@@ -64,6 +64,10 @@ int main ( void )
 {
     /* Initialize all modules */
     SYS_Initialize ( NULL );
+    
+    printf("\n\r---------------------------------------------------------");
+    printf("\n\r                    ICAP Demo                 ");
+    printf("\n\r---------------------------------------------------------\n\r");    
 
     ICAP2_Enable();
     
@@ -81,7 +85,7 @@ int main ( void )
         capturedValue[captureIndex++] = ICAP2_CaptureBufferRead();
 
         if ( captureIndex > 1){
-            printf("Pulse width = %d\r\n",(capturedValue[1] - capturedValue[0]));
+            printf("Pulse width Count = %d\r\n",(capturedValue[1] - capturedValue[0]));
             captureIndex = 0;
         }
     }

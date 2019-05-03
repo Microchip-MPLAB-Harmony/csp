@@ -74,8 +74,6 @@ void TMR2_Initialize(void)
     PR2 = 14062U;
 
 
-    /* start the TMR */
-    T2CONSET = _T2CON_ON_MASK;
 }
 
 
