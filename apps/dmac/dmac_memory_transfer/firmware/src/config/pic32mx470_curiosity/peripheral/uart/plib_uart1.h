@@ -1,4 +1,21 @@
 /*******************************************************************************
+  UART1 PLIB
+
+  Company:
+    Microchip Technology Inc.
+
+  File Name:
+    plib_uart1.h
+
+  Summary:
+    UART1 PLIB Header File
+
+  Description:
+    None
+
+*******************************************************************************/
+
+/*******************************************************************************
 * Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
@@ -21,60 +38,57 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
-#ifndef PLIB_CLK_H
-#define PLIB_CLK_H
+#ifndef PLIB_UART1_H
+#define PLIB_UART1_H
 
 #include <stddef.h>
-#include <stdbool.h>  
-#include <device.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include "device.h"
+#include "plib_uart_common.h"
 
+// DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
     extern "C" {
 
 #endif
- 
-// *****************************************************************************
-// *****************************************************************************
-// Section: CLK Module System Interface Routines
-// *****************************************************************************
-// *****************************************************************************
+// DOM-IGNORE-END
 
 // *****************************************************************************
-/* Function:
-    void CLK_Initialize ( void )
+// *****************************************************************************
+// Section: Interface
+// *****************************************************************************
+// *****************************************************************************
 
-  Summary:
-    Initializes hardware of the System Clock and Peripheral Clock.
-    
-  Description:
-    This function initializes the hardware of System Clock and Peripheral Clocks.
+#define UART1_FrequencyGet()    (uint32_t)(48000000UL)
 
-  Precondition:
-    None.
+/****************************** UART1 API *********************************/
 
-  Parameters:
-    None.
+void UART1_Initialize( void );
 
-  Returns:
-    None.
+bool UART1_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcClkFreq );
 
-  Example:
-    <code>
-    //Example 1: Do not alter the configuration bit settings
-    CLK_Initialize ( );
+bool UART1_Write( void *buffer, const size_t size );
 
-    </code>
+bool UART1_Read( void *buffer, const size_t size );
 
-  Remarks:
-    None.
-*/
+UART_ERROR UART1_ErrorGet( void );
 
-void CLK_Initialize ( void );
+int UART1_ReadByte( void );
 
-#ifdef __cplusplus
-}
+bool UART1_ReceiverIsReady( void );
+
+void UART1_WriteByte( int data );
+
+bool UART1_TransmitterIsReady( void );
+
+// DOM-IGNORE-BEGIN
+#ifdef __cplusplus  // Provide C++ Compatibility
+
+    }
+
 #endif
+// DOM-IGNORE-END
 
-#endif //PLIB_CLK_H
-
+#endif // PLIB_UART1_H
