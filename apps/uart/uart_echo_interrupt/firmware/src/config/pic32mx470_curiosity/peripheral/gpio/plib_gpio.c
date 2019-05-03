@@ -64,6 +64,7 @@ void GPIO_Initialize ( void )
     /* PORTD Initialization */
 
     /* PORTE Initialization */
+    LATE = 0x0; /* Initial Latch Value */
     TRISECLR = 0x10; /* Direction Control */
     ANSELECLR = 0x10; /* Digital Mode Enable */
 
