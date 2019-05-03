@@ -183,10 +183,10 @@ bool UART1_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcClkFreq )
     return status;
 }
 
-bool UART1_Read( void *buffer, const size_t size )
+bool UART1_Read(void* buffer, const size_t size )
 {
     bool status = false;
-    uint8_t * lBuffer = (uint8_t *)buffer;
+    uint8_t* lBuffer = (uint8_t* )buffer;
     uint32_t errorStatus = 0;
     size_t processedSize = 0;
 
@@ -223,10 +223,10 @@ bool UART1_Read( void *buffer, const size_t size )
     return status;
 }
 
-bool UART1_Write( void *buffer, const size_t size )
+bool UART1_Write( void* buffer, const size_t size )
 {
     bool status = false;
-    uint8_t * lBuffer = (uint8_t *)buffer;
+    uint8_t* lBuffer = (uint8_t*)buffer;
     size_t processedSize = 0;
 
     if(lBuffer != NULL)
@@ -264,7 +264,7 @@ UART_ERROR UART1_ErrorGet( void )
 
 void UART1_WriteByte(int data)
 {
-    while (!(U1STA & _U1STA_UTXBF_MASK));
+    while ((U1STA & _U1STA_UTXBF_MASK));
 
     U1TXREG = data;
 }
