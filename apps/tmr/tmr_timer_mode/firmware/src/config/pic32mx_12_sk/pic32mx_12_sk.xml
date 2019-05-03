@@ -108,52 +108,117 @@
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <Boolean dnOrder="21" id="EVIC_8_ENABLE">
+        <Boolean dnOrder="21" id="EVIC_12_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="22" id="EVIC_8_HANDLER_LOCK">
+        <Boolean dnOrder="22" id="EVIC_12_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <String dnOrder="23" id="EVIC_8_INTERRUPT_HANDLER">
+        <String dnOrder="23" id="EVIC_12_INTERRUPT_HANDLER">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="TIMER_2_InterruptHandler"/>
+            <Dynamic dnOrder="0" id="core" value="TIMER_3_InterruptHandler"/>
           </Values>
         </String>
-        <Hex dnOrder="24" id="SYS_PORT_C_CNPU">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="256"/>
-          </Values>
-        </Hex>
-        <Hex dnOrder="25" id="SYS_PORT_C_TRIS">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="256"/>
-          </Values>
-        </Hex>
-        <Boolean dnOrder="26" id="TIMER_2_INTERRUPT_ENABLE">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="tmr2" value="true"/>
-          </Values>
-        </Boolean>
-        <Boolean dnOrder="27" id="TIMER_2_INTERRUPT_ENABLE_UPDATE">
+        <Boolean dnOrder="24" id="EVIC_8_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
-        <String dnOrder="28" id="TIMER_2_INTERRUPT_HANDLER">
+        <Boolean dnOrder="25" id="EVIC_8_HANDLER_LOCK">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="tmr2" value="TIMER_2_InterruptHandler"/>
+            <Dynamic dnOrder="0" id="core" value="false"/>
+          </Values>
+        </Boolean>
+        <String dnOrder="26" id="EVIC_8_INTERRUPT_HANDLER">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="TIMER_2_Handler"/>
           </Values>
         </String>
-        <Boolean dnOrder="29" id="TIMER_2_INTERRUPT_HANDLER_LOCK">
+        <Hex dnOrder="27" id="PMD4_REG_VALUE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="4294967289"/>
+          </Values>
+        </Hex>
+        <Hex dnOrder="28" id="PMD6_REG_VALUE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="4294967293"/>
+          </Values>
+        </Hex>
+        <Hex dnOrder="29" id="SYS_PORT_C_CNPU">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="256"/>
+          </Values>
+        </Hex>
+        <Hex dnOrder="30" id="SYS_PORT_C_TRIS">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="256"/>
+          </Values>
+        </Hex>
+        <Boolean dnOrder="31" id="TIMER_2_INTERRUPT_ENABLE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="tmr2" value="false"/>
+          </Values>
+        </Boolean>
+        <Boolean dnOrder="32" id="TIMER_2_INTERRUPT_ENABLE_UPDATE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="true"/>
+          </Values>
+        </Boolean>
+        <String dnOrder="33" id="TIMER_2_INTERRUPT_HANDLER">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="tmr2" value="TIMER_2_Handler"/>
+          </Values>
+        </String>
+        <Boolean dnOrder="34" id="TIMER_2_INTERRUPT_HANDLER_LOCK">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="tmr2" value="false"/>
+          </Values>
+        </Boolean>
+        <Boolean dnOrder="35" id="TIMER_3_INTERRUPT_ENABLE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="tmr3" value="true"/>
+          </Values>
+        </Boolean>
+        <Boolean dnOrder="36" id="TIMER_3_INTERRUPT_ENABLE_UPDATE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="false"/>
+          </Values>
+        </Boolean>
+        <String dnOrder="37" id="TIMER_3_INTERRUPT_HANDLER">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="tmr3" value="TIMER_3_InterruptHandler"/>
+          </Values>
+        </String>
+        <Boolean dnOrder="38" id="TIMER_3_INTERRUPT_HANDLER_LOCK">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="tmr3" value="true"/>
+          </Values>
+        </Boolean>
+        <Boolean dnOrder="39" id="TMR2_CLOCK_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="tmr2" value="true"/>
           </Values>
         </Boolean>
-        <KeyValueSet dnOrder="30" id="clkSvcMode">
+        <Integer dnOrder="40" id="TMR2_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="48000000"/>
+          </Values>
+        </Integer>
+        <Boolean dnOrder="41" id="TMR3_CLOCK_ENABLE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="tmr3" value="true"/>
+          </Values>
+        </Boolean>
+        <Integer dnOrder="42" id="TMR3_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="48000000"/>
+          </Values>
+        </Integer>
+        <KeyValueSet dnOrder="43" id="clkSvcMode">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
@@ -165,50 +230,156 @@
       <Symbols dnOrder="0">
         <Hex dnOrder="0" id="TCON_REG_VALUE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="tmr2" value="112"/>
+            <Dynamic dnOrder="0" id="tmr2" value="120"/>
           </Values>
         </Hex>
-        <Integer dnOrder="1" id="TIMER_CLOCK_FREQ">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="tmr2" value="187500"/>
-          </Values>
-        </Integer>
-        <Long dnOrder="2" id="TIMER_PERIOD">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="tmr2" value="18750"/>
-          </Values>
-        </Long>
-        <KeyValueSet dnOrder="3" id="TIMER_PRE_SCALER">
+        <KeyValueSet dnOrder="1" id="TIMER_32BIT_MODE_SEL">
           <Values dnOrder="0">
             <User dnOrder="0" value="0"/>
           </Values>
         </KeyValueSet>
-        <Float dnOrder="4" id="TIMER_TIME_PERIOD_MS">
+        <Integer dnOrder="2" id="TIMER_CLOCK_FREQ">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="tmr2" value="187500"/>
+          </Values>
+        </Integer>
+        <Long dnOrder="3" id="TIMER_PERIOD">
+          <Attributes dnOrder="0">
+            <Long dnOrder="0" id="max">
+              <Value dnOrder="0">4294967295</Value>
+            </Long>
+          </Attributes>
+          <Values dnOrder="1">
+            <Dynamic dnOrder="0" id="tmr2" value="187500"/>
+          </Values>
+        </Long>
+        <KeyValueSet dnOrder="4" id="TIMER_PRE_SCALER">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="0"/>
+          </Values>
+        </KeyValueSet>
+        <Float dnOrder="5" id="TIMER_TIME_PERIOD_MS">
           <Attributes dnOrder="0">
             <Float dnOrder="0" id="max">
-              <Value dnOrder="0">349.52</Value>
+              <Value dnOrder="0">2.2906492E7</Value>
             </Float>
           </Attributes>
           <Values dnOrder="1">
-            <User dnOrder="0" value="100.0"/>
+            <User dnOrder="0" value="1000.0"/>
           </Values>
         </Float>
-        <Integer dnOrder="5" id="TMR_PRESCALER_VALUE">
+        <String dnOrder="6" id="TMR_IEC_REG">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="tmr2" value="IEC0"/>
+          </Values>
+        </String>
+        <String dnOrder="7" id="TMR_IFS_REG">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="tmr2" value="IFS0"/>
+          </Values>
+        </String>
+        <Integer dnOrder="8" id="TMR_PRESCALER_VALUE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="tmr2" value="256"/>
           </Values>
         </Integer>
       </Symbols>
     </UniqueComponent>
+    <UniqueComponent dnOrder="3" id="tmr3">
+      <Symbols dnOrder="0">
+        <Integer dnOrder="0" id="TIMER_CLOCK_FREQ">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="visible">
+              <Value dnOrder="0">false</Value>
+            </Boolean>
+          </Attributes>
+          <Values dnOrder="1">
+            <Dynamic dnOrder="0" id="tmr3" value="48000000"/>
+          </Values>
+        </Integer>
+        <Long dnOrder="1" id="TIMER_PERIOD">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="visible">
+              <Value dnOrder="0">false</Value>
+            </Boolean>
+          </Attributes>
+          <Values dnOrder="1">
+            <Dynamic dnOrder="0" id="tmr3" value="14400"/>
+          </Values>
+        </Long>
+        <KeyValueSet dnOrder="2" id="TIMER_PRE_SCALER">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="visible">
+              <Value dnOrder="0">false</Value>
+            </Boolean>
+          </Attributes>
+        </KeyValueSet>
+        <KeyValueSet dnOrder="3" id="TIMER_SIDL">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="visible">
+              <Value dnOrder="0">false</Value>
+            </Boolean>
+          </Attributes>
+        </KeyValueSet>
+        <Boolean dnOrder="4" id="TIMER_SLAVE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="tmr3" value="true"/>
+          </Values>
+        </Boolean>
+        <KeyValueSet dnOrder="5" id="TIMER_SRC_SEL">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="visible">
+              <Value dnOrder="0">false</Value>
+            </Boolean>
+          </Attributes>
+        </KeyValueSet>
+        <Float dnOrder="6" id="TIMER_TIME_PERIOD_MS">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="visible">
+              <Value dnOrder="0">false</Value>
+            </Boolean>
+          </Attributes>
+        </Float>
+        <File dnOrder="7" id="TMR_HEADER1">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="enabled">
+              <Value dnOrder="0">false</Value>
+            </Boolean>
+          </Attributes>
+        </File>
+        <Boolean dnOrder="8" id="TMR_INTERRUPT_MODE">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="visible">
+              <Value dnOrder="0">false</Value>
+            </Boolean>
+          </Attributes>
+        </Boolean>
+        <Comment dnOrder="9" id="TMR_SLAVE_COMMENT">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="visible">
+              <Value dnOrder="0">true</Value>
+            </Boolean>
+          </Attributes>
+        </Comment>
+        <File dnOrder="10" id="TMR_SOURCE">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="enabled">
+              <Value dnOrder="0">false</Value>
+            </Boolean>
+          </Attributes>
+        </File>
+      </Symbols>
+    </UniqueComponent>
   </Components>
   <UserData>
-    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="0"/>
-    <ComponentGraph dnOrder="1" id="__ROOTVIEW">
+    <ComponentGraph dnOrder="0" id="__ROOTVIEW">
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="core" x="240" y="20"/>
         <ElementPosition dnOrder="1" id="dfp" x="20" y="20"/>
         <ElementPosition dnOrder="2" id="tmr2" x="340" y="20"/>
+        <ElementPosition dnOrder="3" id="tmr3" x="30" y="60"/>
       </ElementPositions>
     </ComponentGraph>
+    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="1"/>
   </UserData>
 </Configuration>

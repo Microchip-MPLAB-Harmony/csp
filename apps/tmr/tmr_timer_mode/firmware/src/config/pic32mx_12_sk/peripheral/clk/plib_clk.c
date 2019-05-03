@@ -1,4 +1,31 @@
 /*******************************************************************************
+  SYS CLK Static Functions for Clock System Service
+
+  Company:
+    Microchip Technology Inc.
+
+  File Name:
+    plib_clk.c
+
+  Summary:
+    SYS CLK static function implementations for the Clock System Service.
+
+  Description:
+    The Clock System Service provides a simple interface to manage the
+    oscillators on Microchip microcontrollers. This file defines the static
+    implementation for the Clock System Service.
+
+  Remarks:
+    Static functions incorporate all system clock configuration settings as
+    determined by the user via the Microchip Harmony Configurator GUI.
+    It provides static version of the routines, eliminating the need for an
+    object ID or object handle.
+
+    Static single-open interfaces also eliminate the need for the open handle.
+
+*******************************************************************************/
+
+/*******************************************************************************
 * Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
@@ -21,31 +48,6 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
- /*******************************************************************************
-  SYS CLK Static Functions for Clock System Service
-
-  Company:
-    Microchip Technology Inc.
-
-  File Name:
-    plib_clk.c.ftl
-
-  Summary:
-    SYS CLK static function implementations for the Clock System Service.
-
-  Description:
-    The Clock System Service provides a simple interface to manage the oscillators
-    on Microchip microcontrollers. This file defines the static implementation for the
-    Clock System Service.
-
-  Remarks:
-    Static functions incorporate all system clock configuration settings as
-    determined by the user via the Microchip Harmony Configurator GUI.  It provides
-    static version of the routines, eliminating the need for an object ID or
-    object handle.
-
-    Static single-open interfaces also eliminate the need for the open handle.
-*******************************************************************************/
 // *****************************************************************************
 // *****************************************************************************
 // Section: Include Files
@@ -61,10 +63,9 @@
 // *****************************************************************************
 // *****************************************************************************
 
-
 // *****************************************************************************
 /* Function:
-    void CLK_Initialize ( void )
+    void CLK_Initialize( void )
 
   Summary:
     Initializes hardware and internal data structure of the System Clock.
@@ -74,20 +75,24 @@
     Clock Service.
 
   Remarks:
-    This is configuration values for the static version of the Clock System Service
-    module is determined by the user via the Microchip Harmony Configurator GUI.
+    This is configuration values for the static version of the Clock System
+    Service module is determined by the user via the MHC GUI.
 
-    The objective is to eliminate the user's need to be knowledgeable in the function of
-    the 'configuration bits' to configure the system oscillators.
+    The objective is to eliminate the user's need to be knowledgeable in the
+    function of the 'configuration bits' to configure the system oscillators.
 */
-
 
 void CLK_Initialize( void )
 {
+
     /* Default clock setting is used, hence no code is generated */
     /* Code for fuse settings can be found in "initialization.c" */
+
+    /* Peripheral Module Disable Configuration */
+    PMD1SET = 0xffffffff;
+    PMD2SET = 0xffffffff;
+    PMD3SET = 0xffffffff;
+    PMD4SET = 0xfffffff9;
+    PMD5SET = 0xffffffff;
+    PMD6SET = 0xfffffffd;
 }
-
-
-
-

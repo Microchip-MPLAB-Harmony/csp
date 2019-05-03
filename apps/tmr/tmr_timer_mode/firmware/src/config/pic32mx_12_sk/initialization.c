@@ -159,6 +159,7 @@ void SYS_Initialize ( void* data )
 
 
 
+
     EVIC_Initialize();
 
 	/* Enable global interrupts */
