@@ -65,6 +65,7 @@ enum
 {
   IDLE_SLEEP_MODE = 'a',
   STANDBY_SLEEP_MODE = 'b',
+  OFF_SLEEP_MODE = 'c'
 }SLEEP_MODES;
 
 uint8_t cmd = 0;
@@ -79,7 +80,7 @@ void display_menu (void)
     printf("\n\n\n\rSelect the low power mode to enter");
     printf("\n\ra) Idle Sleep Mode");
     printf("\n\rb) Standby Sleep Mode"); 
-    
+    printf("\n\rc) OFF Sleep Mode"); 
     printf("\n\rEnter your choice");    
     scanf("%c", &cmd);
 }
@@ -92,15 +93,23 @@ void display_menu (void)
 
 int main ( void )
 {
+    RSTC_RESET_CAUSE reset_cause;
+   
     /* Initialize all modules */
     SYS_Initialize ( NULL );
     PM_ConfigurePerformanceLevel(PLCFG_PLSEL0);
-    SYSTICK_TimerCallbackSet(&timeout, (uintptr_t) NULL);
-    SYSTICK_TimerStart();
+    reset_cause = RSTC_ResetCauseGet();
+   
     
     printf("\n\n\r----------------------------------------------");
     printf("\n\r                 LOW power demo using EIC"               );
     printf("\n\r----------------------------------------------"); 
+
+    if(reset_cause == RSTC_RCAUSE_POR_Msk)
+        printf("\n\n\rDevice exited from OFF mode\n");
+    
+    SYSTICK_TimerCallbackSet(&timeout, (uintptr_t) NULL);
+    SYSTICK_TimerStart();    
     
     display_menu();
     
@@ -127,11 +136,20 @@ int main ( void )
                 SYSTICK_TimerStop();
                 LED_OFF();
                 PM_StandbyModeEnter();
-                printf("\n\rSW0 Pressed exiting Wait mode......");
+                printf("\n\rSW0 Pressed exiting Standby mode......");
                 SYSTICK_TimerStart();
                 display_menu();
                 break;
             }
+            case OFF_SLEEP_MODE:
+            {
+                printf("\n\rEntering OFF SLEEP Mode");
+                printf("\n\rPress Reset button to wakeup the device  ");   
+                SYSTICK_TimerStop();
+                LED_OFF();
+                PM_OffModeEnter();
+                break;
+            }  
             default:
             {
                 printf("\n\rInvalid choice");
