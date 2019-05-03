@@ -76,11 +76,11 @@ void TMR2_Start(void);
 
 void TMR2_Stop(void);
 
-void TMR2_PeriodSet(uint16_t);
+void TMR2_PeriodSet(uint32_t);
 
-uint16_t TMR2_PeriodGet(void);
+uint32_t TMR2_PeriodGet(void);
 
-uint16_t TMR2_CounterGet(void);
+uint32_t TMR2_CounterGet(void);
 
 uint32_t TMR2_FrequencyGet(void);
 

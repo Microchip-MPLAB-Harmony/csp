@@ -64,6 +64,7 @@ void GPIO_Initialize ( void )
     /* PORTC Initialization */
 
     /* PORTD Initialization */
+    LATD = 0x0; /* Initial Latch Value */
     TRISDCLR = 0x1; /* Direction Control */
 
     /* PORTE Initialization */
