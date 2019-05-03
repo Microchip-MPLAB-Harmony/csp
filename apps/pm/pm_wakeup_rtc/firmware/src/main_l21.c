@@ -165,7 +165,6 @@ int main ( void )
             }
             case OFF_SLEEP_MODE:
             {
-                printf("\n\n\rConfiguring RTC Compare Match for wake up.......");
                 configure_alarm();
                 SYSTICK_TimerStop();
                 printf("\n\rEntering OFF Mode");

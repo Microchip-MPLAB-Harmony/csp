@@ -62,6 +62,7 @@
 // *****************************************************************************
 void RSTC_Initialize(void)
 {
+    RSTC_REGS->RSTC_WKEN = RSTC_WKEN_WKEN(0x4);
 }
 
 RSTC_WAKEUP_CAUSE RSTC_WakeupCauseGet (void)

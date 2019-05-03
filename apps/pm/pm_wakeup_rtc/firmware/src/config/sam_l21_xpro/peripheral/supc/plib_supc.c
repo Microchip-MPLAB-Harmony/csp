@@ -68,12 +68,12 @@ void SUPC_Initialize( void )
 
 void SUPC_SetOutputPin( SUPC_OUTPIN pin )
 {
-    //SUPC_REGS->SUPC_BKOUT |= SUPC_BKOUT_SETOUT(1 << pin);
+    SUPC_REGS->SUPC_BKOUT |= SUPC_BKOUT_SETOUT(1 << pin);
 }
 
 void SUPC_ClearOutputPin( SUPC_OUTPIN pin )
 {
-    //SUPC_REGS->SUPC_BKOUT |= SUPC_BKOUT_CLROUT(1 << pin);
+    SUPC_REGS->SUPC_BKOUT |= SUPC_BKOUT_CLROUT(1 << pin);
 }
 
 void SUPC_SelectVoltageRegulator(SUPC_VREGSEL regsel)
