@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>SUPC_TSSEL Enumeration</title>
+<title>RTC_Timer32Compare0HasMatched Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="04699.html" target="topic">SUPC Peripheral Library Help</a> &gt; <a href="04700.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="04751.html" target="topic">SUPC_TSSEL Enumeration</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="04518.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="04519.html" target="topic">32-bit Timer (Mode 0)</a> &gt; <a href="04524.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="04751.html" target="topic">RTC_Timer32Compare0HasMatched Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04745.html" target="topic">Previous</a> | <a href="04700.html" target="topic">Up</a> | <a href="04754.html" target="topic">Next</a></div>
+<a href="04693.html" target="topic">Previous</a> | <a href="04524.html" target="topic">Up</a> | <a href="04753.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: supc_u2407::SUPC_TSSEL Topic Title: SUPC_TSSEL Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::RTC_Timer32Compare0HasMatched Topic Title: RTC_Timer32Compare0HasMatched Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-SUPC_TSSEL Enumeration</div>
+RTC_Timer32Compare0HasMatched Function</div>
 </div>
 </div>
 
@@ -49,29 +49,53 @@ SUPC_TSSEL Enumeration</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-SUPC Temperature Sensor Selection&nbsp;</p>
-<p class="Element10">
-There are two temperature sensor channels controlled by SUPC. This enum type can be used to specify the channel when calling the APIs which controls temperature sensors channels. eg. <a href="04748.html" target="topic">SUPC_SelectTempSenorChannel</a>( SUPC_TSSEL_PTAT );</p></div>
+This function returns true if the counter value has matched the configured 32-bit compare value.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
-  <strong><span style="color: #000000">SUPC_TSSEL_PTAT</span></strong> = 0,
-  <strong><span style="color: #000000">SUPC_TSSEL_CTAT</span></strong> = 1
-} SUPC_TSSEL;</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">RTC_Timer32Compare0HasMatched</span></strong>();</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+<a href="04683.html" target="topic">RTC_Initialize</a>, <a href="04764.html" target="topic">RTC_Timer32Start</a> and <a href="04756.html" target="topic">RTC_Timer32CompareSet</a> must have been called for the associated RTC instance. The RTC peripheral should have been configured in 32-bit Timer Counter mode.</p></div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+true - Compare match has occurred. false - Compare match has not ocurred.</p></div>
+</div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+This API is available for devices that have more than one compare register in 32-bit mode.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">    <strong><span style="color: #000080">bool</span></strong> compareHasMatched = <strong><span style="color: #000080">false</span></strong>;
+    <a href="04683.html" target="topic">RTC_Initialize</a>();
+    <a href="04752.html" target="topic">RTC_Timer32Compare0Set</a>(0x3000);
+    <a href="04759.html" target="topic">RTC_Timer32CounterSet</a>(0);
+    <a href="04764.html" target="topic">RTC_Timer32Start</a>();
+
+    <i><span style="color: #008000">// Wait until compare match</span></i>
+    <strong><span style="color: #000080">while</span></strong>(!RTC_Timer32Compare0HasMatched();
+</pre></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="04699.html" target="topic">SUPC Peripheral Library Help</a> &gt; <a href="04700.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="04751.html" target="topic">SUPC_TSSEL Enumeration</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="04518.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="04519.html" target="topic">32-bit Timer (Mode 0)</a> &gt; <a href="04524.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="04751.html" target="topic">RTC_Timer32Compare0HasMatched Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -79,13 +103,13 @@ None.</p></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04745.html" target="topic">Previous</a> | <a href="04700.html" target="topic">Up</a> | <a href="04754.html" target="topic">Next</a></div>
+<a href="04693.html" target="topic">Previous</a> | <a href="04524.html" target="topic">Up</a> | <a href="04753.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: supc_u2407::SUPC_TSSEL Topic Title: SUPC_TSSEL Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::RTC_Timer32Compare0HasMatched Topic Title: RTC_Timer32Compare0HasMatched Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Using the Library</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '03810.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="03805.html" target="topic">PIT64B Peripheral Library Help</a> &gt; <a href="03810.html" target="topic">Using the Library</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+Microchip 32-bit Chip Support Package</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="03801.html" target="topic">Previous</a> | <a href="03805.html" target="topic">Up</a> | <a href="03806.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PIT64B 44117 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+Using the Library</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10" style="text-align: justify;">
+When the PIT64B_MR.CONT bit is written to 0, the PIT64B produces a single timer event. The timer period starts as soon as the START bit, in the Control register (PIT64B_CR), is written to 1. The period is defined by configuring the LSBPERIOD field in the LSB Period register (PIT64B_LSBPR) and the MSBPERIOD field in the MSB Period register (PIT64B_MSBPR). When the START command is issued, the 64-bit timer loads 0 and increments up to LSBPERIOD and MSBPERIOD field value minus 1, then automatically reloads 0 and stops. When time reaches the maximum value, the PERIOD flag, in the Interrupt Status register (PIT64B_ISR), is set. No other period will be started until a new START command is issued.</p><p class="Element10">
+&nbsp;</p>
+<p class="Element10" style="text-align: justify;">
+When the PIT64B_MR.CONT bit is written to 1, the PIT64B continuously produces timer events. The timer is started as soon as the PIT64B_CR.START bit is written to 1. The period is defined by configuring the PIT64B_LSBPR.LSBPERIOD field and PIT64B_MSBPR.MSBPERIOD field. When the START command is issued, the 64-bit timer loads 0 and increments up to LSBPERIOD and MSBPERIOD field value minus 1, then automatically reloads 0 anc restarts a new counting period until bit&nbsp;</p>
+<p class="Element10" style="text-align: justify;">
+PIT64B_CR.SWRST is written to 1. When the timer reaches its maximum value, the flag PIT64B_ISR.PERIOD is set. PIT64B_ISR.PERIOD is cleared when reading PIT64B_ISR. If a new period elapses and the PIT64B_ISR.PERIOD is 1, the PIT64B_ISR.OVRE flag is set to indicate a potential latency at system level.</p><p class="Element10">
+&nbsp;</p>
+<p class="Element10" style="text-align: justify;">
+<span style="color: #000000"><strong>Interrupt method:</strong></span></p><div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">int</span></strong> main ( <strong><span style="color: #000080">void</span></strong> )
+{
+    <i><span style="color: #008000">/* Initialize all modules */</span></i>
+    SYS_Initialize ( NULL );
+    PIT64B_TimerStart();
+
+    <strong><span style="color: #000080">while</span></strong> ( <strong><span style="color: #000080">true</span></strong> )
+    {
+        PIT64B_DelayMs(1000);
+        LED_BLUE_Toggle();
+        <i><span style="color: #008000">/* Maintain state machines of all polled MPLAB Harmony modules. */</span></i>
+        SYS_Tasks ( );
+    }
+
+    <i><span style="color: #008000">/* Execution should not come here during normal operation */</span></i>
+
+    <strong><span style="color: #000080">return</span></strong> ( EXIT_FAILURE );
+}</pre></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="03805.html" target="topic">PIT64B Peripheral Library Help</a> &gt; <a href="03810.html" target="topic">Using the Library</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+Microchip 32-bit Chip Support Package</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="03801.html" target="topic">Previous</a> | <a href="03805.html" target="topic">Up</a> | <a href="03806.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PIT64B 44117 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

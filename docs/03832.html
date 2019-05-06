@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>RTC_ALARM_MASK Enumeration</title>
+<title>PIC32MK Peripheral Libraries</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="03742.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="03743.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="03832.html" target="topic">RTC_ALARM_MASK Enumeration</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03832.html" target="topic">PIC32MK Peripheral Libraries</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03844.html" target="topic">Previous</a> | <a href="03743.html" target="topic">Up</a> | <a href="03847.html" target="topic">Next</a></div>
+<a href="03839.html" target="topic">Previous</a> | <a href="03423.html" target="topic">Up</a> | <a href="03836.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_6056::RTC_ALARM_MASK Topic Title: RTC_ALARM_MASK Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PLIB PIC32MK Topic Title: PIC32MK Peripheral Libraries)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-RTC_ALARM_MASK Enumeration</div>
+PIC32MK Peripheral Libraries</div>
 </div>
 </div>
 
@@ -49,102 +49,80 @@ RTC_ALARM_MASK Enumeration</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-RTC Alarm Mask&nbsp;</p>
+The following Table lists all the Peripheral Libraries for the PIC32MK Family.&nbsp;</p>
 <p class="Element10">
-This is used to set up the alarm for RTC.</p></div>
-</div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
-  <strong><span style="color: #000000">RTC_ALARM_MASK_OFF</span></strong> = 0x00,
-  <strong><span style="color: #000000">RTC_ALARM_MASK_SS</span></strong> = 0x01,
-  <strong><span style="color: #000000">RTC_ALARM_MASK_MI</span></strong> = 0x02,
-  <strong><span style="color: #000000">RTC_ALARM_MASK_HH</span></strong> = 0x04,
-  <strong><span style="color: #000000">RTC_ALARM_MASK_DD</span></strong> = 0x08,
-  <strong><span style="color: #000000">RTC_ALARM_MASK_MO</span></strong> = 0x10,
-  <strong><span style="color: #000000">RTC_ALARM_MASK_MISS</span></strong> = 0x03,
-  <strong><span style="color: #000000">RTC_ALARM_MASK_HHMISS</span></strong> = 0x07,
-  <strong><span style="color: #000000">RTC_ALARM_MASK_DDHHMISS</span></strong> = 0x0f,
-  <strong><span style="color: #000000">RTC_ALARM_MASK_MODDHHMISS</span></strong> = 0x1f
-} RTC_ALARM_MASK;</pre></div></div>
-<a name="4D656D62657273"></a><div class="Element14">
-Members</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element272">
+&nbsp;</p><div class="Element63">
 <div class="TableDiv">
-<table cellspacing="0" class="Table3">
+<table cellspacing="0" class="Table1">
 <tr>
-<td class="Element260" valign="top" width="35%">
-<div class="Element261">
-Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
-<div class="Element265">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-RTC_ALARM_MASK_OFF = 0x00&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-NO Alarm&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-RTC_ALARM_MASK_SS = 0x01&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Every minute, seconds alarm enable&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-RTC_ALARM_MASK_MI = 0x02&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Minute alarm enable&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-RTC_ALARM_MASK_HH = 0x04&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Hour alarm enable&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-RTC_ALARM_MASK_DD = 0x08&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Date alarm enable&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-RTC_ALARM_MASK_MO = 0x10&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Month alarm enable&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-RTC_ALARM_MASK_MISS = 0x03&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Every hour&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-RTC_ALARM_MASK_HHMISS = 0x07&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Every day&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-RTC_ALARM_MASK_DDHHMISS = 0x0f&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Every month&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-RTC_ALARM_MASK_MODDHHMISS = 0x1f&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Every year&nbsp;</div></td></tr></table></div></div>
+<td class="Element65" valign="top" width="100%">
+<div class="Element66">
+PIC32 MK Peripheral Libraries&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="00653.html" target="topic">ADCHS Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="01088.html" target="topic">CDAC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="01206.html" target="topic">CMP Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="01172.html" target="topic">Clock (PIC32MK) Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="01265.html" target="topic">CORETIMER Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="01481.html" target="topic">DMAC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="01629.html" target="topic">DMT Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="01681.html" target="topic">EEPROM Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="01817.html" target="topic">EVIC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="02356.html" target="topic">GPIO Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="02666.html" target="topic">ICAP Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="03062.html" target="topic">NVM Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="03230.html" target="topic">OCMP Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="04776.html" target="topic">RTCC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="05264.html" target="topic">SPI Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="06074.html" target="topic">TMR Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="06124.html" target="topic">TMR1 Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="06232.html" target="topic">UART Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="06435.html" target="topic">WDT Peripheral Library Help</a>&nbsp;</div></td></tr></table></div></div>
 </div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="03742.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="03743.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="03832.html" target="topic">RTC_ALARM_MASK Enumeration</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03832.html" target="topic">PIC32MK Peripheral Libraries</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -152,13 +130,13 @@ None.</p></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03844.html" target="topic">Previous</a> | <a href="03743.html" target="topic">Up</a> | <a href="03847.html" target="topic">Next</a></div>
+<a href="03839.html" target="topic">Previous</a> | <a href="03423.html" target="topic">Up</a> | <a href="03836.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_6056::RTC_ALARM_MASK Topic Title: RTC_ALARM_MASK Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PLIB PIC32MK Topic Title: PIC32MK Peripheral Libraries)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

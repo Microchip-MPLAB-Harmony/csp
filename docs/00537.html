@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>AFECx_ChannelGainSet Function</title>
+<title>ADC_ChannelSelect Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="00467.html" target="topic">AFEC Peripheral Library Help</a> &gt; <a href="00468.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="00537.html" target="topic">AFECx_ChannelGainSet Function</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="00159.html" target="topic">ADC Peripheral Library Help</a> &gt; <a href="00160.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="00537.html" target="topic">ADC_ChannelSelect Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00536.html" target="topic">Previous</a> | <a href="00468.html" target="topic">Up</a> | <a href="00538.html" target="topic">Next</a></div>
+<a href="00536.html" target="topic">Previous</a> | <a href="00160.html" target="topic">Up</a> | <a href="00538.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: AFECx_ChannelGainSet@AFEC_CHANNEL_NUM@AFEC_CHANNEL_GAIN Topic Title: AFECx_ChannelGainSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: adc_u2247::ADC_ChannelSelect@ADC_POSINPUT@ADC_NEGINPUT Topic Title: ADC_ChannelSelect Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-AFECx_ChannelGainSet Function</div>
+ADC_ChannelSelect Function</div>
 </div>
 </div>
 
@@ -49,20 +49,20 @@ AFECx_ChannelGainSet Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function writes the gain of the channel</p></div>
+This function selects ADC channel to use.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">AFECx_ChannelGainSet</span></strong>(
-    <a href="00510.html" target="topic">AFEC_CHANNEL_NUM</a> <strong><span style="color: #000000">channel</span></strong>, 
-    <a href="00493.html" target="topic">AFEC_CHANNEL_GAIN</a> <strong><span style="color: #000000">gain</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">ADC_ChannelSelect</span></strong>(
+    <a href="00554.html" target="topic">ADC_POSINPUT</a> <strong><span style="color: #000000">positiveInput</span></strong>, 
+    <a href="00546.html" target="topic">ADC_NEGINPUT</a> <strong><span style="color: #000000">negativeInput</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="00547.html" target="topic">AFECx_Initialize</a>() must have been called first for the associated instance.</p></div>
+<a href="00545.html" target="topic">ADC_Initialize</a>() function must have been called first for the associated instance.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -79,14 +79,14 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-channel&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+positiveInput&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-channel number&nbsp;</div></td></tr><tr>
+selected positive input pin.&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-gain&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+negativeInput&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-channel gain of the amplifier&nbsp;</div></td></tr></table></div></div>
+selected negative input pin.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -101,14 +101,14 @@ Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Input voltage range reduces as gain increases. For gain = 1, range is (0) to (Vref) For gain = 2, range is (Vref/4) to (3 * Vref/4) For gain = 4, range is (3 * Vref/8) to (5 * Vref/8)</p></div>
+None.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">    AFEC0_Initialize();
-    AFEC0_ChannelGainSet(AFEC_CH0, AFEC_CHANNEL_GAIN_2X);</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">  <a href="00545.html" target="topic">ADC_Initialize</a>();
+  ADC_ChannelSelect(ADC_POSINPUT_AIN0, ADC_NEGINPUT_GND);</pre></div></div>
 </div>
 </div>
 </div>
@@ -116,7 +116,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="00467.html" target="topic">AFEC Peripheral Library Help</a> &gt; <a href="00468.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="00537.html" target="topic">AFECx_ChannelGainSet Function</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="00159.html" target="topic">ADC Peripheral Library Help</a> &gt; <a href="00160.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="00537.html" target="topic">ADC_ChannelSelect Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -124,13 +124,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00536.html" target="topic">Previous</a> | <a href="00468.html" target="topic">Up</a> | <a href="00538.html" target="topic">Next</a></div>
+<a href="00536.html" target="topic">Previous</a> | <a href="00160.html" target="topic">Up</a> | <a href="00538.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: AFECx_ChannelGainSet@AFEC_CHANNEL_NUM@AFEC_CHANNEL_GAIN Topic Title: AFECx_ChannelGainSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: adc_u2247::ADC_ChannelSelect@ADC_POSINPUT@ADC_NEGINPUT Topic Title: ADC_ChannelSelect Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

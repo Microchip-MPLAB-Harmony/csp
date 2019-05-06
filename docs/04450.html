@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>SERCOMx_USART_ReceiverIsReady Function</title>
+<title>RSWDT_CallbackRegister Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="04369.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="04380.html" target="topic">USART</a> &gt; <a href="04384.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="04450.html" target="topic">SERCOMx_USART_ReceiverIsReady Function</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="04439.html" target="topic">RSWDT Peripheral Library Help</a> &gt; <a href="04440.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="04450.html" target="topic">RSWDT_CallbackRegister Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04456.html" target="topic">Previous</a> | <a href="04384.html" target="topic">Up</a> | <a href="04452.html" target="topic">Next</a></div>
+<a href="04454.html" target="topic">Previous</a> | <a href="04440.html" target="topic">Up</a> | <a href="04453.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_usart::SERCOMx_USART_ReceiverIsReady Topic Title: SERCOMx_USART_ReceiverIsReady Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RSWDT_CallbackRegister@RSWDT_CALLBACK@uintptr_t Topic Title: RSWDT_CallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-SERCOMx_USART_ReceiverIsReady Function</div>
+RSWDT_CallbackRegister Function</div>
 </div>
 </div>
 
@@ -49,51 +49,65 @@ SERCOMx_USART_ReceiverIsReady Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function returns the hardware status associated with the Receive hardware FIFO of the given USART peripheral instance. When Receiver is ready, user can read the available data.&nbsp;</p>
-<p class="Element10">
-This function is available only in non-interrupt mode of operation. It can be used to achieve non-blocking behavior of <a href="04445.html" target="topic">SERCOMx_USART_Read</a>() function even if the library is configured for blocking behavior. If this function returns true, calling the <a href="04445.html" target="topic">SERCOMx_USART_Read</a>() function with a byte count of 1 will result in non-blocking behavior.</p></div>
+This function sets the pointer to a client function to be called &quot;back&quot; when the Timeout event occurs. It also passes a context value that is passed into the function when it is called. This function is available only in interrupt mode of operation.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">SERCOMx_USART_ReceiverIsReady</span></strong>();</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">RSWDT_CallbackRegister</span></strong>(
+    <a href="04449.html" target="topic">RSWDT_CALLBACK</a> <strong><span style="color: #000000">callback</span></strong>, 
+    uintptr_t <strong><span style="color: #000000">context</span></strong>
+);</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="04444.html" target="topic">SERCOMx_USART_Initialize</a> must have been called for the associated USART instance.</p></div>
+<a href="04454.html" target="topic">RSWDT_Initialize</a> must have been called for the associated RSWDT instance. Reset mode must be disabled in MCC configuration</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+callback&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+A pointer to a function with a calling signature defined by the <a href="04449.html" target="topic">RSWDT_CALLBACK</a> data type.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+A value (usually a pointer) passed (unused) into the function identified by the callback parameter.&nbsp;</div></td></tr></table></div></div>
+</div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
 <div class="Element11">
 <div class="Element10">
-
-<ul class="Element630">
-<li class="Element600">true - if receive hardware FIFO has at least one data available to read.</li>
-<li class="Element600">false - if receive hardware FIFO is empty.</li>
-</ul></div>
+<p class="Element10">
+None.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-If user submits read request for more than 1 byte after checking the ready status, then read API will block until the submitted length of data is processed. This is the native behavior of the read API in the non-interrupt or blocking mode of the library.</p></div>
+The context value may be set to NULL if it is not required. Note that the value of NULL will still be passed to the callback function. To disable the callback function, pass a NULL for the callback parameter. See the <a href="04449.html" target="topic">RSWDT_CALLBACK</a> type definition for additional information. This feature may or may not be available based on device.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">char</span></strong> rxData;
-<strong><span style="color: #000080">if</span></strong>(<strong><span style="color: #000080">true</span></strong> == SERCOM0_USART_ReceiverIsReady())
-{
-    <i><span style="color: #008000">// At least one data is available in Receive FIFO, hence can read a byte</span></i>
-    SERCOM0_USART_Read(&amp;rxData, 1);
-}
-<strong><span style="color: #000080">else</span></strong>
-{
-    <i><span style="color: #008000">//Receiver is empty</span></i>
-}</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">    RSWDT_CallbackRegister(MyCallback, &amp;myData);</pre></div></div>
 </div>
 </div>
 </div>
@@ -101,7 +115,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="04369.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="04380.html" target="topic">USART</a> &gt; <a href="04384.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="04450.html" target="topic">SERCOMx_USART_ReceiverIsReady Function</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="04439.html" target="topic">RSWDT Peripheral Library Help</a> &gt; <a href="04440.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="04450.html" target="topic">RSWDT_CallbackRegister Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -109,13 +123,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04456.html" target="topic">Previous</a> | <a href="04384.html" target="topic">Up</a> | <a href="04452.html" target="topic">Next</a></div>
+<a href="04454.html" target="topic">Previous</a> | <a href="04440.html" target="topic">Up</a> | <a href="04453.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_usart::SERCOMx_USART_ReceiverIsReady Topic Title: SERCOMx_USART_ReceiverIsReady Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RSWDT_CallbackRegister@RSWDT_CALLBACK@uintptr_t Topic Title: RSWDT_CallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

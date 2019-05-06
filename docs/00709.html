@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>CANx_IsBusy Function</title>
+<title>ADCHS_MODULE_MASK Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="00610.html" target="topic">CAN Peripheral Library Help</a> &gt; <a href="00611.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="00709.html" target="topic">CANx_IsBusy Function</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="00653.html" target="topic">ADCHS Peripheral Library Help</a> &gt; <a href="00654.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="00709.html" target="topic">ADCHS_MODULE_MASK Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00712.html" target="topic">Previous</a> | <a href="00611.html" target="topic">Up</a> | <a href="00617.html" target="topic">Next</a></div>
+<a href="00663.html" target="topic">Previous</a> | <a href="00654.html" target="topic">Up</a> | <a href="00733.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: can_u2003::CANx_IsBusy Topic Title: CANx_IsBusy Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ADCHS_MODULE_MASK Topic Title: ADCHS_MODULE_MASK Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-CANx_IsBusy Function</div>
+ADCHS_MODULE_MASK Enumeration</div>
 </div>
 </div>
 
@@ -46,38 +46,36 @@ CANx_IsBusy Function</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Analog module mask&nbsp;</p>
+<p class="Element10">
+This enumeration identifies ADC module mask. This may be ORed together to enable/disable multiple ADC modules.</p></div>
+</div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">CANx_IsBusy</span></strong>();</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">ADCHS_MODULE0_MASK</span></strong> = (1U &lt;&lt; 0U),
+  <strong><span style="color: #000000">ADCHS_MODULE1_MASK</span></strong> = (1U &lt;&lt; 1U),
+  <strong><span style="color: #000000">ADCHS_MODULE2_MASK</span></strong> = (1U &lt;&lt; 2U),
+  <strong><span style="color: #000000">ADCHS_MODULE3_MASK</span></strong> = (1U &lt;&lt; 3U),
+  <strong><span style="color: #000000">ADCHS_MODULE4_MASK</span></strong> = (1U &lt;&lt; 4U),
+  <strong><span style="color: #000000">ADCHS_MODULE7_MASK</span></strong> = (1U &lt;&lt; 7U)
+} ADCHS_MODULE_MASK;</pre></div></div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="00706.html" target="topic">CANx_Initialize</a> must have been called for the associated CAN instance.</p></div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-true - Busy. false - Not busy.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">if</span></strong> (CAN0_IsBusy())
-{
-}</pre></div></div>
-</div>
+None.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="00610.html" target="topic">CAN Peripheral Library Help</a> &gt; <a href="00611.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="00709.html" target="topic">CANx_IsBusy Function</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="00653.html" target="topic">ADCHS Peripheral Library Help</a> &gt; <a href="00654.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="00709.html" target="topic">ADCHS_MODULE_MASK Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -85,13 +83,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00712.html" target="topic">Previous</a> | <a href="00611.html" target="topic">Up</a> | <a href="00617.html" target="topic">Next</a></div>
+<a href="00663.html" target="topic">Previous</a> | <a href="00654.html" target="topic">Up</a> | <a href="00733.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: can_u2003::CANx_IsBusy Topic Title: CANx_IsBusy Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ADCHS_MODULE_MASK Topic Title: ADCHS_MODULE_MASK Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>UART_PARITY Enumeration</title>
+<title>Introduction</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="05361.html" target="topic">UART Peripheral Library Help</a> &gt; <a href="05362.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="05408.html" target="topic">UART_PARITY Enumeration</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="05409.html" target="topic">SUPC Peripheral Library Help</a> &gt; <a href="05408.html" target="topic">Introduction</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05403.html" target="topic">Previous</a> | <a href="05362.html" target="topic">Up</a> | <a href="05412.html" target="topic">Next</a></div>
+<a href="05409.html" target="topic">Previous</a> | <a href="05409.html" target="topic">Up</a> | <a href="05405.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: uart_00734::UART_PARITY Topic Title: UART_PARITY Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SUPC 6452 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-UART_PARITY Enumeration</div>
+Introduction</div>
 </div>
 </div>
 
@@ -49,30 +49,34 @@ UART_PARITY Enumeration</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-UART Parity&nbsp;</p>
+The Supply Controller controls the Embedded Voltage Regulators used by the Core Power Supply and Backup Low Power Mode.&nbsp;</p>
 <p class="Element10">
-This defines the type of parity for UART peripheral.</p></div>
-</div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
-  <strong><span style="color: #000000">UART_PARITY_NONE</span></strong>,
-  <strong><span style="color: #000000">UART_PARITY_ODD</span></strong>,
-  <strong><span style="color: #000000">UART_PARITY_EVEN</span></strong>
-} UART_PARITY;</pre></div></div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
+In Backup Low Power Mode the current consumption is reduced to a few microamps for Backup power retention. Exit from this mode can be achieved via multiple wake-up sources.&nbsp;</p>
 <p class="Element10">
-None.</p></div>
+The Supply Controller also generates the Slow Clock (SCLK) by selecting either the 22-42kHz Low Power RC oscillator or the 32kHz Low Power Crystal oscillator.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+The purpose of Backup Low Power Mode is to achieve the lowest power consumption possible in a system that wakes up periodically in order to perform tasks that do not require a fast startup time.&nbsp;</p>
+<p class="Element10">
+The supply controller, zero-power power-on reset, RTT, RTC, backup registers, and 32kHz oscillator (RC or crystal oscillator selected by software) are all running whilst the regulator and core supply are off.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+Following wakeup sources can wakeup the device from backup mode.</p>
+<ul class="Element630">
+<li class="Element600">14 Wakeup Inputs with Programmable De-bouncing</li>
+<li class="Element600">Real-Time Clock Alarm</li>
+<li class="Element600">Real-Time Timer Alarm</li>
+<li class="Element600">Supply Monitor Detection on VDDIO, with Programmable Scan Period and Voltage Threshold</li>
+</ul></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="05361.html" target="topic">UART Peripheral Library Help</a> &gt; <a href="05362.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="05408.html" target="topic">UART_PARITY Enumeration</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="05409.html" target="topic">SUPC Peripheral Library Help</a> &gt; <a href="05408.html" target="topic">Introduction</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -80,13 +84,13 @@ None.</p></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05403.html" target="topic">Previous</a> | <a href="05362.html" target="topic">Up</a> | <a href="05412.html" target="topic">Next</a></div>
+<a href="05409.html" target="topic">Previous</a> | <a href="05409.html" target="topic">Up</a> | <a href="05405.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: uart_00734::UART_PARITY Topic Title: UART_PARITY Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SUPC 6452 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

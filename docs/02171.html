@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Introduction</title>
+<title>EVSYSx_InterruptEnable Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="02172.html" target="topic">I2SC Peripheral Library Help</a> &gt; <a href="02171.html" target="topic">Introduction</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="02063.html" target="topic">EVSYS Peripheral Library Help</a> &gt; <a href="02064.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="02171.html" target="topic">EVSYSx_InterruptEnable Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02172.html" target="topic">Previous</a> | <a href="02172.html" target="topic">Up</a> | <a href="02169.html" target="topic">Next</a></div>
+<a href="02170.html" target="topic">Previous</a> | <a href="02064.html" target="topic">Up</a> | <a href="02131.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: I2SC 11241 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: evsys_u2504::EVSYSx_InterruptEnable@EVSYS_CHANNEL@EVSYSx_INT_MASK Topic Title: EVSYSx_InterruptEnable Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Introduction</div>
+EVSYSx_InterruptEnable Function</div>
 </div>
 </div>
 
@@ -49,47 +49,74 @@ Introduction</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The I2SC module implements an I2S (Inter-IC Sound) interface, for connection between an MCU and an audio peripheral such as a codec or Bluetooth module.&nbsp;</p>
+This function enables the specified evsys interrupt.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">EVSYSx_InterruptEnable</span></strong>(
+    EVSYS_CHANNEL <strong><span style="color: #000000">channel</span></strong>, 
+    <a href="02167.html" target="topic">EVSYSx_INT_MASK</a> <strong><span style="color: #000000">interrupt</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-The I2SC module provides support to the audio protocol functionality via four standard I/O pins. The four pins that make up the audio protocol interface modes are:</p>
-<ul class="Element630">
-<li class="Element600"><strong>DI: </strong>Serial Data Input for receiving sample digital audio data (ADCDAT)</li>
-<li class="Element600"><strong>DO: </strong>Serial Data Output for transmitting digital audio data (DACDAT)</li>
-<li class="Element600"><strong>CK: </strong>Serial Clock, also known as bit clock (BCLK)</li>
-<li class="Element600"><strong>WS:</strong> Word Select, also known as Left/Right Channel Clock (LRCK)</li>
-</ul><p class="Element10">
-The BCLK provides the clock required to drive the data out or into the module, while the LRCK provides the synchronization of the frame based on the protocol mode selected.&nbsp;</p>
+EVSYSx module should be initialized with the required configuration parameters from the MHC GUI in the <a href="02166.html" target="topic">EVSYSx_Initialize</a>() function</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+channel&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Channel for which the interrupt needs to be enabled&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+interrupt&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Interrupt to be enabled&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-In Master mode, the module generates both the BCLK on the CK pin and the LRCK on the WS pin. In certain devices, while in Slave mode, the module receives these two clocks from its I2S partner, which is operating in Master mode.&nbsp;</p>
+None</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-When configured in Master mode, the leading edge of CK and the LRCK are driven out within one SCK period of starting the audio protocol. Serial data is shifted in or out with timings determined by the protocol mode set.&nbsp;</p>
-<p class="Element10">
-In Slave mode, the peripheral drives zeros out DO, but does not transmit the contents of the transmit FIFO until it sees the leading edge of the LRCK, after which time it starts receiving data.</p><div class="Element15">
-Master Mode</div>
-<p class="Element10" style="text-align: center;">
-<strong>Master Generating its Own Clock – Output BCLK and LRCK</strong>&nbsp;</p>
-<p class="Element10" style="text-align: center;">
-<img src="MaterMode.png" border="0" alt="" title=""></p><div class="Element15">
-Slave Mode</div>
-<p class="Element10" style="text-align: center;">
-<strong>Codec Device as Master Derives MCLK from MCU Reference Clock Out</strong>&nbsp;</p>
-<p class="Element10" style="text-align: center;">
-<img src="SlaveMode.png" border="0" alt="" title=""></p><p class="Element10">
-<strong>Audio Formats</strong>&nbsp;</p>
-<p class="Element10">
-The I2SC Module supports just one audio format, I2S. Left Justified format is not available. </p><p class="Element10" style="text-align: center;">
-&nbsp;</p>
-<p class="Element10" style="text-align: center;">
-&nbsp;</p>
-<p class="Element10" style="text-align: center;">
-&nbsp;</p></div>
+Interrupts configuration will be generated in <a href="02166.html" target="topic">EVSYSx_Initialize</a>() function as per user settings in MHC. The EVSYSx_InterruptEnable and <a href="02170.html" target="topic">EVSYSx_InterruptDisable</a> API should be used to enable and disable interrupt at run time.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">    <i><span style="color: #008000">// Enable Event System channel 0 Event Detection interrupt </span></i>
+    EVSYSx_InterruptEnable(EVSYS_CHANNEL_0, EVSYS_INT_EVD);</pre></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="02172.html" target="topic">I2SC Peripheral Library Help</a> &gt; <a href="02171.html" target="topic">Introduction</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="02063.html" target="topic">EVSYS Peripheral Library Help</a> &gt; <a href="02064.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="02171.html" target="topic">EVSYSx_InterruptEnable Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -97,13 +124,13 @@ The I2SC Module supports just one audio format, I2S. Left Justified format is no
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02172.html" target="topic">Previous</a> | <a href="02172.html" target="topic">Up</a> | <a href="02169.html" target="topic">Next</a></div>
+<a href="02170.html" target="topic">Previous</a> | <a href="02064.html" target="topic">Up</a> | <a href="02131.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: I2SC 11241 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: evsys_u2504::EVSYSx_InterruptEnable@EVSYS_CHANNEL@EVSYSx_INT_MASK Topic Title: EVSYSx_InterruptEnable Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

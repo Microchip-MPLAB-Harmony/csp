@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Library Interface</title>
+<title>NVMCTRL_RWWEEPROM_PageWrite Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="03171.html" target="topic">PIT Peripheral Library Help</a> &gt; <a href="03172.html" target="topic">Library Interface</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="03134.html" target="topic">NVMCTRL Peripheral Library Help</a> &gt; <a href="03135.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="03172.html" target="topic">NVMCTRL_RWWEEPROM_PageWrite Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03176.html" target="topic">Previous</a> | <a href="03171.html" target="topic">Up</a> | <a href="03206.html" target="topic">Next</a></div>
+<a href="03166.html" target="topic">Previous</a> | <a href="03135.html" target="topic">Up</a> | <a href="03165.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PIT 6079 Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nvmctrl_u2207::NVMCTRL_RWWEEPROM_PageWrite@uint32_t*@uint32_t Topic Title: NVMCTRL_RWWEEPROM_PageWrite Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Library Interface</div>
+NVMCTRL_RWWEEPROM_PageWrite Function</div>
 </div>
 </div>
 
@@ -46,194 +46,95 @@ Library Interface</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="612920496E697469616C697A6174696F6E2046756E6374696F6E"></a><div class="Element14">
-a) Initialization Function</div>
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+This function will write one page of data to the RWWEEPROM address specified by the address parameter. The size of the input buffer should be one NVM page. The address should be aligned on a page boundary. Unlike the <a href="03166.html" target="topic">NVMCTRL_PageWrite</a> function, calling this function will not cause the CPU execution to stall. If the interrupt operation was enabled and if a callback was registered, then the callback function will be called. The <a href="03165.html" target="topic">NVMCTRL_IsBusy</a>() function can be used to poll for completion of the operation. The application should ensure that there are no other operations in progress before calling this function. This can be checked by calling the <a href="03165.html" target="topic">NVMCTRL_IsBusy</a>() function.&nbsp;</p>
+<p class="Element10">
+This function is blocking if the library was generated (in MHC) with the interrupt option disabled. If blocking, the function will exit only after write operation has completed. This function is not blocking if the library was generated with the interrupt option enabled. In this mode, the function initiates the operation and then exits. The application can either register a callback function or call the <a href="03165.html" target="topic">NVMCTRL_IsBusy</a>() function periodically to check for completion of the operation.&nbsp;</p>
+<p class="Element10">
+Once the operation is complete, the <a href="03159.html" target="topic">NVMCTRL_ErrorGet</a>() function can be called to check operation success.&nbsp;</p>
+<p class="Element10">
+This API is generated if the RWWEEPROM API option (in MHC) is selected.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">NVMCTRL_RWWEEPROM_PageWrite</span></strong>(
+    uint32_t* <strong><span style="color: #000000">data</span></strong>, 
+    uint32_t <strong><span style="color: #000000">address</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03206.html" target="topic">PIT_TimerInitialize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Initialize PIT registers per user config.&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+The <a href="03164.html" target="topic">NVMCTRL_Initialize</a>() function should have been called once. Also validate if NVM controller is ready to accept new request by calling <a href="03165.html" target="topic">NVMCTRL_IsBusy</a>(). The row containing the page should be erased before any page in that row can be written. The size of the RWWEEPROM memory should have been configured in the NVM User Configuration.</p></div>
 </div>
-</div>
-<a name="62292053657475702046756E6374696F6E73"></a><div class="Element14">
-b) Setup Functions</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
+<div class="Element312">
 <div class="TableDiv">
-<table cellspacing="0" class="Table0">
+<table cellspacing="0" class="Table2">
 <tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03202.html" target="topic">PIT_TimerCallbackSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Register callback for PIT interrupt.&nbsp;</div></td></tr></table></div></div>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+address&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+RWW EEPROM address to be modified.<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+data&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+pointer to data buffer.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
-<a name="6329205472616E73616374696F6E2046756E6374696F6E73"></a><div class="Element14">
-c) Transaction Functions</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03199.html" target="topic">PIT_ClearInterrupt</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-PIT Clear Interrupt.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03200.html" target="topic">PIT_DelayMs</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Delays processing for x milliseconds.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03201.html" target="topic">PIT_InterruptHandler</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-PIT Interrupt Handler.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03203.html" target="topic">PIT_TimerCompareSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Set the timer comparison value.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03208.html" target="topic">PIT_TimerPeriodHasExpired</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Return whether or not the Timer Period has expired.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03209.html" target="topic">PIT_TimerPeriodSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Set the timer period value.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03210.html" target="topic">PIT_TimerRestart</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Restart the PIT counter.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03211.html" target="topic">PIT_TimerStart</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Start the PIT counter.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03212.html" target="topic">PIT_TimerStop</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Stop the PIT counter.&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+Always return true.</p></div>
 </div>
-</div>
-<a name="6429205374617475732046756E6374696F6E73"></a><div class="Element14">
-d) Status Functions</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03207.html" target="topic">PIT_TimerPeriodGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Get the timer period value.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03204.html" target="topic">PIT_TimerCounterGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Get the timer counter value.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03205.html" target="topic">PIT_TimerFrequencyGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Get the timer clock frequency.&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+RWWEEPROM API generation option will appear in the MHC if the device supports it.&nbsp;</p>
+<p class="Element10">
+This function will clear any existing module errors before initiating the operation.</p></div>
 </div>
-</div>
-<a name="6529204461746120547970657320616E6420436F6E7374616E7473"></a><div class="Element14">
-e) Data Types and Constants</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03198.html" target="topic">PIT_CALLBACK</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-PIT Interrupt Callback Function definition.&nbsp;</div></td></tr></table></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">
+<i><span style="color: #008000">// This code snippet shows how the NVMCTRL_RWWEEPROM_PageWrite function is</span></i>
+<i><span style="color: #008000">// called and how the NVMCTRL_IsBusy function is used to poll for</span></i>
+<i><span style="color: #008000">// completion. This assumes the library was generated for interrupt (and</span></i>
+<i><span style="color: #008000">// hence non-blocking) operation.</span></i>
+
+<a href="03164.html" target="topic">NVMCTRL_Initialize</a>();
+
+<i><span style="color: #008000">// Erase the row. This will erase all the pages in the row.</span></i>
+<a href="03173.html" target="topic">NVMCTRL_RWWEEPROM_RowErase</a>(RWWEEPROM_ROW_ADDRESS);
+<strong><span style="color: #000080">while</span></strong>(<a href="03165.html" target="topic">NVMCTRL_IsBusy</a>());
+
+<i><span style="color: #008000">// Now write the page.</span></i>
+NVMCTRL_RWWEEPROM_PageWrite((uint32_t *)buffer, RWWEEPROM_PAGE_ADDRESS);
+<strong><span style="color: #000080">while</span></strong>(<a href="03165.html" target="topic">NVMCTRL_IsBusy</a>());
+
+<strong><span style="color: #000080">if</span></strong>(<a href="03159.html" target="topic">NVMCTRL_ErrorGet</a>() == NVMCTRL_ERROR_NONE)
+{
+    <i><span style="color: #008000">// Operation was successful.</span></i>
+}</pre></div></div>
 </div>
 </div>
 </div>
@@ -241,7 +142,7 @@ PIT Interrupt Callback Function definition.&nbsp;</div></td></tr></table></div><
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="03171.html" target="topic">PIT Peripheral Library Help</a> &gt; <a href="03172.html" target="topic">Library Interface</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="03134.html" target="topic">NVMCTRL Peripheral Library Help</a> &gt; <a href="03135.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="03172.html" target="topic">NVMCTRL_RWWEEPROM_PageWrite Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -249,13 +150,13 @@ PIT Interrupt Callback Function definition.&nbsp;</div></td></tr></table></div><
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03176.html" target="topic">Previous</a> | <a href="03171.html" target="topic">Up</a> | <a href="03206.html" target="topic">Next</a></div>
+<a href="03166.html" target="topic">Previous</a> | <a href="03135.html" target="topic">Up</a> | <a href="03165.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PIT 6079 Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nvmctrl_u2207::NVMCTRL_RWWEEPROM_PageWrite@uint32_t*@uint32_t Topic Title: NVMCTRL_RWWEEPROM_PageWrite Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

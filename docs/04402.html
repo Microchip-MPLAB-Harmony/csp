@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>SERCOM_I2C_CALLBACK Type</title>
+<title>RSTC_RESET_CAUSE Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="04369.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="04358.html" target="topic">I2C</a> &gt; <a href="04363.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="04402.html" target="topic">SERCOM_I2C_CALLBACK Type</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="04365.html" target="topic">RSTC Peripheral Library Help</a> &gt; <a href="04366.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="04402.html" target="topic">RSTC_RESET_CAUSE Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04410.html" target="topic">Previous</a> | <a href="04363.html" target="topic">Up</a> | <a href="04403.html" target="topic">Next</a></div>
+<a href="04414.html" target="topic">Previous</a> | <a href="04366.html" target="topic">Up</a> | <a href="04419.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_i2c::SERCOM_I2C_CALLBACK Topic Title: SERCOM_I2C_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RSTC_RESET_CAUSE Topic Title: RSTC_RESET_CAUSE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-SERCOM_I2C_CALLBACK Type</div>
+RSTC_RESET_CAUSE Enumeration</div>
 </div>
 </div>
 
@@ -49,81 +49,84 @@ SERCOM_I2C_CALLBACK Type</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-SERCOM I2C Transfer Event Callback Function Pointer.&nbsp;</p>
+Reset cause&nbsp;</p>
 <p class="Element10">
-This data type defines the function signature for the SERCOM I2C peripheral callback function. The SERCOM I2C peripheral will call back the client's function with this signature when the SERCOM I2C Transfer has completed.</p></div>
+This enumeration provides identifiers for General, Backup, Watchdog, Software, User reset, CPU clock failure and 32.768 kHz crystal failure causes.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000">SERCOM_I2C_CALLBACK</span></strong>)(uintptr_t contextHandle);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">RSTC_GENERAL_RESET</span></strong> = RSTC_SR_RSTTYP_GENERAL_RST,
+  <strong><span style="color: #000000">RSTC_WAKEUP_RESET</span></strong> = RSTC_SR_RSTTYP_BACKUP_RST,
+  <strong><span style="color: #000000">RSTC_WATCHDOG_RESET</span></strong> = RSTC_SR_RSTTYP_WDT_RST,
+  <strong><span style="color: #000000">RSTC_SOFTWARE_RESET</span></strong> = RSTC_SR_RSTTYP_SOFT_RST,
+  <strong><span style="color: #000000">RSTC_USER_RESET</span></strong> = RSTC_SR_RSTTYP_USER_RST,
+  <strong><span style="color: #000000">RSTC_CPU_FAIL_RESET</span></strong> = RSTC_SR_RSTTYP_CPU_FAIL_RST,
+  <strong><span style="color: #000000">RSTC_SLCK_XTAL_RESET</span></strong> = RSTC_SR_RSTTYP_SLCK_XTAL_RST
+} RSTC_RESET_CAUSE;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-<a href="04409.html" target="topic">SERCOMx_I2C_Initialize</a> must have been called for the given SERCOM I2C peripheral instance and <a href="04407.html" target="topic">SERCOMx_I2C_CallbackRegister</a> must have been called to set the function to be called. The callback register function should have been called before a read, write or transfer function has been initiated.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
+<div class="Element272">
 <div class="TableDiv">
-<table cellspacing="0" class="Table2">
+<table cellspacing="0" class="Table3">
 <tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Allows the caller to provide a context value (usually a pointer to the callers context for multi-instance clients).&nbsp;</div></td></tr></table></div></div>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+RSTC_GENERAL_RESET = RSTC_SR_RSTTYP_GENERAL_RST&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+First power reset&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+RSTC_WAKEUP_RESET = RSTC_SR_RSTTYP_BACKUP_RST&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Return from backup&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+RSTC_WATCHDOG_RESET = RSTC_SR_RSTTYP_WDT_RST&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Watch dog fault occurred&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+RSTC_SOFTWARE_RESET = RSTC_SR_RSTTYP_SOFT_RST&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Dedicated software instruction&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+RSTC_USER_RESET = RSTC_SR_RSTTYP_USER_RST&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+User reset, NRST pin detected low&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+RSTC_CPU_FAIL_RESET = RSTC_SR_RSTTYP_CPU_FAIL_RST&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+CPU clock failure detection&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+RSTC_SLCK_XTAL_RESET = RSTC_SR_RSTTYP_SLCK_XTAL_RST&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+32.768 kHz crystal failure detection&nbsp;</div></td></tr></table></div></div>
 </div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">     <strong><span style="color: #000080">void</span></strong> SERCOM0_I2C_Callback(uintptr_t context)
-     {
-         <strong><span style="color: #000080">if</span></strong>(SERCOM0_I2C_ErrorGet() == SERCOM_I2C_ERROR_NONE)
-         {
-             <i><span style="color: #008000">//Transfer is completed successfully</span></i>
-         }
-         <strong><span style="color: #000080">else</span></strong>
-         {
-             <i><span style="color: #008000">//Error occurred during transfer.</span></i>
-         }
-     }
-
-     <i><span style="color: #008000">// Register Callback function which is defined above</span></i>
-     SERCOM0_I2C_CallbackRegister(SERCOM0_I2C_Callback, (uintptr_t)NULL);
-</pre></div></div>
-</div>
+Refer to the specific device data sheet to determine availability.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="04369.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="04358.html" target="topic">I2C</a> &gt; <a href="04363.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="04402.html" target="topic">SERCOM_I2C_CALLBACK Type</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="04365.html" target="topic">RSTC Peripheral Library Help</a> &gt; <a href="04366.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="04402.html" target="topic">RSTC_RESET_CAUSE Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -131,13 +134,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04410.html" target="topic">Previous</a> | <a href="04363.html" target="topic">Up</a> | <a href="04403.html" target="topic">Next</a></div>
+<a href="04414.html" target="topic">Previous</a> | <a href="04366.html" target="topic">Up</a> | <a href="04419.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_i2c::SERCOM_I2C_CALLBACK Topic Title: SERCOM_I2C_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RSTC_RESET_CAUSE Topic Title: RSTC_RESET_CAUSE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

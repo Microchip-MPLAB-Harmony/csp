@@ -1,0 +1,160 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>DMAC_ChannelLinkedListTransfer Function</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '01619.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="01512.html" target="topic">DMAC Peripheral Library Help</a> &gt; <a href="01513.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="01619.html" target="topic">DMAC_ChannelLinkedListTransfer Function</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+Microchip 32-bit Chip Support Package</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="01617.html" target="topic">Previous</a> | <a href="01513.html" target="topic">Up</a> | <a href="01622.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: dmac_u2503::DMAC_ChannelLinkedListTransfer@DMAC_CHANNEL@dmacdescriptor_registers_t * Topic Title: DMAC_ChannelLinkedListTransfer Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+DMAC_ChannelLinkedListTransfer Function</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The function will submit a list of DMA transfers. The DMA channel will process all transfers in the list. The transfers will be processed in the order in which they added to the list. Each transfer in the list is specified by a DmacDescriptor type descriptor. The list is formed by linking of the descriptors. While processing each descriptor in the linked list, the DMA transfer settings will be updated based on the settings contained in the descriptor.&nbsp;</p>
+<p class="Element10">
+It is possible to link the last descriptor in the list to the first descriptor. This results in an undisrupted transfer sequence. Such type of circular linked descriptor list are useful in audio applications. The DMAC module will generate a callback for each transfer in the descriptor list. The application must keep track of transfer being completed and should only modify the descriptors which have been processed.&nbsp;</p>
+<p class="Element10">
+The application must submit the entire list while calling the function. Adding or inserting of descriptors to a submitted list is not supported. The application can change the transfer parameters such as transfer beat size, source and address increment step size. This will override the transfer setting defined in MHC.&nbsp;</p>
+<p class="Element10">
+The BLOCKACT field of the last DMA transfer descriptor in the descriptor linked list should be set to the value 0x0 i.e. this should be set to disable the channel when the last transfer has been completed. Setting this field to any other value will interfere with the operation of the DMAC peripheral library.&nbsp;</p>
+<p class="Element10">
+When already a transfer is in progress, this API will return false indicating that transfer request is not accepted.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">DMAC_ChannelLinkedListTransfer</span></strong>(
+    <a href="01582.html" target="topic">DMAC_CHANNEL</a> <strong><span style="color: #000000">channel</span></strong>, 
+    dmacdescriptor_registers_t * <strong><span style="color: #000000">channelDesc</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+DMAC should have been initialized by calling <a href="01623.html" target="topic">DMAC_Initialize</a>. The Transfer Linked Option in MHC should have been enabled.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+channel&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+The DMAC channel on which the transfer needs to scheduled.<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+channelDesc&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+A pointer to a linked list of DmacDescriptor type descriptor chain. Each of the descriptors must be placed at a 128-bit aligned SRAM address. If these descriptors belong to an array of descriptors, then configuring the starting address of the array at a 128-bit aligned address will ensure that all descriptors of the array starts at 128-bit aligned address, because the size of each descriptor is 128-bits.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+
+<ul class="Element630">
+<li class="Element600">True - If transfer request is accepted.</li>
+<li class="Element600">False - If previous transfer is in progress and the request is rejected.</li>
+</ul></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12"><i><span style="color: #008000">// Process a transfer list called transferList. Refer to the DMAC PLIB demo</span></i>
+<i><span style="color: #008000">// application example for more details on usage.</span></i>
+<strong><span style="color: #000080">if</span></strong> (DMAC_ChannelLinkedListTransfer(DMAC_CHANNEL_0, transferList) == <strong><span style="color: #000080">true</span></strong>)
+{
+    <i><span style="color: #008000">// do something else</span></i>
+}
+<strong><span style="color: #000080">else</span></strong>
+{
+    <i><span style="color: #008000">// try again?</span></i>
+}</pre></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="01512.html" target="topic">DMAC Peripheral Library Help</a> &gt; <a href="01513.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="01619.html" target="topic">DMAC_ChannelLinkedListTransfer Function</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+Microchip 32-bit Chip Support Package</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="01617.html" target="topic">Previous</a> | <a href="01513.html" target="topic">Up</a> | <a href="01622.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: dmac_u2503::DMAC_ChannelLinkedListTransfer@DMAC_CHANNEL@dmacdescriptor_registers_t * Topic Title: DMAC_ChannelLinkedListTransfer Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

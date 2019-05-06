@@ -1,0 +1,180 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>DSUx_CRCCalculate Function</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '01663.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="01651.html" target="topic">DSU Peripheral Library Help</a> &gt; <a href="01652.html" target="topic">Library Interface</a> &gt; a) Transaction Functions &gt; <a href="01663.html" target="topic">DSUx_CRCCalculate Function</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+Microchip 32-bit Chip Support Package</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="01662.html" target="topic">Previous</a> | <a href="01652.html" target="topic">Up</a> | <a href="01667.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DSUx_CRCCalculate@uint32_t@size_t@uint32_t@uint32_t * Topic Title: DSUx_CRCCalculate Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+DSUx_CRCCalculate Function</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+This function uses the hardware CRC computation feature of the DSU to calculate the CRC on a memory block. The start address and the size of the memory block are specified by startAddress and the size parameters. If this is the first block, the value of the crcSeed parameter should be 0xFFFFFFFF. For calculating the CRC of non-contiguous memory blocks, the CRC result from the CRC calculation of a previous memory block can be passed as the crcSeed to the CRC calculation of the next memory block.&nbsp;</p>
+<p class="Element10">
+The calcualted CRC is returned in the crc parameter. This should be inverted to match standard CRC implementations. It should be kept non-inverted if used as a starting point for subsequent CRC calculations.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">DSUx_CRCCalculate</span></strong>(
+    uint32_t <strong><span style="color: #000000">startAddress</span></strong>, 
+    size_t <strong><span style="color: #000000">size</span></strong>, 
+    uint32_t <strong><span style="color: #000000">crcSeed</span></strong>, 
+    uint32_t * <strong><span style="color: #000000">crc</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+startAddress&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+the starting location of the memory block on which the CRC calculation needs to be performed. This needs to be aligned on a 4 byte boundary.<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+length&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+size of the memory block in terms of 32-bit word.<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+crcSeed&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Initial crcSeed value. This should be 0xFFFFFFFF for the first block. CRC values from the previous calculations can be passed as the CRC seed for next calculation while calculating CRC of separate CRC blocks.<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+crc&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+pointer to the return parameter where the calculated CRC result is stored. This should be inverted to match standard CRC implementations. This should be kept non-inverted if used a starting point for subsequent CRC calculations.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+true - The CRC was calculated successfully.&nbsp;</p>
+<p class="Element10">
+false - A fault occurred while calculating the CRC.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">    <i><span style="color: #008000">// Calculate the CRC of a memory block starting 0x30000 and 1024 bytes.</span></i>
+    <i><span style="color: #008000">// Note the 1024 bytes is 256 32-bit words</span></i>
+
+    <strong><span style="color: #000080">bool</span></strong> crcStatus;
+    uint32_t crcResult;
+    crcstatus = DSUx_CRCCalculate((uint32_t)(0x30000), 256, 0xFFFFFFFF,
+                                  &amp;crcResult);
+    <strong><span style="color: #000080">if</span></strong>(crcStatus == <strong><span style="color: #000080">true</span></strong>)
+    {
+        <i><span style="color: #008000">// This is the standard CRC result.</span></i>
+        crcResult = ~crcResult;
+    }
+
+    <i><span style="color: #008000">// Calculate the CRC of multiple but separate blocks. Return status is</span></i>
+    <i><span style="color: #008000">// ignored in this example. Note how the intermediate result is not</span></i>
+    <i><span style="color: #008000">// inverted but the final result is.</span></i>
+
+    <strong><span style="color: #000080">bool</span></strong> crcStatus;
+    uint32_t crcResult, tempResult;
+
+    DSUx_CRCCalculate((uint32_t)(0x30000), 256, 0xFFFFFFFF, &amp;tempResult);
+    DSUx_CRCCalculate((uint32_t)(0x31000), 256, tempResult, &amp;crcResult);
+
+    crcResult = ~crcResult;
+</pre></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="01651.html" target="topic">DSU Peripheral Library Help</a> &gt; <a href="01652.html" target="topic">Library Interface</a> &gt; a) Transaction Functions &gt; <a href="01663.html" target="topic">DSUx_CRCCalculate Function</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+Microchip 32-bit Chip Support Package</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="01662.html" target="topic">Previous</a> | <a href="01652.html" target="topic">Up</a> | <a href="01667.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DSUx_CRCCalculate@uint32_t@size_t@uint32_t@uint32_t * Topic Title: DSUx_CRCCalculate Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

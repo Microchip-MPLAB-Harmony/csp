@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>PIO_PortInputEnable Function</title>
+<title>MCPWM_ChannelPrimaryTriggerSet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="02839.html" target="topic">PIO Peripheral Library Help</a> &gt; <a href="02840.html" target="topic">Library Interface</a> &gt; c) Port Functions &gt; <a href="03001.html" target="topic">PIO_PortInputEnable Function</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="02968.html" target="topic">MCPWM Peripheral Library Help</a> &gt; <a href="02969.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="03001.html" target="topic">MCPWM_ChannelPrimaryTriggerSet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03000.html" target="topic">Previous</a> | <a href="02840.html" target="topic">Up</a> | <a href="03002.html" target="topic">Next</a></div>
+<a href="03000.html" target="topic">Previous</a> | <a href="02969.html" target="topic">Up</a> | <a href="03002.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pio_11004::PIO_PortInputEnable@PIO_PORT@uint32_t Topic Title: PIO_PortInputEnable Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: mcpwm_01477::MCPWM_ChannelPrimaryTriggerSet@MCPWM_CH_NUM@uint16_t Topic Title: MCPWM_ChannelPrimaryTriggerSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-PIO_PortInputEnable Function</div>
+MCPWM_ChannelPrimaryTriggerSet Function</div>
 </div>
 </div>
 
@@ -49,20 +49,20 @@ PIO_PortInputEnable Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function enables selected IO pins of a port as input.</p></div>
+This function writes primary trigger compare value to trigger ADC conversion</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">PIO_PortInputEnable</span></strong>(
-    <a href="02994.html" target="topic">PIO_PORT</a> <strong><span style="color: #000000">port</span></strong>, 
-    uint32_t <strong><span style="color: #000000">mask</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">MCPWM_ChannelPrimaryTriggerSet</span></strong>(
+    <a href="02978.html" target="topic">MCPWM_CH_NUM</a> <strong><span style="color: #000000">channel</span></strong>, 
+    uint16_t <strong><span style="color: #000000">trigger</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+<a href="03004.html" target="topic">MCPWM_Initialize</a>() function must have been called first for the associated instance. And associated channel must be running.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -79,19 +79,14 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-port&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+channel&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-One or more of the of the IO ports from the enum <a href="02994.html" target="topic">PIO_PORT</a>.&nbsp;</div></td></tr><tr>
+MCPWM channel number&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-mask&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+trigger&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-A 32 bit value in which positions of 0s and 1s decide which IO pins of the selected port will be setup as inputs.</p>
-<ul class="Element630">
-<li class="Element600">1's - Will set corresponding IO pins as input(s).</li>
-<li class="Element600">0's - Will cause the direction of the corresponding IO pins to remain unchanged.</li>
-</ul><p class="Element307">
-&nbsp;</div></td></tr></table></div></div>
+compare value which is compared with time base&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -99,21 +94,22 @@ Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+None</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+When trigger compare value matches the counter of primary time base, interrupt can be generated. And this trigger is used to synchronize an ADC conversion with the primary time base.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">    <i><span style="color: #008000">// Make PC5 and PC7 pins as input</span></i>
-    PIO_PortInputEnable(PIO_PORT_C, 0x00A0);</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">    <a href="03004.html" target="topic">MCPWM_Initialize</a>();
+    <a href="03011.html" target="topic">MCPWM_Start</a>();
+    MCPWM_ChannelPrimaryTriggerSet(MCPWM_CH_0, 0x25);</pre></div></div>
 </div>
 </div>
 </div>
@@ -121,7 +117,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="02839.html" target="topic">PIO Peripheral Library Help</a> &gt; <a href="02840.html" target="topic">Library Interface</a> &gt; c) Port Functions &gt; <a href="03001.html" target="topic">PIO_PortInputEnable Function</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="02968.html" target="topic">MCPWM Peripheral Library Help</a> &gt; <a href="02969.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="03001.html" target="topic">MCPWM_ChannelPrimaryTriggerSet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -129,13 +125,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03000.html" target="topic">Previous</a> | <a href="02840.html" target="topic">Up</a> | <a href="03002.html" target="topic">Next</a></div>
+<a href="03000.html" target="topic">Previous</a> | <a href="02969.html" target="topic">Up</a> | <a href="03002.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pio_11004::PIO_PortInputEnable@PIO_PORT@uint32_t Topic Title: PIO_PortInputEnable Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: mcpwm_01477::MCPWM_ChannelPrimaryTriggerSet@MCPWM_CH_NUM@uint16_t Topic Title: MCPWM_ChannelPrimaryTriggerSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

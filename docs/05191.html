@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCCx_PWMStart Function</title>
+<title>USARTx_DATA Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="05161.html" target="topic">TCC Peripheral Library Help</a> &gt; <a href="05162.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="05191.html" target="topic">TCCx_PWMStart Function</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="05102.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="05113.html" target="topic">USART</a> &gt; <a href="05117.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="05191.html" target="topic">USARTx_DATA Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05184.html" target="topic">Previous</a> | <a href="05162.html" target="topic">Up</a> | <a href="05192.html" target="topic">Next</a></div>
+<a href="05185.html" target="topic">Previous</a> | <a href="05117.html" target="topic">Up</a> | <a href="05198.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCCx_PWMStart Topic Title: TCCx_PWMStart Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_usart::USARTx_DATA Topic Title: USARTx_DATA Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCCx_PWMStart Function</div>
+USARTx_DATA Enumeration</div>
 </div>
 </div>
 
@@ -49,46 +49,78 @@ TCCx_PWMStart Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function enables the TCC and starts the counter of associated instance.</p></div>
+USART DATA&nbsp;</p>
+<p class="Element10">
+This may be used to check the width of data with the USART peripheral during serial setup.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">TCCx_PWMStart</span></strong>();</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">USART_DATA_5_BIT</span></strong>,
+  <strong><span style="color: #000000">USART_DATA_6_BIT</span></strong>,
+  <strong><span style="color: #000000">USART_DATA_7_BIT</span></strong>,
+  <strong><span style="color: #000000">USART_DATA_8_BIT</span></strong>,
+  <strong><span style="color: #000000">USART_DATA_9_BIT</span></strong>,
+  <strong><span style="color: #000000">USART_DATA_INVALID</span></strong>
+} USARTx_DATA;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-<a href="05187.html" target="topic">TCCx_PWMInitialize</a>() function must have been called first for the given instance.</p></div>
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+USART_DATA_5_BIT&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+5 bit data&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+USART_DATA_6_BIT&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+6 bit data&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+USART_DATA_7_BIT&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+7 bit data&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+USART_DATA_8_BIT&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+8 bit data&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+USART_DATA_9_BIT&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+9 bit data&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+USART_DATA_INVALID&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Force the compiler to reserve 32-bit memory for each enum&nbsp;</div></td></tr></table></div></div>
 </div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Due to synchronization, there is a delay from writing to register until peripheral is enabled. This function waits till sync operation is complete.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">TCC0_PWMInitialize();
-TCC0_PWMStart();</pre></div></div>
-</div>
+None.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="05161.html" target="topic">TCC Peripheral Library Help</a> &gt; <a href="05162.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="05191.html" target="topic">TCCx_PWMStart Function</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="05102.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="05113.html" target="topic">USART</a> &gt; <a href="05117.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="05191.html" target="topic">USARTx_DATA Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -96,13 +128,13 @@ TCC0_PWMStart();</pre></div></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05184.html" target="topic">Previous</a> | <a href="05162.html" target="topic">Up</a> | <a href="05192.html" target="topic">Next</a></div>
+<a href="05185.html" target="topic">Previous</a> | <a href="05117.html" target="topic">Up</a> | <a href="05198.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCCx_PWMStart Topic Title: TCCx_PWMStart Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_usart::USARTx_DATA Topic Title: USARTx_DATA Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>PIO_PIN Enumeration</title>
+<title>MCPWM_Stop Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="02848.html" target="topic">PIO Peripheral Library Help</a> &gt; <a href="02849.html" target="topic">Library Interface</a> &gt; <a href="02845.html" target="topic">d) Data Types and Constants</a> &gt; <a href="03012.html" target="topic">PIO_PIN Enumeration</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="02968.html" target="topic">MCPWM Peripheral Library Help</a> &gt; <a href="02969.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="03012.html" target="topic">MCPWM_Stop Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02845.html" target="topic">Previous</a> | <a href="02845.html" target="topic">Up</a> | <a href="03152.html" target="topic">Next</a></div>
+<a href="03011.html" target="topic">Previous</a> | <a href="02969.html" target="topic">Up</a> | <a href="03006.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pio_11264::PIO_PIN Topic Title: PIO_PIN Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: mcpwm_01477::MCPWM_Stop Topic Title: MCPWM_Stop Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-PIO_PIN Enumeration</div>
+MCPWM_Stop Function</div>
 </div>
 </div>
 
@@ -49,178 +49,47 @@ PIO_PIN Enumeration</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-PIO Port Pins&nbsp;</p>
-<p class="Element10">
-This enumeration identifies the available PIO port pins.</p></div>
+This function disables the MCPWM module.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
-  <strong><span style="color: #000000">PIO_PIN_PA0</span></strong> = 0,
-  <strong><span style="color: #000000">PIO_PIN_PA1</span></strong> = 1,
-  <strong><span style="color: #000000">PIO_PIN_PA2</span></strong> = 2,
-  <strong><span style="color: #000000">PIO_PIN_PA3</span></strong> = 3,
-  <strong><span style="color: #000000">PIO_PIN_PA4</span></strong> = 4,
-  <strong><span style="color: #000000">PIO_PIN_PA5</span></strong> = 5,
-  <strong><span style="color: #000000">PIO_PIN_PA6</span></strong> = 6,
-  <strong><span style="color: #000000">PIO_PIN_PA7</span></strong> = 7,
-  <strong><span style="color: #000000">PIO_PIN_PA8</span></strong> = 8,
-  <strong><span style="color: #000000">PIO_PIN_PA9</span></strong> = 9,
-  <strong><span style="color: #000000">PIO_PIN_PA10</span></strong> = 10,
-  <strong><span style="color: #000000">PIO_PIN_PA11</span></strong> = 11,
-  <strong><span style="color: #000000">PIO_PIN_PA12</span></strong> = 12,
-  <strong><span style="color: #000000">PIO_PIN_PA13</span></strong> = 13,
-  <strong><span style="color: #000000">PIO_PIN_PA14</span></strong> = 14,
-  <strong><span style="color: #000000">PIO_PIN_PA15</span></strong> = 15,
-  <strong><span style="color: #000000">PIO_PIN_PA16</span></strong> = 16,
-  <strong><span style="color: #000000">PIO_PIN_PA17</span></strong> = 17,
-  <strong><span style="color: #000000">PIO_PIN_PA18</span></strong> = 18,
-  <strong><span style="color: #000000">PIO_PIN_PA19</span></strong> = 19,
-  <strong><span style="color: #000000">PIO_PIN_PA20</span></strong> = 20,
-  <strong><span style="color: #000000">PIO_PIN_PA21</span></strong> = 21,
-  <strong><span style="color: #000000">PIO_PIN_PA22</span></strong> = 22,
-  <strong><span style="color: #000000">PIO_PIN_PA23</span></strong> = 23,
-  <strong><span style="color: #000000">PIO_PIN_PA24</span></strong> = 24,
-  <strong><span style="color: #000000">PIO_PIN_PA25</span></strong> = 25,
-  <strong><span style="color: #000000">PIO_PIN_PA26</span></strong> = 26,
-  <strong><span style="color: #000000">PIO_PIN_PA27</span></strong> = 27,
-  <strong><span style="color: #000000">PIO_PIN_PA28</span></strong> = 28,
-  <strong><span style="color: #000000">PIO_PIN_PA29</span></strong> = 29,
-  <strong><span style="color: #000000">PIO_PIN_PA30</span></strong> = 30,
-  <strong><span style="color: #000000">PIO_PIN_PA31</span></strong> = 31,
-  <strong><span style="color: #000000">PIO_PIN_PB0</span></strong> = 32,
-  <strong><span style="color: #000000">PIO_PIN_PB1</span></strong> = 33,
-  <strong><span style="color: #000000">PIO_PIN_PB2</span></strong> = 34,
-  <strong><span style="color: #000000">PIO_PIN_PB3</span></strong> = 35,
-  <strong><span style="color: #000000">PIO_PIN_PB4</span></strong> = 36,
-  <strong><span style="color: #000000">PIO_PIN_PB5</span></strong> = 37,
-  <strong><span style="color: #000000">PIO_PIN_PB6</span></strong> = 38,
-  <strong><span style="color: #000000">PIO_PIN_PB7</span></strong> = 39,
-  <strong><span style="color: #000000">PIO_PIN_PB8</span></strong> = 40,
-  <strong><span style="color: #000000">PIO_PIN_PB9</span></strong> = 41,
-  <strong><span style="color: #000000">PIO_PIN_PB10</span></strong> = 42,
-  <strong><span style="color: #000000">PIO_PIN_PB11</span></strong> = 43,
-  <strong><span style="color: #000000">PIO_PIN_PB12</span></strong> = 44,
-  <strong><span style="color: #000000">PIO_PIN_PB13</span></strong> = 45,
-  <strong><span style="color: #000000">PIO_PIN_PB14</span></strong> = 46,
-  <strong><span style="color: #000000">PIO_PIN_PB15</span></strong> = 47,
-  <strong><span style="color: #000000">PIO_PIN_PB16</span></strong> = 48,
-  <strong><span style="color: #000000">PIO_PIN_PB17</span></strong> = 49,
-  <strong><span style="color: #000000">PIO_PIN_PB18</span></strong> = 50,
-  <strong><span style="color: #000000">PIO_PIN_PB19</span></strong> = 51,
-  <strong><span style="color: #000000">PIO_PIN_PB20</span></strong> = 52,
-  <strong><span style="color: #000000">PIO_PIN_PB21</span></strong> = 53,
-  <strong><span style="color: #000000">PIO_PIN_PB22</span></strong> = 54,
-  <strong><span style="color: #000000">PIO_PIN_PB23</span></strong> = 55,
-  <strong><span style="color: #000000">PIO_PIN_PB24</span></strong> = 56,
-  <strong><span style="color: #000000">PIO_PIN_PB25</span></strong> = 57,
-  <strong><span style="color: #000000">PIO_PIN_PB26</span></strong> = 58,
-  <strong><span style="color: #000000">PIO_PIN_PB27</span></strong> = 59,
-  <strong><span style="color: #000000">PIO_PIN_PB28</span></strong> = 60,
-  <strong><span style="color: #000000">PIO_PIN_PB29</span></strong> = 61,
-  <strong><span style="color: #000000">PIO_PIN_PB30</span></strong> = 62,
-  <strong><span style="color: #000000">PIO_PIN_PB31</span></strong> = 63,
-  <strong><span style="color: #000000">PIO_PIN_PC0</span></strong> = 64,
-  <strong><span style="color: #000000">PIO_PIN_PC1</span></strong> = 65,
-  <strong><span style="color: #000000">PIO_PIN_PC2</span></strong> = 66,
-  <strong><span style="color: #000000">PIO_PIN_PC3</span></strong> = 67,
-  <strong><span style="color: #000000">PIO_PIN_PC4</span></strong> = 68,
-  <strong><span style="color: #000000">PIO_PIN_PC5</span></strong> = 69,
-  <strong><span style="color: #000000">PIO_PIN_PC6</span></strong> = 70,
-  <strong><span style="color: #000000">PIO_PIN_PC7</span></strong> = 71,
-  <strong><span style="color: #000000">PIO_PIN_PC8</span></strong> = 72,
-  <strong><span style="color: #000000">PIO_PIN_PC9</span></strong> = 73,
-  <strong><span style="color: #000000">PIO_PIN_PC10</span></strong> = 74,
-  <strong><span style="color: #000000">PIO_PIN_PC11</span></strong> = 75,
-  <strong><span style="color: #000000">PIO_PIN_PC12</span></strong> = 76,
-  <strong><span style="color: #000000">PIO_PIN_PC13</span></strong> = 77,
-  <strong><span style="color: #000000">PIO_PIN_PC14</span></strong> = 78,
-  <strong><span style="color: #000000">PIO_PIN_PC15</span></strong> = 79,
-  <strong><span style="color: #000000">PIO_PIN_PC16</span></strong> = 80,
-  <strong><span style="color: #000000">PIO_PIN_PC17</span></strong> = 81,
-  <strong><span style="color: #000000">PIO_PIN_PC18</span></strong> = 82,
-  <strong><span style="color: #000000">PIO_PIN_PC19</span></strong> = 83,
-  <strong><span style="color: #000000">PIO_PIN_PC20</span></strong> = 84,
-  <strong><span style="color: #000000">PIO_PIN_PC21</span></strong> = 85,
-  <strong><span style="color: #000000">PIO_PIN_PC22</span></strong> = 86,
-  <strong><span style="color: #000000">PIO_PIN_PC23</span></strong> = 87,
-  <strong><span style="color: #000000">PIO_PIN_PC24</span></strong> = 88,
-  <strong><span style="color: #000000">PIO_PIN_PC25</span></strong> = 89,
-  <strong><span style="color: #000000">PIO_PIN_PC26</span></strong> = 90,
-  <strong><span style="color: #000000">PIO_PIN_PC27</span></strong> = 91,
-  <strong><span style="color: #000000">PIO_PIN_PC28</span></strong> = 92,
-  <strong><span style="color: #000000">PIO_PIN_PC29</span></strong> = 93,
-  <strong><span style="color: #000000">PIO_PIN_PC30</span></strong> = 94,
-  <strong><span style="color: #000000">PIO_PIN_PC31</span></strong> = 95,
-  <strong><span style="color: #000000">PIO_PIN_PD0</span></strong> = 96,
-  <strong><span style="color: #000000">PIO_PIN_PD1</span></strong> = 97,
-  <strong><span style="color: #000000">PIO_PIN_PD2</span></strong> = 98,
-  <strong><span style="color: #000000">PIO_PIN_PD3</span></strong> = 99,
-  <strong><span style="color: #000000">PIO_PIN_PD4</span></strong> = 100,
-  <strong><span style="color: #000000">PIO_PIN_PD5</span></strong> = 101,
-  <strong><span style="color: #000000">PIO_PIN_PD6</span></strong> = 102,
-  <strong><span style="color: #000000">PIO_PIN_PD7</span></strong> = 103,
-  <strong><span style="color: #000000">PIO_PIN_PD8</span></strong> = 104,
-  <strong><span style="color: #000000">PIO_PIN_PD9</span></strong> = 105,
-  <strong><span style="color: #000000">PIO_PIN_PD10</span></strong> = 106,
-  <strong><span style="color: #000000">PIO_PIN_PD11</span></strong> = 107,
-  <strong><span style="color: #000000">PIO_PIN_PD12</span></strong> = 108,
-  <strong><span style="color: #000000">PIO_PIN_PD13</span></strong> = 109,
-  <strong><span style="color: #000000">PIO_PIN_PD14</span></strong> = 110,
-  <strong><span style="color: #000000">PIO_PIN_PD15</span></strong> = 111,
-  <strong><span style="color: #000000">PIO_PIN_PD16</span></strong> = 112,
-  <strong><span style="color: #000000">PIO_PIN_PD17</span></strong> = 113,
-  <strong><span style="color: #000000">PIO_PIN_PD18</span></strong> = 114,
-  <strong><span style="color: #000000">PIO_PIN_PD19</span></strong> = 115,
-  <strong><span style="color: #000000">PIO_PIN_PD20</span></strong> = 116,
-  <strong><span style="color: #000000">PIO_PIN_PD21</span></strong> = 117,
-  <strong><span style="color: #000000">PIO_PIN_PD22</span></strong> = 118,
-  <strong><span style="color: #000000">PIO_PIN_PD23</span></strong> = 119,
-  <strong><span style="color: #000000">PIO_PIN_PD24</span></strong> = 120,
-  <strong><span style="color: #000000">PIO_PIN_PD25</span></strong> = 121,
-  <strong><span style="color: #000000">PIO_PIN_PD26</span></strong> = 122,
-  <strong><span style="color: #000000">PIO_PIN_PD27</span></strong> = 123,
-  <strong><span style="color: #000000">PIO_PIN_PD28</span></strong> = 124,
-  <strong><span style="color: #000000">PIO_PIN_PD29</span></strong> = 125,
-  <strong><span style="color: #000000">PIO_PIN_PD30</span></strong> = 126,
-  <strong><span style="color: #000000">PIO_PIN_PD31</span></strong> = 127,
-  <strong><span style="color: #000000">PIO_PIN_NONE</span></strong> = -1
-} PIO_PIN;</pre></div></div>
-<a name="4D656D62657273"></a><div class="Element14">
-Members</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">MCPWM_Stop</span></strong>();</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element272">
-<div class="TableDiv">
-<table cellspacing="0" class="Table3">
-<tr>
-<td class="Element260" valign="top" width="35%">
-<div class="Element261">
-Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
-<div class="Element265">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-PIO_PIN_NONE = -1&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-This element should not be used in any of the PIO APIs. It will be used by other modules or application to denote that none of the PIO Pin is used&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+<a href="03004.html" target="topic">MCPWM_Initialize</a>() function must have been called first for the associated instance.</p></div>
 </div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The caller should not rely on the specific numbers assigned to any of these values as they may change from one processor to the next.&nbsp;</p>
-<p class="Element10">
-Not all pins are available on all devices. Refer to the specific device data sheet to determine which pins are supported.</p></div>
+None</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">    <a href="03004.html" target="topic">MCPWM_Initialize</a>();
+    <a href="03011.html" target="topic">MCPWM_Start</a>();
+    MCPWM_Stop();</pre></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="02848.html" target="topic">PIO Peripheral Library Help</a> &gt; <a href="02849.html" target="topic">Library Interface</a> &gt; <a href="02845.html" target="topic">d) Data Types and Constants</a> &gt; <a href="03012.html" target="topic">PIO_PIN Enumeration</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="02968.html" target="topic">MCPWM Peripheral Library Help</a> &gt; <a href="02969.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="03012.html" target="topic">MCPWM_Stop Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -228,13 +97,13 @@ Not all pins are available on all devices. Refer to the specific device data she
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02845.html" target="topic">Previous</a> | <a href="02845.html" target="topic">Up</a> | <a href="03152.html" target="topic">Next</a></div>
+<a href="03011.html" target="topic">Previous</a> | <a href="02969.html" target="topic">Up</a> | <a href="03006.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pio_11264::PIO_PIN Topic Title: PIO_PIN Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: mcpwm_01477::MCPWM_Stop Topic Title: MCPWM_Stop Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

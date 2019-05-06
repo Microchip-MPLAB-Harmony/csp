@@ -1,0 +1,207 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Using the Library</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '00875.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="00870.html" target="topic">CAN Peripheral Library Help</a> &gt; <a href="00875.html" target="topic">Using the Library</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+Microchip 32-bit Chip Support Package</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="00866.html" target="topic">Previous</a> | <a href="00870.html" target="topic">Up</a> | <a href="00871.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CAN 6019 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+Using the Library</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The CAN library supports the normal mode. The CAN Plib can transfer message in a polling or an interrupt mode.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<strong>CAN normal operation with polling</strong>&nbsp;</p>
+<p class="Element10">
+The following example shows the CAN normal mode operation with polling implementation.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+int main(void)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+while (1)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+/* Check if there is a receive MB1 New Message */&nbsp;</p>
+<p class="Element10">
+if (CAN1_InterruptGet(CAN_INTERRUPT_MB1_MASK))&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+/* Receive FIFO 0 New Message */&nbsp;</p>
+<p class="Element10">
+CAN1_MessageReceive(&amp;rx_messageID, &amp;rx_messageLength, rx_message, CAN_MAILBOX_DATA_FRAME_RX_OVERWRITE);&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+/* Transmit back received Message */&nbsp;</p>
+<p class="Element10">
+CAN1_MessageTransmit(messageID, messageLength, message, CAN_MAILBOX_DATA_FRAME_TX);&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<strong>CAN normal operation with interrupt</strong>&nbsp;</p>
+<p class="Element10">
+The following example shows the CAN normal mode operation with interrupt implementation.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+void APP_CAN_Callback(uintptr_t context)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+xferContext = context;&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+/* Check CAN Status */&nbsp;</p>
+<p class="Element10">
+status = CAN1_ErrorGet();&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+if ((status &amp; (CAN_ERROR_BOFF | CAN_ERROR_CERR |&nbsp;</p>
+<p class="Element10">
+CAN_ERROR_SERR | CAN_ERROR_AERR |&nbsp;</p>
+<p class="Element10">
+CAN_ERROR_FERR | CAN_ERROR_BERR)) == CAN_ERROR_NONE)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+switch ((APP_STATES)context)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+case APP_STATE_CAN_RECEIVE:&nbsp;</p>
+<p class="Element10">
+case APP_STATE_CAN_TRANSMIT:&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+state = APP_STATE_CAN_XFER_SUCCESSFUL;&nbsp;</p>
+<p class="Element10">
+break;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+default:&nbsp;</p>
+<p class="Element10">
+break;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+else&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+state = APP_STATE_CAN_XFER_ERROR;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+int main(void)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+while(1)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+/* Transmitting Message */&nbsp;</p>
+<p class="Element10">
+CAN1_CallbackRegister( APP_CAN_Callback, (uintptr_t)APP_STATE_CAN_TRANSMIT );&nbsp;</p>
+<p class="Element10">
+CAN1_MessageTransmit(messageID, messageLength, message, CAN_MAILBOX_DATA_FRAME_TX);&nbsp;</p>
+<p class="Element10">
+.....&nbsp;</p>
+<p class="Element10">
+/* Receiving Message */&nbsp;</p>
+<p class="Element10">
+CAN1_CallbackRegister( APP_CAN_Callback, (uintptr_t)APP_STATE_CAN_RECEIVE );&nbsp;</p>
+<p class="Element10">
+CAN1_MessageReceive(&amp;rx_messageID, &amp;rx_messageLength, rx_message, CAN_MAILBOX_DATA_FRAME_RX_OVERWRITE);</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="00870.html" target="topic">CAN Peripheral Library Help</a> &gt; <a href="00875.html" target="topic">Using the Library</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+Microchip 32-bit Chip Support Package</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="00866.html" target="topic">Previous</a> | <a href="00870.html" target="topic">Up</a> | <a href="00871.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CAN 6019 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

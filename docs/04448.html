@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>SERCOMx_USART_ReadCountGet Function</title>
+<title>Running The Application</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="04369.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="04380.html" target="topic">USART</a> &gt; <a href="04384.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="04448.html" target="topic">SERCOMx_USART_ReadCountGet Function</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="04443.html" target="topic">RSWDT Applications</a> &gt; <a href="04444.html" target="topic">rswdt_timeout</a> &gt; <a href="04448.html" target="topic">Running The Application</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04442.html" target="topic">Previous</a> | <a href="04384.html" target="topic">Up</a> | <a href="04457.html" target="topic">Next</a></div>
+<a href="04446.html" target="topic">Previous</a> | <a href="04444.html" target="topic">Up</a> | <a href="04468.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_usart::SERCOMx_USART_ReadCountGet Topic Title: SERCOMx_USART_ReadCountGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RSWDT rswdt_timeout Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-SERCOMx_USART_ReadCountGet Function</div>
+Running The Application</div>
 </div>
 </div>
 
@@ -48,57 +48,65 @@ SERCOMx_USART_ReadCountGet Function</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
-<p class="Element10">
-This function gets the count of processed bytes for an on-going or last completed USART Read operation. This function is only available in interrupt non-blocking mode. This function can be used to track the progress of the non-blocking read operation. In case of an error, this function can be used to track the number of bytes that were received before the error occurred.</p></div>
-</div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100">size_t <strong><span style="color: #000000">SERCOMx_USART_ReadCountGet</span></strong>();</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-<a href="04444.html" target="topic">SERCOMx_USART_Initialize</a> must have been called for the associated USART instance.</p></div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-Returns count of bytes completed/processed to the current Receive buffer.</p></div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-This function resets the read count every time a new transfer is submitted.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">
-<strong><span style="color: #000080"># define</span></strong> COUNT_EXPECTED 10
 
-size_t count;
+<ol class="Element630">
+<li value="1" class="Element600">Open the Terminal application (Ex.:Tera term) on the computer.</li>
+<li value="2" class="Element600">Connect to the EDBG Virtual COM port and configure the serial settings as follows:
+<ul class="Element631">
+<li class="Element601">Baud : 115200</li>
+<li class="Element601">Data : 8 Bits</li>
+<li class="Element601">Parity : None</li>
+<li class="Element601">Stop : 1 Bit</li>
+<li class="Element601">Flow Control : None</li>
+</ul></li>
+<li value="3" class="Element600">Build and Program the application using the MPLAB X IDE.</li>
+<li value="4" class="Element600">The console displays the following message and the LED blinks continuously</li>
+</ol><p class="Element10" style="text-align: center;">
+<img src="rswdt_timeout_output1.png" border="0" alt="" title=""></p><p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+The following table provides the Switch and the LED name. </p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="71%">
+<div class="Element66">
+Kit Name&nbsp;</div></td><td class="Element65" valign="top" width="15%">
+<div class="Element66">
+Switch Name&nbsp;</div></td><td class="Element65" valign="top" width="14%">
+<div class="Element66">
+LED Name&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="71%">
+<div class="Element68">
+SAM E70 Xplained Ultra Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="15%">
+<div class="Element68">
+SW0&nbsp;</div></td><td class="Element67" valign="top" width="14%">
+<div class="Element68">
+LED3&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="71%">
+<div class="Element68">
+SAM V71 Xplained Ultra Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="15%">
+<div class="Element68">
+SW0&nbsp;</div></td><td class="Element67" valign="top" width="14%">
+<div class="Element68">
+LED0&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+&nbsp;</p>
 
-count = SERCOM0_USART_ReadCountGet();
-
-<strong><span style="color: #000080">if</span></strong>(COUNT_EXPECTED &gt; count)
-{
-    <i><span style="color: #008000">//More bytes are expected, wait</span></i>
-}
-</pre></div></div>
-</div>
+<ol class="Element630">
+<li value="5" class="Element600">Press the switch to put the system in a deadlock. The LED should stop blinking and the console should print the following message:</li>
+</ol><p class="Element10" style="text-align: center;">
+<img src="rswdt_timeout_output2.png" border="0" alt="" title=""></p>
+<ol class="Element630">
+<li value="6" class="Element600">The RSWDT will reset the device in four seconds and the demonstration should restart.</li>
+</ol></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="04369.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="04380.html" target="topic">USART</a> &gt; <a href="04384.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="04448.html" target="topic">SERCOMx_USART_ReadCountGet Function</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="04443.html" target="topic">RSWDT Applications</a> &gt; <a href="04444.html" target="topic">rswdt_timeout</a> &gt; <a href="04448.html" target="topic">Running The Application</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -106,13 +114,13 @@ count = SERCOM0_USART_ReadCountGet();
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04442.html" target="topic">Previous</a> | <a href="04384.html" target="topic">Up</a> | <a href="04457.html" target="topic">Next</a></div>
+<a href="04446.html" target="topic">Previous</a> | <a href="04444.html" target="topic">Up</a> | <a href="04468.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_usart::SERCOMx_USART_ReadCountGet Topic Title: SERCOMx_USART_ReadCountGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RSWDT rswdt_timeout Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

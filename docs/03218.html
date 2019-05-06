@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>SAM A5D2 Peripheral Libraries</title>
+<title>NVMCTRL_SmartEepromSectorReallocate Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03218.html" target="topic">SAM A5D2 Peripheral Libraries</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="03144.html" target="topic">NVMCTRL Peripheral Library Help</a> &gt; <a href="03145.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="03218.html" target="topic">NVMCTRL_SmartEepromSectorReallocate Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03216.html" target="topic">Previous</a> | <a href="02834.html" target="topic">Up</a> | <a href="03215.html" target="topic">Next</a></div>
+<a href="03217.html" target="topic">Previous</a> | <a href="03145.html" target="topic">Up</a> | <a href="03208.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PLIB SAM A5D2 Topic Title: SAM A5D2 Peripheral Libraries)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nvmctrl_u2409::NVMCTRL_SmartEepromSectorReallocate Topic Title: NVMCTRL_SmartEepromSectorReallocate Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-SAM A5D2 Peripheral Libraries</div>
+NVMCTRL_SmartEepromSectorReallocate Function</div>
 </div>
 </div>
 
@@ -49,102 +49,42 @@ SAM A5D2 Peripheral Libraries</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The following Table lists all the Peripheral Libraries for the SAM A5D2 Family.&nbsp;</p>
+When automatic page reallocation is disabled, the application code has to check whether the active sector is full, before issuing a write. if the sector is full, it must call the API NVMCTRL_SmartEepromSectorReallocate to trigger a sector reallocation.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">NVMCTRL_SmartEepromSectorReallocate</span></strong>();</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-&nbsp;</p><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element65" valign="top" width="100%">
-<div class="Element66">
-SAM A5D2 Peripheral Libraries&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="00080.html" target="topic">ACC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="00103.html" target="topic">ADC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="00551.html" target="topic">AIC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="00726.html" target="topic">Clock (SAM A5D2) Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="01697.html" target="topic">FLEXCOM Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="02172.html" target="topic">I2SC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="02213.html" target="topic">L2CC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="02220.html" target="topic">LCDC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="02362.html" target="topic">MATRIX Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="02370.html" target="topic">MCAN Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="02486.html" target="topic">MMU Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="02848.html" target="topic">PIO Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="03171.html" target="topic">PIT Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="03433.html" target="topic">PWM Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="03495.html" target="topic">QSPI Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="03642.html" target="topic">RSTC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="03742.html" target="topic">RTC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="04108.html" target="topic">RXLP Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="04233.html" target="topic">SDMMC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="04487.html" target="topic">SHDWC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="04505.html" target="topic">SMC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="04531.html" target="topic">SPI Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="04655.html" target="topic">SSC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="04809.html" target="topic">TC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="05303.html" target="topic">TRNG Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="05334.html" target="topic">TWIHS Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="05381.html" target="topic">UART Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="05576.html" target="topic">WDT Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="05634.html" target="topic">XDMAC Peripheral Library Help</a>&nbsp;</div></td></tr></table></div></div>
+None.</p></div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Performs sector reallocation for the SmartEEPROM.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">
+<strong><span style="color: #000080">if</span></strong> (<a href="03214.html" target="topic">NVMCTRL_SmartEEPROM_IsActiveSectorFull</a>())
+{
+    NVMCTRL_SmartEepromSectorReallocate();
+}
+</pre></div></div>
 </div>
 </div>
 </div>
@@ -152,7 +92,7 @@ SAM A5D2 Peripheral Libraries&nbsp;</div></td></tr><tr>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03218.html" target="topic">SAM A5D2 Peripheral Libraries</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="03144.html" target="topic">NVMCTRL Peripheral Library Help</a> &gt; <a href="03145.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="03218.html" target="topic">NVMCTRL_SmartEepromSectorReallocate Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -160,13 +100,13 @@ SAM A5D2 Peripheral Libraries&nbsp;</div></td></tr><tr>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03216.html" target="topic">Previous</a> | <a href="02834.html" target="topic">Up</a> | <a href="03215.html" target="topic">Next</a></div>
+<a href="03217.html" target="topic">Previous</a> | <a href="03145.html" target="topic">Up</a> | <a href="03208.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PLIB SAM A5D2 Topic Title: SAM A5D2 Peripheral Libraries)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nvmctrl_u2409::NVMCTRL_SmartEepromSectorReallocate Topic Title: NVMCTRL_SmartEepromSectorReallocate Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

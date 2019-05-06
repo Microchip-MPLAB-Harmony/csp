@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Hardware Setup</title>
+<title>ADC_INTERRUPT_MASK Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00556.html" target="topic">Applications Help</a> &gt; <a href="00488.html" target="topic">AFEC Applications</a> &gt; <a href="00486.html" target="topic">afec_polled_mode</a> &gt; <a href="00478.html" target="topic">Hardware Setup</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="00103.html" target="topic">ADC Peripheral Library Help</a> &gt; <a href="00104.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="00478.html" target="topic">ADC_INTERRUPT_MASK Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00479.html" target="topic">Previous</a> | <a href="00486.html" target="topic">Up</a> | <a href="00480.html" target="topic">Next</a></div>
+<a href="00453.html" target="topic">Previous</a> | <a href="00104.html" target="topic">Up</a> | <a href="00653.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: AFEC afec_polled_mode Hardware Setup Topic Title: Hardware Setup)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: adc_44073::ADC_INTERRUPT_MASK Topic Title: ADC_INTERRUPT_MASK Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Hardware Setup</div>
+ADC_INTERRUPT_MASK Enumeration</div>
 </div>
 </div>
 
@@ -48,50 +48,41 @@ Hardware Setup</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
-
-<ol class="Element630">
-<li value="1" class="Element600"><strong>Project sam_e70_xult.X</strong>
-<ul class="Element631">
-<li class="Element601"><strong>Hardware Used</strong>
-<ul class="Element632">
-<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/DevelopmentTools/ProductDetails/PartNO/DM320113');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM E70 Xplained Ultra Evaluation Kit</a></li>
-</ul></li>
-<li class="Element601"><strong>Hardware Setup</strong>
-<ul class="Element632">
-<li class="Element602">An analog input (AD0) is feed from the DAC output. DAC output is incremented by 0.1 V on Switch (SW0) press</li>
-<li class="Element602">An analog input &quot;AD0&quot; is mapped to Port Pin &quot;PB1&quot; that is routed to &quot;Pin 14 of the EXT1 header&quot;</li>
-<li class="Element602">The DAC output &quot;DAC0&quot; is mapped to Port Pin &quot;PB13&quot; that is routed to &quot;Pin 5 of the J502 header&quot;</li>
-<li class="Element602">Use a jumper wire to connect &quot;Pin 14 of the EXT1&quot; to &quot;Pin 5 of the J502&quot;</li>
-<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
-</ul></li>
-</ul></li>
-</ol><p class="Element10">
-&nbsp;</p>
-
-<ol class="Element630">
-<li value="2" class="Element600"><strong>Project sam_v71_xult.X</strong>
-<ul class="Element631">
-<li class="Element601"><strong>Hardware Used</strong>
-<ul class="Element632">
-<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/atsamv71-xult');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM V71 Xplained Ultra Evaluation Kit</a></li>
-</ul></li>
-<li class="Element601"><strong>Hardware Setup</strong>
-<ul class="Element632">
-<li class="Element602">An analog input (AD0) is feed from the DAC output. The DAC output is incremented by 0.1 V on Switch (SW0) press</li>
-<li class="Element602">An analog input &quot;AD0&quot; is mapped to Port Pin &quot;PB1&quot; that is routed to &quot;Pin 14 of the EXT1 header&quot;</li>
-<li class="Element602">The DAC output &quot;DAC0&quot; is mapped to Port Pin &quot;PB13&quot; that is routed to &quot;Pin 5 of the J504 header&quot;</li>
-<li class="Element602">Use a jumper wire to connect &quot;Pin 14 of the EXT1&quot; to &quot;Pin 5 of the J504&quot;</li>
-<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
-</ul></li>
-</ul></li>
-</ol></div>
+<p class="Element10">
+Interrupt sources number&nbsp;</p>
+<p class="Element10">
+This enumeration identifies ADC channel end of conversion (EOC) and Comparison event interrupt sources number. This may be ORed together to enable/disable multiple interrupts.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">ADC_INTERRUPT_EOC_0_MASK</span></strong> = (1U &lt;&lt; 0U),
+  <strong><span style="color: #000000">ADC_INTERRUPT_EOC_1_MASK</span></strong> = (1U &lt;&lt; 1U),
+  <strong><span style="color: #000000">ADC_INTERRUPT_EOC_2_MASK</span></strong> = (1U &lt;&lt; 2U),
+  <strong><span style="color: #000000">ADC_INTERRUPT_EOC_3_MASK</span></strong> = (1U &lt;&lt; 3U),
+  <strong><span style="color: #000000">ADC_INTERRUPT_EOC_4_MASK</span></strong> = (1U &lt;&lt; 4U),
+  <strong><span style="color: #000000">ADC_INTERRUPT_EOC_5_MASK</span></strong> = (1U &lt;&lt; 5U),
+  <strong><span style="color: #000000">ADC_INTERRUPT_EOC_6_MASK</span></strong> = (1U &lt;&lt; 6U),
+  <strong><span style="color: #000000">ADC_INTERRUPT_EOC_7_MASK</span></strong> = (1U &lt;&lt; 7U),
+  <strong><span style="color: #000000">ADC_INTERRUPT_EOC_8_MASK</span></strong> = (1U &lt;&lt; 8U),
+  <strong><span style="color: #000000">ADC_INTERRUPT_EOC_9_MASK</span></strong> = (1U &lt;&lt; 9U),
+  <strong><span style="color: #000000">ADC_INTERRUPT_EOC_10_MASK</span></strong> = (1U &lt;&lt; 10U),
+  <strong><span style="color: #000000">ADC_INTERRUPT_EOC_11_MASK</span></strong> = (1U &lt;&lt; 11U),
+  <strong><span style="color: #000000">ADC_INTERRUPT_COMPE_MASK</span></strong> = (1U &lt;&lt; 26U)
+} ADC_INTERRUPT_MASK;</pre></div></div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00556.html" target="topic">Applications Help</a> &gt; <a href="00488.html" target="topic">AFEC Applications</a> &gt; <a href="00486.html" target="topic">afec_polled_mode</a> &gt; <a href="00478.html" target="topic">Hardware Setup</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="00103.html" target="topic">ADC Peripheral Library Help</a> &gt; <a href="00104.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="00478.html" target="topic">ADC_INTERRUPT_MASK Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -99,13 +90,13 @@ Hardware Setup</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00479.html" target="topic">Previous</a> | <a href="00486.html" target="topic">Up</a> | <a href="00480.html" target="topic">Next</a></div>
+<a href="00453.html" target="topic">Previous</a> | <a href="00104.html" target="topic">Up</a> | <a href="00653.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: AFEC afec_polled_mode Hardware Setup Topic Title: Hardware Setup)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: adc_44073::ADC_INTERRUPT_MASK Topic Title: ADC_INTERRUPT_MASK Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

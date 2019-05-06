@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Using the Library</title>
+<title>ICAPx_Initialize Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="02686.html" target="topic">PAC Peripheral Library Help</a> &gt; <a href="02690.html" target="topic">Using the Library</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="02666.html" target="topic">ICAP Peripheral Library Help</a> &gt; <a href="02667.html" target="topic">Library Interface</a> &gt; a) Initialization Function &gt; <a href="02690.html" target="topic">ICAPx_Initialize Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02682.html" target="topic">Previous</a> | <a href="02686.html" target="topic">Up</a> | <a href="02687.html" target="topic">Next</a></div>
+<a href="02667.html" target="topic">Previous</a> | <a href="02667.html" target="topic">Up</a> | <a href="02683.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PAC U2120 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: icap_00740::ICAPx_Initialize Topic Title: ICAPx_Initialize Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Using the Library</div>
+ICAPx_Initialize Function</div>
 </div>
 </div>
 
@@ -49,32 +49,45 @@ Using the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The Peripheral Access Controller (PAC) provides interface to protect write access to a peripheral's registers to minimize risk of unintended configuration changes as a result of run-away code. The Following operations are provided to manage the peripheral access.</p>
-<ul class="Element630">
-<li class="Element600">Clear Protection: This operation will remove the write access protection for the selected peripheral to enable write access</li>
-<li class="Element600">Set Protection: This operation will set the write access protection for the selected peripheral to disable write access.</li>
-<li class="Element600">Set and Lock Protection: This operation will set the write access protection for the selected peripheral to disable write access and locks the access rights of the selected peripheral registers. The write access protection will only be cleared by a hardware reset.</li>
-</ul><p class="Element10">
-&nbsp;</p>
+This function initializes the ICAPx peripheral with user input from the configurator.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">ICAPx_Initialize</span></strong>();</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-In an application where write protection is also modified in main and interrupt context, the interrupts must be disabled so that the interrupt can not happen while the main application manipulate the write protection status.&nbsp;</p>
+MHC GUI should be configured with the right values.</p></div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-&nbsp;</p>
+None.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-The registered callback function will be called when Peripheral Access Error occurs due to the following:</p>
-<ul class="Element630">
-<li class="Element600">If a peripheral is write protected and if a write access is attempted, data will not be written and peripheral returns an access error.</li>
-<li class="Element600">Attempting to set protection for the peripheral that is already set or attempting to clear protection for the peripheral that is already cleared. This is a safety feature to ensure correct program execution sequence to clear and set the protection.</li>
-<li class="Element600">Access to an unimplemented register within the module.</li>
-<li class="Element600">For write-synchronized registers an error will be reported if the register is written while a synchronization is ongoing.</li>
-</ul></div>
+None.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">ICAP1_Initialize();</pre></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="02686.html" target="topic">PAC Peripheral Library Help</a> &gt; <a href="02690.html" target="topic">Using the Library</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="02666.html" target="topic">ICAP Peripheral Library Help</a> &gt; <a href="02667.html" target="topic">Library Interface</a> &gt; a) Initialization Function &gt; <a href="02690.html" target="topic">ICAPx_Initialize Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -82,13 +95,13 @@ The registered callback function will be called when Peripheral Access Error occ
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02682.html" target="topic">Previous</a> | <a href="02686.html" target="topic">Up</a> | <a href="02687.html" target="topic">Next</a></div>
+<a href="02667.html" target="topic">Previous</a> | <a href="02667.html" target="topic">Up</a> | <a href="02683.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PAC U2120 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: icap_00740::ICAPx_Initialize Topic Title: ICAPx_Initialize Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

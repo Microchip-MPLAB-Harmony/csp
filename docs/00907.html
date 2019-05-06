@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Building The Application</title>
+<title>CAN_INTERRUPT_MASK Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00556.html" target="topic">Applications Help</a> &gt; <a href="00902.html" target="topic">DAC Applications</a> &gt; <a href="00901.html" target="topic">dac_wav_gen_dma</a> &gt; <a href="00907.html" target="topic">Building The Application</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="00870.html" target="topic">CAN Peripheral Library Help</a> &gt; <a href="00871.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="00907.html" target="topic">CAN_INTERRUPT_MASK Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00901.html" target="topic">Previous</a> | <a href="00901.html" target="topic">Up</a> | <a href="00909.html" target="topic">Next</a></div>
+<a href="00899.html" target="topic">Previous</a> | <a href="00871.html" target="topic">Up</a> | <a href="00929.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DAC dac_wav_gen_dma Building The Application Topic Title: Building The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: can_6019::CAN_INTERRUPT_MASK Topic Title: CAN_INTERRUPT_MASK Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Building The Application</div>
+CAN_INTERRUPT_MASK Enumeration</div>
 </div>
 </div>
 
@@ -49,50 +49,48 @@ Building The Application</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The parent folder for all the MPLAB X projects for this application is given below: </p><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element65" valign="top" width="30%">
-<div class="Element66">
-Application Path&nbsp;</div></td><td class="Element65" valign="top" width="70%">
-<div class="Element66">
-csp/apps/dac/dac_wav_gen_dma/firmware&nbsp;</div></td></tr></table></div></div>
+CAN Interrupt Mask&nbsp;</p>
 <p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-To build the application, refer to the following table and open the appropriate project file in the MPLAB X IDE. </p><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element65" valign="top" width="25%">
-<div class="Element66">
-Project Name&nbsp;</div></td><td class="Element65" valign="top" width="75%">
-<div class="Element66">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="25%">
-<div class="Element68">
-sam_c21n_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
-<div class="Element68">
-SAM C21N Xplained Pro Evaluation Kit&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="25%">
-<div class="Element68">
-sam_d21_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
-<div class="Element68">
-SAM D21 Xplained Pro Evaluation Kit&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="25%">
-<div class="Element68">
-sam_e54_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
-<div class="Element68">
-SAM E54 Xplained Pro Evaluation Kit&nbsp;</div></td></tr></table></div></div>
+This data type defines the CAN Interrupt sources number.</p></div>
 </div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">CAN_INTERRUPT_MB0_MASK</span></strong> = (1U &lt;&lt; 0U),
+  <strong><span style="color: #000000">CAN_INTERRUPT_MB1_MASK</span></strong> = (1U &lt;&lt; 1U),
+  <strong><span style="color: #000000">CAN_INTERRUPT_MB2_MASK</span></strong> = (1U &lt;&lt; 2U),
+  <strong><span style="color: #000000">CAN_INTERRUPT_MB3_MASK</span></strong> = (1U &lt;&lt; 3U),
+  <strong><span style="color: #000000">CAN_INTERRUPT_MB4_MASK</span></strong> = (1U &lt;&lt; 4U),
+  <strong><span style="color: #000000">CAN_INTERRUPT_MB5_MASK</span></strong> = (1U &lt;&lt; 5U),
+  <strong><span style="color: #000000">CAN_INTERRUPT_MB6_MASK</span></strong> = (1U &lt;&lt; 6U),
+  <strong><span style="color: #000000">CAN_INTERRUPT_MB7_MASK</span></strong> = (1U &lt;&lt; 7U),
+  <strong><span style="color: #000000">CAN_INTERRUPT_ERRA_MASK</span></strong> = (1U &lt;&lt; 16U),
+  <strong><span style="color: #000000">CAN_INTERRUPT_WARN_MASK</span></strong> = (1U &lt;&lt; 17U),
+  <strong><span style="color: #000000">CAN_INTERRUPT_ERRP_MASK</span></strong> = (1U &lt;&lt; 18U),
+  <strong><span style="color: #000000">CAN_INTERRUPT_BOFF_MASK</span></strong> = (1U &lt;&lt; 19U),
+  <strong><span style="color: #000000">CAN_INTERRUPT_SLEEP_MASK</span></strong> = (1U &lt;&lt; 20U),
+  <strong><span style="color: #000000">CAN_INTERRUPT_WAKEUP_MASK</span></strong> = (1U &lt;&lt; 21U),
+  <strong><span style="color: #000000">CAN_INTERRUPT_TOVF_MASK</span></strong> = (1U &lt;&lt; 22U),
+  <strong><span style="color: #000000">CAN_INTERRUPT_TSTP_MASK</span></strong> = (1U &lt;&lt; 23U),
+  <strong><span style="color: #000000">CAN_INTERRUPT_CERR_MASK</span></strong> = (1U &lt;&lt; 24U),
+  <strong><span style="color: #000000">CAN_INTERRUPT_SERR_MASK</span></strong> = (1U &lt;&lt; 25U),
+  <strong><span style="color: #000000">CAN_INTERRUPT_AERR_MASK</span></strong> = (1U &lt;&lt; 26U),
+  <strong><span style="color: #000000">CAN_INTERRUPT_FERR_MASK</span></strong> = (1U &lt;&lt; 27U),
+  <strong><span style="color: #000000">CAN_INTERRUPT_BERR_MASK</span></strong> = (1U &lt;&lt; 28U)
+} CAN_INTERRUPT_MASK;</pre></div></div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00556.html" target="topic">Applications Help</a> &gt; <a href="00902.html" target="topic">DAC Applications</a> &gt; <a href="00901.html" target="topic">dac_wav_gen_dma</a> &gt; <a href="00907.html" target="topic">Building The Application</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="00870.html" target="topic">CAN Peripheral Library Help</a> &gt; <a href="00871.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="00907.html" target="topic">CAN_INTERRUPT_MASK Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -100,13 +98,13 @@ SAM E54 Xplained Pro Evaluation Kit&nbsp;</div></td></tr></table></div></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00901.html" target="topic">Previous</a> | <a href="00901.html" target="topic">Up</a> | <a href="00909.html" target="topic">Next</a></div>
+<a href="00899.html" target="topic">Previous</a> | <a href="00871.html" target="topic">Up</a> | <a href="00929.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DAC dac_wav_gen_dma Building The Application Topic Title: Building The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: can_6019::CAN_INTERRUPT_MASK Topic Title: CAN_INTERRUPT_MASK Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

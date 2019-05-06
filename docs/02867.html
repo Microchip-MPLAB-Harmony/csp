@@ -1,0 +1,131 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Running The Application</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '02867.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="02857.html" target="topic">MCAN Applications</a> &gt; <a href="02859.html" target="topic">mcan_normal_operation_interrupt</a> &gt; <a href="02867.html" target="topic">Running The Application</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+Microchip 32-bit Chip Support Package</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="02865.html" target="topic">Previous</a> | <a href="02859.html" target="topic">Up</a> | <a href="03021.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MCAN mcan_normal_operation_interrupt Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+Running The Application</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+<strong><u>IAR Embedded work bench</u></strong></p>
+<ol class="Element630">
+<li value="1" class="Element600">Open the Terminal application (Ex.:Tera term) on the computer</li>
+<li value="2" class="Element600">Connect to the DEBUG UART Virtual COM port and configure the serial settings as follows:
+<ul class="Element631">
+<li class="Element601">Baud : 115200</li>
+<li class="Element601">Data : 8 Bits</li>
+<li class="Element601">Parity : None</li>
+<li class="Element601">Stop : 1 Bit</li>
+<li class="Element601">Flow Control : None</li>
+</ul></li>
+<li value="3" class="Element600">Build the project using IAR Embedded Workbench</li>
+<li value="4" class="Element600">Use the output binary file (harmony.bin) to setup the board as detailed in <a href="02865.html" target="topic">hardware setup</a></li>
+<li value="5" class="Element600">Execute the steps and observe the output as described in the following table</li>
+</ol><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="9%">
+<div class="Element66">
+Project Name&nbsp;</div></td><td class="Element65" valign="top" width="91%">
+<div class="Element66">
+Output&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="9%">
+<div class="Element68">
+sam_a5d2_xult.IAR&nbsp;</div></td><td class="Element67" valign="top" width="91%">
+<div class="Element68">
+</p>
+<ul class="Element630">
+<li class="Element600">Send CAN messages to the SAMA5D2-XULT board from the CAN analyzer software</li>
+<li class="Element600">CAN message will be displayed in the terminal window</li>
+<li class="Element600">RGB LED will toggle in green color for every message received</li>
+<li class="Element600">Received message will be echoed back to the CAN analyzer software and terminal window.</li>
+</ul><p class="Element68">
+&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="6" class="Element600">Open the CAN Analyzer Software and perform following steps
+<ul class="Element631">
+<li class="Element601">Configure CAN Analyzer Software as per Hardware Setup mention in below screenshot</li>
+<li class="Element601">Send CAN message from CAN Analyzer Software.</li>
+</ul></li>
+</ol><p class="Element10">
+<img src="CAN_Analyzer.png" border="0" alt="" title="">&nbsp;</p>
+
+<ol class="Element630">
+<li value="7" class="Element600">Following will be terminal session’s output.</li>
+</ol><p class="Element10">
+<img src="mcan_normal_operation_interrupt_SAMA5D2.png" border="0" alt="" title=""></p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="02857.html" target="topic">MCAN Applications</a> &gt; <a href="02859.html" target="topic">mcan_normal_operation_interrupt</a> &gt; <a href="02867.html" target="topic">Running The Application</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+Microchip 32-bit Chip Support Package</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="02865.html" target="topic">Previous</a> | <a href="02859.html" target="topic">Up</a> | <a href="03021.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MCAN mcan_normal_operation_interrupt Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

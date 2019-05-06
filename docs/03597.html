@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>QSPIx_RegisterRead Function</title>
+<title>PIO_PortToggle Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="03514.html" target="topic">QSPI Peripheral Library Help</a> &gt; <a href="03515.html" target="topic">Library Interface</a> &gt; b) Transaction Functions &gt; <a href="03597.html" target="topic">QSPIx_RegisterRead Function</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="03428.html" target="topic">PIO Peripheral Library Help</a> &gt; <a href="03429.html" target="topic">Library Interface</a> &gt; c) Port Functions &gt; <a href="03597.html" target="topic">PIO_PortToggle Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03596.html" target="topic">Previous</a> | <a href="03515.html" target="topic">Up</a> | <a href="03598.html" target="topic">Next</a></div>
+<a href="03596.html" target="topic">Previous</a> | <a href="03429.html" target="topic">Up</a> | <a href="03598.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: qspi_u2008::QSPIx_RegisterRead@qspi_register_xfer_t *@uint32_t *@uint8_t Topic Title: QSPIx_RegisterRead Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pio_11004::PIO_PortToggle@PIO_PORT@uint32_t Topic Title: PIO_PortToggle Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-QSPIx_RegisterRead Function</div>
+PIO_PortToggle Function</div>
 </div>
 </div>
 
@@ -49,21 +49,20 @@ QSPIx_RegisterRead Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function can be used to read a particular register of QSPI slave device which has a command code associated to it.</p></div>
+This function toggles (or invert) the selected IO pins of a port.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">QSPIx_RegisterRead</span></strong>(
-    <a href="03589.html" target="topic">qspi_register_xfer_t</a> * <strong><span style="color: #000000">qspi_register_xfer</span></strong>, 
-    uint32_t * <strong><span style="color: #000000">rx_data</span></strong>, 
-    uint8_t <strong><span style="color: #000000">rx_data_length</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">PIO_PortToggle</span></strong>(
+    <a href="03583.html" target="topic">PIO_PORT</a> <strong><span style="color: #000000">port</span></strong>, 
+    uint32_t <strong><span style="color: #000000">mask</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="03594.html" target="topic">QSPIx_Initialize</a> must have been called for the associated QSPI instance.</p></div>
+<a href="03454.html" target="topic">PIO_Initialize</a>() must have been called.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -80,53 +79,43 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-*qspi_register_xfer&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+port&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-pointer to QSPI register transfer structure holding the instruction code register and instruction frame register information.<br>&nbsp;</div></td></tr><tr>
+One of the IO ports from the enum <a href="03583.html" target="topic">PIO_PORT</a>&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-*rx_data&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+mask&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Pointer to receive buffer where the register data will be stored.<br>&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-rx_data_length&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Register width in bytes.&nbsp;</div></td></tr></table></div></div>
+A 32 bit value in which positions of 0s and 1s decide which IO pins of the selected port will be toggled.</p>
+<ul class="Element630">
+<li class="Element600">1's - Will toggle (invert) corresponding IO pins.</li>
+<li class="Element600">0's - Will remain unchanged.</li>
+</ul><p class="Element307">
+&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
 <div class="Element11">
 <div class="Element10">
-
-<ul class="Element630">
-<li class="Element600">True on transfer request success.</li>
-<li class="Element600">False on transfer request failure.</li>
-</ul></div>
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+If the port has less than 32-bits, unimplemented pins will be ignored.&nbsp;</p>
+<p class="Element10">
+Implemented pins are Right aligned in the 32-bit value.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">
-<strong><span style="color: #000080">#define</span></strong> READ_STATUS_REG_CODE 0x05
-
-<strong><span style="color: #000080">static</span></strong> <a href="03589.html" target="topic">qspi_register_xfer_t</a> qspi_register_xfer;
-<strong><span style="color: #000080">static</span></strong> uint8_t reg_data;
-
-<i><span style="color: #008000">// Use QAUD SPI Lane</span></i>
-qspi_register_xfer.width = QUAD_CMD;
-qspi_register_xfer.dummy_cycles = 2;
-
-<i><span style="color: #008000">// Read status register of 1 Byte width</span></i>
-qspi_register_xfer.instruction = READ_STATUS_REG_CODE;
-
-<strong><span style="color: #000080">if</span></strong> (TRUE != QSPI0_RegisterRead(&amp;qspi_register_xfer, (uint32_t *)&amp;reg_data, 1))
-{
-    <i><span style="color: #008000">// Handle Error</span></i>
-}
-</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">    <i><span style="color: #008000">// Toggles PC5 and PC7 pins</span></i>
+    PIO_PortToggle(PIO_PORT_C, 0x00A0);</pre></div></div>
 </div>
 </div>
 </div>
@@ -134,7 +123,7 @@ qspi_register_xfer.instruction = READ_STATUS_REG_CODE;
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="03514.html" target="topic">QSPI Peripheral Library Help</a> &gt; <a href="03515.html" target="topic">Library Interface</a> &gt; b) Transaction Functions &gt; <a href="03597.html" target="topic">QSPIx_RegisterRead Function</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="03428.html" target="topic">PIO Peripheral Library Help</a> &gt; <a href="03429.html" target="topic">Library Interface</a> &gt; c) Port Functions &gt; <a href="03597.html" target="topic">PIO_PortToggle Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -142,13 +131,13 @@ qspi_register_xfer.instruction = READ_STATUS_REG_CODE;
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03596.html" target="topic">Previous</a> | <a href="03515.html" target="topic">Up</a> | <a href="03598.html" target="topic">Next</a></div>
+<a href="03596.html" target="topic">Previous</a> | <a href="03429.html" target="topic">Up</a> | <a href="03598.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: qspi_u2008::QSPIx_RegisterRead@qspi_register_xfer_t *@uint32_t *@uint8_t Topic Title: QSPIx_RegisterRead Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pio_11004::PIO_PortToggle@PIO_PORT@uint32_t Topic Title: PIO_PortToggle Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

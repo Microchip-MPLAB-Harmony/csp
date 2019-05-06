@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00556.html" target="topic">Applications Help</a> &gt; <a href="00144.html" target="topic">ADC Applications</a> &gt; <a href="00140.html" target="topic">adc_polled_mode</a> &gt; <a href="00118.html" target="topic">Hardware Setup</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="00144.html" target="topic">ADC Applications</a> &gt; <a href="00140.html" target="topic">adc_polled_mode</a> &gt; <a href="00118.html" target="topic">Hardware Setup</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,7 +26,7 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
 <a href="00119.html" target="topic">Previous</a> | <a href="00140.html" target="topic">Up</a> | <a href="00120.html" target="topic">Next</a></div>
@@ -67,7 +67,66 @@ Hardware Setup</div>
 </ul></li>
 <li class="Element602">Short jumper JP2 (DEBUG_DIS)</li>
 <li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+<li class="Element602">AD0 pin is used for analog input</li>
 <li class="Element602">Use a jumper wire to connect Pin 2 of J8 (AD0 is mapped to Port Pin PD19) to 3.3 V or GND</li>
+</ul></li>
+</ul></li>
+</ol><p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="2" class="Element600"><strong>Project sam_9x60_ek.IAR</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602">SAM 9X60 Evaluation Kit board</li>
+<li class="Element602">SD Card with FAT32 file system</li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">Setup the SD card
+<ul class="Element633">
+<li class="Element603">Download harmony MPU bootstrap loader from this <a href="#" onclick="openExternalLink('http://github.com/Microchip-MPLAB-Harmony/at91bootstrap/blob/sam9x60ek/boot.bin');"><img src="indicator_external_link.gif" border="0" alt="" title="">location</a></li>
+<li class="Element603">Copy the downloaded boot loader binary( boot.bin) and generated application binary (harmony.bin)into the SD card</li>
+<li class="Element603">Insert the SD card into the SDMMC connector J5 on the board</li>
+</ul></li>
+<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+<li class="Element602">AD0 pin is used for analog input</li>
+<li class="Element602">Use a jumper wire to connect Pin 32 of J17 (AD0 is mapped to Port Pin PB11) to 3.3 V or GND</li>
+<li class="Element602">Note: Reset push button on SAM9X60 EK is labeled as SW3</li>
+</ul></li>
+</ul></li>
+</ol><p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="3" class="Element600"><strong>Project pic32mx470_curiosity.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/DevelopmentTools/ProductDetails/dm320103#utm_source=MicroSolutions&amp;utm_medium=Link&amp;utm_term=FY17Q3&amp;utm_content=DevTools&amp;utm_campaign=Article');"><img src="indicator_external_link.gif" border="0" alt="" title="">PIC32MX470 Curiosity board</a></li>
+<li class="Element602">USB UART Click Board</li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">Connect the Debug USB port on the board to the computer using a mini USB cable</li>
+<li class="Element602">Install USB UART click board on mikro BUS slot J5 present on curiosity board</li>
+<li class="Element602">AN9 pin is used for analog input</li>
+<li class="Element602">Use a jumper wire to connect Pin 3 of J14 (AN9 is mapped to Port Pin RPB9) to 3.3 V or GND or external supply</li>
+</ul></li>
+</ul></li>
+<li value="4" class="Element600"><strong>Project pic32mx_xlp_sk.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/DM320105');"><img src="indicator_external_link.gif" border="0" alt="" title="">PIC32MX XLP starter kit</a></li>
+<li class="Element602">USB UART Click Board</li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+<li class="Element602">Install USB UART click board on mikro BUS slot J5 present on starter kit</li>
+<li class="Element602">AN7 pin, which is coming on switches S1 to S5, is used for analog input</li>
 </ul></li>
 </ul></li>
 </ol></div>
@@ -77,7 +136,7 @@ Hardware Setup</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00556.html" target="topic">Applications Help</a> &gt; <a href="00144.html" target="topic">ADC Applications</a> &gt; <a href="00140.html" target="topic">adc_polled_mode</a> &gt; <a href="00118.html" target="topic">Hardware Setup</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="00144.html" target="topic">ADC Applications</a> &gt; <a href="00140.html" target="topic">adc_polled_mode</a> &gt; <a href="00118.html" target="topic">Hardware Setup</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -85,7 +144,7 @@ Hardware Setup</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
 <a href="00119.html" target="topic">Previous</a> | <a href="00140.html" target="topic">Up</a> | <a href="00120.html" target="topic">Next</a></div>

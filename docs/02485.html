@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Introduction</title>
+<title>GPIO_PinInterruptEnable Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="02486.html" target="topic">MMU Peripheral Library Help</a> &gt; <a href="02485.html" target="topic">Introduction</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="02349.html" target="topic">GPIO Peripheral Library Help</a> &gt; <a href="02364.html" target="topic">Library Interface</a> &gt; b) Pin Functions &gt; <a href="02485.html" target="topic">GPIO_PinInterruptEnable Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02486.html" target="topic">Previous</a> | <a href="02486.html" target="topic">Up</a> | <a href="02483.html" target="topic">Next</a></div>
+<a href="02484.html" target="topic">Previous</a> | <a href="02364.html" target="topic">Up</a> | <a href="02500.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MMU v7a Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: gpio_01618::GPIO_PinInterruptEnable@GPIO_PIN Topic Title: GPIO_PinInterruptEnable Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Introduction</div>
+GPIO_PinInterruptEnable Function</div>
 </div>
 </div>
 
@@ -49,29 +49,69 @@ Introduction</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<span style="color: #000000">The MMU works with the L1 and L2 memory system to translate virtual addresses to physical addresses. It also controls accesses to and from external memory.</span>&nbsp;</p>
+This function enables interrupt on selected IO pin.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">GPIO_PinInterruptEnable</span></strong>(
+    <a href="02380.html" target="topic">GPIO_PIN</a> <strong><span style="color: #000000">pin</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-<span style="color: #000000">The ARM v7 Virtual Memory System Architecture (VMSA) features include the following:</span></p>
-<ul class="Element630">
-<li class="Element600"><span style="color: #000000">Page table entries that support:</span>
-<ul class="Element631">
-<li class="Element601"><span style="color: #000000">16 Mbyte supersections. The processor supports supersections that consist of 16 Mbyte blocks of memory.</span></li>
-<li class="Element601"><span style="color: #000000">1 Mbyte sections</span></li>
-<li class="Element601"><span style="color: #000000">64 Kbyte large pages</span></li>
-<li class="Element601"><span style="color: #000000">4 Kbyte small pages</span></li>
-</ul></li>
-<li class="Element600"><span style="color: #000000">16 access domains</span></li>
-<li class="Element600"><span style="color: #000000">Global and application-specific identifiers to remove the requirement for context switch TLB flushes.</span></li>
-<li class="Element600"><span style="color: #000000">Extended permissions checking capability.</span></li>
-</ul><p class="Element10">
-<span style="color: #000000">TLB maintenance and configuration operations are controlled through a dedicated coprocessor, CP15, integrated with the core. This coprocessor provides a standard mechanism for configuring the L1 memory system.</span></p></div>
+Corresponding pin must be configured in interrupt mode in MHC Pin Manager.&nbsp;</p>
+<p class="Element10">
+<a href="02379.html" target="topic">GPIO_Initialize</a>() must have been called.&nbsp;</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+pin&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+One of the IO pins from the enum <a href="02380.html" target="topic">GPIO_PIN</a>&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">    GPIO_PinInterruptEnable(GPIO_PIN_RB3);</pre></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="02486.html" target="topic">MMU Peripheral Library Help</a> &gt; <a href="02485.html" target="topic">Introduction</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="02349.html" target="topic">GPIO Peripheral Library Help</a> &gt; <a href="02364.html" target="topic">Library Interface</a> &gt; b) Pin Functions &gt; <a href="02485.html" target="topic">GPIO_PinInterruptEnable Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -79,13 +119,13 @@ Introduction</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02486.html" target="topic">Previous</a> | <a href="02486.html" target="topic">Up</a> | <a href="02483.html" target="topic">Next</a></div>
+<a href="02484.html" target="topic">Previous</a> | <a href="02364.html" target="topic">Up</a> | <a href="02500.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MMU v7a Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: gpio_01618::GPIO_PinInterruptEnable@GPIO_PIN Topic Title: GPIO_PinInterruptEnable Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

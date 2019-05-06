@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>RTC_RTCCTimeSet Function</title>
+<title>Library Interface</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="03764.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="03786.html" target="topic">Clock and Calendar (Mode 2)</a> &gt; <a href="03792.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="03887.html" target="topic">RTC_RTCCTimeSet Function</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="03886.html" target="topic">PM Peripheral Library Help</a> &gt; <a href="03887.html" target="topic">Library Interface</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03884.html" target="topic">Previous</a> | <a href="03792.html" target="topic">Up</a> | <a href="03886.html" target="topic">Next</a></div>
+<a href="03889.html" target="topic">Previous</a> | <a href="03886.html" target="topic">Up</a> | <a href="03913.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2202::RTC_RTCCTimeSet@struct tm * Topic Title: RTC_RTCCTimeSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PM U2406 Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-RTC_RTCCTimeSet Function</div>
+Library Interface</div>
 </div>
 </div>
 
@@ -46,83 +46,94 @@ RTC_RTCCTimeSet Function</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="4465736372697074696F6E"></a><div class="Element11">
-<div class="Element10">
-<p class="Element10">
-This function sets the Real Time Clock Calendar time and date. The time and date should be specified via the struct tm structure. The isdst, tm_wday, tm_yday member of the initialTime data structure is ignored.&nbsp;</p>
-<p class="Element10">
-The reference year parameter in MHC should be adjusted to be within 64 years of the input year range. In that, the function will subtract the reference year from the input year while setting the calendar year.</p></div>
-</div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">RTC_RTCCTimeSet</span></strong>(
-    <strong><span style="color: #000080">struct</span></strong> tm * <strong><span style="color: #000000">initialTime</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
+<a name="612920496E697469616C697A6174696F6E2046756E6374696F6E"></a><div class="Element14">
+a) Initialization Function</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-<a href="03883.html" target="topic">RTC_Initialize</a> must have been called for the associated RTC instance. The RTC should have been configured for Real Time Clock Calendar operation.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
+<div class="Element212">
 <div class="TableDiv">
-<table cellspacing="0" class="Table2">
+<table cellspacing="0" class="Table0">
 <tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-initialTime&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Initial time value from the user of type tm structure defined in the time.h header file&nbsp;</div></td></tr></table></div></div>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03913.html" target="topic">PM_Initialize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Initializes the PM.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
+<a name="6229205472616E73616374696F6E2046756E6374696F6E73"></a><div class="Element14">
+b) Transaction Functions</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-bool.</p></div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">    <strong><span style="color: #000080">struct</span></strong> tm initialTime;
-
-    <a href="03883.html" target="topic">RTC_Initialize</a>();
-
-    <i><span style="color: #008000">// Set the time as 22:31:23 and date as 7 April 1980.</span></i>
-    <i><span style="color: #008000">// The Reference Year Configuration in MHC should be within</span></i>
-    <i><span style="color: #008000">// 64 years of 1980. Also note that tm structure needs the tm_year to</span></i>
-    <i><span style="color: #008000">// specified as years since 1900.</span></i>
-
-    initialTime.tm_sec = 23;
-    initialTime.tm_min = 31;
-    initialTime.tm_hour = 22;
-    initialTime.tm_mday = 7;
-    initialTime.tm_mon = 3;
-    initialTime.tm_year = 80;
-
-    <strong><span style="color: #000080">if</span></strong>(RTC_RTCCTimeSet(&amp;initialTime) == <strong><span style="color: #000080">false</span></strong>)
-    {
-        <i><span style="color: #008000">//incorrect format</span></i>
-    }</pre></div></div>
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03910.html" target="topic">PM_BackupModeEnter</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Puts the device in backup mode.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03911.html" target="topic">PM_HibernateModeEnter</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Puts the device in hibernate mode.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03912.html" target="topic">PM_IdleModeEnter</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Puts the device in Idle mode.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03914.html" target="topic">PM_IO_RetentionClear</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Turns off I/O retention. To be called after exiting HIBERNATE or BACKUP mode.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03915.html" target="topic">PM_IO_RetentionSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Turns on I/O retention when exiting HIBERNATE or BACKUP mode.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03916.html" target="topic">PM_OffModeEnter</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Puts the device in off mode.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03917.html" target="topic">PM_StandbyModeEnter</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Puts the device in standby mode.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -130,7 +141,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="03764.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="03786.html" target="topic">Clock and Calendar (Mode 2)</a> &gt; <a href="03792.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="03887.html" target="topic">RTC_RTCCTimeSet Function</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="03886.html" target="topic">PM Peripheral Library Help</a> &gt; <a href="03887.html" target="topic">Library Interface</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -138,13 +149,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03884.html" target="topic">Previous</a> | <a href="03792.html" target="topic">Up</a> | <a href="03886.html" target="topic">Next</a></div>
+<a href="03889.html" target="topic">Previous</a> | <a href="03886.html" target="topic">Up</a> | <a href="03913.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2202::RTC_RTCCTimeSet@struct tm * Topic Title: RTC_RTCCTimeSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PM U2406 Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

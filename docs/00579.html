@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>CACHE_CacheSync Function</title>
+<title>ADC_NEGINPUT Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="00570.html" target="topic">Cache Peripheral Library Help</a> &gt; <a href="00571.html" target="topic">Library Interface</a> &gt; e) Status Functions &gt; <a href="00579.html" target="topic">CACHE_CacheSync Function</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="00169.html" target="topic">ADC Peripheral Library Help</a> &gt; <a href="00170.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="00579.html" target="topic">ADC_NEGINPUT Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00576.html" target="topic">Previous</a> | <a href="00571.html" target="topic">Up</a> | <a href="00580.html" target="topic">Next</a></div>
+<a href="00578.html" target="topic">Previous</a> | <a href="00170.html" target="topic">Up</a> | <a href="00589.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CACHE_CacheSync@uint32_t@size_t Topic Title: CACHE_CacheSync Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: adc_u2500::ADC_NEGINPUT Topic Title: ADC_NEGINPUT Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-CACHE_CacheSync Function</div>
+ADC_NEGINPUT Enumeration</div>
 </div>
 </div>
 
@@ -49,45 +49,82 @@ CACHE_CacheSync Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Synchronize the instruction and data caches. Used when modifying the instruction stream (breakpoints, self-modifying code, relocating executable code to RAM). Flushes an address range from the data cache and invalidates that same range from the instruction cache.</p></div>
+ADC negative MUX input selection enum&nbsp;</p>
+<p class="Element10">
+Enum for the possible negative MUX input selections for the ADC.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">CACHE_CacheSync</span></strong>(
-    uint32_t <strong><span style="color: #000000">addr</span></strong>, 
-    size_t <strong><span style="color: #000000">len</span></strong>
-);</pre></div></div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">ADC_NEGINPUT_AIN0</span></strong> = ADC_INPUTCTRL_MUXNEG_AIN0,
+  <strong><span style="color: #000000">ADC_NEGINPUT_AIN1</span></strong> = ADC_INPUTCTRL_MUXNEG_AIN1,
+  <strong><span style="color: #000000">ADC_NEGINPUT_AIN2</span></strong> = ADC_INPUTCTRL_MUXNEG_AIN2,
+  <strong><span style="color: #000000">ADC_NEGINPUT_AIN3</span></strong> = ADC_INPUTCTRL_MUXNEG_AIN3,
+  <strong><span style="color: #000000">ADC_NEGINPUT_AIN4</span></strong> = ADC_INPUTCTRL_MUXNEG_AIN4,
+  <strong><span style="color: #000000">ADC_NEGINPUT_AIN5</span></strong> = ADC_INPUTCTRL_MUXNEG_AIN5,
+  <strong><span style="color: #000000">ADC_NEGINPUT_AIN6</span></strong> = ADC_INPUTCTRL_MUXNEG_AIN6,
+  <strong><span style="color: #000000">ADC_NEGINPUT_AIN7</span></strong> = ADC_INPUTCTRL_MUXNEG_AIN7,
+  <strong><span style="color: #000000">ADC_NEGINPUT_GND</span></strong> = ADC_INPUTCTRL_MUXNEG(0x18u)
+} ADC_NEGINPUT;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element312">
+<div class="Element272">
 <div class="TableDiv">
-<table cellspacing="0" class="Table2">
+<table cellspacing="0" class="Table3">
 <tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-uint32_t addr&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-address (aligned to 32-byte boundary)&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-size_t len&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-size of memory block (in number of bytes)&nbsp;</div></td></tr></table></div></div>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ADC_NEGINPUT_AIN0 = ADC_INPUTCTRL_MUXNEG_AIN0&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ADC pin AIN0&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ADC_NEGINPUT_AIN1 = ADC_INPUTCTRL_MUXNEG_AIN1&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ADC pin AIN1&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ADC_NEGINPUT_AIN2 = ADC_INPUTCTRL_MUXNEG_AIN2&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ADC pin AIN2&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ADC_NEGINPUT_AIN3 = ADC_INPUTCTRL_MUXNEG_AIN3&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ADC pin AIN3&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ADC_NEGINPUT_AIN4 = ADC_INPUTCTRL_MUXNEG_AIN4&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ADC pin AIN4&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ADC_NEGINPUT_AIN5 = ADC_INPUTCTRL_MUXNEG_AIN5&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ADC pin AIN5&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ADC_NEGINPUT_AIN6 = ADC_INPUTCTRL_MUXNEG_AIN6&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ADC pin AIN6&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ADC_NEGINPUT_AIN7 = ADC_INPUTCTRL_MUXNEG_AIN7&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ADC pin AIN7&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ADC_NEGINPUT_GND = ADC_INPUTCTRL_MUXNEG(0x18u)&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ADC pin GND&nbsp;</div></td></tr></table></div></div>
 </div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
@@ -96,19 +133,12 @@ Remarks</div>
 <p class="Element10">
 None.</p></div>
 </div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">CACHE_CacheSync(addr, len);</pre></div></div>
-</div>
-</div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="00570.html" target="topic">Cache Peripheral Library Help</a> &gt; <a href="00571.html" target="topic">Library Interface</a> &gt; e) Status Functions &gt; <a href="00579.html" target="topic">CACHE_CacheSync Function</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="00169.html" target="topic">ADC Peripheral Library Help</a> &gt; <a href="00170.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="00579.html" target="topic">ADC_NEGINPUT Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -116,13 +146,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00576.html" target="topic">Previous</a> | <a href="00571.html" target="topic">Up</a> | <a href="00580.html" target="topic">Next</a></div>
+<a href="00578.html" target="topic">Previous</a> | <a href="00170.html" target="topic">Up</a> | <a href="00589.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CACHE_CacheSync@uint32_t@size_t Topic Title: CACHE_CacheSync Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: adc_u2500::ADC_NEGINPUT Topic Title: ADC_NEGINPUT Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

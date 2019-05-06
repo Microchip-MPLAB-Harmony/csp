@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>SDMMC_CLK_MODE Enumeration</title>
+<title>Introduction</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="04233.html" target="topic">SDMMC Peripheral Library Help</a> &gt; <a href="04234.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="04244.html" target="topic">SDMMC_CLK_MODE Enumeration</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="04245.html" target="topic">RCON Peripheral Library Help</a> &gt; <a href="04244.html" target="topic">Introduction</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04243.html" target="topic">Previous</a> | <a href="04234.html" target="topic">Up</a> | <a href="04252.html" target="topic">Next</a></div>
+<a href="04245.html" target="topic">Previous</a> | <a href="04245.html" target="topic">Up</a> | <a href="04242.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sdmmc_44002::SDMMC_CLK_MODE Topic Title: SDMMC_CLK_MODE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RCON 01342 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-SDMMC_CLK_MODE Enumeration</div>
+Introduction</div>
 </div>
 </div>
 
@@ -49,29 +49,30 @@ SDMMC_CLK_MODE Enumeration</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-SDMMC clock mode&nbsp;</p>
+The Resets collects the various reset sources and generates reset for the device and allows the reset source to be identified by the software.</p>
+<ul class="Element630">
+<li class="Element600"><strong>Power On Reset: </strong>The device contains a power-on-reset (POR) detector, which keeps the system reset until power is stable. This eliminates the need for external reset circuitry to guarantee stable operation when powering up the device.</li>
+<li class="Element600"><strong>Brown Out Reset: </strong>If the voltage supplied to the regulator is inadequate to maintain a regulated level, the regulator Reset circuitry will generate a BOR event, which is synchronized with the system clock, SYSCLK, before asserting the system Reset..</li>
+<li class="Element600"><strong>Watchdog Reset:</strong> The watchdog reset occurs when it times out</li>
+<li class="Element600"><strong>External Reset/MCLR: </strong>A external reset is generated when a low level is detected on the RESET pin</li>
+<li class="Element600"><strong>Software Reset: </strong>Caused by performing software reset command sequence</li>
+<li class="Element600"><strong>Configuration Mismatch:</strong> Caused due to configuration bit values are not opposite to each other.</li>
+<li class="Element600"><strong>High Voltage Detect:</strong> Caused when high voltage is detected.</li>
+</ul><p class="Element10">
+&nbsp;</p>
 <p class="Element10">
-The enumeration is used to select the clock mode.</p></div>
-</div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
-  <strong><span style="color: #000000">SDMMC_DIVIDED_CLK_MODE</span></strong> = 0,
-  <strong><span style="color: #000000">SDMMC_PROGRAMMABLE_CLK_MODE</span></strong>
-} SDMMC_CLK_MODE;</pre></div></div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None.</p></div>
+Resets are divided into two modes based upon the source of the reset.</p>
+<ul class="Element630">
+<li class="Element600">Power Resets include resets generated by POR, BOR, MCLR.</li>
+<li class="Element600">User Resets consist of the external reset, WDT, and the software reset instruction</li>
+</ul></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="04233.html" target="topic">SDMMC Peripheral Library Help</a> &gt; <a href="04234.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="04244.html" target="topic">SDMMC_CLK_MODE Enumeration</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="04245.html" target="topic">RCON Peripheral Library Help</a> &gt; <a href="04244.html" target="topic">Introduction</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -79,13 +80,13 @@ None.</p></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04243.html" target="topic">Previous</a> | <a href="04234.html" target="topic">Up</a> | <a href="04252.html" target="topic">Next</a></div>
+<a href="04245.html" target="topic">Previous</a> | <a href="04245.html" target="topic">Up</a> | <a href="04242.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sdmmc_44002::SDMMC_CLK_MODE Topic Title: SDMMC_CLK_MODE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RCON 01342 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

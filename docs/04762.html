@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Introduction</title>
+<title>RTC_Timer32InterruptEnable Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="04763.html" target="topic">SYSTICK Peripheral Library Help</a> &gt; <a href="04762.html" target="topic">Introduction</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="04518.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="04519.html" target="topic">32-bit Timer (Mode 0)</a> &gt; <a href="04524.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="04762.html" target="topic">RTC_Timer32InterruptEnable Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04763.html" target="topic">Previous</a> | <a href="04763.html" target="topic">Up</a> | <a href="04759.html" target="topic">Next</a></div>
+<a href="04760.html" target="topic">Previous</a> | <a href="04524.html" target="topic">Up</a> | <a href="04761.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SYSTICK Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::RTC_Timer32InterruptEnable@RTC_TIMER32_INT_MASK Topic Title: RTC_Timer32InterruptEnable Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Introduction</div>
+RTC_Timer32InterruptEnable Function</div>
 </div>
 </div>
 
@@ -49,18 +49,68 @@ Introduction</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The ARM® Cortex® CPU includes an optional system timer (SysTick) that provides a simple, 24-bit clear-on-write, decrementing, wrap-on-zero counter with a flexible control mechanism.&nbsp;</p>
+This function allows the application to enable period match, compare match and periodic event interrupt</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">RTC_Timer32InterruptEnable</span></strong>(
+    <a href="04737.html" target="topic">RTC_TIMER32_INT_MASK</a> <strong><span style="color: #000000">interrupt</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-When enabled, the 24-bit timer counter counts down from the value in VAL. When the counter reaches zero, it reloads the value in LOAD on the next clock edge. It then decrements on subsequent clocks. This reloading when the counter reaches zero is called wrapping. The timer interrupt is activated on the transition from 1 to 0, therefore it activates every n+1 clock ticks. . If a period of 100 is required 99 should be written to the SysTick Reload Value register.&nbsp;</p>
+<a href="04683.html" target="topic">RTC_Initialize</a> must have been called for the associated RTC instance. The Interrupt option in MHC should have been enabled. The RTC peripheral should have been configured for 32-bit timer counter operation. A valid event handling callback function should have been registered by calling the <a href="04750.html" target="topic">RTC_Timer32CallbackRegister</a>() function.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+InterruptMask&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Specifies interrupt source to be enabled&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-The SysTick can be polled by software or can be configured to generate an interrupt.</p></div>
+None.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">
+RTC_Timer32InterruptEnable(RTC_TIMER32_INT_MASK_PERIOD_MATCH);</pre></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="04763.html" target="topic">SYSTICK Peripheral Library Help</a> &gt; <a href="04762.html" target="topic">Introduction</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="04518.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="04519.html" target="topic">32-bit Timer (Mode 0)</a> &gt; <a href="04524.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="04762.html" target="topic">RTC_Timer32InterruptEnable Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -68,13 +118,13 @@ The SysTick can be polled by software or can be configured to generate an interr
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04763.html" target="topic">Previous</a> | <a href="04763.html" target="topic">Up</a> | <a href="04759.html" target="topic">Next</a></div>
+<a href="04760.html" target="topic">Previous</a> | <a href="04524.html" target="topic">Up</a> | <a href="04761.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SYSTICK Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::RTC_Timer32InterruptEnable@RTC_TIMER32_INT_MASK Topic Title: RTC_Timer32InterruptEnable Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

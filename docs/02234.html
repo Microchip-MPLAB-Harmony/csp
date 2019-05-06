@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>LCDCx_GetPWMSignalStatusActivated Function</title>
+<title>FLEXCOM_SPI_DATA_BITS Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="02220.html" target="topic">LCDC Peripheral Library Help</a> &gt; <a href="02221.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="02234.html" target="topic">LCDCx_GetPWMSignalStatusActivated Function</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="02183.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02184.html" target="topic">SPI</a> &gt; <a href="02189.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="02234.html" target="topic">FLEXCOM_SPI_DATA_BITS Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02233.html" target="topic">Previous</a> | <a href="02221.html" target="topic">Up</a> | <a href="02235.html" target="topic">Next</a></div>
+<a href="02230.html" target="topic">Previous</a> | <a href="02189.html" target="topic">Up</a> | <a href="02245.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: LCDCx_GetPWMSignalStatusActivated Topic Title: LCDCx_GetPWMSignalStatusActivated Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: FLEXCOM_SPI_DATA_BITS Topic Title: FLEXCOM_SPI_DATA_BITS Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-LCDCx_GetPWMSignalStatusActivated Function</div>
+FLEXCOM_SPI_DATA_BITS Enumeration</div>
 </div>
 </div>
 
@@ -49,38 +49,102 @@ LCDCx_GetPWMSignalStatusActivated Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None</p></div>
+FLEXCOM SPI Data Bits&nbsp;</p>
+<p class="Element10">
+This enumeration identifies number of bits per FLEXCOM SPI transfer.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">LCDCx_GetPWMSignalStatusActivated</span></strong>();</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">FLEXCOM_SPI_DATA_BITS_8</span></strong> = FLEX_SPI_CSR_BITS_8_BIT_Val&lt;&lt;FLEX_SPI_CSR_BITS_Pos,
+  <strong><span style="color: #000000">FLEXCOM_SPI_DATA_BITS_9</span></strong> = FLEX_SPI_CSR_BITS_9_BIT_Val&lt;&lt;FLEX_SPI_CSR_BITS_Pos,
+  <strong><span style="color: #000000">FLEXCOM_SPI_DATA_BITS_10</span></strong> = FLEX_SPI_CSR_BITS_10_BIT_Val&lt;&lt;FLEX_SPI_CSR_BITS_Pos,
+  <strong><span style="color: #000000">FLEXCOM_SPI_DATA_BITS_11</span></strong> = FLEX_SPI_CSR_BITS_11_BIT_Val&lt;&lt;FLEX_SPI_CSR_BITS_Pos,
+  <strong><span style="color: #000000">FLEXCOM_SPI_DATA_BITS_12</span></strong> = FLEX_SPI_CSR_BITS_12_BIT_Val&lt;&lt;FLEX_SPI_CSR_BITS_Pos,
+  <strong><span style="color: #000000">FLEXCOM_SPI_DATA_BITS_13</span></strong> = FLEX_SPI_CSR_BITS_13_BIT_Val&lt;&lt;FLEX_SPI_CSR_BITS_Pos,
+  <strong><span style="color: #000000">FLEXCOM_SPI_DATA_BITS_14</span></strong> = FLEX_SPI_CSR_BITS_14_BIT_Val&lt;&lt;FLEX_SPI_CSR_BITS_Pos,
+  <strong><span style="color: #000000">FLEXCOM_SPI_DATA_BITS_15</span></strong> = FLEX_SPI_CSR_BITS_15_BIT_Val&lt;&lt;FLEX_SPI_CSR_BITS_Pos,
+  <strong><span style="color: #000000">FLEXCOM_SPI_DATA_BITS_16</span></strong> = FLEX_SPI_CSR_BITS_16_BIT_Val&lt;&lt;FLEX_SPI_CSR_BITS_Pos,
+  <strong><span style="color: #000000">FLEXCOM_SPI_DATA_BITS_INVALID</span></strong> = 0xFFFFFFFF
+} FLEXCOM_SPI_DATA_BITS;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-None.</p></div>
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+FLEXCOM_SPI_DATA_BITS_8 = FLEX_SPI_CSR_BITS_8_BIT_Val&lt;&lt;FLEX_SPI_CSR_BITS_Pos&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+8 bits per transfer&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+FLEXCOM_SPI_DATA_BITS_9 = FLEX_SPI_CSR_BITS_9_BIT_Val&lt;&lt;FLEX_SPI_CSR_BITS_Pos&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+9 bits per transfer&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+FLEXCOM_SPI_DATA_BITS_10 = FLEX_SPI_CSR_BITS_10_BIT_Val&lt;&lt;FLEX_SPI_CSR_BITS_Pos&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+10 bits per transfer&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+FLEXCOM_SPI_DATA_BITS_11 = FLEX_SPI_CSR_BITS_11_BIT_Val&lt;&lt;FLEX_SPI_CSR_BITS_Pos&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+11 bits per transfer&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+FLEXCOM_SPI_DATA_BITS_12 = FLEX_SPI_CSR_BITS_12_BIT_Val&lt;&lt;FLEX_SPI_CSR_BITS_Pos&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+12 bits per transfer&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+FLEXCOM_SPI_DATA_BITS_13 = FLEX_SPI_CSR_BITS_13_BIT_Val&lt;&lt;FLEX_SPI_CSR_BITS_Pos&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+13 bits per transfer&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+FLEXCOM_SPI_DATA_BITS_14 = FLEX_SPI_CSR_BITS_14_BIT_Val&lt;&lt;FLEX_SPI_CSR_BITS_Pos&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+14 bits per transfer&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+FLEXCOM_SPI_DATA_BITS_15 = FLEX_SPI_CSR_BITS_15_BIT_Val&lt;&lt;FLEX_SPI_CSR_BITS_Pos&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+15 bits per transfer&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+FLEXCOM_SPI_DATA_BITS_16 = FLEX_SPI_CSR_BITS_16_BIT_Val&lt;&lt;FLEX_SPI_CSR_BITS_Pos&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+16 bits per transfer&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+FLEXCOM_SPI_DATA_BITS_INVALID = 0xFFFFFFFF&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Force the compiler to reserve 32-bit space for each enum value&nbsp;</div></td></tr></table></div></div>
 </div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-true - PWM signal is activated false - PWM signal is disabled</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None</p></div>
+For 9 to 15bit modes, data should be right aligned in the 16 bit memory location.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="02220.html" target="topic">LCDC Peripheral Library Help</a> &gt; <a href="02221.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="02234.html" target="topic">LCDCx_GetPWMSignalStatusActivated Function</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="02183.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02184.html" target="topic">SPI</a> &gt; <a href="02189.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="02234.html" target="topic">FLEXCOM_SPI_DATA_BITS Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -88,13 +152,13 @@ None</p></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02233.html" target="topic">Previous</a> | <a href="02221.html" target="topic">Up</a> | <a href="02235.html" target="topic">Next</a></div>
+<a href="02230.html" target="topic">Previous</a> | <a href="02189.html" target="topic">Up</a> | <a href="02245.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: LCDCx_GetPWMSignalStatusActivated Topic Title: LCDCx_GetPWMSignalStatusActivated Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: FLEXCOM_SPI_DATA_BITS Topic Title: FLEXCOM_SPI_DATA_BITS Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>EBI_Initialize Function</title>
+<title>Introduction</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="01180.html" target="topic">EBI Peripheral Library Help</a> &gt; <a href="01181.html" target="topic">Library Interface</a> &gt; Initialization Function &gt; <a href="01189.html" target="topic">EBI_Initialize Function</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="01190.html" target="topic">CLOCK Peripheral Library Help</a> &gt; <a href="01189.html" target="topic">Introduction</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01181.html" target="topic">Previous</a> | <a href="01181.html" target="topic">Up</a> | <a href="01195.html" target="topic">Next</a></div>
+<a href="01190.html" target="topic">Previous</a> | <a href="01190.html" target="topic">Up</a> | <a href="01187.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: EBI_Initialize Topic Title: EBI_Initialize Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CLOCK SAM_9X60 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-EBI_Initialize Function</div>
+Introduction</div>
 </div>
 </div>
 
@@ -49,45 +49,41 @@ EBI_Initialize Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function initializes the EBI peripheral with user input from the configurator.</p></div>
-</div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">EBI_Initialize</span></strong>();</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
-<div class="Element11">
-<div class="Element10">
+The Clock system generates and distributes the clock for the processor and peripherals&nbsp;</p>
 <p class="Element10">
-None</p></div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
+&nbsp;</p>
 <p class="Element10">
-void</p></div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
+<strong>Clock Generators:</strong>&nbsp;</p>
+<ul class="Element630">
+<li class="Element600">A low-power 32.768 kHz oscillator supporting crystals, resonators and Bypass mode</li>
+<li class="Element600">An embedded always-on, slow RC oscillator generating a typical 32 kHz clock</li>
+<li class="Element600">A 8 to 50 MHz oscillator supporting crystals, resonators and Bypass mode</li>
+<li class="Element600">A Main RC oscillator generating a typical 12 MHz clock</li>
+<li class="Element600">Two fractional-N PLLs with an input range of 8 to 50 MHz and an internal frequency range of 600 to 1200 MHz</li>
+</ul><p class="Element10">
+&nbsp;</p>
 <p class="Element10">
-None</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">    EBI_Initialize();</pre></div></div>
-</div>
+<strong>Clock Distribution:</strong></p>
+<ul class="Element630">
+<li class="Element600">MD_SLCK—Monitoring Domain Slow clock. This clock, sourced from the always-on Slow RC oscillator only, is the only permanent clock of the system and feeds safety-critical functions of the device (WDT, RSTC, SCKC, frequency monitors and detectors, PMC startup time counters).</li>
+<li class="Element600">TD_SLCK—Timing Domain Slow clock. This clock, sourced from the 32.768 kHz crystal oscillator or the always-on Slow RC oscillator, is routed to the RTC and RTT peripherals.</li>
+<li class="Element600">MAINCK—Output of the Main clock oscillator selection. This clock is either the Main crystal oscillator or Main RC oscillator.</li>
+<li class="Element600">PLL Clocks—Outputs of embedded PLLs</li>
+<li class="Element600">Master Clock (MCK)—programmable from a few hundred Hz to the maximum operating frequency of the device. It is available to the modules running permanently.</li>
+<li class="Element600">Processor Clock (CPU_CLK)—can be tuned through a frequency scaler module and automatically switched off when entering the processor in Sleep mode.</li>
+<li class="Element600">Free-running Processor Clock (FCLK)—the source clock of CPU_CLK. Is not affected when Sleep mode is activated.</li>
+<li class="Element600">UHDP Clocks (UHP48M and UHP12M)—required by USB Host Device Port operations.</li>
+<li class="Element600">Peripheral Clocks with independent ON/OFF control, provided to the peripherals. Each peripheral clock is inherited from MCK.</li>
+<li class="Element600">Programmable Clock Outputs (PCKx), selected from the clock generator outputs to drive the device PCKx pins.</li>
+<li class="Element600">Generic Clock (GCLK) with controllable division and ON/OFF control, independent of MCK and CPU_CLK. Provided to selected peripherals.</li>
+</ul></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="01180.html" target="topic">EBI Peripheral Library Help</a> &gt; <a href="01181.html" target="topic">Library Interface</a> &gt; Initialization Function &gt; <a href="01189.html" target="topic">EBI_Initialize Function</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="01190.html" target="topic">CLOCK Peripheral Library Help</a> &gt; <a href="01189.html" target="topic">Introduction</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -95,13 +91,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01181.html" target="topic">Previous</a> | <a href="01181.html" target="topic">Up</a> | <a href="01195.html" target="topic">Next</a></div>
+<a href="01190.html" target="topic">Previous</a> | <a href="01190.html" target="topic">Up</a> | <a href="01187.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: EBI_Initialize Topic Title: EBI_Initialize Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CLOCK SAM_9X60 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

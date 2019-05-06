@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Hardware Setup</title>
+<title>CAN_MAILBOX_TX_ATTRIBUTE Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00556.html" target="topic">Applications Help</a> &gt; <a href="00952.html" target="topic">DACC Applications</a> &gt; <a href="00950.html" target="topic">dacc_wav_gen</a> &gt; <a href="00954.html" target="topic">Hardware Setup</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="00870.html" target="topic">CAN Peripheral Library Help</a> &gt; <a href="00871.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="00954.html" target="topic">CAN_MAILBOX_TX_ATTRIBUTE Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00955.html" target="topic">Previous</a> | <a href="00950.html" target="topic">Up</a> | <a href="00956.html" target="topic">Next</a></div>
+<a href="00951.html" target="topic">Previous</a> | <a href="00871.html" target="topic">Up</a> | <a href="00958.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DACC dacc_wav_gen Hardware Setup Topic Title: Hardware Setup)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: can_6019::CAN_MAILBOX_TX_ATTRIBUTE Topic Title: CAN_MAILBOX_TX_ATTRIBUTE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Hardware Setup</div>
+CAN_MAILBOX_TX_ATTRIBUTE Enumeration</div>
 </div>
 </div>
 
@@ -48,44 +48,31 @@ Hardware Setup</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
-
-<ol class="Element630">
-<li value="1" class="Element600"><strong>Project: sam_e70_xult.X</strong>
-<ul class="Element631">
-<li class="Element601"><strong>Hardware Used</strong>
-<ul class="Element632">
-<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/DevelopmentTools/ProductDetails/PartNO/DM320113');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM E70 Xplained Ultra Evaluation Kit</a></li>
-</ul></li>
-<li class="Element601"><strong>Hardware Setup</strong>
-<ul class="Element632">
-<li class="Element602">Connect the DACC &quot;Channel 0&quot; and &quot;Channel 1&quot; output pin observable at PB13 (Pin 5 of the J502) and PD00 (Pin 6 of the J502) respectively to oscilloscope probe, to observe the analog output waveform</li>
-<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
-</ul></li>
-</ul></li>
-</ol><p class="Element10">
-&nbsp;</p>
-
-<ol class="Element630">
-<li value="2" class="Element600"><strong>Project: sam_v71_xult.X</strong>
-<ul class="Element631">
-<li class="Element601"><strong>Hardware Used</strong>
-<ul class="Element632">
-<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/atsamv71-xult');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM V71 Xplained Ultra Evaluation Kit</a></li>
-</ul></li>
-<li class="Element601"><strong>Hardware Setup</strong>
-<ul class="Element632">
-<li class="Element602">Connect the DACC &quot;Channel 0&quot; and &quot;Channel 1&quot; output pin observable at PB13 (Pin 5 of the J504) and PD00 (Pin 6 of the J504) respectively to oscilloscope probe, to observe the analog output waveform</li>
-<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
-</ul></li>
-</ul></li>
-</ol></div>
+<p class="Element10">
+CAN Mailbox Object Type TX Attribute&nbsp;</p>
+<p class="Element10">
+This data type defines CAN Mailbox TX Attribute. Only One attribute need to be passed as parameter value while invoking message transmit function.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">CAN_MAILBOX_DATA_FRAME_TX</span></strong> = 0,
+  <strong><span style="color: #000000">CAN_MAILBOX_DATA_FRAME_PRODUCER</span></strong>,
+  <strong><span style="color: #000000">CAN_MAILBOX_REMOTE_FRAME_CONSUMER</span></strong>
+} CAN_MAILBOX_TX_ATTRIBUTE;</pre></div></div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00556.html" target="topic">Applications Help</a> &gt; <a href="00952.html" target="topic">DACC Applications</a> &gt; <a href="00950.html" target="topic">dacc_wav_gen</a> &gt; <a href="00954.html" target="topic">Hardware Setup</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="00870.html" target="topic">CAN Peripheral Library Help</a> &gt; <a href="00871.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="00954.html" target="topic">CAN_MAILBOX_TX_ATTRIBUTE Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -93,13 +80,13 @@ Hardware Setup</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00955.html" target="topic">Previous</a> | <a href="00950.html" target="topic">Up</a> | <a href="00956.html" target="topic">Next</a></div>
+<a href="00951.html" target="topic">Previous</a> | <a href="00871.html" target="topic">Up</a> | <a href="00958.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DACC dacc_wav_gen Hardware Setup Topic Title: Hardware Setup)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: can_6019::CAN_MAILBOX_TX_ATTRIBUTE Topic Title: CAN_MAILBOX_TX_ATTRIBUTE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>FLEXCOMx_USART_ReadIsBusy Function</title>
+<title>EVIC_SourceStatusClear Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="01697.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="01708.html" target="topic">USART</a> &gt; <a href="01713.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="01827.html" target="topic">FLEXCOMx_USART_ReadIsBusy Function</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="01817.html" target="topic">EVIC Peripheral Library Help</a> &gt; <a href="01818.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="01827.html" target="topic">EVIC_SourceStatusClear Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01821.html" target="topic">Previous</a> | <a href="01713.html" target="topic">Up</a> | <a href="01836.html" target="topic">Next</a></div>
+<a href="01825.html" target="topic">Previous</a> | <a href="01818.html" target="topic">Up</a> | <a href="01829.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: FLEXCOMx_USART_ReadIsBusy Topic Title: FLEXCOMx_USART_ReadIsBusy Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: evic_02907::EVIC_SourceStatusClear@INT_SOURCE Topic Title: EVIC_SourceStatusClear Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-FLEXCOMx_USART_ReadIsBusy Function</div>
+EVIC_SourceStatusClear Function</div>
 </div>
 </div>
 
@@ -49,42 +49,61 @@ FLEXCOMx_USART_ReadIsBusy Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function returns the read request status associated with the given FLEXCOM USART peripheral instance.&nbsp;</p>
-<p class="Element10">
-This function is available only in interrupt or non-blocking mode of operation.</p></div>
+This function clears the status of the interrupt flag for the selected source. The flag is set when the interrupt request is identified. The pending interrupt request will not cause further processing if the interrupt is not enabled using the function <a href="01825.html" target="topic">EVIC_SourceEnable</a> or if interrupts are not enabled.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">FLEXCOMx_USART_ReadIsBusy</span></strong>();</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">EVIC_SourceStatusClear</span></strong>(
+    <a href="01830.html" target="topic">INT_SOURCE</a> <strong><span style="color: #000000">source</span></strong>
+);</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="01822.html" target="topic">FLEXCOMx_USART_Initialize</a> must have been called for the associated FLEXCOM USART instance.</p></div>
+<a href="01823.html" target="topic">EVIC_Initialize</a>() function must have been called first.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+source&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+One of the possible values from <a href="01830.html" target="topic">INT_SOURCE</a>.&nbsp;</div></td></tr></table></div></div>
+</div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Status of Read request. True - USART is busy in processing the previous read request. False - USART is free and ready to accept the new read request.</p></div>
+None.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+This function implements an operation of the SourceFlag feature. This feature may not be available on all devices. Please refer to the specific device data sheet to determine availability.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">if</span></strong>(<strong><span style="color: #000080">true</span></strong> == FLEXCOMx_USART_ReadIsBusy())
+<div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">if</span></strong>(<a href="01828.html" target="topic">EVIC_SourceStatusGet</a>(INT_SOURCE_CORE_TIMER) != <strong><span style="color: #000080">true</span></strong>)
 {
-    <i><span style="color: #008000">//USART is currently processing the previous read request.</span></i>
-    <i><span style="color: #008000">//Wait to submit new request.</span></i>
+    EVIC_SourceStatusClear(INT_SOURCE_CORE_TIMER);
 }</pre></div></div>
 </div>
 </div>
@@ -93,7 +112,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="01697.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="01708.html" target="topic">USART</a> &gt; <a href="01713.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="01827.html" target="topic">FLEXCOMx_USART_ReadIsBusy Function</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="01817.html" target="topic">EVIC Peripheral Library Help</a> &gt; <a href="01818.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="01827.html" target="topic">EVIC_SourceStatusClear Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -101,13 +120,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01821.html" target="topic">Previous</a> | <a href="01713.html" target="topic">Up</a> | <a href="01836.html" target="topic">Next</a></div>
+<a href="01825.html" target="topic">Previous</a> | <a href="01818.html" target="topic">Up</a> | <a href="01829.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: FLEXCOMx_USART_ReadIsBusy Topic Title: FLEXCOMx_USART_ReadIsBusy Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: evic_02907::EVIC_SourceStatusClear@INT_SOURCE Topic Title: EVIC_SourceStatusClear Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

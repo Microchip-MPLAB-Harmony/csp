@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TRNGx_CallbackRegister Function</title>
+<title>SPIx_CLOCK_PHASE Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="05316.html" target="topic">TRNG Peripheral Library Help</a> &gt; <a href="05317.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="05327.html" target="topic">TRNGx_CallbackRegister Function</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="05102.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="05103.html" target="topic">SPI</a> &gt; <a href="05108.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="05327.html" target="topic">SPIx_CLOCK_PHASE Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05317.html" target="topic">Previous</a> | <a href="05317.html" target="topic">Up</a> | <a href="05328.html" target="topic">Next</a></div>
+<a href="05156.html" target="topic">Previous</a> | <a href="05108.html" target="topic">Up</a> | <a href="05160.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: trng_u2242::TRNGx_CallbackRegister@TRNG_CALLBACK@uintptr_t Topic Title: TRNGx_CallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SPIx_CLOCK_PHASE Topic Title: SPIx_CLOCK_PHASE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TRNGx_CallbackRegister Function</div>
+SPIx_CLOCK_PHASE Enumeration</div>
 </div>
 </div>
 
@@ -49,78 +49,54 @@ TRNGx_CallbackRegister Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function sets the pointer to a client function to be called &quot;back&quot; when the random number is ready. It also accepts a context value that is passed into the function when it is called. This function is available only in interrupt mode of operation.</p></div>
+SPI Clock Phase&nbsp;</p>
+<p class="Element10">
+This enumeration identifies possible SPI Clock Phase Options.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">TRNGx_CallbackRegister</span></strong>(
-    <a href="05326.html" target="topic">TRNG_CALLBACK</a> <strong><span style="color: #000000">callback</span></strong>, 
-    uintptr_t <strong><span style="color: #000000">context</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">SPI_CLOCK_PHASE_TRAILING_EDGE</span></strong>,
+  <strong><span style="color: #000000">SPI_CLOCK_PHASE_LEADING_EDGE</span></strong>
+} SPIx_CLOCK_PHASE;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-None.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
+<div class="Element272">
 <div class="TableDiv">
-<table cellspacing="0" class="Table2">
+<table cellspacing="0" class="Table3">
 <tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-callback&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-A pointer to a function with a calling signature defined by the <a href="05326.html" target="topic">TRNG_CALLBACK</a> data type.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-A value (usually a pointer) passed (unused) into the function identified by the callback parameter.&nbsp;</div></td></tr></table></div></div>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SPI_CLOCK_PHASE_TRAILING_EDGE&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Input data is valid on clock trailing edge and output data is ready on leading edge&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SPI_CLOCK_PHASE_LEADING_EDGE&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Input data is valid on clock leading edge and output data is ready on trailing edge&nbsp;</div></td></tr></table></div></div>
 </div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The context value may be set to NULL if it is not required. In this case the value NULL will be passed to the callback function. To disable the callback function, pass a NULL for the callback parameter. See the <a href="05326.html" target="topic">TRNG_CALLBACK</a> type definition for additional information.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">    uint32_t randomValue;
-    <strong><span style="color: #000080">void</span></strong> testCallback( uintptr_t context, uint32_t random)
-    {
-        randomValue= random;
-    }
-    TRNG0_CallbackRegister(testCallback, NULL);</pre></div></div>
-</div>
+None.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="05316.html" target="topic">TRNG Peripheral Library Help</a> &gt; <a href="05317.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="05327.html" target="topic">TRNGx_CallbackRegister Function</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="05102.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="05103.html" target="topic">SPI</a> &gt; <a href="05108.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="05327.html" target="topic">SPIx_CLOCK_PHASE Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -128,13 +104,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05317.html" target="topic">Previous</a> | <a href="05317.html" target="topic">Up</a> | <a href="05328.html" target="topic">Next</a></div>
+<a href="05156.html" target="topic">Previous</a> | <a href="05108.html" target="topic">Up</a> | <a href="05160.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: trng_u2242::TRNGx_CallbackRegister@TRNG_CALLBACK@uintptr_t Topic Title: TRNGx_CallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SPIx_CLOCK_PHASE Topic Title: SPIx_CLOCK_PHASE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

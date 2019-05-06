@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Building The Application</title>
+<title>Using the Library</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00556.html" target="topic">Applications Help</a> &gt; <a href="02853.html" target="topic">PIO Applications</a> &gt; <a href="02854.html" target="topic">pio_led_on_off_interrupt</a> &gt; <a href="02856.html" target="topic">Building The Application</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="02851.html" target="topic">MCAN Peripheral Library Help</a> &gt; <a href="02856.html" target="topic">Using the Library</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02854.html" target="topic">Previous</a> | <a href="02854.html" target="topic">Up</a> | <a href="02858.html" target="topic">Next</a></div>
+<a href="02847.html" target="topic">Previous</a> | <a href="02851.html" target="topic">Up</a> | <a href="02852.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PIO pio_led_on_off_interrupt Building The Application Topic Title: Building The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MCAN 11273 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Building The Application</div>
+Using the Library</div>
 </div>
 </div>
 
@@ -49,66 +49,196 @@ Building The Application</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The parent folder for all the MPLABX projects for this application is given below: </p><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element65" valign="top" width="26%">
-<div class="Element66">
-Application Path&nbsp;</div></td><td class="Element65" valign="top" width="74%">
-<div class="Element66">
-csp/apps/pio/pio_led_on_off_interrupt/firmware&nbsp;</div></td></tr></table></div></div>
+The MCAN library supports the Normal and CAN-FD modes. The MCAN Normal or CAN-FD mode can transfer message in a polling or an interrupt mode.&nbsp;</p>
 <p class="Element10">
 &nbsp;</p>
 <p class="Element10">
-Below table shows the list of project names to be used with different development boards. Open the project in their respective IDEs.&nbsp;</p>
+<strong>MCAN Message RAM Configuration</strong>&nbsp;</p>
+<p class="Element10">
+Allocate MCAN Message RAM configuration in contiguous non-cacheable buffer in the application.&nbsp;</p>
+<p class="Element10">
+For example in SAME70, uint8_t Mcan0MessageRAM[MCAN0_MESSAGE_RAM_CONFIG_SIZE] __attribute__((aligned (32))) __attribute__((space(data), section (&quot;.ram_nocache&quot;))&nbsp;</p>
+<p class="Element10">
+For example in SAMA5D2, uint8_t Mcan0MessageRAM[MCAN0_MESSAGE_RAM_CONFIG_SIZE] __attribute__((aligned (32))) __attribute__((__section__(&quot;.region_nocache&quot;)))&nbsp;</p>
+<p class="Element10">
+If cache is enabled then non-cacheable section &quot;ram_nocache&quot; or &quot;region_nocache&quot; should be added in linker script (if non-cacheable section is not present in linker script).&nbsp;</p>
 <p class="Element10">
 &nbsp;</p>
 <p class="Element10">
-<strong>MPLAB X IDE Projects</strong> &nbsp;</p><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element65" valign="top" width="25%">
-<div class="Element66">
-Project Name&nbsp;</div></td><td class="Element65" valign="top" width="75%">
-<div class="Element66">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="25%">
-<div class="Element68">
-sam_e70_xult.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
-<div class="Element68">
-SAM E70 Xplained Ultra board&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="25%">
-<div class="Element68">
-sam_v71_xult.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
-<div class="Element68">
-SAM V71 Xplained Ultra board&nbsp;</div></td></tr></table></div></div>
+<strong>MCAN normal operation with polling</strong>&nbsp;</p>
+<p class="Element10">
+The following example shows the MCAN normal mode operation with polling implementation.&nbsp;</p>
 <p class="Element10">
 &nbsp;</p>
 <p class="Element10">
-<strong>IAR Embedded Workbench Projects</strong> </p><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element65" valign="top" width="25%">
-<div class="Element66">
-Project Name&nbsp;</div></td><td class="Element65" valign="top" width="75%">
-<div class="Element66">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="25%">
-<div class="Element68">
-sam_a5d2_xult.IAR&nbsp;</div></td><td class="Element67" valign="top" width="75%">
-<div class="Element68">
-SAMA5D2 Xplained Ultra evaluation kit&nbsp;</div></td></tr></table></div></div>
-</div>
+int main(void)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+/* Set Message RAM Configuration */&nbsp;</p>
+<p class="Element10">
+MCAN0_MessageRAMConfigSet(Mcan0MessageRAM);&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+while (1)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+/* Check if there is a receive FIFO 0 New Message */&nbsp;</p>
+<p class="Element10">
+if (MCAN0_InterruptGet(MCAN_INTERRUPT_RF0N_MASK))&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+MCAN0_InterruptClear(MCAN_INTERRUPT_RF0N_MASK);&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+/* Receive FIFO 0 New Message */&nbsp;</p>
+<p class="Element10">
+MCAN0_MessageReceive(&amp;messageID, &amp;messageLength, message, MCAN_MSG_ATTR_RX_FIFO0);&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+/* Transmit back received Message */&nbsp;</p>
+<p class="Element10">
+MCAN0_MessageTransmit(messageID, messageLength, message, MCAN_MODE_NORMAL, MCAN_MSG_ATTR_TX_FIFO_DATA_FRAME);&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<strong>MCAN normal operation with interrupt</strong>&nbsp;</p>
+<p class="Element10">
+The following example shows the MCAN normal mode operation with interrupt implementation.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+void APP_MCAN_Callback(uintptr_t context)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+/* Check MCAN Status */&nbsp;</p>
+<p class="Element10">
+status = MCAN0_ErrorGet();&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+if (((status &amp; MCAN_PSR_LEC_Msk) == MCAN_ERROR_NONE) || ((status &amp; MCAN_PSR_LEC_Msk) == MCAN_PSR_LEC_NO_CHANGE))&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+switch ((APP_STATES)context)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+case APP_STATE_MCAN_RECEIVE:&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+state = APP_STATE_MCAN_TRANSMIT;&nbsp;</p>
+<p class="Element10">
+break;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+default:&nbsp;</p>
+<p class="Element10">
+break;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+int main(void)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+/* Set Message RAM Configuration */&nbsp;</p>
+<p class="Element10">
+MCAN0_MessageRAMConfigSet(Mcan0MessageRAM);&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+while(1)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+/* Check the application's current state. */&nbsp;</p>
+<p class="Element10">
+switch (state)&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+case APP_STATE_MCAN_RECEIVE:&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+MCAN0_CallbackRegister( APP_MCAN_Callback, (uintptr_t)APP_STATE_MCAN_RECEIVE );&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+state = APP_STATE_MCAN_IDLE;&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+/* Receive FIFO 0 New Message */&nbsp;</p>
+<p class="Element10">
+MCAN0_MessageReceive(&amp;messageID, &amp;messageLength, message, MCAN_MSG_ATTR_RX_FIFO0);&nbsp;</p>
+<p class="Element10">
+break;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+case APP_STATE_MCAN_TRANSMIT:&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+MCAN0_CallbackRegister( APP_MCAN_Callback, (uintptr_t)APP_STATE_MCAN_TRANSMIT );&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+state = APP_STATE_MCAN_IDLE;&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+/* Transmit back received Message */&nbsp;</p>
+<p class="Element10">
+MCAN0_MessageTransmit(messageID, messageLength, message, MCAN_MODE_NORMAL, MCAN_MSG_ATTR_TX_FIFO_DATA_FRAME);&nbsp;</p>
+<p class="Element10">
+break;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+case APP_STATE_MCAN_IDLE:&nbsp;</p>
+<p class="Element10">
+{&nbsp;</p>
+<p class="Element10">
+/* Application can do other task here */&nbsp;</p>
+<p class="Element10">
+break;&nbsp;</p>
+<p class="Element10">
+}&nbsp;</p>
+<p class="Element10">
+default:&nbsp;</p>
+<p class="Element10">
+break;</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00556.html" target="topic">Applications Help</a> &gt; <a href="02853.html" target="topic">PIO Applications</a> &gt; <a href="02854.html" target="topic">pio_led_on_off_interrupt</a> &gt; <a href="02856.html" target="topic">Building The Application</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="02851.html" target="topic">MCAN Peripheral Library Help</a> &gt; <a href="02856.html" target="topic">Using the Library</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -116,13 +246,13 @@ SAMA5D2 Xplained Ultra evaluation kit&nbsp;</div></td></tr></table></div></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02854.html" target="topic">Previous</a> | <a href="02854.html" target="topic">Up</a> | <a href="02858.html" target="topic">Next</a></div>
+<a href="02847.html" target="topic">Previous</a> | <a href="02851.html" target="topic">Up</a> | <a href="02852.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PIO pio_led_on_off_interrupt Building The Application Topic Title: Building The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MCAN 11273 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->
