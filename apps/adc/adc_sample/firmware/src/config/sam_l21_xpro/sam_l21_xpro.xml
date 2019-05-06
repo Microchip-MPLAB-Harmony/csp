@@ -803,7 +803,16 @@
         </Integer>
       </Symbols>
     </UniqueComponent>
-    <UniqueComponent dnOrder="8" id="sercom3">
+    <UniqueComponent dnOrder="8" id="pm">
+      <Symbols dnOrder="0">
+        <KeyValueSet dnOrder="0" id="PM_PLCFG_PLSEL">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="pm" value="1"/>
+          </Values>
+        </KeyValueSet>
+      </Symbols>
+    </UniqueComponent>
+    <UniqueComponent dnOrder="9" id="sercom3">
       <Symbols dnOrder="0">
         <Integer dnOrder="0" id="I2CM_BAUD">
           <Values dnOrder="0">
@@ -816,12 +825,7 @@
           </Values>
         </String>
         <KeyValueSet dnOrder="2" id="SERCOM_MODE">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="readOnly">
-              <Value dnOrder="0">true</Value>
-            </Boolean>
-          </Attributes>
-          <Values dnOrder="1">
+          <Values dnOrder="0">
             <Dynamic dnOrder="0" id="sercom3" value="0"/>
           </Values>
         </KeyValueSet>
@@ -856,34 +860,27 @@
             <Dynamic dnOrder="0" id="sercom3" value="&amp;(SERCOM3_REGS-&gt;USART_INT.SERCOM_DATA)"/>
           </Values>
         </String>
-        <Comment dnOrder="8" id="USART_BAUD_ERROR_COMMENT">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="visible">
-              <Value dnOrder="0">false</Value>
-            </Boolean>
-          </Attributes>
-        </Comment>
-        <Integer dnOrder="9" id="USART_BAUD_VALUE">
+        <Integer dnOrder="8" id="USART_BAUD_VALUE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="sercom3" value="63019"/>
           </Values>
         </Integer>
-        <Boolean dnOrder="10" id="USART_INTERRUPT_MODE">
+        <Boolean dnOrder="9" id="USART_INTERRUPT_MODE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="stdio" value="false"/>
           </Values>
         </Boolean>
-        <KeyValueSet dnOrder="11" id="USART_RXPO">
+        <KeyValueSet dnOrder="10" id="USART_RXPO">
           <Values dnOrder="0">
             <User dnOrder="0" value="1"/>
           </Values>
         </KeyValueSet>
-        <Integer dnOrder="12" id="USART_SAMPLE_COUNT">
+        <Integer dnOrder="11" id="USART_SAMPLE_COUNT">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="sercom3" value="16"/>
           </Values>
         </Integer>
-        <Integer dnOrder="13" id="USART_SAMPLE_RATE">
+        <Integer dnOrder="12" id="USART_SAMPLE_RATE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="sercom3" value="0"/>
           </Values>
@@ -916,7 +913,7 @@
         </DirectCapability>
       </Attachments>
     </UniqueComponent>
-    <UniqueComponent dnOrder="9" id="stdio">
+    <UniqueComponent dnOrder="10" id="stdio">
       <Symbols dnOrder="0">
         <String dnOrder="0" id="DEBUG_PERIPHERAL">
           <Values dnOrder="0">
@@ -937,7 +934,7 @@
         </DirectDependency>
       </Attachments>
     </UniqueComponent>
-    <UniqueComponent dnOrder="10" id="supc">
+    <UniqueComponent dnOrder="11" id="supc">
       <Symbols dnOrder="0">
         <KeyValueSet dnOrder="0" id="SUPC_VREF_SEL">
           <Values dnOrder="0">
@@ -959,9 +956,10 @@
         <ElementPosition dnOrder="5" id="eic" x="189" y="182"/>
         <ElementPosition dnOrder="6" id="evsys" x="20" y="20"/>
         <ElementPosition dnOrder="7" id="nvmctrl" x="170" y="60"/>
-        <ElementPosition dnOrder="8" id="sercom3" x="26" y="276"/>
-        <ElementPosition dnOrder="9" id="stdio" x="222" y="291"/>
-        <ElementPosition dnOrder="10" id="supc" x="527" y="180"/>
+        <ElementPosition dnOrder="8" id="pm" x="330" y="60"/>
+        <ElementPosition dnOrder="9" id="sercom3" x="26" y="276"/>
+        <ElementPosition dnOrder="10" id="stdio" x="222" y="291"/>
+        <ElementPosition dnOrder="11" id="supc" x="527" y="180"/>
       </ElementPositions>
     </ComponentGraph>
   </UserData>

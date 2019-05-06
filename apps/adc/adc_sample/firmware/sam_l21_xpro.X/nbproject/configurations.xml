@@ -7,17 +7,17 @@
       <logicalFolder name="f1" displayName="config" projectFiles="true">
         <logicalFolder name="f1" displayName="sam_l21_xpro" projectFiles="true">
           <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
-            <logicalFolder name="f8" displayName="adc" projectFiles="true">
+            <logicalFolder name="f9" displayName="adc" projectFiles="true">
               <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/adc/plib_adc_common.h</itemPath>
               <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/adc/plib_adc.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f5" displayName="clock" projectFiles="true">
               <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/clock/plib_clock.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f11" displayName="dac" projectFiles="true">
+            <logicalFolder name="f12" displayName="dac" projectFiles="true">
               <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/dac/plib_dac.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f10" displayName="eic" projectFiles="true">
+            <logicalFolder name="f11" displayName="eic" projectFiles="true">
               <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/eic/plib_eic.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f3" displayName="evsys" projectFiles="true">
@@ -29,6 +29,9 @@
             <logicalFolder name="f2" displayName="nvmctrl" projectFiles="true">
               <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/nvmctrl/plib_nvmctrl.h</itemPath>
             </logicalFolder>
+            <logicalFolder name="f8" displayName="pm" projectFiles="true">
+              <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/pm/plib_pm.h</itemPath>
+            </logicalFolder>
             <logicalFolder name="f4" displayName="port" projectFiles="true">
               <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/port/plib_port.h</itemPath>
             </logicalFolder>
@@ -38,7 +41,7 @@
                 <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/sercom/usart/plib_sercom_usart_common.h</itemPath>
               </logicalFolder>
             </logicalFolder>
-            <logicalFolder name="f9" displayName="supc" projectFiles="true">
+            <logicalFolder name="f10" displayName="supc" projectFiles="true">
               <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/supc/plib_supc.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f7" displayName="systick" projectFiles="true">
@@ -123,16 +126,16 @@
       <logicalFolder name="f1" displayName="config" projectFiles="true">
         <logicalFolder name="f1" displayName="sam_l21_xpro" projectFiles="true">
           <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
-            <logicalFolder name="f8" displayName="adc" projectFiles="true">
+            <logicalFolder name="f9" displayName="adc" projectFiles="true">
               <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/adc/plib_adc.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f5" displayName="clock" projectFiles="true">
               <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/clock/plib_clock.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f11" displayName="dac" projectFiles="true">
+            <logicalFolder name="f12" displayName="dac" projectFiles="true">
               <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/dac/plib_dac.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f10" displayName="eic" projectFiles="true">
+            <logicalFolder name="f11" displayName="eic" projectFiles="true">
               <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/eic/plib_eic.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f3" displayName="evsys" projectFiles="true">
@@ -144,6 +147,9 @@
             <logicalFolder name="f2" displayName="nvmctrl" projectFiles="true">
               <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/nvmctrl/plib_nvmctrl.c</itemPath>
             </logicalFolder>
+            <logicalFolder name="f8" displayName="pm" projectFiles="true">
+              <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/pm/plib_pm.c</itemPath>
+            </logicalFolder>
             <logicalFolder name="f4" displayName="port" projectFiles="true">
               <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/port/plib_port.c</itemPath>
             </logicalFolder>
@@ -152,7 +158,7 @@
                 <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/sercom/usart/plib_sercom3_usart.c</itemPath>
               </logicalFolder>
             </logicalFolder>
-            <logicalFolder name="f9" displayName="supc" projectFiles="true">
+            <logicalFolder name="f10" displayName="supc" projectFiles="true">
               <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/supc/plib_supc.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f7" displayName="systick" projectFiles="true">

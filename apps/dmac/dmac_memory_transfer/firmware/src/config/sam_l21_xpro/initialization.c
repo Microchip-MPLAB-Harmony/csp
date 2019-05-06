@@ -126,6 +126,8 @@ void SYS_Initialize ( void* data )
 	SYSTICK_TimerInitialize();
     DMAC_Initialize();
 
+    PM_Initialize();
+
 
 
 

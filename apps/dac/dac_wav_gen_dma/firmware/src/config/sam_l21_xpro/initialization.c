@@ -110,8 +110,6 @@
 
 void SYS_Initialize ( void* data )
 {
-    PM_REGS->PM_PLCFG |= 0x2;
-    
     NVMCTRL_Initialize( );
 
   
@@ -124,6 +122,8 @@ void SYS_Initialize ( void* data )
     EVSYS_Initialize();
 
     DMAC_Initialize();
+
+    PM_Initialize();
 
     TC0_TimerInitialize();
 

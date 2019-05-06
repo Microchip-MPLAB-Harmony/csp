@@ -123,6 +123,8 @@ void SYS_Initialize ( void* data )
 
     TCC0_PWMInitialize();
 
+    PM_Initialize();
+
 
 
 

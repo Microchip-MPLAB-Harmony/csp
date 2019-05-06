@@ -125,6 +125,8 @@ void SYS_Initialize ( void* data )
 
 	TRNG_Initialize();
 
+    PM_Initialize();
+
     EIC_Initialize();
 
 
