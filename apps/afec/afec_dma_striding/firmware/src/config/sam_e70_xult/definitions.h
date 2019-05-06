@@ -55,8 +55,8 @@
 #include "peripheral/nvic/plib_nvic.h"
 #include "peripheral/xdmac/plib_xdmac.h"
 #include "peripheral/dacc/plib_dacc.h"
-#include "peripheral/tc/plib_tc1.h"
 #include "peripheral/efc/plib_efc.h"
+#include "peripheral/tc/plib_tc1.h"
 #include "peripheral/usart/plib_usart1.h"
 
 // DOM-IGNORE-BEGIN
