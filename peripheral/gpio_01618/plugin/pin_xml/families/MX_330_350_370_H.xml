@@ -305,34 +305,34 @@
             </function>
 		</module>
 		<module name="Clock" desc="Clock\n(OSC_ID_0)">
-			<function name="CLKI" analog="true">
+			<function name="CLKI">
                 <constraint type="enable">
                     <pair key="POSCMOD" value="EC"/>
                 </constraint>
             </function>
-			<function name="CLKO" analog="true">
+			<function name="CLKO">
                 <constraint type="enable">
                     <pair key="OSCIOFNC" value="ON"/>
                 </constraint>
             </function>
-			<function name="OSC1" analog="true">
+			<function name="OSC1">
                 <constraint type="enable">
                     <pair key="POSCMOD" value="HS"/>
                     <pair key="POSCMOD" value="XT"/>
                 </constraint>
             </function>
-			<function name="OSC2" analog="true">
+			<function name="OSC2">
                 <constraint type="enable">
                     <pair key="POSCMOD" value="HS"/>
                     <pair key="POSCMOD" value="XT"/>
                 </constraint>
             </function>
-			<function name="SOSCI" analog="true">
+			<function name="SOSCI">
                 <constraint type="enable">
                     <pair key="FSOSCEN" value="ON"/>
                 </constraint>
             </function>
-			<function name="SOSCO" analog="true">
+			<function name="SOSCO">
                 <constraint type="enable">
                     <pair key="FSOSCEN" value="ON"/>
                 </constraint>
@@ -715,22 +715,22 @@
             <constraint type="enable">
 		       	<pair key="DRV_CMP_PERIPHERAL_ID_IDX[0-1]" value="CMP_ID_1"/>
 		    </constraint>
-            <function name="C1INA" analog="true">
+            <function name="C1INA">
                 <constraint type="enable">
 			    	<pair key="DRV_CMP_NONINVPIN_IDX[0-1]" value="C1INA"/>
 			    </constraint>
 			</function>
-            <function name="C1INB" analog="true">
+            <function name="C1INB">
                 <constraint type="enable">
 			    	<pair key="DRV_CMP_INVPIN_IDX[0-1]" value="C1INB"/>
 			    </constraint>
 			</function>
-            <function name="C1INC" analog="true">
+            <function name="C1INC">
                 <constraint type="enable">
 			    	<pair key="DRV_CMP_INVPIN_IDX[0-1]" value="C1INC"/>
 			    </constraint>
 			</function>
-            <function name="C1IND" analog="true">
+            <function name="C1IND">
                 <constraint type="enable">
 			    	<pair key="DRV_CMP_INVPIN_IDX[0-1]" value="C1IND"/>
 			    </constraint>
@@ -745,22 +745,22 @@
             <constraint type="enable">
 		       	<pair key="DRV_CMP_PERIPHERAL_ID_IDX[0-1]" value="CMP_ID_2"/>
 		    </constraint>
-            <function name="C2INA" analog="true">
+            <function name="C2INA">
                 <constraint type="enable">
 			    	<pair key="DRV_CMP_NONINVPIN_IDX[0-1]" value="C2INA"/>
 			    </constraint>
 			</function>
-			<function name="C2INB" analog="true">
+			<function name="C2INB">
                 <constraint type="enable">
 			    	<pair key="DRV_CMP_INVPIN_IDX[0-1]" value="C2INB"/>
 			    </constraint>
 			</function>
-			<function name="C2INC" analog="true">
+			<function name="C2INC">
                 <constraint type="enable">
 			    	<pair key="DRV_CMP_INVPIN_IDX[0-1]" value="C2INC"/>
 			    </constraint>
 			</function>
-			<function name="C2IND" analog="true">
+			<function name="C2IND">
                 <constraint type="enable">
 			    	<pair key="DRV_CMP_INVPIN_IDX[0-1]" value="C2IND"/>
 			    </constraint>
