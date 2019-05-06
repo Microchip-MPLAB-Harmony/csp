@@ -551,7 +551,15 @@
         </Boolean>
       </Symbols>
     </UniqueComponent>
-    <UniqueComponent dnOrder="5" id="nvmctrl"/>
+    <UniqueComponent dnOrder="5" id="nvmctrl">
+      <Symbols dnOrder="0">
+        <Integer dnOrder="0" id="NVM_RWS">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="nvmctrl" value="2"/>
+          </Values>
+        </Integer>
+      </Symbols>
+    </UniqueComponent>
     <UniqueComponent dnOrder="6" id="opamp">
       <Symbols dnOrder="0">
         <Boolean dnOrder="0" id="OPAMP_OPAMPCTRL_2_ANAOUT">
@@ -603,7 +611,16 @@
         </Boolean>
       </Symbols>
     </UniqueComponent>
-    <UniqueComponent dnOrder="7" id="sercom3">
+    <UniqueComponent dnOrder="7" id="pm">
+      <Symbols dnOrder="0">
+        <KeyValueSet dnOrder="0" id="PM_PLCFG_PLSEL">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="pm" value="1"/>
+          </Values>
+        </KeyValueSet>
+      </Symbols>
+    </UniqueComponent>
+    <UniqueComponent dnOrder="8" id="sercom3">
       <Symbols dnOrder="0">
         <Integer dnOrder="0" id="I2CM_BAUD">
           <Values dnOrder="0">
@@ -616,7 +633,12 @@
           </Values>
         </String>
         <KeyValueSet dnOrder="2" id="SERCOM_MODE">
-          <Values dnOrder="0">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="readOnly">
+              <Value dnOrder="0">true</Value>
+            </Boolean>
+          </Attributes>
+          <Values dnOrder="1">
             <Dynamic dnOrder="0" id="sercom3" value="0"/>
           </Values>
         </KeyValueSet>
@@ -704,7 +726,7 @@
         </DirectCapability>
       </Attachments>
     </UniqueComponent>
-    <UniqueComponent dnOrder="8" id="stdio">
+    <UniqueComponent dnOrder="9" id="stdio">
       <Symbols dnOrder="0">
         <String dnOrder="0" id="DEBUG_PERIPHERAL">
           <Values dnOrder="0">
@@ -737,8 +759,9 @@
         <ElementPosition dnOrder="4" id="evsys" x="20" y="20"/>
         <ElementPosition dnOrder="5" id="nvmctrl" x="500" y="20"/>
         <ElementPosition dnOrder="6" id="opamp" x="182" y="147"/>
-        <ElementPosition dnOrder="7" id="sercom3" x="26" y="107"/>
-        <ElementPosition dnOrder="8" id="stdio" x="173" y="76"/>
+        <ElementPosition dnOrder="7" id="pm" x="270" y="80"/>
+        <ElementPosition dnOrder="8" id="sercom3" x="26" y="107"/>
+        <ElementPosition dnOrder="9" id="stdio" x="173" y="76"/>
       </ElementPositions>
     </ComponentGraph>
   </UserData>
