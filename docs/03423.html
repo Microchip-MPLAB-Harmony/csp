@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>PORT_PinLatchRead Function</title>
+<title>Peripheral Libraries Help</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="03307.html" target="topic">PORT Peripheral Library Help</a> &gt; <a href="03308.html" target="topic">Library Interface</a> &gt; b) Pin Functions &gt; <a href="03423.html" target="topic">PORT_PinLatchRead Function</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03425.html" target="topic">Previous</a> | <a href="03308.html" target="topic">Up</a> | <a href="03428.html" target="topic">Next</a></div>
+<a href="03831.html" target="topic">Previous</a> | <a href="03831.html" target="topic">Up</a> | <a href="03843.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PORT_PinLatchRead@PORT_PIN Topic Title: PORT_PinLatchRead Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: Peripheral Library Help Topic Title: Peripheral Libraries Help)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-PORT_PinLatchRead Function</div>
+Peripheral Libraries Help</div>
 </div>
 </div>
 
@@ -49,65 +49,86 @@ PORT_PinLatchRead Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function reads the data driven on the selected I/O line/pin. The function does not sample the state of the hardware pin. It only returns the value that is written to output register. Refer to the <a href="03425.html" target="topic">PORT_PinRead</a>() function if the state of the output pin needs to be read.</p></div>
+The MPLAB® Harmony Configurator (MHC) is a Graphical User Interface (GUI) plug-in tool for MPLAB X IDE to configures a rich set of peripherals and functions specific to your application and generate the corresponding peripheral library code. The generated code directly accesses the Peripheral registers without any abstraction layers and it is easy to understand.</p></div>
 </div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">PORT_PinLatchRead</span></strong>(
-    <a href="03324.html" target="topic">PORT_PIN</a> <strong><span style="color: #000000">pin</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
+<a name="546F70696373"></a><div class="Element14">
+Topics</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-The <a href="03323.html" target="topic">PORT_Initialize</a>() function should have been called.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
+<div class="Element212">
 <div class="TableDiv">
-<table cellspacing="0" class="Table2">
+<table cellspacing="0" class="Table0">
 <tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
+<td class="Element200" valign="top" width="35%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-pin&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-One of the IO pins from the enum <a href="03324.html" target="topic">PORT_PIN</a>.&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-
-<ul class="Element630">
-<li class="Element600">true - the present value in the output latch is a logic high.</li>
-<li class="Element600">false - the present value in the output latch is a logic low.</li>
-</ul></div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-To read actual pin value, PIN_Read API should be used.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">
-<strong><span style="color: #000080">bool</span></strong> value;
-value = PORT_PinLatchRead(PORT_PIN_PB03);
-</pre></div></div>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="03843.html" target="topic">SAM C20/C21 Peripheral Libraries</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This Section Provides list of all the Peripheral Libraries for the SAM C20/C21 Family.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="03840.html" target="topic">SAM D20/D21 Peripheral Libraries</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This Section Provides list of all the Peripheral Libraries for the SAMD20/D21 Family.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="03842.html" target="topic">SAM E70/S70/V70/V71 Peripheral Libraries</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This Section Provides list of all the Peripheral Libraries for the SAM E70/S70/V70/V71 Family.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="03841.html" target="topic">SAM D51/E51/E53/E54 Peripheral Libraries</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This Section Provides list of all the Peripheral Libraries for the SAM D51/E51/E53/E54 Family.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="03838.html" target="topic">PIC32MZ EF Peripheral Libraries</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This Section Provides list of all the Peripheral Libraries for the PIC32MZ EF Family.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="03837.html" target="topic">PIC32MZ DA Peripheral Libraries</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This Section Provides list of all the Peripheral Libraries for the PIC32MZ DA Family.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="03839.html" target="topic">SAM A5D2 Peripheral Libraries</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This Section Provides list of all the Peripheral Libraries for the SAM A5D2 Family.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="03832.html" target="topic">PIC32MK Peripheral Libraries</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This Section Provides list of all the Peripheral Libraries for the PIC32MK Family.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="03836.html" target="topic">PIC32MX 330/350/370/430/450/470 Peripheral Libraries</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This Section Provides list of all the Peripheral Libraries for the PIC32MX 330/350/370/430/450/470 Family.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="03835.html" target="topic">PIC32MX 1XX/2XX/5XX Peripheral Libraries</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This Section Provides list of all the Peripheral Libraries for the PIC32MX 1XX/2XX/5XX Family.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="03833.html" target="topic">PIC32MX 1XX/2XX Peripheral Libraries</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This Section Provides list of all the Peripheral Libraries for the PIC32MX 1XX/2XX Family.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="03834.html" target="topic">PIC32MX 1XX/2XX XLP Peripheral Libraries</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This Section Provides list of all the Peripheral Libraries for the PIC32MX 1XX/2XX XLP Family.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="03830.html" target="topic">Peripheral Libraries</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This topic provides help for the peripheral libraries that are available in the Microchip 32 bit Chip Support Package (CSP).&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -115,7 +136,7 @@ value = PORT_PinLatchRead(PORT_PIN_PB03);
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="03307.html" target="topic">PORT Peripheral Library Help</a> &gt; <a href="03308.html" target="topic">Library Interface</a> &gt; b) Pin Functions &gt; <a href="03423.html" target="topic">PORT_PinLatchRead Function</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -123,13 +144,13 @@ value = PORT_PinLatchRead(PORT_PIN_PB03);
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03425.html" target="topic">Previous</a> | <a href="03308.html" target="topic">Up</a> | <a href="03428.html" target="topic">Next</a></div>
+<a href="03831.html" target="topic">Previous</a> | <a href="03831.html" target="topic">Up</a> | <a href="03843.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PORT_PinLatchRead@PORT_PIN Topic Title: PORT_PinLatchRead Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: Peripheral Library Help Topic Title: Peripheral Libraries Help)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

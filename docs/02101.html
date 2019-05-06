@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>HSMCI_DataTransferFlags Structure</title>
+<title>EVSYS_CallbackRegister Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="02062.html" target="topic">HSMCI Peripheral Library Help</a> &gt; <a href="02063.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="02101.html" target="topic">HSMCI_DataTransferFlags Structure</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="02054.html" target="topic">EVSYS Peripheral Library Help</a> &gt; <a href="02055.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="02101.html" target="topic">EVSYS_CallbackRegister Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02097.html" target="topic">Previous</a> | <a href="02063.html" target="topic">Up</a> | <a href="02106.html" target="topic">Next</a></div>
+<a href="02102.html" target="topic">Previous</a> | <a href="02055.html" target="topic">Up</a> | <a href="02128.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: HSMCI_DataTransferFlags Topic Title: HSMCI_DataTransferFlags Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: evsys_u2256::EVSYS_CallbackRegister@EVSYS_CALLBACK@uintptr_t Topic Title: EVSYS_CallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-HSMCI_DataTransferFlags Structure</div>
+EVSYS_CallbackRegister Function</div>
 </div>
 </div>
 
@@ -49,60 +49,92 @@ HSMCI_DataTransferFlags Structure</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-HSMCI data transfer flags&nbsp;</p>
-<p class="Element10">
-The client indicates whether the transfer contains data stage and if yes, it further specifies the data transfer direction and data transfer type. The object of this data type is passed as an argument to the <a href="02092.html" target="topic">HSMCI_CommandSend</a> function.</p></div>
+This function allows the application to register a callback function that will be called when a event system interrupt has triggered. The callback feature is only available if the Interrupt operation in the GUI was enabled. If a callback mechanism is desired, then a callback function should be registered via this function before enabling other peripherals Calling this function at any time with callback function as NULL will disable the callback feature.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
-  <strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">isDataPresent</span></strong>;
-  <a href="02094.html" target="topic">HSMCI_DATA_TRANSFER_DIR</a> <strong><span style="color: #000000">transferDir</span></strong>;
-  <a href="02097.html" target="topic">HSMCI_DATA_TRANSFER_TYPE</a> <strong><span style="color: #000000">transferType</span></strong>;
-} HSMCI_DataTransferFlags;</pre></div></div>
-<a name="4D656D62657273"></a><div class="Element14">
-Members</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">EVSYS_CallbackRegister</span></strong>(
+    <a href="02100.html" target="topic">EVSYS_CALLBACK</a> <strong><span style="color: #000000">callback</span></strong>, 
+    uintptr_t <strong><span style="color: #000000">context</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element272">
-<div class="TableDiv">
-<table cellspacing="0" class="Table3">
-<tr>
-<td class="Element260" valign="top" width="35%">
-<div class="Element261">
-Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
-<div class="Element265">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-bool isDataPresent;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Indicates if HSMCI transfer has a data stage or not&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-HSMCI_DATA_TRANSFER_DIR transferDir;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Direction of the data transfer&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-HSMCI_DATA_TRANSFER_TYPE transferType;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Type of the data transfer - read/write&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+The <a href="02102.html" target="topic">EVSYS_Initialize</a> function must have been called. Interrupt option in MHC should have been enabled.</p></div>
 </div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+callBack&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Pointer to an application callback function.<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+The value of parameter will be passed back to the application unchanged, when the callback function is called. It can be used to identify any application specific data object that identifies the instance of the client module (for example, it may be a pointer to the client modules state structure).&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+The callback mechanism allows the application to implement an event based interaction with the library.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">
+<i><span style="color: #008000">// This is the callback function that is called when an Event</span></i>
+<i><span style="color: #008000">// interrupt is triggered.</span></i>
+
+<strong><span style="color: #000080">void</span></strong> evsysCallBack(uintptr_t contextHandle, uint32_t int_cause)
+{
+    <strong><span style="color: #000080">if</span></strong>( int_cause &amp; EVSYS_INTENSET_EVD1)
+    {
+        <i><span style="color: #008000">// Event detected on channel 1</span></i>
+    }
+    <strong><span style="color: #000080">if</span></strong>( int_cause &amp; EVSYS_INTENSET_EVD2)
+    {
+        <i><span style="color: #008000">// Event detected on channel 2</span></i>
+    }
+    
+}
+
+<a href="02102.html" target="topic">EVSYS_Initialize</a>();
+EVSYS_CallbackRegister(&amp;evsysCallBack, NULL);
+</pre></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="02062.html" target="topic">HSMCI Peripheral Library Help</a> &gt; <a href="02063.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="02101.html" target="topic">HSMCI_DataTransferFlags Structure</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="02054.html" target="topic">EVSYS Peripheral Library Help</a> &gt; <a href="02055.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="02101.html" target="topic">EVSYS_CallbackRegister Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -110,13 +142,13 @@ None.</p></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02097.html" target="topic">Previous</a> | <a href="02063.html" target="topic">Up</a> | <a href="02106.html" target="topic">Next</a></div>
+<a href="02102.html" target="topic">Previous</a> | <a href="02055.html" target="topic">Up</a> | <a href="02128.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: HSMCI_DataTransferFlags Topic Title: HSMCI_DataTransferFlags Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: evsys_u2256::EVSYS_CallbackRegister@EVSYS_CALLBACK@uintptr_t Topic Title: EVSYS_CallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

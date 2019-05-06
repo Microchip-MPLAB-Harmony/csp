@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Using the Library</title>
+<title>RSTC_ResetCauseGet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="04369.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="04380.html" target="topic">USART</a> &gt; <a href="04385.html" target="topic">Using the Library</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="04327.html" target="topic">RSTC Peripheral Library Help</a> &gt; <a href="04328.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="04385.html" target="topic">RSTC_ResetCauseGet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04381.html" target="topic">Previous</a> | <a href="04380.html" target="topic">Up</a> | <a href="04384.html" target="topic">Next</a></div>
+<a href="04432.html" target="topic">Previous</a> | <a href="04328.html" target="topic">Up</a> | <a href="04431.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SERCOM U2201 USART Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rstc_11009::RSTC_ResetCauseGet Topic Title: RSTC_ResetCauseGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Using the Library</div>
+RSTC_ResetCauseGet Function</div>
 </div>
 </div>
 
@@ -49,110 +49,40 @@ Using the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The SERCOM UART library supports the byte and buffer model to transfer data. The buffer model can process a block of data in a blocking or a non-blocking manner.&nbsp;</p>
+This function is used to know the cause of the last reset.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><a href="04375.html" target="topic">RSTC_RESET_CAUSE</a> <strong><span style="color: #000000">RSTC_ResetCauseGet</span></strong>();</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-&nbsp;</p>
+None.</p></div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-<strong>Byte-by-Byte Transfer Model:</strong>&nbsp;</p>
+<a href="04375.html" target="topic">RSTC_RESET_CAUSE</a> - Identifies cause of reset, either General, Backup, Watchdog, Software or User Reset</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-The Byte-by-Byte Model allows the application to transfer data through the USART one byte at a time. With this model, the driver reads one byte from the receive buffer or writes one byte to the transmit buffer. The application must check if data has been received before reading the data. Similarly, it must check if the transmit buffer is empty before writing to the transmit buffer. The byte-by-byte data transfer model places the responsibility of maintaining the USART peripheral on the Application.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-The following example shows the byte-by-byte model usage. </p><div class="Element13"><div class="Element12"><pre class="Element12"> <strong><span style="color: #000080">char</span></strong> rxData;
- <strong><span style="color: #000080">char</span></strong> txData = 'A';
-
-<strong><span style="color: #000080">int</span></strong> main(<strong><span style="color: #000080">void</span></strong>)
-{
-    <strong><span style="color: #000080">if</span></strong>(SERCOM0_USART_ReceiverIsReady() == <strong><span style="color: #000080">true</span></strong>)
+None.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">    <strong><span style="color: #000080">if</span></strong> (RSTC_WATCHDOG_RESET == RSTC_ResetCauseGet ())
     {
-        rxData = SERCOM0_USART_ReadByte();
-    }
-
-    <strong><span style="color: #000080">if</span></strong>(SERCOM0_USART_TransmitterIsReady() == <strong><span style="color: #000080">true</span></strong>)
-    {
-        SERCOM0_USART_WriteByte(txData);
-    }
-
-}</pre></div></div>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong>Buffer Transfer Model:</strong>&nbsp;</p>
-<p class="Element10">
-The buffer model can process a block of data in a blocking or a non-blocking manner.</p>
-<ul class="Element630">
-<li class="Element600">With blocking, the read and write APIs will block until all of the data is transferred. The CPU polls the peripheral register continuously to manage the transfer.</li>
-<li class="Element600">With non-blocking, the read and write APIs will return immediately. The peripheral interrupt is used to manage the transfer. The user application can either use polling or callback method to indicate the transfer status.
-<ul class="Element631">
-<li class="Element601">With polling, the application will need to continuously poll to check if the transfer is completed.</li>
-<li class="Element601">With callback, the registered callback function will be called once the transfer is completed. This means the application do not have to poll continuously.</li>
-</ul></li>
-</ul><p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong>Blocking Transfer</strong>&nbsp;</p>
-<p class="Element10">
-The following example shows the blocking transfer. </p><div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">char</span></strong> myData[6] = {&quot;hello&quot;};
-
-<strong><span style="color: #000080">int</span></strong> main(<strong><span style="color: #000080">void</span></strong>)
-{
-   <i><span style="color: #008000">/* Write 6 bytes of data */</span></i>
-   SERCOM0_USART_Write(&amp;myData, 6);
-
-}</pre></div></div>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong>Non-blocking Transfer with callback</strong>&nbsp;</p>
-<p class="Element10">
-The following example shows a non-blocking transfer with callback. </p><div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">char</span></strong> readBuffer[10];
-
-<strong><span style="color: #000080">void</span></strong> SERCOM0_USART_Callback(uintptr_t context)
-{
-    <strong><span style="color: #000080">if</span></strong>(SERCOM0_USART_ErrorGet() != USART_ERROR_NONE)
-    {
-        <i><span style="color: #008000">//Handle error case</span></i>
-    }
-    <strong><span style="color: #000080">else</span></strong>
-    {
-        <i><span style="color: #008000">//Transfer completed successfully</span></i>
-    }
-}
-
-<strong><span style="color: #000080">int</span></strong> main (<strong><span style="color: #000080">void</span></strong>)
-{
-    <i><span style="color: #008000">/* Register Callback function for Read operation*/</span></i>
-    SERCOM0_USART_ReadCallbackRegister(SERCOM0_USART_Callback, (uintptr_t)NULL);
-
-    <i><span style="color: #008000">/* Submit Read request to read 10 bytes of data */</span></i>
-    SERCOM0_USART_Read(&amp;readBuffer, 10);
-
-}</pre></div></div>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong>Non-blocking Transfer with polling</strong>&nbsp;</p>
-<p class="Element10">
-The following example shows a non-blocking transfer with polling. </p><div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">char</span></strong> readBuffer[10];
-
-<strong><span style="color: #000080">int</span></strong> main(<strong><span style="color: #000080">void</span></strong>)
-{
-
-    SERCOM0_USART_Read(&amp;readBuffer, 10);
-
-    <i><span style="color: #008000">/* Poll and wait for the transfer to complete */</span></i>
-    <strong><span style="color: #000080">while</span></strong>(SERCOM0_USART_ReadIsBusy());
-
-    <strong><span style="color: #000080">if</span></strong>(SERCOM0_USART_ErrorGet() != USART_ERROR_NONE)
-    {
-        <i><span style="color: #008000">// Error occurred while receiving the buffer</span></i>
-    }
-    <strong><span style="color: #000080">else</span></strong>
-    {
-        <i><span style="color: #008000">//  Received the buffer without any error</span></i>
-    }
-}</pre></div></div>
+        <i><span style="color: #008000">//Application related tasks</span></i>
+    }</pre></div></div>
 </div>
 </div>
 </div>
@@ -160,7 +90,7 @@ The following example shows a non-blocking transfer with polling. </p><div class
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="04369.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="04380.html" target="topic">USART</a> &gt; <a href="04385.html" target="topic">Using the Library</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="04327.html" target="topic">RSTC Peripheral Library Help</a> &gt; <a href="04328.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="04385.html" target="topic">RSTC_ResetCauseGet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -168,13 +98,13 @@ The following example shows a non-blocking transfer with polling. </p><div class
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04381.html" target="topic">Previous</a> | <a href="04380.html" target="topic">Up</a> | <a href="04384.html" target="topic">Next</a></div>
+<a href="04432.html" target="topic">Previous</a> | <a href="04328.html" target="topic">Up</a> | <a href="04431.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SERCOM U2201 USART Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rstc_11009::RSTC_ResetCauseGet Topic Title: RSTC_ResetCauseGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

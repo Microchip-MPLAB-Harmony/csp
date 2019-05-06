@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Introduction</title>
+<title>RNG_Poly2Get Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="04315.html" target="topic">SDRAMC Peripheral Library Help</a> &gt; <a href="04314.html" target="topic">Introduction</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="04297.html" target="topic">RNG Peripheral Library Help</a> &gt; <a href="04298.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="04314.html" target="topic">RNG_Poly2Get Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04315.html" target="topic">Previous</a> | <a href="04315.html" target="topic">Up</a> | <a href="04312.html" target="topic">Next</a></div>
+<a href="04313.html" target="topic">Previous</a> | <a href="04298.html" target="topic">Up</a> | <a href="04315.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SDRAMC 6100 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RNG_Poly2Get Topic Title: RNG_Poly2Get Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Introduction</div>
+RNG_Poly2Get Function</div>
 </div>
 </div>
 
@@ -49,20 +49,46 @@ Introduction</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<span style="color: #000000">The SDRAM Controller (SDRAMC) extends the memory capabilities of a chip by providing the interface to the external 16-bit DRAM devices. The page size supports ranges from 2048 to 8192 and the number of columns from 256 to 2048. It also supports byte (8-bit), half-word (16-bit), and word (32-bit) accesses.</span>&nbsp;</p>
+The polynomial equation for PRNG is set via the RNGPOLYx registers. Use this function to read the polynomial.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100">uint32_t <strong><span style="color: #000000">RNG_Poly2Get</span></strong>();</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-<span style="color: #000000">The SDRAMC supports a read or write burst length of one location. It keeps track of the active row in each bank, maximizing SDRAM performance, e.g., the application may be placed in one bank and data in the other banks. For optimized performance, it is advisable to avoid accessing different rows in the same bank.</span>&nbsp;</p>
+None.</p></div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-<span style="color: #000000">The SDRAMC supports a CAS latency of 1, 2 or 3 and optimizes the read access depending on the frequency.</span>&nbsp;</p>
+Value of the RNGPOLY2 register.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-<span style="color: #000000">The SDRAM controller supports Self-refresh, Power-down and Deep Power-down modes to minimize power consumption on the SDRAM device.</span></p></div>
+None.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">    uint32_t poly2 = 0;
+    poly2 = RNG_Poly2Get();</pre></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="04315.html" target="topic">SDRAMC Peripheral Library Help</a> &gt; <a href="04314.html" target="topic">Introduction</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="04297.html" target="topic">RNG Peripheral Library Help</a> &gt; <a href="04298.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="04314.html" target="topic">RNG_Poly2Get Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -70,13 +96,13 @@ Introduction</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04315.html" target="topic">Previous</a> | <a href="04315.html" target="topic">Up</a> | <a href="04312.html" target="topic">Next</a></div>
+<a href="04313.html" target="topic">Previous</a> | <a href="04298.html" target="topic">Up</a> | <a href="04315.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SDRAMC 6100 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RNG_Poly2Get Topic Title: RNG_Poly2Get Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

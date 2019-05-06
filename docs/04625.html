@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Running The Application</title>
+<title>RTC_Timer16PeriodGet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00556.html" target="topic">Applications Help</a> &gt; <a href="04620.html" target="topic">SQI Applications</a> &gt; <a href="04621.html" target="topic">sqi_read_write</a> &gt; <a href="04625.html" target="topic">Running The Application</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="04485.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="04496.html" target="topic">16-bit Timer (Mode 1)</a> &gt; <a href="04502.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="04625.html" target="topic">RTC_Timer16PeriodGet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04623.html" target="topic">Previous</a> | <a href="04621.html" target="topic">Up</a> | <a href="04671.html" target="topic">Next</a></div>
+<a href="04626.html" target="topic">Previous</a> | <a href="04502.html" target="topic">Up</a> | <a href="04615.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SQI sqi_read_write Running Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2202::RTC_Timer16PeriodGet Topic Title: RTC_Timer16PeriodGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Running The Application</div>
+RTC_Timer16PeriodGet Function</div>
 </div>
 </div>
 
@@ -48,46 +48,44 @@ Running The Application</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
-
-<ol class="Element630">
-<li value="1" class="Element600">Build and program the application using the MPLAB X IDE.</li>
-<li value="2" class="Element600"><strong>Switch LED</strong> is turned ON to indicate waiting for switch press.</li>
-<li value="3" class="Element600">Press the Switch to start the SQI Transfer. <strong>Switch LED</strong> is turned OFF once switch is pressed.</li>
-<li value="4" class="Element600"><span style="color: #000000">The <strong>Success LED</strong> is turned ON when the value read from the SQI Serial Flash memory matched with the written value.</span></li>
-</ol><p class="Element10">
-&nbsp;</p>
 <p class="Element10">
-The following table provides the LED names and switch name. </p><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element65" valign="top" width="65%">
-<div class="Element66">
-Kit Name&nbsp;</div></td><td class="Element65" valign="top" width="13%">
-<div class="Element66">
-Success LED Name&nbsp;</div></td><td class="Element65" valign="top" width="13%">
-<div class="Element66">
-Switch LED Name&nbsp;</div></td><td class="Element65" valign="top" width="9%">
-<div class="Element66">
-Switch Name&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="65%">
-<div class="Element68">
-PIC32MZ Embedded Graphics with Stacked DRAM (DA) Starter Kit&nbsp;</div></td><td class="Element67" valign="top" width="13%">
-<div class="Element68">
-LED3&nbsp;</div></td><td class="Element67" valign="top" width="13%">
-<div class="Element68">
-LED1&nbsp;</div></td><td class="Element67" valign="top" width="9%">
-<div class="Element68">
-SW3&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="65%">
-<div class="Element68">
-PIC32MZ Embedded Connectivity with FPU (EF) Starter Kit&nbsp;</div></td><td class="Element67" valign="top" width="13%">
-<div class="Element68">
-LED3&nbsp;</div></td><td class="Element67" valign="top" width="13%">
-<div class="Element68">
-LED1&nbsp;</div></td><td class="Element67" valign="top" width="9%">
-<div class="Element68">
-SW3&nbsp;</div></td></tr></table></div></div>
+This function returns the 16-bit timer period value which used to compare with the current counter value. This value will match the value that was set using the <a href="04626.html" target="topic">RTC_Timer16PeriodSet</a>() function.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100">uint16_t <strong><span style="color: #000000">RTC_Timer16PeriodGet</span></strong>();</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+<a href="04604.html" target="topic">RTC_Initialize</a> must have been called for the associated RTC instance. The RTC peripheral should have been configured in 16-bit Timer Counter mode</p></div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The current 16-bit timer period value.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">    uint16_t period = 0;
+    <a href="04604.html" target="topic">RTC_Initialize</a>();
+    <a href="04626.html" target="topic">RTC_Timer16PeriodSet</a>(0xFFF);
+
+    <i><span style="color: #008000">// period will have the same value is 0xFFF.</span></i>
+    period = RTC_Timer16PeriodGet();
+</pre></div></div>
 </div>
 </div>
 </div>
@@ -95,7 +93,7 @@ SW3&nbsp;</div></td></tr></table></div></div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00556.html" target="topic">Applications Help</a> &gt; <a href="04620.html" target="topic">SQI Applications</a> &gt; <a href="04621.html" target="topic">sqi_read_write</a> &gt; <a href="04625.html" target="topic">Running The Application</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="04485.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="04496.html" target="topic">16-bit Timer (Mode 1)</a> &gt; <a href="04502.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="04625.html" target="topic">RTC_Timer16PeriodGet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -103,13 +101,13 @@ SW3&nbsp;</div></td></tr></table></div></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04623.html" target="topic">Previous</a> | <a href="04621.html" target="topic">Up</a> | <a href="04671.html" target="topic">Next</a></div>
+<a href="04626.html" target="topic">Previous</a> | <a href="04502.html" target="topic">Up</a> | <a href="04615.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SQI sqi_read_write Running Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2202::RTC_Timer16PeriodGet Topic Title: RTC_Timer16PeriodGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

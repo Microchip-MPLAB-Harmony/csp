@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Building The Application</title>
+<title>CAN_ERROR Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00556.html" target="topic">Applications Help</a> &gt; <a href="00985.html" target="topic">DIVAS Applications</a> &gt; <a href="00984.html" target="topic">divas_c_operator_override</a> &gt; <a href="00990.html" target="topic">Building The Application</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="00891.html" target="topic">CAN Peripheral Library Help</a> &gt; <a href="00892.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="00990.html" target="topic">CAN_ERROR Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00984.html" target="topic">Previous</a> | <a href="00984.html" target="topic">Up</a> | <a href="00992.html" target="topic">Next</a></div>
+<a href="00989.html" target="topic">Previous</a> | <a href="00892.html" target="topic">Up</a> | <a href="01011.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DIVAS divas_c_operator_override Building The Application Topic Title: Building The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: can_u2003::CAN_ERROR Topic Title: CAN_ERROR Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Building The Application</div>
+CAN_ERROR Enumeration</div>
 </div>
 </div>
 
@@ -49,40 +49,67 @@ Building The Application</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The parent folder for all the MPLAB X IDE projects for this application is given below: </p><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element65" valign="top" width="25%">
-<div class="Element66">
-Application Path&nbsp;</div></td><td class="Element65" valign="top" width="75%">
-<div class="Element66">
-csp/apps/divas/divas_c_operator_override/firmware&nbsp;</div></td></tr></table></div></div>
+CAN Transfer Error&nbsp;</p>
 <p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-To build the application, refer to the following table and open the appropriate project file in the MPLAB X IDE. </p><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element65" valign="top" width="25%">
-<div class="Element66">
-Project Name&nbsp;</div></td><td class="Element65" valign="top" width="75%">
-<div class="Element66">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="25%">
-<div class="Element68">
-sam_c21n_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
-<div class="Element68">
-SAM C21N Xplained Pro Evaluation Kit&nbsp;</div></td></tr></table></div></div>
+This data type defines the CAN Transfer Error.</p></div>
 </div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">CAN_ERROR_NONE</span></strong> = 0x0,
+  <strong><span style="color: #000000">CAN_ERROR_LEC_STUFF</span></strong> = 0x1,
+  <strong><span style="color: #000000">CAN_ERROR_LEC_FORM</span></strong> = 0x2,
+  <strong><span style="color: #000000">CAN_ERROR_LEC_ACK</span></strong> = 0x3,
+  <strong><span style="color: #000000">CAN_ERROR_LEC_BIT1</span></strong> = 0x4,
+  <strong><span style="color: #000000">CAN_ERROR_LEC_BIT0</span></strong> = 0x5,
+  <strong><span style="color: #000000">CAN_ERROR_LEC_CRC</span></strong> = 0x6,
+  <strong><span style="color: #000000">CAN_ERROR_LEC_NO_CHANGE</span></strong> = 0x7,
+  <strong><span style="color: #000000">CAN_ERROR_PASSIVE</span></strong> = 0x20,
+  <strong><span style="color: #000000">CAN_ERROR_WARNING_STATUS</span></strong> = 0x40,
+  <strong><span style="color: #000000">CAN_ERROR_BUS_OFF</span></strong> = 0x80,
+  <strong><span style="color: #000000">CAN_ERROR_DLEC_STUFF</span></strong> = 0x100,
+  <strong><span style="color: #000000">CAN_ERROR_DLEC_FORM</span></strong> = 0x200,
+  <strong><span style="color: #000000">CAN_ERROR_DLEC_ACK</span></strong> = 0x300,
+  <strong><span style="color: #000000">CAN_ERROR_DLEC_BIT1</span></strong> = 0x400,
+  <strong><span style="color: #000000">CAN_ERROR_DLEC_BIT0</span></strong> = 0x500,
+  <strong><span style="color: #000000">CAN_ERROR_DLEC_CRC</span></strong> = 0x600,
+  <strong><span style="color: #000000">CAN_ERROR_DLEC_NO_CHANGE</span></strong> = 0x700,
+  <strong><span style="color: #000000">CAN_ERROR_PROTOCOL_EXCEPTION_EVENT</span></strong> = 0x4000,
+  <strong><span style="color: #000000">CAN_ERROR_INVALID</span></strong> = 0xFFFFFFFF
+} CAN_ERROR;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+CAN_ERROR_INVALID = 0xFFFFFFFF&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Force the compiler to reserve 32-bit space for each enum value&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00556.html" target="topic">Applications Help</a> &gt; <a href="00985.html" target="topic">DIVAS Applications</a> &gt; <a href="00984.html" target="topic">divas_c_operator_override</a> &gt; <a href="00990.html" target="topic">Building The Application</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="00891.html" target="topic">CAN Peripheral Library Help</a> &gt; <a href="00892.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="00990.html" target="topic">CAN_ERROR Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -90,13 +117,13 @@ SAM C21N Xplained Pro Evaluation Kit&nbsp;</div></td></tr></table></div></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00984.html" target="topic">Previous</a> | <a href="00984.html" target="topic">Up</a> | <a href="00992.html" target="topic">Next</a></div>
+<a href="00989.html" target="topic">Previous</a> | <a href="00892.html" target="topic">Up</a> | <a href="01011.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DIVAS divas_c_operator_override Building The Application Topic Title: Building The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: can_u2003::CAN_ERROR Topic Title: CAN_ERROR Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

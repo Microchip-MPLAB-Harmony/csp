@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="04155.html" target="topic">SDHC Peripheral Library Help</a> &gt; <a href="04160.html" target="topic">Using the Library</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="04157.html" target="topic">QSPI Peripheral Library Help</a> &gt; <a href="04160.html" target="topic">Using the Library</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,13 +26,13 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04151.html" target="topic">Previous</a> | <a href="04155.html" target="topic">Up</a> | <a href="04156.html" target="topic">Next</a></div>
+<a href="04153.html" target="topic">Previous</a> | <a href="04157.html" target="topic">Up</a> | <a href="04158.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SDHC U2011 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: QSPI U2008 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
 Using the Library</div>
 </div>
@@ -49,72 +49,32 @@ Using the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The SDHC peripheral library performs the transfers in non-blocking mode. Transfers involving a data stage are performed using DMA. The example code demonstrates sending a SD command to read a single block of data from the SD card. This example assumes that the SD card is already initialized by the application and is ready to accept read and write requests. The example application does not show the larger SD protocol required in order to communicate with the SD card.&nbsp;</p>
+The QSPI Peripheral Library operates only in Serial Memory Mode to interface with the QSPI based Serial Flash Memories operating in Single-bit SPI, Dual SPI, and Quad SPI.&nbsp;</p>
 <p class="Element10">
-&nbsp;</p><div class="Element13"><div class="Element12"><pre class="Element12">
-
-uint16_t cmd_error;
-uint16_t data_error;
-<strong><span style="color: #000080">bool</span></strong> isCommandCompleted = <strong><span style="color: #000080">false</span></strong>;
-<strong><span style="color: #000080">bool</span></strong> isDataCompleted = <strong><span style="color: #000080">false</span></strong>;
-uint8_t readBuffer[512];
-
-<strong><span style="color: #000080">static</span></strong> <strong><span style="color: #000080">void</span></strong> SDHC_TransferEventHandler(
-        SDHC_XFER_STATUS xferStatus,
-        uintptr_t contextHandle
-)
-{
-    <strong><span style="color: #000080">if</span></strong> (xferStatus &amp; SDHC_XFER_STATUS_CMD_COMPLETED)
-    {
-        <i><span style="color: #008000">// Command transfer complete, read the command error status.</span></i>
-        cmd_error = SDHC1_CommandErrorGet();
-        isCommandCompleted = <strong><span style="color: #000080">true</span></strong>;
-    }
-    <strong><span style="color: #000080">if</span></strong> (xferStatus &amp; SDHC_XFER_STATUS_DATA_COMPLETED)
-    {
-        <i><span style="color: #008000">// Data transfer complete, read the data error status.</span></i>
-        data_error = SDHC1_DataErrorGet();
-        isDataCompleted = <strong><span style="color: #000080">true</span></strong>;
-    }
-}
-
-<strong><span style="color: #000080">int</span></strong> main(<strong><span style="color: #000080">void</span></strong>)
-{
-
-    <i><span style="color: #008000">// Register event handler with the SDHC PLIB. This is usually done once.</span></i>
-    SDHC1_CallbackRegister(SDHC_TransferEventHandler, (uintptr_t) 0);
-
-    SDHC_DataTransferFlags transferFlags;
-
-    transferFlags.isDataPresent  = <strong><span style="color: #000080">true</span></strong>;
-    transferFlags.transferDir = SDHC_DATA_TRANSFER_DIR_READ;
-    transferFlags.transferType = SDHC_DATA_TRANSFER_TYPE_SINGLE;
-
-    <i><span style="color: #008000">// Set the block size to 512 bytes</span></i>
-    SDHC1_BlockSizeSet(512);
-
-    <i><span style="color: #008000">// Set the block count to 1</span></i>
-    SDHC1_BlockCountSet(1);
-
-    <i><span style="color: #008000">// Set up the DMA to read 512 btyes of data</span></i>
-    SDHC1_DmaSetup(readBuffer, 512, SDHC_DATA_TRANSFER_DIR_READ);
-
-    <i><span style="color: #008000">// Send command to read one block of data from SD card starting at block address 100</span></i>
-    SDHC1_CommandSend(17, 100, SDHC_CMD_RESP_R1, transferFlags);
-
-    <i><span style="color: #008000">// Check the status of isCommandCompleted and isDataCompleted</span></i>
-
-    <i><span style="color: #008000">// Other tasks ...</span></i>
-}
-</pre></div></div>
-</div>
+&nbsp;</p>
+<p class="Element10">
+The QSPI Peripheral library provides non-Blocking API's, which can be used to perform the following functionalities on the QSPI Slave device.</p>
+<ul class="Element630">
+<li class="Element600"><strong>Send a command</strong>
+<ul class="Element631">
+<li class="Element601"><a href="04164.html" target="topic">qspi_command_xfer_t</a> data type needs to filled to send a command to the slave device</li>
+</ul></li>
+<li class="Element600"><strong>Register read/write</strong>
+<ul class="Element631">
+<li class="Element601"><a href="04195.html" target="topic">qspi_register_xfer_t</a> data type needs to be filled to read data from a register or to write data to a register.</li>
+</ul></li>
+<li class="Element600"><strong>Memory read/write</strong>
+<ul class="Element631">
+<li class="Element601"><a href="04179.html" target="topic">qspi_memory_xfer_t</a> data type needs to be filled to read data from flash memory or to write data to the FLASH memory.</li>
+</ul></li>
+</ul></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="04155.html" target="topic">SDHC Peripheral Library Help</a> &gt; <a href="04160.html" target="topic">Using the Library</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="04157.html" target="topic">QSPI Peripheral Library Help</a> &gt; <a href="04160.html" target="topic">Using the Library</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -122,13 +82,13 @@ uint8_t readBuffer[512];
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04151.html" target="topic">Previous</a> | <a href="04155.html" target="topic">Up</a> | <a href="04156.html" target="topic">Next</a></div>
+<a href="04153.html" target="topic">Previous</a> | <a href="04157.html" target="topic">Up</a> | <a href="04158.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SDHC U2011 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: QSPI U2008 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

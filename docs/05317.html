@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Library Interface</title>
+<title>SPIx_TRANSFER_SETUP Structure</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="05316.html" target="topic">TRNG Peripheral Library Help</a> &gt; <a href="05317.html" target="topic">Library Interface</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="05264.html" target="topic">SPI Peripheral Library Help</a> &gt; <a href="05265.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="05317.html" target="topic">SPIx_TRANSFER_SETUP Structure</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05320.html" target="topic">Previous</a> | <a href="05316.html" target="topic">Up</a> | <a href="05327.html" target="topic">Next</a></div>
+<a href="05310.html" target="topic">Previous</a> | <a href="05265.html" target="topic">Up</a> | <a href="05358.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TRNG U2242 Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: spi_01329::SPIx_TRANSFER_SETUP Topic Title: SPIx_TRANSFER_SETUP Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Library Interface</div>
+SPIx_TRANSFER_SETUP Structure</div>
 </div>
 </div>
 
@@ -46,91 +46,69 @@ Library Interface</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="62292053657475702046756E6374696F6E73"></a><div class="Element14">
-b) Setup Functions</div>
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+SPI Setup Parameters&nbsp;</p>
+<p class="Element10">
+This structure identifies the possible setup parameters for SPI which can be changed dynamically if needed.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
+  uint32_t <strong><span style="color: #000000">clockFrequency</span></strong>;
+  <a href="05304.html" target="topic">SPIx_CLOCK_PHASE</a> <strong><span style="color: #000000">clockPhase</span></strong>;
+  <a href="05307.html" target="topic">SPIx_CLOCK_POLARITY</a> <strong><span style="color: #000000">clockPolarity</span></strong>;
+  <a href="05310.html" target="topic">SPIx_DATA_BITS</a> <strong><span style="color: #000000">dataBits</span></strong>;
+} SPIx_TRANSFER_SETUP;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
+<div class="Element272">
 <div class="TableDiv">
-<table cellspacing="0" class="Table0">
+<table cellspacing="0" class="Table3">
 <tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="05327.html" target="topic">TRNGx_CallbackRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Sets the pointer to the function (and it's context) to be called when the random number is ready to be read.&nbsp;</div></td></tr></table></div></div>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint32_t clockFrequency;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Baud Rate or clock frequency&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SPIx_CLOCK_PHASE clockPhase;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Clock Phase&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SPIx_CLOCK_POLARITY clockPolarity;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Clock Polarity&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SPIx_DATA_BITS dataBits;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Number of bits per transfer&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
-<a name="6329205472616E73616374696F6E2046756E6374696F6E73"></a><div class="Element14">
-c) Transaction Functions</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="05328.html" target="topic">TRNGx_RandomNumberGenerate</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Initiates generation of random number using the TRNG peripheral.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="05329.html" target="topic">TRNGx_ReadData</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Generates and return a 32-bit random number&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="6529204461746120547970657320616E6420436F6E7374616E7473"></a><div class="Element14">
-e) Data Types and Constants</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="05326.html" target="topic">TRNG_CALLBACK</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Defines the data type and function signature for the TRNG peripheral callback function.&nbsp;</div></td></tr></table></div></div>
-</div>
+<p class="Element10">
+None.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="05316.html" target="topic">TRNG Peripheral Library Help</a> &gt; <a href="05317.html" target="topic">Library Interface</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="05264.html" target="topic">SPI Peripheral Library Help</a> &gt; <a href="05265.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="05317.html" target="topic">SPIx_TRANSFER_SETUP Structure</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -138,13 +116,13 @@ Defines the data type and function signature for the TRNG peripheral callback fu
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05320.html" target="topic">Previous</a> | <a href="05316.html" target="topic">Up</a> | <a href="05327.html" target="topic">Next</a></div>
+<a href="05310.html" target="topic">Previous</a> | <a href="05265.html" target="topic">Up</a> | <a href="05358.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TRNG U2242 Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: spi_01329::SPIx_TRANSFER_SETUP Topic Title: SPIx_TRANSFER_SETUP Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>SDADCx_WindowMonitorIsSet Function</title>
+<title>Hardware Setup</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="04128.html" target="topic">SDADC Peripheral Library Help</a> &gt; <a href="04129.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="04150.html" target="topic">SDADCx_WindowMonitorIsSet Function</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="04142.html" target="topic">QSPI Applications</a> &gt; <a href="04144.html" target="topic">qspi_xip</a> &gt; <a href="04150.html" target="topic">Hardware Setup</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04147.html" target="topic">Previous</a> | <a href="04129.html" target="topic">Up</a> | <a href="04134.html" target="topic">Next</a></div>
+<a href="04151.html" target="topic">Previous</a> | <a href="04144.html" target="topic">Up</a> | <a href="04152.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SDADCx_WindowMonitorIsSet Topic Title: SDADCx_WindowMonitorIsSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: QSPI qspi_xip Hardware Setup Topic Title: Hardware Setup)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-SDADCx_WindowMonitorIsSet Function</div>
+Hardware Setup</div>
 </div>
 </div>
 
@@ -48,49 +48,27 @@ SDADCx_WindowMonitorIsSet Function</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
-<p class="Element10">
-This function returns the status of whether window monitor condition is met.</p></div>
-</div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">SDADCx_WindowMonitorIsSet</span></strong>();</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-<a href="04149.html" target="topic">SDADCx_Initialize</a>() function must have been called first for the associated instance. Also conversion must have been started.</p></div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-True - Window monitor condition is met False - Window monitor condition is not met</p></div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-This function should be called only after conversion is started and window monitor mode is enabled.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">    <strong><span style="color: #000080">bool</span></strong> sdadcWinMonStatus;
-    <a href="04149.html" target="topic">SDADCx_Initialize</a>();
-    <a href="04148.html" target="topic">SDADCx_ConversionStart</a>();
-    sdadcWinMonStatus = SDADCx_WindowMonitorIsSet();</pre></div></div>
-</div>
+
+<ol class="Element630">
+<li value="1" class="Element600"><strong>Project xip_main/firmware/sam_e70_xult.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602">SAM E70 Xplained Ultra Evaluation Kit</li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+</ul></li>
+</ul></li>
+</ol></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="04128.html" target="topic">SDADC Peripheral Library Help</a> &gt; <a href="04129.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="04150.html" target="topic">SDADCx_WindowMonitorIsSet Function</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="04142.html" target="topic">QSPI Applications</a> &gt; <a href="04144.html" target="topic">qspi_xip</a> &gt; <a href="04150.html" target="topic">Hardware Setup</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -98,13 +76,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04147.html" target="topic">Previous</a> | <a href="04129.html" target="topic">Up</a> | <a href="04134.html" target="topic">Next</a></div>
+<a href="04151.html" target="topic">Previous</a> | <a href="04144.html" target="topic">Up</a> | <a href="04152.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SDADCx_WindowMonitorIsSet Topic Title: SDADCx_WindowMonitorIsSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: QSPI qspi_xip Hardware Setup Topic Title: Hardware Setup)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

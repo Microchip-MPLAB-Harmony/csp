@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Library Interface</title>
+<title>RTC_Timer16Compare0Set Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="04615.html" target="topic">SQI Peripheral Library Help</a> &gt; <a href="04616.html" target="topic">Library Interface</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="04485.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="04496.html" target="topic">16-bit Timer (Mode 1)</a> &gt; <a href="04502.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="04616.html" target="topic">RTC_Timer16Compare0Set Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04619.html" target="topic">Previous</a> | <a href="04615.html" target="topic">Up</a> | <a href="04649.html" target="topic">Next</a></div>
+<a href="04628.html" target="topic">Previous</a> | <a href="04502.html" target="topic">Up</a> | <a href="04618.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SQI 00206 Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2202::RTC_Timer16Compare0Set@uint16_t Topic Title: RTC_Timer16Compare0Set Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Library Interface</div>
+RTC_Timer16Compare0Set Function</div>
 </div>
 </div>
 
@@ -46,149 +46,44 @@ Library Interface</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="612920496E697469616C697A6174696F6E2046756E6374696F6E"></a><div class="Element14">
-a) Initialization Function</div>
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+This function will set the Counter Compare 0 Value. The module will compare the counter against this value and will signal a match when the counter equals the compare value. If the library was configured for interrupt mode, the Compare 0 event is enabled and if a valid callback is registered, the library will call the registered callback function with the RTC_TIMER16_INT_MASK_COMPARE0_MATCH event. The <a href="04615.html" target="topic">RTC_Timer16Compare0HasMatched</a>() function will return true when the match occurs.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">RTC_Timer16Compare0Set</span></strong>(
+    uint16_t <strong><span style="color: #000000">comparisionValue</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="04649.html" target="topic">SQIx_Initialize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Initializes given instance of the SQI peripheral.&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+<a href="04604.html" target="topic">RTC_Initialize</a>, <a href="04627.html" target="topic">RTC_Timer16Start</a> must have been called for the associated RTC instance. The module should have configured for 16-bit Timer Counter operation.</p></div>
 </div>
-</div>
-<a name="62292053657475702046756E6374696F6E73"></a><div class="Element14">
-b) Setup Functions</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="04650.html" target="topic">SQIx_RegisterCallback</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Sets the pointer to the function (and it's context) to be called when the operation is complete.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="04647.html" target="topic">SQIx_DMASetup</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Sets up SQI peripheral to DMA mode.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="04651.html" target="topic">SQIx_XIPSetup</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Sets up SQI peripheral to XIP mode.&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+comparisionValue - 16-bit compare value compares with the current counter value.</p></div>
 </div>
-</div>
-<a name="6329205472616E73616374696F6E2046756E6374696F6E73"></a><div class="Element14">
-c) Transaction Functions</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="04648.html" target="topic">SQIx_DMATransfer</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Starts a DMA transfer to the SQI slave device.&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+None.</p></div>
 </div>
-</div>
-<a name="6429204461746120547970657320616E6420436F6E7374616E7473"></a><div class="Element14">
-d) Data Types and Constants</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="04633.html" target="topic">SQI_EVENT_HANDLER</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Defines the data type and function signature for the SQI peripheral event handler function.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="04634.html" target="topic">SQI_LANE_MODE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Defines the data type to specify the type of lane.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="04638.html" target="topic">SQI_XIP_ADDR_BYTES</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Defines the data type to specify the number of address bytes.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="04644.html" target="topic">SQI_XIP_DEV_SELECT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Defines the data type to specify the device to be used.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="04632.html" target="topic">sqi_dma_desc</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Defines the data type for the SQI DMA based transfer.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="04632.html" target="topic">sqi_dma_desc_t</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Defines the data type for the SQI DMA based transfer.&nbsp;</div></td></tr></table></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">    <i><span style="color: #008000">// Refer to the description of the RTC_Timer16Compare0HasMatched()</span></i>
+    <i><span style="color: #008000">// function for example usage of the RTC_Timer16Compare0Set() function.</span></i>
+</pre></div></div>
 </div>
 </div>
 </div>
@@ -196,7 +91,7 @@ Defines the data type for the SQI DMA based transfer.&nbsp;</div></td></tr></tab
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="04615.html" target="topic">SQI Peripheral Library Help</a> &gt; <a href="04616.html" target="topic">Library Interface</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="04485.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="04496.html" target="topic">16-bit Timer (Mode 1)</a> &gt; <a href="04502.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="04616.html" target="topic">RTC_Timer16Compare0Set Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -204,13 +99,13 @@ Defines the data type for the SQI DMA based transfer.&nbsp;</div></td></tr></tab
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04619.html" target="topic">Previous</a> | <a href="04615.html" target="topic">Up</a> | <a href="04649.html" target="topic">Next</a></div>
+<a href="04628.html" target="topic">Previous</a> | <a href="04502.html" target="topic">Up</a> | <a href="04618.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SQI 00206 Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2202::RTC_Timer16Compare0Set@uint16_t Topic Title: RTC_Timer16Compare0Set Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

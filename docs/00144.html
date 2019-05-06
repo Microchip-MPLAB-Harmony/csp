@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00556.html" target="topic">Applications Help</a> &gt; <a href="00144.html" target="topic">ADC Applications</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="00144.html" target="topic">ADC Applications</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,10 +26,10 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00088.html" target="topic">Previous</a> | <a href="00556.html" target="topic">Up</a> | <a href="00141.html" target="topic">Next</a></div>
+<a href="00088.html" target="topic">Previous</a> | <a href="00822.html" target="topic">Up</a> | <a href="00133.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
 <a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ADC Applications Help Topic Title: ADC Applications)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
@@ -66,19 +66,9 @@ Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="35%">
 <div class="Element203">
-<a href="00141.html" target="topic">adc_sample</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="00133.html" target="topic">adc_automatic_window_comparison</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-This example application shows how to sample an analog input using the ADC and displays the converted samples on a serial terminal.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="00143.html" target="topic">adc_window_sleepwalking</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This application shows how to configure the ADC in a sleepwalking operation, where the input voltage is measured at a fixed interval, but the device is not woken from sleep until the measured value is below a given threshold.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="00139.html" target="topic">adc_dmac_sleepwalking</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This application shows how to configure the ADC in a sleepwalking operation, where the input voltage is measured at a fixed interval, and then the device is woken from sleep after conversion of 16 samples.&nbsp;</div></td></tr><tr>
+This application shows how to sample an analog input in polled mode and send the converted data to console using automatic window comparison of converted values.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="35%">
 <div class="Element203">
 <a href="00134.html" target="topic">adc_dma_sequencing</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
@@ -86,9 +76,19 @@ This application shows how to configure the ADC in a sleepwalking operation, whe
 This application shows how to use DMA sequencing feature available in ADC peripheral library.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="35%">
 <div class="Element203">
+<a href="00139.html" target="topic">adc_dmac_sleepwalking</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This application shows how to configure the ADC in a sleepwalking operation, where the input voltage is measured at a fixed interval, and then the device is woken from sleep after conversion of 16 samples.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
 <a href="00140.html" target="topic">adc_polled_mode</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
 This example demonstrates how to sample an analog input in polled mode and send the converted data to console.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="00141.html" target="topic">adc_sample</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This example application shows how to sample an analog input using the ADC and displays the converted samples on a serial terminal.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="35%">
 <div class="Element203">
 <a href="00142.html" target="topic">adc_user_sequence</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
@@ -96,9 +96,9 @@ This example demonstrates how to sample an analog input in polled mode and send 
 This example demonstrates how to sample three analog inputs using the user sequencer in software trigger mode and send the converted data to the console.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="35%">
 <div class="Element203">
-<a href="00133.html" target="topic">adc_automatic_window_comparison</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="00143.html" target="topic">adc_window_sleepwalking</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-This application shows how to sample an analog input in polled mode and send the converted data to console using automatic window comparison of converted values.&nbsp;</div></td></tr></table></div></div>
+This application shows how to configure the ADC in a sleepwalking operation, where the input voltage is measured at a fixed interval, but the device is not woken from sleep until the measured value is below a given threshold.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -106,7 +106,7 @@ This application shows how to sample an analog input in polled mode and send the
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00556.html" target="topic">Applications Help</a> &gt; <a href="00144.html" target="topic">ADC Applications</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="00144.html" target="topic">ADC Applications</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -114,10 +114,10 @@ This application shows how to sample an analog input in polled mode and send the
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00088.html" target="topic">Previous</a> | <a href="00556.html" target="topic">Up</a> | <a href="00141.html" target="topic">Next</a></div>
+<a href="00088.html" target="topic">Previous</a> | <a href="00822.html" target="topic">Up</a> | <a href="00133.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
 <a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ADC Applications Help Topic Title: ADC Applications)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>

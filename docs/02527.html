@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>NVM_CALLBACK Type</title>
+<title>HSMCI_CallbackRegister Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="02514.html" target="topic">NVM Peripheral Library Help</a> &gt; <a href="02515.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="02527.html" target="topic">NVM_CALLBACK Type</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="02514.html" target="topic">HSMCI Peripheral Library Help</a> &gt; <a href="02515.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="02527.html" target="topic">HSMCI_CallbackRegister Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02529.html" target="topic">Previous</a> | <a href="02515.html" target="topic">Up</a> | <a href="02560.html" target="topic">Next</a></div>
+<a href="02525.html" target="topic">Previous</a> | <a href="02515.html" target="topic">Up</a> | <a href="02531.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nvm_02819::NVM_CALLBACK Topic Title: NVM_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: HSMCI_CallbackRegister@HSMCI_CALLBACK@uintptr_t Topic Title: HSMCI_CallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-NVM_CALLBACK Type</div>
+HSMCI_CallbackRegister Function</div>
 </div>
 </div>
 
@@ -49,13 +49,23 @@ NVM_CALLBACK Type</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Callback Function Pointer&nbsp;</p>
+This function allows a client to set an event handler. The client may want to receive transfer related events in cases when it submits a HSMCI PLIB transfer request. The event handler should be set before the client intends to perform operations that could generate events.&nbsp;</p>
 <p class="Element10">
-This data type defines the function signature for the NVM peripheral callback function. The NVM peripheral library will call back the client's function with this signature when an on-going erase or write operation has completed and the NVM is ready to accept a new operation request. A function of this should be registered by calling the <a href="02528.html" target="topic">NVM_CallbackRegister</a> function.</p></div>
+This function accepts a contextHandle parameter. This parameter could be set by the client to contain (or point to) any client specific data object that should be associated with this HSMCI PLIB. The contextHandle parameter is not modified by the PLIB and is passed as is in the client event handler.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000">NVM_CALLBACK</span></strong>)(uintptr_t context);</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">HSMCI_CallbackRegister</span></strong>(
+    <a href="02526.html" target="topic">HSMCI_CALLBACK</a> <strong><span style="color: #000000">callback</span></strong>, 
+    uintptr_t <strong><span style="color: #000000">contextHandle</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+<a href="02567.html" target="topic">HSMCI_Initialize</a>() must have been called first.</p></div>
+</div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
 <div class="Element11">
@@ -71,9 +81,9 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+callback&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Allows the caller to provide a context value (usually a pointer to the callers context for multi-instance clients).&nbsp;</div></td></tr></table></div></div>
+Pointer to the event handler function. contextHandle -Value identifying the context of the application/driver/middleware that registered the event handling function.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -88,40 +98,35 @@ Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The callback feature is only available when the library was generated with interrupt option (in MHC) enabled.</p></div>
+None.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">
-<strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong>
-{
-    <strong><span style="color: #000080">bool</span></strong> operationComplete;
+<div class="Element13"><div class="Element12"><pre class="Element12">MY_APP_OBJ myAppObj;
 
-} APP_DATA;
-
-<i><span style="color: #008000">// Callback is called when an operation completes.</span></i>
-<strong><span style="color: #000080">void</span></strong> APP_NVMCallback(uintptr_t context)
+<strong><span style="color: #000080">static</span></strong> <strong><span style="color: #000080">void</span></strong> HSMCI_TransferEventHandler(
+    <a href="02582.html" target="topic">HSMCI_XFER_STATUS</a> xferStatus,
+    uintptr_t contextHandle
+)
 {
-    APP_DATA * appdata = (APP_DATA *)context;
-    appData-&gt;operationComplete = <strong><span style="color: #000080">true</span></strong>;
+    MY_APP_OBJ* myAppObj = (MY_APP_OBJ*)contextHandle;
+
+    <strong><span style="color: #000080">if</span></strong> (xferStatus &amp; HSMCI_XFER_STATUS_CMD_COMPLETED)
+    {
+        <i><span style="color: #008000">// Command transfer complete, read the command error status.</span></i>
+        cmd_error = <a href="02543.html" target="topic">HSMCI_CommandErrorGet</a>();
+    }
+    <strong><span style="color: #000080">if</span></strong> (xferStatus &amp; HSMCI_XFER_STATUS_DATA_COMPLETED)
+    {
+        <i><span style="color: #008000">// Data transfer complete, read the data error status.</span></i>
+        data_error = <a href="02552.html" target="topic">HSMCI_DataErrorGet</a>();
+    }
 }
 
-<i><span style="color: #008000">// Function calls in main thread.</span></i>
-APP_DATA  myAppData;
-myAppData.operationComplete = <strong><span style="color: #000080">false</span></strong>;
-NVM_Initialize();
-
-<i><span style="color: #008000">// Register the callback</span></i>
-<a href="02528.html" target="topic">NVM_CallbackRegister</a>(APP_NVMCallback, &amp;myAppData);
-
-<i><span style="color: #008000">// Perform some operation.</span></i>
-<a href="02535.html" target="topic">NVM_PageErase</a>(0x9D100000);
-
-<i><span style="color: #008000">// Now wait for the operation to complete.</span></i>
-<strong><span style="color: #000080">while</span></strong>(!myAppData.operationComplete);
-</pre></div></div>
+<i><span style="color: #008000">// User registers an event handler with the HSMCI PLIB. This is usually done once.</span></i>
+HSMCI_CallbackRegister(HSMCI_TransferEventHandler, (uintptr_t)&amp;myAppObj);</pre></div></div>
 </div>
 </div>
 </div>
@@ -129,7 +134,7 @@ NVM_Initialize();
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="02514.html" target="topic">NVM Peripheral Library Help</a> &gt; <a href="02515.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="02527.html" target="topic">NVM_CALLBACK Type</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="02514.html" target="topic">HSMCI Peripheral Library Help</a> &gt; <a href="02515.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="02527.html" target="topic">HSMCI_CallbackRegister Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -137,13 +142,13 @@ NVM_Initialize();
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02529.html" target="topic">Previous</a> | <a href="02515.html" target="topic">Up</a> | <a href="02560.html" target="topic">Next</a></div>
+<a href="02525.html" target="topic">Previous</a> | <a href="02515.html" target="topic">Up</a> | <a href="02531.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nvm_02819::NVM_CALLBACK Topic Title: NVM_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: HSMCI_CallbackRegister@HSMCI_CALLBACK@uintptr_t Topic Title: HSMCI_CallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

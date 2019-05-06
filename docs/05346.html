@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TWIHS_CALLBACK Type</title>
+<title>SPIx_TRANSFER_SETUP Structure</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="05334.html" target="topic">TWIHS Peripheral Library Help</a> &gt; <a href="05335.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="05346.html" target="topic">TWIHS_CALLBACK Type</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="05102.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="05103.html" target="topic">SPI</a> &gt; <a href="05108.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="05346.html" target="topic">SPIx_TRANSFER_SETUP Structure</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05351.html" target="topic">Previous</a> | <a href="05335.html" target="topic">Up</a> | <a href="05347.html" target="topic">Next</a></div>
+<a href="05168.html" target="topic">Previous</a> | <a href="05108.html" target="topic">Up</a> | <a href="05164.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TWIHS_CALLBACK Topic Title: TWIHS_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SPIx_TRANSFER_SETUP Topic Title: SPIx_TRANSFER_SETUP Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TWIHS_CALLBACK Type</div>
+SPIx_TRANSFER_SETUP Structure</div>
 </div>
 </div>
 
@@ -49,46 +49,52 @@ TWIHS_CALLBACK Type</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-TWIHS Transfer Event Callback Function Pointer.&nbsp;</p>
+SPI Setup Parameters&nbsp;</p>
 <p class="Element10">
-This data type defines the function signature for the TWIHS peripheral callback function. The TWIHS peripheral will call back the client's function with this signature when the TWIHS Transfer event has occurred.</p></div>
+This structure identifies the possible setup parameters for SPI which can be changed dynamically if needed.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000">TWIHS_CALLBACK</span></strong>)(uintptr_t contextHandle);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
+  uint32_t <strong><span style="color: #000000">clockFrequency</span></strong>;
+  <a href="05327.html" target="topic">SPIx_CLOCK_PHASE</a> <strong><span style="color: #000000">clockPhase</span></strong>;
+  <a href="05330.html" target="topic">SPIx_CLOCK_POLARITY</a> <strong><span style="color: #000000">clockPolarity</span></strong>;
+  <a href="05333.html" target="topic">SPIx_DATA_BITS</a> <strong><span style="color: #000000">dataBits</span></strong>;
+} SPIx_TRANSFER_SETUP;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-<a href="05352.html" target="topic">TWIHSx_Initialize</a> must have been called for the given TWIHS peripheral instance and <a href="05350.html" target="topic">TWIHSx_CallbackRegister</a> must have been called to set the function to be called.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
+<div class="Element272">
 <div class="TableDiv">
-<table cellspacing="0" class="Table2">
+<table cellspacing="0" class="Table3">
 <tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Allows the caller to provide a context value (usually a pointer to the callers context for multi-instance clients).&nbsp;</div></td></tr></table></div></div>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint32_t clockFrequency;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Baud Rate or clock frequency&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SPIx_CLOCK_PHASE clockPhase;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Clock Phase&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SPIx_CLOCK_POLARITY clockPolarity;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Clock Polarity&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SPIx_DATA_BITS dataBits;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Number of bits per transfer&nbsp;</div></td></tr></table></div></div>
 </div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
@@ -97,37 +103,12 @@ Remarks</div>
 <p class="Element10">
 None.</p></div>
 </div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12"><i><span style="color: #008000">// Data tracking what each of my instances is doing.</span></i>
-MY_DATA myData[2];
-
-<strong><span style="color: #000080">void</span></strong> MyTWIHSCallback ( uintptr_t context )
-{
-    MY_DATA *mePtr = (MY_DATA *)context;
-
-    <strong><span style="color: #000080">if</span></strong>(TWIHS_ERROR_NONE == TWIHS1_ErrorGet())
-    {
-        <i><span style="color: #008000">//Handle complete status here based on context</span></i>
-    }
-    <strong><span style="color: #000080">else</span></strong>
-    {
-        <i><span style="color: #008000">//Handle error here</span></i>
-    }
-}
-
-TWIHS1_CallbackSet(MyTWIHSCallback, &amp;myData[0]);
-TWIHS2_CallbackSet(MyTWIHSCallback, &amp;myData[1]);</pre></div></div>
-</div>
-</div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="05334.html" target="topic">TWIHS Peripheral Library Help</a> &gt; <a href="05335.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="05346.html" target="topic">TWIHS_CALLBACK Type</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="05102.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="05103.html" target="topic">SPI</a> &gt; <a href="05108.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="05346.html" target="topic">SPIx_TRANSFER_SETUP Structure</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -135,13 +116,13 @@ TWIHS2_CallbackSet(MyTWIHSCallback, &amp;myData[1]);</pre></div></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05351.html" target="topic">Previous</a> | <a href="05335.html" target="topic">Up</a> | <a href="05347.html" target="topic">Next</a></div>
+<a href="05168.html" target="topic">Previous</a> | <a href="05108.html" target="topic">Up</a> | <a href="05164.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TWIHS_CALLBACK Topic Title: TWIHS_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SPIx_TRANSFER_SETUP Topic Title: SPIx_TRANSFER_SETUP Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

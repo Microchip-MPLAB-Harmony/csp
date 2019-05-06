@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>CACHE_DataCacheLineSizeGet Function</title>
+<title>ADC_POSINPUT Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="00570.html" target="topic">Cache Peripheral Library Help</a> &gt; <a href="00571.html" target="topic">Library Interface</a> &gt; b) Data Cache Operations &gt; <a href="00589.html" target="topic">CACHE_DataCacheLineSizeGet Function</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="00169.html" target="topic">ADC Peripheral Library Help</a> &gt; <a href="00170.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="00589.html" target="topic">ADC_POSINPUT Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00588.html" target="topic">Previous</a> | <a href="00571.html" target="topic">Up</a> | <a href="00590.html" target="topic">Next</a></div>
+<a href="00579.html" target="topic">Previous</a> | <a href="00170.html" target="topic">Up</a> | <a href="00621.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CACHE_DataCacheLineSizeGet Topic Title: CACHE_DataCacheLineSizeGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: adc_u2500::ADC_POSINPUT Topic Title: ADC_POSINPUT Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-CACHE_DataCacheLineSizeGet Function</div>
+ADC_POSINPUT Enumeration</div>
 </div>
 </div>
 
@@ -49,17 +49,214 @@ CACHE_DataCacheLineSizeGet Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Returns the data cache line size.</p></div>
+ADC positive MUX input selection enum.&nbsp;</p>
+<p class="Element10">
+Enum for the possible positive MUX input selections for the ADC.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100">size_t <strong><span style="color: #000000">CACHE_DataCacheLineSizeGet</span></strong>();</pre></div></div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">ADC_POSINPUT_AIN0</span></strong> = ADC_INPUTCTRL_MUXPOS_AIN0,
+  <strong><span style="color: #000000">ADC_POSINPUT_AIN1</span></strong> = ADC_INPUTCTRL_MUXPOS_AIN1,
+  <strong><span style="color: #000000">ADC_POSINPUT_AIN2</span></strong> = ADC_INPUTCTRL_MUXPOS_AIN2,
+  <strong><span style="color: #000000">ADC_POSINPUT_AIN3</span></strong> = ADC_INPUTCTRL_MUXPOS_AIN3,
+  <strong><span style="color: #000000">ADC_POSINPUT_AIN4</span></strong> = ADC_INPUTCTRL_MUXPOS_AIN4,
+  <strong><span style="color: #000000">ADC_POSINPUT_AIN5</span></strong> = ADC_INPUTCTRL_MUXPOS_AIN5,
+  <strong><span style="color: #000000">ADC_POSINPUT_AIN6</span></strong> = ADC_INPUTCTRL_MUXPOS_AIN6,
+  <strong><span style="color: #000000">ADC_POSINPUT_AIN7</span></strong> = ADC_INPUTCTRL_MUXPOS_AIN7,
+  <strong><span style="color: #000000">ADC_POSINPUT_AIN8</span></strong> = ADC_INPUTCTRL_MUXPOS_AIN8,
+  <strong><span style="color: #000000">ADC_POSINPUT_AIN9</span></strong> = ADC_INPUTCTRL_MUXPOS_AIN9,
+  <strong><span style="color: #000000">ADC_POSINPUT_AIN10</span></strong> = ADC_INPUTCTRL_MUXPOS_AIN10,
+  <strong><span style="color: #000000">ADC_POSINPUT_AIN11</span></strong> = ADC_INPUTCTRL_MUXPOS_AIN11,
+  <strong><span style="color: #000000">ADC_POSINPUT_AIN12</span></strong> = ADC_INPUTCTRL_MUXPOS_AIN12,
+  <strong><span style="color: #000000">ADC_POSINPUT_AIN13</span></strong> = ADC_INPUTCTRL_MUXPOS_AIN13,
+  <strong><span style="color: #000000">ADC_POSINPUT_AIN14</span></strong> = ADC_INPUTCTRL_MUXPOS_AIN14,
+  <strong><span style="color: #000000">ADC_POSINPUT_AIN15</span></strong> = ADC_INPUTCTRL_MUXPOS_AIN15,
+  <strong><span style="color: #000000">ADC_POSINPUT_AIN16</span></strong> = ADC_INPUTCTRL_MUXPOS_AIN16,
+  <strong><span style="color: #000000">ADC_POSINPUT_AIN17</span></strong> = ADC_INPUTCTRL_MUXPOS_AIN17,
+  <strong><span style="color: #000000">ADC_POSINPUT_AIN18</span></strong> = ADC_INPUTCTRL_MUXPOS_AIN18,
+  <strong><span style="color: #000000">ADC_POSINPUT_AIN19</span></strong> = ADC_INPUTCTRL_MUXPOS_AIN19,
+  <strong><span style="color: #000000">ADC_POSINPUT_AIN20</span></strong> = ADC_INPUTCTRL_MUXPOS_AIN20,
+  <strong><span style="color: #000000">ADC_POSINPUT_AIN21</span></strong> = ADC_INPUTCTRL_MUXPOS_AIN21,
+  <strong><span style="color: #000000">ADC_POSINPUT_AIN22</span></strong> = ADC_INPUTCTRL_MUXPOS_AIN22,
+  <strong><span style="color: #000000">ADC_POSINPUT_AIN23</span></strong> = ADC_INPUTCTRL_MUXPOS_AIN23,
+  <strong><span style="color: #000000">ADC_POSINPUT_SCALEDCOREVCC</span></strong> = ADC_INPUTCTRL_MUXPOS_SCALEDCOREVCC,
+  <strong><span style="color: #000000">ADC_POSINPUT_SCALEDVBAT</span></strong> = ADC_INPUTCTRL_MUXPOS_SCALEDVBAT,
+  <strong><span style="color: #000000">ADC_POSINPUT_SCALEDIOVCC</span></strong> = ADC_INPUTCTRL_MUXPOS_SCALEDIOVCC,
+  <strong><span style="color: #000000">ADC_POSINPUT_BANDGAP</span></strong> = ADC_INPUTCTRL_MUXPOS_BANDGAP,
+  <strong><span style="color: #000000">ADC_POSINPUT_PTAT</span></strong> = ADC_INPUTCTRL_MUXPOS_PTAT,
+  <strong><span style="color: #000000">ADC_POSINPUT_CTAT</span></strong> = ADC_INPUTCTRL_MUXPOS_CTAT,
+  <strong><span style="color: #000000">ADC_POSINPUT_DAC</span></strong> = ADC_INPUTCTRL_MUXPOS_DAC
+} ADC_POSINPUT;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-size_t - number of ways in the data cache.</p></div>
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ADC_POSINPUT_AIN0 = ADC_INPUTCTRL_MUXPOS_AIN0&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ADC pin AIN0&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ADC_POSINPUT_AIN1 = ADC_INPUTCTRL_MUXPOS_AIN1&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ADC pin AIN1&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ADC_POSINPUT_AIN2 = ADC_INPUTCTRL_MUXPOS_AIN2&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ADC pin AIN2&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ADC_POSINPUT_AIN3 = ADC_INPUTCTRL_MUXPOS_AIN3&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ADC pin AIN3&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ADC_POSINPUT_AIN4 = ADC_INPUTCTRL_MUXPOS_AIN4&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ADC pin AIN4&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ADC_POSINPUT_AIN5 = ADC_INPUTCTRL_MUXPOS_AIN5&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ADC pin AIN5&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ADC_POSINPUT_AIN6 = ADC_INPUTCTRL_MUXPOS_AIN6&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ADC pin AIN6&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ADC_POSINPUT_AIN7 = ADC_INPUTCTRL_MUXPOS_AIN7&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ADC pin AIN7&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ADC_POSINPUT_AIN8 = ADC_INPUTCTRL_MUXPOS_AIN8&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ADC pin AIN8&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ADC_POSINPUT_AIN9 = ADC_INPUTCTRL_MUXPOS_AIN9&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ADC pin AIN9&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ADC_POSINPUT_AIN10 = ADC_INPUTCTRL_MUXPOS_AIN10&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ADC pin AIN10&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ADC_POSINPUT_AIN11 = ADC_INPUTCTRL_MUXPOS_AIN11&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ADC pin AIN11&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ADC_POSINPUT_AIN12 = ADC_INPUTCTRL_MUXPOS_AIN12&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ADC pin AIN12&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ADC_POSINPUT_AIN13 = ADC_INPUTCTRL_MUXPOS_AIN13&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ADC pin AIN13&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ADC_POSINPUT_AIN14 = ADC_INPUTCTRL_MUXPOS_AIN14&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ADC pin AIN14&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ADC_POSINPUT_AIN15 = ADC_INPUTCTRL_MUXPOS_AIN15&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ADC pin AIN15&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ADC_POSINPUT_AIN16 = ADC_INPUTCTRL_MUXPOS_AIN16&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ADC pin AIN16&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ADC_POSINPUT_AIN17 = ADC_INPUTCTRL_MUXPOS_AIN17&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ADC pin AIN17&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ADC_POSINPUT_AIN18 = ADC_INPUTCTRL_MUXPOS_AIN18&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ADC pin AIN18&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ADC_POSINPUT_AIN19 = ADC_INPUTCTRL_MUXPOS_AIN19&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ADC pin AIN19&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ADC_POSINPUT_AIN20 = ADC_INPUTCTRL_MUXPOS_AIN20&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ADC pin AIN20&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ADC_POSINPUT_AIN21 = ADC_INPUTCTRL_MUXPOS_AIN21&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ADC pin AIN21&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ADC_POSINPUT_AIN22 = ADC_INPUTCTRL_MUXPOS_AIN22&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ADC pin AIN22&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ADC_POSINPUT_AIN23 = ADC_INPUTCTRL_MUXPOS_AIN23&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ADC pin AIN23&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ADC_POSINPUT_SCALEDCOREVCC = ADC_INPUTCTRL_MUXPOS_SCALEDCOREVCC&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ADC pin SCALEDCOREVCC&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ADC_POSINPUT_SCALEDVBAT = ADC_INPUTCTRL_MUXPOS_SCALEDVBAT&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ADC pin SCALEDVBAT&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ADC_POSINPUT_SCALEDIOVCC = ADC_INPUTCTRL_MUXPOS_SCALEDIOVCC&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ADC pin SCALEDIOVCC&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ADC_POSINPUT_BANDGAP = ADC_INPUTCTRL_MUXPOS_BANDGAP&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ADC pin BANDGAP&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ADC_POSINPUT_PTAT = ADC_INPUTCTRL_MUXPOS_PTAT&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ADC pin PTAT&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ADC_POSINPUT_CTAT = ADC_INPUTCTRL_MUXPOS_CTAT&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ADC pin CTAT&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ADC_POSINPUT_DAC = ADC_INPUTCTRL_MUXPOS_DAC&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ADC pin DAC&nbsp;</div></td></tr></table></div></div>
+</div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
@@ -68,20 +265,12 @@ Remarks</div>
 <p class="Element10">
 None.</p></div>
 </div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">size_t instructionCacheSize;
-instructionCacheSize = CACHE_DataCacheLineSizeGet();</pre></div></div>
-</div>
-</div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="00570.html" target="topic">Cache Peripheral Library Help</a> &gt; <a href="00571.html" target="topic">Library Interface</a> &gt; b) Data Cache Operations &gt; <a href="00589.html" target="topic">CACHE_DataCacheLineSizeGet Function</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="00169.html" target="topic">ADC Peripheral Library Help</a> &gt; <a href="00170.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="00589.html" target="topic">ADC_POSINPUT Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -89,13 +278,13 @@ instructionCacheSize = CACHE_DataCacheLineSizeGet();</pre></div></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00588.html" target="topic">Previous</a> | <a href="00571.html" target="topic">Up</a> | <a href="00590.html" target="topic">Next</a></div>
+<a href="00579.html" target="topic">Previous</a> | <a href="00170.html" target="topic">Up</a> | <a href="00621.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CACHE_DataCacheLineSizeGet Topic Title: CACHE_DataCacheLineSizeGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: adc_u2500::ADC_POSINPUT Topic Title: ADC_POSINPUT Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

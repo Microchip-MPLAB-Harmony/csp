@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>FLEXCOMx_SPI_Write Function</title>
+<title>EIC_PinDebounceStateGet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="01697.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="01698.html" target="topic">SPI</a> &gt; <a href="01703.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="01812.html" target="topic">FLEXCOMx_SPI_Write Function</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="01743.html" target="topic">EIC Peripheral Library Help</a> &gt; <a href="01744.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="01812.html" target="topic">EIC_PinDebounceStateGet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01811.html" target="topic">Previous</a> | <a href="01703.html" target="topic">Up</a> | <a href="01813.html" target="topic">Next</a></div>
+<a href="01791.html" target="topic">Previous</a> | <a href="01744.html" target="topic">Up</a> | <a href="01787.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: FLEXCOMx_SPI_Write@void*@size_t Topic Title: FLEXCOMx_SPI_Write Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: eic_u2217::EIC_PinDebounceStateGet@EIC_PIN Topic Title: EIC_PinDebounceStateGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-FLEXCOMx_SPI_Write Function</div>
+EIC_PinDebounceStateGet Function</div>
 </div>
 </div>
 
@@ -49,74 +49,61 @@ FLEXCOMx_SPI_Write Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function should be used to write &quot;txSize&quot; number of bytes on FLEXCOMx SPI module. Data pointed by pTransmitData is transmitted.&nbsp;</p>
-<p class="Element10">
-The function will work differently as per the configuration done in MHC as described below:&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<ol class="Element630">
-<li value="1" class="Element600">Blocking Configuration (Non-Interrupt mode): When &quot;Interrupt Mode&quot; option is unchecked in GUI, the generated code for that particular FLEXCOM SPI PLIB instance will be blocking. In this particular mode, the Write API will not return until all the requested data is transferred.</li>
-</ol><p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-After transferring all the data, boolean status 'True' is returned indicating operation completion.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<ol class="Element630">
-<li value="2" class="Element600">Non-Blocking Configuration (Interrupt mode): When &quot;Interrupt Mode&quot; option is selected in GUI, the generated code for that particular FLEXCOM SPI PLIB instance will be Non-blocking in nature. In this particular mode, application will give the data transfer responsibility to the PLIB and come back and start doing other activities, FLEXCOM SPI Data transaction will happen in the corresponding ISR. in this mode, the transmit data locations provided by user must remain valid until the data transfer is complete. Application can check the data transfer completion status via callback or polling mechanism. In case of callback, it needs to be registered prior to calling the Write API. Data transfer status polling can be done using &quot;FLEXCOMx_SPI_IsBusy&quot; API.</li>
-</ol></div>
+This function gets the De-bounced state of the EIC Pin.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">FLEXCOMx_SPI_Write</span></strong>(
-    <strong><span style="color: #000080">void</span></strong>* <strong><span style="color: #000000">pTransmitData</span></strong>, 
-    size_t <strong><span style="color: #000000">txSize</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">EIC_PinDebounceStateGet</span></strong>(
+    <a href="01794.html" target="topic">EIC_PIN</a> <strong><span style="color: #000000">pin</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The <a href="01809.html" target="topic">FLEXCOMx_SPI_Initialize</a> function must have been called.&nbsp;</p>
-<p class="Element10">
-Callback has to be registered using <a href="01808.html" target="topic">FLEXCOMx_SPI_CallbackRegister</a> API if the peripheral instance has been configured in Interrupt mode and transfer completion status needs to be communicated back to application via callback.</p></div>
+<a href="01789.html" target="topic">EIC_Initialize</a>() must have been called first for the associated instance. The debounce feature should have been enabled in MHC on the desired pin.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+pin&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+EIC Pin number&nbsp;</div></td></tr></table></div></div>
+</div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-In Blocking mode, API returns True once the transfer is complete. It returns False if txSize parameter is 0 and transmit data pointer is NULL.&nbsp;</p>
-<p class="Element10">
-In interrupt mode, if previous buffer request is not completed and a new transfer request comes, then this API will reject the new request and will return &quot;False&quot;. Also, Same as blocking mode, It returns False if txSize parameter is 0 and transmit data pointer is NULL.</p></div>
+true - If the EIC Pin De-bounce state is set. false - If the EIC Pin De-bounce state is not set</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Non-blocking interrupt mode configuration implementation of this function will be used by Harmony driver implementation APIs.</p></div>
+None.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">uint8_t     txBuffer[4];
-size_t      txSize = 4; 
-<strong><span style="color: #000080">bool</span></strong>        reqAccepted;
-
-<a href="01809.html" target="topic">FLEXCOMx_SPI_Initialize</a>();
-
-<a href="01808.html" target="topic">FLEXCOMx_SPI_CallbackRegister</a>(&amp;APP_SPITransferHandler, NULL);
-
-reqAccepted = FLEXCOMx_SPI_Write(&amp;txBuffer, txSize);
-
-<strong><span style="color: #000080">void</span></strong> APP_SPITransferHandler(uintptr_t context)
+<div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">if</span></strong> (<strong><span style="color: #000080">true</span></strong> == EIC_PinDebounceStateGet(EIC_PIN_3))
 {
-    <strong><span style="color: #000080">if</span></strong>(FLEXCOMx_SPI_ErrorGet() == FLEXCOM_SPI_ERROR_NONE)
-    {
-        Transfer was completed without error, <strong><span style="color: #000080">do</span></strong> something <strong><span style="color: #000080">else</span></strong> now.
-    }
+    <i><span style="color: #008000">// The pin was debounced and the state of the pin is logic high.</span></i>
 }</pre></div></div>
 </div>
 </div>
@@ -125,7 +112,7 @@ reqAccepted = FLEXCOMx_SPI_Write(&amp;txBuffer, txSize);
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="01697.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="01698.html" target="topic">SPI</a> &gt; <a href="01703.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="01812.html" target="topic">FLEXCOMx_SPI_Write Function</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="01743.html" target="topic">EIC Peripheral Library Help</a> &gt; <a href="01744.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="01812.html" target="topic">EIC_PinDebounceStateGet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -133,13 +120,13 @@ reqAccepted = FLEXCOMx_SPI_Write(&amp;txBuffer, txSize);
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01811.html" target="topic">Previous</a> | <a href="01703.html" target="topic">Up</a> | <a href="01813.html" target="topic">Next</a></div>
+<a href="01791.html" target="topic">Previous</a> | <a href="01744.html" target="topic">Up</a> | <a href="01787.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: FLEXCOMx_SPI_Write@void*@size_t Topic Title: FLEXCOMx_SPI_Write Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: eic_u2217::EIC_PinDebounceStateGet@EIC_PIN Topic Title: EIC_PinDebounceStateGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

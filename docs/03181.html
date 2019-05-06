@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>start_stop</title>
+<title>NVMCTRL_DisableMainFlashInterruptSource Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00556.html" target="topic">Applications Help</a> &gt; <a href="03177.html" target="topic">PIT Applications</a> &gt; <a href="03181.html" target="topic">start_stop</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="03144.html" target="topic">NVMCTRL Peripheral Library Help</a> &gt; <a href="03145.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="03181.html" target="topic">NVMCTRL_DisableMainFlashInterruptSource Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03193.html" target="topic">Previous</a> | <a href="03177.html" target="topic">Up</a> | <a href="03194.html" target="topic">Next</a></div>
+<a href="03179.html" target="topic">Previous</a> | <a href="03145.html" target="topic">Up</a> | <a href="03182.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PIT Applications start_stop Topic Title: start_stop)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nvmctrl_u2409::NVMCTRL_DisableMainFlashInterruptSource@NVMCTRL_INTERRUPT0_SOURCE Topic Title: NVMCTRL_DisableMainFlashInterruptSource Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-start_stop</div>
+NVMCTRL_DisableMainFlashInterruptSource Function</div>
 </div>
 </div>
 
@@ -49,41 +49,61 @@ start_stop</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Pushing the user switch will stop/start the PIT counter, which in turn stops/starts the LED toggling.</p></div>
+There are multiple interrupt sources supported by the NVMCTRL peripheral. It supports two interrupt vectors, one for interrupts from the SmartEEPROM and another for all other interrupts of the NVMCTRL. This function disables the given interrupt for the first vector which is used by all interrupts except the ones from SmartEEPROM.</p></div>
 </div>
-<a name="546F70696373"></a><div class="Element14">
-Topics</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">NVMCTRL_DisableMainFlashInterruptSource</span></strong>(
+    <a href="03192.html" target="topic">NVMCTRL_INTERRUPT0_SOURCE</a> <strong><span style="color: #000000">int_source</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
+<p class="Element10">
+Interrupt option in MHC should have been enabled.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
 <div class="TableDiv">
-<table cellspacing="0" class="Table0">
+<table cellspacing="0" class="Table2">
 <tr>
-<td class="Element200" valign="top" width="35%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="03194.html" target="topic">Building The Application</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This section provides information on how to build an application.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="03196.html" target="topic">MPLAB Harmony Configurations</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This topic provides information on the MHC configurations.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="03195.html" target="topic">Hardware Setup</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This section describes how to configure the supported hardware.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="03197.html" target="topic">Running The Application</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This section provides information on how to run an application.&nbsp;</div></td></tr></table></div></div>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+int_source&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Refer to enum <a href="03192.html" target="topic">NVMCTRL_INTERRUPT0_SOURCE</a> for possible values.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+This API is available only if the main interrupt is enabled via the MHC tree.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">
+NVMCTRL_DisableMainFlashInterruptSource(NVMCTRL_INT_LOCKE);
+</pre></div></div>
 </div>
 </div>
 </div>
@@ -91,7 +111,7 @@ This section provides information on how to run an application.&nbsp;</div></td>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00556.html" target="topic">Applications Help</a> &gt; <a href="03177.html" target="topic">PIT Applications</a> &gt; <a href="03181.html" target="topic">start_stop</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="03144.html" target="topic">NVMCTRL Peripheral Library Help</a> &gt; <a href="03145.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="03181.html" target="topic">NVMCTRL_DisableMainFlashInterruptSource Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -99,13 +119,13 @@ This section provides information on how to run an application.&nbsp;</div></td>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03193.html" target="topic">Previous</a> | <a href="03177.html" target="topic">Up</a> | <a href="03194.html" target="topic">Next</a></div>
+<a href="03179.html" target="topic">Previous</a> | <a href="03145.html" target="topic">Up</a> | <a href="03182.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PIT Applications start_stop Topic Title: start_stop)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nvmctrl_u2409::NVMCTRL_DisableMainFlashInterruptSource@NVMCTRL_INTERRUPT0_SOURCE Topic Title: NVMCTRL_DisableMainFlashInterruptSource Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

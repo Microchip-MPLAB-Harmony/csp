@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>MCANx_MessageTransmit Function</title>
+<title>GPIO_PinInputEnable Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="02370.html" target="topic">MCAN Peripheral Library Help</a> &gt; <a href="02371.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="02482.html" target="topic">MCANx_MessageTransmit Function</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="02349.html" target="topic">GPIO Peripheral Library Help</a> &gt; <a href="02364.html" target="topic">Library Interface</a> &gt; b) Pin Functions &gt; <a href="02482.html" target="topic">GPIO_PinInputEnable Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02481.html" target="topic">Previous</a> | <a href="02371.html" target="topic">Up</a> | <a href="02475.html" target="topic">Next</a></div>
+<a href="02486.html" target="topic">Previous</a> | <a href="02364.html" target="topic">Up</a> | <a href="02487.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MCANx_MessageTransmit@uint32_t@uint8_t@uint8_t*@MCAN_MODE@MCAN_MSG_TX_ATTRIBUTE Topic Title: MCANx_MessageTransmit Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: gpio_01618::GPIO_PinInputEnable@GPIO_PIN Topic Title: GPIO_PinInputEnable Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-MCANx_MessageTransmit Function</div>
+GPIO_PinInputEnable Function</div>
 </div>
 </div>
 
@@ -49,23 +49,19 @@ MCANx_MessageTransmit Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This routine transmits a data buffer on the MCAN bus according to the mode, msgAttr, address, data and length given.</p></div>
+This function enables selected IO pin as input.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">MCANx_MessageTransmit</span></strong>(
-    uint32_t <strong><span style="color: #000000">id</span></strong>, 
-    uint8_t <strong><span style="color: #000000">length</span></strong>, 
-    uint8_t* <strong><span style="color: #000000">data</span></strong>, 
-    <a href="02438.html" target="topic">MCAN_MODE</a> <strong><span style="color: #000000">mode</span></strong>, 
-    <a href="02454.html" target="topic">MCAN_MSG_TX_ATTRIBUTE</a> <strong><span style="color: #000000">msgAttr</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">GPIO_PinInputEnable</span></strong>(
+    <a href="02380.html" target="topic">GPIO_PIN</a> <strong><span style="color: #000000">pin</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="02476.html" target="topic">MCANx_Initialize</a> has been called.</p></div>
+None.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -82,29 +78,9 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-id&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+pin&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-11-bit / 29-bit identifier (ID).&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-length&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-length of data buffer in number of bytes.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-data&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-pointer to source data buffer&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-mode&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-MCAN mode Classic CAN or CAN FD without BRS or CAN FD with BRS&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-msgAttr&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Data Frame or Remote frame using Tx FIFO or Tx Buffer&nbsp;</div></td></tr></table></div></div>
+One of the IO pins from the enum <a href="02380.html" target="topic">GPIO_PIN</a>&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -112,22 +88,20 @@ Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Boolean &quot;true&quot; when a message has been transmitted.</p></div>
+None.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This routine transmits a standard or extended messages based upon the CAN plib setup.</p></div>
+None.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">uint8_t buf[] = {0xAA, 0x55};
-MCAN0_Initialize();
-MCAN0_MessageTransmit(0x555, <strong><span style="color: #000080">sizeof</span></strong>(buf), buf, MCAN_MODE_NORMAL, MCAN_MSG_ATTR_TX_FIFO_DATA_FRAME);</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">    GPIO_PinInputEnable(GPIO_PIN_RB3);</pre></div></div>
 </div>
 </div>
 </div>
@@ -135,7 +109,7 @@ MCAN0_MessageTransmit(0x555, <strong><span style="color: #000080">sizeof</span><
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="02370.html" target="topic">MCAN Peripheral Library Help</a> &gt; <a href="02371.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="02482.html" target="topic">MCANx_MessageTransmit Function</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="02349.html" target="topic">GPIO Peripheral Library Help</a> &gt; <a href="02364.html" target="topic">Library Interface</a> &gt; b) Pin Functions &gt; <a href="02482.html" target="topic">GPIO_PinInputEnable Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -143,13 +117,13 @@ MCAN0_MessageTransmit(0x555, <strong><span style="color: #000080">sizeof</span><
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02481.html" target="topic">Previous</a> | <a href="02371.html" target="topic">Up</a> | <a href="02475.html" target="topic">Next</a></div>
+<a href="02486.html" target="topic">Previous</a> | <a href="02364.html" target="topic">Up</a> | <a href="02487.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MCANx_MessageTransmit@uint32_t@uint8_t@uint8_t*@MCAN_MODE@MCAN_MSG_TX_ATTRIBUTE Topic Title: MCANx_MessageTransmit Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: gpio_01618::GPIO_PinInputEnable@GPIO_PIN Topic Title: GPIO_PinInputEnable Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

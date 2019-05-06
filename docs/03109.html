@@ -1,0 +1,148 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>NVM_PageErase Function</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '03109.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="03062.html" target="topic">NVM Peripheral Library Help</a> &gt; <a href="03063.html" target="topic">Library Interface</a> &gt; b) Transaction Functions &gt; <a href="03109.html" target="topic">NVM_PageErase Function</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+Microchip 32-bit Chip Support Package</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="03111.html" target="topic">Previous</a> | <a href="03063.html" target="topic">Up</a> | <a href="03112.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nvm_02819::NVM_PageErase@uint32_t Topic Title: NVM_PageErase Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+NVM_PageErase Function</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+This function will erase one page in NVM. Calling this function will cause the CPU execution to stall, hence blocking execution of any other thread. Execution resumes when the Erase operation has completed. If the interrupt operation was enabled and if a callback was registered, then the callback function will be called. The <a href="03108.html" target="topic">NVM_IsBusy</a>() function can be used to poll for completion of the operation. The application should ensure that there are no other operations in progress before calling this function.&nbsp;</p>
+<p class="Element10">
+Once the operation is complete, the <a href="03107.html" target="topic">NVM_ErrorGet</a>() function can be called to check operation success.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">NVM_PageErase</span></strong>(
+    uint32_t <strong><span style="color: #000000">address</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Also validate if NVM controller is ready to accept new request by calling <a href="03108.html" target="topic">NVM_IsBusy</a>().</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+address&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+start address of the page to be erased.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Always return true.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">
+<i><span style="color: #008000">// This code snippet shows how the NVM_RowErase function is called to</span></i>
+<i><span style="color: #008000">// erase the row at locatioin 0x9D100000.</span></i>
+
+<i><span style="color: #008000">// Erase the row. This will erase all the pages in the row.</span></i>
+NVM_PageErase(0x9D100000);
+<strong><span style="color: #000080">while</span></strong>(<a href="03108.html" target="topic">NVM_IsBusy</a>());
+
+<strong><span style="color: #000080">if</span></strong>(<a href="03107.html" target="topic">NVM_ErrorGet</a>() == NVM_ERROR_NONE)
+{
+    <i><span style="color: #008000">// Operation was successful.</span></i>
+}
+</pre></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="03062.html" target="topic">NVM Peripheral Library Help</a> &gt; <a href="03063.html" target="topic">Library Interface</a> &gt; b) Transaction Functions &gt; <a href="03109.html" target="topic">NVM_PageErase Function</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+Microchip 32-bit Chip Support Package</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="03111.html" target="topic">Previous</a> | <a href="03063.html" target="topic">Up</a> | <a href="03112.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nvm_02819::NVM_PageErase@uint32_t Topic Title: NVM_PageErase Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

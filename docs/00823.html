@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>MPLAB Harmony Configurations</title>
+<title>cache_maintenance</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00556.html" target="topic">Applications Help</a> &gt; <a href="00820.html" target="topic">CMP Applications</a> &gt; <a href="00819.html" target="topic">cmp_configurable_reference</a> &gt; <a href="00823.html" target="topic">MPLAB Harmony Configurations</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="00824.html" target="topic">Cache Applications</a> &gt; <a href="00823.html" target="topic">cache_maintenance</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00821.html" target="topic">Previous</a> | <a href="00819.html" target="topic">Up</a> | <a href="00822.html" target="topic">Next</a></div>
+<a href="00824.html" target="topic">Previous</a> | <a href="00824.html" target="topic">Up</a> | <a href="00825.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CMP cmp_configurable_reference MPLAB Harmony Configurations Topic Title: MPLAB Harmony Configurations)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: Cache Applications cache_maintenance Topic Title: cache_maintenance)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-MPLAB Harmony Configurations</div>
+cache_maintenance</div>
 </div>
 </div>
 
@@ -49,14 +49,57 @@ MPLAB Harmony Configurations</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Refer to the MHC project graph for the components used and the respective configuration options.</p></div>
+<span style="color: #000000">This example application shows how to use the cache maintenance APIs to avoid issues related to cache coherency when the data cache is enabled.</span>&nbsp;</p>
+<p class="Element10">
+<span style="color: #000000">The application uses the USART and the DMA PLIBs to demonstrate the cache maintenance APIs provided by the Cache peripheral library. It registers a callback with the DMA transmit and receive channels. The application first transmits a message using the DMA transmit channel and then schedules a read of ten characters using the DMA receive channel. Once the DMA read is complete, it reads the received data and echoes the same on the terminal using the DMA transmit channel.</span>&nbsp;</p>
+<p class="Element10">
+<span style="color: #000000">The application calls the DCACHE_CLEAN_BY_ADDR API on the write buffer before transmitting it. Calling this API copies the data from the cache memory to the main memory, thereby ensuring that the DMA peripheral uses the updated values in the write buffer.</span>&nbsp;</p>
+<p class="Element10">
+<span style="color: #000000">The application calls the DCACHE_INVALIDATE_BY_ADDR API on the read buffer after reception of data is complete by the DMA receive channel. Calling this API invalidates the cache region corresponding to the read buffer, thereby ensuring that the CPU reads the updated values in the read buffer from the main memory and into the cache.</span>&nbsp;</p>
+<p class="Element10">
+<span style="color: #000000">The cache maintenance operations are always performed on a cache line (1 cache line = 32 bytes), the read and write buffers must be aligned to a 32 byte boundary and must be a multiple of 32 bytes. For the same reason, the number of received and echoed back bytes is 10, the size of the receive and echo buffers is 32 bytes.</span></p></div>
+</div>
+<a name="546F70696373"></a><div class="Element14">
+Topics</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element200" valign="top" width="35%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="00825.html" target="topic">Building the Application</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides information on how to build and run the application.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="00827.html" target="topic">MPLAB Harmony Configurations</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This topic provides information on the MHC configurations.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="00826.html" target="topic">Hardware Setup</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section describes how to configure the supported hardware.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="00828.html" target="topic">Running the Application</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides information on how to run the application.&nbsp;</div></td></tr></table></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00556.html" target="topic">Applications Help</a> &gt; <a href="00820.html" target="topic">CMP Applications</a> &gt; <a href="00819.html" target="topic">cmp_configurable_reference</a> &gt; <a href="00823.html" target="topic">MPLAB Harmony Configurations</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="00824.html" target="topic">Cache Applications</a> &gt; <a href="00823.html" target="topic">cache_maintenance</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -64,13 +107,13 @@ Refer to the MHC project graph for the components used and the respective config
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00821.html" target="topic">Previous</a> | <a href="00819.html" target="topic">Up</a> | <a href="00822.html" target="topic">Next</a></div>
+<a href="00824.html" target="topic">Previous</a> | <a href="00824.html" target="topic">Up</a> | <a href="00825.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CMP cmp_configurable_reference MPLAB Harmony Configurations Topic Title: MPLAB Harmony Configurations)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: Cache Applications cache_maintenance Topic Title: cache_maintenance)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

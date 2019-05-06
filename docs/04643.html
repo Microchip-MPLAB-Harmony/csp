@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>RTC_Timer32Start Function</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '04643.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="04485.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="04486.html" target="topic">32-bit Timer (Mode 0)</a> &gt; <a href="04491.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="04643.html" target="topic">RTC_Timer32Start Function</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+Microchip 32-bit Chip Support Package</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="04633.html" target="topic">Previous</a> | <a href="04491.html" target="topic">Up</a> | <a href="04644.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2202::RTC_Timer32Start Topic Title: RTC_Timer32Start Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+RTC_Timer32Start Function</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+This function starts the 32-bit timer. The timer will start counting up from the value that was set using the <a href="04638.html" target="topic">RTC_Timer32CounterSet</a>() function. The timer will count at a rate configured by the input clock and the input prescalar.&nbsp;</p>
+<p class="Element10">
+The timer can be configured to count up till a specific non-zero value. This value is specified using the <a href="04635.html" target="topic">RTC_Timer32CompareSet</a>() function. Setting a non-zero will cause the timer counter to operate as timer. The counter will count up to the period value and then reset and start counting again. This causes a period expiry event. Timer type operations are preferred to implement a delay or obtain periodic notification.&nbsp;</p>
+<p class="Element10">
+Setting the period to 0 will result in a counter type operation. In this mode, starting the timer will cause the counter to count upto 0xFFFFFFFF and then overflow to 0 and continue counting. This causes an overflow event. A counter can be used to count in timer input clock units. This is useful when needed to perform temporal measurements.&nbsp;</p>
+<p class="Element10">
+The counter can be stopped by calling the <a href="04644.html" target="topic">RTC_Timer32Stop</a> function. Calling the RTC_Timer32Start() will again start the counting from the current counter value.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">RTC_Timer32Start</span></strong>();</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+<a href="04604.html" target="topic">RTC_Initialize</a> must have been called for the associated RTC instance. The RTC peripheral should have been configured in 32-bit Timer Counter mode. The <a href="04635.html" target="topic">RTC_Timer32CompareSet</a> and <a href="04638.html" target="topic">RTC_Timer32CounterSet</a> function should have been called to set the desired period and starting count.</p></div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">    <a href="04604.html" target="topic">RTC_Initialize</a>();
+
+    <i><span style="color: #008000">// Operate as a timer by setting a non-zero period.</span></i>
+    <a href="04635.html" target="topic">RTC_Timer32CompareSet</a>(0x3000);
+    <a href="04638.html" target="topic">RTC_Timer32CounterSet</a>(0);
+    RTC_Timer32Start();
+
+    <i><span style="color: #008000">// Wait till the period has expired.</span></i>
+    <strong><span style="color: #000080">while</span></strong>(<a href="04634.html" target="topic">RTC_Timer32CompareHasMatched</a>());
+
+    <i><span style="color: #008000">// Refer to the description of the RTC_Timer32CounterHasOverflowed()</span></i>
+    <i><span style="color: #008000">// function for example of counter mode operation.</span></i>
+</pre></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="04485.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="04486.html" target="topic">32-bit Timer (Mode 0)</a> &gt; <a href="04491.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="04643.html" target="topic">RTC_Timer32Start Function</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+Microchip 32-bit Chip Support Package</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="04633.html" target="topic">Previous</a> | <a href="04491.html" target="topic">Up</a> | <a href="04644.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2202::RTC_Timer32Start Topic Title: RTC_Timer32Start Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

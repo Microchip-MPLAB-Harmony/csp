@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>nvmctrl_smarteeprom</title>
+<title>HSMCI_CommandErrorGet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00556.html" target="topic">Applications Help</a> &gt; <a href="02540.html" target="topic">NVMCTRL Applications</a> &gt; <a href="02543.html" target="topic">nvmctrl_smarteeprom</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="02514.html" target="topic">HSMCI Peripheral Library Help</a> &gt; <a href="02515.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="02543.html" target="topic">HSMCI_CommandErrorGet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02547.html" target="topic">Previous</a> | <a href="02540.html" target="topic">Up</a> | <a href="02552.html" target="topic">Next</a></div>
+<a href="02557.html" target="topic">Previous</a> | <a href="02515.html" target="topic">Up</a> | <a href="02552.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NVMCTRL Applications nvmctrl_smarteeprom Topic Title: nvmctrl_smarteeprom)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: HSMCI_CommandErrorGet Topic Title: HSMCI_CommandErrorGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-nvmctrl_smarteeprom</div>
+HSMCI_CommandErrorGet Function</div>
 </div>
 </div>
 
@@ -49,41 +49,43 @@ nvmctrl_smarteeprom</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This SmartEEPROM feature is provided through the AHB2 interface and makes a portion of the NVM appear like a RAM. <span style="color: #000000">This example uses the NVMCTRL peripheral library to read or write a 8-bit data to the internal flash memory by using SmartEEPROM feature. T</span>his application demonstrates Read data from internal flash, Write data into internal flash. Along with these options, &quot;Reset device&quot; option also available in this demo to validate written data. This will useful to check, is EEPROM holding user data even after reset or not?</p></div>
+Returns the errors associated with a command transfer. For a command transfer, the returned value is a bit wise ORing of the following errors, defined in the <a href="02558.html" target="topic">HSMCI_ERROR_FLAGS</a> enum. HSMCI_CMD_TIMEOUT_ERROR = 0x0001, HSMCI_CMD_CRC_ERROR = 0x0002, HSMCI_CMD_END_BIT_ERROR = 0x0004, HSMCI_CMD_INDEX_ERROR = 0x0008 The error flags are cleared after a call to this API.</p></div>
 </div>
-<a name="546F70696373"></a><div class="Element14">
-Topics</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100">uint16_t <strong><span style="color: #000000">HSMCI_CommandErrorGet</span></strong>();</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element200" valign="top" width="35%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="02552.html" target="topic">Building The Application</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This section provides information on how to build the application using the MPLAB X IDE.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="02554.html" target="topic">MPLAB Harmony Configurations</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This topic provides information on the MHC configurations.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="02553.html" target="topic">Hardware Setup</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This section describes how to configure the supported hardware.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="02555.html" target="topic">Running The Application</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This section provides information on how to run the application using the MPLAB X IDE.&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+A command must have been initiated using the <a href="02544.html" target="topic">HSMCI_CommandSend</a>() function.</p></div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Bit wise OR of the command error flags defined under the enum <a href="02558.html" target="topic">HSMCI_ERROR_FLAGS</a> - HSMCI_CMD_TIMEOUT_ERROR, HSMCI_CMD_CRC_ERROR, HSMCI_CMD_END_BIT_ERROR, HSMCI_CMD_INDEX_ERROR.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">uint16_t cmd_error = HSMCI_CommandErrorGet();
+
+<strong><span style="color: #000080">if</span></strong> (cmd_error &amp; (HSMCI_CMD_TIMEOUT_ERROR | HSMCI_CMD_CRC_ERROR |
+            HSMCI_CMD_END_BIT_ERROR | HSMCI_CMD_INDEX_ERROR))
+{
+    <i><span style="color: #008000">// Handle command error</span></i>
+}</pre></div></div>
 </div>
 </div>
 </div>
@@ -91,7 +93,7 @@ This section provides information on how to run the application using the MPLAB 
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00556.html" target="topic">Applications Help</a> &gt; <a href="02540.html" target="topic">NVMCTRL Applications</a> &gt; <a href="02543.html" target="topic">nvmctrl_smarteeprom</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="02514.html" target="topic">HSMCI Peripheral Library Help</a> &gt; <a href="02515.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="02543.html" target="topic">HSMCI_CommandErrorGet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -99,13 +101,13 @@ This section provides information on how to run the application using the MPLAB 
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02547.html" target="topic">Previous</a> | <a href="02540.html" target="topic">Up</a> | <a href="02552.html" target="topic">Next</a></div>
+<a href="02557.html" target="topic">Previous</a> | <a href="02515.html" target="topic">Up</a> | <a href="02552.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NVMCTRL Applications nvmctrl_smarteeprom Topic Title: nvmctrl_smarteeprom)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: HSMCI_CommandErrorGet Topic Title: HSMCI_CommandErrorGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -1,0 +1,151 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>TCx_CAPTURE_STATUS Enumeration</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '05852.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="05652.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="05631.html" target="topic">Capture</a> &gt; <a href="05634.html" target="topic">Library Interface</a> &gt; <a href="05635.html" target="topic">e) Data Types and Constants</a> &gt; <a href="05852.html" target="topic">TCx_CAPTURE_STATUS Enumeration</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+Microchip 32-bit Chip Support Package</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="05849.html" target="topic">Previous</a> | <a href="05635.html" target="topic">Up</a> | <a href="05552.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tc_u2212::TCx_CAPTURE_STATUS Topic Title: TCx_CAPTURE_STATUS Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+TCx_CAPTURE_STATUS Enumeration</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Interrupt source mask for capture mode&nbsp;</p>
+<p class="Element10">
+This enumeration identifies TC capture mode interrupt source mask.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">TC_CAPTURE_STATUS_NONE</span></strong> = 0,
+  <strong><span style="color: #000000">TC_CAPTURE_STATUS_OVERFLOW</span></strong> = TC_INTFLAG_OVF_Msk,
+  <strong><span style="color: #000000">TC_CAPTURE_STATUS_ERROR</span></strong> = TC_INTFLAG_ERR_Msk,
+  <strong><span style="color: #000000">TC_CAPTURE_STAUTS_CAPTURE0_READY</span></strong> = TC_INTFLAG_MC0_Msk,
+  <strong><span style="color: #000000">TC_CAPTURE_STATUS_CAPTURE1_READY</span></strong> = TC_INTFLAG_MC1_Msk,
+  <strong><span style="color: #000000">TC_CAPTURE_STATUS_MSK</span></strong> = TC_CAPTURE_STATUS_OVERFLOW|TC_CAPTURE_STATUS_ERROR|TC_CAPTURE_STAUTS_CAPTURE0_READY|TC_CAPTURE_STATUS_CAPTURE1_READY,
+  <strong><span style="color: #000000">TC_CAPTURE_STATUS_INVALID</span></strong> = 0xFFFFFFFF
+} TCx_CAPTURE_STATUS;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TC_CAPTURE_STATUS_NONE = 0&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+No interrupt set&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TC_CAPTURE_STATUS_OVERFLOW = TC_INTFLAG_OVF_Msk&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Capture status overflow&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TC_CAPTURE_STATUS_ERROR = TC_INTFLAG_ERR_Msk&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Capture status error&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TC_CAPTURE_STAUTS_CAPTURE0_READY = TC_INTFLAG_MC0_Msk&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Capture status ready for channel 0&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TC_CAPTURE_STATUS_CAPTURE1_READY = TC_INTFLAG_MC1_Msk&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Capture status ready for channel 1&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TC_CAPTURE_STATUS_MSK = TC_CAPTURE_STATUS_OVERFLOW|TC_CAPTURE_STATUS_ERROR|TC_CAPTURE_STAUTS_CAPTURE0_READY|TC_CAPTURE_STATUS_CAPTURE1_READY&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Mask of all capture interrupts&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TC_CAPTURE_STATUS_INVALID = 0xFFFFFFFF&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Force the compiler to reserve 32-bit memory for enum&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="05652.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="05631.html" target="topic">Capture</a> &gt; <a href="05634.html" target="topic">Library Interface</a> &gt; <a href="05635.html" target="topic">e) Data Types and Constants</a> &gt; <a href="05852.html" target="topic">TCx_CAPTURE_STATUS Enumeration</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+Microchip 32-bit Chip Support Package</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="05849.html" target="topic">Previous</a> | <a href="05635.html" target="topic">Up</a> | <a href="05552.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tc_u2212::TCx_CAPTURE_STATUS Topic Title: TCx_CAPTURE_STATUS Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

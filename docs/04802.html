@@ -1,0 +1,149 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Using the Library</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '04802.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="04798.html" target="topic">RTT Peripheral Library Help</a> &gt; <a href="04802.html" target="topic">Using the Library</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+Microchip 32-bit Chip Support Package</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="04794.html" target="topic">Previous</a> | <a href="04798.html" target="topic">Up</a> | <a href="04799.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RTT 6081 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+Using the Library</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The RTT peripheral generates a periodic interrupt and/or triggers an alarm on a programmed value.</p>
+<ul class="Element630">
+<li class="Element600">Periodic interrupt is generated when the prescaler roll-over generates the clock to increment real-time timer counter</li>
+<li class="Element600">Alarm interrupt is generated when the time value matches the programmed alarm value</li>
+</ul><p class="Element10">
+The RTT continues to run in the device's low-power sleep modes, and it can be used as a source to wake up the system using the alarm function.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<strong>Periodic Interrupt</strong>&nbsp;</p>
+<p class="Element10">
+This example below demonstrates how to use RTT for periodic interrupt generation.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p><div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">void</span></strong> Timeout_Handler (RTT_INTERRUPT_TYPE type, uintptr_t context)
+{
+    <strong><span style="color: #000080">if</span></strong>(type == RTT_PERIODIC)
+    {
+        LED_Toggle();
+    }
+}
+
+<strong><span style="color: #000080">int</span></strong> main ( <strong><span style="color: #000080">void</span></strong> )
+{
+
+    <i><span style="color: #008000">/* Register Callback */</span></i>
+    RTT0_CallbackRegister(Timeout_Handler, (uintptr_t) NULL);
+
+    <i><span style="color: #008000">/* Enable RTT */</span></i>
+    RTT0_Enable();
+
+
+    <strong><span style="color: #000080">while</span></strong> ( <strong><span style="color: #000080">true</span></strong> )
+    {
+
+    }
+
+}</pre></div></div>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+The below example demonstrates how to set alarm and watch it being triggered when the timer reaches the corresponding value.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p><div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">void</span></strong> Timeout_Handler (RTT_INTERRUPT_TYPE type, uintptr_t context)
+{
+    <strong><span style="color: #000080">if</span></strong>(type == RTT_ALARM)
+    {
+        <i><span style="color: #008000">// Alarm has occurred</span></i>
+    }
+}
+
+<strong><span style="color: #000080">int</span></strong> main ( <strong><span style="color: #000080">void</span></strong> )
+{
+
+    <i><span style="color: #008000">/* Register Callback */</span></i>
+    RTT0_CallbackRegister(Timeout_Handler, (uintptr_t) NULL);
+
+    <i><span style="color: #008000">/* Set Alarm Value */</span></i>
+    RTT_AlarmValueSet(10);
+
+    <i><span style="color: #008000">/* Enable RTT */</span></i>
+    RTT0_Enable();
+
+    <strong><span style="color: #000080">while</span></strong> ( <strong><span style="color: #000080">true</span></strong> )
+    {
+
+    }
+
+}</pre></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="04798.html" target="topic">RTT Peripheral Library Help</a> &gt; <a href="04802.html" target="topic">Using the Library</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+Microchip 32-bit Chip Support Package</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="04794.html" target="topic">Previous</a> | <a href="04798.html" target="topic">Up</a> | <a href="04799.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RTT 6081 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

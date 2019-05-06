@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Configuring the Library</title>
+<title>SQI_LANE_MODE Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="05381.html" target="topic">UART Peripheral Library Help</a> &gt; <a href="05377.html" target="topic">Configuring the Library</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="05358.html" target="topic">SQI Peripheral Library Help</a> &gt; <a href="05359.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="05377.html" target="topic">SQI_LANE_MODE Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05380.html" target="topic">Previous</a> | <a href="05381.html" target="topic">Up</a> | <a href="05386.html" target="topic">Next</a></div>
+<a href="05376.html" target="topic">Previous</a> | <a href="05359.html" target="topic">Up</a> | <a href="05381.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: UART 6418 Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sqi_00206::SQI_LANE_MODE Topic Title: SQI_LANE_MODE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Configuring the Library</div>
+SQI_LANE_MODE Enumeration</div>
 </div>
 </div>
 
@@ -49,22 +49,28 @@ Configuring the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Configure the peripheral library using the MHC.&nbsp;</p>
+SQI Lane Mode can be used to specify the lane to be used for SQI transaction</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">SINGLE_MODE</span></strong> = 0x0,
+  <strong><span style="color: #000000">DUAL_MODE</span></strong> = 0x1,
+  <strong><span style="color: #000000">QUAD_MODE</span></strong> = 0x2
+} SQI_LANE_MODE;</pre></div></div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-The UART library supports the byte and buffer model to transfer data. The buffer model can transfer a block of data in a blocking and a non-blocking manner.</p>
-<ul class="Element630">
-<li class="Element600">To transfer a block of data in a non-blocking manner, the peripheral interrupt is used to manage the transfer and therefore the &quot;Interrupt Mode&quot; option should be <strong>enabled</strong> in the MHC</li>
-<li class="Element600">To use the byte model or to transfer a block of data in a blocking manner, the CPU polls the peripheral register and therefore the &quot;Interrupt Mode&quot; option should be <strong>disabled</strong> in the MHC</li>
-</ul></div>
+None.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="05381.html" target="topic">UART Peripheral Library Help</a> &gt; <a href="05377.html" target="topic">Configuring the Library</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="05358.html" target="topic">SQI Peripheral Library Help</a> &gt; <a href="05359.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="05377.html" target="topic">SQI_LANE_MODE Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -72,13 +78,13 @@ The UART library supports the byte and buffer model to transfer data. The buffer
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05380.html" target="topic">Previous</a> | <a href="05381.html" target="topic">Up</a> | <a href="05386.html" target="topic">Next</a></div>
+<a href="05376.html" target="topic">Previous</a> | <a href="05359.html" target="topic">Up</a> | <a href="05381.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: UART 6418 Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sqi_00206::SQI_LANE_MODE Topic Title: SQI_LANE_MODE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

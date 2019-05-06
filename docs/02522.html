@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Building the Application</title>
+<title>HSMCI_BUS_WIDTH Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00556.html" target="topic">Applications Help</a> &gt; <a href="02521.html" target="topic">NVM Applications</a> &gt; <a href="02520.html" target="topic">flash_read_write</a> &gt; <a href="02522.html" target="topic">Building the Application</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="02514.html" target="topic">HSMCI Peripheral Library Help</a> &gt; <a href="02515.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="02522.html" target="topic">HSMCI_BUS_WIDTH Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02520.html" target="topic">Previous</a> | <a href="02520.html" target="topic">Up</a> | <a href="02524.html" target="topic">Next</a></div>
+<a href="02569.html" target="topic">Previous</a> | <a href="02515.html" target="topic">Up</a> | <a href="02526.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NVM flash_read_write Building The Application Topic Title: Building the Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: HSMCI_BUS_WIDTH Topic Title: HSMCI_BUS_WIDTH Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Building the Application</div>
+HSMCI_BUS_WIDTH Enumeration</div>
 </div>
 </div>
 
@@ -49,50 +49,54 @@ Building the Application</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The parent folder for all the MPLAB X IDE projects for this application is given below: </p><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element65" valign="top" width="30%">
-<div class="Element66">
-Application Path&nbsp;</div></td><td class="Element65" valign="top" width="70%">
-<div class="Element66">
-csp/apps/nvm/flash_read_write/firmware&nbsp;</div></td></tr></table></div></div>
+HSMCI bus width&nbsp;</p>
 <p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-To build the application, refer to the following table and open the appropriate project file in the MPLAB X IDE. </p><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element65" valign="top" width="27%">
-<div class="Element66">
-Project Name&nbsp;</div></td><td class="Element65" valign="top" width="73%">
-<div class="Element66">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="27%">
-<div class="Element68">
-pic32mk_gp_db.X&nbsp;</div></td><td class="Element67" valign="top" width="73%">
-<div class="Element68">
-PIC32MK GP Development Kit&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="27%">
-<div class="Element68">
-pic32mz_das_sk.X&nbsp;</div></td><td class="Element67" valign="top" width="73%">
-<div class="Element68">
-PIC32MZ Embedded Graphics with Stacked DRAM (DA) Starter Kit&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="27%">
-<div class="Element68">
-pic32mz_ef_sk.X&nbsp;</div></td><td class="Element67" valign="top" width="73%">
-<div class="Element68">
-PIC32MZ Embedded Connectivity with FPU (EF) Starter Kit&nbsp;</div></td></tr></table></div></div>
+The enumeration is used to identify the bus width mode for the HSMCI bus.</p></div>
 </div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">HSMCI_BUS_WIDTH_1_BIT</span></strong> = 0,
+  <strong><span style="color: #000000">HSMCI_BUS_WIDTH_4_BIT</span></strong>
+} HSMCI_BUS_WIDTH;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+HSMCI_BUS_WIDTH_1_BIT = 0&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+1-bit HSMCI bus width&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+HSMCI_BUS_WIDTH_4_BIT&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+4-bit HSMCI bus width&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00556.html" target="topic">Applications Help</a> &gt; <a href="02521.html" target="topic">NVM Applications</a> &gt; <a href="02520.html" target="topic">flash_read_write</a> &gt; <a href="02522.html" target="topic">Building the Application</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="02514.html" target="topic">HSMCI Peripheral Library Help</a> &gt; <a href="02515.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="02522.html" target="topic">HSMCI_BUS_WIDTH Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -100,13 +104,13 @@ PIC32MZ Embedded Connectivity with FPU (EF) Starter Kit&nbsp;</div></td></tr></t
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02520.html" target="topic">Previous</a> | <a href="02520.html" target="topic">Up</a> | <a href="02524.html" target="topic">Next</a></div>
+<a href="02569.html" target="topic">Previous</a> | <a href="02515.html" target="topic">Up</a> | <a href="02526.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NVM flash_read_write Building The Application Topic Title: Building the Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: HSMCI_BUS_WIDTH Topic Title: HSMCI_BUS_WIDTH Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

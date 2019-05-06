@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>SPIx_IsBusy Function</title>
+<title>RTC_InterruptDisable Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="04521.html" target="topic">SPI Peripheral Library Help</a> &gt; <a href="04522.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="04572.html" target="topic">SPIx_IsBusy Function</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="04463.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="04464.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="04572.html" target="topic">RTC_InterruptDisable Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04581.html" target="topic">Previous</a> | <a href="04522.html" target="topic">Up</a> | <a href="04559.html" target="topic">Next</a></div>
+<a href="04573.html" target="topic">Previous</a> | <a href="04464.html" target="topic">Up</a> | <a href="04565.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: spi_01329::SPIx_IsBusy Topic Title: SPIx_IsBusy Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_6056::RTC_InterruptDisable@RTC_INT_MASK Topic Title: RTC_InterruptDisable Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-SPIx_IsBusy Function</div>
+RTC_InterruptDisable Function</div>
 </div>
 </div>
 
@@ -49,11 +49,13 @@ SPIx_IsBusy Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function returns transfer status of last successful Write, Read or WriteRead request on SPI x module in interrupt mode.</p></div>
+This function is used to disable a specific RTC interrupt source</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">SPIx_IsBusy</span></strong>();</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">RTC_InterruptDisable</span></strong>(
+    <a href="04568.html" target="topic">RTC_INT_MASK</a> <strong><span style="color: #000000">interrupt</span></strong>
+);</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
@@ -61,32 +63,38 @@ Preconditions</div>
 <p class="Element10">
 None.</p></div>
 </div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+interrupt&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Interrupt source to be disabled.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Returns the current status of transfer happening on SPI x.</p>
-<ul class="Element630">
-<li class="Element600">true: Transfer is still in progress</li>
-<li class="Element600">false: Transfer is completed</li>
-</ul></div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-This API is available only for interrupt mode as blocking mode transfer APIs will always return only after completing the transfer.</p></div>
+None.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">    <strong><span style="color: #000080">if</span></strong> (SPI1_IsBusy() == <strong><span style="color: #000080">false</span></strong>)
-    {
-        <i><span style="color: #008000">//Data Transfer is complete, do something else.</span></i>
-    }</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">    RTC_InterruptDisable(RTC_INT_ALARM);</pre></div></div>
 </div>
 </div>
 </div>
@@ -94,7 +102,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="04521.html" target="topic">SPI Peripheral Library Help</a> &gt; <a href="04522.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="04572.html" target="topic">SPIx_IsBusy Function</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="04463.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="04464.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="04572.html" target="topic">RTC_InterruptDisable Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -102,13 +110,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04581.html" target="topic">Previous</a> | <a href="04522.html" target="topic">Up</a> | <a href="04559.html" target="topic">Next</a></div>
+<a href="04573.html" target="topic">Previous</a> | <a href="04464.html" target="topic">Up</a> | <a href="04565.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: spi_01329::SPIx_IsBusy Topic Title: SPIx_IsBusy Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_6056::RTC_InterruptDisable@RTC_INT_MASK Topic Title: RTC_InterruptDisable Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

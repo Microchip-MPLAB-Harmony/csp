@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>FLEXCOMx_TWI_IsBusy Function</title>
+<title>EVIC Peripheral Library Help</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="01697.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="01686.html" target="topic">I2C</a> &gt; <a href="01691.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="01817.html" target="topic">FLEXCOMx_TWI_IsBusy Function</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="01817.html" target="topic">EVIC Peripheral Library Help</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01815.html" target="topic">Previous</a> | <a href="01691.html" target="topic">Up</a> | <a href="01764.html" target="topic">Next</a></div>
+<a href="01794.html" target="topic">Previous</a> | <a href="03830.html" target="topic">Up</a> | <a href="01816.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: FLEXCOMx_TWI_IsBusy Topic Title: FLEXCOMx_TWI_IsBusy Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: EVIC 02907 Library Topic Title: EVIC Peripheral Library Help)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-FLEXCOMx_TWI_IsBusy Function</div>
+EVIC Peripheral Library Help</div>
 </div>
 </div>
 
@@ -49,47 +49,41 @@ FLEXCOMx_TWI_IsBusy Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function returns the peripheral's busy status.</p></div>
+This section provides an interface to use Enhanced Vectored Interrupt Controller (EVIC) module.</p></div>
 </div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">FLEXCOMx_TWI_IsBusy</span></strong>();</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
+<a name="546F70696373"></a><div class="Element14">
+Topics</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-<a href="01816.html" target="topic">FLEXCOMx_TWI_Initialize</a> must have been called for the associated FLEXCOM TWI instance.</p></div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-true - Busy. false - Not busy.</p></div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">    uint8_t myData [NUM_BYTES] = {'1', '0', ' ', 'B', 'Y', 'T', 'E', 'S', '!', '!',};
-  
-    <i><span style="color: #008000">// wait for the current transfer to complete</span></i>
-    <strong><span style="color: #000080">while</span></strong>(FLEXCOMx_TWI_IsBusy( ));
-    
-    <i><span style="color: #008000">// perform the next transfer</span></i>
-    <strong><span style="color: #000080">if</span></strong>(!<a href="01819.html" target="topic">FLEXCOMx_TWI_Write</a>( SLAVE_ADDR, &amp;myData[0], NUM_BYTES ))
-    {
-        <i><span style="color: #008000">// error handling</span></i>
-    }
-</pre></div></div>
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element200" valign="top" width="35%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01816.html" target="topic">Introduction</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides a brief overview of the Enhanced Vectored Interrupt Controller (EVIC) module.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01813.html" target="topic">Configuring the Library</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section explains how to configure the peripheral library using the MHC.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01821.html" target="topic">Using the Library</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section explains how to use the peripheral library.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01818.html" target="topic">Library Interface</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section describes the Application Programming Interface (API) functions of the Peripheral Library<span style="color: #0000FF">.</span><br>Refer to each section for a detailed description.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -97,7 +91,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="01697.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="01686.html" target="topic">I2C</a> &gt; <a href="01691.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="01817.html" target="topic">FLEXCOMx_TWI_IsBusy Function</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="01817.html" target="topic">EVIC Peripheral Library Help</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -105,13 +99,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01815.html" target="topic">Previous</a> | <a href="01691.html" target="topic">Up</a> | <a href="01764.html" target="topic">Next</a></div>
+<a href="01794.html" target="topic">Previous</a> | <a href="03830.html" target="topic">Up</a> | <a href="01816.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: FLEXCOMx_TWI_IsBusy Topic Title: FLEXCOMx_TWI_IsBusy Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: EVIC 02907 Library Topic Title: EVIC Peripheral Library Help)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

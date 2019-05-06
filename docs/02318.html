@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>LCDCx_SetLayerClockGatingDisable Function</title>
+<title>FLEXCOMx_USART_WriteByte Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="02220.html" target="topic">LCDC Peripheral Library Help</a> &gt; <a href="02221.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="02318.html" target="topic">LCDCx_SetLayerClockGatingDisable Function</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="02183.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02194.html" target="topic">USART</a> &gt; <a href="02199.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="02318.html" target="topic">FLEXCOMx_USART_WriteByte Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02317.html" target="topic">Previous</a> | <a href="02221.html" target="topic">Up</a> | <a href="02319.html" target="topic">Next</a></div>
+<a href="02317.html" target="topic">Previous</a> | <a href="02199.html" target="topic">Up</a> | <a href="02320.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: LCDCx_SetLayerClockGatingDisable@LCDCx_LAYER_ID@bool Topic Title: LCDCx_SetLayerClockGatingDisable Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: FLEXCOMx_USART_WriteByte@uint8_t Topic Title: FLEXCOMx_USART_WriteByte Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-LCDCx_SetLayerClockGatingDisable Function</div>
+FLEXCOMx_USART_WriteByte Function</div>
 </div>
 </div>
 
@@ -49,20 +49,19 @@ LCDCx_SetLayerClockGatingDisable Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None</p></div>
+This function submits a byte of data to the FLEXCOM USART peripheral to transfer. This Function is available only in non-interrupt mode.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">LCDCx_SetLayerClockGatingDisable</span></strong>(
-    <a href="02272.html" target="topic">LCDCx_LAYER_ID</a> <strong><span style="color: #000000">layer</span></strong>, 
-    <strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">disable</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">FLEXCOMx_USART_WriteByte</span></strong>(
+    uint8_t <strong><span style="color: #000000">data</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+<a href="02308.html" target="topic">FLEXCOMx_USART_Initialize</a> must have been called for the associated FLEXCOM USART instance.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -79,14 +78,9 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-layer&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+data&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-the layer to enable clock gating on&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-disable&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-disables the clock gating if true, enables if false&nbsp;</div></td></tr></table></div></div>
+Data byte to be transferred.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -101,14 +95,25 @@ Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None</p></div>
+None.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12"><i><span style="color: #008000">//Example to use in non-interrupt mode</span></i>
+uint8_t myData = 0xAA;
+
+FLEXCOMx_USART_WriteByte(myData)
+</pre></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="02220.html" target="topic">LCDC Peripheral Library Help</a> &gt; <a href="02221.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="02318.html" target="topic">LCDCx_SetLayerClockGatingDisable Function</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="02183.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02194.html" target="topic">USART</a> &gt; <a href="02199.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="02318.html" target="topic">FLEXCOMx_USART_WriteByte Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -116,13 +121,13 @@ None</p></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02317.html" target="topic">Previous</a> | <a href="02221.html" target="topic">Up</a> | <a href="02319.html" target="topic">Next</a></div>
+<a href="02317.html" target="topic">Previous</a> | <a href="02199.html" target="topic">Up</a> | <a href="02320.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: LCDCx_SetLayerClockGatingDisable@LCDCx_LAYER_ID@bool Topic Title: LCDCx_SetLayerClockGatingDisable Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: FLEXCOMx_USART_WriteByte@uint8_t Topic Title: FLEXCOMx_USART_WriteByte Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

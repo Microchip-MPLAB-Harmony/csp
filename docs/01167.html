@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Using the Library</title>
+<title>MPLAB Harmony Configurations</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="01164.html" target="topic">DSU Peripheral Library Help</a> &gt; <a href="01167.html" target="topic">Using the Library</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="01164.html" target="topic">Clock Applications</a> &gt; <a href="01163.html" target="topic">clock_config</a> &gt; <a href="01167.html" target="topic">MPLAB Harmony Configurations</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01162.html" target="topic">Previous</a> | <a href="01164.html" target="topic">Up</a> | <a href="01165.html" target="topic">Next</a></div>
+<a href="01165.html" target="topic">Previous</a> | <a href="01163.html" target="topic">Up</a> | <a href="01166.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DSU U2209 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: Clock clock_config MPLAB Harmony Configurations Topic Title: MPLAB Harmony Configurations)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Using the Library</div>
+MPLAB Harmony Configurations</div>
 </div>
 </div>
 
@@ -49,31 +49,14 @@ Using the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-CRC32 calculation for a memory range is started after writing the start address into the Address register (ADDR) and the size of the memory range into the Length register (LENGTH). Both must be word aligned. The initial seed value used for the CRC32 calculation must be written to the Data register (DATA). This value will usually be 0xFFFFFFFF, but can be, for example, the result of a previous CRC32 calculation if generating a common CRC32 of separate memory blocks. Once completed, the calculated CRC32 value can be read out of the Data register. The read value must be complemented to match standard CRC32 implementations or kept non-inverted if used as starting point for subsequent CRC32 calculations.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-The example code below demonstrates how to compute CRC. </p><div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">#define</span></strong> CRC_DATA_LENGTH         16          <i><span style="color: #008000">// in bytes</span></i>
-<strong><span style="color: #000080">#define</span></strong> CRC_SEED                0xFFFFFFFF
-
-<i><span style="color: #008000">/* Random generated data */</span></i>
-<strong><span style="color: #000080">const</span></strong> uint8_t crc_data[CRC_DATA_LENGTH] = {0xf0, 0x7f, 0x00, 0x20, 0x19, 0x0c, 0x00, 0x00, 0x39, 0x0e, 0x00, 0x00, 0x3b, 0x0e, 0x00, 0x00}
-
-<strong><span style="color: #000080">int</span></strong> main ( <strong><span style="color: #000080">void</span></strong> )
-{
-    uint32_t hw_crc32   = 0;
-    PAC_PeripheralProtectSetup (PAC_PERIPHERAL_DSU, PAC_PROTECTION_CLEAR);
-    status = DSU_CRCCalculate((uint32_t)&amp;crc_data, CRC_DATA_LENGTH/4, CRC_SEED, &amp;hw_crc32);
-}
-</pre></div></div>
-</div>
+Refer to the MHC project graph for the components used and the respective configuration options. For projects that use IAR Embedded work bench as IDE, the harmony project file should be opened using MHC plugin (standalone mode) to access the project graph.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="01164.html" target="topic">DSU Peripheral Library Help</a> &gt; <a href="01167.html" target="topic">Using the Library</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="01164.html" target="topic">Clock Applications</a> &gt; <a href="01163.html" target="topic">clock_config</a> &gt; <a href="01167.html" target="topic">MPLAB Harmony Configurations</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -81,13 +64,13 @@ The example code below demonstrates how to compute CRC. </p><div class="Element1
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01162.html" target="topic">Previous</a> | <a href="01164.html" target="topic">Up</a> | <a href="01165.html" target="topic">Next</a></div>
+<a href="01165.html" target="topic">Previous</a> | <a href="01163.html" target="topic">Up</a> | <a href="01166.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DSU U2209 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: Clock clock_config MPLAB Harmony Configurations Topic Title: MPLAB Harmony Configurations)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

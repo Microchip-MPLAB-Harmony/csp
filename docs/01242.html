@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>EFC_QuadWordWrite Function</title>
+<title>CMP_StatusGet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="01219.html" target="topic">EFC Peripheral Library Help</a> &gt; <a href="01220.html" target="topic">Library Interface</a> &gt; b) Transaction Functions &gt; <a href="01242.html" target="topic">EFC_QuadWordWrite Function</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="01206.html" target="topic">CMP Peripheral Library Help</a> &gt; <a href="01207.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="01242.html" target="topic">CMP_StatusGet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01241.html" target="topic">Previous</a> | <a href="01220.html" target="topic">Up</a> | <a href="01243.html" target="topic">Next</a></div>
+<a href="01233.html" target="topic">Previous</a> | <a href="01207.html" target="topic">Up</a> | <a href="01234.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: EFC_QuadWordWrite@uint32_t*@uint32_t Topic Title: EFC_QuadWordWrite Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: cmp_01427::CMP_StatusGet@CMP_STATUS_SOURCE Topic Title: CMP_StatusGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-EFC_QuadWordWrite Function</div>
+CMP_StatusGet Function</div>
 </div>
 </div>
 
@@ -49,71 +49,39 @@ EFC_QuadWordWrite Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function takes a 32-bit address, a pointer to the 128-bit data and writes it to the given location in FLASH memory.</p></div>
+This function returns the output state of a comparator specified by the input parameter.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">EFC_QuadWordWrite</span></strong>(
-    uint32_t* <strong><span style="color: #000000">data</span></strong>, 
-    uint32_t <strong><span style="color: #000000">address</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">CMP_StatusGet</span></strong>(
+    <a href="01236.html" target="topic">CMP_STATUS_SOURCE</a> <strong><span style="color: #000000">source</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Validate if EFC controller is ready to accept new request by calling <a href="01240.html" target="topic">EFC_IsBusy</a>()&nbsp;</p>
-<p class="Element10">
-The Memory to be written should be in Erased State.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
-<div class="TableDiv">
-<table cellspacing="0" class="Table2">
-<tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-address&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-FLASH address to be modified&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-data&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-pointer to 128-bit data buffer&nbsp;</div></td></tr></table></div></div>
-</div>
+None.</p></div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
 <div class="Element11">
 <div class="Element10">
-
-<ul class="Element630">
-<li class="Element600">true: On successful write request.</li>
-<li class="Element600">false: On failure to send write request.</li>
-</ul></div>
+<p class="Element10">
+None.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Application needs to poll for busy bit or wait for callback to be called before sending next request.</p></div>
+None.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">    EFC_QuadWordWrite((uint32_t *) buffer, 0x500000);
-    <strong><span style="color: #000080">while</span></strong>(<a href="01240.html" target="topic">EFC_IsBusy</a>());</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">    CMP_StatusGet(CMP1_OUTPUT_STATUS);</pre></div></div>
 </div>
 </div>
 </div>
@@ -121,7 +89,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="01219.html" target="topic">EFC Peripheral Library Help</a> &gt; <a href="01220.html" target="topic">Library Interface</a> &gt; b) Transaction Functions &gt; <a href="01242.html" target="topic">EFC_QuadWordWrite Function</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="01206.html" target="topic">CMP Peripheral Library Help</a> &gt; <a href="01207.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="01242.html" target="topic">CMP_StatusGet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -129,13 +97,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01241.html" target="topic">Previous</a> | <a href="01220.html" target="topic">Up</a> | <a href="01243.html" target="topic">Next</a></div>
+<a href="01233.html" target="topic">Previous</a> | <a href="01207.html" target="topic">Up</a> | <a href="01234.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: EFC_QuadWordWrite@uint32_t*@uint32_t Topic Title: EFC_QuadWordWrite Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: cmp_01427::CMP_StatusGet@CMP_STATUS_SOURCE Topic Title: CMP_StatusGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

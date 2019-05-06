@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>PM Peripheral Library Help</title>
+<title>Hardware Setup</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="03259.html" target="topic">PM Peripheral Library Help</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="03256.html" target="topic">OPAMP Applications</a> &gt; <a href="03257.html" target="topic">opamp_adc_gain_amp</a> &gt; <a href="03259.html" target="topic">Hardware Setup</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03295.html" target="topic">Previous</a> | <a href="03213.html" target="topic">Up</a> | <a href="03258.html" target="topic">Next</a></div>
+<a href="03260.html" target="topic">Previous</a> | <a href="03257.html" target="topic">Up</a> | <a href="03261.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PM U2240 Library Topic Title: PM Peripheral Library Help)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: OPAMP opamp_adc_gain_amp Hardware Setup Topic Title: Hardware Setup)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-PM Peripheral Library Help</div>
+Hardware Setup</div>
 </div>
 </div>
 
@@ -48,50 +48,29 @@ PM Peripheral Library Help</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
-<p class="Element10">
-This section provides an interface to use the Power Manager (PM) peripheral.</p></div>
-</div>
-<a name="546F70696373"></a><div class="Element14">
-Topics</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element200" valign="top" width="35%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="03258.html" target="topic">Introduction</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This section provides a brief overview of the PM peripheral.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="03255.html" target="topic">Configuring the Library</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This section explains how to configure the peripheral library using the MHC.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="03262.html" target="topic">Using the Library</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This section explains how to use the peripheral library.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="03260.html" target="topic">Library Interface</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This section describes the Application Programming Interface (API) functions of the Peripheral Library<span style="color: #0000FF">.</span><br>Refer to each section for a detailed description.&nbsp;</div></td></tr></table></div></div>
-</div>
+
+<ol class="Element630">
+<li value="1" class="Element600"><strong>Project sam_l21_xpro.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/ATSAML21-XPRO-B');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM L21 Xplained Pro Evaluation Kit</a></li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">Non-inverting input of OPAMP2 is available on PA05 (Pin 15 on EXT1 connector on the SAM L21 Xplained Pro).</li>
+<li class="Element602">Connect the input signal to this pin. Since the OPAMP gives gain of 1.33, choose appropriate voltage to be connected at input of the OPAMP so that it does not saturate the ADC result.</li>
+<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable.</li>
+</ul></li>
+</ul></li>
+</ol></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="03259.html" target="topic">PM Peripheral Library Help</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="03256.html" target="topic">OPAMP Applications</a> &gt; <a href="03257.html" target="topic">opamp_adc_gain_amp</a> &gt; <a href="03259.html" target="topic">Hardware Setup</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -99,13 +78,13 @@ This section describes the Application Programming Interface (API) functions of 
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03295.html" target="topic">Previous</a> | <a href="03213.html" target="topic">Up</a> | <a href="03258.html" target="topic">Next</a></div>
+<a href="03260.html" target="topic">Previous</a> | <a href="03257.html" target="topic">Up</a> | <a href="03261.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PM U2240 Library Topic Title: PM Peripheral Library Help)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: OPAMP opamp_adc_gain_amp Hardware Setup Topic Title: Hardware Setup)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

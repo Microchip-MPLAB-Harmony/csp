@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="05506.html" target="topic">USART Peripheral Library Help</a> &gt; <a href="05507.html" target="topic">Library Interface</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="05506.html" target="topic">SYSTICK Peripheral Library Help</a> &gt; <a href="05507.html" target="topic">Library Interface</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,13 +26,13 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05511.html" target="topic">Previous</a> | <a href="05506.html" target="topic">Up</a> | <a href="05536.html" target="topic">Next</a></div>
+<a href="05515.html" target="topic">Previous</a> | <a href="05506.html" target="topic">Up</a> | <a href="05524.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: USART 6089 Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SYSTICK Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
 Library Interface</div>
 </div>
@@ -46,8 +46,8 @@ Library Interface</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="612029496E697469616C697A6174696F6E2046756E6374696F6E"></a><div class="Element14">
-a )Initialization Function</div>
+<a name="612920496E697469616C697A6174696F6E2046756E6374696F6E"></a><div class="Element14">
+a) Initialization Function</div>
 <div class="Element11">
 <div class="Element10">
 <div class="Element212">
@@ -65,9 +65,9 @@ Description&nbsp;</div></td></tr><tr>
 <div class="Element203">
 <img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="05536.html" target="topic">USARTx_Initialize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="05524.html" target="topic">SYSTICK_TimerInitialize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Initializes given instance of the USART peripheral.&nbsp;</div></td></tr></table></div></div>
+Initializes SysTick.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="62292053657475702046756E6374696F6E73"></a><div class="Element14">
@@ -89,23 +89,9 @@ Description&nbsp;</div></td></tr><tr>
 <div class="Element203">
 <img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="05555.html" target="topic">USARTx_SerialSetup</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="05521.html" target="topic">SYSTICK_TimerCallbackSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Sets the USART serial communication settings dynamically.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="05546.html" target="topic">USARTx_ReadCallbackRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Sets the pointer to the function (and it's context) to be called when the given USART's read events occur.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="05563.html" target="topic">USARTx_WriteCallbackRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Sets the pointer to the function (and it's context) to be called when the given USART's write events occur.&nbsp;</div></td></tr></table></div></div>
+Sets the pointer to the function (and it's context) to be called when the given systick reaches 0.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="6329205472616E73616374696F6E2046756E6374696F6E73"></a><div class="Element14">
@@ -127,30 +113,58 @@ Description&nbsp;</div></td></tr><tr>
 <div class="Element203">
 <img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="05544.html" target="topic">USARTx_Read</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="05522.html" target="topic">SYSTICK_TimerCounterGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Submits a read buffer to the given USART peripheral to process.&nbsp;</div></td></tr><tr>
+Get the SysTick current Value&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
 <img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="05561.html" target="topic">USARTx_Write</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="05523.html" target="topic">SYSTICK_TimerFrequencyGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Submits a write buffer to the given USART peripheral to transfer.&nbsp;</div></td></tr><tr>
+Get the SysTick frequency Value&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
 <img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="05545.html" target="topic">USARTx_ReadByte</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="05525.html" target="topic">SYSTICK_TimerPeriodGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Submits request to read a byte of data to the given USART peripheral.&nbsp;</div></td></tr><tr>
+Get the SysTick Load Value&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
 <img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="05562.html" target="topic">USARTx_WriteByte</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="05529.html" target="topic">SYSTICK_TimerStart</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Submits a byte of data to the given USART peripheral to transfer.&nbsp;</div></td></tr></table></div></div>
+Starts System Timer.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="05530.html" target="topic">SYSTICK_TimerStop</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Stops System Timer.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="05527.html" target="topic">SYSTICK_TimerPeriodSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Set the SysTick Load Value&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="05528.html" target="topic">SYSTICK_TimerRestart</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Restarts SysTick.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="05517.html" target="topic">SYSTICK_DelayMs</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Blocking function to generate delay in milliseconds&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="6429205374617475732046756E6374696F6E73"></a><div class="Element14">
@@ -172,51 +186,9 @@ Description&nbsp;</div></td></tr><tr>
 <div class="Element203">
 <img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="05548.html" target="topic">USARTx_ReadIsBusy</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="05526.html" target="topic">SYSTICK_TimerPeriodHasExpired</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Returns the read request status associated with the given USART peripheral instance.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="05565.html" target="topic">USARTx_WriteIsBusy</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Returns the write request status associated with the given USART peripheral instance.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="05560.html" target="topic">USARTx_TransmitterIsReady</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Returns the hardware status of the USART Transmitter.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="05549.html" target="topic">USARTx_ReceiverIsReady</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Returns the hardware status of the USART Receiver.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="05535.html" target="topic">USARTx_ErrorGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Gets the error of the given USART peripheral instance.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="05547.html" target="topic">USARTx_ReadCountGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Returns the count of number of bytes processed for a given USART read operation.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="05564.html" target="topic">USARTx_WriteCountGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Returns the count of number of bytes processed for a given USART write operation.&nbsp;</div></td></tr></table></div></div>
+Returns the current status of the systick&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="6529204461746120547970657320616E6420436F6E7374616E7473"></a><div class="Element14">
@@ -238,44 +210,16 @@ Description&nbsp;</div></td></tr><tr>
 <div class="Element203">
 <img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="05523.html" target="topic">USARTx_CALLBACK</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="05516.html" target="topic">SYSTICK_CALLBACK</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Defines the data type and function signature for the USART peripheral callback function.&nbsp;</div></td></tr><tr>
+Defines the data type and function signature for the SysTick callback function.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
 <img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="05524.html" target="topic">USARTx_DATA_BIT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="05518.html" target="topic">SYSTICK_OBJECT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Defines the data type for the USART data bit length.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="05530.html" target="topic">USARTx_ERROR</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Defines the data type for the USART peripheral errors.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="05537.html" target="topic">USARTx_PARITY</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Defines the type of parity for USART peripheral.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="05550.html" target="topic">USARTx_SERIAL_SETUP</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Defines the data type for the USART serial setup.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="05556.html" target="topic">USARTx_STOP_BIT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Defines the length of stop bits.&nbsp;</div></td></tr></table></div></div>
+Defines the data type for the SYSTICK OBJECT.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -283,7 +227,7 @@ Defines the length of stop bits.&nbsp;</div></td></tr></table></div></div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03214.html" target="topic">Peripheral Library Overview</a> &gt; <a href="02834.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03213.html" target="topic">Peripheral Libraries</a> &gt; <a href="05506.html" target="topic">USART Peripheral Library Help</a> &gt; <a href="05507.html" target="topic">Library Interface</a></div>
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="05506.html" target="topic">SYSTICK Peripheral Library Help</a> &gt; <a href="05507.html" target="topic">Library Interface</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -291,13 +235,13 @@ Defines the length of stop bits.&nbsp;</div></td></tr></table></div></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03214.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05511.html" target="topic">Previous</a> | <a href="05506.html" target="topic">Up</a> | <a href="05536.html" target="topic">Next</a></div>
+<a href="05515.html" target="topic">Previous</a> | <a href="05506.html" target="topic">Up</a> | <a href="05524.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: USART 6089 Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SYSTICK Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

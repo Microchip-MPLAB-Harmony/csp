@@ -1,0 +1,155 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>PORT_GroupWrite Function</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '03948.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="03933.html" target="topic">PORT Peripheral Library Help</a> &gt; <a href="03934.html" target="topic">Library Interface</a> &gt; c) Group Functions &gt; <a href="03948.html" target="topic">PORT_GroupWrite Function</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+Microchip 32-bit Chip Support Package</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="03943.html" target="topic">Previous</a> | <a href="03934.html" target="topic">Up</a> | <a href="03942.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PORT_GroupWrite@PORT_GROUP@uint32_t@uint32_t Topic Title: PORT_GroupWrite Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+PORT_GroupWrite Function</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+This function writes the value contained in the value parameter to the port group. Port group pins which are configured for output will be updated. The mask parameter provides additional control on the bits in the group to be affected. Setting a bit to 1 in the mask will cause the corresponding bit in the port group to be updated. Clearing a bit in the mask will cause that corresponding bit in the group to stay unaffected. For example, setting a mask value 0xFFFFFFFF will cause all bits in the port group to be updated. Setting a value 0x3 will only cause port group bit 0 and bit 1 to be updated.&nbsp;</p>
+<p class="Element10">
+For port pins which are not configured for output and have the pull feature enabled, this function will affect pull value (pull up or pull down). A bit value of 1 will enable the pull up. A bit value of 0 will enable the pull down.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">PORT_GroupWrite</span></strong>(
+    <a href="03937.html" target="topic">PORT_GROUP</a> <strong><span style="color: #000000">group</span></strong>, 
+    uint32_t <strong><span style="color: #000000">mask</span></strong>, 
+    uint32_t <strong><span style="color: #000000">value</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The <a href="03949.html" target="topic">PORT_Initialize</a>() function should have been called.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+group&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+One of the IO groups from the enum <a href="03937.html" target="topic">PORT_GROUP</a>.<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+mask&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+A 32 bit value in which positions of 0s and 1s decide which IO pins of the selected port group will be written.&nbsp;</p>
+<ul class="Element630">
+<li class="Element600">1's - Will write to corresponding IO pins.</li>
+<li class="Element600">0's - Will remain unchanged.</li>
+</ul><p class="Element307">
+<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+value&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Value which has to be written/driven on the I/O lines of the selected port for which mask bits are '1'. Values for the corresponding mask bit '0' will be ignored. Refer to the function description for effect on pins which are not configured for output.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12"><i><span style="color: #008000">// Write binary value 0011 to the pins PC3, PC2, PC1 and PC0 respectively.</span></i>
+PORT_GroupWrite(PORT_GROUP_C, 0x0F, 0xF563D453);
+</pre></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="03933.html" target="topic">PORT Peripheral Library Help</a> &gt; <a href="03934.html" target="topic">Library Interface</a> &gt; c) Group Functions &gt; <a href="03948.html" target="topic">PORT_GroupWrite Function</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+Microchip 32-bit Chip Support Package</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="03943.html" target="topic">Previous</a> | <a href="03934.html" target="topic">Up</a> | <a href="03942.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PORT_GroupWrite@PORT_GROUP@uint32_t@uint32_t Topic Title: PORT_GroupWrite Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>
