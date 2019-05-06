@@ -67,6 +67,8 @@ int main ( void )
     /* Initialize all modules */
     SYS_Initialize ( NULL );
 
+    LED_OFF();
+
     SYSTICK_TimerStart();
 
     while ( true )
