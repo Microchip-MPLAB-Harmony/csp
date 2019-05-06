@@ -109,6 +109,7 @@ static void setConfig(void)
 {
     L2CC_REGS->L2CC_ACR = L2CC_ACR_HPSO(${L2CC_ACR_HPSO}) |
                      L2CC_ACR_SBDLE(${L2CC_ACR_SBDLE}) |
+                     L2CC_ACR_SAIE(${L2CC_ACR_SAIE}) |
                      L2CC_ACR_EMBEN(${L2CC_ACR_EMBEN}) |
                      L2CC_ACR_PEN(${L2CC_ACR_PEN}) |
                      L2CC_ACR_SAOEN(${L2CC_ACR_SAOEN}) |
