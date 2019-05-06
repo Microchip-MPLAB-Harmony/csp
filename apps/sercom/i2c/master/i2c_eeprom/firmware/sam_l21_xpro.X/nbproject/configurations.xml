@@ -13,13 +13,16 @@
             <logicalFolder name="f5" displayName="nvic" projectFiles="true">
               <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/nvic/plib_nvic.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f2" displayName="nvmctrl" projectFiles="true">
+            <logicalFolder name="f1" displayName="nvmctrl" projectFiles="true">
               <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/nvmctrl/plib_nvmctrl.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f6" displayName="pm" projectFiles="true">
+              <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/pm/plib_pm.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f3" displayName="port" projectFiles="true">
               <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/port/plib_port.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f1" displayName="sercom" projectFiles="true">
+            <logicalFolder name="f2" displayName="sercom" projectFiles="true">
               <logicalFolder name="f1" displayName="i2cm" projectFiles="true">
                 <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/sercom/i2cm/plib_sercom_i2c_master.h</itemPath>
                 <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/sercom/i2cm/plib_sercom2_i2c.h</itemPath>
@@ -110,13 +113,16 @@
             <logicalFolder name="f5" displayName="nvic" projectFiles="true">
               <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/nvic/plib_nvic.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f2" displayName="nvmctrl" projectFiles="true">
+            <logicalFolder name="f1" displayName="nvmctrl" projectFiles="true">
               <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/nvmctrl/plib_nvmctrl.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f6" displayName="pm" projectFiles="true">
+              <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/pm/plib_pm.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f3" displayName="port" projectFiles="true">
               <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/port/plib_port.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f1" displayName="sercom" projectFiles="true">
+            <logicalFolder name="f2" displayName="sercom" projectFiles="true">
               <logicalFolder name="f1" displayName="i2cm" projectFiles="true">
                 <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/sercom/i2cm/plib_sercom2_i2c.c</itemPath>
               </logicalFolder>

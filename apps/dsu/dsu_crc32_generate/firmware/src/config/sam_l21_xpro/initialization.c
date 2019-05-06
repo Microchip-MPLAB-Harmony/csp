@@ -123,6 +123,8 @@ void SYS_Initialize ( void* data )
 
     PAC_Initialize();
 
+    PM_Initialize();
+
 
 
 

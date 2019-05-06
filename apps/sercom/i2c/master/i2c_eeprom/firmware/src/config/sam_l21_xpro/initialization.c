@@ -121,6 +121,8 @@ void SYS_Initialize ( void* data )
 
     SERCOM2_I2C_Initialize();
 
+    PM_Initialize();
+
 
 
 

@@ -123,6 +123,8 @@ void SYS_Initialize ( void* data )
 
     DMAC_Initialize();
 
+    PM_Initialize();
+
 
 
 

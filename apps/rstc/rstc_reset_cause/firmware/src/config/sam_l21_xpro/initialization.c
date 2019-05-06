@@ -122,6 +122,8 @@ void SYS_Initialize ( void* data )
     SERCOM3_USART_Initialize();
 
 	SYSTICK_TimerInitialize();
+    PM_Initialize();
+
     EIC_Initialize();
 
 	RSTC_Initialize();

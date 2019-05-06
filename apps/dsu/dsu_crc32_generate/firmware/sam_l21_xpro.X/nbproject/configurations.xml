@@ -10,7 +10,7 @@
             <logicalFolder name="f4" displayName="clock" projectFiles="true">
               <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/clock/plib_clock.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f7" displayName="dsu" projectFiles="true">
+            <logicalFolder name="f8" displayName="dsu" projectFiles="true">
               <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/dsu/plib_dsu.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f2" displayName="evsys" projectFiles="true">
@@ -24,6 +24,9 @@
             </logicalFolder>
             <logicalFolder name="f6" displayName="pac" projectFiles="true">
               <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/pac/plib_pac.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f7" displayName="pm" projectFiles="true">
+              <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/pm/plib_pm.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f3" displayName="port" projectFiles="true">
               <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/port/plib_port.h</itemPath>
@@ -110,7 +113,7 @@
             <logicalFolder name="f4" displayName="clock" projectFiles="true">
               <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/clock/plib_clock.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f7" displayName="dsu" projectFiles="true">
+            <logicalFolder name="f8" displayName="dsu" projectFiles="true">
               <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/dsu/plib_dsu.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f2" displayName="evsys" projectFiles="true">
@@ -124,6 +127,9 @@
             </logicalFolder>
             <logicalFolder name="f6" displayName="pac" projectFiles="true">
               <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/pac/plib_pac.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f7" displayName="pm" projectFiles="true">
+              <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/pm/plib_pm.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f3" displayName="port" projectFiles="true">
               <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/port/plib_port.c</itemPath>
@@ -160,7 +166,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>EdbgTool</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>2.10</languageToolchainVersion>
+        <languageToolchainVersion>2.20</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
@@ -363,6 +369,8 @@
                   value="${memories.instruction.ram.ranges}"/>
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="0-3ffff"/>
+        <property key="poweroptions.powerenable" value="false"/>
+        <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.preservedataflash" value="false"/>
         <property key="programoptions.preservedataflash.ranges"
                   value="${memories.dataflash.default}"/>
@@ -372,6 +380,7 @@
         <property key="programoptions.preserveprogramrange" value="false"/>
         <property key="programoptions.preserveuserid" value="false"/>
         <property key="programoptions.programuserotp" value="false"/>
+        <property key="voltagevalue" value=""/>
       </EdbgTool>
       <PICkit3PlatformTool>
         <property key="ADC 1" value="true"/>
