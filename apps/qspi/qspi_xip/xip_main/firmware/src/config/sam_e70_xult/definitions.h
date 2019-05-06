@@ -53,6 +53,7 @@
 #include "peripheral/pio/plib_pio.h"
 #include "peripheral/nvic/plib_nvic.h"
 #include "peripheral/mpu/plib_mpu.h"
+#include "peripheral/systick/plib_systick.h"
 #include "peripheral/efc/plib_efc.h"
 
 // DOM-IGNORE-BEGIN
