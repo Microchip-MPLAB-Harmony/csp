@@ -725,8 +725,25 @@
         </Boolean>
       </Symbols>
     </UniqueComponent>
-    <UniqueComponent dnOrder="4" id="nvmctrl"/>
-    <UniqueComponent dnOrder="5" id="tc0">
+    <UniqueComponent dnOrder="4" id="nvmctrl">
+      <Symbols dnOrder="0">
+        <Integer dnOrder="0" id="NVM_RWS">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="nvmctrl" value="2"/>
+          </Values>
+        </Integer>
+      </Symbols>
+    </UniqueComponent>
+    <UniqueComponent dnOrder="5" id="pm">
+      <Symbols dnOrder="0">
+        <KeyValueSet dnOrder="0" id="PM_PLCFG_PLSEL">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="pm" value="1"/>
+          </Values>
+        </KeyValueSet>
+      </Symbols>
+    </UniqueComponent>
+    <UniqueComponent dnOrder="6" id="tc0">
       <Symbols dnOrder="0">
         <File dnOrder="0" id="TC_CAPTURE_HEADER">
           <Attributes dnOrder="0">
@@ -842,7 +859,7 @@
         </Float>
       </Symbols>
     </UniqueComponent>
-    <UniqueComponent dnOrder="6" id="tc3">
+    <UniqueComponent dnOrder="7" id="tc3">
       <Symbols dnOrder="0">
         <File dnOrder="0" id="TC_CAPTURE_HEADER">
           <Attributes dnOrder="0">
@@ -963,7 +980,7 @@
         </Float>
       </Symbols>
     </UniqueComponent>
-    <UniqueComponent dnOrder="7" id="tc4">
+    <UniqueComponent dnOrder="8" id="tc4">
       <Symbols dnOrder="0">
         <File dnOrder="0" id="TC_CAPTURE_HEADER">
           <Attributes dnOrder="0">
@@ -1100,18 +1117,19 @@
     </UniqueComponent>
   </Components>
   <UserData>
-    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="0"/>
-    <ComponentGraph dnOrder="1" id="__ROOTVIEW">
+    <ComponentGraph dnOrder="0" id="__ROOTVIEW">
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="cmsis" x="170" y="60"/>
         <ElementPosition dnOrder="1" id="core" x="400" y="20"/>
         <ElementPosition dnOrder="2" id="dfp" x="180" y="20"/>
         <ElementPosition dnOrder="3" id="evsys" x="20" y="20"/>
         <ElementPosition dnOrder="4" id="nvmctrl" x="190" y="140"/>
-        <ElementPosition dnOrder="5" id="tc0" x="310" y="60"/>
-        <ElementPosition dnOrder="6" id="tc3" x="30" y="100"/>
-        <ElementPosition dnOrder="7" id="tc4" x="30" y="180"/>
+        <ElementPosition dnOrder="5" id="pm" x="500" y="20"/>
+        <ElementPosition dnOrder="6" id="tc0" x="310" y="60"/>
+        <ElementPosition dnOrder="7" id="tc3" x="30" y="100"/>
+        <ElementPosition dnOrder="8" id="tc4" x="30" y="180"/>
       </ElementPositions>
     </ComponentGraph>
+    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="1"/>
   </UserData>
 </Configuration>

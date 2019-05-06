@@ -562,7 +562,16 @@
         </Integer>
       </Symbols>
     </UniqueComponent>
-    <UniqueComponent dnOrder="5" id="tcc0">
+    <UniqueComponent dnOrder="5" id="pm">
+      <Symbols dnOrder="0">
+        <KeyValueSet dnOrder="0" id="PM_PLCFG_PLSEL">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="pm" value="1"/>
+          </Values>
+        </KeyValueSet>
+      </Symbols>
+    </UniqueComponent>
+    <UniqueComponent dnOrder="6" id="tcc0">
       <Symbols dnOrder="0">
         <Boolean dnOrder="0" id="TCC_CTRLBSET_DIR">
           <Attributes dnOrder="0">
@@ -613,7 +622,8 @@
         <ElementPosition dnOrder="2" id="dfp" x="180" y="20"/>
         <ElementPosition dnOrder="3" id="evsys" x="20" y="20"/>
         <ElementPosition dnOrder="4" id="nvmctrl" x="500" y="20"/>
-        <ElementPosition dnOrder="5" id="tcc0" x="33" y="93"/>
+        <ElementPosition dnOrder="5" id="pm" x="310" y="60"/>
+        <ElementPosition dnOrder="6" id="tcc0" x="33" y="93"/>
       </ElementPositions>
     </ComponentGraph>
     <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="1"/>

@@ -656,7 +656,16 @@
         </Integer>
       </Symbols>
     </UniqueComponent>
-    <UniqueComponent dnOrder="6" id="tc0">
+    <UniqueComponent dnOrder="6" id="pm">
+      <Symbols dnOrder="0">
+        <KeyValueSet dnOrder="0" id="PM_PLCFG_PLSEL">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="pm" value="1"/>
+          </Values>
+        </KeyValueSet>
+      </Symbols>
+    </UniqueComponent>
+    <UniqueComponent dnOrder="7" id="tc0">
       <Symbols dnOrder="0">
         <Integer dnOrder="0" id="TC_FREQUENCY">
           <Values dnOrder="0">
@@ -694,8 +703,9 @@
         <ElementPosition dnOrder="2" id="dac" x="310" y="60"/>
         <ElementPosition dnOrder="3" id="dfp" x="180" y="20"/>
         <ElementPosition dnOrder="4" id="evsys" x="20" y="20"/>
-        <ElementPosition dnOrder="5" id="nvmctrl" x="190" y="120"/>
-        <ElementPosition dnOrder="6" id="tc0" x="30" y="100"/>
+        <ElementPosition dnOrder="5" id="nvmctrl" x="191" y="120"/>
+        <ElementPosition dnOrder="6" id="pm" x="350" y="120"/>
+        <ElementPosition dnOrder="7" id="tc0" x="30" y="100"/>
       </ElementPositions>
     </ComponentGraph>
     <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="1"/>
