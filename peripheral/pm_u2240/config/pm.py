@@ -48,12 +48,13 @@ def instantiateComponent(pmComponent):
     parametersNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"PM\"]/instance@[name=\""+pmInstanceName.getValue()+"\"]/parameters")
     for parameter in parametersNode.getChildren():
         if "HAS_" in parameter.getAttribute("name"):
+
             parameters.append(parameter.getAttribute("name"))
             paramSym = pmComponent.createBooleanSymbol(parameter.getAttribute("name"), None)
             paramSym.setVisible(False)
             paramSym.setDefaultValue(True)
 
-    if "HAS_PLCFG" in parameter.getAttribute("name"):
+    if "HAS_PLCFG" in parameters:
         #PM performance level select
         pmSym_PM_PLCFG_PLSEL = pmComponent.createKeyValueSetSymbol("PM_PLCFG_PLSEL", None)
         pmSym_PM_PLCFG_PLSEL.setLabel("Performance Level Select")
