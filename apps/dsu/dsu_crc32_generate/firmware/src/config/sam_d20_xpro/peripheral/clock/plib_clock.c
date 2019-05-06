@@ -115,8 +115,8 @@ void CLOCK_Initialize (void)
     /* Function to Initialize the Oscillators */
     SYSCTRL_Initialize();
 
-    DFLL_Initialize();
     GCLK1_Initialize();
+    DFLL_Initialize();
     GCLK0_Initialize();
 
 

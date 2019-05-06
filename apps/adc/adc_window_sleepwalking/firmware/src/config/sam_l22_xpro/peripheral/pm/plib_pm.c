@@ -60,14 +60,25 @@ void PM_Initialize( void )
 {
     /* Configure PM */
     PM_REGS->PM_STDBYCFG = PM_STDBYCFG_BBIASHS(0)| PM_STDBYCFG_VREGSMOD(0);
+
+    /* Clear INTFLAG.PLRDY */
+    PM_REGS->PM_INTFLAG |= PM_INTENCLR_PLRDY_Msk;
+
+    /* Configure performance level */
+    PM_REGS->PM_PLCFG = PM_PLCFG_PLSEL_PL2;
+
+    /* Wait for performance level transition to complete */
+    while(!(PM_REGS->PM_INTFLAG & PM_INTFLAG_PLRDY_Msk));
 }
 
 void PM_IdleModeEnter( void )
 {
     /* Configure Idle Sleep mode */
     PM_REGS->PM_SLEEPCFG = PM_SLEEPCFG_SLEEPMODE_IDLE_Val;
+
     /* Ensure that SLEEPMODE bits are configured with the given value */
     while (!(PM_REGS->PM_SLEEPCFG & PM_SLEEPCFG_SLEEPMODE_IDLE_Val));
+
     /* Wait for interrupt instruction execution */
     __WFI();
 }
@@ -76,8 +87,10 @@ void PM_StandbyModeEnter( void )
 {
     /* Configure Standby Sleep */
     PM_REGS->PM_SLEEPCFG = PM_SLEEPCFG_SLEEPMODE_STANDBY_Val;
+
     /* Ensure that SLEEPMODE bits are configured with the given value */
     while (!(PM_REGS->PM_SLEEPCFG & PM_SLEEPCFG_SLEEPMODE_STANDBY_Val));
+
     /* Wait for interrupt instruction execution */
     __WFI();
 }
@@ -86,8 +99,10 @@ void PM_BackupModeEnter( void )
 {
     /* Configure Backup Sleep */
     PM_REGS->PM_SLEEPCFG = PM_SLEEPCFG_SLEEPMODE_BACKUP_Val;
+
     /* Ensure that SLEEPMODE bits are configured with the given value */
     while (!(PM_REGS->PM_SLEEPCFG & PM_SLEEPCFG_SLEEPMODE_BACKUP_Val));
+
     /* Wait for interrupt instruction execution */
     __WFI();
 }
@@ -96,11 +111,14 @@ void PM_OffModeEnter( void )
 {
     /* Configure Off Sleep */
     PM_REGS->PM_SLEEPCFG = PM_SLEEPCFG_SLEEPMODE_OFF_Val;
+
     /* Ensure that SLEEPMODE bits are configured with the given value */
     while (!(PM_REGS->PM_SLEEPCFG & PM_SLEEPCFG_SLEEPMODE_OFF_Val));
+
     /* Wait for interrupt instruction execution */
     __WFI();
 }
+
 /* ********Important Note********
  * When IORET is enabled, SWD access to the device will not be
  * available after waking up from Backup sleep until
@@ -119,7 +137,7 @@ void PM_IO_RetentionClear( void )
 bool PM_ConfigurePerformanceLevel(PLCFG_PLSEL plsel)
 {
     bool status = false;
-    
+
     /* Write the value only if Performance Level Disable is not set */
     if (!(PM_REGS->PM_PLCFG & PM_PLCFG_PLDIS_Msk))
     {
@@ -127,15 +145,17 @@ bool PM_ConfigurePerformanceLevel(PLCFG_PLSEL plsel)
         {
             /* Clear INTFLAG.PLRDY */
             PM_REGS->PM_INTFLAG |= PM_INTENCLR_PLRDY_Msk;
+
             /* Write PLSEL bits */
             PM_REGS->PM_PLCFG  = plsel;
+
             /* Wait for performance level transition to complete */
             while(!(PM_REGS->PM_INTFLAG & PM_INTFLAG_PLRDY_Msk));
-            
+
             status = true;
         }
     }
-    
+
     return status;
 }
 
