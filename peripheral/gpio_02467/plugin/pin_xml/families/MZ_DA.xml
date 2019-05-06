@@ -55,7 +55,7 @@
 			<pin name="RPC4" value="10"/>
 			<pin name="RPG0" value="12"/>
 			<pin name="RPA15" value="13"/>
-			<pin name="RPD7" value="14"/>			
+			<pin name="RPD7" value="14"/>
 			<function name="INT4" direction="in"/>
 			<function name="T5CK" direction="in"/>
 			<function name="T7CK" direction="in"/>
@@ -141,7 +141,7 @@
 			<function name="SS2 (in)" direction="in"/>
 			<function name="SDI6" direction="in"/>
 			<function name="OCFA" direction="in"/>
-			<function name="REFCLKI3" direction="in"/>				
+			<function name="REFCLKI3" direction="in"/>
 			<function name="U1RTS" direction="out" value="1"/>
 			<function name="U2TX" direction="out" value="2"/>
 			<function name="U5RTS" direction="out" value="3"/>
@@ -160,42 +160,42 @@
             <function name="AN0">
                 <constraint type="enable">
                     <pair key="DRV_ADCHS_CHNL_0_ALT_INP_SEL_IDX[0-5]" value="ADCHS_DEFAULT_CLASS1_AN0"/>
-                </constraint>                
+                </constraint>
                 <constraint type="enable">
                     <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-44]" value="ADCHS_AN0"/>
-                </constraint>                 
+                </constraint>
             </function>
             <function name="AN1">
                 <constraint type="enable">
                     <pair key="DRV_ADCHS_CHNL_1_ALT_INP_SEL_IDX[0-5]" value="ADCHS_DEFAULT_CLASS1_AN1"/>
-                </constraint>                 
+                </constraint>
                 <constraint type="enable">
                     <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-44]" value="ADCHS_AN1"/>
-                </constraint>  
+                </constraint>
             </function>
 	    <function name="AN2">
                 <constraint type="enable">
                     <pair key="DRV_ADCHS_CHNL_2_ALT_INP_SEL_IDX[0-5]" value="ADCHS_DEFAULT_CLASS1_AN2"/>
-                </constraint>                 
+                </constraint>
                 <constraint type="enable">
                     <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-44]" value="ADCHS_AN2"/>
-                </constraint>  
+                </constraint>
             </function>
 	    <function name="AN3">
                 <constraint type="enable">
                     <pair key="DRV_ADCHS_CHNL_3_ALT_INP_SEL_IDX[0-5]" value="ADCHS_DEFAULT_CLASS1_AN3"/>
-                </constraint>                 
+                </constraint>
                 <constraint type="enable">
                     <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-44]" value="ADCHS_AN3"/>
-                </constraint>  
+                </constraint>
             </function>
 	    <function name="AN4">
                 <constraint type="enable">
                     <pair key="DRV_ADCHS_CHNL_4_ALT_INP_SEL_IDX[0-5]" value="ADCHS_DEFAULT_CLASS1_AN4"/>
-                </constraint>                 
+                </constraint>
                 <constraint type="enable">
                     <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-44]" value="ADCHS_AN4"/>
-                </constraint>  
+                </constraint>
             </function>
 	    <function name="AN5">
                 <constraint type="enable">
@@ -203,7 +203,7 @@
                 </constraint>
                 <constraint type="enable">
                     <pair key="DRV_ADCHS_CLASS_2_ANALOG_INPUT_IDX[0-6]" value="ADCHS_CLASS2_AN5"/>
-                </constraint>                  
+                </constraint>
             </function>
 	    <function name="AN6">
                 <constraint type="enable">
@@ -442,7 +442,7 @@
                 <constraint type="enable">
                     <pair key="DRV_ADCHS_CHNL_4_ALT_INP_SEL_IDX[0-5]" value="ADCHS_ALTERNATE_CLASS1_AN49"/>
                 </constraint>
-            </function>            
+            </function>
 	</module>
         <module name="Clock" desc="Clock\n(OSC_ID_0)">
 			<function name="CLKI">
@@ -450,27 +450,27 @@
                     <pair key="POSCMOD" value="EC"/>
                 </constraint>
             </function>
-			<function name="CLKO" analog="true">
+			<function name="CLKO">
                 <constraint type="enable">
                     <pair key="OSCIOFNC" value="ON"/>
                 </constraint>
             </function>
-			<function name="OSC1" analog="true">
+			<function name="OSC1">
                 <constraint type="enable">
                     <pair key="POSCMOD" value="HS"/>
                 </constraint>
             </function>
-			<function name="OSC2" analog="true">
+			<function name="OSC2">
                 <constraint type="enable">
                     <pair key="POSCMOD" value="HS"/>
                 </constraint>
             </function>
-			<function name="SOSCI" analog="true">
+			<function name="SOSCI">
                 <constraint type="enable">
                     <pair key="FSOSCEN" value="ON"/>
                 </constraint>
             </function>
-			<function name="SOSCO" analog="true">
+			<function name="SOSCO">
                 <constraint type="enable">
                     <pair key="FSOSCEN" value="ON"/>
                 </constraint>
@@ -1108,22 +1108,22 @@
             <constraint type="enable">
 		       	<pair key="DRV_CMP_PERIPHERAL_ID_IDX[0-1]" value="CMP_ID_1"/>
 		    </constraint>
-            <function name="C1INA" analog="true">
+            <function name="C1INA">
                 <constraint type="enable">
 			    	<pair key="DRV_CMP_NONINVPIN_IDX[0-1]" value="C1INA"/>
 			    </constraint>
 			</function>
-            <function name="C1INB" analog="true">
+            <function name="C1INB">
                 <constraint type="enable">
 			    	<pair key="DRV_CMP_INVPIN_IDX[0-1]" value="C1INB"/>
 			    </constraint>
 			</function>
-            <function name="C1INC" analog="true">
+            <function name="C1INC">
                 <constraint type="enable">
 			    	<pair key="DRV_CMP_INVPIN_IDX[0-1]" value="C1INC"/>
 			    </constraint>
 			</function>
-            <function name="C1IND" analog="true">
+            <function name="C1IND">
                 <constraint type="enable">
 			    	<pair key="DRV_CMP_INVPIN_IDX[0-1]" value="C1IND"/>
 			    </constraint>
@@ -1138,22 +1138,22 @@
             <constraint type="enable">
 		       	<pair key="DRV_CMP_PERIPHERAL_ID_IDX[0-1]" value="CMP_ID_2"/>
 		    </constraint>
-            <function name="C2INA" analog="true">
+            <function name="C2INA">
                 <constraint type="enable">
 			    	<pair key="DRV_CMP_NONINVPIN_IDX[0-1]" value="C2INA"/>
 			    </constraint>
 			</function>
-			<function name="C2INB" analog="true">
+			<function name="C2INB">
                 <constraint type="enable">
 			    	<pair key="DRV_CMP_INVPIN_IDX[0-1]" value="C2INB"/>
 			    </constraint>
 			</function>
-			<function name="C2INC" analog="true">
+			<function name="C2INC">
                 <constraint type="enable">
 			    	<pair key="DRV_CMP_INVPIN_IDX[0-1]" value="C2INC"/>
 			    </constraint>
 			</function>
-			<function name="C2IND" analog="true">
+			<function name="C2IND">
                 <constraint type="enable">
 			    	<pair key="DRV_CMP_INVPIN_IDX[0-1]" value="C2IND"/>
 			    </constraint>
@@ -1171,7 +1171,7 @@
             <function name="CTED1" analog="true"/>
 	    <function name="CTED2" analog="true"/>
             <function name="CTPLS"/>
-	</module>	
+	</module>
 		<module name="PMP" desc="PMP\n(PMP_ID_0)">
             <constraint type="enable">
 		       	<pair key="USE_DRV_PMP" value="y"/>
@@ -1879,12 +1879,12 @@
                 <constraint type="enable">
 			    	<pair key="DRV_SDHC_SDCDEN" value="y"/>
 			    </constraint>
-            </function>				
+            </function>
 			<function name="SDWP">
                 <constraint type="enable">
 			    	<pair key="DRV_SDHC_SDWPEN" value="y"/>
 			    </constraint>
-            </function>				
+            </function>
 		</module>
 		<module name="GLCD">
 			<constraint type="enable">
@@ -1897,7 +1897,7 @@
 			<function name="GD0"/>
 			<function name="GD1"/>
 			<function name="GD2"/>
-			<function name="GD3"/>	
+			<function name="GD3"/>
 			<function name="GD4"/>
 			<function name="GD5"/>
 			<function name="GD6"/>
@@ -1917,7 +1917,7 @@
 			<function name="GD20"/>
 			<function name="GD21"/>
 			<function name="GD22"/>
-			<function name="GD23"/>			
+			<function name="GD23"/>
 		</module>
 		<module name="JTAG">
 			<constraint type="enable">
@@ -1975,4 +1975,3 @@
 		</module>
 	</modules>
 </family>
-
