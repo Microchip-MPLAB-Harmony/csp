@@ -1,0 +1,191 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>DMAC_ChannelTransfer Function</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '01544.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="01486.html" target="topic">DMAC Peripheral Library Help</a> &gt; <a href="01487.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="01544.html" target="topic">DMAC_ChannelTransfer Function</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+Microchip 32-bit Chip Support Package</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="01542.html" target="topic">Previous</a> | <a href="01487.html" target="topic">Up</a> | <a href="01543.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: dmac_00735::DMAC_ChannelTransfer@DMAC_CHANNEL@void *@size_t@void *@size_t@size_t Topic Title: DMAC_ChannelTransfer Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+DMAC_ChannelTransfer Function</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+This function schedules a DMA transfer on the specified DMA channel and starts the transfer when the configured trigger is received. The transfer is processed based on the channel configuration performed in the DMA manager. The channel parameter specifies the channel to be used for the transfer.&nbsp;</p>
+<p class="Element10">
+If the channel is configured for software trigger, calling the channel transfer function will set the source and destination address and will also start the transfer. If the channel was configured for a peripheral trigger, the channel transfer function will set the source and destination address and will transfer data when a trigger has occurred.&nbsp;</p>
+<p class="Element10">
+If the requesting client registered an event callback function before calling the channel transfer function, this function will be called when the transfer completes. The callback function will be called with a DMAC_TRANSFER_COMPLETE event if the transfer was processed successfully and a DMAC_TRANSFER_ERROR event if the transfer was not processed successfully.&nbsp;</p>
+<p class="Element10">
+When already a transfer is in progress, this API will return false indicating that transfer request is not accepted.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">DMAC_ChannelTransfer</span></strong>(
+    <a href="01534.html" target="topic">DMAC_CHANNEL</a> <strong><span style="color: #000000">channel</span></strong>, 
+    <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">void</span></strong> * <strong><span style="color: #000000">srcAddr</span></strong>, 
+    size_t <strong><span style="color: #000000">srcSize</span></strong>, 
+    <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">void</span></strong> * <strong><span style="color: #000000">destAddr</span></strong>, 
+    size_t <strong><span style="color: #000000">destSize</span></strong>, 
+    size_t <strong><span style="color: #000000">cellSize</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+DMAC should have been initialized by calling the <a href="01548.html" target="topic">DMAC_Initialize</a>.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+DMAC_CHANNEL channel&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+DMA channel to use for this transfer<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+srcAddr&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+pointer to source data<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+srcSize&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Size of the source<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+destAddr&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+pointer to where data is to be moved to<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+destSize&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Size of the destination<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+cellSize&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Size of the cell&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+
+<ul class="Element630">
+<li class="Element600">true - If transfer request is accepted.</li>
+<li class="Element600">false - If previous transfer is in progress and the request is rejected.</li>
+</ul></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12"><i><span style="color: #008000">// Transfer 10 bytes of data to UART TX using DMAC channel 1</span></i>
+MY_APP_OBJ myAppObj;
+uint8_t buf[10] = {0,1,2,3,4,5,6,7,8,9};
+<strong><span style="color: #000080">void</span></strong> *srcAddr = (uint8_t *) buf;
+<strong><span style="color: #000080">void</span></strong> *destAddr = (uin8_t*) &amp;U1TXREG;
+size_t size = 10;
+
+<i><span style="color: #008000">// User registers an event handler with PLIB. This is done once.</span></i>
+<a href="01541.html" target="topic">DMAC_ChannelCallbackRegister</a>(DMAC_CHANNEL_1, APP_DMACTransferEventHandler,
+    (uintptr_t)&amp;myAppObj);
+
+<strong><span style="color: #000080">if</span></strong>(DMAC_ChannelTransfer(DMAC_CHANNEL_1, srcAddr, size, destAddr, 1, 1) == <strong><span style="color: #000080">true</span></strong>)
+{
+    <i><span style="color: #008000">// do something else</span></i>
+}
+<strong><span style="color: #000080">else</span></strong>
+{
+    <i><span style="color: #008000">// try again?</span></i>
+}</pre></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="01486.html" target="topic">DMAC Peripheral Library Help</a> &gt; <a href="01487.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="01544.html" target="topic">DMAC_ChannelTransfer Function</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+Microchip 32-bit Chip Support Package</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="01542.html" target="topic">Previous</a> | <a href="01487.html" target="topic">Up</a> | <a href="01543.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: dmac_00735::DMAC_ChannelTransfer@DMAC_CHANNEL@void *@size_t@void *@size_t@size_t Topic Title: DMAC_ChannelTransfer Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

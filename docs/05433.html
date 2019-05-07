@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Introduction</title>
+<title>spi_self_loopback_blocking</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="05434.html" target="topic">SUPC Peripheral Library Help</a> &gt; <a href="05433.html" target="topic">Introduction</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="05423.html" target="topic">SERCOM Applications</a> &gt; <a href="05430.html" target="topic">SERCOM SPI Applications</a> &gt; <a href="05433.html" target="topic">spi_self_loopback_blocking</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05434.html" target="topic">Previous</a> | <a href="05434.html" target="topic">Up</a> | <a href="05430.html" target="topic">Next</a></div>
+<a href="05442.html" target="topic">Previous</a> | <a href="05430.html" target="topic">Up</a> | <a href="05443.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SUPC U2117 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SERCOM SPI Applications spi_self_loopback_blocking Topic Title: spi_self_loopback_blocking)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Introduction</div>
+spi_self_loopback_blocking</div>
 </div>
 </div>
 
@@ -49,20 +49,49 @@ Introduction</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The Supply Controller (SUPC) manages the voltage reference and power supply of the device.&nbsp;</p>
-<p class="Element10">
-The SUPC controls the voltage regulators for the core (VDDCORE) domain. It sets the voltage regulators according to the sleep modes, or the user configuration.&nbsp;</p>
-<p class="Element10">
-The SUPC embeds two Brown-Out Detectors. BODVDD monitors the voltage applied to the device (VDD) and BODCORE monitors the internal voltage to the core (VDDCORE). The BOD can monitor the supply voltage continuously (continuous mode) or periodically (sampling mode).&nbsp;</p>
-<p class="Element10">
-The SUPC generates also a selectable reference voltage and a voltage dependent on the temperature which can be used by analog modules like the ADC, SDADC or DAC.</p></div>
+This example shows the transmit and receive operation over a SPI interface in a blocking manner. The CPU polls the peripheral register continuously to manage the transfer. <span style="color: #000000">It transmits an array of values and verifies the value transmitted by receiving the values back with loop back and comparing it to the value transmitted. The loop back</span> test requires the MOSI output pin to be connected to the MISO input pin so that anything transmitted will also be received.</p></div>
+</div>
+<a name="546F70696373"></a><div class="Element14">
+Topics</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element200" valign="top" width="35%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="05443.html" target="topic">Building The Application</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides information on how to build application using the MPLAB X IDE&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="05445.html" target="topic">MPLAB Harmony Configurations</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This topic provides information on MHC configurations.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="05444.html" target="topic">Hardware Setup</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section describes how to configure the supported hardware.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="05446.html" target="topic">Running The Application</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides information on how to run the application using the MPLAB X IDE.&nbsp;</div></td></tr></table></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="05434.html" target="topic">SUPC Peripheral Library Help</a> &gt; <a href="05433.html" target="topic">Introduction</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="05423.html" target="topic">SERCOM Applications</a> &gt; <a href="05430.html" target="topic">SERCOM SPI Applications</a> &gt; <a href="05433.html" target="topic">spi_self_loopback_blocking</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -70,13 +99,13 @@ The SUPC generates also a selectable reference voltage and a voltage dependent o
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05434.html" target="topic">Previous</a> | <a href="05434.html" target="topic">Up</a> | <a href="05430.html" target="topic">Next</a></div>
+<a href="05442.html" target="topic">Previous</a> | <a href="05430.html" target="topic">Up</a> | <a href="05443.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SUPC U2117 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SERCOM SPI Applications spi_self_loopback_blocking Topic Title: spi_self_loopback_blocking)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

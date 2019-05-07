@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>c) Transaction Functions</title>
+<title>SPIx_DATA_BITS Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="05684.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="05685.html" target="topic">Timer</a> &gt; <a href="05690.html" target="topic">Library Interface</a> &gt; <a href="05693.html" target="topic">c) Transaction Functions</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="05462.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="05463.html" target="topic">SPI</a> &gt; <a href="05468.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="05693.html" target="topic">SPIx_DATA_BITS Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06006.html" target="topic">Previous</a> | <a href="05690.html" target="topic">Up</a> | <a href="06010.html" target="topic">Next</a></div>
+<a href="05524.html" target="topic">Previous</a> | <a href="05468.html" target="topic">Up</a> | <a href="05451.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC U2249 Timer Transaction functions Topic Title: c) Transaction Functions)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SPIx_DATA_BITS Topic Title: SPIx_DATA_BITS Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-c) Transaction Functions</div>
+SPIx_DATA_BITS Enumeration</div>
 </div>
 </div>
 
@@ -48,157 +48,97 @@ c) Transaction Functions</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
+<p class="Element10">
+SPI Data Bits&nbsp;</p>
+<p class="Element10">
+This enumeration identifies number of bits per SPI transfer.</p></div>
 </div>
-</div>
-<a name="46756E6374696F6E73"></a><div class="Element14">
-Functions</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">SPI_DATA_BITS_8</span></strong>,
+  <strong><span style="color: #000000">SPI_DATA_BITS_9</span></strong>,
+  <strong><span style="color: #000000">SPI_DATA_BITS_10</span></strong>,
+  <strong><span style="color: #000000">SPI_DATA_BITS_11</span></strong>,
+  <strong><span style="color: #000000">SPI_DATA_BITS_12</span></strong>,
+  <strong><span style="color: #000000">SPI_DATA_BITS_13</span></strong>,
+  <strong><span style="color: #000000">SPI_DATA_BITS_14</span></strong>,
+  <strong><span style="color: #000000">SPI_DATA_BITS_15</span></strong>,
+  <strong><span style="color: #000000">SPI_DATA_BITS_16</span></strong>
+} SPIx_DATA_BITS;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
+<div class="Element272">
 <div class="TableDiv">
-<table cellspacing="0" class="Table0">
+<table cellspacing="0" class="Table3">
 <tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="06010.html" target="topic">TCx_TimerStart</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Starts the timer for given TC instance.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="06011.html" target="topic">TCx_TimerStop</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Stops the timer for given TC instance.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="06007.html" target="topic">TCx_TimerFrequencyGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Provides the given timer's counter-increment frequency.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="06001.html" target="topic">TCx_Timer8bitCompareSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Sets the compare value of a given timer channel.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="06002.html" target="topic">TCx_Timer8bitCounterGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Reads the timer current count value.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="06003.html" target="topic">TCx_Timer8bitCounterSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Sets new timer counter value.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="06004.html" target="topic">TCx_Timer8bitPeriodGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Reads the period value of given timer.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="06005.html" target="topic">TCx_Timer8bitPeriodSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Sets the period value of a given timer.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="05991.html" target="topic">TCx_Timer16bitCompareSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Sets the compare value of a given timer channel.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="05992.html" target="topic">TCx_Timer16bitCounterGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Reads the timer current count value.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="05993.html" target="topic">TCx_Timer16bitCounterSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Sets new timer counter value.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="05994.html" target="topic">TCx_Timer16bitPeriodGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Reads the period value of given timer.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="05995.html" target="topic">TCx_Timer16bitPeriodSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Sets the period value of a given timer.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="05996.html" target="topic">TCx_Timer32bitCompareSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Sets the compare value of a given timer channel.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="05997.html" target="topic">TCx_Timer32bitCounterGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Reads the timer current count value.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="05998.html" target="topic">TCx_Timer32bitCounterSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Sets new timer counter value.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="05999.html" target="topic">TCx_Timer32bitPeriodGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Reads the period value of given timer.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="06000.html" target="topic">TCx_Timer32bitPeriodSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Sets the period value of a given timer.&nbsp;</div></td></tr></table></div></div>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SPI_DATA_BITS_8&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+8 bits per transfer&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SPI_DATA_BITS_9&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+9 bits per transfer&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SPI_DATA_BITS_10&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+10 bits per transfer&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SPI_DATA_BITS_11&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+11 bits per transfer&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SPI_DATA_BITS_12&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+12 bits per transfer&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SPI_DATA_BITS_13&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+13 bits per transfer&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SPI_DATA_BITS_14&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+14 bits per transfer&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SPI_DATA_BITS_15&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+15 bits per transfer&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SPI_DATA_BITS_16&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+16 bits per transfer&nbsp;</div></td></tr></table></div></div>
 </div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+For 9 to 15bit modes, data should be right aligned in the 16 bit memory location.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="05684.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="05685.html" target="topic">Timer</a> &gt; <a href="05690.html" target="topic">Library Interface</a> &gt; <a href="05693.html" target="topic">c) Transaction Functions</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="05462.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="05463.html" target="topic">SPI</a> &gt; <a href="05468.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="05693.html" target="topic">SPIx_DATA_BITS Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -206,13 +146,13 @@ Sets the period value of a given timer.&nbsp;</div></td></tr></table></div></div
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06006.html" target="topic">Previous</a> | <a href="05690.html" target="topic">Up</a> | <a href="06010.html" target="topic">Next</a></div>
+<a href="05524.html" target="topic">Previous</a> | <a href="05468.html" target="topic">Up</a> | <a href="05451.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC U2249 Timer Transaction functions Topic Title: c) Transaction Functions)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SPIx_DATA_BITS Topic Title: SPIx_DATA_BITS Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

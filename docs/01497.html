@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Running The Application</title>
+<title>Library Interface</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="01489.html" target="topic">DMAC Applications</a> &gt; <a href="01488.html" target="topic">dmac_usart_echo</a> &gt; <a href="01497.html" target="topic">Running The Application</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="01496.html" target="topic">DMAC Peripheral Library Help</a> &gt; <a href="01497.html" target="topic">Library Interface</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01495.html" target="topic">Previous</a> | <a href="01488.html" target="topic">Up</a> | <a href="01634.html" target="topic">Next</a></div>
+<a href="01501.html" target="topic">Previous</a> | <a href="01496.html" target="topic">Up</a> | <a href="01569.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DMAC dmac_usart_echo Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DMAC 01500 Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Running The Application</div>
+Library Interface</div>
 </div>
 </div>
 
@@ -46,137 +46,145 @@ Running The Application</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="4465736372697074696F6E"></a><div class="Element11">
+<a name="612920496E697469616C697A6174696F6E2046756E6374696F6E"></a><div class="Element14">
+a) Initialization Function</div>
+<div class="Element11">
 <div class="Element10">
-
-<ol class="Element630">
-<li value="1" class="Element600">Open the Terminal application (Ex.:Tera term) on the computer.</li>
-<li value="2" class="Element600">Configure the serial port settings as follows and connect to the COM port as per following table:</li>
-</ol><div class="Element63">
+<div class="Element212">
 <div class="TableDiv">
-<table cellspacing="0" class="Table1">
+<table cellspacing="0" class="Table0">
 <tr>
-<td class="Element65" valign="top" width="59%">
-<div class="Element66">
-Kit Name&nbsp;</div></td><td class="Element65" valign="top" width="41%">
-<div class="Element66">
-COM Port Connector&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="59%">
-<div class="Element68">
-PIC32MX Curiosity Development Board&nbsp;</div></td><td class="Element67" valign="top" width="41%">
-<div class="Element68">
-USB to UART Click Board COM port&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="59%">
-<div class="Element68">
-PIC32MX XLP Starter Kit&nbsp;</div></td><td class="Element67" valign="top" width="41%">
-<div class="Element68">
-USB to UART Click Board COM port&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="59%">
-<div class="Element68">
-PIC32MZ DA Family Starter Kit&nbsp;</div></td><td class="Element67" valign="top" width="41%">
-<div class="Element68">
-USB to UART COM port&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="59%">
-<div class="Element68">
-PIC32MZ Embedded Connectivity with FPU (EF) Starter Kit&nbsp;</div></td><td class="Element67" valign="top" width="41%">
-<div class="Element68">
-USB to UART COM port&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="59%">
-<div class="Element68">
-SAM C21N Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="41%">
-<div class="Element68">
-EDBG Virtual COM port&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="59%">
-<div class="Element68">
-SAM D21 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="41%">
-<div class="Element68">
-EDBG Virtual COM port&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="59%">
-<div class="Element68">
-SAM E54 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="41%">
-<div class="Element68">
-EDBG Virtual COM port&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="59%">
-<div class="Element68">
-SAM L21 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="41%">
-<div class="Element68">
-EDBG Virtual COM port&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="59%">
-<div class="Element68">
-SAM L22 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="41%">
-<div class="Element68">
-EDBG Virtual COM port&nbsp;</div></td></tr></table></div></div>
-<p class="Element10">
-&nbsp;</p>
-
-<ul class="Element630">
-<li class="Element600">Baud : 115200</li>
-<li class="Element600">Data : 8 Bits</li>
-<li class="Element600">Parity : None</li>
-<li class="Element600">Stop : 1 Bit</li>
-<li class="Element600">Flow Control : None</li>
-</ul>
-<ol class="Element630">
-<li value="3" class="Element600">Build and program the application using the MPLAB X IDE.</li>
-<li value="4" class="Element600">See the following message in the console.</li>
-</ol><p class="Element10" style="text-align: center;">
-<img src="dmac_usart_echo_output.png" border="0" alt="" title=""></p>
-<ol class="Element630">
-<li value="5" class="Element600">Type 10 characters in the terminal. It will echo back the received bytes and toggles the LED. The following table provides the LED name.</li>
-</ol><div class="Element63">
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01569.html" target="topic">DMAC_Initialize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This function initializes the DMAC controller of the device.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="62292053657475702046756E6374696F6E73"></a><div class="Element14">
+b) Setup Functions</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
 <div class="TableDiv">
-<table cellspacing="0" class="Table1">
+<table cellspacing="0" class="Table0">
 <tr>
-<td class="Element65" valign="top" width="86%">
-<div class="Element66">
-Kit Name&nbsp;</div></td><td class="Element65" valign="top" width="14%">
-<div class="Element66">
-LED Name&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="86%">
-<div class="Element68">
-PIC32MX Curiosity Development Board&nbsp;</div></td><td class="Element67" valign="top" width="14%">
-<div class="Element68">
-LED1&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="86%">
-<div class="Element68">
-PIC32MX XLP Starter Kit&nbsp;</div></td><td class="Element67" valign="top" width="14%">
-<div class="Element68">
-RGB_LED(RED)&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="86%">
-<div class="Element68">
-PIC32MZ DA Family Starter Kit&nbsp;</div></td><td class="Element67" valign="top" width="14%">
-<div class="Element68">
-LED1&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="86%">
-<div class="Element68">
-PIC32MZ Embedded Connectivity with FPU (EF) Starter Kit&nbsp;</div></td><td class="Element67" valign="top" width="14%">
-<div class="Element68">
-LED1&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="86%">
-<div class="Element68">
-SAM C21N Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="14%">
-<div class="Element68">
-LED0&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="86%">
-<div class="Element68">
-SAM D21 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="14%">
-<div class="Element68">
-LED0&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="86%">
-<div class="Element68">
-SAM E54 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="14%">
-<div class="Element68">
-LED0&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="86%">
-<div class="Element68">
-SAM L21 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="14%">
-<div class="Element68">
-LED0&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="86%">
-<div class="Element68">
-SAM L22 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="14%">
-<div class="Element68">
-LED0&nbsp;</div></td></tr></table></div></div>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01562.html" target="topic">DMAC_ChannelCallbackRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This function allows a DMAC PLIB client to set an event handler.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01563.html" target="topic">DMAC_ChannelDisable</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This function disables the DMA channel.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="6329205472616E73616374696F6E2046756E6374696F6E73"></a><div class="Element14">
+c) Transaction Functions</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01565.html" target="topic">DMAC_ChannelTransfer</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Schedules a DMA transfer on the specified DMA channel.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="6429205374617475732046756E6374696F6E73"></a><div class="Element14">
+d) Status Functions</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01564.html" target="topic">DMAC_ChannelIsBusy</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Reads the busy status of a channel.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="6529204461746120547970657320616E6420436F6E7374616E7473"></a><div class="Element14">
+e) Data Types and Constants</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01551.html" target="topic">DMAC_CHANNEL</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Fundamental data object that represents DMA channel number.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01561.html" target="topic">DMAC_CHANNEL_CALLBACK</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Pointer to a DMAC Transfer Event handler function.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01570.html" target="topic">DMAC_TRANSFER_EVENT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Identifies the available DMA operating modes.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -184,7 +192,7 @@ LED0&nbsp;</div></td></tr></table></div></div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="01489.html" target="topic">DMAC Applications</a> &gt; <a href="01488.html" target="topic">dmac_usart_echo</a> &gt; <a href="01497.html" target="topic">Running The Application</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="01496.html" target="topic">DMAC Peripheral Library Help</a> &gt; <a href="01497.html" target="topic">Library Interface</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -192,13 +200,13 @@ LED0&nbsp;</div></td></tr></table></div></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01495.html" target="topic">Previous</a> | <a href="01488.html" target="topic">Up</a> | <a href="01634.html" target="topic">Next</a></div>
+<a href="01501.html" target="topic">Previous</a> | <a href="01496.html" target="topic">Up</a> | <a href="01569.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DMAC dmac_usart_echo Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DMAC 01500 Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Library Interface</title>
+<title>SPI</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="02183.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02194.html" target="topic">USART</a> &gt; <a href="02199.html" target="topic">Library Interface</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="02198.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02199.html" target="topic">SPI</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02203.html" target="topic">Previous</a> | <a href="02194.html" target="topic">Up</a> | <a href="02308.html" target="topic">Next</a></div>
+<a href="02304.html" target="topic">Previous</a> | <a href="02198.html" target="topic">Up</a> | <a href="02203.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: FLEXCOM 11268 USART Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: FLEXCOM 11268 SPI Topic Title: SPI)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Library Interface</div>
+SPI</div>
 </div>
 </div>
 
@@ -46,236 +46,44 @@ Library Interface</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="612920496E697469616C697A6174696F6E2046756E6374696F6E"></a><div class="Element14">
-a) Initialization Function</div>
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+FLEXCOM Serial Peripheral Interface (SPI) is a synchronous serial data link that provides communication with external devices in Master or Slave mode. The Serial Peripheral Interface is essentially a shift register that serially transmits data bits to other SPIs. During a data transfer, one SPI system acts as the “master” which controls the data flow, while the other devices act as “slaves” which have data shifted into and out by the master.</p></div>
+</div>
+<a name="546F70696373"></a><div class="Element14">
+Topics</div>
 <div class="Element11">
 <div class="Element10">
 <div class="Element212">
 <div class="TableDiv">
 <table cellspacing="0" class="Table0">
 <tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<td class="Element200" valign="top" width="35%">
 <div class="Element201">
 Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
 <div class="Element205">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<td class="Element202" valign="top" width="35%">
 <div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02308.html" target="topic">FLEXCOMx_USART_Initialize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02203.html" target="topic">Introduction</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Initializes given instance of the FLEXCOM USART peripheral.&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="62292053657475702046756E6374696F6E73"></a><div class="Element14">
-b) Setup Functions</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+This section provides brief overview of SPI interface&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
 <div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02311.html" target="topic">FLEXCOMx_USART_ReadCallbackRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02200.html" target="topic">Configuring the Library</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Sets the pointer to the function (and it's context) to be called when the given FLEXCOM USART's read events occur.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+This section explains how to configure the peripheral library using the MHC.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
 <div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02319.html" target="topic">FLEXCOMx_USART_WriteCallbackRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02208.html" target="topic">Using the Library</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Sets the pointer to the function (and it's context) to be called when the given FLEXCOM USART's write events occur.&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="6329205472616E73616374696F6E2046756E6374696F6E73"></a><div class="Element14">
-c) Transaction Functions</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+This section explains how to use the Peripheral Library.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
 <div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02309.html" target="topic">FLEXCOMx_USART_Read</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02204.html" target="topic">Library Interface</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Submits a read buffer to the given FLEXCOM USART peripheral to process.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02310.html" target="topic">FLEXCOMx_USART_ReadByte</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Submits request to read a byte of data to the given FLEXCOM USART peripheral.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02312.html" target="topic">FLEXCOMx_USART_ReadCountGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Returns the count of number of bytes processed for a given FLEXCOM USART read operation.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02315.html" target="topic">FLEXCOMx_USART_SerialSetup</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Sets the FLEXCOM USART serial communication settings dynamically.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02317.html" target="topic">FLEXCOMx_USART_Write</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Submits a write buffer to the given FLEXCOM USART peripheral to transfer.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02318.html" target="topic">FLEXCOMx_USART_WriteByte</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Submits a byte of data to the given FLEXCOM USART peripheral to transfer.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02320.html" target="topic">FLEXCOMx_USART_WriteCountGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Returns the count of number of bytes processed for a given FLEXCOM USART write operation.&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="6429205374617475732046756E6374696F6E73"></a><div class="Element14">
-d) Status Functions</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02307.html" target="topic">FLEXCOMx_USART_ErrorGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Gets the error of the given FLEXCOM USART peripheral instance.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02313.html" target="topic">FLEXCOMx_USART_ReadIsBusy</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Returns the read request status associated with the given FLEXCOM USART peripheral instance.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02321.html" target="topic">FLEXCOMx_USART_WriteIsBusy</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Returns the write request status associated with the given FLEXCOM USART peripheral instance.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02314.html" target="topic">FLEXCOMx_USART_ReceiverIsReady</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Returns the hardware status of the FLEXCOM USART Receiver.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02316.html" target="topic">FLEXCOMx_USART_TransmitterIsReady</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Returns the hardware status of the FLEXCOM USART Transmitter.&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="6529204461746120547970657320616E6420436F6E7374616E7473"></a><div class="Element14">
-e) Data Types and Constants</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02262.html" target="topic">FLEXCOM_USART_CALLBACK</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Defines the data type and function signature for the FLEXCOM USART peripheral callback function.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02263.html" target="topic">FLEXCOM_USART_DATA</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Defines the data type for the FLEXCOM USART serial setup.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02270.html" target="topic">FLEXCOM_USART_ERROR</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Defines the data type for the FLEXCOM USART peripheral errors.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02276.html" target="topic">FLEXCOM_USART_PARITY</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This is type FLEXCOM_USART_PARITY.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02284.html" target="topic">FLEXCOM_USART_SERIAL_SETUP</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This is type FLEXCOM_USART_SERIAL_SETUP.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02289.html" target="topic">FLEXCOM_USART_STOP</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This is type FLEXCOM_USART_STOP.&nbsp;</div></td></tr></table></div></div>
+This section describes the Application Programming Interface (API) functions of the Peripheral Library.<br>Refer to each section for a detailed description.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -283,7 +91,7 @@ This is type FLEXCOM_USART_STOP.&nbsp;</div></td></tr></table></div></div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="02183.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02194.html" target="topic">USART</a> &gt; <a href="02199.html" target="topic">Library Interface</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="02198.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02199.html" target="topic">SPI</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -291,13 +99,13 @@ This is type FLEXCOM_USART_STOP.&nbsp;</div></td></tr></table></div></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02203.html" target="topic">Previous</a> | <a href="02194.html" target="topic">Up</a> | <a href="02308.html" target="topic">Next</a></div>
+<a href="02304.html" target="topic">Previous</a> | <a href="02198.html" target="topic">Up</a> | <a href="02203.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: FLEXCOM 11268 USART Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: FLEXCOM 11268 SPI Topic Title: SPI)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Hardware Setup</title>
+<title>TCx_COMPARE_CALLBACK_OBJECT Structure</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="06168.html" target="topic">TRNG Applications</a> &gt; <a href="06169.html" target="topic">random_number</a> &gt; <a href="06171.html" target="topic">Hardware Setup</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="05954.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="05943.html" target="topic">Compare</a> &gt; <a href="05946.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="06171.html" target="topic">TCx_COMPARE_CALLBACK_OBJECT Structure</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06172.html" target="topic">Previous</a> | <a href="06169.html" target="topic">Up</a> | <a href="06173.html" target="topic">Next</a></div>
+<a href="06170.html" target="topic">Previous</a> | <a href="05946.html" target="topic">Up</a> | <a href="06174.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TRNG random_number Hardware Setup Topic Title: Hardware Setup)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tc_6082::TCx_COMPARE_CALLBACK_OBJECT Topic Title: TCx_COMPARE_CALLBACK_OBJECT Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Hardware Setup</div>
+TCx_COMPARE_CALLBACK_OBJECT Structure</div>
 </div>
 </div>
 
@@ -48,135 +48,30 @@ Hardware Setup</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
-
-<ol class="Element630">
-<li value="1" class="Element600"><strong>Project sam_9x60_ek.IAR</strong></li>
-</ol>
-<ul class="Element630">
-<li class="Element600"><strong>Hardware Used</strong>
-<ul class="Element631">
-<li class="Element601">SAM 9X60 Evaluation Kit</li>
-<li class="Element601">SD Card with FAT32 file system</li>
-</ul></li>
-<li class="Element600"><strong>Hardware Setup</strong>
-<ul class="Element631">
-<li class="Element601">Setup the SD card
-<ul class="Element632">
-<li class="Element602">Download harmony MPU bootstrap loader from this <a href="#" onclick="openExternalLink('http://github.com/Microchip-MPLAB-Harmony/at91bootstrap/blob/sam9x60ek/boot.bin');"><img src="indicator_external_link.gif" border="0" alt="" title="">location</a></li>
-<li class="Element602">Copy the downloaded boot loader binary( boot.bin) and generated application binary (harmony.bin)into the SD card</li>
-<li class="Element602">Insert the SD card into the SDMMC0 slot on the board</li>
-</ul></li>
-<li class="Element601">Connect the Debug USB (J22) port on the board to the computer using a micro USB cable</li>
-<li class="Element601"><i>Note: Reset push button on SAM9X60 EK is labeled as SW3</i></li>
-</ul></li>
-</ul><p class="Element10">
-&nbsp;</p>
-
-<ol class="Element630">
-<li value="2" class="Element600"><strong>Project sam_a5d2_xult.IAR</strong>
-<ul class="Element631">
-<li class="Element601"><strong>Hardware Used</strong>
-<ul class="Element632">
-<li class="Element602"><a href="#" onclick="openExternalLink('http://www.microchip.com/DevelopmentTools/ProductDetails/ATSAMA5D2C-XULT');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM A5D2 Xplained Ultra board</a></li>
-<li class="Element602">SD Card with FAT32 file system</li>
-</ul></li>
-<li class="Element601"><strong>Hardware Setup</strong>
-<ul class="Element632">
-<li class="Element602">Setup the SD card
-<ul class="Element633">
-<li class="Element603">Download harmony MPU bootstrap loader from this <a href="#" onclick="openExternalLink('http://github.com/Microchip-MPLAB-Harmony/at91bootstrap/blob/master/boot.bin');"><img src="indicator_external_link.gif" border="0" alt="" title="">location</a></li>
-<li class="Element603">Copy the downloaded boot loader binary( boot.bin) and generated application binary (harmony.bin)into the SD card</li>
-<li class="Element603">Insert the SD card into the SDMMC1 slot on the board</li>
-</ul></li>
-<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
-<li class="Element602"><i>Note: Reset push button on SAM9X60 EK is labeled as RESET</i></li>
-</ul></li>
-</ul></li>
-</ol><p class="Element10">
-&nbsp;</p>
 <p class="Element10">
-&nbsp;</p>
-
-<ol class="Element630">
-<li value="3" class="Element600"><strong>Project sam_e54_xpro.X</strong>
-<ul class="Element631">
-<li class="Element601"><strong>Hardware Used</strong>
-<ul class="Element632">
-<li class="Element602"><a href="#" onclick="openExternalLink('http://ww1.microchip.com/downloads/en/devicedoc/70005321a.pdf');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM E54 Xplained Pro Evaluation Kit</a></li>
-</ul></li>
-<li class="Element601"><strong>Hardware Setup</strong>
-<ul class="Element632">
-<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
-</ul></li>
-</ul></li>
-</ol><p class="Element10">
-&nbsp;</p>
-
-<ol class="Element630">
-<li value="4" class="Element600"><strong>Project sam_e70_xult.X</strong>
-<ul class="Element631">
-<li class="Element601"><strong>Hardware Used</strong>
-<ul class="Element632">
-<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/DevelopmentTools/ProductDetails/PartNO/DM320113');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM E70 Xplained Ultra Evaluation Kit</a></li>
-</ul></li>
-<li class="Element601"><strong>Hardware Setup</strong>
-<ul class="Element632">
-<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
-</ul></li>
-</ul></li>
-</ol><p class="Element10">
-&nbsp;</p>
-
-<ol class="Element630">
-<li value="5" class="Element600"><strong>Project sam_l21_xpro.X</strong>
-<ul class="Element631">
-<li class="Element601"><strong>Hardware Used</strong>
-<ul class="Element632">
-<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/ATSAML21-XPRO-B');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM L21 Xplained Pro Evaluation Kit</a></li>
-</ul></li>
-<li class="Element601"><strong>Hardware Setup</strong>
-<ul class="Element632">
-<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
-</ul></li>
-</ul></li>
-</ol><p class="Element10">
-&nbsp;</p>
-
-<ol class="Element630">
-<li value="6" class="Element600"><strong>Project sam_l22_xpro.X</strong>
-<ul class="Element631">
-<li class="Element601"><strong>Hardware Used</strong>
-<ul class="Element632">
-<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/ATSAML22-XPRO-B');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM L22 Xplained Pro Evaluation Kit</a></li>
-</ul></li>
-<li class="Element601"><strong>Hardware Setup</strong>
-<ul class="Element632">
-<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
-</ul></li>
-</ul></li>
-</ol><p class="Element10">
-&nbsp;</p>
-
-<ol class="Element630">
-<li value="7" class="Element600"><strong>Project sam_v71_xult.X</strong>
-<ul class="Element631">
-<li class="Element601"><strong>Hardware Used</strong>
-<ul class="Element632">
-<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/atsamv71-xult');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM V71 Xplained Ultra Evaluation Kit</a></li>
-</ul></li>
-<li class="Element601"><strong>Hardware Setup</strong>
-<ul class="Element632">
-<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
-</ul></li>
-</ul></li>
-</ol></div>
+Callback structure&nbsp;</p>
+<p class="Element10">
+This stores the callback function pointer and context</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
+  <a href="06170.html" target="topic">TCx_COMPARE_CALLBACK</a> <strong><span style="color: #000000">callback_fn</span></strong>;
+  uintptr_t <strong><span style="color: #000000">context</span></strong>;
+} TCx_COMPARE_CALLBACK_OBJECT;</pre></div></div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="06168.html" target="topic">TRNG Applications</a> &gt; <a href="06169.html" target="topic">random_number</a> &gt; <a href="06171.html" target="topic">Hardware Setup</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="05954.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="05943.html" target="topic">Compare</a> &gt; <a href="05946.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="06171.html" target="topic">TCx_COMPARE_CALLBACK_OBJECT Structure</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -184,13 +79,13 @@ Hardware Setup</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06172.html" target="topic">Previous</a> | <a href="06169.html" target="topic">Up</a> | <a href="06173.html" target="topic">Next</a></div>
+<a href="06170.html" target="topic">Previous</a> | <a href="05946.html" target="topic">Up</a> | <a href="06174.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TRNG random_number Hardware Setup Topic Title: Hardware Setup)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tc_6082::TCx_COMPARE_CALLBACK_OBJECT Topic Title: TCx_COMPARE_CALLBACK_OBJECT Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

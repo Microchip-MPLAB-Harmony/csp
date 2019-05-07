@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>SERCOMx_USART_ReadCallbackRegister Function</title>
+<title>Using the Library</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="05102.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="05113.html" target="topic">USART</a> &gt; <a href="05117.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="05180.html" target="topic">SERCOMx_USART_ReadCallbackRegister Function</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="05175.html" target="topic">SDHC Peripheral Library Help</a> &gt; <a href="05180.html" target="topic">Using the Library</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05188.html" target="topic">Previous</a> | <a href="05117.html" target="topic">Up</a> | <a href="05178.html" target="topic">Next</a></div>
+<a href="05171.html" target="topic">Previous</a> | <a href="05175.html" target="topic">Up</a> | <a href="05176.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_usart::SERCOMx_USART_ReadCallbackRegister@SERCOMx_USART_CALLBACK@uintptr_t Topic Title: SERCOMx_USART_ReadCallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SDHC U2011 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-SERCOMx_USART_ReadCallbackRegister Function</div>
+Using the Library</div>
 </div>
 </div>
 
@@ -49,82 +49,64 @@ SERCOMx_USART_ReadCallbackRegister Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function sets the pointer to a client function to be called &quot;back&quot; when the given USART's read events occur. It also passes a context value (usually a pointer to a context structure) that is passed into the function when it is called.&nbsp;</p>
+The SDHC peripheral library performs the transfers in non-blocking mode. Transfers involving a data stage are performed using DMA. The example code demonstrates sending a SD command to read a single block of data from the SD card. This example assumes that the SD card is already initialized by the application and is ready to accept read and write requests. The example application does not show the larger SD protocol required in order to communicate with the SD card.&nbsp;</p>
 <p class="Element10">
-This function is available only in interrupt or non-blocking mode of operation.</p></div>
-</div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">SERCOMx_USART_ReadCallbackRegister</span></strong>(
-    <a href="05174.html" target="topic">SERCOMx_USART_CALLBACK</a> <strong><span style="color: #000000">callback</span></strong>, 
-    uintptr_t <strong><span style="color: #000000">context</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-<a href="05177.html" target="topic">SERCOMx_USART_Initialize</a> must have been called for the associated USART instance.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
-<div class="TableDiv">
-<table cellspacing="0" class="Table2">
-<tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-callback&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Pointer to the function that will be called when <a href="05178.html" target="topic">SERCOMx_USART_Read</a>() function has completed. Setting this to NULl will disable the callback feature.<br>&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-A value (usually a pointer) passed (unused) into the function identified by the callback parameter.&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None.</p></div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-The context parameter is ignored if the pointer passed is NULL. To disable the callback function, pass a NULL for the callback parameter. See the USART_CALLBACK type definition for additional information.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12"><i><span style="color: #008000">// Data tracking what each of my instances is doing.</span></i>
-<strong><span style="color: #000080">char</span></strong> myData[2];
+&nbsp;</p><div class="Element13"><div class="Element12"><pre class="Element12">
 
-<strong><span style="color: #000080">void</span></strong> MyUsartCallback ( uintptr_t context )
+uint16_t cmd_error;
+uint16_t data_error;
+<strong><span style="color: #000080">bool</span></strong> isCommandCompleted = <strong><span style="color: #000080">false</span></strong>;
+<strong><span style="color: #000080">bool</span></strong> isDataCompleted = <strong><span style="color: #000080">false</span></strong>;
+uint8_t readBuffer[512];
+
+<strong><span style="color: #000080">static</span></strong> <strong><span style="color: #000080">void</span></strong> SDHC_TransferEventHandler(
+        SDHC_XFER_STATUS xferStatus,
+        uintptr_t contextHandle
+)
 {
-    <strong><span style="color: #000080">if</span></strong>(USART_ERROR_NONE != SERCOM0_USART_ErrorGet())
+    <strong><span style="color: #000080">if</span></strong> (xferStatus &amp; SDHC_XFER_STATUS_CMD_COMPLETED)
     {
-        <i><span style="color: #008000">//Handle error case</span></i>
+        <i><span style="color: #008000">// Command transfer complete, read the command error status.</span></i>
+        cmd_error = SDHC1_CommandErrorGet();
+        isCommandCompleted = <strong><span style="color: #000080">true</span></strong>;
     }
-    <strong><span style="color: #000080">else</span></strong>
+    <strong><span style="color: #000080">if</span></strong> (xferStatus &amp; SDHC_XFER_STATUS_DATA_COMPLETED)
     {
-        <i><span style="color: #008000">//Transfer completed successfully</span></i>
+        <i><span style="color: #008000">// Data transfer complete, read the data error status.</span></i>
+        data_error = SDHC1_DataErrorGet();
+        isDataCompleted = <strong><span style="color: #000080">true</span></strong>;
     }
 }
 
-SERCOM0_USART_ReadCallbackRegister(MyUsartCallback, (uintptr_t)&amp;myData[0]);</pre></div></div>
+<strong><span style="color: #000080">int</span></strong> main(<strong><span style="color: #000080">void</span></strong>)
+{
+
+    <i><span style="color: #008000">// Register event handler with the SDHC PLIB. This is usually done once.</span></i>
+    SDHC1_CallbackRegister(SDHC_TransferEventHandler, (uintptr_t) 0);
+
+    SDHC_DataTransferFlags transferFlags;
+
+    transferFlags.isDataPresent  = <strong><span style="color: #000080">true</span></strong>;
+    transferFlags.transferDir = SDHC_DATA_TRANSFER_DIR_READ;
+    transferFlags.transferType = SDHC_DATA_TRANSFER_TYPE_SINGLE;
+
+    <i><span style="color: #008000">// Set the block size to 512 bytes</span></i>
+    SDHC1_BlockSizeSet(512);
+
+    <i><span style="color: #008000">// Set the block count to 1</span></i>
+    SDHC1_BlockCountSet(1);
+
+    <i><span style="color: #008000">// Set up the DMA to read 512 btyes of data</span></i>
+    SDHC1_DmaSetup(readBuffer, 512, SDHC_DATA_TRANSFER_DIR_READ);
+
+    <i><span style="color: #008000">// Send command to read one block of data from SD card starting at block address 100</span></i>
+    SDHC1_CommandSend(17, 100, SDHC_CMD_RESP_R1, transferFlags);
+
+    <i><span style="color: #008000">// Check the status of isCommandCompleted and isDataCompleted</span></i>
+
+    <i><span style="color: #008000">// Other tasks ...</span></i>
+}
+</pre></div></div>
 </div>
 </div>
 </div>
@@ -132,7 +114,7 @@ SERCOM0_USART_ReadCallbackRegister(MyUsartCallback, (uintptr_t)&amp;myData[0]);<
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="05102.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="05113.html" target="topic">USART</a> &gt; <a href="05117.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="05180.html" target="topic">SERCOMx_USART_ReadCallbackRegister Function</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="05175.html" target="topic">SDHC Peripheral Library Help</a> &gt; <a href="05180.html" target="topic">Using the Library</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -140,13 +122,13 @@ SERCOM0_USART_ReadCallbackRegister(MyUsartCallback, (uintptr_t)&amp;myData[0]);<
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05188.html" target="topic">Previous</a> | <a href="05117.html" target="topic">Up</a> | <a href="05178.html" target="topic">Next</a></div>
+<a href="05171.html" target="topic">Previous</a> | <a href="05175.html" target="topic">Up</a> | <a href="05176.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_usart::SERCOMx_USART_ReadCallbackRegister@SERCOMx_USART_CALLBACK@uintptr_t Topic Title: SERCOMx_USART_ReadCallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SDHC U2011 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

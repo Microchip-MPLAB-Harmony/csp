@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>SERCOMx_SPI_Write Function</title>
+<title>SDADCx_ComparisonWindowSet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="05102.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="05103.html" target="topic">SPI</a> &gt; <a href="05108.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="05154.html" target="topic">SERCOMx_SPI_Write Function</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="05138.html" target="topic">SDADC Peripheral Library Help</a> &gt; <a href="05139.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="05154.html" target="topic">SDADCx_ComparisonWindowSet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05152.html" target="topic">Previous</a> | <a href="05108.html" target="topic">Up</a> | <a href="05155.html" target="topic">Next</a></div>
+<a href="05153.html" target="topic">Previous</a> | <a href="05139.html" target="topic">Up</a> | <a href="05155.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_spi::SERCOMx_SPI_Write@void*@size_t Topic Title: SERCOMx_SPI_Write Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SDADCx_ComparisonWindowSet@int16_t@int16_t Topic Title: SDADCx_ComparisonWindowSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-SERCOMx_SPI_Write Function</div>
+SDADCx_ComparisonWindowSet Function</div>
 </div>
 </div>
 
@@ -49,26 +49,20 @@ SERCOMx_SPI_Write Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function writes &quot;txSize&quot; number of bytes on SERCOM x SPI module. Data pointed by pTransmitData is transmitted.&nbsp;</p>
-<p class="Element10">
-When &quot;Interrupt Mode&quot; option is unchecked in MHC, this function will be blocking in nature. In this mode, the function will not return until all the requested data is transferred. The function returns true after transferring all the data. This indicates that the operation has been completed.&nbsp;</p>
-<p class="Element10">
-When &quot;Interrupt Mode&quot; option is selected in MHC, the function will be non-blocking in nature. The function returns immediately. The data transfer process continues in the peripheral interrupt. The application specified transmit buffer is owned by the library until the data transfer is complete and should not be modified by the application till the transfer is complete. Only one transfer is allowed at any time. The application can use a callback function or a polling function to check for completion of the transfer. If a callback is required, this should be registered prior to calling the <a href="05155.html" target="topic">SERCOMx_SPI_WriteRead</a>() function. The application can use the <a href="05151.html" target="topic">SERCOMx_SPI_IsBusy</a>() to poll for completion.</p></div>
+This function configures the window threshold values.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">SERCOMx_SPI_Write</span></strong>(
-    <strong><span style="color: #000080">void</span></strong>* <strong><span style="color: #000000">pTransmitData</span></strong>, 
-    size_t <strong><span style="color: #000000">txSize</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">SDADCx_ComparisonWindowSet</span></strong>(
+    int16_t <strong><span style="color: #000000">low_threshold</span></strong>, 
+    int16_t <strong><span style="color: #000000">high_threshold</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The <a href="05150.html" target="topic">SERCOMx_SPI_Initialize</a> function must have been called.&nbsp;</p>
-<p class="Element10">
-Callback has to be registered using <a href="05149.html" target="topic">SERCOMx_SPI_CallbackRegister</a> API if the peripheral instance has been configured in Interrupt mode and transfer completion status needs to be communicated back to application via callback.</p></div>
+<a href="05159.html" target="topic">SDADCx_Initialize</a>() function must have been called first for the associated instance.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -85,56 +79,36 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-pTransmitData&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+low_threshold&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Pointer to the buffer containing the data which has to be transmitted. For 9 bit mode, data should be right aligned in the 16 bit memory location. In &quot;Interrupt Mode&quot;, this buffer should not be modified after calling the function and before the callback function has been called or the <a href="05151.html" target="topic">SERCOMx_SPI_IsBusy</a>() function returns false.<br>&nbsp;</div></td></tr><tr>
+16-bit signed value for lower threshold&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-txSize&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+high_threshold&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Number of bytes to be transmitted. This value is always the byte count of the buffer. For 9 bit data length, this should be an even number.&nbsp;</div></td></tr></table></div></div>
+16-bit signed value for upper threshold&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
 <div class="Element11">
 <div class="Element10">
-
-<ul class="Element630">
-<li class="Element600">true - If configured for Non-interrupt mode, the function has transmitted the requested number of bytes. If configured for Interrupt mode, the request was accepted successfully and will be processed in the interrupt.</li>
-<li class="Element600">false - If pTransmitData is NULL. In Interrupt mode, the function will additionally return false if there is an on-going data transfer at the time of calling the function.</li>
-</ul></div>
+<p class="Element10">
+None</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+This function is valid only if window monitor feature is enabled. 16-bit signed values are written in the register as 24-bit by left shifting by 8 bits.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">uint8_t txBuffer[4];
-size_t txSize = 4;
-
-<strong><span style="color: #000080">void</span></strong> APP_SPITransferHandler(uintptr_t context)
-{
-    <i><span style="color: #008000">//Transfer was completed without error, do something else now.</span></i>
-}
-
-SERCOM1_SPI_Initialize();
-SERCOM1_SPI_CallbackRegister(&amp;APP_SPITransferHandler, (uintptr_t)NULL);
-<strong><span style="color: #000080">if</span></strong>(SERCOM1_SPI_Write(&amp;txBuffer, txSize))
-{
-    <i><span style="color: #008000">// request got accepted</span></i>
-}
-<strong><span style="color: #000080">else</span></strong>
-{
-    <i><span style="color: #008000">// request didn't get accepted, try again later with correct arguments</span></i>
-}
-</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">    <a href="05159.html" target="topic">SDADCx_Initialize</a>();
+    SDADCx_ComparisonWindowSet(0x1000, 0x3000);</pre></div></div>
 </div>
 </div>
 </div>
@@ -142,7 +116,7 @@ SERCOM1_SPI_CallbackRegister(&amp;APP_SPITransferHandler, (uintptr_t)NULL);
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="05102.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="05103.html" target="topic">SPI</a> &gt; <a href="05108.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="05154.html" target="topic">SERCOMx_SPI_Write Function</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="05138.html" target="topic">SDADC Peripheral Library Help</a> &gt; <a href="05139.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="05154.html" target="topic">SDADCx_ComparisonWindowSet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -150,13 +124,13 @@ SERCOM1_SPI_CallbackRegister(&amp;APP_SPITransferHandler, (uintptr_t)NULL);
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05152.html" target="topic">Previous</a> | <a href="05108.html" target="topic">Up</a> | <a href="05155.html" target="topic">Next</a></div>
+<a href="05153.html" target="topic">Previous</a> | <a href="05139.html" target="topic">Up</a> | <a href="05155.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_spi::SERCOMx_SPI_Write@void*@size_t Topic Title: SERCOMx_SPI_Write Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SDADCx_ComparisonWindowSet@int16_t@int16_t Topic Title: SDADCx_ComparisonWindowSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

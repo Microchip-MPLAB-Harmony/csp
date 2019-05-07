@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Running The Application</title>
+<title>CMP_2_CallbackRegister Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="01256.html" target="topic">CORETIMER Applications</a> &gt; <a href="01255.html" target="topic">coretimer_periodic_timeout</a> &gt; <a href="01261.html" target="topic">Running The Application</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="01211.html" target="topic">CMP Peripheral Library Help</a> &gt; <a href="01212.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="01261.html" target="topic">CMP_2_CallbackRegister Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01259.html" target="topic">Previous</a> | <a href="01255.html" target="topic">Up</a> | <a href="01295.html" target="topic">Next</a></div>
+<a href="01258.html" target="topic">Previous</a> | <a href="01212.html" target="topic">Up</a> | <a href="01259.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CORETIMER coretimer_periodic_timeout Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CMP_2_CallbackRegister@CMP_CALLBACK@uintptr_t Topic Title: CMP_2_CallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Running The Application</div>
+CMP_2_CallbackRegister Function</div>
 </div>
 </div>
 
@@ -48,47 +48,64 @@ Running The Application</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
-
-<ol class="Element630">
-<li value="1" class="Element600">Build and Program the application using the MPLAB X IDE.</li>
-<li value="2" class="Element600">The LED blinks continuously.</li>
-</ol><p class="Element10">
-&nbsp;</p>
 <p class="Element10">
-The following table provides the LED name. </p><div class="Element63">
+This function registers the callback function to be called from interrupt.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">CMP_2_CallbackRegister</span></strong>(
+    <a href="01264.html" target="topic">CMP_CALLBACK</a> <strong><span style="color: #000000">callback</span></strong>, 
+    uintptr_t <strong><span style="color: #000000">context</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+<a href="01265.html" target="topic">CMP_Initialize</a> must have been called.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
 <div class="TableDiv">
-<table cellspacing="0" class="Table1">
+<table cellspacing="0" class="Table2">
 <tr>
-<td class="Element65" valign="top" width="84%">
-<div class="Element66">
-Kit Name&nbsp;</div></td><td class="Element65" valign="top" width="16%">
-<div class="Element66">
-LED Name&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="84%">
-<div class="Element68">
-PIC32MK General Purpose (GP) Development Board&nbsp;</div></td><td class="Element67" valign="top" width="16%">
-<div class="Element68">
-LED1&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="84%">
-<div class="Element68">
-PIC32MX Curiosity Development Board&nbsp;</div></td><td class="Element67" valign="top" width="16%">
-<div class="Element68">
-LED1&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="84%">
-<div class="Element68">
-PIC32MX XLP Starter Kit&nbsp;</div></td><td class="Element67" valign="top" width="16%">
-<div class="Element68">
-RGB_LED(RED)&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="84%">
-<div class="Element68">
-PIC32MZ DA Family Starter Kit&nbsp;</div></td><td class="Element67" valign="top" width="16%">
-<div class="Element68">
-LED1&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="84%">
-<div class="Element68">
-PIC32MZ Embedded Connectivity with FPU (EF) Starter Kit&nbsp;</div></td><td class="Element67" valign="top" width="16%">
-<div class="Element68">
-LED1&nbsp;</div></td></tr></table></div></div>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Allows the caller to provide a context value (usually a pointer to the callers context for multi-instance clients).&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">uintptr_t cmp2_context = 0;
+<strong><span style="color: #000080">void</span></strong> cmp2_cb(uintptr_t context)
+
+CMP_2_CallbackRegister(cmp2_cb, cmp2_context);</pre></div></div>
 </div>
 </div>
 </div>
@@ -96,7 +113,7 @@ LED1&nbsp;</div></td></tr></table></div></div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="01256.html" target="topic">CORETIMER Applications</a> &gt; <a href="01255.html" target="topic">coretimer_periodic_timeout</a> &gt; <a href="01261.html" target="topic">Running The Application</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="01211.html" target="topic">CMP Peripheral Library Help</a> &gt; <a href="01212.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="01261.html" target="topic">CMP_2_CallbackRegister Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -104,13 +121,13 @@ LED1&nbsp;</div></td></tr></table></div></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01259.html" target="topic">Previous</a> | <a href="01255.html" target="topic">Up</a> | <a href="01295.html" target="topic">Next</a></div>
+<a href="01258.html" target="topic">Previous</a> | <a href="01212.html" target="topic">Up</a> | <a href="01259.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CORETIMER coretimer_periodic_timeout Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CMP_2_CallbackRegister@CMP_CALLBACK@uintptr_t Topic Title: CMP_2_CallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

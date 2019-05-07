@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCx_QuadratureInitialize Function</title>
+<title>Configuring the Library</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="05552.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="05553.html" target="topic">Quadrature Decoder</a> &gt; <a href="05558.html" target="topic">Library Interface</a> &gt; <a href="05556.html" target="topic">a) Initialization Function</a> &gt; <a href="05755.html" target="topic">TCx_QuadratureInitialize Function</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="05758.html" target="topic">SSC Peripheral Library Help</a> &gt; <a href="05755.html" target="topic">Configuring the Library</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05556.html" target="topic">Previous</a> | <a href="05556.html" target="topic">Up</a> | <a href="05559.html" target="topic">Next</a></div>
+<a href="05757.html" target="topic">Previous</a> | <a href="05758.html" target="topic">Up</a> | <a href="05761.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tc_44162::TCx_QuadratureInitialize Topic Title: TCx_QuadratureInitialize Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SSC 6078 Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCx_QuadratureInitialize Function</div>
+Configuring the Library</div>
 </div>
 </div>
 
@@ -49,47 +49,26 @@ TCx_QuadratureInitialize Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function initializes given instance of TC channel in quadrature mode with options configured in MCC GUI.</p></div>
-</div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">TCx_QuadratureInitialize</span></strong>();</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
-<div class="Element11">
-<div class="Element10">
+The library is configured for the supported processor when the processor is chosen in MPLAB X IDE, using the Microchip Harmony Configurator (MHC).&nbsp;</p>
 <p class="Element10">
-MCC GUI should be configured with the desired options.</p></div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
+Choose the SSC peripheral by clicking on the appropriate instance under <i>Peripherals-&gt;SSC</i> in the Available Components section of MHC. (The SSC component may also be added automatically as a result of using a BSP Template, such as one for a codec or Bluetooth module).&nbsp;</p>
 <p class="Element10">
-None.</p></div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
+When the SSC peripheral is clicked on in the Project Graph, the following menu is displayed in the Configurations Options): </p><p class="Element10" style="text-align: center;">
+<img src="CSP SSC MHC.png" border="0" alt="" title=""></p><p class="Element10">
+Default values are shown. The <strong>DMA</strong> and <strong>Interrupt Mode</strong> are always enabled.&nbsp;</p>
 <p class="Element10">
-This function must be called before any other TC function is called.&nbsp;</p>
+<strong>Usage Mode</strong> can be either Master -- the SSC peripheral supplies the I2S clocks, or Slave -- the peripheral such as a codec or Bluetooth module supplies the I2S clocks.&nbsp;</p>
 <p class="Element10">
-This function is normally called only be called once during system initialization.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">TC0_QuadratureInitialize();</pre></div></div>
-</div>
+<strong>Audio Protocol Mode </strong>can be either I2S, Left Justified, or Custom. In the latter case, a number of other options are then available, which allows the SSC peripheral to be used for a number of protocols (not currently supported by existing drivers).&nbsp;</p>
+<p class="Element10">
+<strong>Data Length </strong>is set to the number of data bits per channel.&nbsp;</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="05552.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="05553.html" target="topic">Quadrature Decoder</a> &gt; <a href="05558.html" target="topic">Library Interface</a> &gt; <a href="05556.html" target="topic">a) Initialization Function</a> &gt; <a href="05755.html" target="topic">TCx_QuadratureInitialize Function</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="05758.html" target="topic">SSC Peripheral Library Help</a> &gt; <a href="05755.html" target="topic">Configuring the Library</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -97,13 +76,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05556.html" target="topic">Previous</a> | <a href="05556.html" target="topic">Up</a> | <a href="05559.html" target="topic">Next</a></div>
+<a href="05757.html" target="topic">Previous</a> | <a href="05758.html" target="topic">Up</a> | <a href="05761.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tc_44162::TCx_QuadratureInitialize Topic Title: TCx_QuadratureInitialize Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SSC 6078 Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

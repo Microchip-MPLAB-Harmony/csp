@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Using the Library</title>
+<title>coretimer_periodic_timeout</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="01265.html" target="topic">Core Timer Peripheral Library Help</a> &gt; <a href="01270.html" target="topic">Using the Library</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="01271.html" target="topic">CORETIMER Applications</a> &gt; <a href="01270.html" target="topic">coretimer_periodic_timeout</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01257.html" target="topic">Previous</a> | <a href="01265.html" target="topic">Up</a> | <a href="01266.html" target="topic">Next</a></div>
+<a href="01271.html" target="topic">Previous</a> | <a href="01271.html" target="topic">Up</a> | <a href="01273.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CORETIMER Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CORETIMER Applications coretimer_periodic_timeout Topic Title: coretimer_periodic_timeout)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Using the Library</div>
+coretimer_periodic_timeout</div>
 </div>
 </div>
 
@@ -49,58 +49,41 @@ Using the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The core timer peripheral library can be used to generate periodic callback in interrupt mode or create blocking delay function.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong>Blocking Delay</strong>&nbsp;</p>
-<p class="Element10">
-When the interrupt mode is not enabled, the function can generate accuracy delay. The resolution of the delay is in terms of system clock period. The delay may get impacted if the processor is interrupted.</p>
-<ul class="Element630">
-<li class="Element600"><a href="01275.html" target="topic">CORETIMER_DelayMs</a>() function generated delay by the specified number of milliseconds.</li>
-<li class="Element600"><a href="01276.html" target="topic">CORETIMER_DelayUs</a>() function generated delay by the specified number of microseconds.</li>
-</ul><p class="Element10">
-&nbsp;</p>
-<div class="Element13"><div class="Element12"><pre class="Element12">CORETIMER_DelayMs(100);
-
-CORETIMER_DelayUs(1000);</pre></div></div>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong>Blocking Delay in Interrupt mode</strong>&nbsp;</p>
-<p class="Element10">
-The <a href="01275.html" target="topic">CORETIMER_DelayMs</a>() function generates delay by the specified number of milliseconds. When the core timer is configured to generate periodic interrupt, the delay time accuracy and resolution is dependent on the interrupt time period. For example, if the core timer is configured to generate interrupt every 10 ms, the delay resolution is 10 ms and the delay accuracy is +/- 10ms. The delay may get extended if processor is interrupted by the higher priority interrupt.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p><div class="Element13"><div class="Element12"><pre class="Element12">
-CORETIMER_DelayMs(100);
-</pre></div></div>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong>Periodic Callback in Interrupt mode</strong>&nbsp;</p>
-<p class="Element10">
-This example demonstrates how to use Core Timer to generate periodic callback. The time period is configured using MHC or the period set API.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p><div class="Element13"><div class="Element12"><pre class="Element12"><i><span style="color: #008000">/* This function is called at specified periodic interval */</span></i>
-<strong><span style="color: #000080">void</span></strong> CORETIMER_EventHandler(uintptr_t context)
-{
-    <i><span style="color: #008000">/* Toggle LED */</span></i>
-    LED_Toggle();
-}
-
-<strong><span style="color: #000080">int</span></strong> main(<strong><span style="color: #000080">void</span></strong>)
-{
-    <i><span style="color: #008000">/* Initialize all modules */</span></i>
-    SYS_Initialize ( NULL );
-
-    <i><span style="color: #008000">/* Register Callback */</span></i>
-    SYSTICK_TimerCallbackSet(CORETIMER_EventHandler, (uintptr_t) NULL);
-
-    <i><span style="color: #008000">/* Start the Timer */</span></i>
-    CORETIMER_Start();
-}</pre></div></div>
+<span style="color: #000000">This example application configures the CoreTimer Peripheral Library to generate periodic interrupts. The application registers a periodic timeout callback. It toggles an LED every time the callback is triggered.</span></p></div>
+</div>
+<a name="546F70696373"></a><div class="Element14">
+Topics</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element200" valign="top" width="35%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01273.html" target="topic">Building The Application</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides information on how to build an application using the MPLAB X IDE.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01275.html" target="topic">MPLAB Harmony Configurations</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This topic provides information on the MHC configurations.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01274.html" target="topic">Hardware Setup</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section describes how to configure the supported hardware.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01276.html" target="topic">Running The Application</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides information on how to run the application using the MPLAB X IDE.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -108,7 +91,7 @@ This example demonstrates how to use Core Timer to generate periodic callback. T
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="01265.html" target="topic">Core Timer Peripheral Library Help</a> &gt; <a href="01270.html" target="topic">Using the Library</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="01271.html" target="topic">CORETIMER Applications</a> &gt; <a href="01270.html" target="topic">coretimer_periodic_timeout</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -116,13 +99,13 @@ This example demonstrates how to use Core Timer to generate periodic callback. T
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01257.html" target="topic">Previous</a> | <a href="01265.html" target="topic">Up</a> | <a href="01266.html" target="topic">Next</a></div>
+<a href="01271.html" target="topic">Previous</a> | <a href="01271.html" target="topic">Up</a> | <a href="01273.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CORETIMER Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CORETIMER Applications coretimer_periodic_timeout Topic Title: coretimer_periodic_timeout)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

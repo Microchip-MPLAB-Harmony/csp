@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>MPLAB Harmony Configurations</title>
+<title>FLEXCOMx_USART_Read Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="02323.html" target="topic">FREQM Applications</a> &gt; <a href="02322.html" target="topic">freqm_measure_clock_freq</a> &gt; <a href="02324.html" target="topic">MPLAB Harmony Configurations</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="02198.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02209.html" target="topic">USART</a> &gt; <a href="02214.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="02324.html" target="topic">FLEXCOMx_USART_Read Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02325.html" target="topic">Previous</a> | <a href="02322.html" target="topic">Up</a> | <a href="02326.html" target="topic">Next</a></div>
+<a href="02334.html" target="topic">Previous</a> | <a href="02214.html" target="topic">Up</a> | <a href="02325.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: FREQM freqm_measure_clock_freq  MPLAB Harmony Configurations Topic Title: MPLAB Harmony Configurations)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: FLEXCOMx_USART_Read@void *@size_t Topic Title: FLEXCOMx_USART_Read Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-MPLAB Harmony Configurations</div>
+FLEXCOMx_USART_Read Function</div>
 </div>
 </div>
 
@@ -49,25 +49,87 @@ MPLAB Harmony Configurations</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Refer to the MHC project graph for the components used and the respective configuration options.&nbsp;</p>
+This function submits a read buffer to the FLEXCOM USART peripheral to process. The behavior of this function call will vary based on the mode selected within MCC.&nbsp;</p>
 <p class="Element10">
-&nbsp;</p>
+If the peripheral is configured for the interrupt mode, this function call is always non-blocking. Call to this function submits the buffer and the size to the peripheral library and returns immediately. User can check the transfer status through callback mechanism.&nbsp;</p>
 <p class="Element10">
-The FREQM peripheral is configured to count the number of periods of the measurement clock over 128 cycles of the reference clock.&nbsp;</p>
+If the peripheral is configured for the non-interrupt mode, this function call returns only after requested size is processed.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">FLEXCOMx_USART_Read</span></strong>(
+    <strong><span style="color: #000080">void</span></strong> * <strong><span style="color: #000000">buffer</span></strong>, 
+    <strong><span style="color: #000080">const</span></strong> size_t <strong><span style="color: #000000">size</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-The following clock configuration is selected to measure the frequency of the 48MHz internal oscillator using 32-kHz Crystal oscillator as the reference clock.</p>
-<ul class="Element630">
-<li class="Element600">The 48MHz internal oscillator is selected as the clock source for GCLK0. The GCLK0 is used as the measurement clock for the FREQM peripheral.</li>
-<li class="Element600">The 32KHz crystal oscillator is selected as the clock source for GCLK1. The CLK1 is used as the reference clock for the FREQM peripheral.</li>
-</ul><p class="Element10">
-<img src="freqm_measure_clock_freq_clock.png" border="0" alt="" title=""></p></div>
+<a href="02323.html" target="topic">FLEXCOMx_USART_Initialize</a> must have been called for the associated FLEXCOM USART instance.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+buffer&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Pointer to the user buffer.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+size&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Number of bytes to be transferred.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Read request status. True - Read request was successful. False - Read request has failed.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12"><i><span style="color: #008000">//Example to use in non-interrupt</span></i>
+<strong><span style="color: #000080">char</span></strong> rxData[COUNT] = {}; <i><span style="color: #008000">//COUNT is expected size</span></i>
+
+<strong><span style="color: #000080">if</span></strong>(<strong><span style="color: #000080">false</span></strong> != FLEXCOMx_USART_Read(&amp;rxData, COUNT))
+{
+    <i><span style="color: #008000">//The transfer is completed</span></i>
+}
+<strong><span style="color: #000080">else</span></strong>
+{
+    <i><span style="color: #008000">//Read Failed</span></i>
+}</pre></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="02323.html" target="topic">FREQM Applications</a> &gt; <a href="02322.html" target="topic">freqm_measure_clock_freq</a> &gt; <a href="02324.html" target="topic">MPLAB Harmony Configurations</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="02198.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02209.html" target="topic">USART</a> &gt; <a href="02214.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="02324.html" target="topic">FLEXCOMx_USART_Read Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -75,13 +137,13 @@ The following clock configuration is selected to measure the frequency of the 48
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02325.html" target="topic">Previous</a> | <a href="02322.html" target="topic">Up</a> | <a href="02326.html" target="topic">Next</a></div>
+<a href="02334.html" target="topic">Previous</a> | <a href="02214.html" target="topic">Up</a> | <a href="02325.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: FREQM freqm_measure_clock_freq  MPLAB Harmony Configurations Topic Title: MPLAB Harmony Configurations)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: FLEXCOMx_USART_Read@void *@size_t Topic Title: FLEXCOMx_USART_Read Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

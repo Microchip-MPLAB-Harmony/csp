@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Using the Library</title>
+<title>eic_led_on_off</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="01743.html" target="topic">EIC Peripheral Library Help</a> &gt; <a href="01748.html" target="topic">Using the Library</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="01749.html" target="topic">EIC Applications</a> &gt; <a href="01748.html" target="topic">eic_led_on_off</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01739.html" target="topic">Previous</a> | <a href="01743.html" target="topic">Up</a> | <a href="01744.html" target="topic">Next</a></div>
+<a href="01749.html" target="topic">Previous</a> | <a href="01749.html" target="topic">Up</a> | <a href="01750.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: EIC U2217 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: EIC Applications eic_led_on_off Topic Title: eic_led_on_off)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Using the Library</div>
+eic_led_on_off</div>
 </div>
 </div>
 
@@ -49,21 +49,41 @@ Using the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The External Interrupt Controller (EIC) allows external pins to be configured as interrupt lines. The registered callback function will be call when the interrupt is triggered.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p><div class="Element13"><div class="Element12"><pre class="Element12">
-<strong><span style="color: #000080">void</span></strong> EIC15_Callback(uintptr_t context)
-{
-    LED_Toggle();
-}
-
-<strong><span style="color: #000080">int</span></strong> main ( <strong><span style="color: #000080">void</span></strong> )
-{
-
-    EIC_CallbackRegister(EIC_PIN_15,EIC15_Callback, 0);
-
-}
-</pre></div></div>
+The application registers an event callback with EIC Peripheral library and toggles an LED for every switch press event.</p></div>
+</div>
+<a name="546F70696373"></a><div class="Element14">
+Topics</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element200" valign="top" width="35%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01750.html" target="topic">Building The Application</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides information on how to build an application using the MPLAB X IDE.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01752.html" target="topic">MPLAB Harmony Configurations</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This topic provides information on the MHC configurations.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01751.html" target="topic">Hardware Setup</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section describes how to configure the supported hardware.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01753.html" target="topic">Running The Application</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides information on how to run the application using the MPLAB X IDE.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -71,7 +91,7 @@ The External Interrupt Controller (EIC) allows external pins to be configured as
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="01743.html" target="topic">EIC Peripheral Library Help</a> &gt; <a href="01748.html" target="topic">Using the Library</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="01749.html" target="topic">EIC Applications</a> &gt; <a href="01748.html" target="topic">eic_led_on_off</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -79,13 +99,13 @@ The External Interrupt Controller (EIC) allows external pins to be configured as
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01739.html" target="topic">Previous</a> | <a href="01743.html" target="topic">Up</a> | <a href="01744.html" target="topic">Next</a></div>
+<a href="01749.html" target="topic">Previous</a> | <a href="01749.html" target="topic">Up</a> | <a href="01750.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: EIC U2217 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: EIC Applications eic_led_on_off Topic Title: eic_led_on_off)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

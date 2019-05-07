@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Library Interface</title>
+<title>SERCOMx_USART_CALLBACK Type</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="05552.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="05531.html" target="topic">Capture</a> &gt; <a href="05534.html" target="topic">Library Interface</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="05462.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="05473.html" target="topic">USART</a> &gt; <a href="05477.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="05534.html" target="topic">SERCOMx_USART_CALLBACK Type</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05540.html" target="topic">Previous</a> | <a href="05531.html" target="topic">Up</a> | <a href="05536.html" target="topic">Next</a></div>
+<a href="05573.html" target="topic">Previous</a> | <a href="05477.html" target="topic">Up</a> | <a href="05463.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC 44162 Capture Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_usart::SERCOMx_USART_CALLBACK Topic Title: SERCOMx_USART_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Library Interface</div>
+SERCOMx_USART_CALLBACK Type</div>
 </div>
 </div>
 
@@ -46,44 +46,76 @@ Library Interface</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="546F70696373"></a><div class="Element14">
-Topics</div>
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Callback Function Pointer&nbsp;</p>
+<p class="Element10">
+This data type defines the function signature of the USART peripheral callback function. The USART peripheral will call back the client's function with this signature when the USART buffer event has occurred.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000">SERCOMx_USART_CALLBACK</span></strong>)(uintptr_t context);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
+<p class="Element10">
+<a href="05537.html" target="topic">SERCOMx_USART_Initialize</a> must have been called for the given USART peripheral instance and SERCOMx_USART_CallbackRegister must have been called to set the function to be called.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
 <div class="TableDiv">
-<table cellspacing="0" class="Table0">
+<table cellspacing="0" class="Table2">
 <tr>
-<td class="Element200" valign="top" width="35%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="05536.html" target="topic">a) Initialization Function</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
- &nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="05537.html" target="topic">b) Setup Functions</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
- &nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="05539.html" target="topic">c) Transaction Functions</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
- &nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="05538.html" target="topic">d) Status Functions</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
- &nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="05535.html" target="topic">e) Data Types and Constants</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
- &nbsp;</div></td></tr></table></div></div>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Allows the caller to provide a context value (usually a pointer to the callers context for multi-instance clients).&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Code within the callback function will execute in an interrupt context. The application should avoid calling hardware blocking functions or interrupt in-sensitive code in this function.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12"><i><span style="color: #008000">// Data tracking what each of my instances is doing.</span></i>
+MY_DATA myData[2];
+
+<strong><span style="color: #000080">void</span></strong> MyUsartReadCallback(uintptr_t context)
+{
+    <i><span style="color: #008000">// This function will be called when a USART read has completed.</span></i>
+}
+
+<strong><span style="color: #000080">void</span></strong> MyUsartWriteCallback(uintptr_t context)
+{
+    <i><span style="color: #008000">// This function will be called when a USART write has completed.</span></i>
+}
+
+SERCOM0_USART_ReadCallbackRegister(MyUsartReadCallback, &amp;myData[0]);
+SERCOM0_USART_WriteCallbackRegister(MyUsartWriteCallback, &amp;myData[1]);</pre></div></div>
 </div>
 </div>
 </div>
@@ -91,7 +123,7 @@ Description&nbsp;</div></td></tr><tr>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="05552.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="05531.html" target="topic">Capture</a> &gt; <a href="05534.html" target="topic">Library Interface</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="05462.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="05473.html" target="topic">USART</a> &gt; <a href="05477.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="05534.html" target="topic">SERCOMx_USART_CALLBACK Type</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -99,13 +131,13 @@ Description&nbsp;</div></td></tr><tr>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05540.html" target="topic">Previous</a> | <a href="05531.html" target="topic">Up</a> | <a href="05536.html" target="topic">Next</a></div>
+<a href="05573.html" target="topic">Previous</a> | <a href="05477.html" target="topic">Up</a> | <a href="05463.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC 44162 Capture Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_usart::SERCOMx_USART_CALLBACK Topic Title: SERCOMx_USART_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>SERCOMx_USART_WriteCountGet Function</title>
+<title>SDHC_CallbackRegister Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="05102.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="05113.html" target="topic">USART</a> &gt; <a href="05117.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="05189.html" target="topic">SERCOMx_USART_WriteCountGet Function</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="05165.html" target="topic">SDHC Peripheral Library Help</a> &gt; <a href="05166.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="05189.html" target="topic">SDHC_CallbackRegister Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05190.html" target="topic">Previous</a> | <a href="05117.html" target="topic">Up</a> | <a href="05183.html" target="topic">Next</a></div>
+<a href="05187.html" target="topic">Previous</a> | <a href="05166.html" target="topic">Up</a> | <a href="05224.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_usart::SERCOMx_USART_WriteCountGet Topic Title: SERCOMx_USART_WriteCountGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sdhc_00187::SDHC_CallbackRegister@SDHC_CALLBACK@uintptr_t Topic Title: SDHC_CallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-SERCOMx_USART_WriteCountGet Function</div>
+SDHC_CallbackRegister Function</div>
 </div>
 </div>
 
@@ -49,45 +49,84 @@ SERCOMx_USART_WriteCountGet Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function gets the count of processed bytes for an on-going or last completed USART Transmit operation. This function is only available in interrupt non-blocking mode. This function can be used to track the progress of the non-blocking transmit operation.</p></div>
+This function allows a client to set an event handler. The client may want to receive transfer related events in cases when it submits a SDHC PLIB transfer request. The event handler should be set before the client intends to perform operations that could generate events.&nbsp;</p>
+<p class="Element10">
+This function accepts a contextHandle parameter. This parameter could be set by the client to contain (or point to) any client specific data object that should be associated with this SDHC PLIB. The contextHandle parameter is not modified by the PLIB and is passed as is in the client event handler.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100">size_t <strong><span style="color: #000000">SERCOMx_USART_WriteCountGet</span></strong>();</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">SDHC_CallbackRegister</span></strong>(
+    <a href="05188.html" target="topic">SDHC_CALLBACK</a> <strong><span style="color: #000000">callback</span></strong>, 
+    uintptr_t <strong><span style="color: #000000">contextHandle</span></strong>
+);</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="05177.html" target="topic">SERCOMx_USART_Initialize</a> must have been called for the associated USART instance.</p></div>
+<a href="05226.html" target="topic">SDHC_Initialize</a>() must have been called first for the associated instance.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+callback&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Pointer to the event handler function. contextHandle -Value identifying the context of the application/driver/middleware that registered the event handling function.&nbsp;</div></td></tr></table></div></div>
+</div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Returns count of bytes currently completed/processed from the current Transmit buffer for interrupt non-blocking mode.</p></div>
+None.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This write count gets reset every time the <a href="05186.html" target="topic">SERCOMx_USART_Write</a>() function is called.</p></div>
+None.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080"># define</span></strong> COUNT_EXPECTED 10
-size_t count;
+<div class="Element13"><div class="Element12"><pre class="Element12">MY_APP_OBJ myAppObj;
 
-count = SERCOM0_USART_WriteCountGet();
-
-<strong><span style="color: #000080">if</span></strong>(COUNT_EXPECTED &gt; count)
+<strong><span style="color: #000080">static</span></strong> <strong><span style="color: #000080">void</span></strong> SDHC_TransferEventHandler(
+    <a href="05249.html" target="topic">SDHC_XFER_STATUS</a> xferStatus,
+    uintptr_t contextHandle
+)
 {
-    <i><span style="color: #008000">//More bytes are expected to transmit, wait</span></i>
-}</pre></div></div>
+    MY_APP_OBJ* myAppObj = (MY_APP_OBJ*)contextHandle;
+
+    <strong><span style="color: #000080">if</span></strong> (xferStatus &amp; SDHC_XFER_STATUS_CMD_COMPLETED)
+    {
+        <i><span style="color: #008000">// Command transfer complete, read the command error status.</span></i>
+        cmd_error = <a href="05211.html" target="topic">SDHC_CommandErrorGet</a>();
+    }
+    <strong><span style="color: #000080">if</span></strong> (xferStatus &amp; SDHC_XFER_STATUS_DATA_COMPLETED)
+    {
+        <i><span style="color: #008000">// Data transfer complete, read the data error status.</span></i>
+        data_error = <a href="05219.html" target="topic">SDHC_DataErrorGet</a>();
+    }
+}
+
+<i><span style="color: #008000">// User registers an event handler with the SDHC PLIB. This is usually done once.</span></i>
+SDHC_CallbackRegister(SDHC_TransferEventHandler, (uintptr_t)&amp;myAppObj);</pre></div></div>
 </div>
 </div>
 </div>
@@ -95,7 +134,7 @@ count = SERCOM0_USART_WriteCountGet();
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="05102.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="05113.html" target="topic">USART</a> &gt; <a href="05117.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="05189.html" target="topic">SERCOMx_USART_WriteCountGet Function</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="05165.html" target="topic">SDHC Peripheral Library Help</a> &gt; <a href="05166.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="05189.html" target="topic">SDHC_CallbackRegister Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -103,13 +142,13 @@ count = SERCOM0_USART_WriteCountGet();
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05190.html" target="topic">Previous</a> | <a href="05117.html" target="topic">Up</a> | <a href="05183.html" target="topic">Next</a></div>
+<a href="05187.html" target="topic">Previous</a> | <a href="05166.html" target="topic">Up</a> | <a href="05224.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_usart::SERCOMx_USART_WriteCountGet Topic Title: SERCOMx_USART_WriteCountGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sdhc_00187::SDHC_CallbackRegister@SDHC_CALLBACK@uintptr_t Topic Title: SDHC_CallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

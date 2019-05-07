@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Running The Application</title>
+<title>PIO_PIN_CALLBACK Type</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="03766.html" target="topic">PIT Applications</a> &gt; <a href="03769.html" target="topic">period_change</a> &gt; <a href="03782.html" target="topic">Running The Application</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="03639.html" target="topic">PIO Peripheral Library Help</a> &gt; <a href="03640.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="03782.html" target="topic">PIO_PIN_CALLBACK Type</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03780.html" target="topic">Previous</a> | <a href="03769.html" target="topic">Up</a> | <a href="03770.html" target="topic">Next</a></div>
+<a href="03809.html" target="topic">Previous</a> | <a href="03640.html" target="topic">Up</a> | <a href="03666.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PIT period_change Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pio_11004::PIO_PIN_CALLBACK Topic Title: PIO_PIN_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Running The Application</div>
+PIO_PIN_CALLBACK Type</div>
 </div>
 </div>
 
@@ -49,32 +49,67 @@ Running The Application</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<strong><u>IAR Embedded work bench</u></strong></p>
-<ol class="Element630">
-<li value="1" class="Element600">Build the project using IAR Embedded Workbench</li>
-<li value="2" class="Element600">Use the output binary file (harmony.bin) to setup the board as detailed in <a href="03780.html" target="topic">hardware setup</a></li>
-<li value="3" class="Element600">Reset the board to run the application</li>
-</ol><p class="Element10">
-&nbsp;</p>
-<div class="Element63">
+PIO Pin-Event Handler Function Pointer&nbsp;</p>
+<p class="Element10">
+This data type defines the required function signature for the PIO pin-event handling callback function. The client must register a pointer to an event handling function whose function signature (parameter and return value types) match the types specified by this function pointer in order to receive calls back from the PLIB when a configured pin event occurs.&nbsp;</p>
+<p class="Element10">
+The parameters and return values are described here and a partial example implementation is provided.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000">PIO_PIN_CALLBACK</span></strong>)(<a href="03666.html" target="topic">PIO_PIN</a> pin, uintptr_t context);</pre></div></div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
 <div class="TableDiv">
-<table cellspacing="0" class="Table1">
+<table cellspacing="0" class="Table2">
 <tr>
-<td class="Element65" valign="top" width="28%">
-<div class="Element66">
-Kit Name&nbsp;</div></td><td class="Element65" valign="top" width="72%">
-<div class="Element66">
-Output&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="28%">
-<div class="Element68">
-SAMA5D2 Xplained Ultra evaluation kit&nbsp;</div></td><td class="Element67" valign="top" width="72%">
-<div class="Element68">
-</p>
-<ul class="Element630">
-<li class="Element600">RGB_LED toggles in blue color every 1 second</li>
-<li class="Element600">Press switch PB_USER, to observe the change in rate of toggle</li>
-</ul><p class="Element68">
-&nbsp;</div></td></tr></table></div></div>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+pin&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+One of the IO pins from the enum <a href="03666.html" target="topic">PIO_PIN</a>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Value identifying the context of the client that registered the event handling function&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The context parameter contains the a handle to the client context, provided at the time the event handling function was registered using the <a href="03785.html" target="topic">PIO_PinInterruptCallbackRegister</a> function. This context handle value is passed back to the client as the &quot;context&quot; parameter. It can be any value (such as a pointer to the client's data) necessary to identify the client context.&nbsp;</p>
+<p class="Element10">
+The event handler function executes in the PLIB's interrupt context. It is recommended of the application to not perform process intensive or blocking operations with in this function.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+A function matching this signature: </p><div class="Element13"><div class="Element12"><pre class="Element12">    <strong><span style="color: #000080">void</span></strong> APP_PinEventHandler(<a href="03666.html" target="topic">PIO_PIN</a> pin, uintptr_t context)
+    {
+        <i><span style="color: #008000">// Do Something</span></i>
+    }</pre></div></div>
+<p class="Element10">
+Is registered as follows: </p><div class="Element13"><div class="Element12"><pre class="Element12">    <a href="03785.html" target="topic">PIO_PinInterruptCallbackRegister</a>(PIO_PIN_PA5, &amp;APP_PinEventHandler, NULL);</pre></div></div>
 </div>
 </div>
 </div>
@@ -82,7 +117,7 @@ SAMA5D2 Xplained Ultra evaluation kit&nbsp;</div></td><td class="Element67" vali
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="03766.html" target="topic">PIT Applications</a> &gt; <a href="03769.html" target="topic">period_change</a> &gt; <a href="03782.html" target="topic">Running The Application</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="03639.html" target="topic">PIO Peripheral Library Help</a> &gt; <a href="03640.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="03782.html" target="topic">PIO_PIN_CALLBACK Type</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -90,13 +125,13 @@ SAMA5D2 Xplained Ultra evaluation kit&nbsp;</div></td><td class="Element67" vali
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03780.html" target="topic">Previous</a> | <a href="03769.html" target="topic">Up</a> | <a href="03770.html" target="topic">Next</a></div>
+<a href="03809.html" target="topic">Previous</a> | <a href="03640.html" target="topic">Up</a> | <a href="03666.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PIT period_change Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pio_11004::PIO_PIN_CALLBACK Topic Title: PIO_PIN_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

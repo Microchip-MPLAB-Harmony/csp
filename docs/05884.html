@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCx_Compare16bitPeriodGet Function</title>
+<title>SYSTICK_TimerInitialize Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="05652.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="05641.html" target="topic">Compare</a> &gt; <a href="05644.html" target="topic">Library Interface</a> &gt; <a href="05649.html" target="topic">c) Transaction Functions</a> &gt; <a href="05884.html" target="topic">TCx_Compare16bitPeriodGet Function</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="05866.html" target="topic">SYSTICK Peripheral Library Help</a> &gt; <a href="05867.html" target="topic">Library Interface</a> &gt; a) Initialization Function &gt; <a href="05884.html" target="topic">SYSTICK_TimerInitialize Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05885.html" target="topic">Previous</a> | <a href="05649.html" target="topic">Up</a> | <a href="05891.html" target="topic">Next</a></div>
+<a href="05867.html" target="topic">Previous</a> | <a href="05867.html" target="topic">Up</a> | <a href="05881.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tc_u2212::TCx_Compare16bitPeriodGet Topic Title: TCx_Compare16bitPeriodGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SYSTICK_TimerInitialize Topic Title: SYSTICK_TimerInitialize Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCx_Compare16bitPeriodGet Function</div>
+SYSTICK_TimerInitialize Function</div>
 </div>
 </div>
 
@@ -49,39 +49,30 @@ TCx_Compare16bitPeriodGet Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function reads the value of period.</p></div>
+This function initializes the System Timer as configured by the user from within the MHC.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100">uint16_t <strong><span style="color: #000000">TCx_Compare16bitPeriodGet</span></strong>();</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">SYSTICK_TimerInitialize</span></strong>();</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="05899.html" target="topic">TCx_CompareInitialize</a>() function must have been called first.</p></div>
+None.</p></div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-period - The timer's period value.</p></div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-The caller must know the number of significant bytes of timer. Period value is right-aligned.</p></div>
+None.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">  uint16_t period = 0;
-  <a href="05899.html" target="topic">TCx_CompareInitialize</a>();
-  period = TCx_Compare16bitPeriodGet();</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">    SYSTICK_TimerInitialize();</pre></div></div>
 </div>
 </div>
 </div>
@@ -89,7 +80,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="05652.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="05641.html" target="topic">Compare</a> &gt; <a href="05644.html" target="topic">Library Interface</a> &gt; <a href="05649.html" target="topic">c) Transaction Functions</a> &gt; <a href="05884.html" target="topic">TCx_Compare16bitPeriodGet Function</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="05866.html" target="topic">SYSTICK Peripheral Library Help</a> &gt; <a href="05867.html" target="topic">Library Interface</a> &gt; a) Initialization Function &gt; <a href="05884.html" target="topic">SYSTICK_TimerInitialize Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -97,13 +88,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05885.html" target="topic">Previous</a> | <a href="05649.html" target="topic">Up</a> | <a href="05891.html" target="topic">Next</a></div>
+<a href="05867.html" target="topic">Previous</a> | <a href="05867.html" target="topic">Up</a> | <a href="05881.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tc_u2212::TCx_Compare16bitPeriodGet Topic Title: TCx_Compare16bitPeriodGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SYSTICK_TimerInitialize Topic Title: SYSTICK_TimerInitialize Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

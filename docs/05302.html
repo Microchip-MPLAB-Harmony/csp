@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>SPIx_CALLBACK Type</title>
+<title>SDHCx_BlockCountSet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="05264.html" target="topic">SPI Peripheral Library Help</a> &gt; <a href="05265.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="05302.html" target="topic">SPIx_CALLBACK Type</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="05175.html" target="topic">SDHC Peripheral Library Help</a> &gt; <a href="05176.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="05302.html" target="topic">SDHCx_BlockCountSet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05315.html" target="topic">Previous</a> | <a href="05265.html" target="topic">Up</a> | <a href="05304.html" target="topic">Next</a></div>
+<a href="05319.html" target="topic">Previous</a> | <a href="05176.html" target="topic">Up</a> | <a href="05303.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: spi_01329::SPIx_CALLBACK Topic Title: SPIx_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SDHCx_BlockCountSet@uint16_t Topic Title: SDHCx_BlockCountSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-SPIx_CALLBACK Type</div>
+SDHCx_BlockCountSet Function</div>
 </div>
 </div>
 
@@ -49,15 +49,20 @@ SPIx_CALLBACK Type</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-SPI Callback Function Pointer&nbsp;</p>
-<p class="Element10">
-This data type defines the required function signature for the SPI callback function. Application must register a pointer to a callback function whose function signature (parameter and return value types) match the types specified by this function pointer in order to receive callback from the PLIB.&nbsp;</p>
-<p class="Element10">
-The parameters and return values are described here and a partial example implementation is provided.</p></div>
+Sets the number of blocks to transfer for a multi-block transfer. For example, the block count must be set to the appropriate value before issuing the multi-block read (CMD 18) or write (CMD 25) commands. For single blcok read (CMD 17) or write (CMD24) commands, the block count must be set to 1.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000">SPIx_CALLBACK</span></strong>)(uintptr_t context);</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">SDHCx_BlockCountSet</span></strong>(
+    uint16_t <strong><span style="color: #000000">numBlocks</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+<a href="05314.html" target="topic">SDHCx_Initialize</a>() must have been called first for the associated instance.</p></div>
+</div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
 <div class="Element11">
@@ -73,9 +78,9 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+numBlocks&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Value identifying the context of the application that registered the callback function&nbsp;</div></td></tr></table></div></div>
+Number of blocks to transfer.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -90,19 +95,13 @@ Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The context parameter contains the a handle to the client context, provided at the time the callback function was registered using the <a href="05303.html" target="topic">SPIx_CallbackRegister</a> function. This context handle value is passed back to the client as the &quot;context&quot; parameter. It can be any value (such as a pointer to the client's data) necessary to identify the client context or instance of the client that made the data transfer request.&nbsp;</p>
-<p class="Element10">
-The callback function executes in the PLIB's interrupt context. It is recommended of the application to not perform process intensive or blocking operations with in this function.</p></div>
+None.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">SPI1_CallbackRegister(&amp;APP_SPITransferHandler, (uintptr_t)NULL);
-<strong><span style="color: #000080">void</span></strong> APP_SPITransferHandler(uintptr_t context)
-{
-    <i><span style="color: #008000">//Transfer was completed without error, do something else now.</span></i>
-}</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">SDHC1_BlockCountSet(1);</pre></div></div>
 </div>
 </div>
 </div>
@@ -110,7 +109,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="05264.html" target="topic">SPI Peripheral Library Help</a> &gt; <a href="05265.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="05302.html" target="topic">SPIx_CALLBACK Type</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="05175.html" target="topic">SDHC Peripheral Library Help</a> &gt; <a href="05176.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="05302.html" target="topic">SDHCx_BlockCountSet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -118,13 +117,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05315.html" target="topic">Previous</a> | <a href="05265.html" target="topic">Up</a> | <a href="05304.html" target="topic">Next</a></div>
+<a href="05319.html" target="topic">Previous</a> | <a href="05176.html" target="topic">Up</a> | <a href="05303.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: spi_01329::SPIx_CALLBACK Topic Title: SPIx_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SDHCx_BlockCountSet@uint16_t Topic Title: SDHCx_BlockCountSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

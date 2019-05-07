@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>EFC_ErrorGet Function</title>
+<title>Using the Library</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="01705.html" target="topic">EFC Peripheral Library Help</a> &gt; <a href="01706.html" target="topic">Library Interface</a> &gt; c) Status Functions &gt; <a href="01725.html" target="topic">EFC_ErrorGet Function</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="01720.html" target="topic">EFC Peripheral Library Help</a> &gt; <a href="01725.html" target="topic">Using the Library</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01726.html" target="topic">Previous</a> | <a href="01706.html" target="topic">Up</a> | <a href="01717.html" target="topic">Next</a></div>
+<a href="01717.html" target="topic">Previous</a> | <a href="01720.html" target="topic">Up</a> | <a href="01721.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: EFC_ErrorGet Topic Title: EFC_ErrorGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: EFC 6450 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-EFC_ErrorGet Function</div>
+Using the Library</div>
 </div>
 </div>
 
@@ -49,32 +49,54 @@ EFC_ErrorGet Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function is used to check error encountered by EFC controller.&nbsp;</p>
+The main Flash memory can not be read while it is being erased or written, the CPU is stalled during the entire operation. All functions that modify the main Flash can be run from RAM memory to avoid CPU stall while main main Flash is being erased or written. The FLASH memory is divided into a number of physical rows, each containing four identically sized flash pages. Pages may be read or written to individually, however pages must be erased before being reprogrammed and the smallest granularity available for erasure is one single row.&nbsp;</p>
 <p class="Element10">
-Return value can be mapped to <a href="01719.html" target="topic">EFC_ERROR</a> to identify particular error.</p></div>
-</div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100">uint32_t <strong><span style="color: #000000">EFC_ErrorGet</span></strong>();</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
-<div class="Element11">
-<div class="Element10">
+&nbsp;</p>
 <p class="Element10">
-None.</p></div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
+NVM APIs are implemented to be non-blocking, the API will return immediately if not stalled by Flash operation. The user application can either poll the status or get callback once the flash operation is completed.</p>
+<ul class="Element630">
+<li class="Element600">With polling, the application will need to continuously check if the flash operation is completed</li>
+<li class="Element600">With callback, the registered callback function will be called once the flash operation is completed. This means the application do not have to poll continuously. The interrupt must be enabled in MHC for callback method</li>
+</ul><p class="Element10">
+&nbsp;</p>
 <p class="Element10">
-uint32_t - EFC controller error type</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">uint32_t error = EFC_ErrorGet();</pre></div></div>
+Here is an example code to erase a row and program a page of memory using polling method </p><div class="Element13"><div class="Element12"><pre class="Element12">
+<i><span style="color: #008000">// Erase operation erases 16 pages</span></i>
+<strong><span style="color: #000080">#define</span></strong> SECTOR_SIZE  16*IFLASH_PAGE_SIZE
+</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">const</span></strong> uint8_t sectorBuffer[SECTOR_SIZE] __attribute__((address(IFLASH_ADDR+0x100000)))= {0};
+
+<strong><span style="color: #000080">void</span></strong> populate_buffer(uint8_t* data)
+{
+    <strong><span style="color: #000080">int</span></strong> i = 0;
+
+    <strong><span style="color: #000080">for</span></strong> (i = 0; i &lt; (IFLASH_PAGE_SIZE); i++)
+    {
+        *(data + i) = i;
+    }
+}
+
+<strong><span style="color: #000080">int</span></strong> main (<strong><span style="color: #000080">void</span></strong>)
+{
+    uint8_t pageBuffer[IFLASH_PAGE_SIZE] = {0};
+
+    <i><span style="color: #008000">/*Populate data to programmed*/</span></i>
+    populate_buffer(data);</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">
+    <i><span style="color: #008000">/*Erase the sector*/</span></i>
+    EFC_SectorErase(start_address);
+
+    <i><span style="color: #008000">/* Wait for erase operation to complete */</span></i>
+    <strong><span style="color: #000080">while</span></strong>(EFC_IsBusy());
+
+    <i><span style="color: #008000">/*Program a page*/</span></i>
+    EFC_PageWrite(data, start_address);
+
+
+    <i><span style="color: #008000">/* Wait for page program to complete</span></i></pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">    <strong><span style="color: #000080">while</span></strong>(EFC_IsBusy());
+</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">}</pre></div></div>
 </div>
 </div>
 </div>
@@ -82,7 +104,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="01705.html" target="topic">EFC Peripheral Library Help</a> &gt; <a href="01706.html" target="topic">Library Interface</a> &gt; c) Status Functions &gt; <a href="01725.html" target="topic">EFC_ErrorGet Function</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="01720.html" target="topic">EFC Peripheral Library Help</a> &gt; <a href="01725.html" target="topic">Using the Library</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -90,13 +112,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01726.html" target="topic">Previous</a> | <a href="01706.html" target="topic">Up</a> | <a href="01717.html" target="topic">Next</a></div>
+<a href="01717.html" target="topic">Previous</a> | <a href="01720.html" target="topic">Up</a> | <a href="01721.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: EFC_ErrorGet Topic Title: EFC_ErrorGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: EFC 6450 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Library Interface</title>
+<title>GPIO_PortClear Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="02514.html" target="topic">HSMCI Peripheral Library Help</a> &gt; <a href="02515.html" target="topic">Library Interface</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="02364.html" target="topic">GPIO Peripheral Library Help</a> &gt; <a href="02379.html" target="topic">Library Interface</a> &gt; c) Port Functions &gt; <a href="02515.html" target="topic">GPIO_PortClear Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02519.html" target="topic">Previous</a> | <a href="02514.html" target="topic">Up</a> | <a href="02567.html" target="topic">Next</a></div>
+<a href="02500.html" target="topic">Previous</a> | <a href="02379.html" target="topic">Up</a> | <a href="02516.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: HSMCI 6449 Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: gpio_01618::GPIO_PortClear@GPIO_PORT@uint32_t Topic Title: GPIO_PortClear Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Library Interface</div>
+GPIO_PortClear Function</div>
 </div>
 </div>
 
@@ -46,299 +46,76 @@ Library Interface</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="612920496E697469616C697A6174696F6E2046756E6374696F6E"></a><div class="Element14">
-a) Initialization Function</div>
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+This function clears (to '0') the selected IO pins of a port.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">GPIO_PortClear</span></strong>(
+    <a href="02507.html" target="topic">GPIO_PORT</a> <strong><span style="color: #000000">port</span></strong>, 
+    uint32_t <strong><span style="color: #000000">mask</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02567.html" target="topic">HSMCI_Initialize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Initializes the HSMCI peripheral and the internal data structures used by the peripheral library.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02570.html" target="topic">HSMCI_ModuleInit</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Initializes the HSMCI peripheral.&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+None.</p></div>
 </div>
-</div>
-<a name="62292053657475702046756E6374696F6E73"></a><div class="Element14">
-b) Setup Functions</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
+<div class="Element312">
 <div class="TableDiv">
-<table cellspacing="0" class="Table0">
+<table cellspacing="0" class="Table2">
 <tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02520.html" target="topic">HSMCI_BlockCountSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Sets the number of blocks to transfer.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02521.html" target="topic">HSMCI_BlockSizeSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Sets the size of the one data block of transfer.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02525.html" target="topic">HSMCI_BusWidthSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Configures the width of the data bus.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02527.html" target="topic">HSMCI_CallbackRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This function allows a HSMCI PLIB client to set an event handler.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02531.html" target="topic">HSMCI_ClockSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Sets the High Speed MultiMedia Card Interface clock frequency.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02581.html" target="topic">HSMCI_SpeedModeSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Sets the bus speed.&nbsp;</div></td></tr></table></div></div>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+port&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+One of the IO ports from the enum <a href="02507.html" target="topic">GPIO_PORT</a>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+mask&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+A 32 bit value in which positions of 0s and 1s decide which IO pins of the selected port will be cleared.</p>
+<ul class="Element630">
+<li class="Element600">1's - Will clear corresponding IO pins to low (to 0).</li>
+<li class="Element600">0's - Will remain unchanged.</li>
+</ul><p class="Element307">
+&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
-<a name="6329205472616E73616374696F6E2046756E6374696F6E73"></a><div class="Element14">
-c) Transaction Functions</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02577.html" target="topic">HSMCI_ResponseRead</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Reads the response to a given command.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02544.html" target="topic">HSMCI_CommandSend</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This function allows the client to send a SD command on the HSMCI interface.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02557.html" target="topic">HSMCI_DmaSetup</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Sets up the DMA for data tranfers.&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+None.</p></div>
 </div>
-</div>
-<a name="6429205374617475732046756E6374696F6E73"></a><div class="Element14">
-d) Status Functions</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02543.html" target="topic">HSMCI_CommandErrorGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Returns the errors associated with a command transfer.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02552.html" target="topic">HSMCI_DataErrorGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Returns the errors associated with a data transfer.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02568.html" target="topic">HSMCI_IsCmdLineBusy</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Returns the status of the command line.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02569.html" target="topic">HSMCI_IsDatLineBusy</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Returns the status of the data line.&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+If the port has less than 32-bits, unimplemented pins will be ignored.&nbsp;</p>
+<p class="Element10">
+Implemented pins are Right aligned in the 32-bit value.</p></div>
 </div>
-</div>
-<a name="6529204461746120547970657320616E6420436F6E7374616E7473"></a><div class="Element14">
-e) Data Types and Constants</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02522.html" target="topic">HSMCI_BUS_WIDTH</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-The enumeration lists the bus widths for the HSMCI bus.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02526.html" target="topic">HSMCI_CALLBACK</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-The prototype of the HSMCI callback function&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02533.html" target="topic">HSMCI_CMD_RESP_TYPE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-The enumeration lists the supported response types&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02546.html" target="topic">HSMCI_DATA_TRANSFER_DIR</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-The enumeration lists the direction of the data transfer.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02549.html" target="topic">HSMCI_DATA_TRANSFER_TYPE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-The enumeration lists single or multi block data transfer type.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02553.html" target="topic">HSMCI_DataTransferFlags</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-The data structure is used by the client to provide information about the data trasnfer to the HSMCI PLIB.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02558.html" target="topic">HSMCI_ERROR_FLAGS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-The enumeration lists the possible error types for a command and data transfer.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02571.html" target="topic">HSMCI_READ_RESPONSE_REG</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-The enumeration lists the response registers that can be read for a given command.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02578.html" target="topic">HSMCI_SPEED_MODE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-The enumeration lists the bus widths for the HSMCI bus.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02582.html" target="topic">HSMCI_XFER_STATUS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-The enumeration lists the status of the transfer.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02528.html" target="topic">HSMCI_CLOCK_FREQ_400_KHZ</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This is macro HSMCI_CLOCK_FREQ_400_KHZ.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02529.html" target="topic">HSMCI_CLOCK_FREQ_DS_25_MHZ</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This is macro HSMCI_CLOCK_FREQ_DS_25_MHZ.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02530.html" target="topic">HSMCI_CLOCK_FREQ_HS_50_MHZ</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This is macro HSMCI_CLOCK_FREQ_HS_50_MHZ.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02532.html" target="topic">HSMCI_CMD_ERROR</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-The macro is a bit wise OR of all the possible errors corresponding to a command transfer.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02545.html" target="topic">HSMCI_DATA_ERROR</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-The macro is a bit wise OR of all the possible errors corresponding to a data transfer.&nbsp;</div></td></tr></table></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">    <i><span style="color: #008000">// Clear RC5 and RC7 pins to 0</span></i>
+    GPIO_PortClear(GPIO_PORT_C, 0x00A0);</pre></div></div>
 </div>
 </div>
 </div>
@@ -346,7 +123,7 @@ The macro is a bit wise OR of all the possible errors corresponding to a data tr
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="02514.html" target="topic">HSMCI Peripheral Library Help</a> &gt; <a href="02515.html" target="topic">Library Interface</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="02364.html" target="topic">GPIO Peripheral Library Help</a> &gt; <a href="02379.html" target="topic">Library Interface</a> &gt; c) Port Functions &gt; <a href="02515.html" target="topic">GPIO_PortClear Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -354,13 +131,13 @@ The macro is a bit wise OR of all the possible errors corresponding to a data tr
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02519.html" target="topic">Previous</a> | <a href="02514.html" target="topic">Up</a> | <a href="02567.html" target="topic">Next</a></div>
+<a href="02500.html" target="topic">Previous</a> | <a href="02379.html" target="topic">Up</a> | <a href="02516.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: HSMCI 6449 Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: gpio_01618::GPIO_PortClear@GPIO_PORT@uint32_t Topic Title: GPIO_PortClear Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

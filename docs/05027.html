@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>SDMMCx_CallbackRegister Function</title>
+<title>RTC_Timer32CallbackRegister Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="04966.html" target="topic">SDMMC Peripheral Library Help</a> &gt; <a href="04967.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="05027.html" target="topic">SDMMCx_CallbackRegister Function</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="04795.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="04796.html" target="topic">32-bit Timer (Mode 0)</a> &gt; <a href="04801.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="05027.html" target="topic">RTC_Timer32CallbackRegister Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05026.html" target="topic">Previous</a> | <a href="04967.html" target="topic">Up</a> | <a href="05028.html" target="topic">Next</a></div>
+<a href="04960.html" target="topic">Previous</a> | <a href="04801.html" target="topic">Up</a> | <a href="05041.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sdmmc_44002::SDMMCx_CallbackRegister@SDMMC_CALLBACK@uintptr_t Topic Title: SDMMCx_CallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::RTC_Timer32CallbackRegister@RTC_TIMER32_CALLBACK@uintptr_t Topic Title: RTC_Timer32CallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-SDMMCx_CallbackRegister Function</div>
+RTC_Timer32CallbackRegister Function</div>
 </div>
 </div>
 
@@ -49,22 +49,20 @@ SDMMCx_CallbackRegister Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function allows a client to set an event handler. The client may want to receive transfer related events in cases when it submits a SDMMC PLIB transfer request. The event handler should be set before the client intends to perform operations that could generate events.&nbsp;</p>
-<p class="Element10">
-This function accepts a contextHandle parameter. This parameter could be set by the client to contain (or point to) any client specific data object that should be associated with this SDMMC PLIB. The contextHandle parameter is not modified by the PLIB and is passed as is in the client event handler.</p></div>
+This function registers the callback function that the library will call when an interrupt occurs. The library will return the event that has caused the interrupt and the application specified context in the callback function.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">SDMMCx_CallbackRegister</span></strong>(
-    <a href="04976.html" target="topic">SDMMC_CALLBACK</a> <strong><span style="color: #000000">callback</span></strong>, 
-    uintptr_t <strong><span style="color: #000000">contextHandle</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">RTC_Timer32CallbackRegister</span></strong>(
+    <a href="05013.html" target="topic">RTC_TIMER32_CALLBACK</a> <strong><span style="color: #000000">callback</span></strong>, 
+    uintptr_t <strong><span style="color: #000000">context</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="05037.html" target="topic">SDMMCx_Initialize</a>() must have been called first for the associated instance.</p></div>
+The <a href="04960.html" target="topic">RTC_Initialize</a>() function should have been called to initialize the RTC module. The module should have been conifgured for 32-bit Timer Counter operation in MHC. The library should have been configured for Interrupt mode operation.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -83,7 +81,12 @@ Description&nbsp;</div></td></tr><tr>
 <div class="Element303">
 callback&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Pointer to the event handler function. contextHandle -Value identifying the context of the application/driver/middleware that registered the event handling function.&nbsp;</div></td></tr></table></div></div>
+A pointer to a function with a calling signature defined by the <a href="05013.html" target="topic">RTC_TIMER32_CALLBACK</a> data type. Passing a NULL value disables the callback.<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+A value (usually a pointer) that passed into the callback function when the callback function is called.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -98,35 +101,14 @@ Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+To disable the callback function, pass a NULL for the callback parameter. See the <a href="05013.html" target="topic">RTC_TIMER32_CALLBACK</a> type definition for additional information.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">MY_APP_OBJ myAppObj;
-
-<strong><span style="color: #000080">static</span></strong> <strong><span style="color: #000080">void</span></strong> SDMMC_TransferEventHandler(
-    <a href="05018.html" target="topic">SDMMC_XFER_STATUS</a> xferStatus,
-    uintptr_t contextHandle
-)
-{
-    MY_APP_OBJ* myAppObj = (MY_APP_OBJ*)contextHandle;
-
-    <strong><span style="color: #000080">if</span></strong> (xferStatus &amp; SDMMC_XFER_STATUS_CMD_COMPLETED)
-    {
-        <i><span style="color: #008000">// Command transfer complete, read the command error status.</span></i>
-        cmd_error = SDMMC1_CommandErrorGet();
-    }
-    <strong><span style="color: #000080">if</span></strong> (xferStatus &amp; SDMMC_XFER_STATUS_DATA_COMPLETED)
-    {
-        <i><span style="color: #008000">// Data transfer complete, read the data error status.</span></i>
-        data_error = SDMMC1_DataErrorGet();
-    }
-}
-
-<i><span style="color: #008000">// User registers an event handler with the SDMMC PLIB. This is usually done once.</span></i>
-SDMMC1_CallbackRegister(SDMMC_TransferEventHandler, (uintptr_t)&amp;myAppObj);</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">    <i><span style="color: #008000">// Refer to the description of the RTC_TIMER32_CALLBACK datatype for</span></i>
+    <i><span style="color: #008000">// example usage of this function.</span></i></pre></div></div>
 </div>
 </div>
 </div>
@@ -134,7 +116,7 @@ SDMMC1_CallbackRegister(SDMMC_TransferEventHandler, (uintptr_t)&amp;myAppObj);</
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="04966.html" target="topic">SDMMC Peripheral Library Help</a> &gt; <a href="04967.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="05027.html" target="topic">SDMMCx_CallbackRegister Function</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="04795.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="04796.html" target="topic">32-bit Timer (Mode 0)</a> &gt; <a href="04801.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="05027.html" target="topic">RTC_Timer32CallbackRegister Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -142,13 +124,13 @@ SDMMC1_CallbackRegister(SDMMC_TransferEventHandler, (uintptr_t)&amp;myAppObj);</
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05026.html" target="topic">Previous</a> | <a href="04967.html" target="topic">Up</a> | <a href="05028.html" target="topic">Next</a></div>
+<a href="04960.html" target="topic">Previous</a> | <a href="04801.html" target="topic">Up</a> | <a href="05041.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sdmmc_44002::SDMMCx_CallbackRegister@SDMMC_CALLBACK@uintptr_t Topic Title: SDMMCx_CallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::RTC_Timer32CallbackRegister@RTC_TIMER32_CALLBACK@uintptr_t Topic Title: RTC_Timer32CallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

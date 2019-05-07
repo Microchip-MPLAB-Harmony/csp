@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Running The Application</title>
+<title>Library Interface</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="01389.html" target="topic">DBGU Applications</a> &gt; <a href="01388.html" target="topic">dbgu_echo_interrupt</a> &gt; <a href="01397.html" target="topic">Running The Application</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="01396.html" target="topic">DBGU Peripheral Library Help</a> &gt; <a href="01397.html" target="topic">Library Interface</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01395.html" target="topic">Previous</a> | <a href="01388.html" target="topic">Up</a> | <a href="01445.html" target="topic">Next</a></div>
+<a href="01401.html" target="topic">Previous</a> | <a href="01396.html" target="topic">Up</a> | <a href="01420.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DBGU dbgu_echo_interrupt Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DBGU 6059 Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Running The Application</div>
+Library Interface</div>
 </div>
 </div>
 
@@ -46,40 +46,222 @@ Running The Application</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="4465736372697074696F6E"></a><div class="Element11">
+<a name="612920496E697469616C697A6174696F6E2046756E6374696F6E"></a><div class="Element14">
+a) Initialization Function</div>
+<div class="Element11">
 <div class="Element10">
-<p class="Element10">
-<strong><u>IAR Embedded work bench</u></strong></p>
-<ol class="Element630">
-<li value="1" class="Element600">Open the Terminal application (Ex.:Tera term) on the computer.</li>
-<li value="2" class="Element600">Connect to the USB to DBGU COM port and configure the serial settings as follows:
-<ul class="Element631">
-<li class="Element601">Baud : 115200</li>
-<li class="Element601">Data : 8 Bits</li>
-<li class="Element601">Parity : None</li>
-<li class="Element601">Stop : 1 Bit</li>
-<li class="Element601">Flow Control : None</li>
-</ul></li>
-<li value="3" class="Element600">Build the project using IAR Embedded Workbench</li>
-<li value="4" class="Element600">Use the output binary file (harmony.bin) to setup the board as detailed in <a href="01395.html" target="topic">hardware setup</a></li>
-<li value="5" class="Element600">Type 10 characters in the terminal. It will echo back the received bytes and LED is toggled.</li>
-</ol><p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-The following table provides the LED name. </p><div class="Element63">
+<div class="Element212">
 <div class="TableDiv">
-<table cellspacing="0" class="Table1">
+<table cellspacing="0" class="Table0">
 <tr>
-<td class="Element65" valign="top" width="58%">
-<div class="Element66">
-Kit Name&nbsp;</div></td><td class="Element65" valign="top" width="42%">
-<div class="Element66">
-LED Name&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="58%">
-<div class="Element68">
-SAM9X60 evaluation kit&nbsp;</div></td><td class="Element67" valign="top" width="42%">
-<div class="Element68">
-RGB_LED(Green)&nbsp;</div></td></tr></table></div></div>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01420.html" target="topic">DBGU_Initialize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Initializes given instance of the DBGU peripheral.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="62292053657475702046756E6374696F6E73"></a><div class="Element14">
+b) Setup Functions</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01429.html" target="topic">DBGU_ReadCallbackRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Sets the pointer to the function (and it's context) to be called when the given DBGU's read events occur.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01440.html" target="topic">DBGU_WriteCallbackRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Sets the pointer to the function (and it's context) to be called when the given DBGU's write events occur.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="6329205472616E73616374696F6E2046756E6374696F6E73"></a><div class="Element14">
+c) Transaction Functions</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01427.html" target="topic">DBGU_Read</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Submits request to read n-Bytes of data to the given DBGU peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01428.html" target="topic">DBGU_ReadByte</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Submits request to read a byte of data to the given DBGU peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01430.html" target="topic">DBGU_ReadCountGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Returns the count of number of bytes processed for a given DBGU read operation.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01436.html" target="topic">DBGU_SerialSetup</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Sets the DBGU serial communication settings dynamically.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01438.html" target="topic">DBGU_Write</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Submits a write buffer to the given DBGU peripheral to transfer.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01439.html" target="topic">DBGU_WriteByte</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Submits a byte of data to the given DBGU peripheral to transfer.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01441.html" target="topic">DBGU_WriteCountGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Returns the count of number of bytes processed for a given DBGU write operation.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="6429205374617475732046756E6374696F6E73"></a><div class="Element14">
+d) Status Functions</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01431.html" target="topic">DBGU_ReadIsBusy</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Returns the read request status associated with the given DBGU peripheral instance.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01432.html" target="topic">DBGU_ReceiverIsReady</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Returns the hardware status of the DBGU Receiver.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01437.html" target="topic">DBGU_TransmitterIsReady</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Returns the hardware status of the DBGU Transmitter.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01442.html" target="topic">DBGU_WriteIsBusy</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Returns the write request status associated with the given DBGU peripheral instance.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01419.html" target="topic">DBGU_ErrorGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Gets the error of the given DBGU peripheral instance.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="6529204461746120547970657320616E6420436F6E7374616E7473"></a><div class="Element14">
+e) Data Types and Constants</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01413.html" target="topic">DBGU_CALLBACK</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Defines the data type and function signature for the DBGU peripheral callback function.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01414.html" target="topic">DBGU_ERROR</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Defines the data type for the DBGU peripheral errors.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01421.html" target="topic">DBGU_PARITY</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Defines the type of parity for DBGU peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01433.html" target="topic">DBGU_SERIAL_SETUP</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Defines the data type for the DBGU serial setup.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -87,7 +269,7 @@ RGB_LED(Green)&nbsp;</div></td></tr></table></div></div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="01389.html" target="topic">DBGU Applications</a> &gt; <a href="01388.html" target="topic">dbgu_echo_interrupt</a> &gt; <a href="01397.html" target="topic">Running The Application</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="01396.html" target="topic">DBGU Peripheral Library Help</a> &gt; <a href="01397.html" target="topic">Library Interface</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -95,13 +277,13 @@ RGB_LED(Green)&nbsp;</div></td></tr></table></div></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01395.html" target="topic">Previous</a> | <a href="01388.html" target="topic">Up</a> | <a href="01445.html" target="topic">Next</a></div>
+<a href="01401.html" target="topic">Previous</a> | <a href="01396.html" target="topic">Up</a> | <a href="01420.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DBGU dbgu_echo_interrupt Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DBGU 6059 Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

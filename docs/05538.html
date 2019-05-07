@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>d) Status Functions</title>
+<title>SERCOMx_USART_Read Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="05552.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="05531.html" target="topic">Capture</a> &gt; <a href="05534.html" target="topic">Library Interface</a> &gt; <a href="05538.html" target="topic">d) Status Functions</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="05462.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="05473.html" target="topic">USART</a> &gt; <a href="05477.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="05538.html" target="topic">SERCOMx_USART_Read Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05713.html" target="topic">Previous</a> | <a href="05534.html" target="topic">Up</a> | <a href="05712.html" target="topic">Next</a></div>
+<a href="05540.html" target="topic">Previous</a> | <a href="05477.html" target="topic">Up</a> | <a href="05546.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC 44162 Capture mode Status Functions Topic Title: d) Status Functions)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_usart::SERCOMx_USART_Read@void *@size_t Topic Title: SERCOMx_USART_Read Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-d) Status Functions</div>
+SERCOMx_USART_Read Function</div>
 </div>
 </div>
 
@@ -48,30 +48,78 @@ d) Status Functions</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
+<p class="Element10">
+This function submits a read buffer to the USART peripheral to process. The behavior of this function will vary based on the mode selected within MHC.&nbsp;</p>
+<p class="Element10">
+If the peripheral is configured for interrupt mode operation, this function call is always non-blocking. A call to this function submits the buffer and the size to the peripheral library and returns immediately. The transfer completion status can either be checked through the callback mechanism or by calling the <a href="05542.html" target="topic">SERCOMx_USART_ReadIsBusy</a>() function. The success of the operation can be obtained by calling the <a href="05535.html" target="topic">SERCOMx_USART_ErrorGet</a>() function.&nbsp;</p>
+<p class="Element10">
+If the <a href="05535.html" target="topic">SERCOMx_USART_ErrorGet</a>() function returns no error, then this means that the requested number of bytes have been processed. If the function returns some error, the <a href="05541.html" target="topic">SERCOMx_USART_ReadCountGet</a>() function can be called to know the number of bytes that were received till the error occurred.&nbsp;</p>
+<p class="Element10">
+If the peripheral is configured for the non-interrupt mode, this function call returns only after the requested size of bytes are received.</p></div>
 </div>
-</div>
-<a name="46756E6374696F6E73"></a><div class="Element14">
-Functions</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">SERCOMx_USART_Read</span></strong>(
+    <strong><span style="color: #000080">void</span></strong> * <strong><span style="color: #000000">buffer</span></strong>, 
+    <strong><span style="color: #000080">const</span></strong> size_t <strong><span style="color: #000000">size</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
+<p class="Element10">
+<a href="05537.html" target="topic">SERCOMx_USART_Initialize</a> must have been called for the associated USART instance.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
 <div class="TableDiv">
-<table cellspacing="0" class="Table0">
+<table cellspacing="0" class="Table2">
 <tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="05712.html" target="topic">TCx_CHy_CaptureStatusGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Identifies status of the capture events&nbsp;</div></td></tr></table></div></div>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+buffer&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Pointer to the user buffer where received data will be placed.<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+size&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Number of bytes to be received.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+
+<ul class="Element630">
+<li class="Element600">true - if the Read transaction is successful or if the requested size is 0.</li>
+<li class="Element600">false - if the arguments are not valid or if the device is busy or if an error occurred while receiving data.</li>
+</ul></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Configuring the library for non-interrupt mode and calling a blocking function can affect the operation of other polled components in the application.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">
+<strong><span style="color: #000080">char</span></strong> myData[] = {&quot;hello&quot;};
+SERCOM0_USART_Write(&amp;myData, <strong><span style="color: #000080">sizeof</span></strong>(myData));
+</pre></div></div>
 </div>
 </div>
 </div>
@@ -79,7 +127,7 @@ Identifies status of the capture events&nbsp;</div></td></tr></table></div></div
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="05552.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="05531.html" target="topic">Capture</a> &gt; <a href="05534.html" target="topic">Library Interface</a> &gt; <a href="05538.html" target="topic">d) Status Functions</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="05462.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="05473.html" target="topic">USART</a> &gt; <a href="05477.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="05538.html" target="topic">SERCOMx_USART_Read Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -87,13 +135,13 @@ Identifies status of the capture events&nbsp;</div></td></tr></table></div></div
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05713.html" target="topic">Previous</a> | <a href="05534.html" target="topic">Up</a> | <a href="05712.html" target="topic">Next</a></div>
+<a href="05540.html" target="topic">Previous</a> | <a href="05477.html" target="topic">Up</a> | <a href="05546.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC 44162 Capture mode Status Functions Topic Title: d) Status Functions)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_usart::SERCOMx_USART_Read@void *@size_t Topic Title: SERCOMx_USART_Read Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

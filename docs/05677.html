@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>e) Data Types and Constants</title>
+<title>SPIx_TRANSFER_SETUP Structure</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="05684.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="05673.html" target="topic">Compare</a> &gt; <a href="05676.html" target="topic">Library Interface</a> &gt; <a href="05677.html" target="topic">e) Data Types and Constants</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="05624.html" target="topic">SPI Peripheral Library Help</a> &gt; <a href="05625.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="05677.html" target="topic">SPIx_TRANSFER_SETUP Structure</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05982.html" target="topic">Previous</a> | <a href="05676.html" target="topic">Up</a> | <a href="05956.html" target="topic">Next</a></div>
+<a href="05670.html" target="topic">Previous</a> | <a href="05625.html" target="topic">Up</a> | <a href="05634.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC U2249 Compare mode Data Types and Constants Topic Title: e) Data Types and Constants)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: spi_01329::SPIx_TRANSFER_SETUP Topic Title: SPIx_TRANSFER_SETUP Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-e) Data Types and Constants</div>
+SPIx_TRANSFER_SETUP Structure</div>
 </div>
 </div>
 
@@ -48,62 +48,67 @@ e) Data Types and Constants</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
+<p class="Element10">
+SPI Setup Parameters&nbsp;</p>
+<p class="Element10">
+This structure identifies the possible setup parameters for SPI which can be changed dynamically if needed.</p></div>
 </div>
-</div>
-<a name="456E756D65726174696F6E73"></a><div class="Element14">
-Enumerations</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
+  uint32_t <strong><span style="color: #000000">clockFrequency</span></strong>;
+  <a href="05664.html" target="topic">SPIx_CLOCK_PHASE</a> <strong><span style="color: #000000">clockPhase</span></strong>;
+  <a href="05667.html" target="topic">SPIx_CLOCK_POLARITY</a> <strong><span style="color: #000000">clockPolarity</span></strong>;
+  <a href="05670.html" target="topic">SPIx_DATA_BITS</a> <strong><span style="color: #000000">dataBits</span></strong>;
+} SPIx_TRANSFER_SETUP;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
+<div class="Element272">
 <div class="TableDiv">
-<table cellspacing="0" class="Table0">
+<table cellspacing="0" class="Table3">
 <tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="05957.html" target="topic">TCx_COMPARE_STATUS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Identifies channel interrupt source mask.&nbsp;</div></td></tr></table></div></div>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint32_t clockFrequency;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Baud Rate or clock frequency&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SPIx_CLOCK_PHASE clockPhase;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Clock Phase&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SPIx_CLOCK_POLARITY clockPolarity;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Clock Polarity&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SPIx_DATA_BITS dataBits;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Number of bits per transfer&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
-<a name="5479706573"></a><div class="Element14">
-Types</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="05956.html" target="topic">TCx_COMPARE_CALLBACK</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Defines the function pointer data type and function signature for the tc channel callback function.&nbsp;</div></td></tr></table></div></div>
-</div>
+<p class="Element10">
+None.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="05684.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="05673.html" target="topic">Compare</a> &gt; <a href="05676.html" target="topic">Library Interface</a> &gt; <a href="05677.html" target="topic">e) Data Types and Constants</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="05624.html" target="topic">SPI Peripheral Library Help</a> &gt; <a href="05625.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="05677.html" target="topic">SPIx_TRANSFER_SETUP Structure</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -111,13 +116,13 @@ Defines the function pointer data type and function signature for the tc channel
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05982.html" target="topic">Previous</a> | <a href="05676.html" target="topic">Up</a> | <a href="05956.html" target="topic">Next</a></div>
+<a href="05670.html" target="topic">Previous</a> | <a href="05625.html" target="topic">Up</a> | <a href="05634.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC U2249 Compare mode Data Types and Constants Topic Title: e) Data Types and Constants)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: spi_01329::SPIx_TRANSFER_SETUP Topic Title: SPIx_TRANSFER_SETUP Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

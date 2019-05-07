@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Introduction</title>
+<title>QSPI_ADDRESS_LENGTH Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="04439.html" target="topic">RSWDT Peripheral Library Help</a> &gt; <a href="04438.html" target="topic">Introduction</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="04415.html" target="topic">QSPI Peripheral Library Help</a> &gt; <a href="04416.html" target="topic">Library Interface</a> &gt; c) Data Types and Constants &gt; <a href="04438.html" target="topic">QSPI_ADDRESS_LENGTH Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04439.html" target="topic">Previous</a> | <a href="04439.html" target="topic">Up</a> | <a href="04435.html" target="topic">Next</a></div>
+<a href="04477.html" target="topic">Previous</a> | <a href="04416.html" target="topic">Up</a> | <a href="04448.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RSWDT 11110 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: QSPI_ADDRESS_LENGTH Topic Title: QSPI_ADDRESS_LENGTH Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Introduction</div>
+QSPI_ADDRESS_LENGTH Enumeration</div>
 </div>
 </div>
 
@@ -49,20 +49,29 @@ Introduction</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The RSWDT works in parallel with the Watchdog Timer (WDT) to reinforce safe watchdog operations.&nbsp;</p>
+QSPI Address Length&nbsp;</p>
 <p class="Element10">
-The RSWDT is a 12-bit down counter that allows a watchdog period of up to 16 seconds with a 32kHz slow clock. It should be fed periodically before it counts down to zero. If the timer counts down to zero, it will reset the device.&nbsp;</p>
+This data type can be used to specify the address length for QSPI transaction</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">ADDRL_24_BIT</span></strong> = QSPI_IFR_ADDRL_24_BIT,
+  <strong><span style="color: #000000">ADDRL_32_BIT</span></strong> = QSPI_IFR_ADDRL_32_BIT
+} QSPI_ADDRESS_LENGTH;</pre></div></div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-The RSWDT uses the Main RC oscillator divided clock (frequency is equivalent to Slow RC) if the Main RC oscillator is enabled by the application, or if the WDT is driven by the 32kHz Slow clock.&nbsp;</p>
-<p class="Element10">
-If the WDT clock source (for example, the 32 kHz crystal oscillator) fails, the system lock-up is no longer monitored by the WDT and the RSWDT performs the monitoring with the Main RC oscillator and resets the device.</p></div>
+None.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="04439.html" target="topic">RSWDT Peripheral Library Help</a> &gt; <a href="04438.html" target="topic">Introduction</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="04415.html" target="topic">QSPI Peripheral Library Help</a> &gt; <a href="04416.html" target="topic">Library Interface</a> &gt; c) Data Types and Constants &gt; <a href="04438.html" target="topic">QSPI_ADDRESS_LENGTH Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -70,13 +79,13 @@ If the WDT clock source (for example, the 32 kHz crystal oscillator) fails, the 
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04439.html" target="topic">Previous</a> | <a href="04439.html" target="topic">Up</a> | <a href="04435.html" target="topic">Next</a></div>
+<a href="04477.html" target="topic">Previous</a> | <a href="04416.html" target="topic">Up</a> | <a href="04448.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RSWDT 11110 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: QSPI_ADDRESS_LENGTH Topic Title: QSPI_ADDRESS_LENGTH Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

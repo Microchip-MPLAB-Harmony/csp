@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TMR1_PeriodSet Function</title>
+<title>TCx_CHy_CompareStart Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="06124.html" target="topic">Timer1 Peripheral Library Help</a> &gt; <a href="06125.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="06157.html" target="topic">TMR1_PeriodSet Function</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="05954.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="05943.html" target="topic">Compare</a> &gt; <a href="05946.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="06157.html" target="topic">TCx_CHy_CompareStart Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06155.html" target="topic">Previous</a> | <a href="06125.html" target="topic">Up</a> | <a href="06158.html" target="topic">Next</a></div>
+<a href="06152.html" target="topic">Previous</a> | <a href="05946.html" target="topic">Up</a> | <a href="06159.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tmr1_02141::TMR1_PeriodSet@uint16_t Topic Title: TMR1_PeriodSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tc_6082::TCx_CHy_CompareStart Topic Title: TCx_CHy_CompareStart Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TMR1_PeriodSet Function</div>
+TCx_CHy_CompareStart Function</div>
 </div>
 </div>
 
@@ -49,39 +49,17 @@ TMR1_PeriodSet Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function writes the period value. When timer counter matches period value counter is reset and interrupt can be generated.</p></div>
+This function enables the clock and starts the counter of associated channel in compare mode so that the TC module may start generating the selected waveform.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">TMR1_PeriodSet</span></strong>(
-    uint16_t <strong><span style="color: #000000">period</span></strong>
-);</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">TCx_CHy_CompareStart</span></strong>();</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="06153.html" target="topic">TMR1_Initialize</a>() function must have been called first for the given timer.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
-<div class="TableDiv">
-<table cellspacing="0" class="Table2">
-<tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-period&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-new period value to set for timer.&nbsp;</div></td></tr></table></div></div>
-</div>
+<a href="06154.html" target="topic">TCx_CHy_CompareInitialize</a>() function must have been called first for the given channel.</p></div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
@@ -95,15 +73,14 @@ Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+None</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">uint16_t period = 0x100;
-<a href="06153.html" target="topic">TMR1_Initialize</a>();
-TMR1_PeriodSet(period);</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">TC0_CH1_CompareInitialize();
+TC0_CH1_CompareStart();</pre></div></div>
 </div>
 </div>
 </div>
@@ -111,7 +88,7 @@ TMR1_PeriodSet(period);</pre></div></div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="06124.html" target="topic">Timer1 Peripheral Library Help</a> &gt; <a href="06125.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="06157.html" target="topic">TMR1_PeriodSet Function</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="05954.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="05943.html" target="topic">Compare</a> &gt; <a href="05946.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="06157.html" target="topic">TCx_CHy_CompareStart Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -119,13 +96,13 @@ TMR1_PeriodSet(period);</pre></div></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06155.html" target="topic">Previous</a> | <a href="06125.html" target="topic">Up</a> | <a href="06158.html" target="topic">Next</a></div>
+<a href="06152.html" target="topic">Previous</a> | <a href="05946.html" target="topic">Up</a> | <a href="06159.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tmr1_02141::TMR1_PeriodSet@uint16_t Topic Title: TMR1_PeriodSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tc_6082::TCx_CHy_CompareStart Topic Title: TCx_CHy_CompareStart Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

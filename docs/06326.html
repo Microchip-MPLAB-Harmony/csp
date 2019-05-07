@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>UARTx_SerialSetup Function</title>
+<title>TCx_Compare16bitPeriodSet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="06232.html" target="topic">UART Peripheral Library Help</a> &gt; <a href="06233.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="06326.html" target="topic">UARTx_SerialSetup Function</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="06044.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="06033.html" target="topic">Compare</a> &gt; <a href="06036.html" target="topic">Library Interface</a> &gt; <a href="06041.html" target="topic">c) Transaction Functions</a> &gt; <a href="06326.html" target="topic">TCx_Compare16bitPeriodSet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06319.html" target="topic">Previous</a> | <a href="06233.html" target="topic">Up</a> | <a href="06322.html" target="topic">Next</a></div>
+<a href="06323.html" target="topic">Previous</a> | <a href="06041.html" target="topic">Up</a> | <a href="06325.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: uart_02478::UARTx_SerialSetup@UART_SERIAL_SETUP *@uint32_t Topic Title: UARTx_SerialSetup Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tc_u2249::TCx_Compare16bitPeriodSet@uint16_t Topic Title: TCx_Compare16bitPeriodSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-UARTx_SerialSetup Function</div>
+TCx_Compare16bitPeriodSet Function</div>
 </div>
 </div>
 
@@ -49,22 +49,19 @@ UARTx_SerialSetup Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function sets the UART serial communication settings dynamically.</p></div>
+This function writes the period value. When timer counter matches period value,counter is reset and interrupt can be generated.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">UARTx_SerialSetup</span></strong>(
-    <a href="06310.html" target="topic">UART_SERIAL_SETUP</a> * <strong><span style="color: #000000">setup</span></strong>, 
-    uint32_t <strong><span style="color: #000000">srcClkFreq</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">TCx_Compare16bitPeriodSet</span></strong>(
+    uint16_t <strong><span style="color: #000000">period</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="06319.html" target="topic">UARTx_Initialize</a> must have been called for the associated UART instance.&nbsp;</p>
-<p class="Element10">
-The UART transmit or receive transfer status should not be busy.</p></div>
+<a href="06340.html" target="topic">TCx_CompareInitialize</a>() function must have been called first.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -81,43 +78,32 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-setup&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+period&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Pointer to the structure containing the serial setup.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-srcClkFreq&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-UART Peripheral Clock Source Frequency.&nbsp;</div></td></tr></table></div></div>
+new period value to set for timer.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
 <div class="Element11">
 <div class="Element10">
-
-<ul class="Element630">
-<li class="Element600">true - Serial setup was updated Successfully.</li>
-<li class="Element600">false - Failure while updating serial setup.</li>
-</ul></div>
+<p class="Element10">
+None.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-srcClkFreq overrides any change in the peripheral clock frequency. If configured to zero, PLIB takes the peripheral clock frequency from MHC.</p></div>
+The caller must know the number of significant bytes of timer. Period value is right-aligned.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12"><a href="06310.html" target="topic">UART_SERIAL_SETUP</a> setup = {
-        115200,
-        UART_PARITY_ODD
-    };
-
-UART1_SerialSetup(&amp;setup, 0);</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">  uint16_t period = 0x500;
+  <a href="06340.html" target="topic">TCx_CompareInitialize</a>();
+  TCx_Compare16bitPeriodSet(period);</pre></div></div>
 </div>
 </div>
 </div>
@@ -125,7 +111,7 @@ UART1_SerialSetup(&amp;setup, 0);</pre></div></div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="06232.html" target="topic">UART Peripheral Library Help</a> &gt; <a href="06233.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="06326.html" target="topic">UARTx_SerialSetup Function</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="06044.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="06033.html" target="topic">Compare</a> &gt; <a href="06036.html" target="topic">Library Interface</a> &gt; <a href="06041.html" target="topic">c) Transaction Functions</a> &gt; <a href="06326.html" target="topic">TCx_Compare16bitPeriodSet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -133,13 +119,13 @@ UART1_SerialSetup(&amp;setup, 0);</pre></div></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06319.html" target="topic">Previous</a> | <a href="06233.html" target="topic">Up</a> | <a href="06322.html" target="topic">Next</a></div>
+<a href="06323.html" target="topic">Previous</a> | <a href="06041.html" target="topic">Up</a> | <a href="06325.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: uart_02478::UARTx_SerialSetup@UART_SERIAL_SETUP *@uint32_t Topic Title: UARTx_SerialSetup Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tc_u2249::TCx_Compare16bitPeriodSet@uint16_t Topic Title: TCx_Compare16bitPeriodSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

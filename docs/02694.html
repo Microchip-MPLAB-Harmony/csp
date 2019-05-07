@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>L2CC Peripheral Library Help</title>
+<title>GPIO_PortLatchRead Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="02694.html" target="topic">L2CC Peripheral Library Help</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="02371.html" target="topic">GPIO Peripheral Library Help</a> &gt;  &gt; <a href="02694.html" target="topic">GPIO_PortLatchRead Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02680.html" target="topic">Previous</a> | <a href="03830.html" target="topic">Up</a> | <a href="02693.html" target="topic">Next</a></div>
+</div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: L2CC 11160 Library Topic Title: L2CC Peripheral Library Help)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: gpio_02467::GPIO_PortLatchRead@GPIO_PORT Topic Title: GPIO_PortLatchRead Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-L2CC Peripheral Library Help</div>
+GPIO_PortLatchRead Function</div>
 </div>
 </div>
 
@@ -49,41 +49,66 @@ L2CC Peripheral Library Help</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This section provides an interface to use the L2 Cache Controller (L2CC) peripheral.</p></div>
+This function reads the latched data values on all the I/O lines of the selected port. Bit values returned in each position indicate corresponding pin levels.</p>
+<ul class="Element630">
+<li class="Element600">1 - Pin is high.</li>
+<li class="Element600">0 - Pin is low.</li>
+</ul></div>
 </div>
-<a name="546F70696373"></a><div class="Element14">
-Topics</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100">uint32_t <strong><span style="color: #000000">GPIO_PortLatchRead</span></strong>(
+    <a href="02679.html" target="topic">GPIO_PORT</a> <strong><span style="color: #000000">port</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
 <div class="TableDiv">
-<table cellspacing="0" class="Table0">
+<table cellspacing="0" class="Table2">
 <tr>
-<td class="Element200" valign="top" width="35%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="02693.html" target="topic">Introduction</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This section provides a brief overview of the L2 Cache Controller (L2CC) peripheral.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="02691.html" target="topic">Configuring the Library</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This section explains how to configure the peripheral library using the MHC.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="02697.html" target="topic">Using the Library</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This section explains how to use the L2CC peripheral library.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="02695.html" target="topic">Library Interface</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This section describes the Application Programming Interface (API) functions of the Peripheral Library<span style="color: #0000FF">.</span><br>Refer to each section for a detailed description.&nbsp;</div></td></tr></table></div></div>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+port&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+One of the IO ports from the enum <a href="02679.html" target="topic">GPIO_PORT</a>&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Returns the data driven on all the I/O lines of the selected port.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+If the port has less than 32-bits, unimplemented pins will read as low (0).&nbsp;</p>
+<p class="Element10">
+Implemented pins are Right aligned in the 32-bit return value.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">    uint32_t value;
+    value = GPIO_PortLatchRead(GPIO_PORT_C);</pre></div></div>
 </div>
 </div>
 </div>
@@ -91,7 +116,7 @@ This section describes the Application Programming Interface (API) functions of 
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="02694.html" target="topic">L2CC Peripheral Library Help</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="02371.html" target="topic">GPIO Peripheral Library Help</a> &gt;  &gt; <a href="02694.html" target="topic">GPIO_PortLatchRead Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -99,13 +124,13 @@ This section describes the Application Programming Interface (API) functions of 
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02680.html" target="topic">Previous</a> | <a href="03830.html" target="topic">Up</a> | <a href="02693.html" target="topic">Next</a></div>
+</div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: L2CC 11160 Library Topic Title: L2CC Peripheral Library Help)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: gpio_02467::GPIO_PortLatchRead@GPIO_PORT Topic Title: GPIO_PortLatchRead Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

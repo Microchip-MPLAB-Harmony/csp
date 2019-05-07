@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>SDMMC_DataTransferFlags Structure</title>
+<title>RTC_Timer16Compare3Set Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="04966.html" target="topic">SDMMC Peripheral Library Help</a> &gt; <a href="04967.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="05001.html" target="topic">SDMMC_DataTransferFlags Structure</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="04795.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="04806.html" target="topic">16-bit Timer (Mode 1)</a> &gt; <a href="04812.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="05001.html" target="topic">RTC_Timer16Compare3Set Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04998.html" target="topic">Previous</a> | <a href="04967.html" target="topic">Up</a> | <a href="05005.html" target="topic">Next</a></div>
+<a href="04999.html" target="topic">Previous</a> | <a href="04812.html" target="topic">Up</a> | <a href="05012.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sdmmc_44002::SDMMC_DataTransferFlags Topic Title: SDMMC_DataTransferFlags Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::RTC_Timer16Compare3Set@uint16_t Topic Title: RTC_Timer16Compare3Set Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-SDMMC_DataTransferFlags Structure</div>
+RTC_Timer16Compare3Set Function</div>
 </div>
 </div>
 
@@ -49,46 +49,26 @@ SDMMC_DataTransferFlags Structure</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-SDMMC data transfer flags&nbsp;</p>
-<p class="Element10">
-The client indicates whether the transfer contains data stage and if yes, it further specifies the data transfer direction and data transfer type. The object of this data type is passed as an argument to the <a href="05032.html" target="topic">SDMMCx_CommandSend</a> function.</p></div>
+This function will set the Counter Compare 3 Value. The module will compare the counter against this value and will signal a match when the counter equals the compare value. If the library was configured for interrupt mode, the Compare 3 event is enabled and if a valid callback is registered, the library will call the registered callback function with the RTC_TIMER16_INT_MASK_COMP3 event. The <a href="05000.html" target="topic">RTC_Timer16Compare3HasMatched</a>() function will return true when the match occurs.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
-  <strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">isDataPresent</span></strong>;
-  <a href="04995.html" target="topic">SDMMC_DATA_TRANSFER_DIR</a> <strong><span style="color: #000000">transferDir</span></strong>;
-  <a href="04998.html" target="topic">SDMMC_DATA_TRANSFER_TYPE</a> <strong><span style="color: #000000">transferType</span></strong>;
-} SDMMC_DataTransferFlags;</pre></div></div>
-<a name="4D656D62657273"></a><div class="Element14">
-Members</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">RTC_Timer16Compare3Set</span></strong>(
+    uint16_t <strong><span style="color: #000000">comparisionValue</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element272">
-<div class="TableDiv">
-<table cellspacing="0" class="Table3">
-<tr>
-<td class="Element260" valign="top" width="35%">
-<div class="Element261">
-Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
-<div class="Element265">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-bool isDataPresent;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Indicates if SDMMC transfer has a data stage or not&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-SDMMC_DATA_TRANSFER_DIR transferDir;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Direction of the data transfer&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-SDMMC_DATA_TRANSFER_TYPE transferType;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Type of the data transfer - read/write&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+<a href="04960.html" target="topic">RTC_Initialize</a>, <a href="05010.html" target="topic">RTC_Timer16Start</a> must have been called for the associated RTC instance. The module should have configured for 16-bit Timer Counter operation.</p></div>
 </div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+comparisionValue - 16-bit compare value compares with the current counter value.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
@@ -97,12 +77,21 @@ Remarks</div>
 <p class="Element10">
 None.</p></div>
 </div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">    <i><span style="color: #008000">// Refer to the description of the RTC_Timer16Compare3HasMatched()</span></i>
+    <i><span style="color: #008000">// function for example usage of the RTC_Timer16Compare3Set() function.</span></i>
+</pre></div></div>
+</div>
+</div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="04966.html" target="topic">SDMMC Peripheral Library Help</a> &gt; <a href="04967.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="05001.html" target="topic">SDMMC_DataTransferFlags Structure</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="04795.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="04806.html" target="topic">16-bit Timer (Mode 1)</a> &gt; <a href="04812.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="05001.html" target="topic">RTC_Timer16Compare3Set Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -110,13 +99,13 @@ None.</p></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04998.html" target="topic">Previous</a> | <a href="04967.html" target="topic">Up</a> | <a href="05005.html" target="topic">Next</a></div>
+<a href="04999.html" target="topic">Previous</a> | <a href="04812.html" target="topic">Up</a> | <a href="05012.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sdmmc_44002::SDMMC_DataTransferFlags Topic Title: SDMMC_DataTransferFlags Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::RTC_Timer16Compare3Set@uint16_t Topic Title: RTC_Timer16Compare3Set Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->
