@@ -21,13 +21,13 @@
             <logicalFolder name="f6" displayName="nvic" projectFiles="true">
               <itemPath ex="false">../src/config/sam_e54_xpro/peripheral/nvic/plib_nvic.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f2" displayName="nvmctrl" projectFiles="true">
+            <logicalFolder name="f1" displayName="nvmctrl" projectFiles="true">
               <itemPath ex="false">../src/config/sam_e54_xpro/peripheral/nvmctrl/plib_nvmctrl.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f4" displayName="port" projectFiles="true">
               <itemPath ex="false">../src/config/sam_e54_xpro/peripheral/port/plib_port.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f1" displayName="qspi" projectFiles="true">
+            <logicalFolder name="f2" displayName="qspi" projectFiles="true">
               <itemPath ex="false">../src/config/sam_e54_xpro/peripheral/qspi/plib_qspi_common.h</itemPath>
               <itemPath ex="false">../src/config/sam_e54_xpro/peripheral/qspi/plib_qspi.h</itemPath>
             </logicalFolder>
@@ -35,8 +35,6 @@
               <itemPath ex="false">../src/config/sam_e54_xpro/peripheral/systick/plib_systick.h</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <itemPath ex="false">../src/config/sam_e54_xpro/device_cache.h</itemPath>
-          <itemPath ex="false">../src/config/sam_e54_xpro/toolchain_specifics.h</itemPath>
           <itemPath ex="false">../src/config/sam_e54_xpro/device_cache.h</itemPath>
           <itemPath ex="false">../src/config/sam_e54_xpro/toolchain_specifics.h</itemPath>
           <itemPath ex="false">../src/config/sam_e54_xpro/definitions.h</itemPath>
@@ -140,13 +138,13 @@
             <logicalFolder name="f6" displayName="nvic" projectFiles="true">
               <itemPath ex="false">../src/config/sam_e54_xpro/peripheral/nvic/plib_nvic.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f2" displayName="nvmctrl" projectFiles="true">
+            <logicalFolder name="f1" displayName="nvmctrl" projectFiles="true">
               <itemPath ex="false">../src/config/sam_e54_xpro/peripheral/nvmctrl/plib_nvmctrl.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f4" displayName="port" projectFiles="true">
               <itemPath ex="false">../src/config/sam_e54_xpro/peripheral/port/plib_port.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f1" displayName="qspi" projectFiles="true">
+            <logicalFolder name="f2" displayName="qspi" projectFiles="true">
               <itemPath ex="false">../src/config/sam_e54_xpro/peripheral/qspi/plib_qspi.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f8" displayName="systick" projectFiles="true">

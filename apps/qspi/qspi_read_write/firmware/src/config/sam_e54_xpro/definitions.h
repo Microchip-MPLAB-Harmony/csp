@@ -48,8 +48,8 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
-#include "peripheral/qspi/plib_qspi.h"
 #include "peripheral/nvmctrl/plib_nvmctrl.h"
+#include "peripheral/qspi/plib_qspi.h"
 #include "peripheral/evsys/plib_evsys.h"
 #include "peripheral/port/plib_port.h"
 #include "peripheral/clock/plib_clock.h"
