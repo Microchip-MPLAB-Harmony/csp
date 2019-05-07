@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>SERCOM I2C Applications</title>
+<title>RTCC_AlarmSet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="05063.html" target="topic">SERCOM Applications</a> &gt; <a href="05064.html" target="topic">SERCOM I2C Applications</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="05053.html" target="topic">RTCC Peripheral Library Help</a> &gt; <a href="05054.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="05064.html" target="topic">RTCC_AlarmSet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05063.html" target="topic">Previous</a> | <a href="05063.html" target="topic">Up</a> | <a href="05065.html" target="topic">Next</a></div>
+<a href="05068.html" target="topic">Previous</a> | <a href="05054.html" target="topic">Up</a> | <a href="05070.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SERCOM I2C Applications Help Topic Title: SERCOM I2C Applications)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RTCC_AlarmSet@struct tm *@RTC_ALARM_MASK Topic Title: RTCC_AlarmSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-SERCOM I2C Applications</div>
+RTCC_AlarmSet Function</div>
 </div>
 </div>
 
@@ -49,26 +49,76 @@ SERCOM I2C Applications</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This Section provides help for the SERCOM I2C PLIB Applications.</p></div>
+This functions sets the alarm time and date in the RTCC peripheral.</p></div>
 </div>
-<a name="546F70696373"></a><div class="Element14">
-Topics</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">RTCC_AlarmSet</span></strong>(
+    <strong><span style="color: #000080">struct</span></strong> tm * <strong><span style="color: #000000">alarmTime</span></strong>, 
+    <a href="04853.html" target="topic">RTC_ALARM_MASK</a> <strong><span style="color: #000000">alarmFreq</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
+<p class="Element10">
+The <a href="05066.html" target="topic">RTCC_Initialize</a>() function should have been called to initialize the RTCC peripheral.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
 <div class="TableDiv">
-<table cellspacing="0" class="Table0">
+<table cellspacing="0" class="Table2">
 <tr>
-<td class="Element200" valign="top" width="35%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="05065.html" target="topic">i2c_eeprom</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-<span style="color: #000000">This example application demonstrates how to use the SERCOM peripheral to write and read from the I2C serial EEPROM memory.</span>&nbsp;</div></td></tr></table></div></div>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+alarmTime&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Structure which holds the alarm time and date information.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+alarmFreq&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+This parameter of type <a href="04853.html" target="topic">RTC_ALARM_MASK</a>. Used to specify the recurrence of alarm.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Always return true. Discard the return value at the application level. This return is to satisfy the function signature requirement of drivers which uses different RTC PLIBs.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+This function checks RTCSYNC before writing into RTCTIME and RTCDATE registers. Thus no separate check for the bit is needed.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">struct</span></strong> tm alarm_time;
+<i><span style="color: #008000">//15-01-2018 12:00:20 Monday</span></i>
+alarm_time.tm_hour = 23;
+alarm_time.tm_min = 59;
+alarm_time.tm_sec = 55;
+
+alarm_time.tm_year = 18;
+alarm_time.tm_mon = 12;
+alarm_time.tm_mday = 31;
+alarm_time.tm_wday = 1;
+
+RTCC_AlarmSet(&amp;alarm_time, RTC_ALARM_MASK_SECOND);</pre></div></div>
 </div>
 </div>
 </div>
@@ -76,7 +126,7 @@ Description&nbsp;</div></td></tr><tr>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="05063.html" target="topic">SERCOM Applications</a> &gt; <a href="05064.html" target="topic">SERCOM I2C Applications</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="05053.html" target="topic">RTCC Peripheral Library Help</a> &gt; <a href="05054.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="05064.html" target="topic">RTCC_AlarmSet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -84,13 +134,13 @@ Description&nbsp;</div></td></tr><tr>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05063.html" target="topic">Previous</a> | <a href="05063.html" target="topic">Up</a> | <a href="05065.html" target="topic">Next</a></div>
+<a href="05068.html" target="topic">Previous</a> | <a href="05054.html" target="topic">Up</a> | <a href="05070.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SERCOM I2C Applications Help Topic Title: SERCOM I2C Applications)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RTCC_AlarmSet@struct tm *@RTC_ALARM_MASK Topic Title: RTCC_AlarmSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

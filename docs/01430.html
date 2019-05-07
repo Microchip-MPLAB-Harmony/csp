@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>dcache_CleanInvalidateAll Function</title>
+<title>DBGU_ReadCountGet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="03016.html" target="topic">MMU Peripheral Library Help</a> &gt; <a href="03017.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="01430.html" target="topic">dcache_CleanInvalidateAll Function</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="01396.html" target="topic">DBGU Peripheral Library Help</a> &gt; <a href="01397.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="01430.html" target="topic">DBGU_ReadCountGet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01429.html" target="topic">Previous</a> | <a href="03017.html" target="topic">Up</a> | <a href="01431.html" target="topic">Next</a></div>
+<a href="01428.html" target="topic">Previous</a> | <a href="01397.html" target="topic">Up</a> | <a href="01436.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: dcache_CleanInvalidateAll Topic Title: dcache_CleanInvalidateAll Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DBGU_ReadCountGet Topic Title: DBGU_ReadCountGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-dcache_CleanInvalidateAll Function</div>
+DBGU_ReadCountGet Function</div>
 </div>
 </div>
 
@@ -49,31 +49,56 @@ dcache_CleanInvalidateAll Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Clean and Invalidate whole L1 Data Cache.</p></div>
+This function returns the count of number of bytes processed for the last DBGU read operation.&nbsp;</p>
+<p class="Element10">
+This function is available only in interrupt mode of operation.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">dcache_CleanInvalidateAll</span></strong>();</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100">size_t <strong><span style="color: #000000">DBGU_ReadCountGet</span></strong>();</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+<a href="01420.html" target="topic">DBGU_Initialize</a> must have been called for the associated DBGU instance.</p></div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+Count of bytes processed for the last read request.&nbsp;</p>
+<p class="Element10">
+In case of error, the API returns the count of successful read bytes.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+This function resets the read count every time a new transfer is submitted.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">size_t count; <i><span style="color: #008000">//COUNT_EXPECTED is the expected Receive count value</span></i>
+
+count = DBGU1_ReadCountGet();
+
+<strong><span style="color: #000080">if</span></strong>(COUNT_EXPECTED &gt; count)
+{
+    <i><span style="color: #008000">//More bytes are expected, wait</span></i>
+}</pre></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="03016.html" target="topic">MMU Peripheral Library Help</a> &gt; <a href="03017.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="01430.html" target="topic">dcache_CleanInvalidateAll Function</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="01396.html" target="topic">DBGU Peripheral Library Help</a> &gt; <a href="01397.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="01430.html" target="topic">DBGU_ReadCountGet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -81,13 +106,13 @@ None.</p></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01429.html" target="topic">Previous</a> | <a href="03017.html" target="topic">Up</a> | <a href="01431.html" target="topic">Next</a></div>
+<a href="01428.html" target="topic">Previous</a> | <a href="01397.html" target="topic">Up</a> | <a href="01436.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: dcache_CleanInvalidateAll Topic Title: dcache_CleanInvalidateAll Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DBGU_ReadCountGet Topic Title: DBGU_ReadCountGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

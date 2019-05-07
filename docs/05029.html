@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>SDMMCx_ClockEnable Function</title>
+<title>RTC_Timer32Compare0Set Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="04966.html" target="topic">SDMMC Peripheral Library Help</a> &gt; <a href="04967.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="05029.html" target="topic">SDMMCx_ClockEnable Function</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="04795.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="04796.html" target="topic">32-bit Timer (Mode 0)</a> &gt; <a href="04801.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="05029.html" target="topic">RTC_Timer32Compare0Set Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05028.html" target="topic">Previous</a> | <a href="04967.html" target="topic">Up</a> | <a href="05030.html" target="topic">Next</a></div>
+<a href="05038.html" target="topic">Previous</a> | <a href="04801.html" target="topic">Up</a> | <a href="05031.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sdmmc_44002::SDMMCx_ClockEnable Topic Title: SDMMCx_ClockEnable Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::RTC_Timer32Compare0Set@uint32_t Topic Title: RTC_Timer32Compare0Set Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-SDMMCx_ClockEnable Function</div>
+RTC_Timer32Compare0Set Function</div>
 </div>
 </div>
 
@@ -49,17 +49,39 @@ SDMMCx_ClockEnable Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Enables SDMMC clock.</p></div>
+This function sets the 32-bit timer compare value. The counter value will be compared against the compare value and a compare match event will occur when the counter matches the compare value. If the library is configured for interrupt mode and if a event handler function has been set through the <a href="05027.html" target="topic">RTC_Timer32CallbackRegister</a>() function, the event handling function will be called. When the match occurs, the counter can optionally be reset if clear on compare is enabled to generate periodic interrupt.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">SDMMCx_ClockEnable</span></strong>();</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">RTC_Timer32Compare0Set</span></strong>(
+    uint32_t <strong><span style="color: #000000">compare</span></strong>
+);</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="05037.html" target="topic">SDMMCx_Initialize</a>() must have been called first for the associated instance.</p></div>
+<a href="04960.html" target="topic">RTC_Initialize</a> must have been called for the associated RTC instance. The RTC peripheral should have been configured in 32-bit Timer Counter mode.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+compare&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Compare value&nbsp;</div></td></tr></table></div></div>
+</div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
@@ -73,13 +95,18 @@ Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+This API is available for devices that have more than one compare register in 32-bit mode.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">SDMMC1_ClockEnable();</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">    uint32_t period = 0x00000FFF;
+    <a href="04960.html" target="topic">RTC_Initialize</a>();
+    RTC_Timer32Compare0Set(period);
+    <a href="05036.html" target="topic">RTC_Timer32CounterSet</a>(0);
+    <a href="05041.html" target="topic">RTC_Timer32Start</a>();
+    <strong><span style="color: #000080">while</span></strong>(!<a href="05028.html" target="topic">RTC_Timer32Compare0HasMatched</a>());</pre></div></div>
 </div>
 </div>
 </div>
@@ -87,7 +114,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="04966.html" target="topic">SDMMC Peripheral Library Help</a> &gt; <a href="04967.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="05029.html" target="topic">SDMMCx_ClockEnable Function</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="04795.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="04796.html" target="topic">32-bit Timer (Mode 0)</a> &gt; <a href="04801.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="05029.html" target="topic">RTC_Timer32Compare0Set Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -95,13 +122,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05028.html" target="topic">Previous</a> | <a href="04967.html" target="topic">Up</a> | <a href="05030.html" target="topic">Next</a></div>
+<a href="05038.html" target="topic">Previous</a> | <a href="04801.html" target="topic">Up</a> | <a href="05031.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sdmmc_44002::SDMMCx_ClockEnable Topic Title: SDMMCx_ClockEnable Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::RTC_Timer32Compare0Set@uint32_t Topic Title: RTC_Timer32Compare0Set Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

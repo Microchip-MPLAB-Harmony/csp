@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>FLEXCOMx_USART_ReceiverIsReady Function</title>
+<title>FLEXCOMx_SPI_WriteRead Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="02183.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02194.html" target="topic">USART</a> &gt; <a href="02199.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="02314.html" target="topic">FLEXCOMx_USART_ReceiverIsReady Function</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="02198.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02199.html" target="topic">SPI</a> &gt; <a href="02204.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="02314.html" target="topic">FLEXCOMx_SPI_WriteRead Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02321.html" target="topic">Previous</a> | <a href="02199.html" target="topic">Up</a> | <a href="02316.html" target="topic">Next</a></div>
+<a href="02313.html" target="topic">Previous</a> | <a href="02204.html" target="topic">Up</a> | <a href="02240.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: FLEXCOMx_USART_ReceiverIsReady Topic Title: FLEXCOMx_USART_ReceiverIsReady Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: FLEXCOMx_SPI_WriteRead@void*@size_t@void*@size_t Topic Title: FLEXCOMx_SPI_WriteRead Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-FLEXCOMx_USART_ReceiverIsReady Function</div>
+FLEXCOMx_SPI_WriteRead Function</div>
 </div>
 </div>
 
@@ -49,48 +49,78 @@ FLEXCOMx_USART_ReceiverIsReady Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function returns the hardware status associated with the Receive hardware FIFO of the given FLEXCOM USART peripheral instance.&nbsp;</p>
+This function should be used to write &quot;txSize&quot; number of bytes and read &quot;rxSize&quot; number of bytes on FLEXCOMx SPI module. Data pointed by pTransmitData is transmitted and received data is saved in the location pointed by pReceiveData.&nbsp;</p>
 <p class="Element10">
-When Receiver is ready, user can read the available data.&nbsp;</p>
+The function will work differently as per the configuration done in MHC as described below:&nbsp;</p>
 <p class="Element10">
-This function is available only in non-interrupt mode of operation. And can be used to achieve non-blocking behavior of read request. User has to check the Receiver ready status by calling this function and can submit a read request for the buffer size of 1.</p></div>
+&nbsp;</p>
+<ol class="Element630">
+<li value="1" class="Element600">Blocking Configuration (Non-Interrupt mode): When &quot;Interrupt Mode&quot; option is unchecked in GUI, the generated code for that particular FLEXCOM SPI PLIB instance will be blocking. In this particular mode, the WriteRead API will not return until all the requested data is transferred.</li>
+</ol><p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+After transferring all the data, boolean status 'True' is returned indicating operation completion.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<ol class="Element630">
+<li value="2" class="Element600">Non-Blocking Configuration (Interrupt mode): When &quot;Interrupt Mode&quot; option is selected in GUI, the generated code for that particular FLEXCOM SPI PLIB instance will be Non-blocking in nature. In this particular mode, application will give the data transfer responsibility to the PLIB and come back and start doing other activities, FLEXCOM SPI Data transaction will happen in the corresponding ISR. in this mode, the transmit and receive data locations provided by user must remain valid until the data transfer is complete. Application can check the data transfer completion status via callback or polling mechanism. In case of callback, it needs to be registered prior to calling the WriteRead API. Data transfer status polling can be done using &quot;FLEXCOMx_SPI_IsBusy&quot; API.</li>
+</ol></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">FLEXCOMx_USART_ReceiverIsReady</span></strong>();</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">FLEXCOMx_SPI_WriteRead</span></strong>(
+    <strong><span style="color: #000080">void</span></strong>* <strong><span style="color: #000000">pTransmitData</span></strong>, 
+    size_t <strong><span style="color: #000000">txSize</span></strong>, 
+    <strong><span style="color: #000080">void</span></strong>* <strong><span style="color: #000000">pReceiveData</span></strong>, 
+    size_t <strong><span style="color: #000000">rxSize</span></strong>
+);</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="02308.html" target="topic">FLEXCOMx_USART_Initialize</a> must have been called for the associated FLEXCOM USART instance.</p></div>
+The <a href="02310.html" target="topic">FLEXCOMx_SPI_Initialize</a> function must have been called.&nbsp;</p>
+<p class="Element10">
+Callback has to be registered using <a href="02309.html" target="topic">FLEXCOMx_SPI_CallbackRegister</a> API if the peripheral instance has been configured in Interrupt mode and transfer completion status needs to be communicated back to application via callback.</p></div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-true - Receive hardware FIFO has at least one data available to read. false - Receive hardware FIFO is empty.</p></div>
+In Blocking mode, API returns True once the transfer is complete. It returns False if either of the size parameters are 0 and corresponding data pointer is NULL.&nbsp;</p>
+<p class="Element10">
+In interrupt mode, if previous buffer request is not completed and a new transfer request comes, then this API will reject the new request and will return &quot;False&quot;. Also, Same as blocking mode, It returns False if either of the size parameters are 0 and corresponding data pointer is NULL.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-If user submits read request for more than 1 byte after checking the ready status, then read API will block until the submitted length of data is processed. This is the native behavior of the read API in the non-interrupt or blocking mode of the library.</p></div>
+Non-blocking interrupt mode configuration implementation of this function will be used by Harmony driver implementation APIs.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">if</span></strong>(<strong><span style="color: #000080">true</span></strong> == FLEXCOMx_USART_ReceiverIsReady())
+<div class="Element13"><div class="Element12"><pre class="Element12">uint8_t     txBuffer[4];
+uint8_t     rxBuffer[10];
+size_t      txSize = 4; 
+size_t      rxSize = 10;
+<strong><span style="color: #000080">bool</span></strong>        reqAccepted;
+
+<a href="02310.html" target="topic">FLEXCOMx_SPI_Initialize</a>();
+
+<a href="02309.html" target="topic">FLEXCOMx_SPI_CallbackRegister</a>(&amp;APP_SPITransferHandler, NULL);
+
+reqAccepted = FLEXCOMx_SPI_WriteRead(&amp;txBuffer, txSize, &amp;rxBuffer, rxSize);
+
+<strong><span style="color: #000080">void</span></strong> APP_SPITransferHandler(uintptr_t context)
 {
-    <i><span style="color: #008000">// At least one data is available in Receive FIFO, hence can read a byte</span></i>
-    <a href="02309.html" target="topic">FLEXCOMx_USART_Read</a>(&amp;rxData, 1);
-}
-<strong><span style="color: #000080">else</span></strong>
-{
-    <i><span style="color: #008000">//Receiver is empty</span></i>
+    <strong><span style="color: #000080">if</span></strong>(FLEXCOMx_SPI_ErrorGet() == FLEXCOM_SPI_ERROR_NONE)
+    {
+        Transfer was completed without error, <strong><span style="color: #000080">do</span></strong> something <strong><span style="color: #000080">else</span></strong> now.
+    }
 }</pre></div></div>
 </div>
 </div>
@@ -99,7 +129,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="02183.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02194.html" target="topic">USART</a> &gt; <a href="02199.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="02314.html" target="topic">FLEXCOMx_USART_ReceiverIsReady Function</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="02198.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02199.html" target="topic">SPI</a> &gt; <a href="02204.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="02314.html" target="topic">FLEXCOMx_SPI_WriteRead Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -107,13 +137,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02321.html" target="topic">Previous</a> | <a href="02199.html" target="topic">Up</a> | <a href="02316.html" target="topic">Next</a></div>
+<a href="02313.html" target="topic">Previous</a> | <a href="02204.html" target="topic">Up</a> | <a href="02240.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: FLEXCOMx_USART_ReceiverIsReady Topic Title: FLEXCOMx_USART_ReceiverIsReady Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: FLEXCOMx_SPI_WriteRead@void*@size_t@void*@size_t Topic Title: FLEXCOMx_SPI_WriteRead Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

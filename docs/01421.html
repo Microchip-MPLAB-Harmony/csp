@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>DBGU_SerialSetup Function</title>
+<title>DBGU_PARITY Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="01381.html" target="topic">DBGU Peripheral Library Help</a> &gt; <a href="01382.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="01421.html" target="topic">DBGU_SerialSetup Function</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="01396.html" target="topic">DBGU Peripheral Library Help</a> &gt; <a href="01397.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="01421.html" target="topic">DBGU_PARITY Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01415.html" target="topic">Previous</a> | <a href="01382.html" target="topic">Up</a> | <a href="01423.html" target="topic">Next</a></div>
+<a href="01414.html" target="topic">Previous</a> | <a href="01397.html" target="topic">Up</a> | <a href="01433.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DBGU_SerialSetup@DBGU_SERIAL_SETUP *@uint32_t Topic Title: DBGU_SerialSetup Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DBGU_PARITY Topic Title: DBGU_PARITY Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-DBGU_SerialSetup Function</div>
+DBGU_PARITY Enumeration</div>
 </div>
 </div>
 
@@ -49,83 +49,32 @@ DBGU_SerialSetup Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function sets the DBGU serial communication settings dynamically.</p></div>
+DBGU Parity&nbsp;</p>
+<p class="Element10">
+This defines the type of parity for DBGU peripheral.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">DBGU_SerialSetup</span></strong>(
-    <a href="01418.html" target="topic">DBGU_SERIAL_SETUP</a> * <strong><span style="color: #000000">setup</span></strong>, 
-    uint32_t <strong><span style="color: #000000">srcClkFreq</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-<a href="01405.html" target="topic">DBGU_Initialize</a> must have been called for the associated DBGU instance.&nbsp;</p>
-<p class="Element10">
-The DBGU transmit or receive transfer status should not be busy.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
-<div class="TableDiv">
-<table cellspacing="0" class="Table2">
-<tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-setup&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Pointer to the structure containing the serial setup.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-srcClkFreq&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-DBGU Peripheral Clock Source Frequency.&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-
-<ul class="Element630">
-<li class="Element600">true - Serial setup was updated Successfully.</li>
-<li class="Element600">false - Failure while updating serial setup.</li>
-</ul></div>
-</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">DBGU_PARITY_NONE</span></strong>,
+  <strong><span style="color: #000000">DBGU_PARITY_ODD</span></strong>,
+  <strong><span style="color: #000000">DBGU_PARITY_EVEN</span></strong>,
+  <strong><span style="color: #000000">DBGU_PARITY_MARK</span></strong>,
+  <strong><span style="color: #000000">DBGU_PARITY_SPACE</span></strong>
+} DBGU_PARITY;</pre></div></div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-srcClkFreq overrides any change in the peripheral clock frequency. If configured to zero, PLIB takes the peripheral clock frequency from MHC.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12"><a href="01418.html" target="topic">DBGU_SERIAL_SETUP</a> setup = {
-        115200,
-        DBGU_PARITY_ODD
-    };
-
-DBGU1_SerialSetup(&amp;setup, 0);</pre></div></div>
-</div>
+None.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="01381.html" target="topic">DBGU Peripheral Library Help</a> &gt; <a href="01382.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="01421.html" target="topic">DBGU_SerialSetup Function</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="01396.html" target="topic">DBGU Peripheral Library Help</a> &gt; <a href="01397.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="01421.html" target="topic">DBGU_PARITY Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -133,13 +82,13 @@ DBGU1_SerialSetup(&amp;setup, 0);</pre></div></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01415.html" target="topic">Previous</a> | <a href="01382.html" target="topic">Up</a> | <a href="01423.html" target="topic">Next</a></div>
+<a href="01414.html" target="topic">Previous</a> | <a href="01397.html" target="topic">Up</a> | <a href="01433.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DBGU_SerialSetup@DBGU_SERIAL_SETUP *@uint32_t Topic Title: DBGU_SerialSetup Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DBGU_PARITY Topic Title: DBGU_PARITY Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

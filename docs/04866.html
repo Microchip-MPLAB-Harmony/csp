@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Using the Library</title>
+<title>RTC_INT_MASK Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="04861.html" target="topic">SDADC Peripheral Library Help</a> &gt; <a href="04866.html" target="topic">Using the Library</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="04740.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="04741.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="04866.html" target="topic">RTC_INT_MASK Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04857.html" target="topic">Previous</a> | <a href="04861.html" target="topic">Up</a> | <a href="04862.html" target="topic">Next</a></div>
+<a href="04845.html" target="topic">Previous</a> | <a href="04741.html" target="topic">Up</a> | <a href="04795.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SDADC U2260 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RTC_INT_MASK Topic Title: RTC_INT_MASK Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Using the Library</div>
+RTC_INT_MASK Enumeration</div>
 </div>
 </div>
 
@@ -49,91 +49,28 @@ Using the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-SDADC converts enabled channel on software or hardware triggers. It provides both polling and callback methods to indicate the end of conversion to read the converted data from the result register.</p>
-<ul class="Element630">
-<li class="Element600">With polling, the application will need to continuously poll to check if the conversion is completed.</li>
-<li class="Element600">With callback, the registered callback function will be called once the conversion is completed. This means the application do not have to poll continuously.</li>
-</ul><p class="Element10">
-&nbsp;</p>
+RTCC Alaram Mask&nbsp;</p>
 <p class="Element10">
-<strong>Callback method</strong>&nbsp;</p>
+This enumeration defines the mask for enabling and disabling the RTCC interrupt via IEC5 register. Used by <a href="05068.html" target="topic">RTCC_InterruptEnable</a> and <a href="05067.html" target="topic">RTCC_InterruptDisable</a> functions.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">RTC_INT_ALARM</span></strong>
+} RTC_INT_MASK;</pre></div></div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-This example demonstrates how to read conversion result in the callback function. One channel is enabled and configured to start conversion on hardware trigger.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<span class="Element146">int16_t result;</span>&nbsp;</p>
-<p class="Element10">
-<span class="Element146">/* This function is called after conversion of last channel in the user sequence */</span>&nbsp;</p>
-<p class="Element10">
-<span class="Element146">void SDADC_EventHandler(<a href="04871.html" target="topic">SDADC_STATUS</a> status, uintptr_t context)</span>&nbsp;</p>
-<p class="Element10">
-<span class="Element146">{</span>&nbsp;</p>
-<p class="Element10">
-<span class="Element146"> result = SDADC_ConversionResultGet();</span>&nbsp;</p>
-<p class="Element10">
-<span class="Element146">}</span>&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<span class="Element146">int main(void)</span>&nbsp;</p>
-<p class="Element10">
-<span class="Element146">{</span>&nbsp;</p>
-<p class="Element10">
-<span class="Element146"> /* Register callback function for SDADC end of conversion interrupt*/</span>&nbsp;</p>
-<p class="Element10">
-<span class="Element146"> SDADC_CallbackRegister(SDADC_EventHandler, (uintptr_t)NULL);</span>&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<span class="Element146">while(true)</span>&nbsp;</p>
-<p class="Element10">
-<span class="Element146">{</span>&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<span class="Element146">}</span>&nbsp;</p>
-<p class="Element10">
-<span class="Element146">}</span>&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong>Polling method</strong>&nbsp;</p>
-<p class="Element10">
-This example demonstrates how to start conversion and read the converted data in polled mode. One channel is enabled and configured to start conversion on software trigger.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<span class="Element146">/* Start conversion */</span>&nbsp;</p>
-<p class="Element10">
-<span class="Element146">SDADC_ConversionStart();</span>&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<span class="Element146">/* Wait till ADC conversion result is available */</span>&nbsp;</p>
-<p class="Element10">
-<span class="Element146">while(!SDADC_ConversionResultIsReady(CH0))</span>&nbsp;</p>
-<p class="Element10">
-<span class="Element146">{</span>&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<span class="Element146">};</span>&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<span class="Element146">/* Read the ADC result */</span>&nbsp;</p>
-<p class="Element10">
-<span class="Element146">result = SDADC_ConversionResultGet();</span>&nbsp;</p></div>
+This enum is kept to satisfy the drivers which expects an input parameter for RTCC interrupt enable/disable functions. Such enum is used on devices on which the peripheral supports multiple interrupts.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="04861.html" target="topic">SDADC Peripheral Library Help</a> &gt; <a href="04866.html" target="topic">Using the Library</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="04740.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="04741.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="04866.html" target="topic">RTC_INT_MASK Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -141,13 +78,13 @@ This example demonstrates how to start conversion and read the converted data in
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04857.html" target="topic">Previous</a> | <a href="04861.html" target="topic">Up</a> | <a href="04862.html" target="topic">Next</a></div>
+<a href="04845.html" target="topic">Previous</a> | <a href="04741.html" target="topic">Up</a> | <a href="04795.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SDADC U2260 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RTC_INT_MASK Topic Title: RTC_INT_MASK Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="02843.html" target="topic">MATRIX Peripheral Library Help</a> &gt; <a href="02842.html" target="topic">Introduction</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="02843.html" target="topic">I2S Peripheral Library Help</a> &gt; <a href="02842.html" target="topic">Introduction</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,13 +26,13 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
 <a href="02843.html" target="topic">Previous</a> | <a href="02843.html" target="topic">Up</a> | <a href="02840.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MATRIX 44025 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: I2S U2224 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
 Introduction</div>
 </div>
@@ -48,15 +48,47 @@ Introduction</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
-<p class="Element10" style="text-align: justify;">
-<span style="color: #000000">In order to reduce power consumption without loss in performance, the system embeds three matrixes: one based on the AXI protocol (AXIMX) and two based on the AHB protocol (H64MX and H32MX). This section describes the implementation of the 64-bit AHB Matrix (H64MX) and the 32-bit AHB Matrix (H32MX). Each AHB Matrix implements a multilayer AHB, based on the AHB-Lite protocol, which enables parallel access paths between multiple AHB masters and slaves in a system, thus increasing the overall bandwidth. The normal latency to connect a master to a slave is one cycle, except for the default master of the accessed slave which is connected directly (zero cycle latency).</span></p></div>
+<p class="Element10">
+The I2S module implements an I2S (Inter-IC Sound) interface, for connection between an MCU and an audio peripheral such as a codec or Bluetooth module.&nbsp;</p>
+<p class="Element10">
+The I2S module provides support to the audio protocol functionality via four standard I/O pins. The four pins that make up the audio protocol interface modes are:</p>
+<ul class="Element630">
+<li class="Element600"><strong>SDI: </strong>Serial Data Input for receiving sample digital audio data (ADCDAT as output from the codec)</li>
+<li class="Element600"><strong>SDO: </strong>Serial Data Output for transmitting digital audio data (DACDAT as input to the codec)</li>
+<li class="Element600"><strong>SCKn: </strong>Serial Clock, also known as bit clock (BCLK)</li>
+<li class="Element600"><strong>FSn:</strong> Frame Select, also known as Word Select or Left/Right Channel Clock (LRCK)</li>
+</ul><p class="Element10">
+In addition, there is a fifth line, called <strong>MCKn</strong> (Master Clock), which can be used to drive the codec.&nbsp;</p>
+<p class="Element10">
+There are two clock units in the I2S module, so <strong>n</strong>=1 or 2 depending on which is used. However there are only two data lines (SDO/SDI), one for each serializer (transmit/receive).&nbsp;</p>
+<p class="Element10">
+The SCK provides the clock required to drive the data out or into the module, while FS provides the synchronization of the frame based on the protocol mode selected. In I2S mode, the leading edge of audio data is driven out one SCK period of starting the frame.&nbsp;</p>
+<p class="Element10">
+In Master mode, the module generates both the SCK and FS.&nbsp;</p>
+<p class="Element10">
+In Slave mode, the peripheral generates the BCLK and LRCLK signals, driving the SCK and FS pins of the I2S module. When in Slave mode, the I2S cannot generate a master clock (MCK), so a generic clock (GCLKn) must be used.</p><div class="Element15">
+Master Mode</div>
+<p class="Element10" style="text-align: center;">
+<strong>Master Generating its Own Clock – Output BCLK and LRCK</strong>&nbsp;</p>
+<p class="Element10" style="text-align: center;">
+<img src="MaterMode.png" border="0" alt="" title=""></p><div class="Element15">
+Slave Mode</div>
+<p class="Element10" style="text-align: center;">
+<strong>Codec Device as Master Derives MCLK from MCU Reference Clock Out</strong>&nbsp;</p>
+<p class="Element10" style="text-align: center;">
+<img src="SlaveMode.png" border="0" alt="" title="">&nbsp;</p>
+<p class="Element10" style="text-align: center;">
+&nbsp;</p>
+<p class="Element10" style="text-align: center;">
+&nbsp;</p>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="02843.html" target="topic">MATRIX Peripheral Library Help</a> &gt; <a href="02842.html" target="topic">Introduction</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="02843.html" target="topic">I2S Peripheral Library Help</a> &gt; <a href="02842.html" target="topic">Introduction</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -64,13 +96,13 @@ Introduction</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
 <a href="02843.html" target="topic">Previous</a> | <a href="02843.html" target="topic">Up</a> | <a href="02840.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MATRIX 44025 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: I2S U2224 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

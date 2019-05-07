@@ -1,0 +1,118 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>EVSYS_INT_MASK Enumeration</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '02118.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="02069.html" target="topic">EVSYS Peripheral Library Help</a> &gt; <a href="02070.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="02118.html" target="topic">EVSYS_INT_MASK Enumeration</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+Microchip 32-bit Chip Support Package</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="02115.html" target="topic">Previous</a> | <a href="02070.html" target="topic">Up</a> | <a href="02060.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: evsys_u2256::EVSYS_INT_MASK Topic Title: EVSYS_INT_MASK Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+EVSYS_INT_MASK Enumeration</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+EVSYS Interrupt Mask&nbsp;</p>
+<p class="Element10">
+This enumeration identifies the possible interrupt source that the EVSYS module can generate. The EVSYS callback will receive a value of this type.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">EVSYS_INT_OVERRUN0</span></strong> = EVSYS_INTENSET_OVR0,
+  <strong><span style="color: #000000">EVSYS_INT_OVERRUN1</span></strong> = EVSYS_INTENSET_OVR1,
+  <strong><span style="color: #000000">EVSYS_INT_OVERRUN2</span></strong> = EVSYS_INTENSET_OVR2,
+  <strong><span style="color: #000000">EVSYS_INT_OVERRUN3</span></strong> = EVSYS_INTENSET_OVR3,
+  <strong><span style="color: #000000">EVSYS_INT_OVERRUN4</span></strong> = EVSYS_INTENSET_OVR4,
+  <strong><span style="color: #000000">EVSYS_INT_OVERRUN5</span></strong> = EVSYS_INTENSET_OVR5,
+  <strong><span style="color: #000000">EVSYS_INT_OVERRUN6</span></strong> = EVSYS_INTENSET_OVR6,
+  <strong><span style="color: #000000">EVSYS_INT_OVERRUN7</span></strong> = EVSYS_INTENSET_OVR7,
+  <strong><span style="color: #000000">EVSYS_INT_OVERRUN8</span></strong> = EVSYS_INTENSET_OVR8,
+  <strong><span style="color: #000000">EVSYS_INT_OVERRUN9</span></strong> = EVSYS_INTENSET_OVR9,
+  <strong><span style="color: #000000">EVSYS_INT_OVERRUN10</span></strong> = EVSYS_INTENSET_OVR10,
+  <strong><span style="color: #000000">EVSYS_INT_OVERRUN11</span></strong> = EVSYS_INTENSET_OVR11,
+  <strong><span style="color: #000000">EVSYS_INT_EVENT0</span></strong> = EVSYS_INTENSET_EVD0,
+  <strong><span style="color: #000000">EVSYS_INT_EVENT1</span></strong> = EVSYS_INTENSET_EVD1,
+  <strong><span style="color: #000000">EVSYS_INT_EVENT2</span></strong> = EVSYS_INTENSET_EVD2,
+  <strong><span style="color: #000000">EVSYS_INT_EVENT3</span></strong> = EVSYS_INTENSET_EVD3,
+  <strong><span style="color: #000000">EVSYS_INT_EVENT4</span></strong> = EVSYS_INTENSET_EVD4,
+  <strong><span style="color: #000000">EVSYS_INT_EVENT5</span></strong> = EVSYS_INTENSET_EVD5,
+  <strong><span style="color: #000000">EVSYS_INT_EVENT6</span></strong> = EVSYS_INTENSET_EVD6,
+  <strong><span style="color: #000000">EVSYS_INT_EVENT7</span></strong> = EVSYS_INTENSET_EVD7,
+  <strong><span style="color: #000000">EVSYS_INT_EVENT8</span></strong> = EVSYS_INTENSET_EVD8,
+  <strong><span style="color: #000000">EVSYS_INT_EVENT9</span></strong> = EVSYS_INTENSET_EVD9,
+  <strong><span style="color: #000000">EVSYS_INT_EVENT10</span></strong> = EVSYS_INTENSET_EVD10,
+  <strong><span style="color: #000000">EVSYS_INT_EVENT11</span></strong> = EVSYS_INTENSET_EVD11
+} EVSYS_INT_MASK;</pre></div></div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="02069.html" target="topic">EVSYS Peripheral Library Help</a> &gt; <a href="02070.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="02118.html" target="topic">EVSYS_INT_MASK Enumeration</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+Microchip 32-bit Chip Support Package</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="02115.html" target="topic">Previous</a> | <a href="02070.html" target="topic">Up</a> | <a href="02060.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: evsys_u2256::EVSYS_INT_MASK Topic Title: EVSYS_INT_MASK Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

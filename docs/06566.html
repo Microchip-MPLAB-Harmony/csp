@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>XDMAC_ChannelLinkedListTransfer Function</title>
+<title>Running The Application</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="06523.html" target="topic">XDMAC Peripheral Library Help</a> &gt; <a href="06524.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="06566.html" target="topic">XDMAC_ChannelLinkedListTransfer Function</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="06561.html" target="topic">TWIHS Applications</a> &gt; <a href="06562.html" target="topic">twihs_eeprom</a> &gt; <a href="06566.html" target="topic">Running The Application</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06569.html" target="topic">Previous</a> | <a href="06524.html" target="topic">Up</a> | <a href="06564.html" target="topic">Next</a></div>
+<a href="06564.html" target="topic">Previous</a> | <a href="06562.html" target="topic">Up</a> | <a href="06608.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: XDMAC_ChannelLinkedListTransfer@XDMAC_CHANNEL@uint32_t@XDMAC_DESCRIPTOR_CONTROL* Topic Title: XDMAC_ChannelLinkedListTransfer Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TWIHS twihs_eeprom Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-XDMAC_ChannelLinkedListTransfer Function</div>
+Running The Application</div>
 </div>
 </div>
 
@@ -49,98 +49,66 @@ XDMAC_ChannelLinkedListTransfer Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function sets up multi-block data transfer for a XDMAC channel by linked list operation mode if channel is not busy already. That is each block of data to be transferred is configured as descriptors of a linked list. Each descriptor can be defined in any available descriptor view formats and the views are available as XDMAC_DESCRIPTOR_VIEW_x.&nbsp;</p>
+<strong><u>MPLAB X IDE</u></strong></p>
+<ol class="Element630">
+<li value="1" class="Element600">Build and program the application using the MPLAB X IDE.</li>
+<li value="2" class="Element600">The LED indicates the success or failure:
+<ul class="Element631">
+<li class="Element601"><span style="color: #000000">The LED is turned ON when the value read from the EEPROM matched with the written value</span></li>
+<li class="Element601"><span style="color: #000000">The LED is turned OFF when the value read from the EEPROM did not match with the written value</span></li>
+</ul></li>
+</ol><p class="Element10">
+&nbsp;</p>
 <p class="Element10">
-Specified XDMAC channel will be enabled by default upon linked list addition. Upon each block transfer completion XDMAC PLIB will call event handler if the event handler is registered through <a href="06563.html" target="topic">XDMAC_ChannelCallbackRegister</a>.</p></div>
-</div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">XDMAC_ChannelLinkedListTransfer</span></strong>(
-    <a href="06535.html" target="topic">XDMAC_CHANNEL</a> <strong><span style="color: #000000">channel</span></strong>, 
-    uint32_t <strong><span style="color: #000000">firstDescriptorAddress</span></strong>, 
-    <a href="06570.html" target="topic">XDMAC_DESCRIPTOR_CONTROL</a>* <strong><span style="color: #000000">firstDescriptorControl</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-XDMAC should have been initialized by calling <a href="06601.html" target="topic">XDMAC_Initialize</a>. Linked list with descriptors in any available descriptor view formats must be defined.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
+The following table provides the LED name. </p><div class="Element63">
 <div class="TableDiv">
-<table cellspacing="0" class="Table2">
+<table cellspacing="0" class="Table1">
 <tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-channel&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-A specific XDMAC channel<br>&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-firstDescriptorAddress&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Address of the first descriptor of the linked list. All descriptors must be defined in the device specific view formats available as XDMAC_DESCRIPTOR_VIEW_x and must be cache line aligned.<br>&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-firstDescriptorControl&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Control settings for the first descriptor. This must be defined in device specific view format, <a href="06570.html" target="topic">XDMAC_DESCRIPTOR_CONTROL</a> and must be cache line aligned.&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-
-<ul class="Element630">
-<li class="Element600">True - If transfer request is accepted.</li>
-<li class="Element600">False - If previous transfer is in progress and the request is rejected.</li>
-</ul></div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
+<td class="Element65" valign="top" width="59%">
+<div class="Element66">
+Kit Name&nbsp;</div></td><td class="Element65" valign="top" width="41%">
+<div class="Element66">
+LED Name&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="59%">
+<div class="Element68">
+SAM E70 Xplained Ultra Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="41%">
+<div class="Element68">
+<span style="color: #000000">LED1</span>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="59%">
+<div class="Element68">
+SAM V71 Xplained Ultra Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="41%">
+<div class="Element68">
+<span style="color: #000000">LED0</span>&nbsp;</div></td></tr></table></div></div>
 <p class="Element10">
-This is supported by only the devices with multi-block transfer feature. The &quot;descriptorControl&quot; parameter is a XDMAC hardware version specific requirement and may not be needed in some of the devices.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12"><i><span style="color: #008000">// Transfer 2 blocks of data to UART TX, each 10 bytes.</span></i>
-
-<i><span style="color: #008000">//Two blocks of data</span></i>
-<strong><span style="color: #000080">char</span></strong> src1[11] = {&quot;1234567890&quot;};
-<strong><span style="color: #000080">char</span></strong> src2[11] = {&quot;ABCDEFGHIJ&quot;};
-
-<i><span style="color: #008000">//Cache line aligned first descriptor control, &quot;descptr_crtl&quot;</span></i>
-<i><span style="color: #008000">//Cache line aligned linked list with descriptors in any supported view,</span></i>
-<i><span style="color: #008000">//&quot;linkedList1[2]&quot; with 2 descriptors of different source addresses.</span></i>
-
-<i><span style="color: #008000">// User registers an event handler with PLIB.</span></i>
-<a href="06563.html" target="topic">XDMAC_ChannelCallbackRegister</a>(handle, APP_XDMAC_TransferEventHandler,
-    NULL);
-
-<i><span style="color: #008000">// Add linked list to the XDMAC PLIB, channel will be enabled by default.</span></i>
-<strong><span style="color: #000080">if</span></strong>(XDMAC_ChannelLinkedListTransfer(XDMAC_CHANNEL_1, (uint32_t)&amp;linkedList1[0], &amp;descptr_crtl) == <strong><span style="color: #000080">true</span></strong>)
-{
-    <i><span style="color: #008000">// do something else</span></i>
-}
-<strong><span style="color: #000080">else</span></strong>
-{
-    <i><span style="color: #008000">// try again?</span></i>
-}</pre></div></div>
+&nbsp;</p>
+<p class="Element10">
+<strong><u>IAR Embedded work bench</u></strong></p>
+<ol class="Element630">
+<li value="1" class="Element600">Build the project using IAR Embedded Workbench</li>
+<li value="2" class="Element600">Use the output binary file (harmony.bin) to setup the board as detailed in <a href="06564.html" target="topic">hardware setup</a></li>
+<li value="3" class="Element600">Reset the board to run the application</li>
+<li value="4" class="Element600">The LED indicates the success or failure:
+<ul class="Element631">
+<li class="Element601"><span style="color: #000000">The LED is turned ON when the value read from the EEPROM matched with the written value</span></li>
+<li class="Element601"><span style="color: #000000">The LED is turned OFF when the value read from the EEPROM did not match with the written value</span></li>
+</ul></li>
+</ol><p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+The following table provides the LED name. </p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="67%">
+<div class="Element66">
+Kit Name&nbsp;</div></td><td class="Element65" valign="top" width="33%">
+<div class="Element66">
+LED Name&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="67%">
+<div class="Element68">
+SAMA5D2 Xplained Ultra evaluation kit&nbsp;</div></td><td class="Element67" valign="top" width="33%">
+<div class="Element68">
+RGB_LED(Green)&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -148,7 +116,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="06523.html" target="topic">XDMAC Peripheral Library Help</a> &gt; <a href="06524.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="06566.html" target="topic">XDMAC_ChannelLinkedListTransfer Function</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="06561.html" target="topic">TWIHS Applications</a> &gt; <a href="06562.html" target="topic">twihs_eeprom</a> &gt; <a href="06566.html" target="topic">Running The Application</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -156,13 +124,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06569.html" target="topic">Previous</a> | <a href="06524.html" target="topic">Up</a> | <a href="06564.html" target="topic">Next</a></div>
+<a href="06564.html" target="topic">Previous</a> | <a href="06562.html" target="topic">Up</a> | <a href="06608.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: XDMAC_ChannelLinkedListTransfer@XDMAC_CHANNEL@uint32_t@XDMAC_DESCRIPTOR_CONTROL* Topic Title: XDMAC_ChannelLinkedListTransfer Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TWIHS twihs_eeprom Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

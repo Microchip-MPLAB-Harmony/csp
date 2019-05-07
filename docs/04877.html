@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>SDADCx_ComparisonWindowSet Function</title>
+<title>RTC_CLOCK_EVENT Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="04861.html" target="topic">SDADC Peripheral Library Help</a> &gt; <a href="04862.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="04877.html" target="topic">SDADCx_ComparisonWindowSet Function</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="04762.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="04784.html" target="topic">Clock and Calendar (Mode 2)</a> &gt; <a href="04790.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="04877.html" target="topic">RTC_CLOCK_EVENT Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04876.html" target="topic">Previous</a> | <a href="04862.html" target="topic">Up</a> | <a href="04878.html" target="topic">Next</a></div>
+<a href="04869.html" target="topic">Previous</a> | <a href="04790.html" target="topic">Up</a> | <a href="05053.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SDADCx_ComparisonWindowSet@int16_t@int16_t Topic Title: SDADCx_ComparisonWindowSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2202::RTC_CLOCK_EVENT Topic Title: RTC_CLOCK_EVENT Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-SDADCx_ComparisonWindowSet Function</div>
+RTC_CLOCK_EVENT Enumeration</div>
 </div>
 </div>
 
@@ -49,74 +49,54 @@ SDADCx_ComparisonWindowSet Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function configures the window threshold values.</p></div>
+RTC Real Time Clock Calendar (RTCC) Mode events&nbsp;</p>
+<p class="Element10">
+This enumeration defines the possible events that can occur when the RTC peripheral is configured for Real Time Clock Calendar operation. These events are passed into the callback function registered through the <a href="04883.html" target="topic">RTC_RTCCCallbackRegister</a>() function.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">SDADCx_ComparisonWindowSet</span></strong>(
-    int16_t <strong><span style="color: #000000">low_threshold</span></strong>, 
-    int16_t <strong><span style="color: #000000">high_threshold</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">RTC_CLOCK_EVENT_ALARM</span></strong>,
+  <strong><span style="color: #000000">RTC_CLOCK_EVENT_YEAR_OVERFLOW</span></strong>
+} RTC_CLOCK_EVENT;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-<a href="04882.html" target="topic">SDADCx_Initialize</a>() function must have been called first for the associated instance.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
+<div class="Element272">
 <div class="TableDiv">
-<table cellspacing="0" class="Table2">
+<table cellspacing="0" class="Table3">
 <tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-low_threshold&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-16-bit signed value for lower threshold&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-high_threshold&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-16-bit signed value for upper threshold&nbsp;</div></td></tr></table></div></div>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+RTC_CLOCK_EVENT_ALARM&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+An alarm has occurred.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+RTC_CLOCK_EVENT_YEAR_OVERFLOW&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+The Clock and Calendar overflowed at 23:59:59 (HH:MM:SS) on December 31 of year value 63&nbsp;</div></td></tr></table></div></div>
 </div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function is valid only if window monitor feature is enabled. 16-bit signed values are written in the register as 24-bit by left shifting by 8 bits.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">    <a href="04882.html" target="topic">SDADCx_Initialize</a>();
-    SDADCx_ComparisonWindowSet(0x1000, 0x3000);</pre></div></div>
-</div>
+None.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="04861.html" target="topic">SDADC Peripheral Library Help</a> &gt; <a href="04862.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="04877.html" target="topic">SDADCx_ComparisonWindowSet Function</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="04762.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="04784.html" target="topic">Clock and Calendar (Mode 2)</a> &gt; <a href="04790.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="04877.html" target="topic">RTC_CLOCK_EVENT Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -124,13 +104,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04876.html" target="topic">Previous</a> | <a href="04862.html" target="topic">Up</a> | <a href="04878.html" target="topic">Next</a></div>
+<a href="04869.html" target="topic">Previous</a> | <a href="04790.html" target="topic">Up</a> | <a href="05053.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SDADCx_ComparisonWindowSet@int16_t@int16_t Topic Title: SDADCx_ComparisonWindowSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2202::RTC_CLOCK_EVENT Topic Title: RTC_CLOCK_EVENT Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

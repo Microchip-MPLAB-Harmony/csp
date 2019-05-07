@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>PORT_PinWrite Function</title>
+<title>SAM E70/S70/V70/V71 Peripheral Libraries</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="03933.html" target="topic">PORT Peripheral Library Help</a> &gt; <a href="03934.html" target="topic">Library Interface</a> &gt; b) Pin Functions &gt; <a href="04054.html" target="topic">PORT_PinWrite Function</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04054.html" target="topic">SAM E70/S70/V70/V71 Peripheral Libraries</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04049.html" target="topic">Previous</a> | <a href="03934.html" target="topic">Up</a> | <a href="04048.html" target="topic">Next</a></div>
+<a href="04052.html" target="topic">Previous</a> | <a href="03634.html" target="topic">Up</a> | <a href="04053.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PORT_PinWrite@PORT_PIN@bool Topic Title: PORT_PinWrite Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PLIB SAM E70/S70/V70/V71 Topic Title: SAM E70/S70/V70/V71 Peripheral Libraries)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-PORT_PinWrite Function</div>
+SAM E70/S70/V70/V71 Peripheral Libraries</div>
 </div>
 </div>
 
@@ -49,73 +49,99 @@ PORT_PinWrite Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function writes/drives the &quot;value&quot; on the selected I/O line/pin.</p></div>
-</div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">PORT_PinWrite</span></strong>(
-    <a href="03950.html" target="topic">PORT_PIN</a> <strong><span style="color: #000000">pin</span></strong>, 
-    <strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">value</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
-<div class="Element11">
-<div class="Element10">
+The following Table lists all the Peripheral Libraries for the SAM E70/S70/V70/V71 Family.&nbsp;</p>
 <p class="Element10">
-The <a href="03949.html" target="topic">PORT_Initialize</a>() function should have been called once.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
+&nbsp;</p><div class="Element63">
 <div class="TableDiv">
-<table cellspacing="0" class="Table2">
+<table cellspacing="0" class="Table1">
 <tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-pin&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-One of the IO pins from the enum <a href="03950.html" target="topic">PORT_PIN</a>.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-value&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-value to be written on the selected pin.</p>
-<ul class="Element630">
-<li class="Element600">true = set pin to high (1).</li>
-<li class="Element600">false = clear pin to low (0).</li>
-</ul><p class="Element307">
-&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None.</p></div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-Calling this function with an input pin with the pull-up/pull-down feature enabled will affect the pull-up/pull-down configuration. If the value is false, the pull-down will be enabled. If the value is true, the pull-up will be enabled.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">
-<strong><span style="color: #000080">bool</span></strong> value = <strong><span style="color: #000080">true</span></strong>;
-PORT_PinWrite(PORT_PIN_PB03, value);
-</pre></div></div>
+<td class="Element65" valign="top" width="100%">
+<div class="Element66">
+SAM E70/S70/V70/V71 Peripheral Libraries&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="00080.html" target="topic">ACC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="00733.html" target="topic">AFEC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="01125.html" target="topic">Clock Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="01369.html" target="topic">DACC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="01720.html" target="topic">EFC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="02853.html" target="topic">I2SC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="03237.html" target="topic">MPU Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="03248.html" target="topic">NVIC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="03639.html" target="topic">PIO Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="04283.html" target="topic">PWM Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="04415.html" target="topic">QSPI Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="04604.html" target="topic">RSTC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="04716.html" target="topic">RSWDT Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="04740.html" target="topic">RTC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="05075.html" target="topic">RTT Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="05408.html" target="topic">SDRAMC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="05612.html" target="topic">SMC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="05634.html" target="topic">SPI Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="05758.html" target="topic">SSC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="05769.html" target="topic">SUPC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="05866.html" target="topic">SYSTICK Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="05954.html" target="topic">TC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="06524.html" target="topic">TRNG Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="06555.html" target="topic">TWIHS Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="06602.html" target="topic">UART Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="06727.html" target="topic">USART Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="06812.html" target="topic">WDT Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="06883.html" target="topic">XDMAC Peripheral Library Help</a>&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -123,7 +149,7 @@ PORT_PinWrite(PORT_PIN_PB03, value);
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="03933.html" target="topic">PORT Peripheral Library Help</a> &gt; <a href="03934.html" target="topic">Library Interface</a> &gt; b) Pin Functions &gt; <a href="04054.html" target="topic">PORT_PinWrite Function</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04054.html" target="topic">SAM E70/S70/V70/V71 Peripheral Libraries</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -131,13 +157,13 @@ PORT_PinWrite(PORT_PIN_PB03, value);
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04049.html" target="topic">Previous</a> | <a href="03934.html" target="topic">Up</a> | <a href="04048.html" target="topic">Next</a></div>
+<a href="04052.html" target="topic">Previous</a> | <a href="03634.html" target="topic">Up</a> | <a href="04053.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PORT_PinWrite@PORT_PIN@bool Topic Title: PORT_PinWrite Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PLIB SAM E70/S70/V70/V71 Topic Title: SAM E70/S70/V70/V71 Peripheral Libraries)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

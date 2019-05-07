@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>UARTx_WriteIsBusy Function</title>
+<title>TCx_CAPTURE_CALLBACK Type</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="06222.html" target="topic">UART Peripheral Library Help</a> &gt; <a href="06223.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="06295.html" target="topic">UARTx_WriteIsBusy Function</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="06044.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="06023.html" target="topic">Capture</a> &gt; <a href="06026.html" target="topic">Library Interface</a> &gt; <a href="06027.html" target="topic">e) Data Types and Constants</a> &gt; <a href="06295.html" target="topic">TCx_CAPTURE_CALLBACK Type</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06287.html" target="topic">Previous</a> | <a href="06223.html" target="topic">Up</a> | <a href="06288.html" target="topic">Next</a></div>
+<a href="06027.html" target="topic">Previous</a> | <a href="06027.html" target="topic">Up</a> | <a href="06296.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: uart_00734::UARTx_WriteIsBusy Topic Title: UARTx_WriteIsBusy Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tc_u2249::TCx_CAPTURE_CALLBACK Topic Title: TCx_CAPTURE_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-UARTx_WriteIsBusy Function</div>
+TCx_CAPTURE_CALLBACK Type</div>
 </div>
 </div>
 
@@ -49,29 +49,51 @@ UARTx_WriteIsBusy Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function returns the status of the write request which was made using UART1_Write function. It can be used to poll the write status if callback is not intended.&nbsp;</p>
+Callback Function Pointer for Capture mode&nbsp;</p>
 <p class="Element10">
-This function is available only in interrupt mode of operation.</p></div>
+This data type defines the function pointer and function signature for the tc channel callback function. The library will call back the client's function with this signature from the interrupt routine.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">UARTx_WriteIsBusy</span></strong>();</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000">TCx_CAPTURE_CALLBACK</span></strong>)(<a href="06296.html" target="topic">TCx_CAPTURE_STATUS</a> status, uintptr_t context);</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="06282.html" target="topic">UARTx_Initialize</a> must have been called for the associated UART instance.</p></div>
+TCx_CHy_Initialize must have been called for the given TC channel instance and TCx_CHy_CaptureCallbackRegister must have been called to register the function to be called.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+status&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Interrupt status in capture mode&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Allows the caller to provide a context value (usually a pointer to the callers context for multi-instance clients).&nbsp;</div></td></tr></table></div></div>
+</div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
 <div class="Element11">
 <div class="Element10">
-
-<ul class="Element630">
-<li class="Element600">true - UART is busy in processing write request.</li>
-<li class="Element600">false - UART is free and ready to accept the new write request.</li>
-</ul></div>
+<p class="Element10">
+None.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
@@ -84,14 +106,9 @@ None.</p></div>
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">if</span></strong>(<strong><span style="color: #000080">true</span></strong> == UART1_WriteIsBusy())
-{
-    <i><span style="color: #008000">//UART is currently processing the write request.</span></i>
-}
-<strong><span style="color: #000080">else</span></strong>
-{
-    <i><span style="color: #008000">// write is completed.</span></i>
-}</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">void</span></strong> TC_CallbackFn (<a href="06296.html" target="topic">TCx_CAPTURE_STATUS</a> status, uintptr_t context );
+
+TC0_CH1_CaptureCallbackRegister(TC_CallbackFn, NULL);</pre></div></div>
 </div>
 </div>
 </div>
@@ -99,7 +116,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="06222.html" target="topic">UART Peripheral Library Help</a> &gt; <a href="06223.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="06295.html" target="topic">UARTx_WriteIsBusy Function</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="06044.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="06023.html" target="topic">Capture</a> &gt; <a href="06026.html" target="topic">Library Interface</a> &gt; <a href="06027.html" target="topic">e) Data Types and Constants</a> &gt; <a href="06295.html" target="topic">TCx_CAPTURE_CALLBACK Type</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -107,13 +124,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06287.html" target="topic">Previous</a> | <a href="06223.html" target="topic">Up</a> | <a href="06288.html" target="topic">Next</a></div>
+<a href="06027.html" target="topic">Previous</a> | <a href="06027.html" target="topic">Up</a> | <a href="06296.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: uart_00734::UARTx_WriteIsBusy Topic Title: UARTx_WriteIsBusy Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tc_u2249::TCx_CAPTURE_CALLBACK Topic Title: TCx_CAPTURE_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

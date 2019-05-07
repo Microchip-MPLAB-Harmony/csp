@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Using the Library</title>
+<title>SERCOMx_USART_ReadCallbackRegister Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="05552.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="05531.html" target="topic">Capture</a> &gt; <a href="05540.html" target="topic">Using the Library</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="05462.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="05473.html" target="topic">USART</a> &gt; <a href="05477.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="05540.html" target="topic">SERCOMx_USART_ReadCallbackRegister Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05532.html" target="topic">Previous</a> | <a href="05531.html" target="topic">Up</a> | <a href="05534.html" target="topic">Next</a></div>
+<a href="05548.html" target="topic">Previous</a> | <a href="05477.html" target="topic">Up</a> | <a href="05538.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC 44162 Capture Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_usart::SERCOMx_USART_ReadCallbackRegister@SERCOMx_USART_CALLBACK@uintptr_t Topic Title: SERCOMx_USART_ReadCallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Using the Library</div>
+SERCOMx_USART_ReadCallbackRegister Function</div>
 </div>
 </div>
 
@@ -49,38 +49,82 @@ Using the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The Capture mode allows the TC channel to perform measurements such as pulse timing, frequency, period, duty cycle and phase on TIOAx and TIOBx signals.&nbsp;</p>
+This function sets the pointer to a client function to be called &quot;back&quot; when the given USART's read events occur. It also passes a context value (usually a pointer to a context structure) that is passed into the function when it is called.&nbsp;</p>
 <p class="Element10">
-In Capture mode, TIOAx and TIOBx are configured as inputs. The counter value is captured in the buffer on the selected input edge and it is used as a timestamp for the event. The user can select up to two input events and the respective timestamp is captured in Capture A and Capture B buffers, it can be used to measure pulse, period, frequency and duty cycle of the external input.&nbsp;</p>
+This function is available only in interrupt or non-blocking mode of operation.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">SERCOMx_USART_ReadCallbackRegister</span></strong>(
+    <a href="05534.html" target="topic">SERCOMx_USART_CALLBACK</a> <strong><span style="color: #000000">callback</span></strong>, 
+    uintptr_t <strong><span style="color: #000000">context</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-It provides both polling and callback methods to indicate capture event has occurred.</p>
-<ul class="Element630">
-<li class="Element600">With polling, the application will need to continuously poll to check if the capture event has occurred.</li>
-<li class="Element600">With callback, the registered callback function will be called when the capture event occurs. This means the application do not have to poll continuously.</li>
-</ul><p class="Element10">
-&nbsp;</p>
+<a href="05537.html" target="topic">SERCOMx_USART_Initialize</a> must have been called for the associated USART instance.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+callback&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Pointer to the function that will be called when <a href="05538.html" target="topic">SERCOMx_USART_Read</a>() function has completed. Setting this to NULl will disable the callback feature.<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+A value (usually a pointer) passed (unused) into the function identified by the callback parameter.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-<strong>Callback method</strong>&nbsp;</p>
+None.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-This example demonstrates how to use the TC channel in capture mode to measure off time and period. The rising edge is captured in Capture A and Falling edge is captured in Capture B register, and then the timer is reset.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p><div class="Element13"><div class="Element12"><pre class="Element12"><i><span style="color: #008000">/* This function is called after Capture B */</span></i>
-<strong><span style="color: #000080">void</span></strong> TC0_CH0_CaptureInterruptHandler(uintptr_t context)
+The context parameter is ignored if the pointer passed is NULL. To disable the callback function, pass a NULL for the callback parameter. See the USART_CALLBACK type definition for additional information.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12"><i><span style="color: #008000">// Data tracking what each of my instances is doing.</span></i>
+<strong><span style="color: #000080">char</span></strong> myData[2];
+
+<strong><span style="color: #000080">void</span></strong> MyUsartCallback ( uintptr_t context )
 {
-    <i><span style="color: #008000">/* Read Captured values */</span></i>
-    off_time = TC0_CH0_CaptureAGet();
-    period = TC0_CH0_CaptureBGet();
+    <strong><span style="color: #000080">if</span></strong>(USART_ERROR_NONE != SERCOM0_USART_ErrorGet())
+    {
+        <i><span style="color: #008000">//Handle error case</span></i>
+    }
+    <strong><span style="color: #000080">else</span></strong>
+    {
+        <i><span style="color: #008000">//Transfer completed successfully</span></i>
+    }
 }
 
-<strong><span style="color: #000080">int</span></strong> main(<strong><span style="color: #000080">void</span></strong>)
-{
-
-    <i><span style="color: #008000">/* Register callback function for CH0 period interrupt */</span></i>
-    TC0_CH0_CaptureCallbackRegister(TC0_CH0_CaptureInterruptHandler, (uintptr_t)NULL);
-
-    <i><span style="color: #008000">/* Start the Capture channel 0*/</span></i>
-    TC0_CH0_CaptureStart();
-}</pre></div></div>
+SERCOM0_USART_ReadCallbackRegister(MyUsartCallback, (uintptr_t)&amp;myData[0]);</pre></div></div>
 </div>
 </div>
 </div>
@@ -88,7 +132,7 @@ This example demonstrates how to use the TC channel in capture mode to measure o
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="05552.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="05531.html" target="topic">Capture</a> &gt; <a href="05540.html" target="topic">Using the Library</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="05462.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="05473.html" target="topic">USART</a> &gt; <a href="05477.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="05540.html" target="topic">SERCOMx_USART_ReadCallbackRegister Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -96,13 +140,13 @@ This example demonstrates how to use the TC channel in capture mode to measure o
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05532.html" target="topic">Previous</a> | <a href="05531.html" target="topic">Up</a> | <a href="05534.html" target="topic">Next</a></div>
+<a href="05548.html" target="topic">Previous</a> | <a href="05477.html" target="topic">Up</a> | <a href="05538.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC 44162 Capture Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_usart::SERCOMx_USART_ReadCallbackRegister@SERCOMx_USART_CALLBACK@uintptr_t Topic Title: SERCOMx_USART_ReadCallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

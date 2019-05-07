@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>UARTx_Write Function</title>
+<title>TCx_Timer32bitCounterSet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="06242.html" target="topic">UART Peripheral Library Help</a> &gt; <a href="06243.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="06358.html" target="topic">UARTx_Write Function</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="06044.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="06045.html" target="topic">Timer</a> &gt; <a href="06050.html" target="topic">Library Interface</a> &gt; <a href="06053.html" target="topic">c) Transaction Functions</a> &gt; <a href="06358.html" target="topic">TCx_Timer32bitCounterSet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06350.html" target="topic">Previous</a> | <a href="06243.html" target="topic">Up</a> | <a href="06351.html" target="topic">Next</a></div>
+<a href="06357.html" target="topic">Previous</a> | <a href="06053.html" target="topic">Up</a> | <a href="06359.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: UARTx_Write@void *@size_t Topic Title: UARTx_Write Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tc_u2249::TCx_Timer32bitCounterSet@uint32_t Topic Title: TCx_Timer32bitCounterSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-UARTx_Write Function</div>
+TCx_Timer32bitCounterSet Function</div>
 </div>
 </div>
 
@@ -49,24 +49,19 @@ UARTx_Write Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function submits a write buffer to the UART peripheral to transfer. The behavior of this function call will vary based on the mode selected within MHC.&nbsp;</p>
-<p class="Element10">
-If the peripheral is configured for the interrupt mode, this function call is always non-blocking. Call to this function submits the buffer and the size to the peripheral library and returns immediately. User can check the transfer status either through callback mechanism or by calling <a href="06362.html" target="topic">UARTx_WriteIsBusy</a>.&nbsp;</p>
-<p class="Element10">
-If the peripheral is configured for the non-interrupt mode, this function call returns only after requested size is transferred.</p></div>
+This function sets new timer counter value.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">UARTx_Write</span></strong>(
-    <strong><span style="color: #000080">void</span></strong> * <strong><span style="color: #000000">buffer</span></strong>, 
-    <strong><span style="color: #000080">const</span></strong> size_t <strong><span style="color: #000000">size</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">TCx_Timer32bitCounterSet</span></strong>(
+    uint32_t <strong><span style="color: #000000">count</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="06349.html" target="topic">UARTx_Initialize</a> must have been called for the associated UART instance.</p></div>
+<a href="06368.html" target="topic">TCx_TimerInitialize</a>() function must have been called first.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -83,44 +78,33 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-buffer&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+count&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Pointer to the user buffer.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-size&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Number of bytes to be transferred.&nbsp;</div></td></tr></table></div></div>
+new counter value to set.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
 <div class="Element11">
 <div class="Element10">
-
-<ul class="Element630">
-<li class="Element600">True - Write request was successful.</li>
-<li class="Element600">False - Write request has failed.</li>
-</ul></div>
+<p class="Element10">
+None.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+The caller must know the number of significant bytes of timer. Counter value is right-aligned.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12"><i><span style="color: #008000">//Example to use in non-interrupt mode</span></i>
-<strong><span style="color: #000080">char</span></strong> myData[6] = {&quot;hello&quot;};
-
-<strong><span style="color: #000080">if</span></strong>(UART1_Write(&amp;myData, 6) == <strong><span style="color: #000080">true</span></strong>)
-{
-    <i><span style="color: #008000">//The transfer is completed</span></i>
-}</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">  uint32_t count = 0x100;
+  <a href="06368.html" target="topic">TCx_TimerInitialize</a>();
+  <a href="06370.html" target="topic">TCx_TimerStart</a>();
+  TCx_Timer32bitCounterSet(count);</pre></div></div>
 </div>
 </div>
 </div>
@@ -128,7 +112,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="06242.html" target="topic">UART Peripheral Library Help</a> &gt; <a href="06243.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="06358.html" target="topic">UARTx_Write Function</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="06044.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="06045.html" target="topic">Timer</a> &gt; <a href="06050.html" target="topic">Library Interface</a> &gt; <a href="06053.html" target="topic">c) Transaction Functions</a> &gt; <a href="06358.html" target="topic">TCx_Timer32bitCounterSet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -136,13 +120,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06350.html" target="topic">Previous</a> | <a href="06243.html" target="topic">Up</a> | <a href="06351.html" target="topic">Next</a></div>
+<a href="06357.html" target="topic">Previous</a> | <a href="06053.html" target="topic">Up</a> | <a href="06359.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: UARTx_Write@void *@size_t Topic Title: UARTx_Write Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tc_u2249::TCx_Timer32bitCounterSet@uint32_t Topic Title: TCx_Timer32bitCounterSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

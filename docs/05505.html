@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Introduction</title>
+<title>SERCOMx_I2C_Write Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="05506.html" target="topic">SYSTICK Peripheral Library Help</a> &gt; <a href="05505.html" target="topic">Introduction</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="05462.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="05451.html" target="topic">I2C</a> &gt; <a href="05456.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="05505.html" target="topic">SERCOMx_I2C_Write Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05506.html" target="topic">Previous</a> | <a href="05506.html" target="topic">Up</a> | <a href="05502.html" target="topic">Next</a></div>
+<a href="05504.html" target="topic">Previous</a> | <a href="05456.html" target="topic">Up</a> | <a href="05506.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SYSTICK Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_i2c::SERCOMx_I2C_Write@uint16_t@uint8_t *@uint32_t Topic Title: SERCOMx_I2C_Write Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Introduction</div>
+SERCOMx_I2C_Write Function</div>
 </div>
 </div>
 
@@ -49,18 +49,92 @@ Introduction</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The ARM® Cortex® CPU includes an optional system timer (SysTick) that provides a simple, 24-bit clear-on-write, decrementing, wrap-on-zero counter with a flexible control mechanism.&nbsp;</p>
+This function writes data to a slave on the bus. The function will attempt to write length number of bytes from pdata buffer to a slave whose address is specified by address. The I2C Master will generate a Start condition, write the data and then generate a Stop Condition. If the Master lost arbitration, then the library will attempt to regain the control of the bus. If the slave NAKs the request or a bus error was encountered on the bus, the transfer is terminated. The application can call the <a href="05501.html" target="topic">SERCOMx_I2C_ErrorGet</a>() function to know that cause of the error.&nbsp;</p>
 <p class="Element10">
-When enabled, the 24-bit timer counter counts down from the value in VAL. When the counter reaches zero, it reloads the value in LOAD on the next clock edge. It then decrements on subsequent clocks. This reloading when the counter reaches zero is called wrapping. The timer interrupt is activated on the transition from 1 to 0, therefore it activates every n+1 clock ticks. . If a period of 100 is required 99 should be written to the SysTick Reload Value register.&nbsp;</p>
+The function is non-blocking. It initiates bus activity and returns immediately. The transfer is then completed in the peripheral interrupt. A transfer request cannot be placed when another transfer is in progress. Calling the write function when another function is already in progress will cause the function to return false.&nbsp;</p>
 <p class="Element10">
-The SysTick can be polled by software or can be configured to generate an interrupt.</p></div>
+The library will call the registered callback function when the transfer has terminated.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">SERCOMx_I2C_Write</span></strong>(
+    uint16_t <strong><span style="color: #000000">address</span></strong>, 
+    uint8_t * <strong><span style="color: #000000">pdata</span></strong>, 
+    uint32_t <strong><span style="color: #000000">length</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+<a href="05502.html" target="topic">SERCOMx_I2C_Initialize</a> must have been called for the associated SERCOM I2C instance. At least one TRB should be available.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+address&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+7-bit / 10-bit slave address.<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+data&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+pointer to source data buffer that contains the data to be transmitted.<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+length&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+length of data buffer in number of bytes. Also the number of bytes to be written.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+
+<ul class="Element630">
+<li class="Element600">true - The request was placed successfully and the bus activity was initiated.</li>
+<li class="Element600">false - The request fails, if there was already a transfer in progress when this function was called.</li>
+</ul></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">    uint8_t myData [NUM_BYTES];
+
+    <strong><span style="color: #000080">if</span></strong>(!SERCOM0_I2C_Write( SLAVE_ADDR, &amp;myData[0], NUM_BYTES ))
+    {
+        <i><span style="color: #008000">// error handling</span></i>
+    }
+</pre></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="05506.html" target="topic">SYSTICK Peripheral Library Help</a> &gt; <a href="05505.html" target="topic">Introduction</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="05462.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="05451.html" target="topic">I2C</a> &gt; <a href="05456.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="05505.html" target="topic">SERCOMx_I2C_Write Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -68,13 +142,13 @@ The SysTick can be polled by software or can be configured to generate an interr
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05506.html" target="topic">Previous</a> | <a href="05506.html" target="topic">Up</a> | <a href="05502.html" target="topic">Next</a></div>
+<a href="05504.html" target="topic">Previous</a> | <a href="05456.html" target="topic">Up</a> | <a href="05506.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SYSTICK Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_i2c::SERCOMx_I2C_Write@uint16_t@uint8_t *@uint32_t Topic Title: SERCOMx_I2C_Write Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

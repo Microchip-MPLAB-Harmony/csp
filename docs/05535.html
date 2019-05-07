@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>e) Data Types and Constants</title>
+<title>SERCOMx_USART_ErrorGet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="05552.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="05531.html" target="topic">Capture</a> &gt; <a href="05534.html" target="topic">Library Interface</a> &gt; <a href="05535.html" target="topic">e) Data Types and Constants</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="05462.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="05473.html" target="topic">USART</a> &gt; <a href="05477.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="05535.html" target="topic">SERCOMx_USART_ErrorGet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05712.html" target="topic">Previous</a> | <a href="05534.html" target="topic">Up</a> | <a href="05696.html" target="topic">Next</a></div>
+<a href="05542.html" target="topic">Previous</a> | <a href="05477.html" target="topic">Up</a> | <a href="05541.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC 44162 Capture mode Data Types and Constants Topic Title: e) Data Types and Constants)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_usart::SERCOMx_USART_ErrorGet Topic Title: SERCOMx_USART_ErrorGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-e) Data Types and Constants</div>
+SERCOMx_USART_ErrorGet Function</div>
 </div>
 </div>
 
@@ -48,78 +48,49 @@ e) Data Types and Constants</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
+<p class="Element10">
+This function returns the errors associated with the given USART peripheral instance. Multiple error conditions may be active. The function return value should be matched against each member of the USART_ERROR enumeration to handle all error cases. Calling the <a href="05538.html" target="topic">SERCOMx_USART_Read</a> or <a href="05546.html" target="topic">SERCOMx_USART_Write</a> functions will clear the errors. Hence error handling must be performed before these functions are called again.</p></div>
 </div>
-</div>
-<a name="456E756D65726174696F6E73"></a><div class="Element14">
-Enumerations</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><a href="05558.html" target="topic">USARTx_ERROR</a> <strong><span style="color: #000000">SERCOMx_USART_ErrorGet</span></strong>();</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="05700.html" target="topic">TCx_CAPTURE_STATUS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Identifies channel interrupt source mask&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+<a href="05537.html" target="topic">SERCOMx_USART_Initialize</a> must have been called for the associated USART instance.</p></div>
 </div>
-</div>
-<a name="53747275637475726573"></a><div class="Element14">
-Structures</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="05697.html" target="topic">TCx_CAPTURE_CALLBACK_OBJECT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This is type tc_44162::TCx_CAPTURE_CALLBACK_OBJECT.&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+Returns errors occurred as listed by USART_ERROR enumeration.</p></div>
 </div>
-</div>
-<a name="5479706573"></a><div class="Element14">
-Types</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="05696.html" target="topic">TCx_CAPTURE_CALLBACK</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Defines the function pointer data type and function signature for the tc channel callback function.&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+USART errors are normally associated with the receiver. Hence, it is recommended to use this function in receive context only.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">if</span></strong>(USART_ERROR_NONE != SERCOM0_USART_ErrorGet())
+{
+    <strong><span style="color: #000080">if</span></strong> (USART_ERROR_OVERRUN &amp; SERCOM0_USART_ErrorGet())
+    {
+        <i><span style="color: #008000">// Handle overrun error.</span></i>
+    }
+
+    <strong><span style="color: #000080">if</span></strong>(USART_ERROR_PARITY &amp; SERCOM0_USART_ErrorGet())
+    {
+        <i><span style="color: #008000">// Handle parity error.</span></i>
+    }
+}</pre></div></div>
 </div>
 </div>
 </div>
@@ -127,7 +98,7 @@ Defines the function pointer data type and function signature for the tc channel
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="05552.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="05531.html" target="topic">Capture</a> &gt; <a href="05534.html" target="topic">Library Interface</a> &gt; <a href="05535.html" target="topic">e) Data Types and Constants</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="05462.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="05473.html" target="topic">USART</a> &gt; <a href="05477.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="05535.html" target="topic">SERCOMx_USART_ErrorGet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -135,13 +106,13 @@ Defines the function pointer data type and function signature for the tc channel
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05712.html" target="topic">Previous</a> | <a href="05534.html" target="topic">Up</a> | <a href="05696.html" target="topic">Next</a></div>
+<a href="05542.html" target="topic">Previous</a> | <a href="05477.html" target="topic">Up</a> | <a href="05541.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC 44162 Capture mode Data Types and Constants Topic Title: e) Data Types and Constants)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_usart::SERCOMx_USART_ErrorGet Topic Title: SERCOMx_USART_ErrorGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

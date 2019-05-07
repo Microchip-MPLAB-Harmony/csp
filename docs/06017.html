@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Running The Application</title>
+<title>Introduction</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="06012.html" target="topic">TCC Applications</a> &gt; <a href="06013.html" target="topic">tcc_synchronous_pwm_channels</a> &gt; <a href="06017.html" target="topic">Running The Application</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="06012.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="06013.html" target="topic">Timer</a> &gt; <a href="06017.html" target="topic">Introduction</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06015.html" target="topic">Previous</a> | <a href="06013.html" target="topic">Up</a> | <a href="06055.html" target="topic">Next</a></div>
+<a href="06013.html" target="topic">Previous</a> | <a href="06013.html" target="topic">Up</a> | <a href="06014.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCC tcc_synchronous_pwm_channels Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC U2212 Timer Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Running The Application</div>
+Introduction</div>
 </div>
 </div>
 
@@ -48,139 +48,25 @@ Running The Application</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
-
-<ol class="Element630">
-<li value="1" class="Element600">Build and Program the application using the MPLAB X IDE.</li>
-<li value="2" class="Element600">Observe the output as described in the following table:</li>
-</ol><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element65" valign="top" width="4%">
-<div class="Element66">
-Project Name&nbsp;</div></td><td class="Element65" valign="top" width="96%">
-<div class="Element66">
-Output&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="4%">
-<div class="Element68">
-sam_c21n_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="96%">
-<div class="Element68">
-Observe the high-side and low-side PWM waveforms on oscilloscope. Observe the dead time between the high side and the low side. PWM frequency = 10KHz</p>
-<ul class="Element630">
-<li class="Element600">TCC Channel 2
-<ul class="Element631">
-<li class="Element601">Pin 5 of EXT1 - PWMH (PA10)</li>
-<li class="Element601">Pin 7 of EXT1 - PWML ( PB12)</li>
-</ul></li>
-<li class="Element600">TCC Channel 3
-<ul class="Element631">
-<li class="Element601"> Pin 6 of EXT1 - PWMH ( PA11)</li>
-<li class="Element601"> Pin 8 of EXT1 - PWML ( PB13)</li>
-</ul></li>
-</ul><p class="Element68">
-<br><img src="mhc_configuration_tcc_output.png" border="0" alt="" title="">&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="4%">
-<div class="Element68">
-sam_d21_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="96%">
-<div class="Element68">
-Observe the high-side and low-side PWM waveforms on oscilloscope. Observe the dead time between the high side and the low side. PWM frequency = 10KHz</p>
-<ul class="Element630">
-<li class="Element600">TCC Channel 0
-<ul class="Element631">
-<li class="Element601">Pin 11 of EXT2 - PWMH (PA08)</li>
-<li class="Element601">Pin 14 of EXT2 - PWML ( PB10)</li>
-</ul></li>
-<li class="Element600">TCC Channel 1
-<ul class="Element631">
-<li class="Element601"> Pin 12 of EXT2 - PWMH ( PA09)</li>
-<li class="Element601"> Pin 13 of EXT2 - PWML ( PB11)</li>
-</ul></li>
-<li class="Element600">TCC Channel 2
-<ul class="Element631">
-<li class="Element601"> Pin 3 of EXT2 - PWMH ( PA10)</li>
-<li class="Element601"> Pin 7 of EXT2 - PWML ( PB12)</li>
-</ul></li>
-</ul><p class="Element68">
-<br><img src="TCC_D21_output.png" border="0" alt="" title="">&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="4%">
-<div class="Element68">
-sam_e54_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="96%">
-<div class="Element68">
-Observe the high-side and low-side PWM waveforms on oscilloscope. Observe the dead time between the high side and the low side. PWM frequency = 10KHz</p>
-<ul class="Element630">
-<li class="Element600">TCC Channel 0
-<ul class="Element631">
-<li class="Element601">Pin 16 of EXT2 - PWMH (PC04)</li>
-<li class="Element601">Pin 8 of EXT3 - PWML ( PD11)</li>
-</ul></li>
-<li class="Element600">TCC Channel 1
-<ul class="Element631">
-<li class="Element601"> Pin 11 of EXT2 - PWMH ( PD08)</li>
-<li class="Element601"> Pin 13 of EXT2 - PWML ( PB17)</li>
-</ul></li>
-<li class="Element600">TCC Channel 2
-<ul class="Element631">
-<li class="Element601"> Pin 7 of EXT2 - PWMH ( PB14)</li>
-<li class="Element601"> Pin 14 of EXT3 - PWML ( PC22)</li>
-</ul></li>
-</ul><p class="Element68">
-<br><img src="TCC_E54_output.png" border="0" alt="" title="">&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="4%">
-<div class="Element68">
-sam_l21_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="96%">
-<div class="Element68">
-Observe the high-side and low-side PWM waveforms on oscilloscope. Observe the dead time between the high side and the low side. PWM frequency = 10KHz</p>
-<ul class="Element630">
-<li class="Element600">TCC Channel 0
-<ul class="Element631">
-<li class="Element601">Pin 11 of EXT1 - PWMH (PA08)</li>
-<li class="Element601">Pin 17 of EXT3 - PWML ( PB16)</li>
-</ul></li>
-<li class="Element600">TCC Channel 1
-<ul class="Element631">
-<li class="Element601"> Pin 12 of EXT1 - PWMH ( PA09)</li>
-<li class="Element601"> Pin 15 of EXT3 - PWML ( PB17)</li>
-</ul></li>
-<li class="Element600">TCC Channel 2
-<ul class="Element631">
-<li class="Element601"> Pin 3 of EXT2 - PWMH ( PA10)</li>
-<li class="Element601"> Pin 7 of EXT2 - PWML ( PB12)</li>
-</ul></li>
-</ul><p class="Element68">
-<br><img src="TCC_L21_output.png" border="0" alt="" title="">&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="4%">
-<div class="Element68">
-sam_l22_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="96%">
-<div class="Element68">
-Observe the high-side and low-side PWM waveforms on oscilloscope. Observe the dead time between the high side and the low side. PWM frequency = 10KHz</p>
-<ul class="Element630">
-<li class="Element600">TCC Channel 0
-<ul class="Element631">
-<li class="Element601">Pin 11 of EXT1 - PWMH (PB30)</li>
-<li class="Element601">Pin 7 of EXT2 - PWML ( PC28)</li>
-</ul></li>
-<li class="Element600">TCC Channel 1
-<ul class="Element631">
-<li class="Element601"> Pin 12 of EXT1 - PWMH ( PB31)</li>
-<li class="Element601"> Pin 13 of EXT1 - PWML ( PA23)</li>
-</ul></li>
-<li class="Element600">TCC Channel 2
-<ul class="Element631">
-<li class="Element601"> Pin 16 of EXT2 - PWMH ( PA18)</li>
-<li class="Element601"> Pin 5 of EXT1 - PWML ( PA20)</li>
-</ul></li>
-</ul><p class="Element68">
-<br><img src="TCC_L22_output.png" border="0" alt="" title="">&nbsp;</div></td></tr></table></div></div>
-<p class="Element10" style="text-align: center;">
+<p class="Element10">
+The TC channel in timer mode is used for periodic interrupt generation. This provides below features:&nbsp;</p>
+<p class="Element10">
 &nbsp;</p>
-</div>
+<ul class="Element630">
+<li class="Element600">Selectable 8/16/32 bit counter</li>
+<li class="Element600">Interrupts/output events on:
+<ul class="Element631">
+<li class="Element601">Counter overflow/underflow</li>
+<li class="Element601">Compare match</li>
+</ul></li>
+</ul></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="06012.html" target="topic">TCC Applications</a> &gt; <a href="06013.html" target="topic">tcc_synchronous_pwm_channels</a> &gt; <a href="06017.html" target="topic">Running The Application</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="06012.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="06013.html" target="topic">Timer</a> &gt; <a href="06017.html" target="topic">Introduction</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -188,13 +74,13 @@ Observe the high-side and low-side PWM waveforms on oscilloscope. Observe the de
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06015.html" target="topic">Previous</a> | <a href="06013.html" target="topic">Up</a> | <a href="06055.html" target="topic">Next</a></div>
+<a href="06013.html" target="topic">Previous</a> | <a href="06013.html" target="topic">Up</a> | <a href="06014.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCC tcc_synchronous_pwm_channels Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC U2212 Timer Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

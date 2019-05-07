@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Introduction</title>
+<title>NVMCTRL_SmartEEPROMCallbackRegister Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="03428.html" target="topic">PIO Peripheral Library Help</a> &gt; <a href="03427.html" target="topic">Introduction</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="03355.html" target="topic">NVMCTRL Peripheral Library Help</a> &gt; <a href="03356.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="03427.html" target="topic">NVMCTRL_SmartEEPROMCallbackRegister Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03428.html" target="topic">Previous</a> | <a href="03428.html" target="topic">Up</a> | <a href="03424.html" target="topic">Next</a></div>
+<a href="03417.html" target="topic">Previous</a> | <a href="03356.html" target="topic">Up</a> | <a href="03389.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PIO 11004 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nvmctrl_u2409::NVMCTRL_SmartEEPROMCallbackRegister@NVMCTRL_CALLBACK@uintptr_t Topic Title: NVMCTRL_SmartEEPROMCallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Introduction</div>
+NVMCTRL_SmartEEPROMCallbackRegister Function</div>
 </div>
 </div>
 
@@ -49,26 +49,91 @@ Introduction</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The Parallel Input/Output Controller (PIO) manages up to 32 fully programmable input/output lines. Each I/O line may be dedicated as a general-purpose I/O or be assigned to a function of an embedded peripheral. This ensures effective optimization of the pins of the product.&nbsp;</p>
+This function sets the pointer to a client function to be called when the SmartEEPROM has completed an operation and is ready to receive new command. It also passes a context value that is passed into the callback function when it is called. This function is available only when the library is generated with SmartEEPROM interrupt option (in MHC) enabled.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">NVMCTRL_SmartEEPROMCallbackRegister</span></strong>(
+    <a href="03391.html" target="topic">NVMCTRL_CALLBACK</a> <strong><span style="color: #000000">callback</span></strong>, 
+    uintptr_t <strong><span style="color: #000000">context</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-&nbsp;</p>
+SmartEEPROM Interrupt option in MHC should have been enabled</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+callback&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+A pointer to a function with a calling signature defined by the <a href="03391.html" target="topic">NVMCTRL_CALLBACK</a> data type.<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+A value (usually a pointer) passed (unused) into the function identified by the callback parameter.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-Each I/O line of the PIO Controller features the following:</p>
-<ul class="Element630">
-<li class="Element600">An input change interrupt enabling level change detection on any I/O line</li>
-<li class="Element600">Additional Interrupt modes enabling rising edge, falling edge, low-level or high-level detection on any I/O line</li>
-<li class="Element600">A glitch filter providing rejection of glitches lower than one-half of peripheral clock cycle</li>
-<li class="Element600">A debouncing filter providing rejection of unwanted pulses from key or push button operations</li>
-<li class="Element600">Multi-drive capability similar to an open drain I/O line</li>
-<li class="Element600">Control of the I/O line pullup and pulldown</li>
-</ul></div>
+None.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The context value may be set to NULL if it is not required. Note that the value of NULL will still be passed to the callback function. To disable the callback function, pass a NULL for the callback parameter. See the <a href="03391.html" target="topic">NVMCTRL_CALLBACK</a> type definition for additional information.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">
+uintptr_t seep_context;
+<i><span style="color: #008000">// Callback is called when an operation completes.</span></i>
+<strong><span style="color: #000080">void</span></strong> seep_cb(uint8_t int_flags, uintptr_t context)
+{
+    <i><span style="color: #008000">//Code to check int_flags and decide next action</span></i>
+}
+
+<a href="03402.html" target="topic">NVMCTRL_Initialize</a>();
+
+<i><span style="color: #008000">// Register the callback</span></i>
+NVMCTRL_SmartEEPROMCallbackRegister(seep_cb, seep_context);
+
+<i><span style="color: #008000">// Perform some operation.</span></i>
+<a href="03396.html" target="topic">NVMCTRL_EnableSmartEepromInterruptSource</a>(NVMCTRL_INT_SEEWRC);
+SMART_EEPROM32[0] = 0x11223344;
+
+<i><span style="color: #008000">// The callback 'seep_cb' will be invoked after the above operation is done.</span></i>
+</pre></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="03428.html" target="topic">PIO Peripheral Library Help</a> &gt; <a href="03427.html" target="topic">Introduction</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="03355.html" target="topic">NVMCTRL Peripheral Library Help</a> &gt; <a href="03356.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="03427.html" target="topic">NVMCTRL_SmartEEPROMCallbackRegister Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -76,13 +141,13 @@ Each I/O line of the PIO Controller features the following:</p>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03428.html" target="topic">Previous</a> | <a href="03428.html" target="topic">Up</a> | <a href="03424.html" target="topic">Next</a></div>
+<a href="03417.html" target="topic">Previous</a> | <a href="03356.html" target="topic">Up</a> | <a href="03389.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PIO 11004 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nvmctrl_u2409::NVMCTRL_SmartEEPROMCallbackRegister@NVMCTRL_CALLBACK@uintptr_t Topic Title: NVMCTRL_SmartEEPROMCallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

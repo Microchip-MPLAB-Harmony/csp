@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCx_CompareStatusGet Function</title>
+<title>Running The Application</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="05684.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="05673.html" target="topic">Compare</a> &gt; <a href="05676.html" target="topic">Library Interface</a> &gt; <a href="05680.html" target="topic">d) Status Functions</a> &gt; <a href="05982.html" target="topic">TCx_CompareStatusGet Function</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="05975.html" target="topic">TC Applications</a> &gt; <a href="05976.html" target="topic">tc_capture_mode</a> &gt; <a href="05982.html" target="topic">Running The Application</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05680.html" target="topic">Previous</a> | <a href="05680.html" target="topic">Up</a> | <a href="05677.html" target="topic">Next</a></div>
+<a href="05980.html" target="topic">Previous</a> | <a href="05976.html" target="topic">Up</a> | <a href="05977.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tc_u2249::TCx_CompareStatusGet Topic Title: TCx_CompareStatusGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC tc_capture_mode Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCx_CompareStatusGet Function</div>
+Running The Application</div>
 </div>
 </div>
 
@@ -49,40 +49,135 @@ TCx_CompareStatusGet Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function reads the compare status.</p></div>
-</div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><a href="05957.html" target="topic">TCx_COMPARE_STATUS</a> <strong><span style="color: #000000">TCx_CompareStatusGet</span></strong>();</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
-<div class="Element11">
-<div class="Element10">
+<strong><u>Running project with MPLAB X IDE</u></strong>&nbsp;</p>
+
+<ol class="Element630">
+<li value="1" class="Element600">Open the Terminal application (Ex.:Tera term) on the computer.</li>
+<li value="2" class="Element600">Connect to the EDBG Virtual COM port and configure the serial settings as follows:
+<ul class="Element631">
+<li class="Element601">Baud : 115200</li>
+<li class="Element601">Data : 8 Bits</li>
+<li class="Element601">Parity : None</li>
+<li class="Element601">Stop : 1 Bit</li>
+<li class="Element601">Flow Control : None</li>
+</ul></li>
+<li value="3" class="Element600">SAM E70 Xplained Ultra Evaluation Kit and SAM V71 Xplained Ultra Evaluation Kit
+<ul class="Element631">
+<li class="Element601">Connect PA00 (Pin 7 of EXT1) to PC30 (Pin 8 of EXT1)</li>
+</ul></li>
+<li value="4" class="Element600">SAM C21n Xplained Pro Evaluation Kit
+<ul class="Element631">
+<li class="Element601">Connect PA09 (Pin 4 of EXT2) to PA21 (Pin 6 of EXT2)</li>
+</ul></li>
+<li value="5" class="Element600">SAM D21 Xplained Pro Evaluation Kit and SAM D20 Xplained Pro Evaluation Kit
+<ul class="Element631">
+<li class="Element601">Connect PA19 (Pin 18 of EXT2) to PA16 (pin 17 of EXT2)</li>
+</ul></li>
+<li value="6" class="Element600">SAM E54 Xplained Pro Evaluation Kit
+<ul class="Element631">
+<li class="Element601">Connect PA05 (Pin 13 of EXT1) to PB04 (Pin 3 of EXT1)</li>
+</ul></li>
+<li value="7" class="Element600">SAM L21 Xplained Pro Evaluation Kit
+<ul class="Element631">
+<li class="Element601">Connect PA17 (Pin 15 of EXT2) to PB09 (Pin 13 of EXT1)</li>
+</ul></li>
+<li value="8" class="Element600">SAM L22 Xplained Pro Evaluation Kit
+<ul class="Element631">
+<li class="Element601">Connect PB09 (Pin 8 of EXT1) to PC02 (Pin 9 of EXT1)</li>
+</ul></li>
+<li value="9" class="Element600">Build and Program the application using the MPLAB X IDE.</li>
+<li value="10" class="Element600">Console displays the frequency and duty cycle of the input signal.</li>
+<li value="11" class="Element600">Observe the output as described in the following table:</li>
+</ol><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="8%">
+<div class="Element66">
+Project Name&nbsp;</div></td><td class="Element65" valign="top" width="92%">
+<div class="Element66">
+Output&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="8%">
+<div class="Element68">
+sam_c21n_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="92%">
+<div class="Element68">
+Success: Console displays frequency and duty cycle of input signal. Frequency is constant (800 Hz) and duty cycle changes by 1%.<br><br><img src="output_tc_capture_mode_samc21.png" border="0" alt="" title="">&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="8%">
+<div class="Element68">
+sam_d20_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="92%">
+<div class="Element68">
+Success: Console displays frequency and duty cycle of input signal. Frequency is constant (799 Hz) and duty cycle changes by 1%.<br><img src="output_tc_capture_mode_samd2x.png" border="0" alt="" title="">&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="8%">
+<div class="Element68">
+sam_d21_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="92%">
+<div class="Element68">
+Success: Console displays frequency and duty cycle of input signal. Frequency is constant (800 Hz) and duty cycle changes by 1%.<br><img src="output_tc_capture_mode_same54.png" border="0" alt="" title="">&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="8%">
+<div class="Element68">
+sam_e54_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="92%">
+<div class="Element68">
+Success: Console displays frequency and duty cycle of input signal. Frequency is constant (799 Hz) and duty cycle changes by 1%.<br><img src="output_tc_capture_mode_same54.png" border="0" alt="" title="">&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="8%">
+<div class="Element68">
+sam_e70_xult.X&nbsp;</div></td><td class="Element67" valign="top" width="92%">
+<div class="Element68">
+Success: Console displays frequency and duty cycle of input signal. Frequency is constant (2500 Hz) and duty cycle changes by 1%.<br><img src="output_tc_capture_mode.png" border="0" alt="" title="">&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="8%">
+<div class="Element68">
+sam_l21_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="92%">
+<div class="Element68">
+Success: Console displays frequency and duty cycle of input signal. Frequency is constant (800 Hz) and duty cycle changes by 1%.<br><img src="output_tc_capture_mode_saml21.png" border="0" alt="" title="">&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="8%">
+<div class="Element68">
+sam_l22_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="92%">
+<div class="Element68">
+Success: Console displays frequency and duty cycle of input signal. Frequency is constant (800 Hz) and duty cycle changes by 1%.<br><img src="output_tc_capture_mode_saml22.png" border="0" alt="" title="">&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="8%">
+<div class="Element68">
+sam_v71_xult.X&nbsp;</div></td><td class="Element67" valign="top" width="92%">
+<div class="Element68">
+Success: Console displays frequency and duty cycle of input signal. Frequency is constant (2500 Hz) and duty cycle changes by 1%.<br><img src="output_tc_capture_mode_samv71.png" border="0" alt="" title="">&nbsp;</div></td></tr></table></div></div>
 <p class="Element10">
-<a href="05980.html" target="topic">TCx_CompareInitialize</a>() function must have been called first.</p></div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
+&nbsp;</p>
 <p class="Element10">
-compareStatus - status of compare operation.</p></div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">  <a href="05957.html" target="topic">TCx_COMPARE_STATUS</a> compareStatus;
-  <a href="05980.html" target="topic">TCx_CompareInitialize</a>();
-  <a href="05981.html" target="topic">TCx_CompareStart</a>();
-  compareStatus = TCx_CompareStatusGet();</pre></div></div>
+<strong><u>Running project with IAR Embedded work bench</u></strong></p>
+<ol class="Element630">
+<li value="1" class="Element600">Build the project using IAR Embedded Workbench</li>
+<li value="2" class="Element600">Use the output binary file (harmony.bin) to setup the board as detailed in <a href="05980.html" target="topic">hardware setup</a></li>
+<li value="3" class="Element600">Open the Terminal application (Ex.:Tera term) on the computer</li>
+<li value="4" class="Element600">Connect to the EDBG Virtual COM port and configure the serial settings as follows:
+<ul class="Element631">
+<li class="Element601">Baud : 115200</li>
+<li class="Element601">Data : 8 Bits</li>
+<li class="Element601">Parity : None</li>
+<li class="Element601">Stop : 1 Bit</li>
+<li class="Element601">Flow Control : None</li>
+</ul></li>
+<li value="5" class="Element600">Reset the board to run the application</li>
+</ol>
+<ul class="Element630">
+<li class="Element600"><i>Note: In addition to program output, bootloader outputs its log messages to the same console. These messages will be displayed immediately after reset and are not captured here.</i></li>
+</ul><p class="Element10">
+&nbsp;</p>
+<div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="11%">
+<div class="Element66">
+Project Name&nbsp;</div></td><td class="Element65" valign="top" width="89%">
+<div class="Element66">
+Output&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="11%">
+<div class="Element68">
+sam_a5d2_xult.IAR&nbsp;</div></td><td class="Element67" valign="top" width="89%">
+<div class="Element68">
+Success: Console displays frequency and duty cycle of input signal. Frequency is constant (2500 Hz) and duty cycle changes by 8%<br><img src="output_tc_capture_mode_sama5d2.png" border="0" alt="" title="">&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="11%">
+<div class="Element68">
+sam_9x60_ek.IAR&nbsp;</div></td><td class="Element67" valign="top" width="89%">
+<div class="Element68">
+Success:Console displays frequency and duty cycle of input signal. Frequency is constant (1000Hz) and duty cycle changes by 10%<br><br><img src="output_tc_capture_mode_sam9x60.png" border="0" alt="" title="">&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -90,7 +185,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="05684.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="05673.html" target="topic">Compare</a> &gt; <a href="05676.html" target="topic">Library Interface</a> &gt; <a href="05680.html" target="topic">d) Status Functions</a> &gt; <a href="05982.html" target="topic">TCx_CompareStatusGet Function</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="05975.html" target="topic">TC Applications</a> &gt; <a href="05976.html" target="topic">tc_capture_mode</a> &gt; <a href="05982.html" target="topic">Running The Application</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -98,13 +193,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05680.html" target="topic">Previous</a> | <a href="05680.html" target="topic">Up</a> | <a href="05677.html" target="topic">Next</a></div>
+<a href="05980.html" target="topic">Previous</a> | <a href="05976.html" target="topic">Up</a> | <a href="05977.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tc_u2249::TCx_CompareStatusGet Topic Title: TCx_CompareStatusGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC tc_capture_mode Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

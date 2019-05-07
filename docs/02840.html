@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="02843.html" target="topic">MATRIX Peripheral Library Help</a> &gt; <a href="02840.html" target="topic">Configuring the Library</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="02843.html" target="topic">I2S Peripheral Library Help</a> &gt; <a href="02840.html" target="topic">Configuring the Library</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,13 +26,13 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02842.html" target="topic">Previous</a> | <a href="02843.html" target="topic">Up</a> | <a href="02845.html" target="topic">Next</a></div>
+<a href="02842.html" target="topic">Previous</a> | <a href="02843.html" target="topic">Up</a> | <a href="02846.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MATRIX 44025 Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: I2S U2224 Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
 Configuring the Library</div>
 </div>
@@ -49,14 +49,64 @@ Configuring the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Configure the peripheral library using the MHC.</p></div>
+The library is configured for the supported processor when the processor is chosen in MPLAB X IDE, using the Microchip Harmony Configurator (MHC).&nbsp;</p>
+<p class="Element10">
+Choose the I2S peripheral by clicking on the appropriate instance under <i>Peripherals-&gt;I2S</i> in the Available Components section of MHC. (The I2S component may also be added automatically as a result of using a BSP Template, such as one for a codec or Bluetooth module).&nbsp;</p>
+<p class="Element10">
+When the I2S peripheral is clicked on in the Project Graph, the following menu is displayed in the Configurations Options:&nbsp;</p>
+<p class="Element10">
+<img src="CSP I2S i2s MHC.png" border="0" alt="" title="">&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+Typical values are shown for working in Slave mode, with a codec such as the WM8904 in Master mode. <strong>DMA</strong> and <strong>Interrupt Mode</strong> are always enabled.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<u>For each of the two Clock Units (0 and 1, only the first is shown):</u>&nbsp;</p>
+<p class="Element10">
+<strong> Clock Unit n Enable -- </strong>if checked, the clock unit is enabled&nbsp;</p>
+<p class="Element10">
+<strong> Master/Slave Mode</strong> can be either Master -- the I2S peripheral supplies the I2S clocks, or Slave -- the peripheral such as a codec or Bluetooth module supplies the I2S clocks.&nbsp;</p>
+<p class="Element10">
+<strong> Master Clock Output Divisor</strong> -- the Generic I2S Clock (GCLK_I2S_n) is divided by this number to generate the Master Clock (MCKn)&nbsp;</p>
+<p class="Element10">
+<strong> Master Clock Division Factor</strong> -- the Master Clock (MCKn) is divided by this number to generate a serial clock SCKn&nbsp;</p>
+<p class="Element10">
+<strong> Frame Sync Output Invert</strong> -- the FSn signal is output with or without inversion&nbsp;</p>
+<p class="Element10">
+<strong> Frame Sync Input Invert</strong> -- the FSn signal is used with or without inversion on input&nbsp;</p>
+<p class="Element10">
+<strong> Data Delay from Frame Sync</strong> -- either 1 bit for I2S format, or 0 for left/right adjusted format&nbsp;</p>
+<p class="Element10">
+<strong> Slot Size </strong>selects the number of bits per slot: 8, 16, 24 or 32&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<u>For each of the Serializers (TX/RX):</u>&nbsp;</p>
+<p class="Element10">
+<strong> Stereo/Mono </strong>selects stereo or mono (left channel is duplicated to the right)&nbsp;</p>
+<p class="Element10">
+<strong> Data Word Formatting Adjust </strong>selects left or right adjustment of data samples within the word&nbsp;</p>
+<p class="Element10">
+<strong> Data Word Size </strong>selects the number of bits per sample: 8, 16, 18, 20, 24 or 32 (or 8-bit compact stereo or 16-bit compact stereo)&nbsp;</p>
+<p class="Element10">
+<strong> Data Slot Formatting Adjust </strong>selects left or right adjustment of data samples within the slot&nbsp;</p>
+<p class="Element10">
+<strong> Clock Unit Selection</strong> selects which clock unit to use for this serializer, 0 or 1&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<strong>Frame Select Pin </strong>specifies which pin is used as the FSn output as selected in the Pin Diagram&nbsp;</p>
+<p class="Element10">
+<strong>Invert</strong> selects whether the output of the I2S_LRCLK_Get function returns the true value or inverted one.&nbsp;</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="02843.html" target="topic">MATRIX Peripheral Library Help</a> &gt; <a href="02840.html" target="topic">Configuring the Library</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="02843.html" target="topic">I2S Peripheral Library Help</a> &gt; <a href="02840.html" target="topic">Configuring the Library</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -64,13 +114,13 @@ Configure the peripheral library using the MHC.</p></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02842.html" target="topic">Previous</a> | <a href="02843.html" target="topic">Up</a> | <a href="02845.html" target="topic">Next</a></div>
+<a href="02842.html" target="topic">Previous</a> | <a href="02843.html" target="topic">Up</a> | <a href="02846.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MATRIX 44025 Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: I2S U2224 Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

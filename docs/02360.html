@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Using the Library</title>
+<title>FREQM_FrequencyGet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="02356.html" target="topic">GPIO Peripheral Library Help</a> &gt; <a href="02360.html" target="topic">Using the Library</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="02348.html" target="topic">FREQM Peripheral Library Help</a> &gt; <a href="02349.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="02360.html" target="topic">FREQM_FrequencyGet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02352.html" target="topic">Previous</a> | <a href="02356.html" target="topic">Up</a> | <a href="02357.html" target="topic">Next</a></div>
+<a href="02363.html" target="topic">Previous</a> | <a href="02349.html" target="topic">Up</a> | <a href="02359.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: GPIO 02467 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: FREQM_FrequencyGet Topic Title: FREQM_FrequencyGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Using the Library</div>
+FREQM_FrequencyGet Function</div>
 </div>
 </div>
 
@@ -49,27 +49,63 @@ Using the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The GPIO peripheral library provides two kinds of functions which can be used to control GPIO Pins:&nbsp;</p>
+This function returns the measured frequency in Hz. It should be called when a frequency measurement is complete and no errors have occurred. This function is non-blocking. In this mode, the function should be called only after a callback function was called. The return value of the function is only valid if the <a href="02359.html" target="topic">FREQM_ErrorGet</a>() function returns FREQM_ERROR_NONE.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100">uint32_t <strong><span style="color: #000000">FREQM_FrequencyGet</span></strong>();</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-&nbsp;</p>
-<ol class="Element630">
-<li value="1" class="Element600">Pin Functions.</li>
-<li value="2" class="Element600">Port Functions.</li>
-</ol><p class="Element10">
-&nbsp;</p>
+<a href="02361.html" target="topic">FREQM_Initialize</a>() and <a href="02363.html" target="topic">FREQM_MeasurementStart</a>() functions should be called.</p></div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-Pin functions take a particular pin as input and operates only on that pin without affecting any other pins. Whereas port functions can operate on multiple pins of the same port together.&nbsp;</p>
+uint32_t - frequency value of the measured clock. The value is only valid if the <a href="02359.html" target="topic">FREQM_ErrorGet</a>() function returns FREQM_ERROR_NONE.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-The GPIO peripheral library can generate a callback on a pin interrupt if the pin interrupt is enabled in the MHC.</p></div>
+None.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">
+<i><span style="color: #008000">// Refer to the code example of FREQM_CallbackRegister() function for</span></i>
+<i><span style="color: #008000">// guidance on interrupt based operation.</span></i>
+
+<i><span style="color: #008000">// The following code snippet shows an exampl of non-interrupt based</span></i>
+<i><span style="color: #008000">// operation.</span></i>
+
+<a href="02361.html" target="topic">FREQM_Initialize</a>();
+<a href="02363.html" target="topic">FREQM_MeasurementStart</a>()
+
+<i><span style="color: #008000">// Wait till the measurement is complete.</span></i>
+<strong><span style="color: #000080">while</span></strong>(<a href="02362.html" target="topic">FREQM_IsBusy</a>());
+
+<strong><span style="color: #000080">if</span></strong>(FREQM_ERROR_NONE == <a href="02359.html" target="topic">FREQM_ErrorGet</a>())
+{
+    measuredFrequency = FREQM_FrequencyGet();
+    <i><span style="color: #008000">// This means there are no errors and the value contained in</span></i>
+    <i><span style="color: #008000">// measuredFrequency is valid.</span></i>
+}</pre></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="02356.html" target="topic">GPIO Peripheral Library Help</a> &gt; <a href="02360.html" target="topic">Using the Library</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="02348.html" target="topic">FREQM Peripheral Library Help</a> &gt; <a href="02349.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="02360.html" target="topic">FREQM_FrequencyGet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -77,13 +113,13 @@ The GPIO peripheral library can generate a callback on a pin interrupt if the pi
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02352.html" target="topic">Previous</a> | <a href="02356.html" target="topic">Up</a> | <a href="02357.html" target="topic">Next</a></div>
+<a href="02363.html" target="topic">Previous</a> | <a href="02349.html" target="topic">Up</a> | <a href="02359.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: GPIO 02467 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: FREQM_FrequencyGet Topic Title: FREQM_FrequencyGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

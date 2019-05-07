@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>RTC_FrequencyCorrect Function</title>
+<title>Introduction</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="04485.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="04507.html" target="topic">Clock and Calendar (Mode 2)</a> &gt; <a href="04513.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="04603.html" target="topic">RTC_FrequencyCorrect Function</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="04604.html" target="topic">RSTC Peripheral Library Help</a> &gt; <a href="04603.html" target="topic">Introduction</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04607.html" target="topic">Previous</a> | <a href="04513.html" target="topic">Up</a> | <a href="04599.html" target="topic">Next</a></div>
+<a href="04604.html" target="topic">Previous</a> | <a href="04604.html" target="topic">Up</a> | <a href="04600.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2202::RTC_FrequencyCorrect@int8_t Topic Title: RTC_FrequencyCorrect Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RSTC 11009 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-RTC_FrequencyCorrect Function</div>
+Introduction</div>
 </div>
 </div>
 
@@ -49,73 +49,29 @@ RTC_FrequencyCorrect Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function allows the application to calibrate the RTC frequency. The RTC module will add or subtract cycles from the RTC prescaler to adjust the frequency in steps of approximately 1ppm. The provided correction value should be between -127 to 127. A positive correction value adds counts and increase the period, thus reducing the frequency. A negative count will have the reverse effect.</p></div>
-</div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">RTC_FrequencyCorrect</span></strong>(
-    int8_t <strong><span style="color: #000000">correction</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
-<div class="Element11">
-<div class="Element10">
+The Reset Controller (RSTC) handles all the resets of the system and generates following reset signals:</p>
+<ul class="Element630">
+<li class="Element600"><strong>Processor Reset:</strong> Resets processor and also resets the Watchdog Timer</li>
+<li class="Element600"><strong>Peripheral Reset: </strong>Resets the peripheral</li>
+<li class="Element600"><strong>External Reset:</strong> Drives the NRST pin</li>
+</ul><p class="Element10">
+&nbsp;</p>
 <p class="Element10">
-<a href="04604.html" target="topic">RTC_Initialize</a> must have been called for the associated RTC instance. The Generate Frequency Correction API option in MHC should have been selected.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
-<div class="TableDiv">
-<table cellspacing="0" class="Table2">
-<tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-correction&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Signed 8 bit correction value. If no correction is needed, set value to zero.&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None.</p></div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">    <a href="04604.html" target="topic">RTC_Initialize</a>();
-
-    <i><span style="color: #008000">// Positive correction. This reduces frequency.</span></i>
-    RTC_FrequencyCorrect(5);
-
-    <i><span style="color: #008000">// Negatvie correction. This increase frequency.</span></i>
-    RTC_FrequencyCorrect(-10);</pre></div></div>
-</div>
+The following are the sources of reset:</p>
+<ul class="Element630">
+<li class="Element600"><strong>General Reset: </strong>A general reset occurs when a VDDIO power-on-reset is detected, a brownout or a voltage regulation loss is detected by the Supply Controller.</li>
+<li class="Element600"><strong>Backup Reset</strong>: A backup reset occurs when the chip exits from Backup mode.</li>
+<li class="Element600"><strong>Watchdog Reset:</strong> The watchdog reset occurs when it times out</li>
+<li class="Element600"><strong>Software Reset: </strong>The RSTC offers commands to assert processor reset and external reset</li>
+<li class="Element600"><strong>User Reset: </strong>A user reset is generated when a low level is detected on the NRST pin</li>
+</ul></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="04485.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="04507.html" target="topic">Clock and Calendar (Mode 2)</a> &gt; <a href="04513.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="04603.html" target="topic">RTC_FrequencyCorrect Function</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="04604.html" target="topic">RSTC Peripheral Library Help</a> &gt; <a href="04603.html" target="topic">Introduction</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -123,13 +79,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04607.html" target="topic">Previous</a> | <a href="04513.html" target="topic">Up</a> | <a href="04599.html" target="topic">Next</a></div>
+<a href="04604.html" target="topic">Previous</a> | <a href="04604.html" target="topic">Up</a> | <a href="04600.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2202::RTC_FrequencyCorrect@int8_t Topic Title: RTC_FrequencyCorrect Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RSTC 11009 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

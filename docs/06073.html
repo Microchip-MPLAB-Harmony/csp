@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Introduction</title>
+<title>TCx_CHy_CaptureStop Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="06074.html" target="topic">Timer Peripheral Library Help</a> &gt; <a href="06073.html" target="topic">Introduction</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="05912.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="05891.html" target="topic">Capture</a> &gt; <a href="05894.html" target="topic">Library Interface</a> &gt; <a href="05899.html" target="topic">c) Transaction Functions</a> &gt; <a href="06073.html" target="topic">TCx_CHy_CaptureStop Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06074.html" target="topic">Previous</a> | <a href="06074.html" target="topic">Up</a> | <a href="06070.html" target="topic">Next</a></div>
+<a href="06071.html" target="topic">Previous</a> | <a href="05899.html" target="topic">Up</a> | <a href="05898.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TMR 02815 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tc_44162::TCx_CHy_CaptureStop Topic Title: TCx_CHy_CaptureStop Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Introduction</div>
+TCx_CHy_CaptureStop Function</div>
 </div>
 </div>
 
@@ -49,47 +49,48 @@ Introduction</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Depending on the specific variant, the PIC32M device family offers several 16-bit timers. These timers are designated as <strong>Timer1, Timer2, Timer3, ..., etc.</strong>&nbsp;</p>
+This function stops the clock and thus counter of associated channel, preventing it from capturing signal-event counter values.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">TCx_CHy_CaptureStop</span></strong>();</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-Timers are useful for generating accurate time-based periodic interrupt events for software applications or real-time operating systems. Other uses include counting external pulses or accurate timing measurement of external events by using the timer’s gate feature. With certain exceptions, all of the timers have the same functional circuitry.&nbsp;</p>
+<a href="06070.html" target="topic">TCx_CHy_CaptureInitialize</a>() function must have been called first for the given channel.</p></div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-&nbsp;</p>
+None.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-The PIC32 has two kinds of timers:</p>
-<ol class="Element630">
-<li value="1" class="Element600"><strong>Timer1</strong></li>
-</ol><p class="Element10">
-All timers can run when the Central Processing Unit (CPU) is in idle mode, but only Timer1's asynchronous external clock mode enables it to run while the CPU is in sleep. This, combined with its ability to be driven by a secondary oscillator, allows the timer to function as a real-time clock (RTC).&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<ol class="Element630">
-<li value="2" class="Element600"><strong>Timer2, 3, 4, etc…</strong></li>
-</ol><p class="Element10">
-<strong>This peripheral library covers this timer. </strong>Each timer has its own 16-bit counter and period registers. A 32-bit timer can be created by combining two timers (e.g. Timer2 &amp; Timer3). In this case, the 32-bit timer is controlled by the even number timer control registers (e.g. Timer2). When an interrupt event occurs, the odd number timer generates the event (e.g. Timer3). The timer supports the following features.</p>
-<ul class="Element630">
-<li class="Element600">16-bit and 32-bit modes</li>
-<li class="Element600">Synchronous Internal Timer</li>
-<li class="Element600">Synchronous Internal Gated Timer</li>
-<li class="Element600">Synchronous External Timer</li>
-</ul><p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong>Timer Operation (non-gate mode)</strong>&nbsp;</p>
-<p class="Element10">
-When a timer is not in gate mode, it will generate an interrupt event when the value in the counter matches the value in the period register. When this match occurs, the counter is reset to zero, and the timer starts counting again. Note that if interrupts are disabled, the timer interrupt flag, TxIF, will still be set.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong>Timer Operation (Gate mode)</strong>&nbsp;</p>
-<p class="Element10">
-You can use the timer's gate feature to accurately measure the time for an external event. When the timers are in gate mode, the counters (driven by an internal clock) only increment when the TxCK pin is high. When this pin goes low, the timer stops incrementing and the timer interrupt flag, TxIF, is set. Note that in this mode, an interrupt event is not generated when the timer value matches the period register.</p></div>
+None</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">TC0_CH1_CaptureInitialize();
+TC0_CH1_CaptureStart();
+<i><span style="color: #008000">// Capture signal event counter values.</span></i>
+TC0_CH1_CaptureStop();</pre></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03831.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03423.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="03830.html" target="topic">Peripheral Libraries</a> &gt; <a href="06074.html" target="topic">Timer Peripheral Library Help</a> &gt; <a href="06073.html" target="topic">Introduction</a></div>
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="05912.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="05891.html" target="topic">Capture</a> &gt; <a href="05894.html" target="topic">Library Interface</a> &gt; <a href="05899.html" target="topic">c) Transaction Functions</a> &gt; <a href="06073.html" target="topic">TCx_CHy_CaptureStop Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -97,13 +98,13 @@ You can use the timer's gate feature to accurately measure the time for an exter
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="03831.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06074.html" target="topic">Previous</a> | <a href="06074.html" target="topic">Up</a> | <a href="06070.html" target="topic">Next</a></div>
+<a href="06071.html" target="topic">Previous</a> | <a href="05899.html" target="topic">Up</a> | <a href="05898.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TMR 02815 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tc_44162::TCx_CHy_CaptureStop Topic Title: TCx_CHy_CaptureStop Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->
