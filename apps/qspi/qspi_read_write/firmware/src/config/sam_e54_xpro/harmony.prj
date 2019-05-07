@@ -107,8 +107,8 @@
           <Name dnOrder="1">plib_qspi.c</Name>
           <LogicalPath dnOrder="2">config/sam_e54_xpro/peripheral/qspi/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/qspi/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">0CB0B404765B2A251D4DD51C1FBCC1F1</GeneratedChecksum>
-          <UserChecksum dnOrder="5">0CB0B404765B2A251D4DD51C1FBCC1F1</UserChecksum>
+          <GeneratedChecksum dnOrder="4">8049932B9993C6386727FE994A38AA35</GeneratedChecksum>
+          <UserChecksum dnOrder="5">8049932B9993C6386727FE994A38AA35</UserChecksum>
         </File>
         <File dnOrder="13">
           <Type dnOrder="0">SOURCE</Type>
@@ -267,8 +267,8 @@
           <Name dnOrder="1">definitions.h</Name>
           <LogicalPath dnOrder="2">config/sam_e54_xpro/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">1E8B6C3C1CDB19685ED399786BFFF234</GeneratedChecksum>
-          <UserChecksum dnOrder="5">1E8B6C3C1CDB19685ED399786BFFF234</UserChecksum>
+          <GeneratedChecksum dnOrder="4">BED240B19BF3A849196AB45A807EE6F2</GeneratedChecksum>
+          <UserChecksum dnOrder="5">BED240B19BF3A849196AB45A807EE6F2</UserChecksum>
         </File>
         <File dnOrder="33">
           <Type dnOrder="0">HEADER</Type>

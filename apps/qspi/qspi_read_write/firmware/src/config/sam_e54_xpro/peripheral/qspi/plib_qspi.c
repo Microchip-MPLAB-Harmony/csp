@@ -152,6 +152,8 @@ bool QSPI_CommandWrite( qspi_command_xfer_t *qspi_command_xfer, uint32_t address
             /* Poll Status register to know status if instruction has end */
     }
 
+    QSPI_REGS->QSPI_INTFLAG |=  QSPI_INTFLAG_INSTREND_Msk;
+
     return true;
 }
 
@@ -190,6 +192,8 @@ bool QSPI_RegisterRead( qspi_register_xfer_t *qspi_register_xfer, uint32_t *rx_d
             /* Poll Status register to know status if instruction has end */
     }
 
+    QSPI_REGS->QSPI_INTFLAG |=  QSPI_INTFLAG_INSTREND_Msk;
+
     return true;
 }
 
@@ -225,6 +229,8 @@ bool QSPI_RegisterWrite( qspi_register_xfer_t *qspi_register_xfer, uint32_t *tx_
     {
             /* Poll Status register to know status if instruction has end */
     }
+
+    QSPI_REGS->QSPI_INTFLAG |=  QSPI_INTFLAG_INSTREND_Msk;
 
     return true;
 }
@@ -269,6 +275,8 @@ bool QSPI_MemoryRead( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *rx_data, u
             /* Poll Status register to know status if instruction has end */
     }
 
+    QSPI_REGS->QSPI_INTFLAG |=  QSPI_INTFLAG_INSTREND_Msk;
+
     return true;
 }
 
@@ -306,6 +314,8 @@ bool QSPI_MemoryWrite( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *tx_data, 
     {
             /* Poll Status register to know status if instruction has end */
     }
+
+    QSPI_REGS->QSPI_INTFLAG |=  QSPI_INTFLAG_INSTREND_Msk;
 
     return true;
 }
