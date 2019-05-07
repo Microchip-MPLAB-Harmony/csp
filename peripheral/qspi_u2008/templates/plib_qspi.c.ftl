@@ -152,6 +152,8 @@ bool ${QSPI_INSTANCE_NAME}_CommandWrite( qspi_command_xfer_t *qspi_command_xfer,
             /* Poll Status register to know status if instruction has end */
     }
 
+    ${QSPI_INSTANCE_NAME}_REGS->QSPI_INTFLAG |=  QSPI_INTFLAG_INSTREND_Msk;
+
     return true;
 }
 
@@ -190,6 +192,8 @@ bool ${QSPI_INSTANCE_NAME}_RegisterRead( qspi_register_xfer_t *qspi_register_xfe
             /* Poll Status register to know status if instruction has end */
     }
 
+    ${QSPI_INSTANCE_NAME}_REGS->QSPI_INTFLAG |=  QSPI_INTFLAG_INSTREND_Msk;
+
     return true;
 }
 
@@ -225,6 +229,8 @@ bool ${QSPI_INSTANCE_NAME}_RegisterWrite( qspi_register_xfer_t *qspi_register_xf
     {
             /* Poll Status register to know status if instruction has end */
     }
+
+    ${QSPI_INSTANCE_NAME}_REGS->QSPI_INTFLAG |=  QSPI_INTFLAG_INSTREND_Msk;
 
     return true;
 }
@@ -269,6 +275,8 @@ bool ${QSPI_INSTANCE_NAME}_MemoryRead( qspi_memory_xfer_t *qspi_memory_xfer, uin
             /* Poll Status register to know status if instruction has end */
     }
 
+    ${QSPI_INSTANCE_NAME}_REGS->QSPI_INTFLAG |=  QSPI_INTFLAG_INSTREND_Msk;
+
     return true;
 }
 
@@ -306,6 +314,8 @@ bool ${QSPI_INSTANCE_NAME}_MemoryWrite( qspi_memory_xfer_t *qspi_memory_xfer, ui
     {
             /* Poll Status register to know status if instruction has end */
     }
+
+    ${QSPI_INSTANCE_NAME}_REGS->QSPI_INTFLAG |=  QSPI_INTFLAG_INSTREND_Msk;
 
     return true;
 }
