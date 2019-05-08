@@ -404,6 +404,15 @@
         </Integer>
       </Symbols>
     </UniqueComponent>
+    <UniqueComponent dnOrder="5" id="pm">
+      <Symbols dnOrder="0">
+        <KeyValueSet dnOrder="0" id="PM_PLCFG_PLSEL">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="pm" value="1"/>
+          </Values>
+        </KeyValueSet>
+      </Symbols>
+    </UniqueComponent>
   </Components>
   <UserData>
     <ComponentGraph dnOrder="0" id="__ROOTVIEW">
@@ -413,6 +422,7 @@
         <ElementPosition dnOrder="2" id="dfp" x="340" y="20"/>
         <ElementPosition dnOrder="3" id="evsys" x="180" y="20"/>
         <ElementPosition dnOrder="4" id="nvmctrl" x="20" y="20"/>
+        <ElementPosition dnOrder="5" id="pm" x="330" y="60"/>
       </ElementPositions>
     </ComponentGraph>
     <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="1"/>

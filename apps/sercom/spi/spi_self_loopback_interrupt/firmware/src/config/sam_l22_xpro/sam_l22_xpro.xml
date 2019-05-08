@@ -2532,8 +2532,25 @@
       </Symbols>
     </UniqueComponent>
     <UniqueComponent dnOrder="2" id="dfp"/>
-    <UniqueComponent dnOrder="3" id="nvmctrl"/>
-    <UniqueComponent dnOrder="4" id="sercom1">
+    <UniqueComponent dnOrder="3" id="nvmctrl">
+      <Symbols dnOrder="0">
+        <Integer dnOrder="0" id="NVM_RWS">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="nvmctrl" value="1"/>
+          </Values>
+        </Integer>
+      </Symbols>
+    </UniqueComponent>
+    <UniqueComponent dnOrder="4" id="pm">
+      <Symbols dnOrder="0">
+        <KeyValueSet dnOrder="0" id="PM_PLCFG_PLSEL">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="pm" value="1"/>
+          </Values>
+        </KeyValueSet>
+      </Symbols>
+    </UniqueComponent>
+    <UniqueComponent dnOrder="5" id="sercom1">
       <Symbols dnOrder="0">
         <Integer dnOrder="0" id="I2CM_BAUD">
           <Values dnOrder="0">
@@ -2785,7 +2802,8 @@
         <ElementPosition dnOrder="1" id="core" x="400" y="23"/>
         <ElementPosition dnOrder="2" id="dfp" x="180" y="20"/>
         <ElementPosition dnOrder="3" id="nvmctrl" x="170" y="60"/>
-        <ElementPosition dnOrder="4" id="sercom1" x="20" y="20"/>
+        <ElementPosition dnOrder="4" id="pm" x="640" y="20"/>
+        <ElementPosition dnOrder="5" id="sercom1" x="20" y="20"/>
       </ElementPositions>
     </ComponentGraph>
   </UserData>

@@ -2565,8 +2565,25 @@
       </Symbols>
     </UniqueComponent>
     <UniqueComponent dnOrder="2" id="dfp"/>
-    <UniqueComponent dnOrder="3" id="nvmctrl"/>
-    <UniqueComponent dnOrder="4" id="rtc">
+    <UniqueComponent dnOrder="3" id="nvmctrl">
+      <Symbols dnOrder="0">
+        <Integer dnOrder="0" id="NVM_RWS">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="nvmctrl" value="1"/>
+          </Values>
+        </Integer>
+      </Symbols>
+    </UniqueComponent>
+    <UniqueComponent dnOrder="4" id="pm">
+      <Symbols dnOrder="0">
+        <KeyValueSet dnOrder="0" id="PM_PLCFG_PLSEL">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="pm" value="1"/>
+          </Values>
+        </KeyValueSet>
+      </Symbols>
+    </UniqueComponent>
+    <UniqueComponent dnOrder="5" id="rtc">
       <Symbols dnOrder="0">
         <File dnOrder="0" id="RTC_CLOCK_SOURCE">
           <Attributes dnOrder="0">
@@ -2648,7 +2665,7 @@
         </Boolean>
       </Symbols>
     </UniqueComponent>
-    <UniqueComponent dnOrder="5" id="sercom4">
+    <UniqueComponent dnOrder="6" id="sercom4">
       <Symbols dnOrder="0">
         <Integer dnOrder="0" id="I2CM_BAUD">
           <Values dnOrder="0">
@@ -2661,7 +2678,12 @@
           </Values>
         </String>
         <KeyValueSet dnOrder="2" id="SERCOM_MODE">
-          <Values dnOrder="0">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="readOnly">
+              <Value dnOrder="0">true</Value>
+            </Boolean>
+          </Attributes>
+          <Values dnOrder="1">
             <Dynamic dnOrder="0" id="sercom4" value="0"/>
           </Values>
         </KeyValueSet>
@@ -2754,7 +2776,7 @@
         </DirectCapability>
       </Attachments>
     </UniqueComponent>
-    <UniqueComponent dnOrder="6" id="stdio">
+    <UniqueComponent dnOrder="7" id="stdio">
       <Symbols dnOrder="0">
         <String dnOrder="0" id="DEBUG_PERIPHERAL">
           <Values dnOrder="0">
@@ -2783,9 +2805,10 @@
         <ElementPosition dnOrder="1" id="core" x="400" y="20"/>
         <ElementPosition dnOrder="2" id="dfp" x="180" y="20"/>
         <ElementPosition dnOrder="3" id="nvmctrl" x="660" y="20"/>
-        <ElementPosition dnOrder="4" id="rtc" x="310" y="60"/>
-        <ElementPosition dnOrder="5" id="sercom4" x="500" y="20"/>
-        <ElementPosition dnOrder="6" id="stdio" x="30" y="80"/>
+        <ElementPosition dnOrder="4" id="pm" x="20" y="20"/>
+        <ElementPosition dnOrder="5" id="rtc" x="310" y="60"/>
+        <ElementPosition dnOrder="6" id="sercom4" x="500" y="20"/>
+        <ElementPosition dnOrder="7" id="stdio" x="30" y="80"/>
       </ElementPositions>
     </ComponentGraph>
     <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="1"/>

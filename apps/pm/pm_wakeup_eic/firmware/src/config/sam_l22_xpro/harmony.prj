@@ -19,8 +19,8 @@
           <Name dnOrder="1">initialization.c</Name>
           <LogicalPath dnOrder="2">config/sam_l22_xpro/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">D066BA1CC8BA430D8F5B1614FCDFAA87</GeneratedChecksum>
-          <UserChecksum dnOrder="5">D066BA1CC8BA430D8F5B1614FCDFAA87</UserChecksum>
+          <GeneratedChecksum dnOrder="4">FB2EB91CAA6329BDA41F68C7B0E01D33</GeneratedChecksum>
+          <UserChecksum dnOrder="5">FB2EB91CAA6329BDA41F68C7B0E01D33</UserChecksum>
         </File>
         <File dnOrder="2">
           <Type dnOrder="0">SOURCE</Type>
@@ -51,7 +51,7 @@
           <Name dnOrder="1">plib_clock.c</Name>
           <LogicalPath dnOrder="2">config/sam_l22_xpro/peripheral/clock/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/clock/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">55C396A7EACC9755CF4D2DA117BF927F</GeneratedChecksum>
+          <GeneratedChecksum dnOrder="4">9FDE89DD6203ECD5E88597C213DABF45</GeneratedChecksum>
           <UserChecksum dnOrder="5">9FDE89DD6203ECD5E88597C213DABF45</UserChecksum>
         </File>
         <File dnOrder="6">
@@ -91,8 +91,8 @@
           <Name dnOrder="1">plib_pm.c</Name>
           <LogicalPath dnOrder="2">config/sam_l22_xpro/peripheral/pm/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/pm/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">5F4F5BA8ACA9551C7D62EECE3C6FBCFD</GeneratedChecksum>
-          <UserChecksum dnOrder="5">5F4F5BA8ACA9551C7D62EECE3C6FBCFD</UserChecksum>
+          <GeneratedChecksum dnOrder="4">26AA8E2E3785B5C5040E16F2ADE7DD4B</GeneratedChecksum>
+          <UserChecksum dnOrder="5">26AA8E2E3785B5C5040E16F2ADE7DD4B</UserChecksum>
         </File>
         <File dnOrder="11">
           <Type dnOrder="0">SOURCE</Type>

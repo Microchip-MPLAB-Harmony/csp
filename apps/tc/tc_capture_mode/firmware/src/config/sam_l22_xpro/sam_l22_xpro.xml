@@ -2963,8 +2963,25 @@
         </Boolean>
       </Symbols>
     </UniqueComponent>
-    <UniqueComponent dnOrder="5" id="nvmctrl"/>
-    <UniqueComponent dnOrder="6" id="sercom4">
+    <UniqueComponent dnOrder="5" id="nvmctrl">
+      <Symbols dnOrder="0">
+        <Integer dnOrder="0" id="NVM_RWS">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="nvmctrl" value="1"/>
+          </Values>
+        </Integer>
+      </Symbols>
+    </UniqueComponent>
+    <UniqueComponent dnOrder="6" id="pm">
+      <Symbols dnOrder="0">
+        <KeyValueSet dnOrder="0" id="PM_PLCFG_PLSEL">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="pm" value="1"/>
+          </Values>
+        </KeyValueSet>
+      </Symbols>
+    </UniqueComponent>
+    <UniqueComponent dnOrder="7" id="sercom4">
       <Symbols dnOrder="0">
         <Integer dnOrder="0" id="I2CM_BAUD">
           <Values dnOrder="0">
@@ -2977,7 +2994,12 @@
           </Values>
         </String>
         <KeyValueSet dnOrder="2" id="SERCOM_MODE">
-          <Values dnOrder="0">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="readOnly">
+              <Value dnOrder="0">true</Value>
+            </Boolean>
+          </Attributes>
+          <Values dnOrder="1">
             <Dynamic dnOrder="0" id="sercom4" value="0"/>
           </Values>
         </KeyValueSet>
@@ -3070,7 +3092,7 @@
         </DirectCapability>
       </Attachments>
     </UniqueComponent>
-    <UniqueComponent dnOrder="7" id="stdio">
+    <UniqueComponent dnOrder="8" id="stdio">
       <Symbols dnOrder="0">
         <String dnOrder="0" id="DEBUG_PERIPHERAL">
           <Values dnOrder="0">
@@ -3091,7 +3113,7 @@
         </DirectDependency>
       </Attachments>
     </UniqueComponent>
-    <UniqueComponent dnOrder="8" id="tc0">
+    <UniqueComponent dnOrder="9" id="tc0">
       <Symbols dnOrder="0">
         <File dnOrder="0" id="TC_CAPTURE_HEADER">
           <Attributes dnOrder="0">
@@ -3212,7 +3234,7 @@
         </Float>
       </Symbols>
     </UniqueComponent>
-    <UniqueComponent dnOrder="9" id="tc1">
+    <UniqueComponent dnOrder="10" id="tc1">
       <Symbols dnOrder="0">
         <Boolean dnOrder="0" id="TC_CAPTURE_CTRLA_CAPTEN1">
           <Values dnOrder="0">
@@ -3343,10 +3365,11 @@
         <ElementPosition dnOrder="3" id="eic" x="350" y="60"/>
         <ElementPosition dnOrder="4" id="evsys" x="21" y="19"/>
         <ElementPosition dnOrder="5" id="nvmctrl" x="350" y="120"/>
-        <ElementPosition dnOrder="6" id="sercom4" x="740" y="20"/>
-        <ElementPosition dnOrder="7" id="stdio" x="912" y="34"/>
-        <ElementPosition dnOrder="8" id="tc0" x="36" y="96"/>
-        <ElementPosition dnOrder="9" id="tc1" x="190" y="60"/>
+        <ElementPosition dnOrder="6" id="pm" x="510" y="60"/>
+        <ElementPosition dnOrder="7" id="sercom4" x="740" y="20"/>
+        <ElementPosition dnOrder="8" id="stdio" x="912" y="34"/>
+        <ElementPosition dnOrder="9" id="tc0" x="36" y="96"/>
+        <ElementPosition dnOrder="10" id="tc1" x="190" y="60"/>
       </ElementPositions>
     </ComponentGraph>
     <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="1"/>

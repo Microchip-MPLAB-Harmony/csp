@@ -2491,8 +2491,25 @@
         </Boolean>
       </Symbols>
     </UniqueComponent>
-    <UniqueComponent dnOrder="4" id="nvmctrl"/>
-    <UniqueComponent dnOrder="5" id="tcc0">
+    <UniqueComponent dnOrder="4" id="nvmctrl">
+      <Symbols dnOrder="0">
+        <Integer dnOrder="0" id="NVM_RWS">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="nvmctrl" value="1"/>
+          </Values>
+        </Integer>
+      </Symbols>
+    </UniqueComponent>
+    <UniqueComponent dnOrder="5" id="pm">
+      <Symbols dnOrder="0">
+        <KeyValueSet dnOrder="0" id="PM_PLCFG_PLSEL">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="pm" value="1"/>
+          </Values>
+        </KeyValueSet>
+      </Symbols>
+    </UniqueComponent>
+    <UniqueComponent dnOrder="6" id="tcc0">
       <Symbols dnOrder="0">
         <Boolean dnOrder="0" id="TCC_CTRLBSET_DIR">
           <Attributes dnOrder="0">
@@ -2527,16 +2544,17 @@
     </UniqueComponent>
   </Components>
   <UserData>
-    <ComponentGraph dnOrder="0" id="__ROOTVIEW">
+    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="0"/>
+    <ComponentGraph dnOrder="1" id="__ROOTVIEW">
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="cmsis" x="500" y="20"/>
         <ElementPosition dnOrder="1" id="core" x="400" y="20"/>
         <ElementPosition dnOrder="2" id="dfp" x="180" y="20"/>
         <ElementPosition dnOrder="3" id="evsys" x="20" y="20"/>
         <ElementPosition dnOrder="4" id="nvmctrl" x="170" y="60"/>
-        <ElementPosition dnOrder="5" id="tcc0" x="6" y="77"/>
+        <ElementPosition dnOrder="5" id="pm" x="330" y="60"/>
+        <ElementPosition dnOrder="6" id="tcc0" x="6" y="77"/>
       </ElementPositions>
     </ComponentGraph>
-    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="1"/>
   </UserData>
 </Configuration>
