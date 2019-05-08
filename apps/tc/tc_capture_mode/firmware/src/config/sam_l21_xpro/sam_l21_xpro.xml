@@ -33,7 +33,7 @@
         </Menu>
         <String dnOrder="5" id="CoreMainFileName">
           <Values dnOrder="0">
-            <User dnOrder="0" value="main_l2x"/>
+            <User dnOrder="0" value="main_l21"/>
           </Values>
         </String>
         <KeyValueSet dnOrder="6" id="DEVICE_SECURITY">
@@ -199,7 +199,7 @@
         <File dnOrder="37" id="MAIN_C">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="name">
-              <Value dnOrder="0">main_l2x.c</Value>
+              <Value dnOrder="0">main_l21.c</Value>
             </String>
           </Attributes>
         </File>
@@ -891,7 +891,12 @@
           </Values>
         </String>
         <KeyValueSet dnOrder="2" id="SERCOM_MODE">
-          <Values dnOrder="0">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="readOnly">
+              <Value dnOrder="0">true</Value>
+            </Boolean>
+          </Attributes>
+          <Values dnOrder="1">
             <Dynamic dnOrder="0" id="sercom3" value="0"/>
           </Values>
         </KeyValueSet>
@@ -1210,7 +1215,8 @@
     </UniqueComponent>
   </Components>
   <UserData>
-    <ComponentGraph dnOrder="0" id="__ROOTVIEW">
+    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="0"/>
+    <ComponentGraph dnOrder="1" id="__ROOTVIEW">
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="cmsis" x="170" y="60"/>
         <ElementPosition dnOrder="1" id="core" x="400" y="20"/>
@@ -1225,6 +1231,5 @@
         <ElementPosition dnOrder="10" id="tc1" x="30" y="100"/>
       </ElementPositions>
     </ComponentGraph>
-    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="1"/>
   </UserData>
 </Configuration>
