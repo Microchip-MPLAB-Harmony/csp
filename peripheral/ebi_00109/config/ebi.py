@@ -280,22 +280,6 @@ def combineSMCON_Values(symbol, event):
     smconValue = smdwidth0Value + smdwidth1Value + smdwidth2Value + smrp
     symbol.setValue(smconValue, 2)
 
-def shiftEBICS0_Values(symbol, event):
-    shiftedValue = ebiSym_EBICS0_CSADDR.getValue() << 16
-    symbol.setValue(shiftedValue, 2)
-
-def shiftEBICS1_Values(symbol, event):
-    shiftedValue = ebiSym_EBICS1_CSADDR.getValue() << 16
-    symbol.setValue(shiftedValue, 2)
-
-def shiftEBICS2_Values(symbol, event):
-    shiftedValue = ebiSym_EBICS2_CSADDR.getValue() << 16
-    symbol.setValue(shiftedValue, 2)
-
-def shiftEBICS3_Values(symbol, event):
-    shiftedValue = ebiSym_EBICS3_CSADDR.getValue() << 16
-    symbol.setValue(shiftedValue, 2)
-
 def updateEBIClockWarningStatus(symbol, event):
     symbol.setVisible(not event["value"])
 
@@ -526,12 +510,6 @@ def instantiateComponent(ebiComponent):
     ebiSym_EBICS0_CSADDR.setDefaultValue(0x20000000)
     ebiSym_EBICS0_CSADDR.setVisible(False)
 
-    #EBICS0_VALUE
-    ebiSym_EBICS0_VALUE = ebiComponent.createHexSymbol("EBICS0_VALUE", None)
-    ebiSym_EBICS0_VALUE.setDefaultValue(0x20000000)
-    ebiSym_EBICS0_VALUE.setVisible(False)
-    ebiSym_EBICS0_VALUE.setDependencies(shiftEBICS0_Values, ["EBICS0_CSADDR"])
-
     #EBICS1_ENABLE
     ebiSym_CFGEBIC_EBICSEN1 = ebiComponent.createBooleanSymbol("CFGEBIC_EBICSEN1", None)
     ebiSym_CFGEBIC_EBICSEN1.setLabel("/EBICS1 Pin Enable bit")
@@ -539,18 +517,11 @@ def instantiateComponent(ebiComponent):
     ebiSym_CFGEBIC_EBICSEN1.setVisible(chipSelects)
     ebiSym_CFGEBIC_EBICSEN1.setDependencies(EBICS_config_visibility,["CFGEBIC_EBICSEN1"]);
 
-
     #EBICS1
     ebiSym_EBICS1_CSADDR = ebiComponent.createHexSymbol("EBICS1_CSADDR", ebiSym_CFGEBIC_EBICSEN1)
     ebiSym_EBICS1_CSADDR.setLabel("EBICS1 " + ebiBitFld_EBICS0_CSADDR.getAttribute("caption"))
     ebiSym_EBICS1_CSADDR.setDefaultValue(0x10000000)
     ebiSym_EBICS1_CSADDR.setVisible(False)
-
-    #EBICS1_VALUE
-    ebiSym_EBICS1_VALUE = ebiComponent.createHexSymbol("EBICS1_VALUE", None)
-    ebiSym_EBICS1_VALUE.setDefaultValue(0x10000000)
-    ebiSym_EBICS1_VALUE.setVisible(False)
-    ebiSym_EBICS1_VALUE.setDependencies(shiftEBICS1_Values, ["EBICS1_CSADDR"])
 
     #EBICS2_ENABLE
     ebiSym_CFGEBIC_EBICSEN2 = ebiComponent.createBooleanSymbol("CFGEBIC_EBICSEN2", None)
@@ -565,12 +536,6 @@ def instantiateComponent(ebiComponent):
     ebiSym_EBICS2_CSADDR.setDefaultValue(0x20400000)
     ebiSym_EBICS2_CSADDR.setVisible(False)
 
-    #EBICS2_VALUE
-    ebiSym_EBICS2_VALUE = ebiComponent.createHexSymbol("EBICS2_VALUE", None)
-    ebiSym_EBICS2_VALUE.setDefaultValue(0x20400000)
-    ebiSym_EBICS2_VALUE.setVisible(False)
-    ebiSym_EBICS2_VALUE.setDependencies(shiftEBICS2_Values, ["EBICS2_CSADDR"])
-
     #EBICS3_ENABLE
     ebiSym_CFGEBIC_EBICSEN3 = ebiComponent.createBooleanSymbol("CFGEBIC_EBICSEN3", None)
     ebiSym_CFGEBIC_EBICSEN3.setLabel("/EBICS3 Pin Enable bit")
@@ -584,12 +549,6 @@ def instantiateComponent(ebiComponent):
     ebiSym_EBICS3_CSADDR.setLabel("EBICS3 " + ebiBitFld_EBICS0_CSADDR.getAttribute("caption"))
     ebiSym_EBICS3_CSADDR.setDefaultValue(0x10400000)
     ebiSym_EBICS3_CSADDR.setVisible(False)
-
-    #EBICS3_VALUE
-    ebiSym_EBICS3_VALUE = ebiComponent.createHexSymbol("EBICS3_VALUE", None)
-    ebiSym_EBICS3_VALUE.setDefaultValue(0x10400000)
-    ebiSym_EBICS3_VALUE.setVisible(False)
-    ebiSym_EBICS3_VALUE.setDependencies(shiftEBICS3_Values, ["EBICS3_CSADDR"])
 
     #CFGEBIC_VALUE
     ebiSym_CFGEBIC_VALUE = ebiComponent.createHexSymbol("CFGEBIC_VALUE", None)

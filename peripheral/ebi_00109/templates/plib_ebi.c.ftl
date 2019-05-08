@@ -69,7 +69,7 @@ void EBI_Initialize (void)
 {
 	<#if CFGEBIC_EBICSEN0?c == "true">
 	/*EBICS0*/
-	EBICS0 = 0x${EBICS0_VALUE};
+	EBICS0 = 0x${EBICS0_CSADDR};
 	
 	/* Setup EBIMSK0	*/
 	/* MEMSIZE = ${EBIMSK0_MEMSIZE}		*/
@@ -80,7 +80,7 @@ void EBI_Initialize (void)
 	</#if>
 	<#if CFGEBIC_EBICSEN1?c == "true">
 	/*EBICS1*/
-	EBICS1 = 0x${EBICS1_VALUE};
+	EBICS1 = 0x${EBICS1_CSADDR};
 	
 	/* Setup EBIMSK1	*/
 	/* MEMSIZE = ${EBIMSK1_MEMSIZE}		*/
@@ -91,7 +91,7 @@ void EBI_Initialize (void)
 	</#if>
 	<#if CFGEBIC_EBICSEN2?c == "true">
 	/*EBICS2*/
-	EBICS2 = 0x${EBICS2_VALUE};
+	EBICS2 = 0x${EBICS2_CSADDR};
 	
 	/* Setup EBIMSK2	*/
 	/* MEMSIZE = ${EBIMSK2_MEMSIZE}		*/
@@ -102,7 +102,7 @@ void EBI_Initialize (void)
 	</#if>
 	<#if CFGEBIC_EBICSEN3?c == "true">
 	/*EBICS3*/
-	EBICS3 = 0x${EBICS3_VALUE};
+	EBICS3 = 0x${EBICS3_CSADDR};
 
 	/* Setup EBIMSK3	*/
 	/* MEMSIZE = ${EBIMSK3_MEMSIZE}		*/
