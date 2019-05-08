@@ -214,7 +214,7 @@ def instantiateComponent(pmComponent):
 
     pmSym_SystemInitFile = pmComponent.createFileSymbol("PM_SYS_INIT", None)
     pmSym_SystemInitFile.setType("STRING")
-    pmSym_SystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+    pmSym_SystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_START")
     pmSym_SystemInitFile.setSourcePath("../peripheral/pm_u2240/templates/system/initialization.c.ftl")
     pmSym_SystemInitFile.setMarkup(True)
 
