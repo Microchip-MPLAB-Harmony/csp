@@ -40,11 +40,11 @@
         </File>
         <File dnOrder="4">
           <Type dnOrder="0">SOURCE</Type>
-          <Name dnOrder="1">main_l2x.c</Name>
+          <Name dnOrder="1">main_l21.c</Name>
           <LogicalPath dnOrder="2"/>
           <PhysicalPath dnOrder="3">/../../</PhysicalPath>
-          <GeneratedChecksum dnOrder="4"/>
-          <UserChecksum dnOrder="5"/>
+          <GeneratedChecksum dnOrder="4">F81A00E640818EDFB9E79C9BD241AEF4</GeneratedChecksum>
+          <UserChecksum dnOrder="5">F81A00E640818EDFB9E79C9BD241AEF4</UserChecksum>
         </File>
         <File dnOrder="5">
           <Type dnOrder="0">SOURCE</Type>
