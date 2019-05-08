@@ -2500,7 +2500,24 @@
         </Boolean>
       </Symbols>
     </UniqueComponent>
-    <UniqueComponent dnOrder="5" id="nvmctrl"/>
+    <UniqueComponent dnOrder="5" id="nvmctrl">
+      <Symbols dnOrder="0">
+        <Integer dnOrder="0" id="NVM_RWS">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="nvmctrl" value="1"/>
+          </Values>
+        </Integer>
+      </Symbols>
+    </UniqueComponent>
+    <UniqueComponent dnOrder="6" id="pm">
+      <Symbols dnOrder="0">
+        <KeyValueSet dnOrder="0" id="PM_PLCFG_PLSEL">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="pm" value="1"/>
+          </Values>
+        </KeyValueSet>
+      </Symbols>
+    </UniqueComponent>
   </Components>
   <UserData>
     <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="0"/>
@@ -2512,6 +2529,7 @@
         <ElementPosition dnOrder="3" id="dsu" x="170" y="60"/>
         <ElementPosition dnOrder="4" id="evsys" x="20" y="20"/>
         <ElementPosition dnOrder="5" id="nvmctrl" x="640" y="20"/>
+        <ElementPosition dnOrder="6" id="pm" x="330" y="60"/>
       </ElementPositions>
     </ComponentGraph>
   </UserData>
