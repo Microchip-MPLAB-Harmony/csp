@@ -112,6 +112,8 @@ void SYS_Initialize ( void* data )
 {
     NVMCTRL_Initialize( );
 
+    PM_Initialize();
+
   
     PORT_Initialize();
 
@@ -125,8 +127,6 @@ void SYS_Initialize ( void* data )
 
 	SYSTICK_TimerInitialize();
     DMAC_Initialize();
-
-    PM_Initialize();
 
 
 

@@ -1,150 +1,141 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <configurationDescriptor version="66">
-  <logicalFolder name="root" displayName="root" projectFiles="true">
-    <logicalFolder name="HeaderFiles"
-                   displayName="Header Files"
-                   projectFiles="true">
-      <logicalFolder name="f1" displayName="config" projectFiles="true">
-        <logicalFolder name="f1" displayName="sam_l21_xpro" projectFiles="true">
-          <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
-            <logicalFolder name="f4" displayName="clock" projectFiles="true">
-              <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/clock/plib_clock.h</itemPath>
+  <logicalFolder displayName="root" name="root" projectFiles="true">
+    <logicalFolder displayName="Header Files" name="f1" projectFiles="true">
+      <logicalFolder displayName="config" name="f1" projectFiles="true">
+        <logicalFolder displayName="sam_l21_xpro" name="f1" projectFiles="true">
+          <logicalFolder displayName="peripheral" name="f1" projectFiles="true">
+            <logicalFolder displayName="nvmctrl" name="f1" projectFiles="true">
+              <itemPath>../src/config/sam_l21_xpro/peripheral/nvmctrl/plib_nvmctrl.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f7" displayName="eic" projectFiles="true">
-              <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/eic/plib_eic.h</itemPath>
+            <logicalFolder displayName="evsys" name="f2" projectFiles="true">
+              <itemPath>../src/config/sam_l21_xpro/peripheral/evsys/plib_evsys.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f2" displayName="evsys" projectFiles="true">
-              <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/evsys/plib_evsys.h</itemPath>
+            <logicalFolder displayName="port" name="f3" projectFiles="true">
+              <itemPath>../src/config/sam_l21_xpro/peripheral/port/plib_port.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f5" displayName="nvic" projectFiles="true">
-              <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/nvic/plib_nvic.h</itemPath>
+            <logicalFolder displayName="clock" name="f4" projectFiles="true">
+              <itemPath>../src/config/sam_l21_xpro/peripheral/clock/plib_clock.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f1" displayName="nvmctrl" projectFiles="true">
-              <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/nvmctrl/plib_nvmctrl.h</itemPath>
+            <logicalFolder displayName="nvic" name="f5" projectFiles="true">
+              <itemPath>../src/config/sam_l21_xpro/peripheral/nvic/plib_nvic.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f6" displayName="pm" projectFiles="true">
-              <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/pm/plib_pm.h</itemPath>
+            <logicalFolder displayName="pm" name="f6" projectFiles="true">
+              <itemPath>../src/config/sam_l21_xpro/peripheral/pm/plib_pm.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f3" displayName="port" projectFiles="true">
-              <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/port/plib_port.h</itemPath>
+            <logicalFolder displayName="eic" name="f7" projectFiles="true">
+              <itemPath>../src/config/sam_l21_xpro/peripheral/eic/plib_eic.h</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <itemPath ex="false">../src/config/sam_l21_xpro/device_cache.h</itemPath>
-          <itemPath ex="false">../src/config/sam_l21_xpro/toolchain_specifics.h</itemPath>
-          <itemPath ex="false">../src/config/sam_l21_xpro/definitions.h</itemPath>
+          <itemPath>../src/config/sam_l21_xpro/device_cache.h</itemPath>
+          <itemPath>../src/config/sam_l21_xpro/toolchain_specifics.h</itemPath>
+          <itemPath>../src/config/sam_l21_xpro/definitions.h</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <logicalFolder name="f2" displayName="packs" projectFiles="true">
-        <logicalFolder name="f1" displayName="ATSAML21J18B_DFP" projectFiles="true">
-          <logicalFolder name="f1" displayName="component" projectFiles="true">
-            <itemPath ex="false">../src/packs/ATSAML21J18B_DFP/component/ac.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAML21J18B_DFP/component/adc.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAML21J18B_DFP/component/aes.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAML21J18B_DFP/component/ccl.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAML21J18B_DFP/component/dac.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAML21J18B_DFP/component/dmac.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAML21J18B_DFP/component/dsu.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAML21J18B_DFP/component/eic.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAML21J18B_DFP/component/evsys.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAML21J18B_DFP/component/gclk.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAML21J18B_DFP/component/mclk.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAML21J18B_DFP/component/mtb.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAML21J18B_DFP/component/nvmctrl.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAML21J18B_DFP/component/opamp.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAML21J18B_DFP/component/osc32kctrl.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAML21J18B_DFP/component/oscctrl.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAML21J18B_DFP/component/pac.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAML21J18B_DFP/component/pm.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAML21J18B_DFP/component/port.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAML21J18B_DFP/component/ptc.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAML21J18B_DFP/component/rstc.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAML21J18B_DFP/component/rtc.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAML21J18B_DFP/component/sercom.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAML21J18B_DFP/component/supc.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAML21J18B_DFP/component/tc.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAML21J18B_DFP/component/tcc.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAML21J18B_DFP/component/trng.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAML21J18B_DFP/component/usb.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAML21J18B_DFP/component/wdt.h</itemPath>
+      <logicalFolder displayName="packs" name="f2" projectFiles="true">
+        <logicalFolder displayName="ATSAML21J18B_DFP" name="f1" projectFiles="true">
+          <logicalFolder displayName="component" name="f1" projectFiles="true">
+            <itemPath>../src/packs/ATSAML21J18B_DFP/component/ac.h</itemPath>
+            <itemPath>../src/packs/ATSAML21J18B_DFP/component/adc.h</itemPath>
+            <itemPath>../src/packs/ATSAML21J18B_DFP/component/aes.h</itemPath>
+            <itemPath>../src/packs/ATSAML21J18B_DFP/component/ccl.h</itemPath>
+            <itemPath>../src/packs/ATSAML21J18B_DFP/component/dac.h</itemPath>
+            <itemPath>../src/packs/ATSAML21J18B_DFP/component/dmac.h</itemPath>
+            <itemPath>../src/packs/ATSAML21J18B_DFP/component/dsu.h</itemPath>
+            <itemPath>../src/packs/ATSAML21J18B_DFP/component/eic.h</itemPath>
+            <itemPath>../src/packs/ATSAML21J18B_DFP/component/evsys.h</itemPath>
+            <itemPath>../src/packs/ATSAML21J18B_DFP/component/gclk.h</itemPath>
+            <itemPath>../src/packs/ATSAML21J18B_DFP/component/mclk.h</itemPath>
+            <itemPath>../src/packs/ATSAML21J18B_DFP/component/mtb.h</itemPath>
+            <itemPath>../src/packs/ATSAML21J18B_DFP/component/nvmctrl.h</itemPath>
+            <itemPath>../src/packs/ATSAML21J18B_DFP/component/opamp.h</itemPath>
+            <itemPath>../src/packs/ATSAML21J18B_DFP/component/osc32kctrl.h</itemPath>
+            <itemPath>../src/packs/ATSAML21J18B_DFP/component/oscctrl.h</itemPath>
+            <itemPath>../src/packs/ATSAML21J18B_DFP/component/pac.h</itemPath>
+            <itemPath>../src/packs/ATSAML21J18B_DFP/component/pm.h</itemPath>
+            <itemPath>../src/packs/ATSAML21J18B_DFP/component/port.h</itemPath>
+            <itemPath>../src/packs/ATSAML21J18B_DFP/component/ptc.h</itemPath>
+            <itemPath>../src/packs/ATSAML21J18B_DFP/component/rstc.h</itemPath>
+            <itemPath>../src/packs/ATSAML21J18B_DFP/component/rtc.h</itemPath>
+            <itemPath>../src/packs/ATSAML21J18B_DFP/component/sercom.h</itemPath>
+            <itemPath>../src/packs/ATSAML21J18B_DFP/component/supc.h</itemPath>
+            <itemPath>../src/packs/ATSAML21J18B_DFP/component/tc.h</itemPath>
+            <itemPath>../src/packs/ATSAML21J18B_DFP/component/tcc.h</itemPath>
+            <itemPath>../src/packs/ATSAML21J18B_DFP/component/trng.h</itemPath>
+            <itemPath>../src/packs/ATSAML21J18B_DFP/component/usb.h</itemPath>
+            <itemPath>../src/packs/ATSAML21J18B_DFP/component/wdt.h</itemPath>
           </logicalFolder>
-          <logicalFolder name="f2" displayName="pio" projectFiles="true">
-            <itemPath ex="false">../src/packs/ATSAML21J18B_DFP/pio/saml21j18b.h</itemPath>
+          <logicalFolder displayName="pio" name="f2" projectFiles="true">
+            <itemPath>../src/packs/ATSAML21J18B_DFP/pio/saml21j18b.h</itemPath>
           </logicalFolder>
-          <itemPath ex="false">../src/packs/ATSAML21J18B_DFP/device.h</itemPath>
-          <itemPath ex="false">../src/packs/ATSAML21J18B_DFP/atsaml21j18b.h</itemPath>
+          <itemPath>../src/packs/ATSAML21J18B_DFP/device.h</itemPath>
+          <itemPath>../src/packs/ATSAML21J18B_DFP/atsaml21j18b.h</itemPath>
         </logicalFolder>
-        <logicalFolder name="f2" displayName="CMSIS" projectFiles="true">
-          <logicalFolder name="f1" displayName="CMSIS" projectFiles="true">
-            <logicalFolder name="f1" displayName="Core" projectFiles="true">
-              <logicalFolder name="f1" displayName="Include" projectFiles="true">
-                <itemPath ex="false">../src/packs/CMSIS/CMSIS/Core/Include/cmsis_compiler.h</itemPath>
-                <itemPath ex="false">../src/packs/CMSIS/CMSIS/Core/Include/cmsis_iccarm.h</itemPath>
-                <itemPath ex="false">../src/packs/CMSIS/CMSIS/Core/Include/cmsis_gcc.h</itemPath>
-                <itemPath ex="false">../src/packs/CMSIS/CMSIS/Core/Include/tz_context.h</itemPath>
-                <itemPath ex="false">../src/packs/CMSIS/CMSIS/Core/Include/core_cm0plus.h</itemPath>
-                <itemPath ex="false">../src/packs/CMSIS/CMSIS/Core/Include/mpu_armv7.h</itemPath>
-                <itemPath ex="false">../src/packs/CMSIS/CMSIS/Core/Include/cmsis_version.h</itemPath>
+        <logicalFolder displayName="CMSIS" name="f2" projectFiles="true">
+          <logicalFolder displayName="CMSIS" name="f1" projectFiles="true">
+            <logicalFolder displayName="Core" name="f1" projectFiles="true">
+              <logicalFolder displayName="Include" name="f1" projectFiles="true">
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_compiler.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_iccarm.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_gcc.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/tz_context.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/core_cm0plus.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/mpu_armv7.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_version.h</itemPath>
               </logicalFolder>
             </logicalFolder>
-            <logicalFolder name="f2" displayName="DSP" projectFiles="true">
-              <logicalFolder name="f1" displayName="Include" projectFiles="true">
-                <itemPath ex="false">../src/packs/CMSIS/CMSIS/DSP/Include/arm_common_tables.h</itemPath>
-                <itemPath ex="false">../src/packs/CMSIS/CMSIS/DSP/Include/arm_const_structs.h</itemPath>
-                <itemPath ex="false">../src/packs/CMSIS/CMSIS/DSP/Include/arm_math.h</itemPath>
+            <logicalFolder displayName="DSP" name="f2" projectFiles="true">
+              <logicalFolder displayName="Include" name="f1" projectFiles="true">
+                <itemPath>../src/packs/CMSIS/CMSIS/DSP/Include/arm_common_tables.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/DSP/Include/arm_const_structs.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/DSP/Include/arm_math.h</itemPath>
               </logicalFolder>
             </logicalFolder>
           </logicalFolder>
         </logicalFolder>
       </logicalFolder>
     </logicalFolder>
-    <logicalFolder name="LinkerScript"
-                   displayName="Linker Files"
-                   projectFiles="true">
-    </logicalFolder>
-    <logicalFolder name="SourceFiles"
-                   displayName="Source Files"
-                   projectFiles="true">
-      <logicalFolder name="f1" displayName="config" projectFiles="true">
-        <logicalFolder name="f1" displayName="sam_l21_xpro" projectFiles="true">
-          <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
-            <logicalFolder name="f4" displayName="clock" projectFiles="true">
-              <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/clock/plib_clock.c</itemPath>
+    <logicalFolder displayName="Linker Files" name="f2" projectFiles="true"/>
+    <logicalFolder displayName="Source Files" name="f3" projectFiles="true">
+      <logicalFolder displayName="config" name="f1" projectFiles="true">
+        <logicalFolder displayName="sam_l21_xpro" name="f1" projectFiles="true">
+          <logicalFolder displayName="peripheral" name="f1" projectFiles="true">
+            <logicalFolder displayName="nvmctrl" name="f1" projectFiles="true">
+              <itemPath>../src/config/sam_l21_xpro/peripheral/nvmctrl/plib_nvmctrl.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f7" displayName="eic" projectFiles="true">
-              <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/eic/plib_eic.c</itemPath>
+            <logicalFolder displayName="evsys" name="f2" projectFiles="true">
+              <itemPath>../src/config/sam_l21_xpro/peripheral/evsys/plib_evsys.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f2" displayName="evsys" projectFiles="true">
-              <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/evsys/plib_evsys.c</itemPath>
+            <logicalFolder displayName="port" name="f3" projectFiles="true">
+              <itemPath>../src/config/sam_l21_xpro/peripheral/port/plib_port.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f5" displayName="nvic" projectFiles="true">
-              <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/nvic/plib_nvic.c</itemPath>
+            <logicalFolder displayName="clock" name="f4" projectFiles="true">
+              <itemPath>../src/config/sam_l21_xpro/peripheral/clock/plib_clock.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f1" displayName="nvmctrl" projectFiles="true">
-              <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/nvmctrl/plib_nvmctrl.c</itemPath>
+            <logicalFolder displayName="nvic" name="f5" projectFiles="true">
+              <itemPath>../src/config/sam_l21_xpro/peripheral/nvic/plib_nvic.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f6" displayName="pm" projectFiles="true">
-              <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/pm/plib_pm.c</itemPath>
+            <logicalFolder displayName="pm" name="f6" projectFiles="true">
+              <itemPath>../src/config/sam_l21_xpro/peripheral/pm/plib_pm.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f3" displayName="port" projectFiles="true">
-              <itemPath ex="false">../src/config/sam_l21_xpro/peripheral/port/plib_port.c</itemPath>
+            <logicalFolder displayName="eic" name="f7" projectFiles="true">
+              <itemPath>../src/config/sam_l21_xpro/peripheral/eic/plib_eic.c</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f2" displayName="stdio" projectFiles="true">
-            <itemPath ex="false">../src/config/sam_l21_xpro/stdio/xc32_monitor.c</itemPath>
+          <logicalFolder displayName="stdio" name="f2" projectFiles="true">
+            <itemPath>../src/config/sam_l21_xpro/stdio/xc32_monitor.c</itemPath>
           </logicalFolder>
-          <itemPath ex="false">../src/config/sam_l21_xpro/initialization.c</itemPath>
-          <itemPath ex="false">../src/config/sam_l21_xpro/interrupts.c</itemPath>
-          <itemPath ex="false">../src/config/sam_l21_xpro/exceptions.c</itemPath>
-          <itemPath ex="false">../src/config/sam_l21_xpro/startup_xc32.c</itemPath>
-          <itemPath ex="false">../src/config/sam_l21_xpro/libc_syscalls.c</itemPath>
+          <itemPath>../src/config/sam_l21_xpro/initialization.c</itemPath>
+          <itemPath>../src/config/sam_l21_xpro/interrupts.c</itemPath>
+          <itemPath>../src/config/sam_l21_xpro/exceptions.c</itemPath>
+          <itemPath>../src/config/sam_l21_xpro/startup_xc32.c</itemPath>
+          <itemPath>../src/config/sam_l21_xpro/libc_syscalls.c</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <itemPath ex="false">../src/main_l2x.c</itemPath>
+      <itemPath>../src/main_l2x.c</itemPath>
     </logicalFolder>
-    <logicalFolder name="ExternalFiles"
-                   displayName="Important Files"
-                   projectFiles="false">
-      <itemPath ex="false">Makefile</itemPath>
+    <logicalFolder displayName="Important Files" name="f4" projectFiles="true">
+      <itemPath>Makefile</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
@@ -156,8 +147,8 @@
       <toolsSet>
         <developmentServer>localhost</developmentServer>
         <targetDevice>ATSAML21J18B</targetDevice>
-        <targetHeader></targetHeader>
-        <targetPluginBoard></targetPluginBoard>
+        <targetHeader/>
+        <targetPluginBoard/>
         <platformTool>EdbgTool</platformTool>
         <languageToolchain>XC32</languageToolchain>
         <languageToolchainVersion>2.20</languageToolchainVersion>
@@ -177,16 +168,16 @@
         <loading>
           <useAlternateLoadableFile>false</useAlternateLoadableFile>
           <parseOnProdLoad>false</parseOnProdLoad>
-          <alternateLoadableFile></alternateLoadableFile>
+          <alternateLoadableFile/>
         </loading>
         <subordinates>
         </subordinates>
       </compileType>
       <makeCustomizationType>
         <makeCustomizationPreStepEnabled>false</makeCustomizationPreStepEnabled>
-        <makeCustomizationPreStep></makeCustomizationPreStep>
+        <makeCustomizationPreStep/>
         <makeCustomizationPostStepEnabled>false</makeCustomizationPostStepEnabled>
-        <makeCustomizationPostStep></makeCustomizationPostStep>
+        <makeCustomizationPostStep/>
         <makeCustomizationPutChecksumInUserID>false</makeCustomizationPutChecksumInUserID>
         <makeCustomizationEnableLongLines>false</makeCustomizationEnableLongLines>
         <makeCustomizationNormalizeHexFile>false</makeCustomizationNormalizeHexFile>
@@ -203,8 +194,7 @@
         <property key="memories.eeprom" value="true"/>
         <property key="memories.flashdata" value="true"/>
         <property key="memories.id" value="true"/>
-        <property key="memories.instruction.ram.ranges"
-                  value="${memories.instruction.ram.ranges}"/>
+        <property key="memories.instruction.ram.ranges" value="${memories.instruction.ram.ranges}"/>
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="0x400000-0x5fffff"/>
         <property key="programoptions.eraseb4program" value="false"/>
@@ -223,8 +213,7 @@
         <property key="enable-symbols" value="true"/>
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
-        <property key="extra-include-directories"
-                  value="../src;../src/config/sam_l21_xpro;../src/packs/ATSAML21J18B_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/arm"/>
+        <property key="extra-include-directories" value="../src;../src/config/sam_l21_xpro;../src/packs/ATSAML21J18B_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/arm"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
@@ -359,13 +348,11 @@
         <property key="memories.exclude.configurationmemory" value="true"/>
         <property key="memories.flashdata" value="true"/>
         <property key="memories.id" value="true"/>
-        <property key="memories.instruction.ram.ranges"
-                  value="${memories.instruction.ram.ranges}"/>
+        <property key="memories.instruction.ram.ranges" value="${memories.instruction.ram.ranges}"/>
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="0-3ffff"/>
         <property key="programoptions.preservedataflash" value="false"/>
-        <property key="programoptions.preservedataflash.ranges"
-                  value="${memories.dataflash.default}"/>
+        <property key="programoptions.preservedataflash.ranges" value="${memories.dataflash.default}"/>
         <property key="programoptions.preserveeeprom" value="false"/>
         <property key="programoptions.preserveeeprom.ranges" value=""/>
         <property key="programoptions.preserveprogram.ranges" value="0-401fff"/>
@@ -404,8 +391,7 @@
         <property key="TIMER3" value="true"/>
         <property key="TIMER4" value="true"/>
         <property key="TIMER5" value="true"/>
-        <property key="ToolFirmwareFilePath"
-                  value="Press to browse for a specific firmware version"/>
+        <property key="ToolFirmwareFilePath" value="Press to browse for a specific firmware version"/>
         <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
         <property key="UART1" value="true"/>
         <property key="UART2" value="true"/>
