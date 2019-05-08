@@ -112,6 +112,8 @@ void SYS_Initialize ( void* data )
 {
     NVMCTRL_Initialize( );
 
+    PM_Initialize();
+
   
     PORT_Initialize();
 
@@ -122,8 +124,6 @@ void SYS_Initialize ( void* data )
     SERCOM3_USART_Initialize();
 
     EVSYS_Initialize();
-
-    PM_Initialize();
 
     AC_Initialize();
     RTC_Initialize();

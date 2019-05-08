@@ -112,14 +112,14 @@ void SYS_Initialize ( void* data )
 {
     NVMCTRL_Initialize( );
 
+    PM_Initialize();
+
   
     PORT_Initialize();
 
 
     CLOCK_Initialize();
 
-
-    PM_Initialize();
 
     RTC_Initialize();
 
