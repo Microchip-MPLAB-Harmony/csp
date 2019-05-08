@@ -117,5 +117,13 @@ for module in range (0, len(modules)):
                     smcChipSelCount = int( smcRegGroup.getAttribute( "count" ) )
                     for smcChipSel in range(0, smcChipSelCount):
                         periphComponent.addCapability("smc_cs"  + str(smcChipSel), "SMC_CS", "SMC_CS"  + str(smcChipSel), False)
+                if periphName == "EBI":
+                    ebiRegGroup = ATDF.getNode('/avr-tools-device-file/modules/module@[name="EBI"]/register-group@[name="EBI"]').getChildren()
+                    ebiChipSelCount = 0
+                    for csregister in ebiRegGroup:
+                        if("EBICS" in csregister.getAttribute("name")):
+                            ebiChipSelCount += 1
+                    for ebiChipSel in range(0, ebiChipSelCount):
+                        periphComponent.addCapability("ebi_cs"  + str(ebiChipSel), "EBI_CS", "EBI_CS"  + str(ebiChipSel), False)
     else:
         print("CSP: Peripheral [" + periphName + " id=" + periphID + "] is not supported in MCC")
