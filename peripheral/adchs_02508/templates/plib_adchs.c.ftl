@@ -256,6 +256,11 @@ void ${ADCHS_INSTANCE_NAME}_CallbackRegister(ADCHS_CHANNEL_NUM channel, ADCHS_CA
 <#if .vars[ADCHS_DATA_INTERRUPT_ENABLE]?? && .vars[ADCHS_DATA_INTERRUPT_ENABLE] == true>
 void ADC_DATA${i}_InterruptHandler(void)
 {
+    if (${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].callback_fn != NULL)
+    {
+      ${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].callback_fn(ADCHS_CH${i}, ${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].context);
+    }
+
 <#if __PROCESSOR?contains("PIC32MZ")>
 <#if i < ADCHS_IFS0_NUM_IRQ>
     IFS${ADCHS_IFS_START_INDEX}CLR = _IFS${ADCHS_IFS_START_INDEX}_ADCD${i}IF_MASK;
@@ -271,11 +276,6 @@ void ADC_DATA${i}_InterruptHandler(void)
     IFS${ADCHS_IFS_START_INDEX + 1}CLR = _IFS${ADCHS_IFS_START_INDEX+1}_AD1D${i}IF_MASK;
 </#if>
 </#if>
-
-    if (${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].callback_fn != NULL)
-    {
-      ${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].callback_fn(ADCHS_CH${i}, ${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].context);
-    }
 }
 </#if>
 </#list>
@@ -285,6 +285,10 @@ void ADC_DATA${i}_InterruptHandler(void)
 <#if .vars[ADCHS_DATA_INTERRUPT_ENABLE]?? &&.vars[ADCHS_DATA_INTERRUPT_ENABLE] == true>
 void ADC_DATA${i}_InterruptHandler(void)
 {
+    if (${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].callback_fn != NULL)
+    {
+        ${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].callback_fn(ADCHS_CH${i}, ${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].context);
+    }
 <#if __PROCESSOR?contains("PIC32MZ")>
 <#if i < ADCHS_IFS0_NUM_IRQ>
     IFS${ADCHS_IFS_START_INDEX}CLR = _IFS${ADCHS_IFS_START_INDEX}_ADCD${i}IF_MASK;
@@ -304,12 +308,6 @@ void ADC_DATA${i}_InterruptHandler(void)
     IFS${ADCHS_IFS_START_INDEX + 2}CLR = _IFS${ADCHS_IFS_START_INDEX+2}_AD1D${i}IF_MASK;
 </#if>
 </#if>
-
-    if (${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].callback_fn != NULL)
-    {
-        ${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].callback_fn(ADCHS_CH${i}, ${ADCHS_INSTANCE_NAME}_CallbackObj[${i}].context);
-    }
-
 }
 </#if>
 </#list>
