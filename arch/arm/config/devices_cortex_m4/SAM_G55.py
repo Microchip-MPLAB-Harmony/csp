@@ -30,8 +30,10 @@ global tcmEnable
 global fuseMenu
 
 # ///////////////////////Symbol Creation for Fuses ////////////////////////// #
+
+
 def getMaxValue(mask):
-    if mask == 0 :
+    if mask == 0:
         return hex(0)
 
     mask = int(mask, 16)
@@ -40,8 +42,9 @@ def getMaxValue(mask):
 
     return mask
 
+
 def xc32SetTcmSize(symbol, event):
-    symObj=event["symbol"]
+    symObj = event["symbol"]
     if (symObj.getSelectedKey() == "0KB"):
         xc32DTCMSizeSym.setValue("")
         xc32ITCMSizeSym.setValue("")
@@ -55,35 +58,41 @@ def xc32SetTcmSize(symbol, event):
         xc32DTCMSizeSym.setValue("0x1000")
         xc32ITCMSizeSym.setValue("0x1000")
 
+
 def xc32SetStackInTcm(symbol, event):
     if (event["value"] == True):
         xc32StackInTCMSym.setValue("true")
     else:
         xc32StackInTCMSym.setValue("false")
 
+
 # load family specific configurations
 print("Loading System Services for " + Variables.get("__PROCESSOR"))
 
-# load device specific configurations (fuses), temporary, to be removed once XC32 updated
-devCfgComment = coreComponent.createCommentSymbol("CoreCfgComment1", devCfgMenu)
-devCfgComment.setLabel("Note: Set Device Configuration Bits via Programming Tool")
+fuseSettings = coreComponent.createBooleanSymbol("FUSE_CONFIG_ENABLE", devCfgMenu)
+fuseSettings.setLabel("Generate Fuse Settings")
+fuseSettings.setDefaultValue(True)
 
-fuseMenu = coreComponent.createMenuSymbol("FUSE_MENU", devCfgMenu)
-fuseMenu.setLabel("Fuse Settings")
+# load device specific configurations (fuses), temporary, to be removed once
+# XC32 updated
+devCfgComment = coreComponent.createCommentSymbol(
+    "CoreCfgComment1", fuseSettings)
+devCfgComment.setLabel(
+    "Note: Set Device Configuration Bits via Programming Tool")
 
 # Device Configuration
 deviceSecurity = coreComponent.createKeyValueSetSymbol("DEVICE_SECURITY", devCfgMenu)
 deviceSecurity.setLabel("Security")
 deviceSecurity.setOutputMode("Key")
 deviceSecurity.setDisplayMode("Description")
-deviceSecurity.addKey("CLEAR", "0", "Disable (Code Protection Disabled)" )
+deviceSecurity.addKey("CLEAR", "0", "Disable (Code Protection Disabled)")
 deviceSecurity.addKey("SET", "1", "Enable (Code Protection Enabled)")
-deviceSecurity.setSelectedKey("CLEAR",1)
+deviceSecurity.setSelectedKey("CLEAR", 1)
 
 # SysTick External Clock Source
 systickExternal = coreComponent.createBooleanSymbol("SYSTICK_EXTERNAL_CLOCK", devCfgMenu)
 systickExternal.setLabel("External Clock Source for SysTick Available")
-systickExternal.setDefaultValue(False)
+systickExternal.setDefaultValue(True)
 systickExternal.setVisible(False)
 
 coreFPU = coreComponent.createBooleanSymbol("FPU_Available", devCfgMenu)
@@ -94,7 +103,7 @@ coreFPU.setVisible(False)
 
 deviceFamily = coreComponent.createStringSymbol("DeviceFamily", devCfgMenu)
 deviceFamily.setLabel("Device Family")
-deviceFamily.setDefaultValue("SAM_D51_E51_E53_E54")
+deviceFamily.setDefaultValue("SAM_G55")
 deviceFamily.setReadOnly(True)
 deviceFamily.setVisible(False)
 
@@ -110,11 +119,11 @@ deviceTCMsize = coreComponent.createKeyValueSetSymbol("DEVICE_TCM_SIZE", cacheMe
 deviceTCMsize.setLabel("TCM and cache Size")
 deviceTCMsize.setOutputMode("Value")
 deviceTCMsize.setDisplayMode("Description")
-deviceTCMsize.addKey("8KB", "3", "TCM: 8 KB, Cache: 8 KB" )
+deviceTCMsize.addKey("8KB", "3", "TCM: 8 KB, Cache: 8 KB")
 deviceTCMsize.addKey("10KB", "2", "TCM: 10 KB, Cache: 4 KB")
 deviceTCMsize.addKey("14KB", "1", "TCM: 14 KB, Cache: 2 KB")
 deviceTCMsize.addKey("16KB", "0", "TCM: 16 KB,  Cache: 0 KB")
-deviceTCMsize.setSelectedKey("8KB",1)
+deviceTCMsize.setSelectedKey("8KB", 1)
 
 
 dcacheEnable = coreComponent.createBooleanSymbol("DATA_CACHE_ENABLE", cacheMenu)
@@ -136,33 +145,31 @@ cacheAlign.setVisible(False)
 cacheAlign.setDefaultValue(16)
 
 
-def setDMACDefaultSettings():
-    return
-
 def setMPUDefaultSettings():
     mpuRegions = 8
-    mpuSettings = {"FLASH"              : ["MPU_ATTR_NORMAL_WT",           "MPU_RASR_AP_READWRITE_Val",    "",     "",     "0x00000000",   "4MB"   ],
-                    "SRAM"              : ["MPU_ATTR_NORMAL_WB_WA",     "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x20000000",   "8MB"],
-                    "PERIPHERALS"       : ["MPU_ATTR_DEVICE",           "MPU_RASR_AP_READWRITE_Val",    "",         "",     "0x40000000",   "256MB" ],
-                    "SYSTEM"            : ["MPU_ATTR_STRONGLY_ORDERED", "MPU_RASR_AP_READWRITE_Val",    "",         "",     "0xE0000000",   "1MB"   ],
-                    "QSPI"              : ["MPU_ATTR_STRONGLY_ORDERED", "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x04000000",   "256MB"],}
-    mpuSetUpLogicList = ["FLASH", "SRAM", "PERIPHERALS", "SYSTEM", "QSPI"]
+    mpuSettings = {"FLASH": ["MPU_ATTR_NORMAL_WT",           "MPU_RASR_AP_READWRITE_Val",    "",     "",     "0x00400000",   "2MB"],
+                   "SRAM": ["MPU_ATTR_NORMAL_WB_WA",     "MPU_RASR_AP_READWRITE_Val",    "True",     "",     "0x20000000",   "2MB"],
+                   "PERIPHERALS": ["MPU_ATTR_DEVICE",           "MPU_RASR_AP_READWRITE_Val",    "",         "",     "0x40000000",   "256MB"],
+                   "SYSTEM": ["MPU_ATTR_STRONGLY_ORDERED", "MPU_RASR_AP_READWRITE_Val",    "",         "",     "0xE0000000",   "1MB"],
+                   "UHP_DPRAM": ["MPU_ATTR_DEVICE",           "MPU_RASR_AP_READWRITE_Val",    "",         "",     "0x20400000",   "1MB"], }
+    mpuSetUpLogicList = ["FLASH", "SRAM", "PERIPHERALS", "SYSTEM", "UHP_DPRAM"]
 
     return mpuRegions, mpuSettings, mpuSetUpLogicList
 
+
 global nvmWaitStates
-nvmWaitStates = { #VDD > 2.7
-                    16000000 : 0,
-                    24000000 : 1,
-                    48000000 : 2,
-                    100000000 : 4,
-                    120000000 : 5
-                }
-                
+nvmWaitStates = {  # VDD > 2.7
+    16000000: 0,
+    24000000: 1,
+    48000000: 2,
+    100000000: 4,
+    120000000: 5
+}
+
 periphNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"EFC\"]")
 modules = periphNode.getChildren()
 components = []
-for nvmctrl_instance in range (0, len(modules)):
+for nvmctrl_instance in range(0, len(modules)):
     components.append(str(modules[nvmctrl_instance].getAttribute("name")).lower())
 Database.activateComponents(components)
 
@@ -184,10 +191,6 @@ coreComponent.addPlugin("../peripheral/mpu/plugin/mpu.jar")
 
 # #load systick
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/systick/config/systick.py")
-
-# # # load dma manager information
-# execfile(Variables.get("__CORE_DIR") + "/../peripheral/dmac_u2503/config/dmac.py")
-# coreComponent.addPlugin("../peripheral/dmac_u2503/plugin/dmamanager.jar")
 
 # # load wdt
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_6080/config/wdt.py")
