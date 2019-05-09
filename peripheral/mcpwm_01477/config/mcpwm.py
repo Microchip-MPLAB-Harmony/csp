@@ -430,6 +430,18 @@ def mcpwmCalcIOCON(symbol, event):
             cldat_pwmh + cldat_pwml + clmod + clpol + clsrc
     symbol.setValue(iocon, 2)
 
+def mcpwmCalcTRGCON(symbol, event):
+    trgcon = 0x0
+    component = symbol.getComponent()
+    channelID = filter(str.isdigit,str(symbol.getID()))
+    dtm = component.getSymbolValue("TRGCON"+str(channelID)+"__DTM") << 7
+    strgsel = component.getSymbolValue("TRGCON"+str(channelID)+"__STRGSEL") << 8
+    trgsel = component.getSymbolValue("TRGCON"+str(channelID)+"__TRGSEL") << 10
+    trgdiv = component.getSymbolValue("TRGCON"+str(channelID)+"__TRGDIV") << 12
+    trgcon = dtm + strgsel + trgsel + trgdiv
+    symbol.setValue(trgcon, 2)
+
+
 def mcpwmCalcLEBCON(symbol, event):
     lebcon = 0x0
     component = symbol.getComponent()
@@ -614,6 +626,7 @@ def instantiateComponent(mcpwmComponent):
     ioconDepList = [[] for i in range (MCPWM_MAX_CHANNELS)]
     lebconDepList = [[] for i in range (MCPWM_MAX_CHANNELS)]
     evicDeplist = [[] for i in range (MCPWM_MAX_CHANNELS)]
+    trgconDepList = [[] for i in range (MCPWM_MAX_CHANNELS)]
 
     #PWM common Configurations
     mcpwmSym_PWM_CONF = mcpwmComponent.createMenuSymbol("MCPWM_CONF", None)
@@ -829,9 +842,12 @@ def instantiateComponent(mcpwmComponent):
         mcpwmSym_TRIGGER_MENU.setLabel("Trigger Configurations")
 
         mcpwmSym_TRGCON_TRGDIV = mcpwmAddKeyValueSetFromATDFInitValue(mcpwmComponent, Module, "TRGCON"+str(channelID), "TRGDIV", mcpwmSym_TRIGGER_MENU, True)
+        trgconDepList[channelID - 1].append("TRGCON"+str(channelID)+"__TRGDIV")
 
         mcpwmSym_TRGCON_TRGSEL = mcpwmAddKeyValueSetFromATDFInitValue(mcpwmComponent, Module, "TRGCON"+str(channelID), "TRGSEL", mcpwmSym_TRIGGER_MENU, True)
+        trgconDepList[channelID - 1].append("TRGCON"+str(channelID)+"__TRGSEL")
         mcpwmSym_TRGCON_DTM = mcpwmAddKeyValueSetFromATDFInitValue(mcpwmComponent, Module, "TRGCON"+str(channelID), "DTM", mcpwmSym_TRIGGER_MENU, True)
+        trgconDepList[channelID - 1].append("TRGCON"+str(channelID)+"__DTM")
 
         mcpwm_TRIG_TRGCMP = mcpwmComponent.createIntegerSymbol("TRIG"+str(channelID)+"__TRGCMP", mcpwmSym_TRIGGER_MENU)
         mcpwm_TRIG_TRGCMP.setLabel("Primary Trigger Value")
@@ -840,6 +856,7 @@ def instantiateComponent(mcpwmComponent):
         mcpwm_TRIG_TRGCMP.setMax(pow(2, 16) - 1)
 
         mcpwmSym_TRGCON_STRGSEL = mcpwmAddKeyValueSetFromATDFInitValue(mcpwmComponent, Module, "TRGCON"+str(channelID), "STRGSEL", mcpwmSym_TRIGGER_MENU, True)
+        trgconDepList[channelID - 1].append("TRGCON"+str(channelID)+"__STRGSEL")
 
         mcpwm_STRIG_STRGCMP = mcpwmComponent.createIntegerSymbol("STRIG"+str(channelID)+"__STRGCMP", mcpwmSym_TRIGGER_MENU)
         mcpwm_STRIG_STRGCMP.setLabel("Secondary Trigger Value")
@@ -1004,6 +1021,10 @@ def instantiateComponent(mcpwmComponent):
         else:
             mcpwmSym_IOCON.setValue(0xc000, 2)
         mcpwmSym_IOCON.setDependencies(mcpwmCalcIOCON, ioconDepList[channelID - 1])
+
+        mcpwmSym_TRGCON = mcpwmComponent.createHexSymbol("MCPWM_TRGCON"+str(channelID), None)
+        mcpwmSym_TRGCON.setVisible(False)
+        mcpwmSym_TRGCON.setDependencies(mcpwmCalcTRGCON, trgconDepList[channelID - 1])
 
         mcpwmSym_LEBCON = mcpwmComponent.createHexSymbol("MCPWM_LEBCON"+str(channelID), None)
         mcpwmSym_LEBCON.setVisible(False)

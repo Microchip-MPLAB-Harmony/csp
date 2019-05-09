@@ -86,6 +86,7 @@ void ${MCPWM_INSTANCE_NAME}_Initialize (void)
 <#assign PWM_CH_ENABLE = "MCPWM_CHANNEL" + i>
 <#assign PWMCON = "MCPWM_PWMCON" + i>
 <#assign IOCON = "MCPWM_IOCON" + i>
+<#assign TRGCON = "MCPWM_TRGCON" + i>
 <#assign PDC = "PDC" + i + "__PDC">
 <#assign SDC = "SDC" + i + "__SDC">
 <#assign PHASE = "PHASE" + i + "__PHASE">
@@ -169,6 +170,7 @@ void ${MCPWM_INSTANCE_NAME}_Initialize (void)
     ALTDTR${i} = ${.vars[ALTDTR]};
 
     /* Trigger Generator */
+    TRGCON${i} = 0x${.vars[TRGCON]};
     TRIG${i} = ${.vars[TRIG]};
     STRIG${i} = ${.vars[STRIG]};
 
