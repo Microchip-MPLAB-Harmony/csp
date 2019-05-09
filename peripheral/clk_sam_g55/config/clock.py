@@ -271,7 +271,7 @@ for peripheral in atdf_content.iter("module"):
                 sym_perip_clk.setLabel(
                     instance.attrib["name"] + param.attrib["name"].split("CLOCK_ID")[1])
                 sym_perip_clk.setDefaultValue(False)
-                sym_perip_clk.setReadOnly(False)
+                sym_perip_clk.setVisible(True)
                 clkSetupDep.append(symbol_id)
 
 #########################################Processor and Main clock #######################################
@@ -320,7 +320,7 @@ def progClk(symbol, value):
         elif src == "PLLB_CLK":
             freq = int(Database.getSymbolValue("core", "PLLB_CLOCK_FREQUENCY"))
         elif src == "MCK":
-            freq = int(Database.getSymbolValue("core", "MASTERCLK_FREQ"))
+            freq = int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))
         else:
             freq = 0
 
@@ -366,7 +366,7 @@ for id in range(0, 8):
     progClkFreq.setDependencies(progClk, ["PMC_SCER_PCK" + str(id),
                                             "PMC_PCK" + str(id) + "_PRES",
                                             "PMC_PCK" + str(id) + "_CSS",
-                                            "MASTERCLK_FREQ",
+                                            "MASTER_CLOCK_FREQUENCY",
                                             "SLCK_CLOCK_FREQUENCY",
                                             "PLLA_CLOCK_FREQUENCY",
                                             "PLLB_CLOCK_FREQUENCY",
@@ -380,7 +380,7 @@ def perifreq(symbol, event):
     enable = Database.getSymbolValue("core", symbol.getID().split(
         "_CLOCK_FREQUENCY")[0] + "_CLOCK_ENABLE")
     if enable:
-        freq = int(Database.getSymbolValue("core", "MASTERCLK_FREQ"))
+        freq = int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))
         if symbol.getValue() != freq:
             symbol.setValue(freq, 2)
     else:
@@ -396,7 +396,7 @@ def pdmicFreq(symbol, event):
     if enable:
         src = int(Database.getSymbolValue(pdmicNamespace, "PDMIC_CLKSEL"))
         if src == 0:
-            freq = int(Database.getSymbolValue("core", "MASTERCLK_FREQ"))
+            freq = int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))
         else:
             freq = int(Database.getSymbolValue("core", "PROG_4_CLOCK_FREQUENCY"))
 
@@ -419,15 +419,15 @@ def tcFreq(symbol, event):
     if enable:
         src = int(Database.getSymbolValue("tc" + tcId, "TC" + channelId + "_CMR_TCCLKS"))
         if src == 0:
-            freq = int(Database.getSymbolValue("core", "MASTERCLK_FREQ"))
+            freq = int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))
         elif src == 1:
             freq = int(Database.getSymbolValue("core", "PROG_3_CLOCK_FREQUENCY"))
         elif src == 2:
-            freq = int(Database.getSymbolValue("core", "MASTERCLK_FREQ"))/8
+            freq = int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))/8
         elif src == 3:
-            freq = int(Database.getSymbolValue("core", "MASTERCLK_FREQ"))/32
+            freq = int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))/32
         elif src == 4:
-            freq = int(Database.getSymbolValue("core", "MASTERCLK_FREQ"))/128
+            freq = int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))/128
         elif src == 5:
             freq = int(Database.getSymbolValue("core", "SLCK_CLOCK_FREQUENCY"))
         else:
@@ -452,9 +452,9 @@ def flexcomFreq(symbol, event):
         if mode == 1:
             src = int(Database.getSymbolValue(flexcomId.lower(), "FLEXCOM_USART_MR_USCLKS"))
             if src == 0:
-                freq = int(Database.getSymbolValue("core", "MASTERCLK_FREQ"))
+                freq = int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))
             elif src == 1:
-                freq = int(Database.getSymbolValue("core", "MASTERCLK_FREQ"))/8
+                freq = int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))/8
             elif src == 2:
                 freq = int(Database.getSymbolValue("core", "PROG_" + str(progClk) + "_CLOCK_FREQUENCY"))
             else:
@@ -463,19 +463,19 @@ def flexcomFreq(symbol, event):
         elif mode == 2:
             src = int(Database.getSymbolValue(flexcomId.lower(), "FLEXCOM_SPI_MR_BRSRCCLK"))
             if src == 0:
-                freq = int(Database.getSymbolValue("core", "MASTERCLK_FREQ"))
+                freq = int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))
             else:
                 freq = int(Database.getSymbolValue("core", "PROG_" + str(progClk) + "_CLOCK_FREQUENCY"))
 
         elif mode == 3:
             src = int(Database.getSymbolValue(flexcomId.lower(), "FLEXCOM_TWI_CWGR_BRSRCCLK"))
             if src == 0:
-                freq = int(Database.getSymbolValue("core", "MASTERCLK_FREQ"))
+                freq = int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))
             else:
                 freq = int(Database.getSymbolValue("core", "PROG_" + str(progClk) + "_CLOCK_FREQUENCY"))
 
         else:
-            freq = int(Database.getSymbolValue("core", "MASTERCLK_FREQ"))
+            freq = int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))
 
         if symbol.getValue() != freq:
             symbol.setValue(freq, 2)
@@ -491,7 +491,7 @@ def i2sFreq(symbol, event):
         i2sId = symbol.getID().split("_")[0].split("I2SMCC")[1]
         src = int(Database.getSymbolValue("core", "CLK_I2S" + i2sId + "_CLKSEL"))
         if src == 0:
-            freq = int(Database.getSymbolValue("core", "MASTERCLK_FREQ"))
+            freq = int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))
         else:
             freq = int(Database.getSymbolValue("core", "PROG_4_CLOCK_FREQUENCY"))
 
@@ -505,7 +505,7 @@ def adcFreq(symbol, event):
     if enable:
         src = int(Database.getSymbolValue("adc", "ADC_CLK_SRC"))
         if src == 0:
-            freq = int(Database.getSymbolValue("core", "MASTERCLK_FREQ"))
+            freq = int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))
         else:
             freq = int(Database.getSymbolValue("core", "PROG_5_CLOCK_FREQUENCY"))
 
@@ -536,8 +536,8 @@ def masterFreq(symbol, event):
 
     if int(Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")) != processorFreqVal:
         Database.setSymbolValue("core", "CPU_CLOCK_FREQUENCY", processorFreqVal, 2)
-    if int(Database.getSymbolValue("core", "MASTERCLK_FREQ")) != int(masterclkFreq):
-        Database.setSymbolValue("core", "MASTERCLK_FREQ", masterclkFreq, 2)
+    if int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")) != int(masterclkFreq):
+        Database.setSymbolValue("core", "MASTER_CLOCK_FREQUENCY", masterclkFreq, 2)
     if int(Database.getSymbolValue("core", "SYSTICK_CLOCK_FREQUENCY")) != systickFreq:
         Database.setSymbolValue("core", "SYSTICK_CLOCK_FREQUENCY", systickFreq, 2)
 
@@ -582,7 +582,7 @@ for index in range(0, 2):
     i2smccClockSelection.addKey("Peripheral Clock", str(0), "Peripheral Clock")
     i2smccClockSelection.addKey("Programmable Clock 4", str(1), "PCK4")
 
-masterFreqVal = coreComponent.createIntegerSymbol("MASTERCLK_FREQ", calculatedclkMenu)
+masterFreqVal = coreComponent.createIntegerSymbol("MASTER_CLOCK_FREQUENCY", calculatedclkMenu)
 masterFreqVal.setLabel("Master Clock Frequency (Hz)")
 masterFreqVal.setDefaultValue(119996416)
 masterFreqVal.setReadOnly(True)
@@ -595,7 +595,7 @@ masterFreqVal.setDependencies(masterFreq, ["PMC_MCKR_CSS",
                                         "MAIN_CLOCK_FREQUENCY"
                                         ] )
 
-usbfsFreq = coreComponent.createIntegerSymbol("USBFS_FREQ", calculatedclkMenu)
+usbfsFreq = coreComponent.createIntegerSymbol("USBFS_CLOCK_FREQUENCY", calculatedclkMenu)
 usbfsFreq.setLabel("USBFS Frequency (Hz)")
 usbfsFreq.setDefaultValue(0)
 usbfsFreq.setReadOnly(True)
@@ -619,7 +619,7 @@ for id in clocks:
                 progClk = 6
         else:
             progClk = 7
-        peripClock.setDependencies(flexcomFreq, ["MASTERCLK_FREQ",
+        peripClock.setDependencies(flexcomFreq, ["MASTER_CLOCK_FREQUENCY",
                                                     "PROG_" + str(progClk) + "_CLOCK_FREQUENCY",
                                                     "flexcom" + str(flexcomId) + ".FLEXCOM_MODE",
                                                     "flexcom" + str(flexcomId) + ".EXTERNAL_CLOCK_FREQ",
@@ -635,7 +635,7 @@ for id in clocks:
     elif "TC" in clock_id.get(id) and "CHANNEL" in clock_id.get(id):
         tcId = clock_id.get(id).split("_")[0].split("TC")[1]
         channel = clock_id.get(id).split("_")[1].split("CHANNEL")[1]
-        peripClock.setDependencies(tcFreq, ["MASTERCLK_FREQ",
+        peripClock.setDependencies(tcFreq, ["MASTER_CLOCK_FREQUENCY",
                                             "PROG_3_CLOCK_FREQUENCY",
                                             str(clock_id.get(id)) + "_CLOCK_ENABLE",
                                             "tc" + str(tcId) + ".TC"
@@ -643,7 +643,7 @@ for id in clocks:
 
     elif "I2SC" in clock_id.get(id):
             i2sId = clock_id.get(id).split("I2SC")[1]
-            peripClock.setDependencies(i2sFreq, ["MASTERCLK_FREQ",
+            peripClock.setDependencies(i2sFreq, ["MASTER_CLOCK_FREQUENCY",
                                                     "PROG_4_CLOCK_FREQUENCY",
                                                     str(clock_id.get(id)) + "_CLOCK_ENABLE",
                                                     "CLK_I2S" + str(i2sId) + "_CLKSEL"
@@ -651,14 +651,14 @@ for id in clocks:
 
     elif "PDMIC" in clock_id.get(id):
         pdmicId = clock_id.get(id).split("PDMIC")[1]
-        peripClock.setDependencies(pdmicFreq, ["MASTERCLK_FREQ",
+        peripClock.setDependencies(pdmicFreq, ["MASTER_CLOCK_FREQUENCY",
                                                 str(clock_id.get(id)) + "_CLOCK_ENABLE",
                                                 "PROG_4_CLOCK_FREQUENCY",
                                                 "pdmic" + str(pdmicId) + ".PDMIC_CLKSEL"
                                                 ])
         
     elif "ADC" in clock_id.get(id):
-        peripClock.setDependencies(adcFreq, ["MASTERCLK_FREQ",
+        peripClock.setDependencies(adcFreq, ["MASTER_CLOCK_FREQUENCY",
                                                 str(clock_id.get(id)) + "_CLOCK_ENABLE",
                                                 "PROG_5_CLOCK_FREQUENCY",
                                                 "adc.ADC_CLK_SRC"
@@ -666,7 +666,7 @@ for id in clocks:
 
     else:
         peripClock.setDependencies(
-                    perifreq, ["MASTERCLK_FREQ", str(clock_id.get(id)) + "_CLOCK_ENABLE"])
+                    perifreq, ["MASTER_CLOCK_FREQUENCY", str(clock_id.get(id)) + "_CLOCK_ENABLE"])
 
 #CH3 is used for quadrature speed mode
 sym_tc_ch3_clock_freq = coreComponent.createIntegerSymbol("TC0_CH3_CLOCK_FREQUENCY", None)
@@ -717,38 +717,16 @@ def pcer1Cal(symbol, event):
 
                 symbol.setValue(value, 2) 
 #######################################WAIT STATE############################################
-global fws
-fws = {}
-
-
-def wait_states(symbol, event):
-    global fws
-    for key, value in fws.items():
-        if int(event["value"]) < value:
-            symbol.setValue(key, 2)
-            break
-
-
-for property_group in atdf_content.iter("property-group"):
-    if "ELECTRICAL_CHARACTERISTICS" in property_group.attrib["name"]:
-        for property_tag in property_group.iter("property"):
-            if "CHIP_FREQ_FWS_" in property_tag.attrib["name"] and property_tag.attrib["name"] != "CHIP_FREQ_FWS_NUMBER":
-                fws[int(property_tag.attrib["name"].split("CHIP_FREQ_FWS_")[1])
-                    ] = int(property_tag.attrib["value"])
-
-efcFWS = coreComponent.createIntegerSymbol("EFC_FWS", None)
-efcFWS.setVisible(False)
-efcFWS.setDefaultValue(6)
-efcFWS.setDependencies(wait_states, ["CPU_CLOCK_FREQUENCY"])
 
 pmcClockEnable0 = coreComponent.createHexSymbol("PMC_PCER0", None)
 pmcClockEnable0.setDefaultValue(0x0)
 pmcClockEnable0.setDependencies(pcer0Cal, clkSetupDep)
+pmcClockEnable0.setVisible(False)
 
 pmcClockEnable1 = coreComponent.createHexSymbol("PMC_PCER1", None)
 pmcClockEnable1.setDefaultValue(0x0)
 pmcClockEnable1.setDependencies(pcer1Cal, clkSetupDep)
-
+pmcClockEnable1.setVisible(False)
 ############################################# calculated Frequencies ##########################
 
 configName = Variables.get("__CONFIGURATION_NAME")
