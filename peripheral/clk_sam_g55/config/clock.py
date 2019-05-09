@@ -270,7 +270,6 @@ for peripheral in atdf_content.iter("module"):
                 sym_perip_clk = coreComponent.createBooleanSymbol(symbol_id, peripheralclkMenu)
                 sym_perip_clk.setLabel(
                     instance.attrib["name"] + param.attrib["name"].split("CLOCK_ID")[1])
-                sym_perip_clk.setDefaultValue(False)
                 sym_perip_clk.setVisible(True)
                 clkSetupDep.append(symbol_id)
 
@@ -488,7 +487,7 @@ def flexcomFreq(symbol, event):
 def i2sFreq(symbol, event):
     enable = Database.getSymbolValue("core", symbol.getID().split("_CLOCK_FREQUENCY")[0] + "_CLOCK_ENABLE")
     if enable:
-        i2sId = symbol.getID().split("_")[0].split("I2SMCC")[1]
+        i2sId = symbol.getID().split("_")[0].split("I2SC")[1]
         src = int(Database.getSymbolValue("core", "CLK_I2S" + i2sId + "_CLKSEL"))
         if src == 0:
             freq = int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))
@@ -540,6 +539,23 @@ def masterFreq(symbol, event):
         Database.setSymbolValue("core", "MASTER_CLOCK_FREQUENCY", masterclkFreq, 2)
     if int(Database.getSymbolValue("core", "SYSTICK_CLOCK_FREQUENCY")) != systickFreq:
         Database.setSymbolValue("core", "SYSTICK_CLOCK_FREQUENCY", systickFreq, 2)
+
+def usbfsFreqCal(symbol, event):
+    uhpEnable = Database.getSymbolValue("core", "PMC_SCER_UHP")
+    udpEnable = Database.getSymbolValue("core", "PMC_SCER_UDP")
+    src = Database.getSymbolValue("core", "PMC_USB_USBS")
+    div = Database.getSymbolValue("core", "PMC_USB_USBDIV")
+    freq = 0
+    if uhpEnable or udpEnable:
+        if src == 0:
+            freq = int(Database.getSymbolValue("core", "PLLA_CLOCK_FREQUENCY"))
+        else:
+            freq = int(Database.getSymbolValue("core", "PLLB_CLOCK_FREQUENCY"))
+
+        freq = freq / (div + 1)
+
+    if symbol.getValue() != freq:
+        symbol.setValue(freq)
 
 ###############################################################################
 systickFreq = coreComponent.createIntegerSymbol("SYSTICK_CLOCK_FREQUENCY", calculatedclkMenu)
@@ -599,6 +615,13 @@ usbfsFreq = coreComponent.createIntegerSymbol("USBFS_CLOCK_FREQUENCY", calculate
 usbfsFreq.setLabel("USBFS Frequency (Hz)")
 usbfsFreq.setDefaultValue(0)
 usbfsFreq.setReadOnly(True)
+usbfsFreq.setDependencies(usbfsFreqCal, [  "PLLA_CLOCK_FREQUENCY",
+                                        "PLLB_CLOCK_FREQUENCY",
+                                        "PMC_SCER_UDP",
+                                        "PMC_SCER_UHP",
+                                        "PMC_USB_USBDIV",
+                                        "PMC_USB_USBS"
+                                        ])
 
 clocks = clock_id.keys()
 
@@ -727,6 +750,9 @@ pmcClockEnable1 = coreComponent.createHexSymbol("PMC_PCER1", None)
 pmcClockEnable1.setDefaultValue(0x0)
 pmcClockEnable1.setDependencies(pcer1Cal, clkSetupDep)
 pmcClockEnable1.setVisible(False)
+
+Database.setSymbolValue("core", "PIOA_CLOCK_ENABLE", True, 1)
+Database.setSymbolValue("core", "PIOB_CLOCK_ENABLE", True, 1)
 ############################################# calculated Frequencies ##########################
 
 configName = Variables.get("__CONFIGURATION_NAME")
