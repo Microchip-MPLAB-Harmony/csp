@@ -150,6 +150,22 @@ def setMPUDefaultSettings():
 
     return mpuRegions, mpuSettings, mpuSetUpLogicList
 
+global nvmWaitStates
+nvmWaitStates = { #VDD > 2.7
+                    16000000 : 0,
+                    24000000 : 1,
+                    48000000 : 2,
+                    100000000 : 4,
+                    120000000 : 5
+                }
+                
+periphNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"EFC\"]")
+modules = periphNode.getChildren()
+components = []
+for nvmctrl_instance in range (0, len(modules)):
+    components.append(str(modules[nvmctrl_instance].getAttribute("name")).lower())
+Database.activateComponents(components)
+
 # load device specific pin manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/pio_11004/config/pio.py")
 coreComponent.addPlugin("../peripheral/pio_11004/plugin/pio_11004.jar")
@@ -167,7 +183,7 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/mpu/config/mpu.py")
 coreComponent.addPlugin("../peripheral/mpu/plugin/mpu.jar")
 
 # #load systick
-# execfile(Variables.get("__CORE_DIR") + "/../peripheral/systick/config/systick.py")
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/systick/config/systick.py")
 
 # # # load dma manager information
 # execfile(Variables.get("__CORE_DIR") + "/../peripheral/dmac_u2503/config/dmac.py")
@@ -177,7 +193,7 @@ coreComponent.addPlugin("../peripheral/mpu/plugin/mpu.jar")
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_6080/config/wdt.py")
 
 # #  load CMCC
-# execfile(Variables.get("__CORE_DIR") + "/../peripheral/cmcc/config/cmcc.py")
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/cmcc/config/cmcc.py")
 
 # # load device specific adc manager information
 # coreComponent.addPlugin("../peripheral/afec_11147/plugin/ARM_M7_ADCmanager.jar")

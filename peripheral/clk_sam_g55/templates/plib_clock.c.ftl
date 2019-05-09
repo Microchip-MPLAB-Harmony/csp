@@ -285,11 +285,6 @@ Clock Initialize
 *********************************************************************************/
 void CLOCK_Initialize( void )
 {
-<#if EFC_FWS != 0>
-    /* Set Flash Wait States and  Enable Code Loop Optimization */
-    EFC_REGS->EEFC_FMR = EEFC_FMR_FWS(${EFC_FWS}) | EEFC_FMR_CLOE_Msk;
-</#if>
-
 <#if SUPC_CR_MDXTALSEL != "0">
     /* Initialize Slow Clock */
     CLK_SlowClockInitialize();
