@@ -80,7 +80,7 @@ void populate_buffer(uint32_t* data)
 int main ( void )
 {
     uint32_t data [buffer_size] = {0};
-    uint32_t start_address = 0x500000;
+    uint32_t start_address = 0x450000;
 
     /* Initialize all modules */
     SYS_Initialize ( NULL );
