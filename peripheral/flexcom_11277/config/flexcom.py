@@ -198,6 +198,10 @@ def instantiateComponent(flexcomComponent):
     flexcomInstanceName.setVisible(False)
     flexcomInstanceName.setDefaultValue(flexcomComponent.getID().upper())
 
+    flexcomInstanceNumber = flexcomComponent.createStringSymbol("FLEXCOM_INSTANCE_NUMBER", None)
+    flexcomInstanceNumber.setVisible(False)
+    flexcomInstanceNumber.setDefaultValue(flexcomComponent.getID().replace("flexcom",""))
+
     Log.writeInfoMessage("Running " + flexcomInstanceName.getValue())
 
     uartCapabilityId = flexcomInstanceName.getValue() + "_UART"
@@ -214,7 +218,7 @@ def instantiateComponent(flexcomComponent):
     flexcomSym_OperatingMode = flexcomComponent.createKeyValueSetSymbol("FLEXCOM_MODE", None)
     flexcomSym_OperatingMode.setLabel("FLEXCOM Operating Mode")
 
-    flexcomSym_OperatingMode_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"FLEXCOM\"]/value-group@[name=\"FLEX_MR__OPMODE\"]")
+    flexcomSym_OperatingMode_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"FLEXCOM\"]/value-group@[name=\"FLEXCOM_MR__OPMODE\"]")
     flexcomSym_OperatingMode_Values = []
     flexcomSym_OperatingMode_Values = flexcomSym_OperatingMode_Node.getChildren()
 
