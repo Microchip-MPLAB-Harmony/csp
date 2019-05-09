@@ -103,7 +103,7 @@ flexcomSym_UsartInterrupt.setDependencies(symbolVisible, ["FLEXCOM_MODE"])
 
 flexcomSym_UsartClkSrc = flexcomComponent.createKeyValueSetSymbol("FLEXCOM_USART_MR_USCLKS", flexcomSym_OperatingMode)
 flexcomSym_UsartClkSrc.setLabel("Select Clock Source")
-flexcomSym_UsartClkSrc_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"FLEXCOM\"]/value-group@[name=\"FLEX_US_MR__USCLKS\"]")
+flexcomSym_UsartClkSrc_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"USART\"]/value-group@[name=\"US_MR__USCLKS\"]")
 flexcomSym_UsartClkSrc_Values = []
 flexcomSym_UsartClkSrc_Values = flexcomSym_UsartClkSrc_Node.getChildren()
 for index in range(len(flexcomSym_UsartClkSrc_Values)):
@@ -151,7 +151,7 @@ flexcomSym_UsartBRGValue.setDependencies(baudRateTrigger, ["BAUD_RATE", "FLEX_US
 
 flexcomSym_Usart_MR_CHRL = flexcomComponent.createKeyValueSetSymbol("FLEX_USART_MR_CHRL", flexcomSym_OperatingMode)
 flexcomSym_Usart_MR_CHRL.setLabel("Data")
-flexcomSym_Usart_MR_CHRL_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"FLEXCOM\"]/value-group@[name=\"FLEX_US_MR__CHRL\"]")
+flexcomSym_Usart_MR_CHRL_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"USART\"]/value-group@[name=\"US_MR__CHRL\"]")
 flexcomSym_Usart_MR_CHRL_Values = []
 flexcomSym_Usart_MR_CHRL_Values = flexcomSym_Usart_MR_CHRL_Node.getChildren()
 for index in range(len(flexcomSym_Usart_MR_CHRL_Values)):
@@ -201,7 +201,7 @@ flexcomSym_Usart_MR_CHRL_9_Mask.setVisible(False)
 
 flexcomSym_Usart_MR_PAR = flexcomComponent.createKeyValueSetSymbol("FLEX_USART_MR_PAR", flexcomSym_OperatingMode)
 flexcomSym_Usart_MR_PAR.setLabel("Parity")
-flexcomSym_Usart_MR_PAR_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"FLEXCOM\"]/value-group@[name=\"FLEX_US_MR__PAR\"]")
+flexcomSym_Usart_MR_PAR_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"USART\"]/value-group@[name=\"US_MR__PAR\"]")
 flexcomSym_Usart_MR_PAR_Values = []
 flexcomSym_Usart_MR_PAR_Values = flexcomSym_Usart_MR_PAR_Node.getChildren()
 for index in range(len(flexcomSym_Usart_MR_PAR_Values)):
@@ -247,7 +247,7 @@ flexcomSym_Usart_MR_PAR_MULTIDROP_Mask.setVisible(False)
 
 flexcomSym_Usart_MR_NBSTOP = flexcomComponent.createKeyValueSetSymbol("FLEX_USART_MR_NBSTOP", flexcomSym_OperatingMode)
 flexcomSym_Usart_MR_NBSTOP.setLabel("Stop")
-flexcomSym_Usart_MR_NBSTOP_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"FLEXCOM\"]/value-group@[name=\"FLEX_US_MR__NBSTOP\"]")
+flexcomSym_Usart_MR_NBSTOP_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"USART\"]/value-group@[name=\"US_MR__NBSTOP\"]")
 flexcomSym_Usart_MR_NBSTOP_Values = []
 flexcomSym_Usart_MR_NBSTOP_Values = flexcomSym_Usart_MR_NBSTOP_Node.getChildren()
 for index in range(len(flexcomSym_Usart_MR_NBSTOP_Values)):

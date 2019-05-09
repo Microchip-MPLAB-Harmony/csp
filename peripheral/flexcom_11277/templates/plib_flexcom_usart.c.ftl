@@ -65,9 +65,9 @@ void static ${FLEXCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
 {
     if(${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxBusyStatus == true)
     {
-        while((FLEX_US_CSR_RXRDY_Msk == (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & FLEX_US_CSR_RXRDY_Msk)) && (${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxSize > ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxProcessedSize) )
+        while((US_CSR_RXRDY_Msk == (USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_CSR & US_CSR_RXRDY_Msk)) && (${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxSize > ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxProcessedSize) )
         {
-            ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxBuffer[${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxProcessedSize++] = (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_RHR & FLEX_US_RHR_RXCHR_Msk);
+            ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxBuffer[${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxProcessedSize++] = (USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_RHR & US_RHR_RXCHR_Msk);
         }
 
         /* Check if the buffer is done */
@@ -76,7 +76,7 @@ void static ${FLEXCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
             ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxBusyStatus = false;
 
             /* Disable Read, Overrun, Parity and Framing error interrupts */
-            ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IDR = (FLEX_US_IDR_RXRDY_Msk | FLEX_US_IDR_FRAME_Msk | FLEX_US_IDR_PARE_Msk | FLEX_US_IDR_OVRE_Msk);
+            USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_IDR = (US_IDR_RXRDY_Msk | US_IDR_FRAME_Msk | US_IDR_PARE_Msk | US_IDR_OVRE_Msk);
 
             if(${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxCallback != NULL)
             {
@@ -97,16 +97,16 @@ void static ${FLEXCOM_INSTANCE_NAME}_USART_ISR_TX_Handler( void )
 {
     if(${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txBusyStatus == true)
     {
-        while((FLEX_US_CSR_TXEMPTY_Msk == (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & FLEX_US_CSR_TXEMPTY_Msk)) && (${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txSize > ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txProcessedSize) )
+        while((US_CSR_TXEMPTY_Msk == (USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_CSR & US_CSR_TXEMPTY_Msk)) && (${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txSize > ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txProcessedSize) )
         {
-            ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_THR = ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txBuffer[${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txProcessedSize++];
+            USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_THR = ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txBuffer[${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txProcessedSize++];
         }
 
         /* Check if the buffer is done */
         if(${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txProcessedSize >= ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txSize)
         {
             ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txBusyStatus = false;
-            ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IDR = FLEX_US_IDR_TXEMPTY_Msk;
+            USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_IDR = US_IDR_TXEMPTY_Msk;
 
             if(${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txCallback != NULL)
             {
@@ -126,38 +126,38 @@ void static ${FLEXCOM_INSTANCE_NAME}_USART_ISR_TX_Handler( void )
 void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
 {
     /* Channel status */
-    uint32_t channelStatus = ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR;
+    uint32_t channelStatus = USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_CSR;
     <#if USE_USART_RX_DMA>
-    if ((channelStatus & FLEX_US_CSR_ENDRX_Msk) == FLEX_US_CSR_ENDRX_Msk)
+    if ((channelStatus & US_CSR_ENDRX_Msk) == US_CSR_ENDRX_Msk)
     {
         if( ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxDmaCallback != NULL )
         {
             ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxDmaCallback(USART_DMA_TRANSFER_EVENT_COMPLETE, ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxDmaCallback);
         }
-        ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IDR = FLEX_US_IDR_ENDRX_Msk;
+        USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_IDR = US_IDR_ENDRX_Msk;
     }
     </#if>
 
     <#if USE_USART_TX_DMA>
-    if ((channelStatus & FLEX_US_CSR_ENDTX_Msk) == FLEX_US_CSR_ENDTX_Msk)
+    if ((channelStatus & US_CSR_ENDTX_Msk) == US_CSR_ENDTX_Msk)
     {
         if( ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txDmaCallback != NULL )
         {
             ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txDmaCallback(USART_DMA_TRANSFER_EVENT_COMPLETE, ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txDmaCallback);
         }
-        ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IDR = FLEX_US_IDR_ENDTX_Msk;
+        USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_IDR = US_IDR_ENDTX_Msk;
     }
     </#if>
 
     /* Error status */
-    uint32_t errorStatus = (channelStatus & (FLEX_US_CSR_OVRE_Msk | FLEX_US_CSR_FRAME_Msk | FLEX_US_CSR_PARE_Msk));
+    uint32_t errorStatus = (channelStatus & (US_CSR_OVRE_Msk | US_CSR_FRAME_Msk | US_CSR_PARE_Msk));
 
     if(errorStatus != 0)
     {
         ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxBusyStatus = false;
 
         /* Disable Read, Overrun, Parity and Framing error interrupts */
-        ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IDR = (FLEX_US_IDR_RXRDY_Msk | FLEX_US_IDR_FRAME_Msk | FLEX_US_IDR_PARE_Msk | FLEX_US_IDR_OVRE_Msk);
+        USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_IDR = (US_IDR_RXRDY_Msk | US_IDR_FRAME_Msk | US_IDR_PARE_Msk | US_IDR_OVRE_Msk);
 
         /* Client must call ${FLEXCOM_INSTANCE_NAME}_USART_ErrorGet() function to clear the errors */
 
@@ -170,13 +170,13 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
     }
 
     /* Receiver status */
-    if(FLEX_US_CSR_RXRDY_Msk == (channelStatus & FLEX_US_CSR_RXRDY_Msk))
+    if(US_CSR_RXRDY_Msk == (channelStatus & US_CSR_RXRDY_Msk))
     {
         ${FLEXCOM_INSTANCE_NAME}_USART_ISR_RX_Handler();
     }
 
     /* Transmitter status */
-    if(FLEX_US_CSR_TXEMPTY_Msk == (channelStatus & FLEX_US_CSR_TXEMPTY_Msk))
+    if(US_CSR_TXEMPTY_Msk == (channelStatus & US_CSR_TXEMPTY_Msk))
     {
         ${FLEXCOM_INSTANCE_NAME}_USART_ISR_TX_Handler();
     }
@@ -190,12 +190,12 @@ void static ${FLEXCOM_INSTANCE_NAME}_USART_ErrorClear( void )
 {
     uint8_t dummyData = 0u;
 
-    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CR = FLEX_US_CR_RSTSTA_Msk;
+    USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_CR = US_CR_RSTSTA_Msk;
 
     /* Flush existing error bytes from the RX FIFO */
-    while( FLEX_US_CSR_RXRDY_Msk == (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR& FLEX_US_CSR_RXRDY_Msk) )
+    while( US_CSR_RXRDY_Msk == (USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_CSR& US_CSR_RXRDY_Msk) )
     {
-        dummyData = (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_RHR& FLEX_US_RHR_RXCHR_Msk);
+        dummyData = (USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_RHR& US_RHR_RXCHR_Msk);
     }
 
     /* Ignore the warning */
@@ -207,19 +207,19 @@ void static ${FLEXCOM_INSTANCE_NAME}_USART_ErrorClear( void )
 void ${FLEXCOM_INSTANCE_NAME}_USART_Initialize( void )
 {
     /* Set FLEXCOM USART operating mode */
-    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_MR = FLEX_MR_OPMODE_USART;
+    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEXCOM_MR = FLEXCOM_MR_OPMODE_USART;
 
     /* Reset ${FLEXCOM_INSTANCE_NAME} USART */
-    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CR = (FLEX_US_CR_RSTRX_Msk | FLEX_US_CR_RSTTX_Msk | FLEX_US_CR_RSTSTA_Msk);
+    USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_CR = (US_CR_RSTRX_Msk | US_CR_RSTTX_Msk | US_CR_RSTSTA_Msk);
 
     /* Enable ${FLEXCOM_INSTANCE_NAME} USART */
-    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CR = (FLEX_US_CR_TXEN_Msk | FLEX_US_CR_RXEN_Msk);
+    USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_CR = (US_CR_TXEN_Msk | US_CR_RXEN_Msk);
 
     /* Configure ${FLEXCOM_INSTANCE_NAME} USART mode */
-    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_MR = ((FLEX_US_MR_USCLKS_${FLEXCOM_USART_MR_USCLKS}) ${(FLEX_USART_MR_MODE9 == true)?then('| FLEX_US_MR_MODE9_Msk', '| FLEX_US_MR_CHRL${FLEX_USART_MR_CHRL}')} | FLEX_US_MR_PAR_${FLEX_USART_MR_PAR} | FLEX_US_MR_NBSTOP${FLEX_USART_MR_NBSTOP} | (${FLEXCOM_USART_MR_OVER} << FLEX_US_MR_OVER_Pos));
+    USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_MR = ((US_MR_USCLKS_${FLEXCOM_USART_MR_USCLKS}) ${(FLEX_USART_MR_MODE9 == true)?then('| US_MR_MODE9_Msk', '| US_MR_CHRL${FLEX_USART_MR_CHRL}')} | US_MR_PAR_${FLEX_USART_MR_PAR} | US_MR_NBSTOP${FLEX_USART_MR_NBSTOP} | (${FLEXCOM_USART_MR_OVER} << US_MR_OVER_Pos));
 
     /* Configure ${FLEXCOM_INSTANCE_NAME} USART Baud Rate */
-    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_BRGR = FLEX_US_BRGR_CD(${BRG_VALUE});
+    USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_BRGR = US_BRGR_CD(${BRG_VALUE});
 <#if USART_INTERRUPT_MODE == true>
 
     /* Initialize instance object */
@@ -241,18 +241,18 @@ void ${FLEXCOM_INSTANCE_NAME}_USART_Initialize( void )
 FLEXCOM_USART_ERROR ${FLEXCOM_INSTANCE_NAME}_USART_ErrorGet( void )
 {
     FLEXCOM_USART_ERROR errors = FLEXCOM_USART_ERROR_NONE;
-    uint32_t status = ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR;
+    uint32_t status = USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_CSR;
 
     /* Collect all errors */
-    if(status & FLEX_US_CSR_OVRE_Msk)
+    if(status & US_CSR_OVRE_Msk)
     {
         errors = FLEXCOM_USART_ERROR_OVERRUN;
     }
-    if(status & FLEX_US_CSR_PARE_Msk)
+    if(status & US_CSR_PARE_Msk)
     {
         errors |= FLEXCOM_USART_ERROR_PARITY;
     }
-    if(status & FLEX_US_CSR_FRAME_Msk)
+    if(status & US_CSR_FRAME_Msk)
     {
         errors |= FLEXCOM_USART_ERROR_FRAMING;
     }
@@ -298,16 +298,16 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_SerialSetup( FLEXCOM_USART_SERIAL_SETUP *set
         else
         {
             brgVal = (srcClkFreq / (8 * baud));
-            overSampVal = (1 << FLEX_US_MR_OVER_Pos) & FLEX_US_MR_OVER_Msk;
+            overSampVal = (1 << US_MR_OVER_Pos) & US_MR_OVER_Msk;
         }
 
         /* Configure ${FLEXCOM_INSTANCE_NAME} USART mode */
-        usartMode = ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_MR;
-        usartMode &= ~(FLEX_US_MR_CHRL_Msk | FLEX_US_MR_MODE9_Msk | FLEX_US_MR_PAR_Msk | FLEX_US_MR_NBSTOP_Msk | FLEX_US_MR_OVER_Msk);
-        ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_MR = usartMode | ((uint32_t)setup->dataWidth | (uint32_t)setup->parity | (uint32_t)setup->stopBits | overSampVal);
+        usartMode = USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_MR;
+        usartMode &= ~(US_MR_CHRL_Msk | US_MR_MODE9_Msk | US_MR_PAR_Msk | US_MR_NBSTOP_Msk | US_MR_OVER_Msk);
+        USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_MR = usartMode | ((uint32_t)setup->dataWidth | (uint32_t)setup->parity | (uint32_t)setup->stopBits | overSampVal);
 
         /* Configure ${FLEXCOM_INSTANCE_NAME} USART Baud Rate */
-        ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_BRGR = FLEX_US_BRGR_CD(brgVal);
+        USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_BRGR = US_BRGR_CD(brgVal);
         status = true;
     }
 
@@ -333,16 +333,16 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_Read( void *buffer, const size_t size )
         while( size > processedSize )
         {
             /* Error status */
-            errorStatus = (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & (FLEX_US_CSR_OVRE_Msk | FLEX_US_CSR_FRAME_Msk | FLEX_US_CSR_PARE_Msk));
+            errorStatus = (USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_CSR & (US_CSR_OVRE_Msk | US_CSR_FRAME_Msk | US_CSR_PARE_Msk));
 
             if(errorStatus != 0)
             {
                 break;
             }
 
-            if(FLEX_US_CSR_RXRDY_Msk == (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & FLEX_US_CSR_RXRDY_Msk))
+            if(US_CSR_RXRDY_Msk == (USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_CSR & US_CSR_RXRDY_Msk))
             {
-                *lBuffer++ = (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_RHR& FLEX_US_RHR_RXCHR_Msk);
+                *lBuffer++ = (USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_RHR& US_RHR_RXCHR_Msk);
                 processedSize++;
             }
         }
@@ -363,7 +363,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_Read( void *buffer, const size_t size )
             status = true;
 
             /* Enable Read, Overrun, Parity and Framing error interrupts */
-            ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IER = (FLEX_US_IER_RXRDY_Msk | FLEX_US_IER_FRAME_Msk | FLEX_US_IER_PARE_Msk | FLEX_US_IER_OVRE_Msk);
+            USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_IER = (US_IER_RXRDY_Msk | US_IER_FRAME_Msk | US_IER_PARE_Msk | US_IER_OVRE_Msk);
         }
 </#if>
     }
@@ -384,9 +384,9 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_Write( void *buffer, const size_t size )
 <#if USART_INTERRUPT_MODE == false>
         while( size > processedSize )
         {
-            if(FLEX_US_CSR_TXEMPTY_Msk == (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR& FLEX_US_CSR_TXEMPTY_Msk))
+            if(US_CSR_TXEMPTY_Msk == (USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_CSR& US_CSR_TXEMPTY_Msk))
             {
-                ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_THR = (FLEX_US_THR_TXCHR(*lBuffer++) & FLEX_US_THR_TXCHR_Msk);
+                USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_THR = (US_THR_TXCHR(*lBuffer++) & US_THR_TXCHR_Msk);
                 processedSize++;
             }
         }
@@ -403,13 +403,13 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_Write( void *buffer, const size_t size )
             status = true;
 
             /* Initiate the transfer by sending first byte */
-            if(FLEX_US_CSR_TXEMPTY_Msk == (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR& FLEX_US_CSR_TXEMPTY_Msk))
+            if(US_CSR_TXEMPTY_Msk == (USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_CSR& US_CSR_TXEMPTY_Msk))
             {
-                ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_THR = (FLEX_US_THR_TXCHR(*lBuffer) & FLEX_US_THR_TXCHR_Msk);
+                USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_THR = (US_THR_TXCHR(*lBuffer) & US_THR_TXCHR_Msk);
                 ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txProcessedSize++;
             }
 
-            ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IER = FLEX_US_IER_TXEMPTY_Msk;
+            USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_IER = US_IER_TXEMPTY_Msk;
         }
 </#if>
     }
@@ -454,25 +454,25 @@ size_t ${FLEXCOM_INSTANCE_NAME}_USART_ReadCountGet( void )
 <#if USART_INTERRUPT_MODE == false>
 uint8_t ${FLEXCOM_INSTANCE_NAME}_ReadByte(void)
 {
-    return(${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_RHR & FLEX_US_RHR_RXCHR_Msk);
+    return(USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_RHR & US_RHR_RXCHR_Msk);
 }
 
 void ${FLEXCOM_INSTANCE_NAME}_WriteByte(uint8_t data)
 {
-    while ((FLEX_US_CSR_TXEMPTY_Msk == (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & FLEX_US_CSR_TXEMPTY_Msk)) == 0);
-    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_THR = (FLEX_US_THR_TXCHR(data) & FLEX_US_THR_TXCHR_Msk);
+    while ((US_CSR_TXEMPTY_Msk == (USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_CSR & US_CSR_TXEMPTY_Msk)) == 0);
+    USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_THR = (US_THR_TXCHR(data) & US_THR_TXCHR_Msk);
 }
 
 void inline ${FLEXCOM_INSTANCE_NAME}_Sync(void)
 {
-    while ((FLEX_US_CSR_TXEMPTY_Msk == (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & FLEX_US_CSR_TXEMPTY_Msk)) == 0);
+    while ((US_CSR_TXEMPTY_Msk == (USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_CSR & US_CSR_TXEMPTY_Msk)) == 0);
 }
 
 bool ${FLEXCOM_INSTANCE_NAME}_USART_TransmitterIsReady( void )
 {
     bool status = false;
 
-    if(FLEX_US_CSR_TXEMPTY_Msk == (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR& FLEX_US_CSR_TXEMPTY_Msk))
+    if(US_CSR_TXEMPTY_Msk == (USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_CSR& US_CSR_TXEMPTY_Msk))
     {
         status = true;
     }
@@ -484,7 +484,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_ReceiverIsReady( void )
 {
     bool status = false;
 
-    if(FLEX_US_CSR_RXRDY_Msk == (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR& FLEX_US_CSR_RXRDY_Msk))
+    if(US_CSR_RXRDY_Msk == (USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_CSR& US_CSR_RXRDY_Msk))
     {
         status = true;
     }
@@ -503,10 +503,10 @@ void ${FLEXCOM_INSTANCE_NAME}_USART_DmaTransmitCallbackRegister( FLEXCOM_USART_D
 
 void ${FLEXCOM_INSTANCE_NAME}_USART_DMAWrite( void *buffer, const size_t size )
 {
-    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_TPR = (uint32_t) buffer;
-    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_TCR = (uint32_t) size;
-    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_PTCR = FLEX_US_PTCR_TXTEN_Msk;
-    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IER = FLEX_US_IER_ENDTX_Msk;
+    USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_TPR = (uint32_t) buffer;
+    USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_TCR = (uint32_t) size;
+    USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_PTCR = US_PTCR_TXTEN_Msk;
+    USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_IER = US_IER_ENDTX_Msk;
 }
 </#if>
 
@@ -519,9 +519,9 @@ void ${FLEXCOM_INSTANCE_NAME}_USART_DmaReceiveCallbackRegister( FLEXCOM_USART_DM
 
 void ${FLEXCOM_INSTANCE_NAME}_USART_DMARead( void *buffer, const size_t size )
 {
-    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_RPR = (uint32_t) buffer;
-    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_RCR = (uint32_t) size;
-    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_PTCR = FLEX_US_PTCR_RXTEN_Msk;
-    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IER = FLEX_US_IER_ENDRX_Msk;
+    USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_RPR = (uint32_t) buffer;
+    USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_RCR = (uint32_t) size;
+    USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_PTCR = US_PTCR_RXTEN_Msk;
+    USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_IER = US_IER_ENDRX_Msk;
 }
 </#if>

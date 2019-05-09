@@ -132,7 +132,7 @@ flexcomSym_SPI_MR_MSTR.setDependencies(symbolVisible, ["FLEXCOM_MODE"])
 #Select clock source
 flexcomSym_SPI_MR_BRSRCCLK = flexcomComponent.createKeyValueSetSymbol("FLEXCOM_SPI_MR_BRSRCCLK", flexcomSym_OperatingMode)
 flexcomSym_SPI_MR_BRSRCCLK.setLabel("Select Clock Source")
-flexcomSym_SPI_MR_BRSRCCLK_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"FLEXCOM\"]/value-group@[name=\"FLEX_SPI_MR__BRSRCCLK\"]")
+flexcomSym_SPI_MR_BRSRCCLK_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SPI\"]/value-group@[name=\"SPI_MR__BRSRCCLK\"]")
 flexcomSym_SPI_MR_BRSRCCLK_Values = []
 flexcomSym_SPI_MR_BRSRCCLK_Values = flexcomSym_SPI_MR_BRSRCCLK_Node.getChildren()
 for index in range(len(flexcomSym_SPI_MR_BRSRCCLK_Values)):
@@ -190,7 +190,7 @@ flexcomSym_SPI_CSR_BITS.setLabel("Bits Per Transfer")
 flexcomSym_SPI_CSR_BITS.setOutputMode("Key")
 flexcomSym_SPI_CSR_BITS.setDisplayMode("Description")
 flexcomSym_SPI_CSR_BITS.setDefaultValue(0)
-flexcomSym_SPI_CSR_BITS_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"FLEXCOM\"]/value-group@[name=\"FLEX_SPI_CSR__BITS\"]")
+flexcomSym_SPI_CSR_BITS_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SPI\"]/value-group@[name=\"SPI_CSR__BITS\"]")
 flexcomSym_SPI_CSR_BITS_Values = []
 flexcomSym_SPI_CSR_BITS_Values = flexcomSym_SPI_CSR_BITS_Node.getChildren()
 for index in range(len(flexcomSym_SPI_CSR_BITS_Values)):

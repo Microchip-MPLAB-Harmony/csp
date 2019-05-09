@@ -85,7 +85,7 @@ flexcomSym_Twi_OpMode.setDependencies(symbolVisible, ["FLEXCOM_MODE"])
 #Select clock source
 flexcomSym_TWI_CWGR_BRSRCCLK = flexcomComponent.createKeyValueSetSymbol("FLEXCOM_TWI_CWGR_BRSRCCLK", flexcomSym_OperatingMode)
 flexcomSym_TWI_CWGR_BRSRCCLK.setLabel("Select Clock Source")
-flexcomSym_TWI_CWGR_BRSRCCLK_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"FLEXCOM\"]/value-group@[name=\"FLEX_TWI_CWGR__BRSRCCLK\"]")
+flexcomSym_TWI_CWGR_BRSRCCLK_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TWI\"]/value-group@[name=\"TWI_CWGR__BRSRCCLK\"]")
 flexcomSym_TWI_CWGR_BRSRCCLK_Values = []
 flexcomSym_TWI_CWGR_BRSRCCLK_Values = flexcomSym_TWI_CWGR_BRSRCCLK_Node.getChildren()
 for index in range(len(flexcomSym_TWI_CWGR_BRSRCCLK_Values)):
