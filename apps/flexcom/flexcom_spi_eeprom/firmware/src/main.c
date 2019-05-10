@@ -71,10 +71,6 @@ FLEXCOM SPI   - Connect EEPROM 4 click board to XPRO EXT1 Connector.
 #define EEPROM_ADDRESS                      0x000000
 #define LED_On()                            LED_Clear()
 #define LED_Off()                           LED_Set()
-#define EEPROM_CS_Set()                    (PIOD_REGS->PIO_SODR = (1 << 29))
-#define EEPROM_CS_Clear()                  (PIOD_REGS->PIO_CODR = (1 << 29))
-#define EEPROM_HOLD_Set()                  (PIOB_REGS->PIO_SODR = (1 << 9))
-#define EEPROM_WP_Set()                    (PIOD_REGS->PIO_SODR = (1 << 13))
 
 /* Application's state machine enum */
 typedef enum
@@ -169,11 +165,11 @@ int main ( void )
                 txData[0] = EEPROM_CMD_WREN;
 
                 /* Register FLEXCOM SPI Callback with current state as context */
-                FLEXCOM2_SPI_CallbackRegister(&FLEXCOM_SPI_EventHandler, (uintptr_t)APP_STATE_EEPROM_WRITE_ENABLE);
+                FLEXCOM5_SPI_CallbackRegister(&FLEXCOM_SPI_EventHandler, (uintptr_t)APP_STATE_EEPROM_WRITE_ENABLE);
                 state = APP_STATE_IDLE;
 
                 EEPROM_CS_Clear();
-                FLEXCOM2_SPI_Write(txData, 1);
+                FLEXCOM5_SPI_Write(txData, 1);
 
                 break;
             }
@@ -185,21 +181,21 @@ int main ( void )
                 txData[2] = (uint8_t)(eepromAddr>>8);
                 txData[3] = (uint8_t)(eepromAddr);
 
-                FLEXCOM2_SPI_CallbackRegister(&FLEXCOM_SPI_EventHandler, (uintptr_t)APP_STATE_EEPROM_WRITE);
+                FLEXCOM5_SPI_CallbackRegister(&FLEXCOM_SPI_EventHandler, (uintptr_t)APP_STATE_EEPROM_WRITE);
                 state = APP_STATE_IDLE;
                 EEPROM_CS_Clear();
-                FLEXCOM2_SPI_Write(txData, sizeof(txData));
+                FLEXCOM5_SPI_Write(txData, sizeof(txData));
                 break;
             }
             case APP_STATE_EEPROM_READ_STATUS:
             {
                 /* Read Status  */
                 txData[0] = EEPROM_CMD_RDSR;
-                FLEXCOM2_SPI_CallbackRegister(&FLEXCOM_SPI_EventHandler, (uintptr_t)APP_STATE_EEPROM_READ_STATUS);
+                FLEXCOM5_SPI_CallbackRegister(&FLEXCOM_SPI_EventHandler, (uintptr_t)APP_STATE_EEPROM_READ_STATUS);
                 state = APP_STATE_IDLE;
 
                 EEPROM_CS_Clear();
-                FLEXCOM2_SPI_WriteRead(txData, 1, rxData, 2);
+                FLEXCOM5_SPI_WriteRead(txData, 1, rxData, 2);
                 break;
             }
             case APP_STATE_EEPROM_CHECK_STATUS:
@@ -223,10 +219,10 @@ int main ( void )
                 txData[2] = (uint8_t)(eepromAddr>>8);
                 txData[3] = (uint8_t)(eepromAddr);
 
-                FLEXCOM2_SPI_CallbackRegister(&FLEXCOM_SPI_EventHandler, (uintptr_t)APP_STATE_EEPROM_READ);
+                FLEXCOM5_SPI_CallbackRegister(&FLEXCOM_SPI_EventHandler, (uintptr_t)APP_STATE_EEPROM_READ);
                 state = APP_STATE_IDLE;
                 EEPROM_CS_Clear();
-                FLEXCOM2_SPI_WriteRead(txData, 4, rxData, sizeof(rxData));
+                FLEXCOM5_SPI_WriteRead(txData, 4, rxData, sizeof(rxData));
                 break;
             }
             case APP_STATE_IDLE:
