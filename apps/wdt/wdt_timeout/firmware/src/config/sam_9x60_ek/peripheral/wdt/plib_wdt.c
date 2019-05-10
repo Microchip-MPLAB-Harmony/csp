@@ -63,7 +63,8 @@ void WDT_InterruptHandler( void )
     // Capture and clear interrupt status
     uint32_t interruptStatus = WDT_REGS->WDT_ISR;
 
-    if( interruptStatus && (wdtCallbackObj.callback != NULL) ) {
+    if( interruptStatus && (wdtCallbackObj.callback != NULL) )
+    {
         wdtCallbackObj.callback( wdtCallbackObj.context, interruptStatus );
     }
 }
@@ -94,14 +95,16 @@ void WDT_Clear( void )
     // repeat threshold, currently 250 counts, has expired.
     // Note: Due to the asynchronous operation of the WDT with respect to the rest of the chip
     //    a minimum of two, possibly three, value register reads must be performed. 
-    if( !(WDT_MR_WDDIS_Msk & WDT_REGS->WDT_MR) ) {
+    if( !(WDT_MR_WDDIS_Msk & WDT_REGS->WDT_MR) )
+    {
         const uint32_t  minWait = 250;
         uint32_t        countDownValue = WDT_VR_COUNTER( WDT_REGS->WDT_VR );
         if( countDownValue != WDT_VR_COUNTER( WDT_REGS->WDT_VR ) )
             countDownValue = WDT_VR_COUNTER( WDT_REGS->WDT_VR );
     
         // initial WDT_WLR_PERIOD = 1536 (counts)
-        if( 1536 > (minWait + countDownValue) ) {
+        if( 1536 > (minWait + countDownValue) )
+        {
             WDT_REGS->WDT_CR = WDT_CR_KEY_PASSWD | WDT_CR_WDRSTT_Msk;
         }
     }
