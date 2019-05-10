@@ -83,8 +83,8 @@
           <Name dnOrder="1">plib_nvmctrl.c</Name>
           <LogicalPath dnOrder="2">config/sam_d21_xpro/peripheral/nvmctrl/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/nvmctrl/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">8F9E56E635AA5CADBBB3D9A5600441EA</GeneratedChecksum>
-          <UserChecksum dnOrder="5">8F9E56E635AA5CADBBB3D9A5600441EA</UserChecksum>
+          <GeneratedChecksum dnOrder="4">ACE0D4DC71618954B26EF174B547BCCF</GeneratedChecksum>
+          <UserChecksum dnOrder="5">ACE0D4DC71618954B26EF174B547BCCF</UserChecksum>
         </File>
         <File dnOrder="10">
           <Type dnOrder="0">SOURCE</Type>
@@ -115,8 +115,8 @@
           <Name dnOrder="1">plib_systick.c</Name>
           <LogicalPath dnOrder="2">config/sam_d21_xpro/peripheral/systick/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/systick/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">5293C9E9C001FE15AA8773B7356A0C71</GeneratedChecksum>
-          <UserChecksum dnOrder="5">5293C9E9C001FE15AA8773B7356A0C71</UserChecksum>
+          <GeneratedChecksum dnOrder="4">B344AB9F346A6353AB2A43FEE7360BFA</GeneratedChecksum>
+          <UserChecksum dnOrder="5">B344AB9F346A6353AB2A43FEE7360BFA</UserChecksum>
         </File>
         <File dnOrder="14">
           <Type dnOrder="0">SOURCE</Type>
@@ -555,7 +555,7 @@
       <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAMD21_DFP\3.0.24\samd21a\atdf\ATSAMD21J18A.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
-      <Setting dnOrder="4" key="MERGE_STRATEGY" value="OVERWRITE"/>
+      <Setting dnOrder="4" key="MERGE_STRATEGY" value="ALL"/>
       <Setting dnOrder="5" key="PackageFilter" value="csp;"/>
     </Settings>
   </Configurator>
