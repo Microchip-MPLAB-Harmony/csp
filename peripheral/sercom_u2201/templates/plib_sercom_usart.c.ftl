@@ -397,6 +397,7 @@ bool ${SERCOM_INSTANCE_NAME}_USART_Read( void *buffer, const size_t size )
 <#if USART_INTERRUPT_MODE = false>
     uint32_t u32Length     = size;
     uint32_t processedSize = 0;
+    USART_ERROR errorStatus = USART_ERROR_NONE;
 </#if>
 
     if(pu8Data != NULL)
@@ -416,7 +417,9 @@ bool ${SERCOM_INSTANCE_NAME}_USART_Read( void *buffer, const size_t size )
             *pu8Data++ = ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA;
             processedSize++;
 
-            if(${SERCOM_INSTANCE_NAME}_USART_ErrorGet() != USART_ERROR_NONE)
+            errorStatus = ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & (SERCOM_USART_INT_STATUS_PERR_Msk | SERCOM_USART_INT_STATUS_FERR_Msk | SERCOM_USART_INT_STATUS_BUFOVF_Msk);
+
+            if(errorStatus != USART_ERROR_NONE)
             {
                 break;
             }
