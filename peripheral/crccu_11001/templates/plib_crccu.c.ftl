@@ -49,13 +49,14 @@ void ${CRCCU_INSTANCE_NAME}_Initialize (void)
 {
     ${CRCCU_INSTANCE_NAME}_REGS->CRCCU_MR = CRCCU_MR_PTYPE_${CRCCU_POLYNOMIAL} | CRCCU_MR_DIVIDER(${CRCCU_DIVIDER}) | CRCCU_MR_BITORDER(${CRCCU_BITORDER});
     crc_dscr.ul_tr_ctrl = ${CRCCU_TWIDTH} << 24;
-    CRCCU_REGS->CRCCU_DSCR = (uint32_t) &crc_dscr;
+    ${CRCCU_INSTANCE_NAME}_REGS->CRCCU_DSCR = (uint32_t) &crc_dscr;
 }
+
 bool ${CRCCU_INSTANCE_NAME}_CRCCalculate(uint32_t startAddress, uint16_t length, uint32_t * crc, bool chain)
 {
     bool statusValue = false;
 
-    if( (0 != length) && (NULL != crc) )
+    if( (length != 0) && (crc != NULL) )
     {
         crc_dscr.ul_tr_addr = startAddress;
 
@@ -64,6 +65,7 @@ bool ${CRCCU_INSTANCE_NAME}_CRCCalculate(uint32_t startAddress, uint16_t length,
             ${CRCCU_INSTANCE_NAME}_REGS->CRCCU_CR = CRCCU_CR_RESET_Msk;
         }
 
+        crc_dscr.ul_tr_ctrl = crc_dscr.ul_tr_ctrl & (0xffff0000);
         crc_dscr.ul_tr_ctrl |= length;
 
         ${CRCCU_INSTANCE_NAME}_REGS->CRCCU_MR |= CRCCU_MR_ENABLE_Msk;
@@ -76,7 +78,7 @@ bool ${CRCCU_INSTANCE_NAME}_CRCCalculate(uint32_t startAddress, uint16_t length,
         }
 
         /* Reading the resultant crc value from the DATA register */
-        *crc = crc_dscr.ul_tr_crc;
+        *crc = ${CRCCU_INSTANCE_NAME}_REGS->CRCCU_SR;
         
         statusValue = true;
     }
@@ -86,30 +88,7 @@ bool ${CRCCU_INSTANCE_NAME}_CRCCalculate(uint32_t startAddress, uint16_t length,
 
 void ${CRCCU_INSTANCE_NAME}_Setup (CRCCU_POLYNOMIAL polynomial, CRCCU_TWIDTH width)
 {
-    crc_dscr.ul_tr_ctrl = ${CRCCU_TWIDTH} << 24;
+    crc_dscr.ul_tr_ctrl = width << 24;
     ${CRCCU_INSTANCE_NAME}_REGS->CRCCU_MR &= ~(CRCCU_MR_PTYPE_Msk);
-    ${CRCCU_INSTANCE_NAME}_REGS->CRCCU_MR |= CRCCU_MR_PTYPE_${CRCCU_POLYNOMIAL};
-}
-
-bool ${CRCCU_INSTANCE_NAME}_CRCCalculateAndCompare (uint32_t startAddress, uint16_t length, uint32_t crc, bool chain)
-{
-    crc_dscr.ul_tr_addr = startAddress;
-
-    if(chain == false)
-    {
-        ${CRCCU_INSTANCE_NAME}_REGS->CRCCU_CR = CRCCU_CR_RESET_Msk;
-    }
-
-    crc_dscr.ul_tr_ctrl |= length;
-    crc_dscr.ul_tr_crc = crc;
-    ${CRCCU_INSTANCE_NAME}_REGS->CRCCU_MR |= CRCCU_MR_ENABLE_Msk;
-
-    ${CRCCU_INSTANCE_NAME}_REGS->CRCCU_DMA_EN = CRCCU_DMA_EN_DMAEN_Msk;
-
-    while((${CRCCU_INSTANCE_NAME}_REGS->CRCCU_DMA_ISR & CRCCU_DMA_ISR_DMAISR_Msk) != CRCCU_DMA_ISR_DMAISR_Msk)
-    {
-        /* Wait for the DSU Operation to Complete */
-    }
-
-    return (bool)(${CRCCU_INSTANCE_NAME}_REGS->CRCCU_ISR & CRCCU_ISR_ERRISR_Msk != CRCCU_DMA_ISR_ERRISR_Msk)
+    ${CRCCU_INSTANCE_NAME}_REGS->CRCCU_MR |= polynomial;
 }
