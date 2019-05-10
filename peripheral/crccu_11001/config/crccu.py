@@ -21,15 +21,16 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
 
+
 def instantiateComponent(crccuComponent):
 
     crccuInstanceName = crccuComponent.createStringSymbol("CRCCU_INSTANCE_NAME", None)
     crccuInstanceName.setVisible(False)
     crccuInstanceName.setDefaultValue(crccuComponent.getID().upper())
 
-    #Clock enable
+    # Clock enable
     Database.setSymbolValue("core", crccuInstanceName.getValue() + "_CLOCK_ENABLE", True, 2)
-    
+
     crccuPolynomialNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CRCCU"]/value-group@[name="CRCCU_MR__PTYPE"]')
     crccuPolynomialValues = crccuPolynomialNode.getChildren()
 
@@ -41,7 +42,7 @@ def instantiateComponent(crccuComponent):
         crccuPolynomialCaption = crccuPolynomialValues[index].getAttribute("caption")
         crccuPolynomial.addKey(crccuPolynomialKey, crccuPolynomialValue, crccuPolynomialCaption)
     crccuPolynomial.setOutputMode("Key")
-    crccuPolynomial.setDisplayMode("Description")
+    crccuPolynomial.setDisplayMode("Key")
     crccuPolynomial.setDefaultValue(0)
 
     crccuBitorderNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CRCCU"]/value-group@[name="CRCCU_MR__BITORDER"]')
@@ -58,7 +59,6 @@ def instantiateComponent(crccuComponent):
     crccuBitorder.setDisplayMode("Key")
     crccuBitorder.setDefaultValue(0)
 
-
     crccuTwidth = crccuComponent.createKeyValueSetSymbol("CRCCU_TWIDTH", None)
     crccuTwidth.setLabel("Select CRC Transfer Width")
     crccuTwidth.addKey("BYTE", "0", "1 byte")
@@ -68,7 +68,6 @@ def instantiateComponent(crccuComponent):
     crccuTwidth.setDisplayMode("Key")
     crccuTwidth.setDefaultValue(0)
 
-    
     crccuDivider = crccuComponent.createIntegerSymbol("CRCCU_DIVIDER", None)
     crccuDivider.setLabel("CRC transfer Frequency Divider")
     crccuDivider.setDefaultValue(0)
@@ -102,14 +101,14 @@ def instantiateComponent(crccuComponent):
     crccuSourceFile.setType("SOURCE")
     crccuSourceFile.setMarkup(True)
 
-    #System Initialization
+    # System Initialization
     crccuSystemInitFile = crccuComponent.createFileSymbol("CRCCU_SYS_INIT", None)
     crccuSystemInitFile.setType("STRING")
     crccuSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
     crccuSystemInitFile.setSourcePath("../peripheral/crccu_11001/templates/system/initialization.c.ftl")
     crccuSystemInitFile.setMarkup(True)
 
-    #System Definition
+    # System Definition
     crccuSystemDefFile = crccuComponent.createFileSymbol("CRCCUu_SYS_DEF", None)
     crccuSystemDefFile.setType("STRING")
     crccuSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")

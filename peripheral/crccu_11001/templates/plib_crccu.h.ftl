@@ -63,13 +63,13 @@ extern "C" {
 typedef enum
 {
     /* CCITT8023 Polynom 0x04C11DB7*/
-    CRCCU_POLYNOMIAL_CCITT8023,
+    CRCCU_POLYNOMIAL_CCITT8023 = CRCCU_MR_PTYPE_CCITT8023,
 
     /* CASTAGNOLI Polynom 0x1EDC6F41 */
-    CRCCU_POLYNOMIAL_CASTAGNOLI,
+    CRCCU_POLYNOMIAL_CASTAGNOLI = CRCCU_MR_PTYPE_CASTAGNOLI,
 
     /* CCITT16 Polynom 0x1021 */
-    CRCCU_POLYNOMIAL_CCITT16
+    CRCCU_POLYNOMIAL_CCITT16 = CRCCU_MR_PTYPE_CCITT16
 
 } CRCCU_POLYNOMIAL;
 
@@ -97,7 +97,6 @@ typedef struct crccu_dscr_type {
 void ${CRCCU_INSTANCE_NAME}_Initialize (void);
 bool ${CRCCU_INSTANCE_NAME}_CRCCalculate(uint32_t startAddress, uint16_t length, uint32_t * crc, bool chain);
 void ${CRCCU_INSTANCE_NAME}_Setup (CRCCU_POLYNOMIAL polynomial, CRCCU_TWIDTH width);
-bool ${CRCCU_INSTANCE_NAME}_CRCCalculateAndCompare (uint32_t startAddress, uint16_t length, uint32_t crc, bool chain);
 #ifdef __cplusplus  // Provide C++ Compatibility
 }
 #endif
