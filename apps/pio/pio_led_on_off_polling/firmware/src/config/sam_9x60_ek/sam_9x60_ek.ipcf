@@ -84,7 +84,7 @@
             <path>\..\..\packs\SAM9X60_DFP\pio\sam9x60.h</path>
         </group>
         <group name="Source Files" relRoot="$PROJ_DIR$\..\..\firmware\src\config\sam_9x60_ek">
-            <path>\..\..\main.c</path>
+            <path>\..\..\main_sam9x60.c</path>
             <path>\initialization.c</path>
             <path>\interrupts.c</path>
             <path>\exceptions.c</path>

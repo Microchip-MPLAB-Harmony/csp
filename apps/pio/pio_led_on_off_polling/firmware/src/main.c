@@ -51,8 +51,8 @@
 #include "definitions.h"                // SYS function prototypes
 
 #define SWITCH_PRESSED_STATE            0   // Active LOW switch
-#define LED_On()                        LED_BLUE_Set()
-#define LED_Off()                       LED_BLUE_Clear()
+#define LED_On()                        LED_Clear()
+#define LED_Off()                       LED_Set()
 
 // *****************************************************************************
 // *****************************************************************************
@@ -64,10 +64,6 @@ int main ( void )
 {
     /* Initialize all modules */
     SYS_Initialize ( NULL );
-    
-    LED_RED_Clear();
-    LED_GREEN_Clear();
-    LED_BLUE_Clear();
 
     while ( true )
     {

@@ -2560,7 +2560,7 @@
                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\interrupts.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\main.c</name>
+                <name>$PROJ_DIR$\..\src\main_sam9x60.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\aic\plib_aic.c</name>
