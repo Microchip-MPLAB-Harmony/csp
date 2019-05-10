@@ -40,7 +40,7 @@
         </File>
         <File dnOrder="4">
           <Type dnOrder="0">SOURCE</Type>
-          <Name dnOrder="1">main.c</Name>
+          <Name dnOrder="1">main_e54.c</Name>
           <LogicalPath dnOrder="2"/>
           <PhysicalPath dnOrder="3">/../../</PhysicalPath>
           <GeneratedChecksum dnOrder="4"/>
@@ -259,8 +259,8 @@
           <Name dnOrder="1">definitions.h</Name>
           <LogicalPath dnOrder="2">config/sam_e54_xpro/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">B6D631BEDA7379F98192F368B721FF65</GeneratedChecksum>
-          <UserChecksum dnOrder="5">B6D631BEDA7379F98192F368B721FF65</UserChecksum>
+          <GeneratedChecksum dnOrder="4">D16EB91AC0EAEBA817CA9F810B0A508E</GeneratedChecksum>
+          <UserChecksum dnOrder="5">D16EB91AC0EAEBA817CA9F810B0A508E</UserChecksum>
         </File>
         <File dnOrder="32">
           <Type dnOrder="0">HEADER</Type>
@@ -655,7 +655,7 @@
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
       <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
-      <Setting dnOrder="5" key="PackageFilter" value="csp;csp;"/>
+      <Setting dnOrder="5" key="PackageFilter" value="csp;"/>
     </Settings>
   </Configurator>
 </Configuration>
