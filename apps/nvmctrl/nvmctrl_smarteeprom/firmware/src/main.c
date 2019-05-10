@@ -235,6 +235,7 @@ int main ( void )
                 }
                 printf("\r\nEnter number bytes need to read >> ");
                 scanf("%d", (int *)&num_of_bytes_to_read);
+                fflush(stdin);              /* Removing if any null characters are there in Rx register after reading number of bytes to read value */ 
                 if (num_of_bytes_to_read > MAX_BUFF_SIZE)
                 {
                     printf("\r\nERROR: In this Demo, at a time demo can able to \
@@ -269,6 +270,7 @@ int main ( void )
                 }
                 printf("\r\nEnter data >> ");
                 scanf("%d", (int *)&eeprom_data);
+                fflush(stdin);              /* Removing if any null characters are there in Rx register after reading eeprom data value */ 
                 SmartEEPROM8[eeprom_addr] = eeprom_data;
                 printf("\r\nWritten %d at %d", (int)eeprom_data, (int)eeprom_addr);
                 eeprom_data_buf_start_index = (eeprom_addr & (~0xFF));
