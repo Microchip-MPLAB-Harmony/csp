@@ -80,6 +80,7 @@ void PORT_Initialize(void)
    PORT_REGS->GROUP[1].PORT_PMUX[12] = 0x33;
    /************************** GROUP 2 Initialization *************************/
    PORT_REGS->GROUP[2].PORT_DIR = 0x40000;
+   PORT_REGS->GROUP[2].PORT_OUT = 0x40000;
 
    /************************** GROUP 3 Initialization *************************/
 
