@@ -80,7 +80,7 @@ char * message[ MsgSentinel ] = {
     "\r\n-------------------------------------------------------------\r\n",    // MsgBannerBreak
     "                          RTC DEMO",                                       // MsgBannerTitle
     "Wait for the alarm after midnight\r\n",                                    // MsgPrompt
-    "   The interrupt handler will change the LED and user message\r\n\r\n",    // MsgInputResult
+    "   The interrupt handler will turn on LED and user message\r\n\r\n",       // MsgInputResult
     "RTC interrupt occurred!\r\n",                                              // MsgRtcInterruptOccurred
     "RTC error setting time\r\n",                                               // MsgRtcErrorSettingTime
     "RTC error setting alarm\r\n",                                              // MsgRtcErrorSettingAlarm
@@ -184,8 +184,6 @@ int main( void )
 
     RTC_CallbackRegister( rtcCallback, (uintptr_t) NULL );
 
-    ledColorType = LedGreenFlash;
-    
     msgId = MsgBannerBreak;
     showMsg();
     msgId = MsgBannerTitle;
@@ -261,6 +259,7 @@ int main( void )
                             );
             }
         }
+        ledUpdate();
         showMsg();
     }
 
