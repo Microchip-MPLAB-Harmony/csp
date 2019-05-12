@@ -39,10 +39,6 @@ int main ( void )
     /* Initialize all modules */
     SYS_Initialize ( NULL );
 
-    LED_RED_Clear();
-    LED_GREEN_Clear();
-    LED_BLUE_Clear();
-
     PIT64B_TimerStart();
 
     while ( true )

@@ -77,6 +77,8 @@ void PIO_Initialize ( void )
     /* PORTA Output Direction Enable */
     ((pio_registers_t*)PIO_PORT_A)->PIO_OER = 0x0;
     ((pio_registers_t*)PIO_PORT_A)->PIO_ODR = ~0x0;
+    /* PORTA Initial state High */
+    ((pio_registers_t*)PIO_PORT_A)->PIO_ODSR = 0x0;
     /* PORTA Slew rate control */
     ((pio_registers_t*)PIO_PORT_A)->PIO_SLEWR = 0x0;
     /* PORTA drive control */
@@ -94,6 +96,8 @@ void PIO_Initialize ( void )
     /* PORTB Output Direction Enable */
     ((pio_registers_t*)PIO_PORT_B)->PIO_OER = 0x3800;
     ((pio_registers_t*)PIO_PORT_B)->PIO_ODR = ~0x3800;
+    /* PORTB Initial state High */
+    ((pio_registers_t*)PIO_PORT_B)->PIO_ODSR = 0x0;
     /* PORTB Slew rate control */
     ((pio_registers_t*)PIO_PORT_B)->PIO_SLEWR = 0x0;
     /* PORTB drive control */
@@ -111,6 +115,8 @@ void PIO_Initialize ( void )
     /* PORTC Output Direction Enable */
     ((pio_registers_t*)PIO_PORT_C)->PIO_OER = 0x0;
     ((pio_registers_t*)PIO_PORT_C)->PIO_ODR = ~0x0;
+    /* PORTC Initial state High */
+    ((pio_registers_t*)PIO_PORT_C)->PIO_ODSR = 0x0;
     /* PORTC Slew rate control */
     ((pio_registers_t*)PIO_PORT_C)->PIO_SLEWR = 0x0;
     /* PORTC drive control */
@@ -129,6 +135,8 @@ void PIO_Initialize ( void )
     /* PORTD Output Direction Enable */
     ((pio_registers_t*)PIO_PORT_D)->PIO_OER = 0x0;
     ((pio_registers_t*)PIO_PORT_D)->PIO_ODR = ~0x0;
+    /* PORTD Initial state High */
+    ((pio_registers_t*)PIO_PORT_D)->PIO_ODSR = 0x0;
     /* PORTD Additional interrupt mode Enable */
     ((pio_registers_t*)PIO_PORT_D)->PIO_AIMER = 0x40000;
     /* PORTD Interrupt Status Clear */
