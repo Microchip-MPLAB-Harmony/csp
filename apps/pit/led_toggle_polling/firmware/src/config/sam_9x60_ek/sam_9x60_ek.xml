@@ -75,7 +75,7 @@
         </KeyValueSet>
         <String dnOrder="14" id="CoreMainFileName">
           <Values dnOrder="0">
-            <User dnOrder="0" value="main_sam9x60"/>
+            <User dnOrder="0" value="main"/>
           </Values>
         </String>
         <KeyValueSet dnOrder="15" id="DBGU_INTERRUPT_PRIORITY">
@@ -396,7 +396,7 @@
         <File dnOrder="78" id="MAIN_C">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="name">
-              <Value dnOrder="0">main_sam9x60.c</Value>
+              <Value dnOrder="0">main.c</Value>
             </String>
           </Attributes>
         </File>
@@ -920,13 +920,13 @@
     </UniqueComponent>
   </Components>
   <UserData>
-    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="0"/>
-    <ComponentGraph dnOrder="1" id="__ROOTVIEW">
+    <ComponentGraph dnOrder="0" id="__ROOTVIEW">
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="core" x="240" y="20"/>
         <ElementPosition dnOrder="1" id="dfp" x="20" y="20"/>
         <ElementPosition dnOrder="2" id="pit" x="340" y="20"/>
       </ElementPositions>
     </ComponentGraph>
+    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="1"/>
   </UserData>
 </Configuration>

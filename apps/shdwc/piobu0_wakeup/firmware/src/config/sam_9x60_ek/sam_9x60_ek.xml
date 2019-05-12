@@ -878,27 +878,73 @@
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="173" id="WDT_LEVEL_EXPIRATION">
+        <Integer dnOrder="173" id="WDT_EARLY_RESET_THRESHOLD_COUNT">
+          <Attributes dnOrder="0">
+            <Integer dnOrder="0" id="max">
+              <Value dnOrder="0">3749</Value>
+            </Integer>
+          </Attributes>
+        </Integer>
+        <Integer dnOrder="174" id="WDT_EARLY_RESET_THRESHOLD_MILLISECONDS">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="1000"/>
+          </Values>
+        </Integer>
+        <Boolean dnOrder="175" id="WDT_INTERRUPT_ENABLE">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="readOnly">
+              <Value dnOrder="0">false</Value>
+            </Boolean>
+          </Attributes>
+        </Boolean>
+        <String dnOrder="176" id="WDT_INTERRUPT_HANDLER">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="WDT_Handler"/>
+          </Values>
+        </String>
+        <Boolean dnOrder="177" id="WDT_INTERRUPT_HANDLER_LOCK">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="false"/>
+          </Values>
+        </Boolean>
+        <KeyValueSet dnOrder="178" id="WDT_LEVEL_EXPIRATION">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <Integer dnOrder="174" id="WDT_PERIOD_COUNT">
+        <Integer dnOrder="179" id="WDT_LEVEL_THRESHOLD_COUNT">
+          <Attributes dnOrder="0">
+            <Integer dnOrder="0" id="max">
+              <Value dnOrder="0">3999</Value>
+            </Integer>
+          </Attributes>
+        </Integer>
+        <Integer dnOrder="180" id="WDT_LEVEL_THRESHOLD_MILLISECONDS">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="15000"/>
+          </Values>
+        </Integer>
+        <Integer dnOrder="181" id="WDT_PERIOD_COUNT">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="4000"/>
           </Values>
         </Integer>
-        <KeyValueSet dnOrder="175" id="WDT_PERIOD_EXPIRATION">
+        <KeyValueSet dnOrder="182" id="WDT_PERIOD_EXPIRATION">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="176" id="XDMAC_INTERRUPT_PRIORITY">
+        <Integer dnOrder="183" id="WDT_PERIOD_MILLISECONDS">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="16000"/>
+          </Values>
+        </Integer>
+        <KeyValueSet dnOrder="184" id="XDMAC_INTERRUPT_PRIORITY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="177" id="XDMAC_INTERRUPT_SRC_TYPE">
+        <KeyValueSet dnOrder="185" id="XDMAC_INTERRUPT_SRC_TYPE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>

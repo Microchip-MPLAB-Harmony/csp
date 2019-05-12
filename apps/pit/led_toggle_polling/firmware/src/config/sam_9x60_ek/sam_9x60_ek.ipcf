@@ -86,7 +86,7 @@
         </group>
         <group name="Source Files" relRoot="$PROJ_DIR$\..\..\firmware\src\config\sam_9x60_ek">
             <path>\peripheral\pit\plib_pit.c</path>
-            <path>\..\..\main_sam9x60.c</path>
+            <path>\..\..\main.c</path>
             <path>\initialization.c</path>
             <path>\interrupts.c</path>
             <path>\exceptions.c</path>

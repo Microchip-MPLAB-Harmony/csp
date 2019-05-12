@@ -75,8 +75,8 @@
           <Name dnOrder="1">plib_pio.c</Name>
           <LogicalPath dnOrder="2">config/sam_9x60_ek/peripheral/pio/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/pio/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">1EC4018848D965A67CC96CF197A20502</GeneratedChecksum>
-          <UserChecksum dnOrder="5">1EC4018848D965A67CC96CF197A20502</UserChecksum>
+          <GeneratedChecksum dnOrder="4">2F4DBF0465C424D40083750001E55267</GeneratedChecksum>
+          <UserChecksum dnOrder="5">2F4DBF0465C424D40083750001E55267</UserChecksum>
         </File>
         <File dnOrder="9">
           <Type dnOrder="0">SOURCE</Type>
@@ -549,7 +549,7 @@
       <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAM9X60_DFP\0.1.14\atdf\SAM9X60.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
-      <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
+      <Setting dnOrder="4" key="MERGE_STRATEGY" value="OVERWRITE"/>
       <Setting dnOrder="5" key="PackageFilter" value="csp;"/>
     </Settings>
   </Configurator>
