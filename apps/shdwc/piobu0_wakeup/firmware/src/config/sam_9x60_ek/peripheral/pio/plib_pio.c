@@ -92,8 +92,8 @@ void PIO_Initialize ( void )
     /* PORTB Output Write Enable */
     ((pio_registers_t*)PIO_PORT_B)->PIO_OWER = PIO_OWER_Msk;
     /* PORTB Output Direction Enable */
-    ((pio_registers_t*)PIO_PORT_B)->PIO_OER = 0x2000;
-    ((pio_registers_t*)PIO_PORT_B)->PIO_ODR = ~0x2000;
+    ((pio_registers_t*)PIO_PORT_B)->PIO_OER = 0x3800;
+    ((pio_registers_t*)PIO_PORT_B)->PIO_ODR = ~0x3800;
     /* PORTB Slew rate control */
     ((pio_registers_t*)PIO_PORT_B)->PIO_SLEWR = 0x0;
     /* PORTB drive control */
