@@ -141,10 +141,8 @@
     <#lt>    /* PORT${PIO_PORT} Output Direction Enable */
     <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_OER = 0x${PIO_DIR};
     <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_ODR = ~0x${PIO_DIR};
-    <#if PIO_LAT_HIGH != "0">
-        <#lt>    /* PORT${PIO_PORT} Initial state High */
-        <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_ODSR = 0x${PIO_LAT_HIGH};
-    </#if>
+    <#lt>    /* PORT${PIO_PORT} Initial state High */
+    <#lt>    ((pio_registers_t*)PIO_PORT_${PIO_PORT})->PIO_ODSR = 0x${PIO_LAT_HIGH};
     <#if PIO_INTERRUPT == true>
         <#if PIO_INT_TYPE != "0">
             <#lt>    /* PORT${PIO_PORT} Additional interrupt mode Enable */
