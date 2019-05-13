@@ -67,8 +67,8 @@
           <Name dnOrder="1">plib_mpu.c</Name>
           <LogicalPath dnOrder="2">config/sam_v71_xult/peripheral/mpu/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/mpu/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">0C184A333CA4A1F68085CB51DCCDA371</GeneratedChecksum>
-          <UserChecksum dnOrder="5">0C184A333CA4A1F68085CB51DCCDA371</UserChecksum>
+          <GeneratedChecksum dnOrder="4">42978A274616ED47C51D216664B906A0</GeneratedChecksum>
+          <UserChecksum dnOrder="5">42978A274616ED47C51D216664B906A0</UserChecksum>
         </File>
         <File dnOrder="8">
           <Type dnOrder="0">SOURCE</Type>
@@ -83,8 +83,8 @@
           <Name dnOrder="1">plib_pio.c</Name>
           <LogicalPath dnOrder="2">config/sam_v71_xult/peripheral/pio/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/pio/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">966969D237081B91C496CBB0BD1483A1</GeneratedChecksum>
-          <UserChecksum dnOrder="5">966969D237081B91C496CBB0BD1483A1</UserChecksum>
+          <GeneratedChecksum dnOrder="4">69B7BA8FDF4EE0F8E9A5FF8B0A256871</GeneratedChecksum>
+          <UserChecksum dnOrder="5">69B7BA8FDF4EE0F8E9A5FF8B0A256871</UserChecksum>
         </File>
         <File dnOrder="10">
           <Type dnOrder="0">SOURCE</Type>
@@ -639,7 +639,7 @@
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
       <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
-      <Setting dnOrder="5" key="PackageFilter" value="csp;csp;"/>
+      <Setting dnOrder="5" key="PackageFilter" value="csp;"/>
     </Settings>
   </Configurator>
 </Configuration>

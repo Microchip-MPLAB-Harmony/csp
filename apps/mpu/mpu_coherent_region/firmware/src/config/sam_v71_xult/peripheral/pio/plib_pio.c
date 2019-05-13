@@ -74,6 +74,8 @@ void PIO_Initialize ( void )
     /* PORTA Output Direction Enable */
     ((pio_registers_t*)PIO_PORT_A)->PIO_OER = 0x800000;
     ((pio_registers_t*)PIO_PORT_A)->PIO_ODR = ~0x800000;
+    /* PORTA Initial state High */
+    ((pio_registers_t*)PIO_PORT_A)->PIO_ODSR = 0x800000;
     /* PORTA drive control */
     ((pio_registers_t*)PIO_PORT_A)->PIO_DRIVER = 0x0;
 
