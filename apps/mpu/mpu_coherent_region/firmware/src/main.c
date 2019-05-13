@@ -72,7 +72,7 @@
  * global variables, initialization has to be done later. */
 char __attribute__  ((space(data), section (".ram_nocache"))) writeBuffer[WRITE_SIZE] = {};
 char __attribute__  ((space(data), section (".ram_nocache"))) readBuffer[READ_SIZE] = {};
-char __attribute__  ((space(data), section (".ram_nocache"))) echoBuffer[2*READ_SIZE] = {};
+char __attribute__  ((space(data), section (".ram_nocache"))) echoBuffer[READ_SIZE + 2] = {};
 
 /* Application Status Data */
 char failureMessage[] = "\r\n**** Data transfer error ****\r\n";
@@ -121,7 +121,7 @@ it echo back ****\r\n**** LED toggles on each time buffer is echoed ****\r\n");
     XDMAC_ChannelCallbackRegister(USART1_TRANSMIT_CHANNEL, XDMAC_Callback, 0);
     XDMAC_ChannelCallbackRegister(USART1_RECEIVE_CHANNEL, XDMAC_Callback, 1);
 
-    XDMAC_ChannelTransfer(USART1_TRANSMIT_CHANNEL, &writeBuffer, (const void *)USART1_TRANSMIT_ADDRESS, sizeof(writeBuffer));
+    XDMAC_ChannelTransfer(USART1_TRANSMIT_CHANNEL, writeBuffer, (const void *)USART1_TRANSMIT_ADDRESS, strlen(writeBuffer));
 
     while ( true )
     {
@@ -130,24 +130,25 @@ it echo back ****\r\n**** LED toggles on each time buffer is echoed ****\r\n");
             /* Send error message to console.
              * Using USART directly to since DMA is in error condition */
             errorStatus = false;
-            USART1_Write(&failureMessage, sizeof(failureMessage));
+            USART1_Write(failureMessage, sizeof(failureMessage));
         }
         else if(readStatus == true)
         {
             /* Echo back received buffer and Toggle LED */
             readStatus = false;
 
-            strcpy(echoBuffer, readBuffer);
-            strcat(echoBuffer, "\r\n");
+            memcpy(echoBuffer, readBuffer, READ_SIZE);
+            echoBuffer[READ_SIZE] = '\r';
+            echoBuffer[READ_SIZE+1] = '\n';
 
-            XDMAC_ChannelTransfer(USART1_TRANSMIT_CHANNEL, &echoBuffer, (const void *)USART1_TRANSMIT_ADDRESS, READ_SIZE+strlen("\r\n"));
+            XDMAC_ChannelTransfer(USART1_TRANSMIT_CHANNEL, echoBuffer, (const void *)USART1_TRANSMIT_ADDRESS, (READ_SIZE+2));
             LED_TOGGLE();
         }
         else if(writeStatus == true)
         {
             /* Submit buffer to read user data */
             writeStatus = false;
-            XDMAC_ChannelTransfer(USART1_RECEIVE_CHANNEL, (const void *)USART1_RECEIVE_ADDRESS, &readBuffer, READ_SIZE);
+            XDMAC_ChannelTransfer(USART1_RECEIVE_CHANNEL, (const void *)USART1_RECEIVE_ADDRESS, readBuffer, READ_SIZE);
         }
         else
         {
