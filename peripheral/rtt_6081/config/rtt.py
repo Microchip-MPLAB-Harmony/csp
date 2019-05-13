@@ -67,6 +67,11 @@ def instantiateComponent(rttComponent):
     rttMenu = rttComponent.createMenuSymbol("RTT_MENU_0", None)
     rttMenu.setLabel("Hardware Settings ")
 
+    rttNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"RTT\"]/register-group@[name=\"RTT\"]/register@[name=\"RTT_MODR\"]")
+
+    rttEvent = rttComponent.createBooleanSymbol("RTT_INC2_SUPPORTED", None)
+    rttEvent.setVisible(False)
+    rttEvent.setDefaultValue(rttNode is not None)
 #------------------------------------------------------------
 # Common Symbols needed for SYS_TIME usage
 #------------------------------------------------------------
@@ -124,6 +129,43 @@ def instantiateComponent(rttComponent):
     rttAlarm = rttComponent.createBooleanSymbol("rttALMIEN", rttMenu)
     rttAlarm.setLabel("Enable Alarm Interrupt")
     rttAlarm.setDefaultValue(True)
+
+    if rttEvent.getValue():
+        rttInc2Enable = rttComponent.createBooleanSymbol("rttINC2EN", rttMenu)
+        rttInc2Enable.setLabel("Enable RTTINC2 Interrupt")
+        rttInc2Enable.setDefaultValue(False)
+
+        rttInc2Node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTT"]/value-group@[name="RTT_MODR__SELINC2"]')
+        rttInc2Values = rttInc2Node.getChildren()
+
+        rttSelinc2 = rttComponent.createKeyValueSetSymbol("RTT_SELINC2", rttMenu)
+        rttSelinc2.setLabel("Periodicity of RTTINC2 Interrupt")
+        for index in range(0, len(rttInc2Values)):
+            key =  rttInc2Values[index].getAttribute("name")
+            value =  rttInc2Values[index].getAttribute("value")
+            description =  rttInc2Values[index].getAttribute("caption")
+            rttSelinc2.addKey(key, value, description)
+        rttSelinc2.setDefaultValue(0)
+        rttSelinc2.setOutputMode("Value")
+        rttSelinc2.setDisplayMode("Description")
+
+        rttEventEnable = rttComponent.createBooleanSymbol("rttEVAEN", rttMenu)
+        rttEventEnable.setLabel("Generate Alarm Interrupt on RTT event")
+        rttEventEnable.setDefaultValue(False)
+
+        rttInc2Node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTT"]/value-group@[name="RTT_MODR__SELTRGEV"]')
+        rttInc2Values = rttInc2Node.getChildren()
+
+        rttSeltrgev = rttComponent.createKeyValueSetSymbol("RTT_SELTRGEV", rttMenu)
+        rttSeltrgev.setLabel("Periodicity of RTT Event")
+        for index in range(0, len(rttInc2Values)):
+            key =  rttInc2Values[index].getAttribute("name")
+            value =  rttInc2Values[index].getAttribute("value")
+            description =  rttInc2Values[index].getAttribute("caption")
+            rttSeltrgev.addKey(key, value, description)
+        rttSeltrgev.setDefaultValue(0)
+        rttSeltrgev.setOutputMode("Value")
+        rttSeltrgev.setDisplayMode("Description")
 
     rttClkSrc = rttComponent.createBooleanSymbol("rttRTC1HZ", rttMenu)
     rttClkSrc.setLabel("Use RTC 1Hz as clock Source")

@@ -2,17 +2,17 @@
  Interface definition of RTT PLIB.
  
  Company:
-	Microchip Technology Inc.
-	
+    Microchip Technology Inc.
+    
  File Name:
-	plib_rtt.h
-	
+    plib_rtt.h
+    
  Summary:
-	Interface definition of RTT Plib.
-	
+    Interface definition of RTT Plib.
+    
  Description:
-	This file defines the interface for the RTT Plib.
-	It allows user to start, stop and configure the on-chip real time timer.
+    This file defines the interface for the RTT Plib.
+    It allows user to start, stop and configure the on-chip real time timer.
 *******************************************************************************/
 
 // DOM-IGNORE-BEGIN
@@ -49,7 +49,7 @@
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
-	extern "C" {
+    extern "C" {
 #endif
 // DOM-IGNORE-END
 
@@ -59,14 +59,14 @@ void ${RTT_INSTANCE_NAME}_Disable(void);
 void ${RTT_INSTANCE_NAME}_PrescalarUpdate(uint16_t prescale);
 
 <#if rttINCIEN == true || rttALMIEN == true>
-	<#lt>void ${RTT_INSTANCE_NAME}_AlarmValueSet(uint32_t alarm);
-	<#lt>void ${RTT_INSTANCE_NAME}_EnableInterrupt (RTT_INTERRUPT_TYPE type);
-	<#lt>void ${RTT_INSTANCE_NAME}_DisableInterrupt(RTT_INTERRUPT_TYPE type);
+    <#lt>void ${RTT_INSTANCE_NAME}_AlarmValueSet(uint32_t alarm);
+    <#lt>void ${RTT_INSTANCE_NAME}_EnableInterrupt (RTT_INTERRUPT_TYPE type);
+    <#lt>void ${RTT_INSTANCE_NAME}_DisableInterrupt(RTT_INTERRUPT_TYPE type);
 </#if>
 uint32_t ${RTT_INSTANCE_NAME}_TimerValueGet(void);
 uint32_t ${RTT_INSTANCE_NAME}_FrequencyGet(void); 
 <#if rttINCIEN == true || rttALMIEN == true>
-	<#lt>void ${RTT_INSTANCE_NAME}_CallbackRegister( RTT_CALLBACK callback, uintptr_t context );
+    <#lt>void ${RTT_INSTANCE_NAME}_CallbackRegister( RTT_CALLBACK callback, uintptr_t context );
 </#if>
 
 // DOM-IGNORE-BEGIN
