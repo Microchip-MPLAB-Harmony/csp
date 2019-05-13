@@ -69,17 +69,17 @@ void switch_handler( GPIO_PIN pin, uintptr_t context )
 int main ( void )
 {
     RCON_RESET_CAUSE ResetCause = RCON_ResetCauseGet();
-    
+
     /* Initialize all modules */
     SYS_Initialize ( NULL );
-    
+
     printf ("\n\r -------------------------------------------------------------");
-    printf ("\n\r                           RCON DEMO                           ");
+    printf ("\n\r                          RCON DEMO                           ");
     printf ("\n\r -------------------------------------------------------------");
-    
+
     GPIO_PinInterruptCallbackRegister(SWITCH_PIN, &switch_handler, (uintptr_t) NULL );
     GPIO_PinInterruptEnable(SWITCH_PIN);
-    
+
     if ((ResetCause & RCON_RESET_CAUSE_WDTO) == RCON_RESET_CAUSE_WDTO)
     {
         printf("\r\n Reset type is Watch Dog Timer Reset");
@@ -90,11 +90,11 @@ int main ( void )
     }
     printf("\r\n Reset Cause = 0x%08X", (unsigned char)ResetCause);
 
-	RCON_ResetCauseClear(RESET_REASON_ALL);
-	ResetCause = RCON_ResetCauseGet();
-	printf("\r\n After clear all RCON, Reset Cause = 0x%02X", (unsigned char)ResetCause);
+    RCON_ResetCauseClear(RESET_REASON_ALL);
+    ResetCause = RCON_ResetCauseGet();
+    printf("\r\n After clear all RCON, Reset Cause = 0x%02X", (unsigned char)ResetCause);
 
-    printf ("\n\n\r Press SW0 button to emulate Watchdog Timer Reset"); 
+    printf ("\n\n\r Press the Switch to emulate Watchdog Timer Reset");
     CORETIMER_Start();
     CORETIMER_DelayMs(1000);
     switch_pressed  = false;
