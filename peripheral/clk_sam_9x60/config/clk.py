@@ -34,7 +34,8 @@ def update_mainck(symbol, event):
 def update_xtal_warning(symbol, event):
     oscsel = event['source'].getSymbolByID("CLK_TD_OSCSEL")
     xten  = event['source'].getSymbolByID("CLK_OSC32EN")
-    symbol.setVisible(oscsel.getValue()==1 and xten.getValue()==False)
+    osc32byp  = event['source'].getSymbolByID("CLK_OSC32BYP")
+    symbol.setVisible(oscsel.getValue()==1 and xten.getValue()==False and osc32byp.getValue()==False)
 
 def update_bypass_warning(symbol, event):
     xten  = event['source'].getSymbolByID("CLK_OSC32EN")
@@ -315,15 +316,15 @@ osc32en.setLabel(osc32en_node.getAttribute("name"))
 osc32en.setDescription(osc32en_node.getAttribute("caption"))
 osc32en.setDefaultValue(True)
 
-xtal_warning = coreComponent.createCommentSymbol("CLK_XTAL_WARNING", sckc_menu)
-xtal_warning.setLabel("WARNING! Crystal selected but not enabled.")
-xtal_warning.setVisible(td_oscel.getValue()==1 and osc32en.getValue()==False)
-xtal_warning.setDependencies(update_xtal_warning, ['CLK_OSC32EN', 'CLK_TD_OSCSEL'])
-
 osc32byp_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SCKC"]/register-group@[name="SCKC"]/register@[name="SCKC_CR"]/bitfield@[name="OSC32BYP"]')
 osc32byp = coreComponent.createBooleanSymbol("CLK_OSC32BYP", sckc_menu)
 osc32byp.setLabel(osc32byp_node.getAttribute("name"))
 osc32byp.setDescription(osc32byp_node.getAttribute("caption"))
+
+xtal_warning = coreComponent.createCommentSymbol("CLK_XTAL_WARNING", sckc_menu)
+xtal_warning.setLabel("WARNING! Crystal selected but not enabled.")
+xtal_warning.setVisible(td_oscel.getValue()==1 and osc32en.getValue()==False and osc32byp.getValue()==False)
+xtal_warning.setDependencies(update_xtal_warning, ['CLK_OSC32EN', 'CLK_TD_OSCSEL', 'CLK_OSC32BYP'])
 
 bypass_warning = coreComponent.createCommentSymbol("CLK_BYPASS_WARNING", sckc_menu)
 bypass_warning.setLabel("WARNING! Bypass cannot be enabled when the crystal is enabled.")
