@@ -90,8 +90,6 @@ void SUPC_BackupModeEnter (void);
 uint32_t SUPC_GPBRRead (GPBR_REGS_INDEX reg);
 void SUPC_GPBRWrite(GPBR_REGS_INDEX reg, uint32_t data);
 
-extern void	CLK_Initialize(void);
-
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

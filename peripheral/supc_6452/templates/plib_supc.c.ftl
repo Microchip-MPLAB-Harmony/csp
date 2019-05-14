@@ -39,6 +39,8 @@
 *******************************************************************************/
 
 #include "plib_${SUPC_INSTANCE_NAME?lower_case}.h"
+#include "peripheral/clk/plib_clk.h"
+#include "peripheral/efc/plib_efc.h"
 
 static void WaitEntryClockSetup (bool xtal_disable);
 
@@ -52,11 +54,11 @@ static void WaitEntryClockSetup (bool xtal_disable);
 
 <#if .vars[SUPC_WUIR_WKUPEN] == true>
 
-	<#if SUPC_WUIR != "">
+    <#if SUPC_WUIR != "">
         <#assign SUPC_WUIR = SUPC_WUIR + " | \n\t\t" + "SUPC_WUIR_WKUPEN" + i +"_ENABLE | SUPC_WUIR_WKUPT" + i + "_${.vars[SUPC_WUIR_WKUPT]}">
-	<#else>
+    <#else>
         <#assign SUPC_WUIR = "SUPC_WUIR_WKUPEN" + i +"_ENABLE | SUPC_WUIR_WKUPT" + i + "_${.vars[SUPC_WUIR_WKUPT]}">
-	</#if>
+    </#if>
 
 </#if>
 
@@ -72,32 +74,32 @@ static void WaitEntryClockSetup (bool xtal_disable);
 
 void ${SUPC_INSTANCE_NAME}_Initialize (void)
 {
-	<#if SM_ENABLE>
-	${SUPC_INSTANCE_NAME}_REGS->SUPC_SMMR = (SUPC_SMMR_SMSMPL${SUPC_SMMR_SMSMPL} | SUPC_SMMR_SMTH(${SUPC_SMMR_SMTH}) ${SUPC_SMMR_SMIEN?then('| SUPC_SMMR_SMIEN_Msk', '')} ${SUPC_SMMR_SMRSTEN?then('| SUPC_SMMR_SMRSTEN_ENABLE', '')}); 
-	<#else>
-	${SUPC_INSTANCE_NAME}_REGS->SUPC_SMMR = SUPC_SMMR_SMSMPL_SMD;
+    <#if SM_ENABLE>
+    ${SUPC_INSTANCE_NAME}_REGS->SUPC_SMMR = (SUPC_SMMR_SMSMPL${SUPC_SMMR_SMSMPL} | SUPC_SMMR_SMTH(${SUPC_SMMR_SMTH}) ${SUPC_SMMR_SMIEN?then('| SUPC_SMMR_SMIEN_Msk', '')} ${SUPC_SMMR_SMRSTEN?then('| SUPC_SMMR_SMRSTEN_ENABLE', '')}); 
+    <#else>
+    ${SUPC_INSTANCE_NAME}_REGS->SUPC_SMMR = SUPC_SMMR_SMSMPL_SMD;
     </#if>
-	
-	${SUPC_INSTANCE_NAME}_REGS->SUPC_MR = (SUPC_MR_KEY_PASSWD | SUPC_MR_ONREG_ONREG_USED ${SUPC_MR_BODRSTEN?then('| SUPC_MR_BODRSTEN_ENABLE', '')} ${SUPC_MR_BODDIS?then('', '| SUPC_MR_BODDIS_DISABLE')} ${SUPC_MR_BKUPRETON?then('| SUPC_MR_BKUPRETON_Msk', '')});  
-	
-	${SUPC_INSTANCE_NAME}_REGS->SUPC_WUMR = (SUPC_WUMR_LPDBC(${SUPC_WUMR_LPDBC}) ${SUPC_WUMR_LPDBCEN0?then('| SUPC_WUMR_LPDBCEN0_ENABLE', '')} ${SUPC_WUMR_LPDBCEN1?then('| SUPC_WUMR_LPDBCEN1_ENABLE', '')} ${SUPC_WUMR_LPDBCCLR?then('| SUPC_WUMR_LPDBCCLR_ENABLE', '')} \
-							| SUPC_WUMR_WKUPDBC(${SUPC_WUMR_WKUPDBC}) ${SUPC_WUMR_RTCEN?then('| SUPC_WUMR_RTCEN_ENABLE ', '')} ${SUPC_WUMR_RTTEN?then('| SUPC_WUMR_RTTEN_ENABLE', '')} ${SUPC_WUMR_SMEN?then('| SUPC_WUMR_SMEN_ENABLE', '')});	
     
-	<#if SUPC_WUIR != "">	
+    ${SUPC_INSTANCE_NAME}_REGS->SUPC_MR = (SUPC_MR_KEY_PASSWD | SUPC_MR_ONREG_ONREG_USED ${SUPC_MR_BODRSTEN?then('| SUPC_MR_BODRSTEN_ENABLE', '')} ${SUPC_MR_BODDIS?then('', '| SUPC_MR_BODDIS_DISABLE')} ${SUPC_MR_BKUPRETON?then('| SUPC_MR_BKUPRETON_Msk', '')});  
+    
+    ${SUPC_INSTANCE_NAME}_REGS->SUPC_WUMR = (SUPC_WUMR_LPDBC(${SUPC_WUMR_LPDBC}) ${SUPC_WUMR_LPDBCEN0?then('| SUPC_WUMR_LPDBCEN0_ENABLE', '')} ${SUPC_WUMR_LPDBCEN1?then('| SUPC_WUMR_LPDBCEN1_ENABLE', '')} ${SUPC_WUMR_LPDBCCLR?then('| SUPC_WUMR_LPDBCCLR_ENABLE', '')} \
+                            | SUPC_WUMR_WKUPDBC(${SUPC_WUMR_WKUPDBC}) ${SUPC_WUMR_RTCEN?then('| SUPC_WUMR_RTCEN_ENABLE ', '')} ${SUPC_WUMR_RTTEN?then('| SUPC_WUMR_RTTEN_ENABLE', '')} ${SUPC_WUMR_SMEN?then('| SUPC_WUMR_SMEN_ENABLE', '')});	
+    
+    <#if SUPC_WUIR != "">	
     ${SUPC_INSTANCE_NAME}_REGS->SUPC_WUIR = ${SUPC_WUIR};
-	</#if>
+    </#if>
 }
 
 void ${SUPC_INSTANCE_NAME}_SleepModeEnter (void)
 {
     SCB->SCR &= (uint32_t)~SCB_SCR_SLEEPDEEP_Msk;
 
-	/* Enable Interrupt */
-	__DMB();
+    /* Enable Interrupt */
+    __DMB();
     __enable_irq();
-	
-	/* Enter Sleep 	*/
-	__DSB();
+    
+    /* Enter Sleep 	*/
+    __DSB();
     __WFI();
 }
 
@@ -105,32 +107,32 @@ void ${SUPC_INSTANCE_NAME}_WaitModeEnter (WAITMODE_FLASH_STATE flash_lpm, WAITMO
 {
     uint32_t i;
  
-	/* Disable CPU Interrupt	*/
+    /* Disable CPU Interrupt	*/
     __disable_irq();
-	__DMB();
+    __DMB();
 
-	/* Setup Clock for wait mode entry	*/	
-	WaitEntryClockSetup((flash_lpm == PMC_FSMR_FLPM_FLASH_DEEP_POWERDOWN));
-	
-	/* Enable CPU Interrupt	*/
-	__DMB();
+    /* Setup Clock for wait mode entry	*/	
+    WaitEntryClockSetup((flash_lpm == PMC_FSMR_FLPM_FLASH_DEEP_POWERDOWN));
+    
+    /* Enable CPU Interrupt	*/
+    __DMB();
     __enable_irq();
-	
-	/* FLASH  Low power mode and Wakeup source	*/
+    
+    /* FLASH  Low power mode and Wakeup source	*/
     PMC_REGS->PMC_FSMR = (flash_lpm | source);
-	
-	/* Set Flash Wait State at 0	*/
+    
+    /* Set Flash Wait State at 0	*/
     EFC_REGS->EEFC_FMR = EEFC_FMR_FWS(0) | EEFC_FMR_CLOE_Msk;
 
-	/* Set HCLK = MCK by configuring MDIV to 0	*/
-	 PMC_REGS->PMC_MCKR = ( PMC_REGS->PMC_MCKR & ~PMC_MCKR_MDIV_Msk) | PMC_MCKR_MDIV_EQ_PCK;
-	
-	/* Set the WAITMODE bit	*/
+    /* Set HCLK = MCK by configuring MDIV to 0	*/
+     PMC_REGS->PMC_MCKR = ( PMC_REGS->PMC_MCKR & ~PMC_MCKR_MDIV_Msk) | PMC_MCKR_MDIV_EQ_PCK;
+    
+    /* Set the WAITMODE bit	*/
     PMC_REGS->CKGR_MOR |= (CKGR_MOR_KEY_PASSWD | CKGR_MOR_WAITMODE_Msk);
-	
+    
     /* Waiting for Master Clock Ready MCKRDY = 1 */
     while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk);
-			
+            
     /* Waiting for MOSCRCEN bit is cleared is strongly recommended
     * to ensure that the core will not execute undesired instructions
     */
@@ -140,17 +142,18 @@ void ${SUPC_INSTANCE_NAME}_WaitModeEnter (WAITMODE_FLASH_STATE flash_lpm, WAITMO
     }
     
     while ((PMC_REGS->CKGR_MOR & CKGR_MOR_MOSCRCEN_Msk) != CKGR_MOR_MOSCRCEN_Msk);
-	
-	/* Disable CPU Interrupt	*/
+    
+    /* Disable CPU Interrupt	*/
     __disable_irq();
-	__DMB();
+    __DMB();
 
-	/* Restore Clock Setting	*/
-	CLK_Initialize();
-	
-	
-	/* Enable CPU Interrupt	*/
-	__DMB();
+    /* Restore Clock Setting	*/
+    EFC_Initialize();
+    CLK_Initialize();
+    
+    
+    /* Enable CPU Interrupt	*/
+    __DMB();
     __enable_irq();	
 }
 
@@ -158,16 +161,16 @@ void ${SUPC_INSTANCE_NAME}_BackupModeEnter (void)
 {
     SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
 
-	/* Switch off voltage regulator	*/
+    /* Switch off voltage regulator	*/
     ${SUPC_INSTANCE_NAME}_REGS->SUPC_CR |= (SUPC_CR_KEY_PASSWD | SUPC_CR_VROFF_Msk); 
 
-	/* Enable CPU Interrupt	*/
-	__DMB();
+    /* Enable CPU Interrupt	*/
+    __DMB();
     __enable_irq();
 
-	/* Enter Backup	*/
-	__DSB();	
-	__WFI();	
+    /* Enter Backup	*/
+    __DSB();	
+    __WFI();	
 }
 
 <#if SUPC_SMMR_SMIEN>
@@ -181,11 +184,11 @@ void ${SUPC_INSTANCE_NAME}_CallbackRegister (SUPC_CALLBACK callback, uintptr_t c
 
 void ${SUPC_INSTANCE_NAME}_InterruptHandler (void)
 {
-   	// Callback user function
-	if(supcObj.callback != NULL)
-	{
+       // Callback user function
+    if(supcObj.callback != NULL)
+    {
         supcObj.callback (supcObj.context);		
-	}
+    }
 }
 </#if>
 
@@ -202,38 +205,38 @@ void ${SUPC_INSTANCE_NAME}_GPBRWrite (GPBR_REGS_INDEX reg, uint32_t data)
 void WaitEntryClockSetup(bool xtal_disable)
 {
     /* Enable the RC Oscillator */
-	PMC_REGS->CKGR_MOR |= CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCRCEN_Msk;
+    PMC_REGS->CKGR_MOR |= CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCRCEN_Msk;
 
     /* Wait until the RC oscillator clock is ready. */
     while( (PMC_REGS->PMC_SR & PMC_SR_MOSCRCS_Msk) != PMC_SR_MOSCRCS_Msk )
     {
     }
-	
-	/* Switch Main Clock (MAINCK) to the RC Oscillator clock */
+    
+    /* Switch Main Clock (MAINCK) to the RC Oscillator clock */
     PMC_REGS->CKGR_MOR = (PMC_REGS->CKGR_MOR & ~CKGR_MOR_MOSCSEL_Msk) | CKGR_MOR_KEY_PASSWD;
 
-	/* Wait for Main Clock Selection Status */
-	while ((PMC_REGS->PMC_SR & PMC_SR_MOSCSELS_Msk) != PMC_SR_MOSCSELS_Msk);
-	
-	/* If Master clock source is PLL, switch to MAIN clock	*/
-	if ( (PMC_REGS->PMC_MCKR & PMC_MCKR_CSS_Msk) > PMC_MCKR_CSS_MAIN_CLK) 
+    /* Wait for Main Clock Selection Status */
+    while ((PMC_REGS->PMC_SR & PMC_SR_MOSCSELS_Msk) != PMC_SR_MOSCSELS_Msk);
+    
+    /* If Master clock source is PLL, switch to MAIN clock	*/
+    if ( (PMC_REGS->PMC_MCKR & PMC_MCKR_CSS_Msk) > PMC_MCKR_CSS_MAIN_CLK) 
     {
-		PMC_REGS->PMC_MCKR = (PMC_REGS->PMC_MCKR & ~PMC_MCKR_CSS_Msk) | PMC_MCKR_CSS_MAIN_CLK;
-	
-		while ( (PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk )
-		{
-		}	
-	}
-	
-	/* Disable PLLA Clock */
-	PMC_REGS->CKGR_PLLAR = CKGR_PLLAR_ONE_Msk | CKGR_PLLAR_MULA(0);	
-	
-	/* Disable UPLL Clock */
-	PMC_REGS->CKGR_UCKR &= ~CKGR_UCKR_UPLLEN_Msk;
-	
-	/* Disable Crystal	*/
-	if(xtal_disable)
+        PMC_REGS->PMC_MCKR = (PMC_REGS->PMC_MCKR & ~PMC_MCKR_CSS_Msk) | PMC_MCKR_CSS_MAIN_CLK;
+    
+        while ( (PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk )
+        {
+        }	
+    }
+    
+    /* Disable PLLA Clock */
+    PMC_REGS->CKGR_PLLAR = CKGR_PLLAR_ONE_Msk | CKGR_PLLAR_MULA(0);	
+    
+    /* Disable UPLL Clock */
+    PMC_REGS->CKGR_UCKR &= ~CKGR_UCKR_UPLLEN_Msk;
+    
+    /* Disable Crystal	*/
+    if(xtal_disable)
     {
-		PMC_REGS->CKGR_MOR = (PMC_REGS->CKGR_MOR & ~CKGR_MOR_MOSCXTEN_Msk) | CKGR_MOR_KEY_PASSWD;
+        PMC_REGS->CKGR_MOR = (PMC_REGS->CKGR_MOR & ~CKGR_MOR_MOSCXTEN_Msk) | CKGR_MOR_KEY_PASSWD;
     }
 }
