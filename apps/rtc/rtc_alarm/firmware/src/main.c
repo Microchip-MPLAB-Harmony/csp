@@ -119,7 +119,7 @@ int main ( void )
         if( alarmTriggered )
         {
             alarmTriggered = false;
-            printf("\n\rAlarm triggered\n\r");
+            printf("\n\rAlarm Triggered !!!!!!!!\n\r");
         }
     }
 
