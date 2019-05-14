@@ -212,23 +212,23 @@ def instantiateComponent(adcComponent):
     adcSym_CTRLA_SLAVEEN.setLabel("Enable Slave")
     adcSym_CTRLA_SLAVEEN.setDefaultValue(False)
     mode = "0"
-    parameters = [];
-    parametersNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"ADC\"]/instance@[name=\""+adcInstanceName.getValue()+"\"]/parameters")
-    for index in parametersNode.getChildren():
-        if "MASTER_SLAVE_MODE" in parameters:
-            mode = parameters[index].getAttribute("value")
+    node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"ADC\"]/instance@[name=\""+adcInstanceName.getValue()+"\"]/parameters")
+    param_values = []
+    param_values = node.getChildren()
+    for index in range(0, len(param_values)):
+        if "MASTER_SLAVE_MODE" in param_values[index].getAttribute("name"):
+            mode = param_values[index].getAttribute("value")
         if (mode == "2"):
             adcSym_CTRLA_SLAVEEN.setVisible(True)
         else:
             adcSym_CTRLA_SLAVEEN.setVisible(False)
 
-    for parameter in parametersNode.getChildren():
-        parameters.append(parameter.getAttribute("name"))
-    if "LOAD_CALIB" in parameters:
-        adcSym_CALIB = adcComponent.createBooleanSymbol("ADC_LOAD_CALIB", None)
-        adcSym_CALIB.setVisible(False)
-        adcSym_CALIB.setDefaultValue(True)
-    
+    for index in range(0, len(param_values)):
+        if "LOAD_CALIB" in param_values[index].getAttribute("name"):
+            adcSym_CALIB = adcComponent.createBooleanSymbol("ADC_LOAD_CALIB", None)
+            adcSym_CALIB.setVisible(False)
+            adcSym_CALIB.setDefaultValue(True)
+
     #prescaler configuration
     global adcSym_CTRLB_PRESCALER
     adcSym_CTRLB_PRESCALER = adcComponent.createKeyValueSetSymbol("ADC_CTRLB_PRESCALER", None)
@@ -344,7 +344,7 @@ def instantiateComponent(adcComponent):
     adcSym_CTRLC_DIFFMODE = adcComponent.createBooleanSymbol("ADC_CTRLC_DIFFMODE", adcChannelMenu)
     adcSym_CTRLC_DIFFMODE.setLabel("Enable Differential Mode")
     adcSym_CTRLC_DIFFMODE.setDefaultValue(False)
-    
+
     #positive input
     adcSym_INPUTCTRL_MUXPOS = adcComponent.createKeyValueSetSymbol("ADC_INPUTCTRL_MUXPOS", adcChannelMenu)
     adcSym_INPUTCTRL_MUXPOS.setLabel("Select Positive Input")
