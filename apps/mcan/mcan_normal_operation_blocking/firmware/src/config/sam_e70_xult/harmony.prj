@@ -91,8 +91,8 @@
           <Name dnOrder="1">plib_pio.c</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xult/peripheral/pio/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/pio/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">44645A4153927BED393497683401039F</GeneratedChecksum>
-          <UserChecksum dnOrder="5">44645A4153927BED393497683401039F</UserChecksum>
+          <GeneratedChecksum dnOrder="4">F615C91D16A4F47A644F2AB92A8C7C2C</GeneratedChecksum>
+          <UserChecksum dnOrder="5">F615C91D16A4F47A644F2AB92A8C7C2C</UserChecksum>
         </File>
         <File dnOrder="11">
           <Type dnOrder="0">SOURCE</Type>
@@ -631,7 +631,7 @@
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
       <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
-      <Setting dnOrder="5" key="PackageFilter" value="bsp;csp;"/>
+      <Setting dnOrder="5" key="PackageFilter" value="csp;"/>
     </Settings>
   </Configurator>
 </Configuration>
