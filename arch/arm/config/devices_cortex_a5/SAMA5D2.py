@@ -29,12 +29,31 @@ def setXDMACDefaultSettings():
     return triggerSettings
 
 def updateLinkerScript(symbol, event):
-    if event["value"] == "DDR":
-        symbol.setSourcePath("arm/templates/iar/cortex_a/SAMA5D2/sam_a5_ddr.icf.ftl")
-        symbol.setOutputName("ddr.icf")
+    compiler_choice = event['source'].getSymbolByID("COMPILER_CHOICE")
+    memory_loc  = event['source'].getSymbolByID("EXECUTION_MEMORY")
+    if compiler_choice.getSelectedKey() == "XC32":
+        if memory_loc.getValue()  == "DDR":
+            symbol.setSourcePath("arm/templates/xc32/cortex_a/SAMA5D2/ddram.ld.ftl")
+            symbol.setOutputName("ddr.ld")
+        else:
+            symbol.setSourcePath("arm/templates/xc32/cortex_a/SAMA5D2/sram.ld.ftl")
+            symbol.setOutputName("sram.ld")
     else:
-        symbol.setSourcePath("arm/templates/iar/cortex_a/SAMA5D2/sram.icf.ftl")
-        symbol.setOutputName("sram.icf")
+        if memory_loc.getValue() == "DDR":
+            symbol.setSourcePath("arm/templates/iar/cortex_a/SAMA5D2/sam_a5_ddr.icf.ftl")
+            symbol.setOutputName("ddr.icf")
+        else:
+            symbol.setSourcePath("arm/templates/iar/cortex_a/SAMA5D2/sram.icf.ftl")
+            symbol.setOutputName("sram.icf")
+
+def updateStartupFile(symbol, event):
+    compiler_choice = event['source'].getSymbolByID("COMPILER_CHOICE")
+    if compiler_choice.getSelectedKey() == "XC32":
+        symbol.setSourcePath("arm/templates/xc32/cortex_a/SAMA5D2/cstartup.s.ftl")
+        symbol.setOutputName("cstartup.S")
+    else:
+        symbol.setSourcePath("arm/templates/iar/cortex_a/SAMA5D2/sam_a5_cstartup.s.ftl")
+        symbol.setOutputName("cstartup.s")
 
 print ("Loading System Services for " + Variables.get("__PROCESSOR"))
 
@@ -92,31 +111,67 @@ coreComponent.addPlugin("../peripheral/adc_44073/plugin/adc_44073.jar")
 # load AIC manager information
 coreComponent.addPlugin("../peripheral/aic_11051/plugin/aic_11051.jar")
 
-armSysStartSourceFile = coreComponent.createFileSymbol("STARTUP_C", None)
-armSysStartSourceFile.setSourcePath("arm/templates/iar/cortex_a/SAMA5D2/sam_a5_cstartup.s.ftl")
-armSysStartSourceFile.setOutputName("cstartup.s")
-armSysStartSourceFile.setMarkup(True)
-armSysStartSourceFile.setOverwrite(True)
-armSysStartSourceFile.setDestPath("")
-armSysStartSourceFile.setProjectPath("config/" + configName + "/")
-armSysStartSourceFile.setType("SOURCE")
+compiler_choice = deviceFamily.getComponent().getSymbolByID("COMPILER_CHOICE")
+if compiler_choice.getSelectedKey() == "XC32":
+    armSysStartSourceFile = coreComponent.createFileSymbol("STARTUP_C", None)
+    armSysStartSourceFile.setSourcePath("arm/templates/xc32/cortex_a/SAMA5D2/cstartup.s.ftl")
+    armSysStartSourceFile.setOutputName("cstartup.S")
+    armSysStartSourceFile.setMarkup(True)
+    armSysStartSourceFile.setOverwrite(True)
+    armSysStartSourceFile.setDestPath("")
+    armSysStartSourceFile.setProjectPath("config/" + configName + "/")
+    armSysStartSourceFile.setType("SOURCE")
+    armSysStartSourceFile.setDependencies(updateStartupFile, ["COMPILER_CHOICE"])
+
+    linkerFile = coreComponent.createFileSymbol("LINKER_SCRIPT", None)
+    linkerFile.setSourcePath("arm/templates/xc32/cortex_a/SAMA5D2/ddram.ld.ftl")
+    linkerFile.setOutputName("ddr.ld")
+    linkerFile.setMarkup(True)
+    linkerFile.setOverwrite(True)
+    linkerFile.setDestPath("")
+    linkerFile.setProjectPath("config/" + configName + "/")
+    linkerFile.setType("LINKER")
+    linkerFile.setDependencies(updateLinkerScript, ["EXECUTION_MEMORY", "COMPILER_CHOICE"])
+
+    sym = coreComponent.createSettingSymbol(None, None)
+    sym.setCategory("C32")
+    sym.setKey("preprocessor-macros")
+    sym.setValue("__FPU_PRESENT=1")
+    sym.setAppend(True, ";")
+
+    sym = coreComponent.createSettingSymbol(None, None)
+    sym.setCategory("C32")
+    sym.setKey("appendMe")
+    sym.setValue("-marm -cpu=cortex-a5 -mfpu=neon-vfpv4")
+    sym.setAppend(True, ";")
+
+elif compiler_choice.getSelectedKey() == "IAR":
+    armSysStartSourceFile = coreComponent.createFileSymbol("STARTUP_C", None)
+    armSysStartSourceFile.setSourcePath("arm/templates/iar/cortex_a/SAMA5D2/sam_a5_cstartup.s.ftl")
+    armSysStartSourceFile.setOutputName("cstartup.s")
+    armSysStartSourceFile.setMarkup(True)
+    armSysStartSourceFile.setOverwrite(True)
+    armSysStartSourceFile.setDestPath("")
+    armSysStartSourceFile.setProjectPath("config/" + configName + "/")
+    armSysStartSourceFile.setType("SOURCE")
+    armSysStartSourceFile.setDependencies(updateStartupFile, ["COMPILER_CHOICE"])
+
+    linkerFile = coreComponent.createFileSymbol("LINKER_SCRIPT", None)
+    linkerFile.setSourcePath("arm/templates/iar/cortex_a/SAMA5D2/sam_a5_ddr.icf.ftl")
+    linkerFile.setOutputName("ddr.icf")
+    linkerFile.setMarkup(True)
+    linkerFile.setOverwrite(True)
+    linkerFile.setDestPath("")
+    linkerFile.setProjectPath("config/" + configName + "/")
+    linkerFile.setType("LINKER")
+    linkerFile.setDependencies(updateLinkerScript, ["EXECUTION_MEMORY", "COMPILER_CHOICE"])
 
 #default exception handlers.
 faultSourceFile = coreComponent.createFileSymbol("DFLT_FAULT_HANDLER_C", None)
-faultSourceFile.setSourcePath("arm/templates/iar/cortex_a/SAMA5D2/sam_a5_vectortrap.s.ftl")
-faultSourceFile.setOutputName("vectortrap.s")
+faultSourceFile.setSourcePath("arm/templates/common/mpu_handlers/fault_handlers.c")
+faultSourceFile.setOutputName("fault_handlers.c")
 faultSourceFile.setMarkup(True)
 faultSourceFile.setOverwrite(True)
 faultSourceFile.setDestPath("")
 faultSourceFile.setProjectPath("config/" + configName + "/")
 faultSourceFile.setType("SOURCE")
-
-linkerFile = coreComponent.createFileSymbol("LINKER_SCRIPT", None)
-linkerFile.setSourcePath("arm/templates/iar/cortex_a/SAMA5D2/sam_a5_ddr.icf.ftl")
-linkerFile.setOutputName("ddr.icf")
-linkerFile.setMarkup(True)
-linkerFile.setOverwrite(True)
-linkerFile.setDestPath("")
-linkerFile.setProjectPath("config/" + configName + "/")
-linkerFile.setType("LINKER")
-linkerFile.setDependencies(updateLinkerScript, ["EXECUTION_MEMORY"])
