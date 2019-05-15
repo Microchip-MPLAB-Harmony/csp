@@ -172,6 +172,7 @@ def instantiateComponent( coreComponent ):
     xc32Available = False
     iarAvailable =  False
     iarAllStacks =  False
+    xc32AllStacks =  False
     iarVisiblity =  False
     xc32Visibility = False
     multiCompilerSupport = False
@@ -184,10 +185,13 @@ def instantiateComponent( coreComponent ):
     if "CORTEX-A" in coreArch.getValue():
         isCortexA = True
         baseArchDir = "arm"
-        compilers = [ "XC32" + naQualifier, "IAR" ]
+        compilers = [ "XC32", "IAR" ]
+        xc32Available = True
+        xc32Visibility = True
         iarAvailable = True
-        iarVisiblity = True
         iarAllStacks = True
+        xc32AllStacks = True
+        multiCompilerSupport = True
         deviceCacheHeaderName = "cache_cortex_a.h.ftl"
     elif "CORTEX-M" in coreArch.getValue():
         isCortexM = True
@@ -349,7 +353,44 @@ def instantiateComponent( coreComponent ):
 
     xc32HeapSize = coreComponent.createIntegerSymbol("XC32_HEAP_SIZE", xc32LdGeneralMenu)
     xc32HeapSize.setLabel("Heap Size (bytes)")
-    xc32HeapSize.setDefaultValue( 0 )
+    xc32HeapSize.setDefaultValue( 512 )
+
+    if isCortexA == True:
+        xc32UsrStackSize = coreComponent.createIntegerSymbol("XC32_USR_STACK_SIZE", xc32LdGeneralMenu)
+        xc32UsrStackSize.setLabel( "User Stack Size (bytes)" )
+        xc32UsrStackSize.setDefaultValue( 4096 )
+        xc32UsrStackSize.setVisible( xc32Available )
+
+        xc32FiqStackSize = coreComponent.createIntegerSymbol("XC32_FIQ_STACK_SIZE", xc32LdGeneralMenu)
+        xc32FiqStackSize.setLabel("FIQ Stack Size (bytes)")
+        xc32FiqStackSize.setDefaultValue(96)
+        xc32FiqStackSize.setVisible( xc32AllStacks )
+
+        xc32IrqStackSize = coreComponent.createIntegerSymbol("XC32_IRQ_STACK_SIZE", xc32LdGeneralMenu)
+        xc32IrqStackSize.setLabel("IRQ Stack Size (bytes)")
+        xc32IrqStackSize.setDefaultValue(96)
+        xc32IrqStackSize.setVisible( xc32AllStacks )
+
+        xc32SvcStackSize = coreComponent.createIntegerSymbol("XC32_SVC_STACK_SIZE", xc32LdGeneralMenu)
+        xc32SvcStackSize.setLabel("Supervisor Stack Size (bytes)")
+        xc32SvcStackSize.setDefaultValue(4096)
+        xc32SvcStackSize.setVisible( xc32AllStacks )
+
+        xc32AbtStackSize = coreComponent.createIntegerSymbol("XC32_ABT_STACK_SIZE", xc32LdGeneralMenu)
+        xc32AbtStackSize.setLabel("Abort Stack Size (bytes)")
+        xc32AbtStackSize.setDefaultValue(64)
+        xc32AbtStackSize.setVisible( xc32AllStacks )
+
+        xc32SysStackSize = coreComponent.createIntegerSymbol("XC32_SYS_STACK_SIZE", xc32LdGeneralMenu)
+        xc32SysStackSize.setLabel("System Stack Size (bytes)")
+        xc32SysStackSize.setDefaultValue(64)
+        xc32SysStackSize.setVisible( xc32AllStacks )
+
+        xc32UndStackSize = coreComponent.createIntegerSymbol("XC32_UND_STACK_SIZE", xc32LdGeneralMenu)
+        xc32UndStackSize.setLabel("Undefined Stack Size (bytes)")
+        xc32UndStackSize.setDefaultValue(64)
+        xc32UndStackSize.setVisible( xc32AllStacks )
+        
 
     xc32LdSymbolsMacrosMenu = coreComponent.createMenuSymbol("CoreXC32_SYMBOLS_MACROS", xc32LdMenu)
     xc32LdSymbolsMacrosMenu.setLabel("Symbols & Macros")
