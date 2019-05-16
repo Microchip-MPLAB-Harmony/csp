@@ -418,7 +418,7 @@ TC_COMPARE_STATUS ${TC_INSTANCE_NAME}_CompareStatusGet( void )
     TC_COMPARE_STATUS compare_status;
     compare_status = ((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG) & TC_COMPARE_STATUS_MSK);
     /* Clear timer overflow interrupt */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_COMPARE_STATUS_MSK;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = compare_status;
     return compare_status;
 }
 </#if>

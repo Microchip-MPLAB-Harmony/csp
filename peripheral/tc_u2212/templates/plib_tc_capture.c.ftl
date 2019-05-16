@@ -175,7 +175,7 @@ void ${TC_INSTANCE_NAME}_CaptureInitialize( void )
 <#if TC_CTRLC_VAL?has_content>
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLC = ${TC_CTRLC_VAL};
 </#if>
-    
+
 <#if TC_EVCTRL_VAL?has_content>
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_EVCTRL = ${TC_EVCTRL_VAL};
 </#if>
@@ -322,7 +322,7 @@ TC_CAPTURE_STATUS ${TC_INSTANCE_NAME}_CaptureStatusGet(void)
 {
     TC_CAPTURE_STATUS capture_status;
     capture_status = (${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG) & TC_CAPTURE_STATUS_MSK;
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_CAPTURE_STATUS_MSK;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = capture_status;
     return capture_status;
 }
 </#if>

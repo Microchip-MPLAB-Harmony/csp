@@ -472,7 +472,7 @@ uint32_t ${TCC_INSTANCE_NAME}_PWMInterruptStatusGet(void)
     uint32_t interrupt_status;
     interrupt_status = ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG;
     /* Clear interrupt flags */
-    ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = TCC_INTFLAG_Msk;
+    ${TCC_INSTANCE_NAME}_REGS->TCC_INTFLAG = interrupt_status;
     return interrupt_status;
 }
 </#if>
