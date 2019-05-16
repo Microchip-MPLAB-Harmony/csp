@@ -128,16 +128,16 @@ void ${TC_INSTANCE_NAME}_CompareInitialize( void )
     /* Configure timer one shot mode & direction */
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET = ${TC_CTRLBSET_VAL};
     </#if>
-    
+
     <#if TC_CTRLC_VAL?has_content>
     /* Configure waveform invert */
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLC = ${TC_CTRLC_VAL};
     </#if>
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[0] = ${TC_COMPARE_PERIOD}U;
-    <#if TC_COMPARE_CTRLA_WAVEGEN == "MPWM"> 
+    <#if TC_COMPARE_CTRLA_WAVEGEN == "MPWM">
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[1] = ${TC_COMPARE_CC1}U;
     </#if>
-    
+
     /* Clear all interrupt flags */
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_INTFLAG_Msk;
 
@@ -146,7 +146,7 @@ void ${TC_INSTANCE_NAME}_CompareInitialize( void )
     ${TC_INSTANCE_NAME}_CallbackObject.callback = NULL;
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTENSET = TC_INTENSET_OVF_Msk;
     </#if>
-    
+
     <#if TC_EVCTRL_VAL?has_content>
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_EVCTRL = ${TC_EVCTRL_VAL};
     </#if>
@@ -241,7 +241,7 @@ uint8_t ${TC_INSTANCE_NAME}_Compare8bitPeriodGet( void )
     return (uint8_t)${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[0];
 }
 
-<#if TC_COMPARE_CTRLA_WAVEGEN == "MPWM"> 
+<#if TC_COMPARE_CTRLA_WAVEGEN == "MPWM">
 /* Configure duty cycle value */
 void ${TC_INSTANCE_NAME}_Compare8bitSet( uint8_t compareValue )
 {
@@ -307,7 +307,7 @@ uint16_t ${TC_INSTANCE_NAME}_Compare16bitPeriodGet( void )
 }
 
 
-<#if TC_COMPARE_CTRLA_WAVEGEN == "MPWM"> 
+<#if TC_COMPARE_CTRLA_WAVEGEN == "MPWM">
 /* Configure duty cycle value */
 void ${TC_INSTANCE_NAME}_Compare16bitSet( uint16_t compareValue )
 {
@@ -415,10 +415,7 @@ TC_COMPARE_STATUS ${TC_INSTANCE_NAME}_CompareStatusGet( void )
     TC_COMPARE_STATUS compare_status;
     compare_status = ((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG) & TC_COMPARE_STATUS_MSK);
     /* Clear timer overflow interrupt */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_COMPARE_STATUS_MSK;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = compare_status;
     return compare_status;
 }
 </#if>
-
-
-

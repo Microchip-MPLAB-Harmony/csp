@@ -101,7 +101,7 @@ void ${TC_INSTANCE_NAME}_TimerInitialize( void )
 
     /* Configure counter mode & prescaler */
     <@compress single_line=true>${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLA = TC_CTRLA_MODE_${TC_CTRLA_MODE}
-                                | TC_CTRLA_PRESCALER_${TC_CTRLA_PRESCALER} | TC_CTRLA_WAVEGEN_MPWM 
+                                | TC_CTRLA_PRESCALER_${TC_CTRLA_PRESCALER} | TC_CTRLA_WAVEGEN_MPWM
                                 ${TC_CTRLA_RUNSTDBY?then('| TC_CTRLA_RUNSTDBY_Msk', '')};</@compress>
 
 <#if TC_TIMER_CTRLBSET_ONESHOT == true>
@@ -110,7 +110,7 @@ void ${TC_INSTANCE_NAME}_TimerInitialize( void )
 </#if>
     /* Configure timer period */
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[0U] = ${TC_TIMER_PERIOD}U;
-    
+
     /* Clear all interrupt flags */
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_INTFLAG_Msk;
 
@@ -379,10 +379,7 @@ bool ${TC_INSTANCE_NAME}_TimerPeriodHasExpired( void )
 {
     bool timer_status;
     timer_status = ((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG) & TC_INTFLAG_OVF_Msk);
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_INTFLAG_OVF_Msk;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = timer_status;
     return timer_status;
 }
 </#if>
-
-
-
