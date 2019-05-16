@@ -308,7 +308,7 @@
         <property key="symbol-stripping" value=""/>
         <property key="trace-symbols" value=""/>
         <property key="warn-section-align" value="false"/>
-        <appendMe value="-T..\..\firmware\src\config\sam_v71_xult\ATSAMV71Q21B.ld"/>
+        <appendMe value="-T../../firmware/src/config/sam_v71_xult/ATSAMV71Q21B.ld"/>
       </C32-LD>
       <C32CPP>
         <property key="additional-warnings" value="false"/>
