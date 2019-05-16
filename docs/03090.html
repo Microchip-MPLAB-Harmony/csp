@@ -1,0 +1,122 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>MCAN_INTERRUPT_MASK Enumeration</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '03090.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="03051.html" target="topic">MCAN Peripheral Library Help</a> &gt; <a href="03052.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="03090.html" target="topic">MCAN_INTERRUPT_MASK Enumeration</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+Microchip 32-bit Chip Support Package</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="03131.html" target="topic">Previous</a> | <a href="03052.html" target="topic">Up</a> | <a href="03149.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MCAN_INTERRUPT_MASK Topic Title: MCAN_INTERRUPT_MASK Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+MCAN_INTERRUPT_MASK Enumeration</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+MCAN Interrupt Mask&nbsp;</p>
+<p class="Element10">
+This data type defines the MCAN Interrupt sources number.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">MCAN_INTERRUPT_RF0N_MASK</span></strong> = (1U &lt;&lt; 0U),
+  <strong><span style="color: #000000">MCAN_INTERRUPT_RF0W_MASK</span></strong> = (1U &lt;&lt; 1U),
+  <strong><span style="color: #000000">MCAN_INTERRUPT_RF0F_MASK</span></strong> = (1U &lt;&lt; 2U),
+  <strong><span style="color: #000000">MCAN_INTERRUPT_RF0L_MASK</span></strong> = (1U &lt;&lt; 3U),
+  <strong><span style="color: #000000">MCAN_INTERRUPT_RF1N_MASK</span></strong> = (1U &lt;&lt; 4U),
+  <strong><span style="color: #000000">MCAN_INTERRUPT_RF1W_MASK</span></strong> = (1U &lt;&lt; 5U),
+  <strong><span style="color: #000000">MCAN_INTERRUPT_RF1F_MASK</span></strong> = (1U &lt;&lt; 6U),
+  <strong><span style="color: #000000">MCAN_INTERRUPT_RF1L_MASK</span></strong> = (1U &lt;&lt; 7U),
+  <strong><span style="color: #000000">MCAN_INTERRUPT_HPM_MASK</span></strong> = (1U &lt;&lt; 8U),
+  <strong><span style="color: #000000">MCAN_INTERRUPT_TC_MASK</span></strong> = (1U &lt;&lt; 9U),
+  <strong><span style="color: #000000">MCAN_INTERRUPT_TCF_MASK</span></strong> = (1U &lt;&lt; 10U),
+  <strong><span style="color: #000000">MCAN_INTERRUPT_TFE_MASK</span></strong> = (1U &lt;&lt; 11U),
+  <strong><span style="color: #000000">MCAN_INTERRUPT_TEFN_MASK</span></strong> = (1U &lt;&lt; 12U),
+  <strong><span style="color: #000000">MCAN_INTERRUPT_TEFW_MASK</span></strong> = (1U &lt;&lt; 13U),
+  <strong><span style="color: #000000">MCAN_INTERRUPT_TEFF_MASK</span></strong> = (1U &lt;&lt; 14U),
+  <strong><span style="color: #000000">MCAN_INTERRUPT_TEFL_MASK</span></strong> = (1U &lt;&lt; 15U),
+  <strong><span style="color: #000000">MCAN_INTERRUPT_TSW_MASK</span></strong> = (1U &lt;&lt; 16U),
+  <strong><span style="color: #000000">MCAN_INTERRUPT_MRAF_MASK</span></strong> = (1U &lt;&lt; 17U),
+  <strong><span style="color: #000000">MCAN_INTERRUPT_TOO_MASK</span></strong> = (1U &lt;&lt; 18U),
+  <strong><span style="color: #000000">MCAN_INTERRUPT_DRX_MASK</span></strong> = (1U &lt;&lt; 19U),
+  <strong><span style="color: #000000">MCAN_INTERRUPT_ELO_MASK</span></strong> = (1U &lt;&lt; 22U),
+  <strong><span style="color: #000000">MCAN_INTERRUPT_EP_MASK</span></strong> = (1U &lt;&lt; 23U),
+  <strong><span style="color: #000000">MCAN_INTERRUPT_EW_MASK</span></strong> = (1U &lt;&lt; 24U),
+  <strong><span style="color: #000000">MCAN_INTERRUPT_BO_MASK</span></strong> = (1U &lt;&lt; 25U),
+  <strong><span style="color: #000000">MCAN_INTERRUPT_WDI_MASK</span></strong> = (1U &lt;&lt; 26U),
+  <strong><span style="color: #000000">MCAN_INTERRUPT_PEA_MASK</span></strong> = (1U &lt;&lt; 27U),
+  <strong><span style="color: #000000">MCAN_INTERRUPT_PED_MASK</span></strong> = (1U &lt;&lt; 28U),
+  <strong><span style="color: #000000">MCAN_INTERRUPT_ARA_MASK</span></strong> = (1U &lt;&lt; 29U)
+} MCAN_INTERRUPT_MASK;</pre></div></div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="03051.html" target="topic">MCAN Peripheral Library Help</a> &gt; <a href="03052.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="03090.html" target="topic">MCAN_INTERRUPT_MASK Enumeration</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+Microchip 32-bit Chip Support Package</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="03131.html" target="topic">Previous</a> | <a href="03052.html" target="topic">Up</a> | <a href="03149.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MCAN_INTERRUPT_MASK Topic Title: MCAN_INTERRUPT_MASK Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

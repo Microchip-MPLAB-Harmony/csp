@@ -1,0 +1,144 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Introduction</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '04794.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="04795.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="04794.html" target="topic">Introduction</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+Microchip 32-bit Chip Support Package</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="04795.html" target="topic">Previous</a> | <a href="04795.html" target="topic">Up</a> | <a href="04796.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RTC U2250 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+Introduction</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The RTC module is a 32-bit counter, with a 10-bit programmable prescaler. Typically, the RTC clock is run continuously, including in the device's low-power sleep modes, to track the current time and date information. The RTC can be used as a source to wake up the system at a scheduled time or periodically using the alarm functions.&nbsp;</p>
+<p class="Element10">
+The RTC peripheral can be configured to operate in the following three modes</p>
+<ul class="Element630">
+<li class="Element600">16-bit Counter mode (or Timer mode)</li>
+<li class="Element600">32-bit Counter mode (or Timer mode)</li>
+<li class="Element600">Clock and Calendar mode</li>
+</ul><p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+The RTC peripheral in 16-bit or 32-counter mode allows for an easy integration of an asynchronous counter into a user application, which is capable of operating while the device is in sleep mode.&nbsp;</p>
+<p class="Element10">
+The RTC peripheral in calendar mode allows for an easy integration of a real time clock and calendar into a user application to track the passing of time and/or perform scheduled tasks.&nbsp;</p>
+<p class="Element10">
+The RTC timer has 10-bit programmable prescaler, it can generate periodic events on the upper eight bits of the RTC prescaler. Table below shows the periodic event frequencies for each prescaler bit using 1 KHz clock. </p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="28%">
+<div class="Element66">
+Bit position&nbsp;</div></td><td class="Element65" valign="top" width="72%">
+<div class="Element66">
+Periodic Event&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="28%">
+<div class="Element68">
+7&nbsp;</div></td><td class="Element67" valign="top" width="72%">
+<div class="Element68">
+1 Hz&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="28%">
+<div class="Element68">
+6&nbsp;</div></td><td class="Element67" valign="top" width="72%">
+<div class="Element68">
+2 Hz&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="28%">
+<div class="Element68">
+5&nbsp;</div></td><td class="Element67" valign="top" width="72%">
+<div class="Element68">
+4 Hz&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="28%">
+<div class="Element68">
+4&nbsp;</div></td><td class="Element67" valign="top" width="72%">
+<div class="Element68">
+8 Hz&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="28%">
+<div class="Element68">
+3&nbsp;</div></td><td class="Element67" valign="top" width="72%">
+<div class="Element68">
+16 Hz&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="28%">
+<div class="Element68">
+2&nbsp;</div></td><td class="Element67" valign="top" width="72%">
+<div class="Element68">
+32 Hz&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="28%">
+<div class="Element68">
+1&nbsp;</div></td><td class="Element67" valign="top" width="72%">
+<div class="Element68">
+64 Hz&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="28%">
+<div class="Element68">
+0&nbsp;</div></td><td class="Element67" valign="top" width="72%">
+<div class="Element68">
+128 Hz&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="04795.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="04794.html" target="topic">Introduction</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+Microchip 32-bit Chip Support Package</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="04795.html" target="topic">Previous</a> | <a href="04795.html" target="topic">Up</a> | <a href="04796.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RTC U2250 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>
