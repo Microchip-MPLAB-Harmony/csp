@@ -93,7 +93,7 @@ void display_menu (void)
     printf("\n\rb) Wait Mode");
     printf("\n\rc) Backup Mode");   
     
-    printf("\n\rEnter your choice");    
+    printf("\n\rEnter your choice ");    
     scanf("%c", &cmd);
 }
 
@@ -138,7 +138,7 @@ int main ( void )
                 printf("\n\n\rConfiguring RTT Alarm for wake up.......");
                 configure_alarm();
                 SYSTICK_TimerStop();
-                printf("\n\rEntering WAIT Mode");
+                printf("\n\rEntering WAIT Mode ");
                 LED_OFF();
                 SUPC_WaitModeEnter (PMC_FSMR_FLPM_FLASH_DEEP_POWERDOWN, WAITMODE_WKUP_RTT);
                 printf("\n\rRTT ALARM triggered waking up device from Wait mode");
