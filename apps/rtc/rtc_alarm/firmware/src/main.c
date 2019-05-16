@@ -110,7 +110,8 @@ int main ( void )
         printf("\n\rError setting up alarm\n");
         while( true );
     }
-    printf( "\n\rThe alarm will occur at 12:00:20\n\n\r" );
+
+    printf("\n\rThe Alarm will Trigger at 12:00:20\n\n\r");
     
     while( true )
     {
