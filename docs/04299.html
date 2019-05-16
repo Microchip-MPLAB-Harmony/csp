@@ -1,0 +1,156 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Running The Application</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '04299.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="04289.html" target="topic">PWM Applications</a> &gt; <a href="04291.html" target="topic">pwm_synchronous_channels</a> &gt; <a href="04299.html" target="topic">Running The Application</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+Microchip 32-bit Chip Support Package</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="04297.html" target="topic">Previous</a> | <a href="04291.html" target="topic">Up</a> | <a href="04419.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PWM pwm_synchronous_channels Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+Running The Application</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+<strong><u>Running project with MPLAB X IDE</u></strong>&nbsp;</p>
+
+<ol class="Element630">
+<li value="1" class="Element600">Build and Program the application using the MPLAB X IDE</li>
+<li value="2" class="Element600">Observe the high-side and low-side PWM waveforms on the oscilloscope. Observe the dead time between the high side and low side.
+<ul class="Element631">
+<li class="Element601">PWM Channel 0
+<ul class="Element632">
+<li class="Element602">Pin 7 of EXT1 - PWM0_PWMH0 (PA00)</li>
+<li class="Element602">Pin 4 of EXT1 - PWM0_PWML0 (PA19)</li>
+</ul></li>
+<li class="Element601">PWM Channel 1
+<ul class="Element632">
+<li class="Element602">Pin 9 of EXT2 - PWM0_PWMH1 (PA02)</li>
+<li class="Element602">Pin 15 of EXT1 - PWM0_PWML1 (PD25)</li>
+</ul></li>
+<li class="Element601">PWM Channel 2
+<ul class="Element632">
+<li class="Element602"> Pin 7 of EXT2 - PWM0_PWMH2 (PC19)</li>
+<li class="Element602"> Pin 8 of EXT2 - PWM0_PWML2 (PD26)</li>
+</ul></li>
+</ul></li>
+<li value="3" class="Element600">Observe the output as described in the following table:</li>
+</ol><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="12%">
+<div class="Element66">
+Project Name&nbsp;</div></td><td class="Element65" valign="top" width="88%">
+<div class="Element66">
+Output&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="12%">
+<div class="Element68">
+sam_e70_xult.X&nbsp;</div></td><td class="Element67" valign="top" width="88%">
+<div class="Element68">
+Success: Observe the high side and low side PWM waveforms. PWM frequency = 20KHz.<br>Duty cycle of the waveform is changing from 0% to 100%.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="12%">
+<div class="Element68">
+sam_v71_xult.X&nbsp;</div></td><td class="Element67" valign="top" width="88%">
+<div class="Element68">
+Success: Observe the high side and low side PWM waveforms. PWM frequency = 20KHz.<br>Duty cycle of the waveform is changing from 0% to 100%.&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10" style="text-align: center;">
+<img src="output_waveform_PWM.png" border="0" alt="" title=""></p><p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<strong><u>Running project with IAR Embedded work bench</u></strong></p>
+<ol class="Element630">
+<li value="1" class="Element600">Build the project using IAR Embedded Workbench</li>
+<li value="2" class="Element600">Use the output binary file (harmony.bin) to setup the board as detailed in <a href="04297.html" target="topic">hardware setup</a></li>
+<li value="3" class="Element600">Reset the board to run the application</li>
+</ol><p class="Element10">
+&nbsp;</p>
+<div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="17%">
+<div class="Element66">
+Project Name&nbsp;</div></td><td class="Element65" valign="top" width="83%">
+<div class="Element66">
+Output&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="17%">
+<div class="Element68">
+sam_a5d2_xult.IAR&nbsp;</div></td><td class="Element67" valign="top" width="83%">
+<div class="Element68">
+</p>
+<ul class="Element630">
+<li class="Element600">Observe the High side of PWM Channel 2 on pin 7 of XPRO_EXT2 (J26)</li>
+<li class="Element600">PWM frequency is 20 KHz</li>
+<li class="Element600">PWM duty cycle varies from 0 to 100 %</li>
+</ul><p class="Element68">
+&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="04289.html" target="topic">PWM Applications</a> &gt; <a href="04291.html" target="topic">pwm_synchronous_channels</a> &gt; <a href="04299.html" target="topic">Running The Application</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+Microchip 32-bit Chip Support Package</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="04297.html" target="topic">Previous</a> | <a href="04291.html" target="topic">Up</a> | <a href="04419.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PWM pwm_synchronous_channels Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

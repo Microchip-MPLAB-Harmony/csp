@@ -1,0 +1,179 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>XDMAC_ChannelTransfer Function</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '06929.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="06883.html" target="topic">XDMAC Peripheral Library Help</a> &gt; <a href="06884.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="06929.html" target="topic">XDMAC_ChannelTransfer Function</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+Microchip 32-bit Chip Support Package</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="06928.html" target="topic">Previous</a> | <a href="06884.html" target="topic">Up</a> | <a href="06926.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: XDMAC_ChannelTransfer@XDMAC_CHANNEL@void *@void *@size_t Topic Title: XDMAC_ChannelTransfer Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+XDMAC_ChannelTransfer Function</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+This function adds a single block data transfer characteristics for a specific XDMAC channel id it is not busy already. It also enables the channel to start data transfer.&nbsp;</p>
+<p class="Element10">
+If the requesting client registered an event callback with the PLIB, the PLIB will issue a XDMAC_TRANSFER_COMPLETE event if the transfer was processed successfully and XDMAC_TRANSFER_ERROR event if the transfer was not processed successfully.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">XDMAC_ChannelTransfer</span></strong>(
+    <a href="06895.html" target="topic">XDMAC_CHANNEL</a> <strong><span style="color: #000000">channel</span></strong>, 
+    <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">void</span></strong> * <strong><span style="color: #000000">srcAddr</span></strong>, 
+    <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">void</span></strong> * <strong><span style="color: #000000">destAddr</span></strong>, 
+    size_t <strong><span style="color: #000000">blockSize</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+XDMAC should have been initialized by calling <a href="06961.html" target="topic">XDMAC_Initialize</a>.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+channel&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+A specific XDMAC channel<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+srcAddr&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Source of the XDMAC transfer<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+destAddr&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Destination of the XDMAC transfer<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+blockSize&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Size of the transfer block&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+
+<ul class="Element630">
+<li class="Element600">True - If transfer request is accepted.</li>
+<li class="Element600">False - If previous transfer is in progress and the request is rejected.</li>
+</ul></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+When DMA transfer buffers are placed in cacheable memory, cache maintenance operation must be performed by cleaning and invalidating cache for DMA buffers located in cacheable SRAM region using CMSIS APIs. The buffer start address must be aligned to cache line and buffer size must be multiple of cache line. Refer to device documentation to find the cache line size.&nbsp;</p>
+<p class="Element10">
+Invalidate cache lines having received buffer before using it to load the latest data in the actual memory to the cache SCB_InvalidateDCache_by_Addr((uint32_t *)&amp;readBuffer, sizeof(readBuffer));&nbsp;</p>
+<p class="Element10">
+Clean cache lines having source buffer before submitting a transfer request to XDMAC to load the latest data in the cache to the actual memory SCB_CleanDCache_by_Addr((uint32_t *)&amp;writeBuffer, sizeof(writeBuffer));</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12"><i><span style="color: #008000">// Transfer 10 bytes of data to UART TX using XDMAC channel 1</span></i>
+MY_APP_OBJ myAppObj;
+uint8_t buf[10] = {0,1,2,3,4,5,6,7,8,9};
+<strong><span style="color: #000080">void</span></strong> *srcAddr = (uint8_t *) buf;
+<strong><span style="color: #000080">void</span></strong> *destAddr = (uin8_t*) &amp;U1TXREG;
+size_t size = 10;
+
+<i><span style="color: #008000">// User registers an event handler with PLIB. This is done once.</span></i>
+<a href="06923.html" target="topic">XDMAC_ChannelCallbackRegister</a>(APP_XDMACTransferEventHandler,
+    (uintptr_t)&amp;myAppObj);
+
+<strong><span style="color: #000080">if</span></strong> (XDMAC_ChannelTransfer(XDMAC_CHANNEL_1, srcAddr, destAddr, size) == <strong><span style="color: #000080">true</span></strong>)
+{
+    <i><span style="color: #008000">// do something else</span></i>
+}
+<strong><span style="color: #000080">else</span></strong>
+{
+    <i><span style="color: #008000">// try again?</span></i>
+}</pre></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="06883.html" target="topic">XDMAC Peripheral Library Help</a> &gt; <a href="06884.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="06929.html" target="topic">XDMAC_ChannelTransfer Function</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+Microchip 32-bit Chip Support Package</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="06928.html" target="topic">Previous</a> | <a href="06884.html" target="topic">Up</a> | <a href="06926.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: XDMAC_ChannelTransfer@XDMAC_CHANNEL@void *@void *@size_t Topic Title: XDMAC_ChannelTransfer Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>
