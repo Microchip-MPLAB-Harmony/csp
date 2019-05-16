@@ -120,10 +120,10 @@ int main ( void )
             {
                 SYSTICK_TimerStop();
                 printf("\n\rEntering SLEEP Mode");
-                printf("\n\rPress SW1 to wakeup the device");                
+                printf("\n\rPress SW0 to wakeup the device");                
                 LED_OFF();
                 SUPC_SleepModeEnter();
-                printf("\n\rSW1 Pressed exiting Sleep mode......");
+                printf("\n\rSW0 Pressed exiting Sleep mode......");
                 SYSTICK_TimerStart();
                 display_menu();
                 break;
@@ -132,10 +132,10 @@ int main ( void )
             {
                 SYSTICK_TimerStop();
                 printf("\n\rEntering WAIT Mode");
-                printf("\n\rPress SW1 to wakeup the device");   
+                printf("\n\rPress SW0 to wakeup the device");   
                 LED_OFF();
                 SUPC_WaitModeEnter (PMC_FSMR_FLPM_FLASH_DEEP_POWERDOWN, WAITMODE_WKUP_WKUP7);
-                printf("\n\rSW1 Pressed exiting Wait mode......");
+                printf("\n\rSW0 Pressed exiting Wait mode......");
                 SYSTICK_TimerStart();
                 display_menu();
                 break;
@@ -144,7 +144,7 @@ int main ( void )
             {
                 SYSTICK_TimerStop();
                 printf("\n\rEntering Backup Mode \n");
-                printf("\n\rPress SW1 to wakeup the device"); 
+                printf("\n\rPress SW0 to wakeup the device"); 
                 LED_OFF();
                 SUPC_BackupModeEnter();
                 break;
