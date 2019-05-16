@@ -19,8 +19,8 @@
           <Name dnOrder="1">initialization.c</Name>
           <LogicalPath dnOrder="2">config/sam_l21_xpro/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">5B9C48865B20AB47395D24986B3E1AF4</GeneratedChecksum>
-          <UserChecksum dnOrder="5">5B9C48865B20AB47395D24986B3E1AF4</UserChecksum>
+          <GeneratedChecksum dnOrder="4">7B62AE9A184702BF9821A17F6C06EB60</GeneratedChecksum>
+          <UserChecksum dnOrder="5">7B62AE9A184702BF9821A17F6C06EB60</UserChecksum>
         </File>
         <File dnOrder="2">
           <Type dnOrder="0">SOURCE</Type>
@@ -131,8 +131,8 @@
           <Name dnOrder="1">plib_systick.c</Name>
           <LogicalPath dnOrder="2">config/sam_l21_xpro/peripheral/systick/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/systick/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">DDFA0CF5FF129A010742169868BF3545</GeneratedChecksum>
-          <UserChecksum dnOrder="5">DDFA0CF5FF129A010742169868BF3545</UserChecksum>
+          <GeneratedChecksum dnOrder="4">B1173D966E397EA6743610B84411497C</GeneratedChecksum>
+          <UserChecksum dnOrder="5">B1173D966E397EA6743610B84411497C</UserChecksum>
         </File>
         <File dnOrder="16">
           <Type dnOrder="0">SOURCE</Type>
@@ -483,8 +483,8 @@
           <Name dnOrder="1">plib_systick.h</Name>
           <LogicalPath dnOrder="2">config/sam_l21_xpro/peripheral/systick/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/systick/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">9E1B527D2F807937F22078D6C65F2874</GeneratedChecksum>
-          <UserChecksum dnOrder="5">9E1B527D2F807937F22078D6C65F2874</UserChecksum>
+          <GeneratedChecksum dnOrder="4">71B6A8AF4E191503AA232FAC9C828C29</GeneratedChecksum>
+          <UserChecksum dnOrder="5">71B6A8AF4E191503AA232FAC9C828C29</UserChecksum>
         </File>
         <File dnOrder="60">
           <Type dnOrder="0">HEADER</Type>

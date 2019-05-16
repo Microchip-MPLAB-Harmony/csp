@@ -514,7 +514,7 @@
         </Menu>
         <String dnOrder="98" id="SYSTICK_PERIOD">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="0x1f40"/>
+            <Dynamic dnOrder="0" id="core" value="0xc3500"/>
           </Values>
         </String>
         <Float dnOrder="99" id="SYSTICK_PERIOD_MS">
@@ -523,10 +523,13 @@
               <Value dnOrder="0">2097.1519</Value>
             </Float>
           </Attributes>
+          <Values dnOrder="1">
+            <User dnOrder="0" value="100.0"/>
+          </Values>
         </Float>
         <Integer dnOrder="100" id="SYSTICK_PERIOD_US">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="1000"/>
+            <Dynamic dnOrder="0" id="core" value="100000"/>
           </Values>
         </Integer>
         <Boolean dnOrder="101" id="SysTick_INTERRUPT_ENABLE">
@@ -702,7 +705,12 @@
           </Values>
         </String>
         <KeyValueSet dnOrder="2" id="SERCOM_MODE">
-          <Values dnOrder="0">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="readOnly">
+              <Value dnOrder="0">true</Value>
+            </Boolean>
+          </Attributes>
+          <Values dnOrder="1">
             <Dynamic dnOrder="0" id="sercom3" value="0"/>
           </Values>
         </KeyValueSet>
