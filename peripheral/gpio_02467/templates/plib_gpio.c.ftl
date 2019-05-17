@@ -159,7 +159,12 @@ void GPIO_Initialize ( void )
     <#assign remapInputPin = "SYS_PORT_PPS_INPUT_PIN_" + i>
     <#if .vars[usePPSInputPin]?has_content>
         <#if .vars[usePPSInputPin] == true>
-            <#lt>    ${.vars[inputFunction]}R = ${.vars[remapInputPin]};
+            <#assign res = .vars[inputFunction]?matches(r"(\w+) \((\w+)\)")>
+            <#if res>
+                <#lt>    ${res?groups[1]}R = ${.vars[remapInputPin]};
+            <#else>
+                <#lt>    ${.vars[inputFunction]}R = ${.vars[remapInputPin]};
+            </#if>
         </#if>
     </#if>
 </#list>
