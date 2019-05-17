@@ -182,7 +182,7 @@
             <function name="U5TX" direction="out" value="11"/>
             <function name="C2TX" direction="out" value="12"/>
             <function name="SCK3 (out)" direction="out" value="14"/>
-            <function name="SDO4 (out)" direction="out" value="15"/>
+            <function name="SDO4" direction="out" value="15"/>
             <function name="SCK5 (out)" direction="out" value="16"/>
             <function name="SDO6" direction="out" value="17"/>
             <function name="CTPLS" direction="out" value="18"/>
@@ -201,7 +201,7 @@
             <function name="U5CTS" direction="in"/>
             <function name="SDI2" direction="in"/>
             <function name="SDI4" direction="in"/>
-            <function name="SCK6" direction="in"/>
+            <function name="SCK6 (in)" direction="in"/>
             <function name="C2RX" direction="in"/>
         </group>
         <group id="6">
@@ -1892,7 +1892,7 @@
             <function name="C3RX"/>
             <function name="C3TX"/>
         </module>
-        <module name="CAN4" desc="CAN2\n(CAN_ID_4)">
+        <module name="CAN4" desc="CAN4\n(CAN_ID_4)">
             <constraint type="enable">
                 <pair key="DRV_CAN_PERIPHERAL_ID_IDX[0-3]" value="CAN_ID_4"/>
             </constraint>
