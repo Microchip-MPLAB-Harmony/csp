@@ -165,7 +165,7 @@
             <function name="OC15" direction="out" value="10"/>
             <function name="U5TX" direction="out" value="11"/>
             <function name="SCK3 (out)" direction="out" value="14"/>
-            <function name="SDO4 (out)" direction="out" value="15"/>
+            <function name="SDO4" direction="out" value="15"/>
             <function name="SCK5 (out)" direction="out" value="16"/>
             <function name="SDO6" direction="out" value="17"/>
             <function name="CTPLS" direction="out" value="18"/>
@@ -184,7 +184,7 @@
             <function name="U5CTS" direction="in"/>
             <function name="SDI2" direction="in"/>
             <function name="SDI4" direction="in"/>
-            <function name="SCK6" direction="in"/>
+            <function name="SCK6 (in)" direction="in"/>
         </group>
         <group id="6">
             <pin name="RPC13" value="9"/>

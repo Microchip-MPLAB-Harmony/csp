@@ -213,7 +213,7 @@
             <function name="U5TX" direction="out" value="11"/>
             <function name="C2TX" direction="out" value="12"/>
             <function name="SCK3 (out)" direction="out" value="14"/>
-            <function name="SDO4 (out)" direction="out" value="15"/>
+            <function name="SDO4" direction="out" value="15"/>
             <function name="SCK5 (out)" direction="out" value="16"/>
             <function name="SDO6" direction="out" value="17"/>
             <function name="CTPLS" direction="out" value="18"/>
@@ -233,7 +233,7 @@
             <function name="U5CTS" direction="in"/>
             <function name="SDI2" direction="in"/>
             <function name="SDI4" direction="in"/>
-            <function name="SCK6" direction="in"/>
+            <function name="SCK6 (in)" direction="in"/>
             <function name="QEB1" direction="in"/>
             <function name="INDX2" direction="in"/>
             <function name="QEB3" direction="in"/>
@@ -1938,7 +1938,7 @@
             <function name="C3RX"/>
             <function name="C3TX"/>
         </module>
-        <module name="CAN4" desc="CAN2\n(CAN_ID_4)">
+        <module name="CAN4" desc="CAN4\n(CAN_ID_4)">
             <constraint type="enable">
                 <pair key="DRV_CAN_PERIPHERAL_ID_IDX[0-3]" value="CAN_ID_4"/>
             </constraint>
@@ -2022,6 +2022,14 @@
             <function name="DAC3" analog="true"/>
         </module>
         <module name="PWM">
+            <function name="FLT1"/>
+			<function name="FLT2"/>
+			<function name="FLT3"/>
+			<function name="FLT4"/>
+			<function name="FLT5"/>
+            <function name="FLT6"/>
+            <function name="FLT7"/>
+            <function name="FLT8"/>
             <function name="FLT15"/>
         </module>
         <module name="PWM1">
@@ -2035,32 +2043,26 @@
         <module name="PWM3">
             <function name="PWM3L"/>
 			<function name="PWM3H"/>
-			<function name="FLT3"/>
         </module>
         <module name="PWM4">
             <function name="PWM4L"/>
 			<function name="PWM4H"/>
-			<function name="FLT4"/>
         </module>
         <module name="PWM5">
             <function name="PWM5L"/>
 			<function name="PWM5H"/>
-			<function name="FLT5"/>
         </module>
         <module name="PWM6">
             <function name="PWM6L"/>
 			<function name="PWM6H"/>
-			<function name="FLT6"/>
         </module>
         <module name="PWM7">
             <function name="PWM7L"/>
 			<function name="PWM7H"/>
-			<function name="FLT7"/>
         </module>
         <module name="PWM8">
             <function name="PWM8L"/>
 			<function name="PWM8H"/>
-			<function name="FLT8"/>
         </module>
         <module name="PWM9">
             <function name="PWM9L"/>
