@@ -188,7 +188,13 @@ def instantiateComponent(opampComponent):
         opampSym_OPAMPCTRL_RES1MUX[opampID].setDependencies(setOpampSymbolVisibility, ["OPAMP_OPAMPCTRL_" + str(opampID) + "_RES1EN"])
         opampSym_OPAMPCTRL_RES1MUX[opampID].setVisible(False)
 
-        opampSym_OPAMPCTRL_RES1MUX_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"OPAMP\"]/value-group@[name=\"OPAMP_OPAMPCTRL__RES1MUX\"]")
+        if (opampID == 0):
+            opampSym_OPAMPCTRL_RES1MUX_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"OPAMP\"]/value-group@[name=\"OPAMP_OPAMPCTRL0__RES1MUX\"]")
+        elif (opampID == 1):
+            opampSym_OPAMPCTRL_RES1MUX_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"OPAMP\"]/value-group@[name=\"OPAMP_OPAMPCTRL1__RES1MUX\"]")
+        elif (opampID == 2):
+            opampSym_OPAMPCTRL_RES1MUX_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"OPAMP\"]/value-group@[name=\"OPAMP_OPAMPCTRL2__RES1MUX\"]")
+
         opampSym_OPAMPCTRL_RES1MUX_Node_Values = []
         opampSym_OPAMPCTRL_RES1MUX_Node_Values = opampSym_OPAMPCTRL_RES1MUX_Node.getChildren()
 
@@ -294,6 +300,59 @@ def instantiateComponent(opampComponent):
     opampSym_CTRLA_LPMUX.setLabel("Disable voltage doubler")
     opampSym_CTRLA_LPMUX.setDefaultValue(True)
     opampSym_CTRLA_LPMUX.setDescription("If the supply voltage is always above 2.5V, the voltage doubler can be disabled")
+
+    #checkRESCTRL register
+    resctrlNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"OPAMP\"]/register-group/register@[name=\"RESCTRL\"]")
+    if resctrlNode != None:
+        resctrlMenu = opampComponent.createMenuSymbol("RESCTRL_MENU", None)
+        resctrlMenu.setLabel("Resistor Control Menu")
+
+        res2Out = opampComponent.createBooleanSymbol("RESCTRL_RES2OUT", resctrlMenu)
+        res2Out.setLabel("Resistor ladder To Output")
+        res2Out.setDefaultValue(False)
+
+        res1En = opampComponent.createBooleanSymbol("RESCTRL_RES1EN", resctrlMenu)
+        res1En.setLabel("Enable Resistor 1 (DAC/REFBUF) output to Mux")
+        res1En.setDefaultValue(False)
+
+        node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OPAMP"]/value-group@[name="OPAMP_RESCTRL__RES1MUX"]')
+        nodeValues = node.getChildren()
+        res1Mux = opampComponent.createKeyValueSetSymbol("RESCTRL_RES1MUX", resctrlMenu)
+        res1Mux.setLabel("Resistor1 Source")
+        for index in range(0, len(nodeValues)):
+            key =  nodeValues[index].getAttribute("name")
+            value =  nodeValues[index].getAttribute("value")
+            description =  nodeValues[index].getAttribute("caption")
+            res1Mux.addKey(key, value, description)
+        res1Mux.setDefaultValue(0)
+        res1Mux.setOutputMode("Value")
+        res1Mux.setDisplayMode("Description")
+
+        node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OPAMP"]/value-group@[name="OPAMP_RESCTRL__POTMUX"]')
+        nodeValues = node.getChildren()
+        resctrlPotmux = opampComponent.createKeyValueSetSymbol("RESCTRL_POTMUX", resctrlMenu)
+        resctrlPotmux.setLabel("Potentiometer selection")
+        for index in range(0, len(nodeValues)):
+            key =  nodeValues[index].getAttribute("name")
+            value =  nodeValues[index].getAttribute("value")
+            description =  nodeValues[index].getAttribute("caption")
+            resctrlPotmux.addKey(key, value, description)
+        resctrlPotmux.setDefaultValue(0)
+        resctrlPotmux.setOutputMode("Value")
+        resctrlPotmux.setDisplayMode("Description")
+
+        node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OPAMP"]/value-group@[name="OPAMP_RESCTRL__REFBUFLEVEL"]')
+        nodeValues = node.getChildren()
+        resctrlREFBUFLEVEL = opampComponent.createKeyValueSetSymbol("RESCTRL_REFBUFLEVEL", resctrlMenu)
+        resctrlREFBUFLEVEL.setLabel("Reference output voltage")
+        for index in range(0, len(nodeValues)):
+            key =  nodeValues[index].getAttribute("name")
+            value =  nodeValues[index].getAttribute("value")
+            description =  nodeValues[index].getAttribute("caption")
+            resctrlREFBUFLEVEL.addKey(key, value, description)
+        resctrlREFBUFLEVEL.setDefaultValue(0)
+        resctrlREFBUFLEVEL.setOutputMode("Value")
+        resctrlREFBUFLEVEL.setDisplayMode("Description")
         
     ############################################################################
     #### Dependency ####

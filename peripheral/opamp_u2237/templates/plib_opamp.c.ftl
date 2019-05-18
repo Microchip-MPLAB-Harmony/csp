@@ -85,6 +85,16 @@ void ${OPAMP_INSTANCE_NAME}_Initialize(void)
     
     </#if>
     </#list>
+    <#if RESCTRL_RES1MUX??>
+        <#if (RESCTRL_RES2OUT) || (RESCTRL_RES1EN) || (RESCTRL_RES1MUX != "0") || (RESCTRL_POTMUX != "0") || (RESCTRL_REFBUFLEVEL != "0")>
+        <#lt>    <@compress single_line=true>${OPAMP_INSTANCE_NAME}_REGS->OPAMP_RESCTRL = OPAMP_RESCTRL_REFBUFLEVEL(${RESCTRL_REFBUFLEVEL})
+                                        | OPAMP_RESCTRL_RES1MUX(${RESCTRL_POTMUX})
+                                        | OPAMP_RESCTRL_POTMUX(${RESCTRL_RES1MUX})
+                                        ${RESCTRL_RES1EN?then(' | OPAMP_RESCTRL_RES1EN_Msk','')}
+                                        ${RESCTRL_RES2OUT?then(' | OPAMP_RESCTRL_RES2OUT_Msk','')}
+                                        ;</@compress>
+        </#if>
+    </#if>
     /* Enable the peripheral */
     ${OPAMP_INSTANCE_NAME}_REGS->OPAMP_CTRLA = OPAMP_CTRLA_ENABLE_Msk;
 }
