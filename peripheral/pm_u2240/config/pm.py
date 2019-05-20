@@ -65,6 +65,11 @@ def instantiateComponent(pmComponent):
         pmSym_PM_PLCFG_PLSEL.setOutputMode("Key")
         pmSym_PM_PLCFG_PLSEL.setDisplayMode("Description")
 
+        pmSym_PM_PLCFG_PLDIS = pmComponent.createBooleanSymbol("PLCFG_PLDIS", None)
+        pmSym_PM_PLCFG_PLDIS.setLabel("Force device to run in PL0")
+        pmSym_PM_PLCFG_PLDIS.setDefaultValue(False)
+        
+
     if "HAS_BBIASHS_FIELD" in parameters:
         #PM standby back biasing for SRAM
         pmStandbyConfigurationNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PM\"]/value-group@[name=\"PM_STDBYCFG__BBIASHS\"]")
@@ -90,6 +95,12 @@ def instantiateComponent(pmComponent):
         pmSym_STDBYCFG_BBIASHS.setLabel("Put RAM in low power during standby mode")
         pmSym_STDBYCFG_BBIASHS.setDescription("RAM is backbiased in standby mode to reduce power")
 
+    if "HAS_BBIASTR_BIT" in parameters:
+        #PM standby back biasing is a single bit for few devices
+        pmSym_STDBYCFG_BBIASTR = pmComponent.createBooleanSymbol("PM_STDBYCFG_BBIASTR", None)
+        pmSym_STDBYCFG_BBIASTR.setLabel("Put TrustRAM in low power during standby mode")
+        pmSym_STDBYCFG_BBIASTR.setDescription("RAM is backbiased in standby mode to reduce power")
+        
     if "HAS_BBIASLP_FIELD" in parameters:
         #PM standby back biasing for LP SRAM
         pmSym_STDBYCFG_BBIASLP = pmComponent.createKeyValueSetSymbol("PM_STDBYCFG_BBIASLP", None)
@@ -150,6 +161,26 @@ def instantiateComponent(pmComponent):
         pmSym_STDBYCFG_PDCFG.setOutputMode("Value")
         pmSym_STDBYCFG_PDCFG.setDisplayMode("Description")
 
+    if "HAS_PDCFG_BIT" in parameters:
+        #PM Power Domain Configuration
+        pmSym_STDBYCFG_PDCFG = pmComponent.createKeyValueSetSymbol("PM_STDBYCFG_PDCFG", None)
+        pmSym_STDBYCFG_PDCFG.setLabel("Power Domain Configuration")
+        pmSym_STDBYCFG_PDCFG.setDescription("Power domains can be forced to remain in active state during standby sleep mode, this will accelerate wake-up time")
+
+        pmStandbyConfigurationNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PM\"]/value-group@[name=\"PM_STDBYCFG__PDCFG\"]")
+        pmStandbyConfigurationValues = []
+        pmStandbyConfigurationValues = pmStandbyConfigurationNode.getChildren()
+
+        for index in range(len(pmStandbyConfigurationValues)):
+            pmStandbyConfigurationKeyName = pmStandbyConfigurationValues[index].getAttribute("name")
+            pmStandbyConfigurationKeyDescription = pmStandbyConfigurationValues[index].getAttribute("caption")
+            pmStandbyConfigurationKeyValue = pmStandbyConfigurationValues[index].getAttribute("value")
+            pmSym_STDBYCFG_PDCFG.addKey(pmStandbyConfigurationKeyName, pmStandbyConfigurationKeyValue, pmStandbyConfigurationKeyDescription)
+
+        pmSym_STDBYCFG_PDCFG.setDefaultValue(0)
+        pmSym_STDBYCFG_PDCFG.setOutputMode("Value")
+        pmSym_STDBYCFG_PDCFG.setDisplayMode("Description")
+        
     if "HAS_DPGPD0_BIT" in parameters:
         pmSym_STDBYCFG_DPGPD0 = pmComponent.createBooleanSymbol("PM_STDBYCFG_DPGPD0", None)
         pmSym_STDBYCFG_DPGPD0.setLabel("PD0 Dynamic Power Gating Enable")
@@ -162,6 +193,12 @@ def instantiateComponent(pmComponent):
         pmSym_STDBYCFG_DPGPD1.setDefaultValue(0)
         pmSym_STDBYCFG_DPGPD1.setDescription("PD0 and PD1 supports dynamic power gating")
 
+    if "HAS_DPGPDSW_BIT" in parameters:
+        pmSym_STDBYCFG_DPGPD = pmComponent.createBooleanSymbol("PM_STDBYCFG_DPGPD", None)
+        pmSym_STDBYCFG_DPGPD.setLabel("Dynamic Power Gating Enable")
+        pmSym_STDBYCFG_DPGPD.setDefaultValue(0)
+        pmSym_STDBYCFG_DPGPD.setDescription("Dynamic Power Gating for Switchable Power Domain")
+        
     #PM standby VREGMOD configuration
     pmSym_STDBYCFG_VREGSMOD = pmComponent.createKeyValueSetSymbol("PM_STDBYCFG_VREGSMOD", None)
     pmSym_STDBYCFG_VREGSMOD.setLabel("Voltage Regulator operation in Standby mode")
@@ -180,6 +217,24 @@ def instantiateComponent(pmComponent):
     pmSym_STDBYCFG_VREGSMOD.setDefaultValue(0)
     pmSym_STDBYCFG_VREGSMOD.setOutputMode("Value")
     pmSym_STDBYCFG_VREGSMOD.setDisplayMode("Description")
+    
+    if "HAS_PWCFG" in parameters:
+        pmSym_PWCFG = pmComponent.createKeyValueSetSymbol("PM_PWCFG_RAMPSWC", None)
+        pmSym_PWCFG.setLabel("RAM Power Switch Configuration")
+
+        pmStandbyConfigurationNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PM\"]/value-group@[name=\"PM_PWCFG__RAMPSWC\"]")
+        pmStandbyConfigurationValues = []
+        pmStandbyConfigurationValues = pmStandbyConfigurationNode.getChildren()
+
+        for index in range(len(pmStandbyConfigurationValues)):
+            pmStandbyConfigurationKeyName = pmStandbyConfigurationValues[index].getAttribute("name")
+            pmStandbyConfigurationKeyDescription = pmStandbyConfigurationValues[index].getAttribute("caption")
+            pmStandbyConfigurationKeyValue = pmStandbyConfigurationValues[index].getAttribute("value")
+            pmSym_PWCFG.addKey(pmStandbyConfigurationKeyName, pmStandbyConfigurationKeyValue, pmStandbyConfigurationKeyDescription)
+
+        pmSym_PWCFG.setDefaultValue(0)
+        pmSym_PWCFG.setOutputMode("Value")
+        pmSym_PWCFG.setDisplayMode("Description")       
 
     # Clock Warning status
     pmSym_ClkEnComment = pmComponent.createCommentSymbol("PM_CLOCK_ENABLE_COMMENT", None)
