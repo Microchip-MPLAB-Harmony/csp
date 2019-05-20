@@ -90,7 +90,7 @@
     </#if>
 </#if>
 <#if PM_STDBYCFG_DPGPD1?has_content >
-    <#if PM_STDBYCFG_DPGPD1??>
+    <#if PM_STDBYCFG_DPGPD1>
         <#if PM_STDBYCFG_VAL != "">
             <#assign PM_STDBYCFG_VAL = PM_STDBYCFG_VAL + "| PM_STDBYCFG_DPGPD1_Msk">
         <#else>
@@ -99,7 +99,7 @@
     </#if>
 </#if>
 <#if PM_STDBYCFG_DPGPD0?has_content >
-    <#if PM_STDBYCFG_DPGPD0??>
+    <#if PM_STDBYCFG_DPGPD0>
         <#if PM_STDBYCFG_VAL != "">
             <#assign PM_STDBYCFG_VAL = PM_STDBYCFG_VAL + "| PM_STDBYCFG_DPGPD0_Msk">
         <#else>
@@ -107,6 +107,25 @@
         </#if>
     </#if>
 </#if>
+<#if PM_STDBYCFG_DPGPD?has_content >
+    <#if PM_STDBYCFG_DPGPD>
+        <#if PM_STDBYCFG_VAL != "">
+            <#assign PM_STDBYCFG_VAL = PM_STDBYCFG_VAL + "| PM_STDBYCFG_DPGPDSW_Msk">
+        <#else>
+            <#assign PM_STDBYCFG_VAL = "PM_STDBYCFG_DPGPDSW_Msk">
+        </#if>
+    </#if>
+</#if>
+<#if PM_STDBYCFG_BBIASTR?has_content >
+    <#if PM_STDBYCFG_BBIASTR>
+        <#if PM_STDBYCFG_VAL != "">
+            <#assign PM_STDBYCFG_VAL = PM_STDBYCFG_VAL + "| PM_STDBYCFG_BBIASTR_Msk">
+        <#else>
+            <#assign PM_STDBYCFG_VAL = "PM_STDBYCFG_BBIASTR_Msk">
+        </#if>
+    </#if>
+</#if>
+<#if HAS_PDCFG_FIELD??>
 <#if PM_STDBYCFG_PDCFG?has_content >
     <#if PM_STDBYCFG_VAL != "">
         <#assign PM_STDBYCFG_VAL = PM_STDBYCFG_VAL + "| PM_STDBYCFG_PDCFG("+PM_STDBYCFG_PDCFG+")">
@@ -114,7 +133,18 @@
         <#assign PM_STDBYCFG_VAL = "PM_STDBYCFG_PDCFG("+PM_STDBYCFG_PDCFG+")">
     </#if>
 </#if>
-
+</#if>
+<#if HAS_PDCFG_BIT??>
+<#if PM_STDBYCFG_PDCFG?has_content >
+    <#if PM_STDBYCFG_PDCFG != "0">
+        <#if PM_STDBYCFG_VAL != "">
+            <#assign PM_STDBYCFG_VAL = PM_STDBYCFG_VAL + "| PM_STDBYCFG_PDCFG_Msk">
+        <#else>
+            <#assign PM_STDBYCFG_VAL = "PM_STDBYCFG_PDCFG_Msk">
+        </#if>
+    </#if>
+</#if>
+</#if>
 void ${PM_INSTANCE_NAME}_Initialize( void )
 {
 <#if PM_STDBYCFG_VAL?has_content>
@@ -123,6 +153,9 @@ void ${PM_INSTANCE_NAME}_Initialize( void )
 </#if>
 
 <#if HAS_PLCFG??>
+<#if PLCFG_PLDIS>
+    ${PM_INSTANCE_NAME}_REGS->PM_PLCFG = PM_PLCFG_PLDIS_Msk;
+<#else>
     /* Clear INTFLAG.PLRDY */
     ${PM_INSTANCE_NAME}_REGS->PM_INTFLAG |= PM_INTENCLR_PLRDY_Msk;
 
@@ -131,6 +164,13 @@ void ${PM_INSTANCE_NAME}_Initialize( void )
 
     /* Wait for performance level transition to complete */
     while(!(${PM_INSTANCE_NAME}_REGS->PM_INTFLAG & PM_INTFLAG_PLRDY_Msk));
+</#if>
+</#if>
+<#if HAS_PWCFG??>
+    <#if PM_PWCFG_RAMPSWC != "0x0">
+        /* Clear INTFLAG.PLRDY */
+    <#lt>    ${PM_INSTANCE_NAME}_REGS->PM_PWCFG = PM_PWCFG_RAMPSWC(${PM_PWCFG_RAMPSWC});
+    </#if>
 </#if>
 }
 
