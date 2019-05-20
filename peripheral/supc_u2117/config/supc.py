@@ -34,22 +34,6 @@ global supcSym_INTENSET
 def updateBODVisibleProperty(symbol, event):
     symbol.setVisible(event["value"])
 
-def updateBODVDDPrescalerVisibleProperty(symbol, event):
-
-    if supcSym_BODVDD_STDBYCFG.getValue() == 1 or supcSym_BODVDD_ACTCFG.getValue() == 1 or supcSym_BOD33_RUNBKUP.getValue() == 1:
-        symbol.setVisible(True)
-    else:
-        symbol.setVisible(False)
-
-def updateVrefVisibleProperty(symbol, event):
-    if supcSym_VREF_VREFOE.getValue() == True and supcSym_VREF_ONDEMAND.getValue() == False:
-        symbol.setVisible(False)
-    else:
-        symbol.setVisible(True)
-
-def updateSUPCInterruptWarringStatus(symbol, event):
-    global supcSym_INTENSET
-
 def interruptControl(symbol, event):
     global supcInstanceName
     InterruptVector = supcInstanceName.getValue()+"_INTERRUPT_ENABLE"
@@ -84,11 +68,21 @@ def instantiateComponent(supcComponent):
     global supcSym_VREF_ONDEMAND
     global supcInstanceName
     global supcSym_INTENSET
-   
+    vsvstepPresent = False
+    vsperPresent = False
     supcInstanceName = supcComponent.createStringSymbol("SUPC_INSTANCE_NAME", None)
     supcInstanceName.setVisible(False)
     supcInstanceName.setDefaultValue(supcComponent.getID().upper())
     
+    #checkVREF register
+    vrefNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SUPC\"]/register-group/register@[name=\"VREG\"]")
+    vrefNodeValues = vrefNode.getChildren()
+    for index in range(0, len(vrefNodeValues)):
+        if "VSVSTEP" in vrefNodeValues[index].getAttribute("name"):
+            vsvstepPresent = True
+        if "VSPER" in vrefNodeValues[index].getAttribute("name"):
+            vsperPresent = True
+
     #Parse parameters to show device specific functions (but uses the same IP)
     parameters = [];
     parametersNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"SUPC\"]/instance@[name=\""+supcInstanceName.getValue()+"\"]/parameters")
@@ -160,9 +154,7 @@ def instantiateComponent(supcComponent):
     supcSym_BODVDD_PSEL = supcComponent.createKeyValueSetSymbol("SUPC_"+BODname+"_PSEL", supcSym_BODVDD_Menu)
     supcSym_BODVDD_PSEL.setLabel("Select Prescaler for Sampling Clock")
     supcSym_BODVDD_PSEL.setDescription("Configures the sampling clock prescaler when BODVDD is operating in sampling mode")
-    supcSym_BODVDD_PSEL.setVisible(False)
-    supcSym_BODVDD_PSEL.setDependencies(updateBODVDDPrescalerVisibleProperty, ["SUPC_"+BODname+"_STDBYCFG", "SUPC_"+BODname+"_ACTCFG", "SUPC_"+BODname+"_RUNBKUP"])
-
+    supcSym_BODVDD_PSEL.setVisible(True)
     supcBODVDDPselNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SUPC\"]/value-group@[name=\"SUPC_"+BODname+"__PSEL\"]")
     supcBODVDDPselValues = []
     supcBODVDDPselValues = supcBODVDDPselNode.getChildren()
@@ -177,6 +169,23 @@ def instantiateComponent(supcComponent):
     supcSym_BODVDD_PSEL.setOutputMode("Value")
     supcSym_BODVDD_PSEL.setDisplayMode("Description")
 
+    if "HAS_VREFSEL_BIT" in parameters:
+        supcSym_BODVDD_VREFSEL = supcComponent.createKeyValueSetSymbol("SUPC_"+BODname+"_VREFSEL", supcSym_BODVDD_Menu)
+        supcSym_BODVDD_VREFSEL.setLabel("BOD33 Voltage Reference Selection")    
+        supcBODVrefselNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SUPC\"]/value-group@[name=\"SUPC_"+BODname+"__VREFSEL\"]")
+        supcBODVrefselValues = []
+        supcBODVrefselValues = supcBODVrefselNode.getChildren()
+
+        for index in range (0, len(supcBODVrefselValues)):
+            supcBODVrefselKeyName = supcBODVrefselValues[index].getAttribute("name")
+            supcBODVrefselKeyDescription = supcBODVrefselValues[index].getAttribute("caption")
+            supcBODVrefselKeyValue =  supcBODVrefselValues[index].getAttribute("value")
+            supcSym_BODVDD_VREFSEL.addKey(supcBODVrefselKeyName, supcBODVrefselKeyValue, supcBODVrefselKeyDescription)
+
+        supcSym_BODVDD_VREFSEL.setDefaultValue(0)
+        supcSym_BODVDD_VREFSEL.setOutputMode("Value")
+        supcSym_BODVDD_VREFSEL.setDisplayMode("Description")
+        
     if "HAS_VMON_BIT" in parameters:
         #BODVDD VMON selection
         supcSym_BOD33_VMON = supcComponent.createBooleanSymbol("SUPC_"+BODname+"_VMON", supcSym_BODVDD_Menu)
@@ -204,11 +213,27 @@ def instantiateComponent(supcComponent):
     supcSym_VREG_RUNSTDBY.setOutputMode("Value")
     supcSym_VREG_RUNSTDBY.setDisplayMode("Description")
     
+    if "HAS_VREFSEL_BIT" in parameters:
+        supcSym_VREG_VREFSEL = supcComponent.createKeyValueSetSymbol("SUPC_VREG_VREFSEL", supcSym_VREG_Menu)
+        supcSym_VREG_VREFSEL.setLabel("Voltage Regulator Voltage Reference Selection")    
+        supcVREGVrefselNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SUPC\"]/value-group@[name=\"SUPC_VREG__VREFSEL\"]")
+        supcVREGVrefselValues = []
+        supcVREGVrefselValues = supcVREGVrefselNode.getChildren()
+
+        for index in range (0, len(supcVREGVrefselValues)):
+            supcVREGVrefselKeyName = supcVREGVrefselValues[index].getAttribute("name")
+            supcVREGVrefselKeyDescription = supcVREGVrefselValues[index].getAttribute("caption")
+            supcVREGVrefselKeyValue =  supcVREGVrefselValues[index].getAttribute("value")
+            supcSym_VREG_VREFSEL.addKey(supcVREGVrefselKeyName, supcVREGVrefselKeyValue, supcVREGVrefselKeyDescription)
+
+        supcSym_VREG_VREFSEL.setDefaultValue(0)
+        supcSym_VREG_VREFSEL.setOutputMode("Value")
+        supcSym_VREG_VREFSEL.setDisplayMode("Description")
     
     if "HAS_STDBYPL0_BIT" in parameters:
         #VREG performance level in standby sleep
         supcSym_VREG_STDBYPL0 = supcComponent.createBooleanSymbol("SUPC_VREG_STDBYPL0", supcSym_VREG_Menu)
-        supcSym_VREG_STDBYPL0.setLabel("Regulator operation in PL0 in Stanby sleep")
+        supcSym_VREG_STDBYPL0.setLabel("Set Main regulator to PL0 voltage level in Standby State")
         supcSym_VREG_STDBYPL0.setDefaultValue(1)
         supcSym_VREG_STDBYPL0.setDescription("In Standby sleep mode, the voltage regulator can be configured to set VDDCORE at PL0 voltage level")
     
@@ -218,6 +243,20 @@ def instantiateComponent(supcComponent):
         supcSym_VREG_LPEFF.setLabel("Increase low power mode efficiency")
         supcSym_VREG_LPEFF.setDefaultValue(0)
         supcSym_VREG_LPEFF.setDescription("When this is set to 1, the voltage regulator in Low power mode has the highest efficiency but it supports a limited VDD range (2.5V to 3.6V).")
+
+    if vsvstepPresent:
+        supcSym_VREG_VSVSTEP = supcComponent.createIntegerSymbol("SUPC_VREG_VSVSTEP", supcSym_VREG_Menu)
+        supcSym_VREG_VSVSTEP.setLabel("Voltage Scaling Voltage Step")
+        supcSym_VREG_VSVSTEP.setDefaultValue(0)
+        supcSym_VREG_VSVSTEP.setMax(15)
+        supcSym_VREG_VSVSTEP.setMin(0)
+    
+    if vsperPresent:
+        supcSym_VREG_VSPER = supcComponent.createIntegerSymbol("SUPC_VREG_VSPER", supcSym_VREG_Menu)
+        supcSym_VREG_VSPER.setLabel("Voltage Scaling Period")
+        supcSym_VREG_VSPER.setDefaultValue(0)
+        supcSym_VREG_VSPER.setMax(255)
+        supcSym_VREG_VSPER.setMin(0)
 
     #VREF Menu    
     supcSym_VREF_Menu= supcComponent.createMenuSymbol("VREF_MENU", None)
@@ -260,7 +299,6 @@ def instantiateComponent(supcComponent):
         supcSym_VREF_TSEN.setLabel("Enable Temperature Sensor")
         supcSym_VREF_TSEN.setDescription("Enable Temperature Sensor connection to ADC")
         supcSym_VREF_TSEN.setDefaultValue(False)
-        supcSym_VREF_TSEN.setDependencies(updateVrefVisibleProperty, ["SUPC_VREF_ONDEMAND", "SUPC_VREF_VREFOE"])
   
     #VREF RUNSTDBY mode
     supcSym_VREF_RUNSTDBY = supcComponent.createBooleanSymbol("SUPC_VREF_RUNSTDBY", supcSym_VREF_Menu)
