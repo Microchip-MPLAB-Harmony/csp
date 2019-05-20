@@ -102,10 +102,6 @@
             </#if>
         </#if>
     </#if>
-    <#if SUPC_BOD_PSEL??>
-        <#assign SUPC_BOD_PSEL_VAL = "${SUPC_BOD_PSEL}(${.vars[SUPC_BOD_PSEL]})">
-        <#assign SUPC_BOD_VAL = SUPC_BOD_PSEL_VAL>
-    </#if>
     <#if .vars[SUPC_BOD_RUNBKUP]?has_content >
         <#if .vars[SUPC_BOD_RUNBKUP] == true>
             <#if SUPC_BOD_VAL != "">
@@ -116,6 +112,12 @@
         </#if>
     </#if>
 </#if>
+
+<#if SUPC_BOD_PSEL??>
+    <#assign SUPC_BOD_PSEL_VAL = "${SUPC_BOD_PSEL}(${.vars[SUPC_BOD_PSEL]})">
+    <#assign SUPC_BOD_VAL = SUPC_BOD_PSEL_VAL>
+</#if>
+
 <#if HAS_VREFSEL_BIT??>
     <#assign SUPC_BOD_VREFSEL = "SUPC_"+SUPC_BOD_NAME+"_VREFSEL">
     <#if .vars[SUPC_BOD_VREFSEL]?has_content >
