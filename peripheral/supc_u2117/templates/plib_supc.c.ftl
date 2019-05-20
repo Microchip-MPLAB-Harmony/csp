@@ -102,11 +102,9 @@
             </#if>
         </#if>
     </#if>
-    <#if (.vars[SUPC_BOD_RUNBKUP] == true) || (.vars[SUPC_BOD_STDBYCFG] == "1") || (.vars[SUPC_BOD_ACTCFG] == "1")>
-        <#if SUPC_BOD_PSEL?has_content >
-            <#assign SUPC_BOD_PSEL_VAL = "${SUPC_BOD_PSEL}(${.vars[SUPC_BOD_PSEL]})">
-            <#assign SUPC_BOD_VAL = SUPC_BOD_PSEL_VAL>
-        </#if>
+    <#if SUPC_BOD_PSEL??>
+        <#assign SUPC_BOD_PSEL_VAL = "${SUPC_BOD_PSEL}(${.vars[SUPC_BOD_PSEL]})">
+        <#assign SUPC_BOD_VAL = SUPC_BOD_PSEL_VAL>
     </#if>
     <#if .vars[SUPC_BOD_RUNBKUP]?has_content >
         <#if .vars[SUPC_BOD_RUNBKUP] == true>
@@ -114,6 +112,18 @@
             <#assign SUPC_BOD_VAL = SUPC_BOD_VAL + " | SUPC_BOD33_RUNBKUP_Msk">
             <#else>
             <#assign SUPC_BOD_VAL = "SUPC_BOD33_RUNBKUP_Msk">
+            </#if>
+        </#if>
+    </#if>
+</#if>
+<#if HAS_VREFSEL_BIT??>
+    <#assign SUPC_BOD_VREFSEL = "SUPC_"+SUPC_BOD_NAME+"_VREFSEL">
+    <#if .vars[SUPC_BOD_VREFSEL]?has_content >
+        <#if (.vars[SUPC_BOD_VREFSEL] == "1")>
+            <#if SUPC_BOD_VAL != "">
+                <#assign SUPC_BOD_VAL = SUPC_BOD_VAL + " | SUPC_${SUPC_BOD_NAME}_VREFSEL_Msk">
+            <#else>
+                <#assign SUPC_BOD_VAL = "SUPC_${SUPC_BOD_NAME}_VREFSEL_Msk">
             </#if>
         </#if>
     </#if>
@@ -145,14 +155,12 @@
         </#if>
     </#if>
 </#if>
-<#if SUPC_VREG_VAL??>
-    <#if SUPC_VREG_VAL?has_content >
-        <#if SUPC_VREG_VAL == true >
-            <#if SUPC_VREG_VAL != "">
-            <#assign SUPC_VREG_VAL = SUPC_VREG_VAL + " | SUPC_VREG_SEL_Msk">
-            <#else>
-            <#assign SUPC_VREG_VAL = " SUPC_VREG_SEL_Msk">
-            </#if>
+<#if SUPC_VREG_SEL??>
+    <#if SUPC_VREG_SEL == true >
+        <#if SUPC_VREG_VAL != "">
+        <#assign SUPC_VREG_VAL = SUPC_VREG_VAL + " | SUPC_VREG_SEL_Msk">
+        <#else>
+        <#assign SUPC_VREG_VAL = " SUPC_VREG_SEL_Msk">
         </#if>
     </#if>
 </#if>
@@ -165,6 +173,20 @@
         </#if>
     </#if>
 </#if>
+<#if SUPC_VREG_VSVSTEP??>
+    <#if SUPC_VREG_VAL != "">
+    <#assign SUPC_VREG_VAL = SUPC_VREG_VAL + " | SUPC_VREG_VSVSTEP(${SUPC_VREG_VSVSTEP})">
+    <#else>
+    <#assign SUPC_VREG_VAL = "SUPC_VREG_VSVSTEP(${SUPC_VREG_VSVSTEP})">
+    </#if>
+</#if>
+<#if SUPC_VREG_VSPER??>
+    <#if SUPC_VREG_VAL != "">
+    <#assign SUPC_VREG_VAL = SUPC_VREG_VAL + " | SUPC_VREG_VSPER(${SUPC_VREG_VSPER})">
+    <#else>
+    <#assign SUPC_VREG_VAL = "SUPC_VREG_VSPER(${SUPC_VREG_VSPER})">
+    </#if>
+</#if>
 <#if HAS_LPEFF_BIT??>
     <#if SUPC_VREG_LPEFF?has_content >
         <#if SUPC_VREG_LPEFF == true >
@@ -172,6 +194,17 @@
             <#assign SUPC_VREG_VAL = SUPC_VREG_VAL + " | SUPC_VREG_LPEFF_Msk">
             <#else>
             <#assign SUPC_VREG_VAL = " SUPC_VREG_LPEFF_Msk">
+            </#if>
+        </#if>
+    </#if>
+</#if>
+<#if HAS_VREFSEL_BIT??>
+    <#if SUPC_VREG_VREFSEL?has_content >
+        <#if SUPC_VREG_VREFSEL == "1" >
+            <#if SUPC_VREG_VAL != "">
+                <#assign SUPC_VREG_VAL = SUPC_VREG_VAL + " | SUPC_VREG_VREFSEL_Msk">
+            <#else>
+                <#assign SUPC_VREG_VAL = "SUPC_VREG_VREFSEL_Msk">
             </#if>
         </#if>
     </#if>
@@ -237,12 +270,7 @@ void ${SUPC_INSTANCE_NAME}_Initialize( void )
 </#if>
 <#if SUPC_VREG_VAL?has_content>
     /* Configure VREG. Mask the values loaded from NVM during reset.*/
-    <@compress single_line=true>${SUPC_INSTANCE_NAME}_REGS->SUPC_VREG = (${SUPC_INSTANCE_NAME}_REGS->SUPC_VREG & (${SUPC_VREG_FACTORY_DATA_MASK})) | ${SUPC_VREG_VAL};</@compress>
-    <#if SUPC_VREG_STDBYPL0?has_content >
-        <#if SUPC_VREG_STDBYPL0 == false >
-    ${SUPC_INSTANCE_NAME}_REGS->SUPC_VREG &= ~SUPC_VREG_STDBYPL0_Msk;
-        </#if>
-    </#if>
+    <@compress single_line=true>${SUPC_INSTANCE_NAME}_REGS->SUPC_VREG = SUPC_VREG_ENABLE_Msk | ${SUPC_VREG_VAL};</@compress>
 
 </#if>
 <#if SUPC_VREF_VAL?has_content>
