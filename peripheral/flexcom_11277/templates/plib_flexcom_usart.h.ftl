@@ -50,13 +50,15 @@
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-/* This section lists the other files that are included in this file. */
+
 #include "device.h"
 #include "plib_flexcom_usart_local.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
-extern "C" {
+
+	extern "C" {
+
 #endif
 // DOM-IGNORE-END
 
@@ -66,6 +68,7 @@ extern "C" {
 // Section: Interface Routines
 // *****************************************************************************
 // *****************************************************************************
+
 #define ${FLEXCOM_INSTANCE_NAME}_USART_FrequencyGet()    (uint32_t)(${FLEX_USART_CLOCK_FREQ}UL)
 
 /****************************** ${FLEXCOM_INSTANCE_NAME} USART API *********************************/
@@ -80,32 +83,18 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_Write( void *buffer, const size_t size );
 
 bool ${FLEXCOM_INSTANCE_NAME}_USART_Read( void *buffer, const size_t size );
 
-<#if (USE_USART_TX_DMA )>
-void ${FLEXCOM_INSTANCE_NAME}_USART_DmaTransmitCallbackRegister( FLEXCOM_USART_DMA_CALLBACK callback, uintptr_t context );
-
-void ${FLEXCOM_INSTANCE_NAME}_USART_DMAWrite( void *buffer, const size_t size );
-</#if>
-
-<#if (USE_USART_RX_DMA )>
-void ${FLEXCOM_INSTANCE_NAME}_USART_DmaReceiveCallbackRegister( FLEXCOM_USART_DMA_CALLBACK callback, uintptr_t context );
-
-void ${FLEXCOM_INSTANCE_NAME}_USART_DMARead( void *buffer, const size_t size );
-
-</#if>
-
 <#if USART_INTERRUPT_MODE == false>
-uint8_t ${FLEXCOM_INSTANCE_NAME}_ReadByte(void);
+uint8_t ${FLEXCOM_INSTANCE_NAME}_USART_ReadByte( void );
 
-void ${FLEXCOM_INSTANCE_NAME}_WriteByte(uint8_t data);
+void ${FLEXCOM_INSTANCE_NAME}_USART_WriteByte( uint8_t data );
 
-void ${FLEXCOM_INSTANCE_NAME}_Sync(void);
+bool ${FLEXCOM_INSTANCE_NAME}_USART_TransmitComplete( void );
 
 bool ${FLEXCOM_INSTANCE_NAME}_USART_TransmitterIsReady( void );
 
 bool ${FLEXCOM_INSTANCE_NAME}_USART_ReceiverIsReady( void );
 
-</#if>
-<#if USART_INTERRUPT_MODE == true>
+<#else>
 bool ${FLEXCOM_INSTANCE_NAME}_USART_WriteIsBusy( void );
 
 bool ${FLEXCOM_INSTANCE_NAME}_USART_ReadIsBusy( void );
@@ -118,17 +107,13 @@ void ${FLEXCOM_INSTANCE_NAME}_USART_WriteCallbackRegister( FLEXCOM_USART_CALLBAC
 
 void ${FLEXCOM_INSTANCE_NAME}_USART_ReadCallbackRegister( FLEXCOM_USART_CALLBACK callback, uintptr_t context );
 
-// *****************************************************************************
-// *****************************************************************************
-// Section: Local: **** Do Not Use ****
-// *****************************************************************************
-// *****************************************************************************
-
 </#if>
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
+
     }
+
 #endif
 // DOM-IGNORE-END
 
