@@ -53,12 +53,13 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <stdbool.h>
 #include "device.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
 
-	extern "C" {
+    extern "C" {
 
 #endif
 // DOM-IGNORE-END
@@ -70,17 +71,25 @@
 // *****************************************************************************
 
 <#if CONFIG_FDMTEN == "OFF">
-void ${DMT_INSTANCE_NAME}_Enable(void);
+void ${DMT_INSTANCE_NAME}_Enable( void );
 
-void ${DMT_INSTANCE_NAME}_Disable(void);
+void ${DMT_INSTANCE_NAME}_Disable( void );
 
 </#if>
-void ${DMT_INSTANCE_NAME}_Clear ( void );
+void ${DMT_INSTANCE_NAME}_Clear( void );
+
+bool ${DMT_INSTANCE_NAME}_ClearWindowStatusGet( void );
+
+uint32_t ${DMT_INSTANCE_NAME}_CounterGet( void );
+
+uint32_t ${DMT_INSTANCE_NAME}_TimeOutCountGet( void );
+
+uint32_t ${DMT_INSTANCE_NAME}_WindowIntervalGet( void );
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
-	}
+    }
 
 #endif
 // DOM-IGNORE-END
