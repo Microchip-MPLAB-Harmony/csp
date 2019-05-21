@@ -175,6 +175,7 @@ def updateFLEXCOMRxDataRegister(symbol, event):
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
+
 def destroyComponent(flexcomComponent):
     Database.clearSymbolValue( interruptNamespace, interruptSymbolEnable)
     Database.clearSymbolValue( interruptNamespace, interruptSymbolHandler)
@@ -188,7 +189,7 @@ def instantiateComponent(flexcomComponent):
     global flexcomInstanceName
     global deviceNamespace
     global interruptNamespace
-    global deviceHandlerLastName 
+    global deviceHandlerLastName
     global interruptSymbolEnable
     global interruptSymbolHandler
     global interruptSymbolHandlerLock
@@ -213,7 +214,7 @@ def instantiateComponent(flexcomComponent):
     interruptSymbolEnable = flexcomInstanceName.getValue() + "_INTERRUPT_ENABLE"
     interruptSymbolHandler = flexcomInstanceName.getValue() + "_INTERRUPT_HANDLER"
     interruptSymbolHandlerLock =  flexcomInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK"
-            
+
     #Flexcom Mode - NO_COM, USART, SPI, TWI
     flexcomSym_OperatingMode = flexcomComponent.createKeyValueSetSymbol("FLEXCOM_MODE", None)
     flexcomSym_OperatingMode.setLabel("FLEXCOM Operating Mode")
