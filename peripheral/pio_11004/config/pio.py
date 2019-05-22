@@ -195,6 +195,18 @@ def pinFunctionCal(pType, pFunction):
                     CCFG_SYSIO_Value |= (1 << bit_pos)
                 pioMatrixSym_CCFG_SYSIO.setValue(CCFG_SYSIO_Value, 2)
 
+            if ((portChannel == "A") and ((bit_pos == 21) or (bit_pos == 22))):
+                CCFG_SYSIO_Value = pioMatrixSym_CCFG_SYSIO.getValue()
+                if (pType.getValue() == "UHP_DP") or (pFunction["value"] == ""):
+                    CCFG_SYSIO_Value &= ~(1 << 11)
+                else:
+                    CCFG_SYSIO_Value |= (1 << 11)
+                if (pType.getValue() == "UHP_DM") or (pFunction["value"] == ""):
+                    CCFG_SYSIO_Value &= ~(1 << 10)
+                else:
+                    CCFG_SYSIO_Value |= (1 << 10)
+                pioMatrixSym_CCFG_SYSIO.setValue(CCFG_SYSIO_Value, 2)
+
         pioSym_PIO_PDR[channelIndex].setValue(PDR_Value, 2)
         pioSym_PIO_ABCDSR1[channelIndex].setValue(ABCDSR1_Value, 2)
         pioSym_PIO_ABCDSR2[channelIndex].setValue(ABCDSR2_Value, 2)
