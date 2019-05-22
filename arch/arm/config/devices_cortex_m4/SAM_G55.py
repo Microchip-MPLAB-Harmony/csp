@@ -80,8 +80,20 @@ devCfgComment = coreComponent.createCommentSymbol(
 devCfgComment.setLabel(
     "Note: Set Device Configuration Bits via Programming Tool")
 
+fuseSettings = coreComponent.createBooleanSymbol("FUSE_CONFIG_ENABLE", devCfgMenu)
+fuseSettings.setLabel("Generate Fuse Settings")
+fuseSettings.setDefaultValue(True)
+
+# load device specific configurations (fuses), temporary, to be removed once
+# XC32 updated
+devCfgComment = coreComponent.createCommentSymbol(
+    "CoreCfgComment1", fuseSettings)
+devCfgComment.setLabel(
+    "Note: Set Device Configuration Bits via Programming Tool")
+
 # Device Configuration
-deviceSecurity = coreComponent.createKeyValueSetSymbol("DEVICE_SECURITY", devCfgMenu)
+deviceSecurity = coreComponent.createKeyValueSetSymbol(
+    "DEVICE_SECURITY", fuseSettings)
 deviceSecurity.setLabel("Security")
 deviceSecurity.setOutputMode("Key")
 deviceSecurity.setDisplayMode("Description")
@@ -90,10 +102,19 @@ deviceSecurity.addKey("SET", "1", "Enable (Code Protection Enabled)")
 deviceSecurity.setSelectedKey("CLEAR", 1)
 
 # SysTick External Clock Source
-systickExternal = coreComponent.createBooleanSymbol("SYSTICK_EXTERNAL_CLOCK", devCfgMenu)
+systickExternal = coreComponent.createBooleanSymbol(
+    "SYSTICK_EXTERNAL_CLOCK", devCfgMenu)
 systickExternal.setLabel("External Clock Source for SysTick Available")
 systickExternal.setDefaultValue(True)
 systickExternal.setVisible(False)
+
+deviceBoot = coreComponent.createKeyValueSetSymbol("DEVICE_BOOT", fuseSettings)
+deviceBoot.setLabel("Boot Mode")
+deviceBoot.setOutputMode("Key")
+deviceBoot.setDisplayMode("Description")
+deviceBoot.addKey("CLEAR", "0", "Boot from ROM")
+deviceBoot.addKey("SET", "1", "Boot from Flash")
+deviceBoot.setSelectedKey("SET", 1)
 
 coreFPU = coreComponent.createBooleanSymbol("FPU_Available", devCfgMenu)
 coreFPU.setLabel("FPU Available")
