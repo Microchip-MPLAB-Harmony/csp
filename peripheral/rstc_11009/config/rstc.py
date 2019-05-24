@@ -91,7 +91,7 @@ def instantiateComponent(rstcComponent):
     rstcCrNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"RSTC\"]/register-group/register@[name=\"RSTC_MR\"]/bitfield@[name=\"SCKSW\"]")
     if rstcCrNode != None:
         clockFail = rstcComponent.createBooleanSymbol("ENABLE_32K_FAIL_DETECT", None)
-        clockFail.setLabel("Enable 32K crystal Failure Detection")
+        clockFail.setLabel("Reset the device on 32.768 kHz Crystal Oscillator Failure Detection")
 
     rstcSym_MR_ERSTL = rstcComponent.createIntegerSymbol("RSTC_MR_ERSTL", None)
     rstcSym_MR_ERSTL.setLabel("External Reset Assertion duration on WDT/SW Reset")

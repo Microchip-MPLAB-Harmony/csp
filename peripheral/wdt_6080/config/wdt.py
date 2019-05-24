@@ -144,7 +144,16 @@ wdtinterruptControl = coreComponent.createBooleanSymbol("NVIC_WDT_ENABLE", None)
 wdtinterruptControl.setDependencies(interruptControl, ["wdtinterruptMode"])
 wdtinterruptControl.setVisible(False)
 
-
+wdtCrNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"WDT\"]/register-group/register@[name=\"WDT_MR\"]/bitfield@[name=\"WDRPROC\"]")
+if wdtCrNode != None:
+    wdrProc = coreComponent.createKeyValueSetSymbol("WDT_MR_WDRPROC", wdtCfgMenu)
+    wdrProc.setLabel("WDT Resets")
+    wdrProc.addKey("System", "0", "WDT resets peripherals and processor")
+    wdrProc.addKey("PROCESSOR", "1", "WDT resets processor")
+    wdrProc.setDefaultValue(0)
+    wdrProc.setOutputMode("Value")
+    wdrProc.setDisplayMode("Description")
+    
 
 configName = Variables.get("__CONFIGURATION_NAME")
 
