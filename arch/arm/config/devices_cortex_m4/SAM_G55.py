@@ -80,16 +80,6 @@ devCfgComment = coreComponent.createCommentSymbol(
 devCfgComment.setLabel(
     "Note: Set Device Configuration Bits via Programming Tool")
 
-fuseSettings = coreComponent.createBooleanSymbol("FUSE_CONFIG_ENABLE", devCfgMenu)
-fuseSettings.setLabel("Generate Fuse Settings")
-fuseSettings.setDefaultValue(True)
-
-# load device specific configurations (fuses), temporary, to be removed once
-# XC32 updated
-devCfgComment = coreComponent.createCommentSymbol(
-    "CoreCfgComment1", fuseSettings)
-devCfgComment.setLabel(
-    "Note: Set Device Configuration Bits via Programming Tool")
 
 # Device Configuration
 deviceSecurity = coreComponent.createKeyValueSetSymbol(

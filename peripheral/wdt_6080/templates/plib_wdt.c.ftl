@@ -42,36 +42,36 @@
 #include "plib_${WDT_INSTANCE_NAME?lower_case}.h"
 
 <#if wdtinterruptMode == true>	
-	<#lt>WDT_OBJECT wdt;
+  <#lt>WDT_OBJECT wdt;
 </#if>
 
 void ${WDT_INSTANCE_NAME}_Initialize( void )
 {
-	${WDT_INSTANCE_NAME}_REGS->WDT_MR = WDT_MR_WDD (${wdtWDD}) | WDT_MR_WDV(${wdtWDV}) \
-							${wdtdebugHalt?then(' | WDT_MR_WDDBGHLT_Msk','')}${wdtidleHalt?then(' | WDT_MR_WDIDLEHLT_Msk','')}${wdtEnableReset?then(' | WDT_MR_WDRSTEN_Msk','')}${wdtinterruptMode?then(' | WDT_MR_WDFIEN_Msk','')};
-							
+    ${WDT_INSTANCE_NAME}_REGS->WDT_MR = WDT_MR_WDD (${wdtWDD}) | WDT_MR_WDV(${wdtWDV}) \
+              ${wdtdebugHalt?then(' | WDT_MR_WDDBGHLT_Msk','')}${wdtidleHalt?then(' | WDT_MR_WDIDLEHLT_Msk','')}<#if WDT_MR_WDRPROC??>${(WDT_MR_WDRPROC != "0")?then(' | WDT_MR_WDRPROC_Msk','')}</#if>${wdtEnableReset?then(' | WDT_MR_WDRSTEN_Msk','')}${wdtinterruptMode?then(' | WDT_MR_WDFIEN_Msk','')};
+              
 }
 
 void ${WDT_INSTANCE_NAME}_Clear(void)
 {
-	${WDT_INSTANCE_NAME}_REGS->WDT_CR = (WDT_CR_KEY_PASSWD | WDT_CR_WDRSTT_Msk);
+   ${WDT_INSTANCE_NAME}_REGS->WDT_CR = (WDT_CR_KEY_PASSWD | WDT_CR_WDRSTT_Msk);
 }
 
 <#if wdtinterruptMode == true>
-	<#lt>void ${WDT_INSTANCE_NAME}_CallbackRegister( WDT_CALLBACK callback, uintptr_t context )
-	<#lt>{
-	<#lt>	wdt.callback = callback;
-	<#lt>	wdt.context = context;
-	<#lt>}
+    <#lt>void ${WDT_INSTANCE_NAME}_CallbackRegister( WDT_CALLBACK callback, uintptr_t context )
+    <#lt>{
+    <#lt>   wdt.callback = callback;
+    <#lt>   wdt.context = context;
+    <#lt>}
 </#if>
 
 <#if wdtinterruptMode == true>
-	<#lt>void ${WDT_INSTANCE_NAME}_InterruptHandler( void )
-	<#lt>{
-	<#lt>   ${WDT_INSTANCE_NAME}_REGS->WDT_SR;
-	<#lt>	if(wdt.callback != NULL)
-    <#lt>        {
-    <#lt>            wdt.callback(wdt.context);
-    <#lt>        }
-	<#lt>}
+   <#lt>void ${WDT_INSTANCE_NAME}_InterruptHandler( void )
+   <#lt>{
+   <#lt>   ${WDT_INSTANCE_NAME}_REGS->WDT_SR;
+   <#lt>    if(wdt.callback != NULL)
+    <#lt>   {
+    <#lt>       wdt.callback(wdt.context);
+    <#lt>   }
+  <#lt>}
 </#if>

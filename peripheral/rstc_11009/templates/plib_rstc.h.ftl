@@ -81,7 +81,8 @@ typedef enum
     RSTC_RESET_EXT = RSTC_CR_EXTRST_Msk,
 
     /* Processor and External reset */
-    RSTC_RESET_EXT_PROC = (RSTC_CR_PROCRST_Msk | RSTC_CR_EXTRST_Msk) 
+    RSTC_RESET_EXT_PROC = (RSTC_CR_PROCRST_Msk | RSTC_CR_EXTRST_Msk),
+
     <#if PERRST_SUPPORTED??>
     /* Peripheral reset */
     RSTC_RESET_PER = RSTC_CR_PERRST_Msk,
