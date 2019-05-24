@@ -60,7 +60,43 @@
     extern "C" {
 #endif
 // DOM-IGNORE-END
+/* Reset type
 
+   Summary:
+    Identifies the type of reset, either Processor reset or External Reset.
+
+   Description:
+    This enums identifies either Processor reset or External Reset.
+
+  Remarks:
+    Refer to the specific device data sheet to determine availability.
+*/
+
+typedef enum
+{
+    /* Processor reset */
+    RSTC_RESET_PROC = RSTC_CR_PROCRST_Msk,
+
+    /* External reset */
+    RSTC_RESET_EXT = RSTC_CR_EXTRST_Msk,
+
+    /* Processor and External reset */
+    RSTC_RESET_EXT_PROC = (RSTC_CR_PROCRST_Msk | RSTC_CR_EXTRST_Msk) 
+    <#if PERRST_SUPPORTED??>
+    /* Peripheral reset */
+    RSTC_RESET_PER = RSTC_CR_PERRST_Msk,
+
+    /* External reset and Peripheral reset */
+    RSTC_RESET_EXT_PER = (RSTC_CR_EXTRST_Msk | RSTC_CR_PERRST_Msk),
+
+    /* Processor and Peripheral reset */
+    RSTC_RESET_PER_PROC = (RSTC_CR_PROCRST_Msk | RSTC_CR_PERRST_Msk),
+
+    /* Processor, Peripheral and External reset */
+    RSTC_RESET_PER_PROC_EXT = (RSTC_CR_PROCRST_Msk | RSTC_CR_PERRST_Msk | RSTC_CR_EXTRST_Msk) 
+    </#if>
+
+} RSTC_RESET_TYPE;
 // *****************************************************************************
 // *****************************************************************************
 // Section: Interface Routines

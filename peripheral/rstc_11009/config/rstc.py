@@ -36,17 +36,18 @@ global rstcInstanceName
 ################################################################################
 #### Business Logic ####
 ################################################################################
-#-----------------------------------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------------------------------------------------
 
-def calcExtResetAssertTime(symbol,event):
-    numSlck=2**(event["value"]+1)
-    time= float(numSlck)/32768
-    timeUsInt=int(time*1e6)
-    timeMs=float(timeUsInt)/1000
+def calcExtResetAssertTime(symbol, event):
+    numSlck = 2**(event["value"]+1)
+    time = float(numSlck)/32768
+    timeUsInt = int(time*1e6)
+    timeMs = float(timeUsInt)/1000
     symbol.setLabel("External Reset Assertion Time is: " + str(timeMs) + " ms ( "+str(numSlck)+" SLCK Cycles )")
 
+
 def interruptControl(symbol, event):
-    symObj=event["symbol"]
+    symObj = event["symbol"]
 
     Database.clearSymbolValue("core", interruptVector)
     Database.clearSymbolValue("core", interruptHandler)
@@ -54,7 +55,7 @@ def interruptControl(symbol, event):
 
     if (symObj.getSelectedKey() == "INTERRUPT"):
         Database.setSymbolValue("core", interruptVector, True, 2)
-        Database.setSymbolValue("core", interruptHandler, rstcInstanceName.getValue()+ "_InterruptHandler", 2)
+        Database.setSymbolValue("core", interruptHandler, rstcInstanceName.getValue() + "_InterruptHandler", 2)
         Database.setSymbolValue("core", interruptHandlerLock, True, 2)
     else:
         Database.setSymbolValue("core", interruptVector, False, 2)
@@ -64,6 +65,8 @@ def interruptControl(symbol, event):
 ################################################################################
 #### Component ####
 ################################################################################
+
+
 def instantiateComponent(rstcComponent):
 
     global interruptVector
@@ -83,7 +86,12 @@ def instantiateComponent(rstcComponent):
     rstcSym_MR_UserReset.addKey("GPIO", "2", "Use as a GPIO")
     rstcSym_MR_UserReset.setOutputMode("Key")
     rstcSym_MR_UserReset.setDisplayMode("Description")
-    rstcSym_MR_UserReset.setSelectedKey("RESET",1)
+    rstcSym_MR_UserReset.setSelectedKey("RESET", 1)
+
+    rstcCrNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"RSTC\"]/register-group/register@[name=\"RSTC_MR\"]/bitfield@[name=\"SCKSW\"]")
+    if rstcCrNode != None:
+        clockFail = rstcComponent.createBooleanSymbol("ENABLE_32K_FAIL_DETECT", None)
+        clockFail.setLabel("Enable 32K crystal Failure Detection")
 
     rstcSym_MR_ERSTL = rstcComponent.createIntegerSymbol("RSTC_MR_ERSTL", None)
     rstcSym_MR_ERSTL.setLabel("External Reset Assertion duration on WDT/SW Reset")
@@ -98,7 +106,10 @@ def instantiateComponent(rstcComponent):
 
     rstcSym_MR_ERSTL.setDefaultValue(0)
 
-
+    rstcCrNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"RSTC\"]/register-group/register@[name=\"RSTC_CR\"]/bitfield@[name=\"PERRST\"]")
+    if rstcCrNode != None:
+        perResetSupported = rstcComponent.createBooleanSymbol("PERRST_SUPPORTED", None)
+        perResetSupported.setVisible(False)
 
     ############################################################################
     #### Dependency ####
@@ -156,4 +167,3 @@ def instantiateComponent(rstcComponent):
     rstcSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     rstcSystemDefFile.setSourcePath("../peripheral/rstc_11009/templates/system/definitions.h.ftl")
     rstcSystemDefFile.setMarkup(True)
-
