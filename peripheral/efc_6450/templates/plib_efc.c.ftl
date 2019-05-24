@@ -52,7 +52,7 @@ static uint32_t status = 0;
 
 void ${EFC_INSTANCE_NAME}_Initialize(void)
 {
-    ${EFC_INSTANCE_NAME}_REGS->EEFC_FMR = EEFC_FMR_FWS(${NVM_RWS}) | EEFC_FMR_CLOE_Msk;
+    ${EFC_INSTANCE_NAME}_REGS->EEFC_FMR = EEFC_FMR_FWS(${NVM_RWS}) | EEFC_FMR_CLOE_Msk <#if EFC_FAM??>${(EFC_FAM != "0")?then(' | EEFC_FMR_FAM_Msk','')}</#if>;
 }
 bool ${EFC_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, uint32_t address )
 {

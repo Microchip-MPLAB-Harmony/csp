@@ -122,7 +122,16 @@ def instantiateComponent(efcComponent):
     nvm_rws.setLabel("Wait States")
     nvm_rws.setDefaultValue(waitState)
     nvm_rws.setDependencies(waitStateUpdate, ["core.MASTER_CLOCK_FREQUENCY"])
-
+    efcNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EFC\"]/register-group/register@[name=\"EEFC_FMR\"]/bitfield@[name=\"FAM\"]")
+    if efcNode!= None:
+        efcFam = efcComponent.createKeyValueSetSymbol("EFC_FAM", efcMenu)
+        efcFam.setLabel("Flash Access Mode")
+        efcFam.addKey("128-Bit", "0", "Use 128-bit access to enhance access speed")
+        efcFam.addKey("64-Bit", "1", "Use 64-bit access to enhance power consumption")
+        efcFam.setDefaultValue(0)
+        efcFam.setOutputMode("Value")
+        efcFam.setDisplayMode("Description")
+        
     #Create a Checkbox to enable disable interrupts
     efcInterrupt = efcComponent.createBooleanSymbol("INTERRUPT_ENABLE", efcMenu)
     efcInterrupt.setLabel("Enable Interrupts")
