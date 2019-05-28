@@ -174,7 +174,7 @@ coreComponent.addPlugin("../peripheral/port_u2210/plugin/port_u2210.jar")
 
 # load clock manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_sam_l10_l11/config/clock.py")
-#coreComponent.addPlugin("../peripheral/clk_sam_l10_l11/plugin/clockmanager.jar")
+coreComponent.addPlugin("../peripheral/clk_sam_l10_l11/plugin/clk_sam_l10_l11.jar")
 
 #load mpu
 # execfile(Variables.get("__CORE_DIR") + "/../peripheral/mpu/config/mpu.py")
