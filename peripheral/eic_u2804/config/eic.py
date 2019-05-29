@@ -88,6 +88,7 @@ def updateEICInterruptStatus(symbol, event):
     global InterruptHandlerLock
     global InterruptHandler
     global intPrev
+    global extIntCount
     if len(InterruptVector) == 1:
         Database.setSymbolValue("core", InterruptVector[0], bool(event["value"]), 2)
         Database.setSymbolValue("core", InterruptHandlerLock[0], bool(event["value"]), 2)
@@ -99,13 +100,32 @@ def updateEICInterruptStatus(symbol, event):
         value = event["value"] ^ intPrev
         if value > 0:
             bitPos = int(math.log(value, 2))
-            result = bool(event["value"] & (1<<bitPos))
-            Database.setSymbolValue("core", InterruptVector[bitPos], result, 2)
-            Database.setSymbolValue("core", InterruptHandlerLock[bitPos], result, 2)
-            if result:
-                Database.setSymbolValue("core", InterruptHandler[bitPos], InterruptHandler[bitPos].split("_INTERRUPT_HANDLER")[0] + "_InterruptHandler", 2)
+            if sharedVector:
+                if bitPos < len(InterruptVector) - 1: 
+                    result = bool(event["value"] & (1<<bitPos))
+                    Database.setSymbolValue("core", InterruptVector[bitPos], result, 2)
+                    Database.setSymbolValue("core", InterruptHandlerLock[bitPos], result, 2)
+                    if result:
+                        Database.setSymbolValue("core", InterruptHandler[bitPos], InterruptHandler[bitPos].split("_INTERRUPT_HANDLER")[0] + "_InterruptHandler", 2)
+                    else:
+                        Database.setSymbolValue("core", InterruptHandler[bitPos], InterruptHandler[bitPos].split("_INTERRUPT_HANDLER")[0] + "_Handler", 2)
+                else:
+                    result = event["value"] > (1 << (len(InterruptVector) - 2))
+                    Database.setSymbolValue("core", InterruptVector[(len(InterruptVector) - 1)], result, 2)
+                    Database.setSymbolValue("core", InterruptHandlerLock[(len(InterruptVector) - 1)], result, 2)
+                    Database.setSymbolValue(event["namespace"], "EIC_OTHER_HANDLER_ACTIVE", result, 2)
+                    if result:
+                        Database.setSymbolValue("core", InterruptHandler[(len(InterruptVector) - 1)], "EIC_OTHER_InterruptHandler", 2)
+                    else:
+                        Database.setSymbolValue("core", InterruptHandler[(len(InterruptVector) - 1)], "EIC_OTHER_Handler", 2)
             else:
-                Database.setSymbolValue("core", InterruptHandler[bitPos], InterruptHandler[bitPos].split("_INTERRUPT_HANDLER")[0] + "_Handler", 2)
+                result = bool(event["value"] & (1<<bitPos))
+                Database.setSymbolValue("core", InterruptVector[bitPos], result, 2)
+                Database.setSymbolValue("core", InterruptHandlerLock[bitPos], result, 2)
+                if result:
+                    Database.setSymbolValue("core", InterruptHandler[bitPos], InterruptHandler[bitPos].split("_INTERRUPT_HANDLER")[0] + "_InterruptHandler", 2)
+                else:
+                    Database.setSymbolValue("core", InterruptHandler[bitPos], InterruptHandler[bitPos].split("_INTERRUPT_HANDLER")[0] + "_Handler", 2)
         intPrev = event["value"]
 def updateEICInterruptWarringStatus(symbol, event):
 
@@ -160,6 +180,7 @@ def instantiateComponent(eicComponent):
     global NMIInterruptHandler
     global numInt
     global extIntCount
+    global sharedVector
     InterruptVectorUpdate = []
 
     debounceSupported = eicComponent.createBooleanSymbol("DEBOUNCE_SUPPORT", None)
@@ -459,6 +480,12 @@ def instantiateComponent(eicComponent):
     eicIntLines.setVisible(False)
     eicIntLines.setDefaultValue((len(InterruptVector) - 1))
 
+    if (len(InterruptVector) < extIntCount):
+        sharedVector = True
+        eicOtherHandler = eicComponent.createBooleanSymbol("EIC_OTHER_HANDLER_ACTIVE", None)
+        eicOtherHandler.setVisible(False)
+        
+        
     NMIInterruptHandler = "NonMaskableInt_INTERRUPT_HANDLER"
 
     # Interrupt Dynamic settings
