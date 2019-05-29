@@ -223,7 +223,7 @@ void ${EIC_INSTANCE_NAME}_InterruptHandler(void)
     }
 }
 <#else>
-<#list 0..NUM_INT_LINES as x>
+<#list 0..(NUM_INT_LINES-1) as x>
 <#assign Enable = "EIC_INT_" + x>
 <#if .vars[Enable]>
 void ${EIC_INSTANCE_NAME}_EXTINT_${x}_InterruptHandler(void)
@@ -239,6 +239,38 @@ void ${EIC_INSTANCE_NAME}_EXTINT_${x}_InterruptHandler(void)
 }
 </#if>
 </#list>
+<#if EIC_OTHER_HANDLER_ACTIVE??>
+<#if EIC_OTHER_HANDLER_ACTIVE>
+void ${EIC_INSTANCE_NAME}_OTHER_InterruptHandler(void)
+{
+    uint8_t currentChannel = 0;
+    uint32_t eicIntFlagStatus = 0;
+
+    /* Find any triggered channels, run associated callback handlers */
+    for (currentChannel = ${NUM_INT_LINES}; currentChannel < EXTINT_COUNT; currentChannel++)
+    {
+        /* Verify if the EXTINT x Interrupt Pin is enabled */
+        if ((${EIC_INSTANCE_NAME?lower_case}CallbackObject[currentChannel].eicPinNo == currentChannel))
+        {
+            /* Read the interrupt flag status */
+            eicIntFlagStatus = ${EIC_INSTANCE_NAME}_REGS->EIC_INTFLAG & (1UL << currentChannel);
+
+            if (eicIntFlagStatus)
+            {
+                /* Find any associated callback entries in the callback table */
+                if ((${EIC_INSTANCE_NAME?lower_case}CallbackObject[currentChannel].callback != NULL))
+                {
+                    ${EIC_INSTANCE_NAME?lower_case}CallbackObject[currentChannel].callback(${EIC_INSTANCE_NAME?lower_case}CallbackObject[currentChannel].context);
+                }
+
+                /* Clear interrupt flag */
+                ${EIC_INSTANCE_NAME}_REGS->EIC_INTFLAG = (1UL << currentChannel);
+            }
+        }
+    }
+}
+</#if>
+</#if>
 </#if>
 
 </#if>
