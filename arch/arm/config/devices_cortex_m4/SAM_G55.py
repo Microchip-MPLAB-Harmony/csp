@@ -190,7 +190,7 @@ coreComponent.addPlugin("../peripheral/pio_11004/plugin/pio_11004.jar")
 
 # # load clock manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_sam_g55/config/clock.py")
-# coreComponent.addPlugin("../peripheral/clk_sam_d51_e51_e53_e54/plugin/clk_sam_e5x.jar")
+coreComponent.addPlugin("../peripheral/clk_sam_g55/plugin/clockmanager.jar")
 
 # # load NVIC
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/nvic/config/nvic.py")
