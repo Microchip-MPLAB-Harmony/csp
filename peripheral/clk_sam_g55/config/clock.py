@@ -709,7 +709,7 @@ sym_tc_ch3_clock_freq.setDependencies(tcFreq, ["tc1.TC3_CMR_TCCLKS", "tc1.TC_PCK
 
 CLK_MANAGER_SELECT = coreComponent.createStringSymbol("CLK_MANAGER_PLUGIN", None)
 CLK_MANAGER_SELECT.setVisible(False)
-CLK_MANAGER_SELECT.setDefaultValue("PIC32CZDA:PIC32CZDAClockModel")
+CLK_MANAGER_SELECT.setDefaultValue("clk_sam_g55:SAMG55ClockModel")
 
 
 ############################################################################################
