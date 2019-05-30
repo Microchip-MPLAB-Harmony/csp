@@ -540,19 +540,21 @@ def instantiateComponent(rtcComponent):
             tampChannelMenu = rtcComponent.createMenuSymbol("TAMP_CHANNEL" + str(id), rtcTampMenu)
             tampChannelMenu.setLabel("Tamper Channel " + str(id) + " Configuration")
 
-            tampChannelLvl = rtcComponent.createKeyValueSetSymbol(
-                "TAMP_CHANNEL" + str(id) + "_LEVEL", tampChannelMenu)
-            tampChannelLvl.setLabel("Edge Detection ")
-            tampChannelLvl.addKey("Falling Edge", "0",
-                                  "A falling edge condition will be detected on Tamper input INn.")
-            tampChannelLvl.addKey("Rising Edge", "1",
-                                  "A rising edge condition will be detected on Tamper input INn.")
-            tampChannelLvl.setDisplayMode("Key")
-            tampChannelLvl.setOutputMode("Value")
+            rtcNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"RTC\"]/register-group@[name=\"RTC\"]/register@[name=\"TAMPCTRL\"]/bitfield@[name=\"" "TAMLVL" + str(id) + "" "\"]")
+            if rtcNode != None: 
+                tampChannelLvl = rtcComponent.createKeyValueSetSymbol(
+                    "TAMP_CHANNEL" + str(id) + "_LEVEL", tampChannelMenu)
+                tampChannelLvl.setLabel("Edge Detection ")
+                tampChannelLvl.addKey("Falling Edge", "0",
+                                    "A falling edge condition will be detected on Tamper input INn.")
+                tampChannelLvl.addKey("Rising Edge", "1",
+                                    "A rising edge condition will be detected on Tamper input INn.")
+                tampChannelLvl.setDisplayMode("Key")
+                tampChannelLvl.setOutputMode("Value")
 
-            tampChannelDebounce = rtcComponent.createBooleanSymbol(
-                "TAMP_CHANNEL" + str(id) + "_DEBNC", tampChannelMenu)
-            tampChannelDebounce.setLabel("Enable Debouncing")
+                tampChannelDebounce = rtcComponent.createBooleanSymbol(
+                    "TAMP_CHANNEL" + str(id) + "_DEBNC", tampChannelMenu)
+                tampChannelDebounce.setLabel("Enable Debouncing")
 
             tampChannelAction = rtcComponent.createKeyValueSetSymbol(
                 "TAMP_CHANNEL" + str(id) + "_ACTION", tampChannelMenu)
@@ -619,6 +621,10 @@ def instantiateComponent(rtcComponent):
     rtcModeSelection_Sym.setOutputMode("Key")
     rtcModeSelection_Sym.setDisplayMode("Description")
 
+    rtcNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTC"]/register-group@[name="RTC"]/register@[name="BKUP"]')
+    if rtcNode != None:
+        rtcBkupSupported = rtcComponent.createBooleanSymbol("RTC_BKUP_SUPPORTED", None)
+        rtcBkupSupported.setVisible(False)
     sysTimeTrigger_Sym = rtcComponent.createBooleanSymbol("SYS_TIME", None)
     sysTimeTrigger_Sym.setVisible(False)
     sysTimeTrigger_Sym.setDependencies(

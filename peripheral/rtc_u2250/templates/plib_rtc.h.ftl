@@ -129,18 +129,19 @@ extern "C" {
 </#if>
 <#if TAMP_DETECTION_SUPPORTED??>
     <#if TAMP_DETECTION_SUPPORTED>
-        <#lt>typedef enum
-        <#lt>{
-        <#lt>    BACKUP_REGISTER_0 = 0,
-        <#lt>    BACKUP_REGISTER_1 = 1,
-        <#lt>    BACKUP_REGISTER_2 = 2,
-        <#lt>    BACKUP_REGISTER_3 = 3,
-        <#lt>    BACKUP_REGISTER_4 = 4,
-        <#lt>    BACKUP_REGISTER_5 = 5,
-        <#lt>    BACKUP_REGISTER_6 = 6,
-        <#lt>    BACKUP_REGISTER_7 = 7
-        <#lt>} BACKUP_REGISTER;
-
+        <#if RTC_BKUP_SUPPORTED??>
+            <#lt>typedef enum
+            <#lt>{
+            <#lt>    BACKUP_REGISTER_0 = 0,
+            <#lt>    BACKUP_REGISTER_1 = 1,
+            <#lt>    BACKUP_REGISTER_2 = 2,
+            <#lt>    BACKUP_REGISTER_3 = 3,
+            <#lt>    BACKUP_REGISTER_4 = 4,
+            <#lt>    BACKUP_REGISTER_5 = 5,
+            <#lt>    BACKUP_REGISTER_6 = 6,
+            <#lt>    BACKUP_REGISTER_7 = 7
+            <#lt>} BACKUP_REGISTER;
+        </#if>
         <#lt>typedef enum
         <#lt>{
         <#lt>    TAMPER_CHANNEL_0 = 0,
@@ -258,8 +259,10 @@ void ${RTC_INSTANCE_NAME}_Initialize(void);
 </#if>
 <#if TAMP_DETECTION_SUPPORTED??>
     <#if TAMP_DETECTION_SUPPORTED>
-        <#lt>void ${RTC_INSTANCE_NAME}_BackupRegisterSet( BACKUP_REGISTER reg, uint32_t value );
-        <#lt>uint32_t ${RTC_INSTANCE_NAME}_BackupRegisterGet( BACKUP_REGISTER reg );
+        <#if RTC_BKUP_SUPPORTED??>
+            <#lt>void ${RTC_INSTANCE_NAME}_BackupRegisterSet( BACKUP_REGISTER reg, uint32_t value );
+            <#lt>uint32_t ${RTC_INSTANCE_NAME}_BackupRegisterGet( BACKUP_REGISTER reg );
+        </#if>
         <#lt>TAMPER_CHANNEL ${RTC_INSTANCE_NAME}_TamperSourceGet( void );
         <#if RTC_MODULE_SELECTION = "MODE0">
         <#lt>uint32_t ${RTC_INSTANCE_NAME}_Timer32TimeStampGet( void );
