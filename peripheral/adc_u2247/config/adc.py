@@ -28,29 +28,63 @@ global InterruptHandlerLock
 global InterruptVectorUpdate
 global adcInstanceName
 adcSym_SEQCTRL_SEQ = []
-
+global multiVectorSupport
+multiVectorSupport = False
 ###################################################################################################
 ########################################## Callbacks  #############################################
 ###################################################################################################
 
+
 def updateADCInterruptStatus(symbol, event):
-    if adcSym_INTENSET_RESRDY.getValue() == True or adcSym_INTENSET_WINMON.getValue() == True:
-        Database.setSymbolValue("core", InterruptVector, True, 2)
-        Database.setSymbolValue("core", InterruptHandlerLock, True, 2)
-        Database.setSymbolValue("core", InterruptHandler, adcInstanceName.getValue() + "_InterruptHandler", 2)
+    global multiVectorSupport
+    if multiVectorSupport:
+        if (event["id"] == "ADC_INTENSET_WINMON"):
+            Database.setSymbolValue("core", InterruptVector[0], event["value"], 2)
+            Database.setSymbolValue("core", InterruptHandlerLock[0], event["value"], 2)
+            if event["value"] == True:
+                Database.setSymbolValue("core", InterruptHandler[0], adcInstanceName.getValue() + "_OTHER_InterruptHandler", 2)
+            else:
+                Database.setSymbolValue("core", InterruptHandler[0], adcInstanceName.getValue() + "_Handler", 2)
+        elif (event["id"] == "ADC_INTENSET_RESRDY"):
+            Database.setSymbolValue("core", InterruptVector[1], event["value"], 2)
+            Database.setSymbolValue("core", InterruptHandlerLock[1], event["value"], 2)
+            if event["value"] == True:
+                Database.setSymbolValue("core", InterruptHandler[1], adcInstanceName.getValue() + "_RESRDY_InterruptHandler", 2)
+            else:
+                Database.setSymbolValue("core", InterruptHandler[1], adcInstanceName.getValue() + "_Handler", 2)
     else:
-        Database.setSymbolValue("core", InterruptVector, False, 2)
-        Database.setSymbolValue("core", InterruptHandlerLock, False, 2)
-        Database.setSymbolValue("core", InterruptHandler, adcInstanceName.getValue() + "_Handler", 2)
+        if adcSym_INTENSET_RESRDY.getValue() == True or adcSym_INTENSET_WINMON.getValue() == True:
+            Database.setSymbolValue("core", InterruptVector, True, 2)
+            Database.setSymbolValue("core", InterruptHandlerLock, True, 2)
+            Database.setSymbolValue("core", InterruptHandler, adcInstanceName.getValue() + "_InterruptHandler", 2)
+        else:
+            Database.setSymbolValue("core", InterruptVector, False, 2)
+            Database.setSymbolValue("core", InterruptHandlerLock, False, 2)
+            Database.setSymbolValue("core", InterruptHandler, adcInstanceName.getValue() + "_Handler", 2)
+
 
 def updateADCInterruptWarningStatus(symbol, event):
-    if adcSym_INTENSET_RESRDY.getValue() == True or adcSym_INTENSET_WINMON.getValue() == True:
-        if (Database.getSymbolValue("core", InterruptVectorUpdate) == True):
+    global multiVectorSupport
+    symVisible = False
+    if multiVectorSupport:
+        if adcSym_INTENSET_WINMON.getValue() == True:
+            if (Database.getSymbolValue("core", InterruptVectorUpdate[0].split("core.")[1]) == True):
+                symVisible = True
+        if adcSym_INTENSET_RESRDY.getValue() == True:
+            if (Database.getSymbolValue("core", InterruptVectorUpdate[1].split("core.")[1]) == True):
+                symVisible = True
+        if symVisible == True:
             symbol.setVisible(True)
         else:
             symbol.setVisible(False)
     else:
-        symbol.setVisible(False)
+        if adcSym_INTENSET_RESRDY.getValue() == True or adcSym_INTENSET_WINMON.getValue() == True:
+            if (Database.getSymbolValue("core", InterruptVectorUpdate) == True):
+                symbol.setVisible(True)
+            else:
+                symbol.setVisible(False)
+        else:
+            symbol.setVisible(False)
 
 def updateADCClockWarningStatus(symbol, event):
     if event["value"] == False:
@@ -169,16 +203,27 @@ def instantiateComponent(adcComponent):
     global InterruptHandlerLock
     global InterruptVectorUpdate
     global adcInstanceName
+    global multiVectorSupport
 
     adcInstanceName = adcComponent.createStringSymbol("ADC_INSTANCE_NAME", None)
     adcInstanceName.setVisible(False)
     adcInstanceName.setDefaultValue(adcComponent.getID().upper())
     Log.writeInfoMessage("Running " + adcInstanceName.getValue())
 
-    #clock enable
+    # clock enable
     Database.setSymbolValue("core", adcInstanceName.getValue() + "_CLOCK_ENABLE", True, 2)
 
-    #------------------------- ATDF Read -------------------------------------
+    count = 0
+    vectorNode=ATDF.getNode("/avr-tools-device-file/devices/device/interrupts")
+    vectorValues = vectorNode.getChildren()
+    for id in range(0, len(vectorNode.getChildren())):
+        if vectorValues[id].getAttribute("module-instance") == adcInstanceName.getValue():
+            count = count + 1
+
+    if count > 1:
+        multiVectorSupport = True
+
+    # ------------------------- ATDF Read -------------------------------------
     packageName = str(Database.getSymbolValue("core", "COMPONENT_PACKAGE"))
     availablePins = []      # array to save available pins
     channel = []
@@ -206,7 +251,7 @@ def instantiateComponent(adcComponent):
             if padSignal in availablePins:
                 channel.append(adc_signals[pad].getAttribute("group")+adc_signals[pad].getAttribute("index"))
 
-    #slave mode
+    # slave mode
     global adcSym_CTRLA_SLAVEEN
     adcSym_CTRLA_SLAVEEN = adcComponent.createBooleanSymbol("ADC_CTRLA_SLAVEEN", None)
     adcSym_CTRLA_SLAVEEN.setLabel("Enable Slave")
@@ -229,7 +274,7 @@ def instantiateComponent(adcComponent):
             adcSym_CALIB.setVisible(False)
             adcSym_CALIB.setDefaultValue(True)
 
-    #prescaler configuration
+    # prescaler configuration
     global adcSym_CTRLB_PRESCALER
     adcSym_CTRLB_PRESCALER = adcComponent.createKeyValueSetSymbol("ADC_CTRLB_PRESCALER", None)
     adcSym_CTRLB_PRESCALER.setLabel("Select Prescaler")
@@ -243,7 +288,7 @@ def instantiateComponent(adcComponent):
         adcSym_CTRLB_PRESCALER.addKey(adcPrescalerValues[index].getAttribute("name"), adcPrescalerValues[index].getAttribute("value"), adcPrescalerValues[index].getAttribute("caption"))
     adcSym_CTRLB_PRESCALER.setDependencies(adcSlaveModeVisibility, ["ADC_CTRLA_SLAVEEN"])
 
-    #sampling time
+    # sampling time
     global adcSym_SAMPCTRL_SAMPLEN
     adcSym_SAMPCTRL_SAMPLEN = adcComponent.createIntegerSymbol("ADC_SAMPCTRL_SAMPLEN", None)
     adcSym_SAMPCTRL_SAMPLEN.setLabel("Select Sample Length (cycles)")
@@ -263,12 +308,12 @@ def instantiateComponent(adcComponent):
     else:
         component = ""
 
-    #Sampling time calculation
+    # Sampling time calculation
     adcSym_SAMPCTRL_SAMPLEN_TIME = adcComponent.createCommentSymbol("ADC_SAMPCTRL_SAMPLEN_TIME", None)
     adcSym_SAMPCTRL_SAMPLEN_TIME.setLabel("**** Conversion Time is " + str(conv_time) + " us ****")
     # Dependency registration is done after all dependencies are defined.
 
-    #reference selection
+    # reference selection
     adcSym_REFCTRL_REFSEL = adcComponent.createKeyValueSetSymbol("ADC_REFCTRL_REFSEL", None)
     adcSym_REFCTRL_REFSEL.setLabel("Select Reference")
     default = 0
@@ -284,7 +329,7 @@ def instantiateComponent(adcComponent):
         adcReferenceValues[index].getAttribute("caption"))
     adcSym_REFCTRL_REFSEL.setDefaultValue(default)
 
-    #trigger
+    # trigger
     global adcSym_CONV_TRIGGER
     adcSym_CONV_TRIGGER = adcComponent.createComboSymbol("ADC_CONV_TRIGGER", None, ["Free Run", "SW Trigger", "HW Event Trigger"])
     adcSym_CONV_TRIGGER.setDefaultValue("Free Run")
@@ -311,7 +356,7 @@ def instantiateComponent(adcComponent):
     adcSym_START_EVENT.addKey("ENABLED_FALLING_EDGE", "2", "Enabled on Falling Edge")
     adcSym_START_EVENT.setDependencies(adcEventInputVisibility, ["ADC_CONV_TRIGGER", "ADC_CTRLA_SLAVEEN"])
 
-    #Auto sequence menu
+    # Auto sequence menu
     adcSequenceMenu = adcComponent.createMenuSymbol("ADC_SEQUENCE_MENU", None)
     adcSequenceMenu.setLabel("Automatic Sequence Configuration")
     adcSequenceMenu.setVisible(False)
@@ -345,7 +390,7 @@ def instantiateComponent(adcComponent):
     adcSym_CTRLC_DIFFMODE.setLabel("Enable Differential Mode")
     adcSym_CTRLC_DIFFMODE.setDefaultValue(False)
 
-    #positive input
+    # positive input
     adcSym_INPUTCTRL_MUXPOS = adcComponent.createKeyValueSetSymbol("ADC_INPUTCTRL_MUXPOS", adcChannelMenu)
     adcSym_INPUTCTRL_MUXPOS.setLabel("Select Positive Input")
     adcSym_INPUTCTRL_MUXPOS.setDefaultValue(0)
@@ -370,7 +415,7 @@ def instantiateComponent(adcComponent):
             adcPositiveInputValues[index].getAttribute("caption"))
     adcSym_INPUTCTRL_MUXPOS.setDependencies(adcPosInpVisible, ["ADC_CONV_TRIGGER", "ADC_SEQ_ENABLE"])
 
-    #negative input
+    # negative input
     adcSym_INPUTCTRL_MUXNEG = adcComponent.createKeyValueSetSymbol("ADC_INPUTCTRL_MUXNEG", adcChannelMenu)
     adcSym_INPUTCTRL_MUXNEG.setLabel("Select Negative Input")
     adcSym_INPUTCTRL_MUXNEG.setOutputMode("Key")
@@ -408,7 +453,7 @@ def instantiateComponent(adcComponent):
     adcResultMenu = adcComponent.createMenuSymbol("ADC_RESULT_MENU", None)
     adcResultMenu.setLabel("Result Configuration")
 
-    #resolution configuration
+    # resolution configuration
     global adcSym_CTRLC_RESSEL
     adcSym_CTRLC_RESSEL = adcComponent.createKeyValueSetSymbol("ADC_CTRLC_RESSEL", adcResultMenu)
     adcSym_CTRLC_RESSEL.setLabel("Select Result Resolution")
@@ -422,7 +467,7 @@ def instantiateComponent(adcComponent):
         adcSym_CTRLC_RESSEL.addKey(adcResultResolutionValues[index].getAttribute("name"), adcResultResolutionValues[index].getAttribute("value"),
         adcResultResolutionValues[index].getAttribute("caption"))
 
-    #Averaging
+    # Averaging
     adcSym_AVGCTRL_SAMPLENUM = adcComponent.createKeyValueSetSymbol("ADC_AVGCTRL_SAMPLENUM", adcSym_CTRLC_RESSEL)
     adcSym_AVGCTRL_SAMPLENUM.setLabel("Number of Accumulated Samples")
     adcSym_AVGCTRL_SAMPLENUM.setDefaultValue(0)
@@ -437,7 +482,7 @@ def instantiateComponent(adcComponent):
         adcResultResolutionValues[index].getAttribute("caption"))
     adcSym_AVGCTRL_SAMPLENUM.setDependencies(adcResultConfVisibility, ["ADC_CTRLC_RESSEL"])
 
-    #division coefficient
+    # division coefficient
     adcSym_AVGCTRL_ADJRES = adcComponent.createIntegerSymbol("ADC_AVGCTRL_ADJRES", adcSym_CTRLC_RESSEL)
     adcSym_AVGCTRL_ADJRES.setLabel("Number of Right Shifts")
     adcSym_AVGCTRL_ADJRES.setMin(0)
@@ -446,24 +491,24 @@ def instantiateComponent(adcComponent):
     adcSym_AVGCTRL_ADJRES.setVisible(False)
     adcSym_AVGCTRL_ADJRES.setDependencies(adcResultConfVisibility, ["ADC_CTRLC_RESSEL"])
 
-    #left adjusted mode
+    # left adjusted mode
     adcSym_CTRLC_LEFTADJ = adcComponent.createBooleanSymbol("ADC_CTRLC_LEFTADJ", adcResultMenu)
     adcSym_CTRLC_LEFTADJ.setLabel("Left Aligned Result")
     adcSym_CTRLC_LEFTADJ.setVisible(True)
 
-    #interrupt mode
+    # interrupt mode
     global adcSym_INTENSET_RESRDY
     adcSym_INTENSET_RESRDY = adcComponent.createBooleanSymbol("ADC_INTENSET_RESRDY", adcResultMenu)
     adcSym_INTENSET_RESRDY.setLabel("Enable Result Ready Interrupt")
 
-    #event out mode
+    # event out mode
     adcSym_EVCTRL_RSERDYEO = adcComponent.createBooleanSymbol("ADC_EVCTRL_RESRDYEO", adcResultMenu)
     adcSym_EVCTRL_RSERDYEO.setLabel("Enable Result Ready Event Out")
 
     adcWindowMenu = adcComponent.createMenuSymbol("ADC_WINDOW_CONFIG_MENU", None)
     adcWindowMenu.setLabel("Window Mode Configuration")
 
-    #Configure mode for Window operation
+    # Configure mode for Window operation
     adcSym_CTRLC_WINMODE = adcComponent.createKeyValueSetSymbol("ADC_CTRLC_WINMODE", adcWindowMenu)
     adcSym_CTRLC_WINMODE.setLabel("Select Window Monitor Mode")
     adcSym_CTRLC_WINMODE.setDefaultValue(0)
@@ -476,7 +521,7 @@ def instantiateComponent(adcComponent):
         adcSym_CTRLC_WINMODE.addKey(adcWindowConfigValues[index].getAttribute("name"), adcWindowConfigValues[index].getAttribute("value"),
         adcWindowConfigValues[index].getAttribute("caption"))
 
-    #Window upper threshold
+    # Window upper threshold
     adcSym_WINUT = adcComponent.createIntegerSymbol("ADC_WINUT", adcWindowMenu)
     adcSym_WINUT.setLabel("Window Upper Threshold")
     adcSym_WINUT.setMin(-32768)
@@ -485,7 +530,7 @@ def instantiateComponent(adcComponent):
     adcSym_WINUT.setVisible(False)
     adcSym_WINUT.setDependencies(adcWindowVisible, ["ADC_CTRLC_WINMODE"])
 
-    #Window lower threshold
+    # Window lower threshold
     adcSym_WINLT = adcComponent.createIntegerSymbol("ADC_WINLT", adcWindowMenu)
     adcSym_WINLT.setLabel("Window Lower Threshold")
     adcSym_WINLT.setMin(-32768)
@@ -501,7 +546,7 @@ def instantiateComponent(adcComponent):
     adcSym_INTENSET_WINMON.setVisible(False)
     adcSym_INTENSET_WINMON.setDependencies(adcWindowVisible, ["ADC_CTRLC_WINMODE"])
 
-    #Enable Window Monitor Event Out
+    # Enable Window Monitor Event Out
     adcSym_HW_INP_EVENT = adcComponent.createBooleanSymbol("ADC_WINDOW_OUTPUT_EVENT", adcWindowMenu)
     adcSym_HW_INP_EVENT.setLabel("Enable Window Monitor Event Out")
     adcSym_HW_INP_EVENT.setVisible(False)
@@ -513,12 +558,12 @@ def instantiateComponent(adcComponent):
     adcSleepMenu = adcComponent.createMenuSymbol("ADC_SLEEP_MENU", None)
     adcSleepMenu.setLabel("Sleep Mode Configuration")
 
-    #run in standby mode
+    # run in standby mode
     adcSym_CTRLA_RUNSTDBY = adcComponent.createBooleanSymbol("ADC_CTRLA_RUNSTDBY", adcSleepMenu)
     adcSym_CTRLA_RUNSTDBY.setLabel("Run During Standby")
     adcSym_CTRLA_RUNSTDBY.setVisible(True)
 
-    #run in on demand control mode
+    # run in on demand control mode
     adcSym_CTRLA_ONDEMAND = adcComponent.createBooleanSymbol("ADC_CTRLA_ONDEMAND", adcSleepMenu)
     adcSym_CTRLA_ONDEMAND.setLabel("On Demand Control")
     adcSym_CTRLA_ONDEMAND.setVisible(True)
@@ -535,21 +580,59 @@ def instantiateComponent(adcComponent):
     ############################################################################
     #### Dependency ####
     ############################################################################
-    InterruptVector = adcInstanceName.getValue() + "_INTERRUPT_ENABLE"
-    InterruptHandler = adcInstanceName.getValue() + "_INTERRUPT_HANDLER"
-    InterruptHandlerLock = adcInstanceName.getValue()+ "_INTERRUPT_HANDLER_LOCK"
-    InterruptVectorUpdate = adcInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
+    if multiVectorSupport:
+        InterruptVector = []
+        InterruptHandler = []
+        InterruptHandlerLock = []
+        InterruptVectorUpdate = []
+        multiVectorSupport = adcComponent.createBooleanSymbol("MULTI_VECTOR_SUPPORT", None)
+        multiVectorSupport.setVisible(False)
 
-    # Interrupt Dynamic settings
-    adcSym_UpdateInterruptStatus = adcComponent.createBooleanSymbol("ADC_INTERRUPT_STATUS", None)
-    adcSym_UpdateInterruptStatus.setDependencies(updateADCInterruptStatus, ["ADC_INTENSET_RESRDY", "ADC_INTENSET_WINMON"])
-    adcSym_UpdateInterruptStatus.setVisible(False)
+        vectorNode=ATDF.getNode(
+            "/avr-tools-device-file/devices/device/interrupts")
+        vectorValues = vectorNode.getChildren()
+        for id in range(0, len(vectorNode.getChildren())):
+            if vectorValues[id].getAttribute("module-instance") == adcInstanceName.getValue():
+                name = vectorValues[id].getAttribute("name")
+                InterruptVector.append(name + "_INTERRUPT_ENABLE")
+                InterruptHandler.append(name + "_INTERRUPT_HANDLER")
+                InterruptHandlerLock.append(name + "_INTERRUPT_HANDLER_LOCK")
+                InterruptVectorUpdate.append(
+                    "core." + name + "_INTERRUPT_ENABLE_UPDATE")
+        adcSym_IntLines = adcComponent.createIntegerSymbol("ADC_NUM_INT_LINES", None)
+        adcSym_IntLines.setVisible(False)
+        adcSym_IntLines.setDefaultValue((len(InterruptVector) - 1))
 
-    # Interrupt Warning status
-    adcSym_IntEnComment = adcComponent.createCommentSymbol("ADC_INTERRUPT_ENABLE_COMMENT", None)
-    adcSym_IntEnComment.setVisible(False)
-    adcSym_IntEnComment.setLabel("Warning!!! "+adcInstanceName.getValue()+" Interrupt is Disabled in Interrupt Manager")
-    adcSym_IntEnComment.setDependencies(updateADCInterruptWarningStatus, ["core." + InterruptVectorUpdate, "ADC_INTENSET_RESRDY", "ADC_INTENSET_WINMON"])
+        # Interrupt Dynamic settings
+        adcSym_UpdateInterruptStatus = adcComponent.createBooleanSymbol("ADC_INTERRUPT_STATUS", None)
+        adcSym_UpdateInterruptStatus.setDependencies(updateADCInterruptStatus, ["ADC_INTENSET_RESRDY", "ADC_INTENSET_WINMON"])
+        adcSym_UpdateInterruptStatus.setVisible(False)
+
+        InterruptVectorUpdate.append("ADC_INTENSET_RESRDY")
+        InterruptVectorUpdate.append("ADC_INTENSET_WINMON")
+
+        # Interrupt Warning status
+        adcSym_IntEnComment = adcComponent.createCommentSymbol("ADC_INTERRUPT_ENABLE_COMMENT", None)
+        adcSym_IntEnComment.setVisible(False)
+        adcSym_IntEnComment.setLabel("Warning!!! "+adcInstanceName.getValue()+" Interrupt is Disabled in Interrupt Manager")
+        adcSym_IntEnComment.setDependencies(updateADCInterruptWarningStatus, InterruptVectorUpdate)
+
+    else:
+        InterruptVector = adcInstanceName.getValue() + "_INTERRUPT_ENABLE"
+        InterruptHandler = adcInstanceName.getValue() + "_INTERRUPT_HANDLER"
+        InterruptHandlerLock = adcInstanceName.getValue()+ "_INTERRUPT_HANDLER_LOCK"
+        InterruptVectorUpdate = adcInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
+
+        # Interrupt Dynamic settings
+        adcSym_UpdateInterruptStatus = adcComponent.createBooleanSymbol("ADC_INTERRUPT_STATUS", None)
+        adcSym_UpdateInterruptStatus.setDependencies(updateADCInterruptStatus, ["ADC_INTENSET_RESRDY", "ADC_INTENSET_WINMON"])
+        adcSym_UpdateInterruptStatus.setVisible(False)
+
+        # Interrupt Warning status
+        adcSym_IntEnComment = adcComponent.createCommentSymbol("ADC_INTERRUPT_ENABLE_COMMENT", None)
+        adcSym_IntEnComment.setVisible(False)
+        adcSym_IntEnComment.setLabel("Warning!!! "+adcInstanceName.getValue()+" Interrupt is Disabled in Interrupt Manager")
+        adcSym_IntEnComment.setDependencies(updateADCInterruptWarningStatus, ["core." + InterruptVectorUpdate, "ADC_INTENSET_RESRDY", "ADC_INTENSET_WINMON"])
 
     # Clock Warning status
     adcSym_ClkEnComment = adcComponent.createCommentSymbol("ADC_CLOCK_ENABLE_COMMENT", None)

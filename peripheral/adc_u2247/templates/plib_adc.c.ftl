@@ -365,6 +365,96 @@ uint16_t ${ADC_INSTANCE_NAME}_ConversionResultGet( void )
     return (uint16_t)${ADC_INSTANCE_NAME}_REGS->ADC_RESULT;
 }
 
+<#if MULTI_VECTOR_SUPPORT??>
+<#if ADC_INTENSET_RESRDY == true || (ADC_INTENSET_WINMON == true && ADC_CTRLC_WINMODE != "0")>
+/* Register callback function */
+void ${ADC_INSTANCE_NAME}_CallbackRegister( ADC_CALLBACK callback, uintptr_t context )
+{
+    ${ADC_INSTANCE_NAME}_CallbackObject.callback = callback;
+
+    ${ADC_INSTANCE_NAME}_CallbackObject.context = context;
+}
+
+<#if ADC_INTENSET_RESRDY = true>
+void ${ADC_INSTANCE_NAME}_RESRDY_InterruptHandler( void )
+{
+    volatile ADC_STATUS status;
+    status = ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_RESRDY_Msk;
+    /* Clear interrupt flag */
+    ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ADC_INTFLAG_RESRDY_Msk;
+    if (${ADC_INSTANCE_NAME}_CallbackObject.callback != NULL)
+    {
+        ${ADC_INSTANCE_NAME}_CallbackObject.callback(status, ${ADC_INSTANCE_NAME}_CallbackObject.context);
+    }
+}
+<#else>
+/* Check whether result is ready */
+bool ${ADC_INSTANCE_NAME}_ConversionStatusGet( void )
+{
+    bool status;
+    status =  (bool)((${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_RESRDY_Msk) >> ADC_INTFLAG_RESRDY_Pos);
+    if (status == true)
+    {
+        ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ADC_INTFLAG_RESRDY_Msk;
+    }
+    return status;
+}
+</#if>
+<#if ADC_INTENSET_WINMON = true && ADC_CTRLC_WINMODE != "0">
+void ${ADC_INSTANCE_NAME}_OTHER_InterruptHandler( void )
+{
+    volatile ADC_STATUS status;
+    status = ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG;
+    /* Clear interrupt flag */
+    ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ADC_INTFLAG_WINMON_Msk | ADC_INTFLAG_OVERRUN_Msk;
+    if (${ADC_INSTANCE_NAME}_CallbackObject.callback != NULL)
+    {
+        ${ADC_INSTANCE_NAME}_CallbackObject.callback(status, ${ADC_INSTANCE_NAME}_CallbackObject.context);
+    }
+}
+<#else>
+<#if ADC_CTRLC_WINMODE != "0">
+/* Check whether window monitor result is ready */
+bool ${ADC_INSTANCE_NAME}_WindowMonitorStatusGet( void )
+{
+    bool status;
+    status = (bool)((${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_WINMON_Msk) >> ADC_INTFLAG_WINMON_Pos);
+    if (status == true)
+    {
+        ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ADC_INTFLAG_WINMON_Msk;
+    }
+    return status;
+}
+</#if>
+</#if>
+<#else>
+/* Check whether result is ready */
+bool ${ADC_INSTANCE_NAME}_ConversionStatusGet( void )
+{
+    bool status;
+    status =  (bool)((${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_RESRDY_Msk) >> ADC_INTFLAG_RESRDY_Pos);
+    if (status == true)
+    {
+        ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ADC_INTFLAG_RESRDY_Msk;
+    }
+    return status;
+}
+
+<#if ADC_CTRLC_WINMODE != "0" && ADC_INTENSET_WINMON == false>
+/* Check whether window monitor result is ready */
+bool ${ADC_INSTANCE_NAME}_WindowMonitorStatusGet( void )
+{
+    bool status;
+    status = (bool)((${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_WINMON_Msk) >> ADC_INTFLAG_WINMON_Pos);
+    if (status == true)
+    {
+        ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ADC_INTFLAG_WINMON_Msk;
+    }
+    return status;
+}
+</#if>
+</#if>
+<#else>
 <#if ADC_INTENSET_RESRDY == true || (ADC_CTRLC_WINMODE != "0" && ADC_INTENSET_WINMON == true)>
 /* Register callback function */
 void ${ADC_INSTANCE_NAME}_CallbackRegister( ADC_CALLBACK callback, uintptr_t context )
@@ -412,4 +502,5 @@ bool ${ADC_INSTANCE_NAME}_WindowMonitorStatusGet( void )
     }
     return status;
 }
+</#if>
 </#if>
