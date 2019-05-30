@@ -20,6 +20,7 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
+import re
 
 def _find_default_value(bitfieldNode, initialRegValue):
     '''
@@ -124,7 +125,8 @@ def calcWaitStates(symbol, event):
 
     symbol.setValue(getWaitStates(), 2)
 
-print("Loading System Services for " + Variables.get("__PROCESSOR"))
+processor = Variables.get("__PROCESSOR")
+print("Loading System Services for " + processor)
 
 fuseModuleGrp = ATDF.getNode('/avr-tools-device-file/modules/module@[name="FUSECONFIG"]')
 
@@ -183,6 +185,22 @@ coreFPU.setLabel("FPU Available")
 coreFPU.setDefaultValue(True)
 coreFPU.setReadOnly(True)
 coreFPU.setVisible(False)
+
+ds60001402Regex = re.compile(r'MK\w+(GPD|GPE|MCF)')       #PIC32MKXXXXGPD/GPE/MCF
+ds60001570Regex = re.compile(r'MK\w+(GPG|GPH|MCJ)')       #PIC32MKXXXXGPG/GPH/MCJ
+
+global deviceFamily
+
+deviceFamily = coreComponent.createStringSymbol("DEVICE_FAMILY", devCfgMenu)
+deviceFamily.setLabel("Device Family")
+deviceFamily.setReadOnly(True)
+deviceFamily.setVisible(False)
+
+# decide on the family this processor belongs
+if  ds60001402Regex.search(processor):
+    deviceFamily.setDefaultValue("DS60001402")
+elif ds60001570Regex.search(processor):
+    deviceFamily.setDefaultValue("DS60001570")
 
 mipsMenu = coreComponent.createMenuSymbol("MIPS MENU", None)
 mipsMenu.setLabel("MIPS Configuration")

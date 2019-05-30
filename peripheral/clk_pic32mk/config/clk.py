@@ -34,14 +34,90 @@ global set_refotrim_value
 global _process_valuegroup_entry
 
 global peripheralBusDict
-peripheralBusDict =  {
+peripheralBusDict = {}
+
+peripheralBusDict_DS60001570 =  {
+
+        #Peripheral : ["Peripheral bus  "PMD register no", "PMD register bit no"]
+        # if "Peripheral bus no" == -1 then clocked by SYSCLK
+
+        "ADCHS": ["-1", "1", "0"],
+        "CDAC1": ["2", "1", "5"],
+        "CDAC2": ["2", "1", "6"],
+        "CTMU": ["2", "1", "8"],
+        "HLVD": ["1", "1", "20"],
+        "CLC1": ["2", "1", "24"],
+        "CLC2": ["2", "1", "25"],
+        "CLC3": ["2", "1", "26"],
+        "CLC4": ["2", "1", "27"],
+        "CMP1": ["2", "2", "0"],
+        "CMP2": ["2", "2", "1"],
+        "CMP3": ["2", "2", "2"],
+        "CMP4": ["2", "2", "3"],
+        "CMP5": ["2", "2", "4"],
+        "OPAMP1": ["2", "2", "16"],
+        "OPAMP2": ["2", "2", "17"],
+        "OPAMP3": ["2", "2", "18"],
+        "OPAMP5": ["2", "2", "20"],
+        "ICAP1": ["2", "3", "0"],
+        "ICAP2": ["2", "3", "1"],
+        "ICAP3": ["2", "3", "2"],
+        "ICAP4": ["2", "3", "3"],
+        "ICAP5": ["2", "3", "4"],
+        "ICAP6": ["2", "3", "5"],
+        "ICAP7": ["2", "3", "6"],
+        "ICAP8": ["2", "3", "7"],
+        "ICAP9": ["2", "3", "8"],
+        "OCMP1": ["2", "3", "16"],
+        "OCMP2": ["2", "3", "17"],
+        "OCMP3": ["2", "3", "18"],
+        "OCMP4": ["2", "3", "19"],
+        "OCMP5": ["2", "3", "20"],
+        "OCMP6": ["2", "3", "21"],
+        "OCMP7": ["2", "3", "22"],
+        "OCMP8": ["2", "3", "23"],
+        "OCMP9": ["2", "3", "24"],
+        "TMR1": ["2", "4", "0"],
+        "TMR2": ["2", "4", "1"],
+        "TMR3": ["2", "4", "2"],
+        "TMR4": ["2", "4", "3"],
+        "TMR5": ["2", "4", "4"],
+        "TMR6": ["2", "4", "5"],
+        "TMR7": ["2", "4", "6"],
+        "TMR8": ["2", "4", "7"],
+        "TMR9": ["2", "4", "8"],
+        "MCPWM1": ["-1", "4", "16"],
+        "MCPWM2": ["-1", "4", "17"],
+        "MCPWM3": ["-1", "4", "18"],
+        "MCPWM4": ["-1", "4", "19"],
+        "MCPWM5": ["-1", "4", "20"],
+        "MCPWM6": ["-1", "4", "21"],
+        "MCPWM7": ["-1", "4", "22"],
+        "MCPWM8": ["-1", "4", "23"],
+        "MCPWM9": ["-1", "4", "24"],
+        "UART1": ["2", "5", "0"],
+        "UART2": ["2", "5", "1"],
+        "SPI1": ["2", "5", "8"],
+        "SPI2": ["2", "5", "9"],
+        "I2C1": ["2", "5", "16"],
+        "I2C2": ["2", "5", "17"],
+        "CAN1": ["-1", "5", "28"],
+        "REFO1": ["-1", "6", "8"],
+        "REFO2": ["-1", "6", "9"],
+        "REFO3": ["-1", "6", "10"],
+        "REFO4": ["-1", "6", "11"],
+        "QEI1": ["-1", "6", "24"],
+        "QEI2": ["-1", "6", "25"],
+        "QEI3": ["-1", "6", "26"],
+        "DMAC": ["-1", "7", "4"],
+        "RTCC": ["6"],              #PMD support not there
+                                }
+peripheralBusDict_DS60001402 =  {
 
         #Peripheral : ["Peripheral bus  "PMD register no", "PMD register bit no"]
         # if "Peripheral bus no" == -1 then clocked by SYSCLK
 
         "ADCHS": ["5", "1", "0"],
-        "I2C1": ["2", "5", "16"],
-        "I2C2": ["2", "5", "17"],
         "CDAC1": ["2", "1", "4"],
         "CDAC2": ["3", "1", "5"],
         "CDAC3": ["3", "1", "6"],
@@ -988,7 +1064,12 @@ if __name__ == "__main__":
 
     CLK_MANAGER_SELECT = coreComponent.createStringSymbol("CLK_MANAGER_PLUGIN", SYM_CLK_MENU)
     CLK_MANAGER_SELECT.setVisible(False)
-    CLK_MANAGER_SELECT.setDefaultValue("clk_pic32mk:MKClockModel")
+    if Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001402":
+        CLK_MANAGER_SELECT.setDefaultValue("clk_pic32mk:MKClockModel")
+        peripheralBusDict = peripheralBusDict_DS60001402.copy()
+    elif Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001570":
+        CLK_MANAGER_SELECT.setDefaultValue("clk_pic32mk_no_USB:MKClockModel")
+        peripheralBusDict = peripheralBusDict_DS60001570.copy()
 
     # see if UPLL is enabled through FUSE configuration
     upllEnableSym = coreComponent.createBooleanSymbol("UPLL_EN", None)
@@ -1402,25 +1483,24 @@ if __name__ == "__main__":
     SOSC_IN_FREQ.setDefaultValue(int(newPoscFreq))
     SOSC_IN_FREQ.setVisible(True)
 
-    '''
-        get key/value pairs first from atdf file
-        then define the combo symbol using those pairs
-        
-        Note:  some devices don't have this register being used, so have to be careful
-    '''
+
     # used in ftl file for deciding whether to use USB-specific symbols below
-    UPLL_PRESENT = coreComponent.createBooleanSymbol("UPLL_PRESENT", CLK_CFG_SETTINGS)
-    UPLL_PRESENT.setVisible(False)
-    UPLL_PRESENT.setDefaultValue(True)
-    
+    UPLL_PRESENTSYM = coreComponent.createBooleanSymbol("UPLL_PRESENT", CLK_CFG_SETTINGS)
+    UPLL_PRESENTSYM.setVisible(False)
+    UPLL_PRESENTSYM.setDefaultValue(True)
+
     # USB is not in some members of PIC32MK family.
     if(clkValGrp_UPLLCON__UPOSCEN != None):
         # UPLL
         UPLL_SYM = coreComponent.createMenuSymbol("CONFIG_UPLL", CLK_CFG_SETTINGS)
         UPLL_SYM.setLabel("USB Clock Configuration")
         UPLL_SYM.setVisible(True)
-        
+
         # UPOSCEN, Output Enable bit
+        '''
+        get key/value pairs first from atdf file
+        then define the combo symbol using those pairs
+        '''
         UsbClkSrcUPOSCEN = "USB Input Clock Source 1"
         items = clkValGrp_UPLLCON__UPOSCEN.getChildren()
         keyVals = {}
@@ -1432,15 +1512,15 @@ if __name__ == "__main__":
         UPOSCEN_VALSYM.setLabel(UsbClkSrcUPOSCEN)
         UPOSCEN_VALSYM.setVisible(True)
         UPOSCEN_VALSYM.setDefaultValue("UPLL")  # USB input clock is UPLL
-    
+
         UFRCEN_VALSYM = coreComponent.createComboSymbol("UFRCEN_VAL", UPLL_SYM, ["FRC",UsbClkSrcUPOSCEN])
         UFRCEN_VALSYM.setLabel("USB Input Clock Source")
         UFRCEN_VALSYM.setVisible(True)
         UFRCEN_VALSYM.setDefaultValue(UsbClkSrcUPOSCEN)  # USB input clock is selected from UPOSCEN
-    
+
         scan_atdf_for_upll_fields(coreComponent)
-    
-    
+
+
         # UPLLCON register value for use in ftl files
         UPLLCON_VALSYM = coreComponent.createHexSymbol("UPLLCON_REG_VALUE",None)
         UPLLCON_VALSYM.setVisible(False)
@@ -1452,7 +1532,7 @@ if __name__ == "__main__":
         UPLLCON_VALSYM.setDefaultValue(defaultValue)
         UPLLCON_VALSYM.setDependencies(updateUpllcon, ['PLLRANGE_VAL', 'PLLIDIV_VAL', 'PLLMULT_VAL', 'PLLODIV_VAL', 'UPOSCEN_VAL'])
     else:
-        UPLL_PRESENT.setDefaultValue(False) # prevents certain output from occurring in ftl file
+        UPLL_PRESENTSYM.setDefaultValue(False) # prevents certain output from occurring in ftl file
 
 
     # this is added to resolve a dependency in ftl file
