@@ -98,27 +98,29 @@ void CLK_Initialize( void )
         __builtin_mtc0(12, 0,(__builtin_mfc0(12, 0) | 0x0001)); /* enable interrupts */
     }
 
+<#if SYS_CLK_FRCDIV != "0">
     OSCCONbits.FRCDIV = ${SYS_CLK_FRCDIV};
+</#if>
+
 <#if UPLL_PRESENT == true> <#-- some devices (that use this PLIB) don't have USB in them -->
-<#if UPLL_EN == true>  <#-- UPLL_EN is dependent on DEVCFG2:UPLLEN -->
-    /* Configure UPLL */
-    /* UPOSCEN = ${UPOSCEN_VAL} */
-    /* PLLODIV = ${PLLODIV_VAL} */
-    /* PLLMULT = ${PLLMULT_VAL} */
-    /* PLLIDIV = ${PLLIDIV_VAL} */
-    /* PLLRANGE = ${PLLRANGE_VAL} */
-    ${UPLLCON_REG} = 0x${UPLLCON_REG_VALUE};
-</#if>
-<#if UFRCEN_VAL == "FRC">
-    /* Make FRC as the input clock for USB */
-    OSCCONSET = _OSCCON_UFRCEN_MASK;
-</#if>
-</#if>
+    <#if UPLL_EN == true>  <#-- UPLL_EN is dependent on DEVCFG2:UPLLEN -->
+        <#lt>    /* Configure UPLL */
+        <#lt>    /* UPOSCEN = ${UPOSCEN_VAL} */
+        <#lt>    /* PLLODIV = ${PLLODIV_VAL} */
+        <#lt>    /* PLLMULT = ${PLLMULT_VAL} */
+        <#lt>    /* PLLIDIV = ${PLLIDIV_VAL} */
+        <#lt>    /* PLLRANGE = ${PLLRANGE_VAL} */
+        <#lt>    ${UPLLCON_REG} = 0x${UPLLCON_REG_VALUE};
 
+    </#if>
+    <#if UFRCEN_VAL == "FRC">
+        <#lt>    /* Make FRC as the input clock for USB */
+        <#lt>    OSCCONSET = _OSCCON_UFRCEN_MASK;
+    </#if>
+</#if>
 <#if CONFIG_SYS_CLK_PBCLK1_ENABLE == true && CONFIG_SYS_CLK_PBDIV1 != 2>
-    /* Peripheral Bus 1 is by default enabled, set its divisor */
-    ${PBREGNAME1}bits.PBDIV = ${CONFIG_SYS_CLK_PBDIV1 -1};
-
+    <#lt>    /* Peripheral Bus 1 is by default enabled, set its divisor */
+    <#lt>    ${PBREGNAME1}bits.PBDIV = ${CONFIG_SYS_CLK_PBDIV1 -1};
 </#if>
 <#if CONFIG_SYS_CLK_PBCLK2_ENABLE == true>
     <#if CONFIG_SYS_CLK_PBDIV2 != 2>
@@ -131,16 +133,17 @@ void CLK_Initialize( void )
     ${PBREGNAME2}CLR = ${PBONMASK2};
 
 </#if>
-<#if CONFIG_SYS_CLK_PBCLK3_ENABLE == true>
-    <#if CONFIG_SYS_CLK_PBDIV3 != 2>
-        <#lt>    /* Peripheral Bus 3 is by default enabled, set its divisor */
-        <#lt>    ${PBREGNAME3}bits.PBDIV = ${CONFIG_SYS_CLK_PBDIV3 -1};
+<#if CONFIG_SYS_CLK_PBCLK3_ENABLE?has_content>
+    <#if CONFIG_SYS_CLK_PBCLK3_ENABLE == true>
+        <#if CONFIG_SYS_CLK_PBDIV3 != 2>
+            <#lt>    /* Peripheral Bus 3 is by default enabled, set its divisor */
+            <#lt>    ${PBREGNAME3}bits.PBDIV = ${CONFIG_SYS_CLK_PBDIV3 -1};
 
-    </#if>
-<#else>
-    /* Disable Peripheral Bus 3 */
-    ${PBREGNAME3}CLR = ${PBONMASK3};
-
+        </#if>
+    <#else>
+        /* Disable Peripheral Bus 3 */
+        ${PBREGNAME3}CLR = ${PBONMASK3};
+</#if>
 </#if>
 <#if CONFIG_SYS_CLK_PBCLK4_ENABLE == true>
     <#if CONFIG_SYS_CLK_PBDIV4 != 2>
