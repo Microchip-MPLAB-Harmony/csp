@@ -65,14 +65,20 @@
 </#if>
 <#if PM_STDBYCFG_BBIASHS?has_content >
     <#if HAS_BBIASHS_FIELD??>
-    <#assign BBIASHS_VAL = PM_STDBYCFG_BBIASHS>
+        <#assign BBIASHS_VAL = PM_STDBYCFG_BBIASHS>
+        <#if PM_STDBYCFG_VAL != "">
+            <#assign PM_STDBYCFG_VAL = PM_STDBYCFG_VAL + "| PM_STDBYCFG_BBIASHS("+BBIASHS_VAL+")">
+        <#else>
+            <#assign PM_STDBYCFG_VAL = "PM_STDBYCFG_BBIASHS("+BBIASHS_VAL+")">
+        </#if>
     <#else>
-    <#assign BBIASHS_VAL = PM_STDBYCFG_BBIASHS?then("1", "0")>
-    </#if>
-    <#if PM_STDBYCFG_VAL != "">
-        <#assign PM_STDBYCFG_VAL = PM_STDBYCFG_VAL + "| PM_STDBYCFG_BBIASHS("+BBIASHS_VAL+")">
-    <#else>
-        <#assign PM_STDBYCFG_VAL = "PM_STDBYCFG_BBIASHS("+BBIASHS_VAL+")">
+        <#if PM_STDBYCFG_BBIASHS>
+            <#if PM_STDBYCFG_VAL != "">
+                <#assign PM_STDBYCFG_VAL = PM_STDBYCFG_VAL + "| PM_STDBYCFG_BBIASHS_Msk">
+            <#else>
+                <#assign PM_STDBYCFG_VAL = "PM_STDBYCFG_BBIASHS_Msk">
+            </#if>
+        </#if>
     </#if>
 </#if>
 <#if PM_STDBYCFG_LINKPD?has_content >
