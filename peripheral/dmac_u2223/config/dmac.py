@@ -88,9 +88,20 @@ per_instance["Software Trigger"] = 0
 # based on the trigger source selected.
 
 global triggerSettings
-
+global dmacMultiVectorSupported 
+dmacMultiVectorSupported = False
 triggerSettings = setDMACDefaultSettings()
 
+count = 0
+dmacvectorValues = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts").getChildren()
+for id in range(0, len(dmacvectorValues)):
+    if dmacvectorValues[id].getAttribute("module-instance") == "DMAC":
+        count = count + 1
+if count > 1:
+    dmacMultiVectorSupported = True
+    dmacmultiVectorSupport = coreComponent.createBooleanSymbol("DMAC_MULTIVECTOR_SUPPORTED", None)
+    dmacmultiVectorSupport.setVisible(False)
+    
 ################################################################################
 #### Business Logic ####
 ################################################################################
@@ -161,27 +172,53 @@ def dmacGlobalLogic(symbol, event):
 
 def onGlobalEnableLogic(symbol, event):
     global dmacInstanceName
-
+    global dmacMultiVectorSupported
     #clock enable
     Database.clearSymbolValue("core", dmacInstanceName.getValue()+"_CLOCK_ENABLE")
     Database.setSymbolValue("core", dmacInstanceName.getValue()+"_CLOCK_ENABLE", event["value"], 2)
 
-    InterruptVector = dmacInstanceName.getValue()+"_INTERRUPT_ENABLE"
-    InterruptHandler = dmacInstanceName.getValue()+"_INTERRUPT_HANDLER"
-    InterruptHandlerLock = dmacInstanceName.getValue()+"_INTERRUPT_HANDLER_LOCK"
+    if dmacMultiVectorSupported:
+        InterruptVector = []
+        InterruptHandler = []
+        InterruptHandlerLock = []
+        #interrupt enable
+        vectorValues = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts").getChildren()
+        for id in range(0, len(vectorValues)):
+            if vectorValues[id].getAttribute("module-instance") == "DMAC":
+                name = vectorValues[id].getAttribute("name")
+                InterruptVector.append(name + "_INTERRUPT_ENABLE")
+                InterruptHandler.append(name + "_INTERRUPT_HANDLER")
+                InterruptHandlerLock.append(name + "_INTERRUPT_HANDLER_LOCK")
 
-    Database.clearSymbolValue("core", InterruptVector)
-    Database.setSymbolValue("core", InterruptVector, event["value"], 2)
-
-    Database.clearSymbolValue("core", InterruptHandlerLock)
-    Database.setSymbolValue("core", InterruptHandlerLock, event["value"], 2)
-
-    Database.clearSymbolValue("core", InterruptHandler)
-
-    if event["value"] == True:
-        Database.setSymbolValue("core", InterruptHandler, dmacInstanceName.getValue()+"_InterruptHandler", 2)
+        if event["value"] == True:
+            for i in range(0,len(InterruptHandler)):
+                Database.setSymbolValue("core", InterruptVector[i], event["value"], 2)
+                Database.setSymbolValue("core", InterruptHandlerLock[i], event["value"], 2)
+                Database.setSymbolValue("core", InterruptHandler[i], InterruptHandler[i].split(
+                    "_INTERRUPT_HANDLER")[0] + "_InterruptHandler", 2)
+        else:
+            for i in range(0,len(InterruptHandler)):
+                Database.setSymbolValue("core", InterruptVector[i], event["value"], 2)
+                Database.setSymbolValue("core", InterruptHandlerLock[i], event["value"], 2)
+                Database.setSymbolValue("core", InterruptHandler[i], InterruptHandler[i].split(
+                    "_INTERRUPT_HANDLER")[0] + "_Handler", 2)
     else:
-        Database.setSymbolValue("core", InterruptHandler, "DMAC_Handler", 2)
+        InterruptVector = dmacInstanceName.getValue()+"_INTERRUPT_ENABLE"
+        InterruptHandler = dmacInstanceName.getValue()+"_INTERRUPT_HANDLER"
+        InterruptHandlerLock = dmacInstanceName.getValue()+"_INTERRUPT_HANDLER_LOCK"
+
+        Database.clearSymbolValue("core", InterruptVector)
+        Database.setSymbolValue("core", InterruptVector, event["value"], 2)
+
+        Database.clearSymbolValue("core", InterruptHandlerLock)
+        Database.setSymbolValue("core", InterruptHandlerLock, event["value"], 2)
+
+        Database.clearSymbolValue("core", InterruptHandler)
+
+        if event["value"] == True:
+            Database.setSymbolValue("core", InterruptHandler, dmacInstanceName.getValue()+"_InterruptHandler", 2)
+        else:
+            Database.setSymbolValue("core", InterruptHandler, "DMAC_Handler", 2)
 
     # File generation logic
     dmacHeaderFile.setEnabled(event["value"])
