@@ -33,6 +33,7 @@ global pacSym_INTENSET
 ########################################## Callbacks  #############################################
 ###################################################################################################
 
+
 def updatePACInterruptStatus(symbol, event):
 
     Database.setSymbolValue("core", pacInterruptVector, event["value"], 2)
@@ -43,10 +44,12 @@ def updatePACInterruptStatus(symbol, event):
     else:
         Database.setSymbolValue("core", pacInterruptHandler, pacInstanceName.getValue() + "_Handler", 2)
 
+
 def updatePACInterruptWarringStatus(symbol, event):
 
     if pacSym_INTENSET.getValue() == True and pacSym_Use.getValue() == True:
         symbol.setVisible(event["value"])
+
 
 def updatePACInterruptVisibleProperty(symbol, event):
 
@@ -60,6 +63,7 @@ def updatePACInterruptVisibleProperty(symbol, event):
             Database.setSymbolValue("core", pacInterruptHandler, pacInstanceName.getValue() + "_InterruptHandler", 2)
         else:
             Database.setSymbolValue("core", pacInterruptHandler, pacInstanceName.getValue() + "_Handler", 2)
+
 
 def updatePACErrorEventVisibleProperty(symbol, event):
 
@@ -75,6 +79,7 @@ def updatePACErrorEventVisibleProperty(symbol, event):
     if event["value"] == False:
         component.getSymbolByID("PAC_INTERRUPT_ENABLE_COMMENT").setVisible(False)
 
+
 def evsysSetup(symbol, event):
 
     pacActive = Database.getSymbolValue(event["namespace"], "PAC_USE")
@@ -88,7 +93,8 @@ def evsysSetup(symbol, event):
 ########################################## Component  #############################################
 ###################################################################################################
 
-#PAC menu
+
+# PAC menu
 pacSym_Menu = coreComponent.createMenuSymbol("PAC_MENU", None)
 pacSym_Menu.setLabel("PAC")
 
@@ -98,24 +104,24 @@ pacInstanceName = coreComponent.createStringSymbol("PAC_INSTANCE_NAME", pacSym_M
 pacInstanceName.setVisible(False)
 pacInstanceName.setDefaultValue(instances[0].getAttribute("name"))
 
-#PAC Use
+# PAC Use
 pacSym_Use = coreComponent.createBooleanSymbol("PAC_USE", pacSym_Menu)
 pacSym_Use.setLabel("Use PAC ?")
 
-#interrupt mode
+# interrupt mode
 pacSym_INTENSET = coreComponent.createBooleanSymbol("PAC_INTERRRUPT_MODE", pacSym_Use)
 pacSym_INTENSET.setLabel("Enable PAC Interrupt ?")
 pacSym_INTENSET.setVisible(False)
 pacSym_INTENSET.setDefaultValue(True)
 pacSym_INTENSET.setDependencies(updatePACInterruptVisibleProperty, ["PAC_USE"])
 
-#Error Event
+# Error Event
 pacSym_ErrEventSET = coreComponent.createBooleanSymbol("PAC_ERROR_EVENT", pacSym_Use)
 pacSym_ErrEventSET.setLabel("Generate Peripheral Access Error Event Output")
 pacSym_ErrEventSET.setVisible(False)
 pacSym_ErrEventSET.setDependencies(updatePACErrorEventVisibleProperty, ["PAC_USE"])
 
-#Error Event
+# Error Event
 pacSym_ErrEventSET = coreComponent.createBooleanSymbol("PAC_EVSYS_TRIGGER_DUMMY", pacSym_Use)
 pacSym_ErrEventSET.setVisible(False)
 pacSym_ErrEventSET.setDependencies(evsysSetup, ["PAC_ERROR_EVENT", "PAC_USE"])
@@ -123,11 +129,11 @@ pacSym_ErrEventSET.setDependencies(evsysSetup, ["PAC_ERROR_EVENT", "PAC_USE"])
 pacIndex = 0
 
 modules = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals").getChildren()
-for module in range (0, len(modules)):
+for module in range(0, len(modules)):
     instances = modules[module].getChildren()
-    for instance in range (0, len(instances)):
+    for instance in range(0, len(instances)):
         options = instances[instance].getChildren()
-        for option in range (0, len(options)):
+        for option in range(0, len(options)):
             parameters = options[option].getChildren()
             for parameter in range(0, len(parameters)):
                 name = str(parameters[parameter].getAttribute("name"))
@@ -143,6 +149,10 @@ for module in range (0, len(modules)):
 pacSym_PeriCount = coreComponent.createIntegerSymbol("PAC_PERI_COUNT", pacSym_Use)
 pacSym_PeriCount.setDefaultValue(pacIndex)
 pacSym_PeriCount.setVisible(False)
+pacNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PAC\"]/register-group@[name=\"PAC\"]/register@[name=\"INTFLAGD\"]")
+if pacNode != None:
+    intflagdSupported = coreComponent.createBooleanSymbol("INTFLAGD_AVAILABLE", None)
+    intflagdSupported.setVisible(False)
 
 ############################################################################
 #### Dependency ####
