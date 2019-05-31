@@ -24,6 +24,7 @@
 ################################################################################
 #### Business Logic ####
 ################################################################################
+
 global dummyDataDict
 dummyDataDict = {
                     "_8_BIT"     :   0xFF,
@@ -38,8 +39,10 @@ dummyDataDict = {
                 }
 
 def ClockModeInfo(symbol, event):
+
     CPHA = Database.getSymbolValue(deviceNamespace, "FLEXCOM_SPI_CSR_NCPHA")
     CPOL = Database.getSymbolValue(deviceNamespace, "FLEXCOM_SPI_CSR_CPOL")
+
     if (CPOL == 0) and (CPHA == 0):
         symbol.setLabel("***FLEXCOM SPI Mode 1 is Selected***")
     elif (CPOL == 0) and (CPHA == 1):
@@ -48,6 +51,7 @@ def ClockModeInfo(symbol, event):
         symbol.setLabel("***FLEXCOM SPI Mode 3 is Selected***")
     else:
         symbol.setLabel("***FLEXCOM SPI Mode 2 is Selected***")
+
     # Symbol Visible Property
     if event["id"] == "FLEXCOM_MODE":
         if event["value"] == 0x2:
@@ -56,6 +60,7 @@ def ClockModeInfo(symbol, event):
             symbol.setVisible(False)
 
 def SCBR_ValueUpdate(spiSym_CSR_SCBR_VALUE, event):
+
     if event["id"] == flexcomInstanceName.getValue() + "_CLOCK_FREQUENCY":
         clk = int(event["value"])
         baud = Database.getSymbolValue(deviceNamespace, "FLEXCOM_SPI_BAUD_RATE")
@@ -73,15 +78,18 @@ def SCBR_ValueUpdate(spiSym_CSR_SCBR_VALUE, event):
         SCBR = 1
     elif SCBR > 255:
         SCBR = 255
+
     spiSym_CSR_SCBR_VALUE.setValue(SCBR, 1)
 
 def calculateCSRIndex(spiSymCSRIndex, event):
+
     if event["value"] == 0x1:
         spiSymCSRIndex.setValue(1, 2)
     else:
         spiSymCSRIndex.setValue(0, 2)
 
 def DummyData_ValueUpdate(symbol, event):
+
     if event["id"] == "FLEXCOM_SPI_CSR_BITS":
         symbol.setValue(dummyDataDict[event["symbol"].getKey(event["value"])], 1)
         symbol.setMax(dummyDataDict[event["symbol"].getKey(event["value"])])
@@ -92,9 +100,11 @@ def DummyData_ValueUpdate(symbol, event):
         symbol.setVisible(False)    
 
 def SpiControlDriverDependancyStatus(symbol, event):
+
     interruptMode = Database.getSymbolValue(deviceNamespace, "SPI_INTERRUPT_MODE")
     driverControl = Database.getSymbolValue(deviceNamespace, "SPI_DRIVER_CONTROLLED")
     component = symbol.getComponent()
+
     if(interruptMode == False and driverControl == True):
         symbol.setVisible(True)
         component.getSymbolByID("FLEXCOM_SPI_MR_PCS").setSelectedKey("GPIO",1)
@@ -107,7 +117,15 @@ def SpiControlDriverDependancyStatus(symbol, event):
         component.getSymbolByID("SPI_INTERRUPT_MODE").setReadOnly(False)
 
 def symbolVisible(symbol, event):
+
     if event["value"] == 0x2:
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+
+def updateSPIDMASymbolVisiblity(symbol, event):
+
+    if flexcomSym_OperatingMode.getSelectedKey() == "SPI" and Database.getSymbolValue(deviceNamespace, "SPI_INTERRUPT_MODE"):
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
@@ -115,11 +133,17 @@ def symbolVisible(symbol, event):
 ###################################################################################################
 ############################################# FLEXCOM SPI #########################################
 ###################################################################################################
+
 flexcomSym_SPI_InterruptMode = flexcomComponent.createBooleanSymbol("SPI_INTERRUPT_MODE", flexcomSym_OperatingMode)
-flexcomSym_SPI_InterruptMode.setLabel("Interrupt Mode")
+flexcomSym_SPI_InterruptMode.setLabel("Interrupt Mode (Non-blocking Transfer)")
 flexcomSym_SPI_InterruptMode.setDefaultValue(True)
 flexcomSym_SPI_InterruptMode.setVisible(False)
 flexcomSym_SPI_InterruptMode.setDependencies(symbolVisible, ["FLEXCOM_MODE"])
+
+flecomSym_SPI_DMAEnable = flexcomComponent.createBooleanSymbol("USE_SPI_DMA", flexcomSym_OperatingMode)
+flecomSym_SPI_DMAEnable.setLabel("Enable DMA for Transmit and Receive")
+flecomSym_SPI_DMAEnable.setVisible(False)
+flecomSym_SPI_DMAEnable.setDependencies(updateSPIDMASymbolVisiblity, ["FLEXCOM_MODE", "SPI_INTERRUPT_MODE"])
 
 flexcomSPIModeValues = ["MASTER", "SLAVE"]
 flexcomSym_SPI_MR_MSTR = flexcomComponent.createComboSymbol("FLEXCOM_SPI_MR_MSTR", flexcomSym_OperatingMode, flexcomSPIModeValues)
@@ -201,6 +225,59 @@ for index in range(len(flexcomSym_SPI_CSR_BITS_Values)):
 flexcomSym_SPI_CSR_BITS.setVisible(False)
 flexcomSym_SPI_CSR_BITS.setDependencies(symbolVisible, ["FLEXCOM_MODE"])
 
+flexcomSym_SPI_DummyData = flexcomComponent.createHexSymbol("FLEXCOM_SPI_DUMMY_DATA", flexcomSym_OperatingMode)
+flexcomSym_SPI_DummyData.setVisible(False)
+flexcomSym_SPI_DummyData.setLabel("Dummy Data")
+flexcomSym_SPI_DummyData.setDescription("Dummy Data to be written during SPI Read")
+flexcomSym_SPI_DummyData.setDefaultValue(0xFF)
+flexcomSym_SPI_DummyData.setMin(0x0)
+flexcomSym_SPI_DummyData.setDependencies(DummyData_ValueUpdate, ["FLEXCOM_SPI_CSR_BITS", "FLEXCOM_MODE"])
+
+flexcomSym_SPI_CSR_CPOL = flexcomComponent.createKeyValueSetSymbol("FLEXCOM_SPI_CSR_CPOL", flexcomSym_OperatingMode)
+flexcomSym_SPI_CSR_CPOL.setLabel("Clock Polarity")
+flexcomSym_SPI_CSR_CPOL.setOutputMode("Value")
+flexcomSym_SPI_CSR_CPOL.setDisplayMode("Description")
+flexcomSym_SPI_CSR_CPOL.setDefaultValue(0)
+flexcomSym_SPI_CSR_CPOL.addKey("CPOL0", "0", "The inactive state value of SPCK is logic level zero (CPOL=0)")
+flexcomSym_SPI_CSR_CPOL.addKey("CPOL1", "1", "The inactive state value of SPCK is logic level one (CPOL=1)")
+flexcomSym_SPI_CSR_CPOL.setVisible(False)
+flexcomSym_SPI_CSR_CPOL.setDependencies(symbolVisible, ["FLEXCOM_MODE"])
+
+flexcomSym_SPI_CSR_NCPHA = flexcomComponent.createKeyValueSetSymbol("FLEXCOM_SPI_CSR_NCPHA", flexcomSym_OperatingMode)
+flexcomSym_SPI_CSR_NCPHA.setLabel("Clock Phase")
+flexcomSym_SPI_CSR_NCPHA.setOutputMode("Value")
+flexcomSym_SPI_CSR_NCPHA.setDisplayMode("Description")
+flexcomSym_SPI_CSR_NCPHA.setDefaultValue(1)
+flexcomSym_SPI_CSR_NCPHA.addKey("NCPHA0", "0", "Data are changed on the leading edge of SPCK and captured on the following edge of SPCK (NCPHA=0)")
+flexcomSym_SPI_CSR_NCPHA.addKey("NCPHA1", "1", "Data are captured on the leading edge of SPCK and changed on the following edge of SPCK (NCPHA=1)")
+flexcomSym_SPI_CSR_NCPHA.setVisible(False)
+flexcomSym_SPI_CSR_NCPHA.setDependencies(symbolVisible, ["FLEXCOM_MODE"])
+
+flexcomSym_SPI_ClockModeComment = flexcomComponent.createCommentSymbol("FLEXCOM_SPI_CLOCK_MODE_COMMENT", flexcomSym_OperatingMode)
+flexcomSym_SPI_ClockModeComment.setLabel("***FLEXCOM SPI Mode 0 is Selected***")
+flexcomSym_SPI_ClockModeComment.setVisible(False)
+flexcomSym_SPI_ClockModeComment.setDependencies(ClockModeInfo, ["FLEXCOM_MODE", "FLEXCOM_SPI_CSR_CPOL", "FLEXCOM_SPI_CSR_NCPHA"])
+
+#FLEXCOM SPI Driver Controlled Symbol
+global flexcomSym_SPI_DriverControlled
+flexcomSym_SPI_DriverControlled = flexcomComponent.createBooleanSymbol("SPI_DRIVER_CONTROLLED", flexcomSym_OperatingMode)
+flexcomSym_SPI_DriverControlled.setVisible(False)
+
+# Warning message when PLIB is configured in non-interrupt mode but used with driver.
+global flexcomSym_SPI_InterruptDriverModeComment
+flexcomSym_SPI_InterruptDriverModeComment = flexcomComponent.createCommentSymbol("SPI_INT_DRIVER_COMMENT", flexcomSym_OperatingMode)
+flexcomSym_SPI_InterruptDriverModeComment.setVisible(False)
+flexcomSym_SPI_InterruptDriverModeComment.setLabel("Warning!!! " + flexcomInstanceName.getValue() + "SPI PLIB to be used with driver, must be configured in interrupt mode")
+flexcomSym_SPI_InterruptDriverModeComment.setDependencies(SpiControlDriverDependancyStatus, ["SPI_INTERRUPT_MODE", "SPI_DRIVER_CONTROLLED"])
+
+###################################################################################################
+####################################### Driver Symbols ############################################
+###################################################################################################
+
+flexcomSym_SPI_API_Prefix = flexcomComponent.createStringSymbol("SPI_PLIB_API_PREFIX", flexcomSym_OperatingMode)
+flexcomSym_SPI_API_Prefix.setDefaultValue(flexcomInstanceName.getValue()  + "_SPI")
+flexcomSym_SPI_API_Prefix.setVisible(False)
+
 #FLEXCOM SPI 8-bit Character size Mask
 flexcomSym_SPI_CSR_BITS_8BIT = flexcomComponent.createStringSymbol("SPI_CHARSIZE_BITS_8_BIT_MASK", flexcomSym_OperatingMode)
 flexcomSym_SPI_CSR_BITS_8BIT.setDefaultValue("0x0")
@@ -246,24 +323,6 @@ flexcomSym_SPI_CSR_BITS_16BIT = flexcomComponent.createStringSymbol("SPI_CHARSIZ
 flexcomSym_SPI_CSR_BITS_16BIT.setDefaultValue("0x80")
 flexcomSym_SPI_CSR_BITS_16BIT.setVisible(False)
 
-flexcomSym_SPI_DummyData = flexcomComponent.createHexSymbol("FLEXCOM_SPI_DUMMY_DATA", flexcomSym_OperatingMode)
-flexcomSym_SPI_DummyData.setVisible(False)
-flexcomSym_SPI_DummyData.setLabel("Dummy Data")
-flexcomSym_SPI_DummyData.setDescription("Dummy Data to be written during SPI Read")
-flexcomSym_SPI_DummyData.setDefaultValue(0xFF)
-flexcomSym_SPI_DummyData.setMin(0x0)
-flexcomSym_SPI_DummyData.setDependencies(DummyData_ValueUpdate, ["FLEXCOM_SPI_CSR_BITS", "FLEXCOM_MODE"])
-
-flexcomSym_SPI_CSR_CPOL = flexcomComponent.createKeyValueSetSymbol("FLEXCOM_SPI_CSR_CPOL", flexcomSym_OperatingMode)
-flexcomSym_SPI_CSR_CPOL.setLabel("Clock Polarity")
-flexcomSym_SPI_CSR_CPOL.setOutputMode("Value")
-flexcomSym_SPI_CSR_CPOL.setDisplayMode("Description")
-flexcomSym_SPI_CSR_CPOL.setDefaultValue(0)
-flexcomSym_SPI_CSR_CPOL.addKey("CPOL0", "0", "The inactive state value of SPCK is logic level zero (CPOL=0)")
-flexcomSym_SPI_CSR_CPOL.addKey("CPOL1", "1", "The inactive state value of SPCK is logic level one (CPOL=1)")
-flexcomSym_SPI_CSR_CPOL.setVisible(False)
-flexcomSym_SPI_CSR_CPOL.setDependencies(symbolVisible, ["FLEXCOM_MODE"])
-
 #SPI Clock Polarity Idle Low Mask
 flexcomSym_SPI_CSR_CPOL_IL_Mask = flexcomComponent.createStringSymbol("SPI_CLOCK_POLARITY_LOW_MASK", flexcomSym_OperatingMode)
 flexcomSym_SPI_CSR_CPOL_IL_Mask.setDefaultValue("0x0")
@@ -274,29 +333,6 @@ flexcomSym_SPI_CSR_CPOL_IH_Mask = flexcomComponent.createStringSymbol("SPI_CLOCK
 flexcomSym_SPI_CSR_CPOL_IH_Mask.setDefaultValue("0x1")
 flexcomSym_SPI_CSR_CPOL_IH_Mask.setVisible(False)
 
-flexcomSym_SPI_CSR_NCPHA = flexcomComponent.createKeyValueSetSymbol("FLEXCOM_SPI_CSR_NCPHA", flexcomSym_OperatingMode)
-flexcomSym_SPI_CSR_NCPHA.setLabel("Clock Phase")
-flexcomSym_SPI_CSR_NCPHA.setOutputMode("Value")
-flexcomSym_SPI_CSR_NCPHA.setDisplayMode("Description")
-flexcomSym_SPI_CSR_NCPHA.setDefaultValue(1)
-flexcomSym_SPI_CSR_NCPHA.addKey("NCPHA0", "0", "Data are changed on the leading edge of SPCK and captured on the following edge of SPCK (NCPHA=0)")
-flexcomSym_SPI_CSR_NCPHA.addKey("NCPHA1", "1", "Data are captured on the leading edge of SPCK and changed on the following edge of SPCK (NCPHA=1)")
-flexcomSym_SPI_CSR_NCPHA.setVisible(False)
-flexcomSym_SPI_CSR_NCPHA.setDependencies(symbolVisible, ["FLEXCOM_MODE"])
-
-
-flecomspiRxdmaEnable = flexcomComponent.createBooleanSymbol("USE_SPI_RX_DMA", flexcomSym_OperatingMode)
-flecomspiRxdmaEnable.setLabel("Enable Dma for Receive")
-flecomspiRxdmaEnable.setDefaultValue(False)
-flecomspiRxdmaEnable.setVisible(False)
-flecomspiRxdmaEnable.setDependencies(symbolVisible, ["FLEXCOM_MODE"])
-
-flecomspiTxdmaEnable = flexcomComponent.createBooleanSymbol("USE_SPI_TX_DMA", flexcomSym_OperatingMode)
-flecomspiTxdmaEnable.setLabel("Enable Dma for Transmit")
-flecomspiTxdmaEnable.setDefaultValue(False)
-flecomspiTxdmaEnable.setVisible(False)
-flecomspiTxdmaEnable.setDependencies(symbolVisible, ["FLEXCOM_MODE"])
-
 #SPI Clock Phase Leading Edge Mask
 flexcomSym_SPI_CSR_NCPHA_TE_Mask = flexcomComponent.createStringSymbol("SPI_CLOCK_PHASE_TRAILING_MASK", flexcomSym_OperatingMode)
 flexcomSym_SPI_CSR_NCPHA_TE_Mask.setDefaultValue("0x0")
@@ -306,25 +342,3 @@ flexcomSym_SPI_CSR_NCPHA_TE_Mask.setVisible(False)
 flexcomSym_SPI_CSR_NCPHA_LE_Mask = flexcomComponent.createStringSymbol("SPI_CLOCK_PHASE_LEADING_MASK", flexcomSym_OperatingMode)
 flexcomSym_SPI_CSR_NCPHA_LE_Mask.setDefaultValue("0x2")
 flexcomSym_SPI_CSR_NCPHA_LE_Mask.setVisible(False)
-
-flexcomSym_SPI_API_Prefix = flexcomComponent.createStringSymbol("SPI_PLIB_API_PREFIX", flexcomSym_OperatingMode)
-flexcomSym_SPI_API_Prefix.setDefaultValue(flexcomInstanceName.getValue()  + "_SPI")
-flexcomSym_SPI_API_Prefix.setVisible(False)
-
-flexcomSym_SPI_ClockModeComment = flexcomComponent.createCommentSymbol("FLEXCOM_SPI_CLOCK_MODE_COMMENT", flexcomSym_OperatingMode)
-flexcomSym_SPI_ClockModeComment.setLabel("***FLEXCOM SPI Mode 0 is Selected***")
-flexcomSym_SPI_ClockModeComment.setVisible(False)
-flexcomSym_SPI_ClockModeComment.setDependencies(ClockModeInfo, ["FLEXCOM_MODE", "FLEXCOM_SPI_CSR_CPOL", "FLEXCOM_SPI_CSR_NCPHA"])
-
-#FLEXCOM SPI Driver Controlled Symbol
-global flexcomSym_SPI_DriverControlled
-flexcomSym_SPI_DriverControlled = flexcomComponent.createBooleanSymbol("SPI_DRIVER_CONTROLLED", flexcomSym_OperatingMode)
-flexcomSym_SPI_DriverControlled.setVisible(False)
-flexcomSym_SPI_DriverControlled.setDefaultValue(False)
-
-# Warning message when PLIB is configured in non-interrupt mode but used with driver.
-global flexcomSym_SPI_InterruptDriverModeComment
-flexcomSym_SPI_InterruptDriverModeComment = flexcomComponent.createCommentSymbol("SPI_INT_DRIVER_COMMENT", flexcomSym_OperatingMode)
-flexcomSym_SPI_InterruptDriverModeComment.setVisible(False)
-flexcomSym_SPI_InterruptDriverModeComment.setLabel("Warning!!! " + flexcomInstanceName.getValue() + "SPI PLIB to be used with driver, must be configured in interrupt mode")
-flexcomSym_SPI_InterruptDriverModeComment.setDependencies(SpiControlDriverDependancyStatus, ["SPI_INTERRUPT_MODE", "SPI_DRIVER_CONTROLLED"])

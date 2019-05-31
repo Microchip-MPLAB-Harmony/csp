@@ -52,12 +52,29 @@
 // Section: ${FLEXCOM_INSTANCE_NAME} SPI Implementation
 // *****************************************************************************
 // *****************************************************************************
+
 <#if SPI_INTERRUPT_MODE == true>
+
 /* Global object to save FLEXCOM SPI Exchange related data */
 FLEXCOM_SPI_OBJECT ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj;
 </#if>
 
-void ${FLEXCOM_INSTANCE_NAME}_SPI_Initialize ( void )
+<#if USE_SPI_DMA>
+static uint8_t dummyDataBuffer[512];
+
+static void setupDMA( void* pTransmitData, void* pReceiveData, size_t size )
+{
+    /* Always set up the rx channel first */
+    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_RPR = (uint32_t) pReceiveData;
+    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_RCR = (uint32_t) size;
+    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_TPR = (uint32_t) pTransmitData;
+    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_TCR = (uint32_t) size;
+    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_PTCR = SPI_PTCR_RXTEN_Msk | SPI_PTCR_TXTEN_Msk;
+    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_IER = SPI_IER_ENDRX_Msk;
+}
+</#if>
+
+void ${FLEXCOM_INSTANCE_NAME}_SPI_Initialize( void )
 {
     /* Set FLEXCOM SPI operating mode */
     ${FLEXCOM_INSTANCE_NAME}_REGS->FLEXCOM_MR = FLEXCOM_MR_OPMODE_SPI;
@@ -65,16 +82,16 @@ void ${FLEXCOM_INSTANCE_NAME}_SPI_Initialize ( void )
     /* Disable and Reset the FLEXCOM SPI */
     SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_CR = SPI_CR_SPIDIS_Msk | SPI_CR_SWRST_Msk;
 
-<#if FLEXCOM_SPI_MR_MSTR =="MASTER">
+<#if FLEXCOM_SPI_MR_MSTR == "MASTER">
     /* Enable Master mode, select clock source, select particular NPCS line for chip select and disable mode fault detection */
     SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_MR = SPI_MR_MSTR_Msk | SPI_MR_BRSRCCLK_${FLEXCOM_SPI_MR_BRSRCCLK} | SPI_MR_PCS(${FLEXCOM_SPI_MR_PCS}) | SPI_MR_MODFDIS_Msk;
 <#else>
     /* SPI is by default in Slave Mode, disable mode fault detection */
-    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_MR =  SPI_MR_MODFDIS_Msk;
+    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_MR = SPI_MR_MODFDIS_Msk;
 </#if>
 
     /* Set up clock Polarity, data phase, Communication Width and Baud Rate */
-    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_CSR[${FLEXCOM_SPI_CSR_INDEX}]= SPI_CSR_CPOL(${FLEXCOM_SPI_CSR_CPOL}) | SPI_CSR_NCPHA(${FLEXCOM_SPI_CSR_NCPHA}) | SPI_CSR_BITS${FLEXCOM_SPI_CSR_BITS} | SPI_CSR_SCBR(${FLEXCOM_SPI_CSR_SCBR_VALUE});
+    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_CSR[${FLEXCOM_SPI_CSR_INDEX}] = SPI_CSR_CPOL(${FLEXCOM_SPI_CSR_CPOL}) | SPI_CSR_NCPHA(${FLEXCOM_SPI_CSR_NCPHA}) | SPI_CSR_BITS${FLEXCOM_SPI_CSR_BITS} | SPI_CSR_SCBR(${FLEXCOM_SPI_CSR_SCBR_VALUE});
 
 <#if SPI_INTERRUPT_MODE == true >
     /* Initialize global variables */
@@ -84,17 +101,16 @@ void ${FLEXCOM_INSTANCE_NAME}_SPI_Initialize ( void )
 
     /* Enable ${FLEXCOM_INSTANCE_NAME} SPI */
     SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_CR = SPI_CR_SPIEN_Msk;
-    return;
 }
 
 <#if SPI_INTERRUPT_MODE == false >
-bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead(void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize)
+bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead( void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize )
 {
     size_t txCount = 0;
     size_t rxCount = 0;
     size_t dummySize = 0;
-    size_t receivedData;
-    uint32_t dataBits;
+    size_t receivedData = 0;
+    uint32_t dataBits = 0;
     bool isSuccess = false;
 
     /* Verify the request */
@@ -155,9 +171,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead(void* pTransmitData, size_t txSize, 
             else
             {
                 /* If data is read, wait for the Receiver Data Register to become full*/
-                while((bool)((SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_SR & SPI_SR_RDRF_Msk) >> SPI_SR_RDRF_Pos) == false)
-                {
-                }
+                while((bool)((SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_SR & SPI_SR_RDRF_Msk) >> SPI_SR_RDRF_Pos) == false);
 
                 receivedData = (SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_RDR & SPI_RDR_RD_Msk) >> SPI_RDR_RD_Pos;
 
@@ -180,23 +194,88 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead(void* pTransmitData, size_t txSize, 
 
         isSuccess = true;
     }
+
     return isSuccess;
 }
 <#else>
-bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize)
+bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead( void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize )
 {
     bool isRequestAccepted = false;
+<#if USE_SPI_DMA>
+    uint32_t size = 0;
+
+    /* Verify the request */
+    if((((txSize > 0) && (pTransmitData != NULL)) || ((rxSize > 0) && (pReceiveData != NULL))) && (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.transferIsBusy == false))
+    {
+        isRequestAccepted = true;
+
+        ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.transferIsBusy = true;
+
+        ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txBuffer = pTransmitData;
+        ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxBuffer = pReceiveData;
+        ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount = txSize;
+        ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount = rxSize;
+
+        if ((txSize > 0) && (rxSize > 0))
+        {
+            /* Find the lower value among txSize and rxSize */
+            (txSize >= rxSize) ? (size = rxSize) : (size = txSize);
+
+            /* Calculate the remaining tx/rx bytes and total bytes transferred */
+            ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount -= size;
+            ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount -= size;
+            ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.nBytesTransferred = size;
+
+            setupDMA(pTransmitData, pReceiveData, size);
+        }
+        else
+        {
+            if (rxSize > 0)
+            {
+                /* txSize is 0. Need to use the dummy data buffer for transmission.
+                 * Find out the max data that can be received, given the limited size of the dummy data buffer.
+                 */
+                (rxSize > sizeof(dummyDataBuffer)) ?
+                    (size = sizeof(dummyDataBuffer)): (size = rxSize);
+
+                /* Calculate the remaining rx bytes and total bytes transferred */
+                ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount -= size;
+                ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.nBytesTransferred = size;
+
+                setupDMA(dummyDataBuffer, pReceiveData, size);
+            }
+            else
+            {
+                /* rxSize is 0. Need to use the dummy data buffer for reception.
+                 * Find out the max data that can be transmitted, given the limited size of the dummy data buffer.
+                 */
+                (txSize > sizeof(dummyDataBuffer)) ?
+                    (size = sizeof(dummyDataBuffer)): (size = txSize);
+
+                /* Calculate the remaining tx bytes and total bytes transferred */
+                ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount -= size;
+                ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.nBytesTransferred = size;
+
+                setupDMA(pTransmitData, dummyDataBuffer, size);
+            }
+        }
+    }
+
+    return isRequestAccepted;
+<#else>
     uint32_t dummyData;
 
     /* Verify the request */
     if((((txSize > 0) && (pTransmitData != NULL)) || ((rxSize > 0) && (pReceiveData != NULL))) && (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.transferIsBusy == false))
     {
         isRequestAccepted = true;
+
         ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txBuffer = pTransmitData;
         ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxBuffer = pReceiveData;
         ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount = 0;
         ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount = 0;
         ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.dummySize = 0;
+
         if (pTransmitData != NULL)
         {
             ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txSize = txSize;
@@ -271,16 +350,18 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize,
     }
 
     return isRequestAccepted;
+</#if>
 }
 </#if>
 
-bool ${FLEXCOM_INSTANCE_NAME}_SPI_TransferSetup (FLEXCOM_SPI_TRANSFER_SETUP * setup, uint32_t spiSourceClock )
+bool ${FLEXCOM_INSTANCE_NAME}_SPI_TransferSetup( FLEXCOM_SPI_TRANSFER_SETUP * setup, uint32_t spiSourceClock )
 {
     uint32_t scbr;
+
     if ((setup == NULL) || (setup->clockFrequency == 0))
-	{
-		return false;
-	}
+    {
+        return false;
+    }
     if(spiSourceClock == 0)
     {
         // Fetch Master Clock Frequency directly
@@ -298,67 +379,98 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_TransferSetup (FLEXCOM_SPI_TRANSFER_SETUP * se
         scbr = 255;
     }
 
-    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_CSR[${FLEXCOM_SPI_CSR_INDEX}]= (uint32_t)setup->clockPolarity | (uint32_t)setup->clockPhase | (uint32_t)setup->dataBits | SPI_CSR_SCBR(scbr);
+    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_CSR[${FLEXCOM_SPI_CSR_INDEX}] = (uint32_t)setup->clockPolarity | (uint32_t)setup->clockPhase | (uint32_t)setup->dataBits | SPI_CSR_SCBR(scbr);
 
     return true;
 }
 
-bool ${FLEXCOM_INSTANCE_NAME}_SPI_Write(void* pTransmitData, size_t txSize)
+bool ${FLEXCOM_INSTANCE_NAME}_SPI_Write( void* pTransmitData, size_t txSize )
 {
-    return(${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead(pTransmitData, txSize, NULL, 0));
+    return (${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead(pTransmitData, txSize, NULL, 0));
 }
 
-bool ${FLEXCOM_INSTANCE_NAME}_SPI_Read(void* pReceiveData, size_t rxSize)
+bool ${FLEXCOM_INSTANCE_NAME}_SPI_Read( void* pReceiveData, size_t rxSize )
 {
-    return(${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead(NULL, 0, pReceiveData, rxSize));
+    return (${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead(NULL, 0, pReceiveData, rxSize));
 }
 
 <#if SPI_INTERRUPT_MODE == true >
-void ${FLEXCOM_INSTANCE_NAME}_SPI_CallbackRegister (FLEXCOM_SPI_CALLBACK callback, uintptr_t context)
+void ${FLEXCOM_INSTANCE_NAME}_SPI_CallbackRegister( FLEXCOM_SPI_CALLBACK callback, uintptr_t context )
 {
     ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.callback = callback;
     ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.context = context;
 }
 
-bool ${FLEXCOM_INSTANCE_NAME}_SPI_IsBusy(void)
+bool ${FLEXCOM_INSTANCE_NAME}_SPI_IsBusy( void )
 {
-    return ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.transferIsBusy;
+    return ((${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.transferIsBusy) || ((SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_SR & SPI_SR_TXEMPTY_Msk) == 0));
 }
 
-void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
+void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
 {
-    uint32_t dataBits ;
+<#if !(USE_SPI_DMA)>
+    uint32_t dataBits;
     uint32_t receivedData;
     dataBits = SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_CSR[${FLEXCOM_SPI_CSR_INDEX}] & SPI_CSR_BITS_Msk;
 
     static bool isLastByteTransferInProgress = false;
+<#else>
+    uint32_t size;
+    uint32_t index;
+</#if>
 
     /* save the status in global object before it gets cleared */
     ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.status = SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_SR;
 
-    <#if USE_SPI_RX_DMA>
-    if ((${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.status & SPI_SR_ENDRX_Msk) == SPI_SR_ENDRX_Msk)
+    <#if USE_SPI_DMA>
+    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_PTCR = SPI_PTCR_ERRCLR_Msk;
+
+    if(${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount > 0)
     {
-        if( ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxDmaCallback != NULL )
+        /* txPending is 0. Need to use the dummy data buffer for transmission.
+         * Find out the max data that can be received, given the limited size of the dummy data buffer.
+         */
+        (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount > sizeof(dummyDataBuffer)) ?
+            (size = sizeof(dummyDataBuffer)): (size = ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount);
+
+        index = ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.nBytesTransferred;
+
+        /* Calculate the remaining rx bytes and total bytes transferred */
+        ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount -= size;
+        ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.nBytesTransferred += size;
+
+        setupDMA(dummyDataBuffer,(void *)&((uint8_t*)${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxBuffer)[index],size);
+    }
+    else if(${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount > 0)
+    {
+        /* rxSize is 0. Need to use the dummy data buffer for reception.
+         * Find out the max data that can be transmitted, given the limited size of the dummy data buffer.
+         */
+        (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount > sizeof(dummyDataBuffer)) ?
+            (size = sizeof(dummyDataBuffer)): (size = ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount);
+
+        index = ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.nBytesTransferred;
+
+        /* Calculate the remaining rx bytes and total bytes transferred */
+        ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount -= size;
+        ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.nBytesTransferred += size;
+
+        setupDMA((void *)&((uint8_t*)${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txBuffer)[index], dummyDataBuffer, size);
+    }
+    else
+    {
+        ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.transferIsBusy = false;
+
+        if( ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.callback != NULL )
         {
-            ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxDmaCallback(SPI_DMA_TRANSFER_EVENT_COMPLETE, ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxDmaCallback);
+            ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.callback(${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.context);
         }
+
         SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_IDR = SPI_IDR_ENDRX_Msk;
     }
-    </#if>
+    <#else>
 
-    <#if USE_SPI_TX_DMA>
-    if ((${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.status & SPI_SR_ENDTX_Msk) == SPI_SR_ENDTX_Msk)
-    {
-        if( ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txDmaCallback != NULL )
-        {
-            ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txDmaCallback(SPI_DMA_TRANSFER_EVENT_COMPLETE, ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txDmaCallback);
-        }
-        SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_IDR = SPI_IDR_ENDTX_Msk;
-    }
-    </#if>
-
-    if ((SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_SR & SPI_SR_RDRF_Msk ) == SPI_SR_RDRF_Msk)
+    if ((SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_SR & SPI_SR_RDRF_Msk) == SPI_SR_RDRF_Msk)
     {
         receivedData = (SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_RDR & SPI_RDR_RD_Msk) >> SPI_RDR_RD_Pos;
 
@@ -380,7 +492,6 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
     {
         /* Disable the TDRE interrupt. This will be enabled back if more than
          * one byte is pending to be transmitted */
-
         SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_IDR = SPI_IDR_TDRE_Msk;
 
         if(dataBits == SPI_CSR_BITS_8_BIT)
@@ -422,7 +533,6 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
              * the TXEMPTY interrupt is not enabled there is no need to
              * explicitly clear the pending interrupt from the Interrupt controller.
              */
-
             isLastByteTransferInProgress = true;
         }
         else if (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount == ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxSize)
@@ -461,56 +571,6 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
          */
         SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_IER = SPI_IER_TXEMPTY_Msk;
     }
-
+    </#if>
 }
 </#if>
-
-<#if (USE_SPI_TX_DMA )>
-void ${FLEXCOM_INSTANCE_NAME}_SPI_DmaTransmitCallbackRegister( FLEXCOM_SPI_DMA_CALLBACK callback, uintptr_t context )
-{
-    ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txDmaCallback = callback;
-    ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txDmaContext = context;
-}
-
-void ${FLEXCOM_INSTANCE_NAME}_SPI_DMAWrite( void * pTransmitData, size_t txSize )
-{
-    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_TPR = (uint32_t) pTransmitData;
-    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_TCR = (uint32_t) txSize;
-    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_PTCR = SPI_PTCR_TXTEN_Msk;
-    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_IER = SPI_IER_ENDTX_Msk;
-}
-</#if>
-
-<#if (USE_SPI_RX_DMA )>
-void ${FLEXCOM_INSTANCE_NAME}_SPI_DmaReceiveCallbackRegister( FLEXCOM_SPI_DMA_CALLBACK callback, uintptr_t context )
-{
-    ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxDmaCallback = callback;
-    ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxDmaContext = context;
-}
-
-void ${FLEXCOM_INSTANCE_NAME}_SPI_DMARead( void * pReceiveData, size_t rxSize )
-{
-    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_RPR = (uint32_t) pReceiveData;
-    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_RCR = (uint32_t) rxSize;
-    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_PTCR = SPI_PTCR_RXTEN_Msk;
-    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_IER = SPI_IER_ENDRX_Msk;
-}
-</#if>
-<#if (USE_SPI_TX_DMA || USE_SPI_RX_DMA)>
-void ${FLEXCOM_INSTANCE_NAME}_SPI_DMAWriteRead( void * pTransmitData, size_t txSize, void * pReceiveData, size_t rxSize )
-{
-    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_TPR = (uint32_t) pTransmitData;
-    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_TCR = (uint32_t) txSize;
-    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_PTCR = SPI_PTCR_TXTEN_Msk;
-    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_IER = SPI_IER_ENDTX_Msk;
-
-    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_RPR = (uint32_t) pReceiveData;
-    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_RCR = (uint32_t) rxSize;
-    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_PTCR = SPI_PTCR_RXTEN_Msk;
-    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_IER = SPI_IER_ENDRX_Msk;
-}
-</#if>
-/*******************************************************************************
- End of File
-*/
-
