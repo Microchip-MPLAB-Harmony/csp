@@ -1466,7 +1466,7 @@ ahbMaskNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="MCLK"]/
 ahbMaskValues = ahbMaskNode.getChildren()
 for index in range(0, len(ahbMaskValues)):
     mclkDic["AHB_" + str(int(ahbMaskValues[index].getAttribute("mask"),16))] = ahbMaskValues[index].getAttribute("name").split("_")[0]
-    if ahbMaskValues[index].getAttribute("name").startswith("HPB"):
+    if ahbMaskValues[index].getAttribute("name").startswith("APB"):
         numAPB = numAPB + 1
 
 bridges = ["APBA", "APBB", "APBC", "APBD", "APBE"]
