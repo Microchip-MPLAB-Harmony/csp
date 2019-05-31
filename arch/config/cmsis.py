@@ -23,23 +23,12 @@
 
 def instantiateComponent(cmsisComponent):
 
-    cmsisSupportedVersion = "5.4.0"
-
     cmsisInformation = cmsisComponent.createCommentSymbol("cmsisInformation", None)
-    cmsisError = cmsisComponent.createCommentSymbol("cmsisError", None)
-    cmsisError.setLabel("Error: This version of CMSIS Pack is not supported! Supported version is " + cmsisSupportedVersion)
-    cmsisError.setVisible(False)
 
     import xml.etree.ElementTree as ET
     cmsisDescriptionFile = open(Variables.get("__CMSIS_PACK_DIR") + "/ARM.CMSIS.pdsc", "r")
     cmsisDescription = ET.fromstring(cmsisDescriptionFile.read())
-    for release in cmsisDescription.iter("release"):
-        cmsisInformation.setLabel("Release Information: " + str(release.attrib))
-        if release.attrib['version'] != cmsisSupportedVersion:
-            Log.writeErrorMessage("Error: This version of CMSIS Pack is not supported! Supported version is " + cmsisSupportedVersion)
-            cmsisError.setVisible(True)
-            return
-        break
+    cmsisInformation.setLabel("Release Information: " + str(cmsisDescription.iter("release").next().attrib))
 
     #check if it is a cortex M device
     archNode = ATDF.getNode('/avr-tools-device-file/devices')
