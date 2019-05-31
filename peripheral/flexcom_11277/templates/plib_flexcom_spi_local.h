@@ -52,8 +52,6 @@
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-/* This section lists the other files that are included in this file.
-*/
 
 #include <stdint.h>
 #include <stddef.h>
@@ -62,7 +60,7 @@
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
 
-extern "C" {
+    extern "C" {
 
 #endif
 
@@ -77,7 +75,7 @@ typedef enum
     /* Force the compiler to reserve 32-bit space for each enum value */
     FLEXCOM_SPI_CLOCK_PHASE_INVALID = 0xFFFFFFFF
 
-}FLEXCOM_SPI_CLOCK_PHASE;
+} FLEXCOM_SPI_CLOCK_PHASE;
 
 typedef enum
 {
@@ -87,7 +85,7 @@ typedef enum
     /* Force the compiler to reserve 32-bit space for each enum value */
     FLEXCOM_SPI_CLOCK_POLARITY_INVALID = 0xFFFFFFFF
 
-}FLEXCOM_SPI_CLOCK_POLARITY;
+} FLEXCOM_SPI_CLOCK_POLARITY;
 
 typedef enum
 {
@@ -104,32 +102,18 @@ typedef enum
     /* Force the compiler to reserve 32-bit space for each enum value */
     FLEXCOM_SPI_DATA_BITS_INVALID = 0xFFFFFFFF
 
-}FLEXCOM_SPI_DATA_BITS;
+} FLEXCOM_SPI_DATA_BITS;
 
 typedef struct
-{     
+{
     uint32_t    clockFrequency;
     FLEXCOM_SPI_CLOCK_PHASE clockPhase;
     FLEXCOM_SPI_CLOCK_POLARITY clockPolarity;
     FLEXCOM_SPI_DATA_BITS   dataBits;
 
-}FLEXCOM_SPI_TRANSFER_SETUP;
-
-
-typedef enum
-{
-    /* Data was transferred successfully. */
-    SPI_DMA_TRANSFER_EVENT_COMPLETE,
-
-    /* Error while processing the request */
-    SPI_DMA_TRANSFER_EVENT_ERROR
-
-} SPI_DMA_TRANSFER_EVENT;
+} FLEXCOM_SPI_TRANSFER_SETUP;
 
 typedef  void (*FLEXCOM_SPI_CALLBACK) (uintptr_t context);
-
-/* Callback Function Pointer for DMA */
-typedef void (*FLEXCOM_SPI_DMA_CALLBACK)( SPI_DMA_TRANSFER_EVENT event, uintptr_t context );
 
 // *****************************************************************************
 // *****************************************************************************
@@ -139,26 +123,26 @@ typedef void (*FLEXCOM_SPI_DMA_CALLBACK)( SPI_DMA_TRANSFER_EVENT event, uintptr_
 
 typedef struct
 {
-    void*                   txBuffer;    
-    void*                   rxBuffer;
-    size_t                  txSize;
-    size_t                  rxSize;
-    size_t                  dummySize;
-    size_t                  rxCount;
-    size_t                  txCount;
-    bool                    transferIsBusy;
-    FLEXCOM_SPI_CALLBACK    callback;
-    uintptr_t               context;
-    FLEXCOM_SPI_DMA_CALLBACK txDmaCallback;
-    uintptr_t               txDmaContext; 
-    FLEXCOM_SPI_DMA_CALLBACK rxDmaCallback;
-    uintptr_t               rxDmaContext; 
-    uint32_t                status;
+    void*                    txBuffer;
+    void*                    rxBuffer;
+    size_t                   txSize;
+    size_t                   rxSize;
+    size_t                   dummySize;
+    size_t                   rxCount;
+    size_t                   txCount;
+    bool                     transferIsBusy;
+    FLEXCOM_SPI_CALLBACK     callback;
+    uintptr_t                context;
+    uint32_t                 status;
+    /* Number of bytes transferred */
+    size_t                   nBytesTransferred;
 
 } FLEXCOM_SPI_OBJECT ;
 
 #ifdef __cplusplus // Provide C++ Compatibility
-}
+
+    }
+
 #endif
 
 #endif /* PLIB_FLEXCOM_SPI_LOCAL_H */
