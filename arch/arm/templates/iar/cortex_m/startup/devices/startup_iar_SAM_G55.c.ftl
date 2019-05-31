@@ -4,11 +4,11 @@ __STATIC_INLINE void TCM_Configure(uint32_t tcmSize);
 __STATIC_INLINE void ICache_Enable(void);
 __STATIC_INLINE void DCache_Enable(void);
 
-/** Program CMCC CSIZESW bits for TCM and cache configuration */
+/** Program CMCC PRGCSIZE bits for TCM and cache configuration */
 __STATIC_INLINE void TCM_Configure(uint32_t tcmSize)
 {
     <#if DEVICE_TCM_SIZE != "0">
-    <#lt>    CMCC_REGS->CMCC_CFG = CMCC_CFG_CSIZESW(tcmSize);
+    <#lt>    CMCC_REGS->CMCC_CFG = CMCC_CFG_PRGCSIZE(tcmSize);
     </#if>
 }
 
