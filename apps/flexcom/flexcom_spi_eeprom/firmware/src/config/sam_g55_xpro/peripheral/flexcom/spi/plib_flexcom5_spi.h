@@ -53,8 +53,6 @@
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-/* This section lists the other files that are included in this file.
-*/
 
 #include "device.h"
 #include "plib_flexcom_spi_local.h"
@@ -62,7 +60,7 @@
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
 
-extern "C" {
+    extern "C" {
 
 #endif
 
@@ -71,13 +69,18 @@ extern "C" {
 /****************************** FLEXCOM5 SPI Interface *********************************/
 
 void FLEXCOM5_SPI_Initialize( void );
-bool FLEXCOM5_SPI_WriteRead( void * pTransmitData, size_t txSize, void * pReceiveData, size_t rxSize );
-bool FLEXCOM5_SPI_Write( void * pTransmitData, size_t txSize );
-bool FLEXCOM5_SPI_Read( void * pReceiveData, size_t rxSize );
-bool FLEXCOM5_SPI_TransferSetup( FLEXCOM_SPI_TRANSFER_SETUP * setup, uint32_t spiSourceClock );
-bool FLEXCOM5_SPI_IsBusy( void );
-void FLEXCOM5_SPI_CallbackRegister( FLEXCOM_SPI_CALLBACK callback, uintptr_t context );
 
+bool FLEXCOM5_SPI_WriteRead( void * pTransmitData, size_t txSize, void * pReceiveData, size_t rxSize );
+
+bool FLEXCOM5_SPI_Write( void * pTransmitData, size_t txSize );
+
+bool FLEXCOM5_SPI_Read( void * pReceiveData, size_t rxSize );
+
+bool FLEXCOM5_SPI_TransferSetup( FLEXCOM_SPI_TRANSFER_SETUP * setup, uint32_t spiSourceClock );
+
+bool FLEXCOM5_SPI_IsBusy( void );
+
+void FLEXCOM5_SPI_CallbackRegister( FLEXCOM_SPI_CALLBACK callback, uintptr_t context );
 
 /* Provide C++ Compatibility */
 #ifdef __cplusplus
