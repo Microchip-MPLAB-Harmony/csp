@@ -48,8 +48,7 @@
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-/* This section lists the other files that are included in this file.
-*/
+
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -135,24 +134,8 @@ typedef struct
 
 } FLEXCOM_USART_SERIAL_SETUP;
 
-
-typedef enum
-{
-    /* Data was transferred successfully. */
-    USART_DMA_TRANSFER_EVENT_COMPLETE,
-
-    /* Error while processing the request */
-    USART_DMA_TRANSFER_EVENT_ERROR
-
-} USART_DMA_TRANSFER_EVENT;
-
-
 /* Callback Function Pointer */
 typedef void (*FLEXCOM_USART_CALLBACK)( uintptr_t context );
-
-/* Callback Function Pointer for DMA */
-typedef void (*FLEXCOM_USART_DMA_CALLBACK)( USART_DMA_TRANSFER_EVENT event, uintptr_t context );
-
 
 /* FLEXCOM USART Object */
 typedef struct
@@ -161,8 +144,6 @@ typedef struct
     size_t                  txSize;
     size_t                  txProcessedSize;
     FLEXCOM_USART_CALLBACK  txCallback;
-    FLEXCOM_USART_DMA_CALLBACK txDmaCallback;
-    uintptr_t               txDmaContext;    
     uintptr_t               txContext;
     bool                    txBusyStatus;
 
@@ -170,16 +151,16 @@ typedef struct
     size_t                  rxSize;
     size_t                  rxProcessedSize;
     FLEXCOM_USART_CALLBACK  rxCallback;
-    FLEXCOM_USART_DMA_CALLBACK rxDmaCallback;
-    uintptr_t               rxDmaContext; 
     uintptr_t               rxContext;
     bool                    rxBusyStatus;
 
-} FLEXCOM_USART_OBJECT ;
+} FLEXCOM_USART_OBJECT;
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
+
     }
+
 #endif
 // DOM-IGNORE-END
 
