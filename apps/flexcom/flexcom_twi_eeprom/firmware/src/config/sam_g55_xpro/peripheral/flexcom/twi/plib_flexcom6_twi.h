@@ -11,12 +11,12 @@
     FLEXCOM TWI peripheral library interface.
 
   Description
-    This file defines the interface to the FLEXCOM TWI peripheral library.  This 
-    library provides access to and control of the associated peripheral 
+    This file defines the interface to the FLEXCOM TWI peripheral library.  This
+    library provides access to and control of the associated peripheral
     instance.
 
   Remarks:
-    
+
 *******************************************************************************/
 
 // DOM-IGNORE-BEGIN
@@ -44,7 +44,7 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_FLEXCOM6_TWI_H   
+#ifndef PLIB_FLEXCOM6_TWI_H
 #define PLIB_FLEXCOM6_TWI_H
 
 // *****************************************************************************
@@ -53,8 +53,6 @@
 // *****************************************************************************
 // *****************************************************************************
 
-/*  This section lists the other files that are included in this file.
-*/
 #include "plib_flexcom_twi_master.h"
 
 // DOM-IGNORE-BEGIN
@@ -65,19 +63,12 @@
 #endif
 // DOM-IGNORE-END
 
-
-// *****************************************************************************
-// *****************************************************************************
-// Section: Data Types
-// *****************************************************************************
-// *****************************************************************************
-
 // *****************************************************************************
 // *****************************************************************************
 // Section: Interface Routines
 // *****************************************************************************
 // *****************************************************************************
-/* The following functions make up the methods (set of possible operations) of 
+/* The following functions make up the methods (set of possible operations) of
    this interface.
 */
 
@@ -87,17 +78,17 @@
 
    Summary:
     Initializes given instance of the FLEXCOM TWI peripheral.
-    
+
    Description:
     This function initializes the given instance of the FLEXCOM TWI peripheral as
     configured by the user from within the MHC.
 
    Precondition:
     None.
-    
+
    Parameters:
     None.
-    
+
    Returns:
     None
 
@@ -115,14 +106,14 @@ void FLEXCOM6_TWI_Initialize(void);
 // *****************************************************************************
 /* Function:
     void FLEXCOM6_TWI_CallbackRegister(FLEXCOM_TWI_CALLBACK callback, uintptr_t contextHandle)
-    
+
    Summary:
-    Sets the pointer to the function (and it's context) to be called when the 
+    Sets the pointer to the function (and it's context) to be called when the
     given FLEXCOM TWI's transfer events occur.
 
    Description:
-    This function sets the pointer to a client function to be called "back" 
-    when the given FLEXCOM TWI's transfer events occur. It also passes a context value 
+    This function sets the pointer to a client function to be called "back"
+    when the given FLEXCOM TWI's transfer events occur. It also passes a context value
     (usually a pointer to a context structure) that is passed into the
     function when it is called.
 
@@ -130,12 +121,12 @@ void FLEXCOM6_TWI_Initialize(void);
     FLEXCOM6_TWI_Initialize must have been called for the associated FLEXCOM TWI instance.
 
    Parameters:
-    callback - A pointer to a function with a calling signature defined 
+    callback - A pointer to a function with a calling signature defined
     by the FLEXCOM_TWI_CALLBACK data type.
 
-    context - A value (usually a pointer) passed (unused) into the function 
+    context - A value (usually a pointer) passed (unused) into the function
     identified by the callback parameter.
-  
+
    Returns:
     None.
 
@@ -155,10 +146,10 @@ void FLEXCOM6_TWI_CallbackRegister(FLEXCOM_TWI_CALLBACK callback, uintptr_t cont
 // *****************************************************************************
 /* Function:
     bool FLEXCOM6_TWI_IsBusy(void)
-    
+
    Summary:
     Returns the Peripheral busy status.
-    
+
    Description:
     This function returns the peripheral's busy status.
 
@@ -167,24 +158,24 @@ void FLEXCOM6_TWI_CallbackRegister(FLEXCOM_TWI_CALLBACK callback, uintptr_t cont
 
    Parameters:
     None.
-    
+
    Returns:
     true - Busy.
     false - Not busy.
-    
+
    Example:
     <code>
         uint8_t myData [NUM_BYTES] = {'1', '0', ' ', 'B', 'Y', 'T', 'E', 'S', '!', '!',};
-      
+
         // wait for the current transfer to complete
         while(FLEXCOM6_TWI_IsBusy( ));
-        
+
         // perform the next transfer
         if(!FLEXCOM6_TWI_Write( SLAVE_ADDR, &myData[0], NUM_BYTES ))
         {
             // error handling
         }
-    
+
     </code>
 
    Remarks:
@@ -196,13 +187,13 @@ bool FLEXCOM6_TWI_IsBusy(void);
 // *****************************************************************************
 /* Function:
     bool FLEXCOM6_TWI_Read(uint16_t address, uint8_t *pdata, size_t length)
-    
+
    Summary:
     Reads data from the slave.
 
    Description:
-    This function reads the data of size in bytes equal to length into pdata buffer 
-    from the slave having given address. Master will generate Stop condition after 
+    This function reads the data of size in bytes equal to length into pdata buffer
+    from the slave having given address. Master will generate Stop condition after
     completion of the read.
 
    Precondition:
@@ -212,7 +203,7 @@ bool FLEXCOM6_TWI_IsBusy(void);
     address - 7-bit / 10-bit slave address.
     pdata   - pointer to destination data buffer
     length  - length of data buffer in number of bytes.
-  
+
    Returns:
     Read request status.
     True - Read request was successful.
@@ -221,7 +212,7 @@ bool FLEXCOM6_TWI_IsBusy(void);
    Example:
     <code>
         uint8_t myData [NUM_BYTES];
-      
+
         if(!FLEXCOM6_TWI_Read( SLAVE_ADDR, &myData[0], NUM_BYTES ))
         {
             // error handling
@@ -237,13 +228,13 @@ bool FLEXCOM6_TWI_Read(uint16_t address, uint8_t *pdata, size_t length);
 // *****************************************************************************
 /* Function:
     bool FLEXCOM6_TWI_Write(uint16_t address, uint8_t *pdata, size_t length)
-    
+
    Summary:
     Writes data onto the slave.
 
    Description:
-    This function writes the data from pdata buffer of size in bytes equal to 
-    length onto the slave with given address. Master will generate Stop 
+    This function writes the data from pdata buffer of size in bytes equal to
+    length onto the slave with given address. Master will generate Stop
     condition after completion of the write.
 
    Precondition:
@@ -253,7 +244,7 @@ bool FLEXCOM6_TWI_Read(uint16_t address, uint8_t *pdata, size_t length);
     address - 7-bit / 10-bit slave address.
     pdata   - pointer to source data buffer
     length  - length of data buffer in number of bytes.
-    
+
    Returns:
     Request status.
     True - Request was successful.
@@ -262,7 +253,7 @@ bool FLEXCOM6_TWI_Read(uint16_t address, uint8_t *pdata, size_t length);
    Example:
     <code>
         uint8_t myData [NUM_BYTES] = {'1', '0', ' ', 'B', 'Y', 'T', 'E', 'S', '!', '!',};
-      
+
         if(!FLEXCOM6_TWI_Write( SLAVE_ADDR, &myData[0], NUM_BYTES ))
         {
             // error handling
@@ -278,7 +269,7 @@ bool FLEXCOM6_TWI_Write(uint16_t address, uint8_t *pdata, size_t length);
 // *****************************************************************************
 /* Function:
     bool FLEXCOM6_TWI_WriteRead(uint16_t address, uint8_t *wdata, size_t wlength, uint8_t *rdata, size_t rlength)
-    
+
    Summary:
     Write and Read data from Slave.
 
@@ -298,7 +289,7 @@ bool FLEXCOM6_TWI_Write(uint16_t address, uint8_t *pdata, size_t length);
     wlength - write data length in bytes.
     rdata   - pointer to read data buffer.
     rlength - read data length in bytes.
-  
+
    Returns:
     Request status.
     True - Request was successful.
@@ -308,7 +299,7 @@ bool FLEXCOM6_TWI_Write(uint16_t address, uint8_t *pdata, size_t length);
     <code>
         uint8_t myTxData [NUM_BYTES] = {'1', '0', ' ', 'B', 'Y', 'T', 'E', 'S', '!', '!'};
         uint8_t myRxData [NUM_BYTES] = {0};
-      
+
         if(!FLEXCOM6_TWI_WriteRead( SLAVE_ADDR, &myTxData[0], NUM_BYTES, myRxData, NUM_BYTES ))
         {
             // error handling
@@ -323,7 +314,7 @@ bool FLEXCOM6_TWI_WriteRead(uint16_t address, uint8_t *wdata, size_t wlength, ui
 // *****************************************************************************
 /* Function:
     FLEXCOM_TWI_ERROR FLEXCOM6_TWI_ErrorGet(void)
-    
+
    Summary:
     Returns the error during transfer.
 
@@ -335,12 +326,12 @@ bool FLEXCOM6_TWI_WriteRead(uint16_t address, uint8_t *wdata, size_t wlength, ui
 
    Parameters:
     None.
-    
+
    Returns:
     Request status.
     True - Request was successful.
     False - Request has failed.
-	
+
    Example:
     <code>
     if(FLEXCOM_TWI_ERROR_NONE == FLEXCOM6_TWI_ErrorGet())
@@ -364,7 +355,3 @@ FLEXCOM_TWI_ERROR FLEXCOM6_TWI_ErrorGet(void);
 // DOM-IGNORE-END
 
 #endif //PLIB_FLEXCOM6_TWI_H
-
-/*******************************************************************************
- End of File
-*/
