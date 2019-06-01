@@ -71,8 +71,6 @@ void static FLEXCOM7_USART_ErrorClear( void )
 
     /* Ignore the warning */
     (void)dummyData;
-
-    return;
 }
 
 void FLEXCOM7_USART_Initialize( void )
@@ -91,8 +89,6 @@ void FLEXCOM7_USART_Initialize( void )
 
     /* Configure FLEXCOM7 USART Baud Rate */
     USART7_REGS->US_BRGR = US_BRGR_CD(65);
-
-    return;
 }
 
 FLEXCOM_USART_ERROR FLEXCOM7_USART_ErrorGet( void )
@@ -105,10 +101,12 @@ FLEXCOM_USART_ERROR FLEXCOM7_USART_ErrorGet( void )
     {
         errors = FLEXCOM_USART_ERROR_OVERRUN;
     }
+
     if(status & US_CSR_PARE_Msk)
     {
         errors |= FLEXCOM_USART_ERROR_PARITY;
     }
+
     if(status & US_CSR_FRAME_Msk)
     {
         errors |= FLEXCOM_USART_ERROR_FRAMING;
@@ -134,6 +132,7 @@ bool FLEXCOM7_USART_SerialSetup( FLEXCOM_USART_SERIAL_SETUP *setup, uint32_t src
     if (setup != NULL)
     {
         baud = setup->baudRate;
+
         if(srcClkFreq == 0)
         {
             srcClkFreq = FLEXCOM7_USART_FrequencyGet();
@@ -170,7 +169,7 @@ bool FLEXCOM7_USART_Read( void *buffer, const size_t size )
     size_t processedSize = 0;
     uint8_t * lBuffer = (uint8_t *)buffer;
 
-    if(NULL != lBuffer)
+    if(lBuffer != NULL)
     {
         /* Clear errors before submitting the request.
          * ErrorGet clears errors internally. */
@@ -209,11 +208,11 @@ bool FLEXCOM7_USART_Write( void *buffer, const size_t size )
     size_t processedSize = 0;
     uint8_t * lBuffer = (uint8_t *)buffer;
 
-    if(NULL != lBuffer)
+    if(lBuffer != NULL)
     {
         while( size > processedSize )
         {
-            if(US_CSR_TXEMPTY_Msk == (USART7_REGS->US_CSR& US_CSR_TXEMPTY_Msk))
+            if(US_CSR_TXEMPTY_Msk == (USART7_REGS->US_CSR & US_CSR_TXEMPTY_Msk))
             {
                 USART7_REGS->US_THR = (US_THR_TXCHR(*lBuffer++) & US_THR_TXCHR_Msk);
                 processedSize++;
@@ -226,27 +225,35 @@ bool FLEXCOM7_USART_Write( void *buffer, const size_t size )
     return status;
 }
 
-uint8_t FLEXCOM7_ReadByte(void)
+uint8_t FLEXCOM7_USART_ReadByte( void )
 {
-    return(USART7_REGS->US_RHR & US_RHR_RXCHR_Msk);
+    return (USART7_REGS->US_RHR & US_RHR_RXCHR_Msk);
 }
 
-void FLEXCOM7_WriteByte(uint8_t data)
+void FLEXCOM7_USART_WriteByte( uint8_t data )
 {
     while ((US_CSR_TXEMPTY_Msk == (USART7_REGS->US_CSR & US_CSR_TXEMPTY_Msk)) == 0);
+
     USART7_REGS->US_THR = (US_THR_TXCHR(data) & US_THR_TXCHR_Msk);
 }
 
-void inline FLEXCOM7_Sync(void)
+bool FLEXCOM7_USART_TransmitComplete( void )
 {
-    while ((US_CSR_TXEMPTY_Msk == (USART7_REGS->US_CSR & US_CSR_TXEMPTY_Msk)) == 0);
+    bool status = false;
+
+    if(US_CSR_TXEMPTY_Msk == (USART7_REGS->US_CSR & US_CSR_TXEMPTY_Msk))
+    {
+        status = true;
+    }
+
+    return status;
 }
 
 bool FLEXCOM7_USART_TransmitterIsReady( void )
 {
     bool status = false;
 
-    if(US_CSR_TXEMPTY_Msk == (USART7_REGS->US_CSR& US_CSR_TXEMPTY_Msk))
+    if(US_CSR_TXRDY_Msk == (USART7_REGS->US_CSR & US_CSR_TXRDY_Msk))
     {
         status = true;
     }
@@ -258,13 +265,10 @@ bool FLEXCOM7_USART_ReceiverIsReady( void )
 {
     bool status = false;
 
-    if(US_CSR_RXRDY_Msk == (USART7_REGS->US_CSR& US_CSR_RXRDY_Msk))
+    if(US_CSR_RXRDY_Msk == (USART7_REGS->US_CSR & US_CSR_RXRDY_Msk))
     {
         status = true;
     }
 
     return status;
 }
-
-
-
