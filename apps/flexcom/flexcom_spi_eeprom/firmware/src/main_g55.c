@@ -52,15 +52,21 @@
 #include "definitions.h"                // SYS function prototypes
 #include <string.h>
 
-/*************************************************************************************
-FLEXCOM SPI   - Connect EEPROM 4 click board to XPRO EXT1 Connector.
-                Connect PD26 - MOSI to PIN 16 XPRO EXT1 Connector
-                Connect PD27 - MISO to PIN 17 XPRO EXT1 Connector
-                Connect PD28 - SPCK to- PIN 15 XPRO EXT1 Connector
-                Connect PD29 - CS  to PIN 10 XPRO EXT1 Connector
-                Connect WP   - PD13 to PIN 09 XPRO EXT1 Connector
-                Connect HOLD - PB9  to PIN 07 XPRO EXT1 Connector
-*************************************************************************************/
+
+/* Application's state machine enum */
+typedef enum
+{
+	APP_STATE_INITIALIZE,
+    APP_STATE_EEPROM_WRITE_ENABLE,
+    APP_STATE_EEPROM_WRITE,
+    APP_STATE_EEPROM_READ_STATUS,
+    APP_STATE_EEPROM_CHECK_STATUS,
+    APP_STATE_EEPROM_READ,
+    APP_STATE_DATA_COMPARISON,
+    APP_STATE_XFER_SUCCESSFUL,
+    APP_STATE_XFER_ERROR
+
+} APP_STATES;
 
 /* EEPROM Commands */
 #define EEPROM_CMD_WREN                     0x06
@@ -72,60 +78,24 @@ FLEXCOM SPI   - Connect EEPROM 4 click board to XPRO EXT1 Connector.
 #define LED_On()                            LED_Clear()
 #define LED_Off()                           LED_Set()
 
-/* Application's state machine enum */
-typedef enum
-{
-    APP_STATE_INITIALIZE,
-    APP_STATE_EEPROM_WRITE_ENABLE,
-    APP_STATE_EEPROM_WRITE,
-    APP_STATE_EEPROM_READ_STATUS,
-    APP_STATE_EEPROM_CHECK_STATUS,
-    APP_STATE_EEPROM_READ,
-    APP_STATE_IDLE,
-    APP_STATE_DATA_COMPARISON,
-    APP_STATE_XFER_SUCCESSFUL,
-    APP_STATE_XFER_ERROR
-
-} APP_STATES;
+#define EEPROM_DATA                         "WRITING AND READING DATA FROM EEPROM!"
+#define EEPROM_DATA_LEN                     sizeof(EEPROM_DATA)
 
 /* Global variables */
-uint8_t  txData[]  = "----WRITING AND READING DATA FROM EEPROM!";
-uint8_t  rxData[sizeof(txData)];
-volatile APP_STATES state = APP_STATE_INITIALIZE;
 
-/* This function will be called by FLEXCOM SPI PLIB when transfer is completed */
-void FLEXCOM_SPI_EventHandler(uintptr_t context )
+// EEPROM CMD (1) + EEPROM ADDR (3) + EEPROM_DATA_LEN
+uint8_t  txData[(4 + EEPROM_DATA_LEN)];
+uint8_t  rxData[(4 + EEPROM_DATA_LEN)];
+volatile bool isTransferDone = false;
+APP_STATES state = APP_STATE_INITIALIZE;
+
+/* This function will be called by SPI PLIB when transfer is completed */
+void SPIEventHandler(uintptr_t context )
 {
     /* De-assert the chip select */
     EEPROM_CS_Set();
 
-    /* Change application state based on current state.
-     * Context has current state value passed while registering the callbacks.*/
-    switch ((APP_STATES)context)
-    {
-        case APP_STATE_EEPROM_WRITE_ENABLE:
-        {
-            state = APP_STATE_EEPROM_WRITE;
-            break;
-        }
-        case APP_STATE_EEPROM_WRITE:
-        {
-            state = APP_STATE_EEPROM_READ_STATUS;
-            break;
-        }
-        case APP_STATE_EEPROM_READ_STATUS:
-        {
-            state = APP_STATE_EEPROM_CHECK_STATUS;
-            break;
-        }
-        case APP_STATE_EEPROM_READ:
-        {
-            state = APP_STATE_DATA_COMPARISON;
-            break;
-        }
-        default:
-            break;
-    }
+    isTransferDone = true;
 }
 
 void EEPROM_Initialize (void)
@@ -154,106 +124,107 @@ int main ( void )
         switch (state)
         {
             case APP_STATE_INITIALIZE:
-            {
                 EEPROM_Initialize();
-
+                /* Register callback with the SPI PLIB */
+                FLEXCOM5_SPI_CallbackRegister(SPIEventHandler, (uintptr_t) 0);
                 state = APP_STATE_EEPROM_WRITE_ENABLE;
-            }
+                break;
+
             case APP_STATE_EEPROM_WRITE_ENABLE:
-            {
-                //Enable Writes to EEPROM
+                // Enable Writes to EEPROM
                 txData[0] = EEPROM_CMD_WREN;
-
-                /* Register FLEXCOM SPI Callback with current state as context */
-                FLEXCOM5_SPI_CallbackRegister(&FLEXCOM_SPI_EventHandler, (uintptr_t)APP_STATE_EEPROM_WRITE_ENABLE);
-                state = APP_STATE_IDLE;
-
                 EEPROM_CS_Clear();
                 FLEXCOM5_SPI_Write(txData, 1);
-
+                state = APP_STATE_EEPROM_WRITE;
                 break;
-            }
+
             case APP_STATE_EEPROM_WRITE:
-            {
-                //Write to EEPROM
-                txData[0] = EEPROM_CMD_WRITE;
-                txData[1] = (uint8_t)(eepromAddr>>16);
-                txData[2] = (uint8_t)(eepromAddr>>8);
-                txData[3] = (uint8_t)(eepromAddr);
-
-                FLEXCOM5_SPI_CallbackRegister(&FLEXCOM_SPI_EventHandler, (uintptr_t)APP_STATE_EEPROM_WRITE);
-                state = APP_STATE_IDLE;
-                EEPROM_CS_Clear();
-                FLEXCOM5_SPI_Write(txData, sizeof(txData));
-                break;
-            }
-            case APP_STATE_EEPROM_READ_STATUS:
-            {
-                /* Read Status  */
-                txData[0] = EEPROM_CMD_RDSR;
-                FLEXCOM5_SPI_CallbackRegister(&FLEXCOM_SPI_EventHandler, (uintptr_t)APP_STATE_EEPROM_READ_STATUS);
-                state = APP_STATE_IDLE;
-
-                EEPROM_CS_Clear();
-                FLEXCOM5_SPI_WriteRead(txData, 1, rxData, 2);
-                break;
-            }
-            case APP_STATE_EEPROM_CHECK_STATUS:
-            {
-                if(!(rxData[1] & 0x01))
+                if (isTransferDone == true)
                 {
-                    /* It means write has been completed */
-                    state = APP_STATE_EEPROM_READ;
-                }
-                else
-                {
+                    isTransferDone = false;
+                    //Copy the write command and the memory address to write to
+                    txData[0] = EEPROM_CMD_WRITE;
+                    txData[1] = (uint8_t)(eepromAddr>>16);
+                    txData[2] = (uint8_t)(eepromAddr>>8);
+                    txData[3] = (uint8_t)(eepromAddr);
+                    //Copy the data to be written to EEPROM
+                    memcpy(&txData[4], EEPROM_DATA, EEPROM_DATA_LEN);
+                    EEPROM_CS_Clear();
+                    FLEXCOM5_SPI_Write(txData, (4 + EEPROM_DATA_LEN));
                     state = APP_STATE_EEPROM_READ_STATUS;
                 }
                 break;
-            }
+
+            case APP_STATE_EEPROM_READ_STATUS:
+                if (isTransferDone == true)
+                {
+                    isTransferDone = false;
+                    /* Read the status of the internal write operation  */
+                    txData[0] = EEPROM_CMD_RDSR;
+                    EEPROM_CS_Clear();
+                    FLEXCOM5_SPI_WriteRead(txData, 1, rxData, 2);
+                    state = APP_STATE_EEPROM_CHECK_STATUS;
+                }
+                break;
+
+            case APP_STATE_EEPROM_CHECK_STATUS:
+                if (isTransferDone == true)
+                {
+                    isTransferDone = false;
+                    if(!(rxData[1] & 0x01))
+                    {
+                        /* It means write has been completed */
+                        state = APP_STATE_EEPROM_READ;
+                    }
+                    else
+                    {
+                        // Keep reading the status of the internal write operation
+                        txData[0] = EEPROM_CMD_RDSR;
+                        EEPROM_CS_Clear();
+                        FLEXCOM5_SPI_WriteRead(txData, 1, rxData, 2);
+                    }
+                }
+                break;
+
             case APP_STATE_EEPROM_READ:
-            {
-                //Read from EEPROM
+
+                // Copy the read command and the memory address to read from
                 txData[0] = EEPROM_CMD_READ;
                 txData[1] = (uint8_t)(eepromAddr>>16);
                 txData[2] = (uint8_t)(eepromAddr>>8);
                 txData[3] = (uint8_t)(eepromAddr);
 
-                FLEXCOM5_SPI_CallbackRegister(&FLEXCOM_SPI_EventHandler, (uintptr_t)APP_STATE_EEPROM_READ);
-                state = APP_STATE_IDLE;
                 EEPROM_CS_Clear();
-                FLEXCOM5_SPI_WriteRead(txData, 4, rxData, sizeof(rxData));
+                FLEXCOM5_SPI_WriteRead(txData, 4, rxData, (4 + EEPROM_DATA_LEN));
+                state = APP_STATE_DATA_COMPARISON;
+
                 break;
-            }
-            case APP_STATE_IDLE:
-            {
-                /* Application can do other task here */
-                break;
-            }
+
             case APP_STATE_DATA_COMPARISON:
-            {
-                if (memcmp(&txData[4], &rxData[4], sizeof(txData)-4) != 0)
+                if (isTransferDone == true)
                 {
-                    /* It means received data is not same as transmitted data */
-                    state = APP_STATE_XFER_ERROR;
-                }
-                else
-                {
-                    /* It means received data is same as transmitted data */
-                    state = APP_STATE_XFER_SUCCESSFUL;
+                    isTransferDone = false;
+                    if (memcmp(&txData[4], &rxData[4], EEPROM_DATA_LEN) != 0)
+                    {
+                        /* It means received data is not same as transmitted data */
+                        state = APP_STATE_XFER_ERROR;
+                    }
+                    else
+                    {
+                        /* It means received data is same as transmitted data */
+                        state = APP_STATE_XFER_SUCCESSFUL;
+                    }
                 }
                 break;
-            }
+
             case APP_STATE_XFER_SUCCESSFUL:
-            {
                 LED_On();
                 break;
-            }
+
             case APP_STATE_XFER_ERROR:
-            {
                 LED_Off();
                 break;
-            }
+
             default:
                 break;
         }

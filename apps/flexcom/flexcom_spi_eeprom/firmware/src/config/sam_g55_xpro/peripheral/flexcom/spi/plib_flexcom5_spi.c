@@ -52,10 +52,25 @@
 // Section: FLEXCOM5 SPI Implementation
 // *****************************************************************************
 // *****************************************************************************
+
+
 /* Global object to save FLEXCOM SPI Exchange related data */
 FLEXCOM_SPI_OBJECT flexcom5SpiObj;
 
-void FLEXCOM5_SPI_Initialize ( void )
+static uint8_t dummyDataBuffer[512];
+
+static void setupDMA( void* pTransmitData, void* pReceiveData, size_t size )
+{
+    /* Always set up the rx channel first */
+    SPI5_REGS->SPI_RPR = (uint32_t) pReceiveData;
+    SPI5_REGS->SPI_RCR = (uint32_t) size;
+    SPI5_REGS->SPI_TPR = (uint32_t) pTransmitData;
+    SPI5_REGS->SPI_TCR = (uint32_t) size;
+    SPI5_REGS->SPI_PTCR = SPI_PTCR_RXTEN_Msk | SPI_PTCR_TXTEN_Msk;
+    SPI5_REGS->SPI_IER = SPI_IER_ENDRX_Msk;
+}
+
+void FLEXCOM5_SPI_Initialize( void )
 {
     /* Set FLEXCOM SPI operating mode */
     FLEXCOM5_REGS->FLEXCOM_MR = FLEXCOM_MR_OPMODE_SPI;
@@ -67,7 +82,7 @@ void FLEXCOM5_SPI_Initialize ( void )
     SPI5_REGS->SPI_MR = SPI_MR_MSTR_Msk | SPI_MR_BRSRCCLK_PERIPH_CLK | SPI_MR_PCS(0) | SPI_MR_MODFDIS_Msk;
 
     /* Set up clock Polarity, data phase, Communication Width and Baud Rate */
-    SPI5_REGS->SPI_CSR[0]= SPI_CSR_CPOL(0) | SPI_CSR_NCPHA(1) | SPI_CSR_BITS_8_BIT | SPI_CSR_SCBR(11);
+    SPI5_REGS->SPI_CSR[0] = SPI_CSR_CPOL(0) | SPI_CSR_NCPHA(1) | SPI_CSR_BITS_8_BIT | SPI_CSR_SCBR(11);
 
     /* Initialize global variables */
     flexcom5SpiObj.transferIsBusy = false;
@@ -75,106 +90,81 @@ void FLEXCOM5_SPI_Initialize ( void )
 
     /* Enable FLEXCOM5 SPI */
     SPI5_REGS->SPI_CR = SPI_CR_SPIEN_Msk;
-    return;
 }
 
-bool FLEXCOM5_SPI_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize)
+bool FLEXCOM5_SPI_WriteRead( void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize )
 {
     bool isRequestAccepted = false;
-    uint32_t dummyData;
+    uint32_t size = 0;
 
     /* Verify the request */
     if((((txSize > 0) && (pTransmitData != NULL)) || ((rxSize > 0) && (pReceiveData != NULL))) && (flexcom5SpiObj.transferIsBusy == false))
     {
         isRequestAccepted = true;
-        flexcom5SpiObj.txBuffer = pTransmitData;
-        flexcom5SpiObj.rxBuffer = pReceiveData;
-        flexcom5SpiObj.rxCount = 0;
-        flexcom5SpiObj.txCount = 0;
-        flexcom5SpiObj.dummySize = 0;
-        if (pTransmitData != NULL)
-        {
-            flexcom5SpiObj.txSize = txSize;
-        }
-        else
-        {
-            flexcom5SpiObj.txSize = 0;
-        }
-
-        if (pReceiveData != NULL)
-        {
-            flexcom5SpiObj.rxSize = rxSize;
-        }
-        else
-        {
-            flexcom5SpiObj.rxSize = 0;
-        }
 
         flexcom5SpiObj.transferIsBusy = true;
 
-        /* Flush out any unread data in SPI read buffer */
-        dummyData = (SPI5_REGS->SPI_RDR & SPI_RDR_RD_Msk) >> SPI_RDR_RD_Pos;
-        (void)dummyData;
+        flexcom5SpiObj.txBuffer = pTransmitData;
+        flexcom5SpiObj.rxBuffer = pReceiveData;
+        flexcom5SpiObj.txCount = txSize;
+        flexcom5SpiObj.rxCount = rxSize;
 
-        if (flexcom5SpiObj.rxSize > flexcom5SpiObj.txSize)
+        if ((txSize > 0) && (rxSize > 0))
         {
-            flexcom5SpiObj.dummySize = flexcom5SpiObj.rxSize - flexcom5SpiObj.txSize;
-        }
+            /* Find the lower value among txSize and rxSize */
+            (txSize >= rxSize) ? (size = rxSize) : (size = txSize);
 
-        /* Start the first write here itself, rest will happen in ISR context */
-        if((SPI5_REGS->SPI_CSR[0] & SPI_CSR_BITS_Msk) == SPI_CSR_BITS_8_BIT)
-        {
-            if (flexcom5SpiObj.txCount < flexcom5SpiObj.txSize)
-            {
-                SPI5_REGS->SPI_TDR = *((uint8_t*)flexcom5SpiObj.txBuffer);
-                flexcom5SpiObj.txCount++;
-            }
-            else if (flexcom5SpiObj.dummySize > 0)
-            {
-                SPI5_REGS->SPI_TDR = (uint8_t)(0xff);
-                flexcom5SpiObj.dummySize--;
-            }
+            /* Calculate the remaining tx/rx bytes and total bytes transferred */
+            flexcom5SpiObj.rxCount -= size;
+            flexcom5SpiObj.txCount -= size;
+            flexcom5SpiObj.nBytesTransferred = size;
+
+            setupDMA(pTransmitData, pReceiveData, size);
         }
         else
         {
-            flexcom5SpiObj.txSize >>= 1;
-            flexcom5SpiObj.dummySize >>= 1;
-            flexcom5SpiObj.rxSize >>= 1;
-
-            if (flexcom5SpiObj.txCount < flexcom5SpiObj.txSize)
+            if (rxSize > 0)
             {
-                SPI5_REGS->SPI_TDR = *((uint16_t*)flexcom5SpiObj.txBuffer);
-                flexcom5SpiObj.txCount++;
-            }
-            else if (flexcom5SpiObj.dummySize > 0)
-            {
-                SPI5_REGS->SPI_TDR = (uint16_t)(0xff);
-                flexcom5SpiObj.dummySize--;
-            }
-        }
+                /* txSize is 0. Need to use the dummy data buffer for transmission.
+                 * Find out the max data that can be received, given the limited size of the dummy data buffer.
+                 */
+                (rxSize > sizeof(dummyDataBuffer)) ?
+                    (size = sizeof(dummyDataBuffer)): (size = rxSize);
 
-        if (rxSize > 0)
-        {
-            /* Enable receive interrupt to complete the transfer in ISR context */
-            SPI5_REGS->SPI_IER = SPI_IER_RDRF_Msk;
-        }
-        else
-        {
-            /* Enable transmit interrupt to complete the transfer in ISR context */
-            SPI5_REGS->SPI_IER = SPI_IER_TDRE_Msk;
+                /* Calculate the remaining rx bytes and total bytes transferred */
+                flexcom5SpiObj.rxCount -= size;
+                flexcom5SpiObj.nBytesTransferred = size;
+
+                setupDMA(dummyDataBuffer, pReceiveData, size);
+            }
+            else
+            {
+                /* rxSize is 0. Need to use the dummy data buffer for reception.
+                 * Find out the max data that can be transmitted, given the limited size of the dummy data buffer.
+                 */
+                (txSize > sizeof(dummyDataBuffer)) ?
+                    (size = sizeof(dummyDataBuffer)): (size = txSize);
+
+                /* Calculate the remaining tx bytes and total bytes transferred */
+                flexcom5SpiObj.txCount -= size;
+                flexcom5SpiObj.nBytesTransferred = size;
+
+                setupDMA(pTransmitData, dummyDataBuffer, size);
+            }
         }
     }
 
     return isRequestAccepted;
 }
 
-bool FLEXCOM5_SPI_TransferSetup (FLEXCOM_SPI_TRANSFER_SETUP * setup, uint32_t spiSourceClock )
+bool FLEXCOM5_SPI_TransferSetup( FLEXCOM_SPI_TRANSFER_SETUP * setup, uint32_t spiSourceClock )
 {
     uint32_t scbr;
+
     if ((setup == NULL) || (setup->clockFrequency == 0))
-	{
-		return false;
-	}
+    {
+        return false;
+    }
     if(spiSourceClock == 0)
     {
         // Fetch Master Clock Frequency directly
@@ -192,153 +182,83 @@ bool FLEXCOM5_SPI_TransferSetup (FLEXCOM_SPI_TRANSFER_SETUP * setup, uint32_t sp
         scbr = 255;
     }
 
-    SPI5_REGS->SPI_CSR[0]= (uint32_t)setup->clockPolarity | (uint32_t)setup->clockPhase | (uint32_t)setup->dataBits | SPI_CSR_SCBR(scbr);
+    SPI5_REGS->SPI_CSR[0] = (uint32_t)setup->clockPolarity | (uint32_t)setup->clockPhase | (uint32_t)setup->dataBits | SPI_CSR_SCBR(scbr);
 
     return true;
 }
 
-bool FLEXCOM5_SPI_Write(void* pTransmitData, size_t txSize)
+bool FLEXCOM5_SPI_Write( void* pTransmitData, size_t txSize )
 {
-    return(FLEXCOM5_SPI_WriteRead(pTransmitData, txSize, NULL, 0));
+    return (FLEXCOM5_SPI_WriteRead(pTransmitData, txSize, NULL, 0));
 }
 
-bool FLEXCOM5_SPI_Read(void* pReceiveData, size_t rxSize)
+bool FLEXCOM5_SPI_Read( void* pReceiveData, size_t rxSize )
 {
-    return(FLEXCOM5_SPI_WriteRead(NULL, 0, pReceiveData, rxSize));
+    return (FLEXCOM5_SPI_WriteRead(NULL, 0, pReceiveData, rxSize));
 }
 
-void FLEXCOM5_SPI_CallbackRegister (FLEXCOM_SPI_CALLBACK callback, uintptr_t context)
+void FLEXCOM5_SPI_CallbackRegister( FLEXCOM_SPI_CALLBACK callback, uintptr_t context )
 {
     flexcom5SpiObj.callback = callback;
     flexcom5SpiObj.context = context;
 }
 
-bool FLEXCOM5_SPI_IsBusy(void)
+bool FLEXCOM5_SPI_IsBusy( void )
 {
-    return flexcom5SpiObj.transferIsBusy;
+    return ((flexcom5SpiObj.transferIsBusy) || ((SPI5_REGS->SPI_SR & SPI_SR_TXEMPTY_Msk) == 0));
 }
 
-void FLEXCOM5_InterruptHandler(void)
+void FLEXCOM5_InterruptHandler( void )
 {
-    uint32_t dataBits ;
-    uint32_t receivedData;
-    dataBits = SPI5_REGS->SPI_CSR[0] & SPI_CSR_BITS_Msk;
-
-    static bool isLastByteTransferInProgress = false;
+    uint32_t size;
+    uint32_t index;
 
     /* save the status in global object before it gets cleared */
     flexcom5SpiObj.status = SPI5_REGS->SPI_SR;
 
+    SPI5_REGS->SPI_PTCR = SPI_PTCR_ERRCLR_Msk;
 
-
-    if ((SPI5_REGS->SPI_SR & SPI_SR_RDRF_Msk ) == SPI_SR_RDRF_Msk)
+    if(flexcom5SpiObj.rxCount > 0)
     {
-        receivedData = (SPI5_REGS->SPI_RDR & SPI_RDR_RD_Msk) >> SPI_RDR_RD_Pos;
-
-        if (flexcom5SpiObj.rxCount < flexcom5SpiObj.rxSize)
-        {
-            if(dataBits == SPI_CSR_BITS_8_BIT)
-            {
-                ((uint8_t*)flexcom5SpiObj.rxBuffer)[flexcom5SpiObj.rxCount++] = receivedData;
-            }
-            else
-            {
-                ((uint16_t*)flexcom5SpiObj.rxBuffer)[flexcom5SpiObj.rxCount++] = receivedData;
-            }
-        }
-    }
-
-    /* If there are more words to be transmitted, then transmit them here and keep track of the count */
-    if((SPI5_REGS->SPI_SR & SPI_SR_TDRE_Msk) == SPI_SR_TDRE_Msk)
-    {
-        /* Disable the TDRE interrupt. This will be enabled back if more than
-         * one byte is pending to be transmitted */
-
-        SPI5_REGS->SPI_IDR = SPI_IDR_TDRE_Msk;
-
-        if(dataBits == SPI_CSR_BITS_8_BIT)
-        {
-            if (flexcom5SpiObj.txCount < flexcom5SpiObj.txSize)
-            {
-                SPI5_REGS->SPI_TDR = ((uint8_t*)flexcom5SpiObj.txBuffer)[flexcom5SpiObj.txCount++];
-            }
-            else if (flexcom5SpiObj.dummySize > 0)
-            {
-                SPI5_REGS->SPI_TDR = (uint8_t)(0xff);
-                flexcom5SpiObj.dummySize--;
-            }
-        }
-        else
-        {
-            if (flexcom5SpiObj.txCount < flexcom5SpiObj.txSize)
-            {
-                SPI5_REGS->SPI_TDR = ((uint16_t*)flexcom5SpiObj.txBuffer)[flexcom5SpiObj.txCount++];
-            }
-            else if (flexcom5SpiObj.dummySize > 0)
-            {
-                SPI5_REGS->SPI_TDR = (uint16_t)(0xff);
-                flexcom5SpiObj.dummySize--;
-            }
-        }
-        if ((flexcom5SpiObj.txCount == flexcom5SpiObj.txSize) && (flexcom5SpiObj.dummySize == 0))
-        {
-            /* At higher baud rates, the data in the shift register can be
-             * shifted out and TXEMPTY flag can get set resulting in a
-             * callback been given to the application with the SPI interrupt
-             * pending with the application. This will then result in the
-             * interrupt handler being called again with nothing to transmit.
-             * To avoid the above mentioned issue, a software flag is set, but
-             * the TXEMPTY interrupt is not enabled until the very end.
-             * At higher baud rates, if the software flag is set and the
-             * TXEMPTY status bit is set, then it means that the transfer is
-             * complete and a callback can be given to the application. Since
-             * the TXEMPTY interrupt is not enabled there is no need to
-             * explicitly clear the pending interrupt from the Interrupt controller.
-             */
-
-            isLastByteTransferInProgress = true;
-        }
-        else if (flexcom5SpiObj.rxCount == flexcom5SpiObj.rxSize)
-        {
-            /* Enable TDRE interrupt as all the requested bytes are received
-             * and can now make use of the internal transmit shift register.
-             */
-            SPI5_REGS->SPI_IDR = SPI_IDR_RDRF_Msk;
-            SPI5_REGS->SPI_IER = SPI_IDR_TDRE_Msk;
-        }
-    }
-
-    /* See if Exchange is complete */
-    if ((isLastByteTransferInProgress == true) && ((SPI5_REGS->SPI_SR & SPI_SR_TXEMPTY_Msk) == SPI_SR_TXEMPTY_Msk))
-    {
-        if (flexcom5SpiObj.rxCount == flexcom5SpiObj.rxSize)
-        {
-            flexcom5SpiObj.transferIsBusy = false;
-
-            /* Disable TDRE, RDRF and TXEMPTY interrupts */
-            SPI5_REGS->SPI_IDR = SPI_IDR_TDRE_Msk | SPI_IDR_RDRF_Msk | SPI_IDR_TXEMPTY_Msk;
-
-            isLastByteTransferInProgress = false;
-
-            if(flexcom5SpiObj.callback != NULL)
-            {
-                flexcom5SpiObj.callback(flexcom5SpiObj.context);
-            }
-        }
-    }
-    if (isLastByteTransferInProgress == true)
-    {
-        /* For the last byte transfer, the TDRE interrupt is already disabled.
-         * Enable TXEMPTY interrupt to ensure no data is present in the shift
-         * register before application callback is called.
+        /* txPending is 0. Need to use the dummy data buffer for transmission.
+         * Find out the max data that can be received, given the limited size of the dummy data buffer.
          */
-        SPI5_REGS->SPI_IER = SPI_IER_TXEMPTY_Msk;
+        (flexcom5SpiObj.rxCount > sizeof(dummyDataBuffer)) ?
+            (size = sizeof(dummyDataBuffer)): (size = flexcom5SpiObj.rxCount);
+
+        index = flexcom5SpiObj.nBytesTransferred;
+
+        /* Calculate the remaining rx bytes and total bytes transferred */
+        flexcom5SpiObj.rxCount -= size;
+        flexcom5SpiObj.nBytesTransferred += size;
+
+        setupDMA(dummyDataBuffer,(void *)&((uint8_t*)flexcom5SpiObj.rxBuffer)[index],size);
     }
+    else if(flexcom5SpiObj.txCount > 0)
+    {
+        /* rxSize is 0. Need to use the dummy data buffer for reception.
+         * Find out the max data that can be transmitted, given the limited size of the dummy data buffer.
+         */
+        (flexcom5SpiObj.txCount > sizeof(dummyDataBuffer)) ?
+            (size = sizeof(dummyDataBuffer)): (size = flexcom5SpiObj.txCount);
 
+        index = flexcom5SpiObj.nBytesTransferred;
+
+        /* Calculate the remaining rx bytes and total bytes transferred */
+        flexcom5SpiObj.txCount -= size;
+        flexcom5SpiObj.nBytesTransferred += size;
+
+        setupDMA((void *)&((uint8_t*)flexcom5SpiObj.txBuffer)[index], dummyDataBuffer, size);
+    }
+    else
+    {
+        flexcom5SpiObj.transferIsBusy = false;
+
+        if( flexcom5SpiObj.callback != NULL )
+        {
+            flexcom5SpiObj.callback(flexcom5SpiObj.context);
+        }
+
+        SPI5_REGS->SPI_IDR = SPI_IDR_ENDRX_Msk;
+    }
 }
-
-
-/*******************************************************************************
- End of File
-*/
-
