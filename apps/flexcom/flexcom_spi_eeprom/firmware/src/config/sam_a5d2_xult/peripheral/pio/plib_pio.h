@@ -63,25 +63,25 @@
 
 
 
-/*** Macros for HOLD pin ***/
-#define HOLD_Set()               (PIOB_REGS->PIO_SODR = (1<<9))
-#define HOLD_Clear()             (PIOB_REGS->PIO_CODR = (1<<9))
-#define HOLD_Toggle()            do {\
+/*** Macros for EEPROM_HOLD pin ***/
+#define EEPROM_HOLD_Set()               (PIOB_REGS->PIO_SODR = (1<<9))
+#define EEPROM_HOLD_Clear()             (PIOB_REGS->PIO_CODR = (1<<9))
+#define EEPROM_HOLD_Toggle()            do {\
                                             PIOB_REGS->PIO_MSKR = (1<<9); \
                                             PIOB_REGS->PIO_ODSR ^= (1<<9);\
                                         } while (0)
-#define HOLD_Get()               ((PIOB_REGS->PIO_PDSR >> 9) & 0x1)
-#define HOLD_OutputEnable()      do {\
+#define EEPROM_HOLD_Get()               ((PIOB_REGS->PIO_PDSR >> 9) & 0x1)
+#define EEPROM_HOLD_OutputEnable()      do {\
                                             PIOB_REGS->PIO_MSKR = (1<<9); \
 										     PIOB_REGS->PIO_CFGR |=(1 << PIO_CFGR_DIR_Pos);\
                                         }while(0)
-#define HOLD_InputEnable()       do { \
+#define EEPROM_HOLD_InputEnable()       do { \
                                             PIOB_REGS->PIO_MSKR = (1<<9); \
 										     PIOB_REGS->PIO_CFGR &= ~(1 << PIO_CFGR_DIR_Pos);\
                                         } while (0)
-#define HOLD_InterruptEnable()   (PIOB_REGS->PIO_IER = (1<<9))
-#define HOLD_InterruptDisable()  (PIOB_REGS->PIO_IDR = (1<<9))
-#define HOLD_PIN                  PIO_PIN_PB9
+#define EEPROM_HOLD_InterruptEnable()   (PIOB_REGS->PIO_IER = (1<<9))
+#define EEPROM_HOLD_InterruptDisable()  (PIOB_REGS->PIO_IDR = (1<<9))
+#define EEPROM_HOLD_PIN                  PIO_PIN_PB9
 
 /*** Macros for LED pin ***/
 #define LED_Set()               (PIOB_REGS->PIO_SODR = (1<<5))
@@ -103,45 +103,45 @@
 #define LED_InterruptDisable()  (PIOB_REGS->PIO_IDR = (1<<5))
 #define LED_PIN                  PIO_PIN_PB5
 
-/*** Macros for WP pin ***/
-#define WP_Set()               (PIOD_REGS->PIO_SODR = (1<<13))
-#define WP_Clear()             (PIOD_REGS->PIO_CODR = (1<<13))
-#define WP_Toggle()            do {\
+/*** Macros for EEPROM_WP pin ***/
+#define EEPROM_WP_Set()               (PIOD_REGS->PIO_SODR = (1<<13))
+#define EEPROM_WP_Clear()             (PIOD_REGS->PIO_CODR = (1<<13))
+#define EEPROM_WP_Toggle()            do {\
                                             PIOD_REGS->PIO_MSKR = (1<<13); \
                                             PIOD_REGS->PIO_ODSR ^= (1<<13);\
                                         } while (0)
-#define WP_Get()               ((PIOD_REGS->PIO_PDSR >> 13) & 0x1)
-#define WP_OutputEnable()      do {\
+#define EEPROM_WP_Get()               ((PIOD_REGS->PIO_PDSR >> 13) & 0x1)
+#define EEPROM_WP_OutputEnable()      do {\
                                             PIOD_REGS->PIO_MSKR = (1<<13); \
 										     PIOD_REGS->PIO_CFGR |=(1 << PIO_CFGR_DIR_Pos);\
                                         }while(0)
-#define WP_InputEnable()       do { \
+#define EEPROM_WP_InputEnable()       do { \
                                             PIOD_REGS->PIO_MSKR = (1<<13); \
 										     PIOD_REGS->PIO_CFGR &= ~(1 << PIO_CFGR_DIR_Pos);\
                                         } while (0)
-#define WP_InterruptEnable()   (PIOD_REGS->PIO_IER = (1<<13))
-#define WP_InterruptDisable()  (PIOD_REGS->PIO_IDR = (1<<13))
-#define WP_PIN                  PIO_PIN_PD13
+#define EEPROM_WP_InterruptEnable()   (PIOD_REGS->PIO_IER = (1<<13))
+#define EEPROM_WP_InterruptDisable()  (PIOD_REGS->PIO_IDR = (1<<13))
+#define EEPROM_WP_PIN                  PIO_PIN_PD13
 
-/*** Macros for CS pin ***/
-#define CS_Set()               (PIOD_REGS->PIO_SODR = (1<<29))
-#define CS_Clear()             (PIOD_REGS->PIO_CODR = (1<<29))
-#define CS_Toggle()            do {\
+/*** Macros for EEPROM_CS pin ***/
+#define EEPROM_CS_Set()               (PIOD_REGS->PIO_SODR = (1<<29))
+#define EEPROM_CS_Clear()             (PIOD_REGS->PIO_CODR = (1<<29))
+#define EEPROM_CS_Toggle()            do {\
                                             PIOD_REGS->PIO_MSKR = (1<<29); \
                                             PIOD_REGS->PIO_ODSR ^= (1<<29);\
                                         } while (0)
-#define CS_Get()               ((PIOD_REGS->PIO_PDSR >> 29) & 0x1)
-#define CS_OutputEnable()      do {\
+#define EEPROM_CS_Get()               ((PIOD_REGS->PIO_PDSR >> 29) & 0x1)
+#define EEPROM_CS_OutputEnable()      do {\
                                             PIOD_REGS->PIO_MSKR = (1<<29); \
 										     PIOD_REGS->PIO_CFGR |=(1 << PIO_CFGR_DIR_Pos);\
                                         }while(0)
-#define CS_InputEnable()       do { \
+#define EEPROM_CS_InputEnable()       do { \
                                             PIOD_REGS->PIO_MSKR = (1<<29); \
 										     PIOD_REGS->PIO_CFGR &= ~(1 << PIO_CFGR_DIR_Pos);\
                                         } while (0)
-#define CS_InterruptEnable()   (PIOD_REGS->PIO_IER = (1<<29))
-#define CS_InterruptDisable()  (PIOD_REGS->PIO_IDR = (1<<29))
-#define CS_PIN                  PIO_PIN_PD29
+#define EEPROM_CS_InterruptEnable()   (PIOD_REGS->PIO_IER = (1<<29))
+#define EEPROM_CS_InterruptDisable()  (PIOD_REGS->PIO_IDR = (1<<29))
+#define EEPROM_CS_PIN                  PIO_PIN_PD29
 
 
 // *****************************************************************************
