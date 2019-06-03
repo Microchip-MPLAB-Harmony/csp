@@ -62,6 +62,8 @@
 </#if>
 </#compress>
 <#assign start = 0>
+
+<#if TC_QDEC_PRESENT == true>
 <#-- start index of the for loop. In quadrature position mode channel 0 and channel 1 are used. And in quadrature speed mode, all 3 channels are used -->
 <#if TC_ENABLE_QEI == true>
     <#compress>
@@ -189,12 +191,13 @@ TC_QUADRATURE_STATUS ${TC_INSTANCE_NAME}_QuadratureStatusGet(void)
 }
 </#if>
 </#if> <#-- QUADRATURE -->
+</#if> <#-- QDEC_PRESENT -->
+
 <#list start..(TC_MAX_CHANNELS - 1) as i>
-<#compress>
     <#if i == TC_MAX_CHANNELS>
         <#break>
     </#if> <#-- break the loop if quadrature speed mode is used -->
-    <#if TC_ENABLE_QEI == true && TC_INDEX_PULSE == false && TC_BMR_POSEN == "SPEED" && i == 2>
+    <#if (TC_ENABLE_QEI?? && TC_ENABLE_QEI == true) && TC_INDEX_PULSE == false && TC_BMR_POSEN == "SPEED" && i == 2>
         <#break>
     </#if>
 <#assign TC_CH_ENABLE = "TC" + i + "_ENABLE">
@@ -234,11 +237,11 @@ TC_QUADRATURE_STATUS ${TC_INSTANCE_NAME}_QuadratureStatusGet(void)
 <#assign TC_COMPARE_B = "TC"+i+"_COMPARE_B">
 <#assign TC_COMPARE_IER_CPCS = "TC"+i+"_COMPARE_IER_CPCS">
 <#assign TC_COMPARE_CMR_CPCSTOP = "TC"+i+"_COMPARE_CMR_CPCSTOP">
-</#compress>
+
 <#if .vars[TC_CH_ENABLE] == true>
 <#if .vars[TC_CH_OPERATINGMODE] == "TIMER">
-<#if (.vars[TC_TIMER_IER_CPCS] == true) || (.vars[TC_TIMER_IER_CPAS] == true)>
 
+<#if (.vars[TC_TIMER_IER_CPCS] == true) || (.vars[TC_TIMER_IER_CPAS] == true)>
 /* Callback object for channel ${CH_NUM} */
 TC_TIMER_CALLBACK_OBJECT ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj;
 </#if>
@@ -330,8 +333,8 @@ ${TC_UNSIGNED_INT_TYPE} ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerCounterGet (void)
 {
     return ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_CV;
 }
-<#if (.vars[TC_TIMER_IER_CPCS] == true) || (.vars[TC_TIMER_IER_CPAS] == true)>
 
+<#if (.vars[TC_TIMER_IER_CPCS] == true) || (.vars[TC_TIMER_IER_CPAS] == true)>
 /* Register callback for period interrupt */
 void ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerCallbackRegister(TC_TIMER_CALLBACK callback, uintptr_t context)
 {
@@ -349,8 +352,8 @@ void ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
         ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn(timer_status, ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.context);
     }
 }
-<#else>
 
+<#else>
 /* Check if timer period status is set */
 bool ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerPeriodHasExpired(void)
 {
@@ -358,9 +361,9 @@ bool ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerPeriodHasExpired(void)
 }
 </#if>
 </#if> <#-- TIMER -->
+
 <#if .vars[TC_CH_OPERATINGMODE] == "CAPTURE">
 <#if .vars[TC_CAPTURE_IER_LDRAS] == true || .vars[TC_CAPTURE_IER_LDRBS] == true || .vars[TC_CAPTURE_IER_COVFS] == true>
-
 /* Callback object for channel ${CH_NUM} */
 TC_CAPTURE_CALLBACK_OBJECT ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj;
 </#if>
@@ -449,8 +452,8 @@ ${TC_UNSIGNED_INT_TYPE} ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureBGet (void)
 {
     return ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_RB;
 }
-<#if .vars[TC_CAPTURE_IER_LDRAS] == true || .vars[TC_CAPTURE_IER_LDRBS] == true || .vars[TC_CAPTURE_IER_COVFS] == true>
 
+<#if .vars[TC_CAPTURE_IER_LDRAS] == true || .vars[TC_CAPTURE_IER_LDRBS] == true || .vars[TC_CAPTURE_IER_COVFS] == true>
 /* Register callback function */
 void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureCallbackRegister(TC_CAPTURE_CALLBACK callback, uintptr_t context)
 {
@@ -469,17 +472,15 @@ void ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
     }
 }
 <#else>
-
-/*Get the capture status */
 TC_CAPTURE_STATUS ${TC_INSTANCE_NAME}_CH${CH_NUM}_CaptureStatusGet(void)
 {
     return (TC_CAPTURE_STATUS)(${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR & TC_CAPTURE_STATUS_MSK);
 }
 </#if>
 </#if> <#-- CAPTURE -->
+
 <#if .vars[TC_CH_OPERATINGMODE] == "COMPARE">
 <#if .vars[TC_COMPARE_IER_CPCS] == true>
-
 /* Callback object for channel ${CH_NUM} */
 TC_COMPARE_CALLBACK_OBJECT ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj;
 </#if>
@@ -568,8 +569,8 @@ void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareBSet (${TC_UNSIGNED_INT_TYPE} value)
 {
     ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_RB = value;
 }
-<#if .vars[TC_COMPARE_IER_CPCS] == true>
 
+<#if .vars[TC_COMPARE_IER_CPCS] == true>
 /* Register callback function */
 void ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareCallbackRegister(TC_COMPARE_CALLBACK callback, uintptr_t context)
 {
@@ -588,21 +589,20 @@ void ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
     }
 }
 <#else>
-
-/*Get the compare status */
 TC_COMPARE_STATUS ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareStatusGet(void)
 {
     return (TC_COMPARE_STATUS)(${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_SR & TC_COMPARE_STATUS_MSK);
 }
 </#if>
 </#if> <#-- COMPARE -->
+
 </#if> <#-- CH_ENABLE -->
 </#list>
+
 <#--  If a common interrupt symbol exists -->
 <#if TC_COMMON_INTERRUPT_STATUS??>
 <#--  If common interrupt is enabled -->
 <#if TC_COMMON_INTERRUPT_STATUS == true>
-
 /* Interrupt handler for ${TC_INSTANCE_NAME} */
 void ${TC_INSTANCE_NAME}_InterruptHandler(void)
 {

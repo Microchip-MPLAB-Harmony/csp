@@ -188,9 +188,10 @@ def tcUpdatecommonInterrupt(symbol,event):
 
 #Enable/Disable peripheral clock
 def tcClockControl(symbol, event):
+    global tcSym_QDEC_PRESENT
     id = symbol.getID()
     channelID = int(id[2])
-    if(tcSym_CH_EnableQEI.getValue() == True):
+    if(tcSym_QDEC_PRESENT.getValue() == True and tcSym_CH_EnableQEI.getValue() == True):
         Database.setSymbolValue("core", tcInstanceName.getValue()  + "_CHANNEL0_CLOCK_ENABLE", True, 2)
         if(tcSym_CH_QEI_INDEX_PULSE.getValue() == True):
             Database.setSymbolValue("core", tcInstanceName.getValue()  + "_CHANNEL1_CLOCK_ENABLE", True, 2)
@@ -217,12 +218,13 @@ def tcinterruptControl(symbol, event):
     id = symbol.getID()
     channelID = int(id[2])
     global channel_periphId
+    global tcSym_QDEC_PRESENT
 
     interruptVector = tcInstanceName.getValue() + "_CH" + str(channelID) + "_INTERRUPT_ENABLE"
     interruptHandler = tcInstanceName.getValue() + "_CH" + str(channelID) + "_INTERRUPT_HANDLER"
     interruptHandlerLock = tcInstanceName.getValue() + "_CH" + str(channelID) + "_INTERRUPT_HANDLER_LOCK"
 
-    if(tcSym_CH_EnableQEI.getValue() == True):
+    if(tcSym_QDEC_PRESENT.getValue() == True and tcSym_CH_EnableQEI.getValue() == True):
         interruptVector = tcInstanceName.getValue() + "_CH0_INTERRUPT_ENABLE"
         interruptHandler = tcInstanceName.getValue() + "_CH0_INTERRUPT_HANDLER"
         interruptHandlerLock = tcInstanceName.getValue() + "_CH0_INTERRUPT_HANDLER_LOCK"
@@ -376,7 +378,7 @@ def tcQEIDependencyIntStatus(symbol, event):
             symbol.setVisible(False)
 
 def tcGetClockResolution(clockSource, channelID):
-    if (clockSource > 5):
+    if ("XC" in clockSource):
         source_clk_freq = tcSym_CH_EXT_CLOCK[channelID].getValue()
     else:
         source_clk_freq = Database.getSymbolValue("core", tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY")
@@ -399,7 +401,8 @@ def tcClockResCalc(tcSym_CH_ResolutionLocal, event):
     channelID = int(id[2])
     resolution = None
     clock = Database.getSymbolValue(tcInstanceName.getValue().lower(), "TC"+str(channelID)+"_CMR_TCCLKS")
-    if (clock > 5):
+    source = tcSym_CH_CMR_TCCLKS[channelID].getSelectedKey()
+    if ("XC" in source):
         source_clk_freq = tcSym_CH_EXT_CLOCK[channelID].getValue()
     else:
         source_clk_freq = Database.getSymbolValue("core", tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY")
@@ -408,7 +411,7 @@ def tcClockResCalc(tcSym_CH_ResolutionLocal, event):
         tcSym_CH_Invalid_Source[channelID].setVisible(True)
     else:
         tcSym_CH_Invalid_Source[channelID].setVisible(False)
-        resolution = tcGetClockResolution(clock, channelID)
+        resolution = tcGetClockResolution(source, channelID)
         tcSym_CH_Resolution[channelID].setLabel("****Clock resolution is " + str(resolution) + " nS****")
         tcSym_CH_Resolution[channelID].setVisible(True)
 
@@ -489,7 +492,7 @@ def tcPeriodCalc(tcSym_CH_ComparePeriodLocal, event):
 
     id = tcSym_CH_ComparePeriodLocal.getID()
     channelID = int(id[2])
-    clock = Database.getSymbolValue(tcInstanceName.getValue().lower(), "TC"+str(channelID)+"_CMR_TCCLKS")
+    clock = tcSym_CH_CMR_TCCLKS[channelID].getSelectedKey()
     mode = tcSym_CH_OperatingMode[channelID].getValue()
     if(mode == "COMPARE"):
         count = tcSym_CH_ComparePeriodCount[channelID].getValue()
@@ -498,7 +501,7 @@ def tcPeriodCalc(tcSym_CH_ComparePeriodLocal, event):
     time_us = float(resolution_ns) * int(count) / 1000.0;
 
     if(mode == "COMPARE"):
-        tcSym_CH_ComparePeriod[channelID].setLabel("****Waveform period is " + str(time_us) + " uS****")
+        tcSym_CH_ComparePeriod[channelID].setLabel("**** Waveform Period is " + str(time_us) + " uS****")
 
 def tcPeriodCountCalc(symbol, event):
     global tcSym_CH_CMR_TCCLKS
@@ -510,7 +513,7 @@ def tcPeriodCountCalc(symbol, event):
 
     id = symbol.getID()
     channelID = int(id[2])
-    clock = Database.getSymbolValue(tcInstanceName.getValue().lower(), "TC"+str(channelID)+"_CMR_TCCLKS")
+    clock = tcSym_CH_CMR_TCCLKS[channelID].getSelectedKey()
     mode = tcSym_CH_OperatingMode[channelID].getValue()
 
     if (mode == "TIMER"):
@@ -531,7 +534,7 @@ def tcPeriodCountCalc(symbol, event):
 def tcPeriodMaxVal(symbol, event):
     id = symbol.getID()
     channelID = int(id[2])
-    clock = Database.getSymbolValue(tcInstanceName.getValue().lower(), "TC"+str(channelID)+"_CMR_TCCLKS")
+    clock = tcSym_CH_CMR_TCCLKS[channelID].getSelectedKey()
     resolution_ns = tcGetClockResolution(clock, channelID)
     symbol.setMax(float(((float(resolution_ns) * float(tcCounterMaxValue))/1000000)))
 
@@ -606,7 +609,7 @@ def tcQuadratureTimeBaseCalculate(tcSym_CH_QEI_CH2PERIOD_COMMENT, event):
     global tcSym_CH_CMR_TCCLKS
     global tcSym_CH_QEI_CH2PERIOD
     channelID = 3
-    clock = Database.getSymbolValue(tcInstanceName.getValue().lower(), "TC"+str(channelID)+"_CMR_TCCLKS")
+    clock = tcSym_CH_CMR_TCCLKS[channelID].getSelectedKey()
     count = tcSym_CH_QEI_CH2PERIOD.getValue()
 
     resolution_ns = tcGetClockResolution(clock, 3)
@@ -845,6 +848,14 @@ def instantiateComponent(tcComponent):
     tcInstanceName.setDefaultValue(tcComponent.getID().upper())
     print("Running " + tcInstanceName.getValue())
 
+    global tcSym_QDEC_PRESENT
+    tcSym_QDEC_PRESENT = tcComponent.createBooleanSymbol("TC_QDEC_PRESENT", None)
+    tcSym_QDEC_PRESENT.setVisible(False)
+    tcSym_QDEC_PRESENT.setDefaultValue(True)
+    node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"TC\"]/instance@[name=\""+tcInstanceName.getValue()+"\"]/parameters/param@[name=\"QDEC_PRESENT\"]")
+    if node != None and node.getAttribute("value") == "0":
+        tcSym_QDEC_PRESENT.setValue(False)
+
     tcSym_MAX_CHANNELS = tcComponent.createIntegerSymbol("TC_MAX_CHANNELS", None)
     tcSym_MAX_CHANNELS.setDefaultValue(3)
     tcSym_MAX_CHANNELS.setVisible(False)
@@ -962,131 +973,138 @@ def instantiateComponent(tcComponent):
 
 
     #*****************************QUADRATURE******************************
-    #channel enable
-    global tcSym_CH_EnableQEI
-    tcSym_CH_EnableQEI = tcComponent.createBooleanSymbol("TC_ENABLE_QEI", None)
-    tcSym_CH_EnableQEI.setLabel("Enable Quadrature Encoder Mode")
-    tcSym_CH_EnableQEI.setDefaultValue(False)
-    #Quadrature interface is not available if channel 0 and channel 1 pins are not available
-    if (channel[0] == True and channel[1] == True):
-        tcSym_CH_EnableQEI.setVisible(True)
-    else:
-        tcSym_CH_EnableQEI.setVisible(False)
+    if tcSym_QDEC_PRESENT.getValue() == True:
+        #channel enable
+        global tcSym_CH_EnableQEI
+        tcSym_CH_EnableQEI = tcComponent.createBooleanSymbol("TC_ENABLE_QEI", None)
+        tcSym_CH_EnableQEI.setLabel("Enable Quadrature Encoder Mode")
+        tcSym_CH_EnableQEI.setDefaultValue(False)
+        #Quadrature interface is not available if channel 0 and channel 1 pins are not available
+        if (channel[0] == True and channel[1] == True):
+            tcSym_CH_EnableQEI.setVisible(True)
+        else:
+            tcSym_CH_EnableQEI.setVisible(False)
 
-    # Dependency Status
-    tcSym_QEI_ClkEnComment = tcComponent.createCommentSymbol("TC_CLK_ENABLE_COMMENT", tcSym_CH_EnableQEI)
-    tcSym_QEI_ClkEnComment.setVisible(False)
-    tcSym_QEI_ClkEnComment.setLabel("Warning!!! " + tcInstanceName.getValue() + " Channel Peripheral Clock is Disabled in Clock Manager")
-    tcSym_QEI_ClkEnComment.setDependencies(tcQEIDependencyClockStatus, ["core." +  tcInstanceName.getValue()  + "_CHANNEL0_CLOCK_ENABLE", \
-        "core." + tcInstanceName.getValue() + "_CHANNEL1_CLOCK_ENABLE", "core." + tcInstanceName.getValue() + "_CHANNEL2_CLOCK_ENABLE", "TC_ENABLE_QEI", "TC_BMR_POSEN", "TC_INDEX_PULSE"])
+        # Dependency Status
+        tcSym_QEI_ClkEnComment = tcComponent.createCommentSymbol("TC_CLK_ENABLE_COMMENT", tcSym_CH_EnableQEI)
+        tcSym_QEI_ClkEnComment.setVisible(False)
+        tcSym_QEI_ClkEnComment.setLabel("Warning!!! " + tcInstanceName.getValue() + " Channel Peripheral Clock is Disabled in Clock Manager")
+        tcSym_QEI_ClkEnComment.setDependencies(tcQEIDependencyClockStatus, ["core." +  tcInstanceName.getValue()  + "_CHANNEL0_CLOCK_ENABLE", \
+            "core." + tcInstanceName.getValue() + "_CHANNEL1_CLOCK_ENABLE", "core." + tcInstanceName.getValue() + "_CHANNEL2_CLOCK_ENABLE", "TC_ENABLE_QEI", "TC_BMR_POSEN", "TC_INDEX_PULSE"])
 
-    interruptVectorUpdate = tcInstanceName.getValue() + "_CH0_INTERRUPT_ENABLE_UPDATE"
-    tcSym_QEI_IntEnComment = tcComponent.createCommentSymbol("TC_NVIC_ENABLE_COMMENT", tcSym_CH_EnableQEI)
-    tcSym_QEI_IntEnComment.setVisible(False)
-    tcSym_QEI_IntEnComment.setLabel("Warning!!! " +tcInstanceName.getValue()+"_CH0 Interrupt is Disabled in Interrupt Manager")
-    tcSym_QEI_IntEnComment.setDependencies(tcQEIDependencyIntStatus, ["core." + interruptVectorUpdate, "TC_ENABLE_QEI", "TC_QIER_IDX", "TC_QIER_QERR", "TC_QEI_IER_CPCS"])
+        interruptVectorUpdate = tcInstanceName.getValue() + "_CH0_INTERRUPT_ENABLE_UPDATE"
+        tcSym_QEI_IntEnComment = tcComponent.createCommentSymbol("TC_NVIC_ENABLE_COMMENT", tcSym_CH_EnableQEI)
+        tcSym_QEI_IntEnComment.setVisible(False)
+        tcSym_QEI_IntEnComment.setLabel("Warning!!! " +tcInstanceName.getValue()+"_CH0 Interrupt is Disabled in Interrupt Manager")
+        tcSym_QEI_IntEnComment.setDependencies(tcQEIDependencyIntStatus, ["core." + interruptVectorUpdate, "TC_ENABLE_QEI", "TC_QIER_IDX", "TC_QIER_QERR", "TC_QEI_IER_CPCS"])
 
-    #quadrature menu
-    tcQuadratureMenu = tcComponent.createMenuSymbol("TC_QUADRATURE", tcSym_CH_EnableQEI)
-    tcQuadratureMenu.setLabel("Quadrature")
-    tcQuadratureMenu.setVisible(False)
-    tcQuadratureMenu.setDependencies(tcQuadratureVisible, ["TC_ENABLE_QEI"])
+        #quadrature menu
+        tcQuadratureMenu = tcComponent.createMenuSymbol("TC_QUADRATURE", tcSym_CH_EnableQEI)
+        tcQuadratureMenu.setLabel("Quadrature")
+        tcQuadratureMenu.setVisible(False)
+        tcQuadratureMenu.setDependencies(tcQuadratureVisible, ["TC_ENABLE_QEI"])
 
-    tcQuadratureComment = tcComponent.createCommentSymbol("TC_QUADRATURE_COMMENT", tcQuadratureMenu)
-    tcQuadratureComment.setLabel("**** Quadrature mode uses two channels. Channel 0 to capture number of edges and Channel 1 to capture number of revolutions ****")
-    # Dependency registration is done after all dependencies are defined.
-    #tcQuadratureComment.setDependencies(tcQuadratureCommentChange, ["TC_BMR_POSEN", "TC_INDEX_PULSE"])
+        tcQuadratureComment = tcComponent.createCommentSymbol("TC_QUADRATURE_COMMENT", tcQuadratureMenu)
+        tcQuadratureComment.setLabel("**** Quadrature mode uses two channels. Channel 0 to capture number of edges and Channel 1 to capture number of revolutions ****")
+        # Dependency registration is done after all dependencies are defined.
+        #tcQuadratureComment.setDependencies(tcQuadratureCommentChange, ["TC_BMR_POSEN", "TC_INDEX_PULSE"])
 
-    # Swap PhA and PhB
-    tcSym_CH_QEI_BMR_SWAP = tcComponent.createBooleanSymbol("TC_BMR_SWAP", tcQuadratureMenu)
-    tcSym_CH_QEI_BMR_SWAP.setLabel("Swap Phase A and Phase B Signals")
-    tcSym_CH_QEI_BMR_SWAP.setDefaultValue(False)
+        # Swap PhA and PhB
+        tcSym_CH_QEI_BMR_SWAP = tcComponent.createBooleanSymbol("TC_BMR_SWAP", tcQuadratureMenu)
+        tcSym_CH_QEI_BMR_SWAP.setLabel("Swap Phase A and Phase B Signals")
+        tcSym_CH_QEI_BMR_SWAP.setDefaultValue(False)
 
-    # Filter value
-    tcSym_CH_BMR_MAXFILT = tcComponent.createIntegerSymbol("TC_BMR_MAXFILT", tcQuadratureMenu)
-    tcSym_CH_BMR_MAXFILT.setLabel("Select Input Signal Filter Count")
-    tcSym_CH_BMR_MAXFILT.setDefaultValue(2)
-    tcSym_CH_BMR_MAXFILT.setMin(0)
-    tcSym_CH_BMR_MAXFILT.setMax(63)
+        # Filter value
+        tcSym_CH_BMR_MAXFILT = tcComponent.createIntegerSymbol("TC_BMR_MAXFILT", tcQuadratureMenu)
+        tcSym_CH_BMR_MAXFILT.setLabel("Select Input Signal Filter Count")
+        tcSym_CH_BMR_MAXFILT.setDefaultValue(2)
+        tcSym_CH_BMR_MAXFILT.setMin(0)
+        tcSym_CH_BMR_MAXFILT.setMax(63)
 
-    # Index pulse
-    global tcSym_CH_QEI_INDEX_PULSE
-    tcSym_CH_QEI_INDEX_PULSE = tcComponent.createBooleanSymbol("TC_INDEX_PULSE", tcQuadratureMenu)
-    tcSym_CH_QEI_INDEX_PULSE.setLabel("Is Index Pulse Available?")
-    tcSym_CH_QEI_INDEX_PULSE.setDefaultValue(True)
+        # Index pulse
+        global tcSym_CH_QEI_INDEX_PULSE
+        tcSym_CH_QEI_INDEX_PULSE = tcComponent.createBooleanSymbol("TC_INDEX_PULSE", tcQuadratureMenu)
+        tcSym_CH_QEI_INDEX_PULSE.setLabel("Is Index Pulse Available?")
+        tcSym_CH_QEI_INDEX_PULSE.setDefaultValue(True)
 
-    #Mode
-    global tcSym_CH_BMR_POSEN
-    tcSym_CH_BMR_POSEN = tcComponent.createComboSymbol("TC_BMR_POSEN", tcQuadratureMenu, ["POSITION", "SPEED"])
-    tcSym_CH_BMR_POSEN.setLabel("Select Mode")
-    tcSym_CH_BMR_POSEN.setDefaultValue("POSITION")
+        #Mode
+        global tcSym_CH_BMR_POSEN
+        tcSym_CH_BMR_POSEN = tcComponent.createComboSymbol("TC_BMR_POSEN", tcQuadratureMenu, ["POSITION", "SPEED"])
+        tcSym_CH_BMR_POSEN.setLabel("Select Mode")
+        tcSym_CH_BMR_POSEN.setDefaultValue("POSITION")
 
-    #position menu
-    global tcPositionMenu
-    tcPositionMenu = tcComponent.createMenuSymbol("TC_QUADRATURE_POSITION", tcSym_CH_BMR_POSEN)
-    tcPositionMenu.setLabel("Position Measurement")
-    tcPositionMenu.setVisible(False)
-    tcPositionMenu.setDependencies(tcQuadraturePositionVisible, ["TC_BMR_POSEN", "TC_INDEX_PULSE"])
+        #position menu
+        global tcPositionMenu
+        tcPositionMenu = tcComponent.createMenuSymbol("TC_QUADRATURE_POSITION", tcSym_CH_BMR_POSEN)
+        tcPositionMenu.setLabel("Position Measurement")
+        tcPositionMenu.setVisible(False)
+        tcPositionMenu.setDependencies(tcQuadraturePositionVisible, ["TC_BMR_POSEN", "TC_INDEX_PULSE"])
 
-    #Num pulses
-    tcSym_CH_QEI_NUM_PULSES = tcComponent.createLongSymbol("TC_QEI_NUM_PULSES", tcPositionMenu)
-    tcSym_CH_QEI_NUM_PULSES.setLabel("Number of Quadrature Pulses per Revolution")
-    tcSym_CH_QEI_NUM_PULSES.setDefaultValue(1024)
-    tcSym_CH_QEI_NUM_PULSES.setMin(0)
-    tcSym_CH_QEI_NUM_PULSES.setMax(tcCounterMaxValue)
+        #Num pulses
+        tcSym_CH_QEI_NUM_PULSES = tcComponent.createLongSymbol("TC_QEI_NUM_PULSES", tcPositionMenu)
+        tcSym_CH_QEI_NUM_PULSES.setLabel("Number of Quadrature Pulses per Revolution")
+        tcSym_CH_QEI_NUM_PULSES.setDefaultValue(1024)
+        tcSym_CH_QEI_NUM_PULSES.setMin(0)
+        tcSym_CH_QEI_NUM_PULSES.setMax(tcCounterMaxValue)
 
-    #Position reset interrupt
-    global tcSym_CH_QEI_IER_CPCS
-    tcSym_CH_QEI_IER_CPCS = tcComponent.createBooleanSymbol("TC_QEI_IER_CPCS", tcPositionMenu)
-    tcSym_CH_QEI_IER_CPCS.setLabel("Enable Period Interrupt")
-    tcSym_CH_QEI_IER_CPCS.setDefaultValue(False)
+        #Position reset interrupt
+        global tcSym_CH_QEI_IER_CPCS
+        tcSym_CH_QEI_IER_CPCS = tcComponent.createBooleanSymbol("TC_QEI_IER_CPCS", tcPositionMenu)
+        tcSym_CH_QEI_IER_CPCS.setLabel("Enable Period Interrupt")
+        tcSym_CH_QEI_IER_CPCS.setDefaultValue(False)
 
-    #speed menu
-    tcSpeedMenu = tcComponent.createMenuSymbol("TC_QUADRATURE_SPEED", tcSym_CH_BMR_POSEN)
-    tcSpeedMenu.setLabel("Speed Measurement")
-    tcSpeedMenu.setVisible(False)
-    tcSpeedMenu.setDependencies(tcQuadratureModeVisible, ["TC_BMR_POSEN"])
+        #speed menu
+        tcSpeedMenu = tcComponent.createMenuSymbol("TC_QUADRATURE_SPEED", tcSym_CH_BMR_POSEN)
+        tcSpeedMenu.setLabel("Speed Measurement")
+        tcSpeedMenu.setVisible(False)
+        tcSpeedMenu.setDependencies(tcQuadratureModeVisible, ["TC_BMR_POSEN"])
 
-    #channel enable for speed channel 2. Dummy symbol
-    tcSym_CH3_Enable = tcComponent.createBooleanSymbol("TC3_ENABLE", None)
-    tcSym_CH3_Enable.setLabel("Enable")
-    tcSym_CH3_Enable.setVisible(False)
-    tcSym_CH3_Enable.setDefaultValue(True)
+        #channel enable for speed channel 2. Dummy symbol
+        tcSym_CH3_Enable = tcComponent.createBooleanSymbol("TC3_ENABLE", None)
+        tcSym_CH3_Enable.setLabel("Enable")
+        tcSym_CH3_Enable.setVisible(False)
+        tcSym_CH3_Enable.setDefaultValue(True)
 
-    # clock selection for channel 2. For quadrature mode, channel ID 3 is used to distinguish between channel numbers and quadrature mode
-    tcClockSymbols(tcComponent, 3, tcSpeedMenu)
+        # clock selection for channel 2. For quadrature mode, channel ID 3 is used to distinguish between channel numbers and quadrature mode
+        tcClockSymbols(tcComponent, 3, tcSpeedMenu)
 
-    # CH2 time period
-    global tcSym_CH_QEI_CH2PERIOD
-    tcSym_CH_QEI_CH2PERIOD = tcComponent.createLongSymbol("TC_QEI_PERIOD", tcSpeedMenu)
-    tcSym_CH_QEI_CH2PERIOD.setLabel("Select Speed Time Base")
-    tcSym_CH_QEI_CH2PERIOD.setDefaultValue(15015)
-    tcSym_CH_QEI_CH2PERIOD.setMin(0)
-    tcSym_CH_QEI_CH2PERIOD.setMax(tcCounterMaxValue)
+        # CH2 time period
+        global tcSym_CH_QEI_CH2PERIOD
+        tcSym_CH_QEI_CH2PERIOD = tcComponent.createLongSymbol("TC_QEI_PERIOD", tcSpeedMenu)
+        tcSym_CH_QEI_CH2PERIOD.setLabel("Select Speed Time Base")
+        tcSym_CH_QEI_CH2PERIOD.setDefaultValue(15015)
+        tcSym_CH_QEI_CH2PERIOD.setMin(0)
+        tcSym_CH_QEI_CH2PERIOD.setMax(tcCounterMaxValue)
 
-    if (Database.getSymbolValue("core", tcInstanceName.getValue()+"_CH3_CLOCK_FREQUENCY") != 0):
-        time_base = (1000000.0 / long(Database.getSymbolValue("core", tcInstanceName.getValue()+"_CH3_CLOCK_FREQUENCY"))) * tcSym_CH_QEI_CH2PERIOD.getValue()
-    else:
-        time_base = 0
+        if (Database.getSymbolValue("core", tcInstanceName.getValue()+"_CH3_CLOCK_FREQUENCY") != 0):
+            time_base = (1000000.0 / long(Database.getSymbolValue("core", tcInstanceName.getValue()+"_CH3_CLOCK_FREQUENCY"))) * tcSym_CH_QEI_CH2PERIOD.getValue()
+        else:
+            time_base = 0
 
-    # CH2 time in us comment
-    tcSym_CH_QEI_CH2PERIOD_COMMENT = tcComponent.createCommentSymbol("TC_QEI_PERIOD_COMMENT", tcSpeedMenu)
-    tcSym_CH_QEI_CH2PERIOD_COMMENT.setLabel("**** Time Base is " + str(time_base) + " uS  ****")
-    tcSym_CH_QEI_CH2PERIOD_COMMENT.setDependencies(tcQuadratureTimeBaseCalculate, ["TC_QEI_PERIOD", "TC3_CMR_TCCLKS", \
-        "core."+tcInstanceName.getValue()+"_CH3_CLOCK_FREQUENCY", "TC_BMR_POSEN"])
+        # CH2 time in us comment
+        tcSym_CH_QEI_CH2PERIOD_COMMENT = tcComponent.createCommentSymbol("TC_QEI_PERIOD_COMMENT", tcSpeedMenu)
+        tcSym_CH_QEI_CH2PERIOD_COMMENT.setLabel("**** Time Base is " + str(time_base) + " uS  ****")
+        tcSym_CH_QEI_CH2PERIOD_COMMENT.setDependencies(tcQuadratureTimeBaseCalculate, ["TC_QEI_PERIOD", "TC3_CMR_TCCLKS", \
+            "core."+tcInstanceName.getValue()+"_CH3_CLOCK_FREQUENCY", "TC_BMR_POSEN"])
 
-    # enable index interrupt
-    global tcSym_CH_QIER_IDX
-    tcSym_CH_QIER_IDX = tcComponent.createBooleanSymbol("TC_QIER_IDX", tcQuadratureMenu)
-    tcSym_CH_QIER_IDX.setLabel("Enable Index Interrupt")
-    tcSym_CH_QIER_IDX.setDefaultValue(False)
-    tcSym_CH_QIER_IDX.setDependencies(tcQuadratureIndexPulse, ["TC_INDEX_PULSE"])
+        # enable index interrupt
+        global tcSym_CH_QIER_IDX
+        tcSym_CH_QIER_IDX = tcComponent.createBooleanSymbol("TC_QIER_IDX", tcQuadratureMenu)
+        tcSym_CH_QIER_IDX.setLabel("Enable Index Interrupt")
+        tcSym_CH_QIER_IDX.setDefaultValue(False)
+        tcSym_CH_QIER_IDX.setDependencies(tcQuadratureIndexPulse, ["TC_INDEX_PULSE"])
 
-    # enable quadrature error interrupt
-    global tcSym_CH_QIER_QERR
-    tcSym_CH_QIER_QERR = tcComponent.createBooleanSymbol("TC_QIER_QERR", tcQuadratureMenu)
-    tcSym_CH_QIER_QERR.setLabel("Enable Quadrature Error Interrupt")
-    tcSym_CH_QIER_QERR.setDefaultValue(False)
+        # enable quadrature error interrupt
+        global tcSym_CH_QIER_QERR
+        tcSym_CH_QIER_QERR = tcComponent.createBooleanSymbol("TC_QIER_QERR", tcQuadratureMenu)
+        tcSym_CH_QIER_QERR.setLabel("Enable Quadrature Error Interrupt")
+        tcSym_CH_QIER_QERR.setDefaultValue(False)
+
+        # Dependency registration is done after all dependencies are defined.
+        #tcSym_CH_PCK_CLKSRC.setDependencies(tcPCKVisible, ["TC0_CMR_TCCLKS", "TC1_CMR_TCCLKS", "TC2_CMR_TCCLKS", \
+        #        "TC3_CMR_TCCLKS", "TC_BMR_POSEN", "TC_ENABLE_QEI"])
+
+        tcQuadratureComment.setDependencies(tcQuadratureCommentChange, ["TC_BMR_POSEN", "TC_INDEX_PULSE"])
 
     #combo box to select PCK source only visible for TC0
     global tcSym_CH_PCK_CLKSRC
@@ -1094,11 +1112,7 @@ def instantiateComponent(tcComponent):
     tcSym_CH_PCK_CLKSRC.setLabel("Select PCK Clock Source")
     tcSym_CH_PCK_CLKSRC.setDefaultValue("PCK6")
     tcSym_CH_PCK_CLKSRC.setVisible(False)
-    # Dependency registration is done after all dependencies are defined.
-    #tcSym_CH_PCK_CLKSRC.setDependencies(tcPCKVisible, ["TC0_CMR_TCCLKS", "TC1_CMR_TCCLKS", "TC2_CMR_TCCLKS", \
-    #        "TC3_CMR_TCCLKS", "TC_BMR_POSEN", "TC_ENABLE_QEI"])
 
-    tcQuadratureComment.setDependencies(tcQuadratureCommentChange, ["TC_BMR_POSEN", "TC_INDEX_PULSE"])
     #*************************CHANNEL CONFIGURATIONS ******************************
     for channelID in range(0, len(channel)):
         #channel menu
@@ -1364,16 +1378,17 @@ def instantiateComponent(tcComponent):
         tcSym_CH_ComparePeriodCount[channelID].setMax(tcCounterMaxValue)
 
         if (Database.getSymbolValue("core", tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY") != 0):
-            period =  tcSym_CH_ComparePeriodCount[channelID].getValue() * 1000000.0 / int(Database.getSymbolValue("core", tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY") )
+            period =  (tcSym_CH_ComparePeriodCount[channelID].getValue() * 1000000.0) / \
+                int(Database.getSymbolValue("core", tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY") )
         else:
             period = 0
 
         #period time in uS
         tcSym_CH_ComparePeriod.append(channelID)
         tcSym_CH_ComparePeriod[channelID] = tcComponent.createCommentSymbol("TC"+str(channelID)+"_COMPARE_PERIOD", tcCompareMenu[channelID])
-        tcSym_CH_ComparePeriod[channelID].setLabel("****Timer Period is " + str(period) + " uS****")
+        tcSym_CH_ComparePeriod[channelID].setLabel("**** Waveform Period is " + str(period) + " uS****")
         tcSym_CH_ComparePeriod[channelID].setDependencies(tcPeriodCalc, ["TC"+str(channelID)+"_COMPARE_PERIOD_COUNT", "TC"+str(channelID)+"_CMR_TCCLKS", \
-            "core."+tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY", "TC_PCK_CLKSRC"])
+            "core."+tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY", "TC_PCK_CLKSRC", "TC"+str(channelID)+"_OPERATING_MODE"])
 
         #External Event Menu
         tcEventMenu.append(channelID)
@@ -1548,12 +1563,12 @@ def instantiateComponent(tcComponent):
     tcSource1File.setMarkup(True)
 
     tcGlobalHeaderFile = tcComponent.createFileSymbol("TC_GLOBALHEADER", None)
-    tcGlobalHeaderFile.setSourcePath("../peripheral/tc_6082/templates/plib_tc_common.h")
+    tcGlobalHeaderFile.setSourcePath("../peripheral/tc_6082/templates/plib_tc_common.h.ftl")
     tcGlobalHeaderFile.setOutputName("plib_tc_common.h")
     tcGlobalHeaderFile.setDestPath("/peripheral/tc/")
     tcGlobalHeaderFile.setProjectPath("config/" + configName + "/peripheral/tc/")
     tcGlobalHeaderFile.setType("HEADER")
-    tcGlobalHeaderFile.setMarkup(False)
+    tcGlobalHeaderFile.setMarkup(True)
 
     tcSystemInitFile = tcComponent.createFileSymbol("TC_INIT", None)
     tcSystemInitFile.setType("STRING")
