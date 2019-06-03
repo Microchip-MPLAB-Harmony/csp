@@ -153,7 +153,13 @@ if wdtCrNode != None:
     wdrProc.setDefaultValue(0)
     wdrProc.setOutputMode("Value")
     wdrProc.setDisplayMode("Description")
-    
+
+wdtCrLockNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"WDT\"]/register-group/register@[name=\"WDT_CR\"]/bitfield@[name=\"LOCKMR\"]")
+if wdtCrLockNode is not None:
+    lockMr = coreComponent.createBooleanSymbol("WDT_CR_LOCKMR", wdtCfgMenu)
+    lockMr.setLabel("Lock watchdog after initialization ")
+    lockMr.setDescription("If the watchdog is locked, its configurations cannot be modified after initialization")
+    lockMr.setDefaultValue(True)
 
 configName = Variables.get("__CONFIGURATION_NAME")
 

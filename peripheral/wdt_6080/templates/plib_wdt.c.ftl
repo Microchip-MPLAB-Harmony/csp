@@ -40,16 +40,42 @@
 
 #include "device.h"
 #include "plib_${WDT_INSTANCE_NAME?lower_case}.h"
+<#if WDT_CR_LOCKMR??>
 
-<#if wdtinterruptMode == true>	
+#define WDT_CLK_DELAY  ((3 * ${CPU_CLOCK_FREQUENCY}) / 32768)
+</#if>
+<#if wdtinterruptMode == true>
+
   <#lt>WDT_OBJECT wdt;
 </#if>
 
 void ${WDT_INSTANCE_NAME}_Initialize( void )
 {
+<#if WDT_CR_LOCKMR??>
+    /* Until LOCK bit is set, watchdog can be disabled or enabled. If it is disabled (for eg, by bootloader),
+     * WDD and WDV fields in MR cannot be modified, so enable it before proceeding.
+     * NOTE: If lock bit is already set, these operations have no effect on WDT.
+     */
+    if (${WDT_INSTANCE_NAME}_REGS->WDT_MR & WDT_MR_WDDIS_Msk)
+    {
+        /* Enable Watchdog */
+        ${WDT_INSTANCE_NAME}_REGS->WDT_MR &= ~(WDT_MR_WDDIS_Msk);
+
+        /* Wait for 3 WDT clk cycles before any further update to MR */
+        for(uint32_t count = 0; count < WDT_CLK_DELAY; count++);
+    }
+</#if>
+
     ${WDT_INSTANCE_NAME}_REGS->WDT_MR = WDT_MR_WDD (${wdtWDD}) | WDT_MR_WDV(${wdtWDV}) \
               ${wdtdebugHalt?then(' | WDT_MR_WDDBGHLT_Msk','')}${wdtidleHalt?then(' | WDT_MR_WDIDLEHLT_Msk','')}<#if WDT_MR_WDRPROC??>${(WDT_MR_WDRPROC != "0")?then(' | WDT_MR_WDRPROC_Msk','')}</#if>${wdtEnableReset?then(' | WDT_MR_WDRSTEN_Msk','')}${wdtinterruptMode?then(' | WDT_MR_WDFIEN_Msk','')};
-              
+<#if WDT_CR_LOCKMR??>
+<#if WDT_CR_LOCKMR == true>
+
+    /* Lock WDT MR register */
+    ${WDT_INSTANCE_NAME}_REGS->WDT_CR = (WDT_CR_KEY_PASSWD | WDT_CR_LOCKMR_Msk);
+</#if>
+</#if>
+
 }
 
 void ${WDT_INSTANCE_NAME}_Clear(void)
