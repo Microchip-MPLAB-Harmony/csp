@@ -401,12 +401,12 @@ def packageChange(pinoutSymbol, pinout):
         pin_position = []
         pinoutNode = ATDF.getNode('/avr-tools-device-file/pinouts/pinout@[name= "' + str(package.get(pinout["value"])) + '"]')
         for id in range(0,len(pinoutNode.getChildren())):
-            if "BGA" in pinout["value"]:
+            if "BGA" in pinout["value"] or "WLCSP" in pinout["value"]:
                 pin_map[pinoutNode.getChildren()[id].getAttribute("position")] = pinoutNode.getChildren()[id].getAttribute("pad")
             else:
                 pin_map[int(pinoutNode.getChildren()[id].getAttribute("position"))] = pinoutNode.getChildren()[id].getAttribute("pad")
 
-        if "BGA" in pinout["value"]:
+        if "BGA" in pinout["value"] or "WLCSP" in pinout["value"]:
             ## BGA package ID's are alphanumeric unlike TQFP special sorting required
             pin_position = sort_alphanumeric(pin_map.keys())
         else:
@@ -500,12 +500,12 @@ pinTotalPins.setDefaultValue(packagePinCount)
 # Build pins position-pad map
 pinoutNode = ATDF.getNode('/avr-tools-device-file/pinouts/pinout@[name= "' + str(package.get(pioPackage.getValue())) + '"]')
 for id in range(0,len(pinoutNode.getChildren())):
-    if "BGA" in pioPackage.getValue():
+    if "BGA" in pioPackage.getValue() or "WLCSP" in pioPackage.getValue():
         pin_map[pinoutNode.getChildren()[id].getAttribute("position")] = pinoutNode.getChildren()[id].getAttribute("pad")
     else:
         pin_map[int(pinoutNode.getChildren()[id].getAttribute("position"))] = pinoutNode.getChildren()[id].getAttribute("pad")
 
-if "BGA" in pioPackage.getValue():
+if "BGA" in pioPackage.getValue() or "WLCSP" in pioPackage.getValue():
     pin_position = sort_alphanumeric(pin_map.keys())
 else:
     pin_position = sorted(pin_map.keys())
