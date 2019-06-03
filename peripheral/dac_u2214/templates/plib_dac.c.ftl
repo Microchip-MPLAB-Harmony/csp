@@ -53,7 +53,7 @@
 #include "device.h"
 
 <#assign DAC_REGS = "DAC_CTRLB_REFSEL(" + DAC_REFERENCE_SELECTION + ") " + DAC_VOLTAGE_PUMP_DISABLED?then('| DAC_CTRLB_VPD_Msk ','') +
-					DAC_DEVICE_NAME?contains("SAMC2")?then(DAC_DITHERING_MODE?then('| DAC_CTRLB_DITHER_Msk ',''),'') + (DAC_OUTPUT_MODE == "ANALOG_COMPARATOR")?then('| DAC_CTRLB_IOEN_Msk ','') +
+					DAC_DITHERING_MODE???then(DAC_DITHERING_MODE?then('| DAC_CTRLB_DITHER_Msk ',''),'') + (DAC_OUTPUT_MODE == "ANALOG_COMPARATOR")?then('| DAC_CTRLB_IOEN_Msk ','') +
 					(DAC_OUTPUT_MODE == "INTERNAL_AND_EXTERNAL_OUTPUT")?then('| DAC_CTRLB_IOEN_Msk | DAC_CTRLB_EOEN_Msk ','') + (DAC_OUTPUT_MODE == "EXTERNAL_OUTPUT")?then('| DAC_CTRLB_EOEN_Msk ','')>
 
 /* (DAC DATA) Mask DATA[15:10] Bit */
@@ -69,8 +69,7 @@ void ${DAC_INSTANCE_NAME}_Initialize(void)
     
     /* Enable DAC */
     ${DAC_INSTANCE_NAME}_REGS->DAC_CTRLA = DAC_CTRLA_ENABLE_Msk ${DAC_RUNSTDBY?then('| DAC_CTRLA_RUNSTDBY_Msk',' ')};	
-
-    <#if DAC_DEVICE_NAME?contains("SAMC2")>while((${DAC_INSTANCE_NAME}_REGS->DAC_SYNCBUSY & DAC_SYNCBUSY_ENABLE_Msk) == DAC_SYNCBUSY_ENABLE_Msk)<#else>while(${DAC_INSTANCE_NAME}_REGS->DAC_STATUS)</#if>	
+    <#if STATUS_SYNCBUSY_AVAILABLE??>while(${DAC_INSTANCE_NAME}_REGS->DAC_STATUS)<#else>while((${DAC_INSTANCE_NAME}_REGS->DAC_SYNCBUSY & DAC_SYNCBUSY_ENABLE_Msk) == DAC_SYNCBUSY_ENABLE_Msk)</#if>
     {
         /* Wait for Synchronization after Enabling DAC */
     }
@@ -81,15 +80,13 @@ void ${DAC_INSTANCE_NAME}_DataWrite(uint16_t data)
 {
     /* Write Data to DATA Register for conversion(DATA[9:0]) */
     ${DAC_INSTANCE_NAME}_REGS->DAC_DATA = DAC_DATA_MSB_MASK & DAC_DATA_DATA(data);
-
-    <#if DAC_DEVICE_NAME?contains("SAMC2")>while((${DAC_INSTANCE_NAME}_REGS->DAC_SYNCBUSY & DAC_SYNCBUSY_DATA_Msk) == DAC_SYNCBUSY_DATA_Msk)<#else>while(${DAC_INSTANCE_NAME}_REGS->DAC_STATUS)</#if>	
+    <#if STATUS_SYNCBUSY_AVAILABLE??>while(${DAC_INSTANCE_NAME}_REGS->DAC_STATUS)<#else>while((${DAC_INSTANCE_NAME}_REGS->DAC_SYNCBUSY & DAC_SYNCBUSY_DATA_Msk) == DAC_SYNCBUSY_DATA_Msk)</#if>
     {
         /* Wait for Synchronization after writing Data to DATA Register */
     }
 }
 
-<#if DAC_DEVICE_NAME?contains("SAMC2")>bool ${DAC_INSTANCE_NAME}_IsReady(void)
+bool ${DAC_INSTANCE_NAME}_IsReady(void)
 {
-    return ((${DAC_INSTANCE_NAME}_REGS->DAC_STATUS & DAC_STATUS_READY_Msk) == DAC_STATUS_READY_Msk);
+    return ((${DAC_INSTANCE_NAME}_REGS->DAC_INTFLAG & DAC_INTFLAG_EMPTY_Msk) == DAC_INTFLAG_EMPTY_Msk);
 }
-</#if>
