@@ -52,7 +52,7 @@
           <LogicalPath dnOrder="2">config/sam_a5d2_xult/peripheral/aic/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/aic/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">10862E5E0B12B06E93866BED38746A18</GeneratedChecksum>
-          <UserChecksum dnOrder="5">F435E5331751479374E94DE518D0420F</UserChecksum>
+          <UserChecksum dnOrder="5">10862E5E0B12B06E93866BED38746A18</UserChecksum>
         </File>
         <File dnOrder="6">
           <Type dnOrder="0">SOURCE</Type>
@@ -68,15 +68,15 @@
           <LogicalPath dnOrder="2">config/sam_a5d2_xult/peripheral/flexcom/twi/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/flexcom/twi/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">D8B882D3015421160CB2D99EA0DA9FE2</GeneratedChecksum>
-          <UserChecksum dnOrder="5">0264ECEA0FE705C0A6576C9A2A4FB444</UserChecksum>
+          <UserChecksum dnOrder="5">D8B882D3015421160CB2D99EA0DA9FE2</UserChecksum>
         </File>
         <File dnOrder="8">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_l2cc.c</Name>
           <LogicalPath dnOrder="2">config/sam_a5d2_xult/peripheral/l2cc/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/l2cc/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">74BFB579A6084880A5ED42727229DF52</GeneratedChecksum>
-          <UserChecksum dnOrder="5">74BFB579A6084880A5ED42727229DF52</UserChecksum>
+          <GeneratedChecksum dnOrder="4">5EF382126813749B3905373343DD3C23</GeneratedChecksum>
+          <UserChecksum dnOrder="5">5EF382126813749B3905373343DD3C23</UserChecksum>
         </File>
         <File dnOrder="9">
           <Type dnOrder="0">SOURCE</Type>
@@ -171,8 +171,8 @@
           <Name dnOrder="1">arm_math.h</Name>
           <LogicalPath dnOrder="2">packs/CMSIS/CMSIS/DSP/Include/</LogicalPath>
           <PhysicalPath dnOrder="3">/../../packs/CMSIS/CMSIS/DSP/Include/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">27F6D2D0CB97CA5159FE0788243E978E</GeneratedChecksum>
-          <UserChecksum dnOrder="5">27F6D2D0CB97CA5159FE0788243E978E</UserChecksum>
+          <GeneratedChecksum dnOrder="4">4726F6E7A3CDEDAE6075A88F3D16F093</GeneratedChecksum>
+          <UserChecksum dnOrder="5">4726F6E7A3CDEDAE6075A88F3D16F093</UserChecksum>
         </File>
         <File dnOrder="21">
           <Type dnOrder="0">HEADER</Type>
@@ -227,24 +227,24 @@
           <Name dnOrder="1">cmsis_gcc.h</Name>
           <LogicalPath dnOrder="2">packs/CMSIS/CMSIS/Core_A/Include/</LogicalPath>
           <PhysicalPath dnOrder="3">/../../packs/CMSIS/CMSIS/Core_A/Include/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">91C03FE6A482084EEC44B1D75FE4D00E</GeneratedChecksum>
-          <UserChecksum dnOrder="5">91C03FE6A482084EEC44B1D75FE4D00E</UserChecksum>
+          <GeneratedChecksum dnOrder="4">25431DA0E64D60CDB443B02ABAC00FC8</GeneratedChecksum>
+          <UserChecksum dnOrder="5">25431DA0E64D60CDB443B02ABAC00FC8</UserChecksum>
         </File>
         <File dnOrder="28">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">cmsis_iccarm.h</Name>
           <LogicalPath dnOrder="2">packs/CMSIS/CMSIS/Core_A/Include/</LogicalPath>
           <PhysicalPath dnOrder="3">/../../packs/CMSIS/CMSIS/Core_A/Include/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">44699E7D9F67414CAC0914AB865D0FF6</GeneratedChecksum>
-          <UserChecksum dnOrder="5">44699E7D9F67414CAC0914AB865D0FF6</UserChecksum>
+          <GeneratedChecksum dnOrder="4">A194C342920D5CD34C03C2E40907D2E6</GeneratedChecksum>
+          <UserChecksum dnOrder="5">A194C342920D5CD34C03C2E40907D2E6</UserChecksum>
         </File>
         <File dnOrder="29">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">core_ca.h</Name>
           <LogicalPath dnOrder="2">packs/CMSIS/CMSIS/Core_A/Include/</LogicalPath>
           <PhysicalPath dnOrder="3">/../../packs/CMSIS/CMSIS/Core_A/Include/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">31692AF12C3323852C7051974B2CA56E</GeneratedChecksum>
-          <UserChecksum dnOrder="5">31692AF12C3323852C7051974B2CA56E</UserChecksum>
+          <GeneratedChecksum dnOrder="4">789BC94E81700B86004C6A43BAC0EFF2</GeneratedChecksum>
+          <UserChecksum dnOrder="5">789BC94E81700B86004C6A43BAC0EFF2</UserChecksum>
         </File>
         <File dnOrder="30">
           <Type dnOrder="0">HEADER</Type>
@@ -396,7 +396,7 @@
           <LogicalPath dnOrder="2">config/sam_a5d2_xult/peripheral/clk/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/clk/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">3176DF5386ABD348A93A3A6169F52E8B</GeneratedChecksum>
-          <UserChecksum dnOrder="5">115B0136EFE9ED871D67D3B10CBEBDC8</UserChecksum>
+          <UserChecksum dnOrder="5">3176DF5386ABD348A93A3A6169F52E8B</UserChecksum>
         </File>
         <File dnOrder="49">
           <Type dnOrder="0">HEADER</Type>
@@ -412,7 +412,7 @@
           <LogicalPath dnOrder="2">config/sam_a5d2_xult/peripheral/flexcom/twi/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/flexcom/twi/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">8733DE17A3C53226091BF46B7F121596</GeneratedChecksum>
-          <UserChecksum dnOrder="5">83855E6D55973AC4F47CA284F5B56C35</UserChecksum>
+          <UserChecksum dnOrder="5">8733DE17A3C53226091BF46B7F121596</UserChecksum>
         </File>
         <File dnOrder="51">
           <Type dnOrder="0">HEADER</Type>
@@ -689,7 +689,7 @@
       </Files>
     </Manifest>
     <Settings dnOrder="4">
-      <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.4.0"/>
+      <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.5.1"/>
       <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAMA5D2_DFP\0.1.18\atdf\ATSAMA5D27.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
