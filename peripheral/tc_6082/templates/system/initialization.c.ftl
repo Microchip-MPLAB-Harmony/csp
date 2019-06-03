@@ -1,4 +1,5 @@
 <#assign start = 0>
+<#if TC_QDEC_PRESENT == true>
 <#if TC_ENABLE_QEI == true>
     ${TC_INSTANCE_NAME}_QuadratureInitialize();
     <#if TC_BMR_POSEN == "POSITION">
@@ -15,11 +16,13 @@
         </#if>
     </#if>
 </#if>
+</#if>  <#-- QDEC_PRESENT -->
+
 <#list start..(TC_MAX_CHANNELS - 1) as i>
     <#if i == TC_MAX_CHANNELS>
         <#break>
     </#if> <#-- break the loop if quadrature mode is enabled -->
-    <#if TC_ENABLE_QEI == true && TC_INDEX_PULSE == false && TC_BMR_POSEN == "SPEED" && i == 2>
+    <#if (TC_ENABLE_QEI?? && TC_ENABLE_QEI == true) && TC_INDEX_PULSE == false && TC_BMR_POSEN == "SPEED" && i == 2>
         <#break>
     </#if>
 ${""?left_pad(4)}<#compress>
@@ -36,6 +39,6 @@ ${""?left_pad(4)}<#compress>
     <#if .vars[TC_CH_OPERATINGMODE] == "COMPARE">
     <#lt>${TC_INSTANCE_NAME}_CH${TC_NUM}_CompareInitialize();
     </#if> <#-- COMPARE -->
-</#if> <#-- CH_ENABLE --> 
+</#if> <#-- CH_ENABLE -->
 </#compress>
 </#list>

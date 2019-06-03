@@ -410,31 +410,25 @@ def tcFreq(symbol, event):
     peripheralId = symbol.getID().split("_CLOCK_FREQUENCY")[0]
     tcId = peripheralId.split("_")[0].split("TC")[1]
     channelId = peripheralId.split("_")[1].split("CH")[1]
-    print tcId
-    print channelId
-    print ("tc" + tcId + ".TC" + channelId + "_CMR_TCCLKS")
     enable = Database.getSymbolValue("core", "TC"+ tcId + "_CHANNEL" + channelId + "_CLOCK_ENABLE")
     freq = 0
     if enable:
         src = int(Database.getSymbolValue("tc" + tcId, "TC" + channelId + "_CMR_TCCLKS"))
         if src == 0:
-            freq = int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))
+            freq = int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))/2
         elif src == 1:
-            freq = int(Database.getSymbolValue("core", "PROG_3_CLOCK_FREQUENCY"))
-        elif src == 2:
             freq = int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))/8
-        elif src == 3:
+        elif src == 2:
             freq = int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))/32
-        elif src == 4:
+        elif src == 3:
             freq = int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))/128
-        elif src == 5:
-            freq = int(Database.getSymbolValue("core", "SLCK_CLOCK_FREQUENCY"))
+        elif src == 4:
+            Database.setSymbolValue("core", "PMC_SCER_PCK3", True)
+            freq = int(Database.getSymbolValue("core", "PROG_3_CLOCK_FREQUENCY"))
         else:
             freq = 0
-        
         if symbol.getValue() != freq:
             symbol.setValue(freq, 1)
-        
     else:
         if symbol.getValue() != 0:
             symbol.setValue(0, 1)
@@ -635,7 +629,7 @@ for id in clocks:
     peripClock.setLabel(str(clock_id.get(id)) + " Clock Frequency (Hz)")
     peripClock.setDefaultValue(0)
     peripClock.setReadOnly(True)
-    
+
     if "FLEXCOM" in clock_id.get(id):
         flexcomId = clock_id.get(id).split("FLEXCOM")[1]
         if (int(flexcomId[-1] == 0) or int(flexcomId[-1] == 1) or int(flexcomId[-1] == 2) or int(flexcomId[-1] == 3)):
@@ -679,7 +673,7 @@ for id in clocks:
                                                 "PROG_4_CLOCK_FREQUENCY",
                                                 "pdmic" + str(pdmicId) + ".PDMIC_CLKSEL"
                                                 ])
-        
+
     elif "ADC" in clock_id.get(id):
         peripClock.setDependencies(adcFreq, ["MASTER_CLOCK_FREQUENCY",
                                                 str(clock_id.get(id)) + "_CLOCK_ENABLE",
@@ -690,22 +684,6 @@ for id in clocks:
     else:
         peripClock.setDependencies(
                     perifreq, ["MASTER_CLOCK_FREQUENCY", str(clock_id.get(id)) + "_CLOCK_ENABLE"])
-
-#CH3 is used for quadrature speed mode
-sym_tc_ch3_clock_freq = coreComponent.createIntegerSymbol("TC0_CH3_CLOCK_FREQUENCY", None)
-sym_tc_ch3_clock_freq.setVisible(False)
-sym_tc_ch3_clock_freq.setDefaultValue(0)
-sym_tc_ch3_clock_freq.setDependencies(tcFreq, ["tc0.TC3_CMR_TCCLKS", "tc0.TC_PCK_CLKSRC", \
-"core.MASTER_CLOCK_FREQUENCY", "core.PCK3_CLOCK_FREQUENCY", "core.SLCK_CLOCK_FREQUENCY", "tc0.TC3_ENABLE", \
-"core.TC0_CHANNEL3_CLOCK_ENABLE"])
-
-#CH3 is used for quadrature speed mode
-sym_tc_ch3_clock_freq = coreComponent.createIntegerSymbol("TC1_CH3_CLOCK_FREQUENCY", None)
-sym_tc_ch3_clock_freq.setVisible(False)
-sym_tc_ch3_clock_freq.setDefaultValue(0)
-sym_tc_ch3_clock_freq.setDependencies(tcFreq, ["tc1.TC3_CMR_TCCLKS", "tc1.TC_PCK_CLKSRC", \
-"core.MASTER_CLOCK_FREQUENCY", "core.PCK3_CLOCK_FREQUENCY", "core.SLCK_CLOCK_FREQUENCY", "tc1.TC3_ENABLE", \
-"core.TC1_CHANNEL3_CLOCK_ENABLE"])
 
 CLK_MANAGER_SELECT = coreComponent.createStringSymbol("CLK_MANAGER_PLUGIN", None)
 CLK_MANAGER_SELECT.setVisible(False)
@@ -724,7 +702,7 @@ def pcer0Cal(symbol, event):
                 else:
                     value = symbol.getValue() & ~( 1 << int(id))
 
-                symbol.setValue(value, 2) 
+                symbol.setValue(value, 2)
 
 def pcer1Cal(symbol, event):
     global clock_id
@@ -733,12 +711,11 @@ def pcer1Cal(symbol, event):
         if id > 32:
             if peri == clock_id.get(id):
                 if event["value"]:
-                    print("set")
                     value = symbol.getValue() | 1 << int(id - 32)
                 else:
                     value = symbol.getValue() & ~( 1 << int(id - 32))
 
-                symbol.setValue(value, 2) 
+                symbol.setValue(value, 2)
 #######################################WAIT STATE############################################
 
 pmcClockEnable0 = coreComponent.createHexSymbol("PMC_PCER0", None)
