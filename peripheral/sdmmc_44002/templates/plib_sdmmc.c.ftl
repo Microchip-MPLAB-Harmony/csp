@@ -215,7 +215,7 @@ uint16_t ${SDMMC_INSTANCE_NAME}_ErrorGet( void )
 uint16_t ${SDMMC_INSTANCE_NAME}_CommandErrorGet( void )
 {
     return (${SDMMC_INSTANCE_NAME?lower_case}Obj.errorStatus & (SDMMC_EISTR_SD_SDIO_CMDTEO_Msk | SDMMC_EISTR_SD_SDIO_CMDCRC_Msk | \
-                SDMMC_EISTR_SD_SDIO_CMDEND_Msk));
+                SDMMC_EISTR_SD_SDIO_CMDEND_Msk | SDMMC_EISTR_SD_SDIO_CMDIDX_Msk));
 }
 
 uint16_t ${SDMMC_INSTANCE_NAME}_DataErrorGet( void )
