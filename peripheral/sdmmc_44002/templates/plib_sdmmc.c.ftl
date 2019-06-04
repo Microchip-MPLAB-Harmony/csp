@@ -56,9 +56,12 @@
 #define ${SDMMC_INSTANCE_NAME}_MAX_SUPPORTED_SDCLK_FREQUENCY    50000000UL
 #define ${SDMMC_INSTANCE_NAME}_MAX_SUPPORTED_DIVIDER            0x3FF
 
+#define ${SDMMC_INSTANCE_NAME}_MAX_BLOCK_SIZE                   0x200
+
 #define ${SDMMC_INSTANCE_NAME}_MAX_ADMA2_TRANSFER_SIZE          0x10000U
 
 #define ${SDMMC_INSTANCE_NAME}_MAX_DMA_TRANSFER_SIZE            (${SDMMC_INSTANCE_NAME}_MAX_ADMA2_TRANSFER_SIZE * ${SDMMC_INSTANCE_NAME}_DMA_NUM_DESCR_LINES)
+
 
 /* Absolute difference between two 32 bit integers */
 static inline uint32_t ${SDMMC_INSTANCE_NAME}_ABS_DIFF_U32(uint32_t a, uint32_t b)
@@ -274,7 +277,19 @@ bool ${SDMMC_INSTANCE_NAME}_IsCardAttached ( void )
 
 void ${SDMMC_INSTANCE_NAME}_BlockSizeSet ( uint16_t blockSize )
 {
-    ${SDMMC_INSTANCE_NAME}_REGS->SDMMC_BSR = blockSize;
+    if(blockSize == 0)
+    {
+        blockSize = 1;
+    }
+    else if(blockSize > ${SDMMC_INSTANCE_NAME}_MAX_BLOCK_SIZE)
+    {
+        blockSize = ${SDMMC_INSTANCE_NAME}_MAX_BLOCK_SIZE;
+    }
+    else
+    {
+      /* Do not modify the block size */
+    }
+    ${SDMMC_INSTANCE_NAME}_REGS->SDMMC_BSR = (SDMMC_BSR_BOUNDARY_4K | SDMMC_BSR_BLKSIZE(blockSize));
 }
 
 void ${SDMMC_INSTANCE_NAME}_BlockCountSet ( uint16_t numBlocks )
