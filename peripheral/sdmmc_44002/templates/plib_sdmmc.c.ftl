@@ -284,7 +284,14 @@ void ${SDMMC_INSTANCE_NAME}_BlockCountSet ( uint16_t numBlocks )
 
 void ${SDMMC_INSTANCE_NAME}_ClockEnable ( void )
 {
-    ${SDMMC_INSTANCE_NAME}_REGS->SDMMC_CCR |= (SDMMC_CCR_INTCLKEN_Msk | SDMMC_CCR_SDCLKEN_Msk);
+    /* Start the internal clock  */
+    ${SDMMC_INSTANCE_NAME}_REGS->SDMMC_CCR |= SDMMC_CCR_INTCLKEN_Msk;
+
+    /* Wait for internal clock to stabilize */
+    while (!(${SDMMC_INSTANCE_NAME}_REGS->SDMMC_CCR & SDMMC_CCR_INTCLKS_Msk)) ;
+
+    /* Enable the SD Clock */
+    ${SDMMC_INSTANCE_NAME}_REGS->SDMMC_CCR |= SDMMC_CCR_SDCLKEN_Msk;
 }
 
 void ${SDMMC_INSTANCE_NAME}_ClockDisable ( void )
