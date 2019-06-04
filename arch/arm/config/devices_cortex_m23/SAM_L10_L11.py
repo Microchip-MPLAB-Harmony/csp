@@ -155,6 +155,17 @@ cortexMenu = coreComponent.createMenuSymbol("CORTEX_MENU", None)
 cortexMenu.setLabel("Cortex-M23 Configuration")
 cortexMenu.setDescription("Configuration for Cortex M23")
 
+periInstanceMultiVectorSupport = coreComponent.createBooleanSymbol("PERIPHERAL_MULTI_VECTOR", None)
+periInstanceMultiVectorSupport.setDefaultValue(True)
+periInstanceMultiVectorSupport.setVisible(False)
+
+def getCorePeripherals():
+
+    # Components which are creating critical section
+    corePeripherals = ["DMAC", "I2S", "RTC", "TC", "SERCOM"]
+
+    return corePeripherals
+
 global nvmWaitStates
 nvmWaitStates = { #VDD > 2.7
                     14000000 : 0,
