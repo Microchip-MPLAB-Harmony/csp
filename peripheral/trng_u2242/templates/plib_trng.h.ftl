@@ -8,11 +8,11 @@
     plib_${TRNG_INSTANCE_NAME?lower_case}.h
 
   Summary:
-    Interface definition of the Watch Dog Timer Plib (TRNG).
+    Interface definition of the True Random Number Generator Plib (TRNG).
 
   Description:
     This file defines the interface for the TRNG Plib.
-    It allows user to setup timeout duration and restart watch dog timer.
+    It allows user to generate true random numbers.
 *******************************************************************************/
 
 /*******************************************************************************
