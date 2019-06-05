@@ -167,13 +167,12 @@ void ${PWM_INSTANCE_NAME}_Initialize (void)
     /* Clock configuration */
     ${PWM_INSTANCE_NAME}_REGS->PWM_CLK = PWM_CLK_PREB_${PWM_CLK_PREB} | PWM_CLK_DIVB(${PWM_CLK_DIVB});
 </#if>
-
 <#if PWM_SCM_VAL?has_content >
+
     /* Synchronous channels configuration */
     ${PWM_INSTANCE_NAME}_REGS->PWM_SCM = ${PWM_SCM_VAL} | PWM_SCM_UPDM_${PWM_SCM_UPDM};
     ${PWM_INSTANCE_NAME}_REGS->PWM_SCUP = PWM_SCUP_UPR(${PWM_SCUP_UPR}U);
 </#if>
-
 <#list 0..3 as i>
 <#assign CH_NUM = i >
 <#assign PWM_CH_ENABLE = "PWM_CH_"+ i +"_ENABLE">
@@ -192,6 +191,7 @@ void ${PWM_INSTANCE_NAME}_Initialize (void)
 <#assign PWM_FPE = "PWM_CH_"+i+"_FPE">
 <#assign PWM_IER1_CHID = "PWM_CH_"+i+"_IER1_CHID">
     <#if .vars[PWM_CH_ENABLE] == true>
+
     /************** Channel ${CH_NUM} *************************/
         <#if .vars[PWM_CH_SYNC_ENABLE] == false>
             <#lt>    /* PWM channel mode configurations */
@@ -224,8 +224,8 @@ void ${PWM_INSTANCE_NAME}_Initialize (void)
         </#if>
     </#if> <#-- PWM_CH_ENABLE -->
 </#list>
-
 <#if PWM_FPE_VAL?has_content>
+
     /*************************** Fault ************************/
     /* Enable fault input */
     ${PWM_INSTANCE_NAME}_REGS->PWM_FPE = ${PWM_FPE_VAL};
@@ -236,10 +236,8 @@ void ${PWM_INSTANCE_NAME}_Initialize (void)
     <#lt>    ${PWM_INSTANCE_NAME}_REGS->PWM_FPV2 = ${PWM_FPV2_VAL};
     </#if>
     /* Fault mode configuration */
-    ${PWM_INSTANCE_NAME}_REGS->PWM_FMR = PWM_FMR_FPOL(0b${PWM_FAULT_7_FMR_FPOL}${PWM_FAULT_6_FMR_FPOL}${PWM_FAULT_5_FMR_FPOL}${PWM_FAULT_4_FMR_FPOL}${PWM_FAULT_3_FMR_FPOL}${PWM_FAULT_2_FMR_FPOL}${PWM_FAULT_1_FMR_FPOL}${PWM_FAULT_0_FMR_FPOL}) |
-        PWM_FMR_FMOD(0b${PWM_FAULT_7_FMR_FMOD}${PWM_FAULT_6_FMR_FMOD}${PWM_FAULT_5_FMR_FMOD}${PWM_FAULT_4_FMR_FMOD}${PWM_FAULT_3_FMR_FMOD}${PWM_FAULT_2_FMR_FMOD}${PWM_FAULT_1_FMR_FMOD}${PWM_FAULT_0_FMR_FMOD});
+    ${PWM_INSTANCE_NAME}_REGS->PWM_FMR = PWM_FMR_FFIL(0x${PWM_FMR_FFIL_VAL?upper_case}) | PWM_FMR_FPOL(0x${PWM_FMR_FPOL_VAL?upper_case}) | PWM_FMR_FMOD(0x${PWM_FMR_FMOD_VAL?upper_case});
 </#if>
-
 <#list 0..7 as i>
 <#assign PWM_CMPM_CEN = "PWM_COMP_"+i+"_CMPM_CEN">
 <#assign PWM_CMPV_CV = "PWM_COMP_"+i+"_CMPV_CV">
@@ -249,6 +247,7 @@ void ${PWM_INSTANCE_NAME}_Initialize (void)
 <#assign PWM_CMPM_CUPR = "PWM_COMP_"+i+"_CMPM_CUPR">
 <#assign COMP_ID = i>
     <#if .vars[PWM_CMPM_CEN] == true>
+
     /************* Compare Unit ${COMP_ID} **************************/
     <#lt>    /* Compare unit configurations */
     <#lt>    ${PWM_INSTANCE_NAME}_REGS->PWM_CMP[${COMP_ID}].PWM_CMPM = PWM_CMPM_CEN_Msk | PWM_CMPM_CTR(${.vars[PWM_CMPM_CTR]}U) | PWM_CMPM_CPR(${.vars[PWM_CMPM_CPR]}U)
@@ -256,11 +255,12 @@ void ${PWM_INSTANCE_NAME}_Initialize (void)
     <#lt>    ${PWM_INSTANCE_NAME}_REGS->PWM_CMP[${COMP_ID}].PWM_CMPV = PWM_CMPV_CV(${.vars[PWM_CMPV_CV]}U) | PWM_CMPV_CVM_${.vars[PWM_CMPV_CVM]};
     </#if>
 </#list>
-
     <#if PWM_ELMR0_VAL?has_content>
+
     <#lt>    ${PWM_INSTANCE_NAME}_REGS->PWM_ELMR[0] = ${PWM_ELMR0_VAL};
     </#if>
     <#if PWM_ELMR1_VAL?has_content>
+
     <#lt>    ${PWM_INSTANCE_NAME}_REGS->PWM_ELMR[1] = ${PWM_ELMR1_VAL};
     </#if>
 }

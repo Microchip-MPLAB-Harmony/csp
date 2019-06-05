@@ -310,6 +310,15 @@ def pwmCompMenuVisible(symbol, event):
     else:
         symbol.setVisible(False)
 
+
+def pwmFaultFMRUpdate(symbol, event):
+    faultIndex = int(event["id"].split("INDEX_")[1])
+    currentValue = symbol.getValue()
+    if event["value"] == 1:
+        symbol.setValue(currentValue | (1 << faultIndex), 1)
+    else:
+        symbol.setValue(currentValue & ~(1 << faultIndex), 1)
+
 ###################################################################################################
 ########################### Component   #################################
 ###################################################################################################
@@ -643,32 +652,76 @@ def instantiateComponent(pwmComponent):
     pwmFaultMenu.setVisible(False)
     pwmFaultMenu.setDependencies(pwmFaultMenuVisible, ["PWM_CH_0_FAULT_ENABLE", "PWM_CH_1_FAULT_ENABLE", "PWM_CH_2_FAULT_ENABLE", "PWM_CH_3_FAULT_ENABLE"])
 
-    for faultID in range(0, 8):
-        pwmFaultIndexMenu.append(faultID)
-        pwmFaultIndexMenu[faultID] = pwmComponent.createMenuSymbol("PWM_FAULT_"+str(faultID)+"_INDEX", pwmFaultMenu)
-        pwmFaultIndexMenu[faultID].setLabel("Fault "+str(faultID))
+    pwmSym_PWM_FMR_FPOL_Val = pwmComponent.createHexSymbol("PWM_FMR_FPOL_VAL", pwmFaultMenu)
+    pwmSym_PWM_FMR_FPOL_Val.setVisible(False)
+    pwmFaultFPOLSymNameList = []
+    pwmFPOLDefaultVal = 0
 
-        #fault polarity
-        pwmSym_PWM_FMR_FPOL.append(faultID)
-        pwmSym_PWM_FMR_FPOL[faultID] = pwmComponent.createKeyValueSetSymbol("PWM_FAULT_"+str(faultID)+"_FMR_FPOL", pwmFaultIndexMenu[faultID])
-        pwmSym_PWM_FMR_FPOL[faultID].setLabel("Select Fault Polarity")
-        pwmSym_PWM_FMR_FPOL[faultID].addKey("LOW", "0", "Active when fault input is low")
-        pwmSym_PWM_FMR_FPOL[faultID].addKey("HIGH", "1", "Active when fault input is high")
-        pwmSym_PWM_FMR_FPOL[faultID].setDisplayMode("Description")
-        pwmSym_PWM_FMR_FPOL[faultID].setOutputMode("Value")
-        if (faultID > 2):
-            pwmSym_PWM_FMR_FPOL[faultID].setDefaultValue(1)
-            pwmSym_PWM_FMR_FPOL[faultID].setReadOnly(True)
+    pwmSym_PWM_FMR_FMOD_Val = pwmComponent.createHexSymbol("PWM_FMR_FMOD_VAL", pwmFaultMenu)
+    pwmSym_PWM_FMR_FMOD_Val.setVisible(False)
+    pwmFaultFMODSymNameList = []
+    pwmFMODDefaultVal = 0
 
-        #fault mode
-        pwmSym_PWM_FMR_FMOD.append(faultID)
-        pwmSym_PWM_FMR_FMOD[faultID] = pwmComponent.createKeyValueSetSymbol("PWM_FAULT_"+str(faultID)+"_FMR_FMOD", pwmFaultIndexMenu[faultID])
-        pwmSym_PWM_FMR_FMOD[faultID].setLabel("Select Fault Mode")
-        pwmSym_PWM_FMR_FMOD[faultID].addKey("CLEAR_AT_PERIPHERAL", "0", "Fault is active until cleared at peripheral level")
-        pwmSym_PWM_FMR_FMOD[faultID].addKey("CLEAR_AT_PERIPHERAL_AND_REGISTER", "1", "Fault is active until cleared at peripheral level AND cleared in PWM_FCR register")
-        pwmSym_PWM_FMR_FMOD[faultID].setDisplayMode("Description")
-        pwmSym_PWM_FMR_FMOD[faultID].setOutputMode("Value")
-        pwmSym_PWM_FMR_FMOD[faultID].setDefaultValue(1)
+    pwmSym_PWM_FMR_FFIL_Val = pwmComponent.createHexSymbol("PWM_FMR_FFIL_VAL", pwmFaultMenu)
+    pwmSym_PWM_FMR_FFIL_Val.setVisible(False)
+    pwmFaultFILSymNameList = []
+    pwmFFILDefaultVal = 0
+
+    parametersNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"PWM\"]/instance@[name=\"" + pwmInstanceName.getValue() + "\"]/parameters")
+    for parameter in parametersNode.getChildren():
+        if parameter.getAttribute("name").startswith("FAULT"):
+            # ID number of the fault
+            faultID = parameter.getAttribute("name").split("_ID")[1]
+
+            # Fault Menu
+            pwmFaultIndexMenu = pwmComponent.createMenuSymbol("PWM_FAULT_" + faultID, pwmFaultMenu)
+            pwmFaultIndexMenu.setLabel(parameter.getAttribute("caption"))
+
+            # Fault polarity
+            pwmFPOLSymName = "PWM_FMR_FPOL_INDEX_" + faultID
+            pwmSym_PWM_FMR_FPOL = pwmComponent.createKeyValueSetSymbol(pwmFPOLSymName, pwmFaultIndexMenu)
+            pwmSym_PWM_FMR_FPOL.setLabel("Select Fault Polarity")
+            pwmSym_PWM_FMR_FPOL.addKey("LOW", "0", "Active when fault input is low")
+            pwmSym_PWM_FMR_FPOL.addKey("HIGH", "1", "Active when fault input is high")
+            pwmSym_PWM_FMR_FPOL.setDisplayMode("Description")
+            pwmSym_PWM_FMR_FPOL.setOutputMode("Value")
+            if not parameter.getAttribute("caption").endswith("Input pin"):
+                pwmSym_PWM_FMR_FPOL.setDefaultValue(1)
+                pwmSym_PWM_FMR_FPOL.setReadOnly(True)
+                pwmFPOLDefaultVal |= (1 << int(faultID))
+            pwmFaultFPOLSymNameList.append(pwmFPOLSymName)
+
+            # Fault mode
+            pwmFMODSymName = "PWM_FMR_FMOD_INDEX_" + faultID
+            pwmSym_PWM_FMR_FMOD = pwmComponent.createKeyValueSetSymbol(pwmFMODSymName, pwmFaultIndexMenu)
+            pwmSym_PWM_FMR_FMOD.setLabel("Select Fault Mode")
+            pwmSym_PWM_FMR_FMOD.addKey("CLEAR_AT_PERIPHERAL", "0", "Fault is active until cleared at peripheral level")
+            pwmSym_PWM_FMR_FMOD.addKey("CLEAR_AT_PERIPHERAL_AND_REGISTER", "1", "Fault is active until cleared at peripheral level AND cleared in PWM_FCR register")
+            pwmSym_PWM_FMR_FMOD.setDisplayMode("Description")
+            pwmSym_PWM_FMR_FMOD.setOutputMode("Value")
+            pwmSym_PWM_FMR_FMOD.setDefaultValue(1)
+            pwmFMODDefaultVal |= (1 << int(faultID))
+            pwmFaultFMODSymNameList.append(pwmFMODSymName)
+
+            #Fault Filter
+            pwmFFILSymName = "PWM_FMR_FFIL_INDEX_" + faultID
+            pwmSym_PWM_FMR_FFIL = pwmComponent.createKeyValueSetSymbol(pwmFFILSymName, pwmFaultIndexMenu)
+            pwmSym_PWM_FMR_FFIL.setLabel("Select Fault Filter")
+            pwmSym_PWM_FMR_FFIL.addKey("DISABLE_FILTER", "0", "Fault input is not filtered")
+            pwmSym_PWM_FMR_FFIL.addKey("ENABLE_FILTER", "1", "Fault input is filtered")
+            pwmSym_PWM_FMR_FFIL.setDisplayMode("Description")
+            pwmSym_PWM_FMR_FFIL.setOutputMode("Value")
+            pwmFaultFILSymNameList.append(pwmFFILSymName)
+
+    # Set the dependency update function for FPOL, FMOD and FFIL
+    pwmSym_PWM_FMR_FPOL_Val.setDefaultValue(pwmFPOLDefaultVal)
+    pwmSym_PWM_FMR_FPOL_Val.setDependencies(pwmFaultFMRUpdate, pwmFaultFPOLSymNameList)
+
+    pwmSym_PWM_FMR_FMOD_Val.setDefaultValue(pwmFMODDefaultVal)
+    pwmSym_PWM_FMR_FMOD_Val.setDependencies(pwmFaultFMRUpdate, pwmFaultFMODSymNameList)
+
+    pwmSym_PWM_FMR_FFIL_Val.setDefaultValue(pwmFFILDefaultVal)
+    pwmSym_PWM_FMR_FFIL_Val.setDependencies(pwmFaultFMRUpdate, pwmFaultFILSymNameList)
 
     #-----------------------------------------------------------------------------------------------------------
 
