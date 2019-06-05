@@ -134,7 +134,7 @@ def instantiateComponent( pitComponent ):
     period = pitComponent.createFloatSymbol("PERIOD_MS", None)
     period.setLabel("Period (ms)")
     period.setMax(maxval)
-    period.setMin(0)
+    period.setMin(1001.0 / float(clk))
     period.setDefaultValue(1)
 
     piv = calcPIV(period.getValue())
