@@ -52,6 +52,7 @@
 
 #define ${SDHC_INSTANCE_NAME}_DMA_NUM_DESCR_LINES        ${SDHC_NUM_DESCRIPTOR_LINES}
 #define ${SDHC_INSTANCE_NAME}_BASE_CLOCK_FREQUENCY       ${SDHC_CLK_FREQ}
+#define ${SDHC_INSTANCE_NAME}_MAX_BLOCK_SIZE                   0x200
 
 static __attribute__((__aligned__(32))) SDHC_ADMA_DESCR ${SDHC_INSTANCE_NAME?lower_case}DmaDescrTable[${SDHC_INSTANCE_NAME}_DMA_NUM_DESCR_LINES];
 
@@ -188,7 +189,7 @@ uint16_t ${SDHC_INSTANCE_NAME}_GetError(void)
 uint16_t ${SDHC_INSTANCE_NAME}_CommandErrorGet(void)
 {
     return (${SDHC_INSTANCE_NAME?lower_case}Obj.errorStatus & (SDHC_EISTR_CMDTEO_Msk | SDHC_EISTR_CMDCRC_Msk | \
-                SDHC_EISTR_CMDEND_Msk));
+                SDHC_EISTR_CMDEND_Msk | SDHC_EISTR_CMDIDX_Msk));
 }
 
 uint16_t ${SDHC_INSTANCE_NAME}_DataErrorGet(void)
@@ -243,7 +244,19 @@ bool ${SDHC_INSTANCE_NAME}_IsCardAttached ( void )
 
 void ${SDHC_INSTANCE_NAME}_BlockSizeSet ( uint16_t blockSize )
 {
-    ${SDHC_INSTANCE_NAME}_REGS->SDHC_BSR = blockSize;
+    if(blockSize == 0)
+    {
+        blockSize = 1;
+    }
+    else if(blockSize > ${SDHC_INSTANCE_NAME}_MAX_BLOCK_SIZE)
+    {
+        blockSize = ${SDHC_INSTANCE_NAME}_MAX_BLOCK_SIZE;
+    }
+    else
+    {
+      /* Do not modify the block size */
+    }
+    ${SDHC_INSTANCE_NAME}_REGS->SDHC_BSR = (SDHC_BSR_BOUNDARY_4K | SDHC_BSR_BLOCKSIZE(blockSize));
 }
 
 void ${SDHC_INSTANCE_NAME}_BlockCountSet ( uint16_t numBlocks )
@@ -253,7 +266,14 @@ void ${SDHC_INSTANCE_NAME}_BlockCountSet ( uint16_t numBlocks )
 
 void ${SDHC_INSTANCE_NAME}_ClockEnable ( void )
 {
-    ${SDHC_INSTANCE_NAME}_REGS->SDHC_CCR |= (SDHC_CCR_INTCLKEN_Msk | SDHC_CCR_SDCLKEN_Msk);
+    /* Start the internal clock  */
+    ${SDHC_INSTANCE_NAME}_REGS->SDHC_CCR |= SDHC_CCR_INTCLKEN_Msk;
+
+    /* Wait for the internal clock to stabilize */
+    while (!(${SDHC_INSTANCE_NAME}_REGS->SDHC_CCR & SDHC_CCR_INTCLKS_Msk)) ;
+
+    /* Enable the SD Clock */
+    ${SDHC_INSTANCE_NAME}_REGS->SDHC_CCR |= SDHC_CCR_SDCLKEN_Msk;
 }
 
 void ${SDHC_INSTANCE_NAME}_ClockDisable ( void )
