@@ -125,7 +125,7 @@ int main ( void )
                     {
                         /* Print message to UART1 */
                         uint8_t length = messageLength;
-                        printf("Message - ID : 0x%x Length : 0x%x ", messageID, messageLength);
+                        printf("Message - ID : 0x%lx Length : 0x%x ", messageID, messageLength);
                         printf("Message : ");
                         while(length)
                         {
@@ -136,7 +136,7 @@ int main ( void )
                     }
                     else
                     {
-                        printf("MCAN Tx Error : 0x%x\r\n", status);
+                        printf("MCAN Tx Error : 0x%lx\r\n", status);
                     }
                 }
                 else
@@ -146,7 +146,7 @@ int main ( void )
             }
             else
             {
-                printf("MCAN Rx Error : 0x%x\r\n", status);
+                printf("MCAN Rx Error : 0x%lx\r\n", status);
             }
         }
     }
