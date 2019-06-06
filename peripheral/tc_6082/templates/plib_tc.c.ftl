@@ -260,11 +260,11 @@ void ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerInitialize (void)
     /* Use peripheral clock */
     <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_EMR = TC_EMR_NODIVCLK_Msk;
     <#lt>    /* clock selection and waveform selection */
-    <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_CMR =  TC_CMR_WAVEFORM_WAVSEL_UP_RC | TC_CMR_WAVE_Msk ${.vars[TC_CMR_CPCSTOP]?then('| (TC_CMR_WAVEFORM_CPCDIS_Msk)', '')};
+    <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_CMR =  TC_CMR_WAVEFORM_WAVSEL_UP_RC | TC_CMR_WAVE_Msk ${.vars[TC_CMR_CPCSTOP]?then('| (TC_CMR_WAVEFORM_CPCSTOP_Msk)', '')};
     <#else>
     /* clock selection and waveform selection */
     <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_CMR = TC_CMR_TCCLKS_${.vars[TC_CMR_TCCLKS]} | TC_CMR_WAVEFORM_WAVSEL_UP_RC | \
-                                                        TC_CMR_WAVE_Msk ${.vars[TC_CMR_CPCSTOP]?then('|(TC_CMR_WAVEFORM_CPCDIS_Msk)', '')};
+                                                        TC_CMR_WAVE_Msk ${.vars[TC_CMR_CPCSTOP]?then('|(TC_CMR_WAVEFORM_CPCSTOP_Msk)', '')};
     </#if>
 
     /* write period */
