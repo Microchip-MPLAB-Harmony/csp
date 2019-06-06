@@ -461,12 +461,13 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
     {
         ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.transferIsBusy = false;
 
+        SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_PTCR = SPI_PTCR_RXTDIS_Msk | SPI_PTCR_TXTDIS_Msk;
+        SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_IDR = SPI_IDR_ENDRX_Msk;
+
         if( ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.callback != NULL )
         {
             ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.callback(${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.context);
         }
-
-        SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_IDR = SPI_IDR_ENDRX_Msk;
     }
     <#else>
 
