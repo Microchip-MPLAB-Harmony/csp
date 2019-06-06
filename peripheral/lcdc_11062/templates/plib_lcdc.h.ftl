@@ -296,30 +296,6 @@ void ${LCDC_INSTANCE_NAME}_SetPixelClockPolarity(${LCDC_INSTANCE_NAME}_SIGNAL_PO
 
 // *****************************************************************************
 /* Function:
-    void ${LCDC_INSTANCE_NAME}_SetClockSourceSelection(${LCDC_INSTANCE_NAME}_CLOCK_SOURCE source)
-
-   Summary:
-    Sets the LCDC clock source
-
-   Description:
-    None
-
-   Precondition:
-    None.
-
-   Parameters:
-    source - the source clock
-
-   Returns:
-    None
-
-   Remarks:
-    None
-*/
-void ${LCDC_INSTANCE_NAME}_SetClockSourceSelection(${LCDC_INSTANCE_NAME}_CLOCK_SOURCE source);
-
-// *****************************************************************************
-/* Function:
     void ${LCDC_INSTANCE_NAME}_SetPWMClockSourceSelection(${LCDC_INSTANCE_NAME}_PWM_CLOCK_SOURCE source)
 
    Summary:
@@ -778,30 +754,6 @@ void ${LCDC_INSTANCE_NAME}_SetDisplaySignalSynchronization(bool synchronous);
     None
 */
 void ${LCDC_INSTANCE_NAME}_SetOutputMode(${LCDC_INSTANCE_NAME}_OUTPUT_COLOR_MODE mode);
-
-// *****************************************************************************
-/* Function:
-    void ${LCDC_INSTANCE_NAME}_SetPostPocessingEnable(bool enable)
-
-   Summary:
-    Enables/disables post processing
-
-   Description:
-    None
-
-   Precondition:
-    None.
-
-   Parameters:
-    enable - if true, post processing is enabled. Disabled if false.
-
-   Returns:
-    None
-
-   Remarks:
-    None
-*/
-void ${LCDC_INSTANCE_NAME}_SetPostPocessingEnable(bool enable);
 
 // *****************************************************************************
 /* Function:
