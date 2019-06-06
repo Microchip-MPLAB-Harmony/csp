@@ -52,12 +52,6 @@ void ${LCDC_INSTANCE_NAME}_SetPixelClockPolarity(${LCDC_INSTANCE_NAME}_SIGNAL_PO
                                 ${LCDC_INSTANCE_NAME}_LCDCFG0_CLKPOL(polarity == ${LCDC_INSTANCE_NAME}_POLARITY_NEGATIVE);
 }
 
-void ${LCDC_INSTANCE_NAME}_SetClockSourceSelection(${LCDC_INSTANCE_NAME}_CLOCK_SOURCE source)
-{
-    ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDCFG0 = (${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDCFG0 & ~${LCDC_INSTANCE_NAME}_LCDCFG0_CLKSEL_Msk) | 
-                                ${LCDC_INSTANCE_NAME}_LCDCFG0_CLKSEL(source == ${LCDC_INSTANCE_NAME}_CLOCK_SOURCE_SYSTEM_2X);
-}
-
 void ${LCDC_INSTANCE_NAME}_SetPWMClockSourceSelection(${LCDC_INSTANCE_NAME}_PWM_CLOCK_SOURCE source)
 {
     ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDCFG0 = (${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDCFG0 & ~${LCDC_INSTANCE_NAME}_LCDCFG0_CLKPWMSEL_Msk) | 
@@ -85,9 +79,7 @@ void ${LCDC_INSTANCE_NAME}_SetLayerClockGatingDisable(${LCDC_INSTANCE_NAME}_LAYE
                                 ${LCDC_INSTANCE_NAME}_LCDCFG0_CGDISHEO(disable == false);
             break;
         case ${LCDC_INSTANCE_NAME}_LAYER_PP:
-            ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDCFG0 = (${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDCFG0 & ~${LCDC_INSTANCE_NAME}_LCDCFG0_CGDISPP_Msk) | 
-                                ${LCDC_INSTANCE_NAME}_LCDCFG0_CGDISPP(disable == false);
-            break;
+            //Unsupported
         default:
             break;
     }
@@ -193,12 +185,6 @@ void ${LCDC_INSTANCE_NAME}_SetOutputMode(${LCDC_INSTANCE_NAME}_OUTPUT_COLOR_MODE
 {
     ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDCFG5 = (${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDCFG5 & ~${LCDC_INSTANCE_NAME}_LCDCFG5_MODE_Msk) | 
                                   ${LCDC_INSTANCE_NAME}_LCDCFG5_MODE(mode);
-}
-
-void ${LCDC_INSTANCE_NAME}_SetPostPocessingEnable(bool enable)
-{
-    ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDCFG5 = (${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDCFG5 & ~${LCDC_INSTANCE_NAME}_LCDCFG5_PP_Msk) | 
-                                  ${LCDC_INSTANCE_NAME}_LCDCFG5_PP(enable == true);
 }
 
 void ${LCDC_INSTANCE_NAME}_SetVSYNCPulseSetupConfig(bool synchronous)
@@ -445,9 +431,7 @@ void ${LCDC_INSTANCE_NAME}_UpdateAddToQueue(${LCDC_INSTANCE_NAME}_LAYER_ID layer
                               ${LCDC_INSTANCE_NAME}_ATTR_HEOA2Q(1);
             break;
         case ${LCDC_INSTANCE_NAME}_LAYER_PP:
-            ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_ATTR = (${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_ATTR & ~${LCDC_INSTANCE_NAME}_ATTR_PPA2Q_Msk) | 
-                              ${LCDC_INSTANCE_NAME}_ATTR_PPA2Q(1);
-            break;
+            //Unsupported
         default:
           break;
     }
@@ -511,9 +495,8 @@ void ${LCDC_INSTANCE_NAME}_SetHorizStride(${LCDC_INSTANCE_NAME}_LAYER_ID layer, 
         case LCDC_LAYER_HEO:
             ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_HEOCFG5 = ${LCDC_INSTANCE_NAME}_HEOCFG5_XSTRIDE(xstride);
             break;
-        case LCDC_LAYER_PP:
-            ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_PPCFG2 = ${LCDC_INSTANCE_NAME}_PPCFG2_XSTRIDE(xstride);
-            break;
+        case ${LCDC_INSTANCE_NAME}_LAYER_PP:
+            //Unsupported
         default:
           break;
     }
@@ -562,8 +545,7 @@ void ${LCDC_INSTANCE_NAME}_SetDMAAddressRegister(${LCDC_INSTANCE_NAME}_LAYER_ID 
             ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_HEOADDR = ${LCDC_INSTANCE_NAME}_HEOADDR_ADDR(addr);
             break;
         case ${LCDC_INSTANCE_NAME}_LAYER_PP:
-            ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_PPADDR = ${LCDC_INSTANCE_NAME}_PPADDR_ADDR(addr);
-            break;
+            //Unsupported
         default:
           break;
     }
@@ -586,8 +568,7 @@ void ${LCDC_INSTANCE_NAME}_SetDMADescriptorNextAddress(${LCDC_INSTANCE_NAME}_LAY
             ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_HEONEXT = ${LCDC_INSTANCE_NAME}_HEONEXT_NEXT(next);  
             break;
         case ${LCDC_INSTANCE_NAME}_LAYER_PP:
-            ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_PPNEXT = ${LCDC_INSTANCE_NAME}_PPNEXT_NEXT(next);  
-            break;
+            //Unsupported
         default:
           break;
     }  
@@ -614,9 +595,7 @@ void ${LCDC_INSTANCE_NAME}_SetTransferDescriptorFetchEnable(${LCDC_INSTANCE_NAME
                                         ${LCDC_INSTANCE_NAME}_HEOCTRL_DFETCH(enable == true);
             break;
         case ${LCDC_INSTANCE_NAME}_LAYER_PP:
-            ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_PPCTRL = (${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_PPCTRL & ~${LCDC_INSTANCE_NAME}_PPCTRL_DFETCH_Msk) | 
-                                        ${LCDC_INSTANCE_NAME}_PPCTRL_DFETCH(enable == true);
-            break;
+            //Unsupported
         default:
           break;
     }
@@ -643,9 +622,7 @@ void ${LCDC_INSTANCE_NAME}_UpdateOverlayAttributesEnable(${LCDC_INSTANCE_NAME}_L
                                         ${LCDC_INSTANCE_NAME}_HEOCHER_UPDATEEN(1);
             break;
         case ${LCDC_INSTANCE_NAME}_LAYER_PP:
-            ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_PPCHER = (${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_PPCHER & ~${LCDC_INSTANCE_NAME}_PPCHER_UPDATEEN_Msk) | 
-                                        ${LCDC_INSTANCE_NAME}_PPCHER_UPDATEEN(1);
-            break;
+            //Unsupported
         default:
           break;
     }  
@@ -688,13 +665,7 @@ void ${LCDC_INSTANCE_NAME}_SetChannelEnable(${LCDC_INSTANCE_NAME}_LAYER_ID layer
                                             ${LCDC_INSTANCE_NAME}_HEOCHDR_CHDIS(1);    
             break;
         case ${LCDC_INSTANCE_NAME}_LAYER_PP:
-            if (enable == true)
-                ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_PPCHER = (${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_PPCHER & ~${LCDC_INSTANCE_NAME}_PPCHER_CHEN_Msk) | 
-                                            ${LCDC_INSTANCE_NAME}_PPCHER_CHEN(1);
-            else
-                ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_PPCHDR = (${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_PPCHDR & ~${LCDC_INSTANCE_NAME}_PPCHDR_CHDIS_Msk) | 
-                                            ${LCDC_INSTANCE_NAME}_PPCHDR_CHDIS(1);    
-            break;
+            //Unsupported
         default:
           break;
     }  
@@ -721,9 +692,7 @@ void ${LCDC_INSTANCE_NAME}_AddToQueueEnable(${LCDC_INSTANCE_NAME}_LAYER_ID layer
                                         ${LCDC_INSTANCE_NAME}_HEOCHER_A2QEN(1);
             break;
         case ${LCDC_INSTANCE_NAME}_LAYER_PP:
-            ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_PPCHER = (${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_PPCHER & ~${LCDC_INSTANCE_NAME}_PPCHSR_A2QSR_Msk) | 
-                                        ${LCDC_INSTANCE_NAME}_PPCHER_A2QEN(1);
-            break;
+            //Unsupported
         default:
           break;
     }  
@@ -919,9 +888,7 @@ void ${LCDC_INSTANCE_NAME}_UpdateAttribute(${LCDC_INSTANCE_NAME}_LAYER_ID layer)
                                     ${LCDC_INSTANCE_NAME}_ATTR_BASE(1);
             break;          
         case ${LCDC_INSTANCE_NAME}_LAYER_PP:
-            ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_ATTR = (${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_ATTR & ~${LCDC_INSTANCE_NAME}_ATTR_PP_Msk) | 
-                                    ${LCDC_INSTANCE_NAME}_ATTR_PP(1);
-            break;
+            //Unsupported
         default:
           break;
     }   
@@ -972,9 +939,7 @@ void ${LCDC_INSTANCE_NAME}_IRQ_Enable(LCDC_INTERRUPT interrupt)
                                       ${LCDC_INSTANCE_NAME}_LCDIER_HEOIE(1);                    
             break;
         case ${LCDC_INSTANCE_NAME}_INTERRUPT_PP:
-            ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDIER = (${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDIER & ~${LCDC_INSTANCE_NAME}_LCDIER_PPIE_Msk) |
-                                      ${LCDC_INSTANCE_NAME}_LCDIER_PPIE(1);                 
-            break;
+            //Unsupported
         default:
           break;
     }
@@ -1017,9 +982,7 @@ void ${LCDC_INSTANCE_NAME}_IRQ_Disable(LCDC_INTERRUPT interrupt)
                                       ${LCDC_INSTANCE_NAME}_LCDIDR_HEOID(1);                    
             break;
         case ${LCDC_INSTANCE_NAME}_INTERRUPT_PP:
-            ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDIDR = (${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDIDR & ~${LCDC_INSTANCE_NAME}_LCDIDR_PPID_Msk) |
-                                      ${LCDC_INSTANCE_NAME}_LCDIDR_PPID(1);
-            break;
+            //Unsupported
         default:
           break;
     }
