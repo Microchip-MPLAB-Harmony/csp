@@ -116,7 +116,9 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
                                                             <#if TAMP_DETECTION_SUPPORTED??>
                                                                 <#if TAMP_DETECTION_SUPPORTED>
                                                                     ${TAMP_RESET_GP?then("| RTC_MODE2_CTRLA_GPTRST_Msk", "")}
+                                                                    <#if TAMP_RESET_BACKUP??>
                                                                     ${TAMP_RESET_BACKUP?then("| RTC_MODE2_CTRLA_BKTRST_Msk", "")}
+                                                                    </#if>
                                                                 </#if>
                                                             </#if>;</@compress>
 
