@@ -456,6 +456,11 @@ def instantiateComponent(rtcComponent):
 
 # ------------------------------------------------------------
     # Frequency Correction
+
+    rtcNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTC"]/register-group@[name="RTC"]/register@[name="BKUP"]')
+    if rtcNode != None:
+        rtcBkupSupported = rtcComponent.createBooleanSymbol("RTC_BKUP_SUPPORTED", None)
+        rtcBkupSupported.setVisible(False)
     rtcSymMode0_FREQCORR = rtcComponent.createBooleanSymbol(
         "RTC_FREQCORR", rtcSym_Menu)
     rtcSymMode0_FREQCORR.setLabel("Generate Frequency Correction API")
@@ -482,10 +487,11 @@ def instantiateComponent(rtcComponent):
         rtcTampChannels.setDefaultValue(tamperChannels)
 
         tampInterrupt = rtcComponent.createBooleanSymbol("TAMP_INTERRUPT_ENABLE", rtcTampMenu)
-        tampInterrupt.setLabel("Enable Tamper Detection Inetrrupt")
+        tampInterrupt.setLabel("Enable Tamper Detection Interrupt")
 
-        tampBKUPRST = rtcComponent.createBooleanSymbol("TAMP_RESET_BACKUP", rtcTampMenu)
-        tampBKUPRST.setLabel("Erase Backup Registers on Tamper Detection")
+        if rtcNode != None:
+            tampBKUPRST = rtcComponent.createBooleanSymbol("TAMP_RESET_BACKUP", rtcTampMenu)
+            tampBKUPRST.setLabel("Erase Backup Registers on Tamper Detection")
 
         tampGPRST = rtcComponent.createBooleanSymbol("TAMP_RESET_GP", rtcTampMenu)
         tampGPRST.setLabel("Erase General Purpose Registers on Tamper Detection")
@@ -621,10 +627,6 @@ def instantiateComponent(rtcComponent):
     rtcModeSelection_Sym.setOutputMode("Key")
     rtcModeSelection_Sym.setDisplayMode("Description")
 
-    rtcNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTC"]/register-group@[name="RTC"]/register@[name="BKUP"]')
-    if rtcNode != None:
-        rtcBkupSupported = rtcComponent.createBooleanSymbol("RTC_BKUP_SUPPORTED", None)
-        rtcBkupSupported.setVisible(False)
     sysTimeTrigger_Sym = rtcComponent.createBooleanSymbol("SYS_TIME", None)
     sysTimeTrigger_Sym.setVisible(False)
     sysTimeTrigger_Sym.setDependencies(

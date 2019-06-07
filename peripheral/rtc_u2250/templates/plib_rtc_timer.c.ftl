@@ -97,7 +97,9 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
                                                                 <#if TAMP_DETECTION_SUPPORTED??>
                                                                     <#if TAMP_DETECTION_SUPPORTED>
                                                                         ${TAMP_RESET_GP?then("| RTC_MODE0_CTRLA_GPTRST_Msk", "")}
+                                                                        <#if TAMP_RESET_BACKUP??>
                                                                         ${TAMP_RESET_BACKUP?then("| RTC_MODE0_CTRLA_BKTRST_Msk", "")}
+                                                                        </#if>
                                                                     </#if>
                                                                 </#if>;</@compress>
 
@@ -154,7 +156,9 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
         <#lt>                                                        RTC_MODE1_CTRLA_COUNTSYNC_Msk                                                             <#if TAMP_DETECTION_SUPPORTED??>
                                                                         <#if TAMP_DETECTION_SUPPORTED>
                                                                             ${TAMP_RESET_GP?then("| RTC_MODE1_CTRLA_GPTRST_Msk", "")}
+                                                                            <#if TAMP_RESET_BACKUP??>
                                                                             ${TAMP_RESET_BACKUP?then("| RTC_MODE1_CTRLA_BKTRST_Msk", "")}
+                                                                            </#if>
                                                                         </#if>
                                                                     </#if>;</@compress>
 
