@@ -244,21 +244,19 @@ def dmacEvsysControl(symbol, event):
 # And once the DMA mode is unselected, then the corresponding DMA channel will
 # be disabled and trigger source will be reset to "Software trigger"
 def dmacChannelAllocLogic(symbol, event):
-
-    dmaChannelCount = Database.getSymbolValue("core", "DMA_CHANNEL_COUNT")
     perID = event["id"].split('DMA_CH_NEEDED_FOR_')[1]
-    channelAllocated = False
+    if event["value"] == True:
+        dmaChannelCount = Database.getSymbolValue("core", "DMA_CHANNEL_COUNT")
+        channelAllocated = False
 
-    for i in range(0, dmaChannelCount):
-        dmaChannelEnable = Database.getSymbolValue("core", "DMAC_ENABLE_CH_" + str(i))
-        dmaChannelPerID = str(Database.getSymbolValue("core", "DMAC_CHCTRLA_TRIGSRC_CH_" + str(i)))
+        for i in range(0, dmaChannelCount):
+            dmaChannelEnable = Database.getSymbolValue("core", "DMAC_ENABLE_CH_" + str(i))
+            dmaChannelPerID = str(Database.getSymbolValue("core", "DMAC_CHCTRLA_TRIGSRC_CH_" + str(i)))
 
-        if dmaChannelPerID == perID:
-            channelAllocated = True
-            break
-            
-        # Client requested to allocate channel
-        if event["value"] == True:
+            if dmaChannelPerID == perID:
+                channelAllocated = True
+                break
+
             # Reserve the first available free channel
             if dmaChannelEnable == False:
                 Database.setSymbolValue("core", "DMAC_ENABLE_CH_" + str(i), True, 2)
@@ -267,20 +265,25 @@ def dmacChannelAllocLogic(symbol, event):
                 Database.setSymbolValue("core", "DMA_CH_FOR_" + perID, i, 2)
                 channelAllocated = True
                 break
+            
+            
+        if event["value"] == True and channelAllocated == False:
+            # Couldn't find any free DMA channel, hence set warning.
+            Database.clearSymbolValue("core", "DMA_CH_FOR_" + perID)
+            Database.setSymbolValue("core", "DMA_CH_FOR_" + perID, -2, 2)
 
-        # Client requested to deallocate channel
-        else:
-            # Reset the previously allocated channel
-            if perID == dmaChannelPerID and dmaChannelEnable == True:
-                Database.setSymbolValue("core", "DMAC_ENABLE_CH_" + str(i), False, 2)
-                Database.setSymbolValue("core", "DMAC_CHCTRLA_TRIGSRC_CH_" + str(i), "Software Trigger", 2)
-                Database.setSymbolValue("core", "DMAC_CHCTRLA_TRIGSRC_CH_" + str(i) + "_PERID_LOCK", False, 2)
-                Database.setSymbolValue("core", "DMA_CH_FOR_" + perID, -1, 2)
+    # Client requested to deallocate channel
+    else:
+        channelNumber = Database.getSymbolValue("core", "DMA_CH_FOR_" + perID)
+        dmaChannelEnable = Database.getSymbolValue("core", "DMAC_ENABLE_CH_" + str(channelNumber))
+        dmaChannelPerID = str(Database.getSymbolValue("core", "DMAC_CHCTRLA_TRIGSRC_CH_" + str(channelNumber)))
+        # Reset the previously allocated channel
+        if perID == dmaChannelPerID and dmaChannelEnable == True:
+            Database.setSymbolValue("core", "DMAC_ENABLE_CH_" + str(channelNumber), False, 2)
+            Database.setSymbolValue("core", "DMAC_CHCTRLA_TRIGSRC_CH_" + str(channelNumber), "Software Trigger", 2)
+            Database.setSymbolValue("core", "DMAC_CHCTRLA_TRIGSRC_CH_" + str(channelNumber) + "_PERID_LOCK", False, 2)
+            Database.setSymbolValue("core", "DMA_CH_FOR_" + perID, -1, 2)
 
-    if event["value"] == True and channelAllocated == False:
-        # Couldn't find any free DMA channel, hence set warning.
-        Database.clearSymbolValue("core", "DMA_CH_FOR_" + perID)
-        Database.setSymbolValue("core", "DMA_CH_FOR_" + perID, -2, 2)
 
 ################################################################################
 #### Component ####

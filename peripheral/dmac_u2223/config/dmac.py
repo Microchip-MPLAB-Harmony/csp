@@ -59,11 +59,11 @@ dmacDep = []
 # Create lists for peripheral triggers and the corresponding ID values
 node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals")
 modules = node.getChildren()
-for module in range (0, len(modules)):
+for module in range(0, len(modules)):
     instances = modules[module].getChildren()
-    for instance in range (0, len(instances)):
+    for instance in range(0, len(instances)):
         options = instances[instance].getChildren()
-        for option in range (0, len(options)):
+        for option in range(0, len(options)):
             if "parameters" == options[option].getName():
                 parameters = options[option].getChildren()
                 for parameter in range(0, len(parameters)):
@@ -88,7 +88,7 @@ per_instance["Software Trigger"] = 0
 # based on the trigger source selected.
 
 global triggerSettings
-global dmacMultiVectorSupported 
+global dmacMultiVectorSupported
 dmacMultiVectorSupported = False
 triggerSettings = setDMACDefaultSettings()
 
@@ -101,10 +101,11 @@ if count > 1:
     dmacMultiVectorSupported = True
     dmacmultiVectorSupport = coreComponent.createBooleanSymbol("DMAC_MULTIVECTOR_SUPPORTED", None)
     dmacmultiVectorSupport.setVisible(False)
-    
+
 ################################################################################
 #### Business Logic ####
 ################################################################################
+
 
 def dmacTriggerLogic(symbol, event):
 
@@ -136,6 +137,8 @@ def dmacTriggerLogic(symbol, event):
 # index enabled, also if the list is empty then none of the channel is enabled.
 # Highest index will be used to create DMAC objects in source code.
 # List empty or non-empty status helps to generate/discard DMAC code.
+
+
 def dmacGlobalLogic(symbol, event):
 
     global dmacActiveChannels
@@ -150,7 +153,7 @@ def dmacGlobalLogic(symbol, event):
     if event["value"] == True:
         if index not in dmacActiveChannels:
             dmacActiveChannels.append(index)
-    else :
+    else:
         if index in dmacActiveChannels:
             dmacActiveChannels.remove(index)
 
@@ -170,10 +173,11 @@ def dmacGlobalLogic(symbol, event):
         if not dmacActiveChannels:
             symbol.setValue(False, 2)
 
+
 def onGlobalEnableLogic(symbol, event):
     global dmacInstanceName
     global dmacMultiVectorSupported
-    #clock enable
+    # clock enable
     Database.clearSymbolValue("core", dmacInstanceName.getValue()+"_CLOCK_ENABLE")
     Database.setSymbolValue("core", dmacInstanceName.getValue()+"_CLOCK_ENABLE", event["value"], 2)
 
@@ -181,7 +185,7 @@ def onGlobalEnableLogic(symbol, event):
         InterruptVector = []
         InterruptHandler = []
         InterruptHandlerLock = []
-        #interrupt enable
+        # interrupt enable
         vectorValues = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts").getChildren()
         for id in range(0, len(vectorValues)):
             if vectorValues[id].getAttribute("module-instance") == "DMAC":
@@ -191,13 +195,13 @@ def onGlobalEnableLogic(symbol, event):
                 InterruptHandlerLock.append(name + "_INTERRUPT_HANDLER_LOCK")
 
         if event["value"] == True:
-            for i in range(0,len(InterruptHandler)):
+            for i in range(0, len(InterruptHandler)):
                 Database.setSymbolValue("core", InterruptVector[i], event["value"], 2)
                 Database.setSymbolValue("core", InterruptHandlerLock[i], event["value"], 2)
                 Database.setSymbolValue("core", InterruptHandler[i], InterruptHandler[i].split(
                     "_INTERRUPT_HANDLER")[0] + "_InterruptHandler", 2)
         else:
-            for i in range(0,len(InterruptHandler)):
+            for i in range(0, len(InterruptHandler)):
                 Database.setSymbolValue("core", InterruptVector[i], event["value"], 2)
                 Database.setSymbolValue("core", InterruptHandlerLock[i], event["value"], 2)
                 Database.setSymbolValue("core", InterruptHandler[i], InterruptHandler[i].split(
@@ -226,10 +230,12 @@ def onGlobalEnableLogic(symbol, event):
     dmacSystemInitFile.setEnabled(event["value"])
     dmacSystemDefFile.setEnabled(event["value"])
 
+
 def updateDMACInterruptWarringStatus(symbol, event):
 
     if dmacEnable.getValue() == True:
         symbol.setVisible(event["value"])
+
 
 def updateDMACClockWarringStatus(symbol, event):
 
@@ -238,12 +244,14 @@ def updateDMACClockWarringStatus(symbol, event):
     else:
         symbol.setVisible(False)
 
+
 def dmacTriggerCalc(symbol, event):
 
     global per_instance
 
     symbol.clearValue()
     symbol.setValue(per_instance.get(event["value"]), 2)
+
 
 def dmacEvsysControl(symbol, event):
     channel = symbol.getID().split("DMAC_EVSYS_DUMMY")[1]
@@ -259,18 +267,20 @@ def dmacEvsysControl(symbol, event):
 # is selected for any peripheral ID.
 # And once the DMA mode is unselected, then the corresponding DMA channel will
 # be disabled and trigger source will be reset to "Software trigger"
+
+
 def dmacChannelAllocLogic(symbol, event):
-    dmaChannelCount = Database.getSymbolValue("core", "DMA_CHANNEL_COUNT")
     perID = event["id"].split('DMA_CH_NEEDED_FOR_')[1]
-    channelAllocated = False
-    for i in range(0, dmaChannelCount):
-        dmaChannelEnable = Database.getSymbolValue("core", "DMAC_ENABLE_CH_" + str(i))
-        dmaChannelPerID = str(Database.getSymbolValue("core", "DMAC_CHCTRLB_TRIGSRC_CH_" + str(i)))
-        if dmaChannelPerID == perID:
-            channelAllocated = True
-            break
-        # Client requested to allocate channel
-        if event["value"]:
+    if event["value"]:
+        dmaChannelCount = Database.getSymbolValue("core", "DMA_CHANNEL_COUNT")
+        channelAllocated = False
+        for i in range(0, dmaChannelCount):
+            dmaChannelEnable = Database.getSymbolValue("core", "DMAC_ENABLE_CH_" + str(i))
+            dmaChannelPerID = str(Database.getSymbolValue("core", "DMAC_CHCTRLB_TRIGSRC_CH_" + str(i)))
+            if dmaChannelPerID == perID:
+                channelAllocated = True
+                break
+
             # Reserve the first available free channel
             if dmaChannelEnable == False:
                 Database.setSymbolValue("core", "DMAC_ENABLE_CH_" + str(i), True, 2)
@@ -280,24 +290,27 @@ def dmacChannelAllocLogic(symbol, event):
                 channelAllocated = True
                 break
 
-        # Client requested to deallocate channel
-        else:
-            # Reset the previously allocated channel
-            if perID == dmaChannelPerID and dmaChannelEnable == True:
-                Database.setSymbolValue("core", "DMAC_ENABLE_CH_" + str(i), False, 2)
-                Database.setSymbolValue("core", "DMAC_CHCTRLB_TRIGSRC_CH_" + str(i), "Software Trigger", 2)
-                Database.setSymbolValue("core", "DMAC_CHCTRLB_TRIGSRC_CH_" + str(i) + "_PERID_LOCK", False, 2)
-                Database.setSymbolValue("core", "DMA_CH_FOR_" + perID, -1, 2)
+        if channelAllocated == False:
+            # Couldn't find any free DMA channel, hence set warning.
+            Database.clearSymbolValue("core", "DMA_CH_FOR_" + perID)
+            Database.setSymbolValue("core", "DMA_CH_FOR_" + perID, -2, 2)
 
-    if event["value"] == True and channelAllocated == False:
-        # Couldn't find any free DMA channel, hence set warning.
-        Database.clearSymbolValue("core", "DMA_CH_FOR_" + perID)
-        Database.setSymbolValue("core", "DMA_CH_FOR_" + perID, -2, 2)
+        # Client requested to deallocate channel
+    else:
+        channelNumber = Database.getSymbolValue("core", "DMA_CH_FOR_" + perID)
+        dmaChannelEnable = Database.getSymbolValue("core", "DMAC_ENABLE_CH_" + str(channelNumber))
+        dmaChannelPerID = str(Database.getSymbolValue("core", "DMAC_CHCTRLB_TRIGSRC_CH_" + str(channelNumber)))
+        # Reset the previously allocated channel
+        if perID == dmaChannelPerID and dmaChannelEnable == True:
+            Database.setSymbolValue("core", "DMAC_ENABLE_CH_" + str(channelNumber), False, 2)
+            Database.setSymbolValue("core", "DMAC_CHCTRLB_TRIGSRC_CH_" + str(channelNumber), "Software Trigger", 2)
+            Database.setSymbolValue("core", "DMAC_CHCTRLB_TRIGSRC_CH_" + str(channelNumber) + "_PERID_LOCK", False, 2)
+            Database.setSymbolValue("core", "DMA_CH_FOR_" + perID, -1, 2)
+
 
 ################################################################################
 #### Component ####
 ################################################################################
-
 # DMA_NAME: Needed to map DMA system service APIs to PLIB APIs
 dmacSymAPI_Prefix = coreComponent.createStringSymbol("DMA_NAME", None)
 dmacSymAPI_Prefix.setDefaultValue("DMAC")
@@ -327,7 +340,7 @@ dmacMenu = coreComponent.createMenuSymbol("DMAC_MENU", None)
 dmacMenu.setLabel("DMA (DMAC)")
 dmacMenu.setDescription("DMA (DMAC) Configuration")
 
-#Device name
+# Device name
 dmacSym_DeviceName = coreComponent.createStringSymbol("DMAC_DEVICE_NAME", None)
 dmacSym_DeviceName.setVisible(False)
 dmacSym_DeviceName.setDefaultValue(Variables.get("__PROCESSOR"))
@@ -360,11 +373,11 @@ dmacHighestCh.setVisible(False)
 dmacChannelLinkedList = coreComponent.createBooleanSymbol("DMAC_LL_ENABLE", dmacMenu)
 dmacChannelLinkedList.setLabel("Use Linked List Mode ?")
 
-#Priority Control 0 Register
+# Priority Control 0 Register
 for dmacCount in range(0, 4):
 
-    #Level 0/1/2/3 Round-Robin Arbitration Enable
-    PRICTRL0_LVLPRI_SelectionSym = coreComponent.createKeyValueSetSymbol("DMAC_LVLXPRIO_" + str(dmacCount),dmacMenu)
+    # Level 0/1/2/3 Round-Robin Arbitration Enable
+    PRICTRL0_LVLPRI_SelectionSym = coreComponent.createKeyValueSetSymbol("DMAC_LVLXPRIO_" + str(dmacCount), dmacMenu)
     PRICTRL0_LVLPRI_SelectionSym.setLabel("Priority Level " + str(dmacCount) + " Arbitration Scheme")
 
     PRICTRL0_LVLPRI_SelectionSym.addKey("STATIC_LVL", "0", "Static Priority Arbitration")
@@ -382,7 +395,7 @@ for channelID in range(0, dmacChCount.getValue()):
     dmacChannelIds.append("DMAC_ENABLE_CH_" + str(channelID))
 
     if "SAMD21" not in dmacSym_DeviceName.getValue():
-        #Channel Run in Standby
+        # Channel Run in Standby
         CH_CHCTRLA_RUNSTDBY_Ctrl = coreComponent.createBooleanSymbol("DMAC_CHCTRLA_RUNSTDBY_CH_" + str(channelID), dmacChannelEnable)
         CH_CHCTRLA_RUNSTDBY_Ctrl.setLabel("Run Channel in Standby mode")
 
@@ -413,7 +426,7 @@ for channelID in range(0, dmacChCount.getValue()):
     dmacSym_CHCTRLB_TRIGACT.setDisplayMode("Description")
     dmacSym_CHCTRLB_TRIGACT.setDependencies(dmacTriggerLogic, ["DMAC_CHCTRLB_TRIGSRC_CH_" + str(channelID)])
 
-    #Channel Priority Level
+    # Channel Priority Level
     CHCTRLB_LVL_SelectionSym = coreComponent.createKeyValueSetSymbol("DMAC_CHCTRLB_LVL_CH_" + str(channelID), dmacChannelEnable)
     CHCTRLB_LVL_SelectionSym.setLabel("Channel Priority Level")
     CHCTRLB_LVL_SelectionSym.addKey("LVL0", "0", "Priority Level 0")
@@ -467,7 +480,7 @@ for channelID in range(0, dmacChCount.getValue()):
     dmacSym_BTCTRL_BEATSIZE.setDefaultValue(dmacBeatSizeDefaultValue)
     dmacSym_BTCTRL_BEATSIZE.setOutputMode("Key")
     dmacSym_BTCTRL_BEATSIZE.setDisplayMode("Description")
-    dmacSym_BTCTRL_BEATSIZE.setDependencies(dmacTriggerLogic, ["DMAC_CHCTRLB_TRIGSRC_CH_"+ str(channelID)])
+    dmacSym_BTCTRL_BEATSIZE.setDependencies(dmacTriggerLogic, ["DMAC_CHCTRLB_TRIGSRC_CH_" + str(channelID)])
 
     if channelID < 4:
         dmaEVSYSMenu = coreComponent.createMenuSymbol("DMAC_EVSYS_MENU" + str(channelID), dmacChannelEnable)
@@ -513,59 +526,59 @@ for channelID in range(0, dmacChCount.getValue()):
         dmacDep.append("DMAC_ENABLE_EVSYS_OUT_" + str(channelID))
         dmacDep.append("DMAC_ENABLE_EVSYS_IN_" + str(channelID))
 
-        dmacEvsys = coreComponent.createBooleanSymbol("DMAC_EVSYS_DUMMY" + str(channelID) , dmacMenu)
+        dmacEvsys = coreComponent.createBooleanSymbol("DMAC_EVSYS_DUMMY" + str(channelID), dmacMenu)
         dmacEvsys.setVisible(False)
         dmacEvsys.setDependencies(dmacEvsysControl, ["DMAC_ENABLE_CH_" + str(channelID), "DMAC_ENABLE_EVSYS_OUT_" + str(channelID), "DMAC_ENABLE_EVSYS_IN_" + str(channelID)])
 
 dmacEnable.setDependencies(dmacGlobalLogic, dmacChannelIds)
 dmacHighestCh.setDependencies(dmacGlobalLogic, dmacChannelIds)
 
-#DMA - Source AM Mask
+# DMA - Source AM Mask
 xdmacSym_BTCTRL_SRCINC_MASK = coreComponent.createStringSymbol("DMA_SRC_AM_MASK", dmacChannelEnable)
 xdmacSym_BTCTRL_SRCINC_MASK.setDefaultValue("0x400")
 xdmacSym_BTCTRL_SRCINC_MASK.setVisible(False)
 
-#DMA - Source FIXED_AM Value
+# DMA - Source FIXED_AM Value
 dmacSym_BTCTRL_SRCINC_FIXED = coreComponent.createStringSymbol("DMA_SRC_FIXED_AM_VALUE", dmacChannelEnable)
 dmacSym_BTCTRL_SRCINC_FIXED.setDefaultValue("0x0")
 dmacSym_BTCTRL_SRCINC_FIXED.setVisible(False)
 
-#DMA - Source INCREMENTED_AM Value
+# DMA - Source INCREMENTED_AM Value
 dmacSym_BTCTRL_SRCINC_INCREMENTED = coreComponent.createStringSymbol("DMA_SRC_INCREMENTED_AM_VALUE", dmacChannelEnable)
 dmacSym_BTCTRL_SRCINC_INCREMENTED.setDefaultValue("0x400")
 dmacSym_BTCTRL_SRCINC_INCREMENTED.setVisible(False)
 
-#DMA - Destination AM Mask
+# DMA - Destination AM Mask
 xdmacSym_BTCTRL_DSTIN_MASK = coreComponent.createStringSymbol("DMA_DST_AM_MASK", dmacChannelEnable)
 xdmacSym_BTCTRL_DSTIN_MASK.setDefaultValue("0x800")
 xdmacSym_BTCTRL_DSTIN_MASK.setVisible(False)
 
-#DMA - Destination FIXED_AM Value
+# DMA - Destination FIXED_AM Value
 dmacSym_BTCTRL_DSTINC_FIXED = coreComponent.createStringSymbol("DMA_DST_FIXED_AM_VALUE", dmacChannelEnable)
 dmacSym_BTCTRL_DSTINC_FIXED.setDefaultValue("0x0")
 dmacSym_BTCTRL_DSTINC_FIXED.setVisible(False)
 
-#DMA - Destination INCREMENTED_AM Value
+# DMA - Destination INCREMENTED_AM Value
 dmacSym_BTCTRL_DSTINC_INCREMENTED = coreComponent.createStringSymbol("DMA_DST_INCREMENTED_AM_VALUE", dmacChannelEnable)
 dmacSym_BTCTRL_DSTINC_INCREMENTED.setDefaultValue("0x800")
 dmacSym_BTCTRL_DSTINC_INCREMENTED.setVisible(False)
 
-#DMA - Data Width Mask
+# DMA - Data Width Mask
 xdmacSym_BTCTRL_BEATSIZE_MASK = coreComponent.createStringSymbol("DMA_DATA_WIDTH_MASK", dmacChannelEnable)
 xdmacSym_BTCTRL_BEATSIZE_MASK.setDefaultValue("0x300")
 xdmacSym_BTCTRL_BEATSIZE_MASK.setVisible(False)
 
-#DMA - Beat Size BYTE Value
+# DMA - Beat Size BYTE Value
 dmacSym_BTCTRL_BEATSIZE_BYTE = coreComponent.createStringSymbol("DMA_DATA_WIDTH_BYTE_VALUE", dmacChannelEnable)
 dmacSym_BTCTRL_BEATSIZE_BYTE.setDefaultValue("0x0")
 dmacSym_BTCTRL_BEATSIZE_BYTE.setVisible(False)
 
-#DMA - Beat Size HWORD Value
+# DMA - Beat Size HWORD Value
 dmacSym_BTCTRL_BEATSIZE_HWORD = coreComponent.createStringSymbol("DMA_DATA_WIDTH_HALFWORD_VALUE", dmacChannelEnable)
 dmacSym_BTCTRL_BEATSIZE_HWORD.setDefaultValue("0x100")
 dmacSym_BTCTRL_BEATSIZE_HWORD.setVisible(False)
 
-#DMA - Beat Size WORD Value
+# DMA - Beat Size WORD Value
 dmacSym_BTCTRL_BEATSIZE_WORD = coreComponent.createStringSymbol("DMA_DATA_WIDTH_WORD_VALUE", dmacChannelEnable)
 dmacSym_BTCTRL_BEATSIZE_WORD.setDefaultValue("0x200")
 dmacSym_BTCTRL_BEATSIZE_WORD.setVisible(False)
@@ -627,7 +640,7 @@ dmacSourceFile.setType("SOURCE")
 dmacSourceFile.setMarkup(True)
 dmacSourceFile.setEnabled(False)
 
-#System Initialization
+# System Initialization
 dmacSystemInitFile = coreComponent.createFileSymbol("DMAC_SYS_INIT", None)
 dmacSystemInitFile.setType("STRING")
 dmacSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
@@ -635,7 +648,7 @@ dmacSystemInitFile.setSourcePath("../peripheral/dmac_u2223/templates/system/init
 dmacSystemInitFile.setMarkup(True)
 dmacSystemInitFile.setEnabled(False)
 
-#System Definition
+# System Definition
 dmacSystemDefFile = coreComponent.createFileSymbol("DMAC_SYS_DEF", None)
 dmacSystemDefFile.setType("STRING")
 dmacSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
