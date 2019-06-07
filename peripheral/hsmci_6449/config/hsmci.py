@@ -45,7 +45,7 @@ def setValue(symbol, event):
     symbol.setValue(int(event["value"]), 2)
 
 def destroyComponent(sdhcComponent):
-    Database.setSymbolValue("core","DMA_CH_NEEDED_FOR_HSMCI", False, 2)
+    Database.setSymbolValue("core","DMA_CH_NEEDED_FOR_HSMCI", False)
 
 ################################################################################
 #### Component ####
@@ -67,12 +67,12 @@ def instantiateComponent(hsmciComponent):
 
     # DMA_CHANNEL for HSMCI
     # Enable DMA for HSMCI
-    Database.setSymbolValue("core","DMA_CH_NEEDED_FOR_HSMCI", True, 2)
+    Database.setSymbolValue("core","DMA_CH_NEEDED_FOR_HSMCI", True)
 
     sdhcDMA = hsmciComponent.createIntegerSymbol("HSMCI_DMA", None)
     sdhcDMA.setLabel("DMA Channel For Transmit and Receive")
     sdhcDMA.setReadOnly(True)
-    sdhcDMA.setDefaultValue(int(Database.getSymbolValue("core", "DMA_CH_FOR_HSMCI")))
+    sdhcDMA.setValue(int(Database.getSymbolValue("core", "DMA_CH_FOR_HSMCI")))
 
     sdhcDMAChannelComment = hsmciComponent.createCommentSymbol("DRV_SDHC_DMA_CH_COMMENT", None)
     sdhcDMAChannelComment.setLabel("Warning!!! Couldn't Allocate DMA Channel. Check DMA Manager.")
