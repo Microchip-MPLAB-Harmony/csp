@@ -234,21 +234,21 @@ def xdmacTriggerCalc(xdmacPERIDVal, event):
 
 
 def xdmacChannelAllocLogic(Sym, event):
-    dmaChannelCount = Database.getSymbolValue("core", "DMA_CHANNEL_COUNT")
     perID = event["id"].split('DMA_CH_NEEDED_FOR_')[1]
-    channelAllocated = False
+    if event["value"] == True:
+        dmaChannelCount = Database.getSymbolValue("core", "DMA_CHANNEL_COUNT")
+        perID = event["id"].split('DMA_CH_NEEDED_FOR_')[1]
+        channelAllocated = False
 
-    for i in range(0, dmaChannelCount):
-        dmaChannelEnable = Database.getSymbolValue(
-            "core", "XDMAC_CH" + str(i) + "_ENABLE")
-        dmaChannelPerID = str(Database.getSymbolValue(
-            "core", "XDMAC_CC" + str(i) + "_PERID"))
+        for i in range(0, dmaChannelCount):
+            dmaChannelEnable = Database.getSymbolValue(
+                "core", "XDMAC_CH" + str(i) + "_ENABLE")
+            dmaChannelPerID = str(Database.getSymbolValue(
+                "core", "XDMAC_CC" + str(i) + "_PERID"))
 
-        if dmaChannelPerID == perID:
-            channelAllocated = True
-            break
-        # Client requested to allocate channel
-        if event["value"] == True:
+            if dmaChannelPerID == perID:
+                channelAllocated = True
+                break
             # Reserve the first available free channel
             if dmaChannelEnable == False:
                 Database.setSymbolValue(
@@ -260,25 +260,28 @@ def xdmacChannelAllocLogic(Sym, event):
                 Database.setSymbolValue("core", "DMA_CH_FOR_" + perID, i, 2)
                 channelAllocated = True
                 break
+        
+        if channelAllocated == False:
+            Database.setSymbolValue("core", "DMA_CH_FOR_" + perID, -2, 2)
+            Log.writeWarningMessage(
+                "Warning!!! Couldn't Allocate any DMA Channel. Check DMA manager.")
 
-        # Client requested to deallocate channel
-        else:
-            # Reset the previously allocated channel
-            if perID == dmaChannelPerID and dmaChannelEnable == True:
-                Database.setSymbolValue(
-                    "core", "XDMAC_CH" + str(i) + "_ENABLE", False, 2)
-                Database.setSymbolValue(
-                    "core", "XDMAC_CC" + str(i) + "_PERID", "Software Trigger", 2)
-                Database.setSymbolValue(
-                    "core", "XDMAC_CC" + str(i) + "_PERID_LOCK", False, 2)
-                Database.setSymbolValue("core", "DMA_CH_FOR_" + perID, -1, 2)
-                channelAllocated = True
-                break
+    # Client requested to deallocate channel
+    else:
+        channelNumber = Database.getSymbolValue("core", "DMA_CH_FOR_" + perID)
+        dmaChannelEnable = Database.getSymbolValue("core", "XDMAC_CH" + str(channelNumber) + "_ENABLE")
+        dmaChannelPerID = str(Database.getSymbolValue("core", "XDMAC_CC" + str(channelNumber) + "_PERID"))
+        # Reset the previously allocated channel
+        if perID == dmaChannelPerID and dmaChannelEnable == True:
+            Database.setSymbolValue(
+                "core", "XDMAC_CH" + str(channelNumber) + "_ENABLE", False, 2)
+            Database.setSymbolValue(
+                "core", "XDMAC_CC" + str(channelNumber) + "_PERID", "Software Trigger", 2)
+            Database.setSymbolValue(
+                "core", "XDMAC_CC" + str(channelNumber) + "_PERID_LOCK", False, 2)
+            Database.setSymbolValue("core", "DMA_CH_FOR_" + perID, -1, 2)
+            
 
-    if event["value"] == True and channelAllocated == False:
-        Database.setSymbolValue("core", "DMA_CH_FOR_" + perID, -2, 2)
-        Log.writeWarningMessage(
-            "Warning!!! Couldn't Allocate any DMA Channel. Check DMA manager.")
 
 
 ###############################################################################

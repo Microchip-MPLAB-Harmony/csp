@@ -83,10 +83,7 @@ def dmacTriggerCalc(symbol, event):
 # And once the DMA mode is unselected, then the corresponding DMA channel will
 # be disabled and trigger source will be reset to "Software trigger"
 def dmacChannelAllocLogic(symbol, event):
-
-    dmaChannelCount = Database.getSymbolValue("core", "DMA_CHANNEL_COUNT")
     perID = event["id"].split('DMA_CH_NEEDED_FOR_')[1]
-    channelAllocated = False
 
     triggerSource = perID
 
@@ -95,16 +92,18 @@ def dmacChannelAllocLogic(symbol, event):
     elif "Receive" in perID:
         triggerSource = perID.replace("Receive", "RX")
 
-    for dmaChannel in range(dmaChannelCount):
-        dmaChannelEnable = Database.getSymbolValue("core", "DMAC_CHAN" + str(dmaChannel) + "_ENBL")
-        dmaChannelPerID = str(Database.getSymbolValue("core", "DMAC_REQUEST_" + str(dmaChannel) + "_SOURCE"))
+    if event["value"] == True:
+        dmaChannelCount = Database.getSymbolValue("core", "DMA_CHANNEL_COUNT")
 
-        if dmaChannelPerID == triggerSource:
-            channelAllocated = True
-            break
+        channelAllocated = False
 
-        # Client requested to allocate channel
-        if event["value"] == True:
+        for dmaChannel in range(dmaChannelCount):
+            dmaChannelEnable = Database.getSymbolValue("core", "DMAC_CHAN" + str(dmaChannel) + "_ENBL")
+            dmaChannelPerID = str(Database.getSymbolValue("core", "DMAC_REQUEST_" + str(dmaChannel) + "_SOURCE"))
+
+            if dmaChannelPerID == triggerSource:
+                channelAllocated = True
+                break
             # Reserve the first available free channel
             if dmaChannelEnable == False:
                 Database.setSymbolValue("core", "DMAC_CHAN" + str(dmaChannel) + "_ENBL", True, 2)
@@ -114,19 +113,22 @@ def dmacChannelAllocLogic(symbol, event):
                 channelAllocated = True
                 break
 
-        # Client requested to deallocate channel
-        else:
-            # Reset the previously allocated channel
-            if triggerSource == dmaChannelPerID and dmaChannelEnable == True:
-                Database.setSymbolValue("core", "DMAC_CHAN" + str(dmaChannel) + "_ENBL", False, 2)
-                Database.setSymbolValue("core", "DMAC_REQUEST_" + str(dmaChannel) + "_SOURCE", "Software Trigger", 2)
-                Database.setSymbolValue("core", "DMAC_REQUEST_" + str(dmaChannel) + "_PERID_LOCK", False, 2)
-                Database.setSymbolValue("core", "DMA_CH_FOR_" + perID, -1, 2)
+        if channelAllocated == False:
+            # Couldn't find any free DMA channel, hence set warning.
+            Database.clearSymbolValue("core", "DMA_CH_FOR_" + perID)
+            Database.setSymbolValue("core", "DMA_CH_FOR_" + perID, -2, 2)
 
-    if event["value"] == True and channelAllocated == False:
-        # Couldn't find any free DMA channel, hence set warning.
-        Database.clearSymbolValue("core", "DMA_CH_FOR_" + perID)
-        Database.setSymbolValue("core", "DMA_CH_FOR_" + perID, -2, 2)
+        # Client requested to deallocate channel
+    else:
+        channelNumber = Database.getSymbolValue("core", "DMA_CH_FOR_" + perID)
+        dmaChannelEnable = Database.getSymbolValue("core", "DMAC_CHAN" + str(channelNumber) + "_ENBL")
+        dmaChannelPerID = str(Database.getSymbolValue("core", "DMAC_REQUEST_" + str(channelNumber) + "_SOURCE"))
+        # Reset the previously allocated channel
+        if triggerSource == dmaChannelPerID and dmaChannelEnable == True:
+            Database.setSymbolValue("core", "DMAC_CHAN" + str(channelNumber) + "_ENBL", False, 2)
+            Database.setSymbolValue("core", "DMAC_REQUEST_" + str(channelNumber) + "_SOURCE", "Software Trigger", 2)
+            Database.setSymbolValue("core", "DMAC_REQUEST_" + str(channelNumber) + "_PERID_LOCK", False, 2)
+            Database.setSymbolValue("core", "DMA_CH_FOR_" + perID, -1, 2)
 
 # The following business logic creates a list of enabled DMA channels and sorts
 # them in the descending order. The left most channel number will be the highest
