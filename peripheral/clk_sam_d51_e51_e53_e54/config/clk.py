@@ -146,7 +146,7 @@ def setDPLLClockFreq(symbol, event):
         ldrFrac = int(Database.getSymbolValue(
             "core", "CONFIG_CLOCK_DPLL" + index + "_LDRFRAC_FRACTION"))
 
-        dpllFreq = int(srcFreq * (ldr + 1.0 + (ldrFrac / 16.0)))
+        dpllFreq = int(srcFreq * (ldr + 1.0 + (ldrFrac / 32.0)))
 
         prevFreq = symbol.getValue()
         if prevFreq != dpllFreq:
@@ -162,7 +162,7 @@ def calcDpllMultiplier(symbol, event):
         "core", "CONFIG_CLOCK_DPLL" + index + "_LDR_INTEGER"))
     ldrFrac = int(Database.getSymbolValue(
         "core", "CONFIG_CLOCK_DPLL" + index + "_LDRFRAC_FRACTION"))
-    multiplier = (ldr + 1.0 + (ldrFrac / 16.0))
+    multiplier = (ldr + 1.0 + (ldrFrac / 32.0))
     symbol.setValue(multiplier, 2)
 
 
