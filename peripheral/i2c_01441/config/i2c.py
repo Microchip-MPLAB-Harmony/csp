@@ -101,12 +101,16 @@ def baudRateCalc(clk, baud):
 
     I2CxBRG = (clk / (2 * baud) - (clk * 0.000000104) / 2)  - 1
 
-    if I2CxBRG >= 3 and I2CxBRG < 65536:
-        i2cmSym_BaudError_Comment.setVisible(False)
-    else:
-        i2cmSym_BaudError_Comment.setVisible(True)
-    if I2CxBRG < 3:
+    i2cSym_BaudError_Comment.setVisible(False)
+
+    if I2CxBRG < 0:
+        I2CxBRG = 0
+        i2cSym_BaudError_Comment.setVisible(True)
+    elif I2CxBRG < 3:
         I2CxBRG = 3
+    elif I2CxBRG > i2cSymMaxBRG.getValue():
+        I2CxBRG = i2cSymMaxBRG.getValue()
+        i2cSym_BaudError_Comment.setVisible(True)
 
     return int(I2CxBRG)
 
@@ -123,7 +127,9 @@ def i2cSourceFreq(symbol, event):
     symbol.setValue(int(Database.getSymbolValue("core", i2cInstanceName.getValue() + "_CLOCK_FREQUENCY")), 2)
 
 def updateI2CClockWarningStatus(symbol, event):
+
     symbol.setVisible(not event["value"])
+
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
@@ -136,6 +142,8 @@ def instantiateComponent(i2cComponent):
     global InterruptHandler
     global InterruptVectorUpdate
     global i2cSym_BAUD
+    global i2cSymMaxBRG
+    global i2cSym_BaudError_Comment
 
     InterruptVector = []
     InterruptHandler = []
@@ -178,10 +186,17 @@ def instantiateComponent(i2cComponent):
     i2cSym_BAUD.setMax(1000000)
 
     #I2C Baud Rate not supported comment
-    global i2cmSym_BaudError_Comment
-    i2cmSym_BaudError_Comment = i2cComponent.createCommentSymbol("I2C_BAUD_ERROR_COMMENT", None)
-    i2cmSym_BaudError_Comment.setLabel("********** WARNING!: Baud Rate is out of range **********")
-    i2cmSym_BaudError_Comment.setVisible(False)
+    i2cSym_BaudError_Comment = i2cComponent.createCommentSymbol("I2C_BAUD_ERROR_COMMENT", None)
+    i2cSym_BaudError_Comment.setLabel("********** WARNING!: Baud Rate is out of range **********")
+    i2cSym_BaudError_Comment.setVisible(False)
+    i2cxBRG = i2cInstanceName.getValue() + "BRG"
+
+    i2cxBRG_Bitfield = ATDF.getNode('/avr-tools-device-file/modules/module@[name="I2C"]/register-group@[name="I2C"]/register@[name="' + i2cxBRG + '"]/bitfield@[name="I2CBRG"]')
+    i2cMaxBRG = int(str(i2cxBRG_Bitfield.getAttribute("mask")), 0)
+
+    i2cSymMaxBRG = i2cComponent.createIntegerSymbol("I2C_MAX_BRG", None)
+    i2cSymMaxBRG.setDefaultValue(i2cMaxBRG)
+    i2cSymMaxBRG.setVisible(False)
 
     ## Baud Rate Frequency dependency
     i2cSym_BRGValue = i2cComponent.createIntegerSymbol("BRG_VALUE", None)
