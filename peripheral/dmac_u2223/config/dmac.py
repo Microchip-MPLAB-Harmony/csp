@@ -421,6 +421,7 @@ for channelID in range(0, dmacChCount.getValue()):
     dmacSym_CHCTRLB_TRIGACT.setLabel("Trigger Action")
     dmacSym_CHCTRLB_TRIGACT.addKey("BLOCK", "0", "One Block Transfer Per DMA Request")
     dmacSym_CHCTRLB_TRIGACT.addKey("BEAT", "2", "One Beat Transfer per DMA Request")
+    dmacSym_CHCTRLB_TRIGACT.addKey("TRANSACTION", "3", "One Transaction per DMA Request")
     dmacSym_CHCTRLB_TRIGACT.setDefaultValue(0)
     dmacSym_CHCTRLB_TRIGACT.setOutputMode("Value")
     dmacSym_CHCTRLB_TRIGACT.setDisplayMode("Description")
