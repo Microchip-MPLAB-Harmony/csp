@@ -77,6 +77,15 @@ typedef enum
 </#list>
 } CMP_STATUS_SOURCE;
 
+<#assign INTERRUPT_MODE = false>
+<#list 1..CMP_COUNT as i>
+    <#assign CMP_CMxCON_EVPOL = "CMP_CM" + i + "CON_EVPOL">
+    <#if .vars[CMP_CMxCON_EVPOL] != "0">
+        <#assign INTERRUPT_MODE = true>
+        <#break>
+    </#if>
+</#list>
+<#if INTERRUPT_MODE == true>
 typedef void (*CMP_CALLBACK) (uintptr_t context);
 
 typedef struct
@@ -87,6 +96,7 @@ typedef struct
 
 } CMP_OBJECT;
 
+</#if>
 // *****************************************************************************
 // *****************************************************************************
 // Section: Interface
@@ -104,7 +114,7 @@ void ${CMP_INSTANCE_NAME}_${i}_CompareEnable(void);
 
 void ${CMP_INSTANCE_NAME}_${i}_CompareDisable(void);
 
-<#if CMP_CMxCON_EVPOL != "0">
+<#if .vars[CMP_CMxCON_EVPOL] != "0">
 void ${CMP_INSTANCE_NAME}_${i}_CallbackRegister(CMP_CALLBACK callback, uintptr_t context);
 
 </#if>
