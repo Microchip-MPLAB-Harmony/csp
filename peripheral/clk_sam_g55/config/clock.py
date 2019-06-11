@@ -498,8 +498,10 @@ def adcFreq(symbol, event):
     if enable:
         src = int(Database.getSymbolValue("adc", "ADC_CLK_SRC"))
         if src == 0:
+            Database.setSymbolValue("core", "PMC_SCER_PCK5", False)
             freq = int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY"))
         else:
+            Database.setSymbolValue("core", "PMC_SCER_PCK5", True)
             freq = int(Database.getSymbolValue("core", "PROG_5_CLOCK_FREQUENCY"))
 
         if symbol.getValue() != freq:
