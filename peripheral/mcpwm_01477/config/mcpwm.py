@@ -614,7 +614,16 @@ def instantiateComponent(mcpwmComponent):
     instanceNum = filter(str.isdigit,str(mcpwmComponent.getID()))
     mcpwmInstanceNum.setDefaultValue(instanceNum)
 
-    MCPWM_MAX_CHANNELS = 12
+    MCPWM_MAX_CHANNELS = 0
+    ModuleName = "MCPWM"
+
+    MCPWM_childrens = ATDF.getNode('/avr-tools-device-file/modules/module@[name="' +
+        ModuleName + '"]/register-group@[name="' + ModuleName + '"]').getChildren()
+
+    for register in MCPWM_childrens:
+        if("PWM Control Register" in register.getAttribute("caption")):
+           MCPWM_MAX_CHANNELS += 1
+
 
     mcpwmSym_NUM_CHANNELS = mcpwmComponent.createIntegerSymbol("MCPWM_NUM_CHANNELS", None)
     mcpwmSym_NUM_CHANNELS.setVisible(False)
