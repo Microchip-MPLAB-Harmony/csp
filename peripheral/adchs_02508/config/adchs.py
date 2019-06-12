@@ -711,7 +711,7 @@ def instantiateComponent(adchsComponent):
     ADC_Input_Signals_List = [False] * MAX_AVAILABLE_SIGNALS
 
     # Each of the dedicated ADCHS SARs must have a DIGEN bit field in the
-    # ADCCON3 SFR. 
+    # ADCCON3 SFR.
     # ATDF files can skip a channel (e.g., DIGEN6 is absent).  We therefore
     # need to poll the ATDF file to see what channels are present.  They are
     # set in channelList[].
@@ -722,7 +722,7 @@ def instantiateComponent(adchsComponent):
         if(("DIGEN" in ii.getAttribute("name")) and (ii.getAttribute("values")!=None)):
             if(ii.getAttribute("values")[-1] != '7'):  # channel 7 is shared - do not include in channelList
                 channelList.append(ii.getAttribute("values")[-1]) # the last char is a digit
- 
+
     for ChannelNumber in channelList:
         labelPath = adchsATDFRegisterBitfieldPath(Module, "ADCCON3",
             "DIGEN" + str(ChannelNumber))
@@ -870,10 +870,10 @@ def instantiateComponent(adchsComponent):
     adchsSym_ADCTIME__SAMC = []
     adchsSym_ADCTIME__ADCDIV = []
     adchsSym_ADCTIME__SELRES = []
-    adchsSym_ADCTRG__TRGSRC = []
+    adchsSym_ADCTRG__TRGSRC = [None] * MAX_AVAILABLE_SIGNALS
     adchsSym_ADCTRGSNS__LVL = []
     adchsSym_ADCCSS__CSS = [None] * MAX_AVAILABLE_SIGNALS
-    adchsSym_class2 = []
+    adchsSym_class2 = [None] * ADC_Max_Class_2
     adcSym_TADC = []
     adcSym_CONV_RATE = []
 
@@ -972,7 +972,7 @@ def instantiateComponent(adchsComponent):
         BitFieldBaseName_TRGSRC = "TRGSRC"
         RegisterName = RegisterNameBase + str((channelID/4)+1)
         # trigger source
-        adchsSym_ADCTRG__TRGSRC.append(channelID)
+        #adchsSym_ADCTRG__TRGSRC.append(channelID)
         adchsSym_ADCTRG__TRGSRC[channelID] = adchsAddKeyValueSetFromATDFInitValue(
             adchsComponent, Module, RegisterName, BitFieldBaseName_TRGSRC +
             str(channelID), adchsSym_CH_ENABLE[channelID], False)
@@ -1043,35 +1043,35 @@ def instantiateComponent(adchsComponent):
         "ADCCON2__SAMC", "ADCCON1__SELRES", "ADCHS_"+str(channelID)+"_ENABLE"])
 
     for channelID in range(ADC_Max_Class_1, ADC_Max_Class_1and2):
-        adchsSym_class2.append(channelID - ADC_Max_Class_1)
-        adchsSym_class2[channelID - ADC_Max_Class_1] = adchsComponent.createCommentSymbol("ADCHS_CLASS2_INPUT" + str(channelID), adchsSym_CH_ENABLE7)
-        adchsSym_class2[channelID - ADC_Max_Class_1].setLabel("CLASS 2 Input AN" + str(channelID))
-        adchsSym_class2[channelID - ADC_Max_Class_1].setVisible(False)
-        adchsSym_class2[channelID - ADC_Max_Class_1].setDependencies(adchsVisibilityOnEvent, ["ADCHS_7_ENABLE"])
+        if (ADC_Input_Signals_List[channelID] == True):
+            adchsSym_class2[channelID - ADC_Max_Class_1] = adchsComponent.createCommentSymbol("ADCHS_CLASS2_INPUT" + str(channelID), adchsSym_CH_ENABLE7)
+            adchsSym_class2[channelID - ADC_Max_Class_1].setLabel("CLASS 2 Input AN" + str(channelID))
+            adchsSym_class2[channelID - ADC_Max_Class_1].setVisible(False)
+            adchsSym_class2[channelID - ADC_Max_Class_1].setDependencies(adchsVisibilityOnEvent, ["ADCHS_7_ENABLE"])
 
-        RegisterNameBase = "ADCTRG"
-        BitFieldBaseName_TRGSRC = "TRGSRC"
-        RegisterName = RegisterNameBase + str((channelID/4)+1)
-        component = adchsAddKeyValueSetFromATDFInitValue(
-            adchsComponent, Module, RegisterName, BitFieldBaseName_TRGSRC +
-            str(channelID), adchsSym_class2[channelID - ADC_Max_Class_1], False)
-        if(component != None):
-            adchsSym_ADCTRG__TRGSRC.append(channelID)
-            adchsSym_ADCTRG__TRGSRC[channelID] = component
-            adchsSym_ADCTRG__TRGSRC[channelID].setLabel("Select Trigger Source")
-            adchsSym_ADCTRG__TRGSRC[channelID].setDependencies(adchsVisibilityOnEvent, ["ADCHS_7_ENABLE"])
-            adctrg_deplist[int((channelID/4))].append(RegisterName + "__" + BitFieldBaseName_TRGSRC + str(channelID))
+            RegisterNameBase = "ADCTRG"
+            BitFieldBaseName_TRGSRC = "TRGSRC"
+            RegisterName = RegisterNameBase + str((channelID/4)+1)
+            component = adchsAddKeyValueSetFromATDFInitValue(
+                adchsComponent, Module, RegisterName, BitFieldBaseName_TRGSRC +
+                str(channelID), adchsSym_class2[channelID - ADC_Max_Class_1], False)
+            if(component != None):
+                adchsSym_ADCTRG__TRGSRC[channelID] = component
+                adchsSym_ADCTRG__TRGSRC[channelID].setLabel("Select Trigger Source")
+                adchsSym_ADCTRG__TRGSRC[channelID].setDependencies(adchsVisibilityOnEvent, ["ADCHS_7_ENABLE"])
+                adctrg_deplist[int((channelID/4))].append(RegisterName + "__" + BitFieldBaseName_TRGSRC + str(channelID))
 
-        RegisterBaseName_ADCCSS = "ADCCSS"
-        BitFieldBaseName_CSS = "CSS"
-        RegisterName = RegisterBaseName_ADCCSS + str((channelID/32)+1)
-        adchsSym_ADCCSS__CSS.append(channelID)
-        adchsSym_ADCCSS__CSS[channelID] = adchsAddBooleanFromATDF1ValueValueGroup(
-            adchsComponent, Module, RegisterName, BitFieldBaseName_CSS + str(channelID),
-            adchsSym_class2[channelID - ADC_Max_Class_1], False)
-        adchsSym_ADCCSS__CSS[channelID].setLabel("Select AN" + str(channelID) + " for Input Scan")
-        adchsSym_ADCCSS__CSS[channelID].setDependencies(adchsVisibilityOnEvent, ["ADCHS_7_ENABLE"])
-        adccss_deplist[int(channelID/32)].append(RegisterName + "__" + BitFieldBaseName_CSS + str(channelID))
+            RegisterBaseName_ADCCSS = "ADCCSS"
+            BitFieldBaseName_CSS = "CSS"
+            RegisterName = RegisterBaseName_ADCCSS + str((channelID/32)+1)
+            component = adchsAddBooleanFromATDF1ValueValueGroup(
+                adchsComponent, Module, RegisterName, BitFieldBaseName_CSS + str(channelID),
+                adchsSym_class2[channelID - ADC_Max_Class_1], False)
+            if (component != None):
+                adchsSym_ADCCSS__CSS[channelID] = component
+                adchsSym_ADCCSS__CSS[channelID].setLabel("Select AN" + str(channelID) + " for Input Scan")
+                adchsSym_ADCCSS__CSS[channelID].setDependencies(adchsVisibilityOnEvent, ["ADCHS_7_ENABLE"])
+                adccss_deplist[int(channelID/32)].append(RegisterName + "__" + BitFieldBaseName_CSS + str(channelID))
 
     adchsSym_class3 = adchsComponent.createCommentSymbol("ADCHS_CLASS3_INPUTS", adchsSym_CH_ENABLE7)
     adchsSym_class3.setLabel("CLASS 3 Inputs")
@@ -1234,29 +1234,15 @@ def instantiateComponent(adchsComponent):
         if("ADC Trigger Source" in register.getAttribute("caption")):
            ADCTRG_NUM += 1
 
-    #adchsSym_ADCTRG1 = adchsComponent.createHexSymbol("ADCHS_ADCTRG1", None)
-    #adchsSym_ADCTRG1.setLabel("ADCTRG1 Register")
-    #adchsSym_ADCTRG1.setVisible(False)
-    #adchsSym_ADCTRG1.setDependencies(adchsCalcADCTRG1, adctrg_deplist[0])
-    #
-    #adchsSym_ADCTRG2 = adchsComponent.createHexSymbol("ADCHS_ADCTRG2", None)
-    #adchsSym_ADCTRG2.setLabel("ADCTRG2 Register")
-    #adchsSym_ADCTRG2.setVisible(False)
-    #adchsSym_ADCTRG2.setDependencies(adchsCalcADCTRG2, adctrg_deplist[1])
-    #
-    #adchsSym_ADCTRG3 = adchsComponent.createHexSymbol("ADCHS_ADCTRG3", None)
-    #adchsSym_ADCTRG3.setLabel("ADCTRG3 Register")
-    #adchsSym_ADCTRG3.setVisible(False)
-    #adchsSym_ADCTRG3.setDependencies(adchsCalcADCTRG3, adctrg_deplist[2])
     global adchsSym_ADCTRG
     adchsSym_ADCTRG = [None]
-
     for ctrg_id in range(1,ADCTRG_NUM+1):
         adchsSym_ADCTRG.append(ctrg_id)
-        adchsSym_ADCTRG[ctrg_id] = adchsComponent.createHexSymbol("ADCHS_ADCTRG" + str(ctrg_id), None)
-        adchsSym_ADCTRG[ctrg_id].setLabel("ADCTRG" + str(ctrg_id) + "Register")
-        adchsSym_ADCTRG[ctrg_id].setVisible(False)
-        adchsSym_ADCTRG[ctrg_id].setDependencies(adchsCalcADCTRG,adctrg_deplist[ctrg_id - 1])
+        if (adctrg_deplist[ctrg_id - 1] != []):
+            adchsSym_ADCTRG[ctrg_id] = adchsComponent.createHexSymbol("ADCHS_ADCTRG" + str(ctrg_id), None)
+            adchsSym_ADCTRG[ctrg_id].setLabel("ADCTRG" + str(ctrg_id) + "Register")
+            adchsSym_ADCTRG[ctrg_id].setVisible(False)
+            adchsSym_ADCTRG[ctrg_id].setDependencies(adchsCalcADCTRG,adctrg_deplist[ctrg_id - 1])
 
     adchsSym_ADCTGSNS = adchsComponent.createHexSymbol("ADCHS_ADCTRGSNS", None)
     adchsSym_ADCTGSNS.setLabel("ADCTRGSNS Register")
