@@ -67,14 +67,14 @@ void ${FLEXCOM_INSTANCE_NAME}_SPI_Initialize ( void )
 
 <#if FLEXCOM_SPI_MR_MSTR =="MASTER">
     /* Enable Master mode, select clock source, select particular NPCS line for chip select and disable mode fault detection */
-    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_MR = FLEX_SPI_MR_MSTR_Msk | FLEX_SPI_MR_BRSRCCLK_${FLEXCOM_SPI_MR_BRSRCCLK} | FLEX_SPI_MR_PCS(${FLEXCOM_SPI_MR_PCS}) | FLEX_SPI_MR_MODFDIS_Msk;
+    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_MR = FLEX_SPI_MR_MSTR_Msk | FLEX_SPI_MR_BRSRCCLK_${FLEXCOM_SPI_MR_BRSRCCLK} <#if FLEXCOM_SPI_MR_PCS != "GPIO">| FLEX_SPI_MR_PCS(${FLEXCOM_SPI_MR_PCS?remove_beginning("NPCS")})<#else>| FLEX_SPI_MR_PCS(0)</#if> | FLEX_SPI_MR_MODFDIS_Msk;
 <#else>
     /* SPI is by default in Slave Mode, disable mode fault detection */
     ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_MR =  FLEX_SPI_MR_MODFDIS_Msk;
 </#if>
 
-    /* Set up clock Polarity, data phase, Communication Width and Baud Rate */
-    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CSR[${FLEXCOM_SPI_CSR_INDEX}]= FLEX_SPI_CSR_CPOL(${FLEXCOM_SPI_CSR_CPOL}) | FLEX_SPI_CSR_NCPHA(${FLEXCOM_SPI_CSR_NCPHA}) | FLEX_SPI_CSR_BITS${FLEXCOM_SPI_CSR_BITS} | FLEX_SPI_CSR_SCBR(${FLEXCOM_SPI_CSR_SCBR_VALUE});
+    /* Set up clock Polarity, data phase, Communication Width, Baud Rate<#if FLEXCOM_SPI_MR_PCS != "GPIO"> and Chip select active after transfer</#if> */
+    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CSR[${FLEXCOM_SPI_CSR_INDEX}]= FLEX_SPI_CSR_CPOL(${FLEXCOM_SPI_CSR_CPOL}) | FLEX_SPI_CSR_NCPHA(${FLEXCOM_SPI_CSR_NCPHA}) | FLEX_SPI_CSR_BITS${FLEXCOM_SPI_CSR_BITS} | FLEX_SPI_CSR_SCBR(${FLEXCOM_SPI_CSR_SCBR_VALUE})<#if FLEXCOM_SPI_MR_PCS != "GPIO"> | FLEX_SPI_CSR_CSAAT_Msk</#if>;
 
 <#if SPI_INTERRUPT_MODE == true >
     /* Initialize global variables */
@@ -178,6 +178,11 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead(void* pTransmitData, size_t txSize, 
         /* Make sure no data is pending in the shift register */
         while ((bool)((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_SR & FLEX_SPI_SR_TXEMPTY_Msk) >> FLEX_SPI_SR_TXEMPTY_Pos) == false);
 
+        <#if FLEXCOM_SPI_MR_PCS != "GPIO">
+        /* Set Last transfer to deassert NPCS after the last byte written in TDR has been transferred. */
+        ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CR = FLEX_SPI_CR_LASTXFER_Msk;
+
+        </#if>
         isSuccess = true;
     }
     return isSuccess;
@@ -278,9 +283,9 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_TransferSetup (FLEXCOM_SPI_TRANSFER_SETUP * se
 {
     uint32_t scbr;
     if ((setup == NULL) || (setup->clockFrequency == 0))
-	{
-		return false;
-	}
+    {
+        return false;
+    }
     if(spiSourceClock == 0)
     {
         // Fetch Master Clock Frequency directly
@@ -358,9 +363,17 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
     {
         /* Disable the TDRE interrupt. This will be enabled back if more than
          * one byte is pending to be transmitted */
-
         ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_IDR = FLEX_SPI_IDR_TDRE_Msk;
 
+        <#if FLEXCOM_SPI_MR_PCS != "GPIO">
+        /* Disable interrupts to ensure last transfer bit set before preemption by higher priority interrupt */
+        if (((${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount == (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txSize - 1)) && (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.dummySize == 0)) ||
+           ((${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount == ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txSize) && (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.dummySize == 1)))
+        {
+            __disable_irq();
+        }
+
+        </#if>
         if(dataBits == FLEX_SPI_CSR_BITS_8_BIT)
         {
             if (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount < ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txSize)
@@ -402,6 +415,12 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
              */
 
             isLastByteTransferInProgress = true;
+            <#if FLEXCOM_SPI_MR_PCS != "GPIO">
+            /* Set Last transfer to deassert NPCS after the last byte written in TDR has been transferred. */
+            ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CR = FLEX_SPI_CR_LASTXFER_Msk;
+            /* Enable interrupts to allow preemption by higher priority interrupt */
+            __enable_irq();
+            </#if>
         }
         else if (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount == ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxSize)
         {

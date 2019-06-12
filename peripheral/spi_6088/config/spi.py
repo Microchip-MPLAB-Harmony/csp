@@ -212,7 +212,7 @@ def instantiateComponent(spiComponent):
     global spiSym_MR_PCS
     spiSym_MR_PCS = spiComponent.createKeyValueSetSymbol("SPI_MR_PCS", None)
     spiSym_MR_PCS.setLabel(spiBitField_MR_PCS.getAttribute("caption"))
-    spiSym_MR_PCS.setOutputMode("Value")
+    spiSym_MR_PCS.setOutputMode("Key")
     spiSym_MR_PCS.setDisplayMode("Key")
     spiSym_MR_PCS.setDefaultValue(DefaultPCS)
     spiSym_MR_PCS.setDependencies(showMasterDependencies, ["SPI_MR_MSTR"])
