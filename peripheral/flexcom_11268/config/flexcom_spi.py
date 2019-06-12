@@ -148,7 +148,7 @@ flexcomSym_SPI_MR_BRSRCCLK.setDependencies(symbolVisible, ["FLEXCOM_MODE"])
 
 flexcomSym_SPI_MR_PCS = flexcomComponent.createKeyValueSetSymbol("FLEXCOM_SPI_MR_PCS", flexcomSym_OperatingMode)
 flexcomSym_SPI_MR_PCS.setLabel("Peripheral Chip Select")
-flexcomSym_SPI_MR_PCS.setOutputMode("Value")
+flexcomSym_SPI_MR_PCS.setOutputMode("Key")
 flexcomSym_SPI_MR_PCS.setDisplayMode("Key")
 flexcomSym_SPI_MR_PCS.setDefaultValue(0)
 flexcomSym_SPI_MR_PCS.addKey("NPCS0", "0", "NPCS0 as Chip Select")

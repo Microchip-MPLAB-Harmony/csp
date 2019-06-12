@@ -58,14 +58,14 @@ void ${SPI_INSTANCE_NAME}_Initialize ( void )
 
 <#if SPI_MR_MSTR =="MASTER">
     /* Enable Master mode, <#if SPI_CLK_SRC??>select source clock, </#if>select particular NPCS line for chip select and disable mode fault detection */
-    ${SPI_INSTANCE_NAME}_REGS->SPI_MR =  SPI_MR_MSTR_Msk <#if SPI_CLK_SRC??>| SPI_MR_BRSRCCLK_${SPI_CLK_SRC} </#if>| SPI_MR_PCS_${SPI_MR_PCS} | SPI_MR_MODFDIS_Msk;
+    ${SPI_INSTANCE_NAME}_REGS->SPI_MR =  SPI_MR_MSTR_Msk <#if SPI_CLK_SRC??>| SPI_MR_BRSRCCLK_${SPI_CLK_SRC} </#if><#if SPI_MR_PCS != "GPIO">| SPI_MR_PCS_${SPI_MR_PCS}<#else>| SPI_MR_PCS_NPCS0</#if> | SPI_MR_MODFDIS_Msk;
 <#else>
     /* SPI is by default in Slave Mode, disable mode fault detection <#if SPI_CLK_SRC??> and select source clock </#if>*/
     ${SPI_INSTANCE_NAME}_REGS->SPI_MR =  SPI_MR_MODFDIS_Msk <#if SPI_CLK_SRC??>| SPI_MR_BRSRCCLK_${SPI_CLK_SRC}</#if>;
 </#if>
 
-    /* Set up clock Polarity, data phase, Communication Width, Baud Rate and Chip select active after transfer */
-    ${SPI_INSTANCE_NAME}_REGS->SPI_CSR[${SPI_CSR_INDEX}] = SPI_CSR_CPOL_${SPI_CLOCK_POLARITY} | SPI_CSR_NCPHA_${SPI_CLOCK_PHASE} | SPI_CSR_BITS${SPI_CHARSIZE_BITS} | SPI_CSR_SCBR(${SPI_CSR_SCBR_VALUE}) | SPI_CSR_CSAAT_Msk;
+    /* Set up clock Polarity, data phase, Communication Width, Baud Rate<#if SPI_MR_PCS != "GPIO"> and Chip select active after transfer</#if> */
+    ${SPI_INSTANCE_NAME}_REGS->SPI_CSR[${SPI_CSR_INDEX}] = SPI_CSR_CPOL_${SPI_CLOCK_POLARITY} | SPI_CSR_NCPHA_${SPI_CLOCK_PHASE} | SPI_CSR_BITS${SPI_CHARSIZE_BITS} | SPI_CSR_SCBR(${SPI_CSR_SCBR_VALUE})<#if SPI_MR_PCS != "GPIO"> | SPI_CSR_CSAAT_Msk</#if>;
 
 <#if SPI_INTERRUPT_MODE == true >
     /* Initialize global variables */
@@ -169,9 +169,11 @@ bool ${SPI_INSTANCE_NAME}_WriteRead(void* pTransmitData, size_t txSize, void* pR
         /* Make sure no data is pending in the shift register */
         while ((bool)((${SPI_INSTANCE_NAME}_REGS->SPI_SR & SPI_SR_TXEMPTY_Msk) >> SPI_SR_TXEMPTY_Pos) == false);
 
+        <#if SPI_MR_PCS != "GPIO">
         /* Set Last transfer to deassert NPCS after the last byte written in TDR has been transferred. */
         ${SPI_INSTANCE_NAME}_REGS->SPI_CR = SPI_CR_LASTXFER_Msk;
 
+        </#if>
         isSuccess = true;
     }
         return isSuccess;
@@ -347,12 +349,11 @@ void ${SPI_INSTANCE_NAME}_InterruptHandler(void)
     /* If there are more words to be transmitted, then transmit them here and keep track of the count */
     if((${SPI_INSTANCE_NAME}_REGS->SPI_SR & SPI_SR_TDRE_Msk) == SPI_SR_TDRE_Msk)
     {
-
         /* Disable the TDRE interrupt. This will be enabled back if more than
          * one byte is pending to be transmitted */
-
         ${SPI_INSTANCE_NAME}_REGS->SPI_IDR = SPI_IDR_TDRE_Msk;
 
+        <#if SPI_MR_PCS != "GPIO">
         /* Disable interrupts to ensure last transfer bit set before preemption by higher priority interrupt */
         if (((${SPI_INSTANCE_NAME?lower_case}Obj.txCount == (${SPI_INSTANCE_NAME?lower_case}Obj.txSize - 1)) && (${SPI_INSTANCE_NAME?lower_case}Obj.dummySize == 0)) ||
            ((${SPI_INSTANCE_NAME?lower_case}Obj.txCount == ${SPI_INSTANCE_NAME?lower_case}Obj.txSize) && (${SPI_INSTANCE_NAME?lower_case}Obj.dummySize == 1)))
@@ -360,6 +361,7 @@ void ${SPI_INSTANCE_NAME}_InterruptHandler(void)
             __disable_irq();
         }
 
+        </#if>
         if(dataBits == SPI_CSR_BITS_8_BIT)
         {
             if (${SPI_INSTANCE_NAME?lower_case}Obj.txCount < ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
@@ -396,6 +398,12 @@ void ${SPI_INSTANCE_NAME}_InterruptHandler(void)
              */
 
             isLastByteTransferInProgress = true;
+            <#if SPI_MR_PCS != "GPIO">
+            /* Set Last transfer to deassert NPCS after the last byte written in TDR has been transferred. */
+            ${SPI_INSTANCE_NAME}_REGS->SPI_CR = SPI_CR_LASTXFER_Msk;
+            /* Enable interrupts to allow preemption by higher priority interrupt */
+            __enable_irq();
+            </#if>
         }
         else if (${SPI_INSTANCE_NAME?lower_case}Obj.rxCount == ${SPI_INSTANCE_NAME?lower_case}Obj.rxSize)
         {
@@ -427,11 +435,6 @@ void ${SPI_INSTANCE_NAME}_InterruptHandler(void)
     }
     if (isLastByteTransferInProgress == true)
     {
-        /* Set Last transfer to deassert NPCS after the last byte written in TDR has been transferred. */
-        ${SPI_INSTANCE_NAME}_REGS->SPI_CR = SPI_CR_LASTXFER_Msk;
-        /* Enable interrupts to allow preemption by higher priority interrupt */
-        __enable_irq();
-
         /* For the last byte transfer, the TDRE interrupt is already disabled.
          * Enable TXEMPTY interrupt to ensure no data is present in the shift
          * register before application callback is called.
