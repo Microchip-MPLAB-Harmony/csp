@@ -197,6 +197,23 @@ def sort_alphanumeric(l):
     return sorted(l, key = alphanum_key)
 
 
+def updateInputFilter(symbol, event):
+	pin_num = int(str(symbol.getID()).split("PIN_")[1].split("_IFEN")[0])
+
+	if event["value"] == "Debounce Filter":
+		ifen = 1
+		ifscen = 1
+	elif event["value"] == "Glitch Filter":
+		ifen = 1
+		ifscen = 0
+	else:
+		ifen = 0
+		ifscen = 0
+
+	symbol.setValue(ifen)
+	event["source"].setSymbolValue("PIN_" + str(pin_num) + "_IFSCEN", ifscen)
+
+
 def portFunc(pin, func):
     global port_mskr
     global per_func
@@ -235,7 +252,7 @@ def pinCFGR (pin, cfgr_reg):
 	direction = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_DIR")
 	schmitt = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_ST")
 	tamper = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_TAMPER")
-	filter = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_PIO_FILTER")
+	filter = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_IFEN")
 	filterclock = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_IFSCEN")
 	driver = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_DRV")
 	if port:
@@ -455,8 +472,15 @@ for pinNumber in range(1, packagePinCount + 1):
 	for id in range(0,len(drvSTRVal.getChildren())):
 		pinDRV.addKey(drvSTRVal.getChildren()[id].getAttribute("name"), str(drvSTRVal.getChildren()[id].getAttribute("value")) , drvSTRVal.getChildren()[id].getAttribute("caption") )
 
-	pinFilter = coreComponent.createBooleanSymbol("PIN_" + str(pinNumber) + "_PIO_FILTER", pin[pinNumber-1])
+	# This symbol is used to map the UI manager selection to the corresponding symbol in the tree view. Will not be
+	# displayed in the tree view
+	pinFilterTypeString = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_PIO_FILTER", pin[pinNumber-1])
+	pinFilterTypeString.setVisible(False)
+	pinFilterTypeString.setReadOnly(True)
+
+	pinFilter = coreComponent.createBooleanSymbol("PIN_" + str(pinNumber) + "_IFEN", pin[pinNumber-1])
 	pinFilter.setLabel("Glitch Filter Enable")
+	pinFilter.setDependencies(updateInputFilter, ["PIN_" + str(pinNumber) + "_PIO_FILTER"])
 
 	pinFilterClock = coreComponent.createKeyValueSetSymbol("PIN_" + str(pinNumber) + "_IFSCEN", pin[pinNumber-1])
 	pinFilterClock.setLabel("Glitch filter Clock Source ")
@@ -479,7 +503,7 @@ for pinNumber in range(1, packagePinCount + 1):
 	pincfgrValue[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_CFGR_Value", pin[pinNumber-1])
 	pincfgrValue[pinNumber-1].setReadOnly(True)
 	pincfgrValue[pinNumber-1].setVisible(False)
-	pincfgrValue[pinNumber-1].setDependencies(pinCFGR, ["PIN_" + str(pinNumber) + "_PD", "PIN_" + str(pinNumber) + "_PU", "PIN_" + str(pinNumber) + "_OD", "PIN_" + str(pinNumber) + "_DIR", "PIN_" + str(pinNumber) + "_PIO_INTERRUPT", "PIN_" + str(pinNumber) + "_IFSCEN", "PIN_" + str(pinNumber) + "_PIO_FILTER", "PIN_" + str(pinNumber) + "_DRV", "PIN_" + str(pinNumber) + "_TAMPER", "PIN_" + str(pinNumber) + "_ST" ])
+	pincfgrValue[pinNumber-1].setDependencies(pinCFGR, ["PIN_" + str(pinNumber) + "_PD", "PIN_" + str(pinNumber) + "_PU", "PIN_" + str(pinNumber) + "_OD", "PIN_" + str(pinNumber) + "_DIR", "PIN_" + str(pinNumber) + "_PIO_INTERRUPT", "PIN_" + str(pinNumber) + "_IFSCEN", "PIN_" + str(pinNumber) + "_IFEN", "PIN_" + str(pinNumber) + "_DRV", "PIN_" + str(pinNumber) + "_TAMPER", "PIN_" + str(pinNumber) + "_ST" ])
 
 packageUpdate = coreComponent.createBooleanSymbol("PACKAGE_UPDATE_DUMMY", None)
 packageUpdate.setVisible(False)
