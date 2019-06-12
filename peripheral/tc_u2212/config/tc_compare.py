@@ -66,10 +66,40 @@ def tcEventVisible(symbol, event):
         symbol.setVisible(False)
 
 def tcCompareEvsys(symbol, event):
-    if(event["id"] == "TC_COMPARE_EVCTRL_OVFEO"):
-        Database.setSymbolValue("evsys", "GENERATOR_"+tcInstanceName.getValue()+"_OVF_ACTIVE", event["value"], 2)
-    if(event["id"] == "TC_COMPARE_EVCTRL_MCEO1"):
-        Database.setSymbolValue("evsys", "GENERATOR_"+tcInstanceName.getValue()+"_MC_1_ACTIVE", event["value"], 2)
+    component = symbol.getComponent()
+    if (event["id"] == "TC_OPERATION_MODE"):
+        evsysVal_ovf = Database.getSymbolValue("evsys", "GENERATOR_"+tcInstanceName.getValue()+"_OVF_ACTIVE")
+        tcVal_ovf = component.getSymbolValue("TC_COMPARE_EVCTRL_OVFEO")
+        evsysVal_mc1 = Database.getSymbolValue("evsys", "GENERATOR_"+tcInstanceName.getValue()+"_MC_1_ACTIVE")
+        tcVal_mc1 = component.getSymbolValue("TC_COMPARE_EVCTRL_MCEO1")
+        evsysVal_evu = Database.getSymbolValue("evsys", "USER_"+tcInstanceName.getValue()+"_EVU_READY")
+        tcVal_evu = component.getSymbolValue("TC_COMPARE_EVCTRL_EV")
+        if (event["value"] == "Compare"):
+            if (evsysVal_ovf != tcVal_ovf):
+                Database.setSymbolValue("evsys", "GENERATOR_"+tcInstanceName.getValue()+"_OVF_ACTIVE", tcVal_ovf, 2)
+            if (evsysVal_mc1 != tcVal_mc1):
+                Database.setSymbolValue("evsys", "GENERATOR_"+tcInstanceName.getValue()+"_MC_1_ACTIVE", tcVal_mc1, 2)
+            if ((evsysVal_evu) != tcVal_evu):
+                Database.setSymbolValue("evsys", "USER_"+tcInstanceName.getValue()+"_EVU_READY", bool(tcVal_evu), 2)
+        else:
+            if(evsysVal_ovf == True and component.getSymbolValue("TC_TIMER_EVCTRL_OVFEO") == False):
+                Database.setSymbolValue("evsys", "GENERATOR_"+tcInstanceName.getValue()+"_OVF_ACTIVE", False, 2)
+            if(evsysVal_mc1 == True and component.getSymbolValue("TC_CAPTURE_EVCTRL_MCEO1") == False):
+                Database.setSymbolValue("evsys", "GENERATOR_"+tcInstanceName.getValue()+"_MC_1_ACTIVE", False, 2)
+            if (evsysVal_evu == True and event["value"] != "Capture"
+                    and component.getSymbolValue("TC_TIMER_EVCTRL_EV") == False):
+                Database.setSymbolValue("evsys", "USER_"+tcInstanceName.getValue()+"_EVU_READY", False, 2)
+    else:
+        if(event["id"] == "TC_COMPARE_EVCTRL_OVFEO"):
+            Database.setSymbolValue("evsys", "GENERATOR_"+tcInstanceName.getValue()+"_OVF_ACTIVE", event["value"], 2)
+        if(event["id"] == "TC_COMPARE_EVCTRL_MCEO1"):
+            Database.setSymbolValue("evsys", "GENERATOR_"+tcInstanceName.getValue()+"_MC_1_ACTIVE", event["value"], 2)
+        if(event["id"] == "TC_COMPARE_EVCTRL_EV"):
+            Database.setSymbolValue("evsys", "USER_"+tcInstanceName.getValue()+"_EVU_READY", event["value"], 2)
+
+def tcCompareEVACTVisible(symbol, event):
+    symbol.setVisible(event["value"])
+
 ###################################################################################################
 ####################################### Compare Mode ##############################################
 ###################################################################################################
@@ -157,6 +187,23 @@ tcSym_Compare_EVCTRL_MCEO1.setLabel("Enable Compare Match 1 Event")
 tcSym_Compare_EVCTRL_MCEO1.setDefaultValue(False)
 tcSym_Compare_EVCTRL_MCEO1.setDependencies(tcEventVisible, ["TC_COMPARE_WAVE_WAVEGEN"])
 
+tcSym_Compare_EVCTRL_EV = tcComponent.createBooleanSymbol("TC_COMPARE_EVCTRL_EV", tcSym_Compare_Events_Menu)
+tcSym_Compare_EVCTRL_EV.setLabel("Enable Compare Input Event")
+tcSym_Compare_EVCTRL_EV.setDefaultValue(False)
+
+tcSym_Compare_EVCTRL_EVACT = tcComponent.createKeyValueSetSymbol("TC_COMPARE_EVCTRL_EVACT", tcSym_Compare_EVCTRL_EV)
+tcSym_Compare_EVCTRL_EVACT.setLabel("Select Input Event Action")
+tcSym_Compare_EVCTRL_EVACT.setVisible(False)
+tcSym_Compare_EVCTRL_EVACT.addKey("START", "0", "Start Compare")
+tcSym_Compare_EVCTRL_EVACT.addKey("RETRIGGER", "1", "Retrigger Compare")
+tcSym_Compare_EVCTRL_EVACT.addKey("COUNT", "2", "Count on Event")
+tcSym_Compare_EVCTRL_EVACT.setDependencies(tcCompareEVACTVisible, ["TC_COMPARE_EVCTRL_EV"])
+
+tcSym_Compare_EVCTRL_TCINV = tcComponent.createBooleanSymbol("TC_COMPARE_EVCTRL_TCINV", tcSym_Compare_EVCTRL_EV)
+tcSym_Compare_EVCTRL_TCINV.setLabel("Invert Input Event")
+tcSym_Compare_EVCTRL_TCINV.setVisible(False)
+tcSym_Compare_EVCTRL_TCINV.setDependencies(tcEVACTVisible, ["TC_COMPARE_EVCTRL_EV"])
+
 tcSym_Compare_EVESYS_CONFIGURE = tcComponent.createIntegerSymbol("TC_COMPARE_EVSYS_CONFIGURE", tcSym_Compare_Events_Menu)
 tcSym_Compare_EVESYS_CONFIGURE.setVisible(False)
-tcSym_Compare_EVESYS_CONFIGURE.setDependencies(tcCompareEvsys, ["TC_COMPARE_EVCTRL_OVFEO", "TC_COMPARE_EVCTRL_MCEO1"])
+tcSym_Compare_EVESYS_CONFIGURE.setDependencies(tcCompareEvsys, ["TC_OPERATION_MODE", "TC_COMPARE_EVCTRL_OVFEO", "TC_COMPARE_EVCTRL_MCEO1", "TC_COMPARE_EVCTRL_EV"])

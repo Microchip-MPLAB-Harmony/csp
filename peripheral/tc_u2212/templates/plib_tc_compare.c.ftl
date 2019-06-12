@@ -92,6 +92,16 @@
         <#assign TC_EVCTRL_VAL = "TC_EVCTRL_MCEO1_Msk">
     </#if>
 </#if>
+<#if TC_COMPARE_EVCTRL_EV == true>
+    <#if TC_EVCTRL_VAL != "">
+        <#assign TC_EVCTRL_VAL = TC_EVCTRL_VAL + " | TC_EVCTRL_TCEI_Msk | TC_EVCTRL_EVACT_"+TC_COMPARE_EVCTRL_EVACT>
+    <#else>
+        <#assign TC_EVCTRL_VAL = "TC_EVCTRL_TCEI_Msk | TC_EVCTRL_EVACT_"+TC_COMPARE_EVCTRL_EVACT>
+    </#if>
+    <#if TC_COMPARE_EVCTRL_TCINV == true>
+    <#assign TC_EVCTRL_VAL = TC_EVCTRL_VAL + " | TC_EVCTRL_TCINV_Msk">
+    </#if>
+</#if>
 // *****************************************************************************
 // *****************************************************************************
 // Section: Global Data

@@ -56,6 +56,7 @@
 #include "plib_${TC_INSTANCE_NAME?lower_case}.h"
 
 <#assign TC_INTENSET_VAL = "">
+<#assign TC_EVCTRL_VAL = "">
 <#if TC_TIMER_INTENSET_OVF == true>
     <#if TC_INTENSET_VAL != "">
         <#assign TC_INTENSET_VAL = TC_INTENSET_VAL + " | TC_INTENSET_OVF_Msk">
@@ -68,6 +69,23 @@
         <#assign TC_INTENSET_VAL = TC_INTENSET_VAL + " | TC_INTENSET_MC1_Msk">
     <#else>
         <#assign TC_INTENSET_VAL = "TC_INTENSET_MC1_Msk">
+    </#if>
+</#if>
+<#if TC_TIMER_EVCTRL_OVFEO == true>
+    <#if TC_EVCTRL_VAL != "">
+        <#assign TC_EVCTRL_VAL = TC_EVCTRL_VAL + " | TC_EVCTRL_OVFEO_Msk">
+    <#else>
+        <#assign TC_EVCTRL_VAL = "TC_EVCTRL_OVFEO_Msk">
+    </#if>
+</#if>
+<#if TC_TIMER_EVCTRL_EV == true>
+    <#if TC_EVCTRL_VAL != "">
+        <#assign TC_EVCTRL_VAL = TC_EVCTRL_VAL + " | TC_EVCTRL_TCEI_Msk | TC_EVCTRL_EVACT_"+TC_TIMER_EVCTRL_EVACT>
+    <#else>
+        <#assign TC_EVCTRL_VAL = "TC_EVCTRL_TCEI_Msk | TC_EVCTRL_EVACT_"+TC_TIMER_EVCTRL_EVACT>
+    </#if>
+    <#if TC_TIMER_EVCTRL_TCINV == true>
+    <#assign TC_EVCTRL_VAL = TC_EVCTRL_VAL + " | TC_EVCTRL_TCINV_Msk">
     </#if>
 </#if>
 
@@ -122,8 +140,8 @@ void ${TC_INSTANCE_NAME}_TimerInitialize( void )
     </#if>
 </#if>
 
-<#if TC_TIMER_EVCTRL_OVFEO == true>
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_EVCTRL = TC_EVCTRL_OVFEO_Msk;
+<#if TC_EVCTRL_VAL?has_content>
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_EVCTRL = ${TC_EVCTRL_VAL};
 </#if>
 
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
