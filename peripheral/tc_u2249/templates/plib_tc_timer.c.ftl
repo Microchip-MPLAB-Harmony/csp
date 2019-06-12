@@ -84,6 +84,9 @@
     <#else>
         <#assign TC_EVCTRL_VAL = "TC_EVCTRL_TCEI_Msk | TC_EVCTRL_EVACT_"+TC_TIMER_EVCTRL_EVACT>
     </#if>
+    <#if TC_TIMER_EVCTRL_TCINV == true>
+    <#assign TC_EVCTRL_VAL = TC_EVCTRL_VAL + " | TC_EVCTRL_TCINV_Msk">
+    </#if>
 </#if>
 // *****************************************************************************
 // *****************************************************************************

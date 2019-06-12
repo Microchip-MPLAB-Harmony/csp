@@ -61,8 +61,32 @@ def tcPeriodCalc(symbol, event):
     symbol.setValue(long(period), 2)
 
 def tcTimerEvsys(symbol, event):
-    Database.setSymbolValue("evsys", "GENERATOR_"+tcInstanceName.getValue()+"_OVF_ACTIVE", event["value"], 2)
+    component = symbol.getComponent()
+    if (event["id"] == "TC_OPERATION_MODE"):
+        evsysVal = Database.getSymbolValue("evsys", "GENERATOR_"+tcInstanceName.getValue()+"_OVF_ACTIVE")
+        tcVal = component.getSymbolValue("TC_TIMER_EVCTRL_OVFEO")
+        evsysVal_evu = Database.getSymbolValue("evsys", "USER_"+tcInstanceName.getValue()+"_EVU_READY")
+        tcVal_evu = component.getSymbolValue("TC_TIMER_EVCTRL_EV")
+        if (event["value"] == "Timer"):
+            if (evsysVal != tcVal):
+                Database.setSymbolValue("evsys", "GENERATOR_"+tcInstanceName.getValue()+"_OVF_ACTIVE", tcVal, 2)
+            if ((evsysVal_evu) != tcVal_evu):
+                print("Timer event")
+                Database.setSymbolValue("evsys", "USER_"+tcInstanceName.getValue()+"_EVU_READY", bool(tcVal_evu), 2)
+        else:
+            if(evsysVal == True and component.getSymbolValue("TC_COMPARE_EVCTRL_OVFEO") == False):
+                Database.setSymbolValue("evsys", "GENERATOR_"+tcInstanceName.getValue()+"_OVF_ACTIVE", False, 2)
+            if (evsysVal_evu == True and event["value"] != "Capture"
+                    and component.getSymbolValue("TC_COMPARE_EVCTRL_EV") == False):
+                Database.setSymbolValue("evsys", "USER_"+tcInstanceName.getValue()+"_EVU_READY", False, 2)
+    else:
+        if(event["id"] == "TC_TIMER_EVCTRL_OVFEO"):
+            Database.setSymbolValue("evsys", "GENERATOR_"+tcInstanceName.getValue()+"_OVF_ACTIVE", event["value"], 2)
+        if(event["id"] == "TC_TIMER_EVCTRL_EV"):
+            Database.setSymbolValue("evsys", "USER_"+tcInstanceName.getValue()+"_EVU_READY", event["value"], 2)
 
+def tcEVACTVisible(symbol, event):
+    symbol.setVisible(event["value"])
 ###################################################################################################
 ######################################### Timer Mode ##############################################
 ###################################################################################################
@@ -108,16 +132,36 @@ tcSym_Timer_INTENSET_OVF = tcComponent.createBooleanSymbol("TC_TIMER_INTENSET_OV
 tcSym_Timer_INTENSET_OVF.setLabel("Enable Timer Period Interrupt")
 tcSym_Timer_INTENSET_OVF.setDefaultValue(True)
 
-tcSym_Timer_EVCTRL_OVFEO = tcComponent.createBooleanSymbol("TC_TIMER_EVCTRL_OVFEO", tcSym_TimerMenu)
-tcSym_Timer_EVCTRL_OVFEO.setLabel("Enable Timer Period Overflow Event")
-tcSym_Timer_EVCTRL_OVFEO.setDefaultValue(False)
-
 global tcSym_Timer_INTENSET_MC1
 tcSym_Timer_INTENSET_MC1 = tcComponent.createBooleanSymbol("TC_TIMER_INTENSET_MC1", tcSym_TimerMenu)
 tcSym_Timer_INTENSET_MC1.setLabel("Enable Timer Compare Interrupt")
 tcSym_Timer_INTENSET_MC1.setVisible(False)
 tcSym_Timer_INTENSET_MC1.setDefaultValue(False)
 
+tcSym_TimerEventMenu = tcComponent.createMenuSymbol("TC_TIMER_EVENT_MENU", tcSym_TimerMenu)
+tcSym_TimerEventMenu.setLabel("Events")
+
+tcSym_Timer_EVCTRL_OVFEO = tcComponent.createBooleanSymbol("TC_TIMER_EVCTRL_OVFEO", tcSym_TimerEventMenu)
+tcSym_Timer_EVCTRL_OVFEO.setLabel("Enable Timer Period Overflow Event")
+tcSym_Timer_EVCTRL_OVFEO.setDefaultValue(False)
+
+tcSym_Timer_EVCTRL_EV = tcComponent.createBooleanSymbol("TC_TIMER_EVCTRL_EV", tcSym_TimerEventMenu)
+tcSym_Timer_EVCTRL_EV.setLabel("Enable Timer Input Event")
+tcSym_Timer_EVCTRL_EV.setDefaultValue(False)
+
+tcSym_Timer_EVCTRL_EVACT = tcComponent.createKeyValueSetSymbol("TC_TIMER_EVCTRL_EVACT", tcSym_Timer_EVCTRL_EV)
+tcSym_Timer_EVCTRL_EVACT.setLabel("Select Input Event Action")
+tcSym_Timer_EVCTRL_EVACT.setVisible(False)
+tcSym_Timer_EVCTRL_EVACT.addKey("START", "0", "Start Timer")
+tcSym_Timer_EVCTRL_EVACT.addKey("RETRIGGER", "1", "Retrigger Timer")
+tcSym_Timer_EVCTRL_EVACT.addKey("COUNT", "2", "Count on Event")
+tcSym_Timer_EVCTRL_EVACT.setDependencies(tcEVACTVisible, ["TC_TIMER_EVCTRL_EV"])
+
+tcSym_Timer_EVCTRL_TCINV = tcComponent.createBooleanSymbol("TC_TIMER_EVCTRL_TCINV", tcSym_Timer_EVCTRL_EV)
+tcSym_Timer_EVCTRL_TCINV.setLabel("Invert Input Event")
+tcSym_Timer_EVCTRL_TCINV.setVisible(False)
+tcSym_Timer_EVCTRL_TCINV.setDependencies(tcEVACTVisible, ["TC_TIMER_EVCTRL_EV"])
+
 tcSym_Timer_EVSYS_CONFIGURE = tcComponent.createIntegerSymbol("TC_TIMER_EVSYS_CONFIGURE", tcSym_TimerMenu)
 tcSym_Timer_EVSYS_CONFIGURE.setVisible(False)
-tcSym_Timer_EVSYS_CONFIGURE.setDependencies(tcTimerEvsys, ["TC_TIMER_EVCTRL_OVFEO"])
+tcSym_Timer_EVSYS_CONFIGURE.setDependencies(tcTimerEvsys, ["TC_OPERATION_MODE", "TC_TIMER_EVCTRL_OVFEO", "TC_TIMER_EVCTRL_EV"])

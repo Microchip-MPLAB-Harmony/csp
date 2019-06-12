@@ -57,7 +57,7 @@ def tcComparePeriodCalc(symbol, event):
         clock_freq = 1
     resolution = (int(tcSym_CTRLA_PRESCALER.getSelectedKey()[3:]) * 1000000.0) / clock_freq
     time = tcSym_ComparePeriod.getValue() * resolution
-    symbol.setLabel("**** Timer Period is " + str(time) + " us ****")
+    symbol.setLabel("**** Compare Period is " + str(time) + " us ****")
 
 def tcEventVisible(symbol, event):
     if event["value"] == 1:
@@ -72,21 +72,33 @@ def tcCompareEvsys(symbol, event):
         tcVal_ovf = component.getSymbolValue("TC_COMPARE_EVCTRL_OVFEO")
         evsysVal_mc1 = Database.getSymbolValue("evsys", "GENERATOR_"+tcInstanceName.getValue()+"_MC_1_ACTIVE")
         tcVal_mc1 = component.getSymbolValue("TC_COMPARE_EVCTRL_MCEO1")
+        evsysVal_evu = Database.getSymbolValue("evsys", "USER_"+tcInstanceName.getValue()+"_EVU_READY")
+        tcVal_evu = component.getSymbolValue("TC_COMPARE_EVCTRL_EV")
         if (event["value"] == "Compare"):
             if (evsysVal_ovf != tcVal_ovf):
                 Database.setSymbolValue("evsys", "GENERATOR_"+tcInstanceName.getValue()+"_OVF_ACTIVE", tcVal_ovf, 2)
             if (evsysVal_mc1 != tcVal_mc1):
                 Database.setSymbolValue("evsys", "GENERATOR_"+tcInstanceName.getValue()+"_MC_1_ACTIVE", tcVal_mc1, 2)
+            if ((evsysVal_evu) != tcVal_evu):
+                Database.setSymbolValue("evsys", "USER_"+tcInstanceName.getValue()+"_EVU_READY", bool(tcVal_evu), 2)
         else:
             if(evsysVal_ovf == True and component.getSymbolValue("TC_TIMER_EVCTRL_OVFEO") == False):
                 Database.setSymbolValue("evsys", "GENERATOR_"+tcInstanceName.getValue()+"_OVF_ACTIVE", False, 2)
             if(evsysVal_mc1 == True and component.getSymbolValue("TC_CAPTURE_EVCTRL_MCEO1") == False):
                 Database.setSymbolValue("evsys", "GENERATOR_"+tcInstanceName.getValue()+"_MC_1_ACTIVE", False, 2)
+            if (evsysVal_evu == True and component.getSymbolValue("TC_CAPTURE_CTRLA_COPEN0") != 1
+                    and component.getSymbolValue("TC_TIMER_EVCTRL_EV") == False):
+                Database.setSymbolValue("evsys", "USER_"+tcInstanceName.getValue()+"_EVU_READY", False, 2)
     else:
         if(event["id"] == "TC_COMPARE_EVCTRL_OVFEO"):
             Database.setSymbolValue("evsys", "GENERATOR_"+tcInstanceName.getValue()+"_OVF_ACTIVE", event["value"], 2)
         if(event["id"] == "TC_COMPARE_EVCTRL_MCEO1"):
             Database.setSymbolValue("evsys", "GENERATOR_"+tcInstanceName.getValue()+"_MC_1_ACTIVE", event["value"], 2)
+        if(event["id"] == "TC_COMPARE_EVCTRL_EV"):
+            Database.setSymbolValue("evsys", "USER_"+tcInstanceName.getValue()+"_EVU_READY", event["value"], 2)
+
+def tcCompareEVACTVisible(symbol, event):
+    symbol.setVisible(event["value"])
 ###################################################################################################
 ####################################### Compare Mode ##############################################
 ###################################################################################################
@@ -131,7 +143,7 @@ if clk_freq == 0:
 resolution = (int(tcSym_CTRLA_PRESCALER.getSelectedKey()[3:]) * 1000000.0) / clk_freq
 time = tcSym_ComparePeriod.getValue() * resolution
 tcSym_ComparePeriod_Comment = tcComponent.createCommentSymbol("TC_COMPARE_PERIOD_COMMENT", tcSym_CompareMenu)
-tcSym_ComparePeriod_Comment.setLabel("**** Timer Period is " + str(time) + " us ****")
+tcSym_ComparePeriod_Comment.setLabel("**** Compare Period is " + str(time) + " us ****")
 tcSym_ComparePeriod_Comment.setDependencies(tcComparePeriodCalc, ["TC_COMPARE_PERIOD", "TC_CTRLA_PRESCALER",\
     "core."+tcInstanceName.getValue()+"_CLOCK_FREQUENCY"])
 
@@ -171,14 +183,31 @@ tcSym_Compare_Events_Menu = tcComponent.createMenuSymbol("TC_COMPARE_EVENT_MENU"
 tcSym_Compare_Events_Menu.setLabel("Events")
 
 tcSym_Compare_EVCTRL_OVFEO = tcComponent.createBooleanSymbol("TC_COMPARE_EVCTRL_OVFEO", tcSym_Compare_Events_Menu)
-tcSym_Compare_EVCTRL_OVFEO.setLabel("Enable Timer Period Overflow Event")
+tcSym_Compare_EVCTRL_OVFEO.setLabel("Enable Compare Period Overflow Event")
 tcSym_Compare_EVCTRL_OVFEO.setDefaultValue(False)
 
 tcSym_Compare_EVCTRL_MCEO1 = tcComponent.createBooleanSymbol("TC_COMPARE_EVCTRL_MCEO1", tcSym_Compare_Events_Menu)
-tcSym_Compare_EVCTRL_MCEO1.setLabel("Enable Compare Match 1 Event")
+tcSym_Compare_EVCTRL_MCEO1.setLabel("Enable Compare Match 1 Output Event")
 tcSym_Compare_EVCTRL_MCEO1.setDefaultValue(False)
 tcSym_Compare_EVCTRL_MCEO1.setDependencies(tcEventVisible, ["TC_COMPARE_WAVE_WAVEGEN"])
 
+tcSym_Compare_EVCTRL_EV = tcComponent.createBooleanSymbol("TC_COMPARE_EVCTRL_EV", tcSym_Compare_Events_Menu)
+tcSym_Compare_EVCTRL_EV.setLabel("Enable Compare Input Event")
+tcSym_Compare_EVCTRL_EV.setDefaultValue(False)
+
+tcSym_Compare_EVCTRL_EVACT = tcComponent.createKeyValueSetSymbol("TC_COMPARE_EVCTRL_EVACT", tcSym_Compare_EVCTRL_EV)
+tcSym_Compare_EVCTRL_EVACT.setLabel("Select Input Event Action")
+tcSym_Compare_EVCTRL_EVACT.setVisible(False)
+tcSym_Compare_EVCTRL_EVACT.addKey("START", "0", "Start Compare")
+tcSym_Compare_EVCTRL_EVACT.addKey("RETRIGGER", "1", "Retrigger Compare")
+tcSym_Compare_EVCTRL_EVACT.addKey("COUNT", "2", "Count on Event")
+tcSym_Compare_EVCTRL_EVACT.setDependencies(tcCompareEVACTVisible, ["TC_COMPARE_EVCTRL_EV"])
+
+tcSym_Compare_EVCTRL_TCINV = tcComponent.createBooleanSymbol("TC_COMPARE_EVCTRL_TCINV", tcSym_Compare_EVCTRL_EV)
+tcSym_Compare_EVCTRL_TCINV.setLabel("Invert Input Event")
+tcSym_Compare_EVCTRL_TCINV.setVisible(False)
+tcSym_Compare_EVCTRL_TCINV.setDependencies(tcEVACTVisible, ["TC_COMPARE_EVCTRL_EV"])
+
 tcSym_Compare_EVESYS_CONFIGURE = tcComponent.createIntegerSymbol("TC_COMPARE_EVSYS_CONFIGURE", tcSym_Compare_Events_Menu)
 tcSym_Compare_EVESYS_CONFIGURE.setVisible(False)
-tcSym_Compare_EVESYS_CONFIGURE.setDependencies(tcCompareEvsys, ["TC_OPERATION_MODE", "TC_COMPARE_EVCTRL_OVFEO", "TC_COMPARE_EVCTRL_MCEO1"])
+tcSym_Compare_EVESYS_CONFIGURE.setDependencies(tcCompareEvsys, ["TC_OPERATION_MODE", "TC_COMPARE_EVCTRL_OVFEO", "TC_COMPARE_EVCTRL_MCEO1", "TC_COMPARE_EVCTRL_EV"])

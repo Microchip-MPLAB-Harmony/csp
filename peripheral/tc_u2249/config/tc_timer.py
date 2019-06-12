@@ -75,7 +75,8 @@ def tcTimerEvsys(symbol, event):
         else:
             if(evsysVal == True and component.getSymbolValue("TC_COMPARE_EVCTRL_OVFEO") == False):
                 Database.setSymbolValue("evsys", "GENERATOR_"+tcInstanceName.getValue()+"_OVF_ACTIVE", False, 2)
-            if (evsysVal_evu == True and component.getSymbolValue("TC_CAPTURE_CTRLA_COPEN0") != 1):
+            if (evsysVal_evu == True and component.getSymbolValue("TC_CAPTURE_CTRLA_COPEN0") != 1
+                    and component.getSymbolValue("TC_COMPARE_EVCTRL_EV") == False):
                 Database.setSymbolValue("evsys", "USER_"+tcInstanceName.getValue()+"_EVU_READY", False, 2)
     else:
         if(event["id"] == "TC_TIMER_EVCTRL_OVFEO"):
@@ -146,8 +147,13 @@ tcSym_Timer_EVCTRL_EVACT.setLabel("Select Input Event Action")
 tcSym_Timer_EVCTRL_EVACT.setVisible(False)
 tcSym_Timer_EVCTRL_EVACT.addKey("START", "0", "Start Timer")
 tcSym_Timer_EVCTRL_EVACT.addKey("RETRIGGER", "1", "Retrigger Timer")
-tcSym_Timer_EVCTRL_EVACT.addKey("STOP", "2", "Stop Timer")
+tcSym_Timer_EVCTRL_EVACT.addKey("COUNT", "2", "Count on Event")
 tcSym_Timer_EVCTRL_EVACT.setDependencies(tcEVACTVisible, ["TC_TIMER_EVCTRL_EV"])
+
+tcSym_Timer_EVCTRL_TCINV = tcComponent.createBooleanSymbol("TC_TIMER_EVCTRL_TCINV", tcSym_Timer_EVCTRL_EV)
+tcSym_Timer_EVCTRL_TCINV.setLabel("Invert Input Event")
+tcSym_Timer_EVCTRL_TCINV.setVisible(False)
+tcSym_Timer_EVCTRL_TCINV.setDependencies(tcEVACTVisible, ["TC_TIMER_EVCTRL_EV"])
 
 global tcSym_Timer_INTENSET_MC1
 tcSym_Timer_INTENSET_MC1 = tcComponent.createBooleanSymbol("TC_TIMER_INTENSET_MC1", tcSym_TimerMenu)

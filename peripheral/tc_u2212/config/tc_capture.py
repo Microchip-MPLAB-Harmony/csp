@@ -68,6 +68,8 @@ def tcCaptureEvsys(symbol, event):
         Database.setSymbolValue("evsys", "GENERATOR_"+tcInstanceName.getValue()+"_MC_0_ACTIVE", event["value"], 2)
     if(event["id"] == "TC_CAPTURE_EVCTRL_MCEO1"):
         Database.setSymbolValue("evsys", "GENERATOR_"+tcInstanceName.getValue()+"_MC_1_ACTIVE", event["value"], 2)
+    if(event["id"] == "TC_OPERATION_MODE" and event["value"] == "Capture"):
+        Database.setSymbolValue("evsys", "USER_"+tcInstanceName.getValue()+"_EVU_READY", True, 2)
 
 ###################################################################################################
 ######################################## Capture Mode #############################################
@@ -83,9 +85,6 @@ tcSym_CaptureNumChannels = tcComponent.createIntegerSymbol("TC_NUM_CHANNELS", tc
 tcSym_CaptureNumChannels.setLabel("Number of capture channels")
 tcSym_CaptureNumChannels.setVisible(False)
 tcSym_CaptureNumChannels.setDefaultValue(int(NUM_CAPTURE_CHANNELS))
-
-#Enable input event
-Database.setSymbolValue("evsys", "USER_"+tcInstanceName.getValue()+"_EVU_READY", True, 2)
 
 for channelID in range (0, NUM_CAPTURE_CHANNELS):
     #capture channel 0
@@ -161,4 +160,4 @@ tcSym_Capture_InterruptMode.setDependencies(updateTCCaptureInterruptValue, ["TC_
 
 tcSym_Capture_EVSYS_CONFIGURE = tcComponent.createIntegerSymbol("TC_CAPTURE_EVSYS_CONFIGURE", tcSym_CaptureMenu)
 tcSym_Capture_EVSYS_CONFIGURE.setVisible(False)
-tcSym_Capture_EVSYS_CONFIGURE.setDependencies(tcCaptureEvsys, ["TC_CAPTURE_EVCTRL_MCEO0", "TC_CAPTURE_EVCTRL_MCEO1"])
+tcSym_Capture_EVSYS_CONFIGURE.setDependencies(tcCaptureEvsys, ["TC_OPERATION_MODE", "TC_CAPTURE_EVCTRL_MCEO0", "TC_CAPTURE_EVCTRL_MCEO1"])
