@@ -84,14 +84,14 @@ void ${FLEXCOM_INSTANCE_NAME}_SPI_Initialize( void )
 
 <#if FLEXCOM_SPI_MR_MSTR == "MASTER">
     /* Enable Master mode, select clock source, select particular NPCS line for chip select and disable mode fault detection */
-    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_MR = SPI_MR_MSTR_Msk | SPI_MR_BRSRCCLK_${FLEXCOM_SPI_MR_BRSRCCLK} | SPI_MR_PCS(${FLEXCOM_SPI_MR_PCS}) | SPI_MR_MODFDIS_Msk;
+    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_MR = SPI_MR_MSTR_Msk | SPI_MR_BRSRCCLK_${FLEXCOM_SPI_MR_BRSRCCLK} <#if FLEXCOM_SPI_MR_PCS != "GPIO">| SPI_MR_PCS(${FLEXCOM_SPI_MR_PCS?remove_beginning("NPCS")})<#else>| SPI_MR_PCS(0)</#if> | SPI_MR_MODFDIS_Msk;
 <#else>
     /* SPI is by default in Slave Mode, disable mode fault detection */
     SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_MR = SPI_MR_MODFDIS_Msk;
 </#if>
 
-    /* Set up clock Polarity, data phase, Communication Width and Baud Rate */
-    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_CSR[${FLEXCOM_SPI_CSR_INDEX}] = SPI_CSR_CPOL(${FLEXCOM_SPI_CSR_CPOL}) | SPI_CSR_NCPHA(${FLEXCOM_SPI_CSR_NCPHA}) | SPI_CSR_BITS${FLEXCOM_SPI_CSR_BITS} | SPI_CSR_SCBR(${FLEXCOM_SPI_CSR_SCBR_VALUE});
+    /* Set up clock Polarity, data phase, Communication Width, Baud Rate<#if FLEXCOM_SPI_MR_PCS != "GPIO"> and Chip select active after transfer</#if> */
+    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_CSR[${FLEXCOM_SPI_CSR_INDEX}] = SPI_CSR_CPOL(${FLEXCOM_SPI_CSR_CPOL}) | SPI_CSR_NCPHA(${FLEXCOM_SPI_CSR_NCPHA}) | SPI_CSR_BITS${FLEXCOM_SPI_CSR_BITS} | SPI_CSR_SCBR(${FLEXCOM_SPI_CSR_SCBR_VALUE})<#if FLEXCOM_SPI_MR_PCS != "GPIO"> | SPI_CSR_CSAAT_Msk</#if>;
 
 <#if SPI_INTERRUPT_MODE == true >
     /* Initialize global variables */
@@ -192,6 +192,11 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead( void* pTransmitData, size_t txSize,
         /* Make sure no data is pending in the shift register */
         while ((bool)((SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_SR & SPI_SR_TXEMPTY_Msk) >> SPI_SR_TXEMPTY_Pos) == false);
 
+        <#if FLEXCOM_SPI_MR_PCS != "GPIO">
+        /* Set Last transfer to deassert NPCS after the last byte written in TDR has been transferred. */
+        SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_CR = SPI_CR_LASTXFER_Msk;
+
+        </#if>
         isSuccess = true;
     }
 
@@ -461,6 +466,10 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
     {
         ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.transferIsBusy = false;
 
+        <#if FLEXCOM_SPI_MR_PCS != "GPIO">
+        /* Set Last transfer to deassert NPCS after the last byte written in TDR has been transferred. */
+        SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_CR = SPI_CR_LASTXFER_Msk;
+        </#if>
         SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_PTCR = SPI_PTCR_RXTDIS_Msk | SPI_PTCR_TXTDIS_Msk;
         SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_IDR = SPI_IDR_ENDRX_Msk;
 
@@ -535,6 +544,10 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
              * explicitly clear the pending interrupt from the Interrupt controller.
              */
             isLastByteTransferInProgress = true;
+            <#if FLEXCOM_SPI_MR_PCS != "GPIO">
+            /* Set Last transfer to deassert NPCS after the last byte written in TDR has been transferred. */
+            SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_CR = SPI_CR_LASTXFER_Msk;
+            </#if>
         }
         else if (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount == ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxSize)
         {
