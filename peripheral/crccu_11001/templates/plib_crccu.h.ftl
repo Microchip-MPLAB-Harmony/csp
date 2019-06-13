@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Digital-to-Analog Converter (${CRCCU_INSTANCE_NAME}) PLIB
+  Cyclic Redundancy Check Calculation Unit (${CRCCU_INSTANCE_NAME}) PLIB
 
   Company:
     Microchip Technology Inc.
