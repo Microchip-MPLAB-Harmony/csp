@@ -456,7 +456,7 @@ def getTCLKValue():
     if (clk_freq == 0):
         Log.writeErrorMessage("Peripheral Clock Frequency should not be 0")
         clk_freq = 40000000
-    return float((dividor * 1000000000)/clk_freq)
+    return float((2 * (dividor + 1) * 1000000000)/clk_freq)
 
 def adcTCLKCalc(symbol, event):
     if Database.getSymbolValue(adcInstanceName.getValue().lower(), "AD1CON3__ADRC") == 1:
@@ -519,8 +519,8 @@ def instantiateComponent(adcComponent):
     adcSym_AD1CON3__ADCS = adcComponent.createIntegerSymbol("AD1CON3__ADCS", adcSym_AD1CON3__ADRC)
     adcSym_AD1CON3__ADCS.setDefaultValue(2)
     adcSym_AD1CON3__ADCS.setLabel("Select Clock Divider")
-    adcSym_AD1CON3__ADCS.setMin(2)
-    adcSym_AD1CON3__ADCS.setMax(512)
+    adcSym_AD1CON3__ADCS.setMin(0)
+    adcSym_AD1CON3__ADCS.setMax(255)
     adcSym_AD1CON3__ADCS.setVisible(True)
     adcSym_AD1CON3__ADCS.setDependencies(adcClkDividorVisibility, [adcSym_AD1CON3__ADRC.getID()])
 
