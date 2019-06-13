@@ -103,7 +103,8 @@ def standardFilterRangeCheck(symbol, event):
                                    mcanInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_SFID1")
         id2 = Database.getSymbolValue(mcanInstanceName.getValue().lower(),
                                       mcanInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_SFID2")
-        if id1 > id2:
+        if ((id1 > id2) and (Database.getSymbolValue(mcanInstanceName.getValue().lower(),
+                             mcanInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_CONFIG") != 7)):
             symbol.setVisible(True)
         else:
             symbol.setVisible(False)
@@ -128,14 +129,15 @@ def mcanCreateStdFilter(component, menu, filterNumber):
     stdFilterRangeInvalidSym = component.createCommentSymbol(mcanInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_COMMENT", stdFilter)
     stdFilterRangeInvalidSym.setLabel("Warning!!! " + mcanInstanceName.getValue() + " Standard Filter " + str(filterNumber) + " ID2 must be greater or equal to ID1")
     stdFilterRangeInvalidSym.setVisible(False)
-    stdFilterRangeInvalidSym.setDependencies(standardFilterRangeCheck, [mcanInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_TYPE",
-                                                                        mcanInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_SFID1",
-                                                                        mcanInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_SFID2"])
 
     config = component.createKeyValueSetSymbol(mcanInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_CONFIG", stdFilter)
     config.setLabel("Element Configuration")
     adornFilterConfig(config)
 
+    stdFilterRangeInvalidSym.setDependencies(standardFilterRangeCheck, [mcanInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_TYPE",
+                                                                        mcanInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_SFID1",
+                                                                        mcanInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_SFID2",
+                                                                        mcanInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_CONFIG"])
     stdFilter.setVisible(False)
     stdFilter.setEnabled(False)
     return stdFilter
@@ -148,7 +150,8 @@ def extendedFilterRangeCheck(symbol, event):
                                    mcanInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_EFID1")
         id2 = Database.getSymbolValue(mcanInstanceName.getValue().lower(),
                                       mcanInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_EFID2")
-        if id1 > id2:
+        if ((id1 > id2) and (Database.getSymbolValue(mcanInstanceName.getValue().lower(),
+                             mcanInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_CONFIG") != 7)):
             symbol.setVisible(True)
         else:
             symbol.setVisible(False)
@@ -173,14 +176,15 @@ def mcanCreateExtFilter(component, menu, filterNumber):
     extFilterRangeInvalidSym = component.createCommentSymbol(mcanInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_COMMENT", extFilter)
     extFilterRangeInvalidSym.setLabel("Warning!!! " + mcanInstanceName.getValue() + " Extended Filter " + str(filterNumber) + " ID2 must be greater or equal to ID1")
     extFilterRangeInvalidSym.setVisible(False)
-    extFilterRangeInvalidSym.setDependencies(extendedFilterRangeCheck, [mcanInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_TYPE",
-                                                                        mcanInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_EFID1",
-                                                                        mcanInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_EFID2"])
 
     config = component.createKeyValueSetSymbol(mcanInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_CONFIG", extFilter)
     config.setLabel("Element Configuration")
     adornFilterConfig(config)
 
+    extFilterRangeInvalidSym.setDependencies(extendedFilterRangeCheck, [mcanInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_TYPE",
+                                                                        mcanInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_EFID1",
+                                                                        mcanInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_EFID2",
+                                                                        mcanInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_CONFIG"])
     extFilter.setVisible(False)
     extFilter.setEnabled(False)
     return extFilter
