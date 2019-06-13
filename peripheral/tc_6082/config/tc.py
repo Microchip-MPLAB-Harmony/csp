@@ -600,10 +600,16 @@ def tcQuadratureModeVisible(tcSpeedMenu, event):
         tcSpeedMenu.setVisible(False)
 
 def tcQuadraturePositionVisible(symbol, event):
-    if (tcSym_CH_BMR_POSEN.getValue() == "POSITION" and tcSym_CH_QEI_INDEX_PULSE.getValue() == False):
+    if (tcSym_CH_BMR_POSEN.getValue() == "POSITION"):
         tcPositionMenu.setVisible(True)
     else:
         tcPositionMenu.setVisible(False)
+
+def tcQDECRcVisible(symbol, event):
+    if (event["value"] == 0):
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
 
 def tcQuadratureTimeBaseCalculate(tcSym_CH_QEI_CH2PERIOD_COMMENT, event):
     global tcSym_CH_CMR_TCCLKS
@@ -1024,8 +1030,9 @@ def instantiateComponent(tcComponent):
         # Index pulse
         global tcSym_CH_QEI_INDEX_PULSE
         tcSym_CH_QEI_INDEX_PULSE = tcComponent.createBooleanSymbol("TC_INDEX_PULSE", tcQuadratureMenu)
-        tcSym_CH_QEI_INDEX_PULSE.setLabel("Is Index Pulse Available?")
-        tcSym_CH_QEI_INDEX_PULSE.setDefaultValue(True)
+        tcSym_CH_QEI_INDEX_PULSE.setLabel("Is Index Pulse used for Revolution Counter?")
+        tcSym_CH_QEI_INDEX_PULSE.setDefaultValue(False)
+        tcSym_CH_QEI_INDEX_PULSE.setVisible(True)
 
         #Mode
         global tcSym_CH_BMR_POSEN
@@ -1037,8 +1044,17 @@ def instantiateComponent(tcComponent):
         global tcPositionMenu
         tcPositionMenu = tcComponent.createMenuSymbol("TC_QUADRATURE_POSITION", tcSym_CH_BMR_POSEN)
         tcPositionMenu.setLabel("Position Measurement")
-        tcPositionMenu.setVisible(False)
-        tcPositionMenu.setDependencies(tcQuadraturePositionVisible, ["TC_BMR_POSEN", "TC_INDEX_PULSE"])
+        tcPositionMenu.setVisible(True)
+        tcPositionMenu.setDependencies(tcQuadraturePositionVisible, ["TC_BMR_POSEN"])
+
+        tcSym_CH0_RESET = tcComponent.createKeyValueSetSymbol("TC_CH0_RESET", tcPositionMenu)
+        tcSym_CH0_RESET.setLabel("Select Position Counter Reset Mode")
+        tcSym_CH0_RESET.addKey("CPCTRG", "0", "Reset on Rc Compare Match")
+        tcSym_CH0_RESET.addKey("ABETRG", "1", "Reset on External Event (Index Pulse)")
+        tcSym_CH0_RESET.addKey("", "2", "Free Run")
+        tcSym_CH0_RESET.setOutputMode("Key")
+        tcSym_CH0_RESET.setDisplayMode("Description")
+        tcSym_CH0_RESET.setDefaultValue(2)
 
         #Num pulses
         tcSym_CH_QEI_NUM_PULSES = tcComponent.createLongSymbol("TC_QEI_NUM_PULSES", tcPositionMenu)
@@ -1046,12 +1062,17 @@ def instantiateComponent(tcComponent):
         tcSym_CH_QEI_NUM_PULSES.setDefaultValue(1024)
         tcSym_CH_QEI_NUM_PULSES.setMin(0)
         tcSym_CH_QEI_NUM_PULSES.setMax(tcCounterMaxValue)
+        tcSym_CH_QEI_NUM_PULSES.setVisible(False)
+        tcSym_CH_QEI_NUM_PULSES.setDependencies(tcQDECRcVisible, ["TC_CH0_RESET"])
+
 
         #Position reset interrupt
         global tcSym_CH_QEI_IER_CPCS
         tcSym_CH_QEI_IER_CPCS = tcComponent.createBooleanSymbol("TC_QEI_IER_CPCS", tcPositionMenu)
         tcSym_CH_QEI_IER_CPCS.setLabel("Enable Period Interrupt")
         tcSym_CH_QEI_IER_CPCS.setDefaultValue(False)
+        tcSym_CH_QEI_IER_CPCS.setVisible(False)
+        tcSym_CH_QEI_IER_CPCS.setDependencies(tcQDECRcVisible, ["TC_CH0_RESET"])
 
         #speed menu
         tcSpeedMenu = tcComponent.createMenuSymbol("TC_QUADRATURE_SPEED", tcSym_CH_BMR_POSEN)

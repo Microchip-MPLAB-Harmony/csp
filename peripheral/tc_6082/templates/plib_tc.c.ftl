@@ -90,24 +90,28 @@ TC_QUADRATURE_CALLBACK_OBJECT ${TC_INSTANCE_NAME}_CallbackObj;
 void ${TC_INSTANCE_NAME}_QuadratureInitialize (void)
 {
     uint32_t status;
-
-    <#if TC_INDEX_PULSE == true>
-        <#lt>    /* clock selection and waveform selection */
-        <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[0].TC_CMR = TC_CMR_TCCLKS_XC0 | TC_CMR_CAPTURE_LDRA_RISING |
-            TC_CMR_CAPTURE_ABETRG_Msk | TC_CMR_CAPTURE_ETRGEDG_RISING;
-
-        <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[1].TC_CMR = TC_CMR_TCCLKS_XC0 | TC_CMR_CAPTURE_LDRA_RISING;
-
-    <#else>
+<#if TC_BMR_POSEN == "POSITION">
+    <#if TC_CH0_RESET == "CPCTRG">
         <#lt>    /* clock selection and waveform selection */
         <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[0].TC_CMR = TC_CMR_TCCLKS_XC0 | TC_CMR_CAPTURE_LDRA_RISING | TC_CMR_CAPTURE_CPCTRG_Msk;
         <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[0].TC_RC = ${TC_QEI_NUM_PULSES}U;
         <#if TC_QEI_IER_CPCS == true>
             <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[0].TC_IER = TC_IER_CPCS_Msk;
         </#if>
+    <#elseif TC_CH0_RESET == "ABETRG">
+      <#lt>    /* clock selection and waveform selection */
+      <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[0].TC_CMR = TC_CMR_TCCLKS_XC0 | TC_CMR_CAPTURE_LDRA_RISING |
+          TC_CMR_CAPTURE_ABETRG_Msk | TC_CMR_CAPTURE_ETRGEDG_RISING;
+    <#else>
+      <#lt>    /* clock selection and waveform selection */
+      <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[0].TC_CMR = TC_CMR_TCCLKS_XC0 | TC_CMR_CAPTURE_LDRA_RISING;
+      <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[0].TC_RC = 0xFFFF;
     </#if>
 
-    <#if TC_BMR_POSEN == "SPEED">
+<#elseif TC_BMR_POSEN == "SPEED">
+    /* Channel 0 Configurations */
+    <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[0].TC_CMR = TC_CMR_TCCLKS_XC0 | TC_CMR_CAPTURE_LDRA_RISING |
+        TC_CMR_CAPTURE_ABETRG_Msk | TC_CMR_CAPTURE_ETRGEDG_RISING;
     /* Channel 2 configurations */
         <#if TC_MATRIX_PRESENT == true>
             <#if TC3_PCK7 == true>
@@ -125,7 +129,10 @@ void ${TC_INSTANCE_NAME}_QuadratureInitialize (void)
         </#if>
     <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[2].TC_RC = ${TC_QEI_PERIOD}U;
     </#if>
-
+    <#if TC_INDEX_PULSE == true>
+        <#lt>    /* Channel 1 is used for revolutions counter */
+        <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[1].TC_CMR = TC_CMR_TCCLKS_XC0 | TC_CMR_CAPTURE_LDRA_RISING;
+    </#if>
     /*Enable quadrature mode */
     ${TC_INSTANCE_NAME}_REGS->TC_BMR = TC_BMR_QDEN_Msk ${TC_BMR_SWAP?then('| (TC_BMR_SWAP_Msk)', '')} | TC_BMR_MAXFILT(${TC_BMR_MAXFILT}U) | TC_BMR_EDGPHA_Msk
         | ${(TC_BMR_POSEN == "POSITION")?then('(TC_BMR_POSEN_Msk)', 'TC_BMR_SPEEDEN_Msk')};
