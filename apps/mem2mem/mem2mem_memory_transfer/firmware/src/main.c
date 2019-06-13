@@ -81,7 +81,7 @@ void APP_Callback(MEM2MEM_TRANSFER_EVENT status, uintptr_t context)
 int main ( void )
 {
     uint32_t i = 0;
-
+    bool status = false;
     /* Initialize all modules */
     SYS_Initialize ( NULL );
     LED_Off();
@@ -99,8 +99,11 @@ int main ( void )
     /* Register a callback with DMAC PLIB to get transfer complete and erro
      * events. */
     MEM2MEM_CallbackRegister(APP_Callback, 0);
-    MEM2MEM_ChannelTransfer(&srcBuffer, &dstBuffer1, TRANSFER_SIZE, MEM2MEM_TRANSFER_WIDTH_WORD);
-
+    do
+    {
+        status = MEM2MEM_ChannelTransfer(&srcBuffer, &dstBuffer1, TRANSFER_SIZE, MEM2MEM_TRANSFER_WIDTH_WORD);
+    } while(status != true);
+    
     while ( true )
     {
         if(completeStatus == true)

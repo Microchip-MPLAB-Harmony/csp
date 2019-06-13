@@ -5,7 +5,7 @@ Company:
     Microchip Technology Inc.
 
 File Name:
-    plib_mem2mem.HAS
+    plib_mem2mem.h
 
 Summary:
     Interface definition of MEM2MEM Plib.
@@ -45,7 +45,7 @@ Description:
 
 #include <stdint.h>
 #include <stddef.h>
-
+#include <stdbool.h>
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
     extern "C" {
@@ -72,7 +72,7 @@ typedef enum
 
 typedef void (*MEM2MEM_CALLBACK)(MEM2MEM_TRANSFER_EVENT event, uintptr_t context);
 
-void MEM2MEM_ChannelTransfer (const void *srcAddr, const void *destAddr, size_t blockSize, MEM2MEM_TRANSFER_WIDTH twidth);
+bool MEM2MEM_ChannelTransfer (const void *srcAddr, const void *destAddr, size_t blockSize, MEM2MEM_TRANSFER_WIDTH twidth);
 void MEM2MEM_CallbackRegister( MEM2MEM_CALLBACK callback, uintptr_t context );
 
 
