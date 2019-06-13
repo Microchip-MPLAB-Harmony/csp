@@ -353,15 +353,6 @@ void ${SPI_INSTANCE_NAME}_InterruptHandler(void)
          * one byte is pending to be transmitted */
         ${SPI_INSTANCE_NAME}_REGS->SPI_IDR = SPI_IDR_TDRE_Msk;
 
-        <#if SPI_MR_PCS != "GPIO">
-        /* Disable interrupts to ensure last transfer bit set before preemption by higher priority interrupt */
-        if (((${SPI_INSTANCE_NAME?lower_case}Obj.txCount == (${SPI_INSTANCE_NAME?lower_case}Obj.txSize - 1)) && (${SPI_INSTANCE_NAME?lower_case}Obj.dummySize == 0)) ||
-           ((${SPI_INSTANCE_NAME?lower_case}Obj.txCount == ${SPI_INSTANCE_NAME?lower_case}Obj.txSize) && (${SPI_INSTANCE_NAME?lower_case}Obj.dummySize == 1)))
-        {
-            __disable_irq();
-        }
-
-        </#if>
         if(dataBits == SPI_CSR_BITS_8_BIT)
         {
             if (${SPI_INSTANCE_NAME?lower_case}Obj.txCount < ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
@@ -401,8 +392,6 @@ void ${SPI_INSTANCE_NAME}_InterruptHandler(void)
             <#if SPI_MR_PCS != "GPIO">
             /* Set Last transfer to deassert NPCS after the last byte written in TDR has been transferred. */
             ${SPI_INSTANCE_NAME}_REGS->SPI_CR = SPI_CR_LASTXFER_Msk;
-            /* Enable interrupts to allow preemption by higher priority interrupt */
-            __enable_irq();
             </#if>
         }
         else if (${SPI_INSTANCE_NAME?lower_case}Obj.rxCount == ${SPI_INSTANCE_NAME?lower_case}Obj.rxSize)

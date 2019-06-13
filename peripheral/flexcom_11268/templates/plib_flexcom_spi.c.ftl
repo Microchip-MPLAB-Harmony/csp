@@ -365,15 +365,6 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
          * one byte is pending to be transmitted */
         ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_IDR = FLEX_SPI_IDR_TDRE_Msk;
 
-        <#if FLEXCOM_SPI_MR_PCS != "GPIO">
-        /* Disable interrupts to ensure last transfer bit set before preemption by higher priority interrupt */
-        if (((${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount == (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txSize - 1)) && (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.dummySize == 0)) ||
-           ((${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount == ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txSize) && (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.dummySize == 1)))
-        {
-            __disable_irq();
-        }
-
-        </#if>
         if(dataBits == FLEX_SPI_CSR_BITS_8_BIT)
         {
             if (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount < ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txSize)
@@ -418,8 +409,6 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
             <#if FLEXCOM_SPI_MR_PCS != "GPIO">
             /* Set Last transfer to deassert NPCS after the last byte written in TDR has been transferred. */
             ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CR = FLEX_SPI_CR_LASTXFER_Msk;
-            /* Enable interrupts to allow preemption by higher priority interrupt */
-            __enable_irq();
             </#if>
         }
         else if (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount == ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxSize)
