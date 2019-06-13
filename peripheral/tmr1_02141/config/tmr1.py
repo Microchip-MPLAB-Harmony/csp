@@ -469,7 +469,7 @@ def instantiateComponent(tmr1Component):
     #Timer1 TxCON Reg Value
     tmr1Sym_T1CON_Value = tmr1Component.createHexSymbol("TCON_REG_VALUE", None)
     default_value = (int(tmr1SymField_T1CON_SIDL.getSelectedValue()) << 13) | (int(tmr1SymField_T1CON_TWDIS.getSelectedValue()) << 12) | (int(tmr1SymField_T1CON_TECS.getSelectedValue()) << 8) | \
-                    (int(tmr1SymField_T1CON_TGATE.getSelectedValue()) << 7) | (int(tmr1Sym_T1CON_PRESCALER.getSelectedValue()) << 4) | (int(tmr1Sym_T1CON_TSYNC.getValue()) << 2) | \
+                    (int(tmr1SymField_T1CON_TGATE.getSelectedValue()) << 7) | (int(tmr1Sym_T1CON_PRESCALER.getSelectedValue()) << 4) | (int(tmr1Sym_T1CON_TSYNC.getSelectedValue()) << 2) | \
                     (int(tmr1Sym_T1CON_SOURCE_SEL.getSelectedValue()) << 1)
     tmr1Sym_T1CON_Value.setDefaultValue(default_value)
     tmr1Sym_T1CON_Value.setVisible(False)
