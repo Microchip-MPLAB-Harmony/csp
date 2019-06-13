@@ -103,7 +103,8 @@ def standardFilterRangeCheck(symbol, event):
                                    canInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_SFID1")
         id2 = Database.getSymbolValue(canInstanceName.getValue().lower(),
                                       canInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_SFID2")
-        if id1 > id2:
+        if ((id1 > id2) and (Database.getSymbolValue(canInstanceName.getValue().lower(),
+                             canInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_CONFIG") != 7)):
             symbol.setVisible(True)
         else:
             symbol.setVisible(False)
@@ -128,14 +129,15 @@ def canCreateStdFilter(component, menu, filterNumber):
     stdFilterRangeInvalidSym = component.createCommentSymbol(canInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_COMMENT", stdFilter)
     stdFilterRangeInvalidSym.setLabel("Warning!!! " + canInstanceName.getValue() + " Standard Filter " + str(filterNumber) + " ID2 must be greater or equal to ID1")
     stdFilterRangeInvalidSym.setVisible(False)
-    stdFilterRangeInvalidSym.setDependencies(standardFilterRangeCheck, [canInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_TYPE",
-                                                                        canInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_SFID1",
-                                                                        canInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_SFID2"])
 
     config = component.createKeyValueSetSymbol(canInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_CONFIG", stdFilter)
     config.setLabel("Element Configuration")
     adornFilterConfig(config)
 
+    stdFilterRangeInvalidSym.setDependencies(standardFilterRangeCheck, [canInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_TYPE",
+                                                                        canInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_SFID1",
+                                                                        canInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_SFID2",
+                                                                        canInstanceName.getValue() + "_STD_FILTER" + str(filterNumber) + "_CONFIG"])
     stdFilter.setVisible(False)
     stdFilter.setEnabled(False)
     return stdFilter
@@ -148,7 +150,8 @@ def extendedFilterRangeCheck(symbol, event):
                                    canInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_EFID1")
         id2 = Database.getSymbolValue(canInstanceName.getValue().lower(),
                                       canInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_EFID2")
-        if id1 > id2:
+        if ((id1 > id2) and (Database.getSymbolValue(canInstanceName.getValue().lower(),
+                             canInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_CONFIG") != 7)):
             symbol.setVisible(True)
         else:
             symbol.setVisible(False)
@@ -173,14 +176,15 @@ def canCreateExtFilter(component, menu, filterNumber):
     extFilterRangeInvalidSym = component.createCommentSymbol(canInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_COMMENT", extFilter)
     extFilterRangeInvalidSym.setLabel("Warning!!! " + canInstanceName.getValue() + " Extended Filter " + str(filterNumber) + " ID2 must be greater or equal to ID1")
     extFilterRangeInvalidSym.setVisible(False)
-    extFilterRangeInvalidSym.setDependencies(extendedFilterRangeCheck, [canInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_TYPE",
-                                                                        canInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_EFID1",
-                                                                        canInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_EFID2"])
 
     config = component.createKeyValueSetSymbol(canInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_CONFIG", extFilter)
     config.setLabel("Element Configuration")
     adornFilterConfig(config)
 
+    extFilterRangeInvalidSym.setDependencies(extendedFilterRangeCheck, [canInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_TYPE",
+                                                                        canInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_EFID1",
+                                                                        canInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_EFID2",
+                                                                        canInstanceName.getValue() + "_EXT_FILTER" + str(filterNumber) + "_CONFIG"])
     extFilter.setVisible(False)
     extFilter.setEnabled(False)
     return extFilter
