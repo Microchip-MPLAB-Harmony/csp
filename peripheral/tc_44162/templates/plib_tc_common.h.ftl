@@ -92,7 +92,7 @@ typedef enum
     TC_COMPARE_A = TC_SR_CPAS_Msk,
     TC_COMPARE_B = TC_SR_CPBS_Msk,
     TC_COMPARE_C = TC_SR_CPCS_Msk,
-    TC_COMPARE_STATUS_MSK = TC_SR_CPAS_Msk | TC_SR_CPBS_Msk | TC_SR_CPCS_Msk, 
+    TC_COMPARE_STATUS_MSK = TC_SR_CPAS_Msk | TC_SR_CPBS_Msk | TC_SR_CPCS_Msk,
     /* Force the compiler to reserve 32-bit memory for enum */
     TC_COMPARE_STATUS_INVALID = 0xFFFFFFFF
 }TC_COMPARE_STATUS;
@@ -109,6 +109,7 @@ typedef enum
     TC_CAPTURE_STATUS_INVALID = 0xFFFFFFFF
 }TC_CAPTURE_STATUS;
 
+<#if TC_QDEC_PRESENT == true>
 typedef enum
 {
     TC_QUADRATURE_NONE = 0U,
@@ -119,6 +120,7 @@ typedef enum
     /* Force the compiler to reserve 32-bit memory for enum */
     TC_QUADRATURE_STATUS_INVALID = 0xFFFFFFFF
 }TC_QUADRATURE_STATUS;
+</#if>
 
 // *****************************************************************************
 
@@ -128,8 +130,9 @@ typedef void (*TC_COMPARE_CALLBACK) (TC_COMPARE_STATUS status, uintptr_t context
 
 typedef void (*TC_CAPTURE_CALLBACK) (TC_CAPTURE_STATUS status, uintptr_t context);
 
+<#if TC_QDEC_PRESENT == true>
 typedef void (*TC_QUADRATURE_CALLBACK) (TC_QUADRATURE_STATUS status, uintptr_t context);
-
+</#if>
 
 // *****************************************************************************
 
@@ -151,12 +154,13 @@ typedef struct
     uintptr_t context;
 }TC_CAPTURE_CALLBACK_OBJECT;
 
+<#if TC_QDEC_PRESENT == true>
 typedef struct
 {
     TC_QUADRATURE_CALLBACK callback_fn;
     uintptr_t context;
 }TC_QUADRATURE_CALLBACK_OBJECT;
-
+</#if>
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
