@@ -59,6 +59,7 @@
 
 #define ${SDHC_INSTANCE_NAME}_DMA_NUM_DESCR_LINES               ${SDHC_NUM_DESCRIPTOR_LINES}
 #define ${SDHC_INSTANCE_NAME}_BASE_CLOCK_FREQUENCY              ${SDHC_CLK_FREQ}
+#define ${SDHC_INSTANCE_NAME}_MAX_BLOCK_SIZE                    0x200
 
 typedef unsigned long _paddr_t; /* a physical address */
 #define KVA_TO_PA(v)    ((_paddr_t)(v) & 0x1fffffff)
@@ -231,7 +232,7 @@ uint16_t ${SDHC_INSTANCE_NAME}_CommandErrorGet(void)
 {
     uint32_t errorStatus = ${SDHC_INSTANCE_NAME?lower_case}Obj.errorStatus;
 
-    errorStatus &= (_SDHCINTSTAT_CTOEIF_MASK | _SDHCINTSTAT_CCRCEIF_MASK | _SDHCINTSTAT_CEBEIF_MASK);
+    errorStatus &= (_SDHCINTSTAT_CTOEIF_MASK | _SDHCINTSTAT_CCRCEIF_MASK | _SDHCINTSTAT_CEBEIF_MASK | _SDHCINTSTAT_CIDXEIF_MASK);
 
     return (errorStatus >> 16);
 }
@@ -299,6 +300,11 @@ bool ${SDHC_INSTANCE_NAME}_IsCardAttached ( void )
 
 void ${SDHC_INSTANCE_NAME}_BlockSizeSet ( uint16_t blockSize )
 {
+    if (blockSize > ${SDHC_INSTANCE_NAME}_MAX_BLOCK_SIZE)
+    {
+        blockSize = ${SDHC_INSTANCE_NAME}_MAX_BLOCK_SIZE;
+    }
+    
     ${SDHC_INSTANCE_NAME}BLKCON = ((${SDHC_INSTANCE_NAME}BLKCON & ~_SDHCBLKCON_BSIZE_MASK) | (blockSize));
 }
 
@@ -309,7 +315,14 @@ void ${SDHC_INSTANCE_NAME}_BlockCountSet ( uint16_t numBlocks )
 
 void ${SDHC_INSTANCE_NAME}_ClockEnable ( void )
 {
-    ${SDHC_INSTANCE_NAME}CON2 |= (_SDHCCON2_ICLKEN_MASK | _SDHCCON2_SDCLKEN_MASK);
+    /* Enable internal clock */
+    ${SDHC_INSTANCE_NAME}CON2 |= _SDHCCON2_ICLKEN_MASK;
+    
+    /* Wait for the internal clock to stabilize */
+    ${SDHC_INSTANCE_NAME}_Delay(1000);
+
+    /* Enable the SDCLK */
+    ${SDHC_INSTANCE_NAME}CON2 |= _SDHCCON2_SDCLKEN_MASK;
 }
 
 void ${SDHC_INSTANCE_NAME}_ClockDisable ( void )
@@ -567,7 +580,7 @@ void ${SDHC_INSTANCE_NAME}_ModuleInit( void )
     ${SDHC_INSTANCE_NAME}_Delay(1000);
 
     /* Enable the SDCLK */
-    SDHCCON2 |= _SDHCCON2_SDCLKEN_MASK;
+    ${SDHC_INSTANCE_NAME}CON2 |= _SDHCCON2_SDCLKEN_MASK;
 
     /* Clear the high speed bit and set the data width to 1-bit mode */
     ${SDHC_INSTANCE_NAME}CON1 &= ~(_SDHCCON1_HSEN_MASK | _SDHCCON1_DTXWIDTH_MASK);
