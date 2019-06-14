@@ -1473,7 +1473,7 @@
             </Boolean>
           </Attributes>
           <Values dnOrder="1">
-            <User dnOrder="0" value="58"/>
+            <User dnOrder="0" value="57"/>
           </Values>
         </KeyValueSet>
         <Combo dnOrder="257" id="SYS_PORT_PPS_OUTPUT_PIN_0">
