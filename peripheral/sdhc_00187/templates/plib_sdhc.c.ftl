@@ -50,7 +50,7 @@
 
 #include "plib_sdhc_common.h"
 
-#define SDHC_INTEN_Msk                                          0x03FF81FF
+#define SDHC_INTEN_Msk                                          0x03FF01FF
 #define SDHC_EISIER_Msk                                         0x03FF0000
 #define SDHC_MODE_RESPTYPE_48_BIT_BUSY                          (0x03 << 16)
 #define SDHC_MODE_RESPTYPE_48_BIT                               (0x02 << 16)
