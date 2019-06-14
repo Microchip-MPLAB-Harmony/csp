@@ -787,4 +787,4 @@ def instantiateComponent(adcComponent):
     adcSystemDefFile.setSourcePath("../peripheral/adc_00755/templates/system/definitions.h.ftl")
     adcSystemDefFile.setMarkup(True)
 
- #   adcComponent.addPlugin("../peripheral/adc_00755/plugin/adc_00755.jar")
+    adcComponent.addPlugin("../peripheral/adc_00755/plugin/adc_00755.jar")
