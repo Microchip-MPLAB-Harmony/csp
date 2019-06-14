@@ -245,7 +245,7 @@ def visibilityBasedOnBoolSymbol( symbol, event ):
 
 def smcModeByteWriteOrSelectAccessVisible( symbol, event ):
     """ function to enable visibility based on selection of Byte Access Type """ 
-    if( event[ "symbol" ].getSelectedKey() == "SMC_DBW_16_BIT" ):
+    if( event[ "symbol" ].getSelectedKey() == "BIT_16" ):
         symbol.setVisible( True )
     else:
         symbol.setVisible( False )
