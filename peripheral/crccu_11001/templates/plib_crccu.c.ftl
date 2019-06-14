@@ -42,7 +42,6 @@
 // DOM-IGNORE-END
 
 #include "plib_${CRCCU_INSTANCE_NAME?lower_case}.h"
-#include "device.h"
 
 crccu_dscr_type_t crc_dscr __ALIGNED(512);
 void ${CRCCU_INSTANCE_NAME}_Initialize (void)

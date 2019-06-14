@@ -55,6 +55,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include "device.h"
 
 #ifdef __cplusplus // Provide C++ Compatibility
 extern "C" {
