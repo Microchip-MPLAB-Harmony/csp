@@ -61,16 +61,6 @@
 // *****************************************************************************
 // *****************************************************************************
 
-/*** Macros for SWITCH1 pin ***/
-#define SWITCH1_Set()               (LATGSET = (1<<11))
-#define SWITCH1_Clear()             (LATGCLR = (1<<11))
-#define SWITCH1_Toggle()            (LATGINV= (1<<11))
-#define SWITCH1_Get()               ((PORTG >> 11) & 0x1)
-#define SWITCH1_OutputEnable()      (TRISGCLR = (1<<11))
-#define SWITCH1_InputEnable()       (TRISGSET = (1<<11))
-#define SWITCH1_InterruptEnable()   (CNENGSET = (1<<11))
-#define SWITCH1_InterruptDisable()  (CNENGCLR = (1<<11))
-#define SWITCH1_PIN                  GPIO_PIN_RG11
 /*** Macros for LED1 pin ***/
 #define LED1_Set()               (LATGSET = (1<<12))
 #define LED1_Clear()             (LATGCLR = (1<<12))
@@ -212,7 +202,6 @@ typedef enum
 
 } GPIO_PIN;
 
-typedef  void (*GPIO_PIN_CALLBACK) ( GPIO_PIN pin, uintptr_t context);
 
 void GPIO_Initialize(void);
 
@@ -237,29 +226,6 @@ void GPIO_PortToggle(GPIO_PORT port, uint32_t mask);
 void GPIO_PortInputEnable(GPIO_PORT port, uint32_t mask);
 
 void GPIO_PortOutputEnable(GPIO_PORT port, uint32_t mask);
-
-void GPIO_PortInterruptEnable(GPIO_PORT port, uint32_t mask);
-
-void GPIO_PortInterruptDisable(GPIO_PORT port, uint32_t mask);
-
-// *****************************************************************************
-// *****************************************************************************
-// Section: Local Data types and Prototypes
-// *****************************************************************************
-// *****************************************************************************
-
-typedef struct {
-
-    /* target pin */
-    GPIO_PIN                 pin;
-
-    /* Callback for event on target pin*/
-    GPIO_PIN_CALLBACK        callback;
-
-    /* Callback Context */
-    uintptr_t               context;
-
-} GPIO_PIN_CALLBACK_OBJ;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -307,21 +273,6 @@ static inline void GPIO_PinOutputEnable(GPIO_PIN pin)
     GPIO_PortOutputEnable(pin>>4, 0x1 << (pin & 0xF));
 }
 
-static inline void GPIO_PinInterruptEnable(GPIO_PIN pin)
-{
-    GPIO_PortInterruptEnable(pin>>4, 0x1 << (pin & 0xF));
-}
-
-static inline void GPIO_PinInterruptDisable(GPIO_PIN pin)
-{
-    GPIO_PortInterruptDisable(pin>>4, 0x1 << (pin & 0xF));
-}
-
-bool GPIO_PinInterruptCallbackRegister(
-    GPIO_PIN pin,
-    const   GPIO_PIN_CALLBACK callBack,
-    uintptr_t context
-);
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
