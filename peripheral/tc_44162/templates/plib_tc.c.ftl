@@ -62,6 +62,8 @@
 </#if>
 </#compress>
 <#assign start = 0>
+
+<#if TC_QDEC_PRESENT == true>
 <#-- start index of the for loop. In quadrature position mode channel 0 and channel 1 are used. And in quadrature speed mode, all 3 channels are used -->
 <#if TC_ENABLE_QEI == true>
     <#compress>
@@ -88,24 +90,28 @@ TC_QUADRATURE_CALLBACK_OBJECT ${TC_INSTANCE_NAME}_CallbackObj;
 void ${TC_INSTANCE_NAME}_QuadratureInitialize (void)
 {
     uint32_t status;
-
-    <#if TC_INDEX_PULSE == true>
-        <#lt>    /* clock selection and waveform selection */
-        <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[0].TC_CMR = TC_CMR_TCCLKS_XC0 | TC_CMR_CAPTURE_LDRA_RISING |
-            TC_CMR_CAPTURE_ABETRG_Msk | TC_CMR_CAPTURE_ETRGEDG_RISING;
-
-        <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[1].TC_CMR = TC_CMR_TCCLKS_XC0 | TC_CMR_CAPTURE_LDRA_RISING;
-
-    <#else>
+<#if TC_BMR_POSEN == "POSITION">
+    <#if TC_CH0_RESET == "CPCTRG">
         <#lt>    /* clock selection and waveform selection */
         <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[0].TC_CMR = TC_CMR_TCCLKS_XC0 | TC_CMR_CAPTURE_LDRA_RISING | TC_CMR_CAPTURE_CPCTRG_Msk;
         <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[0].TC_RC = ${TC_QEI_NUM_PULSES}U;
         <#if TC_QEI_IER_CPCS == true>
             <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[0].TC_IER = TC_IER_CPCS_Msk;
         </#if>
+    <#elseif TC_CH0_RESET == "ABETRG">
+      <#lt>    /* clock selection and waveform selection */
+      <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[0].TC_CMR = TC_CMR_TCCLKS_XC0 | TC_CMR_CAPTURE_LDRA_RISING |
+          TC_CMR_CAPTURE_ABETRG_Msk | TC_CMR_CAPTURE_ETRGEDG_RISING;
+    <#else>
+      <#lt>    /* clock selection and waveform selection */
+      <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[0].TC_CMR = TC_CMR_TCCLKS_XC0 | TC_CMR_CAPTURE_LDRA_RISING;
+      <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[0].TC_RC = 0xFFFF;
     </#if>
 
-    <#if TC_BMR_POSEN == "SPEED">
+<#elseif TC_BMR_POSEN == "SPEED">
+    /* Channel 0 Configurations */
+    <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[0].TC_CMR = TC_CMR_TCCLKS_XC0 | TC_CMR_CAPTURE_LDRA_RISING |
+        TC_CMR_CAPTURE_ABETRG_Msk | TC_CMR_CAPTURE_ETRGEDG_RISING;
     /* Channel 2 configurations */
         <#if TC_MATRIX_PRESENT == true>
             <#if TC3_PCK7 == true>
@@ -123,7 +129,10 @@ void ${TC_INSTANCE_NAME}_QuadratureInitialize (void)
         </#if>
     <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[2].TC_RC = ${TC_QEI_PERIOD}U;
     </#if>
-
+    <#if TC_INDEX_PULSE == true>
+        <#lt>    /* Channel 1 is used for revolutions counter */
+        <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[1].TC_CMR = TC_CMR_TCCLKS_XC0 | TC_CMR_CAPTURE_LDRA_RISING;
+    </#if>
     /*Enable quadrature mode */
     ${TC_INSTANCE_NAME}_REGS->TC_BMR = TC_BMR_QDEN_Msk ${TC_BMR_SWAP?then('| (TC_BMR_SWAP_Msk)', '')} | TC_BMR_MAXFILT(${TC_BMR_MAXFILT}U) | TC_BMR_EDGPHA_Msk
         | ${(TC_BMR_POSEN == "POSITION")?then('(TC_BMR_POSEN_Msk)', 'TC_BMR_SPEEDEN_Msk')};
@@ -189,12 +198,13 @@ TC_QUADRATURE_STATUS ${TC_INSTANCE_NAME}_QuadratureStatusGet(void)
 }
 </#if>
 </#if> <#-- QUADRATURE -->
+</#if> <#-- QDEC_PRESENT -->
+
 <#list start..(TC_MAX_CHANNELS - 1) as i>
-<#compress>
     <#if i == TC_MAX_CHANNELS>
         <#break>
     </#if> <#-- break the loop if quadrature speed mode is used -->
-    <#if TC_ENABLE_QEI == true && TC_INDEX_PULSE == false && TC_BMR_POSEN == "SPEED" && i == 2>
+    <#if (TC_ENABLE_QEI?? && TC_ENABLE_QEI == true) && TC_INDEX_PULSE == false && TC_BMR_POSEN == "SPEED" && i == 2>
         <#break>
     </#if>
 <#assign TC_CH_ENABLE = "TC" + i + "_ENABLE">
@@ -234,11 +244,11 @@ TC_QUADRATURE_STATUS ${TC_INSTANCE_NAME}_QuadratureStatusGet(void)
 <#assign TC_COMPARE_B = "TC"+i+"_COMPARE_B">
 <#assign TC_COMPARE_IER_CPCS = "TC"+i+"_COMPARE_IER_CPCS">
 <#assign TC_COMPARE_CMR_CPCSTOP = "TC"+i+"_COMPARE_CMR_CPCSTOP">
-</#compress>
+
 <#if .vars[TC_CH_ENABLE] == true>
 <#if .vars[TC_CH_OPERATINGMODE] == "TIMER">
-<#if (.vars[TC_TIMER_IER_CPCS] == true) || (.vars[TC_TIMER_IER_CPAS] == true)>
 
+<#if (.vars[TC_TIMER_IER_CPCS] == true) || (.vars[TC_TIMER_IER_CPAS] == true)>
 /* Callback object for channel ${CH_NUM} */
 TC_TIMER_CALLBACK_OBJECT ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj;
 </#if>
@@ -257,11 +267,11 @@ void ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerInitialize (void)
     /* Use peripheral clock */
     <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_EMR = TC_EMR_NODIVCLK_Msk;
     <#lt>    /* clock selection and waveform selection */
-    <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_CMR =  TC_CMR_WAVEFORM_WAVSEL_UP_RC | TC_CMR_WAVE_Msk ${.vars[TC_CMR_CPCSTOP]?then('| (TC_CMR_WAVEFORM_CPCDIS_Msk)', '')};
+    <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_CMR =  TC_CMR_WAVEFORM_WAVSEL_UP_RC | TC_CMR_WAVE_Msk ${.vars[TC_CMR_CPCSTOP]?then('| (TC_CMR_WAVEFORM_CPCSTOP_Msk)', '')};
     <#else>
     /* clock selection and waveform selection */
     <#lt>    ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_CMR = TC_CMR_TCCLKS_${.vars[TC_CMR_TCCLKS]} | TC_CMR_WAVEFORM_WAVSEL_UP_RC | \
-                                                        TC_CMR_WAVE_Msk ${.vars[TC_CMR_CPCSTOP]?then('|(TC_CMR_WAVEFORM_CPCDIS_Msk)', '')};
+                                                        TC_CMR_WAVE_Msk ${.vars[TC_CMR_CPCSTOP]?then('|(TC_CMR_WAVEFORM_CPCSTOP_Msk)', '')};
     </#if>
 
     /* write period */
@@ -330,8 +340,8 @@ ${TC_UNSIGNED_INT_TYPE} ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerCounterGet (void)
 {
     return ${TC_INSTANCE_NAME}_REGS->TC_CHANNEL[${CH_NUM}].TC_CV;
 }
-<#if (.vars[TC_TIMER_IER_CPCS] == true) || (.vars[TC_TIMER_IER_CPAS] == true)>
 
+<#if (.vars[TC_TIMER_IER_CPCS] == true) || (.vars[TC_TIMER_IER_CPAS] == true)>
 /* Register callback for period interrupt */
 void ${TC_INSTANCE_NAME}_CH${CH_NUM}_TimerCallbackRegister(TC_TIMER_CALLBACK callback, uintptr_t context)
 {
@@ -349,6 +359,7 @@ void ${TC_INSTANCE_NAME}_CH${CH_NUM}_InterruptHandler(void)
         ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.callback_fn(timer_status, ${TC_INSTANCE_NAME}_CH${CH_NUM}_CallbackObj.context);
     }
 }
+
 <#else>
 
 /* Check if timer period status is set */

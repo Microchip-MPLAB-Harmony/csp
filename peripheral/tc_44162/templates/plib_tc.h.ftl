@@ -96,6 +96,7 @@ extern "C" {
  </#compress>
 
 <#assign start = 0>
+<#if TC_QDEC_PRESENT == true>
 <#-- start index of the for loop. In quadrature position mode channel 0 and channel 1 are used. And in quadrature speed mode, all 3 channels are used -->
 <#if TC_ENABLE_QEI == true>
     <#compress>
@@ -112,7 +113,7 @@ extern "C" {
             <#assign start = 1>
         </#if>
     </#if>
-    </#compress>       
+    </#compress>
 <#if TC_BMR_POSEN == "SPEED">
 #define ${TC_INSTANCE_NAME}_CH2_FrequencyGet()     (uint32_t)(${TC3_CLOCK_FREQ}UL)
 
@@ -151,11 +152,14 @@ __STATIC_INLINE ${TC_SIGNED_INT_TYPE} ${TC_INSTANCE_NAME}_QuadraturePositionGet 
 TC_QUADRATURE_STATUS ${TC_INSTANCE_NAME}_QuadratureStatusGet(void);
 </#if>
 </#if>
+</#if>  <#-- QDEC_PRESENT -->
+
+
 <#list start..(TC_MAX_CHANNELS-1) as i>
     <#if i == TC_MAX_CHANNELS>
         <#break>
     </#if> <#-- break the loop if quadrature mode is enabled -->
-    <#if TC_ENABLE_QEI == true && TC_INDEX_PULSE == false && TC_BMR_POSEN == "SPEED" && i == 2>
+    <#if (TC_ENABLE_QEI?? && TC_ENABLE_QEI == true) && TC_INDEX_PULSE == false && TC_BMR_POSEN == "SPEED" && i == 2>
         <#break>
     </#if>
 <#assign TC_CH_ENABLE = "TC" + i + "_ENABLE">
