@@ -61,20 +61,15 @@
 uint32_t writeData[BUFFER_SIZE] CACHE_ALIGN;
 uint32_t readData[BUFFER_SIZE];
 
-volatile bool switch_pressed = false;
-
 typedef enum {
     EEPROM_OPERATION_WORD_WRITE_READ_CMP = 0,
     EEPROM_OPERATION_PAGE_ERASE_READ_CMP,
     EEPROM_OPERATION_BULK_ERASE_READ_CMP,
     EEPROM_OPERATION_SUCCESS,
-    EEPROM_OPERATION_ERROR
+    EEPROM_OPERATION_ERROR,
+    EEPROM_OPERATION_IDLE
 } EEPROM_OPERATION_STATE;
 
-void switch_handler( GPIO_PIN pin, uintptr_t context )
-{
-    switch_pressed = true;
-}
 
 static void populate_buffer(void)
 {
@@ -86,6 +81,45 @@ static void populate_buffer(void)
     }
 }
 
+static void APP_EepromWordWrite(uint32_t address)
+{
+    uint32_t i = 0;
+
+    /* Populate buffer before writing to EEPROM */
+    populate_buffer();
+
+    for ( i = 0; i < BUFFER_SIZE; i++ )
+    {
+        EEPROM_WordWrite( address, writeData[i] );
+        while ( EEPROM_IsBusy() == true );
+        address = address + 4;
+    }
+}
+
+static void APP_EepromWordRead(uint32_t address)
+{
+    uint32_t i = 0;
+
+    for (  i = 0; i < BUFFER_SIZE; i++ )
+    {
+        EEPROM_WordRead( address, &readData[i] );
+        while ( EEPROM_IsBusy() == true );
+        address = address + 4;
+    }
+}
+
+static void APP_EepromPageErase(uint32_t address)
+{
+    uint32_t i = 0;
+
+    for (  i = 0; i < BUFFER_SIZE; i++ )
+    {
+        EEPROM_PageErase( address );
+        while ( EEPROM_IsBusy() == true );
+        address = address + 4;
+    }
+}
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Main Entry Point
@@ -94,203 +128,110 @@ static void populate_buffer(void)
 
 int main ( void )
 {
-    uint32_t i = 0;
-    uint32_t address = APP_EEPROM_ADDRESS;
-    bool result = false;
-
-    EEPROM_OPERATION_STATE state = EEPROM_OPERATION_WORD_WRITE_READ_CMP;
-
-    LED_OFF();
-
     /* Initialize all modules */
     SYS_Initialize ( NULL );
 
-    /* Populate the EEPROM data to be programmed */
-    populate_buffer();
+    LED_OFF();
 
-    GPIO_PinInterruptCallbackRegister( SWITCH1_PIN, &switch_handler, ( uintptr_t ) NULL );
-    GPIO_PinInterruptEnable( SWITCH1_PIN );
-    switch_pressed = false;
+    /* Check whether EEPROM is busy */
+    while ( EEPROM_IsBusy() == true );
 
-    while ( true )
+    EEPROM_OPERATION_STATE state = EEPROM_OPERATION_WORD_WRITE_READ_CMP;
+
+    while (true)
     {
-        if(switch_pressed == true)
+        switch(state)
         {
-            switch(state)
+            case EEPROM_OPERATION_WORD_WRITE_READ_CMP:
             {
-                case EEPROM_OPERATION_WORD_WRITE_READ_CMP:
+                /* Populate buffer and Write data to EEPROM */
+                APP_EepromWordWrite(APP_EEPROM_ADDRESS);
+
+                /* Read the data from EEPROM */
+                APP_EepromWordRead(APP_EEPROM_ADDRESS);
+
+                /* Verify the programmed data */
+                if ( !memcmp( writeData, readData, sizeof( writeData ) ) )
                 {
-                    /* Step 1: Write populated date to EEPROM */
-                    for ( i = 0; i < BUFFER_SIZE; i++ )
-                    {
-                        result = EEPROM_WordWrite( address, writeData[i] );
-                        if (result == true)
-                        {
-                            address = address + 4;
-                        }
-                        else
-                        {
-                            state = EEPROM_OPERATION_ERROR;
-                            break;
-                        }
-                    }
-
-                    /* Reset the start address of EEPROM */
-                    address = APP_EEPROM_ADDRESS;
-
-                    /* Step 2: Read-back the data from EEPROM */
-                    for (  i = 0; i < BUFFER_SIZE; i++ )
-                    {
-                        result = EEPROM_WordRead( address, &readData[i] );
-                        if (result == true)
-                        {
-                            address = address + 4;
-                        }
-                        else
-                        {
-                            state = EEPROM_OPERATION_ERROR;
-                            break;
-                        }
-                    }
-
-                    /* Step 3: Verify the programmed content */
-                    if ( !memcmp( writeData, readData, sizeof( writeData ) ) )
-                    {
-                        state = EEPROM_OPERATION_PAGE_ERASE_READ_CMP;
-                    }
-                    else
-                    {
-                        state = EEPROM_OPERATION_ERROR;
-                    }
-                    break;
+                    state = EEPROM_OPERATION_PAGE_ERASE_READ_CMP;
                 }
-
-                case EEPROM_OPERATION_PAGE_ERASE_READ_CMP:
+                else
                 {
-                    /* Step 4: Fill the writeData with 0xFFFFFFFF */
-                    memset(&writeData, 0xFFFFFFFF, sizeof(writeData));
-
-                    /* Reset the start address of EEPROM */
-                    address = APP_EEPROM_ADDRESS;
-
-                    /* Step 5: Erase EEPROM data */
-                    for (  i = 0; i < BUFFER_SIZE; i++ )
-                    {
-                        result = EEPROM_PageErase( address );
-                        address = address + 4;
-                    }
-
-                    /* Reset the start address of EEPROM */
-                    address = APP_EEPROM_ADDRESS;
-
-                    /* Step 6: Read-back the data from EEPROM */
-                    for (  i = 0; i < BUFFER_SIZE; i++ )
-                    {
-                        result = EEPROM_WordRead( address, &readData[i] );
-                        if (result == true)
-                        {
-                            address = address + 4;
-                        }
-                        else
-                        {
-                            state = EEPROM_OPERATION_ERROR;
-                            break;
-                        }
-                    }
-
-                    /* Step 7: Verify the programmed content */
-                    if ( !memcmp( writeData, readData, sizeof( writeData ) ) )
-                    {
-                        state = EEPROM_OPERATION_BULK_ERASE_READ_CMP;
-                    }
-                    else
-                    {
-                        state = EEPROM_OPERATION_ERROR;
-                    }
-                    break;
+                    state = EEPROM_OPERATION_ERROR;
                 }
+                break;
+            }
 
-                case EEPROM_OPERATION_BULK_ERASE_READ_CMP:
+            case EEPROM_OPERATION_PAGE_ERASE_READ_CMP:
+            {
+                /* Fill the writeData with 0xFFFFFFFF */
+                memset(&writeData, 0xFFFFFFFF, sizeof(writeData));
+
+                /* Erase EEPROM data */
+                APP_EepromPageErase(APP_EEPROM_ADDRESS);
+
+                /* Read the data from EEPROM */
+                APP_EepromWordRead(APP_EEPROM_ADDRESS);
+
+                /* Verify the programmed data */
+                if ( !memcmp( writeData, readData, sizeof( writeData ) ) )
                 {
-                    /* Populate the EEPROM data to be programmed */
-                    populate_buffer();
-
-                    /* Step 8: Write populated date to EEPROM */
-                    for ( i = 0; i < BUFFER_SIZE; i++ )
-                    {
-                        result = EEPROM_WordWrite( address, writeData[i] );
-                        if (result == true)
-                        {
-                            address = address + 4;
-                        }
-                        else
-                        {
-                            state = EEPROM_OPERATION_ERROR;
-                            break;
-                        }
-                    }
-
-                    /* Step 9: Erase EEPROM data */
-                    result = EEPROM_BulkErase();
-                    if (result != true)
-                    {
-                        state = EEPROM_OPERATION_ERROR;
-                        break;
-                    }
-
-                    /* Reset the start address of EEPROM */
-                    address = APP_EEPROM_ADDRESS;
-
-                    /* Step 10: Read-back the data from EEPROM */
-                    for (  i = 0; i < BUFFER_SIZE; i++ )
-                    {
-                        result = EEPROM_WordRead( address, &readData[i] );
-                        if (result == true)
-                        {
-                            address = address + 4;
-                        }
-                        else
-                        {
-                            state = EEPROM_OPERATION_ERROR;
-                            break;
-                        }
-                    }
-
-                    /* Fill the writeData with 0xFFFFFFFF */
-                    memset(&writeData, 0xFFFFFFFF, sizeof(writeData));
-
-                    /* Step 11: Verify whether the data is erased properly */
-                    if ( !memcmp( writeData, readData, sizeof( writeData ) ) )
-                    {
-                        state = EEPROM_OPERATION_SUCCESS;
-                    }
-                    else
-                    {
-                        state = EEPROM_OPERATION_ERROR;
-                    }
-                    break;
+                    state = EEPROM_OPERATION_BULK_ERASE_READ_CMP;
                 }
-
-                case EEPROM_OPERATION_SUCCESS:
+                else
                 {
-                    LED_ON();
-                    while(1);
+                    state = EEPROM_OPERATION_ERROR;
                 }
+                break;
+            }
 
-                case EEPROM_OPERATION_ERROR:
-                default:
+            case EEPROM_OPERATION_BULK_ERASE_READ_CMP:
+            {
+                /* Populate buffer and Write data to EEPROM */
+                APP_EepromWordWrite(APP_EEPROM_ADDRESS);
+
+                /* Bulk erase EEPROM */
+                EEPROM_BulkErase();
+                while ( EEPROM_IsBusy() == true );
+
+                /* Read the data from EEPROM */
+                APP_EepromWordRead(APP_EEPROM_ADDRESS);
+
+                /* Fill the writeData with 0xFFFFFFFF */
+                memset(&writeData, 0xFFFFFFFF, sizeof(writeData));
+
+                /* Verify whether the data is erased properly */
+                if ( !memcmp( writeData, readData, sizeof( writeData ) ) )
                 {
-                    LED_OFF();
-                    while(1);
+                    state = EEPROM_OPERATION_SUCCESS;
                 }
+                else
+                {
+                    state = EEPROM_OPERATION_ERROR;
+                }
+                break;
+            }
+
+            case EEPROM_OPERATION_SUCCESS:
+            {
+                LED_ON();
+                state = EEPROM_OPERATION_IDLE;
+                break;
+            }
+
+            case EEPROM_OPERATION_ERROR:
+            {
+                LED_OFF();
+                break;
+            }
+
+            case EEPROM_OPERATION_IDLE:
+            default:
+            {
+               break;
             }
         }
-        else // If switch is not pressed, turn off the LED
-        {
-            LED_OFF();
-        }
     }
-
     /* Execution should not come here during normal operation */
     return ( EXIT_FAILURE );
 }

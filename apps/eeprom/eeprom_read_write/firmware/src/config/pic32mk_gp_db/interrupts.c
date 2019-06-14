@@ -58,16 +58,10 @@
 // *****************************************************************************
 
 
-void CHANGE_NOTICE_G_InterruptHandler( void );
 
 
 
 /* All the handlers are defined here.  Each will call its PLIB-specific function. */
-void __ISR(_CHANGE_NOTICE_G_VECTOR, ipl1AUTO) CHANGE_NOTICE_G_Handler (void)
-{
-    CHANGE_NOTICE_G_InterruptHandler();
-}
-
 
 
 
