@@ -191,10 +191,10 @@ ${SMC_INSTANCE_NAME}_Initialize( void )
                 <#lt>                                           ;
                 <#lt>   // Timings Register
                 <#lt><#if .vars[SMC_TIMINGS_NFSEL]>
-                <#lt>   ${SMC_REGS}->SMC_CS_NUMBER[ ${ii} ].HSMC_CYCLE = HSMC_TIMINGS_NFSEL_Msk
+                <#lt>   ${SMC_REGS}->SMC_CS_NUMBER[ ${ii} ].HSMC_TIMINGS = HSMC_TIMINGS_NFSEL_Msk
                 <#lt>                                           | HSMC_TIMINGS_TWB(  ${.vars[SMC_TIMINGS_TWB]} )
                 <#lt><#else>
-                <#lt>   ${SMC_REGS}->SMC_CS_NUMBER[ ${ii} ].HSMC_CYCLE = HSMC_TIMINGS_TWB( ${.vars[SMC_TIMINGS_TWB]} )
+                <#lt>   ${SMC_REGS}->SMC_CS_NUMBER[ ${ii} ].HSMC_TIMINGS = HSMC_TIMINGS_TWB( ${.vars[SMC_TIMINGS_TWB]} )
                 <#lt></#if>
                 <#lt>                                           | HSMC_TIMINGS_TRR(  ${.vars[SMC_TIMINGS_TRR]} )
                 <#lt><#if .vars[SMC_TIMINGS_OCMS]>
