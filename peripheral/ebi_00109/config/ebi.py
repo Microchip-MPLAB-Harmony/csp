@@ -508,6 +508,8 @@ def instantiateComponent(ebiComponent):
     ebiSym_EBICS0_CSADDR = ebiComponent.createHexSymbol("EBICS0_CSADDR", ebiSym_CFGEBIC_EBICSEN0)
     ebiSym_EBICS0_CSADDR.setLabel("EBICS0 " + ebiBitFld_EBICS0_CSADDR.getAttribute("caption"))
     ebiSym_EBICS0_CSADDR.setDefaultValue(0x20000000)
+    ebiSym_EBICS0_CSADDR.setMin(0x20000000)
+    ebiSym_EBICS0_CSADDR.setMax(0x23FFFFFF)
     ebiSym_EBICS0_CSADDR.setVisible(False)
 
     #EBICS1_ENABLE
@@ -520,7 +522,9 @@ def instantiateComponent(ebiComponent):
     #EBICS1
     ebiSym_EBICS1_CSADDR = ebiComponent.createHexSymbol("EBICS1_CSADDR", ebiSym_CFGEBIC_EBICSEN1)
     ebiSym_EBICS1_CSADDR.setLabel("EBICS1 " + ebiBitFld_EBICS0_CSADDR.getAttribute("caption"))
-    ebiSym_EBICS1_CSADDR.setDefaultValue(0x10000000)
+    ebiSym_EBICS1_CSADDR.setDefaultValue(0x20000000)
+    ebiSym_EBICS1_CSADDR.setMin(0x20000000)
+    ebiSym_EBICS1_CSADDR.setMax(0x23FFFFFF)
     ebiSym_EBICS1_CSADDR.setVisible(False)
 
     #EBICS2_ENABLE
@@ -533,7 +537,9 @@ def instantiateComponent(ebiComponent):
     #EBICS2
     ebiSym_EBICS2_CSADDR = ebiComponent.createHexSymbol("EBICS2_CSADDR", ebiSym_CFGEBIC_EBICSEN2)
     ebiSym_EBICS2_CSADDR.setLabel("EBICS2 " + ebiBitFld_EBICS0_CSADDR.getAttribute("caption"))
-    ebiSym_EBICS2_CSADDR.setDefaultValue(0x20400000)
+    ebiSym_EBICS2_CSADDR.setDefaultValue(0x20000000)
+    ebiSym_EBICS2_CSADDR.setMin(0x20000000)
+    ebiSym_EBICS2_CSADDR.setMax(0x23FFFFFF)
     ebiSym_EBICS2_CSADDR.setVisible(False)
 
     #EBICS3_ENABLE
@@ -547,7 +553,9 @@ def instantiateComponent(ebiComponent):
     #EBICS3
     ebiSym_EBICS3_CSADDR = ebiComponent.createHexSymbol("EBICS3_CSADDR", ebiSym_CFGEBIC_EBICSEN3)
     ebiSym_EBICS3_CSADDR.setLabel("EBICS3 " + ebiBitFld_EBICS0_CSADDR.getAttribute("caption"))
-    ebiSym_EBICS3_CSADDR.setDefaultValue(0x10400000)
+    ebiSym_EBICS3_CSADDR.setDefaultValue(0x20000000)
+    ebiSym_EBICS3_CSADDR.setMin(0x20000000)
+    ebiSym_EBICS3_CSADDR.setMax(0x23FFFFFF)
     ebiSym_EBICS3_CSADDR.setVisible(False)
 
     #CFGEBIC_VALUE
