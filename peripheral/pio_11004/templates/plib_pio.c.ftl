@@ -654,7 +654,7 @@ void _PIO_Interrupt_Handler ( PIO_PORT port )
 </#if>
 </#if>
 
-<#if PIO_C_INTERRUPT_USED??>
+<#if PIO_D_INTERRUPT_USED??>
 <#if PIO_D_INTERRUPT_USED == true>
     <@PIO_ISR_HANDLER
         PIO_CHANNEL="D"

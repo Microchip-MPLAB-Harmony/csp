@@ -39,6 +39,11 @@ sym_tc_ch2_clock_freq = []
 sym_tc_ch3_clock_freq = []
 sym_mcan_clock_freq = []
 
+def cktrimSet(symbol, event):
+    if event["value"] == 12000000:
+        symbol.setValue("XTAL12")
+    elif event["value"] == 16000000:
+        symbol.setValue("XTAL16")
 def periphFreqCalc(symbol, event):
     symbol.setValue(int(event["value"]), 2)
 
@@ -521,7 +526,7 @@ def __master_clock_menu(clk_comp, clk_menu, pmc_reg_module):
     sym_pmc_mckr_mdiv.setLabel(bitfield_pmc_mckr_mdiv.getDescription())
     sym_pmc_mckr_mdiv.setDefaultValue("PCK_DIV2")
 
-def __usb_clock_menu(clk_comp, clk_menu, pmc_reg_module, utmi_reg_module, update_upll_divider_visibility):
+def __usb_clock_menu(clk_comp, clk_menu, pmc_reg_module, utmi_reg_module, update_upll_divider_visibility, cktrimSet):
     """
     USB Clock Menu Implementation.
 
@@ -564,7 +569,7 @@ def __usb_clock_menu(clk_comp, clk_menu, pmc_reg_module, utmi_reg_module, update
     sym_utmi_cktrim_freq = clk_comp.createComboSymbol("UTMI_CKTRIM_FREQ", sym_ckgr_uckr_upllen, valgrp_utmi_cktrim_freq.getValueNames())
     sym_utmi_cktrim_freq.setDefaultValue("XTAL12")
     sym_utmi_cktrim_freq.setVisible(False)
-
+    sym_utmi_cktrim_freq.setDependencies(cktrimSet, ["CLK_MAIN_XTAL"])
     # get PMC_MCKR register
     reg_pmc_mckr = pmc_reg_group.getRegister("PMC_MCKR")
 
@@ -928,7 +933,7 @@ if __name__ == "__main__":
     __master_clock_menu(coreComponent, SYM_CLK_MENU, PMC_REGISTERS)
 
     # creates usb clock
-    __usb_clock_menu(coreComponent, SYM_CLK_MENU, PMC_REGISTERS, UTMI_REGISTERS, __update_upll_divider_visibility)
+    __usb_clock_menu(coreComponent, SYM_CLK_MENU, PMC_REGISTERS, UTMI_REGISTERS, __update_upll_divider_visibility, cktrimSet)
 
     # creates generic clock menu
     __generic_clock_menu(coreComponent, SYM_CLK_MENU, PMC_REGISTERS, __update_generic_clk_div_visibility, __update_generic_clk_src_visibility)
