@@ -690,153 +690,192 @@ pioSymClkEnComment = []
 global pioSymIntEnComment
 pioSymIntEnComment = []
 global interruptDependncy
-node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"PIO\"]")
-values = node.getChildren()
+portAvailable = {}
+for id in pioSymChannel:
+    node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"PIO\"]/instance@[name=\"" "PIO" + str(id) + "" "\"]")
+    if node != None:
+        print "Available"
+        portAvailable["PIO" + id] = True
+    else:
+        portAvailable["PIO" + id] = False
+
 interruptDependncy = []
 
-for portNumber in range(0, len(values)):
+for portNumber in range(0, len(pioSymChannel)):
 
     #Enable Peripheral clock for all the PORT Channels in Clock Manager
     Database.setSymbolValue("core", "PIO" + str(pioSymChannel[portNumber]) + "_CLOCK_ENABLE", True, 1)
+    if portAvailable["PIO" + pioSymChannel[portNumber]]:
+        port.append(portNumber)
+        port[portNumber]= coreComponent.createMenuSymbol("PIO_CONFIGURATION" + str(portNumber), portConfiguration)
+        port[portNumber].setLabel("PIO " + pioSymChannel[portNumber] + " Configuration")
 
-    port.append(portNumber)
-    port[portNumber]= coreComponent.createMenuSymbol("PIO_CONFIGURATION" + str(portNumber), portConfiguration)
-    port[portNumber].setLabel("PIO " + pioSymChannel[portNumber] + " Configuration")
+        pioSym_PIO_SCDR.append(portNumber)
+        pioSym_PIO_SCDR[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_SCDR_VALUE", port[portNumber])
+        pioSym_PIO_SCDR[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_SCDR")
+        pioSym_PIO_SCDR[portNumber].setDefaultValue(0x00000000)
+        pioSym_PIO_SCDR[portNumber].setMin(0x0)
+        pioSym_PIO_SCDR[portNumber].setMax(0x00003FFF)
 
-    pioSym_PIO_SCDR.append(portNumber)
-    pioSym_PIO_SCDR[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_SCDR_VALUE", port[portNumber])
-    pioSym_PIO_SCDR[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_SCDR")
-    pioSym_PIO_SCDR[portNumber].setDefaultValue(0x00000000)
-    pioSym_PIO_SCDR[portNumber].setMin(0x0)
-    pioSym_PIO_SCDR[portNumber].setMax(0x00003FFF)
+        portInterrupt.append(portNumber)
+        portInterrupt[portNumber]= coreComponent.createBooleanSymbol("PIO_" + str(pioSymChannel[portNumber]) + "_INTERRUPT_USED", port[portNumber])
+        portInterrupt[portNumber].setLabel("Use Interrupt for PIO " + pioSymChannel[portNumber])
+        portInterrupt[portNumber].setDefaultValue(False)
+        portInterrupt[portNumber].setVisible(True)
+        portInterrupt[portNumber].setReadOnly(True)
+        interruptDependncy.append("PIO_" + str(pioSymChannel[portNumber]) + "_INTERRUPT_USED")
 
-    portInterrupt.append(portNumber)
-    portInterrupt[portNumber]= coreComponent.createBooleanSymbol("PIO_" + str(pioSymChannel[portNumber]) + "_INTERRUPT_USED", port[portNumber])
-    portInterrupt[portNumber].setLabel("Use Interrupt for PIO " + pioSymChannel[portNumber])
-    portInterrupt[portNumber].setDefaultValue(False)
-    portInterrupt[portNumber].setVisible(True)
-    portInterrupt[portNumber].setReadOnly(True)
-    interruptDependncy.append("PIO_" + str(pioSymChannel[portNumber]) + "_INTERRUPT_USED")
+        #list created only for dependency
+        portInterruptList.append(portNumber)
+        portInterruptList[portNumber] = "PIO_" + str(pioSymChannel[portNumber]) + "_INTERRUPT_USED"
 
-    #list created only for dependency
-    portInterruptList.append(portNumber)
-    portInterruptList[portNumber] = "PIO_" + str(pioSymChannel[portNumber]) + "_INTERRUPT_USED"
+        pioSym_PIO_PDR.append(portNumber)
+        pioSym_PIO_PDR[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_PDR_VALUE", port[portNumber])
+        pioSym_PIO_PDR[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_PDR")
+        pioSym_PIO_PDR[portNumber].setDefaultValue(0x00000000)
+        pioSym_PIO_PDR[portNumber].setReadOnly(True)
 
-    pioSym_PIO_PDR.append(portNumber)
-    pioSym_PIO_PDR[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_PDR_VALUE", port[portNumber])
-    pioSym_PIO_PDR[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_PDR")
-    pioSym_PIO_PDR[portNumber].setDefaultValue(0x00000000)
-    pioSym_PIO_PDR[portNumber].setReadOnly(True)
+        pioSym_PIO_ABCDSR1.append(portNumber)
+        pioSym_PIO_ABCDSR1[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_ABCDSR1_VALUE", port[portNumber])
+        pioSym_PIO_ABCDSR1[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_ABCDSR1")
+        pioSym_PIO_ABCDSR1[portNumber].setDefaultValue(0x00000000)
+        pioSym_PIO_ABCDSR1[portNumber].setReadOnly(True)
 
-    pioSym_PIO_ABCDSR1.append(portNumber)
-    pioSym_PIO_ABCDSR1[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_ABCDSR1_VALUE", port[portNumber])
-    pioSym_PIO_ABCDSR1[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_ABCDSR1")
-    pioSym_PIO_ABCDSR1[portNumber].setDefaultValue(0x00000000)
-    pioSym_PIO_ABCDSR1[portNumber].setReadOnly(True)
+        pioSym_PIO_ABCDSR2.append(portNumber)
+        pioSym_PIO_ABCDSR2[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_ABCDSR2_VALUE", port[portNumber])
+        pioSym_PIO_ABCDSR2[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_ABCDSR2")
+        pioSym_PIO_ABCDSR2[portNumber].setDefaultValue(0x00000000)
+        pioSym_PIO_ABCDSR2[portNumber].setReadOnly(True)
 
-    pioSym_PIO_ABCDSR2.append(portNumber)
-    pioSym_PIO_ABCDSR2[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_ABCDSR2_VALUE", port[portNumber])
-    pioSym_PIO_ABCDSR2[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_ABCDSR2")
-    pioSym_PIO_ABCDSR2[portNumber].setDefaultValue(0x00000000)
-    pioSym_PIO_ABCDSR2[portNumber].setReadOnly(True)
+        pioSym_PIO_OER.append(portNumber)
+        pioSym_PIO_OER[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_OER_VALUE", port[portNumber])
+        pioSym_PIO_OER[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_OER")
+        pioSym_PIO_OER[portNumber].setDefaultValue(0x00000000)
+        pioSym_PIO_OER[portNumber].setReadOnly(True)
 
-    pioSym_PIO_OER.append(portNumber)
-    pioSym_PIO_OER[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_OER_VALUE", port[portNumber])
-    pioSym_PIO_OER[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_OER")
-    pioSym_PIO_OER[portNumber].setDefaultValue(0x00000000)
-    pioSym_PIO_OER[portNumber].setReadOnly(True)
+        pioSym_PIO_SODR.append(portNumber)
+        pioSym_PIO_SODR[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_SODR_VALUE", port[portNumber])
+        pioSym_PIO_SODR[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_SODR")
+        pioSym_PIO_SODR[portNumber].setDefaultValue(0x00000000)
+        pioSym_PIO_SODR[portNumber].setReadOnly(True)
 
-    pioSym_PIO_SODR.append(portNumber)
-    pioSym_PIO_SODR[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_SODR_VALUE", port[portNumber])
-    pioSym_PIO_SODR[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_SODR")
-    pioSym_PIO_SODR[portNumber].setDefaultValue(0x00000000)
-    pioSym_PIO_SODR[portNumber].setReadOnly(True)
+        pioSym_PIO_AIMER.append(portNumber)
+        pioSym_PIO_AIMER[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_AIMER_VALUE", port[portNumber])
+        pioSym_PIO_AIMER[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_AIMER")
+        pioSym_PIO_AIMER[portNumber].setDefaultValue(0x00000000)
+        pioSym_PIO_AIMER[portNumber].setReadOnly(True)
 
-    pioSym_PIO_AIMER.append(portNumber)
-    pioSym_PIO_AIMER[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_AIMER_VALUE", port[portNumber])
-    pioSym_PIO_AIMER[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_AIMER")
-    pioSym_PIO_AIMER[portNumber].setDefaultValue(0x00000000)
-    pioSym_PIO_AIMER[portNumber].setReadOnly(True)
+        pioSym_PIO_LSR.append(portNumber)
+        pioSym_PIO_LSR[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_LSR_VALUE", port[portNumber])
+        pioSym_PIO_LSR[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_LSR")
+        pioSym_PIO_LSR[portNumber].setDefaultValue(0x00000000)
+        pioSym_PIO_LSR[portNumber].setReadOnly(True)
 
-    pioSym_PIO_LSR.append(portNumber)
-    pioSym_PIO_LSR[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_LSR_VALUE", port[portNumber])
-    pioSym_PIO_LSR[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_LSR")
-    pioSym_PIO_LSR[portNumber].setDefaultValue(0x00000000)
-    pioSym_PIO_LSR[portNumber].setReadOnly(True)
+        pioSym_PIO_REHLSR.append(portNumber)
+        pioSym_PIO_REHLSR[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_REHLSR_VALUE", port[portNumber])
+        pioSym_PIO_REHLSR[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_REHLSR")
+        pioSym_PIO_REHLSR[portNumber].setDefaultValue(0x00000000)
+        pioSym_PIO_REHLSR[portNumber].setReadOnly(True)
 
-    pioSym_PIO_REHLSR.append(portNumber)
-    pioSym_PIO_REHLSR[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_REHLSR_VALUE", port[portNumber])
-    pioSym_PIO_REHLSR[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_REHLSR")
-    pioSym_PIO_REHLSR[portNumber].setDefaultValue(0x00000000)
-    pioSym_PIO_REHLSR[portNumber].setReadOnly(True)
+        pioSym_PIO_PUER.append(portNumber)
+        pioSym_PIO_PUER[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_PUER_VALUE", port[portNumber])
+        pioSym_PIO_PUER[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_PUER")
+        pioSym_PIO_PUER[portNumber].setDefaultValue(0x00000000)
+        pioSym_PIO_PUER[portNumber].setReadOnly(True)
 
-    pioSym_PIO_PUER.append(portNumber)
-    pioSym_PIO_PUER[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_PUER_VALUE", port[portNumber])
-    pioSym_PIO_PUER[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_PUER")
-    pioSym_PIO_PUER[portNumber].setDefaultValue(0x00000000)
-    pioSym_PIO_PUER[portNumber].setReadOnly(True)
+        pioSym_PIO_PPDEN.append(portNumber)
+        pioSym_PIO_PPDEN[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_PPDEN_VALUE", port[portNumber])
+        pioSym_PIO_PPDEN[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_PPDEN")
+        pioSym_PIO_PPDEN[portNumber].setDefaultValue(0x00000000)
+        pioSym_PIO_PPDEN[portNumber].setReadOnly(True)
 
-    pioSym_PIO_PPDEN.append(portNumber)
-    pioSym_PIO_PPDEN[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_PPDEN_VALUE", port[portNumber])
-    pioSym_PIO_PPDEN[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_PPDEN")
-    pioSym_PIO_PPDEN[portNumber].setDefaultValue(0x00000000)
-    pioSym_PIO_PPDEN[portNumber].setReadOnly(True)
+        pioSym_PIO_MDER.append(portNumber)
+        pioSym_PIO_MDER[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_MDER_VALUE", port[portNumber])
+        pioSym_PIO_MDER[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_MDER")
+        pioSym_PIO_MDER[portNumber].setDefaultValue(0x00000000)
+        pioSym_PIO_MDER[portNumber].setReadOnly(True)
 
-    pioSym_PIO_MDER.append(portNumber)
-    pioSym_PIO_MDER[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_MDER_VALUE", port[portNumber])
-    pioSym_PIO_MDER[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_MDER")
-    pioSym_PIO_MDER[portNumber].setDefaultValue(0x00000000)
-    pioSym_PIO_MDER[portNumber].setReadOnly(True)
+        pioSym_PIO_IFER.append(portNumber)
+        pioSym_PIO_IFER[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_IFER_VALUE", port[portNumber])
+        pioSym_PIO_IFER[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_IFER")
+        pioSym_PIO_IFER[portNumber].setDefaultValue(0x00000000)
+        pioSym_PIO_IFER[portNumber].setReadOnly(True)
 
-    pioSym_PIO_IFER.append(portNumber)
-    pioSym_PIO_IFER[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_IFER_VALUE", port[portNumber])
-    pioSym_PIO_IFER[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_IFER")
-    pioSym_PIO_IFER[portNumber].setDefaultValue(0x00000000)
-    pioSym_PIO_IFER[portNumber].setReadOnly(True)
+        pioSym_PIO_IFSCER.append(portNumber)
+        pioSym_PIO_IFSCER[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_IFSCER_VALUE", port[portNumber])
+        pioSym_PIO_IFSCER[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_IFSCER")
+        pioSym_PIO_IFSCER[portNumber].setDefaultValue(0x00000000)
+        pioSym_PIO_IFSCER[portNumber].setReadOnly(True)
 
-    pioSym_PIO_IFSCER.append(portNumber)
-    pioSym_PIO_IFSCER[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_IFSCER_VALUE", port[portNumber])
-    pioSym_PIO_IFSCER[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_IFSCER")
-    pioSym_PIO_IFSCER[portNumber].setDefaultValue(0x00000000)
-    pioSym_PIO_IFSCER[portNumber].setReadOnly(True)
+        if slewRateControlPresent.getValue():
+            pioSym_PIO_SLEWR.append(portNumber)
+            pioSym_PIO_SLEWR[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_SLEWR_VALUE", port[portNumber])
+            pioSym_PIO_SLEWR[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_SLEWR")
+            pioSym_PIO_SLEWR[portNumber].setDefaultValue(0x00000000)
+            pioSym_PIO_SLEWR[portNumber].setReadOnly(True)
 
-    if slewRateControlPresent.getValue():
-        pioSym_PIO_SLEWR.append(portNumber)
-        pioSym_PIO_SLEWR[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_SLEWR_VALUE", port[portNumber])
-        pioSym_PIO_SLEWR[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_SLEWR")
-        pioSym_PIO_SLEWR[portNumber].setDefaultValue(0x00000000)
-        pioSym_PIO_SLEWR[portNumber].setReadOnly(True)
+        if driverControlPresent.getValue():
+            pioSym_PIO_DRIVER.append(portNumber)
+            pioSym_PIO_DRIVER[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_DRIVER_VALUE", port[portNumber])
+            pioSym_PIO_DRIVER[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_DRIVER")
+            pioSym_PIO_DRIVER[portNumber].setDefaultValue(0x00000000)
+            pioSym_PIO_DRIVER[portNumber].setReadOnly(True)
 
-    if driverControlPresent.getValue():
-        pioSym_PIO_DRIVER.append(portNumber)
-        pioSym_PIO_DRIVER[portNumber] = coreComponent.createHexSymbol("PIO" + str(pioSymChannel[portNumber]) + "_DRIVER_VALUE", port[portNumber])
-        pioSym_PIO_DRIVER[portNumber].setLabel("PIO" + str(pioSymChannel[portNumber]) + "_DRIVER")
-        pioSym_PIO_DRIVER[portNumber].setDefaultValue(0x00000000)
-        pioSym_PIO_DRIVER[portNumber].setReadOnly(True)
+        #symbols and variables for interrupt handling
+        pioSymInterruptVector.append(portNumber)
+        pioSymInterruptVector[portNumber] = "PIO" + str(pioSymChannel[portNumber]) + "_INTERRUPT_ENABLE"
+        pioSymInterruptHandler.append(portNumber)
+        pioSymInterruptHandler[portNumber] = "PIO" + str(pioSymChannel[portNumber]) + "_INTERRUPT_HANDLER"
+        pioSymInterruptHandlerLock.append(portNumber)
+        pioSymInterruptHandlerLock[portNumber] = "PIO" + str(pioSymChannel[portNumber]) + "_INTERRUPT_HANDLER_LOCK"
+        pioSymInterruptVectorUpdate.append(portNumber)
+        pioSymInterruptVectorUpdate[portNumber] = "PIO" + str(pioSymChannel[portNumber]) + "_INTERRUPT_ENABLE_UPDATE"
 
-    #symbols and variables for interrupt handling
-    pioSymInterruptVector.append(portNumber)
-    pioSymInterruptVector[portNumber] = "PIO" + str(pioSymChannel[portNumber]) + "_INTERRUPT_ENABLE"
-    pioSymInterruptHandler.append(portNumber)
-    pioSymInterruptHandler[portNumber] = "PIO" + str(pioSymChannel[portNumber]) + "_INTERRUPT_HANDLER"
-    pioSymInterruptHandlerLock.append(portNumber)
-    pioSymInterruptHandlerLock[portNumber] = "PIO" + str(pioSymChannel[portNumber]) + "_INTERRUPT_HANDLER_LOCK"
-    pioSymInterruptVectorUpdate.append(portNumber)
-    pioSymInterruptVectorUpdate[portNumber] = "PIO" + str(pioSymChannel[portNumber]) + "_INTERRUPT_ENABLE_UPDATE"
+        # Dependency Status for interrupt
+        pioSymIntEnComment.append(portNumber)
+        pioSymIntEnComment[portNumber] = coreComponent.createCommentSymbol("PIO_" + str(pioSymChannel[portNumber]) + "_NVIC_ENABLE_COMMENT", pioMenu)
+        pioSymIntEnComment[portNumber].setVisible(False)
+        pioSymIntEnComment[portNumber].setLabel("Warning!!! PIO" + str(pioSymChannel[portNumber]) + " Interrupt is Disabled in Interrupt Manager")
+        pioSymIntEnComment[portNumber].setDependencies(InterruptStatusWarning, ["core." + pioSymInterruptVectorUpdate[portNumber], "PIO_" + str(pioSymChannel[portNumber]) + "_INTERRUPT_USED"])
 
-    # Dependency Status for interrupt
-    pioSymIntEnComment.append(portNumber)
-    pioSymIntEnComment[portNumber] = coreComponent.createCommentSymbol("PIO_" + str(pioSymChannel[portNumber]) + "_NVIC_ENABLE_COMMENT", pioMenu)
-    pioSymIntEnComment[portNumber].setVisible(False)
-    pioSymIntEnComment[portNumber].setLabel("Warning!!! PIO" + str(pioSymChannel[portNumber]) + " Interrupt is Disabled in Interrupt Manager")
-    pioSymIntEnComment[portNumber].setDependencies(InterruptStatusWarning, ["core." + pioSymInterruptVectorUpdate[portNumber], "PIO_" + str(pioSymChannel[portNumber]) + "_INTERRUPT_USED"])
-
-    # Dependency Status for clock
-    pioSymClkEnComment.append(portNumber)
-    pioSymClkEnComment[portNumber] = coreComponent.createCommentSymbol("PIO_" + str(pioSymChannel[portNumber]) + "_CLK_ENABLE_COMMENT", pioMenu)
-    pioSymClkEnComment[portNumber].setVisible(False)
-    pioSymClkEnComment[portNumber].setLabel("Warning!!! PIO" + str(pioSymChannel[portNumber]) + " Peripheral Clock is Disabled in Clock Manager")
-    pioSymClkEnComment[portNumber].setDependencies(ClockStatusWarning, ["core.PIO" + str(pioSymChannel[portNumber]) + "_CLOCK_ENABLE"])
+        # Dependency Status for clock
+        pioSymClkEnComment.append(portNumber)
+        pioSymClkEnComment[portNumber] = coreComponent.createCommentSymbol("PIO_" + str(pioSymChannel[portNumber]) + "_CLK_ENABLE_COMMENT", pioMenu)
+        pioSymClkEnComment[portNumber].setVisible(False)
+        pioSymClkEnComment[portNumber].setLabel("Warning!!! PIO" + str(pioSymChannel[portNumber]) + " Peripheral Clock is Disabled in Clock Manager")
+        pioSymClkEnComment[portNumber].setDependencies(ClockStatusWarning, ["core.PIO" + str(pioSymChannel[portNumber]) + "_CLOCK_ENABLE"])
+    else:
+        port.append(portNumber)
+        pioSym_PIO_SCDR.append(portNumber)
+        portInterrupt.append(portNumber)
+        #list created only for dependency
+        portInterruptList.append("")
+        pioSym_PIO_PDR.append(portNumber)
+        pioSym_PIO_ABCDSR1.append(portNumber)
+        pioSym_PIO_ABCDSR2.append(portNumber)
+        pioSym_PIO_OER.append(portNumber)
+        pioSym_PIO_SODR.append(portNumber)
+        pioSym_PIO_AIMER.append(portNumber)
+        pioSym_PIO_LSR.append(portNumber)
+        pioSym_PIO_REHLSR.append(portNumber)
+        pioSym_PIO_PUER.append(portNumber)
+        pioSym_PIO_PPDEN.append(portNumber)
+        pioSym_PIO_MDER.append(portNumber)
+        pioSym_PIO_IFER.append(portNumber)
+        pioSym_PIO_IFSCER.append(portNumber)
+        if slewRateControlPresent.getValue():
+            pioSym_PIO_SLEWR.append(portNumber)
+        if driverControlPresent.getValue():
+            pioSym_PIO_DRIVER.append(portNumber)
+        #symbols and variables for interrupt handling
+        pioSymInterruptVector.append(portNumber)
+        pioSymInterruptHandler.append(portNumber)
+        pioSymInterruptHandlerLock.append(portNumber)
+        pioSymInterruptVectorUpdate.append(portNumber)
+        # Dependency Status for interrupt
+        pioSymIntEnComment.append(portNumber)
+        # Dependency Status for clock
+        pioSymClkEnComment.append(portNumber)
  
 interruptActive = coreComponent.createBooleanSymbol("INTERRUPT_ACTIVE", portConfiguration)
 interruptActive.setDefaultValue(False)
