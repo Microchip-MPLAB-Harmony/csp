@@ -49,7 +49,6 @@
 // *****************************************************************************
 // *****************************************************************************
 
-#include "configuration.h"
 #include "definitions.h"
 
 // *****************************************************************************
@@ -84,7 +83,8 @@ void NVMCTRL_Handler            ( void ) __attribute__((weak, alias("Dummy_Handl
 void DMAC_Handler               ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void EVSYS_Handler              ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void SERCOM0_6_Handler          ( void ) __attribute__((weak, alias("Dummy_Handler")));
-void SERCOM1_7_Handler          ( void ) __attribute__((weak, alias("Dummy_Handler")));
+void SERCOM1_SPI_InterruptHandler ( void ) __attribute__((weak, alias("Dummy_Handler")));
+void SERCOM7_Handler            ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void SERCOM2_Handler            ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void SERCOM3_Handler            ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void SERCOM4_Handler            ( void ) __attribute__((weak, alias("Dummy_Handler")));
@@ -109,6 +109,11 @@ void PTC_Handler                ( void ) __attribute__((weak, alias("Dummy_Handl
 
 
 /* Mutiple handlers for vector */
+void SERCOM1_7_Handler( void )
+{
+    SERCOM1_SPI_InterruptHandler();
+}
+
 
 
 
