@@ -465,6 +465,124 @@ bool SERCOM1_SPI_Write(void* pTransmitData, size_t txSize);
 
 bool SERCOM1_SPI_Read(void* pReceiveData, size_t rxSize);
 
+// *****************************************************************************
+/* Function:
+    void SERCOM1_SPI_CallbackRegister(const SERCOM_SPI_CALLBACK* callBack,
+                                                    uintptr_t context);
+
+  Summary:
+    Allows application to register callback with PLIB.
+
+  Description:
+    This function allows application to register an event handling function
+    for the PLIB to call back when requested data exchange operation has
+    completed or any error has occurred.
+    The callback should be registered before the client performs exchange
+    operation.
+    At any point if application wants to stop the callback, it can use this
+    function with "callBack" value as NULL.
+
+  Precondition:
+    The SERCOM1_SPI_Initialize function must have been called.
+
+  Parameters:
+    callBack - Pointer to the event handler function implemented by the
+               user .
+
+    context - The value of parameter will be passed back to the application
+              unchanged, when the callBack function is called. It can
+              be used to identify any application specific data object that
+              identifies the instance of the client module (for example,
+              it may be a pointer to the client module's state structure).
+
+  Returns:
+    None.
+
+  Example:
+    <code>
+    uint8_t txBuffer[10];
+    uint8_t rxBuffer[10];
+    size_t txSize = 10;
+    size_t rxSize = 10;
+
+    SERCOM1_SPI_Initialize();
+
+    SERCOM1_SPI_CallbackRegister(&APP_SPICallBack, (uintptr_t)NULL);
+
+    if(SERCOM1_SPI_WriteRead(&txBuffer, txSize, &rxBuffer, rxSize ))
+    {
+        // request got accepted
+    }
+    else
+    {
+        // request didn't get accepted, try again later with correct arguments
+    }
+
+    void APP_SPICallBack(uintptr_t contextHandle)
+        {
+            //Exchange was completed without error, do something else.
+        }
+    </code>
+
+  Remarks:
+    If the client does not want to be notified when the queued operation
+    has completed, it does not need to register a callback.
+*/
+
+void SERCOM1_SPI_CallbackRegister(SERCOM_SPI_CALLBACK callBack, uintptr_t context);
+
+// *****************************************************************************
+/* Function:
+    bool SERCOM1_SPI_IsBusy (void);
+
+  Summary:
+    Returns transfer status of SERCOM SERCOM1SPI.
+
+  Description:
+    This function ture if the SERCOM SERCOM1SPI module is busy with a transfer. The
+    application can use the function to check if SERCOM SERCOM1SPI module is busy
+    before calling any of the data transfer functions. The library does not
+    allow a data transfer operation if another transfer operation is already in
+    progress.
+
+    This function can be used as an alternative to the callback function when
+    the library is operating interrupt mode. The allow the application to
+    implement a synchronous interface to the library.
+
+  Precondition:
+    The SERCOM1_SPI_Initialize() should have been called once. The module should
+    have been configured for interrupt mode operation in MHC.
+
+  Parameters:
+    None.
+
+  Returns:
+    true -  Transfer is still in progress
+    false - Transfer is completed or no transfer is currently in progress.
+
+  Example:
+    <code>
+        // The following code example demonstrates the use of the
+        // SERCOM1_SPI_IsBusy() function. This example shows a blocking while
+        // loop. The function can also be called periodically.
+
+        uint8_t dataBuffer[20];
+
+        SERCOM1_SPI_Initialize();
+        SERCOM1_SPI_Write(dataBuffer, 20);
+
+        while (SERCOM1_SPI_IsBusy() == true)
+        {
+            // Wait here till the transfer is done.
+        }
+    </code>
+
+  Remarks:
+    None.
+*/
+
+bool SERCOM1_SPI_IsBusy (void);
+
 
 #ifdef __cplusplus // Provide C++ Compatibility
 }

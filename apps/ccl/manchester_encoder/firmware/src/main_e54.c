@@ -28,6 +28,20 @@
 #include "definitions.h"                // SYS function prototypes
 
 
+/* Macro definitions */
+#define SIZE 10
+
+/* Global variables */
+char mybuffer[]="0123456789";
+volatile bool transferStatus=false;
+
+/* This function will be called by SPI PLIB when transfer is completed */
+void SERCOM0_SPI_Callback(uintptr_t context )
+{
+    transferStatus = true;
+}
+
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Main Entry Point
@@ -38,6 +52,15 @@ int main ( void )
 {
     /* Initialize all modules */
     SYS_Initialize ( NULL );
+
+    /* Register callback function   */
+    SERCOM0_SPI_CallbackRegister(SERCOM0_SPI_Callback, 0);
+
+    /* SPI Write */
+    SERCOM0_SPI_Write(mybuffer, SIZE);
+
+    /* Busy wait on transfer status */
+    while(transferStatus != true)
 
     while ( true )
     {
@@ -54,4 +77,3 @@ int main ( void )
 /*******************************************************************************
  End of File
 */
-
