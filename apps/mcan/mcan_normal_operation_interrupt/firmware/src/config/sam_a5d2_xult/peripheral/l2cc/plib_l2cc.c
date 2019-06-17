@@ -85,6 +85,7 @@ static void setConfig(void)
 {
     L2CC_REGS->L2CC_ACR = L2CC_ACR_HPSO(0) |
                      L2CC_ACR_SBDLE(0) |
+                     L2CC_ACR_SAIE(0) |
                      L2CC_ACR_EMBEN(0) |
                      L2CC_ACR_PEN(0) |
                      L2CC_ACR_SAOEN(0) |
