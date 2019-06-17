@@ -54,7 +54,7 @@
 // ****************************************************************************
 // ****************************************************************************
 #pragma config NVMCTRL_NSULCK = 0x7
-#pragma config BOD33USERLEVEL = 0x6
+#pragma config BOD33_LEVEL = 0x6
 #pragma config BOD33_DIS = CLEAR
 #pragma config BOD33_ACTION = 0x1
 #pragma config WDT_RUNSTDBY = CLEAR
@@ -122,9 +122,9 @@ void SYS_Initialize ( void* data )
 
     SERCOM0_USART_Initialize();
 
+    AC_Initialize();
     RTC_Initialize();
 
-    AC_Initialize();
 
 
 

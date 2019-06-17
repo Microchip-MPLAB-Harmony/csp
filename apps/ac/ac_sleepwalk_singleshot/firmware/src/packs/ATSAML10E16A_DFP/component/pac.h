@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-01-31T10:50:35Z */
+/* file generated from device description version 2019-06-07T05:54:14Z */
 #ifndef _SAML10_PAC_COMPONENT_H_
 #define _SAML10_PAC_COMPONENT_H_
 
@@ -38,19 +38,13 @@
 #define PAC_WRCTRL_KEY_Msk                    (_U_(0xFF) << PAC_WRCTRL_KEY_Pos)                    /**< (PAC_WRCTRL) Peripheral access control key Mask */
 #define PAC_WRCTRL_KEY(value)                 (PAC_WRCTRL_KEY_Msk & ((value) << PAC_WRCTRL_KEY_Pos))
 #define   PAC_WRCTRL_KEY_OFF_Val              _U_(0x0)                                             /**< (PAC_WRCTRL) No action  */
-#define   PAC_WRCTRL_KEY_CLR_Val              _U_(0x1)                                             /**< (PAC_WRCTRL) Clear protection  */
+#define   PAC_WRCTRL_KEY_CLEAR_Val            _U_(0x1)                                             /**< (PAC_WRCTRL) Clear protection  */
 #define   PAC_WRCTRL_KEY_SET_Val              _U_(0x2)                                             /**< (PAC_WRCTRL) Set protection  */
-#define   PAC_WRCTRL_KEY_SETLCK_Val           _U_(0x3)                                             /**< (PAC_WRCTRL) Set and lock protection  */
-#define   PAC_WRCTRL_KEY_SETSEC_Val           _U_(0x4)                                             /**< (PAC_WRCTRL) Set IP secure  */
-#define   PAC_WRCTRL_KEY_SETNONSEC_Val        _U_(0x5)                                             /**< (PAC_WRCTRL) Set IP non-secure  */
-#define   PAC_WRCTRL_KEY_SECLOCK_Val          _U_(0x6)                                             /**< (PAC_WRCTRL) Lock IP security value  */
+#define   PAC_WRCTRL_KEY_LOCK_Val             _U_(0x3)                                             /**< (PAC_WRCTRL) Set and lock protection  */
 #define PAC_WRCTRL_KEY_OFF                    (PAC_WRCTRL_KEY_OFF_Val << PAC_WRCTRL_KEY_Pos)       /**< (PAC_WRCTRL) No action Position  */
-#define PAC_WRCTRL_KEY_CLR                    (PAC_WRCTRL_KEY_CLR_Val << PAC_WRCTRL_KEY_Pos)       /**< (PAC_WRCTRL) Clear protection Position  */
+#define PAC_WRCTRL_KEY_CLEAR                  (PAC_WRCTRL_KEY_CLEAR_Val << PAC_WRCTRL_KEY_Pos)     /**< (PAC_WRCTRL) Clear protection Position  */
 #define PAC_WRCTRL_KEY_SET                    (PAC_WRCTRL_KEY_SET_Val << PAC_WRCTRL_KEY_Pos)       /**< (PAC_WRCTRL) Set protection Position  */
-#define PAC_WRCTRL_KEY_SETLCK                 (PAC_WRCTRL_KEY_SETLCK_Val << PAC_WRCTRL_KEY_Pos)    /**< (PAC_WRCTRL) Set and lock protection Position  */
-#define PAC_WRCTRL_KEY_SETSEC                 (PAC_WRCTRL_KEY_SETSEC_Val << PAC_WRCTRL_KEY_Pos)    /**< (PAC_WRCTRL) Set IP secure Position  */
-#define PAC_WRCTRL_KEY_SETNONSEC              (PAC_WRCTRL_KEY_SETNONSEC_Val << PAC_WRCTRL_KEY_Pos) /**< (PAC_WRCTRL) Set IP non-secure Position  */
-#define PAC_WRCTRL_KEY_SECLOCK                (PAC_WRCTRL_KEY_SECLOCK_Val << PAC_WRCTRL_KEY_Pos)   /**< (PAC_WRCTRL) Lock IP security value Position  */
+#define PAC_WRCTRL_KEY_LOCK                   (PAC_WRCTRL_KEY_LOCK_Val << PAC_WRCTRL_KEY_Pos)      /**< (PAC_WRCTRL) Set and lock protection Position  */
 #define PAC_WRCTRL_Msk                        _U_(0x00FFFFFF)                                      /**< (PAC_WRCTRL) Register Mask  */
 
 
@@ -87,15 +81,15 @@
 #define PAC_INTFLAGAHB_FLASH_Pos              _U_(0)                                               /**< (PAC_INTFLAGAHB) FLASH Position */
 #define PAC_INTFLAGAHB_FLASH_Msk              (_U_(0x1) << PAC_INTFLAGAHB_FLASH_Pos)               /**< (PAC_INTFLAGAHB) FLASH Mask */
 #define PAC_INTFLAGAHB_FLASH(value)           (PAC_INTFLAGAHB_FLASH_Msk & ((value) << PAC_INTFLAGAHB_FLASH_Pos))
-#define PAC_INTFLAGAHB_HPB0_Pos               _U_(1)                                               /**< (PAC_INTFLAGAHB) HPB0 Position */
-#define PAC_INTFLAGAHB_HPB0_Msk               (_U_(0x1) << PAC_INTFLAGAHB_HPB0_Pos)                /**< (PAC_INTFLAGAHB) HPB0 Mask */
-#define PAC_INTFLAGAHB_HPB0(value)            (PAC_INTFLAGAHB_HPB0_Msk & ((value) << PAC_INTFLAGAHB_HPB0_Pos))
-#define PAC_INTFLAGAHB_HPB1_Pos               _U_(2)                                               /**< (PAC_INTFLAGAHB) HPB1 Position */
-#define PAC_INTFLAGAHB_HPB1_Msk               (_U_(0x1) << PAC_INTFLAGAHB_HPB1_Pos)                /**< (PAC_INTFLAGAHB) HPB1 Mask */
-#define PAC_INTFLAGAHB_HPB1(value)            (PAC_INTFLAGAHB_HPB1_Msk & ((value) << PAC_INTFLAGAHB_HPB1_Pos))
-#define PAC_INTFLAGAHB_HPB2_Pos               _U_(3)                                               /**< (PAC_INTFLAGAHB) HPB2 Position */
-#define PAC_INTFLAGAHB_HPB2_Msk               (_U_(0x1) << PAC_INTFLAGAHB_HPB2_Pos)                /**< (PAC_INTFLAGAHB) HPB2 Mask */
-#define PAC_INTFLAGAHB_HPB2(value)            (PAC_INTFLAGAHB_HPB2_Msk & ((value) << PAC_INTFLAGAHB_HPB2_Pos))
+#define PAC_INTFLAGAHB_APBA_Pos               _U_(1)                                               /**< (PAC_INTFLAGAHB) AHB-APB Bridge A Position */
+#define PAC_INTFLAGAHB_APBA_Msk               (_U_(0x1) << PAC_INTFLAGAHB_APBA_Pos)                /**< (PAC_INTFLAGAHB) AHB-APB Bridge A Mask */
+#define PAC_INTFLAGAHB_APBA(value)            (PAC_INTFLAGAHB_APBA_Msk & ((value) << PAC_INTFLAGAHB_APBA_Pos))
+#define PAC_INTFLAGAHB_APBB_Pos               _U_(2)                                               /**< (PAC_INTFLAGAHB) AHB-APB Bridge B Position */
+#define PAC_INTFLAGAHB_APBB_Msk               (_U_(0x1) << PAC_INTFLAGAHB_APBB_Pos)                /**< (PAC_INTFLAGAHB) AHB-APB Bridge B Mask */
+#define PAC_INTFLAGAHB_APBB(value)            (PAC_INTFLAGAHB_APBB_Msk & ((value) << PAC_INTFLAGAHB_APBB_Pos))
+#define PAC_INTFLAGAHB_APBC_Pos               _U_(3)                                               /**< (PAC_INTFLAGAHB) AHB-APB Bridge C Position */
+#define PAC_INTFLAGAHB_APBC_Msk               (_U_(0x1) << PAC_INTFLAGAHB_APBC_Pos)                /**< (PAC_INTFLAGAHB) AHB-APB Bridge C Mask */
+#define PAC_INTFLAGAHB_APBC(value)            (PAC_INTFLAGAHB_APBC_Msk & ((value) << PAC_INTFLAGAHB_APBC_Pos))
 #define PAC_INTFLAGAHB_HSRAMCPU_Pos           _U_(4)                                               /**< (PAC_INTFLAGAHB) HSRAMCPU Position */
 #define PAC_INTFLAGAHB_HSRAMCPU_Msk           (_U_(0x1) << PAC_INTFLAGAHB_HSRAMCPU_Pos)            /**< (PAC_INTFLAGAHB) HSRAMCPU Mask */
 #define PAC_INTFLAGAHB_HSRAMCPU(value)        (PAC_INTFLAGAHB_HSRAMCPU_Msk & ((value) << PAC_INTFLAGAHB_HSRAMCPU_Pos))
@@ -105,11 +99,11 @@
 #define PAC_INTFLAGAHB_HSRAMDSU_Pos           _U_(6)                                               /**< (PAC_INTFLAGAHB) HSRAMDSU Position */
 #define PAC_INTFLAGAHB_HSRAMDSU_Msk           (_U_(0x1) << PAC_INTFLAGAHB_HSRAMDSU_Pos)            /**< (PAC_INTFLAGAHB) HSRAMDSU Mask */
 #define PAC_INTFLAGAHB_HSRAMDSU(value)        (PAC_INTFLAGAHB_HSRAMDSU_Msk & ((value) << PAC_INTFLAGAHB_HSRAMDSU_Pos))
-#define PAC_INTFLAGAHB_Msk                    _U_(0x0000007F)                                      /**< (PAC_INTFLAGAHB) Register Mask  */
+#define PAC_INTFLAGAHB_BROM_Pos               _U_(7)                                               /**< (PAC_INTFLAGAHB) BROM Position */
+#define PAC_INTFLAGAHB_BROM_Msk               (_U_(0x1) << PAC_INTFLAGAHB_BROM_Pos)                /**< (PAC_INTFLAGAHB) BROM Mask */
+#define PAC_INTFLAGAHB_BROM(value)            (PAC_INTFLAGAHB_BROM_Msk & ((value) << PAC_INTFLAGAHB_BROM_Pos))
+#define PAC_INTFLAGAHB_Msk                    _U_(0x000000FF)                                      /**< (PAC_INTFLAGAHB) Register Mask  */
 
-#define PAC_INTFLAGAHB_HPB_Pos                _U_(1)                                               /**< (PAC_INTFLAGAHB Position) HPBx */
-#define PAC_INTFLAGAHB_HPB_Msk                (_U_(0x7) << PAC_INTFLAGAHB_HPB_Pos)                 /**< (PAC_INTFLAGAHB Mask) HPB */
-#define PAC_INTFLAGAHB_HPB(value)             (PAC_INTFLAGAHB_HPB_Msk & ((value) << PAC_INTFLAGAHB_HPB_Pos)) 
 
 /* -------- PAC_INTFLAGA : (PAC Offset: 0x14) (R/W 32) Peripheral interrupt flag status - Bridge A -------- */
 #define PAC_INTFLAGA_RESETVALUE               _U_(0x00)                                            /**<  (PAC_INTFLAGA) Peripheral interrupt flag status - Bridge A  Reset Value */
@@ -471,126 +465,6 @@
 #define PAC_NONSECC_TC_Msk                    (_U_(0x7) << PAC_NONSECC_TC_Pos)                     /**< (PAC_NONSECC Mask) TC */
 #define PAC_NONSECC_TC(value)                 (PAC_NONSECC_TC_Msk & ((value) << PAC_NONSECC_TC_Pos)) 
 
-/* -------- PAC_SECLOCKA : (PAC Offset: 0x74) ( R/ 32) Peripheral secure status locked - Bridge A -------- */
-#define PAC_SECLOCKA_RESETVALUE               _U_(0x00)                                            /**<  (PAC_SECLOCKA) Peripheral secure status locked - Bridge A  Reset Value */
-
-#define PAC_SECLOCKA_PAC_Pos                  _U_(0)                                               /**< (PAC_SECLOCKA) PAC Secure Status Locked Position */
-#define PAC_SECLOCKA_PAC_Msk                  (_U_(0x1) << PAC_SECLOCKA_PAC_Pos)                   /**< (PAC_SECLOCKA) PAC Secure Status Locked Mask */
-#define PAC_SECLOCKA_PAC(value)               (PAC_SECLOCKA_PAC_Msk & ((value) << PAC_SECLOCKA_PAC_Pos))
-#define PAC_SECLOCKA_PM_Pos                   _U_(1)                                               /**< (PAC_SECLOCKA) PM Secure Status Locked Position */
-#define PAC_SECLOCKA_PM_Msk                   (_U_(0x1) << PAC_SECLOCKA_PM_Pos)                    /**< (PAC_SECLOCKA) PM Secure Status Locked Mask */
-#define PAC_SECLOCKA_PM(value)                (PAC_SECLOCKA_PM_Msk & ((value) << PAC_SECLOCKA_PM_Pos))
-#define PAC_SECLOCKA_MCLK_Pos                 _U_(2)                                               /**< (PAC_SECLOCKA) MCLK Secure Status Locked Position */
-#define PAC_SECLOCKA_MCLK_Msk                 (_U_(0x1) << PAC_SECLOCKA_MCLK_Pos)                  /**< (PAC_SECLOCKA) MCLK Secure Status Locked Mask */
-#define PAC_SECLOCKA_MCLK(value)              (PAC_SECLOCKA_MCLK_Msk & ((value) << PAC_SECLOCKA_MCLK_Pos))
-#define PAC_SECLOCKA_RSTC_Pos                 _U_(3)                                               /**< (PAC_SECLOCKA) RSTC Secure Status Locked Position */
-#define PAC_SECLOCKA_RSTC_Msk                 (_U_(0x1) << PAC_SECLOCKA_RSTC_Pos)                  /**< (PAC_SECLOCKA) RSTC Secure Status Locked Mask */
-#define PAC_SECLOCKA_RSTC(value)              (PAC_SECLOCKA_RSTC_Msk & ((value) << PAC_SECLOCKA_RSTC_Pos))
-#define PAC_SECLOCKA_OSCCTRL_Pos              _U_(4)                                               /**< (PAC_SECLOCKA) OSCCTRL Secure Status Locked Position */
-#define PAC_SECLOCKA_OSCCTRL_Msk              (_U_(0x1) << PAC_SECLOCKA_OSCCTRL_Pos)               /**< (PAC_SECLOCKA) OSCCTRL Secure Status Locked Mask */
-#define PAC_SECLOCKA_OSCCTRL(value)           (PAC_SECLOCKA_OSCCTRL_Msk & ((value) << PAC_SECLOCKA_OSCCTRL_Pos))
-#define PAC_SECLOCKA_OSC32KCTRL_Pos           _U_(5)                                               /**< (PAC_SECLOCKA) OSC32KCTRL Secure Status Locked Position */
-#define PAC_SECLOCKA_OSC32KCTRL_Msk           (_U_(0x1) << PAC_SECLOCKA_OSC32KCTRL_Pos)            /**< (PAC_SECLOCKA) OSC32KCTRL Secure Status Locked Mask */
-#define PAC_SECLOCKA_OSC32KCTRL(value)        (PAC_SECLOCKA_OSC32KCTRL_Msk & ((value) << PAC_SECLOCKA_OSC32KCTRL_Pos))
-#define PAC_SECLOCKA_SUPC_Pos                 _U_(6)                                               /**< (PAC_SECLOCKA) SUPC Secure Status Locked Position */
-#define PAC_SECLOCKA_SUPC_Msk                 (_U_(0x1) << PAC_SECLOCKA_SUPC_Pos)                  /**< (PAC_SECLOCKA) SUPC Secure Status Locked Mask */
-#define PAC_SECLOCKA_SUPC(value)              (PAC_SECLOCKA_SUPC_Msk & ((value) << PAC_SECLOCKA_SUPC_Pos))
-#define PAC_SECLOCKA_GCLK_Pos                 _U_(7)                                               /**< (PAC_SECLOCKA) GCLK Secure Status Locked Position */
-#define PAC_SECLOCKA_GCLK_Msk                 (_U_(0x1) << PAC_SECLOCKA_GCLK_Pos)                  /**< (PAC_SECLOCKA) GCLK Secure Status Locked Mask */
-#define PAC_SECLOCKA_GCLK(value)              (PAC_SECLOCKA_GCLK_Msk & ((value) << PAC_SECLOCKA_GCLK_Pos))
-#define PAC_SECLOCKA_WDT_Pos                  _U_(8)                                               /**< (PAC_SECLOCKA) WDT Secure Status Locked Position */
-#define PAC_SECLOCKA_WDT_Msk                  (_U_(0x1) << PAC_SECLOCKA_WDT_Pos)                   /**< (PAC_SECLOCKA) WDT Secure Status Locked Mask */
-#define PAC_SECLOCKA_WDT(value)               (PAC_SECLOCKA_WDT_Msk & ((value) << PAC_SECLOCKA_WDT_Pos))
-#define PAC_SECLOCKA_RTC_Pos                  _U_(9)                                               /**< (PAC_SECLOCKA) RTC Secure Status Locked Position */
-#define PAC_SECLOCKA_RTC_Msk                  (_U_(0x1) << PAC_SECLOCKA_RTC_Pos)                   /**< (PAC_SECLOCKA) RTC Secure Status Locked Mask */
-#define PAC_SECLOCKA_RTC(value)               (PAC_SECLOCKA_RTC_Msk & ((value) << PAC_SECLOCKA_RTC_Pos))
-#define PAC_SECLOCKA_EIC_Pos                  _U_(10)                                              /**< (PAC_SECLOCKA) EIC Secure Status Locked Position */
-#define PAC_SECLOCKA_EIC_Msk                  (_U_(0x1) << PAC_SECLOCKA_EIC_Pos)                   /**< (PAC_SECLOCKA) EIC Secure Status Locked Mask */
-#define PAC_SECLOCKA_EIC(value)               (PAC_SECLOCKA_EIC_Msk & ((value) << PAC_SECLOCKA_EIC_Pos))
-#define PAC_SECLOCKA_FREQM_Pos                _U_(11)                                              /**< (PAC_SECLOCKA) FREQM Secure Status Locked Position */
-#define PAC_SECLOCKA_FREQM_Msk                (_U_(0x1) << PAC_SECLOCKA_FREQM_Pos)                 /**< (PAC_SECLOCKA) FREQM Secure Status Locked Mask */
-#define PAC_SECLOCKA_FREQM(value)             (PAC_SECLOCKA_FREQM_Msk & ((value) << PAC_SECLOCKA_FREQM_Pos))
-#define PAC_SECLOCKA_PORT_Pos                 _U_(12)                                              /**< (PAC_SECLOCKA) PORT Secure Status Locked Position */
-#define PAC_SECLOCKA_PORT_Msk                 (_U_(0x1) << PAC_SECLOCKA_PORT_Pos)                  /**< (PAC_SECLOCKA) PORT Secure Status Locked Mask */
-#define PAC_SECLOCKA_PORT(value)              (PAC_SECLOCKA_PORT_Msk & ((value) << PAC_SECLOCKA_PORT_Pos))
-#define PAC_SECLOCKA_AC_Pos                   _U_(13)                                              /**< (PAC_SECLOCKA) AC Secure Status Locked Position */
-#define PAC_SECLOCKA_AC_Msk                   (_U_(0x1) << PAC_SECLOCKA_AC_Pos)                    /**< (PAC_SECLOCKA) AC Secure Status Locked Mask */
-#define PAC_SECLOCKA_AC(value)                (PAC_SECLOCKA_AC_Msk & ((value) << PAC_SECLOCKA_AC_Pos))
-#define PAC_SECLOCKA_Msk                      _U_(0x00003FFF)                                      /**< (PAC_SECLOCKA) Register Mask  */
-
-
-/* -------- PAC_SECLOCKB : (PAC Offset: 0x78) ( R/ 32) Peripheral secure status locked - Bridge B -------- */
-#define PAC_SECLOCKB_RESETVALUE               _U_(0x03)                                            /**<  (PAC_SECLOCKB) Peripheral secure status locked - Bridge B  Reset Value */
-
-#define PAC_SECLOCKB_IDAU_Pos                 _U_(0)                                               /**< (PAC_SECLOCKB) IDAU Secure Status Locked Position */
-#define PAC_SECLOCKB_IDAU_Msk                 (_U_(0x1) << PAC_SECLOCKB_IDAU_Pos)                  /**< (PAC_SECLOCKB) IDAU Secure Status Locked Mask */
-#define PAC_SECLOCKB_IDAU(value)              (PAC_SECLOCKB_IDAU_Msk & ((value) << PAC_SECLOCKB_IDAU_Pos))
-#define PAC_SECLOCKB_DSU_Pos                  _U_(1)                                               /**< (PAC_SECLOCKB) DSU Secure Status Locked Position */
-#define PAC_SECLOCKB_DSU_Msk                  (_U_(0x1) << PAC_SECLOCKB_DSU_Pos)                   /**< (PAC_SECLOCKB) DSU Secure Status Locked Mask */
-#define PAC_SECLOCKB_DSU(value)               (PAC_SECLOCKB_DSU_Msk & ((value) << PAC_SECLOCKB_DSU_Pos))
-#define PAC_SECLOCKB_NVMCTRL_Pos              _U_(2)                                               /**< (PAC_SECLOCKB) NVMCTRL Secure Status Locked Position */
-#define PAC_SECLOCKB_NVMCTRL_Msk              (_U_(0x1) << PAC_SECLOCKB_NVMCTRL_Pos)               /**< (PAC_SECLOCKB) NVMCTRL Secure Status Locked Mask */
-#define PAC_SECLOCKB_NVMCTRL(value)           (PAC_SECLOCKB_NVMCTRL_Msk & ((value) << PAC_SECLOCKB_NVMCTRL_Pos))
-#define PAC_SECLOCKB_DMAC_Pos                 _U_(3)                                               /**< (PAC_SECLOCKB) DMAC Secure Status Locked Position */
-#define PAC_SECLOCKB_DMAC_Msk                 (_U_(0x1) << PAC_SECLOCKB_DMAC_Pos)                  /**< (PAC_SECLOCKB) DMAC Secure Status Locked Mask */
-#define PAC_SECLOCKB_DMAC(value)              (PAC_SECLOCKB_DMAC_Msk & ((value) << PAC_SECLOCKB_DMAC_Pos))
-#define PAC_SECLOCKB_Msk                      _U_(0x0000000F)                                      /**< (PAC_SECLOCKB) Register Mask  */
-
-
-/* -------- PAC_SECLOCKC : (PAC Offset: 0x7C) ( R/ 32) Peripheral secure status locked - Bridge C -------- */
-#define PAC_SECLOCKC_RESETVALUE               _U_(0x00)                                            /**<  (PAC_SECLOCKC) Peripheral secure status locked - Bridge C  Reset Value */
-
-#define PAC_SECLOCKC_EVSYS_Pos                _U_(0)                                               /**< (PAC_SECLOCKC) EVSYS Secure Status Locked Position */
-#define PAC_SECLOCKC_EVSYS_Msk                (_U_(0x1) << PAC_SECLOCKC_EVSYS_Pos)                 /**< (PAC_SECLOCKC) EVSYS Secure Status Locked Mask */
-#define PAC_SECLOCKC_EVSYS(value)             (PAC_SECLOCKC_EVSYS_Msk & ((value) << PAC_SECLOCKC_EVSYS_Pos))
-#define PAC_SECLOCKC_SERCOM0_Pos              _U_(1)                                               /**< (PAC_SECLOCKC) SERCOM0 Secure Status Locked Position */
-#define PAC_SECLOCKC_SERCOM0_Msk              (_U_(0x1) << PAC_SECLOCKC_SERCOM0_Pos)               /**< (PAC_SECLOCKC) SERCOM0 Secure Status Locked Mask */
-#define PAC_SECLOCKC_SERCOM0(value)           (PAC_SECLOCKC_SERCOM0_Msk & ((value) << PAC_SECLOCKC_SERCOM0_Pos))
-#define PAC_SECLOCKC_SERCOM1_Pos              _U_(2)                                               /**< (PAC_SECLOCKC) SERCOM1 Secure Status Locked Position */
-#define PAC_SECLOCKC_SERCOM1_Msk              (_U_(0x1) << PAC_SECLOCKC_SERCOM1_Pos)               /**< (PAC_SECLOCKC) SERCOM1 Secure Status Locked Mask */
-#define PAC_SECLOCKC_SERCOM1(value)           (PAC_SECLOCKC_SERCOM1_Msk & ((value) << PAC_SECLOCKC_SERCOM1_Pos))
-#define PAC_SECLOCKC_SERCOM2_Pos              _U_(3)                                               /**< (PAC_SECLOCKC) SERCOM2 Secure Status Locked Position */
-#define PAC_SECLOCKC_SERCOM2_Msk              (_U_(0x1) << PAC_SECLOCKC_SERCOM2_Pos)               /**< (PAC_SECLOCKC) SERCOM2 Secure Status Locked Mask */
-#define PAC_SECLOCKC_SERCOM2(value)           (PAC_SECLOCKC_SERCOM2_Msk & ((value) << PAC_SECLOCKC_SERCOM2_Pos))
-#define PAC_SECLOCKC_TC0_Pos                  _U_(4)                                               /**< (PAC_SECLOCKC) TC0 Secure Status Locked Position */
-#define PAC_SECLOCKC_TC0_Msk                  (_U_(0x1) << PAC_SECLOCKC_TC0_Pos)                   /**< (PAC_SECLOCKC) TC0 Secure Status Locked Mask */
-#define PAC_SECLOCKC_TC0(value)               (PAC_SECLOCKC_TC0_Msk & ((value) << PAC_SECLOCKC_TC0_Pos))
-#define PAC_SECLOCKC_TC1_Pos                  _U_(5)                                               /**< (PAC_SECLOCKC) TC1 Secure Status Locked Position */
-#define PAC_SECLOCKC_TC1_Msk                  (_U_(0x1) << PAC_SECLOCKC_TC1_Pos)                   /**< (PAC_SECLOCKC) TC1 Secure Status Locked Mask */
-#define PAC_SECLOCKC_TC1(value)               (PAC_SECLOCKC_TC1_Msk & ((value) << PAC_SECLOCKC_TC1_Pos))
-#define PAC_SECLOCKC_TC2_Pos                  _U_(6)                                               /**< (PAC_SECLOCKC) TC2 Secure Status Locked Position */
-#define PAC_SECLOCKC_TC2_Msk                  (_U_(0x1) << PAC_SECLOCKC_TC2_Pos)                   /**< (PAC_SECLOCKC) TC2 Secure Status Locked Mask */
-#define PAC_SECLOCKC_TC2(value)               (PAC_SECLOCKC_TC2_Msk & ((value) << PAC_SECLOCKC_TC2_Pos))
-#define PAC_SECLOCKC_ADC_Pos                  _U_(7)                                               /**< (PAC_SECLOCKC) ADC Secure Status Locked Position */
-#define PAC_SECLOCKC_ADC_Msk                  (_U_(0x1) << PAC_SECLOCKC_ADC_Pos)                   /**< (PAC_SECLOCKC) ADC Secure Status Locked Mask */
-#define PAC_SECLOCKC_ADC(value)               (PAC_SECLOCKC_ADC_Msk & ((value) << PAC_SECLOCKC_ADC_Pos))
-#define PAC_SECLOCKC_DAC_Pos                  _U_(8)                                               /**< (PAC_SECLOCKC) DAC Secure Status Locked Position */
-#define PAC_SECLOCKC_DAC_Msk                  (_U_(0x1) << PAC_SECLOCKC_DAC_Pos)                   /**< (PAC_SECLOCKC) DAC Secure Status Locked Mask */
-#define PAC_SECLOCKC_DAC(value)               (PAC_SECLOCKC_DAC_Msk & ((value) << PAC_SECLOCKC_DAC_Pos))
-#define PAC_SECLOCKC_PTC_Pos                  _U_(9)                                               /**< (PAC_SECLOCKC) PTC Secure Status Locked Position */
-#define PAC_SECLOCKC_PTC_Msk                  (_U_(0x1) << PAC_SECLOCKC_PTC_Pos)                   /**< (PAC_SECLOCKC) PTC Secure Status Locked Mask */
-#define PAC_SECLOCKC_PTC(value)               (PAC_SECLOCKC_PTC_Msk & ((value) << PAC_SECLOCKC_PTC_Pos))
-#define PAC_SECLOCKC_TRNG_Pos                 _U_(10)                                              /**< (PAC_SECLOCKC) TRNG Secure Status Locked Position */
-#define PAC_SECLOCKC_TRNG_Msk                 (_U_(0x1) << PAC_SECLOCKC_TRNG_Pos)                  /**< (PAC_SECLOCKC) TRNG Secure Status Locked Mask */
-#define PAC_SECLOCKC_TRNG(value)              (PAC_SECLOCKC_TRNG_Msk & ((value) << PAC_SECLOCKC_TRNG_Pos))
-#define PAC_SECLOCKC_CCL_Pos                  _U_(11)                                              /**< (PAC_SECLOCKC) CCL Secure Status Locked Position */
-#define PAC_SECLOCKC_CCL_Msk                  (_U_(0x1) << PAC_SECLOCKC_CCL_Pos)                   /**< (PAC_SECLOCKC) CCL Secure Status Locked Mask */
-#define PAC_SECLOCKC_CCL(value)               (PAC_SECLOCKC_CCL_Msk & ((value) << PAC_SECLOCKC_CCL_Pos))
-#define PAC_SECLOCKC_OPAMP_Pos                _U_(12)                                              /**< (PAC_SECLOCKC) OPAMP Secure Status Locked Position */
-#define PAC_SECLOCKC_OPAMP_Msk                (_U_(0x1) << PAC_SECLOCKC_OPAMP_Pos)                 /**< (PAC_SECLOCKC) OPAMP Secure Status Locked Mask */
-#define PAC_SECLOCKC_OPAMP(value)             (PAC_SECLOCKC_OPAMP_Msk & ((value) << PAC_SECLOCKC_OPAMP_Pos))
-#define PAC_SECLOCKC_TRAM_Pos                 _U_(13)                                              /**< (PAC_SECLOCKC) TRAM Secure Status Locked Position */
-#define PAC_SECLOCKC_TRAM_Msk                 (_U_(0x1) << PAC_SECLOCKC_TRAM_Pos)                  /**< (PAC_SECLOCKC) TRAM Secure Status Locked Mask */
-#define PAC_SECLOCKC_TRAM(value)              (PAC_SECLOCKC_TRAM_Msk & ((value) << PAC_SECLOCKC_TRAM_Pos))
-#define PAC_SECLOCKC_Msk                      _U_(0x00003FFF)                                      /**< (PAC_SECLOCKC) Register Mask  */
-
-#define PAC_SECLOCKC_SERCOM_Pos               _U_(1)                                               /**< (PAC_SECLOCKC Position) SERCOMx Secure Status Locked */
-#define PAC_SECLOCKC_SERCOM_Msk               (_U_(0x7) << PAC_SECLOCKC_SERCOM_Pos)                /**< (PAC_SECLOCKC Mask) SERCOM */
-#define PAC_SECLOCKC_SERCOM(value)            (PAC_SECLOCKC_SERCOM_Msk & ((value) << PAC_SECLOCKC_SERCOM_Pos)) 
-#define PAC_SECLOCKC_TC_Pos                   _U_(4)                                               /**< (PAC_SECLOCKC Position) TCx Secure Status Locked */
-#define PAC_SECLOCKC_TC_Msk                   (_U_(0x7) << PAC_SECLOCKC_TC_Pos)                    /**< (PAC_SECLOCKC Mask) TC */
-#define PAC_SECLOCKC_TC(value)                (PAC_SECLOCKC_TC_Msk & ((value) << PAC_SECLOCKC_TC_Pos)) 
-
 /** \brief PAC register offsets definitions */
 #define PAC_WRCTRL_REG_OFST            (0x00)              /**< (PAC_WRCTRL) Write control Offset */
 #define PAC_EVCTRL_REG_OFST            (0x04)              /**< (PAC_EVCTRL) Event control Offset */
@@ -606,9 +480,6 @@
 #define PAC_NONSECA_REG_OFST           (0x54)              /**< (PAC_NONSECA) Peripheral non-secure status - Bridge A Offset */
 #define PAC_NONSECB_REG_OFST           (0x58)              /**< (PAC_NONSECB) Peripheral non-secure status - Bridge B Offset */
 #define PAC_NONSECC_REG_OFST           (0x5C)              /**< (PAC_NONSECC) Peripheral non-secure status - Bridge C Offset */
-#define PAC_SECLOCKA_REG_OFST          (0x74)              /**< (PAC_SECLOCKA) Peripheral secure status locked - Bridge A Offset */
-#define PAC_SECLOCKB_REG_OFST          (0x78)              /**< (PAC_SECLOCKB) Peripheral secure status locked - Bridge B Offset */
-#define PAC_SECLOCKC_REG_OFST          (0x7C)              /**< (PAC_SECLOCKC) Peripheral secure status locked - Bridge C Offset */
 
 #if !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__))
 /** \brief PAC register API structure */
@@ -632,10 +503,6 @@ typedef struct
   __I   uint32_t                       PAC_NONSECA;        /**< Offset: 0x54 (R/   32) Peripheral non-secure status - Bridge A */
   __I   uint32_t                       PAC_NONSECB;        /**< Offset: 0x58 (R/   32) Peripheral non-secure status - Bridge B */
   __I   uint32_t                       PAC_NONSECC;        /**< Offset: 0x5C (R/   32) Peripheral non-secure status - Bridge C */
-  __I   uint8_t                        Reserved5[0x14];
-  __I   uint32_t                       PAC_SECLOCKA;       /**< Offset: 0x74 (R/   32) Peripheral secure status locked - Bridge A */
-  __I   uint32_t                       PAC_SECLOCKB;       /**< Offset: 0x78 (R/   32) Peripheral secure status locked - Bridge B */
-  __I   uint32_t                       PAC_SECLOCKC;       /**< Offset: 0x7C (R/   32) Peripheral secure status locked - Bridge C */
 } pac_registers_t;
 
 

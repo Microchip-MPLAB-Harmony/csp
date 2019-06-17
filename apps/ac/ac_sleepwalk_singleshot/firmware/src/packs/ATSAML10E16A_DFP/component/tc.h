@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-01-31T10:50:35Z */
+/* file generated from device description version 2019-06-07T05:54:14Z */
 #ifndef _SAML10_TC_COMPONENT_H_
 #define _SAML10_TC_COMPONENT_H_
 
@@ -137,18 +137,6 @@
 #define TC_CTRLBCLR_CMD_Pos                   _U_(5)                                               /**< (TC_CTRLBCLR) Command Position */
 #define TC_CTRLBCLR_CMD_Msk                   (_U_(0x7) << TC_CTRLBCLR_CMD_Pos)                    /**< (TC_CTRLBCLR) Command Mask */
 #define TC_CTRLBCLR_CMD(value)                (TC_CTRLBCLR_CMD_Msk & ((value) << TC_CTRLBCLR_CMD_Pos))
-#define   TC_CTRLBCLR_CMD_NONE_Val            _U_(0x0)                                             /**< (TC_CTRLBCLR) No action  */
-#define   TC_CTRLBCLR_CMD_RETRIGGER_Val       _U_(0x1)                                             /**< (TC_CTRLBCLR) Force a start, restart or retrigger  */
-#define   TC_CTRLBCLR_CMD_STOP_Val            _U_(0x2)                                             /**< (TC_CTRLBCLR) Force a stop  */
-#define   TC_CTRLBCLR_CMD_UPDATE_Val          _U_(0x3)                                             /**< (TC_CTRLBCLR) Force update of double-buffered register  */
-#define   TC_CTRLBCLR_CMD_READSYNC_Val        _U_(0x4)                                             /**< (TC_CTRLBCLR) Force a read synchronization of COUNT  */
-#define   TC_CTRLBCLR_CMD_DMAOS_Val           _U_(0x5)                                             /**< (TC_CTRLBCLR) One-shot DMA trigger  */
-#define TC_CTRLBCLR_CMD_NONE                  (TC_CTRLBCLR_CMD_NONE_Val << TC_CTRLBCLR_CMD_Pos)    /**< (TC_CTRLBCLR) No action Position  */
-#define TC_CTRLBCLR_CMD_RETRIGGER             (TC_CTRLBCLR_CMD_RETRIGGER_Val << TC_CTRLBCLR_CMD_Pos) /**< (TC_CTRLBCLR) Force a start, restart or retrigger Position  */
-#define TC_CTRLBCLR_CMD_STOP                  (TC_CTRLBCLR_CMD_STOP_Val << TC_CTRLBCLR_CMD_Pos)    /**< (TC_CTRLBCLR) Force a stop Position  */
-#define TC_CTRLBCLR_CMD_UPDATE                (TC_CTRLBCLR_CMD_UPDATE_Val << TC_CTRLBCLR_CMD_Pos)  /**< (TC_CTRLBCLR) Force update of double-buffered register Position  */
-#define TC_CTRLBCLR_CMD_READSYNC              (TC_CTRLBCLR_CMD_READSYNC_Val << TC_CTRLBCLR_CMD_Pos) /**< (TC_CTRLBCLR) Force a read synchronization of COUNT Position  */
-#define TC_CTRLBCLR_CMD_DMAOS                 (TC_CTRLBCLR_CMD_DMAOS_Val << TC_CTRLBCLR_CMD_Pos)   /**< (TC_CTRLBCLR) One-shot DMA trigger Position  */
 #define TC_CTRLBCLR_Msk                       _U_(0xE7)                                            /**< (TC_CTRLBCLR) Register Mask  */
 
 
@@ -172,13 +160,11 @@
 #define   TC_CTRLBSET_CMD_STOP_Val            _U_(0x2)                                             /**< (TC_CTRLBSET) Force a stop  */
 #define   TC_CTRLBSET_CMD_UPDATE_Val          _U_(0x3)                                             /**< (TC_CTRLBSET) Force update of double-buffered register  */
 #define   TC_CTRLBSET_CMD_READSYNC_Val        _U_(0x4)                                             /**< (TC_CTRLBSET) Force a read synchronization of COUNT  */
-#define   TC_CTRLBSET_CMD_DMAOS_Val           _U_(0x5)                                             /**< (TC_CTRLBSET) One-shot DMA trigger  */
 #define TC_CTRLBSET_CMD_NONE                  (TC_CTRLBSET_CMD_NONE_Val << TC_CTRLBSET_CMD_Pos)    /**< (TC_CTRLBSET) No action Position  */
 #define TC_CTRLBSET_CMD_RETRIGGER             (TC_CTRLBSET_CMD_RETRIGGER_Val << TC_CTRLBSET_CMD_Pos) /**< (TC_CTRLBSET) Force a start, restart or retrigger Position  */
 #define TC_CTRLBSET_CMD_STOP                  (TC_CTRLBSET_CMD_STOP_Val << TC_CTRLBSET_CMD_Pos)    /**< (TC_CTRLBSET) Force a stop Position  */
 #define TC_CTRLBSET_CMD_UPDATE                (TC_CTRLBSET_CMD_UPDATE_Val << TC_CTRLBSET_CMD_Pos)  /**< (TC_CTRLBSET) Force update of double-buffered register Position  */
 #define TC_CTRLBSET_CMD_READSYNC              (TC_CTRLBSET_CMD_READSYNC_Val << TC_CTRLBSET_CMD_Pos) /**< (TC_CTRLBSET) Force a read synchronization of COUNT Position  */
-#define TC_CTRLBSET_CMD_DMAOS                 (TC_CTRLBSET_CMD_DMAOS_Val << TC_CTRLBSET_CMD_Pos)   /**< (TC_CTRLBSET) One-shot DMA trigger Position  */
 #define TC_CTRLBSET_Msk                       _U_(0xE7)                                            /**< (TC_CTRLBSET) Register Mask  */
 
 
