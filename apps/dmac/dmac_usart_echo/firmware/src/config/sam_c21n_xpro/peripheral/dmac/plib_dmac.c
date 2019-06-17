@@ -272,7 +272,6 @@ bool DMAC_ChannelSettingsSet (DMAC_CHANNEL channel, DMAC_CHANNEL_CONFIG setting)
 /*******************************************************************************
     This function handles the DMA interrupt events.
 */
-
 void DMAC_InterruptHandler( void )
 {
     DMAC_CH_OBJECT  *dmacChObj = NULL;
