@@ -104,6 +104,8 @@ void PIO_Initialize ( void )
     /* PORTC Output Direction Enable */
     ((pio_registers_t*)PIO_PORT_C)->PIO_OER = 0x0;
     ((pio_registers_t*)PIO_PORT_C)->PIO_ODR = ~0x0;
+    /* PORTC Initial state High */
+    ((pio_registers_t*)PIO_PORT_C)->PIO_ODSR = 0x0;
     /* PORTC drive control */
     ((pio_registers_t*)PIO_PORT_C)->PIO_DRIVER = 0x0;
 
@@ -141,6 +143,8 @@ void PIO_Initialize ( void )
     /* PORTE Output Direction Enable */
     ((pio_registers_t*)PIO_PORT_E)->PIO_OER = 0x0;
     ((pio_registers_t*)PIO_PORT_E)->PIO_ODR = ~0x0;
+    /* PORTE Initial state High */
+    ((pio_registers_t*)PIO_PORT_E)->PIO_ODSR = 0x0;
     /* PORTE drive control */
     ((pio_registers_t*)PIO_PORT_E)->PIO_DRIVER = 0x0;
 
