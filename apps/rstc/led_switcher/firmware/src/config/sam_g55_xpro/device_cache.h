@@ -68,10 +68,10 @@ extern "C" {
 // Section: L1 Cache Configuration
 // *****************************************************************************
 // *****************************************************************************
-#define ICACHE_ENABLE()                                SCB_EnableICache()
-#define ICACHE_DISABLE()                               SCB_DisableICache()
-#define ICACHE_INVALIDATE()                            SCB_InvalidateICache()
-#define INSTRUCTION_CACHE_ENABLED                      true
+#define ICACHE_ENABLE()
+#define ICACHE_DISABLE()
+#define ICACHE_INVALIDATE()
+#define INSTRUCTION_CACHE_ENABLED                      false
 
 #define DCACHE_ENABLE()
 #define DCACHE_DISABLE()
