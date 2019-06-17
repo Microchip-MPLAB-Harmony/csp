@@ -66,8 +66,7 @@ void DAC_Initialize(void)
     
     /* Enable DAC */
     DAC_REGS->DAC_CTRLA = DAC_CTRLA_ENABLE_Msk  ;	
-
-    while((DAC_REGS->DAC_SYNCBUSY & DAC_SYNCBUSY_ENABLE_Msk) == DAC_SYNCBUSY_ENABLE_Msk)	
+    while((DAC_REGS->DAC_SYNCBUSY & DAC_SYNCBUSY_ENABLE_Msk) == DAC_SYNCBUSY_ENABLE_Msk)
     {
         /* Wait for Synchronization after Enabling DAC */
     }
@@ -78,13 +77,11 @@ void DAC_DataWrite(uint16_t data)
 {
     /* Write Data to DATA Register for conversion(DATA[9:0]) */
     DAC_REGS->DAC_DATA = DAC_DATA_MSB_MASK & DAC_DATA_DATA(data);
-
-    while((DAC_REGS->DAC_SYNCBUSY & DAC_SYNCBUSY_DATA_Msk) == DAC_SYNCBUSY_DATA_Msk)	
+    while((DAC_REGS->DAC_SYNCBUSY & DAC_SYNCBUSY_DATA_Msk) == DAC_SYNCBUSY_DATA_Msk)
     {
         /* Wait for Synchronization after writing Data to DATA Register */
     }
 }
-
 bool DAC_IsReady(void)
 {
     return ((DAC_REGS->DAC_STATUS & DAC_STATUS_READY_Msk) == DAC_STATUS_READY_Msk);
