@@ -115,6 +115,8 @@ void SYS_Initialize ( void* data )
 {
     NVMCTRL_Initialize( );
 
+    PM_Initialize();
+
   
     PORT_Initialize();
 
@@ -125,8 +127,6 @@ void SYS_Initialize ( void* data )
 
 
     ADC0_Initialize();
-    PM_Initialize();
-
     SERCOM4_USART_Initialize();
 
     RTC_Initialize();
