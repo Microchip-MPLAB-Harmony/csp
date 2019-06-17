@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-01-31T10:50:35Z */
+/* file generated from device description version 2019-06-07T05:54:14Z */
 #ifndef _SAML10_WDT_COMPONENT_H_
 #define _SAML10_WDT_COMPONENT_H_
 
@@ -123,7 +123,6 @@
 #define   WDT_EWCTRL_EWOFFSET_CYC2048_Val     _U_(0x8)                                             /**< (WDT_EWCTRL) 2048 clock cycles  */
 #define   WDT_EWCTRL_EWOFFSET_CYC4096_Val     _U_(0x9)                                             /**< (WDT_EWCTRL) 4096 clock cycles  */
 #define   WDT_EWCTRL_EWOFFSET_CYC8192_Val     _U_(0xA)                                             /**< (WDT_EWCTRL) 8192 clock cycles  */
-#define   WDT_EWCTRL_EWOFFSET_CYC16384_Val    _U_(0xB)                                             /**< (WDT_EWCTRL) 16384 clock cycles  */
 #define WDT_EWCTRL_EWOFFSET_CYC8              (WDT_EWCTRL_EWOFFSET_CYC8_Val << WDT_EWCTRL_EWOFFSET_Pos) /**< (WDT_EWCTRL) 8 clock cycles Position  */
 #define WDT_EWCTRL_EWOFFSET_CYC16             (WDT_EWCTRL_EWOFFSET_CYC16_Val << WDT_EWCTRL_EWOFFSET_Pos) /**< (WDT_EWCTRL) 16 clock cycles Position  */
 #define WDT_EWCTRL_EWOFFSET_CYC32             (WDT_EWCTRL_EWOFFSET_CYC32_Val << WDT_EWCTRL_EWOFFSET_Pos) /**< (WDT_EWCTRL) 32 clock cycles Position  */
@@ -135,7 +134,6 @@
 #define WDT_EWCTRL_EWOFFSET_CYC2048           (WDT_EWCTRL_EWOFFSET_CYC2048_Val << WDT_EWCTRL_EWOFFSET_Pos) /**< (WDT_EWCTRL) 2048 clock cycles Position  */
 #define WDT_EWCTRL_EWOFFSET_CYC4096           (WDT_EWCTRL_EWOFFSET_CYC4096_Val << WDT_EWCTRL_EWOFFSET_Pos) /**< (WDT_EWCTRL) 4096 clock cycles Position  */
 #define WDT_EWCTRL_EWOFFSET_CYC8192           (WDT_EWCTRL_EWOFFSET_CYC8192_Val << WDT_EWCTRL_EWOFFSET_Pos) /**< (WDT_EWCTRL) 8192 clock cycles Position  */
-#define WDT_EWCTRL_EWOFFSET_CYC16384          (WDT_EWCTRL_EWOFFSET_CYC16384_Val << WDT_EWCTRL_EWOFFSET_Pos) /**< (WDT_EWCTRL) 16384 clock cycles Position  */
 #define WDT_EWCTRL_Msk                        _U_(0x0F)                                            /**< (WDT_EWCTRL) Register Mask  */
 
 

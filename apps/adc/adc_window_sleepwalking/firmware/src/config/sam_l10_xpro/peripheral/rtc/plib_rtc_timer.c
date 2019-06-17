@@ -55,14 +55,10 @@ void RTC_Initialize(void)
     }
 
 
-    RTC_REGS->MODE0.RTC_TAMPCTRL = RTC_TAMPCTRL_IN0ACT(0x0)   | \
-                                   RTC_TAMPCTRL_IN1ACT(0x0)  | \
-                                   RTC_TAMPCTRL_IN2ACT(0x0)  | \
-                                   RTC_TAMPCTRL_IN3ACT(0x0) ;
 
     RTC_REGS->MODE0.RTC_CTRLA = RTC_MODE0_CTRLA_MODE(0) | RTC_MODE0_CTRLA_PRESCALER(0x1) | RTC_MODE0_CTRLA_COUNTSYNC_Msk |RTC_MODE0_CTRLA_MATCHCLR_Msk ;
 
-   RTC_REGS->MODE0.RTC_COMP[0] = 0x200;
+   RTC_REGS->MODE0.RTC_COMP = 0x200;
 
     RTC_REGS->MODE0.RTC_EVCTRL = 0x100;
 }
@@ -141,7 +137,7 @@ void RTC_Timer32CounterSet ( uint32_t count )
 
 void RTC_Timer32CompareSet ( uint32_t compareValue )
 {
-    RTC_REGS->MODE0.RTC_COMP[0] = compareValue;
+    RTC_REGS->MODE0.RTC_COMP = compareValue;
 
     while((RTC_REGS->MODE0.RTC_SYNCBUSY & RTC_MODE0_SYNCBUSY_COMP0_Msk) == RTC_MODE0_SYNCBUSY_COMP0_Msk)
     {
@@ -168,17 +164,6 @@ uint32_t RTC_Timer32FrequencyGet ( void )
 {
     /* Return Frequency of RTC Clock */
     return RTC_COUNTER_CLOCK_FREQUENCY;
-}
-
-void RTC_BackupRegisterSet( BACKUP_REGISTER reg, uint32_t value )
-{
-    //RTC_REGS->MODE0.RTC_BKUP[reg] = value;
-}
-
-uint32_t RTC_BackupRegisterGet( BACKUP_REGISTER reg )
-{
-    //return(RTC_REGS->MODE0.RTC_BKUP[reg]);
-    return 0x00;
 }
 
  TAMPER_CHANNEL RTC_TamperSourceGet( void )

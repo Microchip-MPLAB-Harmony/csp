@@ -71,18 +71,6 @@ typedef enum
 } RTC_PERIODIC_INT_MASK;
 typedef enum
 {
-    BACKUP_REGISTER_0 = 0,
-    BACKUP_REGISTER_1 = 1,
-    BACKUP_REGISTER_2 = 2,
-    BACKUP_REGISTER_3 = 3,
-    BACKUP_REGISTER_4 = 4,
-    BACKUP_REGISTER_5 = 5,
-    BACKUP_REGISTER_6 = 6,
-    BACKUP_REGISTER_7 = 7
-} BACKUP_REGISTER;
-
-typedef enum
-{
     TAMPER_CHANNEL_0 = 0,
     TAMPER_CHANNEL_1 = 1,
     TAMPER_CHANNEL_2 = 2,
@@ -102,8 +90,6 @@ uint32_t RTC_Timer32CounterGet ( void );
 uint32_t RTC_Timer32FrequencyGet ( void );
 void RTC_Timer32CompareSet ( uint32_t compareValue );
 uint32_t RTC_Timer32PeriodGet ( void );
-void RTC_BackupRegisterSet( BACKUP_REGISTER reg, uint32_t value );
-uint32_t RTC_BackupRegisterGet( BACKUP_REGISTER reg );
 TAMPER_CHANNEL RTC_TamperSourceGet( void );
 uint32_t RTC_Timer32TimeStampGet( void );
 

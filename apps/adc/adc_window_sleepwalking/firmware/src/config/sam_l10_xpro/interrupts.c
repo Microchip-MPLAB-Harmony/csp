@@ -113,8 +113,8 @@ void SERCOM2_OTHER_Handler      ( void ) __attribute__((weak, alias("Dummy_Handl
 void TC0_Handler                ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void TC1_Handler                ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void TC2_Handler                ( void ) __attribute__((weak, alias("Dummy_Handler")));
-void ADC_OTHER_Handler          ( void ) __attribute__((weak, alias("Dummy_Handler")));
-void ADC_RESRDY_Handler         ( void ) __attribute__((weak, alias("Dummy_Handler")));
+void ADC_OTHER_InterruptHandler ( void ) __attribute__((weak, alias("Dummy_Handler")));
+void ADC_Handler                ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void AC_Handler                 ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void DAC_UNDERRUN_A_Handler     ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void DAC_EMPTY_Handler          ( void ) __attribute__((weak, alias("Dummy_Handler")));
@@ -177,8 +177,8 @@ const DeviceVectors exception_table=
     .pfnTC0_Handler                = ( void * ) TC0_Handler,
     .pfnTC1_Handler                = ( void * ) TC1_Handler,
     .pfnTC2_Handler                = ( void * ) TC2_Handler,
-    .pfnADC_OTHER_Handler          = ( void * ) ADC_OTHER_Handler,
-    .pfnADC_RESRDY_Handler         = ( void * ) ADC_RESRDY_Handler,
+    .pfnADC_OTHER_Handler          = ( void * ) ADC_OTHER_InterruptHandler,
+    .pfnADC_RESRDY_Handler         = ( void * ) ADC_Handler,
     .pfnAC_Handler                 = ( void * ) AC_Handler,
     .pfnDAC_UNDERRUN_A_Handler     = ( void * ) DAC_UNDERRUN_A_Handler,
     .pfnDAC_EMPTY_Handler          = ( void * ) DAC_EMPTY_Handler,

@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-01-31T10:50:35Z */
+/* file generated from device description version 2019-06-07T05:54:14Z */
 #ifndef _SAML10_DMAC_COMPONENT_H_
 #define _SAML10_DMAC_COMPONENT_H_
 
@@ -180,8 +180,24 @@
 #define DMAC_CRCCTRL_CRCSRC(value)            (DMAC_CRCCTRL_CRCSRC_Msk & ((value) << DMAC_CRCCTRL_CRCSRC_Pos))
 #define   DMAC_CRCCTRL_CRCSRC_NOACT_Val       _U_(0x0)                                             /**< (DMAC_CRCCTRL) No action  */
 #define   DMAC_CRCCTRL_CRCSRC_IO_Val          _U_(0x1)                                             /**< (DMAC_CRCCTRL) I/O interface  */
+#define   DMAC_CRCCTRL_CRCSRC_CHN0_Val        _U_(0x20)                                            /**< (DMAC_CRCCTRL) DMA Channel 0  */
+#define   DMAC_CRCCTRL_CRCSRC_CHN1_Val        _U_(0x21)                                            /**< (DMAC_CRCCTRL) DMA Channel 1  */
+#define   DMAC_CRCCTRL_CRCSRC_CHN2_Val        _U_(0x22)                                            /**< (DMAC_CRCCTRL) DMA Channel 2  */
+#define   DMAC_CRCCTRL_CRCSRC_CHN3_Val        _U_(0x23)                                            /**< (DMAC_CRCCTRL) DMA Channel 3  */
+#define   DMAC_CRCCTRL_CRCSRC_CHN4_Val        _U_(0x24)                                            /**< (DMAC_CRCCTRL) DMA Channel 4  */
+#define   DMAC_CRCCTRL_CRCSRC_CHN5_Val        _U_(0x25)                                            /**< (DMAC_CRCCTRL) DMA Channel 5  */
+#define   DMAC_CRCCTRL_CRCSRC_CHN6_Val        _U_(0x26)                                            /**< (DMAC_CRCCTRL) DMA Channel 6  */
+#define   DMAC_CRCCTRL_CRCSRC_CHN7_Val        _U_(0x27)                                            /**< (DMAC_CRCCTRL) DMA Channel 7  */
 #define DMAC_CRCCTRL_CRCSRC_NOACT             (DMAC_CRCCTRL_CRCSRC_NOACT_Val << DMAC_CRCCTRL_CRCSRC_Pos) /**< (DMAC_CRCCTRL) No action Position  */
 #define DMAC_CRCCTRL_CRCSRC_IO                (DMAC_CRCCTRL_CRCSRC_IO_Val << DMAC_CRCCTRL_CRCSRC_Pos) /**< (DMAC_CRCCTRL) I/O interface Position  */
+#define DMAC_CRCCTRL_CRCSRC_CHN0              (DMAC_CRCCTRL_CRCSRC_CHN0_Val << DMAC_CRCCTRL_CRCSRC_Pos) /**< (DMAC_CRCCTRL) DMA Channel 0 Position  */
+#define DMAC_CRCCTRL_CRCSRC_CHN1              (DMAC_CRCCTRL_CRCSRC_CHN1_Val << DMAC_CRCCTRL_CRCSRC_Pos) /**< (DMAC_CRCCTRL) DMA Channel 1 Position  */
+#define DMAC_CRCCTRL_CRCSRC_CHN2              (DMAC_CRCCTRL_CRCSRC_CHN2_Val << DMAC_CRCCTRL_CRCSRC_Pos) /**< (DMAC_CRCCTRL) DMA Channel 2 Position  */
+#define DMAC_CRCCTRL_CRCSRC_CHN3              (DMAC_CRCCTRL_CRCSRC_CHN3_Val << DMAC_CRCCTRL_CRCSRC_Pos) /**< (DMAC_CRCCTRL) DMA Channel 3 Position  */
+#define DMAC_CRCCTRL_CRCSRC_CHN4              (DMAC_CRCCTRL_CRCSRC_CHN4_Val << DMAC_CRCCTRL_CRCSRC_Pos) /**< (DMAC_CRCCTRL) DMA Channel 4 Position  */
+#define DMAC_CRCCTRL_CRCSRC_CHN5              (DMAC_CRCCTRL_CRCSRC_CHN5_Val << DMAC_CRCCTRL_CRCSRC_Pos) /**< (DMAC_CRCCTRL) DMA Channel 5 Position  */
+#define DMAC_CRCCTRL_CRCSRC_CHN6              (DMAC_CRCCTRL_CRCSRC_CHN6_Val << DMAC_CRCCTRL_CRCSRC_Pos) /**< (DMAC_CRCCTRL) DMA Channel 6 Position  */
+#define DMAC_CRCCTRL_CRCSRC_CHN7              (DMAC_CRCCTRL_CRCSRC_CHN7_Val << DMAC_CRCCTRL_CRCSRC_Pos) /**< (DMAC_CRCCTRL) DMA Channel 7 Position  */
 #define DMAC_CRCCTRL_Msk                      _U_(0x3F0F)                                          /**< (DMAC_CRCCTRL) Register Mask  */
 
 
@@ -557,7 +573,53 @@
 #define DMAC_CHCTRLB_TRIGSRC_Msk              (_U_(0x1F) << DMAC_CHCTRLB_TRIGSRC_Pos)              /**< (DMAC_CHCTRLB) Trigger Source Mask */
 #define DMAC_CHCTRLB_TRIGSRC(value)           (DMAC_CHCTRLB_TRIGSRC_Msk & ((value) << DMAC_CHCTRLB_TRIGSRC_Pos))
 #define   DMAC_CHCTRLB_TRIGSRC_DISABLE_Val    _U_(0x0)                                             /**< (DMAC_CHCTRLB) Only software/event triggers  */
+#define   DMAC_CHCTRLB_TRIGSRC_RTC_TIMESTAMP_Val _U_(0x1)                                             /**< (DMAC_CHCTRLB) RTC Timestamp Trigger  */
+#define   DMAC_CHCTRLB_TRIGSRC_DSU_DCC0_Val   _U_(0x2)                                             /**< (DMAC_CHCTRLB) ID for DCC0 register  */
+#define   DMAC_CHCTRLB_TRIGSRC_DSU_DCC1_Val   _U_(0x3)                                             /**< (DMAC_CHCTRLB) ID for DCC1 register  */
+#define   DMAC_CHCTRLB_TRIGSRC_SERCOM0_RX_Val _U_(0x4)                                             /**< (DMAC_CHCTRLB) SERCOM0 RX Trigger  */
+#define   DMAC_CHCTRLB_TRIGSRC_SERCOM0_TX_Val _U_(0x5)                                             /**< (DMAC_CHCTRLB) SERCOM0 TX Trigger  */
+#define   DMAC_CHCTRLB_TRIGSRC_SERCOM1_RX_Val _U_(0x6)                                             /**< (DMAC_CHCTRLB) SERCOM1 RX Trigger  */
+#define   DMAC_CHCTRLB_TRIGSRC_SERCOM1_TX_Val _U_(0x7)                                             /**< (DMAC_CHCTRLB) SERCOM1 TX Trigger  */
+#define   DMAC_CHCTRLB_TRIGSRC_SERCOM2_RX_Val _U_(0x8)                                             /**< (DMAC_CHCTRLB) SERCOM2 RX Trigger  */
+#define   DMAC_CHCTRLB_TRIGSRC_SERCOM2_TX_Val _U_(0x9)                                             /**< (DMAC_CHCTRLB) SERCOM2 TX Trigger  */
+#define   DMAC_CHCTRLB_TRIGSRC_TC0_OVF_Val    _U_(0xA)                                             /**< (DMAC_CHCTRLB) TC0 Overflow Trigger  */
+#define   DMAC_CHCTRLB_TRIGSRC_TC0_MC0_Val    _U_(0xB)                                             /**< (DMAC_CHCTRLB) TC0 Match/Compare 0 Trigger  */
+#define   DMAC_CHCTRLB_TRIGSRC_TC0_MC1_Val    _U_(0xC)                                             /**< (DMAC_CHCTRLB) TC0 Match/Compare 1 Trigger  */
+#define   DMAC_CHCTRLB_TRIGSRC_TC1_OVF_Val    _U_(0xD)                                             /**< (DMAC_CHCTRLB) TC1 Overflow Trigger  */
+#define   DMAC_CHCTRLB_TRIGSRC_TC1_MC0_Val    _U_(0xE)                                             /**< (DMAC_CHCTRLB) TC1 Match/Compare 0 Trigger  */
+#define   DMAC_CHCTRLB_TRIGSRC_TC1_MC1_Val    _U_(0xF)                                             /**< (DMAC_CHCTRLB) TC1 Match/Compare 1 Trigger  */
+#define   DMAC_CHCTRLB_TRIGSRC_TC2_OVF_Val    _U_(0x10)                                            /**< (DMAC_CHCTRLB) TC2 Overflow Trigger  */
+#define   DMAC_CHCTRLB_TRIGSRC_TC2_MC0_Val    _U_(0x11)                                            /**< (DMAC_CHCTRLB) TC2 Match/Compare 0 Trigger  */
+#define   DMAC_CHCTRLB_TRIGSRC_TC2_MC1_Val    _U_(0x12)                                            /**< (DMAC_CHCTRLB) TC2 Match/Compare 1 Trigger  */
+#define   DMAC_CHCTRLB_TRIGSRC_ADC_RESRDY_Val _U_(0x13)                                            /**< (DMAC_CHCTRLB) ADC Result Ready Trigger  */
+#define   DMAC_CHCTRLB_TRIGSRC_DAC_EMPTY_Val  _U_(0x14)                                            /**< (DMAC_CHCTRLB) DAC Empty Trigger  */
+#define   DMAC_CHCTRLB_TRIGSRC_PTC_EOC_Val    _U_(0x15)                                            /**< (DMAC_CHCTRLB) PTC End of Conversion Trigger  */
+#define   DMAC_CHCTRLB_TRIGSRC_PTC_SEQ_Val    _U_(0x16)                                            /**< (DMAC_CHCTRLB) PTC Sequence Trigger  */
+#define   DMAC_CHCTRLB_TRIGSRC_PTC_WCOMP_Val  _U_(0x17)                                            /**< (DMAC_CHCTRLB) PTC Window Compare Trigger  */
 #define DMAC_CHCTRLB_TRIGSRC_DISABLE          (DMAC_CHCTRLB_TRIGSRC_DISABLE_Val << DMAC_CHCTRLB_TRIGSRC_Pos) /**< (DMAC_CHCTRLB) Only software/event triggers Position  */
+#define DMAC_CHCTRLB_TRIGSRC_RTC_TIMESTAMP    (DMAC_CHCTRLB_TRIGSRC_RTC_TIMESTAMP_Val << DMAC_CHCTRLB_TRIGSRC_Pos) /**< (DMAC_CHCTRLB) RTC Timestamp Trigger Position  */
+#define DMAC_CHCTRLB_TRIGSRC_DSU_DCC0         (DMAC_CHCTRLB_TRIGSRC_DSU_DCC0_Val << DMAC_CHCTRLB_TRIGSRC_Pos) /**< (DMAC_CHCTRLB) ID for DCC0 register Position  */
+#define DMAC_CHCTRLB_TRIGSRC_DSU_DCC1         (DMAC_CHCTRLB_TRIGSRC_DSU_DCC1_Val << DMAC_CHCTRLB_TRIGSRC_Pos) /**< (DMAC_CHCTRLB) ID for DCC1 register Position  */
+#define DMAC_CHCTRLB_TRIGSRC_SERCOM0_RX       (DMAC_CHCTRLB_TRIGSRC_SERCOM0_RX_Val << DMAC_CHCTRLB_TRIGSRC_Pos) /**< (DMAC_CHCTRLB) SERCOM0 RX Trigger Position  */
+#define DMAC_CHCTRLB_TRIGSRC_SERCOM0_TX       (DMAC_CHCTRLB_TRIGSRC_SERCOM0_TX_Val << DMAC_CHCTRLB_TRIGSRC_Pos) /**< (DMAC_CHCTRLB) SERCOM0 TX Trigger Position  */
+#define DMAC_CHCTRLB_TRIGSRC_SERCOM1_RX       (DMAC_CHCTRLB_TRIGSRC_SERCOM1_RX_Val << DMAC_CHCTRLB_TRIGSRC_Pos) /**< (DMAC_CHCTRLB) SERCOM1 RX Trigger Position  */
+#define DMAC_CHCTRLB_TRIGSRC_SERCOM1_TX       (DMAC_CHCTRLB_TRIGSRC_SERCOM1_TX_Val << DMAC_CHCTRLB_TRIGSRC_Pos) /**< (DMAC_CHCTRLB) SERCOM1 TX Trigger Position  */
+#define DMAC_CHCTRLB_TRIGSRC_SERCOM2_RX       (DMAC_CHCTRLB_TRIGSRC_SERCOM2_RX_Val << DMAC_CHCTRLB_TRIGSRC_Pos) /**< (DMAC_CHCTRLB) SERCOM2 RX Trigger Position  */
+#define DMAC_CHCTRLB_TRIGSRC_SERCOM2_TX       (DMAC_CHCTRLB_TRIGSRC_SERCOM2_TX_Val << DMAC_CHCTRLB_TRIGSRC_Pos) /**< (DMAC_CHCTRLB) SERCOM2 TX Trigger Position  */
+#define DMAC_CHCTRLB_TRIGSRC_TC0_OVF          (DMAC_CHCTRLB_TRIGSRC_TC0_OVF_Val << DMAC_CHCTRLB_TRIGSRC_Pos) /**< (DMAC_CHCTRLB) TC0 Overflow Trigger Position  */
+#define DMAC_CHCTRLB_TRIGSRC_TC0_MC0          (DMAC_CHCTRLB_TRIGSRC_TC0_MC0_Val << DMAC_CHCTRLB_TRIGSRC_Pos) /**< (DMAC_CHCTRLB) TC0 Match/Compare 0 Trigger Position  */
+#define DMAC_CHCTRLB_TRIGSRC_TC0_MC1          (DMAC_CHCTRLB_TRIGSRC_TC0_MC1_Val << DMAC_CHCTRLB_TRIGSRC_Pos) /**< (DMAC_CHCTRLB) TC0 Match/Compare 1 Trigger Position  */
+#define DMAC_CHCTRLB_TRIGSRC_TC1_OVF          (DMAC_CHCTRLB_TRIGSRC_TC1_OVF_Val << DMAC_CHCTRLB_TRIGSRC_Pos) /**< (DMAC_CHCTRLB) TC1 Overflow Trigger Position  */
+#define DMAC_CHCTRLB_TRIGSRC_TC1_MC0          (DMAC_CHCTRLB_TRIGSRC_TC1_MC0_Val << DMAC_CHCTRLB_TRIGSRC_Pos) /**< (DMAC_CHCTRLB) TC1 Match/Compare 0 Trigger Position  */
+#define DMAC_CHCTRLB_TRIGSRC_TC1_MC1          (DMAC_CHCTRLB_TRIGSRC_TC1_MC1_Val << DMAC_CHCTRLB_TRIGSRC_Pos) /**< (DMAC_CHCTRLB) TC1 Match/Compare 1 Trigger Position  */
+#define DMAC_CHCTRLB_TRIGSRC_TC2_OVF          (DMAC_CHCTRLB_TRIGSRC_TC2_OVF_Val << DMAC_CHCTRLB_TRIGSRC_Pos) /**< (DMAC_CHCTRLB) TC2 Overflow Trigger Position  */
+#define DMAC_CHCTRLB_TRIGSRC_TC2_MC0          (DMAC_CHCTRLB_TRIGSRC_TC2_MC0_Val << DMAC_CHCTRLB_TRIGSRC_Pos) /**< (DMAC_CHCTRLB) TC2 Match/Compare 0 Trigger Position  */
+#define DMAC_CHCTRLB_TRIGSRC_TC2_MC1          (DMAC_CHCTRLB_TRIGSRC_TC2_MC1_Val << DMAC_CHCTRLB_TRIGSRC_Pos) /**< (DMAC_CHCTRLB) TC2 Match/Compare 1 Trigger Position  */
+#define DMAC_CHCTRLB_TRIGSRC_ADC_RESRDY       (DMAC_CHCTRLB_TRIGSRC_ADC_RESRDY_Val << DMAC_CHCTRLB_TRIGSRC_Pos) /**< (DMAC_CHCTRLB) ADC Result Ready Trigger Position  */
+#define DMAC_CHCTRLB_TRIGSRC_DAC_EMPTY        (DMAC_CHCTRLB_TRIGSRC_DAC_EMPTY_Val << DMAC_CHCTRLB_TRIGSRC_Pos) /**< (DMAC_CHCTRLB) DAC Empty Trigger Position  */
+#define DMAC_CHCTRLB_TRIGSRC_PTC_EOC          (DMAC_CHCTRLB_TRIGSRC_PTC_EOC_Val << DMAC_CHCTRLB_TRIGSRC_Pos) /**< (DMAC_CHCTRLB) PTC End of Conversion Trigger Position  */
+#define DMAC_CHCTRLB_TRIGSRC_PTC_SEQ          (DMAC_CHCTRLB_TRIGSRC_PTC_SEQ_Val << DMAC_CHCTRLB_TRIGSRC_Pos) /**< (DMAC_CHCTRLB) PTC Sequence Trigger Position  */
+#define DMAC_CHCTRLB_TRIGSRC_PTC_WCOMP        (DMAC_CHCTRLB_TRIGSRC_PTC_WCOMP_Val << DMAC_CHCTRLB_TRIGSRC_Pos) /**< (DMAC_CHCTRLB) PTC Window Compare Trigger Position  */
 #define DMAC_CHCTRLB_TRIGACT_Pos              _U_(22)                                              /**< (DMAC_CHCTRLB) Trigger Action Position */
 #define DMAC_CHCTRLB_TRIGACT_Msk              (_U_(0x3) << DMAC_CHCTRLB_TRIGACT_Pos)               /**< (DMAC_CHCTRLB) Trigger Action Mask */
 #define DMAC_CHCTRLB_TRIGACT(value)           (DMAC_CHCTRLB_TRIGACT_Msk & ((value) << DMAC_CHCTRLB_TRIGACT_Pos))

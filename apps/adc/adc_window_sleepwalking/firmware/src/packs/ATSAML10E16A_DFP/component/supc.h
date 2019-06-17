@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-01-31T10:50:35Z */
+/* file generated from device description version 2019-06-07T05:54:14Z */
 #ifndef _SAML10_SUPC_COMPONENT_H_
 #define _SAML10_SUPC_COMPONENT_H_
 
@@ -40,15 +40,6 @@
 #define SUPC_INTENCLR_B33SRDY_Pos             _U_(2)                                               /**< (SUPC_INTENCLR) BOD33 Synchronization Ready Position */
 #define SUPC_INTENCLR_B33SRDY_Msk             (_U_(0x1) << SUPC_INTENCLR_B33SRDY_Pos)              /**< (SUPC_INTENCLR) BOD33 Synchronization Ready Mask */
 #define SUPC_INTENCLR_B33SRDY(value)          (SUPC_INTENCLR_B33SRDY_Msk & ((value) << SUPC_INTENCLR_B33SRDY_Pos))
-#define SUPC_INTENCLR_BOD12RDY_Pos            _U_(3)                                               /**< (SUPC_INTENCLR) BOD12 Ready Position */
-#define SUPC_INTENCLR_BOD12RDY_Msk            (_U_(0x1) << SUPC_INTENCLR_BOD12RDY_Pos)             /**< (SUPC_INTENCLR) BOD12 Ready Mask */
-#define SUPC_INTENCLR_BOD12RDY(value)         (SUPC_INTENCLR_BOD12RDY_Msk & ((value) << SUPC_INTENCLR_BOD12RDY_Pos))
-#define SUPC_INTENCLR_BOD12DET_Pos            _U_(4)                                               /**< (SUPC_INTENCLR) BOD12 Detection Position */
-#define SUPC_INTENCLR_BOD12DET_Msk            (_U_(0x1) << SUPC_INTENCLR_BOD12DET_Pos)             /**< (SUPC_INTENCLR) BOD12 Detection Mask */
-#define SUPC_INTENCLR_BOD12DET(value)         (SUPC_INTENCLR_BOD12DET_Msk & ((value) << SUPC_INTENCLR_BOD12DET_Pos))
-#define SUPC_INTENCLR_B12SRDY_Pos             _U_(5)                                               /**< (SUPC_INTENCLR) BOD12 Synchronization Ready Position */
-#define SUPC_INTENCLR_B12SRDY_Msk             (_U_(0x1) << SUPC_INTENCLR_B12SRDY_Pos)              /**< (SUPC_INTENCLR) BOD12 Synchronization Ready Mask */
-#define SUPC_INTENCLR_B12SRDY(value)          (SUPC_INTENCLR_B12SRDY_Msk & ((value) << SUPC_INTENCLR_B12SRDY_Pos))
 #define SUPC_INTENCLR_VREGRDY_Pos             _U_(8)                                               /**< (SUPC_INTENCLR) Voltage Regulator Ready Position */
 #define SUPC_INTENCLR_VREGRDY_Msk             (_U_(0x1) << SUPC_INTENCLR_VREGRDY_Pos)              /**< (SUPC_INTENCLR) Voltage Regulator Ready Mask */
 #define SUPC_INTENCLR_VREGRDY(value)          (SUPC_INTENCLR_VREGRDY_Msk & ((value) << SUPC_INTENCLR_VREGRDY_Pos))
@@ -58,7 +49,7 @@
 #define SUPC_INTENCLR_ULPVREFRDY_Pos          _U_(11)                                              /**< (SUPC_INTENCLR) ULPVREF Voltage Reference Ready Position */
 #define SUPC_INTENCLR_ULPVREFRDY_Msk          (_U_(0x1) << SUPC_INTENCLR_ULPVREFRDY_Pos)           /**< (SUPC_INTENCLR) ULPVREF Voltage Reference Ready Mask */
 #define SUPC_INTENCLR_ULPVREFRDY(value)       (SUPC_INTENCLR_ULPVREFRDY_Msk & ((value) << SUPC_INTENCLR_ULPVREFRDY_Pos))
-#define SUPC_INTENCLR_Msk                     _U_(0x00000D3F)                                      /**< (SUPC_INTENCLR) Register Mask  */
+#define SUPC_INTENCLR_Msk                     _U_(0x00000D07)                                      /**< (SUPC_INTENCLR) Register Mask  */
 
 
 /* -------- SUPC_INTENSET : (SUPC Offset: 0x04) (R/W 32) Interrupt Enable Set -------- */
@@ -73,15 +64,6 @@
 #define SUPC_INTENSET_B33SRDY_Pos             _U_(2)                                               /**< (SUPC_INTENSET) BOD33 Synchronization Ready Position */
 #define SUPC_INTENSET_B33SRDY_Msk             (_U_(0x1) << SUPC_INTENSET_B33SRDY_Pos)              /**< (SUPC_INTENSET) BOD33 Synchronization Ready Mask */
 #define SUPC_INTENSET_B33SRDY(value)          (SUPC_INTENSET_B33SRDY_Msk & ((value) << SUPC_INTENSET_B33SRDY_Pos))
-#define SUPC_INTENSET_BOD12RDY_Pos            _U_(3)                                               /**< (SUPC_INTENSET) BOD12 Ready Position */
-#define SUPC_INTENSET_BOD12RDY_Msk            (_U_(0x1) << SUPC_INTENSET_BOD12RDY_Pos)             /**< (SUPC_INTENSET) BOD12 Ready Mask */
-#define SUPC_INTENSET_BOD12RDY(value)         (SUPC_INTENSET_BOD12RDY_Msk & ((value) << SUPC_INTENSET_BOD12RDY_Pos))
-#define SUPC_INTENSET_BOD12DET_Pos            _U_(4)                                               /**< (SUPC_INTENSET) BOD12 Detection Position */
-#define SUPC_INTENSET_BOD12DET_Msk            (_U_(0x1) << SUPC_INTENSET_BOD12DET_Pos)             /**< (SUPC_INTENSET) BOD12 Detection Mask */
-#define SUPC_INTENSET_BOD12DET(value)         (SUPC_INTENSET_BOD12DET_Msk & ((value) << SUPC_INTENSET_BOD12DET_Pos))
-#define SUPC_INTENSET_B12SRDY_Pos             _U_(5)                                               /**< (SUPC_INTENSET) BOD12 Synchronization Ready Position */
-#define SUPC_INTENSET_B12SRDY_Msk             (_U_(0x1) << SUPC_INTENSET_B12SRDY_Pos)              /**< (SUPC_INTENSET) BOD12 Synchronization Ready Mask */
-#define SUPC_INTENSET_B12SRDY(value)          (SUPC_INTENSET_B12SRDY_Msk & ((value) << SUPC_INTENSET_B12SRDY_Pos))
 #define SUPC_INTENSET_VREGRDY_Pos             _U_(8)                                               /**< (SUPC_INTENSET) Voltage Regulator Ready Position */
 #define SUPC_INTENSET_VREGRDY_Msk             (_U_(0x1) << SUPC_INTENSET_VREGRDY_Pos)              /**< (SUPC_INTENSET) Voltage Regulator Ready Mask */
 #define SUPC_INTENSET_VREGRDY(value)          (SUPC_INTENSET_VREGRDY_Msk & ((value) << SUPC_INTENSET_VREGRDY_Pos))
@@ -91,7 +73,7 @@
 #define SUPC_INTENSET_ULPVREFRDY_Pos          _U_(11)                                              /**< (SUPC_INTENSET) ULPVREF Voltage Reference Ready Position */
 #define SUPC_INTENSET_ULPVREFRDY_Msk          (_U_(0x1) << SUPC_INTENSET_ULPVREFRDY_Pos)           /**< (SUPC_INTENSET) ULPVREF Voltage Reference Ready Mask */
 #define SUPC_INTENSET_ULPVREFRDY(value)       (SUPC_INTENSET_ULPVREFRDY_Msk & ((value) << SUPC_INTENSET_ULPVREFRDY_Pos))
-#define SUPC_INTENSET_Msk                     _U_(0x00000D3F)                                      /**< (SUPC_INTENSET) Register Mask  */
+#define SUPC_INTENSET_Msk                     _U_(0x00000D07)                                      /**< (SUPC_INTENSET) Register Mask  */
 
 
 /* -------- SUPC_INTFLAG : (SUPC Offset: 0x08) (R/W 32) Interrupt Flag Status and Clear -------- */
@@ -106,15 +88,6 @@
 #define SUPC_INTFLAG_B33SRDY_Pos              _U_(2)                                               /**< (SUPC_INTFLAG) BOD33 Synchronization Ready Position */
 #define SUPC_INTFLAG_B33SRDY_Msk              (_U_(0x1) << SUPC_INTFLAG_B33SRDY_Pos)               /**< (SUPC_INTFLAG) BOD33 Synchronization Ready Mask */
 #define SUPC_INTFLAG_B33SRDY(value)           (SUPC_INTFLAG_B33SRDY_Msk & ((value) << SUPC_INTFLAG_B33SRDY_Pos))
-#define SUPC_INTFLAG_BOD12RDY_Pos             _U_(3)                                               /**< (SUPC_INTFLAG) BOD12 Ready Position */
-#define SUPC_INTFLAG_BOD12RDY_Msk             (_U_(0x1) << SUPC_INTFLAG_BOD12RDY_Pos)              /**< (SUPC_INTFLAG) BOD12 Ready Mask */
-#define SUPC_INTFLAG_BOD12RDY(value)          (SUPC_INTFLAG_BOD12RDY_Msk & ((value) << SUPC_INTFLAG_BOD12RDY_Pos))
-#define SUPC_INTFLAG_BOD12DET_Pos             _U_(4)                                               /**< (SUPC_INTFLAG) BOD12 Detection Position */
-#define SUPC_INTFLAG_BOD12DET_Msk             (_U_(0x1) << SUPC_INTFLAG_BOD12DET_Pos)              /**< (SUPC_INTFLAG) BOD12 Detection Mask */
-#define SUPC_INTFLAG_BOD12DET(value)          (SUPC_INTFLAG_BOD12DET_Msk & ((value) << SUPC_INTFLAG_BOD12DET_Pos))
-#define SUPC_INTFLAG_B12SRDY_Pos              _U_(5)                                               /**< (SUPC_INTFLAG) BOD12 Synchronization Ready Position */
-#define SUPC_INTFLAG_B12SRDY_Msk              (_U_(0x1) << SUPC_INTFLAG_B12SRDY_Pos)               /**< (SUPC_INTFLAG) BOD12 Synchronization Ready Mask */
-#define SUPC_INTFLAG_B12SRDY(value)           (SUPC_INTFLAG_B12SRDY_Msk & ((value) << SUPC_INTFLAG_B12SRDY_Pos))
 #define SUPC_INTFLAG_VREGRDY_Pos              _U_(8)                                               /**< (SUPC_INTFLAG) Voltage Regulator Ready Position */
 #define SUPC_INTFLAG_VREGRDY_Msk              (_U_(0x1) << SUPC_INTFLAG_VREGRDY_Pos)               /**< (SUPC_INTFLAG) Voltage Regulator Ready Mask */
 #define SUPC_INTFLAG_VREGRDY(value)           (SUPC_INTFLAG_VREGRDY_Msk & ((value) << SUPC_INTFLAG_VREGRDY_Pos))
@@ -124,7 +97,7 @@
 #define SUPC_INTFLAG_ULPVREFRDY_Pos           _U_(11)                                              /**< (SUPC_INTFLAG) ULPVREF Voltage Reference Ready Position */
 #define SUPC_INTFLAG_ULPVREFRDY_Msk           (_U_(0x1) << SUPC_INTFLAG_ULPVREFRDY_Pos)            /**< (SUPC_INTFLAG) ULPVREF Voltage Reference Ready Mask */
 #define SUPC_INTFLAG_ULPVREFRDY(value)        (SUPC_INTFLAG_ULPVREFRDY_Msk & ((value) << SUPC_INTFLAG_ULPVREFRDY_Pos))
-#define SUPC_INTFLAG_Msk                      _U_(0x00000D3F)                                      /**< (SUPC_INTFLAG) Register Mask  */
+#define SUPC_INTFLAG_Msk                      _U_(0x00000D07)                                      /**< (SUPC_INTFLAG) Register Mask  */
 
 
 /* -------- SUPC_STATUS : (SUPC Offset: 0x0C) ( R/ 32) Power and Clocks Status -------- */
@@ -139,15 +112,6 @@
 #define SUPC_STATUS_B33SRDY_Pos               _U_(2)                                               /**< (SUPC_STATUS) BOD33 Synchronization Ready Position */
 #define SUPC_STATUS_B33SRDY_Msk               (_U_(0x1) << SUPC_STATUS_B33SRDY_Pos)                /**< (SUPC_STATUS) BOD33 Synchronization Ready Mask */
 #define SUPC_STATUS_B33SRDY(value)            (SUPC_STATUS_B33SRDY_Msk & ((value) << SUPC_STATUS_B33SRDY_Pos))
-#define SUPC_STATUS_BOD12RDY_Pos              _U_(3)                                               /**< (SUPC_STATUS) BOD12 Ready Position */
-#define SUPC_STATUS_BOD12RDY_Msk              (_U_(0x1) << SUPC_STATUS_BOD12RDY_Pos)               /**< (SUPC_STATUS) BOD12 Ready Mask */
-#define SUPC_STATUS_BOD12RDY(value)           (SUPC_STATUS_BOD12RDY_Msk & ((value) << SUPC_STATUS_BOD12RDY_Pos))
-#define SUPC_STATUS_BOD12DET_Pos              _U_(4)                                               /**< (SUPC_STATUS) BOD12 Detection Position */
-#define SUPC_STATUS_BOD12DET_Msk              (_U_(0x1) << SUPC_STATUS_BOD12DET_Pos)               /**< (SUPC_STATUS) BOD12 Detection Mask */
-#define SUPC_STATUS_BOD12DET(value)           (SUPC_STATUS_BOD12DET_Msk & ((value) << SUPC_STATUS_BOD12DET_Pos))
-#define SUPC_STATUS_B12SRDY_Pos               _U_(5)                                               /**< (SUPC_STATUS) BOD12 Synchronization Ready Position */
-#define SUPC_STATUS_B12SRDY_Msk               (_U_(0x1) << SUPC_STATUS_B12SRDY_Pos)                /**< (SUPC_STATUS) BOD12 Synchronization Ready Mask */
-#define SUPC_STATUS_B12SRDY(value)            (SUPC_STATUS_B12SRDY_Msk & ((value) << SUPC_STATUS_B12SRDY_Pos))
 #define SUPC_STATUS_VREGRDY_Pos               _U_(8)                                               /**< (SUPC_STATUS) Voltage Regulator Ready Position */
 #define SUPC_STATUS_VREGRDY_Msk               (_U_(0x1) << SUPC_STATUS_VREGRDY_Pos)                /**< (SUPC_STATUS) Voltage Regulator Ready Mask */
 #define SUPC_STATUS_VREGRDY(value)            (SUPC_STATUS_VREGRDY_Msk & ((value) << SUPC_STATUS_VREGRDY_Pos))
@@ -157,10 +121,7 @@
 #define SUPC_STATUS_ULPVREFRDY_Pos            _U_(12)                                              /**< (SUPC_STATUS) Low Power Voltage Reference Ready Position */
 #define SUPC_STATUS_ULPVREFRDY_Msk            (_U_(0x1) << SUPC_STATUS_ULPVREFRDY_Pos)             /**< (SUPC_STATUS) Low Power Voltage Reference Ready Mask */
 #define SUPC_STATUS_ULPVREFRDY(value)         (SUPC_STATUS_ULPVREFRDY_Msk & ((value) << SUPC_STATUS_ULPVREFRDY_Pos))
-#define SUPC_STATUS_ULPBIASRDY_Pos            _U_(13)                                              /**< (SUPC_STATUS) Low Power Voltage Bias Ready Position */
-#define SUPC_STATUS_ULPBIASRDY_Msk            (_U_(0x1) << SUPC_STATUS_ULPBIASRDY_Pos)             /**< (SUPC_STATUS) Low Power Voltage Bias Ready Mask */
-#define SUPC_STATUS_ULPBIASRDY(value)         (SUPC_STATUS_ULPBIASRDY_Msk & ((value) << SUPC_STATUS_ULPBIASRDY_Pos))
-#define SUPC_STATUS_Msk                       _U_(0x0000353F)                                      /**< (SUPC_STATUS) Register Mask  */
+#define SUPC_STATUS_Msk                       _U_(0x00001507)                                      /**< (SUPC_STATUS) Register Mask  */
 
 
 /* -------- SUPC_BOD33 : (SUPC Offset: 0x10) (R/W 32) BOD33 Control -------- */
@@ -178,11 +139,9 @@
 #define   SUPC_BOD33_ACTION_NONE_Val          _U_(0x0)                                             /**< (SUPC_BOD33) No action  */
 #define   SUPC_BOD33_ACTION_RESET_Val         _U_(0x1)                                             /**< (SUPC_BOD33) The BOD33 generates a reset  */
 #define   SUPC_BOD33_ACTION_INT_Val           _U_(0x2)                                             /**< (SUPC_BOD33) The BOD33 generates an interrupt  */
-#define   SUPC_BOD33_ACTION_BKUP_Val          _U_(0x3)                                             /**< (SUPC_BOD33) The BOD33 puts the device in backup sleep mode if VMON=0  */
 #define SUPC_BOD33_ACTION_NONE                (SUPC_BOD33_ACTION_NONE_Val << SUPC_BOD33_ACTION_Pos) /**< (SUPC_BOD33) No action Position  */
 #define SUPC_BOD33_ACTION_RESET               (SUPC_BOD33_ACTION_RESET_Val << SUPC_BOD33_ACTION_Pos) /**< (SUPC_BOD33) The BOD33 generates a reset Position  */
 #define SUPC_BOD33_ACTION_INT                 (SUPC_BOD33_ACTION_INT_Val << SUPC_BOD33_ACTION_Pos) /**< (SUPC_BOD33) The BOD33 generates an interrupt Position  */
-#define SUPC_BOD33_ACTION_BKUP                (SUPC_BOD33_ACTION_BKUP_Val << SUPC_BOD33_ACTION_Pos) /**< (SUPC_BOD33) The BOD33 puts the device in backup sleep mode if VMON=0 Position  */
 #define SUPC_BOD33_STDBYCFG_Pos               _U_(5)                                               /**< (SUPC_BOD33) Configuration in Standby mode Position */
 #define SUPC_BOD33_STDBYCFG_Msk               (_U_(0x1) << SUPC_BOD33_STDBYCFG_Pos)                /**< (SUPC_BOD33) Configuration in Standby mode Mask */
 #define SUPC_BOD33_STDBYCFG(value)            (SUPC_BOD33_STDBYCFG_Msk & ((value) << SUPC_BOD33_STDBYCFG_Pos))
@@ -192,13 +151,13 @@
 #define SUPC_BOD33_ACTCFG_Pos                 _U_(8)                                               /**< (SUPC_BOD33) Configuration in Active mode Position */
 #define SUPC_BOD33_ACTCFG_Msk                 (_U_(0x1) << SUPC_BOD33_ACTCFG_Pos)                  /**< (SUPC_BOD33) Configuration in Active mode Mask */
 #define SUPC_BOD33_ACTCFG(value)              (SUPC_BOD33_ACTCFG_Msk & ((value) << SUPC_BOD33_ACTCFG_Pos))
-#define SUPC_BOD33_REFSEL_Pos                 _U_(11)                                              /**< (SUPC_BOD33) BOD33 Voltage Reference Selection Position */
-#define SUPC_BOD33_REFSEL_Msk                 (_U_(0x1) << SUPC_BOD33_REFSEL_Pos)                  /**< (SUPC_BOD33) BOD33 Voltage Reference Selection Mask */
-#define SUPC_BOD33_REFSEL(value)              (SUPC_BOD33_REFSEL_Msk & ((value) << SUPC_BOD33_REFSEL_Pos))
-#define   SUPC_BOD33_REFSEL_SEL_VREFDETREF_Val _U_(0x0)                                             /**< (SUPC_BOD33) Selects VREFDETREF for the BOD33  */
-#define   SUPC_BOD33_REFSEL_SEL_ULPVREF_Val   _U_(0x1)                                             /**< (SUPC_BOD33) Selects ULPVREF for the BOD33  */
-#define SUPC_BOD33_REFSEL_SEL_VREFDETREF      (SUPC_BOD33_REFSEL_SEL_VREFDETREF_Val << SUPC_BOD33_REFSEL_Pos) /**< (SUPC_BOD33) Selects VREFDETREF for the BOD33 Position  */
-#define SUPC_BOD33_REFSEL_SEL_ULPVREF         (SUPC_BOD33_REFSEL_SEL_ULPVREF_Val << SUPC_BOD33_REFSEL_Pos) /**< (SUPC_BOD33) Selects ULPVREF for the BOD33 Position  */
+#define SUPC_BOD33_VREFSEL_Pos                _U_(11)                                              /**< (SUPC_BOD33) BOD33 Voltage Reference Selection Position */
+#define SUPC_BOD33_VREFSEL_Msk                (_U_(0x1) << SUPC_BOD33_VREFSEL_Pos)                 /**< (SUPC_BOD33) BOD33 Voltage Reference Selection Mask */
+#define SUPC_BOD33_VREFSEL(value)             (SUPC_BOD33_VREFSEL_Msk & ((value) << SUPC_BOD33_VREFSEL_Pos))
+#define   SUPC_BOD33_VREFSEL_SEL_VREF_Val     _U_(0x0)                                             /**< (SUPC_BOD33) Selects VREF for the BOD33  */
+#define   SUPC_BOD33_VREFSEL_SEL_ULPVREF_Val  _U_(0x1)                                             /**< (SUPC_BOD33) Selects ULPVREF for the BOD33  */
+#define SUPC_BOD33_VREFSEL_SEL_VREF           (SUPC_BOD33_VREFSEL_SEL_VREF_Val << SUPC_BOD33_VREFSEL_Pos) /**< (SUPC_BOD33) Selects VREF for the BOD33 Position  */
+#define SUPC_BOD33_VREFSEL_SEL_ULPVREF        (SUPC_BOD33_VREFSEL_SEL_ULPVREF_Val << SUPC_BOD33_VREFSEL_Pos) /**< (SUPC_BOD33) Selects ULPVREF for the BOD33 Position  */
 #define SUPC_BOD33_PSEL_Pos                   _U_(12)                                              /**< (SUPC_BOD33) Prescaler Select Position */
 #define SUPC_BOD33_PSEL_Msk                   (_U_(0xF) << SUPC_BOD33_PSEL_Pos)                    /**< (SUPC_BOD33) Prescaler Select Mask */
 #define SUPC_BOD33_PSEL(value)                (SUPC_BOD33_PSEL_Msk & ((value) << SUPC_BOD33_PSEL_Pos))
@@ -240,74 +199,6 @@
 #define SUPC_BOD33_Msk                        _U_(0x003FF97E)                                      /**< (SUPC_BOD33) Register Mask  */
 
 
-/* -------- SUPC_BOD12 : (SUPC Offset: 0x14) (R/W 32) BOD12 Control -------- */
-#define SUPC_BOD12_RESETVALUE                 _U_(0x00)                                            /**<  (SUPC_BOD12) BOD12 Control  Reset Value */
-
-#define SUPC_BOD12_ENABLE_Pos                 _U_(1)                                               /**< (SUPC_BOD12) Enable Position */
-#define SUPC_BOD12_ENABLE_Msk                 (_U_(0x1) << SUPC_BOD12_ENABLE_Pos)                  /**< (SUPC_BOD12) Enable Mask */
-#define SUPC_BOD12_ENABLE(value)              (SUPC_BOD12_ENABLE_Msk & ((value) << SUPC_BOD12_ENABLE_Pos))
-#define SUPC_BOD12_HYST_Pos                   _U_(2)                                               /**< (SUPC_BOD12) Hysteresis Enable Position */
-#define SUPC_BOD12_HYST_Msk                   (_U_(0x1) << SUPC_BOD12_HYST_Pos)                    /**< (SUPC_BOD12) Hysteresis Enable Mask */
-#define SUPC_BOD12_HYST(value)                (SUPC_BOD12_HYST_Msk & ((value) << SUPC_BOD12_HYST_Pos))
-#define SUPC_BOD12_ACTION_Pos                 _U_(3)                                               /**< (SUPC_BOD12) Action when Threshold Crossed Position */
-#define SUPC_BOD12_ACTION_Msk                 (_U_(0x3) << SUPC_BOD12_ACTION_Pos)                  /**< (SUPC_BOD12) Action when Threshold Crossed Mask */
-#define SUPC_BOD12_ACTION(value)              (SUPC_BOD12_ACTION_Msk & ((value) << SUPC_BOD12_ACTION_Pos))
-#define   SUPC_BOD12_ACTION_NONE_Val          _U_(0x0)                                             /**< (SUPC_BOD12) No action  */
-#define   SUPC_BOD12_ACTION_RESET_Val         _U_(0x1)                                             /**< (SUPC_BOD12) The BOD12 generates a reset  */
-#define   SUPC_BOD12_ACTION_INT_Val           _U_(0x2)                                             /**< (SUPC_BOD12) The BOD12 generates an interrupt  */
-#define SUPC_BOD12_ACTION_NONE                (SUPC_BOD12_ACTION_NONE_Val << SUPC_BOD12_ACTION_Pos) /**< (SUPC_BOD12) No action Position  */
-#define SUPC_BOD12_ACTION_RESET               (SUPC_BOD12_ACTION_RESET_Val << SUPC_BOD12_ACTION_Pos) /**< (SUPC_BOD12) The BOD12 generates a reset Position  */
-#define SUPC_BOD12_ACTION_INT                 (SUPC_BOD12_ACTION_INT_Val << SUPC_BOD12_ACTION_Pos) /**< (SUPC_BOD12) The BOD12 generates an interrupt Position  */
-#define SUPC_BOD12_STDBYCFG_Pos               _U_(5)                                               /**< (SUPC_BOD12) Configuration in Standby mode Position */
-#define SUPC_BOD12_STDBYCFG_Msk               (_U_(0x1) << SUPC_BOD12_STDBYCFG_Pos)                /**< (SUPC_BOD12) Configuration in Standby mode Mask */
-#define SUPC_BOD12_STDBYCFG(value)            (SUPC_BOD12_STDBYCFG_Msk & ((value) << SUPC_BOD12_STDBYCFG_Pos))
-#define SUPC_BOD12_RUNSTDBY_Pos               _U_(6)                                               /**< (SUPC_BOD12) Run during Standby Position */
-#define SUPC_BOD12_RUNSTDBY_Msk               (_U_(0x1) << SUPC_BOD12_RUNSTDBY_Pos)                /**< (SUPC_BOD12) Run during Standby Mask */
-#define SUPC_BOD12_RUNSTDBY(value)            (SUPC_BOD12_RUNSTDBY_Msk & ((value) << SUPC_BOD12_RUNSTDBY_Pos))
-#define SUPC_BOD12_ACTCFG_Pos                 _U_(8)                                               /**< (SUPC_BOD12) Configuration in Active mode Position */
-#define SUPC_BOD12_ACTCFG_Msk                 (_U_(0x1) << SUPC_BOD12_ACTCFG_Pos)                  /**< (SUPC_BOD12) Configuration in Active mode Mask */
-#define SUPC_BOD12_ACTCFG(value)              (SUPC_BOD12_ACTCFG_Msk & ((value) << SUPC_BOD12_ACTCFG_Pos))
-#define SUPC_BOD12_PSEL_Pos                   _U_(12)                                              /**< (SUPC_BOD12) Prescaler Select Position */
-#define SUPC_BOD12_PSEL_Msk                   (_U_(0xF) << SUPC_BOD12_PSEL_Pos)                    /**< (SUPC_BOD12) Prescaler Select Mask */
-#define SUPC_BOD12_PSEL(value)                (SUPC_BOD12_PSEL_Msk & ((value) << SUPC_BOD12_PSEL_Pos))
-#define   SUPC_BOD12_PSEL_DIV2_Val            _U_(0x0)                                             /**< (SUPC_BOD12) Divide clock by 2  */
-#define   SUPC_BOD12_PSEL_DIV4_Val            _U_(0x1)                                             /**< (SUPC_BOD12) Divide clock by 4  */
-#define   SUPC_BOD12_PSEL_DIV8_Val            _U_(0x2)                                             /**< (SUPC_BOD12) Divide clock by 8  */
-#define   SUPC_BOD12_PSEL_DIV16_Val           _U_(0x3)                                             /**< (SUPC_BOD12) Divide clock by 16  */
-#define   SUPC_BOD12_PSEL_DIV32_Val           _U_(0x4)                                             /**< (SUPC_BOD12) Divide clock by 32  */
-#define   SUPC_BOD12_PSEL_DIV64_Val           _U_(0x5)                                             /**< (SUPC_BOD12) Divide clock by 64  */
-#define   SUPC_BOD12_PSEL_DIV128_Val          _U_(0x6)                                             /**< (SUPC_BOD12) Divide clock by 128  */
-#define   SUPC_BOD12_PSEL_DIV256_Val          _U_(0x7)                                             /**< (SUPC_BOD12) Divide clock by 256  */
-#define   SUPC_BOD12_PSEL_DIV512_Val          _U_(0x8)                                             /**< (SUPC_BOD12) Divide clock by 512  */
-#define   SUPC_BOD12_PSEL_DIV1024_Val         _U_(0x9)                                             /**< (SUPC_BOD12) Divide clock by 1024  */
-#define   SUPC_BOD12_PSEL_DIV2048_Val         _U_(0xA)                                             /**< (SUPC_BOD12) Divide clock by 2048  */
-#define   SUPC_BOD12_PSEL_DIV4096_Val         _U_(0xB)                                             /**< (SUPC_BOD12) Divide clock by 4096  */
-#define   SUPC_BOD12_PSEL_DIV8192_Val         _U_(0xC)                                             /**< (SUPC_BOD12) Divide clock by 8192  */
-#define   SUPC_BOD12_PSEL_DIV16384_Val        _U_(0xD)                                             /**< (SUPC_BOD12) Divide clock by 16384  */
-#define   SUPC_BOD12_PSEL_DIV32768_Val        _U_(0xE)                                             /**< (SUPC_BOD12) Divide clock by 32768  */
-#define   SUPC_BOD12_PSEL_DIV65536_Val        _U_(0xF)                                             /**< (SUPC_BOD12) Divide clock by 65536  */
-#define SUPC_BOD12_PSEL_DIV2                  (SUPC_BOD12_PSEL_DIV2_Val << SUPC_BOD12_PSEL_Pos)    /**< (SUPC_BOD12) Divide clock by 2 Position  */
-#define SUPC_BOD12_PSEL_DIV4                  (SUPC_BOD12_PSEL_DIV4_Val << SUPC_BOD12_PSEL_Pos)    /**< (SUPC_BOD12) Divide clock by 4 Position  */
-#define SUPC_BOD12_PSEL_DIV8                  (SUPC_BOD12_PSEL_DIV8_Val << SUPC_BOD12_PSEL_Pos)    /**< (SUPC_BOD12) Divide clock by 8 Position  */
-#define SUPC_BOD12_PSEL_DIV16                 (SUPC_BOD12_PSEL_DIV16_Val << SUPC_BOD12_PSEL_Pos)   /**< (SUPC_BOD12) Divide clock by 16 Position  */
-#define SUPC_BOD12_PSEL_DIV32                 (SUPC_BOD12_PSEL_DIV32_Val << SUPC_BOD12_PSEL_Pos)   /**< (SUPC_BOD12) Divide clock by 32 Position  */
-#define SUPC_BOD12_PSEL_DIV64                 (SUPC_BOD12_PSEL_DIV64_Val << SUPC_BOD12_PSEL_Pos)   /**< (SUPC_BOD12) Divide clock by 64 Position  */
-#define SUPC_BOD12_PSEL_DIV128                (SUPC_BOD12_PSEL_DIV128_Val << SUPC_BOD12_PSEL_Pos)  /**< (SUPC_BOD12) Divide clock by 128 Position  */
-#define SUPC_BOD12_PSEL_DIV256                (SUPC_BOD12_PSEL_DIV256_Val << SUPC_BOD12_PSEL_Pos)  /**< (SUPC_BOD12) Divide clock by 256 Position  */
-#define SUPC_BOD12_PSEL_DIV512                (SUPC_BOD12_PSEL_DIV512_Val << SUPC_BOD12_PSEL_Pos)  /**< (SUPC_BOD12) Divide clock by 512 Position  */
-#define SUPC_BOD12_PSEL_DIV1024               (SUPC_BOD12_PSEL_DIV1024_Val << SUPC_BOD12_PSEL_Pos) /**< (SUPC_BOD12) Divide clock by 1024 Position  */
-#define SUPC_BOD12_PSEL_DIV2048               (SUPC_BOD12_PSEL_DIV2048_Val << SUPC_BOD12_PSEL_Pos) /**< (SUPC_BOD12) Divide clock by 2048 Position  */
-#define SUPC_BOD12_PSEL_DIV4096               (SUPC_BOD12_PSEL_DIV4096_Val << SUPC_BOD12_PSEL_Pos) /**< (SUPC_BOD12) Divide clock by 4096 Position  */
-#define SUPC_BOD12_PSEL_DIV8192               (SUPC_BOD12_PSEL_DIV8192_Val << SUPC_BOD12_PSEL_Pos) /**< (SUPC_BOD12) Divide clock by 8192 Position  */
-#define SUPC_BOD12_PSEL_DIV16384              (SUPC_BOD12_PSEL_DIV16384_Val << SUPC_BOD12_PSEL_Pos) /**< (SUPC_BOD12) Divide clock by 16384 Position  */
-#define SUPC_BOD12_PSEL_DIV32768              (SUPC_BOD12_PSEL_DIV32768_Val << SUPC_BOD12_PSEL_Pos) /**< (SUPC_BOD12) Divide clock by 32768 Position  */
-#define SUPC_BOD12_PSEL_DIV65536              (SUPC_BOD12_PSEL_DIV65536_Val << SUPC_BOD12_PSEL_Pos) /**< (SUPC_BOD12) Divide clock by 65536 Position  */
-#define SUPC_BOD12_LEVEL_Pos                  _U_(16)                                              /**< (SUPC_BOD12) Threshold Level Position */
-#define SUPC_BOD12_LEVEL_Msk                  (_U_(0x3F) << SUPC_BOD12_LEVEL_Pos)                  /**< (SUPC_BOD12) Threshold Level Mask */
-#define SUPC_BOD12_LEVEL(value)               (SUPC_BOD12_LEVEL_Msk & ((value) << SUPC_BOD12_LEVEL_Pos))
-#define SUPC_BOD12_Msk                        _U_(0x003FF17E)                                      /**< (SUPC_BOD12) Register Mask  */
-
-
 /* -------- SUPC_VREG : (SUPC Offset: 0x18) (R/W 32) VREG Control -------- */
 #define SUPC_VREG_RESETVALUE                  _U_(0x02)                                            /**<  (SUPC_VREG) VREG Control  Reset Value */
 
@@ -333,6 +224,10 @@
 #define SUPC_VREG_VREFSEL_Pos                 _U_(9)                                               /**< (SUPC_VREG) Voltage Regulator Voltage Reference Selection Position */
 #define SUPC_VREG_VREFSEL_Msk                 (_U_(0x1) << SUPC_VREG_VREFSEL_Pos)                  /**< (SUPC_VREG) Voltage Regulator Voltage Reference Selection Mask */
 #define SUPC_VREG_VREFSEL(value)              (SUPC_VREG_VREFSEL_Msk & ((value) << SUPC_VREG_VREFSEL_Pos))
+#define   SUPC_VREG_VREFSEL_SEL_VREF_Val      _U_(0x0)                                             /**< (SUPC_VREG) Selects VREF for the VREG  */
+#define   SUPC_VREG_VREFSEL_SEL_ULPVREF_Val   _U_(0x1)                                             /**< (SUPC_VREG) Selects ULPVREF for the VREG  */
+#define SUPC_VREG_VREFSEL_SEL_VREF            (SUPC_VREG_VREFSEL_SEL_VREF_Val << SUPC_VREG_VREFSEL_Pos) /**< (SUPC_VREG) Selects VREF for the VREG Position  */
+#define SUPC_VREG_VREFSEL_SEL_ULPVREF         (SUPC_VREG_VREFSEL_SEL_ULPVREF_Val << SUPC_VREG_VREFSEL_Pos) /**< (SUPC_VREG) Selects ULPVREF for the VREG Position  */
 #define SUPC_VREG_VSVSTEP_Pos                 _U_(16)                                              /**< (SUPC_VREG) Voltage Scaling Voltage Step Position */
 #define SUPC_VREG_VSVSTEP_Msk                 (_U_(0xF) << SUPC_VREG_VSVSTEP_Pos)                  /**< (SUPC_VREG) Voltage Scaling Voltage Step Mask */
 #define SUPC_VREG_VSVSTEP(value)              (SUPC_VREG_VSVSTEP_Msk & ((value) << SUPC_VREG_VSVSTEP_Pos))
@@ -354,9 +249,6 @@
 #define SUPC_VREF_VREFOE_Pos                  _U_(2)                                               /**< (SUPC_VREF) Voltage Reference Output Enable Position */
 #define SUPC_VREF_VREFOE_Msk                  (_U_(0x1) << SUPC_VREF_VREFOE_Pos)                   /**< (SUPC_VREF) Voltage Reference Output Enable Mask */
 #define SUPC_VREF_VREFOE(value)               (SUPC_VREF_VREFOE_Msk & ((value) << SUPC_VREF_VREFOE_Pos))
-#define SUPC_VREF_TSSEL_Pos                   _U_(3)                                               /**< (SUPC_VREF) Temperature Sensor Selection Position */
-#define SUPC_VREF_TSSEL_Msk                   (_U_(0x1) << SUPC_VREF_TSSEL_Pos)                    /**< (SUPC_VREF) Temperature Sensor Selection Mask */
-#define SUPC_VREF_TSSEL(value)                (SUPC_VREF_TSSEL_Msk & ((value) << SUPC_VREF_TSSEL_Pos))
 #define SUPC_VREF_RUNSTDBY_Pos                _U_(6)                                               /**< (SUPC_VREF) Run during Standby Position */
 #define SUPC_VREF_RUNSTDBY_Msk                (_U_(0x1) << SUPC_VREF_RUNSTDBY_Pos)                 /**< (SUPC_VREF) Run during Standby Mask */
 #define SUPC_VREF_RUNSTDBY(value)             (SUPC_VREF_RUNSTDBY_Msk & ((value) << SUPC_VREF_RUNSTDBY_Pos))
@@ -382,7 +274,7 @@
 #define SUPC_VREF_SEL_2V2                     (SUPC_VREF_SEL_2V2_Val << SUPC_VREF_SEL_Pos)         /**< (SUPC_VREF) 2.2V voltage reference typical value Position  */
 #define SUPC_VREF_SEL_2V4                     (SUPC_VREF_SEL_2V4_Val << SUPC_VREF_SEL_Pos)         /**< (SUPC_VREF) 2.4V voltage reference typical value Position  */
 #define SUPC_VREF_SEL_2V5                     (SUPC_VREF_SEL_2V5_Val << SUPC_VREF_SEL_Pos)         /**< (SUPC_VREF) 2.5V voltage reference typical value Position  */
-#define SUPC_VREF_Msk                         _U_(0x000F00CE)                                      /**< (SUPC_VREF) Register Mask  */
+#define SUPC_VREF_Msk                         _U_(0x000F00C6)                                      /**< (SUPC_VREF) Register Mask  */
 
 
 /* -------- SUPC_EVCTRL : (SUPC Offset: 0x2C) (R/W 32) Event Control -------- */
@@ -391,19 +283,7 @@
 #define SUPC_EVCTRL_BOD33DETEO_Pos            _U_(1)                                               /**< (SUPC_EVCTRL) BOD33 Detection Event Output Enable Position */
 #define SUPC_EVCTRL_BOD33DETEO_Msk            (_U_(0x1) << SUPC_EVCTRL_BOD33DETEO_Pos)             /**< (SUPC_EVCTRL) BOD33 Detection Event Output Enable Mask */
 #define SUPC_EVCTRL_BOD33DETEO(value)         (SUPC_EVCTRL_BOD33DETEO_Msk & ((value) << SUPC_EVCTRL_BOD33DETEO_Pos))
-#define SUPC_EVCTRL_BOD12DETEO_Pos            _U_(4)                                               /**< (SUPC_EVCTRL) BOD12 Detection Event Output Enable Position */
-#define SUPC_EVCTRL_BOD12DETEO_Msk            (_U_(0x1) << SUPC_EVCTRL_BOD12DETEO_Pos)             /**< (SUPC_EVCTRL) BOD12 Detection Event Output Enable Mask */
-#define SUPC_EVCTRL_BOD12DETEO(value)         (SUPC_EVCTRL_BOD12DETEO_Msk & ((value) << SUPC_EVCTRL_BOD12DETEO_Pos))
-#define SUPC_EVCTRL_Msk                       _U_(0x00000012)                                      /**< (SUPC_EVCTRL) Register Mask  */
-
-
-/* -------- SUPC_VREGSUSP : (SUPC Offset: 0x30) (R/W 32) VREG Suspend Control -------- */
-#define SUPC_VREGSUSP_RESETVALUE              _U_(0x00)                                            /**<  (SUPC_VREGSUSP) VREG Suspend Control  Reset Value */
-
-#define SUPC_VREGSUSP_VREGSEN_Pos             _U_(0)                                               /**< (SUPC_VREGSUSP) Enable Voltage Regulator Suspend Position */
-#define SUPC_VREGSUSP_VREGSEN_Msk             (_U_(0x1) << SUPC_VREGSUSP_VREGSEN_Pos)              /**< (SUPC_VREGSUSP) Enable Voltage Regulator Suspend Mask */
-#define SUPC_VREGSUSP_VREGSEN(value)          (SUPC_VREGSUSP_VREGSEN_Msk & ((value) << SUPC_VREGSUSP_VREGSEN_Pos))
-#define SUPC_VREGSUSP_Msk                     _U_(0x00000001)                                      /**< (SUPC_VREGSUSP) Register Mask  */
+#define SUPC_EVCTRL_Msk                       _U_(0x00000002)                                      /**< (SUPC_EVCTRL) Register Mask  */
 
 
 /** \brief SUPC register offsets definitions */
@@ -412,11 +292,9 @@
 #define SUPC_INTFLAG_REG_OFST          (0x08)              /**< (SUPC_INTFLAG) Interrupt Flag Status and Clear Offset */
 #define SUPC_STATUS_REG_OFST           (0x0C)              /**< (SUPC_STATUS) Power and Clocks Status Offset */
 #define SUPC_BOD33_REG_OFST            (0x10)              /**< (SUPC_BOD33) BOD33 Control Offset */
-#define SUPC_BOD12_REG_OFST            (0x14)              /**< (SUPC_BOD12) BOD12 Control Offset */
 #define SUPC_VREG_REG_OFST             (0x18)              /**< (SUPC_VREG) VREG Control Offset */
 #define SUPC_VREF_REG_OFST             (0x1C)              /**< (SUPC_VREF) VREF Control Offset */
 #define SUPC_EVCTRL_REG_OFST           (0x2C)              /**< (SUPC_EVCTRL) Event Control Offset */
-#define SUPC_VREGSUSP_REG_OFST         (0x30)              /**< (SUPC_VREGSUSP) VREG Suspend Control Offset */
 
 #if !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__))
 /** \brief SUPC register API structure */
@@ -427,12 +305,11 @@ typedef struct
   __IO  uint32_t                       SUPC_INTFLAG;       /**< Offset: 0x08 (R/W  32) Interrupt Flag Status and Clear */
   __I   uint32_t                       SUPC_STATUS;        /**< Offset: 0x0C (R/   32) Power and Clocks Status */
   __IO  uint32_t                       SUPC_BOD33;         /**< Offset: 0x10 (R/W  32) BOD33 Control */
-  __IO  uint32_t                       SUPC_BOD12;         /**< Offset: 0x14 (R/W  32) BOD12 Control */
+  __I   uint8_t                        Reserved1[0x04];
   __IO  uint32_t                       SUPC_VREG;          /**< Offset: 0x18 (R/W  32) VREG Control */
   __IO  uint32_t                       SUPC_VREF;          /**< Offset: 0x1C (R/W  32) VREF Control */
-  __I   uint8_t                        Reserved1[0x0C];
+  __I   uint8_t                        Reserved2[0x0C];
   __IO  uint32_t                       SUPC_EVCTRL;        /**< Offset: 0x2C (R/W  32) Event Control */
-  __IO  uint32_t                       SUPC_VREGSUSP;      /**< Offset: 0x30 (R/W  32) VREG Suspend Control */
 } supc_registers_t;
 
 

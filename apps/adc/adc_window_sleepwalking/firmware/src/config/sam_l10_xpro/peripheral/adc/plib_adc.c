@@ -204,18 +204,6 @@ void ADC_CallbackRegister( ADC_CALLBACK callback, uintptr_t context )
     ADC_CallbackObject.context = context;
 }
 
-
-void ADC_OTHER_Handler( void )
-{
-    volatile ADC_STATUS status;
-    status = ADC_REGS->ADC_INTFLAG;
-    /* Clear interrupt flag */
-    ADC_REGS->ADC_INTFLAG = ADC_INTENSET_WINMON_Msk;
-    if (ADC_CallbackObject.callback != NULL)
-    {
-        ADC_CallbackObject.callback(status, ADC_CallbackObject.context);
-    }
-}
 /* Check whether result is ready */
 bool ADC_ConversionStatusGet( void )
 {
@@ -226,4 +214,15 @@ bool ADC_ConversionStatusGet( void )
         ADC_REGS->ADC_INTFLAG = ADC_INTFLAG_RESRDY_Msk;
     }
     return status;
+}
+void ADC_OTHER_InterruptHandler( void )
+{
+    volatile ADC_STATUS status;
+    status = ADC_REGS->ADC_INTFLAG;
+    /* Clear interrupt flag */
+    ADC_REGS->ADC_INTFLAG = ADC_INTFLAG_WINMON_Msk | ADC_INTFLAG_OVERRUN_Msk;
+    if (ADC_CallbackObject.callback != NULL)
+    {
+        ADC_CallbackObject.callback(status, ADC_CallbackObject.context);
+    }
 }
