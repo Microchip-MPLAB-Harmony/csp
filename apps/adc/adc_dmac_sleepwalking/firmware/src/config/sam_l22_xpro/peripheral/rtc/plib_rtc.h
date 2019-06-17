@@ -80,7 +80,6 @@ typedef enum
     BACKUP_REGISTER_6 = 6,
     BACKUP_REGISTER_7 = 7
 } BACKUP_REGISTER;
-
 typedef enum
 {
     TAMPER_CHANNEL_0 = 0,
