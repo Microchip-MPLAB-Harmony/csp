@@ -83,7 +83,7 @@ char messageStart[] = "**** MCAN Normal Operation Interrupt Demo ****\r\n\
 **** Receive message from CAN Bus and transmit back received message to CAN Bus and UART1 serial port ****\r\n\
 **** LED toggles on each time the message is transmitted back ****\r\n";
 /* Variable to save application state */
-static APP_STATES state = APP_STATE_MCAN_RECEIVE;
+volatile static APP_STATES state = APP_STATE_MCAN_RECEIVE;
 /* Variable to save Tx/Rx transfer status and context */
 static uint32_t status = 0;
 static uint32_t xferContext = 0;
