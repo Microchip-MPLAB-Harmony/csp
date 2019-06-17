@@ -93,7 +93,7 @@ typedef enum
 
 } RTC_INT_MASK;
 
-typedef void (*RTC_CALLBACK)(uintptr_t context);
+typedef void (*RTC_CALLBACK)( uintptr_t context );
 
 // *****************************************************************************
 // *****************************************************************************
@@ -111,9 +111,9 @@ bool RTCC_AlarmSet( struct tm *alarmTime, RTC_ALARM_MASK alarmFreq );
 
 void RTCC_CallbackRegister( RTC_CALLBACK callback, uintptr_t context );
 
-void RTCC_InterruptEnable(RTC_INT_MASK interrupt);
+void RTCC_InterruptEnable( RTC_INT_MASK interrupt );
 
-void RTCC_InterruptDisable(RTC_INT_MASK interrupt);
+void RTCC_InterruptDisable( RTC_INT_MASK interrupt );
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
