@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Digital-to-Analog Converter (CRCCU) PLIB
+  Cyclic Redundancy Check Calculation Unit (CRCCU) PLIB
 
   Company:
     Microchip Technology Inc.
@@ -42,7 +42,6 @@
 // DOM-IGNORE-END
 
 #include "plib_crccu.h"
-#include "device.h"
 
 crccu_dscr_type_t crc_dscr __ALIGNED(512);
 void CRCCU_Initialize (void)
@@ -51,11 +50,12 @@ void CRCCU_Initialize (void)
     crc_dscr.ul_tr_ctrl = 0 << 24;
     CRCCU_REGS->CRCCU_DSCR = (uint32_t) &crc_dscr;
 }
+
 bool CRCCU_CRCCalculate(uint32_t startAddress, uint16_t length, uint32_t * crc, bool chain)
 {
     bool statusValue = false;
 
-    if( (0 != length) && (NULL != crc) )
+    if( (length != 0) && (crc != NULL) )
     {
         crc_dscr.ul_tr_addr = startAddress;
 
@@ -64,6 +64,7 @@ bool CRCCU_CRCCalculate(uint32_t startAddress, uint16_t length, uint32_t * crc, 
             CRCCU_REGS->CRCCU_CR = CRCCU_CR_RESET_Msk;
         }
 
+        crc_dscr.ul_tr_ctrl = crc_dscr.ul_tr_ctrl & (0xffff0000);
         crc_dscr.ul_tr_ctrl |= length;
 
         CRCCU_REGS->CRCCU_MR |= CRCCU_MR_ENABLE_Msk;
@@ -86,31 +87,7 @@ bool CRCCU_CRCCalculate(uint32_t startAddress, uint16_t length, uint32_t * crc, 
 
 void CRCCU_Setup (CRCCU_POLYNOMIAL polynomial, CRCCU_TWIDTH width)
 {
-    crc_dscr.ul_tr_ctrl = 2 << 24;
+    crc_dscr.ul_tr_ctrl = width << 24;
     CRCCU_REGS->CRCCU_MR &= ~(CRCCU_MR_PTYPE_Msk);
-    CRCCU_REGS->CRCCU_MR |= CRCCU_MR_PTYPE_CCITT8023;
-}
-
-bool CRCCU_CRCCalculateAndCompare (uint32_t startAddress, uint16_t length, uint32_t crc, bool chain)
-{
-    crc_dscr.ul_tr_addr = startAddress;
-
-    if(chain == false)
-    {
-        CRCCU_REGS->CRCCU_CR = CRCCU_CR_RESET_Msk;
-    }
-
-    crc_dscr.ul_tr_ctrl |= length;
-    crc_dscr.ul_tr_crc = crc;
-    CRCCU_REGS->CRCCU_MR |= CRCCU_MR_ENABLE_Msk | CRCCU_MR_COMPARE_Msk;
-    CRCCU_REGS->CRCCU_IER = CRCCU_IER_ERRIER_Msk;
-
-    CRCCU_REGS->CRCCU_DMA_EN = CRCCU_DMA_EN_DMAEN_Msk;
-
-    while((CRCCU_REGS->CRCCU_DMA_ISR & CRCCU_DMA_ISR_DMAISR_Msk) != CRCCU_DMA_ISR_DMAISR_Msk)
-    {
-        /* Wait for the DSU Operation to Complete */
-    }
-
-    return (bool)((CRCCU_REGS->CRCCU_ISR & CRCCU_ISR_ERRISR_Msk) != CRCCU_ISR_ERRISR_Msk);
+    CRCCU_REGS->CRCCU_MR |= polynomial;
 }
