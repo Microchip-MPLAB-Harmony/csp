@@ -130,5 +130,6 @@ void CLOCK_Initialize( void )
     CLK_ProgrammableClockInitialize();
 
     /* Enable Peripheral Clock */
+    PMC_REGS->PMC_PCER0 = 0x1800;
 }
 
