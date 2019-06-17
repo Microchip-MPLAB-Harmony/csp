@@ -116,6 +116,8 @@ void SYS_Initialize ( void* data )
 
 	DACC_Initialize();
 
+  
+
  
     TC1_CH0_CompareInitialize(); 
      
