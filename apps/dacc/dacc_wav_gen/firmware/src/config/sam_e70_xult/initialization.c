@@ -112,6 +112,8 @@ void SYS_Initialize ( void* data )
 
 	DACC_Initialize();
 
+  
+
  
     TC0_CH0_TimerInitialize(); 
      
