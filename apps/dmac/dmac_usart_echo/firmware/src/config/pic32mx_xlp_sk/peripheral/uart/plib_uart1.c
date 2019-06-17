@@ -334,6 +334,8 @@ static void UART1_FAULT_InterruptHandler (void)
 
     /* Disable the fault interrupt */
     IEC1CLR = _IEC1_U1EIE_MASK;
+    /* Disable the receive interrupt */
+    IEC1CLR = _IEC1_U1RXIE_MASK;
 
     /* Client must call UARTx_ErrorGet() function to clear the errors */
     if( uart1Obj.rxCallback != NULL )
