@@ -111,19 +111,6 @@ typedef enum
     Refer to the specific device data sheet to determine availability.
 */
 
-typedef enum
-{
-    /* Processor reset */
-    RSTC_RESET_PROC = RSTC_CR_PROCRST_Msk,
-
-    /* External reset */
-    RSTC_RESET_EXT = RSTC_CR_EXTRST_Msk,
-
-    /* Processor and External reset */
-    RSTC_RESET_EXT_PROC = (RSTC_CR_PROCRST_Msk | RSTC_CR_EXTRST_Msk) 
-
-} RSTC_RESET_TYPE;
-
 typedef void (*RSTC_CALLBACK) (uintptr_t context);
 
 // *****************************************************************************
