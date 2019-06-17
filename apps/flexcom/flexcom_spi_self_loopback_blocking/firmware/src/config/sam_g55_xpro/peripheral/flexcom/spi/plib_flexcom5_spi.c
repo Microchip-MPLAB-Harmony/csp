@@ -66,8 +66,8 @@ void FLEXCOM5_SPI_Initialize( void )
     /* Enable Master mode, select clock source, select particular NPCS line for chip select and disable mode fault detection */
     SPI5_REGS->SPI_MR = SPI_MR_MSTR_Msk | SPI_MR_BRSRCCLK_PERIPH_CLK | SPI_MR_PCS(0) | SPI_MR_MODFDIS_Msk;
 
-    /* Set up clock Polarity, data phase, Communication Width and Baud Rate */
-    SPI5_REGS->SPI_CSR[0] = SPI_CSR_CPOL(0) | SPI_CSR_NCPHA(1) | SPI_CSR_BITS_8_BIT | SPI_CSR_SCBR(119);
+    /* Set up clock Polarity, data phase, Communication Width, Baud Rate and Chip select active after transfer */
+    SPI5_REGS->SPI_CSR[0] = SPI_CSR_CPOL(0) | SPI_CSR_NCPHA(1) | SPI_CSR_BITS_8_BIT | SPI_CSR_SCBR(119) | SPI_CSR_CSAAT_Msk;
 
 
     /* Enable FLEXCOM5 SPI */
@@ -161,6 +161,9 @@ bool FLEXCOM5_SPI_WriteRead( void* pTransmitData, size_t txSize, void* pReceiveD
 
         /* Make sure no data is pending in the shift register */
         while ((bool)((SPI5_REGS->SPI_SR & SPI_SR_TXEMPTY_Msk) >> SPI_SR_TXEMPTY_Pos) == false);
+
+        /* Set Last transfer to deassert NPCS after the last byte written in TDR has been transferred. */
+        SPI5_REGS->SPI_CR = SPI_CR_LASTXFER_Msk;
 
         isSuccess = true;
     }
