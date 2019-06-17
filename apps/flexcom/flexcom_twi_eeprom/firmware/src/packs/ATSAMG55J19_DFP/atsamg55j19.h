@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-05-13T10:57:54Z */
+/* file generated from device description version 2019-06-11T17:59:23Z */
 #ifndef _SAMG55J19_H_
 #define _SAMG55J19_H_
 
@@ -108,12 +108,12 @@ typedef enum IRQn
   FLEXCOM4_IRQn             =  20, /**< 20  Flexible Serial Communication (FLEXCOM4) */
   FLEXCOM5_IRQn             =  21, /**< 21  Flexible Serial Communication (FLEXCOM5) */
   FLEXCOM6_IRQn             =  22, /**< 22  Flexible Serial Communication (FLEXCOM6) */
-  TC0_IRQn                  =  23, /**< 23  Timer Counter (TC0)                 */
-  TC1_IRQn                  =  24, /**< 24  Timer Counter (TC0)                 */
-  TC2_IRQn                  =  25, /**< 25  Timer Counter (TC0)                 */
-  TC3_IRQn                  =  26, /**< 26  Timer Counter (TC1)                 */
-  TC4_IRQn                  =  27, /**< 27  Timer Counter (TC1)                 */
-  TC5_IRQn                  =  28, /**< 28  Timer Counter (TC1)                 */
+  TC0_CH0_IRQn              =  23, /**< 23  Timer/Counter 0 Channel 0 (TC0)     */
+  TC0_CH1_IRQn              =  24, /**< 24  Timer/Counter 0 Channel 1 (TC0)     */
+  TC0_CH2_IRQn              =  25, /**< 25  Timer/Counter 0 Channel 2 (TC0)     */
+  TC1_CH0_IRQn              =  26, /**< 26  Timer/Counter 1 Channel 0 (TC1)     */
+  TC1_CH1_IRQn              =  27, /**< 27  Timer/Counter 1 Channel 1 (TC1)     */
+  TC1_CH2_IRQn              =  28, /**< 28  Timer/Counter 1 Channel 2 (TC1)     */
   ADC_IRQn                  =  29, /**< 29  Analog-to-Digital Converter (ADC)   */
   UHP_IRQn                  =  47, /**< 47  USB Host Port (UHP)                 */
   UDP_IRQn                  =  48, /**< 48  USB Device Port (UDP)               */
@@ -169,12 +169,12 @@ typedef struct _DeviceVectors
   void* pfnFLEXCOM4_Handler;                     /*  20 Flexible Serial Communication (FLEXCOM4) */
   void* pfnFLEXCOM5_Handler;                     /*  21 Flexible Serial Communication (FLEXCOM5) */
   void* pfnFLEXCOM6_Handler;                     /*  22 Flexible Serial Communication (FLEXCOM6) */
-  void* pfnTC0_Handler;                          /*  23 Timer Counter (TC0) */
-  void* pfnTC1_Handler;                          /*  24 Timer Counter (TC0) */
-  void* pfnTC2_Handler;                          /*  25 Timer Counter (TC0) */
-  void* pfnTC3_Handler;                          /*  26 Timer Counter (TC1) */
-  void* pfnTC4_Handler;                          /*  27 Timer Counter (TC1) */
-  void* pfnTC5_Handler;                          /*  28 Timer Counter (TC1) */
+  void* pfnTC0_CH0_Handler;                      /*  23 Timer/Counter 0 Channel 0 (TC0) */
+  void* pfnTC0_CH1_Handler;                      /*  24 Timer/Counter 0 Channel 1 (TC0) */
+  void* pfnTC0_CH2_Handler;                      /*  25 Timer/Counter 0 Channel 2 (TC0) */
+  void* pfnTC1_CH0_Handler;                      /*  26 Timer/Counter 1 Channel 0 (TC1) */
+  void* pfnTC1_CH1_Handler;                      /*  27 Timer/Counter 1 Channel 1 (TC1) */
+  void* pfnTC1_CH2_Handler;                      /*  28 Timer/Counter 1 Channel 2 (TC1) */
   void* pfnADC_Handler;                          /*  29 Analog-to-Digital Converter (ADC) */
   void* pvReserved30;
   void* pvReserved31;
@@ -239,12 +239,12 @@ void FLEXCOM3_Handler              ( void );
 void FLEXCOM4_Handler              ( void );
 void FLEXCOM5_Handler              ( void );
 void FLEXCOM6_Handler              ( void );
-void TC0_Handler                   ( void );
-void TC1_Handler                   ( void );
-void TC2_Handler                   ( void );
-void TC3_Handler                   ( void );
-void TC4_Handler                   ( void );
-void TC5_Handler                   ( void );
+void TC0_CH0_Handler               ( void );
+void TC0_CH1_Handler               ( void );
+void TC0_CH2_Handler               ( void );
+void TC1_CH0_Handler               ( void );
+void TC1_CH1_Handler               ( void );
+void TC1_CH2_Handler               ( void );
 void ADC_Handler                   ( void );
 void UHP_Handler                   ( void );
 void UDP_Handler                   ( void );
