@@ -57,11 +57,6 @@ void RTC_Initialize(void)
     }
 
 
-    RTC_REGS->MODE0.RTC_TAMPCTRL = RTC_TAMPCTRL_IN0ACT(0x0)   | \
-                                   RTC_TAMPCTRL_IN1ACT(0x0)  | \
-                                   RTC_TAMPCTRL_IN2ACT(0x0)  | \
-                                   RTC_TAMPCTRL_IN3ACT(0x0)  | \
-                                   RTC_TAMPCTRL_IN4ACT(0x0) ;
 
     RTC_REGS->MODE0.RTC_CTRLA = RTC_MODE0_CTRLA_MODE(0) | RTC_MODE0_CTRLA_PRESCALER(0x1) | RTC_MODE0_CTRLA_COUNTSYNC_Msk ;
 
@@ -162,7 +157,6 @@ uint32_t RTC_BackupRegisterGet( BACKUP_REGISTER reg )
 {
     return(RTC_REGS->MODE0.RTC_BKUP[reg]);
 }
-
  TAMPER_CHANNEL RTC_TamperSourceGet( void )
 {
     return((RTC_REGS->MODE0.RTC_TAMPID) & (0xFF));
