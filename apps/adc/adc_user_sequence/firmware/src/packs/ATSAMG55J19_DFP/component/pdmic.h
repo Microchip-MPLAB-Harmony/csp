@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-05-13T10:57:54Z */
+/* file generated from device description version 2019-06-11T17:59:23Z */
 #ifndef _SAMG55_PDMIC_COMPONENT_H_
 #define _SAMG55_PDMIC_COMPONENT_H_
 
