@@ -175,6 +175,6 @@ bool TC0_TimerPeriodHasExpired( void )
 {
     bool timer_status;
     timer_status = ((TC0_REGS->COUNT16.TC_INTFLAG) & TC_INTFLAG_OVF_Msk);
-    TC0_REGS->COUNT16.TC_INTFLAG = TC_INTFLAG_OVF_Msk;
+    TC0_REGS->COUNT16.TC_INTFLAG = timer_status;
     return timer_status;
 }
