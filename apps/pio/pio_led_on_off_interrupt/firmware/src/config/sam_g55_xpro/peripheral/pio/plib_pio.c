@@ -105,6 +105,8 @@ void PIO_Initialize ( void )
     /* PORTB Output Direction Enable */
     ((pio_registers_t*)PIO_PORT_B)->PIO_OER = 0x0;
     ((pio_registers_t*)PIO_PORT_B)->PIO_ODR = ~0x0;
+    /* PORTB Initial state High */
+    ((pio_registers_t*)PIO_PORT_B)->PIO_ODSR = 0x0;
     /* PORTB drive control */
     ((pio_registers_t*)PIO_PORT_B)->PIO_DRIVER = 0x0;
 
