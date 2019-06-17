@@ -40,7 +40,21 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
+// *****************************************************************************
+// *****************************************************************************
+// Section: Included Files
+// *****************************************************************************
+// *****************************************************************************
+
 #include "plib_cmp.h"
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Global Data
+// *****************************************************************************
+// *****************************************************************************
+
+CMP_OBJECT cmp3Obj;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -96,25 +110,6 @@ void CMP_1_CompareDisable(void)
     CM1CONCLR = _CM1CON_ON_MASK;
 }
 
-CMP_OBJECT cmp1Obj;
-
-void CMP_1_CallbackRegister(CMP_CALLBACK callback, uintptr_t context)
-{
-    cmp1Obj.callback = callback;
-
-    cmp1Obj.context = context;
-}
-
-void COMPARATOR_1_InterruptHandler(void)
-{
-    IFS1CLR = _IFS1_CMP1IF_MASK; //Clear IRQ flag
-
-    if(cmp1Obj.callback != NULL)
-    {
-        cmp1Obj.callback(cmp1Obj.context);
-    }
-}
-
 void CMP_2_CompareEnable(void)
 {
     CM2CONSET = _CM2CON_ON_MASK;
@@ -123,25 +118,6 @@ void CMP_2_CompareEnable(void)
 void CMP_2_CompareDisable(void)
 {
     CM2CONCLR = _CM2CON_ON_MASK;
-}
-
-CMP_OBJECT cmp2Obj;
-
-void CMP_2_CallbackRegister(CMP_CALLBACK callback, uintptr_t context)
-{
-    cmp2Obj.callback = callback;
-
-    cmp2Obj.context = context;
-}
-
-void COMPARATOR_2_InterruptHandler(void)
-{
-    IFS1CLR = _IFS1_CMP2IF_MASK; //Clear IRQ flag
-
-    if(cmp2Obj.callback != NULL)
-    {
-        cmp2Obj.callback(cmp2Obj.context);
-    }
 }
 
 void CMP_3_CompareEnable(void)
@@ -153,8 +129,6 @@ void CMP_3_CompareDisable(void)
 {
     CM3CONCLR = _CM3CON_ON_MASK;
 }
-
-CMP_OBJECT cmp3Obj;
 
 void CMP_3_CallbackRegister(CMP_CALLBACK callback, uintptr_t context)
 {
