@@ -1,7 +1,7 @@
 /**
  * \brief Header file for ATSAMG55J19
  *
- * © 2019 Microchip Technology Inc. and its subsidiaries.
+ * Copyright (c) 2019 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip software and any derivatives
  * exclusively with Microchip products. It is your responsibility to comply with third party license
@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-06-04T09:35:08Z */
+/* file generated from device description version 2019-06-11T17:59:23Z */
 #ifndef _SAMG55J19_H_
 #define _SAMG55J19_H_
 
