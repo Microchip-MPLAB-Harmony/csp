@@ -102,12 +102,12 @@ void FLEXCOM3_Handler           ( void ) __attribute__((weak, alias("Dummy_Handl
 void FLEXCOM4_Handler           ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void FLEXCOM5_InterruptHandler  ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void FLEXCOM6_Handler           ( void ) __attribute__((weak, alias("Dummy_Handler")));
-void TC0_Handler                ( void ) __attribute__((weak, alias("Dummy_Handler")));
-void TC1_Handler                ( void ) __attribute__((weak, alias("Dummy_Handler")));
-void TC2_Handler                ( void ) __attribute__((weak, alias("Dummy_Handler")));
-void TC3_Handler                ( void ) __attribute__((weak, alias("Dummy_Handler")));
-void TC4_Handler                ( void ) __attribute__((weak, alias("Dummy_Handler")));
-void TC5_Handler                ( void ) __attribute__((weak, alias("Dummy_Handler")));
+void TC0_CH0_Handler            ( void ) __attribute__((weak, alias("Dummy_Handler")));
+void TC0_CH1_Handler            ( void ) __attribute__((weak, alias("Dummy_Handler")));
+void TC0_CH2_Handler            ( void ) __attribute__((weak, alias("Dummy_Handler")));
+void TC1_CH0_Handler            ( void ) __attribute__((weak, alias("Dummy_Handler")));
+void TC1_CH1_Handler            ( void ) __attribute__((weak, alias("Dummy_Handler")));
+void TC1_CH2_Handler            ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void ADC_Handler                ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void UHP_Handler                ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void UDP_Handler                ( void ) __attribute__((weak, alias("Dummy_Handler")));
@@ -157,12 +157,12 @@ const DeviceVectors exception_table=
     .pfnFLEXCOM4_Handler           = ( void * ) FLEXCOM4_Handler,
     .pfnFLEXCOM5_Handler           = ( void * ) FLEXCOM5_InterruptHandler,
     .pfnFLEXCOM6_Handler           = ( void * ) FLEXCOM6_Handler,
-    .pfnTC0_Handler                = ( void * ) TC0_Handler,
-    .pfnTC1_Handler                = ( void * ) TC1_Handler,
-    .pfnTC2_Handler                = ( void * ) TC2_Handler,
-    .pfnTC3_Handler                = ( void * ) TC3_Handler,
-    .pfnTC4_Handler                = ( void * ) TC4_Handler,
-    .pfnTC5_Handler                = ( void * ) TC5_Handler,
+    .pfnTC0_CH0_Handler            = ( void * ) TC0_CH0_Handler,
+    .pfnTC0_CH1_Handler            = ( void * ) TC0_CH1_Handler,
+    .pfnTC0_CH2_Handler            = ( void * ) TC0_CH2_Handler,
+    .pfnTC1_CH0_Handler            = ( void * ) TC1_CH0_Handler,
+    .pfnTC1_CH1_Handler            = ( void * ) TC1_CH1_Handler,
+    .pfnTC1_CH2_Handler            = ( void * ) TC1_CH2_Handler,
     .pfnADC_Handler                = ( void * ) ADC_Handler,
     .pfnUHP_Handler                = ( void * ) UHP_Handler,
     .pfnUDP_Handler                = ( void * ) UDP_Handler,
