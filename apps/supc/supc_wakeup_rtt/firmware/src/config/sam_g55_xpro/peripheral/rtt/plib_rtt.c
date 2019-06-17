@@ -2,17 +2,18 @@
 Interface definition of RTT PLIB.
 
 Company:
-	Microchip Technology Inc.
+    Microchip Technology Inc.
 
 File Name:
-	plib_rtt.c
+    plib_rtt.c
 
 Summary:
-	Interface definition of RTT Plib.
+    Interface definition of RTT Plib.
 
 Description:
-	This file defines the interface for the RTT Plib.
-	It allows user to Program, Erase and lock the on-chip FLASH memory.
+    This file defines the interface for the RTT Plib.
+    It allows user to configure and generate Periodic events using a real time
+    timer.
 *******************************************************************************/
 
 // DOM-IGNORE-BEGIN
@@ -43,34 +44,34 @@ Description:
 #include "plib_rtt.h"
 
 RTT_OBJECT rtt;
-	
+    
 void RTT_Initialize(void)
 {
-	RTT_REGS->RTT_MR = RTT_MR_RTTRST_Msk;
-	RTT_REGS->RTT_MR = RTT_MR_RTPRES(3) | RTT_MR_RTTDIS_Msk  | RTT_MR_ALMIEN_Msk | RTT_MR_RTC1HZ_Msk;
+    RTT_REGS->RTT_MR = RTT_MR_RTTRST_Msk;
+    RTT_REGS->RTT_MR = RTT_MR_RTPRES(3) | RTT_MR_RTTDIS_Msk  | RTT_MR_ALMIEN_Msk | RTT_MR_RTC1HZ_Msk;
 }
 
 void RTT_Enable(void)
 {
-	RTT_REGS->RTT_MR|= RTT_MR_RTTRST_Msk;
-	RTT_REGS->RTT_MR&= ~(RTT_MR_RTTDIS_Msk);
+    RTT_REGS->RTT_MR|= RTT_MR_RTTRST_Msk;
+    RTT_REGS->RTT_MR&= ~(RTT_MR_RTTDIS_Msk);
 }
 
 void RTT_Disable(void)
 {
-	RTT_REGS->RTT_MR|= RTT_MR_RTTDIS_Msk;
+    RTT_REGS->RTT_MR|= RTT_MR_RTTDIS_Msk;
 }
 
 void RTT_PrescalarUpdate(uint16_t prescale)
 {
-	uint32_t rtt_mr = RTT_REGS->RTT_MR;
-	uint32_t flag = rtt_mr & RTT_MR_RTTINCIEN_Msk;
-	rtt_mr &= ~(RTT_MR_RTPRES_Msk | RTT_MR_RTTINCIEN_Msk);
-	RTT_REGS->RTT_MR = rtt_mr | prescale | RTT_MR_RTTRST_Msk;
-	if (flag)
-	{
-		RTT_REGS->RTT_MR|=  RTT_MR_RTTINCIEN_Msk;
-	}
+    uint32_t rtt_mr = RTT_REGS->RTT_MR;
+    uint32_t flag = rtt_mr & RTT_MR_RTTINCIEN_Msk;
+    rtt_mr &= ~(RTT_MR_RTPRES_Msk | RTT_MR_RTTINCIEN_Msk);
+    RTT_REGS->RTT_MR = rtt_mr | prescale | RTT_MR_RTTRST_Msk;
+    if (flag)
+    {
+        RTT_REGS->RTT_MR|=  RTT_MR_RTTINCIEN_Msk;
+    }
 }
 
 void RTT_AlarmValueSet(uint32_t alarm)
@@ -100,41 +101,41 @@ void RTT_CallbackRegister( RTT_CALLBACK callback, uintptr_t context )
  
 uint32_t RTT_TimerValueGet(void)
 {
-	uint32_t rtt_val = RTT_REGS->RTT_VR;
-	while (rtt_val != RTT_REGS->RTT_VR) 
-	{
-		rtt_val = RTT_REGS->RTT_VR;
-	}
-	return rtt_val;
+    uint32_t rtt_val = RTT_REGS->RTT_VR;
+    while (rtt_val != RTT_REGS->RTT_VR) 
+    {
+        rtt_val = RTT_REGS->RTT_VR;
+    }
+    return rtt_val;
 }
 
 uint32_t RTT_FrequencyGet(void)
 {
-	uint32_t flag = 0;
-	
-	flag =  (RTT_REGS->RTT_MR) & (RTT_MR_RTC1HZ_Msk);
-	
-	if (flag)
-	{
-		return 1000;
-	}
-	else
-	{
-		flag = (RTT_REGS->RTT_MR) & (RTT_MR_RTPRES_Msk);
-		if (flag == 0)
-		{
-			return (32768 / 65536);
-		}
-		else
-		{
-			return (32768 / flag); 
-		}
-	}
+    uint32_t flag = 0;
+    
+    flag =  (RTT_REGS->RTT_MR) & (RTT_MR_RTC1HZ_Msk);
+    
+    if (flag)
+    {
+        return 1;
+    }
+    else
+    {
+        flag = (RTT_REGS->RTT_MR) & (RTT_MR_RTPRES_Msk);
+        if (flag == 0)
+        {
+            return (0);
+        }
+        else
+        {
+            return (32768 / flag); 
+        }
+    }
 }
 
 void RTT_InterruptHandler()
 {
-	volatile uint32_t status = RTT_REGS->RTT_SR;
+	uint32_t status = RTT_REGS->RTT_SR;
 	uint32_t flags = RTT_REGS->RTT_MR;
 	RTT_REGS->RTT_MR&= ~(RTT_MR_ALMIEN_Msk | RTT_MR_RTTINCIEN_Msk);
 	if(flags & RTT_MR_RTTINCIEN_Msk)
