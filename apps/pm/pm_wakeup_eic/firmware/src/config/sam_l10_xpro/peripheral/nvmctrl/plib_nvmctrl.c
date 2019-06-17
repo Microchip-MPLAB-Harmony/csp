@@ -121,7 +121,7 @@ NVMCTRL_ERROR NVMCTRL_ErrorGet( void )
 
 bool NVMCTRL_IsBusy(void)
 {
-    return (bool)(!(NVMCTRL_REGS->NVMCTRL_INTFLAG & NVMCTRL_INTFLAG_DONE_Msk));
+    return (bool)(!(NVMCTRL_REGS->NVMCTRL_STATUS & NVMCTRL_STATUS_READY_Msk));
 }
 
 void NVMCTRL_RegionLock(NVMCTRL_MEMORY_REGION region)
