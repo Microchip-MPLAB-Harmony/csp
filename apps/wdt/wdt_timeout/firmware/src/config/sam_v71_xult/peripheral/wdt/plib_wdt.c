@@ -41,17 +41,17 @@
 #include "device.h"
 #include "plib_wdt.h"
 
-
 void WDT_Initialize( void )
 {
-	WDT_REGS->WDT_MR = WDT_MR_WDD (1024) | WDT_MR_WDV(1024) \
-							 | WDT_MR_WDRSTEN_Msk;
-							
+
+    WDT_REGS->WDT_MR = WDT_MR_WDD (1024) | WDT_MR_WDV(1024) \
+               | WDT_MR_WDRSTEN_Msk;
+
 }
 
 void WDT_Clear(void)
 {
-	WDT_REGS->WDT_CR = (WDT_CR_KEY_PASSWD | WDT_CR_WDRSTT_Msk);
+   WDT_REGS->WDT_CR = (WDT_CR_KEY_PASSWD | WDT_CR_WDRSTT_Msk);
 }
 
 
