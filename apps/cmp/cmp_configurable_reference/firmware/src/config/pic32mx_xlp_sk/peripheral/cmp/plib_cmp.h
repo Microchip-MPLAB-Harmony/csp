@@ -105,13 +105,9 @@ void CMP_1_CompareEnable(void);
 
 void CMP_1_CompareDisable(void);
 
-void CMP_1_CallbackRegister(CMP_CALLBACK callback, uintptr_t context);
-
 void CMP_2_CompareEnable(void);
 
 void CMP_2_CompareDisable(void);
-
-void CMP_2_CallbackRegister(CMP_CALLBACK callback, uintptr_t context);
 
 void CMP_3_CompareEnable(void);
 
