@@ -53,12 +53,13 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <stdbool.h>
 #include "device.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
 
-	extern "C" {
+    extern "C" {
 
 #endif
 // DOM-IGNORE-END
@@ -69,16 +70,24 @@
 // *****************************************************************************
 // *****************************************************************************
 
-void DMT_Enable(void);
+void DMT_Enable( void );
 
-void DMT_Disable(void);
+void DMT_Disable( void );
 
-void DMT_Clear ( void );
+void DMT_Clear( void );
+
+bool DMT_ClearWindowStatusGet( void );
+
+uint32_t DMT_CounterGet( void );
+
+uint32_t DMT_TimeOutCountGet( void );
+
+uint32_t DMT_WindowIntervalGet( void );
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
-	}
+    }
 
 #endif
 // DOM-IGNORE-END
