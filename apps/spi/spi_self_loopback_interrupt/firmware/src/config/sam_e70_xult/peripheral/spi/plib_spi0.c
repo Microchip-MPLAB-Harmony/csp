@@ -57,8 +57,8 @@ void SPI0_Initialize ( void )
     /* Enable Master mode, select particular NPCS line for chip select and disable mode fault detection */
     SPI0_REGS->SPI_MR =  SPI_MR_MSTR_Msk | SPI_MR_PCS_NPCS0 | SPI_MR_MODFDIS_Msk;
 
-    /* Set up clock Polarity, data phase, Communication Width and Baud Rate */
-    SPI0_REGS->SPI_CSR[0] = SPI_CSR_CPOL_IDLE_LOW | SPI_CSR_NCPHA_VALID_LEADING_EDGE | SPI_CSR_BITS_8_BIT | SPI_CSR_SCBR(150);
+    /* Set up clock Polarity, data phase, Communication Width, Baud Rate and Chip select active after transfer */
+    SPI0_REGS->SPI_CSR[0] = SPI_CSR_CPOL_IDLE_LOW | SPI_CSR_NCPHA_VALID_LEADING_EDGE | SPI_CSR_BITS_8_BIT | SPI_CSR_SCBR(150) | SPI_CSR_CSAAT_Msk;
 
     /* Initialize global variables */
     spi0Obj.transferIsBusy = false;
@@ -173,9 +173,9 @@ bool SPI0_TransferSetup (SPI_TRANSFER_SETUP * setup, uint32_t spiSourceClock )
 {
     uint32_t scbr;
     if ((setup == NULL) || (setup->clockFrequency == 0))
-	{
-		return false;
-	}
+    {
+        return false;
+    }
     if(spiSourceClock == 0)
     {
         // Fetch Master Clock Frequency directly
@@ -237,10 +237,8 @@ void SPI0_InterruptHandler(void)
     /* If there are more words to be transmitted, then transmit them here and keep track of the count */
     if((SPI0_REGS->SPI_SR & SPI_SR_TDRE_Msk) == SPI_SR_TDRE_Msk)
     {
-
         /* Disable the TDRE interrupt. This will be enabled back if more than
          * one byte is pending to be transmitted */
-
         SPI0_REGS->SPI_IDR = SPI_IDR_TDRE_Msk;
 
         if(dataBits == SPI_CSR_BITS_8_BIT)
@@ -279,6 +277,8 @@ void SPI0_InterruptHandler(void)
              */
 
             isLastByteTransferInProgress = true;
+            /* Set Last transfer to deassert NPCS after the last byte written in TDR has been transferred. */
+            SPI0_REGS->SPI_CR = SPI_CR_LASTXFER_Msk;
         }
         else if (spi0Obj.rxCount == spi0Obj.rxSize)
         {
