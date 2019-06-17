@@ -78,7 +78,6 @@ void RTC_Initialize(void)
         /* Wait for synchronization after Software Reset */
     }
 
-
     RTC_REGS->MODE2.RTC_TAMPCTRL = RTC_TAMPCTRL_IN0ACT(0x2)  | RTC_TAMPCTRL_DEBNC0_Msk | \
                                    RTC_TAMPCTRL_IN1ACT(0x0)  | \
                                    RTC_TAMPCTRL_IN2ACT(0x0)  | \
@@ -147,7 +146,6 @@ uint32_t RTC_BackupRegisterGet( BACKUP_REGISTER reg )
 {
     return(RTC_REGS->MODE2.RTC_BKUP[reg]);
 }
-
  TAMPER_CHANNEL RTC_TamperSourceGet( void )
 {
     return((RTC_REGS->MODE2.RTC_TAMPID) & (0xFF));
