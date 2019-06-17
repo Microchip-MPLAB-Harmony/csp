@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-01-31T10:50:35Z */
+/* file generated from device description version 2019-06-07T05:54:14Z */
 #ifndef _SAML10_DAC_COMPONENT_H_
 #define _SAML10_DAC_COMPONENT_H_
 
@@ -64,12 +64,12 @@
 #define DAC_CTRLB_REFSEL_Pos                  _U_(6)                                               /**< (DAC_CTRLB) Reference Selection Position */
 #define DAC_CTRLB_REFSEL_Msk                  (_U_(0x3) << DAC_CTRLB_REFSEL_Pos)                   /**< (DAC_CTRLB) Reference Selection Mask */
 #define DAC_CTRLB_REFSEL(value)               (DAC_CTRLB_REFSEL_Msk & ((value) << DAC_CTRLB_REFSEL_Pos))
-#define   DAC_CTRLB_REFSEL_INT1V_Val          _U_(0x0)                                             /**< (DAC_CTRLB) Internal 1.0V reference  */
-#define   DAC_CTRLB_REFSEL_AVCC_Val           _U_(0x1)                                             /**< (DAC_CTRLB) AVCC  */
-#define   DAC_CTRLB_REFSEL_VREFP_Val          _U_(0x2)                                             /**< (DAC_CTRLB) External reference  */
-#define DAC_CTRLB_REFSEL_INT1V                (DAC_CTRLB_REFSEL_INT1V_Val << DAC_CTRLB_REFSEL_Pos) /**< (DAC_CTRLB) Internal 1.0V reference Position  */
-#define DAC_CTRLB_REFSEL_AVCC                 (DAC_CTRLB_REFSEL_AVCC_Val << DAC_CTRLB_REFSEL_Pos)  /**< (DAC_CTRLB) AVCC Position  */
-#define DAC_CTRLB_REFSEL_VREFP                (DAC_CTRLB_REFSEL_VREFP_Val << DAC_CTRLB_REFSEL_Pos) /**< (DAC_CTRLB) External reference Position  */
+#define   DAC_CTRLB_REFSEL_INTREF_Val         _U_(0x0)                                             /**< (DAC_CTRLB) Internal Voltage reference  */
+#define   DAC_CTRLB_REFSEL_VDDANA_Val         _U_(0x1)                                             /**< (DAC_CTRLB) Analog Voltage Supply  */
+#define   DAC_CTRLB_REFSEL_VREFA_Val          _U_(0x2)                                             /**< (DAC_CTRLB) External reference  */
+#define DAC_CTRLB_REFSEL_INTREF               (DAC_CTRLB_REFSEL_INTREF_Val << DAC_CTRLB_REFSEL_Pos) /**< (DAC_CTRLB) Internal Voltage reference Position  */
+#define DAC_CTRLB_REFSEL_VDDANA               (DAC_CTRLB_REFSEL_VDDANA_Val << DAC_CTRLB_REFSEL_Pos) /**< (DAC_CTRLB) Analog Voltage Supply Position  */
+#define DAC_CTRLB_REFSEL_VREFA                (DAC_CTRLB_REFSEL_VREFA_Val << DAC_CTRLB_REFSEL_Pos) /**< (DAC_CTRLB) External reference Position  */
 #define DAC_CTRLB_Msk                         _U_(0xEF)                                            /**< (DAC_CTRLB) Register Mask  */
 
 

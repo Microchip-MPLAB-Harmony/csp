@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-01-31T10:50:35Z */
+/* file generated from device description version 2019-06-07T05:54:14Z */
 #ifndef _SAML10_MCLK_COMPONENT_H_
 #define _SAML10_MCLK_COMPONENT_H_
 
@@ -92,15 +92,15 @@
 /* -------- MCLK_AHBMASK : (MCLK Offset: 0x10) (R/W 32) AHB Mask -------- */
 #define MCLK_AHBMASK_RESETVALUE               _U_(0x1FFF)                                          /**<  (MCLK_AHBMASK) AHB Mask  Reset Value */
 
-#define MCLK_AHBMASK_HPB0_Pos                 _U_(0)                                               /**< (MCLK_AHBMASK) HPB0 AHB Clock Mask Position */
-#define MCLK_AHBMASK_HPB0_Msk                 (_U_(0x1) << MCLK_AHBMASK_HPB0_Pos)                  /**< (MCLK_AHBMASK) HPB0 AHB Clock Mask Mask */
-#define MCLK_AHBMASK_HPB0(value)              (MCLK_AHBMASK_HPB0_Msk & ((value) << MCLK_AHBMASK_HPB0_Pos))
-#define MCLK_AHBMASK_HPB1_Pos                 _U_(1)                                               /**< (MCLK_AHBMASK) HPB1 AHB Clock Mask Position */
-#define MCLK_AHBMASK_HPB1_Msk                 (_U_(0x1) << MCLK_AHBMASK_HPB1_Pos)                  /**< (MCLK_AHBMASK) HPB1 AHB Clock Mask Mask */
-#define MCLK_AHBMASK_HPB1(value)              (MCLK_AHBMASK_HPB1_Msk & ((value) << MCLK_AHBMASK_HPB1_Pos))
-#define MCLK_AHBMASK_HPB2_Pos                 _U_(2)                                               /**< (MCLK_AHBMASK) HPB2 AHB Clock Mask Position */
-#define MCLK_AHBMASK_HPB2_Msk                 (_U_(0x1) << MCLK_AHBMASK_HPB2_Pos)                  /**< (MCLK_AHBMASK) HPB2 AHB Clock Mask Mask */
-#define MCLK_AHBMASK_HPB2(value)              (MCLK_AHBMASK_HPB2_Msk & ((value) << MCLK_AHBMASK_HPB2_Pos))
+#define MCLK_AHBMASK_APBA_Pos                 _U_(0)                                               /**< (MCLK_AHBMASK) AHB-APB Bridge A AHB Clock Mask Position */
+#define MCLK_AHBMASK_APBA_Msk                 (_U_(0x1) << MCLK_AHBMASK_APBA_Pos)                  /**< (MCLK_AHBMASK) AHB-APB Bridge A AHB Clock Mask Mask */
+#define MCLK_AHBMASK_APBA(value)              (MCLK_AHBMASK_APBA_Msk & ((value) << MCLK_AHBMASK_APBA_Pos))
+#define MCLK_AHBMASK_APBB_Pos                 _U_(1)                                               /**< (MCLK_AHBMASK) AHB-APB Bridge B AHB Clock Mask Position */
+#define MCLK_AHBMASK_APBB_Msk                 (_U_(0x1) << MCLK_AHBMASK_APBB_Pos)                  /**< (MCLK_AHBMASK) AHB-APB Bridge B AHB Clock Mask Mask */
+#define MCLK_AHBMASK_APBB(value)              (MCLK_AHBMASK_APBB_Msk & ((value) << MCLK_AHBMASK_APBB_Pos))
+#define MCLK_AHBMASK_APBC_Pos                 _U_(2)                                               /**< (MCLK_AHBMASK) AHB-APB Bridge C AHB Clock Mask Position */
+#define MCLK_AHBMASK_APBC_Msk                 (_U_(0x1) << MCLK_AHBMASK_APBC_Pos)                  /**< (MCLK_AHBMASK) AHB-APB Bridge C AHB Clock Mask Mask */
+#define MCLK_AHBMASK_APBC(value)              (MCLK_AHBMASK_APBC_Msk & ((value) << MCLK_AHBMASK_APBC_Pos))
 #define MCLK_AHBMASK_DMAC_Pos                 _U_(3)                                               /**< (MCLK_AHBMASK) DMAC AHB Clock Mask Position */
 #define MCLK_AHBMASK_DMAC_Msk                 (_U_(0x1) << MCLK_AHBMASK_DMAC_Pos)                  /**< (MCLK_AHBMASK) DMAC AHB Clock Mask Mask */
 #define MCLK_AHBMASK_DMAC(value)              (MCLK_AHBMASK_DMAC_Msk & ((value) << MCLK_AHBMASK_DMAC_Pos))
@@ -118,9 +118,6 @@
 #define MCLK_AHBMASK_TRAM(value)              (MCLK_AHBMASK_TRAM_Msk & ((value) << MCLK_AHBMASK_TRAM_Pos))
 #define MCLK_AHBMASK_Msk                      _U_(0x000010DF)                                      /**< (MCLK_AHBMASK) Register Mask  */
 
-#define MCLK_AHBMASK_HPB_Pos                  _U_(0)                                               /**< (MCLK_AHBMASK Position) HPBx AHB Clock Mask */
-#define MCLK_AHBMASK_HPB_Msk                  (_U_(0x7) << MCLK_AHBMASK_HPB_Pos)                   /**< (MCLK_AHBMASK Mask) HPB */
-#define MCLK_AHBMASK_HPB(value)               (MCLK_AHBMASK_HPB_Msk & ((value) << MCLK_AHBMASK_HPB_Pos)) 
 
 /* -------- MCLK_APBAMASK : (MCLK Offset: 0x14) (R/W 32) APBA Mask -------- */
 #define MCLK_APBAMASK_RESETVALUE              _U_(0x7FFF)                                          /**<  (MCLK_APBAMASK) APBA Mask  Reset Value */
@@ -182,7 +179,10 @@
 #define MCLK_APBBMASK_NVMCTRL_Pos             _U_(2)                                               /**< (MCLK_APBBMASK) NVMCTRL APB Clock Enable Position */
 #define MCLK_APBBMASK_NVMCTRL_Msk             (_U_(0x1) << MCLK_APBBMASK_NVMCTRL_Pos)              /**< (MCLK_APBBMASK) NVMCTRL APB Clock Enable Mask */
 #define MCLK_APBBMASK_NVMCTRL(value)          (MCLK_APBBMASK_NVMCTRL_Msk & ((value) << MCLK_APBBMASK_NVMCTRL_Pos))
-#define MCLK_APBBMASK_Msk                     _U_(0x00000007)                                      /**< (MCLK_APBBMASK) Register Mask  */
+#define MCLK_APBBMASK_HMATRIXS_Pos            _U_(4)                                               /**< (MCLK_APBBMASK) HMATRIXHS APBB Clock Enable Position */
+#define MCLK_APBBMASK_HMATRIXS_Msk            (_U_(0x1) << MCLK_APBBMASK_HMATRIXS_Pos)             /**< (MCLK_APBBMASK) HMATRIXHS APBB Clock Enable Mask */
+#define MCLK_APBBMASK_HMATRIXS(value)         (MCLK_APBBMASK_HMATRIXS_Msk & ((value) << MCLK_APBBMASK_HMATRIXS_Pos))
+#define MCLK_APBBMASK_Msk                     _U_(0x00000017)                                      /**< (MCLK_APBBMASK) Register Mask  */
 
 
 /* -------- MCLK_APBCMASK : (MCLK Offset: 0x1C) (R/W 32) APBC Mask -------- */
