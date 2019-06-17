@@ -559,7 +559,7 @@
         </Integer>
         <Boolean dnOrder="106" id="XOSC32K_EN32K">
           <Values dnOrder="0">
-            <User dnOrder="0" value="true"/>
+            <User dnOrder="0" value="false"/>
           </Values>
         </Boolean>
         <Integer dnOrder="107" id="XOSC32K_FREQ">
@@ -671,14 +671,9 @@
     </UniqueComponent>
     <UniqueComponent dnOrder="6" id="rstc">
       <Symbols dnOrder="0">
-        <Boolean dnOrder="0" id="WAKEUP_2_ENABLE">
+        <Hex dnOrder="0" id="WAKEUP_ENABLE_VALUE">
           <Values dnOrder="0">
-            <User dnOrder="0" value="true"/>
-          </Values>
-        </Boolean>
-        <Hex dnOrder="1" id="WAKEUP_ENABLE_VALUE">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="rstc" value="4"/>
+            <Dynamic dnOrder="0" id="rstc" value="0"/>
           </Values>
         </Hex>
       </Symbols>
@@ -705,12 +700,7 @@
           </Values>
         </String>
         <KeyValueSet dnOrder="2" id="SERCOM_MODE">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="readOnly">
-              <Value dnOrder="0">true</Value>
-            </Boolean>
-          </Attributes>
-          <Values dnOrder="1">
+          <Values dnOrder="0">
             <Dynamic dnOrder="0" id="sercom3" value="0"/>
           </Values>
         </KeyValueSet>
@@ -830,21 +820,21 @@
     </UniqueComponent>
   </Components>
   <UserData>
-    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="0"/>
-    <ComponentGraph dnOrder="1" id="__ROOTVIEW">
+    <ComponentGraph dnOrder="0" id="__ROOTVIEW">
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="cmsis" x="500" y="20"/>
         <ElementPosition dnOrder="1" id="core" x="400" y="20"/>
         <ElementPosition dnOrder="2" id="dfp" x="180" y="20"/>
         <ElementPosition dnOrder="3" id="evsys" x="20" y="20"/>
         <ElementPosition dnOrder="4" id="nvmctrl" x="640" y="20"/>
-        <ElementPosition dnOrder="5" id="pm" x="201" y="97"/>
-        <ElementPosition dnOrder="6" id="rstc" x="548" y="98"/>
+        <ElementPosition dnOrder="5" id="pm" x="200" y="97"/>
+        <ElementPosition dnOrder="6" id="rstc" x="547" y="98"/>
         <ElementPosition dnOrder="7" id="rtc" x="33" y="83"/>
         <ElementPosition dnOrder="8" id="sercom3" x="29" y="160"/>
         <ElementPosition dnOrder="9" id="stdio" x="316" y="174"/>
         <ElementPosition dnOrder="10" id="supc" x="373" y="88"/>
       </ElementPositions>
     </ComponentGraph>
+    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="1"/>
   </UserData>
 </Configuration>

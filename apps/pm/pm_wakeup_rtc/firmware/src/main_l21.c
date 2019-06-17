@@ -101,7 +101,7 @@ int main ( void )
 {
     RSTC_RESET_CAUSE reset_cause;
     RSTC_BKUPEXIT_CAUSE reset_cause_bkup;
-   
+    
     /* Initialize all modules */
     SYS_Initialize ( NULL );
     SUPC_SelectVoltageRegulator(SUPC_VREGSEL_BUCK);
