@@ -82,13 +82,13 @@ void TC6_CompareInitialize( void )
     /* Configure counter mode & prescaler */
     TC6_REGS->COUNT16.TC_CTRLA = TC_CTRLA_MODE_COUNT16 | TC_CTRLA_PRESCALER_DIV64 | TC_CTRLA_WAVEGEN_MFRQ ;
 
-    
+
     TC6_REGS->COUNT16.TC_CC[0] = 10000U;
-    
+
     /* Clear all interrupt flags */
     TC6_REGS->COUNT16.TC_INTFLAG = TC_INTFLAG_Msk;
 
-    
+
 
     while((TC6_REGS->COUNT16.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
     {
@@ -182,9 +182,6 @@ TC_COMPARE_STATUS TC6_CompareStatusGet( void )
     TC_COMPARE_STATUS compare_status;
     compare_status = ((TC6_REGS->COUNT16.TC_INTFLAG) & TC_COMPARE_STATUS_MSK);
     /* Clear timer overflow interrupt */
-    TC6_REGS->COUNT16.TC_INTFLAG = TC_COMPARE_STATUS_MSK;
+    TC6_REGS->COUNT16.TC_INTFLAG = compare_status;
     return compare_status;
 }
-
-
-
