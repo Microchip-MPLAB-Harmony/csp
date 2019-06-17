@@ -149,7 +149,8 @@ void PIT_InterruptHandler(void)
 {
     uint32_t interruptStatus = PIT_REGS->PIT_SR;
     if( interruptStatus ) {
-        uint32_t reg = PIT_REGS->PIT_PIVR;
+        volatile uint32_t reg = PIT_REGS->PIT_PIVR;
+        (void)reg;
         pit.tickCounter++;
         if(pit.callback) {
             pit.callback(pit.context);
