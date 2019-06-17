@@ -53,6 +53,18 @@
 // Section: Configuration Bits
 // ****************************************************************************
 // ****************************************************************************
+#pragma config NVMCTRL_NSULCK = 0x7
+#pragma config BOD33_LEVEL = 0x6
+#pragma config BOD33_DIS = CLEAR
+#pragma config BOD33_ACTION = 0x1
+#pragma config WDT_RUNSTDBY = CLEAR
+#pragma config WDT_ENABLE = CLEAR
+#pragma config WDT_ALWAYSON = CLEAR
+#pragma config WDT_PER = 0xB
+#pragma config WDT_WINDOW = 0xB
+#pragma config WDT_EWOFFSET = 0xB
+#pragma config WDT_WEN = CLEAR
+#pragma config BOD33_HYST = CLEAR
 
 
 
