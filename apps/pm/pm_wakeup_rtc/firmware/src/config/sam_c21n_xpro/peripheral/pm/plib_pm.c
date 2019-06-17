@@ -55,11 +55,10 @@
 
 #include "device.h"
 #include "plib_pm.h"
-
 void PM_Initialize( void )
 {
     /* Configure PM */
-    PM_REGS->PM_STDBYCFG = PM_STDBYCFG_BBIASHS(0)| PM_STDBYCFG_VREGSMOD(2);
+    PM_REGS->PM_STDBYCFG = PM_STDBYCFG_VREGSMOD(2);
 
 }
 
