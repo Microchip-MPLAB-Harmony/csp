@@ -90,7 +90,7 @@ void ADC_Initialize( void )
         | ADC_CALIB_BIASCOMP((((*(uint64_t*)OTP5_ADDR) & ADC_BIASCAL_Msk) >> ADC_BIASCAL_POS));
 
     /* Prescaler */
-    ADC_REGS->ADC_CTRLB = ADC_CTRLB_PRESCALER_DIV16;
+    ADC_REGS->ADC_CTRLB = ADC_CTRLB_PRESCALER_DIV128;
     /* Sampling length */
     ADC_REGS->ADC_SAMPCTRL = ADC_SAMPCTRL_SAMPLEN(3U);
 

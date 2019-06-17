@@ -15,7 +15,7 @@
         </Boolean>
         <KeyValueSet dnOrder="2" id="ADC_CTRLB_PRESCALER">
           <Values dnOrder="0">
-            <User dnOrder="0" value="3"/>
+            <User dnOrder="0" value="6"/>
           </Values>
         </KeyValueSet>
         <KeyValueSet dnOrder="3" id="ADC_CTRLC_WINMODE">
@@ -65,28 +65,33 @@
             <User dnOrder="0" value="5"/>
           </Values>
         </KeyValueSet>
-        <Comment dnOrder="10" id="ADC_SAMPCTRL_SAMPLEN_TIME">
+        <Integer dnOrder="10" id="ADC_SAMPCTRL_SAMPLEN">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="4"/>
+          </Values>
+        </Integer>
+        <Comment dnOrder="11" id="ADC_SAMPCTRL_SAMPLEN_TIME">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="text">
-              <Value dnOrder="0">****&amp;#160;Conversion&amp;#160;Time&amp;#160;is&amp;#160;8.0&amp;#160;uS&amp;#160;****</Value>
+              <Value dnOrder="0">****&amp;#160;Conversion&amp;#160;Time&amp;#160;is&amp;#160;64.0&amp;#160;uS&amp;#160;****</Value>
             </String>
           </Attributes>
         </Comment>
-        <Menu dnOrder="11" id="ADC_SEQUENCE_MENU">
+        <Menu dnOrder="12" id="ADC_SEQUENCE_MENU">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </Menu>
-        <Boolean dnOrder="12" id="ADC_WINDOW_OUTPUT_EVENT">
+        <Boolean dnOrder="13" id="ADC_WINDOW_OUTPUT_EVENT">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </Boolean>
-        <Integer dnOrder="13" id="ADC_WINLT">
+        <Integer dnOrder="14" id="ADC_WINLT">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
@@ -96,7 +101,7 @@
             <User dnOrder="0" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="14" id="ADC_WINUT">
+        <Integer dnOrder="15" id="ADC_WINUT">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
@@ -2762,8 +2767,24 @@
         </Boolean>
       </Symbols>
     </UniqueComponent>
-    <UniqueComponent dnOrder="5" id="nvmctrl"/>
-    <UniqueComponent dnOrder="6" id="pm"/>
+    <UniqueComponent dnOrder="5" id="nvmctrl">
+      <Symbols dnOrder="0">
+        <Integer dnOrder="0" id="NVM_RWS">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="nvmctrl" value="1"/>
+          </Values>
+        </Integer>
+      </Symbols>
+    </UniqueComponent>
+    <UniqueComponent dnOrder="6" id="pm">
+      <Symbols dnOrder="0">
+        <KeyValueSet dnOrder="0" id="PM_PLCFG_PLSEL">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="pm" value="1"/>
+          </Values>
+        </KeyValueSet>
+      </Symbols>
+    </UniqueComponent>
     <UniqueComponent dnOrder="7" id="rtc">
       <Symbols dnOrder="0">
         <Hex dnOrder="0" id="RTC_MODE0_EVCTRL">
@@ -2816,7 +2837,12 @@
           </Values>
         </String>
         <KeyValueSet dnOrder="2" id="SERCOM_MODE">
-          <Values dnOrder="0">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="readOnly">
+              <Value dnOrder="0">true</Value>
+            </Boolean>
+          </Attributes>
+          <Values dnOrder="1">
             <Dynamic dnOrder="0" id="sercom4" value="0"/>
           </Values>
         </KeyValueSet>
