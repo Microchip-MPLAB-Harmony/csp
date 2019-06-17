@@ -53,6 +53,8 @@
 */
 #include "device.h"
 #include "plib_tc1.h"
+
+ 
  
 
  
@@ -138,7 +140,7 @@ void TC1_CH0_CompareCallbackRegister(TC_COMPARE_CALLBACK callback, uintptr_t con
     TC1_CH0_CallbackObj.context = context;
 }
 
-/* Interrupt Handler */
+/* Interrupt handler for Channel 0 */
 void TC1_CH0_InterruptHandler(void)
 {
     TC_COMPARE_STATUS compare_status = (TC_COMPARE_STATUS)(TC1_REGS->TC_CHANNEL[0].TC_SR & TC_COMPARE_STATUS_MSK);
