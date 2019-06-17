@@ -55,8 +55,8 @@ void SPI0_Initialize ( void )
     /* Enable Master mode, select particular NPCS line for chip select and disable mode fault detection */
     SPI0_REGS->SPI_MR =  SPI_MR_MSTR_Msk | SPI_MR_PCS_NPCS0 | SPI_MR_MODFDIS_Msk;
 
-    /* Set up clock Polarity, data phase, Communication Width and Baud Rate */
-    SPI0_REGS->SPI_CSR[0] = SPI_CSR_CPOL_IDLE_LOW | SPI_CSR_NCPHA_VALID_LEADING_EDGE | SPI_CSR_BITS_8_BIT | SPI_CSR_SCBR(150);
+    /* Set up clock Polarity, data phase, Communication Width, Baud Rate and Chip select active after transfer */
+    SPI0_REGS->SPI_CSR[0] = SPI_CSR_CPOL_IDLE_LOW | SPI_CSR_NCPHA_VALID_LEADING_EDGE | SPI_CSR_BITS_8_BIT | SPI_CSR_SCBR(150) | SPI_CSR_CSAAT_Msk;
 
 
     /* Enable SPI0 */
@@ -132,10 +132,10 @@ bool SPI0_WriteRead(void* pTransmitData, size_t txSize, void* pReceiveData, size
             {
                 /* If data is read, wait for the Receiver Data Register to become full*/
                 while((bool)((SPI0_REGS->SPI_SR & SPI_SR_RDRF_Msk) >> SPI_SR_RDRF_Pos) == false)
-				{
-				}
+                {
+                }
 
-				receivedData = (SPI0_REGS->SPI_RDR & SPI_RDR_RD_Msk) >> SPI_RDR_RD_Pos;
+                receivedData = (SPI0_REGS->SPI_RDR & SPI_RDR_RD_Msk) >> SPI_RDR_RD_Pos;
 
                 if (rxCount < rxSize)
                 {
@@ -154,9 +154,12 @@ bool SPI0_WriteRead(void* pTransmitData, size_t txSize, void* pReceiveData, size
         /* Make sure no data is pending in the shift register */
         while ((bool)((SPI0_REGS->SPI_SR & SPI_SR_TXEMPTY_Msk) >> SPI_SR_TXEMPTY_Pos) == false);
 
+        /* Set Last transfer to deassert NPCS after the last byte written in TDR has been transferred. */
+        SPI0_REGS->SPI_CR = SPI_CR_LASTXFER_Msk;
+
         isSuccess = true;
     }
-	    return isSuccess;
+        return isSuccess;
 }
 
 bool SPI0_Write(void* pTransmitData, size_t txSize)
@@ -173,9 +176,9 @@ bool SPI0_TransferSetup (SPI_TRANSFER_SETUP * setup, uint32_t spiSourceClock )
 {
     uint32_t scbr;
     if ((setup == NULL) || (setup->clockFrequency == 0))
-	{
-		return false;
-	}
+    {
+        return false;
+    }
     if(spiSourceClock == 0)
     {
         // Fetch Master Clock Frequency directly
