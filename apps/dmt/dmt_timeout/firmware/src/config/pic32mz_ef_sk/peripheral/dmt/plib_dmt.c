@@ -55,23 +55,47 @@
 // *****************************************************************************
 // *****************************************************************************
 
-void DMT_Enable(void)
+void DMT_Enable( void )
 {
     /* ON = 1 */
-    DMTCON = _DMTCON_ON_MASK;
+    DMTCONbits.ON = 1;
 }
 
-void DMT_Disable(void)
+void DMT_Disable( void )
 {
     /* ON = 0 */
-    DMTCON = _DMTCON_ON_MASK;
+    DMTCONbits.ON = 0;
 }
 
-void DMT_Clear ( void )
+void DMT_Clear( void )
 {
-    /* STEP1 */
-    DMTPRECLR = (_DMTPRECLR_STEP1_MASK & (0x40 << _DMTPRECLR_STEP1_POSITION));
+    /* Clear STEP1 */
+    DMTPRECLRbits.STEP1 = 0x40;
 
-    /* STEP2 */
-    DMTCLR = (_DMTCLR_STEP2_MASK & 0x8);
+    /* Clear STEP2 */
+    DMTCLRbits.STEP2 = 0x08;
+}
+
+bool DMT_ClearWindowStatusGet( void )
+{
+    /* Clear window open status */
+    return (bool) DMTSTATbits.WINOPN;
+}
+
+uint32_t DMT_CounterGet( void )
+{
+    /* Current counter value */
+    return (uint32_t) DMTCNT;
+}
+
+uint32_t DMT_TimeOutCountGet( void )
+{
+    /* Maximum count selected */
+    return (uint32_t) DMTPSCNT;
+}
+
+uint32_t DMT_WindowIntervalGet( void )
+{
+    /* Window interval value */
+    return (uint32_t) DMTPSINTV;
 }
