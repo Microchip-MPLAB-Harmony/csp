@@ -20,6 +20,9 @@
         <path>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS</path>
         <path>$PROJ_DIR$\..\..\firmware\src\arm</path>
     </asmIncludePath>
+    <defines>
+        <defines>__FPU_PRESENT=1</defines>
+    </defines>
     <linkerFile>
         <override>true</override>
         <path>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult\ddr.icf</path>
@@ -109,7 +112,7 @@
             <path>\peripheral\pio\plib_pio.c</path>
             <path>\peripheral\aic\plib_aic.c</path>
             <path>\cstartup.s</path>
-            <path>\vectortrap.s</path>
+            <path>\fault_handlers.c</path>
             <path>\peripheral\pwm\plib_pwm.c</path>
         </group>
     </files>
