@@ -74,7 +74,7 @@ void PIO_Initialize ( void )
 	
  /* Port B Pin 9 configuration */
 	PIOB_REGS->PIO_MSKR = 0x200;
-	PIOB_REGS->PIO_CFGR |= 0x2000200;
+	PIOB_REGS->PIO_CFGR |= 0x2001200;
 	
  /* Port B Latch configuration */
 	PIOB_REGS->PIO_SODR = 0x1;
