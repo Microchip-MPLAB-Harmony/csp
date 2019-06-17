@@ -87,11 +87,11 @@ void EIC_OTHER_Handler          ( void ) __attribute__((weak, alias("Dummy_Handl
 void FREQM_Handler              ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void NVMCTRL_Handler            ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void PORT_Handler               ( void ) __attribute__((weak, alias("Dummy_Handler")));
-void DMAC_0_Handler             ( void ) __attribute__((weak, alias("Dummy_Handler")));
-void DMAC_1_Handler             ( void ) __attribute__((weak, alias("Dummy_Handler")));
-void DMAC_2_Handler             ( void ) __attribute__((weak, alias("Dummy_Handler")));
-void DMAC_3_Handler             ( void ) __attribute__((weak, alias("Dummy_Handler")));
-void DMAC_OTHER_Handler         ( void ) __attribute__((weak, alias("Dummy_Handler")));
+void DMAC_0_InterruptHandler    ( void ) __attribute__((weak, alias("Dummy_Handler")));
+void DMAC_1_InterruptHandler    ( void ) __attribute__((weak, alias("Dummy_Handler")));
+void DMAC_2_InterruptHandler    ( void ) __attribute__((weak, alias("Dummy_Handler")));
+void DMAC_3_InterruptHandler    ( void ) __attribute__((weak, alias("Dummy_Handler")));
+void DMAC_OTHER_InterruptHandler ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void EVSYS_0_Handler            ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void EVSYS_1_Handler            ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void EVSYS_2_Handler            ( void ) __attribute__((weak, alias("Dummy_Handler")));
@@ -114,7 +114,7 @@ void TC0_Handler                ( void ) __attribute__((weak, alias("Dummy_Handl
 void TC1_Handler                ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void TC2_Handler                ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void ADC_OTHER_Handler          ( void ) __attribute__((weak, alias("Dummy_Handler")));
-void ADC_RESRDY_Handler         ( void ) __attribute__((weak, alias("Dummy_Handler")));
+void ADC_Handler                ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void AC_Handler                 ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void DAC_UNDERRUN_A_Handler     ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void DAC_EMPTY_Handler          ( void ) __attribute__((weak, alias("Dummy_Handler")));
@@ -151,11 +151,11 @@ const DeviceVectors exception_table=
     .pfnFREQM_Handler              = ( void * ) FREQM_Handler,
     .pfnNVMCTRL_Handler            = ( void * ) NVMCTRL_Handler,
     .pfnPORT_Handler               = ( void * ) PORT_Handler,
-    .pfnDMAC_0_Handler             = ( void * ) DMAC_0_Handler,
-    .pfnDMAC_1_Handler             = ( void * ) DMAC_1_Handler,
-    .pfnDMAC_2_Handler             = ( void * ) DMAC_2_Handler,
-    .pfnDMAC_3_Handler             = ( void * ) DMAC_3_Handler,
-    .pfnDMAC_OTHER_Handler         = ( void * ) DMAC_OTHER_Handler,
+    .pfnDMAC_0_Handler             = ( void * ) DMAC_0_InterruptHandler,
+    .pfnDMAC_1_Handler             = ( void * ) DMAC_1_InterruptHandler,
+    .pfnDMAC_2_Handler             = ( void * ) DMAC_2_InterruptHandler,
+    .pfnDMAC_3_Handler             = ( void * ) DMAC_3_InterruptHandler,
+    .pfnDMAC_OTHER_Handler         = ( void * ) DMAC_OTHER_InterruptHandler,
     .pfnEVSYS_0_Handler            = ( void * ) EVSYS_0_Handler,
     .pfnEVSYS_1_Handler            = ( void * ) EVSYS_1_Handler,
     .pfnEVSYS_2_Handler            = ( void * ) EVSYS_2_Handler,
@@ -178,7 +178,7 @@ const DeviceVectors exception_table=
     .pfnTC1_Handler                = ( void * ) TC1_Handler,
     .pfnTC2_Handler                = ( void * ) TC2_Handler,
     .pfnADC_OTHER_Handler          = ( void * ) ADC_OTHER_Handler,
-    .pfnADC_RESRDY_Handler         = ( void * ) ADC_RESRDY_Handler,
+    .pfnADC_RESRDY_Handler         = ( void * ) ADC_Handler,
     .pfnAC_Handler                 = ( void * ) AC_Handler,
     .pfnDAC_UNDERRUN_A_Handler     = ( void * ) DAC_UNDERRUN_A_Handler,
     .pfnDAC_EMPTY_Handler          = ( void * ) DAC_EMPTY_Handler,

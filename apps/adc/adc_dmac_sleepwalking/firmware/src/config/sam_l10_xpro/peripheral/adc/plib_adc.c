@@ -200,3 +200,4 @@ bool ADC_ConversionStatusGet( void )
     }
     return status;
 }
+

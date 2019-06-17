@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-01-31T10:50:35Z */
+/* file generated from device description version 2019-06-07T05:54:14Z */
 #ifndef _SAML10_GCLK_COMPONENT_H_
 #define _SAML10_GCLK_COMPONENT_H_
 
@@ -71,7 +71,7 @@
 #define GCLK_GENCTRL_SRC_Msk                  (_U_(0x7) << GCLK_GENCTRL_SRC_Pos)                   /**< (GCLK_GENCTRL) Source Select Mask */
 #define GCLK_GENCTRL_SRC(value)               (GCLK_GENCTRL_SRC_Msk & ((value) << GCLK_GENCTRL_SRC_Pos))
 #define   GCLK_GENCTRL_SRC_XOSC_Val           _U_(0x0)                                             /**< (GCLK_GENCTRL) XOSC oscillator output  */
-#define   GCLK_GENCTRL_SRC_GCLKIN_Val         _U_(0x1)                                             /**< (GCLK_GENCTRL) Generator input pad  */
+#define   GCLK_GENCTRL_SRC_GCLKIN_Val         _U_(0x1)                                             /**< (GCLK_GENCTRL) Generator input pad (GCLK_IO)  */
 #define   GCLK_GENCTRL_SRC_GCLKGEN1_Val       _U_(0x2)                                             /**< (GCLK_GENCTRL) Generic clock generator 1 output  */
 #define   GCLK_GENCTRL_SRC_OSCULP32K_Val      _U_(0x3)                                             /**< (GCLK_GENCTRL) OSCULP32K oscillator output  */
 #define   GCLK_GENCTRL_SRC_XOSC32K_Val        _U_(0x4)                                             /**< (GCLK_GENCTRL) XOSC32K oscillator output  */
@@ -79,7 +79,7 @@
 #define   GCLK_GENCTRL_SRC_DFLLULP_Val        _U_(0x6)                                             /**< (GCLK_GENCTRL) DFLLULP output  */
 #define   GCLK_GENCTRL_SRC_FDPLL96M_Val       _U_(0x7)                                             /**< (GCLK_GENCTRL) FDPLL output  */
 #define GCLK_GENCTRL_SRC_XOSC                 (GCLK_GENCTRL_SRC_XOSC_Val << GCLK_GENCTRL_SRC_Pos)  /**< (GCLK_GENCTRL) XOSC oscillator output Position  */
-#define GCLK_GENCTRL_SRC_GCLKIN               (GCLK_GENCTRL_SRC_GCLKIN_Val << GCLK_GENCTRL_SRC_Pos) /**< (GCLK_GENCTRL) Generator input pad Position  */
+#define GCLK_GENCTRL_SRC_GCLKIN               (GCLK_GENCTRL_SRC_GCLKIN_Val << GCLK_GENCTRL_SRC_Pos) /**< (GCLK_GENCTRL) Generator input pad (GCLK_IO) Position  */
 #define GCLK_GENCTRL_SRC_GCLKGEN1             (GCLK_GENCTRL_SRC_GCLKGEN1_Val << GCLK_GENCTRL_SRC_Pos) /**< (GCLK_GENCTRL) Generic clock generator 1 output Position  */
 #define GCLK_GENCTRL_SRC_OSCULP32K            (GCLK_GENCTRL_SRC_OSCULP32K_Val << GCLK_GENCTRL_SRC_Pos) /**< (GCLK_GENCTRL) OSCULP32K oscillator output Position  */
 #define GCLK_GENCTRL_SRC_XOSC32K              (GCLK_GENCTRL_SRC_XOSC32K_Val << GCLK_GENCTRL_SRC_Pos) /**< (GCLK_GENCTRL) XOSC32K oscillator output Position  */
@@ -101,6 +101,10 @@
 #define GCLK_GENCTRL_DIVSEL_Pos               _U_(12)                                              /**< (GCLK_GENCTRL) Divide Selection Position */
 #define GCLK_GENCTRL_DIVSEL_Msk               (_U_(0x1) << GCLK_GENCTRL_DIVSEL_Pos)                /**< (GCLK_GENCTRL) Divide Selection Mask */
 #define GCLK_GENCTRL_DIVSEL(value)            (GCLK_GENCTRL_DIVSEL_Msk & ((value) << GCLK_GENCTRL_DIVSEL_Pos))
+#define   GCLK_GENCTRL_DIVSEL_DIV1_Val        _U_(0x0)                                             /**< (GCLK_GENCTRL) Divide input directly by divider factor  */
+#define   GCLK_GENCTRL_DIVSEL_DIV2_Val        _U_(0x1)                                             /**< (GCLK_GENCTRL) Divide input by 2^(divider factor+ 1)  */
+#define GCLK_GENCTRL_DIVSEL_DIV1              (GCLK_GENCTRL_DIVSEL_DIV1_Val << GCLK_GENCTRL_DIVSEL_Pos) /**< (GCLK_GENCTRL) Divide input directly by divider factor Position  */
+#define GCLK_GENCTRL_DIVSEL_DIV2              (GCLK_GENCTRL_DIVSEL_DIV2_Val << GCLK_GENCTRL_DIVSEL_Pos) /**< (GCLK_GENCTRL) Divide input by 2^(divider factor+ 1) Position  */
 #define GCLK_GENCTRL_RUNSTDBY_Pos             _U_(13)                                              /**< (GCLK_GENCTRL) Run in Standby Position */
 #define GCLK_GENCTRL_RUNSTDBY_Msk             (_U_(0x1) << GCLK_GENCTRL_RUNSTDBY_Pos)              /**< (GCLK_GENCTRL) Run in Standby Mask */
 #define GCLK_GENCTRL_RUNSTDBY(value)          (GCLK_GENCTRL_RUNSTDBY_Msk & ((value) << GCLK_GENCTRL_RUNSTDBY_Pos))

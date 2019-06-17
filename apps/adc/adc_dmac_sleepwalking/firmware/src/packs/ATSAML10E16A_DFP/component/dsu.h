@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-01-31T10:50:35Z */
+/* file generated from device description version 2019-06-07T05:54:14Z */
 #ifndef _SAML10_DSU_COMPONENT_H_
 #define _SAML10_DSU_COMPONENT_H_
 
@@ -74,10 +74,8 @@
 #define DSU_STATUSB_DAL_Msk                   (_U_(0x3) << DSU_STATUSB_DAL_Pos)                    /**< (DSU_STATUSB) Debugger Access Level Mask */
 #define DSU_STATUSB_DAL(value)                (DSU_STATUSB_DAL_Msk & ((value) << DSU_STATUSB_DAL_Pos))
 #define   DSU_STATUSB_DAL_SECURED_Val         _U_(0x0)                                             /**< (DSU_STATUSB)   */
-#define   DSU_STATUSB_DAL_NS_DEBUG_Val        _U_(0x1)                                             /**< (DSU_STATUSB)   */
 #define   DSU_STATUSB_DAL_FULL_DEBUG_Val      _U_(0x2)                                             /**< (DSU_STATUSB)   */
 #define DSU_STATUSB_DAL_SECURED               (DSU_STATUSB_DAL_SECURED_Val << DSU_STATUSB_DAL_Pos) /**< (DSU_STATUSB)  Position  */
-#define DSU_STATUSB_DAL_NS_DEBUG              (DSU_STATUSB_DAL_NS_DEBUG_Val << DSU_STATUSB_DAL_Pos) /**< (DSU_STATUSB)  Position  */
 #define DSU_STATUSB_DAL_FULL_DEBUG            (DSU_STATUSB_DAL_FULL_DEBUG_Val << DSU_STATUSB_DAL_Pos) /**< (DSU_STATUSB)  Position  */
 #define DSU_STATUSB_DBGPRES_Pos               _U_(2)                                               /**< (DSU_STATUSB) Debugger Present Position */
 #define DSU_STATUSB_DBGPRES_Msk               (_U_(0x1) << DSU_STATUSB_DBGPRES_Pos)                /**< (DSU_STATUSB) Debugger Present Mask */
@@ -105,12 +103,6 @@
 #define DSU_STATUSB_BCCD_Pos                  _U_(6)                                               /**< (DSU_STATUSB Position) Boot ROM Communication Channel x Dirty */
 #define DSU_STATUSB_BCCD_Msk                  (_U_(0x3) << DSU_STATUSB_BCCD_Pos)                   /**< (DSU_STATUSB Mask) BCCD */
 #define DSU_STATUSB_BCCD(value)               (DSU_STATUSB_BCCD_Msk & ((value) << DSU_STATUSB_BCCD_Pos)) 
-
-/* -------- DSU_STATUSC : (DSU Offset: 0x03) ( R/ 8) Status C -------- */
-#define DSU_STATUSC_RESETVALUE                _U_(0x00)                                            /**<  (DSU_STATUSC) Status C  Reset Value */
-
-#define DSU_STATUSC_Msk                       _U_(0x00)                                            /**< (DSU_STATUSC) Register Mask  */
-
 
 /* -------- DSU_ADDR : (DSU Offset: 0x04) (R/W 32) Address -------- */
 #define DSU_ADDR_RESETVALUE                   _U_(0x00)                                            /**<  (DSU_ADDR) Address  Reset Value */
@@ -168,8 +160,12 @@
 #define DSU_DID_SERIES(value)                 (DSU_DID_SERIES_Msk & ((value) << DSU_DID_SERIES_Pos))
 #define   DSU_DID_SERIES_0_Val                _U_(0x0)                                             /**< (DSU_DID) Cortex-M0+ processor, basic feature set  */
 #define   DSU_DID_SERIES_1_Val                _U_(0x1)                                             /**< (DSU_DID) Cortex-M0+ processor, USB  */
+#define   DSU_DID_SERIES_3_Val                _U_(0x3)                                             /**< (DSU_DID) SAM L11  */
+#define   DSU_DID_SERIES_4_Val                _U_(0x4)                                             /**< (DSU_DID) SAM L10  */
 #define DSU_DID_SERIES_0                      (DSU_DID_SERIES_0_Val << DSU_DID_SERIES_Pos)         /**< (DSU_DID) Cortex-M0+ processor, basic feature set Position  */
 #define DSU_DID_SERIES_1                      (DSU_DID_SERIES_1_Val << DSU_DID_SERIES_Pos)         /**< (DSU_DID) Cortex-M0+ processor, USB Position  */
+#define DSU_DID_SERIES_3                      (DSU_DID_SERIES_3_Val << DSU_DID_SERIES_Pos)         /**< (DSU_DID) SAM L11 Position  */
+#define DSU_DID_SERIES_4                      (DSU_DID_SERIES_4_Val << DSU_DID_SERIES_Pos)         /**< (DSU_DID) SAM L10 Position  */
 #define DSU_DID_FAMILY_Pos                    _U_(23)                                              /**< (DSU_DID) Family Position */
 #define DSU_DID_FAMILY_Msk                    (_U_(0x1F) << DSU_DID_FAMILY_Pos)                    /**< (DSU_DID) Family Mask */
 #define DSU_DID_FAMILY(value)                 (DSU_DID_FAMILY_Msk & ((value) << DSU_DID_FAMILY_Pos))
@@ -220,15 +216,6 @@
 #define DSU_BCC_Msk                           _U_(0xFFFFFFFF)                                      /**< (DSU_BCC) Register Mask  */
 
 
-/* -------- DSU_DCFG : (DSU Offset: 0xF0) (R/W 32) Device Configuration -------- */
-#define DSU_DCFG_RESETVALUE                   _U_(0x00)                                            /**<  (DSU_DCFG) Device Configuration  Reset Value */
-
-#define DSU_DCFG_DCFG_Pos                     _U_(0)                                               /**< (DSU_DCFG) Device Configuration Position */
-#define DSU_DCFG_DCFG_Msk                     (_U_(0xFFFFFFFF) << DSU_DCFG_DCFG_Pos)               /**< (DSU_DCFG) Device Configuration Mask */
-#define DSU_DCFG_DCFG(value)                  (DSU_DCFG_DCFG_Msk & ((value) << DSU_DCFG_DCFG_Pos))
-#define DSU_DCFG_Msk                          _U_(0xFFFFFFFF)                                      /**< (DSU_DCFG) Register Mask  */
-
-
 /* -------- DSU_ENTRY0 : (DSU Offset: 0x1000) ( R/ 32) CoreSight ROM Table Entry 0 -------- */
 #define DSU_ENTRY0_RESETVALUE                 _U_(0x9F0FC002)                                      /**<  (DSU_ENTRY0) CoreSight ROM Table Entry 0  Reset Value */
 
@@ -247,7 +234,16 @@
 /* -------- DSU_ENTRY1 : (DSU Offset: 0x1004) ( R/ 32) CoreSight ROM Table Entry 1 -------- */
 #define DSU_ENTRY1_RESETVALUE                 _U_(0x00)                                            /**<  (DSU_ENTRY1) CoreSight ROM Table Entry 1  Reset Value */
 
-#define DSU_ENTRY1_Msk                        _U_(0x00000000)                                      /**< (DSU_ENTRY1) Register Mask  */
+#define DSU_ENTRY1_EPRES_Pos                  _U_(0)                                               /**< (DSU_ENTRY1) Entry Present Position */
+#define DSU_ENTRY1_EPRES_Msk                  (_U_(0x1) << DSU_ENTRY1_EPRES_Pos)                   /**< (DSU_ENTRY1) Entry Present Mask */
+#define DSU_ENTRY1_EPRES(value)               (DSU_ENTRY1_EPRES_Msk & ((value) << DSU_ENTRY1_EPRES_Pos))
+#define DSU_ENTRY1_FMT_Pos                    _U_(1)                                               /**< (DSU_ENTRY1) Format Position */
+#define DSU_ENTRY1_FMT_Msk                    (_U_(0x1) << DSU_ENTRY1_FMT_Pos)                     /**< (DSU_ENTRY1) Format Mask */
+#define DSU_ENTRY1_FMT(value)                 (DSU_ENTRY1_FMT_Msk & ((value) << DSU_ENTRY1_FMT_Pos))
+#define DSU_ENTRY1_ADDOFF_Pos                 _U_(12)                                              /**< (DSU_ENTRY1) Address Offset Position */
+#define DSU_ENTRY1_ADDOFF_Msk                 (_U_(0xFFFFF) << DSU_ENTRY1_ADDOFF_Pos)              /**< (DSU_ENTRY1) Address Offset Mask */
+#define DSU_ENTRY1_ADDOFF(value)              (DSU_ENTRY1_ADDOFF_Msk & ((value) << DSU_ENTRY1_ADDOFF_Pos))
+#define DSU_ENTRY1_Msk                        _U_(0xFFFFF003)                                      /**< (DSU_ENTRY1) Register Mask  */
 
 
 /* -------- DSU_END : (DSU Offset: 0x1008) ( R/ 32) CoreSight ROM Table End -------- */
@@ -389,7 +385,6 @@
 #define DSU_CTRL_REG_OFST              (0x00)              /**< (DSU_CTRL) Control Offset */
 #define DSU_STATUSA_REG_OFST           (0x01)              /**< (DSU_STATUSA) Status A Offset */
 #define DSU_STATUSB_REG_OFST           (0x02)              /**< (DSU_STATUSB) Status B Offset */
-#define DSU_STATUSC_REG_OFST           (0x03)              /**< (DSU_STATUSC) Status C Offset */
 #define DSU_ADDR_REG_OFST              (0x04)              /**< (DSU_ADDR) Address Offset */
 #define DSU_LENGTH_REG_OFST            (0x08)              /**< (DSU_LENGTH) Length Offset */
 #define DSU_DATA_REG_OFST              (0x0C)              /**< (DSU_DATA) Data Offset */
@@ -397,7 +392,6 @@
 #define DSU_DID_REG_OFST               (0x18)              /**< (DSU_DID) Device Identification Offset */
 #define DSU_CFG_REG_OFST               (0x1C)              /**< (DSU_CFG) Configuration Offset */
 #define DSU_BCC_REG_OFST               (0x20)              /**< (DSU_BCC) Boot ROM Communication Channel n Offset */
-#define DSU_DCFG_REG_OFST              (0xF0)              /**< (DSU_DCFG) Device Configuration Offset */
 #define DSU_ENTRY0_REG_OFST            (0x1000)            /**< (DSU_ENTRY0) CoreSight ROM Table Entry 0 Offset */
 #define DSU_ENTRY1_REG_OFST            (0x1004)            /**< (DSU_ENTRY1) CoreSight ROM Table Entry 1 Offset */
 #define DSU_END_REG_OFST               (0x1008)            /**< (DSU_END) CoreSight ROM Table End Offset */
@@ -422,7 +416,7 @@ typedef struct
   __O   uint8_t                        DSU_CTRL;           /**< Offset: 0x00 ( /W  8) Control */
   __IO  uint8_t                        DSU_STATUSA;        /**< Offset: 0x01 (R/W  8) Status A */
   __I   uint8_t                        DSU_STATUSB;        /**< Offset: 0x02 (R/   8) Status B */
-  __I   uint8_t                        DSU_STATUSC;        /**< Offset: 0x03 (R/   8) Status C */
+  __I   uint8_t                        Reserved1[0x01];
   __IO  uint32_t                       DSU_ADDR;           /**< Offset: 0x04 (R/W  32) Address */
   __IO  uint32_t                       DSU_LENGTH;         /**< Offset: 0x08 (R/W  32) Length */
   __IO  uint32_t                       DSU_DATA;           /**< Offset: 0x0C (R/W  32) Data */
@@ -430,9 +424,7 @@ typedef struct
   __I   uint32_t                       DSU_DID;            /**< Offset: 0x18 (R/   32) Device Identification */
   __IO  uint32_t                       DSU_CFG;            /**< Offset: 0x1C (R/W  32) Configuration */
   __IO  uint32_t                       DSU_BCC[2];         /**< Offset: 0x20 (R/W  32) Boot ROM Communication Channel n */
-  __I   uint8_t                        Reserved1[0xC8];
-  __IO  uint32_t                       DSU_DCFG[2];        /**< Offset: 0xF0 (R/W  32) Device Configuration */
-  __I   uint8_t                        Reserved2[0xF08];
+  __I   uint8_t                        Reserved2[0xFD8];
   __I   uint32_t                       DSU_ENTRY0;         /**< Offset: 0x1000 (R/   32) CoreSight ROM Table Entry 0 */
   __I   uint32_t                       DSU_ENTRY1;         /**< Offset: 0x1004 (R/   32) CoreSight ROM Table Entry 1 */
   __I   uint32_t                       DSU_END;            /**< Offset: 0x1008 (R/   32) CoreSight ROM Table End */

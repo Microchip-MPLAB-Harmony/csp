@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-01-31T10:50:35Z */
+/* file generated from device description version 2019-06-07T05:54:14Z */
 #ifndef _SAML10_ADC_COMPONENT_H_
 #define _SAML10_ADC_COMPONENT_H_
 
@@ -37,16 +37,13 @@
 #define ADC_CTRLA_ENABLE_Pos                  _U_(1)                                               /**< (ADC_CTRLA) Enable Position */
 #define ADC_CTRLA_ENABLE_Msk                  (_U_(0x1) << ADC_CTRLA_ENABLE_Pos)                   /**< (ADC_CTRLA) Enable Mask */
 #define ADC_CTRLA_ENABLE(value)               (ADC_CTRLA_ENABLE_Msk & ((value) << ADC_CTRLA_ENABLE_Pos))
-#define ADC_CTRLA_SLAVEEN_Pos                 _U_(5)                                               /**< (ADC_CTRLA) Slave Enable Position */
-#define ADC_CTRLA_SLAVEEN_Msk                 (_U_(0x1) << ADC_CTRLA_SLAVEEN_Pos)                  /**< (ADC_CTRLA) Slave Enable Mask */
-#define ADC_CTRLA_SLAVEEN(value)              (ADC_CTRLA_SLAVEEN_Msk & ((value) << ADC_CTRLA_SLAVEEN_Pos))
 #define ADC_CTRLA_RUNSTDBY_Pos                _U_(6)                                               /**< (ADC_CTRLA) Run During Standby Position */
 #define ADC_CTRLA_RUNSTDBY_Msk                (_U_(0x1) << ADC_CTRLA_RUNSTDBY_Pos)                 /**< (ADC_CTRLA) Run During Standby Mask */
 #define ADC_CTRLA_RUNSTDBY(value)             (ADC_CTRLA_RUNSTDBY_Msk & ((value) << ADC_CTRLA_RUNSTDBY_Pos))
 #define ADC_CTRLA_ONDEMAND_Pos                _U_(7)                                               /**< (ADC_CTRLA) On Demand Control Position */
 #define ADC_CTRLA_ONDEMAND_Msk                (_U_(0x1) << ADC_CTRLA_ONDEMAND_Pos)                 /**< (ADC_CTRLA) On Demand Control Mask */
 #define ADC_CTRLA_ONDEMAND(value)             (ADC_CTRLA_ONDEMAND_Msk & ((value) << ADC_CTRLA_ONDEMAND_Pos))
-#define ADC_CTRLA_Msk                         _U_(0xE3)                                            /**< (ADC_CTRLA) Register Mask  */
+#define ADC_CTRLA_Msk                         _U_(0xC3)                                            /**< (ADC_CTRLA) Register Mask  */
 
 
 /* -------- ADC_CTRLB : (ADC Offset: 0x01) (R/W 8) Control B -------- */
@@ -83,15 +80,15 @@
 #define   ADC_REFCTRL_REFSEL_INTREF_Val       _U_(0x0)                                             /**< (ADC_REFCTRL) Internal Bandgap Reference  */
 #define   ADC_REFCTRL_REFSEL_INTVCC0_Val      _U_(0x1)                                             /**< (ADC_REFCTRL) 1/1.6 VDDANA  */
 #define   ADC_REFCTRL_REFSEL_INTVCC1_Val      _U_(0x2)                                             /**< (ADC_REFCTRL) 1/2 VDDANA  */
-#define   ADC_REFCTRL_REFSEL_AREFA_Val        _U_(0x3)                                             /**< (ADC_REFCTRL) External Reference  */
-#define   ADC_REFCTRL_REFSEL_AREFB_Val        _U_(0x4)                                             /**< (ADC_REFCTRL) External Reference  */
-#define   ADC_REFCTRL_REFSEL_INTVCC2_Val      _U_(0x5)                                             /**< (ADC_REFCTRL) VCCANA  */
+#define   ADC_REFCTRL_REFSEL_VREFA_Val        _U_(0x3)                                             /**< (ADC_REFCTRL) External Reference  */
+#define   ADC_REFCTRL_REFSEL_VREFB_Val        _U_(0x4)                                             /**< (ADC_REFCTRL) External Reference  */
+#define   ADC_REFCTRL_REFSEL_INTVCC2_Val      _U_(0x5)                                             /**< (ADC_REFCTRL) VDDANA  */
 #define ADC_REFCTRL_REFSEL_INTREF             (ADC_REFCTRL_REFSEL_INTREF_Val << ADC_REFCTRL_REFSEL_Pos) /**< (ADC_REFCTRL) Internal Bandgap Reference Position  */
 #define ADC_REFCTRL_REFSEL_INTVCC0            (ADC_REFCTRL_REFSEL_INTVCC0_Val << ADC_REFCTRL_REFSEL_Pos) /**< (ADC_REFCTRL) 1/1.6 VDDANA Position  */
 #define ADC_REFCTRL_REFSEL_INTVCC1            (ADC_REFCTRL_REFSEL_INTVCC1_Val << ADC_REFCTRL_REFSEL_Pos) /**< (ADC_REFCTRL) 1/2 VDDANA Position  */
-#define ADC_REFCTRL_REFSEL_AREFA              (ADC_REFCTRL_REFSEL_AREFA_Val << ADC_REFCTRL_REFSEL_Pos) /**< (ADC_REFCTRL) External Reference Position  */
-#define ADC_REFCTRL_REFSEL_AREFB              (ADC_REFCTRL_REFSEL_AREFB_Val << ADC_REFCTRL_REFSEL_Pos) /**< (ADC_REFCTRL) External Reference Position  */
-#define ADC_REFCTRL_REFSEL_INTVCC2            (ADC_REFCTRL_REFSEL_INTVCC2_Val << ADC_REFCTRL_REFSEL_Pos) /**< (ADC_REFCTRL) VCCANA Position  */
+#define ADC_REFCTRL_REFSEL_VREFA              (ADC_REFCTRL_REFSEL_VREFA_Val << ADC_REFCTRL_REFSEL_Pos) /**< (ADC_REFCTRL) External Reference Position  */
+#define ADC_REFCTRL_REFSEL_VREFB              (ADC_REFCTRL_REFSEL_VREFB_Val << ADC_REFCTRL_REFSEL_Pos) /**< (ADC_REFCTRL) External Reference Position  */
+#define ADC_REFCTRL_REFSEL_INTVCC2            (ADC_REFCTRL_REFSEL_INTVCC2_Val << ADC_REFCTRL_REFSEL_Pos) /**< (ADC_REFCTRL) VDDANA Position  */
 #define ADC_REFCTRL_REFCOMP_Pos               _U_(7)                                               /**< (ADC_REFCTRL) Reference Buffer Offset Compensation Enable Position */
 #define ADC_REFCTRL_REFCOMP_Msk               (_U_(0x1) << ADC_REFCTRL_REFCOMP_Pos)                /**< (ADC_REFCTRL) Reference Buffer Offset Compensation Enable Mask */
 #define ADC_REFCTRL_REFCOMP(value)            (ADC_REFCTRL_REFCOMP_Msk & ((value) << ADC_REFCTRL_REFCOMP_Pos))
@@ -195,26 +192,12 @@
 #define   ADC_INPUTCTRL_MUXPOS_AIN7_Val       _U_(0x7)                                             /**< (ADC_INPUTCTRL) ADC AIN7 Pin  */
 #define   ADC_INPUTCTRL_MUXPOS_AIN8_Val       _U_(0x8)                                             /**< (ADC_INPUTCTRL) ADC AIN8 Pin  */
 #define   ADC_INPUTCTRL_MUXPOS_AIN9_Val       _U_(0x9)                                             /**< (ADC_INPUTCTRL) ADC AIN9 Pin  */
-#define   ADC_INPUTCTRL_MUXPOS_AIN10_Val      _U_(0xA)                                             /**< (ADC_INPUTCTRL) ADC AIN10 Pin  */
-#define   ADC_INPUTCTRL_MUXPOS_AIN11_Val      _U_(0xB)                                             /**< (ADC_INPUTCTRL) ADC AIN11 Pin  */
-#define   ADC_INPUTCTRL_MUXPOS_AIN12_Val      _U_(0xC)                                             /**< (ADC_INPUTCTRL) ADC AIN12 Pin  */
-#define   ADC_INPUTCTRL_MUXPOS_AIN13_Val      _U_(0xD)                                             /**< (ADC_INPUTCTRL) ADC AIN13 Pin  */
-#define   ADC_INPUTCTRL_MUXPOS_AIN14_Val      _U_(0xE)                                             /**< (ADC_INPUTCTRL) ADC AIN14 Pin  */
-#define   ADC_INPUTCTRL_MUXPOS_AIN15_Val      _U_(0xF)                                             /**< (ADC_INPUTCTRL) ADC AIN15 Pin  */
-#define   ADC_INPUTCTRL_MUXPOS_AIN16_Val      _U_(0x10)                                            /**< (ADC_INPUTCTRL) ADC AIN16 Pin  */
-#define   ADC_INPUTCTRL_MUXPOS_AIN17_Val      _U_(0x11)                                            /**< (ADC_INPUTCTRL) ADC AIN17 Pin  */
-#define   ADC_INPUTCTRL_MUXPOS_AIN18_Val      _U_(0x12)                                            /**< (ADC_INPUTCTRL) ADC AIN18 Pin  */
-#define   ADC_INPUTCTRL_MUXPOS_AIN19_Val      _U_(0x13)                                            /**< (ADC_INPUTCTRL) ADC AIN19 Pin  */
-#define   ADC_INPUTCTRL_MUXPOS_AIN20_Val      _U_(0x14)                                            /**< (ADC_INPUTCTRL) ADC AIN20 Pin  */
-#define   ADC_INPUTCTRL_MUXPOS_AIN21_Val      _U_(0x15)                                            /**< (ADC_INPUTCTRL) ADC AIN21 Pin  */
-#define   ADC_INPUTCTRL_MUXPOS_AIN22_Val      _U_(0x16)                                            /**< (ADC_INPUTCTRL) ADC AIN22 Pin  */
-#define   ADC_INPUTCTRL_MUXPOS_AIN23_Val      _U_(0x17)                                            /**< (ADC_INPUTCTRL) ADC AIN23 Pin  */
 #define   ADC_INPUTCTRL_MUXPOS_TEMP_Val       _U_(0x18)                                            /**< (ADC_INPUTCTRL) Temperature Sensor  */
 #define   ADC_INPUTCTRL_MUXPOS_BANDGAP_Val    _U_(0x19)                                            /**< (ADC_INPUTCTRL) Bandgap Voltage  */
-#define   ADC_INPUTCTRL_MUXPOS_SCALEDCOREVCC_Val _U_(0x1A)                                            /**< (ADC_INPUTCTRL) 1/4 Scaled Core Supply  */
-#define   ADC_INPUTCTRL_MUXPOS_SCALEDIOVCC_Val _U_(0x1B)                                            /**< (ADC_INPUTCTRL) 1/4 Scaled I/O Supply  */
+#define   ADC_INPUTCTRL_MUXPOS_SCALEDVDDCORE_Val _U_(0x1A)                                            /**< (ADC_INPUTCTRL) 1/4 Scaled VDDCORE Supply  */
+#define   ADC_INPUTCTRL_MUXPOS_SCALEDVDDANA_Val _U_(0x1B)                                            /**< (ADC_INPUTCTRL) 1/4 Scaled VDDANA Supply  */
 #define   ADC_INPUTCTRL_MUXPOS_DAC_Val        _U_(0x1C)                                            /**< (ADC_INPUTCTRL) DAC Output  */
-#define   ADC_INPUTCTRL_MUXPOS_SCALEDVBAT_Val _U_(0x1D)                                            /**< (ADC_INPUTCTRL) 1/4 Scaled VBAT Supply  */
+#define   ADC_INPUTCTRL_MUXPOS_SCALEDVDDIO_Val _U_(0x1D)                                            /**< (ADC_INPUTCTRL) 1/4 Scaled VDDIO Supply  */
 #define   ADC_INPUTCTRL_MUXPOS_OPAMP01_Val    _U_(0x1E)                                            /**< (ADC_INPUTCTRL) OPAMP0 or OPAMP1 output  */
 #define   ADC_INPUTCTRL_MUXPOS_OPAMP2_Val     _U_(0x1F)                                            /**< (ADC_INPUTCTRL) OPAMP2 output  */
 #define ADC_INPUTCTRL_MUXPOS_AIN0             (ADC_INPUTCTRL_MUXPOS_AIN0_Val << ADC_INPUTCTRL_MUXPOS_Pos) /**< (ADC_INPUTCTRL) ADC AIN0 Pin Position  */
@@ -227,26 +210,12 @@
 #define ADC_INPUTCTRL_MUXPOS_AIN7             (ADC_INPUTCTRL_MUXPOS_AIN7_Val << ADC_INPUTCTRL_MUXPOS_Pos) /**< (ADC_INPUTCTRL) ADC AIN7 Pin Position  */
 #define ADC_INPUTCTRL_MUXPOS_AIN8             (ADC_INPUTCTRL_MUXPOS_AIN8_Val << ADC_INPUTCTRL_MUXPOS_Pos) /**< (ADC_INPUTCTRL) ADC AIN8 Pin Position  */
 #define ADC_INPUTCTRL_MUXPOS_AIN9             (ADC_INPUTCTRL_MUXPOS_AIN9_Val << ADC_INPUTCTRL_MUXPOS_Pos) /**< (ADC_INPUTCTRL) ADC AIN9 Pin Position  */
-#define ADC_INPUTCTRL_MUXPOS_AIN10            (ADC_INPUTCTRL_MUXPOS_AIN10_Val << ADC_INPUTCTRL_MUXPOS_Pos) /**< (ADC_INPUTCTRL) ADC AIN10 Pin Position  */
-#define ADC_INPUTCTRL_MUXPOS_AIN11            (ADC_INPUTCTRL_MUXPOS_AIN11_Val << ADC_INPUTCTRL_MUXPOS_Pos) /**< (ADC_INPUTCTRL) ADC AIN11 Pin Position  */
-#define ADC_INPUTCTRL_MUXPOS_AIN12            (ADC_INPUTCTRL_MUXPOS_AIN12_Val << ADC_INPUTCTRL_MUXPOS_Pos) /**< (ADC_INPUTCTRL) ADC AIN12 Pin Position  */
-#define ADC_INPUTCTRL_MUXPOS_AIN13            (ADC_INPUTCTRL_MUXPOS_AIN13_Val << ADC_INPUTCTRL_MUXPOS_Pos) /**< (ADC_INPUTCTRL) ADC AIN13 Pin Position  */
-#define ADC_INPUTCTRL_MUXPOS_AIN14            (ADC_INPUTCTRL_MUXPOS_AIN14_Val << ADC_INPUTCTRL_MUXPOS_Pos) /**< (ADC_INPUTCTRL) ADC AIN14 Pin Position  */
-#define ADC_INPUTCTRL_MUXPOS_AIN15            (ADC_INPUTCTRL_MUXPOS_AIN15_Val << ADC_INPUTCTRL_MUXPOS_Pos) /**< (ADC_INPUTCTRL) ADC AIN15 Pin Position  */
-#define ADC_INPUTCTRL_MUXPOS_AIN16            (ADC_INPUTCTRL_MUXPOS_AIN16_Val << ADC_INPUTCTRL_MUXPOS_Pos) /**< (ADC_INPUTCTRL) ADC AIN16 Pin Position  */
-#define ADC_INPUTCTRL_MUXPOS_AIN17            (ADC_INPUTCTRL_MUXPOS_AIN17_Val << ADC_INPUTCTRL_MUXPOS_Pos) /**< (ADC_INPUTCTRL) ADC AIN17 Pin Position  */
-#define ADC_INPUTCTRL_MUXPOS_AIN18            (ADC_INPUTCTRL_MUXPOS_AIN18_Val << ADC_INPUTCTRL_MUXPOS_Pos) /**< (ADC_INPUTCTRL) ADC AIN18 Pin Position  */
-#define ADC_INPUTCTRL_MUXPOS_AIN19            (ADC_INPUTCTRL_MUXPOS_AIN19_Val << ADC_INPUTCTRL_MUXPOS_Pos) /**< (ADC_INPUTCTRL) ADC AIN19 Pin Position  */
-#define ADC_INPUTCTRL_MUXPOS_AIN20            (ADC_INPUTCTRL_MUXPOS_AIN20_Val << ADC_INPUTCTRL_MUXPOS_Pos) /**< (ADC_INPUTCTRL) ADC AIN20 Pin Position  */
-#define ADC_INPUTCTRL_MUXPOS_AIN21            (ADC_INPUTCTRL_MUXPOS_AIN21_Val << ADC_INPUTCTRL_MUXPOS_Pos) /**< (ADC_INPUTCTRL) ADC AIN21 Pin Position  */
-#define ADC_INPUTCTRL_MUXPOS_AIN22            (ADC_INPUTCTRL_MUXPOS_AIN22_Val << ADC_INPUTCTRL_MUXPOS_Pos) /**< (ADC_INPUTCTRL) ADC AIN22 Pin Position  */
-#define ADC_INPUTCTRL_MUXPOS_AIN23            (ADC_INPUTCTRL_MUXPOS_AIN23_Val << ADC_INPUTCTRL_MUXPOS_Pos) /**< (ADC_INPUTCTRL) ADC AIN23 Pin Position  */
 #define ADC_INPUTCTRL_MUXPOS_TEMP             (ADC_INPUTCTRL_MUXPOS_TEMP_Val << ADC_INPUTCTRL_MUXPOS_Pos) /**< (ADC_INPUTCTRL) Temperature Sensor Position  */
 #define ADC_INPUTCTRL_MUXPOS_BANDGAP          (ADC_INPUTCTRL_MUXPOS_BANDGAP_Val << ADC_INPUTCTRL_MUXPOS_Pos) /**< (ADC_INPUTCTRL) Bandgap Voltage Position  */
-#define ADC_INPUTCTRL_MUXPOS_SCALEDCOREVCC    (ADC_INPUTCTRL_MUXPOS_SCALEDCOREVCC_Val << ADC_INPUTCTRL_MUXPOS_Pos) /**< (ADC_INPUTCTRL) 1/4 Scaled Core Supply Position  */
-#define ADC_INPUTCTRL_MUXPOS_SCALEDIOVCC      (ADC_INPUTCTRL_MUXPOS_SCALEDIOVCC_Val << ADC_INPUTCTRL_MUXPOS_Pos) /**< (ADC_INPUTCTRL) 1/4 Scaled I/O Supply Position  */
+#define ADC_INPUTCTRL_MUXPOS_SCALEDVDDCORE    (ADC_INPUTCTRL_MUXPOS_SCALEDVDDCORE_Val << ADC_INPUTCTRL_MUXPOS_Pos) /**< (ADC_INPUTCTRL) 1/4 Scaled VDDCORE Supply Position  */
+#define ADC_INPUTCTRL_MUXPOS_SCALEDVDDANA     (ADC_INPUTCTRL_MUXPOS_SCALEDVDDANA_Val << ADC_INPUTCTRL_MUXPOS_Pos) /**< (ADC_INPUTCTRL) 1/4 Scaled VDDANA Supply Position  */
 #define ADC_INPUTCTRL_MUXPOS_DAC              (ADC_INPUTCTRL_MUXPOS_DAC_Val << ADC_INPUTCTRL_MUXPOS_Pos) /**< (ADC_INPUTCTRL) DAC Output Position  */
-#define ADC_INPUTCTRL_MUXPOS_SCALEDVBAT       (ADC_INPUTCTRL_MUXPOS_SCALEDVBAT_Val << ADC_INPUTCTRL_MUXPOS_Pos) /**< (ADC_INPUTCTRL) 1/4 Scaled VBAT Supply Position  */
+#define ADC_INPUTCTRL_MUXPOS_SCALEDVDDIO      (ADC_INPUTCTRL_MUXPOS_SCALEDVDDIO_Val << ADC_INPUTCTRL_MUXPOS_Pos) /**< (ADC_INPUTCTRL) 1/4 Scaled VDDIO Supply Position  */
 #define ADC_INPUTCTRL_MUXPOS_OPAMP01          (ADC_INPUTCTRL_MUXPOS_OPAMP01_Val << ADC_INPUTCTRL_MUXPOS_Pos) /**< (ADC_INPUTCTRL) OPAMP0 or OPAMP1 output Position  */
 #define ADC_INPUTCTRL_MUXPOS_OPAMP2           (ADC_INPUTCTRL_MUXPOS_OPAMP2_Val << ADC_INPUTCTRL_MUXPOS_Pos) /**< (ADC_INPUTCTRL) OPAMP2 output Position  */
 #define ADC_INPUTCTRL_MUXNEG_Pos              _U_(8)                                               /**< (ADC_INPUTCTRL) Negative Mux Input Selection Position */
@@ -260,6 +229,7 @@
 #define   ADC_INPUTCTRL_MUXNEG_AIN5_Val       _U_(0x5)                                             /**< (ADC_INPUTCTRL) ADC AIN5 Pin  */
 #define   ADC_INPUTCTRL_MUXNEG_AIN6_Val       _U_(0x6)                                             /**< (ADC_INPUTCTRL) ADC AIN6 Pin  */
 #define   ADC_INPUTCTRL_MUXNEG_AIN7_Val       _U_(0x7)                                             /**< (ADC_INPUTCTRL) ADC AIN7 Pin  */
+#define   ADC_INPUTCTRL_MUXNEG_GND_Val        _U_(0x18)                                            /**< (ADC_INPUTCTRL) Internal Ground  */
 #define ADC_INPUTCTRL_MUXNEG_AIN0             (ADC_INPUTCTRL_MUXNEG_AIN0_Val << ADC_INPUTCTRL_MUXNEG_Pos) /**< (ADC_INPUTCTRL) ADC AIN0 Pin Position  */
 #define ADC_INPUTCTRL_MUXNEG_AIN1             (ADC_INPUTCTRL_MUXNEG_AIN1_Val << ADC_INPUTCTRL_MUXNEG_Pos) /**< (ADC_INPUTCTRL) ADC AIN1 Pin Position  */
 #define ADC_INPUTCTRL_MUXNEG_AIN2             (ADC_INPUTCTRL_MUXNEG_AIN2_Val << ADC_INPUTCTRL_MUXNEG_Pos) /**< (ADC_INPUTCTRL) ADC AIN2 Pin Position  */
@@ -268,6 +238,7 @@
 #define ADC_INPUTCTRL_MUXNEG_AIN5             (ADC_INPUTCTRL_MUXNEG_AIN5_Val << ADC_INPUTCTRL_MUXNEG_Pos) /**< (ADC_INPUTCTRL) ADC AIN5 Pin Position  */
 #define ADC_INPUTCTRL_MUXNEG_AIN6             (ADC_INPUTCTRL_MUXNEG_AIN6_Val << ADC_INPUTCTRL_MUXNEG_Pos) /**< (ADC_INPUTCTRL) ADC AIN6 Pin Position  */
 #define ADC_INPUTCTRL_MUXNEG_AIN7             (ADC_INPUTCTRL_MUXNEG_AIN7_Val << ADC_INPUTCTRL_MUXNEG_Pos) /**< (ADC_INPUTCTRL) ADC AIN7 Pin Position  */
+#define ADC_INPUTCTRL_MUXNEG_GND              (ADC_INPUTCTRL_MUXNEG_GND_Val << ADC_INPUTCTRL_MUXNEG_Pos) /**< (ADC_INPUTCTRL) Internal Ground Position  */
 #define ADC_INPUTCTRL_Msk                     _U_(0x1F1F)                                          /**< (ADC_INPUTCTRL) Register Mask  */
 
 
@@ -290,16 +261,13 @@
 #define ADC_CTRLC_RESSEL_Msk                  (_U_(0x3) << ADC_CTRLC_RESSEL_Pos)                   /**< (ADC_CTRLC) Conversion Result Resolution Mask */
 #define ADC_CTRLC_RESSEL(value)               (ADC_CTRLC_RESSEL_Msk & ((value) << ADC_CTRLC_RESSEL_Pos))
 #define   ADC_CTRLC_RESSEL_12BIT_Val          _U_(0x0)                                             /**< (ADC_CTRLC) 12-bit result  */
-#define   ADC_CTRLC_RESSEL_16BIT_Val          _U_(0x1)                                             /**< (ADC_CTRLC) For averaging mode output  */
+#define   ADC_CTRLC_RESSEL_16BIT_Val          _U_(0x1)                                             /**< (ADC_CTRLC) Accumulation or Oversampling and Decimation modes  */
 #define   ADC_CTRLC_RESSEL_10BIT_Val          _U_(0x2)                                             /**< (ADC_CTRLC) 10-bit result  */
 #define   ADC_CTRLC_RESSEL_8BIT_Val           _U_(0x3)                                             /**< (ADC_CTRLC) 8-bit result  */
 #define ADC_CTRLC_RESSEL_12BIT                (ADC_CTRLC_RESSEL_12BIT_Val << ADC_CTRLC_RESSEL_Pos) /**< (ADC_CTRLC) 12-bit result Position  */
-#define ADC_CTRLC_RESSEL_16BIT                (ADC_CTRLC_RESSEL_16BIT_Val << ADC_CTRLC_RESSEL_Pos) /**< (ADC_CTRLC) For averaging mode output Position  */
+#define ADC_CTRLC_RESSEL_16BIT                (ADC_CTRLC_RESSEL_16BIT_Val << ADC_CTRLC_RESSEL_Pos) /**< (ADC_CTRLC) Accumulation or Oversampling and Decimation modes Position  */
 #define ADC_CTRLC_RESSEL_10BIT                (ADC_CTRLC_RESSEL_10BIT_Val << ADC_CTRLC_RESSEL_Pos) /**< (ADC_CTRLC) 10-bit result Position  */
 #define ADC_CTRLC_RESSEL_8BIT                 (ADC_CTRLC_RESSEL_8BIT_Val << ADC_CTRLC_RESSEL_Pos)  /**< (ADC_CTRLC) 8-bit result Position  */
-#define ADC_CTRLC_R2R_Pos                     _U_(7)                                               /**< (ADC_CTRLC) Rail-to-Rail mode enable Position */
-#define ADC_CTRLC_R2R_Msk                     (_U_(0x1) << ADC_CTRLC_R2R_Pos)                      /**< (ADC_CTRLC) Rail-to-Rail mode enable Mask */
-#define ADC_CTRLC_R2R(value)                  (ADC_CTRLC_R2R_Msk & ((value) << ADC_CTRLC_R2R_Pos))
 #define ADC_CTRLC_WINMODE_Pos                 _U_(8)                                               /**< (ADC_CTRLC) Window Monitor Mode Position */
 #define ADC_CTRLC_WINMODE_Msk                 (_U_(0x7) << ADC_CTRLC_WINMODE_Pos)                  /**< (ADC_CTRLC) Window Monitor Mode Mask */
 #define ADC_CTRLC_WINMODE(value)              (ADC_CTRLC_WINMODE_Msk & ((value) << ADC_CTRLC_WINMODE_Pos))
@@ -313,14 +281,7 @@
 #define ADC_CTRLC_WINMODE_MODE2               (ADC_CTRLC_WINMODE_MODE2_Val << ADC_CTRLC_WINMODE_Pos) /**< (ADC_CTRLC) RESULT < WINUT Position  */
 #define ADC_CTRLC_WINMODE_MODE3               (ADC_CTRLC_WINMODE_MODE3_Val << ADC_CTRLC_WINMODE_Pos) /**< (ADC_CTRLC) WINLT < RESULT < WINUT Position  */
 #define ADC_CTRLC_WINMODE_MODE4               (ADC_CTRLC_WINMODE_MODE4_Val << ADC_CTRLC_WINMODE_Pos) /**< (ADC_CTRLC) !(WINLT < RESULT < WINUT) Position  */
-#define ADC_CTRLC_DUALSEL_Pos                 _U_(12)                                              /**< (ADC_CTRLC) Dual Mode Trigger Selection Position */
-#define ADC_CTRLC_DUALSEL_Msk                 (_U_(0x3) << ADC_CTRLC_DUALSEL_Pos)                  /**< (ADC_CTRLC) Dual Mode Trigger Selection Mask */
-#define ADC_CTRLC_DUALSEL(value)              (ADC_CTRLC_DUALSEL_Msk & ((value) << ADC_CTRLC_DUALSEL_Pos))
-#define   ADC_CTRLC_DUALSEL_BOTH_Val          _U_(0x0)                                             /**< (ADC_CTRLC) Start event or software trigger will start a conversion on both ADCs  */
-#define   ADC_CTRLC_DUALSEL_INTERLEAVE_Val    _U_(0x1)                                             /**< (ADC_CTRLC) START event or software trigger will alternatingly start a conversion on ADC0 and ADC1  */
-#define ADC_CTRLC_DUALSEL_BOTH                (ADC_CTRLC_DUALSEL_BOTH_Val << ADC_CTRLC_DUALSEL_Pos) /**< (ADC_CTRLC) Start event or software trigger will start a conversion on both ADCs Position  */
-#define ADC_CTRLC_DUALSEL_INTERLEAVE          (ADC_CTRLC_DUALSEL_INTERLEAVE_Val << ADC_CTRLC_DUALSEL_Pos) /**< (ADC_CTRLC) START event or software trigger will alternatingly start a conversion on ADC0 and ADC1 Position  */
-#define ADC_CTRLC_Msk                         _U_(0x37BF)                                          /**< (ADC_CTRLC) Register Mask  */
+#define ADC_CTRLC_Msk                         _U_(0x073F)                                          /**< (ADC_CTRLC) Register Mask  */
 
 
 /* -------- ADC_AVGCTRL : (ADC Offset: 0x0C) (R/W 8) Average Control -------- */

@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-01-31T10:50:35Z */
+/* file generated from device description version 2019-06-07T05:54:14Z */
 #ifndef _SAML10_RSTC_COMPONENT_H_
 #define _SAML10_RSTC_COMPONENT_H_
 
@@ -32,12 +32,12 @@
 #define RSTC_RCAUSE_POR_Pos                   _U_(0)                                               /**< (RSTC_RCAUSE) Power On Reset Position */
 #define RSTC_RCAUSE_POR_Msk                   (_U_(0x1) << RSTC_RCAUSE_POR_Pos)                    /**< (RSTC_RCAUSE) Power On Reset Mask */
 #define RSTC_RCAUSE_POR(value)                (RSTC_RCAUSE_POR_Msk & ((value) << RSTC_RCAUSE_POR_Pos))
-#define RSTC_RCAUSE_BODCORE_Pos               _U_(1)                                               /**< (RSTC_RCAUSE) Brown Out CORE Detector Reset Position */
-#define RSTC_RCAUSE_BODCORE_Msk               (_U_(0x1) << RSTC_RCAUSE_BODCORE_Pos)                /**< (RSTC_RCAUSE) Brown Out CORE Detector Reset Mask */
-#define RSTC_RCAUSE_BODCORE(value)            (RSTC_RCAUSE_BODCORE_Msk & ((value) << RSTC_RCAUSE_BODCORE_Pos))
-#define RSTC_RCAUSE_BODVDD_Pos                _U_(2)                                               /**< (RSTC_RCAUSE) Brown Out VDD Detector Reset Position */
-#define RSTC_RCAUSE_BODVDD_Msk                (_U_(0x1) << RSTC_RCAUSE_BODVDD_Pos)                 /**< (RSTC_RCAUSE) Brown Out VDD Detector Reset Mask */
-#define RSTC_RCAUSE_BODVDD(value)             (RSTC_RCAUSE_BODVDD_Msk & ((value) << RSTC_RCAUSE_BODVDD_Pos))
+#define RSTC_RCAUSE_BOD12_Pos                 _U_(1)                                               /**< (RSTC_RCAUSE) Brown Out 1.2V Detector Reset Position */
+#define RSTC_RCAUSE_BOD12_Msk                 (_U_(0x1) << RSTC_RCAUSE_BOD12_Pos)                  /**< (RSTC_RCAUSE) Brown Out 1.2V Detector Reset Mask */
+#define RSTC_RCAUSE_BOD12(value)              (RSTC_RCAUSE_BOD12_Msk & ((value) << RSTC_RCAUSE_BOD12_Pos))
+#define RSTC_RCAUSE_BOD33_Pos                 _U_(2)                                               /**< (RSTC_RCAUSE) Brown Out 3.3V Detector Reset Position */
+#define RSTC_RCAUSE_BOD33_Msk                 (_U_(0x1) << RSTC_RCAUSE_BOD33_Pos)                  /**< (RSTC_RCAUSE) Brown Out 3.3V Detector Reset Mask */
+#define RSTC_RCAUSE_BOD33(value)              (RSTC_RCAUSE_BOD33_Msk & ((value) << RSTC_RCAUSE_BOD33_Pos))
 #define RSTC_RCAUSE_EXT_Pos                   _U_(4)                                               /**< (RSTC_RCAUSE) External Reset Position */
 #define RSTC_RCAUSE_EXT_Msk                   (_U_(0x1) << RSTC_RCAUSE_EXT_Pos)                    /**< (RSTC_RCAUSE) External Reset Mask */
 #define RSTC_RCAUSE_EXT(value)                (RSTC_RCAUSE_EXT_Msk & ((value) << RSTC_RCAUSE_EXT_Pos))
@@ -49,6 +49,9 @@
 #define RSTC_RCAUSE_SYST(value)               (RSTC_RCAUSE_SYST_Msk & ((value) << RSTC_RCAUSE_SYST_Pos))
 #define RSTC_RCAUSE_Msk                       _U_(0x77)                                            /**< (RSTC_RCAUSE) Register Mask  */
 
+#define RSTC_RCAUSE_BOD_Pos                   _U_(1)                                               /**< (RSTC_RCAUSE Position) Brown Out x.2V Detector Reset */
+#define RSTC_RCAUSE_BOD_Msk                   (_U_(0x3) << RSTC_RCAUSE_BOD_Pos)                    /**< (RSTC_RCAUSE Mask) BOD */
+#define RSTC_RCAUSE_BOD(value)                (RSTC_RCAUSE_BOD_Msk & ((value) << RSTC_RCAUSE_BOD_Pos)) 
 
 /** \brief RSTC register offsets definitions */
 #define RSTC_RCAUSE_REG_OFST           (0x00)              /**< (RSTC_RCAUSE) Reset Cause Offset */
