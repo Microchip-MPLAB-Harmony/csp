@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-01-31T10:50:35Z */
+/* file generated from device description version 2019-06-07T05:54:14Z */
 #ifndef _SAML10E16A_H_
 #define _SAML10E16A_H_
 
@@ -159,7 +159,7 @@ typedef struct _DeviceVectors
   void* pfnSysTick_Handler;                      /*  -1 System Tick Timer */
 
   /* Peripheral handlers */
-  void* pfnSYSTEM_Handler;                       /*   0  (MCLK OSCCTRL OSC32KCTRL PM SUPC) */
+  void* pfnSYSTEM_Handler;                       /*   0 System peripherals shared interrupt (MCLK OSCCTRL OSC32KCTRL PM SUPC) */
   void* pfnWDT_Handler;                          /*   1 Watchdog Timer (WDT) */
   void* pfnRTC_Handler;                          /*   2 Real-Time Counter (RTC) */
   void* pfnEIC_0_Handler;                        /*   3 External Interrupt Controller (EIC) */
@@ -493,9 +493,9 @@ void TRAM_Handler                  ( void );
 #define USER_PAGE_NB_OF_PAGES          _UL_(         4)
 
 #define HSRAM_SIZE                     _UL_(0x00004000)    /*   16kB Memory segment type: ram */
-#define HPB0_SIZE                      _UL_(0x00008000)    /*   32kB Memory segment type: io */
-#define HPB1_SIZE                      _UL_(0x00010000)    /*   64kB Memory segment type: io */
-#define HPB2_SIZE                      _UL_(0x00004000)    /*   16kB Memory segment type: io */
+#define APBA_SIZE                      _UL_(0x00008000)    /*   32kB Memory segment type: io */
+#define APBB_SIZE                      _UL_(0x00010000)    /*   64kB Memory segment type: io */
+#define APBC_SIZE                      _UL_(0x00004000)    /*   16kB Memory segment type: io */
 #define PPB_SIZE                       _UL_(0x00100000)    /* 1024kB Memory segment type: io */
 #define SCS_SIZE                       _UL_(0x00001000)    /*    4kB Memory segment type: io */
 #define PERIPHERALS_SIZE               _UL_(0x20000000)    /* 524288kB Memory segment type: io */
@@ -508,9 +508,9 @@ void TRAM_Handler                  ( void );
 #define TEMP_LOG_ADDR                  _UL_(0x00806038)    /**< TEMP_LOG base address (type: fuses)*/
 #define USER_PAGE_ADDR                 _UL_(0x00804000)    /**< USER_PAGE base address (type: user_page)*/
 #define HSRAM_ADDR                     _UL_(0x20000000)    /**< HSRAM base address (type: ram)*/
-#define HPB0_ADDR                      _UL_(0x40000000)    /**< HPB0 base address (type: io)*/
-#define HPB1_ADDR                      _UL_(0x41000000)    /**< HPB1 base address (type: io)*/
-#define HPB2_ADDR                      _UL_(0x42000000)    /**< HPB2 base address (type: io)*/
+#define APBA_ADDR                      _UL_(0x40000000)    /**< APBA base address (type: io)*/
+#define APBB_ADDR                      _UL_(0x41000000)    /**< APBB base address (type: io)*/
+#define APBC_ADDR                      _UL_(0x42000000)    /**< APBC base address (type: io)*/
 #define PPB_ADDR                       _UL_(0xe0000000)    /**< PPB base address (type: io)*/
 #define SCS_ADDR                       _UL_(0xe000e000)    /**< SCS base address (type: io)*/
 #define PERIPHERALS_ADDR               _UL_(0x40000000)    /**< PERIPHERALS base address (type: io)*/
@@ -527,8 +527,8 @@ void TRAM_Handler                  ( void );
 /* ************************************************************************** */
 /** Event Generator IDs for SAML10E16A */
 /* ************************************************************************** */
-#define EVENT_ID_GEN_OSCCTRL_XOSC_FAIL                    1 /**< ID for OSCCTRL event generator XOSC_FAIL */
-#define EVENT_ID_GEN_OSC32KCTRL_XOSC32K_FAIL              2 /**< ID for OSC32KCTRL event generator XOSC32K_FAIL */
+#define EVENT_ID_GEN_OSCCTRL_CLKFAIL                      1 /**< ID for OSCCTRL event generator CLKFAIL */
+#define EVENT_ID_GEN_OSC32KCTRL_CLKFAIL                   2 /**< ID for OSC32KCTRL event generator CLKFAIL */
 #define EVENT_ID_GEN_SUPC_BOD33DET                        3 /**< ID for SUPC event generator BOD33DET */
 #define EVENT_ID_GEN_RTC_PER_0                            4 /**< ID for RTC event generator PER_0 */
 #define EVENT_ID_GEN_RTC_PER_1                            5 /**< ID for RTC event generator PER_1 */
@@ -538,6 +538,7 @@ void TRAM_Handler                  ( void );
 #define EVENT_ID_GEN_RTC_PER_5                            9 /**< ID for RTC event generator PER_5 */
 #define EVENT_ID_GEN_RTC_PER_6                           10 /**< ID for RTC event generator PER_6 */
 #define EVENT_ID_GEN_RTC_PER_7                           11 /**< ID for RTC event generator PER_7 */
+#define EVENT_ID_GEN_RTC_ALARM_0                         12 /**< ID for RTC event generator ALARM_0 */
 #define EVENT_ID_GEN_RTC_CMP_0                           12 /**< ID for RTC event generator CMP_0 */
 #define EVENT_ID_GEN_RTC_CMP_1                           13 /**< ID for RTC event generator CMP_1 */
 #define EVENT_ID_GEN_RTC_TAMPER                          14 /**< ID for RTC event generator TAMPER */
@@ -570,17 +571,17 @@ void TRAM_Handler                  ( void );
 #define EVENT_ID_GEN_AC_COMP_1                           41 /**< ID for AC event generator COMP_1 */
 #define EVENT_ID_GEN_AC_WIN_0                            42 /**< ID for AC event generator WIN_0 */
 #define EVENT_ID_GEN_DAC_EMPTY                           43 /**< ID for DAC event generator EMPTY */
-#define EVENT_ID_GEN_TRNG_READY                          46 /**< ID for TRNG event generator READY */
-#define EVENT_ID_GEN_CCL_LUTOUT_0                        47 /**< ID for CCL event generator LUTOUT_0 */
-#define EVENT_ID_GEN_CCL_LUTOUT_1                        48 /**< ID for CCL event generator LUTOUT_1 */
+#define EVENT_ID_GEN_TRNG_DATARDY                        46 /**< ID for TRNG event generator DATARDY */
+#define EVENT_ID_GEN_CCL_LUT_0                           47 /**< ID for CCL event generator LUT_0 */
+#define EVENT_ID_GEN_CCL_LUT_1                           48 /**< ID for CCL event generator LUT_1 */
 #define EVENT_ID_GEN_PAC_ERR                             49 /**< ID for PAC event generator ERR */
 
 /* ************************************************************************** */
 /** Event User IDs for SAML10E16A */
 /* ************************************************************************** */
 #define EVENT_ID_USER_OSCCTRL_TUNE                        0 /**< ID for OSCCTRL event user TUNE */
-#define EVENT_ID_USER_RTC_TAMPER                          1 /**< ID for RTC event user TAMPER */
-#define EVENT_ID_USER_NVMCTRL_PAGEW                       2 /**< ID for NVMCTRL event user PAGEW */
+#define EVENT_ID_USER_RTC_TAMPEVT                         1 /**< ID for RTC event user TAMPEVT */
+#define EVENT_ID_USER_NVMCTRL_AUTOW                       2 /**< ID for NVMCTRL event user AUTOW */
 #define EVENT_ID_USER_PORT_EV_0                           3 /**< ID for PORT event user EV_0 */
 #define EVENT_ID_USER_PORT_EV_1                           4 /**< ID for PORT event user EV_1 */
 #define EVENT_ID_USER_PORT_EV_2                           5 /**< ID for PORT event user EV_2 */
@@ -593,12 +594,12 @@ void TRAM_Handler                  ( void );
 #define EVENT_ID_USER_TC1_EVU                            12 /**< ID for TC1 event user EVU */
 #define EVENT_ID_USER_TC2_EVU                            13 /**< ID for TC2 event user EVU */
 #define EVENT_ID_USER_ADC_START                          14 /**< ID for ADC event user START */
-#define EVENT_ID_USER_ADC_SYNC                           15 /**< ID for ADC event user SYNC */
-#define EVENT_ID_USER_AC_SOC_0                           16 /**< ID for AC event user SOC_0 */
-#define EVENT_ID_USER_AC_SOC_1                           17 /**< ID for AC event user SOC_1 */
+#define EVENT_ID_USER_ADC_FLUSH                          15 /**< ID for ADC event user FLUSH */
+#define EVENT_ID_USER_AC_COMP_0                          16 /**< ID for AC event user COMP_0 */
+#define EVENT_ID_USER_AC_COMP_1                          17 /**< ID for AC event user COMP_1 */
 #define EVENT_ID_USER_DAC_START                          18 /**< ID for DAC event user START */
-#define EVENT_ID_USER_CCL_LUTIN_0                        21 /**< ID for CCL event user LUTIN_0 */
-#define EVENT_ID_USER_CCL_LUTIN_1                        22 /**< ID for CCL event user LUTIN_1 */
+#define EVENT_ID_USER_CCL_LUT_0                          21 /**< ID for CCL event user LUT_0 */
+#define EVENT_ID_USER_CCL_LUT_1                          22 /**< ID for CCL event user LUT_1 */
 
 #ifdef __cplusplus
 }

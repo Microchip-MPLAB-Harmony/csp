@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-01-31T10:50:35Z */
+/* file generated from device description version 2019-06-07T05:54:14Z */
 #ifndef _SAML10_PTC_COMPONENT_H_
 #define _SAML10_PTC_COMPONENT_H_
 
