@@ -1,73 +1,64 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <configurationDescriptor version="66">
-  <logicalFolder name="root" displayName="root" projectFiles="true">
-    <logicalFolder name="HeaderFiles"
-                   displayName="Header Files"
-                   projectFiles="true">
-      <logicalFolder name="f1" displayName="config" projectFiles="true">
-        <logicalFolder name="f1" displayName="pic32mx_xlp_sk" projectFiles="true">
-          <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
-            <logicalFolder name="f1" displayName="clk" projectFiles="true">
-              <itemPath ex="false">../src/config/pic32mx_xlp_sk/peripheral/clk/plib_clk.h</itemPath>
+  <logicalFolder displayName="root" name="root" projectFiles="true">
+    <logicalFolder displayName="Header Files" name="f1" projectFiles="true">
+      <logicalFolder displayName="config" name="f1" projectFiles="true">
+        <logicalFolder displayName="pic32mx_xlp_sk" name="f1" projectFiles="true">
+          <logicalFolder displayName="peripheral" name="f1" projectFiles="true">
+            <logicalFolder displayName="clk" name="f1" projectFiles="true">
+              <itemPath>../src/config/pic32mx_xlp_sk/peripheral/clk/plib_clk.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f3" displayName="evic" projectFiles="true">
-              <itemPath ex="false">../src/config/pic32mx_xlp_sk/peripheral/evic/plib_evic.h</itemPath>
+            <logicalFolder displayName="gpio" name="f2" projectFiles="true">
+              <itemPath>../src/config/pic32mx_xlp_sk/peripheral/gpio/plib_gpio.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f2" displayName="gpio" projectFiles="true">
-              <itemPath ex="false">../src/config/pic32mx_xlp_sk/peripheral/gpio/plib_gpio.h</itemPath>
+            <logicalFolder displayName="evic" name="f3" projectFiles="true">
+              <itemPath>../src/config/pic32mx_xlp_sk/peripheral/evic/plib_evic.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f4" displayName="tmr1" projectFiles="true">
-              <itemPath ex="false">../src/config/pic32mx_xlp_sk/peripheral/tmr1/plib_tmr1_common.h</itemPath>
-              <itemPath ex="false">../src/config/pic32mx_xlp_sk/peripheral/tmr1/plib_tmr1.h</itemPath>
+            <logicalFolder displayName="tmr1" name="f4" projectFiles="true">
+              <itemPath>../src/config/pic32mx_xlp_sk/peripheral/tmr1/plib_tmr1_common.h</itemPath>
+              <itemPath>../src/config/pic32mx_xlp_sk/peripheral/tmr1/plib_tmr1.h</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <itemPath ex="false">../src/config/pic32mx_xlp_sk/toolchain_specifics.h</itemPath>
-          <itemPath ex="false">../src/config/pic32mx_xlp_sk/definitions.h</itemPath>
+          <itemPath>../src/config/pic32mx_xlp_sk/toolchain_specifics.h</itemPath>
+          <itemPath>../src/config/pic32mx_xlp_sk/definitions.h</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <logicalFolder name="f2" displayName="packs" projectFiles="true">
-        <logicalFolder name="f1" displayName="PIC32MX274F256D_DFP" projectFiles="true">
-          <itemPath ex="false">../src/packs/PIC32MX274F256D_DFP/device.h</itemPath>
+      <logicalFolder displayName="packs" name="f2" projectFiles="true">
+        <logicalFolder displayName="PIC32MX274F256D_DFP" name="f1" projectFiles="true">
+          <itemPath>../src/packs/PIC32MX274F256D_DFP/device.h</itemPath>
         </logicalFolder>
       </logicalFolder>
     </logicalFolder>
-    <logicalFolder name="LinkerScript"
-                   displayName="Linker Files"
-                   projectFiles="true">
-    </logicalFolder>
-    <logicalFolder name="SourceFiles"
-                   displayName="Source Files"
-                   projectFiles="true">
-      <logicalFolder name="f1" displayName="config" projectFiles="true">
-        <logicalFolder name="f1" displayName="pic32mx_xlp_sk" projectFiles="true">
-          <logicalFolder name="f2" displayName="peripheral" projectFiles="true">
-            <logicalFolder name="f1" displayName="clk" projectFiles="true">
-              <itemPath ex="false">../src/config/pic32mx_xlp_sk/peripheral/clk/plib_clk.c</itemPath>
+    <logicalFolder displayName="Linker Files" name="f2" projectFiles="true"/>
+    <logicalFolder displayName="Source Files" name="f3" projectFiles="true">
+      <logicalFolder displayName="config" name="f1" projectFiles="true">
+        <logicalFolder displayName="pic32mx_xlp_sk" name="f1" projectFiles="true">
+          <logicalFolder displayName="stdio" name="f1" projectFiles="true">
+            <itemPath>../src/config/pic32mx_xlp_sk/stdio/xc32_monitor.c</itemPath>
+          </logicalFolder>
+          <logicalFolder displayName="peripheral" name="f2" projectFiles="true">
+            <logicalFolder displayName="clk" name="f1" projectFiles="true">
+              <itemPath>../src/config/pic32mx_xlp_sk/peripheral/clk/plib_clk.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f3" displayName="evic" projectFiles="true">
-              <itemPath ex="false">../src/config/pic32mx_xlp_sk/peripheral/evic/plib_evic.c</itemPath>
+            <logicalFolder displayName="gpio" name="f2" projectFiles="true">
+              <itemPath>../src/config/pic32mx_xlp_sk/peripheral/gpio/plib_gpio.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f2" displayName="gpio" projectFiles="true">
-              <itemPath ex="false">../src/config/pic32mx_xlp_sk/peripheral/gpio/plib_gpio.c</itemPath>
+            <logicalFolder displayName="evic" name="f3" projectFiles="true">
+              <itemPath>../src/config/pic32mx_xlp_sk/peripheral/evic/plib_evic.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f4" displayName="tmr1" projectFiles="true">
-              <itemPath ex="false">../src/config/pic32mx_xlp_sk/peripheral/tmr1/plib_tmr1.c</itemPath>
+            <logicalFolder displayName="tmr1" name="f4" projectFiles="true">
+              <itemPath>../src/config/pic32mx_xlp_sk/peripheral/tmr1/plib_tmr1.c</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f1" displayName="stdio" projectFiles="true">
-            <itemPath ex="false">../src/config/pic32mx_xlp_sk/stdio/xc32_monitor.c</itemPath>
-          </logicalFolder>
-          <itemPath ex="false">../src/config/pic32mx_xlp_sk/initialization.c</itemPath>
-          <itemPath ex="false">../src/config/pic32mx_xlp_sk/interrupts.c</itemPath>
-          <itemPath ex="false">../src/config/pic32mx_xlp_sk/exceptions.c</itemPath>
+          <itemPath>../src/config/pic32mx_xlp_sk/initialization.c</itemPath>
+          <itemPath>../src/config/pic32mx_xlp_sk/interrupts.c</itemPath>
+          <itemPath>../src/config/pic32mx_xlp_sk/exceptions.c</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <itemPath ex="false">../src/main.c</itemPath>
+      <itemPath>../src/main.c</itemPath>
     </logicalFolder>
-    <logicalFolder name="ExternalFiles"
-                   displayName="Important Files"
-                   projectFiles="false">
-      <itemPath ex="false">Makefile</itemPath>
+    <logicalFolder displayName="Important Files" name="f4" projectFiles="true">
+      <itemPath>Makefile</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
@@ -79,8 +70,8 @@
       <toolsSet>
         <developmentServer>localhost</developmentServer>
         <targetDevice>PIC32MX274F256D</targetDevice>
-        <targetHeader></targetHeader>
-        <targetPluginBoard></targetPluginBoard>
+        <targetHeader/>
+        <targetPluginBoard/>
         <platformTool>PKOBSKDEPlatformTool</platformTool>
         <languageToolchain>XC32</languageToolchain>
         <languageToolchainVersion>2.20</languageToolchainVersion>
@@ -99,16 +90,16 @@
         <loading>
           <useAlternateLoadableFile>false</useAlternateLoadableFile>
           <parseOnProdLoad>false</parseOnProdLoad>
-          <alternateLoadableFile></alternateLoadableFile>
+          <alternateLoadableFile/>
         </loading>
         <subordinates>
         </subordinates>
       </compileType>
       <makeCustomizationType>
         <makeCustomizationPreStepEnabled>false</makeCustomizationPreStepEnabled>
-        <makeCustomizationPreStep></makeCustomizationPreStep>
+        <makeCustomizationPreStep/>
         <makeCustomizationPostStepEnabled>false</makeCustomizationPostStepEnabled>
-        <makeCustomizationPostStep></makeCustomizationPostStep>
+        <makeCustomizationPostStep/>
         <makeCustomizationPutChecksumInUserID>false</makeCustomizationPutChecksumInUserID>
         <makeCustomizationEnableLongLines>false</makeCustomizationEnableLongLines>
         <makeCustomizationNormalizeHexFile>false</makeCustomizationNormalizeHexFile>
@@ -120,8 +111,7 @@
         <property key="enable-symbols" value="true"/>
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
-        <property key="extra-include-directories"
-                  value="../src;../src/config/pic32mx_xlp_sk;../src/packs/PIC32MX274F256D_DFP;;../src/mips"/>
+        <property key="extra-include-directories" value="../src;../src/config/pic32mx_xlp_sk;../src/packs/PIC32MX274F256D_DFP;../src/mips"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
@@ -156,7 +146,7 @@
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-cross-reference-file" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
-        <property key="heap-size" value="0"/>
+        <property key="heap-size" value="512"/>
         <property key="input-libraries" value=""/>
         <property key="linker-symbols" value=""/>
         <property key="map-file" value="${DISTDIR}/${PROJECTNAME}.${IMAGE_TYPE}.map"/>
@@ -235,8 +225,7 @@
         <property key="TIMER3" value="true"/>
         <property key="TIMER4" value="true"/>
         <property key="TIMER5" value="true"/>
-        <property key="ToolFirmwareFilePath"
-                  value="Press to browse for a specific firmware version"/>
+        <property key="ToolFirmwareFilePath" value="Press to browse for a specific firmware version"/>
         <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
         <property key="UART1" value="true"/>
         <property key="UART2" value="true"/>
