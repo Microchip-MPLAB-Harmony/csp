@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-01-31T10:50:35Z */
+/* file generated from device description version 2019-06-07T05:54:14Z */
 #ifndef _SAML10_EIC_COMPONENT_H_
 #define _SAML10_EIC_COMPONENT_H_
 
@@ -40,6 +40,10 @@
 #define EIC_CTRLA_CKSEL_Pos                   _U_(4)                                               /**< (EIC_CTRLA) Clock Selection Position */
 #define EIC_CTRLA_CKSEL_Msk                   (_U_(0x1) << EIC_CTRLA_CKSEL_Pos)                    /**< (EIC_CTRLA) Clock Selection Mask */
 #define EIC_CTRLA_CKSEL(value)                (EIC_CTRLA_CKSEL_Msk & ((value) << EIC_CTRLA_CKSEL_Pos))
+#define   EIC_CTRLA_CKSEL_CLK_GCLK_Val        _U_(0x0)                                             /**< (EIC_CTRLA) Clocked by GCLK  */
+#define   EIC_CTRLA_CKSEL_CLK_ULP32K_Val      _U_(0x1)                                             /**< (EIC_CTRLA) Clocked by ULP32K  */
+#define EIC_CTRLA_CKSEL_CLK_GCLK              (EIC_CTRLA_CKSEL_CLK_GCLK_Val << EIC_CTRLA_CKSEL_Pos) /**< (EIC_CTRLA) Clocked by GCLK Position  */
+#define EIC_CTRLA_CKSEL_CLK_ULP32K            (EIC_CTRLA_CKSEL_CLK_ULP32K_Val << EIC_CTRLA_CKSEL_Pos) /**< (EIC_CTRLA) Clocked by ULP32K Position  */
 #define EIC_CTRLA_Msk                         _U_(0x13)                                            /**< (EIC_CTRLA) Register Mask  */
 
 
@@ -67,6 +71,10 @@
 #define EIC_NMICTRL_NMIASYNCH_Pos             _U_(4)                                               /**< (EIC_NMICTRL) Asynchronous Edge Detection Mode Position */
 #define EIC_NMICTRL_NMIASYNCH_Msk             (_U_(0x1) << EIC_NMICTRL_NMIASYNCH_Pos)              /**< (EIC_NMICTRL) Asynchronous Edge Detection Mode Mask */
 #define EIC_NMICTRL_NMIASYNCH(value)          (EIC_NMICTRL_NMIASYNCH_Msk & ((value) << EIC_NMICTRL_NMIASYNCH_Pos))
+#define   EIC_NMICTRL_NMIASYNCH_SYNC_Val      _U_(0x0)                                             /**< (EIC_NMICTRL) Edge detection is clock synchronously operated  */
+#define   EIC_NMICTRL_NMIASYNCH_ASYNC_Val     _U_(0x1)                                             /**< (EIC_NMICTRL) Edge detection is clock asynchronously operated  */
+#define EIC_NMICTRL_NMIASYNCH_SYNC            (EIC_NMICTRL_NMIASYNCH_SYNC_Val << EIC_NMICTRL_NMIASYNCH_Pos) /**< (EIC_NMICTRL) Edge detection is clock synchronously operated Position  */
+#define EIC_NMICTRL_NMIASYNCH_ASYNC           (EIC_NMICTRL_NMIASYNCH_ASYNC_Val << EIC_NMICTRL_NMIASYNCH_Pos) /**< (EIC_NMICTRL) Edge detection is clock asynchronously operated Position  */
 #define EIC_NMICTRL_Msk                       _U_(0x1F)                                            /**< (EIC_NMICTRL) Register Mask  */
 
 
@@ -142,6 +150,10 @@
 #define EIC_ASYNCH_ASYNCH_Pos                 _U_(0)                                               /**< (EIC_ASYNCH) Asynchronous Edge Detection Mode Position */
 #define EIC_ASYNCH_ASYNCH_Msk                 (_U_(0xFF) << EIC_ASYNCH_ASYNCH_Pos)                 /**< (EIC_ASYNCH) Asynchronous Edge Detection Mode Mask */
 #define EIC_ASYNCH_ASYNCH(value)              (EIC_ASYNCH_ASYNCH_Msk & ((value) << EIC_ASYNCH_ASYNCH_Pos))
+#define   EIC_ASYNCH_ASYNCH_SYNC_Val          _U_(0x0)                                             /**< (EIC_ASYNCH) Edge detection is clock synchronously operated  */
+#define   EIC_ASYNCH_ASYNCH_ASYNC_Val         _U_(0x1)                                             /**< (EIC_ASYNCH) Edge detection is clock asynchronously operated  */
+#define EIC_ASYNCH_ASYNCH_SYNC                (EIC_ASYNCH_ASYNCH_SYNC_Val << EIC_ASYNCH_ASYNCH_Pos) /**< (EIC_ASYNCH) Edge detection is clock synchronously operated Position  */
+#define EIC_ASYNCH_ASYNCH_ASYNC               (EIC_ASYNCH_ASYNCH_ASYNC_Val << EIC_ASYNCH_ASYNCH_Pos) /**< (EIC_ASYNCH) Edge detection is clock asynchronously operated Position  */
 #define EIC_ASYNCH_Msk                        _U_(0x000000FF)                                      /**< (EIC_ASYNCH) Register Mask  */
 
 
@@ -310,6 +322,22 @@
 #define EIC_DPRESCALER_PRESCALER0_Pos         _U_(0)                                               /**< (EIC_DPRESCALER) Debouncer Prescaler Position */
 #define EIC_DPRESCALER_PRESCALER0_Msk         (_U_(0x7) << EIC_DPRESCALER_PRESCALER0_Pos)          /**< (EIC_DPRESCALER) Debouncer Prescaler Mask */
 #define EIC_DPRESCALER_PRESCALER0(value)      (EIC_DPRESCALER_PRESCALER0_Msk & ((value) << EIC_DPRESCALER_PRESCALER0_Pos))
+#define   EIC_DPRESCALER_PRESCALER0_DIV2_Val  _U_(0x0)                                             /**< (EIC_DPRESCALER) EIC clock divided by 2  */
+#define   EIC_DPRESCALER_PRESCALER0_DIV4_Val  _U_(0x1)                                             /**< (EIC_DPRESCALER) EIC clock divided by 4  */
+#define   EIC_DPRESCALER_PRESCALER0_DIV8_Val  _U_(0x2)                                             /**< (EIC_DPRESCALER) EIC clock divided by 8  */
+#define   EIC_DPRESCALER_PRESCALER0_DIV16_Val _U_(0x3)                                             /**< (EIC_DPRESCALER) EIC clock divided by 16  */
+#define   EIC_DPRESCALER_PRESCALER0_DIV32_Val _U_(0x4)                                             /**< (EIC_DPRESCALER) EIC clock divided by 32  */
+#define   EIC_DPRESCALER_PRESCALER0_DIV64_Val _U_(0x5)                                             /**< (EIC_DPRESCALER) EIC clock divided by 64  */
+#define   EIC_DPRESCALER_PRESCALER0_DIV128_Val _U_(0x6)                                             /**< (EIC_DPRESCALER) EIC clock divided by 128  */
+#define   EIC_DPRESCALER_PRESCALER0_DIV256_Val _U_(0x7)                                             /**< (EIC_DPRESCALER) EIC clock divided by 256  */
+#define EIC_DPRESCALER_PRESCALER0_DIV2        (EIC_DPRESCALER_PRESCALER0_DIV2_Val << EIC_DPRESCALER_PRESCALER0_Pos) /**< (EIC_DPRESCALER) EIC clock divided by 2 Position  */
+#define EIC_DPRESCALER_PRESCALER0_DIV4        (EIC_DPRESCALER_PRESCALER0_DIV4_Val << EIC_DPRESCALER_PRESCALER0_Pos) /**< (EIC_DPRESCALER) EIC clock divided by 4 Position  */
+#define EIC_DPRESCALER_PRESCALER0_DIV8        (EIC_DPRESCALER_PRESCALER0_DIV8_Val << EIC_DPRESCALER_PRESCALER0_Pos) /**< (EIC_DPRESCALER) EIC clock divided by 8 Position  */
+#define EIC_DPRESCALER_PRESCALER0_DIV16       (EIC_DPRESCALER_PRESCALER0_DIV16_Val << EIC_DPRESCALER_PRESCALER0_Pos) /**< (EIC_DPRESCALER) EIC clock divided by 16 Position  */
+#define EIC_DPRESCALER_PRESCALER0_DIV32       (EIC_DPRESCALER_PRESCALER0_DIV32_Val << EIC_DPRESCALER_PRESCALER0_Pos) /**< (EIC_DPRESCALER) EIC clock divided by 32 Position  */
+#define EIC_DPRESCALER_PRESCALER0_DIV64       (EIC_DPRESCALER_PRESCALER0_DIV64_Val << EIC_DPRESCALER_PRESCALER0_Pos) /**< (EIC_DPRESCALER) EIC clock divided by 64 Position  */
+#define EIC_DPRESCALER_PRESCALER0_DIV128      (EIC_DPRESCALER_PRESCALER0_DIV128_Val << EIC_DPRESCALER_PRESCALER0_Pos) /**< (EIC_DPRESCALER) EIC clock divided by 128 Position  */
+#define EIC_DPRESCALER_PRESCALER0_DIV256      (EIC_DPRESCALER_PRESCALER0_DIV256_Val << EIC_DPRESCALER_PRESCALER0_Pos) /**< (EIC_DPRESCALER) EIC clock divided by 256 Position  */
 #define EIC_DPRESCALER_STATES0_Pos            _U_(3)                                               /**< (EIC_DPRESCALER) Debouncer number of states Position */
 #define EIC_DPRESCALER_STATES0_Msk            (_U_(0x1) << EIC_DPRESCALER_STATES0_Pos)             /**< (EIC_DPRESCALER) Debouncer number of states Mask */
 #define EIC_DPRESCALER_STATES0(value)         (EIC_DPRESCALER_STATES0_Msk & ((value) << EIC_DPRESCALER_STATES0_Pos))
@@ -386,7 +414,7 @@ typedef struct
   __IO  uint32_t                       EIC_INTENSET;       /**< Offset: 0x10 (R/W  32) Interrupt Enable Set */
   __IO  uint32_t                       EIC_INTFLAG;        /**< Offset: 0x14 (R/W  32) Interrupt Flag Status and Clear */
   __IO  uint32_t                       EIC_ASYNCH;         /**< Offset: 0x18 (R/W  32) External Interrupt Asynchronous Mode */
-  __IO  uint32_t                       EIC_CONFIG[1];      /**< Offset: 0x1C (R/W  32) External Interrupt Sense Configuration */
+  __IO  uint32_t                       EIC_CONFIG;         /**< Offset: 0x1C (R/W  32) External Interrupt Sense Configuration */
   __I   uint8_t                        Reserved2[0x10];
   __IO  uint32_t                       EIC_DEBOUNCEN;      /**< Offset: 0x30 (R/W  32) Debouncer Enable */
   __IO  uint32_t                       EIC_DPRESCALER;     /**< Offset: 0x34 (R/W  32) Debouncer Prescaler */

@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-01-31T10:50:35Z */
+/* file generated from device description version 2019-06-07T05:54:14Z */
 #ifndef _SAML10_NVMCTRL_COMPONENT_H_
 #define _SAML10_NVMCTRL_COMPONENT_H_
 
@@ -41,7 +41,6 @@
 #define   NVMCTRL_CTRLA_CMD_PBC_Val           _U_(0x44)                                            /**< (NVMCTRL_CTRLA) Page Buffer Clear - Clears the page buffer.  */
 #define   NVMCTRL_CTRLA_CMD_INVALL_Val        _U_(0x46)                                            /**< (NVMCTRL_CTRLA) Invalidate all cache lines.  */
 #define   NVMCTRL_CTRLA_CMD_SDAL0_Val         _U_(0x4B)                                            /**< (NVMCTRL_CTRLA) Set DAL=0  */
-#define   NVMCTRL_CTRLA_CMD_SDAL1_Val         _U_(0x4C)                                            /**< (NVMCTRL_CTRLA) Set DAL=1  */
 #define NVMCTRL_CTRLA_CMD_ER                  (NVMCTRL_CTRLA_CMD_ER_Val << NVMCTRL_CTRLA_CMD_Pos)  /**< (NVMCTRL_CTRLA) Erase Row - Erases the row addressed by the ADDR register. Position  */
 #define NVMCTRL_CTRLA_CMD_WP                  (NVMCTRL_CTRLA_CMD_WP_Val << NVMCTRL_CTRLA_CMD_Pos)  /**< (NVMCTRL_CTRLA) Write Page - Writes the contents of the page buffer to the page addressed by the ADDR register. Position  */
 #define NVMCTRL_CTRLA_CMD_SPRM                (NVMCTRL_CTRLA_CMD_SPRM_Val << NVMCTRL_CTRLA_CMD_Pos) /**< (NVMCTRL_CTRLA) Sets the power reduction mode. Position  */
@@ -49,7 +48,6 @@
 #define NVMCTRL_CTRLA_CMD_PBC                 (NVMCTRL_CTRLA_CMD_PBC_Val << NVMCTRL_CTRLA_CMD_Pos) /**< (NVMCTRL_CTRLA) Page Buffer Clear - Clears the page buffer. Position  */
 #define NVMCTRL_CTRLA_CMD_INVALL              (NVMCTRL_CTRLA_CMD_INVALL_Val << NVMCTRL_CTRLA_CMD_Pos) /**< (NVMCTRL_CTRLA) Invalidate all cache lines. Position  */
 #define NVMCTRL_CTRLA_CMD_SDAL0               (NVMCTRL_CTRLA_CMD_SDAL0_Val << NVMCTRL_CTRLA_CMD_Pos) /**< (NVMCTRL_CTRLA) Set DAL=0 Position  */
-#define NVMCTRL_CTRLA_CMD_SDAL1               (NVMCTRL_CTRLA_CMD_SDAL1_Val << NVMCTRL_CTRLA_CMD_Pos) /**< (NVMCTRL_CTRLA) Set DAL=1 Position  */
 #define NVMCTRL_CTRLA_CMDEX_Pos               _U_(8)                                               /**< (NVMCTRL_CTRLA) Command Execution Position */
 #define NVMCTRL_CTRLA_CMDEX_Msk               (_U_(0xFF) << NVMCTRL_CTRLA_CMDEX_Pos)               /**< (NVMCTRL_CTRLA) Command Execution Mask */
 #define NVMCTRL_CTRLA_CMDEX(value)            (NVMCTRL_CTRLA_CMDEX_Msk & ((value) << NVMCTRL_CTRLA_CMDEX_Pos))
@@ -88,10 +86,7 @@
 #define NVMCTRL_CTRLB_CACHEDIS_Pos            _U_(18)                                              /**< (NVMCTRL_CTRLB) Cache Disable Position */
 #define NVMCTRL_CTRLB_CACHEDIS_Msk            (_U_(0x1) << NVMCTRL_CTRLB_CACHEDIS_Pos)             /**< (NVMCTRL_CTRLB) Cache Disable Mask */
 #define NVMCTRL_CTRLB_CACHEDIS(value)         (NVMCTRL_CTRLB_CACHEDIS_Msk & ((value) << NVMCTRL_CTRLB_CACHEDIS_Pos))
-#define NVMCTRL_CTRLB_QWEN_Pos                _U_(19)                                              /**< (NVMCTRL_CTRLB) Quick Write Enable Position */
-#define NVMCTRL_CTRLB_QWEN_Msk                (_U_(0x1) << NVMCTRL_CTRLB_QWEN_Pos)                 /**< (NVMCTRL_CTRLB) Quick Write Enable Mask */
-#define NVMCTRL_CTRLB_QWEN(value)             (NVMCTRL_CTRLB_QWEN_Msk & ((value) << NVMCTRL_CTRLB_QWEN_Pos))
-#define NVMCTRL_CTRLB_Msk                     _U_(0x000F0B1E)                                      /**< (NVMCTRL_CTRLB) Register Mask  */
+#define NVMCTRL_CTRLB_Msk                     _U_(0x00070B1E)                                      /**< (NVMCTRL_CTRLB) Register Mask  */
 
 
 /* -------- NVMCTRL_CTRLC : (NVMCTRL Offset: 0x08) (R/W 8) Control C -------- */
@@ -202,6 +197,10 @@
 #define NVMCTRL_STATUS_DALFUSE_Pos            _U_(3)                                               /**< (NVMCTRL_STATUS) Debug Access Level Fuse Position */
 #define NVMCTRL_STATUS_DALFUSE_Msk            (_U_(0x3) << NVMCTRL_STATUS_DALFUSE_Pos)             /**< (NVMCTRL_STATUS) Debug Access Level Fuse Mask */
 #define NVMCTRL_STATUS_DALFUSE(value)         (NVMCTRL_STATUS_DALFUSE_Msk & ((value) << NVMCTRL_STATUS_DALFUSE_Pos))
+#define   NVMCTRL_STATUS_DALFUSE_DAL0_Val     _U_(0x0)                                             /**< (NVMCTRL_STATUS) NO DEBUG  */
+#define   NVMCTRL_STATUS_DALFUSE_DAL2_Val     _U_(0x2)                                             /**< (NVMCTRL_STATUS) FULL DEBUG  */
+#define NVMCTRL_STATUS_DALFUSE_DAL0           (NVMCTRL_STATUS_DALFUSE_DAL0_Val << NVMCTRL_STATUS_DALFUSE_Pos) /**< (NVMCTRL_STATUS) NO DEBUG Position  */
+#define NVMCTRL_STATUS_DALFUSE_DAL2           (NVMCTRL_STATUS_DALFUSE_DAL2_Val << NVMCTRL_STATUS_DALFUSE_Pos) /**< (NVMCTRL_STATUS) FULL DEBUG Position  */
 #define NVMCTRL_STATUS_Msk                    _U_(0x001F)                                          /**< (NVMCTRL_STATUS) Register Mask  */
 
 
@@ -216,12 +215,10 @@
 #define NVMCTRL_ADDR_ARRAY(value)             (NVMCTRL_ADDR_ARRAY_Msk & ((value) << NVMCTRL_ADDR_ARRAY_Pos))
 #define   NVMCTRL_ADDR_ARRAY_FLASH_Val        _U_(0x0)                                             /**< (NVMCTRL_ADDR) FLASH Array  */
 #define   NVMCTRL_ADDR_ARRAY_DATAFLASH_Val    _U_(0x1)                                             /**< (NVMCTRL_ADDR) DATA FLASH Array  */
-#define   NVMCTRL_ADDR_ARRAY_AUX_Val          _U_(0x2)                                             /**< (NVMCTRL_ADDR) Auxilliary Space  */
-#define   NVMCTRL_ADDR_ARRAY_RESERVED_Val     _U_(0x3)                                             /**< (NVMCTRL_ADDR) Reserved Array  */
+#define   NVMCTRL_ADDR_ARRAY_NVMROWS_Val      _U_(0x2)                                             /**< (NVMCTRL_ADDR) NVM Rows  */
 #define NVMCTRL_ADDR_ARRAY_FLASH              (NVMCTRL_ADDR_ARRAY_FLASH_Val << NVMCTRL_ADDR_ARRAY_Pos) /**< (NVMCTRL_ADDR) FLASH Array Position  */
 #define NVMCTRL_ADDR_ARRAY_DATAFLASH          (NVMCTRL_ADDR_ARRAY_DATAFLASH_Val << NVMCTRL_ADDR_ARRAY_Pos) /**< (NVMCTRL_ADDR) DATA FLASH Array Position  */
-#define NVMCTRL_ADDR_ARRAY_AUX                (NVMCTRL_ADDR_ARRAY_AUX_Val << NVMCTRL_ADDR_ARRAY_Pos) /**< (NVMCTRL_ADDR) Auxilliary Space Position  */
-#define NVMCTRL_ADDR_ARRAY_RESERVED           (NVMCTRL_ADDR_ARRAY_RESERVED_Val << NVMCTRL_ADDR_ARRAY_Pos) /**< (NVMCTRL_ADDR) Reserved Array Position  */
+#define NVMCTRL_ADDR_ARRAY_NVMROWS            (NVMCTRL_ADDR_ARRAY_NVMROWS_Val << NVMCTRL_ADDR_ARRAY_Pos) /**< (NVMCTRL_ADDR) NVM Rows Position  */
 #define NVMCTRL_ADDR_Msk                      _U_(0x00C0FFFF)                                      /**< (NVMCTRL_ADDR) Register Mask  */
 
 
