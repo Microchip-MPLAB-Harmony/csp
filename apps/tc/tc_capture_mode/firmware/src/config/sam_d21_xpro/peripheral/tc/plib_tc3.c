@@ -82,14 +82,14 @@ void TC3_CompareInitialize( void )
     /* Configure counter mode & prescaler */
     TC3_REGS->COUNT16.TC_CTRLA = TC_CTRLA_MODE_COUNT16 | TC_CTRLA_PRESCALER_DIV1 | TC_CTRLA_WAVEGEN_MPWM ;
 
-    
+
     TC3_REGS->COUNT16.TC_CC[0] = 60000U;
     TC3_REGS->COUNT16.TC_CC[1] = 0U;
-    
+
     /* Clear all interrupt flags */
     TC3_REGS->COUNT16.TC_INTFLAG = TC_INTFLAG_Msk;
 
-    
+
 
     while((TC3_REGS->COUNT16.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
     {
@@ -193,9 +193,6 @@ TC_COMPARE_STATUS TC3_CompareStatusGet( void )
     TC_COMPARE_STATUS compare_status;
     compare_status = ((TC3_REGS->COUNT16.TC_INTFLAG) & TC_COMPARE_STATUS_MSK);
     /* Clear timer overflow interrupt */
-    TC3_REGS->COUNT16.TC_INTFLAG = TC_COMPARE_STATUS_MSK;
+    TC3_REGS->COUNT16.TC_INTFLAG = compare_status;
     return compare_status;
 }
-
-
-
