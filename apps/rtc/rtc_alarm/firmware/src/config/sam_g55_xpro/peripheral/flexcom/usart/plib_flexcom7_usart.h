@@ -50,13 +50,15 @@
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-/* This section lists the other files that are included in this file. */
+
 #include "device.h"
 #include "plib_flexcom_usart_local.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
-extern "C" {
+
+	extern "C" {
+
 #endif
 // DOM-IGNORE-END
 
@@ -65,6 +67,7 @@ extern "C" {
 // Section: Interface Routines
 // *****************************************************************************
 // *****************************************************************************
+
 #define FLEXCOM7_USART_FrequencyGet()    (uint32_t)(119996416UL)
 
 /****************************** FLEXCOM7 USART API *********************************/
@@ -79,13 +82,11 @@ bool FLEXCOM7_USART_Write( void *buffer, const size_t size );
 
 bool FLEXCOM7_USART_Read( void *buffer, const size_t size );
 
+uint8_t FLEXCOM7_USART_ReadByte( void );
 
+void FLEXCOM7_USART_WriteByte( uint8_t data );
 
-uint8_t FLEXCOM7_ReadByte(void);
-
-void FLEXCOM7_WriteByte(uint8_t data);
-
-void FLEXCOM7_Sync(void);
+bool FLEXCOM7_USART_TransmitComplete( void );
 
 bool FLEXCOM7_USART_TransmitterIsReady( void );
 
@@ -94,7 +95,9 @@ bool FLEXCOM7_USART_ReceiverIsReady( void );
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
+
     }
+
 #endif
 // DOM-IGNORE-END
 
