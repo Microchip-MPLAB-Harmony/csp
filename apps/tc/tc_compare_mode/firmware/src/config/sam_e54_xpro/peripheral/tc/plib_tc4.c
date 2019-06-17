@@ -55,7 +55,6 @@
 
 #include "plib_tc4.h"
 
-
 // *****************************************************************************
 // *****************************************************************************
 // Section: Global Data
@@ -182,6 +181,6 @@ TC_COMPARE_STATUS TC4_CompareStatusGet( void )
     TC_COMPARE_STATUS compare_status;
     compare_status = ((TC4_REGS->COUNT16.TC_INTFLAG) & TC_COMPARE_STATUS_MSK);
     /* Clear timer overflow interrupt */
-    TC4_REGS->COUNT16.TC_INTFLAG = TC_COMPARE_STATUS_MSK;
+    TC4_REGS->COUNT16.TC_INTFLAG = compare_status;
     return compare_status;
 }
