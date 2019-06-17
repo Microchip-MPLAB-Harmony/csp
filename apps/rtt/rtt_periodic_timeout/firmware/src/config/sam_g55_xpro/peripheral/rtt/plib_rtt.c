@@ -12,7 +12,8 @@ Summary:
 
 Description:
     This file defines the interface for the RTT Plib.
-    It allows user to Program, Erase and lock the on-chip FLASH memory.
+    It allows user to configure and generate Periodic events using a real time
+    timer.
 *******************************************************************************/
 
 // DOM-IGNORE-BEGIN
@@ -47,7 +48,7 @@ RTT_OBJECT rtt;
 void RTT_Initialize(void)
 {
     RTT_REGS->RTT_MR = RTT_MR_RTTRST_Msk;
-    RTT_REGS->RTT_MR = RTT_MR_RTPRES(65535) | RTT_MR_RTTDIS_Msk  | RTT_MR_RTTINCIEN_Msk;
+    RTT_REGS->RTT_MR = RTT_MR_RTPRES(32768) | RTT_MR_RTTDIS_Msk  | RTT_MR_RTTINCIEN_Msk;
 }
 
 void RTT_Enable(void)
@@ -116,14 +117,14 @@ uint32_t RTT_FrequencyGet(void)
     
     if (flag)
     {
-        return 1000;
+        return 1;
     }
     else
     {
         flag = (RTT_REGS->RTT_MR) & (RTT_MR_RTPRES_Msk);
         if (flag == 0)
         {
-            return (32768 / 65536);
+            return (0);
         }
         else
         {
@@ -134,9 +135,9 @@ uint32_t RTT_FrequencyGet(void)
 
 void RTT_InterruptHandler()
 {
-	volatile uint32_t status = RTT_REGS->RTT_SR;
+	uint32_t status = RTT_REGS->RTT_SR;
 	uint32_t flags = RTT_REGS->RTT_MR;
-	RTT_REGS->RTT_MR &= ~(RTT_MR_ALMIEN_Msk | RTT_MR_RTTINCIEN_Msk);
+	RTT_REGS->RTT_MR&= ~(RTT_MR_ALMIEN_Msk | RTT_MR_RTTINCIEN_Msk);
 	if(flags & RTT_MR_RTTINCIEN_Msk)
 	{
 		if(status & RTT_SR_RTTINC_Msk)
