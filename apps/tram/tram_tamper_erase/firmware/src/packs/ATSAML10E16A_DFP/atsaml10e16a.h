@@ -1,7 +1,7 @@
 /**
  * \brief Header file for ATSAML10E16A
  *
- * © 2019 Microchip Technology Inc. and its subsidiaries.
+ * Copyright (c) 2019 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip software and any derivatives
  * exclusively with Microchip products. It is your responsibility to comply with third party license
@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-06-03T17:11:15Z */
+/* file generated from device description version 2019-06-07T05:54:14Z */
 #ifndef _SAML10E16A_H_
 #define _SAML10E16A_H_
 
@@ -82,7 +82,11 @@ typedef enum IRQn
   PendSV_IRQn               =  -2, /**< -2  Pendable request for system service */
   SysTick_IRQn              =  -1, /**< -1  System Tick Timer                   */
 /******  SAML10E16A specific Interrupt Numbers ***********************************/
-  SYSTEM_IRQn               =   0, /**< 0   Shared between MCLK OSCCTRL OSC32KCTRL PM SUPC (MCLK) */
+  MCLK_IRQn                 =   0, /**< 0   Shared between MCLK OSCCTRL OSC32KCTRL PM SUPC (MCLK) */
+  OSCCTRL_IRQn              =   0, /**< 0   Shared between MCLK OSCCTRL OSC32KCTRL PM SUPC (OSCCTRL) */
+  OSC32KCTRL_IRQn           =   0, /**< 0   Shared between MCLK OSCCTRL OSC32KCTRL PM SUPC (OSC32KCTRL) */
+  PM_IRQn                   =   0, /**< 0   Shared between MCLK OSCCTRL OSC32KCTRL PM SUPC (PM) */
+  SUPC_IRQn                 =   0, /**< 0   Shared between MCLK OSCCTRL OSC32KCTRL PM SUPC (SUPC) */
   WDT_IRQn                  =   1, /**< 1   Watchdog Timer (WDT)                */
   RTC_IRQn                  =   2, /**< 2   Real-Time Counter (RTC)             */
   EIC_0_IRQn                =   3, /**< 3   External Interrupt Controller (EIC) */
@@ -406,11 +410,6 @@ void TRAM_Handler                  ( void );
 #define TRAM_REGS                        ((tram_registers_t*)0x42003400)               /**< \brief TRAM Registers Address       */
 #define TRNG_REGS                        ((trng_registers_t*)0x42002800)               /**< \brief TRNG Registers Address       */
 #define WDT_REGS                         ((wdt_registers_t*)0x40002000)                /**< \brief WDT Registers Address        */
-#define CoreDebug_REGS                   ((coredebug_registers_t*)0xe000edf0)          /**< \brief CoreDebug Registers Address  */
-#define DIB_REGS                         ((dib_registers_t*)0xe000efb0)                /**< \brief DIB Registers Address        */
-#define DWT_REGS                         ((dwt_registers_t*)0xe0001000)                /**< \brief DWT Registers Address        */
-#define FPB_REGS                         ((fpb_registers_t*)0xe0002000)                /**< \brief FPB Registers Address        */
-#define ICB_REGS                         ((icb_registers_t*)0xe000e000)                /**< \brief ICB Registers Address        */
 #endif /* (defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__)) */
 /** @}  end of Peripheral Base Address Definitions */
 
@@ -455,11 +454,6 @@ void TRAM_Handler                  ( void );
 #define TRAM_BASE_ADDRESS                _UL_(0x42003400)                              /**< \brief TRAM Base Address */
 #define TRNG_BASE_ADDRESS                _UL_(0x42002800)                              /**< \brief TRNG Base Address */
 #define WDT_BASE_ADDRESS                 _UL_(0x40002000)                              /**< \brief WDT Base Address */
-#define CoreDebug_BASE_ADDRESS           _UL_(0xe000edf0)                              /**< \brief CoreDebug Base Address */
-#define DIB_BASE_ADDRESS                 _UL_(0xe000efb0)                              /**< \brief DIB Base Address */
-#define DWT_BASE_ADDRESS                 _UL_(0xe0001000)                              /**< \brief DWT Base Address */
-#define FPB_BASE_ADDRESS                 _UL_(0xe0002000)                              /**< \brief FPB Base Address */
-#define ICB_BASE_ADDRESS                 _UL_(0xe000e000)                              /**< \brief ICB Base Address */
 /** @}  end of Peripheral Base Address Definitions */
 
 /** \addtogroup SAML10E16A_pio Peripheral Pio Definitions
