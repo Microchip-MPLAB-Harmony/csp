@@ -40,7 +40,21 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
+// *****************************************************************************
+// *****************************************************************************
+// Section: Included Files
+// *****************************************************************************
+// *****************************************************************************
+
 #include "plib_cmp.h"
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Global Data
+// *****************************************************************************
+// *****************************************************************************
+
+CMP_OBJECT cmp2Obj;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -88,25 +102,6 @@ void CMP_1_CompareDisable(void)
     CM1CONCLR = _CM1CON_ON_MASK;
 }
 
-CMP_OBJECT cmp1Obj;
-
-void CMP_1_CallbackRegister(CMP_CALLBACK callback, uintptr_t context)
-{
-    cmp1Obj.callback = callback;
-
-    cmp1Obj.context = context;
-}
-
-void COMPARATOR_1_InterruptHandler(void)
-{
-    IFS4CLR = _IFS4_CMP1IF_MASK; //Clear IRQ flag
-
-    if(cmp1Obj.callback != NULL)
-    {
-        cmp1Obj.callback(cmp1Obj.context);
-    }
-}
-
 void CMP_2_CompareEnable(void)
 {
     CM2CONSET = _CM2CON_ON_MASK;
@@ -116,8 +111,6 @@ void CMP_2_CompareDisable(void)
 {
     CM2CONCLR = _CM2CON_ON_MASK;
 }
-
-CMP_OBJECT cmp2Obj;
 
 void CMP_2_CallbackRegister(CMP_CALLBACK callback, uintptr_t context)
 {
