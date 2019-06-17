@@ -198,7 +198,7 @@ const uint8_t crc_data[CRC_DATA_LENGTH] =
 
 int main ( void )
 {
-    uint32_t soft_crc32 = 0x697e290c;
+    //volatile uint32_t soft_crc32 = __REV(0x697e290c);
     uint32_t crc = 0;
     /* Initialize all modules */
     SYS_Initialize ( NULL );
@@ -207,7 +207,7 @@ int main ( void )
 
     if ((CRCCU_CRCCalculate((uint32_t)&crc_data, CRC_DATA_LENGTH, &crc, false)))
     {
-        if(crc == soft_crc32)
+        if(crc == __REV(0x697e290c))
         {
             LED_ON();
         }
