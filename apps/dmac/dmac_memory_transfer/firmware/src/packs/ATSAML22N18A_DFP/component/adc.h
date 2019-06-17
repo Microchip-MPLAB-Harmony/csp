@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-04-17T13:08:53Z */
+/* file generated from device description version 2019-06-04T17:42:06Z */
 #ifndef _SAML22_ADC_COMPONENT_H_
 #define _SAML22_ADC_COMPONENT_H_
 
