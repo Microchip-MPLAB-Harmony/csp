@@ -106,6 +106,8 @@ void SYS_Initialize ( void* data )
     INT_Initialize();
 	WDT_REGS->WDT_MR = WDT_MR_WDDIS_Msk; 		// Disable WDT 
 
+  
+
  
     TC0_CH0_TimerInitialize(); 
      
