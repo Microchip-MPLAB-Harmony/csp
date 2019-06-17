@@ -83,3 +83,7 @@ void DAC_DataWrite(uint16_t data)
     }
 }
 
+bool DAC_IsReady(void)
+{
+    return ((DAC_REGS->DAC_INTFLAG & DAC_INTFLAG_EMPTY_Msk) == DAC_INTFLAG_EMPTY_Msk);
+}
