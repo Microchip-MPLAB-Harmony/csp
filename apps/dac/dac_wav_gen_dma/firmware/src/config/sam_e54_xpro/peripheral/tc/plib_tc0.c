@@ -157,7 +157,7 @@ void TC0_Timer32bitCounterSet( uint32_t count )
 void TC0_Timer32bitPeriodSet( uint32_t period )
 {
     TC0_REGS->COUNT32.TC_CC[0] = period;
-    while((TC0_REGS->COUNT32.TC_SYNCBUSY & TC_SYNCBUSY_COUNT_Msk) == TC_SYNCBUSY_COUNT_Msk)
+    while((TC0_REGS->COUNT32.TC_SYNCBUSY & TC_SYNCBUSY_CC0_Msk) == TC_SYNCBUSY_CC0_Msk)
     {
         /* Wait for Write Synchronization */
     }
@@ -176,6 +176,6 @@ bool TC0_TimerPeriodHasExpired( void )
 {
     bool timer_status;
     timer_status = ((TC0_REGS->COUNT32.TC_INTFLAG) & TC_INTFLAG_OVF_Msk);
-    TC0_REGS->COUNT32.TC_INTFLAG = TC_INTFLAG_OVF_Msk;
+    TC0_REGS->COUNT32.TC_INTFLAG = timer_status;
     return timer_status;
 }
