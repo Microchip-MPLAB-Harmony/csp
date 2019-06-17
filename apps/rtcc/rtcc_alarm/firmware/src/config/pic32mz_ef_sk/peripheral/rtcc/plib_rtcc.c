@@ -56,7 +56,7 @@
 // *****************************************************************************
 // *****************************************************************************
 
-#define decimaltobcd(x)                 (((x/10)<<4)+((x - ((x/10)*10))))
+#define decimaltobcd(x)                 (((x / 10) << 4) + ((x - ((x / 10) * 10))))
 #define bcdtodecimal(x)                 ((x & 0xF0) >> 4) * 10 + (x & 0x0F)
 
 /* Real Time Clock System Service Object */
@@ -70,7 +70,7 @@ typedef struct _SYS_RTCC_OBJ_STRUCT
 
 } RTCC_OBJECT;
 
-static RTCC_OBJECT rtc;
+static RTCC_OBJECT rtcc;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -120,12 +120,12 @@ void RTCC_Initialize( void )
     RTCCONSET = _RTCCON_ON_MASK;
 }
 
-void RTCC_InterruptEnable(RTC_INT_MASK interrupt)
+void RTCC_InterruptEnable( RTC_INT_MASK interrupt )
 {
     IEC5SET = interrupt;
 }
 
-void RTCC_InterruptDisable(RTC_INT_MASK interrupt)
+void RTCC_InterruptDisable( RTC_INT_MASK interrupt )
 {
     IEC5CLR = interrupt;
 }
@@ -232,24 +232,18 @@ bool RTCC_AlarmSet( struct tm *alarmTime, RTC_ALARM_MASK alarmFreq )
 
 void RTCC_CallbackRegister( RTC_CALLBACK callback, uintptr_t context )
 {
-    /* - Un-register callback if NULL */
-    if (callback == NULL)
-    {
-        rtc.callback = NULL;
-        rtc.context = (uintptr_t) NULL;
-    }
+    rtcc.callback = callback;
 
-    /* - Save callback and context in local memory */
-    rtc.callback = callback;
-    rtc.context = context;
+    rtcc.context = context;
 }
 
 void RTCC_InterruptHandler( void )
 {
-    IFS5CLR = 0x40; /* clear the status flag */
+	/* Clear the status flag */
+    IFS5CLR = 0x40;
 
-    if(rtc.callback != NULL)
+    if(rtcc.callback != NULL)
     {
-        rtc.callback(rtc.context);
+        rtcc.callback(rtcc.context);
     }
 }
