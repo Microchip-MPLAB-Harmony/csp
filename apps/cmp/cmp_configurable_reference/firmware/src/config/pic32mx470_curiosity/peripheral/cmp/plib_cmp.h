@@ -108,8 +108,6 @@ void CMP_2_CompareEnable(void);
 
 void CMP_2_CompareDisable(void);
 
-void CMP_2_CallbackRegister(CMP_CALLBACK callback, uintptr_t context);
-
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
