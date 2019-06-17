@@ -55,7 +55,6 @@
 
 #include "device.h"
 #include "plib_pm.h"
-
 void PM_Initialize( void )
 {
     /* Configure PM */
