@@ -24,13 +24,21 @@
         </File>
         <File dnOrder="2">
           <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">fault_handlers.c</Name>
+          <LogicalPath dnOrder="2">config/sam_a5d2_xult/</LogicalPath>
+          <PhysicalPath dnOrder="3">/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">9E84FBBFC8C498CF6B6DC9EBC4E3B1FE</GeneratedChecksum>
+          <UserChecksum dnOrder="5">9E84FBBFC8C498CF6B6DC9EBC4E3B1FE</UserChecksum>
+        </File>
+        <File dnOrder="3">
+          <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">iar_monitor.c</Name>
           <LogicalPath dnOrder="2">config/sam_a5d2_xult/stdio/</LogicalPath>
           <PhysicalPath dnOrder="3">/stdio/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">51D19E2818A4282EE571C71E4EF288FB</GeneratedChecksum>
           <UserChecksum dnOrder="5">51D19E2818A4282EE571C71E4EF288FB</UserChecksum>
         </File>
-        <File dnOrder="3">
+        <File dnOrder="4">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">initialization.c</Name>
           <LogicalPath dnOrder="2">config/sam_a5d2_xult/</LogicalPath>
@@ -38,7 +46,7 @@
           <GeneratedChecksum dnOrder="4">6F916F55BB03349DF1668084A40A5E62</GeneratedChecksum>
           <UserChecksum dnOrder="5">6F916F55BB03349DF1668084A40A5E62</UserChecksum>
         </File>
-        <File dnOrder="4">
+        <File dnOrder="5">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">interrupts.c</Name>
           <LogicalPath dnOrder="2">config/sam_a5d2_xult/</LogicalPath>
@@ -46,7 +54,7 @@
           <GeneratedChecksum dnOrder="4">1C6CCF80BD08AC7628A13A28FDD99D11</GeneratedChecksum>
           <UserChecksum dnOrder="5">1C6CCF80BD08AC7628A13A28FDD99D11</UserChecksum>
         </File>
-        <File dnOrder="5">
+        <File dnOrder="6">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_aic.c</Name>
           <LogicalPath dnOrder="2">config/sam_a5d2_xult/peripheral/aic/</LogicalPath>
@@ -54,7 +62,7 @@
           <GeneratedChecksum dnOrder="4">10862E5E0B12B06E93866BED38746A18</GeneratedChecksum>
           <UserChecksum dnOrder="5">10862E5E0B12B06E93866BED38746A18</UserChecksum>
         </File>
-        <File dnOrder="6">
+        <File dnOrder="7">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_clk.c</Name>
           <LogicalPath dnOrder="2">config/sam_a5d2_xult/peripheral/clk/</LogicalPath>
@@ -62,7 +70,7 @@
           <GeneratedChecksum dnOrder="4">3BEA9B923298F167719809D170128473</GeneratedChecksum>
           <UserChecksum dnOrder="5">3BEA9B923298F167719809D170128473</UserChecksum>
         </File>
-        <File dnOrder="7">
+        <File dnOrder="8">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_matrix.c</Name>
           <LogicalPath dnOrder="2">config/sam_a5d2_xult/peripheral/matrix/</LogicalPath>
@@ -70,7 +78,7 @@
           <GeneratedChecksum dnOrder="4">A1D44A4F1F0E0FFA06D8BF524BA8088D</GeneratedChecksum>
           <UserChecksum dnOrder="5">A1D44A4F1F0E0FFA06D8BF524BA8088D</UserChecksum>
         </File>
-        <File dnOrder="8">
+        <File dnOrder="9">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_mmu.c</Name>
           <LogicalPath dnOrder="2">config/sam_a5d2_xult/peripheral/mmu/</LogicalPath>
@@ -78,7 +86,7 @@
           <GeneratedChecksum dnOrder="4">A35FB937DDD303035A8B491D5A6A2DF3</GeneratedChecksum>
           <UserChecksum dnOrder="5">A35FB937DDD303035A8B491D5A6A2DF3</UserChecksum>
         </File>
-        <File dnOrder="9">
+        <File dnOrder="10">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_pio.c</Name>
           <LogicalPath dnOrder="2">config/sam_a5d2_xult/peripheral/pio/</LogicalPath>
@@ -86,21 +94,13 @@
           <GeneratedChecksum dnOrder="4">96BC43B05A6C90FD29DFD5A2DEC63464</GeneratedChecksum>
           <UserChecksum dnOrder="5">96BC43B05A6C90FD29DFD5A2DEC63464</UserChecksum>
         </File>
-        <File dnOrder="10">
+        <File dnOrder="11">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_rstc.c</Name>
           <LogicalPath dnOrder="2">config/sam_a5d2_xult/peripheral/rstc/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/rstc/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">4082D3651BC0A85DC07A76AA04F313E1</GeneratedChecksum>
           <UserChecksum dnOrder="5">4082D3651BC0A85DC07A76AA04F313E1</UserChecksum>
-        </File>
-        <File dnOrder="11">
-          <Type dnOrder="0">SOURCE</Type>
-          <Name dnOrder="1">vectortrap.s</Name>
-          <LogicalPath dnOrder="2">config/sam_a5d2_xult/</LogicalPath>
-          <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">4E18F3FB7EC807B305471847E02231B5</GeneratedChecksum>
-          <UserChecksum dnOrder="5">4E18F3FB7EC807B305471847E02231B5</UserChecksum>
         </File>
         <File dnOrder="12">
           <Type dnOrder="0">HEADER</Type>
@@ -163,8 +163,8 @@
           <Name dnOrder="1">arm_math.h</Name>
           <LogicalPath dnOrder="2">packs/CMSIS/CMSIS/DSP/Include/</LogicalPath>
           <PhysicalPath dnOrder="3">/../../packs/CMSIS/CMSIS/DSP/Include/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">27F6D2D0CB97CA5159FE0788243E978E</GeneratedChecksum>
-          <UserChecksum dnOrder="5">27F6D2D0CB97CA5159FE0788243E978E</UserChecksum>
+          <GeneratedChecksum dnOrder="4">4726F6E7A3CDEDAE6075A88F3D16F093</GeneratedChecksum>
+          <UserChecksum dnOrder="5">4726F6E7A3CDEDAE6075A88F3D16F093</UserChecksum>
         </File>
         <File dnOrder="20">
           <Type dnOrder="0">HEADER</Type>
@@ -219,24 +219,24 @@
           <Name dnOrder="1">cmsis_gcc.h</Name>
           <LogicalPath dnOrder="2">packs/CMSIS/CMSIS/Core_A/Include/</LogicalPath>
           <PhysicalPath dnOrder="3">/../../packs/CMSIS/CMSIS/Core_A/Include/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">91C03FE6A482084EEC44B1D75FE4D00E</GeneratedChecksum>
-          <UserChecksum dnOrder="5">91C03FE6A482084EEC44B1D75FE4D00E</UserChecksum>
+          <GeneratedChecksum dnOrder="4">25431DA0E64D60CDB443B02ABAC00FC8</GeneratedChecksum>
+          <UserChecksum dnOrder="5">25431DA0E64D60CDB443B02ABAC00FC8</UserChecksum>
         </File>
         <File dnOrder="27">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">cmsis_iccarm.h</Name>
           <LogicalPath dnOrder="2">packs/CMSIS/CMSIS/Core_A/Include/</LogicalPath>
           <PhysicalPath dnOrder="3">/../../packs/CMSIS/CMSIS/Core_A/Include/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">44699E7D9F67414CAC0914AB865D0FF6</GeneratedChecksum>
-          <UserChecksum dnOrder="5">44699E7D9F67414CAC0914AB865D0FF6</UserChecksum>
+          <GeneratedChecksum dnOrder="4">A194C342920D5CD34C03C2E40907D2E6</GeneratedChecksum>
+          <UserChecksum dnOrder="5">A194C342920D5CD34C03C2E40907D2E6</UserChecksum>
         </File>
         <File dnOrder="28">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">core_ca.h</Name>
           <LogicalPath dnOrder="2">packs/CMSIS/CMSIS/Core_A/Include/</LogicalPath>
           <PhysicalPath dnOrder="3">/../../packs/CMSIS/CMSIS/Core_A/Include/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">31692AF12C3323852C7051974B2CA56E</GeneratedChecksum>
-          <UserChecksum dnOrder="5">31692AF12C3323852C7051974B2CA56E</UserChecksum>
+          <GeneratedChecksum dnOrder="4">789BC94E81700B86004C6A43BAC0EFF2</GeneratedChecksum>
+          <UserChecksum dnOrder="5">789BC94E81700B86004C6A43BAC0EFF2</UserChecksum>
         </File>
         <File dnOrder="29">
           <Type dnOrder="0">HEADER</Type>
@@ -673,12 +673,12 @@
       </Files>
     </Manifest>
     <Settings dnOrder="4">
-      <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.4.0"/>
+      <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.5.1"/>
       <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAMA5D2_DFP\0.1.18\atdf\ATSAMA5D27.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
       <Setting dnOrder="4" key="MERGE_STRATEGY" value="OVERWRITE"/>
-      <Setting dnOrder="5" key="PackageFilter" value="bsp;core;csp;"/>
+      <Setting dnOrder="5" key="PackageFilter" value="csp;"/>
     </Settings>
   </Configurator>
 </Configuration>
