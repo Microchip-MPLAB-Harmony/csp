@@ -28,6 +28,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
         SECTION FIQ_STACK:DATA:NOROOT(2)
         SECTION ABT_STACK:DATA:NOROOT(2)
         SECTION UND_STACK:DATA:NOROOT(2)
+        SECTION SYS_STACK:DATA:NOROOT(2)
         SECTION SVC_STACK:DATA:NOROOT(2)
         SECTION CSTACK:DATA:NOROOT(3)
 
@@ -53,6 +54,7 @@ ARM_MODE_FIQ    DEFINE 0x11
 ARM_MODE_IRQ    DEFINE 0x12
 ARM_MODE_SVC    DEFINE 0x13
 ARM_MODE_UND    DEFINE 0x1B
+ARM_MODE_SYS    DEFINE 0x1F
 
 I_BIT           DEFINE 0x80
 F_BIT           DEFINE 0x40
@@ -264,6 +266,14 @@ __iar_program_start:
         orr     r0, r0, #ARM_MODE_UND
         msr     CPSR_c, r0
         ldr     sp, =SFE(UND_STACK)
+        bic     sp, sp, #0x7
+
+        ; Set up the sys mode stack pointer
+
+        bic     r0, r0, #MODE_MSK
+        orr     r0, r0, #ARM_MODE_SYS
+        msr     CPSR_c, r0
+        ldr     sp, =SFE(SYS_STACK)
         bic     sp, sp, #0x7
 
         ; Can't set up the user mode stack here as we can't
