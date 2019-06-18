@@ -1158,8 +1158,7 @@
     </UniqueComponent>
   </Components>
   <UserData>
-    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="0"/>
-    <ComponentGraph dnOrder="1" id="__ROOTVIEW">
+    <ComponentGraph dnOrder="0" id="__ROOTVIEW">
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="core" x="241" y="20"/>
         <ElementPosition dnOrder="1" id="dbgu" x="24" y="84"/>
@@ -1169,5 +1168,6 @@
         <ElementPosition dnOrder="5" id="stdio" x="218" y="100"/>
       </ElementPositions>
     </ComponentGraph>
+    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="1"/>
   </UserData>
 </Configuration>
