@@ -695,79 +695,67 @@
         </String>
         <KeyValueSet dnOrder="138" id="COMPILER_CHOICE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
         <Boolean dnOrder="139" id="CORE_TIMER_INTERRUPT_ENABLE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core_timer" priority="1" value="true"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core_timer" value="true"/>
           </Values>
         </Boolean>
         <Boolean dnOrder="140" id="CORE_TIMER_INTERRUPT_ENABLE_UPDATE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
         <String dnOrder="141" id="CORE_TIMER_INTERRUPT_HANDLER">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core_timer" priority="1" value="CORE_TIMER_InterruptHandler"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core_timer" value="CORE_TIMER_InterruptHandler"/>
           </Values>
         </String>
         <Boolean dnOrder="142" id="CORE_TIMER_INTERRUPT_HANDLER_LOCK">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core_timer" priority="1" value="true"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core_timer" value="true"/>
           </Values>
         </Boolean>
         <Boolean dnOrder="143" id="EVIC_0_ENABLE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="true"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
         <Boolean dnOrder="144" id="EVIC_0_HANDLER_LOCK">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="true"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
         <String dnOrder="145" id="EVIC_0_INTERRUPT_HANDLER">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="CORE_TIMER_InterruptHandler"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="CORE_TIMER_InterruptHandler"/>
           </Values>
         </String>
-        <Hex dnOrder="146" id="SYS_PORT_G_LAT">
+        <Hex dnOrder="146" id="PMD6_REG_VALUE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="4294963455"/>
           </Values>
         </Hex>
-        <Hex dnOrder="147" id="SYS_PORT_G_TRIS">
+        <Hex dnOrder="147" id="PMD7_REG_VALUE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="4096"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="4294967279"/>
           </Values>
         </Hex>
-        <KeyValueSet dnOrder="148" id="clkSvcMode">
+        <Hex dnOrder="148" id="SYS_PORT_G_LAT">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </Hex>
+        <Hex dnOrder="149" id="SYS_PORT_G_TRIS">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="4096"/>
+          </Values>
+        </Hex>
+        <KeyValueSet dnOrder="150" id="clkSvcMode">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
       </Symbols>
@@ -776,9 +764,7 @@
       <Symbols dnOrder="0">
         <Integer dnOrder="0" id="CORE_TIMER_FREQUENCY">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core_timer" priority="2" value="60000000"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core_timer" value="60000000"/>
           </Values>
         </Integer>
         <Boolean dnOrder="1" id="CORE_TIMER_INTERRUPT_MODE">
@@ -808,16 +794,12 @@
         </Float>
         <Integer dnOrder="4" id="CORE_TIMER_PERIOD_US">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core_timer" priority="2" value="100000"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core_timer" value="100000"/>
           </Values>
         </Integer>
         <String dnOrder="5" id="CORE_TIMER_PERIOD_VALUE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core_timer" priority="2" value="0x5b8d80"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core_timer" value="0x5b8d80"/>
           </Values>
         </String>
       </Symbols>
