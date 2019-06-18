@@ -11,8 +11,8 @@
           <Name dnOrder="1">cstartup.s</Name>
           <LogicalPath dnOrder="2">config/sam_9x60_ek/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">11AAC10B2D0F1C3475B7476DAD1E3835</GeneratedChecksum>
-          <UserChecksum dnOrder="5">11AAC10B2D0F1C3475B7476DAD1E3835</UserChecksum>
+          <GeneratedChecksum dnOrder="4">9B308CAA697FAFA3B67CB9E08D706A28</GeneratedChecksum>
+          <UserChecksum dnOrder="5">9B308CAA697FAFA3B67CB9E08D706A28</UserChecksum>
         </File>
         <File dnOrder="1">
           <Type dnOrder="0">SOURCE</Type>
@@ -83,8 +83,8 @@
           <Name dnOrder="1">plib_pio.c</Name>
           <LogicalPath dnOrder="2">config/sam_9x60_ek/peripheral/pio/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/pio/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">CF5DA446A41A617A45B4CEF086730D84</GeneratedChecksum>
-          <UserChecksum dnOrder="5">CF5DA446A41A617A45B4CEF086730D84</UserChecksum>
+          <GeneratedChecksum dnOrder="4">8B11297E0F9EDA2D6AC11DB8B92E7F32</GeneratedChecksum>
+          <UserChecksum dnOrder="5">8B11297E0F9EDA2D6AC11DB8B92E7F32</UserChecksum>
         </File>
         <File dnOrder="10">
           <Type dnOrder="0">SOURCE</Type>
@@ -587,18 +587,18 @@
           <Name dnOrder="1">ddram.icf</Name>
           <LogicalPath dnOrder="2">config/sam_9x60_ek/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">BA31DCF40D6802C5D66FAFB133AA7552</GeneratedChecksum>
-          <UserChecksum dnOrder="5">BA31DCF40D6802C5D66FAFB133AA7552</UserChecksum>
+          <GeneratedChecksum dnOrder="4">B77CE3D1B72A9EEE794D7724D772A6A7</GeneratedChecksum>
+          <UserChecksum dnOrder="5">B77CE3D1B72A9EEE794D7724D772A6A7</UserChecksum>
         </File>
       </Files>
     </Manifest>
     <Settings dnOrder="4">
-      <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.4.0"/>
+      <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.5.1"/>
       <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAM9X60_DFP\0.1.14\atdf\SAM9X60.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
-      <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
-      <Setting dnOrder="5" key="PackageFilter" value="bsp;core;crypto;csp;gfx;net;"/>
+      <Setting dnOrder="4" key="MERGE_STRATEGY" value="OVERWRITE"/>
+      <Setting dnOrder="5" key="PackageFilter" value="csp;"/>
     </Settings>
   </Configurator>
 </Configuration>
