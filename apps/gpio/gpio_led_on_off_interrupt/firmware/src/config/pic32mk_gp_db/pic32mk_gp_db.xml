@@ -715,107 +715,87 @@
         </String>
         <Boolean dnOrder="142" id="CHANGE_NOTICE_F_INTERRUPT_ENABLE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="true"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
         <Boolean dnOrder="143" id="CHANGE_NOTICE_F_INTERRUPT_ENABLE_UPDATE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="false"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
         <String dnOrder="144" id="CHANGE_NOTICE_F_INTERRUPT_HANDLER">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="CHANGE_NOTICE_F_InterruptHandler"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="CHANGE_NOTICE_F_InterruptHandler"/>
           </Values>
         </String>
         <Boolean dnOrder="145" id="CHANGE_NOTICE_F_INTERRUPT_HANDLER_LOCK">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="true"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
         <KeyValueSet dnOrder="146" id="COMPILER_CHOICE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
         <Boolean dnOrder="147" id="EVIC_49_ENABLE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="true"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
         <Boolean dnOrder="148" id="EVIC_49_HANDLER_LOCK">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="true"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
         <String dnOrder="149" id="EVIC_49_INTERRUPT_HANDLER">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="CHANGE_NOTICE_F_InterruptHandler"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="CHANGE_NOTICE_F_InterruptHandler"/>
           </Values>
         </String>
-        <Hex dnOrder="150" id="SYS_PORT_F_ANSEL">
+        <Hex dnOrder="150" id="PMD6_REG_VALUE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="8192"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="4294963455"/>
           </Values>
         </Hex>
-        <Hex dnOrder="151" id="SYS_PORT_F_CNEN">
+        <Hex dnOrder="151" id="PMD7_REG_VALUE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="8192"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="4294967279"/>
           </Values>
         </Hex>
-        <Hex dnOrder="152" id="SYS_PORT_F_CNPU">
+        <Hex dnOrder="152" id="SYS_PORT_F_ANSEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="8192"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="8192"/>
           </Values>
         </Hex>
-        <Boolean dnOrder="153" id="SYS_PORT_F_CN_USED">
+        <Hex dnOrder="153" id="SYS_PORT_F_CNEN">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="true"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="8192"/>
+          </Values>
+        </Hex>
+        <Hex dnOrder="154" id="SYS_PORT_F_CNPU">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="8192"/>
+          </Values>
+        </Hex>
+        <Boolean dnOrder="155" id="SYS_PORT_F_CN_USED">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <Hex dnOrder="154" id="SYS_PORT_G_LAT">
+        <Hex dnOrder="156" id="SYS_PORT_G_LAT">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Hex>
-        <Hex dnOrder="155" id="SYS_PORT_G_TRIS">
+        <Hex dnOrder="157" id="SYS_PORT_G_TRIS">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="2" value="8192"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="8192"/>
           </Values>
         </Hex>
-        <KeyValueSet dnOrder="156" id="clkSvcMode">
+        <KeyValueSet dnOrder="158" id="clkSvcMode">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="core" priority="1" value="0"/>
-            </Dynamic>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
       </Symbols>
@@ -823,12 +803,12 @@
     <UniqueComponent dnOrder="1" id="dfp"/>
   </Components>
   <UserData>
-    <ComponentGraph dnOrder="0" id="__ROOTVIEW">
+    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="0"/>
+    <ComponentGraph dnOrder="1" id="__ROOTVIEW">
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="core" x="240" y="20"/>
         <ElementPosition dnOrder="1" id="dfp" x="20" y="20"/>
       </ElementPositions>
     </ComponentGraph>
-    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="1"/>
   </UserData>
 </Configuration>
