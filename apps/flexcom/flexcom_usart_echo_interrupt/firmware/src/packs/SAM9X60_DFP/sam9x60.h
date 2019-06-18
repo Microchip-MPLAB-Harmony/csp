@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-04-12T22:09:26Z */
+/* file generated from device description version 2019-04-23T19:01:17Z */
 #ifndef _SAM9X60_H_
 #define _SAM9X60_H_
 
@@ -128,7 +128,8 @@ typedef enum IRQn
   TC1_IRQn                  =  45, /**< 45  Timer Counter (TC1)                 */
   OTPC_IRQn                 =  46, /**< 46  OTP Memory Controller (OTPC)        */
   DBGU_IRQn                 =  47, /**< 47  Debug Unit (DBGU)                   */
-  PMECC_IRQn                =  48, /**< 48  Programmable Multibit Error Correction Code Controller (PMECC) */
+  PMECC_IRQn                =  48, /**< 48  Shared between PMECC PMERRLOC (PMECC) */
+  PMERRLOC_IRQn             =  48, /**< 48  Shared between PMECC PMERRLOC (PMERRLOC) */
   SDRAMC_IRQn               =  49, /**< 49  Shared between SDRAMC MPDDRC SMC (SDRAMC) */
   MPDDRC_IRQn               =  49, /**< 49  Shared between SDRAMC MPDDRC SMC (MPDDRC) */
   SMC_IRQn                  =  49, /**< 49  Shared between SDRAMC MPDDRC SMC (SMC) */
@@ -208,7 +209,7 @@ typedef struct _DeviceVectors
   void* pfnTC1_Handler;                          /*  45 Timer Counter (TC1) */
   void* pfnOTPC_Handler;                         /*  46 OTP Memory Controller (OTPC) */
   void* pfnDBGU_Handler;                         /*  47 Debug Unit (DBGU) */
-  void* pfnPMECC_Handler;                        /*  48 Programmable Multibit Error Correction Code Controller (PMECC) */
+  void* pfnECC_Handler;                          /*  48 ECC Controller (PMECC PMERRLOC) */
   void* pfnMC_Handler;                           /*  49 Memory Controller (SDRAMC MPDDRC SMC) */
 } DeviceVectors;
 
@@ -268,7 +269,7 @@ void PIOD_Handler                  ( void );
 void TC1_Handler                   ( void );
 void OTPC_Handler                  ( void );
 void DBGU_Handler                  ( void );
-void PMECC_Handler                 ( void );
+void ECC_Handler                   ( void );
 void MC_Handler                    ( void );
 #endif /* DONT_USE_PREDEFINED_PERIPHERALS_HANDLERS */
 #endif /* !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__)) */
