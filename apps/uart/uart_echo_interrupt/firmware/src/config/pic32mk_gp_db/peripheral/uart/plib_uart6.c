@@ -334,6 +334,8 @@ void UART6_FAULT_InterruptHandler (void)
 
     /* Disable the fault interrupt */
     IEC5CLR = _IEC5_U6EIE_MASK;
+    /* Disable the receive interrupt */
+    IEC5CLR = _IEC5_U6RXIE_MASK;
 
     /* Client must call UARTx_ErrorGet() function to clear the errors */
     if( uart6Obj.rxCallback != NULL )
