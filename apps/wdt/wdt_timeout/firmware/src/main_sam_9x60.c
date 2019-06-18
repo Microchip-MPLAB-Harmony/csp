@@ -197,6 +197,7 @@ void showMsg( void )
 int main( void )
 {
     uint32_t pitMs = 500;
+
     /* Initialize all modules */
     SYS_Initialize( NULL );
 
