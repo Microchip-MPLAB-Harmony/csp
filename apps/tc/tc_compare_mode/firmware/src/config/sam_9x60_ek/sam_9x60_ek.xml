@@ -953,7 +953,7 @@
         <Comment dnOrder="28" id="TC1_COMPARE_PERIOD">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="text">
-              <Value dnOrder="0">****Waveform&amp;#160;period&amp;#160;is&amp;#160;10000.0&amp;#160;uS****</Value>
+              <Value dnOrder="0">****&amp;#160;Waveform&amp;#160;Period&amp;#160;is&amp;#160;10000.0&amp;#160;uS****</Value>
             </String>
           </Attributes>
         </Comment>
@@ -1036,13 +1036,13 @@
     </UniqueComponent>
   </Components>
   <UserData>
-    <ComponentGraph dnOrder="0" id="__ROOTVIEW">
+    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="0"/>
+    <ComponentGraph dnOrder="1" id="__ROOTVIEW">
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="core" x="240" y="20"/>
         <ElementPosition dnOrder="1" id="dfp" x="20" y="20"/>
         <ElementPosition dnOrder="2" id="tc0" x="265" y="275"/>
       </ElementPositions>
     </ComponentGraph>
-    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="1"/>
   </UserData>
 </Configuration>

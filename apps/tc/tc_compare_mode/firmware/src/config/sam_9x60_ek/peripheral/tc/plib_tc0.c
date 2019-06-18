@@ -53,9 +53,6 @@
 */
 #include "device.h"
 #include "plib_tc0.h"
- 
-
- 
 
  
  
@@ -63,7 +60,10 @@
  
 
  
+ 
 
+ 
+ 
 
 /* Initialize channel in compare mode */
 void TC0_CH1_CompareInitialize (void)
@@ -127,17 +127,16 @@ void TC0_CH1_CompareBSet (uint32_t value)
     TC0_REGS->TC_CHANNEL[1].TC_RB = value;
 }
 
+/*Get the compare status */
 TC_COMPARE_STATUS TC0_CH1_CompareStatusGet(void)
 {
     return (TC_COMPARE_STATUS)(TC0_REGS->TC_CHANNEL[1].TC_SR & TC_COMPARE_STATUS_MSK);
 }
  
-
  
  
 
  
-
  
  
 /**
