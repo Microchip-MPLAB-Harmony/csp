@@ -66,7 +66,7 @@ void FLEXCOM4_SPI_Initialize ( void )
     /* Enable Master mode, select clock source, select particular NPCS line for chip select and disable mode fault detection */
     FLEXCOM4_REGS->FLEX_SPI_MR = FLEX_SPI_MR_MSTR_Msk | FLEX_SPI_MR_BRSRCCLK_PERIPH_CLK | FLEX_SPI_MR_PCS(0) | FLEX_SPI_MR_MODFDIS_Msk;
 
-    /* Set up clock Polarity, data phase, Communication Width and Baud Rate */
+    /* Set up clock Polarity, data phase, Communication Width, Baud Rate */
     FLEXCOM4_REGS->FLEX_SPI_CSR[0]= FLEX_SPI_CSR_CPOL(0) | FLEX_SPI_CSR_NCPHA(1) | FLEX_SPI_CSR_BITS_8_BIT | FLEX_SPI_CSR_SCBR(200);
 
     /* Initialize global variables */
@@ -172,9 +172,9 @@ bool FLEXCOM4_SPI_TransferSetup (FLEXCOM_SPI_TRANSFER_SETUP * setup, uint32_t sp
 {
     uint32_t scbr;
     if ((setup == NULL) || (setup->clockFrequency == 0))
-	{
-		return false;
-	}
+    {
+        return false;
+    }
     if(spiSourceClock == 0)
     {
         // Fetch Master Clock Frequency directly
@@ -251,7 +251,6 @@ void FLEXCOM4_InterruptHandler(void)
     {
         /* Disable the TDRE interrupt. This will be enabled back if more than
          * one byte is pending to be transmitted */
-
         FLEXCOM4_REGS->FLEX_SPI_IDR = FLEX_SPI_IDR_TDRE_Msk;
 
         if(dataBits == FLEX_SPI_CSR_BITS_8_BIT)
