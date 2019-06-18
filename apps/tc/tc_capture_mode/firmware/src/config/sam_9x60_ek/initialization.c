@@ -101,8 +101,6 @@ void SYS_Initialize ( void* data )
 
 	PIO_Initialize();
 
-	PIT_TimerInitialize();
-
 MMU_Initialize();
 
     INT_Initialize();
@@ -110,7 +108,7 @@ MMU_Initialize();
 
  
     TC0_CH0_CaptureInitialize(); 
-     
+    TC0_CH1_TimerInitialize(); 
     
     PWM_Initialize();
 

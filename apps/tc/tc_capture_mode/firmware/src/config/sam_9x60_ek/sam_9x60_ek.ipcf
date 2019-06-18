@@ -26,7 +26,6 @@
     </linkerFile>
     <files relRoot="$PROJ_DIR$\..\..\firmware\src\config\sam_9x60_ek">
         <group name="Header Files" relRoot="$PROJ_DIR$\..\..\firmware\src\config\sam_9x60_ek">
-            <path>\peripheral\pit\plib_pit.h</path>
             <path>\device_cache.h</path>
             <path>\toolchain_specifics.h</path>
             <path>\definitions.h</path>
@@ -91,7 +90,6 @@
             <path>\peripheral\pwm\plib_pwm_common.h</path>
         </group>
         <group name="Source Files" relRoot="$PROJ_DIR$\..\..\firmware\src\config\sam_9x60_ek">
-            <path>\peripheral\pit\plib_pit.c</path>
             <path>\..\..\main_sam_9x60.c</path>
             <path>\initialization.c</path>
             <path>\interrupts.c</path>

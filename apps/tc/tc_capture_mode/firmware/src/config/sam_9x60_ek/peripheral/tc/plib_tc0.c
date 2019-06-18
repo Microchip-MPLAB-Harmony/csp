@@ -53,12 +53,13 @@
 */
 #include "device.h"
 #include "plib_tc0.h"
+
+ 
  
 
  
 
  
-
 
 /* Initialize channel in capture mode */
 void TC0_CH0_CaptureInitialize (void)
@@ -101,22 +102,104 @@ uint32_t TC0_CH0_CaptureBGet (void)
     return TC0_REGS->TC_CHANNEL[0].TC_RB;
 }
 
+/*Get the capture status */
 TC_CAPTURE_STATUS TC0_CH0_CaptureStatusGet(void)
 {
     return (TC_CAPTURE_STATUS)(TC0_REGS->TC_CHANNEL[0].TC_SR & TC_CAPTURE_STATUS_MSK);
 }
  
-
  
-
- 
- 
-
  
  
 
+
+/* Callback object for channel 1 */
+TC_TIMER_CALLBACK_OBJECT TC0_CH1_CallbackObj;
+
+/* Initialize channel in timer mode */
+void TC0_CH1_TimerInitialize (void)
+{
+    /* clock selection and waveform selection */
+    TC0_REGS->TC_CHANNEL[1].TC_CMR = TC_CMR_TCCLKS_TIMER_CLOCK5 | TC_CMR_WAVEFORM_WAVSEL_UP_RC | \
+                                                        TC_CMR_WAVE_Msk ;
+
+    /* write period */
+    TC0_REGS->TC_CHANNEL[1].TC_RC = 32000U;
+
+
+    /* enable interrupt */
+    TC0_REGS->TC_CHANNEL[1].TC_IER = TC_IER_CPCS_Msk;
+    TC0_CH1_CallbackObj.callback_fn = NULL;
+}
+
+/* Start the timer */
+void TC0_CH1_TimerStart (void)
+{
+    TC0_REGS->TC_CHANNEL[1].TC_CCR = (TC_CCR_CLKEN_Msk | TC_CCR_SWTRG_Msk);
+}
+
+/* Stop the timer */
+void TC0_CH1_TimerStop (void)
+{
+    TC0_REGS->TC_CHANNEL[1].TC_CCR = (TC_CCR_CLKDIS_Msk);
+}
+
+uint32_t TC0_CH1_TimerFrequencyGet( void )
+{
+    return (uint32_t)(32000UL);
+}
+
+/* Configure timer period */
+void TC0_CH1_TimerPeriodSet (uint32_t period)
+{
+    TC0_REGS->TC_CHANNEL[1].TC_RC = period;
+}
+
+
+/* Read timer period */
+uint32_t TC0_CH1_TimerPeriodGet (void)
+{
+    return TC0_REGS->TC_CHANNEL[1].TC_RC;
+}
+
+/* Read timer counter value */
+uint32_t TC0_CH1_TimerCounterGet (void)
+{
+    return TC0_REGS->TC_CHANNEL[1].TC_CV;
+}
+
+/* Register callback for period interrupt */
+void TC0_CH1_TimerCallbackRegister(TC_TIMER_CALLBACK callback, uintptr_t context)
+{
+    TC0_CH1_CallbackObj.callback_fn = callback;
+    TC0_CH1_CallbackObj.context = context;
+}
+
+/* Interrupt handler for Channel 1 */
+void TC0_CH1_InterruptHandler(void)
+{
+    TC_TIMER_STATUS timer_status = (TC_TIMER_STATUS)(TC0_REGS->TC_CHANNEL[1].TC_SR & TC_TIMER_STATUS_MSK);
+    /* Call registered callback function */
+    if ((TC_TIMER_NONE != timer_status) && TC0_CH1_CallbackObj.callback_fn != NULL)
+    {
+        TC0_CH1_CallbackObj.callback_fn(timer_status, TC0_CH1_CallbackObj.context);
+    }
+}
+
+ 
+ 
+ 
+ 
  
 
+ 
+
+/* Interrupt handler for TC0 */
+void TC0_InterruptHandler(void)
+{
+
+	TC0_CH1_InterruptHandler();
+}
  
  
 /**

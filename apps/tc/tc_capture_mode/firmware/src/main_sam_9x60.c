@@ -35,6 +35,15 @@ float duty;
 /* Calculated frequency of the input waveform in Hz*/
 float frequency;
 
+bool one_sec_delay_timer_fired = false;
+void timer0_channel1_callback(TC_TIMER_STATUS status, uintptr_t context)
+{
+  if( status == TC_TIMER_PERIOD_MATCH)
+  {
+    one_sec_delay_timer_fired = true;
+  }
+}
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Main Entry Point
@@ -45,6 +54,10 @@ int main ( void )
 {
     uint16_t period, on_time, off_time;
     uint16_t pwm_period, pwm_duty=0; 
+    
+    RTC_REGS->RTC_TIMR = 0x0;
+    RTC_REGS->RTC_TIMALR = 0x0;
+    RTC_REGS->RTC_SCCR = 0x1f;
   
     /* Initialize all modules */
     SYS_Initialize ( NULL );
@@ -54,6 +67,9 @@ int main ( void )
     pwm_period = PWM_ChannelPeriodGet(PWM_CHANNEL_0);
     TC0_CH0_CaptureStart();
     PWM_ChannelsStart(PWM_CHANNEL_0_MASK);
+    
+    TC0_CH1_TimerCallbackRegister(timer0_channel1_callback, NULL);
+    TC0_CH1_TimerStart();
     
     printf("\n\r---------------------------------------------------------");
     printf("\n\r                    TC Capture Demo                 ");
@@ -89,7 +105,8 @@ int main ( void )
         printf("\r\n"); 
                 
         /* Wait for 1 second */ 
-        PIT_DelayMs(1000);
+        while(false == one_sec_delay_timer_fired);
+        one_sec_delay_timer_fired = false;
         
         /* Maintain state machines of all polled MPLAB Harmony modules. */
         SYS_Tasks ( );
