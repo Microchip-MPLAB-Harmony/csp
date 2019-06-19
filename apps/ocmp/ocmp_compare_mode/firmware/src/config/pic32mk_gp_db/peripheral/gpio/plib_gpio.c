@@ -84,7 +84,10 @@ void GPIO_Initialize ( void )
 
     /* PPS Output Remapping */
     RPB0R = 5;
+    RPA0R = 10;
+    RPA14R = 6;
     RPA0R = 5;
+    RPB0R = 5;
     RPA14R = 5;
 
     /* Lock back the system after PPS configuration */
