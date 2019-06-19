@@ -85,6 +85,8 @@ void GPIO_Initialize ( void )
     IC1R = 5;
 
     /* PPS Output Remapping */
+    RPA4R = 6;
+    RPB9R = 5;
     RPA4R = 11;
     RPB9R = 5;
 
