@@ -62,7 +62,10 @@ extern "C" {
 
 void ${DAC_INSTANCE_NAME}_Initialize(void);
 void ${DAC_INSTANCE_NAME}_DataWrite(uint16_t data);
-<#if DAC_DEVICE_NAME?contains("SAMC2")>bool ${DAC_INSTANCE_NAME}_IsReady(void);</#if>
+<#if STATUS_SYNCBUSY_AVAILABLE??>
+<#else>
+bool ${DAC_INSTANCE_NAME}_IsReady(void);
+</#if>
 
 #ifdef __cplusplus  // Provide C++ Compatibility
 }
