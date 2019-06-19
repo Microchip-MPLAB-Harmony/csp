@@ -98,9 +98,9 @@ void CLK_Initialize( void )
         __builtin_mtc0(12, 0,(__builtin_mfc0(12, 0) | 0x0001)); /* enable interrupts */
     }
 
-    OSCCONbits.FRCDIV = 0;
 
-
+ 
+    
   
 
     /* Peripheral Module Disable Configuration */
