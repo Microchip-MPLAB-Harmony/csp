@@ -33,12 +33,11 @@
 
 /* Global variables */
 char mybuffer[]="0123456789";
-volatile bool transferStatus=false;
 
 /* This function will be called by SPI PLIB when transfer is completed */
 void SERCOM1_SPI_Callback(uintptr_t context )
 {
-    transferStatus = true;
+    SERCOM1_SPI_Write(mybuffer, SIZE);
 }
 
 
@@ -58,9 +57,6 @@ int main ( void )
 
     /* SPI Write */
     SERCOM1_SPI_Write(mybuffer, SIZE);
-
-    /* Busy wait on transfer status */
-    while(transferStatus != true)
 
     while ( true )
     {
