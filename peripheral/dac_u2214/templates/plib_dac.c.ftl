@@ -85,8 +85,10 @@ void ${DAC_INSTANCE_NAME}_DataWrite(uint16_t data)
         /* Wait for Synchronization after writing Data to DATA Register */
     }
 }
-
+<#if STATUS_SYNCBUSY_AVAILABLE??>
+<#else>
 bool ${DAC_INSTANCE_NAME}_IsReady(void)
 {
-    return ((${DAC_INSTANCE_NAME}_REGS->DAC_INTFLAG & DAC_INTFLAG_EMPTY_Msk) == DAC_INTFLAG_EMPTY_Msk);
+    return ((${DAC_INSTANCE_NAME}_REGS->DAC_STATUS & DAC_STATUS_READY_Msk) == DAC_STATUS_READY_Msk);
 }
+</#if>
