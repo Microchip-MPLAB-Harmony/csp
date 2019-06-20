@@ -13,6 +13,14 @@ void __attribute__((optimize("-O1"),section(".text.Dummy_Handler"),long_call))Du
     {
     }
 }
+<#elseif COMPILER_CHOICE == "KEIL">
+/* Brief default interrupt handler for unused IRQs.*/
+void __attribute__((section(".text.Dummy_Handler"),long_call))Dummy_Handler(void)
+{
+    while (1)
+    {
+    }
+}
 <#elseif COMPILER_CHOICE == "IAR">
 #pragma section="CSTACK"
 
@@ -34,12 +42,18 @@ ${LIST_SYSTEM_INTERRUPT_MULTIPLE_HANDLERS}
 __attribute__ ((section(".vectors")))
 <#elseif COMPILER_CHOICE == "IAR">
 #pragma location = ".intvec"
+<#elseif COMPILER_CHOICE == "KEIL">
+__attribute__ ((section(".vectors")))
 </#if>
 <#if COMPILER_CHOICE == "XC32">
 const DeviceVectors exception_table=
 {
     /* Configure Initial Stack Pointer, using linker-generated symbols */
     .pvStack = (void*) (&_stack),
+<#elseif COMPILER_CHOICE == "KEIL">
+const DeviceVectors __Vectors=
+{
+    /* Configure Initial Stack Pointer, using linker-generated symbols */
 <#elseif COMPILER_CHOICE == "IAR">
 __root const DeviceVectors __vector_table=
 {
