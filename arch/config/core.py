@@ -173,6 +173,7 @@ def instantiateComponent( coreComponent ):
 
     xc32Available = False
     iarAvailable =  False
+    keilAvailable =  False
     iarAllStacks =  False
     xc32AllStacks =  False
     iarVisiblity =  False
@@ -187,7 +188,7 @@ def instantiateComponent( coreComponent ):
     if "CORTEX-A" in coreArch.getValue():
         isCortexA = True
         baseArchDir = "arm"
-        compilers = [ "XC32", "IAR" ]
+        compilers = [ "XC32", "IAR", "KEIL" + naQualifier ]
         xc32Available = True
         xc32Visibility = True
         iarAvailable = True
@@ -198,15 +199,16 @@ def instantiateComponent( coreComponent ):
     elif "CORTEX-M" in coreArch.getValue():
         isCortexM = True
         baseArchDir = "arm"
-        compilers = [ "XC32", "IAR" ]
+        compilers = [ "XC32", "IAR", "KEIL" ]
         xc32Available = True
         xc32Visibility = True
         iarAvailable = True
+        keilAvailable = True
         multiCompilerSupport = True
         deviceCacheHeaderName = "cache_cortex_m.h.ftl"
     elif "ARM926" in coreArch.getValue():
         baseArchDir = "arm"
-        compilers = [ "XC32" + naQualifier, "IAR" ]
+        compilers = [ "XC32" + naQualifier, "IAR", "KEIL" + naQualifier ]
         iarAvailable = True
         iarVisiblity = True
         iarAllStacks = True
@@ -214,7 +216,7 @@ def instantiateComponent( coreComponent ):
     else: # "mips"
         isMips = True
         baseArchDir = "mips"
-        compilers = [ "XC32", "IAR" + naQualifier ]
+        compilers = [ "XC32", "IAR" + naQualifier, "KEIL" + naQualifier ]
         deviceCacheHeaderName = "cache_pic32mz.h.ftl"
         xc32Available = True
         xc32Visibility = True
@@ -703,6 +705,13 @@ def compilerUpdate( symbol, event ):
             devconSystemInitFile.setEnabled( True )
         if armLibCSourceFile != None:
             armLibCSourceFile.setEnabled( True )
+    elif compilerSelected == "KEIL":
+        xc32Menu.setVisible(False)
+        iarMenu.setVisible(False)
+        if devconSystemInitFile != None:
+            devconSystemInitFile.setEnabled( False )
+        if armLibCSourceFile != None:
+            armLibCSourceFile.setEnabled( False )
 
     for file in compilerSpecifics:
         updatePath( file, compilerSelected.lower() )
