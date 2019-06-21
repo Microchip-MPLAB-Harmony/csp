@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>XDMAC_CHANNEL Enumeration</title>
+<title>Running The Application</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="06883.html" target="topic">XDMAC Peripheral Library Help</a> &gt; <a href="06884.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="06895.html" target="topic">XDMAC_CHANNEL Enumeration</a></div>
+<a href="04085.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="06872.html" target="topic">WDT Applications</a> &gt; <a href="06873.html" target="topic">wdt_timeout</a> &gt; <a href="06895.html" target="topic">Running The Application</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04085.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06920.html" target="topic">Previous</a> | <a href="06884.html" target="topic">Up</a> | <a href="06921.html" target="topic">Next</a></div>
+<a href="06893.html" target="topic">Previous</a> | <a href="06873.html" target="topic">Up</a> | <a href="06944.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: XDMAC_CHANNEL Topic Title: XDMAC_CHANNEL Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: WDT wdt_timeout Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-XDMAC_CHANNEL Enumeration</div>
+Running The Application</div>
 </div>
 </div>
 
@@ -49,51 +49,232 @@ XDMAC_CHANNEL Enumeration</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-XDMAC Channels&nbsp;</p>
+<strong><u>Running project with MPLAB X IDE</u></strong>&nbsp;</p>
+
+<ol class="Element630">
+<li value="1" class="Element600">Open the Terminal application (Ex.:Tera term) on the computer.</li>
+<li value="2" class="Element600">Connect to the EDBG Virtual COM port and configure the serial settings as follows:
+<ul class="Element631">
+<li class="Element601">Baud : 115200</li>
+<li class="Element601">Data : 8 Bits</li>
+<li class="Element601">Parity : None</li>
+<li class="Element601">Stop : 1 Bit</li>
+<li class="Element601">Flow Control : None</li>
+</ul></li>
+<li value="3" class="Element600">Build and Program the application using the MPLAB X IDE.</li>
+<li value="4" class="Element600">The console displays the following message</li>
+</ol><p class="Element10" style="text-align: center;">
+<img src="wdt_initial_input.png" border="0" alt="" title=""></p><p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="5" class="Element600">The watch timer is fed periodically using System Timer (SysTick) to prevent the WDT reset and the LED is toggled.</li>
+</ol><p class="Element10">
+The following table provides the switch and the LED name. </p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="82%">
+<div class="Element66">
+Kit Name&nbsp;</div></td><td class="Element65" valign="top" width="8%">
+<div class="Element66">
+Switch Name&nbsp;</div></td><td class="Element65" valign="top" width="10%">
+<div class="Element66">
+LED Name&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="82%">
+<div class="Element68">
+PIC32MK General Purpose (GP) Development Board&nbsp;</div></td><td class="Element67" valign="top" width="8%">
+<div class="Element68">
+S1&nbsp;</div></td><td class="Element67" valign="top" width="10%">
+<div class="Element68">
+LED1&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="82%">
+<div class="Element68">
+PIC32MX Curiosity Development Board&nbsp;</div></td><td class="Element67" valign="top" width="8%">
+<div class="Element68">
+S1&nbsp;</div></td><td class="Element67" valign="top" width="10%">
+<div class="Element68">
+LED1&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="82%">
+<div class="Element68">
+PIC32MZ DA Family Starter Kit&nbsp;</div></td><td class="Element67" valign="top" width="8%">
+<div class="Element68">
+SW1&nbsp;</div></td><td class="Element67" valign="top" width="10%">
+<div class="Element68">
+LED1&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="82%">
+<div class="Element68">
+PIC32MZ Embedded Connectivity with FPU (EF) Starter Kit&nbsp;</div></td><td class="Element67" valign="top" width="8%">
+<div class="Element68">
+SW1&nbsp;</div></td><td class="Element67" valign="top" width="10%">
+<div class="Element68">
+LED1&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="82%">
+<div class="Element68">
+SAM C21N Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="8%">
+<div class="Element68">
+SW0&nbsp;</div></td><td class="Element67" valign="top" width="10%">
+<div class="Element68">
+LED0&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="82%">
+<div class="Element68">
+SAM D20 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="8%">
+<div class="Element68">
+SW0&nbsp;</div></td><td class="Element67" valign="top" width="10%">
+<div class="Element68">
+LED0&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="82%">
+<div class="Element68">
+SAM D21 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="8%">
+<div class="Element68">
+SW0&nbsp;</div></td><td class="Element67" valign="top" width="10%">
+<div class="Element68">
+LED0&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="82%">
+<div class="Element68">
+SAM E54 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="8%">
+<div class="Element68">
+SW0&nbsp;</div></td><td class="Element67" valign="top" width="10%">
+<div class="Element68">
+LED0&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="82%">
+<div class="Element68">
+SAM E70 Xplained Ultra Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="8%">
+<div class="Element68">
+SW0&nbsp;</div></td><td class="Element67" valign="top" width="10%">
+<div class="Element68">
+LED1&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="82%">
+<div class="Element68">
+SAM G55 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="8%">
+<div class="Element68">
+SW0&nbsp;</div></td><td class="Element67" valign="top" width="10%">
+<div class="Element68">
+LED0&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="82%">
+<div class="Element68">
+SAM L10 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="8%">
+<div class="Element68">
+SW0&nbsp;</div></td><td class="Element67" valign="top" width="10%">
+<div class="Element68">
+LED0&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="82%">
+<div class="Element68">
+SAM L21 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="8%">
+<div class="Element68">
+SW0&nbsp;</div></td><td class="Element67" valign="top" width="10%">
+<div class="Element68">
+LED0&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="82%">
+<div class="Element68">
+SAM L22 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="8%">
+<div class="Element68">
+SW0&nbsp;</div></td><td class="Element67" valign="top" width="10%">
+<div class="Element68">
+LED0&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="82%">
+<div class="Element68">
+SAM V71 Xplained Ultra Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="8%">
+<div class="Element68">
+SW0&nbsp;</div></td><td class="Element67" valign="top" width="10%">
+<div class="Element68">
+LED0&nbsp;</div></td></tr></table></div></div>
 <p class="Element10">
-This lists the set of channels available for data transfer using XDMAC.</p></div>
-</div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
-  <strong><span style="color: #000000">XDMAC_CHANNEL_0</span></strong>,
-  <strong><span style="color: #000000">XDMAC_CHANNEL_1</span></strong>,
-  <strong><span style="color: #000000">XDMAC_CHANNEL_2</span></strong>,
-  <strong><span style="color: #000000">XDMAC_CHANNEL_3</span></strong>,
-  <strong><span style="color: #000000">XDMAC_CHANNEL_4</span></strong>,
-  <strong><span style="color: #000000">XDMAC_CHANNEL_5</span></strong>,
-  <strong><span style="color: #000000">XDMAC_CHANNEL_6</span></strong>,
-  <strong><span style="color: #000000">XDMAC_CHANNEL_7</span></strong>,
-  <strong><span style="color: #000000">XDMAC_CHANNEL_8</span></strong>,
-  <strong><span style="color: #000000">XDMAC_CHANNEL_9</span></strong>,
-  <strong><span style="color: #000000">XDMAC_CHANNEL_10</span></strong>,
-  <strong><span style="color: #000000">XDMAC_CHANNEL_11</span></strong>,
-  <strong><span style="color: #000000">XDMAC_CHANNEL_12</span></strong>,
-  <strong><span style="color: #000000">XDMAC_CHANNEL_13</span></strong>,
-  <strong><span style="color: #000000">XDMAC_CHANNEL_14</span></strong>,
-  <strong><span style="color: #000000">XDMAC_CHANNEL_15</span></strong>,
-  <strong><span style="color: #000000">XDMAC_CHANNEL_16</span></strong>,
-  <strong><span style="color: #000000">XDMAC_CHANNEL_17</span></strong>,
-  <strong><span style="color: #000000">XDMAC_CHANNEL_18</span></strong>,
-  <strong><span style="color: #000000">XDMAC_CHANNEL_19</span></strong>,
-  <strong><span style="color: #000000">XDMAC_CHANNEL_20</span></strong>,
-  <strong><span style="color: #000000">XDMAC_CHANNEL_21</span></strong>,
-  <strong><span style="color: #000000">XDMAC_CHANNEL_22</span></strong>,
-  <strong><span style="color: #000000">XDMAC_CHANNEL_23</span></strong>
-} XDMAC_CHANNEL;</pre></div></div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="6" class="Element600">Press the switch to put the system in deadlock. The LED should stop blinking and the console should print the following message.</li>
+</ol><p class="Element10" style="text-align: center;">
+<img src="wdt_final_output.png" border="0" alt="" title=""></p><p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="7" class="Element600">The WDT will reset the device in four seconds and the demonstration should restart.</li>
+</ol><p class="Element10">
+&nbsp;</p>
 <p class="Element10">
-None.</p></div>
+<strong><u>Running project with IAR Embedded work bench</u></strong>&nbsp;</p>
+
+<ol class="Element630">
+<li value="1" class="Element600">Connect to the EDBG Virtual COM port and configure the serial settings as follows:
+<ul class="Element631">
+<li class="Element601">Baud : 115200</li>
+<li class="Element601">Data : 8 Bits</li>
+<li class="Element601">Parity : None</li>
+<li class="Element601">Stop : 1 Bit</li>
+<li class="Element601">Flow Control : None</li>
+</ul></li>
+<li value="2" class="Element600">Build the project using IAR Embedded Workbench</li>
+<li value="3" class="Element600">Use the output binary file (harmony.bin) to setup the board as detailed in <a href="06893.html" target="topic">hardware setup</a></li>
+<li value="4" class="Element600">The console displays the following message</li>
+</ol><p class="Element10">
+SAMA5D2 Xplained Ultra evaluation kit:&nbsp;</p>
+<p class="Element10">
+<img src="wdt_initial_input_mpu.png" border="0" alt="" title="">&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+SAM9X60 evaluation kit:&nbsp;</p>
+<p class="Element10">
+<img src="wdt_initial_input_9x60.png" border="0" alt="" title="">&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<ol class="Element630">
+<li value="5" class="Element600">The watch timer is fed periodically using Periodic Interval Timer (PIT) to prevent the WDT reset and the LED is toggled.</li>
+</ol><p class="Element10">
+The following table provides the switch and the LED name. </p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="55%">
+<div class="Element66">
+Kit Name&nbsp;</div></td><td class="Element65" valign="top" width="17%">
+<div class="Element66">
+Switch Name&nbsp;</div></td><td class="Element65" valign="top" width="28%">
+<div class="Element66">
+LED Name&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="55%">
+<div class="Element68">
+SAMA5D2 Xplained Ultra evaluation kit&nbsp;</div></td><td class="Element67" valign="top" width="17%">
+<div class="Element68">
+PB_USER&nbsp;</div></td><td class="Element67" valign="top" width="28%">
+<div class="Element68">
+RGB_LED(Blue)&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="55%">
+<div class="Element68">
+SAM9X60 evaluation kit&nbsp;</div></td><td class="Element67" valign="top" width="17%">
+<div class="Element68">
+SW1&nbsp;</div></td><td class="Element67" valign="top" width="28%">
+<div class="Element68">
+RGB_LED(Green)&nbsp;</div></td></tr></table></div></div>
+
+<ol class="Element630">
+<li value="6" class="Element600">Press the switch to put the system in deadlock. The LED should stop blinking and the console should print the following message.</li>
+</ol><p class="Element10">
+SAMA5D2 Xplained Ultra evaluation kit:&nbsp;</p>
+<p class="Element10">
+<img src="wdt_output_final_mpu.png" border="0" alt="" title="">&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+SAM9X60 evaluation kit:&nbsp;</p>
+<p class="Element10">
+<img src="wdt_output_final_9x60.png" border="0" alt="" title="">&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<ol class="Element630">
+<li value="7" class="Element600">The WDT will reset the device and the demonstration should restart.</li>
+</ol><p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<i>NOTE: In addition to the application output, console also outputs prints from the boot loader. This output is not relevant to the application under test and hence is not documented here. </i></p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="06883.html" target="topic">XDMAC Peripheral Library Help</a> &gt; <a href="06884.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="06895.html" target="topic">XDMAC_CHANNEL Enumeration</a></div>
+<a href="04085.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="06872.html" target="topic">WDT Applications</a> &gt; <a href="06873.html" target="topic">wdt_timeout</a> &gt; <a href="06895.html" target="topic">Running The Application</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -101,13 +282,13 @@ None.</p></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04085.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06920.html" target="topic">Previous</a> | <a href="06884.html" target="topic">Up</a> | <a href="06921.html" target="topic">Next</a></div>
+<a href="06893.html" target="topic">Previous</a> | <a href="06873.html" target="topic">Up</a> | <a href="06944.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: XDMAC_CHANNEL Topic Title: XDMAC_CHANNEL Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: WDT wdt_timeout Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

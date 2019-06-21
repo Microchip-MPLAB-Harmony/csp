@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Using the Library</title>
+<title>Introduction</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="05802.html" target="topic">SUPC Peripheral Library Help</a> &gt; <a href="05806.html" target="topic">Using the Library</a></div>
+<a href="04085.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03677.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04084.html" target="topic">Peripheral Libraries</a> &gt; <a href="05807.html" target="topic">SSC Peripheral Library Help</a> &gt; <a href="05806.html" target="topic">Introduction</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04085.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05798.html" target="topic">Previous</a> | <a href="05802.html" target="topic">Up</a> | <a href="05803.html" target="topic">Next</a></div>
+<a href="05807.html" target="topic">Previous</a> | <a href="05807.html" target="topic">Up</a> | <a href="05804.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SUPC U2407 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SSC 6078 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Using the Library</div>
+Introduction</div>
 </div>
 </div>
 
@@ -49,38 +49,42 @@ Using the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The Brown-Out Detector (BOD33) when enabled, monitors the VDD supply and compares the voltage with the brown-out&nbsp;</p>
+The SSC module implements an I2S (Inter-IC Sound) interface, for connection between an MCU and an audio peripheral such as a codec or Bluetooth module. The SSC hardware also provides for other protocols, which can be configured manually.&nbsp;</p>
 <p class="Element10">
-threshold level. When VDD crosses the brown-out threshold level, the BOD33 can perform one of the following actions,&nbsp;</p>
+The SSC module provides support to the audio protocol functionality via four standard I/O pins. The four pins that make up the audio protocol interface modes are:</p>
+<ul class="Element630">
+<li class="Element600"><strong>RD:</strong> Serial Data Input for receiving sample digital audio data (ADCDAT)</li>
+<li class="Element600"><strong>TD: </strong>Serial Data Output for transmitting digital audio data (DACDAT)</li>
+<li class="Element600"><strong>TK/RK:</strong> Transmit/Receive Serial Clock, also known as bit clock (BCLK)</li>
+<li class="Element600"><strong>TF/RF: </strong>Transmit/Receive Frame Clock, also known as Left/Right Channel Clock (LRCK)</li>
+</ul><p class="Element10">
+BCLK provides the clock required to drive the data out or into the module, while LRCK provides the synchronization of the frame based on the protocol mode selected.&nbsp;</p>
 <p class="Element10">
-1. Generate a reset&nbsp;</p>
+In Master mode, the module generates both the BCLK on the TK pin and the LRCK on the TF pin. In certain devices, while in Slave mode, the module receives these two clocks from its I2S partner, which is operating in Master mode.&nbsp;</p>
 <p class="Element10">
-2. Generates an interrupt&nbsp;</p>
+When configured in Master mode, the leading edge of BCLK and the LRCK are driven out within one SCK period of starting the audio protocol. Serial data is shifted in or out with timings determined by the protocol mode set.&nbsp;</p>
 <p class="Element10">
-3. Puts the device in battery backup sleep mode&nbsp;</p>
+In Slave mode, the peripheral drives zeros out TD, but does not transmit the contents of the transmit FIFO until it sees the leading edge of the LRCK, after which time it starts receiving data.</p><div class="Element15">
+Master Mode</div>
+<p class="Element10" style="text-align: center;">
+<strong>Master Generating its Own Clock – Output BCLK and LRCK</strong>&nbsp;</p>
+<p class="Element10" style="text-align: center;">
+<img src="MaterMode.png" border="0" alt="" title=""></p><div class="Element15">
+Slave Mode</div>
+<p class="Element10" style="text-align: center;">
+<strong>Codec Device as Master Derives MCLK from MCU Reference Clock Out</strong>&nbsp;</p>
+<p class="Element10" style="text-align: center;">
+<img src="SlaveMode.png" border="0" alt="" title=""></p><p class="Element10">
+<strong>Audio Formats</strong>&nbsp;</p>
 <p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-The triggering voltage threshold for the BOD33 and the action can be configured via fuse bits in the NVM User Row. These bits can also be written after disabling BOD33. Brown out interrupt enables user to save critical data to prepare the system for a power-down.&nbsp;</p>
-<p class="Element10">
-SUPC Peripheral library provides non-Blocking API's and they can be used to perform below functionalities. Settings configured via MHC are written into SUPC registers when initialization function is called.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-• Initialize BOD33, VREF and VREG of the SUPC peripheral.&nbsp;</p>
-<p class="Element10">
-• Modify the main voltage regulation selection.&nbsp;</p>
-<p class="Element10">
-• Select temperature sensor channel to be used by the ADC peripheral.&nbsp;</p>
-<p class="Element10">
-• Set or clear OUTx pins of the SUPC peripheral.</p></div>
+The SSC Module supports two audio formats, I2S and Left Justified, which are selectable via MHC.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="05802.html" target="topic">SUPC Peripheral Library Help</a> &gt; <a href="05806.html" target="topic">Using the Library</a></div>
+<a href="04085.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03677.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04084.html" target="topic">Peripheral Libraries</a> &gt; <a href="05807.html" target="topic">SSC Peripheral Library Help</a> &gt; <a href="05806.html" target="topic">Introduction</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -88,13 +92,13 @@ SUPC Peripheral library provides non-Blocking API's and they can be used to perf
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04085.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05798.html" target="topic">Previous</a> | <a href="05802.html" target="topic">Up</a> | <a href="05803.html" target="topic">Next</a></div>
+<a href="05807.html" target="topic">Previous</a> | <a href="05807.html" target="topic">Up</a> | <a href="05804.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SUPC U2407 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SSC 6078 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

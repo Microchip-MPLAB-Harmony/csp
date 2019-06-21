@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="01113.html" target="topic">Clock (SAM D20) Peripheral Library Help</a> &gt; <a href="01114.html" target="topic">Library Interface</a> &gt; a) Initialization Function &gt; <a href="01149.html" target="topic">CLOCK_Initialize Function</a></div>
+<a href="04085.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03677.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04084.html" target="topic">Peripheral Libraries</a> &gt; <a href="01112.html" target="topic">Clock (SAM C20/C21) Peripheral Library Help</a> &gt; <a href="01113.html" target="topic">Library Interface</a> &gt; a) Initialize Function &gt; <a href="01149.html" target="topic">CLOCK_Initialize Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,13 +26,13 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04085.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01114.html" target="topic">Previous</a> | <a href="01114.html" target="topic">Up</a> | <a href="01119.html" target="topic">Next</a></div>
+<a href="01113.html" target="topic">Previous</a> | <a href="01113.html" target="topic">Up</a> | <a href="01152.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: clk_sam_d20::CLOCK_Initialize Topic Title: CLOCK_Initialize Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: clk_sam_c20_c21::CLOCK_Initialize Topic Title: CLOCK_Initialize Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
 CLOCK_Initialize Function</div>
 </div>
@@ -49,7 +49,13 @@ CLOCK_Initialize Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function initializes the clock as defined by the MHC Clock Manager.</p></div>
+This function initializes the clock as defined by the MHC and Clock Manager selections. It will then configure the oscillators.&nbsp;</p>
+<p class="Element10">
+For each of the clock sources (External Oscillator, Digital Phase Locked Loop, Internal 48MHz Oscillator, External 32KHz oscillator and the Internal 32KHz oscillator) enabled in MHC, the function will configure the clock settings and will then wait till the clock is ready. In case of DPLL, the function will wait till a lock is obtained.&nbsp;</p>
+<p class="Element10">
+The function will then configure the Generic clock generators based on MHC configurations. If a Generic Clock is enabled in MHC, this will be enabled in the CLOCK_Initialize() function. The function will apply the CPU clock divider and will wait for the Main Clock module to get ready. If the Main Clock to the Peripheral APB and AHB interfaces was enabled in MHC, these will be enabled in the CLOCK_Initialize() function. If the Peripheral Clock Channels were enabled in MHC, these will be enabled in the CLOCK_Initialize() function.&nbsp;</p>
+<p class="Element10">
+The peripheral AHB and APB main clock and peripheral channel clocks will be enabled when the peripheral specific initialize functions are called. This will override the setting in MHC. The Generic Clock Generator source for desired peripheral channel must be configured in MHC.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
@@ -73,7 +79,7 @@ Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+This function should be called before calling other Clock library functions.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
@@ -87,7 +93,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="01113.html" target="topic">Clock (SAM D20) Peripheral Library Help</a> &gt; <a href="01114.html" target="topic">Library Interface</a> &gt; a) Initialization Function &gt; <a href="01149.html" target="topic">CLOCK_Initialize Function</a></div>
+<a href="04085.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03677.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04084.html" target="topic">Peripheral Libraries</a> &gt; <a href="01112.html" target="topic">Clock (SAM C20/C21) Peripheral Library Help</a> &gt; <a href="01113.html" target="topic">Library Interface</a> &gt; a) Initialize Function &gt; <a href="01149.html" target="topic">CLOCK_Initialize Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -95,13 +101,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04085.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01114.html" target="topic">Previous</a> | <a href="01114.html" target="topic">Up</a> | <a href="01119.html" target="topic">Next</a></div>
+<a href="01113.html" target="topic">Previous</a> | <a href="01113.html" target="topic">Up</a> | <a href="01152.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: clk_sam_d20::CLOCK_Initialize Topic Title: CLOCK_Initialize Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: clk_sam_c20_c21::CLOCK_Initialize Topic Title: CLOCK_Initialize Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->
