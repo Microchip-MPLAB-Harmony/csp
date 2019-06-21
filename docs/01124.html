@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="01125.html" target="topic">Clock (SAM E70) Peripheral Library Help</a> &gt; <a href="01124.html" target="topic">Introduction</a></div>
+<a href="04085.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03677.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04084.html" target="topic">Peripheral Libraries</a> &gt; <a href="01125.html" target="topic">Clock (SAM D21) Peripheral Library Help</a> &gt; <a href="01124.html" target="topic">Introduction</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,13 +26,13 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04085.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
 <a href="01125.html" target="topic">Previous</a> | <a href="01125.html" target="topic">Up</a> | <a href="01122.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CLK SAM E70 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CLK SAM D21 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
 Introduction</div>
 </div>
@@ -49,37 +49,40 @@ Introduction</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The Clock system generates and distributes the clock for the processor and peripherals.&nbsp;</p>
+The SAM D21 family contain a sophisticated clocking system, which is designed to give the maximum flexibility to the user application. This system allows a system designer to tune the performance and power consumption of the device in a dynamic manner, to achieve the best trade-off between the two for a particular application.&nbsp;</p>
 <p class="Element10">
 &nbsp;</p>
 <p class="Element10">
-<strong>Clock Generators:</strong>&nbsp;</p>
-<ul class="Element630">
-<li class="Element600">3 to 20 MHz main crystal oscillator with bypass mode. 12 MHz or 16 MHz needed for USB operations</li>
-<li class="Element600">High-precision Main RC oscillator with 12 MHz default frequency</li>
-<li class="Element600">Low-power 32.768 kHz crystal oscillator with bypass mode</li>
-<li class="Element600">Low-power 32 kHz Slow RC Oscillator (SLCK)</li>
-<li class="Element600">160-500 MHz programmable PLL for system clock</li>
-<li class="Element600">480 MHz UTMI PLL providing clock to USB High-speed controller</li>
-</ul><p class="Element10">
-&nbsp;</p>
+<strong>Clock sources</strong>&nbsp;</p>
+<p class="Element10">
+The SAM devices have a number of master clock source modules, each of which being capable of producing a stabilized output frequency, which can then be fed into the various peripherals and modules within the device. Possible clock source modules include internal R/C oscillators as well as external crystal oscillators and/or clock inputs.&nbsp;</p>
 <p class="Element10">
 &nbsp;</p>
 <p class="Element10">
-<strong>Clock Distribution</strong></p>
-<ul class="Element630">
-<li class="Element600">Master clock controller generates Processor Clock (HCLK) and Master Clock (MCK). The master clock (MCK) is the source clock for many peripherals</li>
-<li class="Element600">The Peripheral Clock Controller enables and disables clocks to different peripherals running from Master clock</li>
-<li class="Element600">Programmable Clock Controller (PCK) provides clock for USART, UART, TC, Embedded Trace Macrocell (ETM), and CAN peripherals. The PCK is independent of the processor clock and the master clock</li>
-<li class="Element600">Generic Clock Controller (GCLK) provides clock for I2S peripheral. The GCLK is independent of the processor clock and the master clock</li>
-</ul></div>
+<strong>CPU / Bus Clocks</strong>&nbsp;</p>
+<p class="Element10">
+The Main Clock (MCLK) controls the synchronous clock generation of the device. Using a clock provided by the Generic Clock Module (GCLK_MAIN), the Main Clock Controller provides&nbsp;</p>
+<p class="Element10">
+synchronous system clocks to the CPU and the modules connected to the AHBx and the APBx bus. To save power, the input clock to one or more peripherals on the AHB and APBx buses can be masked away - when masked, no clock is passed into the module. Disabling of clocks of unused modules will prevent all access to the masked module, and will reduce the overall device power consumption.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<strong>Generic Clock Generators</strong>&nbsp;</p>
+<p class="Element10">
+The Generic Clock controller (GCLK) are used to provide clocks to the various peripheral clock domains in the device in a standardized manner. One or more master source clocks can be selected as the input clock to a Generic Clock Generator, which can prescale down the input frequency to a slower rate for use in a peripheral.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<strong>Generic Clock Channels</strong>&nbsp;</p>
+<p class="Element10">
+To connect a Generic Clock Generator to a peripheral within the device, a Generic Clock Channel is used. Each peripheral or peripheral group has an associated Generic Clock Channel, which serves as the clock input for the peripheral(s). To supply a clock to the peripheral module(s), the associated channel must be connected to a running Generic Clock Generator and the channel enabled.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="04042.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03634.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries</a> &gt; <a href="01125.html" target="topic">Clock (SAM E70) Peripheral Library Help</a> &gt; <a href="01124.html" target="topic">Introduction</a></div>
+<a href="04085.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03677.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04084.html" target="topic">Peripheral Libraries</a> &gt; <a href="01125.html" target="topic">Clock (SAM D21) Peripheral Library Help</a> &gt; <a href="01124.html" target="topic">Introduction</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -87,13 +90,13 @@ The Clock system generates and distributes the clock for the processor and perip
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04042.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04085.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
 <a href="01125.html" target="topic">Previous</a> | <a href="01125.html" target="topic">Up</a> | <a href="01122.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CLK SAM E70 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CLK SAM D21 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->
