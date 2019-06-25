@@ -68,7 +68,21 @@ port_mskr = {		"A_A" : 0,
 					"E_D" : 0,
 					"E_E" : 0,
 					"E_F" : 0,
-					"E_G" : 0
+					"E_G" : 0,
+					"F_A" : 0,
+					"F_B" : 0,
+					"F_C" : 0,
+					"F_D" : 0,
+					"F_E" : 0,
+					"F_F" : 0,
+					"F_G" : 0,
+					"G_A" : 0,
+					"G_B" : 0,
+					"G_C" : 0,
+					"G_D" : 0,
+					"G_E" : 0,
+					"G_F" : 0,
+					"G_G" : 0
 					}
 global interruptValues
 interruptValues = {	"Falling Edge" : 0,
@@ -82,14 +96,18 @@ latchValues = {	    "A" : 0,
 					"B" : 0,
 					"C"	: 0,
 					"D"	: 0,
-					"E" : 0
+					"E" : 0,
+					"F" : 0,
+					"G" : 0
 }
 global port_interrupt
-port_interrupt = {	    "A" : 0,
+port_interrupt = {	"A" : 0,
 					"B" : 0,
 					"C"	: 0,
 					"D"	: 0,
-					"E" : 0
+					"E" : 0,
+					"F" : 0,
+					"G" : 0
 }
 global sort_alphanumeric
 global prev_package
@@ -97,7 +115,7 @@ global cur_package
 prev_package = ""
 cur_package = ""
 global pioSymChannel
-pioSymChannel = ["A", "B", "C", "D", "E"]
+pioSymChannel = ["A", "B", "C", "D", "E", "F", "G"]
 global pin_map
 pin_map = {}
 global pin_position
@@ -329,6 +347,14 @@ pioMenu.setDescription("Configuration for PIO PLIB")
 pioPortEEnable = coreComponent.createBooleanSymbol("PIO_PORT_E_ENBALE", pioMenu)
 pioPortEEnable.setVisible(False)
 pioPortEEnable.setDefaultValue(Peripheral.instanceExists("PIO", "PIOE"))
+
+pioPortFEnable = coreComponent.createBooleanSymbol("PIO_PORT_F_ENBALE", pioMenu)
+pioPortFEnable.setVisible(False)
+pioPortFEnable.setDefaultValue(Peripheral.instanceExists("PIO", "PIOF"))
+
+pioPortGEnable = coreComponent.createBooleanSymbol("PIO_PORT_G_ENBALE", pioMenu)
+pioPortGEnable.setVisible(False)
+pioPortGEnable.setDefaultValue(Peripheral.instanceExists("PIO", "PIOG"))
 
 pioEnable = coreComponent.createBooleanSymbol("PIO_ENABLE", pioMenu)
 pioEnable.setLabel("Use PIO PLIB?")

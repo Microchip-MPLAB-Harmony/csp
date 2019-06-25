@@ -84,6 +84,16 @@
     PORT_NUM_INT_PINS = "${PORT_E_NUM_INT_PINS}"
     PIO_INTERRUPT = PORT_E_INTERRUPT_USED
 />
+<@PIO_INT_CALLBACK
+    PIO_PORT = "F"
+    PORT_NUM_INT_PINS = "${PORT_F_NUM_INT_PINS}"
+    PIO_INTERRUPT = PORT_F_INTERRUPT_USED
+/>
+<@PIO_INT_CALLBACK
+    PIO_PORT = "G"
+    PORT_NUM_INT_PINS = "${PORT_G_NUM_INT_PINS}"
+    PIO_INTERRUPT = PORT_G_INTERRUPT_USED
+/>
 
 
 /******************************************************************************
@@ -98,7 +108,7 @@
 */
 void PIO_Initialize ( void )
 {
-<#assign PORT = ['A', 'B', 'C', 'D', 'E'] >
+<#assign PORT = ['A', 'B', 'C', 'D', 'E', 'F', 'G'] >
 <#assign PERFUNC = ['A', 'B', 'C', 'D', 'E', 'F', 'G'] >
 <#list PORT as port>
 	<#list PERFUNC as func>
@@ -313,7 +323,9 @@ void PIO_PortInterruptDisable(PIO_PORT port, uint32_t mask)
      PORT_B_INTERRUPT_USED == true ||
      PORT_C_INTERRUPT_USED == true ||
      PORT_D_INTERRUPT_USED == true ||
-     PORT_E_INTERRUPT_USED == true >
+     PORT_E_INTERRUPT_USED == true ||
+     PORT_F_INTERRUPT_USED == true ||
+     PORT_G_INTERRUPT_USED == true >
 // *****************************************************************************
 // *****************************************************************************
 // Section: PIO APIs which operates on one pin at a time
@@ -410,6 +422,32 @@ void PIO_PinInterruptCallbackRegister(
             break;
         }
     </#if>
+    <#if PORT_F_INTERRUPT_USED == true>
+        case 5:
+        {
+            if( portFCurNumCb < portFMaxNumCb )
+            {
+                portFPinCbObj[ portFCurNumCb ].pin   = pin;
+                portFPinCbObj[ portFCurNumCb ].callback = callback;
+                portFPinCbObj[ portFCurNumCb ].context  = context;
+                portFCurNumCb++;
+            }
+            break;
+        }
+    </#if>
+    <#if PORT_G_INTERRUPT_USED == true>
+        case 6:
+        {
+            if( portGCurNumCb < portGMaxNumCb )
+            {
+                portGPinCbObj[ portGCurNumCb ].pin   = pin;
+                portGPinCbObj[ portGCurNumCb ].callback = callback;
+                portGPinCbObj[ portGCurNumCb ].context  = context;
+                portGCurNumCb++;
+            }
+            break;
+        }
+    </#if>
         default:
         {
             break;
@@ -447,6 +485,16 @@ void PIO_PinInterruptCallbackRegister(
 <#if PORT_E_INTERRUPT_USED == true>
     <@PIO_ISR_HANDLER
         PIO_CHANNEL="E"
+    />
+</#if>
+<#if PORT_F_INTERRUPT_USED == true>
+    <@PIO_ISR_HANDLER
+        PIO_CHANNEL="F"
+    />
+</#if>
+<#if PORT_G_INTERRUPT_USED == true>
+    <@PIO_ISR_HANDLER
+        PIO_CHANNEL="G"
     />
 </#if>
 

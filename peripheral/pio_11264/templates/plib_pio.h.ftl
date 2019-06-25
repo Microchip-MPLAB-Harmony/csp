@@ -101,6 +101,8 @@
     <#assign PORTC_Pin_List = []>
     <#assign PORTD_Pin_List = []>
     <#assign PORTE_Pin_List = []>
+    <#assign PORTF_Pin_List = []>
+    <#assign PORTG_Pin_List = []>
 
     <#list 1..PIO_PIN_TOTAL as i>
         <#assign pinport = "PIN_" + i + "_PIO_PIN">
@@ -126,6 +128,14 @@
 
                 <#if .vars[pinchannel] == "E">
                     <#assign PORTE_Pin_List = PORTE_Pin_List + [.vars[pinport]]>
+                </#if>
+
+                <#if .vars[pinchannel] == "F">
+                    <#assign PORTE_Pin_List = PORTF_Pin_List + [.vars[pinport]]>
+                </#if>
+
+                <#if .vars[pinchannel] == "G">
+                    <#assign PORTE_Pin_List = PORTG_Pin_List + [.vars[pinport]]>
                 </#if>
 
             </#if>
@@ -208,7 +218,17 @@ typedef enum
 
 <#if PIO_PORT_E_ENBALE>
     /* Port E Pins */
-    PIO_PORT_E = PIOE_BASE_ADDRESS
+    PIO_PORT_E = PIOE_BASE_ADDRESS,
+</#if>
+
+<#if PIO_PORT_F_ENBALE>
+    /* Port F Pins */
+    PIO_PORT_F = PIOF_BASE_ADDRESS,
+</#if>
+
+<#if PIO_PORT_G_ENBALE>
+    /* Port G Pins */
+    PIO_PORT_G = PIOG_BASE_ADDRESS
 </#if>
 
 } PIO_PORT;
@@ -252,6 +272,14 @@ typedef enum
     <#list PORTE_Pin_List as pin>
     PIO_PIN_PE${pin} = ${pin+128},
     </#list>
+    <#assign PORTF_Pin_List =  PORTF_Pin_List?sort>
+    <#list PORTF_Pin_List as pin>
+    PIO_PIN_PF${pin} = ${pin+160},
+    </#list>
+    <#assign PORTG_Pin_List =  PORTG_Pin_List?sort>
+    <#list PORTG_Pin_List as pin>
+    PIO_PIN_PG${pin} = ${pin+192},
+    </#list>
 
     /* This element should not be used in any of the PIO APIs.
        It will be used by other modules or application to denote that none of the PIO Pin is used */
@@ -263,7 +291,9 @@ typedef enum
      PORT_B_INTERRUPT_USED == true ||
      PORT_C_INTERRUPT_USED == true ||
      PORT_D_INTERRUPT_USED == true ||
-     PORT_E_INTERRUPT_USED == true >
+     PORT_E_INTERRUPT_USED == true ||
+     PORT_F_INTERRUPT_USED == true ||
+     PORT_G_INTERRUPT_USED == true >
 // *****************************************************************************
 /* PIO Pin-Event Handler Function Pointer
 
@@ -748,7 +778,9 @@ void PIO_PortInterruptDisable(PIO_PORT port, uint32_t mask);
      PORT_B_INTERRUPT_USED == true ||
      PORT_C_INTERRUPT_USED == true ||
      PORT_D_INTERRUPT_USED == true ||
-     PORT_E_INTERRUPT_USED == true >
+     PORT_E_INTERRUPT_USED == true ||
+     PORT_F_INTERRUPT_USED == true ||
+     PORT_G_INTERRUPT_USED == true >
 // *****************************************************************************
 // *****************************************************************************
 // Section: Local Data types and Prototypes
@@ -1145,7 +1177,9 @@ static inline void PIO_PinInterruptDisable(PIO_PIN pin)
      PORT_B_INTERRUPT_USED == true ||
      PORT_C_INTERRUPT_USED == true ||
      PORT_D_INTERRUPT_USED == true ||
-     PORT_E_INTERRUPT_USED == true >
+     PORT_E_INTERRUPT_USED == true ||
+     PORT_F_INTERRUPT_USED == true ||
+     PORT_G_INTERRUPT_USED == true >
 // *****************************************************************************
 /* Function:
     void PIO_PinInterruptCallbackRegister(
