@@ -5,5 +5,6 @@
 		<package diagram="TFBGA176" id="2" name="TFBGA176" />
 		<package diagram="LFBGA289" id="3" name="LFBGA289" />
 		<package diagram="TFBGA196" id="4" name="TFBGA196" />
+		<package diagram="CQFP256" id="5" name="CQFP256" />
 	</packages>
 </pinfile>
