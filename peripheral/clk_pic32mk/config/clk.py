@@ -1559,13 +1559,21 @@ if __name__ == "__main__":
                         availablePeripherals.append("CMP" + str(cmpIndex))
                         cmpIndex += 1
             elif str(instances[instance].getAttribute("name")) == "MCPWM":
-                cmpRegGroup = ATDF.getNode('/avr-tools-device-file/modules/module@[name="MCPWM"]/register-group@[name="MCPWM"]').getChildren()
+                pwmRegGroup = ATDF.getNode('/avr-tools-device-file/modules/module@[name="MCPWM"]/register-group@[name="MCPWM"]').getChildren()
                 pwmIndex = 1
-                for register in cmpRegGroup:
+                for register in pwmRegGroup:
                     regName = str(register.getAttribute("name"))
                     if regName.startswith("PWMCON"):
                         availablePeripherals.append("MCPWM" + str(pwmIndex))
                         pwmIndex += 1
+            elif str(instances[instance].getAttribute("name")) == "USB":
+                usbRegGroup = ATDF.getNode('/avr-tools-device-file/modules/module@[name="USB"]/register-group@[name="USB"]').getChildren()
+                usbIndex = 1
+                for register in usbRegGroup:
+                    regName = str(register.getAttribute("name"))
+                    if regName.startswith("U") and regName.endswith("CON"):
+                        availablePeripherals.append("USB" + str(usbIndex))
+                        usbIndex += 1
             else:
                 availablePeripherals.append(str(instances[instance].getAttribute("name")))
 
