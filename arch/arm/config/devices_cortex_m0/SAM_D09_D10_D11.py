@@ -55,27 +55,78 @@ cortexMenu = coreComponent.createMenuSymbol("CORTEX_MENU", None)
 cortexMenu.setLabel("Cortex-M0+ Configuration")
 cortexMenu.setDescription("Configuration for Cortex M0+")
 
-# load clock manager information
-#execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_sam_d09_d10_d11/config/clk.py")
-#coreComponent.addPlugin("../peripheral/clk_sam_d09_d10_d11/plugin/clockmanager.jar")
+def setDMACDefaultSettings():
+
+    triggerSettings = {
+                        "Software Trigger"  : ["BLOCK", "INCREMENTED_AM", "INCREMENTED_AM", "WORD"],
+                        "Standard_Transmit" : ["BEAT", "INCREMENTED_AM", "FIXED_AM", "BYTE"],
+                        "Standard_Receive"  : ["BEAT", "FIXED_AM", "INCREMENTED_AM", "BYTE"]
+                    }
+
+    return triggerSettings
+
+def setMPUDefaultSettings():
+    mpuRegions = 8
+    mpuSettings = {"FLASH"              : ["MPU_ATTR_NORMAL_WT",           "MPU_RASR_AP_READWRITE_Val",    "",     "",     "0x00000000",   "4MB"   ],
+                    "RWW"               : ["MPU_ATTR_NORMAL_WT",           "MPU_RASR_AP_READWRITE_Val",    "",     "",     "0x00400000",   "4MB"   ],
+                    "SRAM"              : ["MPU_ATTR_NORMAL_WT",           "MPU_RASR_AP_READWRITE_Val",    "",     "",     "0x20000000",   "4MB"   ],
+                    "PERIPHERALS"       : ["MPU_ATTR_DEVICE",           "MPU_RASR_AP_READWRITE_Val",    "",         "",     "0x40000000",   "256MB" ],
+                    "SYSTEM"            : ["MPU_ATTR_STRONGLY_ORDERED", "MPU_RASR_AP_READWRITE_Val",    "",         "",     "0xE0000000",   "1MB"   ]}
+    mpuSetUpLogicList = ["FLASH", "RWW", "SRAM", "PERIPHERALS", "SYSTEM"]
+
+    return mpuRegions, mpuSettings, mpuSetUpLogicList
+
+# SysTick External Clock Source
+systickExternal = coreComponent.createBooleanSymbol("SYSTICK_EXTERNAL_CLOCK", devCfgMenu)
+systickExternal.setLabel("External Clock Source for SysTick Available")
+systickExternal.setDefaultValue(False)
+systickExternal.setVisible(False)
+
+global nvmWaitStates
+nvmWaitStates = { #VDD > 2.7
+                    24000000 : 0,
+                    48000000 : 1
+                }
+                
+periphNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"NVMCTRL\"]")
+modules = periphNode.getChildren()
+components = []
+for nvmctrl_instance in range (0, len(modules)):
+    components.append(str(modules[nvmctrl_instance].getAttribute("name")).lower())
+Database.activateComponents(components)
 
 # load device specific pin manager information
-#execfile(Variables.get("__CORE_DIR") + "/../peripheral/port_u2210/config/port.py")
-#coreComponent.addPlugin("../peripheral/port_u2210/plugin/SAMC2xpinmanager.jar")
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/port_u2210/config/port.py")
+coreComponent.addPlugin("../peripheral/port_u2210/plugin/port_u2210.jar")
+
+# load clock manager information
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_sam_d09_d10_d11/config/clk.py")
+#coreComponent.addPlugin("../peripheral/clk_sam_d09_d10_d11/plugin/clk_sam_d09_d10_d11.jar")
 
 # load NVIC
-#execfile(Variables.get("__CORE_DIR") + "/../peripheral/nvic_m7/config/nvic.py")
-#coreComponent.addPlugin("../peripheral/nvic_m7/plugin/ARM_M7_NVICmanager.jar")
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/nvic/config/nvic.py")
+coreComponent.addPlugin("../peripheral/nvic/plugin/nvic.jar")
 
 #load systick
-#execfile(Variables.get("__CORE_DIR") + "/../peripheral/systick/config/systick.py")
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/systick/config/systick.py")
 
 # load dma manager information
-# execfile(Variables.get("__CORE_DIR") + "/../peripheral/dmac_u2223/config/dmac.py")
-# coreComponent.addPlugin("../peripheral/dmac_u2223/plugin/dmamanager.jar")
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/dmac_u2223/config/dmac.py")
+coreComponent.addPlugin("../peripheral/dmac_u2223/plugin/dmamanager.jar")
 
 # load wdt
-#execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_u2251/config/wdt.py")
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_u2203/config/wdt.py")
+
+# load PAC
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/pac_u2211/config/pac.py")
+
+# Activate Event System
+periphNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"EVSYS\"]")
+modules = periphNode.getChildren()
+components = []
+for evsys_instance in range (0, len(modules)):
+    components.append(str(modules[evsys_instance].getAttribute("name")).lower())
+Database.activateComponents(components)
 
 # load device specific adc manager information
 #coreComponent.addPlugin("../peripheral/afec_11147/plugin/ARM_M7_ADCmanager.jar")
