@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-04-16T20:45:34Z */
+/* file generated from device description version 2019-06-07T05:58:23Z */
 #ifndef _SAML21_OPAMP_COMPONENT_H_
 #define _SAML21_OPAMP_COMPONENT_H_
 
@@ -191,11 +191,11 @@
 #define OPAMP_OPAMPCTRL1_RES1MUX(value)       (OPAMP_OPAMPCTRL1_RES1MUX_Msk & ((value) << OPAMP_OPAMPCTRL1_RES1MUX_Pos))
 #define   OPAMP_OPAMPCTRL1_RES1MUX_OAxPOS_Val _U_(0x0)                                             /**< (OPAMP_OPAMPCTRL1) Positive inout of OPAMPx  */
 #define   OPAMP_OPAMPCTRL1_RES1MUX_OAxNEG_Val _U_(0x1)                                             /**< (OPAMP_OPAMPCTRL1) Negative input of OPAMPx  */
-#define   OPAMP_OPAMPCTRL1_RES1MUX_DAC_Val    _U_(0x2)                                             /**< (OPAMP_OPAMPCTRL1) DAC output  */
+#define   OPAMP_OPAMPCTRL1_RES1MUX_OA0OUT_Val _U_(0x2)                                             /**< (OPAMP_OPAMPCTRL1) OPAMP0 output  */
 #define   OPAMP_OPAMPCTRL1_RES1MUX_GND_Val    _U_(0x3)                                             /**< (OPAMP_OPAMPCTRL1) Ground  */
 #define OPAMP_OPAMPCTRL1_RES1MUX_OAxPOS       (OPAMP_OPAMPCTRL1_RES1MUX_OAxPOS_Val << OPAMP_OPAMPCTRL1_RES1MUX_Pos) /**< (OPAMP_OPAMPCTRL1) Positive inout of OPAMPx Position  */
 #define OPAMP_OPAMPCTRL1_RES1MUX_OAxNEG       (OPAMP_OPAMPCTRL1_RES1MUX_OAxNEG_Val << OPAMP_OPAMPCTRL1_RES1MUX_Pos) /**< (OPAMP_OPAMPCTRL1) Negative input of OPAMPx Position  */
-#define OPAMP_OPAMPCTRL1_RES1MUX_DAC          (OPAMP_OPAMPCTRL1_RES1MUX_DAC_Val << OPAMP_OPAMPCTRL1_RES1MUX_Pos) /**< (OPAMP_OPAMPCTRL1) DAC output Position  */
+#define OPAMP_OPAMPCTRL1_RES1MUX_OA0OUT       (OPAMP_OPAMPCTRL1_RES1MUX_OA0OUT_Val << OPAMP_OPAMPCTRL1_RES1MUX_Pos) /**< (OPAMP_OPAMPCTRL1) OPAMP0 output Position  */
 #define OPAMP_OPAMPCTRL1_RES1MUX_GND          (OPAMP_OPAMPCTRL1_RES1MUX_GND_Val << OPAMP_OPAMPCTRL1_RES1MUX_Pos) /**< (OPAMP_OPAMPCTRL1) Ground Position  */
 #define OPAMP_OPAMPCTRL1_POTMUX_Pos           _U_(13)                                              /**< (OPAMP_OPAMPCTRL1) Potentiometer Selection Position */
 #define OPAMP_OPAMPCTRL1_POTMUX_Msk           (_U_(0x7) << OPAMP_OPAMPCTRL1_POTMUX_Pos)            /**< (OPAMP_OPAMPCTRL1) Potentiometer Selection Mask */
@@ -281,11 +281,11 @@
 #define OPAMP_OPAMPCTRL2_RES1MUX(value)       (OPAMP_OPAMPCTRL2_RES1MUX_Msk & ((value) << OPAMP_OPAMPCTRL2_RES1MUX_Pos))
 #define   OPAMP_OPAMPCTRL2_RES1MUX_OAxPOS_Val _U_(0x0)                                             /**< (OPAMP_OPAMPCTRL2) Positive inout of OPAMPx  */
 #define   OPAMP_OPAMPCTRL2_RES1MUX_OAxNEG_Val _U_(0x1)                                             /**< (OPAMP_OPAMPCTRL2) Negative input of OPAMPx  */
-#define   OPAMP_OPAMPCTRL2_RES1MUX_DAC_Val    _U_(0x2)                                             /**< (OPAMP_OPAMPCTRL2) DAC output  */
+#define   OPAMP_OPAMPCTRL2_RES1MUX_OA1OUT_Val _U_(0x2)                                             /**< (OPAMP_OPAMPCTRL2) OPAMP1 output  */
 #define   OPAMP_OPAMPCTRL2_RES1MUX_GND_Val    _U_(0x3)                                             /**< (OPAMP_OPAMPCTRL2) Ground  */
 #define OPAMP_OPAMPCTRL2_RES1MUX_OAxPOS       (OPAMP_OPAMPCTRL2_RES1MUX_OAxPOS_Val << OPAMP_OPAMPCTRL2_RES1MUX_Pos) /**< (OPAMP_OPAMPCTRL2) Positive inout of OPAMPx Position  */
 #define OPAMP_OPAMPCTRL2_RES1MUX_OAxNEG       (OPAMP_OPAMPCTRL2_RES1MUX_OAxNEG_Val << OPAMP_OPAMPCTRL2_RES1MUX_Pos) /**< (OPAMP_OPAMPCTRL2) Negative input of OPAMPx Position  */
-#define OPAMP_OPAMPCTRL2_RES1MUX_DAC          (OPAMP_OPAMPCTRL2_RES1MUX_DAC_Val << OPAMP_OPAMPCTRL2_RES1MUX_Pos) /**< (OPAMP_OPAMPCTRL2) DAC output Position  */
+#define OPAMP_OPAMPCTRL2_RES1MUX_OA1OUT       (OPAMP_OPAMPCTRL2_RES1MUX_OA1OUT_Val << OPAMP_OPAMPCTRL2_RES1MUX_Pos) /**< (OPAMP_OPAMPCTRL2) OPAMP1 output Position  */
 #define OPAMP_OPAMPCTRL2_RES1MUX_GND          (OPAMP_OPAMPCTRL2_RES1MUX_GND_Val << OPAMP_OPAMPCTRL2_RES1MUX_Pos) /**< (OPAMP_OPAMPCTRL2) Ground Position  */
 #define OPAMP_OPAMPCTRL2_POTMUX_Pos           _U_(13)                                              /**< (OPAMP_OPAMPCTRL2) Potentiometer Selection Position */
 #define OPAMP_OPAMPCTRL2_POTMUX_Msk           (_U_(0x7) << OPAMP_OPAMPCTRL2_POTMUX_Pos)            /**< (OPAMP_OPAMPCTRL2) Potentiometer Selection Mask */

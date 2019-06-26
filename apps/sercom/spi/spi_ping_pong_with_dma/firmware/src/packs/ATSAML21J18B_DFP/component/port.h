@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-04-16T20:45:34Z */
+/* file generated from device description version 2019-06-07T05:58:23Z */
 #ifndef _SAML21_PORT_COMPONENT_H_
 #define _SAML21_PORT_COMPONENT_H_
 
