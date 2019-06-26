@@ -401,8 +401,8 @@ void ${LCDC_INSTANCE_NAME}_SetDMAHeadPointer(${LCDC_INSTANCE_NAME}_LAYER_ID laye
                                         ${LCDC_INSTANCE_NAME}_OVR2HEAD_HEAD(head);
             break;
         case ${LCDC_INSTANCE_NAME}_LAYER_HEO:
-            ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_HEOHEAD = (${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_HEOHEAD & ~${LCDC_INSTANCE_NAME}_OVR2HEAD_HEAD_Msk) | 
-                                       ${LCDC_INSTANCE_NAME}_OVR2HEAD_HEAD(head);
+            ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_HEOHEAD = (${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_HEOHEAD & ~${LCDC_INSTANCE_NAME}_HEOHEAD_HEAD_Msk) | 
+                                       ${LCDC_INSTANCE_NAME}_HEOHEAD_HEAD(head);
             break;
         case ${LCDC_INSTANCE_NAME}_LAYER_PP:
         default:
@@ -645,7 +645,7 @@ void ${LCDC_INSTANCE_NAME}_SetChannelEnable(${LCDC_INSTANCE_NAME}_LAYER_ID layer
                 ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_OVR1CHER = (${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_OVR1CHER & ~${LCDC_INSTANCE_NAME}_OVR1CHER_CHEN_Msk) | 
                                             ${LCDC_INSTANCE_NAME}_OVR1CHER_CHEN(1);
             else
-                ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_OVR1CHDR = (${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_BASECHDR & ~${LCDC_INSTANCE_NAME}_OVR1CHDR_CHDIS_Msk) | 
+                ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_OVR1CHDR = (${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_OVR1CHDR & ~${LCDC_INSTANCE_NAME}_OVR1CHDR_CHDIS_Msk) | 
                                             ${LCDC_INSTANCE_NAME}_OVR1CHDR_CHDIS(1);    
             break;
         case ${LCDC_INSTANCE_NAME}_LAYER_OVR2:
@@ -1105,4 +1105,29 @@ void ${LCDC_INSTANCE_NAME}_Interrupt_Handler(void)
     {
         ${LCDC_INSTANCE_NAME}_IRQ_CallbackObj.callback_fn(${LCDC_INSTANCE_NAME}_IRQ_CallbackObj.context);
     }
+}
+
+void ${LCDC_INSTANCE_NAME}_SetHEOImageMemSize(uint16_t width, uint16_t height)
+{
+    ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_HEOCFG4 = ${LCDC_INSTANCE_NAME}_HEOCFG4_YMEMSIZE(height - 1) | 
+                            ${LCDC_INSTANCE_NAME}_HEOCFG4_XMEMSIZE(width - 1); 
+}
+
+void ${LCDC_INSTANCE_NAME}_SetHEOVideoPriority(bool top)
+{
+    ${LCDC_INSTANCE_NAME}_REGS->LCDC_HEOCFG12 = (${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_HEOCFG12 & ~${LCDC_INSTANCE_NAME}_HEOCFG12_VIDPRI_Msk) | 
+        ${LCDC_INSTANCE_NAME}_HEOCFG12_VIDPRI(top == true); 
+}
+
+void ${LCDC_INSTANCE_NAME}_SetHEOScaler(uint16_t yfactor, uint16_t xfactor, bool enable)
+{
+    ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_HEOCFG13 = ${LCDC_INSTANCE_NAME}_HEOCFG13_SCALEN(enable == true) |
+                               ${LCDC_INSTANCE_NAME}_HEOCFG13_YFACTOR(yfactor) |
+                               ${LCDC_INSTANCE_NAME}_HEOCFG13_XFACTOR(xfactor);
+}
+
+void ${LCDC_INSTANCE_NAME}_SetHEOFilterPhaseOffset(uint8_t yphidef, uint8_t xphidef)
+{
+    ${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_HEOCFG41 = ${LCDC_INSTANCE_NAME}_HEOCFG41_YPHIDEF(yphidef) | 
+                              ${LCDC_INSTANCE_NAME}_HEOCFG41_XPHIDEF(xphidef); 
 }
