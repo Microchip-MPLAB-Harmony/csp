@@ -1,0 +1,1 @@
+    CLOCK_Initialize();
