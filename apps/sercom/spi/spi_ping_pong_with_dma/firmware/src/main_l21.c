@@ -85,7 +85,8 @@ uint8_t rxPongBuffer[sizeof(txPongBuffer)];
 
 volatile APP_STATES state = APP_STATE_INITIALIZE;
 
-static dmac_descriptor_registers_t pTxLinkedListDesc[2], pRxLinkedListDesc[2] __attribute__((__aligned__(16))) __attribute__((space(data), address(0x30000500))) ;
+__attribute__((__aligned__(16))) __attribute__((space(data), address(0x30000500))) static dmac_descriptor_registers_t pTxLinkedListDesc[2];
+__attribute__((__aligned__(16))) __attribute__((space(data), address(0x30000520))) static dmac_descriptor_registers_t pRxLinkedListDesc[2];
 
 #define PING_BUFEER0_TX_BTCTRL  (DMAC_BTCTRL_STEPSIZE_X1 | DMAC_BTCTRL_SRCINC_Msk |     \
                                 DMAC_BTCTRL_BEATSIZE_BYTE | DMAC_BTCTRL_BLOCKACT_INT | DMAC_BTCTRL_VALID_Msk)
@@ -191,12 +192,7 @@ int main ( void )
 
                 state = APP_STATE_SPI_IDLE;
                 break;
-            }
-            case APP_STATE_SPI_IDLE:
-            {
-                /* Application can do other task here */
-                break;
-            }
+            }            
             case APP_STATE_VERIFY_AND_UPDATE_PING_BUFFER:
             {
                 if (memcmp(&txPingBuffer[0], &rxPingBuffer[0], sizeof(txPingBuffer) != 0))
@@ -212,7 +208,7 @@ int main ( void )
                     {
                         txPingBuffer[i] = pingData++;
                     }
-                    state = APP_STATE_SPI_XFER_SUCCESSFUL;
+                    state = APP_STATE_SPI_IDLE;
                 }
                 break;
             }
@@ -238,6 +234,7 @@ int main ( void )
             case APP_STATE_SPI_XFER_SUCCESSFUL:
             {
                 LED_On();
+                state = APP_STATE_SPI_IDLE;
                 break;
             }
             case APP_STATE_SPI_XFER_ERROR:
@@ -248,6 +245,12 @@ int main ( void )
 
                 /* Turn Off the LED */
                 LED_Off();
+                state = APP_STATE_SPI_IDLE;
+                break;
+            }
+            case APP_STATE_SPI_IDLE:
+            {
+                /* Application can do other task here */
                 break;
             }
             default:
