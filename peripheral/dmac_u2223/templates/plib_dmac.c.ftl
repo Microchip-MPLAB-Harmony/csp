@@ -134,11 +134,9 @@ void ${DMA_INSTANCE_NAME}_Initialize( void )
 
         <#lt>    ${DMA_INSTANCE_NAME}_REGS->DMAC_CHID = ${i};
 
-                <#if !(DMAC_DEVICE_NAME?contains("SAMD21"))>
-                    <#if (.vars[DMAC_CHCTRLA_RUNSTDBY]) == true>
-                        <#lt>    ${DMA_INSTANCE_NAME}_REGS->DMAC_CHCTRLA |= DMAC_CHCTRLA_RUNSTDBY_Msk;
+                <#if .vars[DMAC_CHCTRLA_RUNSTDBY]?? && .vars[DMAC_CHCTRLA_RUNSTDBY] == true>
+                    <#lt>    ${DMA_INSTANCE_NAME}_REGS->DMAC_CHCTRLA |= DMAC_CHCTRLA_RUNSTDBY_Msk;
 
-                    </#if>
                 </#if>
         <#lt>    <@compress single_line=true>${DMA_INSTANCE_NAME}_REGS->DMAC_CHCTRLB = DMAC_CHCTRLB_TRIGACT(${.vars[DMAC_CHCTRLB_TRIGACT]}) |
                                                                                        DMAC_CHCTRLB_TRIGSRC(${.vars[DMAC_TRIGSRC_PERID_VAL]}) |

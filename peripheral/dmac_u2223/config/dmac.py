@@ -45,7 +45,6 @@ global dmacEnable
 global per_instance
 per_instance = {}
 
-
 global peridValueListSymbols
 peridValueListSymbols = []
 
@@ -97,6 +96,7 @@ dmacvectorValues = ATDF.getNode("/avr-tools-device-file/devices/device/interrupt
 for id in range(0, len(dmacvectorValues)):
     if dmacvectorValues[id].getAttribute("module-instance") == "DMAC":
         count = count + 1
+
 if count > 1:
     dmacMultiVectorSupported = True
     dmacmultiVectorSupport = coreComponent.createBooleanSymbol("DMAC_MULTIVECTOR_SUPPORTED", None)
@@ -105,7 +105,6 @@ if count > 1:
 ################################################################################
 #### Business Logic ####
 ################################################################################
-
 
 def dmacTriggerLogic(symbol, event):
 
@@ -137,7 +136,6 @@ def dmacTriggerLogic(symbol, event):
 # index enabled, also if the list is empty then none of the channel is enabled.
 # Highest index will be used to create DMAC objects in source code.
 # List empty or non-empty status helps to generate/discard DMAC code.
-
 
 def dmacGlobalLogic(symbol, event):
 
@@ -173,13 +171,14 @@ def dmacGlobalLogic(symbol, event):
         if not dmacActiveChannels:
             symbol.setValue(False, 2)
 
-
 def onGlobalEnableLogic(symbol, event):
+
     global dmacInstanceName
     global dmacMultiVectorSupported
+
     # clock enable
-    Database.clearSymbolValue("core", dmacInstanceName.getValue()+"_CLOCK_ENABLE")
-    Database.setSymbolValue("core", dmacInstanceName.getValue()+"_CLOCK_ENABLE", event["value"], 2)
+    Database.clearSymbolValue("core", dmacInstanceName.getValue() + "_CLOCK_ENABLE")
+    Database.setSymbolValue("core", dmacInstanceName.getValue() + "_CLOCK_ENABLE", event["value"], 2)
 
     if dmacMultiVectorSupported:
         InterruptVector = []
@@ -236,14 +235,12 @@ def updateDMACInterruptWarringStatus(symbol, event):
     if dmacEnable.getValue() == True:
         symbol.setVisible(event["value"])
 
-
 def updateDMACClockWarringStatus(symbol, event):
 
     if event["value"] == False:
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
-
 
 def dmacTriggerCalc(symbol, event):
 
@@ -252,8 +249,8 @@ def dmacTriggerCalc(symbol, event):
     symbol.clearValue()
     symbol.setValue(per_instance.get(event["value"]), 2)
 
-
 def dmacEvsysControl(symbol, event):
+
     channel = symbol.getID().split("DMAC_EVSYS_DUMMY")[1]
 
     enable = Database.getSymbolValue("core", "DMAC_ENABLE_CH_" + channel)
@@ -267,13 +264,14 @@ def dmacEvsysControl(symbol, event):
 # is selected for any peripheral ID.
 # And once the DMA mode is unselected, then the corresponding DMA channel will
 # be disabled and trigger source will be reset to "Software trigger"
-
-
 def dmacChannelAllocLogic(symbol, event):
+
     perID = event["id"].split('DMA_CH_NEEDED_FOR_')[1]
+
     if event["value"]:
         dmaChannelCount = Database.getSymbolValue("core", "DMA_CHANNEL_COUNT")
         channelAllocated = False
+
         for i in range(0, dmaChannelCount):
             dmaChannelEnable = Database.getSymbolValue("core", "DMAC_ENABLE_CH_" + str(i))
             dmaChannelPerID = str(Database.getSymbolValue("core", "DMAC_CHCTRLB_TRIGSRC_CH_" + str(i)))
@@ -307,10 +305,10 @@ def dmacChannelAllocLogic(symbol, event):
             Database.setSymbolValue("core", "DMAC_CHCTRLB_TRIGSRC_CH_" + str(channelNumber) + "_PERID_LOCK", False, 2)
             Database.setSymbolValue("core", "DMA_CH_FOR_" + perID, -1, 2)
 
-
 ################################################################################
 #### Component ####
 ################################################################################
+
 # DMA_NAME: Needed to map DMA system service APIs to PLIB APIs
 dmacSymAPI_Prefix = coreComponent.createStringSymbol("DMA_NAME", None)
 dmacSymAPI_Prefix.setDefaultValue("DMAC")
@@ -329,7 +327,7 @@ dmacInstanceName = coreComponent.createStringSymbol("DMA_INSTANCE_NAME", None)
 dmacInstanceName.setDefaultValue(instances[0].getAttribute("name"))
 dmacInstanceName.setVisible(False)
 
-dmacChannelNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"DMAC\"]/instance@[name=\""+dmacInstanceName.getValue()+"\"]/parameters/param@[name=\"CH_NUM\"]")
+dmacChannelNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"DMAC\"]/instance@[name=\"" + dmacInstanceName.getValue() + "\"]/parameters/param@[name=\"CH_NUM\"]")
 dmacChannelCount = int(dmacChannelNode.getAttribute("value"))
 
 dmaManagerSelect = coreComponent.createStringSymbol("DMA_MANAGER_PLUGIN_SELECT", None)
@@ -340,10 +338,7 @@ dmacMenu = coreComponent.createMenuSymbol("DMAC_MENU", None)
 dmacMenu.setLabel("DMA (DMAC)")
 dmacMenu.setDescription("DMA (DMAC) Configuration")
 
-# Device name
-dmacSym_DeviceName = coreComponent.createStringSymbol("DMAC_DEVICE_NAME", None)
-dmacSym_DeviceName.setVisible(False)
-dmacSym_DeviceName.setDefaultValue(Variables.get("__PROCESSOR"))
+dmacRUNSTDBYNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="DMAC"]/register-group@[name="DMAC"]/register@[name="CHCTRLA"]/bitfield@[name="RUNSTDBY"]')
 
 # DMA_ENABLE: Needed to conditionally generate API mapping in DMA System service
 dmacEnable = coreComponent.createBooleanSymbol("DMA_ENABLE", dmacMenu)
@@ -394,7 +389,7 @@ for channelID in range(0, dmacChCount.getValue()):
     dmacChannelEnable.setLabel("Use DMAC Channel " + str(channelID))
     dmacChannelIds.append("DMAC_ENABLE_CH_" + str(channelID))
 
-    if "SAMD21" not in dmacSym_DeviceName.getValue():
+    if dmacRUNSTDBYNode != None:
         # Channel Run in Standby
         CH_CHCTRLA_RUNSTDBY_Ctrl = coreComponent.createBooleanSymbol("DMAC_CHCTRLA_RUNSTDBY_CH_" + str(channelID), dmacChannelEnable)
         CH_CHCTRLA_RUNSTDBY_Ctrl.setLabel("Run Channel in Standby mode")
