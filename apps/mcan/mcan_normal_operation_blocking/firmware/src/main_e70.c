@@ -69,7 +69,7 @@ void print_menu(void)
 int main ( void )
 {
     uint8_t user_input = 0;
-    uint32_t messageID = 0;
+    volatile uint32_t messageID = 0;
     uint8_t message[8];
     uint8_t messageLength = 0;
     uint32_t status = 0;
