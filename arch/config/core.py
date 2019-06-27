@@ -21,6 +21,8 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
 
+FlashNames          = ["FLASH", "IFLASH"]
+
 flash_start         = 0
 flash_size          = 0
 
@@ -31,7 +33,7 @@ for mem_idx in range(0, len(addr_space_children)):
     mem_seg     = addr_space_children[mem_idx].getAttribute("name")
     mem_type    = addr_space_children[mem_idx].getAttribute("type")
 
-    if (("FLASH" in mem_seg and mem_type == "flash") or ("code" in mem_seg)):
+    if (((any(x == mem_seg for x in FlashNames) == True) and (mem_type == "flash")) or ("code" in mem_seg)):
         flash_start = int(addr_space_children[mem_idx].getAttribute("start"), 16)
         flash_size  = int(addr_space_children[mem_idx].getAttribute("size"), 16)
 
