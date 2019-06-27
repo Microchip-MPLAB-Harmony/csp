@@ -244,6 +244,25 @@ def PreScaler_ValueUpdate(symbol, event):
 def tmr1TsyncVisible(symbol, event):
     symbol.setVisible(not bool(event["value"]))
 
+def tmr1AsyncExtClkVisible(symbol, event):
+    component = symbol.getComponent()
+    src = component.getSymbolValue("TIMER1_SRC_SEL")
+    ext_src = component.getSymbolValue("TIMER1_TECS")
+    if (src == 0 and ext_src == 1):
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+
+def tmr1AsyncSetting(symbol, event):
+    component = symbol.getComponent()
+    src = component.getSymbolValue("TIMER1_SRC_SEL")
+    sync = component.getSymbolValue("TIMER1_TSYNC")
+    if (src == 0 and sync == 1):
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+
+
 def calcTimerFreq(symbol, event):
     component = symbol.getComponent()
     src = component.getSymbolValue("TIMER1_SRC_SEL")
@@ -381,7 +400,7 @@ def instantiateComponent(tmr1Component):
     tmr1Sym_EXT_CLOCK_FREQ.setLabel("External Clock Frequency")
     tmr1Sym_EXT_CLOCK_FREQ.setVisible(False)
     tmr1Sym_EXT_CLOCK_FREQ.setDefaultValue(50000000)
-    tmr1Sym_EXT_CLOCK_FREQ.setDependencies(tmr1TsyncVisible, ["TIMER1_SRC_SEL"])
+    tmr1Sym_EXT_CLOCK_FREQ.setDependencies(tmr1AsyncExtClkVisible, ["TIMER1_SRC_SEL", "TIMER1_TECS"])
 
     #TSYNC, Timer1 External Clock Input Synchronization Selection
     tsync_names = []
@@ -395,6 +414,19 @@ def instantiateComponent(tmr1Component):
     tmr1Sym_T1CON_TSYNC.setDefaultValue(find_key_value(0,tsync_names))   # internal peripheral clock
     tmr1Sym_T1CON_TSYNC.setVisible(False)
     tmr1Sym_T1CON_TSYNC.setDependencies(tmr1TsyncVisible, ["TIMER1_SRC_SEL"])
+
+    #timer TWDIS configuration
+    twdis_names = []
+    _get_bitfield_names(tmr1ValGrp_T1CON_TWDIS, twdis_names)
+    tmr1SymField_T1CON_TWDIS = tmr1Component.createKeyValueSetSymbol("TIMER1_TWDIS", tmr1Sym_T1CON_SOURCE_SEL)
+    tmr1SymField_T1CON_TWDIS.setLabel(tmr1BitField_T1CON_TWDIS.getAttribute("caption"))
+    tmr1SymField_T1CON_TWDIS.setVisible(False)
+    tmr1SymField_T1CON_TWDIS.setOutputMode( "Value" )
+    tmr1SymField_T1CON_TWDIS.setDisplayMode( "Description" )
+    for ii in twdis_names:
+        tmr1SymField_T1CON_TWDIS.addKey( ii['key'],ii['value'], ii['desc'] )
+    tmr1SymField_T1CON_TWDIS.setDefaultValue(find_key_value(0,twdis_names))  # back-to-back writes enabled
+    tmr1SymField_T1CON_TWDIS.setDependencies(tmr1AsyncSetting, ["TIMER1_SRC_SEL", "TIMER1_TSYNC"])
 
     tmr1Sym_CLOCK_FREQ = tmr1Component.createIntegerSymbol("TIMER1_CLOCK_FREQ", None)
     tmr1Sym_CLOCK_FREQ.setLabel("Timer1 Clock Frequency")
@@ -442,17 +474,6 @@ def instantiateComponent(tmr1Component):
     for ii in sidl_names:
         tmr1SymField_T1CON_SIDL.addKey( ii['key'],ii['value'], ii['desc'] )
     tmr1SymField_T1CON_SIDL.setDefaultValue(find_key_value(0,sidl_names))  # continue operation when in idle mode
-
-    #timer TWDIS configuration
-    twdis_names = []
-    _get_bitfield_names(tmr1ValGrp_T1CON_TWDIS, twdis_names)
-    tmr1SymField_T1CON_TWDIS = tmr1Component.createKeyValueSetSymbol("TIMER1_TWDIS", None)
-    tmr1SymField_T1CON_TWDIS.setLabel(tmr1BitField_T1CON_TWDIS.getAttribute("caption"))
-    tmr1SymField_T1CON_TWDIS.setOutputMode( "Value" )
-    tmr1SymField_T1CON_TWDIS.setDisplayMode( "Description" )
-    for ii in twdis_names:
-        tmr1SymField_T1CON_TWDIS.addKey( ii['key'],ii['value'], ii['desc'] )
-    tmr1SymField_T1CON_TWDIS.setDefaultValue(find_key_value(0,twdis_names))  # back-to-back writes enabled
 
     #timer TGATE configuration
     tgate_names = []
