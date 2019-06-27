@@ -158,8 +158,9 @@ int main ( void )
                 }
                 else if (transferStatus == APP_TRANSFER_STATUS_ERROR)
                 {
-                    /* EEPROM is not ready to accept new requests */
-                    state = APP_STATE_XFER_ERROR;
+                    /* EEPROM is not ready to accept new requests. 
+                     * Keep checking until the EEPROM becomes ready. */
+                    state = APP_STATE_EEPROM_STATUS_VERIFY;
                 }
                 break;
 
