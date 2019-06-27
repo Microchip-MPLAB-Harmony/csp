@@ -101,7 +101,7 @@ coreComponent.addPlugin("../peripheral/port_u2210/plugin/port_u2210.jar")
 
 # load clock manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_sam_d09_d10_d11/config/clk.py")
-#coreComponent.addPlugin("../peripheral/clk_sam_d09_d10_d11/plugin/clk_sam_d09_d10_d11.jar")
+coreComponent.addPlugin("../peripheral/clk_sam_d09_d10_d11/plugin/clk_sam_d09_d10_d11.jar")
 
 # load NVIC
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/nvic/config/nvic.py")
