@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>qspi_xip</title>
+<title>Running The Application</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="04085.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="04468.html" target="topic">QSPI Applications</a> &gt; <a href="04470.html" target="topic">qspi_xip</a></div>
+<a href="04430.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="04455.html" target="topic">PM Applications</a> &gt; <a href="04458.html" target="topic">pm_wakeup_rtc</a> &gt; <a href="04470.html" target="topic">Running The Application</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04085.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04430.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04474.html" target="topic">Previous</a> | <a href="04468.html" target="topic">Up</a> | <a href="04475.html" target="topic">Next</a></div>
+<a href="04468.html" target="topic">Previous</a> | <a href="04458.html" target="topic">Up</a> | <a href="04531.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: QSPI Applications qspi_xip Topic Title: qspi_xip)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PM pm_wakeup_rtc Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-qspi_xip</div>
+Running The Application</div>
 </div>
 </div>
 
@@ -48,64 +48,99 @@ qspi_xip</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
+
+<ol class="Element630">
+<li value="1" class="Element600">Open the Terminal application (Ex.:Tera term) on the computer.</li>
+<li value="2" class="Element600">Connect to the EDBG Virtual COM port and configure the serial settings as follows:
+<ul class="Element631">
+<li class="Element601">Baud : 115200</li>
+<li class="Element601">Data : 8 Bits</li>
+<li class="Element601">Parity : None</li>
+<li class="Element601">Stop : 1 Bit</li>
+<li class="Element601">Flow Control : None</li>
+</ul></li>
+<li value="3" class="Element600">Build and Program the application using the MPLAB X IDE.</li>
+<li value="4" class="Element600">See the following message in the console. The LED is blinked continuously using the SysTick Timer.</li>
+</ol><p class="Element10">
+<strong>sam_c21n_xpro.X, sam_d20_xpro.X and sam_d21_xpro.X</strong> </p><p class="Element10" style="text-align: center;">
+<img src="pm_wakeup_rtc_output.png" border="0" alt="" title=""></p><p class="Element10">
+<strong>sam_e54_xpro.X</strong> </p><p class="Element10" style="text-align: center;">
+<img src="pm_wakeup_rtc_output_e54_1.png" border="0" alt="" title=""></p><p class="Element10">
+<strong>sam_l21_xpro.X</strong> </p><p class="Element10" style="text-align: center;">
+<img src="pm_wakeup_rtc_output_l21_1.png" border="0" alt="" title=""></p><p class="Element10">
+<strong>sam_l22_xpro.X and sam_l10_xpro.X</strong> </p><p class="Element10" style="text-align: center;">
+<img src="pm_wakeup_rtc_output_l22_1.png" border="0" alt="" title=""></p><p class="Element10">
+&nbsp;</p>
 <p class="Element10">
-<span style="color: #000000">The QSPI execute in place (XIP) feature allows the system to execute code directly from a serial Flash memory without code shadowing to RAM. The serial Flash memory appears as memory-mapped device in QSPI region. As Quad SPI mode uses four lines for data transfer, it allows the system to use high-performance serial Flash memories which are small and inexpensive, in place of larger and more expensive parallel Flash memories.</span>&nbsp;</p>
-<div class="Element15">
-QSPI XIP Image Application</div>
-<p class="Element10">
-<span style="color: #000000">To be able to execute from QSPI memory space, the binary file of the application needs to be linked to the QSPI address space. A sample QSPI XIP image application is provided using the custom linker script to blink the LED continuously. After generating the binary file using the XIP image application, a custom python script is used to extract the hex code from the binary and store it in the header file as an array of hex values.</span>&nbsp;</p>
-<div class="Element15">
-QSPI Main Application</div>
-<p class="Element10">
-<span style="color: #000000">The main application includes the header file containing the firmware image. It programs and execute code from serial Flash memory. The main application execution sequence is given below:</span></p>
-<ul class="Element630">
-<li class="Element600">Program the QSPI XIP image <span style="color: #000000">in serial Flash memory.</span></li>
-<li class="Element600"><span style="color: #000000">Enable 'Continuous Read Mode' to enter into XIP mode</span></li>
-<li class="Element600"><span style="color: #000000">Verify the image by reading the values back and comparing it to the value written.</span></li>
-<li class="Element600"><span style="color: #000000">If verification passes, configure the Main Stack Pointer and jump to the application in the QSPI based on the value read from the QSPI region.</span></li>
-</ul></div>
-</div>
-<a name="546F70696373"></a><div class="Element14">
-Topics</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
+The following table provides the LED name. </p><div class="Element63">
 <div class="TableDiv">
-<table cellspacing="0" class="Table0">
+<table cellspacing="0" class="Table1">
 <tr>
-<td class="Element200" valign="top" width="35%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="04475.html" target="topic">Building The Application</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This section provides information on how to build the application using the MPLAB X IDE&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="04477.html" target="topic">MPLAB Harmony Configurations</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This topic provides information on the MHC configurations&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="04476.html" target="topic">Hardware Setup</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This section describes how to configure the supported hardware.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="04478.html" target="topic">Running The Application</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This section provides information on how to run the application using the MPLAB X IDE&nbsp;</div></td></tr></table></div></div>
-</div>
+<td class="Element65" valign="top" width="88%">
+<div class="Element66">
+Kit Name&nbsp;</div></td><td class="Element65" valign="top" width="12%">
+<div class="Element66">
+LED Name&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="88%">
+<div class="Element68">
+SAM C21N Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="12%">
+<div class="Element68">
+LED0&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="88%">
+<div class="Element68">
+SAM D20 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="12%">
+<div class="Element68">
+LED0&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="88%">
+<div class="Element68">
+SAM D21 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="12%">
+<div class="Element68">
+LED0&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="88%">
+<div class="Element68">
+SAM E54 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="12%">
+<div class="Element68">
+LED0&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="88%">
+<div class="Element68">
+SAM L10 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="12%">
+<div class="Element68">
+LED0&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="88%">
+<div class="Element68">
+SAM L21 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="12%">
+<div class="Element68">
+LED0&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="88%">
+<div class="Element68">
+SAM L22 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="12%">
+<div class="Element68">
+LED0&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="5" class="Element600">Select 'a' or 'b' to enter the low power mode. The LED is turned off when the device enters low power mode.</li>
+</ol><p class="Element10">
+The RTC counter runs in low power mode, the counter value is continuously compared with the Compare registers and generates compare match interrupt when compare match occurs.&nbsp;</p>
+<p class="Element10">
+When the device wakes up on RTC compare match interrupt, the LED starts blinking and the console displays the following message&nbsp;</p>
+<p class="Element10">
+<strong>sam_c21n_xpro.X, sam_d20_xpro.X and sam_d21_xpro.X</strong> &nbsp;</p><p class="Element10" style="text-align: center;">
+<img src="pm_wakeup_rtc_output2.png" border="0" alt="" title="">&nbsp;</p><p class="Element10">
+<strong>sam_e54_xpro.X</strong> </p><p class="Element10" style="text-align: center;">
+<img src="pm_wakeup_rtc_output_e54_2.png" border="0" alt="" title=""></p><p class="Element10">
+<strong>sam_l21_xpro.X</strong> </p><p class="Element10" style="text-align: center;">
+<img src="pm_wakeup_rtc_output_l21_2.png" border="0" alt="" title=""></p><p class="Element10">
+<strong>sam_l22_xpro.X and sam_l10_xpro.X</strong> </p><p class="Element10" style="text-align: center;">
+<img src="pm_wakeup_rtc_output_l22_2.png" border="0" alt="" title=""></p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="04085.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="04468.html" target="topic">QSPI Applications</a> &gt; <a href="04470.html" target="topic">qspi_xip</a></div>
+<a href="04430.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="04455.html" target="topic">PM Applications</a> &gt; <a href="04458.html" target="topic">pm_wakeup_rtc</a> &gt; <a href="04470.html" target="topic">Running The Application</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -113,13 +148,13 @@ This section provides information on how to run the application using the MPLAB 
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04085.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04430.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04474.html" target="topic">Previous</a> | <a href="04468.html" target="topic">Up</a> | <a href="04475.html" target="topic">Next</a></div>
+<a href="04468.html" target="topic">Previous</a> | <a href="04458.html" target="topic">Up</a> | <a href="04531.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: QSPI Applications qspi_xip Topic Title: qspi_xip)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PM pm_wakeup_rtc Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

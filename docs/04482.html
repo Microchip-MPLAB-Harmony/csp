@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="04085.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03677.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04084.html" target="topic">Peripheral Libraries</a> &gt; <a href="04483.html" target="topic">QSPI Peripheral Library Help</a> &gt; <a href="04482.html" target="topic">Introduction</a></div>
+<a href="04430.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04022.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04429.html" target="topic">Peripheral Libraries</a> &gt; <a href="04483.html" target="topic">PM Peripheral Library Help</a> &gt; <a href="04482.html" target="topic">Introduction</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,13 +26,13 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04085.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04430.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
 <a href="04483.html" target="topic">Previous</a> | <a href="04483.html" target="topic">Up</a> | <a href="04479.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: QSPI U2008 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PM U2240 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
 Introduction</div>
 </div>
@@ -49,18 +49,18 @@ Introduction</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The Quad SPI Interface (QSPI) is a synchronous serial data link that provides communication with external devices in Master mode. It is similar to SPI protocol except that it has additional data lines.&nbsp;</p>
-<p class="Element10">
-The QSPI can be used in normal SPI mode or in Serial Memory mode to connect to external Flash memories. The normal SPI has four communication lines: Chip Select, Clock, MOSI, and MISO. For QSPI, additional data lines are available. The command/data/address are sent through single, quad or dual IO based on the mode selected. As data is sent over multiple lines, it helps in increasing bandwidth compared to a standard SPI transfer. With the support of the Quad SPI protocol, the QSPI allows the system to use high-performance serial Flash memories which are small and inexpensive, in place of larger and more expensive parallel Flash memories.&nbsp;</p>
-<p class="Element10">
-The QSPI allows the system to execute code directly from a serial Flash memory (XIP) without code shadowing to RAM. The serial Flash memory mapping is seen in the system as other memories such as SRAM, and FLASH memory.</p></div>
+The Power Manager (PM) controls the sleep modes of the device. There are two main types of sleep modes available:</p>
+<ul class="Element630">
+<li class="Element600">Idle sleep mode: The CPU stops executing code, no peripheral are disabled. All interrupt sources can wake up the device</li>
+<li class="Element600">Standby sleep mode: The user can configure peripherals to be enabled or not using the respective RUNSTDBY bit. This means that power consumption is highly dependent on what functionality is enabled.</li>
+</ul></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="04085.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03677.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04084.html" target="topic">Peripheral Libraries</a> &gt; <a href="04483.html" target="topic">QSPI Peripheral Library Help</a> &gt; <a href="04482.html" target="topic">Introduction</a></div>
+<a href="04430.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04022.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04429.html" target="topic">Peripheral Libraries</a> &gt; <a href="04483.html" target="topic">PM Peripheral Library Help</a> &gt; <a href="04482.html" target="topic">Introduction</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -68,13 +68,13 @@ The QSPI allows the system to execute code directly from a serial Flash memory (
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04085.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04430.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
 <a href="04483.html" target="topic">Previous</a> | <a href="04483.html" target="topic">Up</a> | <a href="04479.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: QSPI U2008 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PM U2240 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

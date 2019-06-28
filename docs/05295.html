@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>SDHC_SpeedModeSet Function</title>
+<title>RTC_Timer16FrequencyGet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="04085.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03677.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04084.html" target="topic">Peripheral Libraries</a> &gt; <a href="05214.html" target="topic">SDHC Peripheral Library Help</a> &gt; <a href="05215.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="05295.html" target="topic">SDHC_SpeedModeSet Function</a></div>
+<a href="04430.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04022.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04429.html" target="topic">Peripheral Libraries</a> &gt; <a href="05173.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="05184.html" target="topic">16-bit Timer (Mode 1)</a> &gt; <a href="05190.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="05295.html" target="topic">RTC_Timer16FrequencyGet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04085.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04430.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05273.html" target="topic">Previous</a> | <a href="05215.html" target="topic">Up</a> | <a href="05239.html" target="topic">Next</a></div>
+<a href="05292.html" target="topic">Previous</a> | <a href="05190.html" target="topic">Up</a> | <a href="05297.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sdhc_00187::SDHC_SpeedModeSet@SDHC_SPEED_MODE Topic Title: SDHC_SpeedModeSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2202::RTC_Timer16FrequencyGet Topic Title: RTC_Timer16FrequencyGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-SDHC_SpeedModeSet Function</div>
+RTC_Timer16FrequencyGet Function</div>
 </div>
 </div>
 
@@ -49,46 +49,24 @@ SDHC_SpeedModeSet Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Sets the bus speed to either high speed or default speed.</p></div>
+This function returns the frequency at which the 16-bit timer counter is operating. The return value can be used to compute the period that needs to be set in order to operate the timer counter at a desired frequency.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">SDHC_SpeedModeSet</span></strong>(
-    <a href="05292.html" target="topic">SDHC_SPEED_MODE</a> <strong><span style="color: #000000">speedMode</span></strong>
-);</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100">uint32_t <strong><span style="color: #000000">RTC_Timer16FrequencyGet</span></strong>();</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="05275.html" target="topic">SDHC_Initialize</a>() must have been called first for the associated instance.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
-<div class="TableDiv">
-<table cellspacing="0" class="Table2">
-<tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-speedMode&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Normal speed mode or High speed mode.&nbsp;</div></td></tr></table></div></div>
-</div>
+None.</p></div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+Returns the frequency at which the 16-bit timer counter is operating.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
@@ -101,7 +79,13 @@ None.</p></div>
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">SDHC_SpeedModeSet(SDHC_SPEED_MODE_HIGH);</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">    <i><span style="color: #008000">// Compute the period required to operate the timer at 1KHz.</span></i>
+
+    uint16_t desiredFrequency = 1000;
+    uint16_t period = RTC_Timer16FrequencyGet()/desiredFrequency;
+    <a href="05277.html" target="topic">RTC_Initialize</a>();
+    <a href="05299.html" target="topic">RTC_Timer16PeriodSet</a>(period);
+</pre></div></div>
 </div>
 </div>
 </div>
@@ -109,7 +93,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="04085.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03677.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04084.html" target="topic">Peripheral Libraries</a> &gt; <a href="05214.html" target="topic">SDHC Peripheral Library Help</a> &gt; <a href="05215.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="05295.html" target="topic">SDHC_SpeedModeSet Function</a></div>
+<a href="04430.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04022.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04429.html" target="topic">Peripheral Libraries</a> &gt; <a href="05173.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="05184.html" target="topic">16-bit Timer (Mode 1)</a> &gt; <a href="05190.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="05295.html" target="topic">RTC_Timer16FrequencyGet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -117,13 +101,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04085.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04430.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05273.html" target="topic">Previous</a> | <a href="05215.html" target="topic">Up</a> | <a href="05239.html" target="topic">Next</a></div>
+<a href="05292.html" target="topic">Previous</a> | <a href="05190.html" target="topic">Up</a> | <a href="05297.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sdhc_00187::SDHC_SpeedModeSet@SDHC_SPEED_MODE Topic Title: SDHC_SpeedModeSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2202::RTC_Timer16FrequencyGet Topic Title: RTC_Timer16FrequencyGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->
