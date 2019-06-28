@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Hardware Setup</title>
+<title>Using the Library</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="04085.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="00144.html" target="topic">ADC Applications</a> &gt; <a href="00140.html" target="topic">adc_polled_mode</a> &gt; <a href="00118.html" target="topic">Hardware Setup</a></div>
+<a href="04430.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04022.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04429.html" target="topic">Peripheral Libraries</a> &gt; <a href="00113.html" target="topic">ADC Peripheral Library Help</a> &gt; <a href="00118.html" target="topic">Using the Library</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04085.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04430.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00119.html" target="topic">Previous</a> | <a href="00140.html" target="topic">Up</a> | <a href="00120.html" target="topic">Next</a></div>
+<a href="00109.html" target="topic">Previous</a> | <a href="00113.html" target="topic">Up</a> | <a href="00114.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ADC adc_polled_mode Hardware Setup Topic Title: Hardware Setup)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ADC 6489 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Hardware Setup</div>
+Using the Library</div>
 </div>
 </div>
 
@@ -48,119 +48,61 @@ Hardware Setup</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
-
-<ol class="Element630">
-<li value="1" class="Element600"><strong>Project pic32mx470_curiosity.X</strong>
-<ul class="Element631">
-<li class="Element601"><strong>Hardware Used</strong>
-<ul class="Element632">
-<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/DevelopmentTools/ProductDetails/dm320103#utm_source=MicroSolutions&amp;utm_medium=Link&amp;utm_term=FY17Q3&amp;utm_content=DevTools&amp;utm_campaign=Article');"><img src="indicator_external_link.gif" border="0" alt="" title="">PIC32MX470 Curiosity board</a></li>
-<li class="Element602">USB UART Click Board</li>
-</ul></li>
-<li class="Element601"><strong>Hardware Setup</strong>
-<ul class="Element632">
-<li class="Element602">Connect mini USB cable to the 'Debug USB' connector(J3) on the board to the computer.</li>
-<li class="Element602">Install an <a href="#" onclick="openExternalLink('https://www.mikroe.com/usb-uart-click');"><img src="indicator_external_link.gif" border="0" alt="" title="">USB UART click</a> board on to the mikroBUS socket J5.</li>
-<li class="Element602">Connect mini USB cable to the <a href="#" onclick="openExternalLink('https://www.mikroe.com/usb-uart-click');"><img src="indicator_external_link.gif" border="0" alt="" title="">USB UART click</a> board. This will enumerate the USB to UART port.</li>
-<li class="Element602">AN9 pin is used for analog input.</li>
-<li class="Element602">Use a jumper wire to connect Pin 3 of J14 (AN9 is mapped to Port Pin RPB9) to 3.3 V or GND or external supply.</li>
-<li class="Element602">Note: Ensure that the series resistors on the mikroBUS headers are of value 0 Ohms.</li>
-</ul></li>
-</ul></li>
-</ol><p class="Element10">
+<p class="Element10">
+The AFEC converts all the enabled channels on software or hardware triggers. It provides both polling and callback methods to indicate the end of a conversion to read the converted data from the result registers.</p>
+<ul class="Element630">
+<li class="Element600">With polling, the application will need to continuously poll to check if the conversion is completed.</li>
+<li class="Element600">With callback, the registered callback function will be called once the conversion is completed. This means the application do not have to poll continuously.</li>
+</ul><p class="Element10">
 &nbsp;</p>
+<p class="Element10">
+<strong>Callback method</strong>&nbsp;</p>
+<p class="Element10">
+This example demonstrates how to read three analog inputs in the callback function. Three channels are enabled and configured to start conversion on hardware trigger. </p><div class="Element13"><div class="Element12"><pre class="Element12">
+<i><span style="color: #008000">/* This function is called after conversion of last channel in the user sequence */</span></i>
+<strong><span style="color: #000080">void</span></strong> ADC_EventHandler(uintptr_t context)
+{
+<i><span style="color: #008000">/* Read the result of 3 channels*/</span></i>
+adc_ch5_count = ADC_ChannelResultGet(ADC_CH5);
+adc_ch6_count = ADC_ChannelResultGet(ADC_CH6);
+adc_ch0_count = ADC_ChannelResultGet(ADC_CH0);
+}
+</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">
+<strong><span style="color: #000080">int</span></strong> main(<strong><span style="color: #000080">void</span></strong>)
+{
+    <i><span style="color: #008000">/* Register callback function for ADC end of conversion interrupt*/</span></i>
+    ADC_CallbackRegister(AFEC_EventHandler, (uintptr_t)NULL);
 
-<ol class="Element630">
-<li value="2" class="Element600"><strong>Project pic32mx_xlp_sk.X</strong>
-<ul class="Element631">
-<li class="Element601"><strong>Hardware Used</strong>
-<ul class="Element632">
-<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/DM320105');"><img src="indicator_external_link.gif" border="0" alt="" title="">PIC32MX XLP starter kit</a></li>
-<li class="Element602">USB UART Click Board</li>
-</ul></li>
-<li class="Element601"><strong>Hardware Setup</strong>
-<ul class="Element632">
-<li class="Element602">Connect mini USB cable to the 'Debug USB' connector(J9) on the board to the computer.</li>
-<li class="Element602">Install an <a href="#" onclick="openExternalLink('https://www.mikroe.com/usb-uart-click');"><img src="indicator_external_link.gif" border="0" alt="" title="">USB UART click</a> board on to the mikroBUS socket J5.</li>
-<li class="Element602">Connect mini USB cable to the <a href="#" onclick="openExternalLink('https://www.mikroe.com/usb-uart-click');"><img src="indicator_external_link.gif" border="0" alt="" title="">USB UART click</a> board. This will enumerate the USB to UART port.</li>
-<li class="Element602">AN7 pin, which is coming on switches S1 to S5, is used for analog input.</li>
-</ul></li>
-</ul></li>
-</ol><p class="Element10">
+    <strong><span style="color: #000080">while</span></strong>(<strong><span style="color: #000080">true</span></strong>)
+    {
+
+    }
+}</pre></div></div>
+<p class="Element10">
 &nbsp;</p>
+<p class="Element10">
+<strong>Polling method</strong>&nbsp;</p>
+<p class="Element10">
+This example demonstrates how to start conversion and read the converted data in polled mode. One channel is enabled and configured to start conversion on software trigger. </p><div class="Element13"><div class="Element12"><pre class="Element12"><i><span style="color: #008000">/* Start ADC conversion */</span></i>
+ADC_ConversionStart();
 
-<ol class="Element630">
-<li value="3" class="Element600"><strong>Project sam_a5d2_xult.IAR</strong>
-<ul class="Element631">
-<li class="Element601"><strong>Hardware Used</strong>
-<ul class="Element632">
-<li class="Element602"><a href="#" onclick="openExternalLink('http://www.microchip.com/DevelopmentTools/ProductDetails/ATSAMA5D2C-XULT');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM A5D2 Xplained Ultra board</a></li>
-<li class="Element602">SD Card with FAT32 file system</li>
-</ul></li>
-<li class="Element601"><strong>Hardware Setup</strong>
-<ul class="Element632">
-<li class="Element602">Setup the SD card
-<ul class="Element633">
-<li class="Element603">Download harmony MPU bootstrap loader from this <a href="#" onclick="openExternalLink('http://github.com/Microchip-MPLAB-Harmony/at91bootstrap/blob/master/boot.bin');"><img src="indicator_external_link.gif" border="0" alt="" title="">location</a></li>
-<li class="Element603">Copy the downloaded boot loader binary( boot.bin) and generated application binary (harmony.bin)into the SD card</li>
-<li class="Element603">Insert the SD card into the SDMMC1 slot on the board</li>
-</ul></li>
-<li class="Element602">Short jumper JP2 (DEBUG_DIS)</li>
-<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
-<li class="Element602">AD0 pin is used for analog input</li>
-<li class="Element602">Use a jumper wire to connect Pin 2 of J8 (AD0 is mapped to Port Pin PD19) to 3.3 V or GND</li>
-</ul></li>
-</ul></li>
-</ol><p class="Element10">
-&nbsp;</p>
+<i><span style="color: #008000">/* Wait till ADC conversion result is available */</span></i>
+<strong><span style="color: #000080">while</span></strong>(!ADC_ChannelResultIsReady(ADC_CH0))
+{
 
-<ol class="Element630">
-<li value="4" class="Element600"><strong>Project sam_9x60_ek.IAR</strong>
-<ul class="Element631">
-<li class="Element601"><strong>Hardware Used</strong>
-<ul class="Element632">
-<li class="Element602">SAM 9X60 Evaluation Kit board</li>
-<li class="Element602">SD Card with FAT32 file system</li>
-</ul></li>
-<li class="Element601"><strong>Hardware Setup</strong>
-<ul class="Element632">
-<li class="Element602">Setup the SD card
-<ul class="Element633">
-<li class="Element603">Download harmony MPU bootstrap loader from this <a href="#" onclick="openExternalLink('http://github.com/Microchip-MPLAB-Harmony/at91bootstrap/blob/sam9x60ek/boot.bin');"><img src="indicator_external_link.gif" border="0" alt="" title="">location</a></li>
-<li class="Element603">Copy the downloaded boot loader binary( boot.bin) and generated application binary (harmony.bin)into the SD card</li>
-<li class="Element603">Insert the SD card into the SDMMC connector J5 on the board</li>
-</ul></li>
-<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
-<li class="Element602">AD0 pin is used for analog input</li>
-<li class="Element602">Use a jumper wire to connect Pin 32 of J17 (AD0 is mapped to Port Pin PB11) to 3.3 V or GND</li>
-<li class="Element602">Note: Reset push button on SAM9X60 EK is labeled as SW3</li>
-</ul></li>
-</ul></li>
-</ol><p class="Element10">
-&nbsp;</p>
+};
 
-<ol class="Element630">
-<li value="5" class="Element600"><strong>Project sam_g55_xpro.X</strong>
-<ul class="Element631">
-<li class="Element601"><strong>Hardware Used</strong>
-<ul class="Element632">
-<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/atsamg55-xpro');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM G55 Xplained Pro Evaluation Kit</a></li>
-</ul></li>
-<li class="Element601"><strong>Hardware Setup</strong>
-<ul class="Element632">
-<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
-<li class="Element602">AD0 pin is used for analog input</li>
-<li class="Element602">Use a jumper wire to connect Pin 3 of EXT1 (AD0 is mapped to Port Pin PA17) to 3.3 V or GND</li>
-</ul></li>
-</ul></li>
-</ol></div>
+<i><span style="color: #008000">/* Read the ADC result */</span></i>
+adc_count = ADCx_ChannelResultGet(ADC_CH0);</pre></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="04085.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="00144.html" target="topic">ADC Applications</a> &gt; <a href="00140.html" target="topic">adc_polled_mode</a> &gt; <a href="00118.html" target="topic">Hardware Setup</a></div>
+<a href="04430.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04022.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04429.html" target="topic">Peripheral Libraries</a> &gt; <a href="00113.html" target="topic">ADC Peripheral Library Help</a> &gt; <a href="00118.html" target="topic">Using the Library</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -168,13 +110,13 @@ Hardware Setup</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04085.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04430.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00119.html" target="topic">Previous</a> | <a href="00140.html" target="topic">Up</a> | <a href="00120.html" target="topic">Next</a></div>
+<a href="00109.html" target="topic">Previous</a> | <a href="00113.html" target="topic">Up</a> | <a href="00114.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ADC adc_polled_mode Hardware Setup Topic Title: Hardware Setup)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ADC 6489 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

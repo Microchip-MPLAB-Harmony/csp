@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Using the Library</title>
+<title>cache_maintenance</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="04085.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03677.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04084.html" target="topic">Peripheral Libraries</a> &gt; <a href="00870.html" target="topic">CAN Peripheral Library Help</a> &gt; <a href="00875.html" target="topic">Using the Library</a></div>
+<a href="04430.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="00876.html" target="topic">Cache Applications</a> &gt; <a href="00875.html" target="topic">cache_maintenance</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04085.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04430.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00866.html" target="topic">Previous</a> | <a href="00870.html" target="topic">Up</a> | <a href="00871.html" target="topic">Next</a></div>
+<a href="00876.html" target="topic">Previous</a> | <a href="00876.html" target="topic">Up</a> | <a href="00877.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CAN 6019 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: Cache Applications cache_maintenance Topic Title: cache_maintenance)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Using the Library</div>
+cache_maintenance</div>
 </div>
 </div>
 
@@ -49,140 +49,57 @@ Using the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The CAN library supports the normal mode. The CAN Plib can transfer message in a polling or an interrupt mode.&nbsp;</p>
+<span style="color: #000000">This example application shows how to use the cache maintenance APIs to avoid issues related to cache coherency when the data cache is enabled.</span>&nbsp;</p>
 <p class="Element10">
-&nbsp;</p>
+<span style="color: #000000">The application uses the USART and the DMA PLIBs to demonstrate the cache maintenance APIs provided by the Cache peripheral library. It registers a callback with the DMA transmit and receive channels. The application first transmits a message using the DMA transmit channel and then schedules a read of ten characters using the DMA receive channel. Once the DMA read is complete, it reads the received data and echoes the same on the terminal using the DMA transmit channel.</span>&nbsp;</p>
 <p class="Element10">
-<strong>CAN normal operation with polling</strong>&nbsp;</p>
+<span style="color: #000000">The application calls the DCACHE_CLEAN_BY_ADDR API on the write buffer before transmitting it. Calling this API copies the data from the cache memory to the main memory, thereby ensuring that the DMA peripheral uses the updated values in the write buffer.</span>&nbsp;</p>
 <p class="Element10">
-The following example shows the CAN normal mode operation with polling implementation.&nbsp;</p>
+<span style="color: #000000">The application calls the DCACHE_INVALIDATE_BY_ADDR API on the read buffer after reception of data is complete by the DMA receive channel. Calling this API invalidates the cache region corresponding to the read buffer, thereby ensuring that the CPU reads the updated values in the read buffer from the main memory and into the cache.</span>&nbsp;</p>
 <p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-int main(void)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-while (1)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-/* Check if there is a receive MB1 New Message */&nbsp;</p>
-<p class="Element10">
-if (CAN1_InterruptGet(CAN_INTERRUPT_MB1_MASK))&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-/* Receive FIFO 0 New Message */&nbsp;</p>
-<p class="Element10">
-CAN1_MessageReceive(&amp;rx_messageID, &amp;rx_messageLength, rx_message, CAN_MAILBOX_DATA_FRAME_RX_OVERWRITE);&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-/* Transmit back received Message */&nbsp;</p>
-<p class="Element10">
-CAN1_MessageTransmit(messageID, messageLength, message, CAN_MAILBOX_DATA_FRAME_TX);&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong>CAN normal operation with interrupt</strong>&nbsp;</p>
-<p class="Element10">
-The following example shows the CAN normal mode operation with interrupt implementation.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-void APP_CAN_Callback(uintptr_t context)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-xferContext = context;&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-/* Check CAN Status */&nbsp;</p>
-<p class="Element10">
-status = CAN1_ErrorGet();&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-if ((status &amp; (CAN_ERROR_BOFF | CAN_ERROR_CERR |&nbsp;</p>
-<p class="Element10">
-CAN_ERROR_SERR | CAN_ERROR_AERR |&nbsp;</p>
-<p class="Element10">
-CAN_ERROR_FERR | CAN_ERROR_BERR)) == CAN_ERROR_NONE)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-switch ((APP_STATES)context)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-case APP_STATE_CAN_RECEIVE:&nbsp;</p>
-<p class="Element10">
-case APP_STATE_CAN_TRANSMIT:&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-state = APP_STATE_CAN_XFER_SUCCESSFUL;&nbsp;</p>
-<p class="Element10">
-break;&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-default:&nbsp;</p>
-<p class="Element10">
-break;&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-else&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-state = APP_STATE_CAN_XFER_ERROR;&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-int main(void)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-while(1)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-/* Transmitting Message */&nbsp;</p>
-<p class="Element10">
-CAN1_CallbackRegister( APP_CAN_Callback, (uintptr_t)APP_STATE_CAN_TRANSMIT );&nbsp;</p>
-<p class="Element10">
-CAN1_MessageTransmit(messageID, messageLength, message, CAN_MAILBOX_DATA_FRAME_TX);&nbsp;</p>
-<p class="Element10">
-.....&nbsp;</p>
-<p class="Element10">
-/* Receiving Message */&nbsp;</p>
-<p class="Element10">
-CAN1_CallbackRegister( APP_CAN_Callback, (uintptr_t)APP_STATE_CAN_RECEIVE );&nbsp;</p>
-<p class="Element10">
-CAN1_MessageReceive(&amp;rx_messageID, &amp;rx_messageLength, rx_message, CAN_MAILBOX_DATA_FRAME_RX_OVERWRITE);</p></div>
+<span style="color: #000000">The cache maintenance operations are always performed on a cache line (1 cache line = 32 bytes), the read and write buffers must be aligned to a 32 byte boundary and must be a multiple of 32 bytes. For the same reason, the number of received and echoed back bytes is 10, the size of the receive and echo buffers is 32 bytes.</span></p></div>
+</div>
+<a name="546F70696373"></a><div class="Element14">
+Topics</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element200" valign="top" width="35%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="00877.html" target="topic">Building the Application</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides information on how to build and run the application.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="00879.html" target="topic">MPLAB Harmony Configurations</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This topic provides information on the MHC configurations.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="00878.html" target="topic">Hardware Setup</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section describes how to configure the supported hardware.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="00880.html" target="topic">Running the Application</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides information on how to run the application.&nbsp;</div></td></tr></table></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="04085.html" target="topic">Peripheral Library Overview</a> &gt; <a href="03677.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04084.html" target="topic">Peripheral Libraries</a> &gt; <a href="00870.html" target="topic">CAN Peripheral Library Help</a> &gt; <a href="00875.html" target="topic">Using the Library</a></div>
+<a href="04430.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="00876.html" target="topic">Cache Applications</a> &gt; <a href="00875.html" target="topic">cache_maintenance</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -190,13 +107,13 @@ CAN1_MessageReceive(&amp;rx_messageID, &amp;rx_messageLength, rx_message, CAN_MA
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04085.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04430.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00866.html" target="topic">Previous</a> | <a href="00870.html" target="topic">Up</a> | <a href="00871.html" target="topic">Next</a></div>
+<a href="00876.html" target="topic">Previous</a> | <a href="00876.html" target="topic">Up</a> | <a href="00877.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CAN 6019 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: Cache Applications cache_maintenance Topic Title: cache_maintenance)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

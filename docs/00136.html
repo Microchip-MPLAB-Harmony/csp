@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="04085.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="00144.html" target="topic">ADC Applications</a> &gt; <a href="00134.html" target="topic">adc_dma_sequencing</a> &gt; <a href="00136.html" target="topic">Hardware Setup</a></div>
+<a href="04430.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="00154.html" target="topic">ADC Applications</a> &gt; <a href="00152.html" target="topic">adc_user_sequence</a> &gt; <a href="00136.html" target="topic">Hardware Setup</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,13 +26,13 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04085.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04430.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00137.html" target="topic">Previous</a> | <a href="00134.html" target="topic">Up</a> | <a href="00138.html" target="topic">Next</a></div>
+<a href="00137.html" target="topic">Previous</a> | <a href="00152.html" target="topic">Up</a> | <a href="00138.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ADC Applications adc_dma_sequencing Hardware Setup Topic Title: Hardware Setup)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ADC adc_user_sequence Hardware Setup Topic Title: Hardware Setup)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
 Hardware Setup</div>
 </div>
@@ -50,31 +50,84 @@ Hardware Setup</div>
 <div class="Element10">
 
 <ol class="Element630">
-<li value="1" class="Element600"><strong>Project sam_e54_xpro.X</strong>
+<li value="1" class="Element600"><strong>Project sam_a5d2_xult.IAR</strong>
 <ul class="Element631">
 <li class="Element601"><strong>Hardware Used</strong>
 <ul class="Element632">
-<li class="Element602"><a href="#" onclick="openExternalLink('http://ww1.microchip.com/downloads/en/devicedoc/70005321a.pdf');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAME54 Xplained Pro Evaluation Kit</a></li>
+<li class="Element602"><a href="#" onclick="openExternalLink('http://www.microchip.com/DevelopmentTools/ProductDetails/ATSAMA5D2C-XULT');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM A5D2 Xplained Ultra board</a></li>
+<li class="Element602">SD Card with FAT32 file system</li>
 </ul></li>
 <li class="Element601"><strong>Hardware Setup</strong>
 <ul class="Element632">
-<li class="Element602">ADC input pins on SAM E54 Xplained Pro Evaluation Kit are AIN4(PA04), AIN5(PA05), AIN6(PA06) and AIN7(PA07)</li>
-<li class="Element602">Analog input &quot;AIN4&quot; is mapped to Port Pin &quot;PA04&quot; that is routed to &quot;Pin 14 of the EXT1 header&quot;</li>
-<li class="Element602">Analog input &quot;AIN5&quot; is mapped to Port Pin &quot;PA05&quot; that is routed to &quot;Pin 13 of the EXT1 header&quot;</li>
-<li class="Element602">Analog input &quot;AIN6&quot; is mapped to Port Pin &quot;PA06&quot; that is routed to &quot;Pin 5 of the EXT1 header&quot;</li>
-<li class="Element602">Analog input &quot;AIN7&quot; is mapped to Port Pin &quot;PA07&quot; that is routed to &quot;Pin 6 of the EXT1 header&quot;</li>
-<li class="Element602">Use a jumper wire to Connect analog input pins to external voltage source or to Vcc or GND</li>
+<li class="Element602">Setup the SD card
+<ul class="Element633">
+<li class="Element603">Download harmony MPU bootstrap loader from this <a href="#" onclick="openExternalLink('http://github.com/Microchip-MPLAB-Harmony/at91bootstrap/blob/master/boot.bin');"><img src="indicator_external_link.gif" border="0" alt="" title="">location</a></li>
+<li class="Element603">Copy the downloaded boot loader binary( boot.bin) and generated application binary (harmony.bin)into the SD card</li>
+<li class="Element603">Insert the SD card into the SDMMC1 slot on the board</li>
+</ul></li>
+<li class="Element602">Short jumper JP2 (DEBUG_DIS)</li>
 <li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+<li class="Element602">Use a jumper wire to connect Pin 2 of J8 (AD0 is mapped to Port Pin PD19) to 3.3 V or GND</li>
+<li class="Element602">Use a jumper wire to connect Pin 7 of J8 (AD5 is mapped to Port Pin PD24) to 3.3 V or GND</li>
+<li class="Element602">Use a jumper wire to connect Pin 6 of J20 (AD6 is mapped to Port Pin PD25) to 3.3 V or GND</li>
 </ul></li>
 </ul></li>
-</ol></div>
+</ol><p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="2" class="Element600"><strong>Project sam_9x60_ek.IAR</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602">SAM 9X60 Evaluation Kit board</li>
+<li class="Element602">SD Card with FAT32 file system</li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">Setup the SD card
+<ul class="Element633">
+<li class="Element603">Download harmony MPU bootstrap loader from this <a href="#" onclick="openExternalLink('http://github.com/Microchip-MPLAB-Harmony/at91bootstrap/blob/sam9x60ek/boot.bin');"><img src="indicator_external_link.gif" border="0" alt="" title="">location</a></li>
+<li class="Element603">Copy the downloaded boot loader binary( boot.bin) and generated application binary (harmony.bin)into the SD card</li>
+<li class="Element603">Insert the SD card into the SDMMC connector J5 on the board</li>
+</ul></li>
+<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+<li class="Element602">Use a jumper wire to connect Pin 32 of J17 (AD0 is mapped to Port Pin PB11) to 3.3 V or GND</li>
+<li class="Element602">Use a jumper wire to connect Pin 33 of J17 (AD1 is mapped to Port Pin PB12) to 3.3 V or GND</li>
+<li class="Element602">Use a jumper wire to connect Pin 31 of J17 (AD2 is mapped to Port Pin PB13) to 3.3 V or GND</li>
+<li class="Element602">Note: Reset push button on SAM9X60 EK is labeled as SW3</li>
+</ul></li>
+</ul></li>
+</ol><p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="3" class="Element600"><strong>Project sam_g55_xpro.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/atsamg55-xpro');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAMG55 Xplained Pro Evaluation Kit</a></li>
+</ul></li>
+</ul></li>
+</ol><p class="Element10">
+&nbsp;</p>
+
+<ul class="Element630">
+<li class="Element600"><strong>Hardware Setup</strong>
+<ul class="Element631">
+<li class="Element601">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+<li class="Element601">Use a jumper wire to connect Pin 3 of EXT1 (AD0 is mapped to Port Pin PA17) to 3.3 V or GND</li>
+<li class="Element601">Use a jumper wire to connect Pin 4 of EXT1 (AD1 is mapped to Port Pin PA18) to 3.3 V or GND</li>
+<li class="Element601">Use a jumper wire to connect Pin 3 of EXT3 (AD2 is mapped to Port Pin PA19) to 3.3 V or GND</li>
+</ul></li>
+</ul></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="04085.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00822.html" target="topic">Applications Help</a> &gt; <a href="00144.html" target="topic">ADC Applications</a> &gt; <a href="00134.html" target="topic">adc_dma_sequencing</a> &gt; <a href="00136.html" target="topic">Hardware Setup</a></div>
+<a href="04430.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="00154.html" target="topic">ADC Applications</a> &gt; <a href="00152.html" target="topic">adc_user_sequence</a> &gt; <a href="00136.html" target="topic">Hardware Setup</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -82,13 +135,13 @@ Hardware Setup</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04085.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04430.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00137.html" target="topic">Previous</a> | <a href="00134.html" target="topic">Up</a> | <a href="00138.html" target="topic">Next</a></div>
+<a href="00137.html" target="topic">Previous</a> | <a href="00152.html" target="topic">Up</a> | <a href="00138.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ADC Applications adc_dma_sequencing Hardware Setup Topic Title: Hardware Setup)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ADC adc_user_sequence Hardware Setup Topic Title: Hardware Setup)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->
