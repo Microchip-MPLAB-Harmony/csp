@@ -935,7 +935,7 @@ def instantiateComponent(rtcComponent):
         numInt = numInt + 1
         if "ALARM" in rtcMode2InterruptValues[i].getAttribute("name"):
             numAlarm = numAlarm + 1
-        if "TAMPER" not in rtcMode1InterruptValues[i].getAttribute("name"):
+        if "TAMPER" not in rtcMode2InterruptValues[i].getAttribute("name"):
             rtcSymMode2_Interrupt = rtcComponent.createBooleanSymbol(
                 "RTC_MODE2_INTENSET_" + rtcMode2InterruptValues[i].getAttribute("name") + "_ENABLE", rtcSymMode2_INTENSET)
             rtcSymMode2_Interrupt.setLabel(
