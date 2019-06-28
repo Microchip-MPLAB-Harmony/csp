@@ -508,7 +508,7 @@ def instantiateComponent(ddrComponent):
     ddrADDCDRVSEL_names = []
     _get_bitfield_names(ddrValGrp_DDRPHYPADCON_ADDCDRVSEL, ddrADDCDRVSEL_names)
     ddrSym_DDRPHYPADCON_ADDCDRVSEL = ddrComponent.createKeyValueSetSymbol("DDR_PHY_SYS_MEMORY_STRENGTH_ADDC", ddrSym_PHYCONFIG_STRING)
-    ddrSym_DDRPHYPADCON_ADDCDRVSEL.setLabel("Data Pad Drive Strength Select bit")
+    ddrSym_DDRPHYPADCON_ADDCDRVSEL.setLabel("Address and Control Pads Drive Strength Select bit")
     ddrSym_DDRPHYPADCON_ADDCDRVSEL.setDefaultValue(0)
     ddrSym_DDRPHYPADCON_ADDCDRVSEL.setOutputMode("Value")
     ddrSym_DDRPHYPADCON_ADDCDRVSEL.setDisplayMode("Description")
@@ -683,4 +683,3 @@ def instantiateComponent(ddrComponent):
     ddrSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     ddrSystemDefFile.setSourcePath("../peripheral/ddr_00184/templates/system/definitions.h.ftl")
     ddrSystemDefFile.setMarkup(True)
-
