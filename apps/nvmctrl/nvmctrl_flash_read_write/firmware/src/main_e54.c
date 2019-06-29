@@ -55,13 +55,16 @@
 #define LED_OFF                     LED_Set
 #define LED_TOGGLE                  LED_Toggle
 
-const uint32_t nvm_user_start_address[NVMCTRL_FLASH_PAGESIZE/4] __attribute__((address(NVMCTRL_FLASH_START_ADDRESS+0x20000)))= {0};
+// Define a constant array in Flash.
+// It must be aligned to block boundary and size has to be in multiple of blocks
+const uint8_t nvm_user_start_address[NVMCTRL_FLASH_BLOCKSIZE] __attribute__((aligned(NVMCTRL_FLASH_BLOCKSIZE),keep,externally_visible,space(prog)))= {0};
 
-void populate_buffer(uint32_t* data)
+
+void populate_buffer(uint8_t* data)
 {
     int i = 0;
 
-    for (i = 0; i < (NVMCTRL_FLASH_PAGESIZE/4); i++)
+    for (i = 0; i < (NVMCTRL_FLASH_PAGESIZE); i++)
     {
         *(data + i) = i;
     }
@@ -72,38 +75,36 @@ void populate_buffer(uint32_t* data)
 // Section: Main Entry Point
 // *****************************************************************************
 // *****************************************************************************
-uint16_t u16_nvmStatusGet = 0x00;
 int main ( void )
 {
-    uint32_t data [NVMCTRL_FLASH_PAGESIZE/4] = {0};    
+    uint8_t data [NVMCTRL_FLASH_PAGESIZE] = {0};
     
     /* Initialize all modules */
     SYS_Initialize ( NULL );
-    
+
     LED_OFF();
 
     /*Populate random data to programmed*/
-    populate_buffer(data);    
-    u16_nvmStatusGet    = NVMCTRL_StatusGet();
-    while(!(u16_nvmStatusGet & NVMCTRL_STATUS_READY_Msk));
+    populate_buffer(data);
+
+    while(NVMCTRL_IsBusy());
 
     /* Erase the block */
     NVMCTRL_BlockErase((uint32_t)nvm_user_start_address);
 
-    u16_nvmStatusGet    = NVMCTRL_StatusGet();
-    while(!(u16_nvmStatusGet & NVMCTRL_STATUS_READY_Msk));
+    while(NVMCTRL_IsBusy());
 
     /* Program 512 byte page */
     NVMCTRL_PageWrite((uint32_t *)data, (uint32_t)nvm_user_start_address);
-    u16_nvmStatusGet    = NVMCTRL_StatusGet();
-    while(!(u16_nvmStatusGet & NVMCTRL_STATUS_READY_Msk));
-    
+
+    while(NVMCTRL_IsBusy());
+
     /* Verify the programmed content*/
-    if (!memcmp(data, (void *)nvm_user_start_address, NVMCTRL_FLASH_PAGESIZE/4))
+    if (!memcmp(data, (void *)nvm_user_start_address, NVMCTRL_FLASH_PAGESIZE))
     {
         LED_ON();
     }
-    
+
     while ( true )
     {
         /* Maintain state machines of all polled MPLAB Harmony modules. */

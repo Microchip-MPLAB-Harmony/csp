@@ -85,8 +85,8 @@ uint8_t rxPongBuffer[sizeof(txPongBuffer)];
 
 volatile APP_STATES state = APP_STATE_INITIALIZE;
 
-__attribute__((__aligned__(16))) __attribute__((space(data), address(0x30000500))) static dmac_descriptor_registers_t pTxLinkedListDesc[2];
-__attribute__((__aligned__(16))) __attribute__((space(data), address(0x30000520))) static dmac_descriptor_registers_t pRxLinkedListDesc[2];
+dmac_descriptor_registers_t pTxLinkedListDesc[2] __attribute__((aligned(16),space(data),address(0x30000500),keep,externally_visible));
+dmac_descriptor_registers_t pRxLinkedListDesc[2] __attribute__((aligned(16),space(data),address(0x30000520),keep,externally_visible));
 
 #define PING_BUFEER0_TX_BTCTRL  (DMAC_BTCTRL_STEPSIZE_X1 | DMAC_BTCTRL_SRCINC_Msk |     \
                                 DMAC_BTCTRL_BEATSIZE_BYTE | DMAC_BTCTRL_BLOCKACT_INT | DMAC_BTCTRL_VALID_Msk)
