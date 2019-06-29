@@ -71,8 +71,7 @@ const uint16_t sine_wave[NUM_OF_SAMPLES] = {
         0x5A6, 0x5DB, 0x613, 0x64C, 0x687, 0x6C4, 0x701, 0x740, 0x780, 0x7C0        
 };
 
-
-__attribute__((__aligned__(16))) __attribute__((space(data), address(0x30000500))) static dmac_descriptor_registers_t pTxLinkedListDesc[1];
+dmac_descriptor_registers_t pTxLinkedListDesc[1] __attribute__((aligned(16),space(data),address(0x30000500),keep,externally_visible));
 
 #define BUFFER_TX_BTCTRL    (DMAC_BTCTRL_STEPSIZE_X2 | DMAC_BTCTRL_SRCINC_Msk |     \
                              DMAC_BTCTRL_BEATSIZE_HWORD | DMAC_BTCTRL_BLOCKACT_INT | DMAC_BTCTRL_VALID_Msk)

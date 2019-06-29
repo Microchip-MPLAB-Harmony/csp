@@ -55,7 +55,9 @@
 #define LED_OFF                     LED_Set
 #define LED_TOGGLE                  LED_Toggle
 
-const uint8_t nvm_user_start_address[NVMCTRL_FLASH_PAGESIZE] __attribute__((address(NVMCTRL_FLASH_START_ADDRESS+0x20000)))= {0};
+// Define a constant array in Flash.
+// It must be aligned to row boundary and size has to be in multiple of rows
+const uint8_t nvm_user_start_address[NVMCTRL_FLASH_ROWSIZE] __attribute__((aligned(NVMCTRL_FLASH_ROWSIZE),keep,externally_visible,space(prog)))= {0};
 
 void populate_buffer(uint8_t* data)
 {
@@ -75,16 +77,16 @@ void populate_buffer(uint8_t* data)
 
 int main ( void )
 {
-    uint8_t data [NVMCTRL_FLASH_PAGESIZE] = {0};    
-     
+    uint8_t data [NVMCTRL_FLASH_PAGESIZE] = {0};
+
     /* Initialize all modules */
     SYS_Initialize ( NULL );
-    
+
     LED_ON();
 
     /*Populate random data to programmed*/
-    populate_buffer(data);    
-    
+    populate_buffer(data);
+
     while(NVMCTRL_IsBusy());
 
     /* Erase the row */
@@ -95,13 +97,13 @@ int main ( void )
     /* Program 64 byte page */
     NVMCTRL_PageWrite((uint32_t *)data, (uint32_t)nvm_user_start_address);
     while(NVMCTRL_IsBusy());
-    
+
     /* Verify the programmed content*/
     if (!memcmp(data, (void *)nvm_user_start_address, NVMCTRL_FLASH_PAGESIZE))
     {
         LED_ON();
     }
-    
+
     while ( true )
     {
         /* Maintain state machines of all polled MPLAB Harmony modules. */
