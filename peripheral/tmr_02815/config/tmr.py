@@ -392,7 +392,7 @@ def instantiateComponent(tmrComponent):
     tmrSym_EXT_CLOCK_FREQ.setDependencies(tmr1TsyncVisible, ["TIMER_SRC_SEL"])
 
     tmrSym_CLOCK_FREQ = tmrComponent.createIntegerSymbol("TIMER_CLOCK_FREQ", None)
-    tmrSym_CLOCK_FREQ.setLabel("Timer1 Clock Frequency")
+    tmrSym_CLOCK_FREQ.setLabel("Timer Clock Frequency")
     tmrSym_CLOCK_FREQ.setReadOnly(True)
     tmrSym_CLOCK_FREQ.setDefaultValue(int(Database.getSymbolValue("core", tmrInstanceName.getValue() + "_CLOCK_FREQUENCY")))
     tmrSym_CLOCK_FREQ.setDependencies(calcTimerFreq, ["core." + tmrInstanceName.getValue() + "_CLOCK_FREQUENCY","TMR_PRESCALER_VALUE",
