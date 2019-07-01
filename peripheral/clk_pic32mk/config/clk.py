@@ -1580,10 +1580,17 @@ if __name__ == "__main__":
     #ADCHS Clock source
     global adchs_clock_map
     adchs_clock_map = {}
-    adchs_clock_map[0] = "CONFIG_SYS_CLK_PBCLK5_FREQ"
-    adchs_clock_map[1] = "CONFIG_SYS_CLK_FRCDIV"
-    adchs_clock_map[2] = "CONFIG_SYS_CLK_REFCLK3_FREQ"
-    adchs_clock_map[3] = "SYS_CLK_FREQ"
+
+    if Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001402":  #PIC32MK GPD/GPE/MCF
+        adchs_clock_map[0] = "CONFIG_SYS_CLK_PBCLK5_FREQ"
+        adchs_clock_map[1] = "CONFIG_SYS_CLK_FRCDIV"
+        adchs_clock_map[2] = "CONFIG_SYS_CLK_REFCLK3_FREQ"
+        adchs_clock_map[3] = "SYS_CLK_FREQ"
+    elif Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001570": #PIC32MK GPH/GPG/MCJ
+        adchs_clock_map[0] = "SYS_CLK_FREQ"
+        adchs_clock_map[1] = "CONFIG_SYS_CLK_FRCDIV"
+        adchs_clock_map[2] = "CONFIG_SYS_CLK_REFCLK3_FREQ"
+        adchs_clock_map[3] = "SYS_CLK_FREQ"
 
     peripheralClockMenu = coreComponent.createMenuSymbol("PERIPHERAL_CLK_CONFIG", SYM_CLK_MENU)
     peripheralClockMenu.setLabel("Peripheral Clock Configuration")
@@ -1616,6 +1623,9 @@ if __name__ == "__main__":
                     peripheral_clock_freq.setDefaultValue(int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK" + peripheralBus[0] + "_FREQ")))
                     peripheral_clock_freq.setDependencies(rtccClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", "rtcc.RTCC_CLOCK_SOURCE", "CONFIG_SYS_CLK_PBCLK" + peripheralBus[0] + "_FREQ",
                                                                                          "CONFIG_SYS_CLK_CONFIG_SECONDARY_XTAL"])
+                elif peripheralName == "ADCHS":
+                    peripheral_clock_freq.setDependencies(adchsClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", "adchs.ADCCON3__ADCSEL",
+                                                                                        "SYS_CLK_FREQ", "CONFIG_SYS_CLK_REFCLK3_FREQ", "CONFIG_SYS_CLK_FRCDIV"])
                 else:
                     if peripheral_clock_enable.getValue() == True:
                         peripheral_clock_freq.setDefaultValue(int(Database.getSymbolValue("core", "SYS_CLK_FREQ")))
