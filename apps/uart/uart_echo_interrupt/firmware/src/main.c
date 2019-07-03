@@ -53,9 +53,6 @@
 
 #define RX_BUFFER_SIZE                  10
 
-#define LED_On()                        LED_Set()
-#define LED_Off()                       LED_Clear()
-
 char messageStart[] = "****  UART echo demo: Non-blocking Transfer with the interrupt  ****\r\n\
 **** Type 10 characters. The received characters are echoed back, and the LED is toggled ****\r\n";
 char receiveBuffer[RX_BUFFER_SIZE] = {};
@@ -93,8 +90,7 @@ void APP_ReadCallback(uintptr_t context)
 int main ( void )
 {
     /* Initialize all modules */
-    SYS_Initialize ( NULL );
-    LED_Off();
+    SYS_Initialize ( NULL );    
 
     /* Register callback functions and send start message */
     UART2_WriteCallbackRegister(APP_WriteCallback, 0);
