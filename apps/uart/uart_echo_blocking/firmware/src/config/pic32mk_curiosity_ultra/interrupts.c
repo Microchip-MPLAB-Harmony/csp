@@ -1,21 +1,24 @@
 /*******************************************************************************
-  Main Source File
+ System Interrupts File
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    main.c
+    interrupt.c
 
   Summary:
-    This file contains the "main" function for a project.
+    Interrupt vectors mapping
 
   Description:
-    This file contains the "main" function for a project.  The
-    "main" function calls the "SYS_Initialize" function to initialize the state
-    machines of all modules in the system
+    This file maps all the interrupt vectors to their corresponding
+    implementations. If a particular module interrupt is used, then its ISR
+    definition can be found in corresponding PLIB source file. If a module
+    interrupt is not used, then its ISR implementation is mapped to dummy
+    handler.
  *******************************************************************************/
 
+// DOM-IGNORE-BEGIN
 /*******************************************************************************
 * Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
 *
@@ -37,7 +40,8 @@
 * FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
-*******************************************************************************/
+ *******************************************************************************/
+// DOM-IGNORE-END
 
 // *****************************************************************************
 // *****************************************************************************
@@ -45,73 +49,22 @@
 // *****************************************************************************
 // *****************************************************************************
 
-#include <stddef.h>                     // Defines NULL
-#include <stdbool.h>                    // Defines true
-#include <stdlib.h>                     // Defines EXIT_FAILURE
-#include "definitions.h"                // SYS function prototypes
-
-#define RX_BUFFER_SIZE 256
-
-char messageStart[] = "**** UART Line Echo Demo: Blocking Transfer without the interrupt ****\r\n\
-**** Type a line of characters and press the Enter key. **** \r\n\
-**** Entered line will be echoed back, and the LED is toggled. ****\r\n";
-char newline[] = "\r\n";
-char errorMessage[] = "\r\n**** UART error has occurred ****\r\n";
-char receiveBuffer[RX_BUFFER_SIZE] = {};
-char data = 0;
+#include "definitions.h"
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: Main Entry Point
+// Section: System Interrupt Vector Functions
 // *****************************************************************************
 // *****************************************************************************
 
-int main ( void )
-{
-    uint8_t rxCounter=0;
 
-    /* Initialize all modules */
-    SYS_Initialize ( NULL );    
 
-    /* Send start message */
-    UART2_Write(&messageStart, sizeof(messageStart));
 
-    while ( true )
-    {
-        /* Check if there is a received character */
-        if(UART2_ReceiverIsReady() == true)
-        {
-            if(UART2_ErrorGet() == UART_ERROR_NONE)
-            {
-                UART2_Read(&data, 1);
 
-                if((data == '\n') || (data == '\r'))
-                {
-                    UART2_Write(newline,sizeof(newline));
-                    UART2_Write(receiveBuffer,rxCounter);
-                    UART2_Write(newline,sizeof(newline));
-                    rxCounter = 0;
-                    LED_Toggle();
-                }
-                else
-                {
-                    receiveBuffer[rxCounter++] = data;
-                }
-            }
-            else
-            {
-                UART2_Write(errorMessage,sizeof(errorMessage));
-            }
-        }
-    }
+/* All the handlers are defined here.  Each will call its PLIB-specific function. */
 
-    /* Execution should not come here during normal operation */
-
-    return ( EXIT_FAILURE );
-}
 
 
 /*******************************************************************************
  End of File
 */
-
