@@ -92,7 +92,7 @@ int main ( void )
     SYS_Initialize ( NULL );
 
     printf(" ------------------------------ \r\n");
-    printf("            CAN Demo            \r\n");
+    printf("            CAN FD Demo          \r\n");
     printf(" ------------------------------ \r\n");
     
     /* Set Message RAM Configuration */
