@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name:
-    main_pic32mk_curiosity_ultra.c
+    main_pic32mk_mcj_curiosity_pro.c
 
   Summary:
     This file contains the "main" function for a project.
