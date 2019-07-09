@@ -26,6 +26,7 @@ from os.path import join
 from xml.etree import ElementTree
 
 global enableMenu
+global updateRefFreq
 global get_val_from_str
 global set_refocon_value
 global set_pbdiv_value
@@ -262,6 +263,17 @@ def _get_bitfield_names(node, outputList):
 
 def enableMenu(menu, event):
     menu.setVisible(event["value"])
+def updateRefFreq(menu, event):
+    if event["value"] == True:
+        ii = event["id"].split("_")[3][-1]
+        targetName = "__REFCLK" + ii + "_DEF_FREQ"
+        params = ATDF.getNode('/avr-tools-device-file/devices/device/parameters')
+        paramsChildren = params.getChildren()
+        for param in paramsChildren:  # find parameter we are interested in now
+            if(param.getAttribute("name") == targetName):
+                menu.setValue(param.getAttribute("value"),2)
+    else:
+        menu.setValue("0",2)
 
 def get_val_from_str(stringVal):
     # converts string-based number to integer
@@ -713,17 +725,12 @@ def calculated_clock_frequencies(clk_comp, clk_menu, join_path, element_tree, ne
         targetName = "CONFIG_SYS_CLK_REFCLK"+ii+"_FREQ"
         symbolRefoscFreqList[index] = clk_comp.createStringSymbol(targetName, sym_calc_freq_menu)
         symbolRefoscFreqList[index].setLabel("Reference Clock #"+ii+" Frequency (Hz)")
-        symbolRefoscFreqList[index].setVisible(False)
-        targetName = "CONFIG_SYS_CLK_REFCLK"+ii+"_ENABLE"
-        symbolRefoscFreqList[index].setDependencies(enableMenu, [targetName])
-        # get default value from atdf file
-        targetName = "__REFCLK" + ii + "_DEF_FREQ"
-        params = ATDF.getNode('/avr-tools-device-file/devices/device/parameters')
-        paramsChildren = params.getChildren()
-        for param in paramsChildren:  # find parameter we are interested in now
-            if(param.getAttribute("name") == targetName):
-                symbolRefoscFreqList[index].setDefaultValue(param.getAttribute("value"))
+        symbolRefoscFreqList[index].setVisible(True)
+        symbolRefoscFreqList[index].setDefaultValue("0")
         symbolRefoscFreqList[index].setReadOnly(True)
+        targetName = "CONFIG_SYS_CLK_REFCLK"+ii+"_ENABLE"
+        symbolRefoscFreqList[index].setDependencies(updateRefFreq, [targetName])
+        # get default value from atdf file
         index += 1
 
 global find_lsb_position
