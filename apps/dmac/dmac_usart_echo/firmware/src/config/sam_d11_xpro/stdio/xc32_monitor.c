@@ -38,12 +38,20 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
+#include "definitions.h"
 
 int _mon_getc(int canblock)
 {
-   return 0;
+   volatile int c = 0;
+   while(SERCOM2_USART_Read((void*)&c, 1) != true);
+   return c;
 }
 
 void _mon_putc(char c)
 {
+   uint8_t size = 0;
+   do
+   {
+       size = SERCOM2_USART_Write((void*)&c, 1);
+   }while (size != 1);
 }

@@ -84,7 +84,7 @@ void USB_Handler                ( void ) __attribute__((weak, alias("Dummy_Handl
 void EVSYS_Handler              ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void SERCOM0_Handler            ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void SERCOM1_Handler            ( void ) __attribute__((weak, alias("Dummy_Handler")));
-void SERCOM2_USART_InterruptHandler ( void ) __attribute__((weak, alias("Dummy_Handler")));
+void SERCOM2_Handler            ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void TCC0_Handler               ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void TC1_Handler                ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void TC2_Handler                ( void ) __attribute__((weak, alias("Dummy_Handler")));
@@ -122,7 +122,7 @@ const DeviceVectors exception_table=
     .pfnEVSYS_Handler              = ( void * ) EVSYS_Handler,
     .pfnSERCOM0_Handler            = ( void * ) SERCOM0_Handler,
     .pfnSERCOM1_Handler            = ( void * ) SERCOM1_Handler,
-    .pfnSERCOM2_Handler            = ( void * ) SERCOM2_USART_InterruptHandler,
+    .pfnSERCOM2_Handler            = ( void * ) SERCOM2_Handler,
     .pfnTCC0_Handler               = ( void * ) TCC0_Handler,
     .pfnTC1_Handler                = ( void * ) TC1_Handler,
     .pfnTC2_Handler                = ( void * ) TC2_Handler,
