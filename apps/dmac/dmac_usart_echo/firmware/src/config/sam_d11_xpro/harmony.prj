@@ -27,8 +27,8 @@
           <Name dnOrder="1">interrupts.c</Name>
           <LogicalPath dnOrder="2">config/sam_d11_xpro/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">A686B6AF150A6BAAE8CF19FE9A3DC219</GeneratedChecksum>
-          <UserChecksum dnOrder="5">A686B6AF150A6BAAE8CF19FE9A3DC219</UserChecksum>
+          <GeneratedChecksum dnOrder="4">D5DD592BB7A8432DF316542162FDBD3E</GeneratedChecksum>
+          <UserChecksum dnOrder="5">D5DD592BB7A8432DF316542162FDBD3E</UserChecksum>
         </File>
         <File dnOrder="3">
           <Type dnOrder="0">SOURCE</Type>
@@ -75,8 +75,8 @@
           <Name dnOrder="1">plib_nvic.c</Name>
           <LogicalPath dnOrder="2">config/sam_d11_xpro/peripheral/nvic/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/nvic/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">CFA6F9B1EE2ECE7D841A7D69A3864929</GeneratedChecksum>
-          <UserChecksum dnOrder="5">CFA6F9B1EE2ECE7D841A7D69A3864929</UserChecksum>
+          <GeneratedChecksum dnOrder="4">F57A228A5DE57552AE9BB6387F644163</GeneratedChecksum>
+          <UserChecksum dnOrder="5">F57A228A5DE57552AE9BB6387F644163</UserChecksum>
         </File>
         <File dnOrder="9">
           <Type dnOrder="0">SOURCE</Type>
@@ -91,16 +91,16 @@
           <Name dnOrder="1">plib_port.c</Name>
           <LogicalPath dnOrder="2">config/sam_d11_xpro/peripheral/port/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/port/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">49ECD0B7A0729655B85FB13D7C0EAA51</GeneratedChecksum>
-          <UserChecksum dnOrder="5">49ECD0B7A0729655B85FB13D7C0EAA51</UserChecksum>
+          <GeneratedChecksum dnOrder="4">1F624010C717B804F1C14C022462F888</GeneratedChecksum>
+          <UserChecksum dnOrder="5">1F624010C717B804F1C14C022462F888</UserChecksum>
         </File>
         <File dnOrder="11">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_sercom2_usart.c</Name>
           <LogicalPath dnOrder="2">config/sam_d11_xpro/peripheral/sercom/usart/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/sercom/usart/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">2A5CF36A1B66E9835FA20C162B70352A</GeneratedChecksum>
-          <UserChecksum dnOrder="5">2A5CF36A1B66E9835FA20C162B70352A</UserChecksum>
+          <GeneratedChecksum dnOrder="4">33C7AA16B8FABC3FBD26F1C044A74D1F</GeneratedChecksum>
+          <UserChecksum dnOrder="5">33C7AA16B8FABC3FBD26F1C044A74D1F</UserChecksum>
         </File>
         <File dnOrder="12">
           <Type dnOrder="0">SOURCE</Type>
@@ -115,8 +115,8 @@
           <Name dnOrder="1">xc32_monitor.c</Name>
           <LogicalPath dnOrder="2">config/sam_d11_xpro/stdio/</LogicalPath>
           <PhysicalPath dnOrder="3">/stdio/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">0CDCE9B6891797FCD2AEA243F841353F</GeneratedChecksum>
-          <UserChecksum dnOrder="5">0CDCE9B6891797FCD2AEA243F841353F</UserChecksum>
+          <GeneratedChecksum dnOrder="4">33404ECBACC7E8AB9F3D73100596B2A3</GeneratedChecksum>
+          <UserChecksum dnOrder="5">33404ECBACC7E8AB9F3D73100596B2A3</UserChecksum>
         </File>
         <File dnOrder="14">
           <Type dnOrder="0">HEADER</Type>
@@ -219,8 +219,8 @@
           <Name dnOrder="1">definitions.h</Name>
           <LogicalPath dnOrder="2">config/sam_d11_xpro/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">1087F7644B7C9ABB36014FD44464D0B1</GeneratedChecksum>
-          <UserChecksum dnOrder="5">1087F7644B7C9ABB36014FD44464D0B1</UserChecksum>
+          <GeneratedChecksum dnOrder="4">BF9B609C4C953FAEC6476D4E42961872</GeneratedChecksum>
+          <UserChecksum dnOrder="5">BF9B609C4C953FAEC6476D4E42961872</UserChecksum>
         </File>
         <File dnOrder="27">
           <Type dnOrder="0">HEADER</Type>
@@ -371,8 +371,8 @@
           <Name dnOrder="1">plib_sercom2_usart.h</Name>
           <LogicalPath dnOrder="2">config/sam_d11_xpro/peripheral/sercom/usart/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/sercom/usart/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">DA82968DE4D4C2F0BB43D1306891C34F</GeneratedChecksum>
-          <UserChecksum dnOrder="5">DA82968DE4D4C2F0BB43D1306891C34F</UserChecksum>
+          <GeneratedChecksum dnOrder="4">00C3980E8783050E40894918F1788F2B</GeneratedChecksum>
+          <UserChecksum dnOrder="5">00C3980E8783050E40894918F1788F2B</UserChecksum>
         </File>
         <File dnOrder="46">
           <Type dnOrder="0">HEADER</Type>
