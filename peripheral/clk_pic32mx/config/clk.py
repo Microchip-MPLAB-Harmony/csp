@@ -27,6 +27,7 @@ from xml.etree import ElementTree
 import re
 
 global enableMenu
+global updateRefFreq
 global get_val_from_str
 global set_refocon_value
 global set_refotrim_value
@@ -245,6 +246,18 @@ def enableMenu(menu, event):
     # simple visible/invisible callback for menu items
     menu.setVisible(event["value"])
 
+def updateRefFreq(menu, event):
+    if event["value"] == True:
+	    # get default value from atdf file
+	    targetName = "__REFCLK_DEF_FREQ"
+	    params = ATDF.getNode('/avr-tools-device-file/devices/device/parameters')
+	    paramsChildren = params.getChildren()
+	    for param in paramsChildren:  # find parameter we are interested in now
+	        if(param.getAttribute("name") == targetName):
+	            menu.setValue(param.getAttribute("value"),2)
+    else:
+        menu.setValue("0",2)
+
 def get_val_from_str(stringVal):
     '''
     Converts string-based number to integer
@@ -356,17 +369,12 @@ def calculated_clock_frequencies(clk_comp, clk_menu, join_path, element_tree, ne
     targetName = "CONFIG_SYS_CLK_REFCLK_FREQ"
     symbolRefoscFreqList = clk_comp.createStringSymbol(targetName, sym_calc_freq_menu)
     symbolRefoscFreqList.setLabel("Reference Clock Frequency (Hz)")
-    symbolRefoscFreqList.setVisible(False)
-    targetName = "CONFIG_SYS_CLK_REFCLK_ENABLE"
-    symbolRefoscFreqList.setDependencies(enableMenu, [targetName])
-    # get default value from atdf file
-    targetName = "__REFCLK_DEF_FREQ"
-    params = ATDF.getNode('/avr-tools-device-file/devices/device/parameters')
-    paramsChildren = params.getChildren()
-    for param in paramsChildren:  # find parameter we are interested in now
-        if(param.getAttribute("name") == targetName):
-            symbolRefoscFreqList.setDefaultValue(param.getAttribute("value"))
+    symbolRefoscFreqList.setVisible(True)
+    symbolRefoscFreqList.setDefaultValue("0")
     symbolRefoscFreqList.setReadOnly(True)
+    targetName = "CONFIG_SYS_CLK_REFCLK_ENABLE"
+    symbolRefoscFreqList.setDependencies(updateRefFreq, [targetName])
+
 
 global find_lsb_position
 def find_lsb_position(field):
