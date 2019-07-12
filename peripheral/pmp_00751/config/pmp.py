@@ -162,15 +162,16 @@ def instantiateComponent(pmpComponent):
     for ii in pmpWAITE_names:
         pmpWaitE.addKey( ii['desc'], ii['value'], ii['key'] )
 
-    pmpMODE16_names = []
-    _get_bitfield_names(pmpValGrp_PMMODE_MODE16, pmpMODE16_names)
-    pmpMode16 = pmpComponent.createKeyValueSetSymbol("PMMODE_MODE16", pmpSym_MasterModeMenu)
-    pmpMode16.setLabel("Transfer Size")
-    pmpMode16.setDefaultValue(0)
-    pmpMode16.setOutputMode("Value")
-    pmpMode16.setDisplayMode("Description")
-    for ii in pmpMODE16_names:
-        pmpMode16.addKey( ii['desc'], ii['value'], ii['key'] )
+    if pmpValGrp_PMMODE_MODE16 is not None:
+        pmpMODE16_names = []
+        _get_bitfield_names(pmpValGrp_PMMODE_MODE16, pmpMODE16_names)
+        pmpMode16 = pmpComponent.createKeyValueSetSymbol("PMMODE_MODE16", pmpSym_MasterModeMenu)
+        pmpMode16.setLabel("Transfer Size")
+        pmpMode16.setDefaultValue(0)
+        pmpMode16.setOutputMode("Value")
+        pmpMode16.setDisplayMode("Description")
+        for ii in pmpMODE16_names:
+            pmpMode16.addKey( ii['desc'], ii['value'], ii['key'] )
 
     pmpINCM_names = []
     _get_bitfield_names(pmpValGrp_PMMODE_INCM, pmpINCM_names)
