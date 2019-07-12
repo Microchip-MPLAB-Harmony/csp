@@ -140,6 +140,12 @@
 <#if CONFIG_FUSBIDIO?has_content>
 #pragma config FUSBIDIO =   ${CONFIG_FUSBIDIO}
 </#if>
-
-
-
+<#if CONFIG_FMIIEN?has_content>
+#pragma config FMIIEN =     ${CONFIG_FMIIEN}
+</#if>
+<#if CONFIG_FETHIO?has_content>
+#pragma config FETHIO =     ${CONFIG_FETHIO}
+</#if>
+<#if CONFIG_FCANIO?has_content>
+#pragma config FCANIO =     ${CONFIG_FCANIO}
+</#if>
