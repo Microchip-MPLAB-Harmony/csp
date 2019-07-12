@@ -146,7 +146,7 @@ void ${ADC_INSTANCE_NAME}_CallbackRegister(ADC_CALLBACK callback, uintptr_t cont
 
 void ${ADC_INSTANCE_NAME}_InterruptHandler(void)
 {
-    IFS${ADC_IFS_REG_INDEX}CLR = _IFS0_AD1IF_MASK;
+    IFS${ADC_IFS_REG_INDEX}CLR = _IFS${ADC_IFS_REG_INDEX}_AD1IF_MASK;
 
     if (${ADC_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)
     {
