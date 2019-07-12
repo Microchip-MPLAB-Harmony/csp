@@ -68,8 +68,10 @@ void ${PMP_INSTANCE_NAME}_Initialize( void )
     /* Configure PMP operation mode */
     PMMODEbits.MODE = ${PMMODE_MODE};
 
+<#if PMMODE_MODE16?has_content>
     /* 8/16 - bit data transfer */
     PMMODEbits.MODE16 = ${PMMODE_MODE16};
+</#if>
 
 <#if PMMODE_READ_STROBE == true>
     PMCONSET = _PMCON_PTRDEN_MASK;
