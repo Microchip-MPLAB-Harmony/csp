@@ -111,7 +111,7 @@ static void CLK_USBClockInitialize ( void )
 	
 	
 	/* Enable Full-Speed USB Clock Output */
-    PMC_REGS->PMC_SCER |= PMC_SCER_UHP(${PMC_SCER_UHPCLK?then(1,0)});
+    PMC_REGS->PMC_SCER = PMC_SCER_UHP(1);
 }
 </#if>
 
@@ -181,7 +181,7 @@ Initialize LCDC clock
 
 static void CLK_LCDCClockInitialize(void)
 {
-    PMC_REGS->PMC_SCER |= PMC_SCER_LCDCK(1);
+    PMC_REGS->PMC_SCER = PMC_SCER_LCDCK(1);
 }
 </#if>
 
@@ -192,7 +192,7 @@ Initialize LCDC clock
 
 static void CLK_ISCClockInitialize(void)
 {
-    PMC_REGS->PMC_SCER |= PMC_SCER_ISCCK(1);
+    PMC_REGS->PMC_SCER = PMC_SCER_ISCCK(1);
 }
 </#if>
 
