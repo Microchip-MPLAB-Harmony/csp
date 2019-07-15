@@ -35,7 +35,7 @@ global set_refotrim_value
 global peripheralModuleDisableDict
 peripheralModuleDisableDict = {}
 
-peripheralModuleDisableDict = {
+peripheralModuleDisableDict_1xx_2xx_3xx_4xx = {
 
         #Peripheral : ["PMD register no", "PMD register bit no"]
 
@@ -77,6 +77,54 @@ peripheralModuleDisableDict = {
         "RTCC": ["6", "0"],
         "REFO": ["6", "1"],
         "PMP": ["6", "16"]
+}
+
+peripheralModuleDisableDict_5xx_6xx_7xx = {
+
+#all the keys have empty list because 5xx/6xx/7xx series devices do not have PMD feature.
+
+        "ADC": [],
+        "CTMU": [],
+        "CVR": [],
+        "HLVD": [],
+        "CMP1": [],
+        "CMP2": [],
+        "CMP3": [],
+        "ICAP1": [],
+        "ICAP2": [],
+        "ICAP3": [],
+        "ICAP4": [],
+        "ICAP5": [],
+        "OCMP1": [],
+        "OCMP2": [],
+        "OCMP3": [],
+        "OCMP4": [],
+        "OCMP5": [],
+        "TMR1": [],
+        "TMR2": [],
+        "TMR3": [],
+        "TMR4": [],
+        "TMR5": [],
+        "UART1": [],
+        "UART2": [],
+        "UART3": [],
+        "UART4": [],
+        "UART5": [],
+        "UART6": [],
+        "SPI1": [],
+        "SPI2": [],
+        "SPI3": [],
+        "SPI4": [],
+        "I2C1": [],
+        "I2C2": [],
+        "I2C3": [],
+        "I2C4": [],
+        "I2C5": [],
+        "USB": [],
+        "CAN1": [],
+        "CAN2": [],
+        "RTCC": [],
+        "PMP": []
 }
 
 def updateMaxFreq(symbol, event):
@@ -252,13 +300,13 @@ def enableMenu(menu, event):
 
 def updateRefFreq(menu, event):
     if event["value"] == True:
-        # get default value from atdf file
-        targetName = "__REFCLK_DEF_FREQ"
-        params = ATDF.getNode('/avr-tools-device-file/devices/device/parameters')
-        paramsChildren = params.getChildren()
-        for param in paramsChildren:  # find parameter we are interested in now
-            if(param.getAttribute("name") == targetName):
-                menu.setValue(param.getAttribute("value"),2)
+	    # get default value from atdf file
+	    targetName = "__REFCLK_DEF_FREQ"
+	    params = ATDF.getNode('/avr-tools-device-file/devices/device/parameters')
+	    paramsChildren = params.getChildren()
+	    for param in paramsChildren:  # find parameter we are interested in now
+	        if(param.getAttribute("name") == targetName):
+	            menu.setValue(param.getAttribute("value"),2)
     else:
         menu.setValue("0",2)
 
@@ -369,15 +417,16 @@ def calculated_clock_frequencies(clk_comp, clk_menu, join_path, element_tree, ne
             symbolPbFreqList.setDefaultValue(param.getAttribute("value"))
     symbolPbFreqList.setReadOnly(True)
 
-    # Reference Clock frequency
-    targetName = "CONFIG_SYS_CLK_REFCLK_FREQ"
-    symbolRefoscFreqList = clk_comp.createStringSymbol(targetName, sym_calc_freq_menu)
-    symbolRefoscFreqList.setLabel("Reference Clock Frequency (Hz)")
-    symbolRefoscFreqList.setVisible(True)
-    symbolRefoscFreqList.setDefaultValue("0")
-    symbolRefoscFreqList.setReadOnly(True)
-    targetName = "CONFIG_SYS_CLK_REFCLK_ENABLE"
-    symbolRefoscFreqList.setDependencies(updateRefFreq, [targetName])
+    if clkRegGrp_REFOCON is not None:
+        # Reference Clock frequency
+        targetName = "CONFIG_SYS_CLK_REFCLK_FREQ"
+        symbolRefoscFreqList = clk_comp.createStringSymbol(targetName, sym_calc_freq_menu)
+        symbolRefoscFreqList.setLabel("Reference Clock Frequency (Hz)")
+        symbolRefoscFreqList.setVisible(True)
+        symbolRefoscFreqList.setDefaultValue("0")
+        symbolRefoscFreqList.setReadOnly(True)
+        targetName = "CONFIG_SYS_CLK_REFCLK_ENABLE"
+        symbolRefoscFreqList.setDependencies(updateRefFreq, [targetName])
 
 
 global find_lsb_position
@@ -584,77 +633,78 @@ def scan_atdf_for_refocon_fields(coreComponent, parentMenu, submenu1):
     global enSymId
 
     # Scan through bitfields of REFOCON
-    child = clkRegGrp_REFOCON.getChildren()
-    for oscrefoconNode in child:
-        if(oscrefoconNode.getAttribute("name") == "RODIV"):       # REFOCON[RODIV] bitfield
-            maxValue, minValue = find_max_min(clkValGrp_REFOCON__RODIV)
-            symbolRefoconRodivVal = coreComponent.createIntegerSymbol("CONFIG_SYS_CLK_RODIV", submenu1)
-            symbolRefoconRodivVal.setVisible(False)
-            symbolRefoconRodivVal.setMin(minValue)
-            symbolRefoconRodivVal.setMax(maxValue)
-            symbolRefoconRodivVal.setDescription(clkValGrp_REFOCON__RODIV.getAttribute("caption"))
-            symbolRefoconRodivVal.setLabel(clkValGrp_REFOCON__RODIV.getAttribute("caption"))
-            symbolRefoconRodivVal.setDependencies(enableMenu,[enSymId])
-            symbolRefoconRodivVal.setDefaultValue(0)
+    if clkRegGrp_REFOCON is not None:
+        child = clkRegGrp_REFOCON.getChildren()
+        for oscrefoconNode in child:
+            if(oscrefoconNode.getAttribute("name") == "RODIV"):       # REFOCON[RODIV] bitfield
+                maxValue, minValue = find_max_min(clkValGrp_REFOCON__RODIV)
+                symbolRefoconRodivVal = coreComponent.createIntegerSymbol("CONFIG_SYS_CLK_RODIV", submenu1)
+                symbolRefoconRodivVal.setVisible(False)
+                symbolRefoconRodivVal.setMin(minValue)
+                symbolRefoconRodivVal.setMax(maxValue)
+                symbolRefoconRodivVal.setDescription(clkValGrp_REFOCON__RODIV.getAttribute("caption"))
+                symbolRefoconRodivVal.setLabel(clkValGrp_REFOCON__RODIV.getAttribute("caption"))
+                symbolRefoconRodivVal.setDependencies(enableMenu,[enSymId])
+                symbolRefoconRodivVal.setDefaultValue(0)
 
-            # bit mask and lsb for RODIV
-            symbolRefoconRodivMask = coreComponent.createStringSymbol("RODIV_MASK", None)
-            symbolRefoconRodivMask.setVisible(False)
-            symbolRefoconRodivMask.setDefaultValue(oscrefoconNode.getAttribute("mask"))
-            symbolRefoconRodivLsb = coreComponent.createIntegerSymbol("RODIV_MASKLSB", None)
-            symbolRefoconRodivLsb.setVisible(False)
-            lsb = find_lsb_position(oscrefoconNode.getAttribute("mask"))
-            symbolRefoconRodivLsb.setDefaultValue(lsb)
+                # bit mask and lsb for RODIV
+                symbolRefoconRodivMask = coreComponent.createStringSymbol("RODIV_MASK", None)
+                symbolRefoconRodivMask.setVisible(False)
+                symbolRefoconRodivMask.setDefaultValue(oscrefoconNode.getAttribute("mask"))
+                symbolRefoconRodivLsb = coreComponent.createIntegerSymbol("RODIV_MASKLSB", None)
+                symbolRefoconRodivLsb.setVisible(False)
+                lsb = find_lsb_position(oscrefoconNode.getAttribute("mask"))
+                symbolRefoconRodivLsb.setDefaultValue(lsb)
 
-        elif(oscrefoconNode.getAttribute("name") == "ON"):       # REFOCON[OE] bitfield
-            # bit mask and lsb for ON
-            symbolRefoconOnMask = coreComponent.createStringSymbol("ON_MASK", None)
-            symbolRefoconOnMask.setVisible(False)
-            symbolRefoconOnMask.setDefaultValue(oscrefoconNode.getAttribute("mask"))
+            elif(oscrefoconNode.getAttribute("name") == "ON"):       # REFOCON[OE] bitfield
+                # bit mask and lsb for ON
+                symbolRefoconOnMask = coreComponent.createStringSymbol("ON_MASK", None)
+                symbolRefoconOnMask.setVisible(False)
+                symbolRefoconOnMask.setDefaultValue(oscrefoconNode.getAttribute("mask"))
 
-        elif(oscrefoconNode.getAttribute("name") == "OE"):       # REFOCON[OE] bitfield
-            symbolRefoconOeVal = coreComponent.createBooleanSymbol("CONFIG_SYS_CLK_OE", submenu1)
-            symbolRefoconOeVal.setVisible(False)
-            symbolRefoconOeVal.setDescription(clkValGrp_REFOCON__OE.getAttribute("caption"))
-            symbolRefoconOeVal.setLabel(clkValGrp_REFOCON__OE.getAttribute("caption"))
-            symbolRefoconOeVal.setDependencies(enableMenu,[enSymId])
-            symbolRefoconOeVal.setDefaultValue(False)
+            elif(oscrefoconNode.getAttribute("name") == "OE"):       # REFOCON[OE] bitfield
+                symbolRefoconOeVal = coreComponent.createBooleanSymbol("CONFIG_SYS_CLK_OE", submenu1)
+                symbolRefoconOeVal.setVisible(False)
+                symbolRefoconOeVal.setDescription(clkValGrp_REFOCON__OE.getAttribute("caption"))
+                symbolRefoconOeVal.setLabel(clkValGrp_REFOCON__OE.getAttribute("caption"))
+                symbolRefoconOeVal.setDependencies(enableMenu,[enSymId])
+                symbolRefoconOeVal.setDefaultValue(False)
 
-            # bit mask and lsb for OE
-            symbolRefoconOeMask = coreComponent.createStringSymbol("OE_MASK", None)
-            symbolRefoconOeMask.setVisible(False)
-            symbolRefoconOeMask.setDefaultValue(oscrefoconNode.getAttribute("mask"))
+                # bit mask and lsb for OE
+                symbolRefoconOeMask = coreComponent.createStringSymbol("OE_MASK", None)
+                symbolRefoconOeMask.setVisible(False)
+                symbolRefoconOeMask.setDefaultValue(oscrefoconNode.getAttribute("mask"))
 
-        elif(oscrefoconNode.getAttribute("name") == "ROSEL"):       # REFOCON[ROSEL] bitfield
-            rosel = {}
-            _get_bitfield_names(clkValGrp_REFOCON__ROSEL, rosel)
-            symbolRefoconRoselVal = coreComponent.createComboSymbol("CONFIG_SYS_CLK_ROSEL", submenu1, rosel.keys())
-            symbolRefoconRoselVal.setVisible(False)
-            symbolRefoconRoselVal.setDescription(clkValGrp_REFOCON__ROSEL.getAttribute("caption"))
-            symbolRefoconRoselVal.setLabel(clkValGrp_REFOCON__ROSEL.getAttribute("caption"))
-            symbolRefoconRoselVal.setDependencies(enableMenu,[enSymId])
-            symbolRefoconRoselVal.setDefaultValue(_get_default_value(clkRegGrp_REFOCON, 'ROSEL', clkValGrp_REFOCON__ROSEL))
-            # bit mask and lsb for OE
-            symbolRefoconRoselMask = coreComponent.createStringSymbol("ROSEL_MASK", None)
-            symbolRefoconRoselMask.setVisible(False)
-            symbolRefoconRoselMask.setDefaultValue(oscrefoconNode.getAttribute("mask"))
-            symbolRefoconRoselLsb = coreComponent.createIntegerSymbol("ROSEL_MASKLSB", None)
-            symbolRefoconRoselLsb.setVisible(False)
-            lsb = find_lsb_position(oscrefoconNode.getAttribute("mask"))
-            symbolRefoconRoselLsb.setDefaultValue(lsb)
+            elif(oscrefoconNode.getAttribute("name") == "ROSEL"):       # REFOCON[ROSEL] bitfield
+                rosel = {}
+                _get_bitfield_names(clkValGrp_REFOCON__ROSEL, rosel)
+                symbolRefoconRoselVal = coreComponent.createComboSymbol("CONFIG_SYS_CLK_ROSEL", submenu1, rosel.keys())
+                symbolRefoconRoselVal.setVisible(False)
+                symbolRefoconRoselVal.setDescription(clkValGrp_REFOCON__ROSEL.getAttribute("caption"))
+                symbolRefoconRoselVal.setLabel(clkValGrp_REFOCON__ROSEL.getAttribute("caption"))
+                symbolRefoconRoselVal.setDependencies(enableMenu,[enSymId])
+                symbolRefoconRoselVal.setDefaultValue(_get_default_value(clkRegGrp_REFOCON, 'ROSEL', clkValGrp_REFOCON__ROSEL))
+                # bit mask and lsb for OE
+                symbolRefoconRoselMask = coreComponent.createStringSymbol("ROSEL_MASK", None)
+                symbolRefoconRoselMask.setVisible(False)
+                symbolRefoconRoselMask.setDefaultValue(oscrefoconNode.getAttribute("mask"))
+                symbolRefoconRoselLsb = coreComponent.createIntegerSymbol("ROSEL_MASKLSB", None)
+                symbolRefoconRoselLsb.setVisible(False)
+                lsb = find_lsb_position(oscrefoconNode.getAttribute("mask"))
+                symbolRefoconRoselLsb.setDefaultValue(lsb)
 
-    initialRefoconVal = int(clkRegGrp_REFOCON.getAttribute('initval'),16)
+        initialRefoconVal = int(clkRegGrp_REFOCON.getAttribute('initval'),16)
 
-    # to be used by FTL
-    symbolRefoconDefaultValue = coreComponent.createHexSymbol("REFOCON_DEFAULT", None)
-    symbolRefoconDefaultValue.setVisible(False)
-    symbolRefoconDefaultValue.setDefaultValue(initialRefoconVal)
+        # to be used by FTL
+        symbolRefoconDefaultValue = coreComponent.createHexSymbol("REFOCON_DEFAULT", None)
+        symbolRefoconDefaultValue.setVisible(False)
+        symbolRefoconDefaultValue.setDefaultValue(initialRefoconVal)
 
-    # get initial value of REFOCON register from 'initval' field in atdf file
-    symbolRefoconValue = coreComponent.createHexSymbol("REFOCON_VALUE", None)
-    symbolRefoconValue.setVisible(False)
-    symbolRefoconValue.setDefaultValue(initialRefoconVal)
-    symbolRefoconValue.setDependencies(updateRefocon,['CONFIG_SYS_CLK_RODIV','CONFIG_SYS_CLK_ROSEL'])
+        # get initial value of REFOCON register from 'initval' field in atdf file
+        symbolRefoconValue = coreComponent.createHexSymbol("REFOCON_VALUE", None)
+        symbolRefoconValue.setVisible(False)
+        symbolRefoconValue.setDefaultValue(initialRefoconVal)
+        symbolRefoconValue.setDependencies(updateRefocon,['CONFIG_SYS_CLK_RODIV','CONFIG_SYS_CLK_ROSEL'])
 
 def scan_atdf_for_osctun_fields(coreComponent, parentMenu):
     '''
@@ -920,8 +970,13 @@ if __name__ == "__main__":
     CLK_MANAGER_SELECT.setVisible(False)
     if(Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001404"):
         CLK_MANAGER_SELECT.setDefaultValue("clk_pic32mx_xlp:MXClockModel")
-    else:
+        peripheralModuleDisableDict = peripheralModuleDisableDict_1xx_2xx_3xx_4xx.copy()
+    elif Database.getSymbolValue("core", "DEVICE_FAMILY") in ["DS60001168", "DS60001185", "DS60001290"]:
         CLK_MANAGER_SELECT.setDefaultValue("clk_pic32mx1:MXClockModel")
+        peripheralModuleDisableDict = peripheralModuleDisableDict_1xx_2xx_3xx_4xx.copy()
+    elif Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001156":
+        CLK_MANAGER_SELECT.setDefaultValue("clk_pic32mx_no_refOsc:MXClockModel")
+        peripheralModuleDisableDict = peripheralModuleDisableDict_5xx_6xx_7xx.copy()
 
     CLK_CFG_SETTINGS = coreComponent.createMenuSymbol("ClkCfgSettings", SYM_CLK_MENU)
     CLK_CFG_SETTINGS.setDependencies(enableMenu, ["ClkSvcMenu"])
@@ -958,6 +1013,11 @@ if __name__ == "__main__":
         TEMP_RANGE.setReadOnly(True)
         TEMP_RANGE.setDefaultValue(0)
         max_clk_freq_for_selected_temp.setDefaultValue(72000000)
+    elif Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001156":
+        TEMP_RANGE.addKey("RANGE1", "0", "-40C to +105C, DC to 80 MHz")
+        TEMP_RANGE.setReadOnly(True)
+        TEMP_RANGE.setDefaultValue(0)
+        max_clk_freq_for_selected_temp.setDefaultValue(80000000)
 
     max_clk_freq_for_selected_temp.setDependencies(updateMaxFreq, ["CONFIG_TEMPERATURE_RANGE"])
 
@@ -974,21 +1034,12 @@ if __name__ == "__main__":
     CLK_MENU_COMMENT = coreComponent.createCommentSymbol("clkSettingsComment", SYM_CLK_MENU)
     CLK_MENU_COMMENT.setLabel("**** All settings listed here can be configured using the Clock Configurator ****")
 
-    # static or dynamic - always static
-    CLK_SVC_MODE = coreComponent.createKeyValueSetSymbol("clkSvcMode", SYM_CLK_MENU)
-    CLK_SVC_MODE.setDependencies(enableMenu, ["ClkSvcMenu"])
-    CLK_SVC_MODE.setDescription("Static or Dynamic (clocks can be changed during runtime)")
-    CLK_SVC_MODE.setOutputMode("Value")
-    CLK_SVC_MODE.setDisplayMode("Description")
-    CLK_SVC_MODE.addKey("STATIC", "0", "Static: Clocks do not change after being set at startup." )
-    CLK_SVC_MODE.setVisible(False)
-    CLK_SVC_MODE.setSelectedKey("STATIC",1)
-
-    enSymId = "CONFIG_SYS_CLK_REFCLK_ENABLE"
-    enSymbol = coreComponent.createBooleanSymbol(enSymId, CLK_CFG_SETTINGS)
-    enSymbol.setLabel("Enable Reference Clock")
-    enSymbol.setDescription("Sets whether to have reference clock enabled")
-    enSymbol.setDefaultValue(False)
+    if clkRegGrp_REFOCON is not None:
+        enSymId = "CONFIG_SYS_CLK_REFCLK_ENABLE"
+        enSymbol = coreComponent.createBooleanSymbol(enSymId, CLK_CFG_SETTINGS)
+        enSymbol.setLabel("Enable Reference Clock")
+        enSymbol.setDescription("Sets whether to have reference clock enabled")
+        enSymbol.setDefaultValue(False)
 
     # primary oscillator frequency
     POSC_IN_FREQ = coreComponent.createIntegerSymbol("CONFIG_SYS_CLK_CONFIG_PRIMARY_XTAL", CLK_CFG_SETTINGS)
@@ -1010,11 +1061,12 @@ if __name__ == "__main__":
     # OSCTUN
     #scan_atdf_for_osctun_fields(coreComponent, CLK_CFG_SETTINGS)
 
-    # REFOCON
-    scan_atdf_for_refocon_fields(coreComponent, CLK_CFG_SETTINGS, enSymbol)
+    if clkRegGrp_REFOCON is not None:
+        # REFOCON
+        scan_atdf_for_refocon_fields(coreComponent, CLK_CFG_SETTINGS, enSymbol)
 
-    # REFOTRIM
-    scan_atdf_for_refotrim_fields(coreComponent, enSymbol)
+        # REFOTRIM
+        scan_atdf_for_refotrim_fields(coreComponent, enSymbol)
 
     if(Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001404"):   # following registers only exist in this subset of PIC32MX family
         symbolEnName = coreComponent.createBooleanSymbol("CONFIG_SYS_CLK_PBCLK_ENABLE", CLK_CFG_SETTINGS)
@@ -1027,8 +1079,25 @@ if __name__ == "__main__":
     # creates calculated frequencies menu
     calculated_clock_frequencies(coreComponent, SYM_CLK_MENU, join, ElementTree, newPoscFreq)
 
+    cfgRegGroup = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CFG"]/register-group@[name="CFG"]').getChildren()
+
+    pmdCount = 0
+    pmdDict = {}
+    for register in cfgRegGroup:
+        regName = str(register.getAttribute("name"))
+        if regName.startswith("PMD"):
+            mask = 0x0		
+            pmdCount += 1
+            for bitfield in register.getChildren():
+                mask |= int(str(bitfield.getAttribute("mask")), 16)
+            pmdDict[pmdCount] = mask			
+
     peripheralClockMenu = coreComponent.createMenuSymbol("PERIPHERAL_CLK_CONFIG", SYM_CLK_MENU)
     peripheralClockMenu.setLabel("Peripheral Clock Configuration")
+    if pmdCount > 0:
+        peripheralClockMenu.setVisible(True)
+    else:
+        peripheralClockMenu.setVisible(False)
 
     # calculated peripheral frequencies
     sym_peripheral_clock_enable = []
@@ -1087,51 +1156,39 @@ if __name__ == "__main__":
                     else:
                         peripheral_clock_freq.setDependencies(peripheralClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", "CONFIG_SYS_CLK_PBCLK_FREQ"])
 
-    sym_peripheral_clock_enable.append("REFO_CLOCK_ENABLE")
-    peripheral_clock_enable = coreComponent.createBooleanSymbol("REFO_CLOCK_ENABLE", peripheralClockMenu)
-    peripheral_clock_enable.setLabel("REFO Clock Enable")
-    peripheral_clock_enable.setDefaultValue(True)
+    if clkRegGrp_REFOCON is not None:
+        sym_peripheral_clock_enable.append("REFO_CLOCK_ENABLE")
+        peripheral_clock_enable = coreComponent.createBooleanSymbol("REFO_CLOCK_ENABLE", peripheralClockMenu)
+        peripheral_clock_enable.setLabel("REFO Clock Enable")
+        peripheral_clock_enable.setDefaultValue(True)
 
-    sym_peripheral_clock_freq.append("REFO_CLOCK_FREQUENCY")
-    peripheral_clock_freq = coreComponent.createIntegerSymbol("REFO_CLOCK_FREQUENCY", peripheral_clock_enable)
-    peripheral_clock_freq.setLabel("REFO Clock Frequency")
-    peripheral_clock_freq.setReadOnly(True)
-    peripheral_clock_freq.setDefaultValue(int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK_FREQ")))
-    peripheral_clock_freq.setDependencies(peripheralClockFreqCalc, ["REFO_CLOCK_ENABLE", "CONFIG_SYS_CLK_PBCLK_FREQ"])
+        sym_peripheral_clock_freq.append("REFO_CLOCK_FREQUENCY")
+        peripheral_clock_freq = coreComponent.createIntegerSymbol("REFO_CLOCK_FREQUENCY", peripheral_clock_enable)
+        peripheral_clock_freq.setLabel("REFO Clock Frequency")
+        peripheral_clock_freq.setReadOnly(True)
+        peripheral_clock_freq.setDefaultValue(int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK_FREQ")))
+        peripheral_clock_freq.setDependencies(peripheralClockFreqCalc, ["REFO_CLOCK_ENABLE", "CONFIG_SYS_CLK_PBCLK_FREQ"])
 
-    cfgRegGroup = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CFG"]/register-group@[name="CFG"]').getChildren()
+    if pmdCount > 0:
+        peripheralModuleDisableMenu = coreComponent.createMenuSymbol("PMD_CONFIG", SYM_CLK_MENU)
+        peripheralModuleDisableMenu.setLabel("Peripheral Module Disable")
+        peripheralModuleDisableMenu.setDependencies(updatePMDxRegValue, sym_peripheral_clock_enable)
 
-    pmdCount = 0
-    pmdDict = {}
+        pmdRegCount = coreComponent.createIntegerSymbol("PMD_COUNT", peripheralModuleDisableMenu)
+        pmdRegCount.setDefaultValue(pmdCount)
+        pmdRegCount.setVisible(False)
 
-    for register in cfgRegGroup:
-        regName = str(register.getAttribute("name"))
-        if regName.startswith("PMD"):
-            mask = 0x0
-            pmdCount += 1
-            for bitfield in register.getChildren():
-                mask |= int(str(bitfield.getAttribute("mask")), 16)
-            pmdDict[pmdCount] = mask
+        for i in range(1, pmdCount + 1):
+            pmdxRegMaskValue = coreComponent.createHexSymbol("PMD" + str(i) + "_REG_VALUE", peripheralModuleDisableMenu)
+            pmdxRegMaskValue.setLabel("PMD" + str(i) + " Register Value")
+            pmdxRegMaskValue.setDefaultValue(pmdDict[i])
+            pmdxRegMaskValue.setReadOnly(True)
 
-    peripheralModuleDisableMenu = coreComponent.createMenuSymbol("PMD_CONFIG", SYM_CLK_MENU)
-    peripheralModuleDisableMenu.setLabel("Peripheral Module Disable")
-    peripheralModuleDisableMenu.setDependencies(updatePMDxRegValue, sym_peripheral_clock_enable)
-
-    pmdRegCount = coreComponent.createIntegerSymbol("PMD_COUNT", peripheralModuleDisableMenu)
-    pmdRegCount.setDefaultValue(pmdCount)
-    pmdRegCount.setVisible(False)
-
-    for i in range(1, pmdCount + 1):
-        pmdxRegMaskValue = coreComponent.createHexSymbol("PMD" + str(i) + "_REG_VALUE", peripheralModuleDisableMenu)
-        pmdxRegMaskValue.setLabel("PMD" + str(i) + " Register Value")
-        pmdxRegMaskValue.setDefaultValue(pmdDict[i])
-        pmdxRegMaskValue.setReadOnly(True)
-
-    #Enable REFO from PMD
-    periPMDRegId = "PMD" + peripheralModuleDisableDict["REFO"][0] + "_REG_VALUE"
-    pmdxValue = Database.getSymbolValue("core", periPMDRegId)
-    periPMDRegBitShift = 1 << int(peripheralModuleDisableDict["REFO"][1])
-    Database.setSymbolValue("core", periPMDRegId, pmdxValue & ~periPMDRegBitShift, 1)
+        #Enable REFO from PMD
+        periPMDRegId = "PMD" + peripheralModuleDisableDict["REFO"][0] + "_REG_VALUE"
+        pmdxValue = Database.getSymbolValue("core", periPMDRegId)
+        periPMDRegBitShift = 1 << int(peripheralModuleDisableDict["REFO"][1])
+        Database.setSymbolValue("core", periPMDRegId, pmdxValue & ~periPMDRegBitShift, 1)
 
     # File handling below
     CONFIG_NAME = Variables.get("__CONFIGURATION_NAME")

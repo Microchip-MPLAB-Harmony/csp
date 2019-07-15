@@ -161,7 +161,7 @@ void CLK_Initialize( void )
     /* Default clock setting is used, hence no code is generated */
     /* Code for fuse settings can be found in "initialization.c" */
 </#if>
-
+<#if PMD_COUNT?has_content>
     /* Peripheral Module Disable Configuration */
 <#list 1..PMD_COUNT + 1 as i>
     <#assign PMDREG_VALUE = "PMD" + i + "_REG_VALUE">
@@ -169,4 +169,5 @@ void CLK_Initialize( void )
         <#lt>    PMD${i}SET = 0x${.vars[PMDREG_VALUE]};
     </#if>
 </#list>
+</#if>
 }
