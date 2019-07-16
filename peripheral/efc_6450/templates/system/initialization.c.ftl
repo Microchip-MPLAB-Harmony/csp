@@ -25,4 +25,4 @@
 // DOM-IGNORE-END
 -->
 
-    EFC_Initialize();
+    ${EFC_INSTANCE_NAME}_Initialize();

@@ -1,4 +1,3 @@
-# coding: utf-8
 """*****************************************************************************
 * Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
 *
@@ -74,7 +73,7 @@ def instantiateComponent(efcComponent):
     efcInstanceName.setVisible(False)
     efcInstanceName.setDefaultValue(efcComponent.getID().upper())
 
-    Log.writeInfoMessage("Running EEFC")
+    Log.writeInfoMessage("Running " + efcInstanceName.getValue())
 
     global waitStates
     waitStates = {}
@@ -84,11 +83,16 @@ def instantiateComponent(efcComponent):
     efcMenu = efcComponent.createMenuSymbol(None, None)
     efcMenu.setLabel("Hardware Settings ")
 
-    ##### Do not modify below symbol names as they are used by Memory Driver #####
+    #EFC memory segment name
+    efcMemSegName = efcComponent.createStringSymbol("MEM_SEGMENT_NAME", None)
+    efcMemSegName.setVisible(False)
+    efcMemSegName.setReadOnly(True)
+    efcMemSegName.setDefaultValue("IFLASH" + efcInstanceName.getValue().split("EFC")[1])
 
+    ##### Do not modify below symbol names as they are used by Memory Driver #####
     #Flash Details
-    efcFlashNode = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"IFLASH\"]")
-    if efcFlashNode != None:
+    efcFlashNode = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"" + efcMemSegName.getValue() + "\"]")
+    if efcFlashNode is not None:
         efcFlashStartAddress = efcComponent.createStringSymbol("FLASH_START_ADDRESS", efcMenu)
         efcFlashStartAddress.setVisible(False)
         efcFlashStartAddress.setDefaultValue(efcFlashNode.getAttribute("start"))
@@ -131,7 +135,7 @@ def instantiateComponent(efcComponent):
         efcFam.setDefaultValue(0)
         efcFam.setOutputMode("Value")
         efcFam.setDisplayMode("Description")
-        
+
     #Create a Checkbox to enable disable interrupts
     efcInterrupt = efcComponent.createBooleanSymbol("INTERRUPT_ENABLE", efcMenu)
     efcInterrupt.setLabel("Enable Interrupts")
