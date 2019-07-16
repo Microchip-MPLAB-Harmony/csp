@@ -1,3 +1,26 @@
+# coding: utf-8
+"""*****************************************************************************
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
+*
+* Subject to your compliance with these terms, you may use Microchip software
+* and any derivatives exclusively with Microchip products. It is your
+* responsibility to comply with third party license terms applicable to your
+* use of third party software (including open source software) that may
+* accompany Microchip software.
+*
+* THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER
+* EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED
+* WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A
+* PARTICULAR PURPOSE.
+*
+* IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE,
+* INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND
+* WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS
+* BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE
+* FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
+* ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
+* THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
+*****************************************************************************"""
 
 # Translation of selected ATDF clock names to calculated clock frequency symbol names
 global CLK_XLAT
@@ -11,6 +34,11 @@ CLK_XLAT = {
         "MCK"      : "CLK_MCK_FREQ",
         "MAINCK"   : "CLK_MAINCK_FREQ",
         "RC2CK"    : "CLK_RC2CK_FREQ",
+        "RC2_CLK"  : "CLK_RC2CK_FREQ",
+        "MD_SLCK"  : "CLK_MD_SLCK_FREQ",
+        "TD_SLCK"  : "CLK_TD_SLCK_FREQ",
+        "PLLACK"   : "CLK_PLLACK_FREQ",
+        "PLLBCK"   : "CLK_PLLBCK_FREQ",
     }
 
 # Default settings
@@ -20,44 +48,12 @@ global SLCK_XTAL_FREQ
 SLCK_XTAL_FREQ = 32768
 global RC_FREQ_DEFAULT
 RC_FREQ_DEFAULT = 2
-
-global upd_clone
-def upd_clone(symbol, event):
-    if symbol.getValue() != event['value']:
-        symbol.setValue(event['value'])
-
-global upd_clone_dsp
-def upd_clone_dsp(symbol, event):
-    if symbol.getValue() != event['value']:
-        symbol.setValue(event['value'])
-        if event['value'] == 0:
-            symbol.setVisible(False)
-        else:
-            symbol.setVisible(True)
-
-global upd_slck_bp_ro
-def upd_slck_bp_ro(symbol, event):
-    if event["value"] is True:
-        symbol.setReadOnly(False)
-    else:
-        # Setting read only will reset value
-        symbol.setReadOnly(True)
+global SYSTICK_EXT_DIV
+SYSTICK_EXT_DIV = 2
 
 global upd_slck_td_freq
 def upd_slck_td_freq(symbol, event):
-    if event['source'].getSymbolValue("CLK_SLCK_TDXTALSEL") is False:
-        freq = SLCK_RC_FREQ
-    else:
-        if event['source'].getSymbolValue("CLK_SLCK_OSCBYPASS") is False:
-            freq = SLCK_XTAL_FREQ
-        else:
-            freq = event['source'].getSymbolValue("CLK_SLCK_EXT_FREQ")
-    if symbol.getValue() != freq:
-        symbol.setValue(freq)
-
-global upd_slck_md_freq
-def upd_slck_md_freq(symbol, event):
-    if event['source'].getSymbolValue("CLK_SLCK_MDXTALSEL") is False:
+    if event['source'].getSymbolValue("CLK_SLCK_TDXTALSEL") == 0:
         freq = SLCK_RC_FREQ
     else:
         if event['source'].getSymbolValue("CLK_SLCK_OSCBYPASS") is False:
@@ -69,7 +65,7 @@ def upd_slck_md_freq(symbol, event):
 
 global upd_mainck_freq
 def upd_mainck_freq(symbol, event):
-    if event['source'].getSymbolValue("CLK_MAINCK_MOSCSEL") is False:
+    if event['source'].getSymbolValue("CLK_MAINCK_MOSCSEL") == 0:
         mainck_rc_freq = event['source'].getSymbolByID("CLK_MAINCK_MOSCRCF")
         freq = int(mainck_rc_freq.getKey(mainck_rc_freq.getValue()).split("_")[1]) * 1000000
     else:
@@ -119,18 +115,17 @@ def upd_fclk_freq(symbol, event):
     if symbol.getValue() != freq:
         symbol.setValue(freq)
 
-global upd_tick_freq
-def upd_tick_freq(symbol, event):
-    freq = event['value'] / 8
+global upd_systick_freq
+def upd_systick_freq(symbol, event):
+    freq = event['value'] / SYSTICK_EXT_DIV
     if symbol.getValue() != freq:
         symbol.setValue(freq)
 
 global upd_mck_freq
 def upd_mck_freq(symbol, event):
-    pres = event['source'].getSymbolValue("CLK_MCK_PRES")
+    freq = event['source'].getSymbolValue("CPU_CLOCK_FREQUENCY")
     mdiv = event['source'].getSymbolValue("CLK_MCK_MDIV")
-    mck_css = event['source'].getSymbolByID("CLK_MCK_CSS")
-    freq = event['source'].getSymbolValue(CLK_XLAT[mck_css.getKey(mck_css.getValue())]) >> (pres + mdiv)
+    freq = freq >> mdiv
     if symbol.getValue() != freq:
         symbol.setValue(freq)
 
@@ -162,151 +157,113 @@ def upd_gclk_freq(symbol, event):
 
 global upd_flexcom_freq
 def upd_flexcom_freq(symbol,event):
-    frequency = -1
+    frequency = 0
     instance_name = symbol.getID().split("_CLOCK_FREQUENCY")[0]
+    previousFreq = int(Database.getSymbolValue("core", instance_name + "_CLOCK_FREQUENCY"))
     op_mode = Database.getSymbolValue(instance_name.lower(), "FLEXCOM_MODE")
-    # Flexcom is operating as UART
-    if op_mode == 1 :
-        #Get the UART mode source clock
-        source_clock = Database.getSymbolValue(instance_name.lower(), "FLEXCOM_USART_MR_USCLKS")
-        # Source clock is bus clock
-        if source_clock == 0:
-            frequency = Database.getSymbolValue("core", "CLK_MCK_FREQ")
-        # Source clock is bus clock / 8
-        elif source_clock == 1:
-            frequency = Database.getSymbolValue("core", "CLK_MCK_FREQ") / 8
-        # Source clock is GCLK
-        elif source_clock == 2:
-            frequency = Database.getSymbolValue("core", instance_name + "_GCLK_FREQUENCY")
-        # Source clock is external, set the internal frequency to zero
-        else:
-            frequency = 0
-    #Flexcom is operating in SPI mode
-    elif op_mode == 2:
-        #Get the SPI mode source clock
-        source_clock = Database.getSymbolValue(instance_name.lower(), "FLEXCOM_SPI_MR_BRSRCCLK")
-        # Source clock is bus clock
-        if source_clock == 0:
-            frequency = Database.getSymbolValue("core", "CLK_MCK_FREQ")
-        # Source clock is GCLK
-        elif source_clock == 1:
-            frequency = Database.getSymbolValue("core", instance_name + "_GCLK_FREQUENCY")
-    #Flexcom is operating in TWI mode
-    elif op_mode == 3:
-        #Get the SPI mode source clock
-        source_clock = Database.getSymbolValue(instance_name.lower(), "FLEXCOM_TWI_CWGR_BRSRCCLK")
-        # Source clock is bus clock
-        if source_clock == 0:
-            frequency = Database.getSymbolValue("core", "CLK_MCK_FREQ")
-        # Source clock is GCLK
-        elif source_clock == 1:
-            frequency = Database.getSymbolValue("core", instance_name + "_GCLK_FREQUENCY")
+    if Database.getSymbolValue("core", instance_name + "_CLOCK_ENABLE"):
+        # Flexcom is operating as UART
+        if op_mode == 1 :
+            #Get the UART mode source clock
+            source_clock = Database.getSymbolValue(instance_name.lower(), "FLEXCOM_USART_MR_USCLKS")
+            # Source clock is bus clock
+            if source_clock == 0:
+                frequency = Database.getSymbolValue("core", "CLK_MCK_FREQ")
+            # Source clock is bus clock / 8
+            elif source_clock == 1:
+                frequency = Database.getSymbolValue("core", "CLK_MCK_FREQ") / 8
+            # Source clock is GCLK
+            elif source_clock == 2:
+                frequency = Database.getSymbolValue("core", instance_name + "_GCLK_FREQUENCY")
+            # Source clock is external, set the internal frequency to zero
+            else:
+                frequency = 0
+        #Flexcom is operating in SPI mode
+        elif op_mode == 2:
+            #Get the SPI mode source clock
+            source_clock = Database.getSymbolValue(instance_name.lower(), "FLEXCOM_SPI_MR_BRSRCCLK")
+            # Source clock is bus clock
+            if source_clock == 0:
+                frequency = Database.getSymbolValue("core", "CLK_MCK_FREQ")
+            # Source clock is GCLK
+            elif source_clock == 1:
+                frequency = Database.getSymbolValue("core", instance_name + "_GCLK_FREQUENCY")
+        #Flexcom is operating in TWI mode
+        elif op_mode == 3:
+            #Get the SPI mode source clock
+            source_clock = Database.getSymbolValue(instance_name.lower(), "FLEXCOM_TWI_CWGR_BRSRCCLK")
+            # Source clock is bus clock
+            if source_clock == 0:
+                frequency = Database.getSymbolValue("core", "CLK_MCK_FREQ")
+            # Source clock is GCLK
+            elif source_clock == 1:
+                frequency = Database.getSymbolValue("core", instance_name + "_GCLK_FREQUENCY")
 
     # Update the frequency only if the clock selections are valid
-    if frequency >= 0:
+    if frequency != previousFreq:
         symbol.setValue(frequency)
 
 global upd_tc_freq
 def upd_tc_freq(symbol, event):
     # symbol is named as "TC{instance_number}_CH{channel_number}_CLOCK_FREQUENCY.
     # Extract the instance number
-    instance_num = symbol.getID().split("TC")[1].split("_")[0]
+    instance_num = int(symbol.getID().split("TC")[1].split("_")[0])
     # extract the channel number
-    channel_num = symbol.getID().split("_CH")[1].split("_")[0]
+    channel_num = int(symbol.getID().split("_CH")[1].split("_")[0])
 
-    # check if the relevant channel is enabled
-    if (Database.getSymbolValue("tc" + str(instance_num), "TC" + str(channel_num) + "_ENABLE") == True):
-    
-        # Find the current clock source for the channel
-        clk_src = Database.getSymbolValue("tc" + str(instance_num), "TC" + str(channel_num) + "_CMR_TCCLKS")
-        # if clock source is processor independent GCLK
-        if (clk_src == 1):
-            if channel_num==0:
-                clk_frequency = Database.getSymbolValue("core", "TC" + str(instance_num) + "_CHANNEL0_GCLK_FREQUENCY")
+    if (Database.getSymbolValue("core", "TC" + str(instance_num) + "_CHANNEL"  + str(channel_num) + "_ENABLE") == True):
+        # check if the relevant channel is enabled
+        if (Database.getSymbolValue("tc" + str(instance_num), "TC" + str(channel_num) + "_ENABLE") == True):
+        
+            # Find the current clock source for the channel
+            clk_src = Database.getSymbolValue("tc" + str(instance_num), "TC" + str(channel_num) + "_CMR_TCCLKS")
+            # if clock source is processor independent GCLK
+            if (clk_src == 1):
+                if channel_num==0:
+                    clk_frequency = Database.getSymbolValue("core", "TC" + str(instance_num) + "_CHANNEL0_GCLK_FREQUENCY")
+                else:
+                    clk_frequency = 0
+            # if clock  source is MCK/8
+            elif (clk_src == 2):
+                clk_frequency = Database.getSymbolValue("core", "CLK_MCK_FREQ") / 8
+            # if clock  source is MCK/32
+            elif (clk_src == 3):
+                clk_frequency = Database.getSymbolValue("core", "CLK_MCK_FREQ") / 32
+            # if clock  source is MCK/128
+            elif (clk_src == 4):
+                clk_frequency = Database.getSymbolValue("core", "CLK_MCK_FREQ") / 128
+            # if clock  source is SLOW CLOCK
+            elif (clk_src == 5):
+                clk_frequency = Database.getSymbolValue("core", "CLK_MD_SLCK_FREQ")
+            # default  clock source is MCK (Enabled through extended registers of TC)
             else:
-                clk_frequency = 0
-        # if clock  source is MCK/8
-        elif (clk_src == 2):
-            clk_frequency = Database.getSymbolValue("core", "CLK_MCK_FREQ") / 8
-        # if clock  source is MCK/32
-        elif (clk_src == 3):
-            clk_frequency = Database.getSymbolValue("core", "CLK_MCK_FREQ") / 32
-        # if clock  source is MCK/128
-        elif (clk_src == 4):
-            clk_frequency = Database.getSymbolValue("core", "CLK_MCK_FREQ") / 128
-        # if clock  source is SLOW CLOCK
-        elif (clk_src == 5):
-            clk_frequency = Database.getSymbolValue("core", "CLK_MD_SLCK_FREQ")
-        # default  clock source is MCK (Enabled through extended registers of TC)
-        else:
-            clk_frequency = Database.getSymbolValue("core", "CLK_MCK_FREQ")
-        symbol.setValue(clk_frequency)
-
-# WARNING Messages Update Routines
-global warn_event_value_0
-def warn_event_value_0(symbol, event):
-    if event['value'] == 0:
-        symbol.setVisible(True)
+                clk_frequency = Database.getSymbolValue("core", "CLK_MCK_FREQ")
+            symbol.setValue(clk_frequency)
+    
     else:
-        symbol.setVisible(False)
-
-global warn_slck_bp
-def warn_slck_bp(symbol, event):
-    td_xtal_sel = event['source'].getSymbolValue("CLK_SLCK_TDXTALSEL")
-    md_xtal_sel = event['source'].getSymbolValue("CLK_SLCK_MDXTALSEL")
-    bp_sel  = event['source'].getSymbolValue("CLK_SLCK_OSCBYPASS")
-    symbol.setVisible(bp_sel==True and td_xtal_sel==False and md_xtal_sel==False)
-
-global warn_mainck_not_used
-def warn_mainck_not_used(symbol, event):
-    rc_en = event['source'].getSymbolValue("CLK_MAINCK_MOSCRCEN")
-    xtal_en = event['source'].getSymbolValue("CLK_MAINCK_MOSCXTEN")
-    xtal_sel = event['source'].getSymbolValue("CLK_MAINCK_MOSCSEL")
-    bp_sel = event['source'].getSymbolValue("CLK_MAINCK_MOSCXTBY")
-    symbol.setVisible((rc_en==True and xtal_sel==True) or (bp_sel==True and xtal_sel==False) or (xtal_en==True and (xtal_sel==False or bp_sel==True)))
-
-global warn_mainck_not_en
-def warn_mainck_not_en(symbol, event):
-    rc_en = event['source'].getSymbolValue("CLK_MAINCK_MOSCRCEN")
-    xtal_en = event['source'].getSymbolValue("CLK_MAINCK_MOSCXTEN")
-    xtal_sel = event['source'].getSymbolValue("CLK_MAINCK_MOSCSEL")
-    bp_sel = event['source'].getSymbolValue("CLK_MAINCK_MOSCXTBY")
-    symbol.setVisible((rc_en==False and xtal_sel==False) or (xtal_en==False and xtal_sel==True and bp_sel==False))
-
-#global warn_pckx_src_not_en
-#def warn_pckx_src_not_en(symbol, event):
-#    idx = int(symbol.getID().split("PCK")[1].split("_")[0])
-#    en = event['source'].getSymbolValue("CLK_PCK"+str(idx)+"_EN")
-#    freq = event['source'].getSymbolValue("CLK_PCK"+str(idx)+"_FREQ")
-#    if en==True and freq==0:
-#        symbol.setVisible(True)
-#    else:
-#        symbol.setVisible(False)
+        symbol.setValue(0)
 
 # Create Generic Clock Entries
 global create_gclk_entries
 def create_gclk_entries (clock_id_name, clock_comp, clk_menu):
-    gclk_en_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="PMC_PCR"]/bitfield@[name="EN"]')
     gclk_en = clock_comp.createBooleanSymbol(clock_id_name+"_GCLK_ENABLE", clk_menu)
     gclk_en.setLabel("Generic Clock Enable")
-    gclk_en.setDescription(gclk_en_node.getAttribute("caption"))
+    gclk_en.setDescription("Enables the generic clock for" + clock_id_name)
     gclk_en.setDefaultValue(False)
 
-    gclk_css_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="PMC_PCR"]/bitfield@[name="GCLKCSS"]')
-    gclk_css_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="'+gclk_css_node.getAttribute("values")+'"]')
+    gclk_css_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="PMC_PCR__GCLKCSS"]')
     gclk_css = clock_comp.createKeyValueSetSymbol(clock_id_name+"_GCLK_CSS", clk_menu)
-    gclk_css.setLabel(gclk_css_node.getAttribute("name"))
-    gclk_css.setDescription(gclk_css_node.getAttribute("caption"))
+    gclk_css.setLabel("Clock Source")
+    gclk_css.setDescription("Selects the input clock source for Generic clock")
     gclk_css.setDisplayMode("Key")
     gclk_css.setOutputMode("Key")
     for value in gclk_css_vg_node.getChildren():
         gclk_css.addKey(value.getAttribute("name"), value.getAttribute("value"), value.getAttribute("caption"))
     gclk_css.setDefaultValue(0)
 
-    gclk_div_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="PMC_PCR"]/bitfield@[name="GCLKDIV"]')
     gclk_div = clock_comp.createIntegerSymbol(clock_id_name+"_GCLK_DIV", clk_menu)
-    gclk_div.setLabel(gclk_div_node.getAttribute("name"))
-    gclk_div.setDescription(gclk_div_node.getAttribute("caption"))
+    gclk_div.setLabel("GCLK Divider")
+    gclk_div.setDescription("Generic clock is the selected clock period divided by GCLKDIV + 1.")
     gclk_div.setDefaultValue(0)
     gclk_div.setMin(0)
     gclk_div.setMax(15)
@@ -326,27 +283,61 @@ def create_gclk_entries (clock_id_name, clock_comp, clk_menu):
             "CLK_PLLBCK_FREQ",
             "CLK_MCK_FREQ",
             "CLK_RC2CK_FREQ" ])
-    
+
+global periFreq  
+def periFreq(symbol, event):
+    enable = Database.getSymbolValue("core", symbol.getID().split(
+        "_CLOCK_FREQUENCY")[0] + "_CLOCK_ENABLE")
+    if enable:
+        freq = int(Database.getSymbolValue("core", "CLK_MCK_FREQ"))
+        if symbol.getValue() != freq:
+            symbol.setValue(freq)
+    else:
+        if symbol.getValue() != 0:
+            symbol.setValue(0) 
+
+global periGclkFreq
+def periGclkFreq(symbol, event):
+    enable = Database.getSymbolValue("core", symbol.getID().split(
+        "_CLOCK_FREQUENCY")[0] + "_CLOCK_ENABLE")
+    if enable:
+        Database.setSymbolValue("core", symbol.getID().split("_CLOCK_FREQUENCY")[0] +"_GCLK_ENABLE", True)
+        freq = int(Database.getSymbolValue("core", symbol.getID().split("_CLOCK_FREQUENCY")[0] +"_GCLK_FREQUENCY"))
+        if symbol.getValue() != freq:
+            symbol.setValue(freq)
+    else:
+        if symbol.getValue() != 0:
+            symbol.setValue(0) 
 
 global create_default_freq_sym
 def create_default_freq_sym (clock_id_name, clock_comp, clk_menu):
     # Create peripheral clock frequency symbol [clock_id_name]_CLOCK_FREQUENCY
     freq_sym = clock_comp.createIntegerSymbol(clock_id_name + "_CLOCK_FREQUENCY", clk_menu)
     freq_sym.setReadOnly(True)
-    freq_sym.setVisible(False)
-    freq_sym.setDefaultValue(Database.getSymbolValue("core", "CLK_MCK_FREQ"))
-    freq_sym.setDependencies(upd_clone, ["CLK_MCK_FREQ"])
+    freq_sym.setVisible(True)
+    freq_sym.setDefaultValue(0)
+    freq_sym.setDependencies(periFreq, ["CLK_MCK_FREQ", clock_id_name + "_CLOCK_ENABLE"])
+
+global create_default_freq_sym_gclk
+def create_default_freq_sym_gclk (clock_id_name, clock_comp, clk_menu):
+    # Create peripheral clock frequency symbol [clock_id_name]_CLOCK_FREQUENCY
+    freq_sym = clock_comp.createIntegerSymbol(clock_id_name + "_CLOCK_FREQUENCY", clk_menu)
+    freq_sym.setReadOnly(True)
+    freq_sym.setVisible(True)
+    freq_sym.setDefaultValue(0)
+    freq_sym.setDependencies(periGclkFreq, ["CLK_MCK_FREQ", clock_id_name + "_CLOCK_ENABLE", clock_id_name + "_GCLK_FREQUENCY"])
 
 global create_flexcom_freq_sym
 def create_flexcom_freq_sym(clock_id_name, clock_comp, clk_menu):
     create_gclk_entries(clock_id_name, clock_comp, clk_menu)
 
     freq_sym = clock_comp.createIntegerSymbol(clock_id_name + "_CLOCK_FREQUENCY", clk_menu)
-    freq_sym.setVisible(False)
+    freq_sym.setVisible(True)
     freq_sym.setReadOnly(True)
-    freq_sym.setDefaultValue(Database.getSymbolValue("core", "CLK_MCK_FREQ"))
+    freq_sym.setDefaultValue(0)
     freq_sym.setDependencies(upd_flexcom_freq,
         [   "CLK_MCK_FREQ",
+            clock_id_name + "_CLOCK_ENABLE",
             clock_id_name + "_GCLK_FREQUENCY",
             clock_id_name.lower() + ".FLEXCOM_MODE",
             clock_id_name.lower() + ".FLEXCOM_USART_MR_USCLKS",
@@ -355,7 +346,11 @@ def create_flexcom_freq_sym(clock_id_name, clock_comp, clk_menu):
 
 def create_hemc_freq_sym(clock_id_name, clock_comp, clk_menu):
     create_gclk_entries(clock_id_name, clock_comp, clk_menu)
-    create_default_freq_sym(clock_id_name, clock_comp, clk_menu)
+    create_default_freq_sym_gclk(clock_id_name, clock_comp, clk_menu)
+
+def create_hefc_freq_sym(clock_id_name, clock_comp, clk_menu):
+    create_gclk_entries(clock_id_name, clock_comp, clk_menu)
+    create_default_freq_sym_gclk(clock_id_name, clock_comp, clk_menu)
 
 def create_ip1553_freq_sym(clock_id_name, clock_comp, clk_menu):
     create_gclk_entries(clock_id_name, clock_comp, clk_menu)
@@ -369,6 +364,11 @@ def create_spw_freq_sym(clock_id_name, clock_comp, clk_menu):
     create_gclk_entries(clock_id_name, clock_comp, clk_menu)
     create_default_freq_sym(clock_id_name, clock_comp, clk_menu)
 
+def create_nmic_freq_sym(clock_id_name, clock_comp, clk_menu):
+    create_gclk_entries(clock_id_name, clock_comp, clk_menu)
+    create_default_freq_sym_gclk(clock_id_name, clock_comp, clk_menu)
+
+
 def create_tc_freq_sym(clock_id_name, clock_comp, clk_menu):
     id_list = clock_id_name.split("_CHANNEL")
     inst = id_list[0]
@@ -377,8 +377,8 @@ def create_tc_freq_sym(clock_id_name, clock_comp, clk_menu):
         create_gclk_entries(clock_id_name, clock_comp, clk_menu)
     freq_sym = clock_comp.createIntegerSymbol(inst + "_CH" + str(chan) + "_CLOCK_FREQUENCY", clk_menu)
     freq_sym.setReadOnly(True)
-    freq_sym.setVisible(False)
-    freq_sym.setDefaultValue(Database.getSymbolValue("core", "CLK_MCK_FREQ"))
+    freq_sym.setVisible(True)
+    freq_sym.setDefaultValue(0)
     freq_sym.setDependencies(upd_tc_freq,
         [   "CLK_MCK_FREQ",
             "CLK_MD_SLCK_FREQ",
@@ -389,8 +389,8 @@ def create_tc_freq_sym(clock_id_name, clock_comp, clk_menu):
         # Create additional dummy channel 3 for quadrature
         freq_dmy = clock_comp.createIntegerSymbol(inst + "_CH3_CLOCK_FREQUENCY", clk_menu)
         freq_dmy.setReadOnly(True)
-        freq_dmy.setVisible(False)
-        freq_dmy.setDefaultValue(Database.getSymbolValue("core", "CLK_MCK_FREQ"))
+        freq_dmy.setVisible(True)
+        freq_dmy.setDefaultValue(0)
         freq_dmy.setDependencies(upd_tc_freq,
             [   "CLK_MCK_FREQ",
                 "CLK_MD_SLCK_FREQ",
@@ -401,10 +401,12 @@ def create_tc_freq_sym(clock_id_name, clock_comp, clk_menu):
 global freq_sym_const_dict
 freq_sym_const_dict = { "FLEXCOM": create_flexcom_freq_sym,
                         "HEMC": create_hemc_freq_sym,
+                        "HEFC": create_hefc_freq_sym,
                         "IP1553": create_ip1553_freq_sym,
                         "MCAN": create_mcan_freq_sym,
                         "SPW": create_spw_freq_sym,
-                        "TC": create_tc_freq_sym }
+                        "TC": create_tc_freq_sym,
+                        "NMIC": create_nmic_freq_sym }
 
 # SLOW CLOCK MENU
 def __slow_clock_menu(clk_comp, clk_menu):
@@ -413,24 +415,18 @@ def __slow_clock_menu(clk_comp, clk_menu):
     slck_menu.setDescription("Slow Clock Configuration")
 
     # Timing Domain Slow Clock Crystal Oscillator Select (default is RC)
-    slck_td_xtal_sel_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SUPC"]/register-group@[name="SUPC"]/register@[name="SUPC_CR"]/bitfield@[name="TDXTALSEL"]')
-    slck_td_xtal_sel = clk_comp.createBooleanSymbol("CLK_SLCK_TDXTALSEL", slck_menu)
-    slck_td_xtal_sel.setLabel(slck_td_xtal_sel_node.getAttribute("name"))
-    slck_td_xtal_sel.setDescription(slck_td_xtal_sel_node.getAttribute("caption"))
-    slck_td_xtal_sel.setDefaultValue(False)
-
-    # Monitoring Domain Slow Clock Crystal Oscillator Select (default is RC)
-    slck_md_xtal_sel_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SUPC"]/register-group@[name="SUPC"]/register@[name="SUPC_CR"]/bitfield@[name="MDXTALSEL"]')
-    slck_md_xtal_sel = clk_comp.createBooleanSymbol("CLK_SLCK_MDXTALSEL", slck_menu)
-    slck_md_xtal_sel.setLabel(slck_md_xtal_sel_node.getAttribute("name"))
-    slck_md_xtal_sel.setDescription(slck_md_xtal_sel_node.getAttribute("caption"))
-    slck_md_xtal_sel.setDefaultValue(False)
+    slck_td_xtal_sel = clk_comp.createKeyValueSetSymbol("CLK_SLCK_TDXTALSEL", slck_menu)
+    slck_td_xtal_sel.setLabel("Timing Domain Clock Source")
+    slck_td_xtal_sel.setDescription("This option is used to selct the source for the slow clock of the timing domain (TD_SLCK)")
+    slck_td_xtal_sel.setOutputMode("Value")
+    slck_td_xtal_sel.setDisplayMode("Description")
+    slck_td_xtal_sel.addKey("Internal RC", str(0), "Internal RC Oscilator")
+    slck_td_xtal_sel.addKey("External Osc", str(1), "External 32.768 KHz Oscillator")
 
     # Slow Clock Oscillator Bypass (default is RC)
-    slck_bp_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SUPC"]/register-group@[name="SUPC"]/register@[name="SUPC_MR"]/bitfield@[name="OSCBYPASS"]')
     slck_bp_sel = clk_comp.createBooleanSymbol("CLK_SLCK_OSCBYPASS", slck_menu)
-    slck_bp_sel.setLabel(slck_bp_node.getAttribute("name"))
-    slck_bp_sel.setDescription(slck_bp_node.getAttribute("caption"))
+    slck_bp_sel.setLabel("Bypass Crystal Oscillator")
+    slck_bp_sel.setDescription("The 32.768 kHz crystal oscillator is bypassed and external clock is used.")
     slck_bp_sel.setDefaultValue(False)
 
     # Slow Clock External Bypass Frequency
@@ -439,16 +435,14 @@ def __slow_clock_menu(clk_comp, clk_menu):
     slck_bp_freq.setDescription("External bypass clock frequency on pin XIN32")
     slck_bp_freq.setDefaultValue(SLCK_XTAL_FREQ)
     slck_bp_freq.setMin(0)
-    slck_bp_freq.setMax(10000000)
-    slck_bp_freq.setReadOnly(True)
-    slck_bp_freq.setDependencies(upd_slck_bp_ro, ["CLK_SLCK_OSCBYPASS"])
+    slck_bp_freq.setMax(32768)
 
     # TD_SLCK Frequency Display
     slck_td_freq = clk_comp.createIntegerSymbol("CLK_TD_SLCK_FREQ", slck_menu)
     slck_td_freq.setLabel("TD_SLCK Frequency (HZ)")
     slck_td_freq.setDefaultValue(SLCK_RC_FREQ)
     slck_td_freq.setReadOnly(True)
-    slck_td_freq.setVisible(False)
+    slck_td_freq.setVisible(True)
     slck_td_freq.setDependencies(upd_slck_td_freq, ["CLK_SLCK_OSCBYPASS", "CLK_SLCK_TDXTALSEL", "CLK_SLCK_EXT_FREQ"])
 
     # MD_SLCK Frequency Display
@@ -456,14 +450,7 @@ def __slow_clock_menu(clk_comp, clk_menu):
     slck_md_freq.setLabel("MD_SLCK Frequency (HZ)")
     slck_md_freq.setDefaultValue(SLCK_RC_FREQ)
     slck_md_freq.setReadOnly(True)
-    slck_md_freq.setVisible(False)
-    slck_md_freq.setDependencies(upd_slck_md_freq, ["CLK_SLCK_OSCBYPASS", "CLK_SLCK_MDXTALSEL", "CLK_SLCK_EXT_FREQ"])
-
-    # Warning message for bypass selected and xtal mux (for td_slck or md_slck) not set
-    slck_warn_bp = clk_comp.createCommentSymbol("CLK_SLCK_WARN_BP", slck_menu)
-    slck_warn_bp.setLabel("WARNING! Bypass selected but not used.")
-    slck_warn_bp.setVisible(False)
-    slck_warn_bp.setDependencies(warn_slck_bp, ["CLK_SLCK_TDXTALSEL", "CLK_SLCK_MDXTALSEL", "CLK_SLCK_OSCBYPASS"])
+    slck_md_freq.setVisible(True)
 
 # MAIN CLOCK MENU
 def __main_clock_menu(clk_comp, clk_menu):
@@ -472,18 +459,16 @@ def __main_clock_menu(clk_comp, clk_menu):
     mainck_menu.setDescription("Main Clock Configuration")
 
     # Main Clock RC Enable
-    mainck_rc_en_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="CKGR_MOR"]/bitfield@[name="MOSCRCEN"]')
     mainck_rc_en = clk_comp.createBooleanSymbol("CLK_MAINCK_MOSCRCEN", mainck_menu)
-    mainck_rc_en.setLabel(mainck_rc_en_node.getAttribute("name"))
-    mainck_rc_en.setDescription(mainck_rc_en_node.getAttribute("caption"))
+    mainck_rc_en.setLabel("Enable RC Oscillator")
+    mainck_rc_en.setDescription("The Main RC oscillator is enabled.")
     mainck_rc_en.setDefaultValue(True)
 
     # Main Clock RC Frequency Selection
-    mainck_rc_freq_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="CKGR_MOR"]/bitfield@[name="MOSCRCF"]')
-    mainck_rc_freq_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="'+mainck_rc_freq_node.getAttribute("values")+'"]')
+    mainck_rc_freq_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="CKGR_MOR__MOSCRCF"]')
     mainck_rc_freq = clk_comp.createKeyValueSetSymbol("CLK_MAINCK_MOSCRCF", mainck_menu)
-    mainck_rc_freq.setLabel(mainck_rc_freq_node.getAttribute("name"))
-    mainck_rc_freq.setDescription(mainck_rc_freq_node.getAttribute("caption"))
+    mainck_rc_freq.setLabel("RC Oscillator Frequency")
+    mainck_rc_freq.setDescription("Selects the output frequency of the Main RC Oscillator")
     mainck_rc_freq.setDisplayMode("Key")
     mainck_rc_freq.setOutputMode("Key")
     for value in mainck_rc_freq_vg_node.getChildren():
@@ -491,31 +476,30 @@ def __main_clock_menu(clk_comp, clk_menu):
     mainck_rc_freq.setDefaultValue(RC_FREQ_DEFAULT)
 
     # Main Clock Crystal Oscillator Enable
-    mainck_xtal_en_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="CKGR_MOR"]/bitfield@[name="MOSCXTEN"]')
     mainck_xtal_en = clk_comp.createBooleanSymbol("CLK_MAINCK_MOSCXTEN", mainck_menu)
-    mainck_xtal_en.setLabel(mainck_xtal_en_node.getAttribute("name"))
-    mainck_xtal_en.setDescription(mainck_xtal_en_node.getAttribute("caption"))
+    mainck_xtal_en.setLabel("Enable External Oscillator")
+    mainck_xtal_en.setDescription("Enables the Main crystal oscillator. Oscillator ByPass must be disabled")
     mainck_xtal_en.setDefaultValue(False)
 
     # Main Clock Crystal Oscillator Select (default is RC)
-    mainck_xtal_sel_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="CKGR_MOR"]/bitfield@[name="MOSCSEL"]')
-    mainck_xtal_sel = clk_comp.createBooleanSymbol("CLK_MAINCK_MOSCSEL", mainck_menu)
-    mainck_xtal_sel.setLabel(mainck_xtal_sel_node.getAttribute("name"))
-    mainck_xtal_sel.setDescription(mainck_xtal_sel_node.getAttribute("caption"))
-    mainck_xtal_sel.setDefaultValue(False)
+    mainck_xtal_sel = clk_comp.createKeyValueSetSymbol("CLK_MAINCK_MOSCSEL", mainck_menu)
+    mainck_xtal_sel.setLabel("Main Clock Source Selection")
+    mainck_xtal_sel.setDescription("This option is used to selct the source for the Main Clock")
+    mainck_xtal_sel.setOutputMode("Value")
+    mainck_xtal_sel.setDisplayMode("Description")
+    mainck_xtal_sel.addKey("Internal RC", str(0), "Internal RC Oscilator")
+    mainck_xtal_sel.addKey("External Osc", str(1), "External Oscillator")
 
     # Main Clock Oscillator Bypass (default is RC)
-    mainck_bp_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="CKGR_MOR"]/bitfield@[name="MOSCXTBY"]')
     mainck_bp_sel = clk_comp.createBooleanSymbol("CLK_MAINCK_MOSCXTBY", mainck_menu)
-    mainck_bp_sel.setLabel(mainck_bp_node.getAttribute("name"))
-    mainck_bp_sel.setDescription(mainck_bp_node.getAttribute("caption"))
+    mainck_bp_sel.setLabel("Bypass Crystal Oscillator")
+    mainck_bp_sel.setDescription("The external crystal oscillator is bypassed and external clock is used.")
     mainck_bp_sel.setDefaultValue(False)
 
     # Main Clock Startup Time
-    mainck_xtal_start_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="CKGR_MOR"]/bitfield@[name="MOSCXTST"]')
     mainck_xtal_start = clk_comp.createIntegerSymbol("CLK_MAINCK_MOSCXTST", mainck_menu)
-    mainck_xtal_start.setLabel(mainck_xtal_start_node.getAttribute("name"))
-    mainck_xtal_start.setDescription(mainck_xtal_start_node.getAttribute("caption"))
+    mainck_xtal_start.setLabel("External Oscillator Startup")
+    mainck_xtal_start.setDescription("Specifies the number of MD_SLCK cycles multiplied by 8 for the main crystal oscillator start-up time")
     mainck_xtal_start.setDefaultValue(0)
     mainck_xtal_start.setMin(0)
     mainck_xtal_start.setMax(255)
@@ -534,20 +518,8 @@ def __main_clock_menu(clk_comp, clk_menu):
     mainck_freq.setLabel("MAINCK Frequency (HZ)")
     mainck_freq.setDefaultValue(int(mainck_rc_freq.getKey(mainck_rc_freq.getValue()).split("_")[1]) * 1000000)
     mainck_freq.setReadOnly(True)
-    mainck_freq.setVisible(False)
+    mainck_freq.setVisible(True)
     mainck_freq.setDependencies(upd_mainck_freq, ["CLK_MAINCK_MOSCRCF", "CLK_MAINCK_MOSCSEL", "CLK_MAINCK_MOSCXTBY", "CLK_MAINCK_EXT_FREQ"])
-
-    # WARNING! Clock source enabled but not used.
-    mainck_warn_not_used = clk_comp.createCommentSymbol("CLK_MAINCK_WARN_NOT_USED", mainck_menu)
-    mainck_warn_not_used.setLabel("WARNING! Clock source enabled but not used.")
-    mainck_warn_not_used.setVisible(False)
-    mainck_warn_not_used.setDependencies(warn_mainck_not_used, ["CLK_MAINCK_MOSCSEL", "CLK_MAINCK_MOSCRCEN", "CLK_MAINCK_MOSCXTEN", "CLK_MAINCK_MOSCXTBY"])
-
-    # WARNING! Selected clock source not enabled.
-    mainck_warn_not_en = clk_comp.createCommentSymbol("CLK_MAINCK_WARN_NOT_EN", mainck_menu)
-    mainck_warn_not_en.setLabel("WARNING! Selected clock source not enabled.")
-    mainck_warn_not_en.setVisible(False)
-    mainck_warn_not_en.setDependencies(warn_mainck_not_en, ["CLK_MAINCK_MOSCSEL", "CLK_MAINCK_MOSCRCEN", "CLK_MAINCK_MOSCXTEN", "CLK_MAINCK_MOSCXTBY"])
 
 # RC2 OSCILLATOR MENU
 def __rc2_clock_menu(clk_comp, clk_menu):
@@ -556,18 +528,16 @@ def __rc2_clock_menu(clk_comp, clk_menu):
     rc2ck_menu.setDescription("RC2 Oscillator Configuration")
 
     # RC2 Clock Enable
-    rc2ck_en_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="PMC_OSC2"]/bitfield@[name="EN"]')
     rc2ck_en = clk_comp.createBooleanSymbol("CLK_RC2CK_EN", rc2ck_menu)
-    rc2ck_en.setLabel(rc2ck_en_node.getAttribute("name"))
-    rc2ck_en.setDescription(rc2ck_en_node.getAttribute("caption"))
+    rc2ck_en.setLabel("Enable RC2 Oscillator")
+    rc2ck_en.setDescription("Enables the 2nd fast oscillator")
     rc2ck_en.setDefaultValue(True)
 
     # RC2 Frequency Selection
-    rc2ck_sel_freq_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="PMC_OSC2"]/bitfield@[name="OSCRCF"]')
-    rc2ck_sel_freq_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="'+rc2ck_sel_freq_node.getAttribute("values")+'"]')
+    rc2ck_sel_freq_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="PMC_OSC2__OSCRCF"]')
     rc2ck_sel_freq = clk_comp.createKeyValueSetSymbol("CLK_RC2CK_OSCRCF", rc2ck_menu)
-    rc2ck_sel_freq.setLabel(rc2ck_sel_freq_node.getAttribute("name"))
-    rc2ck_sel_freq.setDescription(rc2ck_sel_freq_node.getAttribute("caption"))
+    rc2ck_sel_freq.setLabel("Oscillator Frequency Selection")
+    rc2ck_sel_freq.setDescription("Selects the output Frequency for the second Fast RC Oscillator")
     rc2ck_sel_freq.setDisplayMode("Key")
     rc2ck_sel_freq.setOutputMode("Key")
     for value in rc2ck_sel_freq_vg_node.getChildren():
@@ -578,7 +548,7 @@ def __rc2_clock_menu(clk_comp, clk_menu):
     rc2ck_freq = clk_comp.createIntegerSymbol("CLK_RC2CK_FREQ", rc2ck_menu)
     rc2ck_freq.setLabel("RC2CK Frequency (HZ)")
     rc2ck_freq.setDefaultValue(int(rc2ck_sel_freq.getKey(rc2ck_sel_freq.getValue()).split("_")[1]) * 1000000)
-    rc2ck_freq.setVisible(False)
+    rc2ck_freq.setVisible(True)
     rc2ck_freq.setReadOnly(True)
     rc2ck_freq.setDependencies(upd_rc2ck_freq, ["CLK_RC2CK_EN", "CLK_RC2CK_OSCRCF"])
 
@@ -591,84 +561,60 @@ def __plla_clock_menu(clk_comp, clk_menu):
     # Section 2.5 - A 40 MHz to 200 MHz Programmable PLL (input from 8 MHz to 20 MHz)
 
     # PLLA Front End Divider
-    pllack_diva_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="CKGR_PLLAR"]/bitfield@[name="DIVA"]')
     pllack_diva = clk_comp.createIntegerSymbol("CLK_PLLACK_DIVA", pllack_menu)
-    pllack_diva.setLabel(pllack_diva_node.getAttribute("name"))
-    pllack_diva.setDescription(pllack_diva_node.getAttribute("caption"))
+    pllack_diva.setLabel("PLL Front End divider")
+    pllack_diva.setDescription("Divides the output of PLL. If Dicvider is set to 0 PLL is disabled")
     pllack_diva.setDefaultValue(0)
     pllack_diva.setMin(0)
     pllack_diva.setMax(64)
 
     # PLLA Multiplier
-    pllack_mula_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="CKGR_PLLAR"]/bitfield@[name="MULA"]')
     pllack_mula = clk_comp.createIntegerSymbol("CLK_PLLACK_MULA", pllack_menu)
-    pllack_mula.setLabel(pllack_mula_node.getAttribute("name"))
-    pllack_mula.setDescription(pllack_mula_node.getAttribute("caption"))
+    pllack_mula.setLabel("PLLA Multiplier")
+    pllack_mula.setDescription("PLLCK frequency is the PLLA input frequency multiplied by MULA + 1.")
     pllack_mula.setDefaultValue(0)
     pllack_mula.setMin(0)
     pllack_mula.setMax(56)
 
-    # PLLA Multiplier Max
-    pllack_mmax_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="PMC_PMMR"]/bitfield@[name="PLLA_MMAX"]')
-    pllack_mmax = clk_comp.createIntegerSymbol("CLK_PLLACK_MMAX", pllack_menu)
-    pllack_mmax.setLabel(pllack_mmax_node.getAttribute("name"))
-    pllack_mmax.setDescription(pllack_mmax_node.getAttribute("caption"))
-    pllack_mmax.setDefaultValue(2047)
-    pllack_mmax.setMin(0)
-    pllack_mmax.setMax(2047)
-
-    # PLLA count of MD_SLCK cycles before LOCKB set
-    pllack_cnta_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="CKGR_PLLAR"]/bitfield@[name="PLLACOUNT"]')
-    pllack_cnta = clk_comp.createIntegerSymbol("CLK_PLLACK_PLLACOUNT", pllack_menu)
-    pllack_cnta.setLabel(pllack_cnta_node.getAttribute("name"))
-    pllack_cnta.setDescription(pllack_cnta_node.getAttribute("caption"))
-    pllack_cnta.setDefaultValue(63)
-    pllack_cnta.setMin(0)
-    pllack_cnta.setMax(63)
-
     # PLLA Frequency Range
-    pllack_vco_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="CKGR_PLLAR"]/bitfield@[name="FREQ_VCO"]')
-    pllack_vco_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="'+pllack_vco_node.getAttribute("values")+'"]')
+    pllack_vco_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="CKGR_PLLAR__FREQ_VCO"]')
     pllack_vco = clk_comp.createKeyValueSetSymbol("CLK_PLLACK_FREQ_VCO", pllack_menu)
-    pllack_vco.setLabel(pllack_vco_node.getAttribute("name"))
-    pllack_vco.setDescription(pllack_vco_node.getAttribute("caption"))
-    pllack_vco.setDisplayMode("Key")
+    pllack_vco.setLabel("VCO Frequency Range")
+    pllack_vco.setDescription("This is used to setup the output frequency range of VCO")
+    pllack_vco.setDisplayMode("Description")
     pllack_vco.setOutputMode("Key")
     for value in pllack_vco_vg_node.getChildren():
         pllack_vco.addKey(value.getAttribute("name"), value.getAttribute("value"), value.getAttribute("caption"))
     pllack_vco.setDefaultValue(0)
 
     # PLLA Internal Filter Resistor Value (SRA)
-    pllack_sra_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="PMC_PLL_CFG"]/bitfield@[name="SRA"]')
-    pllack_sra_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="'+pllack_sra_node.getAttribute("values")+'"]')
+    pllack_sra_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="PMC_PLL_CFG__SRA"]')
     pllack_sra = clk_comp.createKeyValueSetSymbol("CLK_PLLACK_SRA", pllack_menu)
-    pllack_sra.setLabel(pllack_sra_node.getAttribute("name"))
-    pllack_sra.setDescription(pllack_sra_node.getAttribute("caption"))
-    pllack_sra.setDisplayMode("Key")
+    pllack_sra.setLabel("Filter Internal Resistor Value")
+    pllack_sra.setDescription("Internal Filter PLL – Select Internal Resistor Value")
+    pllack_sra.setDisplayMode("Description")
     pllack_sra.setOutputMode("Key")
     for value in pllack_sra_vg_node.getChildren():
         pllack_sra.addKey(value.getAttribute("name"), value.getAttribute("value"), value.getAttribute("caption"))
     pllack_sra.setDefaultValue(0)
 
     # PLLA Internal Filter Capaticance Value (SCA)
-    pllack_sca_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="PMC_PLL_CFG"]/bitfield@[name="SCA"]')
-    pllack_sca_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="'+pllack_sca_node.getAttribute("values")+'"]')
+    pllack_sca_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="PMC_PLL_CFG__SCA"]')
     pllack_sca = clk_comp.createKeyValueSetSymbol("CLK_PLLACK_SCA", pllack_menu)
-    pllack_sca.setLabel(pllack_sca_node.getAttribute("name"))
-    pllack_sca.setDescription(pllack_sca_node.getAttribute("caption"))
-    pllack_sca.setDisplayMode("Key")
+    pllack_sca.setLabel("Filter Internal Capaticance Value")
+    pllack_sca.setDescription("Internal Filter PLL – Select Internal Capaticance Value")
+    pllack_sca.setDisplayMode("Description")
     pllack_sca.setOutputMode("Key")
     for value in pllack_sca_vg_node.getChildren():
         pllack_sca.addKey(value.getAttribute("name"), value.getAttribute("value"), value.getAttribute("caption"))
     pllack_sca.setDefaultValue(0)
 
     # PLLA Output Current (OUTCUR_PLLA)
-    pllack_outcur_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="PMC_PLL_CFG"]/bitfield@[name="OUTCUR_PLLA"]')
-    pllack_outcur_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="'+pllack_outcur_node.getAttribute("values")+'"]')
+    pllack_outcur_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="PMC_PLL_CFG__OUTCUR_PLLA"]')
     pllack_outcur = clk_comp.createKeyValueSetSymbol("CLK_PLLACK_OUTCUR", pllack_menu)
-    pllack_outcur.setLabel(pllack_outcur_node.getAttribute("name"))
-    pllack_outcur.setDescription(pllack_outcur_node.getAttribute("caption"))
-    pllack_outcur.setDisplayMode("Key")
+    pllack_outcur.setLabel("PLLA Output Current")
+    pllack_outcur.setDescription("PLLA Output Current")
+    pllack_outcur.setDisplayMode("Description")
     pllack_outcur.setOutputMode("Key")
     for value in pllack_outcur_vg_node.getChildren():
         pllack_outcur.addKey(value.getAttribute("name"), value.getAttribute("value"), value.getAttribute("caption"))
@@ -679,9 +625,12 @@ def __plla_clock_menu(clk_comp, clk_menu):
     pllack_freq.setLabel("PLLACK Frequency (HZ)")
     pllack_freq.setDefaultValue(0)
     pllack_freq.setReadOnly(True)
-    pllack_freq.setVisible(False)
+    pllack_freq.setVisible(True)
     pllack_freq.setDependencies(upd_pllack_freq, ["CLK_PLLACK_DIVA", "CLK_PLLACK_MULA", "CLK_MAINCK_FREQ"])
 
+    #default clock
+    pllack_mula.setValue(9)
+    pllack_diva.setValue(1)
 # PLLB CLOCK MENU
 def __pllb_clock_menu(clk_comp, clk_menu):
     pllbck_menu = clk_comp.createMenuSymbol("CLK_PLLBCK_MENU", clk_menu)
@@ -691,96 +640,71 @@ def __pllb_clock_menu(clk_comp, clk_menu):
     # Section 2.5 - A 40 MHz to 200 MHz Programmable PLL (input from 8 MHz to 20 MHz)
 
     # PLLB Front End Divider
-    pllbck_divb_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="CKGR_PLLBR"]/bitfield@[name="DIVB"]')
     pllbck_divb = clk_comp.createIntegerSymbol("CLK_PLLBCK_DIVB", pllbck_menu)
-    pllbck_divb.setLabel(pllbck_divb_node.getAttribute("name"))
-    pllbck_divb.setDescription(pllbck_divb_node.getAttribute("caption"))
+    pllbck_divb.setLabel("PLL Front End divider")
+    pllbck_divb.setDescription("Divides the output of PLL. If Dicvider is set to 0 PLL is disabled")
     pllbck_divb.setDefaultValue(0)
     pllbck_divb.setMin(0)
     pllbck_divb.setMax(64)
 
     # PLLB Multiplier
-    pllbck_mulb_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="CKGR_PLLBR"]/bitfield@[name="MULB"]')
     pllbck_mulb = clk_comp.createIntegerSymbol("CLK_PLLBCK_MULB", pllbck_menu)
-    pllbck_mulb.setLabel(pllbck_mulb_node.getAttribute("name"))
-    pllbck_mulb.setDescription(pllbck_mulb_node.getAttribute("caption"))
+    pllbck_mulb.setLabel("PLLB Multiplier")
+    pllbck_mulb.setDescription("PLLCK frequency is the PLLA input frequency multiplied by MULA + 1.")
     pllbck_mulb.setDefaultValue(0)
     pllbck_mulb.setMin(0)
     pllbck_mulb.setMax(56)
 
-    # PLLB Multiplier Max
-    pllbck_mmax_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="PMC_PMMR"]/bitfield@[name="PLLB_MMAX"]')
-    pllbck_mmax = clk_comp.createIntegerSymbol("CLK_PLLBCK_MMAX", pllbck_menu)
-    pllbck_mmax.setLabel(pllbck_mmax_node.getAttribute("name"))
-    pllbck_mmax.setDescription(pllbck_mmax_node.getAttribute("caption"))
-    pllbck_mmax.setDefaultValue(2047)
-    pllbck_mmax.setMin(0)
-    pllbck_mmax.setMax(2047)
-
-    # PLLB count of MD_SLCK cycles before LOCKB set
-    pllbck_cntb_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="CKGR_PLLBR"]/bitfield@[name="PLLBCOUNT"]')
-    pllbck_cntb = clk_comp.createIntegerSymbol("CLK_PLLBCK_PLLBCOUNT", pllbck_menu)
-    pllbck_cntb.setLabel(pllbck_cntb_node.getAttribute("name"))
-    pllbck_cntb.setDescription(pllbck_cntb_node.getAttribute("caption"))
-    pllbck_cntb.setDefaultValue(63)
-    pllbck_cntb.setMin(0)
-    pllbck_cntb.setMax(63)
-
     # PLLB Frequency Range
-    pllbck_vco_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="CKGR_PLLBR"]/bitfield@[name="FREQ_VCO"]')
-    pllbck_vco_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="'+pllbck_vco_node.getAttribute("values")+'"]')
+    pllbck_vco_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="CKGR_PLLBR__FREQ_VCO"]')
     pllbck_vco = clk_comp.createKeyValueSetSymbol("CLK_PLLBCK_FREQ_VCO", pllbck_menu)
-    pllbck_vco.setLabel(pllbck_vco_node.getAttribute("name"))
-    pllbck_vco.setDescription(pllbck_vco_node.getAttribute("caption"))
-    pllbck_vco.setDisplayMode("Key")
+    pllbck_vco.setLabel("VCO Frequency Range")
+    pllbck_vco.setDescription("This is used to setup the output frequency range of VCO")
+    pllbck_vco.setDisplayMode("Description")
     pllbck_vco.setOutputMode("Key")
     for value in pllbck_vco_vg_node.getChildren():
         pllbck_vco.addKey(value.getAttribute("name"), value.getAttribute("value"), value.getAttribute("caption"))
     pllbck_vco.setDefaultValue(0)
 
     # PLLB Clock Source
-    pllbck_srcb_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="CKGR_PLLBR"]/bitfield@[name="SRCB"]')
-    pllbck_srcb_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="'+pllbck_srcb_node.getAttribute("values")+'"]')
+    pllbck_srcb_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="CKGR_PLLBR__SRCB"]')
     pllbck_srcb = clk_comp.createKeyValueSetSymbol("CLK_PLLBCK_SRCB", pllbck_menu)
-    pllbck_srcb.setLabel(pllbck_srcb_node.getAttribute("name"))
-    pllbck_srcb.setDescription(pllbck_srcb_node.getAttribute("caption"))
-    pllbck_srcb.setDisplayMode("Key")
+    pllbck_srcb.setLabel("PLLB Source Clock Selection")
+    pllbck_srcb.setDescription("Selects clock source for PLLB")
+    pllbck_srcb.setDisplayMode("Description")
     pllbck_srcb.setOutputMode("Key")
     for value in pllbck_srcb_vg_node.getChildren():
         pllbck_srcb.addKey(value.getAttribute("name"), value.getAttribute("value"), value.getAttribute("caption"))
     pllbck_srcb.setDefaultValue(0)
 
     # PLLB Internal Filter Resistor Value (SRB)
-    pllbck_srb_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="PMC_PLL_CFG"]/bitfield@[name="SRB"]')
-    pllbck_srb_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="'+pllbck_srb_node.getAttribute("values")+'"]')
+    pllbck_srb_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="PMC_PLL_CFG__SRB"]')
     pllbck_srb = clk_comp.createKeyValueSetSymbol("CLK_PLLBCK_SRB", pllbck_menu)
-    pllbck_srb.setLabel(pllbck_srb_node.getAttribute("name"))
-    pllbck_srb.setDescription(pllbck_srb_node.getAttribute("caption"))
-    pllbck_srb.setDisplayMode("Key")
+    pllbck_srb.setLabel("Filter Internal Resistor Value")
+    pllbck_srb.setDescription("Internal Filter PLL – Select Internal Resistor Value")
+    pllbck_srb.setDisplayMode("Description")
     pllbck_srb.setOutputMode("Key")
     for value in pllbck_srb_vg_node.getChildren():
         pllbck_srb.addKey(value.getAttribute("name"), value.getAttribute("value"), value.getAttribute("caption"))
     pllbck_srb.setDefaultValue(0)
 
     # PLLB Internal Filter Capaticance Value (SCB)
-    pllbck_scb_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="PMC_PLL_CFG"]/bitfield@[name="SCB"]')
-    pllbck_scb_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="'+pllbck_scb_node.getAttribute("values")+'"]')
+    pllbck_scb_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="PMC_PLL_CFG__SCB"]')
     pllbck_scb = clk_comp.createKeyValueSetSymbol("CLK_PLLBCK_SCB", pllbck_menu)
-    pllbck_scb.setLabel(pllbck_scb_node.getAttribute("name"))
-    pllbck_scb.setDescription(pllbck_scb_node.getAttribute("caption"))
-    pllbck_scb.setDisplayMode("Key")
+    pllbck_scb.setLabel("Filter Internal Capaticance Value")
+    pllbck_scb.setDescription("Internal Filter PLL – Select Internal Capaticance Value")
+    pllbck_scb.setDisplayMode("Description")
     pllbck_scb.setOutputMode("Key")
     for value in pllbck_scb_vg_node.getChildren():
         pllbck_scb.addKey(value.getAttribute("name"), value.getAttribute("value"), value.getAttribute("caption"))
     pllbck_scb.setDefaultValue(0)
 
     # PLLB Output Current (OUTCUR_PLLB)
-    pllbck_outcur_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="PMC_PLL_CFG"]/bitfield@[name="OUTCUR_PLLB"]')
-    pllbck_outcur_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="'+pllbck_outcur_node.getAttribute("values")+'"]')
+    pllbck_outcur_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="PMC_PLL_CFG__OUTCUR_PLLB"]')
     pllbck_outcur = clk_comp.createKeyValueSetSymbol("CLK_PLLBCK_OUTCUR", pllbck_menu)
-    pllbck_outcur.setLabel(pllbck_outcur_node.getAttribute("name"))
-    pllbck_outcur.setDescription(pllbck_outcur_node.getAttribute("caption"))
-    pllbck_outcur.setDisplayMode("Key")
+    pllbck_outcur.setLabel("PLLB Output Current")
+    pllbck_outcur.setDescription("PLLB Output Current")
+    pllbck_outcur.setDisplayMode("Description")
     pllbck_outcur.setOutputMode("Key")
     for value in pllbck_outcur_vg_node.getChildren():
         pllbck_outcur.addKey(value.getAttribute("name"), value.getAttribute("value"), value.getAttribute("caption"))
@@ -791,7 +715,7 @@ def __pllb_clock_menu(clk_comp, clk_menu):
     pllbck_freq.setLabel("PLLBCK Frequency (HZ)")
     pllbck_freq.setDefaultValue(0)
     pllbck_freq.setReadOnly(True)
-    pllbck_freq.setVisible(False)
+    pllbck_freq.setVisible(True)
     pllbck_freq.setDependencies(upd_pllbck_freq, ["CLK_PLLBCK_DIVB", "CLK_PLLBCK_MULB", "CLK_MAINCK_FREQ", "CLK_RC2CK_FREQ", "CLK_PLLBCK_SRCB"])
 
 # MASTER CLOCK MENU
@@ -801,11 +725,10 @@ def __mast_clock_menu(clk_comp, clk_menu):
     mck_menu.setDescription("Master Clock Configuration")
 
     # Master Clock Source
-    mck_css_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="PMC_MCKR"]/bitfield@[name="CSS"]')
-    mck_css_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="'+mck_css_node.getAttribute("values")+'"]')
+    mck_css_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="PMC_MCKR__CSS"]')
     mck_css = clk_comp.createKeyValueSetSymbol("CLK_MCK_CSS", mck_menu)
-    mck_css.setLabel(mck_css_node.getAttribute("name"))
-    mck_css.setDescription(mck_css_node.getAttribute("caption"))
+    mck_css.setLabel("Clock Source")
+    mck_css.setDescription("This option selects the source for the Master Clock")
     mck_css.setDisplayMode("Key")
     mck_css.setOutputMode("Key")
     for value in mck_css_vg_node.getChildren():
@@ -813,24 +736,22 @@ def __mast_clock_menu(clk_comp, clk_menu):
     mck_css.setDefaultValue(1)
 
     # Master Clock Prescaler
-    mck_pres_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="PMC_MCKR"]/bitfield@[name="PRES"]')
-    mck_pres_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="'+mck_pres_node.getAttribute("values")+'"]')
+    mck_pres_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="PMC_MCKR__PRES"]')
     mck_pres = clk_comp.createKeyValueSetSymbol("CLK_MCK_PRES", mck_menu)
-    mck_pres.setLabel(mck_pres_node.getAttribute("name"))
-    mck_pres.setDescription(mck_pres_node.getAttribute("caption"))
-    mck_pres.setDisplayMode("Key")
+    mck_pres.setLabel("Clock Prescalar")
+    mck_pres.setDescription("Divides the input clock by Selected prescalar")
+    mck_pres.setDisplayMode("Description")
     mck_pres.setOutputMode("Key")
     for value in mck_pres_vg_node.getChildren():
         mck_pres.addKey(value.getAttribute("name"), value.getAttribute("value"), value.getAttribute("caption"))
     mck_pres.setDefaultValue(0)
 
     # Master Clock Divider
-    mck_mdiv_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="PMC_MCKR"]/bitfield@[name="MDIV"]')
-    mck_mdiv_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="'+mck_mdiv_node.getAttribute("values")+'"]')
+    mck_mdiv_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="PMC_MCKR__MDIV"]')
     mck_mdiv = clk_comp.createKeyValueSetSymbol("CLK_MCK_MDIV", mck_menu)
-    mck_mdiv.setLabel(mck_mdiv_node.getAttribute("name"))
-    mck_mdiv.setDescription(mck_mdiv_node.getAttribute("caption"))
-    mck_mdiv.setDisplayMode("Key")
+    mck_mdiv.setLabel("Master Clock Divider")
+    mck_mdiv.setDescription("Divides the output Master Clock by selected divider")
+    mck_mdiv.setDisplayMode("Description")
     mck_mdiv.setOutputMode("Key")
     for value in mck_mdiv_vg_node.getChildren():
         mck_mdiv.addKey(value.getAttribute("name"), value.getAttribute("value"), value.getAttribute("caption"))
@@ -841,31 +762,28 @@ def __mast_clock_menu(clk_comp, clk_menu):
     fclk_freq.setLabel("FCLK Frequency (HZ)")
     fclk_freq.setDefaultValue(Database.getSymbolValue("core", "CLK_MAINCK_FREQ"))
     fclk_freq.setReadOnly(True)
-    fclk_freq.setVisible(False)
+    fclk_freq.setVisible(True)
     fclk_freq.setDependencies(upd_fclk_freq, ["CLK_MCK_CSS", "CLK_MCK_PRES", "CLK_MAINCK_FREQ", "CLK_MD_SLCK_FREQ", "CLK_PLLACK_FREQ"])
 
-    # SysTick Clock Frequency
+    # SysTick External Clock Frequency
     tick_freq = clk_comp.createIntegerSymbol("SYSTICK_CLOCK_FREQUENCY", mck_menu)
     tick_freq.setLabel("SysTick Frequency (HZ)")
-    tick_freq.setDefaultValue(fclk_freq.getValue() / 8)
+    tick_freq.setDefaultValue(fclk_freq.getValue() / SYSTICK_EXT_DIV)
     tick_freq.setReadOnly(True)
-    tick_freq.setVisible(False)
-    tick_freq.setDependencies(upd_tick_freq, ["CPU_CLOCK_FREQUENCY"])
+    tick_freq.setVisible(True)
+    tick_freq.setDependencies(upd_systick_freq, ["CPU_CLOCK_FREQUENCY"])
 
     # Master Clock Frequency
     mck_freq = clk_comp.createIntegerSymbol("CLK_MCK_FREQ", mck_menu)
     mck_freq.setLabel("MCK Frequency (HZ)")
     mck_freq.setDefaultValue(Database.getSymbolValue("core", "CLK_MAINCK_FREQ"))
     mck_freq.setReadOnly(True)
-    mck_freq.setVisible(False)
-    mck_freq.setDependencies(upd_mck_freq, ["CLK_MCK_CSS", "CLK_MCK_PRES", "CLK_MCK_MDIV", "CLK_MAINCK_FREQ", "CLK_MD_SLCK_FREQ", "CLK_PLLACK_FREQ"])
+    mck_freq.setVisible(True)
+    mck_freq.setDependencies(upd_mck_freq, ["CLK_MCK_MDIV", "CPU_CLOCK_FREQUENCY"])
 
-    # WARNING! Selected clock source not enabled.
-    mck_warn_not_en = clk_comp.createCommentSymbol("CLK_MCK_WARN_NOT_EN", mck_menu)
-    mck_warn_not_en.setLabel("WARNING! Selected clock source not enabled.")
-    mck_warn_not_en.setVisible(False)
-    mck_warn_not_en.setDependencies(warn_event_value_0, ["CLK_MCK_FREQ"])
-
+    #default clock
+    mck_css.setValue(2)
+    mck_mdiv.setValue(1)
 # PROGRAMMABLE CLOCK MENU
 def __prog_clock_menu(clk_comp, clk_menu):
     pck_menu = clk_comp.createMenuSymbol("CLK_PCK_MENU", clk_menu)
@@ -877,20 +795,18 @@ def __prog_clock_menu(clk_comp, clk_menu):
         pckx_en = clk_comp.createBooleanSymbol("CLK_PCK"+str(pckx)+"_EN", pck_menu)
         pckx_en.setLabel("Enable PCK"+str(pckx))
     
-        pckx_css_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="PMC_PCK"]/bitfield@[name="CSS"]')
-        pckx_css_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="'+pckx_css_node.getAttribute("values")+'"]')
+        pckx_css_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="PMC_PCK__CSS"]')
         pckx_css = clk_comp.createKeyValueSetSymbol("CLK_PCK"+str(pckx)+"_CSS", pckx_en)
-        pckx_css.setLabel(pckx_css_node.getAttribute("name"))
-        pckx_css.setDescription(pckx_css_node.getAttribute("caption"))
+        pckx_css.setLabel("Clock Source")
+        pckx_css.setDescription("Selects source for the programmable clock")
         pckx_css.setDisplayMode("Key")
         pckx_css.setOutputMode("Key")
         for value in pckx_css_vg_node.getChildren():
             pckx_css.addKey(value.getAttribute("name"), value.getAttribute("value"), value.getAttribute("caption"))
     
-        pckx_pres_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="PMC_PCK"]/bitfield@[name="PRES"]')
         pckx_pres = clk_comp.createIntegerSymbol("CLK_PCK"+str(pckx)+"_PRES", pckx_en)
-        pckx_pres.setLabel(pckx_pres_node.getAttribute("name"))
-        pckx_pres.setDescription(pckx_pres_node.getAttribute("caption"))
+        pckx_pres.setLabel("Programmable Clock Prescalar")
+        pckx_pres.setDescription("Divides the input clock by PRES+1.")
         pckx_pres.setMin(0)
         pckx_pres.setMax(255)
     
@@ -898,16 +814,10 @@ def __prog_clock_menu(clk_comp, clk_menu):
         pckx_freq.setLabel("PCK"+str(pckx)+" Frequency (HZ)")
         pckx_freq.setDefaultValue(0)
         pckx_freq.setReadOnly(True)
-        pckx_freq.setVisible(False)
+        pckx_freq.setVisible(True)
         pckx_freq.setDependencies(upd_pck_freq, ["CLK_PCK"+str(pckx)+"_EN", "CLK_PCK"+str(pckx)+"_CSS", "CLK_PCK"+str(pckx)+"_PRES",
                 "CLK_MAINCK_FREQ", "CLK_MD_SLCK_FREQ", "CLK_PLLACK_FREQ", "CLK_PLLBCK_FREQ", "CLK_MCK_FREQ"])
     
-        # WARNING! Selected clock source not enabled.
-        pckx_warn_not_en = clk_comp.createCommentSymbol("CLK_PCK"+str(pckx)+"_WARN_NOT_EN", pckx_en)
-        pckx_warn_not_en.setLabel("WARNING! Selected clock source not enabled.")
-        pckx_warn_not_en.setVisible(False)
-        #pckx_warn_not_en.setDependencies(warn_pckx_src_not_en, ["CLK_PCK"+str(pckx)+"_EN", "CLK_PCK"+str(pckx)+"_FREQ"])
-        pckx_warn_not_en.setDependencies(warn_event_value_0, ["CLK_PCK"+str(pckx)+"_FREQ"])
 
 # PERIPHERAL CLOCK MENU
 def __peri_clock_menu(clk_comp, clk_menu):
@@ -956,95 +866,10 @@ def __peri_clock_menu(clk_comp, clk_menu):
                     # Create peripheral clock frequency symbol [instance]_CLOCK_FREQUENCY
                     sym_constructor(clock_id_name, clk_comp, periph_menu)
 
-# Calculated Clock Frequencies MENU
-def __calc_clock_menu(clk_comp, clk_menu):
-    calc_freq_menu = clk_comp.createMenuSymbol("CLK_FREQ_MENU", clk_menu)
-    calc_freq_menu.setLabel("Calculated Clock Frequencies")
-
-    # TD_SLCK Frequency Display
-    calc_slck_td_freq = clk_comp.createIntegerSymbol("CALC_TD_SLCK_FREQ", calc_freq_menu)
-    calc_slck_td_freq.setLabel("TD_SLCK Frequency (HZ)")
-    calc_slck_td_freq.setDefaultValue(SLCK_RC_FREQ)
-    calc_slck_td_freq.setReadOnly(True)
-    calc_slck_td_freq.setVisible(True)
-    calc_slck_td_freq.setDependencies(upd_clone, ["CLK_TD_SLCK_FREQ"])
-
-    # MD_SLCK Frequency Display
-    calc_slck_md_freq = clk_comp.createIntegerSymbol("CALC_MD_SLCK_FREQ", calc_freq_menu)
-    calc_slck_md_freq.setLabel("MD_SLCK Frequency (HZ)")
-    calc_slck_md_freq.setDefaultValue(SLCK_RC_FREQ)
-    calc_slck_md_freq.setReadOnly(True)
-    calc_slck_md_freq.setVisible(True)
-    calc_slck_md_freq.setDependencies(upd_clone, ["CLK_MD_SLCK_FREQ"])
-
-    # MAINCK Frequency Display
-    calc_mainck_freq = clk_comp.createIntegerSymbol("CALC_MAINCK_FREQ", calc_freq_menu)
-    calc_mainck_freq.setLabel("MAINCK Frequency (HZ)")
-    mainck_rc_freq = calc_mainck_freq.getComponent().getSymbolByID("CLK_MAINCK_MOSCRCF")
-    calc_mainck_freq.setDefaultValue(int(mainck_rc_freq.getKey(mainck_rc_freq.getValue()).split("_")[1]) * 1000000)
-    calc_mainck_freq.setReadOnly(True)
-    calc_mainck_freq.setVisible(True)
-    calc_mainck_freq.setDependencies(upd_clone, ["CLK_MAINCK_FREQ"])
-
-    # RC2CK Frequency Display
-    calc_rc2ck_freq = clk_comp.createIntegerSymbol("CALC_RC2CK_FREQ", calc_freq_menu)
-    calc_rc2ck_freq.setLabel("RC2CK Frequency (HZ)")
-    rc2ck_sel_freq = calc_rc2ck_freq.getComponent().getSymbolByID("CLK_RC2CK_OSCRCF")
-    calc_rc2ck_freq.setDefaultValue(int(rc2ck_sel_freq.getKey(rc2ck_sel_freq.getValue()).split("_")[1]) * 1000000)
-    calc_rc2ck_freq.setReadOnly(True)
-    calc_rc2ck_freq.setVisible(True)
-    calc_rc2ck_freq.setDependencies(upd_clone_dsp, ["CLK_RC2CK_FREQ"])
-
-    # PLLACK Frequency Display
-    calc_pllack_freq = clk_comp.createIntegerSymbol("CALC_PLLACK_FREQ", calc_freq_menu)
-    calc_pllack_freq.setLabel("PLLACK Frequency (HZ)")
-    calc_pllack_freq.setDefaultValue(0)
-    calc_pllack_freq.setReadOnly(True)
-    calc_pllack_freq.setVisible(False)
-    calc_pllack_freq.setDependencies(upd_clone_dsp, ["CLK_PLLACK_FREQ"])
-
-    # PLLBCK Frequency Display
-    calc_pllbck_freq = clk_comp.createIntegerSymbol("CALC_PLLBCK_FREQ", calc_freq_menu)
-    calc_pllbck_freq.setLabel("PLLBCK Frequency (HZ)")
-    calc_pllbck_freq.setDefaultValue(0)
-    calc_pllbck_freq.setReadOnly(True)
-    calc_pllbck_freq.setVisible(False)
-    calc_pllbck_freq.setDependencies(upd_clone_dsp, ["CLK_PLLBCK_FREQ"])
-
-    # MCK Frequency Display
-    calc_mck_freq = clk_comp.createIntegerSymbol("CALC_MCK_FREQ", calc_freq_menu)
-    calc_mck_freq.setLabel("MCK Frequency (HZ)")
-    calc_mck_freq.setDefaultValue(Database.getSymbolValue("core", "CLK_MCK_FREQ"))
-    calc_mck_freq.setReadOnly(True)
-    calc_mck_freq.setVisible(True)
-    calc_mck_freq.setDependencies(upd_clone, ["CLK_MCK_FREQ"])
-
-    # FCLK Frequency Display
-    calc_fclk_freq = clk_comp.createIntegerSymbol("CALC_FCLK_FREQ", calc_freq_menu)
-    calc_fclk_freq.setLabel("CPU Frequency (HZ)")
-    calc_fclk_freq.setDefaultValue(Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY"))
-    calc_fclk_freq.setReadOnly(True)
-    calc_fclk_freq.setVisible(True)
-    calc_fclk_freq.setDependencies(upd_clone, ["CPU_CLOCK_FREQUENCY"])
-
-    # SysTick Frequency Display
-    calc_tick_freq = clk_comp.createIntegerSymbol("CALC_TICK_FREQ", calc_freq_menu)
-    calc_tick_freq.setLabel("SysTick Frequency (HZ)")
-    calc_tick_freq.setDefaultValue(Database.getSymbolValue("core", "SYSTICK_CLOCK_FREQUENCY"))
-    calc_tick_freq.setReadOnly(True)
-    calc_tick_freq.setVisible(True)
-    calc_tick_freq.setDependencies(upd_clone, ["SYSTICK_CLOCK_FREQUENCY"])
-
-    num_pcks = int(ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="PMC_PCK"]').getAttribute("count"))
-    for pckx in range(0, num_pcks):
-        calc_pckx_freq = clk_comp.createIntegerSymbol("CALC_PCK"+str(pckx)+"_FREQ", calc_freq_menu)
-        calc_pckx_freq.setLabel("PCK"+str(pckx)+" Frequency (HZ)")
-        calc_pckx_freq.setDefaultValue(0)
-        calc_pckx_freq.setReadOnly(True)
-        calc_pckx_freq.setVisible(False)
-        calc_pckx_freq.setDependencies(upd_clone_dsp, ["CLK_PCK"+str(pckx)+"_FREQ"])
 
 if __name__ == "__main__":
+    
+    global perifreq  
     # Main clock configuration menu
     clk_menu = coreComponent.createMenuSymbol("CLK_MENU", None)
     clk_menu.setLabel("Clock (PMC)")
@@ -1059,8 +884,8 @@ if __name__ == "__main__":
     __mast_clock_menu(coreComponent, clk_menu)
     __prog_clock_menu(coreComponent, clk_menu)
     __peri_clock_menu(coreComponent, clk_menu)
-    __calc_clock_menu(coreComponent, clk_menu)
 
+    
     #File handling
     CONFIG_NAME = Variables.get("__CONFIGURATION_NAME")
 

@@ -58,43 +58,30 @@
 
 </#compress>
 
-<#-- Default value of TD_SLCK and MD_SLCK is RC  -->
-<#if CLK_SLCK_TDXTALSEL || CLK_SLCK_MDXTALSEL || CLK_SLCK_OSCBYPASS>
 /*********************************************************************************
 Initialize Slow Clock (SLCK)
 *********************************************************************************/
 static void CLK_SlowClockInitialize(void)
 {
     <#if CLK_SLCK_OSCBYPASS>
-    /* Set bypass mode before selecting xtal select */
-    SUPC_REGS->SUPC_MR |= SUPC_MR_KEY_PASSWD | SUPC_MR_OSCBYPASS_BYPASS;
+    /* Set bypass mode before selecting xtal select (preserve supply monitor settings)*/
+    SUPC_REGS->SUPC_MR = (SUPC_REGS->SUPC_MR & (SUPC_MR_CORSMDIS_Msk | SUPC_MR_CORSMRSTEN_Msk)) | SUPC_MR_KEY_PASSWD | SUPC_MR_OSCBYPASS_BYPASS;
     </#if>
-    <#if CLK_SLCK_TDXTALSEL && !CLK_SLCK_MDXTALSEL>
+    <#if CLK_SLCK_TDXTALSEL != "0">
     /* Select xtal for TD_SLCK */
-    SUPC_REGS->SUPC_CR |= SUPC_CR_KEY_PASSWD | SUPC_CR_TDXTALSEL_CRYSTAL_SEL;
-    </#if>
-    <#if !CLK_SLCK_TDXTALSEL && CLK_SLCK_MDXTALSEL>
-    /* Select xtal for MD_SLCK */
-    SUPC_REGS->SUPC_CR |= SUPC_CR_KEY_PASSWD | SUPC_CR_MDXTALSEL_CRYSTAL_SEL;
-    </#if>
-    <#if CLK_SLCK_TDXTALSEL && CLK_SLCK_MDXTALSEL>
-    /* Select xtal for bot TD_SLCK and MD_SLCK */
-    SUPC_REGS->SUPC_CR |= SUPC_CR_KEY_PASSWD | SUPC_CR_TDXTALSEL_CRYSTAL_SEL | SUPC_CR_MDXTALSEL_CRYSTAL_SEL;
+    SUPC_REGS->SUPC_CR = SUPC_CR_KEY_PASSWD | SUPC_CR_TDXTALSEL_CRYSTAL_SEL;
+    <#else>
+    SUPC_REGS->SUPC_CR = SUPC_CR_KEY_PASSWD;
     </#if>
     <#if !CLK_SLCK_OSCBYPASS>
-        <#if CLK_SLCK_TDXTALSEL>
+        <#if CLK_SLCK_TDXTALSEL != "0">
     /* Wait for xtal selection to become effective for TD_SLCK */
     while (!(SUPC_REGS->SUPC_SR & SUPC_SR_TDOSCSEL_Msk));
-        </#if>
-        <#if CLK_SLCK_MDXTALSEL>
-    /* Wait for xtal selection to become effective for MD_SLCK */
-    while (!(SUPC_REGS->SUPC_PWR & SUPC_PWR_MONSELS_Msk));
         </#if>
     </#if>
 }
 
-</#if>
-<#if !CLK_MAINCK_MOSCRCEN || CLK_MAINCK_MOSCRCF!="_10_MHZ" || CLK_MAINCK_MOSCXTEN || CLK_MAINCK_MOSCSEL || CLK_MAINCK_MOSCXTBY>
+<#if !CLK_MAINCK_MOSCRCEN || CLK_MAINCK_MOSCRCF!="_10_MHZ" || CLK_MAINCK_MOSCXTEN || CLK_MAINCK_MOSCSEL!="0" || CLK_MAINCK_MOSCXTBY>
 /*********************************************************************************
 Initialize Main Clock (MAINCK)
 *********************************************************************************/
@@ -104,7 +91,7 @@ static void CLK_MainClockInitialize(void)
     /* Disable Main Crystal Oscillator and Enable External Clock Signal on XIN pin  */
     PMC_REGS->CKGR_MOR = (PMC_REGS->CKGR_MOR & ~CKGR_MOR_MOSCXTEN_Msk) | CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCXTBY_Msk;
 
-    <#if CLK_MAINCK_MOSCSEL>
+    <#if CLK_MAINCK_MOSCSEL != "0">
      /* External clock signal (XIN pin) is selected as the Main Clock (MAINCK) source.
         Switch Main Clock (MAINCK) to External signal on XIN pin */
     PMC_REGS->CKGR_MOR |= CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCSEL_Msk;
@@ -120,7 +107,7 @@ static void CLK_MainClockInitialize(void)
     /* Wait until the main oscillator clock is ready */
     while ( (PMC_REGS->PMC_SR & PMC_SR_MOSCXTS_Msk) != PMC_SR_MOSCXTS_Msk);
 
-    <#if CLK_MAINCK_MOSCSEL>
+    <#if CLK_MAINCK_MOSCSEL != "0">
     /* Main Crystal Oscillator is selected as the Main Clock (MAINCK) source.
     Switch Main Clock (MAINCK) to Main Crystal Oscillator clock */
     PMC_REGS->CKGR_MOR |= CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCSEL_Msk;
@@ -141,9 +128,9 @@ static void CLK_MainClockInitialize(void)
     PMC_REGS->CKGR_MOR = (PMC_REGS->CKGR_MOR & ~CKGR_MOR_MOSCRCF_Msk) | CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCRCF${CLK_MAINCK_MOSCRCF};
 
     /* Wait until the RC oscillator clock is ready */
-    while( (PMC_REGS->PMC_SR& PMC_SR_MOSCRCS_Msk) != PMC_SR_MOSCRCS_Msk);
+    while( (PMC_REGS->PMC_SR & PMC_SR_MOSCRCS_Msk) != PMC_SR_MOSCRCS_Msk);
 
-    <#if !CLK_MAINCK_MOSCSEL>
+    <#if CLK_MAINCK_MOSCSEL == "0">
     /* Main RC Oscillator is selected as the Main Clock (MAINCK) source.
        Switch Main Clock (MAINCK) to the RC Oscillator clock */
     PMC_REGS->CKGR_MOR = (PMC_REGS->CKGR_MOR & ~CKGR_MOR_MOSCSEL_Msk) | CKGR_MOR_KEY_PASSWD;
@@ -184,19 +171,14 @@ static void CLK_PLLxClockInitialize(void)
                             PMC_PLL_CFG_OUTCUR_PLLB_${CLK_PLLBCK_OUTCUR} |
                             PMC_PLL_CFG_SRA_${CLK_PLLACK_SRA} |
                             PMC_PLL_CFG_SCA_${CLK_PLLACK_SCA} |
-                            PMC_PLL_CFG_OUTCUR_PLLA_${CLK_PLLACK_OUTCUR}
+                            PMC_PLL_CFG_OUTCUR_PLLA_${CLK_PLLACK_OUTCUR};
 
-    </#if>
-    <#if CLK_PLLBCK_MMAX!=2047 || CLK_PLLACK_MMAX!=2047>
-    PMC_REGS->PMC_PMMR    = PMC_PMMR_PLLB_MMAX(${CLK_PLLBCK_MMAX}) |
-                            PMC_PMMR_PLLA_MMAX(${CLK_PLLACK_MMAX})
-                            
     </#if>
     <#if CLK_PLLACK_DIVA!=0 && CLK_PLLACK_MULA!=0>
     /* Configure and Enable PLLA */
     PMC_REGS->CKGR_PLLAR =  CKGR_PLLAR_ONE_Msk |
                             CKGR_PLLAR_FREQ_VCO_${CLK_PLLACK_FREQ_VCO} |
-                            CKGR_PLLAR_PLLACOUNT(${CLK_PLLACK_PLLACOUNT}) |
+                            CKGR_PLLAR_PLLACOUNT(0x3f) |
                             CKGR_PLLAR_MULA(${CLK_PLLACK_MULA}) |
                             CKGR_PLLAR_DIVA(${CLK_PLLACK_DIVA});
 
@@ -207,13 +189,11 @@ static void CLK_PLLxClockInitialize(void)
     /* Configure and Enable PLLB */
     PMC_REGS->CKGR_PLLBR =  CKGR_PLLBR_SRCB_${CLK_PLLBCK_SRCB} |
                             CKGR_PLLBR_FREQ_VCO_${CLK_PLLBCK_FREQ_VCO} |
-                            CKGR_PLLBR_PLLBCOUNT(${CLK_PLLBCK_PLLBCOUNT}) |
+                            CKGR_PLLBR_PLLBCOUNT(0x3f) |
                             CKGR_PLLBR_MULB(${CLK_PLLBCK_MULB}) |
                             CKGR_PLLBR_DIVB(${CLK_PLLBCK_DIVB});
 
-    //while ( (PMC_REGS->PMC_SR & PMC_SR_LOCKB_Msk) != PMC_SR_LOCKB_Msk);
-    while ( (PMC_REGS->PMC_SR & 0x04) != 0x04);
-
+    while ( (PMC_REGS->PMC_SR & PMC_SR_LOCKB_Msk) != PMC_SR_LOCKB_Msk);
     </#if>
 }
 
@@ -311,12 +291,10 @@ Clock Initialize
 *********************************************************************************/
 void CLK_Initialize( void )
 {
-<#if CLK_SLCK_TDXTALSEL || CLK_SLCK_MDXTALSEL || CLK_SLCK_OSCBYPASS>
     /* Initialize Slow Clock */
     CLK_SlowClockInitialize();
 
-</#if>
-<#if !CLK_MAINCK_MOSCRCEN || CLK_MAINCK_MOSCRCF!="_10_MHZ" || CLK_MAINCK_MOSCXTEN || CLK_MAINCK_MOSCSEL || CLK_MAINCK_MOSCXTBY>
+<#if !CLK_MAINCK_MOSCRCEN || CLK_MAINCK_MOSCRCF!="_10_MHZ" || CLK_MAINCK_MOSCXTEN || CLK_MAINCK_MOSCSEL != "0" || CLK_MAINCK_MOSCXTBY>
     /* Initialize Main Clock */
     CLK_MainClockInitialize();
 
