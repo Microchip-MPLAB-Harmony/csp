@@ -65,7 +65,7 @@ bool ${EFC_INSTANCE_NAME}_SectorErase( uint32_t address )
     uint16_t page_number;
 
     /*Calculate the Page number to be passed for FARG register*/
-    page_number = (address - IFLASH_ADDR) / IFLASH_PAGE_SIZE;
+    page_number = (address - ${MEM_SEGMENT_NAME}_ADDR) / ${MEM_SEGMENT_NAME}_PAGE_SIZE;
     /* Issue the FLASH erase operation*/
     ${EFC_INSTANCE_NAME}_REGS->EEFC_FCR = (EEFC_FCR_FCMD_EPA|EEFC_FCR_FARG(page_number|0x2)|EEFC_FCR_FKEY_PASSWD);
 
@@ -83,11 +83,11 @@ bool ${EFC_INSTANCE_NAME}_PageWrite( uint32_t *data, uint32_t address )
     uint16_t page_number;
 
     /*Calculate the Page number to be passed for FARG register*/
-    page_number = (address - IFLASH_ADDR) / IFLASH_PAGE_SIZE;
+    page_number = (address - ${MEM_SEGMENT_NAME}_ADDR) / ${MEM_SEGMENT_NAME}_PAGE_SIZE;
 
-    for (int i = 0; i < IFLASH_PAGE_SIZE; i += 4)
+    for (int i = 0; i < ${MEM_SEGMENT_NAME}_PAGE_SIZE; i += 4)
     {
-    *((uint32_t *)( IFLASH_ADDR + ( page_number * IFLASH_PAGE_SIZE ) + i )) =    *(( data++ ));
+    *((uint32_t *)( ${MEM_SEGMENT_NAME}_ADDR + ( page_number * ${MEM_SEGMENT_NAME}_PAGE_SIZE ) + i )) =    *(( data++ ));
     }
 
     __DSB();
@@ -110,7 +110,7 @@ bool ${EFC_INSTANCE_NAME}_QuadWordWrite( uint32_t *data, uint32_t address )
     uint16_t page_number;
 
     /*Calculate the Page number to be passed for FARG register*/
-    page_number = (address - IFLASH_ADDR) / IFLASH_PAGE_SIZE;
+    page_number = (address - ${MEM_SEGMENT_NAME}_ADDR) / ${MEM_SEGMENT_NAME}_PAGE_SIZE;
 
     for (int i = 0; i < 16; i += 4)
     {
@@ -133,7 +133,7 @@ void ${EFC_INSTANCE_NAME}_RegionLock(uint32_t address)
     uint16_t page_number;
 
     /*Calculate the Page number to be passed for FARG register*/
-    page_number = (address - IFLASH_ADDR) / IFLASH_PAGE_SIZE;
+    page_number = (address - ${MEM_SEGMENT_NAME}_ADDR) / ${MEM_SEGMENT_NAME}_PAGE_SIZE;
     ${EFC_INSTANCE_NAME}_REGS->EEFC_FCR = (EEFC_FCR_FCMD_SLB | EEFC_FCR_FARG(page_number)| EEFC_FCR_FKEY_PASSWD);
 
     status = 0;
@@ -148,7 +148,7 @@ void ${EFC_INSTANCE_NAME}_RegionUnlock(uint32_t address)
     uint16_t page_number;
 
     /*Calculate the Page number to be passed for FARG register*/
-    page_number = (address - IFLASH_ADDR) / IFLASH_PAGE_SIZE;
+    page_number = (address - ${MEM_SEGMENT_NAME}_ADDR) / ${MEM_SEGMENT_NAME}_PAGE_SIZE;
     ${EFC_INSTANCE_NAME}_REGS->EEFC_FCR = (EEFC_FCR_FCMD_CLB | EEFC_FCR_FARG(page_number)| EEFC_FCR_FKEY_PASSWD);
 
     status = 0;
@@ -167,7 +167,7 @@ bool ${EFC_INSTANCE_NAME}_IsBusy(void)
 EFC_ERROR ${EFC_INSTANCE_NAME}_ErrorGet( void )
 {
     status |= ${EFC_INSTANCE_NAME}_REGS->EEFC_FSR;
-    return status;
+    return (EFC_ERROR)status;
 }
 
 <#if INTERRUPT_ENABLE == true>
