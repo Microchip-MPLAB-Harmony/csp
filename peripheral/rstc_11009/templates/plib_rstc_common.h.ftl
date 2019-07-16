@@ -73,8 +73,7 @@ Data Type definition of Reset Controller (RSTC) Peripheral Library (PLIB).
     Identifies the type of reset.
 
   Description:
-    This enums identifies either General, Backup, Watchdog, Software or User 
-    Reset
+    This enums identifies the different reset types
 
   Remarks:
     Refer to the specific device data sheet to determine availability.
@@ -82,34 +81,17 @@ Data Type definition of Reset Controller (RSTC) Peripheral Library (PLIB).
 
 typedef enum
 {
-    /* First power reset */
-    RSTC_GENERAL_RESET = RSTC_SR_RSTTYP_GENERAL_RST, 
+<#assign RSTTYP_ENUM_LIST = RSTC_RSTTYP_ENUM?eval>
+<#assign RSTTYP_DESC_LIST = RSTC_RSTTYP_DESC?eval>
+<#assign RSTTYP_SIZE = RSTTYP_ENUM_LIST?size>
+<#if RSTTYP_SIZE != 0>
+    <#list 0..(RSTTYP_SIZE-1) as i>
+    /* ${RSTTYP_DESC_LIST[i]} */
+    ${RSTTYP_ENUM_LIST[i]}<#if i<(RSTTYP_SIZE-1)>,</#if>
 
-    /* Reset after Return from Backup mode */
-    RSTC_BACKUP_RESET = RSTC_SR_RSTTYP_BACKUP_RST,
-
-    /* Reset when Watchdog fault occurred */
-    RSTC_WATCHDOG_RESET = RSTC_SR_RSTTYP_WDT_RST,
-
-    /* Reset caused by dedicated software instruction */
-    RSTC_SOFTWARE_RESET = RSTC_SR_RSTTYP_SOFT_RST,
-
-    /* Reset occurs when NRST pin is detected low */
-    RSTC_USER_RESET = RSTC_SR_RSTTYP_USER_RST,
-
+    </#list>
+</#if>
 } RSTC_RESET_CAUSE;
-
-/* Reset type
-
-   Summary:
-    Identifies the type of reset, either Processor reset or External Reset.
-
-   Description:
-    This enums identifies either Processor reset or External Reset.
-
-  Remarks:
-    Refer to the specific device data sheet to determine availability.
-*/
 
 typedef void (*RSTC_CALLBACK) (uintptr_t context);
 
