@@ -93,23 +93,51 @@ def instantiateComponent(rstcComponent):
         clockFail = rstcComponent.createBooleanSymbol("ENABLE_32K_FAIL_DETECT", None)
         clockFail.setLabel("Reset the device on 32.768 kHz Crystal Oscillator Failure Detection")
 
-    rstcSym_MR_ERSTL = rstcComponent.createIntegerSymbol("RSTC_MR_ERSTL", None)
-    rstcSym_MR_ERSTL.setLabel("External Reset Assertion duration on WDT/SW Reset")
-    rstcSym_MR_ERSTL.setMin(0)
-    rstcSym_MR_ERSTL.setMax(15)
-    # Default value is set later to trigger business logic for the first time
+    rstcCPUFEN_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RSTC"]/register-group@[name="RSTC"]/register@[name="RSTC_MR"]/bitfield@[name="CPUFEN"]')
+    if rstcCPUFEN_node != None:
+        rstcSym_MR_CPUFEN = rstcComponent.createBooleanSymbol("RSTC_MR_CPUFEN", None)
+        rstcSym_MR_CPUFEN.setLabel("Reset the device on CPU Clock Failure Detection")
 
-    extResetAssertTimeMessage = rstcComponent.createCommentSymbol("EXT_RESET_LENGTH_MESSAGE", None)
-    extResetAssertTimeMessage.setVisible(True)
-    extResetAssertTimeMessage.setLabel("External Reset Assertion Time is: 0.061 ms ( 2 SLCK Cycles )")
-    extResetAssertTimeMessage.setDependencies(calcExtResetAssertTime, ["RSTC_MR_ERSTL"])
+    rstcERSTL_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RSTC"]/register-group@[name="RSTC"]/register@[name="RSTC_MR"]/bitfield@[name="ERSTL"]')
+    if rstcERSTL_node != None:
+        rstcSym_MR_ERSTL = rstcComponent.createIntegerSymbol("RSTC_MR_ERSTL", None)
+        rstcSym_MR_ERSTL.setLabel("External Reset Assertion duration on WDT/SW Reset")
+        rstcSym_MR_ERSTL.setMin(0)
+        rstcSym_MR_ERSTL.setMax(15)
+        # Default value is set later to trigger business logic for the first time
 
-    rstcSym_MR_ERSTL.setDefaultValue(0)
+        extResetAssertTimeMessage = rstcComponent.createCommentSymbol("EXT_RESET_LENGTH_MESSAGE", None)
+        extResetAssertTimeMessage.setVisible(True)
+        extResetAssertTimeMessage.setLabel("External Reset Assertion Time is: 0.061 ms ( 2 SLCK Cycles )")
+        extResetAssertTimeMessage.setDependencies(calcExtResetAssertTime, ["RSTC_MR_ERSTL"])
+
+        rstcSym_MR_ERSTL.setDefaultValue(0)
 
     rstcCrNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"RSTC\"]/register-group/register@[name=\"RSTC_CR\"]/bitfield@[name=\"PERRST\"]")
     if rstcCrNode != None:
         perResetSupported = rstcComponent.createBooleanSymbol("PERRST_SUPPORTED", None)
         perResetSupported.setVisible(False)
+
+    # Get reset types to build enum
+    rstcRSTTYP_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RSTC"]/register-group@[name="RSTC"]/register@[name="RSTC_SR"]/bitfield@[name="RSTTYP"]')
+    rstcRSTTYP_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RSTC"]/value-group@[name="'+rstcRSTTYP_node.getAttribute("values")+'"]')
+    rstcRSTTYP_enum = rstcComponent.createStringSymbol("RSTC_RSTTYP_ENUM", None)
+    rstcRSTTYP_enum.setReadOnly(True)
+    rstcRSTTYP_enum.setVisible(False)
+    rstcRSTTYP_desc = rstcComponent.createStringSymbol("RSTC_RSTTYP_DESC", None)
+    rstcRSTTYP_desc.setReadOnly(True)
+    rstcRSTTYP_desc.setVisible(False)
+    rstcRSTTYP_enum_str = ""
+    rstcRSTTYP_desc_str = ""
+    for value in rstcRSTTYP_vg_node.getChildren():
+        if rstcRSTTYP_enum_str != "":
+            rstcRSTTYP_enum_str += ","
+            rstcRSTTYP_desc_str += ","
+        rstcRSTTYP_enum_str += '"RSTC_' + value.getAttribute("name").replace("_RST", "_RESET").replace("WDT_", "WATCHDOG_").replace("WKUP_","WAKEUP_") \
+            + ' = ' + 'RSTC_SR_RSTTYP_' + value.getAttribute("name") + '"'
+        rstcRSTTYP_desc_str += '"' + value.getAttribute("caption") + '"'
+    rstcRSTTYP_enum.setValue("["+rstcRSTTYP_enum_str+"]")
+    rstcRSTTYP_desc.setValue("["+rstcRSTTYP_desc_str+"]")
 
     ############################################################################
     #### Dependency ####
@@ -131,7 +159,8 @@ def instantiateComponent(rstcComponent):
     configName = Variables.get("__CONFIGURATION_NAME")
 
     rstcHeader1File = rstcComponent.createFileSymbol("RSTC_HEADER1", None)
-    rstcHeader1File.setSourcePath("../peripheral/rstc_11009/templates/plib_rstc_common.h")
+    rstcHeader1File.setMarkup(True)
+    rstcHeader1File.setSourcePath("../peripheral/rstc_11009/templates/plib_rstc_common.h.ftl")
     rstcHeader1File.setOutputName("plib_rstc_common.h")
     rstcHeader1File.setDestPath("/peripheral/rstc/")
     rstcHeader1File.setProjectPath("config/" + configName + "/peripheral/rstc/")
