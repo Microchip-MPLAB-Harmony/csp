@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<diagram min_x="600" min_y="600" >
+	<shape type="complex_rect" width="530" height="530">
+		<corner loc="topleft" type="notch" length="20"/>
+	</shape>
+	<shape type="string" y="-250" line="000000" val="$DEVICE_NAME" orientation="right" size="16"/>
+	<shape type="string_array" x="-290" y="-216" line="000000" vals="A,B,C,D,E,F,G,H,J,K,L" orientation="down" size="14" margin="45" stroke="2" />
+	<shape type="string_array" x="-230" y="-280" line="000000" vals="1,2,3,4,5,6,7,8,9,10,11" orientation="right" size="14" margin="45" stroke="2"/>
+	<layout type="grid" pin_margin="25" pin_name_margin="0" pin_rows="11" pin_cols="11" pin_radius="10" />
+</diagram>
