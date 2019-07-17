@@ -61,6 +61,7 @@ peripherals = {
                 "TMR_00745"     : ["TMR"],
                 "LCDC_11062"    : ["LCDC"],
                 "SPI_01329"     : ["SPI"],
+                "SPI_00753"     : ["SPI"],
                 "UART_00734"    : ["UART"],
                 "NVM_02819"     : ["MEMORY"],
                 "NVM_01390"     : ["MEMORY"],
