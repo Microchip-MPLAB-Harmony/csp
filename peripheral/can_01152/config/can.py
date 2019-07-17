@@ -48,7 +48,7 @@ def getIRQnumber(string):
 
     for param in interruptsChildren:
         name = param.getAttribute("name")
-        if string == name:
+        if string == name or string == name.replace('_',''):
             irq_index = param.getAttribute("index")
             break
 
