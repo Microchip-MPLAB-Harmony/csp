@@ -73,6 +73,7 @@ peripheralModuleDisableDict = {
         "I2C1": ["5", "16"],
         "I2C2": ["5", "17"],
         "USB": ["5", "24"],
+        "CAN1": ["5", "28"],
         "RTCC": ["6", "0"],
         "REFO": ["6", "1"],
         "PMP": ["6", "16"]
@@ -156,6 +157,9 @@ def spiClockFreqCalc(symbol, event):
             freq = int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK_FREQ"))
 
     symbol.setValue(freq, 1)
+
+def canClockFreqCalc(symbol, event):
+    symbol.setValue(int(Database.getSymbolValue("core", "SYS_CLK_FREQ")))
 
 def updatePMDxRegValue(symbol, event):
 
@@ -1078,6 +1082,8 @@ if __name__ == "__main__":
                     elif peripheralName.startswith("SPI"):
                         peripheral_clock_freq.setDependencies(spiClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", peripheralName.lower() + ".SPI_MASTER_CLOCK", "CONFIG_SYS_CLK_PBCLK_FREQ",
                                                                                         "CONFIG_SYS_CLK_REFCLK_FREQ"])
+                    elif Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001290" and peripheralName.startswith("CAN"):
+                        peripheral_clock_freq.setDependencies(canClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", "SYS_CLK_FREQ"])
                     else:
                         peripheral_clock_freq.setDependencies(peripheralClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", "CONFIG_SYS_CLK_PBCLK_FREQ"])
 
