@@ -112,7 +112,8 @@ peripheralBusDict_DS60001570 =  {
         "QEI3": ["-1", "6", "26"],
         "DMAC": ["-1", "7", "4"],
         "RTCC": ["6"],              #PMD support not there
-                                }
+}
+
 peripheralBusDict_DS60001402 =  {
 
         #Peripheral : ["Peripheral bus  "PMD register no", "PMD register bit no"]
@@ -1661,10 +1662,16 @@ if __name__ == "__main__":
     cfgRegGroup = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CFG"]/register-group@[name="CFG"]').getChildren()
 
     pmdCount = 0
+    pmdDict = {}
+
     for register in cfgRegGroup:
         regName = str(register.getAttribute("name"))
         if regName.startswith("PMD"):
+            mask = 0x0
             pmdCount += 1
+            for bitfield in register.getChildren():
+                mask |= int(str(bitfield.getAttribute("mask")), 16)
+            pmdDict[pmdCount] = mask
 
     peripheralModuleDisableMenu = coreComponent.createMenuSymbol("PMD_CONFIG", SYM_CLK_MENU)
     peripheralModuleDisableMenu.setLabel("Peripheral Module Disable")
@@ -1677,7 +1684,7 @@ if __name__ == "__main__":
     for i in range(1, pmdCount + 1):
         pmdxRegMaskValue = coreComponent.createHexSymbol("PMD" + str(i) + "_REG_VALUE", peripheralModuleDisableMenu)
         pmdxRegMaskValue.setLabel("PMD" + str(i) + " Register Value")
-        pmdxRegMaskValue.setDefaultValue(0xffffffff)
+        pmdxRegMaskValue.setDefaultValue(pmdDict[i])
         pmdxRegMaskValue.setReadOnly(True)
 
     defaultPMDxEnableDict = {k: v for k, v in peripheralBusDict.items() if v[0] == "-1" and "MCPWM" not in k and "QEI" not in k}
