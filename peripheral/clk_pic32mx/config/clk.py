@@ -252,13 +252,13 @@ def enableMenu(menu, event):
 
 def updateRefFreq(menu, event):
     if event["value"] == True:
-	    # get default value from atdf file
-	    targetName = "__REFCLK_DEF_FREQ"
-	    params = ATDF.getNode('/avr-tools-device-file/devices/device/parameters')
-	    paramsChildren = params.getChildren()
-	    for param in paramsChildren:  # find parameter we are interested in now
-	        if(param.getAttribute("name") == targetName):
-	            menu.setValue(param.getAttribute("value"),2)
+        # get default value from atdf file
+        targetName = "__REFCLK_DEF_FREQ"
+        params = ATDF.getNode('/avr-tools-device-file/devices/device/parameters')
+        paramsChildren = params.getChildren()
+        for param in paramsChildren:  # find parameter we are interested in now
+            if(param.getAttribute("name") == targetName):
+                menu.setValue(param.getAttribute("value"),2)
     else:
         menu.setValue("0",2)
 
@@ -1102,10 +1102,16 @@ if __name__ == "__main__":
     cfgRegGroup = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CFG"]/register-group@[name="CFG"]').getChildren()
 
     pmdCount = 0
+    pmdDict = {}
+
     for register in cfgRegGroup:
         regName = str(register.getAttribute("name"))
         if regName.startswith("PMD"):
+            mask = 0x0
             pmdCount += 1
+            for bitfield in register.getChildren():
+                mask |= int(str(bitfield.getAttribute("mask")), 16)
+            pmdDict[pmdCount] = mask
 
     peripheralModuleDisableMenu = coreComponent.createMenuSymbol("PMD_CONFIG", SYM_CLK_MENU)
     peripheralModuleDisableMenu.setLabel("Peripheral Module Disable")
@@ -1118,7 +1124,7 @@ if __name__ == "__main__":
     for i in range(1, pmdCount + 1):
         pmdxRegMaskValue = coreComponent.createHexSymbol("PMD" + str(i) + "_REG_VALUE", peripheralModuleDisableMenu)
         pmdxRegMaskValue.setLabel("PMD" + str(i) + " Register Value")
-        pmdxRegMaskValue.setDefaultValue(0xffffffff)
+        pmdxRegMaskValue.setDefaultValue(pmdDict[i])
         pmdxRegMaskValue.setReadOnly(True)
 
     #Enable REFO from PMD
