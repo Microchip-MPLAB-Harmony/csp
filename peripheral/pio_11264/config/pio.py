@@ -270,7 +270,7 @@ def pinCFGR (pin, cfgr_reg):
 	direction = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_DIR")
 	schmitt = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_ST")
 	tamper = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_TAMPER")
-	filter = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_IFEN")
+	filterMask = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_IFEN")
 	filterclock = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_IFSCEN")
 	driver = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_DRV")
 	if port:
@@ -289,8 +289,8 @@ def pinCFGR (pin, cfgr_reg):
 		if tamper:
 			cfgr |= 1 << 31
 		if driver:
-			cfgr |= 1 << 16
-		if filter:
+			cfgr |= driver << 16
+		if filterMask:
 			cfgr |= 1 << 12
 		if filterclock == 1:
 			cfgr |= 1 << 13
@@ -361,7 +361,9 @@ pioEnable.setLabel("Use PIO PLIB?")
 pioEnable.setDefaultValue(True)
 pioEnable.setReadOnly(True)
 
-Database.setSymbolValue("core", "PIOA_CLOCK_ENABLE", True, 1)
+for pio in pioSymChannel:
+	if Database.getSymbolValue("core", "PIO" + pio +"_CLOCK_ENABLE") != None:
+		Database.setSymbolValue("core",  "PIO" + pio +"_CLOCK_ENABLE", True)
 
 # Build package pinout map
 packageNode = ATDF.getNode("/avr-tools-device-file/variants")

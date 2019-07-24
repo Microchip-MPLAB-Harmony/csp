@@ -114,7 +114,7 @@ void PIO_Initialize ( void )
 	<#list PERFUNC as func>
 	<#assign PORT_MSKR = "PORT_" + port + "_MSKR_Value" + func >
 	<#assign PORT_CFGR = "FUNC_" + func + "_CFGR_Value">  
-	<#if .vars[PORT_MSKR] != '0x0'>
+	<#if .vars[PORT_MSKR] != '0x0' && .vars[PORT_MSKR] != '0x0L'>
 	<#lt> /* Port ${port} Peripheral function ${func} configuration */
 	<#lt>	PIO${port}_REGS->PIO_MSKR = ${.vars[PORT_MSKR]};
 	<#lt>	PIO${port}_REGS->PIO_CFGR = ${.vars[PORT_CFGR]};
