@@ -219,6 +219,26 @@ typedef struct
 
 } SERCOM_I2C_OBJ;
 
+// *****************************************************************************
+/* Transaction Request Block
+
+   Summary:
+    Transaction Request Block Structure.
+
+   Description:
+    This data structure defines the Transaction Request Block.
+
+   Remarks:
+    None.
+*/
+
+typedef struct
+{
+    /* SERCOM I2C Clock Speed */
+    uint32_t clkSpeed;
+
+} SERCOM_I2C_TRANSFER_SETUP;
+
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
