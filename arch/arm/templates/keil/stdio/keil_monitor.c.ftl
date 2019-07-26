@@ -42,6 +42,8 @@
     <#if stdio.DEBUG_PERIPHERAL?has_content>
         <#lt>#include "definitions.h"
     </#if>
+<#else>
+    <#lt>#include <stdio.h>
 </#if>
 
 int fgetc(FILE* stream)
@@ -70,5 +72,7 @@ int fputc(int c, FILE* stream)
         <#lt>    }while (size != 1);
         <#lt>    return c;
         </#if>
+    <#else>
+        <#lt>    return 0;
     </#if>
 }
