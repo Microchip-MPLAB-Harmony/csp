@@ -56,6 +56,9 @@
 // *****************************************************************************
 // *****************************************************************************
 
+<#assign I2C_PLIB = "SERCOM_INSTANCE_NAME">
+<#assign I2C_PLIB_CLOCK_FREQUENCY = "core." + I2C_PLIB?eval + "_CORE_CLOCK_FREQUENCY">
+
 /* ${SERCOM_INSTANCE_NAME} I2C baud value for ${I2C_CLOCK_SPEED} Khz baud rate */
 #define ${SERCOM_INSTANCE_NAME}_I2CM_BAUD_VALUE			(${I2CM_BAUD}U)
 
@@ -134,6 +137,73 @@ void ${SERCOM_INSTANCE_NAME}_I2C_Initialize(void)
 
     /* Enable all Interrupts */
     ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_INTENSET = SERCOM_I2CM_INTENSET_Msk;
+}
+
+bool ${SERCOM_INSTANCE_NAME}_I2C_TransferSetup(SERCOM_I2C_TRANSFER_SETUP* setup, uint32_t srcClkFreq )
+{       
+    uint32_t baudValue;    
+    uint32_t i2cClkSpeed;
+    
+    if (setup == NULL)
+    {
+        return false;
+    }        
+        
+    i2cClkSpeed = setup->clkSpeed;
+    
+    if( srcClkFreq == 0)
+    {
+        srcClkFreq = ${I2C_PLIB_CLOCK_FREQUENCY?eval}UL;
+    }    
+    
+    /* Reference clock frequency must be atleast two times the baud rate */
+    if (srcClkFreq < (2*i2cClkSpeed))
+    {
+        return false;
+    }
+    
+    baudValue = ((((float)srcClkFreq)/i2cClkSpeed) - ((((float)srcClkFreq) * (${I2CM_TRISE}/1000000000.0)) + 10))/2.0;
+    
+    /* BAUD.BAUD must be non-zero */
+    if (baudValue == 0)
+    {
+        return false;
+    }
+    
+    /* Disable the I2C before changing the I2C clock speed */
+    ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_CTRLA &= ~SERCOM_I2CM_CTRLA_ENABLE_Msk;
+    
+    /* Wait for synchronization */
+    <#if SERCOM_SYNCBUSY = false>
+    while((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_SYNCBUSY_Msk) & SERCOM_I2CM_STATUS_SYNCBUSY_Msk);
+    <#else>
+    while(${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_SYNCBUSY);
+    </#if>        
+    
+    /* Baud rate - Master Baud Rate*/
+    ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_BAUD = SERCOM_I2CM_BAUD_BAUD(baudValue);   
+
+    /* Re-enable the I2C module */
+    ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_CTRLA |= SERCOM_I2CM_CTRLA_ENABLE_Msk; 
+    
+    /* Wait for synchronization */
+    <#if SERCOM_SYNCBUSY = false>
+    while((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_SYNCBUSY_Msk) & SERCOM_I2CM_STATUS_SYNCBUSY_Msk);
+    <#else>
+    while(${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_SYNCBUSY);
+    </#if>
+
+    /* Since the I2C module was disabled, re-initialize the bus state to IDLE */
+    ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS = SERCOM_I2CM_STATUS_BUSSTATE(0x01);    
+    
+    /* Wait for synchronization */
+    <#if SERCOM_SYNCBUSY = false>
+    while((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_SYNCBUSY_Msk) & SERCOM_I2CM_STATUS_SYNCBUSY_Msk);
+    <#else>
+    while(${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_SYNCBUSY);
+    </#if>
+    
+    return true;
 }
 
 // *****************************************************************************
@@ -656,7 +726,7 @@ void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
         {
             /* Reset the PLib objects and Interrupts */
             ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_STATE_IDLE;
-
+            
             ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_INTFLAG = SERCOM_I2CM_INTFLAG_Msk;
 
             if (${SERCOM_INSTANCE_NAME?lower_case}I2CObj.callback != NULL)
@@ -672,7 +742,7 @@ void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
             ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.error = SERCOM_I2C_ERROR_NONE;
 
             ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_INTFLAG = SERCOM_I2CM_INTFLAG_Msk;
-
+            
             if(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.callback != NULL)
             {
                 ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.callback(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.context);
