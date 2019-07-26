@@ -29,7 +29,8 @@
 /* Initialize segments */
 extern const DeviceVectors __Vectors;
 
-int main(void);
+/* C library initialization routine */
+extern void __main(void);
 
 /* Declaration of Reset handler (may be custom) */
 void Reset_Handler(void);
@@ -117,8 +118,10 @@ void __attribute__((section(".text.Reset_Handler"), long_call)) Reset_Handler(vo
         _on_bootstrap();
     }
 
-    /* Branch to application's main function */
-    main();
+    /* Execute entry point to the C library initialization routine, 
+       which eventually executes application's main function */
+    __main();
+    
     /* Infinite loop */
     while (1) {}
 }
