@@ -426,7 +426,7 @@ for i in range(0, 2):
         "loop divider ratio fraction value")
     oscctrlSym_DPLLRATIO_LDRFRAC.setDefaultValue(0)
     oscctrlSym_DPLLRATIO_LDRFRAC.setMin(0)
-    oscctrlSym_DPLLRATIO_LDRFRAC.setMax(15)
+    oscctrlSym_DPLLRATIO_LDRFRAC.setMax(31)
 
     # DPLL Multiplier value to show in the UI
     oscctrlSym_DPLL_MULTIPLIER_VALUE = coreComponent.createFloatSymbol(
