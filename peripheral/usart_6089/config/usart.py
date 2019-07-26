@@ -56,6 +56,9 @@ def dependencyStatus(symbol, event):
     if (Database.getSymbolValue(usartInstanceName.getValue().lower(), "USART_INTERRUPT_MODE") == True):
         symbol.setVisible(event["value"])
 
+def clockWarningCb(symbol, event):
+    symbol.setVisible(not event["value"])
+
 # Calculates BRG value
 def baudRateCalc(clk, baud, overSamp):
     if (overSamp == 0):
@@ -71,16 +74,13 @@ def baudRateTrigger(symbol, event):
     clk = Database.getSymbolValue(usartInstanceName.getValue().lower(), "USART_CLOCK_FREQ")
     baud = Database.getSymbolValue(usartInstanceName.getValue().lower(), "BAUD_RATE")
     overSamp = Database.getSymbolValue(usartInstanceName.getValue().lower(), "USART_MR_OVER")
-
+    
     brgVal = baudRateCalc(clk, baud, overSamp)
-
-    if(brgVal < 1):
-        Log.writeErrorMessage("USART Clock source value is low for the desired baud rate")
-
-    symbol.clearValue()
-
-    if symbol.getID() == "BRG_VALUE":
-        symbol.setValue(brgVal, 2)
+    
+    usartBaudComment = event["source"].getSymbolByID("USART_BAUD_WARNING")
+    usartBaudComment.setVisible(brgVal < 1)
+    
+    symbol.setValue(brgVal, 2)
 
 def clockSourceFreq(symbol, event):
     symbol.clearValue()
@@ -136,6 +136,9 @@ def instantiateComponent(usartComponent):
     usartBaud.setLabel("Baud Rate")
     usartBaud.setDefaultValue(9600)
 
+    usartBaudComment = usartComponent.createCommentSymbol("USART_BAUD_WARNING", None)
+    usartBaudComment.setLabel("USART Clock source value is low for the desired baud rate")
+
     usartSym_MR_OVER = usartComponent.createKeyValueSetSymbol("USART_MR_OVER", None)
     usartSym_MR_OVER.setLabel("OverSampling")
     usartSym_MR_OVER.addKey("0", "0", "16 Times")
@@ -145,6 +148,8 @@ def instantiateComponent(usartComponent):
     usartSym_MR_OVER.setDefaultValue(0)
 
     brgVal = baudRateCalc(usartClkValue.getValue(), usartBaud.getValue(), usartSym_MR_OVER.getValue())
+
+    usartBaudComment.setVisible(brgVal < 1)
 
     usartBRGValue = usartComponent.createIntegerSymbol("BRG_VALUE", None)
     usartBRGValue.setVisible(False)
@@ -316,7 +321,7 @@ def instantiateComponent(usartComponent):
     usartSymClkEnComment = usartComponent.createCommentSymbol("USART_CLK_ENABLE_COMMENT", None)
     usartSymClkEnComment.setVisible(False)
     usartSymClkEnComment.setLabel("Warning!!! USART Peripheral Clock is Disabled in Clock Manager")
-    usartSymClkEnComment.setDependencies(dependencyStatus, ["core."+usartInstanceName.getValue()+"_CLOCK_ENABLE"])
+    usartSymClkEnComment.setDependencies(clockWarningCb, ["core."+usartInstanceName.getValue()+"_CLOCK_ENABLE"])
 
     usartSymIntEnComment = usartComponent.createCommentSymbol("USART_NVIC_ENABLE_COMMENT", None)
     usartSymIntEnComment.setVisible(False)
