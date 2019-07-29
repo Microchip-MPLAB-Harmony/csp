@@ -532,7 +532,7 @@ bool ${SERCOM_INSTANCE_NAME}_I2C_WriteRead(uint16_t address, uint8_t *wdata, uin
 
 bool ${SERCOM_INSTANCE_NAME}_I2C_IsBusy(void)
 {
-    if(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state == SERCOM_I2C_STATE_IDLE)
+    if((${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state == SERCOM_I2C_STATE_IDLE) && ((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_BUSSTATE_Msk) == SERCOM_I2CM_STATUS_BUSSTATE(0x01)))
     {
         return false;
     }
@@ -727,6 +727,16 @@ void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
             /* Reset the PLib objects and Interrupts */
             ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_STATE_IDLE;
             
+            /* Generate STOP condition */
+            ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_CTRLB |= SERCOM_I2CM_CTRLB_CMD(3);
+
+            /* Wait for synchronization */
+            <#if SERCOM_SYNCBUSY = false>
+            while((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_SYNCBUSY_Msk) & SERCOM_I2CM_STATUS_SYNCBUSY_Msk);
+            <#else>
+            while(${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_SYNCBUSY);
+            </#if>
+
             ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_INTFLAG = SERCOM_I2CM_INTFLAG_Msk;
 
             if (${SERCOM_INSTANCE_NAME?lower_case}I2CObj.callback != NULL)
@@ -743,6 +753,9 @@ void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
 
             ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_INTFLAG = SERCOM_I2CM_INTFLAG_Msk;
             
+            /* Wait for the NAK and STOP bit to be transmitted out and I2C state machine to rest in IDLE state */
+            while((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_BUSSTATE_Msk) != SERCOM_I2CM_STATUS_BUSSTATE(0x01));
+
             if(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.callback != NULL)
             {
                 ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.callback(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.context);
