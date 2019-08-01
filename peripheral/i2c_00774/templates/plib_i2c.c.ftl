@@ -57,6 +57,9 @@
 // *****************************************************************************
 // *****************************************************************************
 
+<#assign I2C_PLIB = "I2C_INSTANCE_NAME">
+<#assign I2C_PLIB_CLOCK_FREQUENCY = "core." + I2C_PLIB?eval + "_CLOCK_FREQUENCY">
+
 static I2C_OBJ ${I2C_INSTANCE_NAME?lower_case}Obj;
 
 void ${I2C_INSTANCE_NAME}_Initialize(void)
@@ -381,6 +384,53 @@ I2C_ERROR ${I2C_INSTANCE_NAME}_ErrorGet(void)
     ${I2C_INSTANCE_NAME?lower_case}Obj.error = I2C_ERROR_NONE;
 
     return error;
+}
+
+bool ${I2C_INSTANCE_NAME}_TransferSetup(I2C_TRANSFER_SETUP* setup, uint32_t srcClkFreq )
+{       
+    uint32_t baudValue;    
+    uint32_t i2cClkSpeed;
+    
+    if (setup == NULL)
+    {
+        return false;
+    }        
+        
+    i2cClkSpeed = setup->clkSpeed;
+    
+    /* Maximum I2C clock speed cannot be greater than 1 MHz */
+    if (i2cClkSpeed > 1000000)
+    {
+        return false;
+    }
+    
+    if( srcClkFreq == 0)
+    {
+        srcClkFreq = ${I2C_PLIB_CLOCK_FREQUENCY?eval}UL;
+    }            
+    
+    baudValue = ((1.0/(2*i2cClkSpeed) - 104e-9)*(float)srcClkFreq) - 2;
+    
+    /* I2CxBRG value cannot be 0 or 1 */
+    if ((baudValue == 0) || (baudValue == 1))
+    {
+        return false;
+    }
+    
+    ${I2C_INSTANCE_NAME}BRG = baudValue;
+    
+    /* Enable slew rate for 400 kHz clock speed; disable for all other speeds */
+    
+    if (i2cClkSpeed == 400000)
+    {        
+        ${I2C_INSTANCE_NAME}CONCLR = _${I2C_INSTANCE_NAME}CON_DISSLW_MASK;;
+    }
+    else
+    {
+        ${I2C_INSTANCE_NAME}CONSET = _${I2C_INSTANCE_NAME}CON_DISSLW_MASK;;
+    }
+    
+    return true;
 }
 
 static void ${I2C_INSTANCE_NAME}_BUS_InterruptHandler(void)

@@ -199,6 +199,26 @@ typedef struct
 
 } I2C_OBJ;
 
+// *****************************************************************************
+/* I2C Transfer Setup Data Structure
+
+   Summary:
+    I2C Transfer Setup Data Structure
+
+   Description:
+    This data structure defines the I2C Transfer Setup Data
+
+   Remarks:
+    None.
+*/
+
+typedef struct
+{
+    /* I2C Clock Speed */
+    uint32_t clkSpeed;
+
+} I2C_TRANSFER_SETUP;
+
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
     }
