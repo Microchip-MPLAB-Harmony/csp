@@ -277,6 +277,7 @@ cacheMenu.setLabel("(no additional MIPS configuration)")
 
 if deviceFamily.getValue() in ["DS60001156"]:
     execfile(Variables.get("__CORE_DIR") + "/../peripheral/evic_01166/config/evic.py")
+    coreComponent.addPlugin("../peripheral/evic_01166/plugin/evic_01166.jar")
 else:
     execfile(Variables.get("__CORE_DIR") + "/../peripheral/evic_02907/config/evic.py")
     coreComponent.addPlugin("../peripheral/evic_02907/plugin/evic_02907.jar")
