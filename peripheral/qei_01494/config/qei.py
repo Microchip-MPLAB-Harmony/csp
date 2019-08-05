@@ -377,7 +377,7 @@ def qeiCalcQEIIOC(symbol, event):
     swpab = component.getSymbolValue("QEI"+str(instanceNum)+"IOC__SWPAB") << 8
     outfnc = component.getSymbolValue("QEI"+str(instanceNum)+"IOC__OUTFNC") << 9
     qfdiv = component.getSymbolValue("QEI"+str(instanceNum)+"IOC__QFDIV") << 11
-    fltren = component.getSymbolValue("QEI"+str(instanceNum)+"IOC__FLTREN") << 13
+    fltren = component.getSymbolValue("QEI"+str(instanceNum)+"IOC__FLTREN") << 14
     qeiioc = qeapol + qebpol + idxpol + hompol + swpab + outfnc + qfdiv + fltren
     symbol.setValue(qeiioc)
 
