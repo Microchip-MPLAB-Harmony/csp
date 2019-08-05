@@ -207,7 +207,7 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/systick/config/systick.py
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_6080/config/wdt.py")
 
 # #  load CMCC
-execfile(Variables.get("__CORE_DIR") + "/../peripheral/cmcc/config/cmcc.py")
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/cmcc_11108/config/cmcc.py")
 
 # # load device specific adc manager information
 # coreComponent.addPlugin("../peripheral/afec_11147/plugin/ARM_M7_ADCmanager.jar")
