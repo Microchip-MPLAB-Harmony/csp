@@ -108,8 +108,8 @@ void ${QEI_INSTANCE_NAME}_Initialize (void)
     /*  FLTREN  = ${.vars[FLTREN]}   */
     QEI${QEI_INSTANCE_NUM}IOC = 0x${QEI_QEIIOC};
 
-    QEI${QEI_INSTANCE_NUM}ICC = ${.vars[QEIICC]};
-    QEI${QEI_INSTANCE_NUM}CMPL = ${.vars[QEICMPL]};
+    QEI${QEI_INSTANCE_NUM}ICC = ${.vars[QEIICC]}U;
+    QEI${QEI_INSTANCE_NUM}CMPL = ${.vars[QEICMPL]}U;
 
     /* QEI${QEI_INSTANCE_NUM}STAT register  */
     /*  IDXIEN    = ${.vars[IDXIEN]?then('true', 'false')} */
