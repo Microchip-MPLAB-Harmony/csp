@@ -132,24 +132,7 @@ def adcEventInputVisibility(symbol, event):
         symbol.setVisible(True)
 
 def adcOptionVisible(symbol, event):
-    if(event["id"] == "ADC_SEQ_ENABLE" and event["value"] == True):
-        if(symbol.getLabel() == "Enable ADC Auto-Start Conversion"):
-            if(adcSym_CONV_TRIGGER.getValue() != "Free Run"):
-                symbol.setValue(False,1)
-                symbol.setVisible(False)
-            else:
-                symbol.setVisible(True)
-                symbol.setValue(True,2)
-
-    if(event["id"] == "ADC_CONV_TRIGGER"):
-        if(symbol.getLabel() == "Enable ADC Auto-Start Conversion" and adcSym_SEQ_ENABLE.getValue() == True):
-            if(event["value"] != "Free Run" ):
-                symbol.setVisible(False)
-                symbol.setValue(False,2)
-            else:
-                symbol.setVisible(True)
-                symbol.setValue(True,2)
-
+    symbol.setVisible(event["value"])
 
 def adcDmaVisible(symbol, event):
     if(event["value"] == True):
@@ -349,7 +332,7 @@ def instantiateComponent(adcComponent):
         adcSym_SEQCTRL_SEQ.append(index)
         adcSym_SEQCTRL_SEQ[index] = adcComponent.createBooleanSymbol("ADC_SEQCTRL_SEQ"+str(index), adcSym_SEQ_ENABLE)
         adcSym_SEQCTRL_SEQ[index].setLabel("Enable "+ str(adcSequenceInputValues[index].getAttribute("caption")))
-        adcSym_SEQCTRL_SEQ[index].setDependencies(adcOptionVisible, ["ADC_CONV_TRIGGER", "ADC_SEQ_ENABLE"])
+        adcSym_SEQCTRL_SEQ[index].setDependencies(adcOptionVisible, ["ADC_SEQ_ENABLE"])
         adcSym_SEQCTRL_SEQ[index].setVisible(False)
         if(adcSym_CONV_TRIGGER.getValue() == "Free Run" and adcSequenceInputValues[index].getAttribute("name") == "AUTOSTART" and adcSym_SEQ_ENABLE.getValue() == True):
             adcSym_SEQCTRL_SEQ[index].setValue(True , 2)
