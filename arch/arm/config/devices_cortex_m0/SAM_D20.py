@@ -197,7 +197,7 @@ wdtWindowModeEnable.setSelectedKey("DISABLED", 1)
 
 wdtWindow = coreComponent.createHexSymbol("DEVICE_WDT_WINDOW", wdtFuseMenu)
 wdtWindow.setLabel("WDT Window")
-wdtWindow.setMax(0xf)
+wdtWindow.setMax(0xB)
 wdtWindow.setMin(0x0)
 
 wdtWindow_0 = coreComponent.createKeyValueSetSymbol("DEVICE_WDT_WINDOW_0", wdtFuseMenu)
