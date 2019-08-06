@@ -106,7 +106,6 @@ static void CLK_SlowClockInitialize(void)
     {
     }
 </#if>
-</#if>
 }
 </#if>
 
@@ -132,7 +131,7 @@ static void CLK_MainClockInitialize(void)
 
 <#elseif CKGR_MOR_MOSCXTEN>
     /* Enable Main Crystal Oscillator */
-    PMC_REGS->CKGR_MOR = (PMC_REGS->CKGR_MOR & ~CKGR_MOR_MOSCXTST_Msk) | CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCXTST(${PMC_CKGR_MOR_MOSCXTST}) | CKGR_MOR_MOSCXTEN_Msk;
+    PMC_REGS->CKGR_MOR = (PMC_REGS->CKGR_MOR & ~CKGR_MOR_MOSCXTST_Msk) | CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCXTST(${CKGR_MOSCXTST}) | CKGR_MOR_MOSCXTEN_Msk;
 
     /* Wait until the main oscillator clock is ready */
     while ( (PMC_REGS->PMC_SR & PMC_SR_MOSCXTS_Msk) != PMC_SR_MOSCXTS_Msk);
