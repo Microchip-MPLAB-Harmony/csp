@@ -86,7 +86,7 @@ static void CLK_SlowClockInitialize(void)
 
     /* Wait until the external clock signal is ready and
        Slow Clock (SLCK) is switched to external clock signal */
-    while (!(SUPC_REGS->SUPC_SR & SUPC_SR_OSCSEL_Msk) &&  !(PMC_REGS->PMC_SR & PMC_SR_MOSCRCS_Msk))
+    while (!(SUPC_REGS->SUPC_SR & SUPC_SR_OSCSEL_Msk))
     {
     }
 
@@ -97,9 +97,15 @@ static void CLK_SlowClockInitialize(void)
 
     /* Wait until the 32K Crystal oscillator clock is ready and
        Slow Clock (SLCK) is switched to 32KHz Oscillator */
-    while (!(SUPC_REGS->SUPC_SR & SUPC_SR_OSCSEL_Msk) &&  !(PMC_REGS->PMC_SR & PMC_SR_MOSCRCS_Msk))
+    while (!(SUPC_REGS->SUPC_SR & SUPC_SR_OSCSEL_Msk))
     {
     }
+<#else>
+    SUPC_REGS->SUPC_CR = SUPC_CR_KEY_PASSWD | (SUPC_REGS->SUPC_CR & ~(SUPC_CR_XTALSEL_CRYSTAL_SEL));
+    while ((SUPC_REGS->SUPC_SR & SUPC_SR_OSCSEL_Msk))
+    {
+    }
+</#if>
 </#if>
 }
 </#if>
@@ -231,7 +237,7 @@ static void CLK_MasterClockInitialize(void)
 </#if>
 
 
-<#if PMC_SCER_UDP || PMC_SCER_UDP>
+<#if PMC_SCER_UDP || PMC_SCER_UHP>
 /*********************************************************************************
 Initialize USB FS clock
 *********************************************************************************/
@@ -243,7 +249,7 @@ static void CLK_USBClockInitialize ( void )
 
 
     /* Enable Full-Speed USB Clock Output */
-    PMC_REGS->PMC_SCER = 0 | <#if PMC_SCER_UDP>PMC_SCER_UDP_Msk</#if> <#if PMC_ACER_UHP_Msk> | PMC_SCER_UHP_Msk</#if>;
+    PMC_REGS->PMC_SCER = 0 | <#if PMC_SCER_UDP>PMC_SCER_UDP_Msk</#if> <#if PMC_SCER_UHP> | PMC_SCER_UHP_Msk</#if>;
 }
 </#if>
 
@@ -310,7 +316,7 @@ void CLOCK_Initialize( void )
     CLK_MasterClockInitialize();
 </#if>
 
-<#if PMC_SCER_UDP || PMC_SCER_UDP>
+<#if PMC_SCER_UDP || PMC_SCER_UHP>
     /* Initialize USB Clock */
     CLK_USBClockInitialize();
 </#if>
