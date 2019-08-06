@@ -86,7 +86,7 @@ static void CLK_SlowClockInitialize(void)
 
     /* Wait until the external clock signal is ready and
        Slow Clock (SLCK) is switched to external clock signal */
-    while (!(SUPC_REGS->SUPC_SR & SUPC_SR_OSCSEL_Msk) &&  !(PMC_REGS->PMC_SR & PMC_SR_MOSCRCS_Msk))
+    while (!(SUPC_REGS->SUPC_SR & SUPC_SR_OSCSEL_Msk))
     {
     }
 
@@ -97,7 +97,12 @@ static void CLK_SlowClockInitialize(void)
 
     /* Wait until the 32K Crystal oscillator clock is ready and
        Slow Clock (SLCK) is switched to 32KHz Oscillator */
-    while (!(SUPC_REGS->SUPC_SR & SUPC_SR_OSCSEL_Msk) &&  !(PMC_REGS->PMC_SR & PMC_SR_MOSCRCS_Msk))
+    while (!(SUPC_REGS->SUPC_SR & SUPC_SR_OSCSEL_Msk))
+    {
+    }
+<#else>
+    SUPC_REGS->SUPC_CR = SUPC_CR_KEY_PASSWD | (SUPC_REGS->SUPC_CR & ~(SUPC_CR_XTALSEL_CRYSTAL_SEL));
+    while ((SUPC_REGS->SUPC_SR & SUPC_SR_OSCSEL_Msk))
     {
     }
 </#if>
