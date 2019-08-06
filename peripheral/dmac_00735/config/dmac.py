@@ -393,12 +393,12 @@ childIndex = 0
 for child in node:
 
     name = child.getAttribute("name")
-    dmaInterruptName = name[:-1]
 
     if name.startswith("DMA"):  # found a DMA-related interrupt from atdf file - make
 
         vectorUpdate = "core.DMA" + str(childIndex) + "_INTERRUPT_ENABLE_UPDATE"
         vectorNum = int(child.getAttribute("index"))
+        dmaInterruptName = name[:-1]
 
         if child.getAttribute("irq-index") != None:
             vectorNum = int(child.getAttribute("irq-index"))
