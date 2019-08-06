@@ -32,6 +32,7 @@ global waitStates
 ########################################## Callbacks  #############################################
 ###################################################################################################
 
+
 def updateNVMCTRLInterruptStatus(symbol, event):
 
     Database.clearSymbolValue("core", InterruptVector)
@@ -43,17 +44,20 @@ def updateNVMCTRLInterruptStatus(symbol, event):
     Database.clearSymbolValue("core", InterruptHandler)
 
     if event["value"] == True:
-        Database.setSymbolValue("core", InterruptHandler, nvmctrlInstanceName.getValue()+ "_InterruptHandler", 2)
+        Database.setSymbolValue("core", InterruptHandler, nvmctrlInstanceName.getValue() + "_InterruptHandler", 2)
     else:
         Database.setSymbolValue("core", InterruptHandler, "NVMCTRL_Handler", 2)
+
 
 def updateNVMCTRLInterruptWarringStatus(symbol, event):
 
     if nvmctrlSym_Interrupt.getValue() == True:
         symbol.setVisible(event["value"])
 
+
 def nvmctlrSetMemoryDependency(symbol, event):
     symbol.setVisible(event["value"])
+
 
 def waitStateUpdate(symbol, event):
     global waitStates
@@ -63,12 +67,14 @@ def waitStateUpdate(symbol, event):
             symbol.setValue(waitStates.get(key), 2)
             break
 
+
 def evsysSetup(symbol, event):
     if Database.getSymbolValue("evsys", "USER_NVMCTRL_PAGEW_READY") != event["value"]:
         Database.setSymbolValue("evsys", "USER_NVMCTRL_PAGEW_READY", event["value"])
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
+
 
 def instantiateComponent(nvmctrlComponent):
 
@@ -87,19 +93,19 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlInstanceName.setDefaultValue(nvmctrlComponent.getID().upper())
     Log.writeInfoMessage("Running " + nvmctrlInstanceName.getValue())
 
-    #Flash Address
+    # Flash Address
     nvmctrlFlashNode = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"FLASH\"]")
     if nvmctrlFlashNode != None:
         nvmctrlSym_FLASH_ADDRESS = nvmctrlComponent.createStringSymbol("FLASH_START_ADDRESS", None)
         nvmctrlSym_FLASH_ADDRESS.setVisible(False)
         nvmctrlSym_FLASH_ADDRESS.setDefaultValue(nvmctrlFlashNode.getAttribute("start"))
 
-        #Flash size
+        # Flash size
         nvmctrlSym_FLASH_SIZE = nvmctrlComponent.createStringSymbol("FLASH_SIZE", None)
         nvmctrlSym_FLASH_SIZE.setVisible(False)
         nvmctrlSym_FLASH_SIZE.setDefaultValue(nvmctrlFlashNode.getAttribute("size"))
 
-        #Flash Page size
+        # Flash Page size
         nvmctrlSym_FLASH_PROGRAM_SIZE = nvmctrlComponent.createStringSymbol("FLASH_PROGRAM_SIZE", None)
         nvmctrlSym_FLASH_PROGRAM_SIZE.setVisible(False)
         nvmctrlSym_FLASH_PROGRAM_SIZE.setDefaultValue(nvmctrlFlashNode.getAttribute("pagesize"))
@@ -114,11 +120,11 @@ def instantiateComponent(nvmctrlComponent):
             if "ROW_SIZE" in param_values[index].getAttribute("name"):
                 rowSize = param_values[index].getAttribute("value")
 
-        #Flash Row size
+        # Flash Row size
         nvmctrlSym_ERASE_SIZE = nvmctrlComponent.createStringSymbol("FLASH_ERASE_SIZE", None)
         nvmctrlSym_ERASE_SIZE.setVisible(False)
         nvmctrlSym_ERASE_SIZE.setDefaultValue(rowSize)
-    #Configures NVM read mode
+    # Configures NVM read mode
     nvmctrlSym_CTRLB_READMODE = nvmctrlComponent.createKeyValueSetSymbol("NVMCTRL_CTRLB_READMODE_SELECTION", None)
     nvmctrlSym_CTRLB_READMODE.setLabel("NVMCTRL Read Mode")
 
@@ -141,10 +147,10 @@ def instantiateComponent(nvmctrlComponent):
     nvm_rws.setDefaultValue(waitState)
     nvm_rws.setDependencies(waitStateUpdate, ["core.CPU_CLOCK_FREQUENCY"])
 
-    nvmctrlReadModeDefaultValue   = 0
+    nvmctrlReadModeDefaultValue = 0
     nvmctrlReadModeKeyDescription = ""
 
-    for index in range (0 , len(nvmctrlReadModeValues)):
+    for index in range(0, len(nvmctrlReadModeValues)):
         nvmctrlReadModeKeyName = nvmctrlReadModeValues[index].getAttribute("name")
 
         if (nvmctrlReadModeKeyName == "NO_MISS_PENALTY"):
@@ -155,14 +161,14 @@ def instantiateComponent(nvmctrlComponent):
         elif (nvmctrlReadModeKeyName == "DETERMINISTIC"):
             nvmctrlReadModeKeyDescription = "DETERMINISTIC"
 
-        nvmctrlReadModeKeyValue =  nvmctrlReadModeValues[index].getAttribute("value")
-        nvmctrlSym_CTRLB_READMODE.addKey(nvmctrlReadModeKeyName , nvmctrlReadModeKeyValue , nvmctrlReadModeKeyDescription)
+        nvmctrlReadModeKeyValue = nvmctrlReadModeValues[index].getAttribute("value")
+        nvmctrlSym_CTRLB_READMODE.addKey(nvmctrlReadModeKeyName, nvmctrlReadModeKeyValue, nvmctrlReadModeKeyDescription)
 
     nvmctrlSym_CTRLB_READMODE.setDefaultValue(nvmctrlReadModeDefaultValue)
     nvmctrlSym_CTRLB_READMODE.setOutputMode("Key")
     nvmctrlSym_CTRLB_READMODE.setDisplayMode("Description")
 
-    #Configures NVM power reduction mode
+    # Configures NVM power reduction mode
     nvmctrlSym_CTRLB_SLEEPPRM = nvmctrlComponent.createKeyValueSetSymbol("NVMCTRL_CTRLB_POWER_REDUCTION_MODE", None)
     nvmctrlSym_CTRLB_SLEEPPRM.setLabel("Power Reduction Mode During Sleep")
 
@@ -170,10 +176,10 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlSleepPrmValues = []
     nvmctrlSleepPrmValues = nvmctrlSleepPrmNode.getChildren()
 
-    nvmctrlSleepPrmDefaultValue   = 0
+    nvmctrlSleepPrmDefaultValue = 0
     nvmctrlSleepPrmKeyDescription = ""
 
-    for index in range (0 , len(nvmctrlSleepPrmValues)):
+    for index in range(0, len(nvmctrlSleepPrmValues)):
         nvmctrlSleepPrmKeyName = nvmctrlSleepPrmValues[index].getAttribute("name")
 
         if (nvmctrlSleepPrmKeyName == "WAKEONACCESS"):
@@ -184,30 +190,30 @@ def instantiateComponent(nvmctrlComponent):
         elif (nvmctrlSleepPrmKeyName == "DISABLED"):
             nvmctrlSleepPrmKeyDescription = "DISABLED"
 
-        nvmctrlSleepPrmKeyValue =  nvmctrlSleepPrmValues[index].getAttribute("value")
-        nvmctrlSym_CTRLB_SLEEPPRM.addKey(nvmctrlSleepPrmKeyName , nvmctrlSleepPrmKeyValue , nvmctrlSleepPrmKeyDescription)
+        nvmctrlSleepPrmKeyValue = nvmctrlSleepPrmValues[index].getAttribute("value")
+        nvmctrlSym_CTRLB_SLEEPPRM.addKey(nvmctrlSleepPrmKeyName, nvmctrlSleepPrmKeyValue, nvmctrlSleepPrmKeyDescription)
 
     nvmctrlSym_CTRLB_SLEEPPRM.setDefaultValue(nvmctrlSleepPrmDefaultValue)
     nvmctrlSym_CTRLB_SLEEPPRM.setOutputMode("Key")
     nvmctrlSym_CTRLB_SLEEPPRM.setDisplayMode("Description")
 
-    #Configures Manual Write operation
+    # Configures Manual Write operation
     nvmctrlSym_CTRLB_WRITEPOLICY = nvmctrlComponent.createComboSymbol("NVMCTRL_WRITE_POLICY", None, ["MANUAL", "AUTOMATIC"])
     nvmctrlSym_CTRLB_WRITEPOLICY.setLabel("Write Policy")
     nvmctrlSym_CTRLB_WRITEPOLICY.setDefaultValue("MANUAL")
 
-    #Configures cache operation
+    # Configures cache operation
     nvmctrlSym_CTRLB_CACHEENABLE = nvmctrlComponent.createBooleanSymbol("NVMCTRL_CACHE_ENABLE", None)
     nvmctrlSym_CTRLB_CACHEENABLE.setLabel("Enable Instruction Cache?")
     nvmctrlSym_CTRLB_CACHEENABLE.setDefaultValue(True)
 
     ##### Do not modify below symbol names as they are used by Memory Driver #####
 
-    #Configures the library for interrupt mode operations
+    # Configures the library for interrupt mode operations
     nvmctrlSym_Interrupt = nvmctrlComponent.createBooleanSymbol("INTERRUPT_ENABLE", None)
     nvmctrlSym_Interrupt.setLabel("Enable Interrupt?")
     nvmctrlSym_Interrupt.setDefaultValue(False)
- 
+
     tampEn = nvmctrlComponent.createBooleanSymbol("TAMPER_DETECTION_ENABLE", None)
     tampEn.setLabel("Enable Tamper Erase ")
     tampEn.setDefaultValue(False)
@@ -217,40 +223,36 @@ def instantiateComponent(nvmctrlComponent):
     tampRow.setDefaultValue(0)
     tampRow.setMin(0)
     tampRow.setMax(7)
-    
-    silentAccess =  nvmctrlComponent.createBooleanSymbol("SILENT_ACCESS_ENABLE", None)
+
+    silentAccess = nvmctrlComponent.createBooleanSymbol("SILENT_ACCESS_ENABLE", None)
     silentAccess.setLabel("Enable Silent access")
     silentAccess.setDefaultValue(False)
-
-    executeDataFlash = nvmctrlComponent.createBooleanSymbol("EXECUTE_DATA_FLASH", None)
-    executeDataFlash.setLabel("Restrict Execution from DataFlash")
-    executeDataFlash.setDefaultValue(False)
 
     fastWakeup = nvmctrlComponent.createBooleanSymbol("FAST_WAKEUP_ENABLE", None)
     fastWakeup.setLabel("Enable Fast Wakeup")
     fastWakeup.setDefaultValue(False)
-    
+
     eventMenu = nvmctrlComponent.createMenuSymbol("EVSYS_MENU", None)
     eventMenu.setLabel("Event System Configuration")
 
     eventEnable = nvmctrlComponent.createBooleanSymbol("AUTOWEI_ENABLE", eventMenu)
     eventEnable.setLabel("Enable Auto Write on Event Detection")
     eventEnable.setDefaultValue(False)
-    
+
     eventPolarity = nvmctrlComponent.createBooleanSymbol("AUTOWINV_ENABLE", eventMenu)
     eventPolarity.setLabel("Invert Input Event Polarity")
     eventPolarity.setDefaultValue(False)
     eventPolarity.setDependencies(evsysSetup, ["AUTOWEI_ENABLE"])
 
-    #Configuration when interfaced with memory driver
+    # Configuration when interfaced with memory driver
     nvmctrlSym_MemoryDriver = nvmctrlComponent.createBooleanSymbol("DRV_MEMORY_CONNECTED", None)
     nvmctrlSym_MemoryDriver.setLabel("Memory Driver Connected")
     nvmctrlSym_MemoryDriver.setVisible(False)
     nvmctrlSym_MemoryDriver.setDefaultValue(False)
 
-    offsetStart = (int(nvmctrlSym_FLASH_SIZE.getValue(),16) / 2)
+    offsetStart = (int(nvmctrlSym_FLASH_SIZE.getValue(), 16) / 2)
 
-    nvmOffset = str(hex(int(nvmctrlSym_FLASH_ADDRESS.getValue(),16) + offsetStart))
+    nvmOffset = str(hex(int(nvmctrlSym_FLASH_ADDRESS.getValue(), 16) + offsetStart))
 
     nvmctrlSym_MemoryStartAddr = nvmctrlComponent.createStringSymbol("START_ADDRESS", None)
     nvmctrlSym_MemoryStartAddr.setLabel("NVM Media Start Address")
