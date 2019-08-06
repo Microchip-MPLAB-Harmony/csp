@@ -146,6 +146,8 @@ def instantiateComponent(nvmctrlComponent):
     nvm_rws.setLabel("Wait States")
     nvm_rws.setDefaultValue(waitState)
     nvm_rws.setDependencies(waitStateUpdate, ["core.CPU_CLOCK_FREQUENCY"])
+    nvm_rws.setMin(0)
+    nvm_rws.setMax(15)
 
     nvmctrlReadModeDefaultValue = 0
     nvmctrlReadModeKeyDescription = ""
