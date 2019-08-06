@@ -199,7 +199,7 @@ static void CLK_PLLBInitialize(void)
 {
     /* Configure and Enable PLLB */
     PMC_REGS->CKGR_PLLBR = CKGR_PLLBR_ZERO(0) | CKGR_PLLBR_PLLBCOUNT(0x3f) |
-                              CKGR_PLLBR_MULA(${CKGR_PLLBR_MULA}) | CKGR_PLLBR_PLLBEN(1);
+                              CKGR_PLLBR_MULB(${CKGR_PLLBR_MULA}) | CKGR_PLLBR_PLLBEN(1);
 
     while ( (PMC_REGS->PMC_SR & PMC_SR_LOCKB_Msk) != PMC_SR_LOCKB_Msk);
 
