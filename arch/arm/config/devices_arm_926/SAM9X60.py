@@ -27,6 +27,12 @@ def setXDMACDefaultSettings():
 
     return triggerSettings
 
+# SYSIO Pin configuration information (Required by PIO 11104)
+# SYSIO configuration is not available for 9X6
+global getArchSYSIOInformation
+def getArchSYSIOInformation():
+    return None, None, None
+
 print ("Loading System Services for " + Variables.get("__PROCESSOR"))
 
 deviceFamily = coreComponent.createStringSymbol("DeviceFamily", devCfgMenu)
