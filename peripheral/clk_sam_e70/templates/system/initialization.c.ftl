@@ -1,1 +1,1 @@
-    CLK_Initialize();
+    CLOCK_Initialize();
