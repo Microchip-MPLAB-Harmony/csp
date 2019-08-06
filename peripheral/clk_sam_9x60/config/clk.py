@@ -874,7 +874,7 @@ qspi_frq.setDependencies(lambda symbol, event: symbol.setValue(((event['source']
 
 gen_code = coreComponent.createBooleanSymbol("CLK_GENERATOR_CODE", menu)
 gen_code.setLabel("Enable generator initialization code")
-gen_code.setDescription("Generate code for initializing Slow clocks, mainclock, and PLL's.  This should only be done if running out of SRAM.  This is mainly intended for writing booloaders.")
+gen_code.setDescription("Generate code for initializing Slow clocks, mainclock, and PLL's.  This should only be done if running out of SRAM.  This is mainly intended for writing bootloaders.")
 
 generator_symbols_list.setDependencies(update_clk_generators, ["CLK_GENERATOR_CODE"])
 
