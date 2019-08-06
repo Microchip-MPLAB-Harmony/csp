@@ -270,6 +270,26 @@ void ${MCPWM_INSTANCE_NAME}_ChannelLeadingEdgeBlankingDelaySet(MCPWM_CH_NUM chan
     *(&LEBDLY1 + (0x40 * (channel))) = delay;
 }
 
+void ${MCPWM_INSTANCE_NAME}_ChannelPinsOverrideEnable(MCPWM_CH_NUM channel)
+{
+    *(&IOCON1 + (0x40 * (channel))) |= _IOCON1_OVRENL_MASK | _IOCON1_OVRENH_MASK;
+}
+
+void ${MCPWM_INSTANCE_NAME}_ChannelPinsOverrideDisable(MCPWM_CH_NUM channel)
+{
+    *(&IOCON1 + (0x40 * (channel))) &= ~(_IOCON1_OVRENL_MASK | _IOCON1_OVRENH_MASK);
+}
+
+void ${MCPWM_INSTANCE_NAME}_ChannelPinsOwnershipEnable(MCPWM_CH_NUM channel)
+{
+    *(&IOCON1 + (0x40 * (channel))) |= _IOCON1_PENH_MASK | _IOCON1_PENL_MASK;
+}
+
+void ${MCPWM_INSTANCE_NAME}_ChannelPinsOwnershipDisable(MCPWM_CH_NUM channel)
+{
+    *(&IOCON1 + (0x40 * (channel))) &= ~(_IOCON1_PENH_MASK | _IOCON1_PENL_MASK);
+}
+
 <#if PTCON__SEIEN == true>
 void PWM_PRI_InterruptHandler(void)
 {

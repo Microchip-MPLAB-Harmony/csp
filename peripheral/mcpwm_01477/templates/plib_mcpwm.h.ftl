@@ -95,6 +95,14 @@ void ${MCPWM_INSTANCE_NAME}_ChannelSecondaryTriggerSet(MCPWM_CH_NUM channel, uin
 
 void ${MCPWM_INSTANCE_NAME}_ChannelLeadingEdgeBlankingDelaySet(MCPWM_CH_NUM channel, uint16_t delay);
 
+void ${MCPWM_INSTANCE_NAME}_ChannelPinsOverrideEnable(MCPWM_CH_NUM channel);
+
+void ${MCPWM_INSTANCE_NAME}_ChannelPinsOverrideDisable(MCPWM_CH_NUM channel);
+
+void ${MCPWM_INSTANCE_NAME}_ChannelPinsOwnershipEnable(MCPWM_CH_NUM channel);
+
+void ${MCPWM_INSTANCE_NAME}_ChannelPinsOwnershipDisable(MCPWM_CH_NUM channel);
+
 <#if PTCON__SEIEN == true>
 void ${MCPWM_INSTANCE_NAME}_PrimaryEventCallbackRegister(MCPWM_CALLBACK callback, uintptr_t context);
 </#if>
