@@ -162,8 +162,8 @@ wdtAlwaysOn = coreComponent.createKeyValueSetSymbol("DEVICE_WDT_ALWAYSON", wdtFu
 wdtAlwaysOn.setLabel("WDT Always On")
 wdtAlwaysOn.setOutputMode("Key")
 wdtAlwaysOn.setDisplayMode("Description")
-wdtAlwaysOn.addKey("DISABLED", "0", "WDT is disabled")
-wdtAlwaysOn.addKey("ENABLED", "1", "WDT is enabled and disabled through ENABLE bit")
+wdtAlwaysOn.addKey("DISABLED", "0", "WDT is controlled by the Enable bit")
+wdtAlwaysOn.addKey("ENABLED", "1", "WDT is always ON and cannot be disabled")
 wdtAlwaysOn.setSelectedKey("DISABLED", 1)
 
 wdtPeriod = coreComponent.createKeyValueSetSymbol("DEVICE_WDT_PER", wdtFuseMenu)
