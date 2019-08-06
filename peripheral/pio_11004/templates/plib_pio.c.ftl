@@ -214,10 +214,10 @@
 */
 void PIO_Initialize ( void )
 {
-    <#if CCFG_SYSIO_PRESENT>
+    <#if MATRIX_NAME?? && SYSIO_REG_NAME?? && PIO_CCFG_SYSIO_VALUE??>
     <#if PIO_CCFG_SYSIO_VALUE != "0">
         <#lt>    /* Selected System IO pins are configured as GPIO */
-        <#lt>    MATRIX_REGS->CCFG_SYSIO |= 0x${PIO_CCFG_SYSIO_VALUE};
+        <#lt>    ${MATRIX_NAME}_REGS->${SYSIO_REG_NAME} |= 0x${PIO_CCFG_SYSIO_VALUE};
     </#if>
     </#if>
 

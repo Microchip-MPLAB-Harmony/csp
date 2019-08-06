@@ -43,12 +43,6 @@ availablePinDictionary = {}
 
 registerNodeTemplate = "/avr-tools-device-file/modules/module@[name=\"{0}\"]/register-group@[name=\"{1}\"]/register@[name=\"{2}\"]"
 
-global sysioPresent
-
-sysioPresent = coreComponent.createBooleanSymbol("CCFG_SYSIO_PRESENT", None)
-sysioPresent.setVisible(False)
-sysioPresent.setDefaultValue(ATDF.getNode(registerNodeTemplate.format("MATRIX", "MATRIX", "CCFG_SYSIO"))is not None)
-
 slewRateControlPresent = coreComponent.createBooleanSymbol("PIO_SLEWR_PRESENT", None)
 slewRateControlPresent.setVisible(False)
 slewRateControlPresent.setDefaultValue(ATDF.getNode(registerNodeTemplate.format("PIO", "PIO", "PIO_SLEWR")) is not None)
@@ -185,27 +179,6 @@ def pinFunctionCal(pType, pFunction):
             ABCDSR1_Value &= ~(1 << bit_pos)
             ABCDSR2_Value &= ~(1 << bit_pos)
             PDR_Value &= ~(1 << bit_pos)
-
-        if sysioPresent.getValue():
-            if (portChannel == "B") and ((bit_pos == 4) or (bit_pos == 5) or (bit_pos == 6) or (bit_pos == 7) or (bit_pos == 12)):
-                CCFG_SYSIO_Value = pioMatrixSym_CCFG_SYSIO.getValue()
-                if (pType.getValue() == "ICE_TDI") or (pType.getValue() == "ICE_TDO/TRACESWO") or (pType.getValue() == "ICE_TMS/SWDIO") or (pType.getValue() == "ICE_TCK/SWDCLK") or (pType.getValue() == "EFC_ERASE") or (pFunction["value"] == ""):
-                    CCFG_SYSIO_Value &= ~(1 << bit_pos)
-                else:
-                    CCFG_SYSIO_Value |= (1 << bit_pos)
-                pioMatrixSym_CCFG_SYSIO.setValue(CCFG_SYSIO_Value, 2)
-
-            if ((portChannel == "A") and ((bit_pos == 21) or (bit_pos == 22))):
-                CCFG_SYSIO_Value = pioMatrixSym_CCFG_SYSIO.getValue()
-                if (pType.getValue() == "UHP_DP") or (pFunction["value"] == ""):
-                    CCFG_SYSIO_Value &= ~(1 << 11)
-                else:
-                    CCFG_SYSIO_Value |= (1 << 11)
-                if (pType.getValue() == "UHP_DM") or (pFunction["value"] == ""):
-                    CCFG_SYSIO_Value &= ~(1 << 10)
-                else:
-                    CCFG_SYSIO_Value |= (1 << 10)
-                pioMatrixSym_CCFG_SYSIO.setValue(CCFG_SYSIO_Value, 2)
 
         pioSym_PIO_PDR[channelIndex].setValue(PDR_Value, 2)
         pioSym_PIO_ABCDSR1[channelIndex].setValue(ABCDSR1_Value, 2)
@@ -420,6 +393,39 @@ def packageChange(pinoutSymbol, pinout):
                 pinBitPosition[pinNumber].setValue(int(re.findall('\d+', pin_map.get(pin_position[pinNumber]))[0]), 2)
                 pinChannel[pinNumber].setValue(pin_map.get(pin_position[pinNumber])[1], 2)
 
+
+def sysIOConfigChange(symbol, event):
+    global pin_map
+    global sysIOConfigdict
+
+    # Find the pin number  whose type has changed 
+    pin = int(event["id"].split("_")[1])
+
+    # Find the pad associated with the pin
+    pad = pin_map.get(pin_position[pin - 1])
+
+    # check if pad needs SYSIO configuration
+    sysioPinCfg = sysIOConfigdict.get(pad)
+    if sysioPinCfg:
+        sysioNewVal = symbol.getValue()
+        sysioFunction = sysioPinCfg[0]
+        sysioMask = sysioPinCfg[1]
+
+        # If pin has function which is not sys_io, override the sysio behavior
+        if (event["value"] and (event["value"] != sysioFunction)):
+            sysioNewVal = (sysioNewVal | sysioMask)
+        # else leave the sysio function intact    
+        else:
+            sysioNewVal =  (sysioNewVal & ~sysioMask)
+        
+        if sysioNewVal != symbol.getValue():
+            symbol.setValue(sysioNewVal)
+
+
+###################################################################################################
+######################################### Helper functions  #######################################
+###################################################################################################
+
 def sort_alphanumeric(l):
     import re
     convert = lambda text: int(text) if text.isdigit() else text.lower()
@@ -444,6 +450,7 @@ pioEnable.setReadOnly(True)
 pioSymAPI_Prefix = coreComponent.createStringSymbol("PORT_API_PREFIX", None)
 pioSymAPI_Prefix.setDefaultValue("PIO")
 pioSymAPI_Prefix.setVisible(False)
+
 
 ###################################################################################################
 ################################# Pin Configuration related code ##################################
@@ -667,7 +674,6 @@ global pioSym_PIO_MDER
 pioSym_PIO_MDER = []
 global pioSym_PIO_SODR
 pioSym_PIO_SODR = []
-global pioMatrixSym_CCFG_SYSIO
 global pioSym_PIO_IFSCER
 pioSym_PIO_IFSCER = []
 global pioSym_PIO_IFER
@@ -886,11 +892,30 @@ pioSymInterruptControl = coreComponent.createBooleanSymbol("NVIC_PIO_ENABLE", No
 pioSymInterruptControl.setDependencies(pioInterruptControl, portInterruptList)
 pioSymInterruptControl.setVisible(False)
 
-pioMatrixSym_CCFG_SYSIO = coreComponent.createHexSymbol("PIO_CCFG_SYSIO_VALUE", portConfiguration)
-pioMatrixSym_CCFG_SYSIO.setLabel("CCFG_SYSIO")
-pioMatrixSym_CCFG_SYSIO.setDescription("System Pins as GPIO")
-pioMatrixSym_CCFG_SYSIO.setDefaultValue(0x00000000)
-pioMatrixSym_CCFG_SYSIO.setVisible(False)
+
+###################################################################################################
+################################# SYS IO related code  ############################################
+###################################################################################################
+global sysIOConfigdict
+matrixName, sysioRegName, sysIOConfigdict = getArchSYSIOInformation()  
+if matrixName is not None:
+    pioSymMatrixName = coreComponent.createStringSymbol("MATRIX_NAME", None)
+    pioSymMatrixName.setVisible(False)
+    pioSymMatrixName.setDefaultValue(matrixName)
+
+if sysioRegName is not None:
+    pioSymSysIORegName = coreComponent.createStringSymbol("SYSIO_REG_NAME", None)
+    pioSymSysIORegName.setVisible(False)
+    pioSymSysIORegName.setDefaultValue(sysioRegName)
+
+if sysIOConfigdict is not None:
+# Note:  all sysio config registers are not named as CCFG_SYSIO, symbol name is retained for backward compatibility
+    pioSymSysIORegVal = coreComponent.createHexSymbol("PIO_CCFG_SYSIO_VALUE", portConfiguration)
+    pioSymSysIORegVal.setLabel("CCFG_SYSIO")
+    pioSymSysIORegVal.setDescription("System Pins as GPIO")
+    pioSymSysIORegVal.setDefaultValue(0x00000000)
+    pioSymSysIORegVal.setVisible(False)
+    pioSymSysIORegVal.setDependencies(sysIOConfigChange, pinFunctionTypelList)
 
 ###################################################################################################
 ####################################### Code Generation  ##########################################
