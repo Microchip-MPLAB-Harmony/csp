@@ -177,6 +177,22 @@ nvmWaitStates = {  # VDD > 2.7
     120000000: 5
 }
 
+# SYSIO Pin configuration information (Required by PIO 11104)
+global getArchSYSIOInformation
+def getArchSYSIOInformation():
+    matrixName = "MATRIX"
+    sysioRegName = "CCFG_SYSIO"
+    sysioInfoDict = {}
+    #SYSIO information Dictionary is of the format {"SIGNAL_PAD":["FUNCTION_NAME":"SYSIO_MASK"]}
+    sysioInfoDict["PA21"] = ["UHP_DM", 0x00000400]
+    sysioInfoDict["PA22"] = ["UHP_DP", 0x00000800]
+    sysioInfoDict["PB4"] = ["ICE_TDI", 0x00000010]
+    sysioInfoDict["PB5"] = ["ICE_TDO/TRACESWO", 0x00000020]
+    sysioInfoDict["PB6"] = ["ICE_TMS/SWDIO", 0x00000040]
+    sysioInfoDict["PB7"] = ["ICE_TCK/SWDCLK", 0x00000080]
+    sysioInfoDict["PB12"] = ["EFC_ERASE", 0x00001000]
+    return matrixName, sysioRegName, sysioInfoDict
+
 periphNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"EFC\"]")
 modules = periphNode.getChildren()
 components = []
