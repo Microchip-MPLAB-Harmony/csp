@@ -219,7 +219,7 @@ int main ( void )
 
             case APP_STATE_VERIFY:
 
-                if (memcmp(&testTxData[2], &testRxData[0], APP_RECEIVE_DATA_LENGTH != 0))
+                if (memcmp(&testTxData[2], &testRxData[0], APP_RECEIVE_DATA_LENGTH) != 0)
                 {
                     /* It means received data is not same as transmitted data */
                     state = APP_STATE_XFER_ERROR;

@@ -32,7 +32,7 @@
         </File>
         <File dnOrder="3">
           <Type dnOrder="0">SOURCE</Type>
-          <Name dnOrder="1">main_pic32mk_mcj_curiosity_pro.c</Name>
+          <Name dnOrder="1">main_pic32mk_mcj.c</Name>
           <LogicalPath dnOrder="2"/>
           <PhysicalPath dnOrder="3">/../../</PhysicalPath>
           <GeneratedChecksum dnOrder="4"/>
@@ -43,8 +43,8 @@
           <Name dnOrder="1">plib_clk.c</Name>
           <LogicalPath dnOrder="2">config/pic32mk_mcj_curiosity_pro/peripheral/clk/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/clk/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">58B893DC37B0B0510FC9988123FC07D9</GeneratedChecksum>
-          <UserChecksum dnOrder="5">58B893DC37B0B0510FC9988123FC07D9</UserChecksum>
+          <GeneratedChecksum dnOrder="4">F0456E7E925213D4A3A84B3C50BBFA64</GeneratedChecksum>
+          <UserChecksum dnOrder="5">F0456E7E925213D4A3A84B3C50BBFA64</UserChecksum>
         </File>
         <File dnOrder="5">
           <Type dnOrder="0">SOURCE</Type>
