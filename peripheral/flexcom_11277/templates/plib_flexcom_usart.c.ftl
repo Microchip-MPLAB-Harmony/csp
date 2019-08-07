@@ -11,9 +11,9 @@
     ${FLEXCOM_INSTANCE_NAME} USART PLIB Implementation File
 
   Description
-    This file defines the interface to the ${FLEXCOM_INSTANCE_NAME} USART peripheral library. This
-    library provides access to and control of the associated peripheral
-    instance.
+    This file defines the interface to the ${FLEXCOM_INSTANCE_NAME} USART
+    peripheral library. This library provides access to and control of the
+    associated peripheral instance.
 
   Remarks:
     None.
@@ -47,11 +47,9 @@
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-/* This section lists the other files that are included in this file.
-*/
+
 #include "plib_${FLEXCOM_INSTANCE_NAME?lower_case}_${FLEXCOM_MODE?lower_case}.h"
 
-<#--Implementation-->
 // *****************************************************************************
 // *****************************************************************************
 // Section: ${FLEXCOM_INSTANCE_NAME} ${FLEXCOM_MODE} Implementation
@@ -61,7 +59,7 @@
 
 FLEXCOM_USART_OBJECT ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj;
 
-<#if !(USE_USART_RX_DMA)>
+<#if !(USE_USART_RX_DMA??) || (USE_USART_RX_DMA == false)>
 void static ${FLEXCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
 {
     if(${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxBusyStatus == true)
@@ -93,7 +91,7 @@ void static ${FLEXCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
 }
 
 </#if>
-<#if !(USE_USART_TX_DMA)>
+<#if !(USE_USART_TX_DMA??) || (USE_USART_TX_DMA == false)>
 void static ${FLEXCOM_INSTANCE_NAME}_USART_ISR_TX_Handler( void )
 {
     if(${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txBusyStatus == true)
@@ -128,11 +126,11 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
     /* Channel status */
     uint32_t channelStatus = USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_CSR;
 
-    <#if (USE_USART_TX_DMA || USE_USART_RX_DMA)>
+    <#if (USE_USART_TX_DMA?? && USE_USART_TX_DMA == true) || (USE_USART_RX_DMA?? && USE_USART_RX_DMA == true)>
     USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_PTCR = US_PTCR_ERRCLR_Msk;
     </#if>
 
-    <#if USE_USART_RX_DMA>
+    <#if USE_USART_RX_DMA?? && USE_USART_RX_DMA == true>
     if ((USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_PTSR & US_PTSR_RXTEN_Msk) && (channelStatus & US_CSR_ENDRX_Msk))
     {
         if(${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxBusyStatus == true)
@@ -175,7 +173,7 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
     }
     </#if>
 
-    <#if USE_USART_TX_DMA>
+    <#if USE_USART_TX_DMA?? && USE_USART_TX_DMA == true>
     if ((USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_PTSR & US_PTSR_TXTEN_Msk) && (channelStatus & US_CSR_ENDTX_Msk))
     {
         if(${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txBusyStatus == true)
@@ -376,7 +374,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_Read( void *buffer, const size_t size )
             ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxProcessedSize = 0;
             ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxBusyStatus = true;
 
-            <#if USE_USART_RX_DMA>
+            <#if USE_USART_RX_DMA?? && USE_USART_RX_DMA == true>
             USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_RPR = (uint32_t) buffer;
             USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_RCR = (uint32_t) size;
             USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_PTCR = US_PTCR_RXTEN_Msk;
@@ -425,7 +423,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_Write( void *buffer, const size_t size )
             ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txProcessedSize = 0;
             ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txBusyStatus = true;
 
-            <#if USE_USART_TX_DMA>
+            <#if USE_USART_TX_DMA?? && USE_USART_TX_DMA == true>
             USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_TPR = (uint32_t) buffer;
             USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_TCR = (uint32_t) size;
             USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_PTCR = US_PTCR_TXTEN_Msk;
@@ -472,17 +470,16 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_ReadIsBusy( void )
 
 size_t ${FLEXCOM_INSTANCE_NAME}_USART_WriteCountGet( void )
 {
-    <#if USE_USART_TX_DMA>
+    <#if USE_USART_TX_DMA?? && USE_USART_TX_DMA == true>
     return (${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txSize - USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_TCR);
     <#else>
     return ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txProcessedSize;
     </#if>
-
 }
 
 size_t ${FLEXCOM_INSTANCE_NAME}_USART_ReadCountGet( void )
 {
-    <#if USE_USART_RX_DMA>
+    <#if USE_USART_RX_DMA?? && USE_USART_RX_DMA == true>
     return (${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxSize - USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_RCR);
     <#else>
     return ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxProcessedSize;
