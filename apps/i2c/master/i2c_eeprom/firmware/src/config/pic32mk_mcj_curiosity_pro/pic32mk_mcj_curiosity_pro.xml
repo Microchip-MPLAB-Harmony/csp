@@ -155,7 +155,7 @@
         </Combo>
         <String dnOrder="30" id="CoreMainFileName">
           <Values dnOrder="0">
-            <User dnOrder="0" value="main_pic32mk_mcj_curiosity_pro"/>
+            <User dnOrder="0" value="main_pic32mk_mcj"/>
           </Values>
         </String>
         <Boolean dnOrder="31" id="EVIC_59_ENABLE">
@@ -241,7 +241,7 @@
         <File dnOrder="47" id="MAIN_C">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="name">
-              <Value dnOrder="0">main_pic32mk_mcj_curiosity_pro.c</Value>
+              <Value dnOrder="0">main_pic32mk_mcj.c</Value>
             </String>
           </Attributes>
         </File>
