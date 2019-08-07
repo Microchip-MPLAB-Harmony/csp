@@ -690,7 +690,7 @@ for module_node in peripherals_node.getChildren():
             gclk_css.setLabel(gclk_css_node.getAttribute("name"))
             gclk_css.setDescription(gclk_css_node.getAttribute("caption"))
             gclk_css.setDisplayMode("Key")
-            gclk_css.setOutputMode("Key")
+            gclk_css.setOutputMode("Value")
             for value in gclk_css_vg_node.getChildren():
                 gclk_css.addKey(value.getAttribute("name"), value.getAttribute("value"), value.getAttribute("caption"))
 
