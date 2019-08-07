@@ -167,46 +167,55 @@ Initialize Peripheral clocks
 static void initPeriphClk(void)
 {
     struct {
-        int id;
-        int gclk;
-        int css;
-        int div;
-    } periphList[] = {
+        uint8_t id;
+        uint8_t clken;
+        uint8_t gclken;
+        uint8_t css;
+        uint8_t div;
+    } periphList[] =
+    {
         <#list 0..50 as i>
-        <#if .vars["CLK_ID_NAME_"+i]?has_content>
-        <#assign name = .vars["CLK_ID_NAME_"+i]>
-        <#if .vars[name+"_CLOCK_ENABLE"]>
-        <#if .vars["CLK_"+name+"_GCLKEN"]?has_content && .vars["CLK_"+name+"_GCLKEN"]>
-        <#assign CSS = .vars["CLK_"+name+"_GCLKCSS"]>
-        <#assign DIV = .vars["CLK_"+name+"_GCLKDIV"]>
-        { ID_${name}, 1, PMC_PCR_GCLKCSS_${CSS}, ${DIV} },
-        <#else>
-        <#if name == "EXT_MEMORY">
-        { ID_SDRAMC, 0, 0, 0},
-        <#else>
-        { ID_${name}, 0, 0, 0},
-        </#if>
-        </#if>
-        </#if>
-        </#if>
+            <#if .vars["CLK_ID_NAME_"+i]?has_content>
+                <#assign name = .vars["CLK_ID_NAME_"+i]>
+                <#assign clken = .vars[name+"_CLOCK_ENABLE"]>
+                <#if .vars["CLK_"+name+"_GCLKEN"]?has_content && .vars["CLK_"+name+"_GCLKEN"]>
+                    <#assign gclken = true>
+                <#else>
+                    <#assign gclken = false>
+                </#if>
+                <#if gclken>
+                    <#assign gclkcss = .vars["CLK_"+name+"_GCLKCSS"]>
+                    <#assign gclkdiv = .vars["CLK_"+name+"_GCLKDIV"]>
+                <#else>
+                    <#assign gclkcss = "0">
+                    <#assign gclkdiv = "0">
+                </#if>
+                <#if clken || gclken>
+                    <#if name == "EXT_MEMORY">
+                        <#lt>        { ID_SDRAMC, 1, 0, 0, 0},
+                    <#else>
+                        <#lt>        { ID_${name}, ${clken?then("1", "0")}, ${gclken?then("1", "0")}, ${gclkcss}, ${gclkdiv}},
+                    </#if>
+                </#if>
+            </#if>
         </#list>
-        { ID_PERIPH_MAX + 1, 0, 0, 0}//end of list marker
+        { ID_PERIPH_MAX + 1, 0, 0, 0, 0}//end of list marker
     };
 
-    int i;
-    int count;
-
-    count = sizeof(periphList)/sizeof(periphList[0]);
-    for (i=0; i<count; i++) {
-        if (periphList[i].id == (ID_PERIPH_MAX + 1)) {
+    int count = sizeof(periphList)/sizeof(periphList[0]);
+    for (int i = 0; i < count; i++)
+    {
+        if (periphList[i].id == (ID_PERIPH_MAX + 1))
+        {
             break;
         }
-        PMC_REGS->PMC_PCR = PMC_PCR_PID(periphList[i].id) |\
-                            PMC_PCR_EN_Msk |\
-                            PMC_PCR_CMD_Msk |\
-                            PMC_PCR_GCLKEN(periphList[i].gclk) |\
-                            periphList[i].css |\
-                            PMC_PCR_GCLKDIV(periphList[i].div);
+
+        PMC_REGS->PMC_PCR = PMC_PCR_CMD_Msk |\
+                            PMC_PCR_GCLKEN(periphList[i].gclken) |\
+                            PMC_PCR_EN(periphList[i].clken) |\
+                            PMC_PCR_GCLKDIV(periphList[i].div) |\
+                            PMC_PCR_GCLKCSS(periphList[i].css) |\
+                            PMC_PCR_PID(periphList[i].id);                
     }
 
 }
