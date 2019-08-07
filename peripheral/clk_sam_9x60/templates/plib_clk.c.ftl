@@ -210,17 +210,41 @@ static void initPeriphClk(void)
     }
 
 }
+<#if CLK_USB_EN>
 
-void initSysClks(void)
-{
-    <#if CLK_GENERATOR_CODE && CLK_DDR_ENABLE>
-    PMC_REGS->PMC_SCER |= PMC_SCER_DDRCK_Msk;
-    </#if>
-
-    <#if CLK_QSPICLK_ENABLE>
-    PMC_REGS->PMC_SCER |= PMC_SCER_QSPICLK_Msk;
-    </#if>
+/*********************************************************************************
+Initialize USB OHCI clocks 
+*********************************************************************************/
+static void initUSBClk ( void )
+{    	
+    /* Configure USB OHCI clock source and divider */
+	PMC_REGS->PMC_USB = PMC_USB_USBDIV(${CLK_USB_USBDIV}) | PMC_USB_USBS_${CLK_USB_USBS};
+	
+	/* Enable UHP48M and UHP12M OHCI clocks */
+    PMC_REGS->PMC_SCER |= PMC_SCER_UHP_Msk;
 }
+</#if>
+<#if CLK_QSPICLK_ENABLE>
+
+/*********************************************************************************
+Initialize QSPI Clock
+*********************************************************************************/
+static void initQSPIClk(void)
+{
+    PMC_REGS->PMC_SCER |= PMC_SCER_QSPICLK_Msk;
+}
+</#if>
+
+<#if CLK_GENERATOR_CODE && CLK_DDR_ENABLE>
+
+/*********************************************************************************
+Initialize DDR Clock
+*********************************************************************************/
+static void initDDRClk(void)
+{
+    PMC_REGS->PMC_SCER |= PMC_SCER_DDRCK_Msk;
+}
+</#if>
 
 /*********************************************************************************
 Clock Initialize
@@ -258,7 +282,20 @@ void CLK_Initialize( void )
 
     /* Initialize Peripheral clock */
     initPeriphClk();
+    <#if CLK_GENERATOR_CODE && CLK_DDR_ENABLE>
 
-    /* Initialize System clocks*/
-    initSysClks();
+    /* Initialize DDR Clock */
+    initDDRClk();
+    </#if>
+    <#if CLK_QSPICLK_ENABLE>
+
+    /* Initialize QSPI Clock */
+    initQSPIClk();
+    </#if>
+    <#if CLK_USB_EN>
+
+    /* Initialize USB Clock */
+    initUSBClk();
+    </#if>
+ 
 }
