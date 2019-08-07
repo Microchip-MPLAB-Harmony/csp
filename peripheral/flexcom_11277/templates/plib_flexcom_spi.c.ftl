@@ -54,12 +54,10 @@
 // *****************************************************************************
 
 <#if SPI_INTERRUPT_MODE == true>
-
 /* Global object to save FLEXCOM SPI Exchange related data */
 FLEXCOM_SPI_OBJECT ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj;
-</#if>
 
-<#if USE_SPI_DMA>
+<#if USE_SPI_DMA?? && USE_SPI_DMA == true>
 static uint8_t dummyDataBuffer[512];
 
 static void setupDMA( void* pTransmitData, void* pReceiveData, size_t size )
@@ -72,8 +70,9 @@ static void setupDMA( void* pTransmitData, void* pReceiveData, size_t size )
     SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_PTCR = SPI_PTCR_RXTEN_Msk | SPI_PTCR_TXTEN_Msk;
     SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_IER = SPI_IER_ENDRX_Msk;
 }
-</#if>
 
+</#if>
+</#if>
 void ${FLEXCOM_INSTANCE_NAME}_SPI_Initialize( void )
 {
     /* Set FLEXCOM SPI operating mode */
@@ -103,7 +102,7 @@ void ${FLEXCOM_INSTANCE_NAME}_SPI_Initialize( void )
     SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_CR = SPI_CR_SPIEN_Msk;
 }
 
-<#if SPI_INTERRUPT_MODE == false >
+<#if SPI_INTERRUPT_MODE == false>
 bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead( void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize )
 {
     size_t txCount = 0;
@@ -206,7 +205,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead( void* pTransmitData, size_t txSize,
 bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead( void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize )
 {
     bool isRequestAccepted = false;
-<#if USE_SPI_DMA>
+<#if USE_SPI_DMA?? && USE_SPI_DMA == true>
     uint32_t size = 0;
 
     /* Verify the request */
@@ -399,7 +398,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_Read( void* pReceiveData, size_t rxSize )
     return (${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead(NULL, 0, pReceiveData, rxSize));
 }
 
-<#if SPI_INTERRUPT_MODE == true >
+<#if SPI_INTERRUPT_MODE == true>
 void ${FLEXCOM_INSTANCE_NAME}_SPI_CallbackRegister( FLEXCOM_SPI_CALLBACK callback, uintptr_t context )
 {
     ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.callback = callback;
@@ -413,7 +412,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_IsBusy( void )
 
 void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
 {
-<#if !(USE_SPI_DMA)>
+<#if !(USE_SPI_DMA?? && USE_SPI_DMA == true)>
     uint32_t dataBits;
     uint32_t receivedData;
     dataBits = SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_CSR[${FLEXCOM_SPI_CSR_INDEX}] & SPI_CSR_BITS_Msk;
@@ -427,7 +426,7 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
     /* save the status in global object before it gets cleared */
     ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.status = SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_SR;
 
-    <#if USE_SPI_DMA>
+    <#if USE_SPI_DMA?? && USE_SPI_DMA == true>
     SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_PTCR = SPI_PTCR_ERRCLR_Msk;
 
     if(${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount > 0)
@@ -469,6 +468,7 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
         <#if FLEXCOM_SPI_MR_PCS != "GPIO">
         /* Set Last transfer to deassert NPCS after the last byte written in TDR has been transferred. */
         SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_CR = SPI_CR_LASTXFER_Msk;
+
         </#if>
         SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_PTCR = SPI_PTCR_RXTDIS_Msk | SPI_PTCR_TXTDIS_Msk;
         SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_IDR = SPI_IDR_ENDRX_Msk;
@@ -545,6 +545,7 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
              */
             isLastByteTransferInProgress = true;
             <#if FLEXCOM_SPI_MR_PCS != "GPIO">
+
             /* Set Last transfer to deassert NPCS after the last byte written in TDR has been transferred. */
             SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_CR = SPI_CR_LASTXFER_Msk;
             </#if>
