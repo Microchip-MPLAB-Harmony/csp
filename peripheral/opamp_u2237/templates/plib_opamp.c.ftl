@@ -80,6 +80,7 @@ void ${OPAMP_INSTANCE_NAME}_Initialize(void)
                                   ${.vars[OPAMP_OPAMPCTRL_RES1EN]?then(' | OPAMP_OPAMPCTRL${i}_RES1EN_Msk','')}
                                   ${.vars[OPAMP_OPAMPCTRL_ONDEMAND]?then(' | OPAMP_OPAMPCTRL${i}_ONDEMAND_Msk','')}
                                   ${.vars[OPAMP_OPAMPCTRL_RUNSTDBY]?then(' | OPAMP_OPAMPCTRL${i}_RUNSTDBY_Msk','')}
+                                  ${.vars[OPAMP_OPAMPCTRL_RES2VCC]?then(' | OPAMP_OPAMPCTRL${i}_RES2VCC_Msk','')}
                                   ${.vars[OPAMP_OPAMPCTRL_ENABLE]?then(' | OPAMP_OPAMPCTRL${i}_ENABLE_Msk','')}
                                   ;</@compress>
     
