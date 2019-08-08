@@ -61,7 +61,6 @@ def wdtEnableCfgMenu(wdtCfgMenu, event):
     component = wdtCfgMenu.getComponent()
     component.getSymbolByID("WDT_HEADER_FILE").setEnabled(event["value"])
     component.getSymbolByID("WDT_SOURCE_FILE").setEnabled(event["value"])
-    component.getSymbolByID("WDT_SYSTEM_INIT_FILE").setEnabled(event["value"])
     component.getSymbolByID("WDT_SYSTEM_DEF_FILE").setEnabled(event["value"])
 
 
@@ -215,7 +214,6 @@ wdtSystemInitFile.setType("STRING")
 wdtSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
 wdtSystemInitFile.setSourcePath("../peripheral/wdt_44154/templates/system/initialization.c.ftl")
 wdtSystemInitFile.setMarkup(True)
-wdtSystemInitFile.setEnabled(False)
 
 wdtSystemDefFile = coreComponent.createFileSymbol("WDT_SYSTEM_DEF_FILE", None)
 wdtSystemDefFile.setType("STRING")
