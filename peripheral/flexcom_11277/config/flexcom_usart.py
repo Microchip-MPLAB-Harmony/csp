@@ -163,6 +163,7 @@ flexcomSym_UsartBaud = flexcomComponent.createIntegerSymbol("BAUD_RATE", flexcom
 flexcomSym_UsartBaud.setLabel("Baud Rate")
 flexcomSym_UsartBaud.setDefaultValue(115200)
 flexcomSym_UsartBaud.setVisible(False)
+flexcomSym_UsartBaud.setMin(1)
 flexcomSym_UsartBaud.setDependencies(symbolVisible, ["FLEXCOM_MODE"])
 
 brgVal, overSamp = baudRateCalc(flexcomSym_UsartClkValue.getValue(), flexcomSym_UsartBaud.getValue())
