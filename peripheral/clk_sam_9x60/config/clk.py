@@ -251,6 +251,17 @@ def update_sdmmc_clock_frequency(symbol, event):
     # set the multiplier clock frequency
     mult_clk_sym = event['source'].getSymbolByID(sdmmc_name + "_MULTCLK_FREQUENCY")
     mult_clk_sym.setValue(gclk_clk_freq)
+
+
+def update_clk_generators(symbol, event):
+    ''' Allow users to edit the generator clock symbols only when the generator
+        clock code generation is enabled 
+    '''
+    gen_clk_sym_name_list = symbol.getValues()
+    for gen_clk_sym_name in reversed(gen_clk_sym_name_list):
+        event["source"].getSymbolByID(gen_clk_sym_name).setReadOnly(not event["value"])
+
+
 #This maps the instance name to the symbol in that instance that determines if we use the peripheral clock or the generic clock.  For the
 #generic handler we assume it is a keyvalueset and 0 maps to the peripheral clock.  Peripherals that don't match this assumption will need
 #to use their own update function and map it in gclk_update_map
@@ -289,6 +300,10 @@ gclk_update_map = {
     "DBGU" : generic_gclk_update_freq
 }
 
+#List symbol to hold the names of the symbol which needs to be activated if the 
+# code generation for the clock generators are enabled
+generator_symbols_list = coreComponent.createListEntrySymbol("CLK_GENERATOR_SYM_LIST", None)
+
 #instantiateComponent of core Component
 menu = coreComponent.createMenuSymbol("CLK_MENU", None)
 menu.setLabel("Clock (PMC)")
@@ -309,21 +324,27 @@ td_oscel.setOutputMode("Key")
 for value in td_oscel_vg_node.getChildren():
     td_oscel.addKey(value.getAttribute("name"), value.getAttribute("value"), value.getAttribute("caption"))
 td_oscel.setDefaultValue(1)
+td_oscel.setReadOnly(True)
+generator_symbols_list.addValue("CLK_TD_OSCSEL")
 
 osc32en_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SCKC"]/register-group@[name="SCKC"]/register@[name="SCKC_CR"]/bitfield@[name="OSC32EN"]')
 osc32en = coreComponent.createBooleanSymbol("CLK_OSC32EN", sckc_menu)
 osc32en.setLabel(osc32en_node.getAttribute("name"))
 osc32en.setDescription(osc32en_node.getAttribute("caption"))
 osc32en.setDefaultValue(True)
+osc32en.setReadOnly(True)
+generator_symbols_list.addValue("CLK_OSC32EN")
 
 osc32byp_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SCKC"]/register-group@[name="SCKC"]/register@[name="SCKC_CR"]/bitfield@[name="OSC32BYP"]')
 osc32byp = coreComponent.createBooleanSymbol("CLK_OSC32BYP", sckc_menu)
 osc32byp.setLabel(osc32byp_node.getAttribute("name"))
 osc32byp.setDescription(osc32byp_node.getAttribute("caption"))
+osc32byp.setReadOnly(True)
+generator_symbols_list.addValue("CLK_OSC32BYP")
 
 xtal_warning = coreComponent.createCommentSymbol("CLK_XTAL_WARNING", sckc_menu)
 xtal_warning.setLabel("WARNING! Crystal selected but not enabled.")
-xtal_warning.setVisible(td_oscel.getValue()==1 and osc32en.getValue()==False and osc32byp.getValue()==False)
+xtal_warning.setVisible(td_oscel.getValue()==1 and osc32en.getValue()==False and osc32byp.getValue() == False)
 xtal_warning.setDependencies(update_xtal_warning, ['CLK_OSC32EN', 'CLK_TD_OSCSEL', 'CLK_OSC32BYP'])
 
 bypass_warning = coreComponent.createCommentSymbol("CLK_BYPASS_WARNING", sckc_menu)
@@ -336,6 +357,8 @@ osc32byp_freq.setLabel("External SLCK Freq")
 osc32byp_freq.setDescription("Frequency(Hz) of the clock connected to XIN32")
 osc32byp_freq.setMin(512)
 osc32byp_freq.setMax(50000)
+osc32byp_freq.setReadOnly(True)
+generator_symbols_list.addValue("CLK_OSC32BYP_FREQ")
 
 td_slck = coreComponent.createIntegerSymbol("TD_SLOW_CLOCK_FREQUENCY", None)
 td_slck.setVisible(False)
@@ -362,12 +385,16 @@ moscrcen_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]
 moscrcen = coreComponent.createBooleanSymbol("CLK_MOSCRCEN", mainck_menu)
 moscrcen.setLabel(moscrcen_node.getAttribute("name"))
 moscrcen.setDescription(moscrcen_node.getAttribute("caption"))
+moscrcen.setReadOnly(True)
+generator_symbols_list.addValue("CLK_MOSCRCEN")
 
 moscxten_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="CKGR_MOR"]/bitfield@[name="MOSCXTEN"]')
 moscxten = coreComponent.createBooleanSymbol("CLK_MOSCXTEN", mainck_menu)
 moscxten.setLabel(moscxten_node.getAttribute("name"))
 moscxten.setDescription(moscxten_node.getAttribute("caption"))
 moscxten.setDefaultValue(True)
+moscxten.setReadOnly(True)
+generator_symbols_list.addValue("CLK_MOSCXTEN")
 
 moscxtst_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="CKGR_MOR"]/bitfield@[name="MOSCXTST"]')
 moscxtst = coreComponent.createIntegerSymbol("CLK_MOSCXTST", mainck_menu)
@@ -377,12 +404,16 @@ moscxtst.setDefaultValue(255)
 moscxtst.setMin(0)
 moscxtst.setMax(255)
 moscxtst.setDefaultValue(18)
+moscxtst.setReadOnly(True)
+generator_symbols_list.addValue("CLK_MOSCXTST")
 
 moscxt_freq = coreComponent.createIntegerSymbol("CLK_MOSCXT_FREQ", mainck_menu)
 moscxt_freq.setLabel("Main Crystal Oscillator Freq(Hz)")
 moscxt_freq.setMin(12000000)
 moscxt_freq.setMax(48000000)
 moscxt_freq.setDefaultValue(24000000)
+moscxt_freq.setReadOnly(True)
+generator_symbols_list.addValue("CLK_MOSCXT_FREQ")
 
 moscsel_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="CKGR_MOR"]/bitfield@[name="MOSCSEL"]')
 moscsel_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="'+moscsel_node.getAttribute("values")+'"]')
@@ -394,6 +425,8 @@ moscsel.setOutputMode("Value")
 for value in moscsel_vg_node.getChildren():
     moscsel.addKey(value.getAttribute("name"), value.getAttribute("value"), value.getAttribute("caption"))
 moscsel.setDefaultValue(1)
+moscsel.setReadOnly(True)
+generator_symbols_list.addValue("CLK_MOSCSEL")
 
 mainck = coreComponent.createIntegerSymbol("MAINCK_FREQUENCY", None)
 mainck.setVisible(False)
@@ -408,7 +441,7 @@ else:
     if moscxten.getValue() == True:
         value = moscxt_freq.getValue()
     else:
-        value = 0;
+        value = 0
 mainck.setDefaultValue(value)
 
 #pll
@@ -418,6 +451,8 @@ pll_menu.setLabel("PLLA")
 pll_en = coreComponent.createBooleanSymbol("CLK_PLL_EN", pll_menu)
 pll_en.setLabel("Enable PLLA")
 pll_en.setDefaultValue(True)
+pll_en.setReadOnly(True)
+generator_symbols_list.addValue("CLK_PLL_EN")
 
 pll_mul_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="PMC_PLL_CTRL1"]/bitfield@[name="MUL"]')
 pll_mul = coreComponent.createIntegerSymbol("CLK_PLL_MUL", pll_en)
@@ -426,6 +461,8 @@ pll_mul.setDescription(pll_mul_node.getAttribute("caption"))
 pll_mul.setMin(0)
 pll_mul.setMax(127)
 pll_mul.setDefaultValue(49)
+pll_mul.setReadOnly(True)
+generator_symbols_list.addValue("CLK_PLL_MUL")
 
 pll_fracr_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="PMC_PLL_CTRL1"]/bitfield@[name="FRACR"]')
 pll_fracr = coreComponent.createIntegerSymbol("CLK_PLL_FRACR", pll_en)
@@ -433,6 +470,8 @@ pll_fracr.setLabel(pll_fracr_node.getAttribute("name"))
 pll_fracr.setDescription(pll_fracr_node.getAttribute("caption"))
 pll_fracr.setMin(0)
 pll_fracr.setMax(4194303)
+pll_fracr.setReadOnly(True)
+generator_symbols_list.addValue("CLK_PLL_FRACR")
 
 pll_divpmc_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="PMC_PLL_CTRL0"]/bitfield@[name="DIVPMC"]')
 pll_divpmc = coreComponent.createIntegerSymbol("CLK_PLL_DIVPMC", pll_en)
@@ -441,11 +480,15 @@ pll_divpmc.setDescription(pll_divpmc_node.getAttribute("caption"))
 pll_divpmc.setMin(0)
 pll_divpmc.setMax(255)
 pll_divpmc.setDefaultValue(1)
+pll_divpmc.setReadOnly(True)
+generator_symbols_list.addValue("CLK_PLL_DIVPMC")
 
 pll_ss_en_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="PMC_PLL_SSR"]/bitfield@[name="ENSPREAD"]')
 pll_ss_en = coreComponent.createBooleanSymbol("CLK_PLLA_SS", pll_en)
 pll_ss_en.setLabel(pll_ss_en_node.getAttribute("name"))
 pll_ss_en.setDescription(pll_ss_en_node.getAttribute("caption"))
+pll_ss_en.setReadOnly(True)
+generator_symbols_list.addValue("CLK_PLLA_SS")
 
 pll_ss_nstep_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="PMC_PLL_SSR"]/bitfield@[name="NSTEP"]')
 pll_ss_nstep = coreComponent.createIntegerSymbol("CLK_PLLA_SS_NSTEP", pll_ss_en)
@@ -453,6 +496,8 @@ pll_ss_nstep.setLabel(pll_ss_nstep_node.getAttribute("name"))
 pll_ss_nstep.setDescription(pll_ss_nstep_node.getAttribute("caption"))
 pll_ss_nstep.setMin(0)
 pll_ss_nstep.setMax(255)
+pll_ss_nstep.setReadOnly(True)
+generator_symbols_list.addValue("CLK_PLLA_SS_NSTEP")
 
 pll_ss_step_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="PMC_PLL_SSR"]/bitfield@[name="STEP"]')
 pll_ss_step = coreComponent.createIntegerSymbol("CLK_PLLA_SS_STEP", pll_ss_en)
@@ -460,6 +505,8 @@ pll_ss_step.setLabel(pll_ss_step_node.getAttribute("name"))
 pll_ss_step.setDescription(pll_ss_step_node.getAttribute("caption"))
 pll_ss_step.setMin(0)
 pll_ss_step.setMax(65535)
+pll_ss_step.setReadOnly(True)
+generator_symbols_list.addValue("CLK_PLLA_SS_STEP")
 
 pllack = coreComponent.createIntegerSymbol("PLLA_FREQUENCY", pll_en)
 pllack.setVisible(False)
@@ -512,6 +559,8 @@ cpu_css.setOutputMode("Key")
 for value in cpu_css_vg_node.getChildren():
     cpu_css.addKey(value.getAttribute("name"), value.getAttribute("value"), value.getAttribute("caption"))
 cpu_css.setDefaultValue(2)
+cpu_css.setReadOnly(True)
+generator_symbols_list.addValue("CLK_CPU_CKR_CSS")
 
 cpu_pres_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="PMC_CPU_CKR"]/bitfield@[name="PRES"]')
 cpu_pres_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="'+cpu_pres_node.getAttribute("values")+'"]')
@@ -523,6 +572,8 @@ cpu_pres.setOutputMode("Key")
 for value in cpu_pres_vg_node.getChildren():
     cpu_pres.addKey(value.getAttribute("name"), value.getAttribute("value"), value.getAttribute("caption"))
 cpu_pres.setDefaultValue(0)
+cpu_pres.setReadOnly(True)
+generator_symbols_list.addValue("CLK_CPU_CKR_PRES")
 
 cpu_mdiv_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="PMC_CPU_CKR"]/bitfield@[name="MDIV"]')
 cpu_mdiv_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="'+cpu_mdiv_node.getAttribute("values")+'"]')
@@ -534,6 +585,8 @@ cpu_mdiv.setOutputMode("Key")
 for value in cpu_mdiv_vg_node.getChildren():
     cpu_mdiv.addKey(value.getAttribute("name"), value.getAttribute("value"), value.getAttribute("caption"))
 cpu_mdiv.setDefaultValue(3)
+cpu_mdiv.setReadOnly(True)
+generator_symbols_list.addValue("CLK_CPU_CKR_MDIV")
 
 cpu_clk = coreComponent.createIntegerSymbol("CPU_CLOCK_FREQUENCY", cpu_menu)
 cpu_clk.setVisible(False)
@@ -565,6 +618,7 @@ else:
 mck.setDefaultValue(input_freq / div)
 mck.setDependencies(update_mck_freq, ['CPU_CLOCK_FREQUENCY', 'CLK_CPU_CKR_MDIV'])
 
+# Programmable clock Menu
 pck_menu = coreComponent.createMenuSymbol("CLK_PCK_MENU", menu)
 pck_menu.setLabel("PCK")
 pck_menu.setDescription("Programmable Clocks")
@@ -795,6 +849,8 @@ sys_clk_menu.setLabel("System Clocks")
 ddr = coreComponent.createBooleanSymbol("CLK_DDR_ENABLE", sys_clk_menu)
 ddr.setLabel("Enbable DDR Clock")
 ddr.setDefaultValue(True)
+ddr.setReadOnly(True)
+generator_symbols_list.addValue("CLK_DDR_ENABLE")
 
 ddr_frq = coreComponent.createIntegerSymbol("DDRCLK_FREQUENCY", sys_clk_menu)
 ddr_frq.setVisible(False)
@@ -820,7 +876,9 @@ gen_code = coreComponent.createBooleanSymbol("CLK_GENERATOR_CODE", menu)
 gen_code.setLabel("Enable generator initialization code")
 gen_code.setDescription("Generate code for initializing Slow clocks, mainclock, and PLL's.  This should only be done if running out of SRAM.  This is mainly intended for writing booloaders.")
 
-gen_code_comment = coreComponent.createCommentSymbol(None, gen_code)
+generator_symbols_list.setDependencies(update_clk_generators, ["CLK_GENERATOR_CODE"])
+
+gen_code_comment = coreComponent.createCommentSymbol("CLK_GENERATOR_CODE_COMMENT", gen_code)
 gen_code_comment.setLabel("WARNING: This could cause lock ups if running out of DDR.  Only enable if running out of SRAM.")
 
 pit = coreComponent.createIntegerSymbol("PIT_CLOCK_FREQUENCY", None)
