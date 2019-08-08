@@ -97,7 +97,7 @@ def DummyData_ValueUpdate(symbol, event):
     if flexcomSym_OperatingMode.getSelectedKey() == "SPI":
         symbol.setVisible(True)
     else:
-        symbol.setVisible(False)    
+        symbol.setVisible(False)
 
 def SpiControlDriverDependancyStatus(symbol, event):
 
@@ -200,6 +200,7 @@ defaultbaudRate = 1000000
 flexcomSym_SPI_Baudrate = flexcomComponent.createIntegerSymbol("FLEXCOM_SPI_BAUD_RATE", flexcomSym_OperatingMode)
 flexcomSym_SPI_Baudrate.setLabel("Baud Rate (Hz)")
 flexcomSym_SPI_Baudrate.setDefaultValue(defaultbaudRate)
+flexcomSym_SPI_Baudrate.setMin(1)
 flexcomSym_SPI_Baudrate.setVisible(False)
 flexcomSym_SPI_Baudrate.setDependencies(symbolVisible, ["FLEXCOM_MODE"])
 
