@@ -97,5 +97,5 @@ void ${OPAMP_INSTANCE_NAME}_Initialize(void)
         </#if>
     </#if>
     /* Enable the peripheral */
-    ${OPAMP_INSTANCE_NAME}_REGS->OPAMP_CTRLA = OPAMP_CTRLA_ENABLE_Msk;
+    ${OPAMP_INSTANCE_NAME}_REGS->OPAMP_CTRLA = OPAMP_CTRLA_ENABLE_Msk ${OPAMP_CTRLA_LPMUX?then(' | OPAMP_CTRLA_LPMUX_Msk','')};
 }
