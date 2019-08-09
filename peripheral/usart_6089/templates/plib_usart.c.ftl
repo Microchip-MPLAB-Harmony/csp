@@ -296,7 +296,7 @@ bool ${USART_INSTANCE_NAME}_Read( void *buffer, const size_t size )
                 break;
             }
 
-            if(US_CSR_RXRDY_Msk == (${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_RXRDY_Msk))
+            if(US_CSR_USART_RXRDY_Msk == (${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_USART_RXRDY_Msk))
             {
                 *lBuffer++ = (${USART_INSTANCE_NAME}_REGS->US_RHR& US_RHR_RXCHR_Msk);
                 processedSize++;
@@ -381,7 +381,7 @@ int ${USART_INSTANCE_NAME}_ReadByte(void)
 
 void ${USART_INSTANCE_NAME}_WriteByte(int data)
 {
-    while ((US_CSR_USART_TXRDY_Msk == (${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_TXRDY_Msk)) == 0);
+    while ((US_CSR_USART_TXRDY_Msk == (${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_USART_TXRDY_Msk)) == 0);
 
     ${USART_INSTANCE_NAME}_REGS->US_THR = (US_THR_TXCHR(data) & US_THR_TXCHR_Msk);
 }
