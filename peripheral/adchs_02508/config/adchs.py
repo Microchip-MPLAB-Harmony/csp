@@ -1182,7 +1182,7 @@ def instantiateComponent(adchsComponent):
     adchsSym_ADCCON1.setDefaultValue(0x600000)
     adchsSym_ADCCON1.setDependencies(adchsCalcADCCON1, adccon1_deplist)
 
-    adccon2_deplist = ["ADCCON2__CVDCPL", "ADCCON2__ADCDIV", "ADCCON2__SAMC"]
+    adccon2_deplist = ["ADCCON2__CVDCPL", "ADCCON2__ADCDIV", "ADCCON2__SAMC", "ADCHS_7_ENABLE"]
     adchsSym_ADCCON2 = adchsComponent.createHexSymbol("ADCHS_ADCCON2", adchsMenu)
     adchsSym_ADCCON2.setLabel("ADCCON2 register value")
     adchsSym_ADCCON2.setVisible(False)
@@ -1193,7 +1193,7 @@ def instantiateComponent(adchsComponent):
     adchsSym_ADCCON3 = adchsComponent.createHexSymbol("ADCHS_ADCCON3", adchsMenu)
     adchsSym_ADCCON3.setLabel("ADCCON3 register value")
     adchsSym_ADCCON3.setVisible(False)
-    adchsSym_ADCCON3.setDefaultValue(0x0)
+    adchsSym_ADCCON3.setDefaultValue(0x1000000)
     adchsSym_ADCCON3.setDependencies(adchsCalcADCCON3, adccon3_deplist)
 
     adchsSym_ADCTRGMODE = adchsComponent.createHexSymbol("ADCHS_ADCTRGMODE", None)
@@ -1256,6 +1256,7 @@ def instantiateComponent(adchsComponent):
         adchsSym_ADCTIME[module_id] = adchsComponent.createHexSymbol("ADCHS_ADCTIME" + str(module_id), None)
         adchsSym_ADCTIME[module_id].setLabel("ADCTIME" + str(module_id))
         adchsSym_ADCTIME[module_id].setVisible(False)
+        adchsSym_ADCTIME[module_id].setDefaultValue(0x3000001)
         adchsSym_ADCTIME[module_id].setDependencies(adchsCalcADCTIME, adctime_deplist[module_id])
 
     adchsSym_ADCGIRQEN1 = adchsComponent.createHexSymbol("ADCHS_ADCGIRQEN1", None)
