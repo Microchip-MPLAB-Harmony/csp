@@ -43,8 +43,8 @@
           <Name dnOrder="1">plib_clk.c</Name>
           <LogicalPath dnOrder="2">config/pic32mx_xlp_sk/peripheral/clk/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/clk/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">9BE7E9709B8F48118709838D71620EAB</GeneratedChecksum>
-          <UserChecksum dnOrder="5">9BE7E9709B8F48118709838D71620EAB</UserChecksum>
+          <GeneratedChecksum dnOrder="4">C983C10D97C5BAEE81450317417A6285</GeneratedChecksum>
+          <UserChecksum dnOrder="5">C983C10D97C5BAEE81450317417A6285</UserChecksum>
         </File>
         <File dnOrder="5">
           <Type dnOrder="0">SOURCE</Type>
@@ -67,16 +67,16 @@
           <Name dnOrder="1">plib_rtcc.c</Name>
           <LogicalPath dnOrder="2">config/pic32mx_xlp_sk/peripheral/rtcc/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/rtcc/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">ECD4188CC6404D7B5400FA4C9CA3AB05</GeneratedChecksum>
-          <UserChecksum dnOrder="5">ECD4188CC6404D7B5400FA4C9CA3AB05</UserChecksum>
+          <GeneratedChecksum dnOrder="4">44842484B03C667409E5B96236CA2DC1</GeneratedChecksum>
+          <UserChecksum dnOrder="5">44842484B03C667409E5B96236CA2DC1</UserChecksum>
         </File>
         <File dnOrder="8">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_uart1.c</Name>
           <LogicalPath dnOrder="2">config/pic32mx_xlp_sk/peripheral/uart/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/uart/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">1E5FD1320783B4B3D545F8900EB14B40</GeneratedChecksum>
-          <UserChecksum dnOrder="5">1E5FD1320783B4B3D545F8900EB14B40</UserChecksum>
+          <GeneratedChecksum dnOrder="4">614010B4D2DC12D3043E64092A96D007</GeneratedChecksum>
+          <UserChecksum dnOrder="5">614010B4D2DC12D3043E64092A96D007</UserChecksum>
         </File>
         <File dnOrder="9">
           <Type dnOrder="0">SOURCE</Type>
@@ -107,8 +107,8 @@
           <Name dnOrder="1">plib_clk.h</Name>
           <LogicalPath dnOrder="2">config/pic32mx_xlp_sk/peripheral/clk/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/clk/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">AED8D8C760D4C814EBDD91798758ED53</GeneratedChecksum>
-          <UserChecksum dnOrder="5">AED8D8C760D4C814EBDD91798758ED53</UserChecksum>
+          <GeneratedChecksum dnOrder="4">7066CC390335CF75126E2A50C46E3BDD</GeneratedChecksum>
+          <UserChecksum dnOrder="5">7066CC390335CF75126E2A50C46E3BDD</UserChecksum>
         </File>
         <File dnOrder="13">
           <Type dnOrder="0">HEADER</Type>
@@ -131,8 +131,8 @@
           <Name dnOrder="1">plib_rtcc.h</Name>
           <LogicalPath dnOrder="2">config/pic32mx_xlp_sk/peripheral/rtcc/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/rtcc/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">21AC283D080FE5F0054B0144EFD981E6</GeneratedChecksum>
-          <UserChecksum dnOrder="5">21AC283D080FE5F0054B0144EFD981E6</UserChecksum>
+          <GeneratedChecksum dnOrder="4">C5CCB53DBC284D1BCEAB7756ED870B04</GeneratedChecksum>
+          <UserChecksum dnOrder="5">C5CCB53DBC284D1BCEAB7756ED870B04</UserChecksum>
         </File>
         <File dnOrder="16">
           <Type dnOrder="0">HEADER</Type>
@@ -161,13 +161,14 @@
       </Files>
       <Settings dnOrder="1">
         <Setting append="true" category="C32" delimiter=";" dnOrder="0" key="extra-include-directories" value="../src;../src/config/pic32mx_xlp_sk;../src/packs/PIC32MX274F256D_DFP;;../src/mips"/>
-        <Setting category="C32-LD" dnOrder="1" key="heap-size" value="0"/>
+        <Setting category="C32-LD" dnOrder="1" key="heap-size" value="512"/>
         <Setting category="C32-LD" dnOrder="2" key="no-device-startup-code" value="true"/>
+        <Setting category="C32-LD" dnOrder="3" key="preprocessor-macros" value=""/>
       </Settings>
     </Manifest>
     <Settings dnOrder="4">
-      <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.4.0"/>
-      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MX_DFP\0.1\PIC32MX\atdf\PIC32MX274F256D.atdf"/>
+      <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.5.1"/>
+      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MX_DFP\1.0.57\atdf\PIC32MX274F256D.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
       <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>

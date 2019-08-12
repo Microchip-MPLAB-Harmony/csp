@@ -63,14 +63,14 @@
 typedef struct _SYS_RTCC_OBJ_STRUCT
 {
     /* Call back function for RTCC.*/
-    RTC_CALLBACK  callback;
+    RTCC_CALLBACK  callback;
 
     /* Client data (Event Context) that will be passed to callback */
     uintptr_t context;
 
 } RTCC_OBJECT;
 
-static RTCC_OBJECT rtc;
+static RTCC_OBJECT rtcc;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -117,12 +117,12 @@ void RTCC_Initialize( void )
     RTCCONSET = _RTCCON_ON_MASK;
 }
 
-void RTCC_InterruptEnable(RTC_INT_MASK interrupt)
+void RTCC_InterruptEnable(RTCC_INT_MASK interrupt)
 {
     IEC0SET = interrupt;
 }
 
-void RTCC_InterruptDisable(RTC_INT_MASK interrupt)
+void RTCC_InterruptDisable(RTCC_INT_MASK interrupt)
 {
     IEC0CLR = interrupt;
 }
@@ -153,7 +153,7 @@ bool RTCC_TimeSet( struct tm *Time )
     return true;    /* This PLIB has no way of indicating wrong device operation so always return true */
 }
 
-void RTCC_TimeGet (struct tm  *Time )
+void RTCC_TimeGet( struct tm  *Time )
 {
     uint32_t dataTime, dataDate;
 
@@ -185,14 +185,14 @@ void RTCC_TimeGet (struct tm  *Time )
     Time->tm_isdst = 0;    /* not used */
 }
 
-bool RTCC_AlarmSet( struct tm *alarmTime, RTC_ALARM_MASK alarmFreq )
+bool RTCC_AlarmSet( struct tm *alarmTime, RTCC_ALARM_MASK alarmFreq )
 {
     uint32_t dataDate, dataTime;
 
     /* Disable interrupt, if enabled, before setting up alarm */
-    RTCC_InterruptDisable(RTC_INT_ALARM);
+    RTCC_InterruptDisable(RTCC_INT_ALARM);
 
-    if(RTC_ALARM_MASK_OFF != alarmFreq)
+    if(RTCC_ALARM_MASK_OFF != alarmFreq)
     {
         dataDate  = (decimaltobcd(alarmTime->tm_mon) << _RTCDATE_MONTH01_POSITION) & (_RTCDATE_MONTH01_MASK | _RTCDATE_MONTH10_MASK);
         dataDate |= (decimaltobcd(alarmTime->tm_mday) << _RTCDATE_DAY01_POSITION) & (_RTCDATE_DAY01_MASK | _RTCDATE_DAY10_MASK);
@@ -222,31 +222,26 @@ bool RTCC_AlarmSet( struct tm *alarmTime, RTC_ALARM_MASK alarmFreq )
         RTCALRMCLR = _RTCALRM_ALRMEN_MASK;  /* Disable the alarm */
     }
 
-    RTCC_InterruptEnable(RTC_INT_ALARM);  /* Enable the interrupt to the interrupt controller */
+    RTCC_InterruptEnable(RTCC_INT_ALARM);  /* Enable the interrupt to the interrupt controller */
 
     return true;  /* This PLIB has no way of indicating wrong device operation so always return true */
 }
 
-void RTCC_CallbackRegister( RTC_CALLBACK callback, uintptr_t context )
+void RTCC_CallbackRegister( RTCC_CALLBACK callback, uintptr_t context )
 {
-    /* - Un-register callback if NULL */
-    if (callback == NULL)
-    {
-        rtc.callback = NULL;
-        rtc.context = (uintptr_t) NULL;
-    }
+    rtcc.callback = callback;
 
-    /* - Save callback and context in local memory */
-    rtc.callback = callback;
-    rtc.context = context;
+    rtcc.context = context;
 }
 
 void RTCC_InterruptHandler( void )
 {
-    IFS0CLR = 0x40000000; /* clear the status flag */
+    /* Clear the status flag */
+    IFS0CLR = 0x40000000;
 
-    if(rtc.callback != NULL)
+    if(rtcc.callback != NULL)
     {
-        rtc.callback(rtc.context);
+        rtcc.callback(rtcc.context);
     }
 }
+

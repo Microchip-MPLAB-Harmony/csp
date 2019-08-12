@@ -59,11 +59,12 @@
 #define decimaltobcd(x)                 (((x / 10) << 4) + ((x - ((x / 10) * 10))))
 #define bcdtodecimal(x)                 ((x & 0xF0) >> 4) * 10 + (x & 0x0F)
 
+<#if RTCC_INTERRUPT_MODE == true>
 /* Real Time Clock System Service Object */
 typedef struct _SYS_RTCC_OBJ_STRUCT
 {
     /* Call back function for RTCC.*/
-    RTC_CALLBACK  callback;
+    RTCC_CALLBACK  callback;
 
     /* Client data (Event Context) that will be passed to callback */
     uintptr_t context;
@@ -72,6 +73,7 @@ typedef struct _SYS_RTCC_OBJ_STRUCT
 
 static RTCC_OBJECT rtcc;
 
+</#if>
 // *****************************************************************************
 // *****************************************************************************
 // Section: ${RTCC_INSTANCE_NAME} Implementation
@@ -111,7 +113,7 @@ void ${RTCC_INSTANCE_NAME}_Initialize( void )
     RTCALRMSET = _RTCALRM_CHIME_MASK;  /* Set alarm to repeat forever */
     <#else>
     RTCALRMCLR = _RTCALRM_CHIME_MASK;  /* Set alarm to repeat finite number of times */
-    
+
     RTCALRMbits.ARPT = ${RTCALRM_ARPT};
     </#if>
 
@@ -137,17 +139,17 @@ void ${RTCC_INSTANCE_NAME}_Initialize( void )
 }
 
 <#if RTCC_INTERRUPT_MODE == true>
-void ${RTCC_INSTANCE_NAME}_InterruptEnable( RTC_INT_MASK interrupt )
+void ${RTCC_INSTANCE_NAME}_InterruptEnable( RTCC_INT_MASK interrupt )
 {
     ${RTCC_IEC_REG}SET = interrupt;
 }
 
-void ${RTCC_INSTANCE_NAME}_InterruptDisable( RTC_INT_MASK interrupt )
+void ${RTCC_INSTANCE_NAME}_InterruptDisable( RTCC_INT_MASK interrupt )
 {
     ${RTCC_IEC_REG}CLR = interrupt;
 }
-</#if>
 
+</#if>
 bool ${RTCC_INSTANCE_NAME}_TimeSet( struct tm *Time )
 {
     uint32_t timeField, dateField;
@@ -174,7 +176,7 @@ bool ${RTCC_INSTANCE_NAME}_TimeSet( struct tm *Time )
     return true;    /* This PLIB has no way of indicating wrong device operation so always return true */
 }
 
-void ${RTCC_INSTANCE_NAME}_TimeGet (struct tm  *Time )
+void ${RTCC_INSTANCE_NAME}_TimeGet( struct tm  *Time )
 {
     uint32_t dataTime, dataDate;
 
@@ -206,16 +208,16 @@ void ${RTCC_INSTANCE_NAME}_TimeGet (struct tm  *Time )
     Time->tm_isdst = 0;    /* not used */
 }
 
-bool ${RTCC_INSTANCE_NAME}_AlarmSet( struct tm *alarmTime, RTC_ALARM_MASK alarmFreq )
+bool ${RTCC_INSTANCE_NAME}_AlarmSet( struct tm *alarmTime, RTCC_ALARM_MASK alarmFreq )
 {
     uint32_t dataDate, dataTime;
 
     <#if RTCC_INTERRUPT_MODE == true>
     /* Disable interrupt, if enabled, before setting up alarm */
-    ${RTCC_INSTANCE_NAME}_InterruptDisable(RTC_INT_ALARM);
+    ${RTCC_INSTANCE_NAME}_InterruptDisable(RTCC_INT_ALARM);
     </#if>
 
-    if(RTC_ALARM_MASK_OFF != alarmFreq)
+    if(RTCC_ALARM_MASK_OFF != alarmFreq)
     {
         dataDate  = (decimaltobcd(alarmTime->tm_mon) << _RTCDATE_MONTH01_POSITION) & (_RTCDATE_MONTH01_MASK | _RTCDATE_MONTH10_MASK);
         dataDate |= (decimaltobcd(alarmTime->tm_mday) << _RTCDATE_DAY01_POSITION) & (_RTCDATE_DAY01_MASK | _RTCDATE_DAY10_MASK);
@@ -246,13 +248,14 @@ bool ${RTCC_INSTANCE_NAME}_AlarmSet( struct tm *alarmTime, RTC_ALARM_MASK alarmF
     }
 
     <#if RTCC_INTERRUPT_MODE == true>
-    ${RTCC_INSTANCE_NAME}_InterruptEnable(RTC_INT_ALARM);  /* Enable the interrupt to the interrupt controller */
+    ${RTCC_INSTANCE_NAME}_InterruptEnable(RTCC_INT_ALARM);  /* Enable the interrupt to the interrupt controller */
     </#if>
 
     return true;  /* This PLIB has no way of indicating wrong device operation so always return true */
 }
 
-void ${RTCC_INSTANCE_NAME}_CallbackRegister( RTC_CALLBACK callback, uintptr_t context )
+<#if RTCC_INTERRUPT_MODE == true>
+void ${RTCC_INSTANCE_NAME}_CallbackRegister( RTCC_CALLBACK callback, uintptr_t context )
 {
     rtcc.callback = callback;
 
@@ -261,7 +264,7 @@ void ${RTCC_INSTANCE_NAME}_CallbackRegister( RTC_CALLBACK callback, uintptr_t co
 
 void ${RTCC_INSTANCE_NAME}_InterruptHandler( void )
 {
-	/* Clear the status flag */
+    /* Clear the status flag */
     ${RTCC_IFS_REG}CLR = ${RTCC_STATREG_SHIFT_VALUE};
 
     if(rtcc.callback != NULL)
@@ -269,3 +272,5 @@ void ${RTCC_INSTANCE_NAME}_InterruptHandler( void )
         rtcc.callback(rtcc.context);
     }
 }
+
+</#if>
