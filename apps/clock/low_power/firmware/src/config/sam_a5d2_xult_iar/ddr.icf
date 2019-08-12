@@ -3,38 +3,14 @@ define region RAM_region           = mem:[from 0x00200000 to 0x0021FFFF];
 define region DDRAM_region         = mem:[from 0x21000000 to 0x3FFFFFFF];
 define region DDRAM_NOCACHE_region = mem:[from 0x20000000 to 0x20FFFFFF];
 
-<#lt><#assign HEAP_SIZE = IAR_HEAP_SIZE!"0x200">
-<#lt><#assign USR_STACK_SIZE = IAR_USR_STACK_SIZE!"0x1000">
-<#lt><#assign FIQ_STACK_SIZE = IAR_FIQ_STACK_SIZE!"0x60">
-<#lt><#assign IRQ_STACK_SIZE = IAR_IRQ_STACK_SIZE!"0x60">
-<#lt><#assign SVC_STACK_SIZE = IAR_SVC_STACK_SIZE!"0x60">
-<#lt><#assign ABT_STACK_SIZE = IAR_ABT_STACK_SIZE!"0x40">
-<#lt><#assign SYS_STACK_SIZE = IAR_SYS_STACK_SIZE!"0x40">
-<#lt><#assign UND_STACK_SIZE = IAR_UND_STACK_SIZE!"0x40">
-<#lt><#if HEAP_SIZE != 0 >
-define block HEAP      with alignment = 4, size = ${HEAP_SIZE}{};
-<#lt></#if>
-<#lt><#if USR_STACK_SIZE != 0 >
-define block CSTACK    with alignment = 8, size = ${USR_STACK_SIZE}{};
-<#lt></#if>
-<#lt><#if FIQ_STACK_SIZE != 0 >
-define block FIQ_STACK with alignment = 8, size = ${FIQ_STACK_SIZE}{};
-<#lt></#if>
-<#lt><#if IRQ_STACK_SIZE != 0 >
-define block IRQ_STACK with alignment = 8, size = ${IRQ_STACK_SIZE}{};
-<#lt></#if>
-<#lt><#if SVC_STACK_SIZE != 0 >
-define block SVC_STACK with alignment = 8, size = ${SVC_STACK_SIZE}{};
-<#lt></#if>
-<#lt><#if ABT_STACK_SIZE != 0 >
-define block ABT_STACK with alignment = 8, size = ${ABT_STACK_SIZE}{};
-<#lt></#if>
-<#lt><#if SYS_STACK_SIZE != 0 >
-define block SYS_STACK with alignment = 8, size = ${SYS_STACK_SIZE}{};
-<#lt></#if>
-<#lt><#if UND_STACK_SIZE != 0 >
-define block UND_STACK with alignment = 8, size = ${UND_STACK_SIZE}{};
-<#lt></#if>
+define block HEAP      with alignment = 4, size = 512{};
+define block CSTACK    with alignment = 8, size = 4096{};
+define block FIQ_STACK with alignment = 8, size = 96{};
+define block IRQ_STACK with alignment = 8, size = 96{};
+define block SVC_STACK with alignment = 8, size = 4096{};
+define block ABT_STACK with alignment = 8, size = 64{};
+define block SYS_STACK with alignment = 8, size = 64{};
+define block UND_STACK with alignment = 8, size = 64{};
 
 define block SRAM { section .region_sram  };
 define block DDRAM { section .region_ddr };
@@ -67,30 +43,14 @@ place in DDRAM_region { block CACHE_ALIGNED_CONST };
 place in DDRAM_region { zi };
 place in DDRAM_region { block CACHE_ALIGNED };
 place in DDRAM_region { block DDRAM };
-<#lt><#if HEAP_SIZE != 0 >
 place in DDRAM_region { block HEAP };
-<#lt></#if>
-<#lt><#if USR_STACK_SIZE != 0 >
 place in DDRAM_region { block CSTACK };
-<#lt></#if>
-<#lt><#if FIQ_STACK_SIZE != 0 >
 place in DDRAM_region { block FIQ_STACK };
-<#lt></#if>
-<#lt><#if IRQ_STACK_SIZE != 0 >
 place in DDRAM_region { block IRQ_STACK };
-<#lt></#if>
-<#lt><#if SVC_STACK_SIZE != 0 >
 place in DDRAM_region { block SVC_STACK };
-<#lt></#if>
-<#lt><#if ABT_STACK_SIZE != 0 >
 place in DDRAM_region { block ABT_STACK };
-<#lt></#if>
-<#lt><#if SYS_STACK_SIZE != 0 >
 place in DDRAM_region { block SYS_STACK };
-<#lt></#if>
-<#lt><#if UND_STACK_SIZE != 0 >
 place in DDRAM_region { block UND_STACK };
-<#lt></#if>
 place in DDRAM_NOCACHE_region { block NO_CACHE };
 place in RAM_region { block RAMCODE_BLOCK };
 place in DDRAM_region   { block RAMCODE_BLOCK_init };
