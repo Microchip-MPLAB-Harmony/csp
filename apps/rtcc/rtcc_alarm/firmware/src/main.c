@@ -54,13 +54,11 @@
 #include "stdio.h"
 #include <string.h>
 
-#define DEBUG_TXT_LEN 50
+volatile bool rtcc_alarm = false;
 
-volatile bool rtc_alarm = false;
-
-void RTC_Callback( uintptr_t context)
+void RTCC_Callback( uintptr_t context)
 {
-    rtc_alarm = true;
+    rtcc_alarm = true;
 }
 
 // *****************************************************************************
@@ -73,55 +71,56 @@ int main ( void )
 {
     /* Initialize all modules */
     SYS_Initialize ( NULL );
-    
+
     printf("\r\nRTCC Alarm demo. Alarm triggered once in a day\r\n");
-    
+
     struct tm sys_time;
     struct tm alarm_time;
-    
+
     // Time setting 31-12-2018 23:59:58 Monday
     sys_time.tm_hour = 23;
     sys_time.tm_min = 59;
     sys_time.tm_sec = 58;
-    
+
     sys_time.tm_year = 18;
     sys_time.tm_mon = 12;
     sys_time.tm_mday = 31;
     sys_time.tm_wday = 1;
-    
+
     // Alarm setting 01-01-2019 00:00:05 Tuesday
     alarm_time.tm_hour = 00;
     alarm_time.tm_min = 00;
     alarm_time.tm_sec = 05;
-    
+
     alarm_time.tm_year = 19;
     alarm_time.tm_mon = 01;
     alarm_time.tm_mday = 01;
     alarm_time.tm_wday = 2;
 
-    RTCC_CallbackRegister(RTC_Callback, (uintptr_t) NULL);
-    
+    RTCC_CallbackRegister(RTCC_Callback, (uintptr_t) NULL);
+
     if (RTCC_TimeSet(&sys_time) == false)
     {
         /* Error setting up time */
         while(1);
     }
-    
-    if (RTCC_AlarmSet(&alarm_time, RTC_ALARM_MASK_HHMISS)== false)
+
+    if (RTCC_AlarmSet(&alarm_time, RTCC_ALARM_MASK_HHMISS) == false)
     {
         /* Error setting up alarm */
         while(1);
     }
-    
+
     printf("\r\nAlarm set for Hour:Min:Sec %d:%d:%d\r\n", alarm_time.tm_hour, alarm_time.tm_min, alarm_time.tm_sec);
 
     while ( true )
     {
         /* Maintain state machines of all polled MPLAB Harmony modules. */
         SYS_Tasks ( );
-        if(rtc_alarm)
+
+        if(rtcc_alarm)
         {
-            rtc_alarm = false;
+            rtcc_alarm = false;
             RTCC_TimeGet(&sys_time);
             printf("\r\nAlarm triggered\r\n");
             printf("\r\nDD:MM:YY %d-%d-%d\r\n", sys_time.tm_mday, sys_time.tm_mon, sys_time.tm_year);

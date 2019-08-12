@@ -60,7 +60,7 @@
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
 
-	extern "C" {
+    extern "C" {
 
 #endif
 // DOM-IGNORE-END
@@ -71,29 +71,29 @@
 // *****************************************************************************
 // *****************************************************************************
 
-typedef enum 
+typedef enum
 {
-    RTC_ALARM_MASK_HALF_SECOND = 0x00,   // Every half-second
-    RTC_ALARM_MASK_SECOND = 0x01,        // Every second
-    RTC_ALARM_MASK_10_SECONDS = 0x02,    // Every 10 seconds
-    RTC_ALARM_MASK_SS = 0x03,            // Every minute
-    RTC_ALARM_MASK_10_MINUTES = 0x04,    // Every 10 minutes
-    RTC_ALARM_MASK_HOUR = 0x05,          // Every hour
-    RTC_ALARM_MASK_HHMISS = 0x06,        // Once a day
-    RTC_ALARM_MASK_WEEK = 0x07,          // Once a week
-    RTC_ALARM_MASK_MONTH = 0x08,         // Once a month
-    RTC_ALARM_MASK_YEAR = 0x09,          // Once a year
-    RTC_ALARM_MASK_OFF = 0xFF            // Disabled
+    RTCC_ALARM_MASK_HALF_SECOND = 0x00,   // Every half-second
+    RTCC_ALARM_MASK_SECOND = 0x01,        // Every second
+    RTCC_ALARM_MASK_10_SECONDS = 0x02,    // Every 10 seconds
+    RTCC_ALARM_MASK_SS = 0x03,            // Every minute
+    RTCC_ALARM_MASK_10_MINUTES = 0x04,    // Every 10 minutes
+    RTCC_ALARM_MASK_HOUR = 0x05,          // Every hour
+    RTCC_ALARM_MASK_HHMISS = 0x06,        // Once a day
+    RTCC_ALARM_MASK_WEEK = 0x07,          // Once a week
+    RTCC_ALARM_MASK_MONTH = 0x08,         // Once a month
+    RTCC_ALARM_MASK_YEAR = 0x09,          // Once a year
+    RTCC_ALARM_MASK_OFF = 0xFF            // Disabled
 
-} RTC_ALARM_MASK;	
+} RTCC_ALARM_MASK;
 
 typedef enum
 {
-    RTC_INT_ALARM = ${RTCC_ENBLREG_ENABLE_VALUE}
+    RTCC_INT_ALARM = ${RTCC_ENBLREG_ENABLE_VALUE}
 
-} RTC_INT_MASK;
+} RTCC_INT_MASK;
 
-typedef void (*RTC_CALLBACK)(uintptr_t context);
+typedef void (*RTCC_CALLBACK)( uintptr_t context );
 
 // *****************************************************************************
 // *****************************************************************************
@@ -107,20 +107,20 @@ bool ${RTCC_INSTANCE_NAME}_TimeSet( struct tm *Time );
 
 void ${RTCC_INSTANCE_NAME}_TimeGet(struct tm  *Time );
 
-bool ${RTCC_INSTANCE_NAME}_AlarmSet( struct tm *alarmTime, RTC_ALARM_MASK alarmFreq );
+bool ${RTCC_INSTANCE_NAME}_AlarmSet( struct tm *alarmTime, RTCC_ALARM_MASK alarmFreq );
 
-void ${RTCC_INSTANCE_NAME}_CallbackRegister( RTC_CALLBACK callback, uintptr_t context );
+void ${RTCC_INSTANCE_NAME}_CallbackRegister( RTCC_CALLBACK callback, uintptr_t context );
 
 <#if RTCC_INTERRUPT_MODE == true>
-void ${RTCC_INSTANCE_NAME}_InterruptEnable(RTC_INT_MASK interrupt);
+void ${RTCC_INSTANCE_NAME}_InterruptEnable( RTCC_INT_MASK interrupt );
 
-void ${RTCC_INSTANCE_NAME}_InterruptDisable(RTC_INT_MASK interrupt);
+void ${RTCC_INSTANCE_NAME}_InterruptDisable( RTCC_INT_MASK interrupt );
 </#if>
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
-	}
+    }
 
 #endif
 // DOM-IGNORE-END
