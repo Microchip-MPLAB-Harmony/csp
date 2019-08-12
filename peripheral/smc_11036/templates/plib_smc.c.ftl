@@ -206,7 +206,7 @@ ${SMC_INSTANCE_NAME}_Initialize( void )
                 <#lt>                                           ;
                 <#lt>   // Mode Register
                 <#lt><#if (.vars[SMC_MODE_TDF_MODE] == true)>
-                    <#lt>    ${SMC_REGS}->SMC_CS_NUMBER[ ${ii} ].HSMC_MODE = HSMC_MODE_TDF_CYCLES_Msk
+                    <#lt>    ${SMC_REGS}->SMC_CS_NUMBER[ ${ii} ].HSMC_MODE = HSMC_MODE_TDF_MODE_Msk
                     <#lt>                                           | HSMC_MODE_TDF_CYCLES( ${.vars[SMC_MODE_TDF_CYCLES]} )
                     <#lt>                                           | HSMC_MODE_DBW_${.vars[SMC_MODE_DBW]}
                 <#lt><#else>
