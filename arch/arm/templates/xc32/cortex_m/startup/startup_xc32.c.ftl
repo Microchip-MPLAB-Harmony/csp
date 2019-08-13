@@ -102,7 +102,23 @@ void __attribute__((optimize("-O1"), section(".text.Reset_Handler"), long_call))
 </#if>
 
 <#if TCM_ENABLE??>
+<#if !(TCM_FIXED_SIZE??)>
 	TCM_Configure(${DEVICE_TCM_SIZE});
+</#if>
+
+<#if TCM_ECC_ENABLE??>
+    <#if TCM_ECC_ENABLE>
+    TCM_EccInitialize();
+    <#else>
+    <#if TCM_ENABLE>
+    /* Enable TCM   */
+    TCM_Enable();
+    <#else>
+    /* Disable TCM  */
+    TCM_Disable();
+    </#if>
+    </#if>
+<#else>
 <#if TCM_ENABLE>
     /* Enable TCM   */
     TCM_Enable();
@@ -111,7 +127,11 @@ void __attribute__((optimize("-O1"), section(".text.Reset_Handler"), long_call))
     TCM_Disable();
 </#if>
 </#if>
+</#if>
 
+<#if FLEXRAM_ECC_SUPPORTED??>
+    FlexRAM_EccInitialize();
+</#if>
     /* Initialize data after TCM is enabled.
      * Data initialization from the XC32 .dinit template */
     __pic32c_data_initialization();
