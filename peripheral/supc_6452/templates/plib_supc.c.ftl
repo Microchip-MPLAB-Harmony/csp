@@ -149,7 +149,7 @@ void ${SUPC_INSTANCE_NAME}_WaitModeEnter (WAITMODE_FLASH_STATE flash_lpm, WAITMO
 
     /* Restore Clock Setting	*/
     EFC_Initialize();
-    CLK_Initialize();
+    CLOCK_Initialize();
     
     
     /* Enable CPU Interrupt	*/
