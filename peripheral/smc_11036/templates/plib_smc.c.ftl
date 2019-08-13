@@ -137,9 +137,8 @@ ${SMC_INSTANCE_NAME}_Initialize( void )
     <#lt></#if>
     <#lt><#if SMC_PMECC_ERROR_LOCATION_DISABLE>
         <#lt>   ${SMC_REGS}->HSMC_ELDIS = HSMC_ELDIS_Msk;
-    <#lt><#else>
-        <#lt>   ${SMC_REGS}->HSMC_ELEN = HSMC_ELEN_ENINIT( ${SMC_PMECC_ERROR_LOCATION_ENABLE_CODEWORD} );
     <#lt></#if>
+    <#lt>       ${SMC_REGS}->HSMC_ELEN = HSMC_ELEN_ENINIT( ${SMC_PMECC_ERROR_LOCATION_ENABLE_CODEWORD} );
 
     <#lt>   // ------------------------------------------------------------------------
     <#lt>   // Chip Selection and Settings
