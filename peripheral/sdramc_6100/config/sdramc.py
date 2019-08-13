@@ -175,11 +175,14 @@ def instantiateComponent(sdramcComponent):
     sdramcSym_CR_TRCD.setMax(15)
     sdramcSym_CR_TRCD.setDefaultValue(SDRAMC_CR_TRCD_DEFAULT_VALUE)
 
-    sdramcSym_CR_CAS = sdramcComponent.createIntegerSymbol("SDRAMC_CR_CAS", sdramcSymMenu_TIMING_MENU)
+    sdramc_cr_cas_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SDRAMC"]/register-group@[name="SDRAMC"]/register@[name="SDRAMC_CR"]/bitfield@[name="CAS"]')
+    sdramc_cr_cas_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SDRAMC"]/value-group@[name="'+sdramc_cr_cas_node.getAttribute("values")+'"]')
+    sdramcSym_CR_CAS = sdramcComponent.createKeyValueSetSymbol("SDRAMC_CR_CAS", sdramcSymMenu_TIMING_MENU)
     sdramcSym_CR_CAS.setLabel("CAS Latency (TCAS)")
-    sdramcSym_CR_CAS.setMin(1)
-    sdramcSym_CR_CAS.setMax(3)
-    sdramcSym_CR_CAS.setDefaultValue(SDRAMC_CR_CAS_DEFAULT_VALUE)
+    sdramcSym_CR_CAS.setDisplayMode("Value")
+    sdramcSym_CR_CAS.setOutputMode("Value")
+    for value in sdramc_cr_cas_vg_node.getChildren():
+        sdramcSym_CR_CAS.addKey(value.getAttribute("name"), value.getAttribute("value"), value.getAttribute("caption"))
 
     sdramcSym_CR_TRAS = sdramcComponent.createIntegerSymbol("SDRAMC_CR_TRAS", sdramcSymMenu_TIMING_MENU)
     sdramcSym_CR_TRAS.setLabel("Row Active to Precharge Delay(RAS)")
