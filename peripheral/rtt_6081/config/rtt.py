@@ -67,11 +67,16 @@ def instantiateComponent(rttComponent):
     rttMenu = rttComponent.createMenuSymbol("RTT_MENU_0", None)
     rttMenu.setLabel("Hardware Settings ")
 
-    rttNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"RTT\"]/register-group@[name=\"RTT\"]/register@[name=\"RTT_MODR\"]")
+    rttINC2Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"RTT\"]/register-group@[name=\"RTT\"]/register@[name=\"RTT_MODR\"]/bitfield@[name=\"SELINC2\"]")
 
-    rttEvent = rttComponent.createBooleanSymbol("RTT_INC2_SUPPORTED", None)
-    rttEvent.setVisible(False)
-    rttEvent.setDefaultValue(rttNode is not None)
+    rttINC2Support = rttComponent.createBooleanSymbol("RTT_INC2_SUPPORTED", None)
+    rttINC2Support.setVisible(False)
+    rttINC2Support.setDefaultValue(rttINC2Node is not None)
+
+    rttEVANode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"RTT\"]/register-group@[name=\"RTT\"]/register@[name=\"RTT_MODR\"]/bitfield@[name=\"SELTRGEV\"]")
+    rttEVASupport = rttComponent.createBooleanSymbol("RTT_EVA_SUPPORTED", None)
+    rttEVASupport.setVisible(False)
+    rttEVASupport.setDefaultValue(rttEVANode is not None)
 #------------------------------------------------------------
 # Common Symbols needed for SYS_TIME usage
 #------------------------------------------------------------
@@ -130,14 +135,14 @@ def instantiateComponent(rttComponent):
     rttAlarm.setLabel("Enable Alarm Interrupt")
     rttAlarm.setDefaultValue(True)
 
-    if rttEvent.getValue():
+    if rttINC2Support.getValue():
         rttInc2Enable = rttComponent.createBooleanSymbol("rttINC2EN", rttMenu)
         rttInc2Enable.setLabel("Enable RTTINC2 Interrupt")
         rttInc2Enable.setDefaultValue(False)
 
         rttInc2Node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTT"]/value-group@[name="RTT_MODR__SELINC2"]')
         rttInc2Values = rttInc2Node.getChildren()
-
+    
         rttSelinc2 = rttComponent.createKeyValueSetSymbol("RTT_SELINC2", rttMenu)
         rttSelinc2.setLabel("Periodicity of RTTINC2 Interrupt")
         for index in range(0, len(rttInc2Values)):
@@ -149,6 +154,7 @@ def instantiateComponent(rttComponent):
         rttSelinc2.setOutputMode("Value")
         rttSelinc2.setDisplayMode("Description")
 
+    if rttEVASupport.getValue():
         rttEventEnable = rttComponent.createBooleanSymbol("rttEVAEN", rttMenu)
         rttEventEnable.setLabel("Generate Alarm Interrupt on RTT event")
         rttEventEnable.setDefaultValue(False)
@@ -241,8 +247,12 @@ def instantiateComponent(rttComponent):
 
 def rttPrescaleHide(rttPrescaleValue, event):
     if event["value"] == True:
+        rttPrescaleValue.setReadOnly(True)
+        rttPrescaleValue.setValue(0)
         rttPrescaleValue.setVisible(False)
     else:
+        rttPrescaleValue.clearValue()
+        rttPrescaleValue.setReadOnly(False)
         rttPrescaleValue.setVisible(True)
 
 
