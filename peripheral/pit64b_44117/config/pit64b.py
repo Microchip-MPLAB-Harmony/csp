@@ -93,7 +93,7 @@ def instantiateComponent(pit64Component):
     period_msb.setDefaultValue((period.getValue() & 0xFFFFFFFF00000000) >> 32)
     period_msb.setDependencies(lambda symbol, event:symbol.setValue((event['value'] & 0xFFFFFFFF00000000) >> 32), ['PERIOD'])
 
-    period_lsb = pit64Component.createIntegerSymbol("PERIOD_LSB", None)
+    period_lsb = pit64Component.createLongSymbol("PERIOD_LSB", None)
     period_lsb.setVisible(False)
     period_lsb.setDefaultValue(period.getValue() & 0xFFFFFFFF)
     period_lsb.setDependencies(lambda symbol, event:symbol.setValue(event['value'] & 0xFFFFFFFF), ['PERIOD'])
