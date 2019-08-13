@@ -45,16 +45,41 @@ Description:
 
 <#if rttINCIEN == true || rttALMIEN == true>
     <#lt>RTT_OBJECT rtt;
+
 </#if>
-    
+<#assign RTT_MR_VAL = "RTT_MR_RTPRES(" + rttRTPRES + ") | RTT_MR_RTTDIS_Msk">
+<#if rttINCIEN>
+<#assign RTT_MR_VAL = RTT_MR_VAL + " | RTT_MR_RTTINCIEN_Msk">
+</#if>
+<#if rttALMIEN>
+<#assign RTT_MR_VAL = RTT_MR_VAL + " | RTT_MR_ALMIEN_Msk">
+</#if>
+<#if rttRTC1HZ>
+<#assign RTT_MR_VAL = RTT_MR_VAL + " | RTT_MR_RTC1HZ_Msk">
+</#if>
+<#if RTT_INC2_SUPPORTED && rttINC2EN>
+<#assign RTT_MR_VAL = RTT_MR_VAL + " | RTT_MR_INC2AEN_Msk">
+</#if>
+<#if RTT_EVA_SUPPORTED && rttEVAEN>
+<#assign RTT_MR_VAL = RTT_MR_VAL + " | RTT_MR_EVAEN_Msk">
+</#if>
+<#assign RTT_MODR_VAL = "">
+<#if RTT_INC2_SUPPORTED>
+<#assign RTT_MODR_VAL = "RTT_MODR_SELINC2(" + RTT_SELINC2 +")">
+</#if>
+<#if RTT_EVA_SUPPORTED>
+<#if RTT_MODR_VAL?has_content>
+<#assign RTT_MODR_VAL = RTT_MODR_VAL + "| RTT_MODR_SELTRGEV(" + RTT_SELTRGEV +")">
+<#else>
+<#assign RTT_MODR_VAL = "RTT_MODR_SELTRGEV(" + RTT_SELTRGEV +")">
+</#if>
+</#if>
 void ${RTT_INSTANCE_NAME}_Initialize(void)
 {
     ${RTT_INSTANCE_NAME}_REGS->RTT_MR = RTT_MR_RTTRST_Msk;
-    ${RTT_INSTANCE_NAME}_REGS->RTT_MR = RTT_MR_RTPRES(${rttRTPRES}) | RTT_MR_RTTDIS_Msk ${rttINCIEN?then(' | RTT_MR_RTTINCIEN_Msk','')}${rttALMIEN?then(' | RTT_MR_ALMIEN_Msk','')}${rttRTC1HZ?then(' | RTT_MR_RTC1HZ_Msk','')}<#if RTT_INC2_SUPPORTED>${rttINC2EN?then(' | RTT_MR_INC2AEN_Msk','')}${rttEVAEN?then(' | RTT_MR_EVAEN_Msk','')}</#if>;
-    <#if RTT_INC2_SUPPORTED>
-    <#if (RTT_SELINC2 != "0x0" || RTT_SELTRGEV != "0x0")>
-        <#lt>    RTT_REGS->RTT_MODR = RTT_MODR_SELINC2(${RTT_SELINC2}) | RTT_MODR_SELTRGEV(${RTT_SELTRGEV});
-    </#if>
+    ${RTT_INSTANCE_NAME}_REGS->RTT_MR = ${RTT_MR_VAL};
+    <#if RTT_MODR_VAL?has_content>
+    ${RTT_INSTANCE_NAME}_REGS->RTT_MODR = ${RTT_MODR_VAL};
     </#if>
 }
 
