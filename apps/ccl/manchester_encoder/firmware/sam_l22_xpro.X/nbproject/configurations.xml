@@ -86,6 +86,9 @@
                 <itemPath ex="false">../src/packs/CMSIS/CMSIS/Core/Include/cmsis_compiler.h</itemPath>
                 <itemPath ex="false">../src/packs/CMSIS/CMSIS/Core/Include/cmsis_iccarm.h</itemPath>
                 <itemPath ex="false">../src/packs/CMSIS/CMSIS/Core/Include/cmsis_gcc.h</itemPath>
+                <itemPath ex="false">../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armcc.h</itemPath>
+                <itemPath ex="false">../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang.h</itemPath>
+                <itemPath ex="false">../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang_ltm.h</itemPath>
                 <itemPath ex="false">../src/packs/CMSIS/CMSIS/Core/Include/tz_context.h</itemPath>
                 <itemPath ex="false">../src/packs/CMSIS/CMSIS/Core/Include/core_cm0plus.h</itemPath>
                 <itemPath ex="false">../src/packs/CMSIS/CMSIS/Core/Include/mpu_armv7.h</itemPath>
