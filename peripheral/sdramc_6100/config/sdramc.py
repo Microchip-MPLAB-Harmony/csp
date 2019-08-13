@@ -214,6 +214,7 @@ def instantiateComponent(sdramcComponent):
     sdramcSym_REFRESH_TIME_IN_MS = sdramcComponent.createIntegerSymbol("SDRAMC_REFRESH_TIME_IN_MS", sdramcSymMenu_TIMING_MENU)
     sdramcSym_REFRESH_TIME_IN_MS.setLabel("Refresh time in ms")
     sdramcSym_REFRESH_TIME_IN_MS.setDefaultValue(SDRAMC_REFRESH_TIME_IN_MS_DEFAULT_VALUE)
+    sdramcSym_REFRESH_TIME_IN_MS.setMin(0)
 
     clk = int(Database.getSymbolValue("core", sdramcInstanceName.getValue() + "_CLOCK_FREQUENCY"))
     count=calcRefreshCount(SDRAMC_REFRESH_TIME_IN_MS_DEFAULT_VALUE, "ROW11", clk)
