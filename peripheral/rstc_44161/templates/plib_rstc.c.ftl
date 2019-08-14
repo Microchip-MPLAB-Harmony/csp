@@ -65,12 +65,6 @@ void RSTC${INSTANCE?string}_Initialize( void )
     <#else>
         <#lt>    // Ignoring user reset input, NRST input
     </#if>
-    <#if RSTC_MR_CPU_FAULT_RESET == true>
-        <#lt>    // Enable CPU fault reset
-        <#lt>    regValue |= RSTC_MR_CPUFEN_Msk;
-    <#else>
-        <#lt>    // No reset on CPU fault
-    </#if>
     <#if RSTC_MR_CRYSTAL_FAULT_RESET == true>
         <#lt>    // Enable Slow Clock fault reset
         <#lt>    regValue |= RSTC_MR_SCKSW_Msk;
