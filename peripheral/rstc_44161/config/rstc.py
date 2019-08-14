@@ -97,10 +97,6 @@ def instantiateComponent(rstcComponent):
     rstcMrExternalResetLengthMilliSecs.setReadOnly(True)
     rstcMrExternalResetLengthMilliSecs.setDefaultValue( rstcErstlToMilliSecs( rstcMrExternalResetLength.getValue() ) )
 
-    rstcMrCpuFaultReset = rstcComponent.createBooleanSymbol( "RSTC_MR_CPU_FAULT_RESET", None )
-    rstcMrCpuFaultReset.setLabel("Reset on CPU fault detection")
-    rstcMrCpuFaultReset.setDefaultValue(False)
-
     rstcMrCrystalFaultReset = rstcComponent.createBooleanSymbol( "RSTC_MR_CRYSTAL_FAULT_RESET", None )
     rstcMrCrystalFaultReset.setLabel("Crystal fault resets VDDCORE logic")
     rstcMrCrystalFaultReset.setDefaultValue(False)
