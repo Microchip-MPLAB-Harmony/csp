@@ -346,6 +346,49 @@ bool ${FLEXCOM_INSTANCE_NAME}_TWI_WriteRead(uint16_t address, uint8_t *wdata, si
 
 FLEXCOM_TWI_ERROR ${FLEXCOM_INSTANCE_NAME}_TWI_ErrorGet(void);
 
+// *****************************************************************************
+/* Function:
+    bool ${FLEXCOM_INSTANCE_NAME}_TWI_TransferSetup(FLEXCOM_TWI_TRANSFER_SETUP* setup, uint32_t srcClkFreq)
+
+   Summary:
+    Dynamic setup of FLEXCOM TWI Peripheral.
+
+   Precondition:
+    ${FLEXCOM_INSTANCE_NAME}_Initialize must have been called for the associated TWI instance.
+	The transfer status should not be busy.
+	
+   Parameters:
+    setup - Pointer to the structure containing the transfer setup.
+    srcClkFreq - TWI Peripheral Clock Source Frequency.
+	
+   Returns:
+    true - Transfer setup was updated Successfully.
+    false - Failure while updating transfer setup.
+    
+   Example:
+    <code>    
+    
+    FLEXCOM_TWI_TRANSFER_SETUP setup;
+    
+    setup.clkSpeed = 400000;
+    
+    // Make sure that the I2C is not busy before changing the I2C clock frequency
+    if (${FLEXCOM_INSTANCE_NAME}_TWI_IsBusy() == false)
+    {
+        if (${FLEXCOM_INSTANCE_NAME}_TWI_TransferSetup( &setup, 0 ) == true)
+        {
+            // Transfer Setup updated successfully
+        }
+    }    
+    </code>
+
+   Remarks:
+    srcClkFreq overrides any change in the peripheral clock frequency. 
+    If configured to zero PLib takes the peripheral clock frequency from MHC.
+*/
+
+bool ${FLEXCOM_INSTANCE_NAME}_TWI_TransferSetup(FLEXCOM_TWI_TRANSFER_SETUP* setup, uint32_t srcClkFreq );
+
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
