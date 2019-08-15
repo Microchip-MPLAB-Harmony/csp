@@ -191,7 +191,7 @@ def visibilityBasedOnBoolSymbol( symbol, event ):
 
 def smcModeByteWriteOrSelectAccessVisible( symbol, event ):
     """ function to enable visibility based on selection of Byte Access Type """ 
-    if( event[ "symbol" ].getSelectedKey() == "SMC_MODE_DBW_16_BIT" ):
+    if( event[ "symbol" ].getSelectedKey() == "SMC_MODE_DBW_BIT_16" ):
         symbol.setVisible( True )
     else:
         symbol.setVisible( False )
@@ -394,6 +394,7 @@ def instantiateComponent( staticMemoryComponent ):
         for tupleElem in getNameValueCaptionTuple( ModuleSmc, "SMC_MODE0__BAT" ):
             smcModeBat.addKey( smcModeBatNameStem + "_" + tupleElem[ 0 ], tupleElem[ 1 ], tupleElem[ 0 ] )
         smcModeBat.setDependencies( smcModeByteWriteOrSelectAccessVisible, [ smcModeDbwName ] )
+        smcModeBat.setVisible( False )
 
         smcModePmenNameStem = "SMC_MODE_PMEN"
         smcModePmenName = smcModePmenNameStem + "_" + csNum  
