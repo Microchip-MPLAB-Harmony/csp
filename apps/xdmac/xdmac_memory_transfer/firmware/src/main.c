@@ -53,8 +53,8 @@
 #include <string.h>                     // Defines strncmp
 #include "definitions.h"                // SYS function prototypes
 
-#define LED_ON                      LED_Clear
-#define LED_OFF                     LED_Set
+#define LED_ON                      LED_Set
+#define LED_OFF                     LED_Clear
 #define LED_TOGGLE                  LED_Toggle
 
 #define TRANSFER_SIZE               10016
