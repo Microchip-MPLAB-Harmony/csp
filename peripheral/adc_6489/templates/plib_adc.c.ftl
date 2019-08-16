@@ -44,10 +44,6 @@
 
 #define ADC_SEQ1_CHANNEL_NUM (8U)
 
-#define ADC_CGR_GAIN_X1   (0x00U)
-#define ADC_CGR_GAIN_X2   (0x01U)
-#define ADC_CGR_GAIN_X4   (0x03U)
-
 <#compress> <#-- To remove unwanted new lines -->
 <#assign ADC_DIFFR_DIFF = "">
 <#assign ADC_SHMR_DUAL = "">
@@ -77,11 +73,13 @@
 
 <#-- Differential mode -->
 <#if i % 2 == 0>
-    <#if .vars[ADC_CH_CHER] == true && .vars[ADC_CH_NEG_INP] != "GND">
-        <#if ADC_DIFFR_DIFF != "">
-            <#assign ADC_DIFFR_DIFF = ADC_DIFFR_DIFF + " | " + "ADC_COR_DIFF"+i+"_Msk">
-        <#else>
-            <#assign ADC_DIFFR_DIFF = "ADC_COR_DIFF"+i+"_Msk">
+    <#if (i == 0) || (i > 0 && ADC_MR_ANACH == false)>
+        <#if .vars[ADC_CH_CHER] == true && .vars[ADC_CH_NEG_INP] != "GND">
+            <#if ADC_DIFFR_DIFF != "">
+                <#assign ADC_DIFFR_DIFF = ADC_DIFFR_DIFF + " | " + "ADC_COR_DIFF"+i+"_Msk">
+            <#else>
+                <#assign ADC_DIFFR_DIFF = "ADC_COR_DIFF"+i+"_Msk">
+            </#if>
         </#if>
     </#if>
 </#if>
@@ -192,7 +190,8 @@ void ${ADC_INSTANCE_NAME}_Initialize()
     ${ADC_INSTANCE_NAME}_REGS->ADC_CR = ADC_CR_SWRST_Msk;
 
     /* Prescaler and different time settings as per CLOCK section  */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_MR = ADC_MR_PRESCAL(${ADC_MR_PRESCAL}U) | ADC_MR_TRACKTIM(15U) | ADC_MR_STARTUP_SUT64 |
+    ${ADC_INSTANCE_NAME}_REGS->ADC_MR = ADC_MR_PRESCAL(${ADC_MR_PRESCAL}U) | ADC_MR_TRACKTIM(15U) |
+        ADC_MR_STARTUP_SUT64 ${(ADC_MR_ANACH == false)?then('| ADC_MR_ANACH_Msk', '')} |
         ADC_MR_TRANSFER(2U) ${(ADC_CONV_MODE == "0")?then('| ADC_MR_FREERUN_Msk', '')} <#rt>
         <#lt> ${(ADC_CONV_MODE == "2")?then('| (ADC_MR_TRGEN_Msk) | (ADC_MR_${ADC_MR_TRGSEL_VALUE})', '')};
 
