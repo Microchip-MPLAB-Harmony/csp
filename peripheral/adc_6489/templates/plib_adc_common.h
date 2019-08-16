@@ -84,10 +84,6 @@ typedef enum
     ADC_CH5_MASK = (1U << 5U),
     ADC_CH6_MASK = (1U << 6U),
     ADC_CH7_MASK = (1U << 7U),
-    ADC_CH8_MASK = (1U << 8U),
-    ADC_CH9_MASK = (1U << 9U),
-    ADC_CH10_MASK = (1U << 10U),
-    ADC_CH11_MASK = (1U << 11U)
 }ADC_CHANNEL_MASK;
 // *****************************************************************************
 
@@ -101,19 +97,9 @@ typedef enum
     ADC_CH5,
     ADC_CH6,
     ADC_CH7,
-    ADC_CH8,
-    ADC_CH9,
-    ADC_CH10,
-    ADC_CH11
 }ADC_CHANNEL_NUM;
 // *****************************************************************************
 
-typedef enum
-{
-    ADC_CHANNEL_GAIN_X1,
-    ADC_CHANNEL_GAIN_X2,
-    ADC_CHANNEL_GAIN_X4
-}ADC_CHANNEL_GAIN;
 // *****************************************************************************
 
 typedef enum
@@ -126,10 +112,6 @@ typedef enum
     ADC_INTERRUPT_EOC_5_MASK = (1U << 5U),
     ADC_INTERRUPT_EOC_6_MASK = (1U << 6U),
     ADC_INTERRUPT_EOC_7_MASK = (1U << 7U),
-    ADC_INTERRUPT_EOC_8_MASK = (1U << 8U),
-    ADC_INTERRUPT_EOC_9_MASK = (1U << 9U),
-    ADC_INTERRUPT_EOC_10_MASK = (1U << 10U),
-    ADC_INTERRUPT_EOC_11_MASK = (1U << 11U)
 }ADC_INTERRUPT_MASK;
 
 // *****************************************************************************
