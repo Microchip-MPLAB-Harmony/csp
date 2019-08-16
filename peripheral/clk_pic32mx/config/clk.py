@@ -289,7 +289,7 @@ def check_for_usb_part(processor):
     if(("110F016" in processor) or ("120F032" in processor) or ("130F064" in processor) or ("130F256" in processor) or
        ("170F256" in processor) or ("150F128" in processor) or ("330F064" in processor) or ("350F128" in processor) or
        ("350F256" in processor) or ("370F512" in processor) or ("120F064" in processor) or ("130F128" in processor) or
-       ("150F256" in processor)  or ("170F512" in processor)):
+       ("150F256" in processor)  or ("170F512" in processor) or ("174F" in processor) or ("154F" in processor)):
         return False
     else:
         return True
