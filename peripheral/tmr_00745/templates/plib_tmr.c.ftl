@@ -52,7 +52,12 @@
 #include "device.h"
 #include "plib_${TMR_INSTANCE_NAME?lower_case}.h"
 
-<#if TMR_INTERRUPT_MODE == true>
+<#assign interrupt = false>
+<#if (TIMER_32BIT_MODE_SEL == "0" && TMR_INTERRUPT_MODE == true) || (TIMER_32BIT_MODE_SEL == "1" && TMR_SLAVE_INTERRUPT_MODE == true)>
+    <#assign interrupt = true>
+</#if>
+
+<#if  interrupt == true>
 static TMR_TIMER_OBJECT ${TMR_INSTANCE_NAME?lower_case}Obj;
 </#if>
 
@@ -76,7 +81,7 @@ void ${TMR_INSTANCE_NAME}_Initialize(void)
     /*Set period */
     PR${TMR_INSTANCE_NUM} = ${TIMER_PERIOD}U;
 
-    <#if TMR_INTERRUPT_MODE == true>
+    <#if interrupt == true>
     <#if TIMER_32BIT_MODE_SEL =="0">
     /* Enable TMR Interrupt */
     ${TMR_IEC_REG}SET = _${TMR_IEC_REG}_T${TMR_INSTANCE_NUM}IE_MASK;
@@ -139,7 +144,15 @@ uint32_t ${TMR_INSTANCE_NAME}_FrequencyGet(void)
     return (${TIMER_CLOCK_FREQ});
 }
 
-<#if TMR_INTERRUPT_MODE == true>
+<#if TIMER_32BIT_MODE_SEL =="1" && TMR_INTERRUPT_MODE == true>
+void TIMER_${TMR_INSTANCE_NUM}_InterruptHandler (void)
+{
+    /* In 32-bit mode, master interrupt handler is ignored */
+    ${TMR_IFS_REG}CLR = _${TMR_IFS_REG}_T${TMR_INSTANCE_NUM}IF_MASK;
+}
+</#if>
+
+<#if interrupt == true>
 <#if TIMER_32BIT_MODE_SEL =="0">
 void TIMER_${TMR_INSTANCE_NUM}_InterruptHandler (void)
 <#else>

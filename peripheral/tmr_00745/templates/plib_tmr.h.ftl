@@ -69,6 +69,11 @@
 // *****************************************************************************
 // *****************************************************************************
 
+<#assign interrupt = false>
+<#if (TIMER_32BIT_MODE_SEL == "0" && TMR_INTERRUPT_MODE == true) || (TIMER_32BIT_MODE_SEL == "1" && TMR_SLAVE_INTERRUPT_MODE == true)>
+    <#assign interrupt = true>
+</#if>
+
 // *****************************************************************************
 void ${TMR_INSTANCE_NAME}_Initialize(void);
 
@@ -92,7 +97,7 @@ uint32_t ${TMR_INSTANCE_NAME}_CounterGet(void);
 
 uint32_t ${TMR_INSTANCE_NAME}_FrequencyGet(void);
 
-<#if TMR_INTERRUPT_MODE == true>
+<#if interrupt == true>
 void ${TMR_INSTANCE_NAME}_InterruptEnable(void);
 
 void ${TMR_INSTANCE_NAME}_InterruptDisable(void);

@@ -140,28 +140,7 @@ def getVectorIndex(string):
 ###################################################################################################
 def timerInterruptSet(symbol, event):
     component = symbol.getComponent()
-    slaveComponent = ""
-    mode_32 = component.getSymbolValue("TIMER_32BIT_MODE_SEL")
-    if (mode_32 == 0):
-        tmrPrevIrq = "TIMER_" + str(int(instanceNum))
-        tmrIrq = "TIMER_" + str(int(instanceNum) + 1)
-        slaveComponent = "tmr" + str(int(instanceNum) + 1)
-    else:
-        tmrIrq = "TIMER_" + str(instanceNum)
-        tmrPrevIrq = "TIMER_" + str(int(instanceNum) + 1)
-
-    activeComponentList = Database.getActiveComponentIDs()
-    if (mode_32 == 0 or (mode_32 == 1 and "tmr"+str(int(instanceNum) + 1) not in activeComponentList)):
-        Database.setSymbolValue("core", tmrPrevIrq + "_INTERRUPT_ENABLE", False, 1)
-        Database.setSymbolValue("core", tmrPrevIrq + "_INTERRUPT_HANDLER_LOCK", False, 1)
-        Database.setSymbolValue("core", tmrPrevIrq + "_INTERRUPT_HANDLER", tmrPrevIrq + "_Handler", 1)
-
-    #set interrupt settings based on 16 or 32 bit mode
-    tmrInterruptVector = tmrIrq + "_INTERRUPT_ENABLE"
-    tmrInterruptHandler = tmrIrq + "_INTERRUPT_HANDLER"
-    tmrInterruptHandlerLock = tmrIrq + "_INTERRUPT_HANDLER_LOCK"
-    tmrInterruptVectorUpdate = tmrIrq + "_INTERRUPT_ENABLE_UPDATE"
-
+    tmrIrq = "TIMER_" + str(instanceNum)
     status = component.getSymbolValue("TMR_INTERRUPT_MODE")
     if status == True:
         if (Database.getSymbolValue("core", tmrIrq + "_INTERRUPT_ENABLE") == False):
@@ -174,8 +153,6 @@ def timerInterruptSet(symbol, event):
             Database.clearSymbolValue("core", tmrIrq + "_INTERRUPT_HANDLER")
             Database.setSymbolValue("core", tmrIrq + "_INTERRUPT_HANDLER", tmrIrq + "_InterruptHandler", 1)
     else:
-        activeComponentList = Database.getActiveComponentIDs()
-        if (slaveComponent not in activeComponentList):
             if (Database.getSymbolValue("core", tmrIrq + "_INTERRUPT_ENABLE") == True):
                 Database.clearSymbolValue("core", tmrIrq + "_INTERRUPT_ENABLE")
                 Database.setSymbolValue("core", tmrIrq + "_INTERRUPT_ENABLE", False, 1)
@@ -335,6 +312,27 @@ def updateCodeGeneration(symbol, event):
 def updateTMRClockWarningStatus(symbol, event):
     symbol.setVisible(not event["value"])
 
+def tmrSlaveInterruptmode(symbol, event):
+    symbol.setValue(event["value"])
+
+def timerInterruptVisible(symbol, event):
+    component = symbol.getComponent()
+    mode_32 = component.getSymbolValue("TIMER_32BIT_MODE_SEL")
+    slave = component.getSymbolValue("TIMER_SLAVE")
+    if (slave == True):
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+
+    if (mode_32 == 0):
+        symbol.setVisible(False)
+        symbol.setValue(False)
+    else:
+        symbol.setVisible(True)
+        symbol.setValue(True)
+
+def timerMasterInterruptVisible(symbol, event):
+    symbol.setVisible(not event["value"])
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
@@ -388,8 +386,13 @@ def instantiateComponent(tmrComponent):
     tmrSymInterruptMode = tmrComponent.createBooleanSymbol("TMR_INTERRUPT_MODE", None)
     tmrSymInterruptMode.setLabel("Enable Interrrupts ?")
     tmrSymInterruptMode.setDefaultValue(True)
-    tmrSymInterruptMode.setDependencies(timerConfigurationsVisible, ["TIMER_SLAVE"])
+    tmrSymInterruptMode.setDependencies(timerInterruptVisible, ["TIMER_SLAVE", "TIMER_32BIT_MODE_SEL"])
     tmrSymInterruptMode.setVisible(not bool(slave))
+
+    tmrSymSlaveInterrupt = tmrComponent.createBooleanSymbol("TMR_SLAVE_INTERRUPT_MODE", None)
+    tmrSymSlaveInterrupt.setLabel("Slave interrupt")
+    tmrSymSlaveInterrupt.setVisible(False)
+    tmrSymSlaveInterrupt.setDependencies(tmrSlaveInterruptmode, ["tmr" + str(int(instanceNum) + 1) + ".TMR_INTERRUPT_MODE"])
 
     #prescaler configuration
     prescale_names = []
@@ -427,6 +430,11 @@ def instantiateComponent(tmrComponent):
         tmrSym_T2CON_32BIT_MODE_SEL.setVisible(True)
     else:
         tmrSym_T2CON_32BIT_MODE_SEL.setVisible(False)
+
+    tmrSym_interrupt_comment = tmrComponent.createCommentSymbol("TIMER_32BIT_COMMENT", None)
+    tmrSym_interrupt_comment.setVisible(False)
+    tmrSym_interrupt_comment.setLabel("**** Enable/Disable interrupt in the slave timer component ****")
+    tmrSym_interrupt_comment.setDependencies(timerMasterInterruptVisible, ["TIMER_32BIT_MODE_SEL"])
 
     #Timer clock Source Slection configuration
     tcs_names = []
