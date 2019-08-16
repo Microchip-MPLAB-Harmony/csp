@@ -42,6 +42,7 @@ uint32_t prim;
 }
 #endif /* (__ARM_FP==14) || (__ARM_FP==4) */
 
+<#if TCM_ECC_ENABLE??>
 <#if TCM_ECC_ENABLE>
 __STATIC_INLINE void FPU_MemToFpu(unsigned int address)
 {
@@ -61,5 +62,6 @@ __STATIC_INLINE void FPU_FpuToMem(unsigned int address)
            : : [addr] "l" (address) : "r8"
     );
 }
+</#if>
 </#if>
 
