@@ -441,7 +441,7 @@
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="81" />
-      <function name="GD14" />
+      <function name="GD22" />
       <function name="EBIA13" />
       <function name="PMA13" />
     </pin>
