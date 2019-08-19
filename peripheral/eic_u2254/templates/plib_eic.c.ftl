@@ -92,7 +92,7 @@ void ${EIC_INSTANCE_NAME}_Initialize (void)
 
     /* NMI Control register */
     <#if NMI_CTRL == true>
-    <@compress single_line=true>${EIC_INSTANCE_NAME}_REGS->EIC_NMICTRL =  EIC_ASYNCH_ASYNCH(${NMI_ASYNCH})
+    <@compress single_line=true>${EIC_INSTANCE_NAME}_REGS->EIC_NMICTRL =  EIC_NMICTRL_NMIASYNCH(${NMI_ASYNCH})
                                                         | EIC_NMICTRL_NMISENSE_${NMI_SENSE}
                                                         ${NMI_FILTEN?then('| EIC_NMICTRL_NMIFILTEN_Msk', '')};</@compress>
     </#if>
