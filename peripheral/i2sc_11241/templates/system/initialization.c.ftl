@@ -1,1 +1,0 @@
-    ${I2SC_INSTANCE_NAME}_Initialize();

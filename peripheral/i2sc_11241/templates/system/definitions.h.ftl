@@ -1,1 +1,0 @@
-#include "peripheral/i2sc/plib_${I2SC_INSTANCE_NAME?lower_case}.h"
