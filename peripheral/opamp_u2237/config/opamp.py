@@ -223,7 +223,7 @@ def instantiateComponent(opampComponent):
         #POTMUX
         opampSym_OPAMPCTRL_POTMUX.append(opampID)
         opampSym_OPAMPCTRL_POTMUX[opampID] = opampComponent.createKeyValueSetSymbol("OPAMP_OPAMPCTRL_" + str(opampID) + "_POTMUX", opampSym_Menu)
-        opampSym_OPAMPCTRL_POTMUX[opampID].setLabel("Select potention meter configuration")
+        opampSym_OPAMPCTRL_POTMUX[opampID].setLabel("Select potentiometer configuration")
 
         opampSym_OPAMPCTRL_POTMUX_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"OPAMP\"]/value-group@[name=\"OPAMP_OPAMPCTRL__POTMUX\"]")
         opampSym_OPAMPCTRL_POTMUX_Node_Values = []
@@ -243,7 +243,7 @@ def instantiateComponent(opampComponent):
 
         opampSym_OPAMPCTRL_POTMUX[opampID].setDefaultValue(opampSym_OPAMPCTRL_POTMUX_Default_Val)
         opampSym_OPAMPCTRL_POTMUX[opampID].setOutputMode("Value")
-        opampSym_OPAMPCTRL_POTMUX[opampID].setDisplayMode("Description")
+        opampSym_OPAMPCTRL_POTMUX[opampID].setDisplayMode("Key")
         
         #Analog Output
         opampSym_OPAMPCTRL_ANAOUT.append(opampID)
