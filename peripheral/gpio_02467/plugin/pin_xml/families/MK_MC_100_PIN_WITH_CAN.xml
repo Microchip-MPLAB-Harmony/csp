@@ -2030,7 +2030,15 @@
             <function name="FLT6"/>
             <function name="FLT7"/>
             <function name="FLT8"/>
+            <function name="FLT9"/>
+			<function name="FLT10"/>
+			<function name="FLT11"/>
+			<function name="FLT12"/>
+			<function name="FLT13"/>
+            <function name="FLT14"/>
             <function name="FLT15"/>
+            <function name="FLT16"/>
+            <function name="FLT17"/>
         </module>
         <module name="PWM1">
             <function name="PWM1L"/>

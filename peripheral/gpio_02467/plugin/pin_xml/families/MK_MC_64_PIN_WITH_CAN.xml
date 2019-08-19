@@ -2021,6 +2021,9 @@
             <function name="FLT6"/>
             <function name="FLT7"/>
             <function name="FLT8"/>
+            <function name="FLT12"/>
+            <function name="FLT13"/>
+            <function name="FLT14"/>
             <function name="FLT15"/>
         </module>
         <module name="PWM1">
