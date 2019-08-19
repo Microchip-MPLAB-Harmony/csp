@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- This is an auto-generated pin data file created: 10:09:30 02/15/19 -->
+<!-- This is an auto-generated pin data file created: 09:30:24 08/19/19 -->
 <pinfile family="MK_GP">
    <packages>
      <package diagram="MX_64_QFN" id="1" name="QFN" />
@@ -375,7 +375,6 @@
       <function name="TMS" />
       <function name="OA5IN-" />
       <function name="AN27" />
-      <function name="LVDIN" />
       <function name="C5IN1-" />
       <function name="RPB9" />
     </pin>
