@@ -205,7 +205,7 @@ static void CLK_PLLBInitialize(void)
 }
 </#if>
 
-<#if (PMC_MCKR_CSS != "MAIN_CLK")  || ( PMC_MCKR_PRES != "CLK_1")>
+<#if (PMC_MCKR_CSS != "MAIN_CLK")  || ( PMC_MCKR_PRES != "CLK_1") || PMC_MCKR_PLLADIV2 || PMC_MCKR_PLLBDIV2>
 /*********************************************************************************
 Initialize Master clock (MCK)
 *********************************************************************************/
@@ -214,7 +214,7 @@ static void CLK_MasterClockInitialize(void)
 {
 <#if PMC_MCKR_CSS == "PLLA_CLK" || PMC_MCKR_CSS == "PLLB_CLK">
     /* Program PMC_MCKR.PRES and wait for PMC_SR.MCKRDY to be set   */
-    PMC_REGS->PMC_MCKR = (PMC_REGS->PMC_MCKR & ~PMC_MCKR_PRES_Msk) | PMC_MCKR_PRES_${PMC_MCKR_PRES};
+    PMC_REGS->PMC_MCKR = (PMC_REGS->PMC_MCKR & ~PMC_MCKR_PRES_Msk) | PMC_MCKR_PRES_${PMC_MCKR_PRES}${PMC_MCKR_PLLADIV2?then('| PMC_MCKR_PLLADIV2_Msk', '')}${PMC_MCKR_PLLBDIV2?then('| PMC_MCKR_PLLBDIV2_Msk', '')};
     while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk);
 
     /* Program PMC_MCKR.CSS and Wait for PMC_SR.MCKRDY to be set    */
@@ -224,7 +224,7 @@ static void CLK_MasterClockInitialize(void)
 
 <#if PMC_MCKR_CSS == "SLOW_CLK" || PMC_MCKR_CSS == "MAIN_CLK">
     /* Program PMC_MCKR.CSS and Wait for PMC_SR.MCKRDY to be set    */
-    PMC_REGS->PMC_MCKR = (PMC_REGS->PMC_MCKR & ~PMC_MCKR_CSS_Msk) | PMC_MCKR_CSS_${PMC_MCKR_CSS};
+    PMC_REGS->PMC_MCKR = (PMC_REGS->PMC_MCKR & ~PMC_MCKR_CSS_Msk) | PMC_MCKR_CSS_${PMC_MCKR_CSS}${PMC_MCKR_PLLADIV2?then('| PMC_MCKR_PLLADIV2_Msk', '')}${PMC_MCKR_PLLBDIV2?then('| PMC_MCKR_PLLBDIV2_Msk', '')};
     while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk);
 
 
@@ -310,7 +310,7 @@ void CLOCK_Initialize( void )
     CLK_PLLBInitialize();
 </#if>
 
-<#if (PMC_MCKR_CSS != "MAIN_CLK") || ( PMC_MCKR_PRES != "CLK_1")>
+<#if (PMC_MCKR_CSS != "MAIN_CLK") || ( PMC_MCKR_PRES != "CLK_1") || PMC_MCKR_PLLADIV2 || PMC_MCKR_PLLBDIV2>
     /* Initialize Master Clock */
     CLK_MasterClockInitialize();
 </#if>
