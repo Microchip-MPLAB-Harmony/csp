@@ -37,6 +37,118 @@ global _process_valuegroup_entry
 global peripheralBusDict
 peripheralBusDict = {}
 
+# PIC32MK GPK/GPL/MCM
+peripheralBusDict_DS60001519 =  {
+
+        #Peripheral : ["Peripheral bus  "PMD register no", "PMD register bit no"]
+        # if "Peripheral bus no" == -1 then clocked by SYSCLK
+
+        "ADCHS": ["-1", "1", "0"],
+        "CDAC1": ["2", "1", "4"],
+        "CDAC2": ["3", "1", "5"],
+        "CDAC3": ["3", "1", "6"],
+        "CTMU": ["2", "1", "8"],
+        "EEPROM": ["2", "1", "9"],
+        "CMP1": ["2", "2", "0"],
+        "CMP2": ["2", "2", "1"],
+        "CMP3": ["2", "2", "2"],
+        "CMP4": ["2", "2", "3"],
+        "CMP5": ["2", "2", "4"],
+        "OPAMP1": ["2", "2", "16"],
+        "OPAMP2": ["2", "2", "17"],
+        "OPAMP3": ["2", "2", "18"],
+        "OPAMP5": ["2", "2", "20"],
+        "ICAP1": ["2", "3", "0"],
+        "ICAP2": ["2", "3", "1"],
+        "ICAP3": ["2", "3", "2"],
+        "ICAP4": ["2", "3", "3"],
+        "ICAP5": ["2", "3", "4"],
+        "ICAP6": ["2", "3", "5"],
+        "ICAP7": ["2", "3", "6"],
+        "ICAP8": ["2", "3", "7"],
+        "ICAP9": ["2", "3", "8"],
+        "ICAP10": ["3", "3", "9"],
+        "ICAP11": ["3", "3", "10"],
+        "ICAP12": ["3", "3", "11"],
+        "ICAP13": ["3", "3", "12"],
+        "ICAP14": ["3", "3", "13"],
+        "ICAP15": ["3", "3", "14"],
+        "ICAP16": ["3", "3", "15"],
+        "OCMP1": ["2", "3", "16"],
+        "OCMP2": ["2", "3", "17"],
+        "OCMP3": ["2", "3", "18"],
+        "OCMP4": ["2", "3", "19"],
+        "OCMP5": ["2", "3", "20"],
+        "OCMP6": ["2", "3", "21"],
+        "OCMP7": ["2", "3", "22"],
+        "OCMP8": ["2", "3", "23"],
+        "OCMP9": ["2", "3", "24"],
+        "OCMP10": ["3", "3", "25"],
+        "OCMP11": ["3", "3", "26"],
+        "OCMP12": ["3", "3", "27"],
+        "OCMP13": ["3", "3", "28"],
+        "OCMP14": ["3", "3", "29"],
+        "OCMP15": ["3", "3", "30"],
+        "OCMP16": ["3", "3", "31"],
+        "TMR1": ["2", "4", "0"],
+        "TMR2": ["2", "4", "1"],
+        "TMR3": ["2", "4", "2"],
+        "TMR4": ["2", "4", "3"],
+        "TMR5": ["2", "4", "4"],
+        "TMR6": ["2", "4", "5"],
+        "TMR7": ["2", "4", "6"],
+        "TMR8": ["2", "4", "7"],
+        "TMR9": ["2", "4", "8"],
+        "MCPWM1": ["-1", "4", "16"],
+        "MCPWM2": ["-1", "4", "17"],
+        "MCPWM3": ["-1", "4", "18"],
+        "MCPWM4": ["-1", "4", "19"],
+        "MCPWM5": ["-1", "4", "20"],
+        "MCPWM6": ["-1", "4", "21"],
+        "MCPWM7": ["-1", "4", "22"],
+        "MCPWM8": ["-1", "4", "23"],
+        "MCPWM9": ["-1", "4", "24"],
+        "MCPWM10": ["-1", "4", "25"],
+        "MCPWM11": ["-1", "4", "26"],
+        "MCPWM12": ["-1", "4", "27"],
+        "UART1": ["2", "5", "0"],
+        "UART2": ["2", "5", "1"],
+        "UART3": ["3", "5", "2"],
+        "UART4": ["3", "5", "3"],
+        "UART5": ["3", "5", "4"],
+        "UART6": ["3", "5", "5"],
+        "SPI1": ["2", "5", "8"],
+        "SPI2": ["2", "5", "9"],
+        "SPI3": ["3", "5", "10"],
+        "SPI4": ["3", "5", "11"],
+        "SPI5": ["3", "5", "12"],
+        "SPI6": ["3", "5", "13"],
+        "I2C1": ["2", "5", "16"],
+        "I2C2": ["2", "5", "17"],
+        "I2C3": ["3", "5", "18"],
+        "I2C4": ["3", "5", "19"],
+        "USB1": ["-1", "5", "24"],
+        "USB2": ["-1", "5", "25"],
+        "CAN1": ["-1", "5", "28"],
+        "CAN2": ["-1", "5", "29"],
+        "CAN3": ["-1", "5", "30"],
+        "CAN4": ["-1", "5", "31"],
+        "REFO1": ["-1", "6", "8"],
+        "REFO2": ["-1", "6", "9"],
+        "REFO3": ["-1", "6", "10"],
+        "REFO4": ["-1", "6", "11"],
+        "PMP": ["2", "6", "16"],
+        "QEI5": ["-1", "6", "18"],
+        "QEI6": ["-1", "6", "19"],
+        "QEI1": ["-1", "6", "24"],
+        "QEI2": ["-1", "6", "25"],
+        "QEI3": ["-1", "6", "26"],
+        "QEI4": ["-1", "6", "27"],
+        "DMAC": ["-1", "7", "4"],
+        "RTCC": ["6"],              #PMD support not there
+}
+
+# PIC32MK GPG/GPH/MCJ
 peripheralBusDict_DS60001570 =  {
 
         #Peripheral : ["Peripheral bus  "PMD register no", "PMD register bit no"]
@@ -114,6 +226,7 @@ peripheralBusDict_DS60001570 =  {
         "RTCC": ["6"],              #PMD support not there
 }
 
+# PIC32MK GPD/GPE/MCF
 peripheralBusDict_DS60001402 =  {
 
         #Peripheral : ["Peripheral bus  "PMD register no", "PMD register bit no"]
@@ -267,6 +380,7 @@ def _get_bitfield_names(node, outputList):
             outputList[ii.getAttribute('name')] = str(tempint)
 
 def enableMenu(menu, event):
+
     menu.setVisible(event["value"])
 
 def updateRefFreq(menu, event):
@@ -1097,6 +1211,9 @@ if __name__ == "__main__":
     elif Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001570":
         CLK_MANAGER_SELECT.setDefaultValue("clk_pic32mk_no_USB:MKClockModel")
         peripheralBusDict = peripheralBusDict_DS60001570.copy()
+    elif Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001519":
+        peripheralBusDict = peripheralBusDict_DS60001519.copy()
+        CLK_MANAGER_SELECT.setDefaultValue("clk_pic32mk:MKClockModel")
 
     # see if UPLL is enabled through FUSE configuration
     upllEnableSym = coreComponent.createBooleanSymbol("UPLL_EN", None)
@@ -1610,7 +1727,7 @@ if __name__ == "__main__":
         adchs_clock_map[1] = "CONFIG_SYS_CLK_FRCDIV"
         adchs_clock_map[2] = "CONFIG_SYS_CLK_REFCLK3_FREQ"
         adchs_clock_map[3] = "SYS_CLK_FREQ"
-    elif Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001570": #PIC32MK GPH/GPG/MCJ
+    elif Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001570" or Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001519": #PIC32MK GPH/GPG/GPK/GPL/MCJ/MCM
         adchs_clock_map[0] = "SYS_CLK_FREQ"
         adchs_clock_map[1] = "CONFIG_SYS_CLK_FRCDIV"
         adchs_clock_map[2] = "CONFIG_SYS_CLK_REFCLK3_FREQ"
