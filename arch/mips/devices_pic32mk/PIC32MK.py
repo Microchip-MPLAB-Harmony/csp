@@ -188,6 +188,7 @@ coreFPU.setVisible(False)
 
 ds60001402Regex = re.compile(r'MK\w+(GPD|GPE|MCF)')       #PIC32MKXXXXGPD/GPE/MCF
 ds60001570Regex = re.compile(r'MK\w+(GPG|GPH|MCJ)')       #PIC32MKXXXXGPG/GPH/MCJ
+ds60001519Regex = re.compile(r'MK\w+(GPK|GPL|MCM)')       #PIC32MKXXXXGPK/GPL/MCM
 
 global deviceFamily
 
@@ -201,6 +202,8 @@ if  ds60001402Regex.search(processor):
     deviceFamily.setDefaultValue("DS60001402")
 elif ds60001570Regex.search(processor):
     deviceFamily.setDefaultValue("DS60001570")
+elif ds60001519Regex.search(processor):
+	deviceFamily.setDefaultValue("DS60001519")
 
 mipsMenu = coreComponent.createMenuSymbol("MIPS MENU", None)
 mipsMenu.setLabel("MIPS Configuration")
