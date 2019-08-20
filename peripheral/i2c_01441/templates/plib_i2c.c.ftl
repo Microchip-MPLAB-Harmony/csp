@@ -165,7 +165,11 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
             }
             break;
         case I2C_STATE_WRITE:
+            <#if I2C_INCLUDE_FORCED_WRITE_API == true>
+            if ((!(${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_ACKSTAT_MASK)) || (${I2C_INSTANCE_NAME?lower_case}Obj.forcedWrite == true))
+            <#else>
             if (!(${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_ACKSTAT_MASK))
+            </#if>
             {
                 /* ACK received */
                 if (${I2C_INSTANCE_NAME?lower_case}Obj.writeCount < ${I2C_INSTANCE_NAME?lower_case}Obj.writeSize)
@@ -312,7 +316,9 @@ bool ${I2C_INSTANCE_NAME}_Read(uint16_t address, uint8_t* rdata, size_t rlength)
     ${I2C_INSTANCE_NAME?lower_case}Obj.transferType        = I2C_TRANSFER_TYPE_READ;
     ${I2C_INSTANCE_NAME?lower_case}Obj.error               = I2C_ERROR_NONE;
     ${I2C_INSTANCE_NAME?lower_case}Obj.state               = I2C_STATE_START_CONDITION;
-
+    <#if I2C_INCLUDE_FORCED_WRITE_API == true>
+    ${I2C_INSTANCE_NAME?lower_case}Obj.forcedWrite         = false;
+    </#if>
     ${I2C_INSTANCE_NAME}_TransferSM();
 
     return true;
@@ -337,11 +343,41 @@ bool ${I2C_INSTANCE_NAME}_Write(uint16_t address, uint8_t* wdata, size_t wlength
     ${I2C_INSTANCE_NAME?lower_case}Obj.transferType        = I2C_TRANSFER_TYPE_WRITE;
     ${I2C_INSTANCE_NAME?lower_case}Obj.error               = I2C_ERROR_NONE;
     ${I2C_INSTANCE_NAME?lower_case}Obj.state               = I2C_STATE_START_CONDITION;
+    <#if I2C_INCLUDE_FORCED_WRITE_API == true>
+    ${I2C_INSTANCE_NAME?lower_case}Obj.forcedWrite         = false;
+    </#if>
 
     ${I2C_INSTANCE_NAME}_TransferSM();
 
     return true;
 }
+
+<#if I2C_INCLUDE_FORCED_WRITE_API == true>
+bool ${I2C_INSTANCE_NAME}_WriteForced(uint16_t address, uint8_t* wdata, size_t wlength)
+{
+    /* State machine must be idle and I2C module should not have detected a start bit on the bus */
+    if((${I2C_INSTANCE_NAME?lower_case}Obj.state != I2C_STATE_IDLE) || (${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_S_MASK))
+    {
+        return false;
+    }
+
+    ${I2C_INSTANCE_NAME?lower_case}Obj.address             = address;
+    ${I2C_INSTANCE_NAME?lower_case}Obj.readBuffer          = NULL;
+    ${I2C_INSTANCE_NAME?lower_case}Obj.readSize            = 0;
+    ${I2C_INSTANCE_NAME?lower_case}Obj.writeBuffer         = wdata;
+    ${I2C_INSTANCE_NAME?lower_case}Obj.writeSize           = wlength;
+    ${I2C_INSTANCE_NAME?lower_case}Obj.writeCount          = 0;
+    ${I2C_INSTANCE_NAME?lower_case}Obj.readCount           = 0;
+    ${I2C_INSTANCE_NAME?lower_case}Obj.transferType        = I2C_TRANSFER_TYPE_WRITE;
+    ${I2C_INSTANCE_NAME?lower_case}Obj.error               = I2C_ERROR_NONE;
+    ${I2C_INSTANCE_NAME?lower_case}Obj.state               = I2C_STATE_START_CONDITION;
+    ${I2C_INSTANCE_NAME?lower_case}Obj.forcedWrite         = true;
+
+    ${I2C_INSTANCE_NAME}_TransferSM();
+
+    return true;
+}
+</#if>
 
 bool ${I2C_INSTANCE_NAME}_WriteRead(uint16_t address, uint8_t* wdata, size_t wlength, uint8_t* rdata, size_t rlength)
 {
@@ -361,7 +397,9 @@ bool ${I2C_INSTANCE_NAME}_WriteRead(uint16_t address, uint8_t* wdata, size_t wle
     ${I2C_INSTANCE_NAME?lower_case}Obj.transferType        = I2C_TRANSFER_TYPE_WRITE;
     ${I2C_INSTANCE_NAME?lower_case}Obj.error               = I2C_ERROR_NONE;
     ${I2C_INSTANCE_NAME?lower_case}Obj.state               = I2C_STATE_START_CONDITION;
-
+    <#if I2C_INCLUDE_FORCED_WRITE_API == true>
+    ${I2C_INSTANCE_NAME?lower_case}Obj.forcedWrite         = false;
+    </#if>
     ${I2C_INSTANCE_NAME}_TransferSM();
 
     return true;
@@ -378,38 +416,38 @@ I2C_ERROR ${I2C_INSTANCE_NAME}_ErrorGet(void)
 }
 
 bool ${I2C_INSTANCE_NAME}_TransferSetup(I2C_TRANSFER_SETUP* setup, uint32_t srcClkFreq )
-{       
-    uint32_t baudValue;    
+{
+    uint32_t baudValue;
     uint32_t i2cClkSpeed;
-    
+
     if (setup == NULL)
     {
         return false;
-    }        
-        
+    }
+
     i2cClkSpeed = setup->clkSpeed;
-    
+
     /* Maximum I2C clock speed cannot be greater than 1 MHz */
     if (i2cClkSpeed > 1000000)
     {
         return false;
     }
-    
+
     if( srcClkFreq == 0)
     {
         srcClkFreq = ${I2C_PLIB_CLOCK_FREQUENCY?eval}UL;
-    }            
-    
+    }
+
     baudValue = ((1.0/(2*i2cClkSpeed) - 104e-9)*(float)srcClkFreq) - 2;
-    
+
     /* I2CxBRG value cannot be 0 or 1 */
     if ((baudValue == 0) || (baudValue == 1))
     {
         return false;
     }
-    
+
     ${I2C_INSTANCE_NAME}BRG = baudValue;
-    
+
     return true;
 }
 
