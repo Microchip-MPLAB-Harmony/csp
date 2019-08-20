@@ -29,7 +29,7 @@ import re
 global pinChannel
 pinChannel = []
 global per_func
-per_func = ["A", "B", "C", "D", "E", "F", "G"]
+per_func = ["GPIO", "A", "B", "C", "D", "E", "F", "G"]
 global pinInterrupt
 pinInterrupt = []
 
@@ -41,6 +41,7 @@ port_mskr = {		"A_A" : 0,
 					"A_E" : 0,
 					"A_F" : 0,
 					"A_G" : 0,
+					"A_GPIO" : 0,
 					"B_A" : 0,
 					"B_B" : 0,
 					"B_C" : 0,
@@ -48,6 +49,7 @@ port_mskr = {		"A_A" : 0,
 					"B_E" : 0,
 					"B_F" : 0,
 					"B_G" : 0,
+					"B_GPIO" : 0,
 					"C_A" : 0,
 					"C_B" : 0,
 					"C_C" : 0,
@@ -55,6 +57,7 @@ port_mskr = {		"A_A" : 0,
 					"C_E" : 0,
 					"C_F" : 0,
 					"C_G" : 0,
+					"C_GPIO" : 0,
 					"D_A" : 0,
 					"D_B" : 0,
 					"D_C" : 0,
@@ -62,6 +65,7 @@ port_mskr = {		"A_A" : 0,
 					"D_E" : 0,
 					"D_F" : 0,
 					"D_G" : 0,
+					"D_GPIO" : 0,
 					"E_A" : 0,
 					"E_B" : 0,
 					"E_C" : 0,
@@ -69,6 +73,7 @@ port_mskr = {		"A_A" : 0,
 					"E_E" : 0,
 					"E_F" : 0,
 					"E_G" : 0,
+					"E_GPIO" : 0,
 					"F_A" : 0,
 					"F_B" : 0,
 					"F_C" : 0,
@@ -76,13 +81,15 @@ port_mskr = {		"A_A" : 0,
 					"F_E" : 0,
 					"F_F" : 0,
 					"F_G" : 0,
+					"F_GPIO" : 0,
 					"G_A" : 0,
 					"G_B" : 0,
 					"G_C" : 0,
 					"G_D" : 0,
 					"G_E" : 0,
 					"G_F" : 0,
-					"G_G" : 0
+					"G_G" : 0,
+					"G_GPIO" : 0,
 					}
 global interruptValues
 interruptValues = {	"Falling Edge" : 0,
@@ -249,7 +256,6 @@ def portFunc(pin, func):
         else:
                         for id in per_func:
                             port_mskr[port + "_" + id] &= ~(1 << bit_pos)
-                            print port_mskr[port + "_" + id]
 
         for id in per_func:
             Database.setSymbolValue("core", "PORT_" + str(port) + "_MSKR_Value" + str(id), str(hex(port_mskr[port + "_" + id])), 2)
@@ -573,7 +579,7 @@ for port in pioSymChannel:
 		portperMSKR.setVisible(False)
 		portperMSKR.setDefaultValue(str(hex(0)))
 
-count = 1
+count = 0
 for func in per_func:
 	portperMSKR = coreComponent.createStringSymbol("FUNC_" + str(func) + "_CFGR_Value", None)
 	portperMSKR.setReadOnly(True)

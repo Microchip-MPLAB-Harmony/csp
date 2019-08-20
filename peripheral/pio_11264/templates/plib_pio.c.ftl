@@ -109,7 +109,7 @@
 void PIO_Initialize ( void )
 {
 <#assign PORT = ['A', 'B', 'C', 'D', 'E', 'F', 'G'] >
-<#assign PERFUNC = ['A', 'B', 'C', 'D', 'E', 'F', 'G'] >
+<#assign PERFUNC = ['A', 'B', 'C', 'D', 'E', 'F', 'G', "GPIO"] >
 <#list PORT as port>
 	<#list PERFUNC as func>
 	<#assign PORT_MSKR = "PORT_" + port + "_MSKR_Value" + func >
@@ -127,7 +127,7 @@ void PIO_Initialize ( void )
 	<#if .vars[PORT_CFGR] != '0x0'>
 	<#lt> /* Port ${port} Pin ${pin} configuration */
 	<#lt>	PIO${port}_REGS->PIO_MSKR = ${.vars[PORT_MSKR]};
-	<#lt>	PIO${port}_REGS->PIO_CFGR |= ${.vars[PORT_CFGR]};
+	<#lt>	PIO${port}_REGS->PIO_CFGR = (PIO${port}_REGS->PIO_CFGR & (PIO_CFGR_FUNC_Msk)) | ${.vars[PORT_CFGR]};
 	
 	</#if>   
 	</#list>
