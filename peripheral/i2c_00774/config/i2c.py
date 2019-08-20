@@ -219,6 +219,12 @@ def instantiateComponent(i2cComponent):
     i2cSymMaxBRG.setDefaultValue(i2cMaxBRG)
     i2cSymMaxBRG.setVisible(False)
 
+    #I2C Forced Write API Inclusion
+    i2cSym_ForcedWriteAPIGen = i2cComponent.createBooleanSymbol("I2C_INCLUDE_FORCED_WRITE_API", None)
+    i2cSym_ForcedWriteAPIGen.setLabel("Include Force Write I2C Function (Master Mode Only - Ignore NACK from Slave)")
+    i2cSym_ForcedWriteAPIGen.setDefaultValue(False)
+    i2cSym_ForcedWriteAPIGen.setVisible(True)
+
     ## Baud Rate Frequency dependency
     i2cSym_BRGValue = i2cComponent.createIntegerSymbol("BRG_VALUE", None)
     i2cSym_BRGValue.setVisible(False)
