@@ -184,7 +184,7 @@ void ${HEMC_INSTANCE_NAME}_Initialize( void )
   <#assign HEMC_TYPE = "CS_" + i + "_MEMORY_TYPE" >
   <#assign HEMC_BANK =  "CS_" + i + "_MEMORY_BANK_SIZE">
   <#assign HEMC_ADDRESS = "CS_" + i + "_MEMORY_BASE" >
-    <#if (.vars[HEMC_ADDRESS] != "3ffff")>
+    <#if (.vars[HEMC_ADDRESS] != "3ffff") || (i = 0)>
     ${HEMC_INSTANCE_NAME}_REGS->HEMC_CR_NCS${i} = HEMC_CR_NCS${i}_TYPE(${.vars[HEMC_TYPE]}) | HEMC_CR_NCS${i}_ADDBASE(0x${.vars[HEMC_ADDRESS]}) | HEMC_CR_NCS${i}_BANKSIZE(${.vars[HEMC_BANK]});
     </#if>
   </#list>

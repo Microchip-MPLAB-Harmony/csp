@@ -107,7 +107,7 @@ def hideMenus(symbol, event):
     if sdRamcs == None:
         commentHSDRAM.setVisible(True)
         useHSDRAM.setValue(False)
-        hsdramcSymMenu_MR_MENU.setVisible(False)
+        #hsdramcSymMenu_MR_MENU.setVisible(False)
         hsdramcSymMenu_features.setVisible(False)
         hsdramcSymMenu_TIMING_MENU.setVisible(False)
 
