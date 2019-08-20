@@ -690,7 +690,7 @@ def tcClockSymbols(tcComponent, channelID, menu):
     tcSym_CH_EXT_CLOCK[channelID] = tcComponent.createIntegerSymbol("TC"+str(channelID)+"_EXT_CLOCK", menu)
     tcSym_CH_EXT_CLOCK[channelID].setLabel("External Clock Frequency (Hz)")
     tcSym_CH_EXT_CLOCK[channelID].setVisible(False)
-    tcSym_CH_EXT_CLOCK[channelID].setDefaultValue(50000000)
+    tcSym_CH_EXT_CLOCK[channelID].setDefaultValue(10000000)
     tcSym_CH_EXT_CLOCK[channelID].setMin (1)
     tcSym_CH_EXT_CLOCK[channelID].setDependencies(tcExtClockVisible, ["TC"+str(channelID)+"_CMR_TCCLKS"])
 
@@ -1189,7 +1189,7 @@ def instantiateComponent(tcComponent):
         tcSym_CH_IntEnComment[channelID] = tcComponent.createCommentSymbol("TC"+str(channelID)+"_NVIC_ENABLE_COMMENT", tcChannelMenu[channelID])
         tcSym_CH_IntEnComment[channelID].setVisible(False)
         tcSym_CH_IntEnComment[channelID].setLabel("Warning!!! " +tcInstanceName.getValue()+"_CH"+str(channelID)+" Interrupt is Disabled in Interrupt Manager")
-        tcSym_CH_IntEnComment[channelID].setDependencies(tcdependencyIntStatus, [tcInterruptSymbolSpace + interruptVectorUpdate,
+        tcSym_CH_IntEnComment[channelID].setDependencies(tcdependencyIntStatus, [tcInterruptSymbolSpace + "." + interruptVectorUpdate,
             "TC"+str(channelID)+"_ENABLE", "TC"+str(channelID)+"_OPERATING_MODE", \
             "TC"+str(channelID)+"_CAPTURE_IER_LDRAS", "TC"+str(channelID)+"_CAPTURE_IER_LDRBS", "TC"+str(channelID)+"_CAPTURE_IER_COVFS", \
             "TC"+str(channelID)+"_COMPARE_IER_CPCS", "TC"+str(channelID)+"_IER_CPCS"])
