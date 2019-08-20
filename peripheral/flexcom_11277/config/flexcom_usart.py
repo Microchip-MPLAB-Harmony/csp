@@ -27,42 +27,44 @@
 
 # FLEXCOM USART clock source
 clock_source = {"Ext_clk_src_Freq" : 1000000}
-
+global baudRateCalc
 # Calculates BRG value and Oversampling
 def baudRateCalc(clk, baud):
 
     if (clk >= (16 * baud)):
         brgVal = (clk / (16 * baud))
         overSamp = 0
-    else :
+    elif (clk >= (8 * baud)):
         brgVal = (clk / (8 * baud))
         overSamp = 1
+    else:
+        brgVal = 0
+        overSamp = 0
+
+    # The brgVal must fit into a 16-bit register
+    if brgVal > 65535:
+        brgVal = 0
+        overSamp = 0
+
+    flexcomClockInvalidSym.setVisible((brgVal < 1))
 
     return [brgVal, overSamp]
 
 def baudRateTrigger(symbol, event):
-
-    if Database.getSymbolValue(deviceNamespace, "FLEXCOM_USART_MR_USCLKS") == 0x3:
-        clk = Database.getSymbolValue(deviceNamespace, "EXTERNAL_CLOCK_FREQ")
-    else:
-        clk = Database.getSymbolValue(deviceNamespace, "FLEX_USART_CLOCK_FREQ")
-
-    baud = Database.getSymbolValue(deviceNamespace, "BAUD_RATE")
-
-    if (clk >= (16 * baud)):
-        brgVal = (clk / (16 * baud))
-        overSamp = 0
-    else :
-        brgVal = (clk / (8 * baud))
-        overSamp = 1
-
     if Database.getSymbolValue(deviceNamespace, "FLEXCOM_MODE") == 0x1:
-        flexcomClockInvalidSym.setVisible((brgVal < 1))
+        if Database.getSymbolValue(deviceNamespace, "FLEXCOM_USART_MR_USCLKS") == 0x3:
+            clk = Database.getSymbolValue(deviceNamespace, "EXTERNAL_CLOCK_FREQ")
+        else:
+            clk = Database.getSymbolValue(deviceNamespace, "FLEX_USART_CLOCK_FREQ")
 
-    if symbol.getID() == "BRG_VALUE":
-        symbol.setValue(brgVal, 2)
-    if symbol.getID() == "FLEXCOM_USART_MR_OVER":
-        symbol.setValue(overSamp, 2)
+        baud = Database.getSymbolValue(deviceNamespace, "BAUD_RATE")
+
+        brgVal, overSamp = baudRateCalc(clk, baud)
+
+        if symbol.getID() == "BRG_VALUE":
+            symbol.setValue(brgVal, 2)
+        if symbol.getID() == "FLEXCOM_USART_MR_OVER":
+            symbol.setValue(overSamp, 2)
 
 def clockSourceFreq(symbol, event):
 
@@ -95,7 +97,6 @@ def ExternalClkSymbolVisible(symbol, event):
         symbol.setVisible(False)
 
 def symbolVisible(symbol, event):
-
     if event["value"] == 0x1:
         symbol.setVisible(True)
     else :
