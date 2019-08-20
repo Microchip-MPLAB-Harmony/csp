@@ -211,35 +211,34 @@ def upd_tc_freq(symbol, event):
     # extract the channel number
     channel_num = int(symbol.getID().split("_CH")[1].split("_")[0])
 
-    if (Database.getSymbolValue("core", "TC" + str(instance_num) + "_CHANNEL"  + str(channel_num) + "_ENABLE") == True):
-        # check if the relevant channel is enabled
-        if (Database.getSymbolValue("tc" + str(instance_num), "TC" + str(channel_num) + "_ENABLE") == True):
-        
-            # Find the current clock source for the channel
-            clk_src = Database.getSymbolValue("tc" + str(instance_num), "TC" + str(channel_num) + "_CMR_TCCLKS")
-            # if clock source is processor independent GCLK
-            if (clk_src == 1):
-                if channel_num==0:
-                    clk_frequency = Database.getSymbolValue("core", "TC" + str(instance_num) + "_CHANNEL0_GCLK_FREQUENCY")
-                else:
-                    clk_frequency = 0
-            # if clock  source is MCK/8
-            elif (clk_src == 2):
-                clk_frequency = Database.getSymbolValue("core", "CLK_MCK_FREQ") / 8
-            # if clock  source is MCK/32
-            elif (clk_src == 3):
-                clk_frequency = Database.getSymbolValue("core", "CLK_MCK_FREQ") / 32
-            # if clock  source is MCK/128
-            elif (clk_src == 4):
-                clk_frequency = Database.getSymbolValue("core", "CLK_MCK_FREQ") / 128
-            # if clock  source is SLOW CLOCK
-            elif (clk_src == 5):
-                clk_frequency = Database.getSymbolValue("core", "CLK_MD_SLCK_FREQ")
-            # default  clock source is MCK (Enabled through extended registers of TC)
+    # check if the relevant channel is enabled
+    if (Database.getSymbolValue("tc" + str(instance_num), "TC" + str(channel_num) + "_ENABLE") == True):
+
+        # Find the current clock source for the channel
+        clk_src = Database.getSymbolValue("tc" + str(instance_num), "TC" + str(channel_num) + "_CMR_TCCLKS")
+        # if clock source is processor independent GCLK
+        if (clk_src == 1):
+            if channel_num==0:
+                clk_frequency = Database.getSymbolValue("core", "TC" + str(instance_num) + "_CHANNEL0_GCLK_FREQUENCY")
             else:
-                clk_frequency = Database.getSymbolValue("core", "CLK_MCK_FREQ")
-            symbol.setValue(clk_frequency)
-    
+                clk_frequency = 0
+        # if clock  source is MCK/8
+        elif (clk_src == 2):
+            clk_frequency = Database.getSymbolValue("core", "CLK_MCK_FREQ") / 8
+        # if clock  source is MCK/32
+        elif (clk_src == 3):
+            clk_frequency = Database.getSymbolValue("core", "CLK_MCK_FREQ") / 32
+        # if clock  source is MCK/128
+        elif (clk_src == 4):
+            clk_frequency = Database.getSymbolValue("core", "CLK_MCK_FREQ") / 128
+        # if clock  source is SLOW CLOCK
+        elif (clk_src == 5):
+            clk_frequency = Database.getSymbolValue("core", "CLK_MD_SLCK_FREQ")
+        # default  clock source is MCK (Enabled through extended registers of TC)
+        else:
+            clk_frequency = Database.getSymbolValue("core", "CLK_MCK_FREQ")
+        symbol.setValue(clk_frequency)
+
     else:
         symbol.setValue(0)
 
@@ -284,7 +283,7 @@ def create_gclk_entries (clock_id_name, clock_comp, clk_menu):
             "CLK_MCK_FREQ",
             "CLK_RC2CK_FREQ" ])
 
-global periFreq  
+global periFreq
 def periFreq(symbol, event):
     enable = Database.getSymbolValue("core", symbol.getID().split(
         "_CLOCK_FREQUENCY")[0] + "_CLOCK_ENABLE")
@@ -294,7 +293,7 @@ def periFreq(symbol, event):
             symbol.setValue(freq)
     else:
         if symbol.getValue() != 0:
-            symbol.setValue(0) 
+            symbol.setValue(0)
 
 global periGclkFreq
 def periGclkFreq(symbol, event):
@@ -307,7 +306,7 @@ def periGclkFreq(symbol, event):
             symbol.setValue(freq)
     else:
         if symbol.getValue() != 0:
-            symbol.setValue(0) 
+            symbol.setValue(0)
 
 global create_default_freq_sym
 def create_default_freq_sym (clock_id_name, clock_comp, clk_menu):
@@ -789,12 +788,12 @@ def __prog_clock_menu(clk_comp, clk_menu):
     pck_menu = clk_comp.createMenuSymbol("CLK_PCK_MENU", clk_menu)
     pck_menu.setLabel("Programmable Clocks (PCK)")
     pck_menu.setDescription("Programmable Clocks")
-    
+
     num_pcks = int(ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/register-group@[name="PMC"]/register@[name="PMC_PCK"]').getAttribute("count"))
     for pckx in range(0, num_pcks):
         pckx_en = clk_comp.createBooleanSymbol("CLK_PCK"+str(pckx)+"_EN", pck_menu)
         pckx_en.setLabel("Enable PCK"+str(pckx))
-    
+
         pckx_css_vg_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PMC"]/value-group@[name="PMC_PCK__CSS"]')
         pckx_css = clk_comp.createKeyValueSetSymbol("CLK_PCK"+str(pckx)+"_CSS", pckx_en)
         pckx_css.setLabel("Clock Source")
@@ -803,13 +802,13 @@ def __prog_clock_menu(clk_comp, clk_menu):
         pckx_css.setOutputMode("Key")
         for value in pckx_css_vg_node.getChildren():
             pckx_css.addKey(value.getAttribute("name"), value.getAttribute("value"), value.getAttribute("caption"))
-    
+
         pckx_pres = clk_comp.createIntegerSymbol("CLK_PCK"+str(pckx)+"_PRES", pckx_en)
         pckx_pres.setLabel("Programmable Clock Prescalar")
         pckx_pres.setDescription("Divides the input clock by PRES+1.")
         pckx_pres.setMin(0)
         pckx_pres.setMax(255)
-    
+
         pckx_freq = clk_comp.createIntegerSymbol("CLK_PCK"+str(pckx)+"_FREQ", pckx_en)
         pckx_freq.setLabel("PCK"+str(pckx)+" Frequency (HZ)")
         pckx_freq.setDefaultValue(0)
@@ -817,7 +816,7 @@ def __prog_clock_menu(clk_comp, clk_menu):
         pckx_freq.setVisible(True)
         pckx_freq.setDependencies(upd_pck_freq, ["CLK_PCK"+str(pckx)+"_EN", "CLK_PCK"+str(pckx)+"_CSS", "CLK_PCK"+str(pckx)+"_PRES",
                 "CLK_MAINCK_FREQ", "CLK_MD_SLCK_FREQ", "CLK_PLLACK_FREQ", "CLK_PLLBCK_FREQ", "CLK_MCK_FREQ"])
-    
+
 
 # PERIPHERAL CLOCK MENU
 def __peri_clock_menu(clk_comp, clk_menu):
@@ -849,10 +848,10 @@ def __peri_clock_menu(clk_comp, clk_menu):
                 if "CLOCK_ID" in param_name:
                     clock_id_name = instance_name + param_entry.getAttribute("name").split("CLOCK_ID")[1]
                     clock_id = int(param_entry.getAttribute("value"))
-    
+
                     periph_menu = clk_comp.createMenuSymbol("CLK_"+clock_id_name+"_MENU", pcr_menu)
                     periph_menu.setLabel(clock_id_name)
-                
+
                     # Create peripheral clock enable symbol [instance]_CLOCK_ENABLE
                     periph_en = clk_comp.createBooleanSymbol(clock_id_name+"_CLOCK_ENABLE", periph_menu)
                     periph_en.setLabel("Peripheral Clock Enable")
@@ -862,14 +861,14 @@ def __peri_clock_menu(clk_comp, clk_menu):
                     periph_id.setDefaultValue(clock_id_name)
                     periph_id.setReadOnly(True)
                     periph_id.setVisible(False)
-    
+
                     # Create peripheral clock frequency symbol [instance]_CLOCK_FREQUENCY
                     sym_constructor(clock_id_name, clk_comp, periph_menu)
 
 
 if __name__ == "__main__":
-    
-    global perifreq  
+
+    global perifreq
     # Main clock configuration menu
     clk_menu = coreComponent.createMenuSymbol("CLK_MENU", None)
     clk_menu.setLabel("Clock (PMC)")
@@ -885,7 +884,7 @@ if __name__ == "__main__":
     __prog_clock_menu(coreComponent, clk_menu)
     __peri_clock_menu(coreComponent, clk_menu)
 
-    
+
     #File handling
     CONFIG_NAME = Variables.get("__CONFIGURATION_NAME")
 
@@ -917,5 +916,3 @@ if __name__ == "__main__":
     CLK_SYS_INIT_LIST_ENTRY.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
     CLK_SYS_INIT_LIST_ENTRY.setSourcePath("../peripheral/clk_sam_rh71/templates/system/initialization.c.ftl")
     CLK_SYS_INIT_LIST_ENTRY.setMarkup(True)
-
-
