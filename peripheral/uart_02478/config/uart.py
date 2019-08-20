@@ -22,55 +22,6 @@
 *****************************************************************************"""
 
 ################################################################################
-#### Register Information ####
-################################################################################
-##UXMODE
-uartValGrp_U1MODE_STSEL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/value-group@[name="U1MODE__STSEL"]')
-uartBitField_U1MODE_STSEL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/register-group@[name="UART"]/register@[name="U1MODE"]/bitfield@[name="STSEL"]')
-
-uartValGrp_U1MODE_PDSEL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/value-group@[name="U1MODE__PDSEL"]')
-uartBitField_U1MODE_PDSEL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/register-group@[name="UART"]/register@[name="U1MODE"]/bitfield@[name="PDSEL"]')
-
-uartValGrp_U1MODE_BRGH = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/value-group@[name="U1MODE__BRGH"]')
-uartBitField_U1MODE_BRGH = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/register-group@[name="UART"]/register@[name="U1MODE"]/bitfield@[name="BRGH"]')
-
-uartValGrp_U1MODE_RXINV = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/value-group@[name="U1MODE__RXINV"]')
-uartBitField_U1MODE_RXINV = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/register-group@[name="UART"]/register@[name="U1MODE"]/bitfield@[name="RXINV"]')
-
-uartValGrp_U1MODE_ABAUD = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/value-group@[name="U1MODE__ABAUD"]')
-uartBitField_U1MODE_ABAUD = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/register-group@[name="UART"]/register@[name="U1MODE"]/bitfield@[name="ABAUD"]')
-
-uartValGrp_U1MODE_LPBACK = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/value-group@[name="U1MODE__LPBACK"]')
-uartBitField_U1MODE_LPBACK = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/register-group@[name="UART"]/register@[name="U1MODE"]/bitfield@[name="LPBACK"]')
-
-uartValGrp_U1MODE_WAKE = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/value-group@[name="U1MODE__WAKE"]')
-uartBitField_U1MODE_WAKE = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/register-group@[name="UART"]/register@[name="U1MODE"]/bitfield@[name="WAKE"]')
-
-uartValGrp_U1MODE_UEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/value-group@[name="U1MODE__UEN"]')
-uartBitField_U1MODE_UEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/register-group@[name="UART"]/register@[name="U1MODE"]/bitfield@[name="UEN"]')
-
-uartValGrp_U1MODE_RTSMD = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/value-group@[name="U1MODE__RTSMD"]')
-uartBitField_U1MODE_RTSMD = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/register-group@[name="UART"]/register@[name="U1MODE"]/bitfield@[name="RTSMD"]')
-
-uartValGrp_U1MODE_IREN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/value-group@[name="U1MODE__IREN"]')
-uartBitField_U1MODE_IREN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/register-group@[name="UART"]/register@[name="U1MODE"]/bitfield@[name="IREN"]')
-
-uartValGrp_U1MODE_SIDL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/value-group@[name="U1MODE__SIDL"]')
-uartBitField_U1MODE_SIDL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/register-group@[name="UART"]/register@[name="U1MODE"]/bitfield@[name="SIDL"]')
-
-uartValGrp_U1MODE_ON = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/value-group@[name="U1MODE__ON"]')
-uartBitField_U1MODE_ON = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/register-group@[name="UART"]/register@[name="U1MODE"]/bitfield@[name="ON"]')
-
-uartValGrp_U1MODE_RUNOVF = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/value-group@[name="U1MODE__RUNOVF"]')
-uartBitField_U1MODE_RUNOVF = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/register-group@[name="UART"]/register@[name="U1MODE"]/bitfield@[name="RUNOVF"]')
-
-uartValGrp_U1MODE_CLKSEL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/value-group@[name="U1MODE__CLKSEL"]')
-uartBitField_U1MODE_CLKSEL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/register-group@[name="UART"]/register@[name="U1MODE"]/bitfield@[name="CLKSEL"]')
-
-uartValGrp_U1MODE_SLPEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/value-group@[name="U1MODE__SLPEN"]')
-uartBitField_U1MODE_SLPEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/register-group@[name="UART"]/register@[name="U1MODE"]/bitfield@[name="SLPEN"]')
-
-################################################################################
 #### Global Variables ####
 ################################################################################
 
@@ -182,24 +133,24 @@ def getVectorIndex(string):
 # Calculates BRG value
 def baudRateCalc(clk, baud):
 
-    global uartSym_U1MODE_BRGH
+    global uartSym_UxMODE_BRGH
 
     brgValLow = ((clk / baud) >> 4) - 1
     brgValHigh = ((clk / baud) >> 2) - 1
 
-    brgh  = int(uartSym_U1MODE_BRGH.getSelectedValue())
+    brgh  = int(uartSym_UxMODE_BRGH.getSelectedValue())
     uxmode = int (Database.getSymbolValue(uartInstanceName.getValue().lower(), "UMODE_VALUE"))
 
     # Check if the baud value can be set with low baud settings
     if((brgValHigh >= 0) and (brgValHigh <= 65535)) :
         brgValue =  (((clk >> 2) + (baud >> 1)) / baud ) - 1
-        uartSym_U1MODE_BRGH.setValue(0, 2)
-        brghBitL = int(uartSym_U1MODE_BRGH.getSelectedValue())
+        uartSym_UxMODE_BRGH.setValue(0, 2)
+        brghBitL = int(uartSym_UxMODE_BRGH.getSelectedValue())
         return brgValue
     elif((brgValLow >= 0) and (brgValLow <= 65535)) :
         brgValue = (((clk >> 4) + (baud >> 1)) / baud) - 1
-        uartSym_U1MODE_BRGH.setValue(1, 2)
-        brghBitH = int(uartSym_U1MODE_BRGH.getSelectedValue())
+        uartSym_UxMODE_BRGH.setValue(1, 2)
+        brghBitH = int(uartSym_UxMODE_BRGH.getSelectedValue())
         return brgValue
     elif brgValLow > 65535:
         return brgValLow
@@ -232,79 +183,79 @@ def u1ModecombineValues(symbol, event):
 
     if event["id"] == "UART_STSEL":
         stselValue = int(event["symbol"].getKeyValue(event["value"]))
-        maskvalue = uartBitField_U1MODE_STSEL.getAttribute("mask")
+        maskvalue = uartBitField_UxMODE_STSEL.getAttribute("mask")
         uart1modeValue = uart1modeValue & (~int(maskvalue, 0))
         uart1modeValue = uart1modeValue | (stselValue << 0)
 
     if event["id"] == "UART_PDSEL":
         pdselValue = int(event["symbol"].getKeyValue(event["value"]))
-        maskvalue = uartBitField_U1MODE_PDSEL.getAttribute("mask")
+        maskvalue = uartBitField_UxMODE_PDSEL.getAttribute("mask")
         uart1modeValue = uart1modeValue & (~int(maskvalue, 0))
         uart1modeValue = uart1modeValue | (pdselValue << 1)
 
     if event["id"] == "UART_BRGH":
         brghValue = int(event["symbol"].getKeyValue(event["value"]))
-        maskvalue = uartBitField_U1MODE_BRGH.getAttribute("mask")
+        maskvalue = uartBitField_UxMODE_BRGH.getAttribute("mask")
         uart1modeValue = uart1modeValue & (~int(maskvalue, 0))
         uart1modeValue = uart1modeValue | (brghValue << 3)
 
     if event["id"] == "UART_RXINV":
         rxinvValue = int(event["symbol"].getKeyValue(event["value"]))
-        maskvalue = uartBitField_U1MODE_RXINV.getAttribute("mask")
+        maskvalue = uartBitField_UxMODE_RXINV.getAttribute("mask")
         uart1modeValue = uart1modeValue & (~int(maskvalue, 0))
         uart1modeValue = uart1modeValue | (rxinvValue << 4)
 
     if event["id"] == "UART_ABAUD":
         abaudValue = int(event["symbol"].getKeyValue(event["value"]))
-        maskvalue = uartBitField_U1MODE_ABAUD.getAttribute("mask")
+        maskvalue = uartBitField_UxMODE_ABAUD.getAttribute("mask")
         uart1modeValue = uart1modeValue & (~int(maskvalue, 0))
         uart1modeValue = uart1modeValue | (abaudValue << 5)
 
     if event["id"] == "UART_LPBACK":
         lpbackValue = int(event["symbol"].getKeyValue(event["value"]))
-        maskvalue = uartBitField_U1MODE_LPBACK.getAttribute("mask")
+        maskvalue = uartBitField_UxMODE_LPBACK.getAttribute("mask")
         uart1modeValue = uart1modeValue & (~int(maskvalue, 0))
         uart1modeValue = uart1modeValue | (lpbackValue << 6)
 
     if event["id"] == "UART_WAKE":
         wakeValue = int(event["symbol"].getKeyValue(event["value"]))
-        maskvalue = uartBitField_U1MODE_WAKE.getAttribute("mask")
+        maskvalue = uartBitField_UxMODE_WAKE.getAttribute("mask")
         uart1modeValue = uart1modeValue & (~int(maskvalue, 0))
         uart1modeValue = uart1modeValue | (wakeValue << 7)
 
     if event["id"] == "UART_RTSMD":
         rstmdValue = int(event["symbol"].getKeyValue(event["value"]))
-        maskvalue = uartBitField_U1MODE_RTSMD.getAttribute("mask")
+        maskvalue = uartBitField_UxMODE_RTSMD.getAttribute("mask")
         uart1modeValue = uart1modeValue & (~int(maskvalue, 0))
         uart1modeValue = uart1modeValue | (rstmdValue << 11)
 
     if event["id"] == "UART_IREN":
         irenValue = int(event["symbol"].getKeyValue(event["value"]))
-        maskvalue = uartBitField_U1MODE_IREN.getAttribute("mask")
+        maskvalue = uartBitField_UxMODE_IREN.getAttribute("mask")
         uart1modeValue = uart1modeValue & (~int(maskvalue, 0))
         uart1modeValue = uart1modeValue | (irenValue << 12)
 
     if event["id"] == "UART_SIDL":
         sidlValue = int(event["symbol"].getKeyValue(event["value"]))
-        maskvalue = uartBitField_U1MODE_SIDL.getAttribute("mask")
+        maskvalue = uartBitField_UxMODE_SIDL.getAttribute("mask")
         uart1modeValue = uart1modeValue & (~int(maskvalue, 0))
         uart1modeValue = uart1modeValue | (sidlValue << 13)
 
     if event["id"] == "UART_RUNOVF":
         runovfValue = int(event["symbol"].getKeyValue(event["value"]))
-        maskvalue = uartBitField_U1MODE_RUNOVF.getAttribute("mask")
+        maskvalue = uartBitField_UxMODE_RUNOVF.getAttribute("mask")
         uart1modeValue = uart1modeValue & (~int(maskvalue, 0))
         uart1modeValue = uart1modeValue | (runovfValue << 16)
 
     if event["id"] == "UART_CLKSEL":
         clkselValue = int(event["symbol"].getKeyValue(event["value"]))
-        maskvalue = uartBitField_U1MODE_CLKSEL.getAttribute("mask")
+        maskvalue = uartBitField_UxMODE_CLKSEL.getAttribute("mask")
         uart1modeValue = uart1modeValue & (~int(maskvalue, 0))
         uart1modeValue = uart1modeValue | (clkselValue << 17)
 
     if event["id"] == "UART_SLPEN":
         slpenValue = int(event["symbol"].getKeyValue(event["value"]))
-        maskvalue = uartBitField_U1MODE_SLPEN.getAttribute("mask")
+        maskvalue = uartBitField_UxMODE_SLPEN.getAttribute("mask")
         uart1modeValue = uart1modeValue & (~int(maskvalue, 0))
         uart1modeValue = uart1modeValue | (slpenValue << 23)
 
@@ -334,7 +285,7 @@ def find_key_value(value, keypairs):
     '''
     index = 0
     for ii in keypairs:
-        if(ii["value"] == str(value)):
+        if ii["value"] == str(value):
             return index  # return occurrence of <bitfield > entry which has matching value
         index += 1
 
@@ -352,12 +303,27 @@ def updateUARTClockWarningStatus(symbol, event):
 def instantiateComponent(uartComponent):
 
     global uartInstanceName
-    global uartSym_U1MODE_BRGH
+    global uartSym_UxMODE_BRGH
     global InterruptVector
     global InterruptHandlerLock
     global InterruptHandler
     global InterruptVectorUpdate
     global uartSymInterruptMode
+    global uartBitField_UxMODE_STSEL
+    global uartBitField_UxMODE_PDSEL
+    global uartBitField_UxMODE_BRGH
+    global uartBitField_UxMODE_RXINV
+    global uartBitField_UxMODE_ABAUD
+    global uartBitField_UxMODE_LPBACK
+    global uartBitField_UxMODE_WAKE
+    global uartBitField_UxMODE_UEN
+    global uartBitField_UxMODE_RTSMD
+    global uartBitField_UxMODE_IREN
+    global uartBitField_UxMODE_SIDL
+    global uartBitField_UxMODE_ON
+    global uartBitField_UxMODE_RUNOVF
+    global uartBitField_UxMODE_CLKSEL
+    global uartBitField_UxMODE_SLPEN
 
     InterruptVector = []
     InterruptHandler = []
@@ -374,6 +340,56 @@ def instantiateComponent(uartComponent):
     componentName = str(uartComponent.getID())
     instanceNum = filter(str.isdigit,componentName)
     uartInstanceNum.setDefaultValue(instanceNum)
+
+    ################################################################################
+    #### Register Information ####
+    ################################################################################
+
+    # UxMODE Register
+    uartValGrp_UxMODE_STSEL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/value-group@[name="U' + uartInstanceNum.getValue() + 'MODE__STSEL"]')
+    uartBitField_UxMODE_STSEL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/register-group@[name="UART"]/register@[name="U' + uartInstanceNum.getValue() + 'MODE"]/bitfield@[name="STSEL"]')
+
+    uartValGrp_UxMODE_PDSEL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/value-group@[name="U' + uartInstanceNum.getValue() + 'MODE__PDSEL"]')
+    uartBitField_UxMODE_PDSEL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/register-group@[name="UART"]/register@[name="U' + uartInstanceNum.getValue() + 'MODE"]/bitfield@[name="PDSEL"]')
+
+    uartValGrp_UxMODE_BRGH = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/value-group@[name="U' + uartInstanceNum.getValue() + 'MODE__BRGH"]')
+    uartBitField_UxMODE_BRGH = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/register-group@[name="UART"]/register@[name="U' + uartInstanceNum.getValue() + 'MODE"]/bitfield@[name="BRGH"]')
+
+    uartValGrp_UxMODE_RXINV = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/value-group@[name="U' + uartInstanceNum.getValue() + 'MODE__RXINV"]')
+    uartBitField_UxMODE_RXINV = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/register-group@[name="UART"]/register@[name="U' + uartInstanceNum.getValue() + 'MODE"]/bitfield@[name="RXINV"]')
+
+    uartValGrp_UxMODE_ABAUD = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/value-group@[name="U' + uartInstanceNum.getValue() + 'MODE__ABAUD"]')
+    uartBitField_UxMODE_ABAUD = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/register-group@[name="UART"]/register@[name="U' + uartInstanceNum.getValue() + 'MODE"]/bitfield@[name="ABAUD"]')
+
+    uartValGrp_UxMODE_LPBACK = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/value-group@[name="U' + uartInstanceNum.getValue() + 'MODE__LPBACK"]')
+    uartBitField_UxMODE_LPBACK = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/register-group@[name="UART"]/register@[name="U' + uartInstanceNum.getValue() + 'MODE"]/bitfield@[name="LPBACK"]')
+
+    uartValGrp_UxMODE_WAKE = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/value-group@[name="U' + uartInstanceNum.getValue() + 'MODE__WAKE"]')
+    uartBitField_UxMODE_WAKE = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/register-group@[name="UART"]/register@[name="U' + uartInstanceNum.getValue() + 'MODE"]/bitfield@[name="WAKE"]')
+
+    uartValGrp_UxMODE_UEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/value-group@[name="U' + uartInstanceNum.getValue() + 'MODE__UEN"]')
+    uartBitField_UxMODE_UEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/register-group@[name="UART"]/register@[name="U' + uartInstanceNum.getValue() + 'MODE"]/bitfield@[name="UEN"]')
+
+    uartValGrp_UxMODE_RTSMD = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/value-group@[name="U' + uartInstanceNum.getValue() + 'MODE__RTSMD"]')
+    uartBitField_UxMODE_RTSMD = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/register-group@[name="UART"]/register@[name="U' + uartInstanceNum.getValue() + 'MODE"]/bitfield@[name="RTSMD"]')
+
+    uartValGrp_UxMODE_IREN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/value-group@[name="U' + uartInstanceNum.getValue() + 'MODE__IREN"]')
+    uartBitField_UxMODE_IREN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/register-group@[name="UART"]/register@[name="U' + uartInstanceNum.getValue() + 'MODE"]/bitfield@[name="IREN"]')
+
+    uartValGrp_UxMODE_SIDL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/value-group@[name="U' + uartInstanceNum.getValue() + 'MODE__SIDL"]')
+    uartBitField_UxMODE_SIDL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/register-group@[name="UART"]/register@[name="U' + uartInstanceNum.getValue() + 'MODE"]/bitfield@[name="SIDL"]')
+
+    uartValGrp_UxMODE_ON = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/value-group@[name="U' + uartInstanceNum.getValue() + 'MODE__ON"]')
+    uartBitField_UxMODE_ON = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/register-group@[name="UART"]/register@[name="U' + uartInstanceNum.getValue() + 'MODE"]/bitfield@[name="ON"]')
+
+    uartValGrp_UxMODE_RUNOVF = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/value-group@[name="U' + uartInstanceNum.getValue() + 'MODE__RUNOVF"]')
+    uartBitField_UxMODE_RUNOVF = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/register-group@[name="UART"]/register@[name="U' + uartInstanceNum.getValue() + 'MODE"]/bitfield@[name="RUNOVF"]')
+
+    uartValGrp_UxMODE_CLKSEL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/value-group@[name="U' + uartInstanceNum.getValue() + 'MODE__CLKSEL"]')
+    uartBitField_UxMODE_CLKSEL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/register-group@[name="UART"]/register@[name="U' + uartInstanceNum.getValue() + 'MODE"]/bitfield@[name="CLKSEL"]')
+
+    uartValGrp_UxMODE_SLPEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/value-group@[name="U' + uartInstanceNum.getValue() + 'MODE__SLPEN"]')
+    uartBitField_UxMODE_SLPEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/register-group@[name="UART"]/register@[name="U' + uartInstanceNum.getValue() + 'MODE"]/bitfield@[name="SLPEN"]')
 
     #Clock enable
     Database.setSymbolValue("core", uartInstanceName.getValue() + "_CLOCK_ENABLE", True, 1)
@@ -472,162 +488,161 @@ def instantiateComponent(uartComponent):
 
     #STSEL, STOP Selection Bit
     stsel_names = []
-    _get_bitfield_names(uartValGrp_U1MODE_STSEL, stsel_names)
-    uartSym_U1MODE_STSEL = uartComponent.createKeyValueSetSymbol("UART_STSEL", None)
-    uartSym_U1MODE_STSEL.setLabel(uartBitField_U1MODE_STSEL.getAttribute("caption"))
-    uartSym_U1MODE_STSEL.setDefaultValue(find_key_value(0,stsel_names)) # 1 stop bit
-    uartSym_U1MODE_STSEL.setOutputMode( "Value" )
-    uartSym_U1MODE_STSEL.setDisplayMode( "Description" )
+    _get_bitfield_names(uartValGrp_UxMODE_STSEL, stsel_names)
+    uartSym_UxMODE_STSEL = uartComponent.createKeyValueSetSymbol("UART_STSEL", None)
+    uartSym_UxMODE_STSEL.setLabel(uartBitField_UxMODE_STSEL.getAttribute("caption"))
+    uartSym_UxMODE_STSEL.setDefaultValue(find_key_value(0, stsel_names)) # 1 stop bit
+    uartSym_UxMODE_STSEL.setOutputMode( "Value" )
+    uartSym_UxMODE_STSEL.setDisplayMode( "Description" )
     for ii in stsel_names:
-        uartSym_U1MODE_STSEL.addKey( ii['key'],ii['value'], ii['desc'] )
+        uartSym_UxMODE_STSEL.addKey( ii['key'],ii['value'], ii['desc'] )
 
     #PDSEL, Parity and data Selection Bits
     pdsel_names = []
-    _get_bitfield_names(uartValGrp_U1MODE_PDSEL, pdsel_names)
-    uartSym_U1MODE_PDSEL = uartComponent.createKeyValueSetSymbol("UART_PDSEL", None)
-    uartSym_U1MODE_PDSEL.setLabel (uartBitField_U1MODE_PDSEL.getAttribute("caption"))
-    uartSym_U1MODE_PDSEL.setDefaultValue(find_key_value(0,pdsel_names)) # 8-bit data, no parity
-    uartSym_U1MODE_PDSEL.setOutputMode( "Value" )
-    uartSym_U1MODE_PDSEL.setDisplayMode( "Description" )
+    _get_bitfield_names(uartValGrp_UxMODE_PDSEL, pdsel_names)
+    uartSym_UxMODE_PDSEL = uartComponent.createKeyValueSetSymbol("UART_PDSEL", None)
+    uartSym_UxMODE_PDSEL.setLabel (uartBitField_UxMODE_PDSEL.getAttribute("caption"))
+    uartSym_UxMODE_PDSEL.setDefaultValue(find_key_value(0, pdsel_names)) # 8-bit data, no parity
+    uartSym_UxMODE_PDSEL.setOutputMode( "Value" )
+    uartSym_UxMODE_PDSEL.setDisplayMode( "Description" )
     for ii in pdsel_names:
-        uartSym_U1MODE_PDSEL.addKey( ii['key'],ii['value'], ii['desc'] )
+        uartSym_UxMODE_PDSEL.addKey( ii['key'],ii['value'], ii['desc'] )
 
     #BRGH, BRGH Selection Bit
     BRGH_names = []
-    _get_bitfield_names(uartValGrp_U1MODE_BRGH, BRGH_names)
-    uartSym_U1MODE_BRGH = uartComponent.createKeyValueSetSymbol("UART_BRGH", None)
-    uartSym_U1MODE_BRGH.setLabel(uartBitField_U1MODE_BRGH.getAttribute("caption"))
-    uartSym_U1MODE_BRGH.setDefaultValue(find_key_value(0,BRGH_names)) # standard speed mode
-    uartSym_U1MODE_BRGH.setOutputMode( "Value" )
-    uartSym_U1MODE_BRGH.setDisplayMode( "Description" )
+    _get_bitfield_names(uartValGrp_UxMODE_BRGH, BRGH_names)
+    uartSym_UxMODE_BRGH = uartComponent.createKeyValueSetSymbol("UART_BRGH", None)
+    uartSym_UxMODE_BRGH.setLabel(uartBitField_UxMODE_BRGH.getAttribute("caption"))
+    uartSym_UxMODE_BRGH.setDefaultValue(find_key_value(0, BRGH_names)) # standard speed mode
+    uartSym_UxMODE_BRGH.setOutputMode( "Value" )
+    uartSym_UxMODE_BRGH.setDisplayMode( "Description" )
     for ii in BRGH_names:
-        uartSym_U1MODE_BRGH.addKey( ii['key'],ii['value'], ii['desc'] )
-    uartSym_U1MODE_BRGH.setReadOnly(True)
+        uartSym_UxMODE_BRGH.addKey( ii['key'],ii['value'], ii['desc'] )
+    uartSym_UxMODE_BRGH.setReadOnly(True)
 
     #RXINV, Rx polarity inversion bit
     RXINV_names = []
-    _get_bitfield_names(uartValGrp_U1MODE_RXINV, RXINV_names)
-    uartSym_U1MODE_RXINV = uartComponent.createKeyValueSetSymbol("UART_RXINV", None)
-    uartSym_U1MODE_RXINV.setLabel(uartBitField_U1MODE_RXINV.getAttribute("caption"))
-    uartSym_U1MODE_RXINV.setDefaultValue(find_key_value(0,RXINV_names)) # standard speed mode
-    uartSym_U1MODE_RXINV.setOutputMode( "Value" )
-    uartSym_U1MODE_RXINV.setDisplayMode( "Description" )
-    uartSym_U1MODE_RXINV.setVisible(False)
+    _get_bitfield_names(uartValGrp_UxMODE_RXINV, RXINV_names)
+    uartSym_UxMODE_RXINV = uartComponent.createKeyValueSetSymbol("UART_RXINV", None)
+    uartSym_UxMODE_RXINV.setLabel(uartBitField_UxMODE_RXINV.getAttribute("caption"))
+    uartSym_UxMODE_RXINV.setDefaultValue(find_key_value(0, RXINV_names)) # standard speed mode
+    uartSym_UxMODE_RXINV.setOutputMode( "Value" )
+    uartSym_UxMODE_RXINV.setDisplayMode( "Description" )
+    uartSym_UxMODE_RXINV.setVisible(False)
     for ii in RXINV_names:
-        uartSym_U1MODE_RXINV.addKey( ii['key'],ii['value'], ii['desc'] )
+        uartSym_UxMODE_RXINV.addKey( ii['key'],ii['value'], ii['desc'] )
 
     #ABAUD, Auto-baud enable bit
     ABAUD_names = []
-    _get_bitfield_names(uartValGrp_U1MODE_ABAUD, ABAUD_names)
-    uartSym_U1MODE_ABAUD = uartComponent.createKeyValueSetSymbol("UART_ABAUD", None)
-    uartSym_U1MODE_ABAUD.setLabel(uartBitField_U1MODE_ABAUD.getAttribute("caption"))
-    uartSym_U1MODE_ABAUD.setDefaultValue(find_key_value(0,ABAUD_names)) # baud rate measurement disabled
-    uartSym_U1MODE_ABAUD.setOutputMode( "Value" )
-    uartSym_U1MODE_ABAUD.setDisplayMode( "Description" )
-    uartSym_U1MODE_ABAUD.setVisible(False)
+    _get_bitfield_names(uartValGrp_UxMODE_ABAUD, ABAUD_names)
+    uartSym_UxMODE_ABAUD = uartComponent.createKeyValueSetSymbol("UART_ABAUD", None)
+    uartSym_UxMODE_ABAUD.setLabel(uartBitField_UxMODE_ABAUD.getAttribute("caption"))
+    uartSym_UxMODE_ABAUD.setDefaultValue(find_key_value(0, ABAUD_names)) # baud rate measurement disabled
+    uartSym_UxMODE_ABAUD.setOutputMode( "Value" )
+    uartSym_UxMODE_ABAUD.setDisplayMode( "Description" )
+    uartSym_UxMODE_ABAUD.setVisible(False)
     for ii in ABAUD_names:
-        uartSym_U1MODE_ABAUD.addKey( ii['key'],ii['value'], ii['desc'] )
-
+        uartSym_UxMODE_ABAUD.addKey( ii['key'],ii['value'], ii['desc'] )
 
     #LPBACK, Loopback Mode Select bit
     LPBACK_names = []
-    _get_bitfield_names(uartValGrp_U1MODE_LPBACK, LPBACK_names)
-    uartSym_U1MODE_LPBACK = uartComponent.createKeyValueSetSymbol("UART_LPBACK", None)
-    uartSym_U1MODE_LPBACK.setLabel(uartBitField_U1MODE_LPBACK.getAttribute("caption"))
-    uartSym_U1MODE_LPBACK.setDefaultValue(find_key_value(0,LPBACK_names)) # loopback mode disabled
-    uartSym_U1MODE_LPBACK.setOutputMode( "Value" )
-    uartSym_U1MODE_LPBACK.setDisplayMode( "Description" )
-    uartSym_U1MODE_LPBACK.setVisible(False)
+    _get_bitfield_names(uartValGrp_UxMODE_LPBACK, LPBACK_names)
+    uartSym_UxMODE_LPBACK = uartComponent.createKeyValueSetSymbol("UART_LPBACK", None)
+    uartSym_UxMODE_LPBACK.setLabel(uartBitField_UxMODE_LPBACK.getAttribute("caption"))
+    uartSym_UxMODE_LPBACK.setDefaultValue(find_key_value(0, LPBACK_names)) # loopback mode disabled
+    uartSym_UxMODE_LPBACK.setOutputMode( "Value" )
+    uartSym_UxMODE_LPBACK.setDisplayMode( "Description" )
+    uartSym_UxMODE_LPBACK.setVisible(False)
     for ii in LPBACK_names:
-        uartSym_U1MODE_LPBACK.addKey( ii['key'],ii['value'], ii['desc'] )
+        uartSym_UxMODE_LPBACK.addKey( ii['key'],ii['value'], ii['desc'] )
 
     #WAKE, Enable Wake-up on Start bit Detect During Sleep Mode bit
     WAKE_names = []
-    _get_bitfield_names(uartValGrp_U1MODE_WAKE, WAKE_names)
-    uartSym_U1MODE_WAKE = uartComponent.createKeyValueSetSymbol("UART_WAKE", None)
-    uartSym_U1MODE_WAKE.setLabel(uartBitField_U1MODE_WAKE.getAttribute("caption"))
-    uartSym_U1MODE_WAKE.setDefaultValue(find_key_value(0,WAKE_names)) # wake-up disabled
-    uartSym_U1MODE_WAKE.setOutputMode( "Value" )
-    uartSym_U1MODE_WAKE.setDisplayMode( "Description" )
-    uartSym_U1MODE_WAKE.setVisible(False)
+    _get_bitfield_names(uartValGrp_UxMODE_WAKE, WAKE_names)
+    uartSym_UxMODE_WAKE = uartComponent.createKeyValueSetSymbol("UART_WAKE", None)
+    uartSym_UxMODE_WAKE.setLabel(uartBitField_UxMODE_WAKE.getAttribute("caption"))
+    uartSym_UxMODE_WAKE.setDefaultValue(find_key_value(0, WAKE_names)) # wake-up disabled
+    uartSym_UxMODE_WAKE.setOutputMode( "Value" )
+    uartSym_UxMODE_WAKE.setDisplayMode( "Description" )
+    uartSym_UxMODE_WAKE.setVisible(False)
     for ii in WAKE_names:
-        uartSym_U1MODE_WAKE.addKey( ii['key'],ii['value'], ii['desc'] )
+        uartSym_UxMODE_WAKE.addKey( ii['key'],ii['value'], ii['desc'] )
 
     #RTSMD, Mode Selection for UxRTS Pin bit
     RTSMD_names = []
-    _get_bitfield_names(uartValGrp_U1MODE_RTSMD, RTSMD_names)
-    uartSym_U1MODE_RTSMD = uartComponent.createKeyValueSetSymbol("UART_RTSMD", None)
-    uartSym_U1MODE_RTSMD.setLabel(uartBitField_U1MODE_RTSMD.getAttribute("caption"))
-    uartSym_U1MODE_RTSMD.setDefaultValue(find_key_value(0,RTSMD_names)) # /UxRTS pin is in Flow Control mode
-    uartSym_U1MODE_RTSMD.setOutputMode( "Value" )
-    uartSym_U1MODE_RTSMD.setDisplayMode( "Description" )
-    uartSym_U1MODE_RTSMD.setVisible(False)
+    _get_bitfield_names(uartValGrp_UxMODE_RTSMD, RTSMD_names)
+    uartSym_UxMODE_RTSMD = uartComponent.createKeyValueSetSymbol("UART_RTSMD", None)
+    uartSym_UxMODE_RTSMD.setLabel(uartBitField_UxMODE_RTSMD.getAttribute("caption"))
+    uartSym_UxMODE_RTSMD.setDefaultValue(find_key_value(0, RTSMD_names)) # /UxRTS pin is in Flow Control mode
+    uartSym_UxMODE_RTSMD.setOutputMode( "Value" )
+    uartSym_UxMODE_RTSMD.setDisplayMode( "Description" )
+    uartSym_UxMODE_RTSMD.setVisible(False)
     for ii in RTSMD_names:
-        uartSym_U1MODE_RTSMD.addKey( ii['key'],ii['value'], ii['desc'] )
+        uartSym_UxMODE_RTSMD.addKey( ii['key'],ii['value'], ii['desc'] )
 
     #IREN, IrDA Encoder and Decoder Enable bit
     IREN_names = []
-    _get_bitfield_names(uartValGrp_U1MODE_IREN, IREN_names)
-    uartSym_U1MODE_IREN = uartComponent.createKeyValueSetSymbol("UART_IREN", None)
-    uartSym_U1MODE_IREN.setLabel(uartBitField_U1MODE_IREN.getAttribute("caption"))
-    uartSym_U1MODE_IREN.setDefaultValue(find_key_value(0,IREN_names)) # IrDA is disabled
-    uartSym_U1MODE_IREN.setOutputMode( "Value" )
-    uartSym_U1MODE_IREN.setDisplayMode( "Description" )
-    uartSym_U1MODE_IREN.setVisible(False)
+    _get_bitfield_names(uartValGrp_UxMODE_IREN, IREN_names)
+    uartSym_UxMODE_IREN = uartComponent.createKeyValueSetSymbol("UART_IREN", None)
+    uartSym_UxMODE_IREN.setLabel(uartBitField_UxMODE_IREN.getAttribute("caption"))
+    uartSym_UxMODE_IREN.setDefaultValue(find_key_value(0, IREN_names)) # IrDA is disabled
+    uartSym_UxMODE_IREN.setOutputMode( "Value" )
+    uartSym_UxMODE_IREN.setDisplayMode( "Description" )
+    uartSym_UxMODE_IREN.setVisible(False)
     for ii in IREN_names:
-        uartSym_U1MODE_IREN.addKey( ii['key'],ii['value'], ii['desc'] )
+        uartSym_UxMODE_IREN.addKey( ii['key'],ii['value'], ii['desc'] )
 
     #SIDL, Stop in Idle Mode bit
     SIDL_names = []
-    _get_bitfield_names(uartValGrp_U1MODE_SIDL, SIDL_names)
-    uartSym_U1MODE_SIDL = uartComponent.createKeyValueSetSymbol("UART_SIDL", None)
-    uartSym_U1MODE_SIDL.setLabel(uartBitField_U1MODE_SIDL.getAttribute("caption"))
-    uartSym_U1MODE_SIDL.setDefaultValue(find_key_value(0,SIDL_names)) # continue operation in idle mode
-    uartSym_U1MODE_SIDL.setOutputMode( "Value" )
-    uartSym_U1MODE_SIDL.setDisplayMode( "Description" )
-    uartSym_U1MODE_SIDL.setVisible(False)
+    _get_bitfield_names(uartValGrp_UxMODE_SIDL, SIDL_names)
+    uartSym_UxMODE_SIDL = uartComponent.createKeyValueSetSymbol("UART_SIDL", None)
+    uartSym_UxMODE_SIDL.setLabel(uartBitField_UxMODE_SIDL.getAttribute("caption"))
+    uartSym_UxMODE_SIDL.setDefaultValue(find_key_value(0, SIDL_names)) # continue operation in idle mode
+    uartSym_UxMODE_SIDL.setOutputMode( "Value" )
+    uartSym_UxMODE_SIDL.setDisplayMode( "Description" )
+    uartSym_UxMODE_SIDL.setVisible(False)
     for ii in SIDL_names:
-        uartSym_U1MODE_SIDL.addKey( ii['key'],ii['value'], ii['desc'] )
+        uartSym_UxMODE_SIDL.addKey( ii['key'],ii['value'], ii['desc'] )
 
     #RUNOVF, Run During Overflow Condition Mode bit
     RUNOVF_names = []
-    _get_bitfield_names(uartValGrp_U1MODE_RUNOVF, RUNOVF_names)
-    uartSym_U1MODE_RUNOVF = uartComponent.createKeyValueSetSymbol("UART_RUNOVF", None)
-    uartSym_U1MODE_RUNOVF.setLabel(uartBitField_U1MODE_RUNOVF.getAttribute("caption"))
-    uartSym_U1MODE_RUNOVF.setDefaultValue(find_key_value(0,RUNOVF_names)) # shift register stops during overflow
-    uartSym_U1MODE_RUNOVF.setOutputMode( "Value" )
-    uartSym_U1MODE_RUNOVF.setDisplayMode( "Description" )
-    uartSym_U1MODE_RUNOVF.setVisible(False)
+    _get_bitfield_names(uartValGrp_UxMODE_RUNOVF, RUNOVF_names)
+    uartSym_UxMODE_RUNOVF = uartComponent.createKeyValueSetSymbol("UART_RUNOVF", None)
+    uartSym_UxMODE_RUNOVF.setLabel(uartBitField_UxMODE_RUNOVF.getAttribute("caption"))
+    uartSym_UxMODE_RUNOVF.setDefaultValue(find_key_value(0, RUNOVF_names)) # shift register stops during overflow
+    uartSym_UxMODE_RUNOVF.setOutputMode( "Value" )
+    uartSym_UxMODE_RUNOVF.setDisplayMode( "Description" )
+    uartSym_UxMODE_RUNOVF.setVisible(False)
     for ii in RUNOVF_names:
-        uartSym_U1MODE_RUNOVF.addKey( ii['key'],ii['value'], ii['desc'] )
+        uartSym_UxMODE_RUNOVF.addKey( ii['key'],ii['value'], ii['desc'] )
 
     #CLKSEL, UARTx Module Clock Selection bits
     CLKSEL_names = []
-    _get_bitfield_names(uartValGrp_U1MODE_CLKSEL, CLKSEL_names)
-    uartSym_U1MODE_CLKSEL = uartComponent.createKeyValueSetSymbol("UART_CLKSEL", None)
-    uartSym_U1MODE_CLKSEL.setLabel(uartBitField_U1MODE_CLKSEL.getAttribute("caption"))
-    uartSym_U1MODE_CLKSEL.setDefaultValue(find_key_value(0,CLKSEL_names)) # BRG clock is PBCLK2
-    uartSym_U1MODE_CLKSEL.setOutputMode( "Value" )
-    uartSym_U1MODE_CLKSEL.setDisplayMode( "Description" )
+    _get_bitfield_names(uartValGrp_UxMODE_CLKSEL, CLKSEL_names)
+    uartSym_UxMODE_CLKSEL = uartComponent.createKeyValueSetSymbol("UART_CLKSEL", None)
+    uartSym_UxMODE_CLKSEL.setLabel(uartBitField_UxMODE_CLKSEL.getAttribute("caption"))
+    uartSym_UxMODE_CLKSEL.setDefaultValue(find_key_value(0, CLKSEL_names)) # BRG clock is PBCLK2
+    uartSym_UxMODE_CLKSEL.setOutputMode( "Value" )
+    uartSym_UxMODE_CLKSEL.setDisplayMode( "Description" )
     for ii in CLKSEL_names:
-        uartSym_U1MODE_CLKSEL.addKey( ii['key'],ii['value'], ii['desc'] )
+        uartSym_UxMODE_CLKSEL.addKey( ii['key'],ii['value'], ii['desc'] )
 
     #SLPEN, Run During Sleep Enable bit
     SLPEN_names = []
-    _get_bitfield_names(uartValGrp_U1MODE_SLPEN, SLPEN_names)
-    uartSym_U1MODE_SLPEN = uartComponent.createKeyValueSetSymbol("UART_SLPEN", None)
-    uartSym_U1MODE_SLPEN.setLabel(uartBitField_U1MODE_SLPEN.getAttribute("caption"))
-    uartSym_U1MODE_SLPEN.setDefaultValue(find_key_value(0,SLPEN_names)) # BRG clock off during sleep mode
-    uartSym_U1MODE_SLPEN.setOutputMode( "Value" )
-    uartSym_U1MODE_SLPEN.setDisplayMode( "Description" )
-    uartSym_U1MODE_SLPEN.setVisible(False)
+    _get_bitfield_names(uartValGrp_UxMODE_SLPEN, SLPEN_names)
+    uartSym_UxMODE_SLPEN = uartComponent.createKeyValueSetSymbol("UART_SLPEN", None)
+    uartSym_UxMODE_SLPEN.setLabel(uartBitField_UxMODE_SLPEN.getAttribute("caption"))
+    uartSym_UxMODE_SLPEN.setDefaultValue(find_key_value(0, SLPEN_names)) # BRG clock off during sleep mode
+    uartSym_UxMODE_SLPEN.setOutputMode( "Value" )
+    uartSym_UxMODE_SLPEN.setDisplayMode( "Description" )
+    uartSym_UxMODE_SLPEN.setVisible(False)
     for ii in SLPEN_names:
-        uartSym_U1MODE_SLPEN.addKey( ii['key'],ii['value'], ii['desc'] )
+        uartSym_UxMODE_SLPEN.addKey( ii['key'],ii['value'], ii['desc'] )
 
-    uartSym_U1MODE = uartComponent.createHexSymbol("UMODE_VALUE", None)
-    uartSym_U1MODE.setDefaultValue((int(uartSym_U1MODE_BRGH.getSelectedValue()) << 3) | (int(uartSym_U1MODE_PDSEL.getSelectedValue()) << 1) | (int(uartSym_U1MODE_STSEL.getSelectedValue()) << 0))
-    uartSym_U1MODE.setVisible(False)
-    uartSym_U1MODE.setDependencies(u1ModecombineValues,["UART_STSEL", "UART_PDSEL", "UART_BRGH", "UART_RXINV", "UART_ABAUD", "UART_LPBACK", "UART_WAKE", "UART_RTSMD", "UART_IREN", "UART_SIDL", "UART_RUNOVF", "UART_CLKSEL", "UART_SLPEN"])
+    uartSym_UxMODE = uartComponent.createHexSymbol("UMODE_VALUE", None)
+    uartSym_UxMODE.setDefaultValue((int(uartSym_UxMODE_BRGH.getSelectedValue()) << 3) | (int(uartSym_UxMODE_PDSEL.getSelectedValue()) << 1) | (int(uartSym_UxMODE_STSEL.getSelectedValue()) << 0))
+    uartSym_UxMODE.setVisible(False)
+    uartSym_UxMODE.setDependencies(u1ModecombineValues,["UART_STSEL", "UART_PDSEL", "UART_BRGH", "UART_RXINV", "UART_ABAUD", "UART_LPBACK", "UART_WAKE", "UART_RTSMD", "UART_IREN", "UART_SIDL", "UART_RUNOVF", "UART_CLKSEL", "UART_SLPEN"])
 
     ## UART Clock Frequency
     uartClkValue = uartComponent.createIntegerSymbol("UART_CLOCK_FREQ", None)
