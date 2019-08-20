@@ -240,15 +240,19 @@ bool ${DBGU_INSTANCE_NAME}_SerialSetup(DBGU_SERIAL_SETUP *setup, uint32_t srcClk
         /* Calculate BRG value */
         brgVal = srcClkFreq / (16 * baud);
 
-        /* Configure ${DBGU_INSTANCE_NAME} mode */
-        dbguMode = ${DBGU_INSTANCE_NAME}_REGS->DBGU_MR;
-        dbguMode &= ~DBGU_MR_PAR_Msk;
-        ${DBGU_INSTANCE_NAME}_REGS->DBGU_MR = dbguMode | setup->parity ;
+        /* If the target baud rate is acheivable using this clock */
+        if (brgVal <= 65535)
+        {
+            /* Configure ${DBGU_INSTANCE_NAME} mode */
+            dbguMode = ${DBGU_INSTANCE_NAME}_REGS->DBGU_MR;
+            dbguMode &= ~DBGU_MR_PAR_Msk;
+            ${DBGU_INSTANCE_NAME}_REGS->DBGU_MR = dbguMode | setup->parity ;
 
-        /* Configure ${DBGU_INSTANCE_NAME} Baud Rate */
-        ${DBGU_INSTANCE_NAME}_REGS->DBGU_BRGR = DBGU_BRGR_CD(brgVal);
+            /* Configure ${DBGU_INSTANCE_NAME} Baud Rate */
+            ${DBGU_INSTANCE_NAME}_REGS->DBGU_BRGR = DBGU_BRGR_CD(brgVal);
 
-        status = true;
+            status = true;
+        }
     }
 
     return status;
