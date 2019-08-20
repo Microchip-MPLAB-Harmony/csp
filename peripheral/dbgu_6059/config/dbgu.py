@@ -59,7 +59,7 @@ def dependencyStatus(symbol, event):
 def baudRateCalc(clk, baud):
     global dbguClockInvalidSym
     brgVal = (clk / (16 * baud))
-    dbguClockInvalidSym.setVisible((brgVal < 1))
+    dbguClockInvalidSym.setVisible((brgVal < 1) or (brgVal > 65535) )
     return brgVal
 
 def baudRateTrigger(symbol, event):
@@ -109,7 +109,7 @@ def instantiateComponent(dbguComponent):
     dbguClkValue.setDefaultValue(int(Database.getSymbolValue("core", dbguInstanceName.getValue() + "_CLOCK_FREQUENCY")))
 
     dbguClockInvalidSym = dbguComponent.createCommentSymbol("DBGU_CLOCK_INVALID_COMMENT", None)
-    dbguClockInvalidSym.setLabel("Warning!!! " + dbguInstanceName.getValue() + " clock frequency is too low for required baud rate")
+    dbguClockInvalidSym.setLabel("Warning!!! Configured baud rate cannot be acheived using current source clock frequency !!!")
     dbguClockInvalidSym.setVisible(False)
 
     dbguBaud = dbguComponent.createIntegerSymbol("BAUD_RATE", None)
