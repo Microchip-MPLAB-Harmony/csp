@@ -47,6 +47,7 @@ def bitTimingCalculation(bitTiming, lowTq, highTq):
     clk = Database.getSymbolValue("core", canInstanceName.getValue() + "_CLOCK_FREQUENCY")
 
     prescaler = Database.getSymbolValue(canInstanceName.getValue().lower(), "BRP")
+    propagationDelayTime = Database.getSymbolValue(canInstanceName.getValue().lower(), "PROPAG_TIME")
     bitrate = Database.getSymbolValue(canInstanceName.getValue().lower(), "NOMINAL_BITRATE")
     samplePoint = Database.getSymbolValue(canInstanceName.getValue().lower(), "NOMINAL_SAMPLE_POINT")
 
@@ -68,8 +69,7 @@ def bitTimingCalculation(bitTiming, lowTq, highTq):
     phase1 = int((numOfTimeQuanta * samplePoint) / 100.0)
     phase2 = numOfTimeQuanta - phase1 - 1
     # The propagation segment time is equal to twice the sum of the signal's propagation time on the bus line, the receiver delay and the output driver delay
-    # Calculate timing delay as Delay of the bus driver: 50 ns, Delay of the receiver: 30 ns and Delay of the bus line (20 m): 110 ns
-    propag = int(((numOfTimeQuanta * bitrate * (2 * (50 + 30 + 110))) / 1000000) - 1)
+    propag = int(((numOfTimeQuanta * bitrate * propagationDelayTime) / 1000000) - 1)
     phase1 = phase1 - (propag + 1) - 2
 
     if ((phase1 + 1) > 4):
@@ -86,7 +86,7 @@ def nominalBitTimingCalculation(symbol, event):
     Database.setSymbolValue(canInstanceName.getValue().lower(), "PHASE2", phase2)
     Database.setSymbolValue(canInstanceName.getValue().lower(), "SJW", sjw)
 
-def MsgAcceptanceMsksymbolVisible(symbol, event):
+def symbolVisible(symbol, event):
     if event['value'] == 1 or event['value'] == 2 or event['value'] == 4:
         symbol.setVisible(True)
     else:
@@ -163,6 +163,12 @@ def instantiateComponent(canComponent):
     brpPrescaler.setDefaultValue(24)
     brpPrescaler.setDependencies(nominalBitTimingCalculation, ["BRP"])
 
+    propagSegmentTime = canComponent.createIntegerSymbol("PROPAG_TIME", canNominalBitTimingMenu)
+    propagSegmentTime.setLabel("Propagation Segment Time (ns)")
+    propagSegmentTime.setMin(1)
+    propagSegmentTime.setDefaultValue(380)
+    propagSegmentTime.setDependencies(nominalBitTimingCalculation, ["PROPAG_TIME"])
+
     propag, phase1, phase2, sjw = bitTimingCalculation("Nominal", 8, 25)
 
     propagSegment = canComponent.createIntegerSymbol("PROPAG", canNominalBitTimingMenu)
@@ -228,6 +234,16 @@ def instantiateComponent(canComponent):
         canMailbox_MMR_MOT.setOutputMode("Key")
         canMailbox_MMR_MOT.setVisible(True)
 
+        canMailbox_MID_Identifier = canComponent.createIntegerSymbol("CAN_MID" + str(MBNum) + "_ID", canMailboxMenu)
+        canMailbox_MID_Identifier.setLabel("Message ID")
+        canMailbox_MID_Identifier.setMin(0)
+        canMailbox_MID_Identifier.setMax(536870911)
+        canMailbox_MID_Identifier.setDefaultValue(0)
+        canMailbox_MID_Identifier.setVisible((canMailbox_MMR_MOT.getValue() == 1 or
+                                              canMailbox_MMR_MOT.getValue() == 2 or
+                                              canMailbox_MMR_MOT.getValue() == 4))
+        canMailbox_MID_Identifier.setDependencies(symbolVisible, ["CAN_MMR" + str(MBNum) + "_MOT"])
+
         canMailbox_MAM_Identifier = canComponent.createIntegerSymbol("CAN_MAM" + str(MBNum) + "_ID", canMailboxMenu)
         canMailbox_MAM_Identifier.setLabel("Message Acceptance Mask ID")
         canMailbox_MAM_Identifier.setMin(0)
@@ -236,7 +252,7 @@ def instantiateComponent(canComponent):
         canMailbox_MAM_Identifier.setVisible((canMailbox_MMR_MOT.getValue() == 1 or
                                               canMailbox_MMR_MOT.getValue() == 2 or
                                               canMailbox_MMR_MOT.getValue() == 4))
-        canMailbox_MAM_Identifier.setDependencies(MsgAcceptanceMsksymbolVisible, ["CAN_MMR" + str(MBNum) + "_MOT"])
+        canMailbox_MAM_Identifier.setDependencies(symbolVisible, ["CAN_MMR" + str(MBNum) + "_MOT"])
 
     #Timestamp EOF Mode
     canTimestampEofMode = canComponent.createBooleanSymbol("TIMESTAMP_EOF_MODE", None)

@@ -96,10 +96,12 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
     /* Configure Mailbox */
     <#list 0..(NUMBER_OF_MAILBOX-1) as mailbox>
     <#assign MMR_MOT = "CAN_MMR" + mailbox + "_MOT">
+    <#assign MID_ID = "CAN_MID" + mailbox + "_ID">
     <#assign MAM_ID = "CAN_MAM" + mailbox + "_ID">
     ${CAN_INSTANCE_NAME}_REGS->CAN_IDR = CAN_IDR_MB${mailbox}_Msk;
     ${CAN_INSTANCE_NAME}_REGS->CAN_MB[${mailbox}].CAN_MCR = 0;
     <#if .vars[MMR_MOT] == "MB_RX" || .vars[MMR_MOT] == "MB_RX_OVERWRITE" || .vars[MMR_MOT] == "MB_CONSUMER">
+    ${CAN_INSTANCE_NAME}_REGS->CAN_MB[${mailbox}].CAN_MID = ${(.vars[MID_ID]?number > 2047)?then('${.vars[MID_ID]}', 'CAN_MID_MIDvA(${.vars[MID_ID]})')} | CAN_MID_MIDE_Msk;
     ${CAN_INSTANCE_NAME}_REGS->CAN_MB[${mailbox}].CAN_MAM = ${(.vars[MAM_ID]?number > 2047)?then('${.vars[MAM_ID]} | CAN_MAM_MIDE_Msk', 'CAN_MAM_MIDvA(${.vars[MAM_ID]})')};
     </#if>
     ${CAN_INSTANCE_NAME}_REGS->CAN_MB[${mailbox}].CAN_MMR = CAN_MMR_MOT_${.vars[MMR_MOT]};
@@ -399,6 +401,66 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
 void ${CAN_INSTANCE_NAME}_MessageAbort(CAN_MAILBOX_MASK mailboxMask)
 {
     ${CAN_INSTANCE_NAME}_REGS->CAN_ACR = mailboxMask;
+}
+
+// *****************************************************************************
+/* Function:
+    void ${CAN_INSTANCE_NAME}_MessageIDSet(CAN_MAILBOX_NUM mailbox, uint32_t id)
+
+   Summary:
+    Set Message ID in mailbox.
+
+   Precondition:
+    ${CAN_INSTANCE_NAME}_Initialize must have been called for the associated CAN instance.
+
+   Parameters:
+    mailbox - Mailbox number
+    id      - 11-bit or 29-bit identifier
+
+   Returns:
+    None.
+*/
+void ${CAN_INSTANCE_NAME}_MessageIDSet(CAN_MAILBOX_NUM mailbox, uint32_t id)
+{
+    if (id > (CAN_MID_MIDvA_Msk >> CAN_MID_MIDvA_Pos))
+    {
+        ${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MID = (id & CAN_MFID_Msk) | CAN_MID_MIDE_Msk;
+    }
+    else
+    {
+        ${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MID = CAN_MID_MIDvA(id) | CAN_MID_MIDE_Msk;
+    }
+}
+
+// *****************************************************************************
+/* Function:
+    uint32_t ${CAN_INSTANCE_NAME}_MessageIDGet(CAN_MAILBOX_NUM mailbox)
+
+   Summary:
+    Get Message ID from mailbox.
+
+   Precondition:
+    ${CAN_INSTANCE_NAME}_Initialize must have been called for the associated CAN instance.
+
+   Parameters:
+    mailbox - Mailbox number
+
+   Returns:
+    Returns Message ID
+*/
+uint32_t ${CAN_INSTANCE_NAME}_MessageIDGet(CAN_MAILBOX_NUM mailbox)
+{
+    uint32_t id = 0;
+
+    if ((${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MID & CAN_MID_MIDvB_Msk) != 0)
+    {
+        id = ${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MID & CAN_MFID_Msk;
+    }
+    else
+    {
+        id = (${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MID & CAN_MID_MIDvA_Msk) >> CAN_MID_MIDvA_Pos;
+    }
+    return id;
 }
 
 // *****************************************************************************
