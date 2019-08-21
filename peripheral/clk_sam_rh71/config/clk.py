@@ -203,6 +203,14 @@ def upd_flexcom_freq(symbol,event):
     if frequency != previousFreq:
         symbol.setValue(frequency)
 
+global upd_mcan_freq
+def upd_mcan_freq(symbol, event):
+    frequency = 0
+    instance_name = symbol.getID().split("_CLOCK_FREQUENCY")[0]
+    if Database.getSymbolValue("core", instance_name + "_GCLK_ENABLE"):
+        frequency = Database.getSymbolValue("core", instance_name + "_GCLK_FREQUENCY")
+    symbol.setValue(frequency)
+
 global upd_tc_freq
 def upd_tc_freq(symbol, event):
     # symbol is named as "TC{instance_number}_CH{channel_number}_CLOCK_FREQUENCY.
@@ -355,9 +363,15 @@ def create_ip1553_freq_sym(clock_id_name, clock_comp, clk_menu):
     create_gclk_entries(clock_id_name, clock_comp, clk_menu)
     create_default_freq_sym(clock_id_name, clock_comp, clk_menu)
 
+global create_mcan_freq_sym
 def create_mcan_freq_sym(clock_id_name, clock_comp, clk_menu):
     create_gclk_entries(clock_id_name, clock_comp, clk_menu)
-    create_default_freq_sym(clock_id_name, clock_comp, clk_menu)
+
+    freq_sym = clock_comp.createIntegerSymbol(clock_id_name + "_CLOCK_FREQUENCY", clk_menu)
+    freq_sym.setVisible(True)
+    freq_sym.setReadOnly(True)
+    freq_sym.setDefaultValue(Database.getSymbolValue("core", clock_id_name + "_GCLK_FREQUENCY"))
+    freq_sym.setDependencies(upd_mcan_freq, [clock_id_name + "_GCLK_ENABLE", clock_id_name + "_GCLK_FREQUENCY"])
 
 def create_spw_freq_sym(clock_id_name, clock_comp, clk_menu):
     create_gclk_entries(clock_id_name, clock_comp, clk_menu)
