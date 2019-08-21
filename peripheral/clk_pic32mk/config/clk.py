@@ -220,6 +220,10 @@ peripheralBusDict_DS60001402 =  {
         "RTCC": ["6"],              #PMD support not there
 }
 
+global defaultEnablePeripheralsList
+
+defaultEnablePeripheralsList = ["DMAC", "REFO1", "REFO2", "REFO3", "REFO4", "RTCC"]
+
 def updateMaxFreq(symbol, event):
     if event["value"] == 0:
         symbol.setValue(80000000, 2)
@@ -264,6 +268,7 @@ def _get_bitfield_names(node, outputList):
 
 def enableMenu(menu, event):
     menu.setVisible(event["value"])
+
 def updateRefFreq(menu, event):
     if event["value"] == True:
         ii = event["id"].split("_")[3][-1]
@@ -651,6 +656,20 @@ def spiClockFreqCalc(symbol, event):
             freq = int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_REFCLK1_FREQ"))
         else:
             freq = int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK" + peripheralBusDict[periName][0] + "_FREQ"))
+
+    symbol.setValue(freq, 1)
+
+def canClockFreqCalc(symbol, event):
+
+    freq = 0
+    periName = symbol.getID().split("_")[0]
+    canClkSrc = Database.getSymbolValue(periName.lower(), "CAN_CORE_SELECT_CLOCK_SOURCE")
+
+    if Database.getSymbolValue("core", periName + "_CLOCK_ENABLE"):
+        if canClkSrc == 1:
+            freq = int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_REFCLK4_FREQ"))
+        else:
+            freq = int(Database.getSymbolValue("core", "SYS_CLK_FREQ"))
 
     symbol.setValue(freq, 1)
 
@@ -1491,7 +1510,6 @@ if __name__ == "__main__":
     SOSC_IN_FREQ.setDefaultValue(int(newPoscFreq))
     SOSC_IN_FREQ.setVisible(True)
 
-
     # used in ftl file for deciding whether to use USB-specific symbols below
     UPLL_PRESENTSYM = coreComponent.createBooleanSymbol("UPLL_PRESENT", CLK_CFG_SETTINGS)
     UPLL_PRESENTSYM.setVisible(False)
@@ -1528,7 +1546,6 @@ if __name__ == "__main__":
 
         scan_atdf_for_upll_fields(coreComponent)
 
-
         # UPLLCON register value for use in ftl files
         UPLLCON_VALSYM = coreComponent.createHexSymbol("UPLLCON_REG_VALUE",None)
         UPLLCON_VALSYM.setVisible(False)
@@ -1541,7 +1558,6 @@ if __name__ == "__main__":
         UPLLCON_VALSYM.setDependencies(updateUpllcon, ['PLLRANGE_VAL', 'PLLIDIV_VAL', 'PLLMULT_VAL', 'PLLODIV_VAL', 'UPOSCEN_VAL'])
     else:
         UPLL_PRESENTSYM.setDefaultValue(False) # prevents certain output from occurring in ftl file
-
 
     # this is added to resolve a dependency in ftl file
     HAVE_REFCLK5 = coreComponent.createBooleanSymbol("CONFIG_HAVE_REFCLOCK5", CLK_CFG_SETTINGS)
@@ -1615,7 +1631,7 @@ if __name__ == "__main__":
             peripheral_clock_enable.setLabel(peripheralName + " Clock Enable")
             peripheral_clock_enable.setReadOnly(len(peripheralBus) == 1)
 
-            if ((peripheralBus[0] == "-1" and "MCPWM" not in peripheralName and "QEI" not in peripheralName) or len(peripheralBus) == 1):
+            if peripheralName in defaultEnablePeripheralsList:
                 peripheral_clock_enable.setDefaultValue(True)
             else:
                 peripheral_clock_enable.setDefaultValue(False)
@@ -1625,21 +1641,14 @@ if __name__ == "__main__":
             peripheral_clock_freq.setLabel(peripheralName + " Clock Frequency")
             peripheral_clock_freq.setReadOnly(True)
 
-            if peripheralBus[0] == "-1" or len(peripheralBus) == 1:
+            if peripheralName in defaultEnablePeripheralsList:
                 if peripheralName == "RTCC":
                     sym_peripheral_clock_enable.remove("RTCC_CLOCK_ENABLE")
                     peripheral_clock_freq.setDefaultValue(int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK" + peripheralBus[0] + "_FREQ")))
                     peripheral_clock_freq.setDependencies(rtccClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", "rtcc.RTCC_CLOCK_SOURCE", "CONFIG_SYS_CLK_PBCLK" + peripheralBus[0] + "_FREQ",
                                                                                          "CONFIG_SYS_CLK_CONFIG_SECONDARY_XTAL"])
-                elif peripheralName == "ADCHS":
-                    peripheral_clock_freq.setDependencies(adchsClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", "adchs.ADCCON3__ADCSEL",
-                                                                                        "SYS_CLK_FREQ", "CONFIG_SYS_CLK_REFCLK3_FREQ", "CONFIG_SYS_CLK_FRCDIV"])
                 else:
-                    if peripheral_clock_enable.getValue() == True:
-                        peripheral_clock_freq.setDefaultValue(int(Database.getSymbolValue("core", "SYS_CLK_FREQ")))
-                    else:
-                        peripheral_clock_freq.setDefaultValue(0)
-
+                    peripheral_clock_freq.setDefaultValue(int(Database.getSymbolValue("core", "SYS_CLK_FREQ")))
                     peripheral_clock_freq.setDependencies(sysPeripheralClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", "SYS_CLK_FREQ"])
             else:
                 peripheral_clock_freq.setDefaultValue(0)
@@ -1656,6 +1665,8 @@ if __name__ == "__main__":
                 elif peripheralName.startswith("UART"):
                     peripheral_clock_freq.setDependencies(uartClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", peripheralName.lower() + ".UART_CLKSEL", "CONFIG_SYS_CLK_REFCLK1_FREQ",
                                                                                          "CONFIG_SYS_CLK_PBCLK" + peripheralBus[0] + "_FREQ", "CONFIG_SYS_CLK_FRCDIV"])
+                elif peripheralName.startswith("CAN") and peripheralBus[0] == "-1":
+                    peripheral_clock_freq.setDependencies(canClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", peripheralName.lower() + ".CAN_CORE_SELECT_CLOCK_SOURCE", "SYS_CLK_FREQ", "CONFIG_SYS_CLK_REFCLK4_FREQ"])
                 else:
                     peripheral_clock_freq.setDependencies(peripheralClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", "CONFIG_SYS_CLK_PBCLK" + peripheralBus[0] + "_FREQ"])
 
@@ -1687,14 +1698,12 @@ if __name__ == "__main__":
         pmdxRegMaskValue.setDefaultValue(pmdDict[i])
         pmdxRegMaskValue.setReadOnly(True)
 
-    defaultPMDxEnableDict = {k: v for k, v in peripheralBusDict.items() if v[0] == "-1" and "MCPWM" not in k and "QEI" not in k}
-
-    for peripheralName, peripheralBus in defaultPMDxEnableDict.items():
-        if peripheralName in availablePeripherals or peripheralName.startswith("REFO"):
+    for peripheralName in defaultEnablePeripheralsList:
+        if len(peripheralBusDict[peripheralName]) > 1:
             #Enable Peripheral from PMD
-            periPMDRegId = "PMD" + peripheralBus[1] + "_REG_VALUE"
+            periPMDRegId = "PMD" + peripheralBusDict[peripheralName][1] + "_REG_VALUE"
             pmdxValue = Database.getSymbolValue("core", periPMDRegId)
-            periPMDRegBitShift = 1 << int(peripheralBus[2])
+            periPMDRegBitShift = 1 << int(peripheralBusDict[peripheralName][2])
             Database.setSymbolValue("core", periPMDRegId, pmdxValue & ~periPMDRegBitShift, 1)
 
     # File handling below
