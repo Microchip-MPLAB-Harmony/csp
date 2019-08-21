@@ -75,7 +75,7 @@ def baudRateTrigger(symbol, event):
     clk = Database.getSymbolValue("core", uartInstanceName.getValue() + "_CLOCK_FREQUENCY")
     baud = Database.getSymbolValue(uartInstanceName.getValue().lower(), "BAUD_RATE")
     brgVal = baudRateCalc(clk, baud)
-    uartClockInvalidSym.setVisible(brgVal < 1)
+    uartClockInvalidSym.setVisible((brgVal < 1) or (brgVal > 65535))
     symbol.setValue(brgVal, 2)
 
 def clockSourceFreq(symbol, event):
@@ -122,10 +122,10 @@ def instantiateComponent(uartComponent):
 
     uartBaud = uartComponent.createIntegerSymbol("BAUD_RATE", None)
     uartBaud.setLabel("Baud Rate")
-    uartBaud.setDefaultValue(9600)
+    uartBaud.setDefaultValue(115200)
 
     uartClockInvalidSym = uartComponent.createCommentSymbol("UART_CLOCK_INVALID", None)
-    uartClockInvalidSym.setLabel("UART clock frequency is too low for required baud rate")
+    uartClockInvalidSym.setLabel("Warning!!! Configured baud rate cannot be acheived using current source clock frequency !!!")
     uartClockInvalidSym.setVisible(False)
 
     brgVal = baudRateCalc(uartClkValue.getValue(), uartBaud.getValue())
