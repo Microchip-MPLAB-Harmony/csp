@@ -246,10 +246,18 @@ def portFunc(pin, func):
     port = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_PIO_CHANNEL")
     bit_pos = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_PIO_PIN")
     if port:
-        key = port + "_" + func["value"]
-        if func["value"] in per_func:
+        # If a function is assigned to the pin and that function is not something 
+        # PIO understands,configure the PIN as GPIO. Useful in BSP configured functions.
+        # For external functions outside the scope of PIO, these configurations won't matter.
+        if func ["value"] and func["value"] not in per_func:
+            function = "GPIO"
+        else:
+            function = func["value"]
+        
+        key = port + "_" + function
+        if function in per_func:
             for id in per_func:
-                if id == func["value"]:
+                if id == function:
                     port_mskr[key] |= (1 << bit_pos)
                 else:
                     port_mskr[port + "_" + id] &= ~(1 << bit_pos)
@@ -259,6 +267,8 @@ def portFunc(pin, func):
 
         for id in per_func:
             Database.setSymbolValue("core", "PORT_" + str(port) + "_MSKR_Value" + str(id), str(hex(port_mskr[port + "_" + id])), 2)
+
+
 
 
 def pinCFGR (pin, cfgr_reg):
