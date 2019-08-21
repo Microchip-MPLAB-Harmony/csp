@@ -771,6 +771,10 @@ void ${MCAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
     SFR_REGS->SFR_CAN[${MCAN_INSTANCE_NAME?lower_case?remove_beginning("mcan")}] =
         (SFR_REGS->SFR_CAN[${MCAN_INSTANCE_NAME?lower_case?remove_beginning("mcan")}] & ~SFR_CAN_EXT_MEM_ADDR_Msk) |
          SFR_CAN_EXT_MEM_ADDR(((uint32_t)msgRAMConfigBaseAddress >> 16));
+<#elseif MCAN_SFR_CAN_ENABLE_VALUE == 3>
+    SFR_REGS->SFR_CAN${MCAN_INSTANCE_NAME?lower_case?remove_beginning("mcan")} =
+        (SFR_REGS->SFR_CAN${MCAN_INSTANCE_NAME?lower_case?remove_beginning("mcan")} & ~SFR_CAN${MCAN_INSTANCE_NAME?lower_case?remove_beginning("mcan")}_EXT_MEM_ADDR_Msk) |
+         SFR_CAN${MCAN_INSTANCE_NAME?lower_case?remove_beginning("mcan")}_EXT_MEM_ADDR(((uint32_t)msgRAMConfigBaseAddress >> 16));
 <#elseif MCAN_MATRIX_CAN_ENABLE == true>
   <#if MCAN_INSTANCE_NAME?lower_case == "mcan0">
     MATRIX_REGS->CCFG_CAN0 = (MATRIX_REGS->CCFG_CAN0 & ~CCFG_CAN0_Msk)
