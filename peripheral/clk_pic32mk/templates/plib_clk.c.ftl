@@ -100,8 +100,8 @@ void CLK_Initialize( void )
 
 <#if SYS_CLK_FRCDIV != "0">
     OSCCONbits.FRCDIV = ${SYS_CLK_FRCDIV};
-</#if>
 
+</#if>
 <#if UPLL_PRESENT == true> <#-- some devices (that use this PLIB) don't have USB in them -->
     <#if UPLL_EN == true>  <#-- UPLL_EN is dependent on DEVCFG2:UPLLEN -->
         <#lt>    /* Configure UPLL */
@@ -116,16 +116,17 @@ void CLK_Initialize( void )
     <#if UFRCEN_VAL == "FRC">
         <#lt>    /* Make FRC as the input clock for USB */
         <#lt>    OSCCONSET = _OSCCON_UFRCEN_MASK;
+
     </#if>
 </#if>
 <#if CONFIG_SYS_CLK_PBCLK1_ENABLE == true && CONFIG_SYS_CLK_PBDIV1 != 2>
     <#lt>    /* Peripheral Bus 1 is by default enabled, set its divisor */
-    <#lt>    ${PBREGNAME1}bits.PBDIV = ${CONFIG_SYS_CLK_PBDIV1 -1};
+    <#lt>    ${PBREGNAME1}bits.PBDIV = ${CONFIG_SYS_CLK_PBDIV1 - 1};
 </#if>
 <#if CONFIG_SYS_CLK_PBCLK2_ENABLE == true>
     <#if CONFIG_SYS_CLK_PBDIV2 != 2>
         <#lt>    /* Peripheral Bus 2 is by default enabled, set its divisor */
-        <#lt>    ${PBREGNAME2}bits.PBDIV = ${CONFIG_SYS_CLK_PBDIV2 -1};
+        <#lt>    ${PBREGNAME2}bits.PBDIV = ${CONFIG_SYS_CLK_PBDIV2 - 1};
 
     </#if>
 <#else>
@@ -133,22 +134,23 @@ void CLK_Initialize( void )
     ${PBREGNAME2}CLR = ${PBONMASK2};
 
 </#if>
-<#if CONFIG_SYS_CLK_PBCLK3_ENABLE?has_content>
+<#if CONFIG_SYS_CLK_PBCLK3_ENABLE??>
     <#if CONFIG_SYS_CLK_PBCLK3_ENABLE == true>
         <#if CONFIG_SYS_CLK_PBDIV3 != 2>
             <#lt>    /* Peripheral Bus 3 is by default enabled, set its divisor */
-            <#lt>    ${PBREGNAME3}bits.PBDIV = ${CONFIG_SYS_CLK_PBDIV3 -1};
+            <#lt>    ${PBREGNAME3}bits.PBDIV = ${CONFIG_SYS_CLK_PBDIV3 - 1};
 
         </#if>
     <#else>
         /* Disable Peripheral Bus 3 */
         ${PBREGNAME3}CLR = ${PBONMASK3};
+
 </#if>
 </#if>
 <#if CONFIG_SYS_CLK_PBCLK4_ENABLE == true>
     <#if CONFIG_SYS_CLK_PBDIV4 != 2>
         <#lt>    /* Peripheral Bus 4 is by default enabled, set its divisor */
-        <#lt>    ${PBREGNAME4}bits.PBDIV = ${CONFIG_SYS_CLK_PBDIV4 -1};
+        <#lt>    ${PBREGNAME4}bits.PBDIV = ${CONFIG_SYS_CLK_PBDIV4 - 1};
 
     </#if>
 <#else>
@@ -156,10 +158,11 @@ void CLK_Initialize( void )
     ${PBREGNAME4}CLR = ${PBONMASK4};
 
 </#if>
+<#if CONFIG_SYS_CLK_PBCLK5_ENABLE??>
 <#if CONFIG_SYS_CLK_PBCLK5_ENABLE == true>
     <#if CONFIG_SYS_CLK_PBDIV5 != 2>
         <#lt>    /* Peripheral Bus 5 is by default enabled, set its divisor */
-        <#lt>    ${PBREGNAME5}bits.PBDIV = ${CONFIG_SYS_CLK_PBDIV5 -1};
+        <#lt>    ${PBREGNAME5}bits.PBDIV = ${CONFIG_SYS_CLK_PBDIV5 - 1};
 
     </#if>
 <#else>
@@ -167,11 +170,12 @@ void CLK_Initialize( void )
     ${PBREGNAME5}CLR = ${PBONMASK5};
 
 </#if>
-<#if CONFIG_SYS_CLK_PBCLK6_ENABLE?has_content>
+</#if>
+<#if CONFIG_SYS_CLK_PBCLK6_ENABLE??>
 <#if CONFIG_SYS_CLK_PBCLK6_ENABLE == true>
     <#if CONFIG_SYS_CLK_PBDIV6 != 4>
         <#lt>    /* Peripheral Bus 6 is by default enabled, set its divisor */
-        <#lt>    ${PBREGNAME6}bits.PBDIV = ${CONFIG_SYS_CLK_PBDIV6 -1};
+        <#lt>    ${PBREGNAME6}bits.PBDIV = ${CONFIG_SYS_CLK_PBDIV6 - 1};
 
     </#if>
 <#else>
@@ -180,7 +184,6 @@ void CLK_Initialize( void )
 
 </#if>
 </#if>
-
 <#if CONFIG_HAVE_REFCLOCK == true>
 <#list 1..NUM_REFOSC_ELEMENTS as i>
     <#assign ENBL = "CONFIG_SYS_CLK_REFCLK"+i+"_ENABLE">
