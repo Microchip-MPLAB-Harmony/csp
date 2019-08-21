@@ -79,8 +79,6 @@ void static ${UART_INSTANCE_NAME}_ISR_RX_Handler( void )
         /* Nothing to process */
         ;
     }
-
-    return;
 }
 
 void static ${UART_INSTANCE_NAME}_ISR_TX_Handler( void )
@@ -109,8 +107,6 @@ void static ${UART_INSTANCE_NAME}_ISR_TX_Handler( void )
         /* Nothing to process */
         ;
     }
-
-    return;
 }
 
 void ${UART_INSTANCE_NAME}_InterruptHandler( void )
@@ -146,8 +142,6 @@ void ${UART_INSTANCE_NAME}_InterruptHandler( void )
     {
         ${UART_INSTANCE_NAME}_ISR_TX_Handler();
     }
-
-    return;
 }
 
 </#if>
@@ -156,7 +150,7 @@ void static ${UART_INSTANCE_NAME}_ErrorClear( void )
 {
     uint8_t dummyData = 0u;
 
-    ${UART_INSTANCE_NAME}_REGS->UART_CR|= UART_CR_RSTSTA_Msk;
+    ${UART_INSTANCE_NAME}_REGS->UART_CR = UART_CR_RSTSTA_Msk;
 
     /* Flush existing error bytes from the RX FIFO */
     while( UART_SR_RXRDY_Msk == (${UART_INSTANCE_NAME}_REGS->UART_SR& UART_SR_RXRDY_Msk) )
@@ -166,8 +160,6 @@ void static ${UART_INSTANCE_NAME}_ErrorClear( void )
 
     /* Ignore the warning */
     (void)dummyData;
-
-    return;
 }
 
 void ${UART_INSTANCE_NAME}_Initialize( void )
@@ -197,8 +189,6 @@ void ${UART_INSTANCE_NAME}_Initialize( void )
     ${UART_INSTANCE_NAME?lower_case}Obj.txBusyStatus = false;
     ${UART_INSTANCE_NAME?lower_case}Obj.txCallback = NULL;
 </#if>
-
-    return;
 }
 
 UART_ERROR ${UART_INSTANCE_NAME}_ErrorGet( void )
@@ -241,15 +231,19 @@ bool ${UART_INSTANCE_NAME}_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcCl
         /* Calculate BRG value */
         brgVal = srcClkFreq / (16 * baud);
 
-        /* Configure ${UART_INSTANCE_NAME} mode */
-        uartMode = ${UART_INSTANCE_NAME}_REGS->UART_MR;
-        uartMode &= ~UART_MR_PAR_Msk;
-        ${UART_INSTANCE_NAME}_REGS->UART_MR = uartMode | setup->parity ;
+        /* If the target baud rate is acheivable using this clock */
+        if (brgVal <= 65535)
+        {
+            /* Configure ${UART_INSTANCE_NAME} mode */
+            uartMode = ${UART_INSTANCE_NAME}_REGS->UART_MR;
+            uartMode &= ~UART_MR_PAR_Msk;
+            ${UART_INSTANCE_NAME}_REGS->UART_MR = uartMode | setup->parity ;
 
-        /* Configure ${UART_INSTANCE_NAME} Baud Rate */
-        ${UART_INSTANCE_NAME}_REGS->UART_BRGR = UART_BRGR_CD(brgVal);
+            /* Configure ${UART_INSTANCE_NAME} Baud Rate */
+            ${UART_INSTANCE_NAME}_REGS->UART_BRGR = UART_BRGR_CD(brgVal);
 
-        status = true;
+            status = true;
+        }
     }
 
     return status;
@@ -284,7 +278,7 @@ bool ${UART_INSTANCE_NAME}_Read( void *buffer, const size_t size )
 
             if(UART_SR_RXRDY_Msk == (${UART_INSTANCE_NAME}_REGS->UART_SR & UART_SR_RXRDY_Msk))
             {
-                *lBuffer++ = (${UART_INSTANCE_NAME}_REGS->UART_RHR& UART_RHR_RXCHR_Msk);
+                *lBuffer++ = (${UART_INSTANCE_NAME}_REGS->UART_RHR & UART_RHR_RXCHR_Msk);
                 processedSize++;
             }
         }
