@@ -201,7 +201,7 @@ int main ( void )
             }
             case APP_STATE_VERIFY_AND_UPDATE_PING_BUFFER:
             {
-                if (memcmp(&txPingBuffer[0], &rxPingBuffer[0], sizeof(txPingBuffer) != 0))
+                if (memcmp(&txPingBuffer[0], &rxPingBuffer[0], sizeof(txPingBuffer)) != 0)
                 {
                     /* It means received data is not same as transmitted data */
                     state = APP_STATE_SPI_XFER_ERROR;
@@ -220,7 +220,7 @@ int main ( void )
             }
             case APP_STATE_VERIFY_AND_UPDATE_PONG_BUFFER:
             {
-                if (memcmp(&txPongBuffer[0], &rxPongBuffer[0], sizeof(txPongBuffer) != 0))
+                if (memcmp(&txPongBuffer[0], &rxPongBuffer[0], sizeof(txPongBuffer)) != 0)
                 {
                     /* It means received data is not same as transmitted data */
                     state = APP_STATE_SPI_XFER_ERROR;
