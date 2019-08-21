@@ -196,16 +196,18 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* 
         /* A standard identifier is stored into MID[28:18] */
         ${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MID = CAN_MID_MIDvA(id);
     }
+
+    /* Limit length */
+    if (length > 8)
+    {
+        length = 8;
+    }
+    ${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MCR = CAN_MCR_MDLC(length);
+
     switch (mailboxAttr)
     {
         case CAN_MAILBOX_DATA_FRAME_TX:
         case CAN_MAILBOX_DATA_FRAME_PRODUCER:
-            /* Limit length */
-            if (length > 8)
-            {
-                length = 8;
-            }
-            ${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MCR = CAN_MCR_MDLC(length);
             /* Copy the data into the payload */
             for (; dataIndex < length; dataIndex++)
             {
