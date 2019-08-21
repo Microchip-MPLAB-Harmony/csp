@@ -251,10 +251,19 @@ bool ${USART_INSTANCE_NAME}_SerialSetup( USART_SERIAL_SETUP *setup, uint32_t src
         {
             brgVal = (srcClkFreq / (16 * baud));
         }
-        else
+        else if (srcClkFreq >= (8 * baud))
         {
             brgVal = (srcClkFreq / (8 * baud));
             overSampVal = US_MR_USART_OVER(1);
+        }
+        else
+        {
+            return false;
+        }
+        if (brgVal > 65535)
+        {
+            /* The requested baud is so low that the ratio of srcClkFreq to baud exceeds the 16-bit register value of CD register */
+            return false;
         }
 
         /* Configure ${USART_INSTANCE_NAME} mode */
