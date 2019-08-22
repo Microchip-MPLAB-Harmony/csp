@@ -281,6 +281,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize,
 
 bool ${FLEXCOM_INSTANCE_NAME}_SPI_TransferSetup (FLEXCOM_SPI_TRANSFER_SETUP * setup, uint32_t spiSourceClock )
 {
+<#assign flexcomClockSymbol = "core." + FLEXCOM_INSTANCE_NAME + "_CLOCK_FREQUENCY">    
     uint32_t scbr;
     if ((setup == NULL) || (setup->clockFrequency == 0))
     {
@@ -289,7 +290,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_TransferSetup (FLEXCOM_SPI_TRANSFER_SETUP * se
     if(spiSourceClock == 0)
     {
         // Fetch Master Clock Frequency directly
-        spiSourceClock = ${FLEXCOM_SPI_PERIPHERAL_CLOCK};
+        spiSourceClock = ${flexcomClockSymbol?eval};
     }
 
     scbr = spiSourceClock/setup->clockFrequency;
