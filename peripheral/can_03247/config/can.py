@@ -55,8 +55,11 @@ def getIRQnumber(string):
 
     for param in interruptsChildren:
         name = param.getAttribute("name")
-        if string == name or string == name.replace('_',''):
+        if string == name:
             irq_index = param.getAttribute("index")
+            break
+        elif string == name.replace('_',''):
+            irq_index = param.getAttribute("irq-index")
             break
 
     return irq_index
@@ -189,21 +192,6 @@ def updateCanInterruptData(symbol, event):
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
-
-def IECRegName(symbol, event):
-    canIrq_index = int(getIRQnumber(canInstanceName.getValue()))
-    enblRegName = _get_enblReg_parms(canIrq_index)
-    symbol.setValue(enblRegName)
-
-def IFSRegName(symbol, event):
-    canIrq_index = int(getIRQnumber(canInstanceName.getValue()))
-    statRegName = _get_statReg_parms(canIrq_index)
-    symbol.setValue(statRegName)
-
-# Dependency Function to show or hide the warning message depending on Interrupt enable/disable status
-def InterruptStatusWarning(symbol, event):
-    if (Database.getSymbolValue(canInstanceName.getValue().lower(), "CAN_INTERRUPT_MODE") == True):
-        symbol.setVisible(event["value"])
 
 def canCoreClockFreq(symbol, event):
     symbol.setValue(int(Database.getSymbolValue("core", canInstanceName.getValue() + "_CLOCK_FREQUENCY")))
@@ -623,7 +611,7 @@ def instantiateComponent(canComponent):
     canIntEnComment = canComponent.createCommentSymbol("CAN_INTERRUPT_ENABLE_COMMENT", None)
     canIntEnComment.setVisible(False)
     canIntEnComment.setLabel("Warning!!! " + canInstanceName.getValue() + " Interrupt is Disabled in Interrupt Manager")
-    canIntEnComment.setDependencies(InterruptStatusWarning, ["core." + canInterruptVectorUpdate])
+    canIntEnComment.setDependencies(updateCanInterruptData, ["core." + canInterruptVectorUpdate])
 
     REG_MODULE_CAN = Register.getRegisterModule("CAN")
     configName = Variables.get("__CONFIGURATION_NAME")
