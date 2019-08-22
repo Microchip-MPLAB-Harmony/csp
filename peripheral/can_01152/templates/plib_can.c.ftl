@@ -708,7 +708,7 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
 
     interruptStatus = C${CAN_INSTANCE_NUM}INT;
     /* Check if error occurred */
-    if (interruptStatus & (_C2INT_SERRIF_MASK | _C2INT_CERRIF_MASK | _C2INT_IVRIF_MASK))
+    if (interruptStatus & (_C${CAN_INSTANCE_NUM}INT_SERRIF_MASK | _C${CAN_INSTANCE_NUM}INT_CERRIF_MASK | _C${CAN_INSTANCE_NUM}INT_IVRIF_MASK))
     {
         C${CAN_INSTANCE_NUM}INTCLR = _C${CAN_INSTANCE_NUM}INT_SERRIE_MASK | _C${CAN_INSTANCE_NUM}INT_CERRIE_MASK | _C${CAN_INSTANCE_NUM}INT_IVRIE_MASK;
         ${CAN_IFS_REG}CLR = _${CAN_IFS_REG}_CAN${CAN_INSTANCE_NUM}IF_MASK;
@@ -736,7 +736,7 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
         ${CAN_INSTANCE_NAME?lower_case}Obj.errorStatus = 0;
         if (C${CAN_INSTANCE_NUM}INT & _C${CAN_INSTANCE_NUM}INT_RBIF_MASK)
         {
-            fifoNum = (uint8_t)C${CAN_INSTANCE_NUM}VEC & _C2VEC_ICODE_MASK;
+            fifoNum = (uint8_t)C${CAN_INSTANCE_NUM}VEC & _C${CAN_INSTANCE_NUM}VEC_ICODE_MASK;
             if (fifoNum < CAN_NUM_OF_FIFO)
             {
                 *(volatile uint32_t *)(&C${CAN_INSTANCE_NUM}FIFOINT0CLR + (fifoNum * CAN_FIFO_OFFSET)) = _C${CAN_INSTANCE_NUM}FIFOINT0_RXNEMPTYIE_MASK;
@@ -789,7 +789,7 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
         }
         if (C${CAN_INSTANCE_NUM}INT & _C${CAN_INSTANCE_NUM}INT_TBIF_MASK)
         {
-            fifoNum = (uint8_t)C${CAN_INSTANCE_NUM}VEC & _C2VEC_ICODE_MASK;
+            fifoNum = (uint8_t)C${CAN_INSTANCE_NUM}VEC & _C${CAN_INSTANCE_NUM}VEC_ICODE_MASK;
             if (fifoNum < CAN_NUM_OF_FIFO)
             {
                 *(volatile uint32_t *)(&C${CAN_INSTANCE_NUM}FIFOINT0CLR + (fifoNum * CAN_FIFO_OFFSET)) = _C${CAN_INSTANCE_NUM}FIFOINT0_TXEMPTYIE_MASK;
