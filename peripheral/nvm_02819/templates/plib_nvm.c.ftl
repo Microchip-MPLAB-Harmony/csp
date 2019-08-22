@@ -120,6 +120,14 @@ typedef enum
     <#lt>}
 </#if>
 
+static void ${NVM_INSTANCE_NAME}_WriteUnlockSequence( void )
+{
+    // Write the unlock key sequence
+    NVMKEY = 0x0;
+    NVMKEY = NVM_UNLOCK_KEY1;
+    NVMKEY = NVM_UNLOCK_KEY2;
+}
+
 static void ${NVM_INSTANCE_NAME}_StartOperationAtAddress( uint32_t address,  NVM_OPERATION_MODE operation)
 {
     volatile uint32_t processorStatus;
@@ -154,10 +162,7 @@ static void ${NVM_INSTANCE_NAME}_StartOperationAtAddress( uint32_t address,  NVM
     // Set WREN to enable writes to the WR bit and to prevent NVMOP modification
     NVMCONSET = _NVMCON_WREN_MASK;
 
-    // Write the unlock key sequence
-    NVMKEY = 0x0;
-    NVMKEY = NVM_UNLOCK_KEY1;
-    NVMKEY = NVM_UNLOCK_KEY2;
+    ${NVM_INSTANCE_NAME}_WriteUnlockSequence();
 
     // Start the operation
     NVMCONSET = _NVMCON_WR_MASK;
@@ -226,4 +231,59 @@ NVM_ERROR ${NVM_INSTANCE_NAME}_ErrorGet( void )
 bool ${NVM_INSTANCE_NAME}_IsBusy( void )
 {
     return (bool)NVMCONbits.WR;
+}
+
+void ${NVM_INSTANCE_NAME}_ProgramFlashSwapBank( void )
+{
+    // NVMOP can be written only when WREN is zero. So, clear WREN.
+    NVMCONCLR = _NVMCON_WREN_MASK;
+
+    ${NVM_INSTANCE_NAME}_WriteUnlockSequence();
+
+    // Map Program Flash Memory Bank 2 to lower region
+    NVMCONSET = _NVMCON_PFSWAP_MASK;
+}
+
+void ${NVM_INSTANCE_NAME}_ProgramFlashWriteProtect( uint32_t address)
+{
+    ${NVM_INSTANCE_NAME}_WriteUnlockSequence();
+
+    /* Program the 24-Bit address till where the memory has to be protected
+     * from start of flash memory.
+     * The Page in which the address falls and all the lower pages below it will
+     * be protected from writes
+     */
+    NVMPWPSET = (address & _NVMPWP_PWP_MASK);
+}
+
+void ${NVM_INSTANCE_NAME}_ProgramFlashWriteProtectLock( void )
+{
+    ${NVM_INSTANCE_NAME}_WriteUnlockSequence();
+
+    // Lock the Program flash Write protect register
+    NVMPWPCLR = _NVMPWP_PWPULOCK_MASK;
+}
+
+void ${NVM_INSTANCE_NAME}_BootFlashWriteProtectEnable( NVM_BOOT_FLASH_WRITE_PROTECT writeProtectPage )
+{
+    ${NVM_INSTANCE_NAME}_WriteUnlockSequence();
+
+    // Protect the appropriate boot page to disable writes
+    NVMBWPSET = writeProtectPage;
+}
+
+void ${NVM_INSTANCE_NAME}_BootFlashWriteProtectDisable( NVM_BOOT_FLASH_WRITE_PROTECT writeProtectPage )
+{
+    ${NVM_INSTANCE_NAME}_WriteUnlockSequence();
+
+    // Un-Protect the appropriate boot page to enable writes
+    NVMBWPCLR = writeProtectPage;
+}
+
+void ${NVM_INSTANCE_NAME}_BootFlashWriteProtectLock( NVM_BOOT_FLASH_WRITE_PROTECT_LOCK writeProtectLock )
+{
+    ${NVM_INSTANCE_NAME}_WriteUnlockSequence();
+
+    // Lock the Boot flash Write protect register
+    NVMBWPCLR = writeProtectLock;
 }
