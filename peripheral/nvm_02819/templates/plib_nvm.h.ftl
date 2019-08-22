@@ -84,6 +84,50 @@ typedef enum
 
 } NVM_ERROR;
 
+typedef enum
+{
+    /* Upper Boot Flash Page 0 Write Protect */
+    NVM_UPPER_BOOT_WRITE_PROTECT_0 = _NVMBWP_UBWP0_MASK,
+
+    /* Upper Boot Flash Page 1 Write Protect */
+    NVM_UPPER_BOOT_WRITE_PROTECT_1 = _NVMBWP_UBWP1_MASK,
+
+    /* Upper Boot Flash Page 2 Write Protect */
+    NVM_UPPER_BOOT_WRITE_PROTECT_2 = _NVMBWP_UBWP2_MASK,
+
+    /* Upper Boot Flash Page 3 Write Protect */
+    NVM_UPPER_BOOT_WRITE_PROTECT_3 = _NVMBWP_UBWP3_MASK,
+
+    /* Lower Boot Flash Page 4 Write Protect */
+    NVM_UPPER_BOOT_WRITE_PROTECT_4 = _NVMBWP_UBWP4_MASK,
+
+    /* Lower Boot Flash Page 0 Write Protect */
+    NVM_LOWER_BOOT_WRITE_PROTECT_0 = _NVMBWP_LBWP0_MASK,
+
+    /* Lower Boot Flash Page 1 Write Protect */
+    NVM_LOWER_BOOT_WRITE_PROTECT_1 = _NVMBWP_LBWP1_MASK,
+
+    /* Lower Boot Flash Page 2 Write Protect */
+    NVM_LOWER_BOOT_WRITE_PROTECT_2 = _NVMBWP_LBWP2_MASK,
+
+    /* Lower Boot Flash Page 3 Write Protect */
+    NVM_LOWER_BOOT_WRITE_PROTECT_3 = _NVMBWP_LBWP3_MASK,
+
+    /* Lower Boot Flash Page 4 Write Protect */
+    NVM_LOWER_BOOT_WRITE_PROTECT_4 = _NVMBWP_LBWP4_MASK,
+
+} NVM_BOOT_FLASH_WRITE_PROTECT;
+
+typedef enum
+{
+    /* Lock the Upper Boot Write Protect pages */
+    NVM_UPPER_BOOT_WRITE_PROTECT_LOCK = _NVMBWP_UBWPULOCK_MASK,
+
+    /* Lock the Upper Boot Write Protect pages */
+    NVM_LOWER_BOOT_WRITE_PROTECT_LOCK = _NVMBWP_LBWPULOCK_MASK,
+
+} NVM_BOOT_FLASH_WRITE_PROTECT_LOCK;
+
 <#if INTERRUPT_ENABLE == true>
     <#lt>typedef void (*NVM_CALLBACK)(uintptr_t context);
 </#if>
@@ -101,6 +145,18 @@ bool ${NVM_INSTANCE_NAME}_PageErase(uint32_t address);
 NVM_ERROR ${NVM_INSTANCE_NAME}_ErrorGet( void );
 
 bool ${NVM_INSTANCE_NAME}_IsBusy( void );
+
+void ${NVM_INSTANCE_NAME}_ProgramFlashSwapBank( void );
+
+void ${NVM_INSTANCE_NAME}_ProgramFlashWriteProtect( uint32_t address);
+
+void ${NVM_INSTANCE_NAME}_ProgramFlashWriteProtectLock( void );
+
+void ${NVM_INSTANCE_NAME}_BootFlashWriteProtectEnable( NVM_BOOT_FLASH_WRITE_PROTECT writeProtectPage );
+
+void ${NVM_INSTANCE_NAME}_BootFlashWriteProtectDisable( NVM_BOOT_FLASH_WRITE_PROTECT writeProtectPage );
+
+void ${NVM_INSTANCE_NAME}_BootFlashWriteProtectLock( NVM_BOOT_FLASH_WRITE_PROTECT_LOCK writeProtectLock );
 
 <#if INTERRUPT_ENABLE == true>
     <#lt>void ${NVM_INSTANCE_NAME}_CallbackRegister ( NVM_CALLBACK callback, uintptr_t context );
