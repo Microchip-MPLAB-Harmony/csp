@@ -130,6 +130,10 @@ def updateSPIDMASymbolVisiblity(symbol, event):
     else:
         symbol.setVisible(False)
 
+
+def sourceClkUpdate(symbol, event):
+    symbol.setValue(event["value"])
+
 ###################################################################################################
 ############################################# FLEXCOM SPI #########################################
 ###################################################################################################
@@ -194,6 +198,7 @@ flexcomSym_SPI_CSRIndex.setDependencies(calculateCSRIndex, ["FLEXCOM_SPI_MR_PCS"
 
 flexcomSym_SPI_MasterClock = flexcomComponent.createIntegerSymbol("FLEXCOM_SPI_PERIPHERAL_CLOCK", flexcomSym_OperatingMode)
 flexcomSym_SPI_MasterClock.setDefaultValue(int(Database.getSymbolValue("core",flexcomInstanceName.getValue() + "_CLOCK_FREQUENCY")))
+flexcomSym_SPI_MasterClock.setDependencies(sourceClkUpdate, ["core." + flexcomInstanceName.getValue() + "_CLOCK_FREQUENCY"])
 flexcomSym_SPI_MasterClock.setVisible(False)
 
 defaultbaudRate = 1000000
