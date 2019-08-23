@@ -119,17 +119,10 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
             {
                 if (${I2C_INSTANCE_NAME?lower_case}Obj.address > 0x007F)
                 {
-                    /* Transmit the first byte of the 10-bit slave address */
-                    ${I2C_INSTANCE_NAME}TRN = ( 0xF0 | (((uint8_t*)&${I2C_INSTANCE_NAME?lower_case}Obj.address)[1] << 1) | (${I2C_INSTANCE_NAME?lower_case}Obj.transferType) );
+                    /* Transmit the MSB 2 bits of the 10-bit slave address, with R/W = 0 */
+                    ${I2C_INSTANCE_NAME}TRN = ( 0xF0 | (((uint8_t*)&${I2C_INSTANCE_NAME?lower_case}Obj.address)[1] << 1));
 
-                    if (${I2C_INSTANCE_NAME?lower_case}Obj.transferType == I2C_TRANSFER_TYPE_WRITE)
-                    {
-                        ${I2C_INSTANCE_NAME?lower_case}Obj.state = I2C_STATE_ADDR_BYTE_2_SEND;
-                    }
-                    else
-                    {
-                        ${I2C_INSTANCE_NAME?lower_case}Obj.state = I2C_STATE_READ;
-                    }
+                    ${I2C_INSTANCE_NAME?lower_case}Obj.state = I2C_STATE_ADDR_BYTE_2_SEND;
                 }
                 else
                 {
@@ -149,13 +142,58 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
             break;
         case I2C_STATE_ADDR_BYTE_2_SEND:
             /* Transmit the 2nd byte of the 10-bit slave address */
+            <#if I2C_INCLUDE_FORCED_WRITE_API == true>
+            if ((!(${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_ACKSTAT_MASK)) || (${I2C_INSTANCE_NAME?lower_case}Obj.forcedWrite == true))
+            <#else>
             if (!(${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_ACKSTAT_MASK))
+            </#if>
             {
                 if (!(${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_TBF_MASK))
                 {
+                    /* Transmit the remaining 8-bits of the 10-bit address */
                     ${I2C_INSTANCE_NAME}TRN = ${I2C_INSTANCE_NAME?lower_case}Obj.address;
-                    ${I2C_INSTANCE_NAME?lower_case}Obj.state = I2C_STATE_WRITE;
+
+                    if (${I2C_INSTANCE_NAME?lower_case}Obj.transferType == I2C_TRANSFER_TYPE_WRITE)
+                    {
+                        ${I2C_INSTANCE_NAME?lower_case}Obj.state = I2C_STATE_WRITE;
+                    }
+                    else
+                    {
+                        ${I2C_INSTANCE_NAME?lower_case}Obj.state = I2C_STATE_READ_10BIT_MODE;
+                    }
                 }
+            }
+            else
+            {
+                /* NAK received. Generate Stop Condition. */
+                ${I2C_INSTANCE_NAME?lower_case}Obj.error = I2C_ERROR_NACK;
+                ${I2C_INSTANCE_NAME}CONSET = _${I2C_INSTANCE_NAME}CON_PEN_MASK;
+                ${I2C_INSTANCE_NAME?lower_case}Obj.state = I2C_STATE_WAIT_STOP_CONDITION_COMPLETE;
+            }
+            break;
+            
+        case I2C_STATE_READ_10BIT_MODE:
+            if (!(${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_ACKSTAT_MASK))
+            {
+                /* Generate repeated start condition */
+                ${I2C_INSTANCE_NAME}CONSET = _${I2C_INSTANCE_NAME}CON_RSEN_MASK;
+                ${I2C_INSTANCE_NAME?lower_case}Obj.state = I2C_STATE_ADDR_BYTE_1_SEND_10BIT_ONLY;
+            }
+            else
+            {
+                /* NAK received. Generate Stop Condition. */
+                ${I2C_INSTANCE_NAME?lower_case}Obj.error = I2C_ERROR_NACK;
+                ${I2C_INSTANCE_NAME}CONSET = _${I2C_INSTANCE_NAME}CON_PEN_MASK;
+                ${I2C_INSTANCE_NAME?lower_case}Obj.state = I2C_STATE_WAIT_STOP_CONDITION_COMPLETE;
+            }
+            break;
+        case I2C_STATE_ADDR_BYTE_1_SEND_10BIT_ONLY:
+            /* Is transmit buffer full? */
+            if (!(${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_TBF_MASK))
+            {
+                /* Transmit the first byte of the 10-bit slave address, with R/W = 1 */
+                ${I2C_INSTANCE_NAME}TRN = ( 0xF1 | ((((uint8_t*)&${I2C_INSTANCE_NAME?lower_case}Obj.address)[1] << 1)));
+                ${I2C_INSTANCE_NAME?lower_case}Obj.state = I2C_STATE_READ;
             }
             else
             {
@@ -187,9 +225,20 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
                     {
                         /* Generate repeated start condition */
                         ${I2C_INSTANCE_NAME}CONSET = _${I2C_INSTANCE_NAME}CON_RSEN_MASK;
+
                         ${I2C_INSTANCE_NAME?lower_case}Obj.transferType = I2C_TRANSFER_TYPE_READ;
-                        /* Send the I2C slave address with R/W = 1*/
-                        ${I2C_INSTANCE_NAME?lower_case}Obj.state = I2C_STATE_ADDR_BYTE_1_SEND;
+
+                        if (${I2C_INSTANCE_NAME?lower_case}Obj.address > 0x007F)
+                        {
+                            /* Send the I2C slave address with R/W = 1 */
+                            ${I2C_INSTANCE_NAME?lower_case}Obj.state = I2C_STATE_ADDR_BYTE_1_SEND_10BIT_ONLY;
+                        }
+                        else
+                        {
+                            /* Send the I2C slave address with R/W = 1 */
+                            ${I2C_INSTANCE_NAME?lower_case}Obj.state = I2C_STATE_ADDR_BYTE_1_SEND;
+                        }
+
                     }
                     else
                     {

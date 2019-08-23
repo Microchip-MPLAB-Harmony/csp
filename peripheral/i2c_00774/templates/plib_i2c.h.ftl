@@ -354,7 +354,7 @@ bool ${I2C_INSTANCE_NAME}_WriteForced(uint16_t address, uint8_t* wdata, size_t w
 
   Precondition:
     ${I2C_INSTANCE_NAME}_Initialize must have been called for the associated
-    I2C instance.  A minimum of two TRB's should be available.
+    I2C instance.
 
   Parameters:
     address - 7-bit / 10-bit slave address.
