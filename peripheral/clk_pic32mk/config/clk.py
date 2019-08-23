@@ -1213,7 +1213,7 @@ if __name__ == "__main__":
         peripheralBusDict = peripheralBusDict_DS60001570.copy()
     elif Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001519":
         peripheralBusDict = peripheralBusDict_DS60001519.copy()
-        CLK_MANAGER_SELECT.setDefaultValue("clk_pic32mk:MKClockModel")
+        CLK_MANAGER_SELECT.setDefaultValue("clk_pic32mk_2:MKClockModel")
 
     # see if UPLL is enabled through FUSE configuration
     upllEnableSym = coreComponent.createBooleanSymbol("UPLL_EN", None)
