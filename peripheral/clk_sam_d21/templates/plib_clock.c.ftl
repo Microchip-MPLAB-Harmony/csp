@@ -216,6 +216,13 @@ static void DFLL_Initialize(void)
 
 static void GCLK${i}_Initialize(void)
 {
+    <#if (i==0)>
+    
+<#if (CONF_CPU_CLOCK_DIVIDER != "0")>
+    /* selection of the CPU clock Division */
+    PM_REGS->PM_CPUSEL = PM_CPUSEL_CPUDIV(${CONF_CPU_CLOCK_DIVIDER});
+</#if>
+    </#if>
     <@compress single_line=true>GCLK_REGS->GCLK_GENCTRL = GCLK_GENCTRL_SRC(${.vars[GCLK_SRC]})
                                                                ${(.vars[GCLK_DIVISONSELECTION] == "DIV2")?then('| GCLK_GENCTRL_DIVSEL_Msk' , ' ')}
                                                                ${(.vars[GCLK_IMPROVE_DUTYCYCLE])?then('| GCLK_GENCTRL_IDC_Msk', ' ')}
@@ -245,11 +252,6 @@ void CLOCK_Initialize (void)
     SYSCTRL_Initialize();
 
 ${CLK_INIT_LIST}
-
-<#if (CONF_CPU_CLOCK_DIVIDER != "0")>
-    /* selection of the CPU clock Division */
-    PM_REGS->PM_CPUSEL = PM_CPUSEL_CPUDIV(${CONF_CPU_CLOCK_DIVIDER});
-</#if>
 
 <#list 2..GCLK_MAX_ID as i>
     <#assign GCLK_ID_CHEN = "GCLK_ID_" + i + "_CHEN">

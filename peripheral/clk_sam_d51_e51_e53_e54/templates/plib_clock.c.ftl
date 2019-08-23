@@ -267,6 +267,18 @@ static void DFLL_Initialize(void)
                 <#assign GCLK_DIVISONSELECTION = "GCLK_" + i + "_DIVSEL">
 static void GCLK${i}_Initialize(void)
 {
+    <#if (i==0)>
+    
+<#if CONF_CPU_CLOCK_DIVIDER != "1">
+    /* selection of the CPU clock Division */
+    MCLK_REGS->MCLK_CPUDIV = MCLK_CPUDIV_DIV(${CONF_CPU_CLOCK_DIVIDER});
+
+    while((MCLK_REGS->MCLK_INTFLAG & MCLK_INTFLAG_CKRDY_Msk) != MCLK_INTFLAG_CKRDY_Msk)
+    {
+        /* Wait for the Main Clock to be Ready */
+    }
+</#if>
+    </#if>
     <@compress single_line=true>GCLK_REGS->GCLK_GENCTRL[${i}] = GCLK_GENCTRL_DIV(${.vars[GCLK_DIVISONVALUE]})
                                                                | GCLK_GENCTRL_SRC(${.vars[GCLK_SRC]})
                                                                ${(.vars[GCLK_DIVISONSELECTION] == "DIV2")?then('| GCLK_GENCTRL_DIVSEL_Msk' , ' ')}
@@ -296,15 +308,7 @@ void CLOCK_Initialize (void)
     OSC32KCTRL_Initialize();
 
 ${CLK_INIT_LIST}
-<#if CONF_CPU_CLOCK_DIVIDER != "1">
-    /* selection of the CPU clock Division */
-    MCLK_REGS->MCLK_CPUDIV = MCLK_CPUDIV_DIV(${CONF_CPU_CLOCK_DIVIDER});
 
-    while((MCLK_REGS->MCLK_INTFLAG & MCLK_INTFLAG_CKRDY_Msk) != MCLK_INTFLAG_CKRDY_Msk)
-    {
-        /* Wait for the Main Clock to be Ready */
-    }
-</#if>
 
 <#list 3..GCLK_MAX_ID as i>
     <#assign GCLK_ID_CHEN = "GCLK_ID_" + i + "_CHEN">

@@ -347,6 +347,12 @@ def instantiateComponent(nvmctrlComponent):
 
     nvmctrlSym_SystemInitFile = nvmctrlComponent.createFileSymbol("NVMCTRL_SYS_INIT", None)
     nvmctrlSym_SystemInitFile.setSourcePath("../peripheral/nvmctrl_u2802/templates/system/initialization.c.ftl")
+    nvmctrlSym_SystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+    nvmctrlSym_SystemInitFile.setType("STRING")
+    nvmctrlSym_SystemInitFile.setMarkup(True)
+
+    nvmctrlSym_SystemInitFile = nvmctrlComponent.createFileSymbol("NVMCTRL_SYS_INIT_0", None)
+    nvmctrlSym_SystemInitFile.setSourcePath("../peripheral/nvmctrl_u2802/templates/system/nvm_waitstate.h.ftl")
     nvmctrlSym_SystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_START")
     nvmctrlSym_SystemInitFile.setType("STRING")
     nvmctrlSym_SystemInitFile.setMarkup(True)
