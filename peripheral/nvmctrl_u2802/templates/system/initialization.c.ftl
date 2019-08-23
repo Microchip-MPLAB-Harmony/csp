@@ -24,4 +24,4 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 -->
-  ${NVMCTRL_INSTANCE_NAME}_Initialize();
+    ${NVMCTRL_INSTANCE_NAME}_Initialize();

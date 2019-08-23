@@ -121,13 +121,13 @@ static void DFLL_Initialize(void)
     </#if>
 
     /* Configure DFLL    */
-    <@compress single_line=true>OSCCTRL_REGS->OSCCTRL_DFLLULPCTRL = OSCCTRL_DFLLCTRL_ENABLE_Msk
-    <#lt>                               ${(CONFIG_CLOCK_DFLL_ONDEMAND == "ENABLE")?then("| OSCCTRL_DFLLCTRL_ONDEMAND_Msk ", "")}
-    <#lt>                               ${CONFIG_CLOCK_DFLL_RUNSTDY?then('| OSCCTRL_DFLLCTRL_RUNSTDBY_Msk ', ' ')}
-    <#lt>                               ${CONFIG_CLOCK_DFLL_DITHER?then('| OSCCTRL_DFLLCTRL_DITHER_Msk ', ' ')}
-    <#lt>                               ${CONFIG_CLOCK_DFLL_SAFE?then('| OSCCTRL_DFLLCTRL_SAFE_Msk ', ' ')}
-    <#lt>                               ${CONFIG_CLOCK_DFLL_BINSE?then('| OSCCTRL_DFLLCTRL_BINSE_Msk ', ' ')}
-    <#lt>                               ${(CONFIG_CLOCK_DFLL_DIV != "0") ?then('| OSCCTRL_DFLLCTRL_DIV(${CONFIG_CLOCK_DFLL_DIV}) ', ' ')}
+    <@compress single_line=true>OSCCTRL_REGS->OSCCTRL_DFLLULPCTRL = OSCCTRL_DFLLULPCTRL_ENABLE_Msk
+    <#lt>                               ${(CONFIG_CLOCK_DFLL_ONDEMAND == "ENABLE")?then("| OSCCTRL_DFLLULPCTRL_ONDEMAND_Msk ", "")}
+    <#lt>                               ${CONFIG_CLOCK_DFLL_RUNSTDY?then('| OSCCTRL_DFLLULPCTRL_RUNSTDBY_Msk ', ' ')}
+    <#lt>                               ${CONFIG_CLOCK_DFLL_DITHER?then('| OSCCTRL_DFLLULPCTRL_DITHER_Msk ', ' ')}
+    <#lt>                               ${CONFIG_CLOCK_DFLL_SAFE?then('| OSCCTRL_DFLLULPCTRL_SAFE_Msk ', ' ')}
+    <#lt>                               ${CONFIG_CLOCK_DFLL_BINSE?then('| OSCCTRL_DFLLULPCTRL_BINSE_Msk ', ' ')}
+    <#lt>                               ${(CONFIG_CLOCK_DFLL_DIV != "0") ?then('| OSCCTRL_DFLLULPCTRL_DIV(${CONFIG_CLOCK_DFLL_DIV}) ', ' ')}
     <#lt>                               ;</@compress>
 
     while((OSCCTRL_REGS->OSCCTRL_STATUS & OSCCTRL_STATUS_DFLLULPRDY_Msk) != OSCCTRL_STATUS_DFLLULPRDY_Msk)
@@ -213,6 +213,18 @@ static void FDPLL_Initialize(void)
 
 static void GCLK${i}_Initialize(void)
 {
+    <#if (i==0)>
+    
+<#if CONF_CPU_CLOCK_DIVIDER != '0x01'>
+    /* selection of the CPU clock Division */
+    MCLK_REGS->MCLK_CPUDIV = MCLK_CPUDIV_CPUDIV(${CONF_CPU_CLOCK_DIVIDER});
+
+    while((MCLK_REGS->MCLK_INTFLAG & MCLK_INTFLAG_CKRDY_Msk) != MCLK_INTFLAG_CKRDY_Msk)
+    {
+        /* Wait for the Main Clock to be Ready */
+    }
+</#if>
+    </#if>
     <@compress single_line=true>GCLK_REGS->GCLK_GENCTRL[${i}] = GCLK_GENCTRL_DIV(${.vars[GCLK_DIVISONVALUE]})
                                                                | GCLK_GENCTRL_SRC(${.vars[GCLK_SRC]})
                                                                ${(.vars[GCLK_DIVISONSELECTION] == "DIV2")?then('| GCLK_GENCTRL_DIVSEL_Msk' , ' ')}
@@ -242,9 +254,7 @@ void CLOCK_Initialize (void)
     OSC32KCTRL_Initialize();
 
 ${CLK_INIT_LIST}
-<#if MCLK_SRC != "0">
-    MCLK_REGS->MCLK_CTRLA = MCLK_CTRLA_CKSEL_Msk;
-</#if>
+<#if !GCLK_INST_NUM0>
 <#if CONF_CPU_CLOCK_DIVIDER != '0x01'>
     /* selection of the CPU clock Division */
     MCLK_REGS->MCLK_CPUDIV = MCLK_CPUDIV_CPUDIV(${CONF_CPU_CLOCK_DIVIDER});
@@ -254,6 +264,11 @@ ${CLK_INIT_LIST}
         /* Wait for the Main Clock to be Ready */
     }
 </#if>
+</#if>
+<#if MCLK_SRC != "0">
+    MCLK_REGS->MCLK_CTRLA = MCLK_CTRLA_CKSEL_Msk;
+</#if>
+
 
 <#list 1..GCLK_MAX_ID as i>
     <#assign GCLK_ID_CHEN = "GCLK_ID_" + i + "_CHEN">
