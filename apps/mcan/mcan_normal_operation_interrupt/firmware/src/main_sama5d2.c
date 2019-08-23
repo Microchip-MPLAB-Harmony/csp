@@ -148,7 +148,7 @@ void APP_MCAN_Callback(uintptr_t context)
 int main ( void )
 {
     uint32_t messageID = 0;
-    uint8_t message[64];
+    uint8_t message[64] = {0};
     uint8_t messageLength = 0;
 
     /* Initialize all modules */
