@@ -64,7 +64,6 @@
 <#assign ADC_CH_COCR_AOFF = "ADC_"+i+"_COCR_AOFF">
 <#assign ADC_CH_IER_EOC = "ADC_"+i+"_IER_EOC">
 <#assign ADC_CH_SEQ1R_USCH = "ADC_SEQ1R_USCH"+i>
-<#assign ADC_CH_SHMR_DUAL_PAIR = "">
 <#assign ADC_CH_DIFF_PAIR = "">
 
 <#if (.vars[ADC_CH_CHER] == true) && (.vars[ADC_CH_IER_EOC] == true)>
@@ -104,7 +103,7 @@
 <#-- Channel enable if user sequence is disabled -->
 <#if ADC_MR_USEQ == false>
     <#if .vars[ADC_CH_CHER] == true>
-        <#if ((i gt 5) && (.vars[ADC_CH_SHMR_DUAL_PAIR] == true)) || ((i % 2 != 0) && (.vars[ADC_CH_DIFF_PAIR] != "GND"))>
+        <#if ((i % 2 != 0) && (.vars[ADC_CH_DIFF_PAIR] != "GND"))>
         <#else>
             <#if ADC_CHER_CH != "">
                 <#assign ADC_CHER_CH = ADC_CHER_CH + " | " + "ADC_CHER_CH"+i+"_Msk">
