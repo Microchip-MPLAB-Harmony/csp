@@ -1037,13 +1037,14 @@ if __name__ == "__main__":
     global num_mcan_instances
     num_mcan_instances = []
     mcan = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"MCAN\"]")
-    num_mcan_instances = mcan.getChildren()
-    for mcanInstance in range(0, len(num_mcan_instances)):
-        sym_mcan_clock_freq.append(mcanInstance)
-        sym_mcan_clock_freq[mcanInstance] = coreComponent.createIntegerSymbol("MCAN" + str(mcanInstance) + "_CLOCK_FREQUENCY", None)
-        sym_mcan_clock_freq[mcanInstance].setVisible(False)
-        sym_mcan_clock_freq[mcanInstance].setDefaultValue(int(Database.getSymbolValue("core", "PCK5_CLOCK_FREQUENCY")) if (Database.getSymbolValue("core", "PMC_SCER_PCK5") == True) else 0)
-        sym_mcan_clock_freq[mcanInstance].setDependencies(mcanClockFreqCalc, ["core.PCK5_CLOCK_FREQUENCY", "core.PMC_SCER_PCK5", "core.MCAN" + str(mcanInstance) + "_CLOCK_ENABLE"])
+    if mcan is not None:
+        num_mcan_instances = mcan.getChildren()
+        for mcanInstance in range(0, len(num_mcan_instances)):
+            sym_mcan_clock_freq.append(mcanInstance)
+            sym_mcan_clock_freq[mcanInstance] = coreComponent.createIntegerSymbol("MCAN" + str(mcanInstance) + "_CLOCK_FREQUENCY", None)
+            sym_mcan_clock_freq[mcanInstance].setVisible(False)
+            sym_mcan_clock_freq[mcanInstance].setDefaultValue(int(Database.getSymbolValue("core", "PCK5_CLOCK_FREQUENCY")) if (Database.getSymbolValue("core", "PMC_SCER_PCK5") == True) else 0)
+            sym_mcan_clock_freq[mcanInstance].setDependencies(mcanClockFreqCalc, ["core.PCK5_CLOCK_FREQUENCY", "core.PMC_SCER_PCK5", "core.MCAN" + str(mcanInstance) + "_CLOCK_ENABLE"])
 
     #File handling
     CONFIG_NAME = Variables.get("__CONFIGURATION_NAME")
