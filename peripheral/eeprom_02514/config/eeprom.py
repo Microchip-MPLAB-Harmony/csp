@@ -27,18 +27,20 @@ global getWaitStates
 def getWaitStates():
 
     sysclk = int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_PBCLK2_FREQ"))
-    ws = 7
+    ws = 5
 
-    if sysclk >= 100000000 and sysclk <= 120000000:
-        ws = 12
-    if sysclk >=  75000000 and sysclk <  100000000:
-        ws = 9
-    if sysclk >=  50000000 and sysclk <   75000000:
-        ws = 7
-    if sysclk >=  25000000 and sysclk <   50000000:
+    if sysclk >= 118000000 and sysclk <= 120000000:
+        ws = 5
+    if sysclk >= 98000000 and sysclk <= 117000000:
         ws = 4
-    if sysclk <   25000000:
+    if sysclk >=  80000000 and sysclk <=   97000000:
+        ws = 3
+    if sysclk >=  60000000 and sysclk <=   79000000:
         ws = 2
+    if sysclk >=  40000000 and sysclk <=   59000000:
+        ws = 1
+    if sysclk <   39000000:
+        ws = 0
 
     return ws
 
