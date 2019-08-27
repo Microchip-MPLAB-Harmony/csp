@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<diagram min_x="520" min_y="520" >
+	<shape type="complex_rect" width="500" height="500" stroke="1" >
+		<corner loc="topleft" type="notch" length="5"/>
+	</shape>
+	<shape type="complex_rect" width="350" height="350" stroke="1" >
+		<corner loc="topleft" type="notch" length="24"/>
+		<corner loc="topright" type="notch" length="24"/>
+		<corner loc="bottomright" type="notch" length="24"/>
+		<corner loc="bottomleft" type="notch" length="24"/>
+	</shape>
+	<shape type="string" line="000000" val="$DEVICE_NAME" orientation="right" size="16"/>
+	<layout type="row">
+		<row pins="A1-A16" x="-232" margin="4" direction="down"
+			 pin_width="22" pin_height="22" pin_name_location="none"
+			 pin_number_location="inside" pin_number_size="10" pin_number_margin="6" pin_number_orientation="up" />
+		<row pins="A17-A34" y="210" margin="4" direction="right"
+			 pin_width="22" pin_height="22" pin_name_location="none"
+			 pin_number_location="inside" pin_number_size="10" pin_number_margin="5" pin_number_orientation="up" />
+		<row pins="A35-A50" x="210" margin="4" direction="up"
+			 pin_width="22" pin_height="22" pin_name_location="none"
+			 pin_number_location="inside" pin_number_size="10" pin_number_margin="6" pin_number_orientation="up" />
+		<row pins="A51-A68" y="-232" margin="4" direction="left"
+			 pin_width="22" pin_height="22" pin_name_location="none"
+			 pin_number_location="inside" pin_number_size="10" pin_number_margin="5" pin_number_orientation="up" />	
+		<row pins="B1-B13" x="-206" y="-180" margin="4" direction="down"
+			 pin_width="22" pin_height="22" pin_name_location="none"
+			 pin_number_location="inside" pin_number_size="10" pin_number_margin="5" pin_number_orientation="up" />	
+		<row pins="B14-B28" x="-206" y="184" margin="4" direction="right"
+			 pin_width="22" pin_height="22" pin_name_location="none"
+			 pin_number_location="inside" pin_number_size="10" pin_number_margin="5" pin_number_orientation="up" />	
+		<row pins="B29-B41" x="184" y="180" margin="4" direction="up"
+			 pin_width="22" pin_height="22" pin_name_location="none"
+			 pin_number_location="inside" pin_number_size="10" pin_number_margin="5" pin_number_orientation="up" />	
+		<row pins="B42-B56" x="206" y="-206" margin="4" direction="left"
+			 pin_width="22" pin_height="22" pin_name_location="none"
+			 pin_number_location="inside" pin_number_size="10" pin_number_margin="5" pin_number_orientation="up" />
+	</layout>
+</diagram>
