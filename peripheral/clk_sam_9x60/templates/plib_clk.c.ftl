@@ -115,8 +115,8 @@ static void initUPLLCLK(void)
                             PMC_PLL_ACR_CONTROL(0x10);
 
     /* STEP 3: Set loop paramaters for the fractional PLL */
-    PMC_REGS->PMC_PLL_CTRL1 = PMC_PLL_CTRL1_MUL(${CLK_PLL_MUL}) |\
-                              PMC_PLL_CTRL1_FRACR(${CLK_PLL_FRACR});
+    PMC_REGS->PMC_PLL_CTRL1 = PMC_PLL_CTRL1_MUL(${CLK_UPLL_MUL}) |\
+                              PMC_PLL_CTRL1_FRACR(${CLK_UPLL_FRACR});
 
     /* STEP 4: Enable UTMI Bandgap */ 
     PMC_REGS->PMC_PLL_ACR |= PMC_PLL_ACR_UTMIBG_Msk;

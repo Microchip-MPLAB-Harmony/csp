@@ -304,6 +304,10 @@ gclk_update_map = {
 # code generation for the clock generators are enabled
 generator_symbols_list = coreComponent.createListEntrySymbol("CLK_GENERATOR_SYM_LIST", None)
 
+#create a dummy list symbol as target for the list entry symbol
+generator_symbols = coreComponent.createListSymbol("9X6_CLK_GEN_SYMS",None)
+generator_symbols_list.setTarget("core.9X6_CLK_GEN_SYMS")
+
 #instantiateComponent of core Component
 menu = coreComponent.createMenuSymbol("CLK_MENU", None)
 menu.setLabel("Clock (PMC)")
