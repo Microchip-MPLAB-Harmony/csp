@@ -1655,7 +1655,7 @@ if __name__ == "__main__":
                 elif peripheralName.startswith("SQI"):
                     peripheral_clock_freq.setDependencies(sqiClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", "CONFIG_SYS_CLK_REFCLK2_FREQ"])
                 elif peripheralName.startswith("SDHC"):
-                    peripheral_clock_freq.setDependencies(sqiClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", "CONFIG_SYS_CLK_REFCLK4_FREQ"])
+                    peripheral_clock_freq.setDependencies(sdhcClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", "CONFIG_SYS_CLK_REFCLK4_FREQ"])
                 elif peripheralName == "RTCC":
                     peripheral_clock_freq.setDependencies(rtccClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", "rtcc.RTCC_CLOCK_SOURCE", "CONFIG_SYS_CLK_PBCLK" + peripheralBus[0] + "_FREQ",
                                                                                          "CONFIG_SYS_CLK_CONFIG_SECONDARY_XTAL"])
