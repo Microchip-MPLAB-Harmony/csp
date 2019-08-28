@@ -164,11 +164,11 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
 
 <#if ADC_MCU_FAMILY == "SAMD">
     uint32_t adc_linearity0 = (((*(uint64_t*)OTP4_ADDR) & ADC_LINEARITY0_Msk) >> ADC_LINEARITY0_POS);
-    uint32_t adc_linearity1 = (((*(uint64_t*)OTP4_ADDR) & ADC_LINEARITY0_Msk) >> ADC_LINEARITY0_POS);
+    uint32_t adc_linearity1 = (((*(uint64_t*)(OTP4_ADDR + 4)) & ADC_LINEARITY1_Msk) >> ADC_LINEARITY1_POS);
 
     /* Write linearity calibration and bias calibration */
     ADC_REGS->ADC_CALIB = (uint32_t)(ADC_CALIB_LINEARITY_CAL(adc_linearity0 | (adc_linearity1 << 5))) \
-        | ADC_CALIB_BIAS_CAL((((*(uint64_t*)OTP4_ADDR + 1) & ADC_BIASCAL_Msk) >> ADC_BIASCAL_POS));
+        | ADC_CALIB_BIAS_CAL((((*(uint64_t*)(OTP4_ADDR + 4)) & ADC_BIASCAL_Msk) >> ADC_BIASCAL_POS));
 
 </#if>
     /* Sampling length */
