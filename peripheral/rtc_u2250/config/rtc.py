@@ -474,9 +474,10 @@ def instantiateComponent(rtcComponent):
         rtcTampAvailable.setDefaultValue(True)
         numChannelValue = numChannelNode.getChildren()
         for id in range(0, len(numChannelValue)):
-            if "TAMLVL" in numChannelValue[id].getAttribute("name"):
-                tamperChannels = tamperChannels + 1
-
+            if ("TAMLVL") in numChannelValue[id].getAttribute("name"):
+                if (int(numChannelValue[id].getAttribute("name").split("TAMLVL")[1]) + 1) > tamperChannels:
+                    tamperChannels = int(numChannelValue[id].getAttribute("name").split("TAMLVL")[1]) + 1
+        
         # Frequency Correction
         rtcTampMenu = rtcComponent.createMenuSymbol(
             "TAMP_MENU", rtcSym_Menu)
@@ -567,15 +568,16 @@ def instantiateComponent(rtcComponent):
             tampChannelAction.setLabel("Channel Action")
             
             channelActionNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"RTC\"]/value-group@[name=\"" "RTC_TAMPCTRL__IN" + str(id) + "ACT""\"]")
-            channelActionValue = channelActionNode.getChildren()
-            for id in range(0, len(channelActionValue)):
-                key = channelActionValue[id].getAttribute("name")
-                value = channelActionValue[id].getAttribute("value")
-                description = channelActionValue[id].getAttribute("caption")
-                tampChannelAction.addKey(key, str(value), description)
+            if channelActionNode!= None:
+                channelActionValue = channelActionNode.getChildren()
+                for id in range(0, len(channelActionValue)):
+                    key = channelActionValue[id].getAttribute("name")
+                    value = channelActionValue[id].getAttribute("value")
+                    description = channelActionValue[id].getAttribute("caption")
+                    tampChannelAction.addKey(key, str(value), description)
 
-            tampChannelAction.setOutputMode("Value")
-            tampChannelAction.setDisplayMode("Description")
+                tampChannelAction.setOutputMode("Value")
+                tampChannelAction.setDisplayMode("Description")
 
         tampEventMenu = rtcComponent.createMenuSymbol("TAMP_EVENT_MENU", rtcTampMenu)
         tampEventMenu.setLabel("Event System Configuration")
