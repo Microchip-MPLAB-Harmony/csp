@@ -23,6 +23,7 @@
 
 global coretimerFreqComment
 global coretimerFrequency
+global coretimerCompareMS
 global coretimerPeriodMS
 global coretimerPeriodUS
 global coretimerPeriodValue
@@ -38,7 +39,12 @@ global setTimerInterruptData
 
 def coreFreqCalc(symbol, event):
     SysClkFreq=Database.getSymbolValue("core", "SYS_CLK_FREQ")
-    periodMS = coretimerPeriodMS.getValue()
+
+    if (tmrInterruptEnable.getValue() == True):
+        periodMS = coretimerPeriodMS.getValue()
+    else:
+        periodMS = coretimerCompareMS.getValue()
+
     timerFrequency=int(SysClkFreq)/2
     coretimerFrequency.setValue(timerFrequency,2)
     coretimerFreqComment.setLabel("*** Core Timer Clock Frequency " + str(timerFrequency) + " Hz ***")
@@ -123,12 +129,16 @@ def onAttachmentDisconnected(source, target):
 def setVisibility(symbol,event):
     symbol.setVisible(event["value"])
 
+def setCompareVisibility(symbol,event):
+    symbol.setVisible((event["value"] == False))
+
 ################################################################################
 #### Menu ####
 ################################################################################
 def instantiateComponent(tmrComponent):
     global coretimerFreqComment
     global coretimerFrequency
+    global coretimerCompareMS
     global coretimerPeriodMS
     global coretimerPeriodUS
     global coretimerPeriodValue
@@ -157,9 +167,16 @@ def instantiateComponent(tmrComponent):
 
     max = ((float(1) / timerFrequency) * (2**32) * 1000)
 
+    coretimerCompareMS = tmrComponent.createFloatSymbol("CORE_TIMER_COMPARE_MS", None)
+    coretimerCompareMS.setLabel("Compare period (milliseconds)")
+    coretimerCompareMS.setDefaultValue(float(1.0))
+    coretimerCompareMS.setMin(0)
+    coretimerCompareMS.setMax(float(max))
+    coretimerCompareMS.setVisible((tmrInterruptEnable.getValue() == False))
+    coretimerCompareMS.setDependencies(setCompareVisibility, ["CORE_TIMER_INTERRUPT_MODE"])
+
     coretimerPeriodMS = tmrComponent.createFloatSymbol("CORE_TIMER_PERIOD_MS", tmrPeriodicInterrupt)
     coretimerPeriodMS.setLabel("Timer interrupt period (milliseconds)")
-    coretimerPeriodMS.setVisible(True)
     coretimerPeriodMS.setDefaultValue(float(1.0))
     coretimerPeriodMS.setMin(0)
     coretimerPeriodMS.setMax(float(max))
@@ -180,7 +197,7 @@ def instantiateComponent(tmrComponent):
     coretimerFrequency = tmrComponent.createIntegerSymbol("CORE_TIMER_FREQUENCY", None)
     coretimerFrequency.setVisible(False)
     coretimerFrequency.setDefaultValue(timerFrequency)
-    coretimerFrequency.setDependencies(coreFreqCalc, ["core.SYS_CLK_FREQ", "CORE_TIMER_PERIOD_MS"])
+    coretimerFrequency.setDependencies(coreFreqCalc, ["core.SYS_CLK_FREQ", "CORE_TIMER_PERIOD_MS", "CORE_TIMER_COMPARE_MS"])
 
     coretimerFreqComment = tmrComponent.createCommentSymbol("CORE_TIMER_FREQUENCY_COMMENT", None)
     coretimerFreqComment.setLabel("*** Core Timer Clock Frequency " + str(timerFrequency) + " Hz ***")
