@@ -224,20 +224,24 @@
 
 </#if>
 
-
 <#if CORE_TIMER_INTERRUPT_MODE == false >
+    <#lt>static uint32_t compareValue = CORE_TIMER_COMPARE_VALUE;
+
     <#lt>void CORETIMER_Initialize()
     <#lt>{
     <#lt><#if CORE_TIMER_STOP_IN_DEBUG == true>
     <#lt>    _CP0_SET_DEBUG(_CP0_GET_DEBUG() & ~_CP0_DEBUG_COUNTDM_MASK);
     <#lt></#if>
-    <#lt>
+
+    <#lt>    // Clear Core Timer
+    <#lt>    _CP0_SET_COUNT(0);
+    <#lt>    _CP0_SET_COMPARE(compareValue);
+
     <#lt>    // Enable Timer by clearing Disable Count (DC) bit
     <#lt>    _CP0_SET_CAUSE(_CP0_GET_CAUSE() & (~_CP0_CAUSE_DC_MASK));
     <#lt>
     <#lt>}
-</#if>
-<#if CORE_TIMER_INTERRUPT_MODE == false || CORE_TIMER_PERIODIC_INTERRUPT == false>
+
     <#lt>void CORETIMER_DelayMs ( uint32_t delay_ms)
     <#lt>{
     <#lt>    uint32_t startCount, endCount;
@@ -261,4 +265,60 @@
     <#lt>    while((_CP0_GET_COUNT()-startCount)<endCount);
     <#lt>
     <#lt>}
+
+    <#lt>void CORETIMER_Start( void )
+    <#lt>{
+    <#lt>    // Disable Timer by setting Disable Count (DC) bit
+    <#lt>    _CP0_SET_CAUSE(_CP0_GET_CAUSE() | _CP0_CAUSE_DC_MASK);
+
+    <#lt>    // Clear Compare Timer Interrupt Flag
+    <#lt>    ${CORE_TIMER_IFS_REG}CLR=${CORE_TIMER_IFS_REG_VALUE};
+
+    <#lt>    // Clear Core Timer
+    <#lt>    _CP0_SET_COUNT(0);
+
+    <#lt>    _CP0_SET_COMPARE(compareValue);
+
+    <#lt>    // Enable Timer by clearing Disable Count (DC) bit
+    <#lt>    _CP0_SET_CAUSE(_CP0_GET_CAUSE() & (~_CP0_CAUSE_DC_MASK));
+
+    <#lt>}
+
+    <#lt>void CORETIMER_Stop( void )
+    <#lt>{
+    <#lt>    // Disable Timer by setting Disable Count (DC) bit
+    <#lt>    _CP0_SET_CAUSE(_CP0_GET_CAUSE() | _CP0_CAUSE_DC_MASK);
+    <#lt>}
+
+    <#lt>uint32_t CORETIMER_FrequencyGet ( void )
+    <#lt>{
+    <#lt>    return (CORE_TIMER_FREQUENCY);
+    <#lt>}
+
+    <#lt>void CORETIMER_CompareSet ( uint32_t compare )
+    <#lt>{
+    <#lt>    compareValue = compare;
+    <#lt>    _CP0_SET_COMPARE(compareValue);
+    <#lt>}
+
+    <#lt>uint32_t CORETIMER_CounterGet ( void )
+    <#lt>{
+    <#lt>    uint32_t count;
+    <#lt>    count = _CP0_GET_COUNT();
+    <#lt>    return count;
+    <#lt>}
+
+    <#lt>bool CORETIMER_CompareHasExpired( void )
+    <#lt>{
+    <#lt>    if (${CORE_TIMER_IFS_REG}bits.CTIF != 0)
+    <#lt>    {
+    <#lt>        // Clear Compare Timer Interrupt Flag
+    <#lt>        ${CORE_TIMER_IFS_REG}CLR=${CORE_TIMER_IFS_REG_VALUE};
+
+    <#lt>        return true;
+    <#lt>    }
+
+    <#lt>    return false;
+    <#lt>}
+
 </#if>
