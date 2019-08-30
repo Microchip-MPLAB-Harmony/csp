@@ -71,7 +71,9 @@ void ${TMR_INSTANCE_NAME}_Initialize(void)
     SIDL = ${TIMER_SIDL}
     TCKPS =${TIMER_PRE_SCALER}
     T32   = ${TIMER_32BIT_MODE_SEL}
-    TCS = ${TIMER_SRC_SEL}
+    <#if TIMER_SRC_SEL?has_content>
+        <#lt>    TCS = ${TIMER_SRC_SEL}
+    </#if>
     */
     T${TMR_INSTANCE_NUM}CONSET = 0x${TCON_REG_VALUE};
 
