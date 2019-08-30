@@ -1784,6 +1784,10 @@ if __name__ == "__main__":
                                                                                          "CONFIG_SYS_CLK_PBCLK" + peripheralBus[0] + "_FREQ", "CONFIG_SYS_CLK_FRCDIV"])
                 elif peripheralName.startswith("CAN") and peripheralBus[0] == "-1":
                     peripheral_clock_freq.setDependencies(canClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", peripheralName.lower() + ".CAN_CORE_SELECT_CLOCK_SOURCE", "SYS_CLK_FREQ", "CONFIG_SYS_CLK_REFCLK4_FREQ"])
+                elif peripheralName.startswith("MCPWM") or peripheralName.startswith("QEI"):
+                    peripheral_clock_freq.setDependencies(sysPeripheralClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", "SYS_CLK_FREQ"])
+                elif peripheralName.startswith("USB") and peripheralBus[0] == "-1":
+                    peripheral_clock_freq.setDependencies(sysPeripheralClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", "SYS_CLK_FREQ"])
                 else:
                     peripheral_clock_freq.setDependencies(peripheralClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", "CONFIG_SYS_CLK_PBCLK" + peripheralBus[0] + "_FREQ"])
 
