@@ -81,7 +81,7 @@ static void CLK_SlowClockInitialize(void)
     </#if>
 }
 
-<#if !CLK_MAINCK_MOSCRCEN || CLK_MAINCK_MOSCRCF!="_10_MHZ" || CLK_MAINCK_MOSCXTEN || CLK_MAINCK_MOSCSEL!="0" || CLK_MAINCK_MOSCXTBY>
+
 /*********************************************************************************
 Initialize Main Clock (MAINCK)
 *********************************************************************************/
@@ -141,9 +141,11 @@ static void CLK_MainClockInitialize(void)
     PMC_REGS->CKGR_MOR = CKGR_MOR_KEY_PASSWD | (PMC_REGS->CKGR_MOR & ~CKGR_MOR_MOSCRCEN_Msk);
     
 </#if>
+
+    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk);
 }
 
-</#if>
+
 <#if !CLK_RC2CK_EN || CLK_RC2CK_OSCRCF!="_10_MHZ">
 /*********************************************************************************
 Initialize RC2 Clock (RC2CK)
@@ -294,11 +296,9 @@ void CLK_Initialize( void )
     /* Initialize Slow Clock */
     CLK_SlowClockInitialize();
 
-<#if !CLK_MAINCK_MOSCRCEN || CLK_MAINCK_MOSCRCF!="_10_MHZ" || CLK_MAINCK_MOSCXTEN || CLK_MAINCK_MOSCSEL != "0" || CLK_MAINCK_MOSCXTBY>
     /* Initialize Main Clock */
     CLK_MainClockInitialize();
 
-</#if>
 <#if !CLK_RC2CK_EN || CLK_RC2CK_OSCRCF!="_10_MHZ">
     /* Initialize RC2 */
     CLK_RC2ClockInitialize();
