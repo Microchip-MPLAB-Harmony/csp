@@ -29,6 +29,11 @@ global interruptVector
 global interruptHandler
 global interruptHandlerLock
 
+def hefcSetMemoryDependency(symbol, event):
+    if (event["value"] == True):
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
 
 def interruptControl(NVIC, event):
     global hefcInstanceName
@@ -67,10 +72,6 @@ def instantiateComponent(hefcComponent):
 
     ##### Do not modify below symbol names as they are used by Memory Driver #####
 
-    # Create a Checkbox to enable disable interrupts
-    hefcInterrupt = hefcComponent.createBooleanSymbol("INTERRUPT_ENABLE", hefcMenu)
-    hefcInterrupt.setLabel("Enable Interrupts")
-
     # Flash Details
     hefcFlashNode = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"IFLASH\"]")
     if hefcFlashNode != None:
@@ -87,6 +88,68 @@ def instantiateComponent(hefcComponent):
         hefcFlashProgramSize = hefcComponent.createStringSymbol("FLASH_PROGRAM_SIZE", hefcMenu)
         hefcFlashProgramSize.setVisible(False)
         hefcFlashProgramSize.setDefaultValue(hefcFlashNode.getAttribute("pagesize"))
+
+    #Flash Erase size
+    hefcFlashEraseSize = hefcComponent.createStringSymbol("FLASH_ERASE_SIZE", hefcMenu)
+    hefcFlashEraseSize.setVisible(False)
+    hefcFlashEraseSize.setDefaultValue("4096")
+
+    # Create a Checkbox to enable disable interrupts
+    hefcInterrupt = hefcComponent.createBooleanSymbol("INTERRUPT_ENABLE", hefcMenu)
+    hefcInterrupt.setLabel("Enable Interrupts")
+
+    hefcMemoryDriver = hefcComponent.createBooleanSymbol("DRV_MEMORY_CONNECTED", hefcMenu)
+    hefcMemoryDriver.setLabel("Memory Driver Connected")
+    hefcMemoryDriver.setVisible(False)
+    hefcMemoryDriver.setDefaultValue(False)
+
+    offsetStart = (int(hefcFlashSize.getValue(),16) / 2)
+
+    nvmOffset = str(hex(int(hefcFlashStartAddress.getValue(),16) + offsetStart))
+
+    hefcMemoryStartAddr = hefcComponent.createStringSymbol("START_ADDRESS", hefcMenu)
+    hefcMemoryStartAddr.setLabel("NVM Media Start Address")
+    hefcMemoryStartAddr.setVisible(False)
+    hefcMemoryStartAddr.setDefaultValue(nvmOffset[2:])
+    hefcMemoryStartAddr.setDependencies(hefcSetMemoryDependency, ["DRV_MEMORY_CONNECTED"])
+
+    memMediaSizeKB = (offsetStart / 1024)
+
+    hefcMemoryMediaSize = hefcComponent.createIntegerSymbol("MEMORY_MEDIA_SIZE", hefcMenu)
+    hefcMemoryMediaSize.setLabel("NVM Media Size (KB)")
+    hefcMemoryMediaSize.setVisible(False)
+    hefcMemoryMediaSize.setDefaultValue(memMediaSizeKB)
+    hefcMemoryMediaSize.setDependencies(hefcSetMemoryDependency, ["DRV_MEMORY_CONNECTED"])
+
+    hefcMemoryEraseEnable = hefcComponent.createBooleanSymbol("ERASE_ENABLE", None)
+    hefcMemoryEraseEnable.setLabel("NVM Erase Enable")
+    hefcMemoryEraseEnable.setVisible(False)
+    hefcMemoryEraseEnable.setDefaultValue(True)
+    hefcMemoryEraseEnable.setReadOnly(True)
+
+    hefcMemoryEraseBufferSize = hefcComponent.createIntegerSymbol("ERASE_BUFFER_SIZE", hefcMenu)
+    hefcMemoryEraseBufferSize.setLabel("NVM Erase Buffer Size")
+    hefcMemoryEraseBufferSize.setVisible(False)
+    hefcMemoryEraseBufferSize.setDefaultValue(int(hefcFlashEraseSize.getValue()))
+    hefcMemoryEraseBufferSize.setDependencies(hefcSetMemoryDependency, ["DRV_MEMORY_CONNECTED", "ERASE_ENABLE"])
+
+    hefcMemoryEraseComment = hefcComponent.createCommentSymbol("ERASE_COMMENT", hefcMenu)
+    hefcMemoryEraseComment.setVisible(False)
+    hefcMemoryEraseComment.setLabel("*** Should be equal to Sector Erase Size ***")
+    hefcMemoryEraseComment.setDependencies(hefcSetMemoryDependency, ["DRV_MEMORY_CONNECTED", "ERASE_ENABLE"])
+
+    writeApiName = hefcInstanceName.getValue() + "_PageWrite"
+    eraseApiName = hefcInstanceName.getValue() + "_SectorErase"
+
+    hefcWriteApiName = hefcComponent.createStringSymbol("WRITE_API_NAME", hefcMenu)
+    hefcWriteApiName.setVisible(False)
+    hefcWriteApiName.setReadOnly(True)
+    hefcWriteApiName.setDefaultValue(writeApiName)
+
+    hefcEraseApiName = hefcComponent.createStringSymbol("ERASE_API_NAME", hefcMenu)
+    hefcEraseApiName.setVisible(False)
+    hefcEraseApiName.setReadOnly(True)
+    hefcEraseApiName.setDefaultValue(eraseApiName)
 
     interruptVector = hefcInstanceName.getValue() + "_INT0" + "_INTERRUPT_ENABLE"
     interruptHandler = hefcInstanceName.getValue() + "_INT0" + "_INTERRUPT_HANDLER"
