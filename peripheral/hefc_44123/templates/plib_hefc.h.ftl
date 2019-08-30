@@ -58,9 +58,14 @@
 // Section: Interface
 // *****************************************************************************
 // *****************************************************************************
-
+#define ${HEFC_INSTANCE_NAME}_SECTORSIZE              ${FLASH_ERASE_SIZE}
 #define ${HEFC_INSTANCE_NAME}_PAGESIZE                ${FLASH_PROGRAM_SIZE}
 #define ${HEFC_INSTANCE_NAME}_LOCKSIZE                256
+<#if DRV_MEMORY_CONNECTED == true>
+    <#lt>#define ${HEFC_INSTANCE_NAME}_START_ADDRESS           0x${START_ADDRESS}
+    <#lt>#define ${HEFC_INSTANCE_NAME}_MEDIA_SIZE              ${MEMORY_MEDIA_SIZE}
+    <#lt>#define ${HEFC_INSTANCE_NAME}_ERASE_BUFFER_SIZE       ${ERASE_BUFFER_SIZE}
+</#if>
 
 typedef enum
 {
