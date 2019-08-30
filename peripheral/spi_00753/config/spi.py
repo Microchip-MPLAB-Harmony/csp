@@ -25,23 +25,23 @@
 #### Register Information ####
 ################################################################################
 # SPICON Register
-spiValGrp_SPI1CON_MSTEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/value-group@[name="SPI1CON__MSTEN"]')
-spiBitField_SPI1CON_MSTEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/register-group@[name="SPI"]/register@[name="SPI1CON"]/bitfield@[name="MSTEN"]')
+spiValGrp_SPI2CON_MSTEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/value-group@[name="SPI2CON__MSTEN"]')
+spiBitField_SPI2CON_MSTEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/register-group@[name="SPI"]/register@[name="SPI2CON"]/bitfield@[name="MSTEN"]')
 
-spiValGrp_SPI1CON_MSSEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/value-group@[name="SPI1CON__MSSEN"]')
-spiBitField_SPI1CON_MSSEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/register-group@[name="SPI"]/register@[name="SPI1CON"]/bitfield@[name="MSSEN"]')
+spiValGrp_SPI2CON_MSSEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/value-group@[name="SPI2CON__MSSEN"]')
+spiBitField_SPI2CON_MSSEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/register-group@[name="SPI"]/register@[name="SPI2CON"]/bitfield@[name="MSSEN"]')
 
-spiValGrp_SPI1CON_MODE = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/value-group@[name="SPI1CON__MODE32"]')
-spiBitField_SPI1CON_MODE = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/register-group@[name="SPI"]/register@[name="SPI1CON"]/bitfield@[name="MODE32"]')
+spiValGrp_SPI2CON_MODE = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/value-group@[name="SPI2CON__MODE32"]')
+spiBitField_SPI2CON_MODE = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/register-group@[name="SPI"]/register@[name="SPI2CON"]/bitfield@[name="MODE32"]')
 
-spiValGrp_SPI1CON_CKE = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/value-group@[name="SPI1CON__CKE"]')
-spiBitField_SPI1CON_CKE = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/register-group@[name="SPI"]/register@[name="SPI1CON"]/bitfield@[name="CKE"]')
+spiValGrp_SPI2CON_CKE = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/value-group@[name="SPI2CON__CKE"]')
+spiBitField_SPI2CON_CKE = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/register-group@[name="SPI"]/register@[name="SPI2CON"]/bitfield@[name="CKE"]')
 
-spiValGrp_SPI1CON_CKP = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/value-group@[name="SPI1CON__CKP"]')
-spiBitField_SPI1CON_CKP = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/register-group@[name="SPI"]/register@[name="SPI1CON"]/bitfield@[name="CKP"]')
+spiValGrp_SPI2CON_CKP = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/value-group@[name="SPI2CON__CKP"]')
+spiBitField_SPI2CON_CKP = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/register-group@[name="SPI"]/register@[name="SPI2CON"]/bitfield@[name="CKP"]')
 
-spiValGrp_SPI1CON_MSSEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/value-group@[name="SPI1CON__MSSEN"]')
-spiBitField_SPI1CON_MSSEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/register-group@[name="SPI"]/register@[name="SPI1CON"]/bitfield@[name="MSSEN"]')
+spiValGrp_SPI2CON_MSSEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/value-group@[name="SPI2CON__MSSEN"]')
+spiBitField_SPI2CON_MSSEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/register-group@[name="SPI"]/register@[name="SPI2CON"]/bitfield@[name="MSSEN"]')
 
 ################################################################################
 #### Global Variables ####
@@ -425,9 +425,9 @@ def instantiateComponent(spiComponent):
 
     ## MSTEN Selection Bit
     msten_names = []
-    _get_bitfield_names(spiValGrp_SPI1CON_MSTEN, msten_names)
+    _get_bitfield_names(spiValGrp_SPI2CON_MSTEN, msten_names)
     spiSym_SPICON_MSTEN = spiComponent.createKeyValueSetSymbol( "SPI_MSTR_MODE_EN",None)
-    spiSym_SPICON_MSTEN.setLabel(spiBitField_SPI1CON_MSTEN.getAttribute("caption"))
+    spiSym_SPICON_MSTEN.setLabel(spiBitField_SPI2CON_MSTEN.getAttribute("caption"))
     spiSym_SPICON_MSTEN.setDefaultValue(0)
     spiSym_SPICON_MSTEN.setReadOnly(True)
     spiSym_SPICON_MSTEN.setOutputMode( "Value" )
@@ -437,9 +437,9 @@ def instantiateComponent(spiComponent):
 
     ## CLock Polarity
     clkpol_names = []
-    _get_bitfield_names(spiValGrp_SPI1CON_CKP, clkpol_names)
+    _get_bitfield_names(spiValGrp_SPI2CON_CKP, clkpol_names)
     spiSym_SPICON_CLKPOL = spiComponent.createKeyValueSetSymbol( "SPI_SPICON_CLK_POL",None)
-    spiSym_SPICON_CLKPOL.setLabel(spiBitField_SPI1CON_CKP.getAttribute("caption"))
+    spiSym_SPICON_CLKPOL.setLabel(spiBitField_SPI2CON_CKP.getAttribute("caption"))
     spiSym_SPICON_CLKPOL.setDefaultValue(1)
     spiSym_SPICON_CLKPOL.setOutputMode( "Value" )
     spiSym_SPICON_CLKPOL.setDisplayMode( "Description" )
@@ -448,9 +448,9 @@ def instantiateComponent(spiComponent):
 
     ## Clock Phase Bit
     clkph_names = []
-    _get_bitfield_names(spiValGrp_SPI1CON_CKE, clkph_names)
+    _get_bitfield_names(spiValGrp_SPI2CON_CKE, clkph_names)
     spiSym_SPICON_CLKPH = spiComponent.createKeyValueSetSymbol( "SPI_SPICON_CLK_PH",None)
-    spiSym_SPICON_CLKPH.setLabel(spiBitField_SPI1CON_CKE.getAttribute("caption"))
+    spiSym_SPICON_CLKPH.setLabel(spiBitField_SPI2CON_CKE.getAttribute("caption"))
     spiSym_SPICON_CLKPH.setDefaultValue(0)
     spiSym_SPICON_CLKPH.setOutputMode( "Value" )
     spiSym_SPICON_CLKPH.setDisplayMode( "Description" )
@@ -459,9 +459,9 @@ def instantiateComponent(spiComponent):
 
     ## Slave slect pin enable bit
     ssen_names = []
-    _get_bitfield_names(spiValGrp_SPI1CON_MSSEN, ssen_names)
+    _get_bitfield_names(spiValGrp_SPI2CON_MSSEN, ssen_names)
     spiSym_SPICON_MSSEN = spiComponent.createKeyValueSetSymbol( "SPI_SPICON_MSSEN",None)
-    spiSym_SPICON_MSSEN.setLabel(spiBitField_SPI1CON_MSSEN.getAttribute("caption"))
+    spiSym_SPICON_MSSEN.setLabel(spiBitField_SPI2CON_MSSEN.getAttribute("caption"))
     spiSym_SPICON_MSSEN.setDefaultValue(0)
     spiSym_SPICON_MSSEN.setOutputMode( "Value" )
     spiSym_SPICON_MSSEN.setDisplayMode( "Description" )
@@ -470,9 +470,9 @@ def instantiateComponent(spiComponent):
 
     ## SPI data width(Mode)
     mode_names = []
-    _get_bitfield_names(spiValGrp_SPI1CON_MODE, mode_names)
+    _get_bitfield_names(spiValGrp_SPI2CON_MODE, mode_names)
     spiSym_SPICON_MODE = spiComponent.createKeyValueSetSymbol( "SPI_SPICON_MODE",None)
-    spiSym_SPICON_MODE.setLabel(spiBitField_SPI1CON_MODE.getAttribute("caption"))
+    spiSym_SPICON_MODE.setLabel(spiBitField_SPI2CON_MODE.getAttribute("caption"))
     spiSym_SPICON_MODE.setDefaultValue(3)
     spiSym_SPICON_MODE.setOutputMode( "Value" )
     spiSym_SPICON_MODE.setDisplayMode( "Description" )
