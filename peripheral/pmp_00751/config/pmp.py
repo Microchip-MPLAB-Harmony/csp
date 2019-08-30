@@ -122,15 +122,16 @@ def instantiateComponent(pmpComponent):
     for ii in pmpCS1P_names:
         pmpCS1P.addKey( ii['desc'], ii['value'], ii['key'] )
 
-    pmpCS2P_names = []
-    _get_bitfield_names(pmpValGrp_PMCON_CS2P, pmpCS2P_names)
-    pmpCS2P = pmpComponent.createKeyValueSetSymbol("PMCON_CS2P", pmpSym_MasterModeMenu)
-    pmpCS2P.setLabel("Chip Select 2 Polarity bit")
-    pmpCS2P.setDefaultValue(0)
-    pmpCS2P.setOutputMode("Value")
-    pmpCS2P.setDisplayMode("Description")
-    for ii in pmpCS2P_names:
-        pmpCS2P.addKey( ii['desc'], ii['value'], ii['key'] )
+    if pmpValGrp_PMCON_CS2P != None:
+        pmpCS2P_names = []
+        _get_bitfield_names(pmpValGrp_PMCON_CS2P, pmpCS2P_names)
+        pmpCS2P = pmpComponent.createKeyValueSetSymbol("PMCON_CS2P", pmpSym_MasterModeMenu)
+        pmpCS2P.setLabel("Chip Select 2 Polarity bit")
+        pmpCS2P.setDefaultValue(0)
+        pmpCS2P.setOutputMode("Value")
+        pmpCS2P.setDisplayMode("Description")
+        for ii in pmpCS2P_names:
+            pmpCS2P.addKey( ii['desc'], ii['value'], ii['key'] )
 
     pmpWAITB_names = []
     _get_bitfield_names(pmpValGrp_PMMODE_WAITB, pmpWAITB_names)
@@ -162,7 +163,7 @@ def instantiateComponent(pmpComponent):
     for ii in pmpWAITE_names:
         pmpWaitE.addKey( ii['desc'], ii['value'], ii['key'] )
 
-    if pmpValGrp_PMMODE_MODE16 is not None:
+    if pmpValGrp_PMMODE_MODE16 != None:
         pmpMODE16_names = []
         _get_bitfield_names(pmpValGrp_PMMODE_MODE16, pmpMODE16_names)
         pmpMode16 = pmpComponent.createKeyValueSetSymbol("PMMODE_MODE16", pmpSym_MasterModeMenu)

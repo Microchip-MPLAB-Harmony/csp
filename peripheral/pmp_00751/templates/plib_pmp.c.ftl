@@ -96,8 +96,10 @@ void ${PMP_INSTANCE_NAME}_Initialize( void )
 
     PMCONbits.CS1P = ${PMCON_CS1P};
 
+<#if PMCON_CS2P??>
     PMCONbits.CS2P = ${PMCON_CS2P};
 
+</#if>
 <#if PMMODE_ADDRESSPORT_ENABLE == true>
     PMADDR = 0;
 
