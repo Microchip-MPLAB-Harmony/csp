@@ -69,8 +69,6 @@ typedef enum
     HEFC_CMD_ERROR = 0x2,
     /*Flash region is locked*/
     HEFC_LOCK_ERROR = 0x4,
-    /*Flash Error*/
-    HEFC_FLERR_ERROR = 0x8,
     /*Flash Encountered an write error*/
     HEFC_WRITE_ERROR = 0x10,
 } HEFC_ERROR;
