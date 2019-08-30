@@ -60,7 +60,7 @@
 // *****************************************************************************
 
 #define ${HEFC_INSTANCE_NAME}_PAGESIZE                ${FLASH_PROGRAM_SIZE}
-#define ${HEFC_INSTANCE_NAME}_LOCKSIZE                0x4000
+#define ${HEFC_INSTANCE_NAME}_LOCKSIZE                256
 
 typedef enum
 {
