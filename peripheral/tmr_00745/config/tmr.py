@@ -437,23 +437,24 @@ def instantiateComponent(tmrComponent):
     tmrSym_interrupt_comment.setDependencies(timerMasterInterruptVisible, ["TIMER_32BIT_MODE_SEL"])
 
     #Timer clock Source Slection configuration
-    tcs_names = []
-    _get_bitfield_names(tmrValGrp_T2CON_TCS, tcs_names)
-    tmrSym_T2CON_SOURCE_SEL = tmrComponent.createKeyValueSetSymbol("TIMER_SRC_SEL", None)
-    tmrSym_T2CON_SOURCE_SEL.setLabel("Select Timer Clock Source")
-    tmrSym_T2CON_SOURCE_SEL.setOutputMode("Value")
-    tmrSym_T2CON_SOURCE_SEL.setDisplayMode("Description")
-    for ii in tcs_names:
-        tmrSym_T2CON_SOURCE_SEL.addKey( ii['desc'], ii['value'], ii['key'] )
-    tmrSym_T2CON_SOURCE_SEL.setDefaultValue(1)
-    tmrSym_T2CON_SOURCE_SEL.setDependencies(timerConfigurationsVisible, ["TIMER_SLAVE"])
-    tmrSym_T2CON_SOURCE_SEL.setVisible(not bool(slave))
+    if tmrValGrp_T2CON_TCS is not None:
+        tcs_names = []
+        _get_bitfield_names(tmrValGrp_T2CON_TCS, tcs_names)
+        tmrSym_T2CON_SOURCE_SEL = tmrComponent.createKeyValueSetSymbol("TIMER_SRC_SEL", None)
+        tmrSym_T2CON_SOURCE_SEL.setLabel("Select Timer Clock Source")
+        tmrSym_T2CON_SOURCE_SEL.setOutputMode("Value")
+        tmrSym_T2CON_SOURCE_SEL.setDisplayMode("Description")
+        for ii in tcs_names:
+            tmrSym_T2CON_SOURCE_SEL.addKey( ii['desc'], ii['value'], ii['key'] )
+        tmrSym_T2CON_SOURCE_SEL.setDefaultValue(1)
+        tmrSym_T2CON_SOURCE_SEL.setDependencies(timerConfigurationsVisible, ["TIMER_SLAVE"])
+        tmrSym_T2CON_SOURCE_SEL.setVisible(not bool(slave))
 
-    tmrSym_EXT_CLOCK_FREQ = tmrComponent.createIntegerSymbol("TIMER_EXT_CLOCK_FREQ", tmrSym_T2CON_SOURCE_SEL)
-    tmrSym_EXT_CLOCK_FREQ.setLabel("External Clock Frequency")
-    tmrSym_EXT_CLOCK_FREQ.setVisible(False)
-    tmrSym_EXT_CLOCK_FREQ.setDefaultValue(50000000)
-    tmrSym_EXT_CLOCK_FREQ.setDependencies(tmr1TsyncVisible, ["TIMER_SRC_SEL", "TIMER_SLAVE"])
+        tmrSym_EXT_CLOCK_FREQ = tmrComponent.createIntegerSymbol("TIMER_EXT_CLOCK_FREQ", tmrSym_T2CON_SOURCE_SEL)
+        tmrSym_EXT_CLOCK_FREQ.setLabel("External Clock Frequency")
+        tmrSym_EXT_CLOCK_FREQ.setVisible(False)
+        tmrSym_EXT_CLOCK_FREQ.setDefaultValue(50000000)
+        tmrSym_EXT_CLOCK_FREQ.setDependencies(tmr1TsyncVisible, ["TIMER_SRC_SEL", "TIMER_SLAVE"])
 
     tmrSym_CLOCK_FREQ = tmrComponent.createIntegerSymbol("TIMER_CLOCK_FREQ", None)
     tmrSym_CLOCK_FREQ.setLabel("Timer Clock Frequency")
@@ -509,11 +510,18 @@ def instantiateComponent(tmrComponent):
     tmrSymField_T2CON_SIDL.setDependencies(timerConfigurationsVisible, ["TIMER_SLAVE"])
 
     #Timer TxCON Reg Value
-    tmrSym_T2CON_Value = tmrComponent.createHexSymbol("TCON_REG_VALUE",None)
-    tmrSym_T2CON_Value.setDefaultValue((int(tmrSymField_T2CON_SIDL.getSelectedValue()) << 13) | (int (tmrSym_T2CON_PRESCALER.getSelectedValue()) << 4) \
-    | (int(tmrSym_T2CON_32BIT_MODE_SEL.getSelectedValue()) << 3) | (int(tmrSym_T2CON_SOURCE_SEL.getSelectedValue()) << 1))
-    tmrSym_T2CON_Value.setVisible(False)
-    tmrSym_T2CON_Value.setDependencies(T2CONcombineValues,["TIMER_SIDL", "TIMER_PRE_SCALER", "TIMER_32BIT_MODE_SEL", "TIMER_SRC_SEL"])
+    if tmrValGrp_T2CON_TCS is not None:
+        tmrSym_T2CON_Value = tmrComponent.createHexSymbol("TCON_REG_VALUE",None)
+        tmrSym_T2CON_Value.setDefaultValue((int(tmrSymField_T2CON_SIDL.getSelectedValue()) << 13) | (int (tmrSym_T2CON_PRESCALER.getSelectedValue()) << 4) \
+        | (int(tmrSym_T2CON_32BIT_MODE_SEL.getSelectedValue()) << 3) | (int(tmrSym_T2CON_SOURCE_SEL.getSelectedValue()) << 1))
+        tmrSym_T2CON_Value.setVisible(False)
+        tmrSym_T2CON_Value.setDependencies(T2CONcombineValues,["TIMER_SIDL", "TIMER_PRE_SCALER", "TIMER_32BIT_MODE_SEL", "TIMER_SRC_SEL"])
+    else:
+        tmrSym_T2CON_Value = tmrComponent.createHexSymbol("TCON_REG_VALUE",None)
+        tmrSym_T2CON_Value.setDefaultValue((int(tmrSymField_T2CON_SIDL.getSelectedValue()) << 13) | (int (tmrSym_T2CON_PRESCALER.getSelectedValue()) << 4) \
+        | (int(tmrSym_T2CON_32BIT_MODE_SEL.getSelectedValue()) << 3))
+        tmrSym_T2CON_Value.setVisible(False)
+        tmrSym_T2CON_Value.setDependencies(T2CONcombineValues,["TIMER_SIDL", "TIMER_PRE_SCALER", "TIMER_32BIT_MODE_SEL"])
 
     tmrInstanceName.setDependencies(updateCodeGeneration, ["TIMER_SLAVE"])
     ############################################################################
