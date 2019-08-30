@@ -242,30 +242,6 @@
     <#lt>
     <#lt>}
 
-    <#lt>void CORETIMER_DelayMs ( uint32_t delay_ms)
-    <#lt>{
-    <#lt>    uint32_t startCount, endCount;
-    <#lt>
-    <#lt>    /* Calculate the end count for the given delay */
-    <#lt>    endCount=(CORE_TIMER_FREQUENCY/1000)*delay_ms;
-    <#lt>
-    <#lt>    startCount=_CP0_GET_COUNT();
-    <#lt>    while((_CP0_GET_COUNT()-startCount)<endCount);
-    <#lt>
-    <#lt>}
-
-    <#lt>void CORETIMER_DelayUs ( uint32_t delay_us)
-    <#lt>{
-    <#lt>    uint32_t startCount, endCount;
-    <#lt>
-    <#lt>    /* Calculate the end count for the given delay */
-    <#lt>    endCount=(CORE_TIMER_FREQUENCY/1000000)*delay_us;
-    <#lt>
-    <#lt>    startCount=_CP0_GET_COUNT();
-    <#lt>    while((_CP0_GET_COUNT()-startCount)<endCount);
-    <#lt>
-    <#lt>}
-
     <#lt>void CORETIMER_Start( void )
     <#lt>{
     <#lt>    // Disable Timer by setting Disable Count (DC) bit
@@ -320,5 +296,30 @@
 
     <#lt>    return false;
     <#lt>}
+</#if>
 
+<#if CORE_TIMER_INTERRUPT_MODE == false || CORE_TIMER_PERIODIC_INTERRUPT == false >
+    <#lt>void CORETIMER_DelayMs ( uint32_t delay_ms)
+    <#lt>{
+    <#lt>    uint32_t startCount, endCount;
+    <#lt>
+    <#lt>    /* Calculate the end count for the given delay */
+    <#lt>    endCount=(CORE_TIMER_FREQUENCY/1000)*delay_ms;
+    <#lt>
+    <#lt>    startCount=_CP0_GET_COUNT();
+    <#lt>    while((_CP0_GET_COUNT()-startCount)<endCount);
+    <#lt>
+    <#lt>}
+
+    <#lt>void CORETIMER_DelayUs ( uint32_t delay_us)
+    <#lt>{
+    <#lt>    uint32_t startCount, endCount;
+    <#lt>
+    <#lt>    /* Calculate the end count for the given delay */
+    <#lt>    endCount=(CORE_TIMER_FREQUENCY/1000000)*delay_us;
+    <#lt>
+    <#lt>    startCount=_CP0_GET_COUNT();
+    <#lt>    while((_CP0_GET_COUNT()-startCount)<endCount);
+    <#lt>
+    <#lt>}
 </#if>
