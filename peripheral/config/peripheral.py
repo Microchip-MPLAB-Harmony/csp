@@ -69,7 +69,9 @@ peripherals = {
                 "HSMCI_6449"    : ["SDHC"],
                 "SDHC_00187"    : ["SDHC"],
                 "DBGU_6059"     : ["UART"],
-                "PMP_00751"     : ["PMP"]
+                "PMP_00751"     : ["PMP"],
+                "TMR1_00687"    : ["TMR"],
+                "TMR1_02141"    : ["TMR"]
 }
 
 if ("PIC32M" in Variables.get("__PROCESSOR")):

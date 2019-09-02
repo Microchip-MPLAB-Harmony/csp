@@ -10,13 +10,28 @@
             <#assign INT_ENABLE = "EVIC_" + i + "_" + j + "_ENABLE">
             <#assign INT_ENABLE_GENERATE = "EVIC_" + i + "_ENABLE_GENERATE">
             <#if .vars[INT_ENABLE]?? && .vars[INT_ENABLE] == true>
-            <#if (HarmonyCore.SELECT_RTOS)?? && HarmonyCore.SELECT_RTOS != "BareMetal">
+            <#if (HarmonyCore.SELECT_RTOS)?? && HarmonyCore.SELECT_RTOS == "FreeRTOS">
                 <#if !((.vars[INT_ENABLE_GENERATE]??) && (.vars[INT_ENABLE_GENERATE] == false))>
                     <#lt>void ${.vars[INT_NAME]}_Handler (void)
                     <#lt>{
                     <#if .vars[INT_HANDLER_LOCK] == true>
                         <#lt>    ${.vars[INTERRUT_HANDLER]}();
                     </#if>
+                    <#lt>}
+                </#if>
+            <#elseif (HarmonyCore.SELECT_RTOS)?? && HarmonyCore.SELECT_RTOS == "ThreadX">
+                <#if !((.vars[INT_ENABLE_GENERATE]??) && (.vars[INT_ENABLE_GENERATE] == false))>
+                    <#lt>void __ISR(${.vars[INT_VECTOR]}, ipl${.vars[INT_PRIORITY]}AUTO) ${.vars[INT_NAME]}_Handler (void)
+                    <#lt>{
+                    <#lt>    /* Call ThreadX context save. */
+                    <#lt>    _tx_thread_context_save();
+
+                    <#if .vars[INT_HANDLER_LOCK] == true>
+                        <#lt>    ${.vars[INTERRUT_HANDLER]}();
+                    </#if>
+
+                    <#lt>    /* Call ThreadX context restore. */
+                    <#lt>    _tx_thread_context_restore();
                     <#lt>}
                 </#if>
             <#else>
@@ -38,13 +53,28 @@
         <#assign INT_ENABLE = "EVIC_" + i + "_ENABLE">
         <#assign INT_ENABLE_GENERATE = "EVIC_" + i + "_ENABLE_GENERATE">
         <#if .vars[INT_ENABLE]?? && .vars[INT_ENABLE] == true>
-            <#if (HarmonyCore.SELECT_RTOS)?? && HarmonyCore.SELECT_RTOS != "BareMetal">
+            <#if (HarmonyCore.SELECT_RTOS)?? && HarmonyCore.SELECT_RTOS == "FreeRTOS">
                 <#if !((.vars[INT_ENABLE_GENERATE]??) && (.vars[INT_ENABLE_GENERATE] == false))>
                     <#lt>void ${.vars[INT_NAME]}_Handler (void)
                     <#lt>{
                     <#if .vars[INT_HANDLER_LOCK] == true>
                         <#lt>    ${.vars[INTERRUT_HANDLER]}();
                     </#if>
+                    <#lt>}
+                </#if>
+            <#elseif (HarmonyCore.SELECT_RTOS)?? && HarmonyCore.SELECT_RTOS == "ThreadX">
+                <#if !((.vars[INT_ENABLE_GENERATE]??) && (.vars[INT_ENABLE_GENERATE] == false))>
+                    <#lt>void __ISR(${.vars[INT_VECTOR]}, ipl${.vars[INT_PRIORITY]}AUTO) ${.vars[INT_NAME]}_Handler (void)
+                    <#lt>{
+                    <#lt>    /* Call ThreadX context save. */
+                    <#lt>    _tx_thread_context_save();
+
+                    <#if .vars[INT_HANDLER_LOCK] == true>
+                        <#lt>    ${.vars[INTERRUT_HANDLER]}();
+                    </#if>
+
+                    <#lt>    /* Call ThreadX context restore. */
+                    <#lt>    _tx_thread_context_restore();
                     <#lt>}
                 </#if>
             <#else>

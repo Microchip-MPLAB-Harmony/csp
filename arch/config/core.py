@@ -136,8 +136,8 @@ def genSysIntASMSourceFile(symbol, event):
 
     symbol.setEnabled(False)
 
-    #Should be enable only for RTOS
-    if event["value"] != "BareMetal":
+    #Should be enable only for FreeRTOS
+    if event["value"] == "FreeRTOS":
         coreSysFileEnabled = Database.getSymbolValue("core", "CoreSysFiles")
         coreSysSourceFileEnabled = Database.getSymbolValue("core", "CoreSysIntFile")
 
