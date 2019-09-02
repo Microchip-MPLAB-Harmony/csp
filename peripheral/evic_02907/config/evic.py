@@ -79,10 +79,9 @@ evicVectorSettings = {
                #SubPriority Lock,
                #SubPriority Generate,
                #Handler Lock ]
-
-    "CORE_SOFTWARE_0" : [True, True, False, str(min(evicPriorityGroup)), True, False, str(min(evicSubPriorityGroup)), True, False, True],  # Specific to FreeRTOS
+    "CORE_SOFTWARE_0" : [False, True, False, str(min(evicPriorityGroup)), True, False, str(min(evicSubPriorityGroup)), True, False, True],  # Specific to FreeRTOS
     "TIMER_1"         : [False, True, False, str(min(evicPriorityGroup)), True, False, str(min(evicSubPriorityGroup)), True, False, True],  # With RTOS
-    "Peripheral"      : [False, False, True, str(min(evicPriorityGroup)), False, True, str(min(evicSubPriorityGroup)), False, True, False]  # With Baremetal
+    "Peripheral"      : [False, False, True,  str(min(evicPriorityGroup)), False, True,  str(min(evicSubPriorityGroup)), False, True, False]  # With Baremetal
 }
 
 ################################################################################
@@ -172,23 +171,26 @@ def updateEVICVectorParametersValue(symbol, event):
 def updateEVICVectorSettings(symbol, event):
 
     symbolId = symbol.getID()
+    vectorIndex=symbolId.split("_")[1]
 
-    if "_ENABLE_LOCK" in symbolId:
-        symbol.setValue((event["value"] != "BareMetal"), 1)
-    elif "_ENABLE_GENERATE" in symbolId:
-        symbol.setValue((event["value"] == "BareMetal"), 1)
-    elif "_PRIORITY_LOCK" in symbolId:
-        symbol.setValue((event["value"] != "BareMetal"), 1)
-    elif "_PRIORITY_GENERATE" in symbolId:
-        symbol.setValue((event["value"] == "BareMetal"), 1)
-    elif "_SUBPRIORITY_LOCK" in symbolId:
-        symbol.setValue((event["value"] != "BareMetal"), 1)
-    elif "_SUBPRIORITY_GENERATE" in symbolId:
-        symbol.setValue((event["value"] == "BareMetal"), 1)
-    else:
-        symbol.setValue((event["value"] != "BareMetal"), 1)         # For CORE_TIMER_0 with FreeRtos
+    if not ((event["value"] == "ThreadX") and (vectorIndex == "1")): # Software Interrupt 0 is not used by ThreadX
+        if "_ENABLE_LOCK" in symbolId:
+            symbol.setValue((event["value"] != "BareMetal"))
+        elif "_ENABLE_GENERATE" in symbolId:
+            symbol.setValue((event["value"] == "BareMetal"))
+        elif "_PRIORITY_LOCK" in symbolId:
+            symbol.setValue((event["value"] != "BareMetal"))
+        elif "_PRIORITY_GENERATE" in symbolId:
+            symbol.setValue((event["value"] == "BareMetal"))
+        elif "_SUBPRIORITY_LOCK" in symbolId:
+            symbol.setValue((event["value"] != "BareMetal"))
+        elif "_SUBPRIORITY_GENERATE" in symbolId:
+            symbol.setValue((event["value"] == "BareMetal"))
+        else:
+            symbol.setValue((event["value"] != "BareMetal"))         # For CORE_TIMER_0 with FreeRtos
 
-    evicSystemIntASMFile.setEnabled((event["value"] != "BareMetal"))
+
+    evicSystemIntASMFile.setEnabled((event["value"] == "FreeRTOS"))
 
 ################################################################################
 #### Component ####
