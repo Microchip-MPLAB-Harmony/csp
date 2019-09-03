@@ -77,7 +77,7 @@ typedef enum
     NVMCTRL_ERROR_PROG = 0x2,
 
     /* NVMCTRL lock error */
-    NVMCTRL_ERROR_LOCK = 0x3,
+    NVMCTRL_ERROR_LOCK = 0x4,
 
     /* NVMCTRL programming or erase error */
     NVMCTRL_ERROR_NVM = 0x8,
