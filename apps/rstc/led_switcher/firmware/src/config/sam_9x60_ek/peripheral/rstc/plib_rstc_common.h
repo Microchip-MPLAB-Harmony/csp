@@ -88,7 +88,6 @@ typedef enum
     RSTC_WATCHDOG_RESET =   RSTC_SR_RSTTYP_WDT_RST,             // Watch dog fault occurred
     RSTC_SOFTWARE_RESET =   RSTC_SR_RSTTYP_SOFT_RST,            // Dedicated software instruction
     RSTC_USER_RESET =       RSTC_SR_RSTTYP_USER_RST,            // User reset, NRST pin detected low
-    RSTC_CPU_FAIL_RESET =   RSTC_SR_RSTTYP_CPU_FAIL_RST,        // CPU clock failure detection
     RSTC_SLCK_XTAL_RESET =  RSTC_SR_RSTTYP_SLCK_XTAL_RST,       // 32.768 kHz crystal failure detection
 } RSTC_RESET_CAUSE;
 

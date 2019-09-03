@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-04-23T19:01:17Z */
+/* file generated from device description version 2019-08-22T13:04:26Z */
 #ifndef _SAM9X_OTPC_COMPONENT_H_
 #define _SAM9X_OTPC_COMPONENT_H_
 
@@ -142,49 +142,7 @@
 #define OTPC_SR_UNLOCK_Pos                    _U_(11)                                              /**< (OTPC_SR) OTP Registers Unlocked Position */
 #define OTPC_SR_UNLOCK_Msk                    (_U_(0x1) << OTPC_SR_UNLOCK_Pos)                     /**< (OTPC_SR) OTP Registers Unlocked Mask */
 #define OTPC_SR_UNLOCK(value)                 (OTPC_SR_UNLOCK_Msk & ((value) << OTPC_SR_UNLOCK_Pos))
-#define OTPC_SR_AHIDE_Pos                     _U_(12)                                              /**< (OTPC_SR) Hiding On-Going Position */
-#define OTPC_SR_AHIDE_Msk                     (_U_(0x1) << OTPC_SR_AHIDE_Pos)                      /**< (OTPC_SR) Hiding On-Going Mask */
-#define OTPC_SR_AHIDE(value)                  (OTPC_SR_AHIDE_Msk & ((value) << OTPC_SR_AHIDE_Pos))
-#define OTPC_SR_RPGM_Pos                      _U_(16)                                              /**< (OTPC_SR) ROM Programming On-Going Position */
-#define OTPC_SR_RPGM_Msk                      (_U_(0x1) << OTPC_SR_RPGM_Pos)                       /**< (OTPC_SR) ROM Programming On-Going Mask */
-#define OTPC_SR_RPGM(value)                   (OTPC_SR_RPGM_Msk & ((value) << OTPC_SR_RPGM_Pos))  
-#define OTPC_SR_PPGM_Pos                      _U_(20)                                              /**< (OTPC_SR) Patch Programming On-Going Position */
-#define OTPC_SR_PPGM_Msk                      (_U_(0x1) << OTPC_SR_PPGM_Pos)                       /**< (OTPC_SR) Patch Programming On-Going Mask */
-#define OTPC_SR_PPGM(value)                   (OTPC_SR_PPGM_Msk & ((value) << OTPC_SR_PPGM_Pos))  
-#define OTPC_SR_PEMUL_Pos                     _U_(21)                                              /**< (OTPC_SR) Patch Emulation Enabled Position */
-#define OTPC_SR_PEMUL_Msk                     (_U_(0x1) << OTPC_SR_PEMUL_Pos)                      /**< (OTPC_SR) Patch Emulation Enabled Mask */
-#define OTPC_SR_PEMUL(value)                  (OTPC_SR_PEMUL_Msk & ((value) << OTPC_SR_PEMUL_Pos))
-#define OTPC_SR_PREAD_Pos                     _U_(22)                                              /**< (OTPC_SR) Patch Read On-Going Position */
-#define OTPC_SR_PREAD_Msk                     (_U_(0x1) << OTPC_SR_PREAD_Pos)                      /**< (OTPC_SR) Patch Read On-Going Mask */
-#define OTPC_SR_PREAD(value)                  (OTPC_SR_PREAD_Msk & ((value) << OTPC_SR_PREAD_Pos))
-#define OTPC_SR_PREFRESH_Pos                  _U_(23)                                              /**< (OTPC_SR) Patch Refresh On-Going Position */
-#define OTPC_SR_PREFRESH_Msk                  (_U_(0x1) << OTPC_SR_PREFRESH_Pos)                   /**< (OTPC_SR) Patch Refresh On-Going Mask */
-#define OTPC_SR_PREFRESH(value)               (OTPC_SR_PREFRESH_Msk & ((value) << OTPC_SR_PREFRESH_Pos))
-#define OTPC_SR_APGM_Pos                      _U_(24)                                              /**< (OTPC_SR) Engineering Programming On-Going Position */
-#define OTPC_SR_APGM_Msk                      (_U_(0x1) << OTPC_SR_APGM_Pos)                       /**< (OTPC_SR) Engineering Programming On-Going Mask */
-#define OTPC_SR_APGM(value)                   (OTPC_SR_APGM_Msk & ((value) << OTPC_SR_APGM_Pos))  
-#define OTPC_SR_ALOCK_Pos                     _U_(25)                                              /**< (OTPC_SR) Engineering Lock On-Going Position */
-#define OTPC_SR_ALOCK_Msk                     (_U_(0x1) << OTPC_SR_ALOCK_Pos)                      /**< (OTPC_SR) Engineering Lock On-Going Mask */
-#define OTPC_SR_ALOCK(value)                  (OTPC_SR_ALOCK_Msk & ((value) << OTPC_SR_ALOCK_Pos))
-#define OTPC_SR_AINVLD_Pos                    _U_(26)                                              /**< (OTPC_SR) Engineering Invalidation On-Going Position */
-#define OTPC_SR_AINVLD_Msk                    (_U_(0x1) << OTPC_SR_AINVLD_Pos)                     /**< (OTPC_SR) Engineering Invalidation On-Going Mask */
-#define OTPC_SR_AINVLD(value)                 (OTPC_SR_AINVLD_Msk & ((value) << OTPC_SR_AINVLD_Pos))
-#define OTPC_SR_AEMUL_Pos                     _U_(27)                                              /**< (OTPC_SR) Engineering Emulation Enabled Position */
-#define OTPC_SR_AEMUL_Msk                     (_U_(0x1) << OTPC_SR_AEMUL_Pos)                      /**< (OTPC_SR) Engineering Emulation Enabled Mask */
-#define OTPC_SR_AEMUL(value)                  (OTPC_SR_AEMUL_Msk & ((value) << OTPC_SR_AEMUL_Pos))
-#define OTPC_SR_AMKBB_Pos                     _U_(28)                                              /**< (OTPC_SR) Engineering Master Key Bus Busy Position */
-#define OTPC_SR_AMKBB_Msk                     (_U_(0x1) << OTPC_SR_AMKBB_Pos)                      /**< (OTPC_SR) Engineering Master Key Bus Busy Mask */
-#define OTPC_SR_AMKBB(value)                  (OTPC_SR_AMKBB_Msk & ((value) << OTPC_SR_AMKBB_Pos))
-#define OTPC_SR_ASKBB_Pos                     _U_(29)                                              /**< (OTPC_SR) Engineering Slave Key Bus Busy Position */
-#define OTPC_SR_ASKBB_Msk                     (_U_(0x1) << OTPC_SR_ASKBB_Pos)                      /**< (OTPC_SR) Engineering Slave Key Bus Busy Mask */
-#define OTPC_SR_ASKBB(value)                  (OTPC_SR_ASKBB_Msk & ((value) << OTPC_SR_ASKBB_Pos))
-#define OTPC_SR_AREAD_Pos                     _U_(30)                                              /**< (OTPC_SR) Engineering Read On-Going Position */
-#define OTPC_SR_AREAD_Msk                     (_U_(0x1) << OTPC_SR_AREAD_Pos)                      /**< (OTPC_SR) Engineering Read On-Going Mask */
-#define OTPC_SR_AREAD(value)                  (OTPC_SR_AREAD_Msk & ((value) << OTPC_SR_AREAD_Pos))
-#define OTPC_SR_AFLUSH_Pos                    _U_(31)                                              /**< (OTPC_SR) Engineering Flush On-Going Position */
-#define OTPC_SR_AFLUSH_Msk                    (_U_(0x1) << OTPC_SR_AFLUSH_Pos)                     /**< (OTPC_SR) Engineering Flush On-Going Mask */
-#define OTPC_SR_AFLUSH(value)                 (OTPC_SR_AFLUSH_Msk & ((value) << OTPC_SR_AFLUSH_Pos))
-#define OTPC_SR_Msk                           _U_(0xFFF11BFF)                                      /**< (OTPC_SR) Register Mask  */
+#define OTPC_SR_Msk                           _U_(0x00000BFF)                                      /**< (OTPC_SR) Register Mask  */
 
 
 /* -------- OTPC_IER : (OTPC Offset: 0x10) ( /W 32) Interrupt Enable Register -------- */
@@ -521,126 +479,32 @@
 #define OTPC_UHC1R_Msk                        _U_(0x0003C7FF)                                      /**< (OTPC_UHC1R) Register Mask  */
 
 
-/* -------- OTPC_UID0R : (OTPC Offset: 0x60) ( R/ 32) Product UID Register 0 -------- */
+/* -------- OTPC_UID0R : (OTPC Offset: 0x60) ( R/ 32) Product UID x Register 0 -------- */
 #define OTPC_UID0R_UID_Pos                    _U_(0)                                               /**< (OTPC_UID0R) Unique Product ID Position */
 #define OTPC_UID0R_UID_Msk                    (_U_(0xFFFFFFFF) << OTPC_UID0R_UID_Pos)              /**< (OTPC_UID0R) Unique Product ID Mask */
 #define OTPC_UID0R_UID(value)                 (OTPC_UID0R_UID_Msk & ((value) << OTPC_UID0R_UID_Pos))
 #define OTPC_UID0R_Msk                        _U_(0xFFFFFFFF)                                      /**< (OTPC_UID0R) Register Mask  */
 
 
-/* -------- OTPC_UID1R : (OTPC Offset: 0x64) ( R/ 32) Product UID Register 1 -------- */
+/* -------- OTPC_UID1R : (OTPC Offset: 0x64) ( R/ 32) Product UID x Register 1 -------- */
 #define OTPC_UID1R_UID_Pos                    _U_(0)                                               /**< (OTPC_UID1R) Unique Product ID Position */
 #define OTPC_UID1R_UID_Msk                    (_U_(0xFFFFFFFF) << OTPC_UID1R_UID_Pos)              /**< (OTPC_UID1R) Unique Product ID Mask */
 #define OTPC_UID1R_UID(value)                 (OTPC_UID1R_UID_Msk & ((value) << OTPC_UID1R_UID_Pos))
 #define OTPC_UID1R_Msk                        _U_(0xFFFFFFFF)                                      /**< (OTPC_UID1R) Register Mask  */
 
 
-/* -------- OTPC_UID2R : (OTPC Offset: 0x68) ( R/ 32) Product UID Register 2 -------- */
+/* -------- OTPC_UID2R : (OTPC Offset: 0x68) ( R/ 32) Product UID x Register 2 -------- */
 #define OTPC_UID2R_UID_Pos                    _U_(0)                                               /**< (OTPC_UID2R) Unique Product ID Position */
 #define OTPC_UID2R_UID_Msk                    (_U_(0xFFFFFFFF) << OTPC_UID2R_UID_Pos)              /**< (OTPC_UID2R) Unique Product ID Mask */
 #define OTPC_UID2R_UID(value)                 (OTPC_UID2R_UID_Msk & ((value) << OTPC_UID2R_UID_Pos))
 #define OTPC_UID2R_Msk                        _U_(0xFFFFFFFF)                                      /**< (OTPC_UID2R) Register Mask  */
 
 
-/* -------- OTPC_UID3R : (OTPC Offset: 0x6C) ( R/ 32) Product UID Register 3 -------- */
+/* -------- OTPC_UID3R : (OTPC Offset: 0x6C) ( R/ 32) Product UID x Register 3 -------- */
 #define OTPC_UID3R_UID_Pos                    _U_(0)                                               /**< (OTPC_UID3R) Unique Product ID Position */
 #define OTPC_UID3R_UID_Msk                    (_U_(0xFFFFFFFF) << OTPC_UID3R_UID_Pos)              /**< (OTPC_UID3R) Unique Product ID Mask */
 #define OTPC_UID3R_UID(value)                 (OTPC_UID3R_UID_Msk & ((value) << OTPC_UID3R_UID_Pos))
 #define OTPC_UID3R_Msk                        _U_(0xFFFFFFFF)                                      /**< (OTPC_UID3R) Register Mask  */
-
-
-/* -------- OTPC_HCSR : (OTPC Offset: 0x70) (R/W 32) Hardware Configuration Selection Register -------- */
-#define OTPC_HCSR_HCSEL_Pos                   _U_(0)                                               /**< (OTPC_HCSR) Hardware Configuration Selection Position */
-#define OTPC_HCSR_HCSEL_Msk                   (_U_(0xF) << OTPC_HCSR_HCSEL_Pos)                    /**< (OTPC_HCSR) Hardware Configuration Selection Mask */
-#define OTPC_HCSR_HCSEL(value)                (OTPC_HCSR_HCSEL_Msk & ((value) << OTPC_HCSR_HCSEL_Pos))
-#define OTPC_HCSR_Msk                         _U_(0x0000000F)                                      /**< (OTPC_HCSR) Register Mask  */
-
-
-/* -------- OTPC_HCDR : (OTPC Offset: 0x74) ( R/ 32) Hardware Configuration Data Register -------- */
-#define OTPC_HCDR_HCFG_Pos                    _U_(0)                                               /**< (OTPC_HCDR) Hardware Configuration Value Position */
-#define OTPC_HCDR_HCFG_Msk                    (_U_(0xFFFFFFFF) << OTPC_HCDR_HCFG_Pos)              /**< (OTPC_HCDR) Hardware Configuration Value Mask */
-#define OTPC_HCDR_HCFG(value)                 (OTPC_HCDR_HCFG_Msk & ((value) << OTPC_HCDR_HCFG_Pos))
-#define OTPC_HCDR_Msk                         _U_(0xFFFFFFFF)                                      /**< (OTPC_HCDR) Register Mask  */
-
-
-/* -------- OTPC_HS0R : (OTPC Offset: 0x80) ( R/ 32) Hardware Security Register 0 -------- */
-#define OTPC_HS0R_SCFG_Pos                    _U_(0)                                               /**< (OTPC_HS0R) Security Configuration Value Position */
-#define OTPC_HS0R_SCFG_Msk                    (_U_(0xFFFFFFFF) << OTPC_HS0R_SCFG_Pos)              /**< (OTPC_HS0R) Security Configuration Value Mask */
-#define OTPC_HS0R_SCFG(value)                 (OTPC_HS0R_SCFG_Msk & ((value) << OTPC_HS0R_SCFG_Pos))
-#define OTPC_HS0R_Msk                         _U_(0xFFFFFFFF)                                      /**< (OTPC_HS0R) Register Mask  */
-
-
-/* -------- OTPC_HS1R : (OTPC Offset: 0x84) ( R/ 32) Hardware Security Register 1 -------- */
-#define OTPC_HS1R_SCFG_Pos                    _U_(0)                                               /**< (OTPC_HS1R) Security Configuration Value Position */
-#define OTPC_HS1R_SCFG_Msk                    (_U_(0xFFFFFFFF) << OTPC_HS1R_SCFG_Pos)              /**< (OTPC_HS1R) Security Configuration Value Mask */
-#define OTPC_HS1R_SCFG(value)                 (OTPC_HS1R_SCFG_Msk & ((value) << OTPC_HS1R_SCFG_Pos))
-#define OTPC_HS1R_Msk                         _U_(0xFFFFFFFF)                                      /**< (OTPC_HS1R) Register Mask  */
-
-
-/* -------- OTPC_OMR : (OTPC Offset: 0x90) (R/W 32) OTP Mode Register -------- */
-#define OTPC_OMR_CHGRQ_Pos                    _U_(0)                                               /**< (OTPC_OMR) Change Request Position */
-#define OTPC_OMR_CHGRQ_Msk                    (_U_(0x1) << OTPC_OMR_CHGRQ_Pos)                     /**< (OTPC_OMR) Change Request Mask */
-#define OTPC_OMR_CHGRQ(value)                 (OTPC_OMR_CHGRQ_Msk & ((value) << OTPC_OMR_CHGRQ_Pos))
-#define OTPC_OMR_KEY_Pos                      _U_(16)                                              /**< (OTPC_OMR) Key Position */
-#define OTPC_OMR_KEY_Msk                      (_U_(0xFFFF) << OTPC_OMR_KEY_Pos)                    /**< (OTPC_OMR) Key Mask */
-#define OTPC_OMR_KEY(value)                   (OTPC_OMR_KEY_Msk & ((value) << OTPC_OMR_KEY_Pos))  
-#define OTPC_OMR_Msk                          _U_(0xFFFF0001)                                      /**< (OTPC_OMR) Register Mask  */
-
-
-/* -------- OTPC_ODC0R : (OTPC Offset: 0xA0) (R/W 32) OTP DAP Configuration Register 0 -------- */
-#define OTPC_ODC0R_DAPCFG_Pos                 _U_(0)                                               /**< (OTPC_ODC0R) DAP Configuration Position */
-#define OTPC_ODC0R_DAPCFG_Msk                 (_U_(0xFFFFFFFF) << OTPC_ODC0R_DAPCFG_Pos)           /**< (OTPC_ODC0R) DAP Configuration Mask */
-#define OTPC_ODC0R_DAPCFG(value)              (OTPC_ODC0R_DAPCFG_Msk & ((value) << OTPC_ODC0R_DAPCFG_Pos))
-#define OTPC_ODC0R_Msk                        _U_(0xFFFFFFFF)                                      /**< (OTPC_ODC0R) Register Mask  */
-
-
-/* -------- OTPC_ODC1R : (OTPC Offset: 0xA4) (R/W 32) OTP DAP Configuration Register 1 -------- */
-#define OTPC_ODC1R_DAPCFG_Pos                 _U_(0)                                               /**< (OTPC_ODC1R) DAP Configuration Position */
-#define OTPC_ODC1R_DAPCFG_Msk                 (_U_(0xFFFFFFFF) << OTPC_ODC1R_DAPCFG_Pos)           /**< (OTPC_ODC1R) DAP Configuration Mask */
-#define OTPC_ODC1R_DAPCFG(value)              (OTPC_ODC1R_DAPCFG_Msk & ((value) << OTPC_ODC1R_DAPCFG_Pos))
-#define OTPC_ODC1R_Msk                        _U_(0xFFFFFFFF)                                      /**< (OTPC_ODC1R) Register Mask  */
-
-
-/* -------- OTPC_ODC2R : (OTPC Offset: 0xA8) (R/W 32) OTP DAP Configuration Register 2 -------- */
-#define OTPC_ODC2R_DAPCFG_Pos                 _U_(0)                                               /**< (OTPC_ODC2R) DAP Configuration Position */
-#define OTPC_ODC2R_DAPCFG_Msk                 (_U_(0xFFFFFFFF) << OTPC_ODC2R_DAPCFG_Pos)           /**< (OTPC_ODC2R) DAP Configuration Mask */
-#define OTPC_ODC2R_DAPCFG(value)              (OTPC_ODC2R_DAPCFG_Msk & ((value) << OTPC_ODC2R_DAPCFG_Pos))
-#define OTPC_ODC2R_Msk                        _U_(0xFFFFFFFF)                                      /**< (OTPC_ODC2R) Register Mask  */
-
-
-/* -------- OTPC_ODC3R : (OTPC Offset: 0xAC) (R/W 32) OTP DAP Configuration Register 3 -------- */
-#define OTPC_ODC3R_DAPCFG_Pos                 _U_(0)                                               /**< (OTPC_ODC3R) DAP Configuration Position */
-#define OTPC_ODC3R_DAPCFG_Msk                 (_U_(0xFFFFFFFF) << OTPC_ODC3R_DAPCFG_Pos)           /**< (OTPC_ODC3R) DAP Configuration Mask */
-#define OTPC_ODC3R_DAPCFG(value)              (OTPC_ODC3R_DAPCFG_Msk & ((value) << OTPC_ODC3R_DAPCFG_Pos))
-#define OTPC_ODC3R_Msk                        _U_(0xFFFFFFFF)                                      /**< (OTPC_ODC3R) Register Mask  */
-
-
-/* -------- OTPC_OPC0R : (OTPC Offset: 0xB0) (R/W 32) OTP PMC Configuration Register 0 -------- */
-#define OTPC_OPC0R_PMCCFG_Pos                 _U_(0)                                               /**< (OTPC_OPC0R) PMC Configuration Position */
-#define OTPC_OPC0R_PMCCFG_Msk                 (_U_(0xFFFFFFFF) << OTPC_OPC0R_PMCCFG_Pos)           /**< (OTPC_OPC0R) PMC Configuration Mask */
-#define OTPC_OPC0R_PMCCFG(value)              (OTPC_OPC0R_PMCCFG_Msk & ((value) << OTPC_OPC0R_PMCCFG_Pos))
-#define OTPC_OPC0R_Msk                        _U_(0xFFFFFFFF)                                      /**< (OTPC_OPC0R) Register Mask  */
-
-
-/* -------- OTPC_OPC1R : (OTPC Offset: 0xB4) (R/W 32) OTP PMC Configuration Register 1 -------- */
-#define OTPC_OPC1R_PMCCFG_Pos                 _U_(0)                                               /**< (OTPC_OPC1R) PMC Configuration Position */
-#define OTPC_OPC1R_PMCCFG_Msk                 (_U_(0xFFFFFFFF) << OTPC_OPC1R_PMCCFG_Pos)           /**< (OTPC_OPC1R) PMC Configuration Mask */
-#define OTPC_OPC1R_PMCCFG(value)              (OTPC_OPC1R_PMCCFG_Msk & ((value) << OTPC_OPC1R_PMCCFG_Pos))
-#define OTPC_OPC1R_Msk                        _U_(0xFFFFFFFF)                                      /**< (OTPC_OPC1R) Register Mask  */
-
-
-/* -------- OTPC_OPC2R : (OTPC Offset: 0xB8) (R/W 32) OTP PMC Configuration Register 2 -------- */
-#define OTPC_OPC2R_PMCCFG_Pos                 _U_(0)                                               /**< (OTPC_OPC2R) PMC Configuration Position */
-#define OTPC_OPC2R_PMCCFG_Msk                 (_U_(0xFFFFFFFF) << OTPC_OPC2R_PMCCFG_Pos)           /**< (OTPC_OPC2R) PMC Configuration Mask */
-#define OTPC_OPC2R_PMCCFG(value)              (OTPC_OPC2R_PMCCFG_Msk & ((value) << OTPC_OPC2R_PMCCFG_Pos))
-#define OTPC_OPC2R_Msk                        _U_(0xFFFFFFFF)                                      /**< (OTPC_OPC2R) Register Mask  */
-
-
-/* -------- OTPC_OPC3R : (OTPC Offset: 0xBC) (R/W 32) OTP PMC Configuration Register 3 -------- */
-#define OTPC_OPC3R_PMCCFG_Pos                 _U_(0)                                               /**< (OTPC_OPC3R) PMC Configuration Position */
-#define OTPC_OPC3R_PMCCFG_Msk                 (_U_(0xFFFFFFFF) << OTPC_OPC3R_PMCCFG_Pos)           /**< (OTPC_OPC3R) PMC Configuration Mask */
-#define OTPC_OPC3R_PMCCFG(value)              (OTPC_OPC3R_PMCCFG_Msk & ((value) << OTPC_OPC3R_PMCCFG_Pos))
-#define OTPC_OPC3R_Msk                        _U_(0xFFFFFFFF)                                      /**< (OTPC_OPC3R) Register Mask  */
 
 
 /* -------- OTPC_WPMR : (OTPC Offset: 0xE4) (R/W 32) Write Protection Mode Register -------- */
@@ -659,8 +523,8 @@
 #define OTPC_WPMR_WPKEY_Pos                   _U_(8)                                               /**< (OTPC_WPMR) Write Protection Key Position */
 #define OTPC_WPMR_WPKEY_Msk                   (_U_(0xFFFFFF) << OTPC_WPMR_WPKEY_Pos)               /**< (OTPC_WPMR) Write Protection Key Mask */
 #define OTPC_WPMR_WPKEY(value)                (OTPC_WPMR_WPKEY_Msk & ((value) << OTPC_WPMR_WPKEY_Pos))
-#define   OTPC_WPMR_WPKEY_PASSWD_Val          _U_(0x4F5450)                                        /**< (OTPC_WPMR) Writing any other value in this field aborts the write operation.Always reads as 0.  */
-#define OTPC_WPMR_WPKEY_PASSWD                (OTPC_WPMR_WPKEY_PASSWD_Val << OTPC_WPMR_WPKEY_Pos)  /**< (OTPC_WPMR) Writing any other value in this field aborts the write operation.Always reads as 0. Position  */
+#define   OTPC_WPMR_WPKEY_PASSWD_Val          _U_(0x4F5450)                                        /**< (OTPC_WPMR) Writing any other value in this field aborts the write operation. Always reads as 0.  */
+#define OTPC_WPMR_WPKEY_PASSWD                (OTPC_WPMR_WPKEY_PASSWD_Val << OTPC_WPMR_WPKEY_Pos)  /**< (OTPC_WPMR) Writing any other value in this field aborts the write operation. Always reads as 0. Position  */
 #define OTPC_WPMR_Msk                         _U_(0xFFFFFF17)                                      /**< (OTPC_WPMR) Register Mask  */
 
 
@@ -686,11 +550,11 @@
 #define   OTPC_WPSR_SWETYP_READ_WO_Val        _U_(0x0)                                             /**< (OTPC_WPSR) A write-only register has been read (warning).  */
 #define   OTPC_WPSR_SWETYP_WRITE_RO_Val       _U_(0x1)                                             /**< (OTPC_WPSR) A write access has been performed on a read-only register (warning).  */
 #define   OTPC_WPSR_SWETYP_CONF_CHG_Val       _U_(0x2)                                             /**< (OTPC_WPSR) A change has been made into the configuration (error).  */
-#define   OTPC_WPSR_SWETYP_KEY_ERROR_Val      _U_(0x3)                                             /**< (OTPC_WPSR) A write has been computed in OTPC_CR, OTPC_ACR, OTPC_RCR, OTPC_PCR, OTPC_OMR or OTPC_WPMR register with a wrong value in the related KEY field (error).  */
+#define   OTPC_WPSR_SWETYP_KEY_ERROR_Val      _U_(0x3)                                             /**< (OTPC_WPSR) A write has been computed in OTPC_CR or OTPC_WPMR register with a wrong value in the related KEY field (error).  */
 #define OTPC_WPSR_SWETYP_READ_WO              (OTPC_WPSR_SWETYP_READ_WO_Val << OTPC_WPSR_SWETYP_Pos) /**< (OTPC_WPSR) A write-only register has been read (warning). Position  */
 #define OTPC_WPSR_SWETYP_WRITE_RO             (OTPC_WPSR_SWETYP_WRITE_RO_Val << OTPC_WPSR_SWETYP_Pos) /**< (OTPC_WPSR) A write access has been performed on a read-only register (warning). Position  */
 #define OTPC_WPSR_SWETYP_CONF_CHG             (OTPC_WPSR_SWETYP_CONF_CHG_Val << OTPC_WPSR_SWETYP_Pos) /**< (OTPC_WPSR) A change has been made into the configuration (error). Position  */
-#define OTPC_WPSR_SWETYP_KEY_ERROR            (OTPC_WPSR_SWETYP_KEY_ERROR_Val << OTPC_WPSR_SWETYP_Pos) /**< (OTPC_WPSR) A write has been computed in OTPC_CR, OTPC_ACR, OTPC_RCR, OTPC_PCR, OTPC_OMR or OTPC_WPMR register with a wrong value in the related KEY field (error). Position  */
+#define OTPC_WPSR_SWETYP_KEY_ERROR            (OTPC_WPSR_SWETYP_KEY_ERROR_Val << OTPC_WPSR_SWETYP_Pos) /**< (OTPC_WPSR) A write has been computed in OTPC_CR or OTPC_WPMR register with a wrong value in the related KEY field (error). Position  */
 #define OTPC_WPSR_ECLASS_Pos                  _U_(31)                                              /**< (OTPC_WPSR) Software Error Class Position */
 #define OTPC_WPSR_ECLASS_Msk                  (_U_(0x1) << OTPC_WPSR_ECLASS_Pos)                   /**< (OTPC_WPSR) Software Error Class Mask */
 #define OTPC_WPSR_ECLASS(value)               (OTPC_WPSR_ECLASS_Msk & ((value) << OTPC_WPSR_ECLASS_Pos))
@@ -699,254 +563,6 @@
 #define OTPC_WPSR_ECLASS_WARNING              (OTPC_WPSR_ECLASS_WARNING_Val << OTPC_WPSR_ECLASS_Pos) /**< (OTPC_WPSR) An abnormal access that does not have any impact. Position  */
 #define OTPC_WPSR_ECLASS_ERROR                (OTPC_WPSR_ECLASS_ERROR_Val << OTPC_WPSR_ECLASS_Pos) /**< (OTPC_WPSR) An abnormal access that may have an impact. Position  */
 #define OTPC_WPSR_Msk                         _U_(0x8FFFFF0F)                                      /**< (OTPC_WPSR) Register Mask  */
-
-
-/* -------- OTPC_VERSION : (OTPC Offset: 0xFC) ( R/ 32) Version Register -------- */
-#define OTPC_VERSION_VERSION_Pos              _U_(0)                                               /**< (OTPC_VERSION) Hardware Module Version Position */
-#define OTPC_VERSION_VERSION_Msk              (_U_(0xFFF) << OTPC_VERSION_VERSION_Pos)             /**< (OTPC_VERSION) Hardware Module Version Mask */
-#define OTPC_VERSION_VERSION(value)           (OTPC_VERSION_VERSION_Msk & ((value) << OTPC_VERSION_VERSION_Pos))
-#define OTPC_VERSION_MFN_Pos                  _U_(16)                                              /**< (OTPC_VERSION) Metal Fix Number Position */
-#define OTPC_VERSION_MFN_Msk                  (_U_(0x7) << OTPC_VERSION_MFN_Pos)                   /**< (OTPC_VERSION) Metal Fix Number Mask */
-#define OTPC_VERSION_MFN(value)               (OTPC_VERSION_MFN_Msk & ((value) << OTPC_VERSION_MFN_Pos))
-#define OTPC_VERSION_Msk                      _U_(0x00070FFF)                                      /**< (OTPC_VERSION) Register Mask  */
-
-
-/* -------- OTPC_RCR : (OTPC Offset: 0x100) ( /W 32) ROM Control Register -------- */
-#define OTPC_RCR_PGM_Pos                      _U_(0)                                               /**< (OTPC_RCR) Program Position */
-#define OTPC_RCR_PGM_Msk                      (_U_(0x1) << OTPC_RCR_PGM_Pos)                       /**< (OTPC_RCR) Program Mask */
-#define OTPC_RCR_PGM(value)                   (OTPC_RCR_PGM_Msk & ((value) << OTPC_RCR_PGM_Pos))  
-#define OTPC_RCR_KEY_Pos                      _U_(16)                                              /**< (OTPC_RCR) Programming Key Position */
-#define OTPC_RCR_KEY_Msk                      (_U_(0xFFFF) << OTPC_RCR_KEY_Pos)                    /**< (OTPC_RCR) Programming Key Mask */
-#define OTPC_RCR_KEY(value)                   (OTPC_RCR_KEY_Msk & ((value) << OTPC_RCR_KEY_Pos))  
-#define OTPC_RCR_Msk                          _U_(0xFFFF0001)                                      /**< (OTPC_RCR) Register Mask  */
-
-
-/* -------- OTPC_RMR : (OTPC Offset: 0x104) (R/W 32) ROM Mode Register -------- */
-#define OTPC_RMR_FWEN_Pos                     _U_(0)                                               /**< (OTPC_RMR) Firewall Enable Position */
-#define OTPC_RMR_FWEN_Msk                     (_U_(0x1) << OTPC_RMR_FWEN_Pos)                      /**< (OTPC_RMR) Firewall Enable Mask */
-#define OTPC_RMR_FWEN(value)                  (OTPC_RMR_FWEN_Msk & ((value) << OTPC_RMR_FWEN_Pos))
-#define OTPC_RMR_RDDIS_Pos                    _U_(8)                                               /**< (OTPC_RMR) Read Disable Position */
-#define OTPC_RMR_RDDIS_Msk                    (_U_(0x1) << OTPC_RMR_RDDIS_Pos)                     /**< (OTPC_RMR) Read Disable Mask */
-#define OTPC_RMR_RDDIS(value)                 (OTPC_RMR_RDDIS_Msk & ((value) << OTPC_RMR_RDDIS_Pos))
-#define OTPC_RMR_WRDIS_Pos                    _U_(9)                                               /**< (OTPC_RMR) Write Disable Position */
-#define OTPC_RMR_WRDIS_Msk                    (_U_(0x1) << OTPC_RMR_WRDIS_Pos)                     /**< (OTPC_RMR) Write Disable Mask */
-#define OTPC_RMR_WRDIS(value)                 (OTPC_RMR_WRDIS_Msk & ((value) << OTPC_RMR_WRDIS_Pos))
-#define OTPC_RMR_LOCK_Pos                     _U_(15)                                              /**< (OTPC_RMR) Lock Register Position */
-#define OTPC_RMR_LOCK_Msk                     (_U_(0x1) << OTPC_RMR_LOCK_Pos)                      /**< (OTPC_RMR) Lock Register Mask */
-#define OTPC_RMR_LOCK(value)                  (OTPC_RMR_LOCK_Msk & ((value) << OTPC_RMR_LOCK_Pos))
-#define OTPC_RMR_PGMODE_Pos                   _U_(16)                                              /**< (OTPC_RMR) Programming Mode Position */
-#define OTPC_RMR_PGMODE_Msk                   (_U_(0x3) << OTPC_RMR_PGMODE_Pos)                    /**< (OTPC_RMR) Programming Mode Mask */
-#define OTPC_RMR_PGMODE(value)                (OTPC_RMR_PGMODE_Msk & ((value) << OTPC_RMR_PGMODE_Pos))
-#define   OTPC_RMR_PGMODE_ROM_NO_PGM_Val      _U_(0x0)                                             /**< (OTPC_RMR) ROM Code programming is disabled  */
-#define   OTPC_RMR_PGMODE_ROM_SBUS_PGM_Val    _U_(0x1)                                             /**< (OTPC_RMR) ROM Code programming through System Bus Slave Interface  */
-#define   OTPC_RMR_PGMODE_ROM_UI_ADDR_CONST_PGM_Val _U_(0x2)                                             /**< (OTPC_RMR) ROM Code programming through User Interface  */
-#define   OTPC_RMR_PGMODE_ROM_UI_ADDR_INCR_PGM_Val _U_(0x3)                                             /**< (OTPC_RMR) ROM Code programming through User Interface with OTPC_RAR incremented after each programming.  */
-#define OTPC_RMR_PGMODE_ROM_NO_PGM            (OTPC_RMR_PGMODE_ROM_NO_PGM_Val << OTPC_RMR_PGMODE_Pos) /**< (OTPC_RMR) ROM Code programming is disabled Position  */
-#define OTPC_RMR_PGMODE_ROM_SBUS_PGM          (OTPC_RMR_PGMODE_ROM_SBUS_PGM_Val << OTPC_RMR_PGMODE_Pos) /**< (OTPC_RMR) ROM Code programming through System Bus Slave Interface Position  */
-#define OTPC_RMR_PGMODE_ROM_UI_ADDR_CONST_PGM (OTPC_RMR_PGMODE_ROM_UI_ADDR_CONST_PGM_Val << OTPC_RMR_PGMODE_Pos) /**< (OTPC_RMR) ROM Code programming through User Interface Position  */
-#define OTPC_RMR_PGMODE_ROM_UI_ADDR_INCR_PGM  (OTPC_RMR_PGMODE_ROM_UI_ADDR_INCR_PGM_Val << OTPC_RMR_PGMODE_Pos) /**< (OTPC_RMR) ROM Code programming through User Interface with OTPC_RAR incremented after each programming. Position  */
-#define OTPC_RMR_Msk                          _U_(0x00038301)                                      /**< (OTPC_RMR) Register Mask  */
-
-
-/* -------- OTPC_RAR : (OTPC Offset: 0x110) (R/W 32) ROM Address Register -------- */
-#define OTPC_RAR_RADDR_Pos                    _U_(2)                                               /**< (OTPC_RAR) ROM Address Position */
-#define OTPC_RAR_RADDR_Msk                    (_U_(0x3FFFFFFF) << OTPC_RAR_RADDR_Pos)              /**< (OTPC_RAR) ROM Address Mask */
-#define OTPC_RAR_RADDR(value)                 (OTPC_RAR_RADDR_Msk & ((value) << OTPC_RAR_RADDR_Pos))
-#define OTPC_RAR_Msk                          _U_(0xFFFFFFFC)                                      /**< (OTPC_RAR) Register Mask  */
-
-
-/* -------- OTPC_RDR : (OTPC Offset: 0x114) (R/W 32) ROM Data Register -------- */
-#define OTPC_RDR_RDATA_Pos                    _U_(0)                                               /**< (OTPC_RDR) ROM Data Position */
-#define OTPC_RDR_RDATA_Msk                    (_U_(0xFFFFFFFF) << OTPC_RDR_RDATA_Pos)              /**< (OTPC_RDR) ROM Data Mask */
-#define OTPC_RDR_RDATA(value)                 (OTPC_RDR_RDATA_Msk & ((value) << OTPC_RDR_RDATA_Pos))
-#define OTPC_RDR_Msk                          _U_(0xFFFFFFFF)                                      /**< (OTPC_RDR) Register Mask  */
-
-
-/* -------- OTPC_PCR : (OTPC Offset: 0x200) ( /W 32) Patch Control Register -------- */
-#define OTPC_PCR_PGM_Pos                      _U_(0)                                               /**< (OTPC_PCR) Program Position */
-#define OTPC_PCR_PGM_Msk                      (_U_(0x1) << OTPC_PCR_PGM_Pos)                       /**< (OTPC_PCR) Program Mask */
-#define OTPC_PCR_PGM(value)                   (OTPC_PCR_PGM_Msk & ((value) << OTPC_PCR_PGM_Pos))  
-#define OTPC_PCR_READ_Pos                     _U_(6)                                               /**< (OTPC_PCR) Read Patch Position */
-#define OTPC_PCR_READ_Msk                     (_U_(0x1) << OTPC_PCR_READ_Pos)                      /**< (OTPC_PCR) Read Patch Mask */
-#define OTPC_PCR_READ(value)                  (OTPC_PCR_READ_Msk & ((value) << OTPC_PCR_READ_Pos))
-#define OTPC_PCR_REFRESH_Pos                  _U_(7)                                               /**< (OTPC_PCR) Refresh Patches Position */
-#define OTPC_PCR_REFRESH_Msk                  (_U_(0x1) << OTPC_PCR_REFRESH_Pos)                   /**< (OTPC_PCR) Refresh Patches Mask */
-#define OTPC_PCR_REFRESH(value)               (OTPC_PCR_REFRESH_Msk & ((value) << OTPC_PCR_REFRESH_Pos))
-#define OTPC_PCR_KEY_Pos                      _U_(16)                                              /**< (OTPC_PCR) Programming Key Position */
-#define OTPC_PCR_KEY_Msk                      (_U_(0xFFFF) << OTPC_PCR_KEY_Pos)                    /**< (OTPC_PCR) Programming Key Mask */
-#define OTPC_PCR_KEY(value)                   (OTPC_PCR_KEY_Msk & ((value) << OTPC_PCR_KEY_Pos))  
-#define OTPC_PCR_Msk                          _U_(0xFFFF00C1)                                      /**< (OTPC_PCR) Register Mask  */
-
-
-/* -------- OTPC_PMR : (OTPC Offset: 0x204) (R/W 32) Patch Mode Register -------- */
-#define OTPC_PMR_EMUL_Pos                     _U_(7)                                               /**< (OTPC_PMR) Emulation Mode Position */
-#define OTPC_PMR_EMUL_Msk                     (_U_(0x1) << OTPC_PMR_EMUL_Pos)                      /**< (OTPC_PMR) Emulation Mode Mask */
-#define OTPC_PMR_EMUL(value)                  (OTPC_PMR_EMUL_Msk & ((value) << OTPC_PMR_EMUL_Pos))
-#define OTPC_PMR_RDDIS_Pos                    _U_(8)                                               /**< (OTPC_PMR) Read Disable Position */
-#define OTPC_PMR_RDDIS_Msk                    (_U_(0x1) << OTPC_PMR_RDDIS_Pos)                     /**< (OTPC_PMR) Read Disable Mask */
-#define OTPC_PMR_RDDIS(value)                 (OTPC_PMR_RDDIS_Msk & ((value) << OTPC_PMR_RDDIS_Pos))
-#define OTPC_PMR_WRDIS_Pos                    _U_(9)                                               /**< (OTPC_PMR) Write Disable Position */
-#define OTPC_PMR_WRDIS_Msk                    (_U_(0x1) << OTPC_PMR_WRDIS_Pos)                     /**< (OTPC_PMR) Write Disable Mask */
-#define OTPC_PMR_WRDIS(value)                 (OTPC_PMR_WRDIS_Msk & ((value) << OTPC_PMR_WRDIS_Pos))
-#define OTPC_PMR_LOCK_Pos                     _U_(15)                                              /**< (OTPC_PMR) Lock Register Position */
-#define OTPC_PMR_LOCK_Msk                     (_U_(0x1) << OTPC_PMR_LOCK_Pos)                      /**< (OTPC_PMR) Lock Register Mask */
-#define OTPC_PMR_LOCK(value)                  (OTPC_PMR_LOCK_Msk & ((value) << OTPC_PMR_LOCK_Pos))
-#define OTPC_PMR_PID_Pos                      _U_(16)                                              /**< (OTPC_PMR) Patch ID Position */
-#define OTPC_PMR_PID_Msk                      (_U_(0xF) << OTPC_PMR_PID_Pos)                       /**< (OTPC_PMR) Patch ID Mask */
-#define OTPC_PMR_PID(value)                   (OTPC_PMR_PID_Msk & ((value) << OTPC_PMR_PID_Pos))  
-#define OTPC_PMR_Msk                          _U_(0x000F8380)                                      /**< (OTPC_PMR) Register Mask  */
-
-
-/* -------- OTPC_PSR : (OTPC Offset: 0x208) (R/W 32) Patch Software Register -------- */
-#define OTPC_PSR_SOFT_Pos                     _U_(0)                                               /**< (OTPC_PSR) Software Value Position */
-#define OTPC_PSR_SOFT_Msk                     (_U_(0xFFFFFFFF) << OTPC_PSR_SOFT_Pos)               /**< (OTPC_PSR) Software Value Mask */
-#define OTPC_PSR_SOFT(value)                  (OTPC_PSR_SOFT_Msk & ((value) << OTPC_PSR_SOFT_Pos))
-#define OTPC_PSR_Msk                          _U_(0xFFFFFFFF)                                      /**< (OTPC_PSR) Register Mask  */
-
-
-/* -------- OTPC_PAR : (OTPC Offset: 0x210) (R/W 32) Patch Address Register -------- */
-#define OTPC_PAR_VALID0_Pos                   _U_(0)                                               /**< (OTPC_PAR) Patch Validity Position */
-#define OTPC_PAR_VALID0_Msk                   (_U_(0x3) << OTPC_PAR_VALID0_Pos)                    /**< (OTPC_PAR) Patch Validity Mask */
-#define OTPC_PAR_VALID0(value)                (OTPC_PAR_VALID0_Msk & ((value) << OTPC_PAR_VALID0_Pos))
-#define OTPC_PAR_PADDR_Pos                    _U_(2)                                               /**< (OTPC_PAR) Patch Address Position */
-#define OTPC_PAR_PADDR_Msk                    (_U_(0x3FFFFFF) << OTPC_PAR_PADDR_Pos)               /**< (OTPC_PAR) Patch Address Mask */
-#define OTPC_PAR_PADDR(value)                 (OTPC_PAR_PADDR_Msk & ((value) << OTPC_PAR_PADDR_Pos))
-#define OTPC_PAR_VALID1_Pos                   _U_(28)                                              /**< (OTPC_PAR) Patch Validity Position */
-#define OTPC_PAR_VALID1_Msk                   (_U_(0xF) << OTPC_PAR_VALID1_Pos)                    /**< (OTPC_PAR) Patch Validity Mask */
-#define OTPC_PAR_VALID1(value)                (OTPC_PAR_VALID1_Msk & ((value) << OTPC_PAR_VALID1_Pos))
-#define OTPC_PAR_Msk                          _U_(0xFFFFFFFF)                                      /**< (OTPC_PAR) Register Mask  */
-
-
-/* -------- OTPC_PDR : (OTPC Offset: 0x214) (R/W 32) Patch Data Register -------- */
-#define OTPC_PDR_PDATA_Pos                    _U_(0)                                               /**< (OTPC_PDR) Patch Data Position */
-#define OTPC_PDR_PDATA_Msk                    (_U_(0xFFFFFFFF) << OTPC_PDR_PDATA_Pos)              /**< (OTPC_PDR) Patch Data Mask */
-#define OTPC_PDR_PDATA(value)                 (OTPC_PDR_PDATA_Msk & ((value) << OTPC_PDR_PDATA_Pos))
-#define OTPC_PDR_Msk                          _U_(0xFFFFFFFF)                                      /**< (OTPC_PDR) Register Mask  */
-
-
-/* -------- OTPC_ACR : (OTPC Offset: 0x300) ( /W 32) A Control Register -------- */
-#define OTPC_ACR_PGM_Pos                      _U_(0)                                               /**< (OTPC_ACR) Program Packet Position */
-#define OTPC_ACR_PGM_Msk                      (_U_(0x1) << OTPC_ACR_PGM_Pos)                       /**< (OTPC_ACR) Program Packet Mask */
-#define OTPC_ACR_PGM(value)                   (OTPC_ACR_PGM_Msk & ((value) << OTPC_ACR_PGM_Pos))  
-#define OTPC_ACR_CKSGEN_Pos                   _U_(1)                                               /**< (OTPC_ACR) Generate Checksum Position */
-#define OTPC_ACR_CKSGEN_Msk                   (_U_(0x1) << OTPC_ACR_CKSGEN_Pos)                    /**< (OTPC_ACR) Generate Checksum Mask */
-#define OTPC_ACR_CKSGEN(value)                (OTPC_ACR_CKSGEN_Msk & ((value) << OTPC_ACR_CKSGEN_Pos))
-#define OTPC_ACR_INVLD_Pos                    _U_(2)                                               /**< (OTPC_ACR) Invalidate Packet Position */
-#define OTPC_ACR_INVLD_Msk                    (_U_(0x1) << OTPC_ACR_INVLD_Pos)                     /**< (OTPC_ACR) Invalidate Packet Mask */
-#define OTPC_ACR_INVLD(value)                 (OTPC_ACR_INVLD_Msk & ((value) << OTPC_ACR_INVLD_Pos))
-#define OTPC_ACR_HIDE_Pos                     _U_(4)                                               /**< (OTPC_ACR) Hide Packet Position */
-#define OTPC_ACR_HIDE_Msk                     (_U_(0x1) << OTPC_ACR_HIDE_Pos)                      /**< (OTPC_ACR) Hide Packet Mask */
-#define OTPC_ACR_HIDE(value)                  (OTPC_ACR_HIDE_Msk & ((value) << OTPC_ACR_HIDE_Pos))
-#define OTPC_ACR_READ_Pos                     _U_(6)                                               /**< (OTPC_ACR) Read Area Position */
-#define OTPC_ACR_READ_Msk                     (_U_(0x1) << OTPC_ACR_READ_Pos)                      /**< (OTPC_ACR) Read Area Mask */
-#define OTPC_ACR_READ(value)                  (OTPC_ACR_READ_Msk & ((value) << OTPC_ACR_READ_Pos))
-#define OTPC_ACR_FLUSH_Pos                    _U_(7)                                               /**< (OTPC_ACR) Flush Temporary Registers Position */
-#define OTPC_ACR_FLUSH_Msk                    (_U_(0x1) << OTPC_ACR_FLUSH_Pos)                     /**< (OTPC_ACR) Flush Temporary Registers Mask */
-#define OTPC_ACR_FLUSH(value)                 (OTPC_ACR_FLUSH_Msk & ((value) << OTPC_ACR_FLUSH_Pos))
-#define OTPC_ACR_KBSTART_Pos                  _U_(8)                                               /**< (OTPC_ACR) Key Bus Transfer Start Position */
-#define OTPC_ACR_KBSTART_Msk                  (_U_(0x1) << OTPC_ACR_KBSTART_Pos)                   /**< (OTPC_ACR) Key Bus Transfer Start Mask */
-#define OTPC_ACR_KBSTART(value)               (OTPC_ACR_KBSTART_Msk & ((value) << OTPC_ACR_KBSTART_Pos))
-#define OTPC_ACR_KBSTOP_Pos                   _U_(9)                                               /**< (OTPC_ACR) Key Bus Transfer Stop Position */
-#define OTPC_ACR_KBSTOP_Msk                   (_U_(0x1) << OTPC_ACR_KBSTOP_Pos)                    /**< (OTPC_ACR) Key Bus Transfer Stop Mask */
-#define OTPC_ACR_KBSTOP(value)                (OTPC_ACR_KBSTOP_Msk & ((value) << OTPC_ACR_KBSTOP_Pos))
-#define OTPC_ACR_REFRESH_Pos                  _U_(15)                                              /**< (OTPC_ACR) Refresh the Area Position */
-#define OTPC_ACR_REFRESH_Msk                  (_U_(0x1) << OTPC_ACR_REFRESH_Pos)                   /**< (OTPC_ACR) Refresh the Area Mask */
-#define OTPC_ACR_REFRESH(value)               (OTPC_ACR_REFRESH_Msk & ((value) << OTPC_ACR_REFRESH_Pos))
-#define OTPC_ACR_KEY_Pos                      _U_(16)                                              /**< (OTPC_ACR) Programming Key Position */
-#define OTPC_ACR_KEY_Msk                      (_U_(0xFFFF) << OTPC_ACR_KEY_Pos)                    /**< (OTPC_ACR) Programming Key Mask */
-#define OTPC_ACR_KEY(value)                   (OTPC_ACR_KEY_Msk & ((value) << OTPC_ACR_KEY_Pos))  
-#define OTPC_ACR_Msk                          _U_(0xFFFF83D7)                                      /**< (OTPC_ACR) Register Mask  */
-
-
-/* -------- OTPC_AMR : (OTPC Offset: 0x304) (R/W 32) A Mode Register -------- */
-#define OTPC_AMR_UIDRDDIS_Pos                 _U_(0)                                               /**< (OTPC_AMR) UID Register Read Disable Position */
-#define OTPC_AMR_UIDRDDIS_Msk                 (_U_(0x1) << OTPC_AMR_UIDRDDIS_Pos)                  /**< (OTPC_AMR) UID Register Read Disable Mask */
-#define OTPC_AMR_UIDRDDIS(value)              (OTPC_AMR_UIDRDDIS_Msk & ((value) << OTPC_AMR_UIDRDDIS_Pos))
-#define OTPC_AMR_HCGRDDIS_Pos                 _U_(1)                                               /**< (OTPC_AMR) Hardware Configuration Register Read Disable Position */
-#define OTPC_AMR_HCGRDDIS_Msk                 (_U_(0x1) << OTPC_AMR_HCGRDDIS_Pos)                  /**< (OTPC_AMR) Hardware Configuration Register Read Disable Mask */
-#define OTPC_AMR_HCGRDDIS(value)              (OTPC_AMR_HCGRDDIS_Msk & ((value) << OTPC_AMR_HCGRDDIS_Pos))
-#define OTPC_AMR_SCGRDDIS_Pos                 _U_(2)                                               /**< (OTPC_AMR) Security Configuration Register Read Disable Position */
-#define OTPC_AMR_SCGRDDIS_Msk                 (_U_(0x1) << OTPC_AMR_SCGRDDIS_Pos)                  /**< (OTPC_AMR) Security Configuration Register Read Disable Mask */
-#define OTPC_AMR_SCGRDDIS(value)              (OTPC_AMR_SCGRDDIS_Msk & ((value) << OTPC_AMR_SCGRDDIS_Pos))
-#define OTPC_AMR_NPCKT_Pos                    _U_(4)                                               /**< (OTPC_AMR) New Packet Position */
-#define OTPC_AMR_NPCKT_Msk                    (_U_(0x1) << OTPC_AMR_NPCKT_Pos)                     /**< (OTPC_AMR) New Packet Mask */
-#define OTPC_AMR_NPCKT(value)                 (OTPC_AMR_NPCKT_Msk & ((value) << OTPC_AMR_NPCKT_Pos))
-#define OTPC_AMR_EMUL_Pos                     _U_(7)                                               /**< (OTPC_AMR) Emulation Mode Position */
-#define OTPC_AMR_EMUL_Msk                     (_U_(0x1) << OTPC_AMR_EMUL_Pos)                      /**< (OTPC_AMR) Emulation Mode Mask */
-#define OTPC_AMR_EMUL(value)                  (OTPC_AMR_EMUL_Msk & ((value) << OTPC_AMR_EMUL_Pos))
-#define OTPC_AMR_RDDIS_Pos                    _U_(8)                                               /**< (OTPC_AMR) Read Disable Position */
-#define OTPC_AMR_RDDIS_Msk                    (_U_(0x1) << OTPC_AMR_RDDIS_Pos)                     /**< (OTPC_AMR) Read Disable Mask */
-#define OTPC_AMR_RDDIS(value)                 (OTPC_AMR_RDDIS_Msk & ((value) << OTPC_AMR_RDDIS_Pos))
-#define OTPC_AMR_WRDIS_Pos                    _U_(9)                                               /**< (OTPC_AMR) Write Disable Position */
-#define OTPC_AMR_WRDIS_Msk                    (_U_(0x1) << OTPC_AMR_WRDIS_Pos)                     /**< (OTPC_AMR) Write Disable Mask */
-#define OTPC_AMR_WRDIS(value)                 (OTPC_AMR_WRDIS_Msk & ((value) << OTPC_AMR_WRDIS_Pos))
-#define OTPC_AMR_KBDST_Pos                    _U_(12)                                              /**< (OTPC_AMR) Key Bus Destination Position */
-#define OTPC_AMR_KBDST_Msk                    (_U_(0x1) << OTPC_AMR_KBDST_Pos)                     /**< (OTPC_AMR) Key Bus Destination Mask */
-#define OTPC_AMR_KBDST(value)                 (OTPC_AMR_KBDST_Msk & ((value) << OTPC_AMR_KBDST_Pos))
-#define   OTPC_AMR_KBDST_TDES_Val             _U_(0x0)                                             /**< (OTPC_AMR) The TDES is the destination of the key transfer.  */
-#define   OTPC_AMR_KBDST_AES_Val              _U_(0x1)                                             /**< (OTPC_AMR) The AES is the destination of the key transfer.  */
-#define OTPC_AMR_KBDST_TDES                   (OTPC_AMR_KBDST_TDES_Val << OTPC_AMR_KBDST_Pos)      /**< (OTPC_AMR) The TDES is the destination of the key transfer. Position  */
-#define OTPC_AMR_KBDST_AES                    (OTPC_AMR_KBDST_AES_Val << OTPC_AMR_KBDST_Pos)       /**< (OTPC_AMR) The AES is the destination of the key transfer. Position  */
-#define OTPC_AMR_LOCK_Pos                     _U_(15)                                              /**< (OTPC_AMR) Lock Register Position */
-#define OTPC_AMR_LOCK_Msk                     (_U_(0x1) << OTPC_AMR_LOCK_Pos)                      /**< (OTPC_AMR) Lock Register Mask */
-#define OTPC_AMR_LOCK(value)                  (OTPC_AMR_LOCK_Msk & ((value) << OTPC_AMR_LOCK_Pos))
-#define OTPC_AMR_AADDR_Pos                    _U_(16)                                              /**< (OTPC_AMR) Address Position */
-#define OTPC_AMR_AADDR_Msk                    (_U_(0xFFFF) << OTPC_AMR_AADDR_Pos)                  /**< (OTPC_AMR) Address Mask */
-#define OTPC_AMR_AADDR(value)                 (OTPC_AMR_AADDR_Msk & ((value) << OTPC_AMR_AADDR_Pos))
-#define OTPC_AMR_Msk                          _U_(0xFFFF9397)                                      /**< (OTPC_AMR) Register Mask  */
-
-
-/* -------- OTPC_AAR : (OTPC Offset: 0x308) (R/W 32) A Address Register -------- */
-#define OTPC_AAR_DADDR_Pos                    _U_(0)                                               /**< (OTPC_AAR) Data Address Position */
-#define OTPC_AAR_DADDR_Msk                    (_U_(0xFF) << OTPC_AAR_DADDR_Pos)                    /**< (OTPC_AAR) Data Address Mask */
-#define OTPC_AAR_DADDR(value)                 (OTPC_AAR_DADDR_Msk & ((value) << OTPC_AAR_DADDR_Pos))
-#define OTPC_AAR_INCRT_Pos                    _U_(16)                                              /**< (OTPC_AAR) Increment Type Position */
-#define OTPC_AAR_INCRT_Msk                    (_U_(0x1) << OTPC_AAR_INCRT_Pos)                     /**< (OTPC_AAR) Increment Type Mask */
-#define OTPC_AAR_INCRT(value)                 (OTPC_AAR_INCRT_Msk & ((value) << OTPC_AAR_INCRT_Pos))
-#define   OTPC_AAR_INCRT_AFTER_READ_Val       _U_(0x0)                                             /**< (OTPC_AAR) Increment DADDR after a read of OTPC_ADR.  */
-#define   OTPC_AAR_INCRT_AFTER_WRITE_Val      _U_(0x1)                                             /**< (OTPC_AAR) Increment DADDR after a write of OTPC_ADR.  */
-#define OTPC_AAR_INCRT_AFTER_READ             (OTPC_AAR_INCRT_AFTER_READ_Val << OTPC_AAR_INCRT_Pos) /**< (OTPC_AAR) Increment DADDR after a read of OTPC_ADR. Position  */
-#define OTPC_AAR_INCRT_AFTER_WRITE            (OTPC_AAR_INCRT_AFTER_WRITE_Val << OTPC_AAR_INCRT_Pos) /**< (OTPC_AAR) Increment DADDR after a write of OTPC_ADR. Position  */
-#define OTPC_AAR_Msk                          _U_(0x000100FF)                                      /**< (OTPC_AAR) Register Mask  */
-
-
-/* -------- OTPC_AHR : (OTPC Offset: 0x310) (R/W 32) A Header Register -------- */
-#define OTPC_AHR_PACKET_Pos                   _U_(0)                                               /**< (OTPC_AHR) Packet Type Position */
-#define OTPC_AHR_PACKET_Msk                   (_U_(0x7) << OTPC_AHR_PACKET_Pos)                    /**< (OTPC_AHR) Packet Type Mask */
-#define OTPC_AHR_PACKET(value)                (OTPC_AHR_PACKET_Msk & ((value) << OTPC_AHR_PACKET_Pos))
-#define   OTPC_AHR_PACKET_REGULAR_Val         _U_(0x1)                                             /**< (OTPC_AHR) Regular packet accessible through the User Interface.  */
-#define   OTPC_AHR_PACKET_KEY_Val             _U_(0x2)                                             /**< (OTPC_AHR) Key packet accessible only through the Key buses.  */
-#define   OTPC_AHR_PACKET_PRODUCT_UID_Val     _U_(0x4)                                             /**< (OTPC_AHR) Product UID packet.  */
-#define   OTPC_AHR_PACKET_HARDWARE_CONFIGURATION_Val _U_(0x5)                                             /**< (OTPC_AHR) Hardware Configuration packet.  */
-#define   OTPC_AHR_PACKET_SECURITY_CONFIGURATION_Val _U_(0x6)                                             /**< (OTPC_AHR) Security Configuration packet.  */
-#define OTPC_AHR_PACKET_REGULAR               (OTPC_AHR_PACKET_REGULAR_Val << OTPC_AHR_PACKET_Pos) /**< (OTPC_AHR) Regular packet accessible through the User Interface. Position  */
-#define OTPC_AHR_PACKET_KEY                   (OTPC_AHR_PACKET_KEY_Val << OTPC_AHR_PACKET_Pos)     /**< (OTPC_AHR) Key packet accessible only through the Key buses. Position  */
-#define OTPC_AHR_PACKET_PRODUCT_UID           (OTPC_AHR_PACKET_PRODUCT_UID_Val << OTPC_AHR_PACKET_Pos) /**< (OTPC_AHR) Product UID packet. Position  */
-#define OTPC_AHR_PACKET_HARDWARE_CONFIGURATION (OTPC_AHR_PACKET_HARDWARE_CONFIGURATION_Val << OTPC_AHR_PACKET_Pos) /**< (OTPC_AHR) Hardware Configuration packet. Position  */
-#define OTPC_AHR_PACKET_SECURITY_CONFIGURATION (OTPC_AHR_PACKET_SECURITY_CONFIGURATION_Val << OTPC_AHR_PACKET_Pos) /**< (OTPC_AHR) Security Configuration packet. Position  */
-#define OTPC_AHR_LOCK_Pos                     _U_(3)                                               /**< (OTPC_AHR) Lock Status Position */
-#define OTPC_AHR_LOCK_Msk                     (_U_(0x1) << OTPC_AHR_LOCK_Pos)                      /**< (OTPC_AHR) Lock Status Mask */
-#define OTPC_AHR_LOCK(value)                  (OTPC_AHR_LOCK_Msk & ((value) << OTPC_AHR_LOCK_Pos))
-#define OTPC_AHR_INVLD_Pos                    _U_(4)                                               /**< (OTPC_AHR) Invalid Status Position */
-#define OTPC_AHR_INVLD_Msk                    (_U_(0x3) << OTPC_AHR_INVLD_Pos)                     /**< (OTPC_AHR) Invalid Status Mask */
-#define OTPC_AHR_INVLD(value)                 (OTPC_AHR_INVLD_Msk & ((value) << OTPC_AHR_INVLD_Pos))
-#define OTPC_AHR_ONE_Pos                      _U_(7)                                               /**< (OTPC_AHR) One Position */
-#define OTPC_AHR_ONE_Msk                      (_U_(0x1) << OTPC_AHR_ONE_Pos)                       /**< (OTPC_AHR) One Mask */
-#define OTPC_AHR_ONE(value)                   (OTPC_AHR_ONE_Msk & ((value) << OTPC_AHR_ONE_Pos))  
-#define OTPC_AHR_SIZE_Pos                     _U_(8)                                               /**< (OTPC_AHR) Packet Size Position */
-#define OTPC_AHR_SIZE_Msk                     (_U_(0xFF) << OTPC_AHR_SIZE_Pos)                     /**< (OTPC_AHR) Packet Size Mask */
-#define OTPC_AHR_SIZE(value)                  (OTPC_AHR_SIZE_Msk & ((value) << OTPC_AHR_SIZE_Pos))
-#define OTPC_AHR_CHECKSUM_Pos                 _U_(16)                                              /**< (OTPC_AHR) Packet Checksum Position */
-#define OTPC_AHR_CHECKSUM_Msk                 (_U_(0xFFFF) << OTPC_AHR_CHECKSUM_Pos)               /**< (OTPC_AHR) Packet Checksum Mask */
-#define OTPC_AHR_CHECKSUM(value)              (OTPC_AHR_CHECKSUM_Msk & ((value) << OTPC_AHR_CHECKSUM_Pos))
-#define OTPC_AHR_Msk                          _U_(0xFFFFFFBF)                                      /**< (OTPC_AHR) Register Mask  */
-
-
-/* -------- OTPC_ADR : (OTPC Offset: 0x314) (R/W 32) A Data Register -------- */
-#define OTPC_ADR_ADATA_Pos                    _U_(0)                                               /**< (OTPC_ADR) Engineering Packet Data Position */
-#define OTPC_ADR_ADATA_Msk                    (_U_(0xFFFFFFFF) << OTPC_ADR_ADATA_Pos)              /**< (OTPC_ADR) Engineering Packet Data Mask */
-#define OTPC_ADR_ADATA(value)                 (OTPC_ADR_ADATA_Msk & ((value) << OTPC_ADR_ADATA_Pos))
-#define OTPC_ADR_Msk                          _U_(0xFFFFFFFF)                                      /**< (OTPC_ADR) Register Mask  */
 
 
 /** \brief OTPC register offsets definitions */
@@ -964,40 +580,12 @@
 #define OTPC_CAR_REG_OFST              (0x34)              /**< (OTPC_CAR) Custom Address Register Offset */
 #define OTPC_UHC0R_REG_OFST            (0x50)              /**< (OTPC_UHC0R) User Hardware Configuration 0 Register Offset */
 #define OTPC_UHC1R_REG_OFST            (0x54)              /**< (OTPC_UHC1R) User Hardware Configuration 1 Register Offset */
-#define OTPC_UID0R_REG_OFST            (0x60)              /**< (OTPC_UID0R) Product UID Register 0 Offset */
-#define OTPC_UID1R_REG_OFST            (0x64)              /**< (OTPC_UID1R) Product UID Register 1 Offset */
-#define OTPC_UID2R_REG_OFST            (0x68)              /**< (OTPC_UID2R) Product UID Register 2 Offset */
-#define OTPC_UID3R_REG_OFST            (0x6C)              /**< (OTPC_UID3R) Product UID Register 3 Offset */
-#define OTPC_HCSR_REG_OFST             (0x70)              /**< (OTPC_HCSR) Hardware Configuration Selection Register Offset */
-#define OTPC_HCDR_REG_OFST             (0x74)              /**< (OTPC_HCDR) Hardware Configuration Data Register Offset */
-#define OTPC_HS0R_REG_OFST             (0x80)              /**< (OTPC_HS0R) Hardware Security Register 0 Offset */
-#define OTPC_HS1R_REG_OFST             (0x84)              /**< (OTPC_HS1R) Hardware Security Register 1 Offset */
-#define OTPC_OMR_REG_OFST              (0x90)              /**< (OTPC_OMR) OTP Mode Register Offset */
-#define OTPC_ODC0R_REG_OFST            (0xA0)              /**< (OTPC_ODC0R) OTP DAP Configuration Register 0 Offset */
-#define OTPC_ODC1R_REG_OFST            (0xA4)              /**< (OTPC_ODC1R) OTP DAP Configuration Register 1 Offset */
-#define OTPC_ODC2R_REG_OFST            (0xA8)              /**< (OTPC_ODC2R) OTP DAP Configuration Register 2 Offset */
-#define OTPC_ODC3R_REG_OFST            (0xAC)              /**< (OTPC_ODC3R) OTP DAP Configuration Register 3 Offset */
-#define OTPC_OPC0R_REG_OFST            (0xB0)              /**< (OTPC_OPC0R) OTP PMC Configuration Register 0 Offset */
-#define OTPC_OPC1R_REG_OFST            (0xB4)              /**< (OTPC_OPC1R) OTP PMC Configuration Register 1 Offset */
-#define OTPC_OPC2R_REG_OFST            (0xB8)              /**< (OTPC_OPC2R) OTP PMC Configuration Register 2 Offset */
-#define OTPC_OPC3R_REG_OFST            (0xBC)              /**< (OTPC_OPC3R) OTP PMC Configuration Register 3 Offset */
+#define OTPC_UID0R_REG_OFST            (0x60)              /**< (OTPC_UID0R) Product UID x Register 0 Offset */
+#define OTPC_UID1R_REG_OFST            (0x64)              /**< (OTPC_UID1R) Product UID x Register 1 Offset */
+#define OTPC_UID2R_REG_OFST            (0x68)              /**< (OTPC_UID2R) Product UID x Register 2 Offset */
+#define OTPC_UID3R_REG_OFST            (0x6C)              /**< (OTPC_UID3R) Product UID x Register 3 Offset */
 #define OTPC_WPMR_REG_OFST             (0xE4)              /**< (OTPC_WPMR) Write Protection Mode Register Offset */
 #define OTPC_WPSR_REG_OFST             (0xE8)              /**< (OTPC_WPSR) Write Protection Status Register Offset */
-#define OTPC_VERSION_REG_OFST          (0xFC)              /**< (OTPC_VERSION) Version Register Offset */
-#define OTPC_RCR_REG_OFST              (0x100)             /**< (OTPC_RCR) ROM Control Register Offset */
-#define OTPC_RMR_REG_OFST              (0x104)             /**< (OTPC_RMR) ROM Mode Register Offset */
-#define OTPC_RAR_REG_OFST              (0x110)             /**< (OTPC_RAR) ROM Address Register Offset */
-#define OTPC_RDR_REG_OFST              (0x114)             /**< (OTPC_RDR) ROM Data Register Offset */
-#define OTPC_PCR_REG_OFST              (0x200)             /**< (OTPC_PCR) Patch Control Register Offset */
-#define OTPC_PMR_REG_OFST              (0x204)             /**< (OTPC_PMR) Patch Mode Register Offset */
-#define OTPC_PSR_REG_OFST              (0x208)             /**< (OTPC_PSR) Patch Software Register Offset */
-#define OTPC_PAR_REG_OFST              (0x210)             /**< (OTPC_PAR) Patch Address Register Offset */
-#define OTPC_PDR_REG_OFST              (0x214)             /**< (OTPC_PDR) Patch Data Register Offset */
-#define OTPC_ACR_REG_OFST              (0x300)             /**< (OTPC_ACR) A Control Register Offset */
-#define OTPC_AMR_REG_OFST              (0x304)             /**< (OTPC_AMR) A Mode Register Offset */
-#define OTPC_AAR_REG_OFST              (0x308)             /**< (OTPC_AAR) A Address Register Offset */
-#define OTPC_AHR_REG_OFST              (0x310)             /**< (OTPC_AHR) A Header Register Offset */
-#define OTPC_ADR_REG_OFST              (0x314)             /**< (OTPC_ADR) A Data Register Offset */
 
 #if !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__))
 /** \brief OTPC register API structure */
@@ -1020,50 +608,13 @@ typedef struct
   __I   uint32_t                       OTPC_UHC0R;         /**< Offset: 0x50 (R/   32) User Hardware Configuration 0 Register */
   __I   uint32_t                       OTPC_UHC1R;         /**< Offset: 0x54 (R/   32) User Hardware Configuration 1 Register */
   __I   uint8_t                        Reserved3[0x08];
-  __I   uint32_t                       OTPC_UID0R;         /**< Offset: 0x60 (R/   32) Product UID Register 0 */
-  __I   uint32_t                       OTPC_UID1R;         /**< Offset: 0x64 (R/   32) Product UID Register 1 */
-  __I   uint32_t                       OTPC_UID2R;         /**< Offset: 0x68 (R/   32) Product UID Register 2 */
-  __I   uint32_t                       OTPC_UID3R;         /**< Offset: 0x6C (R/   32) Product UID Register 3 */
-  __IO  uint32_t                       OTPC_HCSR;          /**< Offset: 0x70 (R/W  32) Hardware Configuration Selection Register */
-  __I   uint32_t                       OTPC_HCDR;          /**< Offset: 0x74 (R/   32) Hardware Configuration Data Register */
-  __I   uint8_t                        Reserved4[0x08];
-  __I   uint32_t                       OTPC_HS0R;          /**< Offset: 0x80 (R/   32) Hardware Security Register 0 */
-  __I   uint32_t                       OTPC_HS1R;          /**< Offset: 0x84 (R/   32) Hardware Security Register 1 */
-  __I   uint8_t                        Reserved5[0x08];
-  __IO  uint32_t                       OTPC_OMR;           /**< Offset: 0x90 (R/W  32) OTP Mode Register */
-  __I   uint8_t                        Reserved6[0x0C];
-  __IO  uint32_t                       OTPC_ODC0R;         /**< Offset: 0xA0 (R/W  32) OTP DAP Configuration Register 0 */
-  __IO  uint32_t                       OTPC_ODC1R;         /**< Offset: 0xA4 (R/W  32) OTP DAP Configuration Register 1 */
-  __IO  uint32_t                       OTPC_ODC2R;         /**< Offset: 0xA8 (R/W  32) OTP DAP Configuration Register 2 */
-  __IO  uint32_t                       OTPC_ODC3R;         /**< Offset: 0xAC (R/W  32) OTP DAP Configuration Register 3 */
-  __IO  uint32_t                       OTPC_OPC0R;         /**< Offset: 0xB0 (R/W  32) OTP PMC Configuration Register 0 */
-  __IO  uint32_t                       OTPC_OPC1R;         /**< Offset: 0xB4 (R/W  32) OTP PMC Configuration Register 1 */
-  __IO  uint32_t                       OTPC_OPC2R;         /**< Offset: 0xB8 (R/W  32) OTP PMC Configuration Register 2 */
-  __IO  uint32_t                       OTPC_OPC3R;         /**< Offset: 0xBC (R/W  32) OTP PMC Configuration Register 3 */
-  __I   uint8_t                        Reserved7[0x24];
+  __I   uint32_t                       OTPC_UID0R;         /**< Offset: 0x60 (R/   32) Product UID x Register 0 */
+  __I   uint32_t                       OTPC_UID1R;         /**< Offset: 0x64 (R/   32) Product UID x Register 1 */
+  __I   uint32_t                       OTPC_UID2R;         /**< Offset: 0x68 (R/   32) Product UID x Register 2 */
+  __I   uint32_t                       OTPC_UID3R;         /**< Offset: 0x6C (R/   32) Product UID x Register 3 */
+  __I   uint8_t                        Reserved4[0x74];
   __IO  uint32_t                       OTPC_WPMR;          /**< Offset: 0xE4 (R/W  32) Write Protection Mode Register */
   __I   uint32_t                       OTPC_WPSR;          /**< Offset: 0xE8 (R/   32) Write Protection Status Register */
-  __I   uint8_t                        Reserved8[0x10];
-  __I   uint32_t                       OTPC_VERSION;       /**< Offset: 0xFC (R/   32) Version Register */
-  __O   uint32_t                       OTPC_RCR;           /**< Offset: 0x100 ( /W  32) ROM Control Register */
-  __IO  uint32_t                       OTPC_RMR;           /**< Offset: 0x104 (R/W  32) ROM Mode Register */
-  __I   uint8_t                        Reserved9[0x08];
-  __IO  uint32_t                       OTPC_RAR;           /**< Offset: 0x110 (R/W  32) ROM Address Register */
-  __IO  uint32_t                       OTPC_RDR;           /**< Offset: 0x114 (R/W  32) ROM Data Register */
-  __I   uint8_t                        Reserved10[0xE8];
-  __O   uint32_t                       OTPC_PCR;           /**< Offset: 0x200 ( /W  32) Patch Control Register */
-  __IO  uint32_t                       OTPC_PMR;           /**< Offset: 0x204 (R/W  32) Patch Mode Register */
-  __IO  uint32_t                       OTPC_PSR;           /**< Offset: 0x208 (R/W  32) Patch Software Register */
-  __I   uint8_t                        Reserved11[0x04];
-  __IO  uint32_t                       OTPC_PAR;           /**< Offset: 0x210 (R/W  32) Patch Address Register */
-  __IO  uint32_t                       OTPC_PDR;           /**< Offset: 0x214 (R/W  32) Patch Data Register */
-  __I   uint8_t                        Reserved12[0xE8];
-  __O   uint32_t                       OTPC_ACR;           /**< Offset: 0x300 ( /W  32) A Control Register */
-  __IO  uint32_t                       OTPC_AMR;           /**< Offset: 0x304 (R/W  32) A Mode Register */
-  __IO  uint32_t                       OTPC_AAR;           /**< Offset: 0x308 (R/W  32) A Address Register */
-  __I   uint8_t                        Reserved13[0x04];
-  __IO  uint32_t                       OTPC_AHR;           /**< Offset: 0x310 (R/W  32) A Header Register */
-  __IO  uint32_t                       OTPC_ADR;           /**< Offset: 0x314 (R/W  32) A Data Register */
 } otpc_registers_t;
 
 

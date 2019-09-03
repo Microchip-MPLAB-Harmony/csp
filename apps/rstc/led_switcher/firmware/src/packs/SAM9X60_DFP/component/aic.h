@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-04-23T19:01:17Z */
+/* file generated from device description version 2019-08-22T13:04:26Z */
 #ifndef _SAM9X_AIC_COMPONENT_H_
 #define _SAM9X_AIC_COMPONENT_H_
 
@@ -627,8 +627,8 @@
 #define AIC_WPMR_WPKEY_Pos                    _U_(8)                                               /**< (AIC_WPMR) Write Protection Key Position */
 #define AIC_WPMR_WPKEY_Msk                    (_U_(0xFFFFFF) << AIC_WPMR_WPKEY_Pos)                /**< (AIC_WPMR) Write Protection Key Mask */
 #define AIC_WPMR_WPKEY(value)                 (AIC_WPMR_WPKEY_Msk & ((value) << AIC_WPMR_WPKEY_Pos))
-#define   AIC_WPMR_WPKEY_PASSWD_Val           _U_(0x414943)                                        /**< (AIC_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit.Always reads as 0.  */
-#define AIC_WPMR_WPKEY_PASSWD                 (AIC_WPMR_WPKEY_PASSWD_Val << AIC_WPMR_WPKEY_Pos)    /**< (AIC_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit.Always reads as 0. Position  */
+#define   AIC_WPMR_WPKEY_PASSWD_Val           _U_(0x414943)                                        /**< (AIC_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit. Always reads as 0.  */
+#define AIC_WPMR_WPKEY_PASSWD                 (AIC_WPMR_WPKEY_PASSWD_Val << AIC_WPMR_WPKEY_Pos)    /**< (AIC_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit. Always reads as 0. Position  */
 #define AIC_WPMR_Msk                          _U_(0xFFFFFF01)                                      /**< (AIC_WPMR) Register Mask  */
 
 
@@ -640,16 +640,6 @@
 #define AIC_WPSR_WPVSRC_Msk                   (_U_(0xFFFF) << AIC_WPSR_WPVSRC_Pos)                 /**< (AIC_WPSR) Write Protection Violation Source Mask */
 #define AIC_WPSR_WPVSRC(value)                (AIC_WPSR_WPVSRC_Msk & ((value) << AIC_WPSR_WPVSRC_Pos))
 #define AIC_WPSR_Msk                          _U_(0x00FFFF01)                                      /**< (AIC_WPSR) Register Mask  */
-
-
-/* -------- AIC_VERSION : (AIC Offset: 0xFC) ( R/ 32) AIC Version Register -------- */
-#define AIC_VERSION_VERSION_Pos               _U_(0)                                               /**< (AIC_VERSION) Version of the Hardware Module Position */
-#define AIC_VERSION_VERSION_Msk               (_U_(0xFFF) << AIC_VERSION_VERSION_Pos)              /**< (AIC_VERSION) Version of the Hardware Module Mask */
-#define AIC_VERSION_VERSION(value)            (AIC_VERSION_VERSION_Msk & ((value) << AIC_VERSION_VERSION_Pos))
-#define AIC_VERSION_MFN_Pos                   _U_(16)                                              /**< (AIC_VERSION) Metal Fix Number Position */
-#define AIC_VERSION_MFN_Msk                   (_U_(0x7) << AIC_VERSION_MFN_Pos)                    /**< (AIC_VERSION) Metal Fix Number Mask */
-#define AIC_VERSION_MFN(value)                (AIC_VERSION_MFN_Msk & ((value) << AIC_VERSION_MFN_Pos))
-#define AIC_VERSION_Msk                       _U_(0x00070FFF)                                      /**< (AIC_VERSION) Register Mask  */
 
 
 /** \brief AIC register offsets definitions */
@@ -680,7 +670,6 @@
 #define AIC_DCR_REG_OFST               (0x6C)              /**< (AIC_DCR) Debug Control Register Offset */
 #define AIC_WPMR_REG_OFST              (0xE4)              /**< (AIC_WPMR) Write Protection Mode Register Offset */
 #define AIC_WPSR_REG_OFST              (0xE8)              /**< (AIC_WPSR) Write Protection Status Register Offset */
-#define AIC_VERSION_REG_OFST           (0xFC)              /**< (AIC_VERSION) AIC Version Register Offset */
 
 #if !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__))
 /** \brief AIC register API structure */
@@ -717,8 +706,6 @@ typedef struct
   __I   uint8_t                        Reserved4[0x74];
   __IO  uint32_t                       AIC_WPMR;           /**< Offset: 0xE4 (R/W  32) Write Protection Mode Register */
   __I   uint32_t                       AIC_WPSR;           /**< Offset: 0xE8 (R/   32) Write Protection Status Register */
-  __I   uint8_t                        Reserved5[0x10];
-  __I   uint32_t                       AIC_VERSION;        /**< Offset: 0xFC (R/   32) AIC Version Register */
 } aic_registers_t;
 
 
