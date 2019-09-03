@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-04-23T19:01:17Z */
+/* file generated from device description version 2019-08-22T13:04:26Z */
 #ifndef _SAM9X_PMECC_COMPONENT_H_
 #define _SAM9X_PMECC_COMPONENT_H_
 
@@ -68,11 +68,11 @@
 #define   PMECC_CFG_PAGESIZE_PAGESIZE_1SEC_Val _U_(0x0)                                             /**< (PMECC_CFG) 1 sector for main area (512 or 1024 bytes)  */
 #define   PMECC_CFG_PAGESIZE_PAGESIZE_2SEC_Val _U_(0x1)                                             /**< (PMECC_CFG) 2 sectors for main area (1024 or 2048 bytes)  */
 #define   PMECC_CFG_PAGESIZE_PAGESIZE_4SEC_Val _U_(0x2)                                             /**< (PMECC_CFG) 4 sectors for main area (2048 or 4096 bytes)  */
-#define   PMECC_CFG_PAGESIZE_PAGESIZE_8SEC_Val _U_(0x3)                                             /**< (PMECC_CFG) 8 errors for main area (4096 or 8192 bytes)  */
+#define   PMECC_CFG_PAGESIZE_PAGESIZE_8SEC_Val _U_(0x3)                                             /**< (PMECC_CFG) 8 sectors for main area (4096 or 8192 bytes)  */
 #define PMECC_CFG_PAGESIZE_PAGESIZE_1SEC      (PMECC_CFG_PAGESIZE_PAGESIZE_1SEC_Val << PMECC_CFG_PAGESIZE_Pos) /**< (PMECC_CFG) 1 sector for main area (512 or 1024 bytes) Position  */
 #define PMECC_CFG_PAGESIZE_PAGESIZE_2SEC      (PMECC_CFG_PAGESIZE_PAGESIZE_2SEC_Val << PMECC_CFG_PAGESIZE_Pos) /**< (PMECC_CFG) 2 sectors for main area (1024 or 2048 bytes) Position  */
 #define PMECC_CFG_PAGESIZE_PAGESIZE_4SEC      (PMECC_CFG_PAGESIZE_PAGESIZE_4SEC_Val << PMECC_CFG_PAGESIZE_Pos) /**< (PMECC_CFG) 4 sectors for main area (2048 or 4096 bytes) Position  */
-#define PMECC_CFG_PAGESIZE_PAGESIZE_8SEC      (PMECC_CFG_PAGESIZE_PAGESIZE_8SEC_Val << PMECC_CFG_PAGESIZE_Pos) /**< (PMECC_CFG) 8 errors for main area (4096 or 8192 bytes) Position  */
+#define PMECC_CFG_PAGESIZE_PAGESIZE_8SEC      (PMECC_CFG_PAGESIZE_PAGESIZE_8SEC_Val << PMECC_CFG_PAGESIZE_Pos) /**< (PMECC_CFG) 8 sectors for main area (4096 or 8192 bytes) Position  */
 #define PMECC_CFG_NANDWR_Pos                  _U_(12)                                              /**< (PMECC_CFG) NAND Write Access Position */
 #define PMECC_CFG_NANDWR_Msk                  (_U_(0x1) << PMECC_CFG_NANDWR_Pos)                   /**< (PMECC_CFG) NAND Write Access Mask */
 #define PMECC_CFG_NANDWR(value)               (PMECC_CFG_NANDWR_Msk & ((value) << PMECC_CFG_NANDWR_Pos))
@@ -170,16 +170,6 @@
 #define PMECC_ISR_Msk                         _U_(0x000000FF)                                      /**< (PMECC_ISR) Register Mask  */
 
 
-/* -------- PMECC_VERSION : (PMECC Offset: 0x5FC) ( R/ 32) PMECC Version Register -------- */
-#define PMECC_VERSION_VERSION_Pos             _U_(0)                                               /**< (PMECC_VERSION) Version of the Hardware Module Position */
-#define PMECC_VERSION_VERSION_Msk             (_U_(0xFFF) << PMECC_VERSION_VERSION_Pos)            /**< (PMECC_VERSION) Version of the Hardware Module Mask */
-#define PMECC_VERSION_VERSION(value)          (PMECC_VERSION_VERSION_Msk & ((value) << PMECC_VERSION_VERSION_Pos))
-#define PMECC_VERSION_MFN_Pos                 _U_(16)                                              /**< (PMECC_VERSION) Metal Fix Number Position */
-#define PMECC_VERSION_MFN_Msk                 (_U_(0x7) << PMECC_VERSION_MFN_Pos)                  /**< (PMECC_VERSION) Metal Fix Number Mask */
-#define PMECC_VERSION_MFN(value)              (PMECC_VERSION_MFN_Msk & ((value) << PMECC_VERSION_MFN_Pos))
-#define PMECC_VERSION_Msk                     _U_(0x00070FFF)                                      /**< (PMECC_VERSION) Register Mask  */
-
-
 /** \brief PMECC register offsets definitions */
 #define PMECC_ECC_REG_OFST             (0x00)              /**< (PMECC_ECC) PMECC ECC 0 Register (sec_num = 0) Offset */
 #define PMECC_REM_REG_OFST             (0x00)              /**< (PMECC_REM) PMECC REM 0 Register (sec_num = 0) Offset */
@@ -194,7 +184,6 @@
 #define PMECC_IDR_REG_OFST             (0x20)              /**< (PMECC_IDR) PMECC Interrupt Disable Register Offset */
 #define PMECC_IMR_REG_OFST             (0x24)              /**< (PMECC_IMR) PMECC Interrupt Mask Register Offset */
 #define PMECC_ISR_REG_OFST             (0x28)              /**< (PMECC_ISR) PMECC Interrupt Status Register Offset */
-#define PMECC_VERSION_REG_OFST         (0x5FC)             /**< (PMECC_VERSION) PMECC Version Register Offset */
 
 #if !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__))
 /** \brief PMECC_ECC register API structure */
@@ -232,8 +221,6 @@ typedef struct
   __I   uint8_t                        Reserved1[0x14];
         pmecc_ecc_registers_t          PMECC_ECC[PMECC_ECC_NUMBER]; /**< Offset: 0x40  */
         pmecc_rem_registers_t          PMECC_REM[PMECC_REM_NUMBER]; /**< Offset: 0x240  */
-  __I   uint8_t                        Reserved2[0x1BC];
-  __I   uint32_t                       PMECC_VERSION;      /**< Offset: 0x5FC (R/   32) PMECC Version Register */
 } pmecc_registers_t;
 
 
