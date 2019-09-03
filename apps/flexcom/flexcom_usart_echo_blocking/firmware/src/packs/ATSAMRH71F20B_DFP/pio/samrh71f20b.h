@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-06-11T20:50:29Z */
+/* file generated from device description version 2019-08-29T14:13:58Z */
 #ifndef _SAMRH71F20B_GPIO_H_
 #define _SAMRH71F20B_GPIO_H_
 
@@ -1083,6 +1083,13 @@
 #define PIN_PA21C_QSPI_QSCK                        _L_(21)      /**< QSPI signal: QSPI_QSCK on PA21 mux C */
 #define MUX_PA21C_QSPI_QSCK                        _L_(2)       /**< QSPI signal line function value: QSPI_QSCK */
 #define PIO_PA21C_QSPI_QSCK                        _UL_(1 << 21) /**< QSPI signal: QSPI_QSCK */
+/* ========== PIO definition for RTC peripheral ========== */
+#define PIN_PG30A_RTC_RTCOUT0                      _L_(222)     /**< RTC signal: RTC_RTCOUT0 on PG30 mux A */
+#define MUX_PG30A_RTC_RTCOUT0                      _L_(0)       /**< RTC signal line function value: RTC_RTCOUT0 */
+#define PIO_PG30A_RTC_RTCOUT0                      _UL_(1 << 30) /**< RTC signal: RTC_RTCOUT0 */
+#define PIN_PG31A_RTC_RTCOUT1                      _L_(223)     /**< RTC signal: RTC_RTCOUT1 on PG31 mux A */
+#define MUX_PG31A_RTC_RTCOUT1                      _L_(0)       /**< RTC signal line function value: RTC_RTCOUT1 */
+#define PIO_PG31A_RTC_RTCOUT1                      _UL_(1 << 31) /**< RTC signal: RTC_RTCOUT1 */
 /* ========== PIO definition for TC0 peripheral ========== */
 #define PIN_PA0B_TC0_TCLK0                         _L_(0)       /**< TC0 signal: TC0_TCLK0 on PA0 mux B */
 #define MUX_PA0B_TC0_TCLK0                         _L_(1)       /**< TC0 signal line function value: TC0_TCLK0 */
