@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-04-23T19:01:17Z */
+/* file generated from device description version 2019-08-22T13:04:26Z */
 #ifndef _SAM9X_I2SMCC_COMPONENT_H_
 #define _SAM9X_I2SMCC_COMPONENT_H_
 
@@ -80,8 +80,8 @@
 #define I2SMCC_MRA_DATALENGTH_16_BITS_COMPACT (I2SMCC_MRA_DATALENGTH_16_BITS_COMPACT_Val << I2SMCC_MRA_DATALENGTH_Pos) /**< (I2SMCC_MRA) Data length is set to 16-bit compact stereo. Left sample in bits [15:0] and right sample in bits [31:16] of same word. Position  */
 #define I2SMCC_MRA_DATALENGTH_8_BITS          (I2SMCC_MRA_DATALENGTH_8_BITS_Val << I2SMCC_MRA_DATALENGTH_Pos) /**< (I2SMCC_MRA) Data length is set to 8 bits. Position  */
 #define I2SMCC_MRA_DATALENGTH_8_BITS_COMPACT  (I2SMCC_MRA_DATALENGTH_8_BITS_COMPACT_Val << I2SMCC_MRA_DATALENGTH_Pos) /**< (I2SMCC_MRA) Data length is set to 8-bit compact stereo. Left sample in bits [7:0] and right sample in bits [15:8] of the same word. Position  */
-#define I2SMCC_MRA_ZERO_Pos                   _U_(4)                                               /**< (I2SMCC_MRA) This field must always be written to 0. Position */
-#define I2SMCC_MRA_ZERO_Msk                   (_U_(0x3) << I2SMCC_MRA_ZERO_Pos)                    /**< (I2SMCC_MRA) This field must always be written to 0. Mask */
+#define I2SMCC_MRA_ZERO_Pos                   _U_(4)                                               /**< (I2SMCC_MRA) Must always be written to 0. Position */
+#define I2SMCC_MRA_ZERO_Msk                   (_U_(0x3) << I2SMCC_MRA_ZERO_Pos)                    /**< (I2SMCC_MRA) Must always be written to 0. Mask */
 #define I2SMCC_MRA_ZERO(value)                (I2SMCC_MRA_ZERO_Msk & ((value) << I2SMCC_MRA_ZERO_Pos))
 #define I2SMCC_MRA_FORMAT_Pos                 _U_(6)                                               /**< (I2SMCC_MRA) Data Format Position */
 #define I2SMCC_MRA_FORMAT_Msk                 (_U_(0x3) << I2SMCC_MRA_FORMAT_Pos)                  /**< (I2SMCC_MRA) Data Format Mask */
@@ -137,13 +137,6 @@
 
 
 /* -------- I2SMCC_MRB : (I2SMCC Offset: 0x08) (R/W 32) Mode Register B -------- */
-#define I2SMCC_MRB_CRAMODE_Pos                _U_(0)                                               /**< (I2SMCC_MRB) Common Register Access Mode Position */
-#define I2SMCC_MRB_CRAMODE_Msk                (_U_(0x1) << I2SMCC_MRB_CRAMODE_Pos)                 /**< (I2SMCC_MRB) Common Register Access Mode Mask */
-#define I2SMCC_MRB_CRAMODE(value)             (I2SMCC_MRB_CRAMODE_Msk & ((value) << I2SMCC_MRB_CRAMODE_Pos))
-#define   I2SMCC_MRB_CRAMODE_LEFT_FIRST_Val   _U_(0x0)                                             /**< (I2SMCC_MRB) All enabled I2S left channels are filled first, then I2S right channels.  */
-#define   I2SMCC_MRB_CRAMODE_REGULAR_Val      _U_(0x1)                                             /**< (I2SMCC_MRB) An enabled I2S left channel is filled, then the corresponding right channel, until all channels are filled.  */
-#define I2SMCC_MRB_CRAMODE_LEFT_FIRST         (I2SMCC_MRB_CRAMODE_LEFT_FIRST_Val << I2SMCC_MRB_CRAMODE_Pos) /**< (I2SMCC_MRB) All enabled I2S left channels are filled first, then I2S right channels. Position  */
-#define I2SMCC_MRB_CRAMODE_REGULAR            (I2SMCC_MRB_CRAMODE_REGULAR_Val << I2SMCC_MRB_CRAMODE_Pos) /**< (I2SMCC_MRB) An enabled I2S left channel is filled, then the corresponding right channel, until all channels are filled. Position  */
 #define I2SMCC_MRB_DMACHUNK_Pos               _U_(8)                                               /**< (I2SMCC_MRB) DMA Chunk Size Position */
 #define I2SMCC_MRB_DMACHUNK_Msk               (_U_(0x3) << I2SMCC_MRB_DMACHUNK_Pos)                /**< (I2SMCC_MRB) DMA Chunk Size Mask */
 #define I2SMCC_MRB_DMACHUNK(value)            (I2SMCC_MRB_DMACHUNK_Msk & ((value) << I2SMCC_MRB_DMACHUNK_Pos))
@@ -158,7 +151,7 @@
 #define I2SMCC_MRB_CLKSEL_Pos                 _U_(16)                                              /**< (I2SMCC_MRB) Serial Clock Selection Position */
 #define I2SMCC_MRB_CLKSEL_Msk                 (_U_(0x1) << I2SMCC_MRB_CLKSEL_Pos)                  /**< (I2SMCC_MRB) Serial Clock Selection Mask */
 #define I2SMCC_MRB_CLKSEL(value)              (I2SMCC_MRB_CLKSEL_Msk & ((value) << I2SMCC_MRB_CLKSEL_Pos))
-#define I2SMCC_MRB_Msk                        _U_(0x00010301)                                      /**< (I2SMCC_MRB) Register Mask  */
+#define I2SMCC_MRB_Msk                        _U_(0x00010300)                                      /**< (I2SMCC_MRB) Register Mask  */
 
 
 /* -------- I2SMCC_SR : (I2SMCC Offset: 0x0C) ( R/ 32) Status Register -------- */
@@ -586,15 +579,15 @@
 
 
 /* -------- I2SMCC_IMRB : (I2SMCC Offset: 0x28) ( R/ 32) Interrupt Mask Register B -------- */
-#define I2SMCC_IMRB_WERR_Pos                  _U_(0)                                               /**< (I2SMCC_IMRB) Write Error Interrupt Mask Position */
-#define I2SMCC_IMRB_WERR_Msk                  (_U_(0x1) << I2SMCC_IMRB_WERR_Pos)                   /**< (I2SMCC_IMRB) Write Error Interrupt Mask Mask */
+#define I2SMCC_IMRB_WERR_Pos                  _U_(0)                                               /**< (I2SMCC_IMRB) Write Error Interrupt Enable Position */
+#define I2SMCC_IMRB_WERR_Msk                  (_U_(0x1) << I2SMCC_IMRB_WERR_Pos)                   /**< (I2SMCC_IMRB) Write Error Interrupt Enable Mask */
 #define I2SMCC_IMRB_WERR(value)               (I2SMCC_IMRB_WERR_Msk & ((value) << I2SMCC_IMRB_WERR_Pos))
 #define I2SMCC_IMRB_Msk                       _U_(0x00000001)                                      /**< (I2SMCC_IMRB) Register Mask  */
 
 
 /* -------- I2SMCC_ISRB : (I2SMCC Offset: 0x2C) ( R/ 32) Interrupt Status Register B -------- */
-#define I2SMCC_ISRB_WERR_Pos                  _U_(0)                                               /**< (I2SMCC_ISRB) Write Error Flag (Cleared on read) Position */
-#define I2SMCC_ISRB_WERR_Msk                  (_U_(0x1) << I2SMCC_ISRB_WERR_Pos)                   /**< (I2SMCC_ISRB) Write Error Flag (Cleared on read) Mask */
+#define I2SMCC_ISRB_WERR_Pos                  _U_(0)                                               /**< (I2SMCC_ISRB) Write Error Flag (cleared on read) Position */
+#define I2SMCC_ISRB_WERR_Msk                  (_U_(0x1) << I2SMCC_ISRB_WERR_Pos)                   /**< (I2SMCC_ISRB) Write Error Flag (cleared on read) Mask */
 #define I2SMCC_ISRB_WERR(value)               (I2SMCC_ISRB_WERR_Msk & ((value) << I2SMCC_ISRB_WERR_Pos))
 #define I2SMCC_ISRB_Msk                       _U_(0x00000001)                                      /**< (I2SMCC_ISRB) Register Mask  */
 
@@ -626,8 +619,8 @@
 #define I2SMCC_WPMR_WPKEY_Pos                 _U_(8)                                               /**< (I2SMCC_WPMR) Write Protection Key Position */
 #define I2SMCC_WPMR_WPKEY_Msk                 (_U_(0xFFFFFF) << I2SMCC_WPMR_WPKEY_Pos)             /**< (I2SMCC_WPMR) Write Protection Key Mask */
 #define I2SMCC_WPMR_WPKEY(value)              (I2SMCC_WPMR_WPKEY_Msk & ((value) << I2SMCC_WPMR_WPKEY_Pos))
-#define   I2SMCC_WPMR_WPKEY_PASSWD_Val        _U_(0x493253)                                        /**< (I2SMCC_WPMR) Writing any other value in this field aborts the write operation.Always reads as 0.  */
-#define I2SMCC_WPMR_WPKEY_PASSWD              (I2SMCC_WPMR_WPKEY_PASSWD_Val << I2SMCC_WPMR_WPKEY_Pos) /**< (I2SMCC_WPMR) Writing any other value in this field aborts the write operation.Always reads as 0. Position  */
+#define   I2SMCC_WPMR_WPKEY_PASSWD_Val        _U_(0x493253)                                        /**< (I2SMCC_WPMR) Writing any other value in this field aborts the write operation. Always reads as 0.  */
+#define I2SMCC_WPMR_WPKEY_PASSWD              (I2SMCC_WPMR_WPKEY_PASSWD_Val << I2SMCC_WPMR_WPKEY_Pos) /**< (I2SMCC_WPMR) Writing any other value in this field aborts the write operation. Always reads as 0. Position  */
 #define I2SMCC_WPMR_Msk                       _U_(0xFFFFFF07)                                      /**< (I2SMCC_WPMR) Register Mask  */
 
 
@@ -639,16 +632,6 @@
 #define I2SMCC_WPSR_WPVSRC_Msk                (_U_(0xFFFFFF) << I2SMCC_WPSR_WPVSRC_Pos)            /**< (I2SMCC_WPSR) Write Protection Violation Source Mask */
 #define I2SMCC_WPSR_WPVSRC(value)             (I2SMCC_WPSR_WPVSRC_Msk & ((value) << I2SMCC_WPSR_WPVSRC_Pos))
 #define I2SMCC_WPSR_Msk                       _U_(0xFFFFFF01)                                      /**< (I2SMCC_WPSR) Register Mask  */
-
-
-/* -------- I2SMCC_VERSION : (I2SMCC Offset: 0xFC) ( R/ 32) Version Register -------- */
-#define I2SMCC_VERSION_VERSION_Pos            _U_(0)                                               /**< (I2SMCC_VERSION) Version of the Hardware Module Position */
-#define I2SMCC_VERSION_VERSION_Msk            (_U_(0xFFF) << I2SMCC_VERSION_VERSION_Pos)           /**< (I2SMCC_VERSION) Version of the Hardware Module Mask */
-#define I2SMCC_VERSION_VERSION(value)         (I2SMCC_VERSION_VERSION_Msk & ((value) << I2SMCC_VERSION_VERSION_Pos))
-#define I2SMCC_VERSION_MFN_Pos                _U_(16)                                              /**< (I2SMCC_VERSION) Metal Fix Number Position */
-#define I2SMCC_VERSION_MFN_Msk                (_U_(0x7) << I2SMCC_VERSION_MFN_Pos)                 /**< (I2SMCC_VERSION) Metal Fix Number Mask */
-#define I2SMCC_VERSION_MFN(value)             (I2SMCC_VERSION_MFN_Msk & ((value) << I2SMCC_VERSION_MFN_Pos))
-#define I2SMCC_VERSION_Msk                    _U_(0x00070FFF)                                      /**< (I2SMCC_VERSION) Register Mask  */
 
 
 /** \brief I2SMCC register offsets definitions */
@@ -668,7 +651,6 @@
 #define I2SMCC_THR_REG_OFST            (0x34)              /**< (I2SMCC_THR) Transmitter Holding Register Offset */
 #define I2SMCC_WPMR_REG_OFST           (0xE4)              /**< (I2SMCC_WPMR) Write Protection Mode Register Offset */
 #define I2SMCC_WPSR_REG_OFST           (0xE8)              /**< (I2SMCC_WPSR) Write Protection Status Register Offset */
-#define I2SMCC_VERSION_REG_OFST        (0xFC)              /**< (I2SMCC_VERSION) Version Register Offset */
 
 #if !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__))
 /** \brief I2SMCC register API structure */
@@ -691,8 +673,6 @@ typedef struct
   __I   uint8_t                        Reserved1[0xAC];
   __IO  uint32_t                       I2SMCC_WPMR;        /**< Offset: 0xE4 (R/W  32) Write Protection Mode Register */
   __I   uint32_t                       I2SMCC_WPSR;        /**< Offset: 0xE8 (R/   32) Write Protection Status Register */
-  __I   uint8_t                        Reserved2[0x10];
-  __I   uint32_t                       I2SMCC_VERSION;     /**< Offset: 0xFC (R/   32) Version Register */
 } i2smcc_registers_t;
 
 
