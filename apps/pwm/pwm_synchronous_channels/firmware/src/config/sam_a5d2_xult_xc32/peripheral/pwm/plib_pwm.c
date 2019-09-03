@@ -84,6 +84,7 @@ void PWM_Initialize (void)
     PWM_REGS->PWM_IER1 = (0x1U << 0U);
     PWM_CallbackObj.callback_fn = NULL;
      
+
     /************** Channel 1 *************************/
 
     /* PWM duty cycle */
@@ -93,6 +94,7 @@ void PWM_Initialize (void)
     PWM_REGS->PWM_CH_NUM[1].PWM_DT = (100U << PWM_DT_DTL_Pos) | (100U);
          
      
+
     /************** Channel 2 *************************/
 
     /* PWM duty cycle */
@@ -103,9 +105,6 @@ void PWM_Initialize (void)
          
      
  
-
-
-
 }
 
 /* Start the PWM generation */
