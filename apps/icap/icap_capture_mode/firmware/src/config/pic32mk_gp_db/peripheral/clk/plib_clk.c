@@ -98,14 +98,12 @@ void CLK_Initialize( void )
         __builtin_mtc0(12, 0,(__builtin_mfc0(12, 0) | 0x0001)); /* enable interrupts */
     }
 
-
  
-    
-  
+      
 
     /* Peripheral Module Disable Configuration */
-    PMD1SET = 0xffffffff;
-    PMD2SET = 0xffffffff;
+    PMD1SET = 0x100371;
+    PMD2SET = 0x17001f;
     PMD3SET = 0xfffbfffe;
     PMD4SET = 0xfffffffd;
     PMD5SET = 0xffffffdf;
