@@ -51,10 +51,10 @@ void static USART1_ErrorClear( void )
 {
     uint8_t dummyData = 0u;
 
-    USART1_REGS->US_CR|= US_CR_RSTSTA_Msk;
+    USART1_REGS->US_CR |= US_CR_USART_RSTSTA_Msk;
 
     /* Flush existing error bytes from the RX FIFO */
-    while( US_CSR_RXRDY_Msk == (USART1_REGS->US_CSR& US_CSR_RXRDY_Msk) )
+    while( US_CSR_USART_RXRDY_Msk == (USART1_REGS->US_CSR& US_CSR_USART_RXRDY_Msk) )
     {
         dummyData = (USART1_REGS->US_RHR& US_RHR_RXCHR_Msk);
     }
@@ -68,13 +68,13 @@ void static USART1_ErrorClear( void )
 void USART1_Initialize( void )
 {
     /* Reset USART1 */
-    USART1_REGS->US_CR = (US_CR_RSTRX_Msk | US_CR_RSTTX_Msk | US_CR_RSTSTA_Msk);
+    USART1_REGS->US_CR = (US_CR_USART_RSTRX_Msk | US_CR_USART_RSTTX_Msk | US_CR_USART_RSTSTA_Msk);
 
     /* Enable USART1 */
-    USART1_REGS->US_CR = (US_CR_TXEN_Msk | US_CR_RXEN_Msk);
+    USART1_REGS->US_CR = (US_CR_USART_TXEN_Msk | US_CR_USART_RXEN_Msk);
 
     /* Configure USART1 mode */
-    USART1_REGS->US_MR = (US_MR_USCLKS_MCK | US_MR_CHRL_8_BIT | US_MR_USART_PAR_NO | US_MR_USART_NBSTOP_1_BIT | (0 << US_MR_USART_OVER_Pos));
+    USART1_REGS->US_MR = (US_MR_USART_USCLKS_MCK | US_MR_USART_CHRL_8_BIT | US_MR_USART_PAR_NO | US_MR_USART_NBSTOP_1_BIT | (0 << US_MR_USART_OVER_Pos));
 
     /* Configure USART1 Baud Rate */
     USART1_REGS->US_BRGR = US_BRGR_CD(81);
@@ -87,7 +87,7 @@ USART_ERROR USART1_ErrorGet( void )
     USART_ERROR errors = USART_ERROR_NONE;
     uint32_t status = USART1_REGS->US_CSR;
 
-    errors = (USART_ERROR)(status & (US_CSR_OVRE_Msk | US_CSR_USART_LIN_PARE_Msk | US_CSR_USART_LIN_FRAME_Msk));
+    errors = (USART_ERROR)(status & (US_CSR_USART_OVRE_Msk | US_CSR_USART_PARE_Msk | US_CSR_USART_FRAME_Msk));
 
     if(errors != USART_ERROR_NONE)
     {
@@ -119,16 +119,25 @@ bool USART1_SerialSetup( USART_SERIAL_SETUP *setup, uint32_t srcClkFreq )
         {
             brgVal = (srcClkFreq / (16 * baud));
         }
-        else
+        else if (srcClkFreq >= (8 * baud))
         {
             brgVal = (srcClkFreq / (8 * baud));
             overSampVal = US_MR_USART_OVER(1);
         }
+        else
+        {
+            return false;
+        }
+        if (brgVal > 65535)
+        {
+            /* The requested baud is so low that the ratio of srcClkFreq to baud exceeds the 16-bit register value of CD register */
+            return false;
+        }
 
         /* Configure USART1 mode */
         usartMode = USART1_REGS->US_MR;
-        usartMode &= ~(US_MR_CHRL_Msk | US_MR_USART_MODE9_Msk | US_MR_USART_PAR_Msk | US_MR_USART_NBSTOP_Msk | US_MR_USART_OVER_Msk);
-        USART1_REGS->US_MR = usartMode | (setup->dataWidth | setup->parity | setup->stopBits | overSampVal);
+        usartMode &= ~(US_MR_USART_CHRL_Msk | US_MR_USART_MODE9_Msk | US_MR_USART_PAR_Msk | US_MR_USART_NBSTOP_Msk | US_MR_USART_OVER_Msk);
+        USART1_REGS->US_MR = usartMode | ((uint32_t)setup->dataWidth | (uint32_t)setup->parity | (uint32_t)setup->stopBits | (uint32_t)overSampVal);
 
         /* Configure USART1 Baud Rate */
         USART1_REGS->US_BRGR = US_BRGR_CD(brgVal);
@@ -154,14 +163,14 @@ bool USART1_Read( void *buffer, const size_t size )
         while( size > processedSize )
         {
             /* Error status */
-            errorStatus = (USART1_REGS->US_CSR & (US_CSR_OVRE_Msk | US_CSR_USART_LIN_FRAME_Msk | US_CSR_USART_LIN_PARE_Msk));
+            errorStatus = (USART1_REGS->US_CSR & (US_CSR_USART_OVRE_Msk | US_CSR_USART_FRAME_Msk | US_CSR_USART_PARE_Msk));
 
             if(errorStatus != 0)
             {
                 break;
             }
 
-            if(US_CSR_RXRDY_Msk == (USART1_REGS->US_CSR & US_CSR_RXRDY_Msk))
+            if(US_CSR_USART_RXRDY_Msk == (USART1_REGS->US_CSR & US_CSR_USART_RXRDY_Msk))
             {
                 *lBuffer++ = (USART1_REGS->US_RHR& US_RHR_RXCHR_Msk);
                 processedSize++;
@@ -188,7 +197,7 @@ bool USART1_Write( void *buffer, const size_t size )
     {
         while( size > processedSize )
         {
-            if(US_CSR_TXRDY_Msk == (USART1_REGS->US_CSR & US_CSR_TXRDY_Msk))
+            if(US_CSR_USART_TXRDY_Msk == (USART1_REGS->US_CSR & US_CSR_USART_TXRDY_Msk))
             {
                 USART1_REGS->US_THR = (US_THR_TXCHR(*lBuffer++) & US_THR_TXCHR_Msk);
                 processedSize++;
@@ -208,14 +217,14 @@ int USART1_ReadByte(void)
 
 void USART1_WriteByte(int data)
 {
-    while ((US_CSR_TXRDY_Msk == (USART1_REGS->US_CSR & US_CSR_TXRDY_Msk)) == 0);
+    while ((US_CSR_USART_TXRDY_Msk == (USART1_REGS->US_CSR & US_CSR_USART_TXRDY_Msk)) == 0);
 
     USART1_REGS->US_THR = (US_THR_TXCHR(data) & US_THR_TXCHR_Msk);
 }
 
 bool USART1_TransmitterIsReady( void )
 {
-    if(US_CSR_TXRDY_Msk == (USART1_REGS->US_CSR & US_CSR_TXRDY_Msk))
+    if(US_CSR_USART_TXRDY_Msk == (USART1_REGS->US_CSR & US_CSR_USART_TXRDY_Msk))
     {
         return true;
     }
@@ -225,7 +234,7 @@ bool USART1_TransmitterIsReady( void )
 
 bool USART1_TransmitComplete( void )
 {
-    if(US_CSR_TXEMPTY_Msk == (USART1_REGS->US_CSR & US_CSR_TXEMPTY_Msk))
+    if(US_CSR_USART_TXEMPTY_Msk == (USART1_REGS->US_CSR & US_CSR_USART_TXEMPTY_Msk))
     {
         return true;
     }
@@ -235,7 +244,7 @@ bool USART1_TransmitComplete( void )
 
 bool USART1_ReceiverIsReady( void )
 {
-    if(US_CSR_RXRDY_Msk == (USART1_REGS->US_CSR & US_CSR_RXRDY_Msk))
+    if(US_CSR_USART_RXRDY_Msk == (USART1_REGS->US_CSR & US_CSR_USART_RXRDY_Msk))
     {
         return true;
     }
