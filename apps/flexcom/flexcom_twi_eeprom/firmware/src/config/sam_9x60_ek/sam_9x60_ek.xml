@@ -565,86 +565,91 @@
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <Hex dnOrder="111" id="PIO_CCFG_SYSIO_VALUE">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="4096"/>
-          </Values>
-        </Hex>
-        <KeyValueSet dnOrder="112" id="PIT64B_INTERRUPT_PRIORITY">
+        <KeyValueSet dnOrder="111" id="PIT64B_INTERRUPT_PRIORITY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="113" id="PIT64B_INTERRUPT_SRC_TYPE">
+        <KeyValueSet dnOrder="112" id="PIT64B_INTERRUPT_SRC_TYPE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="114" id="PWM_INTERRUPT_PRIORITY">
+        <KeyValueSet dnOrder="113" id="PWM_INTERRUPT_PRIORITY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="115" id="PWM_INTERRUPT_SRC_TYPE">
+        <KeyValueSet dnOrder="114" id="PWM_INTERRUPT_SRC_TYPE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="116" id="QSPI_INTERRUPT_PRIORITY">
+        <KeyValueSet dnOrder="115" id="QSPI_INTERRUPT_PRIORITY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="117" id="QSPI_INTERRUPT_SRC_TYPE">
+        <KeyValueSet dnOrder="116" id="QSPI_INTERRUPT_SRC_TYPE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="118" id="SDMMC0_INTERRUPT_PRIORITY">
+        <KeyValueSet dnOrder="117" id="SDMMC0_INTERRUPT_PRIORITY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="119" id="SDMMC0_INTERRUPT_SRC_TYPE">
+        <KeyValueSet dnOrder="118" id="SDMMC0_INTERRUPT_SRC_TYPE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="120" id="SDMMC1_INTERRUPT_PRIORITY">
+        <KeyValueSet dnOrder="119" id="SDMMC1_INTERRUPT_PRIORITY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="121" id="SDMMC1_INTERRUPT_SRC_TYPE">
+        <KeyValueSet dnOrder="120" id="SDMMC1_INTERRUPT_SRC_TYPE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <Boolean dnOrder="122" id="SECURE_TO_NONSECURE_REDIRECTION">
+        <Boolean dnOrder="121" id="SECURE_TO_NONSECURE_REDIRECTION">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <KeyValueSet dnOrder="123" id="SHA_INTERRUPT_PRIORITY">
+        <KeyValueSet dnOrder="122" id="SHA_INTERRUPT_PRIORITY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="124" id="SHA_INTERRUPT_SRC_TYPE">
+        <KeyValueSet dnOrder="123" id="SHA_INTERRUPT_SRC_TYPE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="125" id="SSC_INTERRUPT_PRIORITY">
+        <KeyValueSet dnOrder="124" id="SSC_INTERRUPT_PRIORITY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="126" id="SSC_INTERRUPT_SRC_TYPE">
+        <KeyValueSet dnOrder="125" id="SSC_INTERRUPT_SRC_TYPE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
+        <Boolean dnOrder="126" id="SYSC_INTERRUPT_ENABLE">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="readOnly">
+              <Value dnOrder="0">false</Value>
+            </Boolean>
+          </Attributes>
+          <Values dnOrder="1">
+            <Dynamic dnOrder="0" id="core" value="false"/>
+          </Values>
+        </Boolean>
         <String dnOrder="127" id="SYSC_INTERRUPT_HANDLER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="SYSC_SharedHandler"/>
@@ -730,27 +735,73 @@
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="144" id="WDT_LEVEL_EXPIRATION">
+        <Integer dnOrder="144" id="WDT_EARLY_RESET_THRESHOLD_COUNT">
+          <Attributes dnOrder="0">
+            <Integer dnOrder="0" id="max">
+              <Value dnOrder="0">3749</Value>
+            </Integer>
+          </Attributes>
+        </Integer>
+        <Integer dnOrder="145" id="WDT_EARLY_RESET_THRESHOLD_MILLISECONDS">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="1000"/>
+          </Values>
+        </Integer>
+        <Boolean dnOrder="146" id="WDT_INTERRUPT_ENABLE">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="readOnly">
+              <Value dnOrder="0">false</Value>
+            </Boolean>
+          </Attributes>
+        </Boolean>
+        <String dnOrder="147" id="WDT_INTERRUPT_HANDLER">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="WDT_Handler"/>
+          </Values>
+        </String>
+        <Boolean dnOrder="148" id="WDT_INTERRUPT_HANDLER_LOCK">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="false"/>
+          </Values>
+        </Boolean>
+        <KeyValueSet dnOrder="149" id="WDT_LEVEL_EXPIRATION">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <Integer dnOrder="145" id="WDT_PERIOD_COUNT">
+        <Integer dnOrder="150" id="WDT_LEVEL_THRESHOLD_COUNT">
+          <Attributes dnOrder="0">
+            <Integer dnOrder="0" id="max">
+              <Value dnOrder="0">3999</Value>
+            </Integer>
+          </Attributes>
+        </Integer>
+        <Integer dnOrder="151" id="WDT_LEVEL_THRESHOLD_MILLISECONDS">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="15000"/>
+          </Values>
+        </Integer>
+        <Integer dnOrder="152" id="WDT_PERIOD_COUNT">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="4000"/>
           </Values>
         </Integer>
-        <KeyValueSet dnOrder="146" id="WDT_PERIOD_EXPIRATION">
+        <KeyValueSet dnOrder="153" id="WDT_PERIOD_EXPIRATION">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="147" id="XDMAC_INTERRUPT_PRIORITY">
+        <Integer dnOrder="154" id="WDT_PERIOD_MILLISECONDS">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="16000"/>
+          </Values>
+        </Integer>
+        <KeyValueSet dnOrder="155" id="XDMAC_INTERRUPT_PRIORITY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="148" id="XDMAC_INTERRUPT_SRC_TYPE">
+        <KeyValueSet dnOrder="156" id="XDMAC_INTERRUPT_SRC_TYPE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
@@ -835,7 +886,12 @@
             <Dynamic dnOrder="0" id="flexcom0" value="200"/>
           </Values>
         </Integer>
-        <File dnOrder="6" id="FLEXCOM_SYS_DEF">
+        <Integer dnOrder="6" id="FLEXCOM_SPI_PERIPHERAL_CLOCK">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="flexcom0" value="200000000"/>
+          </Values>
+        </Integer>
+        <File dnOrder="7" id="FLEXCOM_SYS_DEF">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="markup">
               <Value dnOrder="0">true</Value>
@@ -851,7 +907,7 @@
             </String>
           </Attributes>
         </File>
-        <File dnOrder="7" id="FLEXCOM_SYS_INIT">
+        <File dnOrder="8" id="FLEXCOM_SYS_INIT">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="markup">
               <Value dnOrder="0">true</Value>
@@ -867,68 +923,68 @@
             </String>
           </Attributes>
         </File>
-        <Integer dnOrder="8" id="FLEXCOM_TWI_CLK_SRC_FREQ">
+        <Integer dnOrder="9" id="FLEXCOM_TWI_CLK_SRC_FREQ">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="flexcom0" value="200000000"/>
           </Values>
         </Integer>
-        <KeyValueSet dnOrder="9" id="FLEXCOM_TWI_CWGR_BRSRCCLK">
+        <KeyValueSet dnOrder="10" id="FLEXCOM_TWI_CWGR_BRSRCCLK">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </KeyValueSet>
-        <Integer dnOrder="10" id="FLEXCOM_TWI_CWGR_CHDIV">
+        <Integer dnOrder="11" id="FLEXCOM_TWI_CWGR_CHDIV">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="flexcom0" value="247"/>
           </Values>
         </Integer>
-        <Integer dnOrder="11" id="FLEXCOM_TWI_CWGR_CKDIV">
+        <Integer dnOrder="12" id="FLEXCOM_TWI_CWGR_CKDIV">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="flexcom0" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="12" id="FLEXCOM_TWI_CWGR_CLDIV">
+        <Integer dnOrder="13" id="FLEXCOM_TWI_CWGR_CLDIV">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="flexcom0" value="247"/>
           </Values>
         </Integer>
-        <Combo dnOrder="13" id="FLEXCOM_TWI_OPMODE">
+        <Combo dnOrder="14" id="FLEXCOM_TWI_OPMODE">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </Combo>
-        <Integer dnOrder="14" id="FLEXCOM_USART_MR_OVER">
+        <Integer dnOrder="15" id="FLEXCOM_USART_MR_OVER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="flexcom0" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="15" id="FLEX_USART_CLOCK_FREQ">
+        <Integer dnOrder="16" id="FLEX_USART_CLOCK_FREQ">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="flexcom0" value="200000000"/>
           </Values>
         </Integer>
-        <Integer dnOrder="16" id="I2C_CLOCK_SPEED">
+        <Integer dnOrder="17" id="I2C_CLOCK_SPEED">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </Integer>
-        <String dnOrder="17" id="RECEIVE_DATA_REGISTER">
+        <String dnOrder="18" id="RECEIVE_DATA_REGISTER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="flexcom0" value="&amp;(FLEXCOM0_REGS-&gt;FLEX_TWI_RHR)"/>
           </Values>
         </String>
-        <String dnOrder="18" id="TRANSMIT_DATA_REGISTER">
+        <String dnOrder="19" id="TRANSMIT_DATA_REGISTER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="flexcom0" value="&amp;(FLEXCOM0_REGS-&gt;FLEX_TWI_THR)"/>
           </Values>
         </String>
-        <Boolean dnOrder="19" id="TWI_INTERRUPT_MODE">
+        <Boolean dnOrder="20" id="TWI_INTERRUPT_MODE">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>

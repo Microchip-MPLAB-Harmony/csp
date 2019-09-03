@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-04-23T19:01:17Z */
+/* file generated from device description version 2019-08-22T13:04:26Z */
 #ifndef _SAM9X_SHA_COMPONENT_H_
 #define _SAM9X_SHA_COMPONENT_H_
 
@@ -87,21 +87,29 @@
 #define   SHA_MR_ALGO_SHA384_Val              _U_(0x2)                                             /**< (SHA_MR) SHA384 algorithm processed  */
 #define   SHA_MR_ALGO_SHA512_Val              _U_(0x3)                                             /**< (SHA_MR) SHA512 algorithm processed  */
 #define   SHA_MR_ALGO_SHA224_Val              _U_(0x4)                                             /**< (SHA_MR) SHA224 algorithm processed  */
+#define   SHA_MR_ALGO_SHA512_224_Val          _U_(0x5)                                             /**< (SHA_MR) SHA512/224 algorithm processed  */
+#define   SHA_MR_ALGO_SHA512_256_Val          _U_(0x6)                                             /**< (SHA_MR) SHA512/256 algorithm processed  */
 #define   SHA_MR_ALGO_HMAC_SHA1_Val           _U_(0x8)                                             /**< (SHA_MR) HMAC algorithm with SHA1 Hash processed  */
 #define   SHA_MR_ALGO_HMAC_SHA256_Val         _U_(0x9)                                             /**< (SHA_MR) HMAC algorithm with SHA256 Hash processed  */
 #define   SHA_MR_ALGO_HMAC_SHA384_Val         _U_(0xA)                                             /**< (SHA_MR) HMAC algorithm with SHA384 Hash processed  */
 #define   SHA_MR_ALGO_HMAC_SHA512_Val         _U_(0xB)                                             /**< (SHA_MR) HMAC algorithm with SHA512 Hash processed  */
 #define   SHA_MR_ALGO_HMAC_SHA224_Val         _U_(0xC)                                             /**< (SHA_MR) HMAC algorithm with SHA224 Hash processed  */
+#define   SHA_MR_ALGO_HMAC_SHA512_224_Val     _U_(0xD)                                             /**< (SHA_MR) HMAC algorithm with SHA512/224 Hash processed  */
+#define   SHA_MR_ALGO_HMAC_SHA512_256_Val     _U_(0xE)                                             /**< (SHA_MR) HMAC algorithm with SHA512/256 Hash processed  */
 #define SHA_MR_ALGO_SHA1                      (SHA_MR_ALGO_SHA1_Val << SHA_MR_ALGO_Pos)            /**< (SHA_MR) SHA1 algorithm processed Position  */
 #define SHA_MR_ALGO_SHA256                    (SHA_MR_ALGO_SHA256_Val << SHA_MR_ALGO_Pos)          /**< (SHA_MR) SHA256 algorithm processed Position  */
 #define SHA_MR_ALGO_SHA384                    (SHA_MR_ALGO_SHA384_Val << SHA_MR_ALGO_Pos)          /**< (SHA_MR) SHA384 algorithm processed Position  */
 #define SHA_MR_ALGO_SHA512                    (SHA_MR_ALGO_SHA512_Val << SHA_MR_ALGO_Pos)          /**< (SHA_MR) SHA512 algorithm processed Position  */
 #define SHA_MR_ALGO_SHA224                    (SHA_MR_ALGO_SHA224_Val << SHA_MR_ALGO_Pos)          /**< (SHA_MR) SHA224 algorithm processed Position  */
+#define SHA_MR_ALGO_SHA512_224                (SHA_MR_ALGO_SHA512_224_Val << SHA_MR_ALGO_Pos)      /**< (SHA_MR) SHA512/224 algorithm processed Position  */
+#define SHA_MR_ALGO_SHA512_256                (SHA_MR_ALGO_SHA512_256_Val << SHA_MR_ALGO_Pos)      /**< (SHA_MR) SHA512/256 algorithm processed Position  */
 #define SHA_MR_ALGO_HMAC_SHA1                 (SHA_MR_ALGO_HMAC_SHA1_Val << SHA_MR_ALGO_Pos)       /**< (SHA_MR) HMAC algorithm with SHA1 Hash processed Position  */
 #define SHA_MR_ALGO_HMAC_SHA256               (SHA_MR_ALGO_HMAC_SHA256_Val << SHA_MR_ALGO_Pos)     /**< (SHA_MR) HMAC algorithm with SHA256 Hash processed Position  */
 #define SHA_MR_ALGO_HMAC_SHA384               (SHA_MR_ALGO_HMAC_SHA384_Val << SHA_MR_ALGO_Pos)     /**< (SHA_MR) HMAC algorithm with SHA384 Hash processed Position  */
 #define SHA_MR_ALGO_HMAC_SHA512               (SHA_MR_ALGO_HMAC_SHA512_Val << SHA_MR_ALGO_Pos)     /**< (SHA_MR) HMAC algorithm with SHA512 Hash processed Position  */
 #define SHA_MR_ALGO_HMAC_SHA224               (SHA_MR_ALGO_HMAC_SHA224_Val << SHA_MR_ALGO_Pos)     /**< (SHA_MR) HMAC algorithm with SHA224 Hash processed Position  */
+#define SHA_MR_ALGO_HMAC_SHA512_224           (SHA_MR_ALGO_HMAC_SHA512_224_Val << SHA_MR_ALGO_Pos) /**< (SHA_MR) HMAC algorithm with SHA512/224 Hash processed Position  */
+#define SHA_MR_ALGO_HMAC_SHA512_256           (SHA_MR_ALGO_HMAC_SHA512_256_Val << SHA_MR_ALGO_Pos) /**< (SHA_MR) HMAC algorithm with SHA512/256 Hash processed Position  */
 #define SHA_MR_TMPLCK_Pos                     _U_(15)                                              /**< (SHA_MR) Tamper Lock Enable Position */
 #define SHA_MR_TMPLCK_Msk                     (_U_(0x1) << SHA_MR_TMPLCK_Pos)                      /**< (SHA_MR) Tamper Lock Enable Mask */
 #define SHA_MR_TMPLCK(value)                  (SHA_MR_TMPLCK_Msk & ((value) << SHA_MR_TMPLCK_Pos))
@@ -255,8 +263,8 @@
 #define SHA_WPMR_WPKEY_Pos                    _U_(8)                                               /**< (SHA_WPMR) Write Protection Key Position */
 #define SHA_WPMR_WPKEY_Msk                    (_U_(0xFFFFFF) << SHA_WPMR_WPKEY_Pos)                /**< (SHA_WPMR) Write Protection Key Mask */
 #define SHA_WPMR_WPKEY(value)                 (SHA_WPMR_WPKEY_Msk & ((value) << SHA_WPMR_WPKEY_Pos))
-#define   SHA_WPMR_WPKEY_PASSWD_Val           _U_(0x534841)                                        /**< (SHA_WPMR) Writing any other value in this field aborts the write operation of the WPEN,WPITEN,WPCREN bits.Always reads as 0.  */
-#define SHA_WPMR_WPKEY_PASSWD                 (SHA_WPMR_WPKEY_PASSWD_Val << SHA_WPMR_WPKEY_Pos)    /**< (SHA_WPMR) Writing any other value in this field aborts the write operation of the WPEN,WPITEN,WPCREN bits.Always reads as 0. Position  */
+#define   SHA_WPMR_WPKEY_PASSWD_Val           _U_(0x534841)                                        /**< (SHA_WPMR) Writing any other value in this field aborts the write operation of the WPEN,WPITEN,WPCREN bits. Always reads as 0.  */
+#define SHA_WPMR_WPKEY_PASSWD                 (SHA_WPMR_WPKEY_PASSWD_Val << SHA_WPMR_WPKEY_Pos)    /**< (SHA_WPMR) Writing any other value in this field aborts the write operation of the WPEN,WPITEN,WPCREN bits. Always reads as 0. Position  */
 #define SHA_WPMR_Msk                          _U_(0xFFFFFF77)                                      /**< (SHA_WPMR) Register Mask  */
 
 
@@ -295,20 +303,10 @@
 #define SHA_WPSR_ECLASS_Msk                   (_U_(0x1) << SHA_WPSR_ECLASS_Pos)                    /**< (SHA_WPSR) Software Error Class (cleared on read) Mask */
 #define SHA_WPSR_ECLASS(value)                (SHA_WPSR_ECLASS_Msk & ((value) << SHA_WPSR_ECLASS_Pos))
 #define   SHA_WPSR_ECLASS_WARNING_Val         _U_(0x0)                                             /**< (SHA_WPSR) An abnormal access that does not affect system functionality  */
-#define   SHA_WPSR_ECLASS_ERROR_Val           _U_(0x1)                                             /**< (SHA_WPSR) An access is performed into key, input data, control registers while the SHA is performing an encryp-tion/decryption or a start is request by software or DMA while the key is not fully configured.  */
+#define   SHA_WPSR_ECLASS_ERROR_Val           _U_(0x1)                                             /**< (SHA_WPSR) An access is performed into key, input data, control registers while the SHA is performing an encryption/decryption or a start is request by software or DMA while the key is not fully configured.  */
 #define SHA_WPSR_ECLASS_WARNING               (SHA_WPSR_ECLASS_WARNING_Val << SHA_WPSR_ECLASS_Pos) /**< (SHA_WPSR) An abnormal access that does not affect system functionality Position  */
-#define SHA_WPSR_ECLASS_ERROR                 (SHA_WPSR_ECLASS_ERROR_Val << SHA_WPSR_ECLASS_Pos)   /**< (SHA_WPSR) An access is performed into key, input data, control registers while the SHA is performing an encryp-tion/decryption or a start is request by software or DMA while the key is not fully configured. Position  */
+#define SHA_WPSR_ECLASS_ERROR                 (SHA_WPSR_ECLASS_ERROR_Val << SHA_WPSR_ECLASS_Pos)   /**< (SHA_WPSR) An access is performed into key, input data, control registers while the SHA is performing an encryption/decryption or a start is request by software or DMA while the key is not fully configured. Position  */
 #define SHA_WPSR_Msk                          _U_(0x8F00FF0F)                                      /**< (SHA_WPSR) Register Mask  */
-
-
-/* -------- SHA_VERSION : (SHA Offset: 0xFC) ( R/ 32) Version Register -------- */
-#define SHA_VERSION_VERSION_Pos               _U_(0)                                               /**< (SHA_VERSION) Version of the Hardware Module Position */
-#define SHA_VERSION_VERSION_Msk               (_U_(0xFFF) << SHA_VERSION_VERSION_Pos)              /**< (SHA_VERSION) Version of the Hardware Module Mask */
-#define SHA_VERSION_VERSION(value)            (SHA_VERSION_VERSION_Msk & ((value) << SHA_VERSION_VERSION_Pos))
-#define SHA_VERSION_MFN_Pos                   _U_(16)                                              /**< (SHA_VERSION) Metal Fix Number Position */
-#define SHA_VERSION_MFN_Msk                   (_U_(0x7) << SHA_VERSION_MFN_Pos)                    /**< (SHA_VERSION) Metal Fix Number Mask */
-#define SHA_VERSION_MFN(value)                (SHA_VERSION_MFN_Msk & ((value) << SHA_VERSION_MFN_Pos))
-#define SHA_VERSION_Msk                       _U_(0x00070FFF)                                      /**< (SHA_VERSION) Register Mask  */
 
 
 /** \brief SHA register offsets definitions */
@@ -324,7 +322,6 @@
 #define SHA_IODATAR_REG_OFST           (0x80)              /**< (SHA_IODATAR) Input/Output Data 0 Register Offset */
 #define SHA_WPMR_REG_OFST              (0xE4)              /**< (SHA_WPMR) Write Protection Mode Register Offset */
 #define SHA_WPSR_REG_OFST              (0xE8)              /**< (SHA_WPSR) Write Protection Status Register Offset */
-#define SHA_VERSION_REG_OFST           (0xFC)              /**< (SHA_VERSION) Version Register Offset */
 
 #if !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__))
 /** \brief SHA register API structure */
@@ -346,8 +343,6 @@ typedef struct
   __I   uint8_t                        Reserved4[0x24];
   __IO  uint32_t                       SHA_WPMR;           /**< Offset: 0xE4 (R/W  32) Write Protection Mode Register */
   __I   uint32_t                       SHA_WPSR;           /**< Offset: 0xE8 (R/   32) Write Protection Status Register */
-  __I   uint8_t                        Reserved5[0x10];
-  __I   uint32_t                       SHA_VERSION;        /**< Offset: 0xFC (R/   32) Version Register */
 } sha_registers_t;
 
 
