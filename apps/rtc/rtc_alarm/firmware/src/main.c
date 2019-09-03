@@ -70,7 +70,7 @@ void RTC_Callback( uint32_t int_cause, uintptr_t context )
 // *****************************************************************************
 
 int main ( void )
-{
+{   
     /* Initialize all modules */
     SYS_Initialize ( NULL );
     struct tm sys_time;
