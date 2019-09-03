@@ -62,8 +62,8 @@ void RTC_Initialize( void )
                     | RTC_MR_THIGH_H_31MS           // output pulse duration
                     | RTC_MR_OUT1_NO_WAVE           // ADC last channel trigger event source
                     | RTC_MR_OUT0_NO_WAVE           // ADC all channels trigger event source
-                    | RTC_MR_PERSIAN_Msk
-                    | RTC_MR_HRMOD_Msk             // 24 hour mode
+                    | RTC_MR_PERSIAN( 0 )
+                    | RTC_MR_HRMOD( 0 )             // 24 hour mode
                     ;   // no HIGH ppm correction, no slow clock correction, no negative ppm correction
 
     RTC_REGS->RTC_CR = RTC_CR_TIMEVSEL_MINUTE | RTC_CR_CALEVSEL_WEEK;
