@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-04-23T19:01:17Z */
+/* file generated from device description version 2019-08-22T13:04:25Z */
 #ifndef _SAM9X60_H_
 #define _SAM9X60_H_
 
@@ -122,7 +122,7 @@ typedef enum IRQn
   AES_IRQn                  =  39, /**< 39  Advanced Encryption Standard (AES)  */
   TDES_IRQn                 =  40, /**< 40  Triple Data Encryption Standard (TDES) */
   SHA_IRQn                  =  41, /**< 41  Secure Hash Algorithm (SHA)         */
-  CLASSD_IRQn               =  42, /**< 42  Audio Class D Amplifier (CLASSD) (CLASSD) */
+  CLASSD_IRQn               =  42, /**< 42  Audio Class D Amplifier (CLASSD)    */
   ISI_IRQn                  =  43, /**< 43  Image Sensor Interface (ISI)        */
   PIOD_IRQn                 =  44, /**< 44  Parallel Input/Output Controller (PIOD) */
   TC1_IRQn                  =  45, /**< 45  Timer Counter (TC1)                 */
@@ -203,7 +203,7 @@ typedef struct _DeviceVectors
   void* pfnAES_Handler;                          /*  39 Advanced Encryption Standard (AES) */
   void* pfnTDES_Handler;                         /*  40 Triple Data Encryption Standard (TDES) */
   void* pfnSHA_Handler;                          /*  41 Secure Hash Algorithm (SHA) */
-  void* pfnCLASSD_Handler;                       /*  42 Audio Class D Amplifier (CLASSD) (CLASSD) */
+  void* pfnCLASSD_Handler;                       /*  42 Audio Class D Amplifier (CLASSD) */
   void* pfnISI_Handler;                          /*  43 Image Sensor Interface (ISI) */
   void* pfnPIOD_Handler;                         /*  44 Parallel Input/Output Controller (PIOD) */
   void* pfnTC1_Handler;                          /*  45 Timer Counter (TC1) */
@@ -212,6 +212,12 @@ typedef struct _DeviceVectors
   void* pfnECC_Handler;                          /*  48 ECC Controller (PMECC PMERRLOC) */
   void* pfnMC_Handler;                           /*  49 Memory Controller (SDRAMC MPDDRC SMC) */
 } DeviceVectors;
+
+/* Defines for Deprecated Interrupt and Exceptions handler names */
+#define pfnMemManage_Handler      pfnMemoryManagement_Handler     /**< \deprecated  Backward compatibility for ASF*/
+#define pfnDebugMon_Handler       pfnDebugMonitor_Handler         /**< \deprecated  Backward compatibility for ASF*/
+#define pfnNMI_Handler            pfnNonMaskableInt_Handler       /**< \deprecated  Backward compatibility for ASF*/
+#define pfnSVC_Handler            pfnSVCall_Handler               /**< \deprecated  Backward compatibility for ASF*/
 
 #endif /* !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__)) */
 
@@ -272,6 +278,12 @@ void DBGU_Handler                  ( void );
 void ECC_Handler                   ( void );
 void MC_Handler                    ( void );
 #endif /* DONT_USE_PREDEFINED_PERIPHERALS_HANDLERS */
+/* Defines for Deprecated Interrupt and Exceptions handler names */
+#define MemManage_Handler         MemoryManagement_Handler        /**< \deprecated  Backward compatibility*/
+#define DebugMon_Handler          DebugMonitor_Handler            /**< \deprecated  Backward compatibility*/
+#define NMI_Handler               NonMaskableInt_Handler          /**< \deprecated  Backward compatibility*/
+#define SVC_Handler               SVCall_Handler                  /**< \deprecated  Backward compatibility*/
+
 #endif /* !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /*
@@ -389,7 +401,7 @@ void MC_Handler                    ( void );
 #define ID_AES           ( 39) /**< \brief Advanced Encryption Standard (AES) */
 #define ID_TDES          ( 40) /**< \brief Triple Data Encryption Standard (TDES) */
 #define ID_SHA           ( 41) /**< \brief Secure Hash Algorithm (SHA) */
-#define ID_CLASSD        ( 42) /**< \brief Audio Class D Amplifier (CLASSD) (CLASSD) */
+#define ID_CLASSD        ( 42) /**< \brief Audio Class D Amplifier (CLASSD) */
 #define ID_ISI           ( 43) /**< \brief Image Sensor Interface (ISI) */
 #define ID_PIOD          ( 44) /**< \brief Parallel Input/Output Controller (PIOD) */
 #define ID_TC1           ( 45) /**< \brief Timer Counter (TC1) */
@@ -563,8 +575,15 @@ void MC_Handler                    ( void );
 /*   MEMORY MAPPING DEFINITIONS FOR SAM9X60                                   */
 /* ************************************************************************** */
 
+#define ECC_ROM_SIZE                   _UL_(0x00100000)    /* 1024kB Memory segment type: other */
+#define SRAM0_SIZE                     _UL_(0x00100000)    /* 1024kB Memory segment type: other */
+#define SRAM1_SIZE                     _UL_(0x00100000)    /* 1024kB Memory segment type: other */
+#define UDPHS_RAM_SIZE                 _UL_(0x00100000)    /* 1024kB Memory segment type: other */
+#define UHPHS_OHCI_SIZE                _UL_(0x00100000)    /* 1024kB Memory segment type: other */
+#define UHPHS_EHCI_SIZE                _UL_(0x00100000)    /* 1024kB Memory segment type: other */
 #define EBI_CS0_SIZE                   _UL_(0x10000000)    /* 262144kB Memory segment type: other */
 #define EBI_CS1_SIZE                   _UL_(0x10000000)    /* 262144kB Memory segment type: other */
+#define EBI_MPDDR_SIZE                 _UL_(0x10000000)    /* 262144kB Memory segment type: other */
 #define SDRAM_CS_SIZE                  _UL_(0x10000000)    /* 262144kB Memory segment type: other */
 #define EBI_CS2_SIZE                   _UL_(0x10000000)    /* 262144kB Memory segment type: other */
 #define EBI_CS3_SIZE                   _UL_(0x10000000)    /* 262144kB Memory segment type: other */
@@ -574,15 +593,17 @@ void MC_Handler                    ( void );
 #define QSPIMEM_SIZE                   _UL_(0x10000000)    /* 262144kB Memory segment type: other */
 #define SDMMC0_SIZE                    _UL_(0x00100000)    /* 1024kB Memory segment type: other */
 #define SDMMC1_SIZE                    _UL_(0x00100000)    /* 1024kB Memory segment type: other */
-#define ECC_ROM_SIZE                   _UL_(0x00100000)    /* 1024kB Memory segment type: other */
-#define SRAM0_SIZE                     _UL_(0x00100000)    /* 1024kB Memory segment type: other */
-#define SRAM1_SIZE                     _UL_(0x00100000)    /* 1024kB Memory segment type: other */
-#define UDPHS_RAM_SIZE                 _UL_(0x00100000)    /* 1024kB Memory segment type: other */
-#define UHPHS_OHCI_RAM_SIZE            _UL_(0x00100000)    /* 1024kB Memory segment type: other */
-#define UHPHS_EHCI_RAM_SIZE            _UL_(0x00100000)    /* 1024kB Memory segment type: other */
+#define OTPC_SIZE                      _UL_(0x00001000)    /*    4kB Memory segment type: other */
 
+#define ECC_ROM_ADDR                   _UL_(0x00100000)    /**< ECC_ROM base address (type: other)*/
+#define SRAM0_ADDR                     _UL_(0x00300000)    /**< SRAM0 base address (type: other)*/
+#define SRAM1_ADDR                     _UL_(0x00400000)    /**< SRAM1 base address (type: other)*/
+#define UDPHS_RAM_ADDR                 _UL_(0x00500000)    /**< UDPHS_RAM base address (type: other)*/
+#define UHPHS_OHCI_ADDR                _UL_(0x00600000)    /**< UHPHS_OHCI base address (type: other)*/
+#define UHPHS_EHCI_ADDR                _UL_(0x00700000)    /**< UHPHS_EHCI base address (type: other)*/
 #define EBI_CS0_ADDR                   _UL_(0x10000000)    /**< EBI_CS0 base address (type: other)*/
 #define EBI_CS1_ADDR                   _UL_(0x20000000)    /**< EBI_CS1 base address (type: other)*/
+#define EBI_MPDDR_ADDR                 _UL_(0x20000000)    /**< EBI_MPDDR base address (type: other)*/
 #define SDRAM_CS_ADDR                  _UL_(0x20000000)    /**< SDRAM_CS base address (type: other)*/
 #define EBI_CS2_ADDR                   _UL_(0x30000000)    /**< EBI_CS2 base address (type: other)*/
 #define EBI_CS3_ADDR                   _UL_(0x40000000)    /**< EBI_CS3 base address (type: other)*/
@@ -592,12 +613,7 @@ void MC_Handler                    ( void );
 #define QSPIMEM_ADDR                   _UL_(0x70000000)    /**< QSPIMEM base address (type: other)*/
 #define SDMMC0_ADDR                    _UL_(0x80000000)    /**< SDMMC0 base address (type: other)*/
 #define SDMMC1_ADDR                    _UL_(0x90000000)    /**< SDMMC1 base address (type: other)*/
-#define ECC_ROM_ADDR                   _UL_(0x00100000)    /**< ECC_ROM base address (type: other)*/
-#define SRAM0_ADDR                     _UL_(0x00300000)    /**< SRAM0 base address (type: other)*/
-#define SRAM1_ADDR                     _UL_(0x00400000)    /**< SRAM1 base address (type: other)*/
-#define UDPHS_RAM_ADDR                 _UL_(0x00500000)    /**< UDPHS_RAM base address (type: other)*/
-#define UHPHS_OHCI_RAM_ADDR            _UL_(0x00600000)    /**< UHPHS_OHCI_RAM base address (type: other)*/
-#define UHPHS_EHCI_RAM_ADDR            _UL_(0x00700000)    /**< UHPHS_EHCI_RAM base address (type: other)*/
+#define OTPC_ADDR                      _UL_(0xeff00000)    /**< OTPC base address (type: other)*/
 
 /* ************************************************************************** */
 /**  DEVICE SIGNATURES FOR SAM9X60                                            */

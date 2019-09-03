@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-04-23T19:01:17Z */
+/* file generated from device description version 2019-08-22T13:04:26Z */
 #ifndef _SAM9X_AES_COMPONENT_H_
 #define _SAM9X_AES_COMPONENT_H_
 
@@ -35,13 +35,10 @@
 #define AES_CR_SWRST_Pos                      _U_(8)                                               /**< (AES_CR) Software Reset Position */
 #define AES_CR_SWRST_Msk                      (_U_(0x1) << AES_CR_SWRST_Pos)                       /**< (AES_CR) Software Reset Mask */
 #define AES_CR_SWRST(value)                   (AES_CR_SWRST_Msk & ((value) << AES_CR_SWRST_Pos))  
-#define AES_CR_LOADSEED_Pos                   _U_(16)                                              /**< (AES_CR) Random Number Generator Seed Loading Position */
-#define AES_CR_LOADSEED_Msk                   (_U_(0x1) << AES_CR_LOADSEED_Pos)                    /**< (AES_CR) Random Number Generator Seed Loading Mask */
-#define AES_CR_LOADSEED(value)                (AES_CR_LOADSEED_Msk & ((value) << AES_CR_LOADSEED_Pos))
 #define AES_CR_UNLOCK_Pos                     _U_(24)                                              /**< (AES_CR) Unlock Processing Position */
 #define AES_CR_UNLOCK_Msk                     (_U_(0x1) << AES_CR_UNLOCK_Pos)                      /**< (AES_CR) Unlock Processing Mask */
 #define AES_CR_UNLOCK(value)                  (AES_CR_UNLOCK_Msk & ((value) << AES_CR_UNLOCK_Pos))
-#define AES_CR_Msk                            _U_(0x01010101)                                      /**< (AES_CR) Register Mask  */
+#define AES_CR_Msk                            _U_(0x01000101)                                      /**< (AES_CR) Register Mask  */
 
 
 /* -------- AES_MR : (AES Offset: 0x04) (R/W 32) Mode Register -------- */
@@ -112,68 +109,16 @@
 #define AES_MR_CFBS_SIZE_32BIT                (AES_MR_CFBS_SIZE_32BIT_Val << AES_MR_CFBS_Pos)      /**< (AES_MR) 32-bit Position  */
 #define AES_MR_CFBS_SIZE_16BIT                (AES_MR_CFBS_SIZE_16BIT_Val << AES_MR_CFBS_Pos)      /**< (AES_MR) 16-bit Position  */
 #define AES_MR_CFBS_SIZE_8BIT                 (AES_MR_CFBS_SIZE_8BIT_Val << AES_MR_CFBS_Pos)       /**< (AES_MR) 8-bit Position  */
-#define AES_MR_CKEY_Pos                       _U_(20)                                              /**< (AES_MR) Countermeasure Key Position */
-#define AES_MR_CKEY_Msk                       (_U_(0xF) << AES_MR_CKEY_Pos)                        /**< (AES_MR) Countermeasure Key Mask */
+#define AES_MR_CKEY_Pos                       _U_(20)                                              /**< (AES_MR) Key Position */
+#define AES_MR_CKEY_Msk                       (_U_(0xF) << AES_MR_CKEY_Pos)                        /**< (AES_MR) Key Mask */
 #define AES_MR_CKEY(value)                    (AES_MR_CKEY_Msk & ((value) << AES_MR_CKEY_Pos))    
-#define   AES_MR_CKEY_PASSWD_Val              _U_(0xE)                                             /**< (AES_MR) This field must be written with 0xE to allow CMTYPx bit configuration changes. Any other values will abort the write operation in CMTYPx bits.Always reads as 0.  */
-#define AES_MR_CKEY_PASSWD                    (AES_MR_CKEY_PASSWD_Val << AES_MR_CKEY_Pos)          /**< (AES_MR) This field must be written with 0xE to allow CMTYPx bit configuration changes. Any other values will abort the write operation in CMTYPx bits.Always reads as 0. Position  */
-#define AES_MR_CMTYP1_Pos                     _U_(24)                                              /**< (AES_MR) Countermeasure Type 1 Position */
-#define AES_MR_CMTYP1_Msk                     (_U_(0x1) << AES_MR_CMTYP1_Pos)                      /**< (AES_MR) Countermeasure Type 1 Mask */
-#define AES_MR_CMTYP1(value)                  (AES_MR_CMTYP1_Msk & ((value) << AES_MR_CMTYP1_Pos))
-#define   AES_MR_CMTYP1_NOPROT_EXTKEY_Val     _U_(0x0)                                             /**< (AES_MR) Countermeasure type 1 is disabled.  */
-#define   AES_MR_CMTYP1_PROT_EXTKEY_Val       _U_(0x1)                                             /**< (AES_MR) Countermeasure type 1 is enabled.  */
-#define AES_MR_CMTYP1_NOPROT_EXTKEY           (AES_MR_CMTYP1_NOPROT_EXTKEY_Val << AES_MR_CMTYP1_Pos) /**< (AES_MR) Countermeasure type 1 is disabled. Position  */
-#define AES_MR_CMTYP1_PROT_EXTKEY             (AES_MR_CMTYP1_PROT_EXTKEY_Val << AES_MR_CMTYP1_Pos) /**< (AES_MR) Countermeasure type 1 is enabled. Position  */
-#define AES_MR_CMTYP2_Pos                     _U_(25)                                              /**< (AES_MR) Countermeasure Type 2 Position */
-#define AES_MR_CMTYP2_Msk                     (_U_(0x1) << AES_MR_CMTYP2_Pos)                      /**< (AES_MR) Countermeasure Type 2 Mask */
-#define AES_MR_CMTYP2(value)                  (AES_MR_CMTYP2_Msk & ((value) << AES_MR_CMTYP2_Pos))
-#define   AES_MR_CMTYP2_NO_PAUSE_Val          _U_(0x0)                                             /**< (AES_MR) Countermeasure type 2 is disabled.  */
-#define   AES_MR_CMTYP2_PAUSE_Val             _U_(0x1)                                             /**< (AES_MR) Countermeasure type 2 is enabled.  */
-#define AES_MR_CMTYP2_NO_PAUSE                (AES_MR_CMTYP2_NO_PAUSE_Val << AES_MR_CMTYP2_Pos)    /**< (AES_MR) Countermeasure type 2 is disabled. Position  */
-#define AES_MR_CMTYP2_PAUSE                   (AES_MR_CMTYP2_PAUSE_Val << AES_MR_CMTYP2_Pos)       /**< (AES_MR) Countermeasure type 2 is enabled. Position  */
-#define AES_MR_CMTYP3_Pos                     _U_(26)                                              /**< (AES_MR) Countermeasure Type 3 Position */
-#define AES_MR_CMTYP3_Msk                     (_U_(0x1) << AES_MR_CMTYP3_Pos)                      /**< (AES_MR) Countermeasure Type 3 Mask */
-#define AES_MR_CMTYP3(value)                  (AES_MR_CMTYP3_Msk & ((value) << AES_MR_CMTYP3_Pos))
-#define   AES_MR_CMTYP3_NO_DUMMY_Val          _U_(0x0)                                             /**< (AES_MR) Countermeasure type 3 is disabled.  */
-#define   AES_MR_CMTYP3_DUMMY_Val             _U_(0x1)                                             /**< (AES_MR) Countermeasure type 3 is enabled.  */
-#define AES_MR_CMTYP3_NO_DUMMY                (AES_MR_CMTYP3_NO_DUMMY_Val << AES_MR_CMTYP3_Pos)    /**< (AES_MR) Countermeasure type 3 is disabled. Position  */
-#define AES_MR_CMTYP3_DUMMY                   (AES_MR_CMTYP3_DUMMY_Val << AES_MR_CMTYP3_Pos)       /**< (AES_MR) Countermeasure type 3 is enabled. Position  */
-#define AES_MR_CMTYP4_Pos                     _U_(27)                                              /**< (AES_MR) Countermeasure Type 4 Position */
-#define AES_MR_CMTYP4_Msk                     (_U_(0x1) << AES_MR_CMTYP4_Pos)                      /**< (AES_MR) Countermeasure Type 4 Mask */
-#define AES_MR_CMTYP4(value)                  (AES_MR_CMTYP4_Msk & ((value) << AES_MR_CMTYP4_Pos))
-#define   AES_MR_CMTYP4_NO_RESTART_Val        _U_(0x0)                                             /**< (AES_MR) Countermeasure type 4 is disabled.  */
-#define   AES_MR_CMTYP4_RESTART_Val           _U_(0x1)                                             /**< (AES_MR) Countermeasure type 4 is enabled.  */
-#define AES_MR_CMTYP4_NO_RESTART              (AES_MR_CMTYP4_NO_RESTART_Val << AES_MR_CMTYP4_Pos)  /**< (AES_MR) Countermeasure type 4 is disabled. Position  */
-#define AES_MR_CMTYP4_RESTART                 (AES_MR_CMTYP4_RESTART_Val << AES_MR_CMTYP4_Pos)     /**< (AES_MR) Countermeasure type 4 is enabled. Position  */
-#define AES_MR_CMTYP5_Pos                     _U_(28)                                              /**< (AES_MR) Countermeasure Type 5 Position */
-#define AES_MR_CMTYP5_Msk                     (_U_(0x1) << AES_MR_CMTYP5_Pos)                      /**< (AES_MR) Countermeasure Type 5 Mask */
-#define AES_MR_CMTYP5(value)                  (AES_MR_CMTYP5_Msk & ((value) << AES_MR_CMTYP5_Pos))
-#define   AES_MR_CMTYP5_NO_ADDACCESS_Val      _U_(0x0)                                             /**< (AES_MR) Countermeasure type 5 is disabled.  */
-#define   AES_MR_CMTYP5_ADDACCESS_Val         _U_(0x1)                                             /**< (AES_MR) Countermeasure type 5 is enabled.  */
-#define AES_MR_CMTYP5_NO_ADDACCESS            (AES_MR_CMTYP5_NO_ADDACCESS_Val << AES_MR_CMTYP5_Pos) /**< (AES_MR) Countermeasure type 5 is disabled. Position  */
-#define AES_MR_CMTYP5_ADDACCESS               (AES_MR_CMTYP5_ADDACCESS_Val << AES_MR_CMTYP5_Pos)   /**< (AES_MR) Countermeasure type 5 is enabled. Position  */
-#define AES_MR_CMTYP6_Pos                     _U_(29)                                              /**< (AES_MR) Countermeasure Type 6 Position */
-#define AES_MR_CMTYP6_Msk                     (_U_(0x1) << AES_MR_CMTYP6_Pos)                      /**< (AES_MR) Countermeasure Type 6 Mask */
-#define AES_MR_CMTYP6(value)                  (AES_MR_CMTYP6_Msk & ((value) << AES_MR_CMTYP6_Pos))
-#define   AES_MR_CMTYP6_NO_IDLECURRENT_Val    _U_(0x0)                                             /**< (AES_MR) Countermeasure type 6 is disabled.  */
-#define   AES_MR_CMTYP6_IDLECURRENT_Val       _U_(0x1)                                             /**< (AES_MR) Countermeasure type 6 is enabled.  */
-#define AES_MR_CMTYP6_NO_IDLECURRENT          (AES_MR_CMTYP6_NO_IDLECURRENT_Val << AES_MR_CMTYP6_Pos) /**< (AES_MR) Countermeasure type 6 is disabled. Position  */
-#define AES_MR_CMTYP6_IDLECURRENT             (AES_MR_CMTYP6_IDLECURRENT_Val << AES_MR_CMTYP6_Pos) /**< (AES_MR) Countermeasure type 6 is enabled. Position  */
-#define AES_MR_CMTYP7_Pos                     _U_(30)                                              /**< (AES_MR) Countermeasure Type 7 Position */
-#define AES_MR_CMTYP7_Msk                     (_U_(0x1) << AES_MR_CMTYP7_Pos)                      /**< (AES_MR) Countermeasure Type 7 Mask */
-#define AES_MR_CMTYP7(value)                  (AES_MR_CMTYP7_Msk & ((value) << AES_MR_CMTYP7_Pos))
-#define   AES_MR_CMTYP7_NO_STARTDELAY_Val     _U_(0x0)                                             /**< (AES_MR) Countermeasure type 7 is disabled.  */
-#define   AES_MR_CMTYP7_STARTDELAY_Val        _U_(0x1)                                             /**< (AES_MR) Countermeasure type 7 is enabled.  */
-#define AES_MR_CMTYP7_NO_STARTDELAY           (AES_MR_CMTYP7_NO_STARTDELAY_Val << AES_MR_CMTYP7_Pos) /**< (AES_MR) Countermeasure type 7 is disabled. Position  */
-#define AES_MR_CMTYP7_STARTDELAY              (AES_MR_CMTYP7_STARTDELAY_Val << AES_MR_CMTYP7_Pos)  /**< (AES_MR) Countermeasure type 7 is enabled. Position  */
+#define   AES_MR_CKEY_PASSWD_Val              _U_(0xE)                                             /**< (AES_MR) This field must be written with 0xE the first time AES_MR is programmed. For subsequent programming of AES_MR, any value can be written, including that of 0xE. Always reads as 0.  */
+#define AES_MR_CKEY_PASSWD                    (AES_MR_CKEY_PASSWD_Val << AES_MR_CKEY_Pos)          /**< (AES_MR) This field must be written with 0xE the first time AES_MR is programmed. For subsequent programming of AES_MR, any value can be written, including that of 0xE. Always reads as 0. Position  */
 #define AES_MR_TAMPCLR_Pos                    _U_(31)                                              /**< (AES_MR) Tamper Clear Enable Position */
 #define AES_MR_TAMPCLR_Msk                    (_U_(0x1) << AES_MR_TAMPCLR_Pos)                     /**< (AES_MR) Tamper Clear Enable Mask */
 #define AES_MR_TAMPCLR(value)                 (AES_MR_TAMPCLR_Msk & ((value) << AES_MR_TAMPCLR_Pos))
-#define AES_MR_Msk                            _U_(0xFFF7FFFB)                                      /**< (AES_MR) Register Mask  */
+#define AES_MR_Msk                            _U_(0x80F7FFFB)                                      /**< (AES_MR) Register Mask  */
 
-#define AES_MR_CMTYP_Pos                      _U_(24)                                              /**< (AES_MR Position) Countermeasure Type x */
-#define AES_MR_CMTYP_Msk                      (_U_(0x7F) << AES_MR_CMTYP_Pos)                      /**< (AES_MR Mask) CMTYP */
-#define AES_MR_CMTYP(value)                   (AES_MR_CMTYP_Msk & ((value) << AES_MR_CMTYP_Pos))   
 
 /* -------- AES_IER : (AES Offset: 0x10) ( /W 32) Interrupt Enable Register -------- */
 #define AES_IER_DATRDY_Pos                    _U_(0)                                               /**< (AES_IER) Data Ready Interrupt Enable Position */
@@ -417,21 +362,21 @@
 #define   AES_WPMR_ACTION_LOCK_PKRPVS_WPVS_SWE_Val _U_(0x1)                                             /**< (AES_WPMR) If a processing is in progress when the AES_WPSR.PKRPVS/WPVS/SWE event detection occurs, the current processing is ended normally but no other processing is started while a AES_CR.UNLOCK command is issued.  */
 #define   AES_WPMR_ACTION_LOCK_CGD_SEQE_Val   _U_(0x2)                                             /**< (AES_WPMR) If a processing is in progress when the AES_WPSR.CGD/SEQE event detection occurs, the current processing is ended normally but no other processing is started while a AES_CR.UNLOCK command is issued.  */
 #define   AES_WPMR_ACTION_LOCK_ANY_EV_Val     _U_(0x3)                                             /**< (AES_WPMR) If a processing is in progress when the AES_WPSR.PKRPVS/WPVS/CGD/SEQE/SWE events detection occurs, the current processing is ended normally but no other processing is started while a AES_CR.UNLOCK command is issued.  */
-#define   AES_WPMR_ACTION_CLEAR_PKRPVS_WPVS_SWE_Val _U_(0x4)                                             /**< (AES_WPMR) If a processing is in progress when the AES_WPSR.PKRPVS/WPVS/SWE events detection occurs, the current processing is ended normally but no other processing is started while a AES_CR.UNLOCK command is issued.Moreover, the AES_KEYWRx key is immedialely cleared.  */
-#define   AES_WPMR_ACTION_CLEAR_CGD_SEQE_Val  _U_(0x5)                                             /**< (AES_WPMR) If a processing is in progress when the AES_WPSR.CGD/SEQE events detection occurs, the current processing is ended normally but no other processing is started while a AES_CR.UNLOCK command is issued.Moreover, the AES_KEYWRx key is immedialely cleared.  */
-#define   AES_WPMR_ACTION_CLEAR_ANY_EV_Val    _U_(0x6)                                             /**< (AES_WPMR) If a processing is in progress when the AES_WPSR.PKRPVS/WPVS/CGD/SEQE/SWE events detection occurs, the current processing is ended normally but no other processing is started while a AES_CR.UNLOCK command is issued.Moreover, the AES_KEYWRx key is immedialely cleared.  */
+#define   AES_WPMR_ACTION_CLEAR_PKRPVS_WPVS_SWE_Val _U_(0x4)                                             /**< (AES_WPMR) If a processing is in progress when the AES_WPSR.PKRPVS/WPVS/SWE events detection occurs, the current processing is ended normally but no other processing is started while a AES_CR.UNLOCK command is issued. Moreover, the AES_KEYWRx key is immediately cleared.  */
+#define   AES_WPMR_ACTION_CLEAR_CGD_SEQE_Val  _U_(0x5)                                             /**< (AES_WPMR) If a processing is in progress when the AES_WPSR.CGD/SEQE events detection occurs, the current processing is ended normally but no other processing is started while a AES_CR.UNLOCK command is issued. Moreover, the AES_KEYWRx key is immediately cleared.  */
+#define   AES_WPMR_ACTION_CLEAR_ANY_EV_Val    _U_(0x6)                                             /**< (AES_WPMR) If a processing is in progress when the AES_WPSR.PKRPVS/WPVS/CGD/SEQE/SWE events detection occurs, the current processing is ended normally but no other processing is started while a AES_CR.UNLOCK command is issued. Moreover, the AES_KEYWRx key is immediately cleared.  */
 #define AES_WPMR_ACTION_REPORT_ONLY           (AES_WPMR_ACTION_REPORT_ONLY_Val << AES_WPMR_ACTION_Pos) /**< (AES_WPMR) No action (stop or clear key) is performed when one of PKRPVS, WPVS, CGD, SEQE, or SWE flags is set. Position  */
 #define AES_WPMR_ACTION_LOCK_PKRPVS_WPVS_SWE  (AES_WPMR_ACTION_LOCK_PKRPVS_WPVS_SWE_Val << AES_WPMR_ACTION_Pos) /**< (AES_WPMR) If a processing is in progress when the AES_WPSR.PKRPVS/WPVS/SWE event detection occurs, the current processing is ended normally but no other processing is started while a AES_CR.UNLOCK command is issued. Position  */
 #define AES_WPMR_ACTION_LOCK_CGD_SEQE         (AES_WPMR_ACTION_LOCK_CGD_SEQE_Val << AES_WPMR_ACTION_Pos) /**< (AES_WPMR) If a processing is in progress when the AES_WPSR.CGD/SEQE event detection occurs, the current processing is ended normally but no other processing is started while a AES_CR.UNLOCK command is issued. Position  */
 #define AES_WPMR_ACTION_LOCK_ANY_EV           (AES_WPMR_ACTION_LOCK_ANY_EV_Val << AES_WPMR_ACTION_Pos) /**< (AES_WPMR) If a processing is in progress when the AES_WPSR.PKRPVS/WPVS/CGD/SEQE/SWE events detection occurs, the current processing is ended normally but no other processing is started while a AES_CR.UNLOCK command is issued. Position  */
-#define AES_WPMR_ACTION_CLEAR_PKRPVS_WPVS_SWE (AES_WPMR_ACTION_CLEAR_PKRPVS_WPVS_SWE_Val << AES_WPMR_ACTION_Pos) /**< (AES_WPMR) If a processing is in progress when the AES_WPSR.PKRPVS/WPVS/SWE events detection occurs, the current processing is ended normally but no other processing is started while a AES_CR.UNLOCK command is issued.Moreover, the AES_KEYWRx key is immedialely cleared. Position  */
-#define AES_WPMR_ACTION_CLEAR_CGD_SEQE        (AES_WPMR_ACTION_CLEAR_CGD_SEQE_Val << AES_WPMR_ACTION_Pos) /**< (AES_WPMR) If a processing is in progress when the AES_WPSR.CGD/SEQE events detection occurs, the current processing is ended normally but no other processing is started while a AES_CR.UNLOCK command is issued.Moreover, the AES_KEYWRx key is immedialely cleared. Position  */
-#define AES_WPMR_ACTION_CLEAR_ANY_EV          (AES_WPMR_ACTION_CLEAR_ANY_EV_Val << AES_WPMR_ACTION_Pos) /**< (AES_WPMR) If a processing is in progress when the AES_WPSR.PKRPVS/WPVS/CGD/SEQE/SWE events detection occurs, the current processing is ended normally but no other processing is started while a AES_CR.UNLOCK command is issued.Moreover, the AES_KEYWRx key is immedialely cleared. Position  */
+#define AES_WPMR_ACTION_CLEAR_PKRPVS_WPVS_SWE (AES_WPMR_ACTION_CLEAR_PKRPVS_WPVS_SWE_Val << AES_WPMR_ACTION_Pos) /**< (AES_WPMR) If a processing is in progress when the AES_WPSR.PKRPVS/WPVS/SWE events detection occurs, the current processing is ended normally but no other processing is started while a AES_CR.UNLOCK command is issued. Moreover, the AES_KEYWRx key is immediately cleared. Position  */
+#define AES_WPMR_ACTION_CLEAR_CGD_SEQE        (AES_WPMR_ACTION_CLEAR_CGD_SEQE_Val << AES_WPMR_ACTION_Pos) /**< (AES_WPMR) If a processing is in progress when the AES_WPSR.CGD/SEQE events detection occurs, the current processing is ended normally but no other processing is started while a AES_CR.UNLOCK command is issued. Moreover, the AES_KEYWRx key is immediately cleared. Position  */
+#define AES_WPMR_ACTION_CLEAR_ANY_EV          (AES_WPMR_ACTION_CLEAR_ANY_EV_Val << AES_WPMR_ACTION_Pos) /**< (AES_WPMR) If a processing is in progress when the AES_WPSR.PKRPVS/WPVS/CGD/SEQE/SWE events detection occurs, the current processing is ended normally but no other processing is started while a AES_CR.UNLOCK command is issued. Moreover, the AES_KEYWRx key is immediately cleared. Position  */
 #define AES_WPMR_WPKEY_Pos                    _U_(8)                                               /**< (AES_WPMR) Write Protection Key Position */
 #define AES_WPMR_WPKEY_Msk                    (_U_(0xFFFFFF) << AES_WPMR_WPKEY_Pos)                /**< (AES_WPMR) Write Protection Key Mask */
 #define AES_WPMR_WPKEY(value)                 (AES_WPMR_WPKEY_Msk & ((value) << AES_WPMR_WPKEY_Pos))
-#define   AES_WPMR_WPKEY_PASSWD_Val           _U_(0x414553)                                        /**< (AES_WPMR) Writing any other value in this field aborts the write operation of the WPEN,WPITEN,WPCREN bits.Always reads as 0.  */
-#define AES_WPMR_WPKEY_PASSWD                 (AES_WPMR_WPKEY_PASSWD_Val << AES_WPMR_WPKEY_Pos)    /**< (AES_WPMR) Writing any other value in this field aborts the write operation of the WPEN,WPITEN,WPCREN bits.Always reads as 0. Position  */
+#define   AES_WPMR_WPKEY_PASSWD_Val           _U_(0x414553)                                        /**< (AES_WPMR) Writing any other value in this field aborts the write operation of the WPEN,WPITEN,WPCREN bits. Always reads as 0.  */
+#define AES_WPMR_WPKEY_PASSWD                 (AES_WPMR_WPKEY_PASSWD_Val << AES_WPMR_WPKEY_Pos)    /**< (AES_WPMR) Writing any other value in this field aborts the write operation of the WPEN,WPITEN,WPCREN bits. Always reads as 0. Position  */
 #define AES_WPMR_Msk                          _U_(0xFFFFFFF7)                                      /**< (AES_WPMR) Register Mask  */
 
 
@@ -473,20 +418,10 @@
 #define AES_WPSR_ECLASS_Msk                   (_U_(0x1) << AES_WPSR_ECLASS_Pos)                    /**< (AES_WPSR) Software Error Class (cleared on read) Mask */
 #define AES_WPSR_ECLASS(value)                (AES_WPSR_ECLASS_Msk & ((value) << AES_WPSR_ECLASS_Pos))
 #define   AES_WPSR_ECLASS_WARNING_Val         _U_(0x0)                                             /**< (AES_WPSR) An abnormal access that does not affect system functionality  */
-#define   AES_WPSR_ECLASS_ERROR_Val           _U_(0x1)                                             /**< (AES_WPSR) An access is performed into key, input data, control registers while the AES is performing an encryp-tion/decryption or a start is request by software or DMA while the key is not fully configured.  */
+#define   AES_WPSR_ECLASS_ERROR_Val           _U_(0x1)                                             /**< (AES_WPSR) An access is performed into key, input data, control registers while the AES is performing an encryption/decryption or a start is request by software or DMA while the key is not fully configured.  */
 #define AES_WPSR_ECLASS_WARNING               (AES_WPSR_ECLASS_WARNING_Val << AES_WPSR_ECLASS_Pos) /**< (AES_WPSR) An abnormal access that does not affect system functionality Position  */
-#define AES_WPSR_ECLASS_ERROR                 (AES_WPSR_ECLASS_ERROR_Val << AES_WPSR_ECLASS_Pos)   /**< (AES_WPSR) An access is performed into key, input data, control registers while the AES is performing an encryp-tion/decryption or a start is request by software or DMA while the key is not fully configured. Position  */
+#define AES_WPSR_ECLASS_ERROR                 (AES_WPSR_ECLASS_ERROR_Val << AES_WPSR_ECLASS_Pos)   /**< (AES_WPSR) An access is performed into key, input data, control registers while the AES is performing an encryption/decryption or a start is request by software or DMA while the key is not fully configured. Position  */
 #define AES_WPSR_Msk                          _U_(0x8F00FF1F)                                      /**< (AES_WPSR) Register Mask  */
-
-
-/* -------- AES_VERSION : (AES Offset: 0xFC) ( R/ 32) Version Register -------- */
-#define AES_VERSION_VERSION_Pos               _U_(0)                                               /**< (AES_VERSION) Version of the Hardware Module Position */
-#define AES_VERSION_VERSION_Msk               (_U_(0xFFF) << AES_VERSION_VERSION_Pos)              /**< (AES_VERSION) Version of the Hardware Module Mask */
-#define AES_VERSION_VERSION(value)            (AES_VERSION_VERSION_Msk & ((value) << AES_VERSION_VERSION_Pos))
-#define AES_VERSION_MFN_Pos                   _U_(16)                                              /**< (AES_VERSION) Metal Fix Number Position */
-#define AES_VERSION_MFN_Msk                   (_U_(0x7) << AES_VERSION_MFN_Pos)                    /**< (AES_VERSION) Metal Fix Number Mask */
-#define AES_VERSION_MFN(value)                (AES_VERSION_MFN_Msk & ((value) << AES_VERSION_MFN_Pos))
-#define AES_VERSION_Msk                       _U_(0x00070FFF)                                      /**< (AES_VERSION) Register Mask  */
 
 
 /** \brief AES register offsets definitions */
@@ -512,7 +447,6 @@
 #define AES_ALPHAR_REG_OFST            (0xD0)              /**< (AES_ALPHAR) Alpha Word Register Offset */
 #define AES_WPMR_REG_OFST              (0xE4)              /**< (AES_WPMR) Write Protection Mode Register Offset */
 #define AES_WPSR_REG_OFST              (0xE8)              /**< (AES_WPSR) Write Protection Status Register Offset */
-#define AES_VERSION_REG_OFST           (0xFC)              /**< (AES_VERSION) Version Register Offset */
 
 #if !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__))
 /** \brief AES register API structure */
@@ -544,8 +478,6 @@ typedef struct
   __I   uint8_t                        Reserved4[0x04];
   __IO  uint32_t                       AES_WPMR;           /**< Offset: 0xE4 (R/W  32) Write Protection Mode Register */
   __I   uint32_t                       AES_WPSR;           /**< Offset: 0xE8 (R/   32) Write Protection Status Register */
-  __I   uint8_t                        Reserved5[0x10];
-  __I   uint32_t                       AES_VERSION;        /**< Offset: 0xFC (R/   32) Version Register */
 } aes_registers_t;
 
 

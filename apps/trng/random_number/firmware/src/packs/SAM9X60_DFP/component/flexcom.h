@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-04-23T19:01:17Z */
+/* file generated from device description version 2019-08-22T13:04:26Z */
 #ifndef _SAM9X_FLEXCOM_COMPONENT_H_
 #define _SAM9X_FLEXCOM_COMPONENT_H_
 
@@ -33,13 +33,13 @@
 #define FLEX_MR_OPMODE_Msk                    (_U_(0x3) << FLEX_MR_OPMODE_Pos)                     /**< (FLEX_MR) FLEXCOM Operating Mode Mask */
 #define FLEX_MR_OPMODE(value)                 (FLEX_MR_OPMODE_Msk & ((value) << FLEX_MR_OPMODE_Pos))
 #define   FLEX_MR_OPMODE_NO_COM_Val           _U_(0x0)                                             /**< (FLEX_MR) No communication  */
-#define   FLEX_MR_OPMODE_USART_Val            _U_(0x1)                                             /**< (FLEX_MR) All UART related protocols are selected (RS232, RS485, IrDA, ISO7816, LIN, LON)SPI/TWI related registers are not accessible and have no impact on IOs.  */
-#define   FLEX_MR_OPMODE_SPI_Val              _U_(0x2)                                             /**< (FLEX_MR) SPI operating mode is selected.USART/TWI related registers are not accessible and have no impact on IOs.  */
-#define   FLEX_MR_OPMODE_TWI_Val              _U_(0x3)                                             /**< (FLEX_MR) All TWI related protocols are selected (TWI, SMBus).USART/SPI related registers are not accessible and have no impact on IOs.  */
+#define   FLEX_MR_OPMODE_USART_Val            _U_(0x1)                                             /**< (FLEX_MR) All UART related protocols are selected (RS232, RS485, IrDA, ISO7816, LIN, LON) SPI/TWI related registers are not accessible and have no impact on IOs.  */
+#define   FLEX_MR_OPMODE_SPI_Val              _U_(0x2)                                             /**< (FLEX_MR) SPI operating mode is selected. USART/TWI related registers are not accessible and have no impact on IOs.  */
+#define   FLEX_MR_OPMODE_TWI_Val              _U_(0x3)                                             /**< (FLEX_MR) All TWI related protocols are selected (TWI, SMBus). USART/SPI related registers are not accessible and have no impact on IOs.  */
 #define FLEX_MR_OPMODE_NO_COM                 (FLEX_MR_OPMODE_NO_COM_Val << FLEX_MR_OPMODE_Pos)    /**< (FLEX_MR) No communication Position  */
-#define FLEX_MR_OPMODE_USART                  (FLEX_MR_OPMODE_USART_Val << FLEX_MR_OPMODE_Pos)     /**< (FLEX_MR) All UART related protocols are selected (RS232, RS485, IrDA, ISO7816, LIN, LON)SPI/TWI related registers are not accessible and have no impact on IOs. Position  */
-#define FLEX_MR_OPMODE_SPI                    (FLEX_MR_OPMODE_SPI_Val << FLEX_MR_OPMODE_Pos)       /**< (FLEX_MR) SPI operating mode is selected.USART/TWI related registers are not accessible and have no impact on IOs. Position  */
-#define FLEX_MR_OPMODE_TWI                    (FLEX_MR_OPMODE_TWI_Val << FLEX_MR_OPMODE_Pos)       /**< (FLEX_MR) All TWI related protocols are selected (TWI, SMBus).USART/SPI related registers are not accessible and have no impact on IOs. Position  */
+#define FLEX_MR_OPMODE_USART                  (FLEX_MR_OPMODE_USART_Val << FLEX_MR_OPMODE_Pos)     /**< (FLEX_MR) All UART related protocols are selected (RS232, RS485, IrDA, ISO7816, LIN, LON) SPI/TWI related registers are not accessible and have no impact on IOs. Position  */
+#define FLEX_MR_OPMODE_SPI                    (FLEX_MR_OPMODE_SPI_Val << FLEX_MR_OPMODE_Pos)       /**< (FLEX_MR) SPI operating mode is selected. USART/TWI related registers are not accessible and have no impact on IOs. Position  */
+#define FLEX_MR_OPMODE_TWI                    (FLEX_MR_OPMODE_TWI_Val << FLEX_MR_OPMODE_Pos)       /**< (FLEX_MR) All TWI related protocols are selected (TWI, SMBus). USART/SPI related registers are not accessible and have no impact on IOs. Position  */
 #define FLEX_MR_Msk                           _U_(0x00000003)                                      /**< (FLEX_MR) Register Mask  */
 
 
@@ -55,16 +55,6 @@
 #define FLEX_THR_TXDATA_Msk                   (_U_(0xFFFF) << FLEX_THR_TXDATA_Pos)                 /**< (FLEX_THR) Transmit Data Mask */
 #define FLEX_THR_TXDATA(value)                (FLEX_THR_TXDATA_Msk & ((value) << FLEX_THR_TXDATA_Pos))
 #define FLEX_THR_Msk                          _U_(0x0000FFFF)                                      /**< (FLEX_THR) Register Mask  */
-
-
-/* -------- FLEX_VERSION : (FLEXCOM Offset: 0xFC) ( R/ 32) FLEXCOM Version Register -------- */
-#define FLEX_VERSION_VERSION_Pos              _U_(0)                                               /**< (FLEX_VERSION) Hardware Module Version Position */
-#define FLEX_VERSION_VERSION_Msk              (_U_(0xFFF) << FLEX_VERSION_VERSION_Pos)             /**< (FLEX_VERSION) Hardware Module Version Mask */
-#define FLEX_VERSION_VERSION(value)           (FLEX_VERSION_VERSION_Msk & ((value) << FLEX_VERSION_VERSION_Pos))
-#define FLEX_VERSION_MFN_Pos                  _U_(16)                                              /**< (FLEX_VERSION) Metal Fix Number Position */
-#define FLEX_VERSION_MFN_Msk                  (_U_(0x7) << FLEX_VERSION_MFN_Pos)                   /**< (FLEX_VERSION) Metal Fix Number Mask */
-#define FLEX_VERSION_MFN(value)               (FLEX_VERSION_MFN_Msk & ((value) << FLEX_VERSION_MFN_Pos))
-#define FLEX_VERSION_Msk                      _U_(0x00070FFF)                                      /**< (FLEX_VERSION) Register Mask  */
 
 
 /* -------- FLEX_US_CR : (FLEXCOM Offset: 0x200) ( /W 32) USART Control Register -------- */
@@ -110,12 +100,6 @@
 #define FLEX_US_CR_RETTO_Pos                  _U_(15)                                              /**< (FLEX_US_CR) Start Timeout Immediately Position */
 #define FLEX_US_CR_RETTO_Msk                  (_U_(0x1) << FLEX_US_CR_RETTO_Pos)                   /**< (FLEX_US_CR) Start Timeout Immediately Mask */
 #define FLEX_US_CR_RETTO(value)               (FLEX_US_CR_RETTO_Msk & ((value) << FLEX_US_CR_RETTO_Pos))
-#define FLEX_US_CR_DTREN_Pos                  _U_(16)                                              /**< (FLEX_US_CR) Data Terminal Ready Enable Position */
-#define FLEX_US_CR_DTREN_Msk                  (_U_(0x1) << FLEX_US_CR_DTREN_Pos)                   /**< (FLEX_US_CR) Data Terminal Ready Enable Mask */
-#define FLEX_US_CR_DTREN(value)               (FLEX_US_CR_DTREN_Msk & ((value) << FLEX_US_CR_DTREN_Pos))
-#define FLEX_US_CR_DTRDIS_Pos                 _U_(17)                                              /**< (FLEX_US_CR) Data Terminal Ready Disable Position */
-#define FLEX_US_CR_DTRDIS_Msk                 (_U_(0x1) << FLEX_US_CR_DTRDIS_Pos)                  /**< (FLEX_US_CR) Data Terminal Ready Disable Mask */
-#define FLEX_US_CR_DTRDIS(value)              (FLEX_US_CR_DTRDIS_Msk & ((value) << FLEX_US_CR_DTRDIS_Pos))
 #define FLEX_US_CR_RTSEN_Pos                  _U_(18)                                              /**< (FLEX_US_CR) Request to Send Enable Position */
 #define FLEX_US_CR_RTSEN_Msk                  (_U_(0x1) << FLEX_US_CR_RTSEN_Pos)                   /**< (FLEX_US_CR) Request to Send Enable Mask */
 #define FLEX_US_CR_RTSEN(value)               (FLEX_US_CR_RTSEN_Msk & ((value) << FLEX_US_CR_RTSEN_Pos))
@@ -146,10 +130,7 @@
 #define FLEX_US_CR_FIFODIS_Pos                _U_(31)                                              /**< (FLEX_US_CR) FIFO Disable Position */
 #define FLEX_US_CR_FIFODIS_Msk                (_U_(0x1) << FLEX_US_CR_FIFODIS_Pos)                 /**< (FLEX_US_CR) FIFO Disable Mask */
 #define FLEX_US_CR_FIFODIS(value)             (FLEX_US_CR_FIFODIS_Msk & ((value) << FLEX_US_CR_FIFODIS_Pos))
-#define FLEX_US_CR_Msk                        _U_(0xD73FFFFC)                                      /**< (FLEX_US_CR) Register Mask  */
-
-/* SPI mode */
-#define FLEX_US_CR_SPI_Msk                    _U_(0x00000000)                                       /**< (FLEX_US_CR_SPI) Register Mask  */
+#define FLEX_US_CR_Msk                        _U_(0xD73CFFFC)                                      /**< (FLEX_US_CR) Register Mask  */
 
 
 /* -------- FLEX_US_MR : (FLEXCOM Offset: 0x204) (R/W 32) USART Mode Register -------- */
@@ -159,7 +140,6 @@
 #define   FLEX_US_MR_USART_MODE_NORMAL_Val    _U_(0x0)                                             /**< (FLEX_US_MR) Normal mode  */
 #define   FLEX_US_MR_USART_MODE_RS485_Val     _U_(0x1)                                             /**< (FLEX_US_MR) RS485  */
 #define   FLEX_US_MR_USART_MODE_HW_HANDSHAKING_Val _U_(0x2)                                             /**< (FLEX_US_MR) Hardware handshaking  */
-#define   FLEX_US_MR_USART_MODE_MODEM_Val     _U_(0x3)                                             /**< (FLEX_US_MR) Modem  */
 #define   FLEX_US_MR_USART_MODE_IS07816_T_0_Val _U_(0x4)                                             /**< (FLEX_US_MR) IS07816 Protocol: T = 0  */
 #define   FLEX_US_MR_USART_MODE_IS07816_T_1_Val _U_(0x6)                                             /**< (FLEX_US_MR) IS07816 Protocol: T = 1  */
 #define   FLEX_US_MR_USART_MODE_IRDA_Val      _U_(0x8)                                             /**< (FLEX_US_MR) IrDA  */
@@ -168,12 +148,9 @@
 #define   FLEX_US_MR_USART_MODE_LIN_SLAVE_Val _U_(0xB)                                             /**< (FLEX_US_MR) LIN Slave mode  */
 #define   FLEX_US_MR_USART_MODE_DATA16BIT_MASTER_Val _U_(0xC)                                             /**< (FLEX_US_MR) 16-bit data master  */
 #define   FLEX_US_MR_USART_MODE_DATA16BIT_SLAVE_Val _U_(0xD)                                             /**< (FLEX_US_MR) 16-bit data slave  */
-#define   FLEX_US_MR_USART_MODE_SPI_MASTER_Val _U_(0xE)                                             /**< (FLEX_US_MR) SPI Master mode (CLKO must be written to 1 and USCLKS = 0, 1 or 2)  */
-#define   FLEX_US_MR_USART_MODE_SPI_SLAVE_Val _U_(0xF)                                             /**< (FLEX_US_MR) SPI Slave mode  */
 #define FLEX_US_MR_USART_MODE_NORMAL          (FLEX_US_MR_USART_MODE_NORMAL_Val << FLEX_US_MR_USART_MODE_Pos) /**< (FLEX_US_MR) Normal mode Position  */
 #define FLEX_US_MR_USART_MODE_RS485           (FLEX_US_MR_USART_MODE_RS485_Val << FLEX_US_MR_USART_MODE_Pos) /**< (FLEX_US_MR) RS485 Position  */
 #define FLEX_US_MR_USART_MODE_HW_HANDSHAKING  (FLEX_US_MR_USART_MODE_HW_HANDSHAKING_Val << FLEX_US_MR_USART_MODE_Pos) /**< (FLEX_US_MR) Hardware handshaking Position  */
-#define FLEX_US_MR_USART_MODE_MODEM           (FLEX_US_MR_USART_MODE_MODEM_Val << FLEX_US_MR_USART_MODE_Pos) /**< (FLEX_US_MR) Modem Position  */
 #define FLEX_US_MR_USART_MODE_IS07816_T_0     (FLEX_US_MR_USART_MODE_IS07816_T_0_Val << FLEX_US_MR_USART_MODE_Pos) /**< (FLEX_US_MR) IS07816 Protocol: T = 0 Position  */
 #define FLEX_US_MR_USART_MODE_IS07816_T_1     (FLEX_US_MR_USART_MODE_IS07816_T_1_Val << FLEX_US_MR_USART_MODE_Pos) /**< (FLEX_US_MR) IS07816 Protocol: T = 1 Position  */
 #define FLEX_US_MR_USART_MODE_IRDA            (FLEX_US_MR_USART_MODE_IRDA_Val << FLEX_US_MR_USART_MODE_Pos) /**< (FLEX_US_MR) IrDA Position  */
@@ -182,8 +159,6 @@
 #define FLEX_US_MR_USART_MODE_LIN_SLAVE       (FLEX_US_MR_USART_MODE_LIN_SLAVE_Val << FLEX_US_MR_USART_MODE_Pos) /**< (FLEX_US_MR) LIN Slave mode Position  */
 #define FLEX_US_MR_USART_MODE_DATA16BIT_MASTER (FLEX_US_MR_USART_MODE_DATA16BIT_MASTER_Val << FLEX_US_MR_USART_MODE_Pos) /**< (FLEX_US_MR) 16-bit data master Position  */
 #define FLEX_US_MR_USART_MODE_DATA16BIT_SLAVE (FLEX_US_MR_USART_MODE_DATA16BIT_SLAVE_Val << FLEX_US_MR_USART_MODE_Pos) /**< (FLEX_US_MR) 16-bit data slave Position  */
-#define FLEX_US_MR_USART_MODE_SPI_MASTER      (FLEX_US_MR_USART_MODE_SPI_MASTER_Val << FLEX_US_MR_USART_MODE_Pos) /**< (FLEX_US_MR) SPI Master mode (CLKO must be written to 1 and USCLKS = 0, 1 or 2) Position  */
-#define FLEX_US_MR_USART_MODE_SPI_SLAVE       (FLEX_US_MR_USART_MODE_SPI_SLAVE_Val << FLEX_US_MR_USART_MODE_Pos) /**< (FLEX_US_MR) SPI Slave mode Position  */
 #define FLEX_US_MR_USCLKS_Pos                 _U_(4)                                               /**< (FLEX_US_MR) Clock Selection Position */
 #define FLEX_US_MR_USCLKS_Msk                 (_U_(0x3) << FLEX_US_MR_USCLKS_Pos)                  /**< (FLEX_US_MR) Clock Selection Mask */
 #define FLEX_US_MR_USCLKS(value)              (FLEX_US_MR_USCLKS_Msk & ((value) << FLEX_US_MR_USCLKS_Pos))
@@ -285,9 +260,9 @@
 #define FLEX_US_MR_ONEBIT(value)              (FLEX_US_MR_ONEBIT_Msk & ((value) << FLEX_US_MR_ONEBIT_Pos))
 #define FLEX_US_MR_Msk                        _U_(0xF7FFFFFF)                                      /**< (FLEX_US_MR) Register Mask  */
 
-/* SPI mode */
-#define FLEX_US_MR_SPI_Msk                    _U_(0x00000000)                                       /**< (FLEX_US_MR_SPI) Register Mask  */
-
+#define FLEX_US_MR_MODE_Pos                   _U_(17)                                              /**< (FLEX_US_MR Position) 9-bit Character Length */
+#define FLEX_US_MR_MODE_Msk                   (_U_(0x1) << FLEX_US_MR_MODE_Pos)                    /**< (FLEX_US_MR Mask) MODE */
+#define FLEX_US_MR_MODE(value)                (FLEX_US_MR_MODE_Msk & ((value) << FLEX_US_MR_MODE_Pos)) 
 
 /* -------- FLEX_US_IER : (FLEXCOM Offset: 0x208) ( /W 32) USART Interrupt Enable Register -------- */
 #define FLEX_US_IER_RXRDY_Pos                 _U_(0)                                               /**< (FLEX_US_IER) RXRDY Interrupt Enable Position */
@@ -320,15 +295,6 @@
 #define FLEX_US_IER_NACK_Pos                  _U_(13)                                              /**< (FLEX_US_IER) Non Acknowledge Interrupt Enable Position */
 #define FLEX_US_IER_NACK_Msk                  (_U_(0x1) << FLEX_US_IER_NACK_Pos)                   /**< (FLEX_US_IER) Non Acknowledge Interrupt Enable Mask */
 #define FLEX_US_IER_NACK(value)               (FLEX_US_IER_NACK_Msk & ((value) << FLEX_US_IER_NACK_Pos))
-#define FLEX_US_IER_RIIC_Pos                  _U_(16)                                              /**< (FLEX_US_IER) Ring Indicator Input Change Enable Position */
-#define FLEX_US_IER_RIIC_Msk                  (_U_(0x1) << FLEX_US_IER_RIIC_Pos)                   /**< (FLEX_US_IER) Ring Indicator Input Change Enable Mask */
-#define FLEX_US_IER_RIIC(value)               (FLEX_US_IER_RIIC_Msk & ((value) << FLEX_US_IER_RIIC_Pos))
-#define FLEX_US_IER_DSRIC_Pos                 _U_(17)                                              /**< (FLEX_US_IER) Data Set Ready Input Change Enable Position */
-#define FLEX_US_IER_DSRIC_Msk                 (_U_(0x1) << FLEX_US_IER_DSRIC_Pos)                  /**< (FLEX_US_IER) Data Set Ready Input Change Enable Mask */
-#define FLEX_US_IER_DSRIC(value)              (FLEX_US_IER_DSRIC_Msk & ((value) << FLEX_US_IER_DSRIC_Pos))
-#define FLEX_US_IER_DCDIC_Pos                 _U_(18)                                              /**< (FLEX_US_IER) Data Carrier Detect Input Change Interrupt Enable Position */
-#define FLEX_US_IER_DCDIC_Msk                 (_U_(0x1) << FLEX_US_IER_DCDIC_Pos)                  /**< (FLEX_US_IER) Data Carrier Detect Input Change Interrupt Enable Mask */
-#define FLEX_US_IER_DCDIC(value)              (FLEX_US_IER_DCDIC_Msk & ((value) << FLEX_US_IER_DCDIC_Pos))
 #define FLEX_US_IER_CTSIC_Pos                 _U_(19)                                              /**< (FLEX_US_IER) Clear to Send Input Change Interrupt Enable Position */
 #define FLEX_US_IER_CTSIC_Msk                 (_U_(0x1) << FLEX_US_IER_CTSIC_Pos)                  /**< (FLEX_US_IER) Clear to Send Input Change Interrupt Enable Mask */
 #define FLEX_US_IER_CTSIC(value)              (FLEX_US_IER_CTSIC_Msk & ((value) << FLEX_US_IER_CTSIC_Pos))
@@ -338,10 +304,7 @@
 #define FLEX_US_IER_MANE_Pos                  _U_(24)                                              /**< (FLEX_US_IER) Manchester Error Interrupt Enable Position */
 #define FLEX_US_IER_MANE_Msk                  (_U_(0x1) << FLEX_US_IER_MANE_Pos)                   /**< (FLEX_US_IER) Manchester Error Interrupt Enable Mask */
 #define FLEX_US_IER_MANE(value)               (FLEX_US_IER_MANE_Msk & ((value) << FLEX_US_IER_MANE_Pos))
-#define FLEX_US_IER_Msk                       _U_(0x014F27E7)                                      /**< (FLEX_US_IER) Register Mask  */
-
-/* SPI mode */
-#define FLEX_US_IER_SPI_Msk                   _U_(0x00000000)                                       /**< (FLEX_US_IER_SPI) Register Mask  */
+#define FLEX_US_IER_Msk                       _U_(0x014827E7)                                      /**< (FLEX_US_IER) Register Mask  */
 
 /* LIN mode */
 #define FLEX_US_IER_LIN_Msk                   _U_(0x00000000)                                       /**< (FLEX_US_IER_LIN) Register Mask  */
@@ -360,8 +323,8 @@
 #define FLEX_US_IDR_RXBRK_Pos                 _U_(2)                                               /**< (FLEX_US_IDR) Receiver Break Interrupt Disable Position */
 #define FLEX_US_IDR_RXBRK_Msk                 (_U_(0x1) << FLEX_US_IDR_RXBRK_Pos)                  /**< (FLEX_US_IDR) Receiver Break Interrupt Disable Mask */
 #define FLEX_US_IDR_RXBRK(value)              (FLEX_US_IDR_RXBRK_Msk & ((value) << FLEX_US_IDR_RXBRK_Pos))
-#define FLEX_US_IDR_OVRE_Pos                  _U_(5)                                               /**< (FLEX_US_IDR) Overrun Error Interrupt Enable Position */
-#define FLEX_US_IDR_OVRE_Msk                  (_U_(0x1) << FLEX_US_IDR_OVRE_Pos)                   /**< (FLEX_US_IDR) Overrun Error Interrupt Enable Mask */
+#define FLEX_US_IDR_OVRE_Pos                  _U_(5)                                               /**< (FLEX_US_IDR) Overrun Error Interrupt Disable Position */
+#define FLEX_US_IDR_OVRE_Msk                  (_U_(0x1) << FLEX_US_IDR_OVRE_Pos)                   /**< (FLEX_US_IDR) Overrun Error Interrupt Disable Mask */
 #define FLEX_US_IDR_OVRE(value)               (FLEX_US_IDR_OVRE_Msk & ((value) << FLEX_US_IDR_OVRE_Pos))
 #define FLEX_US_IDR_FRAME_Pos                 _U_(6)                                               /**< (FLEX_US_IDR) Framing Error Interrupt Disable Position */
 #define FLEX_US_IDR_FRAME_Msk                 (_U_(0x1) << FLEX_US_IDR_FRAME_Pos)                  /**< (FLEX_US_IDR) Framing Error Interrupt Disable Mask */
@@ -381,15 +344,6 @@
 #define FLEX_US_IDR_NACK_Pos                  _U_(13)                                              /**< (FLEX_US_IDR) Non Acknowledge Interrupt Disable Position */
 #define FLEX_US_IDR_NACK_Msk                  (_U_(0x1) << FLEX_US_IDR_NACK_Pos)                   /**< (FLEX_US_IDR) Non Acknowledge Interrupt Disable Mask */
 #define FLEX_US_IDR_NACK(value)               (FLEX_US_IDR_NACK_Msk & ((value) << FLEX_US_IDR_NACK_Pos))
-#define FLEX_US_IDR_RIIC_Pos                  _U_(16)                                              /**< (FLEX_US_IDR) Ring Indicator Input Change Disable Position */
-#define FLEX_US_IDR_RIIC_Msk                  (_U_(0x1) << FLEX_US_IDR_RIIC_Pos)                   /**< (FLEX_US_IDR) Ring Indicator Input Change Disable Mask */
-#define FLEX_US_IDR_RIIC(value)               (FLEX_US_IDR_RIIC_Msk & ((value) << FLEX_US_IDR_RIIC_Pos))
-#define FLEX_US_IDR_DSRIC_Pos                 _U_(17)                                              /**< (FLEX_US_IDR) Data Set Ready Input Change Disable Position */
-#define FLEX_US_IDR_DSRIC_Msk                 (_U_(0x1) << FLEX_US_IDR_DSRIC_Pos)                  /**< (FLEX_US_IDR) Data Set Ready Input Change Disable Mask */
-#define FLEX_US_IDR_DSRIC(value)              (FLEX_US_IDR_DSRIC_Msk & ((value) << FLEX_US_IDR_DSRIC_Pos))
-#define FLEX_US_IDR_DCDIC_Pos                 _U_(18)                                              /**< (FLEX_US_IDR) Data Carrier Detect Input Change Interrupt Disable Position */
-#define FLEX_US_IDR_DCDIC_Msk                 (_U_(0x1) << FLEX_US_IDR_DCDIC_Pos)                  /**< (FLEX_US_IDR) Data Carrier Detect Input Change Interrupt Disable Mask */
-#define FLEX_US_IDR_DCDIC(value)              (FLEX_US_IDR_DCDIC_Msk & ((value) << FLEX_US_IDR_DCDIC_Pos))
 #define FLEX_US_IDR_CTSIC_Pos                 _U_(19)                                              /**< (FLEX_US_IDR) Clear to Send Input Change Interrupt Disable Position */
 #define FLEX_US_IDR_CTSIC_Msk                 (_U_(0x1) << FLEX_US_IDR_CTSIC_Pos)                  /**< (FLEX_US_IDR) Clear to Send Input Change Interrupt Disable Mask */
 #define FLEX_US_IDR_CTSIC(value)              (FLEX_US_IDR_CTSIC_Msk & ((value) << FLEX_US_IDR_CTSIC_Pos))
@@ -399,10 +353,7 @@
 #define FLEX_US_IDR_MANE_Pos                  _U_(24)                                              /**< (FLEX_US_IDR) Manchester Error Interrupt Disable Position */
 #define FLEX_US_IDR_MANE_Msk                  (_U_(0x1) << FLEX_US_IDR_MANE_Pos)                   /**< (FLEX_US_IDR) Manchester Error Interrupt Disable Mask */
 #define FLEX_US_IDR_MANE(value)               (FLEX_US_IDR_MANE_Msk & ((value) << FLEX_US_IDR_MANE_Pos))
-#define FLEX_US_IDR_Msk                       _U_(0x014F27E7)                                      /**< (FLEX_US_IDR) Register Mask  */
-
-/* SPI mode */
-#define FLEX_US_IDR_SPI_Msk                   _U_(0x00000000)                                       /**< (FLEX_US_IDR_SPI) Register Mask  */
+#define FLEX_US_IDR_Msk                       _U_(0x014827E7)                                      /**< (FLEX_US_IDR) Register Mask  */
 
 /* LIN mode */
 #define FLEX_US_IDR_LIN_Msk                   _U_(0x00000000)                                       /**< (FLEX_US_IDR_LIN) Register Mask  */
@@ -442,15 +393,6 @@
 #define FLEX_US_IMR_NACK_Pos                  _U_(13)                                              /**< (FLEX_US_IMR) Non Acknowledge Interrupt Mask Position */
 #define FLEX_US_IMR_NACK_Msk                  (_U_(0x1) << FLEX_US_IMR_NACK_Pos)                   /**< (FLEX_US_IMR) Non Acknowledge Interrupt Mask Mask */
 #define FLEX_US_IMR_NACK(value)               (FLEX_US_IMR_NACK_Msk & ((value) << FLEX_US_IMR_NACK_Pos))
-#define FLEX_US_IMR_RIIC_Pos                  _U_(16)                                              /**< (FLEX_US_IMR) Ring Indicator Input Change Mask Position */
-#define FLEX_US_IMR_RIIC_Msk                  (_U_(0x1) << FLEX_US_IMR_RIIC_Pos)                   /**< (FLEX_US_IMR) Ring Indicator Input Change Mask Mask */
-#define FLEX_US_IMR_RIIC(value)               (FLEX_US_IMR_RIIC_Msk & ((value) << FLEX_US_IMR_RIIC_Pos))
-#define FLEX_US_IMR_DSRIC_Pos                 _U_(17)                                              /**< (FLEX_US_IMR) Data Set Ready Input Change Mask Position */
-#define FLEX_US_IMR_DSRIC_Msk                 (_U_(0x1) << FLEX_US_IMR_DSRIC_Pos)                  /**< (FLEX_US_IMR) Data Set Ready Input Change Mask Mask */
-#define FLEX_US_IMR_DSRIC(value)              (FLEX_US_IMR_DSRIC_Msk & ((value) << FLEX_US_IMR_DSRIC_Pos))
-#define FLEX_US_IMR_DCDIC_Pos                 _U_(18)                                              /**< (FLEX_US_IMR) Data Carrier Detect Input Change Interrupt Mask Position */
-#define FLEX_US_IMR_DCDIC_Msk                 (_U_(0x1) << FLEX_US_IMR_DCDIC_Pos)                  /**< (FLEX_US_IMR) Data Carrier Detect Input Change Interrupt Mask Mask */
-#define FLEX_US_IMR_DCDIC(value)              (FLEX_US_IMR_DCDIC_Msk & ((value) << FLEX_US_IMR_DCDIC_Pos))
 #define FLEX_US_IMR_CTSIC_Pos                 _U_(19)                                              /**< (FLEX_US_IMR) Clear to Send Input Change Interrupt Mask Position */
 #define FLEX_US_IMR_CTSIC_Msk                 (_U_(0x1) << FLEX_US_IMR_CTSIC_Pos)                  /**< (FLEX_US_IMR) Clear to Send Input Change Interrupt Mask Mask */
 #define FLEX_US_IMR_CTSIC(value)              (FLEX_US_IMR_CTSIC_Msk & ((value) << FLEX_US_IMR_CTSIC_Pos))
@@ -460,10 +402,7 @@
 #define FLEX_US_IMR_MANE_Pos                  _U_(24)                                              /**< (FLEX_US_IMR) Manchester Error Interrupt Mask Position */
 #define FLEX_US_IMR_MANE_Msk                  (_U_(0x1) << FLEX_US_IMR_MANE_Pos)                   /**< (FLEX_US_IMR) Manchester Error Interrupt Mask Mask */
 #define FLEX_US_IMR_MANE(value)               (FLEX_US_IMR_MANE_Msk & ((value) << FLEX_US_IMR_MANE_Pos))
-#define FLEX_US_IMR_Msk                       _U_(0x014F27E7)                                      /**< (FLEX_US_IMR) Register Mask  */
-
-/* SPI mode */
-#define FLEX_US_IMR_SPI_Msk                   _U_(0x00000000)                                       /**< (FLEX_US_IMR_SPI) Register Mask  */
+#define FLEX_US_IMR_Msk                       _U_(0x014827E7)                                      /**< (FLEX_US_IMR) Register Mask  */
 
 /* LIN mode */
 #define FLEX_US_IMR_LIN_Msk                   _U_(0x00000000)                                       /**< (FLEX_US_IMR_LIN) Register Mask  */
@@ -503,15 +442,6 @@
 #define FLEX_US_CSR_NACK_Pos                  _U_(13)                                              /**< (FLEX_US_CSR) Non Acknowledge Interrupt Position */
 #define FLEX_US_CSR_NACK_Msk                  (_U_(0x1) << FLEX_US_CSR_NACK_Pos)                   /**< (FLEX_US_CSR) Non Acknowledge Interrupt Mask */
 #define FLEX_US_CSR_NACK(value)               (FLEX_US_CSR_NACK_Msk & ((value) << FLEX_US_CSR_NACK_Pos))
-#define FLEX_US_CSR_RIIC_Pos                  _U_(16)                                              /**< (FLEX_US_CSR) Ring Indicator Input Change Flag Position */
-#define FLEX_US_CSR_RIIC_Msk                  (_U_(0x1) << FLEX_US_CSR_RIIC_Pos)                   /**< (FLEX_US_CSR) Ring Indicator Input Change Flag Mask */
-#define FLEX_US_CSR_RIIC(value)               (FLEX_US_CSR_RIIC_Msk & ((value) << FLEX_US_CSR_RIIC_Pos))
-#define FLEX_US_CSR_DSRIC_Pos                 _U_(17)                                              /**< (FLEX_US_CSR) Data Set Ready Input Change Flag Position */
-#define FLEX_US_CSR_DSRIC_Msk                 (_U_(0x1) << FLEX_US_CSR_DSRIC_Pos)                  /**< (FLEX_US_CSR) Data Set Ready Input Change Flag Mask */
-#define FLEX_US_CSR_DSRIC(value)              (FLEX_US_CSR_DSRIC_Msk & ((value) << FLEX_US_CSR_DSRIC_Pos))
-#define FLEX_US_CSR_DCDIC_Pos                 _U_(18)                                              /**< (FLEX_US_CSR) Data Carrier Detect Input Change Flag Position */
-#define FLEX_US_CSR_DCDIC_Msk                 (_U_(0x1) << FLEX_US_CSR_DCDIC_Pos)                  /**< (FLEX_US_CSR) Data Carrier Detect Input Change Flag Mask */
-#define FLEX_US_CSR_DCDIC(value)              (FLEX_US_CSR_DCDIC_Msk & ((value) << FLEX_US_CSR_DCDIC_Pos))
 #define FLEX_US_CSR_CTSIC_Pos                 _U_(19)                                              /**< (FLEX_US_CSR) Clear to Send Input Change Flag Position */
 #define FLEX_US_CSR_CTSIC_Msk                 (_U_(0x1) << FLEX_US_CSR_CTSIC_Pos)                  /**< (FLEX_US_CSR) Clear to Send Input Change Flag Mask */
 #define FLEX_US_CSR_CTSIC(value)              (FLEX_US_CSR_CTSIC_Msk & ((value) << FLEX_US_CSR_CTSIC_Pos))
@@ -524,10 +454,7 @@
 #define FLEX_US_CSR_MANE_Pos                  _U_(24)                                              /**< (FLEX_US_CSR) Manchester Error Position */
 #define FLEX_US_CSR_MANE_Msk                  (_U_(0x1) << FLEX_US_CSR_MANE_Pos)                   /**< (FLEX_US_CSR) Manchester Error Mask */
 #define FLEX_US_CSR_MANE(value)               (FLEX_US_CSR_MANE_Msk & ((value) << FLEX_US_CSR_MANE_Pos))
-#define FLEX_US_CSR_Msk                       _U_(0x01CF27E7)                                      /**< (FLEX_US_CSR) Register Mask  */
-
-/* SPI mode */
-#define FLEX_US_CSR_SPI_Msk                   _U_(0x00000000)                                       /**< (FLEX_US_CSR_SPI) Register Mask  */
+#define FLEX_US_CSR_Msk                       _U_(0x01C827E7)                                      /**< (FLEX_US_CSR) Register Mask  */
 
 /* LIN mode */
 #define FLEX_US_CSR_LIN_Msk                   _U_(0x00000000)                                       /**< (FLEX_US_CSR_LIN) Register Mask  */
@@ -1066,16 +993,6 @@
 #define FLEX_US_WPSR_Msk                      _U_(0x00FFFF01)                                      /**< (FLEX_US_WPSR) Register Mask  */
 
 
-/* -------- FLEX_US_VERSION : (FLEXCOM Offset: 0x2FC) ( R/ 32) USART Version Register -------- */
-#define FLEX_US_VERSION_VERSION_Pos           _U_(0)                                               /**< (FLEX_US_VERSION) Hardware Module Version Position */
-#define FLEX_US_VERSION_VERSION_Msk           (_U_(0xFFF) << FLEX_US_VERSION_VERSION_Pos)          /**< (FLEX_US_VERSION) Hardware Module Version Mask */
-#define FLEX_US_VERSION_VERSION(value)        (FLEX_US_VERSION_VERSION_Msk & ((value) << FLEX_US_VERSION_VERSION_Pos))
-#define FLEX_US_VERSION_MFN_Pos               _U_(16)                                              /**< (FLEX_US_VERSION) Metal Fix Number Position */
-#define FLEX_US_VERSION_MFN_Msk               (_U_(0x7) << FLEX_US_VERSION_MFN_Pos)                /**< (FLEX_US_VERSION) Metal Fix Number Mask */
-#define FLEX_US_VERSION_MFN(value)            (FLEX_US_VERSION_MFN_Msk & ((value) << FLEX_US_VERSION_MFN_Pos))
-#define FLEX_US_VERSION_Msk                   _U_(0x00070FFF)                                      /**< (FLEX_US_VERSION) Register Mask  */
-
-
 /* -------- FLEX_SPI_CR : (FLEXCOM Offset: 0x400) ( /W 32) SPI Control Register -------- */
 #define FLEX_SPI_CR_SPIEN_Pos                 _U_(0)                                               /**< (FLEX_SPI_CR) SPI Enable Position */
 #define FLEX_SPI_CR_SPIEN_Msk                 (_U_(0x1) << FLEX_SPI_CR_SPIEN_Pos)                  /**< (FLEX_SPI_CR) SPI Enable Mask */
@@ -1133,9 +1050,6 @@
 #define FLEX_SPI_MR_LLB_Pos                   _U_(7)                                               /**< (FLEX_SPI_MR) Local Loopback Enable Position */
 #define FLEX_SPI_MR_LLB_Msk                   (_U_(0x1) << FLEX_SPI_MR_LLB_Pos)                    /**< (FLEX_SPI_MR) Local Loopback Enable Mask */
 #define FLEX_SPI_MR_LLB(value)                (FLEX_SPI_MR_LLB_Msk & ((value) << FLEX_SPI_MR_LLB_Pos))
-#define FLEX_SPI_MR_LBHPC_Pos                 _U_(8)                                               /**< (FLEX_SPI_MR) Last Bit Half Period Compatibility Position */
-#define FLEX_SPI_MR_LBHPC_Msk                 (_U_(0x1) << FLEX_SPI_MR_LBHPC_Pos)                  /**< (FLEX_SPI_MR) Last Bit Half Period Compatibility Mask */
-#define FLEX_SPI_MR_LBHPC(value)              (FLEX_SPI_MR_LBHPC_Msk & ((value) << FLEX_SPI_MR_LBHPC_Pos))
 #define FLEX_SPI_MR_CMPMODE_Pos               _U_(12)                                              /**< (FLEX_SPI_MR) Comparison Mode Position */
 #define FLEX_SPI_MR_CMPMODE_Msk               (_U_(0x1) << FLEX_SPI_MR_CMPMODE_Pos)                /**< (FLEX_SPI_MR) Comparison Mode Mask */
 #define FLEX_SPI_MR_CMPMODE(value)            (FLEX_SPI_MR_CMPMODE_Msk & ((value) << FLEX_SPI_MR_CMPMODE_Pos))
@@ -1149,7 +1063,7 @@
 #define FLEX_SPI_MR_DLYBCS_Pos                _U_(24)                                              /**< (FLEX_SPI_MR) Delay Between Chip Selects Position */
 #define FLEX_SPI_MR_DLYBCS_Msk                (_U_(0xFF) << FLEX_SPI_MR_DLYBCS_Pos)                /**< (FLEX_SPI_MR) Delay Between Chip Selects Mask */
 #define FLEX_SPI_MR_DLYBCS(value)             (FLEX_SPI_MR_DLYBCS_Msk & ((value) << FLEX_SPI_MR_DLYBCS_Pos))
-#define FLEX_SPI_MR_Msk                       _U_(0xFF0F11BF)                                      /**< (FLEX_SPI_MR) Register Mask  */
+#define FLEX_SPI_MR_Msk                       _U_(0xFF0F10BF)                                      /**< (FLEX_SPI_MR) Register Mask  */
 
 
 /* -------- FLEX_SPI_RDR : (FLEXCOM Offset: 0x408) ( R/ 32) SPI Receive Data Register -------- */
@@ -1473,18 +1387,18 @@
 #define FLEX_SPI_FMR_TXRDYM_Msk               (_U_(0x3) << FLEX_SPI_FMR_TXRDYM_Pos)                /**< (FLEX_SPI_FMR) Transmit Data Register Empty Mode Mask */
 #define FLEX_SPI_FMR_TXRDYM(value)            (FLEX_SPI_FMR_TXRDYM_Msk & ((value) << FLEX_SPI_FMR_TXRDYM_Pos))
 #define   FLEX_SPI_FMR_TXRDYM_ONE_DATA_Val    _U_(0x0)                                             /**< (FLEX_SPI_FMR) TDRE will be at level '1' when at least one data can be written in the Transmit FIFO.  */
-#define   FLEX_SPI_FMR_TXRDYM_TWO_DATA_Val    _U_(0x1)                                             /**< (FLEX_SPI_FMR) TDRE will be at level '1' when at least two data can be written in the Transmit FIFO.Cannot be used if FLEX_SPI_MR.PS =1.  */
+#define   FLEX_SPI_FMR_TXRDYM_TWO_DATA_Val    _U_(0x1)                                             /**< (FLEX_SPI_FMR) TDRE will be at level '1' when at least two data can be written in the Transmit FIFO. Cannot be used if FLEX_SPI_MR.PS =1.  */
 #define FLEX_SPI_FMR_TXRDYM_ONE_DATA          (FLEX_SPI_FMR_TXRDYM_ONE_DATA_Val << FLEX_SPI_FMR_TXRDYM_Pos) /**< (FLEX_SPI_FMR) TDRE will be at level '1' when at least one data can be written in the Transmit FIFO. Position  */
-#define FLEX_SPI_FMR_TXRDYM_TWO_DATA          (FLEX_SPI_FMR_TXRDYM_TWO_DATA_Val << FLEX_SPI_FMR_TXRDYM_Pos) /**< (FLEX_SPI_FMR) TDRE will be at level '1' when at least two data can be written in the Transmit FIFO.Cannot be used if FLEX_SPI_MR.PS =1. Position  */
+#define FLEX_SPI_FMR_TXRDYM_TWO_DATA          (FLEX_SPI_FMR_TXRDYM_TWO_DATA_Val << FLEX_SPI_FMR_TXRDYM_Pos) /**< (FLEX_SPI_FMR) TDRE will be at level '1' when at least two data can be written in the Transmit FIFO. Cannot be used if FLEX_SPI_MR.PS =1. Position  */
 #define FLEX_SPI_FMR_RXRDYM_Pos               _U_(4)                                               /**< (FLEX_SPI_FMR) Receive Data Register Full Mode Position */
 #define FLEX_SPI_FMR_RXRDYM_Msk               (_U_(0x3) << FLEX_SPI_FMR_RXRDYM_Pos)                /**< (FLEX_SPI_FMR) Receive Data Register Full Mode Mask */
 #define FLEX_SPI_FMR_RXRDYM(value)            (FLEX_SPI_FMR_RXRDYM_Msk & ((value) << FLEX_SPI_FMR_RXRDYM_Pos))
 #define   FLEX_SPI_FMR_RXRDYM_ONE_DATA_Val    _U_(0x0)                                             /**< (FLEX_SPI_FMR) RDRF will be at level '1' when at least one unread data is in the Receive FIFO.  */
-#define   FLEX_SPI_FMR_RXRDYM_TWO_DATA_Val    _U_(0x1)                                             /**< (FLEX_SPI_FMR) RDRF will be at level '1' when at least two unread data are in the Receive FIFO.Cannot be used when FLEX_SPI_MR.MSTR =1, or if FLEX_SPI_MR.PS =1.  */
-#define   FLEX_SPI_FMR_RXRDYM_FOUR_DATA_Val   _U_(0x2)                                             /**< (FLEX_SPI_FMR) RDRF will be at level '1' when at least four unread data are in the Receive FIFO.Cannot be used when FLEX_SPI_CSRx.BITS is greater than 0, or if FLEX_SPI_MR.MSTR =1, or if FLEX_SPI_MR.PS =1.  */
+#define   FLEX_SPI_FMR_RXRDYM_TWO_DATA_Val    _U_(0x1)                                             /**< (FLEX_SPI_FMR) RDRF will be at level '1' when at least two unread data are in the Receive FIFO. Cannot be used when FLEX_SPI_MR.MSTR =1, or if FLEX_SPI_MR.PS =1.  */
+#define   FLEX_SPI_FMR_RXRDYM_FOUR_DATA_Val   _U_(0x2)                                             /**< (FLEX_SPI_FMR) RDRF will be at level '1' when at least four unread data are in the Receive FIFO. Cannot be used when FLEX_SPI_CSRx.BITS is greater than 0, or if FLEX_SPI_MR.MSTR =1, or if FLEX_SPI_MR.PS =1.  */
 #define FLEX_SPI_FMR_RXRDYM_ONE_DATA          (FLEX_SPI_FMR_RXRDYM_ONE_DATA_Val << FLEX_SPI_FMR_RXRDYM_Pos) /**< (FLEX_SPI_FMR) RDRF will be at level '1' when at least one unread data is in the Receive FIFO. Position  */
-#define FLEX_SPI_FMR_RXRDYM_TWO_DATA          (FLEX_SPI_FMR_RXRDYM_TWO_DATA_Val << FLEX_SPI_FMR_RXRDYM_Pos) /**< (FLEX_SPI_FMR) RDRF will be at level '1' when at least two unread data are in the Receive FIFO.Cannot be used when FLEX_SPI_MR.MSTR =1, or if FLEX_SPI_MR.PS =1. Position  */
-#define FLEX_SPI_FMR_RXRDYM_FOUR_DATA         (FLEX_SPI_FMR_RXRDYM_FOUR_DATA_Val << FLEX_SPI_FMR_RXRDYM_Pos) /**< (FLEX_SPI_FMR) RDRF will be at level '1' when at least four unread data are in the Receive FIFO.Cannot be used when FLEX_SPI_CSRx.BITS is greater than 0, or if FLEX_SPI_MR.MSTR =1, or if FLEX_SPI_MR.PS =1. Position  */
+#define FLEX_SPI_FMR_RXRDYM_TWO_DATA          (FLEX_SPI_FMR_RXRDYM_TWO_DATA_Val << FLEX_SPI_FMR_RXRDYM_Pos) /**< (FLEX_SPI_FMR) RDRF will be at level '1' when at least two unread data are in the Receive FIFO. Cannot be used when FLEX_SPI_MR.MSTR =1, or if FLEX_SPI_MR.PS =1. Position  */
+#define FLEX_SPI_FMR_RXRDYM_FOUR_DATA         (FLEX_SPI_FMR_RXRDYM_FOUR_DATA_Val << FLEX_SPI_FMR_RXRDYM_Pos) /**< (FLEX_SPI_FMR) RDRF will be at level '1' when at least four unread data are in the Receive FIFO. Cannot be used when FLEX_SPI_CSRx.BITS is greater than 0, or if FLEX_SPI_MR.MSTR =1, or if FLEX_SPI_MR.PS =1. Position  */
 #define FLEX_SPI_FMR_TXFTHRES_Pos             _U_(16)                                              /**< (FLEX_SPI_FMR) Transmit FIFO Threshold Position */
 #define FLEX_SPI_FMR_TXFTHRES_Msk             (_U_(0x3F) << FLEX_SPI_FMR_TXFTHRES_Pos)             /**< (FLEX_SPI_FMR) Transmit FIFO Threshold Mask */
 #define FLEX_SPI_FMR_TXFTHRES(value)          (FLEX_SPI_FMR_TXFTHRES_Msk & ((value) << FLEX_SPI_FMR_TXFTHRES_Pos))
@@ -1527,8 +1441,8 @@
 #define FLEX_SPI_WPMR_WPKEY_Pos               _U_(8)                                               /**< (FLEX_SPI_WPMR) Write Protection Key Position */
 #define FLEX_SPI_WPMR_WPKEY_Msk               (_U_(0xFFFFFF) << FLEX_SPI_WPMR_WPKEY_Pos)           /**< (FLEX_SPI_WPMR) Write Protection Key Mask */
 #define FLEX_SPI_WPMR_WPKEY(value)            (FLEX_SPI_WPMR_WPKEY_Msk & ((value) << FLEX_SPI_WPMR_WPKEY_Pos))
-#define   FLEX_SPI_WPMR_WPKEY_PASSWD_Val      _U_(0x535049)                                        /**< (FLEX_SPI_WPMR) Writing any other value in this field aborts the write operation of bits WPEN, WPITEN and WPCREN.Always reads as 0  */
-#define FLEX_SPI_WPMR_WPKEY_PASSWD            (FLEX_SPI_WPMR_WPKEY_PASSWD_Val << FLEX_SPI_WPMR_WPKEY_Pos) /**< (FLEX_SPI_WPMR) Writing any other value in this field aborts the write operation of bits WPEN, WPITEN and WPCREN.Always reads as 0 Position  */
+#define   FLEX_SPI_WPMR_WPKEY_PASSWD_Val      _U_(0x535049)                                        /**< (FLEX_SPI_WPMR) Writing any other value in this field aborts the write operation of bits WPEN, WPITEN and WPCREN. Always reads as 0  */
+#define FLEX_SPI_WPMR_WPKEY_PASSWD            (FLEX_SPI_WPMR_WPKEY_PASSWD_Val << FLEX_SPI_WPMR_WPKEY_Pos) /**< (FLEX_SPI_WPMR) Writing any other value in this field aborts the write operation of bits WPEN, WPITEN and WPCREN. Always reads as 0 Position  */
 #define FLEX_SPI_WPMR_Msk                     _U_(0xFFFFFF07)                                      /**< (FLEX_SPI_WPMR) Register Mask  */
 
 
@@ -1540,16 +1454,6 @@
 #define FLEX_SPI_WPSR_WPVSRC_Msk              (_U_(0xFF) << FLEX_SPI_WPSR_WPVSRC_Pos)              /**< (FLEX_SPI_WPSR) Write Protection Violation Source Mask */
 #define FLEX_SPI_WPSR_WPVSRC(value)           (FLEX_SPI_WPSR_WPVSRC_Msk & ((value) << FLEX_SPI_WPSR_WPVSRC_Pos))
 #define FLEX_SPI_WPSR_Msk                     _U_(0x0000FF01)                                      /**< (FLEX_SPI_WPSR) Register Mask  */
-
-
-/* -------- FLEX_SPI_VERSION : (FLEXCOM Offset: 0x4FC) ( R/ 32) SPI Version Register -------- */
-#define FLEX_SPI_VERSION_VERSION_Pos          _U_(0)                                               /**< (FLEX_SPI_VERSION) Version of the Hardware Module Position */
-#define FLEX_SPI_VERSION_VERSION_Msk          (_U_(0xFFF) << FLEX_SPI_VERSION_VERSION_Pos)         /**< (FLEX_SPI_VERSION) Version of the Hardware Module Mask */
-#define FLEX_SPI_VERSION_VERSION(value)       (FLEX_SPI_VERSION_VERSION_Msk & ((value) << FLEX_SPI_VERSION_VERSION_Pos))
-#define FLEX_SPI_VERSION_MFN_Pos              _U_(16)                                              /**< (FLEX_SPI_VERSION) Metal Fix Number Position */
-#define FLEX_SPI_VERSION_MFN_Msk              (_U_(0x7) << FLEX_SPI_VERSION_MFN_Pos)               /**< (FLEX_SPI_VERSION) Metal Fix Number Mask */
-#define FLEX_SPI_VERSION_MFN(value)           (FLEX_SPI_VERSION_MFN_Msk & ((value) << FLEX_SPI_VERSION_MFN_Pos))
-#define FLEX_SPI_VERSION_Msk                  _U_(0x00070FFF)                                      /**< (FLEX_SPI_VERSION) Register Mask  */
 
 
 /* -------- FLEX_TWI_CR : (FLEXCOM Offset: 0x600) ( /W 32) TWI Control Register -------- */
@@ -1731,6 +1635,9 @@
 #define FLEX_TWI_SMR_SADAT_Pos                _U_(4)                                               /**< (FLEX_TWI_SMR) Slave Address Treated as Data Position */
 #define FLEX_TWI_SMR_SADAT_Msk                (_U_(0x1) << FLEX_TWI_SMR_SADAT_Pos)                 /**< (FLEX_TWI_SMR) Slave Address Treated as Data Mask */
 #define FLEX_TWI_SMR_SADAT(value)             (FLEX_TWI_SMR_SADAT_Msk & ((value) << FLEX_TWI_SMR_SADAT_Pos))
+#define FLEX_TWI_SMR_BSEL_Pos                 _U_(5)                                               /**< (FLEX_TWI_SMR) TWI Bus Selection Position */
+#define FLEX_TWI_SMR_BSEL_Msk                 (_U_(0x1) << FLEX_TWI_SMR_BSEL_Pos)                  /**< (FLEX_TWI_SMR) TWI Bus Selection Mask */
+#define FLEX_TWI_SMR_BSEL(value)              (FLEX_TWI_SMR_BSEL_Msk & ((value) << FLEX_TWI_SMR_BSEL_Pos))
 #define FLEX_TWI_SMR_SCLWSDIS_Pos             _U_(6)                                               /**< (FLEX_TWI_SMR) Clock Wait State Disable Position */
 #define FLEX_TWI_SMR_SCLWSDIS_Msk             (_U_(0x1) << FLEX_TWI_SMR_SCLWSDIS_Pos)              /**< (FLEX_TWI_SMR) Clock Wait State Disable Mask */
 #define FLEX_TWI_SMR_SCLWSDIS(value)          (FLEX_TWI_SMR_SCLWSDIS_Msk & ((value) << FLEX_TWI_SMR_SCLWSDIS_Pos))
@@ -1743,7 +1650,7 @@
 #define FLEX_TWI_SMR_SADR_Pos                 _U_(16)                                              /**< (FLEX_TWI_SMR) Slave Address Position */
 #define FLEX_TWI_SMR_SADR_Msk                 (_U_(0x7F) << FLEX_TWI_SMR_SADR_Pos)                 /**< (FLEX_TWI_SMR) Slave Address Mask */
 #define FLEX_TWI_SMR_SADR(value)              (FLEX_TWI_SMR_SADR_Msk & ((value) << FLEX_TWI_SMR_SADR_Pos))
-#define FLEX_TWI_SMR_Msk                      _U_(0x007F7FDD)                                      /**< (FLEX_TWI_SMR) Register Mask  */
+#define FLEX_TWI_SMR_Msk                      _U_(0x007F7FFD)                                      /**< (FLEX_TWI_SMR) Register Mask  */
 
 
 /* -------- FLEX_TWI_IADR : (FLEXCOM Offset: 0x60C) (R/W 32) TWI Internal Address Register -------- */
@@ -2215,13 +2122,10 @@
 #define FLEX_TWI_FILTR_PADFEN_Pos             _U_(1)                                               /**< (FLEX_TWI_FILTR) PAD Filter Enable Position */
 #define FLEX_TWI_FILTR_PADFEN_Msk             (_U_(0x1) << FLEX_TWI_FILTR_PADFEN_Pos)              /**< (FLEX_TWI_FILTR) PAD Filter Enable Mask */
 #define FLEX_TWI_FILTR_PADFEN(value)          (FLEX_TWI_FILTR_PADFEN_Msk & ((value) << FLEX_TWI_FILTR_PADFEN_Pos))
-#define FLEX_TWI_FILTR_PADFCFG_Pos            _U_(2)                                               /**< (FLEX_TWI_FILTR) PAD Filter Config Position */
-#define FLEX_TWI_FILTR_PADFCFG_Msk            (_U_(0x1) << FLEX_TWI_FILTR_PADFCFG_Pos)             /**< (FLEX_TWI_FILTR) PAD Filter Config Mask */
-#define FLEX_TWI_FILTR_PADFCFG(value)         (FLEX_TWI_FILTR_PADFCFG_Msk & ((value) << FLEX_TWI_FILTR_PADFCFG_Pos))
 #define FLEX_TWI_FILTR_THRES_Pos              _U_(8)                                               /**< (FLEX_TWI_FILTR) Digital Filter Threshold Position */
 #define FLEX_TWI_FILTR_THRES_Msk              (_U_(0x7) << FLEX_TWI_FILTR_THRES_Pos)               /**< (FLEX_TWI_FILTR) Digital Filter Threshold Mask */
 #define FLEX_TWI_FILTR_THRES(value)           (FLEX_TWI_FILTR_THRES_Msk & ((value) << FLEX_TWI_FILTR_THRES_Pos))
-#define FLEX_TWI_FILTR_Msk                    _U_(0x00000707)                                      /**< (FLEX_TWI_FILTR) Register Mask  */
+#define FLEX_TWI_FILTR_Msk                    _U_(0x00000703)                                      /**< (FLEX_TWI_FILTR) Register Mask  */
 
 
 /* -------- FLEX_TWI_FMR : (FLEXCOM Offset: 0x650) (R/W 32) TWI FIFO Mode Register -------- */
@@ -2374,22 +2278,6 @@
 #define FLEX_TWI_FIMR_Msk                     _U_(0x000000FF)                                      /**< (FLEX_TWI_FIMR) Register Mask  */
 
 
-/* -------- FLEX_TWI_DR : (FLEXCOM Offset: 0x6D0) ( R/ 32) TWI Debug Register -------- */
-#define FLEX_TWI_DR_SWEN_Pos                  _U_(0)                                               /**< (FLEX_TWI_DR) SleepWalking Enable Position */
-#define FLEX_TWI_DR_SWEN_Msk                  (_U_(0x1) << FLEX_TWI_DR_SWEN_Pos)                   /**< (FLEX_TWI_DR) SleepWalking Enable Mask */
-#define FLEX_TWI_DR_SWEN(value)               (FLEX_TWI_DR_SWEN_Msk & ((value) << FLEX_TWI_DR_SWEN_Pos))
-#define FLEX_TWI_DR_CLKRQ_Pos                 _U_(1)                                               /**< (FLEX_TWI_DR) Clock Request Position */
-#define FLEX_TWI_DR_CLKRQ_Msk                 (_U_(0x1) << FLEX_TWI_DR_CLKRQ_Pos)                  /**< (FLEX_TWI_DR) Clock Request Mask */
-#define FLEX_TWI_DR_CLKRQ(value)              (FLEX_TWI_DR_CLKRQ_Msk & ((value) << FLEX_TWI_DR_CLKRQ_Pos))
-#define FLEX_TWI_DR_SWMATCH_Pos               _U_(2)                                               /**< (FLEX_TWI_DR) SleepWalking Match Position */
-#define FLEX_TWI_DR_SWMATCH_Msk               (_U_(0x1) << FLEX_TWI_DR_SWMATCH_Pos)                /**< (FLEX_TWI_DR) SleepWalking Match Mask */
-#define FLEX_TWI_DR_SWMATCH(value)            (FLEX_TWI_DR_SWMATCH_Msk & ((value) << FLEX_TWI_DR_SWMATCH_Pos))
-#define FLEX_TWI_DR_TRP_Pos                   _U_(3)                                               /**< (FLEX_TWI_DR) Transfer Pending Position */
-#define FLEX_TWI_DR_TRP_Msk                   (_U_(0x1) << FLEX_TWI_DR_TRP_Pos)                    /**< (FLEX_TWI_DR) Transfer Pending Mask */
-#define FLEX_TWI_DR_TRP(value)                (FLEX_TWI_DR_TRP_Msk & ((value) << FLEX_TWI_DR_TRP_Pos))
-#define FLEX_TWI_DR_Msk                       _U_(0x0000000F)                                      /**< (FLEX_TWI_DR) Register Mask  */
-
-
 /* -------- FLEX_TWI_WPMR : (FLEXCOM Offset: 0x6E4) (R/W 32) TWI Write Protection Mode Register -------- */
 #define FLEX_TWI_WPMR_WPEN_Pos                _U_(0)                                               /**< (FLEX_TWI_WPMR) Write Protection Enable Position */
 #define FLEX_TWI_WPMR_WPEN_Msk                (_U_(0x1) << FLEX_TWI_WPMR_WPEN_Pos)                 /**< (FLEX_TWI_WPMR) Write Protection Enable Mask */
@@ -2403,8 +2291,8 @@
 #define FLEX_TWI_WPMR_WPKEY_Pos               _U_(8)                                               /**< (FLEX_TWI_WPMR) Write Protection Key Position */
 #define FLEX_TWI_WPMR_WPKEY_Msk               (_U_(0xFFFFFF) << FLEX_TWI_WPMR_WPKEY_Pos)           /**< (FLEX_TWI_WPMR) Write Protection Key Mask */
 #define FLEX_TWI_WPMR_WPKEY(value)            (FLEX_TWI_WPMR_WPKEY_Msk & ((value) << FLEX_TWI_WPMR_WPKEY_Pos))
-#define   FLEX_TWI_WPMR_WPKEY_PASSWD_Val      _U_(0x545749)                                        /**< (FLEX_TWI_WPMR) Writing any other value in this field aborts the write operation of bits WPEN, WPITEN and WPCREN.Always reads as 0  */
-#define FLEX_TWI_WPMR_WPKEY_PASSWD            (FLEX_TWI_WPMR_WPKEY_PASSWD_Val << FLEX_TWI_WPMR_WPKEY_Pos) /**< (FLEX_TWI_WPMR) Writing any other value in this field aborts the write operation of bits WPEN, WPITEN and WPCREN.Always reads as 0 Position  */
+#define   FLEX_TWI_WPMR_WPKEY_PASSWD_Val      _U_(0x545749)                                        /**< (FLEX_TWI_WPMR) Writing any other value in this field aborts the write operation of bits WPEN, WPITEN and WPCREN. Always reads as 0  */
+#define FLEX_TWI_WPMR_WPKEY_PASSWD            (FLEX_TWI_WPMR_WPKEY_PASSWD_Val << FLEX_TWI_WPMR_WPKEY_Pos) /**< (FLEX_TWI_WPMR) Writing any other value in this field aborts the write operation of bits WPEN, WPITEN and WPCREN. Always reads as 0 Position  */
 #define FLEX_TWI_WPMR_Msk                     _U_(0xFFFFFF07)                                      /**< (FLEX_TWI_WPMR) Register Mask  */
 
 
@@ -2418,21 +2306,10 @@
 #define FLEX_TWI_WPSR_Msk                     _U_(0xFFFFFF01)                                      /**< (FLEX_TWI_WPSR) Register Mask  */
 
 
-/* -------- FLEX_TWI_VER : (FLEXCOM Offset: 0x6FC) ( R/ 32) TWI Version Register -------- */
-#define FLEX_TWI_VER_VERSION_Pos              _U_(0)                                               /**< (FLEX_TWI_VER) Version of the Hardware Module Position */
-#define FLEX_TWI_VER_VERSION_Msk              (_U_(0xFFF) << FLEX_TWI_VER_VERSION_Pos)             /**< (FLEX_TWI_VER) Version of the Hardware Module Mask */
-#define FLEX_TWI_VER_VERSION(value)           (FLEX_TWI_VER_VERSION_Msk & ((value) << FLEX_TWI_VER_VERSION_Pos))
-#define FLEX_TWI_VER_MFN_Pos                  _U_(16)                                              /**< (FLEX_TWI_VER) Metal Fix Number Position */
-#define FLEX_TWI_VER_MFN_Msk                  (_U_(0x7) << FLEX_TWI_VER_MFN_Pos)                   /**< (FLEX_TWI_VER) Metal Fix Number Mask */
-#define FLEX_TWI_VER_MFN(value)               (FLEX_TWI_VER_MFN_Msk & ((value) << FLEX_TWI_VER_MFN_Pos))
-#define FLEX_TWI_VER_Msk                      _U_(0x00070FFF)                                      /**< (FLEX_TWI_VER) Register Mask  */
-
-
 /** \brief FLEXCOM register offsets definitions */
 #define FLEX_MR_REG_OFST               (0x00)              /**< (FLEX_MR) FLEXCOM Mode Register Offset */
 #define FLEX_RHR_REG_OFST              (0x10)              /**< (FLEX_RHR) FLEXCOM Receive Holding Register Offset */
 #define FLEX_THR_REG_OFST              (0x20)              /**< (FLEX_THR) FLEXCOM Transmit Holding Register Offset */
-#define FLEX_VERSION_REG_OFST          (0xFC)              /**< (FLEX_VERSION) FLEXCOM Version Register Offset */
 #define FLEX_US_CR_REG_OFST            (0x200)             /**< (FLEX_US_CR) USART Control Register Offset */
 #define FLEX_US_MR_REG_OFST            (0x204)             /**< (FLEX_US_MR) USART Mode Register Offset */
 #define FLEX_US_IER_REG_OFST           (0x208)             /**< (FLEX_US_IER) USART Interrupt Enable Register Offset */
@@ -2471,7 +2348,6 @@
 #define FLEX_US_FESR_REG_OFST          (0x2B4)             /**< (FLEX_US_FESR) USART FIFO Event Status Register Offset */
 #define FLEX_US_WPMR_REG_OFST          (0x2E4)             /**< (FLEX_US_WPMR) USART Write Protection Mode Register Offset */
 #define FLEX_US_WPSR_REG_OFST          (0x2E8)             /**< (FLEX_US_WPSR) USART Write Protection Status Register Offset */
-#define FLEX_US_VERSION_REG_OFST       (0x2FC)             /**< (FLEX_US_VERSION) USART Version Register Offset */
 #define FLEX_SPI_CR_REG_OFST           (0x400)             /**< (FLEX_SPI_CR) SPI Control Register Offset */
 #define FLEX_SPI_MR_REG_OFST           (0x404)             /**< (FLEX_SPI_MR) SPI Mode Register Offset */
 #define FLEX_SPI_RDR_REG_OFST          (0x408)             /**< (FLEX_SPI_RDR) SPI Receive Data Register Offset */
@@ -2486,7 +2362,6 @@
 #define FLEX_SPI_CMPR_REG_OFST         (0x448)             /**< (FLEX_SPI_CMPR) SPI Comparison Register Offset */
 #define FLEX_SPI_WPMR_REG_OFST         (0x4E4)             /**< (FLEX_SPI_WPMR) SPI Write Protection Mode Register Offset */
 #define FLEX_SPI_WPSR_REG_OFST         (0x4E8)             /**< (FLEX_SPI_WPSR) SPI Write Protection Status Register Offset */
-#define FLEX_SPI_VERSION_REG_OFST      (0x4FC)             /**< (FLEX_SPI_VERSION) SPI Version Register Offset */
 #define FLEX_TWI_CR_REG_OFST           (0x600)             /**< (FLEX_TWI_CR) TWI Control Register Offset */
 #define FLEX_TWI_MMR_REG_OFST          (0x604)             /**< (FLEX_TWI_MMR) TWI Master Mode Register Offset */
 #define FLEX_TWI_SMR_REG_OFST          (0x608)             /**< (FLEX_TWI_SMR) TWI Slave Mode Register Offset */
@@ -2507,10 +2382,8 @@
 #define FLEX_TWI_FIER_REG_OFST         (0x664)             /**< (FLEX_TWI_FIER) TWI FIFO Interrupt Enable Register Offset */
 #define FLEX_TWI_FIDR_REG_OFST         (0x668)             /**< (FLEX_TWI_FIDR) TWI FIFO Interrupt Disable Register Offset */
 #define FLEX_TWI_FIMR_REG_OFST         (0x66C)             /**< (FLEX_TWI_FIMR) TWI FIFO Interrupt Mask Register Offset */
-#define FLEX_TWI_DR_REG_OFST           (0x6D0)             /**< (FLEX_TWI_DR) TWI Debug Register Offset */
 #define FLEX_TWI_WPMR_REG_OFST         (0x6E4)             /**< (FLEX_TWI_WPMR) TWI Write Protection Mode Register Offset */
 #define FLEX_TWI_WPSR_REG_OFST         (0x6E8)             /**< (FLEX_TWI_WPSR) TWI Write Protection Status Register Offset */
-#define FLEX_TWI_VER_REG_OFST          (0x6FC)             /**< (FLEX_TWI_VER) TWI Version Register Offset */
 
 #if !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__))
 /** \brief FLEXCOM register API structure */
@@ -2521,9 +2394,7 @@ typedef struct
   __I   uint32_t                       FLEX_RHR;           /**< Offset: 0x10 (R/   32) FLEXCOM Receive Holding Register */
   __I   uint8_t                        Reserved2[0x0C];
   __IO  uint32_t                       FLEX_THR;           /**< Offset: 0x20 (R/W  32) FLEXCOM Transmit Holding Register */
-  __I   uint8_t                        Reserved3[0xD8];
-  __I   uint32_t                       FLEX_VERSION;       /**< Offset: 0xFC (R/   32) FLEXCOM Version Register */
-  __I   uint8_t                        Reserved4[0x100];
+  __I   uint8_t                        Reserved3[0x1DC];
   __O   uint32_t                       FLEX_US_CR;         /**< Offset: 0x200 ( /W  32) USART Control Register */
   __IO  uint32_t                       FLEX_US_MR;         /**< Offset: 0x204 (R/W  32) USART Mode Register */
   __O   uint32_t                       FLEX_US_IER;        /**< Offset: 0x208 ( /W  32) USART Interrupt Enable Register */
@@ -2535,10 +2406,10 @@ typedef struct
   __IO  uint32_t                       FLEX_US_BRGR;       /**< Offset: 0x220 (R/W  32) USART Baud Rate Generator Register */
   __IO  uint32_t                       FLEX_US_RTOR;       /**< Offset: 0x224 (R/W  32) USART Receiver Timeout Register */
   __IO  uint32_t                       FLEX_US_TTGR;       /**< Offset: 0x228 (R/W  32) USART Transmitter Timeguard Register */
-  __I   uint8_t                        Reserved5[0x14];
+  __I   uint8_t                        Reserved4[0x14];
   __IO  uint32_t                       FLEX_US_FIDI;       /**< Offset: 0x240 (R/W  32) USART FI DI Ratio Register */
   __I   uint32_t                       FLEX_US_NER;        /**< Offset: 0x244 (R/   32) USART Number of Errors Register */
-  __I   uint8_t                        Reserved6[0x04];
+  __I   uint8_t                        Reserved5[0x04];
   __IO  uint32_t                       FLEX_US_IF;         /**< Offset: 0x24C (R/W  32) USART IrDA Filter Register */
   __IO  uint32_t                       FLEX_US_MAN;        /**< Offset: 0x250 (R/W  32) USART Manchester Configuration Register */
   __IO  uint32_t                       FLEX_US_LINMR;      /**< Offset: 0x254 (R/W  32) USART LIN Mode Register */
@@ -2555,21 +2426,19 @@ typedef struct
   __IO  uint32_t                       FLEX_US_IDTTX;      /**< Offset: 0x280 (R/W  32) USART LON IDT Tx Register */
   __IO  uint32_t                       FLEX_US_IDTRX;      /**< Offset: 0x284 (R/W  32) USART LON IDT Rx Register */
   __IO  uint32_t                       FLEX_US_ICDIFF;     /**< Offset: 0x288 (R/W  32) USART IC DIFF Register */
-  __I   uint8_t                        Reserved7[0x04];
+  __I   uint8_t                        Reserved6[0x04];
   __IO  uint32_t                       FLEX_US_CMPR;       /**< Offset: 0x290 (R/W  32) USART Comparison Register */
-  __I   uint8_t                        Reserved8[0x0C];
+  __I   uint8_t                        Reserved7[0x0C];
   __IO  uint32_t                       FLEX_US_FMR;        /**< Offset: 0x2A0 (R/W  32) USART FIFO Mode Register */
   __I   uint32_t                       FLEX_US_FLR;        /**< Offset: 0x2A4 (R/   32) USART FIFO Level Register */
   __O   uint32_t                       FLEX_US_FIER;       /**< Offset: 0x2A8 ( /W  32) USART FIFO Interrupt Enable Register */
   __O   uint32_t                       FLEX_US_FIDR;       /**< Offset: 0x2AC ( /W  32) USART FIFO Interrupt Disable Register */
   __I   uint32_t                       FLEX_US_FIMR;       /**< Offset: 0x2B0 (R/   32) USART FIFO Interrupt Mask Register */
   __I   uint32_t                       FLEX_US_FESR;       /**< Offset: 0x2B4 (R/   32) USART FIFO Event Status Register */
-  __I   uint8_t                        Reserved9[0x2C];
+  __I   uint8_t                        Reserved8[0x2C];
   __IO  uint32_t                       FLEX_US_WPMR;       /**< Offset: 0x2E4 (R/W  32) USART Write Protection Mode Register */
   __I   uint32_t                       FLEX_US_WPSR;       /**< Offset: 0x2E8 (R/   32) USART Write Protection Status Register */
-  __I   uint8_t                        Reserved10[0x10];
-  __I   uint32_t                       FLEX_US_VERSION;    /**< Offset: 0x2FC (R/   32) USART Version Register */
-  __I   uint8_t                        Reserved11[0x100];
+  __I   uint8_t                        Reserved9[0x114];
   __O   uint32_t                       FLEX_SPI_CR;        /**< Offset: 0x400 ( /W  32) SPI Control Register */
   __IO  uint32_t                       FLEX_SPI_MR;        /**< Offset: 0x404 (R/W  32) SPI Mode Register */
   __I   uint32_t                       FLEX_SPI_RDR;       /**< Offset: 0x408 (R/   32) SPI Receive Data Register */
@@ -2578,23 +2447,21 @@ typedef struct
   __O   uint32_t                       FLEX_SPI_IER;       /**< Offset: 0x414 ( /W  32) SPI Interrupt Enable Register */
   __O   uint32_t                       FLEX_SPI_IDR;       /**< Offset: 0x418 ( /W  32) SPI Interrupt Disable Register */
   __I   uint32_t                       FLEX_SPI_IMR;       /**< Offset: 0x41C (R/   32) SPI Interrupt Mask Register */
-  __I   uint8_t                        Reserved12[0x10];
+  __I   uint8_t                        Reserved10[0x10];
   __IO  uint32_t                       FLEX_SPI_CSR[4];    /**< Offset: 0x430 (R/W  32) SPI Chip Select Register */
   __IO  uint32_t                       FLEX_SPI_FMR;       /**< Offset: 0x440 (R/W  32) SPI FIFO Mode Register */
   __I   uint32_t                       FLEX_SPI_FLR;       /**< Offset: 0x444 (R/   32) SPI FIFO Level Register */
   __IO  uint32_t                       FLEX_SPI_CMPR;      /**< Offset: 0x448 (R/W  32) SPI Comparison Register */
-  __I   uint8_t                        Reserved13[0x98];
+  __I   uint8_t                        Reserved11[0x98];
   __IO  uint32_t                       FLEX_SPI_WPMR;      /**< Offset: 0x4E4 (R/W  32) SPI Write Protection Mode Register */
   __I   uint32_t                       FLEX_SPI_WPSR;      /**< Offset: 0x4E8 (R/   32) SPI Write Protection Status Register */
-  __I   uint8_t                        Reserved14[0x10];
-  __I   uint32_t                       FLEX_SPI_VERSION;   /**< Offset: 0x4FC (R/   32) SPI Version Register */
-  __I   uint8_t                        Reserved15[0x100];
+  __I   uint8_t                        Reserved12[0x114];
   __O   uint32_t                       FLEX_TWI_CR;        /**< Offset: 0x600 ( /W  32) TWI Control Register */
   __IO  uint32_t                       FLEX_TWI_MMR;       /**< Offset: 0x604 (R/W  32) TWI Master Mode Register */
   __IO  uint32_t                       FLEX_TWI_SMR;       /**< Offset: 0x608 (R/W  32) TWI Slave Mode Register */
   __IO  uint32_t                       FLEX_TWI_IADR;      /**< Offset: 0x60C (R/W  32) TWI Internal Address Register */
   __IO  uint32_t                       FLEX_TWI_CWGR;      /**< Offset: 0x610 (R/W  32) TWI Clock Waveform Generator Register */
-  __I   uint8_t                        Reserved16[0x0C];
+  __I   uint8_t                        Reserved13[0x0C];
   __I   uint32_t                       FLEX_TWI_SR;        /**< Offset: 0x620 (R/   32) TWI Status Register */
   __O   uint32_t                       FLEX_TWI_IER;       /**< Offset: 0x624 ( /W  32) TWI Interrupt Enable Register */
   __O   uint32_t                       FLEX_TWI_IDR;       /**< Offset: 0x628 ( /W  32) TWI Interrupt Disable Register */
@@ -2602,24 +2469,20 @@ typedef struct
   __I   uint32_t                       FLEX_TWI_RHR;       /**< Offset: 0x630 (R/   32) TWI Receive Holding Register */
   __O   uint32_t                       FLEX_TWI_THR;       /**< Offset: 0x634 ( /W  32) TWI Transmit Holding Register */
   __IO  uint32_t                       FLEX_TWI_SMBTR;     /**< Offset: 0x638 (R/W  32) TWI SMBus Timing Register */
-  __I   uint8_t                        Reserved17[0x04];
+  __I   uint8_t                        Reserved14[0x04];
   __IO  uint32_t                       FLEX_TWI_ACR;       /**< Offset: 0x640 (R/W  32) TWI Alternative Command Register */
   __IO  uint32_t                       FLEX_TWI_FILTR;     /**< Offset: 0x644 (R/W  32) TWI Filter Register */
-  __I   uint8_t                        Reserved18[0x08];
+  __I   uint8_t                        Reserved15[0x08];
   __IO  uint32_t                       FLEX_TWI_FMR;       /**< Offset: 0x650 (R/W  32) TWI FIFO Mode Register */
   __I   uint32_t                       FLEX_TWI_FLR;       /**< Offset: 0x654 (R/   32) TWI FIFO Level Register */
-  __I   uint8_t                        Reserved19[0x08];
+  __I   uint8_t                        Reserved16[0x08];
   __I   uint32_t                       FLEX_TWI_FSR;       /**< Offset: 0x660 (R/   32) TWI FIFO Status Register */
   __O   uint32_t                       FLEX_TWI_FIER;      /**< Offset: 0x664 ( /W  32) TWI FIFO Interrupt Enable Register */
   __O   uint32_t                       FLEX_TWI_FIDR;      /**< Offset: 0x668 ( /W  32) TWI FIFO Interrupt Disable Register */
   __I   uint32_t                       FLEX_TWI_FIMR;      /**< Offset: 0x66C (R/   32) TWI FIFO Interrupt Mask Register */
-  __I   uint8_t                        Reserved20[0x60];
-  __I   uint32_t                       FLEX_TWI_DR;        /**< Offset: 0x6D0 (R/   32) TWI Debug Register */
-  __I   uint8_t                        Reserved21[0x10];
+  __I   uint8_t                        Reserved17[0x74];
   __IO  uint32_t                       FLEX_TWI_WPMR;      /**< Offset: 0x6E4 (R/W  32) TWI Write Protection Mode Register */
   __I   uint32_t                       FLEX_TWI_WPSR;      /**< Offset: 0x6E8 (R/   32) TWI Write Protection Status Register */
-  __I   uint8_t                        Reserved22[0x10];
-  __I   uint32_t                       FLEX_TWI_VER;       /**< Offset: 0x6FC (R/   32) TWI Version Register */
 } flexcom_registers_t;
 
 
