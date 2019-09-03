@@ -56,6 +56,7 @@
 // *****************************************************************************
 // *****************************************************************************
 
+
 /* SERCOM2 I2C baud value for 400 Khz baud rate */
 #define SERCOM2_I2CM_BAUD_VALUE			(13620U)
 
@@ -116,6 +117,61 @@ void SERCOM2_I2C_Initialize(void)
 
     /* Enable all Interrupts */
     SERCOM2_REGS->I2CM.SERCOM_INTENSET = SERCOM_I2CM_INTENSET_Msk;
+}
+
+bool SERCOM2_I2C_TransferSetup(SERCOM_I2C_TRANSFER_SETUP* setup, uint32_t srcClkFreq )
+{       
+    uint32_t baudValue;    
+    uint32_t i2cClkSpeed;
+    
+    if (setup == NULL)
+    {
+        return false;
+    }        
+        
+    i2cClkSpeed = setup->clkSpeed;
+    
+    if( srcClkFreq == 0)
+    {
+        srcClkFreq = 48000000UL;
+    }    
+    
+    /* Reference clock frequency must be atleast two times the baud rate */
+    if (srcClkFreq < (2*i2cClkSpeed))
+    {
+        return false;
+    }
+    
+    baudValue = ((((float)srcClkFreq)/i2cClkSpeed) - ((((float)srcClkFreq) * (100/1000000000.0)) + 10))/2.0;
+    
+    /* BAUD.BAUD must be non-zero */
+    if (baudValue == 0)
+    {
+        return false;
+    }
+    
+    /* Disable the I2C before changing the I2C clock speed */
+    SERCOM2_REGS->I2CM.SERCOM_CTRLA &= ~SERCOM_I2CM_CTRLA_ENABLE_Msk;
+    
+    /* Wait for synchronization */
+    while(SERCOM2_REGS->I2CM.SERCOM_SYNCBUSY);
+    
+    /* Baud rate - Master Baud Rate*/
+    SERCOM2_REGS->I2CM.SERCOM_BAUD = SERCOM_I2CM_BAUD_BAUD(baudValue);   
+
+    /* Re-enable the I2C module */
+    SERCOM2_REGS->I2CM.SERCOM_CTRLA |= SERCOM_I2CM_CTRLA_ENABLE_Msk; 
+    
+    /* Wait for synchronization */
+    while(SERCOM2_REGS->I2CM.SERCOM_SYNCBUSY);
+
+    /* Since the I2C module was disabled, re-initialize the bus state to IDLE */
+    SERCOM2_REGS->I2CM.SERCOM_STATUS = SERCOM_I2CM_STATUS_BUSSTATE(0x01);    
+    
+    /* Wait for synchronization */
+    while(SERCOM2_REGS->I2CM.SERCOM_SYNCBUSY);
+    
+    return true;
 }
 
 // *****************************************************************************
@@ -409,7 +465,7 @@ bool SERCOM2_I2C_WriteRead(uint16_t address, uint8_t *wdata, uint32_t wlength, u
 
 bool SERCOM2_I2C_IsBusy(void)
 {
-    if(sercom2I2CObj.state == SERCOM_I2C_STATE_IDLE)
+    if((sercom2I2CObj.state == SERCOM_I2C_STATE_IDLE) && ((SERCOM2_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_BUSSTATE_Msk) == SERCOM_I2CM_STATUS_BUSSTATE(0x01)))
     {
         return false;
     }
@@ -589,6 +645,12 @@ void SERCOM2_I2C_InterruptHandler(void)
         {
             /* Reset the PLib objects and Interrupts */
             sercom2I2CObj.state = SERCOM_I2C_STATE_IDLE;
+            
+            /* Generate STOP condition */
+            SERCOM2_REGS->I2CM.SERCOM_CTRLB |= SERCOM_I2CM_CTRLB_CMD(3);
+
+            /* Wait for synchronization */
+            while(SERCOM2_REGS->I2CM.SERCOM_SYNCBUSY);
 
             SERCOM2_REGS->I2CM.SERCOM_INTFLAG = SERCOM_I2CM_INTFLAG_Msk;
 
@@ -605,6 +667,9 @@ void SERCOM2_I2C_InterruptHandler(void)
             sercom2I2CObj.error = SERCOM_I2C_ERROR_NONE;
 
             SERCOM2_REGS->I2CM.SERCOM_INTFLAG = SERCOM_I2CM_INTFLAG_Msk;
+            
+            /* Wait for the NAK and STOP bit to be transmitted out and I2C state machine to rest in IDLE state */
+            while((SERCOM2_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_BUSSTATE_Msk) != SERCOM_I2CM_STATUS_BUSSTATE(0x01));
 
             if(sercom2I2CObj.callback != NULL)
             {
