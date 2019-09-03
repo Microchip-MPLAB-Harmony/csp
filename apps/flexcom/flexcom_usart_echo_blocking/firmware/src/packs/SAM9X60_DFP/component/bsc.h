@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-04-23T19:01:17Z */
+/* file generated from device description version 2019-08-22T13:04:26Z */
 #ifndef _SAM9X_BSC_COMPONENT_H_
 #define _SAM9X_BSC_COMPONENT_H_
 
@@ -35,8 +35,8 @@
 #define BSC_CR_WPKEY_Pos                      _U_(16)                                              /**< (BSC_CR) Write Protection Key (Write-only) Position */
 #define BSC_CR_WPKEY_Msk                      (_U_(0xFFFF) << BSC_CR_WPKEY_Pos)                    /**< (BSC_CR) Write Protection Key (Write-only) Mask */
 #define BSC_CR_WPKEY(value)                   (BSC_CR_WPKEY_Msk & ((value) << BSC_CR_WPKEY_Pos))  
-#define   BSC_CR_WPKEY_PASSWD_Val             _U_(0x6683)                                          /**< (BSC_CR) Writing any other value in this field aborts the write operation of the BOOT field.Always reads as 0.  */
-#define BSC_CR_WPKEY_PASSWD                   (BSC_CR_WPKEY_PASSWD_Val << BSC_CR_WPKEY_Pos)        /**< (BSC_CR) Writing any other value in this field aborts the write operation of the BOOT field.Always reads as 0. Position  */
+#define   BSC_CR_WPKEY_PASSWD_Val             _U_(0x6683)                                          /**< (BSC_CR) Writing any other value in this field aborts the write operation of the BOOT field. Always reads as 0.  */
+#define BSC_CR_WPKEY_PASSWD                   (BSC_CR_WPKEY_PASSWD_Val << BSC_CR_WPKEY_Pos)        /**< (BSC_CR) Writing any other value in this field aborts the write operation of the BOOT field. Always reads as 0. Position  */
 #define BSC_CR_Msk                            _U_(0xFFFF0007)                                      /**< (BSC_CR) Register Mask  */
 
 

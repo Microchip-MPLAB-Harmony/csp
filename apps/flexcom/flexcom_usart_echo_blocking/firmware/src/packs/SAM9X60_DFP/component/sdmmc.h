@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-04-23T19:01:17Z */
+/* file generated from device description version 2019-08-22T13:04:26Z */
 #ifndef _SAM9X_SDMMC_COMPONENT_H_
 #define _SAM9X_SDMMC_COMPONENT_H_
 
@@ -307,21 +307,7 @@
 #define   SDMMC_WCR_WKENCINT_ENABLED_Val      _U_(0x1)                                             /**< (SDMMC_WCR) Wakeup Event enabled.  */
 #define SDMMC_WCR_WKENCINT_DISABLED           (SDMMC_WCR_WKENCINT_DISABLED_Val << SDMMC_WCR_WKENCINT_Pos) /**< (SDMMC_WCR) Wakeup Event disabled. Position  */
 #define SDMMC_WCR_WKENCINT_ENABLED            (SDMMC_WCR_WKENCINT_ENABLED_Val << SDMMC_WCR_WKENCINT_Pos) /**< (SDMMC_WCR) Wakeup Event enabled. Position  */
-#define SDMMC_WCR_WKENCINS_Pos                _U_(1)                                               /**< (SDMMC_WCR) Wakeup Event Enable on Card Insertion Position */
-#define SDMMC_WCR_WKENCINS_Msk                (_U_(0x1) << SDMMC_WCR_WKENCINS_Pos)                 /**< (SDMMC_WCR) Wakeup Event Enable on Card Insertion Mask */
-#define SDMMC_WCR_WKENCINS(value)             (SDMMC_WCR_WKENCINS_Msk & ((value) << SDMMC_WCR_WKENCINS_Pos))
-#define   SDMMC_WCR_WKENCINS_DISABLED_Val     _U_(0x0)                                             /**< (SDMMC_WCR) Wakeup Event disabled.  */
-#define   SDMMC_WCR_WKENCINS_ENABLED_Val      _U_(0x1)                                             /**< (SDMMC_WCR) Wakeup Event enabled.  */
-#define SDMMC_WCR_WKENCINS_DISABLED           (SDMMC_WCR_WKENCINS_DISABLED_Val << SDMMC_WCR_WKENCINS_Pos) /**< (SDMMC_WCR) Wakeup Event disabled. Position  */
-#define SDMMC_WCR_WKENCINS_ENABLED            (SDMMC_WCR_WKENCINS_ENABLED_Val << SDMMC_WCR_WKENCINS_Pos) /**< (SDMMC_WCR) Wakeup Event enabled. Position  */
-#define SDMMC_WCR_WKENCREM_Pos                _U_(2)                                               /**< (SDMMC_WCR) Wakeup Event Enable on Card Removal Position */
-#define SDMMC_WCR_WKENCREM_Msk                (_U_(0x1) << SDMMC_WCR_WKENCREM_Pos)                 /**< (SDMMC_WCR) Wakeup Event Enable on Card Removal Mask */
-#define SDMMC_WCR_WKENCREM(value)             (SDMMC_WCR_WKENCREM_Msk & ((value) << SDMMC_WCR_WKENCREM_Pos))
-#define   SDMMC_WCR_WKENCREM_DISABLED_Val     _U_(0x0)                                             /**< (SDMMC_WCR) Wakeup Event disabled.  */
-#define   SDMMC_WCR_WKENCREM_ENABLED_Val      _U_(0x1)                                             /**< (SDMMC_WCR) Wakeup Event enabled.  */
-#define SDMMC_WCR_WKENCREM_DISABLED           (SDMMC_WCR_WKENCREM_DISABLED_Val << SDMMC_WCR_WKENCREM_Pos) /**< (SDMMC_WCR) Wakeup Event disabled. Position  */
-#define SDMMC_WCR_WKENCREM_ENABLED            (SDMMC_WCR_WKENCREM_ENABLED_Val << SDMMC_WCR_WKENCREM_Pos) /**< (SDMMC_WCR) Wakeup Event enabled. Position  */
-#define SDMMC_WCR_Msk                         _U_(0x07)                                            /**< (SDMMC_WCR) Register Mask  */
+#define SDMMC_WCR_Msk                         _U_(0x01)                                            /**< (SDMMC_WCR) Register Mask  */
 
 
 /* -------- SDMMC_CCR : (SDMMC Offset: 0x2C) (R/W 16) Clock Control Register -------- */
@@ -543,20 +529,6 @@
 #define   SDMMC_NISTER_SD_SDIO_BRDRDY_ENABLED_Val _U_(0x1)                                             /**< (SDMMC_NISTER) The BRDRDY status flag in SDMMC_NISTR is enabled.  */
 #define SDMMC_NISTER_SD_SDIO_BRDRDY_MASKED    (SDMMC_NISTER_SD_SDIO_BRDRDY_MASKED_Val << SDMMC_NISTER_SD_SDIO_BRDRDY_Pos) /**< (SDMMC_NISTER) The BRDRDY status flag in SDMMC_NISTR is masked. Position  */
 #define SDMMC_NISTER_SD_SDIO_BRDRDY_ENABLED   (SDMMC_NISTER_SD_SDIO_BRDRDY_ENABLED_Val << SDMMC_NISTER_SD_SDIO_BRDRDY_Pos) /**< (SDMMC_NISTER) The BRDRDY status flag in SDMMC_NISTR is enabled. Position  */
-#define SDMMC_NISTER_SD_SDIO_CINS_Pos         _U_(6)                                               /**< (SDMMC_NISTER) Card Insertion Status Enable Position */
-#define SDMMC_NISTER_SD_SDIO_CINS_Msk         (_U_(0x1) << SDMMC_NISTER_SD_SDIO_CINS_Pos)          /**< (SDMMC_NISTER) Card Insertion Status Enable Mask */
-#define SDMMC_NISTER_SD_SDIO_CINS(value)      (SDMMC_NISTER_SD_SDIO_CINS_Msk & ((value) << SDMMC_NISTER_SD_SDIO_CINS_Pos))
-#define   SDMMC_NISTER_SD_SDIO_CINS_MASKED_Val _U_(0x0)                                             /**< (SDMMC_NISTER) The CINS status flag in SDMMC_NISTR is masked.  */
-#define   SDMMC_NISTER_SD_SDIO_CINS_ENABLED_Val _U_(0x1)                                             /**< (SDMMC_NISTER) The CINS status flag in SDMMC_NISTR is enabled.  */
-#define SDMMC_NISTER_SD_SDIO_CINS_MASKED      (SDMMC_NISTER_SD_SDIO_CINS_MASKED_Val << SDMMC_NISTER_SD_SDIO_CINS_Pos) /**< (SDMMC_NISTER) The CINS status flag in SDMMC_NISTR is masked. Position  */
-#define SDMMC_NISTER_SD_SDIO_CINS_ENABLED     (SDMMC_NISTER_SD_SDIO_CINS_ENABLED_Val << SDMMC_NISTER_SD_SDIO_CINS_Pos) /**< (SDMMC_NISTER) The CINS status flag in SDMMC_NISTR is enabled. Position  */
-#define SDMMC_NISTER_SD_SDIO_CREM_Pos         _U_(7)                                               /**< (SDMMC_NISTER) Card Removal Status Enable Position */
-#define SDMMC_NISTER_SD_SDIO_CREM_Msk         (_U_(0x1) << SDMMC_NISTER_SD_SDIO_CREM_Pos)          /**< (SDMMC_NISTER) Card Removal Status Enable Mask */
-#define SDMMC_NISTER_SD_SDIO_CREM(value)      (SDMMC_NISTER_SD_SDIO_CREM_Msk & ((value) << SDMMC_NISTER_SD_SDIO_CREM_Pos))
-#define   SDMMC_NISTER_SD_SDIO_CREM_MASKED_Val _U_(0x0)                                             /**< (SDMMC_NISTER) The CREM status flag in SDMMC_NISTR is masked.  */
-#define   SDMMC_NISTER_SD_SDIO_CREM_ENABLED_Val _U_(0x1)                                             /**< (SDMMC_NISTER) The CREM status flag in SDMMC_NISTR is enabled.  */
-#define SDMMC_NISTER_SD_SDIO_CREM_MASKED      (SDMMC_NISTER_SD_SDIO_CREM_MASKED_Val << SDMMC_NISTER_SD_SDIO_CREM_Pos) /**< (SDMMC_NISTER) The CREM status flag in SDMMC_NISTR is masked. Position  */
-#define SDMMC_NISTER_SD_SDIO_CREM_ENABLED     (SDMMC_NISTER_SD_SDIO_CREM_ENABLED_Val << SDMMC_NISTER_SD_SDIO_CREM_Pos) /**< (SDMMC_NISTER) The CREM status flag in SDMMC_NISTR is enabled. Position  */
 #define SDMMC_NISTER_SD_SDIO_CINT_Pos         _U_(8)                                               /**< (SDMMC_NISTER) Card Interrupt Status Enable Position */
 #define SDMMC_NISTER_SD_SDIO_CINT_Msk         (_U_(0x1) << SDMMC_NISTER_SD_SDIO_CINT_Pos)          /**< (SDMMC_NISTER) Card Interrupt Status Enable Mask */
 #define SDMMC_NISTER_SD_SDIO_CINT(value)      (SDMMC_NISTER_SD_SDIO_CINT_Msk & ((value) << SDMMC_NISTER_SD_SDIO_CINT_Pos))
@@ -564,7 +536,7 @@
 #define   SDMMC_NISTER_SD_SDIO_CINT_ENABLED_Val _U_(0x1)                                             /**< (SDMMC_NISTER) The CINT status flag in SDMMC_NISTR is enabled.  */
 #define SDMMC_NISTER_SD_SDIO_CINT_MASKED      (SDMMC_NISTER_SD_SDIO_CINT_MASKED_Val << SDMMC_NISTER_SD_SDIO_CINT_Pos) /**< (SDMMC_NISTER) The CINT status flag in SDMMC_NISTR is masked. Position  */
 #define SDMMC_NISTER_SD_SDIO_CINT_ENABLED     (SDMMC_NISTER_SD_SDIO_CINT_ENABLED_Val << SDMMC_NISTER_SD_SDIO_CINT_Pos) /**< (SDMMC_NISTER) The CINT status flag in SDMMC_NISTR is enabled. Position  */
-#define SDMMC_NISTER_SD_SDIO_Msk              _U_(0x01FF)                                           /**< (SDMMC_NISTER_SD_SDIO) Register Mask  */
+#define SDMMC_NISTER_SD_SDIO_Msk              _U_(0x013F)                                           /**< (SDMMC_NISTER_SD_SDIO) Register Mask  */
 
 /* E_MMC mode */
 #define SDMMC_NISTER_E_MMC_CMDC_Pos           _U_(0)                                               /**< (SDMMC_NISTER) Command Complete Status Enable Position */
@@ -822,20 +794,6 @@
 #define   SDMMC_NISIER_SD_SDIO_BRDRDY_ENABLED_Val _U_(0x1)                                             /**< (SDMMC_NISIER) An interrupt is generated when the BRDRDY status rises in SDMMC_NISTR.  */
 #define SDMMC_NISIER_SD_SDIO_BRDRDY_MASKED    (SDMMC_NISIER_SD_SDIO_BRDRDY_MASKED_Val << SDMMC_NISIER_SD_SDIO_BRDRDY_Pos) /**< (SDMMC_NISIER) No interrupt is generated when the BRDRDY status rises in SDMMC_NISTR. Position  */
 #define SDMMC_NISIER_SD_SDIO_BRDRDY_ENABLED   (SDMMC_NISIER_SD_SDIO_BRDRDY_ENABLED_Val << SDMMC_NISIER_SD_SDIO_BRDRDY_Pos) /**< (SDMMC_NISIER) An interrupt is generated when the BRDRDY status rises in SDMMC_NISTR. Position  */
-#define SDMMC_NISIER_SD_SDIO_CINS_Pos         _U_(6)                                               /**< (SDMMC_NISIER) Card Insertion Signal Enable Position */
-#define SDMMC_NISIER_SD_SDIO_CINS_Msk         (_U_(0x1) << SDMMC_NISIER_SD_SDIO_CINS_Pos)          /**< (SDMMC_NISIER) Card Insertion Signal Enable Mask */
-#define SDMMC_NISIER_SD_SDIO_CINS(value)      (SDMMC_NISIER_SD_SDIO_CINS_Msk & ((value) << SDMMC_NISIER_SD_SDIO_CINS_Pos))
-#define   SDMMC_NISIER_SD_SDIO_CINS_MASKED_Val _U_(0x0)                                             /**< (SDMMC_NISIER) No interrupt is generated when the CINS status rises in SDMMC_NISTR.  */
-#define   SDMMC_NISIER_SD_SDIO_CINS_ENABLED_Val _U_(0x1)                                             /**< (SDMMC_NISIER) An interrupt is generated when the CINS status rises in SDMMC_NISTR.  */
-#define SDMMC_NISIER_SD_SDIO_CINS_MASKED      (SDMMC_NISIER_SD_SDIO_CINS_MASKED_Val << SDMMC_NISIER_SD_SDIO_CINS_Pos) /**< (SDMMC_NISIER) No interrupt is generated when the CINS status rises in SDMMC_NISTR. Position  */
-#define SDMMC_NISIER_SD_SDIO_CINS_ENABLED     (SDMMC_NISIER_SD_SDIO_CINS_ENABLED_Val << SDMMC_NISIER_SD_SDIO_CINS_Pos) /**< (SDMMC_NISIER) An interrupt is generated when the CINS status rises in SDMMC_NISTR. Position  */
-#define SDMMC_NISIER_SD_SDIO_CREM_Pos         _U_(7)                                               /**< (SDMMC_NISIER) Card Removal Signal Enable Position */
-#define SDMMC_NISIER_SD_SDIO_CREM_Msk         (_U_(0x1) << SDMMC_NISIER_SD_SDIO_CREM_Pos)          /**< (SDMMC_NISIER) Card Removal Signal Enable Mask */
-#define SDMMC_NISIER_SD_SDIO_CREM(value)      (SDMMC_NISIER_SD_SDIO_CREM_Msk & ((value) << SDMMC_NISIER_SD_SDIO_CREM_Pos))
-#define   SDMMC_NISIER_SD_SDIO_CREM_MASKED_Val _U_(0x0)                                             /**< (SDMMC_NISIER) No interrupt is generated when the CREM status rises in SDMMC_NISTR.  */
-#define   SDMMC_NISIER_SD_SDIO_CREM_ENABLED_Val _U_(0x1)                                             /**< (SDMMC_NISIER) An interrupt is generated when the CREM status rises in SDMMC_NISTR.  */
-#define SDMMC_NISIER_SD_SDIO_CREM_MASKED      (SDMMC_NISIER_SD_SDIO_CREM_MASKED_Val << SDMMC_NISIER_SD_SDIO_CREM_Pos) /**< (SDMMC_NISIER) No interrupt is generated when the CREM status rises in SDMMC_NISTR. Position  */
-#define SDMMC_NISIER_SD_SDIO_CREM_ENABLED     (SDMMC_NISIER_SD_SDIO_CREM_ENABLED_Val << SDMMC_NISIER_SD_SDIO_CREM_Pos) /**< (SDMMC_NISIER) An interrupt is generated when the CREM status rises in SDMMC_NISTR. Position  */
 #define SDMMC_NISIER_SD_SDIO_CINT_Pos         _U_(8)                                               /**< (SDMMC_NISIER) Card Interrupt Signal Enable Position */
 #define SDMMC_NISIER_SD_SDIO_CINT_Msk         (_U_(0x1) << SDMMC_NISIER_SD_SDIO_CINT_Pos)          /**< (SDMMC_NISIER) Card Interrupt Signal Enable Mask */
 #define SDMMC_NISIER_SD_SDIO_CINT(value)      (SDMMC_NISIER_SD_SDIO_CINT_Msk & ((value) << SDMMC_NISIER_SD_SDIO_CINT_Pos))
@@ -843,7 +801,7 @@
 #define   SDMMC_NISIER_SD_SDIO_CINT_ENABLED_Val _U_(0x1)                                             /**< (SDMMC_NISIER) An interrupt is generated when the CINT status rises in SDMMC_NISTR.  */
 #define SDMMC_NISIER_SD_SDIO_CINT_MASKED      (SDMMC_NISIER_SD_SDIO_CINT_MASKED_Val << SDMMC_NISIER_SD_SDIO_CINT_Pos) /**< (SDMMC_NISIER) No interrupt is generated when the CINT status rises in SDMMC_NISTR. Position  */
 #define SDMMC_NISIER_SD_SDIO_CINT_ENABLED     (SDMMC_NISIER_SD_SDIO_CINT_ENABLED_Val << SDMMC_NISIER_SD_SDIO_CINT_Pos) /**< (SDMMC_NISIER) An interrupt is generated when the CINT status rises in SDMMC_NISTR. Position  */
-#define SDMMC_NISIER_SD_SDIO_Msk              _U_(0x01FF)                                           /**< (SDMMC_NISIER_SD_SDIO) Register Mask  */
+#define SDMMC_NISIER_SD_SDIO_Msk              _U_(0x013F)                                           /**< (SDMMC_NISIER_SD_SDIO) Register Mask  */
 
 /* E_MMC mode */
 #define SDMMC_NISIER_E_MMC_CMDC_Pos           _U_(0)                                               /**< (SDMMC_NISIER) Command Complete Signal Enable Position */
@@ -1148,6 +1106,10 @@
 #define SDMMC_CA0R_SLTYPE_Pos                 _U_(30)                                              /**< (SDMMC_CA0R) Slot Type Position */
 #define SDMMC_CA0R_SLTYPE_Msk                 (_U_(0x3) << SDMMC_CA0R_SLTYPE_Pos)                  /**< (SDMMC_CA0R) Slot Type Mask */
 #define SDMMC_CA0R_SLTYPE(value)              (SDMMC_CA0R_SLTYPE_Msk & ((value) << SDMMC_CA0R_SLTYPE_Pos))
+#define   SDMMC_CA0R_SLTYPE_REMOVABLECARD_Val _U_(0x0)                                             /**< (SDMMC_CA0R) Removable Card Slot  */
+#define   SDMMC_CA0R_SLTYPE_EMBEDDED_Val      _U_(0x1)                                             /**< (SDMMC_CA0R) Embedded Slot for One Device  */
+#define SDMMC_CA0R_SLTYPE_REMOVABLECARD       (SDMMC_CA0R_SLTYPE_REMOVABLECARD_Val << SDMMC_CA0R_SLTYPE_Pos) /**< (SDMMC_CA0R) Removable Card Slot Position  */
+#define SDMMC_CA0R_SLTYPE_EMBEDDED            (SDMMC_CA0R_SLTYPE_EMBEDDED_Val << SDMMC_CA0R_SLTYPE_Pos) /**< (SDMMC_CA0R) Embedded Slot for One Device Position  */
 #define SDMMC_CA0R_Msk                        _U_(0xF7EFFFBF)                                      /**< (SDMMC_CA0R) Register Mask  */
 
 
@@ -1252,6 +1214,12 @@
 #define SDMMC_AESR_ERRST_Pos                  _U_(0)                                               /**< (SDMMC_AESR) ADMA Error State Position */
 #define SDMMC_AESR_ERRST_Msk                  (_U_(0x3) << SDMMC_AESR_ERRST_Pos)                   /**< (SDMMC_AESR) ADMA Error State Mask */
 #define SDMMC_AESR_ERRST(value)               (SDMMC_AESR_ERRST_Msk & ((value) << SDMMC_AESR_ERRST_Pos))
+#define   SDMMC_AESR_ERRST_STOP_Val           _U_(0x0)                                             /**< (SDMMC_AESR) (Stop DMA) SDMMC_ASAR points to the descriptor following the error descriptor  */
+#define   SDMMC_AESR_ERRST_FDS_Val            _U_(0x1)                                             /**< (SDMMC_AESR) (Fetch Descriptor) SDMMC_ASAR points to the error descriptor  */
+#define   SDMMC_AESR_ERRST_TFR_Val            _U_(0x3)                                             /**< (SDMMC_AESR) (Transfer Data) SDMMC_ASAR points to the descriptor following the error descriptor  */
+#define SDMMC_AESR_ERRST_STOP                 (SDMMC_AESR_ERRST_STOP_Val << SDMMC_AESR_ERRST_Pos)  /**< (SDMMC_AESR) (Stop DMA) SDMMC_ASAR points to the descriptor following the error descriptor Position  */
+#define SDMMC_AESR_ERRST_FDS                  (SDMMC_AESR_ERRST_FDS_Val << SDMMC_AESR_ERRST_Pos)   /**< (SDMMC_AESR) (Fetch Descriptor) SDMMC_ASAR points to the error descriptor Position  */
+#define SDMMC_AESR_ERRST_TFR                  (SDMMC_AESR_ERRST_TFR_Val << SDMMC_AESR_ERRST_Pos)   /**< (SDMMC_AESR) (Transfer Data) SDMMC_ASAR points to the descriptor following the error descriptor Position  */
 #define SDMMC_AESR_LMIS_Pos                   _U_(2)                                               /**< (SDMMC_AESR) ADMA Length Mismatch Error Position */
 #define SDMMC_AESR_LMIS_Msk                   (_U_(0x1) << SDMMC_AESR_LMIS_Pos)                    /**< (SDMMC_AESR) ADMA Length Mismatch Error Mask */
 #define SDMMC_AESR_LMIS(value)                (SDMMC_AESR_LMIS_Msk & ((value) << SDMMC_AESR_LMIS_Pos))
@@ -1378,6 +1346,8 @@
 #define SDMMC_CACR_KEY_Pos                    _U_(8)                                               /**< (SDMMC_CACR) Key Position */
 #define SDMMC_CACR_KEY_Msk                    (_U_(0xFF) << SDMMC_CACR_KEY_Pos)                    /**< (SDMMC_CACR) Key Mask */
 #define SDMMC_CACR_KEY(value)                 (SDMMC_CACR_KEY_Msk & ((value) << SDMMC_CACR_KEY_Pos))
+#define   SDMMC_CACR_KEY_KEY_Val              _U_(0x46)                                            /**< (SDMMC_CACR) Writing any other value in this field aborts the write operation of the CAPWREN bit. Always reads as 0.  */
+#define SDMMC_CACR_KEY_KEY                    (SDMMC_CACR_KEY_KEY_Val << SDMMC_CACR_KEY_Pos)       /**< (SDMMC_CACR) Writing any other value in this field aborts the write operation of the CAPWREN bit. Always reads as 0. Position  */
 #define SDMMC_CACR_Msk                        _U_(0x0000FF01)                                      /**< (SDMMC_CACR) Register Mask  */
 
 
@@ -1390,27 +1360,6 @@
 #define SDMMC_DBGR_NIDBG_DISABLED             (SDMMC_DBGR_NIDBG_DISABLED_Val << SDMMC_DBGR_NIDBG_Pos) /**< (SDMMC_DBGR) Reading the SDMMC_BDPR via debugger increments the dual port RAM read pointer. Position  */
 #define SDMMC_DBGR_NIDBG_ENABLED              (SDMMC_DBGR_NIDBG_ENABLED_Val << SDMMC_DBGR_NIDBG_Pos) /**< (SDMMC_DBGR) Reading the SDMMC_BDPR via debugger does not increment the dual port RAM read pointer. Position  */
 #define SDMMC_DBGR_Msk                        _U_(0x00000001)                                      /**< (SDMMC_DBGR) Register Mask  */
-
-
-/* -------- SDMMC_VERSION1 : (SDMMC Offset: 0x2E8) ( R/ 32) Version Register 1 -------- */
-#define SDMMC_VERSION1_VERSION_Pos            _U_(0)                                               /**< (SDMMC_VERSION1) Version of the Hardware Module Position */
-#define SDMMC_VERSION1_VERSION_Msk            (_U_(0xFFFFFFFF) << SDMMC_VERSION1_VERSION_Pos)      /**< (SDMMC_VERSION1) Version of the Hardware Module Mask */
-#define SDMMC_VERSION1_VERSION(value)         (SDMMC_VERSION1_VERSION_Msk & ((value) << SDMMC_VERSION1_VERSION_Pos))
-#define SDMMC_VERSION1_Msk                    _U_(0xFFFFFFFF)                                      /**< (SDMMC_VERSION1) Register Mask  */
-
-
-/* -------- SDMMC_VERSION2 : (SDMMC Offset: 0x2EC) ( R/ 32) Version Register 2 -------- */
-#define SDMMC_VERSION2_VERSION_Pos            _U_(0)                                               /**< (SDMMC_VERSION2) Version of the Hardware Module Position */
-#define SDMMC_VERSION2_VERSION_Msk            (_U_(0xFFFFFFFF) << SDMMC_VERSION2_VERSION_Pos)      /**< (SDMMC_VERSION2) Version of the Hardware Module Mask */
-#define SDMMC_VERSION2_VERSION(value)         (SDMMC_VERSION2_VERSION_Msk & ((value) << SDMMC_VERSION2_VERSION_Pos))
-#define SDMMC_VERSION2_Msk                    _U_(0xFFFFFFFF)                                      /**< (SDMMC_VERSION2) Register Mask  */
-
-
-/* -------- SDMMC_VERSION3 : (SDMMC Offset: 0x2FC) ( R/ 32) Version Register 3 -------- */
-#define SDMMC_VERSION3_VERSION_Pos            _U_(0)                                               /**< (SDMMC_VERSION3) Version of the Hardware Module Position */
-#define SDMMC_VERSION3_VERSION_Msk            (_U_(0xFFFFFFFF) << SDMMC_VERSION3_VERSION_Pos)      /**< (SDMMC_VERSION3) Version of the Hardware Module Mask */
-#define SDMMC_VERSION3_VERSION(value)         (SDMMC_VERSION3_VERSION_Msk & ((value) << SDMMC_VERSION3_VERSION_Pos))
-#define SDMMC_VERSION3_Msk                    _U_(0xFFFFFFFF)                                      /**< (SDMMC_VERSION3) Register Mask  */
 
 
 /** \brief SDMMC register offsets definitions */
@@ -1456,9 +1405,6 @@
 #define SDMMC_TUNSR_REG_OFST           (0x224)             /**< (SDMMC_TUNSR) Tuning Status Register Offset */
 #define SDMMC_CACR_REG_OFST            (0x230)             /**< (SDMMC_CACR) Capabilities Control Register Offset */
 #define SDMMC_DBGR_REG_OFST            (0x234)             /**< (SDMMC_DBGR) Debug Register Offset */
-#define SDMMC_VERSION1_REG_OFST        (0x2E8)             /**< (SDMMC_VERSION1) Version Register 1 Offset */
-#define SDMMC_VERSION2_REG_OFST        (0x2EC)             /**< (SDMMC_VERSION2) Version Register 2 Offset */
-#define SDMMC_VERSION3_REG_OFST        (0x2FC)             /**< (SDMMC_VERSION3) Version Register 3 Offset */
 
 #if !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__))
 /** \brief SDMMC register API structure */
@@ -1514,11 +1460,6 @@ typedef struct
   __I   uint8_t                        Reserved8[0x08];
   __IO  uint32_t                       SDMMC_CACR;         /**< Offset: 0x230 (R/W  32) Capabilities Control Register */
   __IO  uint32_t                       SDMMC_DBGR;         /**< Offset: 0x234 (R/W  32) Debug Register */
-  __I   uint8_t                        Reserved9[0xB0];
-  __I   uint32_t                       SDMMC_VERSION1;     /**< Offset: 0x2E8 (R/   32) Version Register 1 */
-  __I   uint32_t                       SDMMC_VERSION2;     /**< Offset: 0x2EC (R/   32) Version Register 2 */
-  __I   uint8_t                        Reserved10[0x0C];
-  __I   uint32_t                       SDMMC_VERSION3;     /**< Offset: 0x2FC (R/   32) Version Register 3 */
 } sdmmc_registers_t;
 
 
