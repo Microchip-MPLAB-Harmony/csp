@@ -120,7 +120,7 @@ static void EEPROM_WriteExecute( bool waitForDone )
 void EEPROM_Initialize (void)
 {
     /* Before accessing the Data EEPROM, configure the number of Wait states */
-    CFGCON2bits.EEWS = 7;
+    CFGCON2bits.EEWS = 2;
 
     EECONbits.ON = EEPROM_ENABLE;                       // Turn on the EEPROM
 
@@ -130,17 +130,22 @@ void EEPROM_Initialize (void)
 
     EECONbits.CMD = EEPROM_CONFIG_WRITE_OPERATION;      // Set the command to Configuration Write
 
-    EEADDR = 0x00;                                      // Addr 0x00 = DEVEE1;
+    EEADDR = 0x00;                                      // Addr 0x00 = DEVEE0;
+    EEDATA = DEVEE0;
+    EEPROM_WriteExecute( true );                        // Execute write and wait for finish
+
+    EEADDR = 0x04;                                      // Addr 0x04 = DEVEE1;
     EEDATA = DEVEE1;
     EEPROM_WriteExecute( true );                        // Execute write and wait for finish
 
-    EEADDR = 0x04;                                      // Addr 0x04 = DEVEE2;
+    EEADDR = 0x08;                                      // Addr 0x08 = DEVEE2;
     EEDATA = DEVEE2;
     EEPROM_WriteExecute( true );                        // Execute write and wait for finish
 
-    EEADDR = 0x08;                                      // Addr 0x08 = DEVEE3;
+    EEADDR = 0x0C;                                      // Addr 0x0C = DEVEE3;
     EEDATA = DEVEE3;
     EEPROM_WriteExecute( true );                        // Execute write and wait for finish
+
 
     EECONCLR = _EECON_WREN_MASK;                        // Turn off writes.
 }
