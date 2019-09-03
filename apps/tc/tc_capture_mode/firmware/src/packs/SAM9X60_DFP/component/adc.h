@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-04-23T19:01:17Z */
+/* file generated from device description version 2019-08-22T13:04:26Z */
 #ifndef _SAM9X_ADC_COMPONENT_H_
 #define _SAM9X_ADC_COMPONENT_H_
 
@@ -723,8 +723,8 @@
 #define   ADC_EMR_SRCCLK_GCLK_Val             _U_(0x1)                                             /**< (ADC_EMR) GCLK is the source clock for the ADC prescaler, thus the ADC clock can be independent of the core/peripheral clock.  */
 #define ADC_EMR_SRCCLK_PERIPH_CLK             (ADC_EMR_SRCCLK_PERIPH_CLK_Val << ADC_EMR_SRCCLK_Pos) /**< (ADC_EMR) The peripheral clock is the source for the ADC prescaler. Position  */
 #define ADC_EMR_SRCCLK_GCLK                   (ADC_EMR_SRCCLK_GCLK_Val << ADC_EMR_SRCCLK_Pos)      /**< (ADC_EMR) GCLK is the source clock for the ADC prescaler, thus the ADC clock can be independent of the core/peripheral clock. Position  */
-#define ADC_EMR_TRACKX4_Pos                   _U_(22)                                              /**< (ADC_EMR) Tracking Time 44 Position */
-#define ADC_EMR_TRACKX4_Msk                   (_U_(0x1) << ADC_EMR_TRACKX4_Pos)                    /**< (ADC_EMR) Tracking Time 44 Mask */
+#define ADC_EMR_TRACKX4_Pos                   _U_(22)                                              /**< (ADC_EMR) Tracking Time x4 Position */
+#define ADC_EMR_TRACKX4_Msk                   (_U_(0x1) << ADC_EMR_TRACKX4_Pos)                    /**< (ADC_EMR) Tracking Time x4 Mask */
 #define ADC_EMR_TRACKX4(value)                (ADC_EMR_TRACKX4_Msk & ((value) << ADC_EMR_TRACKX4_Pos))
 #define ADC_EMR_TAG_Pos                       _U_(24)                                              /**< (ADC_EMR) Tag of ADC_LCDR Position */
 #define ADC_EMR_TAG_Msk                       (_U_(0x1) << ADC_EMR_TAG_Pos)                        /**< (ADC_EMR) Tag of ADC_LCDR Mask */
@@ -732,12 +732,12 @@
 #define ADC_EMR_SIGNMODE_Pos                  _U_(25)                                              /**< (ADC_EMR) Sign Mode Position */
 #define ADC_EMR_SIGNMODE_Msk                  (_U_(0x3) << ADC_EMR_SIGNMODE_Pos)                   /**< (ADC_EMR) Sign Mode Mask */
 #define ADC_EMR_SIGNMODE(value)               (ADC_EMR_SIGNMODE_Msk & ((value) << ADC_EMR_SIGNMODE_Pos))
-#define   ADC_EMR_SIGNMODE_SE_UNSG_DF_SIGN_Val _U_(0x0)                                             /**< (ADC_EMR) Single-Ended channels: Unsigned conversions.Pseudo-differential channels and Differential channels: Signed conversions.  */
-#define   ADC_EMR_SIGNMODE_SE_SIGN_DF_UNSG_Val _U_(0x1)                                             /**< (ADC_EMR) Single-Ended channels: Signed conversions.Pseudo-differential channels and Differential channels: Unsigned conversions.  */
+#define   ADC_EMR_SIGNMODE_SE_UNSG_DF_SIGN_Val _U_(0x0)                                             /**< (ADC_EMR) Single-Ended channels: Unsigned conversions. Pseudo-differential channels and Differential channels: Signed conversions.  */
+#define   ADC_EMR_SIGNMODE_SE_SIGN_DF_UNSG_Val _U_(0x1)                                             /**< (ADC_EMR) Single-Ended channels: Signed conversions. Pseudo-differential channels and Differential channels: Unsigned conversions.  */
 #define   ADC_EMR_SIGNMODE_ALL_UNSIGNED_Val   _U_(0x2)                                             /**< (ADC_EMR) All channels: Unsigned conversions.  */
 #define   ADC_EMR_SIGNMODE_ALL_SIGNED_Val     _U_(0x3)                                             /**< (ADC_EMR) All channels: Signed conversions.  */
-#define ADC_EMR_SIGNMODE_SE_UNSG_DF_SIGN      (ADC_EMR_SIGNMODE_SE_UNSG_DF_SIGN_Val << ADC_EMR_SIGNMODE_Pos) /**< (ADC_EMR) Single-Ended channels: Unsigned conversions.Pseudo-differential channels and Differential channels: Signed conversions. Position  */
-#define ADC_EMR_SIGNMODE_SE_SIGN_DF_UNSG      (ADC_EMR_SIGNMODE_SE_SIGN_DF_UNSG_Val << ADC_EMR_SIGNMODE_Pos) /**< (ADC_EMR) Single-Ended channels: Signed conversions.Pseudo-differential channels and Differential channels: Unsigned conversions. Position  */
+#define ADC_EMR_SIGNMODE_SE_UNSG_DF_SIGN      (ADC_EMR_SIGNMODE_SE_UNSG_DF_SIGN_Val << ADC_EMR_SIGNMODE_Pos) /**< (ADC_EMR) Single-Ended channels: Unsigned conversions. Pseudo-differential channels and Differential channels: Signed conversions. Position  */
+#define ADC_EMR_SIGNMODE_SE_SIGN_DF_UNSG      (ADC_EMR_SIGNMODE_SE_SIGN_DF_UNSG_Val << ADC_EMR_SIGNMODE_Pos) /**< (ADC_EMR) Single-Ended channels: Signed conversions. Pseudo-differential channels and Differential channels: Unsigned conversions. Position  */
 #define ADC_EMR_SIGNMODE_ALL_UNSIGNED         (ADC_EMR_SIGNMODE_ALL_UNSIGNED_Val << ADC_EMR_SIGNMODE_Pos) /**< (ADC_EMR) All channels: Unsigned conversions. Position  */
 #define ADC_EMR_SIGNMODE_ALL_SIGNED           (ADC_EMR_SIGNMODE_ALL_SIGNED_Val << ADC_EMR_SIGNMODE_Pos) /**< (ADC_EMR) All channels: Signed conversions. Position  */
 #define ADC_EMR_ADCMODE_Pos                   _U_(28)                                              /**< (ADC_EMR) ADC Running Mode Position */
@@ -753,7 +753,7 @@
 #define ADC_EMR_ADCMODE_GAIN_ERROR_LOW        (ADC_EMR_ADCMODE_GAIN_ERROR_LOW_Val << ADC_EMR_ADCMODE_Pos) /**< (ADC_EMR) Gain Error mode to measure the gain error. See Table 7-6. Position  */
 #define ADC_EMR_Msk                           _U_(0x377732F7)                                      /**< (ADC_EMR) Register Mask  */
 
-#define ADC_EMR_TRACKX_Pos                    _U_(22)                                              /**< (ADC_EMR Position) Tracking Time 44 */
+#define ADC_EMR_TRACKX_Pos                    _U_(22)                                              /**< (ADC_EMR Position) Tracking Time x4 */
 #define ADC_EMR_TRACKX_Msk                    (_U_(0x1) << ADC_EMR_TRACKX_Pos)                     /**< (ADC_EMR Mask) TRACKX */
 #define ADC_EMR_TRACKX(value)                 (ADC_EMR_TRACKX_Msk & ((value) << ADC_EMR_TRACKX_Pos)) 
 
@@ -957,19 +957,19 @@
 #define ADC_TRGR_TRGMOD_Pos                   _U_(0)                                               /**< (ADC_TRGR) Trigger Mode Position */
 #define ADC_TRGR_TRGMOD_Msk                   (_U_(0x7) << ADC_TRGR_TRGMOD_Pos)                    /**< (ADC_TRGR) Trigger Mode Mask */
 #define ADC_TRGR_TRGMOD(value)                (ADC_TRGR_TRGMOD_Msk & ((value) << ADC_TRGR_TRGMOD_Pos))
-#define   ADC_TRGR_TRGMOD_NO_TRIGGER_Val      _U_(0x0)                                             /**< (ADC_TRGR) No trigger, only software trigger can start conversions  */
-#define   ADC_TRGR_TRGMOD_EXT_TRIG_RISE_Val   _U_(0x1)                                             /**< (ADC_TRGR) Rising edge of the selected trigger event, defined in ADC_MR.TRGSEL  */
-#define   ADC_TRGR_TRGMOD_EXT_TRIG_FALL_Val   _U_(0x2)                                             /**< (ADC_TRGR) Falling edge of the selected trigger event  */
-#define   ADC_TRGR_TRGMOD_EXT_TRIG_ANY_Val    _U_(0x3)                                             /**< (ADC_TRGR) Any edge of the selected trigger event  */
+#define   ADC_TRGR_TRGMOD_NO_TRIGGER_Val      _U_(0x0)                                             /**< (ADC_TRGR) No hardware trigger enabled, only software trigger can start conversions  */
+#define   ADC_TRGR_TRGMOD_EXT_TRIG_RISE_Val   _U_(0x1)                                             /**< (ADC_TRGR) Rising edge of the selected hardware trigger event, defined in ADC_MR.TRGSEL  */
+#define   ADC_TRGR_TRGMOD_EXT_TRIG_FALL_Val   _U_(0x2)                                             /**< (ADC_TRGR) Falling edge of the selected hardware trigger event  */
+#define   ADC_TRGR_TRGMOD_EXT_TRIG_ANY_Val    _U_(0x3)                                             /**< (ADC_TRGR) Any edge of the selected hardware trigger event  */
 #define   ADC_TRGR_TRGMOD_PEN_TRIG_Val        _U_(0x4)                                             /**< (ADC_TRGR) Pen Detect Trigger (shall be selected only if PENDET is set and TSMODE > 0)  */
-#define   ADC_TRGR_TRGMOD_PERIOD_TRIG_Val     _U_(0x5)                                             /**< (ADC_TRGR) ADC internal periodic trigger (see field TRGPER)  */
+#define   ADC_TRGR_TRGMOD_PERIOD_TRIG_Val     _U_(0x5)                                             /**< (ADC_TRGR) ADC internal hardware periodic trigger (see field TRGPER)  */
 #define   ADC_TRGR_TRGMOD_CONTINUOUS_Val      _U_(0x6)                                             /**< (ADC_TRGR) Continuous mode  */
-#define ADC_TRGR_TRGMOD_NO_TRIGGER            (ADC_TRGR_TRGMOD_NO_TRIGGER_Val << ADC_TRGR_TRGMOD_Pos) /**< (ADC_TRGR) No trigger, only software trigger can start conversions Position  */
-#define ADC_TRGR_TRGMOD_EXT_TRIG_RISE         (ADC_TRGR_TRGMOD_EXT_TRIG_RISE_Val << ADC_TRGR_TRGMOD_Pos) /**< (ADC_TRGR) Rising edge of the selected trigger event, defined in ADC_MR.TRGSEL Position  */
-#define ADC_TRGR_TRGMOD_EXT_TRIG_FALL         (ADC_TRGR_TRGMOD_EXT_TRIG_FALL_Val << ADC_TRGR_TRGMOD_Pos) /**< (ADC_TRGR) Falling edge of the selected trigger event Position  */
-#define ADC_TRGR_TRGMOD_EXT_TRIG_ANY          (ADC_TRGR_TRGMOD_EXT_TRIG_ANY_Val << ADC_TRGR_TRGMOD_Pos) /**< (ADC_TRGR) Any edge of the selected trigger event Position  */
+#define ADC_TRGR_TRGMOD_NO_TRIGGER            (ADC_TRGR_TRGMOD_NO_TRIGGER_Val << ADC_TRGR_TRGMOD_Pos) /**< (ADC_TRGR) No hardware trigger enabled, only software trigger can start conversions Position  */
+#define ADC_TRGR_TRGMOD_EXT_TRIG_RISE         (ADC_TRGR_TRGMOD_EXT_TRIG_RISE_Val << ADC_TRGR_TRGMOD_Pos) /**< (ADC_TRGR) Rising edge of the selected hardware trigger event, defined in ADC_MR.TRGSEL Position  */
+#define ADC_TRGR_TRGMOD_EXT_TRIG_FALL         (ADC_TRGR_TRGMOD_EXT_TRIG_FALL_Val << ADC_TRGR_TRGMOD_Pos) /**< (ADC_TRGR) Falling edge of the selected hardware trigger event Position  */
+#define ADC_TRGR_TRGMOD_EXT_TRIG_ANY          (ADC_TRGR_TRGMOD_EXT_TRIG_ANY_Val << ADC_TRGR_TRGMOD_Pos) /**< (ADC_TRGR) Any edge of the selected hardware trigger event Position  */
 #define ADC_TRGR_TRGMOD_PEN_TRIG              (ADC_TRGR_TRGMOD_PEN_TRIG_Val << ADC_TRGR_TRGMOD_Pos) /**< (ADC_TRGR) Pen Detect Trigger (shall be selected only if PENDET is set and TSMODE > 0) Position  */
-#define ADC_TRGR_TRGMOD_PERIOD_TRIG           (ADC_TRGR_TRGMOD_PERIOD_TRIG_Val << ADC_TRGR_TRGMOD_Pos) /**< (ADC_TRGR) ADC internal periodic trigger (see field TRGPER) Position  */
+#define ADC_TRGR_TRGMOD_PERIOD_TRIG           (ADC_TRGR_TRGMOD_PERIOD_TRIG_Val << ADC_TRGR_TRGMOD_Pos) /**< (ADC_TRGR) ADC internal hardware periodic trigger (see field TRGPER) Position  */
 #define ADC_TRGR_TRGMOD_CONTINUOUS            (ADC_TRGR_TRGMOD_CONTINUOUS_Val << ADC_TRGR_TRGMOD_Pos) /**< (ADC_TRGR) Continuous mode Position  */
 #define ADC_TRGR_TRGPER_Pos                   _U_(16)                                              /**< (ADC_TRGR) Trigger Period Position */
 #define ADC_TRGR_TRGPER_Msk                   (_U_(0xFFFF) << ADC_TRGR_TRGPER_Pos)                 /**< (ADC_TRGR) Trigger Period Mask */
@@ -1053,8 +1053,8 @@
 #define ADC_WPMR_WPKEY_Pos                    _U_(8)                                               /**< (ADC_WPMR) Write Protection Key Position */
 #define ADC_WPMR_WPKEY_Msk                    (_U_(0xFFFFFF) << ADC_WPMR_WPKEY_Pos)                /**< (ADC_WPMR) Write Protection Key Mask */
 #define ADC_WPMR_WPKEY(value)                 (ADC_WPMR_WPKEY_Msk & ((value) << ADC_WPMR_WPKEY_Pos))
-#define   ADC_WPMR_WPKEY_PASSWD_Val           _U_(0x414443)                                        /**< (ADC_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit.Always reads as 0  */
-#define ADC_WPMR_WPKEY_PASSWD                 (ADC_WPMR_WPKEY_PASSWD_Val << ADC_WPMR_WPKEY_Pos)    /**< (ADC_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit.Always reads as 0 Position  */
+#define   ADC_WPMR_WPKEY_PASSWD_Val           _U_(0x414443)                                        /**< (ADC_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit. Always reads as 0  */
+#define ADC_WPMR_WPKEY_PASSWD                 (ADC_WPMR_WPKEY_PASSWD_Val << ADC_WPMR_WPKEY_Pos)    /**< (ADC_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit. Always reads as 0 Position  */
 #define ADC_WPMR_Msk                          _U_(0xFFFFFF07)                                      /**< (ADC_WPMR) Register Mask  */
 
 
@@ -1066,16 +1066,6 @@
 #define ADC_WPSR_WPVSRC_Msk                   (_U_(0xFFFF) << ADC_WPSR_WPVSRC_Pos)                 /**< (ADC_WPSR) Write Protection Violation Source Mask */
 #define ADC_WPSR_WPVSRC(value)                (ADC_WPSR_WPVSRC_Msk & ((value) << ADC_WPSR_WPVSRC_Pos))
 #define ADC_WPSR_Msk                          _U_(0x00FFFF01)                                      /**< (ADC_WPSR) Register Mask  */
-
-
-/* -------- ADC_VERSION : (ADC Offset: 0xFC) ( R/ 32) Version Register -------- */
-#define ADC_VERSION_VERSION_Pos               _U_(0)                                               /**< (ADC_VERSION) Version of the Hardware Module Position */
-#define ADC_VERSION_VERSION_Msk               (_U_(0xFFF) << ADC_VERSION_VERSION_Pos)              /**< (ADC_VERSION) Version of the Hardware Module Mask */
-#define ADC_VERSION_VERSION(value)            (ADC_VERSION_VERSION_Msk & ((value) << ADC_VERSION_VERSION_Pos))
-#define ADC_VERSION_MFN_Pos                   _U_(16)                                              /**< (ADC_VERSION) Metal Fix Number Position */
-#define ADC_VERSION_MFN_Msk                   (_U_(0x7) << ADC_VERSION_MFN_Pos)                    /**< (ADC_VERSION) Metal Fix Number Mask */
-#define ADC_VERSION_MFN(value)                (ADC_VERSION_MFN_Msk & ((value) << ADC_VERSION_MFN_Pos))
-#define ADC_VERSION_Msk                       _U_(0x00070FFF)                                      /**< (ADC_VERSION) Register Mask  */
 
 
 /** \brief ADC register offsets definitions */
@@ -1110,7 +1100,6 @@
 #define ADC_TSCVR_REG_OFST             (0xDC)              /**< (ADC_TSCVR) Touchscreen Correction Values Register Offset */
 #define ADC_WPMR_REG_OFST              (0xE4)              /**< (ADC_WPMR) Write Protection Mode Register Offset */
 #define ADC_WPSR_REG_OFST              (0xE8)              /**< (ADC_WPSR) Write Protection Status Register Offset */
-#define ADC_VERSION_REG_OFST           (0xFC)              /**< (ADC_VERSION) Version Register Offset */
 
 #if !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__))
 /** \brief ADC register API structure */
@@ -1154,8 +1143,6 @@ typedef struct
   __I   uint8_t                        Reserved7[0x04];
   __IO  uint32_t                       ADC_WPMR;           /**< Offset: 0xE4 (R/W  32) Write Protection Mode Register */
   __I   uint32_t                       ADC_WPSR;           /**< Offset: 0xE8 (R/   32) Write Protection Status Register */
-  __I   uint8_t                        Reserved8[0x10];
-  __I   uint32_t                       ADC_VERSION;        /**< Offset: 0xFC (R/   32) Version Register */
 } adc_registers_t;
 
 
