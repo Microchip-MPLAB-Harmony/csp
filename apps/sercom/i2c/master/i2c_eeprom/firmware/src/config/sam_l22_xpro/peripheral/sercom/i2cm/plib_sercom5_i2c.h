@@ -455,6 +455,49 @@ SERCOM_I2C_ERROR SERCOM5_I2C_ErrorGet(void);
 
 void SERCOM5_I2C_CallbackRegister(SERCOM_I2C_CALLBACK callback, uintptr_t contextHandle);
 
+// *****************************************************************************
+/* Function:
+    bool SERCOM5_TransferSetup(SERCOM_I2C_TRANSFER_SETUP* setup, uint32_t srcClkFreq)
+
+   Summary:
+    Dynamic setup of TWIHS Peripheral.
+
+   Precondition:
+    SERCOM5_Initialize must have been called for the associated SERCOM I2C instance.
+	The transfer status should not be busy.
+	
+   Parameters:
+    setup - Pointer to the structure containing the transfer setup.
+    srcClkFreq - SERCOM I2C Peripheral Clock Source Frequency.
+	
+   Returns:
+    true - Transfer setup was updated Successfully.
+    false - Failure while updating transfer setup.
+    
+   Example:
+    <code>    
+    
+    SERCOM_I2C_TRANSFER_SETUP setup;
+    
+    setup.clkSpeed = 400000;
+    
+    // Make sure that the I2C is not busy before changing the I2C clock frequency
+    if (SERCOM5_I2C_IsBusy() == false)
+    {
+        if (SERCOM5_I2C_TransferSetup( &setup, 0 ) == true)
+        {
+            // Transfer Setup updated successfully
+        }
+    }    
+    </code>
+
+   Remarks:
+    srcClkFreq overrides any change in the peripheral clock frequency. 
+    If configured to zero PLib takes the peripheral clock frequency from MHC.
+*/
+
+bool SERCOM5_I2C_TransferSetup(SERCOM_I2C_TRANSFER_SETUP* setup, uint32_t srcClkFreq );
+
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
