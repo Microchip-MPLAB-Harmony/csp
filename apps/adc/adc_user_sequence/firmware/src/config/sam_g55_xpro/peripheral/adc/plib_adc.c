@@ -44,10 +44,6 @@
 
 #define ADC_SEQ1_CHANNEL_NUM (8U)
 
-#define ADC_CGR_GAIN_X1   (0x00U)
-#define ADC_CGR_GAIN_X2   (0x01U)
-#define ADC_CGR_GAIN_X4   (0x03U)
-
 
 // *****************************************************************************
 // *****************************************************************************
@@ -64,7 +60,8 @@ void ADC_Initialize()
     ADC_REGS->ADC_CR = ADC_CR_SWRST_Msk;
 
     /* Prescaler and different time settings as per CLOCK section  */
-    ADC_REGS->ADC_MR = ADC_MR_PRESCAL(7U) | ADC_MR_TRACKTIM(15U) | ADC_MR_STARTUP_SUT64 |
+    ADC_REGS->ADC_MR = ADC_MR_PRESCAL(7U) | ADC_MR_TRACKTIM(15U) |
+        ADC_MR_STARTUP_SUT64 | ADC_MR_ANACH_Msk |
         ADC_MR_TRANSFER(2U)   ;
 
     /* resolution and sign mode of result */
