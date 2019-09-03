@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-06-04T17:37:50Z */
+/* file generated from device description version 2019-08-07T06:35:22Z */
 #ifndef _SAMC21_TCC_COMPONENT_H_
 #define _SAMC21_TCC_COMPONENT_H_
 
