@@ -103,10 +103,14 @@ void SYS_Initialize ( void* data )
 
 	PIT_TimerInitialize();
 
-MMU_Initialize();
+    MMU_Initialize();
 
     INT_Initialize();
+    
     XDMAC_Initialize();
+
+    /* Disable WDT   */
+    WDT_REGS->WDT_MR = WDT_MR_WDDIS_Msk;
 
     DBGU_Initialize();
 
