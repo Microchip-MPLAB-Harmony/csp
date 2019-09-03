@@ -104,17 +104,10 @@ static void I2C4_TransferSM(void)
             {
                 if (i2c4Obj.address > 0x007F)
                 {
-                    /* Transmit the first byte of the 10-bit slave address */
-                    I2C4TRN = ( 0xF0 | (((uint8_t*)&i2c4Obj.address)[1] << 1) | (i2c4Obj.transferType) );
+                    /* Transmit the MSB 2 bits of the 10-bit slave address, with R/W = 0 */
+                    I2C4TRN = ( 0xF0 | (((uint8_t*)&i2c4Obj.address)[1] << 1));
 
-                    if (i2c4Obj.transferType == I2C_TRANSFER_TYPE_WRITE)
-                    {
-                        i2c4Obj.state = I2C_STATE_ADDR_BYTE_2_SEND;
-                    }
-                    else
-                    {
-                        i2c4Obj.state = I2C_STATE_READ;
-                    }
+                    i2c4Obj.state = I2C_STATE_ADDR_BYTE_2_SEND;
                 }
                 else
                 {
@@ -138,9 +131,50 @@ static void I2C4_TransferSM(void)
             {
                 if (!(I2C4STAT & _I2C4STAT_TBF_MASK))
                 {
+                    /* Transmit the remaining 8-bits of the 10-bit address */
                     I2C4TRN = i2c4Obj.address;
-                    i2c4Obj.state = I2C_STATE_WRITE;
+
+                    if (i2c4Obj.transferType == I2C_TRANSFER_TYPE_WRITE)
+                    {
+                        i2c4Obj.state = I2C_STATE_WRITE;
+                    }
+                    else
+                    {
+                        i2c4Obj.state = I2C_STATE_READ_10BIT_MODE;
+                    }
                 }
+            }
+            else
+            {
+                /* NAK received. Generate Stop Condition. */
+                i2c4Obj.error = I2C_ERROR_NACK;
+                I2C4CONSET = _I2C4CON_PEN_MASK;
+                i2c4Obj.state = I2C_STATE_WAIT_STOP_CONDITION_COMPLETE;
+            }
+            break;
+            
+        case I2C_STATE_READ_10BIT_MODE:
+            if (!(I2C4STAT & _I2C4STAT_ACKSTAT_MASK))
+            {
+                /* Generate repeated start condition */
+                I2C4CONSET = _I2C4CON_RSEN_MASK;
+                i2c4Obj.state = I2C_STATE_ADDR_BYTE_1_SEND_10BIT_ONLY;
+            }
+            else
+            {
+                /* NAK received. Generate Stop Condition. */
+                i2c4Obj.error = I2C_ERROR_NACK;
+                I2C4CONSET = _I2C4CON_PEN_MASK;
+                i2c4Obj.state = I2C_STATE_WAIT_STOP_CONDITION_COMPLETE;
+            }
+            break;
+        case I2C_STATE_ADDR_BYTE_1_SEND_10BIT_ONLY:
+            /* Is transmit buffer full? */
+            if (!(I2C4STAT & _I2C4STAT_TBF_MASK))
+            {
+                /* Transmit the first byte of the 10-bit slave address, with R/W = 1 */
+                I2C4TRN = ( 0xF1 | ((((uint8_t*)&i2c4Obj.address)[1] << 1)));
+                i2c4Obj.state = I2C_STATE_READ;
             }
             else
             {
@@ -168,9 +202,20 @@ static void I2C4_TransferSM(void)
                     {
                         /* Generate repeated start condition */
                         I2C4CONSET = _I2C4CON_RSEN_MASK;
+
                         i2c4Obj.transferType = I2C_TRANSFER_TYPE_READ;
-                        /* Send the I2C slave address with R/W = 1*/
-                        i2c4Obj.state = I2C_STATE_ADDR_BYTE_1_SEND;
+
+                        if (i2c4Obj.address > 0x007F)
+                        {
+                            /* Send the I2C slave address with R/W = 1 */
+                            i2c4Obj.state = I2C_STATE_ADDR_BYTE_1_SEND_10BIT_ONLY;
+                        }
+                        else
+                        {
+                            /* Send the I2C slave address with R/W = 1 */
+                            i2c4Obj.state = I2C_STATE_ADDR_BYTE_1_SEND;
+                        }
+
                     }
                     else
                     {
