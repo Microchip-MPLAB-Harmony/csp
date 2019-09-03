@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-04-23T19:01:17Z */
+/* file generated from device description version 2019-08-22T13:04:26Z */
 #ifndef _SAM9X_SDRAMC_COMPONENT_H_
 #define _SAM9X_SDRAMC_COMPONENT_H_
 
@@ -249,7 +249,10 @@
 #define SDRAMC_OCMS_SDR_SE_Pos                _U_(0)                                               /**< (SDRAMC_OCMS) SDRAM Memory Controller Scrambling Enable Position */
 #define SDRAMC_OCMS_SDR_SE_Msk                (_U_(0x1) << SDRAMC_OCMS_SDR_SE_Pos)                 /**< (SDRAMC_OCMS) SDRAM Memory Controller Scrambling Enable Mask */
 #define SDRAMC_OCMS_SDR_SE(value)             (SDRAMC_OCMS_SDR_SE_Msk & ((value) << SDRAMC_OCMS_SDR_SE_Pos))
-#define SDRAMC_OCMS_Msk                       _U_(0x00000001)                                      /**< (SDRAMC_OCMS) Register Mask  */
+#define SDRAMC_OCMS_TAMPCLR_Pos               _U_(4)                                               /**< (SDRAMC_OCMS) Tamper Clear Enable Position */
+#define SDRAMC_OCMS_TAMPCLR_Msk               (_U_(0x1) << SDRAMC_OCMS_TAMPCLR_Pos)                /**< (SDRAMC_OCMS) Tamper Clear Enable Mask */
+#define SDRAMC_OCMS_TAMPCLR(value)            (SDRAMC_OCMS_TAMPCLR_Msk & ((value) << SDRAMC_OCMS_TAMPCLR_Pos))
+#define SDRAMC_OCMS_Msk                       _U_(0x00000011)                                      /**< (SDRAMC_OCMS) Register Mask  */
 
 
 /* -------- SDRAMC_OCMS_KEY1 : (SDRAMC Offset: 0x30) ( /W 32) OCMS KEY1 Register -------- */
@@ -276,8 +279,8 @@
 #define SDRAMC_WPMR_WPKEY_Pos                 _U_(8)                                               /**< (SDRAMC_WPMR) Write Protection Key Position */
 #define SDRAMC_WPMR_WPKEY_Msk                 (_U_(0xFFFFFF) << SDRAMC_WPMR_WPKEY_Pos)             /**< (SDRAMC_WPMR) Write Protection Key Mask */
 #define SDRAMC_WPMR_WPKEY(value)              (SDRAMC_WPMR_WPKEY_Msk & ((value) << SDRAMC_WPMR_WPKEY_Pos))
-#define   SDRAMC_WPMR_WPKEY_PASSWD_Val        _U_(0x534452)                                        /**< (SDRAMC_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit.Always reads as 0.  */
-#define SDRAMC_WPMR_WPKEY_PASSWD              (SDRAMC_WPMR_WPKEY_PASSWD_Val << SDRAMC_WPMR_WPKEY_Pos) /**< (SDRAMC_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit.Always reads as 0. Position  */
+#define   SDRAMC_WPMR_WPKEY_PASSWD_Val        _U_(0x534452)                                        /**< (SDRAMC_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit. Always reads as 0.  */
+#define SDRAMC_WPMR_WPKEY_PASSWD              (SDRAMC_WPMR_WPKEY_PASSWD_Val << SDRAMC_WPMR_WPKEY_Pos) /**< (SDRAMC_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit. Always reads as 0. Position  */
 #define SDRAMC_WPMR_Msk                       _U_(0xFFFFFF03)                                      /**< (SDRAMC_WPMR) Register Mask  */
 
 
@@ -318,16 +321,6 @@
 #define SDRAMC_WPSR_Msk                       _U_(0x8700FF0F)                                      /**< (SDRAMC_WPSR) Register Mask  */
 
 
-/* -------- SDRAMC_VERSION : (SDRAMC Offset: 0xFC) ( R/ 32) Version Register -------- */
-#define SDRAMC_VERSION_VERSION_Pos            _U_(0)                                               /**< (SDRAMC_VERSION) Version of the Hardware Module Position */
-#define SDRAMC_VERSION_VERSION_Msk            (_U_(0xFFF) << SDRAMC_VERSION_VERSION_Pos)           /**< (SDRAMC_VERSION) Version of the Hardware Module Mask */
-#define SDRAMC_VERSION_VERSION(value)         (SDRAMC_VERSION_VERSION_Msk & ((value) << SDRAMC_VERSION_VERSION_Pos))
-#define SDRAMC_VERSION_MFN_Pos                _U_(16)                                              /**< (SDRAMC_VERSION) Metal Fix Number Position */
-#define SDRAMC_VERSION_MFN_Msk                (_U_(0x7) << SDRAMC_VERSION_MFN_Pos)                 /**< (SDRAMC_VERSION) Metal Fix Number Mask */
-#define SDRAMC_VERSION_MFN(value)             (SDRAMC_VERSION_MFN_Msk & ((value) << SDRAMC_VERSION_MFN_Pos))
-#define SDRAMC_VERSION_Msk                    _U_(0x00070FFF)                                      /**< (SDRAMC_VERSION) Register Mask  */
-
-
 /** \brief SDRAMC register offsets definitions */
 #define SDRAMC_MR_REG_OFST             (0x00)              /**< (SDRAMC_MR) Mode Register Offset */
 #define SDRAMC_TR_REG_OFST             (0x04)              /**< (SDRAMC_TR) Refresh Timer Register Offset */
@@ -345,7 +338,6 @@
 #define SDRAMC_OCMS_KEY2_REG_OFST      (0x34)              /**< (SDRAMC_OCMS_KEY2) OCMS KEY2 Register Offset */
 #define SDRAMC_WPMR_REG_OFST           (0x3C)              /**< (SDRAMC_WPMR) Write Protection Mode Register Offset */
 #define SDRAMC_WPSR_REG_OFST           (0x40)              /**< (SDRAMC_WPSR) Write Protection Status Register Offset */
-#define SDRAMC_VERSION_REG_OFST        (0xFC)              /**< (SDRAMC_VERSION) Version Register Offset */
 
 #if !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__))
 /** \brief SDRAMC register API structure */
@@ -368,8 +360,6 @@ typedef struct
   __I   uint8_t                        Reserved1[0x04];
   __IO  uint32_t                       SDRAMC_WPMR;        /**< Offset: 0x3C (R/W  32) Write Protection Mode Register */
   __I   uint32_t                       SDRAMC_WPSR;        /**< Offset: 0x40 (R/   32) Write Protection Status Register */
-  __I   uint8_t                        Reserved2[0xB8];
-  __I   uint32_t                       SDRAMC_VERSION;     /**< Offset: 0xFC (R/   32) Version Register */
 } sdramc_registers_t;
 
 
