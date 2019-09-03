@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-06-24T19:27:43Z */
+/* file generated from device description version 2019-06-28T15:51:57Z */
 #ifndef _SAMD11_MTB_COMPONENT_H_
 #define _SAMD11_MTB_COMPONENT_H_
 
