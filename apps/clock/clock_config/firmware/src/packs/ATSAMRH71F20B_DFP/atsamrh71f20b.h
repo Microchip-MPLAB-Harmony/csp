@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-06-11T20:50:29Z */
+/* file generated from device description version 2019-08-29T14:13:58Z */
 #ifndef _SAMRH71F20B_H_
 #define _SAMRH71F20B_H_
 
@@ -135,6 +135,7 @@ typedef enum IRQn
   FLEXCOM9_IRQn             =  46, /**< 46  Flexible Serial Communication (FLEXCOM9) */
   WDT1_IRQn                 =  47, /**< 47  Watchdog Timer (WDT1)               */
   QSPI_IRQn                 =  49, /**< 49  Quad Serial Peripheral Interface (QSPI) */
+  HEFC_INT0_IRQn            =  50, /**< 50  Harden Embedded Flash Controller (HEFC) */
   HEFC_INTFIX_IRQn          =  51, /**< 51  Harden Embedded Flash Controller (HEFC) */
   HEFC_INTNOFIX_IRQn        =  52, /**< 52  Harden Embedded Flash Controller (HEFC) */
   TC2_CH0_IRQn              =  53, /**< 53  Timer/Counter 2 Channel 0 (TC2)     */
@@ -236,7 +237,7 @@ typedef struct _DeviceVectors
   void* pfnWDT1_Handler;                         /*  47 Watchdog Timer (WDT1) */
   void* pvReserved48;
   void* pfnQSPI_Handler;                         /*  49 Quad Serial Peripheral Interface (QSPI) */
-  void* pvReserved50;
+  void* pfnHEFC_INT0_Handler;                    /*  50 Harden Embedded Flash Controller (HEFC) */
   void* pfnHEFC_INTFIX_Handler;                  /*  51 Harden Embedded Flash Controller (HEFC) */
   void* pfnHEFC_INTNOFIX_Handler;                /*  52 Harden Embedded Flash Controller (HEFC) */
   void* pfnTC2_CH0_Handler;                      /*  53 Timer/Counter 2 Channel 0 (TC2) */
@@ -262,6 +263,12 @@ typedef struct _DeviceVectors
   void* pfnGMAC_Q4_Handler;                      /*  73 Gigabit Ethernet MAC (GMAC) */
   void* pfnGMAC_Q5_Handler;                      /*  74 Gigabit Ethernet MAC (GMAC) */
 } DeviceVectors;
+
+/* Defines for Deprecated Interrupt and Exceptions handler names */
+#define pfnMemManage_Handler      pfnMemoryManagement_Handler     /**< \deprecated  Backward compatibility for ASF*/
+#define pfnDebugMon_Handler       pfnDebugMonitor_Handler         /**< \deprecated  Backward compatibility for ASF*/
+#define pfnNMI_Handler            pfnNonMaskableInt_Handler       /**< \deprecated  Backward compatibility for ASF*/
+#define pfnSVC_Handler            pfnSVCall_Handler               /**< \deprecated  Backward compatibility for ASF*/
 
 #endif /* !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__)) */
 
@@ -331,6 +338,7 @@ void FLEXCOM8_Handler              ( void );
 void FLEXCOM9_Handler              ( void );
 void WDT1_Handler                  ( void );
 void QSPI_Handler                  ( void );
+void HEFC_INT0_Handler             ( void );
 void HEFC_INTFIX_Handler           ( void );
 void HEFC_INTNOFIX_Handler         ( void );
 void TC2_CH0_Handler               ( void );
@@ -355,6 +363,12 @@ void GMAC_Q3_Handler               ( void );
 void GMAC_Q4_Handler               ( void );
 void GMAC_Q5_Handler               ( void );
 #endif /* DONT_USE_PREDEFINED_PERIPHERALS_HANDLERS */
+/* Defines for Deprecated Interrupt and Exceptions handler names */
+#define MemManage_Handler         MemoryManagement_Handler        /**< \deprecated  Backward compatibility*/
+#define DebugMon_Handler          DebugMonitor_Handler            /**< \deprecated  Backward compatibility*/
+#define NMI_Handler               NonMaskableInt_Handler          /**< \deprecated  Backward compatibility*/
+#define SVC_Handler               SVCall_Handler                  /**< \deprecated  Backward compatibility*/
+
 #endif /* !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /*
