@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-06-07T05:58:23Z */
+/* file generated from device description version 2019-08-06T08:46:36Z */
 #ifndef _SAML21_DAC_COMPONENT_H_
 #define _SAML21_DAC_COMPONENT_H_
 
@@ -253,8 +253,8 @@
 #define   DAC_DACCTRL_REFRESH_REFRESH_5_Val   _U_(0x5)                                             /**< (DAC_DACCTRL) Refresh every 150US  */
 #define   DAC_DACCTRL_REFRESH_REFRESH_6_Val   _U_(0x6)                                             /**< (DAC_DACCTRL) Refresh every 180US  */
 #define   DAC_DACCTRL_REFRESH_REFRESH_7_Val   _U_(0x7)                                             /**< (DAC_DACCTRL) Refresh every 210US  */
-#define   DAC_DACCTRL_REFRESH_REFRESH_8_Val   _U_(0x8)                                             /**< (DAC_DACCTRL) Refresh every 2400US  */
-#define   DAC_DACCTRL_REFRESH_REFRESH_9_Val   _U_(0x9)                                             /**< (DAC_DACCTRL) Refresh every 2700US  */
+#define   DAC_DACCTRL_REFRESH_REFRESH_8_Val   _U_(0x8)                                             /**< (DAC_DACCTRL) Refresh every 240US  */
+#define   DAC_DACCTRL_REFRESH_REFRESH_9_Val   _U_(0x9)                                             /**< (DAC_DACCTRL) Refresh every 270US  */
 #define   DAC_DACCTRL_REFRESH_REFRESH_10_Val  _U_(0xA)                                             /**< (DAC_DACCTRL) Refresh every 300US  */
 #define   DAC_DACCTRL_REFRESH_REFRESH_11_Val  _U_(0xB)                                             /**< (DAC_DACCTRL) Refresh every 330US  */
 #define   DAC_DACCTRL_REFRESH_REFRESH_12_Val  _U_(0xC)                                             /**< (DAC_DACCTRL) Refresh every 360US  */
@@ -268,8 +268,8 @@
 #define DAC_DACCTRL_REFRESH_REFRESH_5         (DAC_DACCTRL_REFRESH_REFRESH_5_Val << DAC_DACCTRL_REFRESH_Pos) /**< (DAC_DACCTRL) Refresh every 150US Position  */
 #define DAC_DACCTRL_REFRESH_REFRESH_6         (DAC_DACCTRL_REFRESH_REFRESH_6_Val << DAC_DACCTRL_REFRESH_Pos) /**< (DAC_DACCTRL) Refresh every 180US Position  */
 #define DAC_DACCTRL_REFRESH_REFRESH_7         (DAC_DACCTRL_REFRESH_REFRESH_7_Val << DAC_DACCTRL_REFRESH_Pos) /**< (DAC_DACCTRL) Refresh every 210US Position  */
-#define DAC_DACCTRL_REFRESH_REFRESH_8         (DAC_DACCTRL_REFRESH_REFRESH_8_Val << DAC_DACCTRL_REFRESH_Pos) /**< (DAC_DACCTRL) Refresh every 2400US Position  */
-#define DAC_DACCTRL_REFRESH_REFRESH_9         (DAC_DACCTRL_REFRESH_REFRESH_9_Val << DAC_DACCTRL_REFRESH_Pos) /**< (DAC_DACCTRL) Refresh every 2700US Position  */
+#define DAC_DACCTRL_REFRESH_REFRESH_8         (DAC_DACCTRL_REFRESH_REFRESH_8_Val << DAC_DACCTRL_REFRESH_Pos) /**< (DAC_DACCTRL) Refresh every 240US Position  */
+#define DAC_DACCTRL_REFRESH_REFRESH_9         (DAC_DACCTRL_REFRESH_REFRESH_9_Val << DAC_DACCTRL_REFRESH_Pos) /**< (DAC_DACCTRL) Refresh every 270US Position  */
 #define DAC_DACCTRL_REFRESH_REFRESH_10        (DAC_DACCTRL_REFRESH_REFRESH_10_Val << DAC_DACCTRL_REFRESH_Pos) /**< (DAC_DACCTRL) Refresh every 300US Position  */
 #define DAC_DACCTRL_REFRESH_REFRESH_11        (DAC_DACCTRL_REFRESH_REFRESH_11_Val << DAC_DACCTRL_REFRESH_Pos) /**< (DAC_DACCTRL) Refresh every 330US Position  */
 #define DAC_DACCTRL_REFRESH_REFRESH_12        (DAC_DACCTRL_REFRESH_REFRESH_12_Val << DAC_DACCTRL_REFRESH_Pos) /**< (DAC_DACCTRL) Refresh every 360US Position  */
