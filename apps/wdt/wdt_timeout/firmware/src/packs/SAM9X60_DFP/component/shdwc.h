@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-04-23T19:01:17Z */
+/* file generated from device description version 2019-08-22T13:04:26Z */
 #ifndef _SAM9X_SHDWC_COMPONENT_H_
 #define _SAM9X_SHDWC_COMPONENT_H_
 
@@ -47,16 +47,16 @@
 #define SHDW_MR_RTCWKEN_Pos                   _U_(17)                                              /**< (SHDW_MR) Real-time Clock Wakeup Enable Position */
 #define SHDW_MR_RTCWKEN_Msk                   (_U_(0x1) << SHDW_MR_RTCWKEN_Pos)                    /**< (SHDW_MR) Real-time Clock Wakeup Enable Mask */
 #define SHDW_MR_RTCWKEN(value)                (SHDW_MR_RTCWKEN_Msk & ((value) << SHDW_MR_RTCWKEN_Pos))
-#define SHDW_MR_WKUPDBC_Pos                   _U_(24)                                              /**< (SHDW_MR) Wake-up Inputs Debouncer Period Position */
-#define SHDW_MR_WKUPDBC_Msk                   (_U_(0x7) << SHDW_MR_WKUPDBC_Pos)                    /**< (SHDW_MR) Wake-up Inputs Debouncer Period Mask */
+#define SHDW_MR_WKUPDBC_Pos                   _U_(24)                                              /**< (SHDW_MR) Wakeup Inputs Debouncer Period Position */
+#define SHDW_MR_WKUPDBC_Msk                   (_U_(0x7) << SHDW_MR_WKUPDBC_Pos)                    /**< (SHDW_MR) Wakeup Inputs Debouncer Period Mask */
 #define SHDW_MR_WKUPDBC(value)                (SHDW_MR_WKUPDBC_Msk & ((value) << SHDW_MR_WKUPDBC_Pos))
-#define   SHDW_MR_WKUPDBC_IMMEDIATE_Val       _U_(0x0)                                             /**< (SHDW_MR) Immediate, no debouncing, detected active at least on one MD_SLCK edge  */
+#define   SHDW_MR_WKUPDBC_IMMEDIATE_Val       _U_(0x0)                                             /**< (SHDW_MR) Immediate, no debouncing, detected active at least on one MD_SLCK edge.  */
 #define   SHDW_MR_WKUPDBC_3_SLCK_Val          _U_(0x1)                                             /**< (SHDW_MR) WKUP shall be in its active state for at least 3 MD_SLCK periods  */
 #define   SHDW_MR_WKUPDBC_32_SLCK_Val         _U_(0x2)                                             /**< (SHDW_MR) WKUP shall be in its active state for at least 32 MD_SLCK periods  */
 #define   SHDW_MR_WKUPDBC_512_SLCK_Val        _U_(0x3)                                             /**< (SHDW_MR) WKUP shall be in its active state for at least 512 MD_SLCK periods  */
 #define   SHDW_MR_WKUPDBC_4096_SLCK_Val       _U_(0x4)                                             /**< (SHDW_MR) WKUP shall be in its active state for at least 4,096 MD_SLCK periods  */
 #define   SHDW_MR_WKUPDBC_32768_SLCK_Val      _U_(0x5)                                             /**< (SHDW_MR) WKUP shall be in its active state for at least 32,768 MD_SLCK periods  */
-#define SHDW_MR_WKUPDBC_IMMEDIATE             (SHDW_MR_WKUPDBC_IMMEDIATE_Val << SHDW_MR_WKUPDBC_Pos) /**< (SHDW_MR) Immediate, no debouncing, detected active at least on one MD_SLCK edge Position  */
+#define SHDW_MR_WKUPDBC_IMMEDIATE             (SHDW_MR_WKUPDBC_IMMEDIATE_Val << SHDW_MR_WKUPDBC_Pos) /**< (SHDW_MR) Immediate, no debouncing, detected active at least on one MD_SLCK edge. Position  */
 #define SHDW_MR_WKUPDBC_3_SLCK                (SHDW_MR_WKUPDBC_3_SLCK_Val << SHDW_MR_WKUPDBC_Pos)  /**< (SHDW_MR) WKUP shall be in its active state for at least 3 MD_SLCK periods Position  */
 #define SHDW_MR_WKUPDBC_32_SLCK               (SHDW_MR_WKUPDBC_32_SLCK_Val << SHDW_MR_WKUPDBC_Pos) /**< (SHDW_MR) WKUP shall be in its active state for at least 32 MD_SLCK periods Position  */
 #define SHDW_MR_WKUPDBC_512_SLCK              (SHDW_MR_WKUPDBC_512_SLCK_Val << SHDW_MR_WKUPDBC_Pos) /**< (SHDW_MR) WKUP shall be in its active state for at least 512 MD_SLCK periods Position  */
@@ -66,13 +66,13 @@
 
 
 /* -------- SHDW_SR : (SHDWC Offset: 0x08) ( R/ 32) Status Register -------- */
-#define SHDW_SR_WKUPS_Pos                     _U_(0)                                               /**< (SHDW_SR) PIOBU, WKUP Wakeup Status Position */
-#define SHDW_SR_WKUPS_Msk                     (_U_(0x1) << SHDW_SR_WKUPS_Pos)                      /**< (SHDW_SR) PIOBU, WKUP Wakeup Status Mask */
+#define SHDW_SR_WKUPS_Pos                     _U_(0)                                               /**< (SHDW_SR) WKUP Wakeup Status Position */
+#define SHDW_SR_WKUPS_Msk                     (_U_(0x1) << SHDW_SR_WKUPS_Pos)                      /**< (SHDW_SR) WKUP Wakeup Status Mask */
 #define SHDW_SR_WKUPS(value)                  (SHDW_SR_WKUPS_Msk & ((value) << SHDW_SR_WKUPS_Pos))
-#define   SHDW_SR_WKUPS_NO_Val                _U_(0x0)                                             /**< (SHDW_SR) No wakeup due to the assertion of the PIOBU, WKUP pins has occurred since the last read of SHDW_SR.  */
-#define   SHDW_SR_WKUPS_PRESENT_Val           _U_(0x1)                                             /**< (SHDW_SR) At least one wakeup due to the assertion of the PIOBU, WKUP pins has occurred since the last read of SHDW_SR.  */
-#define SHDW_SR_WKUPS_NO                      (SHDW_SR_WKUPS_NO_Val << SHDW_SR_WKUPS_Pos)          /**< (SHDW_SR) No wakeup due to the assertion of the PIOBU, WKUP pins has occurred since the last read of SHDW_SR. Position  */
-#define SHDW_SR_WKUPS_PRESENT                 (SHDW_SR_WKUPS_PRESENT_Val << SHDW_SR_WKUPS_Pos)     /**< (SHDW_SR) At least one wakeup due to the assertion of the PIOBU, WKUP pins has occurred since the last read of SHDW_SR. Position  */
+#define   SHDW_SR_WKUPS_NO_Val                _U_(0x0)                                             /**< (SHDW_SR) No wakeup due to the assertion of the WKUP pin has occurred since the last read of SHDW_SR.  */
+#define   SHDW_SR_WKUPS_PRESENT_Val           _U_(0x1)                                             /**< (SHDW_SR) At least one wakeup due to the assertion of the WKUP pin has occurred since the last read of SHDW_SR.  */
+#define SHDW_SR_WKUPS_NO                      (SHDW_SR_WKUPS_NO_Val << SHDW_SR_WKUPS_Pos)          /**< (SHDW_SR) No wakeup due to the assertion of the WKUP pin has occurred since the last read of SHDW_SR. Position  */
+#define SHDW_SR_WKUPS_PRESENT                 (SHDW_SR_WKUPS_PRESENT_Val << SHDW_SR_WKUPS_Pos)     /**< (SHDW_SR) At least one wakeup due to the assertion of the WKUP pin has occurred since the last read of SHDW_SR. Position  */
 #define SHDW_SR_RTTWK_Pos                     _U_(4)                                               /**< (SHDW_SR) Real-time Timer Wakeup Position */
 #define SHDW_SR_RTTWK_Msk                     (_U_(0x1) << SHDW_SR_RTTWK_Pos)                      /**< (SHDW_SR) Real-time Timer Wakeup Mask */
 #define SHDW_SR_RTTWK(value)                  (SHDW_SR_RTTWK_Msk & ((value) << SHDW_SR_RTTWK_Pos))
