@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-04-23T19:01:17Z */
+/* file generated from device description version 2019-08-22T13:04:26Z */
 #ifndef _SAM9X_MPDDRC_COMPONENT_H_
 #define _SAM9X_MPDDRC_COMPONENT_H_
 
@@ -60,14 +60,14 @@
 #define MPDDRC_CR_NC_Pos                      _U_(0)                                               /**< (MPDDRC_CR) Number of Column Bits Position */
 #define MPDDRC_CR_NC_Msk                      (_U_(0x3) << MPDDRC_CR_NC_Pos)                       /**< (MPDDRC_CR) Number of Column Bits Mask */
 #define MPDDRC_CR_NC(value)                   (MPDDRC_CR_NC_Msk & ((value) << MPDDRC_CR_NC_Pos))  
-#define   MPDDRC_CR_NC_9_COL_BITS_Val         _U_(0x0)                                             /**< (MPDDRC_CR) 9 bits to define the column number, up to 512 columns  */
-#define   MPDDRC_CR_NC_10_COL_BITS_Val        _U_(0x1)                                             /**< (MPDDRC_CR) 10 bits to define the column number, up to 1024 columns  */
-#define   MPDDRC_CR_NC_11_COL_BITS_Val        _U_(0x2)                                             /**< (MPDDRC_CR) 11 bits to define the column number, up to 2048 columns  */
-#define   MPDDRC_CR_NC_12_COL_BITS_Val        _U_(0x3)                                             /**< (MPDDRC_CR) 12 bits to define the column number, up to 4096 columns  */
-#define MPDDRC_CR_NC_9_COL_BITS               (MPDDRC_CR_NC_9_COL_BITS_Val << MPDDRC_CR_NC_Pos)    /**< (MPDDRC_CR) 9 bits to define the column number, up to 512 columns Position  */
-#define MPDDRC_CR_NC_10_COL_BITS              (MPDDRC_CR_NC_10_COL_BITS_Val << MPDDRC_CR_NC_Pos)   /**< (MPDDRC_CR) 10 bits to define the column number, up to 1024 columns Position  */
-#define MPDDRC_CR_NC_11_COL_BITS              (MPDDRC_CR_NC_11_COL_BITS_Val << MPDDRC_CR_NC_Pos)   /**< (MPDDRC_CR) 11 bits to define the column number, up to 2048 columns Position  */
-#define MPDDRC_CR_NC_12_COL_BITS              (MPDDRC_CR_NC_12_COL_BITS_Val << MPDDRC_CR_NC_Pos)   /**< (MPDDRC_CR) 12 bits to define the column number, up to 4096 columns Position  */
+#define   MPDDRC_CR_NC_DDR9_MDDR8_COL_BITS_Val _U_(0x0)                                             /**< (MPDDRC_CR) 9 bits to define the column number, up to 512 columns, for DDR2-SDRAM 8 bits to define the column number, up to 256 columns, for LPDDR1-SDRAM  */
+#define   MPDDRC_CR_NC_DDR10_MDDR9_COL_BITS_Val _U_(0x1)                                             /**< (MPDDRC_CR) 10 bits to define the column number, up to 1024 columns, for DDR2-SDRAM 9 bits to define the column number, up to 512 columns, for LPDDR1-SDRAM  */
+#define   MPDDRC_CR_NC_DDR11_MDDR10_COL_BITS_Val _U_(0x2)                                             /**< (MPDDRC_CR) 11 bits to define the column number, up to 2048 columns, for DDR2-SDRAM 10 bits to define the column number, up to 1024 columns, for LPDDR1-SDRAM  */
+#define   MPDDRC_CR_NC_DDR12_MDDR11_COL_BITS_Val _U_(0x3)                                             /**< (MPDDRC_CR) 12 bits to define the column number, up to 4096 columns, for DDR2-SDRAM 11 bits to define the column number, up to 2048 columns, for LPDDR1-SDRAM  */
+#define MPDDRC_CR_NC_DDR9_MDDR8_COL_BITS      (MPDDRC_CR_NC_DDR9_MDDR8_COL_BITS_Val << MPDDRC_CR_NC_Pos) /**< (MPDDRC_CR) 9 bits to define the column number, up to 512 columns, for DDR2-SDRAM 8 bits to define the column number, up to 256 columns, for LPDDR1-SDRAM Position  */
+#define MPDDRC_CR_NC_DDR10_MDDR9_COL_BITS     (MPDDRC_CR_NC_DDR10_MDDR9_COL_BITS_Val << MPDDRC_CR_NC_Pos) /**< (MPDDRC_CR) 10 bits to define the column number, up to 1024 columns, for DDR2-SDRAM 9 bits to define the column number, up to 512 columns, for LPDDR1-SDRAM Position  */
+#define MPDDRC_CR_NC_DDR11_MDDR10_COL_BITS    (MPDDRC_CR_NC_DDR11_MDDR10_COL_BITS_Val << MPDDRC_CR_NC_Pos) /**< (MPDDRC_CR) 11 bits to define the column number, up to 2048 columns, for DDR2-SDRAM 10 bits to define the column number, up to 1024 columns, for LPDDR1-SDRAM Position  */
+#define MPDDRC_CR_NC_DDR12_MDDR11_COL_BITS    (MPDDRC_CR_NC_DDR12_MDDR11_COL_BITS_Val << MPDDRC_CR_NC_Pos) /**< (MPDDRC_CR) 12 bits to define the column number, up to 4096 columns, for DDR2-SDRAM 11 bits to define the column number, up to 2048 columns, for LPDDR1-SDRAM Position  */
 #define MPDDRC_CR_NR_Pos                      _U_(2)                                               /**< (MPDDRC_CR) Number of Row Bits. Position */
 #define MPDDRC_CR_NR_Msk                      (_U_(0x3) << MPDDRC_CR_NR_Pos)                       /**< (MPDDRC_CR) Number of Row Bits. Mask */
 #define MPDDRC_CR_NR(value)                   (MPDDRC_CR_NR_Msk & ((value) << MPDDRC_CR_NR_Pos))  
@@ -84,10 +84,8 @@
 #define MPDDRC_CR_CAS(value)                  (MPDDRC_CR_CAS_Msk & ((value) << MPDDRC_CR_CAS_Pos))
 #define   MPDDRC_CR_CAS_DDR_CAS2_Val          _U_(0x2)                                             /**< (MPDDRC_CR) LPDDR1 CAS Latency 2  */
 #define   MPDDRC_CR_CAS_DDR_CAS3_Val          _U_(0x3)                                             /**< (MPDDRC_CR) DDR2/LPDDR1 CAS Latency 3  */
-#define   MPDDRC_CR_CAS_DDR_CAS4_Val          _U_(0x4)                                             /**< (MPDDRC_CR) DDR2 CAS Latency 4  */
 #define MPDDRC_CR_CAS_DDR_CAS2                (MPDDRC_CR_CAS_DDR_CAS2_Val << MPDDRC_CR_CAS_Pos)    /**< (MPDDRC_CR) LPDDR1 CAS Latency 2 Position  */
 #define MPDDRC_CR_CAS_DDR_CAS3                (MPDDRC_CR_CAS_DDR_CAS3_Val << MPDDRC_CR_CAS_Pos)    /**< (MPDDRC_CR) DDR2/LPDDR1 CAS Latency 3 Position  */
-#define MPDDRC_CR_CAS_DDR_CAS4                (MPDDRC_CR_CAS_DDR_CAS4_Val << MPDDRC_CR_CAS_Pos)    /**< (MPDDRC_CR) DDR2 CAS Latency 4 Position  */
 #define MPDDRC_CR_DLL_Pos                     _U_(7)                                               /**< (MPDDRC_CR) Reset DLL Position */
 #define MPDDRC_CR_DLL_Msk                     (_U_(0x1) << MPDDRC_CR_DLL_Pos)                      /**< (MPDDRC_CR) Reset DLL Mask */
 #define MPDDRC_CR_DLL(value)                  (MPDDRC_CR_DLL_Msk & ((value) << MPDDRC_CR_DLL_Pos))
@@ -123,9 +121,9 @@
 #define MPDDRC_CR_LC_LPDDR1_Msk               (_U_(0x1) << MPDDRC_CR_LC_LPDDR1_Pos)                /**< (MPDDRC_CR) Low-cost Low-power DDR1 Mask */
 #define MPDDRC_CR_LC_LPDDR1(value)            (MPDDRC_CR_LC_LPDDR1_Msk & ((value) << MPDDRC_CR_LC_LPDDR1_Pos))
 #define   MPDDRC_CR_LC_LPDDR1_NOT_2_BANKS_Val _U_(0x0)                                             /**< (MPDDRC_CR) Any type of memory devices except of low cost, low density Low Power DDR1.  */
-#define   MPDDRC_CR_LC_LPDDR1_2_BANKS_LPDDR1_Val _U_(0x1)                                             /**< (MPDDRC_CR) Low-cost and low-density low-power DDR1. These devices have a density of 32 Mbits and are organized as two internal banks. To use this feature, the user has to define the type of memory and the data bus width (see Section 8.8 "MPDDRC Memory Device Register").The 16-bit memory device is organized as 2 banks, 9 columns and 11 rows.  */
+#define   MPDDRC_CR_LC_LPDDR1_2_BANKS_LPDDR1_Val _U_(0x1)                                             /**< (MPDDRC_CR) Low-cost and low-density low-power DDR1. These devices have a density of 32 Mbits and are organized as two internal banks. To use this feature, the user has to define the type of memory and the data bus width (see Section 8.8 "MPDDRC Memory Device Register"). The 16-bit memory device is organized as 2 banks, 9 columns and 11 rows.  */
 #define MPDDRC_CR_LC_LPDDR1_NOT_2_BANKS       (MPDDRC_CR_LC_LPDDR1_NOT_2_BANKS_Val << MPDDRC_CR_LC_LPDDR1_Pos) /**< (MPDDRC_CR) Any type of memory devices except of low cost, low density Low Power DDR1. Position  */
-#define MPDDRC_CR_LC_LPDDR1_2_BANKS_LPDDR1    (MPDDRC_CR_LC_LPDDR1_2_BANKS_LPDDR1_Val << MPDDRC_CR_LC_LPDDR1_Pos) /**< (MPDDRC_CR) Low-cost and low-density low-power DDR1. These devices have a density of 32 Mbits and are organized as two internal banks. To use this feature, the user has to define the type of memory and the data bus width (see Section 8.8 "MPDDRC Memory Device Register").The 16-bit memory device is organized as 2 banks, 9 columns and 11 rows. Position  */
+#define MPDDRC_CR_LC_LPDDR1_2_BANKS_LPDDR1    (MPDDRC_CR_LC_LPDDR1_2_BANKS_LPDDR1_Val << MPDDRC_CR_LC_LPDDR1_Pos) /**< (MPDDRC_CR) Low-cost and low-density low-power DDR1. These devices have a density of 32 Mbits and are organized as two internal banks. To use this feature, the user has to define the type of memory and the data bus width (see Section 8.8 "MPDDRC Memory Device Register"). The 16-bit memory device is organized as 2 banks, 9 columns and 11 rows. Position  */
 #define MPDDRC_CR_NB_Pos                      _U_(20)                                              /**< (MPDDRC_CR) Number of Banks Position */
 #define MPDDRC_CR_NB_Msk                      (_U_(0x1) << MPDDRC_CR_NB_Pos)                       /**< (MPDDRC_CR) Number of Banks Mask */
 #define MPDDRC_CR_NB(value)                   (MPDDRC_CR_NB_Msk & ((value) << MPDDRC_CR_NB_Pos))  
@@ -136,10 +134,10 @@
 #define MPDDRC_CR_NDQS_Pos                    _U_(21)                                              /**< (MPDDRC_CR) Not DQS. Position */
 #define MPDDRC_CR_NDQS_Msk                    (_U_(0x1) << MPDDRC_CR_NDQS_Pos)                     /**< (MPDDRC_CR) Not DQS. Mask */
 #define MPDDRC_CR_NDQS(value)                 (MPDDRC_CR_NDQS_Msk & ((value) << MPDDRC_CR_NDQS_Pos))
-#define   MPDDRC_CR_NDQS_ENABLED_Val          _U_(0x0)                                             /**< (MPDDRC_CR) Not DQS is enabled  */
-#define   MPDDRC_CR_NDQS_DISABLED_Val         _U_(0x1)                                             /**< (MPDDRC_CR) Not DQS is disabled  */
-#define MPDDRC_CR_NDQS_ENABLED                (MPDDRC_CR_NDQS_ENABLED_Val << MPDDRC_CR_NDQS_Pos)   /**< (MPDDRC_CR) Not DQS is enabled Position  */
-#define MPDDRC_CR_NDQS_DISABLED               (MPDDRC_CR_NDQS_DISABLED_Val << MPDDRC_CR_NDQS_Pos)  /**< (MPDDRC_CR) Not DQS is disabled Position  */
+#define   MPDDRC_CR_NDQS_ENABLED_Val          _U_(0x0)                                             /**< (MPDDRC_CR) 'Not DQS' is enabled.  */
+#define   MPDDRC_CR_NDQS_DISABLED_Val         _U_(0x1)                                             /**< (MPDDRC_CR) 'Not DQS' is disabled.  */
+#define MPDDRC_CR_NDQS_ENABLED                (MPDDRC_CR_NDQS_ENABLED_Val << MPDDRC_CR_NDQS_Pos)   /**< (MPDDRC_CR) 'Not DQS' is enabled. Position  */
+#define MPDDRC_CR_NDQS_DISABLED               (MPDDRC_CR_NDQS_DISABLED_Val << MPDDRC_CR_NDQS_Pos)  /**< (MPDDRC_CR) 'Not DQS' is disabled. Position  */
 #define MPDDRC_CR_DECOD_Pos                   _U_(22)                                              /**< (MPDDRC_CR) Type of Decoding Position */
 #define MPDDRC_CR_DECOD_Msk                   (_U_(0x1) << MPDDRC_CR_DECOD_Pos)                    /**< (MPDDRC_CR) Type of Decoding Mask */
 #define MPDDRC_CR_DECOD(value)                (MPDDRC_CR_DECOD_Msk & ((value) << MPDDRC_CR_DECOD_Pos))
@@ -147,13 +145,9 @@
 #define   MPDDRC_CR_DECOD_INTERLEAVED_Val     _U_(0x1)                                             /**< (MPDDRC_CR) Method for address mapping where banks alternate at each DDR-SDRAM end of page of the current bank.  */
 #define MPDDRC_CR_DECOD_SEQUENTIAL            (MPDDRC_CR_DECOD_SEQUENTIAL_Val << MPDDRC_CR_DECOD_Pos) /**< (MPDDRC_CR) Method for address mapping where banks alternate at each last DDR-SDRAM page of the current bank. Position  */
 #define MPDDRC_CR_DECOD_INTERLEAVED           (MPDDRC_CR_DECOD_INTERLEAVED_Val << MPDDRC_CR_DECOD_Pos) /**< (MPDDRC_CR) Method for address mapping where banks alternate at each DDR-SDRAM end of page of the current bank. Position  */
-#define MPDDRC_CR_UNAL_Pos                    _U_(23)                                              /**< (MPDDRC_CR) Support Unaligned Access (masters supporting byte-strobes) Position */
-#define MPDDRC_CR_UNAL_Msk                    (_U_(0x1) << MPDDRC_CR_UNAL_Pos)                     /**< (MPDDRC_CR) Support Unaligned Access (masters supporting byte-strobes) Mask */
+#define MPDDRC_CR_UNAL_Pos                    _U_(23)                                              /**< (MPDDRC_CR) This bit must always be written to 1 Position */
+#define MPDDRC_CR_UNAL_Msk                    (_U_(0x1) << MPDDRC_CR_UNAL_Pos)                     /**< (MPDDRC_CR) This bit must always be written to 1 Mask */
 #define MPDDRC_CR_UNAL(value)                 (MPDDRC_CR_UNAL_Msk & ((value) << MPDDRC_CR_UNAL_Pos))
-#define   MPDDRC_CR_UNAL_UNSUPPORTED_Val      _U_(0x0)                                             /**< (MPDDRC_CR) Unaligned access is not supported.  */
-#define   MPDDRC_CR_UNAL_SUPPORTED_Val        _U_(0x1)                                             /**< (MPDDRC_CR) Unaligned access is supported.This mode must be enabled when accessing DDR memory by DMA (masters supporting byte strobes).  */
-#define MPDDRC_CR_UNAL_UNSUPPORTED            (MPDDRC_CR_UNAL_UNSUPPORTED_Val << MPDDRC_CR_UNAL_Pos) /**< (MPDDRC_CR) Unaligned access is not supported. Position  */
-#define MPDDRC_CR_UNAL_SUPPORTED              (MPDDRC_CR_UNAL_SUPPORTED_Val << MPDDRC_CR_UNAL_Pos) /**< (MPDDRC_CR) Unaligned access is supported.This mode must be enabled when accessing DDR memory by DMA (masters supporting byte strobes). Position  */
 #define MPDDRC_CR_Msk                         _U_(0x00F973FF)                                      /**< (MPDDRC_CR) Register Mask  */
 
 #define MPDDRC_CR_LC_LPDDR_Pos                _U_(19)                                              /**< (MPDDRC_CR Position) Low-cost Low-power DDRx */
@@ -189,8 +183,8 @@
 
 
 /* -------- MPDDRC_TPR1 : (MPDDRC Offset: 0x10) (R/W 32) Timing Parameter 1 Register -------- */
-#define MPDDRC_TPR1_TRFC_Pos                  _U_(0)                                               /**< (MPDDRC_TPR1) Row Cycle Delay Position */
-#define MPDDRC_TPR1_TRFC_Msk                  (_U_(0x7F) << MPDDRC_TPR1_TRFC_Pos)                  /**< (MPDDRC_TPR1) Row Cycle Delay Mask */
+#define MPDDRC_TPR1_TRFC_Pos                  _U_(0)                                               /**< (MPDDRC_TPR1) Row Refresh Cycle Position */
+#define MPDDRC_TPR1_TRFC_Msk                  (_U_(0x7F) << MPDDRC_TPR1_TRFC_Pos)                  /**< (MPDDRC_TPR1) Row Refresh Cycle Mask */
 #define MPDDRC_TPR1_TRFC(value)               (MPDDRC_TPR1_TRFC_Msk & ((value) << MPDDRC_TPR1_TRFC_Pos))
 #define MPDDRC_TPR1_TXSNR_Pos                 _U_(8)                                               /**< (MPDDRC_TPR1) Exit Self-refresh Delay to Non-Read Command Position */
 #define MPDDRC_TPR1_TXSNR_Msk                 (_U_(0xFF) << MPDDRC_TPR1_TXSNR_Pos)                 /**< (MPDDRC_TPR1) Exit Self-refresh Delay to Non-Read Command Mask */
@@ -467,11 +461,11 @@
 #define   MPDDRC_RD_DATA_PATH_SHIFT_SAMPLING_NO_SHIFT_Val _U_(0x0)                                             /**< (MPDDRC_RD_DATA_PATH) Initial sampling point.  */
 #define   MPDDRC_RD_DATA_PATH_SHIFT_SAMPLING_SHIFT_ONE_CYCLE_Val _U_(0x1)                                             /**< (MPDDRC_RD_DATA_PATH) Sampling point is shifted by one cycle.  */
 #define   MPDDRC_RD_DATA_PATH_SHIFT_SAMPLING_SHIFT_TWO_CYCLES_Val _U_(0x2)                                             /**< (MPDDRC_RD_DATA_PATH) Sampling point is shifted by two cycles.  */
-#define   MPDDRC_RD_DATA_PATH_SHIFT_SAMPLING_SHIFT_THREE_CYCLES_Val _U_(0x3)                                             /**< (MPDDRC_RD_DATA_PATH) .Not applicable for DDR2 and LPDDR1 devices.  */
+#define   MPDDRC_RD_DATA_PATH_SHIFT_SAMPLING_SHIFT_THREE_CYCLES_Val _U_(0x3)                                             /**< (MPDDRC_RD_DATA_PATH) Not applicable for DDR2 and LPDDR1 devices.  */
 #define MPDDRC_RD_DATA_PATH_SHIFT_SAMPLING_NO_SHIFT (MPDDRC_RD_DATA_PATH_SHIFT_SAMPLING_NO_SHIFT_Val << MPDDRC_RD_DATA_PATH_SHIFT_SAMPLING_Pos) /**< (MPDDRC_RD_DATA_PATH) Initial sampling point. Position  */
 #define MPDDRC_RD_DATA_PATH_SHIFT_SAMPLING_SHIFT_ONE_CYCLE (MPDDRC_RD_DATA_PATH_SHIFT_SAMPLING_SHIFT_ONE_CYCLE_Val << MPDDRC_RD_DATA_PATH_SHIFT_SAMPLING_Pos) /**< (MPDDRC_RD_DATA_PATH) Sampling point is shifted by one cycle. Position  */
 #define MPDDRC_RD_DATA_PATH_SHIFT_SAMPLING_SHIFT_TWO_CYCLES (MPDDRC_RD_DATA_PATH_SHIFT_SAMPLING_SHIFT_TWO_CYCLES_Val << MPDDRC_RD_DATA_PATH_SHIFT_SAMPLING_Pos) /**< (MPDDRC_RD_DATA_PATH) Sampling point is shifted by two cycles. Position  */
-#define MPDDRC_RD_DATA_PATH_SHIFT_SAMPLING_SHIFT_THREE_CYCLES (MPDDRC_RD_DATA_PATH_SHIFT_SAMPLING_SHIFT_THREE_CYCLES_Val << MPDDRC_RD_DATA_PATH_SHIFT_SAMPLING_Pos) /**< (MPDDRC_RD_DATA_PATH) .Not applicable for DDR2 and LPDDR1 devices. Position  */
+#define MPDDRC_RD_DATA_PATH_SHIFT_SAMPLING_SHIFT_THREE_CYCLES (MPDDRC_RD_DATA_PATH_SHIFT_SAMPLING_SHIFT_THREE_CYCLES_Val << MPDDRC_RD_DATA_PATH_SHIFT_SAMPLING_Pos) /**< (MPDDRC_RD_DATA_PATH) Not applicable for DDR2 and LPDDR1 devices. Position  */
 #define MPDDRC_RD_DATA_PATH_Msk               _U_(0x00000003)                                      /**< (MPDDRC_RD_DATA_PATH) Register Mask  */
 
 
@@ -514,41 +508,41 @@
 
 
 /* -------- MPDDRC_MADDR0 : (MPDDRC Offset: 0x64) (R/W 32) Monitor Address High/Low Port 0 Register -------- */
-#define MPDDRC_MADDR0_ADDR_LOW_PORT0_Pos      _U_(0)                                               /**< (MPDDRC_MADDR0) Address Low on Port x [x = 0..3] Position */
-#define MPDDRC_MADDR0_ADDR_LOW_PORT0_Msk      (_U_(0xFFFF) << MPDDRC_MADDR0_ADDR_LOW_PORT0_Pos)    /**< (MPDDRC_MADDR0) Address Low on Port x [x = 0..3] Mask */
+#define MPDDRC_MADDR0_ADDR_LOW_PORT0_Pos      _U_(0)                                               /**< (MPDDRC_MADDR0) Address Low on Port 0 Position */
+#define MPDDRC_MADDR0_ADDR_LOW_PORT0_Msk      (_U_(0xFFFF) << MPDDRC_MADDR0_ADDR_LOW_PORT0_Pos)    /**< (MPDDRC_MADDR0) Address Low on Port 0 Mask */
 #define MPDDRC_MADDR0_ADDR_LOW_PORT0(value)   (MPDDRC_MADDR0_ADDR_LOW_PORT0_Msk & ((value) << MPDDRC_MADDR0_ADDR_LOW_PORT0_Pos))
-#define MPDDRC_MADDR0_ADDR_HIGH_PORT0_Pos     _U_(16)                                              /**< (MPDDRC_MADDR0) Address High on Port x [x = 0..3] Position */
-#define MPDDRC_MADDR0_ADDR_HIGH_PORT0_Msk     (_U_(0xFFFF) << MPDDRC_MADDR0_ADDR_HIGH_PORT0_Pos)   /**< (MPDDRC_MADDR0) Address High on Port x [x = 0..3] Mask */
+#define MPDDRC_MADDR0_ADDR_HIGH_PORT0_Pos     _U_(16)                                              /**< (MPDDRC_MADDR0) Address High on Port 0 Position */
+#define MPDDRC_MADDR0_ADDR_HIGH_PORT0_Msk     (_U_(0xFFFF) << MPDDRC_MADDR0_ADDR_HIGH_PORT0_Pos)   /**< (MPDDRC_MADDR0) Address High on Port 0 Mask */
 #define MPDDRC_MADDR0_ADDR_HIGH_PORT0(value)  (MPDDRC_MADDR0_ADDR_HIGH_PORT0_Msk & ((value) << MPDDRC_MADDR0_ADDR_HIGH_PORT0_Pos))
 #define MPDDRC_MADDR0_Msk                     _U_(0xFFFFFFFF)                                      /**< (MPDDRC_MADDR0) Register Mask  */
 
 
 /* -------- MPDDRC_MADDR1 : (MPDDRC Offset: 0x68) (R/W 32) Monitor Address High/Low Port 1 Register -------- */
-#define MPDDRC_MADDR1_ADDR_LOW_PORT1_Pos      _U_(0)                                               /**< (MPDDRC_MADDR1) Address Low on Port x [x = 0..3] Position */
-#define MPDDRC_MADDR1_ADDR_LOW_PORT1_Msk      (_U_(0xFFFF) << MPDDRC_MADDR1_ADDR_LOW_PORT1_Pos)    /**< (MPDDRC_MADDR1) Address Low on Port x [x = 0..3] Mask */
+#define MPDDRC_MADDR1_ADDR_LOW_PORT1_Pos      _U_(0)                                               /**< (MPDDRC_MADDR1) Address Low on Port 1 Position */
+#define MPDDRC_MADDR1_ADDR_LOW_PORT1_Msk      (_U_(0xFFFF) << MPDDRC_MADDR1_ADDR_LOW_PORT1_Pos)    /**< (MPDDRC_MADDR1) Address Low on Port 1 Mask */
 #define MPDDRC_MADDR1_ADDR_LOW_PORT1(value)   (MPDDRC_MADDR1_ADDR_LOW_PORT1_Msk & ((value) << MPDDRC_MADDR1_ADDR_LOW_PORT1_Pos))
-#define MPDDRC_MADDR1_ADDR_HIGH_PORT1_Pos     _U_(16)                                              /**< (MPDDRC_MADDR1) Address High on Port x [x = 0..3] Position */
-#define MPDDRC_MADDR1_ADDR_HIGH_PORT1_Msk     (_U_(0xFFFF) << MPDDRC_MADDR1_ADDR_HIGH_PORT1_Pos)   /**< (MPDDRC_MADDR1) Address High on Port x [x = 0..3] Mask */
+#define MPDDRC_MADDR1_ADDR_HIGH_PORT1_Pos     _U_(16)                                              /**< (MPDDRC_MADDR1) Address High on Port 1 Position */
+#define MPDDRC_MADDR1_ADDR_HIGH_PORT1_Msk     (_U_(0xFFFF) << MPDDRC_MADDR1_ADDR_HIGH_PORT1_Pos)   /**< (MPDDRC_MADDR1) Address High on Port 1 Mask */
 #define MPDDRC_MADDR1_ADDR_HIGH_PORT1(value)  (MPDDRC_MADDR1_ADDR_HIGH_PORT1_Msk & ((value) << MPDDRC_MADDR1_ADDR_HIGH_PORT1_Pos))
 #define MPDDRC_MADDR1_Msk                     _U_(0xFFFFFFFF)                                      /**< (MPDDRC_MADDR1) Register Mask  */
 
 
 /* -------- MPDDRC_MADDR2 : (MPDDRC Offset: 0x6C) (R/W 32) Monitor Address High/Low Port 2 Register -------- */
-#define MPDDRC_MADDR2_ADDR_LOW_PORT2_Pos      _U_(0)                                               /**< (MPDDRC_MADDR2) Address Low on Port x [x = 0..3] Position */
-#define MPDDRC_MADDR2_ADDR_LOW_PORT2_Msk      (_U_(0xFFFF) << MPDDRC_MADDR2_ADDR_LOW_PORT2_Pos)    /**< (MPDDRC_MADDR2) Address Low on Port x [x = 0..3] Mask */
+#define MPDDRC_MADDR2_ADDR_LOW_PORT2_Pos      _U_(0)                                               /**< (MPDDRC_MADDR2) Address Low on Port 2 Position */
+#define MPDDRC_MADDR2_ADDR_LOW_PORT2_Msk      (_U_(0xFFFF) << MPDDRC_MADDR2_ADDR_LOW_PORT2_Pos)    /**< (MPDDRC_MADDR2) Address Low on Port 2 Mask */
 #define MPDDRC_MADDR2_ADDR_LOW_PORT2(value)   (MPDDRC_MADDR2_ADDR_LOW_PORT2_Msk & ((value) << MPDDRC_MADDR2_ADDR_LOW_PORT2_Pos))
-#define MPDDRC_MADDR2_ADDR_HIGH_PORT2_Pos     _U_(16)                                              /**< (MPDDRC_MADDR2) Address High on Port x [x = 0..3] Position */
-#define MPDDRC_MADDR2_ADDR_HIGH_PORT2_Msk     (_U_(0xFFFF) << MPDDRC_MADDR2_ADDR_HIGH_PORT2_Pos)   /**< (MPDDRC_MADDR2) Address High on Port x [x = 0..3] Mask */
+#define MPDDRC_MADDR2_ADDR_HIGH_PORT2_Pos     _U_(16)                                              /**< (MPDDRC_MADDR2) Address High on Port 2 Position */
+#define MPDDRC_MADDR2_ADDR_HIGH_PORT2_Msk     (_U_(0xFFFF) << MPDDRC_MADDR2_ADDR_HIGH_PORT2_Pos)   /**< (MPDDRC_MADDR2) Address High on Port 2 Mask */
 #define MPDDRC_MADDR2_ADDR_HIGH_PORT2(value)  (MPDDRC_MADDR2_ADDR_HIGH_PORT2_Msk & ((value) << MPDDRC_MADDR2_ADDR_HIGH_PORT2_Pos))
 #define MPDDRC_MADDR2_Msk                     _U_(0xFFFFFFFF)                                      /**< (MPDDRC_MADDR2) Register Mask  */
 
 
 /* -------- MPDDRC_MADDR3 : (MPDDRC Offset: 0x70) (R/W 32) Monitor Address High/Low Port 3 Register -------- */
-#define MPDDRC_MADDR3_ADDR_LOW_PORT3_Pos      _U_(0)                                               /**< (MPDDRC_MADDR3) Address Low on Port x [x = 0..3] Position */
-#define MPDDRC_MADDR3_ADDR_LOW_PORT3_Msk      (_U_(0xFFFF) << MPDDRC_MADDR3_ADDR_LOW_PORT3_Pos)    /**< (MPDDRC_MADDR3) Address Low on Port x [x = 0..3] Mask */
+#define MPDDRC_MADDR3_ADDR_LOW_PORT3_Pos      _U_(0)                                               /**< (MPDDRC_MADDR3) Address Low on Port 3 Position */
+#define MPDDRC_MADDR3_ADDR_LOW_PORT3_Msk      (_U_(0xFFFF) << MPDDRC_MADDR3_ADDR_LOW_PORT3_Pos)    /**< (MPDDRC_MADDR3) Address Low on Port 3 Mask */
 #define MPDDRC_MADDR3_ADDR_LOW_PORT3(value)   (MPDDRC_MADDR3_ADDR_LOW_PORT3_Msk & ((value) << MPDDRC_MADDR3_ADDR_LOW_PORT3_Pos))
-#define MPDDRC_MADDR3_ADDR_HIGH_PORT3_Pos     _U_(16)                                              /**< (MPDDRC_MADDR3) Address High on Port x [x = 0..3] Position */
-#define MPDDRC_MADDR3_ADDR_HIGH_PORT3_Msk     (_U_(0xFFFF) << MPDDRC_MADDR3_ADDR_HIGH_PORT3_Pos)   /**< (MPDDRC_MADDR3) Address High on Port x [x = 0..3] Mask */
+#define MPDDRC_MADDR3_ADDR_HIGH_PORT3_Pos     _U_(16)                                              /**< (MPDDRC_MADDR3) Address High on Port 3 Position */
+#define MPDDRC_MADDR3_ADDR_HIGH_PORT3_Msk     (_U_(0xFFFF) << MPDDRC_MADDR3_ADDR_HIGH_PORT3_Pos)   /**< (MPDDRC_MADDR3) Address High on Port 3 Mask */
 #define MPDDRC_MADDR3_ADDR_HIGH_PORT3(value)  (MPDDRC_MADDR3_ADDR_HIGH_PORT3_Msk & ((value) << MPDDRC_MADDR3_ADDR_HIGH_PORT3_Pos))
 #define MPDDRC_MADDR3_Msk                     _U_(0xFFFFFFFF)                                      /**< (MPDDRC_MADDR3) Register Mask  */
 
@@ -557,11 +551,11 @@
 #define MPDDRC_MINFO0_Msk                     _U_(0x00000000)                                      /**< (MPDDRC_MINFO0) Register Mask  */
 
 /* MAX_WAIT mode */
-#define MPDDRC_MINFO0_MAX_WAIT_MAX_PORT0_WAITING_Pos _U_(0)                                               /**< (MPDDRC_MINFO0) Address High on Port x [x = 0..3] Position */
-#define MPDDRC_MINFO0_MAX_WAIT_MAX_PORT0_WAITING_Msk (_U_(0xFFFF) << MPDDRC_MINFO0_MAX_WAIT_MAX_PORT0_WAITING_Pos) /**< (MPDDRC_MINFO0) Address High on Port x [x = 0..3] Mask */
+#define MPDDRC_MINFO0_MAX_WAIT_MAX_PORT0_WAITING_Pos _U_(0)                                               /**< (MPDDRC_MINFO0) Address High on Port 0 Position */
+#define MPDDRC_MINFO0_MAX_WAIT_MAX_PORT0_WAITING_Msk (_U_(0xFFFF) << MPDDRC_MINFO0_MAX_WAIT_MAX_PORT0_WAITING_Pos) /**< (MPDDRC_MINFO0) Address High on Port 0 Mask */
 #define MPDDRC_MINFO0_MAX_WAIT_MAX_PORT0_WAITING(value) (MPDDRC_MINFO0_MAX_WAIT_MAX_PORT0_WAITING_Msk & ((value) << MPDDRC_MINFO0_MAX_WAIT_MAX_PORT0_WAITING_Pos))
-#define MPDDRC_MINFO0_MAX_WAIT_BURST_Pos      _U_(16)                                              /**< (MPDDRC_MINFO0) Type of Burst on Port x [x = 0..3] Position */
-#define MPDDRC_MINFO0_MAX_WAIT_BURST_Msk      (_U_(0x7) << MPDDRC_MINFO0_MAX_WAIT_BURST_Pos)       /**< (MPDDRC_MINFO0) Type of Burst on Port x [x = 0..3] Mask */
+#define MPDDRC_MINFO0_MAX_WAIT_BURST_Pos      _U_(16)                                              /**< (MPDDRC_MINFO0) Type of Burst on Port 0 Position */
+#define MPDDRC_MINFO0_MAX_WAIT_BURST_Msk      (_U_(0x7) << MPDDRC_MINFO0_MAX_WAIT_BURST_Pos)       /**< (MPDDRC_MINFO0) Type of Burst on Port 0 Mask */
 #define MPDDRC_MINFO0_MAX_WAIT_BURST(value)   (MPDDRC_MINFO0_MAX_WAIT_BURST_Msk & ((value) << MPDDRC_MINFO0_MAX_WAIT_BURST_Pos))
 #define   MPDDRC_MINFO0_MAX_WAIT_BURST_SINGLE_Val _U_(0x0)                                             /**< (MPDDRC_MINFO0) Single transfer  */
 #define   MPDDRC_MINFO0_MAX_WAIT_BURST_INCR_Val _U_(0x1)                                             /**< (MPDDRC_MINFO0) Incrementing burst of unspecified length  */
@@ -579,8 +573,8 @@
 #define MPDDRC_MINFO0_MAX_WAIT_BURST_INCR8    (MPDDRC_MINFO0_MAX_WAIT_BURST_INCR8_Val << MPDDRC_MINFO0_MAX_WAIT_BURST_Pos) /**< (MPDDRC_MINFO0) 8-beat incrementing burst Position  */
 #define MPDDRC_MINFO0_MAX_WAIT_BURST_WRAP16   (MPDDRC_MINFO0_MAX_WAIT_BURST_WRAP16_Val << MPDDRC_MINFO0_MAX_WAIT_BURST_Pos) /**< (MPDDRC_MINFO0) 16-beat wrapping burst Position  */
 #define MPDDRC_MINFO0_MAX_WAIT_BURST_INCR16   (MPDDRC_MINFO0_MAX_WAIT_BURST_INCR16_Val << MPDDRC_MINFO0_MAX_WAIT_BURST_Pos) /**< (MPDDRC_MINFO0) 16-beat incrementing burst Position  */
-#define MPDDRC_MINFO0_MAX_WAIT_SIZE_Pos       _U_(20)                                              /**< (MPDDRC_MINFO0) Transfer Size on Port x [x = 0..3] Position */
-#define MPDDRC_MINFO0_MAX_WAIT_SIZE_Msk       (_U_(0x7) << MPDDRC_MINFO0_MAX_WAIT_SIZE_Pos)        /**< (MPDDRC_MINFO0) Transfer Size on Port x [x = 0..3] Mask */
+#define MPDDRC_MINFO0_MAX_WAIT_SIZE_Pos       _U_(20)                                              /**< (MPDDRC_MINFO0) Transfer Size on Port 0 Position */
+#define MPDDRC_MINFO0_MAX_WAIT_SIZE_Msk       (_U_(0x7) << MPDDRC_MINFO0_MAX_WAIT_SIZE_Pos)        /**< (MPDDRC_MINFO0) Transfer Size on Port 0 Mask */
 #define MPDDRC_MINFO0_MAX_WAIT_SIZE(value)    (MPDDRC_MINFO0_MAX_WAIT_SIZE_Msk & ((value) << MPDDRC_MINFO0_MAX_WAIT_SIZE_Pos))
 #define   MPDDRC_MINFO0_MAX_WAIT_SIZE_8BITS_Val _U_(0x0)                                             /**< (MPDDRC_MINFO0) Byte transfer  */
 #define   MPDDRC_MINFO0_MAX_WAIT_SIZE_16BITS_Val _U_(0x1)                                             /**< (MPDDRC_MINFO0) Halfword transfer  */
@@ -590,49 +584,49 @@
 #define MPDDRC_MINFO0_MAX_WAIT_SIZE_16BITS    (MPDDRC_MINFO0_MAX_WAIT_SIZE_16BITS_Val << MPDDRC_MINFO0_MAX_WAIT_SIZE_Pos) /**< (MPDDRC_MINFO0) Halfword transfer Position  */
 #define MPDDRC_MINFO0_MAX_WAIT_SIZE_32BITS    (MPDDRC_MINFO0_MAX_WAIT_SIZE_32BITS_Val << MPDDRC_MINFO0_MAX_WAIT_SIZE_Pos) /**< (MPDDRC_MINFO0) Word transfer Position  */
 #define MPDDRC_MINFO0_MAX_WAIT_SIZE_64BITS    (MPDDRC_MINFO0_MAX_WAIT_SIZE_64BITS_Val << MPDDRC_MINFO0_MAX_WAIT_SIZE_Pos) /**< (MPDDRC_MINFO0) Dword transfer Position  */
-#define MPDDRC_MINFO0_MAX_WAIT_READ_WRITE_Pos _U_(24)                                              /**< (MPDDRC_MINFO0) Read or Write Access on Port x [x = 0..3] Position */
-#define MPDDRC_MINFO0_MAX_WAIT_READ_WRITE_Msk (_U_(0x1) << MPDDRC_MINFO0_MAX_WAIT_READ_WRITE_Pos)  /**< (MPDDRC_MINFO0) Read or Write Access on Port x [x = 0..3] Mask */
+#define MPDDRC_MINFO0_MAX_WAIT_READ_WRITE_Pos _U_(24)                                              /**< (MPDDRC_MINFO0) Read or Write Access on Port 0 Position */
+#define MPDDRC_MINFO0_MAX_WAIT_READ_WRITE_Msk (_U_(0x1) << MPDDRC_MINFO0_MAX_WAIT_READ_WRITE_Pos)  /**< (MPDDRC_MINFO0) Read or Write Access on Port 0 Mask */
 #define MPDDRC_MINFO0_MAX_WAIT_READ_WRITE(value) (MPDDRC_MINFO0_MAX_WAIT_READ_WRITE_Msk & ((value) << MPDDRC_MINFO0_MAX_WAIT_READ_WRITE_Pos))
-#define MPDDRC_MINFO0_MAX_WAIT_LQOS_Pos       _U_(25)                                              /**< (MPDDRC_MINFO0) Value of Quality Of Service on Port x [x = 0..3] Position */
-#define MPDDRC_MINFO0_MAX_WAIT_LQOS_Msk       (_U_(0x3) << MPDDRC_MINFO0_MAX_WAIT_LQOS_Pos)        /**< (MPDDRC_MINFO0) Value of Quality Of Service on Port x [x = 0..3] Mask */
+#define MPDDRC_MINFO0_MAX_WAIT_LQOS_Pos       _U_(25)                                              /**< (MPDDRC_MINFO0) Value of Quality Of Service on Port 0 Position */
+#define MPDDRC_MINFO0_MAX_WAIT_LQOS_Msk       (_U_(0x3) << MPDDRC_MINFO0_MAX_WAIT_LQOS_Pos)        /**< (MPDDRC_MINFO0) Value of Quality Of Service on Port 0 Mask */
 #define MPDDRC_MINFO0_MAX_WAIT_LQOS(value)    (MPDDRC_MINFO0_MAX_WAIT_LQOS_Msk & ((value) << MPDDRC_MINFO0_MAX_WAIT_LQOS_Pos))
-#define   MPDDRC_MINFO0_MAX_WAIT_LQOS_BACKGROUND_Val _U_(0x0)                                             /**< (MPDDRC_MINFO0) Background Transfers  */
-#define   MPDDRC_MINFO0_MAX_WAIT_LQOS_BANDWIDTH_Val _U_(0x1)                                             /**< (MPDDRC_MINFO0) Bandwidth Sensitive  */
-#define   MPDDRC_MINFO0_MAX_WAIT_LQOS_SENSITIVE_LAT_Val _U_(0x2)                                             /**< (MPDDRC_MINFO0) Latency Sensitive  */
-#define   MPDDRC_MINFO0_MAX_WAIT_LQOS_CRITICAL_LAT_Val _U_(0x3)                                             /**< (MPDDRC_MINFO0) Latency Critical  */
-#define MPDDRC_MINFO0_MAX_WAIT_LQOS_BACKGROUND (MPDDRC_MINFO0_MAX_WAIT_LQOS_BACKGROUND_Val << MPDDRC_MINFO0_MAX_WAIT_LQOS_Pos) /**< (MPDDRC_MINFO0) Background Transfers Position  */
-#define MPDDRC_MINFO0_MAX_WAIT_LQOS_BANDWIDTH (MPDDRC_MINFO0_MAX_WAIT_LQOS_BANDWIDTH_Val << MPDDRC_MINFO0_MAX_WAIT_LQOS_Pos) /**< (MPDDRC_MINFO0) Bandwidth Sensitive Position  */
-#define MPDDRC_MINFO0_MAX_WAIT_LQOS_SENSITIVE_LAT (MPDDRC_MINFO0_MAX_WAIT_LQOS_SENSITIVE_LAT_Val << MPDDRC_MINFO0_MAX_WAIT_LQOS_Pos) /**< (MPDDRC_MINFO0) Latency Sensitive Position  */
-#define MPDDRC_MINFO0_MAX_WAIT_LQOS_CRITICAL_LAT (MPDDRC_MINFO0_MAX_WAIT_LQOS_CRITICAL_LAT_Val << MPDDRC_MINFO0_MAX_WAIT_LQOS_Pos) /**< (MPDDRC_MINFO0) Latency Critical Position  */
+#define   MPDDRC_MINFO0_MAX_WAIT_LQOS_BACKGROUND_Val _U_(0x0)                                             /**< (MPDDRC_MINFO0) Background transfers  */
+#define   MPDDRC_MINFO0_MAX_WAIT_LQOS_BANDWIDTH_Val _U_(0x1)                                             /**< (MPDDRC_MINFO0) Bandwidth sensitive  */
+#define   MPDDRC_MINFO0_MAX_WAIT_LQOS_SENSITIVE_LAT_Val _U_(0x2)                                             /**< (MPDDRC_MINFO0) Latency sensitive  */
+#define   MPDDRC_MINFO0_MAX_WAIT_LQOS_CRITICAL_LAT_Val _U_(0x3)                                             /**< (MPDDRC_MINFO0) Latency critical  */
+#define MPDDRC_MINFO0_MAX_WAIT_LQOS_BACKGROUND (MPDDRC_MINFO0_MAX_WAIT_LQOS_BACKGROUND_Val << MPDDRC_MINFO0_MAX_WAIT_LQOS_Pos) /**< (MPDDRC_MINFO0) Background transfers Position  */
+#define MPDDRC_MINFO0_MAX_WAIT_LQOS_BANDWIDTH (MPDDRC_MINFO0_MAX_WAIT_LQOS_BANDWIDTH_Val << MPDDRC_MINFO0_MAX_WAIT_LQOS_Pos) /**< (MPDDRC_MINFO0) Bandwidth sensitive Position  */
+#define MPDDRC_MINFO0_MAX_WAIT_LQOS_SENSITIVE_LAT (MPDDRC_MINFO0_MAX_WAIT_LQOS_SENSITIVE_LAT_Val << MPDDRC_MINFO0_MAX_WAIT_LQOS_Pos) /**< (MPDDRC_MINFO0) Latency sensitive Position  */
+#define MPDDRC_MINFO0_MAX_WAIT_LQOS_CRITICAL_LAT (MPDDRC_MINFO0_MAX_WAIT_LQOS_CRITICAL_LAT_Val << MPDDRC_MINFO0_MAX_WAIT_LQOS_Pos) /**< (MPDDRC_MINFO0) Latency critical Position  */
 #define MPDDRC_MINFO0_MAX_WAIT_Msk            _U_(0x0777FFFF)                                       /**< (MPDDRC_MINFO0_MAX_WAIT) Register Mask  */
 
 /* NB_TRANSFERS mode */
-#define MPDDRC_MINFO0_NB_TRANSFERS_P0_NB_TRANSFERS_Pos _U_(0)                                               /**< (MPDDRC_MINFO0) Number of Transfers on Port x [x = 0..3] Position */
-#define MPDDRC_MINFO0_NB_TRANSFERS_P0_NB_TRANSFERS_Msk (_U_(0xFFFFFFFF) << MPDDRC_MINFO0_NB_TRANSFERS_P0_NB_TRANSFERS_Pos) /**< (MPDDRC_MINFO0) Number of Transfers on Port x [x = 0..3] Mask */
+#define MPDDRC_MINFO0_NB_TRANSFERS_P0_NB_TRANSFERS_Pos _U_(0)                                               /**< (MPDDRC_MINFO0) Number of Transfers on Port 0 Position */
+#define MPDDRC_MINFO0_NB_TRANSFERS_P0_NB_TRANSFERS_Msk (_U_(0xFFFFFFFF) << MPDDRC_MINFO0_NB_TRANSFERS_P0_NB_TRANSFERS_Pos) /**< (MPDDRC_MINFO0) Number of Transfers on Port 0 Mask */
 #define MPDDRC_MINFO0_NB_TRANSFERS_P0_NB_TRANSFERS(value) (MPDDRC_MINFO0_NB_TRANSFERS_P0_NB_TRANSFERS_Msk & ((value) << MPDDRC_MINFO0_NB_TRANSFERS_P0_NB_TRANSFERS_Pos))
 #define MPDDRC_MINFO0_NB_TRANSFERS_Msk        _U_(0xFFFFFFFF)                                       /**< (MPDDRC_MINFO0_NB_TRANSFERS) Register Mask  */
 
 /* TOTAL_LATENCY mode */
-#define MPDDRC_MINFO0_TOTAL_LATENCY_P0_TOTAL_LATENCY_Pos _U_(0)                                               /**< (MPDDRC_MINFO0) Total Latency on Port x [x = 0..3] Position */
-#define MPDDRC_MINFO0_TOTAL_LATENCY_P0_TOTAL_LATENCY_Msk (_U_(0xFFFFFFFF) << MPDDRC_MINFO0_TOTAL_LATENCY_P0_TOTAL_LATENCY_Pos) /**< (MPDDRC_MINFO0) Total Latency on Port x [x = 0..3] Mask */
+#define MPDDRC_MINFO0_TOTAL_LATENCY_P0_TOTAL_LATENCY_Pos _U_(0)                                               /**< (MPDDRC_MINFO0) Total Latency on Port 0 Position */
+#define MPDDRC_MINFO0_TOTAL_LATENCY_P0_TOTAL_LATENCY_Msk (_U_(0xFFFFFFFF) << MPDDRC_MINFO0_TOTAL_LATENCY_P0_TOTAL_LATENCY_Pos) /**< (MPDDRC_MINFO0) Total Latency on Port 0 Mask */
 #define MPDDRC_MINFO0_TOTAL_LATENCY_P0_TOTAL_LATENCY(value) (MPDDRC_MINFO0_TOTAL_LATENCY_P0_TOTAL_LATENCY_Msk & ((value) << MPDDRC_MINFO0_TOTAL_LATENCY_P0_TOTAL_LATENCY_Pos))
 #define MPDDRC_MINFO0_TOTAL_LATENCY_Msk       _U_(0xFFFFFFFF)                                       /**< (MPDDRC_MINFO0_TOTAL_LATENCY) Register Mask  */
 
 /* TOTAL_LATENCY_QOS01 mode */
-#define MPDDRC_MINFO0_TOTAL_LATENCY_QOS01_P0_TOTAL_LATENCY_QOS0_Pos _U_(0)                                               /**< (MPDDRC_MINFO0) Total Latency on Port 0 [x = 0..3] when value of qos is 0 Position */
-#define MPDDRC_MINFO0_TOTAL_LATENCY_QOS01_P0_TOTAL_LATENCY_QOS0_Msk (_U_(0xFFFF) << MPDDRC_MINFO0_TOTAL_LATENCY_QOS01_P0_TOTAL_LATENCY_QOS0_Pos) /**< (MPDDRC_MINFO0) Total Latency on Port 0 [x = 0..3] when value of qos is 0 Mask */
+#define MPDDRC_MINFO0_TOTAL_LATENCY_QOS01_P0_TOTAL_LATENCY_QOS0_Pos _U_(0)                                               /**< (MPDDRC_MINFO0) Total Latency on Port 0 when value of qos is 0 Position */
+#define MPDDRC_MINFO0_TOTAL_LATENCY_QOS01_P0_TOTAL_LATENCY_QOS0_Msk (_U_(0xFFFF) << MPDDRC_MINFO0_TOTAL_LATENCY_QOS01_P0_TOTAL_LATENCY_QOS0_Pos) /**< (MPDDRC_MINFO0) Total Latency on Port 0 when value of qos is 0 Mask */
 #define MPDDRC_MINFO0_TOTAL_LATENCY_QOS01_P0_TOTAL_LATENCY_QOS0(value) (MPDDRC_MINFO0_TOTAL_LATENCY_QOS01_P0_TOTAL_LATENCY_QOS0_Msk & ((value) << MPDDRC_MINFO0_TOTAL_LATENCY_QOS01_P0_TOTAL_LATENCY_QOS0_Pos))
-#define MPDDRC_MINFO0_TOTAL_LATENCY_QOS01_P0_TOTAL_LATENCY_QOS1_Pos _U_(16)                                              /**< (MPDDRC_MINFO0) Total Latency on Port 1 [x = 0..3] when value of qos is 1 Position */
-#define MPDDRC_MINFO0_TOTAL_LATENCY_QOS01_P0_TOTAL_LATENCY_QOS1_Msk (_U_(0xFFFF) << MPDDRC_MINFO0_TOTAL_LATENCY_QOS01_P0_TOTAL_LATENCY_QOS1_Pos) /**< (MPDDRC_MINFO0) Total Latency on Port 1 [x = 0..3] when value of qos is 1 Mask */
+#define MPDDRC_MINFO0_TOTAL_LATENCY_QOS01_P0_TOTAL_LATENCY_QOS1_Pos _U_(16)                                              /**< (MPDDRC_MINFO0) Total Latency on Port 1 when value of qos is 1 Position */
+#define MPDDRC_MINFO0_TOTAL_LATENCY_QOS01_P0_TOTAL_LATENCY_QOS1_Msk (_U_(0xFFFF) << MPDDRC_MINFO0_TOTAL_LATENCY_QOS01_P0_TOTAL_LATENCY_QOS1_Pos) /**< (MPDDRC_MINFO0) Total Latency on Port 1 when value of qos is 1 Mask */
 #define MPDDRC_MINFO0_TOTAL_LATENCY_QOS01_P0_TOTAL_LATENCY_QOS1(value) (MPDDRC_MINFO0_TOTAL_LATENCY_QOS01_P0_TOTAL_LATENCY_QOS1_Msk & ((value) << MPDDRC_MINFO0_TOTAL_LATENCY_QOS01_P0_TOTAL_LATENCY_QOS1_Pos))
 #define MPDDRC_MINFO0_TOTAL_LATENCY_QOS01_Msk _U_(0xFFFFFFFF)                                       /**< (MPDDRC_MINFO0_TOTAL_LATENCY_QOS01) Register Mask  */
 
 /* TOTAL_LATENCY_QOS23 mode */
-#define MPDDRC_MINFO0_TOTAL_LATENCY_QOS23_P0_TOTAL_LATENCY_QOS2_Pos _U_(0)                                               /**< (MPDDRC_MINFO0) Total Latency on Port 2 [x = 0..3] when value of qos is 2 Position */
-#define MPDDRC_MINFO0_TOTAL_LATENCY_QOS23_P0_TOTAL_LATENCY_QOS2_Msk (_U_(0xFFFF) << MPDDRC_MINFO0_TOTAL_LATENCY_QOS23_P0_TOTAL_LATENCY_QOS2_Pos) /**< (MPDDRC_MINFO0) Total Latency on Port 2 [x = 0..3] when value of qos is 2 Mask */
+#define MPDDRC_MINFO0_TOTAL_LATENCY_QOS23_P0_TOTAL_LATENCY_QOS2_Pos _U_(0)                                               /**< (MPDDRC_MINFO0) Total Latency on Port 2 when value of qos is 2 Position */
+#define MPDDRC_MINFO0_TOTAL_LATENCY_QOS23_P0_TOTAL_LATENCY_QOS2_Msk (_U_(0xFFFF) << MPDDRC_MINFO0_TOTAL_LATENCY_QOS23_P0_TOTAL_LATENCY_QOS2_Pos) /**< (MPDDRC_MINFO0) Total Latency on Port 2 when value of qos is 2 Mask */
 #define MPDDRC_MINFO0_TOTAL_LATENCY_QOS23_P0_TOTAL_LATENCY_QOS2(value) (MPDDRC_MINFO0_TOTAL_LATENCY_QOS23_P0_TOTAL_LATENCY_QOS2_Msk & ((value) << MPDDRC_MINFO0_TOTAL_LATENCY_QOS23_P0_TOTAL_LATENCY_QOS2_Pos))
-#define MPDDRC_MINFO0_TOTAL_LATENCY_QOS23_P0_TOTAL_LATENCY_QOS3_Pos _U_(16)                                              /**< (MPDDRC_MINFO0) Total Latency on Port 3 [x = 0..3] when value of qos is 3 Position */
-#define MPDDRC_MINFO0_TOTAL_LATENCY_QOS23_P0_TOTAL_LATENCY_QOS3_Msk (_U_(0xFFFF) << MPDDRC_MINFO0_TOTAL_LATENCY_QOS23_P0_TOTAL_LATENCY_QOS3_Pos) /**< (MPDDRC_MINFO0) Total Latency on Port 3 [x = 0..3] when value of qos is 3 Mask */
+#define MPDDRC_MINFO0_TOTAL_LATENCY_QOS23_P0_TOTAL_LATENCY_QOS3_Pos _U_(16)                                              /**< (MPDDRC_MINFO0) Total Latency on Port 3 when value of qos is 3 Position */
+#define MPDDRC_MINFO0_TOTAL_LATENCY_QOS23_P0_TOTAL_LATENCY_QOS3_Msk (_U_(0xFFFF) << MPDDRC_MINFO0_TOTAL_LATENCY_QOS23_P0_TOTAL_LATENCY_QOS3_Pos) /**< (MPDDRC_MINFO0) Total Latency on Port 3 when value of qos is 3 Mask */
 #define MPDDRC_MINFO0_TOTAL_LATENCY_QOS23_P0_TOTAL_LATENCY_QOS3(value) (MPDDRC_MINFO0_TOTAL_LATENCY_QOS23_P0_TOTAL_LATENCY_QOS3_Msk & ((value) << MPDDRC_MINFO0_TOTAL_LATENCY_QOS23_P0_TOTAL_LATENCY_QOS3_Pos))
 #define MPDDRC_MINFO0_TOTAL_LATENCY_QOS23_Msk _U_(0xFFFFFFFF)                                       /**< (MPDDRC_MINFO0_TOTAL_LATENCY_QOS23) Register Mask  */
 
@@ -641,11 +635,11 @@
 #define MPDDRC_MINFO1_Msk                     _U_(0x00000000)                                      /**< (MPDDRC_MINFO1) Register Mask  */
 
 /* MAX_WAIT mode */
-#define MPDDRC_MINFO1_MAX_WAIT_MAX_PORT1_WAITING_Pos _U_(0)                                               /**< (MPDDRC_MINFO1) Address High on Port x [x = 0..3] Position */
-#define MPDDRC_MINFO1_MAX_WAIT_MAX_PORT1_WAITING_Msk (_U_(0xFFFF) << MPDDRC_MINFO1_MAX_WAIT_MAX_PORT1_WAITING_Pos) /**< (MPDDRC_MINFO1) Address High on Port x [x = 0..3] Mask */
+#define MPDDRC_MINFO1_MAX_WAIT_MAX_PORT1_WAITING_Pos _U_(0)                                               /**< (MPDDRC_MINFO1) Address High on Port 1 Position */
+#define MPDDRC_MINFO1_MAX_WAIT_MAX_PORT1_WAITING_Msk (_U_(0xFFFF) << MPDDRC_MINFO1_MAX_WAIT_MAX_PORT1_WAITING_Pos) /**< (MPDDRC_MINFO1) Address High on Port 1 Mask */
 #define MPDDRC_MINFO1_MAX_WAIT_MAX_PORT1_WAITING(value) (MPDDRC_MINFO1_MAX_WAIT_MAX_PORT1_WAITING_Msk & ((value) << MPDDRC_MINFO1_MAX_WAIT_MAX_PORT1_WAITING_Pos))
-#define MPDDRC_MINFO1_MAX_WAIT_BURST_Pos      _U_(16)                                              /**< (MPDDRC_MINFO1) Type of Burst on Port x [x = 0..3] Position */
-#define MPDDRC_MINFO1_MAX_WAIT_BURST_Msk      (_U_(0x7) << MPDDRC_MINFO1_MAX_WAIT_BURST_Pos)       /**< (MPDDRC_MINFO1) Type of Burst on Port x [x = 0..3] Mask */
+#define MPDDRC_MINFO1_MAX_WAIT_BURST_Pos      _U_(16)                                              /**< (MPDDRC_MINFO1) Type of Burst on Port 1 Position */
+#define MPDDRC_MINFO1_MAX_WAIT_BURST_Msk      (_U_(0x7) << MPDDRC_MINFO1_MAX_WAIT_BURST_Pos)       /**< (MPDDRC_MINFO1) Type of Burst on Port 1 Mask */
 #define MPDDRC_MINFO1_MAX_WAIT_BURST(value)   (MPDDRC_MINFO1_MAX_WAIT_BURST_Msk & ((value) << MPDDRC_MINFO1_MAX_WAIT_BURST_Pos))
 #define   MPDDRC_MINFO1_MAX_WAIT_BURST_SINGLE_Val _U_(0x0)                                             /**< (MPDDRC_MINFO1) Single transfer  */
 #define   MPDDRC_MINFO1_MAX_WAIT_BURST_INCR_Val _U_(0x1)                                             /**< (MPDDRC_MINFO1) Incrementing burst of unspecified length  */
@@ -663,8 +657,8 @@
 #define MPDDRC_MINFO1_MAX_WAIT_BURST_INCR8    (MPDDRC_MINFO1_MAX_WAIT_BURST_INCR8_Val << MPDDRC_MINFO1_MAX_WAIT_BURST_Pos) /**< (MPDDRC_MINFO1) 8-beat incrementing burst Position  */
 #define MPDDRC_MINFO1_MAX_WAIT_BURST_WRAP16   (MPDDRC_MINFO1_MAX_WAIT_BURST_WRAP16_Val << MPDDRC_MINFO1_MAX_WAIT_BURST_Pos) /**< (MPDDRC_MINFO1) 16-beat wrapping burst Position  */
 #define MPDDRC_MINFO1_MAX_WAIT_BURST_INCR16   (MPDDRC_MINFO1_MAX_WAIT_BURST_INCR16_Val << MPDDRC_MINFO1_MAX_WAIT_BURST_Pos) /**< (MPDDRC_MINFO1) 16-beat incrementing burst Position  */
-#define MPDDRC_MINFO1_MAX_WAIT_SIZE_Pos       _U_(20)                                              /**< (MPDDRC_MINFO1) Transfer Size on Port x [x = 0..3] Position */
-#define MPDDRC_MINFO1_MAX_WAIT_SIZE_Msk       (_U_(0x7) << MPDDRC_MINFO1_MAX_WAIT_SIZE_Pos)        /**< (MPDDRC_MINFO1) Transfer Size on Port x [x = 0..3] Mask */
+#define MPDDRC_MINFO1_MAX_WAIT_SIZE_Pos       _U_(20)                                              /**< (MPDDRC_MINFO1) Transfer Size on Port 1 Position */
+#define MPDDRC_MINFO1_MAX_WAIT_SIZE_Msk       (_U_(0x7) << MPDDRC_MINFO1_MAX_WAIT_SIZE_Pos)        /**< (MPDDRC_MINFO1) Transfer Size on Port 1 Mask */
 #define MPDDRC_MINFO1_MAX_WAIT_SIZE(value)    (MPDDRC_MINFO1_MAX_WAIT_SIZE_Msk & ((value) << MPDDRC_MINFO1_MAX_WAIT_SIZE_Pos))
 #define   MPDDRC_MINFO1_MAX_WAIT_SIZE_8BITS_Val _U_(0x0)                                             /**< (MPDDRC_MINFO1) Byte transfer  */
 #define   MPDDRC_MINFO1_MAX_WAIT_SIZE_16BITS_Val _U_(0x1)                                             /**< (MPDDRC_MINFO1) Halfword transfer  */
@@ -674,49 +668,49 @@
 #define MPDDRC_MINFO1_MAX_WAIT_SIZE_16BITS    (MPDDRC_MINFO1_MAX_WAIT_SIZE_16BITS_Val << MPDDRC_MINFO1_MAX_WAIT_SIZE_Pos) /**< (MPDDRC_MINFO1) Halfword transfer Position  */
 #define MPDDRC_MINFO1_MAX_WAIT_SIZE_32BITS    (MPDDRC_MINFO1_MAX_WAIT_SIZE_32BITS_Val << MPDDRC_MINFO1_MAX_WAIT_SIZE_Pos) /**< (MPDDRC_MINFO1) Word transfer Position  */
 #define MPDDRC_MINFO1_MAX_WAIT_SIZE_64BITS    (MPDDRC_MINFO1_MAX_WAIT_SIZE_64BITS_Val << MPDDRC_MINFO1_MAX_WAIT_SIZE_Pos) /**< (MPDDRC_MINFO1) Dword transfer Position  */
-#define MPDDRC_MINFO1_MAX_WAIT_READ_WRITE_Pos _U_(24)                                              /**< (MPDDRC_MINFO1) Read or Write Access on Port x [x = 0..3] Position */
-#define MPDDRC_MINFO1_MAX_WAIT_READ_WRITE_Msk (_U_(0x1) << MPDDRC_MINFO1_MAX_WAIT_READ_WRITE_Pos)  /**< (MPDDRC_MINFO1) Read or Write Access on Port x [x = 0..3] Mask */
+#define MPDDRC_MINFO1_MAX_WAIT_READ_WRITE_Pos _U_(24)                                              /**< (MPDDRC_MINFO1) Read or Write Access on Port 1 Position */
+#define MPDDRC_MINFO1_MAX_WAIT_READ_WRITE_Msk (_U_(0x1) << MPDDRC_MINFO1_MAX_WAIT_READ_WRITE_Pos)  /**< (MPDDRC_MINFO1) Read or Write Access on Port 1 Mask */
 #define MPDDRC_MINFO1_MAX_WAIT_READ_WRITE(value) (MPDDRC_MINFO1_MAX_WAIT_READ_WRITE_Msk & ((value) << MPDDRC_MINFO1_MAX_WAIT_READ_WRITE_Pos))
-#define MPDDRC_MINFO1_MAX_WAIT_LQOS_Pos       _U_(25)                                              /**< (MPDDRC_MINFO1) Value of Quality Of Service on Port x [x = 0..3] Position */
-#define MPDDRC_MINFO1_MAX_WAIT_LQOS_Msk       (_U_(0x3) << MPDDRC_MINFO1_MAX_WAIT_LQOS_Pos)        /**< (MPDDRC_MINFO1) Value of Quality Of Service on Port x [x = 0..3] Mask */
+#define MPDDRC_MINFO1_MAX_WAIT_LQOS_Pos       _U_(25)                                              /**< (MPDDRC_MINFO1) Value of Quality Of Service on Port 1 Position */
+#define MPDDRC_MINFO1_MAX_WAIT_LQOS_Msk       (_U_(0x3) << MPDDRC_MINFO1_MAX_WAIT_LQOS_Pos)        /**< (MPDDRC_MINFO1) Value of Quality Of Service on Port 1 Mask */
 #define MPDDRC_MINFO1_MAX_WAIT_LQOS(value)    (MPDDRC_MINFO1_MAX_WAIT_LQOS_Msk & ((value) << MPDDRC_MINFO1_MAX_WAIT_LQOS_Pos))
-#define   MPDDRC_MINFO1_MAX_WAIT_LQOS_BACKGROUND_Val _U_(0x0)                                             /**< (MPDDRC_MINFO1) Background Transfers  */
-#define   MPDDRC_MINFO1_MAX_WAIT_LQOS_BANDWIDTH_Val _U_(0x1)                                             /**< (MPDDRC_MINFO1) Bandwidth Sensitive  */
-#define   MPDDRC_MINFO1_MAX_WAIT_LQOS_SENSITIVE_LAT_Val _U_(0x2)                                             /**< (MPDDRC_MINFO1) Latency Sensitive  */
-#define   MPDDRC_MINFO1_MAX_WAIT_LQOS_CRITICAL_LAT_Val _U_(0x3)                                             /**< (MPDDRC_MINFO1) Latency Critical  */
-#define MPDDRC_MINFO1_MAX_WAIT_LQOS_BACKGROUND (MPDDRC_MINFO1_MAX_WAIT_LQOS_BACKGROUND_Val << MPDDRC_MINFO1_MAX_WAIT_LQOS_Pos) /**< (MPDDRC_MINFO1) Background Transfers Position  */
-#define MPDDRC_MINFO1_MAX_WAIT_LQOS_BANDWIDTH (MPDDRC_MINFO1_MAX_WAIT_LQOS_BANDWIDTH_Val << MPDDRC_MINFO1_MAX_WAIT_LQOS_Pos) /**< (MPDDRC_MINFO1) Bandwidth Sensitive Position  */
-#define MPDDRC_MINFO1_MAX_WAIT_LQOS_SENSITIVE_LAT (MPDDRC_MINFO1_MAX_WAIT_LQOS_SENSITIVE_LAT_Val << MPDDRC_MINFO1_MAX_WAIT_LQOS_Pos) /**< (MPDDRC_MINFO1) Latency Sensitive Position  */
-#define MPDDRC_MINFO1_MAX_WAIT_LQOS_CRITICAL_LAT (MPDDRC_MINFO1_MAX_WAIT_LQOS_CRITICAL_LAT_Val << MPDDRC_MINFO1_MAX_WAIT_LQOS_Pos) /**< (MPDDRC_MINFO1) Latency Critical Position  */
+#define   MPDDRC_MINFO1_MAX_WAIT_LQOS_BACKGROUND_Val _U_(0x0)                                             /**< (MPDDRC_MINFO1) Background transfers  */
+#define   MPDDRC_MINFO1_MAX_WAIT_LQOS_BANDWIDTH_Val _U_(0x1)                                             /**< (MPDDRC_MINFO1) Bandwidth sensitive  */
+#define   MPDDRC_MINFO1_MAX_WAIT_LQOS_SENSITIVE_LAT_Val _U_(0x2)                                             /**< (MPDDRC_MINFO1) Latency sensitive  */
+#define   MPDDRC_MINFO1_MAX_WAIT_LQOS_CRITICAL_LAT_Val _U_(0x3)                                             /**< (MPDDRC_MINFO1) Latency critical  */
+#define MPDDRC_MINFO1_MAX_WAIT_LQOS_BACKGROUND (MPDDRC_MINFO1_MAX_WAIT_LQOS_BACKGROUND_Val << MPDDRC_MINFO1_MAX_WAIT_LQOS_Pos) /**< (MPDDRC_MINFO1) Background transfers Position  */
+#define MPDDRC_MINFO1_MAX_WAIT_LQOS_BANDWIDTH (MPDDRC_MINFO1_MAX_WAIT_LQOS_BANDWIDTH_Val << MPDDRC_MINFO1_MAX_WAIT_LQOS_Pos) /**< (MPDDRC_MINFO1) Bandwidth sensitive Position  */
+#define MPDDRC_MINFO1_MAX_WAIT_LQOS_SENSITIVE_LAT (MPDDRC_MINFO1_MAX_WAIT_LQOS_SENSITIVE_LAT_Val << MPDDRC_MINFO1_MAX_WAIT_LQOS_Pos) /**< (MPDDRC_MINFO1) Latency sensitive Position  */
+#define MPDDRC_MINFO1_MAX_WAIT_LQOS_CRITICAL_LAT (MPDDRC_MINFO1_MAX_WAIT_LQOS_CRITICAL_LAT_Val << MPDDRC_MINFO1_MAX_WAIT_LQOS_Pos) /**< (MPDDRC_MINFO1) Latency critical Position  */
 #define MPDDRC_MINFO1_MAX_WAIT_Msk            _U_(0x0777FFFF)                                       /**< (MPDDRC_MINFO1_MAX_WAIT) Register Mask  */
 
 /* NB_TRANSFERS mode */
-#define MPDDRC_MINFO1_NB_TRANSFERS_P1_NB_TRANSFERS_Pos _U_(0)                                               /**< (MPDDRC_MINFO1) Number of Transfers on Port x [x = 0..3] Position */
-#define MPDDRC_MINFO1_NB_TRANSFERS_P1_NB_TRANSFERS_Msk (_U_(0xFFFFFFFF) << MPDDRC_MINFO1_NB_TRANSFERS_P1_NB_TRANSFERS_Pos) /**< (MPDDRC_MINFO1) Number of Transfers on Port x [x = 0..3] Mask */
+#define MPDDRC_MINFO1_NB_TRANSFERS_P1_NB_TRANSFERS_Pos _U_(0)                                               /**< (MPDDRC_MINFO1) Number of Transfers on Port 1 Position */
+#define MPDDRC_MINFO1_NB_TRANSFERS_P1_NB_TRANSFERS_Msk (_U_(0xFFFFFFFF) << MPDDRC_MINFO1_NB_TRANSFERS_P1_NB_TRANSFERS_Pos) /**< (MPDDRC_MINFO1) Number of Transfers on Port 1 Mask */
 #define MPDDRC_MINFO1_NB_TRANSFERS_P1_NB_TRANSFERS(value) (MPDDRC_MINFO1_NB_TRANSFERS_P1_NB_TRANSFERS_Msk & ((value) << MPDDRC_MINFO1_NB_TRANSFERS_P1_NB_TRANSFERS_Pos))
 #define MPDDRC_MINFO1_NB_TRANSFERS_Msk        _U_(0xFFFFFFFF)                                       /**< (MPDDRC_MINFO1_NB_TRANSFERS) Register Mask  */
 
 /* TOTAL_LATENCY mode */
-#define MPDDRC_MINFO1_TOTAL_LATENCY_P1_TOTAL_LATENCY_Pos _U_(0)                                               /**< (MPDDRC_MINFO1) Total Latency on Port x [x = 0..3] Position */
-#define MPDDRC_MINFO1_TOTAL_LATENCY_P1_TOTAL_LATENCY_Msk (_U_(0xFFFFFFFF) << MPDDRC_MINFO1_TOTAL_LATENCY_P1_TOTAL_LATENCY_Pos) /**< (MPDDRC_MINFO1) Total Latency on Port x [x = 0..3] Mask */
+#define MPDDRC_MINFO1_TOTAL_LATENCY_P1_TOTAL_LATENCY_Pos _U_(0)                                               /**< (MPDDRC_MINFO1) Total Latency on Port 1 Position */
+#define MPDDRC_MINFO1_TOTAL_LATENCY_P1_TOTAL_LATENCY_Msk (_U_(0xFFFFFFFF) << MPDDRC_MINFO1_TOTAL_LATENCY_P1_TOTAL_LATENCY_Pos) /**< (MPDDRC_MINFO1) Total Latency on Port 1 Mask */
 #define MPDDRC_MINFO1_TOTAL_LATENCY_P1_TOTAL_LATENCY(value) (MPDDRC_MINFO1_TOTAL_LATENCY_P1_TOTAL_LATENCY_Msk & ((value) << MPDDRC_MINFO1_TOTAL_LATENCY_P1_TOTAL_LATENCY_Pos))
 #define MPDDRC_MINFO1_TOTAL_LATENCY_Msk       _U_(0xFFFFFFFF)                                       /**< (MPDDRC_MINFO1_TOTAL_LATENCY) Register Mask  */
 
 /* TOTAL_LATENCY_QOS01 mode */
-#define MPDDRC_MINFO1_TOTAL_LATENCY_QOS01_P1_TOTAL_LATENCY_QOS0_Pos _U_(0)                                               /**< (MPDDRC_MINFO1) Total Latency on Port 0 [x = 0..3] when value of qos is 0 Position */
-#define MPDDRC_MINFO1_TOTAL_LATENCY_QOS01_P1_TOTAL_LATENCY_QOS0_Msk (_U_(0xFFFF) << MPDDRC_MINFO1_TOTAL_LATENCY_QOS01_P1_TOTAL_LATENCY_QOS0_Pos) /**< (MPDDRC_MINFO1) Total Latency on Port 0 [x = 0..3] when value of qos is 0 Mask */
+#define MPDDRC_MINFO1_TOTAL_LATENCY_QOS01_P1_TOTAL_LATENCY_QOS0_Pos _U_(0)                                               /**< (MPDDRC_MINFO1) Total Latency on Port 0 when value of qos is 0 Position */
+#define MPDDRC_MINFO1_TOTAL_LATENCY_QOS01_P1_TOTAL_LATENCY_QOS0_Msk (_U_(0xFFFF) << MPDDRC_MINFO1_TOTAL_LATENCY_QOS01_P1_TOTAL_LATENCY_QOS0_Pos) /**< (MPDDRC_MINFO1) Total Latency on Port 0 when value of qos is 0 Mask */
 #define MPDDRC_MINFO1_TOTAL_LATENCY_QOS01_P1_TOTAL_LATENCY_QOS0(value) (MPDDRC_MINFO1_TOTAL_LATENCY_QOS01_P1_TOTAL_LATENCY_QOS0_Msk & ((value) << MPDDRC_MINFO1_TOTAL_LATENCY_QOS01_P1_TOTAL_LATENCY_QOS0_Pos))
-#define MPDDRC_MINFO1_TOTAL_LATENCY_QOS01_P1_TOTAL_LATENCY_QOS1_Pos _U_(16)                                              /**< (MPDDRC_MINFO1) Total Latency on Port 1 [x = 0..3] when value of qos is 1 Position */
-#define MPDDRC_MINFO1_TOTAL_LATENCY_QOS01_P1_TOTAL_LATENCY_QOS1_Msk (_U_(0xFFFF) << MPDDRC_MINFO1_TOTAL_LATENCY_QOS01_P1_TOTAL_LATENCY_QOS1_Pos) /**< (MPDDRC_MINFO1) Total Latency on Port 1 [x = 0..3] when value of qos is 1 Mask */
+#define MPDDRC_MINFO1_TOTAL_LATENCY_QOS01_P1_TOTAL_LATENCY_QOS1_Pos _U_(16)                                              /**< (MPDDRC_MINFO1) Total Latency on Port 1 when value of qos is 1 Position */
+#define MPDDRC_MINFO1_TOTAL_LATENCY_QOS01_P1_TOTAL_LATENCY_QOS1_Msk (_U_(0xFFFF) << MPDDRC_MINFO1_TOTAL_LATENCY_QOS01_P1_TOTAL_LATENCY_QOS1_Pos) /**< (MPDDRC_MINFO1) Total Latency on Port 1 when value of qos is 1 Mask */
 #define MPDDRC_MINFO1_TOTAL_LATENCY_QOS01_P1_TOTAL_LATENCY_QOS1(value) (MPDDRC_MINFO1_TOTAL_LATENCY_QOS01_P1_TOTAL_LATENCY_QOS1_Msk & ((value) << MPDDRC_MINFO1_TOTAL_LATENCY_QOS01_P1_TOTAL_LATENCY_QOS1_Pos))
 #define MPDDRC_MINFO1_TOTAL_LATENCY_QOS01_Msk _U_(0xFFFFFFFF)                                       /**< (MPDDRC_MINFO1_TOTAL_LATENCY_QOS01) Register Mask  */
 
 /* TOTAL_LATENCY_QOS23 mode */
-#define MPDDRC_MINFO1_TOTAL_LATENCY_QOS23_P1_TOTAL_LATENCY_QOS2_Pos _U_(0)                                               /**< (MPDDRC_MINFO1) Total Latency on Port 2 [x = 0..3] when value of qos is 2 Position */
-#define MPDDRC_MINFO1_TOTAL_LATENCY_QOS23_P1_TOTAL_LATENCY_QOS2_Msk (_U_(0xFFFF) << MPDDRC_MINFO1_TOTAL_LATENCY_QOS23_P1_TOTAL_LATENCY_QOS2_Pos) /**< (MPDDRC_MINFO1) Total Latency on Port 2 [x = 0..3] when value of qos is 2 Mask */
+#define MPDDRC_MINFO1_TOTAL_LATENCY_QOS23_P1_TOTAL_LATENCY_QOS2_Pos _U_(0)                                               /**< (MPDDRC_MINFO1) Total Latency on Port 2 when value of qos is 2 Position */
+#define MPDDRC_MINFO1_TOTAL_LATENCY_QOS23_P1_TOTAL_LATENCY_QOS2_Msk (_U_(0xFFFF) << MPDDRC_MINFO1_TOTAL_LATENCY_QOS23_P1_TOTAL_LATENCY_QOS2_Pos) /**< (MPDDRC_MINFO1) Total Latency on Port 2 when value of qos is 2 Mask */
 #define MPDDRC_MINFO1_TOTAL_LATENCY_QOS23_P1_TOTAL_LATENCY_QOS2(value) (MPDDRC_MINFO1_TOTAL_LATENCY_QOS23_P1_TOTAL_LATENCY_QOS2_Msk & ((value) << MPDDRC_MINFO1_TOTAL_LATENCY_QOS23_P1_TOTAL_LATENCY_QOS2_Pos))
-#define MPDDRC_MINFO1_TOTAL_LATENCY_QOS23_P1_TOTAL_LATENCY_QOS3_Pos _U_(16)                                              /**< (MPDDRC_MINFO1) Total Latency on Port 3 [x = 0..3] when value of qos is 3 Position */
-#define MPDDRC_MINFO1_TOTAL_LATENCY_QOS23_P1_TOTAL_LATENCY_QOS3_Msk (_U_(0xFFFF) << MPDDRC_MINFO1_TOTAL_LATENCY_QOS23_P1_TOTAL_LATENCY_QOS3_Pos) /**< (MPDDRC_MINFO1) Total Latency on Port 3 [x = 0..3] when value of qos is 3 Mask */
+#define MPDDRC_MINFO1_TOTAL_LATENCY_QOS23_P1_TOTAL_LATENCY_QOS3_Pos _U_(16)                                              /**< (MPDDRC_MINFO1) Total Latency on Port 3 when value of qos is 3 Position */
+#define MPDDRC_MINFO1_TOTAL_LATENCY_QOS23_P1_TOTAL_LATENCY_QOS3_Msk (_U_(0xFFFF) << MPDDRC_MINFO1_TOTAL_LATENCY_QOS23_P1_TOTAL_LATENCY_QOS3_Pos) /**< (MPDDRC_MINFO1) Total Latency on Port 3 when value of qos is 3 Mask */
 #define MPDDRC_MINFO1_TOTAL_LATENCY_QOS23_P1_TOTAL_LATENCY_QOS3(value) (MPDDRC_MINFO1_TOTAL_LATENCY_QOS23_P1_TOTAL_LATENCY_QOS3_Msk & ((value) << MPDDRC_MINFO1_TOTAL_LATENCY_QOS23_P1_TOTAL_LATENCY_QOS3_Pos))
 #define MPDDRC_MINFO1_TOTAL_LATENCY_QOS23_Msk _U_(0xFFFFFFFF)                                       /**< (MPDDRC_MINFO1_TOTAL_LATENCY_QOS23) Register Mask  */
 
@@ -725,11 +719,11 @@
 #define MPDDRC_MINFO2_Msk                     _U_(0x00000000)                                      /**< (MPDDRC_MINFO2) Register Mask  */
 
 /* MAX_WAIT mode */
-#define MPDDRC_MINFO2_MAX_WAIT_MAX_PORT2_WAITING_Pos _U_(0)                                               /**< (MPDDRC_MINFO2) Address High on Port x [x = 0..3] Position */
-#define MPDDRC_MINFO2_MAX_WAIT_MAX_PORT2_WAITING_Msk (_U_(0xFFFF) << MPDDRC_MINFO2_MAX_WAIT_MAX_PORT2_WAITING_Pos) /**< (MPDDRC_MINFO2) Address High on Port x [x = 0..3] Mask */
+#define MPDDRC_MINFO2_MAX_WAIT_MAX_PORT2_WAITING_Pos _U_(0)                                               /**< (MPDDRC_MINFO2) Address High on Port 2 Position */
+#define MPDDRC_MINFO2_MAX_WAIT_MAX_PORT2_WAITING_Msk (_U_(0xFFFF) << MPDDRC_MINFO2_MAX_WAIT_MAX_PORT2_WAITING_Pos) /**< (MPDDRC_MINFO2) Address High on Port 2 Mask */
 #define MPDDRC_MINFO2_MAX_WAIT_MAX_PORT2_WAITING(value) (MPDDRC_MINFO2_MAX_WAIT_MAX_PORT2_WAITING_Msk & ((value) << MPDDRC_MINFO2_MAX_WAIT_MAX_PORT2_WAITING_Pos))
-#define MPDDRC_MINFO2_MAX_WAIT_BURST_Pos      _U_(16)                                              /**< (MPDDRC_MINFO2) Type of Burst on Port x [x = 0..3] Position */
-#define MPDDRC_MINFO2_MAX_WAIT_BURST_Msk      (_U_(0x7) << MPDDRC_MINFO2_MAX_WAIT_BURST_Pos)       /**< (MPDDRC_MINFO2) Type of Burst on Port x [x = 0..3] Mask */
+#define MPDDRC_MINFO2_MAX_WAIT_BURST_Pos      _U_(16)                                              /**< (MPDDRC_MINFO2) Type of Burst on Port 2 Position */
+#define MPDDRC_MINFO2_MAX_WAIT_BURST_Msk      (_U_(0x7) << MPDDRC_MINFO2_MAX_WAIT_BURST_Pos)       /**< (MPDDRC_MINFO2) Type of Burst on Port 2 Mask */
 #define MPDDRC_MINFO2_MAX_WAIT_BURST(value)   (MPDDRC_MINFO2_MAX_WAIT_BURST_Msk & ((value) << MPDDRC_MINFO2_MAX_WAIT_BURST_Pos))
 #define   MPDDRC_MINFO2_MAX_WAIT_BURST_SINGLE_Val _U_(0x0)                                             /**< (MPDDRC_MINFO2) Single transfer  */
 #define   MPDDRC_MINFO2_MAX_WAIT_BURST_INCR_Val _U_(0x1)                                             /**< (MPDDRC_MINFO2) Incrementing burst of unspecified length  */
@@ -747,8 +741,8 @@
 #define MPDDRC_MINFO2_MAX_WAIT_BURST_INCR8    (MPDDRC_MINFO2_MAX_WAIT_BURST_INCR8_Val << MPDDRC_MINFO2_MAX_WAIT_BURST_Pos) /**< (MPDDRC_MINFO2) 8-beat incrementing burst Position  */
 #define MPDDRC_MINFO2_MAX_WAIT_BURST_WRAP16   (MPDDRC_MINFO2_MAX_WAIT_BURST_WRAP16_Val << MPDDRC_MINFO2_MAX_WAIT_BURST_Pos) /**< (MPDDRC_MINFO2) 16-beat wrapping burst Position  */
 #define MPDDRC_MINFO2_MAX_WAIT_BURST_INCR16   (MPDDRC_MINFO2_MAX_WAIT_BURST_INCR16_Val << MPDDRC_MINFO2_MAX_WAIT_BURST_Pos) /**< (MPDDRC_MINFO2) 16-beat incrementing burst Position  */
-#define MPDDRC_MINFO2_MAX_WAIT_SIZE_Pos       _U_(20)                                              /**< (MPDDRC_MINFO2) Transfer Size on Port x [x = 0..3] Position */
-#define MPDDRC_MINFO2_MAX_WAIT_SIZE_Msk       (_U_(0x7) << MPDDRC_MINFO2_MAX_WAIT_SIZE_Pos)        /**< (MPDDRC_MINFO2) Transfer Size on Port x [x = 0..3] Mask */
+#define MPDDRC_MINFO2_MAX_WAIT_SIZE_Pos       _U_(20)                                              /**< (MPDDRC_MINFO2) Transfer Size on Port 2 Position */
+#define MPDDRC_MINFO2_MAX_WAIT_SIZE_Msk       (_U_(0x7) << MPDDRC_MINFO2_MAX_WAIT_SIZE_Pos)        /**< (MPDDRC_MINFO2) Transfer Size on Port 2 Mask */
 #define MPDDRC_MINFO2_MAX_WAIT_SIZE(value)    (MPDDRC_MINFO2_MAX_WAIT_SIZE_Msk & ((value) << MPDDRC_MINFO2_MAX_WAIT_SIZE_Pos))
 #define   MPDDRC_MINFO2_MAX_WAIT_SIZE_8BITS_Val _U_(0x0)                                             /**< (MPDDRC_MINFO2) Byte transfer  */
 #define   MPDDRC_MINFO2_MAX_WAIT_SIZE_16BITS_Val _U_(0x1)                                             /**< (MPDDRC_MINFO2) Halfword transfer  */
@@ -758,49 +752,49 @@
 #define MPDDRC_MINFO2_MAX_WAIT_SIZE_16BITS    (MPDDRC_MINFO2_MAX_WAIT_SIZE_16BITS_Val << MPDDRC_MINFO2_MAX_WAIT_SIZE_Pos) /**< (MPDDRC_MINFO2) Halfword transfer Position  */
 #define MPDDRC_MINFO2_MAX_WAIT_SIZE_32BITS    (MPDDRC_MINFO2_MAX_WAIT_SIZE_32BITS_Val << MPDDRC_MINFO2_MAX_WAIT_SIZE_Pos) /**< (MPDDRC_MINFO2) Word transfer Position  */
 #define MPDDRC_MINFO2_MAX_WAIT_SIZE_64BITS    (MPDDRC_MINFO2_MAX_WAIT_SIZE_64BITS_Val << MPDDRC_MINFO2_MAX_WAIT_SIZE_Pos) /**< (MPDDRC_MINFO2) Dword transfer Position  */
-#define MPDDRC_MINFO2_MAX_WAIT_READ_WRITE_Pos _U_(24)                                              /**< (MPDDRC_MINFO2) Read or Write Access on Port x [x = 0..3] Position */
-#define MPDDRC_MINFO2_MAX_WAIT_READ_WRITE_Msk (_U_(0x1) << MPDDRC_MINFO2_MAX_WAIT_READ_WRITE_Pos)  /**< (MPDDRC_MINFO2) Read or Write Access on Port x [x = 0..3] Mask */
+#define MPDDRC_MINFO2_MAX_WAIT_READ_WRITE_Pos _U_(24)                                              /**< (MPDDRC_MINFO2) Read or Write Access on Port 2 Position */
+#define MPDDRC_MINFO2_MAX_WAIT_READ_WRITE_Msk (_U_(0x1) << MPDDRC_MINFO2_MAX_WAIT_READ_WRITE_Pos)  /**< (MPDDRC_MINFO2) Read or Write Access on Port 2 Mask */
 #define MPDDRC_MINFO2_MAX_WAIT_READ_WRITE(value) (MPDDRC_MINFO2_MAX_WAIT_READ_WRITE_Msk & ((value) << MPDDRC_MINFO2_MAX_WAIT_READ_WRITE_Pos))
-#define MPDDRC_MINFO2_MAX_WAIT_LQOS_Pos       _U_(25)                                              /**< (MPDDRC_MINFO2) Value of Quality Of Service on Port x [x = 0..3] Position */
-#define MPDDRC_MINFO2_MAX_WAIT_LQOS_Msk       (_U_(0x3) << MPDDRC_MINFO2_MAX_WAIT_LQOS_Pos)        /**< (MPDDRC_MINFO2) Value of Quality Of Service on Port x [x = 0..3] Mask */
+#define MPDDRC_MINFO2_MAX_WAIT_LQOS_Pos       _U_(25)                                              /**< (MPDDRC_MINFO2) Value of Quality Of Service on Port 2 Position */
+#define MPDDRC_MINFO2_MAX_WAIT_LQOS_Msk       (_U_(0x3) << MPDDRC_MINFO2_MAX_WAIT_LQOS_Pos)        /**< (MPDDRC_MINFO2) Value of Quality Of Service on Port 2 Mask */
 #define MPDDRC_MINFO2_MAX_WAIT_LQOS(value)    (MPDDRC_MINFO2_MAX_WAIT_LQOS_Msk & ((value) << MPDDRC_MINFO2_MAX_WAIT_LQOS_Pos))
-#define   MPDDRC_MINFO2_MAX_WAIT_LQOS_BACKGROUND_Val _U_(0x0)                                             /**< (MPDDRC_MINFO2) Background Transfers  */
-#define   MPDDRC_MINFO2_MAX_WAIT_LQOS_BANDWIDTH_Val _U_(0x1)                                             /**< (MPDDRC_MINFO2) Bandwidth Sensitive  */
-#define   MPDDRC_MINFO2_MAX_WAIT_LQOS_SENSITIVE_LAT_Val _U_(0x2)                                             /**< (MPDDRC_MINFO2) Latency Sensitive  */
-#define   MPDDRC_MINFO2_MAX_WAIT_LQOS_CRITICAL_LAT_Val _U_(0x3)                                             /**< (MPDDRC_MINFO2) Latency Critical  */
-#define MPDDRC_MINFO2_MAX_WAIT_LQOS_BACKGROUND (MPDDRC_MINFO2_MAX_WAIT_LQOS_BACKGROUND_Val << MPDDRC_MINFO2_MAX_WAIT_LQOS_Pos) /**< (MPDDRC_MINFO2) Background Transfers Position  */
-#define MPDDRC_MINFO2_MAX_WAIT_LQOS_BANDWIDTH (MPDDRC_MINFO2_MAX_WAIT_LQOS_BANDWIDTH_Val << MPDDRC_MINFO2_MAX_WAIT_LQOS_Pos) /**< (MPDDRC_MINFO2) Bandwidth Sensitive Position  */
-#define MPDDRC_MINFO2_MAX_WAIT_LQOS_SENSITIVE_LAT (MPDDRC_MINFO2_MAX_WAIT_LQOS_SENSITIVE_LAT_Val << MPDDRC_MINFO2_MAX_WAIT_LQOS_Pos) /**< (MPDDRC_MINFO2) Latency Sensitive Position  */
-#define MPDDRC_MINFO2_MAX_WAIT_LQOS_CRITICAL_LAT (MPDDRC_MINFO2_MAX_WAIT_LQOS_CRITICAL_LAT_Val << MPDDRC_MINFO2_MAX_WAIT_LQOS_Pos) /**< (MPDDRC_MINFO2) Latency Critical Position  */
+#define   MPDDRC_MINFO2_MAX_WAIT_LQOS_BACKGROUND_Val _U_(0x0)                                             /**< (MPDDRC_MINFO2) Background transfers  */
+#define   MPDDRC_MINFO2_MAX_WAIT_LQOS_BANDWIDTH_Val _U_(0x1)                                             /**< (MPDDRC_MINFO2) Bandwidth sensitive  */
+#define   MPDDRC_MINFO2_MAX_WAIT_LQOS_SENSITIVE_LAT_Val _U_(0x2)                                             /**< (MPDDRC_MINFO2) Latency sensitive  */
+#define   MPDDRC_MINFO2_MAX_WAIT_LQOS_CRITICAL_LAT_Val _U_(0x3)                                             /**< (MPDDRC_MINFO2) Latency critical  */
+#define MPDDRC_MINFO2_MAX_WAIT_LQOS_BACKGROUND (MPDDRC_MINFO2_MAX_WAIT_LQOS_BACKGROUND_Val << MPDDRC_MINFO2_MAX_WAIT_LQOS_Pos) /**< (MPDDRC_MINFO2) Background transfers Position  */
+#define MPDDRC_MINFO2_MAX_WAIT_LQOS_BANDWIDTH (MPDDRC_MINFO2_MAX_WAIT_LQOS_BANDWIDTH_Val << MPDDRC_MINFO2_MAX_WAIT_LQOS_Pos) /**< (MPDDRC_MINFO2) Bandwidth sensitive Position  */
+#define MPDDRC_MINFO2_MAX_WAIT_LQOS_SENSITIVE_LAT (MPDDRC_MINFO2_MAX_WAIT_LQOS_SENSITIVE_LAT_Val << MPDDRC_MINFO2_MAX_WAIT_LQOS_Pos) /**< (MPDDRC_MINFO2) Latency sensitive Position  */
+#define MPDDRC_MINFO2_MAX_WAIT_LQOS_CRITICAL_LAT (MPDDRC_MINFO2_MAX_WAIT_LQOS_CRITICAL_LAT_Val << MPDDRC_MINFO2_MAX_WAIT_LQOS_Pos) /**< (MPDDRC_MINFO2) Latency critical Position  */
 #define MPDDRC_MINFO2_MAX_WAIT_Msk            _U_(0x0777FFFF)                                       /**< (MPDDRC_MINFO2_MAX_WAIT) Register Mask  */
 
 /* NB_TRANSFERS mode */
-#define MPDDRC_MINFO2_NB_TRANSFERS_P2_NB_TRANSFERS_Pos _U_(0)                                               /**< (MPDDRC_MINFO2) Number of Transfers on Port x [x = 0..3] Position */
-#define MPDDRC_MINFO2_NB_TRANSFERS_P2_NB_TRANSFERS_Msk (_U_(0xFFFFFFFF) << MPDDRC_MINFO2_NB_TRANSFERS_P2_NB_TRANSFERS_Pos) /**< (MPDDRC_MINFO2) Number of Transfers on Port x [x = 0..3] Mask */
+#define MPDDRC_MINFO2_NB_TRANSFERS_P2_NB_TRANSFERS_Pos _U_(0)                                               /**< (MPDDRC_MINFO2) Number of Transfers on Port 2 Position */
+#define MPDDRC_MINFO2_NB_TRANSFERS_P2_NB_TRANSFERS_Msk (_U_(0xFFFFFFFF) << MPDDRC_MINFO2_NB_TRANSFERS_P2_NB_TRANSFERS_Pos) /**< (MPDDRC_MINFO2) Number of Transfers on Port 2 Mask */
 #define MPDDRC_MINFO2_NB_TRANSFERS_P2_NB_TRANSFERS(value) (MPDDRC_MINFO2_NB_TRANSFERS_P2_NB_TRANSFERS_Msk & ((value) << MPDDRC_MINFO2_NB_TRANSFERS_P2_NB_TRANSFERS_Pos))
 #define MPDDRC_MINFO2_NB_TRANSFERS_Msk        _U_(0xFFFFFFFF)                                       /**< (MPDDRC_MINFO2_NB_TRANSFERS) Register Mask  */
 
 /* TOTAL_LATENCY mode */
-#define MPDDRC_MINFO2_TOTAL_LATENCY_P2_TOTAL_LATENCY_Pos _U_(0)                                               /**< (MPDDRC_MINFO2) Total Latency on Port x [x = 0..3] Position */
-#define MPDDRC_MINFO2_TOTAL_LATENCY_P2_TOTAL_LATENCY_Msk (_U_(0xFFFFFFFF) << MPDDRC_MINFO2_TOTAL_LATENCY_P2_TOTAL_LATENCY_Pos) /**< (MPDDRC_MINFO2) Total Latency on Port x [x = 0..3] Mask */
+#define MPDDRC_MINFO2_TOTAL_LATENCY_P2_TOTAL_LATENCY_Pos _U_(0)                                               /**< (MPDDRC_MINFO2) Total Latency on Port 2 Position */
+#define MPDDRC_MINFO2_TOTAL_LATENCY_P2_TOTAL_LATENCY_Msk (_U_(0xFFFFFFFF) << MPDDRC_MINFO2_TOTAL_LATENCY_P2_TOTAL_LATENCY_Pos) /**< (MPDDRC_MINFO2) Total Latency on Port 2 Mask */
 #define MPDDRC_MINFO2_TOTAL_LATENCY_P2_TOTAL_LATENCY(value) (MPDDRC_MINFO2_TOTAL_LATENCY_P2_TOTAL_LATENCY_Msk & ((value) << MPDDRC_MINFO2_TOTAL_LATENCY_P2_TOTAL_LATENCY_Pos))
 #define MPDDRC_MINFO2_TOTAL_LATENCY_Msk       _U_(0xFFFFFFFF)                                       /**< (MPDDRC_MINFO2_TOTAL_LATENCY) Register Mask  */
 
 /* TOTAL_LATENCY_QOS01 mode */
-#define MPDDRC_MINFO2_TOTAL_LATENCY_QOS01_P2_TOTAL_LATENCY_QOS0_Pos _U_(0)                                               /**< (MPDDRC_MINFO2) Total Latency on Port 0 [x = 0..3] when value of qos is 0 Position */
-#define MPDDRC_MINFO2_TOTAL_LATENCY_QOS01_P2_TOTAL_LATENCY_QOS0_Msk (_U_(0xFFFF) << MPDDRC_MINFO2_TOTAL_LATENCY_QOS01_P2_TOTAL_LATENCY_QOS0_Pos) /**< (MPDDRC_MINFO2) Total Latency on Port 0 [x = 0..3] when value of qos is 0 Mask */
+#define MPDDRC_MINFO2_TOTAL_LATENCY_QOS01_P2_TOTAL_LATENCY_QOS0_Pos _U_(0)                                               /**< (MPDDRC_MINFO2) Total Latency on Port 0 when value of qos is 0 Position */
+#define MPDDRC_MINFO2_TOTAL_LATENCY_QOS01_P2_TOTAL_LATENCY_QOS0_Msk (_U_(0xFFFF) << MPDDRC_MINFO2_TOTAL_LATENCY_QOS01_P2_TOTAL_LATENCY_QOS0_Pos) /**< (MPDDRC_MINFO2) Total Latency on Port 0 when value of qos is 0 Mask */
 #define MPDDRC_MINFO2_TOTAL_LATENCY_QOS01_P2_TOTAL_LATENCY_QOS0(value) (MPDDRC_MINFO2_TOTAL_LATENCY_QOS01_P2_TOTAL_LATENCY_QOS0_Msk & ((value) << MPDDRC_MINFO2_TOTAL_LATENCY_QOS01_P2_TOTAL_LATENCY_QOS0_Pos))
-#define MPDDRC_MINFO2_TOTAL_LATENCY_QOS01_P2_TOTAL_LATENCY_QOS1_Pos _U_(16)                                              /**< (MPDDRC_MINFO2) Total Latency on Port 1 [x = 0..3] when value of qos is 1 Position */
-#define MPDDRC_MINFO2_TOTAL_LATENCY_QOS01_P2_TOTAL_LATENCY_QOS1_Msk (_U_(0xFFFF) << MPDDRC_MINFO2_TOTAL_LATENCY_QOS01_P2_TOTAL_LATENCY_QOS1_Pos) /**< (MPDDRC_MINFO2) Total Latency on Port 1 [x = 0..3] when value of qos is 1 Mask */
+#define MPDDRC_MINFO2_TOTAL_LATENCY_QOS01_P2_TOTAL_LATENCY_QOS1_Pos _U_(16)                                              /**< (MPDDRC_MINFO2) Total Latency on Port 1 when value of qos is 1 Position */
+#define MPDDRC_MINFO2_TOTAL_LATENCY_QOS01_P2_TOTAL_LATENCY_QOS1_Msk (_U_(0xFFFF) << MPDDRC_MINFO2_TOTAL_LATENCY_QOS01_P2_TOTAL_LATENCY_QOS1_Pos) /**< (MPDDRC_MINFO2) Total Latency on Port 1 when value of qos is 1 Mask */
 #define MPDDRC_MINFO2_TOTAL_LATENCY_QOS01_P2_TOTAL_LATENCY_QOS1(value) (MPDDRC_MINFO2_TOTAL_LATENCY_QOS01_P2_TOTAL_LATENCY_QOS1_Msk & ((value) << MPDDRC_MINFO2_TOTAL_LATENCY_QOS01_P2_TOTAL_LATENCY_QOS1_Pos))
 #define MPDDRC_MINFO2_TOTAL_LATENCY_QOS01_Msk _U_(0xFFFFFFFF)                                       /**< (MPDDRC_MINFO2_TOTAL_LATENCY_QOS01) Register Mask  */
 
 /* TOTAL_LATENCY_QOS23 mode */
-#define MPDDRC_MINFO2_TOTAL_LATENCY_QOS23_P2_TOTAL_LATENCY_QOS2_Pos _U_(0)                                               /**< (MPDDRC_MINFO2) Total Latency on Port 2 [x = 0..3] when value of qos is 2 Position */
-#define MPDDRC_MINFO2_TOTAL_LATENCY_QOS23_P2_TOTAL_LATENCY_QOS2_Msk (_U_(0xFFFF) << MPDDRC_MINFO2_TOTAL_LATENCY_QOS23_P2_TOTAL_LATENCY_QOS2_Pos) /**< (MPDDRC_MINFO2) Total Latency on Port 2 [x = 0..3] when value of qos is 2 Mask */
+#define MPDDRC_MINFO2_TOTAL_LATENCY_QOS23_P2_TOTAL_LATENCY_QOS2_Pos _U_(0)                                               /**< (MPDDRC_MINFO2) Total Latency on Port 2 when value of qos is 2 Position */
+#define MPDDRC_MINFO2_TOTAL_LATENCY_QOS23_P2_TOTAL_LATENCY_QOS2_Msk (_U_(0xFFFF) << MPDDRC_MINFO2_TOTAL_LATENCY_QOS23_P2_TOTAL_LATENCY_QOS2_Pos) /**< (MPDDRC_MINFO2) Total Latency on Port 2 when value of qos is 2 Mask */
 #define MPDDRC_MINFO2_TOTAL_LATENCY_QOS23_P2_TOTAL_LATENCY_QOS2(value) (MPDDRC_MINFO2_TOTAL_LATENCY_QOS23_P2_TOTAL_LATENCY_QOS2_Msk & ((value) << MPDDRC_MINFO2_TOTAL_LATENCY_QOS23_P2_TOTAL_LATENCY_QOS2_Pos))
-#define MPDDRC_MINFO2_TOTAL_LATENCY_QOS23_P2_TOTAL_LATENCY_QOS3_Pos _U_(16)                                              /**< (MPDDRC_MINFO2) Total Latency on Port 3 [x = 0..3] when value of qos is 3 Position */
-#define MPDDRC_MINFO2_TOTAL_LATENCY_QOS23_P2_TOTAL_LATENCY_QOS3_Msk (_U_(0xFFFF) << MPDDRC_MINFO2_TOTAL_LATENCY_QOS23_P2_TOTAL_LATENCY_QOS3_Pos) /**< (MPDDRC_MINFO2) Total Latency on Port 3 [x = 0..3] when value of qos is 3 Mask */
+#define MPDDRC_MINFO2_TOTAL_LATENCY_QOS23_P2_TOTAL_LATENCY_QOS3_Pos _U_(16)                                              /**< (MPDDRC_MINFO2) Total Latency on Port 3 when value of qos is 3 Position */
+#define MPDDRC_MINFO2_TOTAL_LATENCY_QOS23_P2_TOTAL_LATENCY_QOS3_Msk (_U_(0xFFFF) << MPDDRC_MINFO2_TOTAL_LATENCY_QOS23_P2_TOTAL_LATENCY_QOS3_Pos) /**< (MPDDRC_MINFO2) Total Latency on Port 3 when value of qos is 3 Mask */
 #define MPDDRC_MINFO2_TOTAL_LATENCY_QOS23_P2_TOTAL_LATENCY_QOS3(value) (MPDDRC_MINFO2_TOTAL_LATENCY_QOS23_P2_TOTAL_LATENCY_QOS3_Msk & ((value) << MPDDRC_MINFO2_TOTAL_LATENCY_QOS23_P2_TOTAL_LATENCY_QOS3_Pos))
 #define MPDDRC_MINFO2_TOTAL_LATENCY_QOS23_Msk _U_(0xFFFFFFFF)                                       /**< (MPDDRC_MINFO2_TOTAL_LATENCY_QOS23) Register Mask  */
 
@@ -809,11 +803,11 @@
 #define MPDDRC_MINFO3_Msk                     _U_(0x00000000)                                      /**< (MPDDRC_MINFO3) Register Mask  */
 
 /* MAX_WAIT mode */
-#define MPDDRC_MINFO3_MAX_WAIT_MAX_PORT3_WAITING_Pos _U_(0)                                               /**< (MPDDRC_MINFO3) Address High on Port x [x = 0..3] Position */
-#define MPDDRC_MINFO3_MAX_WAIT_MAX_PORT3_WAITING_Msk (_U_(0xFFFF) << MPDDRC_MINFO3_MAX_WAIT_MAX_PORT3_WAITING_Pos) /**< (MPDDRC_MINFO3) Address High on Port x [x = 0..3] Mask */
+#define MPDDRC_MINFO3_MAX_WAIT_MAX_PORT3_WAITING_Pos _U_(0)                                               /**< (MPDDRC_MINFO3) Address High on Port 3 Position */
+#define MPDDRC_MINFO3_MAX_WAIT_MAX_PORT3_WAITING_Msk (_U_(0xFFFF) << MPDDRC_MINFO3_MAX_WAIT_MAX_PORT3_WAITING_Pos) /**< (MPDDRC_MINFO3) Address High on Port 3 Mask */
 #define MPDDRC_MINFO3_MAX_WAIT_MAX_PORT3_WAITING(value) (MPDDRC_MINFO3_MAX_WAIT_MAX_PORT3_WAITING_Msk & ((value) << MPDDRC_MINFO3_MAX_WAIT_MAX_PORT3_WAITING_Pos))
-#define MPDDRC_MINFO3_MAX_WAIT_BURST_Pos      _U_(16)                                              /**< (MPDDRC_MINFO3) Type of Burst on Port x [x = 0..3] Position */
-#define MPDDRC_MINFO3_MAX_WAIT_BURST_Msk      (_U_(0x7) << MPDDRC_MINFO3_MAX_WAIT_BURST_Pos)       /**< (MPDDRC_MINFO3) Type of Burst on Port x [x = 0..3] Mask */
+#define MPDDRC_MINFO3_MAX_WAIT_BURST_Pos      _U_(16)                                              /**< (MPDDRC_MINFO3) Type of Burst on Port 3 Position */
+#define MPDDRC_MINFO3_MAX_WAIT_BURST_Msk      (_U_(0x7) << MPDDRC_MINFO3_MAX_WAIT_BURST_Pos)       /**< (MPDDRC_MINFO3) Type of Burst on Port 3 Mask */
 #define MPDDRC_MINFO3_MAX_WAIT_BURST(value)   (MPDDRC_MINFO3_MAX_WAIT_BURST_Msk & ((value) << MPDDRC_MINFO3_MAX_WAIT_BURST_Pos))
 #define   MPDDRC_MINFO3_MAX_WAIT_BURST_SINGLE_Val _U_(0x0)                                             /**< (MPDDRC_MINFO3) Single transfer  */
 #define   MPDDRC_MINFO3_MAX_WAIT_BURST_INCR_Val _U_(0x1)                                             /**< (MPDDRC_MINFO3) Incrementing burst of unspecified length  */
@@ -831,8 +825,8 @@
 #define MPDDRC_MINFO3_MAX_WAIT_BURST_INCR8    (MPDDRC_MINFO3_MAX_WAIT_BURST_INCR8_Val << MPDDRC_MINFO3_MAX_WAIT_BURST_Pos) /**< (MPDDRC_MINFO3) 8-beat incrementing burst Position  */
 #define MPDDRC_MINFO3_MAX_WAIT_BURST_WRAP16   (MPDDRC_MINFO3_MAX_WAIT_BURST_WRAP16_Val << MPDDRC_MINFO3_MAX_WAIT_BURST_Pos) /**< (MPDDRC_MINFO3) 16-beat wrapping burst Position  */
 #define MPDDRC_MINFO3_MAX_WAIT_BURST_INCR16   (MPDDRC_MINFO3_MAX_WAIT_BURST_INCR16_Val << MPDDRC_MINFO3_MAX_WAIT_BURST_Pos) /**< (MPDDRC_MINFO3) 16-beat incrementing burst Position  */
-#define MPDDRC_MINFO3_MAX_WAIT_SIZE_Pos       _U_(20)                                              /**< (MPDDRC_MINFO3) Transfer Size on Port x [x = 0..3] Position */
-#define MPDDRC_MINFO3_MAX_WAIT_SIZE_Msk       (_U_(0x7) << MPDDRC_MINFO3_MAX_WAIT_SIZE_Pos)        /**< (MPDDRC_MINFO3) Transfer Size on Port x [x = 0..3] Mask */
+#define MPDDRC_MINFO3_MAX_WAIT_SIZE_Pos       _U_(20)                                              /**< (MPDDRC_MINFO3) Transfer Size on Port 3 Position */
+#define MPDDRC_MINFO3_MAX_WAIT_SIZE_Msk       (_U_(0x7) << MPDDRC_MINFO3_MAX_WAIT_SIZE_Pos)        /**< (MPDDRC_MINFO3) Transfer Size on Port 3 Mask */
 #define MPDDRC_MINFO3_MAX_WAIT_SIZE(value)    (MPDDRC_MINFO3_MAX_WAIT_SIZE_Msk & ((value) << MPDDRC_MINFO3_MAX_WAIT_SIZE_Pos))
 #define   MPDDRC_MINFO3_MAX_WAIT_SIZE_8BITS_Val _U_(0x0)                                             /**< (MPDDRC_MINFO3) Byte transfer  */
 #define   MPDDRC_MINFO3_MAX_WAIT_SIZE_16BITS_Val _U_(0x1)                                             /**< (MPDDRC_MINFO3) Halfword transfer  */
@@ -842,49 +836,49 @@
 #define MPDDRC_MINFO3_MAX_WAIT_SIZE_16BITS    (MPDDRC_MINFO3_MAX_WAIT_SIZE_16BITS_Val << MPDDRC_MINFO3_MAX_WAIT_SIZE_Pos) /**< (MPDDRC_MINFO3) Halfword transfer Position  */
 #define MPDDRC_MINFO3_MAX_WAIT_SIZE_32BITS    (MPDDRC_MINFO3_MAX_WAIT_SIZE_32BITS_Val << MPDDRC_MINFO3_MAX_WAIT_SIZE_Pos) /**< (MPDDRC_MINFO3) Word transfer Position  */
 #define MPDDRC_MINFO3_MAX_WAIT_SIZE_64BITS    (MPDDRC_MINFO3_MAX_WAIT_SIZE_64BITS_Val << MPDDRC_MINFO3_MAX_WAIT_SIZE_Pos) /**< (MPDDRC_MINFO3) Dword transfer Position  */
-#define MPDDRC_MINFO3_MAX_WAIT_READ_WRITE_Pos _U_(24)                                              /**< (MPDDRC_MINFO3) Read or Write Access on Port x [x = 0..3] Position */
-#define MPDDRC_MINFO3_MAX_WAIT_READ_WRITE_Msk (_U_(0x1) << MPDDRC_MINFO3_MAX_WAIT_READ_WRITE_Pos)  /**< (MPDDRC_MINFO3) Read or Write Access on Port x [x = 0..3] Mask */
+#define MPDDRC_MINFO3_MAX_WAIT_READ_WRITE_Pos _U_(24)                                              /**< (MPDDRC_MINFO3) Read or Write Access on Port 3 Position */
+#define MPDDRC_MINFO3_MAX_WAIT_READ_WRITE_Msk (_U_(0x1) << MPDDRC_MINFO3_MAX_WAIT_READ_WRITE_Pos)  /**< (MPDDRC_MINFO3) Read or Write Access on Port 3 Mask */
 #define MPDDRC_MINFO3_MAX_WAIT_READ_WRITE(value) (MPDDRC_MINFO3_MAX_WAIT_READ_WRITE_Msk & ((value) << MPDDRC_MINFO3_MAX_WAIT_READ_WRITE_Pos))
-#define MPDDRC_MINFO3_MAX_WAIT_LQOS_Pos       _U_(25)                                              /**< (MPDDRC_MINFO3) Value of Quality Of Service on Port x [x = 0..3] Position */
-#define MPDDRC_MINFO3_MAX_WAIT_LQOS_Msk       (_U_(0x3) << MPDDRC_MINFO3_MAX_WAIT_LQOS_Pos)        /**< (MPDDRC_MINFO3) Value of Quality Of Service on Port x [x = 0..3] Mask */
+#define MPDDRC_MINFO3_MAX_WAIT_LQOS_Pos       _U_(25)                                              /**< (MPDDRC_MINFO3) Value of Quality Of Service on Port 3 Position */
+#define MPDDRC_MINFO3_MAX_WAIT_LQOS_Msk       (_U_(0x3) << MPDDRC_MINFO3_MAX_WAIT_LQOS_Pos)        /**< (MPDDRC_MINFO3) Value of Quality Of Service on Port 3 Mask */
 #define MPDDRC_MINFO3_MAX_WAIT_LQOS(value)    (MPDDRC_MINFO3_MAX_WAIT_LQOS_Msk & ((value) << MPDDRC_MINFO3_MAX_WAIT_LQOS_Pos))
-#define   MPDDRC_MINFO3_MAX_WAIT_LQOS_BACKGROUND_Val _U_(0x0)                                             /**< (MPDDRC_MINFO3) Background Transfers  */
-#define   MPDDRC_MINFO3_MAX_WAIT_LQOS_BANDWIDTH_Val _U_(0x1)                                             /**< (MPDDRC_MINFO3) Bandwidth Sensitive  */
-#define   MPDDRC_MINFO3_MAX_WAIT_LQOS_SENSITIVE_LAT_Val _U_(0x2)                                             /**< (MPDDRC_MINFO3) Latency Sensitive  */
-#define   MPDDRC_MINFO3_MAX_WAIT_LQOS_CRITICAL_LAT_Val _U_(0x3)                                             /**< (MPDDRC_MINFO3) Latency Critical  */
-#define MPDDRC_MINFO3_MAX_WAIT_LQOS_BACKGROUND (MPDDRC_MINFO3_MAX_WAIT_LQOS_BACKGROUND_Val << MPDDRC_MINFO3_MAX_WAIT_LQOS_Pos) /**< (MPDDRC_MINFO3) Background Transfers Position  */
-#define MPDDRC_MINFO3_MAX_WAIT_LQOS_BANDWIDTH (MPDDRC_MINFO3_MAX_WAIT_LQOS_BANDWIDTH_Val << MPDDRC_MINFO3_MAX_WAIT_LQOS_Pos) /**< (MPDDRC_MINFO3) Bandwidth Sensitive Position  */
-#define MPDDRC_MINFO3_MAX_WAIT_LQOS_SENSITIVE_LAT (MPDDRC_MINFO3_MAX_WAIT_LQOS_SENSITIVE_LAT_Val << MPDDRC_MINFO3_MAX_WAIT_LQOS_Pos) /**< (MPDDRC_MINFO3) Latency Sensitive Position  */
-#define MPDDRC_MINFO3_MAX_WAIT_LQOS_CRITICAL_LAT (MPDDRC_MINFO3_MAX_WAIT_LQOS_CRITICAL_LAT_Val << MPDDRC_MINFO3_MAX_WAIT_LQOS_Pos) /**< (MPDDRC_MINFO3) Latency Critical Position  */
+#define   MPDDRC_MINFO3_MAX_WAIT_LQOS_BACKGROUND_Val _U_(0x0)                                             /**< (MPDDRC_MINFO3) Background transfers  */
+#define   MPDDRC_MINFO3_MAX_WAIT_LQOS_BANDWIDTH_Val _U_(0x1)                                             /**< (MPDDRC_MINFO3) Bandwidth sensitive  */
+#define   MPDDRC_MINFO3_MAX_WAIT_LQOS_SENSITIVE_LAT_Val _U_(0x2)                                             /**< (MPDDRC_MINFO3) Latency sensitive  */
+#define   MPDDRC_MINFO3_MAX_WAIT_LQOS_CRITICAL_LAT_Val _U_(0x3)                                             /**< (MPDDRC_MINFO3) Latency critical  */
+#define MPDDRC_MINFO3_MAX_WAIT_LQOS_BACKGROUND (MPDDRC_MINFO3_MAX_WAIT_LQOS_BACKGROUND_Val << MPDDRC_MINFO3_MAX_WAIT_LQOS_Pos) /**< (MPDDRC_MINFO3) Background transfers Position  */
+#define MPDDRC_MINFO3_MAX_WAIT_LQOS_BANDWIDTH (MPDDRC_MINFO3_MAX_WAIT_LQOS_BANDWIDTH_Val << MPDDRC_MINFO3_MAX_WAIT_LQOS_Pos) /**< (MPDDRC_MINFO3) Bandwidth sensitive Position  */
+#define MPDDRC_MINFO3_MAX_WAIT_LQOS_SENSITIVE_LAT (MPDDRC_MINFO3_MAX_WAIT_LQOS_SENSITIVE_LAT_Val << MPDDRC_MINFO3_MAX_WAIT_LQOS_Pos) /**< (MPDDRC_MINFO3) Latency sensitive Position  */
+#define MPDDRC_MINFO3_MAX_WAIT_LQOS_CRITICAL_LAT (MPDDRC_MINFO3_MAX_WAIT_LQOS_CRITICAL_LAT_Val << MPDDRC_MINFO3_MAX_WAIT_LQOS_Pos) /**< (MPDDRC_MINFO3) Latency critical Position  */
 #define MPDDRC_MINFO3_MAX_WAIT_Msk            _U_(0x0777FFFF)                                       /**< (MPDDRC_MINFO3_MAX_WAIT) Register Mask  */
 
 /* NB_TRANSFERS mode */
-#define MPDDRC_MINFO3_NB_TRANSFERS_P3_NB_TRANSFERS_Pos _U_(0)                                               /**< (MPDDRC_MINFO3) Number of Transfers on Port x [x = 0..3] Position */
-#define MPDDRC_MINFO3_NB_TRANSFERS_P3_NB_TRANSFERS_Msk (_U_(0xFFFFFFFF) << MPDDRC_MINFO3_NB_TRANSFERS_P3_NB_TRANSFERS_Pos) /**< (MPDDRC_MINFO3) Number of Transfers on Port x [x = 0..3] Mask */
+#define MPDDRC_MINFO3_NB_TRANSFERS_P3_NB_TRANSFERS_Pos _U_(0)                                               /**< (MPDDRC_MINFO3) Number of Transfers on Port 3 Position */
+#define MPDDRC_MINFO3_NB_TRANSFERS_P3_NB_TRANSFERS_Msk (_U_(0xFFFFFFFF) << MPDDRC_MINFO3_NB_TRANSFERS_P3_NB_TRANSFERS_Pos) /**< (MPDDRC_MINFO3) Number of Transfers on Port 3 Mask */
 #define MPDDRC_MINFO3_NB_TRANSFERS_P3_NB_TRANSFERS(value) (MPDDRC_MINFO3_NB_TRANSFERS_P3_NB_TRANSFERS_Msk & ((value) << MPDDRC_MINFO3_NB_TRANSFERS_P3_NB_TRANSFERS_Pos))
 #define MPDDRC_MINFO3_NB_TRANSFERS_Msk        _U_(0xFFFFFFFF)                                       /**< (MPDDRC_MINFO3_NB_TRANSFERS) Register Mask  */
 
 /* TOTAL_LATENCY mode */
-#define MPDDRC_MINFO3_TOTAL_LATENCY_P3_TOTAL_LATENCY_Pos _U_(0)                                               /**< (MPDDRC_MINFO3) Total Latency on Port x [x = 0..3] Position */
-#define MPDDRC_MINFO3_TOTAL_LATENCY_P3_TOTAL_LATENCY_Msk (_U_(0xFFFFFFFF) << MPDDRC_MINFO3_TOTAL_LATENCY_P3_TOTAL_LATENCY_Pos) /**< (MPDDRC_MINFO3) Total Latency on Port x [x = 0..3] Mask */
+#define MPDDRC_MINFO3_TOTAL_LATENCY_P3_TOTAL_LATENCY_Pos _U_(0)                                               /**< (MPDDRC_MINFO3) Total Latency on Port 3 Position */
+#define MPDDRC_MINFO3_TOTAL_LATENCY_P3_TOTAL_LATENCY_Msk (_U_(0xFFFFFFFF) << MPDDRC_MINFO3_TOTAL_LATENCY_P3_TOTAL_LATENCY_Pos) /**< (MPDDRC_MINFO3) Total Latency on Port 3 Mask */
 #define MPDDRC_MINFO3_TOTAL_LATENCY_P3_TOTAL_LATENCY(value) (MPDDRC_MINFO3_TOTAL_LATENCY_P3_TOTAL_LATENCY_Msk & ((value) << MPDDRC_MINFO3_TOTAL_LATENCY_P3_TOTAL_LATENCY_Pos))
 #define MPDDRC_MINFO3_TOTAL_LATENCY_Msk       _U_(0xFFFFFFFF)                                       /**< (MPDDRC_MINFO3_TOTAL_LATENCY) Register Mask  */
 
 /* TOTAL_LATENCY_QOS01 mode */
-#define MPDDRC_MINFO3_TOTAL_LATENCY_QOS01_P3_TOTAL_LATENCY_QOS0_Pos _U_(0)                                               /**< (MPDDRC_MINFO3) Total Latency on Port 0 [x = 0..3] when value of qos is 0 Position */
-#define MPDDRC_MINFO3_TOTAL_LATENCY_QOS01_P3_TOTAL_LATENCY_QOS0_Msk (_U_(0xFFFF) << MPDDRC_MINFO3_TOTAL_LATENCY_QOS01_P3_TOTAL_LATENCY_QOS0_Pos) /**< (MPDDRC_MINFO3) Total Latency on Port 0 [x = 0..3] when value of qos is 0 Mask */
+#define MPDDRC_MINFO3_TOTAL_LATENCY_QOS01_P3_TOTAL_LATENCY_QOS0_Pos _U_(0)                                               /**< (MPDDRC_MINFO3) Total Latency on Port 0 when value of qos is 0 Position */
+#define MPDDRC_MINFO3_TOTAL_LATENCY_QOS01_P3_TOTAL_LATENCY_QOS0_Msk (_U_(0xFFFF) << MPDDRC_MINFO3_TOTAL_LATENCY_QOS01_P3_TOTAL_LATENCY_QOS0_Pos) /**< (MPDDRC_MINFO3) Total Latency on Port 0 when value of qos is 0 Mask */
 #define MPDDRC_MINFO3_TOTAL_LATENCY_QOS01_P3_TOTAL_LATENCY_QOS0(value) (MPDDRC_MINFO3_TOTAL_LATENCY_QOS01_P3_TOTAL_LATENCY_QOS0_Msk & ((value) << MPDDRC_MINFO3_TOTAL_LATENCY_QOS01_P3_TOTAL_LATENCY_QOS0_Pos))
-#define MPDDRC_MINFO3_TOTAL_LATENCY_QOS01_P3_TOTAL_LATENCY_QOS1_Pos _U_(16)                                              /**< (MPDDRC_MINFO3) Total Latency on Port 1 [x = 0..3] when value of qos is 1 Position */
-#define MPDDRC_MINFO3_TOTAL_LATENCY_QOS01_P3_TOTAL_LATENCY_QOS1_Msk (_U_(0xFFFF) << MPDDRC_MINFO3_TOTAL_LATENCY_QOS01_P3_TOTAL_LATENCY_QOS1_Pos) /**< (MPDDRC_MINFO3) Total Latency on Port 1 [x = 0..3] when value of qos is 1 Mask */
+#define MPDDRC_MINFO3_TOTAL_LATENCY_QOS01_P3_TOTAL_LATENCY_QOS1_Pos _U_(16)                                              /**< (MPDDRC_MINFO3) Total Latency on Port 1 when value of qos is 1 Position */
+#define MPDDRC_MINFO3_TOTAL_LATENCY_QOS01_P3_TOTAL_LATENCY_QOS1_Msk (_U_(0xFFFF) << MPDDRC_MINFO3_TOTAL_LATENCY_QOS01_P3_TOTAL_LATENCY_QOS1_Pos) /**< (MPDDRC_MINFO3) Total Latency on Port 1 when value of qos is 1 Mask */
 #define MPDDRC_MINFO3_TOTAL_LATENCY_QOS01_P3_TOTAL_LATENCY_QOS1(value) (MPDDRC_MINFO3_TOTAL_LATENCY_QOS01_P3_TOTAL_LATENCY_QOS1_Msk & ((value) << MPDDRC_MINFO3_TOTAL_LATENCY_QOS01_P3_TOTAL_LATENCY_QOS1_Pos))
 #define MPDDRC_MINFO3_TOTAL_LATENCY_QOS01_Msk _U_(0xFFFFFFFF)                                       /**< (MPDDRC_MINFO3_TOTAL_LATENCY_QOS01) Register Mask  */
 
 /* TOTAL_LATENCY_QOS23 mode */
-#define MPDDRC_MINFO3_TOTAL_LATENCY_QOS23_P3_TOTAL_LATENCY_QOS2_Pos _U_(0)                                               /**< (MPDDRC_MINFO3) Total Latency on Port 2 [x = 0..3] when value of qos is 2 Position */
-#define MPDDRC_MINFO3_TOTAL_LATENCY_QOS23_P3_TOTAL_LATENCY_QOS2_Msk (_U_(0xFFFF) << MPDDRC_MINFO3_TOTAL_LATENCY_QOS23_P3_TOTAL_LATENCY_QOS2_Pos) /**< (MPDDRC_MINFO3) Total Latency on Port 2 [x = 0..3] when value of qos is 2 Mask */
+#define MPDDRC_MINFO3_TOTAL_LATENCY_QOS23_P3_TOTAL_LATENCY_QOS2_Pos _U_(0)                                               /**< (MPDDRC_MINFO3) Total Latency on Port 2 when value of qos is 2 Position */
+#define MPDDRC_MINFO3_TOTAL_LATENCY_QOS23_P3_TOTAL_LATENCY_QOS2_Msk (_U_(0xFFFF) << MPDDRC_MINFO3_TOTAL_LATENCY_QOS23_P3_TOTAL_LATENCY_QOS2_Pos) /**< (MPDDRC_MINFO3) Total Latency on Port 2 when value of qos is 2 Mask */
 #define MPDDRC_MINFO3_TOTAL_LATENCY_QOS23_P3_TOTAL_LATENCY_QOS2(value) (MPDDRC_MINFO3_TOTAL_LATENCY_QOS23_P3_TOTAL_LATENCY_QOS2_Msk & ((value) << MPDDRC_MINFO3_TOTAL_LATENCY_QOS23_P3_TOTAL_LATENCY_QOS2_Pos))
-#define MPDDRC_MINFO3_TOTAL_LATENCY_QOS23_P3_TOTAL_LATENCY_QOS3_Pos _U_(16)                                              /**< (MPDDRC_MINFO3) Total Latency on Port 3 [x = 0..3] when value of qos is 3 Position */
-#define MPDDRC_MINFO3_TOTAL_LATENCY_QOS23_P3_TOTAL_LATENCY_QOS3_Msk (_U_(0xFFFF) << MPDDRC_MINFO3_TOTAL_LATENCY_QOS23_P3_TOTAL_LATENCY_QOS3_Pos) /**< (MPDDRC_MINFO3) Total Latency on Port 3 [x = 0..3] when value of qos is 3 Mask */
+#define MPDDRC_MINFO3_TOTAL_LATENCY_QOS23_P3_TOTAL_LATENCY_QOS3_Pos _U_(16)                                              /**< (MPDDRC_MINFO3) Total Latency on Port 3 when value of qos is 3 Position */
+#define MPDDRC_MINFO3_TOTAL_LATENCY_QOS23_P3_TOTAL_LATENCY_QOS3_Msk (_U_(0xFFFF) << MPDDRC_MINFO3_TOTAL_LATENCY_QOS23_P3_TOTAL_LATENCY_QOS3_Pos) /**< (MPDDRC_MINFO3) Total Latency on Port 3 when value of qos is 3 Mask */
 #define MPDDRC_MINFO3_TOTAL_LATENCY_QOS23_P3_TOTAL_LATENCY_QOS3(value) (MPDDRC_MINFO3_TOTAL_LATENCY_QOS23_P3_TOTAL_LATENCY_QOS3_Msk & ((value) << MPDDRC_MINFO3_TOTAL_LATENCY_QOS23_P3_TOTAL_LATENCY_QOS3_Pos))
 #define MPDDRC_MINFO3_TOTAL_LATENCY_QOS23_Msk _U_(0xFFFFFFFF)                                       /**< (MPDDRC_MINFO3_TOTAL_LATENCY_QOS23) Register Mask  */
 
@@ -952,8 +946,8 @@
 #define MPDDRC_WPMR_WPKEY_Pos                 _U_(8)                                               /**< (MPDDRC_WPMR) Write Protection Key Position */
 #define MPDDRC_WPMR_WPKEY_Msk                 (_U_(0xFFFFFF) << MPDDRC_WPMR_WPKEY_Pos)             /**< (MPDDRC_WPMR) Write Protection Key Mask */
 #define MPDDRC_WPMR_WPKEY(value)              (MPDDRC_WPMR_WPKEY_Msk & ((value) << MPDDRC_WPMR_WPKEY_Pos))
-#define   MPDDRC_WPMR_WPKEY_PASSWD_Val        _U_(0x444452)                                        /**< (MPDDRC_WPMR) Writing any other value in this field aborts the write operation of the WPEN and WPITEN bits.Always reads as 0.  */
-#define MPDDRC_WPMR_WPKEY_PASSWD              (MPDDRC_WPMR_WPKEY_PASSWD_Val << MPDDRC_WPMR_WPKEY_Pos) /**< (MPDDRC_WPMR) Writing any other value in this field aborts the write operation of the WPEN and WPITEN bits.Always reads as 0. Position  */
+#define   MPDDRC_WPMR_WPKEY_PASSWD_Val        _U_(0x444452)                                        /**< (MPDDRC_WPMR) Writing any other value in this field aborts the write operation of the WPEN and WPITEN bits. Always reads as 0.  */
+#define MPDDRC_WPMR_WPKEY_PASSWD              (MPDDRC_WPMR_WPKEY_PASSWD_Val << MPDDRC_WPMR_WPKEY_Pos) /**< (MPDDRC_WPMR) Writing any other value in this field aborts the write operation of the WPEN and WPITEN bits. Always reads as 0. Position  */
 #define MPDDRC_WPMR_Msk                       _U_(0xFFFFFF13)                                      /**< (MPDDRC_WPMR) Register Mask  */
 
 
@@ -994,137 +988,6 @@
 #define MPDDRC_WPSR_Msk                       _U_(0x83FFFF0F)                                      /**< (MPDDRC_WPSR) Register Mask  */
 
 
-/* -------- MPDDRC_VERSION : (MPDDRC Offset: 0xFC) ( R/ 32) MPDDRC Version Register -------- */
-#define MPDDRC_VERSION_VERSION_Pos            _U_(0)                                               /**< (MPDDRC_VERSION) Version of the Hardware Module Position */
-#define MPDDRC_VERSION_VERSION_Msk            (_U_(0xFFFF) << MPDDRC_VERSION_VERSION_Pos)          /**< (MPDDRC_VERSION) Version of the Hardware Module Mask */
-#define MPDDRC_VERSION_VERSION(value)         (MPDDRC_VERSION_VERSION_Msk & ((value) << MPDDRC_VERSION_VERSION_Pos))
-#define MPDDRC_VERSION_MFN_Pos                _U_(16)                                              /**< (MPDDRC_VERSION) Metal Fix Number Position */
-#define MPDDRC_VERSION_MFN_Msk                (_U_(0xF) << MPDDRC_VERSION_MFN_Pos)                 /**< (MPDDRC_VERSION) Metal Fix Number Mask */
-#define MPDDRC_VERSION_MFN(value)             (MPDDRC_VERSION_MFN_Msk & ((value) << MPDDRC_VERSION_MFN_Pos))
-#define MPDDRC_VERSION_Msk                    _U_(0x000FFFFF)                                      /**< (MPDDRC_VERSION) Register Mask  */
-
-
-/* -------- MPDDRC_DLL_OS : (MPDDRC Offset: 0x100) (R/W 32) MPDDRC DLL Offset Selection Register -------- */
-#define MPDDRC_DLL_OS_SELOFF_Pos              _U_(0)                                               /**< (MPDDRC_DLL_OS) Offset Selection Position */
-#define MPDDRC_DLL_OS_SELOFF_Msk              (_U_(0x1) << MPDDRC_DLL_OS_SELOFF_Pos)               /**< (MPDDRC_DLL_OS) Offset Selection Mask */
-#define MPDDRC_DLL_OS_SELOFF(value)           (MPDDRC_DLL_OS_SELOFF_Msk & ((value) << MPDDRC_DLL_OS_SELOFF_Pos))
-#define MPDDRC_DLL_OS_Msk                     _U_(0x00000001)                                      /**< (MPDDRC_DLL_OS) Register Mask  */
-
-
-/* -------- MPDDRC_DLL_MAO : (MPDDRC Offset: 0x104) (R/W 32) MPDDRC DLL Master Offset Register -------- */
-#define MPDDRC_DLL_MAO_MAOFF_Pos              _U_(0)                                               /**< (MPDDRC_DLL_MAO) Master Delay Line Offset Position */
-#define MPDDRC_DLL_MAO_MAOFF_Msk              (_U_(0xFF) << MPDDRC_DLL_MAO_MAOFF_Pos)              /**< (MPDDRC_DLL_MAO) Master Delay Line Offset Mask */
-#define MPDDRC_DLL_MAO_MAOFF(value)           (MPDDRC_DLL_MAO_MAOFF_Msk & ((value) << MPDDRC_DLL_MAO_MAOFF_Pos))
-#define MPDDRC_DLL_MAO_Msk                    _U_(0x000000FF)                                      /**< (MPDDRC_DLL_MAO) Register Mask  */
-
-
-/* -------- MPDDRC_DLL_SO0 : (MPDDRC Offset: 0x108) (R/W 32) MPDDRC DLL Slave Offset 0 Register -------- */
-#define MPDDRC_DLL_SO0_S0OFF_Pos              _U_(0)                                               /**< (MPDDRC_DLL_SO0) SLAVEx Delay Line Offset Position */
-#define MPDDRC_DLL_SO0_S0OFF_Msk              (_U_(0xFF) << MPDDRC_DLL_SO0_S0OFF_Pos)              /**< (MPDDRC_DLL_SO0) SLAVEx Delay Line Offset Mask */
-#define MPDDRC_DLL_SO0_S0OFF(value)           (MPDDRC_DLL_SO0_S0OFF_Msk & ((value) << MPDDRC_DLL_SO0_S0OFF_Pos))
-#define MPDDRC_DLL_SO0_S1OFF_Pos              _U_(8)                                               /**< (MPDDRC_DLL_SO0) SLAVEx Delay Line Offset Position */
-#define MPDDRC_DLL_SO0_S1OFF_Msk              (_U_(0xFF) << MPDDRC_DLL_SO0_S1OFF_Pos)              /**< (MPDDRC_DLL_SO0) SLAVEx Delay Line Offset Mask */
-#define MPDDRC_DLL_SO0_S1OFF(value)           (MPDDRC_DLL_SO0_S1OFF_Msk & ((value) << MPDDRC_DLL_SO0_S1OFF_Pos))
-#define MPDDRC_DLL_SO0_S2OFF_Pos              _U_(16)                                              /**< (MPDDRC_DLL_SO0) SLAVEx Delay Line Offset Position */
-#define MPDDRC_DLL_SO0_S2OFF_Msk              (_U_(0xFF) << MPDDRC_DLL_SO0_S2OFF_Pos)              /**< (MPDDRC_DLL_SO0) SLAVEx Delay Line Offset Mask */
-#define MPDDRC_DLL_SO0_S2OFF(value)           (MPDDRC_DLL_SO0_S2OFF_Msk & ((value) << MPDDRC_DLL_SO0_S2OFF_Pos))
-#define MPDDRC_DLL_SO0_S3OFF_Pos              _U_(24)                                              /**< (MPDDRC_DLL_SO0) SLAVEx Delay Line Offset Position */
-#define MPDDRC_DLL_SO0_S3OFF_Msk              (_U_(0xFF) << MPDDRC_DLL_SO0_S3OFF_Pos)              /**< (MPDDRC_DLL_SO0) SLAVEx Delay Line Offset Mask */
-#define MPDDRC_DLL_SO0_S3OFF(value)           (MPDDRC_DLL_SO0_S3OFF_Msk & ((value) << MPDDRC_DLL_SO0_S3OFF_Pos))
-#define MPDDRC_DLL_SO0_Msk                    _U_(0xFFFFFFFF)                                      /**< (MPDDRC_DLL_SO0) Register Mask  */
-
-
-/* -------- MPDDRC_DLL_WRO : (MPDDRC Offset: 0x110) (R/W 32) MPDDRC DLL CLKWR Offset Register -------- */
-#define MPDDRC_DLL_WRO_WR0OFF_Pos             _U_(0)                                               /**< (MPDDRC_DLL_WRO) CLKWRx Delay Line Offset Position */
-#define MPDDRC_DLL_WRO_WR0OFF_Msk             (_U_(0xFF) << MPDDRC_DLL_WRO_WR0OFF_Pos)             /**< (MPDDRC_DLL_WRO) CLKWRx Delay Line Offset Mask */
-#define MPDDRC_DLL_WRO_WR0OFF(value)          (MPDDRC_DLL_WRO_WR0OFF_Msk & ((value) << MPDDRC_DLL_WRO_WR0OFF_Pos))
-#define MPDDRC_DLL_WRO_WR1OFF_Pos             _U_(8)                                               /**< (MPDDRC_DLL_WRO) CLKWRx Delay Line Offset Position */
-#define MPDDRC_DLL_WRO_WR1OFF_Msk             (_U_(0xFF) << MPDDRC_DLL_WRO_WR1OFF_Pos)             /**< (MPDDRC_DLL_WRO) CLKWRx Delay Line Offset Mask */
-#define MPDDRC_DLL_WRO_WR1OFF(value)          (MPDDRC_DLL_WRO_WR1OFF_Msk & ((value) << MPDDRC_DLL_WRO_WR1OFF_Pos))
-#define MPDDRC_DLL_WRO_Msk                    _U_(0x0000FFFF)                                      /**< (MPDDRC_DLL_WRO) Register Mask  */
-
-
-/* -------- MPDDRC_DLL_SM : (MPDDRC Offset: 0x118) ( R/ 32) MPDDRC DLL Status Master 0 Register -------- */
-#define MPDDRC_DLL_SM_MDINC_Pos               _U_(0)                                               /**< (MPDDRC_DLL_SM) MASTERx Delay Increment Position */
-#define MPDDRC_DLL_SM_MDINC_Msk               (_U_(0x1) << MPDDRC_DLL_SM_MDINC_Pos)                /**< (MPDDRC_DLL_SM) MASTERx Delay Increment Mask */
-#define MPDDRC_DLL_SM_MDINC(value)            (MPDDRC_DLL_SM_MDINC_Msk & ((value) << MPDDRC_DLL_SM_MDINC_Pos))
-#define MPDDRC_DLL_SM_MDDEC_Pos               _U_(1)                                               /**< (MPDDRC_DLL_SM) MASTERx Delay Decrement Position */
-#define MPDDRC_DLL_SM_MDDEC_Msk               (_U_(0x1) << MPDDRC_DLL_SM_MDDEC_Pos)                /**< (MPDDRC_DLL_SM) MASTERx Delay Decrement Mask */
-#define MPDDRC_DLL_SM_MDDEC(value)            (MPDDRC_DLL_SM_MDDEC_Msk & ((value) << MPDDRC_DLL_SM_MDDEC_Pos))
-#define MPDDRC_DLL_SM_MDOVF_Pos               _U_(2)                                               /**< (MPDDRC_DLL_SM) MASTERx Delay Overflow Flag Position */
-#define MPDDRC_DLL_SM_MDOVF_Msk               (_U_(0x1) << MPDDRC_DLL_SM_MDOVF_Pos)                /**< (MPDDRC_DLL_SM) MASTERx Delay Overflow Flag Mask */
-#define MPDDRC_DLL_SM_MDOVF(value)            (MPDDRC_DLL_SM_MDOVF_Msk & ((value) << MPDDRC_DLL_SM_MDOVF_Pos))
-#define MPDDRC_DLL_SM_MDLVAL_Pos              _U_(8)                                               /**< (MPDDRC_DLL_SM) MASTERx Delay Lock Value Position */
-#define MPDDRC_DLL_SM_MDLVAL_Msk              (_U_(0xFF) << MPDDRC_DLL_SM_MDLVAL_Pos)              /**< (MPDDRC_DLL_SM) MASTERx Delay Lock Value Mask */
-#define MPDDRC_DLL_SM_MDLVAL(value)           (MPDDRC_DLL_SM_MDLVAL_Msk & ((value) << MPDDRC_DLL_SM_MDLVAL_Pos))
-#define MPDDRC_DLL_SM_MDCNT_Pos               _U_(20)                                              /**< (MPDDRC_DLL_SM) MASTERx Delay Counter Value Position */
-#define MPDDRC_DLL_SM_MDCNT_Msk               (_U_(0xFF) << MPDDRC_DLL_SM_MDCNT_Pos)               /**< (MPDDRC_DLL_SM) MASTERx Delay Counter Value Mask */
-#define MPDDRC_DLL_SM_MDCNT(value)            (MPDDRC_DLL_SM_MDCNT_Msk & ((value) << MPDDRC_DLL_SM_MDCNT_Pos))
-#define MPDDRC_DLL_SM_Msk                     _U_(0x0FF0FF07)                                      /**< (MPDDRC_DLL_SM) Register Mask  */
-
-
-/* -------- MPDDRC_DLL_SSL : (MPDDRC Offset: 0x128) ( R/ 32) MPDDRC DLL Status Slave 0 Register -------- */
-#define MPDDRC_DLL_SSL_SDCOVF_Pos             _U_(0)                                               /**< (MPDDRC_DLL_SSL) SLAVEx Delay Correction Overflow Flag Position */
-#define MPDDRC_DLL_SSL_SDCOVF_Msk             (_U_(0x1) << MPDDRC_DLL_SSL_SDCOVF_Pos)              /**< (MPDDRC_DLL_SSL) SLAVEx Delay Correction Overflow Flag Mask */
-#define MPDDRC_DLL_SSL_SDCOVF(value)          (MPDDRC_DLL_SSL_SDCOVF_Msk & ((value) << MPDDRC_DLL_SSL_SDCOVF_Pos))
-#define MPDDRC_DLL_SSL_SDCUDF_Pos             _U_(1)                                               /**< (MPDDRC_DLL_SSL) SLAVEx Delay Correction Underflow Flag Position */
-#define MPDDRC_DLL_SSL_SDCUDF_Msk             (_U_(0x1) << MPDDRC_DLL_SSL_SDCUDF_Pos)              /**< (MPDDRC_DLL_SSL) SLAVEx Delay Correction Underflow Flag Mask */
-#define MPDDRC_DLL_SSL_SDCUDF(value)          (MPDDRC_DLL_SSL_SDCUDF_Msk & ((value) << MPDDRC_DLL_SSL_SDCUDF_Pos))
-#define MPDDRC_DLL_SSL_SDERF_Pos              _U_(2)                                               /**< (MPDDRC_DLL_SSL) SLAVEx Delay Correction Error Flag Position */
-#define MPDDRC_DLL_SSL_SDERF_Msk              (_U_(0x1) << MPDDRC_DLL_SSL_SDERF_Pos)               /**< (MPDDRC_DLL_SSL) SLAVEx Delay Correction Error Flag Mask */
-#define MPDDRC_DLL_SSL_SDERF(value)           (MPDDRC_DLL_SSL_SDERF_Msk & ((value) << MPDDRC_DLL_SSL_SDERF_Pos))
-#define MPDDRC_DLL_SSL_SDCNT_Pos              _U_(8)                                               /**< (MPDDRC_DLL_SSL) SLAVEx Delay Counter Value Position */
-#define MPDDRC_DLL_SSL_SDCNT_Msk              (_U_(0xFF) << MPDDRC_DLL_SSL_SDCNT_Pos)              /**< (MPDDRC_DLL_SSL) SLAVEx Delay Counter Value Mask */
-#define MPDDRC_DLL_SSL_SDCNT(value)           (MPDDRC_DLL_SSL_SDCNT_Msk & ((value) << MPDDRC_DLL_SSL_SDCNT_Pos))
-#define MPDDRC_DLL_SSL_SDCVAL_Pos             _U_(20)                                              /**< (MPDDRC_DLL_SSL) SLAVEx Delay Correction Value Position */
-#define MPDDRC_DLL_SSL_SDCVAL_Msk             (_U_(0xFF) << MPDDRC_DLL_SSL_SDCVAL_Pos)             /**< (MPDDRC_DLL_SSL) SLAVEx Delay Correction Value Mask */
-#define MPDDRC_DLL_SSL_SDCVAL(value)          (MPDDRC_DLL_SSL_SDCVAL_Msk & ((value) << MPDDRC_DLL_SSL_SDCVAL_Pos))
-#define MPDDRC_DLL_SSL_Msk                    _U_(0x0FF0FF07)                                      /**< (MPDDRC_DLL_SSL) Register Mask  */
-
-
-/* -------- MPDDRC_DLL_SWR : (MPDDRC Offset: 0x148) ( R/ 32) MPDDRC DLL Status CLKWR 0 Register -------- */
-#define MPDDRC_DLL_SWR_WRDCNT_Pos             _U_(0)                                               /**< (MPDDRC_DLL_SWR) CLKWRx Delay Counter Value Position */
-#define MPDDRC_DLL_SWR_WRDCNT_Msk             (_U_(0xFF) << MPDDRC_DLL_SWR_WRDCNT_Pos)             /**< (MPDDRC_DLL_SWR) CLKWRx Delay Counter Value Mask */
-#define MPDDRC_DLL_SWR_WRDCNT(value)          (MPDDRC_DLL_SWR_WRDCNT_Msk & ((value) << MPDDRC_DLL_SWR_WRDCNT_Pos))
-#define MPDDRC_DLL_SWR_Msk                    _U_(0x000000FF)                                      /**< (MPDDRC_DLL_SWR) Register Mask  */
-
-
-/* -------- MPDDRC_DLL_BC : (MPDDRC Offset: 0x1D0) ( /W 32) MPDDRC DLL BIST Control Register -------- */
-#define MPDDRC_DLL_BC_BISTEN_Pos              _U_(0)                                               /**< (MPDDRC_DLL_BC) BIST Mode Enable Position */
-#define MPDDRC_DLL_BC_BISTEN_Msk              (_U_(0x1) << MPDDRC_DLL_BC_BISTEN_Pos)               /**< (MPDDRC_DLL_BC) BIST Mode Enable Mask */
-#define MPDDRC_DLL_BC_BISTEN(value)           (MPDDRC_DLL_BC_BISTEN_Msk & ((value) << MPDDRC_DLL_BC_BISTEN_Pos))
-#define MPDDRC_DLL_BC_BIST2EN_Pos             _U_(1)                                               /**< (MPDDRC_DLL_BC) BIST 2 Mode Enable Position */
-#define MPDDRC_DLL_BC_BIST2EN_Msk             (_U_(0x1) << MPDDRC_DLL_BC_BIST2EN_Pos)              /**< (MPDDRC_DLL_BC) BIST 2 Mode Enable Mask */
-#define MPDDRC_DLL_BC_BIST2EN(value)          (MPDDRC_DLL_BC_BIST2EN_Msk & ((value) << MPDDRC_DLL_BC_BIST2EN_Pos))
-#define MPDDRC_DLL_BC_Msk                     _U_(0x00000003)                                      /**< (MPDDRC_DLL_BC) Register Mask  */
-
-
-/* -------- MPDDRC_DLL_BS : (MPDDRC Offset: 0x1D4) ( R/ 32) MPDDRC DLL BIST Status Register -------- */
-#define MPDDRC_DLL_BS_BISTS_Pos               _U_(0)                                               /**< (MPDDRC_DLL_BS) BIST Mode Status Position */
-#define MPDDRC_DLL_BS_BISTS_Msk               (_U_(0x1) << MPDDRC_DLL_BS_BISTS_Pos)                /**< (MPDDRC_DLL_BS) BIST Mode Status Mask */
-#define MPDDRC_DLL_BS_BISTS(value)            (MPDDRC_DLL_BS_BISTS_Msk & ((value) << MPDDRC_DLL_BS_BISTS_Pos))
-#define MPDDRC_DLL_BS_BIST2S_Pos              _U_(1)                                               /**< (MPDDRC_DLL_BS) BIST2 Mode Status Position */
-#define MPDDRC_DLL_BS_BIST2S_Msk              (_U_(0x1) << MPDDRC_DLL_BS_BIST2S_Pos)               /**< (MPDDRC_DLL_BS) BIST2 Mode Status Mask */
-#define MPDDRC_DLL_BS_BIST2S(value)           (MPDDRC_DLL_BS_BIST2S_Msk & ((value) << MPDDRC_DLL_BS_BIST2S_Pos))
-#define MPDDRC_DLL_BS_BIST2PASS_Pos           _U_(2)                                               /**< (MPDDRC_DLL_BS) BIST 2 is pass Position */
-#define MPDDRC_DLL_BS_BIST2PASS_Msk           (_U_(0x1) << MPDDRC_DLL_BS_BIST2PASS_Pos)            /**< (MPDDRC_DLL_BS) BIST 2 is pass Mask */
-#define MPDDRC_DLL_BS_BIST2PASS(value)        (MPDDRC_DLL_BS_BIST2PASS_Msk & ((value) << MPDDRC_DLL_BS_BIST2PASS_Pos))
-#define MPDDRC_DLL_BS_DL_BIST2_FAIL_Pos       _U_(8)                                               /**< (MPDDRC_DLL_BS) Delay line x [0:6] is failed Position */
-#define MPDDRC_DLL_BS_DL_BIST2_FAIL_Msk       (_U_(0x7F) << MPDDRC_DLL_BS_DL_BIST2_FAIL_Pos)       /**< (MPDDRC_DLL_BS) Delay line x [0:6] is failed Mask */
-#define MPDDRC_DLL_BS_DL_BIST2_FAIL(value)    (MPDDRC_DLL_BS_DL_BIST2_FAIL_Msk & ((value) << MPDDRC_DLL_BS_DL_BIST2_FAIL_Pos))
-#define MPDDRC_DLL_BS_Msk                     _U_(0x00007F07)                                      /**< (MPDDRC_DLL_BS) Register Mask  */
-
-
-/* -------- MPDDRC_DLL_REVISION : (MPDDRC Offset: 0x1FC) ( R/ 32) MPDDRC DLL Revision Register -------- */
-#define MPDDRC_DLL_REVISION_VERSION_Pos       _U_(0)                                               /**< (MPDDRC_DLL_REVISION) Version of the Hardware Module Position */
-#define MPDDRC_DLL_REVISION_VERSION_Msk       (_U_(0xFFF) << MPDDRC_DLL_REVISION_VERSION_Pos)      /**< (MPDDRC_DLL_REVISION) Version of the Hardware Module Mask */
-#define MPDDRC_DLL_REVISION_VERSION(value)    (MPDDRC_DLL_REVISION_VERSION_Msk & ((value) << MPDDRC_DLL_REVISION_VERSION_Pos))
-#define MPDDRC_DLL_REVISION_MFN_Pos           _U_(16)                                              /**< (MPDDRC_DLL_REVISION) Metal Fix Number Position */
-#define MPDDRC_DLL_REVISION_MFN_Msk           (_U_(0x7) << MPDDRC_DLL_REVISION_MFN_Pos)            /**< (MPDDRC_DLL_REVISION) Metal Fix Number Mask */
-#define MPDDRC_DLL_REVISION_MFN(value)        (MPDDRC_DLL_REVISION_MFN_Msk & ((value) << MPDDRC_DLL_REVISION_MFN_Pos))
-#define MPDDRC_DLL_REVISION_Msk               _U_(0x00070FFF)                                      /**< (MPDDRC_DLL_REVISION) Register Mask  */
-
-
 /** \brief MPDDRC register offsets definitions */
 #define MPDDRC_MR_REG_OFST             (0x00)              /**< (MPDDRC_MR) Mode Register Offset */
 #define MPDDRC_RTR_REG_OFST            (0x04)              /**< (MPDDRC_RTR) Refresh Timer Register Offset */
@@ -1159,17 +1022,6 @@
 #define MPDDRC_SAFETY_REG_OFST         (0xD0)              /**< (MPDDRC_SAFETY) Safety Register Offset */
 #define MPDDRC_WPMR_REG_OFST           (0xE4)              /**< (MPDDRC_WPMR) Write Protection Mode Register Offset */
 #define MPDDRC_WPSR_REG_OFST           (0xE8)              /**< (MPDDRC_WPSR) Write Protection Status Register Offset */
-#define MPDDRC_VERSION_REG_OFST        (0xFC)              /**< (MPDDRC_VERSION) MPDDRC Version Register Offset */
-#define MPDDRC_DLL_OS_REG_OFST         (0x100)             /**< (MPDDRC_DLL_OS) MPDDRC DLL Offset Selection Register Offset */
-#define MPDDRC_DLL_MAO_REG_OFST        (0x104)             /**< (MPDDRC_DLL_MAO) MPDDRC DLL Master Offset Register Offset */
-#define MPDDRC_DLL_SO0_REG_OFST        (0x108)             /**< (MPDDRC_DLL_SO0) MPDDRC DLL Slave Offset 0 Register Offset */
-#define MPDDRC_DLL_WRO_REG_OFST        (0x110)             /**< (MPDDRC_DLL_WRO) MPDDRC DLL CLKWR Offset Register Offset */
-#define MPDDRC_DLL_SM_REG_OFST         (0x118)             /**< (MPDDRC_DLL_SM) MPDDRC DLL Status Master 0 Register Offset */
-#define MPDDRC_DLL_SSL_REG_OFST        (0x128)             /**< (MPDDRC_DLL_SSL) MPDDRC DLL Status Slave 0 Register Offset */
-#define MPDDRC_DLL_SWR_REG_OFST        (0x148)             /**< (MPDDRC_DLL_SWR) MPDDRC DLL Status CLKWR 0 Register Offset */
-#define MPDDRC_DLL_BC_REG_OFST         (0x1D0)             /**< (MPDDRC_DLL_BC) MPDDRC DLL BIST Control Register Offset */
-#define MPDDRC_DLL_BS_REG_OFST         (0x1D4)             /**< (MPDDRC_DLL_BS) MPDDRC DLL BIST Status Register Offset */
-#define MPDDRC_DLL_REVISION_REG_OFST   (0x1FC)             /**< (MPDDRC_DLL_REVISION) MPDDRC DLL Revision Register Offset */
 
 #if !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__))
 /** \brief MPDDRC register API structure */
@@ -1215,24 +1067,6 @@ typedef struct
   __I   uint8_t                        Reserved7[0x10];
   __IO  uint32_t                       MPDDRC_WPMR;        /**< Offset: 0xE4 (R/W  32) Write Protection Mode Register */
   __I   uint32_t                       MPDDRC_WPSR;        /**< Offset: 0xE8 (R/   32) Write Protection Status Register */
-  __I   uint8_t                        Reserved8[0x10];
-  __I   uint32_t                       MPDDRC_VERSION;     /**< Offset: 0xFC (R/   32) MPDDRC Version Register */
-  __IO  uint32_t                       MPDDRC_DLL_OS;      /**< Offset: 0x100 (R/W  32) MPDDRC DLL Offset Selection Register */
-  __IO  uint32_t                       MPDDRC_DLL_MAO;     /**< Offset: 0x104 (R/W  32) MPDDRC DLL Master Offset Register */
-  __IO  uint32_t                       MPDDRC_DLL_SO0;     /**< Offset: 0x108 (R/W  32) MPDDRC DLL Slave Offset 0 Register */
-  __I   uint8_t                        Reserved9[0x04];
-  __IO  uint32_t                       MPDDRC_DLL_WRO;     /**< Offset: 0x110 (R/W  32) MPDDRC DLL CLKWR Offset Register */
-  __I   uint8_t                        Reserved10[0x04];
-  __I   uint32_t                       MPDDRC_DLL_SM[2];   /**< Offset: 0x118 (R/   32) MPDDRC DLL Status Master 0 Register */
-  __I   uint8_t                        Reserved11[0x08];
-  __I   uint32_t                       MPDDRC_DLL_SSL[4];  /**< Offset: 0x128 (R/   32) MPDDRC DLL Status Slave 0 Register */
-  __I   uint8_t                        Reserved12[0x10];
-  __I   uint32_t                       MPDDRC_DLL_SWR[2];  /**< Offset: 0x148 (R/   32) MPDDRC DLL Status CLKWR 0 Register */
-  __I   uint8_t                        Reserved13[0x80];
-  __O   uint32_t                       MPDDRC_DLL_BC;      /**< Offset: 0x1D0 ( /W  32) MPDDRC DLL BIST Control Register */
-  __I   uint32_t                       MPDDRC_DLL_BS;      /**< Offset: 0x1D4 (R/   32) MPDDRC DLL BIST Status Register */
-  __I   uint8_t                        Reserved14[0x24];
-  __I   uint32_t                       MPDDRC_DLL_REVISION; /**< Offset: 0x1FC (R/   32) MPDDRC DLL Revision Register */
 } mpddrc_registers_t;
 
 
