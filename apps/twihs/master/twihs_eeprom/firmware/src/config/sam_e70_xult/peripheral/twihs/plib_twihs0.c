@@ -438,6 +438,58 @@ TWIHS_ERROR TWIHS0_ErrorGet(void)
     return error;
 }
 
+bool TWIHS0_TransferSetup(TWIHS_TRANSFER_SETUP* setup, uint32_t srcClkFreq )
+{       
+    uint32_t i2cClkSpeed;
+    uint32_t cldiv;
+    uint8_t ckdiv = 0;
+    
+    if (setup == NULL)
+    {
+        return false;
+    }        
+        
+    i2cClkSpeed = setup->clkSpeed;
+    
+    /* Maximum I2C clock speed in Master mode cannot be greater than 400 KHz */
+    if (i2cClkSpeed > 4000000)
+    {
+        return false;
+    }
+    
+    if( srcClkFreq == 0)
+    {
+        srcClkFreq = 150000000;
+    }            
+    
+    /* Formula for calculating baud value involves two unknowns. Fix one unknown and calculate the other. 
+       Fix the CKDIV value and see if CLDIV (or CHDIV) fits into the 8-bit register. */
+       
+    /* Calculate CLDIV with CKDIV set to 0 */
+    cldiv = (srcClkFreq /(2 * i2cClkSpeed)) - 3;
+    
+    /* CLDIV must fit within 8-bits and CKDIV must fit within 3-bits */
+    while ((cldiv > 255) && (ckdiv < 7))
+    {
+        ckdiv++;
+        cldiv /= 2;
+    }
+    
+    if (cldiv > 255)
+    {
+        /* Could not generate CLDIV and CKDIV register values for the requested baud rate */
+        return false;
+    }    
+    
+    /* set clock waveform generator register */
+    TWIHS0_Module->TWIHS_CWGR = ( TWIHS_CWGR_HOLD_Msk & TWIHS0_Module->TWIHS_CWGR) |
+                              ( TWIHS_CWGR_CLDIV(cldiv) |
+                                TWIHS_CWGR_CHDIV(cldiv) |
+                                TWIHS_CWGR_CKDIV(ckdiv) );
+            
+    return true;
+}
+
 // *****************************************************************************
 /* Function:
     void TWIHS0_InterruptHandler(void)
