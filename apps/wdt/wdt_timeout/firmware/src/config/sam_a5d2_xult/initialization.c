@@ -108,6 +108,7 @@ void SYS_Initialize ( void* data )
     Matrix_Initialize();
 
     INT_Initialize();
+    
 	WDT_Initialize();
 
 
