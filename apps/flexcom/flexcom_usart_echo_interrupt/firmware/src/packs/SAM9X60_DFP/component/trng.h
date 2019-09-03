@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-04-23T19:01:17Z */
+/* file generated from device description version 2019-08-22T13:04:26Z */
 #ifndef _SAM9X_TRNG_COMPONENT_H_
 #define _SAM9X_TRNG_COMPONENT_H_
 
@@ -146,8 +146,8 @@
 #define TRNG_WPMR_WPKEY_Pos                   _U_(8)                                               /**< (TRNG_WPMR) Write Protection Key Position */
 #define TRNG_WPMR_WPKEY_Msk                   (_U_(0xFFFFFF) << TRNG_WPMR_WPKEY_Pos)               /**< (TRNG_WPMR) Write Protection Key Mask */
 #define TRNG_WPMR_WPKEY(value)                (TRNG_WPMR_WPKEY_Msk & ((value) << TRNG_WPMR_WPKEY_Pos))
-#define   TRNG_WPMR_WPKEY_PASSWD_Val          _U_(0x524E47)                                        /**< (TRNG_WPMR) Writing any other value in this field aborts the write operation of bits WPEN, WPITEN and WPCREN.Always reads as 0.  */
-#define TRNG_WPMR_WPKEY_PASSWD                (TRNG_WPMR_WPKEY_PASSWD_Val << TRNG_WPMR_WPKEY_Pos)  /**< (TRNG_WPMR) Writing any other value in this field aborts the write operation of bits WPEN, WPITEN and WPCREN.Always reads as 0. Position  */
+#define   TRNG_WPMR_WPKEY_PASSWD_Val          _U_(0x524E47)                                        /**< (TRNG_WPMR) Writing any other value in this field aborts the write operation of bits WPEN, WPITEN and WPCREN. Always reads as 0.  */
+#define TRNG_WPMR_WPKEY_PASSWD                (TRNG_WPMR_WPKEY_PASSWD_Val << TRNG_WPMR_WPKEY_Pos)  /**< (TRNG_WPMR) Writing any other value in this field aborts the write operation of bits WPEN, WPITEN and WPCREN. Always reads as 0. Position  */
 #define TRNG_WPMR_Msk                         _U_(0xFFFFFF17)                                      /**< (TRNG_WPMR) Register Mask  */
 
 
@@ -184,20 +184,10 @@
 #define TRNG_WPSR_ECLASS_Msk                  (_U_(0x1) << TRNG_WPSR_ECLASS_Pos)                   /**< (TRNG_WPSR) Software Error Class (cleared on read) Mask */
 #define TRNG_WPSR_ECLASS(value)               (TRNG_WPSR_ECLASS_Msk & ((value) << TRNG_WPSR_ECLASS_Pos))
 #define   TRNG_WPSR_ECLASS_WARNING_Val        _U_(0x0)                                             /**< (TRNG_WPSR) An abnormal access that does not affect system functionality.  */
-#define   TRNG_WPSR_ECLASS_ERROR_Val          _U_(0x1)                                             /**< (TRNG_WPSR) Reading TRNG_ODATA when TRNG was disabled or TRNG used for private key bus transfer. TRNG does not provide a random value.Writing to the PKB_CTRL register while a private key bus transfer is ongoing does not launch a new private key bus transfer.  */
+#define   TRNG_WPSR_ECLASS_ERROR_Val          _U_(0x1)                                             /**< (TRNG_WPSR) Reading TRNG_ODATA when TRNG was disabled or TRNG used for private key bus transfer. TRNG does not provide a random value. Writing to the PKB_CTRL register while a private key bus transfer is ongoing does not launch a new private key bus transfer.  */
 #define TRNG_WPSR_ECLASS_WARNING              (TRNG_WPSR_ECLASS_WARNING_Val << TRNG_WPSR_ECLASS_Pos) /**< (TRNG_WPSR) An abnormal access that does not affect system functionality. Position  */
-#define TRNG_WPSR_ECLASS_ERROR                (TRNG_WPSR_ECLASS_ERROR_Val << TRNG_WPSR_ECLASS_Pos) /**< (TRNG_WPSR) Reading TRNG_ODATA when TRNG was disabled or TRNG used for private key bus transfer. TRNG does not provide a random value.Writing to the PKB_CTRL register while a private key bus transfer is ongoing does not launch a new private key bus transfer. Position  */
+#define TRNG_WPSR_ECLASS_ERROR                (TRNG_WPSR_ECLASS_ERROR_Val << TRNG_WPSR_ECLASS_Pos) /**< (TRNG_WPSR) Reading TRNG_ODATA when TRNG was disabled or TRNG used for private key bus transfer. TRNG does not provide a random value. Writing to the PKB_CTRL register while a private key bus transfer is ongoing does not launch a new private key bus transfer. Position  */
 #define TRNG_WPSR_Msk                         _U_(0x8FFFFF0F)                                      /**< (TRNG_WPSR) Register Mask  */
-
-
-/* -------- TRNG_VERSION : (TRNG Offset: 0xFC) ( R/ 32) Version Register -------- */
-#define TRNG_VERSION_VERSION_Pos              _U_(0)                                               /**< (TRNG_VERSION) Version of the Hardware Module Position */
-#define TRNG_VERSION_VERSION_Msk              (_U_(0xFFF) << TRNG_VERSION_VERSION_Pos)             /**< (TRNG_VERSION) Version of the Hardware Module Mask */
-#define TRNG_VERSION_VERSION(value)           (TRNG_VERSION_VERSION_Msk & ((value) << TRNG_VERSION_VERSION_Pos))
-#define TRNG_VERSION_MFN_Pos                  _U_(16)                                              /**< (TRNG_VERSION) Metal Fix Number Position */
-#define TRNG_VERSION_MFN_Msk                  (_U_(0x7) << TRNG_VERSION_MFN_Pos)                   /**< (TRNG_VERSION) Metal Fix Number Mask */
-#define TRNG_VERSION_MFN(value)               (TRNG_VERSION_MFN_Msk & ((value) << TRNG_VERSION_MFN_Pos))
-#define TRNG_VERSION_Msk                      _U_(0x00070FFF)                                      /**< (TRNG_VERSION) Register Mask  */
 
 
 /** \brief TRNG register offsets definitions */
@@ -211,7 +201,6 @@
 #define TRNG_ODATA_REG_OFST            (0x50)              /**< (TRNG_ODATA) Output Data Register Offset */
 #define TRNG_WPMR_REG_OFST             (0xE4)              /**< (TRNG_WPMR) Write Protection Mode Register Offset */
 #define TRNG_WPSR_REG_OFST             (0xE8)              /**< (TRNG_WPSR) Write Protection Status Register Offset */
-#define TRNG_VERSION_REG_OFST          (0xFC)              /**< (TRNG_VERSION) Version Register Offset */
 
 #if !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__))
 /** \brief TRNG register API structure */
@@ -230,8 +219,6 @@ typedef struct
   __I   uint8_t                        Reserved3[0x90];
   __IO  uint32_t                       TRNG_WPMR;          /**< Offset: 0xE4 (R/W  32) Write Protection Mode Register */
   __I   uint32_t                       TRNG_WPSR;          /**< Offset: 0xE8 (R/   32) Write Protection Status Register */
-  __I   uint8_t                        Reserved4[0x10];
-  __I   uint32_t                       TRNG_VERSION;       /**< Offset: 0xFC (R/   32) Version Register */
 } trng_registers_t;
 
 
