@@ -57,6 +57,7 @@
 // *****************************************************************************
 // *****************************************************************************
 
+
 static I2C_OBJ i2c1Obj;
 
 void I2C1_Initialize(void)
@@ -104,17 +105,10 @@ static void I2C1_TransferSM(void)
             {
                 if (i2c1Obj.address > 0x007F)
                 {
-                    /* Transmit the first byte of the 10-bit slave address */
-                    I2C1TRN = ( 0xF0 | (((uint8_t*)&i2c1Obj.address)[1] << 1) | (i2c1Obj.transferType) );
+                    /* Transmit the MSB 2 bits of the 10-bit slave address, with R/W = 0 */
+                    I2C1TRN = ( 0xF0 | (((uint8_t*)&i2c1Obj.address)[1] << 1));
 
-                    if (i2c1Obj.transferType == I2C_TRANSFER_TYPE_WRITE)
-                    {
-                        i2c1Obj.state = I2C_STATE_ADDR_BYTE_2_SEND;
-                    }
-                    else
-                    {
-                        i2c1Obj.state = I2C_STATE_READ;
-                    }
+                    i2c1Obj.state = I2C_STATE_ADDR_BYTE_2_SEND;
                 }
                 else
                 {
@@ -138,9 +132,50 @@ static void I2C1_TransferSM(void)
             {
                 if (!(I2C1STAT & _I2C1STAT_TBF_MASK))
                 {
+                    /* Transmit the remaining 8-bits of the 10-bit address */
                     I2C1TRN = i2c1Obj.address;
-                    i2c1Obj.state = I2C_STATE_WRITE;
+
+                    if (i2c1Obj.transferType == I2C_TRANSFER_TYPE_WRITE)
+                    {
+                        i2c1Obj.state = I2C_STATE_WRITE;
+                    }
+                    else
+                    {
+                        i2c1Obj.state = I2C_STATE_READ_10BIT_MODE;
+                    }
                 }
+            }
+            else
+            {
+                /* NAK received. Generate Stop Condition. */
+                i2c1Obj.error = I2C_ERROR_NACK;
+                I2C1CONSET = _I2C1CON_PEN_MASK;
+                i2c1Obj.state = I2C_STATE_WAIT_STOP_CONDITION_COMPLETE;
+            }
+            break;
+            
+        case I2C_STATE_READ_10BIT_MODE:
+            if (!(I2C1STAT & _I2C1STAT_ACKSTAT_MASK))
+            {
+                /* Generate repeated start condition */
+                I2C1CONSET = _I2C1CON_RSEN_MASK;
+                i2c1Obj.state = I2C_STATE_ADDR_BYTE_1_SEND_10BIT_ONLY;
+            }
+            else
+            {
+                /* NAK received. Generate Stop Condition. */
+                i2c1Obj.error = I2C_ERROR_NACK;
+                I2C1CONSET = _I2C1CON_PEN_MASK;
+                i2c1Obj.state = I2C_STATE_WAIT_STOP_CONDITION_COMPLETE;
+            }
+            break;
+        case I2C_STATE_ADDR_BYTE_1_SEND_10BIT_ONLY:
+            /* Is transmit buffer full? */
+            if (!(I2C1STAT & _I2C1STAT_TBF_MASK))
+            {
+                /* Transmit the first byte of the 10-bit slave address, with R/W = 1 */
+                I2C1TRN = ( 0xF1 | ((((uint8_t*)&i2c1Obj.address)[1] << 1)));
+                i2c1Obj.state = I2C_STATE_READ;
             }
             else
             {
@@ -168,9 +203,20 @@ static void I2C1_TransferSM(void)
                     {
                         /* Generate repeated start condition */
                         I2C1CONSET = _I2C1CON_RSEN_MASK;
+
                         i2c1Obj.transferType = I2C_TRANSFER_TYPE_READ;
-                        /* Send the I2C slave address with R/W = 1*/
-                        i2c1Obj.state = I2C_STATE_ADDR_BYTE_1_SEND;
+
+                        if (i2c1Obj.address > 0x007F)
+                        {
+                            /* Send the I2C slave address with R/W = 1 */
+                            i2c1Obj.state = I2C_STATE_ADDR_BYTE_1_SEND_10BIT_ONLY;
+                        }
+                        else
+                        {
+                            /* Send the I2C slave address with R/W = 1 */
+                            i2c1Obj.state = I2C_STATE_ADDR_BYTE_1_SEND;
+                        }
+
                     }
                     else
                     {
@@ -335,6 +381,7 @@ bool I2C1_Write(uint16_t address, uint8_t* wdata, size_t wlength)
     return true;
 }
 
+
 bool I2C1_WriteRead(uint16_t address, uint8_t* wdata, size_t wlength, uint8_t* rdata, size_t rlength)
 {
     /* State machine must be idle and I2C module should not have detected a start bit on the bus */
@@ -369,6 +416,53 @@ I2C_ERROR I2C1_ErrorGet(void)
     i2c1Obj.error = I2C_ERROR_NONE;
 
     return error;
+}
+
+bool I2C1_TransferSetup(I2C_TRANSFER_SETUP* setup, uint32_t srcClkFreq )
+{
+    uint32_t baudValue;
+    uint32_t i2cClkSpeed;
+
+    if (setup == NULL)
+    {
+        return false;
+    }
+
+    i2cClkSpeed = setup->clkSpeed;
+
+    /* Maximum I2C clock speed cannot be greater than 1 MHz */
+    if (i2cClkSpeed > 1000000)
+    {
+        return false;
+    }
+
+    if( srcClkFreq == 0)
+    {
+        srcClkFreq = 36000000UL;
+    }
+
+    baudValue = ((1.0/(2*i2cClkSpeed) - 104e-9)*(float)srcClkFreq) - 2;
+
+    /* I2CxBRG value cannot be 0 or 1 */
+    if ((baudValue == 0) || (baudValue == 1))
+    {
+        return false;
+    }
+
+    I2C1BRG = baudValue;
+
+    /* Enable slew rate for 400 kHz clock speed; disable for all other speeds */
+
+    if (i2cClkSpeed == 400000)
+    {
+        I2C1CONCLR = _I2C1CON_DISSLW_MASK;;
+    }
+    else
+    {
+        I2C1CONSET = _I2C1CON_DISSLW_MASK;;
+    }
+
+    return true;
 }
 
 static void I2C1_BUS_InterruptHandler(void)

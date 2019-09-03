@@ -132,7 +132,7 @@ void I2C1_Initialize(void);
 
   Precondition:
     I2C1_Initialize must have been called for the associated
-    I2C instance. At least one TRB should be available.
+    I2C instance.
 
   Parameters:
     address - 7-bit / 10-bit slave address.
@@ -188,9 +188,9 @@ bool I2C1_Read(uint16_t address, uint8_t *pdata, size_t length);
     This function writes data to a slave on the bus. The function will attempt
     to write length number of bytes from pdata buffer to a slave whose address
     is specified by address. The I2C Master will generate a Start condition,
-    write the data and then generate a Stop Condition. If the slave NAKs the request 
-    or a bus error was encountered on the bus, the transfer is terminated. The 
-    application can call the I2C1_ErrorGet() function to know that 
+    write the data and then generate a Stop Condition. If the slave NAKs the request
+    or a bus error was encountered on the bus, the transfer is terminated. The
+    application can call the I2C1_ErrorGet() function to know that
     cause of the error.
 
     The function is non-blocking. It initiates bus activity and returns
@@ -204,12 +204,12 @@ bool I2C1_Read(uint16_t address, uint8_t *pdata, size_t length);
 
   Precondition:
     I2C1_Initialize must have been called for the associated
-    I2C instance.  At least one TRB should be available.
+    I2C instance.
 
   Parameters:
     address - 7-bit / 10-bit slave address.
 
-    data    - pointer to source data buffer that contains the data to be
+    pdata   - pointer to source data buffer that contains the data to be
               transmitted.
 
     length  - length of data buffer in number of bytes. Also the number of bytes
@@ -234,7 +234,7 @@ bool I2C1_Read(uint16_t address, uint8_t *pdata, size_t length);
         I2C1_Initialize();
         I2C1_CallbackRegister(MyI2CCallback, NULL);
 
-        if(!I2C1_Read( SLAVE_ADDR, &myData[0], NUM_BYTES ))
+        if(!I2C1_Write( SLAVE_ADDR, &myData[0], NUM_BYTES ))
         {
             // error handling
         }
@@ -246,6 +246,7 @@ bool I2C1_Read(uint16_t address, uint8_t *pdata, size_t length);
 */
 
 bool I2C1_Write(uint16_t address, uint8_t *pdata, size_t length);
+
 
 // *****************************************************************************
 /* Function:
@@ -264,7 +265,7 @@ bool I2C1_Write(uint16_t address, uint8_t *pdata, size_t length);
     bytes are stored in rdata buffer. A Stop condition is generated after the
     last byte has been received.
 
-    If the slave NAKs the request or a bus error was encountered on the bus, 
+    If the slave NAKs the request or a bus error was encountered on the bus,
     the transfer is terminated. The application can call I2C1_ErrorGet()
     function to know that cause of the error.
 
@@ -279,7 +280,7 @@ bool I2C1_Write(uint16_t address, uint8_t *pdata, size_t length);
 
   Precondition:
     I2C1_Initialize must have been called for the associated
-    I2C instance.  A minimum of two TRB's should be available.
+    I2C instance.
 
   Parameters:
     address - 7-bit / 10-bit slave address.
@@ -398,7 +399,7 @@ bool I2C1_IsBusy(void);
   Returns:
     Returns a I2C_ERROR type of status identifying the error that has
     occurred.
-    
+
     Example:
     <code>
     if(I2C_ERROR_NONE == I2C1_ErrorGet())
@@ -455,6 +456,49 @@ I2C_ERROR I2C1_ErrorGet(void);
 */
 
 void I2C1_CallbackRegister(I2C_CALLBACK callback, uintptr_t contextHandle);
+
+// *****************************************************************************
+/* Function:
+    bool I2C1_TransferSetup(I2C_TRANSFER_SETUP* setup, uint32_t srcClkFreq)
+
+   Summary:
+    Dynamic setup of I2C Peripheral.
+
+   Precondition:
+    I2C1_Initialize must have been called for the associated I2C instance.
+	The transfer status should not be busy.
+
+   Parameters:
+    setup - Pointer to the structure containing the transfer setup.
+    srcClkFreq - I2C Peripheral Clock Source Frequency.
+
+   Returns:
+    true - Transfer setup was updated Successfully.
+    false - Failure while updating transfer setup.
+
+   Example:
+    <code>
+
+    I2C_TRANSFER_SETUP setup;
+
+    setup.clkSpeed = 400000;
+
+    // Make sure that the I2C is not busy before changing the I2C clock frequency
+    if (I2C1_IsBusy() == false)
+    {
+        if (I2C1_TransferSetup( &setup, 0 ) == true)
+        {
+            // Transfer Setup updated successfully
+        }
+    }
+    </code>
+
+   Remarks:
+    srcClkFreq overrides any change in the peripheral clock frequency.
+    If configured to zero PLib takes the peripheral clock frequency from MHC.
+*/
+
+bool I2C1_TransferSetup(I2C_TRANSFER_SETUP* setup, uint32_t srcClkFreq );
 
 
 // DOM-IGNORE-BEGIN
