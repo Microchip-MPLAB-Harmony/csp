@@ -1,4 +1,5 @@
-/******************************************************************************* External Interrupt Controller (EIC) PLIB
+/*******************************************************************************
+  External Interrupt Controller (EIC) PLIB
 
   Company
     Microchip Technology Inc.
@@ -52,8 +53,6 @@
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-/* This section lists the other files that are included in this file.
-*/
 
 #include "device.h"
 #include <stdbool.h>
@@ -72,29 +71,9 @@
 // Section: Data Types
 // *****************************************************************************
 // *****************************************************************************
-/* The following data type definitions are used by the functions in this
-    interface and should be considered part of it.
-*/
 
 /* EIC Pin Count */
 #define EXTINT_COUNT                        (16U)
-
-// *****************************************************************************
-/* EIC Pins
-
-  Summary:
-    Identifies the available EIC pins.
-
-  Description:
-    This enumeration identifies all the available EIC pins. Not all pins will be
-    implemented in a device. The pins described here are for documentation
-    purposes only. The MHC will generate this enumeration with the enabled EIC
-    pins only. The application should not use the constant value that are
-    assigned to enumeration constants as this may vary between devices.
-
-  Remarks:
-    None.
-*/
 
 typedef enum
 {
@@ -112,72 +91,15 @@ typedef enum
 // Section: Interface Routines
 // *****************************************************************************
 // *****************************************************************************
-/* The following functions make up the methods (set of possible operations) of
-    this interface.
-*/
 
-// *****************************************************************************
-/* Function:
-    void EIC_Initialize (void);
+void EIC_Initialize(void);
 
-  Summary:
-    Initializes given instance of EIC peripheral.
 
-  Description:
-    This function initializes given instance of EIC peripheral of the device
-    with the values configured in MHC GUI.
 
-  Precondition:
-    MHC GUI should be configured with the right values.
+#ifdef __cplusplus // Provide C++ Compatibility
 
-  Parameters:
-    None.
+    }
 
-  Returns:
-    None.
-
-  Example:
-    <code>
-    EIC_Initialize();
-    </code>
-
-  Remarks:
-    This function should only be called once during system initialization
-    before any other EIC function is called.
-*/
-
-void EIC_Initialize (void);
-
-// *****************************************************************************
-/* Function:
-    void EIC_InterruptEnable (EIC_PIN pin)
-
-  Summary:
-    Enables interrupts on a pin.
-
-  Description
-    This function enables interrupts on an external interrupt pin.
-    When enabled, the interrupt pin sense will be configured as per the
-    configuration set in MHC.
-
-   Precondition:
-    EIC_Initialize() function must have been called for the
-    associated instance.
-
-   Parameters:
-    pin - EIC Pin number
-
-   Returns:
-    None
-
-   Example:
-    <code>
-    EIC_Initialize();
-    EIC_InterruptEnable(EIC_PIN_3);
-    </code>
-
-  Remarks:
-    None.
-*/
+#endif
 
 #endif /* PLIB_EIC_H */
