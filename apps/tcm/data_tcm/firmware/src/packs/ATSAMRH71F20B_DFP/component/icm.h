@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-06-11T20:50:29Z */
+/* file generated from device description version 2019-08-29T14:13:58Z */
 #ifndef _SAMRH71_ICM_COMPONENT_H_
 #define _SAMRH71_ICM_COMPONENT_H_
 
