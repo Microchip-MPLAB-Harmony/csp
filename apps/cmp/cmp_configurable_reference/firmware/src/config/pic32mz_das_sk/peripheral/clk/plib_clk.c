@@ -118,13 +118,13 @@ void CLK_Initialize( void )
   
 
     /* Peripheral Module Disable Configuration */
-    PMD1 = 0xffffefff;
-    PMD2 = 0xfffffffc;
-    PMD3 = 0xffffffff;
-    PMD4 = 0xffffffff;
-    PMD5 = 0xfefffffd;
-    PMD6 = 0xffe9e0ff;
-    PMD7 = 0xffffffef;
+    PMD1 = 0x100101;
+    PMD2 = 0x0;
+    PMD3 = 0x1ff01ff;
+    PMD4 = 0x1ff;
+    PMD5 = 0x301f3f3d;
+    PMD6 = 0x10a10000;
+    PMD7 = 0x10500000;
 
     /* Lock system since done with clock configuration */
     int_flag = (bool)__builtin_disable_interrupts();
