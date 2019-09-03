@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-04-23T19:01:17Z */
+/* file generated from device description version 2019-08-22T13:04:26Z */
 #ifndef _SAM9X_PWM_COMPONENT_H_
 #define _SAM9X_PWM_COMPONENT_H_
 
@@ -307,16 +307,6 @@
 #define PWM_ISR_CHID_Msk                      (_U_(0xF) << PWM_ISR_CHID_Pos)                       /**< (PWM_ISR Mask) CHID */
 #define PWM_ISR_CHID(value)                   (PWM_ISR_CHID_Msk & ((value) << PWM_ISR_CHID_Pos))   
 
-/* -------- PWM_VERSION : (PWM Offset: 0xFC) ( R/ 32) Version Register -------- */
-#define PWM_VERSION_VERSION_Pos               _U_(0)                                               /**< (PWM_VERSION) Version of the Hardware Module Position */
-#define PWM_VERSION_VERSION_Msk               (_U_(0xFFF) << PWM_VERSION_VERSION_Pos)              /**< (PWM_VERSION) Version of the Hardware Module Mask */
-#define PWM_VERSION_VERSION(value)            (PWM_VERSION_VERSION_Msk & ((value) << PWM_VERSION_VERSION_Pos))
-#define PWM_VERSION_MFN_Pos                   _U_(16)                                              /**< (PWM_VERSION) Metal Fix Number Position */
-#define PWM_VERSION_MFN_Msk                   (_U_(0x7) << PWM_VERSION_MFN_Pos)                    /**< (PWM_VERSION) Metal Fix Number Mask */
-#define PWM_VERSION_MFN(value)                (PWM_VERSION_MFN_Msk & ((value) << PWM_VERSION_MFN_Pos))
-#define PWM_VERSION_Msk                       _U_(0x00070FFF)                                      /**< (PWM_VERSION) Register Mask  */
-
-
 /** \brief PWM register offsets definitions */
 #define PWM_CMR_REG_OFST               (0x00)              /**< (PWM_CMR) PWM Channel Mode Register Offset */
 #define PWM_CDTY_REG_OFST              (0x04)              /**< (PWM_CDTY) PWM Channel Duty Cycle Register Offset */
@@ -331,7 +321,6 @@
 #define PWM_IDR_REG_OFST               (0x14)              /**< (PWM_IDR) PWM Interrupt Disable Register Offset */
 #define PWM_IMR_REG_OFST               (0x18)              /**< (PWM_IMR) PWM Interrupt Mask Register Offset */
 #define PWM_ISR_REG_OFST               (0x1C)              /**< (PWM_ISR) PWM Interrupt Status Register Offset */
-#define PWM_VERSION_REG_OFST           (0xFC)              /**< (PWM_VERSION) Version Register Offset */
 
 #if !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__))
 /** \brief PWM_CH_NUM register API structure */
@@ -358,9 +347,7 @@ typedef struct
   __O   uint32_t                       PWM_IDR;            /**< Offset: 0x14 ( /W  32) PWM Interrupt Disable Register */
   __I   uint32_t                       PWM_IMR;            /**< Offset: 0x18 (R/   32) PWM Interrupt Mask Register */
   __I   uint32_t                       PWM_ISR;            /**< Offset: 0x1C (R/   32) PWM Interrupt Status Register */
-  __I   uint8_t                        Reserved1[0xDC];
-  __I   uint32_t                       PWM_VERSION;        /**< Offset: 0xFC (R/   32) Version Register */
-  __I   uint8_t                        Reserved2[0x100];
+  __I   uint8_t                        Reserved1[0x1E0];
         pwm_ch_num_registers_t         PWM_CH_NUM[PWM_CH_NUM_NUMBER]; /**< Offset: 0x200  */
 } pwm_registers_t;
 

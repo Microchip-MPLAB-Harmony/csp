@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-04-23T19:01:17Z */
+/* file generated from device description version 2019-08-22T13:04:26Z */
 #ifndef _SAM9X_TDES_COMPONENT_H_
 #define _SAM9X_TDES_COMPONENT_H_
 
@@ -55,12 +55,12 @@
 #define TDES_MR_TDESMOD_Pos                   _U_(1)                                               /**< (TDES_MR) ALGORITHM Mode Position */
 #define TDES_MR_TDESMOD_Msk                   (_U_(0x3) << TDES_MR_TDESMOD_Pos)                    /**< (TDES_MR) ALGORITHM Mode Mask */
 #define TDES_MR_TDESMOD(value)                (TDES_MR_TDESMOD_Msk & ((value) << TDES_MR_TDESMOD_Pos))
-#define   TDES_MR_TDESMOD_SINGLE_DES_Val      _U_(0x0)                                             /**< (TDES_MR) Single DES processing using Key 1 Registers  */
-#define   TDES_MR_TDESMOD_TRIPLE_DES_Val      _U_(0x1)                                             /**< (TDES_MR) Triple DES processing using Key 1, Key 2 and Key 3 Registers  */
-#define   TDES_MR_TDESMOD_XTEA_Val            _U_(0x2)                                             /**< (TDES_MR) XTEA processing using Key 1 and Key 2 Registers  */
-#define TDES_MR_TDESMOD_SINGLE_DES            (TDES_MR_TDESMOD_SINGLE_DES_Val << TDES_MR_TDESMOD_Pos) /**< (TDES_MR) Single DES processing using Key 1 Registers Position  */
-#define TDES_MR_TDESMOD_TRIPLE_DES            (TDES_MR_TDESMOD_TRIPLE_DES_Val << TDES_MR_TDESMOD_Pos) /**< (TDES_MR) Triple DES processing using Key 1, Key 2 and Key 3 Registers Position  */
-#define TDES_MR_TDESMOD_XTEA                  (TDES_MR_TDESMOD_XTEA_Val << TDES_MR_TDESMOD_Pos)    /**< (TDES_MR) XTEA processing using Key 1 and Key 2 Registers Position  */
+#define   TDES_MR_TDESMOD_SINGLE_DES_Val      _U_(0x0)                                             /**< (TDES_MR) Single DES processing using TDES_KEY1WRy.  */
+#define   TDES_MR_TDESMOD_TRIPLE_DES_Val      _U_(0x1)                                             /**< (TDES_MR) Triple DES processing using TDES_KEY1WRy, TDES_KEY2WRy and TDES_KEY3WRy.  */
+#define   TDES_MR_TDESMOD_XTEA_Val            _U_(0x2)                                             /**< (TDES_MR) XTEA processing using TDES_KEY1WRy and TDES_KEY2WRy.  */
+#define TDES_MR_TDESMOD_SINGLE_DES            (TDES_MR_TDESMOD_SINGLE_DES_Val << TDES_MR_TDESMOD_Pos) /**< (TDES_MR) Single DES processing using TDES_KEY1WRy. Position  */
+#define TDES_MR_TDESMOD_TRIPLE_DES            (TDES_MR_TDESMOD_TRIPLE_DES_Val << TDES_MR_TDESMOD_Pos) /**< (TDES_MR) Triple DES processing using TDES_KEY1WRy, TDES_KEY2WRy and TDES_KEY3WRy. Position  */
+#define TDES_MR_TDESMOD_XTEA                  (TDES_MR_TDESMOD_XTEA_Val << TDES_MR_TDESMOD_Pos)    /**< (TDES_MR) XTEA processing using TDES_KEY1WRy and TDES_KEY2WRy. Position  */
 #define TDES_MR_KEYMOD_Pos                    _U_(4)                                               /**< (TDES_MR) Key Mode Position */
 #define TDES_MR_KEYMOD_Msk                    (_U_(0x1) << TDES_MR_KEYMOD_Pos)                     /**< (TDES_MR) Key Mode Mask */
 #define TDES_MR_KEYMOD(value)                 (TDES_MR_KEYMOD_Msk & ((value) << TDES_MR_KEYMOD_Pos))
@@ -75,10 +75,10 @@
 #define TDES_MR_SMOD(value)                   (TDES_MR_SMOD_Msk & ((value) << TDES_MR_SMOD_Pos))  
 #define   TDES_MR_SMOD_MANUAL_START_Val       _U_(0x0)                                             /**< (TDES_MR) Manual Mode  */
 #define   TDES_MR_SMOD_AUTO_START_Val         _U_(0x1)                                             /**< (TDES_MR) Auto Mode  */
-#define   TDES_MR_SMOD_IDATAR0_START_Val      _U_(0x2)                                             /**< (TDES_MR) TDES_IDATAR0 accesses only Auto Mode  */
+#define   TDES_MR_SMOD_IDATAR0_START_Val      _U_(0x2)                                             /**< (TDES_MR) TDES_IDATAR0 accesses only Auto mode  */
 #define TDES_MR_SMOD_MANUAL_START             (TDES_MR_SMOD_MANUAL_START_Val << TDES_MR_SMOD_Pos)  /**< (TDES_MR) Manual Mode Position  */
 #define TDES_MR_SMOD_AUTO_START               (TDES_MR_SMOD_AUTO_START_Val << TDES_MR_SMOD_Pos)    /**< (TDES_MR) Auto Mode Position  */
-#define TDES_MR_SMOD_IDATAR0_START            (TDES_MR_SMOD_IDATAR0_START_Val << TDES_MR_SMOD_Pos) /**< (TDES_MR) TDES_IDATAR0 accesses only Auto Mode Position  */
+#define TDES_MR_SMOD_IDATAR0_START            (TDES_MR_SMOD_IDATAR0_START_Val << TDES_MR_SMOD_Pos) /**< (TDES_MR) TDES_IDATAR0 accesses only Auto mode Position  */
 #define TDES_MR_OPMOD_Pos                     _U_(12)                                              /**< (TDES_MR) Operating Mode Position */
 #define TDES_MR_OPMOD_Msk                     (_U_(0x3) << TDES_MR_OPMOD_Pos)                      /**< (TDES_MR) Operating Mode Mask */
 #define TDES_MR_OPMOD(value)                  (TDES_MR_OPMOD_Msk & ((value) << TDES_MR_OPMOD_Pos))
@@ -205,22 +205,22 @@
 
 
 /* -------- TDES_ISR : (TDES Offset: 0x1C) ( R/ 32) Interrupt Status Register -------- */
-#define TDES_ISR_DATRDY_Pos                   _U_(0)                                               /**< (TDES_ISR) Data Ready (cleared by setting bit START or bit SWRST in TDES_CR or by reading TDES_ODATARx) Position */
-#define TDES_ISR_DATRDY_Msk                   (_U_(0x1) << TDES_ISR_DATRDY_Pos)                    /**< (TDES_ISR) Data Ready (cleared by setting bit START or bit SWRST in TDES_CR or by reading TDES_ODATARx) Mask */
+#define TDES_ISR_DATRDY_Pos                   _U_(0)                                               /**< (TDES_ISR) Data Ready (cleared by setting TDES_CR.START or TDES_CR.SWRST, or by reading TDES_ODATARx) Position */
+#define TDES_ISR_DATRDY_Msk                   (_U_(0x1) << TDES_ISR_DATRDY_Pos)                    /**< (TDES_ISR) Data Ready (cleared by setting TDES_CR.START or TDES_CR.SWRST, or by reading TDES_ODATARx) Mask */
 #define TDES_ISR_DATRDY(value)                (TDES_ISR_DATRDY_Msk & ((value) << TDES_ISR_DATRDY_Pos))
-#define TDES_ISR_URAD_Pos                     _U_(8)                                               /**< (TDES_ISR) Unspecified Register Access Detection Status (cleared by setting bit TDES_CR.SWRST) Position */
-#define TDES_ISR_URAD_Msk                     (_U_(0x1) << TDES_ISR_URAD_Pos)                      /**< (TDES_ISR) Unspecified Register Access Detection Status (cleared by setting bit TDES_CR.SWRST) Mask */
+#define TDES_ISR_URAD_Pos                     _U_(8)                                               /**< (TDES_ISR) Unspecified Register Access Detection Status (cleared by setting TDES_CR.SWRST) Position */
+#define TDES_ISR_URAD_Msk                     (_U_(0x1) << TDES_ISR_URAD_Pos)                      /**< (TDES_ISR) Unspecified Register Access Detection Status (cleared by setting TDES_CR.SWRST) Mask */
 #define TDES_ISR_URAD(value)                  (TDES_ISR_URAD_Msk & ((value) << TDES_ISR_URAD_Pos))
-#define TDES_ISR_URAT_Pos                     _U_(12)                                              /**< (TDES_ISR) Unspecified Register Access (cleared by setting bit TDES_CR.SWRST) Position */
-#define TDES_ISR_URAT_Msk                     (_U_(0x3) << TDES_ISR_URAT_Pos)                      /**< (TDES_ISR) Unspecified Register Access (cleared by setting bit TDES_CR.SWRST) Mask */
+#define TDES_ISR_URAT_Pos                     _U_(12)                                              /**< (TDES_ISR) Unspecified Register Access (cleared by setting TDES_CR.SWRST) Position */
+#define TDES_ISR_URAT_Msk                     (_U_(0x3) << TDES_ISR_URAT_Pos)                      /**< (TDES_ISR) Unspecified Register Access (cleared by setting TDES_CR.SWRST) Mask */
 #define TDES_ISR_URAT(value)                  (TDES_ISR_URAT_Msk & ((value) << TDES_ISR_URAT_Pos))
-#define   TDES_ISR_URAT_IDR_WR_PROCESSING_Val _U_(0x0)                                             /**< (TDES_ISR) Input Data Register written during data processing when SMOD = 0x2 mode.  */
-#define   TDES_ISR_URAT_ODR_RD_PROCESSING_Val _U_(0x1)                                             /**< (TDES_ISR) Output Data Register read during data processing.  */
-#define   TDES_ISR_URAT_MR_WR_PROCESSING_Val  _U_(0x2)                                             /**< (TDES_ISR) Mode Register written during data processing.  */
+#define   TDES_ISR_URAT_IDR_WR_PROCESSING_Val _U_(0x0)                                             /**< (TDES_ISR) TDES_IDATAR written during data processing when SMOD = 0x2 mode.  */
+#define   TDES_ISR_URAT_ODR_RD_PROCESSING_Val _U_(0x1)                                             /**< (TDES_ISR) TDES_ODATAR read during data processing.  */
+#define   TDES_ISR_URAT_MR_WR_PROCESSING_Val  _U_(0x2)                                             /**< (TDES_ISR) TDES_MR written during data processing.  */
 #define   TDES_ISR_URAT_WOR_RD_ACCESS_Val     _U_(0x3)                                             /**< (TDES_ISR) Write-only register read access.  */
-#define TDES_ISR_URAT_IDR_WR_PROCESSING       (TDES_ISR_URAT_IDR_WR_PROCESSING_Val << TDES_ISR_URAT_Pos) /**< (TDES_ISR) Input Data Register written during data processing when SMOD = 0x2 mode. Position  */
-#define TDES_ISR_URAT_ODR_RD_PROCESSING       (TDES_ISR_URAT_ODR_RD_PROCESSING_Val << TDES_ISR_URAT_Pos) /**< (TDES_ISR) Output Data Register read during data processing. Position  */
-#define TDES_ISR_URAT_MR_WR_PROCESSING        (TDES_ISR_URAT_MR_WR_PROCESSING_Val << TDES_ISR_URAT_Pos) /**< (TDES_ISR) Mode Register written during data processing. Position  */
+#define TDES_ISR_URAT_IDR_WR_PROCESSING       (TDES_ISR_URAT_IDR_WR_PROCESSING_Val << TDES_ISR_URAT_Pos) /**< (TDES_ISR) TDES_IDATAR written during data processing when SMOD = 0x2 mode. Position  */
+#define TDES_ISR_URAT_ODR_RD_PROCESSING       (TDES_ISR_URAT_ODR_RD_PROCESSING_Val << TDES_ISR_URAT_Pos) /**< (TDES_ISR) TDES_ODATAR read during data processing. Position  */
+#define TDES_ISR_URAT_MR_WR_PROCESSING        (TDES_ISR_URAT_MR_WR_PROCESSING_Val << TDES_ISR_URAT_Pos) /**< (TDES_ISR) TDES_MR written during data processing. Position  */
 #define TDES_ISR_URAT_WOR_RD_ACCESS           (TDES_ISR_URAT_WOR_RD_ACCESS_Val << TDES_ISR_URAT_Pos) /**< (TDES_ISR) Write-only register read access. Position  */
 #define TDES_ISR_SECE_Pos                     _U_(16)                                              /**< (TDES_ISR) Security and/or Safety Event Interrupt Mask Position */
 #define TDES_ISR_SECE_Msk                     (_U_(0x1) << TDES_ISR_SECE_Pos)                      /**< (TDES_ISR) Security and/or Safety Event Interrupt Mask Mask */
@@ -297,21 +297,21 @@
 #define   TDES_WPMR_ACTION_LOCK_PKRPVS_WPVS_SWE_Val _U_(0x1)                                             /**< (TDES_WPMR) If a processing is in progress when the TDES_WPSR.PKRPVS/WPVS/SWE event detection occurs, the current processing is ended normally but no other processing is started while a TDES_CR.UNLOCK command is issued.  */
 #define   TDES_WPMR_ACTION_LOCK_CGD_SEQE_Val  _U_(0x2)                                             /**< (TDES_WPMR) If a processing is in progress when the TDES_WPSR.CGD/SEQE event detection occurs, the current processing is ended normally but no other processing is started while a TDES_CR.UNLOCK command is issued.  */
 #define   TDES_WPMR_ACTION_LOCK_ANY_EV_Val    _U_(0x3)                                             /**< (TDES_WPMR) If a processing is in progress when the TDES_WPSR.PKRPVS/WPVS/CGD/SEQE/SWE events detection occurs, the current processing is ended normally but no other processing is started while a TDES_CR.UNLOCK command is issued.  */
-#define   TDES_WPMR_ACTION_CLEAR_PKRPVS_WPVS_SWE_Val _U_(0x4)                                             /**< (TDES_WPMR) If a processing is in progress when the TDES_WPSR.PKRPVS/WPVS/SWE events detection occurs, the current processing is ended normally but no other processing is started while a TDES_CR.UNLOCK command is issued.Moreover, the TDES_KEYxWRx Key Word Registers are immediately cleared.  */
-#define   TDES_WPMR_ACTION_CLEAR_CGD_SEQE_Val _U_(0x5)                                             /**< (TDES_WPMR) If a processing is in progress when the TDES_WPSR.CGD/SEQE events detection occurs, the current processing is ended normally but no other processing is started while a TDES_CR.UNLOCK command is issued.Moreover, the TDES_KEYxWRx Key Word Registers are immediately cleared.  */
-#define   TDES_WPMR_ACTION_CLEAR_ANY_EV_Val   _U_(0x6)                                             /**< (TDES_WPMR) If a processing is in progress when the TDES_WPSR.PKRPVS/WPVS/CGD/SEQE/SWE events detection occurs, the current processing is ended normally but no other processing is started while a TDES_CR.UNLOCK command is issued.Moreover, the TDES_KEYxWRx Key Word Registers are immediately cleared.  */
+#define   TDES_WPMR_ACTION_CLEAR_PKRPVS_WPVS_SWE_Val _U_(0x4)                                             /**< (TDES_WPMR) If a processing is in progress when the TDES_WPSR.PKRPVS/WPVS/SWE events detection occurs, the current processing is ended normally but no other processing is started while a TDES_CR.UNLOCK command is issued. Moreover, TDES_KEYxWRy are immediately cleared.  */
+#define   TDES_WPMR_ACTION_CLEAR_CGD_SEQE_Val _U_(0x5)                                             /**< (TDES_WPMR) If a processing is in progress when the TDES_WPSR.CGD/SEQE events detection occurs, the current processing is ended normally but no other processing is started while a TDES_CR.UNLOCK command is issued. Moreover, TDES_KEYxWRy are immediately cleared.  */
+#define   TDES_WPMR_ACTION_CLEAR_ANY_EV_Val   _U_(0x6)                                             /**< (TDES_WPMR) If a processing is in progress when the TDES_WPSR.PKRPVS/WPVS/CGD/SEQE/SWE events detection occurs, the current processing is ended normally but no other processing is started while a TDES_CR.UNLOCK command is issued. Moreover, TDES_KEYxWRy are immediately cleared.  */
 #define TDES_WPMR_ACTION_REPORT_ONLY          (TDES_WPMR_ACTION_REPORT_ONLY_Val << TDES_WPMR_ACTION_Pos) /**< (TDES_WPMR) No action (stop or clear key) is performed when one of PKRPVS, WPVS, CGD, SEQE, or SWE flags are set. Position  */
 #define TDES_WPMR_ACTION_LOCK_PKRPVS_WPVS_SWE (TDES_WPMR_ACTION_LOCK_PKRPVS_WPVS_SWE_Val << TDES_WPMR_ACTION_Pos) /**< (TDES_WPMR) If a processing is in progress when the TDES_WPSR.PKRPVS/WPVS/SWE event detection occurs, the current processing is ended normally but no other processing is started while a TDES_CR.UNLOCK command is issued. Position  */
 #define TDES_WPMR_ACTION_LOCK_CGD_SEQE        (TDES_WPMR_ACTION_LOCK_CGD_SEQE_Val << TDES_WPMR_ACTION_Pos) /**< (TDES_WPMR) If a processing is in progress when the TDES_WPSR.CGD/SEQE event detection occurs, the current processing is ended normally but no other processing is started while a TDES_CR.UNLOCK command is issued. Position  */
 #define TDES_WPMR_ACTION_LOCK_ANY_EV          (TDES_WPMR_ACTION_LOCK_ANY_EV_Val << TDES_WPMR_ACTION_Pos) /**< (TDES_WPMR) If a processing is in progress when the TDES_WPSR.PKRPVS/WPVS/CGD/SEQE/SWE events detection occurs, the current processing is ended normally but no other processing is started while a TDES_CR.UNLOCK command is issued. Position  */
-#define TDES_WPMR_ACTION_CLEAR_PKRPVS_WPVS_SWE (TDES_WPMR_ACTION_CLEAR_PKRPVS_WPVS_SWE_Val << TDES_WPMR_ACTION_Pos) /**< (TDES_WPMR) If a processing is in progress when the TDES_WPSR.PKRPVS/WPVS/SWE events detection occurs, the current processing is ended normally but no other processing is started while a TDES_CR.UNLOCK command is issued.Moreover, the TDES_KEYxWRx Key Word Registers are immediately cleared. Position  */
-#define TDES_WPMR_ACTION_CLEAR_CGD_SEQE       (TDES_WPMR_ACTION_CLEAR_CGD_SEQE_Val << TDES_WPMR_ACTION_Pos) /**< (TDES_WPMR) If a processing is in progress when the TDES_WPSR.CGD/SEQE events detection occurs, the current processing is ended normally but no other processing is started while a TDES_CR.UNLOCK command is issued.Moreover, the TDES_KEYxWRx Key Word Registers are immediately cleared. Position  */
-#define TDES_WPMR_ACTION_CLEAR_ANY_EV         (TDES_WPMR_ACTION_CLEAR_ANY_EV_Val << TDES_WPMR_ACTION_Pos) /**< (TDES_WPMR) If a processing is in progress when the TDES_WPSR.PKRPVS/WPVS/CGD/SEQE/SWE events detection occurs, the current processing is ended normally but no other processing is started while a TDES_CR.UNLOCK command is issued.Moreover, the TDES_KEYxWRx Key Word Registers are immediately cleared. Position  */
+#define TDES_WPMR_ACTION_CLEAR_PKRPVS_WPVS_SWE (TDES_WPMR_ACTION_CLEAR_PKRPVS_WPVS_SWE_Val << TDES_WPMR_ACTION_Pos) /**< (TDES_WPMR) If a processing is in progress when the TDES_WPSR.PKRPVS/WPVS/SWE events detection occurs, the current processing is ended normally but no other processing is started while a TDES_CR.UNLOCK command is issued. Moreover, TDES_KEYxWRy are immediately cleared. Position  */
+#define TDES_WPMR_ACTION_CLEAR_CGD_SEQE       (TDES_WPMR_ACTION_CLEAR_CGD_SEQE_Val << TDES_WPMR_ACTION_Pos) /**< (TDES_WPMR) If a processing is in progress when the TDES_WPSR.CGD/SEQE events detection occurs, the current processing is ended normally but no other processing is started while a TDES_CR.UNLOCK command is issued. Moreover, TDES_KEYxWRy are immediately cleared. Position  */
+#define TDES_WPMR_ACTION_CLEAR_ANY_EV         (TDES_WPMR_ACTION_CLEAR_ANY_EV_Val << TDES_WPMR_ACTION_Pos) /**< (TDES_WPMR) If a processing is in progress when the TDES_WPSR.PKRPVS/WPVS/CGD/SEQE/SWE events detection occurs, the current processing is ended normally but no other processing is started while a TDES_CR.UNLOCK command is issued. Moreover, TDES_KEYxWRy are immediately cleared. Position  */
 #define TDES_WPMR_WPKEY_Pos                   _U_(8)                                               /**< (TDES_WPMR) Write Protection Key Position */
 #define TDES_WPMR_WPKEY_Msk                   (_U_(0xFFFFFF) << TDES_WPMR_WPKEY_Pos)               /**< (TDES_WPMR) Write Protection Key Mask */
 #define TDES_WPMR_WPKEY(value)                (TDES_WPMR_WPKEY_Msk & ((value) << TDES_WPMR_WPKEY_Pos))
-#define   TDES_WPMR_WPKEY_PASSWD_Val          _U_(0x444553)                                        /**< (TDES_WPMR) Writing any other value in this field aborts the write operation of bits WPEN, WPITEN and WPCREN.Always reads as 0.  */
-#define TDES_WPMR_WPKEY_PASSWD                (TDES_WPMR_WPKEY_PASSWD_Val << TDES_WPMR_WPKEY_Pos)  /**< (TDES_WPMR) Writing any other value in this field aborts the write operation of bits WPEN, WPITEN and WPCREN.Always reads as 0. Position  */
+#define   TDES_WPMR_WPKEY_PASSWD_Val          _U_(0x444553)                                        /**< (TDES_WPMR) Writing any other value in this field aborts the write operation of bits WPEN, WPITEN and WPCREN. Always reads as 0.  */
+#define TDES_WPMR_WPKEY_PASSWD                (TDES_WPMR_WPKEY_PASSWD_Val << TDES_WPMR_WPKEY_Pos)  /**< (TDES_WPMR) Writing any other value in this field aborts the write operation of bits WPEN, WPITEN and WPCREN. Always reads as 0. Position  */
 #define TDES_WPMR_Msk                         _U_(0xFFFFFFF7)                                      /**< (TDES_WPMR) Register Mask  */
 
 
@@ -341,32 +341,22 @@
 #define   TDES_WPSR_SWETYP_WRITE_RO_Val       _U_(0x1)                                             /**< (TDES_WPSR) TDES is enabled and a write access has been performed on a read-only register (Warning).  */
 #define   TDES_WPSR_SWETYP_UNDEF_RW_Val       _U_(0x2)                                             /**< (TDES_WPSR) Access to an undefined address (Warning).  */
 #define   TDES_WPSR_SWETYP_CTRL_START_Val     _U_(0x3)                                             /**< (TDES_WPSR) Abnormal use of TDES_CR.START command when DMA access is configured.  */
-#define   TDES_WPSR_SWETYP_WEIRD_ACTION_Val   _U_(0x4)                                             /**< (TDES_WPSR) A key write, init value write, output data read, Mode register write, Private Key Bus access or XTEA round register has been performed while a current processing is in progress (abnormal).  */
-#define   TDES_WPSR_SWETYP_INCOMPLETE_KEY_Val _U_(0x5)                                             /**< (TDES_WPSR) A tentative of start is required while the keys are not fully loaded into the TDES_KEYxWRx registers.  */
+#define   TDES_WPSR_SWETYP_WEIRD_ACTION_Val   _U_(0x4)                                             /**< (TDES_WPSR) A key write, init value write, output data read, Mode register write, private key bus access or XTEA round register has been performed while a current processing is in progress (abnormal).  */
+#define   TDES_WPSR_SWETYP_INCOMPLETE_KEY_Val _U_(0x5)                                             /**< (TDES_WPSR) A tentative of start is required while the keys are not fully loaded into TDES_KEYxWRy.  */
 #define TDES_WPSR_SWETYP_READ_WO              (TDES_WPSR_SWETYP_READ_WO_Val << TDES_WPSR_SWETYP_Pos) /**< (TDES_WPSR) A write-only register has been read (Warning). Position  */
 #define TDES_WPSR_SWETYP_WRITE_RO             (TDES_WPSR_SWETYP_WRITE_RO_Val << TDES_WPSR_SWETYP_Pos) /**< (TDES_WPSR) TDES is enabled and a write access has been performed on a read-only register (Warning). Position  */
 #define TDES_WPSR_SWETYP_UNDEF_RW             (TDES_WPSR_SWETYP_UNDEF_RW_Val << TDES_WPSR_SWETYP_Pos) /**< (TDES_WPSR) Access to an undefined address (Warning). Position  */
 #define TDES_WPSR_SWETYP_CTRL_START           (TDES_WPSR_SWETYP_CTRL_START_Val << TDES_WPSR_SWETYP_Pos) /**< (TDES_WPSR) Abnormal use of TDES_CR.START command when DMA access is configured. Position  */
-#define TDES_WPSR_SWETYP_WEIRD_ACTION         (TDES_WPSR_SWETYP_WEIRD_ACTION_Val << TDES_WPSR_SWETYP_Pos) /**< (TDES_WPSR) A key write, init value write, output data read, Mode register write, Private Key Bus access or XTEA round register has been performed while a current processing is in progress (abnormal). Position  */
-#define TDES_WPSR_SWETYP_INCOMPLETE_KEY       (TDES_WPSR_SWETYP_INCOMPLETE_KEY_Val << TDES_WPSR_SWETYP_Pos) /**< (TDES_WPSR) A tentative of start is required while the keys are not fully loaded into the TDES_KEYxWRx registers. Position  */
+#define TDES_WPSR_SWETYP_WEIRD_ACTION         (TDES_WPSR_SWETYP_WEIRD_ACTION_Val << TDES_WPSR_SWETYP_Pos) /**< (TDES_WPSR) A key write, init value write, output data read, Mode register write, private key bus access or XTEA round register has been performed while a current processing is in progress (abnormal). Position  */
+#define TDES_WPSR_SWETYP_INCOMPLETE_KEY       (TDES_WPSR_SWETYP_INCOMPLETE_KEY_Val << TDES_WPSR_SWETYP_Pos) /**< (TDES_WPSR) A tentative of start is required while the keys are not fully loaded into TDES_KEYxWRy. Position  */
 #define TDES_WPSR_ECLASS_Pos                  _U_(31)                                              /**< (TDES_WPSR) Software Error Class (cleared on read) Position */
 #define TDES_WPSR_ECLASS_Msk                  (_U_(0x1) << TDES_WPSR_ECLASS_Pos)                   /**< (TDES_WPSR) Software Error Class (cleared on read) Mask */
 #define TDES_WPSR_ECLASS(value)               (TDES_WPSR_ECLASS_Msk & ((value) << TDES_WPSR_ECLASS_Pos))
 #define   TDES_WPSR_ECLASS_WARNING_Val        _U_(0x0)                                             /**< (TDES_WPSR) An abnormal access that does not affect system functionality.  */
-#define   TDES_WPSR_ECLASS_ERROR_Val          _U_(0x1)                                             /**< (TDES_WPSR)   */
+#define   TDES_WPSR_ECLASS_ERROR_Val          _U_(0x1)                                             /**< (TDES_WPSR) An access is performed into key, input data, control registers while the TDES is performing an encryption/decryption or a start is request by software or DMA while the key is not fully configured.  */
 #define TDES_WPSR_ECLASS_WARNING              (TDES_WPSR_ECLASS_WARNING_Val << TDES_WPSR_ECLASS_Pos) /**< (TDES_WPSR) An abnormal access that does not affect system functionality. Position  */
-#define TDES_WPSR_ECLASS_ERROR                (TDES_WPSR_ECLASS_ERROR_Val << TDES_WPSR_ECLASS_Pos) /**< (TDES_WPSR)  Position  */
+#define TDES_WPSR_ECLASS_ERROR                (TDES_WPSR_ECLASS_ERROR_Val << TDES_WPSR_ECLASS_Pos) /**< (TDES_WPSR) An access is performed into key, input data, control registers while the TDES is performing an encryption/decryption or a start is request by software or DMA while the key is not fully configured. Position  */
 #define TDES_WPSR_Msk                         _U_(0x8FFFFF1F)                                      /**< (TDES_WPSR) Register Mask  */
-
-
-/* -------- TDES_VERSION : (TDES Offset: 0xFC) ( R/ 32) Version Register -------- */
-#define TDES_VERSION_VERSION_Pos              _U_(0)                                               /**< (TDES_VERSION) Version of the Hardware Module Position */
-#define TDES_VERSION_VERSION_Msk              (_U_(0xFFF) << TDES_VERSION_VERSION_Pos)             /**< (TDES_VERSION) Version of the Hardware Module Mask */
-#define TDES_VERSION_VERSION(value)           (TDES_VERSION_VERSION_Msk & ((value) << TDES_VERSION_VERSION_Pos))
-#define TDES_VERSION_MFN_Pos                  _U_(16)                                              /**< (TDES_VERSION) Metal Fix Number Position */
-#define TDES_VERSION_MFN_Msk                  (_U_(0x7) << TDES_VERSION_MFN_Pos)                   /**< (TDES_VERSION) Metal Fix Number Mask */
-#define TDES_VERSION_MFN(value)               (TDES_VERSION_MFN_Msk & ((value) << TDES_VERSION_MFN_Pos))
-#define TDES_VERSION_Msk                      _U_(0x00070FFF)                                      /**< (TDES_VERSION) Register Mask  */
 
 
 /** \brief TDES register offsets definitions */
@@ -385,7 +375,6 @@
 #define TDES_XTEA_RNDR_REG_OFST        (0x70)              /**< (TDES_XTEA_RNDR) XTEA Rounds Register Offset */
 #define TDES_WPMR_REG_OFST             (0xE4)              /**< (TDES_WPMR) Write Protection Mode Register Offset */
 #define TDES_WPSR_REG_OFST             (0xE8)              /**< (TDES_WPSR) Write Protection Status Register Offset */
-#define TDES_VERSION_REG_OFST          (0xFC)              /**< (TDES_VERSION) Version Register Offset */
 
 #if !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__))
 /** \brief TDES register API structure */
@@ -412,8 +401,6 @@ typedef struct
   __I   uint8_t                        Reserved6[0x70];
   __IO  uint32_t                       TDES_WPMR;          /**< Offset: 0xE4 (R/W  32) Write Protection Mode Register */
   __I   uint32_t                       TDES_WPSR;          /**< Offset: 0xE8 (R/   32) Write Protection Status Register */
-  __I   uint8_t                        Reserved7[0x10];
-  __I   uint32_t                       TDES_VERSION;       /**< Offset: 0xFC (R/   32) Version Register */
 } tdes_registers_t;
 
 
