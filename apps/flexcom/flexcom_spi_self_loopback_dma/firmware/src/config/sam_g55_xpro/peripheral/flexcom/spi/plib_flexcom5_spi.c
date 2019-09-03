@@ -53,7 +53,6 @@
 // *****************************************************************************
 // *****************************************************************************
 
-
 /* Global object to save FLEXCOM SPI Exchange related data */
 FLEXCOM_SPI_OBJECT flexcom5SpiObj;
 
@@ -256,6 +255,7 @@ void FLEXCOM5_InterruptHandler( void )
 
         /* Set Last transfer to deassert NPCS after the last byte written in TDR has been transferred. */
         SPI5_REGS->SPI_CR = SPI_CR_LASTXFER_Msk;
+
         SPI5_REGS->SPI_PTCR = SPI_PTCR_RXTDIS_Msk | SPI_PTCR_TXTDIS_Msk;
         SPI5_REGS->SPI_IDR = SPI_IDR_ENDRX_Msk;
 
