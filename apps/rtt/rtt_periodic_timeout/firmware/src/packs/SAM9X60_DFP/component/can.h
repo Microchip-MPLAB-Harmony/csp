@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-04-23T19:01:17Z */
+/* file generated from device description version 2019-08-22T13:04:26Z */
 #ifndef _SAM9X_CAN_COMPONENT_H_
 #define _SAM9X_CAN_COMPONENT_H_
 
@@ -129,8 +129,8 @@
 #define CAN_MCR_MRTR_Pos                      _U_(20)                                              /**< (CAN_MCR) Mailbox Remote Transmission Request Position */
 #define CAN_MCR_MRTR_Msk                      (_U_(0x1) << CAN_MCR_MRTR_Pos)                       /**< (CAN_MCR) Mailbox Remote Transmission Request Mask */
 #define CAN_MCR_MRTR(value)                   (CAN_MCR_MRTR_Msk & ((value) << CAN_MCR_MRTR_Pos))  
-#define CAN_MCR_MACR_Pos                      _U_(22)                                              /**< (CAN_MCR) Abort Request for Mailbox x Position */
-#define CAN_MCR_MACR_Msk                      (_U_(0x1) << CAN_MCR_MACR_Pos)                       /**< (CAN_MCR) Abort Request for Mailbox x Mask */
+#define CAN_MCR_MACR_Pos                      _U_(22)                                              /**< (CAN_MCR) Abort Request for Mailbox 0 Position */
+#define CAN_MCR_MACR_Msk                      (_U_(0x1) << CAN_MCR_MACR_Pos)                       /**< (CAN_MCR) Abort Request for Mailbox 0 Mask */
 #define CAN_MCR_MACR(value)                   (CAN_MCR_MACR_Msk & ((value) << CAN_MCR_MACR_Pos))  
 #define CAN_MCR_MTCR_Pos                      _U_(23)                                              /**< (CAN_MCR) Mailbox Transfer Command Position */
 #define CAN_MCR_MTCR_Msk                      (_U_(0x1) << CAN_MCR_MTCR_Pos)                       /**< (CAN_MCR) Mailbox Transfer Command Mask */
@@ -588,8 +588,8 @@
 #define CAN_WPMR_WPKEY_Pos                    _U_(8)                                               /**< (CAN_WPMR) Write Protection Key Password Position */
 #define CAN_WPMR_WPKEY_Msk                    (_U_(0xFFFFFF) << CAN_WPMR_WPKEY_Pos)                /**< (CAN_WPMR) Write Protection Key Password Mask */
 #define CAN_WPMR_WPKEY(value)                 (CAN_WPMR_WPKEY_Msk & ((value) << CAN_WPMR_WPKEY_Pos))
-#define   CAN_WPMR_WPKEY_PASSWD_Val           _U_(0x43414E)                                        /**< (CAN_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit.Always reads as 0  */
-#define CAN_WPMR_WPKEY_PASSWD                 (CAN_WPMR_WPKEY_PASSWD_Val << CAN_WPMR_WPKEY_Pos)    /**< (CAN_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit.Always reads as 0 Position  */
+#define   CAN_WPMR_WPKEY_PASSWD_Val           _U_(0x43414E)                                        /**< (CAN_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit. Always reads as 0  */
+#define CAN_WPMR_WPKEY_PASSWD                 (CAN_WPMR_WPKEY_PASSWD_Val << CAN_WPMR_WPKEY_Pos)    /**< (CAN_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit. Always reads as 0 Position  */
 #define CAN_WPMR_Msk                          _U_(0xFFFFFF01)                                      /**< (CAN_WPMR) Register Mask  */
 
 
@@ -601,16 +601,6 @@
 #define CAN_WPSR_WPVSRC_Msk                   (_U_(0xFF) << CAN_WPSR_WPVSRC_Pos)                   /**< (CAN_WPSR) Write Protection Violation Source Mask */
 #define CAN_WPSR_WPVSRC(value)                (CAN_WPSR_WPVSRC_Msk & ((value) << CAN_WPSR_WPVSRC_Pos))
 #define CAN_WPSR_Msk                          _U_(0x0000FF01)                                      /**< (CAN_WPSR) Register Mask  */
-
-
-/* -------- CAN_VERSION : (CAN Offset: 0xFC) ( R/ 32) Version Register -------- */
-#define CAN_VERSION_VERSION_Pos               _U_(0)                                               /**< (CAN_VERSION) Hardware Module Version Position */
-#define CAN_VERSION_VERSION_Msk               (_U_(0xFFF) << CAN_VERSION_VERSION_Pos)              /**< (CAN_VERSION) Hardware Module Version Mask */
-#define CAN_VERSION_VERSION(value)            (CAN_VERSION_VERSION_Msk & ((value) << CAN_VERSION_VERSION_Pos))
-#define CAN_VERSION_MFN_Pos                   _U_(16)                                              /**< (CAN_VERSION) Metal Fix Number Position */
-#define CAN_VERSION_MFN_Msk                   (_U_(0x7) << CAN_VERSION_MFN_Pos)                    /**< (CAN_VERSION) Metal Fix Number Mask */
-#define CAN_VERSION_MFN(value)                (CAN_VERSION_MFN_Msk & ((value) << CAN_VERSION_MFN_Pos))
-#define CAN_VERSION_Msk                       _U_(0x00070FFF)                                      /**< (CAN_VERSION) Register Mask  */
 
 
 /** \brief CAN register offsets definitions */
@@ -635,7 +625,6 @@
 #define CAN_ACR_REG_OFST               (0x28)              /**< (CAN_ACR) Abort Command Register Offset */
 #define CAN_WPMR_REG_OFST              (0xE4)              /**< (CAN_WPMR) Write Protection Mode Register Offset */
 #define CAN_WPSR_REG_OFST              (0xE8)              /**< (CAN_WPSR) Write Protection Status Register Offset */
-#define CAN_VERSION_REG_OFST           (0xFC)              /**< (CAN_VERSION) Version Register Offset */
 
 #if !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__))
 /** \brief CAN_MB register API structure */
@@ -670,9 +659,7 @@ typedef struct
   __I   uint8_t                        Reserved1[0xB8];
   __IO  uint32_t                       CAN_WPMR;           /**< Offset: 0xE4 (R/W  32) Write Protection Mode Register */
   __I   uint32_t                       CAN_WPSR;           /**< Offset: 0xE8 (R/   32) Write Protection Status Register */
-  __I   uint8_t                        Reserved2[0x10];
-  __I   uint32_t                       CAN_VERSION;        /**< Offset: 0xFC (R/   32) Version Register */
-  __I   uint8_t                        Reserved3[0x100];
+  __I   uint8_t                        Reserved2[0x114];
         can_mb_registers_t             CAN_MB[CAN_MB_NUMBER]; /**< Offset: 0x200  */
 } can_registers_t;
 
