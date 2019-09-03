@@ -68,13 +68,21 @@ PIO_PIN_CALLBACK_OBJ portCPinCbObj[2];
 */
 void PIO_Initialize ( void )
 {
+ /* Port B Peripheral function GPIO configuration */
+	PIOB_REGS->PIO_MSKR = 0x80000;
+	PIOB_REGS->PIO_CFGR = 0x0;
+	
  /* Port B Pin 19 configuration */
 	PIOB_REGS->PIO_MSKR = 0x80000;
-	PIOB_REGS->PIO_CFGR |= 0x100;
+	PIOB_REGS->PIO_CFGR = (PIOB_REGS->PIO_CFGR & (PIO_CFGR_FUNC_Msk)) | 0x100;
+	
+ /* Port C Peripheral function GPIO configuration */
+	PIOC_REGS->PIO_MSKR = 0x20000000;
+	PIOC_REGS->PIO_CFGR = 0x0;
 	
  /* Port C Pin 29 configuration */
 	PIOC_REGS->PIO_MSKR = 0x20000000;
-	PIOC_REGS->PIO_CFGR |= 0x200;
+	PIOC_REGS->PIO_CFGR = (PIOC_REGS->PIO_CFGR & (PIO_CFGR_FUNC_Msk)) | 0x200;
 	
  /* Port F Peripheral function A configuration */
 	PIOF_REGS->PIO_MSKR = 0x60000000;
