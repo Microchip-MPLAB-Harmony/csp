@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-04-23T19:01:17Z */
+/* file generated from device description version 2019-08-22T13:04:26Z */
 #ifndef _SAM9X_SMC_COMPONENT_H_
 #define _SAM9X_SMC_COMPONENT_H_
 
@@ -74,10 +74,10 @@
 #define SMC_MODE_READ_MODE_Pos                _U_(0)                                               /**< (SMC_MODE) Selection of the Control Signal for Read Operation Position */
 #define SMC_MODE_READ_MODE_Msk                (_U_(0x1) << SMC_MODE_READ_MODE_Pos)                 /**< (SMC_MODE) Selection of the Control Signal for Read Operation Mask */
 #define SMC_MODE_READ_MODE(value)             (SMC_MODE_READ_MODE_Msk & ((value) << SMC_MODE_READ_MODE_Pos))
-#define   SMC_MODE_READ_MODE_NCS_CTRL_Val     _U_(0x0)                                             /**< (SMC_MODE) Read operation controlled by NCS signal- If TDF cycles are programmed, the external bus is marked busy after the rising edge of NCS.- If TDF optimization is enabled (TDF_MODE = 1), TDF wait states are inserted after the setup of NCS.  */
-#define   SMC_MODE_READ_MODE_NRD_CTRL_Val     _U_(0x1)                                             /**< (SMC_MODE) Read operation controlled by NRD signal- If TDF cycles are programmed, the external bus is marked busy after the rising edge of NRD.- If TDF optimization is enabled (TDF_MODE = 1), TDF wait states are inserted after the setup of NRD.  */
-#define SMC_MODE_READ_MODE_NCS_CTRL           (SMC_MODE_READ_MODE_NCS_CTRL_Val << SMC_MODE_READ_MODE_Pos) /**< (SMC_MODE) Read operation controlled by NCS signal- If TDF cycles are programmed, the external bus is marked busy after the rising edge of NCS.- If TDF optimization is enabled (TDF_MODE = 1), TDF wait states are inserted after the setup of NCS. Position  */
-#define SMC_MODE_READ_MODE_NRD_CTRL           (SMC_MODE_READ_MODE_NRD_CTRL_Val << SMC_MODE_READ_MODE_Pos) /**< (SMC_MODE) Read operation controlled by NRD signal- If TDF cycles are programmed, the external bus is marked busy after the rising edge of NRD.- If TDF optimization is enabled (TDF_MODE = 1), TDF wait states are inserted after the setup of NRD. Position  */
+#define   SMC_MODE_READ_MODE_NCS_CTRL_Val     _U_(0x0)                                             /**< (SMC_MODE) Read operation controlled by NCS signal - If TDF cycles are programmed, the external bus is marked busy after the rising edge of NCS. - If TDF optimization is enabled (TDF_MODE = 1), TDF wait states are inserted after the setup of NCS.  */
+#define   SMC_MODE_READ_MODE_NRD_CTRL_Val     _U_(0x1)                                             /**< (SMC_MODE) Read operation controlled by NRD signal - If TDF cycles are programmed, the external bus is marked busy after the rising edge of NRD. - If TDF optimization is enabled (TDF_MODE = 1), TDF wait states are inserted after the setup of NRD.  */
+#define SMC_MODE_READ_MODE_NCS_CTRL           (SMC_MODE_READ_MODE_NCS_CTRL_Val << SMC_MODE_READ_MODE_Pos) /**< (SMC_MODE) Read operation controlled by NCS signal - If TDF cycles are programmed, the external bus is marked busy after the rising edge of NCS. - If TDF optimization is enabled (TDF_MODE = 1), TDF wait states are inserted after the setup of NCS. Position  */
+#define SMC_MODE_READ_MODE_NRD_CTRL           (SMC_MODE_READ_MODE_NRD_CTRL_Val << SMC_MODE_READ_MODE_Pos) /**< (SMC_MODE) Read operation controlled by NRD signal - If TDF cycles are programmed, the external bus is marked busy after the rising edge of NRD. - If TDF optimization is enabled (TDF_MODE = 1), TDF wait states are inserted after the setup of NRD. Position  */
 #define SMC_MODE_WRITE_MODE_Pos               _U_(1)                                               /**< (SMC_MODE) Selection of the Control Signal for Write Operation Position */
 #define SMC_MODE_WRITE_MODE_Msk               (_U_(0x1) << SMC_MODE_WRITE_MODE_Pos)                /**< (SMC_MODE) Selection of the Control Signal for Write Operation Mask */
 #define SMC_MODE_WRITE_MODE(value)            (SMC_MODE_WRITE_MODE_Msk & ((value) << SMC_MODE_WRITE_MODE_Pos))
@@ -97,10 +97,10 @@
 #define SMC_MODE_BAT_Pos                      _U_(8)                                               /**< (SMC_MODE) Byte Access Type Position */
 #define SMC_MODE_BAT_Msk                      (_U_(0x1) << SMC_MODE_BAT_Pos)                       /**< (SMC_MODE) Byte Access Type Mask */
 #define SMC_MODE_BAT(value)                   (SMC_MODE_BAT_Msk & ((value) << SMC_MODE_BAT_Pos))  
-#define   SMC_MODE_BAT_BYTE_SELECT_Val        _U_(0x0)                                             /**< (SMC_MODE) Byte select access type:- Write operation is controlled using NCS, NWE, NBS0, NBS1, NBS2 and NBS3- Read operation is controlled using NCS, NRD, NBS0, NBS1, NBS2 and NBS3  */
-#define   SMC_MODE_BAT_BYTE_WRITE_Val         _U_(0x1)                                             /**< (SMC_MODE) Byte write access type:- Write operation is controlled using NCS, NWR0, NWR1, NWR2, NWR3- Read operation is controlled using NCS and NRD  */
-#define SMC_MODE_BAT_BYTE_SELECT              (SMC_MODE_BAT_BYTE_SELECT_Val << SMC_MODE_BAT_Pos)   /**< (SMC_MODE) Byte select access type:- Write operation is controlled using NCS, NWE, NBS0, NBS1, NBS2 and NBS3- Read operation is controlled using NCS, NRD, NBS0, NBS1, NBS2 and NBS3 Position  */
-#define SMC_MODE_BAT_BYTE_WRITE               (SMC_MODE_BAT_BYTE_WRITE_Val << SMC_MODE_BAT_Pos)    /**< (SMC_MODE) Byte write access type:- Write operation is controlled using NCS, NWR0, NWR1, NWR2, NWR3- Read operation is controlled using NCS and NRD Position  */
+#define   SMC_MODE_BAT_BYTE_SELECT_Val        _U_(0x0)                                             /**< (SMC_MODE) Byte select access type: - Write operation is controlled using NCS, NWE, NBS0, NBS1, NBS2 and NBS3 - Read operation is controlled using NCS, NRD, NBS0, NBS1, NBS2 and NBS3  */
+#define   SMC_MODE_BAT_BYTE_WRITE_Val         _U_(0x1)                                             /**< (SMC_MODE) Byte write access type: - Write operation is controlled using NCS, NWR0, NWR1, NWR2, NWR3 - Read operation is controlled using NCS and NRD  */
+#define SMC_MODE_BAT_BYTE_SELECT              (SMC_MODE_BAT_BYTE_SELECT_Val << SMC_MODE_BAT_Pos)   /**< (SMC_MODE) Byte select access type: - Write operation is controlled using NCS, NWE, NBS0, NBS1, NBS2 and NBS3 - Read operation is controlled using NCS, NRD, NBS0, NBS1, NBS2 and NBS3 Position  */
+#define SMC_MODE_BAT_BYTE_WRITE               (SMC_MODE_BAT_BYTE_WRITE_Val << SMC_MODE_BAT_Pos)    /**< (SMC_MODE) Byte write access type: - Write operation is controlled using NCS, NWR0, NWR1, NWR2, NWR3 - Read operation is controlled using NCS and NRD Position  */
 #define SMC_MODE_DBW_Pos                      _U_(12)                                              /**< (SMC_MODE) Data Bus Width Position */
 #define SMC_MODE_DBW_Msk                      (_U_(0x3) << SMC_MODE_DBW_Pos)                       /**< (SMC_MODE) Data Bus Width Mask */
 #define SMC_MODE_DBW(value)                   (SMC_MODE_DBW_Msk & ((value) << SMC_MODE_DBW_Pos))  
@@ -140,19 +140,25 @@
 #define SMC_OCMS_TAMPCLR_Pos                  _U_(4)                                               /**< (SMC_OCMS) Tamper Clear Enable Position */
 #define SMC_OCMS_TAMPCLR_Msk                  (_U_(0x1) << SMC_OCMS_TAMPCLR_Pos)                   /**< (SMC_OCMS) Tamper Clear Enable Mask */
 #define SMC_OCMS_TAMPCLR(value)               (SMC_OCMS_TAMPCLR_Msk & ((value) << SMC_OCMS_TAMPCLR_Pos))
-#define SMC_OCMS_CS0SE_Pos                    _U_(8)                                               /**< (SMC_OCMS) Chip Select (x = 0 to 3) Scrambling Enable Position */
-#define SMC_OCMS_CS0SE_Msk                    (_U_(0x1) << SMC_OCMS_CS0SE_Pos)                     /**< (SMC_OCMS) Chip Select (x = 0 to 3) Scrambling Enable Mask */
+#define SMC_OCMS_CS0SE_Pos                    _U_(8)                                               /**< (SMC_OCMS) Chip Select (x = 0 to 5) Scrambling Enable Position */
+#define SMC_OCMS_CS0SE_Msk                    (_U_(0x1) << SMC_OCMS_CS0SE_Pos)                     /**< (SMC_OCMS) Chip Select (x = 0 to 5) Scrambling Enable Mask */
 #define SMC_OCMS_CS0SE(value)                 (SMC_OCMS_CS0SE_Msk & ((value) << SMC_OCMS_CS0SE_Pos))
-#define SMC_OCMS_CS1SE_Pos                    _U_(9)                                               /**< (SMC_OCMS) Chip Select (x = 0 to 3) Scrambling Enable Position */
-#define SMC_OCMS_CS1SE_Msk                    (_U_(0x1) << SMC_OCMS_CS1SE_Pos)                     /**< (SMC_OCMS) Chip Select (x = 0 to 3) Scrambling Enable Mask */
+#define SMC_OCMS_CS1SE_Pos                    _U_(9)                                               /**< (SMC_OCMS) Chip Select (x = 0 to 5) Scrambling Enable Position */
+#define SMC_OCMS_CS1SE_Msk                    (_U_(0x1) << SMC_OCMS_CS1SE_Pos)                     /**< (SMC_OCMS) Chip Select (x = 0 to 5) Scrambling Enable Mask */
 #define SMC_OCMS_CS1SE(value)                 (SMC_OCMS_CS1SE_Msk & ((value) << SMC_OCMS_CS1SE_Pos))
-#define SMC_OCMS_CS2SE_Pos                    _U_(10)                                              /**< (SMC_OCMS) Chip Select (x = 0 to 3) Scrambling Enable Position */
-#define SMC_OCMS_CS2SE_Msk                    (_U_(0x1) << SMC_OCMS_CS2SE_Pos)                     /**< (SMC_OCMS) Chip Select (x = 0 to 3) Scrambling Enable Mask */
+#define SMC_OCMS_CS2SE_Pos                    _U_(10)                                              /**< (SMC_OCMS) Chip Select (x = 0 to 5) Scrambling Enable Position */
+#define SMC_OCMS_CS2SE_Msk                    (_U_(0x1) << SMC_OCMS_CS2SE_Pos)                     /**< (SMC_OCMS) Chip Select (x = 0 to 5) Scrambling Enable Mask */
 #define SMC_OCMS_CS2SE(value)                 (SMC_OCMS_CS2SE_Msk & ((value) << SMC_OCMS_CS2SE_Pos))
-#define SMC_OCMS_CS3SE_Pos                    _U_(11)                                              /**< (SMC_OCMS) Chip Select (x = 0 to 3) Scrambling Enable Position */
-#define SMC_OCMS_CS3SE_Msk                    (_U_(0x1) << SMC_OCMS_CS3SE_Pos)                     /**< (SMC_OCMS) Chip Select (x = 0 to 3) Scrambling Enable Mask */
+#define SMC_OCMS_CS3SE_Pos                    _U_(11)                                              /**< (SMC_OCMS) Chip Select (x = 0 to 5) Scrambling Enable Position */
+#define SMC_OCMS_CS3SE_Msk                    (_U_(0x1) << SMC_OCMS_CS3SE_Pos)                     /**< (SMC_OCMS) Chip Select (x = 0 to 5) Scrambling Enable Mask */
 #define SMC_OCMS_CS3SE(value)                 (SMC_OCMS_CS3SE_Msk & ((value) << SMC_OCMS_CS3SE_Pos))
-#define SMC_OCMS_Msk                          _U_(0x00000F11)                                      /**< (SMC_OCMS) Register Mask  */
+#define SMC_OCMS_CS4SE_Pos                    _U_(12)                                              /**< (SMC_OCMS) Chip Select (x = 0 to 5) Scrambling Enable Position */
+#define SMC_OCMS_CS4SE_Msk                    (_U_(0x1) << SMC_OCMS_CS4SE_Pos)                     /**< (SMC_OCMS) Chip Select (x = 0 to 5) Scrambling Enable Mask */
+#define SMC_OCMS_CS4SE(value)                 (SMC_OCMS_CS4SE_Msk & ((value) << SMC_OCMS_CS4SE_Pos))
+#define SMC_OCMS_CS5SE_Pos                    _U_(13)                                              /**< (SMC_OCMS) Chip Select (x = 0 to 5) Scrambling Enable Position */
+#define SMC_OCMS_CS5SE_Msk                    (_U_(0x1) << SMC_OCMS_CS5SE_Pos)                     /**< (SMC_OCMS) Chip Select (x = 0 to 5) Scrambling Enable Mask */
+#define SMC_OCMS_CS5SE(value)                 (SMC_OCMS_CS5SE_Msk & ((value) << SMC_OCMS_CS5SE_Pos))
+#define SMC_OCMS_Msk                          _U_(0x00003F11)                                      /**< (SMC_OCMS) Register Mask  */
 
 
 /* -------- SMC_KEY1 : (SMC Offset: 0x84) ( /W 32) SMC Off-Chip Memory Scrambling KEY1 Register -------- */
@@ -183,8 +189,8 @@
 #define SMC_WPMR_WPKEY_Pos                    _U_(8)                                               /**< (SMC_WPMR) Write Protection Key Position */
 #define SMC_WPMR_WPKEY_Msk                    (_U_(0xFFFFFF) << SMC_WPMR_WPKEY_Pos)                /**< (SMC_WPMR) Write Protection Key Mask */
 #define SMC_WPMR_WPKEY(value)                 (SMC_WPMR_WPKEY_Msk & ((value) << SMC_WPMR_WPKEY_Pos))
-#define   SMC_WPMR_WPKEY_PASSWD_Val           _U_(0x534D43)                                        /**< (SMC_WPMR) Writing any other value in this field aborts the write operation of bit WPEN.Always reads as 0.  */
-#define SMC_WPMR_WPKEY_PASSWD                 (SMC_WPMR_WPKEY_PASSWD_Val << SMC_WPMR_WPKEY_Pos)    /**< (SMC_WPMR) Writing any other value in this field aborts the write operation of bit WPEN.Always reads as 0. Position  */
+#define   SMC_WPMR_WPKEY_PASSWD_Val           _U_(0x534D43)                                        /**< (SMC_WPMR) Writing any other value in this field aborts the write operation of bit WPEN. Always reads as 0.  */
+#define SMC_WPMR_WPKEY_PASSWD                 (SMC_WPMR_WPKEY_PASSWD_Val << SMC_WPMR_WPKEY_Pos)    /**< (SMC_WPMR) Writing any other value in this field aborts the write operation of bit WPEN. Always reads as 0. Position  */
 #define SMC_WPMR_Msk                          _U_(0xFFFFFF01)                                      /**< (SMC_WPMR) Register Mask  */
 
 
@@ -213,16 +219,6 @@
 #define SMC_WPSR_Msk                          _U_(0x03FFFF0D)                                      /**< (SMC_WPSR) Register Mask  */
 
 
-/* -------- SMC_VERSION : (SMC Offset: 0xFC) ( R/ 32) SMC Version Register -------- */
-#define SMC_VERSION_VERSION_Pos               _U_(0)                                               /**< (SMC_VERSION) Hardware Version Number Position */
-#define SMC_VERSION_VERSION_Msk               (_U_(0xFFF) << SMC_VERSION_VERSION_Pos)              /**< (SMC_VERSION) Hardware Version Number Mask */
-#define SMC_VERSION_VERSION(value)            (SMC_VERSION_VERSION_Msk & ((value) << SMC_VERSION_VERSION_Pos))
-#define SMC_VERSION_MFN_Pos                   _U_(16)                                              /**< (SMC_VERSION) Metal Fix Number Position */
-#define SMC_VERSION_MFN_Msk                   (_U_(0x7) << SMC_VERSION_MFN_Pos)                    /**< (SMC_VERSION) Metal Fix Number Mask */
-#define SMC_VERSION_MFN(value)                (SMC_VERSION_MFN_Msk & ((value) << SMC_VERSION_MFN_Pos))
-#define SMC_VERSION_Msk                       _U_(0x00070FFF)                                      /**< (SMC_VERSION) Register Mask  */
-
-
 /** \brief SMC register offsets definitions */
 #define SMC_SETUP_REG_OFST             (0x00)              /**< (SMC_SETUP) SMC Setup Register Offset */
 #define SMC_PULSE_REG_OFST             (0x04)              /**< (SMC_PULSE) SMC Pulse Register Offset */
@@ -234,7 +230,6 @@
 #define SMC_SRIER_REG_OFST             (0x90)              /**< (SMC_SRIER) SMC Safety Report Interrupt Enable Register Offset */
 #define SMC_WPMR_REG_OFST              (0xE4)              /**< (SMC_WPMR) SMC Write Protection Mode Register Offset */
 #define SMC_WPSR_REG_OFST              (0xE8)              /**< (SMC_WPSR) SMC Write Protection Status Register Offset */
-#define SMC_VERSION_REG_OFST           (0xFC)              /**< (SMC_VERSION) SMC Version Register Offset */
 
 #if !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__))
 /** \brief SMC_CS_NUMBER register API structure */
@@ -261,8 +256,6 @@ typedef struct
   __I   uint8_t                        Reserved3[0x50];
   __IO  uint32_t                       SMC_WPMR;           /**< Offset: 0xE4 (R/W  32) SMC Write Protection Mode Register */
   __I   uint32_t                       SMC_WPSR;           /**< Offset: 0xE8 (R/   32) SMC Write Protection Status Register */
-  __I   uint8_t                        Reserved4[0x10];
-  __I   uint32_t                       SMC_VERSION;        /**< Offset: 0xFC (R/   32) SMC Version Register */
 } smc_registers_t;
 
 
