@@ -106,6 +106,7 @@ void SYS_Initialize ( void* data )
     Matrix_Initialize();
 
     INT_Initialize();
+    
 	WDT_REGS->WDT_MR = WDT_MR_WDDIS_Msk; 		// Disable WDT 
 
 	RTC_Initialize();
