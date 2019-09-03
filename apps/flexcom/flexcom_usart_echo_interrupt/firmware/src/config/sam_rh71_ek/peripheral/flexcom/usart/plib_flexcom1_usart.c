@@ -267,10 +267,20 @@ bool FLEXCOM1_USART_SerialSetup( FLEXCOM_USART_SERIAL_SETUP *setup, uint32_t src
         {
             brgVal = (srcClkFreq / (16 * baud));
         }
-        else
+        else if (srcClkFreq >= (8 * baud))
         {
             brgVal = (srcClkFreq / (8 * baud));
             overSampVal = (1 << FLEX_US_MR_OVER_Pos) & FLEX_US_MR_OVER_Msk;
+        }
+        else
+        {
+            /* The input clock source - srcClkFreq, is too low to generate the desired baud */
+            return status;
+        }
+        if (brgVal > 65535)
+        {
+            /* The requested baud is so low that the ratio of srcClkFreq to baud exceeds the 16-bit register value of CD register */
+            return status;
         }
 
         /* Configure FLEXCOM1 USART mode */
