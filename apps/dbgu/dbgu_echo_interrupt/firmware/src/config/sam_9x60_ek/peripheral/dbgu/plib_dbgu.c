@@ -176,7 +176,7 @@ void DBGU_Initialize(void)
     DBGU_REGS->DBGU_CR = (DBGU_CR_TXEN_Msk | DBGU_CR_RXEN_Msk);
 
     /* Configure DBGU mode */
-    DBGU_REGS->DBGU_MR = (DBGU_MR_BRSRCCK(0x0) | (DBGU_MR_PAR_NO) | (0 << DBGU_MR_FILTER_Pos));
+    DBGU_REGS->DBGU_MR = (DBGU_MR_BRSRCCK(0) | (DBGU_MR_PAR_NO) | (0 << DBGU_MR_FILTER_Pos));
 
     /* Configure DBGU Baud Rate */
     DBGU_REGS->DBGU_BRGR = DBGU_BRGR_CD(108);
@@ -234,15 +234,19 @@ bool DBGU_SerialSetup(DBGU_SERIAL_SETUP *setup, uint32_t srcClkFreq)
         /* Calculate BRG value */
         brgVal = srcClkFreq / (16 * baud);
 
-        /* Configure DBGU mode */
-        dbguMode = DBGU_REGS->DBGU_MR;
-        dbguMode &= ~DBGU_MR_PAR_Msk;
-        DBGU_REGS->DBGU_MR = dbguMode | setup->parity ;
+        /* If the target baud rate is acheivable using this clock */
+        if (brgVal <= 65535)
+        {
+            /* Configure DBGU mode */
+            dbguMode = DBGU_REGS->DBGU_MR;
+            dbguMode &= ~DBGU_MR_PAR_Msk;
+            DBGU_REGS->DBGU_MR = dbguMode | setup->parity ;
 
-        /* Configure DBGU Baud Rate */
-        DBGU_REGS->DBGU_BRGR = DBGU_BRGR_CD(brgVal);
+            /* Configure DBGU Baud Rate */
+            DBGU_REGS->DBGU_BRGR = DBGU_BRGR_CD(brgVal);
 
-        status = true;
+            status = true;
+        }
     }
 
     return status;
