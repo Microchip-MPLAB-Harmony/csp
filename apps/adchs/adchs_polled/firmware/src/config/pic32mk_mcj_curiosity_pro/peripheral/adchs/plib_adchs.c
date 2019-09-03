@@ -57,13 +57,13 @@ void ADCHS_Initialize()
     ADCCON1bits.ON = 0;
 
     ADC3CFG = DEVADC3;
-    ADC3TIME = 0x0;
+    ADC3TIME = 0x3000001;
 
 
 
     ADCCON1 = 0x600000;
     ADCCON2 = 0x0;
-    ADCCON3 = 0x0;
+    ADCCON3 = 0x1000000;
 
     ADCTRGMODE = 0x0;
 
