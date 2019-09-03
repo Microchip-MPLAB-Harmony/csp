@@ -88,6 +88,14 @@ void MCPWM_ChannelSecondaryTriggerSet(MCPWM_CH_NUM channel, uint16_t trigger);
 
 void MCPWM_ChannelLeadingEdgeBlankingDelaySet(MCPWM_CH_NUM channel, uint16_t delay);
 
+void MCPWM_ChannelPinsOverrideEnable(MCPWM_CH_NUM channel);
+
+void MCPWM_ChannelPinsOverrideDisable(MCPWM_CH_NUM channel);
+
+void MCPWM_ChannelPinsOwnershipEnable(MCPWM_CH_NUM channel);
+
+void MCPWM_ChannelPinsOwnershipDisable(MCPWM_CH_NUM channel);
+
 
 
 void MCPWM_CallbackRegister(MCPWM_CH_NUM channel, MCPWM_CH_CALLBACK callback, uintptr_t context);

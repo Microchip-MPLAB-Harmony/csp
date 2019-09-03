@@ -302,6 +302,26 @@ void MCPWM_ChannelLeadingEdgeBlankingDelaySet(MCPWM_CH_NUM channel, uint16_t del
     *(&LEBDLY1 + (0x40 * (channel))) = delay;
 }
 
+void MCPWM_ChannelPinsOverrideEnable(MCPWM_CH_NUM channel)
+{
+    *(&IOCON1 + (0x40 * (channel))) |= _IOCON1_OVRENL_MASK | _IOCON1_OVRENH_MASK;
+}
+
+void MCPWM_ChannelPinsOverrideDisable(MCPWM_CH_NUM channel)
+{
+    *(&IOCON1 + (0x40 * (channel))) &= ~(_IOCON1_OVRENL_MASK | _IOCON1_OVRENH_MASK);
+}
+
+void MCPWM_ChannelPinsOwnershipEnable(MCPWM_CH_NUM channel)
+{
+    *(&IOCON1 + (0x40 * (channel))) |= _IOCON1_PENH_MASK | _IOCON1_PENL_MASK;
+}
+
+void MCPWM_ChannelPinsOwnershipDisable(MCPWM_CH_NUM channel)
+{
+    *(&IOCON1 + (0x40 * (channel))) &= ~(_IOCON1_PENH_MASK | _IOCON1_PENL_MASK);
+}
+
 
 
 void PWM1_InterruptHandler(void)
