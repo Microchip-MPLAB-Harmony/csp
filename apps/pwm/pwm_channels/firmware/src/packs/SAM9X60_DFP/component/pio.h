@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-04-23T19:01:17Z */
+/* file generated from device description version 2019-08-22T13:04:26Z */
 #ifndef _SAM9X_PIO_COMPONENT_H_
 #define _SAM9X_PIO_COMPONENT_H_
 
@@ -4368,8 +4368,8 @@
 #define PIO_WPMR_WPKEY_Pos                    _U_(8)                                               /**< (PIO_WPMR) Write Protection Key Position */
 #define PIO_WPMR_WPKEY_Msk                    (_U_(0xFFFFFF) << PIO_WPMR_WPKEY_Pos)                /**< (PIO_WPMR) Write Protection Key Mask */
 #define PIO_WPMR_WPKEY(value)                 (PIO_WPMR_WPKEY_Msk & ((value) << PIO_WPMR_WPKEY_Pos))
-#define   PIO_WPMR_WPKEY_PASSWD_Val           _U_(0x50494F)                                        /**< (PIO_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit.Always reads as 0.  */
-#define PIO_WPMR_WPKEY_PASSWD                 (PIO_WPMR_WPKEY_PASSWD_Val << PIO_WPMR_WPKEY_Pos)    /**< (PIO_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit.Always reads as 0. Position  */
+#define   PIO_WPMR_WPKEY_PASSWD_Val           _U_(0x50494F)                                        /**< (PIO_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit. Always reads as 0.  */
+#define PIO_WPMR_WPKEY_PASSWD                 (PIO_WPMR_WPKEY_PASSWD_Val << PIO_WPMR_WPKEY_Pos)    /**< (PIO_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit. Always reads as 0. Position  */
 #define PIO_WPMR_Msk                          _U_(0xFFFFFF01)                                      /**< (PIO_WPMR) Register Mask  */
 
 
@@ -4381,16 +4381,6 @@
 #define PIO_WPSR_WPVSRC_Msk                   (_U_(0xFFFF) << PIO_WPSR_WPVSRC_Pos)                 /**< (PIO_WPSR) Write Protection Violation Source Mask */
 #define PIO_WPSR_WPVSRC(value)                (PIO_WPSR_WPVSRC_Msk & ((value) << PIO_WPSR_WPVSRC_Pos))
 #define PIO_WPSR_Msk                          _U_(0x00FFFF01)                                      /**< (PIO_WPSR) Register Mask  */
-
-
-/* -------- PIO_VERSION : (PIO Offset: 0xFC) ( R/ 32) Version Register -------- */
-#define PIO_VERSION_VERSION_Pos               _U_(0)                                               /**< (PIO_VERSION) Hardware Module Version Position */
-#define PIO_VERSION_VERSION_Msk               (_U_(0xFFF) << PIO_VERSION_VERSION_Pos)              /**< (PIO_VERSION) Hardware Module Version Mask */
-#define PIO_VERSION_VERSION(value)            (PIO_VERSION_VERSION_Msk & ((value) << PIO_VERSION_VERSION_Pos))
-#define PIO_VERSION_MFN_Pos                   _U_(16)                                              /**< (PIO_VERSION) Metal Fix Number Position */
-#define PIO_VERSION_MFN_Msk                   (_U_(0x7) << PIO_VERSION_MFN_Pos)                    /**< (PIO_VERSION) Metal Fix Number Mask */
-#define PIO_VERSION_MFN(value)                (PIO_VERSION_MFN_Msk & ((value) << PIO_VERSION_MFN_Pos))
-#define PIO_VERSION_Msk                       _U_(0x00070FFF)                                      /**< (PIO_VERSION) Register Mask  */
 
 
 /* -------- PIO_SCHMITT : (PIO Offset: 0x100) (R/W 32) Schmitt Trigger Register -------- */
@@ -5004,7 +4994,6 @@
 #define PIO_FRLHSR_REG_OFST            (0xD8)              /**< (PIO_FRLHSR) Fall/Rise - Low/High Status Register Offset */
 #define PIO_WPMR_REG_OFST              (0xE4)              /**< (PIO_WPMR) Write Protection Mode Register Offset */
 #define PIO_WPSR_REG_OFST              (0xE8)              /**< (PIO_WPSR) Write Protection Status Register Offset */
-#define PIO_VERSION_REG_OFST           (0xFC)              /**< (PIO_VERSION) Version Register Offset */
 #define PIO_SCHMITT_REG_OFST           (0x100)             /**< (PIO_SCHMITT) Schmitt Trigger Register Offset */
 #define PIO_SLEWR_REG_OFST             (0x110)             /**< (PIO_SLEWR) I/O Slewrate Control Register Offset */
 #define PIO_DRIVER_REG_OFST            (0x118)             /**< (PIO_DRIVER) I/O Drive Register Offset */
@@ -5069,8 +5058,7 @@ typedef struct
   __I   uint8_t                        Reserved11[0x08];
   __IO  uint32_t                       PIO_WPMR;           /**< Offset: 0xE4 (R/W  32) Write Protection Mode Register */
   __I   uint32_t                       PIO_WPSR;           /**< Offset: 0xE8 (R/   32) Write Protection Status Register */
-  __I   uint8_t                        Reserved12[0x10];
-  __I   uint32_t                       PIO_VERSION;        /**< Offset: 0xFC (R/   32) Version Register */
+  __I   uint8_t                        Reserved12[0x14];
   __IO  uint32_t                       PIO_SCHMITT;        /**< Offset: 0x100 (R/W  32) Schmitt Trigger Register */
   __I   uint8_t                        Reserved13[0x0C];
   __IO  uint32_t                       PIO_SLEWR;          /**< Offset: 0x110 (R/W  32) I/O Slewrate Control Register */
