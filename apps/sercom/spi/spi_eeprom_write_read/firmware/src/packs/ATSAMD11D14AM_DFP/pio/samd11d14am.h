@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-06-24T19:27:38Z */
+/* file generated from device description version 2019-06-28T15:51:48Z */
 #ifndef _SAMD11D14AM_GPIO_H_
 #define _SAMD11D14AM_GPIO_H_
 
