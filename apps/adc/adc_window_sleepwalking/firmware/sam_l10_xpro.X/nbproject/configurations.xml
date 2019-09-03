@@ -182,7 +182,7 @@
       </toolsSet>
       <packs>
         <pack name="SAML10_DFP" vendor="Microchip" version="2.0.24"/>
-        <pack name="CMSIS" vendor="ARM" version="5.0.1"/>
+        <pack name="CMSIS" vendor="ARM" version="5.4.0"/>
       </packs>
       <compileType>
         <linkerTool>
@@ -282,6 +282,9 @@
         <property key="preprocessor-macros" value=""/>
         <property key="warning-level" value=""/>
       </C32-AS>
+      <C32-CO>
+        <property key="coverage-enable" value=""/>
+      </C32-CO>
       <C32-LD>
         <property key="additional-options-use-response-files" value="false"/>
         <property key="additional-options-write-sla" value="false"/>
