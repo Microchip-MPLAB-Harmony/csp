@@ -41,6 +41,7 @@
 #define PLIB_CORETIMER_H
 
 #include <stdint.h>
+#include <stdbool.h>
 
 #ifdef __cplusplus // Provide C++ Compatibility
 	extern "C" {
@@ -50,9 +51,17 @@
 
 
 
+#define CORE_TIMER_COMPARE_VALUE    0x186a0
+
 void CORETIMER_Initialize();
 void CORETIMER_DelayMs ( uint32_t delay_ms);
 void CORETIMER_DelayUs ( uint32_t delay_us);
+void CORETIMER_Start( void );
+void CORETIMER_Stop( void );
+uint32_t CORETIMER_FrequencyGet ( void );
+void CORETIMER_CompareSet ( uint32_t compare );
+uint32_t CORETIMER_CounterGet ( void );
+bool CORETIMER_CompareHasExpired( void );
 
 #ifdef __cplusplus // Provide C++ Compatibility
  }
