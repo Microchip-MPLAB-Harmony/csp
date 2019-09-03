@@ -54,6 +54,7 @@
 
 
 
+
 void TMR2_Initialize(void)
 {
     /* Disable Timer */
@@ -108,4 +109,5 @@ uint32_t TMR2_FrequencyGet(void)
 {
     return (36000000);
 }
+
 
