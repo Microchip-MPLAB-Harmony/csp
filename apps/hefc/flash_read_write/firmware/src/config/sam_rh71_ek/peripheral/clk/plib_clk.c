@@ -33,6 +33,33 @@ static void CLK_SlowClockInitialize(void)
     SUPC_REGS->SUPC_CR = SUPC_CR_KEY_PASSWD;
 }
 
+
+/*********************************************************************************
+Initialize Main Clock (MAINCK)
+*********************************************************************************/
+static void CLK_MainClockInitialize(void)
+{
+    /* Enable Main Crystal Oscillator */
+    PMC_REGS->CKGR_MOR = (PMC_REGS->CKGR_MOR & ~CKGR_MOR_MOSCXTST_Msk) | CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCXTST(255) | CKGR_MOR_MOSCXTEN_Msk;
+
+    /* Wait until the main oscillator clock is ready */
+    while ( (PMC_REGS->PMC_SR & PMC_SR_MOSCXTS_Msk) != PMC_SR_MOSCXTS_Msk);
+
+    /* Main Crystal Oscillator is selected as the Main Clock (MAINCK) source.
+    Switch Main Clock (MAINCK) to Main Crystal Oscillator clock */
+    PMC_REGS->CKGR_MOR |= CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCSEL_Msk;
+
+    /* Wait until MAINCK is switched to Main Crystal Oscillator */
+    while ( (PMC_REGS->PMC_SR & PMC_SR_MOSCSELS_Msk) != PMC_SR_MOSCSELS_Msk);
+
+    /* Disable the RC Oscillator */
+    PMC_REGS->CKGR_MOR = CKGR_MOR_KEY_PASSWD | (PMC_REGS->CKGR_MOR & ~CKGR_MOR_MOSCRCEN_Msk);
+    
+
+    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk);
+}
+
+
 /*********************************************************************************
 Initialize PLLACK/PLLBCK
 *********************************************************************************/
@@ -85,6 +112,9 @@ void CLK_Initialize( void )
 {
     /* Initialize Slow Clock */
     CLK_SlowClockInitialize();
+
+    /* Initialize Main Clock */
+    CLK_MainClockInitialize();
 
     /* Initialize PLLA/PLLB */
     CLK_PLLxClockInitialize();
