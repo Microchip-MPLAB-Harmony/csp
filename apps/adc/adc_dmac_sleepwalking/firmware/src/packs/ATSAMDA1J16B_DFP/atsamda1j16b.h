@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-03-25T22:33:43Z */
+/* file generated from device description version 2019-08-23T08:32:38Z */
 #ifndef _SAMDA1J16B_H_
 #define _SAMDA1J16B_H_
 
@@ -168,6 +168,12 @@ typedef struct _DeviceVectors
   void* pfnI2S_Handler;                          /*  27 Inter-IC Sound Interface (I2S) */
 } DeviceVectors;
 
+/* Defines for Deprecated Interrupt and Exceptions handler names */
+#define pfnMemManage_Handler      pfnMemoryManagement_Handler     /**< \deprecated  Backward compatibility for ASF*/
+#define pfnDebugMon_Handler       pfnDebugMonitor_Handler         /**< \deprecated  Backward compatibility for ASF*/
+#define pfnNMI_Handler            pfnNonMaskableInt_Handler       /**< \deprecated  Backward compatibility for ASF*/
+#define pfnSVC_Handler            pfnSVCall_Handler               /**< \deprecated  Backward compatibility for ASF*/
+
 #endif /* !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #if !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__))
@@ -212,6 +218,12 @@ void DAC_Handler                   ( void );
 void PTC_Handler                   ( void );
 void I2S_Handler                   ( void );
 #endif /* DONT_USE_PREDEFINED_PERIPHERALS_HANDLERS */
+/* Defines for Deprecated Interrupt and Exceptions handler names */
+#define MemManage_Handler         MemoryManagement_Handler        /**< \deprecated  Backward compatibility*/
+#define DebugMon_Handler          DebugMonitor_Handler            /**< \deprecated  Backward compatibility*/
+#define NMI_Handler               NonMaskableInt_Handler          /**< \deprecated  Backward compatibility*/
+#define SVC_Handler               SVCall_Handler                  /**< \deprecated  Backward compatibility*/
+
 #endif /* !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /*
@@ -525,35 +537,35 @@ void I2S_Handler                   ( void );
 #define EVENT_ID_GEN_TCC0_OVF                            34 /**< ID for TCC0 event generator OVF */
 #define EVENT_ID_GEN_TCC0_TRG                            35 /**< ID for TCC0 event generator TRG */
 #define EVENT_ID_GEN_TCC0_CNT                            36 /**< ID for TCC0 event generator CNT */
-#define EVENT_ID_GEN_TCC0_MCX_0                          37 /**< ID for TCC0 event generator MCX_0 */
-#define EVENT_ID_GEN_TCC0_MCX_1                          38 /**< ID for TCC0 event generator MCX_1 */
-#define EVENT_ID_GEN_TCC0_MCX_2                          39 /**< ID for TCC0 event generator MCX_2 */
-#define EVENT_ID_GEN_TCC0_MCX_3                          40 /**< ID for TCC0 event generator MCX_3 */
+#define EVENT_ID_GEN_TCC0_MC_0                           37 /**< ID for TCC0 event generator MC_0 */
+#define EVENT_ID_GEN_TCC0_MC_1                           38 /**< ID for TCC0 event generator MC_1 */
+#define EVENT_ID_GEN_TCC0_MC_2                           39 /**< ID for TCC0 event generator MC_2 */
+#define EVENT_ID_GEN_TCC0_MC_3                           40 /**< ID for TCC0 event generator MC_3 */
 #define EVENT_ID_GEN_TCC1_OVF                            41 /**< ID for TCC1 event generator OVF */
 #define EVENT_ID_GEN_TCC1_TRG                            42 /**< ID for TCC1 event generator TRG */
 #define EVENT_ID_GEN_TCC1_CNT                            43 /**< ID for TCC1 event generator CNT */
-#define EVENT_ID_GEN_TCC1_MCX_0                          44 /**< ID for TCC1 event generator MCX_0 */
-#define EVENT_ID_GEN_TCC1_MCX_1                          45 /**< ID for TCC1 event generator MCX_1 */
+#define EVENT_ID_GEN_TCC1_MC_0                           44 /**< ID for TCC1 event generator MC_0 */
+#define EVENT_ID_GEN_TCC1_MC_1                           45 /**< ID for TCC1 event generator MC_1 */
 #define EVENT_ID_GEN_TCC2_OVF                            46 /**< ID for TCC2 event generator OVF */
 #define EVENT_ID_GEN_TCC2_TRG                            47 /**< ID for TCC2 event generator TRG */
 #define EVENT_ID_GEN_TCC2_CNT                            48 /**< ID for TCC2 event generator CNT */
-#define EVENT_ID_GEN_TCC2_MCX_0                          49 /**< ID for TCC2 event generator MCX_0 */
-#define EVENT_ID_GEN_TCC2_MCX_1                          50 /**< ID for TCC2 event generator MCX_1 */
+#define EVENT_ID_GEN_TCC2_MC_0                           49 /**< ID for TCC2 event generator MC_0 */
+#define EVENT_ID_GEN_TCC2_MC_1                           50 /**< ID for TCC2 event generator MC_1 */
 #define EVENT_ID_GEN_TC3_OVF                             51 /**< ID for TC3 event generator OVF */
-#define EVENT_ID_GEN_TC3_MCX_0                           52 /**< ID for TC3 event generator MCX_0 */
-#define EVENT_ID_GEN_TC3_MCX_1                           53 /**< ID for TC3 event generator MCX_1 */
+#define EVENT_ID_GEN_TC3_MC_0                            52 /**< ID for TC3 event generator MC_0 */
+#define EVENT_ID_GEN_TC3_MC_1                            53 /**< ID for TC3 event generator MC_1 */
 #define EVENT_ID_GEN_TC4_OVF                             54 /**< ID for TC4 event generator OVF */
-#define EVENT_ID_GEN_TC4_MCX_0                           55 /**< ID for TC4 event generator MCX_0 */
-#define EVENT_ID_GEN_TC4_MCX_1                           56 /**< ID for TC4 event generator MCX_1 */
+#define EVENT_ID_GEN_TC4_MC_0                            55 /**< ID for TC4 event generator MC_0 */
+#define EVENT_ID_GEN_TC4_MC_1                            56 /**< ID for TC4 event generator MC_1 */
 #define EVENT_ID_GEN_TC5_OVF                             57 /**< ID for TC5 event generator OVF */
-#define EVENT_ID_GEN_TC5_MCX_0                           58 /**< ID for TC5 event generator MCX_0 */
-#define EVENT_ID_GEN_TC5_MCX_1                           59 /**< ID for TC5 event generator MCX_1 */
+#define EVENT_ID_GEN_TC5_MC_0                            58 /**< ID for TC5 event generator MC_0 */
+#define EVENT_ID_GEN_TC5_MC_1                            59 /**< ID for TC5 event generator MC_1 */
 #define EVENT_ID_GEN_TC6_OVF                             60 /**< ID for TC6 event generator OVF */
-#define EVENT_ID_GEN_TC6_MCX_0                           61 /**< ID for TC6 event generator MCX_0 */
-#define EVENT_ID_GEN_TC6_MCX_1                           62 /**< ID for TC6 event generator MCX_1 */
+#define EVENT_ID_GEN_TC6_MC_0                            61 /**< ID for TC6 event generator MC_0 */
+#define EVENT_ID_GEN_TC6_MC_1                            62 /**< ID for TC6 event generator MC_1 */
 #define EVENT_ID_GEN_TC7_OVF                             63 /**< ID for TC7 event generator OVF */
-#define EVENT_ID_GEN_TC7_MCX_0                           64 /**< ID for TC7 event generator MCX_0 */
-#define EVENT_ID_GEN_TC7_MCX_1                           65 /**< ID for TC7 event generator MCX_1 */
+#define EVENT_ID_GEN_TC7_MC_0                            64 /**< ID for TC7 event generator MC_0 */
+#define EVENT_ID_GEN_TC7_MC_1                            65 /**< ID for TC7 event generator MC_1 */
 #define EVENT_ID_GEN_ADC_RESRDY                          66 /**< ID for ADC event generator RESRDY */
 #define EVENT_ID_GEN_ADC_WINMON                          67 /**< ID for ADC event generator WINMON */
 #define EVENT_ID_GEN_AC_COMP_0                           68 /**< ID for AC event generator COMP_0 */
