@@ -76,7 +76,6 @@ typedef enum {
     MsgRstcCausedByWatchDogReset,
     MsgRstcCausedBySoftwareReset,
     MsgRstcCausedByUserReset,
-    MsgRstcCausedByCpuFailureReset,
     MsgRstcCausedByXtalFailureReset,
     MsgRstcCauseUnknown,
     MsgSentinel,                        // must be last
@@ -96,7 +95,6 @@ char * message[ MsgSentinel ] = {
     "Last reset caused by watch dog reset\r\n",                                 // MsgRstcCausedByWatchDogReset
     "Last reset caused by software reset -- software instruction\r\n",          // MsgRstcCausedBySoftwareReset
     "Last reset caused by user reset -- NRST pin detected low\r\n",             // MsgRstcCausedByUserReset
-    "Last reset caused by cpu failure\r\n",                                     // MsgRstcCausedByCpuFailureReset
     "Last reset caused by slck xtal failure\r\n",                               // MsgRstcCausedByXtalFailureReset
     "Last reset cause is unknown\r\n",                                          // MsgRstcCauseUnknown
 };
@@ -226,9 +224,6 @@ int main( void )
             break;
         case RSTC_USER_RESET:
             msgId = MsgRstcCausedByUserReset;
-            break;
-        case RSTC_CPU_FAIL_RESET:
-            msgId = MsgRstcCausedByCpuFailureReset;
             break;
         case RSTC_SLCK_XTAL_RESET:
             msgId = MsgRstcCausedByXtalFailureReset;
