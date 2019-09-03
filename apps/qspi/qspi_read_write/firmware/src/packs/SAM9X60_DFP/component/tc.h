@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-04-23T19:01:17Z */
+/* file generated from device description version 2019-08-22T13:04:26Z */
 #ifndef _SAM9X_TC_COMPONENT_H_
 #define _SAM9X_TC_COMPONENT_H_
 
@@ -734,19 +734,9 @@
 #define TC_WPMR_WPKEY_Pos                     _U_(8)                                               /**< (TC_WPMR) Write Protection Key Position */
 #define TC_WPMR_WPKEY_Msk                     (_U_(0xFFFFFF) << TC_WPMR_WPKEY_Pos)                 /**< (TC_WPMR) Write Protection Key Mask */
 #define TC_WPMR_WPKEY(value)                  (TC_WPMR_WPKEY_Msk & ((value) << TC_WPMR_WPKEY_Pos))
-#define   TC_WPMR_WPKEY_PASSWD_Val            _U_(0x54494D)                                        /**< (TC_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit.Always reads as 0.  */
-#define TC_WPMR_WPKEY_PASSWD                  (TC_WPMR_WPKEY_PASSWD_Val << TC_WPMR_WPKEY_Pos)      /**< (TC_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit.Always reads as 0. Position  */
+#define   TC_WPMR_WPKEY_PASSWD_Val            _U_(0x54494D)                                        /**< (TC_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit. Always reads as 0.  */
+#define TC_WPMR_WPKEY_PASSWD                  (TC_WPMR_WPKEY_PASSWD_Val << TC_WPMR_WPKEY_Pos)      /**< (TC_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit. Always reads as 0. Position  */
 #define TC_WPMR_Msk                           _U_(0xFFFFFF17)                                      /**< (TC_WPMR) Register Mask  */
-
-
-/* -------- TC_VER : (TC Offset: 0xFC) ( R/ 32) Version Register -------- */
-#define TC_VER_VERSION_Pos                    _U_(0)                                               /**< (TC_VER) Version of the Hardware Module Position */
-#define TC_VER_VERSION_Msk                    (_U_(0xFFF) << TC_VER_VERSION_Pos)                   /**< (TC_VER) Version of the Hardware Module Mask */
-#define TC_VER_VERSION(value)                 (TC_VER_VERSION_Msk & ((value) << TC_VER_VERSION_Pos))
-#define TC_VER_MFN_Pos                        _U_(16)                                              /**< (TC_VER) Metal Fix Number Position */
-#define TC_VER_MFN_Msk                        (_U_(0x7) << TC_VER_MFN_Pos)                         /**< (TC_VER) Metal Fix Number Mask */
-#define TC_VER_MFN(value)                     (TC_VER_MFN_Msk & ((value) << TC_VER_MFN_Pos))      
-#define TC_VER_Msk                            _U_(0x00070FFF)                                      /**< (TC_VER) Register Mask  */
 
 
 /** \brief TC register offsets definitions */
@@ -774,7 +764,6 @@
 #define TC_FMR_REG_OFST                (0xD8)              /**< (TC_FMR) Fault Mode Register Offset */
 #define TC_QSR_REG_OFST                (0xDC)              /**< (TC_QSR) QDEC Status Register Offset */
 #define TC_WPMR_REG_OFST               (0xE4)              /**< (TC_WPMR) Write Protection Mode Register Offset */
-#define TC_VER_REG_OFST                (0xFC)              /**< (TC_VER) Version Register Offset */
 
 #if !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__))
 /** \brief TC_CHANNEL register API structure */
@@ -814,8 +803,6 @@ typedef struct
   __I   uint32_t                       TC_QSR;             /**< Offset: 0xDC (R/   32) QDEC Status Register */
   __I   uint8_t                        Reserved1[0x04];
   __IO  uint32_t                       TC_WPMR;            /**< Offset: 0xE4 (R/W  32) Write Protection Mode Register */
-  __I   uint8_t                        Reserved2[0x14];
-  __I   uint32_t                       TC_VER;             /**< Offset: 0xFC (R/   32) Version Register */
 } tc_registers_t;
 
 
