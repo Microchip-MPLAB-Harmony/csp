@@ -178,7 +178,7 @@ bool FLEXCOM2_SPI_TransferSetup (FLEXCOM_SPI_TRANSFER_SETUP * setup, uint32_t sp
     if(spiSourceClock == 0)
     {
         // Fetch Master Clock Frequency directly
-        spiSourceClock = 0;
+        spiSourceClock = 50000000;
     }
 
     scbr = spiSourceClock/setup->clockFrequency;
