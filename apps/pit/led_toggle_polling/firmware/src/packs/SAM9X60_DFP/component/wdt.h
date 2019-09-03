@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-04-23T19:01:17Z */
+/* file generated from device description version 2019-08-22T13:04:26Z */
 #ifndef _SAM9X_WDT_COMPONENT_H_
 #define _SAM9X_WDT_COMPONENT_H_
 

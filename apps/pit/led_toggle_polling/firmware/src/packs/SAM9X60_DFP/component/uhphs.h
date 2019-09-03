@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-04-23T19:01:17Z */
+/* file generated from device description version 2019-08-22T13:04:26Z */
 #ifndef _SAM9X_UHPHS_COMPONENT_H_
 #define _SAM9X_UHPHS_COMPONENT_H_
 
@@ -264,111 +264,15 @@
 #define UHPHS_PORTSC_Msk                      _U_(0x007FFDFF)                                      /**< (UHPHS_PORTSC) Register Mask  */
 
 
-/* -------- UHPHS_INSNREG00 : (UHPHS Offset: 0x90) (R/W 32) EHCI Specific Registers 00 -------- */
-#define UHPHS_INSNREG00_En_Pos                _U_(0)                                               /**< (UHPHS_INSNREG00) Enable Programmable Microframe Base Value Position */
-#define UHPHS_INSNREG00_En_Msk                (_U_(0x1) << UHPHS_INSNREG00_En_Pos)                 /**< (UHPHS_INSNREG00) Enable Programmable Microframe Base Value Mask */
-#define UHPHS_INSNREG00_En(value)             (UHPHS_INSNREG00_En_Msk & ((value) << UHPHS_INSNREG00_En_Pos))
-#define UHPHS_INSNREG00_MFC_16_Pos            _U_(1)                                               /**< (UHPHS_INSNREG00) Microframe Counter with Word Byte Interface Position */
-#define UHPHS_INSNREG00_MFC_16_Msk            (_U_(0x7FF) << UHPHS_INSNREG00_MFC_16_Pos)           /**< (UHPHS_INSNREG00) Microframe Counter with Word Byte Interface Mask */
-#define UHPHS_INSNREG00_MFC_16(value)         (UHPHS_INSNREG00_MFC_16_Msk & ((value) << UHPHS_INSNREG00_MFC_16_Pos))
-#define UHPHS_INSNREG00_MFC_8_Pos             _U_(12)                                              /**< (UHPHS_INSNREG00) Microframe Counter with Byte Interface Position */
-#define UHPHS_INSNREG00_MFC_8_Msk             (_U_(0x3) << UHPHS_INSNREG00_MFC_8_Pos)              /**< (UHPHS_INSNREG00) Microframe Counter with Byte Interface Mask */
-#define UHPHS_INSNREG00_MFC_8(value)          (UHPHS_INSNREG00_MFC_8_Msk & ((value) << UHPHS_INSNREG00_MFC_8_Pos))
-#define UHPHS_INSNREG00_Debug_Pos             _U_(14)                                              /**< (UHPHS_INSNREG00) Debug Purposes Position */
-#define UHPHS_INSNREG00_Debug_Msk             (_U_(0x3F) << UHPHS_INSNREG00_Debug_Pos)             /**< (UHPHS_INSNREG00) Debug Purposes Mask */
-#define UHPHS_INSNREG00_Debug(value)          (UHPHS_INSNREG00_Debug_Msk & ((value) << UHPHS_INSNREG00_Debug_Pos))
-#define UHPHS_INSNREG00_Msk                   _U_(0x000FFFFF)                                      /**< (UHPHS_INSNREG00) Register Mask  */
-
-
-/* -------- UHPHS_INSNREG01 : (UHPHS Offset: 0x94) (R/W 32) EHCI Specific Registers 01 -------- */
-#define UHPHS_INSNREG01_In_Threshold_Pos      _U_(0)                                               /**< (UHPHS_INSNREG01) Amount of Data Available in the IN Packet Buffer Position */
-#define UHPHS_INSNREG01_In_Threshold_Msk      (_U_(0xFFFF) << UHPHS_INSNREG01_In_Threshold_Pos)    /**< (UHPHS_INSNREG01) Amount of Data Available in the IN Packet Buffer Mask */
-#define UHPHS_INSNREG01_In_Threshold(value)   (UHPHS_INSNREG01_In_Threshold_Msk & ((value) << UHPHS_INSNREG01_In_Threshold_Pos))
-#define UHPHS_INSNREG01_Out_Threshold_Pos     _U_(16)                                              /**< (UHPHS_INSNREG01) Amount of Data Available in the OUT Packet Buffer Position */
-#define UHPHS_INSNREG01_Out_Threshold_Msk     (_U_(0xFFFF) << UHPHS_INSNREG01_Out_Threshold_Pos)   /**< (UHPHS_INSNREG01) Amount of Data Available in the OUT Packet Buffer Mask */
-#define UHPHS_INSNREG01_Out_Threshold(value)  (UHPHS_INSNREG01_Out_Threshold_Msk & ((value) << UHPHS_INSNREG01_Out_Threshold_Pos))
-#define UHPHS_INSNREG01_Msk                   _U_(0xFFFFFFFF)                                      /**< (UHPHS_INSNREG01) Register Mask  */
-
-
-/* -------- UHPHS_INSNREG02 : (UHPHS Offset: 0x98) (R/W 32) EHCI Specific Registers 02 -------- */
-#define UHPHS_INSNREG02_Dwords_Pos            _U_(0)                                               /**< (UHPHS_INSNREG02) Number of Entries Position */
-#define UHPHS_INSNREG02_Dwords_Msk            (_U_(0xFFF) << UHPHS_INSNREG02_Dwords_Pos)           /**< (UHPHS_INSNREG02) Number of Entries Mask */
-#define UHPHS_INSNREG02_Dwords(value)         (UHPHS_INSNREG02_Dwords_Msk & ((value) << UHPHS_INSNREG02_Dwords_Pos))
-#define UHPHS_INSNREG02_Msk                   _U_(0x00000FFF)                                      /**< (UHPHS_INSNREG02) Register Mask  */
-
-
-/* -------- UHPHS_INSNREG03 : (UHPHS Offset: 0x9C) (R/W 32) EHCI Specific Registers 03 -------- */
-#define UHPHS_INSNREG03_Break_Mem_Pos         _U_(0)                                               /**< (UHPHS_INSNREG03) Break Memory Transfer (in CONFIG1 mode only, not applicable in CONFIG2 mode) Position */
-#define UHPHS_INSNREG03_Break_Mem_Msk         (_U_(0x1) << UHPHS_INSNREG03_Break_Mem_Pos)          /**< (UHPHS_INSNREG03) Break Memory Transfer (in CONFIG1 mode only, not applicable in CONFIG2 mode) Mask */
-#define UHPHS_INSNREG03_Break_Mem(value)      (UHPHS_INSNREG03_Break_Mem_Msk & ((value) << UHPHS_INSNREG03_Break_Mem_Pos))
-#define UHPHS_INSNREG03_TA_Offset_Pos         _U_(1)                                               /**< (UHPHS_INSNREG03) Time-Available Offset Position */
-#define UHPHS_INSNREG03_TA_Offset_Msk         (_U_(0xFF) << UHPHS_INSNREG03_TA_Offset_Pos)         /**< (UHPHS_INSNREG03) Time-Available Offset Mask */
-#define UHPHS_INSNREG03_TA_Offset(value)      (UHPHS_INSNREG03_TA_Offset_Msk & ((value) << UHPHS_INSNREG03_TA_Offset_Pos))
-#define UHPHS_INSNREG03_Per_Frame_Pos         _U_(9)                                               /**< (UHPHS_INSNREG03) Periodic Frame List Fetch Position */
-#define UHPHS_INSNREG03_Per_Frame_Msk         (_U_(0x1) << UHPHS_INSNREG03_Per_Frame_Pos)          /**< (UHPHS_INSNREG03) Periodic Frame List Fetch Mask */
-#define UHPHS_INSNREG03_Per_Frame(value)      (UHPHS_INSNREG03_Per_Frame_Msk & ((value) << UHPHS_INSNREG03_Per_Frame_Pos))
-#define UHPHS_INSNREG03_T03_Tx_Pos            _U_(10)                                              /**< (UHPHS_INSNREG03) Transmit to Transmit Turnaround Delay Add-on Position */
-#define UHPHS_INSNREG03_T03_Tx_Msk            (_U_(0x7) << UHPHS_INSNREG03_T03_Tx_Pos)             /**< (UHPHS_INSNREG03) Transmit to Transmit Turnaround Delay Add-on Mask */
-#define UHPHS_INSNREG03_T03_Tx(value)         (UHPHS_INSNREG03_T03_Tx_Msk & ((value) << UHPHS_INSNREG03_T03_Tx_Pos))
-#define UHPHS_INSNREG03_Ignore_LS_Pos         _U_(13)                                              /**< (UHPHS_INSNREG03) Ignore Linestate During TestSE0 NAK Position */
-#define UHPHS_INSNREG03_Ignore_LS_Msk         (_U_(0x1) << UHPHS_INSNREG03_Ignore_LS_Pos)          /**< (UHPHS_INSNREG03) Ignore Linestate During TestSE0 NAK Mask */
-#define UHPHS_INSNREG03_Ignore_LS(value)      (UHPHS_INSNREG03_Ignore_LS_Msk & ((value) << UHPHS_INSNREG03_Ignore_LS_Pos))
-#define UHPHS_INSNREG03_EN_CK256_Pos          _U_(14)                                              /**< (UHPHS_INSNREG03) Enable 256 Clock Checking Position */
-#define UHPHS_INSNREG03_EN_CK256_Msk          (_U_(0x1) << UHPHS_INSNREG03_EN_CK256_Pos)           /**< (UHPHS_INSNREG03) Enable 256 Clock Checking Mask */
-#define UHPHS_INSNREG03_EN_CK256(value)       (UHPHS_INSNREG03_EN_CK256_Msk & ((value) << UHPHS_INSNREG03_EN_CK256_Pos))
-#define UHPHS_INSNREG03_Msk                   _U_(0x00007FFF)                                      /**< (UHPHS_INSNREG03) Register Mask  */
-
-#define UHPHS_INSNREG03_EN_CK_Pos             _U_(14)                                              /**< (UHPHS_INSNREG03 Position) Enable 256 Clock Checking */
-#define UHPHS_INSNREG03_EN_CK_Msk             (_U_(0x1) << UHPHS_INSNREG03_EN_CK_Pos)              /**< (UHPHS_INSNREG03 Mask) EN_CK */
-#define UHPHS_INSNREG03_EN_CK(value)          (UHPHS_INSNREG03_EN_CK_Msk & ((value) << UHPHS_INSNREG03_EN_CK_Pos)) 
-
-/* -------- UHPHS_INSNREG04 : (UHPHS Offset: 0xA0) (R/W 32) EHCI Specific Registers 04 -------- */
-#define UHPHS_INSNREG04_HCSPARAMS_W_Pos       _U_(0)                                               /**< (UHPHS_INSNREG04) HCSPARAMS Write Position */
-#define UHPHS_INSNREG04_HCSPARAMS_W_Msk       (_U_(0x1) << UHPHS_INSNREG04_HCSPARAMS_W_Pos)        /**< (UHPHS_INSNREG04) HCSPARAMS Write Mask */
-#define UHPHS_INSNREG04_HCSPARAMS_W(value)    (UHPHS_INSNREG04_HCSPARAMS_W_Msk & ((value) << UHPHS_INSNREG04_HCSPARAMS_W_Pos))
-#define UHPHS_INSNREG04_HCCPARAMS_BW_Pos      _U_(1)                                               /**< (UHPHS_INSNREG04) HCCPARAMS Bits Write Position */
-#define UHPHS_INSNREG04_HCCPARAMS_BW_Msk      (_U_(0x1) << UHPHS_INSNREG04_HCCPARAMS_BW_Pos)       /**< (UHPHS_INSNREG04) HCCPARAMS Bits Write Mask */
-#define UHPHS_INSNREG04_HCCPARAMS_BW(value)   (UHPHS_INSNREG04_HCCPARAMS_BW_Msk & ((value) << UHPHS_INSNREG04_HCCPARAMS_BW_Pos))
-#define UHPHS_INSNREG04_SDPE_TIME_Pos         _U_(2)                                               /**< (UHPHS_INSNREG04) Scales Down Port Enumeration Time Position */
-#define UHPHS_INSNREG04_SDPE_TIME_Msk         (_U_(0x1) << UHPHS_INSNREG04_SDPE_TIME_Pos)          /**< (UHPHS_INSNREG04) Scales Down Port Enumeration Time Mask */
-#define UHPHS_INSNREG04_SDPE_TIME(value)      (UHPHS_INSNREG04_SDPE_TIME_Msk & ((value) << UHPHS_INSNREG04_SDPE_TIME_Pos))
-#define UHPHS_INSNREG04_NAK_RF_Pos            _U_(4)                                               /**< (UHPHS_INSNREG04) NAK Reload Fix (Read/Write) Position */
-#define UHPHS_INSNREG04_NAK_RF_Msk            (_U_(0x1) << UHPHS_INSNREG04_NAK_RF_Pos)             /**< (UHPHS_INSNREG04) NAK Reload Fix (Read/Write) Mask */
-#define UHPHS_INSNREG04_NAK_RF(value)         (UHPHS_INSNREG04_NAK_RF_Msk & ((value) << UHPHS_INSNREG04_NAK_RF_Pos))
-#define UHPHS_INSNREG04_EN_AutoFunc_Pos       _U_(5)                                               /**< (UHPHS_INSNREG04) Enable Automatic Feature Position */
-#define UHPHS_INSNREG04_EN_AutoFunc_Msk       (_U_(0x1) << UHPHS_INSNREG04_EN_AutoFunc_Pos)        /**< (UHPHS_INSNREG04) Enable Automatic Feature Mask */
-#define UHPHS_INSNREG04_EN_AutoFunc(value)    (UHPHS_INSNREG04_EN_AutoFunc_Msk & ((value) << UHPHS_INSNREG04_EN_AutoFunc_Pos))
-#define UHPHS_INSNREG04_Msk                   _U_(0x00000037)                                      /**< (UHPHS_INSNREG04) Register Mask  */
-
-
-/* -------- UHPHS_INSNREG05 : (UHPHS Offset: 0xA4) (R/W 32) EHCI Specific Registers 05 -------- */
-#define UHPHS_INSNREG05_VStatus_Pos           _U_(0)                                               /**< (UHPHS_INSNREG05) Vendor Status (Read-only) Position */
-#define UHPHS_INSNREG05_VStatus_Msk           (_U_(0xFF) << UHPHS_INSNREG05_VStatus_Pos)           /**< (UHPHS_INSNREG05) Vendor Status (Read-only) Mask */
-#define UHPHS_INSNREG05_VStatus(value)        (UHPHS_INSNREG05_VStatus_Msk & ((value) << UHPHS_INSNREG05_VStatus_Pos))
-#define UHPHS_INSNREG05_VControl_Pos          _U_(8)                                               /**< (UHPHS_INSNREG05) Vendor Control (Read/Write) Position */
-#define UHPHS_INSNREG05_VControl_Msk          (_U_(0xF) << UHPHS_INSNREG05_VControl_Pos)           /**< (UHPHS_INSNREG05) Vendor Control (Read/Write) Mask */
-#define UHPHS_INSNREG05_VControl(value)       (UHPHS_INSNREG05_VControl_Msk & ((value) << UHPHS_INSNREG05_VControl_Pos))
-#define UHPHS_INSNREG05_VControlLoadM_Pos     _U_(12)                                              /**< (UHPHS_INSNREG05) Vendor Control Load Microframe (Read/Write) Position */
-#define UHPHS_INSNREG05_VControlLoadM_Msk     (_U_(0x1) << UHPHS_INSNREG05_VControlLoadM_Pos)      /**< (UHPHS_INSNREG05) Vendor Control Load Microframe (Read/Write) Mask */
-#define UHPHS_INSNREG05_VControlLoadM(value)  (UHPHS_INSNREG05_VControlLoadM_Msk & ((value) << UHPHS_INSNREG05_VControlLoadM_Pos))
-#define UHPHS_INSNREG05_VPort_Pos             _U_(13)                                              /**< (UHPHS_INSNREG05) Vendor Port (Read/Write) Position */
-#define UHPHS_INSNREG05_VPort_Msk             (_U_(0xF) << UHPHS_INSNREG05_VPort_Pos)              /**< (UHPHS_INSNREG05) Vendor Port (Read/Write) Mask */
-#define UHPHS_INSNREG05_VPort(value)          (UHPHS_INSNREG05_VPort_Msk & ((value) << UHPHS_INSNREG05_VPort_Pos))
-#define UHPHS_INSNREG05_VBusy_Pos             _U_(17)                                              /**< (UHPHS_INSNREG05) Vendor Busy (Read-only) Position */
-#define UHPHS_INSNREG05_VBusy_Msk             (_U_(0x1) << UHPHS_INSNREG05_VBusy_Pos)              /**< (UHPHS_INSNREG05) Vendor Busy (Read-only) Mask */
-#define UHPHS_INSNREG05_VBusy(value)          (UHPHS_INSNREG05_VBusy_Msk & ((value) << UHPHS_INSNREG05_VBusy_Pos))
-#define UHPHS_INSNREG05_Msk                   _U_(0x0003FFFF)                                      /**< (UHPHS_INSNREG05) Register Mask  */
-
-
 /* -------- UHPHS_INSNREG06 : (UHPHS Offset: 0xA8) (R/W 32) EHCI Specific Registers 06 -------- */
-#define UHPHS_INSNREG06_Nb_Success_Burst_Pos  _U_(0)                                               /**< (UHPHS_INSNREG06) Number of Successful Bursts (Read-only)(1) Position */
-#define UHPHS_INSNREG06_Nb_Success_Burst_Msk  (_U_(0xF) << UHPHS_INSNREG06_Nb_Success_Burst_Pos)   /**< (UHPHS_INSNREG06) Number of Successful Bursts (Read-only)(1) Mask */
+#define UHPHS_INSNREG06_Nb_Success_Burst_Pos  _U_(0)                                               /**< (UHPHS_INSNREG06) Number of Successful Bursts (Read-only) Position */
+#define UHPHS_INSNREG06_Nb_Success_Burst_Msk  (_U_(0xF) << UHPHS_INSNREG06_Nb_Success_Burst_Pos)   /**< (UHPHS_INSNREG06) Number of Successful Bursts (Read-only) Mask */
 #define UHPHS_INSNREG06_Nb_Success_Burst(value) (UHPHS_INSNREG06_Nb_Success_Burst_Msk & ((value) << UHPHS_INSNREG06_Nb_Success_Burst_Pos))
-#define UHPHS_INSNREG06_Nb_Burst_Pos          _U_(4)                                               /**< (UHPHS_INSNREG06) Number of Bursts (Read-only)(1) Position */
-#define UHPHS_INSNREG06_Nb_Burst_Msk          (_U_(0x1F) << UHPHS_INSNREG06_Nb_Burst_Pos)          /**< (UHPHS_INSNREG06) Number of Bursts (Read-only)(1) Mask */
+#define UHPHS_INSNREG06_Nb_Burst_Pos          _U_(4)                                               /**< (UHPHS_INSNREG06) Number of Bursts (Read-only) Position */
+#define UHPHS_INSNREG06_Nb_Burst_Msk          (_U_(0x1F) << UHPHS_INSNREG06_Nb_Burst_Pos)          /**< (UHPHS_INSNREG06) Number of Bursts (Read-only) Mask */
 #define UHPHS_INSNREG06_Nb_Burst(value)       (UHPHS_INSNREG06_Nb_Burst_Msk & ((value) << UHPHS_INSNREG06_Nb_Burst_Pos))
-#define UHPHS_INSNREG06_HBURST_Pos            _U_(9)                                               /**< (UHPHS_INSNREG06) Burst Value (Read-only)(1) Position */
-#define UHPHS_INSNREG06_HBURST_Msk            (_U_(0x7) << UHPHS_INSNREG06_HBURST_Pos)             /**< (UHPHS_INSNREG06) Burst Value (Read-only)(1) Mask */
+#define UHPHS_INSNREG06_HBURST_Pos            _U_(9)                                               /**< (UHPHS_INSNREG06) Burst Value (Read-only) Position */
+#define UHPHS_INSNREG06_HBURST_Msk            (_U_(0x7) << UHPHS_INSNREG06_HBURST_Pos)             /**< (UHPHS_INSNREG06) Burst Value (Read-only) Mask */
 #define UHPHS_INSNREG06_HBURST(value)         (UHPHS_INSNREG06_HBURST_Msk & ((value) << UHPHS_INSNREG06_HBURST_Pos))
 #define UHPHS_INSNREG06_AHB_ERR_Pos           _U_(31)                                              /**< (UHPHS_INSNREG06) AHB Error Position */
 #define UHPHS_INSNREG06_AHB_ERR_Msk           (_U_(0x1) << UHPHS_INSNREG06_AHB_ERR_Pos)            /**< (UHPHS_INSNREG06) AHB Error Mask */
@@ -396,12 +300,6 @@
 #define UHPHS_ASYNCLISTADDR_REG_OFST   (0x28)              /**< (UHPHS_ASYNCLISTADDR) UHPHS Asynchronous List Address Register Offset */
 #define UHPHS_CONFIGFLAG_REG_OFST      (0x50)              /**< (UHPHS_CONFIGFLAG) UHPHS Configured Flag Register Offset */
 #define UHPHS_PORTSC_REG_OFST          (0x54)              /**< (UHPHS_PORTSC) UHPHS Port Status and Control Register (port = 0) Offset */
-#define UHPHS_INSNREG00_REG_OFST       (0x90)              /**< (UHPHS_INSNREG00) EHCI Specific Registers 00 Offset */
-#define UHPHS_INSNREG01_REG_OFST       (0x94)              /**< (UHPHS_INSNREG01) EHCI Specific Registers 01 Offset */
-#define UHPHS_INSNREG02_REG_OFST       (0x98)              /**< (UHPHS_INSNREG02) EHCI Specific Registers 02 Offset */
-#define UHPHS_INSNREG03_REG_OFST       (0x9C)              /**< (UHPHS_INSNREG03) EHCI Specific Registers 03 Offset */
-#define UHPHS_INSNREG04_REG_OFST       (0xA0)              /**< (UHPHS_INSNREG04) EHCI Specific Registers 04 Offset */
-#define UHPHS_INSNREG05_REG_OFST       (0xA4)              /**< (UHPHS_INSNREG05) EHCI Specific Registers 05 Offset */
 #define UHPHS_INSNREG06_REG_OFST       (0xA8)              /**< (UHPHS_INSNREG06) EHCI Specific Registers 06 Offset */
 #define UHPHS_INSNREG07_REG_OFST       (0xAC)              /**< (UHPHS_INSNREG07) EHCI Specific Registers 07 Offset */
 
@@ -423,13 +321,7 @@ typedef struct
   __I   uint8_t                        Reserved2[0x24];
   __IO  uint32_t                       UHPHS_CONFIGFLAG;   /**< Offset: 0x50 (R/W  32) UHPHS Configured Flag Register */
   __IO  uint32_t                       UHPHS_PORTSC[3];    /**< Offset: 0x54 (R/W  32) UHPHS Port Status and Control Register (port = 0) */
-  __I   uint8_t                        Reserved3[0x30];
-  __IO  uint32_t                       UHPHS_INSNREG00;    /**< Offset: 0x90 (R/W  32) EHCI Specific Registers 00 */
-  __IO  uint32_t                       UHPHS_INSNREG01;    /**< Offset: 0x94 (R/W  32) EHCI Specific Registers 01 */
-  __IO  uint32_t                       UHPHS_INSNREG02;    /**< Offset: 0x98 (R/W  32) EHCI Specific Registers 02 */
-  __IO  uint32_t                       UHPHS_INSNREG03;    /**< Offset: 0x9C (R/W  32) EHCI Specific Registers 03 */
-  __IO  uint32_t                       UHPHS_INSNREG04;    /**< Offset: 0xA0 (R/W  32) EHCI Specific Registers 04 */
-  __IO  uint32_t                       UHPHS_INSNREG05;    /**< Offset: 0xA4 (R/W  32) EHCI Specific Registers 05 */
+  __I   uint8_t                        Reserved3[0x48];
   __IO  uint32_t                       UHPHS_INSNREG06;    /**< Offset: 0xA8 (R/W  32) EHCI Specific Registers 06 */
   __IO  uint32_t                       UHPHS_INSNREG07;    /**< Offset: 0xAC (R/W  32) EHCI Specific Registers 07 */
 } uhphs_registers_t;
