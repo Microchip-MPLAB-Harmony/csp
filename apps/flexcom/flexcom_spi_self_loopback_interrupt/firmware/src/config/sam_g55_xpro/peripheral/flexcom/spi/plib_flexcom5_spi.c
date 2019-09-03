@@ -53,10 +53,8 @@
 // *****************************************************************************
 // *****************************************************************************
 
-
 /* Global object to save FLEXCOM SPI Exchange related data */
 FLEXCOM_SPI_OBJECT flexcom5SpiObj;
-
 
 void FLEXCOM5_SPI_Initialize( void )
 {
@@ -299,6 +297,7 @@ void FLEXCOM5_InterruptHandler( void )
              * explicitly clear the pending interrupt from the Interrupt controller.
              */
             isLastByteTransferInProgress = true;
+
             /* Set Last transfer to deassert NPCS after the last byte written in TDR has been transferred. */
             SPI5_REGS->SPI_CR = SPI_CR_LASTXFER_Msk;
         }
