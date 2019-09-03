@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-04-23T19:01:17Z */
+/* file generated from device description version 2019-08-22T13:04:26Z */
 #ifndef _SAM9X_EMAC_COMPONENT_H_
 #define _SAM9X_EMAC_COMPONENT_H_
 
@@ -626,8 +626,8 @@
 #define EMAC_WOL_MAG_Pos                      _U_(16)                                              /**< (EMAC_WOL) Magic Packet Event Enable Position */
 #define EMAC_WOL_MAG_Msk                      (_U_(0x1) << EMAC_WOL_MAG_Pos)                       /**< (EMAC_WOL) Magic Packet Event Enable Mask */
 #define EMAC_WOL_MAG(value)                   (EMAC_WOL_MAG_Msk & ((value) << EMAC_WOL_MAG_Pos))  
-#define EMAC_WOL_ARP_Pos                      _U_(17)                                              /**< (EMAC_WOL) ARP Request IP Address Position */
-#define EMAC_WOL_ARP_Msk                      (_U_(0x1) << EMAC_WOL_ARP_Pos)                       /**< (EMAC_WOL) ARP Request IP Address Mask */
+#define EMAC_WOL_ARP_Pos                      _U_(17)                                              /**< (EMAC_WOL) ARP Request Event Enable Position */
+#define EMAC_WOL_ARP_Msk                      (_U_(0x1) << EMAC_WOL_ARP_Pos)                       /**< (EMAC_WOL) ARP Request Event Enable Mask */
 #define EMAC_WOL_ARP(value)                   (EMAC_WOL_ARP_Msk & ((value) << EMAC_WOL_ARP_Pos))  
 #define EMAC_WOL_SA1_Pos                      _U_(18)                                              /**< (EMAC_WOL) Specific Address Register 1 Event Enable Position */
 #define EMAC_WOL_SA1_Msk                      (_U_(0x1) << EMAC_WOL_SA1_Pos)                       /**< (EMAC_WOL) Specific Address Register 1 Event Enable Mask */
@@ -640,16 +640,6 @@
 #define EMAC_WOL_SA_Pos                       _U_(18)                                              /**< (EMAC_WOL Position) Specific Address Register x Event Enable */
 #define EMAC_WOL_SA_Msk                       (_U_(0x1) << EMAC_WOL_SA_Pos)                        /**< (EMAC_WOL Mask) SA */
 #define EMAC_WOL_SA(value)                    (EMAC_WOL_SA_Msk & ((value) << EMAC_WOL_SA_Pos))     
-
-/* -------- EMAC_VERSION : (EMAC Offset: 0xFC) ( R/ 32) Version Register -------- */
-#define EMAC_VERSION_VERSION_Pos              _U_(0)                                               /**< (EMAC_VERSION) Hardware Module Version Position */
-#define EMAC_VERSION_VERSION_Msk              (_U_(0xFFF) << EMAC_VERSION_VERSION_Pos)             /**< (EMAC_VERSION) Hardware Module Version Mask */
-#define EMAC_VERSION_VERSION(value)           (EMAC_VERSION_VERSION_Msk & ((value) << EMAC_VERSION_VERSION_Pos))
-#define EMAC_VERSION_MFN_Pos                  _U_(16)                                              /**< (EMAC_VERSION) Metal Fix Number Position */
-#define EMAC_VERSION_MFN_Msk                  (_U_(0x7) << EMAC_VERSION_MFN_Pos)                   /**< (EMAC_VERSION) Metal Fix Number Mask */
-#define EMAC_VERSION_MFN(value)               (EMAC_VERSION_MFN_Msk & ((value) << EMAC_VERSION_MFN_Pos))
-#define EMAC_VERSION_Msk                      _U_(0x00070FFF)                                      /**< (EMAC_VERSION) Register Mask  */
-
 
 /** \brief EMAC register offsets definitions */
 #define EMAC_SAxB_REG_OFST             (0x00)              /**< (EMAC_SAxB) Specific Address X Bottom Register Offset */
@@ -694,7 +684,6 @@
 #define EMAC_TPQ_REG_OFST              (0xBC)              /**< (EMAC_TPQ) Transmit Pause Quantum Register Offset */
 #define EMAC_USRIO_REG_OFST            (0xC0)              /**< (EMAC_USRIO) User Input/Output Register Offset */
 #define EMAC_WOL_REG_OFST              (0xC4)              /**< (EMAC_WOL) Wake-on-LAN Register Offset */
-#define EMAC_VERSION_REG_OFST          (0xFC)              /**< (EMAC_VERSION) Version Register Offset */
 
 #if !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__))
 /** \brief EMAC_SA register API structure */
@@ -751,8 +740,6 @@ typedef struct
   __IO  uint32_t                       EMAC_TPQ;           /**< Offset: 0xBC (R/W  32) Transmit Pause Quantum Register */
   __IO  uint32_t                       EMAC_USRIO;         /**< Offset: 0xC0 (R/W  32) User Input/Output Register */
   __IO  uint32_t                       EMAC_WOL;           /**< Offset: 0xC4 (R/W  32) Wake-on-LAN Register */
-  __I   uint8_t                        Reserved2[0x34];
-  __I   uint32_t                       EMAC_VERSION;       /**< Offset: 0xFC (R/   32) Version Register */
 } emac_registers_t;
 
 
