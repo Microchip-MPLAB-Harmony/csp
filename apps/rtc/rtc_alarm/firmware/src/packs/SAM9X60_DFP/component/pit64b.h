@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-04-23T19:01:17Z */
+/* file generated from device description version 2019-08-22T13:04:26Z */
 #ifndef _SAM9X_PIT64B_COMPONENT_H_
 #define _SAM9X_PIT64B_COMPONENT_H_
 
@@ -150,8 +150,8 @@
 #define PIT64B_WPMR_WPKEY_Pos                 _U_(8)                                               /**< (PIT64B_WPMR) Write Protection Key Position */
 #define PIT64B_WPMR_WPKEY_Msk                 (_U_(0xFFFFFF) << PIT64B_WPMR_WPKEY_Pos)             /**< (PIT64B_WPMR) Write Protection Key Mask */
 #define PIT64B_WPMR_WPKEY(value)              (PIT64B_WPMR_WPKEY_Msk & ((value) << PIT64B_WPMR_WPKEY_Pos))
-#define   PIT64B_WPMR_WPKEY_PASSWD_Val        _U_(0x504954)                                        /**< (PIT64B_WPMR) Writing any other value in this field aborts the write operation of the WPCREN, WPITEN and WPEN bits.Always reads as 0.  */
-#define PIT64B_WPMR_WPKEY_PASSWD              (PIT64B_WPMR_WPKEY_PASSWD_Val << PIT64B_WPMR_WPKEY_Pos) /**< (PIT64B_WPMR) Writing any other value in this field aborts the write operation of the WPCREN, WPITEN and WPEN bits.Always reads as 0. Position  */
+#define   PIT64B_WPMR_WPKEY_PASSWD_Val        _U_(0x504954)                                        /**< (PIT64B_WPMR) Writing any other value in this field aborts the write operation of the WPCREN, WPITEN and WPEN bits. Always reads as 0.  */
+#define PIT64B_WPMR_WPKEY_PASSWD              (PIT64B_WPMR_WPKEY_PASSWD_Val << PIT64B_WPMR_WPKEY_Pos) /**< (PIT64B_WPMR) Writing any other value in this field aborts the write operation of the WPCREN, WPITEN and WPEN bits. Always reads as 0. Position  */
 #define PIT64B_WPMR_Msk                       _U_(0xFFFFFF17)                                      /**< (PIT64B_WPMR) Register Mask  */
 
 
@@ -192,16 +192,6 @@
 #define PIT64B_WPSR_Msk                       _U_(0x83FFFF0F)                                      /**< (PIT64B_WPSR) Register Mask  */
 
 
-/* -------- PIT64B_VERSION : (PIT64B Offset: 0xFC) ( R/ 32) Version Register -------- */
-#define PIT64B_VERSION_VERSION_Pos            _U_(0)                                               /**< (PIT64B_VERSION) Hardware Module Version Position */
-#define PIT64B_VERSION_VERSION_Msk            (_U_(0xFFF) << PIT64B_VERSION_VERSION_Pos)           /**< (PIT64B_VERSION) Hardware Module Version Mask */
-#define PIT64B_VERSION_VERSION(value)         (PIT64B_VERSION_VERSION_Msk & ((value) << PIT64B_VERSION_VERSION_Pos))
-#define PIT64B_VERSION_MFN_Pos                _U_(16)                                              /**< (PIT64B_VERSION) Metal Fix Number Position */
-#define PIT64B_VERSION_MFN_Msk                (_U_(0x7) << PIT64B_VERSION_MFN_Pos)                 /**< (PIT64B_VERSION) Metal Fix Number Mask */
-#define PIT64B_VERSION_MFN(value)             (PIT64B_VERSION_MFN_Msk & ((value) << PIT64B_VERSION_MFN_Pos))
-#define PIT64B_VERSION_Msk                    _U_(0x00070FFF)                                      /**< (PIT64B_VERSION) Register Mask  */
-
-
 /** \brief PIT64B register offsets definitions */
 #define PIT64B_CR_REG_OFST             (0x00)              /**< (PIT64B_CR) Control Register Offset */
 #define PIT64B_MR_REG_OFST             (0x04)              /**< (PIT64B_MR) Mode Register Offset */
@@ -215,7 +205,6 @@
 #define PIT64B_TMSBR_REG_OFST          (0x24)              /**< (PIT64B_TMSBR) Timer MSB Current Value Register Offset */
 #define PIT64B_WPMR_REG_OFST           (0xE4)              /**< (PIT64B_WPMR) Write Protection Mode Register Offset */
 #define PIT64B_WPSR_REG_OFST           (0xE8)              /**< (PIT64B_WPSR) Write Protection Status Register Offset */
-#define PIT64B_VERSION_REG_OFST        (0xFC)              /**< (PIT64B_VERSION) Version Register Offset */
 
 #if !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__))
 /** \brief PIT64B register API structure */
@@ -234,8 +223,6 @@ typedef struct
   __I   uint8_t                        Reserved1[0xBC];
   __IO  uint32_t                       PIT64B_WPMR;        /**< Offset: 0xE4 (R/W  32) Write Protection Mode Register */
   __I   uint32_t                       PIT64B_WPSR;        /**< Offset: 0xE8 (R/   32) Write Protection Status Register */
-  __I   uint8_t                        Reserved2[0x10];
-  __I   uint32_t                       PIT64B_VERSION;     /**< Offset: 0xFC (R/   32) Version Register */
 } pit64b_registers_t;
 
 
