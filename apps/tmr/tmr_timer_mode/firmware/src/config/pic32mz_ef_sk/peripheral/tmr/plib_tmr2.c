@@ -52,6 +52,7 @@
 #include "device.h"
 #include "plib_tmr2.h"
 
+
 static TMR_TIMER_OBJECT tmr2Obj;
 
 
@@ -111,6 +112,7 @@ uint32_t TMR2_FrequencyGet(void)
 {
     return (100000000);
 }
+
 
 void TIMER_3_InterruptHandler (void)
 {
