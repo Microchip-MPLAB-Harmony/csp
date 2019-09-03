@@ -14,16 +14,16 @@
             <User dnOrder="0" value="1"/>
           </Values>
         </KeyValueSet>
-        <Boolean dnOrder="2" id="CLK_MAINCK_MOSCXTBY">
+        <Boolean dnOrder="2" id="CLK_MAINCK_MOSCXTEN">
           <Values dnOrder="0">
             <User dnOrder="0" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="3" id="CLK_MAINCK_MOSCXTEN">
+        <Integer dnOrder="3" id="CLK_MAINCK_MOSCXTST">
           <Values dnOrder="0">
-            <User dnOrder="0" value="true"/>
+            <User dnOrder="0" value="255"/>
           </Values>
-        </Boolean>
+        </Integer>
         <KeyValueSet dnOrder="4" id="CLK_MCK_CSS">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="2"/>
@@ -64,219 +64,316 @@
             <Dynamic dnOrder="0" id="core" value="100000000"/>
           </Values>
         </Integer>
-        <String dnOrder="12" id="CoreMainFileName">
+        <Menu dnOrder="12" id="CoreIARMenu">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="visible">
+              <Value dnOrder="0">false</Value>
+            </Boolean>
+          </Attributes>
+        </Menu>
+        <String dnOrder="13" id="CoreMainFileName">
           <Values dnOrder="0">
             <User dnOrder="0" value="main_rh71"/>
           </Values>
         </String>
-        <File dnOrder="13" id="MAIN_C">
+        <File dnOrder="14" id="MAIN_C">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="name">
               <Value dnOrder="0">main_rh71.c</Value>
             </String>
           </Attributes>
         </File>
-        <Boolean dnOrder="14" id="NVIC_31_0_ENABLE">
+        <Boolean dnOrder="15" id="NVIC_31_0_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <String dnOrder="15" id="NVIC_31_0_HANDLER">
+        <String dnOrder="16" id="NVIC_31_0_HANDLER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="PWM0_InterruptHandler"/>
           </Values>
         </String>
-        <Boolean dnOrder="16" id="NVIC_31_0_HANDLER_LOCK">
+        <Boolean dnOrder="17" id="NVIC_31_0_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="17" id="NVIC_4_0_ENABLE">
+        <Boolean dnOrder="18" id="NVIC_4_0_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
-        <String dnOrder="18" id="NVIC_4_0_HANDLER">
+        <String dnOrder="19" id="NVIC_4_0_HANDLER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="WDT_Handler"/>
           </Values>
         </String>
-        <Boolean dnOrder="19" id="NVIC_4_0_HANDLER_LOCK">
+        <Boolean dnOrder="20" id="NVIC_4_0_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
-        <String dnOrder="20" id="PIN_10_FUNCTION_TYPE">
+        <String dnOrder="21" id="PIN_10_FUNCTION_TYPE">
           <Values dnOrder="0">
             <User dnOrder="0" value="PWM0_PWMC0_PWMH1"/>
           </Values>
         </String>
-        <String dnOrder="21" id="PIN_10_PERIPHERAL_FUNCTION">
+        <String dnOrder="22" id="PIN_10_PERIPHERAL_FUNCTION">
           <Values dnOrder="0">
             <User dnOrder="0" value="C"/>
           </Values>
         </String>
-        <String dnOrder="22" id="PIN_11_FUNCTION_TYPE">
+        <String dnOrder="23" id="PIN_11_FUNCTION_TYPE">
           <Values dnOrder="0">
             <User dnOrder="0" value="PWM0_PWMC0_PWMH2"/>
           </Values>
         </String>
-        <String dnOrder="23" id="PIN_11_PERIPHERAL_FUNCTION">
+        <String dnOrder="24" id="PIN_11_PERIPHERAL_FUNCTION">
           <Values dnOrder="0">
             <User dnOrder="0" value="C"/>
           </Values>
         </String>
-        <String dnOrder="24" id="PIN_12_FUNCTION_TYPE">
+        <String dnOrder="25" id="PIN_12_FUNCTION_TYPE">
           <Values dnOrder="0">
             <User dnOrder="0" value=""/>
           </Values>
         </String>
-        <String dnOrder="25" id="PIN_12_PERIPHERAL_FUNCTION">
+        <String dnOrder="26" id="PIN_12_PERIPHERAL_FUNCTION">
           <Values dnOrder="0">
             <User dnOrder="0" value=""/>
           </Values>
         </String>
-        <String dnOrder="26" id="PIN_13_FUNCTION_TYPE">
+        <String dnOrder="27" id="PIN_13_FUNCTION_TYPE">
           <Values dnOrder="0">
             <User dnOrder="0" value="PWM0_PWMC0_PWML0"/>
           </Values>
         </String>
-        <String dnOrder="27" id="PIN_13_PERIPHERAL_FUNCTION">
+        <String dnOrder="28" id="PIN_13_PERIPHERAL_FUNCTION">
           <Values dnOrder="0">
             <User dnOrder="0" value="C"/>
           </Values>
         </String>
-        <String dnOrder="28" id="PIN_14_FUNCTION_TYPE">
+        <String dnOrder="29" id="PIN_14_FUNCTION_TYPE">
           <Values dnOrder="0">
             <User dnOrder="0" value="PWM0_PWMC0_PWML1"/>
           </Values>
         </String>
-        <String dnOrder="29" id="PIN_14_PERIPHERAL_FUNCTION">
+        <String dnOrder="30" id="PIN_14_PERIPHERAL_FUNCTION">
           <Values dnOrder="0">
             <User dnOrder="0" value="C"/>
           </Values>
         </String>
-        <String dnOrder="30" id="PIN_15_FUNCTION_TYPE">
+        <String dnOrder="31" id="PIN_15_FUNCTION_TYPE">
           <Values dnOrder="0">
             <User dnOrder="0" value="PWM0_PWMC0_PWML2"/>
           </Values>
         </String>
-        <String dnOrder="31" id="PIN_15_PERIPHERAL_FUNCTION">
+        <String dnOrder="32" id="PIN_15_PERIPHERAL_FUNCTION">
           <Values dnOrder="0">
             <User dnOrder="0" value="C"/>
           </Values>
         </String>
-        <String dnOrder="32" id="PIN_9_FUNCTION_TYPE">
+        <String dnOrder="33" id="PIN_9_FUNCTION_TYPE">
           <Values dnOrder="0">
             <User dnOrder="0" value="PWM0_PWMC0_PWMH0"/>
           </Values>
         </String>
-        <String dnOrder="33" id="PIN_9_PERIPHERAL_FUNCTION">
+        <String dnOrder="34" id="PIN_9_PERIPHERAL_FUNCTION">
           <Values dnOrder="0">
             <User dnOrder="0" value="C"/>
           </Values>
         </String>
-        <Boolean dnOrder="34" id="PIOA_CLOCK_ENABLE">
+        <Boolean dnOrder="35" id="PIOA_CLOCK_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <Integer dnOrder="35" id="PIOA_CLOCK_FREQUENCY">
+        <Integer dnOrder="36" id="PIOA_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="50000000"/>
           </Values>
         </Integer>
-        <String dnOrder="36" id="PORT_A_MSKR_ValueA">
+        <String dnOrder="37" id="PORT_A_MSKR_ValueA">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0x0"/>
           </Values>
         </String>
-        <String dnOrder="37" id="PORT_A_MSKR_ValueB">
+        <String dnOrder="38" id="PORT_A_MSKR_ValueB">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0x0"/>
           </Values>
         </String>
-        <String dnOrder="38" id="PORT_A_MSKR_ValueC">
+        <String dnOrder="39" id="PORT_A_MSKR_ValueC">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0x77"/>
           </Values>
         </String>
-        <String dnOrder="39" id="PORT_A_MSKR_ValueD">
+        <String dnOrder="40" id="PORT_A_MSKR_ValueD">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0x0"/>
           </Values>
         </String>
-        <String dnOrder="40" id="PORT_A_MSKR_ValueE">
+        <String dnOrder="41" id="PORT_A_MSKR_ValueE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0x0"/>
           </Values>
         </String>
-        <String dnOrder="41" id="PORT_A_MSKR_ValueF">
+        <String dnOrder="42" id="PORT_A_MSKR_ValueF">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0x0"/>
           </Values>
         </String>
-        <String dnOrder="42" id="PORT_A_MSKR_ValueG">
+        <String dnOrder="43" id="PORT_A_MSKR_ValueG">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0x0"/>
           </Values>
         </String>
-        <String dnOrder="43" id="PORT_A_MSKR_ValueGPIO">
+        <String dnOrder="44" id="PORT_A_MSKR_ValueGPIO">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0x0"/>
           </Values>
         </String>
-        <Boolean dnOrder="44" id="PWM0_CLOCK_ENABLE">
+        <Boolean dnOrder="45" id="PWM0_CLOCK_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="pwm0" value="true"/>
           </Values>
         </Boolean>
-        <Integer dnOrder="45" id="PWM0_CLOCK_FREQUENCY">
+        <Integer dnOrder="46" id="PWM0_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="50000000"/>
           </Values>
         </Integer>
-        <Boolean dnOrder="46" id="PWM0_INTERRUPT_ENABLE">
+        <Boolean dnOrder="47" id="PWM0_INTERRUPT_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="pwm0" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="47" id="PWM0_INTERRUPT_ENABLE_UPDATE">
+        <Boolean dnOrder="48" id="PWM0_INTERRUPT_ENABLE_UPDATE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
-        <String dnOrder="48" id="PWM0_INTERRUPT_HANDLER">
+        <String dnOrder="49" id="PWM0_INTERRUPT_HANDLER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="pwm0" value="PWM0_InterruptHandler"/>
           </Values>
         </String>
-        <Boolean dnOrder="49" id="PWM0_INTERRUPT_HANDLER_LOCK">
+        <Boolean dnOrder="50" id="PWM0_INTERRUPT_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="pwm0" value="true"/>
           </Values>
         </Boolean>
-        <Integer dnOrder="50" id="SYSTICK_CLOCK_FREQUENCY">
+        <Integer dnOrder="51" id="SYSTICK_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="50000000"/>
           </Values>
         </Integer>
-        <Boolean dnOrder="51" id="WDT_INTERRUPT_ENABLE">
+        <String dnOrder="52" id="SYSTICK_PERIOD">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0x186a0"/>
+          </Values>
+        </String>
+        <Integer dnOrder="53" id="SYSTICK_PERIOD_US">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="1000"/>
+          </Values>
+        </Integer>
+        <Integer dnOrder="54" id="TC0_CH0_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </Integer>
+        <Integer dnOrder="55" id="TC0_CH1_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </Integer>
+        <Integer dnOrder="56" id="TC0_CH2_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </Integer>
+        <Integer dnOrder="57" id="TC0_CH3_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </Integer>
+        <Integer dnOrder="58" id="TC1_CH0_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </Integer>
+        <Integer dnOrder="59" id="TC1_CH1_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </Integer>
+        <Integer dnOrder="60" id="TC1_CH2_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </Integer>
+        <Integer dnOrder="61" id="TC1_CH3_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </Integer>
+        <Integer dnOrder="62" id="TC2_CH0_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </Integer>
+        <Integer dnOrder="63" id="TC2_CH1_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </Integer>
+        <Integer dnOrder="64" id="TC2_CH2_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </Integer>
+        <Integer dnOrder="65" id="TC2_CH3_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </Integer>
+        <Integer dnOrder="66" id="TC3_CH0_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </Integer>
+        <Integer dnOrder="67" id="TC3_CH1_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </Integer>
+        <Integer dnOrder="68" id="TC3_CH2_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </Integer>
+        <Integer dnOrder="69" id="TC3_CH3_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </Integer>
+        <Boolean dnOrder="70" id="WDT_INTERRUPT_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="52" id="WDT_INTERRUPT_ENABLE_UPDATE">
+        <Boolean dnOrder="71" id="WDT_INTERRUPT_ENABLE_UPDATE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <String dnOrder="53" id="WDT_INTERRUPT_HANDLER">
+        <String dnOrder="72" id="WDT_INTERRUPT_HANDLER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="WDT_Handler"/>
           </Values>
         </String>
-        <Boolean dnOrder="54" id="WDT_INTERRUPT_HANDLER_LOCK">
+        <Boolean dnOrder="73" id="WDT_INTERRUPT_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
@@ -379,71 +476,40 @@
             <User dnOrder="0" value="0"/>
           </Values>
         </Integer>
-        <KeyValueSet dnOrder="11" id="PWM_CH_1_CMR_CALG">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="visible">
-              <Value dnOrder="0">false</Value>
-            </Boolean>
-          </Attributes>
-        </KeyValueSet>
-        <KeyValueSet dnOrder="12" id="PWM_CH_1_CMR_CPOL">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="visible">
-              <Value dnOrder="0">false</Value>
-            </Boolean>
-          </Attributes>
-        </KeyValueSet>
-        <KeyValueSet dnOrder="13" id="PWM_CH_1_CMR_CPRE">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="visible">
-              <Value dnOrder="0">false</Value>
-            </Boolean>
-          </Attributes>
-        </KeyValueSet>
-        <Boolean dnOrder="14" id="PWM_CH_1_CMR_DTE">
+        <Boolean dnOrder="11" id="PWM_CH_1_CMR_DTE">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </Boolean>
-        <Integer dnOrder="15" id="PWM_CH_1_CPRD">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="visible">
-              <Value dnOrder="0">false</Value>
-            </Boolean>
-          </Attributes>
-        </Integer>
-        <Boolean dnOrder="16" id="PWM_CH_1_ENABLE">
+        <Boolean dnOrder="12" id="PWM_CH_1_ENABLE">
           <Values dnOrder="0">
             <User dnOrder="0" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="17" id="PWM_CH_1_FAULT_ENABLE">
+        <Boolean dnOrder="13" id="PWM_CH_1_FAULT_ENABLE">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </Boolean>
-        <Comment dnOrder="18" id="PWM_CH_1_FREQ_COMMENT">
+        <Comment dnOrder="14" id="PWM_CH_1_FREQ_COMMENT">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="text">
               <Value dnOrder="0">****&amp;#160;PWM&amp;#160;Frequency&amp;#160;is&amp;#160;3333.33333333&amp;#160;Hz&amp;#160;****</Value>
             </String>
-            <Boolean dnOrder="1" id="visible">
-              <Value dnOrder="0">false</Value>
-            </Boolean>
           </Attributes>
         </Comment>
-        <Boolean dnOrder="19" id="PWM_CH_1_IER1_CHID">
+        <Boolean dnOrder="15" id="PWM_CH_1_IER1_CHID">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </Boolean>
-        <Boolean dnOrder="20" id="PWM_CH_1_SYNCENABLE">
+        <Boolean dnOrder="16" id="PWM_CH_1_SYNCENABLE">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
@@ -453,14 +519,14 @@
             <User dnOrder="0" value="true"/>
           </Values>
         </Boolean>
-        <Comment dnOrder="21" id="PWM_CH_1_SYNC_COMMENT">
+        <Comment dnOrder="17" id="PWM_CH_1_SYNC_COMMENT">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </Comment>
-        <Integer dnOrder="22" id="PWM_CH_2_CDTY">
+        <Integer dnOrder="18" id="PWM_CH_2_CDTY">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
@@ -470,71 +536,40 @@
             <User dnOrder="0" value="0"/>
           </Values>
         </Integer>
-        <KeyValueSet dnOrder="23" id="PWM_CH_2_CMR_CALG">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="visible">
-              <Value dnOrder="0">false</Value>
-            </Boolean>
-          </Attributes>
-        </KeyValueSet>
-        <KeyValueSet dnOrder="24" id="PWM_CH_2_CMR_CPOL">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="visible">
-              <Value dnOrder="0">false</Value>
-            </Boolean>
-          </Attributes>
-        </KeyValueSet>
-        <KeyValueSet dnOrder="25" id="PWM_CH_2_CMR_CPRE">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="visible">
-              <Value dnOrder="0">false</Value>
-            </Boolean>
-          </Attributes>
-        </KeyValueSet>
-        <Boolean dnOrder="26" id="PWM_CH_2_CMR_DTE">
+        <Boolean dnOrder="19" id="PWM_CH_2_CMR_DTE">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </Boolean>
-        <Integer dnOrder="27" id="PWM_CH_2_CPRD">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="visible">
-              <Value dnOrder="0">false</Value>
-            </Boolean>
-          </Attributes>
-        </Integer>
-        <Boolean dnOrder="28" id="PWM_CH_2_ENABLE">
+        <Boolean dnOrder="20" id="PWM_CH_2_ENABLE">
           <Values dnOrder="0">
             <User dnOrder="0" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="29" id="PWM_CH_2_FAULT_ENABLE">
+        <Boolean dnOrder="21" id="PWM_CH_2_FAULT_ENABLE">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </Boolean>
-        <Comment dnOrder="30" id="PWM_CH_2_FREQ_COMMENT">
+        <Comment dnOrder="22" id="PWM_CH_2_FREQ_COMMENT">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="text">
               <Value dnOrder="0">****&amp;#160;PWM&amp;#160;Frequency&amp;#160;is&amp;#160;3333.33333333&amp;#160;Hz&amp;#160;****</Value>
             </String>
-            <Boolean dnOrder="1" id="visible">
-              <Value dnOrder="0">false</Value>
-            </Boolean>
           </Attributes>
         </Comment>
-        <Boolean dnOrder="31" id="PWM_CH_2_IER1_CHID">
+        <Boolean dnOrder="23" id="PWM_CH_2_IER1_CHID">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </Boolean>
-        <Boolean dnOrder="32" id="PWM_CH_2_SYNCENABLE">
+        <Boolean dnOrder="24" id="PWM_CH_2_SYNCENABLE">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
@@ -544,77 +579,84 @@
             <User dnOrder="0" value="true"/>
           </Values>
         </Boolean>
-        <Comment dnOrder="33" id="PWM_CH_2_SYNC_COMMENT">
+        <Comment dnOrder="25" id="PWM_CH_2_SYNC_COMMENT">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </Comment>
-        <Comment dnOrder="34" id="PWM_CH_3_FREQ_COMMENT">
+        <Comment dnOrder="26" id="PWM_CH_3_FREQ_COMMENT">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="text">
               <Value dnOrder="0">****&amp;#160;PWM&amp;#160;Frequency&amp;#160;is&amp;#160;3333.33333333&amp;#160;Hz&amp;#160;****</Value>
             </String>
           </Attributes>
         </Comment>
-        <Integer dnOrder="35" id="PWM_COMP_0_CMPV_CV">
+        <Integer dnOrder="27" id="PWM_COMP_0_CMPV_CV">
           <Attributes dnOrder="0">
             <Integer dnOrder="0" id="max">
               <Value dnOrder="0">1250</Value>
             </Integer>
           </Attributes>
         </Integer>
-        <Integer dnOrder="36" id="PWM_COMP_1_CMPV_CV">
+        <Integer dnOrder="28" id="PWM_COMP_1_CMPV_CV">
           <Attributes dnOrder="0">
             <Integer dnOrder="0" id="max">
               <Value dnOrder="0">1250</Value>
             </Integer>
           </Attributes>
         </Integer>
-        <Integer dnOrder="37" id="PWM_COMP_2_CMPV_CV">
+        <Integer dnOrder="29" id="PWM_COMP_2_CMPV_CV">
           <Attributes dnOrder="0">
             <Integer dnOrder="0" id="max">
               <Value dnOrder="0">1250</Value>
             </Integer>
           </Attributes>
         </Integer>
-        <Integer dnOrder="38" id="PWM_COMP_3_CMPV_CV">
+        <Integer dnOrder="30" id="PWM_COMP_3_CMPV_CV">
           <Attributes dnOrder="0">
             <Integer dnOrder="0" id="max">
               <Value dnOrder="0">1250</Value>
             </Integer>
           </Attributes>
         </Integer>
-        <Integer dnOrder="39" id="PWM_COMP_4_CMPV_CV">
+        <Integer dnOrder="31" id="PWM_COMP_4_CMPV_CV">
           <Attributes dnOrder="0">
             <Integer dnOrder="0" id="max">
               <Value dnOrder="0">1250</Value>
             </Integer>
           </Attributes>
         </Integer>
-        <Integer dnOrder="40" id="PWM_COMP_5_CMPV_CV">
+        <Integer dnOrder="32" id="PWM_COMP_5_CMPV_CV">
           <Attributes dnOrder="0">
             <Integer dnOrder="0" id="max">
               <Value dnOrder="0">1250</Value>
             </Integer>
           </Attributes>
         </Integer>
-        <Integer dnOrder="41" id="PWM_COMP_6_CMPV_CV">
+        <Integer dnOrder="33" id="PWM_COMP_6_CMPV_CV">
           <Attributes dnOrder="0">
             <Integer dnOrder="0" id="max">
               <Value dnOrder="0">1250</Value>
             </Integer>
           </Attributes>
         </Integer>
-        <Integer dnOrder="42" id="PWM_COMP_7_CMPV_CV">
+        <Integer dnOrder="34" id="PWM_COMP_7_CMPV_CV">
           <Attributes dnOrder="0">
             <Integer dnOrder="0" id="max">
               <Value dnOrder="0">1250</Value>
             </Integer>
           </Attributes>
         </Integer>
-        <Menu dnOrder="43" id="PWM_SYNC_CHANNELS">
+        <Comment dnOrder="35" id="PWM_NVIC_ENABLE_COMMENT">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="visible">
+              <Value dnOrder="0">false</Value>
+            </Boolean>
+          </Attributes>
+        </Comment>
+        <Menu dnOrder="36" id="PWM_SYNC_CHANNELS">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
@@ -625,8 +667,7 @@
     </UniqueComponent>
   </Components>
   <UserData>
-    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="0"/>
-    <ComponentGraph dnOrder="1" id="__ROOTVIEW">
+    <ComponentGraph dnOrder="0" id="__ROOTVIEW">
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="cmsis" x="320" y="20"/>
         <ElementPosition dnOrder="1" id="core" x="220" y="20"/>
@@ -634,5 +675,6 @@
         <ElementPosition dnOrder="3" id="pwm0" x="22" y="62"/>
       </ElementPositions>
     </ComponentGraph>
+    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="1"/>
   </UserData>
 </Configuration>
