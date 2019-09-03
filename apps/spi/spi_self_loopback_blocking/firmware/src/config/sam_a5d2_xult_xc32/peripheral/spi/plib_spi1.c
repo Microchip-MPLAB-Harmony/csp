@@ -55,7 +55,7 @@ void SPI1_Initialize ( void )
     /* Enable Master mode, select source clock, select particular NPCS line for chip select and disable mode fault detection */
     SPI1_REGS->SPI_MR =  SPI_MR_MSTR_Msk | SPI_MR_BRSRCCLK_PERIPH_CLK | SPI_MR_PCS_NPCS0 | SPI_MR_MODFDIS_Msk;
 
-    /* Set up clock Polarity, data phase, Communication Width and Baud Rate */
+    /* Set up clock Polarity, data phase, Communication Width, Baud Rate */
     SPI1_REGS->SPI_CSR[0] = SPI_CSR_CPOL_IDLE_LOW | SPI_CSR_NCPHA_VALID_LEADING_EDGE | SPI_CSR_BITS_8_BIT | SPI_CSR_SCBR(83);
 
 
@@ -132,10 +132,10 @@ bool SPI1_WriteRead(void* pTransmitData, size_t txSize, void* pReceiveData, size
             {
                 /* If data is read, wait for the Receiver Data Register to become full*/
                 while((bool)((SPI1_REGS->SPI_SR & SPI_SR_RDRF_Msk) >> SPI_SR_RDRF_Pos) == false)
-				{
-				}
+                {
+                }
 
-				receivedData = (SPI1_REGS->SPI_RDR & SPI_RDR_RD_Msk) >> SPI_RDR_RD_Pos;
+                receivedData = (SPI1_REGS->SPI_RDR & SPI_RDR_RD_Msk) >> SPI_RDR_RD_Pos;
 
                 if (rxCount < rxSize)
                 {
@@ -156,7 +156,7 @@ bool SPI1_WriteRead(void* pTransmitData, size_t txSize, void* pReceiveData, size
 
         isSuccess = true;
     }
-	    return isSuccess;
+        return isSuccess;
 }
 
 bool SPI1_Write(void* pTransmitData, size_t txSize)
@@ -173,9 +173,9 @@ bool SPI1_TransferSetup (SPI_TRANSFER_SETUP * setup, uint32_t spiSourceClock )
 {
     uint32_t scbr;
     if ((setup == NULL) || (setup->clockFrequency == 0))
-	{
-		return false;
-	}
+    {
+        return false;
+    }
     if(spiSourceClock == 0)
     {
         // Fetch Master Clock Frequency directly
