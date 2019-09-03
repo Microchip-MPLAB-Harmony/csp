@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-04-23T19:01:17Z */
+/* file generated from device description version 2019-08-22T13:04:26Z */
 #ifndef _SAM9X_ISI_COMPONENT_H_
 #define _SAM9X_ISI_COMPONENT_H_
 
@@ -96,25 +96,25 @@
 #define ISI_CFG2_YCC_SWAP_Pos                 _U_(28)                                              /**< (ISI_CFG2) YCrCb Format Swap Mode Position */
 #define ISI_CFG2_YCC_SWAP_Msk                 (_U_(0x3) << ISI_CFG2_YCC_SWAP_Pos)                  /**< (ISI_CFG2) YCrCb Format Swap Mode Mask */
 #define ISI_CFG2_YCC_SWAP(value)              (ISI_CFG2_YCC_SWAP_Msk & ((value) << ISI_CFG2_YCC_SWAP_Pos))
-#define   ISI_CFG2_YCC_SWAP_DEFAULT_Val       _U_(0x0)                                             /**< (ISI_CFG2) Byte 0 Cb(i)Byte 1 Y(i)Byte 2 Cr(i)Byte 3 Y(i+1)  */
-#define   ISI_CFG2_YCC_SWAP_MODE1_Val         _U_(0x1)                                             /**< (ISI_CFG2) Byte 0 Cr(i)Byte 1 Y(i)Byte 2 Cb(i)Byte 3 Y(i+1)  */
-#define   ISI_CFG2_YCC_SWAP_MODE2_Val         _U_(0x2)                                             /**< (ISI_CFG2) Byte 0 Y(i)Byte 1 Cb(i)Byte 2 Y(i+1)Byte 3 Cr(i)  */
-#define   ISI_CFG2_YCC_SWAP_MODE3_Val         _U_(0x3)                                             /**< (ISI_CFG2) Byte 0 Y(i)Byte 1 Cr(i)Byte 2 Y(i+1)Byte 3 Cb(i)  */
-#define ISI_CFG2_YCC_SWAP_DEFAULT             (ISI_CFG2_YCC_SWAP_DEFAULT_Val << ISI_CFG2_YCC_SWAP_Pos) /**< (ISI_CFG2) Byte 0 Cb(i)Byte 1 Y(i)Byte 2 Cr(i)Byte 3 Y(i+1) Position  */
-#define ISI_CFG2_YCC_SWAP_MODE1               (ISI_CFG2_YCC_SWAP_MODE1_Val << ISI_CFG2_YCC_SWAP_Pos) /**< (ISI_CFG2) Byte 0 Cr(i)Byte 1 Y(i)Byte 2 Cb(i)Byte 3 Y(i+1) Position  */
-#define ISI_CFG2_YCC_SWAP_MODE2               (ISI_CFG2_YCC_SWAP_MODE2_Val << ISI_CFG2_YCC_SWAP_Pos) /**< (ISI_CFG2) Byte 0 Y(i)Byte 1 Cb(i)Byte 2 Y(i+1)Byte 3 Cr(i) Position  */
-#define ISI_CFG2_YCC_SWAP_MODE3               (ISI_CFG2_YCC_SWAP_MODE3_Val << ISI_CFG2_YCC_SWAP_Pos) /**< (ISI_CFG2) Byte 0 Y(i)Byte 1 Cr(i)Byte 2 Y(i+1)Byte 3 Cb(i) Position  */
+#define   ISI_CFG2_YCC_SWAP_DEFAULT_Val       _U_(0x0)                                             /**< (ISI_CFG2) Byte 0 Cb(i) Byte 1 Y(i) Byte 2 Cr(i) Byte 3 Y(i+1)  */
+#define   ISI_CFG2_YCC_SWAP_MODE1_Val         _U_(0x1)                                             /**< (ISI_CFG2) Byte 0 Cr(i) Byte 1 Y(i) Byte 2 Cb(i) Byte 3 Y(i+1)  */
+#define   ISI_CFG2_YCC_SWAP_MODE2_Val         _U_(0x2)                                             /**< (ISI_CFG2) Byte 0 Y(i) Byte 1 Cb(i) Byte 2 Y(i+1) Byte 3 Cr(i)  */
+#define   ISI_CFG2_YCC_SWAP_MODE3_Val         _U_(0x3)                                             /**< (ISI_CFG2) Byte 0 Y(i) Byte 1 Cr(i) Byte 2 Y(i+1) Byte 3 Cb(i)  */
+#define ISI_CFG2_YCC_SWAP_DEFAULT             (ISI_CFG2_YCC_SWAP_DEFAULT_Val << ISI_CFG2_YCC_SWAP_Pos) /**< (ISI_CFG2) Byte 0 Cb(i) Byte 1 Y(i) Byte 2 Cr(i) Byte 3 Y(i+1) Position  */
+#define ISI_CFG2_YCC_SWAP_MODE1               (ISI_CFG2_YCC_SWAP_MODE1_Val << ISI_CFG2_YCC_SWAP_Pos) /**< (ISI_CFG2) Byte 0 Cr(i) Byte 1 Y(i) Byte 2 Cb(i) Byte 3 Y(i+1) Position  */
+#define ISI_CFG2_YCC_SWAP_MODE2               (ISI_CFG2_YCC_SWAP_MODE2_Val << ISI_CFG2_YCC_SWAP_Pos) /**< (ISI_CFG2) Byte 0 Y(i) Byte 1 Cb(i) Byte 2 Y(i+1) Byte 3 Cr(i) Position  */
+#define ISI_CFG2_YCC_SWAP_MODE3               (ISI_CFG2_YCC_SWAP_MODE3_Val << ISI_CFG2_YCC_SWAP_Pos) /**< (ISI_CFG2) Byte 0 Y(i) Byte 1 Cr(i) Byte 2 Y(i+1) Byte 3 Cb(i) Position  */
 #define ISI_CFG2_RGB_CFG_Pos                  _U_(30)                                              /**< (ISI_CFG2) RGB Pixel Mapping Configuration Position */
 #define ISI_CFG2_RGB_CFG_Msk                  (_U_(0x3) << ISI_CFG2_RGB_CFG_Pos)                   /**< (ISI_CFG2) RGB Pixel Mapping Configuration Mask */
 #define ISI_CFG2_RGB_CFG(value)               (ISI_CFG2_RGB_CFG_Msk & ((value) << ISI_CFG2_RGB_CFG_Pos))
-#define   ISI_CFG2_RGB_CFG_DEFAULT_Val        _U_(0x0)                                             /**< (ISI_CFG2) Byte 0 R/G(MSB)Byte 1 G(LSB)/BByte 2 R/G(MSB)Byte 3 G(LSB)/B  */
-#define   ISI_CFG2_RGB_CFG_MODE1_Val          _U_(0x1)                                             /**< (ISI_CFG2) Byte 0 B/G(MSB)Byte 1 G(LSB)/RByte 2 B/G(MSB)Byte 3 G(LSB)/R  */
-#define   ISI_CFG2_RGB_CFG_MODE2_Val          _U_(0x2)                                             /**< (ISI_CFG2) Byte 0 G(LSB)/RByte 1 B/G(MSB)Byte 2 G(LSB)/RByte 3 B/G(MSB)  */
-#define   ISI_CFG2_RGB_CFG_MODE3_Val          _U_(0x3)                                             /**< (ISI_CFG2) Byte 0 G(LSB)/BByte 1 R/G(MSB)Byte 2 G(LSB)/BByte 3 R/G(MSB)  */
-#define ISI_CFG2_RGB_CFG_DEFAULT              (ISI_CFG2_RGB_CFG_DEFAULT_Val << ISI_CFG2_RGB_CFG_Pos) /**< (ISI_CFG2) Byte 0 R/G(MSB)Byte 1 G(LSB)/BByte 2 R/G(MSB)Byte 3 G(LSB)/B Position  */
-#define ISI_CFG2_RGB_CFG_MODE1                (ISI_CFG2_RGB_CFG_MODE1_Val << ISI_CFG2_RGB_CFG_Pos) /**< (ISI_CFG2) Byte 0 B/G(MSB)Byte 1 G(LSB)/RByte 2 B/G(MSB)Byte 3 G(LSB)/R Position  */
-#define ISI_CFG2_RGB_CFG_MODE2                (ISI_CFG2_RGB_CFG_MODE2_Val << ISI_CFG2_RGB_CFG_Pos) /**< (ISI_CFG2) Byte 0 G(LSB)/RByte 1 B/G(MSB)Byte 2 G(LSB)/RByte 3 B/G(MSB) Position  */
-#define ISI_CFG2_RGB_CFG_MODE3                (ISI_CFG2_RGB_CFG_MODE3_Val << ISI_CFG2_RGB_CFG_Pos) /**< (ISI_CFG2) Byte 0 G(LSB)/BByte 1 R/G(MSB)Byte 2 G(LSB)/BByte 3 R/G(MSB) Position  */
+#define   ISI_CFG2_RGB_CFG_DEFAULT_Val        _U_(0x0)                                             /**< (ISI_CFG2) Byte 0 R/G(MSB) Byte 1 G(LSB)/B Byte 2 R/G(MSB) Byte 3 G(LSB)/B  */
+#define   ISI_CFG2_RGB_CFG_MODE1_Val          _U_(0x1)                                             /**< (ISI_CFG2) Byte 0 B/G(MSB) Byte 1 G(LSB)/R Byte 2 B/G(MSB) Byte 3 G(LSB)/R  */
+#define   ISI_CFG2_RGB_CFG_MODE2_Val          _U_(0x2)                                             /**< (ISI_CFG2) Byte 0 G(LSB)/R Byte 1 B/G(MSB) Byte 2 G(LSB)/R Byte 3 B/G(MSB)  */
+#define   ISI_CFG2_RGB_CFG_MODE3_Val          _U_(0x3)                                             /**< (ISI_CFG2) Byte 0 G(LSB)/B Byte 1 R/G(MSB) Byte 2 G(LSB)/B Byte 3 R/G(MSB)  */
+#define ISI_CFG2_RGB_CFG_DEFAULT              (ISI_CFG2_RGB_CFG_DEFAULT_Val << ISI_CFG2_RGB_CFG_Pos) /**< (ISI_CFG2) Byte 0 R/G(MSB) Byte 1 G(LSB)/B Byte 2 R/G(MSB) Byte 3 G(LSB)/B Position  */
+#define ISI_CFG2_RGB_CFG_MODE1                (ISI_CFG2_RGB_CFG_MODE1_Val << ISI_CFG2_RGB_CFG_Pos) /**< (ISI_CFG2) Byte 0 B/G(MSB) Byte 1 G(LSB)/R Byte 2 B/G(MSB) Byte 3 G(LSB)/R Position  */
+#define ISI_CFG2_RGB_CFG_MODE2                (ISI_CFG2_RGB_CFG_MODE2_Val << ISI_CFG2_RGB_CFG_Pos) /**< (ISI_CFG2) Byte 0 G(LSB)/R Byte 1 B/G(MSB) Byte 2 G(LSB)/R Byte 3 B/G(MSB) Position  */
+#define ISI_CFG2_RGB_CFG_MODE3                (ISI_CFG2_RGB_CFG_MODE3_Val << ISI_CFG2_RGB_CFG_Pos) /**< (ISI_CFG2) Byte 0 G(LSB)/B Byte 1 R/G(MSB) Byte 2 G(LSB)/B Byte 3 R/G(MSB) Position  */
 #define ISI_CFG2_Msk                          _U_(0xF7FFFFFF)                                      /**< (ISI_CFG2) Register Mask  */
 
 
@@ -461,8 +461,8 @@
 #define ISI_WPMR_WPKEY_Pos                    _U_(8)                                               /**< (ISI_WPMR) Write Protection Key Password Position */
 #define ISI_WPMR_WPKEY_Msk                    (_U_(0xFFFFFF) << ISI_WPMR_WPKEY_Pos)                /**< (ISI_WPMR) Write Protection Key Password Mask */
 #define ISI_WPMR_WPKEY(value)                 (ISI_WPMR_WPKEY_Msk & ((value) << ISI_WPMR_WPKEY_Pos))
-#define   ISI_WPMR_WPKEY_PASSWD_Val           _U_(0x495349)                                        /**< (ISI_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit.Always reads as 0.  */
-#define ISI_WPMR_WPKEY_PASSWD                 (ISI_WPMR_WPKEY_PASSWD_Val << ISI_WPMR_WPKEY_Pos)    /**< (ISI_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit.Always reads as 0. Position  */
+#define   ISI_WPMR_WPKEY_PASSWD_Val           _U_(0x495349)                                        /**< (ISI_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit. Always reads as 0.  */
+#define ISI_WPMR_WPKEY_PASSWD                 (ISI_WPMR_WPKEY_PASSWD_Val << ISI_WPMR_WPKEY_Pos)    /**< (ISI_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit. Always reads as 0. Position  */
 #define ISI_WPMR_Msk                          _U_(0xFFFFFF01)                                      /**< (ISI_WPMR) Register Mask  */
 
 
@@ -474,16 +474,6 @@
 #define ISI_WPSR_WPVSRC_Msk                   (_U_(0xFFFF) << ISI_WPSR_WPVSRC_Pos)                 /**< (ISI_WPSR) Write Protection Violation Source Mask */
 #define ISI_WPSR_WPVSRC(value)                (ISI_WPSR_WPVSRC_Msk & ((value) << ISI_WPSR_WPVSRC_Pos))
 #define ISI_WPSR_Msk                          _U_(0x00FFFF01)                                      /**< (ISI_WPSR) Register Mask  */
-
-
-/* -------- ISI_VERSION : (ISI Offset: 0xFC) ( R/ 32) Version Register -------- */
-#define ISI_VERSION_VERSION_Pos               _U_(0)                                               /**< (ISI_VERSION) Version of the Hardware Module Position */
-#define ISI_VERSION_VERSION_Msk               (_U_(0xFFF) << ISI_VERSION_VERSION_Pos)              /**< (ISI_VERSION) Version of the Hardware Module Mask */
-#define ISI_VERSION_VERSION(value)            (ISI_VERSION_VERSION_Msk & ((value) << ISI_VERSION_VERSION_Pos))
-#define ISI_VERSION_MFN_Pos                   _U_(16)                                              /**< (ISI_VERSION) Metal Fix Number Position */
-#define ISI_VERSION_MFN_Msk                   (_U_(0x7) << ISI_VERSION_MFN_Pos)                    /**< (ISI_VERSION) Metal Fix Number Mask */
-#define ISI_VERSION_MFN(value)                (ISI_VERSION_MFN_Msk & ((value) << ISI_VERSION_MFN_Pos))
-#define ISI_VERSION_Msk                       _U_(0x00070FFF)                                      /**< (ISI_VERSION) Register Mask  */
 
 
 /** \brief ISI register offsets definitions */
@@ -512,7 +502,6 @@
 #define ISI_DMA_C_DSCR_REG_OFST        (0x58)              /**< (ISI_DMA_C_DSCR) DMA Codec Descriptor Address Register Offset */
 #define ISI_WPMR_REG_OFST              (0xE4)              /**< (ISI_WPMR) Write Protection Mode Register Offset */
 #define ISI_WPSR_REG_OFST              (0xE8)              /**< (ISI_WPSR) Write Protection Status Register Offset */
-#define ISI_VERSION_REG_OFST           (0xFC)              /**< (ISI_VERSION) Version Register Offset */
 
 #if !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__))
 /** \brief ISI register API structure */
@@ -544,8 +533,6 @@ typedef struct
   __I   uint8_t                        Reserved1[0x88];
   __IO  uint32_t                       ISI_WPMR;           /**< Offset: 0xE4 (R/W  32) Write Protection Mode Register */
   __I   uint32_t                       ISI_WPSR;           /**< Offset: 0xE8 (R/   32) Write Protection Status Register */
-  __I   uint8_t                        Reserved2[0x10];
-  __I   uint32_t                       ISI_VERSION;        /**< Offset: 0xFC (R/   32) Version Register */
 } isi_registers_t;
 
 
