@@ -98,19 +98,17 @@ void CLK_Initialize( void )
         __builtin_mtc0(12, 0,(__builtin_mfc0(12, 0) | 0x0001)); /* enable interrupts */
     }
 
-
  
-    
-  
+      
 
     /* Peripheral Module Disable Configuration */
-    PMD1SET = 0xffffffff;
-    PMD2SET = 0xffffffff;
+    PMD1SET = 0x100371;
+    PMD2SET = 0x17001f;
     PMD3SET = 0xffffffff;
-    PMD4SET = 0xffffffff;
-    PMD5SET = 0xffffffff;
-    PMD6SET = 0xfffff0ff;
-    PMD7SET = 0xffffffef;
+    PMD4SET = 0x1ff;
+    PMD5SET = 0xf30f3f3f;
+    PMD6SET = 0x10000;
+    PMD7SET = 0x0;
 
     /* Lock system since done with clock configuration */
     int_flag = (bool)__builtin_disable_interrupts();
