@@ -44,11 +44,12 @@ Description:
 #include "plib_rtt.h"
 
 RTT_OBJECT rtt;
-    
+
 void RTT_Initialize(void)
 {
     RTT_REGS->RTT_MR = RTT_MR_RTTRST_Msk;
-    RTT_REGS->RTT_MR = RTT_MR_RTPRES(32768) | RTT_MR_RTTDIS_Msk  | RTT_MR_RTTINCIEN_Msk;
+    RTT_REGS->RTT_MR = RTT_MR_RTPRES(32768) | RTT_MR_RTTDIS_Msk | RTT_MR_RTTINCIEN_Msk;
+    RTT_REGS->RTT_MODR = RTT_MODR_SELINC2(0x0)| RTT_MODR_SELTRGEV(0x0);
 }
 
 void RTT_Enable(void)
