@@ -57,7 +57,6 @@ void RSTC_Initialize( void )
     uint32_t regValue = RSTC_MR_KEY_PASSWD | RSTC_MR_ERSTL( 14 );
     // Perform user reset on NRST input
     regValue |= RSTC_MR_URSTEN_Msk;
-    // No reset on CPU fault
     // No reset on Slow Clock fault
     // Reset is synchronous to slow clock 
     // Immediate GPBR clear on tamper detection is off 
