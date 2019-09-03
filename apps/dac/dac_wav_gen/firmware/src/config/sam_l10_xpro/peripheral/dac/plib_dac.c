@@ -82,8 +82,7 @@ void DAC_DataWrite(uint16_t data)
         /* Wait for Synchronization after writing Data to DATA Register */
     }
 }
-
 bool DAC_IsReady(void)
 {
-    return ((DAC_REGS->DAC_INTFLAG & DAC_INTFLAG_EMPTY_Msk) == DAC_INTFLAG_EMPTY_Msk);
+    return ((DAC_REGS->DAC_STATUS & DAC_STATUS_READY_Msk) == DAC_STATUS_READY_Msk);
 }
