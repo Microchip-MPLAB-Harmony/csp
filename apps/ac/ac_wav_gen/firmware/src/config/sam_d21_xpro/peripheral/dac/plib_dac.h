@@ -63,7 +63,6 @@ extern "C" {
 void DAC_Initialize(void);
 void DAC_DataWrite(uint16_t data);
 
-
 #ifdef __cplusplus  // Provide C++ Compatibility
 }
 #endif
