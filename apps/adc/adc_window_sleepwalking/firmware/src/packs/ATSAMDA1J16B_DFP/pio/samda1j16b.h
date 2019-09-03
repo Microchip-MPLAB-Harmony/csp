@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-03-25T22:33:43Z */
+/* file generated from device description version 2019-08-23T08:32:38Z */
 #ifndef _SAMDA1J16B_GPIO_H_
 #define _SAMDA1J16B_GPIO_H_
 

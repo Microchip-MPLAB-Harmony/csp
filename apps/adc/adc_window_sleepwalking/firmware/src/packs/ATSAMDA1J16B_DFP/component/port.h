@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-03-25T22:33:43Z */
+/* file generated from device description version 2019-08-23T08:32:38Z */
 #ifndef _SAMDA1_PORT_COMPONENT_H_
 #define _SAMDA1_PORT_COMPONENT_H_
 
@@ -249,7 +249,7 @@ typedef struct
   __I   uint8_t                        Reserved2[0x20];
 } port_group_registers_t;
 
-#define GROUP_NUMBER _U_(1)
+#define GROUP_NUMBER _U_(2)
 
 /** \brief PORT register API structure */
 typedef struct
