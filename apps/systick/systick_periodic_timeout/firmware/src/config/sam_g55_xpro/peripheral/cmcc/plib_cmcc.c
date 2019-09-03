@@ -1,5 +1,5 @@
 /*******************************************************************************
-   CMCC(Cortex M Cache Controller) Peripheral Library
+   Cortex M Cache Controller (CMCC) Peripheral Library
 
   Company:
     Microchip Technology Inc.
@@ -11,7 +11,9 @@
     CMCC Source File
 
   Description:
-    None
+   This file defines the interface to the CMCC peripheral library. This
+    library provides access to and control of the associated peripheral
+    instance.
 
 *******************************************************************************/
 
@@ -103,5 +105,7 @@ void CMCC_InvalidateAll (void )
         /*Wait for the operation to complete*/
     }
     CMCC_REGS->CMCC_MAINT0 = CMCC_MAINT0_INVALL_Msk;
+    CMCC_REGS->CMCC_CTRL = (CMCC_CTRL_CEN_Msk);
 }
+
 
