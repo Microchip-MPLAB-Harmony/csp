@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-06-11T20:50:29Z */
+/* file generated from device description version 2019-08-29T14:13:58Z */
 #ifndef _SAMRH71_FLEXCOM_COMPONENT_H_
 #define _SAMRH71_FLEXCOM_COMPONENT_H_
 
@@ -1306,188 +1306,50 @@
 #define FLEX_SPI_IMR_Msk                      _U_(0xFF000F0F)                                      /**< (FLEX_SPI_IMR) Register Mask  */
 
 
-/* -------- FLEX_SPI_CSR0 : (FLEXCOM Offset: 0x430) (R/W 32) SPI Chip Select Register 0 -------- */
-#define FLEX_SPI_CSR0_CPOL_Pos                _U_(0)                                               /**< (FLEX_SPI_CSR0) Clock Polarity Position */
-#define FLEX_SPI_CSR0_CPOL_Msk                (_U_(0x1) << FLEX_SPI_CSR0_CPOL_Pos)                 /**< (FLEX_SPI_CSR0) Clock Polarity Mask */
-#define FLEX_SPI_CSR0_CPOL(value)             (FLEX_SPI_CSR0_CPOL_Msk & ((value) << FLEX_SPI_CSR0_CPOL_Pos))
-#define FLEX_SPI_CSR0_NCPHA_Pos               _U_(1)                                               /**< (FLEX_SPI_CSR0) Clock Phase Position */
-#define FLEX_SPI_CSR0_NCPHA_Msk               (_U_(0x1) << FLEX_SPI_CSR0_NCPHA_Pos)                /**< (FLEX_SPI_CSR0) Clock Phase Mask */
-#define FLEX_SPI_CSR0_NCPHA(value)            (FLEX_SPI_CSR0_NCPHA_Msk & ((value) << FLEX_SPI_CSR0_NCPHA_Pos))
-#define FLEX_SPI_CSR0_CSNAAT_Pos              _U_(2)                                               /**< (FLEX_SPI_CSR0) Chip Select Not Active After Transfer (Ignored if CSAAT = 1) Position */
-#define FLEX_SPI_CSR0_CSNAAT_Msk              (_U_(0x1) << FLEX_SPI_CSR0_CSNAAT_Pos)               /**< (FLEX_SPI_CSR0) Chip Select Not Active After Transfer (Ignored if CSAAT = 1) Mask */
-#define FLEX_SPI_CSR0_CSNAAT(value)           (FLEX_SPI_CSR0_CSNAAT_Msk & ((value) << FLEX_SPI_CSR0_CSNAAT_Pos))
-#define FLEX_SPI_CSR0_CSAAT_Pos               _U_(3)                                               /**< (FLEX_SPI_CSR0) Chip Select Active After Transfer Position */
-#define FLEX_SPI_CSR0_CSAAT_Msk               (_U_(0x1) << FLEX_SPI_CSR0_CSAAT_Pos)                /**< (FLEX_SPI_CSR0) Chip Select Active After Transfer Mask */
-#define FLEX_SPI_CSR0_CSAAT(value)            (FLEX_SPI_CSR0_CSAAT_Msk & ((value) << FLEX_SPI_CSR0_CSAAT_Pos))
-#define FLEX_SPI_CSR0_BITS_Pos                _U_(4)                                               /**< (FLEX_SPI_CSR0) Bits Per Transfer Position */
-#define FLEX_SPI_CSR0_BITS_Msk                (_U_(0xF) << FLEX_SPI_CSR0_BITS_Pos)                 /**< (FLEX_SPI_CSR0) Bits Per Transfer Mask */
-#define FLEX_SPI_CSR0_BITS(value)             (FLEX_SPI_CSR0_BITS_Msk & ((value) << FLEX_SPI_CSR0_BITS_Pos))
-#define   FLEX_SPI_CSR0_BITS_8_BIT_Val        _U_(0x0)                                             /**< (FLEX_SPI_CSR0) 8 bits for transfer  */
-#define   FLEX_SPI_CSR0_BITS_9_BIT_Val        _U_(0x1)                                             /**< (FLEX_SPI_CSR0) 9 bits for transfer  */
-#define   FLEX_SPI_CSR0_BITS_10_BIT_Val       _U_(0x2)                                             /**< (FLEX_SPI_CSR0) 10 bits for transfer  */
-#define   FLEX_SPI_CSR0_BITS_11_BIT_Val       _U_(0x3)                                             /**< (FLEX_SPI_CSR0) 11 bits for transfer  */
-#define   FLEX_SPI_CSR0_BITS_12_BIT_Val       _U_(0x4)                                             /**< (FLEX_SPI_CSR0) 12 bits for transfer  */
-#define   FLEX_SPI_CSR0_BITS_13_BIT_Val       _U_(0x5)                                             /**< (FLEX_SPI_CSR0) 13 bits for transfer  */
-#define   FLEX_SPI_CSR0_BITS_14_BIT_Val       _U_(0x6)                                             /**< (FLEX_SPI_CSR0) 14 bits for transfer  */
-#define   FLEX_SPI_CSR0_BITS_15_BIT_Val       _U_(0x7)                                             /**< (FLEX_SPI_CSR0) 15 bits for transfer  */
-#define   FLEX_SPI_CSR0_BITS_16_BIT_Val       _U_(0x8)                                             /**< (FLEX_SPI_CSR0) 16 bits for transfer  */
-#define FLEX_SPI_CSR0_BITS_8_BIT              (FLEX_SPI_CSR0_BITS_8_BIT_Val << FLEX_SPI_CSR0_BITS_Pos) /**< (FLEX_SPI_CSR0) 8 bits for transfer Position  */
-#define FLEX_SPI_CSR0_BITS_9_BIT              (FLEX_SPI_CSR0_BITS_9_BIT_Val << FLEX_SPI_CSR0_BITS_Pos) /**< (FLEX_SPI_CSR0) 9 bits for transfer Position  */
-#define FLEX_SPI_CSR0_BITS_10_BIT             (FLEX_SPI_CSR0_BITS_10_BIT_Val << FLEX_SPI_CSR0_BITS_Pos) /**< (FLEX_SPI_CSR0) 10 bits for transfer Position  */
-#define FLEX_SPI_CSR0_BITS_11_BIT             (FLEX_SPI_CSR0_BITS_11_BIT_Val << FLEX_SPI_CSR0_BITS_Pos) /**< (FLEX_SPI_CSR0) 11 bits for transfer Position  */
-#define FLEX_SPI_CSR0_BITS_12_BIT             (FLEX_SPI_CSR0_BITS_12_BIT_Val << FLEX_SPI_CSR0_BITS_Pos) /**< (FLEX_SPI_CSR0) 12 bits for transfer Position  */
-#define FLEX_SPI_CSR0_BITS_13_BIT             (FLEX_SPI_CSR0_BITS_13_BIT_Val << FLEX_SPI_CSR0_BITS_Pos) /**< (FLEX_SPI_CSR0) 13 bits for transfer Position  */
-#define FLEX_SPI_CSR0_BITS_14_BIT             (FLEX_SPI_CSR0_BITS_14_BIT_Val << FLEX_SPI_CSR0_BITS_Pos) /**< (FLEX_SPI_CSR0) 14 bits for transfer Position  */
-#define FLEX_SPI_CSR0_BITS_15_BIT             (FLEX_SPI_CSR0_BITS_15_BIT_Val << FLEX_SPI_CSR0_BITS_Pos) /**< (FLEX_SPI_CSR0) 15 bits for transfer Position  */
-#define FLEX_SPI_CSR0_BITS_16_BIT             (FLEX_SPI_CSR0_BITS_16_BIT_Val << FLEX_SPI_CSR0_BITS_Pos) /**< (FLEX_SPI_CSR0) 16 bits for transfer Position  */
-#define FLEX_SPI_CSR0_SCBR_Pos                _U_(8)                                               /**< (FLEX_SPI_CSR0) Serial Clock Bit Rate Position */
-#define FLEX_SPI_CSR0_SCBR_Msk                (_U_(0xFF) << FLEX_SPI_CSR0_SCBR_Pos)                /**< (FLEX_SPI_CSR0) Serial Clock Bit Rate Mask */
-#define FLEX_SPI_CSR0_SCBR(value)             (FLEX_SPI_CSR0_SCBR_Msk & ((value) << FLEX_SPI_CSR0_SCBR_Pos))
-#define FLEX_SPI_CSR0_DLYBS_Pos               _U_(16)                                              /**< (FLEX_SPI_CSR0) Delay Before SPCK Position */
-#define FLEX_SPI_CSR0_DLYBS_Msk               (_U_(0xFF) << FLEX_SPI_CSR0_DLYBS_Pos)               /**< (FLEX_SPI_CSR0) Delay Before SPCK Mask */
-#define FLEX_SPI_CSR0_DLYBS(value)            (FLEX_SPI_CSR0_DLYBS_Msk & ((value) << FLEX_SPI_CSR0_DLYBS_Pos))
-#define FLEX_SPI_CSR0_DLYBCT_Pos              _U_(24)                                              /**< (FLEX_SPI_CSR0) Delay Between Consecutive Transfers Position */
-#define FLEX_SPI_CSR0_DLYBCT_Msk              (_U_(0xFF) << FLEX_SPI_CSR0_DLYBCT_Pos)              /**< (FLEX_SPI_CSR0) Delay Between Consecutive Transfers Mask */
-#define FLEX_SPI_CSR0_DLYBCT(value)           (FLEX_SPI_CSR0_DLYBCT_Msk & ((value) << FLEX_SPI_CSR0_DLYBCT_Pos))
-#define FLEX_SPI_CSR0_Msk                     _U_(0xFFFFFFFF)                                      /**< (FLEX_SPI_CSR0) Register Mask  */
-
-
-/* -------- FLEX_SPI_CSR1 : (FLEXCOM Offset: 0x434) (R/W 32) SPI Chip Select Register 1 -------- */
-#define FLEX_SPI_CSR1_CPOL_Pos                _U_(0)                                               /**< (FLEX_SPI_CSR1) Clock Polarity Position */
-#define FLEX_SPI_CSR1_CPOL_Msk                (_U_(0x1) << FLEX_SPI_CSR1_CPOL_Pos)                 /**< (FLEX_SPI_CSR1) Clock Polarity Mask */
-#define FLEX_SPI_CSR1_CPOL(value)             (FLEX_SPI_CSR1_CPOL_Msk & ((value) << FLEX_SPI_CSR1_CPOL_Pos))
-#define FLEX_SPI_CSR1_NCPHA_Pos               _U_(1)                                               /**< (FLEX_SPI_CSR1) Clock Phase Position */
-#define FLEX_SPI_CSR1_NCPHA_Msk               (_U_(0x1) << FLEX_SPI_CSR1_NCPHA_Pos)                /**< (FLEX_SPI_CSR1) Clock Phase Mask */
-#define FLEX_SPI_CSR1_NCPHA(value)            (FLEX_SPI_CSR1_NCPHA_Msk & ((value) << FLEX_SPI_CSR1_NCPHA_Pos))
-#define FLEX_SPI_CSR1_CSNAAT_Pos              _U_(2)                                               /**< (FLEX_SPI_CSR1) Chip Select Not Active After Transfer (Ignored if CSAAT = 1) Position */
-#define FLEX_SPI_CSR1_CSNAAT_Msk              (_U_(0x1) << FLEX_SPI_CSR1_CSNAAT_Pos)               /**< (FLEX_SPI_CSR1) Chip Select Not Active After Transfer (Ignored if CSAAT = 1) Mask */
-#define FLEX_SPI_CSR1_CSNAAT(value)           (FLEX_SPI_CSR1_CSNAAT_Msk & ((value) << FLEX_SPI_CSR1_CSNAAT_Pos))
-#define FLEX_SPI_CSR1_CSAAT_Pos               _U_(3)                                               /**< (FLEX_SPI_CSR1) Chip Select Active After Transfer Position */
-#define FLEX_SPI_CSR1_CSAAT_Msk               (_U_(0x1) << FLEX_SPI_CSR1_CSAAT_Pos)                /**< (FLEX_SPI_CSR1) Chip Select Active After Transfer Mask */
-#define FLEX_SPI_CSR1_CSAAT(value)            (FLEX_SPI_CSR1_CSAAT_Msk & ((value) << FLEX_SPI_CSR1_CSAAT_Pos))
-#define FLEX_SPI_CSR1_BITS_Pos                _U_(4)                                               /**< (FLEX_SPI_CSR1) Bits Per Transfer Position */
-#define FLEX_SPI_CSR1_BITS_Msk                (_U_(0xF) << FLEX_SPI_CSR1_BITS_Pos)                 /**< (FLEX_SPI_CSR1) Bits Per Transfer Mask */
-#define FLEX_SPI_CSR1_BITS(value)             (FLEX_SPI_CSR1_BITS_Msk & ((value) << FLEX_SPI_CSR1_BITS_Pos))
-#define   FLEX_SPI_CSR1_BITS_8_BIT_Val        _U_(0x0)                                             /**< (FLEX_SPI_CSR1) 8 bits for transfer  */
-#define   FLEX_SPI_CSR1_BITS_9_BIT_Val        _U_(0x1)                                             /**< (FLEX_SPI_CSR1) 9 bits for transfer  */
-#define   FLEX_SPI_CSR1_BITS_10_BIT_Val       _U_(0x2)                                             /**< (FLEX_SPI_CSR1) 10 bits for transfer  */
-#define   FLEX_SPI_CSR1_BITS_11_BIT_Val       _U_(0x3)                                             /**< (FLEX_SPI_CSR1) 11 bits for transfer  */
-#define   FLEX_SPI_CSR1_BITS_12_BIT_Val       _U_(0x4)                                             /**< (FLEX_SPI_CSR1) 12 bits for transfer  */
-#define   FLEX_SPI_CSR1_BITS_13_BIT_Val       _U_(0x5)                                             /**< (FLEX_SPI_CSR1) 13 bits for transfer  */
-#define   FLEX_SPI_CSR1_BITS_14_BIT_Val       _U_(0x6)                                             /**< (FLEX_SPI_CSR1) 14 bits for transfer  */
-#define   FLEX_SPI_CSR1_BITS_15_BIT_Val       _U_(0x7)                                             /**< (FLEX_SPI_CSR1) 15 bits for transfer  */
-#define   FLEX_SPI_CSR1_BITS_16_BIT_Val       _U_(0x8)                                             /**< (FLEX_SPI_CSR1) 16 bits for transfer  */
-#define FLEX_SPI_CSR1_BITS_8_BIT              (FLEX_SPI_CSR1_BITS_8_BIT_Val << FLEX_SPI_CSR1_BITS_Pos) /**< (FLEX_SPI_CSR1) 8 bits for transfer Position  */
-#define FLEX_SPI_CSR1_BITS_9_BIT              (FLEX_SPI_CSR1_BITS_9_BIT_Val << FLEX_SPI_CSR1_BITS_Pos) /**< (FLEX_SPI_CSR1) 9 bits for transfer Position  */
-#define FLEX_SPI_CSR1_BITS_10_BIT             (FLEX_SPI_CSR1_BITS_10_BIT_Val << FLEX_SPI_CSR1_BITS_Pos) /**< (FLEX_SPI_CSR1) 10 bits for transfer Position  */
-#define FLEX_SPI_CSR1_BITS_11_BIT             (FLEX_SPI_CSR1_BITS_11_BIT_Val << FLEX_SPI_CSR1_BITS_Pos) /**< (FLEX_SPI_CSR1) 11 bits for transfer Position  */
-#define FLEX_SPI_CSR1_BITS_12_BIT             (FLEX_SPI_CSR1_BITS_12_BIT_Val << FLEX_SPI_CSR1_BITS_Pos) /**< (FLEX_SPI_CSR1) 12 bits for transfer Position  */
-#define FLEX_SPI_CSR1_BITS_13_BIT             (FLEX_SPI_CSR1_BITS_13_BIT_Val << FLEX_SPI_CSR1_BITS_Pos) /**< (FLEX_SPI_CSR1) 13 bits for transfer Position  */
-#define FLEX_SPI_CSR1_BITS_14_BIT             (FLEX_SPI_CSR1_BITS_14_BIT_Val << FLEX_SPI_CSR1_BITS_Pos) /**< (FLEX_SPI_CSR1) 14 bits for transfer Position  */
-#define FLEX_SPI_CSR1_BITS_15_BIT             (FLEX_SPI_CSR1_BITS_15_BIT_Val << FLEX_SPI_CSR1_BITS_Pos) /**< (FLEX_SPI_CSR1) 15 bits for transfer Position  */
-#define FLEX_SPI_CSR1_BITS_16_BIT             (FLEX_SPI_CSR1_BITS_16_BIT_Val << FLEX_SPI_CSR1_BITS_Pos) /**< (FLEX_SPI_CSR1) 16 bits for transfer Position  */
-#define FLEX_SPI_CSR1_SCBR_Pos                _U_(8)                                               /**< (FLEX_SPI_CSR1) Serial Clock Bit Rate Position */
-#define FLEX_SPI_CSR1_SCBR_Msk                (_U_(0xFF) << FLEX_SPI_CSR1_SCBR_Pos)                /**< (FLEX_SPI_CSR1) Serial Clock Bit Rate Mask */
-#define FLEX_SPI_CSR1_SCBR(value)             (FLEX_SPI_CSR1_SCBR_Msk & ((value) << FLEX_SPI_CSR1_SCBR_Pos))
-#define FLEX_SPI_CSR1_DLYBS_Pos               _U_(16)                                              /**< (FLEX_SPI_CSR1) Delay Before SPCK Position */
-#define FLEX_SPI_CSR1_DLYBS_Msk               (_U_(0xFF) << FLEX_SPI_CSR1_DLYBS_Pos)               /**< (FLEX_SPI_CSR1) Delay Before SPCK Mask */
-#define FLEX_SPI_CSR1_DLYBS(value)            (FLEX_SPI_CSR1_DLYBS_Msk & ((value) << FLEX_SPI_CSR1_DLYBS_Pos))
-#define FLEX_SPI_CSR1_DLYBCT_Pos              _U_(24)                                              /**< (FLEX_SPI_CSR1) Delay Between Consecutive Transfers Position */
-#define FLEX_SPI_CSR1_DLYBCT_Msk              (_U_(0xFF) << FLEX_SPI_CSR1_DLYBCT_Pos)              /**< (FLEX_SPI_CSR1) Delay Between Consecutive Transfers Mask */
-#define FLEX_SPI_CSR1_DLYBCT(value)           (FLEX_SPI_CSR1_DLYBCT_Msk & ((value) << FLEX_SPI_CSR1_DLYBCT_Pos))
-#define FLEX_SPI_CSR1_Msk                     _U_(0xFFFFFFFF)                                      /**< (FLEX_SPI_CSR1) Register Mask  */
-
-
-/* -------- FLEX_SPI_CSR2 : (FLEXCOM Offset: 0x438) (R/W 32) SPI Chip Select Register 2 -------- */
-#define FLEX_SPI_CSR2_CPOL_Pos                _U_(0)                                               /**< (FLEX_SPI_CSR2) Clock Polarity Position */
-#define FLEX_SPI_CSR2_CPOL_Msk                (_U_(0x1) << FLEX_SPI_CSR2_CPOL_Pos)                 /**< (FLEX_SPI_CSR2) Clock Polarity Mask */
-#define FLEX_SPI_CSR2_CPOL(value)             (FLEX_SPI_CSR2_CPOL_Msk & ((value) << FLEX_SPI_CSR2_CPOL_Pos))
-#define FLEX_SPI_CSR2_NCPHA_Pos               _U_(1)                                               /**< (FLEX_SPI_CSR2) Clock Phase Position */
-#define FLEX_SPI_CSR2_NCPHA_Msk               (_U_(0x1) << FLEX_SPI_CSR2_NCPHA_Pos)                /**< (FLEX_SPI_CSR2) Clock Phase Mask */
-#define FLEX_SPI_CSR2_NCPHA(value)            (FLEX_SPI_CSR2_NCPHA_Msk & ((value) << FLEX_SPI_CSR2_NCPHA_Pos))
-#define FLEX_SPI_CSR2_CSNAAT_Pos              _U_(2)                                               /**< (FLEX_SPI_CSR2) Chip Select Not Active After Transfer (Ignored if CSAAT = 1) Position */
-#define FLEX_SPI_CSR2_CSNAAT_Msk              (_U_(0x1) << FLEX_SPI_CSR2_CSNAAT_Pos)               /**< (FLEX_SPI_CSR2) Chip Select Not Active After Transfer (Ignored if CSAAT = 1) Mask */
-#define FLEX_SPI_CSR2_CSNAAT(value)           (FLEX_SPI_CSR2_CSNAAT_Msk & ((value) << FLEX_SPI_CSR2_CSNAAT_Pos))
-#define FLEX_SPI_CSR2_CSAAT_Pos               _U_(3)                                               /**< (FLEX_SPI_CSR2) Chip Select Active After Transfer Position */
-#define FLEX_SPI_CSR2_CSAAT_Msk               (_U_(0x1) << FLEX_SPI_CSR2_CSAAT_Pos)                /**< (FLEX_SPI_CSR2) Chip Select Active After Transfer Mask */
-#define FLEX_SPI_CSR2_CSAAT(value)            (FLEX_SPI_CSR2_CSAAT_Msk & ((value) << FLEX_SPI_CSR2_CSAAT_Pos))
-#define FLEX_SPI_CSR2_BITS_Pos                _U_(4)                                               /**< (FLEX_SPI_CSR2) Bits Per Transfer Position */
-#define FLEX_SPI_CSR2_BITS_Msk                (_U_(0xF) << FLEX_SPI_CSR2_BITS_Pos)                 /**< (FLEX_SPI_CSR2) Bits Per Transfer Mask */
-#define FLEX_SPI_CSR2_BITS(value)             (FLEX_SPI_CSR2_BITS_Msk & ((value) << FLEX_SPI_CSR2_BITS_Pos))
-#define   FLEX_SPI_CSR2_BITS_8_BIT_Val        _U_(0x0)                                             /**< (FLEX_SPI_CSR2) 8 bits for transfer  */
-#define   FLEX_SPI_CSR2_BITS_9_BIT_Val        _U_(0x1)                                             /**< (FLEX_SPI_CSR2) 9 bits for transfer  */
-#define   FLEX_SPI_CSR2_BITS_10_BIT_Val       _U_(0x2)                                             /**< (FLEX_SPI_CSR2) 10 bits for transfer  */
-#define   FLEX_SPI_CSR2_BITS_11_BIT_Val       _U_(0x3)                                             /**< (FLEX_SPI_CSR2) 11 bits for transfer  */
-#define   FLEX_SPI_CSR2_BITS_12_BIT_Val       _U_(0x4)                                             /**< (FLEX_SPI_CSR2) 12 bits for transfer  */
-#define   FLEX_SPI_CSR2_BITS_13_BIT_Val       _U_(0x5)                                             /**< (FLEX_SPI_CSR2) 13 bits for transfer  */
-#define   FLEX_SPI_CSR2_BITS_14_BIT_Val       _U_(0x6)                                             /**< (FLEX_SPI_CSR2) 14 bits for transfer  */
-#define   FLEX_SPI_CSR2_BITS_15_BIT_Val       _U_(0x7)                                             /**< (FLEX_SPI_CSR2) 15 bits for transfer  */
-#define   FLEX_SPI_CSR2_BITS_16_BIT_Val       _U_(0x8)                                             /**< (FLEX_SPI_CSR2) 16 bits for transfer  */
-#define FLEX_SPI_CSR2_BITS_8_BIT              (FLEX_SPI_CSR2_BITS_8_BIT_Val << FLEX_SPI_CSR2_BITS_Pos) /**< (FLEX_SPI_CSR2) 8 bits for transfer Position  */
-#define FLEX_SPI_CSR2_BITS_9_BIT              (FLEX_SPI_CSR2_BITS_9_BIT_Val << FLEX_SPI_CSR2_BITS_Pos) /**< (FLEX_SPI_CSR2) 9 bits for transfer Position  */
-#define FLEX_SPI_CSR2_BITS_10_BIT             (FLEX_SPI_CSR2_BITS_10_BIT_Val << FLEX_SPI_CSR2_BITS_Pos) /**< (FLEX_SPI_CSR2) 10 bits for transfer Position  */
-#define FLEX_SPI_CSR2_BITS_11_BIT             (FLEX_SPI_CSR2_BITS_11_BIT_Val << FLEX_SPI_CSR2_BITS_Pos) /**< (FLEX_SPI_CSR2) 11 bits for transfer Position  */
-#define FLEX_SPI_CSR2_BITS_12_BIT             (FLEX_SPI_CSR2_BITS_12_BIT_Val << FLEX_SPI_CSR2_BITS_Pos) /**< (FLEX_SPI_CSR2) 12 bits for transfer Position  */
-#define FLEX_SPI_CSR2_BITS_13_BIT             (FLEX_SPI_CSR2_BITS_13_BIT_Val << FLEX_SPI_CSR2_BITS_Pos) /**< (FLEX_SPI_CSR2) 13 bits for transfer Position  */
-#define FLEX_SPI_CSR2_BITS_14_BIT             (FLEX_SPI_CSR2_BITS_14_BIT_Val << FLEX_SPI_CSR2_BITS_Pos) /**< (FLEX_SPI_CSR2) 14 bits for transfer Position  */
-#define FLEX_SPI_CSR2_BITS_15_BIT             (FLEX_SPI_CSR2_BITS_15_BIT_Val << FLEX_SPI_CSR2_BITS_Pos) /**< (FLEX_SPI_CSR2) 15 bits for transfer Position  */
-#define FLEX_SPI_CSR2_BITS_16_BIT             (FLEX_SPI_CSR2_BITS_16_BIT_Val << FLEX_SPI_CSR2_BITS_Pos) /**< (FLEX_SPI_CSR2) 16 bits for transfer Position  */
-#define FLEX_SPI_CSR2_SCBR_Pos                _U_(8)                                               /**< (FLEX_SPI_CSR2) Serial Clock Bit Rate Position */
-#define FLEX_SPI_CSR2_SCBR_Msk                (_U_(0xFF) << FLEX_SPI_CSR2_SCBR_Pos)                /**< (FLEX_SPI_CSR2) Serial Clock Bit Rate Mask */
-#define FLEX_SPI_CSR2_SCBR(value)             (FLEX_SPI_CSR2_SCBR_Msk & ((value) << FLEX_SPI_CSR2_SCBR_Pos))
-#define FLEX_SPI_CSR2_DLYBS_Pos               _U_(16)                                              /**< (FLEX_SPI_CSR2) Delay Before SPCK Position */
-#define FLEX_SPI_CSR2_DLYBS_Msk               (_U_(0xFF) << FLEX_SPI_CSR2_DLYBS_Pos)               /**< (FLEX_SPI_CSR2) Delay Before SPCK Mask */
-#define FLEX_SPI_CSR2_DLYBS(value)            (FLEX_SPI_CSR2_DLYBS_Msk & ((value) << FLEX_SPI_CSR2_DLYBS_Pos))
-#define FLEX_SPI_CSR2_DLYBCT_Pos              _U_(24)                                              /**< (FLEX_SPI_CSR2) Delay Between Consecutive Transfers Position */
-#define FLEX_SPI_CSR2_DLYBCT_Msk              (_U_(0xFF) << FLEX_SPI_CSR2_DLYBCT_Pos)              /**< (FLEX_SPI_CSR2) Delay Between Consecutive Transfers Mask */
-#define FLEX_SPI_CSR2_DLYBCT(value)           (FLEX_SPI_CSR2_DLYBCT_Msk & ((value) << FLEX_SPI_CSR2_DLYBCT_Pos))
-#define FLEX_SPI_CSR2_Msk                     _U_(0xFFFFFFFF)                                      /**< (FLEX_SPI_CSR2) Register Mask  */
-
-
-/* -------- FLEX_SPI_CSR3 : (FLEXCOM Offset: 0x43C) (R/W 32) SPI Chip Select Register 3 -------- */
-#define FLEX_SPI_CSR3_CPOL_Pos                _U_(0)                                               /**< (FLEX_SPI_CSR3) Clock Polarity Position */
-#define FLEX_SPI_CSR3_CPOL_Msk                (_U_(0x1) << FLEX_SPI_CSR3_CPOL_Pos)                 /**< (FLEX_SPI_CSR3) Clock Polarity Mask */
-#define FLEX_SPI_CSR3_CPOL(value)             (FLEX_SPI_CSR3_CPOL_Msk & ((value) << FLEX_SPI_CSR3_CPOL_Pos))
-#define FLEX_SPI_CSR3_NCPHA_Pos               _U_(1)                                               /**< (FLEX_SPI_CSR3) Clock Phase Position */
-#define FLEX_SPI_CSR3_NCPHA_Msk               (_U_(0x1) << FLEX_SPI_CSR3_NCPHA_Pos)                /**< (FLEX_SPI_CSR3) Clock Phase Mask */
-#define FLEX_SPI_CSR3_NCPHA(value)            (FLEX_SPI_CSR3_NCPHA_Msk & ((value) << FLEX_SPI_CSR3_NCPHA_Pos))
-#define FLEX_SPI_CSR3_CSNAAT_Pos              _U_(2)                                               /**< (FLEX_SPI_CSR3) Chip Select Not Active After Transfer (Ignored if CSAAT = 1) Position */
-#define FLEX_SPI_CSR3_CSNAAT_Msk              (_U_(0x1) << FLEX_SPI_CSR3_CSNAAT_Pos)               /**< (FLEX_SPI_CSR3) Chip Select Not Active After Transfer (Ignored if CSAAT = 1) Mask */
-#define FLEX_SPI_CSR3_CSNAAT(value)           (FLEX_SPI_CSR3_CSNAAT_Msk & ((value) << FLEX_SPI_CSR3_CSNAAT_Pos))
-#define FLEX_SPI_CSR3_CSAAT_Pos               _U_(3)                                               /**< (FLEX_SPI_CSR3) Chip Select Active After Transfer Position */
-#define FLEX_SPI_CSR3_CSAAT_Msk               (_U_(0x1) << FLEX_SPI_CSR3_CSAAT_Pos)                /**< (FLEX_SPI_CSR3) Chip Select Active After Transfer Mask */
-#define FLEX_SPI_CSR3_CSAAT(value)            (FLEX_SPI_CSR3_CSAAT_Msk & ((value) << FLEX_SPI_CSR3_CSAAT_Pos))
-#define FLEX_SPI_CSR3_BITS_Pos                _U_(4)                                               /**< (FLEX_SPI_CSR3) Bits Per Transfer Position */
-#define FLEX_SPI_CSR3_BITS_Msk                (_U_(0xF) << FLEX_SPI_CSR3_BITS_Pos)                 /**< (FLEX_SPI_CSR3) Bits Per Transfer Mask */
-#define FLEX_SPI_CSR3_BITS(value)             (FLEX_SPI_CSR3_BITS_Msk & ((value) << FLEX_SPI_CSR3_BITS_Pos))
-#define   FLEX_SPI_CSR3_BITS_8_BIT_Val        _U_(0x0)                                             /**< (FLEX_SPI_CSR3) 8 bits for transfer  */
-#define   FLEX_SPI_CSR3_BITS_9_BIT_Val        _U_(0x1)                                             /**< (FLEX_SPI_CSR3) 9 bits for transfer  */
-#define   FLEX_SPI_CSR3_BITS_10_BIT_Val       _U_(0x2)                                             /**< (FLEX_SPI_CSR3) 10 bits for transfer  */
-#define   FLEX_SPI_CSR3_BITS_11_BIT_Val       _U_(0x3)                                             /**< (FLEX_SPI_CSR3) 11 bits for transfer  */
-#define   FLEX_SPI_CSR3_BITS_12_BIT_Val       _U_(0x4)                                             /**< (FLEX_SPI_CSR3) 12 bits for transfer  */
-#define   FLEX_SPI_CSR3_BITS_13_BIT_Val       _U_(0x5)                                             /**< (FLEX_SPI_CSR3) 13 bits for transfer  */
-#define   FLEX_SPI_CSR3_BITS_14_BIT_Val       _U_(0x6)                                             /**< (FLEX_SPI_CSR3) 14 bits for transfer  */
-#define   FLEX_SPI_CSR3_BITS_15_BIT_Val       _U_(0x7)                                             /**< (FLEX_SPI_CSR3) 15 bits for transfer  */
-#define   FLEX_SPI_CSR3_BITS_16_BIT_Val       _U_(0x8)                                             /**< (FLEX_SPI_CSR3) 16 bits for transfer  */
-#define FLEX_SPI_CSR3_BITS_8_BIT              (FLEX_SPI_CSR3_BITS_8_BIT_Val << FLEX_SPI_CSR3_BITS_Pos) /**< (FLEX_SPI_CSR3) 8 bits for transfer Position  */
-#define FLEX_SPI_CSR3_BITS_9_BIT              (FLEX_SPI_CSR3_BITS_9_BIT_Val << FLEX_SPI_CSR3_BITS_Pos) /**< (FLEX_SPI_CSR3) 9 bits for transfer Position  */
-#define FLEX_SPI_CSR3_BITS_10_BIT             (FLEX_SPI_CSR3_BITS_10_BIT_Val << FLEX_SPI_CSR3_BITS_Pos) /**< (FLEX_SPI_CSR3) 10 bits for transfer Position  */
-#define FLEX_SPI_CSR3_BITS_11_BIT             (FLEX_SPI_CSR3_BITS_11_BIT_Val << FLEX_SPI_CSR3_BITS_Pos) /**< (FLEX_SPI_CSR3) 11 bits for transfer Position  */
-#define FLEX_SPI_CSR3_BITS_12_BIT             (FLEX_SPI_CSR3_BITS_12_BIT_Val << FLEX_SPI_CSR3_BITS_Pos) /**< (FLEX_SPI_CSR3) 12 bits for transfer Position  */
-#define FLEX_SPI_CSR3_BITS_13_BIT             (FLEX_SPI_CSR3_BITS_13_BIT_Val << FLEX_SPI_CSR3_BITS_Pos) /**< (FLEX_SPI_CSR3) 13 bits for transfer Position  */
-#define FLEX_SPI_CSR3_BITS_14_BIT             (FLEX_SPI_CSR3_BITS_14_BIT_Val << FLEX_SPI_CSR3_BITS_Pos) /**< (FLEX_SPI_CSR3) 14 bits for transfer Position  */
-#define FLEX_SPI_CSR3_BITS_15_BIT             (FLEX_SPI_CSR3_BITS_15_BIT_Val << FLEX_SPI_CSR3_BITS_Pos) /**< (FLEX_SPI_CSR3) 15 bits for transfer Position  */
-#define FLEX_SPI_CSR3_BITS_16_BIT             (FLEX_SPI_CSR3_BITS_16_BIT_Val << FLEX_SPI_CSR3_BITS_Pos) /**< (FLEX_SPI_CSR3) 16 bits for transfer Position  */
-#define FLEX_SPI_CSR3_SCBR_Pos                _U_(8)                                               /**< (FLEX_SPI_CSR3) Serial Clock Bit Rate Position */
-#define FLEX_SPI_CSR3_SCBR_Msk                (_U_(0xFF) << FLEX_SPI_CSR3_SCBR_Pos)                /**< (FLEX_SPI_CSR3) Serial Clock Bit Rate Mask */
-#define FLEX_SPI_CSR3_SCBR(value)             (FLEX_SPI_CSR3_SCBR_Msk & ((value) << FLEX_SPI_CSR3_SCBR_Pos))
-#define FLEX_SPI_CSR3_DLYBS_Pos               _U_(16)                                              /**< (FLEX_SPI_CSR3) Delay Before SPCK Position */
-#define FLEX_SPI_CSR3_DLYBS_Msk               (_U_(0xFF) << FLEX_SPI_CSR3_DLYBS_Pos)               /**< (FLEX_SPI_CSR3) Delay Before SPCK Mask */
-#define FLEX_SPI_CSR3_DLYBS(value)            (FLEX_SPI_CSR3_DLYBS_Msk & ((value) << FLEX_SPI_CSR3_DLYBS_Pos))
-#define FLEX_SPI_CSR3_DLYBCT_Pos              _U_(24)                                              /**< (FLEX_SPI_CSR3) Delay Between Consecutive Transfers Position */
-#define FLEX_SPI_CSR3_DLYBCT_Msk              (_U_(0xFF) << FLEX_SPI_CSR3_DLYBCT_Pos)              /**< (FLEX_SPI_CSR3) Delay Between Consecutive Transfers Mask */
-#define FLEX_SPI_CSR3_DLYBCT(value)           (FLEX_SPI_CSR3_DLYBCT_Msk & ((value) << FLEX_SPI_CSR3_DLYBCT_Pos))
-#define FLEX_SPI_CSR3_Msk                     _U_(0xFFFFFFFF)                                      /**< (FLEX_SPI_CSR3) Register Mask  */
+/* -------- FLEX_SPI_CSR : (FLEXCOM Offset: 0x430) (R/W 32) SPI Chip Select Register -------- */
+#define FLEX_SPI_CSR_CPOL_Pos                 _U_(0)                                               /**< (FLEX_SPI_CSR) Clock Polarity Position */
+#define FLEX_SPI_CSR_CPOL_Msk                 (_U_(0x1) << FLEX_SPI_CSR_CPOL_Pos)                  /**< (FLEX_SPI_CSR) Clock Polarity Mask */
+#define FLEX_SPI_CSR_CPOL(value)              (FLEX_SPI_CSR_CPOL_Msk & ((value) << FLEX_SPI_CSR_CPOL_Pos))
+#define FLEX_SPI_CSR_NCPHA_Pos                _U_(1)                                               /**< (FLEX_SPI_CSR) Clock Phase Position */
+#define FLEX_SPI_CSR_NCPHA_Msk                (_U_(0x1) << FLEX_SPI_CSR_NCPHA_Pos)                 /**< (FLEX_SPI_CSR) Clock Phase Mask */
+#define FLEX_SPI_CSR_NCPHA(value)             (FLEX_SPI_CSR_NCPHA_Msk & ((value) << FLEX_SPI_CSR_NCPHA_Pos))
+#define FLEX_SPI_CSR_CSNAAT_Pos               _U_(2)                                               /**< (FLEX_SPI_CSR) Chip Select Not Active After Transfer (Ignored if CSAAT = 1) Position */
+#define FLEX_SPI_CSR_CSNAAT_Msk               (_U_(0x1) << FLEX_SPI_CSR_CSNAAT_Pos)                /**< (FLEX_SPI_CSR) Chip Select Not Active After Transfer (Ignored if CSAAT = 1) Mask */
+#define FLEX_SPI_CSR_CSNAAT(value)            (FLEX_SPI_CSR_CSNAAT_Msk & ((value) << FLEX_SPI_CSR_CSNAAT_Pos))
+#define FLEX_SPI_CSR_CSAAT_Pos                _U_(3)                                               /**< (FLEX_SPI_CSR) Chip Select Active After Transfer Position */
+#define FLEX_SPI_CSR_CSAAT_Msk                (_U_(0x1) << FLEX_SPI_CSR_CSAAT_Pos)                 /**< (FLEX_SPI_CSR) Chip Select Active After Transfer Mask */
+#define FLEX_SPI_CSR_CSAAT(value)             (FLEX_SPI_CSR_CSAAT_Msk & ((value) << FLEX_SPI_CSR_CSAAT_Pos))
+#define FLEX_SPI_CSR_BITS_Pos                 _U_(4)                                               /**< (FLEX_SPI_CSR) Bits Per Transfer Position */
+#define FLEX_SPI_CSR_BITS_Msk                 (_U_(0xF) << FLEX_SPI_CSR_BITS_Pos)                  /**< (FLEX_SPI_CSR) Bits Per Transfer Mask */
+#define FLEX_SPI_CSR_BITS(value)              (FLEX_SPI_CSR_BITS_Msk & ((value) << FLEX_SPI_CSR_BITS_Pos))
+#define   FLEX_SPI_CSR_BITS_8_BIT_Val         _U_(0x0)                                             /**< (FLEX_SPI_CSR) 8 bits for transfer  */
+#define   FLEX_SPI_CSR_BITS_9_BIT_Val         _U_(0x1)                                             /**< (FLEX_SPI_CSR) 9 bits for transfer  */
+#define   FLEX_SPI_CSR_BITS_10_BIT_Val        _U_(0x2)                                             /**< (FLEX_SPI_CSR) 10 bits for transfer  */
+#define   FLEX_SPI_CSR_BITS_11_BIT_Val        _U_(0x3)                                             /**< (FLEX_SPI_CSR) 11 bits for transfer  */
+#define   FLEX_SPI_CSR_BITS_12_BIT_Val        _U_(0x4)                                             /**< (FLEX_SPI_CSR) 12 bits for transfer  */
+#define   FLEX_SPI_CSR_BITS_13_BIT_Val        _U_(0x5)                                             /**< (FLEX_SPI_CSR) 13 bits for transfer  */
+#define   FLEX_SPI_CSR_BITS_14_BIT_Val        _U_(0x6)                                             /**< (FLEX_SPI_CSR) 14 bits for transfer  */
+#define   FLEX_SPI_CSR_BITS_15_BIT_Val        _U_(0x7)                                             /**< (FLEX_SPI_CSR) 15 bits for transfer  */
+#define   FLEX_SPI_CSR_BITS_16_BIT_Val        _U_(0x8)                                             /**< (FLEX_SPI_CSR) 16 bits for transfer  */
+#define FLEX_SPI_CSR_BITS_8_BIT               (FLEX_SPI_CSR_BITS_8_BIT_Val << FLEX_SPI_CSR_BITS_Pos) /**< (FLEX_SPI_CSR) 8 bits for transfer Position  */
+#define FLEX_SPI_CSR_BITS_9_BIT               (FLEX_SPI_CSR_BITS_9_BIT_Val << FLEX_SPI_CSR_BITS_Pos) /**< (FLEX_SPI_CSR) 9 bits for transfer Position  */
+#define FLEX_SPI_CSR_BITS_10_BIT              (FLEX_SPI_CSR_BITS_10_BIT_Val << FLEX_SPI_CSR_BITS_Pos) /**< (FLEX_SPI_CSR) 10 bits for transfer Position  */
+#define FLEX_SPI_CSR_BITS_11_BIT              (FLEX_SPI_CSR_BITS_11_BIT_Val << FLEX_SPI_CSR_BITS_Pos) /**< (FLEX_SPI_CSR) 11 bits for transfer Position  */
+#define FLEX_SPI_CSR_BITS_12_BIT              (FLEX_SPI_CSR_BITS_12_BIT_Val << FLEX_SPI_CSR_BITS_Pos) /**< (FLEX_SPI_CSR) 12 bits for transfer Position  */
+#define FLEX_SPI_CSR_BITS_13_BIT              (FLEX_SPI_CSR_BITS_13_BIT_Val << FLEX_SPI_CSR_BITS_Pos) /**< (FLEX_SPI_CSR) 13 bits for transfer Position  */
+#define FLEX_SPI_CSR_BITS_14_BIT              (FLEX_SPI_CSR_BITS_14_BIT_Val << FLEX_SPI_CSR_BITS_Pos) /**< (FLEX_SPI_CSR) 14 bits for transfer Position  */
+#define FLEX_SPI_CSR_BITS_15_BIT              (FLEX_SPI_CSR_BITS_15_BIT_Val << FLEX_SPI_CSR_BITS_Pos) /**< (FLEX_SPI_CSR) 15 bits for transfer Position  */
+#define FLEX_SPI_CSR_BITS_16_BIT              (FLEX_SPI_CSR_BITS_16_BIT_Val << FLEX_SPI_CSR_BITS_Pos) /**< (FLEX_SPI_CSR) 16 bits for transfer Position  */
+#define FLEX_SPI_CSR_SCBR_Pos                 _U_(8)                                               /**< (FLEX_SPI_CSR) Serial Clock Bit Rate Position */
+#define FLEX_SPI_CSR_SCBR_Msk                 (_U_(0xFF) << FLEX_SPI_CSR_SCBR_Pos)                 /**< (FLEX_SPI_CSR) Serial Clock Bit Rate Mask */
+#define FLEX_SPI_CSR_SCBR(value)              (FLEX_SPI_CSR_SCBR_Msk & ((value) << FLEX_SPI_CSR_SCBR_Pos))
+#define FLEX_SPI_CSR_DLYBS_Pos                _U_(16)                                              /**< (FLEX_SPI_CSR) Delay Before SPCK Position */
+#define FLEX_SPI_CSR_DLYBS_Msk                (_U_(0xFF) << FLEX_SPI_CSR_DLYBS_Pos)                /**< (FLEX_SPI_CSR) Delay Before SPCK Mask */
+#define FLEX_SPI_CSR_DLYBS(value)             (FLEX_SPI_CSR_DLYBS_Msk & ((value) << FLEX_SPI_CSR_DLYBS_Pos))
+#define FLEX_SPI_CSR_DLYBCT_Pos               _U_(24)                                              /**< (FLEX_SPI_CSR) Delay Between Consecutive Transfers Position */
+#define FLEX_SPI_CSR_DLYBCT_Msk               (_U_(0xFF) << FLEX_SPI_CSR_DLYBCT_Pos)               /**< (FLEX_SPI_CSR) Delay Between Consecutive Transfers Mask */
+#define FLEX_SPI_CSR_DLYBCT(value)            (FLEX_SPI_CSR_DLYBCT_Msk & ((value) << FLEX_SPI_CSR_DLYBCT_Pos))
+#define FLEX_SPI_CSR_Msk                      _U_(0xFFFFFFFF)                                      /**< (FLEX_SPI_CSR) Register Mask  */
 
 
 /* -------- FLEX_SPI_FMR : (FLEXCOM Offset: 0x440) (R/W 32) SPI FIFO Mode Register -------- */
@@ -2449,10 +2311,7 @@
 #define FLEX_SPI_IER_REG_OFST          (0x414)             /**< (FLEX_SPI_IER) SPI Interrupt Enable Register Offset */
 #define FLEX_SPI_IDR_REG_OFST          (0x418)             /**< (FLEX_SPI_IDR) SPI Interrupt Disable Register Offset */
 #define FLEX_SPI_IMR_REG_OFST          (0x41C)             /**< (FLEX_SPI_IMR) SPI Interrupt Mask Register Offset */
-#define FLEX_SPI_CSR0_REG_OFST         (0x430)             /**< (FLEX_SPI_CSR0) SPI Chip Select Register 0 Offset */
-#define FLEX_SPI_CSR1_REG_OFST         (0x434)             /**< (FLEX_SPI_CSR1) SPI Chip Select Register 1 Offset */
-#define FLEX_SPI_CSR2_REG_OFST         (0x438)             /**< (FLEX_SPI_CSR2) SPI Chip Select Register 2 Offset */
-#define FLEX_SPI_CSR3_REG_OFST         (0x43C)             /**< (FLEX_SPI_CSR3) SPI Chip Select Register 3 Offset */
+#define FLEX_SPI_CSR_REG_OFST          (0x430)             /**< (FLEX_SPI_CSR) SPI Chip Select Register Offset */
 #define FLEX_SPI_FMR_REG_OFST          (0x440)             /**< (FLEX_SPI_FMR) SPI FIFO Mode Register Offset */
 #define FLEX_SPI_FLR_REG_OFST          (0x444)             /**< (FLEX_SPI_FLR) SPI FIFO Level Register Offset */
 #define FLEX_SPI_CMPR_REG_OFST         (0x448)             /**< (FLEX_SPI_CMPR) SPI Comparison Register Offset */
@@ -2545,10 +2404,7 @@ typedef struct
   __O   uint32_t                       FLEX_SPI_IDR;       /**< Offset: 0x418 ( /W  32) SPI Interrupt Disable Register */
   __I   uint32_t                       FLEX_SPI_IMR;       /**< Offset: 0x41C (R/   32) SPI Interrupt Mask Register */
   __I   uint8_t                        Reserved10[0x10];
-  __IO  uint32_t                       FLEX_SPI_CSR0;      /**< Offset: 0x430 (R/W  32) SPI Chip Select Register 0 */
-  __IO  uint32_t                       FLEX_SPI_CSR1;      /**< Offset: 0x434 (R/W  32) SPI Chip Select Register 1 */
-  __IO  uint32_t                       FLEX_SPI_CSR2;      /**< Offset: 0x438 (R/W  32) SPI Chip Select Register 2 */
-  __IO  uint32_t                       FLEX_SPI_CSR3;      /**< Offset: 0x43C (R/W  32) SPI Chip Select Register 3 */
+  __IO  uint32_t                       FLEX_SPI_CSR[4];    /**< Offset: 0x430 (R/W  32) SPI Chip Select Register */
   __IO  uint32_t                       FLEX_SPI_FMR;       /**< Offset: 0x440 (R/W  32) SPI FIFO Mode Register */
   __I   uint32_t                       FLEX_SPI_FLR;       /**< Offset: 0x444 (R/   32) SPI FIFO Level Register */
   __IO  uint32_t                       FLEX_SPI_CMPR;      /**< Offset: 0x448 (R/W  32) SPI Comparison Register */
