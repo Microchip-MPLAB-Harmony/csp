@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-04-23T19:01:17Z */
+/* file generated from device description version 2019-08-22T13:04:26Z */
 #ifndef _SAM9X_RTT_COMPONENT_H_
 #define _SAM9X_RTT_COMPONENT_H_
 
@@ -44,16 +44,13 @@
 #define RTT_MR_RTTDIS_Pos                     _U_(20)                                              /**< (RTT_MR) Real-time Timer Disable Position */
 #define RTT_MR_RTTDIS_Msk                     (_U_(0x1) << RTT_MR_RTTDIS_Pos)                      /**< (RTT_MR) Real-time Timer Disable Mask */
 #define RTT_MR_RTTDIS(value)                  (RTT_MR_RTTDIS_Msk & ((value) << RTT_MR_RTTDIS_Pos))
-#define RTT_MR_INC2AEN_Pos                    _U_(21)                                              /**< (RTT_MR) RTTINC2 Alarm Enable Position */
-#define RTT_MR_INC2AEN_Msk                    (_U_(0x1) << RTT_MR_INC2AEN_Pos)                     /**< (RTT_MR) RTTINC2 Alarm Enable Mask */
+#define RTT_MR_INC2AEN_Pos                    _U_(21)                                              /**< (RTT_MR) RTTINC2 Alarm and Interrupt Enable Position */
+#define RTT_MR_INC2AEN_Msk                    (_U_(0x1) << RTT_MR_INC2AEN_Pos)                     /**< (RTT_MR) RTTINC2 Alarm and Interrupt Enable Mask */
 #define RTT_MR_INC2AEN(value)                 (RTT_MR_INC2AEN_Msk & ((value) << RTT_MR_INC2AEN_Pos))
-#define RTT_MR_EVAEN_Pos                      _U_(22)                                              /**< (RTT_MR) Trigger Event Alarm Enable Position */
-#define RTT_MR_EVAEN_Msk                      (_U_(0x1) << RTT_MR_EVAEN_Pos)                       /**< (RTT_MR) Trigger Event Alarm Enable Mask */
-#define RTT_MR_EVAEN(value)                   (RTT_MR_EVAEN_Msk & ((value) << RTT_MR_EVAEN_Pos))  
 #define RTT_MR_RTC1HZ_Pos                     _U_(24)                                              /**< (RTT_MR) Real-Time Clock 1Hz Clock Selection Position */
 #define RTT_MR_RTC1HZ_Msk                     (_U_(0x1) << RTT_MR_RTC1HZ_Pos)                      /**< (RTT_MR) Real-Time Clock 1Hz Clock Selection Mask */
 #define RTT_MR_RTC1HZ(value)                  (RTT_MR_RTC1HZ_Msk & ((value) << RTT_MR_RTC1HZ_Pos))
-#define RTT_MR_Msk                            _U_(0x0177FFFF)                                      /**< (RTT_MR) Register Mask  */
+#define RTT_MR_Msk                            _U_(0x0137FFFF)                                      /**< (RTT_MR) Register Mask  */
 
 
 /* -------- RTT_AR : (RTT Offset: 0x04) (R/W 32) Alarm Register -------- */
@@ -84,15 +81,15 @@
 
 
 /* -------- RTT_MODR : (RTT Offset: 0x10) (R/W 32) Modulo Selection Register -------- */
-#define RTT_MODR_SELINC2_Pos                  _U_(0)                                               /**< (RTT_MODR) Selection of the 32-bit Counter Modulo to generate RTTINC2 flag Position */
-#define RTT_MODR_SELINC2_Msk                  (_U_(0x7) << RTT_MODR_SELINC2_Pos)                   /**< (RTT_MODR) Selection of the 32-bit Counter Modulo to generate RTTINC2 flag Mask */
+#define RTT_MODR_SELINC2_Pos                  _U_(0)                                               /**< (RTT_MODR) Selection of the 32-bit Counter Modulo to generate RTTINC2 Flag Position */
+#define RTT_MODR_SELINC2_Msk                  (_U_(0x7) << RTT_MODR_SELINC2_Pos)                   /**< (RTT_MODR) Selection of the 32-bit Counter Modulo to generate RTTINC2 Flag Mask */
 #define RTT_MODR_SELINC2(value)               (RTT_MODR_SELINC2_Msk & ((value) << RTT_MODR_SELINC2_Pos))
 #define   RTT_MODR_SELINC2_NO_RTTINC2_Val     _U_(0x0)                                             /**< (RTT_MODR) The RTTINC2 flag never rises  */
 #define   RTT_MODR_SELINC2_MOD64_Val          _U_(0x1)                                             /**< (RTT_MODR) The RTTINC2 flag is set when CRTV modulo 64 equals 0  */
 #define   RTT_MODR_SELINC2_MOD128_Val         _U_(0x2)                                             /**< (RTT_MODR) The RTTINC2 flag is set when CRTV modulo 128 equals 0  */
 #define   RTT_MODR_SELINC2_MOD256_Val         _U_(0x3)                                             /**< (RTT_MODR) The RTTINC2 flag is set when CRTV modulo 256 equals 0  */
 #define   RTT_MODR_SELINC2_MOD512_Val         _U_(0x4)                                             /**< (RTT_MODR) The RTTINC2 flag is set when CRTV modulo 512 equals 0  */
-#define   RTT_MODR_SELINC2_MOD1024_Val        _U_(0x5)                                             /**< (RTT_MODR) The RTTINC2 flag is set when CRTV modulo 1024 equals 0.Example: If RTPRES=32 then RTTINC2 flag rises once per second if the slow clock is 32.768 kHz.  */
+#define   RTT_MODR_SELINC2_MOD1024_Val        _U_(0x5)                                             /**< (RTT_MODR) The RTTINC2 flag is set when CRTV modulo 1024 equals 0. Example: If RTPRES=32 then RTTINC2 flag rises once per second if the slow clock is 32.768 kHz.  */
 #define   RTT_MODR_SELINC2_MOD2048_Val        _U_(0x6)                                             /**< (RTT_MODR) The RTTINC2 flag is set when CRTV modulo 2048 equals 0  */
 #define   RTT_MODR_SELINC2_MOD4096_Val        _U_(0x7)                                             /**< (RTT_MODR) The RTTINC2 flag is set when CRTV modulo 4096 equals 0  */
 #define RTT_MODR_SELINC2_NO_RTTINC2           (RTT_MODR_SELINC2_NO_RTTINC2_Val << RTT_MODR_SELINC2_Pos) /**< (RTT_MODR) The RTTINC2 flag never rises Position  */
@@ -100,29 +97,10 @@
 #define RTT_MODR_SELINC2_MOD128               (RTT_MODR_SELINC2_MOD128_Val << RTT_MODR_SELINC2_Pos) /**< (RTT_MODR) The RTTINC2 flag is set when CRTV modulo 128 equals 0 Position  */
 #define RTT_MODR_SELINC2_MOD256               (RTT_MODR_SELINC2_MOD256_Val << RTT_MODR_SELINC2_Pos) /**< (RTT_MODR) The RTTINC2 flag is set when CRTV modulo 256 equals 0 Position  */
 #define RTT_MODR_SELINC2_MOD512               (RTT_MODR_SELINC2_MOD512_Val << RTT_MODR_SELINC2_Pos) /**< (RTT_MODR) The RTTINC2 flag is set when CRTV modulo 512 equals 0 Position  */
-#define RTT_MODR_SELINC2_MOD1024              (RTT_MODR_SELINC2_MOD1024_Val << RTT_MODR_SELINC2_Pos) /**< (RTT_MODR) The RTTINC2 flag is set when CRTV modulo 1024 equals 0.Example: If RTPRES=32 then RTTINC2 flag rises once per second if the slow clock is 32.768 kHz. Position  */
+#define RTT_MODR_SELINC2_MOD1024              (RTT_MODR_SELINC2_MOD1024_Val << RTT_MODR_SELINC2_Pos) /**< (RTT_MODR) The RTTINC2 flag is set when CRTV modulo 1024 equals 0. Example: If RTPRES=32 then RTTINC2 flag rises once per second if the slow clock is 32.768 kHz. Position  */
 #define RTT_MODR_SELINC2_MOD2048              (RTT_MODR_SELINC2_MOD2048_Val << RTT_MODR_SELINC2_Pos) /**< (RTT_MODR) The RTTINC2 flag is set when CRTV modulo 2048 equals 0 Position  */
 #define RTT_MODR_SELINC2_MOD4096              (RTT_MODR_SELINC2_MOD4096_Val << RTT_MODR_SELINC2_Pos) /**< (RTT_MODR) The RTTINC2 flag is set when CRTV modulo 4096 equals 0 Position  */
-#define RTT_MODR_SELTRGEV_Pos                 _U_(8)                                               /**< (RTT_MODR) Selection of the 32-bit Counter Modulo to generate the trigger event Position */
-#define RTT_MODR_SELTRGEV_Msk                 (_U_(0x7) << RTT_MODR_SELTRGEV_Pos)                  /**< (RTT_MODR) Selection of the 32-bit Counter Modulo to generate the trigger event Mask */
-#define RTT_MODR_SELTRGEV(value)              (RTT_MODR_SELTRGEV_Msk & ((value) << RTT_MODR_SELTRGEV_Pos))
-#define   RTT_MODR_SELTRGEV_NO_EVENT_Val      _U_(0x0)                                             /**< (RTT_MODR) No event generated  */
-#define   RTT_MODR_SELTRGEV_MOD2_Val          _U_(0x1)                                             /**< (RTT_MODR) Event occurs when CRTV modulo 2 equals 0  */
-#define   RTT_MODR_SELTRGEV_MOD4_Val          _U_(0x2)                                             /**< (RTT_MODR) Event occurs when CRTV modulo 4 equals 0  */
-#define   RTT_MODR_SELTRGEV_MOD8_Val          _U_(0x3)                                             /**< (RTT_MODR) Event occurs when CRTV modulo 8 equals 0  */
-#define   RTT_MODR_SELTRGEV_MOD16_Val         _U_(0x4)                                             /**< (RTT_MODR) Event occurs when CRTV modulo 16 equals 0  */
-#define   RTT_MODR_SELTRGEV_MOD32_Val         _U_(0x5)                                             /**< (RTT_MODR) Event occurs when CRTV modulo 32 equals 0  */
-#define   RTT_MODR_SELTRGEV_MOD64_Val         _U_(0x6)                                             /**< (RTT_MODR) Event occurs when CRTV modulo 64 equals 0  */
-#define   RTT_MODR_SELTRGEV_MOD128_Val        _U_(0x7)                                             /**< (RTT_MODR) Event occurs when CRTV modulo 128 equals 0  */
-#define RTT_MODR_SELTRGEV_NO_EVENT            (RTT_MODR_SELTRGEV_NO_EVENT_Val << RTT_MODR_SELTRGEV_Pos) /**< (RTT_MODR) No event generated Position  */
-#define RTT_MODR_SELTRGEV_MOD2                (RTT_MODR_SELTRGEV_MOD2_Val << RTT_MODR_SELTRGEV_Pos) /**< (RTT_MODR) Event occurs when CRTV modulo 2 equals 0 Position  */
-#define RTT_MODR_SELTRGEV_MOD4                (RTT_MODR_SELTRGEV_MOD4_Val << RTT_MODR_SELTRGEV_Pos) /**< (RTT_MODR) Event occurs when CRTV modulo 4 equals 0 Position  */
-#define RTT_MODR_SELTRGEV_MOD8                (RTT_MODR_SELTRGEV_MOD8_Val << RTT_MODR_SELTRGEV_Pos) /**< (RTT_MODR) Event occurs when CRTV modulo 8 equals 0 Position  */
-#define RTT_MODR_SELTRGEV_MOD16               (RTT_MODR_SELTRGEV_MOD16_Val << RTT_MODR_SELTRGEV_Pos) /**< (RTT_MODR) Event occurs when CRTV modulo 16 equals 0 Position  */
-#define RTT_MODR_SELTRGEV_MOD32               (RTT_MODR_SELTRGEV_MOD32_Val << RTT_MODR_SELTRGEV_Pos) /**< (RTT_MODR) Event occurs when CRTV modulo 32 equals 0 Position  */
-#define RTT_MODR_SELTRGEV_MOD64               (RTT_MODR_SELTRGEV_MOD64_Val << RTT_MODR_SELTRGEV_Pos) /**< (RTT_MODR) Event occurs when CRTV modulo 64 equals 0 Position  */
-#define RTT_MODR_SELTRGEV_MOD128              (RTT_MODR_SELTRGEV_MOD128_Val << RTT_MODR_SELTRGEV_Pos) /**< (RTT_MODR) Event occurs when CRTV modulo 128 equals 0 Position  */
-#define RTT_MODR_Msk                          _U_(0x00000707)                                      /**< (RTT_MODR) Register Mask  */
+#define RTT_MODR_Msk                          _U_(0x00000007)                                      /**< (RTT_MODR) Register Mask  */
 
 
 /* -------- RTT_TSR : (RTT Offset: 0x14) ( R/ 32) TimeStamp Register -------- */

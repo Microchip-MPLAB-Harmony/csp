@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-04-23T19:01:17Z */
+/* file generated from device description version 2019-08-22T13:04:26Z */
 #ifndef _SAM9X_SSC_COMPONENT_H_
 #define _SAM9X_SSC_COMPONENT_H_
 
@@ -447,8 +447,8 @@
 #define SSC_WPMR_WPKEY_Pos                    _U_(8)                                               /**< (SSC_WPMR) Write Protection Key Position */
 #define SSC_WPMR_WPKEY_Msk                    (_U_(0xFFFFFF) << SSC_WPMR_WPKEY_Pos)                /**< (SSC_WPMR) Write Protection Key Mask */
 #define SSC_WPMR_WPKEY(value)                 (SSC_WPMR_WPKEY_Msk & ((value) << SSC_WPMR_WPKEY_Pos))
-#define   SSC_WPMR_WPKEY_PASSWD_Val           _U_(0x535343)                                        /**< (SSC_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit.Always reads as 0.  */
-#define SSC_WPMR_WPKEY_PASSWD                 (SSC_WPMR_WPKEY_PASSWD_Val << SSC_WPMR_WPKEY_Pos)    /**< (SSC_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit.Always reads as 0. Position  */
+#define   SSC_WPMR_WPKEY_PASSWD_Val           _U_(0x535343)                                        /**< (SSC_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit. Always reads as 0.  */
+#define SSC_WPMR_WPKEY_PASSWD                 (SSC_WPMR_WPKEY_PASSWD_Val << SSC_WPMR_WPKEY_Pos)    /**< (SSC_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit. Always reads as 0. Position  */
 #define SSC_WPMR_Msk                          _U_(0xFFFFFF01)                                      /**< (SSC_WPMR) Register Mask  */
 
 
@@ -460,16 +460,6 @@
 #define SSC_WPSR_WPVSRC_Msk                   (_U_(0xFFFF) << SSC_WPSR_WPVSRC_Pos)                 /**< (SSC_WPSR) Write Protect Violation Source Mask */
 #define SSC_WPSR_WPVSRC(value)                (SSC_WPSR_WPVSRC_Msk & ((value) << SSC_WPSR_WPVSRC_Pos))
 #define SSC_WPSR_Msk                          _U_(0x00FFFF01)                                      /**< (SSC_WPSR) Register Mask  */
-
-
-/* -------- SSC_VERSION : (SSC Offset: 0xFC) ( R/ 32) Version Register -------- */
-#define SSC_VERSION_VERSION_Pos               _U_(0)                                               /**< (SSC_VERSION) Version of the Hardware Module Position */
-#define SSC_VERSION_VERSION_Msk               (_U_(0xFFFF) << SSC_VERSION_VERSION_Pos)             /**< (SSC_VERSION) Version of the Hardware Module Mask */
-#define SSC_VERSION_VERSION(value)            (SSC_VERSION_VERSION_Msk & ((value) << SSC_VERSION_VERSION_Pos))
-#define SSC_VERSION_MFN_Pos                   _U_(16)                                              /**< (SSC_VERSION) Metal Fix Number Position */
-#define SSC_VERSION_MFN_Msk                   (_U_(0x7) << SSC_VERSION_MFN_Pos)                    /**< (SSC_VERSION) Metal Fix Number Mask */
-#define SSC_VERSION_MFN(value)                (SSC_VERSION_MFN_Msk & ((value) << SSC_VERSION_MFN_Pos))
-#define SSC_VERSION_Msk                       _U_(0x0007FFFF)                                      /**< (SSC_VERSION) Register Mask  */
 
 
 /** \brief SSC register offsets definitions */
@@ -491,7 +481,6 @@
 #define SSC_IMR_REG_OFST               (0x4C)              /**< (SSC_IMR) Interrupt Mask Register Offset */
 #define SSC_WPMR_REG_OFST              (0xE4)              /**< (SSC_WPMR) Write Protection Mode Register Offset */
 #define SSC_WPSR_REG_OFST              (0xE8)              /**< (SSC_WPSR) Write Protection Status Register Offset */
-#define SSC_VERSION_REG_OFST           (0xFC)              /**< (SSC_VERSION) Version Register Offset */
 
 #if !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__))
 /** \brief SSC register API structure */
@@ -518,8 +507,6 @@ typedef struct
   __I   uint8_t                        Reserved3[0x94];
   __IO  uint32_t                       SSC_WPMR;           /**< Offset: 0xE4 (R/W  32) Write Protection Mode Register */
   __I   uint32_t                       SSC_WPSR;           /**< Offset: 0xE8 (R/   32) Write Protection Status Register */
-  __I   uint8_t                        Reserved4[0x10];
-  __I   uint32_t                       SSC_VERSION;        /**< Offset: 0xFC (R/   32) Version Register */
 } ssc_registers_t;
 
 
