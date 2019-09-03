@@ -445,6 +445,59 @@ FLEXCOM_TWI_ERROR FLEXCOM9_TWI_ErrorGet(void)
     return error;
 }
 
+bool FLEXCOM9_TWI_TransferSetup(FLEXCOM_TWI_TRANSFER_SETUP* setup, uint32_t srcClkFreq )
+{       
+    uint32_t i2cClkSpeed;
+    uint32_t cldiv;
+    uint8_t ckdiv = 0;
+    
+    if (setup == NULL)
+    {
+        return false;
+    }        
+        
+    i2cClkSpeed = setup->clkSpeed;
+    
+    /* Maximum I2C clock speed in Master mode cannot be greater than 400 KHz */
+    if (i2cClkSpeed > 4000000)
+    {
+        return false;
+    }
+    
+    if( srcClkFreq == 0)
+    {
+        srcClkFreq = 50000000;
+    }            
+    
+    /* Formula for calculating baud value involves two unknowns. Fix one unknown and calculate the other. 
+       Fix the CKDIV value and see if CLDIV (or CHDIV) fits into the 8-bit register. */
+       
+    /* Calculate CLDIV with CKDIV set to 0 */
+    cldiv = (srcClkFreq /(2 * i2cClkSpeed)) - 3;
+                   
+    /* CLDIV must fit within 8-bits and CKDIV must fit within 3-bits */
+    while ((cldiv > 255) && (ckdiv < 7))
+    {
+        ckdiv++;
+        cldiv /= 2;
+    }
+    
+    if (cldiv > 255)
+    {
+        /* Could not generate CLDIV and CKDIV register values for the requested baud rate */
+        return false;
+    }
+    
+    // Set Baud rate
+    FLEXCOM9_TWI_Module->FLEX_TWI_CWGR = ( FLEX_TWI_CWGR_HOLD_Msk & FLEXCOM9_TWI_Module->FLEX_TWI_CWGR) |
+                                              FLEX_TWI_CWGR_BRSRCCLK_PERIPH_CLK |
+                                            ( FLEX_TWI_CWGR_CLDIV(cldiv) |
+                                              FLEX_TWI_CWGR_CHDIV(cldiv) |
+                                              FLEX_TWI_CWGR_CKDIV(ckdiv) );
+
+    return true;
+}
+
 // *****************************************************************************
 /* Function:
     void FLEXCOM9_InterruptHandler(void)
