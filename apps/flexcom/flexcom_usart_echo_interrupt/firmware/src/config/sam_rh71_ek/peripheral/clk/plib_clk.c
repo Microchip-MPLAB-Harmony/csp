@@ -33,6 +33,7 @@ static void CLK_SlowClockInitialize(void)
     SUPC_REGS->SUPC_CR = SUPC_CR_KEY_PASSWD;
 }
 
+
 /*********************************************************************************
 Initialize Main Clock (MAINCK)
 *********************************************************************************/
@@ -54,7 +55,10 @@ static void CLK_MainClockInitialize(void)
     /* Disable the RC Oscillator */
     PMC_REGS->CKGR_MOR = CKGR_MOR_KEY_PASSWD | (PMC_REGS->CKGR_MOR & ~CKGR_MOR_MOSCRCEN_Msk);
     
+
+    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk);
 }
+
 
 /*********************************************************************************
 Initialize PLLACK/PLLBCK
