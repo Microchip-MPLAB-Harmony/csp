@@ -94,7 +94,8 @@ static void DFLL_Initialize(void)
 
 static void GCLK0_Initialize(void)
 {
-    GCLK_REGS->GCLK_GENCTRL[0] = GCLK_GENCTRL_DIV(1) | GCLK_GENCTRL_SRC(7) | GCLK_GENCTRL_GENEN_Msk;
+    
+    GCLK_REGS->GCLK_GENCTRL[0] = GCLK_GENCTRL_DIV(1) | GCLK_GENCTRL_SRC(6) | GCLK_GENCTRL_GENEN_Msk;
 
     while((GCLK_REGS->GCLK_SYNCBUSY & GCLK_SYNCBUSY_GENCTRL0_Msk) == GCLK_SYNCBUSY_GENCTRL0_Msk)
     {
@@ -114,11 +115,10 @@ void CLOCK_Initialize (void)
     MCLK_REGS->MCLK_LPDIV = MCLK_LPDIV_LPDIV(0x01);
 
     /*Initialize Backup Divider*/    
-    MCLK_REGS->MCLK_BUPDIV = MCLK_BUPDIV_BUPDIV(0x08);
+    MCLK_REGS->MCLK_BUPDIV = MCLK_BUPDIV_BUPDIV(0x02);
 
     DFLL_Initialize();
     GCLK0_Initialize();
-
 
 
 	/* Selection of the Generator and write Lock for EIC */
