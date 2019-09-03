@@ -33,6 +33,33 @@ static void CLK_SlowClockInitialize(void)
     SUPC_REGS->SUPC_CR = SUPC_CR_KEY_PASSWD;
 }
 
+
+/*********************************************************************************
+Initialize Main Clock (MAINCK)
+*********************************************************************************/
+static void CLK_MainClockInitialize(void)
+{
+    /* Enable the RC Oscillator */
+    PMC_REGS->CKGR_MOR|= CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCRCEN_Msk;
+
+    /* Wait until the RC oscillator clock is ready. */
+    while( (PMC_REGS->PMC_SR & PMC_SR_MOSCRCS_Msk) != PMC_SR_MOSCRCS_Msk);
+
+    /* Configure the RC Oscillator frequency */
+    PMC_REGS->CKGR_MOR = (PMC_REGS->CKGR_MOR & ~CKGR_MOR_MOSCRCF_Msk) | CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCRCF_10_MHZ;
+
+    /* Wait until the RC oscillator clock is ready */
+    while( (PMC_REGS->PMC_SR & PMC_SR_MOSCRCS_Msk) != PMC_SR_MOSCRCS_Msk);
+
+    /* Main RC Oscillator is selected as the Main Clock (MAINCK) source.
+       Switch Main Clock (MAINCK) to the RC Oscillator clock */
+    PMC_REGS->CKGR_MOR = (PMC_REGS->CKGR_MOR & ~CKGR_MOR_MOSCSEL_Msk) | CKGR_MOR_KEY_PASSWD;
+    
+
+    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk);
+}
+
+
 /*********************************************************************************
 Initialize PLLACK/PLLBCK
 *********************************************************************************/
@@ -83,6 +110,9 @@ void CLK_Initialize( void )
 {
     /* Initialize Slow Clock */
     CLK_SlowClockInitialize();
+
+    /* Initialize Main Clock */
+    CLK_MainClockInitialize();
 
     /* Initialize PLLA/PLLB */
     CLK_PLLxClockInitialize();
