@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-04-23T19:01:17Z */
+/* file generated from device description version 2019-08-22T13:04:26Z */
 #ifndef _SAM9X_GFX2D_COMPONENT_H_
 #define _SAM9X_GFX2D_COMPONENT_H_
 
@@ -275,16 +275,6 @@
 #define GFX2D_TAIL_Msk                        _U_(0x000003FF)                                      /**< (GFX2D_TAIL) Register Mask  */
 
 
-/* -------- GFX2D_VERSION : (GFX2D Offset: 0xFC) ( R/ 32) Version Register -------- */
-#define GFX2D_VERSION_VERSION_Pos             _U_(0)                                               /**< (GFX2D_VERSION) Version Position */
-#define GFX2D_VERSION_VERSION_Msk             (_U_(0xFFF) << GFX2D_VERSION_VERSION_Pos)            /**< (GFX2D_VERSION) Version Mask */
-#define GFX2D_VERSION_VERSION(value)          (GFX2D_VERSION_VERSION_Msk & ((value) << GFX2D_VERSION_VERSION_Pos))
-#define GFX2D_VERSION_MFN_Pos                 _U_(16)                                              /**< (GFX2D_VERSION) Metal Fix Number Position */
-#define GFX2D_VERSION_MFN_Msk                 (_U_(0x7) << GFX2D_VERSION_MFN_Pos)                  /**< (GFX2D_VERSION) Metal Fix Number Mask */
-#define GFX2D_VERSION_MFN(value)              (GFX2D_VERSION_MFN_Msk & ((value) << GFX2D_VERSION_MFN_Pos))
-#define GFX2D_VERSION_Msk                     _U_(0x00070FFF)                                      /**< (GFX2D_VERSION) Register Mask  */
-
-
 /** \brief GFX2D register offsets definitions */
 #define GFX2D_PA_REG_OFST              (0x00)              /**< (GFX2D_PA) Surface Physical Address Register Offset */
 #define GFX2D_PITCH_REG_OFST           (0x04)              /**< (GFX2D_PITCH) Surface Pitch Register Offset */
@@ -303,7 +293,6 @@
 #define GFX2D_LEN_REG_OFST             (0x34)              /**< (GFX2D_LEN) Ring Buffer Length Register Offset */
 #define GFX2D_HEAD_REG_OFST            (0x38)              /**< (GFX2D_HEAD) Ring Buffer Head Register Offset */
 #define GFX2D_TAIL_REG_OFST            (0x3C)              /**< (GFX2D_TAIL) Ring Buffer Tail Register Offset */
-#define GFX2D_VERSION_REG_OFST         (0xFC)              /**< (GFX2D_VERSION) Version Register Offset */
 
 #if !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__))
 /** \brief GFX2D_CHID register API structure */
@@ -343,8 +332,6 @@ typedef struct
   __IO  uint32_t                       GFX2D_HEAD;         /**< Offset: 0x38 (R/W  32) Ring Buffer Head Register */
   __IO  uint32_t                       GFX2D_TAIL;         /**< Offset: 0x3C (R/W  32) Ring Buffer Tail Register */
         gfx2d_chid_registers_t         GFX2D_CHID[GFX2D_CHID_NUMBER]; /**< Offset: 0x40  */
-  __I   uint8_t                        Reserved1[0x7C];
-  __I   uint32_t                       GFX2D_VERSION;      /**< Offset: 0xFC (R/   32) Version Register */
 } gfx2d_registers_t;
 
 

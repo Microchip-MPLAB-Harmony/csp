@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-04-23T19:01:17Z */
+/* file generated from device description version 2019-08-22T13:04:26Z */
 #ifndef _SAM9X_DBGU_COMPONENT_H_
 #define _SAM9X_DBGU_COMPONENT_H_
 
@@ -56,10 +56,7 @@
 #define DBGU_CR_STTTO_Pos                     _U_(11)                                              /**< (DBGU_CR) Start Timeout Position */
 #define DBGU_CR_STTTO_Msk                     (_U_(0x1) << DBGU_CR_STTTO_Pos)                      /**< (DBGU_CR) Start Timeout Mask */
 #define DBGU_CR_STTTO(value)                  (DBGU_CR_STTTO_Msk & ((value) << DBGU_CR_STTTO_Pos))
-#define DBGU_CR_DBGE_Pos                      _U_(15)                                              /**< (DBGU_CR) Debug Enable Position */
-#define DBGU_CR_DBGE_Msk                      (_U_(0x1) << DBGU_CR_DBGE_Pos)                       /**< (DBGU_CR) Debug Enable Mask */
-#define DBGU_CR_DBGE(value)                   (DBGU_CR_DBGE_Msk & ((value) << DBGU_CR_DBGE_Pos))  
-#define DBGU_CR_Msk                           _U_(0x00008DFC)                                      /**< (DBGU_CR) Register Mask  */
+#define DBGU_CR_Msk                           _U_(0x00000DFC)                                      /**< (DBGU_CR) Register Mask  */
 
 
 /* -------- DBGU_MR : (DBGU Offset: 0x04) (R/W 32) Mode Register -------- */
@@ -87,9 +84,9 @@
 #define DBGU_MR_BRSRCCK_Msk                   (_U_(0x1) << DBGU_MR_BRSRCCK_Pos)                    /**< (DBGU_MR) Baud Rate Source Clock Mask */
 #define DBGU_MR_BRSRCCK(value)                (DBGU_MR_BRSRCCK_Msk & ((value) << DBGU_MR_BRSRCCK_Pos))
 #define   DBGU_MR_BRSRCCK_PERIPH_CLK_Val      _U_(0x0)                                             /**< (DBGU_MR) The baud rate is driven by the peripheral clock  */
-#define   DBGU_MR_BRSRCCK_PMC_PCKGCLK_Val     _U_(0x1)                                             /**< (DBGU_MR) The baud rate is driven by a PMC-programmable clock PCKGCLK  */
+#define   DBGU_MR_BRSRCCK_GCLK_Val            _U_(0x1)                                             /**< (DBGU_MR) The baud rate is driven by a PMC-programmable clock GCLK (see section Power Management Controller (PMC)).  */
 #define DBGU_MR_BRSRCCK_PERIPH_CLK            (DBGU_MR_BRSRCCK_PERIPH_CLK_Val << DBGU_MR_BRSRCCK_Pos) /**< (DBGU_MR) The baud rate is driven by the peripheral clock Position  */
-#define DBGU_MR_BRSRCCK_PMC_PCKGCLK           (DBGU_MR_BRSRCCK_PMC_PCKGCLK_Val << DBGU_MR_BRSRCCK_Pos) /**< (DBGU_MR) The baud rate is driven by a PMC-programmable clock PCKGCLK Position  */
+#define DBGU_MR_BRSRCCK_GCLK                  (DBGU_MR_BRSRCCK_GCLK_Val << DBGU_MR_BRSRCCK_Pos)    /**< (DBGU_MR) The baud rate is driven by a PMC-programmable clock GCLK (see section Power Management Controller (PMC)). Position  */
 #define DBGU_MR_CHMODE_Pos                    _U_(14)                                              /**< (DBGU_MR) Channel Mode Position */
 #define DBGU_MR_CHMODE_Msk                    (_U_(0x3) << DBGU_MR_CHMODE_Pos)                     /**< (DBGU_MR) Channel Mode Mask */
 #define DBGU_MR_CHMODE(value)                 (DBGU_MR_CHMODE_Msk & ((value) << DBGU_MR_CHMODE_Pos))
@@ -219,22 +216,13 @@
 #define DBGU_SR_TXEMPTY_Pos                   _U_(9)                                               /**< (DBGU_SR) Transmitter Empty Position */
 #define DBGU_SR_TXEMPTY_Msk                   (_U_(0x1) << DBGU_SR_TXEMPTY_Pos)                    /**< (DBGU_SR) Transmitter Empty Mask */
 #define DBGU_SR_TXEMPTY(value)                (DBGU_SR_TXEMPTY_Msk & ((value) << DBGU_SR_TXEMPTY_Pos))
-#define DBGU_SR_SWES_Pos                      _U_(21)                                              /**< (DBGU_SR) SleepWalking Enable Status Position */
-#define DBGU_SR_SWES_Msk                      (_U_(0x1) << DBGU_SR_SWES_Pos)                       /**< (DBGU_SR) SleepWalking Enable Status Mask */
-#define DBGU_SR_SWES(value)                   (DBGU_SR_SWES_Msk & ((value) << DBGU_SR_SWES_Pos))  
-#define DBGU_SR_CLKREQ_Pos                    _U_(22)                                              /**< (DBGU_SR) Clock Request Position */
-#define DBGU_SR_CLKREQ_Msk                    (_U_(0x1) << DBGU_SR_CLKREQ_Pos)                     /**< (DBGU_SR) Clock Request Mask */
-#define DBGU_SR_CLKREQ(value)                 (DBGU_SR_CLKREQ_Msk & ((value) << DBGU_SR_CLKREQ_Pos))
-#define DBGU_SR_WKUPREQ_Pos                   _U_(23)                                              /**< (DBGU_SR) Wakeup Request Position */
-#define DBGU_SR_WKUPREQ_Msk                   (_U_(0x1) << DBGU_SR_WKUPREQ_Pos)                    /**< (DBGU_SR) Wakeup Request Mask */
-#define DBGU_SR_WKUPREQ(value)                (DBGU_SR_WKUPREQ_Msk & ((value) << DBGU_SR_WKUPREQ_Pos))
 #define DBGU_SR_COMMTX_Pos                    _U_(30)                                              /**< (DBGU_SR) Debug Communication Channel Write Status Position */
 #define DBGU_SR_COMMTX_Msk                    (_U_(0x1) << DBGU_SR_COMMTX_Pos)                     /**< (DBGU_SR) Debug Communication Channel Write Status Mask */
 #define DBGU_SR_COMMTX(value)                 (DBGU_SR_COMMTX_Msk & ((value) << DBGU_SR_COMMTX_Pos))
 #define DBGU_SR_COMMRX_Pos                    _U_(31)                                              /**< (DBGU_SR) Debug Communication Channel Read Status Position */
 #define DBGU_SR_COMMRX_Msk                    (_U_(0x1) << DBGU_SR_COMMRX_Pos)                     /**< (DBGU_SR) Debug Communication Channel Read Status Mask */
 #define DBGU_SR_COMMRX(value)                 (DBGU_SR_COMMRX_Msk & ((value) << DBGU_SR_COMMRX_Pos))
-#define DBGU_SR_Msk                           _U_(0xC0E003E3)                                      /**< (DBGU_SR) Register Mask  */
+#define DBGU_SR_Msk                           _U_(0xC00003E3)                                      /**< (DBGU_SR) Register Mask  */
 
 
 /* -------- DBGU_RHR : (DBGU Offset: 0x18) ( R/ 32) Receive Holding Register -------- */
@@ -266,191 +254,9 @@
 
 
 /* -------- DBGU_CIDR : (DBGU Offset: 0x40) ( R/ 32) Chip ID Register -------- */
-#define DBGU_CIDR_VERSION_Pos                 _U_(0)                                               /**< (DBGU_CIDR) Version of the Device Position */
-#define DBGU_CIDR_VERSION_Msk                 (_U_(0x1F) << DBGU_CIDR_VERSION_Pos)                 /**< (DBGU_CIDR) Version of the Device Mask */
-#define DBGU_CIDR_VERSION(value)              (DBGU_CIDR_VERSION_Msk & ((value) << DBGU_CIDR_VERSION_Pos))
-#define DBGU_CIDR_EPROC_Pos                   _U_(5)                                               /**< (DBGU_CIDR) Embedded Processor Position */
-#define DBGU_CIDR_EPROC_Msk                   (_U_(0x7) << DBGU_CIDR_EPROC_Pos)                    /**< (DBGU_CIDR) Embedded Processor Mask */
-#define DBGU_CIDR_EPROC(value)                (DBGU_CIDR_EPROC_Msk & ((value) << DBGU_CIDR_EPROC_Pos))
-#define   DBGU_CIDR_EPROC_ARM946ES_Val        _U_(0x1)                                             /**< (DBGU_CIDR) ARM946ES  */
-#define   DBGU_CIDR_EPROC_ARM7TDMI_Val        _U_(0x2)                                             /**< (DBGU_CIDR) ARM7TDMI  */
-#define   DBGU_CIDR_EPROC_CM3_Val             _U_(0x3)                                             /**< (DBGU_CIDR) Cortex-M3  */
-#define   DBGU_CIDR_EPROC_ARM920T_Val         _U_(0x4)                                             /**< (DBGU_CIDR) ARM920T  */
-#define   DBGU_CIDR_EPROC_ARM926EJS_Val       _U_(0x5)                                             /**< (DBGU_CIDR) ARM926EJ-S  */
-#define   DBGU_CIDR_EPROC_CA5_Val             _U_(0x6)                                             /**< (DBGU_CIDR) Cortex-A5  */
-#define DBGU_CIDR_EPROC_ARM946ES              (DBGU_CIDR_EPROC_ARM946ES_Val << DBGU_CIDR_EPROC_Pos) /**< (DBGU_CIDR) ARM946ES Position  */
-#define DBGU_CIDR_EPROC_ARM7TDMI              (DBGU_CIDR_EPROC_ARM7TDMI_Val << DBGU_CIDR_EPROC_Pos) /**< (DBGU_CIDR) ARM7TDMI Position  */
-#define DBGU_CIDR_EPROC_CM3                   (DBGU_CIDR_EPROC_CM3_Val << DBGU_CIDR_EPROC_Pos)     /**< (DBGU_CIDR) Cortex-M3 Position  */
-#define DBGU_CIDR_EPROC_ARM920T               (DBGU_CIDR_EPROC_ARM920T_Val << DBGU_CIDR_EPROC_Pos) /**< (DBGU_CIDR) ARM920T Position  */
-#define DBGU_CIDR_EPROC_ARM926EJS             (DBGU_CIDR_EPROC_ARM926EJS_Val << DBGU_CIDR_EPROC_Pos) /**< (DBGU_CIDR) ARM926EJ-S Position  */
-#define DBGU_CIDR_EPROC_CA5                   (DBGU_CIDR_EPROC_CA5_Val << DBGU_CIDR_EPROC_Pos)     /**< (DBGU_CIDR) Cortex-A5 Position  */
-#define DBGU_CIDR_NVPSIZ_Pos                  _U_(8)                                               /**< (DBGU_CIDR) Nonvolatile Program Memory Size Position */
-#define DBGU_CIDR_NVPSIZ_Msk                  (_U_(0xF) << DBGU_CIDR_NVPSIZ_Pos)                   /**< (DBGU_CIDR) Nonvolatile Program Memory Size Mask */
-#define DBGU_CIDR_NVPSIZ(value)               (DBGU_CIDR_NVPSIZ_Msk & ((value) << DBGU_CIDR_NVPSIZ_Pos))
-#define   DBGU_CIDR_NVPSIZ_NONE_Val           _U_(0x0)                                             /**< (DBGU_CIDR) None  */
-#define   DBGU_CIDR_NVPSIZ_8K_Val             _U_(0x1)                                             /**< (DBGU_CIDR) 8 Kbytes  */
-#define   DBGU_CIDR_NVPSIZ_16K_Val            _U_(0x2)                                             /**< (DBGU_CIDR) 16 Kbytes  */
-#define   DBGU_CIDR_NVPSIZ_32K_Val            _U_(0x3)                                             /**< (DBGU_CIDR) 32 Kbytes  */
-#define   DBGU_CIDR_NVPSIZ_64K_Val            _U_(0x5)                                             /**< (DBGU_CIDR) 64 Kbytes  */
-#define   DBGU_CIDR_NVPSIZ_128K_Val           _U_(0x7)                                             /**< (DBGU_CIDR) 128 Kbytes  */
-#define   DBGU_CIDR_NVPSIZ_256K_Val           _U_(0x9)                                             /**< (DBGU_CIDR) 256 Kbytes  */
-#define   DBGU_CIDR_NVPSIZ_512K_Val           _U_(0xA)                                             /**< (DBGU_CIDR) 512 Kbytes  */
-#define   DBGU_CIDR_NVPSIZ_1024K_Val          _U_(0xC)                                             /**< (DBGU_CIDR) 1024 Kbytes  */
-#define   DBGU_CIDR_NVPSIZ_2048K_Val          _U_(0xE)                                             /**< (DBGU_CIDR) 2048 Kbytes  */
-#define DBGU_CIDR_NVPSIZ_NONE                 (DBGU_CIDR_NVPSIZ_NONE_Val << DBGU_CIDR_NVPSIZ_Pos)  /**< (DBGU_CIDR) None Position  */
-#define DBGU_CIDR_NVPSIZ_8K                   (DBGU_CIDR_NVPSIZ_8K_Val << DBGU_CIDR_NVPSIZ_Pos)    /**< (DBGU_CIDR) 8 Kbytes Position  */
-#define DBGU_CIDR_NVPSIZ_16K                  (DBGU_CIDR_NVPSIZ_16K_Val << DBGU_CIDR_NVPSIZ_Pos)   /**< (DBGU_CIDR) 16 Kbytes Position  */
-#define DBGU_CIDR_NVPSIZ_32K                  (DBGU_CIDR_NVPSIZ_32K_Val << DBGU_CIDR_NVPSIZ_Pos)   /**< (DBGU_CIDR) 32 Kbytes Position  */
-#define DBGU_CIDR_NVPSIZ_64K                  (DBGU_CIDR_NVPSIZ_64K_Val << DBGU_CIDR_NVPSIZ_Pos)   /**< (DBGU_CIDR) 64 Kbytes Position  */
-#define DBGU_CIDR_NVPSIZ_128K                 (DBGU_CIDR_NVPSIZ_128K_Val << DBGU_CIDR_NVPSIZ_Pos)  /**< (DBGU_CIDR) 128 Kbytes Position  */
-#define DBGU_CIDR_NVPSIZ_256K                 (DBGU_CIDR_NVPSIZ_256K_Val << DBGU_CIDR_NVPSIZ_Pos)  /**< (DBGU_CIDR) 256 Kbytes Position  */
-#define DBGU_CIDR_NVPSIZ_512K                 (DBGU_CIDR_NVPSIZ_512K_Val << DBGU_CIDR_NVPSIZ_Pos)  /**< (DBGU_CIDR) 512 Kbytes Position  */
-#define DBGU_CIDR_NVPSIZ_1024K                (DBGU_CIDR_NVPSIZ_1024K_Val << DBGU_CIDR_NVPSIZ_Pos) /**< (DBGU_CIDR) 1024 Kbytes Position  */
-#define DBGU_CIDR_NVPSIZ_2048K                (DBGU_CIDR_NVPSIZ_2048K_Val << DBGU_CIDR_NVPSIZ_Pos) /**< (DBGU_CIDR) 2048 Kbytes Position  */
-#define DBGU_CIDR_NVPSIZ2_Pos                 _U_(12)                                              /**< (DBGU_CIDR) Second Nonvolatile Program Memory Size Position */
-#define DBGU_CIDR_NVPSIZ2_Msk                 (_U_(0xF) << DBGU_CIDR_NVPSIZ2_Pos)                  /**< (DBGU_CIDR) Second Nonvolatile Program Memory Size Mask */
-#define DBGU_CIDR_NVPSIZ2(value)              (DBGU_CIDR_NVPSIZ2_Msk & ((value) << DBGU_CIDR_NVPSIZ2_Pos))
-#define   DBGU_CIDR_NVPSIZ2_NONE_Val          _U_(0x0)                                             /**< (DBGU_CIDR) None  */
-#define   DBGU_CIDR_NVPSIZ2_8K_Val            _U_(0x1)                                             /**< (DBGU_CIDR) 8 Kbytes  */
-#define   DBGU_CIDR_NVPSIZ2_16K_Val           _U_(0x2)                                             /**< (DBGU_CIDR) 16 Kbytes  */
-#define   DBGU_CIDR_NVPSIZ2_32K_Val           _U_(0x3)                                             /**< (DBGU_CIDR) 32 Kbytes  */
-#define   DBGU_CIDR_NVPSIZ2_64K_Val           _U_(0x5)                                             /**< (DBGU_CIDR) 64 Kbytes  */
-#define   DBGU_CIDR_NVPSIZ2_128K_Val          _U_(0x7)                                             /**< (DBGU_CIDR) 128 Kbytes  */
-#define   DBGU_CIDR_NVPSIZ2_256K_Val          _U_(0x9)                                             /**< (DBGU_CIDR) 256 Kbytes  */
-#define   DBGU_CIDR_NVPSIZ2_512K_Val          _U_(0xA)                                             /**< (DBGU_CIDR) 512 Kbytes  */
-#define   DBGU_CIDR_NVPSIZ2_1024K_Val         _U_(0xC)                                             /**< (DBGU_CIDR) 1024 Kbytes  */
-#define   DBGU_CIDR_NVPSIZ2_2048K_Val         _U_(0xE)                                             /**< (DBGU_CIDR) 2048 Kbytes  */
-#define DBGU_CIDR_NVPSIZ2_NONE                (DBGU_CIDR_NVPSIZ2_NONE_Val << DBGU_CIDR_NVPSIZ2_Pos) /**< (DBGU_CIDR) None Position  */
-#define DBGU_CIDR_NVPSIZ2_8K                  (DBGU_CIDR_NVPSIZ2_8K_Val << DBGU_CIDR_NVPSIZ2_Pos)  /**< (DBGU_CIDR) 8 Kbytes Position  */
-#define DBGU_CIDR_NVPSIZ2_16K                 (DBGU_CIDR_NVPSIZ2_16K_Val << DBGU_CIDR_NVPSIZ2_Pos) /**< (DBGU_CIDR) 16 Kbytes Position  */
-#define DBGU_CIDR_NVPSIZ2_32K                 (DBGU_CIDR_NVPSIZ2_32K_Val << DBGU_CIDR_NVPSIZ2_Pos) /**< (DBGU_CIDR) 32 Kbytes Position  */
-#define DBGU_CIDR_NVPSIZ2_64K                 (DBGU_CIDR_NVPSIZ2_64K_Val << DBGU_CIDR_NVPSIZ2_Pos) /**< (DBGU_CIDR) 64 Kbytes Position  */
-#define DBGU_CIDR_NVPSIZ2_128K                (DBGU_CIDR_NVPSIZ2_128K_Val << DBGU_CIDR_NVPSIZ2_Pos) /**< (DBGU_CIDR) 128 Kbytes Position  */
-#define DBGU_CIDR_NVPSIZ2_256K                (DBGU_CIDR_NVPSIZ2_256K_Val << DBGU_CIDR_NVPSIZ2_Pos) /**< (DBGU_CIDR) 256 Kbytes Position  */
-#define DBGU_CIDR_NVPSIZ2_512K                (DBGU_CIDR_NVPSIZ2_512K_Val << DBGU_CIDR_NVPSIZ2_Pos) /**< (DBGU_CIDR) 512 Kbytes Position  */
-#define DBGU_CIDR_NVPSIZ2_1024K               (DBGU_CIDR_NVPSIZ2_1024K_Val << DBGU_CIDR_NVPSIZ2_Pos) /**< (DBGU_CIDR) 1024 Kbytes Position  */
-#define DBGU_CIDR_NVPSIZ2_2048K               (DBGU_CIDR_NVPSIZ2_2048K_Val << DBGU_CIDR_NVPSIZ2_Pos) /**< (DBGU_CIDR) 2048 Kbytes Position  */
-#define DBGU_CIDR_SRAMSIZ_Pos                 _U_(16)                                              /**< (DBGU_CIDR) Internal SRAM Size Position */
-#define DBGU_CIDR_SRAMSIZ_Msk                 (_U_(0xF) << DBGU_CIDR_SRAMSIZ_Pos)                  /**< (DBGU_CIDR) Internal SRAM Size Mask */
-#define DBGU_CIDR_SRAMSIZ(value)              (DBGU_CIDR_SRAMSIZ_Msk & ((value) << DBGU_CIDR_SRAMSIZ_Pos))
-#define   DBGU_CIDR_SRAMSIZ_1K_Val            _U_(0x1)                                             /**< (DBGU_CIDR) 1 Kbytes  */
-#define   DBGU_CIDR_SRAMSIZ_2K_Val            _U_(0x2)                                             /**< (DBGU_CIDR) 2 Kbytes  */
-#define   DBGU_CIDR_SRAMSIZ_6K_Val            _U_(0x3)                                             /**< (DBGU_CIDR) 6 Kbytes  */
-#define   DBGU_CIDR_SRAMSIZ_112K_Val          _U_(0x4)                                             /**< (DBGU_CIDR) 112 Kbytes  */
-#define   DBGU_CIDR_SRAMSIZ_4K_Val            _U_(0x5)                                             /**< (DBGU_CIDR) 4 Kbytes  */
-#define   DBGU_CIDR_SRAMSIZ_80K_Val           _U_(0x6)                                             /**< (DBGU_CIDR) 80 Kbytes  */
-#define   DBGU_CIDR_SRAMSIZ_160K_Val          _U_(0x7)                                             /**< (DBGU_CIDR) 160 Kbytes  */
-#define   DBGU_CIDR_SRAMSIZ_8K_Val            _U_(0x8)                                             /**< (DBGU_CIDR) 8 Kbytes  */
-#define   DBGU_CIDR_SRAMSIZ_16K_Val           _U_(0x9)                                             /**< (DBGU_CIDR) 16 Kbytes  */
-#define   DBGU_CIDR_SRAMSIZ_32K_Val           _U_(0xA)                                             /**< (DBGU_CIDR) 32 Kbytes  */
-#define   DBGU_CIDR_SRAMSIZ_64K_Val           _U_(0xB)                                             /**< (DBGU_CIDR) 64 Kbytes  */
-#define   DBGU_CIDR_SRAMSIZ_128K_Val          _U_(0xC)                                             /**< (DBGU_CIDR) 128 Kbytes  */
-#define   DBGU_CIDR_SRAMSIZ_256K_Val          _U_(0xD)                                             /**< (DBGU_CIDR) 256 Kbytes  */
-#define   DBGU_CIDR_SRAMSIZ_96K_Val           _U_(0xE)                                             /**< (DBGU_CIDR) 96 Kbytes  */
-#define   DBGU_CIDR_SRAMSIZ_512K_Val          _U_(0xF)                                             /**< (DBGU_CIDR) 512 Kbytes  */
-#define DBGU_CIDR_SRAMSIZ_1K                  (DBGU_CIDR_SRAMSIZ_1K_Val << DBGU_CIDR_SRAMSIZ_Pos)  /**< (DBGU_CIDR) 1 Kbytes Position  */
-#define DBGU_CIDR_SRAMSIZ_2K                  (DBGU_CIDR_SRAMSIZ_2K_Val << DBGU_CIDR_SRAMSIZ_Pos)  /**< (DBGU_CIDR) 2 Kbytes Position  */
-#define DBGU_CIDR_SRAMSIZ_6K                  (DBGU_CIDR_SRAMSIZ_6K_Val << DBGU_CIDR_SRAMSIZ_Pos)  /**< (DBGU_CIDR) 6 Kbytes Position  */
-#define DBGU_CIDR_SRAMSIZ_112K                (DBGU_CIDR_SRAMSIZ_112K_Val << DBGU_CIDR_SRAMSIZ_Pos) /**< (DBGU_CIDR) 112 Kbytes Position  */
-#define DBGU_CIDR_SRAMSIZ_4K                  (DBGU_CIDR_SRAMSIZ_4K_Val << DBGU_CIDR_SRAMSIZ_Pos)  /**< (DBGU_CIDR) 4 Kbytes Position  */
-#define DBGU_CIDR_SRAMSIZ_80K                 (DBGU_CIDR_SRAMSIZ_80K_Val << DBGU_CIDR_SRAMSIZ_Pos) /**< (DBGU_CIDR) 80 Kbytes Position  */
-#define DBGU_CIDR_SRAMSIZ_160K                (DBGU_CIDR_SRAMSIZ_160K_Val << DBGU_CIDR_SRAMSIZ_Pos) /**< (DBGU_CIDR) 160 Kbytes Position  */
-#define DBGU_CIDR_SRAMSIZ_8K                  (DBGU_CIDR_SRAMSIZ_8K_Val << DBGU_CIDR_SRAMSIZ_Pos)  /**< (DBGU_CIDR) 8 Kbytes Position  */
-#define DBGU_CIDR_SRAMSIZ_16K                 (DBGU_CIDR_SRAMSIZ_16K_Val << DBGU_CIDR_SRAMSIZ_Pos) /**< (DBGU_CIDR) 16 Kbytes Position  */
-#define DBGU_CIDR_SRAMSIZ_32K                 (DBGU_CIDR_SRAMSIZ_32K_Val << DBGU_CIDR_SRAMSIZ_Pos) /**< (DBGU_CIDR) 32 Kbytes Position  */
-#define DBGU_CIDR_SRAMSIZ_64K                 (DBGU_CIDR_SRAMSIZ_64K_Val << DBGU_CIDR_SRAMSIZ_Pos) /**< (DBGU_CIDR) 64 Kbytes Position  */
-#define DBGU_CIDR_SRAMSIZ_128K                (DBGU_CIDR_SRAMSIZ_128K_Val << DBGU_CIDR_SRAMSIZ_Pos) /**< (DBGU_CIDR) 128 Kbytes Position  */
-#define DBGU_CIDR_SRAMSIZ_256K                (DBGU_CIDR_SRAMSIZ_256K_Val << DBGU_CIDR_SRAMSIZ_Pos) /**< (DBGU_CIDR) 256 Kbytes Position  */
-#define DBGU_CIDR_SRAMSIZ_96K                 (DBGU_CIDR_SRAMSIZ_96K_Val << DBGU_CIDR_SRAMSIZ_Pos) /**< (DBGU_CIDR) 96 Kbytes Position  */
-#define DBGU_CIDR_SRAMSIZ_512K                (DBGU_CIDR_SRAMSIZ_512K_Val << DBGU_CIDR_SRAMSIZ_Pos) /**< (DBGU_CIDR) 512 Kbytes Position  */
-#define DBGU_CIDR_ARCH_Pos                    _U_(20)                                              /**< (DBGU_CIDR) Architecture Identifier Position */
-#define DBGU_CIDR_ARCH_Msk                    (_U_(0xFF) << DBGU_CIDR_ARCH_Pos)                    /**< (DBGU_CIDR) Architecture Identifier Mask */
-#define DBGU_CIDR_ARCH(value)                 (DBGU_CIDR_ARCH_Msk & ((value) << DBGU_CIDR_ARCH_Pos))
-#define   DBGU_CIDR_ARCH_AT91SAM9xx_Val       _U_(0x19)                                            /**< (DBGU_CIDR) AT91SAM9xx Series  */
-#define   DBGU_CIDR_ARCH_AT91SAM9XExx_Val     _U_(0x29)                                            /**< (DBGU_CIDR) AT91SAM9XExx Series  */
-#define   DBGU_CIDR_ARCH_AT91x34_Val          _U_(0x34)                                            /**< (DBGU_CIDR) AT91x34 Series  */
-#define   DBGU_CIDR_ARCH_CAP7_Val             _U_(0x37)                                            /**< (DBGU_CIDR) CAP7 Series  */
-#define   DBGU_CIDR_ARCH_CAP9_Val             _U_(0x39)                                            /**< (DBGU_CIDR) CAP9 Series  */
-#define   DBGU_CIDR_ARCH_CAP11_Val            _U_(0x3B)                                            /**< (DBGU_CIDR) CAP11 Series  */
-#define   DBGU_CIDR_ARCH_AT91x40_Val          _U_(0x40)                                            /**< (DBGU_CIDR) AT91x40 Series  */
-#define   DBGU_CIDR_ARCH_AT91x42_Val          _U_(0x42)                                            /**< (DBGU_CIDR) AT91x42 Series  */
-#define   DBGU_CIDR_ARCH_AT91x55_Val          _U_(0x55)                                            /**< (DBGU_CIDR) AT91x55 Series  */
-#define   DBGU_CIDR_ARCH_AT91SAM7Axx_Val      _U_(0x60)                                            /**< (DBGU_CIDR) AT91SAM7Axx Series  */
-#define   DBGU_CIDR_ARCH_AT91SAM7AQxx_Val     _U_(0x61)                                            /**< (DBGU_CIDR) AT91SAM7AQxx Series  */
-#define   DBGU_CIDR_ARCH_AT91x63_Val          _U_(0x63)                                            /**< (DBGU_CIDR) AT91x63 Series  */
-#define   DBGU_CIDR_ARCH_AT91SAM7Sxx_Val      _U_(0x70)                                            /**< (DBGU_CIDR) AT91SAM7Sxx Series  */
-#define   DBGU_CIDR_ARCH_AT91SAM7XCxx_Val     _U_(0x71)                                            /**< (DBGU_CIDR) AT91SAM7XCxx Series  */
-#define   DBGU_CIDR_ARCH_AT91SAM7SExx_Val     _U_(0x72)                                            /**< (DBGU_CIDR) AT91SAM7SExx Series  */
-#define   DBGU_CIDR_ARCH_AT91SAM7Lxx_Val      _U_(0x73)                                            /**< (DBGU_CIDR) AT91SAM7Lxx Series  */
-#define   DBGU_CIDR_ARCH_AT91SAM7Xxx_Val      _U_(0x75)                                            /**< (DBGU_CIDR) AT91SAM7Xxx Series  */
-#define   DBGU_CIDR_ARCH_AT91SAM7SLxx_Val     _U_(0x76)                                            /**< (DBGU_CIDR) AT91SAM7SLxx Series  */
-#define   DBGU_CIDR_ARCH_ATSAM3UxC_Val        _U_(0x80)                                            /**< (DBGU_CIDR) ATSAM3UxC Series (100-pin version)  */
-#define   DBGU_CIDR_ARCH_ATSAM3UxE_Val        _U_(0x81)                                            /**< (DBGU_CIDR) ATSAM3UxE Series (144-pin version)  */
-#define   DBGU_CIDR_ARCH_ATSAM3AxC_Val        _U_(0x83)                                            /**< (DBGU_CIDR) ATSAM3AxC Series (100-pin version)  */
-#define   DBGU_CIDR_ARCH_ATSAM3XxC_Val        _U_(0x84)                                            /**< (DBGU_CIDR) ATSAM3XxC Series (100-pin version)  */
-#define   DBGU_CIDR_ARCH_ATSAM3XxE_Val        _U_(0x85)                                            /**< (DBGU_CIDR) ATSAM3XxE Series (144-pin version)  */
-#define   DBGU_CIDR_ARCH_ATSAM3XxG_Val        _U_(0x86)                                            /**< (DBGU_CIDR) ATSAM3XxG Series (208/217-pin version)  */
-#define   DBGU_CIDR_ARCH_ATSAM3SxA_Val        _U_(0x88)                                            /**< (DBGU_CIDR) ATSAM3SxA Series (48-pin version)  */
-#define   DBGU_CIDR_ARCH_ATSAM3SxB_Val        _U_(0x89)                                            /**< (DBGU_CIDR) ATSAM3SxB Series (64-pin version)  */
-#define   DBGU_CIDR_ARCH_ATSAM3SxC_Val        _U_(0x8A)                                            /**< (DBGU_CIDR) ATSAM3SxC Series (100-pin version)  */
-#define   DBGU_CIDR_ARCH_AT91x92_Val          _U_(0x92)                                            /**< (DBGU_CIDR) AT91x92 Series  */
-#define   DBGU_CIDR_ARCH_ATSAM3NxA_Val        _U_(0x93)                                            /**< (DBGU_CIDR) ATSAM3NxA Series (48-pin version)  */
-#define   DBGU_CIDR_ARCH_ATSAM3NxB_Val        _U_(0x94)                                            /**< (DBGU_CIDR) ATSAM3NxB Series (64-pin version)  */
-#define   DBGU_CIDR_ARCH_ATSAM3NxC_Val        _U_(0x95)                                            /**< (DBGU_CIDR) ATSAM3NxC Series (100-pin version)  */
-#define   DBGU_CIDR_ARCH_ATSAM3SDxA_Val       _U_(0x98)                                            /**< (DBGU_CIDR) ATSAM3SDxA Series (48-pin version)  */
-#define   DBGU_CIDR_ARCH_ATSAM3SDxB_Val       _U_(0x99)                                            /**< (DBGU_CIDR) ATSAM3SDxB Series (64-pin version)  */
-#define   DBGU_CIDR_ARCH_ATSAM3SDxC_Val       _U_(0x9A)                                            /**< (DBGU_CIDR) ATSAM3SDxC Series (100-pin version)  */
-#define   DBGU_CIDR_ARCH_ATSAMA5xx_Val        _U_(0xA5)                                            /**< (DBGU_CIDR) ATSAMA5xx Series  */
-#define   DBGU_CIDR_ARCH_AT75Cxx_Val          _U_(0xF0)                                            /**< (DBGU_CIDR) AT75Cxx Series  */
-#define DBGU_CIDR_ARCH_AT91SAM9xx             (DBGU_CIDR_ARCH_AT91SAM9xx_Val << DBGU_CIDR_ARCH_Pos) /**< (DBGU_CIDR) AT91SAM9xx Series Position  */
-#define DBGU_CIDR_ARCH_AT91SAM9XExx           (DBGU_CIDR_ARCH_AT91SAM9XExx_Val << DBGU_CIDR_ARCH_Pos) /**< (DBGU_CIDR) AT91SAM9XExx Series Position  */
-#define DBGU_CIDR_ARCH_AT91x34                (DBGU_CIDR_ARCH_AT91x34_Val << DBGU_CIDR_ARCH_Pos)   /**< (DBGU_CIDR) AT91x34 Series Position  */
-#define DBGU_CIDR_ARCH_CAP7                   (DBGU_CIDR_ARCH_CAP7_Val << DBGU_CIDR_ARCH_Pos)      /**< (DBGU_CIDR) CAP7 Series Position  */
-#define DBGU_CIDR_ARCH_CAP9                   (DBGU_CIDR_ARCH_CAP9_Val << DBGU_CIDR_ARCH_Pos)      /**< (DBGU_CIDR) CAP9 Series Position  */
-#define DBGU_CIDR_ARCH_CAP11                  (DBGU_CIDR_ARCH_CAP11_Val << DBGU_CIDR_ARCH_Pos)     /**< (DBGU_CIDR) CAP11 Series Position  */
-#define DBGU_CIDR_ARCH_AT91x40                (DBGU_CIDR_ARCH_AT91x40_Val << DBGU_CIDR_ARCH_Pos)   /**< (DBGU_CIDR) AT91x40 Series Position  */
-#define DBGU_CIDR_ARCH_AT91x42                (DBGU_CIDR_ARCH_AT91x42_Val << DBGU_CIDR_ARCH_Pos)   /**< (DBGU_CIDR) AT91x42 Series Position  */
-#define DBGU_CIDR_ARCH_AT91x55                (DBGU_CIDR_ARCH_AT91x55_Val << DBGU_CIDR_ARCH_Pos)   /**< (DBGU_CIDR) AT91x55 Series Position  */
-#define DBGU_CIDR_ARCH_AT91SAM7Axx            (DBGU_CIDR_ARCH_AT91SAM7Axx_Val << DBGU_CIDR_ARCH_Pos) /**< (DBGU_CIDR) AT91SAM7Axx Series Position  */
-#define DBGU_CIDR_ARCH_AT91SAM7AQxx           (DBGU_CIDR_ARCH_AT91SAM7AQxx_Val << DBGU_CIDR_ARCH_Pos) /**< (DBGU_CIDR) AT91SAM7AQxx Series Position  */
-#define DBGU_CIDR_ARCH_AT91x63                (DBGU_CIDR_ARCH_AT91x63_Val << DBGU_CIDR_ARCH_Pos)   /**< (DBGU_CIDR) AT91x63 Series Position  */
-#define DBGU_CIDR_ARCH_AT91SAM7Sxx            (DBGU_CIDR_ARCH_AT91SAM7Sxx_Val << DBGU_CIDR_ARCH_Pos) /**< (DBGU_CIDR) AT91SAM7Sxx Series Position  */
-#define DBGU_CIDR_ARCH_AT91SAM7XCxx           (DBGU_CIDR_ARCH_AT91SAM7XCxx_Val << DBGU_CIDR_ARCH_Pos) /**< (DBGU_CIDR) AT91SAM7XCxx Series Position  */
-#define DBGU_CIDR_ARCH_AT91SAM7SExx           (DBGU_CIDR_ARCH_AT91SAM7SExx_Val << DBGU_CIDR_ARCH_Pos) /**< (DBGU_CIDR) AT91SAM7SExx Series Position  */
-#define DBGU_CIDR_ARCH_AT91SAM7Lxx            (DBGU_CIDR_ARCH_AT91SAM7Lxx_Val << DBGU_CIDR_ARCH_Pos) /**< (DBGU_CIDR) AT91SAM7Lxx Series Position  */
-#define DBGU_CIDR_ARCH_AT91SAM7Xxx            (DBGU_CIDR_ARCH_AT91SAM7Xxx_Val << DBGU_CIDR_ARCH_Pos) /**< (DBGU_CIDR) AT91SAM7Xxx Series Position  */
-#define DBGU_CIDR_ARCH_AT91SAM7SLxx           (DBGU_CIDR_ARCH_AT91SAM7SLxx_Val << DBGU_CIDR_ARCH_Pos) /**< (DBGU_CIDR) AT91SAM7SLxx Series Position  */
-#define DBGU_CIDR_ARCH_ATSAM3UxC              (DBGU_CIDR_ARCH_ATSAM3UxC_Val << DBGU_CIDR_ARCH_Pos) /**< (DBGU_CIDR) ATSAM3UxC Series (100-pin version) Position  */
-#define DBGU_CIDR_ARCH_ATSAM3UxE              (DBGU_CIDR_ARCH_ATSAM3UxE_Val << DBGU_CIDR_ARCH_Pos) /**< (DBGU_CIDR) ATSAM3UxE Series (144-pin version) Position  */
-#define DBGU_CIDR_ARCH_ATSAM3AxC              (DBGU_CIDR_ARCH_ATSAM3AxC_Val << DBGU_CIDR_ARCH_Pos) /**< (DBGU_CIDR) ATSAM3AxC Series (100-pin version) Position  */
-#define DBGU_CIDR_ARCH_ATSAM3XxC              (DBGU_CIDR_ARCH_ATSAM3XxC_Val << DBGU_CIDR_ARCH_Pos) /**< (DBGU_CIDR) ATSAM3XxC Series (100-pin version) Position  */
-#define DBGU_CIDR_ARCH_ATSAM3XxE              (DBGU_CIDR_ARCH_ATSAM3XxE_Val << DBGU_CIDR_ARCH_Pos) /**< (DBGU_CIDR) ATSAM3XxE Series (144-pin version) Position  */
-#define DBGU_CIDR_ARCH_ATSAM3XxG              (DBGU_CIDR_ARCH_ATSAM3XxG_Val << DBGU_CIDR_ARCH_Pos) /**< (DBGU_CIDR) ATSAM3XxG Series (208/217-pin version) Position  */
-#define DBGU_CIDR_ARCH_ATSAM3SxA              (DBGU_CIDR_ARCH_ATSAM3SxA_Val << DBGU_CIDR_ARCH_Pos) /**< (DBGU_CIDR) ATSAM3SxA Series (48-pin version) Position  */
-#define DBGU_CIDR_ARCH_ATSAM3SxB              (DBGU_CIDR_ARCH_ATSAM3SxB_Val << DBGU_CIDR_ARCH_Pos) /**< (DBGU_CIDR) ATSAM3SxB Series (64-pin version) Position  */
-#define DBGU_CIDR_ARCH_ATSAM3SxC              (DBGU_CIDR_ARCH_ATSAM3SxC_Val << DBGU_CIDR_ARCH_Pos) /**< (DBGU_CIDR) ATSAM3SxC Series (100-pin version) Position  */
-#define DBGU_CIDR_ARCH_AT91x92                (DBGU_CIDR_ARCH_AT91x92_Val << DBGU_CIDR_ARCH_Pos)   /**< (DBGU_CIDR) AT91x92 Series Position  */
-#define DBGU_CIDR_ARCH_ATSAM3NxA              (DBGU_CIDR_ARCH_ATSAM3NxA_Val << DBGU_CIDR_ARCH_Pos) /**< (DBGU_CIDR) ATSAM3NxA Series (48-pin version) Position  */
-#define DBGU_CIDR_ARCH_ATSAM3NxB              (DBGU_CIDR_ARCH_ATSAM3NxB_Val << DBGU_CIDR_ARCH_Pos) /**< (DBGU_CIDR) ATSAM3NxB Series (64-pin version) Position  */
-#define DBGU_CIDR_ARCH_ATSAM3NxC              (DBGU_CIDR_ARCH_ATSAM3NxC_Val << DBGU_CIDR_ARCH_Pos) /**< (DBGU_CIDR) ATSAM3NxC Series (100-pin version) Position  */
-#define DBGU_CIDR_ARCH_ATSAM3SDxA             (DBGU_CIDR_ARCH_ATSAM3SDxA_Val << DBGU_CIDR_ARCH_Pos) /**< (DBGU_CIDR) ATSAM3SDxA Series (48-pin version) Position  */
-#define DBGU_CIDR_ARCH_ATSAM3SDxB             (DBGU_CIDR_ARCH_ATSAM3SDxB_Val << DBGU_CIDR_ARCH_Pos) /**< (DBGU_CIDR) ATSAM3SDxB Series (64-pin version) Position  */
-#define DBGU_CIDR_ARCH_ATSAM3SDxC             (DBGU_CIDR_ARCH_ATSAM3SDxC_Val << DBGU_CIDR_ARCH_Pos) /**< (DBGU_CIDR) ATSAM3SDxC Series (100-pin version) Position  */
-#define DBGU_CIDR_ARCH_ATSAMA5xx              (DBGU_CIDR_ARCH_ATSAMA5xx_Val << DBGU_CIDR_ARCH_Pos) /**< (DBGU_CIDR) ATSAMA5xx Series Position  */
-#define DBGU_CIDR_ARCH_AT75Cxx                (DBGU_CIDR_ARCH_AT75Cxx_Val << DBGU_CIDR_ARCH_Pos)   /**< (DBGU_CIDR) AT75Cxx Series Position  */
-#define DBGU_CIDR_NVPTYP_Pos                  _U_(28)                                              /**< (DBGU_CIDR) Nonvolatile Program Memory Type Position */
-#define DBGU_CIDR_NVPTYP_Msk                  (_U_(0x7) << DBGU_CIDR_NVPTYP_Pos)                   /**< (DBGU_CIDR) Nonvolatile Program Memory Type Mask */
-#define DBGU_CIDR_NVPTYP(value)               (DBGU_CIDR_NVPTYP_Msk & ((value) << DBGU_CIDR_NVPTYP_Pos))
-#define   DBGU_CIDR_NVPTYP_ROM_Val            _U_(0x0)                                             /**< (DBGU_CIDR) ROM  */
-#define   DBGU_CIDR_NVPTYP_ROMLESS_Val        _U_(0x1)                                             /**< (DBGU_CIDR) ROMless or on-chip Flash  */
-#define   DBGU_CIDR_NVPTYP_FLASH_Val          _U_(0x2)                                             /**< (DBGU_CIDR) Embedded Flash Memory  */
-#define   DBGU_CIDR_NVPTYP_ROM_FLASH_Val      _U_(0x3)                                             /**< (DBGU_CIDR) ROM and Embedded Flash MemoryNVPSIZ is ROM size NVPSIZ2 is Flash size  */
-#define   DBGU_CIDR_NVPTYP_SRAM_Val           _U_(0x4)                                             /**< (DBGU_CIDR) SRAM emulating ROM  */
-#define DBGU_CIDR_NVPTYP_ROM                  (DBGU_CIDR_NVPTYP_ROM_Val << DBGU_CIDR_NVPTYP_Pos)   /**< (DBGU_CIDR) ROM Position  */
-#define DBGU_CIDR_NVPTYP_ROMLESS              (DBGU_CIDR_NVPTYP_ROMLESS_Val << DBGU_CIDR_NVPTYP_Pos) /**< (DBGU_CIDR) ROMless or on-chip Flash Position  */
-#define DBGU_CIDR_NVPTYP_FLASH                (DBGU_CIDR_NVPTYP_FLASH_Val << DBGU_CIDR_NVPTYP_Pos) /**< (DBGU_CIDR) Embedded Flash Memory Position  */
-#define DBGU_CIDR_NVPTYP_ROM_FLASH            (DBGU_CIDR_NVPTYP_ROM_FLASH_Val << DBGU_CIDR_NVPTYP_Pos) /**< (DBGU_CIDR) ROM and Embedded Flash MemoryNVPSIZ is ROM size NVPSIZ2 is Flash size Position  */
-#define DBGU_CIDR_NVPTYP_SRAM                 (DBGU_CIDR_NVPTYP_SRAM_Val << DBGU_CIDR_NVPTYP_Pos)  /**< (DBGU_CIDR) SRAM emulating ROM Position  */
+#define DBGU_CIDR_CHID_Pos                    _U_(0)                                               /**< (DBGU_CIDR) Chip ID Value Position */
+#define DBGU_CIDR_CHID_Msk                    (_U_(0x7FFFFFFF) << DBGU_CIDR_CHID_Pos)              /**< (DBGU_CIDR) Chip ID Value Mask */
+#define DBGU_CIDR_CHID(value)                 (DBGU_CIDR_CHID_Msk & ((value) << DBGU_CIDR_CHID_Pos))
 #define DBGU_CIDR_EXT_Pos                     _U_(31)                                              /**< (DBGU_CIDR) Extension Flag Position */
 #define DBGU_CIDR_EXT_Msk                     (_U_(0x1) << DBGU_CIDR_EXT_Pos)                      /**< (DBGU_CIDR) Extension Flag Mask */
 #define DBGU_CIDR_EXT(value)                  (DBGU_CIDR_EXT_Msk & ((value) << DBGU_CIDR_EXT_Pos))
@@ -478,19 +284,9 @@
 #define DBGU_WPMR_WPKEY_Pos                   _U_(8)                                               /**< (DBGU_WPMR) Write Protection Key Position */
 #define DBGU_WPMR_WPKEY_Msk                   (_U_(0xFFFFFF) << DBGU_WPMR_WPKEY_Pos)               /**< (DBGU_WPMR) Write Protection Key Mask */
 #define DBGU_WPMR_WPKEY(value)                (DBGU_WPMR_WPKEY_Msk & ((value) << DBGU_WPMR_WPKEY_Pos))
-#define   DBGU_WPMR_WPKEY_PASSWD_Val          _U_(0x554152)                                        /**< (DBGU_WPMR) Writing any other value in this field aborts the write operation.Always reads as 0.  */
-#define DBGU_WPMR_WPKEY_PASSWD                (DBGU_WPMR_WPKEY_PASSWD_Val << DBGU_WPMR_WPKEY_Pos)  /**< (DBGU_WPMR) Writing any other value in this field aborts the write operation.Always reads as 0. Position  */
+#define   DBGU_WPMR_WPKEY_PASSWD_Val          _U_(0x554152)                                        /**< (DBGU_WPMR) Writing any other value in this field aborts the write operation. Always reads as 0.  */
+#define DBGU_WPMR_WPKEY_PASSWD                (DBGU_WPMR_WPKEY_PASSWD_Val << DBGU_WPMR_WPKEY_Pos)  /**< (DBGU_WPMR) Writing any other value in this field aborts the write operation. Always reads as 0. Position  */
 #define DBGU_WPMR_Msk                         _U_(0xFFFFFF01)                                      /**< (DBGU_WPMR) Register Mask  */
-
-
-/* -------- DBGU_VERSION : (DBGU Offset: 0xFC) ( R/ 32) Version Register -------- */
-#define DBGU_VERSION_VERSION_Pos              _U_(0)                                               /**< (DBGU_VERSION) Hardware Module Version Position */
-#define DBGU_VERSION_VERSION_Msk              (_U_(0xFFF) << DBGU_VERSION_VERSION_Pos)             /**< (DBGU_VERSION) Hardware Module Version Mask */
-#define DBGU_VERSION_VERSION(value)           (DBGU_VERSION_VERSION_Msk & ((value) << DBGU_VERSION_VERSION_Pos))
-#define DBGU_VERSION_MFN_Pos                  _U_(16)                                              /**< (DBGU_VERSION) Metal Fix Number Position */
-#define DBGU_VERSION_MFN_Msk                  (_U_(0x7) << DBGU_VERSION_MFN_Pos)                   /**< (DBGU_VERSION) Metal Fix Number Mask */
-#define DBGU_VERSION_MFN(value)               (DBGU_VERSION_MFN_Msk & ((value) << DBGU_VERSION_MFN_Pos))
-#define DBGU_VERSION_Msk                      _U_(0x00070FFF)                                      /**< (DBGU_VERSION) Register Mask  */
 
 
 /** \brief DBGU register offsets definitions */
@@ -508,7 +304,6 @@
 #define DBGU_EXID_REG_OFST             (0x44)              /**< (DBGU_EXID) Chip ID Extension Register Offset */
 #define DBGU_FNR_REG_OFST              (0x48)              /**< (DBGU_FNR) Force NTRST Register Offset */
 #define DBGU_WPMR_REG_OFST             (0xE4)              /**< (DBGU_WPMR) Write Protection Mode Register Offset */
-#define DBGU_VERSION_REG_OFST          (0xFC)              /**< (DBGU_VERSION) Version Register Offset */
 
 #if !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__))
 /** \brief DBGU register API structure */
@@ -531,8 +326,6 @@ typedef struct
   __IO  uint32_t                       DBGU_FNR;           /**< Offset: 0x48 (R/W  32) Force NTRST Register */
   __I   uint8_t                        Reserved3[0x98];
   __IO  uint32_t                       DBGU_WPMR;          /**< Offset: 0xE4 (R/W  32) Write Protection Mode Register */
-  __I   uint8_t                        Reserved4[0x14];
-  __I   uint32_t                       DBGU_VERSION;       /**< Offset: 0xFC (R/   32) Version Register */
 } dbgu_registers_t;
 
 
