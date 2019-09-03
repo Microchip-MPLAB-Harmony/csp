@@ -61,12 +61,10 @@
 // *****************************************************************************
 // *****************************************************************************
 
-
-
-void EIC_Initialize (void)
+void EIC_Initialize(void)
 {
     /* Reset all registers in the EIC module to their initial state and
-	   EIC will be disabled. */
+       EIC will be disabled. */
     EIC_REGS->EIC_CTRL |= EIC_CTRL_SWRST_Msk;
 
     while((EIC_REGS->EIC_STATUS & EIC_STATUS_SYNCBUSY_Msk) == EIC_STATUS_SYNCBUSY_Msk)
@@ -76,8 +74,8 @@ void EIC_Initialize (void)
 
     /* NMI Control register */
 
-    /* Interrupt sense type and filter control for EXTINT channels 0 to 7*/
-    EIC_REGS->EIC_CONFIG[0] =  EIC_CONFIG_SENSE0_HIGH  |
+    /* Interrupt sense type and filter control for EXTINT channels 0 to 7 */
+    EIC_REGS->EIC_CONFIG[0] = EIC_CONFIG_SENSE0_HIGH  |
                               EIC_CONFIG_SENSE1_NONE  |
                               EIC_CONFIG_SENSE2_NONE  |
                               EIC_CONFIG_SENSE3_NONE  |
@@ -87,7 +85,7 @@ void EIC_Initialize (void)
                               EIC_CONFIG_SENSE7_NONE ;
 
     /* Interrupt sense type and filter control for EXTINT channels 8 to 15 */
-    EIC_REGS->EIC_CONFIG[1] =  EIC_CONFIG_SENSE0_NONE  |
+    EIC_REGS->EIC_CONFIG[1] = EIC_CONFIG_SENSE0_NONE  |
                               EIC_CONFIG_SENSE1_NONE  |
                               EIC_CONFIG_SENSE2_NONE  |
                               EIC_CONFIG_SENSE3_NONE  |
@@ -96,9 +94,9 @@ void EIC_Initialize (void)
                               EIC_CONFIG_SENSE6_NONE  |
                               EIC_CONFIG_SENSE7_NONE ;
 
-
     /* Event Control Output enable */
     EIC_REGS->EIC_EVCTRL = 0x1;
+
 
     /* Enable the EIC */
     EIC_REGS->EIC_CTRL |= EIC_CTRL_ENABLE_Msk;
@@ -108,3 +106,4 @@ void EIC_Initialize (void)
         /* Wait for sync */
     }
 }
+
