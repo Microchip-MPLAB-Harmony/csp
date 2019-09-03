@@ -140,6 +140,10 @@ typedef enum
 
     I2C_STATE_ADDR_BYTE_2_SEND,
 
+    I2C_STATE_READ_10BIT_MODE,
+
+    I2C_STATE_ADDR_BYTE_1_SEND_10BIT_ONLY,
+
     I2C_STATE_WRITE,
 
     I2C_STATE_READ,
@@ -191,6 +195,7 @@ typedef struct
     size_t                  readSize;
     size_t                  writeCount;
     size_t                  readCount;
+    bool                    forcedWrite;
     I2C_TRANSFER_TYPE       transferType;
     I2C_STATE               state;
     I2C_ERROR               error;
@@ -198,6 +203,26 @@ typedef struct
     uintptr_t               context;
 
 } I2C_OBJ;
+
+// *****************************************************************************
+/* I2C Transfer Setup Data Structure
+
+   Summary:
+    I2C Transfer Setup Data Structure
+
+   Description:
+    This data structure defines the I2C Transfer Setup Data
+
+   Remarks:
+    None.
+*/
+
+typedef struct
+{
+    /* I2C Clock Speed */
+    uint32_t clkSpeed;
+
+} I2C_TRANSFER_SETUP;
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
