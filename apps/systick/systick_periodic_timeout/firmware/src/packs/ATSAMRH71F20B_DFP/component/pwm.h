@@ -20,13 +20,209 @@
  *
  */
 
-/* file generated from device description version 2019-06-11T20:50:29Z */
+/* file generated from device description version 2019-08-29T14:13:58Z */
 #ifndef _SAMRH71_PWM_COMPONENT_H_
 #define _SAMRH71_PWM_COMPONENT_H_
 
 /* ************************************************************************** */
 /*   SOFTWARE API DEFINITION FOR PWM                                          */
 /* ************************************************************************** */
+
+/* -------- PWM_CMR : (PWM Offset: 0x00) (R/W 32) PWM Channel Mode Register -------- */
+#define PWM_CMR_CPRE_Pos                      _U_(0)                                               /**< (PWM_CMR) Channel Pre-scaler Position */
+#define PWM_CMR_CPRE_Msk                      (_U_(0xF) << PWM_CMR_CPRE_Pos)                       /**< (PWM_CMR) Channel Pre-scaler Mask */
+#define PWM_CMR_CPRE(value)                   (PWM_CMR_CPRE_Msk & ((value) << PWM_CMR_CPRE_Pos))  
+#define   PWM_CMR_CPRE_MCK_Val                _U_(0x0)                                             /**< (PWM_CMR) Peripheral clock  */
+#define   PWM_CMR_CPRE_MCK_DIV_2_Val          _U_(0x1)                                             /**< (PWM_CMR) Peripheral clock/2  */
+#define   PWM_CMR_CPRE_MCK_DIV_4_Val          _U_(0x2)                                             /**< (PWM_CMR) Peripheral clock/4  */
+#define   PWM_CMR_CPRE_MCK_DIV_8_Val          _U_(0x3)                                             /**< (PWM_CMR) Peripheral clock/8  */
+#define   PWM_CMR_CPRE_MCK_DIV_16_Val         _U_(0x4)                                             /**< (PWM_CMR) Peripheral clock/16  */
+#define   PWM_CMR_CPRE_MCK_DIV_32_Val         _U_(0x5)                                             /**< (PWM_CMR) Peripheral clock/32  */
+#define   PWM_CMR_CPRE_MCK_DIV_64_Val         _U_(0x6)                                             /**< (PWM_CMR) Peripheral clock/64  */
+#define   PWM_CMR_CPRE_MCK_DIV_128_Val        _U_(0x7)                                             /**< (PWM_CMR) Peripheral clock/128  */
+#define   PWM_CMR_CPRE_MCK_DIV_256_Val        _U_(0x8)                                             /**< (PWM_CMR) Peripheral clock/256  */
+#define   PWM_CMR_CPRE_MCK_DIV_512_Val        _U_(0x9)                                             /**< (PWM_CMR) Peripheral clock/512  */
+#define   PWM_CMR_CPRE_MCK_DIV_1024_Val       _U_(0xA)                                             /**< (PWM_CMR) Peripheral clock/1024  */
+#define   PWM_CMR_CPRE_CLKA_Val               _U_(0xB)                                             /**< (PWM_CMR) Clock A  */
+#define   PWM_CMR_CPRE_CLKB_Val               _U_(0xC)                                             /**< (PWM_CMR) Clock B  */
+#define PWM_CMR_CPRE_MCK                      (PWM_CMR_CPRE_MCK_Val << PWM_CMR_CPRE_Pos)           /**< (PWM_CMR) Peripheral clock Position  */
+#define PWM_CMR_CPRE_MCK_DIV_2                (PWM_CMR_CPRE_MCK_DIV_2_Val << PWM_CMR_CPRE_Pos)     /**< (PWM_CMR) Peripheral clock/2 Position  */
+#define PWM_CMR_CPRE_MCK_DIV_4                (PWM_CMR_CPRE_MCK_DIV_4_Val << PWM_CMR_CPRE_Pos)     /**< (PWM_CMR) Peripheral clock/4 Position  */
+#define PWM_CMR_CPRE_MCK_DIV_8                (PWM_CMR_CPRE_MCK_DIV_8_Val << PWM_CMR_CPRE_Pos)     /**< (PWM_CMR) Peripheral clock/8 Position  */
+#define PWM_CMR_CPRE_MCK_DIV_16               (PWM_CMR_CPRE_MCK_DIV_16_Val << PWM_CMR_CPRE_Pos)    /**< (PWM_CMR) Peripheral clock/16 Position  */
+#define PWM_CMR_CPRE_MCK_DIV_32               (PWM_CMR_CPRE_MCK_DIV_32_Val << PWM_CMR_CPRE_Pos)    /**< (PWM_CMR) Peripheral clock/32 Position  */
+#define PWM_CMR_CPRE_MCK_DIV_64               (PWM_CMR_CPRE_MCK_DIV_64_Val << PWM_CMR_CPRE_Pos)    /**< (PWM_CMR) Peripheral clock/64 Position  */
+#define PWM_CMR_CPRE_MCK_DIV_128              (PWM_CMR_CPRE_MCK_DIV_128_Val << PWM_CMR_CPRE_Pos)   /**< (PWM_CMR) Peripheral clock/128 Position  */
+#define PWM_CMR_CPRE_MCK_DIV_256              (PWM_CMR_CPRE_MCK_DIV_256_Val << PWM_CMR_CPRE_Pos)   /**< (PWM_CMR) Peripheral clock/256 Position  */
+#define PWM_CMR_CPRE_MCK_DIV_512              (PWM_CMR_CPRE_MCK_DIV_512_Val << PWM_CMR_CPRE_Pos)   /**< (PWM_CMR) Peripheral clock/512 Position  */
+#define PWM_CMR_CPRE_MCK_DIV_1024             (PWM_CMR_CPRE_MCK_DIV_1024_Val << PWM_CMR_CPRE_Pos)  /**< (PWM_CMR) Peripheral clock/1024 Position  */
+#define PWM_CMR_CPRE_CLKA                     (PWM_CMR_CPRE_CLKA_Val << PWM_CMR_CPRE_Pos)          /**< (PWM_CMR) Clock A Position  */
+#define PWM_CMR_CPRE_CLKB                     (PWM_CMR_CPRE_CLKB_Val << PWM_CMR_CPRE_Pos)          /**< (PWM_CMR) Clock B Position  */
+#define PWM_CMR_CALG_Pos                      _U_(8)                                               /**< (PWM_CMR) Channel Alignment Position */
+#define PWM_CMR_CALG_Msk                      (_U_(0x1) << PWM_CMR_CALG_Pos)                       /**< (PWM_CMR) Channel Alignment Mask */
+#define PWM_CMR_CALG(value)                   (PWM_CMR_CALG_Msk & ((value) << PWM_CMR_CALG_Pos))  
+#define   PWM_CMR_CALG_LEFT_ALIGNED_Val       _U_(0x0)                                             /**< (PWM_CMR) Left aligned  */
+#define   PWM_CMR_CALG_CENTER_ALIGNED_Val     _U_(0x1)                                             /**< (PWM_CMR) Center aligned  */
+#define PWM_CMR_CALG_LEFT_ALIGNED             (PWM_CMR_CALG_LEFT_ALIGNED_Val << PWM_CMR_CALG_Pos)  /**< (PWM_CMR) Left aligned Position  */
+#define PWM_CMR_CALG_CENTER_ALIGNED           (PWM_CMR_CALG_CENTER_ALIGNED_Val << PWM_CMR_CALG_Pos) /**< (PWM_CMR) Center aligned Position  */
+#define PWM_CMR_CPOL_Pos                      _U_(9)                                               /**< (PWM_CMR) Channel Polarity Position */
+#define PWM_CMR_CPOL_Msk                      (_U_(0x1) << PWM_CMR_CPOL_Pos)                       /**< (PWM_CMR) Channel Polarity Mask */
+#define PWM_CMR_CPOL(value)                   (PWM_CMR_CPOL_Msk & ((value) << PWM_CMR_CPOL_Pos))  
+#define   PWM_CMR_CPOL_LOW_POLARITY_Val       _U_(0x0)                                             /**< (PWM_CMR) Waveform starts at low level  */
+#define   PWM_CMR_CPOL_HIGH_POLARITY_Val      _U_(0x1)                                             /**< (PWM_CMR) Waveform starts at high level  */
+#define PWM_CMR_CPOL_LOW_POLARITY             (PWM_CMR_CPOL_LOW_POLARITY_Val << PWM_CMR_CPOL_Pos)  /**< (PWM_CMR) Waveform starts at low level Position  */
+#define PWM_CMR_CPOL_HIGH_POLARITY            (PWM_CMR_CPOL_HIGH_POLARITY_Val << PWM_CMR_CPOL_Pos) /**< (PWM_CMR) Waveform starts at high level Position  */
+#define PWM_CMR_CES_Pos                       _U_(10)                                              /**< (PWM_CMR) Counter Event Selection Position */
+#define PWM_CMR_CES_Msk                       (_U_(0x1) << PWM_CMR_CES_Pos)                        /**< (PWM_CMR) Counter Event Selection Mask */
+#define PWM_CMR_CES(value)                    (PWM_CMR_CES_Msk & ((value) << PWM_CMR_CES_Pos))    
+#define   PWM_CMR_CES_SINGLE_EVENT_Val        _U_(0x0)                                             /**< (PWM_CMR) At the end of PWM period  */
+#define   PWM_CMR_CES_DOUBLE_EVENT_Val        _U_(0x1)                                             /**< (PWM_CMR) At half of PWM period AND at the end of PWM period  */
+#define PWM_CMR_CES_SINGLE_EVENT              (PWM_CMR_CES_SINGLE_EVENT_Val << PWM_CMR_CES_Pos)    /**< (PWM_CMR) At the end of PWM period Position  */
+#define PWM_CMR_CES_DOUBLE_EVENT              (PWM_CMR_CES_DOUBLE_EVENT_Val << PWM_CMR_CES_Pos)    /**< (PWM_CMR) At half of PWM period AND at the end of PWM period Position  */
+#define PWM_CMR_UPDS_Pos                      _U_(11)                                              /**< (PWM_CMR) Update Selection Position */
+#define PWM_CMR_UPDS_Msk                      (_U_(0x1) << PWM_CMR_UPDS_Pos)                       /**< (PWM_CMR) Update Selection Mask */
+#define PWM_CMR_UPDS(value)                   (PWM_CMR_UPDS_Msk & ((value) << PWM_CMR_UPDS_Pos))  
+#define   PWM_CMR_UPDS_UPDATE_AT_PERIOD_Val   _U_(0x0)                                             /**< (PWM_CMR) At the next end of PWM period  */
+#define   PWM_CMR_UPDS_UPDATE_AT_HALF_PERIOD_Val _U_(0x1)                                             /**< (PWM_CMR) At the next end of Half PWM period  */
+#define PWM_CMR_UPDS_UPDATE_AT_PERIOD         (PWM_CMR_UPDS_UPDATE_AT_PERIOD_Val << PWM_CMR_UPDS_Pos) /**< (PWM_CMR) At the next end of PWM period Position  */
+#define PWM_CMR_UPDS_UPDATE_AT_HALF_PERIOD    (PWM_CMR_UPDS_UPDATE_AT_HALF_PERIOD_Val << PWM_CMR_UPDS_Pos) /**< (PWM_CMR) At the next end of Half PWM period Position  */
+#define PWM_CMR_DPOLI_Pos                     _U_(12)                                              /**< (PWM_CMR) Disabled Polarity Inverted Position */
+#define PWM_CMR_DPOLI_Msk                     (_U_(0x1) << PWM_CMR_DPOLI_Pos)                      /**< (PWM_CMR) Disabled Polarity Inverted Mask */
+#define PWM_CMR_DPOLI(value)                  (PWM_CMR_DPOLI_Msk & ((value) << PWM_CMR_DPOLI_Pos))
+#define PWM_CMR_TCTS_Pos                      _U_(13)                                              /**< (PWM_CMR) Timer Counter Trigger Selection Position */
+#define PWM_CMR_TCTS_Msk                      (_U_(0x1) << PWM_CMR_TCTS_Pos)                       /**< (PWM_CMR) Timer Counter Trigger Selection Mask */
+#define PWM_CMR_TCTS(value)                   (PWM_CMR_TCTS_Msk & ((value) << PWM_CMR_TCTS_Pos))  
+#define PWM_CMR_DTE_Pos                       _U_(16)                                              /**< (PWM_CMR) Dead-Time Generator Enable Position */
+#define PWM_CMR_DTE_Msk                       (_U_(0x1) << PWM_CMR_DTE_Pos)                        /**< (PWM_CMR) Dead-Time Generator Enable Mask */
+#define PWM_CMR_DTE(value)                    (PWM_CMR_DTE_Msk & ((value) << PWM_CMR_DTE_Pos))    
+#define PWM_CMR_DTHI_Pos                      _U_(17)                                              /**< (PWM_CMR) Dead-Time PWMHx Output Inverted Position */
+#define PWM_CMR_DTHI_Msk                      (_U_(0x1) << PWM_CMR_DTHI_Pos)                       /**< (PWM_CMR) Dead-Time PWMHx Output Inverted Mask */
+#define PWM_CMR_DTHI(value)                   (PWM_CMR_DTHI_Msk & ((value) << PWM_CMR_DTHI_Pos))  
+#define PWM_CMR_DTLI_Pos                      _U_(18)                                              /**< (PWM_CMR) Dead-Time PWMLx Output Inverted Position */
+#define PWM_CMR_DTLI_Msk                      (_U_(0x1) << PWM_CMR_DTLI_Pos)                       /**< (PWM_CMR) Dead-Time PWMLx Output Inverted Mask */
+#define PWM_CMR_DTLI(value)                   (PWM_CMR_DTLI_Msk & ((value) << PWM_CMR_DTLI_Pos))  
+#define PWM_CMR_PPM_Pos                       _U_(19)                                              /**< (PWM_CMR) Push-Pull Mode Position */
+#define PWM_CMR_PPM_Msk                       (_U_(0x1) << PWM_CMR_PPM_Pos)                        /**< (PWM_CMR) Push-Pull Mode Mask */
+#define PWM_CMR_PPM(value)                    (PWM_CMR_PPM_Msk & ((value) << PWM_CMR_PPM_Pos))    
+#define PWM_CMR_Msk                           _U_(0x000F3F0F)                                      /**< (PWM_CMR) Register Mask  */
+
+
+/* -------- PWM_CDTY : (PWM Offset: 0x04) (R/W 32) PWM Channel Duty Cycle Register -------- */
+#define PWM_CDTY_CDTY_Pos                     _U_(0)                                               /**< (PWM_CDTY) Channel Duty-Cycle Position */
+#define PWM_CDTY_CDTY_Msk                     (_U_(0xFFFFFF) << PWM_CDTY_CDTY_Pos)                 /**< (PWM_CDTY) Channel Duty-Cycle Mask */
+#define PWM_CDTY_CDTY(value)                  (PWM_CDTY_CDTY_Msk & ((value) << PWM_CDTY_CDTY_Pos))
+#define PWM_CDTY_Msk                          _U_(0x00FFFFFF)                                      /**< (PWM_CDTY) Register Mask  */
+
+
+/* -------- PWM_CDTYUPD : (PWM Offset: 0x08) ( /W 32) PWM Channel Duty Cycle Update Register -------- */
+#define PWM_CDTYUPD_CDTYUPD_Pos               _U_(0)                                               /**< (PWM_CDTYUPD) Channel Duty-Cycle Update Position */
+#define PWM_CDTYUPD_CDTYUPD_Msk               (_U_(0xFFFFFF) << PWM_CDTYUPD_CDTYUPD_Pos)           /**< (PWM_CDTYUPD) Channel Duty-Cycle Update Mask */
+#define PWM_CDTYUPD_CDTYUPD(value)            (PWM_CDTYUPD_CDTYUPD_Msk & ((value) << PWM_CDTYUPD_CDTYUPD_Pos))
+#define PWM_CDTYUPD_Msk                       _U_(0x00FFFFFF)                                      /**< (PWM_CDTYUPD) Register Mask  */
+
+
+/* -------- PWM_CPRD : (PWM Offset: 0x0C) (R/W 32) PWM Channel Period Register -------- */
+#define PWM_CPRD_CPRD_Pos                     _U_(0)                                               /**< (PWM_CPRD) Channel Period Position */
+#define PWM_CPRD_CPRD_Msk                     (_U_(0xFFFFFF) << PWM_CPRD_CPRD_Pos)                 /**< (PWM_CPRD) Channel Period Mask */
+#define PWM_CPRD_CPRD(value)                  (PWM_CPRD_CPRD_Msk & ((value) << PWM_CPRD_CPRD_Pos))
+#define PWM_CPRD_Msk                          _U_(0x00FFFFFF)                                      /**< (PWM_CPRD) Register Mask  */
+
+
+/* -------- PWM_CPRDUPD : (PWM Offset: 0x10) ( /W 32) PWM Channel Period Update Register -------- */
+#define PWM_CPRDUPD_CPRDUPD_Pos               _U_(0)                                               /**< (PWM_CPRDUPD) Channel Period Update Position */
+#define PWM_CPRDUPD_CPRDUPD_Msk               (_U_(0xFFFFFF) << PWM_CPRDUPD_CPRDUPD_Pos)           /**< (PWM_CPRDUPD) Channel Period Update Mask */
+#define PWM_CPRDUPD_CPRDUPD(value)            (PWM_CPRDUPD_CPRDUPD_Msk & ((value) << PWM_CPRDUPD_CPRDUPD_Pos))
+#define PWM_CPRDUPD_Msk                       _U_(0x00FFFFFF)                                      /**< (PWM_CPRDUPD) Register Mask  */
+
+
+/* -------- PWM_CCNT : (PWM Offset: 0x14) ( R/ 32) PWM Channel Counter Register -------- */
+#define PWM_CCNT_CNT_Pos                      _U_(0)                                               /**< (PWM_CCNT) Channel Counter Register Position */
+#define PWM_CCNT_CNT_Msk                      (_U_(0xFFFFFF) << PWM_CCNT_CNT_Pos)                  /**< (PWM_CCNT) Channel Counter Register Mask */
+#define PWM_CCNT_CNT(value)                   (PWM_CCNT_CNT_Msk & ((value) << PWM_CCNT_CNT_Pos))  
+#define PWM_CCNT_Msk                          _U_(0x00FFFFFF)                                      /**< (PWM_CCNT) Register Mask  */
+
+
+/* -------- PWM_DT : (PWM Offset: 0x18) (R/W 32) PWM Channel Dead Time Register -------- */
+#define PWM_DT_DTH_Pos                        _U_(0)                                               /**< (PWM_DT) Dead-Time Value for PWMHx Output Position */
+#define PWM_DT_DTH_Msk                        (_U_(0xFFFF) << PWM_DT_DTH_Pos)                      /**< (PWM_DT) Dead-Time Value for PWMHx Output Mask */
+#define PWM_DT_DTH(value)                     (PWM_DT_DTH_Msk & ((value) << PWM_DT_DTH_Pos))      
+#define PWM_DT_DTL_Pos                        _U_(16)                                              /**< (PWM_DT) Dead-Time Value for PWMLx Output Position */
+#define PWM_DT_DTL_Msk                        (_U_(0xFFFF) << PWM_DT_DTL_Pos)                      /**< (PWM_DT) Dead-Time Value for PWMLx Output Mask */
+#define PWM_DT_DTL(value)                     (PWM_DT_DTL_Msk & ((value) << PWM_DT_DTL_Pos))      
+#define PWM_DT_Msk                            _U_(0xFFFFFFFF)                                      /**< (PWM_DT) Register Mask  */
+
+
+/* -------- PWM_DTUPD : (PWM Offset: 0x1C) ( /W 32) PWM Channel Dead Time Update Register -------- */
+#define PWM_DTUPD_DTHUPD_Pos                  _U_(0)                                               /**< (PWM_DTUPD) Dead-Time Value Update for PWMHx Output Position */
+#define PWM_DTUPD_DTHUPD_Msk                  (_U_(0xFFFF) << PWM_DTUPD_DTHUPD_Pos)                /**< (PWM_DTUPD) Dead-Time Value Update for PWMHx Output Mask */
+#define PWM_DTUPD_DTHUPD(value)               (PWM_DTUPD_DTHUPD_Msk & ((value) << PWM_DTUPD_DTHUPD_Pos))
+#define PWM_DTUPD_DTLUPD_Pos                  _U_(16)                                              /**< (PWM_DTUPD) Dead-Time Value Update for PWMLx Output Position */
+#define PWM_DTUPD_DTLUPD_Msk                  (_U_(0xFFFF) << PWM_DTUPD_DTLUPD_Pos)                /**< (PWM_DTUPD) Dead-Time Value Update for PWMLx Output Mask */
+#define PWM_DTUPD_DTLUPD(value)               (PWM_DTUPD_DTLUPD_Msk & ((value) << PWM_DTUPD_DTLUPD_Pos))
+#define PWM_DTUPD_Msk                         _U_(0xFFFFFFFF)                                      /**< (PWM_DTUPD) Register Mask  */
+
+
+/* -------- PWM_CMPV : (PWM Offset: 0x00) (R/W 32) PWM Comparison 0 Value Register -------- */
+#define PWM_CMPV_CV_Pos                       _U_(0)                                               /**< (PWM_CMPV) Comparison x Value Position */
+#define PWM_CMPV_CV_Msk                       (_U_(0xFFFFFF) << PWM_CMPV_CV_Pos)                   /**< (PWM_CMPV) Comparison x Value Mask */
+#define PWM_CMPV_CV(value)                    (PWM_CMPV_CV_Msk & ((value) << PWM_CMPV_CV_Pos))    
+#define PWM_CMPV_CVM_Pos                      _U_(24)                                              /**< (PWM_CMPV) Comparison x Value Mode Position */
+#define PWM_CMPV_CVM_Msk                      (_U_(0x1) << PWM_CMPV_CVM_Pos)                       /**< (PWM_CMPV) Comparison x Value Mode Mask */
+#define PWM_CMPV_CVM(value)                   (PWM_CMPV_CVM_Msk & ((value) << PWM_CMPV_CVM_Pos))  
+#define   PWM_CMPV_CVM_COMPARE_AT_INCREMENT_Val _U_(0x0)                                             /**< (PWM_CMPV) Compare when counter is incrementing  */
+#define   PWM_CMPV_CVM_COMPARE_AT_DECREMENT_Val _U_(0x1)                                             /**< (PWM_CMPV) Compare when counter is decrementing  */
+#define PWM_CMPV_CVM_COMPARE_AT_INCREMENT     (PWM_CMPV_CVM_COMPARE_AT_INCREMENT_Val << PWM_CMPV_CVM_Pos) /**< (PWM_CMPV) Compare when counter is incrementing Position  */
+#define PWM_CMPV_CVM_COMPARE_AT_DECREMENT     (PWM_CMPV_CVM_COMPARE_AT_DECREMENT_Val << PWM_CMPV_CVM_Pos) /**< (PWM_CMPV) Compare when counter is decrementing Position  */
+#define PWM_CMPV_Msk                          _U_(0x01FFFFFF)                                      /**< (PWM_CMPV) Register Mask  */
+
+
+/* -------- PWM_CMPVUPD : (PWM Offset: 0x04) ( /W 32) PWM Comparison 0 Value Update Register -------- */
+#define PWM_CMPVUPD_CVUPD_Pos                 _U_(0)                                               /**< (PWM_CMPVUPD) Comparison x Value Update Position */
+#define PWM_CMPVUPD_CVUPD_Msk                 (_U_(0xFFFFFF) << PWM_CMPVUPD_CVUPD_Pos)             /**< (PWM_CMPVUPD) Comparison x Value Update Mask */
+#define PWM_CMPVUPD_CVUPD(value)              (PWM_CMPVUPD_CVUPD_Msk & ((value) << PWM_CMPVUPD_CVUPD_Pos))
+#define PWM_CMPVUPD_CVMUPD_Pos                _U_(24)                                              /**< (PWM_CMPVUPD) Comparison x Value Mode Update Position */
+#define PWM_CMPVUPD_CVMUPD_Msk                (_U_(0x1) << PWM_CMPVUPD_CVMUPD_Pos)                 /**< (PWM_CMPVUPD) Comparison x Value Mode Update Mask */
+#define PWM_CMPVUPD_CVMUPD(value)             (PWM_CMPVUPD_CVMUPD_Msk & ((value) << PWM_CMPVUPD_CVMUPD_Pos))
+#define PWM_CMPVUPD_Msk                       _U_(0x01FFFFFF)                                      /**< (PWM_CMPVUPD) Register Mask  */
+
+
+/* -------- PWM_CMPM : (PWM Offset: 0x08) (R/W 32) PWM Comparison 0 Mode Register -------- */
+#define PWM_CMPM_CEN_Pos                      _U_(0)                                               /**< (PWM_CMPM) Comparison x Enable Position */
+#define PWM_CMPM_CEN_Msk                      (_U_(0x1) << PWM_CMPM_CEN_Pos)                       /**< (PWM_CMPM) Comparison x Enable Mask */
+#define PWM_CMPM_CEN(value)                   (PWM_CMPM_CEN_Msk & ((value) << PWM_CMPM_CEN_Pos))  
+#define PWM_CMPM_CTR_Pos                      _U_(4)                                               /**< (PWM_CMPM) Comparison x Trigger Position */
+#define PWM_CMPM_CTR_Msk                      (_U_(0xF) << PWM_CMPM_CTR_Pos)                       /**< (PWM_CMPM) Comparison x Trigger Mask */
+#define PWM_CMPM_CTR(value)                   (PWM_CMPM_CTR_Msk & ((value) << PWM_CMPM_CTR_Pos))  
+#define PWM_CMPM_CPR_Pos                      _U_(8)                                               /**< (PWM_CMPM) Comparison x Period Position */
+#define PWM_CMPM_CPR_Msk                      (_U_(0xF) << PWM_CMPM_CPR_Pos)                       /**< (PWM_CMPM) Comparison x Period Mask */
+#define PWM_CMPM_CPR(value)                   (PWM_CMPM_CPR_Msk & ((value) << PWM_CMPM_CPR_Pos))  
+#define PWM_CMPM_CPRCNT_Pos                   _U_(12)                                              /**< (PWM_CMPM) Comparison x Period Counter Position */
+#define PWM_CMPM_CPRCNT_Msk                   (_U_(0xF) << PWM_CMPM_CPRCNT_Pos)                    /**< (PWM_CMPM) Comparison x Period Counter Mask */
+#define PWM_CMPM_CPRCNT(value)                (PWM_CMPM_CPRCNT_Msk & ((value) << PWM_CMPM_CPRCNT_Pos))
+#define PWM_CMPM_CUPR_Pos                     _U_(16)                                              /**< (PWM_CMPM) Comparison x Update Period Position */
+#define PWM_CMPM_CUPR_Msk                     (_U_(0xF) << PWM_CMPM_CUPR_Pos)                      /**< (PWM_CMPM) Comparison x Update Period Mask */
+#define PWM_CMPM_CUPR(value)                  (PWM_CMPM_CUPR_Msk & ((value) << PWM_CMPM_CUPR_Pos))
+#define PWM_CMPM_CUPRCNT_Pos                  _U_(20)                                              /**< (PWM_CMPM) Comparison x Update Period Counter Position */
+#define PWM_CMPM_CUPRCNT_Msk                  (_U_(0xF) << PWM_CMPM_CUPRCNT_Pos)                   /**< (PWM_CMPM) Comparison x Update Period Counter Mask */
+#define PWM_CMPM_CUPRCNT(value)               (PWM_CMPM_CUPRCNT_Msk & ((value) << PWM_CMPM_CUPRCNT_Pos))
+#define PWM_CMPM_Msk                          _U_(0x00FFFFF1)                                      /**< (PWM_CMPM) Register Mask  */
+
+
+/* -------- PWM_CMPMUPD : (PWM Offset: 0x0C) ( /W 32) PWM Comparison 0 Mode Update Register -------- */
+#define PWM_CMPMUPD_CENUPD_Pos                _U_(0)                                               /**< (PWM_CMPMUPD) Comparison x Enable Update Position */
+#define PWM_CMPMUPD_CENUPD_Msk                (_U_(0x1) << PWM_CMPMUPD_CENUPD_Pos)                 /**< (PWM_CMPMUPD) Comparison x Enable Update Mask */
+#define PWM_CMPMUPD_CENUPD(value)             (PWM_CMPMUPD_CENUPD_Msk & ((value) << PWM_CMPMUPD_CENUPD_Pos))
+#define PWM_CMPMUPD_CTRUPD_Pos                _U_(4)                                               /**< (PWM_CMPMUPD) Comparison x Trigger Update Position */
+#define PWM_CMPMUPD_CTRUPD_Msk                (_U_(0xF) << PWM_CMPMUPD_CTRUPD_Pos)                 /**< (PWM_CMPMUPD) Comparison x Trigger Update Mask */
+#define PWM_CMPMUPD_CTRUPD(value)             (PWM_CMPMUPD_CTRUPD_Msk & ((value) << PWM_CMPMUPD_CTRUPD_Pos))
+#define PWM_CMPMUPD_CPRUPD_Pos                _U_(8)                                               /**< (PWM_CMPMUPD) Comparison x Period Update Position */
+#define PWM_CMPMUPD_CPRUPD_Msk                (_U_(0xF) << PWM_CMPMUPD_CPRUPD_Pos)                 /**< (PWM_CMPMUPD) Comparison x Period Update Mask */
+#define PWM_CMPMUPD_CPRUPD(value)             (PWM_CMPMUPD_CPRUPD_Msk & ((value) << PWM_CMPMUPD_CPRUPD_Pos))
+#define PWM_CMPMUPD_CUPRUPD_Pos               _U_(16)                                              /**< (PWM_CMPMUPD) Comparison x Update Period Update Position */
+#define PWM_CMPMUPD_CUPRUPD_Msk               (_U_(0xF) << PWM_CMPMUPD_CUPRUPD_Pos)                /**< (PWM_CMPMUPD) Comparison x Update Period Update Mask */
+#define PWM_CMPMUPD_CUPRUPD(value)            (PWM_CMPMUPD_CUPRUPD_Msk & ((value) << PWM_CMPMUPD_CUPRUPD_Pos))
+#define PWM_CMPMUPD_Msk                       _U_(0x000F0FF1)                                      /**< (PWM_CMPMUPD) Register Mask  */
+
 
 /* -------- PWM_CLK : (PWM Offset: 0x00) (R/W 32) PWM Clock Register -------- */
 #define PWM_CLK_DIVA_Pos                      _U_(0)                                               /**< (PWM_CLK) CLKA Divide Factor Position */
@@ -894,67 +1090,36 @@
 #define PWM_FPE_Msk                           _U_(0xFFFFFFFF)                                      /**< (PWM_FPE) Register Mask  */
 
 
-/* -------- PWM_ELMR0 : (PWM Offset: 0x7C) (R/W 32) PWM Event Line 0 Mode Register 0 -------- */
-#define PWM_ELMR0_CSEL0_Pos                   _U_(0)                                               /**< (PWM_ELMR0) Comparison 0 Selection Position */
-#define PWM_ELMR0_CSEL0_Msk                   (_U_(0x1) << PWM_ELMR0_CSEL0_Pos)                    /**< (PWM_ELMR0) Comparison 0 Selection Mask */
-#define PWM_ELMR0_CSEL0(value)                (PWM_ELMR0_CSEL0_Msk & ((value) << PWM_ELMR0_CSEL0_Pos))
-#define PWM_ELMR0_CSEL1_Pos                   _U_(1)                                               /**< (PWM_ELMR0) Comparison 1 Selection Position */
-#define PWM_ELMR0_CSEL1_Msk                   (_U_(0x1) << PWM_ELMR0_CSEL1_Pos)                    /**< (PWM_ELMR0) Comparison 1 Selection Mask */
-#define PWM_ELMR0_CSEL1(value)                (PWM_ELMR0_CSEL1_Msk & ((value) << PWM_ELMR0_CSEL1_Pos))
-#define PWM_ELMR0_CSEL2_Pos                   _U_(2)                                               /**< (PWM_ELMR0) Comparison 2 Selection Position */
-#define PWM_ELMR0_CSEL2_Msk                   (_U_(0x1) << PWM_ELMR0_CSEL2_Pos)                    /**< (PWM_ELMR0) Comparison 2 Selection Mask */
-#define PWM_ELMR0_CSEL2(value)                (PWM_ELMR0_CSEL2_Msk & ((value) << PWM_ELMR0_CSEL2_Pos))
-#define PWM_ELMR0_CSEL3_Pos                   _U_(3)                                               /**< (PWM_ELMR0) Comparison 3 Selection Position */
-#define PWM_ELMR0_CSEL3_Msk                   (_U_(0x1) << PWM_ELMR0_CSEL3_Pos)                    /**< (PWM_ELMR0) Comparison 3 Selection Mask */
-#define PWM_ELMR0_CSEL3(value)                (PWM_ELMR0_CSEL3_Msk & ((value) << PWM_ELMR0_CSEL3_Pos))
-#define PWM_ELMR0_CSEL4_Pos                   _U_(4)                                               /**< (PWM_ELMR0) Comparison 4 Selection Position */
-#define PWM_ELMR0_CSEL4_Msk                   (_U_(0x1) << PWM_ELMR0_CSEL4_Pos)                    /**< (PWM_ELMR0) Comparison 4 Selection Mask */
-#define PWM_ELMR0_CSEL4(value)                (PWM_ELMR0_CSEL4_Msk & ((value) << PWM_ELMR0_CSEL4_Pos))
-#define PWM_ELMR0_CSEL5_Pos                   _U_(5)                                               /**< (PWM_ELMR0) Comparison 5 Selection Position */
-#define PWM_ELMR0_CSEL5_Msk                   (_U_(0x1) << PWM_ELMR0_CSEL5_Pos)                    /**< (PWM_ELMR0) Comparison 5 Selection Mask */
-#define PWM_ELMR0_CSEL5(value)                (PWM_ELMR0_CSEL5_Msk & ((value) << PWM_ELMR0_CSEL5_Pos))
-#define PWM_ELMR0_CSEL6_Pos                   _U_(6)                                               /**< (PWM_ELMR0) Comparison 6 Selection Position */
-#define PWM_ELMR0_CSEL6_Msk                   (_U_(0x1) << PWM_ELMR0_CSEL6_Pos)                    /**< (PWM_ELMR0) Comparison 6 Selection Mask */
-#define PWM_ELMR0_CSEL6(value)                (PWM_ELMR0_CSEL6_Msk & ((value) << PWM_ELMR0_CSEL6_Pos))
-#define PWM_ELMR0_CSEL7_Pos                   _U_(7)                                               /**< (PWM_ELMR0) Comparison 7 Selection Position */
-#define PWM_ELMR0_CSEL7_Msk                   (_U_(0x1) << PWM_ELMR0_CSEL7_Pos)                    /**< (PWM_ELMR0) Comparison 7 Selection Mask */
-#define PWM_ELMR0_CSEL7(value)                (PWM_ELMR0_CSEL7_Msk & ((value) << PWM_ELMR0_CSEL7_Pos))
-#define PWM_ELMR0_Msk                         _U_(0x000000FF)                                      /**< (PWM_ELMR0) Register Mask  */
+/* -------- PWM_ELMR : (PWM Offset: 0x7C) (R/W 32) PWM Event Line 0 Mode Register 0 -------- */
+#define PWM_ELMR_CSEL0_Pos                    _U_(0)                                               /**< (PWM_ELMR) Comparison 0 Selection Position */
+#define PWM_ELMR_CSEL0_Msk                    (_U_(0x1) << PWM_ELMR_CSEL0_Pos)                     /**< (PWM_ELMR) Comparison 0 Selection Mask */
+#define PWM_ELMR_CSEL0(value)                 (PWM_ELMR_CSEL0_Msk & ((value) << PWM_ELMR_CSEL0_Pos))
+#define PWM_ELMR_CSEL1_Pos                    _U_(1)                                               /**< (PWM_ELMR) Comparison 1 Selection Position */
+#define PWM_ELMR_CSEL1_Msk                    (_U_(0x1) << PWM_ELMR_CSEL1_Pos)                     /**< (PWM_ELMR) Comparison 1 Selection Mask */
+#define PWM_ELMR_CSEL1(value)                 (PWM_ELMR_CSEL1_Msk & ((value) << PWM_ELMR_CSEL1_Pos))
+#define PWM_ELMR_CSEL2_Pos                    _U_(2)                                               /**< (PWM_ELMR) Comparison 2 Selection Position */
+#define PWM_ELMR_CSEL2_Msk                    (_U_(0x1) << PWM_ELMR_CSEL2_Pos)                     /**< (PWM_ELMR) Comparison 2 Selection Mask */
+#define PWM_ELMR_CSEL2(value)                 (PWM_ELMR_CSEL2_Msk & ((value) << PWM_ELMR_CSEL2_Pos))
+#define PWM_ELMR_CSEL3_Pos                    _U_(3)                                               /**< (PWM_ELMR) Comparison 3 Selection Position */
+#define PWM_ELMR_CSEL3_Msk                    (_U_(0x1) << PWM_ELMR_CSEL3_Pos)                     /**< (PWM_ELMR) Comparison 3 Selection Mask */
+#define PWM_ELMR_CSEL3(value)                 (PWM_ELMR_CSEL3_Msk & ((value) << PWM_ELMR_CSEL3_Pos))
+#define PWM_ELMR_CSEL4_Pos                    _U_(4)                                               /**< (PWM_ELMR) Comparison 4 Selection Position */
+#define PWM_ELMR_CSEL4_Msk                    (_U_(0x1) << PWM_ELMR_CSEL4_Pos)                     /**< (PWM_ELMR) Comparison 4 Selection Mask */
+#define PWM_ELMR_CSEL4(value)                 (PWM_ELMR_CSEL4_Msk & ((value) << PWM_ELMR_CSEL4_Pos))
+#define PWM_ELMR_CSEL5_Pos                    _U_(5)                                               /**< (PWM_ELMR) Comparison 5 Selection Position */
+#define PWM_ELMR_CSEL5_Msk                    (_U_(0x1) << PWM_ELMR_CSEL5_Pos)                     /**< (PWM_ELMR) Comparison 5 Selection Mask */
+#define PWM_ELMR_CSEL5(value)                 (PWM_ELMR_CSEL5_Msk & ((value) << PWM_ELMR_CSEL5_Pos))
+#define PWM_ELMR_CSEL6_Pos                    _U_(6)                                               /**< (PWM_ELMR) Comparison 6 Selection Position */
+#define PWM_ELMR_CSEL6_Msk                    (_U_(0x1) << PWM_ELMR_CSEL6_Pos)                     /**< (PWM_ELMR) Comparison 6 Selection Mask */
+#define PWM_ELMR_CSEL6(value)                 (PWM_ELMR_CSEL6_Msk & ((value) << PWM_ELMR_CSEL6_Pos))
+#define PWM_ELMR_CSEL7_Pos                    _U_(7)                                               /**< (PWM_ELMR) Comparison 7 Selection Position */
+#define PWM_ELMR_CSEL7_Msk                    (_U_(0x1) << PWM_ELMR_CSEL7_Pos)                     /**< (PWM_ELMR) Comparison 7 Selection Mask */
+#define PWM_ELMR_CSEL7(value)                 (PWM_ELMR_CSEL7_Msk & ((value) << PWM_ELMR_CSEL7_Pos))
+#define PWM_ELMR_Msk                          _U_(0x000000FF)                                      /**< (PWM_ELMR) Register Mask  */
 
-#define PWM_ELMR0_CSEL_Pos                    _U_(0)                                               /**< (PWM_ELMR0 Position) Comparison 7 Selection */
-#define PWM_ELMR0_CSEL_Msk                    (_U_(0xFF) << PWM_ELMR0_CSEL_Pos)                    /**< (PWM_ELMR0 Mask) CSEL */
-#define PWM_ELMR0_CSEL(value)                 (PWM_ELMR0_CSEL_Msk & ((value) << PWM_ELMR0_CSEL_Pos)) 
-
-/* -------- PWM_ELMR1 : (PWM Offset: 0x80) (R/W 32) PWM Event Line 0 Mode Register 1 -------- */
-#define PWM_ELMR1_CSEL0_Pos                   _U_(0)                                               /**< (PWM_ELMR1) Comparison 0 Selection Position */
-#define PWM_ELMR1_CSEL0_Msk                   (_U_(0x1) << PWM_ELMR1_CSEL0_Pos)                    /**< (PWM_ELMR1) Comparison 0 Selection Mask */
-#define PWM_ELMR1_CSEL0(value)                (PWM_ELMR1_CSEL0_Msk & ((value) << PWM_ELMR1_CSEL0_Pos))
-#define PWM_ELMR1_CSEL1_Pos                   _U_(1)                                               /**< (PWM_ELMR1) Comparison 1 Selection Position */
-#define PWM_ELMR1_CSEL1_Msk                   (_U_(0x1) << PWM_ELMR1_CSEL1_Pos)                    /**< (PWM_ELMR1) Comparison 1 Selection Mask */
-#define PWM_ELMR1_CSEL1(value)                (PWM_ELMR1_CSEL1_Msk & ((value) << PWM_ELMR1_CSEL1_Pos))
-#define PWM_ELMR1_CSEL2_Pos                   _U_(2)                                               /**< (PWM_ELMR1) Comparison 2 Selection Position */
-#define PWM_ELMR1_CSEL2_Msk                   (_U_(0x1) << PWM_ELMR1_CSEL2_Pos)                    /**< (PWM_ELMR1) Comparison 2 Selection Mask */
-#define PWM_ELMR1_CSEL2(value)                (PWM_ELMR1_CSEL2_Msk & ((value) << PWM_ELMR1_CSEL2_Pos))
-#define PWM_ELMR1_CSEL3_Pos                   _U_(3)                                               /**< (PWM_ELMR1) Comparison 3 Selection Position */
-#define PWM_ELMR1_CSEL3_Msk                   (_U_(0x1) << PWM_ELMR1_CSEL3_Pos)                    /**< (PWM_ELMR1) Comparison 3 Selection Mask */
-#define PWM_ELMR1_CSEL3(value)                (PWM_ELMR1_CSEL3_Msk & ((value) << PWM_ELMR1_CSEL3_Pos))
-#define PWM_ELMR1_CSEL4_Pos                   _U_(4)                                               /**< (PWM_ELMR1) Comparison 4 Selection Position */
-#define PWM_ELMR1_CSEL4_Msk                   (_U_(0x1) << PWM_ELMR1_CSEL4_Pos)                    /**< (PWM_ELMR1) Comparison 4 Selection Mask */
-#define PWM_ELMR1_CSEL4(value)                (PWM_ELMR1_CSEL4_Msk & ((value) << PWM_ELMR1_CSEL4_Pos))
-#define PWM_ELMR1_CSEL5_Pos                   _U_(5)                                               /**< (PWM_ELMR1) Comparison 5 Selection Position */
-#define PWM_ELMR1_CSEL5_Msk                   (_U_(0x1) << PWM_ELMR1_CSEL5_Pos)                    /**< (PWM_ELMR1) Comparison 5 Selection Mask */
-#define PWM_ELMR1_CSEL5(value)                (PWM_ELMR1_CSEL5_Msk & ((value) << PWM_ELMR1_CSEL5_Pos))
-#define PWM_ELMR1_CSEL6_Pos                   _U_(6)                                               /**< (PWM_ELMR1) Comparison 6 Selection Position */
-#define PWM_ELMR1_CSEL6_Msk                   (_U_(0x1) << PWM_ELMR1_CSEL6_Pos)                    /**< (PWM_ELMR1) Comparison 6 Selection Mask */
-#define PWM_ELMR1_CSEL6(value)                (PWM_ELMR1_CSEL6_Msk & ((value) << PWM_ELMR1_CSEL6_Pos))
-#define PWM_ELMR1_CSEL7_Pos                   _U_(7)                                               /**< (PWM_ELMR1) Comparison 7 Selection Position */
-#define PWM_ELMR1_CSEL7_Msk                   (_U_(0x1) << PWM_ELMR1_CSEL7_Pos)                    /**< (PWM_ELMR1) Comparison 7 Selection Mask */
-#define PWM_ELMR1_CSEL7(value)                (PWM_ELMR1_CSEL7_Msk & ((value) << PWM_ELMR1_CSEL7_Pos))
-#define PWM_ELMR1_Msk                         _U_(0x000000FF)                                      /**< (PWM_ELMR1) Register Mask  */
-
-#define PWM_ELMR1_CSEL_Pos                    _U_(0)                                               /**< (PWM_ELMR1 Position) Comparison 7 Selection */
-#define PWM_ELMR1_CSEL_Msk                    (_U_(0xFF) << PWM_ELMR1_CSEL_Pos)                    /**< (PWM_ELMR1 Mask) CSEL */
-#define PWM_ELMR1_CSEL(value)                 (PWM_ELMR1_CSEL_Msk & ((value) << PWM_ELMR1_CSEL_Pos)) 
+#define PWM_ELMR_CSEL_Pos                     _U_(0)                                               /**< (PWM_ELMR Position) Comparison 7 Selection */
+#define PWM_ELMR_CSEL_Msk                     (_U_(0xFF) << PWM_ELMR_CSEL_Pos)                     /**< (PWM_ELMR Mask) CSEL */
+#define PWM_ELMR_CSEL(value)                  (PWM_ELMR_CSEL_Msk & ((value) << PWM_ELMR_CSEL_Pos)) 
 
 /* -------- PWM_SSPR : (PWM Offset: 0xA0) (R/W 32) PWM Spread Spectrum Register -------- */
 #define PWM_SSPR_SPRD_Pos                     _U_(0)                                               /**< (PWM_SSPR) Spread Spectrum Limit Value Position */
@@ -1120,942 +1285,6 @@
 #define PWM_WPSR_WPHWS_Msk                    (_U_(0x3F) << PWM_WPSR_WPHWS_Pos)                    /**< (PWM_WPSR Mask) WPHWS */
 #define PWM_WPSR_WPHWS(value)                 (PWM_WPSR_WPHWS_Msk & ((value) << PWM_WPSR_WPHWS_Pos)) 
 
-/* -------- PWM_CMPV0 : (PWM Offset: 0x130) (R/W 32) PWM Comparison 0 Value Register -------- */
-#define PWM_CMPV0_CV_Pos                      _U_(0)                                               /**< (PWM_CMPV0) Comparison x Value Position */
-#define PWM_CMPV0_CV_Msk                      (_U_(0xFFFFFF) << PWM_CMPV0_CV_Pos)                  /**< (PWM_CMPV0) Comparison x Value Mask */
-#define PWM_CMPV0_CV(value)                   (PWM_CMPV0_CV_Msk & ((value) << PWM_CMPV0_CV_Pos))  
-#define PWM_CMPV0_CVM_Pos                     _U_(24)                                              /**< (PWM_CMPV0) Comparison x Value Mode Position */
-#define PWM_CMPV0_CVM_Msk                     (_U_(0x1) << PWM_CMPV0_CVM_Pos)                      /**< (PWM_CMPV0) Comparison x Value Mode Mask */
-#define PWM_CMPV0_CVM(value)                  (PWM_CMPV0_CVM_Msk & ((value) << PWM_CMPV0_CVM_Pos))
-#define PWM_CMPV0_Msk                         _U_(0x01FFFFFF)                                      /**< (PWM_CMPV0) Register Mask  */
-
-
-/* -------- PWM_CMPVUPD0 : (PWM Offset: 0x134) ( /W 32) PWM Comparison 0 Value Update Register -------- */
-#define PWM_CMPVUPD0_CVUPD_Pos                _U_(0)                                               /**< (PWM_CMPVUPD0) Comparison x Value Update Position */
-#define PWM_CMPVUPD0_CVUPD_Msk                (_U_(0xFFFFFF) << PWM_CMPVUPD0_CVUPD_Pos)            /**< (PWM_CMPVUPD0) Comparison x Value Update Mask */
-#define PWM_CMPVUPD0_CVUPD(value)             (PWM_CMPVUPD0_CVUPD_Msk & ((value) << PWM_CMPVUPD0_CVUPD_Pos))
-#define PWM_CMPVUPD0_CVMUPD_Pos               _U_(24)                                              /**< (PWM_CMPVUPD0) Comparison x Value Mode Update Position */
-#define PWM_CMPVUPD0_CVMUPD_Msk               (_U_(0x1) << PWM_CMPVUPD0_CVMUPD_Pos)                /**< (PWM_CMPVUPD0) Comparison x Value Mode Update Mask */
-#define PWM_CMPVUPD0_CVMUPD(value)            (PWM_CMPVUPD0_CVMUPD_Msk & ((value) << PWM_CMPVUPD0_CVMUPD_Pos))
-#define PWM_CMPVUPD0_Msk                      _U_(0x01FFFFFF)                                      /**< (PWM_CMPVUPD0) Register Mask  */
-
-
-/* -------- PWM_CMPM0 : (PWM Offset: 0x138) (R/W 32) PWM Comparison 0 Mode Register -------- */
-#define PWM_CMPM0_CEN_Pos                     _U_(0)                                               /**< (PWM_CMPM0) Comparison x Enable Position */
-#define PWM_CMPM0_CEN_Msk                     (_U_(0x1) << PWM_CMPM0_CEN_Pos)                      /**< (PWM_CMPM0) Comparison x Enable Mask */
-#define PWM_CMPM0_CEN(value)                  (PWM_CMPM0_CEN_Msk & ((value) << PWM_CMPM0_CEN_Pos))
-#define PWM_CMPM0_CTR_Pos                     _U_(4)                                               /**< (PWM_CMPM0) Comparison x Trigger Position */
-#define PWM_CMPM0_CTR_Msk                     (_U_(0xF) << PWM_CMPM0_CTR_Pos)                      /**< (PWM_CMPM0) Comparison x Trigger Mask */
-#define PWM_CMPM0_CTR(value)                  (PWM_CMPM0_CTR_Msk & ((value) << PWM_CMPM0_CTR_Pos))
-#define PWM_CMPM0_CPR_Pos                     _U_(8)                                               /**< (PWM_CMPM0) Comparison x Period Position */
-#define PWM_CMPM0_CPR_Msk                     (_U_(0xF) << PWM_CMPM0_CPR_Pos)                      /**< (PWM_CMPM0) Comparison x Period Mask */
-#define PWM_CMPM0_CPR(value)                  (PWM_CMPM0_CPR_Msk & ((value) << PWM_CMPM0_CPR_Pos))
-#define PWM_CMPM0_CPRCNT_Pos                  _U_(12)                                              /**< (PWM_CMPM0) Comparison x Period Counter Position */
-#define PWM_CMPM0_CPRCNT_Msk                  (_U_(0xF) << PWM_CMPM0_CPRCNT_Pos)                   /**< (PWM_CMPM0) Comparison x Period Counter Mask */
-#define PWM_CMPM0_CPRCNT(value)               (PWM_CMPM0_CPRCNT_Msk & ((value) << PWM_CMPM0_CPRCNT_Pos))
-#define PWM_CMPM0_CUPR_Pos                    _U_(16)                                              /**< (PWM_CMPM0) Comparison x Update Period Position */
-#define PWM_CMPM0_CUPR_Msk                    (_U_(0xF) << PWM_CMPM0_CUPR_Pos)                     /**< (PWM_CMPM0) Comparison x Update Period Mask */
-#define PWM_CMPM0_CUPR(value)                 (PWM_CMPM0_CUPR_Msk & ((value) << PWM_CMPM0_CUPR_Pos))
-#define PWM_CMPM0_CUPRCNT_Pos                 _U_(20)                                              /**< (PWM_CMPM0) Comparison x Update Period Counter Position */
-#define PWM_CMPM0_CUPRCNT_Msk                 (_U_(0xF) << PWM_CMPM0_CUPRCNT_Pos)                  /**< (PWM_CMPM0) Comparison x Update Period Counter Mask */
-#define PWM_CMPM0_CUPRCNT(value)              (PWM_CMPM0_CUPRCNT_Msk & ((value) << PWM_CMPM0_CUPRCNT_Pos))
-#define PWM_CMPM0_Msk                         _U_(0x00FFFFF1)                                      /**< (PWM_CMPM0) Register Mask  */
-
-
-/* -------- PWM_CMPMUPD0 : (PWM Offset: 0x13C) ( /W 32) PWM Comparison 0 Mode Update Register -------- */
-#define PWM_CMPMUPD0_CENUPD_Pos               _U_(0)                                               /**< (PWM_CMPMUPD0) Comparison x Enable Update Position */
-#define PWM_CMPMUPD0_CENUPD_Msk               (_U_(0x1) << PWM_CMPMUPD0_CENUPD_Pos)                /**< (PWM_CMPMUPD0) Comparison x Enable Update Mask */
-#define PWM_CMPMUPD0_CENUPD(value)            (PWM_CMPMUPD0_CENUPD_Msk & ((value) << PWM_CMPMUPD0_CENUPD_Pos))
-#define PWM_CMPMUPD0_CTRUPD_Pos               _U_(4)                                               /**< (PWM_CMPMUPD0) Comparison x Trigger Update Position */
-#define PWM_CMPMUPD0_CTRUPD_Msk               (_U_(0xF) << PWM_CMPMUPD0_CTRUPD_Pos)                /**< (PWM_CMPMUPD0) Comparison x Trigger Update Mask */
-#define PWM_CMPMUPD0_CTRUPD(value)            (PWM_CMPMUPD0_CTRUPD_Msk & ((value) << PWM_CMPMUPD0_CTRUPD_Pos))
-#define PWM_CMPMUPD0_CPRUPD_Pos               _U_(8)                                               /**< (PWM_CMPMUPD0) Comparison x Period Update Position */
-#define PWM_CMPMUPD0_CPRUPD_Msk               (_U_(0xF) << PWM_CMPMUPD0_CPRUPD_Pos)                /**< (PWM_CMPMUPD0) Comparison x Period Update Mask */
-#define PWM_CMPMUPD0_CPRUPD(value)            (PWM_CMPMUPD0_CPRUPD_Msk & ((value) << PWM_CMPMUPD0_CPRUPD_Pos))
-#define PWM_CMPMUPD0_CUPRUPD_Pos              _U_(16)                                              /**< (PWM_CMPMUPD0) Comparison x Update Period Update Position */
-#define PWM_CMPMUPD0_CUPRUPD_Msk              (_U_(0xF) << PWM_CMPMUPD0_CUPRUPD_Pos)               /**< (PWM_CMPMUPD0) Comparison x Update Period Update Mask */
-#define PWM_CMPMUPD0_CUPRUPD(value)           (PWM_CMPMUPD0_CUPRUPD_Msk & ((value) << PWM_CMPMUPD0_CUPRUPD_Pos))
-#define PWM_CMPMUPD0_Msk                      _U_(0x000F0FF1)                                      /**< (PWM_CMPMUPD0) Register Mask  */
-
-
-/* -------- PWM_CMPV1 : (PWM Offset: 0x140) (R/W 32) PWM Comparison 1 Value Register -------- */
-#define PWM_CMPV1_CV_Pos                      _U_(0)                                               /**< (PWM_CMPV1) Comparison x Value Position */
-#define PWM_CMPV1_CV_Msk                      (_U_(0xFFFFFF) << PWM_CMPV1_CV_Pos)                  /**< (PWM_CMPV1) Comparison x Value Mask */
-#define PWM_CMPV1_CV(value)                   (PWM_CMPV1_CV_Msk & ((value) << PWM_CMPV1_CV_Pos))  
-#define PWM_CMPV1_CVM_Pos                     _U_(24)                                              /**< (PWM_CMPV1) Comparison x Value Mode Position */
-#define PWM_CMPV1_CVM_Msk                     (_U_(0x1) << PWM_CMPV1_CVM_Pos)                      /**< (PWM_CMPV1) Comparison x Value Mode Mask */
-#define PWM_CMPV1_CVM(value)                  (PWM_CMPV1_CVM_Msk & ((value) << PWM_CMPV1_CVM_Pos))
-#define PWM_CMPV1_Msk                         _U_(0x01FFFFFF)                                      /**< (PWM_CMPV1) Register Mask  */
-
-
-/* -------- PWM_CMPVUPD1 : (PWM Offset: 0x144) ( /W 32) PWM Comparison 1 Value Update Register -------- */
-#define PWM_CMPVUPD1_CVUPD_Pos                _U_(0)                                               /**< (PWM_CMPVUPD1) Comparison x Value Update Position */
-#define PWM_CMPVUPD1_CVUPD_Msk                (_U_(0xFFFFFF) << PWM_CMPVUPD1_CVUPD_Pos)            /**< (PWM_CMPVUPD1) Comparison x Value Update Mask */
-#define PWM_CMPVUPD1_CVUPD(value)             (PWM_CMPVUPD1_CVUPD_Msk & ((value) << PWM_CMPVUPD1_CVUPD_Pos))
-#define PWM_CMPVUPD1_CVMUPD_Pos               _U_(24)                                              /**< (PWM_CMPVUPD1) Comparison x Value Mode Update Position */
-#define PWM_CMPVUPD1_CVMUPD_Msk               (_U_(0x1) << PWM_CMPVUPD1_CVMUPD_Pos)                /**< (PWM_CMPVUPD1) Comparison x Value Mode Update Mask */
-#define PWM_CMPVUPD1_CVMUPD(value)            (PWM_CMPVUPD1_CVMUPD_Msk & ((value) << PWM_CMPVUPD1_CVMUPD_Pos))
-#define PWM_CMPVUPD1_Msk                      _U_(0x01FFFFFF)                                      /**< (PWM_CMPVUPD1) Register Mask  */
-
-
-/* -------- PWM_CMPM1 : (PWM Offset: 0x148) (R/W 32) PWM Comparison 1 Mode Register -------- */
-#define PWM_CMPM1_CEN_Pos                     _U_(0)                                               /**< (PWM_CMPM1) Comparison x Enable Position */
-#define PWM_CMPM1_CEN_Msk                     (_U_(0x1) << PWM_CMPM1_CEN_Pos)                      /**< (PWM_CMPM1) Comparison x Enable Mask */
-#define PWM_CMPM1_CEN(value)                  (PWM_CMPM1_CEN_Msk & ((value) << PWM_CMPM1_CEN_Pos))
-#define PWM_CMPM1_CTR_Pos                     _U_(4)                                               /**< (PWM_CMPM1) Comparison x Trigger Position */
-#define PWM_CMPM1_CTR_Msk                     (_U_(0xF) << PWM_CMPM1_CTR_Pos)                      /**< (PWM_CMPM1) Comparison x Trigger Mask */
-#define PWM_CMPM1_CTR(value)                  (PWM_CMPM1_CTR_Msk & ((value) << PWM_CMPM1_CTR_Pos))
-#define PWM_CMPM1_CPR_Pos                     _U_(8)                                               /**< (PWM_CMPM1) Comparison x Period Position */
-#define PWM_CMPM1_CPR_Msk                     (_U_(0xF) << PWM_CMPM1_CPR_Pos)                      /**< (PWM_CMPM1) Comparison x Period Mask */
-#define PWM_CMPM1_CPR(value)                  (PWM_CMPM1_CPR_Msk & ((value) << PWM_CMPM1_CPR_Pos))
-#define PWM_CMPM1_CPRCNT_Pos                  _U_(12)                                              /**< (PWM_CMPM1) Comparison x Period Counter Position */
-#define PWM_CMPM1_CPRCNT_Msk                  (_U_(0xF) << PWM_CMPM1_CPRCNT_Pos)                   /**< (PWM_CMPM1) Comparison x Period Counter Mask */
-#define PWM_CMPM1_CPRCNT(value)               (PWM_CMPM1_CPRCNT_Msk & ((value) << PWM_CMPM1_CPRCNT_Pos))
-#define PWM_CMPM1_CUPR_Pos                    _U_(16)                                              /**< (PWM_CMPM1) Comparison x Update Period Position */
-#define PWM_CMPM1_CUPR_Msk                    (_U_(0xF) << PWM_CMPM1_CUPR_Pos)                     /**< (PWM_CMPM1) Comparison x Update Period Mask */
-#define PWM_CMPM1_CUPR(value)                 (PWM_CMPM1_CUPR_Msk & ((value) << PWM_CMPM1_CUPR_Pos))
-#define PWM_CMPM1_CUPRCNT_Pos                 _U_(20)                                              /**< (PWM_CMPM1) Comparison x Update Period Counter Position */
-#define PWM_CMPM1_CUPRCNT_Msk                 (_U_(0xF) << PWM_CMPM1_CUPRCNT_Pos)                  /**< (PWM_CMPM1) Comparison x Update Period Counter Mask */
-#define PWM_CMPM1_CUPRCNT(value)              (PWM_CMPM1_CUPRCNT_Msk & ((value) << PWM_CMPM1_CUPRCNT_Pos))
-#define PWM_CMPM1_Msk                         _U_(0x00FFFFF1)                                      /**< (PWM_CMPM1) Register Mask  */
-
-
-/* -------- PWM_CMPMUPD1 : (PWM Offset: 0x14C) ( /W 32) PWM Comparison 1 Mode Update Register -------- */
-#define PWM_CMPMUPD1_CENUPD_Pos               _U_(0)                                               /**< (PWM_CMPMUPD1) Comparison x Enable Update Position */
-#define PWM_CMPMUPD1_CENUPD_Msk               (_U_(0x1) << PWM_CMPMUPD1_CENUPD_Pos)                /**< (PWM_CMPMUPD1) Comparison x Enable Update Mask */
-#define PWM_CMPMUPD1_CENUPD(value)            (PWM_CMPMUPD1_CENUPD_Msk & ((value) << PWM_CMPMUPD1_CENUPD_Pos))
-#define PWM_CMPMUPD1_CTRUPD_Pos               _U_(4)                                               /**< (PWM_CMPMUPD1) Comparison x Trigger Update Position */
-#define PWM_CMPMUPD1_CTRUPD_Msk               (_U_(0xF) << PWM_CMPMUPD1_CTRUPD_Pos)                /**< (PWM_CMPMUPD1) Comparison x Trigger Update Mask */
-#define PWM_CMPMUPD1_CTRUPD(value)            (PWM_CMPMUPD1_CTRUPD_Msk & ((value) << PWM_CMPMUPD1_CTRUPD_Pos))
-#define PWM_CMPMUPD1_CPRUPD_Pos               _U_(8)                                               /**< (PWM_CMPMUPD1) Comparison x Period Update Position */
-#define PWM_CMPMUPD1_CPRUPD_Msk               (_U_(0xF) << PWM_CMPMUPD1_CPRUPD_Pos)                /**< (PWM_CMPMUPD1) Comparison x Period Update Mask */
-#define PWM_CMPMUPD1_CPRUPD(value)            (PWM_CMPMUPD1_CPRUPD_Msk & ((value) << PWM_CMPMUPD1_CPRUPD_Pos))
-#define PWM_CMPMUPD1_CUPRUPD_Pos              _U_(16)                                              /**< (PWM_CMPMUPD1) Comparison x Update Period Update Position */
-#define PWM_CMPMUPD1_CUPRUPD_Msk              (_U_(0xF) << PWM_CMPMUPD1_CUPRUPD_Pos)               /**< (PWM_CMPMUPD1) Comparison x Update Period Update Mask */
-#define PWM_CMPMUPD1_CUPRUPD(value)           (PWM_CMPMUPD1_CUPRUPD_Msk & ((value) << PWM_CMPMUPD1_CUPRUPD_Pos))
-#define PWM_CMPMUPD1_Msk                      _U_(0x000F0FF1)                                      /**< (PWM_CMPMUPD1) Register Mask  */
-
-
-/* -------- PWM_CMPV2 : (PWM Offset: 0x150) (R/W 32) PWM Comparison 2 Value Register -------- */
-#define PWM_CMPV2_CV_Pos                      _U_(0)                                               /**< (PWM_CMPV2) Comparison x Value Position */
-#define PWM_CMPV2_CV_Msk                      (_U_(0xFFFFFF) << PWM_CMPV2_CV_Pos)                  /**< (PWM_CMPV2) Comparison x Value Mask */
-#define PWM_CMPV2_CV(value)                   (PWM_CMPV2_CV_Msk & ((value) << PWM_CMPV2_CV_Pos))  
-#define PWM_CMPV2_CVM_Pos                     _U_(24)                                              /**< (PWM_CMPV2) Comparison x Value Mode Position */
-#define PWM_CMPV2_CVM_Msk                     (_U_(0x1) << PWM_CMPV2_CVM_Pos)                      /**< (PWM_CMPV2) Comparison x Value Mode Mask */
-#define PWM_CMPV2_CVM(value)                  (PWM_CMPV2_CVM_Msk & ((value) << PWM_CMPV2_CVM_Pos))
-#define PWM_CMPV2_Msk                         _U_(0x01FFFFFF)                                      /**< (PWM_CMPV2) Register Mask  */
-
-
-/* -------- PWM_CMPVUPD2 : (PWM Offset: 0x154) ( /W 32) PWM Comparison 2 Value Update Register -------- */
-#define PWM_CMPVUPD2_CVUPD_Pos                _U_(0)                                               /**< (PWM_CMPVUPD2) Comparison x Value Update Position */
-#define PWM_CMPVUPD2_CVUPD_Msk                (_U_(0xFFFFFF) << PWM_CMPVUPD2_CVUPD_Pos)            /**< (PWM_CMPVUPD2) Comparison x Value Update Mask */
-#define PWM_CMPVUPD2_CVUPD(value)             (PWM_CMPVUPD2_CVUPD_Msk & ((value) << PWM_CMPVUPD2_CVUPD_Pos))
-#define PWM_CMPVUPD2_CVMUPD_Pos               _U_(24)                                              /**< (PWM_CMPVUPD2) Comparison x Value Mode Update Position */
-#define PWM_CMPVUPD2_CVMUPD_Msk               (_U_(0x1) << PWM_CMPVUPD2_CVMUPD_Pos)                /**< (PWM_CMPVUPD2) Comparison x Value Mode Update Mask */
-#define PWM_CMPVUPD2_CVMUPD(value)            (PWM_CMPVUPD2_CVMUPD_Msk & ((value) << PWM_CMPVUPD2_CVMUPD_Pos))
-#define PWM_CMPVUPD2_Msk                      _U_(0x01FFFFFF)                                      /**< (PWM_CMPVUPD2) Register Mask  */
-
-
-/* -------- PWM_CMPM2 : (PWM Offset: 0x158) (R/W 32) PWM Comparison 2 Mode Register -------- */
-#define PWM_CMPM2_CEN_Pos                     _U_(0)                                               /**< (PWM_CMPM2) Comparison x Enable Position */
-#define PWM_CMPM2_CEN_Msk                     (_U_(0x1) << PWM_CMPM2_CEN_Pos)                      /**< (PWM_CMPM2) Comparison x Enable Mask */
-#define PWM_CMPM2_CEN(value)                  (PWM_CMPM2_CEN_Msk & ((value) << PWM_CMPM2_CEN_Pos))
-#define PWM_CMPM2_CTR_Pos                     _U_(4)                                               /**< (PWM_CMPM2) Comparison x Trigger Position */
-#define PWM_CMPM2_CTR_Msk                     (_U_(0xF) << PWM_CMPM2_CTR_Pos)                      /**< (PWM_CMPM2) Comparison x Trigger Mask */
-#define PWM_CMPM2_CTR(value)                  (PWM_CMPM2_CTR_Msk & ((value) << PWM_CMPM2_CTR_Pos))
-#define PWM_CMPM2_CPR_Pos                     _U_(8)                                               /**< (PWM_CMPM2) Comparison x Period Position */
-#define PWM_CMPM2_CPR_Msk                     (_U_(0xF) << PWM_CMPM2_CPR_Pos)                      /**< (PWM_CMPM2) Comparison x Period Mask */
-#define PWM_CMPM2_CPR(value)                  (PWM_CMPM2_CPR_Msk & ((value) << PWM_CMPM2_CPR_Pos))
-#define PWM_CMPM2_CPRCNT_Pos                  _U_(12)                                              /**< (PWM_CMPM2) Comparison x Period Counter Position */
-#define PWM_CMPM2_CPRCNT_Msk                  (_U_(0xF) << PWM_CMPM2_CPRCNT_Pos)                   /**< (PWM_CMPM2) Comparison x Period Counter Mask */
-#define PWM_CMPM2_CPRCNT(value)               (PWM_CMPM2_CPRCNT_Msk & ((value) << PWM_CMPM2_CPRCNT_Pos))
-#define PWM_CMPM2_CUPR_Pos                    _U_(16)                                              /**< (PWM_CMPM2) Comparison x Update Period Position */
-#define PWM_CMPM2_CUPR_Msk                    (_U_(0xF) << PWM_CMPM2_CUPR_Pos)                     /**< (PWM_CMPM2) Comparison x Update Period Mask */
-#define PWM_CMPM2_CUPR(value)                 (PWM_CMPM2_CUPR_Msk & ((value) << PWM_CMPM2_CUPR_Pos))
-#define PWM_CMPM2_CUPRCNT_Pos                 _U_(20)                                              /**< (PWM_CMPM2) Comparison x Update Period Counter Position */
-#define PWM_CMPM2_CUPRCNT_Msk                 (_U_(0xF) << PWM_CMPM2_CUPRCNT_Pos)                  /**< (PWM_CMPM2) Comparison x Update Period Counter Mask */
-#define PWM_CMPM2_CUPRCNT(value)              (PWM_CMPM2_CUPRCNT_Msk & ((value) << PWM_CMPM2_CUPRCNT_Pos))
-#define PWM_CMPM2_Msk                         _U_(0x00FFFFF1)                                      /**< (PWM_CMPM2) Register Mask  */
-
-
-/* -------- PWM_CMPMUPD2 : (PWM Offset: 0x15C) ( /W 32) PWM Comparison 2 Mode Update Register -------- */
-#define PWM_CMPMUPD2_CENUPD_Pos               _U_(0)                                               /**< (PWM_CMPMUPD2) Comparison x Enable Update Position */
-#define PWM_CMPMUPD2_CENUPD_Msk               (_U_(0x1) << PWM_CMPMUPD2_CENUPD_Pos)                /**< (PWM_CMPMUPD2) Comparison x Enable Update Mask */
-#define PWM_CMPMUPD2_CENUPD(value)            (PWM_CMPMUPD2_CENUPD_Msk & ((value) << PWM_CMPMUPD2_CENUPD_Pos))
-#define PWM_CMPMUPD2_CTRUPD_Pos               _U_(4)                                               /**< (PWM_CMPMUPD2) Comparison x Trigger Update Position */
-#define PWM_CMPMUPD2_CTRUPD_Msk               (_U_(0xF) << PWM_CMPMUPD2_CTRUPD_Pos)                /**< (PWM_CMPMUPD2) Comparison x Trigger Update Mask */
-#define PWM_CMPMUPD2_CTRUPD(value)            (PWM_CMPMUPD2_CTRUPD_Msk & ((value) << PWM_CMPMUPD2_CTRUPD_Pos))
-#define PWM_CMPMUPD2_CPRUPD_Pos               _U_(8)                                               /**< (PWM_CMPMUPD2) Comparison x Period Update Position */
-#define PWM_CMPMUPD2_CPRUPD_Msk               (_U_(0xF) << PWM_CMPMUPD2_CPRUPD_Pos)                /**< (PWM_CMPMUPD2) Comparison x Period Update Mask */
-#define PWM_CMPMUPD2_CPRUPD(value)            (PWM_CMPMUPD2_CPRUPD_Msk & ((value) << PWM_CMPMUPD2_CPRUPD_Pos))
-#define PWM_CMPMUPD2_CUPRUPD_Pos              _U_(16)                                              /**< (PWM_CMPMUPD2) Comparison x Update Period Update Position */
-#define PWM_CMPMUPD2_CUPRUPD_Msk              (_U_(0xF) << PWM_CMPMUPD2_CUPRUPD_Pos)               /**< (PWM_CMPMUPD2) Comparison x Update Period Update Mask */
-#define PWM_CMPMUPD2_CUPRUPD(value)           (PWM_CMPMUPD2_CUPRUPD_Msk & ((value) << PWM_CMPMUPD2_CUPRUPD_Pos))
-#define PWM_CMPMUPD2_Msk                      _U_(0x000F0FF1)                                      /**< (PWM_CMPMUPD2) Register Mask  */
-
-
-/* -------- PWM_CMPV3 : (PWM Offset: 0x160) (R/W 32) PWM Comparison 3 Value Register -------- */
-#define PWM_CMPV3_CV_Pos                      _U_(0)                                               /**< (PWM_CMPV3) Comparison x Value Position */
-#define PWM_CMPV3_CV_Msk                      (_U_(0xFFFFFF) << PWM_CMPV3_CV_Pos)                  /**< (PWM_CMPV3) Comparison x Value Mask */
-#define PWM_CMPV3_CV(value)                   (PWM_CMPV3_CV_Msk & ((value) << PWM_CMPV3_CV_Pos))  
-#define PWM_CMPV3_CVM_Pos                     _U_(24)                                              /**< (PWM_CMPV3) Comparison x Value Mode Position */
-#define PWM_CMPV3_CVM_Msk                     (_U_(0x1) << PWM_CMPV3_CVM_Pos)                      /**< (PWM_CMPV3) Comparison x Value Mode Mask */
-#define PWM_CMPV3_CVM(value)                  (PWM_CMPV3_CVM_Msk & ((value) << PWM_CMPV3_CVM_Pos))
-#define PWM_CMPV3_Msk                         _U_(0x01FFFFFF)                                      /**< (PWM_CMPV3) Register Mask  */
-
-
-/* -------- PWM_CMPVUPD3 : (PWM Offset: 0x164) ( /W 32) PWM Comparison 3 Value Update Register -------- */
-#define PWM_CMPVUPD3_CVUPD_Pos                _U_(0)                                               /**< (PWM_CMPVUPD3) Comparison x Value Update Position */
-#define PWM_CMPVUPD3_CVUPD_Msk                (_U_(0xFFFFFF) << PWM_CMPVUPD3_CVUPD_Pos)            /**< (PWM_CMPVUPD3) Comparison x Value Update Mask */
-#define PWM_CMPVUPD3_CVUPD(value)             (PWM_CMPVUPD3_CVUPD_Msk & ((value) << PWM_CMPVUPD3_CVUPD_Pos))
-#define PWM_CMPVUPD3_CVMUPD_Pos               _U_(24)                                              /**< (PWM_CMPVUPD3) Comparison x Value Mode Update Position */
-#define PWM_CMPVUPD3_CVMUPD_Msk               (_U_(0x1) << PWM_CMPVUPD3_CVMUPD_Pos)                /**< (PWM_CMPVUPD3) Comparison x Value Mode Update Mask */
-#define PWM_CMPVUPD3_CVMUPD(value)            (PWM_CMPVUPD3_CVMUPD_Msk & ((value) << PWM_CMPVUPD3_CVMUPD_Pos))
-#define PWM_CMPVUPD3_Msk                      _U_(0x01FFFFFF)                                      /**< (PWM_CMPVUPD3) Register Mask  */
-
-
-/* -------- PWM_CMPM3 : (PWM Offset: 0x168) (R/W 32) PWM Comparison 3 Mode Register -------- */
-#define PWM_CMPM3_CEN_Pos                     _U_(0)                                               /**< (PWM_CMPM3) Comparison x Enable Position */
-#define PWM_CMPM3_CEN_Msk                     (_U_(0x1) << PWM_CMPM3_CEN_Pos)                      /**< (PWM_CMPM3) Comparison x Enable Mask */
-#define PWM_CMPM3_CEN(value)                  (PWM_CMPM3_CEN_Msk & ((value) << PWM_CMPM3_CEN_Pos))
-#define PWM_CMPM3_CTR_Pos                     _U_(4)                                               /**< (PWM_CMPM3) Comparison x Trigger Position */
-#define PWM_CMPM3_CTR_Msk                     (_U_(0xF) << PWM_CMPM3_CTR_Pos)                      /**< (PWM_CMPM3) Comparison x Trigger Mask */
-#define PWM_CMPM3_CTR(value)                  (PWM_CMPM3_CTR_Msk & ((value) << PWM_CMPM3_CTR_Pos))
-#define PWM_CMPM3_CPR_Pos                     _U_(8)                                               /**< (PWM_CMPM3) Comparison x Period Position */
-#define PWM_CMPM3_CPR_Msk                     (_U_(0xF) << PWM_CMPM3_CPR_Pos)                      /**< (PWM_CMPM3) Comparison x Period Mask */
-#define PWM_CMPM3_CPR(value)                  (PWM_CMPM3_CPR_Msk & ((value) << PWM_CMPM3_CPR_Pos))
-#define PWM_CMPM3_CPRCNT_Pos                  _U_(12)                                              /**< (PWM_CMPM3) Comparison x Period Counter Position */
-#define PWM_CMPM3_CPRCNT_Msk                  (_U_(0xF) << PWM_CMPM3_CPRCNT_Pos)                   /**< (PWM_CMPM3) Comparison x Period Counter Mask */
-#define PWM_CMPM3_CPRCNT(value)               (PWM_CMPM3_CPRCNT_Msk & ((value) << PWM_CMPM3_CPRCNT_Pos))
-#define PWM_CMPM3_CUPR_Pos                    _U_(16)                                              /**< (PWM_CMPM3) Comparison x Update Period Position */
-#define PWM_CMPM3_CUPR_Msk                    (_U_(0xF) << PWM_CMPM3_CUPR_Pos)                     /**< (PWM_CMPM3) Comparison x Update Period Mask */
-#define PWM_CMPM3_CUPR(value)                 (PWM_CMPM3_CUPR_Msk & ((value) << PWM_CMPM3_CUPR_Pos))
-#define PWM_CMPM3_CUPRCNT_Pos                 _U_(20)                                              /**< (PWM_CMPM3) Comparison x Update Period Counter Position */
-#define PWM_CMPM3_CUPRCNT_Msk                 (_U_(0xF) << PWM_CMPM3_CUPRCNT_Pos)                  /**< (PWM_CMPM3) Comparison x Update Period Counter Mask */
-#define PWM_CMPM3_CUPRCNT(value)              (PWM_CMPM3_CUPRCNT_Msk & ((value) << PWM_CMPM3_CUPRCNT_Pos))
-#define PWM_CMPM3_Msk                         _U_(0x00FFFFF1)                                      /**< (PWM_CMPM3) Register Mask  */
-
-
-/* -------- PWM_CMPMUPD3 : (PWM Offset: 0x16C) ( /W 32) PWM Comparison 3 Mode Update Register -------- */
-#define PWM_CMPMUPD3_CENUPD_Pos               _U_(0)                                               /**< (PWM_CMPMUPD3) Comparison x Enable Update Position */
-#define PWM_CMPMUPD3_CENUPD_Msk               (_U_(0x1) << PWM_CMPMUPD3_CENUPD_Pos)                /**< (PWM_CMPMUPD3) Comparison x Enable Update Mask */
-#define PWM_CMPMUPD3_CENUPD(value)            (PWM_CMPMUPD3_CENUPD_Msk & ((value) << PWM_CMPMUPD3_CENUPD_Pos))
-#define PWM_CMPMUPD3_CTRUPD_Pos               _U_(4)                                               /**< (PWM_CMPMUPD3) Comparison x Trigger Update Position */
-#define PWM_CMPMUPD3_CTRUPD_Msk               (_U_(0xF) << PWM_CMPMUPD3_CTRUPD_Pos)                /**< (PWM_CMPMUPD3) Comparison x Trigger Update Mask */
-#define PWM_CMPMUPD3_CTRUPD(value)            (PWM_CMPMUPD3_CTRUPD_Msk & ((value) << PWM_CMPMUPD3_CTRUPD_Pos))
-#define PWM_CMPMUPD3_CPRUPD_Pos               _U_(8)                                               /**< (PWM_CMPMUPD3) Comparison x Period Update Position */
-#define PWM_CMPMUPD3_CPRUPD_Msk               (_U_(0xF) << PWM_CMPMUPD3_CPRUPD_Pos)                /**< (PWM_CMPMUPD3) Comparison x Period Update Mask */
-#define PWM_CMPMUPD3_CPRUPD(value)            (PWM_CMPMUPD3_CPRUPD_Msk & ((value) << PWM_CMPMUPD3_CPRUPD_Pos))
-#define PWM_CMPMUPD3_CUPRUPD_Pos              _U_(16)                                              /**< (PWM_CMPMUPD3) Comparison x Update Period Update Position */
-#define PWM_CMPMUPD3_CUPRUPD_Msk              (_U_(0xF) << PWM_CMPMUPD3_CUPRUPD_Pos)               /**< (PWM_CMPMUPD3) Comparison x Update Period Update Mask */
-#define PWM_CMPMUPD3_CUPRUPD(value)           (PWM_CMPMUPD3_CUPRUPD_Msk & ((value) << PWM_CMPMUPD3_CUPRUPD_Pos))
-#define PWM_CMPMUPD3_Msk                      _U_(0x000F0FF1)                                      /**< (PWM_CMPMUPD3) Register Mask  */
-
-
-/* -------- PWM_CMPV4 : (PWM Offset: 0x170) (R/W 32) PWM Comparison 4 Value Register -------- */
-#define PWM_CMPV4_CV_Pos                      _U_(0)                                               /**< (PWM_CMPV4) Comparison x Value Position */
-#define PWM_CMPV4_CV_Msk                      (_U_(0xFFFFFF) << PWM_CMPV4_CV_Pos)                  /**< (PWM_CMPV4) Comparison x Value Mask */
-#define PWM_CMPV4_CV(value)                   (PWM_CMPV4_CV_Msk & ((value) << PWM_CMPV4_CV_Pos))  
-#define PWM_CMPV4_CVM_Pos                     _U_(24)                                              /**< (PWM_CMPV4) Comparison x Value Mode Position */
-#define PWM_CMPV4_CVM_Msk                     (_U_(0x1) << PWM_CMPV4_CVM_Pos)                      /**< (PWM_CMPV4) Comparison x Value Mode Mask */
-#define PWM_CMPV4_CVM(value)                  (PWM_CMPV4_CVM_Msk & ((value) << PWM_CMPV4_CVM_Pos))
-#define PWM_CMPV4_Msk                         _U_(0x01FFFFFF)                                      /**< (PWM_CMPV4) Register Mask  */
-
-
-/* -------- PWM_CMPVUPD4 : (PWM Offset: 0x174) ( /W 32) PWM Comparison 4 Value Update Register -------- */
-#define PWM_CMPVUPD4_CVUPD_Pos                _U_(0)                                               /**< (PWM_CMPVUPD4) Comparison x Value Update Position */
-#define PWM_CMPVUPD4_CVUPD_Msk                (_U_(0xFFFFFF) << PWM_CMPVUPD4_CVUPD_Pos)            /**< (PWM_CMPVUPD4) Comparison x Value Update Mask */
-#define PWM_CMPVUPD4_CVUPD(value)             (PWM_CMPVUPD4_CVUPD_Msk & ((value) << PWM_CMPVUPD4_CVUPD_Pos))
-#define PWM_CMPVUPD4_CVMUPD_Pos               _U_(24)                                              /**< (PWM_CMPVUPD4) Comparison x Value Mode Update Position */
-#define PWM_CMPVUPD4_CVMUPD_Msk               (_U_(0x1) << PWM_CMPVUPD4_CVMUPD_Pos)                /**< (PWM_CMPVUPD4) Comparison x Value Mode Update Mask */
-#define PWM_CMPVUPD4_CVMUPD(value)            (PWM_CMPVUPD4_CVMUPD_Msk & ((value) << PWM_CMPVUPD4_CVMUPD_Pos))
-#define PWM_CMPVUPD4_Msk                      _U_(0x01FFFFFF)                                      /**< (PWM_CMPVUPD4) Register Mask  */
-
-
-/* -------- PWM_CMPM4 : (PWM Offset: 0x178) (R/W 32) PWM Comparison 4 Mode Register -------- */
-#define PWM_CMPM4_CEN_Pos                     _U_(0)                                               /**< (PWM_CMPM4) Comparison x Enable Position */
-#define PWM_CMPM4_CEN_Msk                     (_U_(0x1) << PWM_CMPM4_CEN_Pos)                      /**< (PWM_CMPM4) Comparison x Enable Mask */
-#define PWM_CMPM4_CEN(value)                  (PWM_CMPM4_CEN_Msk & ((value) << PWM_CMPM4_CEN_Pos))
-#define PWM_CMPM4_CTR_Pos                     _U_(4)                                               /**< (PWM_CMPM4) Comparison x Trigger Position */
-#define PWM_CMPM4_CTR_Msk                     (_U_(0xF) << PWM_CMPM4_CTR_Pos)                      /**< (PWM_CMPM4) Comparison x Trigger Mask */
-#define PWM_CMPM4_CTR(value)                  (PWM_CMPM4_CTR_Msk & ((value) << PWM_CMPM4_CTR_Pos))
-#define PWM_CMPM4_CPR_Pos                     _U_(8)                                               /**< (PWM_CMPM4) Comparison x Period Position */
-#define PWM_CMPM4_CPR_Msk                     (_U_(0xF) << PWM_CMPM4_CPR_Pos)                      /**< (PWM_CMPM4) Comparison x Period Mask */
-#define PWM_CMPM4_CPR(value)                  (PWM_CMPM4_CPR_Msk & ((value) << PWM_CMPM4_CPR_Pos))
-#define PWM_CMPM4_CPRCNT_Pos                  _U_(12)                                              /**< (PWM_CMPM4) Comparison x Period Counter Position */
-#define PWM_CMPM4_CPRCNT_Msk                  (_U_(0xF) << PWM_CMPM4_CPRCNT_Pos)                   /**< (PWM_CMPM4) Comparison x Period Counter Mask */
-#define PWM_CMPM4_CPRCNT(value)               (PWM_CMPM4_CPRCNT_Msk & ((value) << PWM_CMPM4_CPRCNT_Pos))
-#define PWM_CMPM4_CUPR_Pos                    _U_(16)                                              /**< (PWM_CMPM4) Comparison x Update Period Position */
-#define PWM_CMPM4_CUPR_Msk                    (_U_(0xF) << PWM_CMPM4_CUPR_Pos)                     /**< (PWM_CMPM4) Comparison x Update Period Mask */
-#define PWM_CMPM4_CUPR(value)                 (PWM_CMPM4_CUPR_Msk & ((value) << PWM_CMPM4_CUPR_Pos))
-#define PWM_CMPM4_CUPRCNT_Pos                 _U_(20)                                              /**< (PWM_CMPM4) Comparison x Update Period Counter Position */
-#define PWM_CMPM4_CUPRCNT_Msk                 (_U_(0xF) << PWM_CMPM4_CUPRCNT_Pos)                  /**< (PWM_CMPM4) Comparison x Update Period Counter Mask */
-#define PWM_CMPM4_CUPRCNT(value)              (PWM_CMPM4_CUPRCNT_Msk & ((value) << PWM_CMPM4_CUPRCNT_Pos))
-#define PWM_CMPM4_Msk                         _U_(0x00FFFFF1)                                      /**< (PWM_CMPM4) Register Mask  */
-
-
-/* -------- PWM_CMPMUPD4 : (PWM Offset: 0x17C) ( /W 32) PWM Comparison 4 Mode Update Register -------- */
-#define PWM_CMPMUPD4_CENUPD_Pos               _U_(0)                                               /**< (PWM_CMPMUPD4) Comparison x Enable Update Position */
-#define PWM_CMPMUPD4_CENUPD_Msk               (_U_(0x1) << PWM_CMPMUPD4_CENUPD_Pos)                /**< (PWM_CMPMUPD4) Comparison x Enable Update Mask */
-#define PWM_CMPMUPD4_CENUPD(value)            (PWM_CMPMUPD4_CENUPD_Msk & ((value) << PWM_CMPMUPD4_CENUPD_Pos))
-#define PWM_CMPMUPD4_CTRUPD_Pos               _U_(4)                                               /**< (PWM_CMPMUPD4) Comparison x Trigger Update Position */
-#define PWM_CMPMUPD4_CTRUPD_Msk               (_U_(0xF) << PWM_CMPMUPD4_CTRUPD_Pos)                /**< (PWM_CMPMUPD4) Comparison x Trigger Update Mask */
-#define PWM_CMPMUPD4_CTRUPD(value)            (PWM_CMPMUPD4_CTRUPD_Msk & ((value) << PWM_CMPMUPD4_CTRUPD_Pos))
-#define PWM_CMPMUPD4_CPRUPD_Pos               _U_(8)                                               /**< (PWM_CMPMUPD4) Comparison x Period Update Position */
-#define PWM_CMPMUPD4_CPRUPD_Msk               (_U_(0xF) << PWM_CMPMUPD4_CPRUPD_Pos)                /**< (PWM_CMPMUPD4) Comparison x Period Update Mask */
-#define PWM_CMPMUPD4_CPRUPD(value)            (PWM_CMPMUPD4_CPRUPD_Msk & ((value) << PWM_CMPMUPD4_CPRUPD_Pos))
-#define PWM_CMPMUPD4_CUPRUPD_Pos              _U_(16)                                              /**< (PWM_CMPMUPD4) Comparison x Update Period Update Position */
-#define PWM_CMPMUPD4_CUPRUPD_Msk              (_U_(0xF) << PWM_CMPMUPD4_CUPRUPD_Pos)               /**< (PWM_CMPMUPD4) Comparison x Update Period Update Mask */
-#define PWM_CMPMUPD4_CUPRUPD(value)           (PWM_CMPMUPD4_CUPRUPD_Msk & ((value) << PWM_CMPMUPD4_CUPRUPD_Pos))
-#define PWM_CMPMUPD4_Msk                      _U_(0x000F0FF1)                                      /**< (PWM_CMPMUPD4) Register Mask  */
-
-
-/* -------- PWM_CMPV5 : (PWM Offset: 0x180) (R/W 32) PWM Comparison 5 Value Register -------- */
-#define PWM_CMPV5_CV_Pos                      _U_(0)                                               /**< (PWM_CMPV5) Comparison x Value Position */
-#define PWM_CMPV5_CV_Msk                      (_U_(0xFFFFFF) << PWM_CMPV5_CV_Pos)                  /**< (PWM_CMPV5) Comparison x Value Mask */
-#define PWM_CMPV5_CV(value)                   (PWM_CMPV5_CV_Msk & ((value) << PWM_CMPV5_CV_Pos))  
-#define PWM_CMPV5_CVM_Pos                     _U_(24)                                              /**< (PWM_CMPV5) Comparison x Value Mode Position */
-#define PWM_CMPV5_CVM_Msk                     (_U_(0x1) << PWM_CMPV5_CVM_Pos)                      /**< (PWM_CMPV5) Comparison x Value Mode Mask */
-#define PWM_CMPV5_CVM(value)                  (PWM_CMPV5_CVM_Msk & ((value) << PWM_CMPV5_CVM_Pos))
-#define PWM_CMPV5_Msk                         _U_(0x01FFFFFF)                                      /**< (PWM_CMPV5) Register Mask  */
-
-
-/* -------- PWM_CMPVUPD5 : (PWM Offset: 0x184) ( /W 32) PWM Comparison 5 Value Update Register -------- */
-#define PWM_CMPVUPD5_CVUPD_Pos                _U_(0)                                               /**< (PWM_CMPVUPD5) Comparison x Value Update Position */
-#define PWM_CMPVUPD5_CVUPD_Msk                (_U_(0xFFFFFF) << PWM_CMPVUPD5_CVUPD_Pos)            /**< (PWM_CMPVUPD5) Comparison x Value Update Mask */
-#define PWM_CMPVUPD5_CVUPD(value)             (PWM_CMPVUPD5_CVUPD_Msk & ((value) << PWM_CMPVUPD5_CVUPD_Pos))
-#define PWM_CMPVUPD5_CVMUPD_Pos               _U_(24)                                              /**< (PWM_CMPVUPD5) Comparison x Value Mode Update Position */
-#define PWM_CMPVUPD5_CVMUPD_Msk               (_U_(0x1) << PWM_CMPVUPD5_CVMUPD_Pos)                /**< (PWM_CMPVUPD5) Comparison x Value Mode Update Mask */
-#define PWM_CMPVUPD5_CVMUPD(value)            (PWM_CMPVUPD5_CVMUPD_Msk & ((value) << PWM_CMPVUPD5_CVMUPD_Pos))
-#define PWM_CMPVUPD5_Msk                      _U_(0x01FFFFFF)                                      /**< (PWM_CMPVUPD5) Register Mask  */
-
-
-/* -------- PWM_CMPM5 : (PWM Offset: 0x188) (R/W 32) PWM Comparison 5 Mode Register -------- */
-#define PWM_CMPM5_CEN_Pos                     _U_(0)                                               /**< (PWM_CMPM5) Comparison x Enable Position */
-#define PWM_CMPM5_CEN_Msk                     (_U_(0x1) << PWM_CMPM5_CEN_Pos)                      /**< (PWM_CMPM5) Comparison x Enable Mask */
-#define PWM_CMPM5_CEN(value)                  (PWM_CMPM5_CEN_Msk & ((value) << PWM_CMPM5_CEN_Pos))
-#define PWM_CMPM5_CTR_Pos                     _U_(4)                                               /**< (PWM_CMPM5) Comparison x Trigger Position */
-#define PWM_CMPM5_CTR_Msk                     (_U_(0xF) << PWM_CMPM5_CTR_Pos)                      /**< (PWM_CMPM5) Comparison x Trigger Mask */
-#define PWM_CMPM5_CTR(value)                  (PWM_CMPM5_CTR_Msk & ((value) << PWM_CMPM5_CTR_Pos))
-#define PWM_CMPM5_CPR_Pos                     _U_(8)                                               /**< (PWM_CMPM5) Comparison x Period Position */
-#define PWM_CMPM5_CPR_Msk                     (_U_(0xF) << PWM_CMPM5_CPR_Pos)                      /**< (PWM_CMPM5) Comparison x Period Mask */
-#define PWM_CMPM5_CPR(value)                  (PWM_CMPM5_CPR_Msk & ((value) << PWM_CMPM5_CPR_Pos))
-#define PWM_CMPM5_CPRCNT_Pos                  _U_(12)                                              /**< (PWM_CMPM5) Comparison x Period Counter Position */
-#define PWM_CMPM5_CPRCNT_Msk                  (_U_(0xF) << PWM_CMPM5_CPRCNT_Pos)                   /**< (PWM_CMPM5) Comparison x Period Counter Mask */
-#define PWM_CMPM5_CPRCNT(value)               (PWM_CMPM5_CPRCNT_Msk & ((value) << PWM_CMPM5_CPRCNT_Pos))
-#define PWM_CMPM5_CUPR_Pos                    _U_(16)                                              /**< (PWM_CMPM5) Comparison x Update Period Position */
-#define PWM_CMPM5_CUPR_Msk                    (_U_(0xF) << PWM_CMPM5_CUPR_Pos)                     /**< (PWM_CMPM5) Comparison x Update Period Mask */
-#define PWM_CMPM5_CUPR(value)                 (PWM_CMPM5_CUPR_Msk & ((value) << PWM_CMPM5_CUPR_Pos))
-#define PWM_CMPM5_CUPRCNT_Pos                 _U_(20)                                              /**< (PWM_CMPM5) Comparison x Update Period Counter Position */
-#define PWM_CMPM5_CUPRCNT_Msk                 (_U_(0xF) << PWM_CMPM5_CUPRCNT_Pos)                  /**< (PWM_CMPM5) Comparison x Update Period Counter Mask */
-#define PWM_CMPM5_CUPRCNT(value)              (PWM_CMPM5_CUPRCNT_Msk & ((value) << PWM_CMPM5_CUPRCNT_Pos))
-#define PWM_CMPM5_Msk                         _U_(0x00FFFFF1)                                      /**< (PWM_CMPM5) Register Mask  */
-
-
-/* -------- PWM_CMPMUPD5 : (PWM Offset: 0x18C) ( /W 32) PWM Comparison 5 Mode Update Register -------- */
-#define PWM_CMPMUPD5_CENUPD_Pos               _U_(0)                                               /**< (PWM_CMPMUPD5) Comparison x Enable Update Position */
-#define PWM_CMPMUPD5_CENUPD_Msk               (_U_(0x1) << PWM_CMPMUPD5_CENUPD_Pos)                /**< (PWM_CMPMUPD5) Comparison x Enable Update Mask */
-#define PWM_CMPMUPD5_CENUPD(value)            (PWM_CMPMUPD5_CENUPD_Msk & ((value) << PWM_CMPMUPD5_CENUPD_Pos))
-#define PWM_CMPMUPD5_CTRUPD_Pos               _U_(4)                                               /**< (PWM_CMPMUPD5) Comparison x Trigger Update Position */
-#define PWM_CMPMUPD5_CTRUPD_Msk               (_U_(0xF) << PWM_CMPMUPD5_CTRUPD_Pos)                /**< (PWM_CMPMUPD5) Comparison x Trigger Update Mask */
-#define PWM_CMPMUPD5_CTRUPD(value)            (PWM_CMPMUPD5_CTRUPD_Msk & ((value) << PWM_CMPMUPD5_CTRUPD_Pos))
-#define PWM_CMPMUPD5_CPRUPD_Pos               _U_(8)                                               /**< (PWM_CMPMUPD5) Comparison x Period Update Position */
-#define PWM_CMPMUPD5_CPRUPD_Msk               (_U_(0xF) << PWM_CMPMUPD5_CPRUPD_Pos)                /**< (PWM_CMPMUPD5) Comparison x Period Update Mask */
-#define PWM_CMPMUPD5_CPRUPD(value)            (PWM_CMPMUPD5_CPRUPD_Msk & ((value) << PWM_CMPMUPD5_CPRUPD_Pos))
-#define PWM_CMPMUPD5_CUPRUPD_Pos              _U_(16)                                              /**< (PWM_CMPMUPD5) Comparison x Update Period Update Position */
-#define PWM_CMPMUPD5_CUPRUPD_Msk              (_U_(0xF) << PWM_CMPMUPD5_CUPRUPD_Pos)               /**< (PWM_CMPMUPD5) Comparison x Update Period Update Mask */
-#define PWM_CMPMUPD5_CUPRUPD(value)           (PWM_CMPMUPD5_CUPRUPD_Msk & ((value) << PWM_CMPMUPD5_CUPRUPD_Pos))
-#define PWM_CMPMUPD5_Msk                      _U_(0x000F0FF1)                                      /**< (PWM_CMPMUPD5) Register Mask  */
-
-
-/* -------- PWM_CMPV6 : (PWM Offset: 0x190) (R/W 32) PWM Comparison 6 Value Register -------- */
-#define PWM_CMPV6_CV_Pos                      _U_(0)                                               /**< (PWM_CMPV6) Comparison x Value Position */
-#define PWM_CMPV6_CV_Msk                      (_U_(0xFFFFFF) << PWM_CMPV6_CV_Pos)                  /**< (PWM_CMPV6) Comparison x Value Mask */
-#define PWM_CMPV6_CV(value)                   (PWM_CMPV6_CV_Msk & ((value) << PWM_CMPV6_CV_Pos))  
-#define PWM_CMPV6_CVM_Pos                     _U_(24)                                              /**< (PWM_CMPV6) Comparison x Value Mode Position */
-#define PWM_CMPV6_CVM_Msk                     (_U_(0x1) << PWM_CMPV6_CVM_Pos)                      /**< (PWM_CMPV6) Comparison x Value Mode Mask */
-#define PWM_CMPV6_CVM(value)                  (PWM_CMPV6_CVM_Msk & ((value) << PWM_CMPV6_CVM_Pos))
-#define PWM_CMPV6_Msk                         _U_(0x01FFFFFF)                                      /**< (PWM_CMPV6) Register Mask  */
-
-
-/* -------- PWM_CMPVUPD6 : (PWM Offset: 0x194) ( /W 32) PWM Comparison 6 Value Update Register -------- */
-#define PWM_CMPVUPD6_CVUPD_Pos                _U_(0)                                               /**< (PWM_CMPVUPD6) Comparison x Value Update Position */
-#define PWM_CMPVUPD6_CVUPD_Msk                (_U_(0xFFFFFF) << PWM_CMPVUPD6_CVUPD_Pos)            /**< (PWM_CMPVUPD6) Comparison x Value Update Mask */
-#define PWM_CMPVUPD6_CVUPD(value)             (PWM_CMPVUPD6_CVUPD_Msk & ((value) << PWM_CMPVUPD6_CVUPD_Pos))
-#define PWM_CMPVUPD6_CVMUPD_Pos               _U_(24)                                              /**< (PWM_CMPVUPD6) Comparison x Value Mode Update Position */
-#define PWM_CMPVUPD6_CVMUPD_Msk               (_U_(0x1) << PWM_CMPVUPD6_CVMUPD_Pos)                /**< (PWM_CMPVUPD6) Comparison x Value Mode Update Mask */
-#define PWM_CMPVUPD6_CVMUPD(value)            (PWM_CMPVUPD6_CVMUPD_Msk & ((value) << PWM_CMPVUPD6_CVMUPD_Pos))
-#define PWM_CMPVUPD6_Msk                      _U_(0x01FFFFFF)                                      /**< (PWM_CMPVUPD6) Register Mask  */
-
-
-/* -------- PWM_CMPM6 : (PWM Offset: 0x198) (R/W 32) PWM Comparison 6 Mode Register -------- */
-#define PWM_CMPM6_CEN_Pos                     _U_(0)                                               /**< (PWM_CMPM6) Comparison x Enable Position */
-#define PWM_CMPM6_CEN_Msk                     (_U_(0x1) << PWM_CMPM6_CEN_Pos)                      /**< (PWM_CMPM6) Comparison x Enable Mask */
-#define PWM_CMPM6_CEN(value)                  (PWM_CMPM6_CEN_Msk & ((value) << PWM_CMPM6_CEN_Pos))
-#define PWM_CMPM6_CTR_Pos                     _U_(4)                                               /**< (PWM_CMPM6) Comparison x Trigger Position */
-#define PWM_CMPM6_CTR_Msk                     (_U_(0xF) << PWM_CMPM6_CTR_Pos)                      /**< (PWM_CMPM6) Comparison x Trigger Mask */
-#define PWM_CMPM6_CTR(value)                  (PWM_CMPM6_CTR_Msk & ((value) << PWM_CMPM6_CTR_Pos))
-#define PWM_CMPM6_CPR_Pos                     _U_(8)                                               /**< (PWM_CMPM6) Comparison x Period Position */
-#define PWM_CMPM6_CPR_Msk                     (_U_(0xF) << PWM_CMPM6_CPR_Pos)                      /**< (PWM_CMPM6) Comparison x Period Mask */
-#define PWM_CMPM6_CPR(value)                  (PWM_CMPM6_CPR_Msk & ((value) << PWM_CMPM6_CPR_Pos))
-#define PWM_CMPM6_CPRCNT_Pos                  _U_(12)                                              /**< (PWM_CMPM6) Comparison x Period Counter Position */
-#define PWM_CMPM6_CPRCNT_Msk                  (_U_(0xF) << PWM_CMPM6_CPRCNT_Pos)                   /**< (PWM_CMPM6) Comparison x Period Counter Mask */
-#define PWM_CMPM6_CPRCNT(value)               (PWM_CMPM6_CPRCNT_Msk & ((value) << PWM_CMPM6_CPRCNT_Pos))
-#define PWM_CMPM6_CUPR_Pos                    _U_(16)                                              /**< (PWM_CMPM6) Comparison x Update Period Position */
-#define PWM_CMPM6_CUPR_Msk                    (_U_(0xF) << PWM_CMPM6_CUPR_Pos)                     /**< (PWM_CMPM6) Comparison x Update Period Mask */
-#define PWM_CMPM6_CUPR(value)                 (PWM_CMPM6_CUPR_Msk & ((value) << PWM_CMPM6_CUPR_Pos))
-#define PWM_CMPM6_CUPRCNT_Pos                 _U_(20)                                              /**< (PWM_CMPM6) Comparison x Update Period Counter Position */
-#define PWM_CMPM6_CUPRCNT_Msk                 (_U_(0xF) << PWM_CMPM6_CUPRCNT_Pos)                  /**< (PWM_CMPM6) Comparison x Update Period Counter Mask */
-#define PWM_CMPM6_CUPRCNT(value)              (PWM_CMPM6_CUPRCNT_Msk & ((value) << PWM_CMPM6_CUPRCNT_Pos))
-#define PWM_CMPM6_Msk                         _U_(0x00FFFFF1)                                      /**< (PWM_CMPM6) Register Mask  */
-
-
-/* -------- PWM_CMPMUPD6 : (PWM Offset: 0x19C) ( /W 32) PWM Comparison 6 Mode Update Register -------- */
-#define PWM_CMPMUPD6_CENUPD_Pos               _U_(0)                                               /**< (PWM_CMPMUPD6) Comparison x Enable Update Position */
-#define PWM_CMPMUPD6_CENUPD_Msk               (_U_(0x1) << PWM_CMPMUPD6_CENUPD_Pos)                /**< (PWM_CMPMUPD6) Comparison x Enable Update Mask */
-#define PWM_CMPMUPD6_CENUPD(value)            (PWM_CMPMUPD6_CENUPD_Msk & ((value) << PWM_CMPMUPD6_CENUPD_Pos))
-#define PWM_CMPMUPD6_CTRUPD_Pos               _U_(4)                                               /**< (PWM_CMPMUPD6) Comparison x Trigger Update Position */
-#define PWM_CMPMUPD6_CTRUPD_Msk               (_U_(0xF) << PWM_CMPMUPD6_CTRUPD_Pos)                /**< (PWM_CMPMUPD6) Comparison x Trigger Update Mask */
-#define PWM_CMPMUPD6_CTRUPD(value)            (PWM_CMPMUPD6_CTRUPD_Msk & ((value) << PWM_CMPMUPD6_CTRUPD_Pos))
-#define PWM_CMPMUPD6_CPRUPD_Pos               _U_(8)                                               /**< (PWM_CMPMUPD6) Comparison x Period Update Position */
-#define PWM_CMPMUPD6_CPRUPD_Msk               (_U_(0xF) << PWM_CMPMUPD6_CPRUPD_Pos)                /**< (PWM_CMPMUPD6) Comparison x Period Update Mask */
-#define PWM_CMPMUPD6_CPRUPD(value)            (PWM_CMPMUPD6_CPRUPD_Msk & ((value) << PWM_CMPMUPD6_CPRUPD_Pos))
-#define PWM_CMPMUPD6_CUPRUPD_Pos              _U_(16)                                              /**< (PWM_CMPMUPD6) Comparison x Update Period Update Position */
-#define PWM_CMPMUPD6_CUPRUPD_Msk              (_U_(0xF) << PWM_CMPMUPD6_CUPRUPD_Pos)               /**< (PWM_CMPMUPD6) Comparison x Update Period Update Mask */
-#define PWM_CMPMUPD6_CUPRUPD(value)           (PWM_CMPMUPD6_CUPRUPD_Msk & ((value) << PWM_CMPMUPD6_CUPRUPD_Pos))
-#define PWM_CMPMUPD6_Msk                      _U_(0x000F0FF1)                                      /**< (PWM_CMPMUPD6) Register Mask  */
-
-
-/* -------- PWM_CMPV7 : (PWM Offset: 0x1A0) (R/W 32) PWM Comparison 7 Value Register -------- */
-#define PWM_CMPV7_CV_Pos                      _U_(0)                                               /**< (PWM_CMPV7) Comparison x Value Position */
-#define PWM_CMPV7_CV_Msk                      (_U_(0xFFFFFF) << PWM_CMPV7_CV_Pos)                  /**< (PWM_CMPV7) Comparison x Value Mask */
-#define PWM_CMPV7_CV(value)                   (PWM_CMPV7_CV_Msk & ((value) << PWM_CMPV7_CV_Pos))  
-#define PWM_CMPV7_CVM_Pos                     _U_(24)                                              /**< (PWM_CMPV7) Comparison x Value Mode Position */
-#define PWM_CMPV7_CVM_Msk                     (_U_(0x1) << PWM_CMPV7_CVM_Pos)                      /**< (PWM_CMPV7) Comparison x Value Mode Mask */
-#define PWM_CMPV7_CVM(value)                  (PWM_CMPV7_CVM_Msk & ((value) << PWM_CMPV7_CVM_Pos))
-#define PWM_CMPV7_Msk                         _U_(0x01FFFFFF)                                      /**< (PWM_CMPV7) Register Mask  */
-
-
-/* -------- PWM_CMPVUPD7 : (PWM Offset: 0x1A4) ( /W 32) PWM Comparison 7 Value Update Register -------- */
-#define PWM_CMPVUPD7_CVUPD_Pos                _U_(0)                                               /**< (PWM_CMPVUPD7) Comparison x Value Update Position */
-#define PWM_CMPVUPD7_CVUPD_Msk                (_U_(0xFFFFFF) << PWM_CMPVUPD7_CVUPD_Pos)            /**< (PWM_CMPVUPD7) Comparison x Value Update Mask */
-#define PWM_CMPVUPD7_CVUPD(value)             (PWM_CMPVUPD7_CVUPD_Msk & ((value) << PWM_CMPVUPD7_CVUPD_Pos))
-#define PWM_CMPVUPD7_CVMUPD_Pos               _U_(24)                                              /**< (PWM_CMPVUPD7) Comparison x Value Mode Update Position */
-#define PWM_CMPVUPD7_CVMUPD_Msk               (_U_(0x1) << PWM_CMPVUPD7_CVMUPD_Pos)                /**< (PWM_CMPVUPD7) Comparison x Value Mode Update Mask */
-#define PWM_CMPVUPD7_CVMUPD(value)            (PWM_CMPVUPD7_CVMUPD_Msk & ((value) << PWM_CMPVUPD7_CVMUPD_Pos))
-#define PWM_CMPVUPD7_Msk                      _U_(0x01FFFFFF)                                      /**< (PWM_CMPVUPD7) Register Mask  */
-
-
-/* -------- PWM_CMPM7 : (PWM Offset: 0x1A8) (R/W 32) PWM Comparison 7 Mode Register -------- */
-#define PWM_CMPM7_CEN_Pos                     _U_(0)                                               /**< (PWM_CMPM7) Comparison x Enable Position */
-#define PWM_CMPM7_CEN_Msk                     (_U_(0x1) << PWM_CMPM7_CEN_Pos)                      /**< (PWM_CMPM7) Comparison x Enable Mask */
-#define PWM_CMPM7_CEN(value)                  (PWM_CMPM7_CEN_Msk & ((value) << PWM_CMPM7_CEN_Pos))
-#define PWM_CMPM7_CTR_Pos                     _U_(4)                                               /**< (PWM_CMPM7) Comparison x Trigger Position */
-#define PWM_CMPM7_CTR_Msk                     (_U_(0xF) << PWM_CMPM7_CTR_Pos)                      /**< (PWM_CMPM7) Comparison x Trigger Mask */
-#define PWM_CMPM7_CTR(value)                  (PWM_CMPM7_CTR_Msk & ((value) << PWM_CMPM7_CTR_Pos))
-#define PWM_CMPM7_CPR_Pos                     _U_(8)                                               /**< (PWM_CMPM7) Comparison x Period Position */
-#define PWM_CMPM7_CPR_Msk                     (_U_(0xF) << PWM_CMPM7_CPR_Pos)                      /**< (PWM_CMPM7) Comparison x Period Mask */
-#define PWM_CMPM7_CPR(value)                  (PWM_CMPM7_CPR_Msk & ((value) << PWM_CMPM7_CPR_Pos))
-#define PWM_CMPM7_CPRCNT_Pos                  _U_(12)                                              /**< (PWM_CMPM7) Comparison x Period Counter Position */
-#define PWM_CMPM7_CPRCNT_Msk                  (_U_(0xF) << PWM_CMPM7_CPRCNT_Pos)                   /**< (PWM_CMPM7) Comparison x Period Counter Mask */
-#define PWM_CMPM7_CPRCNT(value)               (PWM_CMPM7_CPRCNT_Msk & ((value) << PWM_CMPM7_CPRCNT_Pos))
-#define PWM_CMPM7_CUPR_Pos                    _U_(16)                                              /**< (PWM_CMPM7) Comparison x Update Period Position */
-#define PWM_CMPM7_CUPR_Msk                    (_U_(0xF) << PWM_CMPM7_CUPR_Pos)                     /**< (PWM_CMPM7) Comparison x Update Period Mask */
-#define PWM_CMPM7_CUPR(value)                 (PWM_CMPM7_CUPR_Msk & ((value) << PWM_CMPM7_CUPR_Pos))
-#define PWM_CMPM7_CUPRCNT_Pos                 _U_(20)                                              /**< (PWM_CMPM7) Comparison x Update Period Counter Position */
-#define PWM_CMPM7_CUPRCNT_Msk                 (_U_(0xF) << PWM_CMPM7_CUPRCNT_Pos)                  /**< (PWM_CMPM7) Comparison x Update Period Counter Mask */
-#define PWM_CMPM7_CUPRCNT(value)              (PWM_CMPM7_CUPRCNT_Msk & ((value) << PWM_CMPM7_CUPRCNT_Pos))
-#define PWM_CMPM7_Msk                         _U_(0x00FFFFF1)                                      /**< (PWM_CMPM7) Register Mask  */
-
-
-/* -------- PWM_CMPMUPD7 : (PWM Offset: 0x1AC) ( /W 32) PWM Comparison 7 Mode Update Register -------- */
-#define PWM_CMPMUPD7_CENUPD_Pos               _U_(0)                                               /**< (PWM_CMPMUPD7) Comparison x Enable Update Position */
-#define PWM_CMPMUPD7_CENUPD_Msk               (_U_(0x1) << PWM_CMPMUPD7_CENUPD_Pos)                /**< (PWM_CMPMUPD7) Comparison x Enable Update Mask */
-#define PWM_CMPMUPD7_CENUPD(value)            (PWM_CMPMUPD7_CENUPD_Msk & ((value) << PWM_CMPMUPD7_CENUPD_Pos))
-#define PWM_CMPMUPD7_CTRUPD_Pos               _U_(4)                                               /**< (PWM_CMPMUPD7) Comparison x Trigger Update Position */
-#define PWM_CMPMUPD7_CTRUPD_Msk               (_U_(0xF) << PWM_CMPMUPD7_CTRUPD_Pos)                /**< (PWM_CMPMUPD7) Comparison x Trigger Update Mask */
-#define PWM_CMPMUPD7_CTRUPD(value)            (PWM_CMPMUPD7_CTRUPD_Msk & ((value) << PWM_CMPMUPD7_CTRUPD_Pos))
-#define PWM_CMPMUPD7_CPRUPD_Pos               _U_(8)                                               /**< (PWM_CMPMUPD7) Comparison x Period Update Position */
-#define PWM_CMPMUPD7_CPRUPD_Msk               (_U_(0xF) << PWM_CMPMUPD7_CPRUPD_Pos)                /**< (PWM_CMPMUPD7) Comparison x Period Update Mask */
-#define PWM_CMPMUPD7_CPRUPD(value)            (PWM_CMPMUPD7_CPRUPD_Msk & ((value) << PWM_CMPMUPD7_CPRUPD_Pos))
-#define PWM_CMPMUPD7_CUPRUPD_Pos              _U_(16)                                              /**< (PWM_CMPMUPD7) Comparison x Update Period Update Position */
-#define PWM_CMPMUPD7_CUPRUPD_Msk              (_U_(0xF) << PWM_CMPMUPD7_CUPRUPD_Pos)               /**< (PWM_CMPMUPD7) Comparison x Update Period Update Mask */
-#define PWM_CMPMUPD7_CUPRUPD(value)           (PWM_CMPMUPD7_CUPRUPD_Msk & ((value) << PWM_CMPMUPD7_CUPRUPD_Pos))
-#define PWM_CMPMUPD7_Msk                      _U_(0x000F0FF1)                                      /**< (PWM_CMPMUPD7) Register Mask  */
-
-
-/* -------- PWM_CMR0 : (PWM Offset: 0x200) (R/W 32) PWM Channel Mode Register (ch_num = 0) -------- */
-#define PWM_CMR0_CPRE_Pos                     _U_(0)                                               /**< (PWM_CMR0) Channel Prescaler Position */
-#define PWM_CMR0_CPRE_Msk                     (_U_(0xF) << PWM_CMR0_CPRE_Pos)                      /**< (PWM_CMR0) Channel Prescaler Mask */
-#define PWM_CMR0_CPRE(value)                  (PWM_CMR0_CPRE_Msk & ((value) << PWM_CMR0_CPRE_Pos))
-#define   PWM_CMR0_CPRE_MCK_Val               _U_(0x0)                                             /**< (PWM_CMR0) Peripheral clock  */
-#define   PWM_CMR0_CPRE_MCK_DIV_2_Val         _U_(0x1)                                             /**< (PWM_CMR0) Peripheral clock/2  */
-#define   PWM_CMR0_CPRE_MCK_DIV_4_Val         _U_(0x2)                                             /**< (PWM_CMR0) Peripheral clock/4  */
-#define   PWM_CMR0_CPRE_MCK_DIV_8_Val         _U_(0x3)                                             /**< (PWM_CMR0) Peripheral clock/8  */
-#define   PWM_CMR0_CPRE_MCK_DIV_16_Val        _U_(0x4)                                             /**< (PWM_CMR0) Peripheral clock/16  */
-#define   PWM_CMR0_CPRE_MCK_DIV_32_Val        _U_(0x5)                                             /**< (PWM_CMR0) Peripheral clock/32  */
-#define   PWM_CMR0_CPRE_MCK_DIV_64_Val        _U_(0x6)                                             /**< (PWM_CMR0) Peripheral clock/64  */
-#define   PWM_CMR0_CPRE_MCK_DIV_128_Val       _U_(0x7)                                             /**< (PWM_CMR0) Peripheral clock/128  */
-#define   PWM_CMR0_CPRE_MCK_DIV_256_Val       _U_(0x8)                                             /**< (PWM_CMR0) Peripheral clock/256  */
-#define   PWM_CMR0_CPRE_MCK_DIV_512_Val       _U_(0x9)                                             /**< (PWM_CMR0) Peripheral clock/512  */
-#define   PWM_CMR0_CPRE_MCK_DIV_1024_Val      _U_(0xA)                                             /**< (PWM_CMR0) Peripheral clock/1024  */
-#define   PWM_CMR0_CPRE_CLKA_Val              _U_(0xB)                                             /**< (PWM_CMR0) Clock A  */
-#define   PWM_CMR0_CPRE_CLKB_Val              _U_(0xC)                                             /**< (PWM_CMR0) Clock B  */
-#define PWM_CMR0_CPRE_MCK                     (PWM_CMR0_CPRE_MCK_Val << PWM_CMR0_CPRE_Pos)         /**< (PWM_CMR0) Peripheral clock Position  */
-#define PWM_CMR0_CPRE_MCK_DIV_2               (PWM_CMR0_CPRE_MCK_DIV_2_Val << PWM_CMR0_CPRE_Pos)   /**< (PWM_CMR0) Peripheral clock/2 Position  */
-#define PWM_CMR0_CPRE_MCK_DIV_4               (PWM_CMR0_CPRE_MCK_DIV_4_Val << PWM_CMR0_CPRE_Pos)   /**< (PWM_CMR0) Peripheral clock/4 Position  */
-#define PWM_CMR0_CPRE_MCK_DIV_8               (PWM_CMR0_CPRE_MCK_DIV_8_Val << PWM_CMR0_CPRE_Pos)   /**< (PWM_CMR0) Peripheral clock/8 Position  */
-#define PWM_CMR0_CPRE_MCK_DIV_16              (PWM_CMR0_CPRE_MCK_DIV_16_Val << PWM_CMR0_CPRE_Pos)  /**< (PWM_CMR0) Peripheral clock/16 Position  */
-#define PWM_CMR0_CPRE_MCK_DIV_32              (PWM_CMR0_CPRE_MCK_DIV_32_Val << PWM_CMR0_CPRE_Pos)  /**< (PWM_CMR0) Peripheral clock/32 Position  */
-#define PWM_CMR0_CPRE_MCK_DIV_64              (PWM_CMR0_CPRE_MCK_DIV_64_Val << PWM_CMR0_CPRE_Pos)  /**< (PWM_CMR0) Peripheral clock/64 Position  */
-#define PWM_CMR0_CPRE_MCK_DIV_128             (PWM_CMR0_CPRE_MCK_DIV_128_Val << PWM_CMR0_CPRE_Pos) /**< (PWM_CMR0) Peripheral clock/128 Position  */
-#define PWM_CMR0_CPRE_MCK_DIV_256             (PWM_CMR0_CPRE_MCK_DIV_256_Val << PWM_CMR0_CPRE_Pos) /**< (PWM_CMR0) Peripheral clock/256 Position  */
-#define PWM_CMR0_CPRE_MCK_DIV_512             (PWM_CMR0_CPRE_MCK_DIV_512_Val << PWM_CMR0_CPRE_Pos) /**< (PWM_CMR0) Peripheral clock/512 Position  */
-#define PWM_CMR0_CPRE_MCK_DIV_1024            (PWM_CMR0_CPRE_MCK_DIV_1024_Val << PWM_CMR0_CPRE_Pos) /**< (PWM_CMR0) Peripheral clock/1024 Position  */
-#define PWM_CMR0_CPRE_CLKA                    (PWM_CMR0_CPRE_CLKA_Val << PWM_CMR0_CPRE_Pos)        /**< (PWM_CMR0) Clock A Position  */
-#define PWM_CMR0_CPRE_CLKB                    (PWM_CMR0_CPRE_CLKB_Val << PWM_CMR0_CPRE_Pos)        /**< (PWM_CMR0) Clock B Position  */
-#define PWM_CMR0_CALG_Pos                     _U_(8)                                               /**< (PWM_CMR0) Channel Alignment Position */
-#define PWM_CMR0_CALG_Msk                     (_U_(0x1) << PWM_CMR0_CALG_Pos)                      /**< (PWM_CMR0) Channel Alignment Mask */
-#define PWM_CMR0_CALG(value)                  (PWM_CMR0_CALG_Msk & ((value) << PWM_CMR0_CALG_Pos))
-#define PWM_CMR0_CPOL_Pos                     _U_(9)                                               /**< (PWM_CMR0) Channel Polarity Position */
-#define PWM_CMR0_CPOL_Msk                     (_U_(0x1) << PWM_CMR0_CPOL_Pos)                      /**< (PWM_CMR0) Channel Polarity Mask */
-#define PWM_CMR0_CPOL(value)                  (PWM_CMR0_CPOL_Msk & ((value) << PWM_CMR0_CPOL_Pos))
-#define PWM_CMR0_CES_Pos                      _U_(10)                                              /**< (PWM_CMR0) Counter Event Selection Position */
-#define PWM_CMR0_CES_Msk                      (_U_(0x1) << PWM_CMR0_CES_Pos)                       /**< (PWM_CMR0) Counter Event Selection Mask */
-#define PWM_CMR0_CES(value)                   (PWM_CMR0_CES_Msk & ((value) << PWM_CMR0_CES_Pos))  
-#define PWM_CMR0_UPDS_Pos                     _U_(11)                                              /**< (PWM_CMR0) Update Selection Position */
-#define PWM_CMR0_UPDS_Msk                     (_U_(0x1) << PWM_CMR0_UPDS_Pos)                      /**< (PWM_CMR0) Update Selection Mask */
-#define PWM_CMR0_UPDS(value)                  (PWM_CMR0_UPDS_Msk & ((value) << PWM_CMR0_UPDS_Pos))
-#define PWM_CMR0_DPOLI_Pos                    _U_(12)                                              /**< (PWM_CMR0) Disabled Polarity Inverted Position */
-#define PWM_CMR0_DPOLI_Msk                    (_U_(0x1) << PWM_CMR0_DPOLI_Pos)                     /**< (PWM_CMR0) Disabled Polarity Inverted Mask */
-#define PWM_CMR0_DPOLI(value)                 (PWM_CMR0_DPOLI_Msk & ((value) << PWM_CMR0_DPOLI_Pos))
-#define PWM_CMR0_TCTS_Pos                     _U_(13)                                              /**< (PWM_CMR0) Timer Counter Trigger Selection Position */
-#define PWM_CMR0_TCTS_Msk                     (_U_(0x1) << PWM_CMR0_TCTS_Pos)                      /**< (PWM_CMR0) Timer Counter Trigger Selection Mask */
-#define PWM_CMR0_TCTS(value)                  (PWM_CMR0_TCTS_Msk & ((value) << PWM_CMR0_TCTS_Pos))
-#define PWM_CMR0_DTE_Pos                      _U_(16)                                              /**< (PWM_CMR0) Dead-Time Generator Enable Position */
-#define PWM_CMR0_DTE_Msk                      (_U_(0x1) << PWM_CMR0_DTE_Pos)                       /**< (PWM_CMR0) Dead-Time Generator Enable Mask */
-#define PWM_CMR0_DTE(value)                   (PWM_CMR0_DTE_Msk & ((value) << PWM_CMR0_DTE_Pos))  
-#define PWM_CMR0_DTHI_Pos                     _U_(17)                                              /**< (PWM_CMR0) Dead-Time PWMHx Output Inverted Position */
-#define PWM_CMR0_DTHI_Msk                     (_U_(0x1) << PWM_CMR0_DTHI_Pos)                      /**< (PWM_CMR0) Dead-Time PWMHx Output Inverted Mask */
-#define PWM_CMR0_DTHI(value)                  (PWM_CMR0_DTHI_Msk & ((value) << PWM_CMR0_DTHI_Pos))
-#define PWM_CMR0_DTLI_Pos                     _U_(18)                                              /**< (PWM_CMR0) Dead-Time PWMLx Output Inverted Position */
-#define PWM_CMR0_DTLI_Msk                     (_U_(0x1) << PWM_CMR0_DTLI_Pos)                      /**< (PWM_CMR0) Dead-Time PWMLx Output Inverted Mask */
-#define PWM_CMR0_DTLI(value)                  (PWM_CMR0_DTLI_Msk & ((value) << PWM_CMR0_DTLI_Pos))
-#define PWM_CMR0_PPM_Pos                      _U_(19)                                              /**< (PWM_CMR0) Push-Pull Mode Position */
-#define PWM_CMR0_PPM_Msk                      (_U_(0x1) << PWM_CMR0_PPM_Pos)                       /**< (PWM_CMR0) Push-Pull Mode Mask */
-#define PWM_CMR0_PPM(value)                   (PWM_CMR0_PPM_Msk & ((value) << PWM_CMR0_PPM_Pos))  
-#define PWM_CMR0_Msk                          _U_(0x000F3F0F)                                      /**< (PWM_CMR0) Register Mask  */
-
-
-/* -------- PWM_CDTY0 : (PWM Offset: 0x204) (R/W 32) PWM Channel Duty Cycle Register (ch_num = 0) -------- */
-#define PWM_CDTY0_CDTY_Pos                    _U_(0)                                               /**< (PWM_CDTY0) Channel Duty-Cycle Position */
-#define PWM_CDTY0_CDTY_Msk                    (_U_(0xFFFFFF) << PWM_CDTY0_CDTY_Pos)                /**< (PWM_CDTY0) Channel Duty-Cycle Mask */
-#define PWM_CDTY0_CDTY(value)                 (PWM_CDTY0_CDTY_Msk & ((value) << PWM_CDTY0_CDTY_Pos))
-#define PWM_CDTY0_Msk                         _U_(0x00FFFFFF)                                      /**< (PWM_CDTY0) Register Mask  */
-
-
-/* -------- PWM_CDTYUPD0 : (PWM Offset: 0x208) ( /W 32) PWM Channel Duty Cycle Update Register (ch_num = 0) -------- */
-#define PWM_CDTYUPD0_CDTYUPD_Pos              _U_(0)                                               /**< (PWM_CDTYUPD0) Channel Duty-Cycle Update Position */
-#define PWM_CDTYUPD0_CDTYUPD_Msk              (_U_(0xFFFFFF) << PWM_CDTYUPD0_CDTYUPD_Pos)          /**< (PWM_CDTYUPD0) Channel Duty-Cycle Update Mask */
-#define PWM_CDTYUPD0_CDTYUPD(value)           (PWM_CDTYUPD0_CDTYUPD_Msk & ((value) << PWM_CDTYUPD0_CDTYUPD_Pos))
-#define PWM_CDTYUPD0_Msk                      _U_(0x00FFFFFF)                                      /**< (PWM_CDTYUPD0) Register Mask  */
-
-
-/* -------- PWM_CPRD0 : (PWM Offset: 0x20C) (R/W 32) PWM Channel Period Register (ch_num = 0) -------- */
-#define PWM_CPRD0_CPRD_Pos                    _U_(0)                                               /**< (PWM_CPRD0) Channel Period Position */
-#define PWM_CPRD0_CPRD_Msk                    (_U_(0xFFFFFF) << PWM_CPRD0_CPRD_Pos)                /**< (PWM_CPRD0) Channel Period Mask */
-#define PWM_CPRD0_CPRD(value)                 (PWM_CPRD0_CPRD_Msk & ((value) << PWM_CPRD0_CPRD_Pos))
-#define PWM_CPRD0_Msk                         _U_(0x00FFFFFF)                                      /**< (PWM_CPRD0) Register Mask  */
-
-
-/* -------- PWM_CPRDUPD0 : (PWM Offset: 0x210) ( /W 32) PWM Channel Period Update Register (ch_num = 0) -------- */
-#define PWM_CPRDUPD0_CPRDUPD_Pos              _U_(0)                                               /**< (PWM_CPRDUPD0) Channel Period Update Position */
-#define PWM_CPRDUPD0_CPRDUPD_Msk              (_U_(0xFFFFFF) << PWM_CPRDUPD0_CPRDUPD_Pos)          /**< (PWM_CPRDUPD0) Channel Period Update Mask */
-#define PWM_CPRDUPD0_CPRDUPD(value)           (PWM_CPRDUPD0_CPRDUPD_Msk & ((value) << PWM_CPRDUPD0_CPRDUPD_Pos))
-#define PWM_CPRDUPD0_Msk                      _U_(0x00FFFFFF)                                      /**< (PWM_CPRDUPD0) Register Mask  */
-
-
-/* -------- PWM_CCNT0 : (PWM Offset: 0x214) ( R/ 32) PWM Channel Counter Register (ch_num = 0) -------- */
-#define PWM_CCNT0_CNT_Pos                     _U_(0)                                               /**< (PWM_CCNT0) Channel Counter Register Position */
-#define PWM_CCNT0_CNT_Msk                     (_U_(0xFFFFFF) << PWM_CCNT0_CNT_Pos)                 /**< (PWM_CCNT0) Channel Counter Register Mask */
-#define PWM_CCNT0_CNT(value)                  (PWM_CCNT0_CNT_Msk & ((value) << PWM_CCNT0_CNT_Pos))
-#define PWM_CCNT0_Msk                         _U_(0x00FFFFFF)                                      /**< (PWM_CCNT0) Register Mask  */
-
-
-/* -------- PWM_DT0 : (PWM Offset: 0x218) (R/W 32) PWM Channel Dead Time Register (ch_num = 0) -------- */
-#define PWM_DT0_DTH_Pos                       _U_(0)                                               /**< (PWM_DT0) Dead-Time Value for PWMHx Output Position */
-#define PWM_DT0_DTH_Msk                       (_U_(0xFFFF) << PWM_DT0_DTH_Pos)                     /**< (PWM_DT0) Dead-Time Value for PWMHx Output Mask */
-#define PWM_DT0_DTH(value)                    (PWM_DT0_DTH_Msk & ((value) << PWM_DT0_DTH_Pos))    
-#define PWM_DT0_DTL_Pos                       _U_(16)                                              /**< (PWM_DT0) Dead-Time Value for PWMLx Output Position */
-#define PWM_DT0_DTL_Msk                       (_U_(0xFFFF) << PWM_DT0_DTL_Pos)                     /**< (PWM_DT0) Dead-Time Value for PWMLx Output Mask */
-#define PWM_DT0_DTL(value)                    (PWM_DT0_DTL_Msk & ((value) << PWM_DT0_DTL_Pos))    
-#define PWM_DT0_Msk                           _U_(0xFFFFFFFF)                                      /**< (PWM_DT0) Register Mask  */
-
-
-/* -------- PWM_DTUPD0 : (PWM Offset: 0x21C) ( /W 32) PWM Channel Dead Time Update Register (ch_num = 0) -------- */
-#define PWM_DTUPD0_DTHUPD_Pos                 _U_(0)                                               /**< (PWM_DTUPD0) Dead-Time Value Update for PWMHx Output Position */
-#define PWM_DTUPD0_DTHUPD_Msk                 (_U_(0xFFFF) << PWM_DTUPD0_DTHUPD_Pos)               /**< (PWM_DTUPD0) Dead-Time Value Update for PWMHx Output Mask */
-#define PWM_DTUPD0_DTHUPD(value)              (PWM_DTUPD0_DTHUPD_Msk & ((value) << PWM_DTUPD0_DTHUPD_Pos))
-#define PWM_DTUPD0_DTLUPD_Pos                 _U_(16)                                              /**< (PWM_DTUPD0) Dead-Time Value Update for PWMLx Output Position */
-#define PWM_DTUPD0_DTLUPD_Msk                 (_U_(0xFFFF) << PWM_DTUPD0_DTLUPD_Pos)               /**< (PWM_DTUPD0) Dead-Time Value Update for PWMLx Output Mask */
-#define PWM_DTUPD0_DTLUPD(value)              (PWM_DTUPD0_DTLUPD_Msk & ((value) << PWM_DTUPD0_DTLUPD_Pos))
-#define PWM_DTUPD0_Msk                        _U_(0xFFFFFFFF)                                      /**< (PWM_DTUPD0) Register Mask  */
-
-
-/* -------- PWM_CMR1 : (PWM Offset: 0x220) (R/W 32) PWM Channel Mode Register (ch_num = 1) -------- */
-#define PWM_CMR1_CPRE_Pos                     _U_(0)                                               /**< (PWM_CMR1) Channel Prescaler Position */
-#define PWM_CMR1_CPRE_Msk                     (_U_(0xF) << PWM_CMR1_CPRE_Pos)                      /**< (PWM_CMR1) Channel Prescaler Mask */
-#define PWM_CMR1_CPRE(value)                  (PWM_CMR1_CPRE_Msk & ((value) << PWM_CMR1_CPRE_Pos))
-#define   PWM_CMR1_CPRE_MCK_Val               _U_(0x0)                                             /**< (PWM_CMR1) Peripheral clock  */
-#define   PWM_CMR1_CPRE_MCK_DIV_2_Val         _U_(0x1)                                             /**< (PWM_CMR1) Peripheral clock/2  */
-#define   PWM_CMR1_CPRE_MCK_DIV_4_Val         _U_(0x2)                                             /**< (PWM_CMR1) Peripheral clock/4  */
-#define   PWM_CMR1_CPRE_MCK_DIV_8_Val         _U_(0x3)                                             /**< (PWM_CMR1) Peripheral clock/8  */
-#define   PWM_CMR1_CPRE_MCK_DIV_16_Val        _U_(0x4)                                             /**< (PWM_CMR1) Peripheral clock/16  */
-#define   PWM_CMR1_CPRE_MCK_DIV_32_Val        _U_(0x5)                                             /**< (PWM_CMR1) Peripheral clock/32  */
-#define   PWM_CMR1_CPRE_MCK_DIV_64_Val        _U_(0x6)                                             /**< (PWM_CMR1) Peripheral clock/64  */
-#define   PWM_CMR1_CPRE_MCK_DIV_128_Val       _U_(0x7)                                             /**< (PWM_CMR1) Peripheral clock/128  */
-#define   PWM_CMR1_CPRE_MCK_DIV_256_Val       _U_(0x8)                                             /**< (PWM_CMR1) Peripheral clock/256  */
-#define   PWM_CMR1_CPRE_MCK_DIV_512_Val       _U_(0x9)                                             /**< (PWM_CMR1) Peripheral clock/512  */
-#define   PWM_CMR1_CPRE_MCK_DIV_1024_Val      _U_(0xA)                                             /**< (PWM_CMR1) Peripheral clock/1024  */
-#define   PWM_CMR1_CPRE_CLKA_Val              _U_(0xB)                                             /**< (PWM_CMR1) Clock A  */
-#define   PWM_CMR1_CPRE_CLKB_Val              _U_(0xC)                                             /**< (PWM_CMR1) Clock B  */
-#define PWM_CMR1_CPRE_MCK                     (PWM_CMR1_CPRE_MCK_Val << PWM_CMR1_CPRE_Pos)         /**< (PWM_CMR1) Peripheral clock Position  */
-#define PWM_CMR1_CPRE_MCK_DIV_2               (PWM_CMR1_CPRE_MCK_DIV_2_Val << PWM_CMR1_CPRE_Pos)   /**< (PWM_CMR1) Peripheral clock/2 Position  */
-#define PWM_CMR1_CPRE_MCK_DIV_4               (PWM_CMR1_CPRE_MCK_DIV_4_Val << PWM_CMR1_CPRE_Pos)   /**< (PWM_CMR1) Peripheral clock/4 Position  */
-#define PWM_CMR1_CPRE_MCK_DIV_8               (PWM_CMR1_CPRE_MCK_DIV_8_Val << PWM_CMR1_CPRE_Pos)   /**< (PWM_CMR1) Peripheral clock/8 Position  */
-#define PWM_CMR1_CPRE_MCK_DIV_16              (PWM_CMR1_CPRE_MCK_DIV_16_Val << PWM_CMR1_CPRE_Pos)  /**< (PWM_CMR1) Peripheral clock/16 Position  */
-#define PWM_CMR1_CPRE_MCK_DIV_32              (PWM_CMR1_CPRE_MCK_DIV_32_Val << PWM_CMR1_CPRE_Pos)  /**< (PWM_CMR1) Peripheral clock/32 Position  */
-#define PWM_CMR1_CPRE_MCK_DIV_64              (PWM_CMR1_CPRE_MCK_DIV_64_Val << PWM_CMR1_CPRE_Pos)  /**< (PWM_CMR1) Peripheral clock/64 Position  */
-#define PWM_CMR1_CPRE_MCK_DIV_128             (PWM_CMR1_CPRE_MCK_DIV_128_Val << PWM_CMR1_CPRE_Pos) /**< (PWM_CMR1) Peripheral clock/128 Position  */
-#define PWM_CMR1_CPRE_MCK_DIV_256             (PWM_CMR1_CPRE_MCK_DIV_256_Val << PWM_CMR1_CPRE_Pos) /**< (PWM_CMR1) Peripheral clock/256 Position  */
-#define PWM_CMR1_CPRE_MCK_DIV_512             (PWM_CMR1_CPRE_MCK_DIV_512_Val << PWM_CMR1_CPRE_Pos) /**< (PWM_CMR1) Peripheral clock/512 Position  */
-#define PWM_CMR1_CPRE_MCK_DIV_1024            (PWM_CMR1_CPRE_MCK_DIV_1024_Val << PWM_CMR1_CPRE_Pos) /**< (PWM_CMR1) Peripheral clock/1024 Position  */
-#define PWM_CMR1_CPRE_CLKA                    (PWM_CMR1_CPRE_CLKA_Val << PWM_CMR1_CPRE_Pos)        /**< (PWM_CMR1) Clock A Position  */
-#define PWM_CMR1_CPRE_CLKB                    (PWM_CMR1_CPRE_CLKB_Val << PWM_CMR1_CPRE_Pos)        /**< (PWM_CMR1) Clock B Position  */
-#define PWM_CMR1_CALG_Pos                     _U_(8)                                               /**< (PWM_CMR1) Channel Alignment Position */
-#define PWM_CMR1_CALG_Msk                     (_U_(0x1) << PWM_CMR1_CALG_Pos)                      /**< (PWM_CMR1) Channel Alignment Mask */
-#define PWM_CMR1_CALG(value)                  (PWM_CMR1_CALG_Msk & ((value) << PWM_CMR1_CALG_Pos))
-#define PWM_CMR1_CPOL_Pos                     _U_(9)                                               /**< (PWM_CMR1) Channel Polarity Position */
-#define PWM_CMR1_CPOL_Msk                     (_U_(0x1) << PWM_CMR1_CPOL_Pos)                      /**< (PWM_CMR1) Channel Polarity Mask */
-#define PWM_CMR1_CPOL(value)                  (PWM_CMR1_CPOL_Msk & ((value) << PWM_CMR1_CPOL_Pos))
-#define PWM_CMR1_CES_Pos                      _U_(10)                                              /**< (PWM_CMR1) Counter Event Selection Position */
-#define PWM_CMR1_CES_Msk                      (_U_(0x1) << PWM_CMR1_CES_Pos)                       /**< (PWM_CMR1) Counter Event Selection Mask */
-#define PWM_CMR1_CES(value)                   (PWM_CMR1_CES_Msk & ((value) << PWM_CMR1_CES_Pos))  
-#define PWM_CMR1_UPDS_Pos                     _U_(11)                                              /**< (PWM_CMR1) Update Selection Position */
-#define PWM_CMR1_UPDS_Msk                     (_U_(0x1) << PWM_CMR1_UPDS_Pos)                      /**< (PWM_CMR1) Update Selection Mask */
-#define PWM_CMR1_UPDS(value)                  (PWM_CMR1_UPDS_Msk & ((value) << PWM_CMR1_UPDS_Pos))
-#define PWM_CMR1_DPOLI_Pos                    _U_(12)                                              /**< (PWM_CMR1) Disabled Polarity Inverted Position */
-#define PWM_CMR1_DPOLI_Msk                    (_U_(0x1) << PWM_CMR1_DPOLI_Pos)                     /**< (PWM_CMR1) Disabled Polarity Inverted Mask */
-#define PWM_CMR1_DPOLI(value)                 (PWM_CMR1_DPOLI_Msk & ((value) << PWM_CMR1_DPOLI_Pos))
-#define PWM_CMR1_TCTS_Pos                     _U_(13)                                              /**< (PWM_CMR1) Timer Counter Trigger Selection Position */
-#define PWM_CMR1_TCTS_Msk                     (_U_(0x1) << PWM_CMR1_TCTS_Pos)                      /**< (PWM_CMR1) Timer Counter Trigger Selection Mask */
-#define PWM_CMR1_TCTS(value)                  (PWM_CMR1_TCTS_Msk & ((value) << PWM_CMR1_TCTS_Pos))
-#define PWM_CMR1_DTE_Pos                      _U_(16)                                              /**< (PWM_CMR1) Dead-Time Generator Enable Position */
-#define PWM_CMR1_DTE_Msk                      (_U_(0x1) << PWM_CMR1_DTE_Pos)                       /**< (PWM_CMR1) Dead-Time Generator Enable Mask */
-#define PWM_CMR1_DTE(value)                   (PWM_CMR1_DTE_Msk & ((value) << PWM_CMR1_DTE_Pos))  
-#define PWM_CMR1_DTHI_Pos                     _U_(17)                                              /**< (PWM_CMR1) Dead-Time PWMHx Output Inverted Position */
-#define PWM_CMR1_DTHI_Msk                     (_U_(0x1) << PWM_CMR1_DTHI_Pos)                      /**< (PWM_CMR1) Dead-Time PWMHx Output Inverted Mask */
-#define PWM_CMR1_DTHI(value)                  (PWM_CMR1_DTHI_Msk & ((value) << PWM_CMR1_DTHI_Pos))
-#define PWM_CMR1_DTLI_Pos                     _U_(18)                                              /**< (PWM_CMR1) Dead-Time PWMLx Output Inverted Position */
-#define PWM_CMR1_DTLI_Msk                     (_U_(0x1) << PWM_CMR1_DTLI_Pos)                      /**< (PWM_CMR1) Dead-Time PWMLx Output Inverted Mask */
-#define PWM_CMR1_DTLI(value)                  (PWM_CMR1_DTLI_Msk & ((value) << PWM_CMR1_DTLI_Pos))
-#define PWM_CMR1_PPM_Pos                      _U_(19)                                              /**< (PWM_CMR1) Push-Pull Mode Position */
-#define PWM_CMR1_PPM_Msk                      (_U_(0x1) << PWM_CMR1_PPM_Pos)                       /**< (PWM_CMR1) Push-Pull Mode Mask */
-#define PWM_CMR1_PPM(value)                   (PWM_CMR1_PPM_Msk & ((value) << PWM_CMR1_PPM_Pos))  
-#define PWM_CMR1_Msk                          _U_(0x000F3F0F)                                      /**< (PWM_CMR1) Register Mask  */
-
-
-/* -------- PWM_CDTY1 : (PWM Offset: 0x224) (R/W 32) PWM Channel Duty Cycle Register (ch_num = 1) -------- */
-#define PWM_CDTY1_CDTY_Pos                    _U_(0)                                               /**< (PWM_CDTY1) Channel Duty-Cycle Position */
-#define PWM_CDTY1_CDTY_Msk                    (_U_(0xFFFFFF) << PWM_CDTY1_CDTY_Pos)                /**< (PWM_CDTY1) Channel Duty-Cycle Mask */
-#define PWM_CDTY1_CDTY(value)                 (PWM_CDTY1_CDTY_Msk & ((value) << PWM_CDTY1_CDTY_Pos))
-#define PWM_CDTY1_Msk                         _U_(0x00FFFFFF)                                      /**< (PWM_CDTY1) Register Mask  */
-
-
-/* -------- PWM_CDTYUPD1 : (PWM Offset: 0x228) ( /W 32) PWM Channel Duty Cycle Update Register (ch_num = 1) -------- */
-#define PWM_CDTYUPD1_CDTYUPD_Pos              _U_(0)                                               /**< (PWM_CDTYUPD1) Channel Duty-Cycle Update Position */
-#define PWM_CDTYUPD1_CDTYUPD_Msk              (_U_(0xFFFFFF) << PWM_CDTYUPD1_CDTYUPD_Pos)          /**< (PWM_CDTYUPD1) Channel Duty-Cycle Update Mask */
-#define PWM_CDTYUPD1_CDTYUPD(value)           (PWM_CDTYUPD1_CDTYUPD_Msk & ((value) << PWM_CDTYUPD1_CDTYUPD_Pos))
-#define PWM_CDTYUPD1_Msk                      _U_(0x00FFFFFF)                                      /**< (PWM_CDTYUPD1) Register Mask  */
-
-
-/* -------- PWM_CPRD1 : (PWM Offset: 0x22C) (R/W 32) PWM Channel Period Register (ch_num = 1) -------- */
-#define PWM_CPRD1_CPRD_Pos                    _U_(0)                                               /**< (PWM_CPRD1) Channel Period Position */
-#define PWM_CPRD1_CPRD_Msk                    (_U_(0xFFFFFF) << PWM_CPRD1_CPRD_Pos)                /**< (PWM_CPRD1) Channel Period Mask */
-#define PWM_CPRD1_CPRD(value)                 (PWM_CPRD1_CPRD_Msk & ((value) << PWM_CPRD1_CPRD_Pos))
-#define PWM_CPRD1_Msk                         _U_(0x00FFFFFF)                                      /**< (PWM_CPRD1) Register Mask  */
-
-
-/* -------- PWM_CPRDUPD1 : (PWM Offset: 0x230) ( /W 32) PWM Channel Period Update Register (ch_num = 1) -------- */
-#define PWM_CPRDUPD1_CPRDUPD_Pos              _U_(0)                                               /**< (PWM_CPRDUPD1) Channel Period Update Position */
-#define PWM_CPRDUPD1_CPRDUPD_Msk              (_U_(0xFFFFFF) << PWM_CPRDUPD1_CPRDUPD_Pos)          /**< (PWM_CPRDUPD1) Channel Period Update Mask */
-#define PWM_CPRDUPD1_CPRDUPD(value)           (PWM_CPRDUPD1_CPRDUPD_Msk & ((value) << PWM_CPRDUPD1_CPRDUPD_Pos))
-#define PWM_CPRDUPD1_Msk                      _U_(0x00FFFFFF)                                      /**< (PWM_CPRDUPD1) Register Mask  */
-
-
-/* -------- PWM_CCNT1 : (PWM Offset: 0x234) ( R/ 32) PWM Channel Counter Register (ch_num = 1) -------- */
-#define PWM_CCNT1_CNT_Pos                     _U_(0)                                               /**< (PWM_CCNT1) Channel Counter Register Position */
-#define PWM_CCNT1_CNT_Msk                     (_U_(0xFFFFFF) << PWM_CCNT1_CNT_Pos)                 /**< (PWM_CCNT1) Channel Counter Register Mask */
-#define PWM_CCNT1_CNT(value)                  (PWM_CCNT1_CNT_Msk & ((value) << PWM_CCNT1_CNT_Pos))
-#define PWM_CCNT1_Msk                         _U_(0x00FFFFFF)                                      /**< (PWM_CCNT1) Register Mask  */
-
-
-/* -------- PWM_DT1 : (PWM Offset: 0x238) (R/W 32) PWM Channel Dead Time Register (ch_num = 1) -------- */
-#define PWM_DT1_DTH_Pos                       _U_(0)                                               /**< (PWM_DT1) Dead-Time Value for PWMHx Output Position */
-#define PWM_DT1_DTH_Msk                       (_U_(0xFFFF) << PWM_DT1_DTH_Pos)                     /**< (PWM_DT1) Dead-Time Value for PWMHx Output Mask */
-#define PWM_DT1_DTH(value)                    (PWM_DT1_DTH_Msk & ((value) << PWM_DT1_DTH_Pos))    
-#define PWM_DT1_DTL_Pos                       _U_(16)                                              /**< (PWM_DT1) Dead-Time Value for PWMLx Output Position */
-#define PWM_DT1_DTL_Msk                       (_U_(0xFFFF) << PWM_DT1_DTL_Pos)                     /**< (PWM_DT1) Dead-Time Value for PWMLx Output Mask */
-#define PWM_DT1_DTL(value)                    (PWM_DT1_DTL_Msk & ((value) << PWM_DT1_DTL_Pos))    
-#define PWM_DT1_Msk                           _U_(0xFFFFFFFF)                                      /**< (PWM_DT1) Register Mask  */
-
-
-/* -------- PWM_DTUPD1 : (PWM Offset: 0x23C) ( /W 32) PWM Channel Dead Time Update Register (ch_num = 1) -------- */
-#define PWM_DTUPD1_DTHUPD_Pos                 _U_(0)                                               /**< (PWM_DTUPD1) Dead-Time Value Update for PWMHx Output Position */
-#define PWM_DTUPD1_DTHUPD_Msk                 (_U_(0xFFFF) << PWM_DTUPD1_DTHUPD_Pos)               /**< (PWM_DTUPD1) Dead-Time Value Update for PWMHx Output Mask */
-#define PWM_DTUPD1_DTHUPD(value)              (PWM_DTUPD1_DTHUPD_Msk & ((value) << PWM_DTUPD1_DTHUPD_Pos))
-#define PWM_DTUPD1_DTLUPD_Pos                 _U_(16)                                              /**< (PWM_DTUPD1) Dead-Time Value Update for PWMLx Output Position */
-#define PWM_DTUPD1_DTLUPD_Msk                 (_U_(0xFFFF) << PWM_DTUPD1_DTLUPD_Pos)               /**< (PWM_DTUPD1) Dead-Time Value Update for PWMLx Output Mask */
-#define PWM_DTUPD1_DTLUPD(value)              (PWM_DTUPD1_DTLUPD_Msk & ((value) << PWM_DTUPD1_DTLUPD_Pos))
-#define PWM_DTUPD1_Msk                        _U_(0xFFFFFFFF)                                      /**< (PWM_DTUPD1) Register Mask  */
-
-
-/* -------- PWM_CMR2 : (PWM Offset: 0x240) (R/W 32) PWM Channel Mode Register (ch_num = 2) -------- */
-#define PWM_CMR2_CPRE_Pos                     _U_(0)                                               /**< (PWM_CMR2) Channel Prescaler Position */
-#define PWM_CMR2_CPRE_Msk                     (_U_(0xF) << PWM_CMR2_CPRE_Pos)                      /**< (PWM_CMR2) Channel Prescaler Mask */
-#define PWM_CMR2_CPRE(value)                  (PWM_CMR2_CPRE_Msk & ((value) << PWM_CMR2_CPRE_Pos))
-#define   PWM_CMR2_CPRE_MCK_Val               _U_(0x0)                                             /**< (PWM_CMR2) Peripheral clock  */
-#define   PWM_CMR2_CPRE_MCK_DIV_2_Val         _U_(0x1)                                             /**< (PWM_CMR2) Peripheral clock/2  */
-#define   PWM_CMR2_CPRE_MCK_DIV_4_Val         _U_(0x2)                                             /**< (PWM_CMR2) Peripheral clock/4  */
-#define   PWM_CMR2_CPRE_MCK_DIV_8_Val         _U_(0x3)                                             /**< (PWM_CMR2) Peripheral clock/8  */
-#define   PWM_CMR2_CPRE_MCK_DIV_16_Val        _U_(0x4)                                             /**< (PWM_CMR2) Peripheral clock/16  */
-#define   PWM_CMR2_CPRE_MCK_DIV_32_Val        _U_(0x5)                                             /**< (PWM_CMR2) Peripheral clock/32  */
-#define   PWM_CMR2_CPRE_MCK_DIV_64_Val        _U_(0x6)                                             /**< (PWM_CMR2) Peripheral clock/64  */
-#define   PWM_CMR2_CPRE_MCK_DIV_128_Val       _U_(0x7)                                             /**< (PWM_CMR2) Peripheral clock/128  */
-#define   PWM_CMR2_CPRE_MCK_DIV_256_Val       _U_(0x8)                                             /**< (PWM_CMR2) Peripheral clock/256  */
-#define   PWM_CMR2_CPRE_MCK_DIV_512_Val       _U_(0x9)                                             /**< (PWM_CMR2) Peripheral clock/512  */
-#define   PWM_CMR2_CPRE_MCK_DIV_1024_Val      _U_(0xA)                                             /**< (PWM_CMR2) Peripheral clock/1024  */
-#define   PWM_CMR2_CPRE_CLKA_Val              _U_(0xB)                                             /**< (PWM_CMR2) Clock A  */
-#define   PWM_CMR2_CPRE_CLKB_Val              _U_(0xC)                                             /**< (PWM_CMR2) Clock B  */
-#define PWM_CMR2_CPRE_MCK                     (PWM_CMR2_CPRE_MCK_Val << PWM_CMR2_CPRE_Pos)         /**< (PWM_CMR2) Peripheral clock Position  */
-#define PWM_CMR2_CPRE_MCK_DIV_2               (PWM_CMR2_CPRE_MCK_DIV_2_Val << PWM_CMR2_CPRE_Pos)   /**< (PWM_CMR2) Peripheral clock/2 Position  */
-#define PWM_CMR2_CPRE_MCK_DIV_4               (PWM_CMR2_CPRE_MCK_DIV_4_Val << PWM_CMR2_CPRE_Pos)   /**< (PWM_CMR2) Peripheral clock/4 Position  */
-#define PWM_CMR2_CPRE_MCK_DIV_8               (PWM_CMR2_CPRE_MCK_DIV_8_Val << PWM_CMR2_CPRE_Pos)   /**< (PWM_CMR2) Peripheral clock/8 Position  */
-#define PWM_CMR2_CPRE_MCK_DIV_16              (PWM_CMR2_CPRE_MCK_DIV_16_Val << PWM_CMR2_CPRE_Pos)  /**< (PWM_CMR2) Peripheral clock/16 Position  */
-#define PWM_CMR2_CPRE_MCK_DIV_32              (PWM_CMR2_CPRE_MCK_DIV_32_Val << PWM_CMR2_CPRE_Pos)  /**< (PWM_CMR2) Peripheral clock/32 Position  */
-#define PWM_CMR2_CPRE_MCK_DIV_64              (PWM_CMR2_CPRE_MCK_DIV_64_Val << PWM_CMR2_CPRE_Pos)  /**< (PWM_CMR2) Peripheral clock/64 Position  */
-#define PWM_CMR2_CPRE_MCK_DIV_128             (PWM_CMR2_CPRE_MCK_DIV_128_Val << PWM_CMR2_CPRE_Pos) /**< (PWM_CMR2) Peripheral clock/128 Position  */
-#define PWM_CMR2_CPRE_MCK_DIV_256             (PWM_CMR2_CPRE_MCK_DIV_256_Val << PWM_CMR2_CPRE_Pos) /**< (PWM_CMR2) Peripheral clock/256 Position  */
-#define PWM_CMR2_CPRE_MCK_DIV_512             (PWM_CMR2_CPRE_MCK_DIV_512_Val << PWM_CMR2_CPRE_Pos) /**< (PWM_CMR2) Peripheral clock/512 Position  */
-#define PWM_CMR2_CPRE_MCK_DIV_1024            (PWM_CMR2_CPRE_MCK_DIV_1024_Val << PWM_CMR2_CPRE_Pos) /**< (PWM_CMR2) Peripheral clock/1024 Position  */
-#define PWM_CMR2_CPRE_CLKA                    (PWM_CMR2_CPRE_CLKA_Val << PWM_CMR2_CPRE_Pos)        /**< (PWM_CMR2) Clock A Position  */
-#define PWM_CMR2_CPRE_CLKB                    (PWM_CMR2_CPRE_CLKB_Val << PWM_CMR2_CPRE_Pos)        /**< (PWM_CMR2) Clock B Position  */
-#define PWM_CMR2_CALG_Pos                     _U_(8)                                               /**< (PWM_CMR2) Channel Alignment Position */
-#define PWM_CMR2_CALG_Msk                     (_U_(0x1) << PWM_CMR2_CALG_Pos)                      /**< (PWM_CMR2) Channel Alignment Mask */
-#define PWM_CMR2_CALG(value)                  (PWM_CMR2_CALG_Msk & ((value) << PWM_CMR2_CALG_Pos))
-#define PWM_CMR2_CPOL_Pos                     _U_(9)                                               /**< (PWM_CMR2) Channel Polarity Position */
-#define PWM_CMR2_CPOL_Msk                     (_U_(0x1) << PWM_CMR2_CPOL_Pos)                      /**< (PWM_CMR2) Channel Polarity Mask */
-#define PWM_CMR2_CPOL(value)                  (PWM_CMR2_CPOL_Msk & ((value) << PWM_CMR2_CPOL_Pos))
-#define PWM_CMR2_CES_Pos                      _U_(10)                                              /**< (PWM_CMR2) Counter Event Selection Position */
-#define PWM_CMR2_CES_Msk                      (_U_(0x1) << PWM_CMR2_CES_Pos)                       /**< (PWM_CMR2) Counter Event Selection Mask */
-#define PWM_CMR2_CES(value)                   (PWM_CMR2_CES_Msk & ((value) << PWM_CMR2_CES_Pos))  
-#define PWM_CMR2_UPDS_Pos                     _U_(11)                                              /**< (PWM_CMR2) Update Selection Position */
-#define PWM_CMR2_UPDS_Msk                     (_U_(0x1) << PWM_CMR2_UPDS_Pos)                      /**< (PWM_CMR2) Update Selection Mask */
-#define PWM_CMR2_UPDS(value)                  (PWM_CMR2_UPDS_Msk & ((value) << PWM_CMR2_UPDS_Pos))
-#define PWM_CMR2_DPOLI_Pos                    _U_(12)                                              /**< (PWM_CMR2) Disabled Polarity Inverted Position */
-#define PWM_CMR2_DPOLI_Msk                    (_U_(0x1) << PWM_CMR2_DPOLI_Pos)                     /**< (PWM_CMR2) Disabled Polarity Inverted Mask */
-#define PWM_CMR2_DPOLI(value)                 (PWM_CMR2_DPOLI_Msk & ((value) << PWM_CMR2_DPOLI_Pos))
-#define PWM_CMR2_TCTS_Pos                     _U_(13)                                              /**< (PWM_CMR2) Timer Counter Trigger Selection Position */
-#define PWM_CMR2_TCTS_Msk                     (_U_(0x1) << PWM_CMR2_TCTS_Pos)                      /**< (PWM_CMR2) Timer Counter Trigger Selection Mask */
-#define PWM_CMR2_TCTS(value)                  (PWM_CMR2_TCTS_Msk & ((value) << PWM_CMR2_TCTS_Pos))
-#define PWM_CMR2_DTE_Pos                      _U_(16)                                              /**< (PWM_CMR2) Dead-Time Generator Enable Position */
-#define PWM_CMR2_DTE_Msk                      (_U_(0x1) << PWM_CMR2_DTE_Pos)                       /**< (PWM_CMR2) Dead-Time Generator Enable Mask */
-#define PWM_CMR2_DTE(value)                   (PWM_CMR2_DTE_Msk & ((value) << PWM_CMR2_DTE_Pos))  
-#define PWM_CMR2_DTHI_Pos                     _U_(17)                                              /**< (PWM_CMR2) Dead-Time PWMHx Output Inverted Position */
-#define PWM_CMR2_DTHI_Msk                     (_U_(0x1) << PWM_CMR2_DTHI_Pos)                      /**< (PWM_CMR2) Dead-Time PWMHx Output Inverted Mask */
-#define PWM_CMR2_DTHI(value)                  (PWM_CMR2_DTHI_Msk & ((value) << PWM_CMR2_DTHI_Pos))
-#define PWM_CMR2_DTLI_Pos                     _U_(18)                                              /**< (PWM_CMR2) Dead-Time PWMLx Output Inverted Position */
-#define PWM_CMR2_DTLI_Msk                     (_U_(0x1) << PWM_CMR2_DTLI_Pos)                      /**< (PWM_CMR2) Dead-Time PWMLx Output Inverted Mask */
-#define PWM_CMR2_DTLI(value)                  (PWM_CMR2_DTLI_Msk & ((value) << PWM_CMR2_DTLI_Pos))
-#define PWM_CMR2_PPM_Pos                      _U_(19)                                              /**< (PWM_CMR2) Push-Pull Mode Position */
-#define PWM_CMR2_PPM_Msk                      (_U_(0x1) << PWM_CMR2_PPM_Pos)                       /**< (PWM_CMR2) Push-Pull Mode Mask */
-#define PWM_CMR2_PPM(value)                   (PWM_CMR2_PPM_Msk & ((value) << PWM_CMR2_PPM_Pos))  
-#define PWM_CMR2_Msk                          _U_(0x000F3F0F)                                      /**< (PWM_CMR2) Register Mask  */
-
-
-/* -------- PWM_CDTY2 : (PWM Offset: 0x244) (R/W 32) PWM Channel Duty Cycle Register (ch_num = 2) -------- */
-#define PWM_CDTY2_CDTY_Pos                    _U_(0)                                               /**< (PWM_CDTY2) Channel Duty-Cycle Position */
-#define PWM_CDTY2_CDTY_Msk                    (_U_(0xFFFFFF) << PWM_CDTY2_CDTY_Pos)                /**< (PWM_CDTY2) Channel Duty-Cycle Mask */
-#define PWM_CDTY2_CDTY(value)                 (PWM_CDTY2_CDTY_Msk & ((value) << PWM_CDTY2_CDTY_Pos))
-#define PWM_CDTY2_Msk                         _U_(0x00FFFFFF)                                      /**< (PWM_CDTY2) Register Mask  */
-
-
-/* -------- PWM_CDTYUPD2 : (PWM Offset: 0x248) ( /W 32) PWM Channel Duty Cycle Update Register (ch_num = 2) -------- */
-#define PWM_CDTYUPD2_CDTYUPD_Pos              _U_(0)                                               /**< (PWM_CDTYUPD2) Channel Duty-Cycle Update Position */
-#define PWM_CDTYUPD2_CDTYUPD_Msk              (_U_(0xFFFFFF) << PWM_CDTYUPD2_CDTYUPD_Pos)          /**< (PWM_CDTYUPD2) Channel Duty-Cycle Update Mask */
-#define PWM_CDTYUPD2_CDTYUPD(value)           (PWM_CDTYUPD2_CDTYUPD_Msk & ((value) << PWM_CDTYUPD2_CDTYUPD_Pos))
-#define PWM_CDTYUPD2_Msk                      _U_(0x00FFFFFF)                                      /**< (PWM_CDTYUPD2) Register Mask  */
-
-
-/* -------- PWM_CPRD2 : (PWM Offset: 0x24C) (R/W 32) PWM Channel Period Register (ch_num = 2) -------- */
-#define PWM_CPRD2_CPRD_Pos                    _U_(0)                                               /**< (PWM_CPRD2) Channel Period Position */
-#define PWM_CPRD2_CPRD_Msk                    (_U_(0xFFFFFF) << PWM_CPRD2_CPRD_Pos)                /**< (PWM_CPRD2) Channel Period Mask */
-#define PWM_CPRD2_CPRD(value)                 (PWM_CPRD2_CPRD_Msk & ((value) << PWM_CPRD2_CPRD_Pos))
-#define PWM_CPRD2_Msk                         _U_(0x00FFFFFF)                                      /**< (PWM_CPRD2) Register Mask  */
-
-
-/* -------- PWM_CPRDUPD2 : (PWM Offset: 0x250) ( /W 32) PWM Channel Period Update Register (ch_num = 2) -------- */
-#define PWM_CPRDUPD2_CPRDUPD_Pos              _U_(0)                                               /**< (PWM_CPRDUPD2) Channel Period Update Position */
-#define PWM_CPRDUPD2_CPRDUPD_Msk              (_U_(0xFFFFFF) << PWM_CPRDUPD2_CPRDUPD_Pos)          /**< (PWM_CPRDUPD2) Channel Period Update Mask */
-#define PWM_CPRDUPD2_CPRDUPD(value)           (PWM_CPRDUPD2_CPRDUPD_Msk & ((value) << PWM_CPRDUPD2_CPRDUPD_Pos))
-#define PWM_CPRDUPD2_Msk                      _U_(0x00FFFFFF)                                      /**< (PWM_CPRDUPD2) Register Mask  */
-
-
-/* -------- PWM_CCNT2 : (PWM Offset: 0x254) ( R/ 32) PWM Channel Counter Register (ch_num = 2) -------- */
-#define PWM_CCNT2_CNT_Pos                     _U_(0)                                               /**< (PWM_CCNT2) Channel Counter Register Position */
-#define PWM_CCNT2_CNT_Msk                     (_U_(0xFFFFFF) << PWM_CCNT2_CNT_Pos)                 /**< (PWM_CCNT2) Channel Counter Register Mask */
-#define PWM_CCNT2_CNT(value)                  (PWM_CCNT2_CNT_Msk & ((value) << PWM_CCNT2_CNT_Pos))
-#define PWM_CCNT2_Msk                         _U_(0x00FFFFFF)                                      /**< (PWM_CCNT2) Register Mask  */
-
-
-/* -------- PWM_DT2 : (PWM Offset: 0x258) (R/W 32) PWM Channel Dead Time Register (ch_num = 2) -------- */
-#define PWM_DT2_DTH_Pos                       _U_(0)                                               /**< (PWM_DT2) Dead-Time Value for PWMHx Output Position */
-#define PWM_DT2_DTH_Msk                       (_U_(0xFFFF) << PWM_DT2_DTH_Pos)                     /**< (PWM_DT2) Dead-Time Value for PWMHx Output Mask */
-#define PWM_DT2_DTH(value)                    (PWM_DT2_DTH_Msk & ((value) << PWM_DT2_DTH_Pos))    
-#define PWM_DT2_DTL_Pos                       _U_(16)                                              /**< (PWM_DT2) Dead-Time Value for PWMLx Output Position */
-#define PWM_DT2_DTL_Msk                       (_U_(0xFFFF) << PWM_DT2_DTL_Pos)                     /**< (PWM_DT2) Dead-Time Value for PWMLx Output Mask */
-#define PWM_DT2_DTL(value)                    (PWM_DT2_DTL_Msk & ((value) << PWM_DT2_DTL_Pos))    
-#define PWM_DT2_Msk                           _U_(0xFFFFFFFF)                                      /**< (PWM_DT2) Register Mask  */
-
-
-/* -------- PWM_DTUPD2 : (PWM Offset: 0x25C) ( /W 32) PWM Channel Dead Time Update Register (ch_num = 2) -------- */
-#define PWM_DTUPD2_DTHUPD_Pos                 _U_(0)                                               /**< (PWM_DTUPD2) Dead-Time Value Update for PWMHx Output Position */
-#define PWM_DTUPD2_DTHUPD_Msk                 (_U_(0xFFFF) << PWM_DTUPD2_DTHUPD_Pos)               /**< (PWM_DTUPD2) Dead-Time Value Update for PWMHx Output Mask */
-#define PWM_DTUPD2_DTHUPD(value)              (PWM_DTUPD2_DTHUPD_Msk & ((value) << PWM_DTUPD2_DTHUPD_Pos))
-#define PWM_DTUPD2_DTLUPD_Pos                 _U_(16)                                              /**< (PWM_DTUPD2) Dead-Time Value Update for PWMLx Output Position */
-#define PWM_DTUPD2_DTLUPD_Msk                 (_U_(0xFFFF) << PWM_DTUPD2_DTLUPD_Pos)               /**< (PWM_DTUPD2) Dead-Time Value Update for PWMLx Output Mask */
-#define PWM_DTUPD2_DTLUPD(value)              (PWM_DTUPD2_DTLUPD_Msk & ((value) << PWM_DTUPD2_DTLUPD_Pos))
-#define PWM_DTUPD2_Msk                        _U_(0xFFFFFFFF)                                      /**< (PWM_DTUPD2) Register Mask  */
-
-
-/* -------- PWM_CMR3 : (PWM Offset: 0x260) (R/W 32) PWM Channel Mode Register (ch_num = 3) -------- */
-#define PWM_CMR3_CPRE_Pos                     _U_(0)                                               /**< (PWM_CMR3) Channel Prescaler Position */
-#define PWM_CMR3_CPRE_Msk                     (_U_(0xF) << PWM_CMR3_CPRE_Pos)                      /**< (PWM_CMR3) Channel Prescaler Mask */
-#define PWM_CMR3_CPRE(value)                  (PWM_CMR3_CPRE_Msk & ((value) << PWM_CMR3_CPRE_Pos))
-#define   PWM_CMR3_CPRE_MCK_Val               _U_(0x0)                                             /**< (PWM_CMR3) Peripheral clock  */
-#define   PWM_CMR3_CPRE_MCK_DIV_2_Val         _U_(0x1)                                             /**< (PWM_CMR3) Peripheral clock/2  */
-#define   PWM_CMR3_CPRE_MCK_DIV_4_Val         _U_(0x2)                                             /**< (PWM_CMR3) Peripheral clock/4  */
-#define   PWM_CMR3_CPRE_MCK_DIV_8_Val         _U_(0x3)                                             /**< (PWM_CMR3) Peripheral clock/8  */
-#define   PWM_CMR3_CPRE_MCK_DIV_16_Val        _U_(0x4)                                             /**< (PWM_CMR3) Peripheral clock/16  */
-#define   PWM_CMR3_CPRE_MCK_DIV_32_Val        _U_(0x5)                                             /**< (PWM_CMR3) Peripheral clock/32  */
-#define   PWM_CMR3_CPRE_MCK_DIV_64_Val        _U_(0x6)                                             /**< (PWM_CMR3) Peripheral clock/64  */
-#define   PWM_CMR3_CPRE_MCK_DIV_128_Val       _U_(0x7)                                             /**< (PWM_CMR3) Peripheral clock/128  */
-#define   PWM_CMR3_CPRE_MCK_DIV_256_Val       _U_(0x8)                                             /**< (PWM_CMR3) Peripheral clock/256  */
-#define   PWM_CMR3_CPRE_MCK_DIV_512_Val       _U_(0x9)                                             /**< (PWM_CMR3) Peripheral clock/512  */
-#define   PWM_CMR3_CPRE_MCK_DIV_1024_Val      _U_(0xA)                                             /**< (PWM_CMR3) Peripheral clock/1024  */
-#define   PWM_CMR3_CPRE_CLKA_Val              _U_(0xB)                                             /**< (PWM_CMR3) Clock A  */
-#define   PWM_CMR3_CPRE_CLKB_Val              _U_(0xC)                                             /**< (PWM_CMR3) Clock B  */
-#define PWM_CMR3_CPRE_MCK                     (PWM_CMR3_CPRE_MCK_Val << PWM_CMR3_CPRE_Pos)         /**< (PWM_CMR3) Peripheral clock Position  */
-#define PWM_CMR3_CPRE_MCK_DIV_2               (PWM_CMR3_CPRE_MCK_DIV_2_Val << PWM_CMR3_CPRE_Pos)   /**< (PWM_CMR3) Peripheral clock/2 Position  */
-#define PWM_CMR3_CPRE_MCK_DIV_4               (PWM_CMR3_CPRE_MCK_DIV_4_Val << PWM_CMR3_CPRE_Pos)   /**< (PWM_CMR3) Peripheral clock/4 Position  */
-#define PWM_CMR3_CPRE_MCK_DIV_8               (PWM_CMR3_CPRE_MCK_DIV_8_Val << PWM_CMR3_CPRE_Pos)   /**< (PWM_CMR3) Peripheral clock/8 Position  */
-#define PWM_CMR3_CPRE_MCK_DIV_16              (PWM_CMR3_CPRE_MCK_DIV_16_Val << PWM_CMR3_CPRE_Pos)  /**< (PWM_CMR3) Peripheral clock/16 Position  */
-#define PWM_CMR3_CPRE_MCK_DIV_32              (PWM_CMR3_CPRE_MCK_DIV_32_Val << PWM_CMR3_CPRE_Pos)  /**< (PWM_CMR3) Peripheral clock/32 Position  */
-#define PWM_CMR3_CPRE_MCK_DIV_64              (PWM_CMR3_CPRE_MCK_DIV_64_Val << PWM_CMR3_CPRE_Pos)  /**< (PWM_CMR3) Peripheral clock/64 Position  */
-#define PWM_CMR3_CPRE_MCK_DIV_128             (PWM_CMR3_CPRE_MCK_DIV_128_Val << PWM_CMR3_CPRE_Pos) /**< (PWM_CMR3) Peripheral clock/128 Position  */
-#define PWM_CMR3_CPRE_MCK_DIV_256             (PWM_CMR3_CPRE_MCK_DIV_256_Val << PWM_CMR3_CPRE_Pos) /**< (PWM_CMR3) Peripheral clock/256 Position  */
-#define PWM_CMR3_CPRE_MCK_DIV_512             (PWM_CMR3_CPRE_MCK_DIV_512_Val << PWM_CMR3_CPRE_Pos) /**< (PWM_CMR3) Peripheral clock/512 Position  */
-#define PWM_CMR3_CPRE_MCK_DIV_1024            (PWM_CMR3_CPRE_MCK_DIV_1024_Val << PWM_CMR3_CPRE_Pos) /**< (PWM_CMR3) Peripheral clock/1024 Position  */
-#define PWM_CMR3_CPRE_CLKA                    (PWM_CMR3_CPRE_CLKA_Val << PWM_CMR3_CPRE_Pos)        /**< (PWM_CMR3) Clock A Position  */
-#define PWM_CMR3_CPRE_CLKB                    (PWM_CMR3_CPRE_CLKB_Val << PWM_CMR3_CPRE_Pos)        /**< (PWM_CMR3) Clock B Position  */
-#define PWM_CMR3_CALG_Pos                     _U_(8)                                               /**< (PWM_CMR3) Channel Alignment Position */
-#define PWM_CMR3_CALG_Msk                     (_U_(0x1) << PWM_CMR3_CALG_Pos)                      /**< (PWM_CMR3) Channel Alignment Mask */
-#define PWM_CMR3_CALG(value)                  (PWM_CMR3_CALG_Msk & ((value) << PWM_CMR3_CALG_Pos))
-#define PWM_CMR3_CPOL_Pos                     _U_(9)                                               /**< (PWM_CMR3) Channel Polarity Position */
-#define PWM_CMR3_CPOL_Msk                     (_U_(0x1) << PWM_CMR3_CPOL_Pos)                      /**< (PWM_CMR3) Channel Polarity Mask */
-#define PWM_CMR3_CPOL(value)                  (PWM_CMR3_CPOL_Msk & ((value) << PWM_CMR3_CPOL_Pos))
-#define PWM_CMR3_CES_Pos                      _U_(10)                                              /**< (PWM_CMR3) Counter Event Selection Position */
-#define PWM_CMR3_CES_Msk                      (_U_(0x1) << PWM_CMR3_CES_Pos)                       /**< (PWM_CMR3) Counter Event Selection Mask */
-#define PWM_CMR3_CES(value)                   (PWM_CMR3_CES_Msk & ((value) << PWM_CMR3_CES_Pos))  
-#define PWM_CMR3_UPDS_Pos                     _U_(11)                                              /**< (PWM_CMR3) Update Selection Position */
-#define PWM_CMR3_UPDS_Msk                     (_U_(0x1) << PWM_CMR3_UPDS_Pos)                      /**< (PWM_CMR3) Update Selection Mask */
-#define PWM_CMR3_UPDS(value)                  (PWM_CMR3_UPDS_Msk & ((value) << PWM_CMR3_UPDS_Pos))
-#define PWM_CMR3_DPOLI_Pos                    _U_(12)                                              /**< (PWM_CMR3) Disabled Polarity Inverted Position */
-#define PWM_CMR3_DPOLI_Msk                    (_U_(0x1) << PWM_CMR3_DPOLI_Pos)                     /**< (PWM_CMR3) Disabled Polarity Inverted Mask */
-#define PWM_CMR3_DPOLI(value)                 (PWM_CMR3_DPOLI_Msk & ((value) << PWM_CMR3_DPOLI_Pos))
-#define PWM_CMR3_TCTS_Pos                     _U_(13)                                              /**< (PWM_CMR3) Timer Counter Trigger Selection Position */
-#define PWM_CMR3_TCTS_Msk                     (_U_(0x1) << PWM_CMR3_TCTS_Pos)                      /**< (PWM_CMR3) Timer Counter Trigger Selection Mask */
-#define PWM_CMR3_TCTS(value)                  (PWM_CMR3_TCTS_Msk & ((value) << PWM_CMR3_TCTS_Pos))
-#define PWM_CMR3_DTE_Pos                      _U_(16)                                              /**< (PWM_CMR3) Dead-Time Generator Enable Position */
-#define PWM_CMR3_DTE_Msk                      (_U_(0x1) << PWM_CMR3_DTE_Pos)                       /**< (PWM_CMR3) Dead-Time Generator Enable Mask */
-#define PWM_CMR3_DTE(value)                   (PWM_CMR3_DTE_Msk & ((value) << PWM_CMR3_DTE_Pos))  
-#define PWM_CMR3_DTHI_Pos                     _U_(17)                                              /**< (PWM_CMR3) Dead-Time PWMHx Output Inverted Position */
-#define PWM_CMR3_DTHI_Msk                     (_U_(0x1) << PWM_CMR3_DTHI_Pos)                      /**< (PWM_CMR3) Dead-Time PWMHx Output Inverted Mask */
-#define PWM_CMR3_DTHI(value)                  (PWM_CMR3_DTHI_Msk & ((value) << PWM_CMR3_DTHI_Pos))
-#define PWM_CMR3_DTLI_Pos                     _U_(18)                                              /**< (PWM_CMR3) Dead-Time PWMLx Output Inverted Position */
-#define PWM_CMR3_DTLI_Msk                     (_U_(0x1) << PWM_CMR3_DTLI_Pos)                      /**< (PWM_CMR3) Dead-Time PWMLx Output Inverted Mask */
-#define PWM_CMR3_DTLI(value)                  (PWM_CMR3_DTLI_Msk & ((value) << PWM_CMR3_DTLI_Pos))
-#define PWM_CMR3_PPM_Pos                      _U_(19)                                              /**< (PWM_CMR3) Push-Pull Mode Position */
-#define PWM_CMR3_PPM_Msk                      (_U_(0x1) << PWM_CMR3_PPM_Pos)                       /**< (PWM_CMR3) Push-Pull Mode Mask */
-#define PWM_CMR3_PPM(value)                   (PWM_CMR3_PPM_Msk & ((value) << PWM_CMR3_PPM_Pos))  
-#define PWM_CMR3_Msk                          _U_(0x000F3F0F)                                      /**< (PWM_CMR3) Register Mask  */
-
-
-/* -------- PWM_CDTY3 : (PWM Offset: 0x264) (R/W 32) PWM Channel Duty Cycle Register (ch_num = 3) -------- */
-#define PWM_CDTY3_CDTY_Pos                    _U_(0)                                               /**< (PWM_CDTY3) Channel Duty-Cycle Position */
-#define PWM_CDTY3_CDTY_Msk                    (_U_(0xFFFFFF) << PWM_CDTY3_CDTY_Pos)                /**< (PWM_CDTY3) Channel Duty-Cycle Mask */
-#define PWM_CDTY3_CDTY(value)                 (PWM_CDTY3_CDTY_Msk & ((value) << PWM_CDTY3_CDTY_Pos))
-#define PWM_CDTY3_Msk                         _U_(0x00FFFFFF)                                      /**< (PWM_CDTY3) Register Mask  */
-
-
-/* -------- PWM_CDTYUPD3 : (PWM Offset: 0x268) ( /W 32) PWM Channel Duty Cycle Update Register (ch_num = 3) -------- */
-#define PWM_CDTYUPD3_CDTYUPD_Pos              _U_(0)                                               /**< (PWM_CDTYUPD3) Channel Duty-Cycle Update Position */
-#define PWM_CDTYUPD3_CDTYUPD_Msk              (_U_(0xFFFFFF) << PWM_CDTYUPD3_CDTYUPD_Pos)          /**< (PWM_CDTYUPD3) Channel Duty-Cycle Update Mask */
-#define PWM_CDTYUPD3_CDTYUPD(value)           (PWM_CDTYUPD3_CDTYUPD_Msk & ((value) << PWM_CDTYUPD3_CDTYUPD_Pos))
-#define PWM_CDTYUPD3_Msk                      _U_(0x00FFFFFF)                                      /**< (PWM_CDTYUPD3) Register Mask  */
-
-
-/* -------- PWM_CPRD3 : (PWM Offset: 0x26C) (R/W 32) PWM Channel Period Register (ch_num = 3) -------- */
-#define PWM_CPRD3_CPRD_Pos                    _U_(0)                                               /**< (PWM_CPRD3) Channel Period Position */
-#define PWM_CPRD3_CPRD_Msk                    (_U_(0xFFFFFF) << PWM_CPRD3_CPRD_Pos)                /**< (PWM_CPRD3) Channel Period Mask */
-#define PWM_CPRD3_CPRD(value)                 (PWM_CPRD3_CPRD_Msk & ((value) << PWM_CPRD3_CPRD_Pos))
-#define PWM_CPRD3_Msk                         _U_(0x00FFFFFF)                                      /**< (PWM_CPRD3) Register Mask  */
-
-
-/* -------- PWM_CPRDUPD3 : (PWM Offset: 0x270) ( /W 32) PWM Channel Period Update Register (ch_num = 3) -------- */
-#define PWM_CPRDUPD3_CPRDUPD_Pos              _U_(0)                                               /**< (PWM_CPRDUPD3) Channel Period Update Position */
-#define PWM_CPRDUPD3_CPRDUPD_Msk              (_U_(0xFFFFFF) << PWM_CPRDUPD3_CPRDUPD_Pos)          /**< (PWM_CPRDUPD3) Channel Period Update Mask */
-#define PWM_CPRDUPD3_CPRDUPD(value)           (PWM_CPRDUPD3_CPRDUPD_Msk & ((value) << PWM_CPRDUPD3_CPRDUPD_Pos))
-#define PWM_CPRDUPD3_Msk                      _U_(0x00FFFFFF)                                      /**< (PWM_CPRDUPD3) Register Mask  */
-
-
-/* -------- PWM_CCNT3 : (PWM Offset: 0x274) ( R/ 32) PWM Channel Counter Register (ch_num = 3) -------- */
-#define PWM_CCNT3_CNT_Pos                     _U_(0)                                               /**< (PWM_CCNT3) Channel Counter Register Position */
-#define PWM_CCNT3_CNT_Msk                     (_U_(0xFFFFFF) << PWM_CCNT3_CNT_Pos)                 /**< (PWM_CCNT3) Channel Counter Register Mask */
-#define PWM_CCNT3_CNT(value)                  (PWM_CCNT3_CNT_Msk & ((value) << PWM_CCNT3_CNT_Pos))
-#define PWM_CCNT3_Msk                         _U_(0x00FFFFFF)                                      /**< (PWM_CCNT3) Register Mask  */
-
-
-/* -------- PWM_DT3 : (PWM Offset: 0x278) (R/W 32) PWM Channel Dead Time Register (ch_num = 3) -------- */
-#define PWM_DT3_DTH_Pos                       _U_(0)                                               /**< (PWM_DT3) Dead-Time Value for PWMHx Output Position */
-#define PWM_DT3_DTH_Msk                       (_U_(0xFFFF) << PWM_DT3_DTH_Pos)                     /**< (PWM_DT3) Dead-Time Value for PWMHx Output Mask */
-#define PWM_DT3_DTH(value)                    (PWM_DT3_DTH_Msk & ((value) << PWM_DT3_DTH_Pos))    
-#define PWM_DT3_DTL_Pos                       _U_(16)                                              /**< (PWM_DT3) Dead-Time Value for PWMLx Output Position */
-#define PWM_DT3_DTL_Msk                       (_U_(0xFFFF) << PWM_DT3_DTL_Pos)                     /**< (PWM_DT3) Dead-Time Value for PWMLx Output Mask */
-#define PWM_DT3_DTL(value)                    (PWM_DT3_DTL_Msk & ((value) << PWM_DT3_DTL_Pos))    
-#define PWM_DT3_Msk                           _U_(0xFFFFFFFF)                                      /**< (PWM_DT3) Register Mask  */
-
-
-/* -------- PWM_DTUPD3 : (PWM Offset: 0x27C) ( /W 32) PWM Channel Dead Time Update Register (ch_num = 3) -------- */
-#define PWM_DTUPD3_DTHUPD_Pos                 _U_(0)                                               /**< (PWM_DTUPD3) Dead-Time Value Update for PWMHx Output Position */
-#define PWM_DTUPD3_DTHUPD_Msk                 (_U_(0xFFFF) << PWM_DTUPD3_DTHUPD_Pos)               /**< (PWM_DTUPD3) Dead-Time Value Update for PWMHx Output Mask */
-#define PWM_DTUPD3_DTHUPD(value)              (PWM_DTUPD3_DTHUPD_Msk & ((value) << PWM_DTUPD3_DTHUPD_Pos))
-#define PWM_DTUPD3_DTLUPD_Pos                 _U_(16)                                              /**< (PWM_DTUPD3) Dead-Time Value Update for PWMLx Output Position */
-#define PWM_DTUPD3_DTLUPD_Msk                 (_U_(0xFFFF) << PWM_DTUPD3_DTLUPD_Pos)               /**< (PWM_DTUPD3) Dead-Time Value Update for PWMLx Output Mask */
-#define PWM_DTUPD3_DTLUPD(value)              (PWM_DTUPD3_DTLUPD_Msk & ((value) << PWM_DTUPD3_DTLUPD_Pos))
-#define PWM_DTUPD3_Msk                        _U_(0xFFFFFFFF)                                      /**< (PWM_DTUPD3) Register Mask  */
-
-
 /* -------- PWM_CMUPD0 : (PWM Offset: 0x400) ( /W 32) PWM Channel Mode Update Register (ch_num = 0) -------- */
 #define PWM_CMUPD0_CPOLUP_Pos                 _U_(9)                                               /**< (PWM_CMUPD0) Channel Polarity Update Position */
 #define PWM_CMUPD0_CPOLUP_Msk                 (_U_(0x1) << PWM_CMUPD0_CPOLUP_Pos)                  /**< (PWM_CMUPD0) Channel Polarity Update Mask */
@@ -2203,6 +1432,18 @@
 
 
 /** \brief PWM register offsets definitions */
+#define PWM_CMR_REG_OFST               (0x00)              /**< (PWM_CMR) PWM Channel Mode Register Offset */
+#define PWM_CDTY_REG_OFST              (0x04)              /**< (PWM_CDTY) PWM Channel Duty Cycle Register Offset */
+#define PWM_CDTYUPD_REG_OFST           (0x08)              /**< (PWM_CDTYUPD) PWM Channel Duty Cycle Update Register Offset */
+#define PWM_CPRD_REG_OFST              (0x0C)              /**< (PWM_CPRD) PWM Channel Period Register Offset */
+#define PWM_CPRDUPD_REG_OFST           (0x10)              /**< (PWM_CPRDUPD) PWM Channel Period Update Register Offset */
+#define PWM_CCNT_REG_OFST              (0x14)              /**< (PWM_CCNT) PWM Channel Counter Register Offset */
+#define PWM_DT_REG_OFST                (0x18)              /**< (PWM_DT) PWM Channel Dead Time Register Offset */
+#define PWM_DTUPD_REG_OFST             (0x1C)              /**< (PWM_DTUPD) PWM Channel Dead Time Update Register Offset */
+#define PWM_CMPV_REG_OFST              (0x00)              /**< (PWM_CMPV) PWM Comparison 0 Value Register Offset */
+#define PWM_CMPVUPD_REG_OFST           (0x04)              /**< (PWM_CMPVUPD) PWM Comparison 0 Value Update Register Offset */
+#define PWM_CMPM_REG_OFST              (0x08)              /**< (PWM_CMPM) PWM Comparison 0 Mode Register Offset */
+#define PWM_CMPMUPD_REG_OFST           (0x0C)              /**< (PWM_CMPMUPD) PWM Comparison 0 Mode Update Register Offset */
 #define PWM_CLK_REG_OFST               (0x00)              /**< (PWM_CLK) PWM Clock Register Offset */
 #define PWM_ENA_REG_OFST               (0x04)              /**< (PWM_ENA) PWM Enable Register Offset */
 #define PWM_DIS_REG_OFST               (0x08)              /**< (PWM_DIS) PWM Disable Register Offset */
@@ -2231,78 +1472,13 @@
 #define PWM_FCR_REG_OFST               (0x64)              /**< (PWM_FCR) PWM Fault Clear Register Offset */
 #define PWM_FPV1_REG_OFST              (0x68)              /**< (PWM_FPV1) PWM Fault Protection Value Register 1 Offset */
 #define PWM_FPE_REG_OFST               (0x6C)              /**< (PWM_FPE) PWM Fault Protection Enable Register Offset */
-#define PWM_ELMR0_REG_OFST             (0x7C)              /**< (PWM_ELMR0) PWM Event Line 0 Mode Register 0 Offset */
-#define PWM_ELMR1_REG_OFST             (0x80)              /**< (PWM_ELMR1) PWM Event Line 0 Mode Register 1 Offset */
+#define PWM_ELMR_REG_OFST              (0x7C)              /**< (PWM_ELMR) PWM Event Line 0 Mode Register 0 Offset */
 #define PWM_SSPR_REG_OFST              (0xA0)              /**< (PWM_SSPR) PWM Spread Spectrum Register Offset */
 #define PWM_SSPUP_REG_OFST             (0xA4)              /**< (PWM_SSPUP) PWM Spread Spectrum Update Register Offset */
 #define PWM_SMMR_REG_OFST              (0xB0)              /**< (PWM_SMMR) PWM Stepper Motor Mode Register Offset */
 #define PWM_FPV2_REG_OFST              (0xC0)              /**< (PWM_FPV2) PWM Fault Protection Value 2 Register Offset */
 #define PWM_WPCR_REG_OFST              (0xE4)              /**< (PWM_WPCR) PWM Write Protection Control Register Offset */
 #define PWM_WPSR_REG_OFST              (0xE8)              /**< (PWM_WPSR) PWM Write Protection Status Register Offset */
-#define PWM_CMPV0_REG_OFST             (0x130)             /**< (PWM_CMPV0) PWM Comparison 0 Value Register Offset */
-#define PWM_CMPVUPD0_REG_OFST          (0x134)             /**< (PWM_CMPVUPD0) PWM Comparison 0 Value Update Register Offset */
-#define PWM_CMPM0_REG_OFST             (0x138)             /**< (PWM_CMPM0) PWM Comparison 0 Mode Register Offset */
-#define PWM_CMPMUPD0_REG_OFST          (0x13C)             /**< (PWM_CMPMUPD0) PWM Comparison 0 Mode Update Register Offset */
-#define PWM_CMPV1_REG_OFST             (0x140)             /**< (PWM_CMPV1) PWM Comparison 1 Value Register Offset */
-#define PWM_CMPVUPD1_REG_OFST          (0x144)             /**< (PWM_CMPVUPD1) PWM Comparison 1 Value Update Register Offset */
-#define PWM_CMPM1_REG_OFST             (0x148)             /**< (PWM_CMPM1) PWM Comparison 1 Mode Register Offset */
-#define PWM_CMPMUPD1_REG_OFST          (0x14C)             /**< (PWM_CMPMUPD1) PWM Comparison 1 Mode Update Register Offset */
-#define PWM_CMPV2_REG_OFST             (0x150)             /**< (PWM_CMPV2) PWM Comparison 2 Value Register Offset */
-#define PWM_CMPVUPD2_REG_OFST          (0x154)             /**< (PWM_CMPVUPD2) PWM Comparison 2 Value Update Register Offset */
-#define PWM_CMPM2_REG_OFST             (0x158)             /**< (PWM_CMPM2) PWM Comparison 2 Mode Register Offset */
-#define PWM_CMPMUPD2_REG_OFST          (0x15C)             /**< (PWM_CMPMUPD2) PWM Comparison 2 Mode Update Register Offset */
-#define PWM_CMPV3_REG_OFST             (0x160)             /**< (PWM_CMPV3) PWM Comparison 3 Value Register Offset */
-#define PWM_CMPVUPD3_REG_OFST          (0x164)             /**< (PWM_CMPVUPD3) PWM Comparison 3 Value Update Register Offset */
-#define PWM_CMPM3_REG_OFST             (0x168)             /**< (PWM_CMPM3) PWM Comparison 3 Mode Register Offset */
-#define PWM_CMPMUPD3_REG_OFST          (0x16C)             /**< (PWM_CMPMUPD3) PWM Comparison 3 Mode Update Register Offset */
-#define PWM_CMPV4_REG_OFST             (0x170)             /**< (PWM_CMPV4) PWM Comparison 4 Value Register Offset */
-#define PWM_CMPVUPD4_REG_OFST          (0x174)             /**< (PWM_CMPVUPD4) PWM Comparison 4 Value Update Register Offset */
-#define PWM_CMPM4_REG_OFST             (0x178)             /**< (PWM_CMPM4) PWM Comparison 4 Mode Register Offset */
-#define PWM_CMPMUPD4_REG_OFST          (0x17C)             /**< (PWM_CMPMUPD4) PWM Comparison 4 Mode Update Register Offset */
-#define PWM_CMPV5_REG_OFST             (0x180)             /**< (PWM_CMPV5) PWM Comparison 5 Value Register Offset */
-#define PWM_CMPVUPD5_REG_OFST          (0x184)             /**< (PWM_CMPVUPD5) PWM Comparison 5 Value Update Register Offset */
-#define PWM_CMPM5_REG_OFST             (0x188)             /**< (PWM_CMPM5) PWM Comparison 5 Mode Register Offset */
-#define PWM_CMPMUPD5_REG_OFST          (0x18C)             /**< (PWM_CMPMUPD5) PWM Comparison 5 Mode Update Register Offset */
-#define PWM_CMPV6_REG_OFST             (0x190)             /**< (PWM_CMPV6) PWM Comparison 6 Value Register Offset */
-#define PWM_CMPVUPD6_REG_OFST          (0x194)             /**< (PWM_CMPVUPD6) PWM Comparison 6 Value Update Register Offset */
-#define PWM_CMPM6_REG_OFST             (0x198)             /**< (PWM_CMPM6) PWM Comparison 6 Mode Register Offset */
-#define PWM_CMPMUPD6_REG_OFST          (0x19C)             /**< (PWM_CMPMUPD6) PWM Comparison 6 Mode Update Register Offset */
-#define PWM_CMPV7_REG_OFST             (0x1A0)             /**< (PWM_CMPV7) PWM Comparison 7 Value Register Offset */
-#define PWM_CMPVUPD7_REG_OFST          (0x1A4)             /**< (PWM_CMPVUPD7) PWM Comparison 7 Value Update Register Offset */
-#define PWM_CMPM7_REG_OFST             (0x1A8)             /**< (PWM_CMPM7) PWM Comparison 7 Mode Register Offset */
-#define PWM_CMPMUPD7_REG_OFST          (0x1AC)             /**< (PWM_CMPMUPD7) PWM Comparison 7 Mode Update Register Offset */
-#define PWM_CMR0_REG_OFST              (0x200)             /**< (PWM_CMR0) PWM Channel Mode Register (ch_num = 0) Offset */
-#define PWM_CDTY0_REG_OFST             (0x204)             /**< (PWM_CDTY0) PWM Channel Duty Cycle Register (ch_num = 0) Offset */
-#define PWM_CDTYUPD0_REG_OFST          (0x208)             /**< (PWM_CDTYUPD0) PWM Channel Duty Cycle Update Register (ch_num = 0) Offset */
-#define PWM_CPRD0_REG_OFST             (0x20C)             /**< (PWM_CPRD0) PWM Channel Period Register (ch_num = 0) Offset */
-#define PWM_CPRDUPD0_REG_OFST          (0x210)             /**< (PWM_CPRDUPD0) PWM Channel Period Update Register (ch_num = 0) Offset */
-#define PWM_CCNT0_REG_OFST             (0x214)             /**< (PWM_CCNT0) PWM Channel Counter Register (ch_num = 0) Offset */
-#define PWM_DT0_REG_OFST               (0x218)             /**< (PWM_DT0) PWM Channel Dead Time Register (ch_num = 0) Offset */
-#define PWM_DTUPD0_REG_OFST            (0x21C)             /**< (PWM_DTUPD0) PWM Channel Dead Time Update Register (ch_num = 0) Offset */
-#define PWM_CMR1_REG_OFST              (0x220)             /**< (PWM_CMR1) PWM Channel Mode Register (ch_num = 1) Offset */
-#define PWM_CDTY1_REG_OFST             (0x224)             /**< (PWM_CDTY1) PWM Channel Duty Cycle Register (ch_num = 1) Offset */
-#define PWM_CDTYUPD1_REG_OFST          (0x228)             /**< (PWM_CDTYUPD1) PWM Channel Duty Cycle Update Register (ch_num = 1) Offset */
-#define PWM_CPRD1_REG_OFST             (0x22C)             /**< (PWM_CPRD1) PWM Channel Period Register (ch_num = 1) Offset */
-#define PWM_CPRDUPD1_REG_OFST          (0x230)             /**< (PWM_CPRDUPD1) PWM Channel Period Update Register (ch_num = 1) Offset */
-#define PWM_CCNT1_REG_OFST             (0x234)             /**< (PWM_CCNT1) PWM Channel Counter Register (ch_num = 1) Offset */
-#define PWM_DT1_REG_OFST               (0x238)             /**< (PWM_DT1) PWM Channel Dead Time Register (ch_num = 1) Offset */
-#define PWM_DTUPD1_REG_OFST            (0x23C)             /**< (PWM_DTUPD1) PWM Channel Dead Time Update Register (ch_num = 1) Offset */
-#define PWM_CMR2_REG_OFST              (0x240)             /**< (PWM_CMR2) PWM Channel Mode Register (ch_num = 2) Offset */
-#define PWM_CDTY2_REG_OFST             (0x244)             /**< (PWM_CDTY2) PWM Channel Duty Cycle Register (ch_num = 2) Offset */
-#define PWM_CDTYUPD2_REG_OFST          (0x248)             /**< (PWM_CDTYUPD2) PWM Channel Duty Cycle Update Register (ch_num = 2) Offset */
-#define PWM_CPRD2_REG_OFST             (0x24C)             /**< (PWM_CPRD2) PWM Channel Period Register (ch_num = 2) Offset */
-#define PWM_CPRDUPD2_REG_OFST          (0x250)             /**< (PWM_CPRDUPD2) PWM Channel Period Update Register (ch_num = 2) Offset */
-#define PWM_CCNT2_REG_OFST             (0x254)             /**< (PWM_CCNT2) PWM Channel Counter Register (ch_num = 2) Offset */
-#define PWM_DT2_REG_OFST               (0x258)             /**< (PWM_DT2) PWM Channel Dead Time Register (ch_num = 2) Offset */
-#define PWM_DTUPD2_REG_OFST            (0x25C)             /**< (PWM_DTUPD2) PWM Channel Dead Time Update Register (ch_num = 2) Offset */
-#define PWM_CMR3_REG_OFST              (0x260)             /**< (PWM_CMR3) PWM Channel Mode Register (ch_num = 3) Offset */
-#define PWM_CDTY3_REG_OFST             (0x264)             /**< (PWM_CDTY3) PWM Channel Duty Cycle Register (ch_num = 3) Offset */
-#define PWM_CDTYUPD3_REG_OFST          (0x268)             /**< (PWM_CDTYUPD3) PWM Channel Duty Cycle Update Register (ch_num = 3) Offset */
-#define PWM_CPRD3_REG_OFST             (0x26C)             /**< (PWM_CPRD3) PWM Channel Period Register (ch_num = 3) Offset */
-#define PWM_CPRDUPD3_REG_OFST          (0x270)             /**< (PWM_CPRDUPD3) PWM Channel Period Update Register (ch_num = 3) Offset */
-#define PWM_CCNT3_REG_OFST             (0x274)             /**< (PWM_CCNT3) PWM Channel Counter Register (ch_num = 3) Offset */
-#define PWM_DT3_REG_OFST               (0x278)             /**< (PWM_DT3) PWM Channel Dead Time Register (ch_num = 3) Offset */
-#define PWM_DTUPD3_REG_OFST            (0x27C)             /**< (PWM_DTUPD3) PWM Channel Dead Time Update Register (ch_num = 3) Offset */
 #define PWM_CMUPD0_REG_OFST            (0x400)             /**< (PWM_CMUPD0) PWM Channel Mode Update Register (ch_num = 0) Offset */
 #define PWM_CMUPD1_REG_OFST            (0x420)             /**< (PWM_CMUPD1) PWM Channel Mode Update Register (ch_num = 1) Offset */
 #define PWM_ETRG1_REG_OFST             (0x42C)             /**< (PWM_ETRG1) PWM External Trigger Register (trg_num = 1) Offset */
@@ -2313,6 +1489,32 @@
 #define PWM_CMUPD3_REG_OFST            (0x460)             /**< (PWM_CMUPD3) PWM Channel Mode Update Register (ch_num = 3) Offset */
 
 #if !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__))
+/** \brief PWM_CH_NUM register API structure */
+typedef struct
+{
+  __IO  uint32_t                       PWM_CMR;            /**< Offset: 0x00 (R/W  32) PWM Channel Mode Register */
+  __IO  uint32_t                       PWM_CDTY;           /**< Offset: 0x04 (R/W  32) PWM Channel Duty Cycle Register */
+  __O   uint32_t                       PWM_CDTYUPD;        /**< Offset: 0x08 ( /W  32) PWM Channel Duty Cycle Update Register */
+  __IO  uint32_t                       PWM_CPRD;           /**< Offset: 0x0C (R/W  32) PWM Channel Period Register */
+  __O   uint32_t                       PWM_CPRDUPD;        /**< Offset: 0x10 ( /W  32) PWM Channel Period Update Register */
+  __I   uint32_t                       PWM_CCNT;           /**< Offset: 0x14 (R/   32) PWM Channel Counter Register */
+  __IO  uint32_t                       PWM_DT;             /**< Offset: 0x18 (R/W  32) PWM Channel Dead Time Register */
+  __O   uint32_t                       PWM_DTUPD;          /**< Offset: 0x1C ( /W  32) PWM Channel Dead Time Update Register */
+} pwm_ch_num_registers_t;
+
+/** \brief PWM_CMP register API structure */
+typedef struct
+{
+  __IO  uint32_t                       PWM_CMPV;           /**< Offset: 0x00 (R/W  32) PWM Comparison 0 Value Register */
+  __O   uint32_t                       PWM_CMPVUPD;        /**< Offset: 0x04 ( /W  32) PWM Comparison 0 Value Update Register */
+  __IO  uint32_t                       PWM_CMPM;           /**< Offset: 0x08 (R/W  32) PWM Comparison 0 Mode Register */
+  __O   uint32_t                       PWM_CMPMUPD;        /**< Offset: 0x0C ( /W  32) PWM Comparison 0 Mode Update Register */
+} pwm_cmp_registers_t;
+
+#define PWM_CMP_NUMBER _U_(8)
+
+#define PWM_CH_NUM_NUMBER _U_(4)
+
 /** \brief PWM register API structure */
 typedef struct
 {
@@ -2345,8 +1547,7 @@ typedef struct
   __IO  uint32_t                       PWM_FPV1;           /**< Offset: 0x68 (R/W  32) PWM Fault Protection Value Register 1 */
   __IO  uint32_t                       PWM_FPE;            /**< Offset: 0x6C (R/W  32) PWM Fault Protection Enable Register */
   __I   uint8_t                        Reserved1[0x0C];
-  __IO  uint32_t                       PWM_ELMR0;          /**< Offset: 0x7C (R/W  32) PWM Event Line 0 Mode Register 0 */
-  __IO  uint32_t                       PWM_ELMR1;          /**< Offset: 0x80 (R/W  32) PWM Event Line 0 Mode Register 1 */
+  __IO  uint32_t                       PWM_ELMR[2];        /**< Offset: 0x7C (R/W  32) PWM Event Line 0 Mode Register 0 */
   __I   uint8_t                        Reserved2[0x1C];
   __IO  uint32_t                       PWM_SSPR;           /**< Offset: 0xA0 (R/W  32) PWM Spread Spectrum Register */
   __O   uint32_t                       PWM_SSPUP;          /**< Offset: 0xA4 ( /W  32) PWM Spread Spectrum Update Register */
@@ -2358,71 +1559,9 @@ typedef struct
   __O   uint32_t                       PWM_WPCR;           /**< Offset: 0xE4 ( /W  32) PWM Write Protection Control Register */
   __I   uint32_t                       PWM_WPSR;           /**< Offset: 0xE8 (R/   32) PWM Write Protection Status Register */
   __I   uint8_t                        Reserved6[0x44];
-  __IO  uint32_t                       PWM_CMPV0;          /**< Offset: 0x130 (R/W  32) PWM Comparison 0 Value Register */
-  __O   uint32_t                       PWM_CMPVUPD0;       /**< Offset: 0x134 ( /W  32) PWM Comparison 0 Value Update Register */
-  __IO  uint32_t                       PWM_CMPM0;          /**< Offset: 0x138 (R/W  32) PWM Comparison 0 Mode Register */
-  __O   uint32_t                       PWM_CMPMUPD0;       /**< Offset: 0x13C ( /W  32) PWM Comparison 0 Mode Update Register */
-  __IO  uint32_t                       PWM_CMPV1;          /**< Offset: 0x140 (R/W  32) PWM Comparison 1 Value Register */
-  __O   uint32_t                       PWM_CMPVUPD1;       /**< Offset: 0x144 ( /W  32) PWM Comparison 1 Value Update Register */
-  __IO  uint32_t                       PWM_CMPM1;          /**< Offset: 0x148 (R/W  32) PWM Comparison 1 Mode Register */
-  __O   uint32_t                       PWM_CMPMUPD1;       /**< Offset: 0x14C ( /W  32) PWM Comparison 1 Mode Update Register */
-  __IO  uint32_t                       PWM_CMPV2;          /**< Offset: 0x150 (R/W  32) PWM Comparison 2 Value Register */
-  __O   uint32_t                       PWM_CMPVUPD2;       /**< Offset: 0x154 ( /W  32) PWM Comparison 2 Value Update Register */
-  __IO  uint32_t                       PWM_CMPM2;          /**< Offset: 0x158 (R/W  32) PWM Comparison 2 Mode Register */
-  __O   uint32_t                       PWM_CMPMUPD2;       /**< Offset: 0x15C ( /W  32) PWM Comparison 2 Mode Update Register */
-  __IO  uint32_t                       PWM_CMPV3;          /**< Offset: 0x160 (R/W  32) PWM Comparison 3 Value Register */
-  __O   uint32_t                       PWM_CMPVUPD3;       /**< Offset: 0x164 ( /W  32) PWM Comparison 3 Value Update Register */
-  __IO  uint32_t                       PWM_CMPM3;          /**< Offset: 0x168 (R/W  32) PWM Comparison 3 Mode Register */
-  __O   uint32_t                       PWM_CMPMUPD3;       /**< Offset: 0x16C ( /W  32) PWM Comparison 3 Mode Update Register */
-  __IO  uint32_t                       PWM_CMPV4;          /**< Offset: 0x170 (R/W  32) PWM Comparison 4 Value Register */
-  __O   uint32_t                       PWM_CMPVUPD4;       /**< Offset: 0x174 ( /W  32) PWM Comparison 4 Value Update Register */
-  __IO  uint32_t                       PWM_CMPM4;          /**< Offset: 0x178 (R/W  32) PWM Comparison 4 Mode Register */
-  __O   uint32_t                       PWM_CMPMUPD4;       /**< Offset: 0x17C ( /W  32) PWM Comparison 4 Mode Update Register */
-  __IO  uint32_t                       PWM_CMPV5;          /**< Offset: 0x180 (R/W  32) PWM Comparison 5 Value Register */
-  __O   uint32_t                       PWM_CMPVUPD5;       /**< Offset: 0x184 ( /W  32) PWM Comparison 5 Value Update Register */
-  __IO  uint32_t                       PWM_CMPM5;          /**< Offset: 0x188 (R/W  32) PWM Comparison 5 Mode Register */
-  __O   uint32_t                       PWM_CMPMUPD5;       /**< Offset: 0x18C ( /W  32) PWM Comparison 5 Mode Update Register */
-  __IO  uint32_t                       PWM_CMPV6;          /**< Offset: 0x190 (R/W  32) PWM Comparison 6 Value Register */
-  __O   uint32_t                       PWM_CMPVUPD6;       /**< Offset: 0x194 ( /W  32) PWM Comparison 6 Value Update Register */
-  __IO  uint32_t                       PWM_CMPM6;          /**< Offset: 0x198 (R/W  32) PWM Comparison 6 Mode Register */
-  __O   uint32_t                       PWM_CMPMUPD6;       /**< Offset: 0x19C ( /W  32) PWM Comparison 6 Mode Update Register */
-  __IO  uint32_t                       PWM_CMPV7;          /**< Offset: 0x1A0 (R/W  32) PWM Comparison 7 Value Register */
-  __O   uint32_t                       PWM_CMPVUPD7;       /**< Offset: 0x1A4 ( /W  32) PWM Comparison 7 Value Update Register */
-  __IO  uint32_t                       PWM_CMPM7;          /**< Offset: 0x1A8 (R/W  32) PWM Comparison 7 Mode Register */
-  __O   uint32_t                       PWM_CMPMUPD7;       /**< Offset: 0x1AC ( /W  32) PWM Comparison 7 Mode Update Register */
+        pwm_cmp_registers_t            PWM_CMP[PWM_CMP_NUMBER]; /**< Offset: 0x130 PWM Comparison 0 Value Register */
   __I   uint8_t                        Reserved7[0x50];
-  __IO  uint32_t                       PWM_CMR0;           /**< Offset: 0x200 (R/W  32) PWM Channel Mode Register (ch_num = 0) */
-  __IO  uint32_t                       PWM_CDTY0;          /**< Offset: 0x204 (R/W  32) PWM Channel Duty Cycle Register (ch_num = 0) */
-  __O   uint32_t                       PWM_CDTYUPD0;       /**< Offset: 0x208 ( /W  32) PWM Channel Duty Cycle Update Register (ch_num = 0) */
-  __IO  uint32_t                       PWM_CPRD0;          /**< Offset: 0x20C (R/W  32) PWM Channel Period Register (ch_num = 0) */
-  __O   uint32_t                       PWM_CPRDUPD0;       /**< Offset: 0x210 ( /W  32) PWM Channel Period Update Register (ch_num = 0) */
-  __I   uint32_t                       PWM_CCNT0;          /**< Offset: 0x214 (R/   32) PWM Channel Counter Register (ch_num = 0) */
-  __IO  uint32_t                       PWM_DT0;            /**< Offset: 0x218 (R/W  32) PWM Channel Dead Time Register (ch_num = 0) */
-  __O   uint32_t                       PWM_DTUPD0;         /**< Offset: 0x21C ( /W  32) PWM Channel Dead Time Update Register (ch_num = 0) */
-  __IO  uint32_t                       PWM_CMR1;           /**< Offset: 0x220 (R/W  32) PWM Channel Mode Register (ch_num = 1) */
-  __IO  uint32_t                       PWM_CDTY1;          /**< Offset: 0x224 (R/W  32) PWM Channel Duty Cycle Register (ch_num = 1) */
-  __O   uint32_t                       PWM_CDTYUPD1;       /**< Offset: 0x228 ( /W  32) PWM Channel Duty Cycle Update Register (ch_num = 1) */
-  __IO  uint32_t                       PWM_CPRD1;          /**< Offset: 0x22C (R/W  32) PWM Channel Period Register (ch_num = 1) */
-  __O   uint32_t                       PWM_CPRDUPD1;       /**< Offset: 0x230 ( /W  32) PWM Channel Period Update Register (ch_num = 1) */
-  __I   uint32_t                       PWM_CCNT1;          /**< Offset: 0x234 (R/   32) PWM Channel Counter Register (ch_num = 1) */
-  __IO  uint32_t                       PWM_DT1;            /**< Offset: 0x238 (R/W  32) PWM Channel Dead Time Register (ch_num = 1) */
-  __O   uint32_t                       PWM_DTUPD1;         /**< Offset: 0x23C ( /W  32) PWM Channel Dead Time Update Register (ch_num = 1) */
-  __IO  uint32_t                       PWM_CMR2;           /**< Offset: 0x240 (R/W  32) PWM Channel Mode Register (ch_num = 2) */
-  __IO  uint32_t                       PWM_CDTY2;          /**< Offset: 0x244 (R/W  32) PWM Channel Duty Cycle Register (ch_num = 2) */
-  __O   uint32_t                       PWM_CDTYUPD2;       /**< Offset: 0x248 ( /W  32) PWM Channel Duty Cycle Update Register (ch_num = 2) */
-  __IO  uint32_t                       PWM_CPRD2;          /**< Offset: 0x24C (R/W  32) PWM Channel Period Register (ch_num = 2) */
-  __O   uint32_t                       PWM_CPRDUPD2;       /**< Offset: 0x250 ( /W  32) PWM Channel Period Update Register (ch_num = 2) */
-  __I   uint32_t                       PWM_CCNT2;          /**< Offset: 0x254 (R/   32) PWM Channel Counter Register (ch_num = 2) */
-  __IO  uint32_t                       PWM_DT2;            /**< Offset: 0x258 (R/W  32) PWM Channel Dead Time Register (ch_num = 2) */
-  __O   uint32_t                       PWM_DTUPD2;         /**< Offset: 0x25C ( /W  32) PWM Channel Dead Time Update Register (ch_num = 2) */
-  __IO  uint32_t                       PWM_CMR3;           /**< Offset: 0x260 (R/W  32) PWM Channel Mode Register (ch_num = 3) */
-  __IO  uint32_t                       PWM_CDTY3;          /**< Offset: 0x264 (R/W  32) PWM Channel Duty Cycle Register (ch_num = 3) */
-  __O   uint32_t                       PWM_CDTYUPD3;       /**< Offset: 0x268 ( /W  32) PWM Channel Duty Cycle Update Register (ch_num = 3) */
-  __IO  uint32_t                       PWM_CPRD3;          /**< Offset: 0x26C (R/W  32) PWM Channel Period Register (ch_num = 3) */
-  __O   uint32_t                       PWM_CPRDUPD3;       /**< Offset: 0x270 ( /W  32) PWM Channel Period Update Register (ch_num = 3) */
-  __I   uint32_t                       PWM_CCNT3;          /**< Offset: 0x274 (R/   32) PWM Channel Counter Register (ch_num = 3) */
-  __IO  uint32_t                       PWM_DT3;            /**< Offset: 0x278 (R/W  32) PWM Channel Dead Time Register (ch_num = 3) */
-  __O   uint32_t                       PWM_DTUPD3;         /**< Offset: 0x27C ( /W  32) PWM Channel Dead Time Update Register (ch_num = 3) */
+        pwm_ch_num_registers_t         PWM_CH_NUM[PWM_CH_NUM_NUMBER]; /**< Offset: 0x200 PWM Channel Mode Register */
   __I   uint8_t                        Reserved8[0x180];
   __O   uint32_t                       PWM_CMUPD0;         /**< Offset: 0x400 ( /W  32) PWM Channel Mode Update Register (ch_num = 0) */
   __I   uint8_t                        Reserved9[0x1C];
