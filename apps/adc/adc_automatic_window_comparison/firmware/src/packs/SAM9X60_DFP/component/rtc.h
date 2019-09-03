@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-04-23T19:01:17Z */
+/* file generated from device description version 2019-08-22T13:04:26Z */
 #ifndef _SAM9X_RTC_COMPONENT_H_
 #define _SAM9X_RTC_COMPONENT_H_
 
@@ -518,13 +518,6 @@
 #define   RTC_TMR_EN7_ENABLE_Val              _U_(0x1)                                             /**< (RTC_TMR) WKUP pin index x+1 is enabled as a source of tamper.  */
 #define RTC_TMR_EN7_DISABLE                   (RTC_TMR_EN7_DISABLE_Val << RTC_TMR_EN7_Pos)         /**< (RTC_TMR) WKUP pin index x+1 is not enabled as a source of tamper. Position  */
 #define RTC_TMR_EN7_ENABLE                    (RTC_TMR_EN7_ENABLE_Val << RTC_TMR_EN7_Pos)          /**< (RTC_TMR) WKUP pin index x+1 is enabled as a source of tamper. Position  */
-#define RTC_TMR_TRLOCK_Pos                    _U_(15)                                              /**< (RTC_TMR) Tamper Registers Lock (Write-once, cleared by VDDCORE reset) Position */
-#define RTC_TMR_TRLOCK_Msk                    (_U_(0x1) << RTC_TMR_TRLOCK_Pos)                     /**< (RTC_TMR) Tamper Registers Lock (Write-once, cleared by VDDCORE reset) Mask */
-#define RTC_TMR_TRLOCK(value)                 (RTC_TMR_TRLOCK_Msk & ((value) << RTC_TMR_TRLOCK_Pos))
-#define   RTC_TMR_TRLOCK_UNLOCKED_Val         _U_(0x0)                                             /**< (RTC_TMR) RTC_TMR and RTC_TDPR can be written.  */
-#define   RTC_TMR_TRLOCK_LOCKED_Val           _U_(0x1)                                             /**< (RTC_TMR) RTC_TMR and RTC_TDPR cannot be written until the next VDDCORE domain reset.  */
-#define RTC_TMR_TRLOCK_UNLOCKED               (RTC_TMR_TRLOCK_UNLOCKED_Val << RTC_TMR_TRLOCK_Pos)  /**< (RTC_TMR) RTC_TMR and RTC_TDPR can be written. Position  */
-#define RTC_TMR_TRLOCK_LOCKED                 (RTC_TMR_TRLOCK_LOCKED_Val << RTC_TMR_TRLOCK_Pos)    /**< (RTC_TMR) RTC_TMR and RTC_TDPR cannot be written until the next VDDCORE domain reset. Position  */
 #define RTC_TMR_POL0_Pos                      _U_(16)                                              /**< (RTC_TMR) WKUPx+1 Polarity Position */
 #define RTC_TMR_POL0_Msk                      (_U_(0x1) << RTC_TMR_POL0_Pos)                       /**< (RTC_TMR) WKUPx+1 Polarity Mask */
 #define RTC_TMR_POL0(value)                   (RTC_TMR_POL0_Msk & ((value) << RTC_TMR_POL0_Pos))  
@@ -581,7 +574,14 @@
 #define   RTC_TMR_POL7_HIGH_Val               _U_(0x1)                                             /**< (RTC_TMR) If the source of tamper remains high for a debounce period, a tamper event is generated.  */
 #define RTC_TMR_POL7_LOW                      (RTC_TMR_POL7_LOW_Val << RTC_TMR_POL7_Pos)           /**< (RTC_TMR) If the source of tamper remains low for a debounce period, a tamper event is generated. Position  */
 #define RTC_TMR_POL7_HIGH                     (RTC_TMR_POL7_HIGH_Val << RTC_TMR_POL7_Pos)          /**< (RTC_TMR) If the source of tamper remains high for a debounce period, a tamper event is generated. Position  */
-#define RTC_TMR_Msk                           _U_(0x00FF80FF)                                      /**< (RTC_TMR) Register Mask  */
+#define RTC_TMR_TRLOCK_Pos                    _U_(31)                                              /**< (RTC_TMR) Tamper Registers Lock (Write-once, cleared by VDDCORE reset) Position */
+#define RTC_TMR_TRLOCK_Msk                    (_U_(0x1) << RTC_TMR_TRLOCK_Pos)                     /**< (RTC_TMR) Tamper Registers Lock (Write-once, cleared by VDDCORE reset) Mask */
+#define RTC_TMR_TRLOCK(value)                 (RTC_TMR_TRLOCK_Msk & ((value) << RTC_TMR_TRLOCK_Pos))
+#define   RTC_TMR_TRLOCK_UNLOCKED_Val         _U_(0x0)                                             /**< (RTC_TMR) RTC_TMR and RTC_TDPR can be written.  */
+#define   RTC_TMR_TRLOCK_LOCKED_Val           _U_(0x1)                                             /**< (RTC_TMR) RTC_TMR and RTC_TDPR cannot be written until the next VDDCORE domain reset.  */
+#define RTC_TMR_TRLOCK_UNLOCKED               (RTC_TMR_TRLOCK_UNLOCKED_Val << RTC_TMR_TRLOCK_Pos)  /**< (RTC_TMR) RTC_TMR and RTC_TDPR can be written. Position  */
+#define RTC_TMR_TRLOCK_LOCKED                 (RTC_TMR_TRLOCK_LOCKED_Val << RTC_TMR_TRLOCK_Pos)    /**< (RTC_TMR) RTC_TMR and RTC_TDPR cannot be written until the next VDDCORE domain reset. Position  */
+#define RTC_TMR_Msk                           _U_(0x80FF00FF)                                      /**< (RTC_TMR) Register Mask  */
 
 #define RTC_TMR_EN_Pos                        _U_(0)                                               /**< (RTC_TMR Position) WKUPx+x Tamper Source Enable */
 #define RTC_TMR_EN_Msk                        (_U_(0xFF) << RTC_TMR_EN_Pos)                        /**< (RTC_TMR Mask) EN */
@@ -594,41 +594,41 @@
 #define RTC_TDPR_PERA_Pos                     _U_(0)                                               /**< (RTC_TDPR) Debounce Period A Position */
 #define RTC_TDPR_PERA_Msk                     (_U_(0xF) << RTC_TDPR_PERA_Pos)                      /**< (RTC_TDPR) Debounce Period A Mask */
 #define RTC_TDPR_PERA(value)                  (RTC_TDPR_PERA_Msk & ((value) << RTC_TDPR_PERA_Pos))
-#define   RTC_TDPR_PERA_MD_SCLK_2_Val         _U_(0x0)                                             /**< (RTC_TDPR) The source of tamper must remain active for at least 2 monitoring-domain slow clock cycles to generate a tamper event.  */
-#define   RTC_TDPR_PERA_MD_SCLK_4_Val         _U_(0x1)                                             /**< (RTC_TDPR) The source of tamper must remain active for at least 4 monitoring-domain slow clock cycles to generate a tamper event.  */
-#define   RTC_TDPR_PERA_MD_SCLK_8_Val         _U_(0x2)                                             /**< (RTC_TDPR) The source of tamper must remain active for at least 8 monitoring-domain slow clock cycles to generate a tamper event.  */
-#define   RTC_TDPR_PERA_MD_SCLK_16_Val        _U_(0x3)                                             /**< (RTC_TDPR) The source of tamper must remain active for at least 16 monitoring-domain slow clock cycles to generate a tamper event.  */
-#define   RTC_TDPR_PERA_MD_SCLK_32_Val        _U_(0x4)                                             /**< (RTC_TDPR) The source of tamper must remain active for at least 32 monitoring-domain slow clock cycles to generate a tamper event.  */
-#define   RTC_TDPR_PERA_MD_SCLK_64_Val        _U_(0x5)                                             /**< (RTC_TDPR) The source of tamper must remain active for at least 64 monitoring-domain slow clock cycles to generate a tamper event.  */
-#define   RTC_TDPR_PERA_MD_SCLK_128_Val       _U_(0x6)                                             /**< (RTC_TDPR) The source of tamper must remain active for at least 128 monitoring-domain slow clock cycles to generate a tamper event.  */
-#define   RTC_TDPR_PERA_MD_SCLK_256_Val       _U_(0x7)                                             /**< (RTC_TDPR) The source of tamper must remain active for at least 256 monitoring-domain slow clock cycles to generate a tamper event.  */
-#define RTC_TDPR_PERA_MD_SCLK_2               (RTC_TDPR_PERA_MD_SCLK_2_Val << RTC_TDPR_PERA_Pos)   /**< (RTC_TDPR) The source of tamper must remain active for at least 2 monitoring-domain slow clock cycles to generate a tamper event. Position  */
-#define RTC_TDPR_PERA_MD_SCLK_4               (RTC_TDPR_PERA_MD_SCLK_4_Val << RTC_TDPR_PERA_Pos)   /**< (RTC_TDPR) The source of tamper must remain active for at least 4 monitoring-domain slow clock cycles to generate a tamper event. Position  */
-#define RTC_TDPR_PERA_MD_SCLK_8               (RTC_TDPR_PERA_MD_SCLK_8_Val << RTC_TDPR_PERA_Pos)   /**< (RTC_TDPR) The source of tamper must remain active for at least 8 monitoring-domain slow clock cycles to generate a tamper event. Position  */
-#define RTC_TDPR_PERA_MD_SCLK_16              (RTC_TDPR_PERA_MD_SCLK_16_Val << RTC_TDPR_PERA_Pos)  /**< (RTC_TDPR) The source of tamper must remain active for at least 16 monitoring-domain slow clock cycles to generate a tamper event. Position  */
-#define RTC_TDPR_PERA_MD_SCLK_32              (RTC_TDPR_PERA_MD_SCLK_32_Val << RTC_TDPR_PERA_Pos)  /**< (RTC_TDPR) The source of tamper must remain active for at least 32 monitoring-domain slow clock cycles to generate a tamper event. Position  */
-#define RTC_TDPR_PERA_MD_SCLK_64              (RTC_TDPR_PERA_MD_SCLK_64_Val << RTC_TDPR_PERA_Pos)  /**< (RTC_TDPR) The source of tamper must remain active for at least 64 monitoring-domain slow clock cycles to generate a tamper event. Position  */
-#define RTC_TDPR_PERA_MD_SCLK_128             (RTC_TDPR_PERA_MD_SCLK_128_Val << RTC_TDPR_PERA_Pos) /**< (RTC_TDPR) The source of tamper must remain active for at least 128 monitoring-domain slow clock cycles to generate a tamper event. Position  */
-#define RTC_TDPR_PERA_MD_SCLK_256             (RTC_TDPR_PERA_MD_SCLK_256_Val << RTC_TDPR_PERA_Pos) /**< (RTC_TDPR) The source of tamper must remain active for at least 256 monitoring-domain slow clock cycles to generate a tamper event. Position  */
+#define   RTC_TDPR_PERA_MD_SLCK_2_Val         _U_(0x0)                                             /**< (RTC_TDPR) The source of tamper must remain active for at least 2 monitoring domain slow clock cycles to generate a tamper event.  */
+#define   RTC_TDPR_PERA_MD_SLCK_4_Val         _U_(0x1)                                             /**< (RTC_TDPR) The source of tamper must remain active for at least 4 monitoring domain slow clock cycles to generate a tamper event.  */
+#define   RTC_TDPR_PERA_MD_SLCK_8_Val         _U_(0x2)                                             /**< (RTC_TDPR) The source of tamper must remain active for at least 8 monitoring domain slow clock cycles to generate a tamper event.  */
+#define   RTC_TDPR_PERA_MD_SLCK_16_Val        _U_(0x3)                                             /**< (RTC_TDPR) The source of tamper must remain active for at least 16 monitoring domain slow clock cycles to generate a tamper event.  */
+#define   RTC_TDPR_PERA_MD_SLCK_32_Val        _U_(0x4)                                             /**< (RTC_TDPR) The source of tamper must remain active for at least 32 monitoring domain slow clock cycles to generate a tamper event.  */
+#define   RTC_TDPR_PERA_MD_SLCK_64_Val        _U_(0x5)                                             /**< (RTC_TDPR) The source of tamper must remain active for at least 64 monitoring domain slow clock cycles to generate a tamper event.  */
+#define   RTC_TDPR_PERA_MD_SLCK_128_Val       _U_(0x6)                                             /**< (RTC_TDPR) The source of tamper must remain active for at least 128 monitoring domain slow clock cycles to generate a tamper event.  */
+#define   RTC_TDPR_PERA_MD_SLCK_256_Val       _U_(0x7)                                             /**< (RTC_TDPR) The source of tamper must remain active for at least 256 monitoring domain slow clock cycles to generate a tamper event.  */
+#define RTC_TDPR_PERA_MD_SLCK_2               (RTC_TDPR_PERA_MD_SLCK_2_Val << RTC_TDPR_PERA_Pos)   /**< (RTC_TDPR) The source of tamper must remain active for at least 2 monitoring domain slow clock cycles to generate a tamper event. Position  */
+#define RTC_TDPR_PERA_MD_SLCK_4               (RTC_TDPR_PERA_MD_SLCK_4_Val << RTC_TDPR_PERA_Pos)   /**< (RTC_TDPR) The source of tamper must remain active for at least 4 monitoring domain slow clock cycles to generate a tamper event. Position  */
+#define RTC_TDPR_PERA_MD_SLCK_8               (RTC_TDPR_PERA_MD_SLCK_8_Val << RTC_TDPR_PERA_Pos)   /**< (RTC_TDPR) The source of tamper must remain active for at least 8 monitoring domain slow clock cycles to generate a tamper event. Position  */
+#define RTC_TDPR_PERA_MD_SLCK_16              (RTC_TDPR_PERA_MD_SLCK_16_Val << RTC_TDPR_PERA_Pos)  /**< (RTC_TDPR) The source of tamper must remain active for at least 16 monitoring domain slow clock cycles to generate a tamper event. Position  */
+#define RTC_TDPR_PERA_MD_SLCK_32              (RTC_TDPR_PERA_MD_SLCK_32_Val << RTC_TDPR_PERA_Pos)  /**< (RTC_TDPR) The source of tamper must remain active for at least 32 monitoring domain slow clock cycles to generate a tamper event. Position  */
+#define RTC_TDPR_PERA_MD_SLCK_64              (RTC_TDPR_PERA_MD_SLCK_64_Val << RTC_TDPR_PERA_Pos)  /**< (RTC_TDPR) The source of tamper must remain active for at least 64 monitoring domain slow clock cycles to generate a tamper event. Position  */
+#define RTC_TDPR_PERA_MD_SLCK_128             (RTC_TDPR_PERA_MD_SLCK_128_Val << RTC_TDPR_PERA_Pos) /**< (RTC_TDPR) The source of tamper must remain active for at least 128 monitoring domain slow clock cycles to generate a tamper event. Position  */
+#define RTC_TDPR_PERA_MD_SLCK_256             (RTC_TDPR_PERA_MD_SLCK_256_Val << RTC_TDPR_PERA_Pos) /**< (RTC_TDPR) The source of tamper must remain active for at least 256 monitoring domain slow clock cycles to generate a tamper event. Position  */
 #define RTC_TDPR_PERB_Pos                     _U_(4)                                               /**< (RTC_TDPR) Debounce Period B Position */
 #define RTC_TDPR_PERB_Msk                     (_U_(0xF) << RTC_TDPR_PERB_Pos)                      /**< (RTC_TDPR) Debounce Period B Mask */
 #define RTC_TDPR_PERB(value)                  (RTC_TDPR_PERB_Msk & ((value) << RTC_TDPR_PERB_Pos))
-#define   RTC_TDPR_PERB_MD_SCLK_2_Val         _U_(0x0)                                             /**< (RTC_TDPR) The source of tamper must remain active for at least 2 monitoring-domain slow clock cycles to generate a tamper event.  */
-#define   RTC_TDPR_PERB_MD_SCLK_4_Val         _U_(0x1)                                             /**< (RTC_TDPR) The source of tamper must remain active for at least 4 monitoring-domain slow clock cycles to generate a tamper event.  */
-#define   RTC_TDPR_PERB_MD_SCLK_8_Val         _U_(0x2)                                             /**< (RTC_TDPR) The source of tamper must remain active for at least 8 monitoring-domain slow clock cycles to generate a tamper event.  */
-#define   RTC_TDPR_PERB_MD_SCLK_16_Val        _U_(0x3)                                             /**< (RTC_TDPR) The source of tamper must remain active for at least 16 monitoring-domain slow clock cycles to generate a tamper event.  */
-#define   RTC_TDPR_PERB_MD_SCLK_32_Val        _U_(0x4)                                             /**< (RTC_TDPR) The source of tamper must remain active for at least 32 monitoring-domain slow clock cycles to generate a tamper event.  */
-#define   RTC_TDPR_PERB_MD_SCLK_64_Val        _U_(0x5)                                             /**< (RTC_TDPR) The source of tamper must remain active for at least 64 monitoring-domain slow clock cycles to generate a tamper event.  */
-#define   RTC_TDPR_PERB_MD_SCLK_128_Val       _U_(0x6)                                             /**< (RTC_TDPR) The source of tamper must remain active for at least 128 monitoring-domain slow clock cycles to generate a tamper event.  */
-#define   RTC_TDPR_PERB_MD_SCLK_256_Val       _U_(0x7)                                             /**< (RTC_TDPR) The source of tamper must remain active for at least 256 monitoring-domain slow clock cycles to generate a tamper event.  */
-#define RTC_TDPR_PERB_MD_SCLK_2               (RTC_TDPR_PERB_MD_SCLK_2_Val << RTC_TDPR_PERB_Pos)   /**< (RTC_TDPR) The source of tamper must remain active for at least 2 monitoring-domain slow clock cycles to generate a tamper event. Position  */
-#define RTC_TDPR_PERB_MD_SCLK_4               (RTC_TDPR_PERB_MD_SCLK_4_Val << RTC_TDPR_PERB_Pos)   /**< (RTC_TDPR) The source of tamper must remain active for at least 4 monitoring-domain slow clock cycles to generate a tamper event. Position  */
-#define RTC_TDPR_PERB_MD_SCLK_8               (RTC_TDPR_PERB_MD_SCLK_8_Val << RTC_TDPR_PERB_Pos)   /**< (RTC_TDPR) The source of tamper must remain active for at least 8 monitoring-domain slow clock cycles to generate a tamper event. Position  */
-#define RTC_TDPR_PERB_MD_SCLK_16              (RTC_TDPR_PERB_MD_SCLK_16_Val << RTC_TDPR_PERB_Pos)  /**< (RTC_TDPR) The source of tamper must remain active for at least 16 monitoring-domain slow clock cycles to generate a tamper event. Position  */
-#define RTC_TDPR_PERB_MD_SCLK_32              (RTC_TDPR_PERB_MD_SCLK_32_Val << RTC_TDPR_PERB_Pos)  /**< (RTC_TDPR) The source of tamper must remain active for at least 32 monitoring-domain slow clock cycles to generate a tamper event. Position  */
-#define RTC_TDPR_PERB_MD_SCLK_64              (RTC_TDPR_PERB_MD_SCLK_64_Val << RTC_TDPR_PERB_Pos)  /**< (RTC_TDPR) The source of tamper must remain active for at least 64 monitoring-domain slow clock cycles to generate a tamper event. Position  */
-#define RTC_TDPR_PERB_MD_SCLK_128             (RTC_TDPR_PERB_MD_SCLK_128_Val << RTC_TDPR_PERB_Pos) /**< (RTC_TDPR) The source of tamper must remain active for at least 128 monitoring-domain slow clock cycles to generate a tamper event. Position  */
-#define RTC_TDPR_PERB_MD_SCLK_256             (RTC_TDPR_PERB_MD_SCLK_256_Val << RTC_TDPR_PERB_Pos) /**< (RTC_TDPR) The source of tamper must remain active for at least 256 monitoring-domain slow clock cycles to generate a tamper event. Position  */
+#define   RTC_TDPR_PERB_MD_SLCK_2_Val         _U_(0x0)                                             /**< (RTC_TDPR) The source of tamper must remain active for at least 2 monitoring domain slow clock cycles to generate a tamper event.  */
+#define   RTC_TDPR_PERB_MD_SLCK_4_Val         _U_(0x1)                                             /**< (RTC_TDPR) The source of tamper must remain active for at least 4 monitoring domain slow clock cycles to generate a tamper event.  */
+#define   RTC_TDPR_PERB_MD_SLCK_8_Val         _U_(0x2)                                             /**< (RTC_TDPR) The source of tamper must remain active for at least 8 monitoring domain slow clock cycles to generate a tamper event.  */
+#define   RTC_TDPR_PERB_MD_SLCK_16_Val        _U_(0x3)                                             /**< (RTC_TDPR) The source of tamper must remain active for at least 16 monitoring domain slow clock cycles to generate a tamper event.  */
+#define   RTC_TDPR_PERB_MD_SLCK_32_Val        _U_(0x4)                                             /**< (RTC_TDPR) The source of tamper must remain active for at least 32 monitoring domain slow clock cycles to generate a tamper event.  */
+#define   RTC_TDPR_PERB_MD_SLCK_64_Val        _U_(0x5)                                             /**< (RTC_TDPR) The source of tamper must remain active for at least 64 monitoring domain slow clock cycles to generate a tamper event.  */
+#define   RTC_TDPR_PERB_MD_SLCK_128_Val       _U_(0x6)                                             /**< (RTC_TDPR) The source of tamper must remain active for at least 128 monitoring domain slow clock cycles to generate a tamper event.  */
+#define   RTC_TDPR_PERB_MD_SLCK_256_Val       _U_(0x7)                                             /**< (RTC_TDPR) The source of tamper must remain active for at least 256 monitoring domain slow clock cycles to generate a tamper event.  */
+#define RTC_TDPR_PERB_MD_SLCK_2               (RTC_TDPR_PERB_MD_SLCK_2_Val << RTC_TDPR_PERB_Pos)   /**< (RTC_TDPR) The source of tamper must remain active for at least 2 monitoring domain slow clock cycles to generate a tamper event. Position  */
+#define RTC_TDPR_PERB_MD_SLCK_4               (RTC_TDPR_PERB_MD_SLCK_4_Val << RTC_TDPR_PERB_Pos)   /**< (RTC_TDPR) The source of tamper must remain active for at least 4 monitoring domain slow clock cycles to generate a tamper event. Position  */
+#define RTC_TDPR_PERB_MD_SLCK_8               (RTC_TDPR_PERB_MD_SLCK_8_Val << RTC_TDPR_PERB_Pos)   /**< (RTC_TDPR) The source of tamper must remain active for at least 8 monitoring domain slow clock cycles to generate a tamper event. Position  */
+#define RTC_TDPR_PERB_MD_SLCK_16              (RTC_TDPR_PERB_MD_SLCK_16_Val << RTC_TDPR_PERB_Pos)  /**< (RTC_TDPR) The source of tamper must remain active for at least 16 monitoring domain slow clock cycles to generate a tamper event. Position  */
+#define RTC_TDPR_PERB_MD_SLCK_32              (RTC_TDPR_PERB_MD_SLCK_32_Val << RTC_TDPR_PERB_Pos)  /**< (RTC_TDPR) The source of tamper must remain active for at least 32 monitoring domain slow clock cycles to generate a tamper event. Position  */
+#define RTC_TDPR_PERB_MD_SLCK_64              (RTC_TDPR_PERB_MD_SLCK_64_Val << RTC_TDPR_PERB_Pos)  /**< (RTC_TDPR) The source of tamper must remain active for at least 64 monitoring domain slow clock cycles to generate a tamper event. Position  */
+#define RTC_TDPR_PERB_MD_SLCK_128             (RTC_TDPR_PERB_MD_SLCK_128_Val << RTC_TDPR_PERB_Pos) /**< (RTC_TDPR) The source of tamper must remain active for at least 128 monitoring domain slow clock cycles to generate a tamper event. Position  */
+#define RTC_TDPR_PERB_MD_SLCK_256             (RTC_TDPR_PERB_MD_SLCK_256_Val << RTC_TDPR_PERB_Pos) /**< (RTC_TDPR) The source of tamper must remain active for at least 256 monitoring domain slow clock cycles to generate a tamper event. Position  */
 #define RTC_TDPR_SELP0_Pos                    _U_(16)                                              /**< (RTC_TDPR) WKUPx+1 Debounce Period Selection Position */
 #define RTC_TDPR_SELP0_Msk                    (_U_(0x1) << RTC_TDPR_SELP0_Pos)                     /**< (RTC_TDPR) WKUPx+1 Debounce Period Selection Mask */
 #define RTC_TDPR_SELP0(value)                 (RTC_TDPR_SELP0_Msk & ((value) << RTC_TDPR_SELP0_Pos))
@@ -691,16 +691,6 @@
 #define RTC_TDPR_SELP_Msk                     (_U_(0xFF) << RTC_TDPR_SELP_Pos)                     /**< (RTC_TDPR Mask) SELP */
 #define RTC_TDPR_SELP(value)                  (RTC_TDPR_SELP_Msk & ((value) << RTC_TDPR_SELP_Pos)) 
 
-/* -------- RTC_VERSION : (RTC Offset: 0xFC) ( R/ 32) Version Register -------- */
-#define RTC_VERSION_VERSION_Pos               _U_(0)                                               /**< (RTC_VERSION) Version of the Hardware Module Position */
-#define RTC_VERSION_VERSION_Msk               (_U_(0xFFF) << RTC_VERSION_VERSION_Pos)              /**< (RTC_VERSION) Version of the Hardware Module Mask */
-#define RTC_VERSION_VERSION(value)            (RTC_VERSION_VERSION_Msk & ((value) << RTC_VERSION_VERSION_Pos))
-#define RTC_VERSION_MFN_Pos                   _U_(16)                                              /**< (RTC_VERSION) Metal Fix Number Position */
-#define RTC_VERSION_MFN_Msk                   (_U_(0x7) << RTC_VERSION_MFN_Pos)                    /**< (RTC_VERSION) Metal Fix Number Mask */
-#define RTC_VERSION_MFN(value)                (RTC_VERSION_MFN_Msk & ((value) << RTC_VERSION_MFN_Pos))
-#define RTC_VERSION_Msk                       _U_(0x00070FFF)                                      /**< (RTC_VERSION) Register Mask  */
-
-
 /** \brief RTC register offsets definitions */
 #define RTC_TSTR_REG_OFST              (0x00)              /**< (RTC_TSTR) TimeStamp Time Register 0 Offset */
 #define RTC_TSDR_REG_OFST              (0x04)              /**< (RTC_TSDR) TimeStamp Date Register 0 Offset */
@@ -719,7 +709,6 @@
 #define RTC_VER_REG_OFST               (0x2C)              /**< (RTC_VER) Valid Entry Register Offset */
 #define RTC_TMR_REG_OFST               (0x58)              /**< (RTC_TMR) Tamper Mode register Offset */
 #define RTC_TDPR_REG_OFST              (0x5C)              /**< (RTC_TDPR) Tamper Debounce Period register Offset */
-#define RTC_VERSION_REG_OFST           (0xFC)              /**< (RTC_VERSION) Version Register Offset */
 
 #if !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__))
 /** \brief RTC_TS register API structure */
@@ -752,8 +741,6 @@ typedef struct
   __IO  uint32_t                       RTC_TDPR;           /**< Offset: 0x5C (R/W  32) Tamper Debounce Period register */
   __I   uint8_t                        Reserved2[0x50];
         rtc_ts_registers_t             RTC_TS[RTC_TS_NUMBER]; /**< Offset: 0xB0  */
-  __I   uint8_t                        Reserved3[0x34];
-  __I   uint32_t                       RTC_VERSION;        /**< Offset: 0xFC (R/   32) Version Register */
 } rtc_registers_t;
 
 
