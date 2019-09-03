@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-04-23T19:01:17Z */
+/* file generated from device description version 2019-08-22T13:04:26Z */
 #ifndef _SAM9X_UDPHS_COMPONENT_H_
 #define _SAM9X_UDPHS_COMPONENT_H_
 
@@ -535,6 +535,12 @@
 #define UDPHS_EPTSTA_CURBK_CTLDIR_Pos         _U_(16)                                              /**< (UDPHS_EPTSTA) Current Bank/Control Direction (cleared upon USB reset) Position */
 #define UDPHS_EPTSTA_CURBK_CTLDIR_Msk         (_U_(0x3) << UDPHS_EPTSTA_CURBK_CTLDIR_Pos)          /**< (UDPHS_EPTSTA) Current Bank/Control Direction (cleared upon USB reset) Mask */
 #define UDPHS_EPTSTA_CURBK_CTLDIR(value)      (UDPHS_EPTSTA_CURBK_CTLDIR_Msk & ((value) << UDPHS_EPTSTA_CURBK_CTLDIR_Pos))
+#define   UDPHS_EPTSTA_CURBK_CTLDIR_BANK0_Val _U_(0x0)                                             /**< (UDPHS_EPTSTA) Bank 0 (or single bank)  */
+#define   UDPHS_EPTSTA_CURBK_CTLDIR_BANK1_Val _U_(0x1)                                             /**< (UDPHS_EPTSTA) Bank 1  */
+#define   UDPHS_EPTSTA_CURBK_CTLDIR_BANK2_Val _U_(0x2)                                             /**< (UDPHS_EPTSTA) Bank 2  */
+#define UDPHS_EPTSTA_CURBK_CTLDIR_BANK0       (UDPHS_EPTSTA_CURBK_CTLDIR_BANK0_Val << UDPHS_EPTSTA_CURBK_CTLDIR_Pos) /**< (UDPHS_EPTSTA) Bank 0 (or single bank) Position  */
+#define UDPHS_EPTSTA_CURBK_CTLDIR_BANK1       (UDPHS_EPTSTA_CURBK_CTLDIR_BANK1_Val << UDPHS_EPTSTA_CURBK_CTLDIR_Pos) /**< (UDPHS_EPTSTA) Bank 1 Position  */
+#define UDPHS_EPTSTA_CURBK_CTLDIR_BANK2       (UDPHS_EPTSTA_CURBK_CTLDIR_BANK2_Val << UDPHS_EPTSTA_CURBK_CTLDIR_Pos) /**< (UDPHS_EPTSTA) Bank 2 Position  */
 #define UDPHS_EPTSTA_BUSY_BANK_STA_Pos        _U_(18)                                              /**< (UDPHS_EPTSTA) Busy Bank Number (cleared upon USB reset) Position */
 #define UDPHS_EPTSTA_BUSY_BANK_STA_Msk        (_U_(0x3) << UDPHS_EPTSTA_BUSY_BANK_STA_Pos)         /**< (UDPHS_EPTSTA) Busy Bank Number (cleared upon USB reset) Mask */
 #define UDPHS_EPTSTA_BUSY_BANK_STA(value)     (UDPHS_EPTSTA_BUSY_BANK_STA_Msk & ((value) << UDPHS_EPTSTA_BUSY_BANK_STA_Pos))
@@ -912,16 +918,6 @@
 #define UDPHS_TST_OPMODE_Msk                  (_U_(0x1) << UDPHS_TST_OPMODE_Pos)                   /**< (UDPHS_TST Mask) OPMODE */
 #define UDPHS_TST_OPMODE(value)               (UDPHS_TST_OPMODE_Msk & ((value) << UDPHS_TST_OPMODE_Pos)) 
 
-/* -------- UDPHS_VERSION : (UDPHS Offset: 0xFC) ( R/ 32) UDPHS Version Register -------- */
-#define UDPHS_VERSION_VERSION_Pos             _U_(0)                                               /**< (UDPHS_VERSION) Version of the Hardware Module Position */
-#define UDPHS_VERSION_VERSION_Msk             (_U_(0xFFFF) << UDPHS_VERSION_VERSION_Pos)           /**< (UDPHS_VERSION) Version of the Hardware Module Mask */
-#define UDPHS_VERSION_VERSION(value)          (UDPHS_VERSION_VERSION_Msk & ((value) << UDPHS_VERSION_VERSION_Pos))
-#define UDPHS_VERSION_MFN_Pos                 _U_(16)                                              /**< (UDPHS_VERSION) Metal Fix Number Position */
-#define UDPHS_VERSION_MFN_Msk                 (_U_(0x7) << UDPHS_VERSION_MFN_Pos)                  /**< (UDPHS_VERSION) Metal Fix Number Mask */
-#define UDPHS_VERSION_MFN(value)              (UDPHS_VERSION_MFN_Msk & ((value) << UDPHS_VERSION_MFN_Pos))
-#define UDPHS_VERSION_Msk                     _U_(0x0007FFFF)                                      /**< (UDPHS_VERSION) Register Mask  */
-
-
 /** \brief UDPHS register offsets definitions */
 #define UDPHS_DMANXTDSC_REG_OFST       (0x00)              /**< (UDPHS_DMANXTDSC) UDPHS DMA Next Descriptor Address Register (channel = 0) Offset */
 #define UDPHS_DMAADDRESS_REG_OFST      (0x04)              /**< (UDPHS_DMAADDRESS) UDPHS DMA Channel Address Register (channel = 0) Offset */
@@ -945,7 +941,6 @@
 #define UDPHS_TSTCNTB_REG_OFST         (0xD8)              /**< (UDPHS_TSTCNTB) UDPHS Test B Counter Register Offset */
 #define UDPHS_TSTMODEREG_REG_OFST      (0xDC)              /**< (UDPHS_TSTMODEREG) UDPHS Test Mode Register Offset */
 #define UDPHS_TST_REG_OFST             (0xE0)              /**< (UDPHS_TST) UDPHS Test Register Offset */
-#define UDPHS_VERSION_REG_OFST         (0xFC)              /**< (UDPHS_VERSION) UDPHS Version Register Offset */
 
 #if !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__))
 /** \brief UDPHS_DMA register API structure */
@@ -990,8 +985,7 @@ typedef struct
   __IO  uint32_t                       UDPHS_TSTCNTB;      /**< Offset: 0xD8 (R/W  32) UDPHS Test B Counter Register */
   __IO  uint32_t                       UDPHS_TSTMODEREG;   /**< Offset: 0xDC (R/W  32) UDPHS Test Mode Register */
   __IO  uint32_t                       UDPHS_TST;          /**< Offset: 0xE0 (R/W  32) UDPHS Test Register */
-  __I   uint8_t                        Reserved3[0x18];
-  __I   uint32_t                       UDPHS_VERSION;      /**< Offset: 0xFC (R/   32) UDPHS Version Register */
+  __I   uint8_t                        Reserved3[0x1C];
         udphs_ept_registers_t          UDPHS_EPT[UDPHS_EPT_NUMBER]; /**< Offset: 0x100  */
   __I   uint8_t                        Reserved4[0x120];
         udphs_dma_registers_t          UDPHS_DMA[UDPHS_DMA_NUMBER]; /**< Offset: 0x300  */
