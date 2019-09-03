@@ -103,9 +103,10 @@ void SYS_Initialize ( void* data )
 
 	PIT_TimerInitialize();
 
-MMU_Initialize();
+    MMU_Initialize();
 
     INT_Initialize();
+    
     WDT_Initialize();
 
     DBGU_Initialize();
