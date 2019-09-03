@@ -98,8 +98,6 @@ void CLK_Initialize( void )
         __builtin_mtc0(12, 0,(__builtin_mfc0(12, 0) | 0x0001)); /* enable interrupts */
     }
 
-
-
     /* Set up Reference Clock 3 */
     /* REFO3CON register */
     /* ROSEL =  SYSCLK */
@@ -118,9 +116,9 @@ void CLK_Initialize( void )
 
     /* Peripheral Module Disable Configuration */
     PMD1SET = 0xfffffffe;
-    PMD2SET = 0xffffffff;
+    PMD2SET = 0x17001f;
     PMD3SET = 0xffffffff;
-    PMD4SET = 0xffffffff;
+    PMD4SET = 0xfff01ff;
     PMD5SET = 0xefffffff;
     PMD6SET = 0xfffff0ff;
     PMD7SET = 0xffffffef;
