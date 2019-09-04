@@ -554,25 +554,23 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     <#lt>{
     <#if RTC_MODULE_SELECTION = "MODE0">
         <#lt>    ${RTC_INSTANCE_NAME?lower_case}Obj.timer32intCause = ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_INTFLAG;
-
+        <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_INTFLAG = RTC_MODE0_INTFLAG_Msk;
+        
         <#lt>    /* Invoke registered Callback function */
         <#lt>    if(${RTC_INSTANCE_NAME?lower_case}Obj.timer32BitCallback != NULL)
         <#lt>    {
         <#lt>        ${RTC_INSTANCE_NAME?lower_case}Obj.timer32BitCallback( ${RTC_INSTANCE_NAME?lower_case}Obj.timer32intCause, ${RTC_INSTANCE_NAME?lower_case}Obj.context );
         <#lt>    }
-
-        <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_INTFLAG = RTC_MODE0_INTFLAG_Msk;
     <#else>
         <#lt>    /* Update the event in RTC Peripheral Callback object */
         <#lt>    ${RTC_INSTANCE_NAME?lower_case}Obj.timer16intCause = ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_INTFLAG;
+        <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_INTFLAG = RTC_MODE1_INTFLAG_Msk;
 
         <#lt>    /* Invoke registered Callback function */
         <#lt>    if(${RTC_INSTANCE_NAME?lower_case}Obj.timer16BitCallback != NULL)
         <#lt>    {
         <#lt>        ${RTC_INSTANCE_NAME?lower_case}Obj.timer16BitCallback( ${RTC_INSTANCE_NAME?lower_case}Obj.timer16intCause, ${RTC_INSTANCE_NAME?lower_case}Obj.context );
         <#lt>    }
-
-        <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_INTFLAG = RTC_MODE1_INTFLAG_Msk;
     </#if>
     <#lt>}
 </#if>

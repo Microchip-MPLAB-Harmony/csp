@@ -329,12 +329,12 @@ void ${RTC_INSTANCE_NAME}_RTCCTimeGet ( struct tm * currentTime )
     <#lt>{
     <#lt>    ${RTC_INSTANCE_NAME?lower_case}Obj.intCause = ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_INTFLAG;
 
+    <#lt>    /* Clear All Interrupts */
+    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_INTFLAG = RTC_MODE2_INTFLAG_Msk;
+    
     <#lt>    if(${RTC_INSTANCE_NAME?lower_case}Obj.alarmCallback != NULL)
     <#lt>    {
     <#lt>        ${RTC_INSTANCE_NAME?lower_case}Obj.alarmCallback(${RTC_INSTANCE_NAME?lower_case}Obj.intCause, ${RTC_INSTANCE_NAME?lower_case}Obj.context);
     <#lt>    }
-
-    <#lt>    /* Clear All Interrupts */
-    <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_INTFLAG = RTC_MODE2_INTFLAG_Msk;
     <#lt>}
 </#if>
