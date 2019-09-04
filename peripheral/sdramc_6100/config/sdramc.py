@@ -183,6 +183,7 @@ def instantiateComponent(sdramcComponent):
     sdramcSym_CR_CAS.setOutputMode("Value")
     for value in sdramc_cr_cas_vg_node.getChildren():
         sdramcSym_CR_CAS.addKey(value.getAttribute("name"), value.getAttribute("value"), value.getAttribute("caption"))
+    sdramcSym_CR_CAS.setDefaultValue(sdramcSym_CR_CAS.getKeyCount()-1)
 
     sdramcSym_CR_TRAS = sdramcComponent.createIntegerSymbol("SDRAMC_CR_TRAS", sdramcSymMenu_TIMING_MENU)
     sdramcSym_CR_TRAS.setLabel("Row Active to Precharge Delay(RAS)")
