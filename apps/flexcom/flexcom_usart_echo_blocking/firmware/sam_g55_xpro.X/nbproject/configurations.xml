@@ -1,35 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configurationDescriptor version="65">
-  <logicalFolder displayName="root" name="root" projectFiles="true">
-    <logicalFolder displayName="Header Files" name="f1" projectFiles="true">
-      <logicalFolder displayName="packs" name="f1" projectFiles="true">
-        <logicalFolder displayName="CMSIS" name="f1" projectFiles="true">
-          <logicalFolder displayName="CMSIS" name="f1" projectFiles="true">
-            <logicalFolder displayName="Core" name="f1" projectFiles="true">
-              <logicalFolder displayName="Include" name="f1" projectFiles="true">
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_compiler.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_iccarm.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_gcc.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/tz_context.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/core_cm4.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/mpu_armv7.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_version.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armcc.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang_ltm.h</itemPath>
+  <logicalFolder name="root" displayName="root" projectFiles="true">
+    <logicalFolder name="f1" displayName="Header Files" projectFiles="true">
+      <logicalFolder name="f1" displayName="config" projectFiles="true">
+        <logicalFolder name="f1" displayName="sam_g55_xpro" projectFiles="true">
+          <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
+            <logicalFolder name="f3" displayName="clock" projectFiles="true">
+              <itemPath>../src/config/sam_g55_xpro/peripheral/clock/plib_clock.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f5" displayName="cmcc" projectFiles="true">
+              <itemPath>../src/config/sam_g55_xpro/peripheral/cmcc/plib_cmcc.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f6" displayName="efc" projectFiles="true">
+              <itemPath>../src/config/sam_g55_xpro/peripheral/efc/plib_efc.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f1" displayName="flexcom" projectFiles="true">
+              <logicalFolder name="f1" displayName="usart" projectFiles="true">
+                <itemPath>../src/config/sam_g55_xpro/peripheral/flexcom/usart/plib_flexcom7_usart.h</itemPath>
+                <itemPath>../src/config/sam_g55_xpro/peripheral/flexcom/usart/plib_flexcom_usart_local.h</itemPath>
               </logicalFolder>
             </logicalFolder>
-            <logicalFolder displayName="DSP" name="f2" projectFiles="true">
-              <logicalFolder displayName="Include" name="f1" projectFiles="true">
-                <itemPath>../src/packs/CMSIS/CMSIS/DSP/Include/arm_common_tables.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/DSP/Include/arm_const_structs.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/DSP/Include/arm_math.h</itemPath>
-              </logicalFolder>
+            <logicalFolder name="f4" displayName="nvic" projectFiles="true">
+              <itemPath>../src/config/sam_g55_xpro/peripheral/nvic/plib_nvic.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f2" displayName="pio" projectFiles="true">
+              <itemPath>../src/config/sam_g55_xpro/peripheral/pio/plib_pio.h</itemPath>
             </logicalFolder>
           </logicalFolder>
+          <itemPath>../src/config/sam_g55_xpro/device_cache.h</itemPath>
+          <itemPath>../src/config/sam_g55_xpro/toolchain_specifics.h</itemPath>
+          <itemPath>../src/config/sam_g55_xpro/definitions.h</itemPath>
         </logicalFolder>
-        <logicalFolder displayName="ATSAMG55J19_DFP" name="f2" projectFiles="true">
-          <logicalFolder displayName="component" name="f1" projectFiles="true">
+      </logicalFolder>
+      <logicalFolder name="f2" displayName="packs" projectFiles="true">
+        <logicalFolder name="f1" displayName="ATSAMG55J19_DFP" projectFiles="true">
+          <logicalFolder name="f1" displayName="component" projectFiles="true">
             <itemPath>../src/packs/ATSAMG55J19_DFP/component/adc.h</itemPath>
             <itemPath>../src/packs/ATSAMG55J19_DFP/component/chipid.h</itemPath>
             <itemPath>../src/packs/ATSAMG55J19_DFP/component/cmcc.h</itemPath>
@@ -62,35 +67,30 @@
           <itemPath>../src/packs/ATSAMG55J19_DFP/device.h</itemPath>
           <itemPath>../src/packs/ATSAMG55J19_DFP/atsamg55j19.h</itemPath>
         </logicalFolder>
-      </logicalFolder>
-      <logicalFolder displayName="config" name="f2" projectFiles="true">
-        <logicalFolder displayName="sam_g55_xpro" name="f1" projectFiles="true">
-          <logicalFolder displayName="peripheral" name="f1" projectFiles="true">
-            <logicalFolder displayName="flexcom" name="f1" projectFiles="true">
-              <logicalFolder displayName="usart" name="f1" projectFiles="true">
-                <itemPath>../src/config/sam_g55_xpro/peripheral/flexcom/usart/plib_flexcom7_usart.h</itemPath>
-                <itemPath>../src/config/sam_g55_xpro/peripheral/flexcom/usart/plib_flexcom_usart_local.h</itemPath>
+        <logicalFolder name="f2" displayName="CMSIS" projectFiles="true">
+          <logicalFolder name="f1" displayName="CMSIS" projectFiles="true">
+            <logicalFolder name="f1" displayName="Core" projectFiles="true">
+              <logicalFolder name="f1" displayName="Include" projectFiles="true">
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_compiler.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_iccarm.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_gcc.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armcc.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang_ltm.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/tz_context.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/core_cm4.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/mpu_armv7.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_version.h</itemPath>
               </logicalFolder>
             </logicalFolder>
-            <logicalFolder displayName="pio" name="f2" projectFiles="true">
-              <itemPath>../src/config/sam_g55_xpro/peripheral/pio/plib_pio.h</itemPath>
-            </logicalFolder>
-            <logicalFolder displayName="clock" name="f3" projectFiles="true">
-              <itemPath>../src/config/sam_g55_xpro/peripheral/clock/plib_clock.h</itemPath>
-            </logicalFolder>
-            <logicalFolder displayName="nvic" name="f4" projectFiles="true">
-              <itemPath>../src/config/sam_g55_xpro/peripheral/nvic/plib_nvic.h</itemPath>
-            </logicalFolder>
-            <logicalFolder displayName="cmcc" name="f5" projectFiles="true">
-              <itemPath>../src/config/sam_g55_xpro/peripheral/cmcc/plib_cmcc.h</itemPath>
-            </logicalFolder>
-            <logicalFolder displayName="efc" name="f6" projectFiles="true">
-              <itemPath>../src/config/sam_g55_xpro/peripheral/efc/plib_efc.h</itemPath>
+            <logicalFolder name="f2" displayName="DSP" projectFiles="true">
+              <logicalFolder name="f1" displayName="Include" projectFiles="true">
+                <itemPath>../src/packs/CMSIS/CMSIS/DSP/Include/arm_common_tables.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/DSP/Include/arm_const_structs.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/DSP/Include/arm_math.h</itemPath>
+              </logicalFolder>
             </logicalFolder>
           </logicalFolder>
-          <itemPath>../src/config/sam_g55_xpro/device_cache.h</itemPath>
-          <itemPath>../src/config/sam_g55_xpro/toolchain_specifics.h</itemPath>
-          <itemPath>../src/config/sam_g55_xpro/definitions.h</itemPath>
         </logicalFolder>
       </logicalFolder>
     </logicalFolder>
