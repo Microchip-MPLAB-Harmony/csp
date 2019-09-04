@@ -743,8 +743,8 @@ rtcClockSourceSelection.setDescription("Clock Source selection for RTC")
 
 rtcClockSourceSelection.addKey("OSCULP1K", "0", "32 KHz Ultra Low-Power Internal Oscillator (1 KHz Output)")
 rtcClockSourceSelection.addKey("OSCULP32K", "1", "32 KHz Ultra Low-Power Internal Oscillator (32 KHz Output)")
-rtcClockSourceSelection.addKey("XOSC1K", "3", "32.768 KHz External Crystal Oscillator (1.024 KHz Output)")
-rtcClockSourceSelection.addKey("XOSC32K", "4", "32.768 KHz External Crystal Oscillator (32.768 KHz Output)")
+rtcClockSourceSelection.addKey("XOSC1K", "4", "32.768 KHz External Crystal Oscillator (1.024 KHz Output)")
+rtcClockSourceSelection.addKey("XOSC32K", "5", "32.768 KHz External Crystal Oscillator (32.768 KHz Output)")
 
 rtcClockSourceSelection.setDefaultValue(0)
 rtcClockSourceSelection.setOutputMode("Value")
