@@ -96,6 +96,7 @@ void CAN1_Initialize(void)
     CAN1_REGS->CAN_MB[0].CAN_MMR = CAN_MMR_MOT_MB_TX;
     CAN1_REGS->CAN_IDR = CAN_IDR_MB1_Msk;
     CAN1_REGS->CAN_MB[1].CAN_MCR = 0;
+    CAN1_REGS->CAN_MB[1].CAN_MID = CAN_MID_MIDvA(0) | CAN_MID_MIDE_Msk;
     CAN1_REGS->CAN_MB[1].CAN_MAM = CAN_MAM_MIDvA(0);
     CAN1_REGS->CAN_MB[1].CAN_MMR = CAN_MMR_MOT_MB_RX_OVERWRITE;
     CAN1_REGS->CAN_IDR = CAN_IDR_MB2_Msk;
@@ -194,16 +195,18 @@ bool CAN1_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, CAN_MAILBO
         /* A standard identifier is stored into MID[28:18] */
         CAN1_REGS->CAN_MB[mailbox].CAN_MID = CAN_MID_MIDvA(id);
     }
+
+    /* Limit length */
+    if (length > 8)
+    {
+        length = 8;
+    }
+    CAN1_REGS->CAN_MB[mailbox].CAN_MCR = CAN_MCR_MDLC(length);
+
     switch (mailboxAttr)
     {
         case CAN_MAILBOX_DATA_FRAME_TX:
         case CAN_MAILBOX_DATA_FRAME_PRODUCER:
-            /* Limit length */
-            if (length > 8)
-            {
-                length = 8;
-            }
-            CAN1_REGS->CAN_MB[mailbox].CAN_MCR = CAN_MCR_MDLC(length);
             /* Copy the data into the payload */
             for (; dataIndex < length; dataIndex++)
             {
@@ -362,6 +365,66 @@ bool CAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, CAN_MAILB
 void CAN1_MessageAbort(CAN_MAILBOX_MASK mailboxMask)
 {
     CAN1_REGS->CAN_ACR = mailboxMask;
+}
+
+// *****************************************************************************
+/* Function:
+    void CAN1_MessageIDSet(CAN_MAILBOX_NUM mailbox, uint32_t id)
+
+   Summary:
+    Set Message ID in mailbox.
+
+   Precondition:
+    CAN1_Initialize must have been called for the associated CAN instance.
+
+   Parameters:
+    mailbox - Mailbox number
+    id      - 11-bit or 29-bit identifier
+
+   Returns:
+    None.
+*/
+void CAN1_MessageIDSet(CAN_MAILBOX_NUM mailbox, uint32_t id)
+{
+    if (id > (CAN_MID_MIDvA_Msk >> CAN_MID_MIDvA_Pos))
+    {
+        CAN1_REGS->CAN_MB[mailbox].CAN_MID = (id & CAN_MFID_Msk) | CAN_MID_MIDE_Msk;
+    }
+    else
+    {
+        CAN1_REGS->CAN_MB[mailbox].CAN_MID = CAN_MID_MIDvA(id) | CAN_MID_MIDE_Msk;
+    }
+}
+
+// *****************************************************************************
+/* Function:
+    uint32_t CAN1_MessageIDGet(CAN_MAILBOX_NUM mailbox)
+
+   Summary:
+    Get Message ID from mailbox.
+
+   Precondition:
+    CAN1_Initialize must have been called for the associated CAN instance.
+
+   Parameters:
+    mailbox - Mailbox number
+
+   Returns:
+    Returns Message ID
+*/
+uint32_t CAN1_MessageIDGet(CAN_MAILBOX_NUM mailbox)
+{
+    uint32_t id = 0;
+
+    if ((CAN1_REGS->CAN_MB[mailbox].CAN_MID & CAN_MID_MIDvB_Msk) != 0)
+    {
+        id = CAN1_REGS->CAN_MB[mailbox].CAN_MID & CAN_MFID_Msk;
+    }
+    else
+    {
+        id = (CAN1_REGS->CAN_MB[mailbox].CAN_MID & CAN_MID_MIDvA_Msk) >> CAN_MID_MIDvA_Pos;
+    }
+    return id;
 }
 
 // *****************************************************************************
