@@ -4,25 +4,25 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <logicalFolder name="f2" displayName="config" projectFiles="true">
-        <logicalFolder name="f1" displayName="sam_rh_71" projectFiles="true">
+      <logicalFolder name="f1" displayName="config" projectFiles="true">
+        <logicalFolder name="f1" displayName="sam_rh71_ek" projectFiles="true">
           <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
             <logicalFolder name="f1" displayName="clk" projectFiles="true">
-              <itemPath>../src/config/sam_rh_71/peripheral/clk/plib_clk.h</itemPath>
+              <itemPath>../src/config/sam_rh71_ek/peripheral/clk/plib_clk.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f3" displayName="nvic" projectFiles="true">
-              <itemPath>../src/config/sam_rh_71/peripheral/nvic/plib_nvic.h</itemPath>
+              <itemPath>../src/config/sam_rh71_ek/peripheral/nvic/plib_nvic.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f2" displayName="pio" projectFiles="true">
-              <itemPath>../src/config/sam_rh_71/peripheral/pio/plib_pio.h</itemPath>
+              <itemPath>../src/config/sam_rh71_ek/peripheral/pio/plib_pio.h</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <itemPath>../src/config/sam_rh_71/device_cache.h</itemPath>
-          <itemPath>../src/config/sam_rh_71/toolchain_specifics.h</itemPath>
-          <itemPath>../src/config/sam_rh_71/definitions.h</itemPath>
+          <itemPath>../src/config/sam_rh71_ek/device_cache.h</itemPath>
+          <itemPath>../src/config/sam_rh71_ek/toolchain_specifics.h</itemPath>
+          <itemPath>../src/config/sam_rh71_ek/definitions.h</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <logicalFolder name="f1" displayName="packs" projectFiles="true">
+      <logicalFolder name="f2" displayName="packs" projectFiles="true">
         <logicalFolder name="f1" displayName="ATSAMRH71F20B_DFP" projectFiles="true">
           <logicalFolder name="f1" displayName="component" projectFiles="true">
             <itemPath>../src/packs/ATSAMRH71F20B_DFP/component/chipid.h</itemPath>
@@ -69,6 +69,8 @@
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_iccarm.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_gcc.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armcc.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang_ltm.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/tz_context.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/core_cm7.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/mpu_armv7.h</itemPath>
@@ -94,26 +96,26 @@
                    displayName="Source Files"
                    projectFiles="true">
       <logicalFolder name="f1" displayName="config" projectFiles="true">
-        <logicalFolder name="f1" displayName="sam_rh_71" projectFiles="true">
+        <logicalFolder name="f1" displayName="sam_rh71_ek" projectFiles="true">
           <logicalFolder name="f2" displayName="peripheral" projectFiles="true">
             <logicalFolder name="f1" displayName="clk" projectFiles="true">
-              <itemPath>../src/config/sam_rh_71/peripheral/clk/plib_clk.c</itemPath>
+              <itemPath>../src/config/sam_rh71_ek/peripheral/clk/plib_clk.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f3" displayName="nvic" projectFiles="true">
-              <itemPath>../src/config/sam_rh_71/peripheral/nvic/plib_nvic.c</itemPath>
+              <itemPath>../src/config/sam_rh71_ek/peripheral/nvic/plib_nvic.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f2" displayName="pio" projectFiles="true">
-              <itemPath>../src/config/sam_rh_71/peripheral/pio/plib_pio.c</itemPath>
+              <itemPath>../src/config/sam_rh71_ek/peripheral/pio/plib_pio.c</itemPath>
             </logicalFolder>
           </logicalFolder>
           <logicalFolder name="f1" displayName="stdio" projectFiles="true">
-            <itemPath>../src/config/sam_rh_71/stdio/xc32_monitor.c</itemPath>
+            <itemPath>../src/config/sam_rh71_ek/stdio/xc32_monitor.c</itemPath>
           </logicalFolder>
-          <itemPath>../src/config/sam_rh_71/initialization.c</itemPath>
-          <itemPath>../src/config/sam_rh_71/interrupts.c</itemPath>
-          <itemPath>../src/config/sam_rh_71/exceptions.c</itemPath>
-          <itemPath>../src/config/sam_rh_71/startup_xc32.c</itemPath>
-          <itemPath>../src/config/sam_rh_71/libc_syscalls.c</itemPath>
+          <itemPath>../src/config/sam_rh71_ek/initialization.c</itemPath>
+          <itemPath>../src/config/sam_rh71_ek/interrupts.c</itemPath>
+          <itemPath>../src/config/sam_rh71_ek/exceptions.c</itemPath>
+          <itemPath>../src/config/sam_rh71_ek/startup_xc32.c</itemPath>
+          <itemPath>../src/config/sam_rh71_ek/libc_syscalls.c</itemPath>
         </logicalFolder>
       </logicalFolder>
       <itemPath>../src/main_rh71.c</itemPath>
@@ -129,7 +131,7 @@
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
-    <conf name="sam_rh_71" type="2">
+    <conf name="sam_rh71_ek" type="2">
       <toolsSet>
         <developmentServer>localhost</developmentServer>
         <targetDevice>ATSAMRH71F20B</targetDevice>
@@ -141,8 +143,8 @@
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="CMSIS" vendor="ARM" version="5.4.0"/>
         <pack name="SAMRH71_DFP" vendor="Microchip" version="0.1.22"/>
+        <pack name="CMSIS" vendor="ARM" version="5.4.0"/>
       </packs>
       <compileType>
         <linkerTool>
@@ -201,7 +203,7 @@
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories"
-                  value="../src;../src/config/sam_rh_71;../src/packs/ATSAMRH71F20B_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/arm"/>
+                  value="../src;../src/config/sam_rh71_ek;../src/packs/ATSAMRH71F20B_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/arm"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
