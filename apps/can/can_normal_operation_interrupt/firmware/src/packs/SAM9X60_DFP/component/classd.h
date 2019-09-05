@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-04-23T19:01:17Z */
+/* file generated from device description version 2019-08-22T13:04:26Z */
 #ifndef _SAM9X_CLASSD_COMPONENT_H_
 #define _SAM9X_CLASSD_COMPONENT_H_
 
@@ -51,6 +51,10 @@
 #define CLASSD_MR_PWMTYP_Pos                  _U_(8)                                               /**< (CLASSD_MR) PWM Modulation Type Position */
 #define CLASSD_MR_PWMTYP_Msk                  (_U_(0x1) << CLASSD_MR_PWMTYP_Pos)                   /**< (CLASSD_MR) PWM Modulation Type Mask */
 #define CLASSD_MR_PWMTYP(value)               (CLASSD_MR_PWMTYP_Msk & ((value) << CLASSD_MR_PWMTYP_Pos))
+#define   CLASSD_MR_PWMTYP_TRAILING_EDGE_Val  _U_(0x0)                                             /**< (CLASSD_MR) The signal is single-ended.  */
+#define   CLASSD_MR_PWMTYP_UNIFORM_Val        _U_(0x1)                                             /**< (CLASSD_MR) The signal is differential.  */
+#define CLASSD_MR_PWMTYP_TRAILING_EDGE        (CLASSD_MR_PWMTYP_TRAILING_EDGE_Val << CLASSD_MR_PWMTYP_Pos) /**< (CLASSD_MR) The signal is single-ended. Position  */
+#define CLASSD_MR_PWMTYP_UNIFORM              (CLASSD_MR_PWMTYP_UNIFORM_Val << CLASSD_MR_PWMTYP_Pos) /**< (CLASSD_MR) The signal is differential. Position  */
 #define CLASSD_MR_NON_OVERLAP_Pos             _U_(16)                                              /**< (CLASSD_MR) Non-Overlapping Enable Position */
 #define CLASSD_MR_NON_OVERLAP_Msk             (_U_(0x1) << CLASSD_MR_NON_OVERLAP_Pos)              /**< (CLASSD_MR) Non-Overlapping Enable Mask */
 #define CLASSD_MR_NON_OVERLAP(value)          (CLASSD_MR_NON_OVERLAP_Msk & ((value) << CLASSD_MR_NON_OVERLAP_Pos))
@@ -217,19 +221,9 @@
 #define CLASSD_WPMR_WPKEY_Pos                 _U_(8)                                               /**< (CLASSD_WPMR) Write Protection Key Position */
 #define CLASSD_WPMR_WPKEY_Msk                 (_U_(0xFFFFFF) << CLASSD_WPMR_WPKEY_Pos)             /**< (CLASSD_WPMR) Write Protection Key Mask */
 #define CLASSD_WPMR_WPKEY(value)              (CLASSD_WPMR_WPKEY_Msk & ((value) << CLASSD_WPMR_WPKEY_Pos))
-#define   CLASSD_WPMR_WPKEY_PASSWD_Val        _U_(0x434C44)                                        /**< (CLASSD_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit.Always reads as 0.  */
-#define CLASSD_WPMR_WPKEY_PASSWD              (CLASSD_WPMR_WPKEY_PASSWD_Val << CLASSD_WPMR_WPKEY_Pos) /**< (CLASSD_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit.Always reads as 0. Position  */
+#define   CLASSD_WPMR_WPKEY_PASSWD_Val        _U_(0x434C44)                                        /**< (CLASSD_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit. Always reads as 0.  */
+#define CLASSD_WPMR_WPKEY_PASSWD              (CLASSD_WPMR_WPKEY_PASSWD_Val << CLASSD_WPMR_WPKEY_Pos) /**< (CLASSD_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit. Always reads as 0. Position  */
 #define CLASSD_WPMR_Msk                       _U_(0xFFFFFF01)                                      /**< (CLASSD_WPMR) Register Mask  */
-
-
-/* -------- CLASSD_VERSION : (CLASSD Offset: 0xFC) ( R/ 32) IP Version Register -------- */
-#define CLASSD_VERSION_VERSION_Pos            _U_(0)                                               /**< (CLASSD_VERSION) Version of the Hardware Module Position */
-#define CLASSD_VERSION_VERSION_Msk            (_U_(0xFFF) << CLASSD_VERSION_VERSION_Pos)           /**< (CLASSD_VERSION) Version of the Hardware Module Mask */
-#define CLASSD_VERSION_VERSION(value)         (CLASSD_VERSION_VERSION_Msk & ((value) << CLASSD_VERSION_VERSION_Pos))
-#define CLASSD_VERSION_MFN_Pos                _U_(16)                                              /**< (CLASSD_VERSION) Metal Fix Number Position */
-#define CLASSD_VERSION_MFN_Msk                (_U_(0x7) << CLASSD_VERSION_MFN_Pos)                 /**< (CLASSD_VERSION) Metal Fix Number Mask */
-#define CLASSD_VERSION_MFN(value)             (CLASSD_VERSION_MFN_Msk & ((value) << CLASSD_VERSION_MFN_Pos))
-#define CLASSD_VERSION_Msk                    _U_(0x00070FFF)                                      /**< (CLASSD_VERSION) Register Mask  */
 
 
 /** \brief CLASSD register offsets definitions */
@@ -243,7 +237,6 @@
 #define CLASSD_IMR_REG_OFST            (0x1C)              /**< (CLASSD_IMR) Interrupt Mask Register Offset */
 #define CLASSD_ISR_REG_OFST            (0x20)              /**< (CLASSD_ISR) Interrupt Status Register Offset */
 #define CLASSD_WPMR_REG_OFST           (0xE4)              /**< (CLASSD_WPMR) Write Protection Mode Register Offset */
-#define CLASSD_VERSION_REG_OFST        (0xFC)              /**< (CLASSD_VERSION) IP Version Register Offset */
 
 #if !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__))
 /** \brief CLASSD register API structure */
@@ -260,8 +253,6 @@ typedef struct
   __I   uint32_t                       CLASSD_ISR;         /**< Offset: 0x20 (R/   32) Interrupt Status Register */
   __I   uint8_t                        Reserved1[0xC0];
   __IO  uint32_t                       CLASSD_WPMR;        /**< Offset: 0xE4 (R/W  32) Write Protection Mode Register */
-  __I   uint8_t                        Reserved2[0x14];
-  __I   uint32_t                       CLASSD_VERSION;     /**< Offset: 0xFC (R/   32) IP Version Register */
 } classd_registers_t;
 
 
