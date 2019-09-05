@@ -19,8 +19,8 @@
           <Name dnOrder="1">initialization.c</Name>
           <LogicalPath dnOrder="2">config/pic32mx_125_sk/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">A1107F4EDEC8CC71F20102BE3B4D6898</GeneratedChecksum>
-          <UserChecksum dnOrder="5">A1107F4EDEC8CC71F20102BE3B4D6898</UserChecksum>
+          <GeneratedChecksum dnOrder="4">90C982762ED9B4353D3D96E530D37D31</GeneratedChecksum>
+          <UserChecksum dnOrder="5">90C982762ED9B4353D3D96E530D37D31</UserChecksum>
         </File>
         <File dnOrder="2">
           <Type dnOrder="0">SOURCE</Type>
@@ -51,8 +51,8 @@
           <Name dnOrder="1">plib_clk.c</Name>
           <LogicalPath dnOrder="2">config/pic32mx_125_sk/peripheral/clk/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/clk/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">94A16E82E6219D8333A95BFD5629FBC0</GeneratedChecksum>
-          <UserChecksum dnOrder="5">94A16E82E6219D8333A95BFD5629FBC0</UserChecksum>
+          <GeneratedChecksum dnOrder="4">A781A79FE2CE2CCE680D49A4F59D5B1C</GeneratedChecksum>
+          <UserChecksum dnOrder="5">A781A79FE2CE2CCE680D49A4F59D5B1C</UserChecksum>
         </File>
         <File dnOrder="6">
           <Type dnOrder="0">SOURCE</Type>
@@ -152,7 +152,7 @@
     </Manifest>
     <Settings dnOrder="4">
       <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.5.1"/>
-      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MX_DFP\1.0.50\atdf\PIC32MX570F512L.atdf"/>
+      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MX_DFP\1.0.208\atdf\PIC32MX570F512L.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
       <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
