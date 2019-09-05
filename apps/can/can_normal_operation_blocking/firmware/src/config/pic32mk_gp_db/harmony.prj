@@ -51,8 +51,8 @@
           <Name dnOrder="1">plib_clk.c</Name>
           <LogicalPath dnOrder="2">config/pic32mk_gp_db/peripheral/clk/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/clk/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">E7122DE3AD54450C8AE86B7C15B91B55</GeneratedChecksum>
-          <UserChecksum dnOrder="5">E7122DE3AD54450C8AE86B7C15B91B55</UserChecksum>
+          <GeneratedChecksum dnOrder="4">B21DDF2DFCC5BC4EC948505BB3AB5CE8</GeneratedChecksum>
+          <UserChecksum dnOrder="5">B21DDF2DFCC5BC4EC948505BB3AB5CE8</UserChecksum>
         </File>
         <File dnOrder="6">
           <Type dnOrder="0">SOURCE</Type>
@@ -176,7 +176,7 @@
     </Manifest>
     <Settings dnOrder="4">
       <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.5.1"/>
-      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MK-GP_DFP\1.0.44\atdf\PIC32MK1024GPE100.atdf"/>
+      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MK-GP_DFP\1.1.66\atdf\PIC32MK1024GPE100.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
       <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
