@@ -19,8 +19,8 @@
           <Name dnOrder="1">initialization.c</Name>
           <LogicalPath dnOrder="2">config/pic32mk_gpl_curiosity_pro/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">86596D8074F9677C5BF7133F29ED350E</GeneratedChecksum>
-          <UserChecksum dnOrder="5">86596D8074F9677C5BF7133F29ED350E</UserChecksum>
+          <GeneratedChecksum dnOrder="4">0CA650AE34A421F3AAC13B070FA427A0</GeneratedChecksum>
+          <UserChecksum dnOrder="5">0CA650AE34A421F3AAC13B070FA427A0</UserChecksum>
         </File>
         <File dnOrder="2">
           <Type dnOrder="0">SOURCE</Type>
@@ -176,7 +176,7 @@
     </Manifest>
     <Settings dnOrder="4">
       <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.5.1"/>
-      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MK-GP_DFP\1.1.64\atdf\PIC32MK1024GPL100.atdf"/>
+      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MK-GP_DFP\1.1.66\atdf\PIC32MK1024GPL100.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
       <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
