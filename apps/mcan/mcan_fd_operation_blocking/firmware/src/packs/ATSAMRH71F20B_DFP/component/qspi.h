@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-08-21T10:06:15Z */
+/* file generated from device description version 2019-08-29T14:13:58Z */
 #ifndef _SAMRH71_QSPI_COMPONENT_H_
 #define _SAMRH71_QSPI_COMPONENT_H_
 
@@ -72,6 +72,12 @@
 #define QSPI_MR_CSMODE_Pos                    _U_(4)                                               /**< (QSPI_MR) Chip Select Mode Position */
 #define QSPI_MR_CSMODE_Msk                    (_U_(0x3) << QSPI_MR_CSMODE_Pos)                     /**< (QSPI_MR) Chip Select Mode Mask */
 #define QSPI_MR_CSMODE(value)                 (QSPI_MR_CSMODE_Msk & ((value) << QSPI_MR_CSMODE_Pos))
+#define   QSPI_MR_CSMODE_NOT_RELOADED_Val     _U_(0x0)                                             /**< (QSPI_MR) The chip select is deasserted if QSPI_TDR.TD has not been reloaded before the end of the current transfer.  */
+#define   QSPI_MR_CSMODE_LASTXFER_Val         _U_(0x1)                                             /**< (QSPI_MR) The chip select is deasserted when the bit LASTXFER is written at 1 and the character written in QSPI_TDR.TD has been transferred.  */
+#define   QSPI_MR_CSMODE_SYSTEMATICALLY_Val   _U_(0x2)                                             /**< (QSPI_MR) The chip select is deasserted systematically after each transfer.  */
+#define QSPI_MR_CSMODE_NOT_RELOADED           (QSPI_MR_CSMODE_NOT_RELOADED_Val << QSPI_MR_CSMODE_Pos) /**< (QSPI_MR) The chip select is deasserted if QSPI_TDR.TD has not been reloaded before the end of the current transfer. Position  */
+#define QSPI_MR_CSMODE_LASTXFER               (QSPI_MR_CSMODE_LASTXFER_Val << QSPI_MR_CSMODE_Pos)  /**< (QSPI_MR) The chip select is deasserted when the bit LASTXFER is written at 1 and the character written in QSPI_TDR.TD has been transferred. Position  */
+#define QSPI_MR_CSMODE_SYSTEMATICALLY         (QSPI_MR_CSMODE_SYSTEMATICALLY_Val << QSPI_MR_CSMODE_Pos) /**< (QSPI_MR) The chip select is deasserted systematically after each transfer. Position  */
 #define QSPI_MR_NBBITS_Pos                    _U_(8)                                               /**< (QSPI_MR) Number Of Bits Per Transfer Position */
 #define QSPI_MR_NBBITS_Msk                    (_U_(0xF) << QSPI_MR_NBBITS_Pos)                     /**< (QSPI_MR) Number Of Bits Per Transfer Mask */
 #define QSPI_MR_NBBITS(value)                 (QSPI_MR_NBBITS_Msk & ((value) << QSPI_MR_NBBITS_Pos))

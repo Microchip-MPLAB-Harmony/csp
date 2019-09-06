@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-08-21T10:06:15Z */
+/* file generated from device description version 2019-08-29T14:13:58Z */
 #ifndef _SAMRH71_PWM_COMPONENT_H_
 #define _SAMRH71_PWM_COMPONENT_H_
 
@@ -1090,67 +1090,36 @@
 #define PWM_FPE_Msk                           _U_(0xFFFFFFFF)                                      /**< (PWM_FPE) Register Mask  */
 
 
-/* -------- PWM_ELMR0 : (PWM Offset: 0x7C) (R/W 32) PWM Event Line 0 Mode Register 0 -------- */
-#define PWM_ELMR0_CSEL0_Pos                   _U_(0)                                               /**< (PWM_ELMR0) Comparison 0 Selection Position */
-#define PWM_ELMR0_CSEL0_Msk                   (_U_(0x1) << PWM_ELMR0_CSEL0_Pos)                    /**< (PWM_ELMR0) Comparison 0 Selection Mask */
-#define PWM_ELMR0_CSEL0(value)                (PWM_ELMR0_CSEL0_Msk & ((value) << PWM_ELMR0_CSEL0_Pos))
-#define PWM_ELMR0_CSEL1_Pos                   _U_(1)                                               /**< (PWM_ELMR0) Comparison 1 Selection Position */
-#define PWM_ELMR0_CSEL1_Msk                   (_U_(0x1) << PWM_ELMR0_CSEL1_Pos)                    /**< (PWM_ELMR0) Comparison 1 Selection Mask */
-#define PWM_ELMR0_CSEL1(value)                (PWM_ELMR0_CSEL1_Msk & ((value) << PWM_ELMR0_CSEL1_Pos))
-#define PWM_ELMR0_CSEL2_Pos                   _U_(2)                                               /**< (PWM_ELMR0) Comparison 2 Selection Position */
-#define PWM_ELMR0_CSEL2_Msk                   (_U_(0x1) << PWM_ELMR0_CSEL2_Pos)                    /**< (PWM_ELMR0) Comparison 2 Selection Mask */
-#define PWM_ELMR0_CSEL2(value)                (PWM_ELMR0_CSEL2_Msk & ((value) << PWM_ELMR0_CSEL2_Pos))
-#define PWM_ELMR0_CSEL3_Pos                   _U_(3)                                               /**< (PWM_ELMR0) Comparison 3 Selection Position */
-#define PWM_ELMR0_CSEL3_Msk                   (_U_(0x1) << PWM_ELMR0_CSEL3_Pos)                    /**< (PWM_ELMR0) Comparison 3 Selection Mask */
-#define PWM_ELMR0_CSEL3(value)                (PWM_ELMR0_CSEL3_Msk & ((value) << PWM_ELMR0_CSEL3_Pos))
-#define PWM_ELMR0_CSEL4_Pos                   _U_(4)                                               /**< (PWM_ELMR0) Comparison 4 Selection Position */
-#define PWM_ELMR0_CSEL4_Msk                   (_U_(0x1) << PWM_ELMR0_CSEL4_Pos)                    /**< (PWM_ELMR0) Comparison 4 Selection Mask */
-#define PWM_ELMR0_CSEL4(value)                (PWM_ELMR0_CSEL4_Msk & ((value) << PWM_ELMR0_CSEL4_Pos))
-#define PWM_ELMR0_CSEL5_Pos                   _U_(5)                                               /**< (PWM_ELMR0) Comparison 5 Selection Position */
-#define PWM_ELMR0_CSEL5_Msk                   (_U_(0x1) << PWM_ELMR0_CSEL5_Pos)                    /**< (PWM_ELMR0) Comparison 5 Selection Mask */
-#define PWM_ELMR0_CSEL5(value)                (PWM_ELMR0_CSEL5_Msk & ((value) << PWM_ELMR0_CSEL5_Pos))
-#define PWM_ELMR0_CSEL6_Pos                   _U_(6)                                               /**< (PWM_ELMR0) Comparison 6 Selection Position */
-#define PWM_ELMR0_CSEL6_Msk                   (_U_(0x1) << PWM_ELMR0_CSEL6_Pos)                    /**< (PWM_ELMR0) Comparison 6 Selection Mask */
-#define PWM_ELMR0_CSEL6(value)                (PWM_ELMR0_CSEL6_Msk & ((value) << PWM_ELMR0_CSEL6_Pos))
-#define PWM_ELMR0_CSEL7_Pos                   _U_(7)                                               /**< (PWM_ELMR0) Comparison 7 Selection Position */
-#define PWM_ELMR0_CSEL7_Msk                   (_U_(0x1) << PWM_ELMR0_CSEL7_Pos)                    /**< (PWM_ELMR0) Comparison 7 Selection Mask */
-#define PWM_ELMR0_CSEL7(value)                (PWM_ELMR0_CSEL7_Msk & ((value) << PWM_ELMR0_CSEL7_Pos))
-#define PWM_ELMR0_Msk                         _U_(0x000000FF)                                      /**< (PWM_ELMR0) Register Mask  */
+/* -------- PWM_ELMR : (PWM Offset: 0x7C) (R/W 32) PWM Event Line 0 Mode Register 0 -------- */
+#define PWM_ELMR_CSEL0_Pos                    _U_(0)                                               /**< (PWM_ELMR) Comparison 0 Selection Position */
+#define PWM_ELMR_CSEL0_Msk                    (_U_(0x1) << PWM_ELMR_CSEL0_Pos)                     /**< (PWM_ELMR) Comparison 0 Selection Mask */
+#define PWM_ELMR_CSEL0(value)                 (PWM_ELMR_CSEL0_Msk & ((value) << PWM_ELMR_CSEL0_Pos))
+#define PWM_ELMR_CSEL1_Pos                    _U_(1)                                               /**< (PWM_ELMR) Comparison 1 Selection Position */
+#define PWM_ELMR_CSEL1_Msk                    (_U_(0x1) << PWM_ELMR_CSEL1_Pos)                     /**< (PWM_ELMR) Comparison 1 Selection Mask */
+#define PWM_ELMR_CSEL1(value)                 (PWM_ELMR_CSEL1_Msk & ((value) << PWM_ELMR_CSEL1_Pos))
+#define PWM_ELMR_CSEL2_Pos                    _U_(2)                                               /**< (PWM_ELMR) Comparison 2 Selection Position */
+#define PWM_ELMR_CSEL2_Msk                    (_U_(0x1) << PWM_ELMR_CSEL2_Pos)                     /**< (PWM_ELMR) Comparison 2 Selection Mask */
+#define PWM_ELMR_CSEL2(value)                 (PWM_ELMR_CSEL2_Msk & ((value) << PWM_ELMR_CSEL2_Pos))
+#define PWM_ELMR_CSEL3_Pos                    _U_(3)                                               /**< (PWM_ELMR) Comparison 3 Selection Position */
+#define PWM_ELMR_CSEL3_Msk                    (_U_(0x1) << PWM_ELMR_CSEL3_Pos)                     /**< (PWM_ELMR) Comparison 3 Selection Mask */
+#define PWM_ELMR_CSEL3(value)                 (PWM_ELMR_CSEL3_Msk & ((value) << PWM_ELMR_CSEL3_Pos))
+#define PWM_ELMR_CSEL4_Pos                    _U_(4)                                               /**< (PWM_ELMR) Comparison 4 Selection Position */
+#define PWM_ELMR_CSEL4_Msk                    (_U_(0x1) << PWM_ELMR_CSEL4_Pos)                     /**< (PWM_ELMR) Comparison 4 Selection Mask */
+#define PWM_ELMR_CSEL4(value)                 (PWM_ELMR_CSEL4_Msk & ((value) << PWM_ELMR_CSEL4_Pos))
+#define PWM_ELMR_CSEL5_Pos                    _U_(5)                                               /**< (PWM_ELMR) Comparison 5 Selection Position */
+#define PWM_ELMR_CSEL5_Msk                    (_U_(0x1) << PWM_ELMR_CSEL5_Pos)                     /**< (PWM_ELMR) Comparison 5 Selection Mask */
+#define PWM_ELMR_CSEL5(value)                 (PWM_ELMR_CSEL5_Msk & ((value) << PWM_ELMR_CSEL5_Pos))
+#define PWM_ELMR_CSEL6_Pos                    _U_(6)                                               /**< (PWM_ELMR) Comparison 6 Selection Position */
+#define PWM_ELMR_CSEL6_Msk                    (_U_(0x1) << PWM_ELMR_CSEL6_Pos)                     /**< (PWM_ELMR) Comparison 6 Selection Mask */
+#define PWM_ELMR_CSEL6(value)                 (PWM_ELMR_CSEL6_Msk & ((value) << PWM_ELMR_CSEL6_Pos))
+#define PWM_ELMR_CSEL7_Pos                    _U_(7)                                               /**< (PWM_ELMR) Comparison 7 Selection Position */
+#define PWM_ELMR_CSEL7_Msk                    (_U_(0x1) << PWM_ELMR_CSEL7_Pos)                     /**< (PWM_ELMR) Comparison 7 Selection Mask */
+#define PWM_ELMR_CSEL7(value)                 (PWM_ELMR_CSEL7_Msk & ((value) << PWM_ELMR_CSEL7_Pos))
+#define PWM_ELMR_Msk                          _U_(0x000000FF)                                      /**< (PWM_ELMR) Register Mask  */
 
-#define PWM_ELMR0_CSEL_Pos                    _U_(0)                                               /**< (PWM_ELMR0 Position) Comparison 7 Selection */
-#define PWM_ELMR0_CSEL_Msk                    (_U_(0xFF) << PWM_ELMR0_CSEL_Pos)                    /**< (PWM_ELMR0 Mask) CSEL */
-#define PWM_ELMR0_CSEL(value)                 (PWM_ELMR0_CSEL_Msk & ((value) << PWM_ELMR0_CSEL_Pos)) 
-
-/* -------- PWM_ELMR1 : (PWM Offset: 0x80) (R/W 32) PWM Event Line 0 Mode Register 1 -------- */
-#define PWM_ELMR1_CSEL0_Pos                   _U_(0)                                               /**< (PWM_ELMR1) Comparison 0 Selection Position */
-#define PWM_ELMR1_CSEL0_Msk                   (_U_(0x1) << PWM_ELMR1_CSEL0_Pos)                    /**< (PWM_ELMR1) Comparison 0 Selection Mask */
-#define PWM_ELMR1_CSEL0(value)                (PWM_ELMR1_CSEL0_Msk & ((value) << PWM_ELMR1_CSEL0_Pos))
-#define PWM_ELMR1_CSEL1_Pos                   _U_(1)                                               /**< (PWM_ELMR1) Comparison 1 Selection Position */
-#define PWM_ELMR1_CSEL1_Msk                   (_U_(0x1) << PWM_ELMR1_CSEL1_Pos)                    /**< (PWM_ELMR1) Comparison 1 Selection Mask */
-#define PWM_ELMR1_CSEL1(value)                (PWM_ELMR1_CSEL1_Msk & ((value) << PWM_ELMR1_CSEL1_Pos))
-#define PWM_ELMR1_CSEL2_Pos                   _U_(2)                                               /**< (PWM_ELMR1) Comparison 2 Selection Position */
-#define PWM_ELMR1_CSEL2_Msk                   (_U_(0x1) << PWM_ELMR1_CSEL2_Pos)                    /**< (PWM_ELMR1) Comparison 2 Selection Mask */
-#define PWM_ELMR1_CSEL2(value)                (PWM_ELMR1_CSEL2_Msk & ((value) << PWM_ELMR1_CSEL2_Pos))
-#define PWM_ELMR1_CSEL3_Pos                   _U_(3)                                               /**< (PWM_ELMR1) Comparison 3 Selection Position */
-#define PWM_ELMR1_CSEL3_Msk                   (_U_(0x1) << PWM_ELMR1_CSEL3_Pos)                    /**< (PWM_ELMR1) Comparison 3 Selection Mask */
-#define PWM_ELMR1_CSEL3(value)                (PWM_ELMR1_CSEL3_Msk & ((value) << PWM_ELMR1_CSEL3_Pos))
-#define PWM_ELMR1_CSEL4_Pos                   _U_(4)                                               /**< (PWM_ELMR1) Comparison 4 Selection Position */
-#define PWM_ELMR1_CSEL4_Msk                   (_U_(0x1) << PWM_ELMR1_CSEL4_Pos)                    /**< (PWM_ELMR1) Comparison 4 Selection Mask */
-#define PWM_ELMR1_CSEL4(value)                (PWM_ELMR1_CSEL4_Msk & ((value) << PWM_ELMR1_CSEL4_Pos))
-#define PWM_ELMR1_CSEL5_Pos                   _U_(5)                                               /**< (PWM_ELMR1) Comparison 5 Selection Position */
-#define PWM_ELMR1_CSEL5_Msk                   (_U_(0x1) << PWM_ELMR1_CSEL5_Pos)                    /**< (PWM_ELMR1) Comparison 5 Selection Mask */
-#define PWM_ELMR1_CSEL5(value)                (PWM_ELMR1_CSEL5_Msk & ((value) << PWM_ELMR1_CSEL5_Pos))
-#define PWM_ELMR1_CSEL6_Pos                   _U_(6)                                               /**< (PWM_ELMR1) Comparison 6 Selection Position */
-#define PWM_ELMR1_CSEL6_Msk                   (_U_(0x1) << PWM_ELMR1_CSEL6_Pos)                    /**< (PWM_ELMR1) Comparison 6 Selection Mask */
-#define PWM_ELMR1_CSEL6(value)                (PWM_ELMR1_CSEL6_Msk & ((value) << PWM_ELMR1_CSEL6_Pos))
-#define PWM_ELMR1_CSEL7_Pos                   _U_(7)                                               /**< (PWM_ELMR1) Comparison 7 Selection Position */
-#define PWM_ELMR1_CSEL7_Msk                   (_U_(0x1) << PWM_ELMR1_CSEL7_Pos)                    /**< (PWM_ELMR1) Comparison 7 Selection Mask */
-#define PWM_ELMR1_CSEL7(value)                (PWM_ELMR1_CSEL7_Msk & ((value) << PWM_ELMR1_CSEL7_Pos))
-#define PWM_ELMR1_Msk                         _U_(0x000000FF)                                      /**< (PWM_ELMR1) Register Mask  */
-
-#define PWM_ELMR1_CSEL_Pos                    _U_(0)                                               /**< (PWM_ELMR1 Position) Comparison 7 Selection */
-#define PWM_ELMR1_CSEL_Msk                    (_U_(0xFF) << PWM_ELMR1_CSEL_Pos)                    /**< (PWM_ELMR1 Mask) CSEL */
-#define PWM_ELMR1_CSEL(value)                 (PWM_ELMR1_CSEL_Msk & ((value) << PWM_ELMR1_CSEL_Pos)) 
+#define PWM_ELMR_CSEL_Pos                     _U_(0)                                               /**< (PWM_ELMR Position) Comparison 7 Selection */
+#define PWM_ELMR_CSEL_Msk                     (_U_(0xFF) << PWM_ELMR_CSEL_Pos)                     /**< (PWM_ELMR Mask) CSEL */
+#define PWM_ELMR_CSEL(value)                  (PWM_ELMR_CSEL_Msk & ((value) << PWM_ELMR_CSEL_Pos)) 
 
 /* -------- PWM_SSPR : (PWM Offset: 0xA0) (R/W 32) PWM Spread Spectrum Register -------- */
 #define PWM_SSPR_SPRD_Pos                     _U_(0)                                               /**< (PWM_SSPR) Spread Spectrum Limit Value Position */
@@ -1503,8 +1472,7 @@
 #define PWM_FCR_REG_OFST               (0x64)              /**< (PWM_FCR) PWM Fault Clear Register Offset */
 #define PWM_FPV1_REG_OFST              (0x68)              /**< (PWM_FPV1) PWM Fault Protection Value Register 1 Offset */
 #define PWM_FPE_REG_OFST               (0x6C)              /**< (PWM_FPE) PWM Fault Protection Enable Register Offset */
-#define PWM_ELMR0_REG_OFST             (0x7C)              /**< (PWM_ELMR0) PWM Event Line 0 Mode Register 0 Offset */
-#define PWM_ELMR1_REG_OFST             (0x80)              /**< (PWM_ELMR1) PWM Event Line 0 Mode Register 1 Offset */
+#define PWM_ELMR_REG_OFST              (0x7C)              /**< (PWM_ELMR) PWM Event Line 0 Mode Register 0 Offset */
 #define PWM_SSPR_REG_OFST              (0xA0)              /**< (PWM_SSPR) PWM Spread Spectrum Register Offset */
 #define PWM_SSPUP_REG_OFST             (0xA4)              /**< (PWM_SSPUP) PWM Spread Spectrum Update Register Offset */
 #define PWM_SMMR_REG_OFST              (0xB0)              /**< (PWM_SMMR) PWM Stepper Motor Mode Register Offset */
@@ -1543,6 +1511,10 @@ typedef struct
   __O   uint32_t                       PWM_CMPMUPD;        /**< Offset: 0x0C ( /W  32) PWM Comparison 0 Mode Update Register */
 } pwm_cmp_registers_t;
 
+#define PWM_CMP_NUMBER _U_(8)
+
+#define PWM_CH_NUM_NUMBER _U_(4)
+
 /** \brief PWM register API structure */
 typedef struct
 {
@@ -1575,8 +1547,7 @@ typedef struct
   __IO  uint32_t                       PWM_FPV1;           /**< Offset: 0x68 (R/W  32) PWM Fault Protection Value Register 1 */
   __IO  uint32_t                       PWM_FPE;            /**< Offset: 0x6C (R/W  32) PWM Fault Protection Enable Register */
   __I   uint8_t                        Reserved1[0x0C];
-  __IO  uint32_t                       PWM_ELMR0;          /**< Offset: 0x7C (R/W  32) PWM Event Line 0 Mode Register 0 */
-  __IO  uint32_t                       PWM_ELMR1;          /**< Offset: 0x80 (R/W  32) PWM Event Line 0 Mode Register 1 */
+  __IO  uint32_t                       PWM_ELMR[2];        /**< Offset: 0x7C (R/W  32) PWM Event Line 0 Mode Register 0 */
   __I   uint8_t                        Reserved2[0x1C];
   __IO  uint32_t                       PWM_SSPR;           /**< Offset: 0xA0 (R/W  32) PWM Spread Spectrum Register */
   __O   uint32_t                       PWM_SSPUP;          /**< Offset: 0xA4 ( /W  32) PWM Spread Spectrum Update Register */
@@ -1587,19 +1558,23 @@ typedef struct
   __I   uint8_t                        Reserved5[0x20];
   __O   uint32_t                       PWM_WPCR;           /**< Offset: 0xE4 ( /W  32) PWM Write Protection Control Register */
   __I   uint32_t                       PWM_WPSR;           /**< Offset: 0xE8 (R/   32) PWM Write Protection Status Register */
-  __I   uint8_t                        Reserved6[0x314];
+  __I   uint8_t                        Reserved6[0x44];
+        pwm_cmp_registers_t            PWM_CMP[PWM_CMP_NUMBER]; /**< Offset: 0x130 PWM Comparison 0 Value Register */
+  __I   uint8_t                        Reserved7[0x50];
+        pwm_ch_num_registers_t         PWM_CH_NUM[PWM_CH_NUM_NUMBER]; /**< Offset: 0x200 PWM Channel Mode Register */
+  __I   uint8_t                        Reserved8[0x180];
   __O   uint32_t                       PWM_CMUPD0;         /**< Offset: 0x400 ( /W  32) PWM Channel Mode Update Register (ch_num = 0) */
-  __I   uint8_t                        Reserved7[0x1C];
+  __I   uint8_t                        Reserved9[0x1C];
   __O   uint32_t                       PWM_CMUPD1;         /**< Offset: 0x420 ( /W  32) PWM Channel Mode Update Register (ch_num = 1) */
-  __I   uint8_t                        Reserved8[0x08];
+  __I   uint8_t                        Reserved10[0x08];
   __IO  uint32_t                       PWM_ETRG1;          /**< Offset: 0x42C (R/W  32) PWM External Trigger Register (trg_num = 1) */
   __IO  uint32_t                       PWM_LEBR1;          /**< Offset: 0x430 (R/W  32) PWM Leading-Edge Blanking Register (trg_num = 1) */
-  __I   uint8_t                        Reserved9[0x0C];
+  __I   uint8_t                        Reserved11[0x0C];
   __O   uint32_t                       PWM_CMUPD2;         /**< Offset: 0x440 ( /W  32) PWM Channel Mode Update Register (ch_num = 2) */
-  __I   uint8_t                        Reserved10[0x08];
+  __I   uint8_t                        Reserved12[0x08];
   __IO  uint32_t                       PWM_ETRG2;          /**< Offset: 0x44C (R/W  32) PWM External Trigger Register (trg_num = 2) */
   __IO  uint32_t                       PWM_LEBR2;          /**< Offset: 0x450 (R/W  32) PWM Leading-Edge Blanking Register (trg_num = 2) */
-  __I   uint8_t                        Reserved11[0x0C];
+  __I   uint8_t                        Reserved13[0x0C];
   __O   uint32_t                       PWM_CMUPD3;         /**< Offset: 0x460 ( /W  32) PWM Channel Mode Update Register (ch_num = 3) */
 } pwm_registers_t;
 
