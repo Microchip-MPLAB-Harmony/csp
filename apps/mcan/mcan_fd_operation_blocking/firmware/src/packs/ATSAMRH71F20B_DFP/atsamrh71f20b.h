@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-08-21T10:06:15Z */
+/* file generated from device description version 2019-08-29T14:13:58Z */
 #ifndef _SAMRH71F20B_H_
 #define _SAMRH71F20B_H_
 
@@ -264,6 +264,12 @@ typedef struct _DeviceVectors
   void* pfnGMAC_Q5_Handler;                      /*  74 Gigabit Ethernet MAC (GMAC) */
 } DeviceVectors;
 
+/* Defines for Deprecated Interrupt and Exceptions handler names */
+#define pfnMemManage_Handler      pfnMemoryManagement_Handler     /**< \deprecated  Backward compatibility for ASF*/
+#define pfnDebugMon_Handler       pfnDebugMonitor_Handler         /**< \deprecated  Backward compatibility for ASF*/
+#define pfnNMI_Handler            pfnNonMaskableInt_Handler       /**< \deprecated  Backward compatibility for ASF*/
+#define pfnSVC_Handler            pfnSVCall_Handler               /**< \deprecated  Backward compatibility for ASF*/
+
 #endif /* !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #if !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__))
@@ -357,6 +363,12 @@ void GMAC_Q3_Handler               ( void );
 void GMAC_Q4_Handler               ( void );
 void GMAC_Q5_Handler               ( void );
 #endif /* DONT_USE_PREDEFINED_PERIPHERALS_HANDLERS */
+/* Defines for Deprecated Interrupt and Exceptions handler names */
+#define MemManage_Handler         MemoryManagement_Handler        /**< \deprecated  Backward compatibility*/
+#define DebugMon_Handler          DebugMonitor_Handler            /**< \deprecated  Backward compatibility*/
+#define NMI_Handler               NonMaskableInt_Handler          /**< \deprecated  Backward compatibility*/
+#define SVC_Handler               SVCall_Handler                  /**< \deprecated  Backward compatibility*/
+
 #endif /* !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /*
