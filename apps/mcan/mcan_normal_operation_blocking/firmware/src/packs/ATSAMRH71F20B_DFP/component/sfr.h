@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-08-21T10:06:15Z */
+/* file generated from device description version 2019-08-29T14:13:58Z */
 #ifndef _SAMRH71_SFR_COMPONENT_H_
 #define _SAMRH71_SFR_COMPONENT_H_
 
