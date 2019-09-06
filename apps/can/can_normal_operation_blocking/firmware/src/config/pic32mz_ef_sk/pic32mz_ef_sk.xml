@@ -18,9 +18,6 @@
             <String dnOrder="0" id="text">
               <Value dnOrder="0">Warning!!!&amp;#160;CAN1&amp;#160;Clock&amp;#160;Frequency&amp;#160;is&amp;#160;too&amp;#160;low&amp;#160;for&amp;#160;required&amp;#160;Nominal&amp;#160;Bit&amp;#160;Timing</Value>
             </String>
-            <Boolean dnOrder="1" id="visible">
-              <Value dnOrder="0">false</Value>
-            </Boolean>
           </Attributes>
         </Comment>
         <Comment dnOrder="3" id="CAN_TIME_QUANTA_INVALID_COMMENT">
@@ -28,9 +25,6 @@
             <String dnOrder="0" id="text">
               <Value dnOrder="0">Warning!!!&amp;#160;Number&amp;#160;of&amp;#160;Time&amp;#160;Quanta&amp;#160;is&amp;#160;too&amp;#160;low&amp;#160;for&amp;#160;required&amp;#160;Nominal&amp;#160;Bit&amp;#160;Timing</Value>
             </String>
-            <Boolean dnOrder="1" id="visible">
-              <Value dnOrder="0">false</Value>
-            </Boolean>
           </Attributes>
         </Comment>
         <Float dnOrder="4" id="NOMINAL_SAMPLE_POINT">
@@ -618,12 +612,7 @@
           </Values>
         </Integer>
         <Integer dnOrder="110" id="CONFIG_SYS_CLK_PBDIV5">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="visible">
-              <Value dnOrder="0">true</Value>
-            </Boolean>
-          </Attributes>
-          <Values dnOrder="1">
+          <Values dnOrder="0">
             <User dnOrder="0" value="2"/>
           </Values>
         </Integer>
