@@ -19,8 +19,8 @@
           <Name dnOrder="1">initialization.c</Name>
           <LogicalPath dnOrder="2">config/pic32mk_mcj_curiosity_pro/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">3EA1C6CFF315EFAEB3C5912338276FC6</GeneratedChecksum>
-          <UserChecksum dnOrder="5">3EA1C6CFF315EFAEB3C5912338276FC6</UserChecksum>
+          <GeneratedChecksum dnOrder="4">1A07D64F00184796C17623A351F28DE5</GeneratedChecksum>
+          <UserChecksum dnOrder="5">1A07D64F00184796C17623A351F28DE5</UserChecksum>
         </File>
         <File dnOrder="2">
           <Type dnOrder="0">SOURCE</Type>
@@ -43,8 +43,8 @@
           <Name dnOrder="1">plib_can1.c</Name>
           <LogicalPath dnOrder="2">config/pic32mk_mcj_curiosity_pro/peripheral/can/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/can/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">640169348E706519A29A9DDFBDAE656B</GeneratedChecksum>
-          <UserChecksum dnOrder="5">640169348E706519A29A9DDFBDAE656B</UserChecksum>
+          <GeneratedChecksum dnOrder="4">94CC18CBF813433179CDEB09C4D44CF0</GeneratedChecksum>
+          <UserChecksum dnOrder="5">94CC18CBF813433179CDEB09C4D44CF0</UserChecksum>
         </File>
         <File dnOrder="5">
           <Type dnOrder="0">SOURCE</Type>
@@ -176,7 +176,7 @@
     </Manifest>
     <Settings dnOrder="4">
       <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.5.1"/>
-      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MK-MC_DFP\1.0.45\atdf\PIC32MK0512MCJ064.atdf"/>
+      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MK-MC_DFP\1.1.68\atdf\PIC32MK0512MCJ064.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
       <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
