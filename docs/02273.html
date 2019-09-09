@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>EVSYS_CallbackRegister Function</title>
+<title>EVSYS_InterruptDisable Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="04430.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04022.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04429.html" target="topic">Peripheral Libraries</a> &gt; <a href="02226.html" target="topic">EVSYS Peripheral Library Help</a> &gt; <a href="02227.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="02273.html" target="topic">EVSYS_CallbackRegister Function</a></div>
+<a href="04449.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04448.html" target="topic">Peripheral Libraries</a> &gt; <a href="02221.html" target="topic">EVSYS Peripheral Library Help</a> &gt; <a href="02222.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="02273.html" target="topic">EVSYS_InterruptDisable Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04430.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04449.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02274.html" target="topic">Previous</a> | <a href="02227.html" target="topic">Up</a> | <a href="02300.html" target="topic">Next</a></div>
+<a href="02246.html" target="topic">Previous</a> | <a href="02222.html" target="topic">Up</a> | <a href="02274.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: evsys_u2256::EVSYS_CallbackRegister@EVSYS_CALLBACK@uintptr_t Topic Title: EVSYS_CallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: evsys_u2208::EVSYS_InterruptDisable@EVSYS_INT_MASK Topic Title: EVSYS_InterruptDisable Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-EVSYS_CallbackRegister Function</div>
+EVSYS_InterruptDisable Function</div>
 </div>
 </div>
 
@@ -49,20 +49,19 @@ EVSYS_CallbackRegister Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function allows the application to register a callback function that will be called when a event system interrupt has triggered. The callback feature is only available if the Interrupt operation in the GUI was enabled. If a callback mechanism is desired, then a callback function should be registered via this function before enabling other peripherals Calling this function at any time with callback function as NULL will disable the callback feature.</p></div>
+This function disables the specified evsys interrupt.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">EVSYS_CallbackRegister</span></strong>(
-    <a href="02272.html" target="topic">EVSYS_CALLBACK</a> <strong><span style="color: #000000">callback</span></strong>, 
-    uintptr_t <strong><span style="color: #000000">context</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">EVSYS_InterruptDisable</span></strong>(
+    <a href="02248.html" target="topic">EVSYS_INT_MASK</a> <strong><span style="color: #000000">interrupt</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The <a href="02274.html" target="topic">EVSYS_Initialize</a> function must have been called. Interrupt option in MHC should have been enabled.</p></div>
+EVSYSx module should be initialized with the required configuration parameters from the MHC GUI in the <a href="02247.html" target="topic">EVSYS_Initialize</a>() function</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -79,14 +78,9 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-callBack&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+interrupt&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Pointer to an application callback function.<br>&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-The value of parameter will be passed back to the application unchanged, when the callback function is called. It can be used to identify any application specific data object that identifies the instance of the client module (for example, it may be a pointer to the client modules state structure).&nbsp;</div></td></tr></table></div></div>
+Interrupt to be Disabled&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -94,39 +88,21 @@ Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+None</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The callback mechanism allows the application to implement an event based interaction with the library.</p></div>
+Interrupts configuration will be generated in <a href="02247.html" target="topic">EVSYS_Initialize</a>() function as per user settings in MHC. The <a href="02274.html" target="topic">EVSYS_InterruptEnable</a> and EVSYS_InterruptDisable API should be used to enable and disable interrupt at run time.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">
-<i><span style="color: #008000">// This is the callback function that is called when an Event</span></i>
-<i><span style="color: #008000">// interrupt is triggered.</span></i>
-
-<strong><span style="color: #000080">void</span></strong> evsysCallBack(uintptr_t contextHandle, uint32_t int_cause)
-{
-    <strong><span style="color: #000080">if</span></strong>( int_cause &amp; EVSYS_INTENSET_EVD1)
-    {
-        <i><span style="color: #008000">// Event detected on channel 1</span></i>
-    }
-    <strong><span style="color: #000080">if</span></strong>( int_cause &amp; EVSYS_INTENSET_EVD2)
-    {
-        <i><span style="color: #008000">// Event detected on channel 2</span></i>
-    }
-    
-}
-
-<a href="02274.html" target="topic">EVSYS_Initialize</a>();
-EVSYS_CallbackRegister(&amp;evsysCallBack, NULL);
-</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">    <i><span style="color: #008000">// Disable Event System channel 2 Event Detection interrupt </span></i>
+    EVSYS_InterruptDisable(EVSYS_INTENSET_EVD2);</pre></div></div>
 </div>
 </div>
 </div>
@@ -134,7 +110,7 @@ EVSYS_CallbackRegister(&amp;evsysCallBack, NULL);
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="04430.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04022.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04429.html" target="topic">Peripheral Libraries</a> &gt; <a href="02226.html" target="topic">EVSYS Peripheral Library Help</a> &gt; <a href="02227.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="02273.html" target="topic">EVSYS_CallbackRegister Function</a></div>
+<a href="04449.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04448.html" target="topic">Peripheral Libraries</a> &gt; <a href="02221.html" target="topic">EVSYS Peripheral Library Help</a> &gt; <a href="02222.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="02273.html" target="topic">EVSYS_InterruptDisable Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -142,13 +118,13 @@ EVSYS_CallbackRegister(&amp;evsysCallBack, NULL);
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04430.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04449.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02274.html" target="topic">Previous</a> | <a href="02227.html" target="topic">Up</a> | <a href="02300.html" target="topic">Next</a></div>
+<a href="02246.html" target="topic">Previous</a> | <a href="02222.html" target="topic">Up</a> | <a href="02274.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: evsys_u2256::EVSYS_CallbackRegister@EVSYS_CALLBACK@uintptr_t Topic Title: EVSYS_CallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: evsys_u2208::EVSYS_InterruptDisable@EVSYS_INT_MASK Topic Title: EVSYS_InterruptDisable Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

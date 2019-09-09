@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Configuring the Library</title>
+<title>Hardware Setup</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="04430.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04022.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04429.html" target="topic">Peripheral Libraries</a> &gt; <a href="04483.html" target="topic">PM Peripheral Library Help</a> &gt; <a href="04479.html" target="topic">Configuring the Library</a></div>
+<a href="04449.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="04474.html" target="topic">PM Applications</a> &gt; <a href="04475.html" target="topic">pm_reset_cause</a> &gt; <a href="04479.html" target="topic">Hardware Setup</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04430.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04449.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04482.html" target="topic">Previous</a> | <a href="04483.html" target="topic">Up</a> | <a href="04486.html" target="topic">Next</a></div>
+<a href="04480.html" target="topic">Previous</a> | <a href="04475.html" target="topic">Up</a> | <a href="04481.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PM U2240 Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PM pm_reset_cause Hardware Setup Topic Title: Hardware Setup)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Configuring the Library</div>
+Hardware Setup</div>
 </div>
 </div>
 
@@ -48,31 +48,57 @@ Configuring the Library</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
-<p class="Element10">
-Configure the peripheral library using the MHC.&nbsp;</p>
-<p class="Element10">
+
+<ol class="Element630">
+<li value="1" class="Element600"><strong>Project sam_d20_xpro.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602"><a href="#" onclick="openExternalLink('http://www.microchip.com/developmenttools/ProductDetails/ATSAMD20-XPRO');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM D20 Xplained Pro Evaluation Kit</a></li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+</ul></li>
+</ul></li>
+</ol><p class="Element10">
 &nbsp;</p>
-<p class="Element10">
-<strong>Voltage Regulator Operation in Standby Sleep Mode:</strong>&nbsp;</p>
-<p class="Element10">
-There are also two different operating modes for the internal regulator viz., Normal mode, and Low Power mode. In standby mode, the power manager selects either the main or the low power voltage regulator to supply the VDDCORE.</p>
-<ul class="Element630">
-<li class="Element600">Low Power: By default the low power voltage regulator is used to minimize the power consumption in standby mode.</li>
-<li class="Element600">Performance Oriented: If a sleepwalking task is working on either asynchronous clocks (generic clocks) or synchronous clock (APB/AHB clocks), the main voltage regulator is used.</li>
-<li class="Element600">Automatic Mode: The regulator operates in low-power mode (LP VREG) by default and can switch automatically to the main regulator if a task required by a peripheral requires more power. It returns automatically in the low power mode as soon as the task is completed</li>
-</ul><p class="Element10">
+
+<ol class="Element630">
+<li value="2" class="Element600"><strong>Project sam_d21_xpro.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602"><a href="#" onclick="openExternalLink('http://www.microchip.com/developmenttools/ProductDetails/atsamd21-xpro');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM D21 Xplained Pro Evaluation Kit</a></li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+</ul></li>
+</ul></li>
+</ol><p class="Element10">
 &nbsp;</p>
-<p class="Element10">
-<strong>RAM State in Standby Sleep mode.</strong>&nbsp;</p>
-<p class="Element10">
-In standby sleep mode, RAM is put in low-power mode by default. This means that the RAM is back-biased, and the DMAC cannot access it. This behavior can be changed by configuring the Back Bias bit in the Standby Configuration register (STDBYCFG.BBIASHS).</p></div>
+
+<ol class="Element630">
+<li value="3" class="Element600"><strong>Project sam_da1_xpro.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/DevelopmentTools/ProductDetails/PartNO/ATSAMDA1-XPRO');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM DA1 Xplained Pro Evaluation Kit</a></li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+</ul></li>
+</ul></li>
+</ol></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="04430.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04022.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04429.html" target="topic">Peripheral Libraries</a> &gt; <a href="04483.html" target="topic">PM Peripheral Library Help</a> &gt; <a href="04479.html" target="topic">Configuring the Library</a></div>
+<a href="04449.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="04474.html" target="topic">PM Applications</a> &gt; <a href="04475.html" target="topic">pm_reset_cause</a> &gt; <a href="04479.html" target="topic">Hardware Setup</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -80,13 +106,13 @@ In standby sleep mode, RAM is put in low-power mode by default. This means that 
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04430.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04449.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04482.html" target="topic">Previous</a> | <a href="04483.html" target="topic">Up</a> | <a href="04486.html" target="topic">Next</a></div>
+<a href="04480.html" target="topic">Previous</a> | <a href="04475.html" target="topic">Up</a> | <a href="04481.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PM U2240 Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PM pm_reset_cause Hardware Setup Topic Title: Hardware Setup)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

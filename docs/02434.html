@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="04430.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="02413.html" target="topic">FLEXCOM Applications</a> &gt; <a href="02409.html" target="topic">flexcom_twi_eeprom</a> &gt; <a href="02434.html" target="topic">Hardware Setup</a></div>
+<a href="04449.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="02417.html" target="topic">FLEXCOM Applications</a> &gt; <a href="02432.html" target="topic">flexcom_spi_self_loopback_interrupt</a> &gt; <a href="02434.html" target="topic">Hardware Setup</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,13 +26,13 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04430.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04449.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02435.html" target="topic">Previous</a> | <a href="02409.html" target="topic">Up</a> | <a href="02436.html" target="topic">Next</a></div>
+<a href="02435.html" target="topic">Previous</a> | <a href="02432.html" target="topic">Up</a> | <a href="02436.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: FLEXCOM flexcom_twi_eeprom Hardware Setup Topic Title: Hardware Setup)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: FLEXCOM flexcom_spi_self_loopback_interrupt Hardware Setup Topic Title: Hardware Setup)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
 Hardware Setup</div>
 </div>
@@ -55,92 +55,11 @@ Hardware Setup</div>
 <li class="Element601"><strong>Hardware Used</strong>
 <ul class="Element632">
 <li class="Element602"><a href="#" onclick="openExternalLink('http://www.microchip.com/DevelopmentTools/ProductDetails/atsamg55-xpro');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM G55 Xplained Pro Evaluation Kit</a></li>
-<li class="Element602"><a href="#" onclick="openExternalLink('http://www.mikroe.com/eeprom-3-click');"><img src="indicator_external_link.gif" border="0" alt="" title="">EEPROM 3 Click Board</a></li>
-<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/ATMBUSADAPTER-XPRO');"><img src="indicator_external_link.gif" border="0" alt="" title="">mikroBUS Xplained Pro</a></li>
 </ul></li>
 <li class="Element601"><strong>Hardware Setup</strong>
 <ul class="Element632">
-<li class="Element602">Plug the <a href="#" onclick="openExternalLink('https://www.mikroe.com/eeprom-3-click');"><img src="indicator_external_link.gif" border="0" alt="" title="">EEPROM 3 click</a> Board into the MikroBus socket of the <a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/ATMBUSADAPTER-XPRO');"><img src="indicator_external_link.gif" border="0" alt="" title="">mikroBUS Xplained Pro</a></li>
-<li class="Element602">Connect <a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/ATMBUSADAPTER-XPRO');"><img src="indicator_external_link.gif" border="0" alt="" title="">mikroBUS Xplained Pro</a> board to the EXT1 header of the <a href="#" onclick="openExternalLink('http://www.microchip.com/DevelopmentTools/ProductDetails/atsamg55-xpro');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM G55 Xplained Pro Evaluation Kit</a></li>
-<li class="Element602">Connect the Debug USB port on the board to the computer using</li>
-</ul></li>
-</ul></li>
-</ol><p class="Element10">
-&nbsp;</p>
-
-<ol class="Element630">
-<li value="2" class="Element600"><strong>Project sam_a5d2_xult.IAR</strong>
-<ul class="Element631">
-<li class="Element601"><strong>Hardware Used</strong>
-<ul class="Element632">
-<li class="Element602"><a href="#" onclick="openExternalLink('http://www.microchip.com/DevelopmentTools/ProductDetails/ATSAMA5D2C-XULT');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM A5D2 Xplained Ultra board</a></li>
-<li class="Element602"><a href="#" onclick="openExternalLink('http://www.mikroe.com/eeprom-3-click');"><img src="indicator_external_link.gif" border="0" alt="" title="">EEPROM Click 3 Board</a></li>
-<li class="Element602">SD Card with FAT32 file system</li>
-</ul></li>
-<li class="Element601"><strong>Hardware Setup</strong>
-<ul class="Element632">
-<li class="Element602">Setup the SD card
-<ul class="Element633">
-<li class="Element603">Download harmony MPU bootstrap loader from this <a href="#" onclick="openExternalLink('http://github.com/Microchip-MPLAB-Harmony/at91bootstrap/blob/master/boot.bin');"><img src="indicator_external_link.gif" border="0" alt="" title="">location</a></li>
-<li class="Element603">Copy the downloaded boot loader binary( boot.bin) and generated application binary (harmony.bin)into the SD card</li>
-<li class="Element603">Insert the SD card into the SDMMC1 slot on the board</li>
-</ul></li>
-<li class="Element602">Connect <a href="#" onclick="openExternalLink('http://www.mikroe.com/eeprom-3-click');"><img src="indicator_external_link.gif" border="0" alt="" title="">EEPROM Click 3 Board</a> to XPRO EXT2 (J26) connector on the board as per below <strong>Pin Connections</strong> table</li>
+<li class="Element602">Use a jumper wire to short pin 16 and pin 17 of the EXT1 header</li>
 <li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
-</ul></li>
-<li class="Element601"><strong>Pin Connections</strong></li>
-</ul></li>
-</ol><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element65" valign="top" width="59%">
-<div class="Element66">
-XPRO EXT2 (J26) Pins&nbsp;</div></td><td class="Element65" valign="top" width="41%">
-<div class="Element66">
-EEPROM 4 CLICK Pins&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="59%">
-<div class="Element68">
-PIN 11&nbsp;</div></td><td class="Element67" valign="top" width="41%">
-<div class="Element68">
-SDA&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="59%">
-<div class="Element68">
-PIN 12&nbsp;</div></td><td class="Element67" valign="top" width="41%">
-<div class="Element68">
-SCL&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="59%">
-<div class="Element68">
-PIN 19&nbsp;</div></td><td class="Element67" valign="top" width="41%">
-<div class="Element68">
-GND&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="59%">
-<div class="Element68">
-PIN 20&nbsp;</div></td><td class="Element67" valign="top" width="41%">
-<div class="Element68">
-3V3&nbsp;</div></td></tr></table></div></div>
-<p class="Element10">
-&nbsp;</p>
-
-<ol class="Element630">
-<li value="3" class="Element600"><strong>Project sam_9x60_ek.IAR</strong>
-<ul class="Element631">
-<li class="Element601"><strong>Hardware Used</strong>
-<ul class="Element632">
-<li class="Element602">SAM 9X60 Evaluation Kit board</li>
-<li class="Element602">SD Card with FAT32 file system</li>
-</ul></li>
-<li class="Element601"><strong>Hardware Setup</strong>
-<ul class="Element632">
-<li class="Element602">Setup the SD card
-<ul class="Element633">
-<li class="Element603">Download harmony MPU bootstrap loader from this <a href="#" onclick="openExternalLink('http://github.com/Microchip-MPLAB-Harmony/at91bootstrap/blob/sam9x60ek/boot.bin');"><img src="indicator_external_link.gif" border="0" alt="" title="">location</a></li>
-<li class="Element603">Copy the downloaded boot loader binary( boot.bin) and generated application binary (harmony.bin)into the SD card</li>
-<li class="Element603">Insert the SD card into the SDMMC connector J5 on the board</li>
-</ul></li>
-<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
-<li class="Element602">No external hardware is required as on-board EEPROM 24AA025E48 used in demo</li>
-<li class="Element602">Note: Reset push button on SAM9X60 EK is labeled as SW3</li>
 </ul></li>
 </ul></li>
 </ol></div>
@@ -150,7 +69,7 @@ PIN 20&nbsp;</div></td><td class="Element67" valign="top" width="41%">
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="04430.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="02413.html" target="topic">FLEXCOM Applications</a> &gt; <a href="02409.html" target="topic">flexcom_twi_eeprom</a> &gt; <a href="02434.html" target="topic">Hardware Setup</a></div>
+<a href="04449.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="02417.html" target="topic">FLEXCOM Applications</a> &gt; <a href="02432.html" target="topic">flexcom_spi_self_loopback_interrupt</a> &gt; <a href="02434.html" target="topic">Hardware Setup</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -158,13 +77,13 @@ PIN 20&nbsp;</div></td><td class="Element67" valign="top" width="41%">
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04430.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04449.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02435.html" target="topic">Previous</a> | <a href="02409.html" target="topic">Up</a> | <a href="02436.html" target="topic">Next</a></div>
+<a href="02435.html" target="topic">Previous</a> | <a href="02432.html" target="topic">Up</a> | <a href="02436.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: FLEXCOM flexcom_twi_eeprom Hardware Setup Topic Title: Hardware Setup)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: FLEXCOM flexcom_spi_self_loopback_interrupt Hardware Setup Topic Title: Hardware Setup)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

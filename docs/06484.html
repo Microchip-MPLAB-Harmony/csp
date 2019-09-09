@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>c) Transaction Functions</title>
+<title>Building The Application</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="04430.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04022.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04429.html" target="topic">Peripheral Libraries</a> &gt; <a href="06497.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="06476.html" target="topic">Capture</a> &gt; <a href="06479.html" target="topic">Library Interface</a> &gt; <a href="06484.html" target="topic">c) Transaction Functions</a></div>
+<a href="04449.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="06472.html" target="topic">TC Applications</a> &gt; <a href="06475.html" target="topic">tc_timer_mode</a> &gt; <a href="06484.html" target="topic">Building The Application</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04430.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04449.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06711.html" target="topic">Previous</a> | <a href="06479.html" target="topic">Up</a> | <a href="06713.html" target="topic">Next</a></div>
+<a href="06475.html" target="topic">Previous</a> | <a href="06475.html" target="topic">Up</a> | <a href="06486.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC U2212 Capture mode Transaction Functions Topic Title: c) Transaction Functions)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC tc_timer_mode Building The Application Topic Title: Building The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-c) Transaction Functions</div>
+Building The Application</div>
 </div>
 </div>
 
@@ -48,79 +48,122 @@ c) Transaction Functions</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
-</div>
-</div>
-<a name="46756E6374696F6E73"></a><div class="Element14">
-Functions</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
+<p class="Element10">
+The parent folder for all the projects for this application is given below: </p><div class="Element63">
 <div class="TableDiv">
-<table cellspacing="0" class="Table0">
+<table cellspacing="0" class="Table1">
 <tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
+<td class="Element65" valign="top" width="32%">
+<div class="Element66">
+Application Path&nbsp;</div></td><td class="Element65" valign="top" width="68%">
+<div class="Element66">
+csp/apps/tc/tc_timer_mode/firmware&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+Below table shows the list of project names to be used with different development boards. Open the project in their respective IDEs.&nbsp;</p>
+<p class="Element10">
+<strong> MPLAB X IDE Projects </strong> &nbsp;</p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="25%">
+<div class="Element66">
+Project Name&nbsp;</div></td><td class="Element65" valign="top" width="75%">
+<div class="Element66">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="06713.html" target="topic">TCx_CaptureStart</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Starts the timer for given TC instance.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="06715.html" target="topic">TCx_CaptureStop</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Stops the timer for given TC instance.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="06709.html" target="topic">TCx_Capture8bitChannel0Get</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Reads capture value from channel 0.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="06710.html" target="topic">TCx_Capture8bitChannel1Get</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Reads capture value from channel 1.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="06705.html" target="topic">TCx_Capture16bitChannel0Get</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Reads capture value from channel 0.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="06706.html" target="topic">TCx_Capture16bitChannel1Get</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Reads capture value from channel 1.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="06707.html" target="topic">TCx_Capture32bitChannel0Get</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Reads capture value from channel 0.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="06708.html" target="topic">TCx_Capture32bitChannel1Get</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Reads capture value from channel 1.&nbsp;</div></td></tr></table></div></div>
+<td class="Element67" valign="top" width="25%">
+<div class="Element68">
+sam_c21n_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+<div class="Element68">
+SAM C21N Xplained Pro Evaluation Kit&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
+<div class="Element68">
+sam_d11_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+<div class="Element68">
+SAM D11 Xplained Pro Evaluation Kit&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
+<div class="Element68">
+sam_d20_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+<div class="Element68">
+SAM D20 Xplained Pro Evaluation Kit&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
+<div class="Element68">
+sam_d21_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+<div class="Element68">
+SAM D21 Xplained Pro Evaluation Kit&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
+<div class="Element68">
+sam_da1_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+<div class="Element68">
+SAM DA1 Xplained Pro Evaluation Kit&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
+<div class="Element68">
+sam_e54_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+<div class="Element68">
+SAM E54 Xplained Pro Evaluation Kit&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
+<div class="Element68">
+sam_e70_xult.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+<div class="Element68">
+SAM E70 Xplained Ultra board&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
+<div class="Element68">
+sam_g55_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+<div class="Element68">
+SAM G55 Xplained Pro Evaluation Kit&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
+<div class="Element68">
+sam_l10_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+<div class="Element68">
+SAM L10 Xplained Pro Evaluation Kit&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
+<div class="Element68">
+sam_l21_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+<div class="Element68">
+SAM L21 Xplained Pro Evaluation Kit&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
+<div class="Element68">
+sam_l22_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+<div class="Element68">
+SAM L22 Xplained Pro Evaluation Kit&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
+<div class="Element68">
+sam_rh71_ek.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+<div class="Element68">
+SAM RH71 Evaluation Kit&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
+<div class="Element68">
+sam_v71_xult.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+<div class="Element68">
+SAM V71 Xplained Ultra board&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
+<div class="Element68">
+sam_a5d2_xult_xc32.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+<div class="Element68">
+SAMA5D2 Xplained Ultra evaluation kit&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<strong> IAR Embedded Workbench Projects </strong> </p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="25%">
+<div class="Element66">
+Project Name&nbsp;</div></td><td class="Element65" valign="top" width="75%">
+<div class="Element66">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
+<div class="Element68">
+sam_a5d2_xult.IAR&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+<div class="Element68">
+SAMA5D2 Xplained Ultra evaluation kit&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
+<div class="Element68">
+sam_9x60_ek.IAR&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+<div class="Element68">
+SAM9X60 Evaluation Kit&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -128,7 +171,7 @@ Reads capture value from channel 1.&nbsp;</div></td></tr></table></div></div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="04430.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04022.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04429.html" target="topic">Peripheral Libraries</a> &gt; <a href="06497.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="06476.html" target="topic">Capture</a> &gt; <a href="06479.html" target="topic">Library Interface</a> &gt; <a href="06484.html" target="topic">c) Transaction Functions</a></div>
+<a href="04449.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="06472.html" target="topic">TC Applications</a> &gt; <a href="06475.html" target="topic">tc_timer_mode</a> &gt; <a href="06484.html" target="topic">Building The Application</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -136,13 +179,13 @@ Reads capture value from channel 1.&nbsp;</div></td></tr></table></div></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04430.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04449.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06711.html" target="topic">Previous</a> | <a href="06479.html" target="topic">Up</a> | <a href="06713.html" target="topic">Next</a></div>
+<a href="06475.html" target="topic">Previous</a> | <a href="06475.html" target="topic">Up</a> | <a href="06486.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC U2212 Capture mode Transaction Functions Topic Title: c) Transaction Functions)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC tc_timer_mode Building The Application Topic Title: Building The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

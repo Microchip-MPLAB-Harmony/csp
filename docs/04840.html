@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Running The Application</title>
+<title>QEIx_VelocityGet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="04430.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="04830.html" target="topic">QSPI Applications</a> &gt; <a href="04832.html" target="topic">qspi_xip</a> &gt; <a href="04840.html" target="topic">Running The Application</a></div>
+<a href="04449.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04448.html" target="topic">Peripheral Libraries</a> &gt; <a href="04807.html" target="topic">QEI Peripheral Library Help</a> &gt; <a href="04808.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="04840.html" target="topic">QEIx_VelocityGet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04430.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04449.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04838.html" target="topic">Previous</a> | <a href="04832.html" target="topic">Up</a> | <a href="04946.html" target="topic">Next</a></div>
+<a href="04837.html" target="topic">Previous</a> | <a href="04808.html" target="topic">Up</a> | <a href="04811.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: QSPI qspi_xip Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: qei_01494::QEIx_VelocityGet Topic Title: QEIx_VelocityGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Running The Application</div>
+QEIx_VelocityGet Function</div>
 </div>
 </div>
 
@@ -48,45 +48,50 @@ Running The Application</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
+<p class="Element10">
+This function reads the velocity counter. The contents of the counter represent the distance traveled during the time between samples.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100">uint32_t <strong><span style="color: #000000">QEIx_VelocityGet</span></strong>();</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+<a href="04835.html" target="topic">QEIx_Initialize</a> function must have been called first for the given channel.</p></div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Velocity - number of samples since the last read</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The velocity counter is automatically cleared after every processor read of the velocity counter.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">uint32_t velocity;
 
-<ol class="Element630">
-<li value="1" class="Element600">Open the QSPI XIP image project (<strong>csp/apps/qspi/qspi_xip/xip_image/firmware/sam_e70_xult.X</strong>) in the MPLAB X IDE</li>
-<li value="2" class="Element600">Build the project using the MPLAB X IDE and <strong>do not program</strong>.</li>
-<li value="3" class="Element600">Run the python script (<strong>csp/apps/qspi/qspi_xip/xip_image_pattern_gen.py)</strong> using command prompt <span style="color: #000000">to extract the hex code from the binary and store it in the header file (<strong>csp/apps/qspi/qspi_xip/xip_main/firmware/src/config/sam_e70_xult/</span>xip_image_pattern_hex.h</strong>)<span style="color: #000000"> as an array of hex values.</span></li>
-</ol><div class="Element13"><div class="Element12"><pre class="Element12">   python xip_image_pattern_gen.py</pre></div></div>
-
-<ol class="Element630">
-<li value="4" class="Element600">Open the QSPI main project (<strong>xip_main/firmware/ sam_e70_xult.X</strong>) in the MPLAB X IDE</li>
-<li value="5" class="Element600">Build and program the application using the MPLAB X IDE.</li>
-<li value="6" class="Element600"><span style="color: #000000">The main application programs the QSPI XIP image and executes the code from serial Flash memory. The QSPI XIP image application blinks the LED continuously.</span></li>
-</ol><p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-The following table provides the LED name. </p><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element65" valign="top" width="58%">
-<div class="Element66">
-Kit Name&nbsp;</div></td><td class="Element65" valign="top" width="42%">
-<div class="Element66">
-LED Name&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="58%">
-<div class="Element68">
-SAM E70 Xplained Ultra Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="42%">
-<div class="Element68">
-<span style="color: #000000">LED1</span>&nbsp;</div></td></tr></table></div></div>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong>Note:</strong> Use Python version: 2.7.x to run <strong>python xip_image_pattern_gen.py</strong></p></div>
+QEI1_Initialize();
+QEI1_Start();
+velocity = QEI1_VelocityGet();</pre></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="04430.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="04830.html" target="topic">QSPI Applications</a> &gt; <a href="04832.html" target="topic">qspi_xip</a> &gt; <a href="04840.html" target="topic">Running The Application</a></div>
+<a href="04449.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04448.html" target="topic">Peripheral Libraries</a> &gt; <a href="04807.html" target="topic">QEI Peripheral Library Help</a> &gt; <a href="04808.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="04840.html" target="topic">QEIx_VelocityGet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -94,13 +99,13 @@ SAM E70 Xplained Ultra Evaluation Kit&nbsp;</div></td><td class="Element67" vali
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04430.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04449.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04838.html" target="topic">Previous</a> | <a href="04832.html" target="topic">Up</a> | <a href="04946.html" target="topic">Next</a></div>
+<a href="04837.html" target="topic">Previous</a> | <a href="04808.html" target="topic">Up</a> | <a href="04811.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: QSPI qspi_xip Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: qei_01494::QEIx_VelocityGet Topic Title: QEIx_VelocityGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Introduction</title>
+<title>I2Cx_TransferSetup Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="04430.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04022.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04429.html" target="topic">Peripheral Libraries</a> &gt; <a href="03157.html" target="topic">I2S Peripheral Library Help</a> &gt; <a href="03156.html" target="topic">Introduction</a></div>
+<a href="04449.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04448.html" target="topic">Peripheral Libraries</a> &gt; <a href="03116.html" target="topic">I2C Peripheral Library Help</a> &gt;  &gt; <a href="03156.html" target="topic">I2Cx_TransferSetup Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04430.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04449.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03157.html" target="topic">Previous</a> | <a href="03157.html" target="topic">Up</a> | <a href="03154.html" target="topic">Next</a></div>
+</div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: I2S U2224 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: i2c_00774::I2Cx_TransferSetup@I2C_TRANSFER_SETUP*@uint32_t Topic Title: I2Cx_TransferSetup Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Introduction</div>
+I2Cx_TransferSetup Function</div>
 </div>
 </div>
 
@@ -49,38 +49,77 @@ Introduction</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The I2S module implements an I2S (Inter-IC Sound) interface, for connection between an MCU and an audio peripheral such as a codec or Bluetooth module.&nbsp;</p>
+This API is generally used when there are multiple clients on the same I2C bus having different I2C clock speed. In such a case, the I2Cx_TransferSetup API must be called to set the appropriate I2C bus speed before starting the I2C transfer for the I2C slave.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">I2Cx_TransferSetup</span></strong>(
+    <a href="03149.html" target="topic">I2C_TRANSFER_SETUP</a>* <strong><span style="color: #000000">setup</span></strong>, 
+    uint32_t <strong><span style="color: #000000">srcClkFreq</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-The I2S module provides support to the audio protocol functionality via four standard I/O pins. The four pins that make up the audio protocol interface modes are:</p>
-<ul class="Element630">
-<li class="Element600"><strong>SDI: </strong>Serial Data Input for receiving sample digital audio data (ADCDAT as output from the codec)</li>
-<li class="Element600"><strong>SDO: </strong>Serial Data Output for transmitting digital audio data (DACDAT as input to the codec)</li>
-<li class="Element600"><strong>SCKn: </strong>Serial Clock, also known as bit clock (BCLK)</li>
-<li class="Element600"><strong>FSn:</strong> Frame Select, also known as Word Select or Left/Right Channel Clock (LRCK)</li>
-</ul><p class="Element10">
-In addition, there is a fifth line, called <strong>MCKn</strong> (Master Clock), which can be used to drive the codec.&nbsp;</p>
+<a href="03153.html" target="topic">I2Cx_Initialize</a> must have been called for the associated I2C instance. The transfer status should not be busy.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+setup&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Pointer to the structure containing the transfer setup.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+srcClkFreq&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+I2C Peripheral Clock Source Frequency.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-There are two clock units in the I2S module, so <strong>n</strong>=1 or 2 depending on which is used. However there are only two data lines (SDO/SDI), one for each serializer (transmit/receive).&nbsp;</p>
+true - Transfer setup was updated Successfully. false - Failure while updating transfer setup.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-The SCK provides the clock required to drive the data out or into the module, while FS provides the synchronization of the frame based on the protocol mode selected. In I2S mode, the leading edge of audio data is driven out one SCK period of starting the frame.&nbsp;</p>
-<p class="Element10">
-In Master mode, the module generates both the SCK and FS.&nbsp;</p>
-<p class="Element10">
-In Slave mode, the peripheral generates the BCLK and LRCLK signals, driving the SCK and FS pins of the I2S module. When in Slave mode, the I2S cannot generate a master clock (MCK), so a generic clock (GCLKn) must be used.</p><div class="Element15">
-Master Mode</div>
-<p class="Element10" style="text-align: center;">
-<strong>Master Generating its Own Clock – Output BCLK and LRCK</strong>&nbsp;</p>
-<p class="Element10" style="text-align: center;">
-<img src="MaterMode.png" border="0" alt="" title=""></p><div class="Element15">
-Slave Mode</div>
-<p class="Element10" style="text-align: center;">
-<strong>Codec Device as Master Derives MCLK from MCU Reference Clock Out</strong>&nbsp;</p>
-<p class="Element10" style="text-align: center;">
-<img src="SlaveMode.png" border="0" alt="" title="">&nbsp;</p>
-<p class="Element10" style="text-align: center;">
-&nbsp;</p>
-<p class="Element10" style="text-align: center;">
-&nbsp;</p>
+srcClkFreq overrides any change in the peripheral clock frequency. If configured to zero PLib takes the peripheral clock frequency from MHC.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">
+<a href="03149.html" target="topic">I2C_TRANSFER_SETUP</a> setup;
+
+setup.clkSpeed = 400000;
+
+<i><span style="color: #008000">// Make sure that the I2C is not busy before changing the I2C clock frequency</span></i>
+<strong><span style="color: #000080">if</span></strong> (<a href="03154.html" target="topic">I2Cx_IsBusy</a>() == <strong><span style="color: #000080">false</span></strong>)
+{
+    <strong><span style="color: #000080">if</span></strong> (I2Cx_TransferSetup( &amp;setup, 0 ) == <strong><span style="color: #000080">true</span></strong>)
+    {
+        <i><span style="color: #008000">// Transfer Setup updated successfully</span></i>
+    }
+}</pre></div></div>
 </div>
 </div>
 </div>
@@ -88,7 +127,7 @@ Slave Mode</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="04430.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04022.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04429.html" target="topic">Peripheral Libraries</a> &gt; <a href="03157.html" target="topic">I2S Peripheral Library Help</a> &gt; <a href="03156.html" target="topic">Introduction</a></div>
+<a href="04449.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04448.html" target="topic">Peripheral Libraries</a> &gt; <a href="03116.html" target="topic">I2C Peripheral Library Help</a> &gt;  &gt; <a href="03156.html" target="topic">I2Cx_TransferSetup Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -96,13 +135,13 @@ Slave Mode</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04430.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04449.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03157.html" target="topic">Previous</a> | <a href="03157.html" target="topic">Up</a> | <a href="03154.html" target="topic">Next</a></div>
+</div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: I2S U2224 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: i2c_00774::I2Cx_TransferSetup@I2C_TRANSFER_SETUP*@uint32_t Topic Title: I2Cx_TransferSetup Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

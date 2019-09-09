@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Peripheral Libraries Help</title>
+<title>PDEC_QDEC_CALLBACK_OBJ Structure</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="04430.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04022.html" target="topic">Peripheral Libraries Help</a></div>
+<a href="04449.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04448.html" target="topic">Peripheral Libraries</a> &gt; <a href="04009.html" target="topic">PDEC Peripheral Library Help</a> &gt; <a href="04010.html" target="topic">QDEC</a> &gt; <a href="04015.html" target="topic">Library Interface</a> &gt; <a href="04012.html" target="topic">e) Data Types and Constants</a> &gt; <a href="04022.html" target="topic">PDEC_QDEC_CALLBACK_OBJ Structure</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04430.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04449.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04430.html" target="topic">Previous</a> | <a href="04430.html" target="topic">Up</a> | <a href="04431.html" target="topic">Next</a></div>
+<a href="04021.html" target="topic">Previous</a> | <a href="04012.html" target="topic">Up</a> | <a href="04025.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: Peripheral Library Help Topic Title: Peripheral Libraries Help)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pdec_u2263::PDEC_QDEC_CALLBACK_OBJ Topic Title: PDEC_QDEC_CALLBACK_OBJ Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Peripheral Libraries Help</div>
+PDEC_QDEC_CALLBACK_OBJ Structure</div>
 </div>
 </div>
 
@@ -49,119 +49,29 @@ Peripheral Libraries Help</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The MPLABï¿½ Harmony Configurator (MHC) is a Graphical User Interface (GUI) plug-in tool for MPLAB X IDE to configures a rich set of peripherals and functions specific to your application and generate the corresponding peripheral library code. The generated code directly accesses the Peripheral registers without any abstraction layers and it is easy to understand.</p></div>
+Callback structure&nbsp;</p>
+<p class="Element10">
+This stores the callback function pointer and context</p></div>
 </div>
-<a name="546F70696373"></a><div class="Element14">
-Topics</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
+  <a href="04021.html" target="topic">PDEC_QDEC_CALLBACK</a> <strong><span style="color: #000000">callback</span></strong>;
+  uintptr_t <strong><span style="color: #000000">context</span></strong>;
+} PDEC_QDEC_CALLBACK_OBJ;</pre></div></div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element200" valign="top" width="35%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="04431.html" target="topic">PIC32MK Peripheral Libraries</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This Section Provides list of all the Peripheral Libraries for the PIC32MK Family.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="04432.html" target="topic">PIC32MX 1XX/2XX Peripheral Libraries</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This Section Provides list of all the Peripheral Libraries for the PIC32MX 1XX/2XX Family.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="04433.html" target="topic">PIC32MX 1XX/2XX XLP Peripheral Libraries</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This Section Provides list of all the Peripheral Libraries for the PIC32MX 1XX/2XX XLP Family.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="04434.html" target="topic">PIC32MX 1XX/2XX/5XX Peripheral Libraries</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This Section Provides list of all the Peripheral Libraries for the PIC32MX 1XX/2XX/5XX Family.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="04435.html" target="topic">PIC32MX 330/350/370/430/450/470 Peripheral Libraries</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This Section Provides list of all the Peripheral Libraries for the PIC32MX 330/350/370/430/450/470 Family.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="04436.html" target="topic">PIC32MZ DA Peripheral Libraries</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This Section Provides list of all the Peripheral Libraries for the PIC32MZ DA Family.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="04437.html" target="topic">PIC32MZ EF Peripheral Libraries</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This Section Provides list of all the Peripheral Libraries for the PIC32MZ EF Family.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="04438.html" target="topic">SAM 9X60 Peripheral Libraries</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This Section Provides list of all the Peripheral Libraries for the SAM 9X60 Family.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="04439.html" target="topic">SAM A5D2 Peripheral Libraries</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This Section Provides list of all the Peripheral Libraries for the SAM A5D2 Family.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="04447.html" target="topic">SAM C20/C21 Peripheral Libraries</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This Section Provides list of all the Peripheral Libraries for the SAM C20/C21 Family.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="04440.html" target="topic">SAM D20/D21 Peripheral Libraries</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This Section Provides list of all the Peripheral Libraries for the SAM D20/D21 Family.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="04441.html" target="topic">SAM D51/E51/E53/E54 Peripheral Libraries</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This Section Provides list of all the Peripheral Libraries for the SAM D51/E51/E53/E54 Family.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="04442.html" target="topic">SAM E70/S70/V70/V71 Peripheral Libraries</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This Section Provides list of all the Peripheral Libraries for the SAM E70/S70/V70/V71 Family.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="04443.html" target="topic">SAM G55 Peripheral Libraries</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This Section Provides list of all the Peripheral Libraries for the SAM G55 Family.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="04444.html" target="topic">SAM L1X Peripheral Libraries</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This Section Provides list of all the Peripheral Libraries for the SAM L1X Family.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="04445.html" target="topic">SAM L21 Peripheral Libraries</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This Section Provides list of all the Peripheral Libraries for the SAM L21 Family.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="04446.html" target="topic">SAM L22 Peripheral Libraries</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This Section Provides list of all the Peripheral Libraries for the SAM L22 Family.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="04429.html" target="topic">Peripheral Libraries</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This topic provides help for the peripheral libraries that are available in the Microchip 32 bit Chip Support Package (CSP).&nbsp;</div></td></tr></table></div></div>
-</div>
+<p class="Element10">
+None.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="04430.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04022.html" target="topic">Peripheral Libraries Help</a></div>
+<a href="04449.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04448.html" target="topic">Peripheral Libraries</a> &gt; <a href="04009.html" target="topic">PDEC Peripheral Library Help</a> &gt; <a href="04010.html" target="topic">QDEC</a> &gt; <a href="04015.html" target="topic">Library Interface</a> &gt; <a href="04012.html" target="topic">e) Data Types and Constants</a> &gt; <a href="04022.html" target="topic">PDEC_QDEC_CALLBACK_OBJ Structure</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -169,13 +79,13 @@ This topic provides help for the peripheral libraries that are available in the 
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04430.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04449.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04430.html" target="topic">Previous</a> | <a href="04430.html" target="topic">Up</a> | <a href="04431.html" target="topic">Next</a></div>
+<a href="04021.html" target="topic">Previous</a> | <a href="04012.html" target="topic">Up</a> | <a href="04025.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: Peripheral Library Help Topic Title: Peripheral Libraries Help)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pdec_u2263::PDEC_QDEC_CALLBACK_OBJ Topic Title: PDEC_QDEC_CALLBACK_OBJ Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

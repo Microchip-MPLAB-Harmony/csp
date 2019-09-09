@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Using the Library</title>
+<title>Library Interface</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="04430.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04022.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04429.html" target="topic">Peripheral Libraries</a> &gt; <a href="03365.html" target="topic">MCAN Peripheral Library Help</a> &gt; <a href="03370.html" target="topic">Using the Library</a></div>
+<a href="04449.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04448.html" target="topic">Peripheral Libraries</a> &gt; <a href="03369.html" target="topic">MCAN Peripheral Library Help</a> &gt; <a href="03370.html" target="topic">Library Interface</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04430.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04449.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03361.html" target="topic">Previous</a> | <a href="03365.html" target="topic">Up</a> | <a href="03366.html" target="topic">Next</a></div>
+<a href="03374.html" target="topic">Previous</a> | <a href="03369.html" target="topic">Up</a> | <a href="03482.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MCAN 11273 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MCAN 11273 Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Using the Library</div>
+Library Interface</div>
 </div>
 </div>
 
@@ -46,199 +46,251 @@ Using the Library</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="4465736372697074696F6E"></a><div class="Element11">
+<a name="612920496E697469616C697A6174696F6E2046756E6374696F6E"></a><div class="Element14">
+a) Initialization Function</div>
+<div class="Element11">
 <div class="Element10">
-<p class="Element10">
-The MCAN library supports the Normal and CAN-FD modes. The MCAN Normal or CAN-FD mode can transfer message in a polling or an interrupt mode.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong>MCAN Message RAM Configuration</strong>&nbsp;</p>
-<p class="Element10">
-Allocate MCAN Message RAM configuration in contiguous non-cacheable buffer in the application.&nbsp;</p>
-<p class="Element10">
-For example in SAME70, uint8_t Mcan0MessageRAM[MCAN0_MESSAGE_RAM_CONFIG_SIZE] __attribute__((aligned (32))) __attribute__((space(data), section (&quot;.ram_nocache&quot;))&nbsp;</p>
-<p class="Element10">
-For example in SAMA5D2, uint8_t Mcan0MessageRAM[MCAN0_MESSAGE_RAM_CONFIG_SIZE] __attribute__((aligned (32))) __attribute__((__section__(&quot;.region_nocache&quot;)))&nbsp;</p>
-<p class="Element10">
-If cache is enabled then non-cacheable section &quot;ram_nocache&quot; or &quot;region_nocache&quot; should be added in linker script (if non-cacheable section is not present in linker script).&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong>MCAN normal operation with polling</strong>&nbsp;</p>
-<p class="Element10">
-The following example shows the MCAN normal mode operation with polling implementation.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-int main(void)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-/* Set Message RAM Configuration */&nbsp;</p>
-<p class="Element10">
-MCAN0_MessageRAMConfigSet(Mcan0MessageRAM);&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-while (1)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-/* Check if there is a receive FIFO 0 New Message */&nbsp;</p>
-<p class="Element10">
-if (MCAN0_InterruptGet(MCAN_INTERRUPT_RF0N_MASK))&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-MCAN0_InterruptClear(MCAN_INTERRUPT_RF0N_MASK);&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-/* Receive FIFO 0 New Message */&nbsp;</p>
-<p class="Element10">
-MCAN0_MessageReceive(&amp;messageID, &amp;messageLength, message, MCAN_MSG_ATTR_RX_FIFO0);&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-/* Transmit back received Message */&nbsp;</p>
-<p class="Element10">
-MCAN0_MessageTransmit(messageID, messageLength, message, MCAN_MODE_NORMAL, MCAN_MSG_ATTR_TX_FIFO_DATA_FRAME);&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong>MCAN normal operation with interrupt</strong>&nbsp;</p>
-<p class="Element10">
-The following example shows the MCAN normal mode operation with interrupt implementation.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-void APP_MCAN_Callback(uintptr_t context)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-/* Check MCAN Status */&nbsp;</p>
-<p class="Element10">
-status = MCAN0_ErrorGet();&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-if (((status &amp; MCAN_PSR_LEC_Msk) == MCAN_ERROR_NONE) || ((status &amp; MCAN_PSR_LEC_Msk) == MCAN_PSR_LEC_NO_CHANGE))&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-switch ((APP_STATES)context)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-case APP_STATE_MCAN_RECEIVE:&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-state = APP_STATE_MCAN_TRANSMIT;&nbsp;</p>
-<p class="Element10">
-break;&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-default:&nbsp;</p>
-<p class="Element10">
-break;&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-int main(void)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-/* Set Message RAM Configuration */&nbsp;</p>
-<p class="Element10">
-MCAN0_MessageRAMConfigSet(Mcan0MessageRAM);&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-while(1)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-/* Check the application's current state. */&nbsp;</p>
-<p class="Element10">
-switch (state)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-case APP_STATE_MCAN_RECEIVE:&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-MCAN0_CallbackRegister( APP_MCAN_Callback, (uintptr_t)APP_STATE_MCAN_RECEIVE );&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-state = APP_STATE_MCAN_IDLE;&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-/* Receive FIFO 0 New Message */&nbsp;</p>
-<p class="Element10">
-MCAN0_MessageReceive(&amp;messageID, &amp;messageLength, message, MCAN_MSG_ATTR_RX_FIFO0);&nbsp;</p>
-<p class="Element10">
-break;&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-case APP_STATE_MCAN_TRANSMIT:&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-MCAN0_CallbackRegister( APP_MCAN_Callback, (uintptr_t)APP_STATE_MCAN_TRANSMIT );&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-state = APP_STATE_MCAN_IDLE;&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-/* Transmit back received Message */&nbsp;</p>
-<p class="Element10">
-MCAN0_MessageTransmit(messageID, messageLength, message, MCAN_MODE_NORMAL, MCAN_MSG_ATTR_TX_FIFO_DATA_FRAME);&nbsp;</p>
-<p class="Element10">
-break;&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-case APP_STATE_MCAN_IDLE:&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-/* Application can do other task here */&nbsp;</p>
-<p class="Element10">
-break;&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-default:&nbsp;</p>
-<p class="Element10">
-break;</p></div>
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03482.html" target="topic">MCANx_Initialize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Initializes given instance of the MCAN peripheral.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="62292053657475702046756E6374696F6E73"></a><div class="Element14">
+b) Setup Functions</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03486.html" target="topic">MCANx_MessageRAMConfigSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Set the Message RAM Configuration.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03478.html" target="topic">MCANx_CallbackRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Sets the pointer to the function (and it's contextHandle) to be called when the given MCAN's transfer events occur.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="6329205472616E73616374696F6E2046756E6374696F6E73"></a><div class="Element14">
+c) Transaction Functions</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03483.html" target="topic">MCANx_InterruptClear</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Clears Interrupt status.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03484.html" target="topic">MCANx_InterruptGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Returns the Interrupt status.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03487.html" target="topic">MCANx_MessageReceive</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Receives a message from CAN bus.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03488.html" target="topic">MCANx_MessageTransmit</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Transmits a message into CAN bus.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03480.html" target="topic">MCANx_ExtendedFilterElementGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Get a Extended filter element configuration.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03481.html" target="topic">MCANx_ExtendedFilterElementSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Set a Extended filter element configuration.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03489.html" target="topic">MCANx_StandardFilterElementGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Get a standard filter element configuration.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03490.html" target="topic">MCANx_StandardFilterElementSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Set a standard filter element configuration.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="6429205374617475732046756E6374696F6E73"></a><div class="Element14">
+d) Status Functions</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03479.html" target="topic">MCANx_ErrorGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Returns the error during transfer.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03485.html" target="topic">MCANx_IsBusy</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Returns the Peripheral busy status.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="6529204461746120547970657320616E6420436F6E7374616E7473"></a><div class="Element14">
+e) Data Types and Constants</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03442.html" target="topic">MCAN_MODE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+MCAN Mode for Classic CAN and CAN FD.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03458.html" target="topic">MCAN_MSG_TX_ATTRIBUTE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+MCAN Tx Message Attribute for Tx Buffer/FIFO.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03454.html" target="topic">MCAN_MSG_RX_ATTRIBUTE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+MCAN Rx Message Attribute for Rx Buffer/FIFO0/FIFO1.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03413.html" target="topic">MCAN_INTERRUPT_MASK</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+MCAN Interrupt Mask.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03472.html" target="topic">MCAN_STATE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+MCAN PLIB Task State.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03392.html" target="topic">MCAN_ERROR</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+MCAN Transfer Error data type.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03446.html" target="topic">MCAN_MSG_RAM_CONFIG</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+MCAN Message RAM Configuration structure.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03391.html" target="topic">MCAN_CALLBACK</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+MCAN Callback Function Pointer.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03463.html" target="topic">MCAN_OBJ</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+MCAN PLIB Object structure.&nbsp;</div></td></tr></table></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="04430.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04022.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04429.html" target="topic">Peripheral Libraries</a> &gt; <a href="03365.html" target="topic">MCAN Peripheral Library Help</a> &gt; <a href="03370.html" target="topic">Using the Library</a></div>
+<a href="04449.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04448.html" target="topic">Peripheral Libraries</a> &gt; <a href="03369.html" target="topic">MCAN Peripheral Library Help</a> &gt; <a href="03370.html" target="topic">Library Interface</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -246,13 +298,13 @@ break;</p></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04430.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04449.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03361.html" target="topic">Previous</a> | <a href="03365.html" target="topic">Up</a> | <a href="03366.html" target="topic">Next</a></div>
+<a href="03374.html" target="topic">Previous</a> | <a href="03369.html" target="topic">Up</a> | <a href="03482.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MCAN 11273 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MCAN 11273 Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

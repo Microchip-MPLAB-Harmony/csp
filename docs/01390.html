@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>CRCCU_POLYNOMIAL Enumeration</title>
+<title>Running The Application</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="04430.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04022.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04429.html" target="topic">Peripheral Libraries</a> &gt; <a href="01386.html" target="topic">CRCCU Peripheral Library Help</a> &gt; <a href="01387.html" target="topic">Library Interface</a> &gt; c) Data Types and Constants &gt; <a href="01390.html" target="topic">CRCCU_POLYNOMIAL Enumeration</a></div>
+<a href="04449.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="01386.html" target="topic">CRCCU Applications</a> &gt; <a href="01385.html" target="topic">crccu_crc32_generate</a> &gt; <a href="01390.html" target="topic">Running The Application</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04430.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04449.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01394.html" target="topic">Previous</a> | <a href="01387.html" target="topic">Up</a> | <a href="01404.html" target="topic">Next</a></div>
+<a href="01388.html" target="topic">Previous</a> | <a href="01385.html" target="topic">Up</a> | <a href="01424.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: crccu_11001::CRCCU_POLYNOMIAL Topic Title: CRCCU_POLYNOMIAL Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CRCCU crccu_crc32_generate Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-CRCCU_POLYNOMIAL Enumeration</div>
+Running The Application</div>
 </div>
 </div>
 
@@ -48,61 +48,36 @@ CRCCU_POLYNOMIAL Enumeration</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
+
+<ol class="Element630">
+<li value="1" class="Element600">Connect a micro USB cable to the DEBUG port.</li>
+<li value="2" class="Element600">Build and program the application using the MPLAB X IDE.</li>
+<li value="3" class="Element600">The LED indicates the success or failure</li>
+</ol><p class="Element10">
+&nbsp;</p>
 <p class="Element10">
-CRC polynomial selection enum.&nbsp;</p>
-<p class="Element10">
-Enum for the possible CRC Polynomial selections for the CRCCU.</p></div>
-</div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
-  <strong><span style="color: #000000">CRCCU_POLYNOMIAL_CCITT8023</span></strong> = CRCCU_MR_PTYPE_CCITT8023,
-  <strong><span style="color: #000000">CRCCU_POLYNOMIAL_CASTAGNOLI</span></strong> = CRCCU_MR_PTYPE_CASTAGNOLI,
-  <strong><span style="color: #000000">CRCCU_POLYNOMIAL_CCITT16</span></strong> = CRCCU_MR_PTYPE_CCITT16
-} CRCCU_POLYNOMIAL;</pre></div></div>
-<a name="4D656D62657273"></a><div class="Element14">
-Members</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element272">
+The following table provides the LED name: </p><div class="Element63">
 <div class="TableDiv">
-<table cellspacing="0" class="Table3">
+<table cellspacing="0" class="Table1">
 <tr>
-<td class="Element260" valign="top" width="35%">
-<div class="Element261">
-Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
-<div class="Element265">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-CRCCU_POLYNOMIAL_CCITT8023 = CRCCU_MR_PTYPE_CCITT8023&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-CCITT8023 Polynom 0x04C11DB7&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-CRCCU_POLYNOMIAL_CASTAGNOLI = CRCCU_MR_PTYPE_CASTAGNOLI&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-CASTAGNOLI Polynom 0x1EDC6F41&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-CRCCU_POLYNOMIAL_CCITT16 = CRCCU_MR_PTYPE_CCITT16&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-CCITT16 Polynom 0x1021&nbsp;</div></td></tr></table></div></div>
+<td class="Element65" valign="top" width="77%">
+<div class="Element66">
+Kit Name&nbsp;</div></td><td class="Element65" valign="top" width="23%">
+<div class="Element66">
+LED Name&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="77%">
+<div class="Element68">
+SAM G55 Xplained PRO evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="23%">
+<div class="Element68">
+LED 0&nbsp;</div></td></tr></table></div></div>
 </div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="04430.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04022.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04429.html" target="topic">Peripheral Libraries</a> &gt; <a href="01386.html" target="topic">CRCCU Peripheral Library Help</a> &gt; <a href="01387.html" target="topic">Library Interface</a> &gt; c) Data Types and Constants &gt; <a href="01390.html" target="topic">CRCCU_POLYNOMIAL Enumeration</a></div>
+<a href="04449.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="01386.html" target="topic">CRCCU Applications</a> &gt; <a href="01385.html" target="topic">crccu_crc32_generate</a> &gt; <a href="01390.html" target="topic">Running The Application</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -110,13 +85,13 @@ None.</p></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04430.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04449.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01394.html" target="topic">Previous</a> | <a href="01387.html" target="topic">Up</a> | <a href="01404.html" target="topic">Next</a></div>
+<a href="01388.html" target="topic">Previous</a> | <a href="01385.html" target="topic">Up</a> | <a href="01424.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: crccu_11001::CRCCU_POLYNOMIAL Topic Title: CRCCU_POLYNOMIAL Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CRCCU crccu_crc32_generate Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->
