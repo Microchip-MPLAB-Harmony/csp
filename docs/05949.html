@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>SERCOMx_SPI_Read Function</title>
+<title>Running The Application</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="04430.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04022.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04429.html" target="topic">Peripheral Libraries</a> &gt; <a href="05899.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="05900.html" target="topic">SPI</a> &gt; <a href="05905.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="05949.html" target="topic">SERCOMx_SPI_Read Function</a></div>
+<a href="04449.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="05879.html" target="topic">SERCOM Applications</a> &gt; <a href="05935.html" target="topic">SERCOM USART Applications</a> &gt; <a href="05937.html" target="topic">usart_echo_interrupt</a> &gt; <a href="05949.html" target="topic">Running The Application</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04430.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04449.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05950.html" target="topic">Previous</a> | <a href="05905.html" target="topic">Up</a> | <a href="05951.html" target="topic">Next</a></div>
+<a href="05947.html" target="topic">Previous</a> | <a href="05937.html" target="topic">Up</a> | <a href="06044.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_spi::SERCOMx_SPI_Read@void*@size_t Topic Title: SERCOMx_SPI_Read Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SERCOM USART usart_echo_interrupt Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-SERCOMx_SPI_Read Function</div>
+Running The Application</div>
 </div>
 </div>
 
@@ -48,92 +48,87 @@ SERCOMx_SPI_Read Function</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
+
+<ol class="Element630">
+<li value="1" class="Element600">Open the Terminal application (Ex.:Tera term) on the computer.</li>
+<li value="2" class="Element600">Connect to the EDBG Virtual COM port and configure the serial settings as follows:
+<ul class="Element631">
+<li class="Element601">Baud : 115200</li>
+<li class="Element601">Data : 8 Bits</li>
+<li class="Element601">Parity : None</li>
+<li class="Element601">Stop : 1 Bit</li>
+<li class="Element601">Flow Control : None</li>
+</ul></li>
+<li value="3" class="Element600">Build and Program the application using the MPLAB X IDE.</li>
+<li value="4" class="Element600">See the following message in the console.</li>
+</ol><p class="Element10" style="text-align: center;">
+<img src="sercom_usart_echo_interrupt_output.png" border="0" alt="" title=""></p>
+<ol class="Element630">
+<li value="5" class="Element600">Type 10 characters in the terminal. It will echo back the received bytes and toggles an LED. The following table provides the LED name.</li>
+</ol><p class="Element10">
+&nbsp;</p>
 <p class="Element10">
-This function reads &quot;rxSize&quot; number of bytes on SERCOM x SPI module. The received data is stored in the buffer pointed by pReceiveData.&nbsp;</p>
+<strong>NOTE :-</strong> Set Baud : 9600 for sam_d10_xmini.X.&nbsp;</p>
 <p class="Element10">
-When &quot;Interrupt Mode&quot; option is unchecked in MHC, this function will be blocking in nature. In this mode, the function will not return until all the requested data is transferred. The function returns true after receiving &quot;rxSize&quot; number of bytes. This indicates that the operation has been completed.&nbsp;</p>
-<p class="Element10">
-When &quot;Interrupt Mode&quot; option is selected in MHC, the function will be non-blocking in nature. The function returns immediately. The data transfer process continues in the peripheral interrupt. The application specified receive buffer is owned by the library until the data transfer is complete and should not be modified by the application till the transfer is complete. Only one transfer is allowed at any time. The application can use a callback function or a polling function to check for completion of the transfer. If a callback is required, this should be registered prior to calling the <a href="05952.html" target="topic">SERCOMx_SPI_WriteRead</a>() function. The application can use the <a href="05948.html" target="topic">SERCOMx_SPI_IsBusy</a>() to poll for completion.</p></div>
-</div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">SERCOMx_SPI_Read</span></strong>(
-    <strong><span style="color: #000080">void</span></strong>* <strong><span style="color: #000000">pReceiveData</span></strong>, 
-    size_t <strong><span style="color: #000000">rxSize</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-The <a href="05947.html" target="topic">SERCOMx_SPI_Initialize</a> function must have been called.&nbsp;</p>
-<p class="Element10">
-Callback has to be registered using <a href="05946.html" target="topic">SERCOMx_SPI_CallbackRegister</a> API if the peripheral instance has been configured in Interrupt mode and transfer completion status needs to be communicated back to application via callback.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
+The following table provides the LED name. </p><div class="Element63">
 <div class="TableDiv">
-<table cellspacing="0" class="Table2">
+<table cellspacing="0" class="Table1">
 <tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-pReceiveData&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Pointer to the buffer where the received data will be stored. For 9 bit mode, data should be right aligned in the 16 bit memory location. In &quot;Interrupt Mode&quot;, this buffer should not be modified after calling the function and before the callback function has been called or the <a href="05948.html" target="topic">SERCOMx_SPI_IsBusy</a>() function returns false.<br>&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-rxSize&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Number of bytes to be received. This value is the byte size of the buffer. For 9 bit data length, this is an even number.&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-
-<ul class="Element630">
-<li class="Element600">true - If configured for Non-interrupt mode, the function has received the requested number of bytes. If configured for Interrupt mode, the request was accepted successfully and will be processed in the interrupt.</li>
-<li class="Element600">false - If pReceiveData is NULL. In Interrupt mode, the function will additionally return false if there is an on-going data transfer at the time of calling the function.</li>
-</ul></div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">uint8_t     rxBuffer[10];
-size_t      rxSize = 10;
-
-<strong><span style="color: #000080">void</span></strong> APP_SPITransferHandler(uintptr_t context)
-{
-    <i><span style="color: #008000">//Transfer was completed without error, do something else now.</span></i>
-}
-
-SERCOM1_SPI_Initialize();
-SERCOM1_SPI_CallbackRegister(&amp;APP_SPITransferHandler, (uintptr_t)NULL);
-<strong><span style="color: #000080">if</span></strong>(SERCOM1_SPI_Read(&amp;rxBuffer, rxSize))
-{
-    <i><span style="color: #008000">// request got accepted</span></i>
-}
-<strong><span style="color: #000080">else</span></strong>
-{
-    <i><span style="color: #008000">// request didn't get accepted, try again later with correct arguments</span></i>
-}</pre></div></div>
+<td class="Element65" valign="top" width="88%">
+<div class="Element66">
+Kit Name&nbsp;</div></td><td class="Element65" valign="top" width="12%">
+<div class="Element66">
+LED Name&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="88%">
+<div class="Element68">
+SAM C21N Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="12%">
+<div class="Element68">
+LED0&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="88%">
+<div class="Element68">
+SAM D10 Xplained Mini Kit&nbsp;</div></td><td class="Element67" valign="top" width="12%">
+<div class="Element68">
+LED0&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="88%">
+<div class="Element68">
+SAM D11 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="12%">
+<div class="Element68">
+LED0&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="88%">
+<div class="Element68">
+SAM D20 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="12%">
+<div class="Element68">
+LED0&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="88%">
+<div class="Element68">
+SAM D21 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="12%">
+<div class="Element68">
+LED0&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="88%">
+<div class="Element68">
+SAM DA1 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="12%">
+<div class="Element68">
+LED0&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="88%">
+<div class="Element68">
+SAM E54 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="12%">
+<div class="Element68">
+LED0&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="88%">
+<div class="Element68">
+SAM L10 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="12%">
+<div class="Element68">
+LED0&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="88%">
+<div class="Element68">
+SAM L21 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="12%">
+<div class="Element68">
+LED0&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="88%">
+<div class="Element68">
+SAM L22 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="12%">
+<div class="Element68">
+LED0&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -141,7 +136,7 @@ SERCOM1_SPI_CallbackRegister(&amp;APP_SPITransferHandler, (uintptr_t)NULL);
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="04430.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04022.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04429.html" target="topic">Peripheral Libraries</a> &gt; <a href="05899.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="05900.html" target="topic">SPI</a> &gt; <a href="05905.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="05949.html" target="topic">SERCOMx_SPI_Read Function</a></div>
+<a href="04449.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="05879.html" target="topic">SERCOM Applications</a> &gt; <a href="05935.html" target="topic">SERCOM USART Applications</a> &gt; <a href="05937.html" target="topic">usart_echo_interrupt</a> &gt; <a href="05949.html" target="topic">Running The Application</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -149,13 +144,13 @@ SERCOM1_SPI_CallbackRegister(&amp;APP_SPITransferHandler, (uintptr_t)NULL);
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04430.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04449.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05950.html" target="topic">Previous</a> | <a href="05905.html" target="topic">Up</a> | <a href="05951.html" target="topic">Next</a></div>
+<a href="05947.html" target="topic">Previous</a> | <a href="05937.html" target="topic">Up</a> | <a href="06044.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_spi::SERCOMx_SPI_Read@void*@size_t Topic Title: SERCOMx_SPI_Read Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SERCOM USART usart_echo_interrupt Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

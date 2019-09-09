@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>FLEXCOM_TWI_CALLBACK Type</title>
+<title>FLEXCOMx_SPI_TransferSetup Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="04430.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04022.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04429.html" target="topic">Peripheral Libraries</a> &gt; <a href="02355.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02344.html" target="topic">I2C</a> &gt; <a href="02349.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="02483.html" target="topic">FLEXCOM_TWI_CALLBACK Type</a></div>
+<a href="04449.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04448.html" target="topic">Peripheral Libraries</a> &gt; <a href="02359.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02360.html" target="topic">SPI</a> &gt; <a href="02365.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="02483.html" target="topic">FLEXCOMx_SPI_TransferSetup Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04430.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04449.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02498.html" target="topic">Previous</a> | <a href="02349.html" target="topic">Up</a> | <a href="02484.html" target="topic">Next</a></div>
+<a href="02479.html" target="topic">Previous</a> | <a href="02365.html" target="topic">Up</a> | <a href="02482.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: flexcom_11268_twi::FLEXCOM_TWI_CALLBACK Topic Title: FLEXCOM_TWI_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: flexcom_11268_spi::FLEXCOMx_SPI_TransferSetup@FLEXCOM_SPI_TRANSFER_SETUP *@uint32_t Topic Title: FLEXCOMx_SPI_TransferSetup Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-FLEXCOM_TWI_CALLBACK Type</div>
+FLEXCOMx_SPI_TransferSetup Function</div>
 </div>
 </div>
 
@@ -49,19 +49,20 @@ FLEXCOM_TWI_CALLBACK Type</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-FLEXCOM TWI Transfer Event Callback Function Pointer.&nbsp;</p>
-<p class="Element10">
-This data type defines the function signature for the FLEXCOM TWI peripheral callback function. The FLEXCOM TWI peripheral will call back the client's function with this signature when the FLEXCOM TWI Transfer event has occurred.</p></div>
+This function setup FLEXCOMx SPI with the values needed by the client dynamically. User need not call this function if he has configured the setup in GUI and there is no dynamic change needed in any of the parameters.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000">FLEXCOM_TWI_CALLBACK</span></strong>)(uintptr_t contextHandle);</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">FLEXCOMx_SPI_TransferSetup</span></strong>(
+    <a href="02474.html" target="topic">FLEXCOM_SPI_TRANSFER_SETUP</a> * <strong><span style="color: #000000">setup</span></strong>, 
+    uint32_t <strong><span style="color: #000000">spiSourceClock</span></strong>
+);</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="02497.html" target="topic">FLEXCOMx_TWI_Initialize</a> must have been called for the given FLEXCOM TWI peripheral instance and <a href="02495.html" target="topic">FLEXCOMx_TWI_CallbackRegister</a> must have been called to set the function to be called.</p></div>
+FLEXCOMx SPI must first be initialized using <a href="02480.html" target="topic">FLEXCOMx_SPI_Initialize</a>().</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -78,14 +79,14 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-status&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+spiSourceClock&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Complete or error status of the FLEXCOM TWI transfer.<br>&nbsp;</div></td></tr><tr>
+Source Clock frequency in Hz on which FLEXCOM SPI module is running.<br>&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+*setup&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Allows the caller to provide a context value (usually a pointer to the callers context for multi-instance clients).&nbsp;</div></td></tr></table></div></div>
+pointer to the data structure of type <a href="02474.html" target="topic">FLEXCOM_SPI_TRANSFER_SETUP</a> which has the list of elements to be setup for a client.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -93,31 +94,31 @@ Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+true - if setup was successful, API returns true. false - if spiSourceClock and spi clock frequencies are such that resultant SCBR value is out of the possible range, then API returns false.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+User need not call this function if he has configured the setup in GUI and there is no dynamic change needed in any of the parameters.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12"><i><span style="color: #008000">// Data tracking what each of my instances is doing.</span></i>
-MY_DATA myData[2];
+<div class="Element13"><div class="Element12"><pre class="Element12">    <a href="02474.html" target="topic">FLEXCOM_SPI_TRANSFER_SETUP</a> setup;
+    setup.clockFrequency = 1000000;
+    setup.clockPhase = FLEXCOM_SPI_CLOCK_PHASE_TRAILING_EDGE;
+    setup.clockPolarity = FLEXCOM_SPI_CLOCK_POLARITY_IDLE_LOW;
+    setup.dataBits = FLEXCOM_SPI_DATA_BITS_8;
 
-<strong><span style="color: #000080">void</span></strong> MyFLEXCOMTWICallback (uintptr_t context )
-{
-    MY_DATA *mePtr = (MY_DATA *)context;
-
-    <i><span style="color: #008000">//Handle complete status or error here based on context</span></i>
-}
-
-FLEXCOM1_TWI_CallbackSet(MyFLEXCOMTWICallback, &amp;myData[0]);
-FLEXCOM2_TWI_CallbackSet(MyFLEXCOMTWICallback, &amp;myData[1]);</pre></div></div>
+    <i><span style="color: #008000">// Assuming 150 MHz as peripheral Master clock frequency</span></i>
+    <strong><span style="color: #000080">if</span></strong> (FLEXCOMx_SPI_TransferSetup (&amp;setup, 150000000) == <strong><span style="color: #000080">false</span></strong>)
+    {
+        <i><span style="color: #008000">// this means setup could not be done, debug the reason.</span></i>
+    }
+</pre></div></div>
 </div>
 </div>
 </div>
@@ -125,7 +126,7 @@ FLEXCOM2_TWI_CallbackSet(MyFLEXCOMTWICallback, &amp;myData[1]);</pre></div></div
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="04430.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04022.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04429.html" target="topic">Peripheral Libraries</a> &gt; <a href="02355.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02344.html" target="topic">I2C</a> &gt; <a href="02349.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="02483.html" target="topic">FLEXCOM_TWI_CALLBACK Type</a></div>
+<a href="04449.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04448.html" target="topic">Peripheral Libraries</a> &gt; <a href="02359.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02360.html" target="topic">SPI</a> &gt; <a href="02365.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="02483.html" target="topic">FLEXCOMx_SPI_TransferSetup Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -133,13 +134,13 @@ FLEXCOM2_TWI_CallbackSet(MyFLEXCOMTWICallback, &amp;myData[1]);</pre></div></div
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04430.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04449.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02498.html" target="topic">Previous</a> | <a href="02349.html" target="topic">Up</a> | <a href="02484.html" target="topic">Next</a></div>
+<a href="02479.html" target="topic">Previous</a> | <a href="02365.html" target="topic">Up</a> | <a href="02482.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: flexcom_11268_twi::FLEXCOM_TWI_CALLBACK Topic Title: FLEXCOM_TWI_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: flexcom_11268_spi::FLEXCOMx_SPI_TransferSetup@FLEXCOM_SPI_TRANSFER_SETUP *@uint32_t Topic Title: FLEXCOMx_SPI_TransferSetup Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

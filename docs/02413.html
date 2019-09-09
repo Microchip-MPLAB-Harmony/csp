@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>FLEXCOM Applications</title>
+<title>flexcom_twi_eeprom</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="04430.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="02413.html" target="topic">FLEXCOM Applications</a></div>
+<a href="04449.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="02417.html" target="topic">FLEXCOM Applications</a> &gt; <a href="02413.html" target="topic">flexcom_twi_eeprom</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04430.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04449.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02212.html" target="topic">Previous</a> | <a href="00874.html" target="topic">Up</a> | <a href="02408.html" target="topic">Next</a></div>
+<a href="02436.html" target="topic">Previous</a> | <a href="02417.html" target="topic">Up</a> | <a href="02437.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: FLEXCOM Applications Help Topic Title: FLEXCOM Applications)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: FLEXCOM Applications flexcom_twi_eeprom Topic Title: flexcom_twi_eeprom)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-FLEXCOM Applications</div>
+flexcom_twi_eeprom</div>
 </div>
 </div>
 
@@ -49,7 +49,7 @@ FLEXCOM Applications</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This section provides help for the flexible serial communication (FLEXCOM) applications.</p></div>
+<span style="color: #000000">This application configures the flexcom peripheral in TWI mode to read and write data from an external EEPROM memory chip. The data is written to the EEPROM and then read back and compared. Successful comparison is indicated by turning on an LED. </span></p></div>
 </div>
 <a name="546F70696373"></a><div class="Element14">
 Topics</div>
@@ -66,44 +66,24 @@ Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="35%">
 <div class="Element203">
-<a href="02408.html" target="topic">flexcom_spi_eeprom</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02437.html" target="topic">Building The Application</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-<span style="color: #000000">This example application shows how to use the flexcom module in SPI mode.</span>&nbsp;</div></td></tr><tr>
+This section provides information on how to build an application.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="35%">
 <div class="Element203">
-<a href="02418.html" target="topic">flexcom_spi_self_loopback_blocking</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02439.html" target="topic">MPLAB Harmony Configurations</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-<span style="color: #000000">This example application demonstrates how to use the FLEXCOM SPI peripheral to transmit and receive a block of data in</span> a blocking manner.&nbsp;</div></td></tr><tr>
+This topic provides information on the MHC configurations.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="35%">
 <div class="Element203">
-<a href="02423.html" target="topic">flexcom_spi_self_loopback_dma</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02438.html" target="topic">Hardware Setup</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-This example application shows how to use FLEXCOM SPI PLIB with external loop back to write and then read back an array of data in DMA mode.&nbsp;</div></td></tr><tr>
+This section describes how to configure the supported hardware.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="35%">
 <div class="Element203">
-<a href="02428.html" target="topic">flexcom_spi_self_loopback_interrupt</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02440.html" target="topic">Running The Application</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-This example application shows how to use FLEXCOM SPI PLIB with external loop back to write and then read back an array of data in interrupt mode.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="02409.html" target="topic">flexcom_twi_eeprom</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-<span style="color: #000000">This example application shows how to use the flexcom module in TWI mode.</span>&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="02410.html" target="topic">flexcom_usart_echo_blocking</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-<span style="color: #000000">This example application shows how to use the flexcom module in USART mode.</span>&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="02411.html" target="topic">flexcom_usart_echo_dma</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-<span style="color: #000000">This example application shows how to use the flexcom module in USART DMA mode.</span>&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="02412.html" target="topic">flexcom_usart_echo_interrupt</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-<span style="color: #000000">This example application shows how to use the flexcom module in USART mode.</span>&nbsp;</div></td></tr></table></div></div>
+This section provides information on how to run an application.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -111,7 +91,7 @@ This example application shows how to use FLEXCOM SPI PLIB with external loop ba
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="04430.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="02413.html" target="topic">FLEXCOM Applications</a></div>
+<a href="04449.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="02417.html" target="topic">FLEXCOM Applications</a> &gt; <a href="02413.html" target="topic">flexcom_twi_eeprom</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -119,13 +99,13 @@ This example application shows how to use FLEXCOM SPI PLIB with external loop ba
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04430.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="04449.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02212.html" target="topic">Previous</a> | <a href="00874.html" target="topic">Up</a> | <a href="02408.html" target="topic">Next</a></div>
+<a href="02436.html" target="topic">Previous</a> | <a href="02417.html" target="topic">Up</a> | <a href="02437.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: FLEXCOM Applications Help Topic Title: FLEXCOM Applications)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: FLEXCOM Applications flexcom_twi_eeprom Topic Title: flexcom_twi_eeprom)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->
