@@ -138,114 +138,129 @@
             <User dnOrder="0" value="GPIO"/>
           </Values>
         </String>
-        <String dnOrder="27" id="BSP_PIN_64_MODE">
+        <String dnOrder="27" id="BSP_PIN_64_LAT">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="High"/>
+          </Values>
+        </String>
+        <String dnOrder="28" id="BSP_PIN_64_MODE">
           <Values dnOrder="0">
             <User dnOrder="0" value="DIGITAL"/>
           </Values>
         </String>
-        <String dnOrder="28" id="BSP_PIN_7_MODE">
+        <String dnOrder="29" id="BSP_PIN_7_MODE">
           <Values dnOrder="0">
             <User dnOrder="0" value="DIGITAL"/>
           </Values>
         </String>
-        <Boolean dnOrder="29" id="CHANGE_NOTICE_E_INTERRUPT_ENABLE">
+        <Boolean dnOrder="30" id="CHANGE_NOTICE_E_INTERRUPT_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="30" id="CHANGE_NOTICE_E_INTERRUPT_ENABLE_UPDATE">
+        <Boolean dnOrder="31" id="CHANGE_NOTICE_E_INTERRUPT_ENABLE_UPDATE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
-        <String dnOrder="31" id="CHANGE_NOTICE_E_INTERRUPT_HANDLER">
+        <String dnOrder="32" id="CHANGE_NOTICE_E_INTERRUPT_HANDLER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="CHANGE_NOTICE_E_InterruptHandler"/>
           </Values>
         </String>
-        <Boolean dnOrder="32" id="CHANGE_NOTICE_E_INTERRUPT_HANDLER_LOCK">
+        <Boolean dnOrder="33" id="CHANGE_NOTICE_E_INTERRUPT_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <KeyValueSet dnOrder="33" id="COMPILER_CHOICE">
+        <KeyValueSet dnOrder="34" id="COMPILER_CHOICE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <Combo dnOrder="34" id="CONFIG_ICESEL">
+        <Combo dnOrder="35" id="CONFIG_ICESEL">
           <Values dnOrder="0">
             <User dnOrder="0" value="ICS_PGx2"/>
           </Values>
         </Combo>
-        <Boolean dnOrder="35" id="EVIC_48_ENABLE">
+        <String dnOrder="36" id="CoreMainFileName">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="main_pic32mk_mcj_curiosity_pro"/>
+          </Values>
+        </String>
+        <Boolean dnOrder="37" id="EVIC_48_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="36" id="EVIC_48_HANDLER_LOCK">
+        <Boolean dnOrder="38" id="EVIC_48_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <String dnOrder="37" id="EVIC_48_INTERRUPT_HANDLER">
+        <String dnOrder="39" id="EVIC_48_INTERRUPT_HANDLER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="CHANGE_NOTICE_E_InterruptHandler"/>
           </Values>
         </String>
-        <Hex dnOrder="38" id="PMD1_REG_VALUE">
+        <File dnOrder="40" id="MAIN_C">
+          <Attributes dnOrder="0">
+            <String dnOrder="0" id="name">
+              <Value dnOrder="0">main_pic32mk_mcj_curiosity_pro.c</Value>
+            </String>
+          </Attributes>
+        </File>
+        <Hex dnOrder="41" id="PMD1_REG_VALUE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="4294967294"/>
           </Values>
         </Hex>
-        <Hex dnOrder="39" id="PMD5_REG_VALUE">
+        <Hex dnOrder="42" id="PMD5_REG_VALUE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="4026531839"/>
           </Values>
         </Hex>
-        <Hex dnOrder="40" id="PMD6_REG_VALUE">
+        <Hex dnOrder="43" id="PMD6_REG_VALUE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="4294963455"/>
           </Values>
         </Hex>
-        <Hex dnOrder="41" id="PMD7_REG_VALUE">
+        <Hex dnOrder="44" id="PMD7_REG_VALUE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="4294967279"/>
           </Values>
         </Hex>
-        <Hex dnOrder="42" id="SYS_PORT_A_TRIS">
+        <Hex dnOrder="45" id="SYS_PORT_A_LAT">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="1024"/>
           </Values>
         </Hex>
-        <Hex dnOrder="43" id="SYS_PORT_E_ANSEL">
+        <Hex dnOrder="46" id="SYS_PORT_A_TRIS">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="1024"/>
+          </Values>
+        </Hex>
+        <Hex dnOrder="47" id="SYS_PORT_E_ANSEL">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="8192"/>
           </Values>
         </Hex>
-        <Hex dnOrder="44" id="SYS_PORT_E_CNEN">
+        <Hex dnOrder="48" id="SYS_PORT_E_CNEN">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="8192"/>
           </Values>
         </Hex>
-        <Hex dnOrder="45" id="SYS_PORT_E_CNPU">
+        <Hex dnOrder="49" id="SYS_PORT_E_CNPU">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="8192"/>
           </Values>
         </Hex>
-        <Boolean dnOrder="46" id="SYS_PORT_E_CN_USED">
+        <Boolean dnOrder="50" id="SYS_PORT_E_CN_USED">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <Comment dnOrder="47" id="SYS_PORT_E_NVIC_ENABLE_COMMENT">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="visible">
-              <Value dnOrder="0">false</Value>
-            </Boolean>
-          </Attributes>
-        </Comment>
-        <KeyValueSet dnOrder="48" id="clkSvcMode">
+        <KeyValueSet dnOrder="51" id="clkSvcMode">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
