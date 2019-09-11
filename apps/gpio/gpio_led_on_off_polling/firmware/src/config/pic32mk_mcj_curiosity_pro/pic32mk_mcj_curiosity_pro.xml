@@ -133,62 +133,84 @@
             <User dnOrder="0" value="GPIO"/>
           </Values>
         </String>
-        <String dnOrder="26" id="BSP_PIN_64_MODE">
+        <String dnOrder="26" id="BSP_PIN_64_LAT">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="High"/>
+          </Values>
+        </String>
+        <String dnOrder="27" id="BSP_PIN_64_MODE">
           <Values dnOrder="0">
             <User dnOrder="0" value="DIGITAL"/>
           </Values>
         </String>
-        <String dnOrder="27" id="BSP_PIN_7_MODE">
+        <String dnOrder="28" id="BSP_PIN_7_MODE">
           <Values dnOrder="0">
             <User dnOrder="0" value="DIGITAL"/>
           </Values>
         </String>
-        <KeyValueSet dnOrder="28" id="COMPILER_CHOICE">
+        <KeyValueSet dnOrder="29" id="COMPILER_CHOICE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <Combo dnOrder="29" id="CONFIG_ICESEL">
+        <Combo dnOrder="30" id="CONFIG_ICESEL">
           <Values dnOrder="0">
             <User dnOrder="0" value="ICS_PGx2"/>
           </Values>
         </Combo>
-        <Hex dnOrder="30" id="PMD1_REG_VALUE">
+        <String dnOrder="31" id="CoreMainFileName">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="main_pic32mk_mcj_curiosity_pro"/>
+          </Values>
+        </String>
+        <File dnOrder="32" id="MAIN_C">
+          <Attributes dnOrder="0">
+            <String dnOrder="0" id="name">
+              <Value dnOrder="0">main_pic32mk_mcj_curiosity_pro.c</Value>
+            </String>
+          </Attributes>
+        </File>
+        <Hex dnOrder="33" id="PMD1_REG_VALUE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="4294967294"/>
           </Values>
         </Hex>
-        <Hex dnOrder="31" id="PMD5_REG_VALUE">
+        <Hex dnOrder="34" id="PMD5_REG_VALUE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="4026531839"/>
           </Values>
         </Hex>
-        <Hex dnOrder="32" id="PMD6_REG_VALUE">
+        <Hex dnOrder="35" id="PMD6_REG_VALUE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="4294963455"/>
           </Values>
         </Hex>
-        <Hex dnOrder="33" id="PMD7_REG_VALUE">
+        <Hex dnOrder="36" id="PMD7_REG_VALUE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="4294967279"/>
           </Values>
         </Hex>
-        <Hex dnOrder="34" id="SYS_PORT_A_TRIS">
+        <Hex dnOrder="37" id="SYS_PORT_A_LAT">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="1024"/>
           </Values>
         </Hex>
-        <Hex dnOrder="35" id="SYS_PORT_E_ANSEL">
+        <Hex dnOrder="38" id="SYS_PORT_A_TRIS">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="1024"/>
+          </Values>
+        </Hex>
+        <Hex dnOrder="39" id="SYS_PORT_E_ANSEL">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="8192"/>
           </Values>
         </Hex>
-        <Hex dnOrder="36" id="SYS_PORT_E_CNPU">
+        <Hex dnOrder="40" id="SYS_PORT_E_CNPU">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="8192"/>
           </Values>
         </Hex>
-        <KeyValueSet dnOrder="37" id="clkSvcMode">
+        <KeyValueSet dnOrder="41" id="clkSvcMode">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
