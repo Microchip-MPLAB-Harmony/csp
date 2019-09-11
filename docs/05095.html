@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>RSTC_RESET_CAUSE Enumeration</title>
+<title>PIC32MX 1XX/2XX Peripheral Libraries</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="04449.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04448.html" target="topic">Peripheral Libraries</a> &gt; <a href="05044.html" target="topic">RSTC Peripheral Library Help</a> &gt; <a href="05045.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="05095.html" target="topic">RSTC_RESET_CAUSE Enumeration</a></div>
+<a href="05091.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04683.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05095.html" target="topic">PIC32MX 1XX/2XX Peripheral Libraries</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04449.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05091.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05094.html" target="topic">Previous</a> | <a href="05045.html" target="topic">Up</a> | <a href="05101.html" target="topic">Next</a></div>
+<a href="05094.html" target="topic">Previous</a> | <a href="04683.html" target="topic">Up</a> | <a href="05096.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rstc_11265::RSTC_RESET_CAUSE Topic Title: RSTC_RESET_CAUSE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PLIB PIC32MX 1XX/2XX Topic Title: PIC32MX 1XX/2XX Peripheral Libraries)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-RSTC_RESET_CAUSE Enumeration</div>
+PIC32MX 1XX/2XX Peripheral Libraries</div>
 </div>
 </div>
 
@@ -49,72 +49,83 @@ RSTC_RESET_CAUSE Enumeration</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Reset cause&nbsp;</p>
+The following Table lists all the Peripheral Libraries for the PIC32MX 1XX/2XX Family.&nbsp;</p>
 <p class="Element10">
-This enumeration provides identifiers for General, Backup, Watchdog, Software or User reset causes.</p></div>
-</div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
-  <strong><span style="color: #000000">RSTC_GENERAL_RESET</span></strong> = RSTC_SR_RSTTYP_GENERAL_RST,
-  <strong><span style="color: #000000">RSTC_WAKEUP_RESET</span></strong> = RSTC_SR_RSTTYP_WKUP_RST,
-  <strong><span style="color: #000000">RSTC_WATCHDOG_RESET</span></strong> = RSTC_SR_RSTTYP_WDT_RST,
-  <strong><span style="color: #000000">RSTC_SOFTWARE_RESET</span></strong> = RSTC_SR_RSTTYP_SOFT_RST,
-  <strong><span style="color: #000000">RSTC_USER_RESET</span></strong> = RSTC_SR_RSTTYP_USER_RST
-} RSTC_RESET_CAUSE;</pre></div></div>
-<a name="4D656D62657273"></a><div class="Element14">
-Members</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element272">
+&nbsp;</p><div class="Element63">
 <div class="TableDiv">
-<table cellspacing="0" class="Table3">
+<table cellspacing="0" class="Table1">
 <tr>
-<td class="Element260" valign="top" width="35%">
-<div class="Element261">
-Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
-<div class="Element265">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-RSTC_GENERAL_RESET = RSTC_SR_RSTTYP_GENERAL_RST&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-First power reset&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-RSTC_WAKEUP_RESET = RSTC_SR_RSTTYP_WKUP_RST&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Reset after wake up mode&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-RSTC_WATCHDOG_RESET = RSTC_SR_RSTTYP_WDT_RST&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Reset when Watchdog fault occurred&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-RSTC_SOFTWARE_RESET = RSTC_SR_RSTTYP_SOFT_RST&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Reset caused by dedicated software instruction&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-RSTC_USER_RESET = RSTC_SR_RSTTYP_USER_RST&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Reset occurs when NRST pin is detected low&nbsp;</div></td></tr></table></div></div>
+<td class="Element65" valign="top" width="100%">
+<div class="Element66">
+PIC32MX 1XX/2XX Peripheral Libraries&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="00190.html" target="topic">ADC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="01361.html" target="topic">Clock Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="01471.html" target="topic">CMP Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="01540.html" target="topic">CORETIMER Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="01586.html" target="topic">CVR Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="01772.html" target="topic">DMAC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="02180.html" target="topic">EVIC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="03097.html" target="topic">GPIO Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="03713.html" target="topic">I2C Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="03781.html" target="topic">ICAP Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="04255.html" target="topic">NVM Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="04490.html" target="topic">OCMP Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="05192.html" target="topic">PMP Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="05600.html" target="topic">RCON Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="06117.html" target="topic">RTCC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="06748.html" target="topic">SPI Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="07615.html" target="topic">TMR Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="07665.html" target="topic">TMR1 Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="07790.html" target="topic">UART Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="100%">
+<div class="Element68">
+<a href="08003.html" target="topic">WDT Peripheral Library Help</a>&nbsp;</div></td></tr></table></div></div>
 </div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-Refer to the specific device data sheet to determine availability.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="04449.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04448.html" target="topic">Peripheral Libraries</a> &gt; <a href="05044.html" target="topic">RSTC Peripheral Library Help</a> &gt; <a href="05045.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="05095.html" target="topic">RSTC_RESET_CAUSE Enumeration</a></div>
+<a href="05091.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04683.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05095.html" target="topic">PIC32MX 1XX/2XX Peripheral Libraries</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -122,13 +133,13 @@ Refer to the specific device data sheet to determine availability.</p></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04449.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05091.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05094.html" target="topic">Previous</a> | <a href="05045.html" target="topic">Up</a> | <a href="05101.html" target="topic">Next</a></div>
+<a href="05094.html" target="topic">Previous</a> | <a href="04683.html" target="topic">Up</a> | <a href="05096.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rstc_11265::RSTC_RESET_CAUSE Topic Title: RSTC_RESET_CAUSE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PLIB PIC32MX 1XX/2XX Topic Title: PIC32MX 1XX/2XX Peripheral Libraries)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

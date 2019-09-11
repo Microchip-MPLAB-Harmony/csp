@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Using the Library</title>
+<title>Introduction</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="04449.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04448.html" target="topic">Peripheral Libraries</a> &gt; <a href="05594.html" target="topic">SDADC Peripheral Library Help</a> &gt; <a href="05599.html" target="topic">Using the Library</a></div>
+<a href="05091.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04683.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05090.html" target="topic">Peripheral Libraries</a> &gt; <a href="05600.html" target="topic">RCON Peripheral Library Help</a> &gt; <a href="05599.html" target="topic">Introduction</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04449.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05091.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05590.html" target="topic">Previous</a> | <a href="05594.html" target="topic">Up</a> | <a href="05595.html" target="topic">Next</a></div>
+<a href="05600.html" target="topic">Previous</a> | <a href="05600.html" target="topic">Up</a> | <a href="05597.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SDADC U2260 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RCON 01342 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Using the Library</div>
+Introduction</div>
 </div>
 </div>
 
@@ -49,91 +49,30 @@ Using the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-SDADC converts enabled channel on software or hardware triggers. It provides both polling and callback methods to indicate the end of conversion to read the converted data from the result register.</p>
+The Resets collects the various reset sources and generates reset for the device and allows the reset source to be identified by the software.</p>
 <ul class="Element630">
-<li class="Element600">With polling, the application will need to continuously poll to check if the conversion is completed.</li>
-<li class="Element600">With callback, the registered callback function will be called once the conversion is completed. This means the application do not have to poll continuously.</li>
+<li class="Element600"><strong>Power On Reset: </strong>The device contains a power-on-reset (POR) detector, which keeps the system reset until power is stable. This eliminates the need for external reset circuitry to guarantee stable operation when powering up the device.</li>
+<li class="Element600"><strong>Brown Out Reset: </strong>If the voltage supplied to the regulator is inadequate to maintain a regulated level, the regulator Reset circuitry will generate a BOR event, which is synchronized with the system clock, SYSCLK, before asserting the system Reset..</li>
+<li class="Element600"><strong>Watchdog Reset:</strong> The watchdog reset occurs when it times out</li>
+<li class="Element600"><strong>External Reset/MCLR: </strong>A external reset is generated when a low level is detected on the RESET pin</li>
+<li class="Element600"><strong>Software Reset: </strong>Caused by performing software reset command sequence</li>
+<li class="Element600"><strong>Configuration Mismatch:</strong> Caused due to configuration bit values are not opposite to each other.</li>
+<li class="Element600"><strong>High Voltage Detect:</strong> Caused when high voltage is detected.</li>
 </ul><p class="Element10">
 &nbsp;</p>
 <p class="Element10">
-<strong>Callback method</strong>&nbsp;</p>
-<p class="Element10">
-This example demonstrates how to read conversion result in the callback function. One channel is enabled and configured to start conversion on hardware trigger.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<span class="Element146">int16_t result;</span>&nbsp;</p>
-<p class="Element10">
-<span class="Element146">/* This function is called after conversion of last channel in the user sequence */</span>&nbsp;</p>
-<p class="Element10">
-<span class="Element146">void SDADC_EventHandler(<a href="05604.html" target="topic">SDADC_STATUS</a> status, uintptr_t context)</span>&nbsp;</p>
-<p class="Element10">
-<span class="Element146">{</span>&nbsp;</p>
-<p class="Element10">
-<span class="Element146"> result = SDADC_ConversionResultGet();</span>&nbsp;</p>
-<p class="Element10">
-<span class="Element146">}</span>&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<span class="Element146">int main(void)</span>&nbsp;</p>
-<p class="Element10">
-<span class="Element146">{</span>&nbsp;</p>
-<p class="Element10">
-<span class="Element146"> /* Register callback function for SDADC end of conversion interrupt*/</span>&nbsp;</p>
-<p class="Element10">
-<span class="Element146"> SDADC_CallbackRegister(SDADC_EventHandler, (uintptr_t)NULL);</span>&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<span class="Element146">while(true)</span>&nbsp;</p>
-<p class="Element10">
-<span class="Element146">{</span>&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<span class="Element146">}</span>&nbsp;</p>
-<p class="Element10">
-<span class="Element146">}</span>&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong>Polling method</strong>&nbsp;</p>
-<p class="Element10">
-This example demonstrates how to start conversion and read the converted data in polled mode. One channel is enabled and configured to start conversion on software trigger.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<span class="Element146">/* Start conversion */</span>&nbsp;</p>
-<p class="Element10">
-<span class="Element146">SDADC_ConversionStart();</span>&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<span class="Element146">/* Wait till ADC conversion result is available */</span>&nbsp;</p>
-<p class="Element10">
-<span class="Element146">while(!SDADC_ConversionResultIsReady(CH0))</span>&nbsp;</p>
-<p class="Element10">
-<span class="Element146">{</span>&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<span class="Element146">};</span>&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<span class="Element146">/* Read the ADC result */</span>&nbsp;</p>
-<p class="Element10">
-<span class="Element146">result = SDADC_ConversionResultGet();</span>&nbsp;</p></div>
+Resets are divided into two modes based upon the source of the reset.</p>
+<ul class="Element630">
+<li class="Element600">Power Resets include resets generated by POR, BOR, MCLR.</li>
+<li class="Element600">User Resets consist of the external reset, WDT, and the software reset instruction</li>
+</ul></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="04449.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04448.html" target="topic">Peripheral Libraries</a> &gt; <a href="05594.html" target="topic">SDADC Peripheral Library Help</a> &gt; <a href="05599.html" target="topic">Using the Library</a></div>
+<a href="05091.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04683.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05090.html" target="topic">Peripheral Libraries</a> &gt; <a href="05600.html" target="topic">RCON Peripheral Library Help</a> &gt; <a href="05599.html" target="topic">Introduction</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -141,13 +80,13 @@ This example demonstrates how to start conversion and read the converted data in
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04449.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05091.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05590.html" target="topic">Previous</a> | <a href="05594.html" target="topic">Up</a> | <a href="05595.html" target="topic">Next</a></div>
+<a href="05600.html" target="topic">Previous</a> | <a href="05600.html" target="topic">Up</a> | <a href="05597.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SDADC U2260 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RCON 01342 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Building The Application</title>
+<title>Using the Library</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="04449.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="06239.html" target="topic">SUPC Applications</a> &gt; <a href="06241.html" target="topic">supc_wakeup_rtt</a> &gt; <a href="06247.html" target="topic">Building The Application</a></div>
+<a href="05091.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04683.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05090.html" target="topic">Peripheral Libraries</a> &gt; <a href="06242.html" target="topic">SDADC Peripheral Library Help</a> &gt; <a href="06247.html" target="topic">Using the Library</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04449.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05091.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06241.html" target="topic">Previous</a> | <a href="06241.html" target="topic">Up</a> | <a href="06249.html" target="topic">Next</a></div>
+<a href="06238.html" target="topic">Previous</a> | <a href="06242.html" target="topic">Up</a> | <a href="06243.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SUPC supc_wakeup_rtt Building The Application Topic Title: Building The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SDADC U2260 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Building The Application</div>
+Using the Library</div>
 </div>
 </div>
 
@@ -49,50 +49,91 @@ Building The Application</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The parent folder for all the MPLAB X IDE projects for this application is given below: </p><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element65" valign="top" width="30%">
-<div class="Element66">
-Application Path&nbsp;</div></td><td class="Element65" valign="top" width="70%">
-<div class="Element66">
-csp/apps/supc/supc_wakeup_rtt/firmware&nbsp;</div></td></tr></table></div></div>
+SDADC converts enabled channel on software or hardware triggers. It provides both polling and callback methods to indicate the end of conversion to read the converted data from the result register.</p>
+<ul class="Element630">
+<li class="Element600">With polling, the application will need to continuously poll to check if the conversion is completed.</li>
+<li class="Element600">With callback, the registered callback function will be called once the conversion is completed. This means the application do not have to poll continuously.</li>
+</ul><p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<strong>Callback method</strong>&nbsp;</p>
+<p class="Element10">
+This example demonstrates how to read conversion result in the callback function. One channel is enabled and configured to start conversion on hardware trigger.&nbsp;</p>
 <p class="Element10">
 &nbsp;</p>
 <p class="Element10">
-To build the application, refer to the following table and open the appropriate project file in the MPLAB X IDE. </p><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element65" valign="top" width="25%">
-<div class="Element66">
-Project Name&nbsp;</div></td><td class="Element65" valign="top" width="75%">
-<div class="Element66">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="25%">
-<div class="Element68">
-sam_e70_xult.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
-<div class="Element68">
-SAM E70 Xplained Ultra board&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="25%">
-<div class="Element68">
-sam_g55_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
-<div class="Element68">
-SAM G55 Xplained Pro Evaluation Kit&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="25%">
-<div class="Element68">
-sam_v71_xult.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
-<div class="Element68">
-SAM V71 Xplained Ultra board&nbsp;</div></td></tr></table></div></div>
-</div>
+&nbsp;</p>
+<p class="Element10">
+<span class="Element146">int16_t result;</span>&nbsp;</p>
+<p class="Element10">
+<span class="Element146">/* This function is called after conversion of last channel in the user sequence */</span>&nbsp;</p>
+<p class="Element10">
+<span class="Element146">void SDADC_EventHandler(<a href="06252.html" target="topic">SDADC_STATUS</a> status, uintptr_t context)</span>&nbsp;</p>
+<p class="Element10">
+<span class="Element146">{</span>&nbsp;</p>
+<p class="Element10">
+<span class="Element146"> result = SDADC_ConversionResultGet();</span>&nbsp;</p>
+<p class="Element10">
+<span class="Element146">}</span>&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<span class="Element146">int main(void)</span>&nbsp;</p>
+<p class="Element10">
+<span class="Element146">{</span>&nbsp;</p>
+<p class="Element10">
+<span class="Element146"> /* Register callback function for SDADC end of conversion interrupt*/</span>&nbsp;</p>
+<p class="Element10">
+<span class="Element146"> SDADC_CallbackRegister(SDADC_EventHandler, (uintptr_t)NULL);</span>&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<span class="Element146">while(true)</span>&nbsp;</p>
+<p class="Element10">
+<span class="Element146">{</span>&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<span class="Element146">}</span>&nbsp;</p>
+<p class="Element10">
+<span class="Element146">}</span>&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<strong>Polling method</strong>&nbsp;</p>
+<p class="Element10">
+This example demonstrates how to start conversion and read the converted data in polled mode. One channel is enabled and configured to start conversion on software trigger.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<span class="Element146">/* Start conversion */</span>&nbsp;</p>
+<p class="Element10">
+<span class="Element146">SDADC_ConversionStart();</span>&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<span class="Element146">/* Wait till ADC conversion result is available */</span>&nbsp;</p>
+<p class="Element10">
+<span class="Element146">while(!SDADC_ConversionResultIsReady(CH0))</span>&nbsp;</p>
+<p class="Element10">
+<span class="Element146">{</span>&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<span class="Element146">};</span>&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<span class="Element146">/* Read the ADC result */</span>&nbsp;</p>
+<p class="Element10">
+<span class="Element146">result = SDADC_ConversionResultGet();</span>&nbsp;</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="04449.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="06239.html" target="topic">SUPC Applications</a> &gt; <a href="06241.html" target="topic">supc_wakeup_rtt</a> &gt; <a href="06247.html" target="topic">Building The Application</a></div>
+<a href="05091.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04683.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05090.html" target="topic">Peripheral Libraries</a> &gt; <a href="06242.html" target="topic">SDADC Peripheral Library Help</a> &gt; <a href="06247.html" target="topic">Using the Library</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -100,13 +141,13 @@ SAM V71 Xplained Ultra board&nbsp;</div></td></tr></table></div></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04449.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05091.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06241.html" target="topic">Previous</a> | <a href="06241.html" target="topic">Up</a> | <a href="06249.html" target="topic">Next</a></div>
+<a href="06238.html" target="topic">Previous</a> | <a href="06242.html" target="topic">Up</a> | <a href="06243.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SUPC supc_wakeup_rtt Building The Application Topic Title: Building The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SDADC U2260 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

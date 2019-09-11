@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCx_QuadratureCallbackRegister Function</title>
+<title>SERCOMx_I2C_TransferSetup Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="04449.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04448.html" target="topic">Peripheral Libraries</a> &gt; <a href="06409.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="06410.html" target="topic">Quadrature Decoder</a> &gt; <a href="06415.html" target="topic">Library Interface</a> &gt; <a href="06416.html" target="topic">b) Setup Functions</a> &gt; <a href="06611.html" target="topic">TCx_QuadratureCallbackRegister Function</a></div>
+<a href="05091.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04683.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05090.html" target="topic">Peripheral Libraries</a> &gt; <a href="06566.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="06555.html" target="topic">I2C</a> &gt;  &gt; <a href="06611.html" target="topic">SERCOMx_I2C_TransferSetup Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04449.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05091.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06416.html" target="topic">Previous</a> | <a href="06416.html" target="topic">Up</a> | <a href="06418.html" target="topic">Next</a></div>
+</div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tc_44162::TCx_QuadratureCallbackRegister@TCx_QUADRATURE_CALLBACK@uintptr_t Topic Title: TCx_QuadratureCallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_i2c::SERCOMx_I2C_TransferSetup@SERCOM_I2C_TRANSFER_SETUP*@uint32_t Topic Title: SERCOMx_I2C_TransferSetup Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCx_QuadratureCallbackRegister Function</div>
+SERCOMx_I2C_TransferSetup Function</div>
 </div>
 </div>
 
@@ -49,20 +49,20 @@ TCx_QuadratureCallbackRegister Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function registers the callback function to be called from interrupt</p></div>
+This API is generally used when there are multiple clients on the same I2C bus having different I2C clock speed. In such a case, the SERCOMx_I2C_TransferSetup API must be called to set the appropriate I2C bus speed before starting the I2C transfer for the I2C slave.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">TCx_QuadratureCallbackRegister</span></strong>(
-    <a href="06601.html" target="topic">TCx_QUADRATURE_CALLBACK</a> <strong><span style="color: #000000">callback</span></strong>, 
-    uintptr_t <strong><span style="color: #000000">context</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">SERCOMx_I2C_TransferSetup</span></strong>(
+    <a href="06604.html" target="topic">SERCOM_I2C_TRANSFER_SETUP</a>* <strong><span style="color: #000000">setup</span></strong>, 
+    uint32_t <strong><span style="color: #000000">srcClkFreq</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="06612.html" target="topic">TCx_QuadratureInitialize</a> must have been called first.</p></div>
+<a href="06608.html" target="topic">SERCOMx_I2C_Initialize</a> must have been called for the associated SERCOM I2C instance. The transfer status should not be busy.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -79,14 +79,14 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-callback&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+setup&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Callback function pointer.<br>&nbsp;</div></td></tr><tr>
+Pointer to the structure containing the transfer setup.&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+srcClkFreq&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Value provided back to the caller by the callback (usually a pointer to the caller's context for multi-instance clients).&nbsp;</div></td></tr></table></div></div>
+SERCOM I2C Peripheral Clock Source Frequency.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -94,25 +94,32 @@ Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+true - Transfer setup was updated Successfully. false - Failure while updating transfer setup.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Context value can be set to NULL if not required.&nbsp;</p>
-<p class="Element10">
-To disable callback function, pass NULL for the callback parameter.</p></div>
+srcClkFreq overrides any change in the peripheral clock frequency. If configured to zero PLib takes the peripheral clock frequency from MHC.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">void</span></strong> TC_CallbackFn(<a href="06605.html" target="topic">TCx_QUADRATURE_STATUS</a> status, uintptr_t context);
+<div class="Element13"><div class="Element12"><pre class="Element12">
+<a href="06604.html" target="topic">SERCOM_I2C_TRANSFER_SETUP</a> setup;
 
-TC0_QuadratureInitialize();
-TC0_QuadratureCallbackRegister(TC_CallbackFn, NULL);</pre></div></div>
+setup.clkSpeed = 400000;
+
+<i><span style="color: #008000">// Make sure that the I2C is not busy before changing the I2C clock frequency</span></i>
+<strong><span style="color: #000080">if</span></strong> (SERCOMx_I2C_I2C_IsBusy() == <strong><span style="color: #000080">false</span></strong>)
+{
+    <strong><span style="color: #000080">if</span></strong> (SERCOMx_I2C_TransferSetup( &amp;setup, 0 ) == <strong><span style="color: #000080">true</span></strong>)
+    {
+        <i><span style="color: #008000">// Transfer Setup updated successfully</span></i>
+    }
+}    </pre></div></div>
 </div>
 </div>
 </div>
@@ -120,7 +127,7 @@ TC0_QuadratureCallbackRegister(TC_CallbackFn, NULL);</pre></div></div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="04449.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04448.html" target="topic">Peripheral Libraries</a> &gt; <a href="06409.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="06410.html" target="topic">Quadrature Decoder</a> &gt; <a href="06415.html" target="topic">Library Interface</a> &gt; <a href="06416.html" target="topic">b) Setup Functions</a> &gt; <a href="06611.html" target="topic">TCx_QuadratureCallbackRegister Function</a></div>
+<a href="05091.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04683.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05090.html" target="topic">Peripheral Libraries</a> &gt; <a href="06566.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="06555.html" target="topic">I2C</a> &gt;  &gt; <a href="06611.html" target="topic">SERCOMx_I2C_TransferSetup Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -128,13 +135,13 @@ TC0_QuadratureCallbackRegister(TC_CallbackFn, NULL);</pre></div></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04449.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05091.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06416.html" target="topic">Previous</a> | <a href="06416.html" target="topic">Up</a> | <a href="06418.html" target="topic">Next</a></div>
+</div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tc_44162::TCx_QuadratureCallbackRegister@TCx_QUADRATURE_CALLBACK@uintptr_t Topic Title: TCx_QuadratureCallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_i2c::SERCOMx_I2C_TransferSetup@SERCOM_I2C_TRANSFER_SETUP*@uint32_t Topic Title: SERCOMx_I2C_TransferSetup Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

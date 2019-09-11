@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Hardware Setup</title>
+<title>Library Interface</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="04449.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="00931.html" target="topic">CAN Applications</a> &gt; <a href="00928.html" target="topic">can_fd_operation_blocking</a> &gt; <a href="00933.html" target="topic">Hardware Setup</a></div>
+<a href="05091.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04683.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05090.html" target="topic">Peripheral Libraries</a> &gt; <a href="00932.html" target="topic">CAN Peripheral Library Help</a> &gt; <a href="00933.html" target="topic">Library Interface</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04449.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05091.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00934.html" target="topic">Previous</a> | <a href="00928.html" target="topic">Up</a> | <a href="00935.html" target="topic">Next</a></div>
+<a href="00937.html" target="topic">Previous</a> | <a href="00932.html" target="topic">Up</a> | <a href="01084.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CAN can_fd_operation_blocking Hardware Setup Topic Title: Hardware Setup)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CAN 03247 Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Hardware Setup</div>
+Library Interface</div>
 </div>
 </div>
 
@@ -46,156 +46,272 @@ Hardware Setup</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="4465736372697074696F6E"></a><div class="Element11">
+<a name="612920496E697469616C697A6174696F6E2046756E6374696F6E"></a><div class="Element14">
+a) Initialization Function</div>
+<div class="Element11">
 <div class="Element10">
-
-<ol class="Element630">
-<li value="1" class="Element600"><strong>Project sam_c21n_xpro.X</strong>
-<ul class="Element631">
-<li class="Element601"><strong>Hardware Used</strong>
-<ul class="Element632">
-<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/atsamc21n-xpro');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM C21N Xplained Pro Evaluation Kit</a><strong> </strong>- 2 boards</li>
-</ul></li>
-<li class="Element601"><strong>Hardware Setup</strong>
-<ul class="Element632">
-<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
-<li class="Element602">Connect SAM C21N Xplained Pro Evaluation Kit to another SAM C21N Xplained Pro Evaluation Kit as per the pin connections shown below</li>
-</ul></li>
-</ul></li>
-</ol><div class="Element63">
+<div class="Element212">
 <div class="TableDiv">
-<table cellspacing="0" class="Table1">
+<table cellspacing="0" class="Table0">
 <tr>
-<td class="Element65" valign="top" width="50%">
-<div class="Element66">
-SAMC21N XPRO - 1&nbsp;</div></td><td class="Element65" valign="top" width="50%">
-<div class="Element66">
-SAMC21N XPRO - 2&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="50%">
-<div class="Element68">
-CANH1, PIN 1&nbsp;</div></td><td class="Element67" valign="top" width="50%">
-<div class="Element68">
-CANH1, PIN 1&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="50%">
-<div class="Element68">
-CANL1, PIN 2&nbsp;</div></td><td class="Element67" valign="top" width="50%">
-<div class="Element68">
-CANL1, PIN 2&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="50%">
-<div class="Element68">
-GND, EXT1 PIN19&nbsp;</div></td><td class="Element67" valign="top" width="50%">
-<div class="Element68">
-GND, EXT1 PIN19&nbsp;</div></td></tr></table></div></div>
-<p class="Element10">
-&nbsp;</p>
-
-<ol class="Element630">
-<li value="2" class="Element600"><strong>Project sam_e54_xpro.X</strong>
-<ul class="Element631">
-<li class="Element601"><strong>Hardware Used</strong>
-<ul class="Element632">
-<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/atsame54-xpro');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM E54 Xplained Pro Evaluation Kit</a><strong> </strong>- 2 boards</li>
-</ul></li>
-<li class="Element601"><strong>Hardware Setup</strong>
-<ul class="Element632">
-<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
-<li class="Element602">Connect SAM E54 Xplained Pro Evaluation Kit to another SAM E54 Xplained Pro Evaluation Kit as per the pin connections shown below</li>
-</ul></li>
-</ul></li>
-</ol><div class="Element63">
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01084.html" target="topic">CANx_Initialize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Initializes given instance of the CAN peripheral.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="62292053657475702046756E6374696F6E73"></a><div class="Element14">
+b) Setup Functions</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
 <div class="TableDiv">
-<table cellspacing="0" class="Table1">
+<table cellspacing="0" class="Table0">
 <tr>
-<td class="Element65" valign="top" width="50%">
-<div class="Element66">
-SAME54 XPRO - 1&nbsp;</div></td><td class="Element65" valign="top" width="50%">
-<div class="Element66">
-SAME54 XPRO - 2&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="50%">
-<div class="Element68">
-CANH, PIN 1&nbsp;</div></td><td class="Element67" valign="top" width="50%">
-<div class="Element68">
-CANH, PIN 1&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="50%">
-<div class="Element68">
-CANL, PIN 2&nbsp;</div></td><td class="Element67" valign="top" width="50%">
-<div class="Element68">
-CANL, PIN 2&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="50%">
-<div class="Element68">
-GND, EXT1 PIN19&nbsp;</div></td><td class="Element67" valign="top" width="50%">
-<div class="Element68">
-GND, EXT1 PIN19&nbsp;</div></td></tr></table></div></div>
-<p class="Element10">
-&nbsp;</p>
-
-<ol class="Element630">
-<li value="3" class="Element600"><strong>Project pic32mk_mcj_curiosity_pro.X</strong></li>
-</ol>
-<ul class="Element630">
-<li class="Element600"><strong>Hardware Used</strong>
-<ul class="Element631">
-<li class="Element601">PIC32MK MCJ Curiosity Pro Board- 2 boards</li>
-<li class="Element601"><a href="#" onclick="openExternalLink('https://www.microchip.com/Developmenttools/ProductDetails/ATMBUSADAPTER-XPRO');"><img src="indicator_external_link.gif" border="0" alt="" title="">mikroBus Xplained Pro board</a> - 2 boards</li>
-<li class="Element601"><a href="#" onclick="openExternalLink('https://www.mikroe.com/usb-uart-click');"><img src="indicator_external_link.gif" border="0" alt="" title="">USB UART click board</a> - 2 boards</li>
-</ul></li>
-<li class="Element600"><strong>Hardware Setup</strong>
-<ul class="Element631">
-<li class="Element601">Connect the <a href="#" onclick="openExternalLink('https://www.microchip.com/Developmenttools/ProductDetails/ATMBUSADAPTER-XPRO');"><img src="indicator_external_link.gif" border="0" alt="" title="">mikroBus Xplained Pro board</a> with <a href="#" onclick="openExternalLink('https://www.mikroe.com/usb-uart-click');"><img src="indicator_external_link.gif" border="0" alt="" title="">USB UART click board</a> to J501 for each board.</li>
-<li class="Element601">Connect mini USB cable to USB UART click board for each board. This will enumerate the USB to UART port.</li>
-<li class="Element601">Connect the Debug USB port (J1) to the computer using a micro USB cable for each board</li>
-<li class="Element601">Connect PIC32MK MCJ Curiosity Pro Board to another PIC32MK MCJ Curiosity Pro Board as per the pin connections shown below</li>
-</ul></li>
-</ul><div class="Element63">
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01081.html" target="topic">CANx_CallbackRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Sets the pointer to the function (and it's context) to be called when the given CAN's transfer events occur.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="6329205472616E73616374696F6E2046756E6374696F6E73"></a><div class="Element14">
+c) Transaction Functions</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
 <div class="TableDiv">
-<table cellspacing="0" class="Table1">
+<table cellspacing="0" class="Table0">
 <tr>
-<td class="Element65" valign="top" width="50%">
-<div class="Element66">
-PIC32MK MCJ Curiosity Pro Board - 1&nbsp;</div></td><td class="Element65" valign="top" width="50%">
-<div class="Element66">
-PIC32MK MCJ Curiosity Pro Board - 2&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="50%">
-<div class="Element68">
-J504, CANH, PIN 1&nbsp;</div></td><td class="Element67" valign="top" width="50%">
-<div class="Element68">
-J504, CANH, PIN 1&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="50%">
-<div class="Element68">
-J504, GND, PIN 2&nbsp;</div></td><td class="Element67" valign="top" width="50%">
-<div class="Element68">
-J504, GND, PIN 2&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="50%">
-<div class="Element68">
-J504, CANL, PIN 3&nbsp;</div></td><td class="Element67" valign="top" width="50%">
-<div class="Element68">
-J504, CANL, PIN 3&nbsp;</div></td></tr></table></div></div>
-<p class="Element10">
-&nbsp;</p>
-
-<ol class="Element630">
-<li value="4" class="Element600"><strong>Project pic32mk_gpl_curiosity_pro.X</strong>
-<ul class="Element631">
-<li class="Element601"><strong>Hardware Used</strong>
-<ul class="Element632">
-<li class="Element602">PIC32MK GPL Curiosity Pro Board- 2 boards</li>
-</ul></li>
-<li class="Element601"><strong>Hardware Setup</strong>
-<ul class="Element632">
-<li class="Element602">Connect DB9 male to male cable from J402 on PIC32MK GPL Curiosity Pro Board-1 to J402 on PIC32MK GPL Curiosity Pro Board-2</li>
-<li class="Element602">Connect the USB to UART port (J400) to the computer using a micro USB cable for each board</li>
-<li class="Element602">Connect the Debug USB port (J500) to the computer using a micro USB cable for each board</li>
-<li class="Element602">Short (close) J20 Jumper for each board</li>
-</ul></li>
-</ul></li>
-</ol></div>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01093.html" target="topic">CANx_MessageTransmit</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Transmits a message into CAN bus.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01092.html" target="topic">CANx_MessageReceive</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Receives a message from CAN bus.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01091.html" target="topic">CANx_MessageAcceptanceFilterSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Set Message acceptance filter configuration.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01088.html" target="topic">CANx_MessageAcceptanceFilterGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Get Message acceptance filter configuration.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01090.html" target="topic">CANx_MessageAcceptanceFilterMaskSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Set Message acceptance filter mask configuration.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01089.html" target="topic">CANx_MessageAcceptanceFilterMaskGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Get Message acceptance filter mask configuration.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01087.html" target="topic">CANx_MessageAbort</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Abort request for a FIFO.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01094.html" target="topic">CANx_TransmitEventFIFOElementGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Get the Transmit Event FIFO Element for the transmitted message.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="6429205374617475732046756E6374696F6E73"></a><div class="Element14">
+d) Status Functions</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01083.html" target="topic">CANx_ErrorGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Returns the error during transfer.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01082.html" target="topic">CANx_ErrorCountGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Returns the transmit and receive error count during transfer.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01085.html" target="topic">CANx_InterruptGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Returns the FIFO Interrupt status.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01086.html" target="topic">CANx_IsBusy</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Returns the Peripheral busy status.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="6529204461746120547970657320616E6420436F6E7374616E7473"></a><div class="Element14">
+e) Data Types and Constants</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01045.html" target="topic">CAN_MODE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+CAN Mode for Classic CAN and CAN FD.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01049.html" target="topic">CAN_MSG_TX_ATTRIBUTE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+CAN Tx Message Attribute for Tx FIFO and Tx Queue.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01039.html" target="topic">CAN_FIFO_INTERRUPT_FLAG_MASK</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+CAN FIFO Interrupt Status Flag Mask.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01031.html" target="topic">CAN_ERROR</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+CAN Transfer Error data type.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01067.html" target="topic">CAN_STATE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+CAN PLib Task State.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01077.html" target="topic">CAN_TX_MSG_OBJECT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+CAN Transmit Message Object structure.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01063.html" target="topic">CAN_RX_MSG_OBJECT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+CAN Receive Message Object structure.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01073.html" target="topic">CAN_TX_EVENT_FIFO_ELEMENT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+CAN Trasmit Event FIFO Element structure.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01058.html" target="topic">CAN_RX_MSG</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+CAN RX Message Buffer structure.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01030.html" target="topic">CAN_CALLBACK</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+CAN Callback Function Pointer.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01052.html" target="topic">CAN_OBJ</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+CAN PLib Object structure.&nbsp;</div></td></tr></table></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="04449.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="00931.html" target="topic">CAN Applications</a> &gt; <a href="00928.html" target="topic">can_fd_operation_blocking</a> &gt; <a href="00933.html" target="topic">Hardware Setup</a></div>
+<a href="05091.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04683.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05090.html" target="topic">Peripheral Libraries</a> &gt; <a href="00932.html" target="topic">CAN Peripheral Library Help</a> &gt; <a href="00933.html" target="topic">Library Interface</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -203,13 +319,13 @@ J504, CANL, PIN 3&nbsp;</div></td></tr></table></div></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04449.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05091.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00934.html" target="topic">Previous</a> | <a href="00928.html" target="topic">Up</a> | <a href="00935.html" target="topic">Next</a></div>
+<a href="00937.html" target="topic">Previous</a> | <a href="00932.html" target="topic">Up</a> | <a href="01084.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CAN can_fd_operation_blocking Hardware Setup Topic Title: Hardware Setup)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CAN 03247 Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

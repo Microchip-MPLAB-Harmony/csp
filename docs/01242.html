@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>CLOCK_Initialize Function</title>
+<title>CAN_MSG_RAM_CONFIG Structure</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="04449.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04448.html" target="topic">Peripheral Libraries</a> &gt; <a href="05575.html" target="topic">Clock (SAM L21) Peripheral Library Help</a> &gt; <a href="05576.html" target="topic">Library Interface</a> &gt; a) Initialization Function &gt; <a href="01242.html" target="topic">CLOCK_Initialize Function</a></div>
+<a href="05091.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04683.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05090.html" target="topic">Peripheral Libraries</a> &gt; <a href="00968.html" target="topic">CAN Peripheral Library Help</a> &gt; <a href="00969.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="01242.html" target="topic">CAN_MSG_RAM_CONFIG Structure</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04449.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05091.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05576.html" target="topic">Previous</a> | <a href="05576.html" target="topic">Up</a> | <a href="05581.html" target="topic">Next</a></div>
+<a href="01238.html" target="topic">Previous</a> | <a href="00969.html" target="topic">Up</a> | <a href="01250.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: clk_sam_l21::CLOCK_Initialize Topic Title: CLOCK_Initialize Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: can_u2003::CAN_MSG_RAM_CONFIG Topic Title: CAN_MSG_RAM_CONFIG Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-CLOCK_Initialize Function</div>
+CAN_MSG_RAM_CONFIG Structure</div>
 </div>
 </div>
 
@@ -49,42 +49,84 @@ CLOCK_Initialize Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function initializes the clock as defined by the MHC and Clock Manager selections.&nbsp;</p>
+CAN Message RAM Configuration&nbsp;</p>
 <p class="Element10">
-For each of the clock sources enabled in MHC, the function will configure the clock settings and will then wait till the clock is ready. In case of DPLL, the function will wait till a lock is obtained.&nbsp;</p>
-<p class="Element10">
-The function will then configure the Generic clock generators and the peripheral bridges based on the MHC configurations.</p></div>
+This data structure defines the CAN Message RAM Base address for Rx FIFO0, Rx FIFO1, Rx Buffers, Tx Buffers/FIFO, Tx Event FIFO, Standard Message ID Filter and Extended Message ID Filter configuration.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">CLOCK_Initialize</span></strong>();</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
+  can_rxf0e_registers_t * <strong><span style="color: #000000">rxFIFO0Address</span></strong>;
+  can_rxf1e_registers_t * <strong><span style="color: #000000">rxFIFO1Address</span></strong>;
+  can_rxbe_registers_t * <strong><span style="color: #000000">rxBuffersAddress</span></strong>;
+  can_txbe_registers_t * <strong><span style="color: #000000">txBuffersAddress</span></strong>;
+  can_txefe_registers_t * <strong><span style="color: #000000">txEventFIFOAddress</span></strong>;
+  can_sidfe_registers_t * <strong><span style="color: #000000">stdMsgIDFilterAddress</span></strong>;
+  can_xidfe_registers_t * <strong><span style="color: #000000">extMsgIDFilterAddress</span></strong>;
+} CAN_MSG_RAM_CONFIG;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-MHC GUI should be configured with the right values. Incorrect configuration of the Clock will result in incorrect peripheral behavior or a non functional device.</p></div>
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+can_rxf0e_registers_t * rxFIFO0Address;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Rx FIFO0 base address&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+can_rxf1e_registers_t * rxFIFO1Address;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Rx FIFO1 base address&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+can_rxbe_registers_t * rxBuffersAddress;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Rx Buffer base address&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+can_txbe_registers_t * txBuffersAddress;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Tx Buffers/FIFO base address&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+can_txefe_registers_t * txEventFIFOAddress;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Tx Event FIFO base address&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+can_sidfe_registers_t * stdMsgIDFilterAddress;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Standard Message ID Filter base address&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+can_xidfe_registers_t * extMsgIDFilterAddress;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Extended Message ID Filter base address&nbsp;</div></td></tr></table></div></div>
 </div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
 None.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">    CLOCK_Initialize();</pre></div></div>
-</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="04449.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04448.html" target="topic">Peripheral Libraries</a> &gt; <a href="05575.html" target="topic">Clock (SAM L21) Peripheral Library Help</a> &gt; <a href="05576.html" target="topic">Library Interface</a> &gt; a) Initialization Function &gt; <a href="01242.html" target="topic">CLOCK_Initialize Function</a></div>
+<a href="05091.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04683.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05090.html" target="topic">Peripheral Libraries</a> &gt; <a href="00968.html" target="topic">CAN Peripheral Library Help</a> &gt; <a href="00969.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="01242.html" target="topic">CAN_MSG_RAM_CONFIG Structure</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -92,13 +134,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04449.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05091.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05576.html" target="topic">Previous</a> | <a href="05576.html" target="topic">Up</a> | <a href="05581.html" target="topic">Next</a></div>
+<a href="01238.html" target="topic">Previous</a> | <a href="00969.html" target="topic">Up</a> | <a href="01250.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: clk_sam_l21::CLOCK_Initialize Topic Title: CLOCK_Initialize Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: can_u2003::CAN_MSG_RAM_CONFIG Topic Title: CAN_MSG_RAM_CONFIG Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->
