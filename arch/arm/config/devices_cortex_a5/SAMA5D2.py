@@ -55,6 +55,12 @@ def updateStartupFile(symbol, event):
         symbol.setSourcePath("arm/templates/iar/cortex_a/SAMA5D2/sam_a5_cstartup.s.ftl")
         symbol.setOutputName("cstartup.s")
 
+def setAppStartAddress(symbol, event):
+    if event["value"] == "DDR":
+        Database.setSymbolValue("core", "APP_START_ADDRESS", "0x26f00000")
+    else:
+        Database.setSymbolValue("core", "APP_START_ADDRESS", "0x0")
+
 print ("Loading System Services for " + Variables.get("__PROCESSOR"))
 
 deviceFamily = coreComponent.createStringSymbol("DeviceFamily", devCfgMenu)
@@ -73,10 +79,12 @@ freeRTOSVectors.setReadOnly(True)
 freeRTOSVectors.setDefaultValue(False)
 
 #SRAM or DDR
+Database.setSymbolValue("core", "APP_START_ADDRESS", "0x26f00000")
 memory_loc = coreComponent.createComboSymbol("EXECUTION_MEMORY", cortexMenu, ['DDR', 'SRAM'])
 memory_loc.setLabel("Execution Memory")
 memory_loc.setDefaultValue("DDR")
 memory_loc.setDescription("Generate image to run out of either SRAM or DDR")
+memory_loc.setDependencies(setAppStartAddress, ["EXECUTION_MEMORY"])
 
 #load MMU with default 1:1 mapping so we can use cache
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/mmu_v7a/config/mmu.py")
