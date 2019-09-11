@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Introduction</title>
+<title>RTC_Timer16Compare2Set Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="04449.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04448.html" target="topic">Peripheral Libraries</a> &gt; <a href="06064.html" target="topic">SMC Peripheral Library Help</a> &gt; <a href="06063.html" target="topic">Introduction</a></div>
+<a href="05091.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04683.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05090.html" target="topic">Peripheral Libraries</a> &gt; <a href="05874.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="05885.html" target="topic">16-bit Timer (Mode 1)</a> &gt; <a href="05891.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="06063.html" target="topic">RTC_Timer16Compare2Set Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04449.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05091.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06064.html" target="topic">Previous</a> | <a href="06064.html" target="topic">Up</a> | <a href="06060.html" target="topic">Next</a></div>
+<a href="06070.html" target="topic">Previous</a> | <a href="05891.html" target="topic">Up</a> | <a href="06065.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SMC 6105 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::RTC_Timer16Compare2Set@uint16_t Topic Title: RTC_Timer16Compare2Set Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Introduction</div>
+RTC_Timer16Compare2Set Function</div>
 </div>
 </div>
 
@@ -48,17 +48,50 @@ Introduction</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
-<p class="Element10" style="text-align: justify;">
-The Static Memory Controller (SMC) generates the signals that control the access to the external memory devices or peripheral devices. It has 6 Chip Selects and a 26-bit address bus. The 32-bit data bus can be configured to interface with 8-, 16-, or 32-bit external devices. Separate read and write control signals allow for direct memory and peripheral interfacing. Read and write signal waveforms are fully parametrizable.&nbsp;</p>
-<p class="Element10" style="text-align: justify;">
-The SMC can manage wait requests from external devices to extend the current access. The SMC is provided with an automatic slow clock mode. In slow clock mode, it switches from user-programmed waveforms to slow-rate specific waveforms on read and write signals. The SMC supports asynchronous burst read in page mode access for page size up to 32 bytes.</p></div>
+<p class="Element10">
+This function will set the Counter Compare 2 Value. The module will compare the counter against this value and will signal a match when the counter equals the compare value. If the library was configured for interrupt mode, the Compare 2 event is enabled and if a valid callback is registered, the library will call the registered callback function with the RTC_TIMER16_INT_MASK_COMP2 event. The <a href="06062.html" target="topic">RTC_Timer16Compare2HasMatched</a>() function will return true when the match occurs.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">RTC_Timer16Compare2Set</span></strong>(
+    uint16_t <strong><span style="color: #000000">comparisionValue</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+<a href="06024.html" target="topic">RTC_Initialize</a>, <a href="06074.html" target="topic">RTC_Timer16Start</a> must have been called for the associated RTC instance. The module should have configured for 16-bit Timer Counter operation.</p></div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+comparisionValue - 16-bit compare value compares with the current counter value.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">    <i><span style="color: #008000">// Refer to the description of the RTC_Timer16Compare2HasMatched()</span></i>
+    <i><span style="color: #008000">// function for example usage of the RTC_Timer16Compare2Set() function.</span></i>
+</pre></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="04449.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04448.html" target="topic">Peripheral Libraries</a> &gt; <a href="06064.html" target="topic">SMC Peripheral Library Help</a> &gt; <a href="06063.html" target="topic">Introduction</a></div>
+<a href="05091.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04683.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05090.html" target="topic">Peripheral Libraries</a> &gt; <a href="05874.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="05885.html" target="topic">16-bit Timer (Mode 1)</a> &gt; <a href="05891.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="06063.html" target="topic">RTC_Timer16Compare2Set Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -66,13 +99,13 @@ The SMC can manage wait requests from external devices to extend the current acc
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04449.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05091.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06064.html" target="topic">Previous</a> | <a href="06064.html" target="topic">Up</a> | <a href="06060.html" target="topic">Next</a></div>
+<a href="06070.html" target="topic">Previous</a> | <a href="05891.html" target="topic">Up</a> | <a href="06065.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SMC 6105 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::RTC_Timer16Compare2Set@uint16_t Topic Title: RTC_Timer16Compare2Set Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

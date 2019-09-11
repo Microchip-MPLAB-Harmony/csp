@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Hardware Setup</title>
+<title>PIO_PortLatchRead Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="04449.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="04849.html" target="topic">QSPI Applications</a> &gt; <a href="04850.html" target="topic">qspi_read_write</a> &gt; <a href="04853.html" target="topic">Hardware Setup</a></div>
+<a href="05091.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04683.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05090.html" target="topic">Peripheral Libraries</a> &gt; <a href="04688.html" target="topic">PIO Peripheral Library Help</a> &gt; <a href="04689.html" target="topic">Library Interface</a> &gt; c) Port Functions &gt; <a href="04853.html" target="topic">PIO_PortLatchRead Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04449.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05091.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04854.html" target="topic">Previous</a> | <a href="04850.html" target="topic">Up</a> | <a href="04855.html" target="topic">Next</a></div>
+<a href="04852.html" target="topic">Previous</a> | <a href="04689.html" target="topic">Up</a> | <a href="04854.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: QSPI qspi_read_write Hardware Setup Topic Title: Hardware Setup)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pio_11004::PIO_PortLatchRead@PIO_PORT Topic Title: PIO_PortLatchRead Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Hardware Setup</div>
+PIO_PortLatchRead Function</div>
 </div>
 </div>
 
@@ -48,87 +48,75 @@ Hardware Setup</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
-
-<ol class="Element630">
-<li value="1" class="Element600"><strong>Project sam_e70_xult.X</strong>
-<ul class="Element631">
-<li class="Element601"><strong>Hardware Used</strong>
-<ul class="Element632">
-<li class="Element602"><a href="#" onclick="openExternalLink('http://www.microchip.com/DevelopmentTools/ProductDetails/PartNO/DM320113');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM E70 Xplained Ultra Evaluation Kit</a></li>
-</ul></li>
-<li class="Element601"><strong>Hardware Setup</strong>
-<ul class="Element632">
-<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
-</ul></li>
-</ul></li>
-</ol><p class="Element10">
-&nbsp;</p>
-
-<ol class="Element630">
-<li value="2" class="Element600"><strong>Project sam_e54_xpro.X</strong>
-<ul class="Element631">
-<li class="Element601"><strong>Hardware Used</strong>
-<ul class="Element632">
-<li class="Element602"><a href="#" onclick="openExternalLink('http://ww1.microchip.com/downloads/en/devicedoc/70005321a.pdf');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM E54 Xplained Pro Evaluation Kit</a></li>
-</ul></li>
-<li class="Element601"><strong>Hardware Setup</strong>
-<ul class="Element632">
-<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
-</ul></li>
-</ul></li>
-</ol><p class="Element10">
-&nbsp;</p>
-
-<ol class="Element630">
-<li value="3" class="Element600"><strong>Project sam_a5d2_xult.IAR OR sam_a5d2_xult_xc32.X</strong>
-<ul class="Element631">
-<li class="Element601"><strong>Hardware Used</strong>
-<ul class="Element632">
-<li class="Element602"><a href="#" onclick="openExternalLink('http://www.microchip.com/DevelopmentTools/ProductDetails/ATSAMA5D2C-XULT');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAMA5D2 Xplained Ultra board</a></li>
-<li class="Element602">SD Card with FAT32 file system</li>
-<li class="Element602"><strong>Hardware Setup</strong>
-<ul class="Element633">
-<li class="Element603">Setup the SD card
-<ul class="Element634">
-<li class="Element604">Download harmony MPU bootstrap loader from this <a href="#" onclick="openExternalLink('http://github.com/Microchip-MPLAB-Harmony/at91bootstrap/blob/master/boot.bin');"><img src="indicator_external_link.gif" border="0" alt="" title="">location</a></li>
-<li class="Element604">Copy the downloaded boot loader binary( boot.bin) and generated application binary (harmony.bin)into the SD card</li>
-<li class="Element604">Insert the SD card into the SDMMC1 slot on the board</li>
-</ul></li>
-<li class="Element603">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
-</ul></li>
-</ul></li>
-</ul></li>
-</ol><p class="Element10">
-&nbsp;</p>
-
-<ol class="Element630">
-<li value="4" class="Element600"><strong>Project sam_9x60_ek.IAR</strong>
-<ul class="Element631">
-<li class="Element601"><strong>Hardware Used</strong>
-<ul class="Element632">
-<li class="Element602">SAM 9X60 Evaluation Kit board</li>
-<li class="Element602">SD Card with FAT32 file system</li>
-</ul></li>
-<li class="Element601"><strong>Hardware Setup</strong>
-<ul class="Element632">
-<li class="Element602">Setup the SD card
-<ul class="Element633">
-<li class="Element603">Download harmony MPU bootstrap loader from this <a href="#" onclick="openExternalLink('http://github.com/Microchip-MPLAB-Harmony/at91bootstrap/blob/sam9x60ek/boot.bin');"><img src="indicator_external_link.gif" border="0" alt="" title="">location</a></li>
-<li class="Element603">Copy the downloaded boot loader binary( boot.bin) and generated application binary (harmony.bin)into the SD card</li>
-<li class="Element603">Insert the SD card into the SDMMC connector J5 on the board</li>
-</ul></li>
-<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
-<li class="Element602">Note: Reset push button on SAM9X60 EK is labeled as SW3</li>
-</ul></li>
-</ul></li>
-</ol></div>
+<p class="Element10">
+This function reads the latched data values on all the I/O lines of the selected port. Bit values returned in each position indicate corresponding pin levels.</p>
+<ul class="Element630">
+<li class="Element600">1 - Pin is high.</li>
+<li class="Element600">0 - Pin is low.</li>
+</ul></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100">uint32_t <strong><span style="color: #000000">PIO_PortLatchRead</span></strong>(
+    <a href="04843.html" target="topic">PIO_PORT</a> <strong><span style="color: #000000">port</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+port&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+One of the IO ports from the enum <a href="04843.html" target="topic">PIO_PORT</a>&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Returns the data driven on all the I/O lines of the selected port.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+If the port has less than 32-bits, unimplemented pins will read as low (0).&nbsp;</p>
+<p class="Element10">
+Implemented pins are Right aligned in the 32-bit return value.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">    uint32_t value;
+    value = PIO_PortLatchRead(PIO_PORT_C);</pre></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="04449.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="04849.html" target="topic">QSPI Applications</a> &gt; <a href="04850.html" target="topic">qspi_read_write</a> &gt; <a href="04853.html" target="topic">Hardware Setup</a></div>
+<a href="05091.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04683.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05090.html" target="topic">Peripheral Libraries</a> &gt; <a href="04688.html" target="topic">PIO Peripheral Library Help</a> &gt; <a href="04689.html" target="topic">Library Interface</a> &gt; c) Port Functions &gt; <a href="04853.html" target="topic">PIO_PortLatchRead Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -136,13 +124,13 @@ Hardware Setup</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04449.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05091.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04854.html" target="topic">Previous</a> | <a href="04850.html" target="topic">Up</a> | <a href="04855.html" target="topic">Next</a></div>
+<a href="04852.html" target="topic">Previous</a> | <a href="04689.html" target="topic">Up</a> | <a href="04854.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: QSPI qspi_read_write Hardware Setup Topic Title: Hardware Setup)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pio_11004::PIO_PortLatchRead@PIO_PORT Topic Title: PIO_PortLatchRead Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

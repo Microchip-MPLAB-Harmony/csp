@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Configuring the Library</title>
+<title>Building The Application</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="04449.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04448.html" target="topic">Peripheral Libraries</a> &gt; <a href="04502.html" target="topic">PM Peripheral Library Help</a> &gt; <a href="04498.html" target="topic">Configuring the Library</a></div>
+<a href="05091.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="04496.html" target="topic">OCMP Applications</a> &gt; <a href="04497.html" target="topic">ocmp_compare_mode</a> &gt; <a href="04498.html" target="topic">Building The Application</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04449.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05091.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04501.html" target="topic">Previous</a> | <a href="04502.html" target="topic">Up</a> | <a href="04505.html" target="topic">Next</a></div>
+<a href="04497.html" target="topic">Previous</a> | <a href="04497.html" target="topic">Up</a> | <a href="04500.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PM U2240 Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: OCMP ocmp_compare_mode Building Application Topic Title: Building The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Configuring the Library</div>
+Building The Application</div>
 </div>
 </div>
 
@@ -49,30 +49,80 @@ Configuring the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Configure the peripheral library using the MHC.&nbsp;</p>
+The parent folder for all the MPLAB X IDE projects for this application is given below: </p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="28%">
+<div class="Element66">
+Application Path&nbsp;</div></td><td class="Element65" valign="top" width="72%">
+<div class="Element66">
+csp/apps/ocmp/ocmp_compare_mode/firmware/&nbsp;</div></td></tr></table></div></div>
 <p class="Element10">
 &nbsp;</p>
 <p class="Element10">
-<strong>Voltage Regulator Operation in Standby Sleep Mode:</strong>&nbsp;</p>
-<p class="Element10">
-There are also two different operating modes for the internal regulator viz., Normal mode, and Low Power mode. In standby mode, the power manager selects either the main or the low power voltage regulator to supply the VDDCORE.</p>
-<ul class="Element630">
-<li class="Element600">Low Power: By default the low power voltage regulator is used to minimize the power consumption in standby mode.</li>
-<li class="Element600">Performance Oriented: If a sleepwalking task is working on either asynchronous clocks (generic clocks) or synchronous clock (APB/AHB clocks), the main voltage regulator is used.</li>
-<li class="Element600">Automatic Mode: The regulator operates in low-power mode (LP VREG) by default and can switch automatically to the main regulator if a task required by a peripheral requires more power. It returns automatically in the low power mode as soon as the task is completed</li>
-</ul><p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong>RAM State in Standby Sleep mode.</strong>&nbsp;</p>
-<p class="Element10">
-In standby sleep mode, RAM is put in low-power mode by default. This means that the RAM is back-biased, and the DMAC cannot access it. This behavior can be changed by configuring the Back Bias bit in the Standby Configuration register (STDBYCFG.BBIASHS).</p></div>
+To build the application, refer to the following table and open the appropriate project file in the MPLAB X IDE. </p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="25%">
+<div class="Element66">
+Project Name&nbsp;</div></td><td class="Element65" valign="top" width="75%">
+<div class="Element66">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
+<div class="Element68">
+pic32mk_gpl_curiosity_pro.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+<div class="Element68">
+PIC32MK GPL Curiosity Pro Board&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
+<div class="Element68">
+pic32mk_gp_db.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+<div class="Element68">
+PIC32MK General Purpose (GP) Development Board&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
+<div class="Element68">
+pic32mk_mcj_curiosity_pro.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+<div class="Element68">
+PIC32MK MCJ Curiosity Pro Board&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
+<div class="Element68">
+pic32mx470_curiosity.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+<div class="Element68">
+PIC32MX Curiosity Development Board&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
+<div class="Element68">
+pic32mx_eth_sk2.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+<div class="Element68">
+PIC32MX Ethernet Starter Kit II&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
+<div class="Element68">
+pic32mx_xlp_sk.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+<div class="Element68">
+PIC32MX XLP Starter Kit&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
+<div class="Element68">
+pic32mz_dag_sk.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+<div class="Element68">
+PIC32MZ Embedded Graphics with Stacked DRAM (DA) Starter Kit&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
+<div class="Element68">
+pic32mz_das_sk.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+<div class="Element68">
+PIC32MZ Embedded Graphics with Stacked DRAM (DA) Starter Kit (Crypto)&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
+<div class="Element68">
+pic32mz_ef_sk.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+<div class="Element68">
+PIC32MZ Embedded Connectivity with FPU (EF) Starter Kit&nbsp;</div></td></tr></table></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="04449.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04448.html" target="topic">Peripheral Libraries</a> &gt; <a href="04502.html" target="topic">PM Peripheral Library Help</a> &gt; <a href="04498.html" target="topic">Configuring the Library</a></div>
+<a href="05091.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="04496.html" target="topic">OCMP Applications</a> &gt; <a href="04497.html" target="topic">ocmp_compare_mode</a> &gt; <a href="04498.html" target="topic">Building The Application</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -80,13 +130,13 @@ In standby sleep mode, RAM is put in low-power mode by default. This means that 
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04449.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05091.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04501.html" target="topic">Previous</a> | <a href="04502.html" target="topic">Up</a> | <a href="04505.html" target="topic">Next</a></div>
+<a href="04497.html" target="topic">Previous</a> | <a href="04497.html" target="topic">Up</a> | <a href="04500.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PM U2240 Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: OCMP ocmp_compare_mode Building Application Topic Title: Building The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Using the Library</title>
+<title>QEIx_Initialize Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="04449.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04448.html" target="topic">Peripheral Libraries</a> &gt; <a href="05478.html" target="topic">RTCC Peripheral Library Help</a> &gt; <a href="05483.html" target="topic">Using the Library</a></div>
+<a href="05091.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04683.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05090.html" target="topic">Peripheral Libraries</a> &gt; <a href="05455.html" target="topic">QEI Peripheral Library Help</a> &gt; <a href="05456.html" target="topic">Library Interface</a> &gt; a) Initialization Function &gt; <a href="05483.html" target="topic">QEIx_Initialize Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04449.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05091.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05474.html" target="topic">Previous</a> | <a href="05478.html" target="topic">Up</a> | <a href="05479.html" target="topic">Next</a></div>
+<a href="05456.html" target="topic">Previous</a> | <a href="05456.html" target="topic">Up</a> | <a href="05482.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RTCC 01261 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: qei_01494::QEIx_Initialize Topic Title: QEIx_Initialize Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Using the Library</div>
+QEIx_Initialize Function</div>
 </div>
 </div>
 
@@ -49,21 +49,47 @@ Using the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-RTCC Peripheral library provides API's that can be used to perform below functionalities on the RTCC peripheral.</p>
-<ul class="Element630">
-<li class="Element600">Initialize the RTCC</li>
-<li class="Element600">Read and write the time and date registers.</li>
-<li class="Element600">Set alarm time and date.</li>
-<li class="Element600">Enable/Disable the RTCC interrupt.</li>
-<li class="Element600">Register a callback.</li>
-</ul></div>
+This function initializes given instance of QEI peripheral in quadrature mode with options configured in MHC GUI.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">QEIx_Initialize</span></strong>();</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+MHC GUI should be configured with the desired options.</p></div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+This function must be called before any other QEI function is called.&nbsp;</p>
+<p class="Element10">
+This function is normally called only be called once during system initialization.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">QEI1_Initialize();</pre></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="04449.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04448.html" target="topic">Peripheral Libraries</a> &gt; <a href="05478.html" target="topic">RTCC Peripheral Library Help</a> &gt; <a href="05483.html" target="topic">Using the Library</a></div>
+<a href="05091.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04683.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05090.html" target="topic">Peripheral Libraries</a> &gt; <a href="05455.html" target="topic">QEI Peripheral Library Help</a> &gt; <a href="05456.html" target="topic">Library Interface</a> &gt; a) Initialization Function &gt; <a href="05483.html" target="topic">QEIx_Initialize Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -71,13 +97,13 @@ RTCC Peripheral library provides API's that can be used to perform below functio
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04449.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05091.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05474.html" target="topic">Previous</a> | <a href="05478.html" target="topic">Up</a> | <a href="05479.html" target="topic">Next</a></div>
+<a href="05456.html" target="topic">Previous</a> | <a href="05456.html" target="topic">Up</a> | <a href="05482.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RTCC 01261 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: qei_01494::QEIx_Initialize Topic Title: QEIx_Initialize Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

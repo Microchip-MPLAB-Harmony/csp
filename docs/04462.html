@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>SAM G55 Peripheral Libraries</title>
+<title>NVMCTRL_CALLBACK Type</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="04449.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04462.html" target="topic">SAM G55 Peripheral Libraries</a></div>
+<a href="05091.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04683.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05090.html" target="topic">Peripheral Libraries</a> &gt; <a href="04378.html" target="topic">NVMCTRL Peripheral Library Help</a> &gt; <a href="04379.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="04462.html" target="topic">NVMCTRL_CALLBACK Type</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04449.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05091.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04461.html" target="topic">Previous</a> | <a href="04041.html" target="topic">Up</a> | <a href="04463.html" target="topic">Next</a></div>
+<a href="04470.html" target="topic">Previous</a> | <a href="04379.html" target="topic">Up</a> | <a href="04464.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PLIB SAM G55 Topic Title: SAM G55 Peripheral Libraries)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nvmctrl_u2802::NVMCTRL_CALLBACK Topic Title: NVMCTRL_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-SAM G55 Peripheral Libraries</div>
+NVMCTRL_CALLBACK Type</div>
 </div>
 </div>
 
@@ -49,66 +49,79 @@ SAM G55 Peripheral Libraries</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The following Table lists all the Peripheral Libraries for the SAM G55 Family.&nbsp;</p>
+Callback Function Pointer&nbsp;</p>
 <p class="Element10">
-&nbsp;</p><div class="Element63">
+This data type defines the function signature for the NVMCTRL peripheral callback function. The NVMCTRL peripheral library will call back the client's function with this signature when an on-going erase or write operation has completed and the NVMCTRL is ready to accept a new operation request. A function of this should be registered by calling the <a href="04463.html" target="topic">NVMCTRL_CallbackRegister</a> function.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000">NVMCTRL_CALLBACK</span></strong>)(uintptr_t context);</pre></div></div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
 <div class="TableDiv">
-<table cellspacing="0" class="Table1">
+<table cellspacing="0" class="Table2">
 <tr>
-<td class="Element65" valign="top" width="100%">
-<div class="Element66">
-SAM G55 Peripheral Libraries&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="00113.html" target="topic">ADC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="05569.html" target="topic">Clock Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="01283.html" target="topic">CMCCPeripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="01396.html" target="topic">CRCCU Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="01845.html" target="topic">EFC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="02391.html" target="topic">FLEXCOM Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="03553.html" target="topic">MEM2MEM Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="03608.html" target="topic">MPU Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="03619.html" target="topic">NVIC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="04046.html" target="topic">PIO Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="05034.html" target="topic">RSTC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="05171.html" target="topic">RTC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="05525.html" target="topic">RTT Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="06225.html" target="topic">SUPC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="06363.html" target="topic">SYSTICK Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="06451.html" target="topic">TC Peripheral Library Help</a>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="100%">
-<div class="Element68">
-<a href="07325.html" target="topic">WDT Peripheral Library Help</a>&nbsp;</div></td></tr></table></div></div>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Allows the caller to provide a context value (usually a pointer to the callers context for multi-instance clients).&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The callback feature is only available when the library was generated with interrupt option (in MHC) enabled.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">
+<strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong>
+{
+    <strong><span style="color: #000080">bool</span></strong> operationComplete;
+
+} APP_DATA;
+
+<i><span style="color: #008000">// Callback is called when an operation completes.</span></i>
+<strong><span style="color: #000080">void</span></strong> APP_NVMTCTRLCallback(uintptr_t context)
+{
+    APP_DATA * appdata = (APP_DATA *)context;
+    appData-&gt;operationComplete = <strong><span style="color: #000080">true</span></strong>;
+}
+
+<i><span style="color: #008000">// Function calls in main thread.</span></i>
+APP_DATA  myAppData;
+myAppData.operationComplete = <strong><span style="color: #000080">false</span></strong>;
+<a href="04475.html" target="topic">NVMCTRL_Initialize</a>();
+
+<i><span style="color: #008000">// Register the callback</span></i>
+<a href="04463.html" target="topic">NVMCTRL_CallbackRegister</a>(APP_NVMTCTRLCallback, &amp;myAppData);
+
+<i><span style="color: #008000">// Perform some operation.</span></i>
+<a href="04485.html" target="topic">NVMCTRL_RowErase</a>(SOME_ROW_ALIGNED_ADDRESS);
+
+<i><span style="color: #008000">// Now wait for the operation to complete.</span></i>
+<strong><span style="color: #000080">while</span></strong>(!myAppData.operationComplete);
+</pre></div></div>
 </div>
 </div>
 </div>
@@ -116,7 +129,7 @@ SAM G55 Peripheral Libraries&nbsp;</div></td></tr><tr>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="04449.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04041.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="04462.html" target="topic">SAM G55 Peripheral Libraries</a></div>
+<a href="05091.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04683.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05090.html" target="topic">Peripheral Libraries</a> &gt; <a href="04378.html" target="topic">NVMCTRL Peripheral Library Help</a> &gt; <a href="04379.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="04462.html" target="topic">NVMCTRL_CALLBACK Type</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -124,13 +137,13 @@ SAM G55 Peripheral Libraries&nbsp;</div></td></tr><tr>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="04449.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05091.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04461.html" target="topic">Previous</a> | <a href="04041.html" target="topic">Up</a> | <a href="04463.html" target="topic">Next</a></div>
+<a href="04470.html" target="topic">Previous</a> | <a href="04379.html" target="topic">Up</a> | <a href="04464.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PLIB SAM G55 Topic Title: SAM G55 Peripheral Libraries)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nvmctrl_u2802::NVMCTRL_CALLBACK Topic Title: NVMCTRL_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->
