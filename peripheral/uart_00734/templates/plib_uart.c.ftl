@@ -509,6 +509,18 @@ bool ${UART_INSTANCE_NAME}_TransmitterIsReady( void )
     return status;
 }
 
+bool ${UART_INSTANCE_NAME}_TransmitComplete( void )
+{
+    bool transmitComplete = false;
+
+    if((U${UART_INSTANCE_NUM}STA & _U${UART_INSTANCE_NUM}STA_TRMT_MASK))
+    {
+        transmitComplete = true;
+    }
+
+    return transmitComplete;
+}
+
 int ${UART_INSTANCE_NAME}_ReadByte( void )
 {
     return(U${UART_INSTANCE_NUM}RXREG);
