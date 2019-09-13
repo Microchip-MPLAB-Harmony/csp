@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>RTC_ALARM_MASK Enumeration</title>
+<title>RTC_Timer32CounterHasOverflowed Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05091.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04683.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05090.html" target="topic">Peripheral Libraries</a> &gt; <a href="05874.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="05897.html" target="topic">Clock and Calendar (Mode 2)</a> &gt; <a href="05903.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="05996.html" target="topic">RTC_ALARM_MASK Enumeration</a></div>
+<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="05859.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="05860.html" target="topic">32-bit Timer (Mode 0)</a> &gt; <a href="05865.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="05996.html" target="topic">RTC_Timer32CounterHasOverflowed Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05091.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06005.html" target="topic">Previous</a> | <a href="05903.html" target="topic">Up</a> | <a href="06006.html" target="topic">Next</a></div>
+<a href="05993.html" target="topic">Previous</a> | <a href="05865.html" target="topic">Up</a> | <a href="05988.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::RTC_ALARM_MASK Topic Title: RTC_ALARM_MASK Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2202::RTC_Timer32CounterHasOverflowed Topic Title: RTC_Timer32CounterHasOverflowed Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-RTC_ALARM_MASK Enumeration</div>
+RTC_Timer32CounterHasOverflowed Function</div>
 </div>
 </div>
 
@@ -49,66 +49,24 @@ RTC_ALARM_MASK Enumeration</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-RTC Alarm Mask Settings&nbsp;</p>
-<p class="Element10">
-The RTC peripheral while operating in RTCC mode will generate an alarm by matching the configured alarm time and date with current time and date. The date and time field to be considered while matching are specified with the RTC Alarm Mask. This mask should be specified in the <a href="06035.html" target="topic">RTC_RTCCAlarmSet</a>() function.&nbsp;</p>
-<p class="Element10">
-For example, setting the mask to RTC_ALARM_MASK_MMSS will only match the minute and the seconds field of the specified alarm time and will ignore all other fields.</p></div>
+This function will return true if the 32-bit counter has overflowed. An overflow occurs when the counter values transitions from 0xFFFFFFFF to 0x0. This function can be used to validate the timer count when using the timer counter as a counter. Calling the function will clear the internal overflow flags if these flags were set at the time of calling the function.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
-  <strong><span style="color: #000000">RTC_ALARM_MASK_SS</span></strong>,
-  <strong><span style="color: #000000">RTC_ALARM_MASK_MMSS</span></strong>,
-  <strong><span style="color: #000000">RTC_ALARM_MASK_HHMMSS</span></strong>,
-  <strong><span style="color: #000000">RTC_ALARM_MASK_DDHHMMSS</span></strong>,
-  <strong><span style="color: #000000">RTC_ALARM_MASK_MMDDHHMMSS</span></strong>,
-  <strong><span style="color: #000000">RTC_ALARM_MASK_YYMMDDHHMMSS</span></strong>
-} RTC_ALARM_MASK;</pre></div></div>
-<a name="4D656D62657273"></a><div class="Element14">
-Members</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">RTC_Timer32CounterHasOverflowed</span></strong>();</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element272">
-<div class="TableDiv">
-<table cellspacing="0" class="Table3">
-<tr>
-<td class="Element260" valign="top" width="35%">
-<div class="Element261">
-Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
-<div class="Element265">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-RTC_ALARM_MASK_SS&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Alarm mask to compare seconds field (SS) - Generates alarm once per minute&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-RTC_ALARM_MASK_MMSS&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Alarm mask to compare minutes and seconds field (MMSS) - Generates alarm once per hour&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-RTC_ALARM_MASK_HHMMSS&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Alarm mask to compare hours, minutes and seconds field (HHMMSS) - Generates alarm once per day&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-RTC_ALARM_MASK_DDHHMMSS&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Alarm mask to compare date, hours, minutes, and seconds field (DDHHMMSS) - Generates alarm once per month&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-RTC_ALARM_MASK_MMDDHHMMSS&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Alarm mask to compare month, date, hours, minutes and seconds (MMDDHHMMSS) - Generates alarm once per year&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-RTC_ALARM_MASK_YYMMDDHHMMSS&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Alarm mask to compare year, month, date, hours, minutes and seconds (YYMMDDHHMMSS) - Generates alarm on exact day and time&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+<a href="05963.html" target="topic">RTC_Initialize</a>, <a href="06002.html" target="topic">RTC_Timer32Start</a> must have been called for the associated RTC instance. The RTC peripheral should have been configured in 32-bit Timer Counter mode.</p></div>
 </div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+true - Counter has overflowed. false - Counter not overflowed.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
@@ -117,12 +75,40 @@ Remarks</div>
 <p class="Element10">
 None.</p></div>
 </div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">    uint32_t cycles = 0;
+    <a href="05963.html" target="topic">RTC_Initialize</a>();
+
+    <i><span style="color: #008000">// Clear the period set as we want to operate as a counter.</span></i>
+    <a href="05994.html" target="topic">RTC_Timer32CompareSet</a>(0);
+    <a href="05997.html" target="topic">RTC_Timer32CounterSet</a>(0);
+    <a href="06002.html" target="topic">RTC_Timer32Start</a>();
+
+    <i><span style="color: #008000">// This is the task who execution duration needs to be measured.</span></i>
+    SomeTask();
+
+    <a href="06003.html" target="topic">RTC_Timer32Stop</a>();
+    <strong><span style="color: #000080">if</span></strong>(!RTC_Timer32CounterHasOverflowed())
+    {
+        <i><span style="color: #008000">// cycles will contains the execution time of SomeTask() in terms of</span></i>
+        <i><span style="color: #008000">// timer count.</span></i>
+        cycles = <a href="05995.html" target="topic">RTC_Timer32CounterGet</a>();
+    }
+    <strong><span style="color: #000080">else</span></strong>
+    {
+        <i><span style="color: #008000">// Timer overflowed. Handle this differently.</span></i>
+    }</pre></div></div>
+</div>
+</div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05091.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04683.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05090.html" target="topic">Peripheral Libraries</a> &gt; <a href="05874.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="05897.html" target="topic">Clock and Calendar (Mode 2)</a> &gt; <a href="05903.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="05996.html" target="topic">RTC_ALARM_MASK Enumeration</a></div>
+<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="05859.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="05860.html" target="topic">32-bit Timer (Mode 0)</a> &gt; <a href="05865.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="05996.html" target="topic">RTC_Timer32CounterHasOverflowed Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -130,13 +116,13 @@ None.</p></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05091.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06005.html" target="topic">Previous</a> | <a href="05903.html" target="topic">Up</a> | <a href="06006.html" target="topic">Next</a></div>
+<a href="05993.html" target="topic">Previous</a> | <a href="05865.html" target="topic">Up</a> | <a href="05988.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::RTC_ALARM_MASK Topic Title: RTC_ALARM_MASK Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2202::RTC_Timer32CounterHasOverflowed Topic Title: RTC_Timer32CounterHasOverflowed Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Hardware Setup</title>
+<title>Running The Application</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05091.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="04516.html" target="topic">OPAMP Applications</a> &gt; <a href="04517.html" target="topic">opamp_adc_gain_amp</a> &gt; <a href="04519.html" target="topic">Hardware Setup</a></div>
+<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="04514.html" target="topic">OCMP Applications</a> &gt; <a href="04515.html" target="topic">ocmp_compare_mode</a> &gt; <a href="04519.html" target="topic">Running The Application</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05091.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04520.html" target="topic">Previous</a> | <a href="04517.html" target="topic">Up</a> | <a href="04521.html" target="topic">Next</a></div>
+<a href="04517.html" target="topic">Previous</a> | <a href="04515.html" target="topic">Up</a> | <a href="04534.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: OPAMP opamp_adc_gain_amp Hardware Setup Topic Title: Hardware Setup)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: OCMP ocmp_compare_mode Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Hardware Setup</div>
+Running The Application</div>
 </div>
 </div>
 
@@ -50,44 +50,129 @@ Hardware Setup</div>
 <div class="Element10">
 
 <ol class="Element630">
-<li value="1" class="Element600"><strong>Project sam_l10_xpro.X</strong>
-<ul class="Element631">
-<li class="Element601"><strong>Hardware Used</strong>
-<ul class="Element632">
-<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/DevelopmentTools/ProductDetails/dm320204');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM L10 Xplained Pro Evaluation Kit</a></li>
-</ul></li>
-<li class="Element601"><strong>Hardware Setup</strong>
-<ul class="Element632">
-<li class="Element602">Non-inverting input of OPAMP2 is available on PA05 (Pin 15 on EXT1 connector on the SAM L10 Xplained Pro).</li>
-<li class="Element602">Connect the input signal to this pin. Since the OPAMP gives gain of 1.33, choose appropriate voltage to be connected at input of the OPAMP so that it does not saturate the ADC result.</li>
-<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable.</li>
-</ul></li>
-</ul></li>
+<li value="1" class="Element600">Build and Program the application using the MPLAB X IDE.</li>
+<li value="2" class="Element600">Observe the outputs as described in the following table:</li>
 </ol><p class="Element10">
 &nbsp;</p>
-
-<ol class="Element630">
-<li value="2" class="Element600"><strong>Project sam_l21_xpro.X</strong>
-<ul class="Element631">
-<li class="Element601"><strong>Hardware Used</strong>
-<ul class="Element632">
-<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/ATSAML21-XPRO-B');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM L21 Xplained Pro Evaluation Kit</a></li>
-</ul></li>
-<li class="Element601"><strong>Hardware Setup</strong>
-<ul class="Element632">
-<li class="Element602">Non-inverting input of OPAMP2 is available on PA05 (Pin 15 on EXT1 connector on the SAM L21 Xplained Pro).</li>
-<li class="Element602">Connect the input signal to this pin. Since the OPAMP gives gain of 1.33, choose appropriate voltage to be connected at input of the OPAMP so that it does not saturate the ADC result.</li>
-<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable.</li>
-</ul></li>
-</ul></li>
-</ol></div>
+<div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="40%">
+<div class="Element66">
+Project Name&nbsp;</div></td><td class="Element65" valign="top" width="60%">
+<div class="Element66">
+Output&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="40%">
+<div class="Element68">
+pic32mk_gpl_curiosity_pro.X&nbsp;</div></td><td class="Element67" valign="top" width="60%">
+<div class="Element68">
+Success: Observe waveforms on oscilloscope.</p>
+<ul class="Element630">
+<li class="Element600">Observe OC1 output RPA0 &quot;Pin 1 of J300&quot; on the oscilloscope which generates an active low output</li>
+<li class="Element600">Observe OC2 output RPA14 &quot;Pin 11 of J302&quot; on the oscilloscope which generates an active high output</li>
+<li class="Element600">Observe OC3 output RPB0 &quot;Pin 6 of J300&quot; on the oscilloscope which generates the toggle output</li>
+</ul><p class="Element68">
+&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="40%">
+<div class="Element68">
+pic32mk_mcj_curiosity_pro.X&nbsp;</div></td><td class="Element67" valign="top" width="60%">
+<div class="Element68">
+Success: Observe waveforms on oscilloscope.</p>
+<ul class="Element630">
+<li class="Element600">Observe OC1 output RPA0 &quot;Pin 3 of J501&quot; on the oscilloscope which generates an active low output</li>
+<li class="Element600">Observe OC2 output RPA1 &quot;Pin 3 of J502&quot; on the oscilloscope which generates an active high output</li>
+<li class="Element600">Observe OC3 output RPB14 &quot;Pin 7 of J501&quot; on the oscilloscope which generates the toggle output</li>
+</ul><p class="Element68">
+&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="40%">
+<div class="Element68">
+pic32mk_gp_db.X&nbsp;</div></td><td class="Element67" valign="top" width="60%">
+<div class="Element68">
+Success: Observe waveforms on oscilloscope.</p>
+<ul class="Element630">
+<li class="Element600">Observe OC1 output RPA0 &quot;Pin 4 of J29&quot; on the oscilloscope which generates an active low output</li>
+<li class="Element600">Observe OC2 output RPA14 &quot;Pin 5 of J31&quot; on the oscilloscope which generates an active high output</li>
+<li class="Element600">Observe OC3 output RPB0 &quot;Pin 8 of J29&quot; on the oscilloscope which generates the toggle output</li>
+</ul><p class="Element68">
+&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="40%">
+<div class="Element68">
+pic32mx470_curiosity.X&nbsp;</div></td><td class="Element67" valign="top" width="60%">
+<div class="Element68">
+Success: Observe waveforms on oscilloscope.</p>
+<ul class="Element630">
+<li class="Element600">Observe OC1 output RPD0 &quot;Pin 6 of J14&quot; on the oscilloscope which generates an active low output</li>
+<li class="Element600">Observe OC2 output RPG9 &quot;Pin 10 of J14&quot; on the oscilloscope which generates an active high output</li>
+<li class="Element600">Observe OC3 output RPB9 &quot;Pin 3 of J14&quot; on the oscilloscope which generates the toggle output</li>
+</ul><p class="Element68">
+&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="40%">
+<div class="Element68">
+pic32mx_eth_sk2.X&nbsp;</div></td><td class="Element67" valign="top" width="60%">
+<div class="Element68">
+Success: Observe waveforms on oscilloscope.</p>
+<ul class="Element630">
+<li class="Element600">Observe OC1 output RD0 &quot;LED1&quot; on the oscilloscope which generates an active low output</li>
+<li class="Element600">Observe OC2 output RD1 &quot;LED2&quot; on the oscilloscope which generates an active high output</li>
+<li class="Element600">Observe OC3 output RD2 &quot;LED3&quot; on the oscilloscope which generates the toggle output</li>
+</ul><p class="Element68">
+&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="40%">
+<div class="Element68">
+pic32mx_xlp_sk.X&nbsp;</div></td><td class="Element67" valign="top" width="60%">
+<div class="Element68">
+Success: Observe waveforms on oscilloscope.</p>
+<ul class="Element630">
+<li class="Element600">Observe OC1 output RC7 &quot;Pin 5 of J2&quot; on the oscilloscope which generates an active low output</li>
+<li class="Element600">Observe OC2 output RA8 &quot;Pin 13 of J2&quot; on the oscilloscope which generates an active high output</li>
+<li class="Element600">Observe OC3 output RB14 &quot;Pin 12 of J2&quot; on the oscilloscope which generates the toggle output</li>
+</ul><p class="Element68">
+&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="40%">
+<div class="Element68">
+pic32mz_dag_sk.X&nbsp;</div></td><td class="Element67" valign="top" width="60%">
+<div class="Element68">
+Success: Observe waveforms on oscilloscope.</p>
+<ul class="Element630">
+<li class="Element600">Observe OC1 output RD0 &quot;Pin 24 of J15&quot; on the oscilloscope which generates an active low output</li>
+<li class="Element600">Observe OC2 output RB2 &quot;Pin 27 of J15&quot; on the oscilloscope which generates an active high output</li>
+<li class="Element600">Observe OC3 output RD14 &quot;Pin 26 of J15&quot; on the oscilloscope which generates the toggle output</li>
+</ul><p class="Element68">
+&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="40%">
+<div class="Element68">
+pic32mz_das_sk.X&nbsp;</div></td><td class="Element67" valign="top" width="60%">
+<div class="Element68">
+Success: Observe waveforms on oscilloscope.</p>
+<ul class="Element630">
+<li class="Element600">Observe OC1 output RD0 &quot;Pin 24 of J15&quot; on the oscilloscope which generates an active low output</li>
+<li class="Element600">Observe OC2 output RB2 &quot;Pin 27 of J15&quot; on the oscilloscope which generates an active high output</li>
+<li class="Element600">Observe OC3 output RD14 &quot;Pin 26 of J15&quot; on the oscilloscope which generates the toggle output</li>
+</ul><p class="Element68">
+&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="40%">
+<div class="Element68">
+pic32mz_ef_sk.X&nbsp;</div></td><td class="Element67" valign="top" width="60%">
+<div class="Element68">
+Success: Observe waveforms on oscilloscope.</p>
+<ul class="Element630">
+<li class="Element600">Observe OC1 output RD0 &quot;Pin 11 of J12&quot; on the oscilloscope which generates an active low output</li>
+<li class="Element600">Observe OC2 output RD1 &quot;Pin 23 of J12&quot; on the oscilloscope which generates an active high output</li>
+<li class="Element600">Observe OC3 output RD10 &quot;Pin 37 of J12&quot; on the oscilloscope which generates the toggle output</li>
+</ul><p class="Element68">
+&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10" style="text-align: center;">
+<img src="ocmp_compare_mode_output.png" border="0" alt="" title=""></p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05091.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="04516.html" target="topic">OPAMP Applications</a> &gt; <a href="04517.html" target="topic">opamp_adc_gain_amp</a> &gt; <a href="04519.html" target="topic">Hardware Setup</a></div>
+<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="04514.html" target="topic">OCMP Applications</a> &gt; <a href="04515.html" target="topic">ocmp_compare_mode</a> &gt; <a href="04519.html" target="topic">Running The Application</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -95,13 +180,13 @@ Hardware Setup</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05091.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04520.html" target="topic">Previous</a> | <a href="04517.html" target="topic">Up</a> | <a href="04521.html" target="topic">Next</a></div>
+<a href="04517.html" target="topic">Previous</a> | <a href="04515.html" target="topic">Up</a> | <a href="04534.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: OPAMP opamp_adc_gain_amp Hardware Setup Topic Title: Hardware Setup)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: OCMP ocmp_compare_mode Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->
