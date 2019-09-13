@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Using the Library</title>
+<title>Hardware Setup</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05091.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04683.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05090.html" target="topic">Peripheral Libraries</a> &gt; <a href="06959.html" target="topic">SUPC Peripheral Library Help</a> &gt; <a href="06963.html" target="topic">Using the Library</a></div>
+<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="06950.html" target="topic">SUPC Applications</a> &gt; <a href="06953.html" target="topic">supc_wakeup_wkup</a> &gt; <a href="06963.html" target="topic">Hardware Setup</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05091.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06955.html" target="topic">Previous</a> | <a href="06959.html" target="topic">Up</a> | <a href="06960.html" target="topic">Next</a></div>
+<a href="06964.html" target="topic">Previous</a> | <a href="06953.html" target="topic">Up</a> | <a href="06965.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SUPC U2407 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SUPC supc_wakeup_wkup Hardware Setup Topic Title: Hardware Setup)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Using the Library</div>
+Hardware Setup</div>
 </div>
 </div>
 
@@ -48,39 +48,42 @@ Using the Library</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
-<p class="Element10">
-The Brown-Out Detector (BOD33) when enabled, monitors the VDD supply and compares the voltage with the brown-out&nbsp;</p>
-<p class="Element10">
-threshold level. When VDD crosses the brown-out threshold level, the BOD33 can perform one of the following actions,&nbsp;</p>
-<p class="Element10">
-1. Generate a reset&nbsp;</p>
-<p class="Element10">
-2. Generates an interrupt&nbsp;</p>
-<p class="Element10">
-3. Puts the device in battery backup sleep mode&nbsp;</p>
-<p class="Element10">
+
+<ol class="Element630">
+<li value="1" class="Element600"><strong>Project: sam_e70_xult.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602"><strong><a href="#" onclick="openExternalLink('http://www.microchip.com/DevelopmentTools/ProductDetails/PartNO/DM320113');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM E70 Xplained Ultra Evaluation Kit</a></strong></li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+</ul></li>
+</ul></li>
+</ol><p class="Element10">
 &nbsp;</p>
-<p class="Element10">
-The triggering voltage threshold for the BOD33 and the action can be configured via fuse bits in the NVM User Row. These bits can also be written after disabling BOD33. Brown out interrupt enables user to save critical data to prepare the system for a power-down.&nbsp;</p>
-<p class="Element10">
-SUPC Peripheral library provides non-Blocking API's and they can be used to perform below functionalities. Settings configured via MHC are written into SUPC registers when initialization function is called.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-• Initialize BOD33, VREF and VREG of the SUPC peripheral.&nbsp;</p>
-<p class="Element10">
-• Modify the main voltage regulation selection.&nbsp;</p>
-<p class="Element10">
-• Select temperature sensor channel to be used by the ADC peripheral.&nbsp;</p>
-<p class="Element10">
-• Set or clear OUTx pins of the SUPC peripheral.</p></div>
+
+<ol class="Element630">
+<li value="2" class="Element600"><strong>Project sam_g55_xpro.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602"><a href="#" onclick="openExternalLink('http://www.microchip.com/DevelopmentTools/ProductDetails/ATSAMG55-XPRO');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM G55 Xplained Pro Evaluation Kit</a></li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+</ul></li>
+</ul></li>
+</ol></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05091.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04683.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05090.html" target="topic">Peripheral Libraries</a> &gt; <a href="06959.html" target="topic">SUPC Peripheral Library Help</a> &gt; <a href="06963.html" target="topic">Using the Library</a></div>
+<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="06950.html" target="topic">SUPC Applications</a> &gt; <a href="06953.html" target="topic">supc_wakeup_wkup</a> &gt; <a href="06963.html" target="topic">Hardware Setup</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -88,13 +91,13 @@ SUPC Peripheral library provides non-Blocking API's and they can be used to perf
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05091.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06955.html" target="topic">Previous</a> | <a href="06959.html" target="topic">Up</a> | <a href="06960.html" target="topic">Next</a></div>
+<a href="06964.html" target="topic">Previous</a> | <a href="06953.html" target="topic">Up</a> | <a href="06965.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SUPC U2407 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SUPC supc_wakeup_wkup Hardware Setup Topic Title: Hardware Setup)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

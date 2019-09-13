@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Using the Library</title>
+<title>Running The Application</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05091.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04683.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05090.html" target="topic">Peripheral Libraries</a> &gt; <a href="06566.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="06555.html" target="topic">I2C</a> &gt; <a href="06564.html" target="topic">Using the Library</a></div>
+<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="06545.html" target="topic">SERCOM Applications</a> &gt; <a href="06552.html" target="topic">SERCOM SPI Applications</a> &gt; <a href="06554.html" target="topic">spi_ping_pong_with_dma</a> &gt; <a href="06564.html" target="topic">Running The Application</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05091.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06556.html" target="topic">Previous</a> | <a href="06555.html" target="topic">Up</a> | <a href="06560.html" target="topic">Next</a></div>
+<a href="06562.html" target="topic">Previous</a> | <a href="06554.html" target="topic">Up</a> | <a href="06555.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SERCOM U2201 I2C Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SERCOM SPI spi_ping_pong_with_dma Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Using the Library</div>
+Running The Application</div>
 </div>
 </div>
 
@@ -48,73 +48,67 @@ Using the Library</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
-<p class="Element10">
-The SERCOM I2C peripheral library supports the following I2C transfers:</p>
-<ul class="Element630">
-<li class="Element600"><strong>Master Write: </strong>The master writes a block of data to the slave</li>
-<li class="Element600"><strong>Master Read: </strong>The master reads a block of data from the slave</li>
-<li class="Element600"><strong>Master Write/Read: </strong>The master writes and then reads back a block of data from slave.</li>
-</ul><p class="Element10">
+
+<ol class="Element630">
+<li value="1" class="Element600">Build and program the application using the MPLAB X IDE.</li>
+<li value="2" class="Element600">The LED indicates the success or failure:
+<ul class="Element631">
+<li class="Element601"><span style="color: #000000">The LED is turned ON when the value received matched with the transmitted value</span></li>
+<li class="Element601"><span style="color: #000000">The LED is turned OFF when the value received did not match with the transmitted value</span></li>
+</ul></li>
+<li value="3" class="Element600">SPI data transfer and compare match checking happens continuously.</li>
+</ol><p class="Element10">
 &nbsp;</p>
 <p class="Element10">
-The block of data is transferred in a non-blocking manner using a peripheral interrupt. It provides both polling and callback methods to indicate the end of the transfer.</p>
-<ul class="Element630">
-<li class="Element600">With polling, the application will need to continuously poll to check if the transfer is completed.</li>
-<li class="Element600">With callback, the registered callback function will be called when the transfer is completed. This means the application do not have to poll continuously.</li>
-</ul><p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-The example code demonstrates the write operation using polling method. </p><div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">#define</span></strong> APP_SLAVE_ADDR 0x0057
-<strong><span style="color: #000080">#define</span></strong> NUM_BYTES      10
-
-uint8_t myWriteData [NUM_BYTES] = {'1', '0', ' ', 'B', 'Y', 'T', 'E', 'S', '!', '!',};
-
-<strong><span style="color: #000080">int</span></strong> main(<strong><span style="color: #000080">void</span></strong>)
-{
-    <i><span style="color: #008000">/* Write data to the TWIHS0 Slave */</span></i>
-    SERCOM0_I2C_Write(APP_SLAVE_ADDR, &amp;myWriteData[0], NUM_BYTES);
-
-    <i><span style="color: #008000">/* Poll and wait for the transfer to complete */</span></i>
-    <strong><span style="color: #000080">while</span></strong>(SERCOM0_I2C_IsBusy());
-
-    <i><span style="color: #008000">/* Check if any error occurred */</span></i>
-    <strong><span style="color: #000080">if</span></strong>(SERCOM0_I2C_ErrorGet() == SERCOM_I2C_ERROR_NONE)
-    {
-        <i><span style="color: #008000">//Transfer is completed successfully</span></i>
-    }
-    <strong><span style="color: #000080">else</span></strong>
-    {
-        <i><span style="color: #008000">//Error occurred during transfer.</span></i>
-    }
-}</pre></div></div>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-The example code demonstrates write operation using callback method. </p><div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">#define</span></strong> APP_SLAVE_ADDR 0x0057
-<strong><span style="color: #000080">#define</span></strong> NUM_BYTES      10
-
-uint8_t myWriteData [NUM_BYTES] = {'1', '0', ' ', 'B', 'Y', 'T', 'E', 'S', '!', '!',};
-
-<strong><span style="color: #000080">void</span></strong> SERCOM0_I2C_Callback(uintptr_t context)
-{
-    <strong><span style="color: #000080">if</span></strong>(SERCOM0_I2C_ErrorGet() == SERCOM_I2C_ERROR_NONE)
-    {
-        <i><span style="color: #008000">//Transfer is completed successfully</span></i>
-    }
-    <strong><span style="color: #000080">else</span></strong>
-    {
-        <i><span style="color: #008000">//Error occurred during transfer.</span></i>
-    }
-}
-
-<strong><span style="color: #000080">int</span></strong> main(<strong><span style="color: #000080">void</span></strong>)
-{
-    <i><span style="color: #008000">/* Register Callback function */</span></i>
-    SERCOM0_I2C_CallbackRegister(SERCOM0_I2C_Callback, (uintptr_t)NULL);
-
-    <i><span style="color: #008000">/* Submit Write Request */</span></i>
-    SERCOM0_I2C_Write(APP_SLAVE_ADDR, &amp;myWriteData[0], NUM_BYTES);
-}</pre></div></div>
+The following table provides the LED name. </p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="58%">
+<div class="Element66">
+Kit Name&nbsp;</div></td><td class="Element65" valign="top" width="42%">
+<div class="Element66">
+LED Name&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="58%">
+<div class="Element68">
+SAM C21N Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="42%">
+<div class="Element68">
+<span style="color: #000000">LED0</span>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="58%">
+<div class="Element68">
+SAM D11 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="42%">
+<div class="Element68">
+<span style="color: #000000">LED0</span>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="58%">
+<div class="Element68">
+SAM D21 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="42%">
+<div class="Element68">
+<span style="color: #000000">LED0</span>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="58%">
+<div class="Element68">
+SAM DA1 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="42%">
+<div class="Element68">
+<span style="color: #000000">LED0</span>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="58%">
+<div class="Element68">
+SAM E54 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="42%">
+<div class="Element68">
+<span style="color: #000000">LED0</span>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="58%">
+<div class="Element68">
+SAM L10 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="42%">
+<div class="Element68">
+<span style="color: #000000">LED0</span>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="58%">
+<div class="Element68">
+SAM L21 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="42%">
+<div class="Element68">
+<span style="color: #000000">LED0</span>&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="58%">
+<div class="Element68">
+SAM L22 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="42%">
+<div class="Element68">
+<span style="color: #000000">LED0</span>&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -122,7 +116,7 @@ uint8_t myWriteData [NUM_BYTES] = {'1', '0', ' ', 'B', 'Y', 'T', 'E', 'S', '!', 
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05091.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04683.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05090.html" target="topic">Peripheral Libraries</a> &gt; <a href="06566.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="06555.html" target="topic">I2C</a> &gt; <a href="06564.html" target="topic">Using the Library</a></div>
+<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="06545.html" target="topic">SERCOM Applications</a> &gt; <a href="06552.html" target="topic">SERCOM SPI Applications</a> &gt; <a href="06554.html" target="topic">spi_ping_pong_with_dma</a> &gt; <a href="06564.html" target="topic">Running The Application</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -130,13 +124,13 @@ uint8_t myWriteData [NUM_BYTES] = {'1', '0', ' ', 'B', 'Y', 'T', 'E', 'S', '!', 
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05091.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06556.html" target="topic">Previous</a> | <a href="06555.html" target="topic">Up</a> | <a href="06560.html" target="topic">Next</a></div>
+<a href="06562.html" target="topic">Previous</a> | <a href="06554.html" target="topic">Up</a> | <a href="06555.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SERCOM U2201 I2C Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SERCOM SPI spi_ping_pong_with_dma Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

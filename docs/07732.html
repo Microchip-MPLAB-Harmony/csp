@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Using the Library</title>
+<title>Building The Application</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05091.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04683.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05090.html" target="topic">Peripheral Libraries</a> &gt; <a href="07729.html" target="topic">TRNG Peripheral Library Help</a> &gt; <a href="07732.html" target="topic">Using the Library</a></div>
+<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="07730.html" target="topic">TRAM Applications</a> &gt; <a href="07731.html" target="topic">tram_tamper_erase</a> &gt; <a href="07732.html" target="topic">Building The Application</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05091.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="07726.html" target="topic">Previous</a> | <a href="07729.html" target="topic">Up</a> | <a href="07730.html" target="topic">Next</a></div>
+<a href="07731.html" target="topic">Previous</a> | <a href="07731.html" target="topic">Up</a> | <a href="07734.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TRNG 6334 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TRAM tram_tamper_erase Building The Application Topic Title: Building The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Using the Library</div>
+Building The Application</div>
 </div>
 </div>
 
@@ -49,38 +49,33 @@ Using the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The library provides both blocking and callback methods to generate and read the random number.</p>
-<ul class="Element630">
-<li class="Element600">With blocking API, it enables the TRNG module, waits for new random number to be available and then returns the newly generated random number.</li>
-<li class="Element600">With callback, it enables the TRNG module and the registered callback function will be called once the new random value is available.</li>
-</ul><p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong>Blocking API</strong>&nbsp;</p>
-<p class="Element10">
-The example code to generate 32-bit random number using blocking API is given below. </p><div class="Element13"><div class="Element12"><pre class="Element12">uint32_t randomNumber
-randomNumber = TRNG0_ReadData();</pre></div></div>
+The parent folder for all the MPLAB X projects for this application is given below: </p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="29%">
+<div class="Element66">
+Application Path&nbsp;</div></td><td class="Element65" valign="top" width="71%">
+<div class="Element66">
+csp/apps/tram/tram_tamper_erase/firmware&nbsp;</div></td></tr></table></div></div>
 <p class="Element10">
 &nbsp;</p>
 <p class="Element10">
-<strong>Callback method</strong>&nbsp;</p>
-<p class="Element10">
-This example demonstrates how to use callback to generate 32-bit random number.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p><div class="Element13"><div class="Element12"><pre class="Element12"><i><span style="color: #008000">/* Random number is provided as part of callback */</span></i>
-<strong><span style="color: #000080">void</span></strong> TRNG_EventHandler(uint32_t randomNumber, uintptr_t context)
-{
-
-}
-
-<strong><span style="color: #000080">int</span></strong> main(<strong><span style="color: #000080">void</span></strong>)
-{
-    <i><span style="color: #008000">/* Register Callback */</span></i>
-    TRNG_CallbackRegister(&amp;TRNG_EventHandler, (uintptr_t) NULL);
-
-    <i><span style="color: #008000">/* Enable TRNG */</span></i>
-    TRNG_RandomNumberGenerate();
-}</pre></div></div>
+<span style="color: #000000">To build the application, refer the following table and open the appropriate project file in the MPLAB X IDE.</span>&nbsp;</p>
+<div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="25%">
+<div class="Element66">
+Project Name&nbsp;</div></td><td class="Element65" valign="top" width="75%">
+<div class="Element66">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
+<div class="Element68">
+sam_l10_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+<div class="Element68">
+SAM L10 Xplained Pro Evaluation Kit&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -88,7 +83,7 @@ This example demonstrates how to use callback to generate 32-bit random number.&
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05091.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04683.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05090.html" target="topic">Peripheral Libraries</a> &gt; <a href="07729.html" target="topic">TRNG Peripheral Library Help</a> &gt; <a href="07732.html" target="topic">Using the Library</a></div>
+<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="07730.html" target="topic">TRAM Applications</a> &gt; <a href="07731.html" target="topic">tram_tamper_erase</a> &gt; <a href="07732.html" target="topic">Building The Application</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -96,13 +91,13 @@ This example demonstrates how to use callback to generate 32-bit random number.&
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05091.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="07726.html" target="topic">Previous</a> | <a href="07729.html" target="topic">Up</a> | <a href="07730.html" target="topic">Next</a></div>
+<a href="07731.html" target="topic">Previous</a> | <a href="07731.html" target="topic">Up</a> | <a href="07734.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TRNG 6334 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TRAM tram_tamper_erase Building The Application Topic Title: Building The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

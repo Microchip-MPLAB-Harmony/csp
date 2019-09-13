@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>spi_ping_pong_with_dma</title>
+<title>SPI Peripheral Library Help</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05091.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="06765.html" target="topic">SPI Applications</a> &gt; <a href="06767.html" target="topic">spi_ping_pong_with_dma</a></div>
+<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="06767.html" target="topic">SPI Peripheral Library Help</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05091.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06773.html" target="topic">Previous</a> | <a href="06765.html" target="topic">Up</a> | <a href="06764.html" target="topic">Next</a></div>
+<a href="06748.html" target="topic">Previous</a> | <a href="05108.html" target="topic">Up</a> | <a href="06766.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SPI Applications spi_ping_pong_with_dma Topic Title: spi_ping_pong_with_dma)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SPI 01329 Library Topic Title: SPI Peripheral Library Help)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-spi_ping_pong_with_dma</div>
+SPI Peripheral Library Help</div>
 </div>
 </div>
 
@@ -49,12 +49,7 @@ spi_ping_pong_with_dma</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<span style="color: #000000">The DMA peripheral provides support to implement the ping-pong buffering. The DMA transmits and receives data from one pair of buffers, when the CPU works on the second pair.</span></p>
-<ul class="Element630">
-<li class="Element600"><span style="color: #000000">When the DMA is transmitting data from the ping buffer, the CPU works on the pong buffer. When the DMA completes the transfer, it generates interrupt to indicate transfer completion from the ping buffer. The DMA channel is automatically re-initialized to transmit data from the pong buffer while the CPU works on the ping buffer.</span></li>
-<li class="Element600"><span style="color: #000000">When the DMA is receiving data to the ping buffer, the CPU works on the the pong buffer. When the DMA completes the transfer, it generates interrupt to indicate the availability of the data in the ping buffer. The DMA channel is automatically re-initialized to receive data in the pong buffer while the CPU works on the ping buffer.</span></li>
-</ul><p class="Element10">
-<span style="color: #000000">It transmits an array of values and verifies the value transmitted by receiving the values back with look back and comparing it to the value transmitted. The loop back</span> test requires the MOSI output pin to be connected to the MISO input pin so that anything transmitted will also be received.</p></div>
+This section provides an interface to use the Serial Peripheral Interface (SPI) peripheral.</p></div>
 </div>
 <a name="546F70696373"></a><div class="Element14">
 Topics</div>
@@ -71,24 +66,24 @@ Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="35%">
 <div class="Element203">
-<a href="06764.html" target="topic">Building The Application</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="06766.html" target="topic">Introduction</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-This section provides information on how to build an application.&nbsp;</div></td></tr><tr>
+This section provides a brief overview of the SPI peripheral.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="35%">
 <div class="Element203">
-<a href="06775.html" target="topic">MPLAB Harmony Configuration</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="06763.html" target="topic">Configuring the Library</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Refer to the MHC project graph for the components used and the respective configuration options. For projects that use IAR Embedded work bench as IDE, the harmony project file should be opened using MHC plugin (standalone mode) to access the project graph.&nbsp;</div></td></tr><tr>
+This section explains how to configure the peripheral library using the MHC.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="35%">
 <div class="Element203">
-<a href="06774.html" target="topic">Hardware Setup</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="06772.html" target="topic">Using the Library</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-This section describes how to configure the supported hardware.&nbsp;</div></td></tr><tr>
+This section explains how to use the peripheral library.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="35%">
 <div class="Element203">
-<a href="06776.html" target="topic">Running The Application</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="06768.html" target="topic">Library Interface</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-This section provides information on how to run an application.&nbsp;</div></td></tr></table></div></div>
+This section describes the Application Programming Interface (API) functions of the Peripheral Library<span style="color: #0000FF">.</span><br>Refer to each section for a detailed description.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -96,7 +91,7 @@ This section provides information on how to run an application.&nbsp;</div></td>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05091.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="06765.html" target="topic">SPI Applications</a> &gt; <a href="06767.html" target="topic">spi_ping_pong_with_dma</a></div>
+<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="06767.html" target="topic">SPI Peripheral Library Help</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -104,13 +99,13 @@ This section provides information on how to run an application.&nbsp;</div></td>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05091.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06773.html" target="topic">Previous</a> | <a href="06765.html" target="topic">Up</a> | <a href="06764.html" target="topic">Next</a></div>
+<a href="06748.html" target="topic">Previous</a> | <a href="05108.html" target="topic">Up</a> | <a href="06766.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SPI Applications spi_ping_pong_with_dma Topic Title: spi_ping_pong_with_dma)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SPI 01329 Library Topic Title: SPI Peripheral Library Help)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->
