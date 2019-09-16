@@ -352,12 +352,6 @@ void ${LCDC_INSTANCE_NAME}_WaitForDISPSignal( void )
     while (!(${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDSR & ${LCDC_INSTANCE_NAME}_LCDSR_DISPSTS_Msk));
 }
 
-
-static void _wait_for_clock_domain_sync(void)
-{
-	while ((${LCDC_INSTANCE_NAME}_REGS->${LCDC_INSTANCE_NAME}_LCDSR & ${LCDC_INSTANCE_NAME}_LCDSR_SIPSTS_Msk));
-}
-
 void ${LCDC_INSTANCE_NAME}_SetRGBModeInput(${LCDC_INSTANCE_NAME}_LAYER_ID layer, ${LCDC_INSTANCE_NAME}_INPUT_COLOR_MODE mode)
 {
     switch(layer)

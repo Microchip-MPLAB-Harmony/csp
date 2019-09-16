@@ -2132,6 +2132,31 @@ void ${LCDC_INSTANCE_NAME}_SetHEOScaler(uint16_t yfactor, uint16_t xfactor, bool
 */
 void ${LCDC_INSTANCE_NAME}_SetHEOFilterPhaseOffset(uint8_t yphidef, uint8_t xphidef);
 
+// *****************************************************************************
+/* Function:
+    void LCDC_UpdateAddToQueue(LCDC_LAYER_ID layer)
+
+   Summary:
+    Updates the attributes for the specified layer
+
+   Description:
+    None
+
+   Precondition:
+    None.
+
+   Parameters:
+    layer - the layer
+
+   Returns:
+    None
+
+   Remarks:
+    None
+*/
+void LCDC_UpdateAddToQueue(LCDC_LAYER_ID layer);
+
+
 
 #ifdef __cplusplus  // Provide C++ Compatibility
 
