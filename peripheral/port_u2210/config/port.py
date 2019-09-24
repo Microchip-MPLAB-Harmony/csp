@@ -103,6 +103,7 @@ def setupPortPINCFG(usePortLocalPINCFG, event):
 
     pullEnable = Database.getSymbolValue(event["namespace"], "PIN_" + str(event["id"].split("_")[1]) + "_PULLEN")
     inputEnable = Database.getSymbolValue(event["namespace"], "PIN_" + str(event["id"].split("_")[1]) + "_INEN")
+    driveStrength = Database.getSymbolValue(event["namespace"], "PIN_" + str(event["id"].split("_")[1]) + "_DRVSTR")
     peripheralFunc = Database.getSymbolValue(event["namespace"], "PIN_" + str(event["id"].split("_")[1]) +"_PERIPHERAL_FUNCTION")
     bitPosition = Database.getSymbolValue(event["namespace"], "PIN_" + str(event["id"].split("_")[1]) + "_PORT_PIN")
     groupName = Database.getSymbolValue(event["namespace"], "PIN_" + str(event["id"].split("_")[1]) + "_PORT_GROUP")
@@ -119,6 +120,10 @@ def setupPortPINCFG(usePortLocalPINCFG, event):
             cfgValue |= (1 << 1)
         if inputEnable == "False":
             cfgValue &= ~ (1 << 1)
+        if driveStrength == 0:
+            cfgValue &= ~(1 << 6)
+        elif driveStrength == 1:
+            cfgValue |= (1 << 6) 
         if peripheralFunc not in peripheralFunctionality and peripheralFunc != "":
             cfgValue |= (1 << 0)
         else :
@@ -321,6 +326,7 @@ pinDirection = []
 pinLatch = []
 pinPullEnable = []
 pinInputEnable = []
+pinDrvStr = []
 pinDirList = []
 pinLatchList = []
 pinPinMuxList = []
@@ -431,6 +437,14 @@ for pinNumber in range(1, pincount + 1):
     pinInputEnable[pinNumber-1].setLabel("Input Enable")
     pinInputEnable[pinNumber-1].setReadOnly(True)
 
+    pinDrvStr.append(pinNumber)
+    pinDrvStr[pinNumber-1] = coreComponent.createKeyValueSetSymbol("PIN_" + str(pinNumber) + "_DRVSTR", pin[pinNumber-1])
+    pinDrvStr[pinNumber-1].setLabel("Drive Strength")
+    pinDrvStr[pinNumber-1].setDisplayMode("Key")
+    pinDrvStr[pinNumber-1].addKey("NORMAL", "0", "Normal")
+    pinDrvStr[pinNumber-1].addKey("STRONG", "1", "Strong")
+    pinDrvStr[pinNumber-1].setReadOnly(True)
+
     #creating list for direction dependency
     pinDirList.append(pinNumber)
     pinDirList[pinNumber-1] = "PIN_" + str(pinNumber) +"_DIR"
@@ -447,7 +461,7 @@ for pinNumber in range(1, pincount + 1):
     portSym_PIN_PINCFG[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_CFG", pin[pinNumber-1])
     portSym_PIN_PINCFG[pinNumber-1].setReadOnly(True)
     portSym_PIN_PINCFG[pinNumber-1].setVisible(False)
-    portSym_PIN_PINCFG[pinNumber-1].setDependencies(setupPortPINCFG, ["PIN_" + str(pinNumber) +"_INEN", "PIN_" + str(pinNumber) +"_PULLEN", "PIN_" + str(pinNumber) +"_PERIPHERAL_FUNCTION"])
+    portSym_PIN_PINCFG[pinNumber-1].setDependencies(setupPortPINCFG, ["PIN_" + str(pinNumber) +"_INEN", "PIN_" + str(pinNumber) +"_PULLEN", "PIN_" + str(pinNumber) +"_PERIPHERAL_FUNCTION", "PIN_" + str(pinNumber) + "_DRVSTR"])
 
 ###################################################################################################
 ################################# PORT Configuration related code #################################
