@@ -26,10 +26,13 @@
 
 <#if CoreArchitecture?contains("ARM926")>
 
-static inline void __NOP()
+#ifndef __NOP
+#define __NOP __arm926_nop
+static inline void __arm926_nop()
 {
     asm("nop");
 }
+#endif //__NOP
 
 static inline void __disable_irq( void )
 {   // read, modify and write back the CPSR
@@ -45,17 +48,24 @@ static inline void __enable_irq( void )
     asm("MSR cpsr_c, r0");
 }
 
-static inline void __DMB(void)
+#ifndef __DMB
+#define __DMB    __arm926_dmb
+static inline void __arm926_dmb(void)
 {
 	asm("" ::: "memory");
 }
+#endif //__DMB
 
-static inline void __DSB(void)
+#ifndef __DSB
+#define __DSB    __arm926_dsb
+static inline void __arm926_dsb(void)
 {
 	asm("mcr p15, 0, %0, c7, c10, 4" :: "r"(0) : "memory");
 }
+#endif //__DSB
 
-static inline void __ISB(void)
+#define __ISB __arm926_isb
+static inline void __arm926_isb(void)
 {
 	asm("" ::: "memory");
 }
