@@ -87,6 +87,167 @@ tcSym_CH_interruptControl = []
 tcSym_CH_IntEnComment = []
 tcSym_CH_ClkEnComment = []
 
+global sysTimeComponentId
+
+def sysTimePLIBModeConfig(channelID, plibMode):
+    global sysTimeTickRateMs
+
+    if sysTimeComponentId.getValue() != "":
+        #Enable channel
+        tcSym_CH_Enable[channelID].setValue(True)
+        tcSym_SYS_TIME_CONNECTED[channelID].setValue(True)
+        if plibMode == "SYS_TIME_PLIB_MODE_COMPARE":
+            #Show Compare Interrupt Option
+            tcSym_CH_IER_CPAS[channelID].setVisible(True)
+            #Enable Compare Interrupt
+            tcSym_CH_IER_CPAS[channelID].setValue(True)
+            #Disable Period Interrupt
+            tcSym_CH_IER_CPCS[channelID].setValue(False)
+            #Hide Time Period
+            tcSym_CH_TimerPeriod[channelID].setValue(0.0)
+            tcSym_CH_TimerPeriod[channelID].setVisible(False)
+        elif plibMode == "SYS_TIME_PLIB_MODE_PERIOD":
+            #Hide Compare Interrupt Option
+            tcSym_CH_IER_CPAS[channelID].setVisible(False)
+            #Enable Period Interrupt
+            tcSym_CH_IER_CPCS[channelID].setValue(True)
+            #Disable Compare Interrupt
+            tcSym_CH_IER_CPAS[channelID].setValue(False)
+            #Show Time Period and Set it
+            tcSym_CH_TimerPeriod[channelID].setValue(sysTimeTickRateMs.getValue())
+            tcSym_CH_TimerPeriod[channelID].setVisible(True)
+
+        if(channelID==0):
+            #Disable channel
+            tcSym_CH_Enable[1].setValue(False)
+            tcSym_CH_Enable[2].setValue(False)
+            #Show Time Period and clear it
+            tcSym_CH_TimerPeriod[1].setValue(0.0)
+            tcSym_CH_TimerPeriod[2].setValue(0.0)
+            tcSym_CH_TimerPeriod[1].setVisible(True)
+            tcSym_CH_TimerPeriod[2].setVisible(True)
+            #Disable Period Interrupt
+            tcSym_CH_IER_CPCS[1].setValue(False)
+            tcSym_CH_IER_CPCS[2].setValue(False)
+            #Disable Compare Interrupt
+            tcSym_CH_IER_CPAS[1].setValue(False)
+            tcSym_CH_IER_CPAS[2].setValue(False)
+            #Hide Compare Interrupt Option
+            tcSym_CH_IER_CPAS[1].setVisible(False)
+            tcSym_CH_IER_CPAS[2].setVisible(False)
+            #----
+            tcSym_SYS_TIME_CONNECTED[1].setValue(False)
+            tcSym_SYS_TIME_CONNECTED[2].setValue(False)
+        elif (channelID == 1):
+            #Disable channel
+            tcSym_CH_Enable[0].setValue(False)
+            tcSym_CH_Enable[2].setValue(False)
+            #Show Time Period and clear it
+            tcSym_CH_TimerPeriod[0].setValue(0.0)
+            tcSym_CH_TimerPeriod[2].setValue(0.0)
+            tcSym_CH_TimerPeriod[0].setVisible(True)
+            tcSym_CH_TimerPeriod[2].setVisible(True)
+            #Disable Period Interrupt
+            tcSym_CH_IER_CPCS[0].setValue(False)
+            tcSym_CH_IER_CPCS[2].setValue(False)
+            #Disable Compare Interrupt
+            tcSym_CH_IER_CPAS[0].setValue(False)
+            tcSym_CH_IER_CPAS[2].setValue(False)
+            #Hide Compare Interrupt Option
+            tcSym_CH_IER_CPAS[0].setVisible(False)
+            tcSym_CH_IER_CPAS[2].setVisible(False)
+            #----
+            tcSym_SYS_TIME_CONNECTED[0].setValue(False)
+            tcSym_SYS_TIME_CONNECTED[2].setValue(False)
+        elif (channelID == 2):
+            #Disable channel
+            tcSym_CH_Enable[0].setValue(False)
+            tcSym_CH_Enable[1].setValue(False)
+            #Show Time Period and clear it
+            tcSym_CH_TimerPeriod[0].setValue(0.0)
+            tcSym_CH_TimerPeriod[1].setValue(0.0)
+            tcSym_CH_TimerPeriod[0].setVisible(True)
+            tcSym_CH_TimerPeriod[1].setVisible(True)
+            #Disable Period Interrupt
+            tcSym_CH_IER_CPCS[0].setValue(False)
+            tcSym_CH_IER_CPCS[1].setValue(False)
+            #Disable Compare Interrupt
+            tcSym_CH_IER_CPAS[0].setValue(False)
+            tcSym_CH_IER_CPAS[1].setValue(False)
+            #Hide Compare Interrupt Option
+            tcSym_CH_IER_CPAS[0].setVisible(False)
+            tcSym_CH_IER_CPAS[1].setVisible(False)
+            #----
+            tcSym_SYS_TIME_CONNECTED[0].setValue(False)
+            tcSym_SYS_TIME_CONNECTED[1].setValue(False)
+
+def calcAchievableFreq(channelID):
+    global sysTimeComponentId
+    global tcSym_CH_TimerPeriodCount
+    global sysTimePlibMode
+    global sysTimeChannel_Sym
+
+    dummy_dict = dict()
+    tc_channel = sysTimeChannel_Sym.getSelectedKey()
+    sysTimeChannelID = int(tc_channel[3])
+
+    tickRateDict = {"tick_rate_hz": 0}
+    if (sysTimeChannelID == channelID) and (sysTimeComponentId.getValue() != "") and (sysTimePlibMode.getValue() == "SYS_TIME_PLIB_MODE_PERIOD"):
+        #Read the input clock frequency of the timer instance
+        source_clk_freq = Database.getSymbolValue("core", tcInstanceName.getValue()+"_CH"+str(channelID)+"_CLOCK_FREQUENCY")
+        if source_clk_freq != 0:
+            #Read the calculated timer count to achieve the set Time Period and Calculate the actual tick rate
+            achievableTickRateHz = float(1.0/source_clk_freq) * float(tcSym_CH_TimerPeriodCount[channelID].getValue())
+            if achievableTickRateHz != 0:
+                achievableTickRateHz = (1.0/achievableTickRateHz) * 100000.0
+                tickRateDict["tick_rate_hz"] = long(achievableTickRateHz)
+                dummy_dict = Database.sendMessage(sysTimeComponentId.getValue(), "SYS_TIME_ACHIEVABLE_TICK_RATE_HZ", tickRateDict)
+            else:
+                dummy_dict = Database.sendMessage(sysTimeComponentId.getValue(), "SYS_TIME_ACHIEVABLE_TICK_RATE_HZ", tickRateDict)
+        else:
+            dummy_dict = Database.sendMessage(sysTimeComponentId.getValue(), "SYS_TIME_ACHIEVABLE_TICK_RATE_HZ", tickRateDict)
+
+def handleMessage(messageID, args):
+    global sysTimeComponentId
+    global sysTimeChannel_Sym
+    global sysTimePlibMode
+    global sysTimeTickRateMs
+
+    dummy_dict = dict()
+    sysTimePLIBConfig = dict()
+
+    print "handleMessage - " + str(messageID)
+
+    if (messageID == "SYS_TIME_PUBLISH_CAPABILITIES"):
+        sysTimeComponentId.setValue(args["ID"])
+        modeDict = {"plib_mode": "PERIOD_AND_COMPARE_MODES"}
+        sysTimePLIBConfig = Database.sendMessage(sysTimeComponentId.getValue(), "SYS_TIME_PLIB_CAPABILITY", modeDict)
+        sysTimeChannel_Sym.setSelectedKey("_CH0",1)
+        sysTimeChannel_Sym.setVisible(True)
+        tc_channel = sysTimeChannel_Sym.getSelectedKey()
+        channelID = int(tc_channel[3])
+        print sysTimePLIBConfig
+        sysTimePlibMode.setValue(sysTimePLIBConfig["plib_mode"])
+        sysTimePLIBModeConfig(channelID, sysTimePlibMode.getValue())
+        if sysTimePLIBConfig["plib_mode"] == "SYS_TIME_PLIB_MODE_PERIOD":
+            sysTimeTickRateMs.setValue(sysTimePLIBConfig["sys_time_tick_ms"])
+            tcSym_CH_TimerPeriod[channelID].setValue(sysTimeTickRateMs.getValue())
+
+    if ((messageID == "SYS_TIME_PLIB_MODE_COMPARE") or (messageID == "SYS_TIME_PLIB_MODE_PERIOD")):
+        sysTimePlibMode.setValue(messageID)
+        tc_channel = sysTimeChannel_Sym.getSelectedKey()
+        channelID = int(tc_channel[3])
+        sysTimePLIBModeConfig(channelID, sysTimePlibMode.getValue())
+
+    if (messageID == "SYS_TIME_TICK_RATE_CHANGED"):
+        tc_channel = sysTimeChannel_Sym.getSelectedKey()
+        channelID = int(tc_channel[3])
+        #Set the Time Period (Milli Sec)
+        sysTimeTickRateMs.setValue(args["sys_time_tick_ms"])
+        tcSym_CH_TimerPeriod[channelID].setValue(sysTimeTickRateMs.getValue())
+
+    return dummy_dict
+
 ###################################################################################################
 #################### Helpers to map per channel interrupts   ######################################
 ###################################################################################################
@@ -530,6 +691,7 @@ def tcPeriodCountCalc(symbol, event):
         else:
             tcSym_CH_TimerPeriodComment[channelID].setLabel("****Period Count is " + str(time_period) + "****")
         tcSym_CH_TimerPeriodCount[channelID].setValue(int(time_period), 2)
+    calcAchievableFreq(channelID)
 
 def tcPeriodMaxVal(symbol, event):
     id = symbol.getID()
@@ -730,12 +892,9 @@ def onAttachmentConnected(source, target):
     connectID = source["id"]
     targetID = target["id"]
 
-    if (remoteID == "sys_time"):
-        sysTimeChannel_Sym.setSelectedKey("_CH0",1)
-        sysTimeChannel_Sym.setVisible(True)
-
 def onAttachmentDisconnected(source, target):
     global sysTimeChannel_Sym
+    global sysTimeComponentId
 
     localComponent = source["component"]
     remoteComponent = target["component"]
@@ -743,15 +902,21 @@ def onAttachmentDisconnected(source, target):
     connectID = source["id"]
     targetID = target["id"]
 
-    tcSym_CH_TimerPeriod[0].setVisible(True)
-    tcSym_CH_TimerPeriod[1].setVisible(True)
-    tcSym_CH_TimerPeriod[2].setVisible(True)
-    tcSym_CH_IER_CPAS[0].setVisible(False)
-    tcSym_CH_IER_CPAS[1].setVisible(False)
-    tcSym_CH_IER_CPAS[2].setVisible(False)
-
     if (remoteID == "sys_time"):
         sysTimeChannel_Sym.setVisible(False)
+        sysTimeComponentId.setValue("")
+        tc_channel = sysTimeChannel_Sym.getSelectedKey()
+        channelID = int(tc_channel[3])
+        #Show Time Period and clear it
+        tcSym_CH_TimerPeriod[channelID].setValue(0.0)
+        tcSym_CH_TimerPeriod[channelID].setVisible(True)
+        #Enable the period interrupt
+        tcSym_CH_IER_CPCS[channelID].setValue(True)
+        #Disable and Hide Compare Interrupt Option
+        tcSym_CH_IER_CPAS[channelID].setValue(False)
+        tcSym_CH_IER_CPAS[channelID].setVisible(False)
+        #----
+        tcSym_SYS_TIME_CONNECTED[channelID].setValue(False)
 
 def sysTime_ChannelSelection(symbol,event):
     global timerStartApiName_Sym
@@ -764,48 +929,14 @@ def sysTime_ChannelSelection(symbol,event):
     global irqEnumName_Sym
     global tcInstanceName
     global tcNumInterruptLines
-
+    global sysTimePlibMode
 
     symObj=event["symbol"]
     tc_channel = symObj.getSelectedKey()
 
     channelID = int(tc_channel[3])
 
-    tcSym_CH_Enable[channelID].setValue(True,2)
-    tcSym_CH_IER_CPAS[channelID].setVisible(True)
-    tcSym_CH_IER_CPAS[channelID].setValue(True,2)
-    tcSym_CH_IER_CPCS[channelID].setValue(False,2)
-    tcSym_SYS_TIME_CONNECTED[channelID].setValue(True, 2)
-
-    tcSym_CH_TimerPeriod[channelID].setVisible(False)
-
-    if(channelID==0):
-        tcSym_CH_TimerPeriod[1].setVisible(True)
-        tcSym_CH_TimerPeriod[2].setVisible(True)
-        tcSym_CH_IER_CPAS[1].setVisible(False)
-        tcSym_CH_IER_CPAS[2].setVisible(False)
-        tcSym_CH_Enable[1].setValue(False,2)
-        tcSym_CH_Enable[2].setValue(False,2)
-        tcSym_SYS_TIME_CONNECTED[1].setValue(False, 2)
-        tcSym_SYS_TIME_CONNECTED[2].setValue(False, 2)
-    elif(channelID==1):
-        tcSym_CH_TimerPeriod[0].setVisible(True)
-        tcSym_CH_TimerPeriod[2].setVisible(True)
-        tcSym_CH_IER_CPAS[0].setVisible(False)
-        tcSym_CH_IER_CPAS[2].setVisible(False)
-        tcSym_CH_Enable[0].setValue(False,2)
-        tcSym_CH_Enable[2].setValue(False,2)
-        tcSym_SYS_TIME_CONNECTED[0].setValue(False, 2)
-        tcSym_SYS_TIME_CONNECTED[2].setValue(False, 2)
-    elif(channelID==2):
-        tcSym_CH_TimerPeriod[0].setVisible(True)
-        tcSym_CH_TimerPeriod[1].setVisible(True)
-        tcSym_CH_IER_CPAS[1].setVisible(False)
-        tcSym_CH_IER_CPAS[0].setVisible(False)
-        tcSym_CH_Enable[0].setValue(False,2)
-        tcSym_CH_Enable[1].setValue(False,2)
-        tcSym_SYS_TIME_CONNECTED[1].setValue(False, 2)
-        tcSym_SYS_TIME_CONNECTED[0].setValue(False, 2)
+    sysTimePLIBModeConfig(channelID, sysTimePlibMode.getValue())
 
     timerStartApiName = tcInstanceName.getValue() + str(tc_channel) + "_TimerStart"
     timeStopApiName = tcInstanceName.getValue() + str(tc_channel) + "_TimerStop "
@@ -848,6 +979,9 @@ def instantiateComponent(tcComponent):
     global tcInterruptSymbolSpace
     global tcCounterMaxValue
     global tcNumInterruptLines
+    global sysTimeComponentId
+    global sysTimePlibMode
+    global sysTimeTickRateMs
 
     tcInstanceName = tcComponent.createStringSymbol("TC_INSTANCE_NAME", None)
     tcInstanceName.setVisible(False)
@@ -941,6 +1075,21 @@ def instantiateComponent(tcComponent):
 #------------------------------------------------------------
 # Common Symbols needed for SYS_TIME usage
 #------------------------------------------------------------
+
+    sysTimePlibMode = tcComponent.createStringSymbol("SYS_TIME_PLIB_OPERATION_MODE", None)
+    sysTimePlibMode.setLabel("SysTime PLIB Operation Mode")
+    sysTimePlibMode.setVisible(False)
+    sysTimePlibMode.setDefaultValue("")
+
+    sysTimeComponentId = tcComponent.createStringSymbol("SYS_TIME_COMPONENT_ID", None)
+    sysTimeComponentId.setLabel("Component id")
+    sysTimeComponentId.setVisible(False)
+    sysTimeComponentId.setDefaultValue("")
+
+    sysTimeTickRateMs = tcComponent.createFloatSymbol("SYS_TIME_TICK_RATE_MS", None)
+    sysTimeTickRateMs.setDefaultValue(1)
+    sysTimeTickRateMs.setVisible(False)
+
     timerWidth_Sym = tcComponent.createIntegerSymbol("TIMER_WIDTH", None)
     timerWidth_Sym.setVisible(False)
     #Set the counter bitwidth based on the masks. Some masks support 32 bit timers
