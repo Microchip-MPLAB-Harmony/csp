@@ -67,9 +67,47 @@ global tmrInterruptVector
 global tmrInterruptHandlerLock
 global tmrInterruptHandler
 global tmrInterruptVectorUpdate
+global sysTimeComponentId
+global tmrSym_PERIOD_MS
 ################################################################################
 #### Business Logic ####
 ################################################################################
+def calcAchievableFreq():
+    global tmrSym_PR2
+    global tmrSym_CLOCK_FREQ
+    tickRateDict = {"tick_rate_hz": 0}
+    dummy_dict = dict()
+
+    if sysTimeComponentId.getValue() != "":
+        #Read the input clock frequency of the timer instance
+        source_clk_freq = tmrSym_CLOCK_FREQ.getValue()
+        #Read the calculated timer count to achieve the set Time Period and Calculate the actual tick rate
+        achievableTickRateHz = float(1.0/source_clk_freq) * tmrSym_PR2.getValue()
+        achievableTickRateHz = (1.0/achievableTickRateHz) * 100000.0
+        tickRateDict["tick_rate_hz"] = long(achievableTickRateHz)
+        dummy_dict = Database.sendMessage(sysTimeComponentId.getValue(), "SYS_TIME_ACHIEVABLE_TICK_RATE_HZ", tickRateDict)
+
+def handleMessage(messageID, args):
+    global sysTimeComponentId
+
+    dummy_dict = dict()
+    sysTimePLIBConfig = dict()
+
+    if (messageID == "SYS_TIME_PUBLISH_CAPABILITIES"):
+        sysTimeComponentId.setValue(args["ID"])
+        modeDict = {"plib_mode": "PERIOD_MODE"}
+        sysTimePLIBConfig = Database.sendMessage(sysTimeComponentId.getValue(), "SYS_TIME_PLIB_CAPABILITY", modeDict)
+        print sysTimePLIBConfig
+        if sysTimePLIBConfig["plib_mode"] == "SYS_TIME_PLIB_MODE_PERIOD":
+            tmrSym_PERIOD_MS.setValue(sysTimePLIBConfig["sys_time_tick_ms"])
+
+    if (messageID == "SYS_TIME_TICK_RATE_CHANGED"):
+        if sysTimeComponentId.getValue() != "":
+            #Set the Time Period (Milli Sec)
+            tmrSym_PERIOD_MS.setValue(args["sys_time_tick_ms"])
+
+    return dummy_dict
+
 def _get_enblReg_parms(vectorNumber):
 
     # This takes in vector index for interrupt, and returns the IECx register name as well as
@@ -242,6 +280,7 @@ def timerPeriodCalc(symbol, event):
             symbol.setMax(65535)
     else:
         symbol.setValue(0, 2)
+    calcAchievableFreq()
 
 def tmrTgateVisible(symbol, event):
     symbol.setVisible(bool(event["value"]))
@@ -286,6 +325,20 @@ def timer_mode_update(symbol,event):
             symbol.setValue(32,2)
         else:
             symbol.setValue(16,2)
+
+def onAttachmentConnected(source, target):
+    remoteComponent = target["component"]
+    remoteID = remoteComponent.getID()
+
+def onAttachmentDisconnected(source, target):
+    global sysTimeComponentId
+    remoteComponent = target["component"]
+    remoteID = remoteComponent.getID()
+
+    if remoteID == "sys_time":
+        #Reset the remote component ID to NULL
+        sysTimeComponentId.setValue("")
+        tmrSym_PERIOD_MS.setValue(0.3)
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
@@ -299,6 +352,10 @@ def instantiateComponent(tmrComponent):
     global tmrInterruptVectorUpdate
     global tmrSymInterruptMode
     global instanceNum
+    global sysTimeComponentId
+    global tmrSym_PERIOD_MS
+    global tmrSym_PR2
+    global tmrSym_CLOCK_FREQ
 
     tmrInstanceName = tmrComponent.createStringSymbol("TMR_INSTANCE_NAME", None)
     tmrInstanceName.setVisible(False)
@@ -446,6 +503,11 @@ def instantiateComponent(tmrComponent):
     | (int(tmrSym_T2CON_32BIT_MODE_SEL.getSelectedValue()) << 3) | (int(tmrSym_T2CON_SOURCE_SEL.getSelectedValue()) << 1))
     tmrSym_T2CON_Value.setVisible(False)
     tmrSym_T2CON_Value.setDependencies(T2CONcombineValues,["TIMER_SIDL", "TIMER_SYNC", "TIMER_TGATE", "TIMER_PRE_SCALER", "TIMER_32BIT_MODE_SEL", "TIMER_SRC_SEL"])
+
+    sysTimeComponentId = tmrComponent.createStringSymbol("SYS_TIME_COMPONENT_ID", None)
+    sysTimeComponentId.setLabel("Component id")
+    sysTimeComponentId.setVisible(False)
+    sysTimeComponentId.setDefaultValue("")
 
     timerStartApiName = tmrInstanceName.getValue() +  "_Start"
     timerStopApiName = tmrInstanceName.getValue() + "_Stop "
