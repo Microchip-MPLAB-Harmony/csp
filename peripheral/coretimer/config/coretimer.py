@@ -36,6 +36,14 @@ global tmrPeriodicInterrupt
 
 global setTimerInterruptData
 
+def handleMessage(messageID, args):
+    dummy_dict = {}
+
+    if (messageID == "SYS_TIME_PUBLISH_CAPABILITIES"):
+        modeDict = {"plib_mode": "COMPARE_MODE"}
+        dummy_dict = Database.sendMessage(args["ID"], "SYS_TIME_PLIB_CAPABILITY", modeDict)
+
+    return dummy_dict
 
 def coreFreqCalc(symbol, event):
     SysClkFreq=Database.getSymbolValue("core", "SYS_CLK_FREQ")
@@ -115,6 +123,7 @@ def getIRQnumber(string):
 def onAttachmentConnected(source, target):
     remoteComponent = target["component"]
     remoteID = remoteComponent.getID()
+
     if (remoteID == "sys_time"):
         tmrInterruptEnable.setValue(True,1)
         tmrPeriodicInterrupt.setValue(False,1)
@@ -152,7 +161,7 @@ def instantiateComponent(tmrComponent):
     tmrInterruptEnable = tmrComponent.createBooleanSymbol("CORE_TIMER_INTERRUPT_MODE", None)
     tmrInterruptEnable.setLabel("Enable Interrupt mode")
     tmrInterruptEnable.setDefaultValue(False)
-    
+
     tmrPeriodicInterrupt = tmrComponent.createBooleanSymbol("CORE_TIMER_PERIODIC_INTERRUPT", tmrInterruptEnable)
     tmrPeriodicInterrupt.setLabel("Generate Periodic interrupt")
     tmrPeriodicInterrupt.setDefaultValue(False)
