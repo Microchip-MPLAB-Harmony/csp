@@ -50,6 +50,11 @@ freeRTOSVectors.setVisible(False)
 freeRTOSVectors.setReadOnly(True)
 freeRTOSVectors.setDefaultValue(False)
 
+threadXVectors = coreComponent.createBooleanSymbol("USE_THREADX_VECTORS", None)
+threadXVectors.setVisible(False)
+threadXVectors.setReadOnly(True)
+threadXVectors.setDefaultValue(False)
+
 # load MMU
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/mmu_sam_9x60/config/mmu.py")
 

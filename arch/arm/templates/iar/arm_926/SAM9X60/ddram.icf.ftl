@@ -71,3 +71,7 @@ place in DDRAM_region { block UND_STACK };
 place in DDRAM_region { block SYS_STACK };
 
 place in DDRAM_NOCACHE_region { block NO_CACHE };
+
+<#if USE_THREADX_VECTORS>
+place in DDRAM_region { last section FREE_MEM};
+</#if>

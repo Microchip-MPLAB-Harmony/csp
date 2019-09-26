@@ -83,6 +83,8 @@ REMAP_BASE_ADDRESS DEFINE 0xFFFFDE00 + 0x100
         <#if USE_FREERTOS_VECTORS>
         EXTERN FreeRTOS_IRQ_Handler
         EXTERN FreeRTOS_SWI_Handler
+        <#elseif USE_THREADX_VECTORS>
+        EXTERN Threadx_IRQ_Handler
         </#if>
 
 
@@ -121,6 +123,8 @@ prefetch_abt_addr: DCD   prefetch_abort_irq_handler
 data_abt_addr:     DCD   data_abort_irq_handler
 <#if USE_FREERTOS_VECTORS>
 irq_addr:          DCD   FreeRTOS_IRQ_Handler
+<#elseif USE_THREADX_VECTORS>
+irq_addr:          DCD   Threadx_IRQ_Handler
 <#else>
 irq_addr:          DCD   irqHandler
 </#if>
@@ -280,24 +284,22 @@ __iar_program_start:
         ldr     sp, =SFE(UND_STACK)
         bic     sp, sp, #0x7
 
-        ; Set up the sys mode stack pointer
+        ; Set up the usr/sys mode stack pointer
 
         bic     r0, r0, #MODE_MSK
         orr     r0, r0, #ARM_MODE_SYS
         msr     CPSR_c, r0
-        ldr     sp, =SFE(SYS_STACK)
+        ldr     sp, =SFE(CSTACK)
         bic     sp, sp, #0x7
 
-        ; Can't set up the user mode stack here as we can't
-        ; switch out of user mode using cpsr
-
-        ; Set up the supervisor mode stack pointer
-
+        ; Set up the supervisor mode stack pointer 
         bic     r0 ,r0, #MODE_MSK
         orr     r0 ,r0, #ARM_MODE_SVC
         msr     cpsr_c, r0
         ldr     sp, =SFE(SVC_STACK)
         bic     sp, sp, #0x7
+
+        ; Stay in SVC mode for the remainder of the program execution
 
         ; Execute relocations & zero BSS
 
