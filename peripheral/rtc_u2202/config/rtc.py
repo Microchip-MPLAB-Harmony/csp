@@ -34,6 +34,139 @@ global eventMapInverse
 ########                        Callback Functions                      ########
 ################################################################################
 
+def sysTimeCalendarModeCommentVisibility(symbol, event):
+    global sysTimeComponentId
+    global rtcModeSelection_Sym
+    messageDict = {"isVisible" : "", "message" : ""}
+
+    #Hide/Un-hide the comment in PLIB and also send a message to the SYS Time module to display similar comment
+    if ((sysTimeComponentId.getValue() != "") and (rtcModeSelection_Sym.getSelectedKey() == "MODE2")):
+        symbol.setVisible(True)
+        messageDict["isVisible"] = "True"
+        messageDict["message"] = symbol.getLabel()
+        messageDict = Database.sendMessage(sysTimeComponentId.getValue(), "SYS_TIME_NOT_SUPPORTED", messageDict)
+    else:
+        symbol.setVisible(False)
+        messageDict["isVisible"] = "False"
+        messageDict["message"] = ""
+        messageDict = Database.sendMessage(sysTimeComponentId.getValue(), "SYS_TIME_NOT_SUPPORTED", messageDict)
+
+def setSysTimeConfiguration(rtcOperationMode, sysTimeOperationMode):
+    if sysTimeComponentId.getValue() != "":
+        if rtcOperationMode == "MODE0":
+            if sysTimeOperationMode == "SYS_TIME_PLIB_MODE_COMPARE":
+                Database.setSymbolValue("rtc", "RTC_MODE0_INTENSET_CMP0_ENABLE", True)
+                Database.setSymbolValue("rtc", "RTC_MODE0_MATCHCLR", False)
+                Database.setSymbolValue("rtc", "RTC_MODE0_TIMER_COMPARE", long(0))
+                Database.setSymbolValue("rtc", "RTC_MODE1_INTENSET_CMP0_ENABLE", False)
+                Database.setSymbolValue("rtc", "RTC_MODE1_INTENSET_OVF_ENABLE", False)
+                Database.setSymbolValue("rtc", "RTC_MODE1_COMPARE0_MATCH_VALUE", long(0))
+                Database.setSymbolValue("rtc", "RTC_MODE1_TIMER_COUNTER_PERIOD", long(0))
+            elif sysTimeOperationMode == "SYS_TIME_PLIB_MODE_PERIOD":
+                Database.setSymbolValue("rtc", "RTC_MODE0_INTENSET_CMP0_ENABLE", True)
+                Database.setSymbolValue("rtc", "RTC_MODE0_MATCHCLR", True)
+                Database.setSymbolValue("rtc", "RTC_MODE1_INTENSET_CMP0_ENABLE", False)
+                Database.setSymbolValue("rtc", "RTC_MODE1_INTENSET_OVF_ENABLE", False)
+                Database.setSymbolValue("rtc", "RTC_MODE1_COMPARE0_MATCH_VALUE", long(0))
+                Database.setSymbolValue("rtc", "RTC_MODE1_TIMER_COUNTER_PERIOD", long(0))
+                calcSysTimeCompareVal(rtcOperationMode)
+        elif rtcOperationMode == "MODE1":
+            if sysTimeOperationMode == "SYS_TIME_PLIB_MODE_COMPARE":
+                Database.setSymbolValue("rtc", "RTC_MODE1_INTENSET_CMP0_ENABLE", True)
+                Database.setSymbolValue("rtc", "RTC_MODE1_COMPARE0_MATCH_VALUE", long(0))
+                Database.setSymbolValue("rtc", "RTC_MODE1_TIMER_COUNTER_PERIOD", long(0))
+                Database.setSymbolValue("rtc", "RTC_MODE1_INTENSET_OVF_ENABLE", False)
+                Database.setSymbolValue("rtc", "RTC_MODE1_TIMER_COUNTER_PERIOD", long(0))
+                Database.setSymbolValue("rtc", "RTC_MODE0_INTENSET_CMP0_ENABLE", False)
+                Database.setSymbolValue("rtc", "RTC_MODE0_MATCHCLR", False)
+                Database.setSymbolValue("rtc", "RTC_MODE0_TIMER_COMPARE", long(0))
+            elif sysTimeOperationMode == "SYS_TIME_PLIB_MODE_PERIOD":
+                Database.setSymbolValue("rtc", "RTC_MODE1_INTENSET_OVF_ENABLE", True)
+                Database.setSymbolValue("rtc", "RTC_MODE1_INTENSET_CMP0_ENABLE", False)
+                Database.setSymbolValue("rtc", "RTC_MODE0_INTENSET_CMP0_ENABLE", False)
+                Database.setSymbolValue("rtc", "RTC_MODE0_MATCHCLR", False)
+                Database.setSymbolValue("rtc", "RTC_MODE0_TIMER_COMPARE", long(0))
+                calcSysTimeCompareVal(rtcOperationMode)
+
+
+def calcSysTimeCompareVal(rtcOperationMode):
+    global sysTimeComponentId
+    global sysTimeTickRateMs
+    tickRateDict = {"tick_rate_hz": 0}
+    dummy_dict = dict()
+    periodVal = 0
+    if ((sysTimeComponentId.getValue() != "") and (sysTimePlibMode.getValue() == "SYS_TIME_PLIB_MODE_PERIOD")):
+        #Get the RTC clock frequency
+        rtcClockFrequency = Database.getSymbolValue("core", "RTC_CLOCK_FREQUENCY")
+        if rtcOperationMode == "MODE0":
+            #Get the RTC prescaler
+            rtcPrescaler = Database.getSymbolValue("rtc", "RTC_MODE0_PRESCALER")
+            if rtcPrescaler >= 1:
+                #Calculate the RTC input clock
+                rtcClockFrequency = rtcClockFrequency / (2**(rtcPrescaler))
+            newCompareValue = long(rtcClockFrequency * (sysTimeTickRateMs.getValue() / 1000))
+            if newCompareValue > 0xFFFFFFFF:
+                newCompareValue = 0xFFFFFFFF
+            if newCompareValue >=1:
+                newCompareValue -= 1
+            if newCompareValue == 0:
+                newCompareValue = 1
+            Database.setSymbolValue("rtc", "RTC_MODE0_TIMER_COMPARE", long(newCompareValue))
+            periodVal = newCompareValue + 1
+        elif rtcOperationMode == "MODE1":
+            #Get the RTC prescaler
+            rtcPrescaler = Database.getSymbolValue("rtc", "RTC_MODE1_PRESCALER")
+            if rtcPrescaler >= 1:
+                #Calculate the RTC input clock
+                rtcClockFrequency = rtcClockFrequency / (2**(rtcPrescaler))
+            newPeriodValue = long(rtcClockFrequency * (sysTimeTickRateMs.getValue() / 1000))
+            if newPeriodValue > 0xFFFF:
+                newPeriodValue = 0xFFFF
+            if newPeriodValue >=1:
+                newPeriodValue -= 1
+            if newPeriodValue == 0:
+                newPeriodValue = 1
+            Database.setSymbolValue("rtc", "RTC_MODE1_TIMER_COUNTER_PERIOD", long(newPeriodValue))
+            periodVal = newPeriodValue + 1
+        if ((rtcOperationMode == "MODE0") or (rtcOperationMode == "MODE1")):
+            achievableTickRateHz = float(1.0/float(rtcClockFrequency)) * long(periodVal)
+            achievableTickRateHz = (1.0/achievableTickRateHz) * 100000.0
+            tickRateDict["tick_rate_hz"] = long(achievableTickRateHz)
+            dummy_dict = Database.sendMessage(sysTimeComponentId.getValue(), "SYS_TIME_ACHIEVABLE_TICK_RATE_HZ", tickRateDict)
+
+def rtcPrescalerChangeHandler(symbol, event):
+    global rtcModeSelection_Sym
+    calcSysTimeCompareVal(rtcModeSelection_Sym.getSelectedKey())
+
+def handleMessage(messageID, args):
+    global sysTimePlibMode
+    global sysTimeComponentId
+    global rtcModeSelection_Sym
+    global sysTimeTickRateMs
+    dummy_dict = dict()
+    sysTimePLIBConfig = dict()
+
+    if (messageID == "SYS_TIME_PUBLISH_CAPABILITIES"):
+        sysTimeComponentId.setValue(args["ID"])
+        modeDict = {"plib_mode": "PERIOD_AND_COMPARE_MODES"}
+        sysTimePLIBConfig = Database.sendMessage(sysTimeComponentId.getValue(), "SYS_TIME_PLIB_CAPABILITY", modeDict)
+        print sysTimePLIBConfig
+        sysTimePlibMode.setValue(sysTimePLIBConfig["plib_mode"])
+        if sysTimePLIBConfig["plib_mode"] == "SYS_TIME_PLIB_MODE_PERIOD":
+            sysTimeTickRateMs.setValue(sysTimePLIBConfig["sys_time_tick_ms"])
+        rtcModeSelection_Sym.setSelectedKey("MODE0", 1)
+        setSysTimeConfiguration(rtcModeSelection_Sym.getSelectedKey(), sysTimePlibMode.getValue())
+
+    if ((messageID == "SYS_TIME_PLIB_MODE_COMPARE") or (messageID == "SYS_TIME_PLIB_MODE_PERIOD")):
+        sysTimePlibMode.setValue(messageID)
+        setSysTimeConfiguration(rtcModeSelection_Sym.getSelectedKey(), sysTimePlibMode.getValue())
+
+    if (messageID == "SYS_TIME_TICK_RATE_CHANGED"):
+        sysTimeTickRateMs.setValue(args["sys_time_tick_ms"])
+        calcSysTimeCompareVal(rtcModeSelection_Sym.getSelectedKey())
+
+    return dummy_dict
+
 def evsysSetup(symbol, event):
     global eventMap
 
@@ -197,9 +330,6 @@ def updateCodeGenerationProperty(symbol, event):
         component.getSymbolByID("RTC_TIMER_SOURCE").setEnabled(True)
 
 def onAttachmentConnected(source, target):
-
-    global rtcModeSelection_Sym
-
     localComponent = source["component"]
     remoteComponent = target["component"]
     localID = localComponent.getID()
@@ -207,8 +337,24 @@ def onAttachmentConnected(source, target):
     connectID = source["id"]
     targetID = target["id"]
 
-    Database.setSymbolValue(localID, "RTC_MODE0_INTENSET_CMP0_ENABLE", True, 1)
-    rtcModeSelection_Sym.setSelectedKey("MODE0", 1)
+def onAttachmentDisconnected(source, target):
+    global sysTimeComponentId
+
+    localComponent = source["component"]
+    remoteComponent = target["component"]
+    remoteID = remoteComponent.getID()
+
+    if remoteID == "sys_time":
+        #Reset the remote component ID to NULL
+        sysTimeComponentId.setValue("")
+        localComponent.getSymbolByID("RTC_MODE0_INTENSET_CMP0_ENABLE").setValue(False)
+        localComponent.getSymbolByID("RTC_MODE0_MATCHCLR").setValue(False)
+        localComponent.getSymbolByID("RTC_MODE0_TIMER_COMPARE").setValue(long(0))
+        localComponent.getSymbolByID("RTC_MODE1_INTENSET_CMP0_ENABLE").setValue(False)
+        localComponent.getSymbolByID("RTC_MODE1_INTENSET_OVF_ENABLE").setValue(False)
+        localComponent.getSymbolByID("RTC_MODE1_COMPARE0_MATCH_VALUE").setValue(long(0))
+        localComponent.getSymbolByID("RTC_MODE1_TIMER_COUNTER_PERIOD").setValue(long(0))
+        localComponent.getSymbolByID("SYS_TIME_CALENDAR_MODE_NOT_SUPPORTED_COMMENT").setVisible(False)
 
 def sysTime_modeSelection(symbol, event):
     global timerStartApiName_Sym
@@ -222,6 +368,7 @@ def sysTime_modeSelection(symbol, event):
     global timerWidth_Sym
     global timerPeriodMax_Sym
     global rtcInstanceName
+    global sysTimePlibMode
 
     symObj = event["symbol"]
     rtcMode = symObj.getSelectedKey()
@@ -230,6 +377,7 @@ def sysTime_modeSelection(symbol, event):
 
     if rtcMode == "MODE0":
         #32-bit counter
+        setSysTimeConfiguration(rtcMode, sysTimePlibMode.getValue())
         periodSetApiName = ""
         periodSetApiName_Sym.setValue(periodSetApiName,2)
         timerWidth_Sym.setValue(32,2)
@@ -242,6 +390,7 @@ def sysTime_modeSelection(symbol, event):
         callbackApiName = rtcInstanceName.getValue() + "_Timer32CallbackRegister"
     elif rtcMode == "MODE1":
         #16-bit counter
+        setSysTimeConfiguration(rtcMode, sysTimePlibMode.getValue())
         periodSetApiName = rtcInstanceName.getValue() + "_Timer16PeriodSet"
         periodSetApiName_Sym.setValue(periodSetApiName,2)
         timerWidth_Sym.setValue(16,2)
@@ -252,7 +401,6 @@ def sysTime_modeSelection(symbol, event):
         counterGetApiName = rtcInstanceName.getValue() + "_Timer16CounterGet"
         frequencyGetApiName = rtcInstanceName.getValue() + "_Timer16FrequencyGet"
         callbackApiName = rtcInstanceName.getValue() + "_Timer16CallbackRegister"
-
     if rtcMode != "MODE2":
         timerStartApiName_Sym.setValue(timerStartApiName,2)
         timeStopApiName_Sym.setValue(timeStopApiName,2)
@@ -294,6 +442,11 @@ def instantiateComponent(rtcComponent):
     global rtcSymMode1_INTENSET
     global rtcSymMode2_INTENSET
     global evsysDep
+    global sysTimeComponentId
+    global rtcSymMode0_CTRLA_PRESCALER
+    global sysTimePlibMode
+    global sysTimeTickRateMs
+
     rtcMode0InterruptMap = {}
     rtcMode1InterruptMap = {}
     rtcMode2InterruptMap = {}
@@ -339,6 +492,20 @@ def instantiateComponent(rtcComponent):
 #------------------------------------------------------------
 # Common Symbols needed for SYS_TIME usage
 #------------------------------------------------------------
+
+    sysTimeComponentId = rtcComponent.createStringSymbol("SYS_TIME_COMPONENT_ID", None)
+    sysTimeComponentId.setLabel("Component id")
+    sysTimeComponentId.setVisible(False)
+    sysTimeComponentId.setDefaultValue("")
+
+    sysTimePlibMode = rtcComponent.createStringSymbol("SYS_TIME_PLIB_OPERATION_MODE", None)
+    sysTimePlibMode.setLabel("SysTime PLIB Operation Mode")
+    sysTimePlibMode.setVisible(False)
+    sysTimePlibMode.setDefaultValue("")
+
+    sysTimeTickRateMs = rtcComponent.createFloatSymbol("SYS_TIME_TICK_RATE_MS", None)
+    sysTimeTickRateMs.setDefaultValue(1)
+    sysTimeTickRateMs.setVisible(False)
 
     timerWidth_Sym = rtcComponent.createIntegerSymbol("TIMER_WIDTH", None)
     timerWidth_Sym.setVisible(False)
@@ -388,6 +555,11 @@ def instantiateComponent(rtcComponent):
     sysTimeTrigger_Sym = rtcComponent.createBooleanSymbol("SYS_TIME", None)
     sysTimeTrigger_Sym.setVisible(False)
     sysTimeTrigger_Sym.setDependencies(sysTime_modeSelection, ["RTC_MODULE_SELECTION"])
+
+    sysTimeCalendarModeComment = rtcComponent.createCommentSymbol("SYS_TIME_CALENDAR_MODE_NOT_SUPPORTED_COMMENT", rtcModeSelection_Sym)
+    sysTimeCalendarModeComment.setLabel("Warning!!! SYS Tick is not supported with RTC in calendar mode")
+    sysTimeCalendarModeComment.setVisible(False)
+    sysTimeCalendarModeComment.setDependencies(sysTimeCalendarModeCommentVisibility, ["RTC_MODULE_SELECTION"])
 
 #################################### MODE0 #####################################
 
@@ -439,6 +611,7 @@ def instantiateComponent(rtcComponent):
 
     rtcSymMode0_CTRLA_PRESCALER.setDefaultValue(rtcMode0ReferenceDefaultValue)
     rtcSymMode0_CTRLA_PRESCALER.setOutputMode("Value")
+    rtcSymMode0_CTRLA_PRESCALER.setDependencies(rtcPrescalerChangeHandler, ["RTC_MODE0_PRESCALER"])
 
     #Configure 32-Bit Timer Period
     rtcSymMode0_COMP0 = rtcComponent.createHexSymbol("RTC_MODE0_TIMER_COMPARE",rtcSymMode0Menu)
@@ -524,6 +697,7 @@ def instantiateComponent(rtcComponent):
 
     rtcSymMode1_CTRLA_PRESCALER.setDefaultValue(rtcMode1ReferenceDefaultValue)
     rtcSymMode1_CTRLA_PRESCALER.setOutputMode("Value")
+    rtcSymMode1_CTRLA_PRESCALER.setDependencies(rtcPrescalerChangeHandler, ["RTC_MODE1_PRESCALER"])
 
     #Configure 16-Bit Timer Period
     rtcSymMode1_PER = rtcComponent.createHexSymbol("RTC_MODE1_TIMER_COUNTER_PERIOD",rtcSymMode1Menu)
