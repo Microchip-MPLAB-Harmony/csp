@@ -57,11 +57,48 @@ PrescalerDict = {
                     "1:1 prescale value"  : 1,
                 }
 
+global sysTimeComponentId
+global tmr1Sym_PERIOD_MS
+
 global interruptsChildren
 interruptsChildren = ATDF.getNode('/avr-tools-device-file/devices/device/interrupts').getChildren()
 ################################################################################
 #### Business Logic ####
 ################################################################################
+def calcAchievableFreq():
+    global tmr1Sym_PR1
+    global tmr1Sym_CLOCK_FREQ
+    tickRateDict = {"tick_rate_hz": 0}
+    dummy_dict = dict()
+
+    if sysTimeComponentId.getValue() != "":
+        #Read the input clock frequency of the timer instance
+        source_clk_freq = tmr1Sym_CLOCK_FREQ.getValue()
+        #Read the calculated timer count to achieve the set Time Period and Calculate the actual tick rate
+        achievableTickRateHz = float(1.0/source_clk_freq) * tmr1Sym_PR1.getValue()
+        achievableTickRateHz = (1.0/achievableTickRateHz) * 100000.0
+        tickRateDict["tick_rate_hz"] = long(achievableTickRateHz)
+        dummy_dict = Database.sendMessage(sysTimeComponentId.getValue(), "SYS_TIME_ACHIEVABLE_TICK_RATE_HZ", tickRateDict)
+
+def handleMessage(messageID, args):
+    global sysTimeComponentId
+    dummy_dict = dict()
+    sysTimePLIBConfig = dict()
+
+    if (messageID == "SYS_TIME_PUBLISH_CAPABILITIES"):
+        sysTimeComponentId.setValue(args["ID"])
+        modeDict = {"plib_mode": "PERIOD_MODE"}
+        sysTimePLIBConfig = Database.sendMessage(sysTimeComponentId.getValue(), "SYS_TIME_PLIB_CAPABILITY", modeDict)
+        print sysTimePLIBConfig
+        if sysTimePLIBConfig["plib_mode"] == "SYS_TIME_PLIB_MODE_PERIOD":
+            tmr1Sym_PERIOD_MS.setValue(sysTimePLIBConfig["sys_time_tick_ms"])
+
+    if (messageID == "SYS_TIME_TICK_RATE_CHANGED"):
+        if sysTimeComponentId.getValue() != "":
+            #Set the Time Period (Milli Sec)
+            tmr1Sym_PERIOD_MS.setValue(args["sys_time_tick_ms"])
+
+    return dummy_dict
 
 def _get_enblReg_parms(vectorNumber):
 
@@ -266,9 +303,26 @@ def timerPeriodCalc(symbol, event):
         symbol.setValue(long(period), 2)
     else:
         symbol.setValue(0, 2)
+    calcAchievableFreq()
 
 def updateTMR1ClockWarningStatus(symbol, event):
     symbol.setVisible(not event["value"])
+
+def onAttachmentConnected(source, target):
+    remoteComponent = target["component"]
+    remoteID = remoteComponent.getID()
+
+
+def onAttachmentDisconnected(source, target):
+    global sysTimeComponentId
+    remoteComponent = target["component"]
+    remoteID = remoteComponent.getID()
+
+    if remoteID == "sys_time":
+        #Reset the remote component ID to NULL
+        sysTimeComponentId.setValue("")
+        tmr1Sym_PERIOD_MS.setValue(0.3)
+
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
@@ -281,6 +335,10 @@ def instantiateComponent(tmr1Component):
     global tmr1InterruptHandler
     global tmr1InterruptVectorUpdate
     global tmr1SymInterruptMode
+    global sysTimeComponentId
+    global tmr1Sym_PERIOD_MS
+    global tmr1Sym_CLOCK_FREQ
+    global tmr1Sym_PR1
 
     tmr1InstanceName = tmr1Component.createStringSymbol("TMR1_INSTANCE_NAME", None)
     tmr1InstanceName.setVisible(False)
@@ -472,6 +530,54 @@ def instantiateComponent(tmr1Component):
     tmr1Sym_ClkEnComment.setLabel("Warning!!! " + tmr1InstanceName.getValue() + " Peripheral Clock is Disabled in Clock Manager")
     tmr1Sym_ClkEnComment.setVisible(False)
     tmr1Sym_ClkEnComment.setDependencies(updateTMR1ClockWarningStatus, ["core." + tmr1InstanceName.getValue() + "_CLOCK_ENABLE"])
+
+    irqEnumName_Sym = tmr1Component.createStringSymbol("IRQ_ENUM_NAME", None)
+    irqEnumName_Sym.setVisible(False)
+    irqEnumName_Sym.setDefaultValue(str(tmr1Irq_index))
+
+    sysTimeComponentId = tmr1Component.createStringSymbol("SYS_TIME_COMPONENT_ID", None)
+    sysTimeComponentId.setLabel("Component id")
+    sysTimeComponentId.setVisible(False)
+    sysTimeComponentId.setDefaultValue("")
+
+    timerStartApiName = tmr1InstanceName.getValue() +  "_Start"
+    timerStopApiName = tmr1InstanceName.getValue() + "_Stop "
+    counterGetApiName = tmr1InstanceName.getValue() +  "_CounterGet"
+    frequencyGetApiName = tmr1InstanceName.getValue() + "_FrequencyGet"
+    callbackApiName = tmr1InstanceName.getValue() + "_CallbackRegister"
+    periodSetApiName = tmr1InstanceName.getValue() + "_PeriodSet"
+
+    timerWidth_Sym = tmr1Component.createIntegerSymbol("TIMER_WIDTH", None)
+    timerWidth_Sym.setVisible(False)
+    timerWidth_Sym.setDefaultValue(32)
+
+    timerPeriodMax_Sym = tmr1Component.createStringSymbol("TIMER_PERIOD_MAX", None)
+    timerPeriodMax_Sym.setVisible(False)
+    timerPeriodMax_Sym.setDefaultValue("0xFFFFFFFF")
+
+    timerStartApiName_Sym = tmr1Component.createStringSymbol("TIMER_START_API_NAME", None)
+    timerStartApiName_Sym.setVisible(False)
+    timerStartApiName_Sym.setDefaultValue(timerStartApiName)
+
+    timeStopApiName_Sym = tmr1Component.createStringSymbol("TIMER_STOP_API_NAME", None)
+    timeStopApiName_Sym.setVisible(False)
+    timeStopApiName_Sym.setDefaultValue(timerStopApiName)
+
+    counterApiName_Sym = tmr1Component.createStringSymbol("COUNTER_GET_API_NAME", None)
+    counterApiName_Sym.setVisible(False)
+    counterApiName_Sym.setDefaultValue(counterGetApiName)
+
+    frequencyGetApiName_Sym = tmr1Component.createStringSymbol("FREQUENCY_GET_API_NAME", None)
+    frequencyGetApiName_Sym.setVisible(False)
+    frequencyGetApiName_Sym.setDefaultValue(frequencyGetApiName)
+
+    callbackApiName_Sym = tmr1Component.createStringSymbol("CALLBACK_API_NAME", None)
+    callbackApiName_Sym.setVisible(False)
+    callbackApiName_Sym.setDefaultValue(callbackApiName)
+
+    periodSetApiName_Sym = tmr1Component.createStringSymbol("PERIOD_SET_API_NAME", None)
+    periodSetApiName_Sym.setVisible(False)
+    periodSetApiName_Sym.setDefaultValue(periodSetApiName);
     ###################################################################################################
     ####################################### Code Generation  ##########################################
     ###################################################################################################
