@@ -43,6 +43,98 @@ global timerPeriodMax_Sym
 ########################################## Callbacks  #############################################
 ###################################################################################################
 
+def sysTime8bitCommentVisibility(symbol, event):
+    global sysTimePlibMode
+    global sysTimeComponentId
+    global tcSym_CTRLA_MODE
+    messageDict = {"isVisible" : "", "message" : ""}
+
+    #Hide/Un-hide the comment in PLIB and also send a message to the SYS Time module to display similar comment
+    if (sysTimeComponentId.getValue() != "") and (sysTimePlibMode.getValue() == "SYS_TIME_PLIB_MODE_COMPARE") and (tcSym_CTRLA_MODE.getSelectedKey() == "COUNT8"):
+        symbol.setVisible(True)
+        messageDict["isVisible"] = "True"
+        messageDict["message"] = symbol.getLabel()
+        messageDict = Database.sendMessage(sysTimeComponentId.getValue(), "SYS_TIME_NOT_SUPPORTED", messageDict)
+    else:
+        symbol.setVisible(False)
+        messageDict["isVisible"] = "False"
+        messageDict["message"] = ""
+        messageDict = Database.sendMessage(sysTimeComponentId.getValue(), "SYS_TIME_NOT_SUPPORTED", messageDict)
+
+def calcAchievableFreq():
+    global sysTimeComponentId
+    global timer_Frequency
+    global tcSym_TimerPeriod
+    global sysTimePlibMode
+    tickRateDict = {"tick_rate_hz": 0}
+    dummy_dict = dict()
+
+    if ((sysTimeComponentId.getValue() != "") and (sysTimePlibMode.getValue() == "SYS_TIME_PLIB_MODE_PERIOD")):
+        timer_Frequency = Database.getSymbolValue("core", tcInstanceName.getValue()+"_CLOCK_FREQUENCY") / int(tcSym_CTRLA_PRESCALER.getSelectedKey()[3:])
+        if timer_Frequency != 0:
+            achievableTickRateHz = (1.0/float(timer_Frequency)) * (tcSym_TimerPeriod.getValue())
+            if achievableTickRateHz != 0:
+                achievableTickRateHz = long((1.0/achievableTickRateHz) * 100000.0)
+                tickRateDict["tick_rate_hz"] = long(achievableTickRateHz)
+                dummy_dict = Database.sendMessage(sysTimeComponentId.getValue(), "SYS_TIME_ACHIEVABLE_TICK_RATE_HZ", tickRateDict)
+            else:
+                dummy_dict = Database.sendMessage(sysTimeComponentId.getValue(), "SYS_TIME_ACHIEVABLE_TICK_RATE_HZ", tickRateDict)
+        else:
+            dummy_dict = Database.sendMessage(sysTimeComponentId.getValue(), "SYS_TIME_ACHIEVABLE_TICK_RATE_HZ", tickRateDict)
+
+def sysTimePLIBModeConfig(plibMode):
+    global tcSym_Timer_TIME_MS
+    global tcSym_CTRLA_MODE
+
+    if sysTimeComponentId.getValue() != "":
+        if ((plibMode == "SYS_TIME_PLIB_MODE_COMPARE") and (tcSym_CTRLA_MODE.getSelectedKey() != "COUNT8")):
+            #Enable Compare Interrupt
+            tcSym_Timer_INTENSET_MC1.setValue(True,2)
+            tcSym_Timer_INTENSET_MC1.setVisible(True)
+            #Disable Period Interrupt
+            tcSym_Timer_INTENSET_OVF.setValue(False,2)
+            #Hide Time Period (ms) menu item
+            tcSym_Timer_TIME_MS.setVisible(False)
+
+        if (plibMode == "SYS_TIME_PLIB_MODE_PERIOD"):
+            #Enable Period Interrupt
+            tcSym_Timer_INTENSET_OVF.setValue(True,2)
+            #Disable Compare Interrupt
+            tcSym_Timer_INTENSET_MC1.setValue(False,2)
+            tcSym_Timer_INTENSET_MC1.setVisible(False)
+            #Un-Hide Time Period (ms) menu item
+            tcSym_Timer_TIME_MS.setVisible(True)
+
+def handleMessage(messageID, args):
+    global sysTimeComponentId
+    global tcSym_Timer_TIME_MS
+    global tcSym_SYS_TIME_CONNECTED
+    global sysTimePlibMode
+    dummy_dict = dict()
+    sysTimePLIBConfig = dict()
+
+    if (messageID == "SYS_TIME_PUBLISH_CAPABILITIES"):
+        sysTimeComponentId.setValue(args["ID"])
+        modeDict = {"plib_mode": "PERIOD_AND_COMPARE_MODES"}
+        sysTimePLIBConfig = Database.sendMessage(sysTimeComponentId.getValue(), "SYS_TIME_PLIB_CAPABILITY", modeDict)
+        print sysTimePLIBConfig
+        sysTimePlibMode.setValue(sysTimePLIBConfig["plib_mode"])
+        sysTimePLIBModeConfig(sysTimePlibMode.getValue())
+        tcSym_SYS_TIME_CONNECTED.setValue(True, 2)
+        if sysTimePLIBConfig["plib_mode"] == "SYS_TIME_PLIB_MODE_PERIOD":
+            tcSym_Timer_TIME_MS.setValue(sysTimePLIBConfig["sys_time_tick_ms"])
+
+    if ((messageID == "SYS_TIME_PLIB_MODE_COMPARE") or (messageID == "SYS_TIME_PLIB_MODE_PERIOD")):
+        sysTimePlibMode.setValue(messageID)
+        sysTimePLIBModeConfig(sysTimePlibMode.getValue())
+
+    if (messageID == "SYS_TIME_TICK_RATE_CHANGED"):
+        tcSym_Timer_TIME_MS.setValue(args["sys_time_tick_ms"])
+
+
+
+    return dummy_dict
+
 def updateCodeGenerationProperty(symbol, event):
     component = symbol.getComponent()
 
@@ -174,14 +266,10 @@ def onAttachmentConnected(source, target):
     connectID = source["id"]
     targetID = target["id"]
 
-    if remoteID == "sys_time":
-        tcSym_Timer_INTENSET_MC1.setVisible(True)
-        tcSym_Timer_INTENSET_MC1.setValue(True,2)
-        tcSym_Timer_INTENSET_OVF.setValue(False,2)
-        tcSym_SYS_TIME_CONNECTED.setValue(True, 2)
-        tcSym_Timer_TIME_MS.setVisible(False)
 
 def onAttachmentDisconnected(source, target):
+    global sysTimeComponentId
+    global sysTime8bitComment
     localComponent = source["component"]
     remoteComponent = target["component"]
     remoteID = remoteComponent.getID()
@@ -189,11 +277,15 @@ def onAttachmentDisconnected(source, target):
     targetID = target["id"]
 
     if remoteID == "sys_time":
+        #Reset the remote component ID to NULL
+        sysTimeComponentId.setValue("")
+        tcSym_SYS_TIME_CONNECTED.setValue(False, 2)
         tcSym_Timer_INTENSET_MC1.setVisible(False)
         tcSym_Timer_INTENSET_MC1.setValue(False,2)
         tcSym_Timer_INTENSET_OVF.setValue(True,2)
-        tcSym_SYS_TIME_CONNECTED.setValue(False, 2)
         tcSym_Timer_TIME_MS.setVisible(True)
+        tcSym_Timer_TIME_MS.setValue(0)
+        sysTime8bitComment.setVisible(False)
 
 def sysTime_APIUpdate(symbol,event):
     global compareSetApiName_Sym
@@ -214,7 +306,7 @@ def sysTime_APIUpdate(symbol,event):
     counterApiName_Sym.setValue(counterGetApiName,2)
     periodSetApiName_Sym.setValue(periodSetApiName,2)
     timerWidth_Sym.setValue(int(key[5:]), 2)
-    timerPeriodMax_Sym.setValue(str(int(math.pow(2, int(key[5:])))), 2)
+    timerPeriodMax_Sym.setValue(str(int(math.pow(2, int(key[5:])) - 1)), 2)
 
 ###################################################################################################
 ########################################## Component  #############################################
@@ -235,6 +327,10 @@ def instantiateComponent(tcComponent):
     global timerPeriodMax_Sym
     global tcSym_SYS_TIME_CONNECTED
     global masterComponentSymbolId
+    global sysTimeComponentId
+    global tcSym_Frequency
+    global sysTimePlibMode
+    global sysTime8bitComment
 
     tcInstanceName = tcComponent.createStringSymbol("TC_INSTANCE_NAME", None)
     tcInstanceName.setVisible(False)
@@ -305,6 +401,22 @@ def instantiateComponent(tcComponent):
 #------------------------------------------------------------
 # Common Symbols needed for SYS_TIME usage
 #------------------------------------------------------------
+
+    sysTimePlibMode = tcComponent.createStringSymbol("SYS_TIME_PLIB_OPERATION_MODE", None)
+    sysTimePlibMode.setLabel("SysTime PLIB Operation Mode")
+    sysTimePlibMode.setVisible(False)
+    sysTimePlibMode.setDefaultValue("")
+
+    sysTimeComponentId = tcComponent.createStringSymbol("SYS_TIME_COMPONENT_ID", None)
+    sysTimeComponentId.setLabel("Component id")
+    sysTimeComponentId.setVisible(False)
+    sysTimeComponentId.setDefaultValue("")
+
+    sysTime8bitComment = tcComponent.createCommentSymbol("SYS_TIME_8BIT_NOT_SUPPORTED_COMMENT", tcSym_CTRLA_MODE)
+    sysTime8bitComment.setLabel("Warning!!! Tickless mode of SYS Time is not supported in 8-bit mode")
+    sysTime8bitComment.setVisible(False)
+    sysTime8bitComment.setDependencies(sysTime8bitCommentVisibility, ["TC_CTRLA_MODE", "SYS_TIME_PLIB_OPERATION_MODE"])
+
     sysTimeTrigger_Sym = tcComponent.createBooleanSymbol("SYS_TIME", None)
     sysTimeTrigger_Sym.setVisible(False)
     sysTimeTrigger_Sym.setDependencies(sysTime_APIUpdate, ["TC_CTRLA_MODE"])
