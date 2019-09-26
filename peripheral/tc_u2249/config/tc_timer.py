@@ -28,6 +28,8 @@
 ########################################## Callbacks  #############################################
 ###################################################################################################
 
+global calcAchievableFreq
+
 def updateTimerMenuVisibleProperty(symbol, event):
     if event["value"] == "Timer":
         symbol.setVisible(True)
@@ -59,6 +61,7 @@ def tcPeriodCalc(symbol, event):
     time = tcSym_Timer_TIME_MS.getValue()
     period = time / resolution
     symbol.setValue(long(period), 2)
+    calcAchievableFreq()
 
 def tcTimerEvsys(symbol, event):
     component = symbol.getComponent()
@@ -115,13 +118,14 @@ tcSym_Timer_TIME_MS.setDependencies(tcTimeMaxValue, ["TC_CTRLA_MODE", "core."+tc
     "TC_CTRLA_PRESCALER"])
 
 #timer period
+global tcSym_TimerPeriod
 period = tcSym_Timer_TIME_MS.getValue() * 1000000 / resolution
 tcSym_TimerPeriod = tcComponent.createLongSymbol("TC_TIMER_PERIOD", tcSym_TimerMenu)
 tcSym_TimerPeriod.setLabel("Timer Period")
 tcSym_TimerPeriod.setVisible(False)
 tcSym_TimerPeriod.setDefaultValue(long(period))
 tcSym_TimerPeriod.setMin(0)
-tcSym_TimerPeriod.setMax(65535)
+tcSym_TimerPeriod.setMax(2**32)
 tcSym_TimerPeriod.setDependencies(tcPeriodCalc, ["TC_CTRLA_MODE", "core."+tcInstanceName.getValue()+"_CLOCK_FREQUENCY", \
     "TC_CTRLA_PRESCALER", "TC_TIMER_TIME_MS"])
 
