@@ -81,6 +81,8 @@ resetVector:
 /* Interrupt */
 <#if USE_FREERTOS_VECTORS>
 	ldr     pc, =FreeRTOS_IRQ_Handler
+<#elseif USE_THREADX_VECTORS>
+	ldr     pc, =ThreadX_IRQ_Handler
 <#else>
 	ldr     pc, =irqHandler
 </#if>

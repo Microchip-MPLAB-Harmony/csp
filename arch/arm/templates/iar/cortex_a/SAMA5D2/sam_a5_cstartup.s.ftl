@@ -84,6 +84,9 @@ REMAP_BASE_ADDRESS DEFINE 0x00600000
         EXTERN FreeRTOS_IRQ_Handler
         EXTERN FreeRTOS_SWI_Handler
         </#if>
+        <#if USE_THREADX_VECTORS>
+        EXTERN ThreadX_IRQ_Handler
+        </#if>
 
 
         DATA
@@ -121,6 +124,8 @@ prefetch_abt_addr: DCD   prefetch_abort_irq_handler
 data_abt_addr:     DCD   data_abort_irq_handler
 <#if USE_FREERTOS_VECTORS>
 irq_addr:          DCD   FreeRTOS_IRQ_Handler
+<#elseif USE_THREADX_VECTORS>
+irq_addr:          DCD   ThreadX_IRQ_Handler
 <#else>
 irq_addr:          DCD   irqHandler
 </#if>

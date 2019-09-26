@@ -96,4 +96,7 @@ place in RAM_region { block RAMCODE_BLOCK };
 place in DDRAM_region   { block RAMCODE_BLOCK_init };
 place in RAM_region { block RAMDATA_BLOCK };
 place in DDRAM_region   { block RAMDATA_BLOCK_init };
+<#if USE_THREADX_VECTORS>
+place in DDRAM_region { last section FREE_MEM };
+</#if>
 

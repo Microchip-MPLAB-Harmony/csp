@@ -78,6 +78,11 @@ freeRTOSVectors.setVisible(False)
 freeRTOSVectors.setReadOnly(True)
 freeRTOSVectors.setDefaultValue(False)
 
+threadXVectors = coreComponent.createBooleanSymbol("USE_THREADX_VECTORS", None)
+threadXVectors.setVisible(False)
+threadXVectors.setReadOnly(True)
+threadXVectors.setDefaultValue(False)
+
 #SRAM or DDR
 Database.setSymbolValue("core", "APP_START_ADDRESS", "0x26f00000")
 memory_loc = coreComponent.createComboSymbol("EXECUTION_MEMORY", cortexMenu, ['DDR', 'SRAM'])
