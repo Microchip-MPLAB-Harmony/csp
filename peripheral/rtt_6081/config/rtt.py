@@ -27,6 +27,60 @@ global interruptVector
 global interruptHandler
 global interruptHandlerLock
 
+def sysTimePLIBModeConfig(plibMode):
+    global rttPrescaleValue
+
+    if (plibMode == "SYS_TIME_PLIB_MODE_COMPARE"):
+        #Enable Alarm Interrupt
+        rttAlarm.setValue(True,2)
+        #Disable Period Interrupt
+        rttPeriodicInterrupt.setValue(False,2)
+        #Reset the prescale value for Alarm mode
+        rttPrescaleValue.setValue(3)
+
+    if (plibMode == "SYS_TIME_PLIB_MODE_PERIOD"):
+        #Enable Period Interrupt
+        rttPeriodicInterrupt.setValue(True,2)
+        #Disable Alarm Interrupt
+        rttAlarm.setValue(False,2)
+
+def calcAchievableFreq(sysTimeRateMs):
+    global sysTimeComponentId
+    global rttPrescaleValue
+    dummy_dict = dict()
+    tickRateDict = {"tick_rate_hz": 0}
+
+    #Configure the new prescaler based on the tick rate from sys_time
+    newPrescaler = (float(sysTimeRateMs) / 1000) * 32768
+    #Set the new prescaler value
+    rttPrescaleValue.setValue(int(newPrescaler))
+    #Set the achievable tick rate back to the sys_time
+    achievableTickRateHz = float(1.0/32768) * float(rttPrescaleValue.getValue())
+    achievableTickRateHz = (1.0/achievableTickRateHz) * 100000.0
+    tickRateDict["tick_rate_hz"] = long(achievableTickRateHz)
+    dummy_dict = Database.sendMessage(sysTimeComponentId.getValue(), "SYS_TIME_ACHIEVABLE_TICK_RATE_HZ", tickRateDict)
+
+def handleMessage(messageID, args):
+    global sysTimeComponentId
+    dummy_dict = dict()
+    sysTimePLIBConfig = dict()
+
+    if (messageID == "SYS_TIME_PUBLISH_CAPABILITIES"):
+        sysTimeComponentId.setValue(args["ID"])
+        modeDict = {"plib_mode": "PERIOD_AND_COMPARE_MODES"}
+        sysTimePLIBConfig = Database.sendMessage(sysTimeComponentId.getValue(), "SYS_TIME_PLIB_CAPABILITY", modeDict)
+        sysTimePLIBModeConfig(sysTimePLIBConfig["plib_mode"])
+        if sysTimePLIBConfig["plib_mode"] == "SYS_TIME_PLIB_MODE_PERIOD":
+            calcAchievableFreq(sysTimePLIBConfig["sys_time_tick_ms"])
+
+    if (messageID == "SYS_TIME_TICK_RATE_CHANGED"):
+        calcAchievableFreq(args["sys_time_tick_ms"])
+
+    if ((messageID == "SYS_TIME_PLIB_MODE_COMPARE") or (messageID == "SYS_TIME_PLIB_MODE_PERIOD")):
+        sysTimePLIBModeConfig(messageID)
+
+    return dummy_dict
+
 def interruptControl(rttNVIC, event):
 
     global interruptVector
@@ -53,12 +107,31 @@ def interruptControl(rttNVIC, event):
             Database.clearSymbolValue("core", interruptHandlerLock)
             Database.setSymbolValue("core", interruptHandlerLock, False, 2)
 
+def onAttachmentConnected(source, target):
+    remoteComponent = target["component"]
+    remoteID = remoteComponent.getID()
+
+def onAttachmentDisconnected(source, target):
+    global sysTimeComponentId
+    remoteComponent = target["component"]
+    remoteID = remoteComponent.getID()
+
+    if remoteID == "sys_time":
+        #Reset the remote component ID to NULL
+        sysTimeComponentId.setValue("")
+        rttAlarm.setValue(True,2)
+        rttPeriodicInterrupt.setValue(False,2)
+        rttPrescaleValue.setValue(3)
+
 def instantiateComponent(rttComponent):
 
     global rttInstanceName
     global interruptVector
     global interruptHandler
     global interruptHandlerLock
+    global sysTimeComponentId
+    global rttClkSrc
+    global rttPrescaleValue
 
     rttInstanceName = rttComponent.createStringSymbol("RTT_INSTANCE_NAME", None)
     rttInstanceName.setVisible(False)
@@ -87,6 +160,11 @@ def instantiateComponent(rttComponent):
     frequencyGetApiName = rttInstanceName.getValue() + "_FrequencyGet"
     callbackApiName = rttInstanceName.getValue() + "_CallbackRegister"
     irqEnumName = "RTT_IRQn"
+
+    sysTimeComponentId = rttComponent.createStringSymbol("SYS_TIME_COMPONENT_ID", None)
+    sysTimeComponentId.setLabel("Component id")
+    sysTimeComponentId.setVisible(False)
+    sysTimeComponentId.setDefaultValue("")
 
     timerWidth_Sym = rttComponent.createIntegerSymbol("TIMER_WIDTH", rttMenu)
     timerWidth_Sym.setVisible(False)
@@ -142,7 +220,7 @@ def instantiateComponent(rttComponent):
 
         rttInc2Node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTT"]/value-group@[name="RTT_MODR__SELINC2"]')
         rttInc2Values = rttInc2Node.getChildren()
-    
+
         rttSelinc2 = rttComponent.createKeyValueSetSymbol("RTT_SELINC2", rttMenu)
         rttSelinc2.setLabel("Periodicity of RTTINC2 Interrupt")
         for index in range(0, len(rttInc2Values)):
