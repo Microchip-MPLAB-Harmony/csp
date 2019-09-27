@@ -65,10 +65,10 @@ def canCreateFilter(component, menu, filterNumber):
     filterEnable.setLabel("Filter Enable")
     filterEnable.setDefaultValue(True if filterNumber < 1 else False)
 
-    id = component.createHexSymbol(canInstanceName.getValue() + "_FILTER" + str(filterNumber) + "_ID", filterMenu)
+    id = component.createIntegerSymbol(canInstanceName.getValue() + "_FILTER" + str(filterNumber) + "_ID", filterMenu)
     id.setLabel("ID")
     id.setMin(0)
-    id.setMax(0x1FFFFFFF)
+    id.setMax(536870911)
 
     fifoSelect = component.createKeyValueSetSymbol(canInstanceName.getValue() + "_FILTER" + str(filterNumber) + "_FIFO_SELECT", filterMenu)
     fifoSelect.setLabel("Select FIFO")
@@ -107,10 +107,10 @@ def canCreateAcceptanceFilterMask(component, menu, maskNumber):
     acceptanceFilterMaskMenu = component.createMenuSymbol(canInstanceName.getValue() + "_MASK"+ str(maskNumber), menu)
     acceptanceFilterMaskMenu.setLabel("Acceptance Filter Mask " + str(maskNumber))
 
-    maskId = component.createHexSymbol(canInstanceName.getValue() + "_MASK" + str(maskNumber) + "_ID", acceptanceFilterMaskMenu)
+    maskId = component.createIntegerSymbol(canInstanceName.getValue() + "_MASK" + str(maskNumber) + "_ID", acceptanceFilterMaskMenu)
     maskId.setLabel("Mask ID")
     maskId.setMin(0)
-    maskId.setMax(0x1FFFFFFF)
+    maskId.setMax(536870911)
 
     if (maskNumber >= Database.getSymbolValue(canInstanceName.getValue().lower(), "NUMBER_OF_ACCEPTANCE_FILTER_MASK")):
         acceptanceFilterMaskMenu.setVisible(False)
@@ -259,6 +259,7 @@ def instantiateComponent(canComponent):
     global canInterruptVectorUpdate
     global canCoreClockInvalidSym
     global canTimeQuantaInvalidSym
+    global canInterruptMode
 
     canInstanceName = canComponent.createStringSymbol("CAN_INSTANCE_NAME", None)
     canInstanceName.setVisible(False)
