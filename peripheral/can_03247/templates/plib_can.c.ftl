@@ -83,7 +83,7 @@
 static CAN_OBJ ${CAN_INSTANCE_NAME?lower_case}Obj;
 </#if>
 static uint8_t __attribute__((coherent, aligned(16))) can_message_buffer[CAN_MESSAGE_RAM_CONFIG_SIZE];
-const uint8_t dlcToLength[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 12, 16, 20, 24, 32, 48, 64};
+static const uint8_t dlcToLength[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 12, 16, 20, 24, 32, 48, 64};
 
 <#if CAN_OPMODE != "0x6">
 /******************************************************************************
