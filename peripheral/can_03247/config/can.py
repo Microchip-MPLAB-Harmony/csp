@@ -72,15 +72,15 @@ def canCreateFilter(component, menu, filterNumber):
     filterEnable.setLabel("Filter Enable")
     filterEnable.setDefaultValue(True if filterNumber < 1 else False)
 
-    id = component.createHexSymbol(canInstanceName.getValue() + "_FILTER" + str(filterNumber) + "_ID", filterMenu)
+    id = component.createIntegerSymbol(canInstanceName.getValue() + "_FILTER" + str(filterNumber) + "_ID", filterMenu)
     id.setLabel("Filter ID")
     id.setMin(0)
-    id.setMax(0x1FFFFFFF)
+    id.setMax(536870911)
 
-    maskId = component.createHexSymbol(canInstanceName.getValue() + "_FILTER" + str(filterNumber) + "_MASK_ID", filterMenu)
+    maskId = component.createIntegerSymbol(canInstanceName.getValue() + "_FILTER" + str(filterNumber) + "_MASK_ID", filterMenu)
     maskId.setLabel("Mask ID")
     maskId.setMin(0)
-    maskId.setMax(0x1FFFFFFF)
+    maskId.setMax(536870911)
 
     fifoSelect = component.createKeyValueSetSymbol(canInstanceName.getValue() + "_FILTER" + str(filterNumber) + "_FIFO_SELECT", filterMenu)
     fifoSelect.setLabel("Select FIFO")
@@ -273,6 +273,7 @@ def instantiateComponent(canComponent):
     global canInterruptVectorUpdate
     global canCoreClockInvalidSym
     global canTimeQuantaInvalidSym
+    global canInterruptMode
 
     canInstanceName = canComponent.createStringSymbol("CAN_INSTANCE_NAME", None)
     canInstanceName.setVisible(False)
