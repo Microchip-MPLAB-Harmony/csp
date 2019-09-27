@@ -43,8 +43,8 @@
           <Name dnOrder="1">plib_can1.c</Name>
           <LogicalPath dnOrder="2">config/pic32mk_mcj_curiosity_pro/peripheral/can/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/can/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">94CC18CBF813433179CDEB09C4D44CF0</GeneratedChecksum>
-          <UserChecksum dnOrder="5">94CC18CBF813433179CDEB09C4D44CF0</UserChecksum>
+          <GeneratedChecksum dnOrder="4">4E76891055D374869DEEFC525DAF9F1C</GeneratedChecksum>
+          <UserChecksum dnOrder="5">4E76891055D374869DEEFC525DAF9F1C</UserChecksum>
         </File>
         <File dnOrder="5">
           <Type dnOrder="0">SOURCE</Type>
@@ -75,8 +75,8 @@
           <Name dnOrder="1">plib_uart2.c</Name>
           <LogicalPath dnOrder="2">config/pic32mk_mcj_curiosity_pro/peripheral/uart/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/uart/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">3644A69D1B22CB0678ADFD6F5E3864DE</GeneratedChecksum>
-          <UserChecksum dnOrder="5">3644A69D1B22CB0678ADFD6F5E3864DE</UserChecksum>
+          <GeneratedChecksum dnOrder="4">20A225780EC31EB0345E7CAE8DDEE0AA</GeneratedChecksum>
+          <UserChecksum dnOrder="5">20A225780EC31EB0345E7CAE8DDEE0AA</UserChecksum>
         </File>
         <File dnOrder="9">
           <Type dnOrder="0">SOURCE</Type>
@@ -147,8 +147,8 @@
           <Name dnOrder="1">plib_uart2.h</Name>
           <LogicalPath dnOrder="2">config/pic32mk_mcj_curiosity_pro/peripheral/uart/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/uart/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">38348ADD2E32E8E9C983EBB1EA1AC31E</GeneratedChecksum>
-          <UserChecksum dnOrder="5">38348ADD2E32E8E9C983EBB1EA1AC31E</UserChecksum>
+          <GeneratedChecksum dnOrder="4">8CE8227305CEFD690DA41915F698C24C</GeneratedChecksum>
+          <UserChecksum dnOrder="5">8CE8227305CEFD690DA41915F698C24C</UserChecksum>
         </File>
         <File dnOrder="18">
           <Type dnOrder="0">HEADER</Type>
