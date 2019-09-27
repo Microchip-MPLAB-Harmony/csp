@@ -1,7 +1,35 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Configuration>
   <Components>
-    <UniqueComponent dnOrder="0" id="can1"/>
+    <UniqueComponent dnOrder="0" id="can1">
+      <Symbols dnOrder="0">
+        <Integer dnOrder="0" id="CAN_CORE_CLOCK_FREQ">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="can1" value="60000000"/>
+          </Values>
+        </Integer>
+        <Integer dnOrder="1" id="PHASE1">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="can1" value="6"/>
+          </Values>
+        </Integer>
+        <Integer dnOrder="2" id="PHASE2">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="can1" value="2"/>
+          </Values>
+        </Integer>
+        <Integer dnOrder="3" id="PROPAG">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="can1" value="0"/>
+          </Values>
+        </Integer>
+        <Integer dnOrder="4" id="SJW">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="can1" value="2"/>
+          </Values>
+        </Integer>
+      </Symbols>
+    </UniqueComponent>
     <UniqueComponent dnOrder="1" id="core">
       <Symbols dnOrder="0">
         <String dnOrder="0" id="BSP_PIN_100_MODE">

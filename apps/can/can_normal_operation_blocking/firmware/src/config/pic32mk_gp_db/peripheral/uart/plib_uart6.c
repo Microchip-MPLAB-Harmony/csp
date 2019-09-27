@@ -281,6 +281,18 @@ bool UART6_TransmitterIsReady( void )
     return status;
 }
 
+bool UART6_TransmitComplete( void )
+{
+    bool transmitComplete = false;
+
+    if((U6STA & _U6STA_TRMT_MASK))
+    {
+        transmitComplete = true;
+    }
+
+    return transmitComplete;
+}
+
 int UART6_ReadByte( void )
 {
     return(U6RXREG);
