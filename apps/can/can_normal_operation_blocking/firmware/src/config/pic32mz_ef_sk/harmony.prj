@@ -43,8 +43,8 @@
           <Name dnOrder="1">plib_can1.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk/peripheral/can/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/can/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">5BCF6AABA6276A7A66A89F3932986E1C</GeneratedChecksum>
-          <UserChecksum dnOrder="5">5BCF6AABA6276A7A66A89F3932986E1C</UserChecksum>
+          <GeneratedChecksum dnOrder="4">F0F098184414C70B2C97787153BD92B1</GeneratedChecksum>
+          <UserChecksum dnOrder="5">F0F098184414C70B2C97787153BD92B1</UserChecksum>
         </File>
         <File dnOrder="5">
           <Type dnOrder="0">SOURCE</Type>
@@ -175,7 +175,7 @@
       </Settings>
     </Manifest>
     <Settings dnOrder="4">
-      <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.5.1"/>
+      <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.6.0"/>
       <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MZ_EF_DFP\1.0.39\atdf\PIC32MZ2048EFH144.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>

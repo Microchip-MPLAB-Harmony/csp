@@ -43,8 +43,8 @@
           <Name dnOrder="1">plib_can1.c</Name>
           <LogicalPath dnOrder="2">config/pic32mk_gpl_curiosity_pro/peripheral/can/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/can/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">94CC18CBF813433179CDEB09C4D44CF0</GeneratedChecksum>
-          <UserChecksum dnOrder="5">94CC18CBF813433179CDEB09C4D44CF0</UserChecksum>
+          <GeneratedChecksum dnOrder="4">4E76891055D374869DEEFC525DAF9F1C</GeneratedChecksum>
+          <UserChecksum dnOrder="5">4E76891055D374869DEEFC525DAF9F1C</UserChecksum>
         </File>
         <File dnOrder="5">
           <Type dnOrder="0">SOURCE</Type>
@@ -75,8 +75,8 @@
           <Name dnOrder="1">plib_uart6.c</Name>
           <LogicalPath dnOrder="2">config/pic32mk_gpl_curiosity_pro/peripheral/uart/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/uart/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">F0CF3DB7D2F62D1711EFBC332236133A</GeneratedChecksum>
-          <UserChecksum dnOrder="5">F0CF3DB7D2F62D1711EFBC332236133A</UserChecksum>
+          <GeneratedChecksum dnOrder="4">F8177756BADEBA54CA7C008D1A9F5B39</GeneratedChecksum>
+          <UserChecksum dnOrder="5">F8177756BADEBA54CA7C008D1A9F5B39</UserChecksum>
         </File>
         <File dnOrder="9">
           <Type dnOrder="0">SOURCE</Type>
@@ -147,8 +147,8 @@
           <Name dnOrder="1">plib_uart6.h</Name>
           <LogicalPath dnOrder="2">config/pic32mk_gpl_curiosity_pro/peripheral/uart/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/uart/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">3B96C16609761A54A20E4976E1518249</GeneratedChecksum>
-          <UserChecksum dnOrder="5">3B96C16609761A54A20E4976E1518249</UserChecksum>
+          <GeneratedChecksum dnOrder="4">DCA8F9A0C45D3723D6AFFB43C62E547E</GeneratedChecksum>
+          <UserChecksum dnOrder="5">DCA8F9A0C45D3723D6AFFB43C62E547E</UserChecksum>
         </File>
         <File dnOrder="18">
           <Type dnOrder="0">HEADER</Type>
@@ -175,7 +175,7 @@
       </Settings>
     </Manifest>
     <Settings dnOrder="4">
-      <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.5.1"/>
+      <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.6.0"/>
       <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MK-GP_DFP\1.1.66\atdf\PIC32MK1024GPL100.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
