@@ -268,6 +268,18 @@ bool UART2_TransmitterIsReady( void )
     return status;
 }
 
+bool UART2_TransmitComplete( void )
+{
+    bool transmitComplete = false;
+
+    if((U2STA & _U2STA_TRMT_MASK))
+    {
+        transmitComplete = true;
+    }
+
+    return transmitComplete;
+}
+
 int UART2_ReadByte( void )
 {
     return(U2RXREG);

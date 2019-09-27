@@ -75,8 +75,8 @@
           <Name dnOrder="1">plib_uart2.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk/peripheral/uart/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/uart/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">D9F74193F0F1948666D2D2923A3249BC</GeneratedChecksum>
-          <UserChecksum dnOrder="5">D9F74193F0F1948666D2D2923A3249BC</UserChecksum>
+          <GeneratedChecksum dnOrder="4">E7D49C1579FADDCFA6249D8857BD0113</GeneratedChecksum>
+          <UserChecksum dnOrder="5">E7D49C1579FADDCFA6249D8857BD0113</UserChecksum>
         </File>
         <File dnOrder="9">
           <Type dnOrder="0">SOURCE</Type>
@@ -147,8 +147,8 @@
           <Name dnOrder="1">plib_uart2.h</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk/peripheral/uart/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/uart/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">EB089E1CC93023A4B238399FBDC693B7</GeneratedChecksum>
-          <UserChecksum dnOrder="5">EB089E1CC93023A4B238399FBDC693B7</UserChecksum>
+          <GeneratedChecksum dnOrder="4">2D9C4D63BA71C4F7D312593DD4D8AEE1</GeneratedChecksum>
+          <UserChecksum dnOrder="5">2D9C4D63BA71C4F7D312593DD4D8AEE1</UserChecksum>
         </File>
         <File dnOrder="18">
           <Type dnOrder="0">HEADER</Type>
