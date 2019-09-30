@@ -114,12 +114,12 @@ def mainFreq(symbol, event):
     else:
         freq = 0
         rcFreq = Database.getSymbolValue("core", "CKGR_MOR_MOSCRCF")
-        if rcFreq == "_4_MHz":
-            freq = 4000000
-        elif rcFreq == "_8_MHz":
+        if rcFreq == "_8_MHz":
             freq = 8000000
+        elif rcFreq == "_16_MHz":
+            freq = 16000000
         else:
-            freq =12000000
+            freq =24000000
 
         if freq != symbol.getValue():
             symbol.setValue(freq, 2)
