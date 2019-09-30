@@ -123,11 +123,11 @@ bool ${NVMCTRL_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, uint32_t ad
 
 void ${NVMCTRL_INSTANCE_NAME}_SetWriteMode(NVMCTRL_WRITEMODE mode);
 
-bool ${NVMCTRL_INSTANCE_NAME}_QuadWordWrite(uint32_t *data, const uint32_t address);
+bool ${NVMCTRL_INSTANCE_NAME}_QuadWordWrite(const uint32_t *data, const uint32_t address);
 
-bool ${NVMCTRL_INSTANCE_NAME}_DoubleWordWrite(uint32_t *data, const uint32_t address);
+bool ${NVMCTRL_INSTANCE_NAME}_DoubleWordWrite(const uint32_t *data, const uint32_t address);
 
-bool ${NVMCTRL_INSTANCE_NAME}_PageWrite( uint32_t* data, uint32_t address );
+bool ${NVMCTRL_INSTANCE_NAME}_PageWrite( const uint32_t* data, uint32_t address );
 
 bool ${NVMCTRL_INSTANCE_NAME}_BlockErase( uint32_t address );
 

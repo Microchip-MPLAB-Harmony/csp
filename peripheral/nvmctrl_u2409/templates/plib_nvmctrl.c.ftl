@@ -161,7 +161,7 @@ void ${NVMCTRL_INSTANCE_NAME}_SetWriteMode(NVMCTRL_WRITEMODE mode)
     ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLA = (${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLA & (~NVMCTRL_CTRLA_WMODE_Msk)) | mode;
 }
 
-bool ${NVMCTRL_INSTANCE_NAME}_QuadWordWrite(uint32_t *data, const uint32_t address)
+bool ${NVMCTRL_INSTANCE_NAME}_QuadWordWrite(const uint32_t *data, const uint32_t address)
 {
     uint8_t i = 0;
     bool wr_status = false;
@@ -172,14 +172,14 @@ bool ${NVMCTRL_INSTANCE_NAME}_QuadWordWrite(uint32_t *data, const uint32_t addre
     nvm_error = 0;
 
     /* If the address is not a quad word address, return error */
-    if((address & 0x03) != 0)
+    if((address & 0x0f) != 0)
     {
         wr_status = false;
     }
     else
     {
         /* Configure Quad Word Write */
-        ${NVMCTRL_INSTANCE_NAME}_SetWriteMode(NVMCTRL_CTRLA_WMODE_AQW);
+        ${NVMCTRL_INSTANCE_NAME}_SetWriteMode(NVMCTRL_WMODE_ADW);
 
         /* Writing 32-bit data into the given address.  Writes to the page buffer must be 32 bits. */
         for (i = 0; i <= 3; i++)
@@ -187,13 +187,13 @@ bool ${NVMCTRL_INSTANCE_NAME}_QuadWordWrite(uint32_t *data, const uint32_t addre
             *paddress++ = data[i];
         }
         /* Restore the write mode */
-        ${NVMCTRL_INSTANCE_NAME}_SetWriteMode(wr_mode);
+        ${NVMCTRL_INSTANCE_NAME}_SetWriteMode((NVMCTRL_WRITEMODE)wr_mode);
         wr_status = true;
     }
     return wr_status;
 }
 
-bool ${NVMCTRL_INSTANCE_NAME}_DoubleWordWrite(uint32_t *data, const uint32_t address)
+bool ${NVMCTRL_INSTANCE_NAME}_DoubleWordWrite(const uint32_t *data, const uint32_t address)
 {
     uint8_t i = 0;
     bool wr_status = false;
@@ -204,14 +204,14 @@ bool ${NVMCTRL_INSTANCE_NAME}_DoubleWordWrite(uint32_t *data, const uint32_t add
     nvm_error = 0;
 
     /* If the address is not a double word address, return error */
-    if((address & 0x01) != 0)
+    if((address & 0x07) != 0)
     {
         wr_status = false;
     }
     else
     {
         /* Configure Double Word Write */
-        ${NVMCTRL_INSTANCE_NAME}_SetWriteMode(NVMCTRL_CTRLA_WMODE_ADW);
+        ${NVMCTRL_INSTANCE_NAME}_SetWriteMode(NVMCTRL_WMODE_ADW);
 
         /* Writing 32-bit data into the given address.  Writes to the page buffer must be 32 bits. */
         for (i = 0; i <= 1; i++)
@@ -219,7 +219,7 @@ bool ${NVMCTRL_INSTANCE_NAME}_DoubleWordWrite(uint32_t *data, const uint32_t add
             *paddress++ = data[i];
         }
         /* Restore the write mode */
-        ${NVMCTRL_INSTANCE_NAME}_SetWriteMode(wr_mode);
+        ${NVMCTRL_INSTANCE_NAME}_SetWriteMode((NVMCTRL_WRITEMODE)wr_mode);
         wr_status = true;
     }
     return wr_status;
@@ -228,7 +228,7 @@ bool ${NVMCTRL_INSTANCE_NAME}_DoubleWordWrite(uint32_t *data, const uint32_t add
 /* This function assumes that the page written is fresh or it is erased by
  * calling ${NVMCTRL_INSTANCE_NAME}_BlockErase
  */
-bool ${NVMCTRL_INSTANCE_NAME}_PageWrite( uint32_t *data, const uint32_t address )
+bool ${NVMCTRL_INSTANCE_NAME}_PageWrite( const uint32_t *data, const uint32_t address )
 {
     uint32_t i = 0;
     uint32_t * paddress = (uint32_t *)address;
@@ -268,6 +268,10 @@ uint16_t ${NVMCTRL_INSTANCE_NAME}_ErrorGet( void )
 {
     nvm_error |= ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTFLAG;
 
+    <#if INTERRUPT_ENABLE == false >
+    /* Clear NVMCTRL INTFLAG register */
+    NVMCTRL_REGS->NVMCTRL_INTFLAG = NVMCTRL_INTFLAG_Msk;
+    </#if>
     return nvm_error;
 }
 
