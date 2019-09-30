@@ -244,7 +244,7 @@ Initialize USB FS clock
 static void CLK_USBClockInitialize ( void )
 {
     /* Configure Full-Speed USB Clock source and Clock Divider */
-    PMC_REGS->PMC_USB = PMC_USB_USBDIV(${PMC_USB_USBDIV}) <#if PMC_USB_USBS == "PLLB_CLK"> | PMC_USB_USBS_Msk</#if>;
+    PMC_REGS->PMC_USB = PMC_USB_USBDIV(${PMC_USB_USBDIV}) <#if PMC_USB_USBS == "1"> | PMC_USB_USBS_Msk</#if>;
 
 
     /* Enable Full-Speed USB Clock Output */

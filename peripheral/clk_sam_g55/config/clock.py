@@ -537,8 +537,10 @@ def masterFreq(symbol, event):
         Database.setSymbolValue("core", "SYSTICK_CLOCK_FREQUENCY", systickFreq, 2)
 
 def usbfsFreqCal(symbol, event):
-    uhpEnable = Database.getSymbolValue("core", "PMC_SCER_UHP")
-    udpEnable = Database.getSymbolValue("core", "PMC_SCER_UDP")
+    uhpEnable = Database.getSymbolValue("core", "UHP_CLOCK_ENABLE")
+    udpEnable = Database.getSymbolValue("core", "UDP_CLOCK_ENABLE")
+    Database.setSymbolValue("core", "PMC_SCER_UDP", udpEnable)
+    Database.setSymbolValue("core", "PMC_SCER_UHP", udpEnable)
     src = Database.getSymbolValue("core", "PMC_USB_USBS")
     div = Database.getSymbolValue("core", "PMC_USB_USBDIV")
     freq = 0
