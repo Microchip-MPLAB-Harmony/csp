@@ -226,10 +226,7 @@ def upd_tc_freq(symbol, event):
         clk_src = Database.getSymbolValue("tc" + str(instance_num), "TC" + str(channel_num) + "_CMR_TCCLKS")
         # if clock source is processor independent GCLK
         if (clk_src == 1):
-            if channel_num==0:
-                clk_frequency = Database.getSymbolValue("core", "TC" + str(instance_num) + "_CHANNEL0_GCLK_FREQUENCY")
-            else:
-                clk_frequency = 0
+            clk_frequency = Database.getSymbolValue("core", "TC" + str(instance_num) + "_CHANNEL0_GCLK_FREQUENCY")
         # if clock  source is MCK/8
         elif (clk_src == 2):
             clk_frequency = Database.getSymbolValue("core", "CLK_MCK_FREQ") / 8
