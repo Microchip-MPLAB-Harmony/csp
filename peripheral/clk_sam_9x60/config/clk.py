@@ -874,7 +874,7 @@ sys_clk_menu = coreComponent.createMenuSymbol("CLK_SYSTEM_CLK_MENU", menu)
 sys_clk_menu.setLabel("System Clocks")
 
 ddr = coreComponent.createBooleanSymbol("CLK_DDR_ENABLE", sys_clk_menu)
-ddr.setLabel("Enbable DDR Clock")
+ddr.setLabel("Enable DDR Clock")
 ddr.setDefaultValue(True)
 ddr.setReadOnly(True)
 generator_symbols_list.addValue("CLK_DDR_ENABLE")
@@ -890,7 +890,8 @@ ddr_frq.setDependencies(lambda symbol, event: symbol.setValue(((event['source'].
                         ['MCK_FREQUENCY','CLK_DDR_ENABLE'])
 
 qspi_clk = coreComponent.createBooleanSymbol("CLK_QSPICLK_ENABLE", sys_clk_menu)
-qspi_clk.setLabel("Enbable QSPI Clock")
+qspi_clk.setLabel("Enable QSPI Clock")
+qspi_clk.setDependencies(lambda symbol, event: symbol.setValue(event["value"]), ['QSPI_CLOCK_ENABLE'])
 
 qspi_frq = coreComponent.createIntegerSymbol("QSPICLK_FREQUENCY", sys_clk_menu)
 qspi_frq.setVisible(False)
