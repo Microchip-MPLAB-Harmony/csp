@@ -251,7 +251,7 @@ def packageChange(packageSymbol, event):
         pin[pinNumber].setLabel("Pin " + str(pin_position[pinNumber]))
         pinBitPosition[pinNumber].setValue(-1, 2)
         pinChannel[pinNumber].setValue("", 2)
-        if pin_map.get(pin_position[pinNumber]).startswith("R"):
+        if len(pin_map.get(pin_position[pinNumber])) in [3,4] and pin_map.get(pin_position[pinNumber]).startswith("R") and pin_map.get(pin_position[pinNumber])[2].isnumeric():
             pinBitPosition[pinNumber].setValue(int(re.findall('\d+', pin_map.get(pin_position[pinNumber]))[0]), 2)
             pinChannel[pinNumber].setValue(pin_map.get(pin_position[pinNumber])[1], 2)
 
@@ -283,14 +283,14 @@ def createPinMap(packageSymbol):
                     break                    
             for myPackageNumber in myPin.findall('number'):
                 if packageIdMap.get(packageSymbol.getValue()) == myPackageNumber.get("package"):
-                    if "BGA" or "VTLA" in packageSymbol.getValue():
+                    if "BGA" or "VTLA" or "DQFN" in packageSymbol.getValue():
                         pin_map[myPackageNumber.get("pin")] = myPin.get("name")
                         pinHasAnalogFunctionMap[myPackageNumber.get("pin")] = analogFunction
                     else:
                         pin_map[int(myPackageNumber.get("pin"))] = myPin.get("name")
                         pinHasAnalogFunctionMap[int(myPackageNumber.get("pin"))] = analogFunction
 
-    if "BGA" or "VTLA" in packageSymbol.getValue():
+    if "BGA" or "VTLA" or "DQFN" in packageSymbol.getValue():
         pin_position = sort_alphanumeric(pin_map.keys())
     else:
         pin_position = sorted(pin_map.keys())
@@ -369,7 +369,7 @@ pioPackage.setReadOnly(False)
 pioPackage.setDependencies(packageChange, ["COMPONENT_PACKAGE"])
 
 global packagePinCount
-packagePinCount = int(re.findall(r'\d+', pinoutXmlName)[0])
+packagePinCount = int((re.findall(r'_\d+', pinoutXmlName)[0])[1:])
 
 pinTotalPins = coreComponent.createIntegerSymbol("GPIO_PIN_TOTAL" , pinConfiguration)
 pinTotalPins.setVisible(False)
@@ -411,7 +411,7 @@ for pinNumber in range(1, packagePinCount + 1):
     pinChannel[pinNumber-1].setLabel("Channel")
     pinChannel[pinNumber-1].setDefaultValue("")
     pinChannel[pinNumber-1].setReadOnly(False)
-    if pin_map.get(pin_position[pinNumber-1]).startswith("R"):
+    if len(pin_map.get(pin_position[pinNumber-1])) in [3,4] and pin_map.get(pin_position[pinNumber-1]).startswith("R") and pin_map.get(pin_position[pinNumber-1])[2].isnumeric():
         # populate pioSymChannel list
         if  pin_map.get(pin_position[pinNumber-1])[1] in pioSymChannel:
             pass

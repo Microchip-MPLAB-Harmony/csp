@@ -149,7 +149,11 @@ void GPIO_Initialize ( void )
     SYSKEY = 0x00000000;
     SYSKEY = 0xAA996655;
     SYSKEY = 0x556699AA;
-    CFGCONbits.IOLOCK = 0;
+    <#if CoreSeries != 'PIC32MZW'>
+      <#lt>    CFGCONbits.IOLOCK = 0;
+    <#else>
+      <#lt>    CFGCON0bits.IOLOCK = 0;
+    </#if>
 </#if>
 
 <#lt>    /* PPS Input Remapping */
@@ -186,7 +190,11 @@ void GPIO_Initialize ( void )
     SYSKEY = 0x00000000;
     SYSKEY = 0xAA996655;
     SYSKEY = 0x556699AA;
-    CFGCONbits.IOLOCK = 1;
+    <#if CoreSeries != 'PIC32MZW'>
+      <#lt>    CFGCONbits.IOLOCK = 1;
+    <#else>
+      <#lt>    CFGCON0bits.IOLOCK = 1;
+    </#if>
 </#if>
 
 <#if TOTAL_NUM_OF_INT_USED gt 0>
