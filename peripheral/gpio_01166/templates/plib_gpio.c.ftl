@@ -277,7 +277,7 @@ void GPIO_PinInterruptEnable(CN_PIN cnPin)
     CNENSET = cnPin;
 }
 
-void GPIO_PortInterruptDisable(CN_PIN cnPin)
+void GPIO_PinInterruptDisable(CN_PIN cnPin)
 {
     CNENCLR = cnPin;
 }
