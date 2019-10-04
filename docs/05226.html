@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>PMP_AddressSet Function</title>
+<title>PMP_Initialize Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="05210.html" target="topic">PMP Peripheral Library Help</a> &gt; <a href="05211.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="05226.html" target="topic">PMP_AddressSet Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="05209.html" target="topic">PMP Peripheral Library Help</a> &gt; <a href="05210.html" target="topic">Library Interface</a> &gt; a) Initialization Function &gt; <a href="05226.html" target="topic">PMP_Initialize Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05225.html" target="topic">Previous</a> | <a href="05211.html" target="topic">Up</a> | <a href="05228.html" target="topic">Next</a></div>
+<a href="05210.html" target="topic">Previous</a> | <a href="05210.html" target="topic">Up</a> | <a href="05222.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pmp_00751::PMP_AddressSet@uint32_t Topic Title: PMP_AddressSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pmp_00751::PMP_Initialize Topic Title: PMP_Initialize Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-PMP_AddressSet Function</div>
+PMP_Initialize Function</div>
 </div>
 </div>
 
@@ -49,39 +49,17 @@ PMP_AddressSet Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function sets the current address of the PMP module to the specified value.</p></div>
+Sets up a PMP controller for subsequent transfer activity.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">PMP_AddressSet</span></strong>(
-    uint32_t <strong><span style="color: #000000">address</span></strong>
-);</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">PMP_Initialize</span></strong>();</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-PMP should have been initialized by calling <a href="05227.html" target="topic">PMP_Initialize</a>.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
-<div class="TableDiv">
-<table cellspacing="0" class="Table2">
-<tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-address&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Device address to be set&nbsp;</div></td></tr></table></div></div>
-</div>
+PMP channels should be configured in PMP manager.</p></div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
@@ -101,8 +79,7 @@ None.</p></div>
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12"><a href="05227.html" target="topic">PMP_Initialize</a>();
-PLIB_PMP_AddressSet(0x1);</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">PMP_Initialize();</pre></div></div>
 </div>
 </div>
 </div>
@@ -110,7 +87,7 @@ PLIB_PMP_AddressSet(0x1);</pre></div></div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="05210.html" target="topic">PMP Peripheral Library Help</a> &gt; <a href="05211.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="05226.html" target="topic">PMP_AddressSet Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="05209.html" target="topic">PMP Peripheral Library Help</a> &gt; <a href="05210.html" target="topic">Library Interface</a> &gt; a) Initialization Function &gt; <a href="05226.html" target="topic">PMP_Initialize Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -118,13 +95,13 @@ PLIB_PMP_AddressSet(0x1);</pre></div></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05225.html" target="topic">Previous</a> | <a href="05211.html" target="topic">Up</a> | <a href="05228.html" target="topic">Next</a></div>
+<a href="05210.html" target="topic">Previous</a> | <a href="05210.html" target="topic">Up</a> | <a href="05222.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pmp_00751::PMP_AddressSet@uint32_t Topic Title: PMP_AddressSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pmp_00751::PMP_Initialize Topic Title: PMP_Initialize Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

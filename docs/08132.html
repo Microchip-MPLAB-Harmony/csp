@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Running The Application</title>
+<title>XDMAC_CHANNEL Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="08127.html" target="topic">XDMAC Applications</a> &gt; <a href="08128.html" target="topic">xdmac_memory_transfer</a> &gt; <a href="08132.html" target="topic">Running The Application</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="08120.html" target="topic">XDMAC Peripheral Library Help</a> &gt; <a href="08121.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="08132.html" target="topic">XDMAC_CHANNEL Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="08130.html" target="topic">Previous</a> | <a href="08128.html" target="topic">Up</a></div>
+<a href="08157.html" target="topic">Previous</a> | <a href="08121.html" target="topic">Up</a> | <a href="08158.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: XDMAC xdmac_memory_transfer Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: XDMAC_CHANNEL Topic Title: XDMAC_CHANNEL Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Running The Application</div>
+XDMAC_CHANNEL Enumeration</div>
 </div>
 </div>
 
@@ -49,76 +49,51 @@ Running The Application</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<strong><u>MCU Devices</u></strong></p>
-<ol class="Element630">
-<li value="1" class="Element600">Open the Terminal application (Ex.:Tera term) on the computer.</li>
-<li value="2" class="Element600">Connect to the EDBG Virtual COM port and configure the serial settings as follows:
-<ul class="Element631">
-<li class="Element601">Baud : 115200</li>
-<li class="Element601">Data : 8 Bits</li>
-<li class="Element601">Parity : None</li>
-<li class="Element601">Stop : 1 Bit</li>
-<li class="Element601">Flow Control : None</li>
-</ul></li>
-<li value="3" class="Element600">Build and Program the application using the MPLAB X IDE.</li>
-<li value="4" class="Element600">See the following message in the console.</li>
-</ol><p class="Element10">
-The console displays the cycles taken to transfer 10016 bytes with a burst size of 1 and 16.&nbsp;</p>
+XDMAC Channels&nbsp;</p>
 <p class="Element10">
-<strong>Note:</strong> Transfer cycles values are approximate. The actual transfer cycle values may be different due to measurement error.&nbsp;</p>
+This lists the set of channels available for data transfer using XDMAC.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">XDMAC_CHANNEL_0</span></strong>,
+  <strong><span style="color: #000000">XDMAC_CHANNEL_1</span></strong>,
+  <strong><span style="color: #000000">XDMAC_CHANNEL_2</span></strong>,
+  <strong><span style="color: #000000">XDMAC_CHANNEL_3</span></strong>,
+  <strong><span style="color: #000000">XDMAC_CHANNEL_4</span></strong>,
+  <strong><span style="color: #000000">XDMAC_CHANNEL_5</span></strong>,
+  <strong><span style="color: #000000">XDMAC_CHANNEL_6</span></strong>,
+  <strong><span style="color: #000000">XDMAC_CHANNEL_7</span></strong>,
+  <strong><span style="color: #000000">XDMAC_CHANNEL_8</span></strong>,
+  <strong><span style="color: #000000">XDMAC_CHANNEL_9</span></strong>,
+  <strong><span style="color: #000000">XDMAC_CHANNEL_10</span></strong>,
+  <strong><span style="color: #000000">XDMAC_CHANNEL_11</span></strong>,
+  <strong><span style="color: #000000">XDMAC_CHANNEL_12</span></strong>,
+  <strong><span style="color: #000000">XDMAC_CHANNEL_13</span></strong>,
+  <strong><span style="color: #000000">XDMAC_CHANNEL_14</span></strong>,
+  <strong><span style="color: #000000">XDMAC_CHANNEL_15</span></strong>,
+  <strong><span style="color: #000000">XDMAC_CHANNEL_16</span></strong>,
+  <strong><span style="color: #000000">XDMAC_CHANNEL_17</span></strong>,
+  <strong><span style="color: #000000">XDMAC_CHANNEL_18</span></strong>,
+  <strong><span style="color: #000000">XDMAC_CHANNEL_19</span></strong>,
+  <strong><span style="color: #000000">XDMAC_CHANNEL_20</span></strong>,
+  <strong><span style="color: #000000">XDMAC_CHANNEL_21</span></strong>,
+  <strong><span style="color: #000000">XDMAC_CHANNEL_22</span></strong>,
+  <strong><span style="color: #000000">XDMAC_CHANNEL_23</span></strong>
+} XDMAC_CHANNEL;</pre></div></div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-<img src="xmac_memory_transfer_output.png" border="0" alt="" title="">&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong><u>MPU Devices</u></strong>&nbsp;</p>
-<ol class="Element630">
-<li value="1" class="Element600">Open the Terminal application (Ex.:Tera term) on the computer.</li>
-<li value="2" class="Element600">Connect to the EDBG Virtual COM port and configure the serial settings as follows:
-<ul class="Element631">
-<li class="Element601">Baud : 115200</li>
-<li class="Element601">Data : 8 Bits</li>
-<li class="Element601">Parity : None</li>
-<li class="Element601">Stop : 1 Bit</li>
-<li class="Element601">Flow Control : None</li>
-</ul></li>
-<li value="3" class="Element600">Build the IAR or MPLAB X project using IAR Embedded Workbench or MPLAB X IDE respectively</li>
-<li value="4" class="Element600">Use the output binary file (harmony.bin) to setup the board as detailed in <a href="08130.html" target="topic">hardware setup</a></li>
-<li value="5" class="Element600">Perform a warm reset of the board (quick press and release of the RESET button) to execute the application</li>
-</ol><p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element65" valign="top" width="15%">
-<div class="Element66">
-Kit Name&nbsp;</div></td><td class="Element65" valign="top" width="85%">
-<div class="Element66">
-Output&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="15%">
-<div class="Element68">
-SAMA5D2 Xplained Ultra Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="85%">
-<div class="Element68">
-The console displays the cycles taken to transfer the data in 1 and 16 burst size<br><img src="xmac_memory_transfer_output.png" border="0" alt="" title=""><br><i>NOTE: The cycle values are not accurate and should be ignored. </i>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="15%">
-<div class="Element68">
-SAM9X60 evaluation kit&nbsp;</div></td><td class="Element67" valign="top" width="85%">
-<div class="Element68">
-The console displays the cycles taken to transfer the data in 1 and 16 burst size<br><img src="xmac_memory_transfer_output.png" border="0" alt="" title=""><br><i>NOTE: The cycle values are not accurate and should be ignored.</i>&nbsp;</div></td></tr></table></div></div>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<i>NOTE: In addition to the application output, the boot loader also outputs its log message on to the console. Since these messages are not relevant to the application under test, it is not documented here.</i></p></div>
+None.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="08127.html" target="topic">XDMAC Applications</a> &gt; <a href="08128.html" target="topic">xdmac_memory_transfer</a> &gt; <a href="08132.html" target="topic">Running The Application</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="08120.html" target="topic">XDMAC Peripheral Library Help</a> &gt; <a href="08121.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="08132.html" target="topic">XDMAC_CHANNEL Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -126,13 +101,13 @@ The console displays the cycles taken to transfer the data in 1 and 16 burst siz
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="08130.html" target="topic">Previous</a> | <a href="08128.html" target="topic">Up</a></div>
+<a href="08157.html" target="topic">Previous</a> | <a href="08121.html" target="topic">Up</a> | <a href="08158.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: XDMAC xdmac_memory_transfer Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: XDMAC_CHANNEL Topic Title: XDMAC_CHANNEL Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

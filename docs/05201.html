@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>PM_IdleModeEnter Function</title>
+<title>PM_Initialize Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="05175.html" target="topic">PM Peripheral Library Help</a> &gt; <a href="05176.html" target="topic">Library Interface</a> &gt; b) Transaction Functions &gt; <a href="05201.html" target="topic">PM_IdleModeEnter Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="05174.html" target="topic">PM Peripheral Library Help</a> &gt; <a href="05175.html" target="topic">Library Interface</a> &gt; a) Initialization Function &gt; <a href="05201.html" target="topic">PM_Initialize Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05200.html" target="topic">Previous</a> | <a href="05176.html" target="topic">Up</a> | <a href="05203.html" target="topic">Next</a></div>
+<a href="05175.html" target="topic">Previous</a> | <a href="05175.html" target="topic">Up</a> | <a href="05198.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pm_u2406::PM_IdleModeEnter Topic Title: PM_IdleModeEnter Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pm_u2406::PM_Initialize Topic Title: PM_Initialize Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-PM_IdleModeEnter Function</div>
+PM_Initialize Function</div>
 </div>
 </div>
 
@@ -49,11 +49,11 @@ PM_IdleModeEnter Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function places the device in Idle mode. mode.</p></div>
+Configure different options in the PM using the values chosen via MHC. These configurations are later used to define wake up time, ram retention etc in sleep modes.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">PM_IdleModeEnter</span></strong>();</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">PM_Initialize</span></strong>();</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
@@ -80,7 +80,7 @@ Example</div>
 <div class="Element11">
 <div class="Element10">
 <div class="Element13"><div class="Element12"><pre class="Element12">
-  PM_IdleModeEnter();
+  PM_Initialize();
 </pre></div></div>
 </div>
 </div>
@@ -89,7 +89,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="05175.html" target="topic">PM Peripheral Library Help</a> &gt; <a href="05176.html" target="topic">Library Interface</a> &gt; b) Transaction Functions &gt; <a href="05201.html" target="topic">PM_IdleModeEnter Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="05174.html" target="topic">PM Peripheral Library Help</a> &gt; <a href="05175.html" target="topic">Library Interface</a> &gt; a) Initialization Function &gt; <a href="05201.html" target="topic">PM_Initialize Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -97,13 +97,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05200.html" target="topic">Previous</a> | <a href="05176.html" target="topic">Up</a> | <a href="05203.html" target="topic">Next</a></div>
+<a href="05175.html" target="topic">Previous</a> | <a href="05175.html" target="topic">Up</a> | <a href="05198.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pm_u2406::PM_IdleModeEnter Topic Title: PM_IdleModeEnter Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pm_u2406::PM_Initialize Topic Title: PM_Initialize Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

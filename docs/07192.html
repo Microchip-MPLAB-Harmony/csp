@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Running The Application</title>
+<title>Building The Application</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="07185.html" target="topic">TC Applications</a> &gt; <a href="07186.html" target="topic">tc_capture_mode</a> &gt; <a href="07192.html" target="topic">Running The Application</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="07184.html" target="topic">TC Applications</a> &gt; <a href="07186.html" target="topic">tc_compare_mode</a> &gt; <a href="07192.html" target="topic">Building The Application</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="07190.html" target="topic">Previous</a> | <a href="07186.html" target="topic">Up</a> | <a href="07187.html" target="topic">Next</a></div>
+<a href="07186.html" target="topic">Previous</a> | <a href="07186.html" target="topic">Up</a> | <a href="07194.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC tc_capture_mode Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC tc_compare_mode Building The Application Topic Title: Building The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Running The Application</div>
+Building The Application</div>
 </div>
 </div>
 
@@ -49,138 +49,123 @@ Running The Application</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<strong><u>MCU Devices</u></strong>&nbsp;</p>
-
-<ol class="Element630">
-<li value="1" class="Element600">Open the Terminal application (Ex.:Tera term) on the computer.</li>
-<li value="2" class="Element600">Connect to the EDBG Virtual COM port and configure the serial settings as follows:
-<ul class="Element631">
-<li class="Element601">Baud : 115200</li>
-<li class="Element601">Data : 8 Bits</li>
-<li class="Element601">Parity : None</li>
-<li class="Element601">Stop : 1 Bit</li>
-<li class="Element601">Flow Control : None</li>
-</ul></li>
-<li value="3" class="Element600">Build and Program the application using the MPLAB X IDE.</li>
-<li value="4" class="Element600">Console displays the frequency and duty cycle of the input signal.</li>
-<li value="5" class="Element600">Observe the output as described in the following table:</li>
-</ol><div class="Element63">
+The parent folder for all the MPLAB X IDE projects for this application is given below: </p><div class="Element63">
 <div class="TableDiv">
 <table cellspacing="0" class="Table1">
 <tr>
-<td class="Element65" valign="top" width="8%">
+<td class="Element65" valign="top" width="31%">
 <div class="Element66">
-Project Name&nbsp;</div></td><td class="Element65" valign="top" width="92%">
+Application Path&nbsp;</div></td><td class="Element65" valign="top" width="69%">
 <div class="Element66">
-Output&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="8%">
-<div class="Element68">
-sam_c21n_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="92%">
-<div class="Element68">
-Success: Console displays frequency and duty cycle of input signal. Frequency is constant (800 Hz) and duty cycle changes by 1%.<br><br><img src="output_tc_capture_mode_samc21.png" border="0" alt="" title="">&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="8%">
-<div class="Element68">
-sam_d11_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="92%">
-<div class="Element68">
-Success: Console displays frequency and duty cycle of input signal. Frequency is constant (800 Hz) and duty cycle changes by 1%.<br><img src="output_tc_capture_mode_same54.png" border="0" alt="" title="">&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="8%">
-<div class="Element68">
-sam_d20_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="92%">
-<div class="Element68">
-Success: Console displays frequency and duty cycle of input signal. Frequency is constant (799 Hz) and duty cycle changes by 1%.<br><img src="output_tc_capture_mode_samd2x.png" border="0" alt="" title="">&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="8%">
-<div class="Element68">
-sam_d21_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="92%">
-<div class="Element68">
-Success: Console displays frequency and duty cycle of input signal. Frequency is constant (800 Hz) and duty cycle changes by 1%.<br><img src="output_tc_capture_mode_same54.png" border="0" alt="" title="">&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="8%">
-<div class="Element68">
-sam_da1_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="92%">
-<div class="Element68">
-Success: Console displays frequency and duty cycle of input signal. Frequency is constant (800 Hz) and duty cycle changes by 1%.<br><img src="output_tc_capture_mode_same54.png" border="0" alt="" title="">&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="8%">
-<div class="Element68">
-sam_e54_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="92%">
-<div class="Element68">
-Success: Console displays frequency and duty cycle of input signal. Frequency is constant (799 Hz) and duty cycle changes by 1%.<br><img src="output_tc_capture_mode_same54.png" border="0" alt="" title="">&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="8%">
-<div class="Element68">
-sam_e70_xult.X&nbsp;</div></td><td class="Element67" valign="top" width="92%">
-<div class="Element68">
-Success: Console displays frequency and duty cycle of input signal. Frequency is constant (2500 Hz) and duty cycle changes by 1%.<br><img src="output_tc_capture_mode.png" border="0" alt="" title="">&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="8%">
-<div class="Element68">
-sam_g55_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="92%">
-<div class="Element68">
-Success: Console displays frequency and duty cycle of input signal. Frequency is constant (2499 Hz) and duty cycle changes by 1%.<br><img src="output_tc_capture_mode_samg55.png" border="0" alt="" title="">&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="8%">
-<div class="Element68">
-sam_l10_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="92%">
-<div class="Element68">
-Success: Console displays frequency and duty cycle of input signal. Frequency is constant (800 Hz) and duty cycle changes by 1%.<br><img src="output_tc_capture_mode_saml21.png" border="0" alt="" title="">&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="8%">
-<div class="Element68">
-sam_l21_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="92%">
-<div class="Element68">
-Success: Console displays frequency and duty cycle of input signal. Frequency is constant (800 Hz) and duty cycle changes by 1%.<br><img src="output_tc_capture_mode_saml21.png" border="0" alt="" title="">&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="8%">
-<div class="Element68">
-sam_l22_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="92%">
-<div class="Element68">
-Success: Console displays frequency and duty cycle of input signal. Frequency is constant (800 Hz) and duty cycle changes by 1%.<br><img src="output_tc_capture_mode_saml22.png" border="0" alt="" title="">&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="8%">
-<div class="Element68">
-sam_rh71_ek.X&nbsp;</div></td><td class="Element67" valign="top" width="92%">
-<div class="Element68">
-Success: Console displays frequency and duty cycle of input signal. Frequency is constant (2500 Hz) and duty cycle changes by 1%.<br><img src="output_tc_capture_mode_samv71.png" border="0" alt="" title="">&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="8%">
-<div class="Element68">
-sam_v71_xult.X&nbsp;</div></td><td class="Element67" valign="top" width="92%">
-<div class="Element68">
-Success: Console displays frequency and duty cycle of input signal. Frequency is constant (2500 Hz) and duty cycle changes by 1%.<br><img src="output_tc_capture_mode_samv71.png" border="0" alt="" title="">&nbsp;</div></td></tr></table></div></div>
+csp/apps/tc/tc_compare_mode/firmware&nbsp;</div></td></tr></table></div></div>
 <p class="Element10">
 &nbsp;</p>
 <p class="Element10">
+Below table shows the list of project names to be used with different development boards. Open the project in their respective IDEs.&nbsp;</p>
+<p class="Element10">
 &nbsp;</p>
 <p class="Element10">
-<strong><u>MPU Devices</u></strong></p>
-<ol class="Element630">
-<li value="1" class="Element600">Build the IAR or MPLAB X project using IAR Embedded Workbench or MPLAB X IDE respectively</li>
-<li value="2" class="Element600">Use the output binary file (harmony.bin) to setup the board as detailed in <a href="07190.html" target="topic">hardware setup</a></li>
-<li value="3" class="Element600">Open the Terminal application (Ex.:Tera term) on the computer</li>
-<li value="4" class="Element600">Connect to the EDBG Virtual COM port and configure the serial settings as follows:
-<ul class="Element631">
-<li class="Element601">Baud : 115200</li>
-<li class="Element601">Data : 8 Bits</li>
-<li class="Element601">Parity : None</li>
-<li class="Element601">Stop : 1 Bit</li>
-<li class="Element601">Flow Control : None</li>
-</ul></li>
-<li value="5" class="Element600">Reset the board to run the application</li>
-</ol>
-<ul class="Element630">
-<li class="Element600"><i>Note: In addition to program output, bootloader outputs its log messages to the same console. These messages will be displayed immediately after reset and are not captured here.</i></li>
-</ul><p class="Element10">
-&nbsp;</p>
-<div class="Element63">
+<strong>MPLAB X IDE Projects</strong> &nbsp;</p><div class="Element63">
 <div class="TableDiv">
 <table cellspacing="0" class="Table1">
 <tr>
-<td class="Element65" valign="top" width="16%">
+<td class="Element65" valign="top" width="25%">
 <div class="Element66">
-Project Name&nbsp;</div></td><td class="Element65" valign="top" width="84%">
+Project Name&nbsp;</div></td><td class="Element65" valign="top" width="75%">
 <div class="Element66">
-Output&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="16%">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
 <div class="Element68">
-sam_a5d2_xult.IAR OR sam_a5d2_xult_xc32.X&nbsp;</div></td><td class="Element67" valign="top" width="84%">
+sam_c21n_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
 <div class="Element68">
-Success: Console displays frequency and duty cycle of input signal. Frequency is constant (2500 Hz) and duty cycle changes by 8%<br><img src="output_tc_capture_mode_sama5d2.png" border="0" alt="" title="">&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="16%">
+SAM C21N Xplained Pro Evaluation Kit&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
 <div class="Element68">
-sam_9x60_ek.IAR&nbsp;</div></td><td class="Element67" valign="top" width="84%">
+sam_d11_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
 <div class="Element68">
-Success:Console displays frequency and duty cycle of input signal. Frequency is constant (1000Hz) and duty cycle changes by 10%<br><br><img src="output_tc_capture_mode_sam9x60.png" border="0" alt="" title="">&nbsp;</div></td></tr></table></div></div>
+SAM D11 Xplained Pro Evaluation Kit&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
+<div class="Element68">
+sam_d20_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+<div class="Element68">
+SAM D20 Xplained Pro Evaluation Kit&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
+<div class="Element68">
+sam_d21_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+<div class="Element68">
+SAM D21 Xplained Pro Evaluation Kit&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
+<div class="Element68">
+sam_da1_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+<div class="Element68">
+SAM DA1 Xplained Pro Evaluation Kit&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
+<div class="Element68">
+sam_e54_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+<div class="Element68">
+SAM E54 Xplained Pro Evaluation Kit&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
+<div class="Element68">
+sam_e70_xult.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+<div class="Element68">
+SAM E70 Xplained Ultra board&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
+<div class="Element68">
+sam_g55_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+<div class="Element68">
+SAM G55 Xplained Pro Evaluation Kit&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
+<div class="Element68">
+sam_l10_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+<div class="Element68">
+SAM L10 Xplained Pro Evaluation Kit&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
+<div class="Element68">
+sam_l21_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+<div class="Element68">
+SAM L21 Xplained Pro Evaluation Kit&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
+<div class="Element68">
+sam_l22_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+<div class="Element68">
+SAM L22 Xplained Pro Evaluation Kit&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
+<div class="Element68">
+sam_rh71_ek.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+<div class="Element68">
+SAM RH71 Evaluation Kit&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
+<div class="Element68">
+sam_v71_xult.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+<div class="Element68">
+SAM V71 Xplained Ultra board&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
+<div class="Element68">
+sam_a5d2_xult_xc32.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+<div class="Element68">
+SAMA5D2 Xplained Ultra evaluation kit&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<strong> IAR Embedded Workbench Projects </strong> </p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="25%">
+<div class="Element66">
+Project Name&nbsp;</div></td><td class="Element65" valign="top" width="75%">
+<div class="Element66">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
+<div class="Element68">
+sam_a5d2_xult.IAR&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+<div class="Element68">
+SAMA5D2 Xplained Ultra evaluation kit&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
+<div class="Element68">
+sam_9x60_ek.IAR&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+<div class="Element68">
+SAM9X60 Evaluation Kit&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -188,7 +173,7 @@ Success:Console displays frequency and duty cycle of input signal. Frequency is 
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="07185.html" target="topic">TC Applications</a> &gt; <a href="07186.html" target="topic">tc_capture_mode</a> &gt; <a href="07192.html" target="topic">Running The Application</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="07184.html" target="topic">TC Applications</a> &gt; <a href="07186.html" target="topic">tc_compare_mode</a> &gt; <a href="07192.html" target="topic">Building The Application</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -196,13 +181,13 @@ Success:Console displays frequency and duty cycle of input signal. Frequency is 
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="07190.html" target="topic">Previous</a> | <a href="07186.html" target="topic">Up</a> | <a href="07187.html" target="topic">Next</a></div>
+<a href="07186.html" target="topic">Previous</a> | <a href="07186.html" target="topic">Up</a> | <a href="07194.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC tc_capture_mode Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC tc_compare_mode Building The Application Topic Title: Building The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

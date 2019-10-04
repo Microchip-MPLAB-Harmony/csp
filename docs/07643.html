@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Introduction</title>
+<title>Timer Peripheral Library Help</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="07644.html" target="topic">Timer Peripheral Library Help</a> &gt; <a href="07643.html" target="topic">Introduction</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="07643.html" target="topic">Timer Peripheral Library Help</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="07644.html" target="topic">Previous</a> | <a href="07644.html" target="topic">Up</a> | <a href="07640.html" target="topic">Next</a></div>
+<a href="07601.html" target="topic">Previous</a> | <a href="05107.html" target="topic">Up</a> | <a href="07642.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TMR 02815 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TMR 02815 Library Topic Title: Timer Peripheral Library Help)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Introduction</div>
+Timer Peripheral Library Help</div>
 </div>
 </div>
 
@@ -49,47 +49,49 @@ Introduction</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Depending on the specific variant, the PIC32M device family offers several 16-bit timers. These timers are designated as <strong>Timer1, Timer2, Timer3, ..., etc.</strong>&nbsp;</p>
-<p class="Element10">
-Timers are useful for generating accurate time-based periodic interrupt events for software applications or real-time operating systems. Other uses include counting external pulses or accurate timing measurement of external events by using the timer’s gate feature. With certain exceptions, all of the timers have the same functional circuitry.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-The PIC32 has two kinds of timers:</p>
-<ol class="Element630">
-<li value="1" class="Element600"><strong>Timer1</strong></li>
-</ol><p class="Element10">
-All timers can run when the Central Processing Unit (CPU) is in idle mode, but only Timer1's asynchronous external clock mode enables it to run while the CPU is in sleep. This, combined with its ability to be driven by a secondary oscillator, allows the timer to function as a real-time clock (RTC).&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<ol class="Element630">
-<li value="2" class="Element600"><strong>Timer2, 3, 4, etc…</strong></li>
-</ol><p class="Element10">
-<strong>This peripheral library covers this timer. </strong>Each timer has its own 16-bit counter and period registers. A 32-bit timer can be created by combining two timers (e.g. Timer2 &amp; Timer3). In this case, the 32-bit timer is controlled by the even number timer control registers (e.g. Timer2). When an interrupt event occurs, the odd number timer generates the event (e.g. Timer3). The timer supports the following features.</p>
-<ul class="Element630">
-<li class="Element600">16-bit and 32-bit modes</li>
-<li class="Element600">Synchronous Internal Timer</li>
-<li class="Element600">Synchronous Internal Gated Timer</li>
-<li class="Element600">Synchronous External Timer</li>
-</ul><p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong>Timer Operation (non-gate mode)</strong>&nbsp;</p>
-<p class="Element10">
-When a timer is not in gate mode, it will generate an interrupt event when the value in the counter matches the value in the period register. When this match occurs, the counter is reset to zero, and the timer starts counting again. Note that if interrupts are disabled, the timer interrupt flag, TxIF, will still be set.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong>Timer Operation (Gate mode)</strong>&nbsp;</p>
-<p class="Element10">
-You can use the timer's gate feature to accurately measure the time for an external event. When the timers are in gate mode, the counters (driven by an internal clock) only increment when the TxCK pin is high. When this pin goes low, the timer stops incrementing and the timer interrupt flag, TxIF, is set. Note that in this mode, an interrupt event is not generated when the timer value matches the period register.</p></div>
+This section provides an interface to use the Timer peripheral (Timer 2 onward).</p></div>
+</div>
+<a name="546F70696373"></a><div class="Element14">
+Topics</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element200" valign="top" width="35%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="07642.html" target="topic">Introduction</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides a brief overview of the Timer peripheral (Timer 2 onward).&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="07639.html" target="topic">Configuring the Library</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section explains how to configure the peripheral library using the MHC.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="07648.html" target="topic">Using the Library</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section explains how to use the peripheral library.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="07644.html" target="topic">Library Interface</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section describes the Application Programming Interface (API) functions of the Peripheral Library<span style="color: #0000FF">.</span><br>Refer to each section for a detailed description.&nbsp;</div></td></tr></table></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="07644.html" target="topic">Timer Peripheral Library Help</a> &gt; <a href="07643.html" target="topic">Introduction</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="07643.html" target="topic">Timer Peripheral Library Help</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -97,13 +99,13 @@ You can use the timer's gate feature to accurately measure the time for an exter
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="07644.html" target="topic">Previous</a> | <a href="07644.html" target="topic">Up</a> | <a href="07640.html" target="topic">Next</a></div>
+<a href="07601.html" target="topic">Previous</a> | <a href="05107.html" target="topic">Up</a> | <a href="07642.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TMR 02815 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TMR 02815 Library Topic Title: Timer Peripheral Library Help)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

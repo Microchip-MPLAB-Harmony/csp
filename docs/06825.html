@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>SPIx_TransferSetup Function</title>
+<title>SPIx_Write Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="06757.html" target="topic">SPI Peripheral Library Help</a> &gt; <a href="06758.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="06825.html" target="topic">SPIx_TransferSetup Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="06756.html" target="topic">SPI Peripheral Library Help</a> &gt; <a href="06757.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="06825.html" target="topic">SPIx_Write Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06806.html" target="topic">Previous</a> | <a href="06758.html" target="topic">Up</a> | <a href="06819.html" target="topic">Next</a></div>
+<a href="06818.html" target="topic">Previous</a> | <a href="06757.html" target="topic">Up</a> | <a href="06826.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: spi_00753::SPIx_TransferSetup@SPI_TRANSFER_SETUP *@uint32_t Topic Title: SPIx_TransferSetup Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: spi_00753::SPIx_Write@void*@size_t Topic Title: SPIx_Write Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-SPIx_TransferSetup Function</div>
+SPIx_Write Function</div>
 </div>
 </div>
 
@@ -49,22 +49,22 @@ SPIx_TransferSetup Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function setup SPI x with the values needed by the client dynamically. Values passed through setup structure will be the new setup for SPI transmission. Even if user is not intending to modify all the setup parameters, he must update his setup structure with all its parameters. If user do not update all the setup structure elements, then unexpected SPI behavior may occur.&nbsp;</p>
-<p class="Element10">
-User need not call this function if he has configured the setup in GUI and there is no dynamic change needed in any of the parameters.</p></div>
+This function should be used to write &quot;txSize&quot; number of bytes on SPI x module. Data pointed by pTransmitData is transmitted.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">SPIx_TransferSetup</span></strong>(
-    SPI_TRANSFER_SETUP * <strong><span style="color: #000000">setup</span></strong>, 
-    uint32_t <strong><span style="color: #000000">spiSourceClock</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">SPIx_Write</span></strong>(
+    <strong><span style="color: #000080">void</span></strong>* <strong><span style="color: #000000">pTransmitData</span></strong>, 
+    size_t <strong><span style="color: #000000">txSize</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-SPI x must first be initialized using <a href="06817.html" target="topic">SPIx_Initialize</a>().</p></div>
+The <a href="06816.html" target="topic">SPIx_Initialize</a> function must have been called.&nbsp;</p>
+<p class="Element10">
+Callback has to be registered using <a href="06805.html" target="topic">SPIx_CallbackRegister</a> API if the peripheral instance has been configured in Interrupt mode and transfer completion status needs to be communicated back to application via callback.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -81,14 +81,14 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-spiSourceClock&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+*pTransmitData&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Source Clock frequency in Hz on which SPI module is running.<br>&nbsp;</div></td></tr><tr>
+Pointer to the data which has to be transmitted. if it is NULL, that means only data receiving is expected.&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-*setup&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+txSize&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-pointer to the data structure of type <a href="06820.html" target="topic">SPIx_TRANSFER_SETUP</a> which has the list of elements to be setup for a client.&nbsp;</div></td></tr></table></div></div>
+Number of bytes to be transmitted. Always, size should be given in terms of bytes. For example, if 5 16-bit data are to be transmitted, the transmit size should be 10 bytes.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -97,8 +97,12 @@ Returns</div>
 <div class="Element10">
 
 <ul class="Element630">
-<li class="Element600">true: if setup was successful, API returns true.</li>
-<li class="Element600">false: if spiSourceClock and SPI clock frequencies are such that resultant BRG value is out of the possible range, then API returns false.</li>
+<li class="Element600">In Blocking mode, API returns True once the transfer is complete. It returns False if txSize parameter is 0 and transmit data pointer is NULL.</li>
+</ul><p class="Element10">
+&nbsp;</p>
+
+<ul class="Element630">
+<li class="Element600">In interrupt mode, if previous buffer request is not completed and a new transfer request comes, then this API will reject the new request and will return &quot;False&quot;. Also, Same as blocking mode, It returns False if txSize parameter is 0 and transmit data pointer is NULL.</li>
 </ul></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
@@ -106,23 +110,17 @@ Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-User need not call this function if he has configured the setup in GUI and there is no dynamic change needed in any of the parameters.</p></div>
+Non-blocking interrupt mode configuration implementation of this function will be used by Harmony driver implementation APIs.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">    <a href="06820.html" target="topic">SPIx_TRANSFER_SETUP</a> setup;
-    setup.clockFrequency = 1000000;
-    setup.clockPhase = SPI_CLOCK_PHASE_TRAILING_EDGE;
-    setup.clockPolarity = SPI_CLOCK_POLARITY_IDLE_LOW;
-    setup.dataBits = SPI_DATA_BITS_8;
+<div class="Element13"><div class="Element12"><pre class="Element12">uint8_t     txBuffer[4];
+size_t      txSize = 4;
+<strong><span style="color: #000080">bool</span></strong>        reqAccepted;
 
-    <i><span style="color: #008000">// Assuming 150 MHz as peripheral Master clock frequency</span></i>
-    <strong><span style="color: #000080">if</span></strong> (SPI1_TransferSetup (&amp;setup, 150000000) == <strong><span style="color: #000080">false</span></strong>)
-    {
-        <i><span style="color: #008000">// this means setup could not be done, debug the reason.</span></i>
-    }</pre></div></div>
+reqAccepted = SPI1_Write(&amp;txBuffer, txSize);</pre></div></div>
 </div>
 </div>
 </div>
@@ -130,7 +128,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="06757.html" target="topic">SPI Peripheral Library Help</a> &gt; <a href="06758.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="06825.html" target="topic">SPIx_TransferSetup Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="06756.html" target="topic">SPI Peripheral Library Help</a> &gt; <a href="06757.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="06825.html" target="topic">SPIx_Write Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -138,13 +136,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06806.html" target="topic">Previous</a> | <a href="06758.html" target="topic">Up</a> | <a href="06819.html" target="topic">Next</a></div>
+<a href="06818.html" target="topic">Previous</a> | <a href="06757.html" target="topic">Up</a> | <a href="06826.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: spi_00753::SPIx_TransferSetup@SPI_TRANSFER_SETUP *@uint32_t Topic Title: SPIx_TransferSetup Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: spi_00753::SPIx_Write@void*@size_t Topic Title: SPIx_Write Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

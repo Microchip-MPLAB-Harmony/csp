@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>RTC_TIMER32_CALLBACK Type</title>
+<title>RTC_TIMER32_INT_MASK Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="05859.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="05860.html" target="topic">32-bit Timer (Mode 0)</a> &gt; <a href="05865.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="05988.html" target="topic">RTC_TIMER32_CALLBACK Type</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="05858.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="05859.html" target="topic">32-bit Timer (Mode 0)</a> &gt; <a href="05864.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="05988.html" target="topic">RTC_TIMER32_INT_MASK Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05996.html" target="topic">Previous</a> | <a href="05865.html" target="topic">Up</a> | <a href="05989.html" target="topic">Next</a></div>
+<a href="05987.html" target="topic">Previous</a> | <a href="05864.html" target="topic">Up</a> | <a href="05869.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2202::RTC_TIMER32_CALLBACK Topic Title: RTC_TIMER32_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2202::RTC_TIMER32_INT_MASK Topic Title: RTC_TIMER32_INT_MASK Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-RTC_TIMER32_CALLBACK Type</div>
+RTC_TIMER32_INT_MASK Enumeration</div>
 </div>
 </div>
 
@@ -49,67 +49,54 @@ RTC_TIMER32_CALLBACK Type</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-RTC 32-bit Timer Counter Callback Function Pointer Type&nbsp;</p>
+RTC 32-bit Timer Counter Mode Event&nbsp;</p>
 <p class="Element10">
-This data type defines the function signature of the RTC 32-bit Timer Counter Callback function. The RTC peripheral will call back the client's function with this signature every time when the 32-bit Time Counter related event has occurred. Refer to the description of the <a href="05989.html" target="topic">RTC_TIMER32_INT_MASK</a> enumeration for possible events. Hardware event flags are cleared when the callback function exits.&nbsp;</p>
-<p class="Element10">
-The application should register a callback function whose signature (input arguments and return type) must match the signature of this function. The callback function should be registered by calling the <a href="05992.html" target="topic">RTC_Timer32CallbackRegister</a>() function. The callback function should be registered before starting the timer.</p></div>
+This enumeration defines the possible events that can occur when the RTC peripheral is configured for 32-bit Timer Counter mode operation. These events are passed into the callback function registered through the <a href="05991.html" target="topic">RTC_Timer32CallbackRegister</a>() function.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000">RTC_TIMER32_CALLBACK</span></strong>)(<a href="05989.html" target="topic">RTC_TIMER32_INT_MASK</a> interruptCause, uintptr_t context);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">RTC_TIMER32_INT_MASK_COMPARE_MATCH</span></strong>,
+  <strong><span style="color: #000000">RTC_TIMER32_INT_MASK_COUNTER_OVERFLOW</span></strong>
+} RTC_TIMER32_INT_MASK;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-The <a href="05963.html" target="topic">RTC_Initialize</a>() function should have been called to initialize the RTC peripheral. The <a href="05992.html" target="topic">RTC_Timer32CallbackRegister</a>() function should have been called to register the callback function. The RTC peripheral should have been configured for 32-bit Timer Counter mode in MHC. The RTC peripheral should have been configured for Interrupt mode operation in MHC.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
+<div class="Element272">
 <div class="TableDiv">
-<table cellspacing="0" class="Table2">
+<table cellspacing="0" class="Table3">
 <tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-event&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-The 32-bit Timer Counter event that caused the callback function to be called. Multiple events can be active. The application should check for all events in the callback function.<br>&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Allows the caller to provide a context value (usually a pointer to the callers context for multi-instance clients).&nbsp;</div></td></tr></table></div></div>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+RTC_TIMER32_INT_MASK_COMPARE_MATCH&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Compare match interrupt&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+RTC_TIMER32_INT_MASK_COUNTER_OVERFLOW&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Counter Overflow interrupt&nbsp;</div></td></tr></table></div></div>
 </div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This callback if only available when the RTC peripheral is configured for 32-bit Timer Counter operation. The callback function will be execute in an interrupt context. Avoid calling blocking , computationally intensive or interrupt un-safe function from the callback function.</p></div>
+None.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="05859.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="05860.html" target="topic">32-bit Timer (Mode 0)</a> &gt; <a href="05865.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="05988.html" target="topic">RTC_TIMER32_CALLBACK Type</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="05858.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="05859.html" target="topic">32-bit Timer (Mode 0)</a> &gt; <a href="05864.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="05988.html" target="topic">RTC_TIMER32_INT_MASK Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -117,13 +104,13 @@ This callback if only available when the RTC peripheral is configured for 32-bit
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05996.html" target="topic">Previous</a> | <a href="05865.html" target="topic">Up</a> | <a href="05989.html" target="topic">Next</a></div>
+<a href="05987.html" target="topic">Previous</a> | <a href="05864.html" target="topic">Up</a> | <a href="05869.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2202::RTC_TIMER32_CALLBACK Topic Title: RTC_TIMER32_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2202::RTC_TIMER32_INT_MASK Topic Title: RTC_TIMER32_INT_MASK Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

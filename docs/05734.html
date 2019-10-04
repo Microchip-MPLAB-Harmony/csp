@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Running The Application</title>
+<title>Configuring the Library</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="05724.html" target="topic">RSTC Applications</a> &gt; <a href="05726.html" target="topic">rstc_reset_cause</a> &gt; <a href="05734.html" target="topic">Running The Application</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="05737.html" target="topic">RSTC Peripheral Library Help</a> &gt; <a href="05734.html" target="topic">Configuring the Library</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05732.html" target="topic">Previous</a> | <a href="05726.html" target="topic">Up</a> | <a href="05817.html" target="topic">Next</a></div>
+<a href="05736.html" target="topic">Previous</a> | <a href="05737.html" target="topic">Up</a> | <a href="05740.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RSTC rstc_reset_cause Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RSTC U2239 Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Running The Application</div>
+Configuring the Library</div>
 </div>
 </div>
 
@@ -49,137 +49,14 @@ Running The Application</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<strong><u>Running project with MPLAB X IDE</u></strong>&nbsp;</p>
-
-<ol class="Element630">
-<li value="1" class="Element600">Open the Terminal application (Ex.:Tera term) on the computer.</li>
-<li value="2" class="Element600">Connect to the EDBG Virtual COM port and configure the serial settings as follows:
-<ul class="Element631">
-<li class="Element601">Baud : 115200</li>
-<li class="Element601">Data : 8 Bits</li>
-<li class="Element601">Parity : None</li>
-<li class="Element601">Stop : 1 Bit</li>
-<li class="Element601">Flow Control : None</li>
-</ul></li>
-<li value="3" class="Element600">Build and Program the application using the MPLAB X IDE.</li>
-<li value="4" class="Element600">See the following message in the console.</li>
-</ol><p class="Element10" style="text-align: center;">
-<img src="rstc_reset_cause_output.png" border="0" alt="" title=""></p><p class="Element10">
-&nbsp;</p>
-
-<ol class="Element630">
-<li value="5" class="Element600">The watch timer is fed periodically using System Timer (SysTick) to prevent the WDT reset and the LED is toggled.</li>
-</ol><p class="Element10">
-The following table provides the switch and the LED name. </p><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element65" valign="top" width="77%">
-<div class="Element66">
-Kit Name&nbsp;</div></td><td class="Element65" valign="top" width="11%">
-<div class="Element66">
-Switch Name&nbsp;</div></td><td class="Element65" valign="top" width="12%">
-<div class="Element66">
-LED Name&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="77%">
-<div class="Element68">
-SAM C21N Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="11%">
-<div class="Element68">
-SW0&nbsp;</div></td><td class="Element67" valign="top" width="12%">
-<div class="Element68">
-LED0&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="77%">
-<div class="Element68">
-SAM E54 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="11%">
-<div class="Element68">
-SW0&nbsp;</div></td><td class="Element67" valign="top" width="12%">
-<div class="Element68">
-LED0&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="77%">
-<div class="Element68">
-SAM L10 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="11%">
-<div class="Element68">
-SW0&nbsp;</div></td><td class="Element67" valign="top" width="12%">
-<div class="Element68">
-LED0&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="77%">
-<div class="Element68">
-SAM L21 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="11%">
-<div class="Element68">
-SW0&nbsp;</div></td><td class="Element67" valign="top" width="12%">
-<div class="Element68">
-LED0&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="77%">
-<div class="Element68">
-SAM L22 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="11%">
-<div class="Element68">
-SW0&nbsp;</div></td><td class="Element67" valign="top" width="12%">
-<div class="Element68">
-LED0&nbsp;</div></td></tr></table></div></div>
-<p class="Element10">
-&nbsp;</p>
-
-<ol class="Element630">
-<li value="6" class="Element600">Press the switch to put the system in deadlock. The LED should stop blinking and the console should print the following message. The WDT will reset the device in four seconds and the demonstration should restart.</li>
-</ol><p class="Element10">
-<img src="rstc_reset_cause_output2.png" border="0" alt="" title="">&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong><u>Running project with IAR Embedded work bench</u></strong></p>
-<ol class="Element630">
-<li value="1" class="Element600">Open the Terminal application (Ex.:Tera term) on the computer.</li>
-<li value="2" class="Element600">Connect to the USB to DBGU COM port and configure the serial settings as follows:
-<ul class="Element631">
-<li class="Element601">Baud : 115200</li>
-<li class="Element601">Data : 8 Bits</li>
-<li class="Element601">Parity : None</li>
-<li class="Element601">Stop : 1 Bit</li>
-<li class="Element601">Flow Control : None</li>
-</ul></li>
-<li value="3" class="Element600">Build the project using IAR Embedded Workbench</li>
-<li value="4" class="Element600">Use the output binary file (harmony.bin) to setup the board as detailed in <a href="05732.html" target="topic">hardware setup</a></li>
-<li value="5" class="Element600">Reset the board to run the application</li>
-</ol><p class="Element10">
-&nbsp;</p>
-<div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element65" valign="top" width="17%">
-<div class="Element66">
-Kit Name&nbsp;</div></td><td class="Element65" valign="top" width="83%">
-<div class="Element66">
-Steps&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="17%">
-<div class="Element68">
-SAM9X60 evaluation kit&nbsp;</div></td><td class="Element67" valign="top" width="83%">
-<div class="Element68">
-</p>
-<ol class="Element630">
-<li value="6" class="Element600"> <strong>D7</strong> LED toggles in <strong>green</strong> color and console displays the following message.</li>
-</ol><p class="Element68">
-<img src="sam9x60_rstc_cause_1.png" border="0" alt="" title=""><br><i>NOTE: The cause for last reset will differ based on initial user action and is blanked out to avoid confusion</i></p>
-<ol class="Element630">
-<li value="7" class="Element600">Press Switch <strong>S1 </strong>to stop petting the watchdog. LED <strong>D7</strong> to should start toggling in <strong>blue</strong> color and the console display should be updated as follows:</li>
-</ol><p class="Element68">
-<img src="sam9x60_rstc_cause_2.png" border="0" alt="" title=""></p>
-<ol class="Element630">
-<li value="8" class="Element600">After a few seconds board will reset and the demo will start again (<strong>D7</strong> LED toggles in <strong>Green</strong> color). Console shall display <strong>watchdog</strong> as the cause of reset:</li>
-</ol><p class="Element68">
-<img src="sam9x60_rstc_cause_3.png" border="0" alt="" title=""><br><i>NOTE: Application and bootloader shares the same console . Since bootloader messages are not relevant to the application,they are not shown here.</i></p>
-<ol class="Element630">
-<li value="9" class="Element600">Press Switch <strong>S3</strong> to reset the board. Board will reset immediately and demo will start again (<strong>D7</strong> LED toggles in <strong>Green</strong> color). Console shall display <strong>user</strong> as the cause of reset.</li>
-</ol><p class="Element68">
-<img src="sam9x60_rstc_cause_4.png" border="0" alt="" title="">&nbsp;</div></td></tr></table></div></div>
-</div>
+Configure the peripheral library using the MHC.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="05724.html" target="topic">RSTC Applications</a> &gt; <a href="05726.html" target="topic">rstc_reset_cause</a> &gt; <a href="05734.html" target="topic">Running The Application</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="05737.html" target="topic">RSTC Peripheral Library Help</a> &gt; <a href="05734.html" target="topic">Configuring the Library</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -187,13 +64,13 @@ SAM9X60 evaluation kit&nbsp;</div></td><td class="Element67" valign="top" width=
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05732.html" target="topic">Previous</a> | <a href="05726.html" target="topic">Up</a> | <a href="05817.html" target="topic">Next</a></div>
+<a href="05736.html" target="topic">Previous</a> | <a href="05737.html" target="topic">Up</a> | <a href="05740.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RSTC rstc_reset_cause Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RSTC U2239 Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

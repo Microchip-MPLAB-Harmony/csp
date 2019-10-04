@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>MPLAB Harmony Configurations</title>
+<title>Running The Application</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="07730.html" target="topic">TRAM Applications</a> &gt; <a href="07731.html" target="topic">tram_tamper_erase</a> &gt; <a href="07734.html" target="topic">MPLAB Harmony Configurations</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="07729.html" target="topic">TRAM Applications</a> &gt; <a href="07730.html" target="topic">tram_tamper_erase</a> &gt; <a href="07734.html" target="topic">Running The Application</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="07732.html" target="topic">Previous</a> | <a href="07731.html" target="topic">Up</a> | <a href="07733.html" target="topic">Next</a></div>
+<a href="07732.html" target="topic">Previous</a> | <a href="07730.html" target="topic">Up</a> | <a href="07751.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TRAM tram_tamper_erase MPLAB Harmony Configurations Topic Title: MPLAB Harmony Configurations)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TRAM tram_tamper_erase Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-MPLAB Harmony Configurations</div>
+Running The Application</div>
 </div>
 </div>
 
@@ -48,15 +48,87 @@ MPLAB Harmony Configurations</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
+
+<ol class="Element630">
+<li value="1" class="Element600">Open the Terminal application (Ex.:Tera term) on the computer.</li>
+<li value="2" class="Element600">Connect to the EDBG Virtual COM port and configure the serial settings as follows:
+<ul class="Element631">
+<li class="Element601">Baud : 115200</li>
+<li class="Element601">Data : 8 Bits</li>
+<li class="Element601">Parity : None</li>
+<li class="Element601">Stop : 1 Bit</li>
+<li class="Element601">Flow Control : None</li>
+</ul></li>
+<li value="3" class="Element600">Build and program the application using the MPLAB X IDE</li>
+<li value="4" class="Element600">Console will print the value contained in the TRAM. Observe that the TRAM contains non zero values.</li>
+</ol><p class="Element10">
+&nbsp;</p>
+<div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="45%">
+<div class="Element66">
+Board&nbsp;</div></td><td class="Element65" valign="top" width="55%">
+<div class="Element66">
+Console Output&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="45%">
+<div class="Element68">
+SAM L10 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="55%">
+<div class="Element68">
+<img src="tram_tamper_erase_l10_initial.png" border="0" alt="" title="">&nbsp;</div></td></tr></table></div></div>
 <p class="Element10">
-Refer to the MHC project graph for the components used and the respective configuration options. For projects that use IAR Embedded work bench as IDE, the harmony project file should be opened using MHC plugin (standalone mode) to access the project graph.</p></div>
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="4" class="Element600">To emulate tampering, create a falling edge on the RTC input pin. This is achieved as follows:</li>
+</ol><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="35%">
+<div class="Element66">
+Board&nbsp;</div></td><td class="Element65" valign="top" width="65%">
+<div class="Element66">
+Connection&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="35%">
+<div class="Element68">
+SAM L10 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="65%">
+<div class="Element68">
+</p>
+<ul class="Element630">
+<li class="Element600">PA08 pad is the RTC input 0 and is available on connector EXT1, pin 14</li>
+<li class="Element600">Vcc is available on connector J100, pin 4</li>
+<li class="Element600">Short PA08 to Vcc and then remove the short to create a falling edge</li>
+</ul><p class="Element68">
+&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="5" class="Element600">Console will output the current value of TRAM. Observe that the TRAM values now read zero indicating a erasure of the TRAM content.</li>
+</ol><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="46%">
+<div class="Element66">
+Board&nbsp;</div></td><td class="Element65" valign="top" width="54%">
+<div class="Element66">
+Console Output&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="46%">
+<div class="Element68">
+SAM L10 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="54%">
+<div class="Element68">
+<img src="tram_tamper_erase_l10_final.png" border="0" alt="" title="">&nbsp;</div></td></tr></table></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="07730.html" target="topic">TRAM Applications</a> &gt; <a href="07731.html" target="topic">tram_tamper_erase</a> &gt; <a href="07734.html" target="topic">MPLAB Harmony Configurations</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="07729.html" target="topic">TRAM Applications</a> &gt; <a href="07730.html" target="topic">tram_tamper_erase</a> &gt; <a href="07734.html" target="topic">Running The Application</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -64,13 +136,13 @@ Refer to the MHC project graph for the components used and the respective config
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="07732.html" target="topic">Previous</a> | <a href="07731.html" target="topic">Up</a> | <a href="07733.html" target="topic">Next</a></div>
+<a href="07732.html" target="topic">Previous</a> | <a href="07730.html" target="topic">Up</a> | <a href="07751.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TRAM tram_tamper_erase MPLAB Harmony Configurations Topic Title: MPLAB Harmony Configurations)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TRAM tram_tamper_erase Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

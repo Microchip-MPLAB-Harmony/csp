@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Running The Application</title>
+<title>Building The Application</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="05724.html" target="topic">RSTC Applications</a> &gt; <a href="05725.html" target="topic">led_switcher</a> &gt; <a href="05730.html" target="topic">Running The Application</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="05723.html" target="topic">RSTC Applications</a> &gt; <a href="05725.html" target="topic">rstc_reset_cause</a> &gt; <a href="05730.html" target="topic">Building The Application</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05728.html" target="topic">Previous</a> | <a href="05725.html" target="topic">Up</a> | <a href="05726.html" target="topic">Next</a></div>
+<a href="05725.html" target="topic">Previous</a> | <a href="05725.html" target="topic">Up</a> | <a href="05732.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RSTC led_switcher Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RSTC rstc_reset_cause Building The Application Topic Title: Building The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Running The Application</div>
+Building The Application</div>
 </div>
 </div>
 
@@ -49,83 +49,75 @@ Running The Application</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<strong><u>MCU Devices</u></strong>&nbsp;</p>
-
-<ol class="Element630">
-<li value="1" class="Element600">Build and program the application using the MPLAB X IDE.</li>
-<li value="2" class="Element600">Disconnect and reconnect the Debug USB port to power cycle the board</li>
-<li value="3" class="Element600">Press the &quot;RESET&quot; switch and observe the LED toggling</li>
-</ol><p class="Element10">
-The following table provides the LED name. </p><div class="Element63">
+<strong>Building the application:</strong>&nbsp;</p>
+<p class="Element10">
+The parent folder for all the projects for this application is given below: </p><div class="Element63">
 <div class="TableDiv">
 <table cellspacing="0" class="Table1">
 <tr>
-<td class="Element65" valign="top" width="57%">
+<td class="Element65" valign="top" width="29%">
 <div class="Element66">
-Kit Name&nbsp;</div></td><td class="Element65" valign="top" width="43%">
+Application Path&nbsp;</div></td><td class="Element65" valign="top" width="71%">
 <div class="Element66">
-LED Name&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="57%">
-<div class="Element68">
-SAM E70 Xplained Ultra Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="43%">
-<div class="Element68">
-<span style="color: #000000">LED1</span>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="57%">
-<div class="Element68">
-SAM G55 Xplained Ultra Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="43%">
-<div class="Element68">
-<span style="color: #000000">LED0</span>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="57%">
-<div class="Element68">
-SAM RH71 Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="43%">
-<div class="Element68">
-<span style="color: #000000">LED0</span>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="57%">
-<div class="Element68">
-SAM V71 Xplained Ultra Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="43%">
-<div class="Element68">
-<span style="color: #000000">LED0</span>&nbsp;</div></td></tr></table></div></div>
-<p class="Element10">
-&nbsp;</p>
-
-<ol class="Element630">
-<li value="4" class="Element600">Note that this demo reconfigured the external reset pin as a GPIO pin. The board must be power cycled to run the code when a new project is programmed.</li>
-</ol><p class="Element10">
-&nbsp;</p>
+csp/apps/rstc/rstc_reset_cause/firmware&nbsp;</div></td></tr></table></div></div>
 <p class="Element10">
 &nbsp;</p>
 <p class="Element10">
-<strong><u>MPU Devices</u></strong>&nbsp;</p>
-
-<ol class="Element630">
-<li value="5" class="Element600">Build the IAR or MPLAB X project using IAR Embedded Workbench or MPLAB X IDE respectively</li>
-<li value="6" class="Element600">Use the output binary file (harmony.bin) to setup the board as detailed in <a href="05728.html" target="topic">hardware setup</a></li>
-<li value="7" class="Element600">Reset the board to run the application</li>
-<li value="8" class="Element600">Press the &quot;RESET&quot; switch and observe the LED toggling
-<ul class="Element631">
-<li class="Element601"><i>NOTE: Push and Release RESET switch very quickly so as to not end up cutting power to the PMIC triggering a full power on reset (instead of just toggling of the reset pin)</i></li>
-</ul></li>
-</ol><p class="Element10">
+The following tables provide the project name to be used with the different development kits. Open the required project in their respective IDEs.&nbsp;</p>
+<p class="Element10">
 &nbsp;</p>
-<div class="Element63">
+<p class="Element10">
+<strong>MPLAB X IDE Projects</strong> &nbsp;</p><div class="Element63">
 <div class="TableDiv">
 <table cellspacing="0" class="Table1">
 <tr>
-<td class="Element65" valign="top" width="34%">
+<td class="Element65" valign="top" width="25%">
 <div class="Element66">
-Kit Name&nbsp;</div></td><td class="Element65" valign="top" width="66%">
+Project Name&nbsp;</div></td><td class="Element65" valign="top" width="75%">
 <div class="Element66">
-LED Name&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="34%">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
 <div class="Element68">
-SAMA5D2 Xplained Ultra evaluation kit&nbsp;</div></td><td class="Element67" valign="top" width="66%">
+sam_c21n_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
 <div class="Element68">
-<span style="color: #000000">RGB_LED (Blue)</span>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="34%">
+SAM C21N Xplained Pro Evaluation Kit&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
 <div class="Element68">
-SAM9X60 evaluation kit&nbsp;</div></td><td class="Element67" valign="top" width="66%">
+sam_e54_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
 <div class="Element68">
-<span style="color: #000000">D7 toggles between Green and Blue color at every switch (SW3) press</span>&nbsp;</div></td></tr></table></div></div>
+SAM E54 Xplained Pro Evaluation Kit&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
+<div class="Element68">
+sam_l10_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+<div class="Element68">
+SAM L10 Xplained Pro Evaluation Kit&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
+<div class="Element68">
+sam_l21_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+<div class="Element68">
+SAM L21 Xplained Pro Evaluation Kit&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
+<div class="Element68">
+sam_l22_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+<div class="Element68">
+SAM L22 Xplained Pro Evaluation Kit&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<strong>IAR Embedded Workbench Projects</strong> </p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="25%">
+<div class="Element66">
+Project Name&nbsp;</div></td><td class="Element65" valign="top" width="75%">
+<div class="Element66">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
+<div class="Element68">
+sam_9x60_ek.IAR&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+<div class="Element68">
+SAM9X60 evaluation kit&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -133,7 +125,7 @@ SAM9X60 evaluation kit&nbsp;</div></td><td class="Element67" valign="top" width=
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="05724.html" target="topic">RSTC Applications</a> &gt; <a href="05725.html" target="topic">led_switcher</a> &gt; <a href="05730.html" target="topic">Running The Application</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="05723.html" target="topic">RSTC Applications</a> &gt; <a href="05725.html" target="topic">rstc_reset_cause</a> &gt; <a href="05730.html" target="topic">Building The Application</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -141,13 +133,13 @@ SAM9X60 evaluation kit&nbsp;</div></td><td class="Element67" valign="top" width=
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05728.html" target="topic">Previous</a> | <a href="05725.html" target="topic">Up</a> | <a href="05726.html" target="topic">Next</a></div>
+<a href="05725.html" target="topic">Previous</a> | <a href="05725.html" target="topic">Up</a> | <a href="05732.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RSTC led_switcher Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RSTC rstc_reset_cause Building The Application Topic Title: Building The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

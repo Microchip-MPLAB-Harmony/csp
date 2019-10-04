@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>RTC_Timer16CounterSet Function</title>
+<title>RTC_Timer16FrequencyGet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="05859.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="05870.html" target="topic">16-bit Timer (Mode 1)</a> &gt; <a href="05876.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="05980.html" target="topic">RTC_Timer16CounterSet Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="05858.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="05869.html" target="topic">16-bit Timer (Mode 1)</a> &gt; <a href="05875.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="05980.html" target="topic">RTC_Timer16FrequencyGet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05977.html" target="topic">Previous</a> | <a href="05876.html" target="topic">Up</a> | <a href="05978.html" target="topic">Next</a></div>
+<a href="05977.html" target="topic">Previous</a> | <a href="05875.html" target="topic">Up</a> | <a href="05982.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2202::RTC_Timer16CounterSet@uint16_t Topic Title: RTC_Timer16CounterSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2202::RTC_Timer16FrequencyGet Topic Title: RTC_Timer16FrequencyGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-RTC_Timer16CounterSet Function</div>
+RTC_Timer16FrequencyGet Function</div>
 </div>
 </div>
 
@@ -49,46 +49,24 @@ RTC_Timer16CounterSet Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function sets the 16-bit timer counter value. The counter will start to count up from this count value. The application may typically set the counter to 0 before starting a timing or counting operation. Calling this function when the timer is running will overwrite the current counter value.</p></div>
+This function returns the frequency at which the 16-bit timer counter is operating. The return value can be used to compute the period that needs to be set in order to operate the timer counter at a desired frequency.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">RTC_Timer16CounterSet</span></strong>(
-    uint16_t <strong><span style="color: #000000">count</span></strong>
-);</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100">uint32_t <strong><span style="color: #000000">RTC_Timer16FrequencyGet</span></strong>();</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="05963.html" target="topic">RTC_Initialize</a>, <a href="05986.html" target="topic">RTC_Timer16Start</a> must have been called for the associated RTC instance. The RTC peripheral should have been configured in 16-bit Timer Counter mode</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
-<div class="TableDiv">
-<table cellspacing="0" class="Table2">
-<tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-count&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-16-bit value to be loaded in the counter.&nbsp;</div></td></tr></table></div></div>
-</div>
+None.</p></div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+Returns the frequency at which the 16-bit timer counter is operating.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
@@ -101,8 +79,13 @@ None.</p></div>
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">    <i><span style="color: #008000">// Refer to the description of the RTC_Timer16CounterHasOverflowed()</span></i>
-    <i><span style="color: #008000">// function for example usage of the RTC_Timer16CounterSet() function.</span></i></pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">    <i><span style="color: #008000">// Compute the period required to operate the timer at 1KHz.</span></i>
+
+    uint16_t desiredFrequency = 1000;
+    uint16_t period = RTC_Timer16FrequencyGet()/desiredFrequency;
+    <a href="05962.html" target="topic">RTC_Initialize</a>();
+    <a href="05984.html" target="topic">RTC_Timer16PeriodSet</a>(period);
+</pre></div></div>
 </div>
 </div>
 </div>
@@ -110,7 +93,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="05859.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="05870.html" target="topic">16-bit Timer (Mode 1)</a> &gt; <a href="05876.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="05980.html" target="topic">RTC_Timer16CounterSet Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="05858.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="05869.html" target="topic">16-bit Timer (Mode 1)</a> &gt; <a href="05875.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="05980.html" target="topic">RTC_Timer16FrequencyGet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -118,13 +101,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05977.html" target="topic">Previous</a> | <a href="05876.html" target="topic">Up</a> | <a href="05978.html" target="topic">Next</a></div>
+<a href="05977.html" target="topic">Previous</a> | <a href="05875.html" target="topic">Up</a> | <a href="05982.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2202::RTC_Timer16CounterSet@uint16_t Topic Title: RTC_Timer16CounterSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2202::RTC_Timer16FrequencyGet Topic Title: RTC_Timer16FrequencyGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

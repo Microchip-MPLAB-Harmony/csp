@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>MCAN_CALLBACK Type</title>
+<title>MCAN_ERROR Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="03964.html" target="topic">MCAN Peripheral Library Help</a> &gt; <a href="03965.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="03986.html" target="topic">MCAN_CALLBACK Type</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="03963.html" target="topic">MCAN Peripheral Library Help</a> &gt; <a href="03964.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="03986.html" target="topic">MCAN_ERROR Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04041.html" target="topic">Previous</a> | <a href="03965.html" target="topic">Up</a> | <a href="04058.html" target="topic">Next</a></div>
+<a href="04066.html" target="topic">Previous</a> | <a href="03964.html" target="topic">Up</a> | <a href="04040.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MCAN_CALLBACK Topic Title: MCAN_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MCAN_ERROR Topic Title: MCAN_ERROR Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-MCAN_CALLBACK Type</div>
+MCAN_ERROR Enumeration</div>
 </div>
 </div>
 
@@ -49,13 +49,54 @@ MCAN_CALLBACK Type</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-MCAN Callback&nbsp;</p>
+MCAN Transfer Error&nbsp;</p>
 <p class="Element10">
-This data type defines the MCAN Callback Function Pointer.</p></div>
+This data type defines the MCAN Transfer Error.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000">MCAN_CALLBACK</span></strong>)(uintptr_t contextHandle);</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">MCAN_ERROR_NONE</span></strong> = 0x0,
+  <strong><span style="color: #000000">MCAN_ERROR_LEC_STUFF</span></strong> = 0x1,
+  <strong><span style="color: #000000">MCAN_ERROR_LEC_FORM</span></strong> = 0x2,
+  <strong><span style="color: #000000">MCAN_ERROR_LEC_ACK</span></strong> = 0x3,
+  <strong><span style="color: #000000">MCAN_ERROR_LEC_BIT1</span></strong> = 0x4,
+  <strong><span style="color: #000000">MCAN_ERROR_LEC_BIT0</span></strong> = 0x5,
+  <strong><span style="color: #000000">MCAN_ERROR_LEC_CRC</span></strong> = 0x6,
+  <strong><span style="color: #000000">MCAN_ERROR_LEC_NO_CHANGE</span></strong> = 0x7,
+  <strong><span style="color: #000000">MCAN_ERROR_PASSIVE</span></strong> = 0x20,
+  <strong><span style="color: #000000">MCAN_ERROR_WARNING_STATUS</span></strong> = 0x40,
+  <strong><span style="color: #000000">MCAN_ERROR_BUS_OFF</span></strong> = 0x80,
+  <strong><span style="color: #000000">MCAN_ERROR_DLEC_STUFF</span></strong> = 0x100,
+  <strong><span style="color: #000000">MCAN_ERROR_DLEC_FORM</span></strong> = 0x200,
+  <strong><span style="color: #000000">MCAN_ERROR_DLEC_ACK</span></strong> = 0x300,
+  <strong><span style="color: #000000">MCAN_ERROR_DLEC_BIT1</span></strong> = 0x400,
+  <strong><span style="color: #000000">MCAN_ERROR_DLEC_BIT0</span></strong> = 0x500,
+  <strong><span style="color: #000000">MCAN_ERROR_DLEC_CRC</span></strong> = 0x600,
+  <strong><span style="color: #000000">MCAN_ERROR_DLEC_NO_CHANGE</span></strong> = 0x700,
+  <strong><span style="color: #000000">MCAN_ERROR_PROTOCOL_EXCEPTION_EVENT</span></strong> = 0x4000,
+  <strong><span style="color: #000000">MCAN_ERROR_INVALID</span></strong> = 0xFFFFFFFF
+} MCAN_ERROR;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+MCAN_ERROR_INVALID = 0xFFFFFFFF&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Force the compiler to reserve 32-bit space for each enum value&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
@@ -68,7 +109,7 @@ None.</p></div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="03964.html" target="topic">MCAN Peripheral Library Help</a> &gt; <a href="03965.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="03986.html" target="topic">MCAN_CALLBACK Type</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="03963.html" target="topic">MCAN Peripheral Library Help</a> &gt; <a href="03964.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="03986.html" target="topic">MCAN_ERROR Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -76,13 +117,13 @@ None.</p></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04041.html" target="topic">Previous</a> | <a href="03965.html" target="topic">Up</a> | <a href="04058.html" target="topic">Next</a></div>
+<a href="04066.html" target="topic">Previous</a> | <a href="03964.html" target="topic">Up</a> | <a href="04040.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MCAN_CALLBACK Topic Title: MCAN_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MCAN_ERROR Topic Title: MCAN_ERROR Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

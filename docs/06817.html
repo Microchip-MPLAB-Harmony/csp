@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>SPIx_Initialize Function</title>
+<title>SPIx_IsBusy Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="06757.html" target="topic">SPI Peripheral Library Help</a> &gt; <a href="06758.html" target="topic">Library Interface</a> &gt; a) Initialization Function &gt; <a href="06817.html" target="topic">SPIx_Initialize Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="06756.html" target="topic">SPI Peripheral Library Help</a> &gt; <a href="06757.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="06817.html" target="topic">SPIx_IsBusy Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06758.html" target="topic">Previous</a> | <a href="06758.html" target="topic">Up</a> | <a href="06806.html" target="topic">Next</a></div>
+<a href="06826.html" target="topic">Previous</a> | <a href="06757.html" target="topic">Up</a> | <a href="06804.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: spi_00753::SPIx_Initialize Topic Title: SPIx_Initialize Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: spi_00753::SPIx_IsBusy Topic Title: SPIx_IsBusy Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-SPIx_Initialize Function</div>
+SPIx_IsBusy Function</div>
 </div>
 </div>
 
@@ -49,37 +49,44 @@ SPIx_Initialize Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function initializes SPI x module of the device with the values configured in MHC GUI. Once the peripheral is initialized, transfer APIs can be used to transfer the data.</p></div>
+This function returns transfer status of last successful Write, Read or WriteRead request on SPI x module in interrupt mode.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">SPIx_Initialize</span></strong>();</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">SPIx_IsBusy</span></strong>();</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-MHC GUI should be configured with the right values.</p></div>
+None.</p></div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+Returns the current status of transfer happening on SPI x.</p>
+<ul class="Element630">
+<li class="Element600">true: Transfer is still in progress</li>
+<li class="Element600">false: Transfer is completed</li>
+</ul></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function must be called only once and before any other SPI function is called.</p></div>
+This API is available only for interrupt mode as blocking mode transfer APIs will always return only after completing the transfer.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">    SPI1_Initialize();</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">    <strong><span style="color: #000080">if</span></strong> (SPI1_IsBusy() == <strong><span style="color: #000080">false</span></strong>)
+    {
+        <i><span style="color: #008000">//Data Transfer is complete, do something else.</span></i>
+    }</pre></div></div>
 </div>
 </div>
 </div>
@@ -87,7 +94,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="06757.html" target="topic">SPI Peripheral Library Help</a> &gt; <a href="06758.html" target="topic">Library Interface</a> &gt; a) Initialization Function &gt; <a href="06817.html" target="topic">SPIx_Initialize Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="06756.html" target="topic">SPI Peripheral Library Help</a> &gt; <a href="06757.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="06817.html" target="topic">SPIx_IsBusy Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -95,13 +102,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06758.html" target="topic">Previous</a> | <a href="06758.html" target="topic">Up</a> | <a href="06806.html" target="topic">Next</a></div>
+<a href="06826.html" target="topic">Previous</a> | <a href="06757.html" target="topic">Up</a> | <a href="06804.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: spi_00753::SPIx_Initialize Topic Title: SPIx_Initialize Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: spi_00753::SPIx_IsBusy Topic Title: SPIx_IsBusy Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

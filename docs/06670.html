@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>SERCOMx_USART_TransmitComplete Function</title>
+<title>SERCOMx_USART_TransmitterIsReady Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="06584.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="06595.html" target="topic">USART</a> &gt;  &gt; <a href="06670.html" target="topic">SERCOMx_USART_TransmitComplete Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="06583.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="06594.html" target="topic">USART</a> &gt; <a href="06598.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="06670.html" target="topic">SERCOMx_USART_TransmitterIsReady Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-</div>
+<a href="06667.html" target="topic">Previous</a> | <a href="06598.html" target="topic">Up</a> | <a href="06669.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_usart::SERCOMx_USART_TransmitComplete Topic Title: SERCOMx_USART_TransmitComplete Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_usart::SERCOMx_USART_TransmitterIsReady Topic Title: SERCOMx_USART_TransmitterIsReady Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-SERCOMx_USART_TransmitComplete Function</div>
+SERCOMx_USART_TransmitterIsReady Function</div>
 </div>
 </div>
 
@@ -49,19 +49,19 @@ SERCOMx_USART_TransmitComplete Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function returns the hardware status associated with the Transmit Shift register of the given USART peripheral instance.When Transmitter is ready, user can submit data to transmit.&nbsp;</p>
+This function returns the hardware status associated with the transmit hardware FIFO of the given USART peripheral instance. When the transmitter is ready, user can submit data to be transmitted.&nbsp;</p>
 <p class="Element10">
-This function is available only in non-interrupt mode of operation and it should be used to check transmitter readiness before calling <a href="06673.html" target="topic">SERCOMx_USART_WriteByte</a> function.</p></div>
+This function is available only in non-interrupt mode of operation. It can be used to achieve non-blocking behavior of write request in the non-interrupt mode. If non-blocking behavior is desired, this function should be called to check if the transmitter is ready and then the <a href="06671.html" target="topic">SERCOMx_USART_Write</a>() function should be called with a buffer size of 1.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">SERCOMx_USART_TransmitComplete</span></strong>();</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">SERCOMx_USART_TransmitterIsReady</span></strong>();</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="06662.html" target="topic">SERCOMx_USART_Initialize</a> must have been called for the associated USART instance.</p></div>
+<a href="06661.html" target="topic">SERCOMx_USART_Initialize</a> must have been called for the associated USART instance.</p></div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
@@ -69,8 +69,8 @@ Returns</div>
 <div class="Element10">
 
 <ul class="Element630">
-<li class="Element600">true - Transmit Shift register has empty space to accept the data.</li>
-<li class="Element600">false - Transmit Shift register is full.</li>
+<li class="Element600">true - if transmit hardware FIFO has empty space to accept data.</li>
+<li class="Element600">false - if transmit hardware FIFO is full.</li>
 </ul></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
@@ -78,16 +78,17 @@ Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+If user submits write request for more than 1 byte after checking the ready status, then write API will block until the submitted length of data is processed. This is the native behavior of the write API in the non-interrupt or blocking mode of the library.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">if</span></strong>(<strong><span style="color: #000080">true</span></strong> == SERCOM1_USART_TransmitComplete())
+<div class="Element13"><div class="Element12"><pre class="Element12">
+<strong><span style="color: #000080">if</span></strong>(<strong><span style="color: #000080">true</span></strong> == SERCOM0_USART_TransmitterIsReady())
 {
     <i><span style="color: #008000">// Empty space is available in Transmitter FIFO, hence can write a byte</span></i>
-    SERCOM1_USART_WriteByte('A');
+    SERCOM0_USART_Write(&quot;A&quot;, 1);
 }
 <strong><span style="color: #000080">else</span></strong>
 {
@@ -100,7 +101,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="06584.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="06595.html" target="topic">USART</a> &gt;  &gt; <a href="06670.html" target="topic">SERCOMx_USART_TransmitComplete Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="06583.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="06594.html" target="topic">USART</a> &gt; <a href="06598.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="06670.html" target="topic">SERCOMx_USART_TransmitterIsReady Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -108,13 +109,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-</div>
+<a href="06667.html" target="topic">Previous</a> | <a href="06598.html" target="topic">Up</a> | <a href="06669.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_usart::SERCOMx_USART_TransmitComplete Topic Title: SERCOMx_USART_TransmitComplete Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_usart::SERCOMx_USART_TransmitterIsReady Topic Title: SERCOMx_USART_TransmitterIsReady Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

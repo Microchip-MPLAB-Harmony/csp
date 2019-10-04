@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>SDHC_ClockSet Function</title>
+<title>sdhc_00187::SDHC_CMD_RESP_TYPE Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="06287.html" target="topic">SDHC Peripheral Library Help</a> &gt; <a href="06288.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="06322.html" target="topic">SDHC_ClockSet Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="06286.html" target="topic">SDHC Peripheral Library Help</a> &gt; <a href="06287.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="06322.html" target="topic">sdhc_00187::SDHC_CMD_RESP_TYPE Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06313.html" target="topic">Previous</a> | <a href="06288.html" target="topic">Up</a> | <a href="06321.html" target="topic">Next</a></div>
+<a href="06346.html" target="topic">Previous</a> | <a href="06287.html" target="topic">Up</a> | <a href="06305.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sdhc_00187::SDHC_ClockSet@uint32_t Topic Title: SDHC_ClockSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sdhc_00187::SDHC_CMD_RESP_TYPE Topic Title: sdhc_00187::SDHC_CMD_RESP_TYPE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-SDHC_ClockSet Function</div>
+sdhc_00187::SDHC_CMD_RESP_TYPE Enumeration</div>
 </div>
 </div>
 
@@ -49,46 +49,82 @@ SDHC_ClockSet Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Sets the SDHC clock frequency.</p></div>
+SDHC command response type&nbsp;</p>
+<p class="Element10">
+The enumeration is used to identify the response type expected for a given command.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">SDHC_ClockSet</span></strong>(
-    uint32_t <strong><span style="color: #000000">clock</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">enum</span></strong> <strong><span style="color: #000000">SDHC_CMD_RESP_TYPE</span></strong> {
+  <strong><span style="color: #000000">SDHC_CMD_RESP_NONE</span></strong>,
+  <strong><span style="color: #000000">SDHC_CMD_RESP_R1</span></strong>,
+  <strong><span style="color: #000000">SDHC_CMD_RESP_R1B</span></strong>,
+  <strong><span style="color: #000000">SDHC_CMD_RESP_R2</span></strong>,
+  <strong><span style="color: #000000">SDHC_CMD_RESP_R3</span></strong>,
+  <strong><span style="color: #000000">SDHC_CMD_RESP_R4</span></strong>,
+  <strong><span style="color: #000000">SDHC_CMD_RESP_R5</span></strong>,
+  <strong><span style="color: #000000">SDHC_CMD_RESP_R6</span></strong>,
+  <strong><span style="color: #000000">SDHC_CMD_RESP_R7</span></strong>
+};</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-<a href="06348.html" target="topic">SDHC_Initialize</a>() must have been called first for the associated instance.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
+<div class="Element272">
 <div class="TableDiv">
-<table cellspacing="0" class="Table2">
+<table cellspacing="0" class="Table3">
 <tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-clock&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-SDHC clock frequency.&nbsp;</div></td></tr></table></div></div>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SDHC_CMD_RESP_NONE&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+!&lt; no response type&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SDHC_CMD_RESP_R1&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+!&lt; normal response command&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SDHC_CMD_RESP_R1B&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+!&lt; normal with busy signal&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SDHC_CMD_RESP_R2&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+!&lt; CID, CSD register&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SDHC_CMD_RESP_R3&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+!&lt; OCR register&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SDHC_CMD_RESP_R4&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+!&lt;&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SDHC_CMD_RESP_R5&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+!&lt;&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SDHC_CMD_RESP_R6&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+!&lt; Published RCA response&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SDHC_CMD_RESP_R7&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+!&lt; Card interface condition&nbsp;</div></td></tr></table></div></div>
 </div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
@@ -97,19 +133,12 @@ Remarks</div>
 <p class="Element10">
 None.</p></div>
 </div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">SDHC_ClockSet(400000);</pre></div></div>
-</div>
-</div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="06287.html" target="topic">SDHC Peripheral Library Help</a> &gt; <a href="06288.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="06322.html" target="topic">SDHC_ClockSet Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="06286.html" target="topic">SDHC Peripheral Library Help</a> &gt; <a href="06287.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="06322.html" target="topic">sdhc_00187::SDHC_CMD_RESP_TYPE Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -117,13 +146,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06313.html" target="topic">Previous</a> | <a href="06288.html" target="topic">Up</a> | <a href="06321.html" target="topic">Next</a></div>
+<a href="06346.html" target="topic">Previous</a> | <a href="06287.html" target="topic">Up</a> | <a href="06305.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sdhc_00187::SDHC_ClockSet@uint32_t Topic Title: SDHC_ClockSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sdhc_00187::SDHC_CMD_RESP_TYPE Topic Title: sdhc_00187::SDHC_CMD_RESP_TYPE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

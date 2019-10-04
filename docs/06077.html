@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>RTC_Timer16Compare0Set Function</title>
+<title>RTC_Timer16Compare1HasMatched Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="05892.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="05903.html" target="topic">16-bit Timer (Mode 1)</a> &gt; <a href="05909.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="06077.html" target="topic">RTC_Timer16Compare0Set Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="05891.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="05902.html" target="topic">16-bit Timer (Mode 1)</a> &gt; <a href="05908.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="06077.html" target="topic">RTC_Timer16Compare1HasMatched Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06093.html" target="topic">Previous</a> | <a href="05909.html" target="topic">Up</a> | <a href="06079.html" target="topic">Next</a></div>
+<a href="06075.html" target="topic">Previous</a> | <a href="05908.html" target="topic">Up</a> | <a href="05909.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::RTC_Timer16Compare0Set@uint16_t Topic Title: RTC_Timer16Compare0Set Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::RTC_Timer16Compare1HasMatched Topic Title: RTC_Timer16Compare1HasMatched Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-RTC_Timer16Compare0Set Function</div>
+RTC_Timer16Compare1HasMatched Function</div>
 </div>
 </div>
 
@@ -49,26 +49,26 @@ RTC_Timer16Compare0Set Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function will set the Counter Compare 0 Value. The module will compare the counter against this value and will signal a match when the counter equals the compare value. If the library was configured for interrupt mode, the Compare 0 event is enabled and if a valid callback is registered, the library will call the registered callback function with the RTC_TIMER16_INT_MASK_COMP0 event. The <a href="06076.html" target="topic">RTC_Timer16Compare0HasMatched</a>() function will return true when the match occurs.</p></div>
+This function returns true if the 16-bit Timer Compare 1 value has matched the counter. When operating in 16-bit Timer Counter mode, the RTC peripheral compares the counter value with two defined compare values (Compare 1 and Compare 1). This function will return true if the counter value has matched the Compare 1 value and also resets the hardware status flags if when match has occurred.&nbsp;</p>
+<p class="Element10">
+The Compare 1 Value could have been configured via MHC or at run time by calling the <a href="06078.html" target="topic">RTC_Timer16Compare1Set</a>() function. The RTC_Timer16Compare1ValueMatched() function allows the application to poll for the compare value match.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">RTC_Timer16Compare0Set</span></strong>(
-    uint16_t <strong><span style="color: #000000">comparisionValue</span></strong>
-);</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">RTC_Timer16Compare1HasMatched</span></strong>();</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="06042.html" target="topic">RTC_Initialize</a>, <a href="06092.html" target="topic">RTC_Timer16Start</a> must have been called for the associated RTC instance. The module should have configured for 16-bit Timer Counter operation.</p></div>
+<a href="06041.html" target="topic">RTC_Initialize</a>, <a href="06091.html" target="topic">RTC_Timer16Start</a> must have been called for the associated RTC instance. The RTC value should have been configured for 16-bit Timer Counter Mode. The Generate Compare 1 API option in MHC should have been enabled.</p></div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-comparisionValue - 16-bit compare value compares with the current counter value.</p></div>
+true - Counter has matched Compare 1 Value. false - Counter has not matched Compare 1 Value.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
@@ -81,9 +81,17 @@ None.</p></div>
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">    <i><span style="color: #008000">// Refer to the description of the RTC_Timer16Compare0HasMatched()</span></i>
-    <i><span style="color: #008000">// function for example usage of the RTC_Timer16Compare0Set() function.</span></i>
-</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">    <a href="06041.html" target="topic">RTC_Initialize</a>();
+    <a href="06085.html" target="topic">RTC_Timer16CounterSet</a>(0);
+    <a href="06090.html" target="topic">RTC_Timer16PeriodSet</a>(0xFFF);
+
+    <i><span style="color: #008000">// Calling the RTC_Timer16Compare1Set() function will override the</span></i>
+    <i><span style="color: #008000">// Compare 1 value that was set via MHC.</span></i>
+    <a href="06078.html" target="topic">RTC_Timer16Compare1Set</a>(0x3F);
+    <a href="06091.html" target="topic">RTC_Timer16Start</a>();
+
+    <i><span style="color: #008000">// Wait till the Compare 1 value has matched.</span></i>
+    <strong><span style="color: #000080">while</span></strong>(!RTC_Timer16Compare1HasMatched());</pre></div></div>
 </div>
 </div>
 </div>
@@ -91,7 +99,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="05892.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="05903.html" target="topic">16-bit Timer (Mode 1)</a> &gt; <a href="05909.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="06077.html" target="topic">RTC_Timer16Compare0Set Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="05891.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="05902.html" target="topic">16-bit Timer (Mode 1)</a> &gt; <a href="05908.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="06077.html" target="topic">RTC_Timer16Compare1HasMatched Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -99,13 +107,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06093.html" target="topic">Previous</a> | <a href="05909.html" target="topic">Up</a> | <a href="06079.html" target="topic">Next</a></div>
+<a href="06075.html" target="topic">Previous</a> | <a href="05908.html" target="topic">Up</a> | <a href="05909.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::RTC_Timer16Compare0Set@uint16_t Topic Title: RTC_Timer16Compare0Set Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::RTC_Timer16Compare1HasMatched Topic Title: RTC_Timer16Compare1HasMatched Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

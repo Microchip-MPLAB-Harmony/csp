@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>QSPI_MemoryRead Function</title>
+<title>QSPI_MemoryWrite Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="05511.html" target="topic">QSPI Peripheral Library Help</a> &gt; <a href="05512.html" target="topic">Library Interface</a> &gt; b) Transaction Functions &gt; <a href="05561.html" target="topic">QSPI_MemoryRead Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="05510.html" target="topic">QSPI Peripheral Library Help</a> &gt; <a href="05511.html" target="topic">Library Interface</a> &gt; b) Transaction Functions &gt; <a href="05561.html" target="topic">QSPI_MemoryWrite Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05542.html" target="topic">Previous</a> | <a href="05512.html" target="topic">Up</a> | <a href="05562.html" target="topic">Next</a></div>
+<a href="05560.html" target="topic">Previous</a> | <a href="05511.html" target="topic">Up</a> | <a href="05571.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: QSPI_MemoryRead@qspi_memory_xfer_t *@uint32_t *@uint32_t@uint32_t Topic Title: QSPI_MemoryRead Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: QSPI_MemoryWrite@qspi_memory_xfer_t *@uint32_t *@uint32_t@uint32_t Topic Title: QSPI_MemoryWrite Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-QSPI_MemoryRead Function</div>
+QSPI_MemoryWrite Function</div>
 </div>
 </div>
 
@@ -49,14 +49,16 @@ QSPI_MemoryRead Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function can be used to read n bytes of data from the specified address of the serial flash device connected as a QSPI slave.</p></div>
+This function can be used to write maximum of one page of data to the specified address of the serial flash device connected as a QSPI slave.&nbsp;</p>
+<p class="Element10">
+If the number of bytes to be written is greater than the page size then QSPI_MemoryWrite API needs to be called multiple times.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">QSPI_MemoryRead</span></strong>(
-    <a href="05552.html" target="topic">qspi_memory_xfer_t</a> * <strong><span style="color: #000000">qspi_memory_xfer</span></strong>, 
-    uint32_t * <strong><span style="color: #000000">rx_data</span></strong>, 
-    uint32_t <strong><span style="color: #000000">rx_data_length</span></strong>, 
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">QSPI_MemoryWrite</span></strong>(
+    <a href="05551.html" target="topic">qspi_memory_xfer_t</a> * <strong><span style="color: #000000">qspi_memory_xfer</span></strong>, 
+    uint32_t * <strong><span style="color: #000000">tx_data</span></strong>, 
+    uint32_t <strong><span style="color: #000000">tx_data_length</span></strong>, 
     uint32_t <strong><span style="color: #000000">address</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
@@ -64,7 +66,9 @@ Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="05543.html" target="topic">QSPI_Initialize</a> must have been called for the associated QSPI instance.</p></div>
+<a href="05542.html" target="topic">QSPI_Initialize</a> must have been called for the associated QSPI instance.&nbsp;</p>
+<p class="Element10">
+Write enable command has to be sent before write memory request.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -86,19 +90,19 @@ Description&nbsp;</div></td></tr><tr>
 pointer to QSPI memory transfer structure holding the instruction code register and instruction frame register information.<br>&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-*rx_data&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+*tx_data&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Pointer to receive buffer where the data read from memory will be stored.<br>&nbsp;</div></td></tr><tr>
+Pointer to transmit buffer holding the data to write into memory.<br>&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-rx_data_length&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+tx_data_length&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-number of bytes to read.<br>&nbsp;</div></td></tr><tr>
+number of bytes to write.<br>&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
 address&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Memory location to read from.&nbsp;</div></td></tr></table></div></div>
+Memory location to write to.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -111,28 +115,41 @@ Returns</div>
 <li class="Element600">False on transfer request failure.</li>
 </ul></div>
 </div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Before sending next write request <a href="05571.html" target="topic">QSPI_RegisterRead</a>() can be called to read the status register of the slave device to check if the previous write operation is completed.</p></div>
+</div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
 <div class="Element13"><div class="Element12"><pre class="Element12">
-<strong><span style="color: #000080">#define</span></strong> READ_MEMORY_CODE  0x0B
+<strong><span style="color: #000080">#define</span></strong> WRITE_PAGE_CODE       0x02
+<strong><span style="color: #000080">#define</span></strong> WRITE_IN_PROGRESS      (1 &lt;&lt; 0)
 
-<strong><span style="color: #000080">static</span></strong> <a href="05552.html" target="topic">qspi_memory_xfer_t</a> qspi_memory_xfer;
-<strong><span style="color: #000080">static</span></strong> uint32_t buffer[4];
-uint32_t address = 0x0
+<strong><span style="color: #000080">static</span></strong> <a href="05551.html" target="topic">qspi_memory_xfer_t</a> qspi_memory_xfer;
+<strong><span style="color: #000080">static</span></strong> uint8_t buffer[256];
+uint32_t address = 0x0;
 
-<i><span style="color: #008000">// Read memory location starting from address 0x0</span></i>
-qspi_memory_xfer.instruction = READ_MEMORY_CODE;
+<strong><span style="color: #000080">for</span></strong> (<strong><span style="color: #000080">int</span></strong> i = 0; i &lt; 256; i++)
+    buffer[i] = i;
+
+<i><span style="color: #008000">// Write to memory location starting from address 0x0</span></i>
+qspi_memory_xfer.instruction = WRITE_PAGE_CODE;
 
 <i><span style="color: #008000">// Use QAUD SPI Lane</span></i>
 qspi_memory_xfer.width = QUAD_CMD;
-qspi_memory_xfer.dummy_cycles = 6;
 
-<strong><span style="color: #000080">if</span></strong> (TRUE != QSPI_MemoryRead(&amp;qspi_memory_xfer, buffer, <strong><span style="color: #000080">sizeof</span></strong>(buffer), address))
+<strong><span style="color: #000080">if</span></strong> (TRUE != QSPI_MemoryWrite(&amp;qspi_memory_xfer, buffer, <strong><span style="color: #000080">sizeof</span></strong>(buffer), address))
 {
     <i><span style="color: #008000">// Handle Error</span></i>
 }
+
+<i><span style="color: #008000">// Query the status register and wait until WIP bit is cleared.</span></i>
+<strong><span style="color: #000080">while</span></strong>(status_reg &amp; WRITE_IN_PROGRESS);
 </pre></div></div>
 </div>
 </div>
@@ -141,7 +158,7 @@ qspi_memory_xfer.dummy_cycles = 6;
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="05511.html" target="topic">QSPI Peripheral Library Help</a> &gt; <a href="05512.html" target="topic">Library Interface</a> &gt; b) Transaction Functions &gt; <a href="05561.html" target="topic">QSPI_MemoryRead Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="05510.html" target="topic">QSPI Peripheral Library Help</a> &gt; <a href="05511.html" target="topic">Library Interface</a> &gt; b) Transaction Functions &gt; <a href="05561.html" target="topic">QSPI_MemoryWrite Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -149,13 +166,13 @@ qspi_memory_xfer.dummy_cycles = 6;
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05542.html" target="topic">Previous</a> | <a href="05512.html" target="topic">Up</a> | <a href="05562.html" target="topic">Next</a></div>
+<a href="05560.html" target="topic">Previous</a> | <a href="05511.html" target="topic">Up</a> | <a href="05571.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: QSPI_MemoryRead@qspi_memory_xfer_t *@uint32_t *@uint32_t@uint32_t Topic Title: QSPI_MemoryRead Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: QSPI_MemoryWrite@qspi_memory_xfer_t *@uint32_t *@uint32_t@uint32_t Topic Title: QSPI_MemoryWrite Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

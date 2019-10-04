@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>SUPC_CallbackRegister Function</title>
+<title>SUPC_GPBRRead Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="06926.html" target="topic">SUPC Peripheral Library Help</a> &gt; <a href="06927.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="06986.html" target="topic">SUPC_CallbackRegister Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="06925.html" target="topic">SUPC Peripheral Library Help</a> &gt; <a href="06926.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="06986.html" target="topic">SUPC_GPBRRead Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06989.html" target="topic">Previous</a> | <a href="06927.html" target="topic">Up</a> | <a href="06987.html" target="topic">Next</a></div>
+<a href="06985.html" target="topic">Previous</a> | <a href="06926.html" target="topic">Up</a> | <a href="06987.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: supc_11228::SUPC_CallbackRegister@SUPC_CALLBACK@uintptr_t Topic Title: SUPC_CallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: supc_11228::SUPC_GPBRRead@GPBR_REGS_INDEX Topic Title: SUPC_GPBRRead Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-SUPC_CallbackRegister Function</div>
+SUPC_GPBRRead Function</div>
 </div>
 </div>
 
@@ -49,24 +49,19 @@ SUPC_CallbackRegister Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function allows application to register a callback function for the PLIB to callback when a interrupt occurred due to Supply monitor detection.&nbsp;</p>
-<p class="Element10">
-The callback should be registered before the client performs transfer operation.&nbsp;</p>
-<p class="Element10">
-At any point if application wants to stop the callback, it can call this function with &quot;callback&quot; value as NULL.</p></div>
+This functions is used to read the data available in GPBR register when the device wakeup from Low power modes.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">SUPC_CallbackRegister</span></strong>(
-    <a href="06985.html" target="topic">SUPC_CALLBACK</a> <strong><span style="color: #000000">callback</span></strong>, 
-    uintptr_t <strong><span style="color: #000000">context</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100">uint32_t <strong><span style="color: #000000">SUPC_GPBRRead</span></strong>(
+    GPBR_REGS_INDEX <strong><span style="color: #000000">reg</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The <a href="06989.html" target="topic">SUPC_Initialize</a> function must have been called.</p></div>
+None</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -83,14 +78,9 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-callback&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+reg&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Pointer to the callback function implemented by the user<br>&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-The value of parameter will be passed back to the application unchanged, when the callback function is called. It can be used to identify any application specific value that identifies the instance of the client module (for example, it may be a pointer to the client module's state structure).&nbsp;</div></td></tr></table></div></div>
+Identifies the GPBR register&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -98,7 +88,7 @@ Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+32 bit data available in specified GPBR register.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
@@ -111,16 +101,8 @@ None.</p></div>
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">    MY_APP_OBJ myAppObj;
-    <strong><span style="color: #000080">void</span></strong> APP_SUPC_CallbackFunction (uintptr_t context)
-    {  
-        <i><span style="color: #008000">// The context was set to an application specific object.</span></i>
-        <i><span style="color: #008000">// It is now retrievable easily in the event handler.</span></i>
-           MY_APP_OBJ myAppObj = (MY_APP_OBJ *) context;
-        <i><span style="color: #008000">//Application related tasks</span></i>
-    }
-                  
-    SUPC_CallbackRegister(APP_SUPC_CallbackFunction, (uintptr_t)&amp;myAppObj);</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">    uint32_t data;
+    data = SUPC_GPBRRead (GPBR_REGS_2);</pre></div></div>
 </div>
 </div>
 </div>
@@ -128,7 +110,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="06926.html" target="topic">SUPC Peripheral Library Help</a> &gt; <a href="06927.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="06986.html" target="topic">SUPC_CallbackRegister Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="06925.html" target="topic">SUPC Peripheral Library Help</a> &gt; <a href="06926.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="06986.html" target="topic">SUPC_GPBRRead Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -136,13 +118,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06989.html" target="topic">Previous</a> | <a href="06927.html" target="topic">Up</a> | <a href="06987.html" target="topic">Next</a></div>
+<a href="06985.html" target="topic">Previous</a> | <a href="06926.html" target="topic">Up</a> | <a href="06987.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: supc_11228::SUPC_CallbackRegister@SUPC_CALLBACK@uintptr_t Topic Title: SUPC_CallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: supc_11228::SUPC_GPBRRead@GPBR_REGS_INDEX Topic Title: SUPC_GPBRRead Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

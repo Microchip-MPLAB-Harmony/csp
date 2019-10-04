@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>PIO_PortOutputEnable Function</title>
+<title>PIO_PortRead Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="04715.html" target="topic">PIO Peripheral Library Help</a> &gt; <a href="04716.html" target="topic">Library Interface</a> &gt; <a href="04718.html" target="topic">c) Port Functions</a> &gt; <a href="05029.html" target="topic">PIO_PortOutputEnable Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="04714.html" target="topic">PIO Peripheral Library Help</a> &gt; <a href="04715.html" target="topic">Library Interface</a> &gt; <a href="04717.html" target="topic">c) Port Functions</a> &gt; <a href="05029.html" target="topic">PIO_PortRead Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05028.html" target="topic">Previous</a> | <a href="04718.html" target="topic">Up</a> | <a href="05030.html" target="topic">Next</a></div>
+<a href="05028.html" target="topic">Previous</a> | <a href="04717.html" target="topic">Up</a> | <a href="05030.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pio_11264::PIO_PortOutputEnable@PIO_PORT@uint32_t Topic Title: PIO_PortOutputEnable Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pio_11264::PIO_PortRead@PIO_PORT Topic Title: PIO_PortRead Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-PIO_PortOutputEnable Function</div>
+PIO_PortRead Function</div>
 </div>
 </div>
 
@@ -49,20 +49,24 @@ PIO_PortOutputEnable Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function enables selected IO pins of the given port as output(s).</p></div>
+This function reads the live data values on all the I/O lines of the selected port. Bit values returned in each position indicate corresponding pin levels.</p>
+<ul class="Element630">
+<li class="Element600">1 - Pin is high.</li>
+<li class="Element600">0 - Pin is low.</li>
+</ul><p class="Element10">
+This function reads the value regardless of pin configuration, whether it is set as as an input, driven by the PIO Controller, or driven by a peripheral.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">PIO_PortOutputEnable</span></strong>(
-    <a href="05019.html" target="topic">PIO_PORT</a> <strong><span style="color: #000000">port</span></strong>, 
-    uint32_t <strong><span style="color: #000000">mask</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100">uint32_t <strong><span style="color: #000000">PIO_PortRead</span></strong>(
+    <a href="05018.html" target="topic">PIO_PORT</a> <strong><span style="color: #000000">port</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+Reading the I/O line levels requires the clock of the PIO Controller to be enabled, otherwise this API reads the levels present on the I/O line at the time the clock was disabled.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -81,17 +85,7 @@ Description&nbsp;</div></td></tr><tr>
 <div class="Element303">
 port&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-One of the IO ports from the enum <a href="05019.html" target="topic">PIO_PORT</a>&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-mask&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-A 32 bit value in which positions of 0s and 1s decide which IO pins of the selected port will be setup as outputs.</p>
-<ul class="Element630">
-<li class="Element600">1's - Will set corresponding IO pins as output(s).</li>
-<li class="Element600">0's - Will cause the direction of the corresponding IO pins to remain unchanged.</li>
-</ul><p class="Element307">
-&nbsp;</div></td></tr></table></div></div>
+One of the IO ports from the enum <a href="05018.html" target="topic">PIO_PORT</a>&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -99,21 +93,23 @@ Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+Returns the read value of all the I/O lines of the selected port port.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+If the port has less than 32-bits, unimplemented pins will read as low (0).&nbsp;</p>
+<p class="Element10">
+Implemented pins are Right aligned in the 32-bit return value.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">    <i><span style="color: #008000">// Make PC5 and PC7 pins as output</span></i>
-    PIO_PortOutputEnable(PIO_PORT_C, 0x00A0);</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">    uint32_t value;
+    value = PIO_PortRead(PIO_PORT_C);</pre></div></div>
 </div>
 </div>
 </div>
@@ -121,7 +117,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="04715.html" target="topic">PIO Peripheral Library Help</a> &gt; <a href="04716.html" target="topic">Library Interface</a> &gt; <a href="04718.html" target="topic">c) Port Functions</a> &gt; <a href="05029.html" target="topic">PIO_PortOutputEnable Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="04714.html" target="topic">PIO Peripheral Library Help</a> &gt; <a href="04715.html" target="topic">Library Interface</a> &gt; <a href="04717.html" target="topic">c) Port Functions</a> &gt; <a href="05029.html" target="topic">PIO_PortRead Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -129,13 +125,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05028.html" target="topic">Previous</a> | <a href="04718.html" target="topic">Up</a> | <a href="05030.html" target="topic">Next</a></div>
+<a href="05028.html" target="topic">Previous</a> | <a href="04717.html" target="topic">Up</a> | <a href="05030.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pio_11264::PIO_PortOutputEnable@PIO_PORT@uint32_t Topic Title: PIO_PortOutputEnable Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pio_11264::PIO_PortRead@PIO_PORT Topic Title: PIO_PortRead Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

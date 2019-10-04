@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCCx_PWM24bitCounterSet Function</title>
+<title>TCCx_PWM24bitDutySet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="07592.html" target="topic">TCC Peripheral Library Help</a> &gt; <a href="07593.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="07611.html" target="topic">TCCx_PWM24bitCounterSet Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="07591.html" target="topic">TCC Peripheral Library Help</a> &gt; <a href="07592.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="07611.html" target="topic">TCCx_PWM24bitDutySet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="07610.html" target="topic">Previous</a> | <a href="07593.html" target="topic">Up</a> | <a href="07612.html" target="topic">Next</a></div>
+<a href="07610.html" target="topic">Previous</a> | <a href="07592.html" target="topic">Up</a> | <a href="07612.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCCx_PWM24bitCounterSet@uint32_t Topic Title: TCCx_PWM24bitCounterSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCCx_PWM24bitDutySet@TCCx_CHANNEL_NUM@uint32_t Topic Title: TCCx_PWM24bitDutySet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCCx_PWM24bitCounterSet Function</div>
+TCCx_PWM24bitDutySet Function</div>
 </div>
 </div>
 
@@ -49,19 +49,20 @@ TCCx_PWM24bitCounterSet Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function updates the counter value.</p></div>
+This function writes the compare value. Every channel of TCC instance has its own compare register. When counter matches compare value interrupt can be generated. This function writes to the double buffered register. Actual update happens on period match or zero match.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">TCCx_PWM24bitCounterSet</span></strong>(
-    uint32_t <strong><span style="color: #000000">count</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">TCCx_PWM24bitDutySet</span></strong>(
+    <a href="07601.html" target="topic">TCCx_CHANNEL_NUM</a> <strong><span style="color: #000000">channel</span></strong>, 
+    uint32_t <strong><span style="color: #000000">duty</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="07618.html" target="topic">TCCx_PWMInitialize</a> function must have been called first for the given channel.</p></div>
+<a href="07617.html" target="topic">TCCx_PWMInitialize</a> function must have been called first for the given channel.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -78,9 +79,14 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-count&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+channel&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-counter value&nbsp;</div></td></tr></table></div></div>
+TCC channel number&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+duty&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Compare value&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -95,14 +101,15 @@ Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function waits till sync operation is complete.</p></div>
+None</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">TCC0_PWMInitialize();
-TCC0_PWM24bitCounterSet(0x100U);</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">
+TCC0_PWMInitialize();
+TCC0_PWM24bitDutySet(TCC0_CHANNEL0, 0x100U);</pre></div></div>
 </div>
 </div>
 </div>
@@ -110,7 +117,7 @@ TCC0_PWM24bitCounterSet(0x100U);</pre></div></div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="07592.html" target="topic">TCC Peripheral Library Help</a> &gt; <a href="07593.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="07611.html" target="topic">TCCx_PWM24bitCounterSet Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="07591.html" target="topic">TCC Peripheral Library Help</a> &gt; <a href="07592.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="07611.html" target="topic">TCCx_PWM24bitDutySet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -118,13 +125,13 @@ TCC0_PWM24bitCounterSet(0x100U);</pre></div></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="07610.html" target="topic">Previous</a> | <a href="07593.html" target="topic">Up</a> | <a href="07612.html" target="topic">Next</a></div>
+<a href="07610.html" target="topic">Previous</a> | <a href="07592.html" target="topic">Up</a> | <a href="07612.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCCx_PWM24bitCounterSet@uint32_t Topic Title: TCCx_PWM24bitCounterSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCCx_PWM24bitDutySet@TCCx_CHANNEL_NUM@uint32_t Topic Title: TCCx_PWM24bitDutySet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

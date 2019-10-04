@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>NVMCTRL_ErrorGet Function</title>
+<title>NVMCTRL_FLASH_PAGESIZE Macro</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="04396.html" target="topic">NVMCTRL Peripheral Library Help</a> &gt; <a href="04397.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="04488.html" target="topic">NVMCTRL_ErrorGet Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="04395.html" target="topic">NVMCTRL Peripheral Library Help</a> &gt; <a href="04396.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="04488.html" target="topic">NVMCTRL_FLASH_PAGESIZE Macro</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04494.html" target="topic">Previous</a> | <a href="04397.html" target="topic">Up</a> | <a href="04480.html" target="topic">Next</a></div>
+<a href="04494.html" target="topic">Previous</a> | <a href="04396.html" target="topic">Up</a> | <a href="04489.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nvmctrl_u2802::NVMCTRL_ErrorGet Topic Title: NVMCTRL_ErrorGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nvmctrl_u2802::NVMCTRL_FLASH_PAGESIZE Topic Title: NVMCTRL_FLASH_PAGESIZE Macro)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-NVMCTRL_ErrorGet Function</div>
+NVMCTRL_FLASH_PAGESIZE Macro</div>
 </div>
 </div>
 
@@ -49,25 +49,13 @@ NVMCTRL_ErrorGet Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function returns the erorr status of the last NVMCTRL operation. The return value can be either NVMCTRL_ERROR_NONE, a single error or a combination of multiple error conditions.</p></div>
+NVMCTRL Flash Page Size Constant&nbsp;</p>
+<p class="Element10">
+This constant defines the size (in bytes) of a NVM page. It is recommended for the target application to use this constant in place hardcoded literals.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><a href="04482.html" target="topic">NVMCTRL_ERROR</a> <strong><span style="color: #000000">NVMCTRL_ErrorGet</span></strong>();</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None.</p></div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-Return <a href="04482.html" target="topic">NVMCTRL_ERROR</a> type of value. In case of error, this value can be a combination of multiple and different error conditions.</p></div>
-</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">#define</span></strong> <strong><span style="color: #000000">NVMCTRL_FLASH_PAGESIZE</span></strong> (0x40U)</pre></div></div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
@@ -75,28 +63,12 @@ Remarks</div>
 <p class="Element10">
 None.</p></div>
 </div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">
-<strong><span style="color: #000080">if</span></strong>(NVMCTRL_ErrorGet() != NVMCTRL_ERROR_NONE)
-{
-    <i><span style="color: #008000">// The error status can indicate multiple error conditions.</span></i>
-    <strong><span style="color: #000080">if</span></strong>(NVMCTRL_ErrorGet() &amp; (NVMCTRL_ERROR_LOCK|NVMCTRL_ERROR_PROG))
-    {
-        <i><span style="color: #008000">// There are multiple error conditions.</span></i>
-    }
-}
-</pre></div></div>
-</div>
-</div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="04396.html" target="topic">NVMCTRL Peripheral Library Help</a> &gt; <a href="04397.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="04488.html" target="topic">NVMCTRL_ErrorGet Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="04395.html" target="topic">NVMCTRL Peripheral Library Help</a> &gt; <a href="04396.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="04488.html" target="topic">NVMCTRL_FLASH_PAGESIZE Macro</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -104,13 +76,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04494.html" target="topic">Previous</a> | <a href="04397.html" target="topic">Up</a> | <a href="04480.html" target="topic">Next</a></div>
+<a href="04494.html" target="topic">Previous</a> | <a href="04396.html" target="topic">Up</a> | <a href="04489.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nvmctrl_u2802::NVMCTRL_ErrorGet Topic Title: NVMCTRL_ErrorGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nvmctrl_u2802::NVMCTRL_FLASH_PAGESIZE Topic Title: NVMCTRL_FLASH_PAGESIZE Macro)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

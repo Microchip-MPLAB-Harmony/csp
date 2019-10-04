@@ -1,0 +1,134 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Using the Library</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '06291.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="06286.html" target="topic">SDHC Peripheral Library Help</a> &gt; <a href="06291.html" target="topic">Using the Library</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+Microchip 32-bit Chip Support Package</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="06282.html" target="topic">Previous</a> | <a href="06286.html" target="topic">Up</a> | <a href="06287.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SDHC 00187 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+Using the Library</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The SDHC peripheral library performs the transfers in non-blocking mode. Transfers involving a data stage are performed using DMA. The example code demonstrates sending a SD command to read a single block of data from the SD card. This example assumes that the SD card is already initialized by the application and is ready to accept read and write requests. The example application does not show the larger SD protocol required in order to communicate with the SD card. </p><div class="Element13"><div class="Element12"><pre class="Element12">uint16_t cmd_error;
+uint16_t data_error;
+<strong><span style="color: #000080">bool</span></strong> isCommandCompleted = <strong><span style="color: #000080">false</span></strong>;
+<strong><span style="color: #000080">bool</span></strong> isDataCompleted = <strong><span style="color: #000080">false</span></strong>;
+uint8_t readBuffer[512];
+
+<strong><span style="color: #000080">static</span></strong> <strong><span style="color: #000080">void</span></strong> SDHC_TransferEventHandler(
+        SDHC_XFER_STATUS xferStatus,
+        uintptr_t contextHandle
+)
+{
+    <strong><span style="color: #000080">if</span></strong> (xferStatus &amp; SDHC_XFER_STATUS_CMD_COMPLETED)
+    {
+        <i><span style="color: #008000">// Command transfer complete, read the command error status.</span></i>
+        cmd_error = SDHC_CommandErrorGet();
+        isCommandCompleted = <strong><span style="color: #000080">true</span></strong>;
+    }
+    <strong><span style="color: #000080">if</span></strong> (xferStatus &amp; SDHC_XFER_STATUS_DATA_COMPLETED)
+    {
+        <i><span style="color: #008000">// Data transfer complete, read the data error status.</span></i>
+        data_error = SDHC_DataErrorGet();
+        isDataCompleted = <strong><span style="color: #000080">true</span></strong>;
+    }
+}
+
+<strong><span style="color: #000080">int</span></strong> main(<strong><span style="color: #000080">void</span></strong>)
+{
+
+    <i><span style="color: #008000">// Register event handler with the SDHC PLIB. This is usually done once.</span></i>
+    SDHC_CallbackRegister(SDHC_TransferEventHandler, (uintptr_t) 0);
+
+    SDHC_DataTransferFlags transferFlags;
+
+    transferFlags.isDataPresent  = <strong><span style="color: #000080">true</span></strong>;
+    transferFlags.transferDir = SDHC_DATA_TRANSFER_DIR_READ;
+    transferFlags.transferType = SDHC_DATA_TRANSFER_TYPE_SINGLE;
+
+    <i><span style="color: #008000">// Set the block size to 512 bytes</span></i>
+    SDHC_BlockSizeSet(512);
+
+    <i><span style="color: #008000">// Set the block count to 1</span></i>
+    SDHC_BlockCountSet(1);
+
+    <i><span style="color: #008000">// Set up the DMA to read 512 btyes of data</span></i>
+    SDHC_DmaSetup(readBuffer, 512, SDHC_DATA_TRANSFER_DIR_READ);
+
+    <i><span style="color: #008000">// Send command to read one block of data from SD card starting at block address 100</span></i>
+    SDHC_CommandSend(17, 100, SDHC_CMD_RESP_R1, transferFlags);
+
+    <i><span style="color: #008000">// Check the status of isCommandCompleted and isDataCompleted</span></i>
+
+    <i><span style="color: #008000">// Other tasks ...</span></i>
+}</pre></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="06286.html" target="topic">SDHC Peripheral Library Help</a> &gt; <a href="06291.html" target="topic">Using the Library</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+Microchip 32-bit Chip Support Package</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="06282.html" target="topic">Previous</a> | <a href="06286.html" target="topic">Up</a> | <a href="06287.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SDHC 00187 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

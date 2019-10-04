@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCx_CHy_CompareStop Function</title>
+<title>TCx_CHy_TimerCallbackRegister Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="07122.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="07111.html" target="topic">Compare</a> &gt; <a href="07115.html" target="topic">Library Interface</a> &gt; <a href="07119.html" target="topic">c) Transaction Functions</a> &gt; <a href="07293.html" target="topic">TCx_CHy_CompareStop Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="07121.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="07132.html" target="topic">Timer</a> &gt; <a href="07137.html" target="topic">Library Interface</a> &gt; <a href="07138.html" target="topic">b) Setup Functions</a> &gt; <a href="07293.html" target="topic">TCx_CHy_TimerCallbackRegister Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="07295.html" target="topic">Previous</a> | <a href="07119.html" target="topic">Up</a> | <a href="07118.html" target="topic">Next</a></div>
+<a href="07138.html" target="topic">Previous</a> | <a href="07138.html" target="topic">Up</a> | <a href="07140.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tc_44162::TCx_CHy_CompareStop Topic Title: TCx_CHy_CompareStop Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tc_44162::TCx_CHy_TimerCallbackRegister@TCx_TIMER_CALLBACK@uintptr_t Topic Title: TCx_CHy_TimerCallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCx_CHy_CompareStop Function</div>
+TCx_CHy_TimerCallbackRegister Function</div>
 </div>
 </div>
 
@@ -49,17 +49,45 @@ TCx_CHy_CompareStop Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function stops the clock and thus counter of associated channel, freezing the associated waveform generation.</p></div>
+This function registers the callback function to be called from interrupt.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">TCx_CHy_CompareStop</span></strong>();</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">TCx_CHy_TimerCallbackRegister</span></strong>(
+    <a href="07331.html" target="topic">TCx_TIMER_CALLBACK</a> <strong><span style="color: #000000">callback</span></strong>, 
+    uintptr_t <strong><span style="color: #000000">context</span></strong>
+);</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="07288.html" target="topic">TCx_CHy_CompareInitialize</a> function must have been called first for the given channel.</p></div>
+<a href="07297.html" target="topic">TCx_CHy_TimerInitialize</a>() must have been called first.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+callback&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+callback function pointer<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Allows the caller to provide a context value (usually a pointer to the callers context for multi-instance clients).&nbsp;</div></td></tr></table></div></div>
+</div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
@@ -73,16 +101,16 @@ Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None</p></div>
+Context value can be set to NULL if not required. To disable callback function, pass NULL for the callback parameter.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">TC0_CH1_CompareInitialize();
-TC0_CH1_CompareStart();
-<i><span style="color: #008000">// Generate waveform a long as desired, then...</span></i>
-TC0_CH1_CompareStop();</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">void</span></strong> TC_CallbackFn (<a href="07335.html" target="topic">TCx_TIMER_STATUS</a> status, uintptr_t context );
+
+TC0_CH1_TimerInitialize();
+TC0_CH1_TimerCallbackRegistert(TC_CallbackFn, NULL);</pre></div></div>
 </div>
 </div>
 </div>
@@ -90,7 +118,7 @@ TC0_CH1_CompareStop();</pre></div></div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="07122.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="07111.html" target="topic">Compare</a> &gt; <a href="07115.html" target="topic">Library Interface</a> &gt; <a href="07119.html" target="topic">c) Transaction Functions</a> &gt; <a href="07293.html" target="topic">TCx_CHy_CompareStop Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="07121.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="07132.html" target="topic">Timer</a> &gt; <a href="07137.html" target="topic">Library Interface</a> &gt; <a href="07138.html" target="topic">b) Setup Functions</a> &gt; <a href="07293.html" target="topic">TCx_CHy_TimerCallbackRegister Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -98,13 +126,13 @@ TC0_CH1_CompareStop();</pre></div></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="07295.html" target="topic">Previous</a> | <a href="07119.html" target="topic">Up</a> | <a href="07118.html" target="topic">Next</a></div>
+<a href="07138.html" target="topic">Previous</a> | <a href="07138.html" target="topic">Up</a> | <a href="07140.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tc_44162::TCx_CHy_CompareStop Topic Title: TCx_CHy_CompareStop Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tc_44162::TCx_CHy_TimerCallbackRegister@TCx_TIMER_CALLBACK@uintptr_t Topic Title: TCx_CHy_TimerCallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

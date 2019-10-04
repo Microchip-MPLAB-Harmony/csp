@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Introduction</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '06883.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="06884.html" target="topic">SQI Peripheral Library Help</a> &gt; <a href="06883.html" target="topic">Introduction</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+Microchip 32-bit Chip Support Package</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="06884.html" target="topic">Previous</a> | <a href="06884.html" target="topic">Up</a> | <a href="06880.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SQI 00206 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+Introduction</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The SQI module is a synchronous serial interface that provides access to serial Flash memories and other serial devices. The SQI module supports Single Lane (identical to SPI), Dual Lane, and Quad Lane interface modes.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+The SQI peripheral library operates in two transfer modes:</p>
+<ul class="Element630">
+<li class="Element600"><strong>DMA Mode:</strong>
+<ul class="Element631">
+<li class="Element601">DMA mode is a higher throughput data transfer mode, where the internal SQI DMA engine off-loads the Host processor by using predefined Buffer Descriptors for data transfers</li>
+<li class="Element601">Each Buffer Descriptor can handle up to 256Bytes of data and multiple descriptors can be chained to support larger portions of data transfers</li>
+<li class="Element601">Four words cumulatively are called a Buffer Descriptor (BD), and are part of the transmit and receive structure</li>
+<li class="Element601">Individually, a Buffer Descriptor describes an area within the Host memory where data is waiting to be transmitted from or received into</li>
+<li class="Element601">Host software creates a single or linked list of Buffer Descriptors based on the buffer size and places them in the system memory</li>
+<li class="Element601">This is the Default mode set during <a href="06918.html" target="topic">SQIx_Initialize()</a></li>
+</ul></li>
+</ul><p class="Element10">
+&nbsp;</p>
+
+<ul class="Element630">
+<li class="Element600"> <strong> XIP Mode:</strong>
+<ul class="Element631">
+<li class="Element601">XIP mode is used to execute code out of serial Flash devices</li>
+<li class="Element601"><a href="06920.html" target="topic">SQIx_XIPSetup()</a> should be called at run time to switch SQI peripheral to XIP mode</li>
+</ul></li>
+</ul><p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+The SQI module supports two data flow modes: SPI Mode 0 and Mode 3. Each transfer mode (XIP/DMA) can use any of the data flow modes as desired by the application.</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="06884.html" target="topic">SQI Peripheral Library Help</a> &gt; <a href="06883.html" target="topic">Introduction</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+Microchip 32-bit Chip Support Package</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="06884.html" target="topic">Previous</a> | <a href="06884.html" target="topic">Up</a> | <a href="06880.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SQI 00206 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

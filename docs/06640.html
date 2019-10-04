@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>SERCOMx_SPI_WriteRead Function</title>
+<title>SPIx_CLOCK_PHASE Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="06584.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="06585.html" target="topic">SPI</a> &gt; <a href="06590.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="06640.html" target="topic">SERCOMx_SPI_WriteRead Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="06583.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="06584.html" target="topic">SPI</a> &gt; <a href="06589.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="06640.html" target="topic">SPIx_CLOCK_PHASE Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06639.html" target="topic">Previous</a> | <a href="06590.html" target="topic">Up</a> | <a href="06636.html" target="topic">Next</a></div>
+<a href="06632.html" target="topic">Previous</a> | <a href="06589.html" target="topic">Up</a> | <a href="06853.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_spi::SERCOMx_SPI_WriteRead@void*@size_t@void*@size_t Topic Title: SERCOMx_SPI_WriteRead Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_spi::SPIx_CLOCK_PHASE Topic Title: SPIx_CLOCK_PHASE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-SERCOMx_SPI_WriteRead Function</div>
+SPIx_CLOCK_PHASE Enumeration</div>
 </div>
 </div>
 
@@ -49,71 +49,46 @@ SERCOMx_SPI_WriteRead Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function transmits &quot;txSize&quot; number of bytes and receives &quot;rxSize&quot; number of bytes on SERCOM x SPI module. Data pointed by pTransmitData is transmitted and received data is saved in the location pointed by pReceiveData. The function will transfer the maximum of &quot;txSize&quot; or &quot;rxSize&quot; data units towards completion.&nbsp;</p>
+SPI Clock Phase&nbsp;</p>
 <p class="Element10">
-When &quot;Interrupt Mode&quot; option is unchecked in MHC, this function will be blocking in nature. In this mode, the function will not return until all the requested data is transferred. The function returns true after transferring all the data. This indicates that the operation has been completed.&nbsp;</p>
-<p class="Element10">
-When &quot;Interrupt Mode&quot; option is selected in MHC, the function will be non-blocking in nature. The function returns immediately. The data transfer process continues in the peripheral interrupt. The application specified transmit and receive buffer are owned by the library until the data transfer is complete and should not be modified by the application till the transfer is complete. Only one transfer is allowed at any time. The Application can use a callback function or a polling function to check for completion of the transfer. If a callback is required, this should be registered prior to calling the SERCOMx_SPI_WriteRead() function. The application can use the <a href="06636.html" target="topic">SERCOMx_SPI_IsBusy</a>() to poll for completion.</p></div>
+This enumeration identifies possible SPI Clock Phase Options.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">SERCOMx_SPI_WriteRead</span></strong>(
-    <strong><span style="color: #000080">void</span></strong>* <strong><span style="color: #000000">pTransmitData</span></strong>, 
-    size_t <strong><span style="color: #000000">txSize</span></strong>, 
-    <strong><span style="color: #000080">void</span></strong>* <strong><span style="color: #000000">pReceiveData</span></strong>, 
-    size_t <strong><span style="color: #000000">rxSize</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">SPI_CLOCK_PHASE_TRAILING_EDGE</span></strong>,
+  <strong><span style="color: #000000">SPI_CLOCK_PHASE_LEADING_EDGE</span></strong>,
+  <strong><span style="color: #000000">SPI_CLOCK_PHASE_INVALID</span></strong>
+} SPIx_CLOCK_PHASE;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-The <a href="06635.html" target="topic">SERCOMx_SPI_Initialize</a> function must have been called. If the peripheral instance has been configured for Interrupt mode and transfer completion status needs to be communicated back to application via callback, a callback should have been registered using <a href="06634.html" target="topic">SERCOMx_SPI_CallbackRegister</a>() function.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
+<div class="Element272">
 <div class="TableDiv">
-<table cellspacing="0" class="Table2">
+<table cellspacing="0" class="Table3">
 <tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-pTransmitData&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Pointer to the data which has to be transmitted. In a case where only data reception is required, this pointer can be set to NULL. If the module is configured for 9 bit data length, the data should be right aligned in a 16 bit memory location. The size of this buffer should be txSize.<br>&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-txSize&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Number of bytes to be transmitted. This value is always the number of bytes contained in the buffer. For 9 bit data length, this value should be even. This value can be different from rxSize.<br>&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-pReceiveData&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Pointer to the location where the received data has to be stored. It is user's responsibility to ensure that this location has sufficient memory to store rxSize amount of data. In a case where only data transmission is required, this pointer can be set to NULL. If the module is configured for 9 bit data length, received data will be right aligned and will be stored in a 16 bit memory location.<br>&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-rxSize&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Number of bytes to be received. This value can be different from txSize. This value is always the number of bytes contained in the buffer. For 9 bit data length, this value should be even.&nbsp;</div></td></tr></table></div></div>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SPI_CLOCK_PHASE_TRAILING_EDGE&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Input data is sampled on clock trailing edge and changed on leading edge&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SPI_CLOCK_PHASE_LEADING_EDGE&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Input data is sampled on clock leading edge and changed on trailing edge&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SPI_CLOCK_PHASE_INVALID&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Force the compiler to reserve 32-bit space for each enum value&nbsp;</div></td></tr></table></div></div>
 </div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-
-<ul class="Element630">
-<li class="Element600">true - If configured for Non-interrupt mode, the function has received and transmitted the requested number of bytes. If configured for Interrupt mode, the request was accepted successfully and will be processed in the interrupt.</li>
-<li class="Element600">false - If both pTransmitData and pReceiveData are NULL, or if both txSize and rxSize are 0 or if txSize is non-zero but the pTransmitData is set to NULL or rxSize is non-zero but pReceiveData is NULL. In Interrupt mode, the function returns false if there is an on-going data transfer at the time of calling the function.</li>
-</ul></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
@@ -122,56 +97,12 @@ Remarks</div>
 <p class="Element10">
 None.</p></div>
 </div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">
-<i><span style="color: #008000">// The following code snippet shows an example using the</span></i>
-<i><span style="color: #008000">// SERCOMx_SPI_WriteRead() function in interrupt mode operation using the</span></i>
-<i><span style="color: #008000">// callback function.</span></i>
-
-uint8_t     txBuffer[4];
-uint8_t     rxBuffer[10];
-size_t      txSize = 4;
-size_t      rxSize = 10;
-
-<strong><span style="color: #000080">void</span></strong> APP_SPITransferHandler(uintptr_t context)
-{
-   <i><span style="color: #008000">//Transfer was completed without error, do something else now.</span></i>
-}
-
-SERCOM1_SPI_Initialize();
-SERCOM1_SPI_CallbackRegister(&amp;APP_SPITransferHandler, (uintptr_t)NULL);
-<strong><span style="color: #000080">if</span></strong>(SERCOM1_SPI_WriteRead(&amp;txBuffer, txSize, &amp;rxBuffer, rxSize))
-{
-    <i><span style="color: #008000">// request got accepted</span></i>
-}
-<strong><span style="color: #000080">else</span></strong>
-{
-    <i><span style="color: #008000">// request didn't get accepted, try again later with correct arguments</span></i>
-}</pre></div></div>
-<div class="Element13"><div class="Element12"><pre class="Element12"><i><span style="color: #008000">// The following code snippet shows non-interrupt or blocking mode</span></i>
-<i><span style="color: #008000">// operation.</span></i>
-
-uint8_t txBuffer[4];
-uint8_t rxBuffer[10];
-size_t txSize = 4;
-size_t rxSize = 10;
-
-SERCOM1_SPI_Initialize();
-
-<i><span style="color: #008000">// This function call will block.</span></i>
-SERCOM1_SPI_WriteRead(&amp;txBuffer, txSize, &amp;rxBuffer, rxSize);
-</pre></div></div>
-</div>
-</div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="06584.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="06585.html" target="topic">SPI</a> &gt; <a href="06590.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="06640.html" target="topic">SERCOMx_SPI_WriteRead Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="06583.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="06584.html" target="topic">SPI</a> &gt; <a href="06589.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="06640.html" target="topic">SPIx_CLOCK_PHASE Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -179,13 +110,13 @@ SERCOM1_SPI_WriteRead(&amp;txBuffer, txSize, &amp;rxBuffer, rxSize);
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06639.html" target="topic">Previous</a> | <a href="06590.html" target="topic">Up</a> | <a href="06636.html" target="topic">Next</a></div>
+<a href="06632.html" target="topic">Previous</a> | <a href="06589.html" target="topic">Up</a> | <a href="06853.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_spi::SERCOMx_SPI_WriteRead@void*@size_t@void*@size_t Topic Title: SERCOMx_SPI_WriteRead Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_spi::SPIx_CLOCK_PHASE Topic Title: SPIx_CLOCK_PHASE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

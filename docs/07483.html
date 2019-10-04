@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCx_Timer16bitCompareSet Function</title>
+<title>TCx_Timer16bitCounterGet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="07222.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="07223.html" target="topic">Timer</a> &gt; <a href="07228.html" target="topic">Library Interface</a> &gt; <a href="07231.html" target="topic">c) Transaction Functions</a> &gt; <a href="07483.html" target="topic">TCx_Timer16bitCompareSet Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="07221.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="07222.html" target="topic">Timer</a> &gt; <a href="07227.html" target="topic">Library Interface</a> &gt; <a href="07230.html" target="topic">c) Transaction Functions</a> &gt; <a href="07483.html" target="topic">TCx_Timer16bitCounterGet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="07497.html" target="topic">Previous</a> | <a href="07231.html" target="topic">Up</a> | <a href="07484.html" target="topic">Next</a></div>
+<a href="07482.html" target="topic">Previous</a> | <a href="07230.html" target="topic">Up</a> | <a href="07484.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tc_u2212::TCx_Timer16bitCompareSet@uint16_t Topic Title: TCx_Timer16bitCompareSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tc_u2212::TCx_Timer16bitCounterGet Topic Title: TCx_Timer16bitCounterGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCx_Timer16bitCompareSet Function</div>
+TCx_Timer16bitCounterGet Function</div>
 </div>
 </div>
 
@@ -49,60 +49,40 @@ TCx_Timer16bitCompareSet Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function writes the compare value. When timer counter matches compare value, interrupt can be generated.</p></div>
+This function reads the timer count value.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">TCx_Timer16bitCompareSet</span></strong>(
-    uint16_t <strong><span style="color: #000000">compare</span></strong>
-);</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100">uint16_t <strong><span style="color: #000000">TCx_Timer16bitCounterGet</span></strong>();</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="07500.html" target="topic">TCx_TimerInitialize</a> function must have been called first for the given channel.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
-<div class="TableDiv">
-<table cellspacing="0" class="Table2">
-<tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-compare&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-compare value of the timer&nbsp;</div></td></tr></table></div></div>
-</div>
+<a href="07499.html" target="topic">TCx_TimerInitialize</a>() function must have been called first.</p></div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+counter - The timer's current count value.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function is available only when TC timer mode is used by SYS_TIME module. SYS_TIME uses compare match interrupt to generate dynamic delay.</p></div>
+The caller must know the number of significant bytes of timer. Period value is right-aligned.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">TC0_TimerInitialize();
-TC0_Timer16bitCompareSet(0xFul);</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">  uint16_t counter = 0;
+  <a href="07499.html" target="topic">TCx_TimerInitialize</a>();
+  <a href="07501.html" target="topic">TCx_TimerStart</a>();
+  counter = TCx_Timer16bitCounterGet();</pre></div></div>
 </div>
 </div>
 </div>
@@ -110,7 +90,7 @@ TC0_Timer16bitCompareSet(0xFul);</pre></div></div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="07222.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="07223.html" target="topic">Timer</a> &gt; <a href="07228.html" target="topic">Library Interface</a> &gt; <a href="07231.html" target="topic">c) Transaction Functions</a> &gt; <a href="07483.html" target="topic">TCx_Timer16bitCompareSet Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="07221.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="07222.html" target="topic">Timer</a> &gt; <a href="07227.html" target="topic">Library Interface</a> &gt; <a href="07230.html" target="topic">c) Transaction Functions</a> &gt; <a href="07483.html" target="topic">TCx_Timer16bitCounterGet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -118,13 +98,13 @@ TC0_Timer16bitCompareSet(0xFul);</pre></div></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="07497.html" target="topic">Previous</a> | <a href="07231.html" target="topic">Up</a> | <a href="07484.html" target="topic">Next</a></div>
+<a href="07482.html" target="topic">Previous</a> | <a href="07230.html" target="topic">Up</a> | <a href="07484.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tc_u2212::TCx_Timer16bitCompareSet@uint16_t Topic Title: TCx_Timer16bitCompareSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tc_u2212::TCx_Timer16bitCounterGet Topic Title: TCx_Timer16bitCounterGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

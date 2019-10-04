@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Using the Library</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '04400.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="04395.html" target="topic">NVMCTRL Peripheral Library Help</a> &gt; <a href="04400.html" target="topic">Using the Library</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+Microchip 32-bit Chip Support Package</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="04391.html" target="topic">Previous</a> | <a href="04395.html" target="topic">Up</a> | <a href="04396.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NVMCTRL U2802 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+Using the Library</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The main Flash memory can not be read while it is being erased or written, the CPU is stalled during the entire operation.</p>
+<ul class="Element630">
+<li class="Element600">All functions that modify the main Flash can be run from RAM memory to avoid CPU stall while main main Flash is being erased or written.</li>
+</ul><p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+The FLASH memory is divided into a number of physical rows, each containing four identically sized flash pages. Pages may be read or written to individually, however pages must be erased before being reprogrammed and the smallest granularity available for erasure is one single row.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+NVM APIs are implemented to be non-blocking, the API will return immediately unless stalled by Flash operation. The user application can either use polling or callback method to indicate the transfer status.</p>
+<ul class="Element630">
+<li class="Element600">With polling, the application will need to continuously check if the flash operation is completed.</li>
+<li class="Element600">With callback, the registered callback function will be called once the flash operation is completed. This means the application do not have to poll continuously.</li>
+</ul><p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+Here is an example code to erase a row and program a page of memory using polling method </p><div class="Element13"><div class="Element12"><pre class="Element12">
+<strong><span style="color: #000080">const</span></strong> uint8_t rowBuffer[NVMCTRL_FLASH_ROWSIZE] __attribute__((address(NVMCTRL_FLASH_START_ADDRESS+0x20000)))= {0};
+
+<strong><span style="color: #000080">void</span></strong> populate_buffer(uint8_t* data)
+{
+    <strong><span style="color: #000080">int</span></strong> i = 0;
+
+    <strong><span style="color: #000080">for</span></strong> (i = 0; i &lt; (NVMCTRL_FLASH_PAGESIZE); i++)
+    {
+        *(data + i) = i;
+    }
+}
+
+<strong><span style="color: #000080">int</span></strong> main (<strong><span style="color: #000080">void</span></strong>)
+{</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">    uint8_t pageBuffer[NVMCTRL_FLASH_PAGESIZE] = {0};
+</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">    <i><span style="color: #008000">/*Populate data to programmed*/</span></i>
+    populate_buffer(data);
+
+    <i><span style="color: #008000">/* Erase the row */</span></i>
+    NVMCTRL_RowErase((uint32_t)rowBuffer);
+
+    <i><span style="color: #008000">/* Wait for row erase  to complete */</span></i>
+    <strong><span style="color: #000080">while</span></strong>(NVMCTRL_IsBusy());
+
+    <i><span style="color: #008000">/* Program a page of data */</span></i>
+    NVMCTRL_PageWrite((uint32_t *)pageBuffer, (uint32_t)nvm_user_start_address);
+
+    <i><span style="color: #008000">/* Wait for page program to compete */</span></i>
+    <strong><span style="color: #000080">while</span></strong>(NVMCTRL_IsBusy());
+}</pre></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="04395.html" target="topic">NVMCTRL Peripheral Library Help</a> &gt; <a href="04400.html" target="topic">Using the Library</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+Microchip 32-bit Chip Support Package</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="04391.html" target="topic">Previous</a> | <a href="04395.html" target="topic">Up</a> | <a href="04396.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NVMCTRL U2802 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

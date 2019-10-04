@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>NVMCTRL_DisableSmartEepromInterruptSource Function</title>
+<title>NVMCTRL_DoubleWordWrite Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="04386.html" target="topic">NVMCTRL Peripheral Library Help</a> &gt; <a href="04387.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="04434.html" target="topic">NVMCTRL_DisableSmartEepromInterruptSource Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="04385.html" target="topic">NVMCTRL Peripheral Library Help</a> &gt; <a href="04386.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="04434.html" target="topic">NVMCTRL_DoubleWordWrite Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04433.html" target="topic">Previous</a> | <a href="04387.html" target="topic">Up</a> | <a href="04435.html" target="topic">Next</a></div>
+<a href="04433.html" target="topic">Previous</a> | <a href="04386.html" target="topic">Up</a> | <a href="04435.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nvmctrl_u2409::NVMCTRL_DisableSmartEepromInterruptSource@NVMCTRL_INTERRUPT1_SOURCE Topic Title: NVMCTRL_DisableSmartEepromInterruptSource Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nvmctrl_u2409::NVMCTRL_DoubleWordWrite@uint32_t *@uint32_t Topic Title: NVMCTRL_DoubleWordWrite Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-NVMCTRL_DisableSmartEepromInterruptSource Function</div>
+NVMCTRL_DoubleWordWrite Function</div>
 </div>
 </div>
 
@@ -49,19 +49,20 @@ NVMCTRL_DisableSmartEepromInterruptSource Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-There are multiple interrupt sources supported by the NVMCTRL peripheral. It supports two interrupt vectors, one for interrupts from the SmartEEPROM and another for all other interrupts of the NVMCTRL. This function disables the given interrupt for the second vector which is used by all interrupts from the SmartEEPROM.</p></div>
+Configures the NVMCTRL for Automatic Double Word (ADW) write and writes two words at the given address. This operation is quicker when compared to Page Write.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">NVMCTRL_DisableSmartEepromInterruptSource</span></strong>(
-    <a href="04453.html" target="topic">NVMCTRL_INTERRUPT1_SOURCE</a> <strong><span style="color: #000000">int_source</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">NVMCTRL_DoubleWordWrite</span></strong>(
+    uint32_t * <strong><span style="color: #000000">data</span></strong>, 
+    <strong><span style="color: #000080">const</span></strong> uint32_t <strong><span style="color: #000000">address</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Interrupt option in MHC should have been enabled.</p></div>
+The <a href="04442.html" target="topic">NVMCTRL_Initialize</a>() function should have been called once. Also validate if NVM controller is ready to accept a new request by calling <a href="04456.html" target="topic">NVMCTRL_IsBusy</a>(). The memory location should be in erased state (all bytes should be 0xff) before performing write operation. A block erase operation can be performed to erase all pages in a block.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -78,9 +79,14 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-int_source&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+data&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Refer to enum <a href="04453.html" target="topic">NVMCTRL_INTERRUPT1_SOURCE</a> for possible values.&nbsp;</div></td></tr></table></div></div>
+Pointer to the buffer which holds data to be written.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+address&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Address at which the data will be written.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -88,22 +94,13 @@ Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-This API is available only if the SmartEEPROM interrupt is enabled via the MHC tree.</p></div>
+bool - Status of the operation. Returns true if success. Returns false if failure.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">
-NVMCTRL_DisableSmartEepromInterruptSource(NVMCTRL_INT_SEEWRC);
-</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">    NVMCTRL_DoubleWordWrite(data_to_fill, TEST_ADDRESS);</pre></div></div>
 </div>
 </div>
 </div>
@@ -111,7 +108,7 @@ NVMCTRL_DisableSmartEepromInterruptSource(NVMCTRL_INT_SEEWRC);
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="04386.html" target="topic">NVMCTRL Peripheral Library Help</a> &gt; <a href="04387.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="04434.html" target="topic">NVMCTRL_DisableSmartEepromInterruptSource Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="04385.html" target="topic">NVMCTRL Peripheral Library Help</a> &gt; <a href="04386.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="04434.html" target="topic">NVMCTRL_DoubleWordWrite Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -119,13 +116,13 @@ NVMCTRL_DisableSmartEepromInterruptSource(NVMCTRL_INT_SEEWRC);
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04433.html" target="topic">Previous</a> | <a href="04387.html" target="topic">Up</a> | <a href="04435.html" target="topic">Next</a></div>
+<a href="04433.html" target="topic">Previous</a> | <a href="04386.html" target="topic">Up</a> | <a href="04435.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nvmctrl_u2409::NVMCTRL_DisableSmartEepromInterruptSource@NVMCTRL_INTERRUPT1_SOURCE Topic Title: NVMCTRL_DisableSmartEepromInterruptSource Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nvmctrl_u2409::NVMCTRL_DoubleWordWrite@uint32_t *@uint32_t Topic Title: NVMCTRL_DoubleWordWrite Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

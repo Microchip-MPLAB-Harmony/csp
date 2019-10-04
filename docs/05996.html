@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>RTC_Timer32CounterHasOverflowed Function</title>
+<title>RTC_Timer32CounterSet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="05859.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="05860.html" target="topic">32-bit Timer (Mode 0)</a> &gt; <a href="05865.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="05996.html" target="topic">RTC_Timer32CounterHasOverflowed Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="05858.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="05859.html" target="topic">32-bit Timer (Mode 0)</a> &gt; <a href="05864.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="05996.html" target="topic">RTC_Timer32CounterSet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05993.html" target="topic">Previous</a> | <a href="05865.html" target="topic">Up</a> | <a href="05988.html" target="topic">Next</a></div>
+<a href="06002.html" target="topic">Previous</a> | <a href="05864.html" target="topic">Up</a> | <a href="05994.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2202::RTC_Timer32CounterHasOverflowed Topic Title: RTC_Timer32CounterHasOverflowed Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2202::RTC_Timer32CounterSet@uint32_t Topic Title: RTC_Timer32CounterSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-RTC_Timer32CounterHasOverflowed Function</div>
+RTC_Timer32CounterSet Function</div>
 </div>
 </div>
 
@@ -49,24 +49,46 @@ RTC_Timer32CounterHasOverflowed Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function will return true if the 32-bit counter has overflowed. An overflow occurs when the counter values transitions from 0xFFFFFFFF to 0x0. This function can be used to validate the timer count when using the timer counter as a counter. Calling the function will clear the internal overflow flags if these flags were set at the time of calling the function.</p></div>
+This function sets the 32-bit timer counter value. The counter will start to count up from this count value. The application may typically set the counter to 0 before starting a timing or counting operation. Calling this function when the timer is running will overwrite the current counter value.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">RTC_Timer32CounterHasOverflowed</span></strong>();</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">RTC_Timer32CounterSet</span></strong>(
+    uint32_t <strong><span style="color: #000000">count</span></strong>
+);</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="05963.html" target="topic">RTC_Initialize</a>, <a href="06002.html" target="topic">RTC_Timer32Start</a> must have been called for the associated RTC instance. The RTC peripheral should have been configured in 32-bit Timer Counter mode.</p></div>
+<a href="05962.html" target="topic">RTC_Initialize</a>, <a href="06001.html" target="topic">RTC_Timer32Start</a> must have been called for the associated RTC instance. The RTC peripheral should have been configured in 32-bit Timer Counter mode</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+count&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+32-bit value to be loaded in the counter.&nbsp;</div></td></tr></table></div></div>
+</div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-true - Counter has overflowed. false - Counter not overflowed.</p></div>
+None.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
@@ -79,28 +101,8 @@ None.</p></div>
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">    uint32_t cycles = 0;
-    <a href="05963.html" target="topic">RTC_Initialize</a>();
-
-    <i><span style="color: #008000">// Clear the period set as we want to operate as a counter.</span></i>
-    <a href="05994.html" target="topic">RTC_Timer32CompareSet</a>(0);
-    <a href="05997.html" target="topic">RTC_Timer32CounterSet</a>(0);
-    <a href="06002.html" target="topic">RTC_Timer32Start</a>();
-
-    <i><span style="color: #008000">// This is the task who execution duration needs to be measured.</span></i>
-    SomeTask();
-
-    <a href="06003.html" target="topic">RTC_Timer32Stop</a>();
-    <strong><span style="color: #000080">if</span></strong>(!RTC_Timer32CounterHasOverflowed())
-    {
-        <i><span style="color: #008000">// cycles will contains the execution time of SomeTask() in terms of</span></i>
-        <i><span style="color: #008000">// timer count.</span></i>
-        cycles = <a href="05995.html" target="topic">RTC_Timer32CounterGet</a>();
-    }
-    <strong><span style="color: #000080">else</span></strong>
-    {
-        <i><span style="color: #008000">// Timer overflowed. Handle this differently.</span></i>
-    }</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">    <i><span style="color: #008000">// Refer to the description of the RTC_Timer32CounterHasOverflowed()</span></i>
+    <i><span style="color: #008000">// function for example usage of the RTC_Timer32CounterSet() function.</span></i></pre></div></div>
 </div>
 </div>
 </div>
@@ -108,7 +110,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="05859.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="05860.html" target="topic">32-bit Timer (Mode 0)</a> &gt; <a href="05865.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="05996.html" target="topic">RTC_Timer32CounterHasOverflowed Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="05858.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="05859.html" target="topic">32-bit Timer (Mode 0)</a> &gt; <a href="05864.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="05996.html" target="topic">RTC_Timer32CounterSet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -116,13 +118,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05993.html" target="topic">Previous</a> | <a href="05865.html" target="topic">Up</a> | <a href="05988.html" target="topic">Next</a></div>
+<a href="06002.html" target="topic">Previous</a> | <a href="05864.html" target="topic">Up</a> | <a href="05994.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2202::RTC_Timer32CounterHasOverflowed Topic Title: RTC_Timer32CounterHasOverflowed Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2202::RTC_Timer32CounterSet@uint32_t Topic Title: RTC_Timer32CounterSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>MCPWM_CALLBACK Type</title>
+<title>MCPWM_CallbackRegister Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="04090.html" target="topic">MCPWM Peripheral Library Help</a> &gt; <a href="04091.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="04103.html" target="topic">MCPWM_CALLBACK Type</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="04089.html" target="topic">MCPWM Peripheral Library Help</a> &gt; <a href="04090.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="04103.html" target="topic">MCPWM_CallbackRegister Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04141.html" target="topic">Previous</a> | <a href="04091.html" target="topic">Up</a> | <a href="04105.html" target="topic">Next</a></div>
+<a href="04135.html" target="topic">Previous</a> | <a href="04090.html" target="topic">Up</a> | <a href="04139.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: mcpwm_01477::MCPWM_CALLBACK Topic Title: MCPWM_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: mcpwm_01477::MCPWM_CallbackRegister@MCPWM_CH_NUM@MCPWM_CH_CALLBACK@uintptr_t Topic Title: MCPWM_CallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-MCPWM_CALLBACK Type</div>
+MCPWM_CallbackRegister Function</div>
 </div>
 </div>
 
@@ -49,19 +49,21 @@ MCPWM_CALLBACK Type</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Callback Function Pointer&nbsp;</p>
-<p class="Element10">
-This data type defines the function signature for the MCPWM peripheral callback function. The library will call back the client's function with this signature from the interrupt context.</p></div>
+This function registers the callback function to be called from interrupt</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000">MCPWM_CALLBACK</span></strong>)(uintptr_t context);</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">MCPWM_CallbackRegister</span></strong>(
+    <a href="04105.html" target="topic">MCPWM_CH_NUM</a> <strong><span style="color: #000000">channel</span></strong>, 
+    <a href="04104.html" target="topic">MCPWM_CH_CALLBACK</a> <strong><span style="color: #000000">callback</span></strong>, 
+    uintptr_t <strong><span style="color: #000000">context</span></strong>
+);</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="04136.html" target="topic">MCPWM_Initialize</a> must have been called for the given MCPWM peripheral instance and <a href="04137.html" target="topic">MCPWM_PrimaryEventCallbackRegister</a> or <a href="04140.html" target="topic">MCPWM_SecondaryEventCallbackRegister</a> must have been called to register the function to be called.</p></div>
+<a href="04135.html" target="topic">MCPWM_Initialize</a>() must have been called first for the associated instance.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -76,6 +78,16 @@ Parameters</div>
 Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 <div class="Element305">
 Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+channel&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+MCPWM channel number&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+callback&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+callback function pointer&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
 context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
@@ -95,15 +107,16 @@ Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+Context value can be set to NULL if not required. To disable callback function, pass NULL for the callback parameter.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12"><i><span style="color: #008000">// callback function</span></i>
-<strong><span style="color: #000080">void</span></strong> MCPWM_Counter_Callback (uintptr_t context);
-</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">    <strong><span style="color: #000080">void</span></strong> MCPWM_Callback_Fn(<a href="04118.html" target="topic">MCPWM_CH_STATUS</a> status, uintptr_t context);
+
+    <a href="04135.html" target="topic">MCPWM_Initialize</a>();
+    MCPWM_CallbackRegister(MCPWM_CH_0, MCPWM_Callback_Fn, NULL);</pre></div></div>
 </div>
 </div>
 </div>
@@ -111,7 +124,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="04090.html" target="topic">MCPWM Peripheral Library Help</a> &gt; <a href="04091.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="04103.html" target="topic">MCPWM_CALLBACK Type</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="04089.html" target="topic">MCPWM Peripheral Library Help</a> &gt; <a href="04090.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="04103.html" target="topic">MCPWM_CallbackRegister Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -119,13 +132,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04141.html" target="topic">Previous</a> | <a href="04091.html" target="topic">Up</a> | <a href="04105.html" target="topic">Next</a></div>
+<a href="04135.html" target="topic">Previous</a> | <a href="04090.html" target="topic">Up</a> | <a href="04139.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: mcpwm_01477::MCPWM_CALLBACK Topic Title: MCPWM_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: mcpwm_01477::MCPWM_CallbackRegister@MCPWM_CH_NUM@MCPWM_CH_CALLBACK@uintptr_t Topic Title: MCPWM_CallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

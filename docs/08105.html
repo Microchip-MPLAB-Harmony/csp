@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>WDT_CALLBACK Type</title>
+<title>WDT_CallbackRegister Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="08058.html" target="topic">WDT Peripheral Library Help</a> &gt; <a href="08059.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="08105.html" target="topic">WDT_CALLBACK Type</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="08057.html" target="topic">WDT Peripheral Library Help</a> &gt; <a href="08058.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="08105.html" target="topic">WDT_CallbackRegister Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="08107.html" target="topic">Previous</a> | <a href="08059.html" target="topic">Up</a> | <a href="08030.html" target="topic">Next</a></div>
+<a href="08058.html" target="topic">Previous</a> | <a href="08058.html" target="topic">Up</a> | <a href="08108.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: wdt_u2203::WDT_CALLBACK Topic Title: WDT_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: wdt_u2203::WDT_CallbackRegister@WDT_CALLBACK@uintptr_t Topic Title: WDT_CallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-WDT_CALLBACK Type</div>
+WDT_CallbackRegister Function</div>
 </div>
 </div>
 
@@ -49,19 +49,22 @@ WDT_CALLBACK Type</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Callback Function Pointer&nbsp;</p>
+This function sets the pointer to a client function to be called &quot;back&quot; when the WDT Early Warning event occurs. It also passes a context value that is passed into the callback function when it is called. This function is available only if the Early Warning option (in MHC) is enabled at the time of generating the peripheral library.&nbsp;</p>
 <p class="Element10">
-This data type defines the function signature for the WDT peripheral callback function. The WDT peripheral will call back the client's function with this signature when the a Early Warning Event occurred. This interrupt indicates to the application that an WDT timeout is about to occur.</p></div>
+The time at which the Early warning interrupt occurs is defined by the Early Warning setting in the NVM User row. This is configured by using the compiler provided fuse options. Specifying the Early Warning offset to be larger than the WDT time out value will cause the Early Warning mechanism to be in-active.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000">WDT_CALLBACK</span></strong>)(uintptr_t context);</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">WDT_CallbackRegister</span></strong>(
+    <a href="08104.html" target="topic">WDT_CALLBACK</a> <strong><span style="color: #000000">callback</span></strong>, 
+    uintptr_t <strong><span style="color: #000000">context</span></strong>
+);</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-WDT_Initialize must have been called for the given WDT peripheral instance and <a href="08106.html" target="topic">WDT_CallbackRegister</a> must have been called to set the function to be called.</p></div>
+WDT_Initialize must have been called for the associated WDT instance. Reset mode must be disabled in MCC configuration</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -78,9 +81,14 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
+callback&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+A pointer to a function with a calling signature defined by the <a href="08104.html" target="topic">WDT_CALLBACK</a> data type.<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
 context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Allows the caller to provide a context value (usually a pointer to the callers context for multi-instance clients).&nbsp;</div></td></tr></table></div></div>
+A value (usually a pointer) passed (unused) into the function identified by the callback parameter.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -90,12 +98,26 @@ Returns</div>
 <p class="Element10">
 None.</p></div>
 </div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The context value may be set to NULL if it is not required. Note that the value of NULL will still be passed to the callback function. To disable the callback function, pass a NULL for the callback parameter. See the <a href="08104.html" target="topic">WDT_CALLBACK</a> type definition for additional information.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">WDT_CallbackRegister(MyCallback, &amp;myData);</pre></div></div>
+</div>
+</div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="08058.html" target="topic">WDT Peripheral Library Help</a> &gt; <a href="08059.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="08105.html" target="topic">WDT_CALLBACK Type</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="08057.html" target="topic">WDT Peripheral Library Help</a> &gt; <a href="08058.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="08105.html" target="topic">WDT_CallbackRegister Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -103,13 +125,13 @@ None.</p></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="08107.html" target="topic">Previous</a> | <a href="08059.html" target="topic">Up</a> | <a href="08030.html" target="topic">Next</a></div>
+<a href="08058.html" target="topic">Previous</a> | <a href="08058.html" target="topic">Up</a> | <a href="08108.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: wdt_u2203::WDT_CALLBACK Topic Title: WDT_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: wdt_u2203::WDT_CallbackRegister@WDT_CALLBACK@uintptr_t Topic Title: WDT_CallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

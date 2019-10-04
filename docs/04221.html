@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>NMIC_CallbackRegister Function</title>
+<title>NMIC_SOURCE Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="04215.html" target="topic">NMIC Peripheral Library Help</a> &gt; <a href="04216.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="04221.html" target="topic">NMIC_CallbackRegister Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="04214.html" target="topic">NMIC Peripheral Library Help</a> &gt; <a href="04215.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="04221.html" target="topic">NMIC_SOURCE Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04232.html" target="topic">Previous</a> | <a href="04216.html" target="topic">Up</a> | <a href="04220.html" target="topic">Next</a></div>
+<a href="04219.html" target="topic">Previous</a> | <a href="04215.html" target="topic">Up</a> | <a href="04235.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nmic_44062::NMIC_CallbackRegister@NMIC_CALLBACK@uintptr_t Topic Title: NMIC_CallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nmic_44062::NMIC_SOURCE Topic Title: NMIC_SOURCE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-NMIC_CallbackRegister Function</div>
+NMIC_SOURCE Enumeration</div>
 </div>
 </div>
 
@@ -49,73 +49,96 @@ NMIC_CallbackRegister Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function sets the pointer to a client function to be called &quot;back&quot; when the interrupt occurs. It also passes a context value that is passed into the function when it is called. This function is available only in interrupt mode of operation.</p></div>
+NMIC_SOURCE&nbsp;</p>
+<p class="Element10">
+This is used to set up NMIC interrupt.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">NMIC_CallbackRegister</span></strong>(
-    <a href="04220.html" target="topic">NMIC_CALLBACK</a> <strong><span style="color: #000000">callback</span></strong>, 
-    uintptr_t <strong><span style="color: #000000">context</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">NMIC_SOURCE_NMI</span></strong> = 0x01,
+  <strong><span style="color: #000000">NMIC_SOURCE_CPU_FAIL</span></strong> = 0x02,
+  <strong><span style="color: #000000">NMIC_SOURCE_XTAL_12M_FAIL</span></strong> = 0x04,
+  <strong><span style="color: #000000">NMIC_SOURCE_XTAL_32K_FAIL</span></strong> = 0x08,
+  <strong><span style="color: #000000">NMIC_SOURCE_VDDCORE_FAIL</span></strong> = 0x10,
+  <strong><span style="color: #000000">NMIC_SOURCE_NOFIX_TCM</span></strong> = 0x20,
+  <strong><span style="color: #000000">NMIC_SOURCE_NOFIX_HEMC</span></strong> = 0x40,
+  <strong><span style="color: #000000">NMIC_SOURCE_NOFIX_HEFC</span></strong> = 0x80,
+  <strong><span style="color: #000000">NMIC_SOURCE_NOFIX_FlexRAM</span></strong> = 0x100
+} NMIC_SOURCE;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-None.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
+<div class="Element272">
 <div class="TableDiv">
-<table cellspacing="0" class="Table2">
+<table cellspacing="0" class="Table3">
 <tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-callback&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-A pointer to a function with a calling signature defined by the <a href="04220.html" target="topic">NMIC_CALLBACK</a> data type.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-A value (usually a pointer) passed (unused) into the function identified by the callback parameter.&nbsp;</div></td></tr></table></div></div>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+NMIC_SOURCE_NMI = 0x01&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+External NMI&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+NMIC_SOURCE_CPU_FAIL = 0x02&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Wrong CPU Frequency Monitor Detection&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+NMIC_SOURCE_XTAL_12M_FAIL = 0x04&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Fast XTAL Clock Failure Detection&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+NMIC_SOURCE_XTAL_32K_FAIL = 0x08&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Slow XTAL 32KHZ Clock Failure Detection&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+NMIC_SOURCE_VDDCORE_FAIL = 0x10&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+VDDCORE Brownout Detector Failure Detection&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+NMIC_SOURCE_NOFIX_TCM = 0x20&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+TCM non fixable error Detection&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+NMIC_SOURCE_NOFIX_HEMC = 0x40&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+HEMC non fixable error detection&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+NMIC_SOURCE_NOFIX_HEFC = 0x80&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+HEFC non fixable error detection&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+NMIC_SOURCE_NOFIX_FlexRAM = 0x100&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+FlexRam non fixable error detection&nbsp;</div></td></tr></table></div></div>
 </div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The context value may be set to NULL if it is not required. In this case the value NULL will be passed to the callback function. To disable the callback function, pass a NULL for the callback parameter. See the <a href="04220.html" target="topic">NMIC_CALLBACK</a> type definition for additional information.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">    NMIC_CallbackRegister(MyCallback, &amp;myData);</pre></div></div>
-</div>
+None.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="04215.html" target="topic">NMIC Peripheral Library Help</a> &gt; <a href="04216.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="04221.html" target="topic">NMIC_CallbackRegister Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="04214.html" target="topic">NMIC Peripheral Library Help</a> &gt; <a href="04215.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="04221.html" target="topic">NMIC_SOURCE Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -123,13 +146,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04232.html" target="topic">Previous</a> | <a href="04216.html" target="topic">Up</a> | <a href="04220.html" target="topic">Next</a></div>
+<a href="04219.html" target="topic">Previous</a> | <a href="04215.html" target="topic">Up</a> | <a href="04235.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nmic_44062::NMIC_CallbackRegister@NMIC_CALLBACK@uintptr_t Topic Title: NMIC_CallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nmic_44062::NMIC_SOURCE Topic Title: NMIC_SOURCE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

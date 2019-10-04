@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>RTC_Timer32TimeStampGet Function</title>
+<title>TAMPER_CHANNEL Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="05892.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="05893.html" target="topic">32-bit Timer (Mode 0)</a> &gt; <a href="05898.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="06125.html" target="topic">RTC_Timer32TimeStampGet Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="05891.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="05914.html" target="topic">Clock and Calendar (Mode 2)</a> &gt; <a href="05920.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="06125.html" target="topic">TAMPER_CHANNEL Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06113.html" target="topic">Previous</a> | <a href="05898.html" target="topic">Up</a> | <a href="06114.html" target="topic">Next</a></div>
+<a href="06004.html" target="topic">Previous</a> | <a href="05920.html" target="topic">Up</a> | <a href="06026.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::RTC_Timer32TimeStampGet Topic Title: RTC_Timer32TimeStampGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::TAMPER_CHANNEL Topic Title: TAMPER_CHANNEL Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-RTC_Timer32TimeStampGet Function</div>
+TAMPER_CHANNEL Enumeration</div>
 </div>
 </div>
 
@@ -49,45 +49,32 @@ RTC_Timer32TimeStampGet Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function is used to get the 32-bit counter Value at which the tamper Detection took place.</p></div>
+RTC Tamper Channel Mask&nbsp;</p>
+<p class="Element10">
+This enumeration defines the possible Tamper Channel mask.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100">uint32_t <strong><span style="color: #000000">RTC_Timer32TimeStampGet</span></strong>();</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-Tamper channels must be configured properly using MHC.</p></div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-The 32-bit counter Value.</p></div>
-</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">TAMPER_CHANNEL_0</span></strong>,
+  <strong><span style="color: #000000">TAMPER_CHANNEL_1</span></strong>,
+  <strong><span style="color: #000000">TAMPER_CHANNEL_2</span></strong>,
+  <strong><span style="color: #000000">TAMPER_CHANNEL_3</span></strong>,
+  <strong><span style="color: #000000">TAMPER_CHANNEL_4</span></strong>
+} TAMPER_CHANNEL;</pre></div></div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This Feature may not be available on all devices. Refer to device Datasheet for more information..</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">    uint32_t tamperTime = RTC_Timer32TimeStampGet();</pre></div></div>
-</div>
+This Feature may not be available on all devices. Refer to device Datasheet for more information.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="05892.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="05893.html" target="topic">32-bit Timer (Mode 0)</a> &gt; <a href="05898.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="06125.html" target="topic">RTC_Timer32TimeStampGet Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="05891.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="05914.html" target="topic">Clock and Calendar (Mode 2)</a> &gt; <a href="05920.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="06125.html" target="topic">TAMPER_CHANNEL Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -95,13 +82,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06113.html" target="topic">Previous</a> | <a href="05898.html" target="topic">Up</a> | <a href="06114.html" target="topic">Next</a></div>
+<a href="06004.html" target="topic">Previous</a> | <a href="05920.html" target="topic">Up</a> | <a href="06026.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::RTC_Timer32TimeStampGet Topic Title: RTC_Timer32TimeStampGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::TAMPER_CHANNEL Topic Title: TAMPER_CHANNEL Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>I2Cx_Read Function</title>
+<title>I2Cx_TransferSetup Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="03711.html" target="topic">I2C Peripheral Library Help</a> &gt; <a href="03712.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="03750.html" target="topic">I2Cx_Read Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="03710.html" target="topic">I2C Peripheral Library Help</a> &gt; <a href="03711.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="03750.html" target="topic">I2Cx_TransferSetup Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03746.html" target="topic">Previous</a> | <a href="03712.html" target="topic">Up</a> | <a href="03752.html" target="topic">Next</a></div>
+<a href="03745.html" target="topic">Previous</a> | <a href="03711.html" target="topic">Up</a> | <a href="03749.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: i2c_00774::I2Cx_Read@uint16_t@uint8_t *@size_t Topic Title: I2Cx_Read Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: i2c_00774::I2Cx_TransferSetup@I2C_TRANSFER_SETUP*@uint32_t Topic Title: I2Cx_TransferSetup Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-I2Cx_Read Function</div>
+I2Cx_TransferSetup Function</div>
 </div>
 </div>
 
@@ -49,25 +49,20 @@ I2Cx_Read Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function reads the data from a slave on the bus. The function will attempt to read length number of bytes into pdata buffer from a slave whose address is specified as address. The I2C Master generate a Start condition, read the data and then generate a Stop Condition. If the slave NAKs the request or a bus error is encountered on the bus, the transfer is terminated. The application can call <a href="03747.html" target="topic">I2Cx_ErrorGet</a>() function to know that cause of the error.&nbsp;</p>
-<p class="Element10">
-The function is non-blocking. It initiates bus activity and returns immediately. The transfer is completed in the peripheral interrupt. A transfer request cannot be placed when another transfer is in progress. Calling the read function when another function is already in progress will cause the function to return false.&nbsp;</p>
-<p class="Element10">
-The library will call the registered callback function when the transfer has terminated if callback is registered.</p></div>
+This API is generally used when there are multiple clients on the same I2C bus having different I2C clock speed. In such a case, the I2Cx_TransferSetup API must be called to set the appropriate I2C bus speed before starting the I2C transfer for the I2C slave.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">I2Cx_Read</span></strong>(
-    uint16_t <strong><span style="color: #000000">address</span></strong>, 
-    uint8_t * <strong><span style="color: #000000">pdata</span></strong>, 
-    size_t <strong><span style="color: #000000">length</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">I2Cx_TransferSetup</span></strong>(
+    <a href="03743.html" target="topic">I2C_TRANSFER_SETUP</a>* <strong><span style="color: #000000">setup</span></strong>, 
+    uint32_t <strong><span style="color: #000000">srcClkFreq</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="03748.html" target="topic">I2Cx_Initialize</a> must have been called for the associated I2C instance. At least one TRB should be available.</p></div>
+<a href="03747.html" target="topic">I2Cx_Initialize</a> must have been called for the associated I2C instance. The transfer status should not be busy.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -84,19 +79,14 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-address&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+setup&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-7-bit / 10-bit slave address.<br>&nbsp;</div></td></tr><tr>
+Pointer to the structure containing the transfer setup.&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-data&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+srcClkFreq&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-pointer to destination data buffer where the received data should be stored.<br>&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-length&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-length of data buffer in number of bytes. Also the number of bytes to be read.&nbsp;</div></td></tr></table></div></div>
+I2C Peripheral Clock Source Frequency.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -104,37 +94,32 @@ Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-true - The request was placed successfully and the bus activity was initiated.&nbsp;</p>
-<p class="Element10">
-false - The request fails,if there was already a transfer in progress when this function was called.</p></div>
+true - Transfer setup was updated Successfully. false - Failure while updating transfer setup.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+srcClkFreq overrides any change in the peripheral clock frequency. If configured to zero PLib takes the peripheral clock frequency from MHC.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">    uint8_t myData [NUM_BYTES];
-    uint8_t myData [NUM_BYTES];
-    <strong><span style="color: #000080">void</span></strong> MyI2CCallback(uintptr_t context)
-    {
-        <i><span style="color: #008000">// This function will be called when the transfer completes. Note</span></i>
-        <i><span style="color: #008000">// that this function executes in the context of the I2C interrupt.</span></i>
-    }
+<div class="Element13"><div class="Element12"><pre class="Element12">
+<a href="03743.html" target="topic">I2C_TRANSFER_SETUP</a> setup;
 
-    I2C1_Initialize();
-    I2C1_CallbackRegister(MyI2CCallback, NULL);
+setup.clkSpeed = 400000;
 
-    <strong><span style="color: #000080">if</span></strong>(!I2C1_Read( SLAVE_ADDR, &amp;myData[0], NUM_BYTES ))
+<i><span style="color: #008000">// Make sure that the I2C is not busy before changing the I2C clock frequency</span></i>
+<strong><span style="color: #000080">if</span></strong> (<a href="03748.html" target="topic">I2Cx_IsBusy</a>() == <strong><span style="color: #000080">false</span></strong>)
+{
+    <strong><span style="color: #000080">if</span></strong> (I2Cx_TransferSetup( &amp;setup, 0 ) == <strong><span style="color: #000080">true</span></strong>)
     {
-        <i><span style="color: #008000">// error handling</span></i>
+        <i><span style="color: #008000">// Transfer Setup updated successfully</span></i>
     }
-</pre></div></div>
+}</pre></div></div>
 </div>
 </div>
 </div>
@@ -142,7 +127,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="03711.html" target="topic">I2C Peripheral Library Help</a> &gt; <a href="03712.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="03750.html" target="topic">I2Cx_Read Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="03710.html" target="topic">I2C Peripheral Library Help</a> &gt; <a href="03711.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="03750.html" target="topic">I2Cx_TransferSetup Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -150,13 +135,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03746.html" target="topic">Previous</a> | <a href="03712.html" target="topic">Up</a> | <a href="03752.html" target="topic">Next</a></div>
+<a href="03745.html" target="topic">Previous</a> | <a href="03711.html" target="topic">Up</a> | <a href="03749.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: i2c_00774::I2Cx_Read@uint16_t@uint8_t *@size_t Topic Title: I2Cx_Read Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: i2c_00774::I2Cx_TransferSetup@I2C_TRANSFER_SETUP*@uint32_t Topic Title: I2Cx_TransferSetup Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

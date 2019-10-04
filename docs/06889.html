@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Using the Library</title>
+<title>SQI Applications</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="06885.html" target="topic">SQI Peripheral Library Help</a> &gt; <a href="06889.html" target="topic">Using the Library</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="06889.html" target="topic">SQI Applications</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06881.html" target="topic">Previous</a> | <a href="06885.html" target="topic">Up</a> | <a href="06886.html" target="topic">Next</a></div>
+<a href="06802.html" target="topic">Previous</a> | <a href="00874.html" target="topic">Up</a> | <a href="06890.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SQI 00206 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SQI Applications help Topic Title: SQI Applications)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Using the Library</div>
+SQI Applications</div>
 </div>
 </div>
 
@@ -49,41 +49,34 @@ Using the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The SQI Peripheral Library operates only in DMA and XIP mode to interface with the SQI based Serial Flash Memories operating in Single-bit SPI, Dual SPI, and Quad SPI.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-The SQI peripheral library is by default configured to interrupt mode. Use <a href="06920.html" target="topic">SQIx_RegisterCallback()</a> function to receive event on transfer completion.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-The SQI Peripheral library provides non-Blocking API's, which can be used to perform the following functionalities on the SQI Slave device.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<ul class="Element630">
-<li class="Element600"><strong>Start a DMA Transfer</strong>
-<ul class="Element631">
-<li class="Element601"><a href="06902.html" target="topic">sqi_dma_desc_t</a> data type needs to filled to send a transfer request to the slave device</li>
-<li class="Element601">The transfer request can be
-<ul class="Element632">
-<li class="Element602">Sending commands (ERASE, Write Enable, etc..)</li>
-<li class="Element602">Reading/Writing status registers</li>
-<li class="Element602">Writing to the Serial flash memory</li>
-<li class="Element602">Reading from the serial flash memory</li>
-</ul></li>
-</ul></li>
-<li class="Element600"><strong>Setup Execute in Place (XIP)</strong>
-<ul class="Element631">
-<li class="Element601"><a href="06921.html" target="topic">SQIx_XIPSetup()</a> function can be used to configure SQI peripheral to XIP mode</li>
-</ul></li>
-</ul></div>
+This section provides help for the Serial Quad Interface (SQI) peripheral applications.</p></div>
+</div>
+<a name="546F70696373"></a><div class="Element14">
+Topics</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element200" valign="top" width="35%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="06890.html" target="topic">sqi_read_write</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+<span style="color: #000000">This example application demonstrates how to use the SQI Peripheral library to perform erase, write and read operation with the SQI Serial Flash memory.</span>&nbsp;</div></td></tr></table></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="06885.html" target="topic">SQI Peripheral Library Help</a> &gt; <a href="06889.html" target="topic">Using the Library</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="06889.html" target="topic">SQI Applications</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -91,13 +84,13 @@ The SQI Peripheral library provides non-Blocking API's, which can be used to per
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06881.html" target="topic">Previous</a> | <a href="06885.html" target="topic">Up</a> | <a href="06886.html" target="topic">Next</a></div>
+<a href="06802.html" target="topic">Previous</a> | <a href="00874.html" target="topic">Up</a> | <a href="06890.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SQI 00206 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SQI Applications help Topic Title: SQI Applications)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

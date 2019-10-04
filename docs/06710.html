@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Using the Library</title>
+<title>SHDWC Applications</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="06706.html" target="topic">SHDWC Peripheral Library Help</a> &gt; <a href="06710.html" target="topic">Using the Library</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="06710.html" target="topic">SHDWC Applications</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06703.html" target="topic">Previous</a> | <a href="06706.html" target="topic">Up</a> | <a href="06707.html" target="topic">Next</a></div>
+<a href="06614.html" target="topic">Previous</a> | <a href="00874.html" target="topic">Up</a> | <a href="06711.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SHDWC 6122 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SHDWC Applications Help Topic Title: SHDWC Applications)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Using the Library</div>
+SHDWC Applications</div>
 </div>
 </div>
 
@@ -49,44 +49,26 @@ Using the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Shutdown peripheral library can be used to:</p>
-<ul class="Element630">
-<li class="Element600">Configure the wakeup events for the MPU</li>
-<li class="Element600">Software assert the SHDN signal to indicate that the MPU needs to be shutdown. A typical application connects the pin SHDN to the shutdown input of the DC/DC Converter providing the main power supplies of the system, and especially VDDCORE and/or VDDIO.</li>
-<li class="Element600">Get the event that caused the MPU to wake up</li>
-</ul><p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<i>The following program demonstrates assertion of the SHDN signal on pressing of a switch connected to the PIO.The program normally toggles an LED, and upon pressing the switch the SHDN signal is asserted. This signal,if connected to the external PMIC, would then be used to manage the power to the MPU.</i>&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<div class="Element13"><div class="Element12"><pre class="Element12">
-<strong><span style="color: #000080">void</span></strong> switchHandler( PIO_PIN pin, uintptr_t context)
-{
-    SHDWC_Shutdown();
-}
-
-<strong><span style="color: #000080">int</span></strong> main ( <strong><span style="color: #000080">void</span></strong> )
-{
-    <i><span style="color: #008000">/* Initialize all modules */</span></i>
-    SYS_Initialize ( NULL );
-    PIO_PinInterruptCallbackRegister(SWITCH_PIN, switchHandler, 0);
-    PIO_PinInterruptEnable(SWITCH_PIN);
-
-    <strong><span style="color: #000080">while</span></strong> ( <strong><span style="color: #000080">true</span></strong> )
-    {
-        PIT_DelayMs(500);
-        LED_Toggle();
-        <i><span style="color: #008000">/* Maintain state machines of all polled MPLAB Harmony modules. */</span></i>
-        SYS_Tasks ( );
-    }
-
-    <i><span style="color: #008000">/* Execution should not come here during normal operation */</span></i>
-
-    <strong><span style="color: #000080">return</span></strong> ( EXIT_FAILURE );
-}</pre></div></div>
+This section provides help for the Shutdown Controller (SHDWC) peripheral application.</p></div>
+</div>
+<a name="546F70696373"></a><div class="Element14">
+Topics</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element200" valign="top" width="35%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="06711.html" target="topic">piobu0_wakeup</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+The application shows how to shutdown and wakeup the device using SHDWC peripheral.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -94,7 +76,7 @@ Shutdown peripheral library can be used to:</p>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="06706.html" target="topic">SHDWC Peripheral Library Help</a> &gt; <a href="06710.html" target="topic">Using the Library</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="06710.html" target="topic">SHDWC Applications</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -102,13 +84,13 @@ Shutdown peripheral library can be used to:</p>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06703.html" target="topic">Previous</a> | <a href="06706.html" target="topic">Up</a> | <a href="06707.html" target="topic">Next</a></div>
+<a href="06614.html" target="topic">Previous</a> | <a href="00874.html" target="topic">Up</a> | <a href="06711.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SHDWC 6122 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SHDWC Applications Help Topic Title: SHDWC Applications)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

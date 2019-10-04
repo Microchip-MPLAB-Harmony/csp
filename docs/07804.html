@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TWIHSx_WriteRead Function</title>
+<title>Configuring the Library</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="07779.html" target="topic">TWIHS Peripheral Library Help</a> &gt; <a href="07780.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="07804.html" target="topic">TWIHSx_WriteRead Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="07808.html" target="topic">UART Peripheral Library Help</a> &gt; <a href="07804.html" target="topic">Configuring the Library</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="07803.html" target="topic">Previous</a> | <a href="07780.html" target="topic">Up</a> | <a href="07800.html" target="topic">Next</a></div>
+<a href="07807.html" target="topic">Previous</a> | <a href="07808.html" target="topic">Up</a> | <a href="07813.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TWIHSx_WriteRead@uint16_t@uint8_t *@size_t@uint8_t *@size_t Topic Title: TWIHSx_WriteRead Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: UART 00734 Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TWIHSx_WriteRead Function</div>
+Configuring the Library</div>
 </div>
 </div>
 
@@ -49,100 +49,22 @@ TWIHSx_WriteRead Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function writes data from wdata buffer to the slave of given address and of size(in bytes) equal to wlength. Master then generates a repeated start and do a read operation. Read operation reads data into rdata buffer of size(in bytes) equal to rlength from the slave of given address. Master generates a stop condition after reading the data.</p></div>
-</div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">TWIHSx_WriteRead</span></strong>(
-    uint16_t <strong><span style="color: #000000">address</span></strong>, 
-    uint8_t * <strong><span style="color: #000000">wdata</span></strong>, 
-    size_t <strong><span style="color: #000000">wlength</span></strong>, 
-    uint8_t * <strong><span style="color: #000000">rdata</span></strong>, 
-    size_t <strong><span style="color: #000000">rlength</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
-<div class="Element11">
-<div class="Element10">
+Configure the peripheral library using the MHC.&nbsp;</p>
 <p class="Element10">
-<a href="07799.html" target="topic">TWIHSx_Initialize</a> must have been called for the associated TWIHS instance.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
-<div class="TableDiv">
-<table cellspacing="0" class="Table2">
-<tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-address&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-7-bit / 10-bit slave address.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-wdata&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-pointer to write data buffer&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-wlength&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-write data length in bytes.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-rdata&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-pointer to read data buffer.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-rlength&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-read data length in bytes.&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-
+&nbsp;</p>
+<p class="Element10">
+The UART library supports the byte and buffer model to transfer data. The buffer model can transfer a block of data in a blocking and a non-blocking manner.</p>
 <ul class="Element630">
-<li class="Element600">True - Write read request was submitted successfully.</li>
-<li class="Element600">False - Failed while submitting the write read request.</li>
+<li class="Element600">To transfer a block of data in a non-blocking manner, the peripheral interrupt is used to manage the transfer and therefore the &quot;Interrupt Mode&quot; option should be enabled in the MHC</li>
+<li class="Element600">To use the byte model or to transfer a block of data in a blocking manner, the CPU polls the peripheral register and therefore the &quot;Interrupt Mode&quot; option should be disabled in the MHC</li>
 </ul></div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">uint8_t myTxData [NUM_BYTES] = {'1', '0', ' ', 'B', 'Y', 'T', 'E', 'S', '!', '!'};
-uint8_t myRxData [NUM_BYTES] = {0};
-
-<strong><span style="color: #000080">if</span></strong>(!TWIHSx_WriteRead( SLAVE_ADDR, &amp;myTxData[0], NUM_BYTES, myRxData, NUM_BYTES ))
-{
-    <i><span style="color: #008000">// error handling</span></i>
-}</pre></div></div>
-</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="07779.html" target="topic">TWIHS Peripheral Library Help</a> &gt; <a href="07780.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="07804.html" target="topic">TWIHSx_WriteRead Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="07808.html" target="topic">UART Peripheral Library Help</a> &gt; <a href="07804.html" target="topic">Configuring the Library</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -150,13 +72,13 @@ uint8_t myRxData [NUM_BYTES] = {0};
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="07803.html" target="topic">Previous</a> | <a href="07780.html" target="topic">Up</a> | <a href="07800.html" target="topic">Next</a></div>
+<a href="07807.html" target="topic">Previous</a> | <a href="07808.html" target="topic">Up</a> | <a href="07813.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TWIHSx_WriteRead@uint16_t@uint8_t *@size_t@uint8_t *@size_t Topic Title: TWIHSx_WriteRead Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: UART 00734 Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>QEIx_PositionGet Function</title>
+<title>QEIx_RevolutionsGet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="05473.html" target="topic">QEI Peripheral Library Help</a> &gt; <a href="05474.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="05502.html" target="topic">QEIx_PositionGet Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="05472.html" target="topic">QEI Peripheral Library Help</a> &gt; <a href="05473.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="05502.html" target="topic">QEIx_RevolutionsGet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05505.html" target="topic">Previous</a> | <a href="05474.html" target="topic">Up</a> | <a href="05503.html" target="topic">Next</a></div>
+<a href="05501.html" target="topic">Previous</a> | <a href="05473.html" target="topic">Up</a> | <a href="05505.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: qei_01494::QEIx_PositionGet Topic Title: QEIx_PositionGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: qei_01494::QEIx_RevolutionsGet Topic Title: QEIx_RevolutionsGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-QEIx_PositionGet Function</div>
+QEIx_RevolutionsGet Function</div>
 </div>
 </div>
 
@@ -49,41 +49,41 @@ QEIx_PositionGet Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function reads the position from the quadrature encoder as tracked by the channel counter.</p></div>
+This function reads the revolution counter. The contents of the counter represent the number of revolutions tracked by the quadrature encoder.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100">uint32_t <strong><span style="color: #000000">QEIx_PositionGet</span></strong>();</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100">uint32_t <strong><span style="color: #000000">QEIx_RevolutionsGet</span></strong>();</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="05501.html" target="topic">QEIx_Initialize</a> function must have been called first for the given channel.</p></div>
+<a href="05500.html" target="topic">QEIx_Initialize</a> function must have been called first for the given channel.</p></div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Position of the encoder.</p></div>
+revolutions - number of revolutions</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-In counter-clockwise direction, position counter works in down counting mode. The operating mode of position count is controlled by Counter Control Mode (QEIxCON.CCM) bit</p></div>
+Revolution counter is updated every index signal.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">uint32_t position;
+<div class="Element13"><div class="Element12"><pre class="Element12">uint32_t velocity;
 
 QEI1_Initialize();
 QEI1_Start();
-position = QEI1_PositionGet();</pre></div></div>
+velocity = QEI1_RevolutionsGet();</pre></div></div>
 </div>
 </div>
 </div>
@@ -91,7 +91,7 @@ position = QEI1_PositionGet();</pre></div></div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="05473.html" target="topic">QEI Peripheral Library Help</a> &gt; <a href="05474.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="05502.html" target="topic">QEIx_PositionGet Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="05472.html" target="topic">QEI Peripheral Library Help</a> &gt; <a href="05473.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="05502.html" target="topic">QEIx_RevolutionsGet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -99,13 +99,13 @@ position = QEI1_PositionGet();</pre></div></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05505.html" target="topic">Previous</a> | <a href="05474.html" target="topic">Up</a> | <a href="05503.html" target="topic">Next</a></div>
+<a href="05501.html" target="topic">Previous</a> | <a href="05473.html" target="topic">Up</a> | <a href="05505.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: qei_01494::QEIx_PositionGet Topic Title: QEIx_PositionGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: qei_01494::QEIx_RevolutionsGet Topic Title: QEIx_RevolutionsGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

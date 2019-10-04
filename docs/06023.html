@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>RTC_CALLBACK Type</title>
+<title>RTC_CLOCK_EVENT Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="05892.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="05915.html" target="topic">Clock and Calendar (Mode 2)</a> &gt; <a href="05921.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="06023.html" target="topic">RTC_CALLBACK Type</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="05891.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="05914.html" target="topic">Clock and Calendar (Mode 2)</a> &gt; <a href="05920.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="06023.html" target="topic">RTC_CLOCK_EVENT Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05832.html" target="topic">Previous</a> | <a href="05921.html" target="topic">Up</a> | <a href="06014.html" target="topic">Next</a></div>
+<a href="06013.html" target="topic">Previous</a> | <a href="05920.html" target="topic">Up</a> | <a href="06004.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::RTC_CALLBACK Topic Title: RTC_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::RTC_CLOCK_EVENT Topic Title: RTC_CLOCK_EVENT Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-RTC_CALLBACK Type</div>
+RTC_CLOCK_EVENT Enumeration</div>
 </div>
 </div>
 
@@ -49,98 +49,54 @@ RTC_CALLBACK Type</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Real Time Clock Calendar Callback Function Pointer Type&nbsp;</p>
+RTC Real Time Clock Calendar (RTCC) Mode events&nbsp;</p>
 <p class="Element10">
-This data type defines the function signature of the RTC Real Time Clock Calendar Callback function. The RTC peripheral will call back the client's function with this signature when the configured RTCC Alarm has occurred.&nbsp;</p>
-<p class="Element10">
-The application should register a callback function whose signature (input arguments and return type) must match the signature of this function. The calllback function should be registered by calling the <a href="06054.html" target="topic">RTC_RTCCCallbackRegister</a>() function. The callback function should be registered before setting the alarm.</p></div>
+This enumeration defines the possible events that can occur when the RTC peripheral is configured for Real Time Clock Calendar operation. These events are passed into the callback function registered through the <a href="06053.html" target="topic">RTC_RTCCCallbackRegister</a>() function.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000">RTC_CALLBACK</span></strong>)(<a href="06024.html" target="topic">RTC_CLOCK_EVENT</a> event, uintptr_t context);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">RTC_CLOCK_EVENT_ALARM</span></strong>,
+  <strong><span style="color: #000000">RTC_CLOCK_EVENT_YEAR_OVERFLOW</span></strong>
+} RTC_CLOCK_EVENT;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-The <a href="06042.html" target="topic">RTC_Initialize</a>() function should have been called to initialize the RTC peripheral. The <a href="06054.html" target="topic">RTC_RTCCCallbackRegister</a>() function should have been called to register the callback function. The RTC peripheral should have been configured for RTCC operation in MHC. The RTC peripheral should have been configured for interrupt mode of operation in MHC.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
+<div class="Element272">
 <div class="TableDiv">
-<table cellspacing="0" class="Table2">
+<table cellspacing="0" class="Table3">
 <tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-event&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-RTCC event that caused the callback function to be called. Multiple events could be active. Application should process all events in the callback function.<br>&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Allows the caller to provide a context value (usually a pointer to the callers context for multi-instance clients).&nbsp;</div></td></tr></table></div></div>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+RTC_CLOCK_EVENT_ALARM&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+An alarm has occurred.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+RTC_CLOCK_EVENT_YEAR_OVERFLOW&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+The Clock and Calendar overflowed at 23:59:59 (HH:MM:SS) on December 31 of year value 63&nbsp;</div></td></tr></table></div></div>
 </div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The Real Time Clock Calendar feature is available whe the RTC peripheral is configured for Real Time Clock Calendar mode. The callback function will be execute in an interrupt context. Avoid calling blocking functions , performing computationally intensive operations or interrupt un-safe functions from the callback function.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">
-<strong><span style="color: #000080">void</span></strong> MyRTCCCallback ( <a href="06024.html" target="topic">RTC_CLOCK_EVENT</a> event, uintptr_t context )
-{
-    <strong><span style="color: #000080">if</span></strong>((event &amp; RTC_CLOCK_EVENT_YEAR_OVERFLOW) ==
-                                            RTC_CLOCK_EVENT_YEAR_OVERFLOW)
-    {
-        <i><span style="color: #008000">// This means a year overflow has occurred.</span></i>
-    }
-    <strong><span style="color: #000080">else</span></strong> <strong><span style="color: #000080">if</span></strong> ((event &amp; RTC_CLOCK_EVENT_ALARM) == RTC_CLOCK_EVENT_ALARM)
-    {
-        <i><span style="color: #008000">// This means an alarm has occurred.</span></i>
-    }
-}
-
-<i><span style="color: #008000">// Initialize the RTC Peripheral and register the callback function.</span></i>
-<i><span style="color: #008000">// Note how the pointer to the alarmOccurred flag is specified</span></i>
-<i><span style="color: #008000">// as the context. This is passed back into the callback function.</span></i>
-<i><span style="color: #008000">// Refer to the description of the RTC_RTCCTimeSet() and</span></i>
-<i><span style="color: #008000">// RTC_RTCCAlarmSet() function for API usage details.</span></i>
-
-<a href="06042.html" target="topic">RTC_Initialize</a>();
-<a href="06056.html" target="topic">RTC_RTCCTimeSet</a>(&amp;time);
-<a href="06053.html" target="topic">RTC_RTCCAlarmSet</a>(&amp;alarm);
-<a href="06054.html" target="topic">RTC_RTCCCallbackRegister</a>(MyRTCCCallback, &amp;alarmOccurred);
-</pre></div></div>
-</div>
+None.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="05892.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="05915.html" target="topic">Clock and Calendar (Mode 2)</a> &gt; <a href="05921.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="06023.html" target="topic">RTC_CALLBACK Type</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="05891.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="05914.html" target="topic">Clock and Calendar (Mode 2)</a> &gt; <a href="05920.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="06023.html" target="topic">RTC_CLOCK_EVENT Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -148,13 +104,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05832.html" target="topic">Previous</a> | <a href="05921.html" target="topic">Up</a> | <a href="06014.html" target="topic">Next</a></div>
+<a href="06013.html" target="topic">Previous</a> | <a href="05920.html" target="topic">Up</a> | <a href="06004.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::RTC_CALLBACK Topic Title: RTC_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::RTC_CLOCK_EVENT Topic Title: RTC_CLOCK_EVENT Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

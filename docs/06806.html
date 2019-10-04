@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>SPIx_CallbackRegister Function</title>
+<title>SPIx_CLOCK_PHASE Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="06757.html" target="topic">SPI Peripheral Library Help</a> &gt; <a href="06758.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="06806.html" target="topic">SPIx_CallbackRegister Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="06756.html" target="topic">SPI Peripheral Library Help</a> &gt; <a href="06757.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="06806.html" target="topic">SPIx_CLOCK_PHASE Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06817.html" target="topic">Previous</a> | <a href="06758.html" target="topic">Up</a> | <a href="06825.html" target="topic">Next</a></div>
+<a href="06804.html" target="topic">Previous</a> | <a href="06757.html" target="topic">Up</a> | <a href="06809.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: spi_00753::SPIx_CallbackRegister@SPIx_CALLBACK*@uintptr_t Topic Title: SPIx_CallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: spi_00753::SPIx_CLOCK_PHASE Topic Title: SPIx_CLOCK_PHASE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-SPIx_CallbackRegister Function</div>
+SPIx_CLOCK_PHASE Enumeration</div>
 </div>
 </div>
 
@@ -49,80 +49,54 @@ SPIx_CallbackRegister Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function allows application to register a callback function for the PLIB to call back when requested data transfer operation has completed. The callback should be registered before the client performs transfer operation.&nbsp;</p>
+SPI Clock Phase&nbsp;</p>
 <p class="Element10">
-At any point if application wants to stop the callback, it can call this function with &quot;callback&quot; value as NULL.</p></div>
+This enumeration identifies possible SPI Clock Phase Options.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">SPIx_CallbackRegister</span></strong>(
-    <a href="06805.html" target="topic">SPIx_CALLBACK</a>* <strong><span style="color: #000000">callback</span></strong>, 
-    uintptr_t <strong><span style="color: #000000">context</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">SPI_CLOCK_PHASE_TRAILING_EDGE</span></strong>,
+  <strong><span style="color: #000000">SPI_CLOCK_PHASE_LEADING_EDGE</span></strong>
+} SPIx_CLOCK_PHASE;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-The <a href="06817.html" target="topic">SPIx_Initialize</a> function must have been called.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
+<div class="Element272">
 <div class="TableDiv">
-<table cellspacing="0" class="Table2">
+<table cellspacing="0" class="Table3">
 <tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-callback&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Pointer to the callback function implemented by the user<br>&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-The value of parameter will be passed back to the application unchanged, when the callback function is called. It can be used to identify any application specific value that identifies the instance of the client module (for example, it may be a pointer to the client module's state structure).&nbsp;</div></td></tr></table></div></div>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SPI_CLOCK_PHASE_TRAILING_EDGE&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Input data is valid on clock trailing edge and output data changes on leading edge&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SPI_CLOCK_PHASE_LEADING_EDGE&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Input data is valid on clock leading edge and output data changes on trailing edge&nbsp;</div></td></tr></table></div></div>
 </div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-If the client does not want to be notified when the queued operation has completed, it does not need to register a callback.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">SPI1_CallbackRegister(&amp;APP_SPITransferHandler, (uintptr_t)NULL);
-
-<strong><span style="color: #000080">void</span></strong> APP_SPITransferHandler(uintptr_t context)
-{
-    <i><span style="color: #008000">//Transfer was completed without error, do something else now.</span></i>
-}</pre></div></div>
-</div>
+None.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="06757.html" target="topic">SPI Peripheral Library Help</a> &gt; <a href="06758.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="06806.html" target="topic">SPIx_CallbackRegister Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="06756.html" target="topic">SPI Peripheral Library Help</a> &gt; <a href="06757.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="06806.html" target="topic">SPIx_CLOCK_PHASE Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -130,13 +104,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06817.html" target="topic">Previous</a> | <a href="06758.html" target="topic">Up</a> | <a href="06825.html" target="topic">Next</a></div>
+<a href="06804.html" target="topic">Previous</a> | <a href="06757.html" target="topic">Up</a> | <a href="06809.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: spi_00753::SPIx_CallbackRegister@SPIx_CALLBACK*@uintptr_t Topic Title: SPIx_CallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: spi_00753::SPIx_CLOCK_PHASE Topic Title: SPIx_CLOCK_PHASE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

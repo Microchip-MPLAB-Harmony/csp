@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Using the Library</title>
+<title>Configuring the Library</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="03807.html" target="topic">L2CC Peripheral Library Help</a> &gt; <a href="03810.html" target="topic">Using the Library</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="03813.html" target="topic">LCDC Peripheral Library Help</a> &gt; <a href="03810.html" target="topic">Configuring the Library</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03804.html" target="topic">Previous</a> | <a href="03807.html" target="topic">Up</a> | <a href="03808.html" target="topic">Next</a></div>
+<a href="03812.html" target="topic">Previous</a> | <a href="03813.html" target="topic">Up</a> | <a href="03818.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: L2CC 11160 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: LCDC 11062 Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Using the Library</div>
+Configuring the Library</div>
 </div>
 </div>
 
@@ -49,42 +49,14 @@ Using the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The interface to L2 Cache operations is defined in the plib_l2cc.h header file. By definition a secondary cache assumes&nbsp;</p>
-<p class="Element10">
-the presence of a Level 1 or primary cache, closely coupled or internal to the processor. Memory access is fastest to L1 cache, followed closely by L2 cache.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p><div class="Element15">
-Cache Coherency</div>
-<p class="Element10">
-Cache coherency is the discipline of ensuring that the data stored in main memory matches the corresponding data in the cache. The majority of the cache-related APIs deal with cache coherency. These functions allow the user to flush, clean and invalidate entire cache(s), or just a range of addresses within the cache.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-Caches most often lose coherency when a bus master other than the CPU modifies memory. This happens frequently with DMA. Two examples are provided in the following section.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p><div class="Element15">
-Examples</div>
-<p class="Element10">
-<strong>Example 1:</strong>&nbsp;</p>
-<p class="Element10">
-Imagine a situation where you would like to transfer data from a source buffer to a destination buffer using DMA. You would write data to the source buffer, start the DMA transfer, and then expect that the same data now appears in the destination buffer. With the cache in write-back mode, this will not be the case. When transferring data out of memory using DMA, it is possible that the desired data is held in the cache, but has never been written back to main memory. Therefore, in this case, you write data to the source buffer and it gets stored in cache. When the DMA transfer executes, it will pull the data from the source buffer out of RAM and then transfer it to the destination buffer in RAM. The problem is that the fresh data was stored in the cache but never written back to RAM, so what has happened is that stale data was copied over rather than the intended data. What is needed is a way to force the cache to write its data back to main memory before the DMA transfer. This is known as a write-back operation and would be performed with the use of the function: DCACHE_CLEAN_BY_ADDR(addr,sz). This cleans L1 and L2 caches by invoking <a href="01730.html" target="topic">dcache_CleanByAddr</a>(addr,sz) and <a href="05134.html" target="topic">PLIB_L2CC_CleanCacheByAddr</a>(addr,sz) functions.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong>Example 2:</strong>&nbsp;</p>
-<p class="Element10">
-The second situation involves writing data into memory using DMA. Imagine that the cache is holding a chunk of data known as destination_buffer. You then execute a DMA transfer to copy some new data from a source buffer into destination_buffer. The issue here is that main memory now contains the correct data, but the cache holds a copy of stale data for destination_buffer. The CPU cannot see this problem and it will keep pulling the data out of the cache, not even realizing that it’s stale. What is needed is a way to tell the cache to pull the fresh data out of main memory, to replace the stale data that the cache contains. This is known as an invalidate operation. It is performed with the use of the function: DCACHE_INVALIDATE_BY_ADDR(addr,sz). This invalidates L1 and L2 caches by invoking <a href="05139.html" target="topic">PLIB_L2CC_InvalidateCacheByAddr</a>(addr,sz) and <a href="01736.html" target="topic">dcache_InvalidateByAddr</a>(addr,sz) functions.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-The example application, cache_maintenance, in the Cache PLIB Examples demonstrates this situation and shows how to resolve the issue.</p></div>
+Configure the peripheral library using the MHC.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="03807.html" target="topic">L2CC Peripheral Library Help</a> &gt; <a href="03810.html" target="topic">Using the Library</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="03813.html" target="topic">LCDC Peripheral Library Help</a> &gt; <a href="03810.html" target="topic">Configuring the Library</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -92,13 +64,13 @@ The example application, cache_maintenance, in the Cache PLIB Examples demonstra
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03804.html" target="topic">Previous</a> | <a href="03807.html" target="topic">Up</a> | <a href="03808.html" target="topic">Next</a></div>
+<a href="03812.html" target="topic">Previous</a> | <a href="03813.html" target="topic">Up</a> | <a href="03818.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: L2CC 11160 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: LCDC 11062 Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

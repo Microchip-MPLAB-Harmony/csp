@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Running The Application</title>
+<title>Building The Application</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="03970.html" target="topic">MCAN Applications</a> &gt; <a href="03971.html" target="topic">mcan_fd_operation_blocking</a> &gt; <a href="03977.html" target="topic">Running The Application</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="03969.html" target="topic">MCAN Applications</a> &gt; <a href="03971.html" target="topic">mcan_normal_operation_blocking</a> &gt; <a href="03977.html" target="topic">Building The Application</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03975.html" target="topic">Previous</a> | <a href="03971.html" target="topic">Up</a> | <a href="03972.html" target="topic">Next</a></div>
+<a href="03971.html" target="topic">Previous</a> | <a href="03971.html" target="topic">Up</a> | <a href="03979.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MCAN mcan_fd_operation_blocking Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MCAN mcan_normal_operation_blocking Building The Application Topic Title: Building The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Running The Application</div>
+Building The Application</div>
 </div>
 </div>
 
@@ -49,94 +49,74 @@ Running The Application</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<strong><u>MPLAB X IDE</u></strong></p>
-<ol class="Element630">
-<li value="1" class="Element600">Open the Terminal application (Ex.:Tera term) on the computer for each board</li>
-<li value="2" class="Element600">Connect to the DEBUG UART Virtual COM port and configure the serial settings for each board as follows:
-<ul class="Element631">
-<li class="Element601">Baud : 115200</li>
-<li class="Element601">Data : 8 Bits</li>
-<li class="Element601">Parity : None</li>
-<li class="Element601">Stop : 1 Bit</li>
-<li class="Element601">Flow Control : None</li>
-</ul></li>
-<li value="3" class="Element600">Build and Program the application on both boards using the MPLAB X IDE.</li>
-<li value="4" class="Element600">Execute the steps and observe the output as described in the following table</li>
-</ol><div class="Element63">
+The parent folder for all the MPLAB X projects for this application is given below: </p><div class="Element63">
 <div class="TableDiv">
 <table cellspacing="0" class="Table1">
 <tr>
-<td class="Element65" valign="top" width="2%">
+<td class="Element65" valign="top" width="23%">
 <div class="Element66">
-Project Name&nbsp;</div></td><td class="Element65" valign="top" width="98%">
+Application Path&nbsp;</div></td><td class="Element65" valign="top" width="77%">
 <div class="Element66">
-Output&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="2%">
+csp/apps/mcan/mcan_normal_operation_blocking/firmware&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+The following tables provide the project name to be used with the different development kits. Open the required project in their respective IDEs.&nbsp;</p>
+<p class="Element10">
+<strong> MPLAB X IDE Projects </strong> &nbsp;</p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="25%">
+<div class="Element66">
+Project Name&nbsp;</div></td><td class="Element65" valign="top" width="75%">
+<div class="Element66">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
 <div class="Element68">
-sam_e70_xult.X&nbsp;</div></td><td class="Element67" valign="top" width="98%">
+sam_e70_xult.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
 <div class="Element68">
-</p>
-<ul class="Element630">
-<li class="Element600">Press '0' to receive message from CAN Bus on terminal window of SAM E70 XULT - 2 board.</li>
-<li class="Element600">Press '2' to transmit message to CAN Bus on terminal window of SAM E70 XULT - 1 board.</li>
-<li class="Element600">Transmitted message description with success will be displayed in the terminal window of SAM E70 XULT - 1 board. CAN message will be displayed in the terminal window of SAM E70 XULT - 2 board.</li>
-<li class="Element600">Repeat above steps with following input value and observe the output on each terminal.
-<ul class="Element631">
-<li class="Element601">Press '1' on SAM E70 XULT - 2 board and Press '3' on SAM E70 XULT - 1 board</li>
-<li class="Element601">Press '4' on SAM E70 XULT - 2 board and Press '6' on SAM E70 XULT - 1 board</li>
-<li class="Element601">Press '5' on SAM E70 XULT - 2 board and Press '7' on SAM E70 XULT - 1 board</li>
-<li class="Element601">Press '1' on SAM E70 XULT - 2 board and Press 'a' on SAM E70 XULT - 1 board</li>
-</ul></li>
-</ul><p class="Element68">
-&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="2%">
+SAM E70 Xplained Ultra board&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
 <div class="Element68">
-sam_v71_xult.X&nbsp;</div></td><td class="Element67" valign="top" width="98%">
+sam_v71_xult.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
 <div class="Element68">
-</p>
-<ul class="Element630">
-<li class="Element600">Press '0' to receive message from CAN Bus on terminal window of SAM V71 XULT - 2 board.</li>
-<li class="Element600">Press '2' to transmit message to CAN Bus on terminal window of SAM V71 XULT - 1 board.</li>
-<li class="Element600">Transmitted message description with success will be displayed in the terminal window of SAM V71 XULT - 1 board. CAN message will be displayed in the terminal window of SAM V71 XULT - 2 board.</li>
-<li class="Element600">Repeat above steps with following input value and observe the output on each terminal.
-<ul class="Element631">
-<li class="Element601">Press '1' on SAM V71 XULT - 2 board and Press '3' on SAM V71 XULT - 1 board</li>
-<li class="Element601">Press '4' on SAM V71 XULT - 2 board and Press '6' on SAM V71 XULT - 1 board</li>
-<li class="Element601">Press '5' on SAM V71 XULT - 2 board and Press '7' on SAM V71 XULT - 1 board</li>
-<li class="Element601">Press '1' on SAM V71 XULT - 2 board and Press 'a' on SAM V71 XULT - 1 board</li>
-</ul></li>
-</ul><p class="Element68">
-&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="2%">
+SAM V71 Xplained Ultra board&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
 <div class="Element68">
-sam_rh71_ek.X&nbsp;</div></td><td class="Element67" valign="top" width="98%">
+sam_rh71_ek.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
 <div class="Element68">
-</p>
-<ul class="Element630">
-<li class="Element600">Press '0' to receive message from CAN Bus on terminal window of SAM RH71 EK - 2 board.</li>
-<li class="Element600">Press '2' to transmit message to CAN Bus on terminal window of SAM RH71 EK - 1 board.</li>
-<li class="Element600">Transmitted message description with success will be displayed in the terminal window of SAM RH71 EK - 1 board. CAN message will be displayed in the terminal window of SAM RH71 EK - 2 board.</li>
-<li class="Element600">Repeat above steps with following input value and observe the output on each terminal.
-<ul class="Element631">
-<li class="Element601">Press '1' on SAM RH71 EK - 2 board and Press '3' on SAM RH71 EK - 1 board</li>
-<li class="Element601">Press '4' on SAM RH71 EK - 2 board and Press '6' on SAM RH71 EK - 1 board</li>
-<li class="Element601">Press '5' on SAM RH71 EK - 2 board and Press '7' on SAM RH71 EK - 1 board</li>
-<li class="Element601">Press '1' on SAM RH71 EK - 2 board and Press 'a' on SAM RH71 EK - 1 board</li>
-</ul></li>
-</ul><p class="Element68">
-&nbsp;</div></td></tr></table></div></div>
-
-<ol class="Element630">
-<li value="5" class="Element600">Following will be terminal session’s output.</li>
-</ol><p class="Element10">
-<img src="MCAN_FD_SAM.jpg" border="0" alt="" title=""></p></div>
+SAM RH71 Evaluation Kit&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
+<div class="Element68">
+sam_a5d2_xult_xc32.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+<div class="Element68">
+SAMA5D2 Xplained Ultra evaluation kit&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<strong> IAR Embedded Workbench Projects </strong> </p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="25%">
+<div class="Element66">
+Project Name&nbsp;</div></td><td class="Element65" valign="top" width="75%">
+<div class="Element66">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="25%">
+<div class="Element68">
+sam_a5d2_xult.IAR&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+<div class="Element68">
+SAMA5D2 Xplained Ultra evaluation kit&nbsp;</div></td></tr></table></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="03970.html" target="topic">MCAN Applications</a> &gt; <a href="03971.html" target="topic">mcan_fd_operation_blocking</a> &gt; <a href="03977.html" target="topic">Running The Application</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="03969.html" target="topic">MCAN Applications</a> &gt; <a href="03971.html" target="topic">mcan_normal_operation_blocking</a> &gt; <a href="03977.html" target="topic">Building The Application</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -144,13 +124,13 @@ sam_rh71_ek.X&nbsp;</div></td><td class="Element67" valign="top" width="98%">
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03975.html" target="topic">Previous</a> | <a href="03971.html" target="topic">Up</a> | <a href="03972.html" target="topic">Next</a></div>
+<a href="03971.html" target="topic">Previous</a> | <a href="03971.html" target="topic">Up</a> | <a href="03979.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MCAN mcan_fd_operation_blocking Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MCAN mcan_normal_operation_blocking Building The Application Topic Title: Building The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

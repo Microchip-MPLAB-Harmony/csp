@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>PWMx_ChannelDutySet Function</title>
+<title>PWMx_ChannelPeriodGet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="05378.html" target="topic">PWM Peripheral Library Help</a> &gt; <a href="05379.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="05458.html" target="topic">PWMx_ChannelDutySet Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="05377.html" target="topic">PWM Peripheral Library Help</a> &gt; <a href="05378.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="05458.html" target="topic">PWMx_ChannelPeriodGet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05457.html" target="topic">Previous</a> | <a href="05379.html" target="topic">Up</a> | <a href="05459.html" target="topic">Next</a></div>
+<a href="05457.html" target="topic">Previous</a> | <a href="05378.html" target="topic">Up</a> | <a href="05459.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pwm_6343::PWMx_ChannelDutySet@PWM_CHANNEL_NUM@uint16_t Topic Title: PWMx_ChannelDutySet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pwm_6343::PWMx_ChannelPeriodGet@PWM_CHANNEL_NUM Topic Title: PWMx_ChannelPeriodGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-PWMx_ChannelDutySet Function</div>
+PWMx_ChannelPeriodGet Function</div>
 </div>
 </div>
 
@@ -49,20 +49,19 @@ PWMx_ChannelDutySet Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function writes the duty cycle value in double buffer register. Update to the actual duty cycle register happens at the next period border. For left-aligned mode, update occurs when counter value = period value For center-aligned mode, update occurs when counter value = 0 while decrementing OR counter value = period value while incrementing</p></div>
+This function reads the period value of given PWM channel.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">PWMx_ChannelDutySet</span></strong>(
-    <a href="05430.html" target="topic">PWM_CHANNEL_NUM</a> <strong><span style="color: #000000">channel</span></strong>, 
-    uint16_t <strong><span style="color: #000000">duty</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100">uint16_t <strong><span style="color: #000000">PWMx_ChannelPeriodGet</span></strong>(
+    <a href="05429.html" target="topic">PWM_CHANNEL_NUM</a> <strong><span style="color: #000000">channel</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="05465.html" target="topic">PWMx_Initialize</a>() function must have been called first for the associated instance. And associated channel must be running.</p></div>
+<a href="05464.html" target="topic">PWMx_Initialize</a>() function must have been called first for the associated instance.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -81,12 +80,7 @@ Description&nbsp;</div></td></tr><tr>
 <div class="Element303">
 channel&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-PWM channel number&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-duty&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-duty cycle value which determines ON time of waveform&nbsp;</div></td></tr></table></div></div>
+PWM channel&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -94,22 +88,22 @@ Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-channel - PWM channel number duty - duty cycle value</p></div>
+The PWM channel's period value</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-In sync mode update method 0 (manual update of duty cycle), unlock bit (PWM_SCUC.UPDULOCK) should be set explicitly to trigger the update of duty cycle value at the next PWM period border. Use API <a href="05466.html" target="topic">PWMx_SyncUpdateEnable</a> to set the PWM_SCUC.UPDULOCK bit.</p></div>
+None</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">    PWM0_Initialize();
-    PWM0_ChannelsStart(PWM_CHANNEL_0_MASK);
-    PWM0_ChannelDutySet(PWM_CHANNEL_0, 0x200);</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">    uint16_t period;
+    PWM0_Initialize();
+    period = PWM0_ChannelPeriodGet(PWM_CHANNEL_0);</pre></div></div>
 </div>
 </div>
 </div>
@@ -117,7 +111,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="05378.html" target="topic">PWM Peripheral Library Help</a> &gt; <a href="05379.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="05458.html" target="topic">PWMx_ChannelDutySet Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="05377.html" target="topic">PWM Peripheral Library Help</a> &gt; <a href="05378.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="05458.html" target="topic">PWMx_ChannelPeriodGet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -125,13 +119,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05457.html" target="topic">Previous</a> | <a href="05379.html" target="topic">Up</a> | <a href="05459.html" target="topic">Next</a></div>
+<a href="05457.html" target="topic">Previous</a> | <a href="05378.html" target="topic">Up</a> | <a href="05459.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pwm_6343::PWMx_ChannelDutySet@PWM_CHANNEL_NUM@uint16_t Topic Title: PWMx_ChannelDutySet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pwm_6343::PWMx_ChannelPeriodGet@PWM_CHANNEL_NUM Topic Title: PWMx_ChannelPeriodGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

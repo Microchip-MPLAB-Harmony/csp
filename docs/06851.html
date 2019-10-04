@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>SPIx_WriteRead Function</title>
+<title>SPIx_CALLBACK Type</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="06767.html" target="topic">SPI Peripheral Library Help</a> &gt; <a href="06768.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="06851.html" target="topic">SPIx_WriteRead Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="06776.html" target="topic">SPI Peripheral Library Help</a> &gt; <a href="06777.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="06851.html" target="topic">SPIx_CALLBACK Type</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06850.html" target="topic">Previous</a> | <a href="06768.html" target="topic">Up</a> | <a href="06842.html" target="topic">Next</a></div>
+<a href="06870.html" target="topic">Previous</a> | <a href="06777.html" target="topic">Up</a> | <a href="06756.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: spi_01329::SPIx_WriteRead@void*@size_t@void*@size_t Topic Title: SPIx_WriteRead Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SPIx_CALLBACK Topic Title: SPIx_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-SPIx_WriteRead Function</div>
+SPIx_CALLBACK Type</div>
 </div>
 </div>
 
@@ -49,25 +49,15 @@ SPIx_WriteRead Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function should be used to write &quot;txSize&quot; number of bytes and read &quot;rxSize&quot; number of bytes on SPI x module. Data pointed by pTransmitData is transmitted and received data is saved in the location pointed by pReceiveData.</p></div>
+SPI Callback Function Pointer&nbsp;</p>
+<p class="Element10">
+This data type defines the required function signature for the SPI callback function. Application must register a pointer to a callback function whose function signature (parameter and return value types) match the types specified by this function pointer in order to receive callback from the PLIB.&nbsp;</p>
+<p class="Element10">
+The parameters and return values are described here and a partial example implementation is provided.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">SPIx_WriteRead</span></strong>(
-    <strong><span style="color: #000080">void</span></strong>* <strong><span style="color: #000000">pTransmitData</span></strong>, 
-    size_t <strong><span style="color: #000000">txSize</span></strong>, 
-    <strong><span style="color: #000080">void</span></strong>* <strong><span style="color: #000000">pReceiveData</span></strong>, 
-    size_t <strong><span style="color: #000000">rxSize</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-The <a href="06841.html" target="topic">SPIx_Initialize</a> function must have been called.&nbsp;</p>
-<p class="Element10">
-Callback has to be registered using <a href="06830.html" target="topic">SPIx_CallbackRegister</a> API if the peripheral instance has been configured in Interrupt mode and transfer completion status needs to be communicated back to application via callback.</p></div>
-</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000">SPIx_CALLBACK</span></strong>)(uintptr_t context);</pre></div></div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
 <div class="Element11">
@@ -83,58 +73,36 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-*pTransmitData&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Pointer to the data which has to be transmitted. if it is NULL, that means only data receiving is expected.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-txSize&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Number of bytes to be transmitted. Always, size should be given in terms of bytes. For example, if 5 16-bit data are to be transmitted, the transmit size should be 10 bytes.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-*pReceiveData&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Pointer to the location where received data has to be stored. It is user's responsibility to ensure pointed location has sufficient memory to store the read data. if it is NULL, that means only data transmission is expected.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-rxSize&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Number of bytes to be received. Always, size should be given in terms of bytes. For example, if 5 16-bit data are to be received, the receive size should be 10 bytes. if &quot;n&quot; number of bytes has to be received AFTER transmitting &quot;m&quot; number of bytes, then &quot;rxSize&quot; should be set as &quot;m+n&quot;.&nbsp;</div></td></tr></table></div></div>
+Value identifying the context of the application that registered the callback function&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
 <div class="Element11">
 <div class="Element10">
-
-<ul class="Element630">
-<li class="Element600">In Blocking mode, API returns True once the transfer is complete. It returns False if either of the size parameters are 0 and corresponding data pointer is NULL.</li>
-</ul><p class="Element10">
-&nbsp;</p>
-
-<ul class="Element630">
-<li class="Element600">In interrupt mode, if previous buffer request is not completed and a new transfer request comes, then this API will reject the new request and will return &quot;False&quot;. Also, Same as blocking mode, It returns False if either of the size parameters are 0 and corresponding data pointer is NULL.</li>
-</ul></div>
+<p class="Element10">
+None.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Non-blocking interrupt mode configuration implementation of this function. will be used by Harmony driver implementation APIs.</p></div>
+The context parameter contains the a handle to the client context, provided at the time the callback function was registered using the <a href="06852.html" target="topic">SPIx_CallbackRegister</a> function. This context handle value is passed back to the client as the &quot;context&quot; parameter. It can be any value (such as a pointer to the client's data) necessary to identify the client context or instance of the client that made the data transfer request.&nbsp;</p>
+<p class="Element10">
+The callback function executes in the PLIB's interrupt context. It is recommended of the application to not perform process intensive or blocking operations with in this function.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">uint8_t     txBuffer[4];
-uint8_t     rxBuffer[10];
-size_t      txSize = 4;
-size_t      rxSize = 10;
-<strong><span style="color: #000080">bool</span></strong>        reqAccepted;
-
-reqAccepted = SPI1_WriteRead(&amp;txBuffer, txSize, &amp;rxBuffer, rxSize);</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">SPI1_CallbackRegister(&amp;APP_SPITransferHandler, (uintptr_t)NULL);
+<strong><span style="color: #000080">void</span></strong> APP_SPITransferHandler(uintptr_t context)
+{
+    <i><span style="color: #008000">//Transfer was completed without error, do something else now.</span></i>
+}</pre></div></div>
 </div>
 </div>
 </div>
@@ -142,7 +110,7 @@ reqAccepted = SPI1_WriteRead(&amp;txBuffer, txSize, &amp;rxBuffer, rxSize);</pre
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="06767.html" target="topic">SPI Peripheral Library Help</a> &gt; <a href="06768.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="06851.html" target="topic">SPIx_WriteRead Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="06776.html" target="topic">SPI Peripheral Library Help</a> &gt; <a href="06777.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="06851.html" target="topic">SPIx_CALLBACK Type</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -150,13 +118,13 @@ reqAccepted = SPI1_WriteRead(&amp;txBuffer, txSize, &amp;rxBuffer, rxSize);</pre
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06850.html" target="topic">Previous</a> | <a href="06768.html" target="topic">Up</a> | <a href="06842.html" target="topic">Next</a></div>
+<a href="06870.html" target="topic">Previous</a> | <a href="06777.html" target="topic">Up</a> | <a href="06756.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: spi_01329::SPIx_WriteRead@void*@size_t@void*@size_t Topic Title: SPIx_WriteRead Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SPIx_CALLBACK Topic Title: SPIx_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

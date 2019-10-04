@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>NVMCTRL_QuadWordWrite Function</title>
+<title>NVMCTRL_Read Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="04386.html" target="topic">NVMCTRL Peripheral Library Help</a> &gt; <a href="04387.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="04460.html" target="topic">NVMCTRL_QuadWordWrite Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="04385.html" target="topic">NVMCTRL Peripheral Library Help</a> &gt; <a href="04386.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="04460.html" target="topic">NVMCTRL_Read Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04470.html" target="topic">Previous</a> | <a href="04387.html" target="topic">Up</a> | <a href="04457.html" target="topic">Next</a></div>
+<a href="04458.html" target="topic">Previous</a> | <a href="04386.html" target="topic">Up</a> | <a href="04461.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nvmctrl_u2409::NVMCTRL_QuadWordWrite@uint32_t *@uint32_t Topic Title: NVMCTRL_QuadWordWrite Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nvmctrl_u2409::NVMCTRL_Read@uint32_t *@uint32_t@uint32_t Topic Title: NVMCTRL_Read Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-NVMCTRL_QuadWordWrite Function</div>
+NVMCTRL_Read Function</div>
 </div>
 </div>
 
@@ -49,20 +49,21 @@ NVMCTRL_QuadWordWrite Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Configures the NVMCTRL for Automatic Quad Word (AQW) write and writes four words at the given address. This operation is quicker when compared to Page Write.</p></div>
+Reads 'length' number of bytes from a given address in FLASH memory into the user buffer.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">NVMCTRL_QuadWordWrite</span></strong>(
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">NVMCTRL_Read</span></strong>(
     uint32_t * <strong><span style="color: #000000">data</span></strong>, 
-    <strong><span style="color: #000080">const</span></strong> uint32_t <strong><span style="color: #000000">address</span></strong>
+    uint32_t <strong><span style="color: #000000">length</span></strong>, 
+    uint32_t <strong><span style="color: #000000">address</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The <a href="04443.html" target="topic">NVMCTRL_Initialize</a>() function should have been called once. Also validate if NVM controller is ready to accept a new request by calling <a href="04457.html" target="topic">NVMCTRL_IsBusy</a>(). The memory location should be in erased state (all bytes should be 0xff) before performing write operation. A block erase operation can be performed to erase all pages in a block.</p></div>
+None</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -81,12 +82,17 @@ Description&nbsp;</div></td></tr><tr>
 <div class="Element303">
 data&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Pointer to the buffer which holds data to be written.&nbsp;</div></td></tr><tr>
+Pointer to user data buffer&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+length&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Number of bytes to read&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
 address&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Address at which the data will be written.&nbsp;</div></td></tr></table></div></div>
+FLASH address to be read from&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -94,13 +100,14 @@ Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-bool - Status of the operation. Returns true if success. Returns false if failure.</p></div>
+Always returns 'true'. The return value should be ignored at application level.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">    NVMCTRL_QuadWordWrite(data_to_fill, TEST_ADDRESS);</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">    uint8_t buffer[256];
+    NVMCTRL_Read( (uint32_t *) buffer, 256, 0x20000);</pre></div></div>
 </div>
 </div>
 </div>
@@ -108,7 +115,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="04386.html" target="topic">NVMCTRL Peripheral Library Help</a> &gt; <a href="04387.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="04460.html" target="topic">NVMCTRL_QuadWordWrite Function</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="04385.html" target="topic">NVMCTRL Peripheral Library Help</a> &gt; <a href="04386.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="04460.html" target="topic">NVMCTRL_Read Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -116,13 +123,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04470.html" target="topic">Previous</a> | <a href="04387.html" target="topic">Up</a> | <a href="04457.html" target="topic">Next</a></div>
+<a href="04458.html" target="topic">Previous</a> | <a href="04386.html" target="topic">Up</a> | <a href="04461.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nvmctrl_u2409::NVMCTRL_QuadWordWrite@uint32_t *@uint32_t Topic Title: NVMCTRL_QuadWordWrite Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nvmctrl_u2409::NVMCTRL_Read@uint32_t *@uint32_t@uint32_t Topic Title: NVMCTRL_Read Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

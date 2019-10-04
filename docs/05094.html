@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Running The Application</title>
+<title>PIT64B_CALLBACK Type</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="05089.html" target="topic">PIT64B Applications</a> &gt; <a href="05090.html" target="topic">led_toggle_interrupt</a> &gt; <a href="05094.html" target="topic">Running The Application</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="05082.html" target="topic">PIT64B Peripheral Library Help</a> &gt; <a href="05083.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="05094.html" target="topic">PIT64B_CALLBACK Type</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05092.html" target="topic">Previous</a> | <a href="05090.html" target="topic">Up</a> | <a href="05140.html" target="topic">Next</a></div>
+<a href="05101.html" target="topic">Previous</a> | <a href="05083.html" target="topic">Up</a> | <a href="05174.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PIT64B led_toggle_interrupt Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PIT64B_CALLBACK Topic Title: PIT64B_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Running The Application</div>
+PIT64B_CALLBACK Type</div>
 </div>
 </div>
 
@@ -49,35 +49,19 @@ Running The Application</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<strong><u>IAR Embedded work bench</u></strong></p>
-<ol class="Element630">
-<li value="1" class="Element600">Build the project using IAR Embedded Workbench</li>
-<li value="2" class="Element600">Use the output binary file (harmony.bin) to setup the board as detailed in <a href="05092.html" target="topic">hardware setup</a></li>
-<li value="3" class="Element600">Reset the board to run the application</li>
-</ol><p class="Element10">
-&nbsp;</p>
-<div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element65" valign="top" width="37%">
-<div class="Element66">
-Kit Name&nbsp;</div></td><td class="Element65" valign="top" width="63%">
-<div class="Element66">
-LED Name&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="37%">
-<div class="Element68">
-SAM9X60 evaluation kit&nbsp;</div></td><td class="Element67" valign="top" width="63%">
-<div class="Element68">
-RGB_LED toggles in blue color every 1 second&nbsp;</div></td></tr></table></div></div>
+PIT64B Interrupt Callback Function definition.&nbsp;</p>
+<p class="Element10">
+Defines the function signature for the PIT64B interrupt callback.</p></div>
 </div>
-</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000">PIT64B_CALLBACK</span></strong>)(uintptr_t context);</pre></div></div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="05089.html" target="topic">PIT64B Applications</a> &gt; <a href="05090.html" target="topic">led_toggle_interrupt</a> &gt; <a href="05094.html" target="topic">Running The Application</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="05082.html" target="topic">PIT64B Peripheral Library Help</a> &gt; <a href="05083.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="05094.html" target="topic">PIT64B_CALLBACK Type</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -85,13 +69,13 @@ RGB_LED toggles in blue color every 1 second&nbsp;</div></td></tr></table></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05092.html" target="topic">Previous</a> | <a href="05090.html" target="topic">Up</a> | <a href="05140.html" target="topic">Next</a></div>
+<a href="05101.html" target="topic">Previous</a> | <a href="05083.html" target="topic">Up</a> | <a href="05174.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PIT64B led_toggle_interrupt Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PIT64B_CALLBACK Topic Title: PIT64B_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

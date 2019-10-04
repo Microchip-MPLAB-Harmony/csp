@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Using the Library</title>
+<title>TC Applications</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="07164.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="07175.html" target="topic">Timer</a> &gt; <a href="07184.html" target="topic">Using the Library</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="07184.html" target="topic">TC Applications</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="07176.html" target="topic">Previous</a> | <a href="07175.html" target="topic">Up</a> | <a href="07180.html" target="topic">Next</a></div>
+<a href="07082.html" target="topic">Previous</a> | <a href="00874.html" target="topic">Up</a> | <a href="07185.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC 6082 Timer Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC Applications Help Topic Title: TC Applications)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Using the Library</div>
+TC Applications</div>
 </div>
 </div>
 
@@ -49,35 +49,36 @@ Using the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-When the timer is enabled, it increments by one on every rising edge of the input clock, and generates an interrupt on a period match (Timer expiry period). Timer mode is used for periodic interrupt generation.&nbsp;</p>
-<p class="Element10">
-It provides both polling and callback methods to indicate period match has occurred.</p>
-<ul class="Element630">
-<li class="Element600">With polling, the application will need to continuously poll to check if the timer has expired.</li>
-<li class="Element600">With callback, the registered callback function will be called when the timer expires. This means the application do not have to poll continuously.</li>
-</ul><p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong>Callback method</strong>&nbsp;</p>
-<p class="Element10">
-This example demonstrates how to use TC channel in timer mode to generate periodic callback.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p><div class="Element13"><div class="Element12"><pre class="Element12"><i><span style="color: #008000">/* This function is called after period expires */</span></i>
-<strong><span style="color: #000080">void</span></strong> TC0_CH0_TimerInterruptHandler(uintptr_t context)
-{
-    <i><span style="color: #008000">/* Toggle LED */</span></i>
-    LED_Toggle();
-}
-
-<strong><span style="color: #000080">int</span></strong> main(<strong><span style="color: #000080">void</span></strong>)
-{
-
-    <i><span style="color: #008000">/* Register callback function for CH0 period interrupt */</span></i>
-    TC0_CH0_TimerCallbackRegister(TC0_CH0_TimerInterruptHandler, (uintptr_t)NULL);
-
-    <i><span style="color: #008000">/* Start the timer channel 0*/</span></i>
-    TC0_CH0_TimerStart();
-}</pre></div></div>
+This section provides help for the Timer Counter (TC) peripheral applications.</p></div>
+</div>
+<a name="546F70696373"></a><div class="Element14">
+Topics</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element200" valign="top" width="35%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="07185.html" target="topic">tc_capture_mode</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This example demonstrates how to use the TC module in capture mode to measure the duty cycle and frequency of an external input.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="07186.html" target="topic">tc_compare_mode</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This example demonstrates how to use the TC module in compare mode to generate an active low, active high, and toggle output on compare match.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="07187.html" target="topic">tc_timer_mode</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This example demonstrates how to use the TC module in timer mode to generate periodic interrupt.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -85,7 +86,7 @@ This example demonstrates how to use TC channel in timer mode to generate period
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05109.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04701.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05108.html" target="topic">Peripheral Libraries</a> &gt; <a href="07164.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="07175.html" target="topic">Timer</a> &gt; <a href="07184.html" target="topic">Using the Library</a></div>
+<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="07184.html" target="topic">TC Applications</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -93,13 +94,13 @@ This example demonstrates how to use TC channel in timer mode to generate period
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05109.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="07176.html" target="topic">Previous</a> | <a href="07175.html" target="topic">Up</a> | <a href="07180.html" target="topic">Next</a></div>
+<a href="07082.html" target="topic">Previous</a> | <a href="00874.html" target="topic">Up</a> | <a href="07185.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC 6082 Timer Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC Applications Help Topic Title: TC Applications)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->
