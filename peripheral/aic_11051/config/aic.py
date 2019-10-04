@@ -197,30 +197,27 @@ def aicCodeGenerationCallback( aicCodeGeneration, eventDictionary ):
 
 
 global aicVectorEnableCallback
-def aicVectorEnableCallback( aicVectorEnable, eventDictionary ):
-    global sharedVectors
-
-    desiredValue = eventDictionary[ "value" ]
-    interrupt = eventDictionary[ "id" ].replace( interruptLastNameLock, "" ).replace( interruptLastNameEnable, "" )
-    aicVectorEnable.setReadOnly( True )
-    if aicVectorEnable.getDefaultValue() == desiredValue:
-        aicVectorEnable.clearValue()
-    else:
-        aicVectorEnable.setValue( desiredValue, 1 )
-    aicVectorEnable.setReadOnly( False )
-
-    sharedInterrupt = subVectorToSharedVector.get( interrupt )
-    if( sharedInterrupt ):
-        # check if any sibling is enabled
-        component = aicVectorEnable.getComponent()
-        desiredValue = False
-        for elem in sharedVectors[ sharedInterrupt ]:
-            vectorEnable = component.getSymbolByID( elem + interruptLastNameEnable )
-            if vectorEnable and vectorEnable.getValue():
-                desiredValue = True
-
-        aicVectorEnable = component.getSymbolByID( sharedInterrupt + interruptLastNameEnable )
-        aicVectorEnable.setValue( desiredValue, 1 )
+def aicVectorEnableCallback(aicVectorEnable, eventDictionary):
+    #if atleast one sub vector is enabled, enable the shared vector 
+    if eventDictionary["value"]:
+        #Enable only it it not enabled already
+        if not aicVectorEnable.getValue():
+            aicVectorEnable.setValue(True)
+    
+    #if the current sub vector is disabled, check all subvectors before 
+    # disabling the shared vector
+    else: 
+        #Get the shared vector name
+        interruptName = aicVectorEnable.getID().split(interruptLastNameEnable)[0]
+        global sharedVectors
+        subElements = sharedVectors[ interruptName ]
+        for elem in subElements:
+            # A subvector is enabled, do nothing 
+            if eventDictionary["source"].getSymbolValue(elem + interruptLastNameEnable):
+                return
+        #None of the subvectors are enabled, disabled the shared vector(if enabled)
+        if aicVectorEnable.getValue():
+            aicVectorEnable.setValue(False)
 
 
 def setupEnableAndHandler( component, anInterrupt, aicVectorEnable, aicVectorHandler ):
@@ -242,7 +239,6 @@ def setupEnableAndHandler( component, anInterrupt, aicVectorEnable, aicVectorHan
             subVectorEnable = component.createBooleanSymbol( elem + interruptLastNameEnable, aicVectorEnable )
             subVectorEnable.setLabel( "Enable " + elem )
             subVectorEnable.setDefaultValue( False )
-            subVectorEnable.setDependencies( aicVectorEnableCallback, [elem + interruptLastNameLock] )
             enableDependencies.append( elem + interruptLastNameEnable )     # Parent enable depends on children
 
             subVectorHandlerLock = component.createBooleanSymbol( elem + interruptLastNameLock, subVectorEnable )
@@ -253,8 +249,7 @@ def setupEnableAndHandler( component, anInterrupt, aicVectorEnable, aicVectorHan
             subVectorHandler.setLabel( elem + " Handler" )
             subVectorHandler.setDefaultValue( elem + "_Handler" )
 
-    enableDependencies.append( interruptName + interruptLastNameLock )
-    aicVectorEnable.setDependencies( aicVectorEnableCallback, enableDependencies )
+        aicVectorEnable.setDependencies( aicVectorEnableCallback, enableDependencies )
 
 
 def setupSharedVectorFtlSymbols( component, anInterrupt, aicVectorEnable ):
