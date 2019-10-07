@@ -209,19 +209,35 @@ def bitTimingCalculation(bitTiming, lowTq, highTq):
         samplePoint = Database.getSymbolValue(canInstanceName.getValue().lower(), "NOMINAL_SAMPLE_POINT")
 
     numOfTimeQuanta = clk / ((bitrate * 1000) * (prescaler + 1))
-    if (numOfTimeQuanta < lowTq):
-        canTimeQuantaInvalidSym.setLabel("Warning!!! Number of Time Quanta is too low for required " + bitTiming + " Bit Timing")
-        canTimeQuantaInvalidSym.setVisible(True)
-        canCoreClockInvalidSym.setLabel("Warning!!! " + canInstanceName.getValue() + " Clock Frequency is too low for required " + bitTiming + " Bit Timing")
-        canCoreClockInvalidSym.setVisible(True)
-    elif (numOfTimeQuanta > highTq):
-        canTimeQuantaInvalidSym.setLabel("Warning!!! Number of Time Quanta is too high for required " + bitTiming + " Bit Timing")
-        canTimeQuantaInvalidSym.setVisible(True)
-        canCoreClockInvalidSym.setLabel("Warning!!! " + canInstanceName.getValue() + " Clock Frequency is too high for required " + bitTiming + " Bit Timing")
-        canCoreClockInvalidSym.setVisible(True)
+
+    if (bitTiming == "Data"):
+        if (numOfTimeQuanta < lowTq):
+            canTimeQuantaInvalidDataBitrateSym.setLabel("Warning!!! Number of Time Quanta is too low for required " + bitTiming + " Bit Timing")
+            canTimeQuantaInvalidDataBitrateSym.setVisible(True)
+            canCoreClockInvalidDataBitrateSym.setLabel("Warning!!! " + canInstanceName.getValue() + " Clock Frequency is too low for required " + bitTiming + " Bit Timing")
+            canCoreClockInvalidDataBitrateSym.setVisible(True)
+        elif (numOfTimeQuanta > highTq):
+            canTimeQuantaInvalidDataBitrateSym.setLabel("Warning!!! Number of Time Quanta is too high for required " + bitTiming + " Bit Timing")
+            canTimeQuantaInvalidDataBitrateSym.setVisible(True)
+            canCoreClockInvalidDataBitrateSym.setLabel("Warning!!! " + canInstanceName.getValue() + " Clock Frequency is too high for required " + bitTiming + " Bit Timing")
+            canCoreClockInvalidDataBitrateSym.setVisible(True)
+        else:
+            canTimeQuantaInvalidDataBitrateSym.setVisible(False)
+            canCoreClockInvalidDataBitrateSym.setVisible(False)
     else:
-        canTimeQuantaInvalidSym.setVisible(False)
-        canCoreClockInvalidSym.setVisible(False)
+        if (numOfTimeQuanta < lowTq):
+            canTimeQuantaInvalidSym.setLabel("Warning!!! Number of Time Quanta is too low for required " + bitTiming + " Bit Timing")
+            canTimeQuantaInvalidSym.setVisible(True)
+            canCoreClockInvalidSym.setLabel("Warning!!! " + canInstanceName.getValue() + " Clock Frequency is too low for required " + bitTiming + " Bit Timing")
+            canCoreClockInvalidSym.setVisible(True)
+        elif (numOfTimeQuanta > highTq):
+            canTimeQuantaInvalidSym.setLabel("Warning!!! Number of Time Quanta is too high for required " + bitTiming + " Bit Timing")
+            canTimeQuantaInvalidSym.setVisible(True)
+            canCoreClockInvalidSym.setLabel("Warning!!! " + canInstanceName.getValue() + " Clock Frequency is too high for required " + bitTiming + " Bit Timing")
+            canCoreClockInvalidSym.setVisible(True)
+        else:
+            canTimeQuantaInvalidSym.setVisible(False)
+            canCoreClockInvalidSym.setVisible(False)
 
     tseg1 = int((numOfTimeQuanta * samplePoint) / 100.0)
     tseg2 = numOfTimeQuanta - tseg1 - 1
@@ -274,6 +290,8 @@ def instantiateComponent(canComponent):
     global canCoreClockInvalidSym
     global canTimeQuantaInvalidSym
     global canInterruptMode
+    global canCoreClockInvalidDataBitrateSym
+    global canTimeQuantaInvalidDataBitrateSym
 
     canInstanceName = canComponent.createStringSymbol("CAN_INSTANCE_NAME", None)
     canInstanceName.setVisible(False)
@@ -345,6 +363,14 @@ def instantiateComponent(canComponent):
     canTimeQuantaInvalidSym = canComponent.createCommentSymbol("CAN_TIME_QUANTA_INVALID_COMMENT", None)
     canTimeQuantaInvalidSym.setLabel("Warning!!! Number of Time Quanta is too low for required Nominal Bit Timing")
     canTimeQuantaInvalidSym.setVisible(False)
+
+    canCoreClockInvalidDataBitrateSym = canComponent.createCommentSymbol("CAN_CORE_CLOCK_INVALID_DATA_BITRAT_COMMENT", None)
+    canCoreClockInvalidDataBitrateSym.setLabel("Warning!!! " + canInstanceName.getValue() + " Clock Frequency is too low for required Data Bit Timing")
+    canCoreClockInvalidDataBitrateSym.setVisible((canCoreClockValue.getValue() == 0))
+
+    canTimeQuantaInvalidDataBitrateSym = canComponent.createCommentSymbol("CAN_TIME_QUANTA_INVALID_DATA_BITRATE_COMMENT", None)
+    canTimeQuantaInvalidDataBitrateSym.setLabel("Warning!!! Number of Time Quanta is too low for required Data Bit Timing")
+    canTimeQuantaInvalidDataBitrateSym.setVisible(False)
 
     # CAN Nominal Bit Timing Calculation
     canNominalBitTimingMenu = canComponent.createMenuSymbol("NOMINAL_BIT_TIMING_CALCULATION", canBitTimingCalculationMenu)
