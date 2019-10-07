@@ -184,6 +184,11 @@ def instantiateComponent( coreComponent ):
     coreArch.setDefaultValue( ATDF.getNode( "/avr-tools-device-file/devices/device" ).getAttribute( "architecture" ) )
     coreArch.setReadOnly( True )
     coreArch.setVisible( False )
+    
+    coreSeries = coreComponent.createStringSymbol( "CoreSeries", None )
+    coreSeries.setDefaultValue( ATDF.getNode( "/avr-tools-device-file/devices/device" ).getAttribute( "series" ) )
+    coreSeries.setReadOnly( True )
+    coreSeries.setVisible( False )
 
     if "CORTEX-A" in coreArch.getValue():
         isCortexA = True
