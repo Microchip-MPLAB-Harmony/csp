@@ -38,8 +38,8 @@ global packageIdMap
 packageIdMap = {}
 global pin_map
 pin_map = {}
-global pinModifierMap
-pinModifierMap = {}
+global pinHasAnalogFunctionMap
+pinHasAnalogFunctionMap = {}
 global pin_position
 pin_position = []
 global sort_alphanumeric
@@ -169,7 +169,7 @@ def pinModeCal(pin, event):
     portChannel = pinChannel[pin_num-1].getValue()
 
     if len(pin_position) > pin_num-1:# This if condition is to handle the case when same device has two package options with different pin counts
-        if portChannel != "" and portChannel != "None" and pinModifierMap.get(pin_position[pin_num-1]) == False:
+        if portChannel != "" and portChannel != "None" and pinHasAnalogFunctionMap.get(pin_position[pin_num-1]) == True:
             channelIndex = pioSymChannel.index(portChannel)
             bit_pos = pinBitPosition[pin_num-1].getValue()
             ANSEL_Value = gpioSym_GPIO_ANSEL[channelIndex].getValue()
@@ -308,26 +308,27 @@ def createPinMap(packageSymbol):
     global pinoutXmlPath
     pin_map = {}
     pin_position = []
-    global pinModifierMap
-    pinModifierMap = {}
+    global pinHasAnalogFunctionMap
+    pinHasAnalogFunctionMap = {}
 
     tree = ET.parse(pinoutXmlPath)
     root = tree.getroot()
 
     for myPins in root.findall('pins'):
         for myPin in myPins.findall('pin'):
-            if myPin.find('modifiers') != None:
-                modeLock = True
-            else:
-                modeLock = False
+            analogFunction = False
+            for myFunction in myPin.findall('function'):
+                if myFunction.get("name").startswith("AN") and myFunction.get("name")[2].isnumeric():
+                    analogFunction = True
+                    break                    
             for myPackageNumber in myPin.findall('number'):
                 if packageIdMap.get(packageSymbol.getValue()) == myPackageNumber.get("package"):
                     if "BGA" or "VTLA" in packageSymbol.getValue():
                         pin_map[myPackageNumber.get("pin")] = myPin.get("name")
-                        pinModifierMap[myPackageNumber.get("pin")] = modeLock
+                        pinHasAnalogFunctionMap[myPackageNumber.get("pin")] = analogFunction
                     else:
                         pin_map[int(myPackageNumber.get("pin"))] = myPin.get("name")
-                        pinModifierMap[int(myPackageNumber.get("pin"))] = modeLock
+                        pinHasAnalogFunctionMap[int(myPackageNumber.get("pin"))] = analogFunction
 
     if "BGA" or "VTLA" in packageSymbol.getValue():
         pin_position = sort_alphanumeric(pin_map.keys())
