@@ -121,22 +121,14 @@ __STATIC_INLINE void FlexRAM_EccInitialize(void)
     // FlexRAM initialization loop (to handle ECC properly)
     for (i = 0; i < (0x18000); i += 0x10) // FlexRAM size/copy size in bytes = 0xC0000/0x80 = 0x1800 ( increment in 64 bits words : 0x80 / 8 = 0x10)
     {
-        //read ECC OFF
-        TCMECC_REGS->TCMECC_CR = 0x0;
-        __DSB();
-        __ISB();
         FPU_MemToFpu((unsigned int) (pFlexRam + i));
         //Write ECC ON
-        TCMECC_REGS->TCMECC_CR = 0x1;
         __DSB();
         __ISB();
         FPU_FpuToMem((unsigned int) (pFlexRam + i));
         __DSB();
         __ISB();
     }
-    __DSB();
-    __ISB();
-
     //disable cache I et data D
     SCB_DisableICache();
     SCB_DisableDCache();
