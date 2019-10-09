@@ -258,6 +258,16 @@ def instantiateComponent(hemcComponent):
         csType.addKey("HSMC", "0", "HSMC (PROM or SRAM) is connected")
         csType.addKey("SDRAMC", "1", "SDRAMC is connected")
         csDependencies.append("CS_" + str(id) + "_MEMORY_TYPE")
+        
+        csStart = hemcComponent.createHexSymbol("CS_" + str(id) + "_START_ADDRESS", csMenu)
+        csStart.setLabel("Start  Address")
+        csStart.setDefaultValue(0x60000000)
+        csStart.setVisible(False)
+        
+        csEnd = hemcComponent.createHexSymbol("CS_" + str(id) + "_END_ADDRESS", csMenu)
+        csEnd.setLabel("End  Address")
+        csEnd.setDefaultValue(0x60000000)
+        csEnd.setVisible(False)
 
         csBankSize = hemcComponent.createKeyValueSetSymbol("CS_" + str(id) + "_MEMORY_BANK_SIZE", csMenu)
         csBankSize.setLabel("Bank Size")
@@ -659,3 +669,5 @@ def instantiateComponent(hemcComponent):
     hemcSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
     hemcSystemInitFile.setSourcePath("../peripheral/hemc_44121/templates/system/initialization.c.ftl")
     hemcSystemInitFile.setMarkup(True)
+   
+    hemcComponent.addPlugin("../peripheral/hemc_44121/plugin/hemc_44121.jar")
