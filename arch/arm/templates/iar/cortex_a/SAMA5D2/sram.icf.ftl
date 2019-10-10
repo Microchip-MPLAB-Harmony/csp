@@ -7,9 +7,8 @@ define region DDRAM_NOCACHE_region = mem:[from 0x20000000 to 0x20FFFFFF];
 <#lt><#assign USR_STACK_SIZE = IAR_USR_STACK_SIZE!"0x1000">
 <#lt><#assign FIQ_STACK_SIZE = IAR_FIQ_STACK_SIZE!"0x60">
 <#lt><#assign IRQ_STACK_SIZE = IAR_IRQ_STACK_SIZE!"0x60">
-<#lt><#assign SVC_STACK_SIZE = IAR_SVC_STACK_SIZE!"0x60">
+<#lt><#assign SVC_STACK_SIZE = IAR_SVC_STACK_SIZE!"0x1000">
 <#lt><#assign ABT_STACK_SIZE = IAR_ABT_STACK_SIZE!"0x40">
-<#lt><#assign SYS_STACK_SIZE = IAR_SYS_STACK_SIZE!"0x40">
 <#lt><#assign UND_STACK_SIZE = IAR_UND_STACK_SIZE!"0x40">
 <#lt><#if HEAP_SIZE != 0 >
 define block HEAP      with alignment = 4, size = ${HEAP_SIZE}{};
@@ -28,9 +27,6 @@ define block SVC_STACK with alignment = 8, size = ${SVC_STACK_SIZE}{};
 <#lt></#if>
 <#lt><#if ABT_STACK_SIZE != 0 >
 define block ABT_STACK with alignment = 8, size = ${ABT_STACK_SIZE}{};
-<#lt></#if>
-<#lt><#if SYS_STACK_SIZE != 0 >
-define block SYS_STACK with alignment = 8, size = ${SYS_STACK_SIZE}{};
 <#lt></#if>
 <#lt><#if UND_STACK_SIZE != 0 >
 define block UND_STACK with alignment = 8, size = ${UND_STACK_SIZE}{};
@@ -75,9 +71,6 @@ place in RAM_region { block SVC_STACK };
 <#lt></#if>
 <#lt><#if ABT_STACK_SIZE != 0 >
 place in RAM_region { block ABT_STACK };
-<#lt></#if>
-<#lt><#if SYS_STACK_SIZE != 0 >
-place in RAM_region { block SYS_STACK };
 <#lt></#if>
 <#lt><#if UND_STACK_SIZE != 0 >
 place in RAM_region { block UND_STACK };

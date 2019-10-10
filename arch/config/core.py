@@ -361,7 +361,7 @@ def instantiateComponent( coreComponent ):
 
     if isCortexA == True:
         xc32UsrStackSize = coreComponent.createIntegerSymbol("XC32_USR_STACK_SIZE", xc32LdGeneralMenu)
-        xc32UsrStackSize.setLabel( "User Stack Size (bytes)" )
+        xc32UsrStackSize.setLabel( "User/System Stack Size (bytes)" )
         xc32UsrStackSize.setDefaultValue( 4096 )
         xc32UsrStackSize.setVisible( xc32Available )
 
@@ -384,11 +384,6 @@ def instantiateComponent( coreComponent ):
         xc32AbtStackSize.setLabel("Abort Stack Size (bytes)")
         xc32AbtStackSize.setDefaultValue(64)
         xc32AbtStackSize.setVisible( xc32AllStacks )
-
-        xc32SysStackSize = coreComponent.createIntegerSymbol("XC32_SYS_STACK_SIZE", xc32LdGeneralMenu)
-        xc32SysStackSize.setLabel("System Stack Size (bytes)")
-        xc32SysStackSize.setDefaultValue(64)
-        xc32SysStackSize.setVisible( xc32AllStacks )
 
         xc32UndStackSize = coreComponent.createIntegerSymbol("XC32_UND_STACK_SIZE", xc32LdGeneralMenu)
         xc32UndStackSize.setLabel("Undefined Stack Size (bytes)")
@@ -427,7 +422,7 @@ def instantiateComponent( coreComponent ):
     iarHeapSize.setVisible( iarAvailable )
 
     iarUsrStackSize = coreComponent.createIntegerSymbol("IAR_USR_STACK_SIZE", iarLdGeneralMenu)
-    iarUsrStackSize.setLabel( "User Stack Size (bytes)" )
+    iarUsrStackSize.setLabel( "User{} Stack Size (bytes)".format("/System" if iarAllStacks else "") )
     iarUsrStackSize.setDefaultValue( 4096 )
     iarUsrStackSize.setVisible( iarAvailable )
 
@@ -451,11 +446,6 @@ def instantiateComponent( coreComponent ):
     iarAbtStackSize.setLabel("Abort Stack Size (bytes)")
     iarAbtStackSize.setDefaultValue(64)
     iarAbtStackSize.setVisible( iarAllStacks )
-
-    iarSysStackSize = coreComponent.createIntegerSymbol("IAR_SYS_STACK_SIZE", iarLdGeneralMenu)
-    iarSysStackSize.setLabel("System Stack Size (bytes)")
-    iarSysStackSize.setDefaultValue(64)
-    iarSysStackSize.setVisible( iarAllStacks )
 
     iarUndStackSize = coreComponent.createIntegerSymbol("IAR_UND_STACK_SIZE", iarLdGeneralMenu)
     iarUndStackSize.setLabel("Undefined Stack Size (bytes)")

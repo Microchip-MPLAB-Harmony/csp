@@ -11,7 +11,6 @@ define region DDRAM_region         = mem:[from 0x21000000 to 0x2FFFFFFF];
 <#lt><#assign SVC_STACK_SIZE = IAR_SVC_STACK_SIZE!"0x1000">
 <#lt><#assign ABT_STACK_SIZE = IAR_ABT_STACK_SIZE!"0x40">
 <#lt><#assign UND_STACK_SIZE = IAR_UND_STACK_SIZE!"0x40">
-<#lt><#assign SYS_STACK_SIZE = IAR_SYS_STACK_SIZE!"0x1000">
 <#lt><#if HEAP_SIZE != 0 >
 define block HEAP      with alignment = 4, size = ${HEAP_SIZE}{};
 <#lt></#if>
@@ -32,9 +31,6 @@ define block ABT_STACK with alignment = 8, size = ${ABT_STACK_SIZE}{};
 <#lt></#if>
 <#lt><#if UND_STACK_SIZE != 0 >
 define block UND_STACK with alignment = 8, size = ${UND_STACK_SIZE}{};
-<#lt></#if>
-<#lt><#if SYS_STACK_SIZE != 0 >
-define block SYS_STACK with alignment = 8, size = ${SYS_STACK_SIZE}{};
 <#lt></#if>
 
 define block SRAM { section .region_sram  };
@@ -68,7 +64,6 @@ place in DDRAM_region { block IRQ_STACK };
 place in DDRAM_region { block SVC_STACK };
 place in DDRAM_region { block ABT_STACK };
 place in DDRAM_region { block UND_STACK };
-place in DDRAM_region { block SYS_STACK };
 
 place in DDRAM_NOCACHE_region { block NO_CACHE };
 
