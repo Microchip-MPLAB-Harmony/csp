@@ -259,14 +259,14 @@ def instantiateComponent(hemcComponent):
         csType.addKey("SDRAMC", "1", "SDRAMC is connected")
         csDependencies.append("CS_" + str(id) + "_MEMORY_TYPE")
         
-        csStart = hemcComponent.createHexSymbol("CS_" + str(id) + "_START_ADDRESS", csMenu)
+        csStart = hemcComponent.createStringSymbol("CS_" + str(id) + "_START_ADDRESS", csMenu)
         csStart.setLabel("Start  Address")
-        csStart.setDefaultValue(0x60000000)
+        csStart.setDefaultValue("0x60000000")
         csStart.setVisible(False)
         
-        csEnd = hemcComponent.createHexSymbol("CS_" + str(id) + "_END_ADDRESS", csMenu)
+        csEnd = hemcComponent.createStringSymbol("CS_" + str(id) + "_END_ADDRESS", csMenu)
         csEnd.setLabel("End  Address")
-        csEnd.setDefaultValue(0x60000000)
+        csEnd.setDefaultValue("0x60000000")
         csEnd.setVisible(False)
 
         csBankSize = hemcComponent.createKeyValueSetSymbol("CS_" + str(id) + "_MEMORY_BANK_SIZE", csMenu)
@@ -274,6 +274,7 @@ def instantiateComponent(hemcComponent):
         csBankSize.setOutputMode("Value")
         csBankSize.setDisplayMode("Description")
         value = ValGrp_CR_Banksize.getChildren()
+        
         for id in range(0, len(value)):
             csBankSize.addKey(value[id].getAttribute("name"), str(value[id].getAttribute("value")), value[id].getAttribute("caption"))
         csBankSize.setDefaultValue(17)
