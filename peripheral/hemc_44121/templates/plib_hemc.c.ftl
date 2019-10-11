@@ -167,7 +167,7 @@ void ${HSMC_INSTANCE_NAME}_Initialize( void )
     ${HSMC_INSTANCE_NAME}_REGS->HSMC_PULSE${i}= HSMC_PULSE${i}_NWE_PULSE(${.vars[HSMC_NWE_PULSE_CS]}) | HSMC_PULSE${i}_NCS_WR_PULSE(${.vars[HSMC_NCS_WR_PULSE_CS]}) | HSMC_PULSE${i}_NRD_PULSE(${.vars[HSMC_NRD_PULSE_CS]}) | HSMC_PULSE${i}_NCS_RD_PULSE(${.vars[HSMC_NCS_RD_PULSE_CS]});
 
     /* Setup HSMC MODE register */
-    ${HSMC_INSTANCE_NAME}_REGS->HSMC_MODE${i}= HSMC_MODE${i}_EXNW_MODE(${.vars[HSMC_DATA_BUS_CS]}) <#if (.vars[HSMC_WRITE_MODE_CS] == true)>| HSMC_MODE${i}_WRITE_MODE_Msk</#if> <#if (.vars[HSMC_READ_MODE_CS] == true)>| HSMC_MODE${i}_READ_MODE_Msk</#if> <#if (.vars[HSMC_RMW] == true)> HSMC_MODE${i}_RMW_ENABLE_Msk</#if>;
+    ${HSMC_INSTANCE_NAME}_REGS->HSMC_MODE${i}= HSMC_MODE${i}_EXNW_MODE(${.vars[HSMC_DATA_BUS_CS]}) <#if (.vars[HSMC_WRITE_MODE_CS] == true)>| HSMC_MODE${i}_WRITE_MODE_Msk</#if> <#if (.vars[HSMC_READ_MODE_CS] == true)>| HSMC_MODE${i}_READ_MODE_Msk</#if> <#if (.vars[HSMC_RMW] == true)>| HSMC_MODE${i}_RMW_ENABLE_Msk</#if>;
     </#if>
     </#if>
     </#if>
