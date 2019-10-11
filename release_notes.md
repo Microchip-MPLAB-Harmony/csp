@@ -3,6 +3,25 @@
 
 # Microchip MPLAB® Harmony 3 Release Notes
 
+## CSP Release v3.5.1
+### New Features
+- N/A
+
+### Bug fixes
+- Fixed documentation and PLIB of gpio_01166 (PIC32MX7)
+- Fixed API documentation for missing XXX_I2C_TransferSetup
+- Fixed wrong clock generation for SAM G55 and SAM D11
+- Fixed NVMCTRL PLIB for SAM E54
+- Fixed SAM RH71 startup code, HEMC PLIB template and TC clock configuration
+- Fixed SDI1 pin-setting for SPI in PIC32MX270F256B
+- Fixed multiple issues in CAN_03247 and CAN_01152 (PIC32Mxx)
+
+### Known Issues
+- Same as v3.5.0
+
+### Development Tools
+- Same as v3.5.0
+
 ## CSP Release v3.5.0
 ### New Features
 
@@ -50,7 +69,7 @@ families of 32-bit microcontrollers.
 
 The current known issues are as follows:
 
-* Configuration fuse macros are not generated for SAM D09/D11/D12 devices. 
+* Configuration fuse macros are not generated for SAM D09/D10/D11 devices. 
 
 * PIC32MK GPK/GPL/MCM and SAM RH71 will be supported in the next version of MPLAB X IDE release.
 
