@@ -45,17 +45,30 @@ def _get_statReg_parms(vectorNumber):
 
 def getIRQnumber(string):
     interruptsChildren = ATDF.getNode('/avr-tools-device-file/devices/device/interrupts').getChildren()
+    irq_index = "-1"
 
     for param in interruptsChildren:
-        name = param.getAttribute("name")
-        if string == name:
-            irq_index = param.getAttribute("index")
-            break
-        elif string == name.replace('_',''):
-            irq_index = param.getAttribute("irq-index")
+        if "irq-index" in param.getAttributeList():
+            name = str(param.getAttribute("irq-name"))
+            if string == name:
+                irq_index = str(param.getAttribute("irq-index"))
+                break
+        else:
             break
 
     return irq_index
+
+def getVectorIndex(string):
+    vector_index = "-1"
+    interruptsChildren = ATDF.getNode('/avr-tools-device-file/devices/device/interrupts').getChildren()
+
+    for param in interruptsChildren:
+        name = str(param.getAttribute("name"))
+        if string == name:
+            vector_index = str(param.getAttribute("index"))
+            break
+
+    return vector_index
 
 def canCreateFilter(component, menu, filterNumber):
     filterMenu = component.createMenuSymbol(canInstanceName.getValue() + "_FILTER"+ str(filterNumber), menu)
@@ -190,13 +203,12 @@ def canInterruptSet(symbol, event):
     Database.setSymbolValue("core", canInterruptHandlerLock, event["value"])
     interruptName = canInterruptHandler.split("_INTERRUPT_HANDLER")[0]
     if event["value"] == True:
-        Database.setSymbolValue("core", canInterruptHandler, interruptName + "_InterruptHandler")
+        Database.setSymbolValue("core", canInterruptHandler, canInstanceName.getValue() + "_InterruptHandler")
     else:
         Database.setSymbolValue("core", canInterruptHandler, interruptName + "_Handler")
 
 def updateCanInterruptData(symbol, event):
     component = symbol.getComponent()
-    canInterruptVectorUpdate = canInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
     if canInterruptMode.getValue() == True and Database.getSymbolValue("core", canInterruptVectorUpdate) == True:
         symbol.setVisible(True)
     else:
@@ -293,10 +305,25 @@ def instantiateComponent(canComponent):
     canInterruptMode.setLabel("Interrupt Mode")
     canInterruptMode.setDefaultValue(False)
 
-    canInterruptVector = canInstanceName.getValue() + "_INTERRUPT_ENABLE"
-    canInterruptHandler = canInstanceName.getValue() + "_INTERRUPT_HANDLER"
-    canInterruptHandlerLock = canInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK"
-    canInterruptVectorUpdate = canInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
+    canIrq = "CAN_" + canInstanceNum.getValue()
+    canVectorNum = getVectorIndex(canIrq)
+
+    if canVectorNum != "-1":
+        canInterruptVector = canIrq + "_INTERRUPT_ENABLE"
+        canInterruptHandler = canIrq + "_INTERRUPT_HANDLER"
+        canInterruptHandlerLock = canIrq + "_INTERRUPT_HANDLER_LOCK"
+        canInterruptVectorUpdate = canIrq + "_INTERRUPT_ENABLE_UPDATE"
+        canIrq_index = int(getIRQnumber(canInstanceName.getValue()))
+        enblRegName = _get_enblReg_parms(canIrq_index)
+        statRegName = _get_statReg_parms(canIrq_index)
+    else:
+        canInterruptVector = canInstanceName.getValue() + "_INTERRUPT_ENABLE"
+        canInterruptHandler = canInstanceName.getValue() + "_INTERRUPT_HANDLER"
+        canInterruptHandlerLock = canInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK"
+        canInterruptVectorUpdate = canInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
+        canIrq_index = int(getVectorIndex(canInstanceName.getValue()))
+        enblRegName = _get_enblReg_parms(canIrq_index)
+        statRegName = _get_statReg_parms(canIrq_index)
 
     # CAN Bit Timing Calculation
     canBitTimingCalculationMenu = canComponent.createMenuSymbol("BIT_TIMING_CALCULATION", None)
@@ -456,10 +483,6 @@ def instantiateComponent(canComponent):
     caninterruptEnable = canComponent.createBooleanSymbol("CAN_INTERRUPT_ENABLE", None)
     caninterruptEnable.setVisible(False)
     caninterruptEnable.setDependencies(canInterruptSet, ["CAN_INTERRUPT_MODE"])
-
-    canIrq_index = int(getIRQnumber(canInstanceName.getValue()))
-    enblRegName = _get_enblReg_parms(canIrq_index)
-    statRegName = _get_statReg_parms(canIrq_index)
 
     #IEC REG
     canIEC = canComponent.createStringSymbol("CAN_IEC_REG", None)
