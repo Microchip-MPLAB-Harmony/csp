@@ -44,6 +44,11 @@ def dspLibCallback(symbol, event):
     else:
         setDspLibParameters(symbol, event["value"])
 
+def nnEnableCallback(symbol, event):
+    if event["value"]:
+        symbol.setValue(True)
+    else:
+        symbol.clearValue()
 
 def instantiateComponent(cmsisComponent):
 
@@ -110,6 +115,7 @@ def instantiateComponent(cmsisComponent):
         cmsisDSPEnableSym = cmsisComponent.createBooleanSymbol("CMSIS_DSP_ENABLE", None)
         cmsisDSPEnableSym.setLabel("Enable CMSIS DSP")
         cmsisDSPEnableSym.setDescription("Copies cmsis-dsp files into the project and adds it into project path")
+        cmsisDSPEnableSym.setDependencies(nnEnableCallback, ["CMSIS_NN_ENABLE"])
 
         # add dsp header files  
         cmsisDSPIncludePath = os.path.join(Variables.get("__CMSIS_PACK_DIR"), "CMSIS", "DSP", "Include")
@@ -164,6 +170,56 @@ def instantiateComponent(cmsisComponent):
         setDspLibParameters(libraryFileSym,0)
         libraryFileSym.setEnabled(cmsisDSPEnableSym.getValue())
         libraryFileSym.setDependencies(dspLibCallback, ["CMSIS_DSP_ENABLE","core.COMPILER_CHOICE"])
+
+################################################################################
+############################### CMSIS NN #######################################
+################################################################################
+        #Enables cmsis-nn  
+        cmsisNNEnableSym = cmsisComponent.createBooleanSymbol("CMSIS_NN_ENABLE", None)
+        cmsisNNEnableSym.setLabel("Enable CMSIS NN")
+        cmsisNNEnableSym.setDescription("Copies cmsis Neural Network (NN) files into the project and adds it into project path")
+
+        #Create Include file symbols
+        cmsisNNIncludePath = os.path.join(Variables.get("__CMSIS_PACK_DIR"), "CMSIS", "NN", "Include")
+        for headerFileName in  os.listdir(cmsisNNIncludePath):
+            szSymbol = "{}_H".format(headerFileName[:-2].upper())
+            headerFile = cmsisComponent.createFileSymbol(szSymbol, None)
+            headerFile.setRelative(False)
+            headerFile.setSourcePath(cmsisNNIncludePath + os.sep + headerFileName)
+            headerFile.setOutputName(headerFileName)
+            headerFile.setMarkup(False)
+            headerFile.setOverwrite(True)
+            headerFile.setDestPath("../../packs/CMSIS/CMSIS/NN/Include/")
+            headerFile.setProjectPath("packs/CMSIS/CMSIS/NN/Include/")
+            headerFile.setType("HEADER")
+            headerFile.setEnabled(cmsisNNEnableSym.getValue())
+            headerFile.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"]), ["CMSIS_NN_ENABLE"])
+
+        #CMSIS NN include path setting symbol
+        cmsisNNIncludeSetting = cmsisComponent.createSettingSymbol("CMSIS_NN_INCLUDE_DIRS", None)
+        cmsisNNIncludeSetting.setCategory("C32")
+        cmsisNNIncludeSetting.setKey("extra-include-directories")
+        cmsisNNIncludeSetting.setValue("../src/packs/CMSIS/CMSIS/NN/Include/")
+        cmsisNNIncludeSetting.setAppend(True, ";")
+        cmsisNNIncludeSetting.setEnabled(cmsisNNEnableSym.getValue())
+        cmsisNNIncludeSetting.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"]), ["CMSIS_NN_ENABLE"])
+        
+        #Create source file symbols
+        cmsisNNSourcePath = os.path.join(Variables.get("__CMSIS_PACK_DIR"), "CMSIS", "NN", "Source")
+        for root,_,files in os.walk(cmsisNNSourcePath):
+            for sourceFileName in files:
+                szSymbol = sourceFileName.replace(".", "_").upper()
+                sourceFile = cmsisComponent.createFileSymbol(szSymbol, None)
+                sourceFile.setRelative(False)
+                sourceFile.setSourcePath(os.path.join(root, sourceFileName))
+                sourceFile.setOutputName(sourceFileName)
+                sourceFile.setMarkup(False)
+                sourceFile.setOverwrite(True)
+                sourceFile.setDestPath(os.path.normpath("../../packs/CMSIS/CMSIS/NN/Source/" + os.path.basename(root)))
+                sourceFile.setProjectPath(os.path.normpath("packs/CMSIS/CMSIS/NN/Source/" + os.path.basename(root)))
+                sourceFile.setType("SOURCE")
+                sourceFile.setEnabled(cmsisNNEnableSym.getValue())
+                sourceFile.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"]), ["CMSIS_NN_ENABLE"])
 
     #If this is a cortex A device
     elif cortexType.startswith("a"):
