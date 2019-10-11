@@ -305,9 +305,13 @@ global cur_package
 prev_package = ""
 cur_package = ""
 global pin_map
+global pin_map_internal
 global pin_position
+global pin_position_internal
 pin_map = {}
+pin_map_internal = {}
 pin_position = []
+pin_position_internal = []
 global pin
 pin = []
 pinName = []
@@ -342,17 +346,24 @@ for letter in range(65,91):
 
 pinoutNode = ATDF.getNode('/avr-tools-device-file/pinouts/pinout@[name= "' + str(package.get(portPackage.getValue())) + '"]')
 for id in range(0,len(pinoutNode.getChildren())):
-    if "BGA" in portPackage.getValue() or "WLCSP" in portPackage.getValue():
-        pin_map[pinoutNode.getChildren()[id].getAttribute("position")] = pinoutNode.getChildren()[id].getAttribute("pad")
+    if pinoutNode.getChildren()[id].getAttribute("type") == None:
+        if "BGA" in portPackage.getValue() or "WLCSP" in portPackage.getValue():
+            pin_map[pinoutNode.getChildren()[id].getAttribute("position")] = pinoutNode.getChildren()[id].getAttribute("pad")
+        else:
+            pin_map[int(pinoutNode.getChildren()[id].getAttribute("position"))] = pinoutNode.getChildren()[id].getAttribute("pad")
     else:
-        pin_map[int(pinoutNode.getChildren()[id].getAttribute("position"))] = pinoutNode.getChildren()[id].getAttribute("pad")
+        pin_map_internal[pinoutNode.getChildren()[id].getAttribute("type").split("INTERNAL_")[1]] = pinoutNode.getChildren()[id].getAttribute("pad")
 
 if "BGA" in portPackage.getValue() or "WLCSP" in portPackage.getValue():
     pin_position = sort_alphanumeric(pin_map.keys())
+    pin_position_internal = sort_alphanumeric(pin_map_internal.keys())
 else:
     pin_position = sorted(pin_map.keys())
+    pin_position_internal = sorted(pin_map_internal.keys())
 
-for pinNumber in range(1, pincount + 1):
+internalPincount = pincount + len(pin_map_internal.keys())
+
+for pinNumber in range(1, internalPincount + 1):
 
     portSignalNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"PORT\"]/instance@[name=\"PORT\"]/signals/signal@[index=\""+ str(pinNumber - 1) +"\"]")
 
@@ -372,10 +383,16 @@ for pinNumber in range(1, pincount + 1):
 
             availablePinDictionary[str(signalIndex)] = siganlPad
 
-    pin.append(pinNumber)
-    pin[pinNumber-1] = coreComponent.createMenuSymbol("PORT_PIN" + str(pinNumber), pinConfiguration)
-    pin[pinNumber-1].setLabel("Pin " + str(pin_position[pinNumber-1]))
-    pin[pinNumber-1].setDescription("Configuraiton for Pin " + str(pin_position[pinNumber-1]) )
+    if pinNumber < pincount + 1:
+        pin.append(pinNumber)
+        pin[pinNumber-1] = coreComponent.createMenuSymbol("PORT_PIN" + str(pinNumber), pinConfiguration)
+        pin[pinNumber-1].setLabel("Pin " + str(pin_position[pinNumber-1]))
+        pin[pinNumber-1].setDescription("Configuraiton for Pin " + str(pin_position[pinNumber-1]) )
+    else:
+        pin.append(pinNumber)
+        pin[pinNumber-1] = coreComponent.createMenuSymbol("PORT_PIN" + str(pinNumber), pinConfiguration)
+        pin[pinNumber-1].setLabel("Pin " +  str(pin_position_internal[pinNumber - pincount - 1]))
+        pin[pinNumber-1].setDescription("Configuraiton for Pin " + str(pin_position_internal[pinNumber - pincount - 1]))
 
     pinBitPosition.append(pinNumber)
     pinBitPosition[pinNumber-1] = coreComponent.createIntegerSymbol("PIN_" + str(pinNumber) + "_PORT_PIN", pin[pinNumber-1])
@@ -391,10 +408,16 @@ for pinNumber in range(1, pincount + 1):
     pinGroupNum[pinNumber-1] = coreComponent.createIntegerSymbol("PIN_" + str(pinNumber) + "_GROUP", pin[pinNumber-1])
     pinGroupNum[pinNumber-1].setVisible(False)
 
-    if pin_map.get(pin_position[pinNumber-1]).startswith("P"):
-        pinBitPosition[pinNumber-1].setDefaultValue(int(re.findall('\d+', pin_map.get(pin_position[pinNumber-1]))[0]))
-        pinGroup[pinNumber-1].setDefaultValue(pin_map.get(pin_position[pinNumber-1])[1])
-        pinGroupNum[pinNumber-1].setDefaultValue(portGroupName.index(str(pin_map.get(pin_position[pinNumber-1]))[1]))
+    if pinNumber < pincount + 1:
+        if pin_map.get(pin_position[pinNumber-1]).startswith("P"):
+            pinBitPosition[pinNumber-1].setDefaultValue(int(re.findall('\d+', pin_map.get(pin_position[pinNumber-1]))[0]))
+            pinGroup[pinNumber-1].setDefaultValue(pin_map.get(pin_position[pinNumber-1])[1])
+            pinGroupNum[pinNumber-1].setDefaultValue(portGroupName.index(str(pin_map.get(pin_position[pinNumber-1]))[1]))
+    else:
+        if pin_map_internal.get(pin_position_internal[pinNumber - pincount - 1]).startswith("P"):
+            pinBitPosition[pinNumber-1].setDefaultValue(int(re.findall('\d+', pin_map_internal.get(pin_position_internal[pinNumber - pincount - 1]))[0]))
+            pinGroup[pinNumber-1].setDefaultValue(pin_map_internal.get(pin_position_internal[pinNumber - pincount - 1])[1])
+            pinGroupNum[pinNumber-1].setDefaultValue(portGroupName.index(str(pin_map_internal.get(pin_position_internal[pinNumber - pincount - 1]))[1]))
 
     pinName.append(pinNumber)
     pinName[pinNumber-1] = coreComponent.createStringSymbol("PIN_" + str(pinNumber) + "_FUNCTION_NAME", pin[pinNumber-1])
@@ -483,7 +506,7 @@ portSym_Count.setDefaultValue(int(portModuleGC.getAttribute("count")))
 
 portSym_PinCount = coreComponent.createIntegerSymbol("PORT_PIN_COUNT", portMenu)
 portSym_PinCount.setVisible(False)
-portSym_PinCount.setDefaultValue(pincount)
+portSym_PinCount.setDefaultValue(internalPincount)
 
 global portPeripheralFunc
 portPeripheralFunc = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N"]
