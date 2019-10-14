@@ -3,6 +3,19 @@
 
 # Microchip MPLAB® Harmony 3 Release Notes
 
+## CSP Release v3.5.2
+### New Features
+- N/A
+
+### Bug fixes
+- Fixed issue with Pin Manager hanging in some cases.
+
+### Known Issues
+- Same as v3.5.1
+
+### Development Tools
+- Same as v3.5.1
+
 ## CSP Release v3.5.1
 ### New Features
 - N/A
