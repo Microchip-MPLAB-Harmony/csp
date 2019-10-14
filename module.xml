@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<Module name="Chip Support Packages" id="70ED0B77-2528-4AEB-8256-1F60F9450C74" version="1.0.0" type="csp">
+<Module name="Chip Support Packages" id="70ED0B77-2528-4AEB-8256-1F60F9450C74" version="3.5.2" type="csp">
     <ArchRoot path="arch"/>
 </Module>
