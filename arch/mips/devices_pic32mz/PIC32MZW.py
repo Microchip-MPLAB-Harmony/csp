@@ -191,7 +191,7 @@ prefetchMenu.setLabel("Prefetch and Flash Configuration")
 prefetchMenu.setDescription("Configure Prefetch and Flash")
 
 # load clock manager information
-#execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_pic32mzw/config/clk.py")
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_pic32mzw/config/clk.py")
 #coreComponent.addPlugin("../peripheral/clk_pic32mz/plugin/clockmanager.jar")
 
 SYM_ECCCON = coreComponent.createKeyValueSetSymbol("CONFIG_CFGCON_ECCCON", prefetchMenu)
@@ -241,6 +241,14 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/evic_02907/config/evic.py
 # load dma manager information
 #execfile(Variables.get("__CORE_DIR") + "/../peripheral/dmac_01500/config/dmac.py")
 #coreComponent.addPlugin("../peripheral/dmac_01500/plugin/dmamanager.jar")
+
+MLDOInitFile = coreComponent.createFileSymbol("MLDO_C_INIT", None)
+MLDOInitFile.setSourcePath("templates/system_pmu_mldo_trim.c.ftl")
+MLDOInitFile.setOutputName("system_pmu_mldo_trim.c")
+MLDOInitFile.setDestPath("/")
+MLDOInitFile.setProjectPath("config/" + CONFIG_NAME)
+MLDOInitFile.setType("SOURCE")
+MLDOInitFile.setMarkup(True)
 
 devconSystemInitFile = coreComponent.createFileSymbol("DEVICE_CONFIG_SYSTEM_INIT", None)
 devconSystemInitFile.setType("STRING")
