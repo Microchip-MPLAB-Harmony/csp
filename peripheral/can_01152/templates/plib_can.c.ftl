@@ -235,7 +235,7 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* 
 
         if (msgAttr == CAN_MSG_TX_REMOTE_FRAME)
         {
-            txMessage->msgEID = CAN_MSG_RTR_MASK;
+            txMessage->msgEID |= CAN_MSG_RTR_MASK;
         }
         else
         {
