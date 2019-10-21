@@ -59,61 +59,6 @@
 #include <stdbool.h>
 #include <string.h>
 #include "device.h"
-
-<#-- Message memory configuration -->
-<#assign MESSAGE_RAM_SIZE = 0>
-<#assign NUMBER_OF_RX_FIFO = 0>
-<#if TX_EVENT_FIFO_USE == true>
-    <#if CAN_TIMESTAMP_ENABLE == true>
-        <#assign MESSAGE_RAM_SIZE = MESSAGE_RAM_SIZE + (TX_EVENT_FIFO_MESSAGE_BUFFER * 12)>
-    <#else>
-        <#assign MESSAGE_RAM_SIZE = MESSAGE_RAM_SIZE + (TX_EVENT_FIFO_MESSAGE_BUFFER * 8)>
-    </#if>
-</#if>
-<#if TX_QUEUE_USE == true>
-    <#if TX_QUEUE_PAYLOAD_SIZE?keep_after("0x")?number < 5>
-        <#assign TX_QUEUE_OBJECT_SIZE = 16 + TX_QUEUE_PAYLOAD_SIZE?keep_after("0x")?number * 4>
-    <#else>
-        <#assign TX_QUEUE_OBJECT_SIZE = 40 + 16 * (TX_QUEUE_PAYLOAD_SIZE?keep_after("0x")?number - 5)>
-    </#if>
-    <#assign MESSAGE_RAM_SIZE = MESSAGE_RAM_SIZE + (TX_QUEUE_MESSAGE_BUFFER * TX_QUEUE_OBJECT_SIZE)>
-</#if>
-<#list 1..NUMBER_OF_FIFO as fifo>
-    <#assign TX_FIFO_ENABLE = CAN_INSTANCE_NAME + "_FIFO" + fifo + "_TXEN">
-    <#assign FIFO_PAYLOAD_SIZE = CAN_INSTANCE_NAME + "_FIFO" + fifo + "_PAYLOAD_SIZE">
-    <#assign FIFO_MESSAGE_BUFFER_NUM = CAN_INSTANCE_NAME + "_FIFO" + fifo + "_SIZE">
-    <#if .vars[TX_FIFO_ENABLE] == "0x1">
-        <#if .vars[FIFO_PAYLOAD_SIZE]?keep_after("0x")?number < 5>
-            <#assign TX_FIFO_OBJECT_SIZE = 16 + .vars[FIFO_PAYLOAD_SIZE]?keep_after("0x")?number * 4>
-        <#else>
-            <#assign TX_FIFO_OBJECT_SIZE = 40 + 16 * (.vars[FIFO_PAYLOAD_SIZE]?keep_after("0x")?number - 5)>
-        </#if>
-        <#assign MESSAGE_RAM_SIZE = MESSAGE_RAM_SIZE + (.vars[FIFO_MESSAGE_BUFFER_NUM] * TX_FIFO_OBJECT_SIZE)>
-    <#else>
-        <#assign NUMBER_OF_RX_FIFO += 1>
-        <#if .vars[FIFO_PAYLOAD_SIZE]?keep_after("0x")?number < 5>
-            <#if CAN_TIMESTAMP_ENABLE == true>
-                <#assign RX_FIFO_OBJECT_SIZE = 20 + .vars[FIFO_PAYLOAD_SIZE]?keep_after("0x")?number * 4>
-            <#else>
-                <#assign RX_FIFO_OBJECT_SIZE = 16 + .vars[FIFO_PAYLOAD_SIZE]?keep_after("0x")?number * 4>
-            </#if>
-        <#else>
-            <#if CAN_TIMESTAMP_ENABLE == true>
-                <#assign RX_FIFO_OBJECT_SIZE = 44 + 16 * (.vars[FIFO_PAYLOAD_SIZE]?keep_after("0x")?number - 5)>
-            <#else>
-                <#assign RX_FIFO_OBJECT_SIZE = 40 + 16 * (.vars[FIFO_PAYLOAD_SIZE]?keep_after("0x")?number - 5)>
-            </#if>
-        </#if>
-        <#assign MESSAGE_RAM_SIZE = MESSAGE_RAM_SIZE + (.vars[FIFO_MESSAGE_BUFFER_NUM] * RX_FIFO_OBJECT_SIZE)>
-    </#if>
-</#list>
-/* ${CAN_INSTANCE_NAME} Message memory size */
-#define CAN_MESSAGE_RAM_CONFIG_SIZE ${MESSAGE_RAM_SIZE}
-/* Number of configured FIFO */
-#define CAN_NUM_OF_FIFO             ${NUMBER_OF_FIFO}
-/* Maximum number of CAN Message buffers in each FIFO */
-#define CAN_FIFO_MESSAGE_BUFFER_MAX 32
-
 #include "plib_can_common.h"
 
 // DOM-IGNORE-BEGIN
