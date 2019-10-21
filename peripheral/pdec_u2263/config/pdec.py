@@ -33,8 +33,14 @@ global InterruptVectorUpdate
 global pdecInstanceName
 global interruptDepList
 interruptDepList = []
-global eventDepList
+global eventDepList     #List to calculate EVCTRL value for QDEC mode
 eventDepList = []
+global eventHallDepList  #List to calculate EVCTRL value for HALL mode
+eventHallDepList = []
+global eventCounterDepList  #List to calculate EVCTRL value for COUNTER mode
+eventCounterDepList = []
+global eventConfigureList  #List to update EVSYS PLIB symbols
+eventConfigureList = []
 interrupt_val = 0x0
 evsys_val = 0x0
 pin_val = 0x7
@@ -43,6 +49,24 @@ pin_inv_val = 0x00
 ###################################################################################################
 ########################################## Callbacks  #############################################
 ###################################################################################################
+def updateCodeGenerationProperty(symbol, event):
+    component = symbol.getComponent()
+
+    component.getSymbolByID("PDEC_QDEC_HEADER").setEnabled(False)
+    component.getSymbolByID("PDEC_QDEC_SOURCE").setEnabled(False)
+    component.getSymbolByID("PDEC_HALL_HEADER").setEnabled(False)
+    component.getSymbolByID("PDEC_HALL_SOURCE").setEnabled(False)
+    component.getSymbolByID("PDEC_COUNTER_HEADER").setEnabled(False)
+    component.getSymbolByID("PDEC_COUNTER_SOURCE").setEnabled(False)
+    if component.getSymbolValue("PDEC_CTRLA_MODE") == 0:
+        component.getSymbolByID("PDEC_QDEC_HEADER").setEnabled(True)
+        component.getSymbolByID("PDEC_QDEC_SOURCE").setEnabled(True)
+    elif component.getSymbolValue("PDEC_CTRLA_MODE") == 1:
+        component.getSymbolByID("PDEC_HALL_HEADER").setEnabled(True)
+        component.getSymbolByID("PDEC_HALL_SOURCE").setEnabled(True)
+    elif component.getSymbolValue("PDEC_CTRLA_MODE") == 2:
+        component.getSymbolByID("PDEC_COUNTER_HEADER").setEnabled(True)
+        component.getSymbolByID("PDEC_COUNTER_SOURCE").setEnabled(True)
 
 def pdecResolutionCalc(symbol, event):
     clock_freq = Database.getSymbolValue("core", pdecInstanceName.getValue()+"_CLOCK_FREQUENCY")
@@ -57,6 +81,9 @@ def pdecFreqCalc(symbol, event):
 
 def pdecRevolutionCalc(symbol, event):
     symbol.setValue(16 - event["value"], 2)
+
+def pdecMaskCalculate(symbol, event):
+    symbol.setValue(pow(2, event["value"]) - 1)
 
 def pdecOptionVisible(symbol, event):
     if(event["id"] == "PDEC_CTRLA_ANGULAR"):
@@ -77,13 +104,13 @@ def pdecPhaseA(symbol, event):
         symbol.setLabel("Select Quadrature Count")
     else:
         symbol.setLabel("Select Quadrature Phase A")
-        
+
 def pdecPhaseB(symbol, event):
     if(event["value"] == 2 or event["value"] == 3):
         symbol.setLabel("Select Quadrature Index")
     else:
         symbol.setLabel("Select Quadrature Phase B")
-        
+
 def pdecIndex(symbol, event):
     if(event["value"] == 2 or event["value"] == 3):
         symbol.setVisible(False)
@@ -97,7 +124,7 @@ def updatePDECInterruptStatus(symbol, event):
             component.getSymbolValue("PDEC_INTENSET_DIR")):
             Database.setSymbolValue("core", InterruptVector[0], True, 2)
             Database.setSymbolValue("core", InterruptHandlerLock[0], True, 2)
-            Database.setSymbolValue("core", InterruptHandler[0], pdecInstanceName.getValue() + "_QDECInterruptHandler", 2)
+            Database.setSymbolValue("core", InterruptHandler[0], pdecInstanceName.getValue() + "_InterruptHandler", 2)
         else:
             Database.setSymbolValue("core", InterruptVector[0], False, 2)
             Database.setSymbolValue("core", InterruptHandlerLock[0], False, 2)
@@ -118,10 +145,10 @@ def updatePDECInterruptWarningStatus(symbol, event):
         component.getSymbolValue("PDEC_INTENSET_DIR")):
         if (Database.getSymbolValue("core", InterruptVectorUpdate[0].split(".")[-1]) == True):
             symbol.setVisible(True)
-    elif (component.getSymbolValue("PDEC_INTENSET_MC_0") == True and 
+    elif (component.getSymbolValue("PDEC_INTENSET_MC_0") == True and
         Database.getSymbolValue("core", InterruptVectorUpdate[1].split(".")[-1]) == True):
         symbol.setVisible(True)
-    elif (component.getSymbolValue("PDEC_INTENSET_MC_1") == True and 
+    elif (component.getSymbolValue("PDEC_INTENSET_MC_1") == True and
         Database.getSymbolValue("core", InterruptVectorUpdate[2].split(".")[-1]) == True):
         symbol.setVisible(True)
     else:
@@ -134,26 +161,47 @@ def updatePDECClockWarningStatus(symbol, event):
         symbol.setVisible(False)
 
 def pdecEVSYSConfigure(symbol, event):
+    component = symbol.getComponent()
     if ("EVCTRL" in event["id"]):
-        Database.setSymbolValue("evsys", 
+        Database.setSymbolValue("evsys",
             "GENERATOR_"+ str(pdecInstanceName.getValue())+ event["id"].replace("PDEC_EVCTRL","") + "_ACTIVE", event["value"], 2)
     else:
-        if ((event["id"] == "PDEC_PHASE_A")):
-            if(event["value"] == "Input Event" or event["value"] == "Inverted Input Event"):
-                Database.setSymbolValue("evsys", "USER_"+ str(pdecInstanceName.getValue())+"_EVU_0_READY", True, 2)
-            else:
-                Database.setSymbolValue("evsys", "USER_"+ str(pdecInstanceName.getValue())+"_EVU_0_READY", False, 2)
-        elif((event["id"] == "PDEC_PHASE_B")):
-            if(event["value"] == "Input Event" or event["value"] == "Inverted Input Event"):
-                Database.setSymbolValue("evsys", "USER_"+ str(pdecInstanceName.getValue())+"_EVU_1_READY", True, 2)
-            else:
-                Database.setSymbolValue("evsys", "USER_"+ str(pdecInstanceName.getValue())+"_EVU_1_READY", False, 2)
-        elif((event["id"] == "PDEC_INDEX")):
-            if(event["value"] == "Input Event" or event["value"] == "Inverted Input Event"):
-                Database.setSymbolValue("evsys", "USER_"+ str(pdecInstanceName.getValue())+"_EVU_2_READY", True, 2)
-            else:
-                Database.setSymbolValue("evsys", "USER_"+ str(pdecInstanceName.getValue())+"_EVU_2_READY", False, 2)
+        if (event["id"] == "PDEC_CTRLA_MODE"):
+            Database.setSymbolValue("evsys", "USER_"+ str(pdecInstanceName.getValue())+"_EVU_0_READY", False, 2)
+            Database.setSymbolValue("evsys", "USER_"+ str(pdecInstanceName.getValue())+"_EVU_1_READY", False, 2)
+            Database.setSymbolValue("evsys", "USER_"+ str(pdecInstanceName.getValue())+"_EVU_2_READY", False, 2)
+        if pdecSym_OperationMode.getValue() == 0:
+            pdecQDECEVSYS(component, event)
+        elif pdecSym_OperationMode.getValue() == 1:
+            pdecHallEVSYS(component, event)
+        else:
+            pdecCounterEVSYS(component, event)
 
+def pdecQDECEVSYS(component, event):
+    if (component.getSymbolValue("PDEC_PHASE_A") == "Input Event" or component.getSymbolValue("PDEC_PHASE_A") == "Inverted Input Event"):
+        Database.setSymbolValue("evsys", "USER_"+ str(pdecInstanceName.getValue())+"_EVU_0_READY", True, 2)
+    if(component.getSymbolValue("PDEC_PHASE_B") == "Input Event" or component.getSymbolValue("PDEC_PHASE_B") == "Inverted Input Event"):
+        Database.setSymbolValue("evsys", "USER_"+ str(pdecInstanceName.getValue())+"_EVU_1_READY", True, 2)
+    if(component.getSymbolValue("PDEC_INDEX") == "Input Event" or component.getSymbolValue("PDEC_INDEX") == "Inverted Input Event"):
+        Database.setSymbolValue("evsys", "USER_"+ str(pdecInstanceName.getValue())+"_EVU_2_READY", True, 2)
+
+def pdecHallEVSYS(component, event):
+    if (component.getSymbolValue("PDEC_HALL_A") == "Input Event" or component.getSymbolValue("PDEC_PHASE_A") == "Inverted Input Event"):
+        Database.setSymbolValue("evsys", "USER_"+ str(pdecInstanceName.getValue())+"_EVU_0_READY", True, 2)
+    if(component.getSymbolValue("PDEC_HALL_B") == "Input Event" or component.getSymbolValue("PDEC_PHASE_B") == "Inverted Input Event"):
+        Database.setSymbolValue("evsys", "USER_"+ str(pdecInstanceName.getValue())+"_EVU_1_READY", True, 2)
+    if(component.getSymbolValue("PDEC_HALL_C") == "Input Event" or component.getSymbolValue("PDEC_PHASE_C") == "Inverted Input Event"):
+        Database.setSymbolValue("evsys", "USER_"+ str(pdecInstanceName.getValue())+"_EVU_2_READY", True, 2)
+
+def pdecCounterEVSYS(component, event):
+    if (component.getSymbolValue("PDEC_COUNTER_EVEI0") == True or component.getSymbolValue("PDEC_COUNTER_EVINV0") == True):
+        Database.setSymbolValue("evsys", "USER_"+ str(pdecInstanceName.getValue())+"_EVU_0_READY", True, 2)
+    if (component.getSymbolValue("PDEC_COUNTER_EVEI1") == True or component.getSymbolValue("PDEC_COUNTER_EVINV1") == True):
+        Database.setSymbolValue("evsys", "USER_"+ str(pdecInstanceName.getValue())+"_EVU_1_READY", True, 2)
+    if (component.getSymbolValue("PDEC_COUNTER_EVEI2") == True or component.getSymbolValue("PDEC_COUNTER_EVINV2") == True):
+        Database.setSymbolValue("evsys", "USER_"+ str(pdecInstanceName.getValue())+"_EVU_2_READY", True, 2)
+
+#INTENSET register value
 def pdecINTENSET(symbol, event):
     global interrupt_val
     global interruptDepList
@@ -163,6 +211,7 @@ def pdecINTENSET(symbol, event):
             interrupt_val = interrupt_val | (1 << i)
     symbol.setValue(interrupt_val, 2)
 
+#EVCTRL register value for QDEC mode
 def pdecEVCTRL(symbol, event):
     global evsys_val
     global eventDepList
@@ -171,11 +220,11 @@ def pdecEVCTRL(symbol, event):
     for i in range(0, 3):
         if (component.getSymbolValue(eventDepList[i]) == "Input Event"):
             evsys_val = evsys_val | (1 << (i + 5))
-        else:
-            evsys_val = evsys_val & (~ (1 << (i + 5)))
-        if (component.getSymbolValue(eventDepList[i]) == "Inverted Input Event"):
+        elif (component.getSymbolValue(eventDepList[i]) == "Inverted Input Event"):
+            evsys_val = evsys_val | (1 << (i + 5))
             evsys_val = evsys_val | (1 << (i + 2))
         else:
+            evsys_val = evsys_val & (~ (1 << (i + 5)))
             evsys_val = evsys_val & (~ (1 << (i + 2)))
     #for event generators
     for i in range(3, len(eventDepList)):
@@ -184,7 +233,54 @@ def pdecEVCTRL(symbol, event):
         else:
             evsys_val = evsys_val & (~ (1 << (i + 5)))
     symbol.setValue(evsys_val, 2)
-    
+
+#EVCTRL register value for Hall mode
+def pdecHallEVCTRL(symbol, event):
+    global evsys_val
+    global eventHallDepList
+    component = symbol.getComponent()
+    # for event users
+    for i in range(0, 3):
+        if (component.getSymbolValue(eventHallDepList[i]) == "Input Event"):
+            evsys_val = evsys_val | (1 << (i + 5))
+        elif (component.getSymbolValue(eventHallDepList[i]) == "Inverted Input Event"):
+            evsys_val = evsys_val | (1 << (i + 5))
+            evsys_val = evsys_val | (1 << (i + 2))
+        else:
+            evsys_val = evsys_val & (~ (1 << (i + 5)))
+            evsys_val = evsys_val & (~ (1 << (i + 2)))
+    #for event generators
+    for i in range(3, len(eventHallDepList)):
+        if (component.getSymbolValue(eventHallDepList[i]) == True):
+            evsys_val = evsys_val | (1 << (i + 5))
+        else:
+            evsys_val = evsys_val & (~ (1 << (i + 5)))
+    symbol.setValue(evsys_val, 2)
+
+#EVCTRL register value for Counter mode
+def pdecCounterEVCTRL(symbol, event):
+    global evsys_val
+    global eventCounterDepList
+    component = symbol.getComponent()
+    # for event users
+    for i in range(0, 3):
+        if (component.getSymbolValue(eventCounterDepList[i]) == True):
+            evsys_val = evsys_val | (1 << (i + 5))
+            if (component.getSymbolValue(eventCounterDepList[i+3]) == True):
+                evsys_val = evsys_val | (1 << (i + 2))
+            else:
+                evsys_val = evsys_val & (~ (1 << (i + 2)))
+        else:
+            evsys_val = evsys_val & (~ (1 << (i + 5)))
+            evsys_val = evsys_val & (~ (1 << (i + 2)))
+    #for event generators
+    for i in range(6, len(eventCounterDepList)):
+        if (component.getSymbolValue(eventCounterDepList[i]) == True):
+            evsys_val = evsys_val | (1 << (i + 2))
+        else:
+            evsys_val = evsys_val & (~ (1 << (i + 2)))
+    symbol.setValue(evsys_val, 2)
+
 def pdecPIN(symbol, event):
     global eventDepList
     global pin_val
@@ -196,7 +292,7 @@ def pdecPIN(symbol, event):
         else:
             pin_val = pin_val & (~ (1 << (i )))
     symbol.setValue(pin_val, 2)
-            
+
 def pdecPININV(symbol, event):
     global eventDepList
     global pin_inv_val
@@ -208,6 +304,54 @@ def pdecPININV(symbol, event):
         else:
             pin_inv_val = pin_inv_val & (~ (1 << (i)))
     symbol.setValue(pin_inv_val, 2)
+
+def pdecHallPIN(symbol, event):
+    global eventHallDepList
+    global pin_val
+    component = symbol.getComponent()
+    # for io pins
+    for i in range(0, 3):
+        if (component.getSymbolValue(eventHallDepList[i]) == "IO Pin"):
+            pin_val = pin_val | (1 << (i ))
+        else:
+            pin_val = pin_val & (~ (1 << (i )))
+    symbol.setValue(pin_val, 2)
+
+def pdecHallPININV(symbol, event):
+    global eventHallDepList
+    global pin_inv_val
+    component = symbol.getComponent()
+    # for io pins
+    for i in range(0, 3):
+        if (component.getSymbolValue(eventHallDepList[i]) == "Inverted IO Pin"):
+            pin_inv_val = pin_inv_val | (1 << (i ))
+        else:
+            pin_inv_val = pin_inv_val & (~ (1 << (i)))
+    symbol.setValue(pin_inv_val, 2)
+
+def pdecModeVisible(symbol, event):
+    mode = event["value"]
+    pdecSym_QDEC_MENU.setVisible(False)
+    pdecSym_HALL_MENU.setVisible(False)
+    pdecSym_COUNTER_MENU.setVisible(False)
+    if (mode == 0):
+        pdecSym_QDEC_MENU.setVisible(True)
+    elif (mode == 1):
+        pdecSym_HALL_MENU.setVisible(True)
+    else:
+        pdecSym_COUNTER_MENU.setVisible(True)
+
+def pdecInputEventsVisible(symbol, event):
+    if (event["value"] == 2):
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+
+def pdecCounterLabelChange(symbol, event):
+    if event["value"] == False:
+        symbol.setLabel(" Period Value")
+    else:
+        symbol.setLabel("Compare CC0 Value")
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
@@ -216,12 +360,15 @@ def instantiateComponent(pdecComponent):
 
     """ Function to instantiate pdecComponent to Active Component """
 
-    global InterruptVector 
+    global InterruptVector
     global InterruptHandler
     global InterruptHandlerLock
     global InterruptVectorUpdate
     InterruptVectorUpdate = []
     global eventDepList
+    global eventHallDepList
+    global eventCounterDepList
+    global eventConfigureList
     global interruptDepList
     global pdecInstanceName
 
@@ -274,7 +421,7 @@ def instantiateComponent(pdecComponent):
     global pdecSym_OperationMode
     pdecSym_OperationMode = pdecComponent.createKeyValueSetSymbol("PDEC_CTRLA_MODE", None)
     pdecSym_OperationMode.setLabel("Operating Mode")
-    pdecSym_OperationMode.setReadOnly(True)
+    pdecSym_OperationMode.setReadOnly(False)
     pdecNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PDEC\"]/value-group@[name=\"PDEC_CTRLA__MODE\"]")
     pdecValues = []
     pdecValues = pdecNode.getChildren()
@@ -286,12 +433,24 @@ def instantiateComponent(pdecComponent):
     pdecSym_OperationMode.setOutputMode("Key")
     pdecSym_OperationMode.setDisplayMode("Description")
 
-    ###################################################################################################
-    #################################### QDEC Configuration  #######################################
-    ###################################################################################################
+    global pdecSym_QDEC_MENU
     pdecSym_QDEC_MENU = pdecComponent.createMenuSymbol("PDEC_QDEC_MENU", pdecSym_OperationMode)
     pdecSym_QDEC_MENU.setLabel("Quadrature")
-    
+    pdecSym_QDEC_MENU.setDependencies(pdecModeVisible, ["PDEC_CTRLA_MODE"])
+
+    global pdecSym_HALL_MENU
+    pdecSym_HALL_MENU = pdecComponent.createMenuSymbol("PDEC_HALL_MENU", pdecSym_OperationMode)
+    pdecSym_HALL_MENU.setLabel("Hall")
+    pdecSym_HALL_MENU.setVisible(False)
+    pdecSym_HALL_MENU.setDependencies(pdecModeVisible, ["PDEC_CTRLA_MODE"])
+
+    global pdecSym_COUNTER_MENU
+    pdecSym_COUNTER_MENU = pdecComponent.createMenuSymbol("PDEC_COUNTER_MENU", pdecSym_OperationMode)
+    pdecSym_COUNTER_MENU.setLabel("Counter")
+    pdecSym_COUNTER_MENU.setVisible(False)
+    pdecSym_COUNTER_MENU.setDependencies(pdecModeVisible, ["PDEC_CTRLA_MODE"])
+
+################################## Quadrature Menu #####################################
     pdecSym_CTRLA_CONF = pdecComponent.createKeyValueSetSymbol("PDEC_CTRLA_CONF", pdecSym_QDEC_MENU)
     pdecSym_CTRLA_CONF.setLabel("Operating Mode")
     pdecNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PDEC\"]/value-group@[name=\"PDEC_CTRLA__CONF\"]")
@@ -304,54 +463,64 @@ def instantiateComponent(pdecComponent):
     pdecSym_CTRLA_CONF.setDefaultValue(0)
     pdecSym_CTRLA_CONF.setOutputMode("Key")
     pdecSym_CTRLA_CONF.setDisplayMode("Description")
-    
+
     input_options = ["Disabled", "IO Pin", "Inverted IO Pin", "Input Event", "Inverted Input Event"]
-    
+
     pdecSym_PhaseA = pdecComponent.createComboSymbol("PDEC_PHASE_A", pdecSym_QDEC_MENU, input_options)
     pdecSym_PhaseA.setLabel("Select Quadrature Phase A")
     pdecSym_PhaseA.setDefaultValue("IO Pin")
     pdecSym_PhaseA.setDependencies(pdecPhaseA, ["PDEC_CTRLA_CONF"])
     eventDepList.append("PDEC_PHASE_A")
-    
+
     pdecSym_PhaseB = pdecComponent.createComboSymbol("PDEC_PHASE_B", pdecSym_QDEC_MENU, input_options)
     pdecSym_PhaseB.setLabel("Select Quadrature Phase B")
     pdecSym_PhaseB.setDefaultValue("IO Pin")
     pdecSym_PhaseB.setDependencies(pdecPhaseB, ["PDEC_CTRLA_CONF"])
     eventDepList.append("PDEC_PHASE_B")
-    
+
     index_input_options = ["Disabled", "IO Pin", "Inverted IO Pin", "Input Event", "Inverted Input Event"]
     pdecSym_Index = pdecComponent.createComboSymbol("PDEC_INDEX", pdecSym_QDEC_MENU, index_input_options)
     pdecSym_Index.setLabel("Select Quadrature Index")
     pdecSym_Index.setDefaultValue("IO Pin")
     pdecSym_Index.setDependencies(pdecIndex, ["PDEC_CTRLA_CONF"])
     eventDepList.append("PDEC_INDEX")
-    
+
     pdecSym_FILTER = pdecComponent.createIntegerSymbol("PDEC_FILTER", pdecSym_QDEC_MENU)
     pdecSym_FILTER.setLabel("Select Filter Value")
     pdecSym_FILTER.setDefaultValue(5)
     pdecSym_FILTER.setMin(0)
     pdecSym_FILTER.setMax(255)
-    
+
     pdecSym_CTRLA_SWAP = pdecComponent.createBooleanSymbol("PDEC_CTRLA_SWAP", pdecSym_QDEC_MENU)
     pdecSym_CTRLA_SWAP.setLabel("Swap Phase A and B")
     pdecSym_CTRLA_SWAP.setDefaultValue(False)
-    
+
     pdecSym_CTRLA_ANGULAR = pdecComponent.createIntegerSymbol("PDEC_CTRLA_ANGULAR", pdecSym_QDEC_MENU)
     pdecSym_CTRLA_ANGULAR.setLabel("Select No of Bits for Angular Position")
     pdecSym_CTRLA_ANGULAR.setDefaultValue(10)
     pdecSym_CTRLA_ANGULAR.setMin(9)
     pdecSym_CTRLA_ANGULAR.setMax(16)
-    
+
     pdecSym_CTRLA_REVOLUTION = pdecComponent.createIntegerSymbol("PDEC_CTRLA_REVOLUTION", pdecSym_QDEC_MENU)
     pdecSym_CTRLA_REVOLUTION.setLabel("No of Bits for Revolution Counter")
     pdecSym_CTRLA_REVOLUTION.setReadOnly(True)
     pdecSym_CTRLA_REVOLUTION.setDefaultValue(6)
     pdecSym_CTRLA_REVOLUTION.setDependencies(pdecRevolutionCalc, ["PDEC_CTRLA_ANGULAR"])
-    
+
+    pdecSym_CTRLA_ANGULAR_MASK = pdecComponent.createHexSymbol("PDEC_CTRLA_ANGULAR_MASK", pdecSym_QDEC_MENU)
+    pdecSym_CTRLA_ANGULAR_MASK.setVisible(False)
+    pdecSym_CTRLA_ANGULAR_MASK.setDefaultValue(pow(2, pdecSym_CTRLA_ANGULAR.getValue()) - 1)
+    pdecSym_CTRLA_ANGULAR_MASK.setDependencies(pdecMaskCalculate, ["PDEC_CTRLA_ANGULAR"])
+
+    pdecSym_CTRLA_REVOLUTION_MASK = pdecComponent.createHexSymbol("PDEC_CTRLA_REVOLUTION_MASK", pdecSym_QDEC_MENU)
+    pdecSym_CTRLA_REVOLUTION_MASK.setVisible(False)
+    pdecSym_CTRLA_REVOLUTION_MASK.setDefaultValue(pow(2, pdecSym_CTRLA_REVOLUTION.getValue()) - 1)
+    pdecSym_CTRLA_REVOLUTION_MASK.setDependencies(pdecMaskCalculate, ["PDEC_CTRLA_REVOLUTION"])
+
     pdecSym_CTRLA_PEREN = pdecComponent.createBooleanSymbol("PDEC_CTRLA_PEREN", pdecSym_QDEC_MENU)
     pdecSym_CTRLA_PEREN.setLabel("Enable Period Control")
     pdecSym_CTRLA_PEREN.setDefaultValue(True)
-    
+
     pdecSym_CC0_ANGULAR = pdecComponent.createIntegerSymbol("PDEC_CC0_ANGULAR", pdecSym_CTRLA_PEREN)
     pdecSym_CC0_ANGULAR.setLabel("Quadrature Pulses per Revolution")
     pdecSym_CC0_ANGULAR.setVisible(True)
@@ -359,7 +528,7 @@ def instantiateComponent(pdecComponent):
     pdecSym_CC0_ANGULAR.setMin(0)
     pdecSym_CC0_ANGULAR.setMax(pow(2, pdecSym_CTRLA_ANGULAR.getValue()) - 1)
     pdecSym_CC0_ANGULAR.setDependencies(pdecOptionVisible, ["PDEC_CTRLA_PEREN", "PDEC_CTRLA_ANGULAR"])
-    
+
     pdecSym_CC0_REVOLUTION = pdecComponent.createIntegerSymbol("PDEC_CC0_REVOLUTION", pdecSym_CTRLA_PEREN)
     pdecSym_CC0_REVOLUTION.setLabel("Max Number of Revolutions")
     pdecSym_CC0_REVOLUTION.setVisible(True)
@@ -367,11 +536,11 @@ def instantiateComponent(pdecComponent):
     pdecSym_CC0_REVOLUTION.setMin(0)
     pdecSym_CC0_REVOLUTION.setMax(pow(2, pdecSym_CTRLA_REVOLUTION.getValue()) - 1)
     pdecSym_CC0_REVOLUTION.setDependencies(pdecOptionVisible, ["PDEC_CTRLA_PEREN", "PDEC_CTRLA_REVOLUTION"])
-    
+
     pdecSym_COMPARE = pdecComponent.createBooleanSymbol("PDEC_COMPARE", pdecSym_QDEC_MENU)
     pdecSym_COMPARE.setLabel("Enable Compare Control")
     pdecSym_COMPARE.setDefaultValue(False)
-    
+
     pdecSym_CC1_ANGULAR = pdecComponent.createIntegerSymbol("PDEC_CC1_ANGULAR", pdecSym_COMPARE)
     pdecSym_CC1_ANGULAR.setLabel("Compare Value for Quadrature Pulses")
     pdecSym_CC1_ANGULAR.setVisible(False)
@@ -379,7 +548,7 @@ def instantiateComponent(pdecComponent):
     pdecSym_CC1_ANGULAR.setMin(0)
     pdecSym_CC1_ANGULAR.setMax(pow(2, pdecSym_CTRLA_ANGULAR.getValue()) - 1)
     pdecSym_CC1_ANGULAR.setDependencies(pdecOptionVisible, ["PDEC_COMPARE", "PDEC_CTRLA_ANGULAR"])
-    
+
     pdecSym_CC1_REVOLUTION = pdecComponent.createIntegerSymbol("PDEC_CC1_REVOLUTION", pdecSym_COMPARE)
     pdecSym_CC1_REVOLUTION.setLabel("Compare Value for Revolutions")
     pdecSym_CC1_REVOLUTION.setVisible(False)
@@ -387,16 +556,61 @@ def instantiateComponent(pdecComponent):
     pdecSym_CC1_REVOLUTION.setMin(0)
     pdecSym_CC1_REVOLUTION.setMax(pow(2, pdecSym_CTRLA_REVOLUTION.getValue()) - 1)
     pdecSym_CC1_REVOLUTION.setDependencies(pdecOptionVisible, ["PDEC_COMPARE", "PDEC_CTRLA_REVOLUTION"])
-    
+
     pdecSym_CTRLA_MAXCMP = pdecComponent.createIntegerSymbol("PDEC_CTRLA_MAXCMP", pdecSym_QDEC_MENU)
     pdecSym_CTRLA_MAXCMP.setLabel("Select Maximum Consecutive Missing Pulses")
     pdecSym_CTRLA_MAXCMP.setDefaultValue(4)
     pdecSym_CTRLA_MAXCMP.setVisible(False)
     pdecSym_CTRLA_MAXCMP.setDependencies(pdecMAXCMPVisible, ["PDEC_CTRLA_CONF"])
-    
-    pdecSym_Interrupts_Menu = pdecComponent.createMenuSymbol("PDEC_INTERRUPTS", pdecSym_QDEC_MENU)
+
+################################## Hall Menu #####################################
+
+    hall_input_options = ["IO Pin", "Inverted IO Pin", "Input Event", "Inverted Input Event"]
+
+    pdecSym_HallA = pdecComponent.createComboSymbol("PDEC_HALL_A", pdecSym_HALL_MENU, hall_input_options)
+    pdecSym_HallA.setLabel("Select Hall A")
+    pdecSym_HallA.setDefaultValue("IO Pin")
+    eventHallDepList.append("PDEC_HALL_A")
+
+    pdecSym_HallB = pdecComponent.createComboSymbol("PDEC_HALL_B", pdecSym_HALL_MENU, hall_input_options)
+    pdecSym_HallB.setLabel("Select Hall B")
+    pdecSym_HallB.setDefaultValue("IO Pin")
+    eventHallDepList.append("PDEC_HALL_B")
+
+    pdecSym_HallC = pdecComponent.createComboSymbol("PDEC_HALL_C", pdecSym_HALL_MENU, hall_input_options)
+    pdecSym_HallC.setLabel("Select Hall C")
+    pdecSym_HallC.setDefaultValue("IO Pin")
+    eventHallDepList.append("PDEC_HALL_C")
+
+    pdecSym_Hall_FILTER = pdecComponent.createIntegerSymbol("PDEC_HALL_FILTER", pdecSym_HALL_MENU)
+    pdecSym_Hall_FILTER.setLabel("Select Filter Value")
+    pdecSym_Hall_FILTER.setDefaultValue(5)
+    pdecSym_Hall_FILTER.setMin(0)
+    pdecSym_Hall_FILTER.setMax(255)
+
+################################ Counter Menu ###########################
+    pdecSym_CNTR_CTRLA_PEREN = pdecComponent.createBooleanSymbol("PDEC_CNTR_CTRLA_PEREN", pdecSym_COUNTER_MENU)
+    pdecSym_CNTR_CTRLA_PEREN.setLabel("Select TOP as Period")
+    pdecSym_CNTR_CTRLA_PEREN.setDefaultValue(True)
+
+    pdecSym_CNTR_CC0 = pdecComponent.createIntegerSymbol("PDEC_CNTR_CC0", pdecSym_COUNTER_MENU)
+    pdecSym_CNTR_CC0.setLabel("Compare CC0 Value")
+    pdecSym_CNTR_CC0.setMin(0)
+    pdecSym_CNTR_CC0.setMax(65535)
+    pdecSym_CNTR_CC0.setDefaultValue(2000)
+    pdecSym_CNTR_CC0.setDependencies(pdecCounterLabelChange, ["PDEC_CNTR_CTRLA_PEREN"])
+
+    pdecSym_CNTR_CC1 = pdecComponent.createIntegerSymbol("PDEC_CNTR_CC1", pdecSym_COUNTER_MENU)
+    pdecSym_CNTR_CC1.setLabel("Compare CC1 Value")
+    pdecSym_CNTR_CC1.setMin(0)
+    pdecSym_CNTR_CC1.setMax(65535)
+    pdecSym_CNTR_CC1.setDefaultValue(2000)
+
+##################################### Interrupts ###########################
+
+    pdecSym_Interrupts_Menu = pdecComponent.createMenuSymbol("PDEC_INTERRUPTS", None)
     pdecSym_Interrupts_Menu.setLabel("Interrupts")
-    
+
     pdecSym_INTENSET_OVF = pdecComponent.createBooleanSymbol("PDEC_INTENSET_OVF", pdecSym_Interrupts_Menu)
     pdecSym_INTENSET_OVF.setLabel("Enable Overflow Interrupt")
     interruptDepList.append("PDEC_INTENSET_OVF")
@@ -404,64 +618,135 @@ def instantiateComponent(pdecComponent):
     #Added for error interrupt
     interruptDepList.append("")
 
-    pdecSym_INTENSET_VLC = pdecComponent.createBooleanSymbol("PDEC_INTENSET_VLC", pdecSym_Interrupts_Menu)
-    pdecSym_INTENSET_VLC.setLabel("Enable Velocity Interrupt")
-    interruptDepList.append("PDEC_INTENSET_VLC")
-    
     pdecSym_INTENSET_DIR = pdecComponent.createBooleanSymbol("PDEC_INTENSET_DIR", pdecSym_Interrupts_Menu)
     pdecSym_INTENSET_DIR.setLabel("Enable Direction Interrupt")
     interruptDepList.append("PDEC_INTENSET_DIR")
-    
+
+    pdecSym_INTENSET_VLC = pdecComponent.createBooleanSymbol("PDEC_INTENSET_VLC", pdecSym_Interrupts_Menu)
+    pdecSym_INTENSET_VLC.setLabel("Enable Velocity Interrupt")
+    interruptDepList.append("PDEC_INTENSET_VLC")
+
     pdecSym_INTENSET_MC0 = pdecComponent.createBooleanSymbol("PDEC_INTENSET_MC_0", pdecSym_Interrupts_Menu)
     pdecSym_INTENSET_MC0.setLabel("Enable Compare Match 0 Interrupt")
     interruptDepList.append("PDEC_INTENSET_MC_0")
-    
+
     pdecSym_INTENSET_MC1 = pdecComponent.createBooleanSymbol("PDEC_INTENSET_MC_1", pdecSym_Interrupts_Menu)
     pdecSym_INTENSET_MC1.setLabel("Enable Compare Match 1 Interrupt")
     interruptDepList.append("PDEC_INTENSET_MC_1")
-    
+
     pdecSym_INTENSET = pdecComponent.createHexSymbol("PDEC_INTENSET", None)
     pdecSym_INTENSET.setVisible(False)
     pdecSym_INTENSET.setDependencies(pdecINTENSET, interruptDepList)
-    
-    pdecSym_Events_Menu = pdecComponent.createMenuSymbol("PDEC_EVENTS", pdecSym_QDEC_MENU)
+
+################################ Events ######################################
+    pdecSym_Events_Menu = pdecComponent.createMenuSymbol("PDEC_EVENTS", None)
     pdecSym_Events_Menu.setLabel("Events")
-    
+
+    pdecSym_Input_Events = pdecComponent.createMenuSymbol("PDEC_INPUT_EVENTS", pdecSym_Events_Menu)
+    pdecSym_Input_Events.setLabel("Input Events")
+    pdecSym_Input_Events.setVisible(False)
+    pdecSym_Input_Events.setDependencies(pdecInputEventsVisible, ["PDEC_CTRLA_MODE"])
+
+    pdecSym_EVCTRL_EVEI0 = pdecComponent.createBooleanSymbol("PDEC_COUNTER_EVEI0", pdecSym_Input_Events)
+    pdecSym_EVCTRL_EVEI0.setLabel("Enable Input Event 0")
+    eventCounterDepList.append("PDEC_COUNTER_EVEI0")
+    pdecSym_EVCTRL_EVINV0 = pdecComponent.createBooleanSymbol("PDEC_COUNTER_EVINV0", pdecSym_EVCTRL_EVEI0)
+    pdecSym_EVCTRL_EVINV0.setLabel("Invert Input Event 0")
+
+    pdecSym_EVCTRL_EVEI1 = pdecComponent.createBooleanSymbol("PDEC_COUNTER_EVEI1", pdecSym_Input_Events)
+    pdecSym_EVCTRL_EVEI1.setLabel("Enable Input Event 1")
+    eventCounterDepList.append("PDEC_COUNTER_EVEI1")
+    pdecSym_EVCTRL_EVINV1 = pdecComponent.createBooleanSymbol("PDEC_COUNTER_EVINV1", pdecSym_EVCTRL_EVEI1)
+    pdecSym_EVCTRL_EVINV1.setLabel("Invert Input Event 1")
+
+    pdecSym_EVCTRL_EVEI2 = pdecComponent.createBooleanSymbol("PDEC_COUNTER_EVEI2", pdecSym_Input_Events)
+    pdecSym_EVCTRL_EVEI2.setLabel("Enable Input Event 2")
+    eventCounterDepList.append("PDEC_COUNTER_EVEI2")
+    pdecSym_EVCTRL_EVINV2 = pdecComponent.createBooleanSymbol("PDEC_COUNTER_EVINV2", pdecSym_EVCTRL_EVEI2)
+    pdecSym_EVCTRL_EVINV2.setLabel("Invert Input Event 2")
+
+    pdecSym_EVCTRL_EVACT = pdecComponent.createKeyValueSetSymbol("PDEC_EVCTRL_EVACT", pdecSym_Input_Events)
+    pdecSym_EVCTRL_EVACT.setLabel("Select Event Action")
+    pdecNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PDEC\"]/value-group@[name=\"PDEC_EVCTRL__EVACT\"]")
+    pdecValues = []
+    pdecValues = pdecNode.getChildren()
+    for index in range(len(pdecValues)):
+        pdecKeyName = pdecValues[index].getAttribute("name")
+        pdecKeyValue = pdecValues[index].getAttribute("value")
+        pdecSym_EVCTRL_EVACT.addKey(pdecKeyName, pdecKeyValue, pdecValues[index].getAttribute("caption"))
+    pdecSym_EVCTRL_EVACT.setDefaultValue(0)
+    pdecSym_EVCTRL_EVACT.setOutputMode("Key")
+    pdecSym_EVCTRL_EVACT.setDisplayMode("Description")
+
+    eventCounterDepList.append("PDEC_COUNTER_EVINV0")
+    eventCounterDepList.append("PDEC_COUNTER_EVINV1")
+    eventCounterDepList.append("PDEC_COUNTER_EVINV2")
+
     pdecSym_EVCTRL_OVF = pdecComponent.createBooleanSymbol("PDEC_EVCTRL_OVF", pdecSym_Events_Menu)
     pdecSym_EVCTRL_OVF.setLabel("Enable Overflow Event")
     eventDepList.append("PDEC_EVCTRL_OVF")
-    
+    eventHallDepList.append("PDEC_EVCTRL_OVF")
+    eventCounterDepList.append("PDEC_EVCTRL_OVF")
+
     #Added for error event
     eventDepList.append("")
-    
-    pdecSym_EVCTRL_VLC = pdecComponent.createBooleanSymbol("PDEC_EVCTRL_VLC", pdecSym_Events_Menu)
-    pdecSym_EVCTRL_VLC.setLabel("Enable Velocity Event")
-    eventDepList.append("PDEC_EVCTRL_VLC")
-    
+    eventHallDepList.append("")
+    eventCounterDepList.append("")
+
     pdecSym_EVCTRL_DIR = pdecComponent.createBooleanSymbol("PDEC_EVCTRL_DIR", pdecSym_Events_Menu)
     pdecSym_EVCTRL_DIR.setLabel("Enable Direction Event")
     eventDepList.append("PDEC_EVCTRL_DIR")
-    
+    eventHallDepList.append("PDEC_EVCTRL_DIR")
+    eventCounterDepList.append("PDEC_EVCTRL_DIR")
+
+    pdecSym_EVCTRL_VLC = pdecComponent.createBooleanSymbol("PDEC_EVCTRL_VLC", pdecSym_Events_Menu)
+    pdecSym_EVCTRL_VLC.setLabel("Enable Velocity Event")
+    eventDepList.append("PDEC_EVCTRL_VLC")
+    eventHallDepList.append("PDEC_EVCTRL_VLC")
+    eventCounterDepList.append("PDEC_EVCTRL_VLC")
+
     pdecSym_EVCTRL_MC0 = pdecComponent.createBooleanSymbol("PDEC_EVCTRL_MC_0", pdecSym_Events_Menu)
     pdecSym_EVCTRL_MC0.setLabel("Enable Compare Match 0 Event")
     eventDepList.append("PDEC_EVCTRL_MC_0")
-    
+    eventHallDepList.append("PDEC_EVCTRL_MC_0")
+    eventCounterDepList.append("PDEC_EVCTRL_MC_0")
+
     pdecSym_EVCTRL_MC1 = pdecComponent.createBooleanSymbol("PDEC_EVCTRL_MC_1", pdecSym_Events_Menu)
     pdecSym_EVCTRL_MC1.setLabel("Enable Compare Match 1 Event")
     eventDepList.append("PDEC_EVCTRL_MC_1")
-    
+    eventHallDepList.append("PDEC_EVCTRL_MC_1")
+    eventCounterDepList.append("PDEC_EVCTRL_MC_1")
+
     pdecSym_EVCTRL = pdecComponent.createHexSymbol("PDEC_EVCTRL", None)
     pdecSym_EVCTRL.setVisible(False)
     pdecSym_EVCTRL.setDependencies(pdecEVCTRL, eventDepList)
-    
+
+    pdecSym_HALL_EVCTRL = pdecComponent.createHexSymbol("PDEC_HALL_EVCTRL", None)
+    pdecSym_HALL_EVCTRL.setVisible(False)
+    pdecSym_HALL_EVCTRL.setDependencies(pdecHallEVCTRL, eventHallDepList)
+
+    pdecSym_COUNTER_EVCTRL = pdecComponent.createHexSymbol("PDEC_COUNTER_EVCTRL", None)
+    pdecSym_COUNTER_EVCTRL.setVisible(False)
+    pdecSym_COUNTER_EVCTRL.setDependencies(pdecCounterEVCTRL, eventCounterDepList)
+
     pdecSym_PIN = pdecComponent.createHexSymbol("PDEC_PIN", None)
     pdecSym_PIN.setVisible(False)
     pdecSym_PIN.setDefaultValue(pin_val)
     pdecSym_PIN.setDependencies(pdecPIN, eventDepList)
-    
+
     pdecSym_PIN_INV = pdecComponent.createHexSymbol("PDEC_PIN_INV", None)
     pdecSym_PIN_INV.setVisible(False)
     pdecSym_PIN_INV.setDependencies(pdecPININV, eventDepList)
+
+    pdecSym_HALL_PIN = pdecComponent.createHexSymbol("PDEC_HALL_PIN", None)
+    pdecSym_HALL_PIN.setVisible(False)
+    pdecSym_HALL_PIN.setDefaultValue(pin_val)
+    pdecSym_HALL_PIN.setDependencies(pdecHallPIN, eventHallDepList)
+
+    pdecSym_HALL_PIN_INV = pdecComponent.createHexSymbol("PDEC_HALL_PIN_INV", None)
+    pdecSym_HALL_PIN_INV.setVisible(False)
+    pdecSym_HALL_PIN_INV.setDependencies(pdecHallPININV, eventHallDepList)
+
     ###################################################################################################
     #################################### Sleep Configuration  #######################################
     ###################################################################################################
@@ -473,6 +758,8 @@ def instantiateComponent(pdecComponent):
     #run standby mode
     pdecSym_CTRLA_RUNSTDBY = pdecComponent.createBooleanSymbol("PDEC_CTRLA_RUNSTDBY", pdecSym_SleepConfiguration)
     pdecSym_CTRLA_RUNSTDBY.setLabel("Run during Standby")
+
+    pdecInstanceName.setDependencies(updateCodeGenerationProperty, ["PDEC_CTRLA_MODE"])
 
     ############################################################################
     #### Dependency ####
@@ -509,13 +796,25 @@ def instantiateComponent(pdecComponent):
     pdecSym_ClkEnComment.setLabel("Warning!!! PDEC Peripheral Clock is Disabled in Clock Manager")
     pdecSym_ClkEnComment.setVisible(False)
     pdecSym_ClkEnComment.setDependencies(updatePDECClockWarningStatus, ["core."+pdecInstanceName.getValue()+"_CLOCK_ENABLE"])
-    
+
     # events configure
+    eventConfigureList = list(eventDepList)
+    eventConfigureList.append("PDEC_CTRLA_MODE")
+    eventConfigureList.append("PDEC_HALL_A")
+    eventConfigureList.append("PDEC_HALL_B")
+    eventConfigureList.append("PDEC_HALL_C")
+    eventConfigureList.append("PDEC_COUNTER_EVEI0")
+    eventConfigureList.append("PDEC_COUNTER_EVEI1")
+    eventConfigureList.append("PDEC_COUNTER_EVEI2")
+    eventConfigureList.append("PDEC_COUNTER_EVINV0")
+    eventConfigureList.append("PDEC_COUNTER_EVINV1")
+    eventConfigureList.append("PDEC_COUNTER_EVINV2")
+
     pdecSym_EventsComment = pdecComponent.createCommentSymbol("PDEC_EVENTS_COMMENT", None)
     pdecSym_EventsComment.setLabel("Events Configure")
     pdecSym_EventsComment.setVisible(False)
-    pdecSym_EventsComment.setDependencies(pdecEVSYSConfigure, eventDepList)
-    
+    pdecSym_EventsComment.setDependencies(pdecEVSYSConfigure, eventConfigureList)
+
 
     ###################################################################################################
     ####################################### Code Generation  ##########################################
@@ -531,21 +830,53 @@ def instantiateComponent(pdecComponent):
     pdecSym_CommonHeaderFile.setType("HEADER")
     pdecSym_CommonHeaderFile.setMarkup(False)
 
-    pdecSym_HeaderFile = pdecComponent.createFileSymbol("PDEC_HEADER", None)
-    pdecSym_HeaderFile.setSourcePath("../peripheral/pdec_u2263/templates/plib_pdec.h.ftl")
-    pdecSym_HeaderFile.setOutputName("plib_"+pdecInstanceName.getValue().lower()+".h")
-    pdecSym_HeaderFile.setDestPath("/peripheral/pdec/")
-    pdecSym_HeaderFile.setProjectPath("config/" + configName + "/peripheral/pdec/")
-    pdecSym_HeaderFile.setType("HEADER")
-    pdecSym_HeaderFile.setMarkup(True)
+    pdecSym_QdecHeaderFile = pdecComponent.createFileSymbol("PDEC_QDEC_HEADER", None)
+    pdecSym_QdecHeaderFile.setSourcePath("../peripheral/pdec_u2263/templates/plib_pdec_qdec.h.ftl")
+    pdecSym_QdecHeaderFile.setOutputName("plib_"+pdecInstanceName.getValue().lower()+".h")
+    pdecSym_QdecHeaderFile.setDestPath("/peripheral/pdec/")
+    pdecSym_QdecHeaderFile.setProjectPath("config/" + configName + "/peripheral/pdec/")
+    pdecSym_QdecHeaderFile.setType("HEADER")
+    pdecSym_QdecHeaderFile.setMarkup(True)
 
-    pdecSym_SourceFile = pdecComponent.createFileSymbol("PDEC_SOURCE", None)
-    pdecSym_SourceFile.setSourcePath("../peripheral/pdec_u2263/templates/plib_pdec.c.ftl")
-    pdecSym_SourceFile.setOutputName("plib_"+pdecInstanceName.getValue().lower()+".c")
-    pdecSym_SourceFile.setDestPath("/peripheral/pdec/")
-    pdecSym_SourceFile.setProjectPath("config/" + configName + "/peripheral/pdec/")
-    pdecSym_SourceFile.setType("SOURCE")
-    pdecSym_SourceFile.setMarkup(True)
+    pdecSym_QdecSourceFile = pdecComponent.createFileSymbol("PDEC_QDEC_SOURCE", None)
+    pdecSym_QdecSourceFile.setSourcePath("../peripheral/pdec_u2263/templates/plib_pdec_qdec.c.ftl")
+    pdecSym_QdecSourceFile.setOutputName("plib_"+pdecInstanceName.getValue().lower()+".c")
+    pdecSym_QdecSourceFile.setDestPath("/peripheral/pdec/")
+    pdecSym_QdecSourceFile.setProjectPath("config/" + configName + "/peripheral/pdec/")
+    pdecSym_QdecSourceFile.setType("SOURCE")
+    pdecSym_QdecSourceFile.setMarkup(True)
+
+    pdecSym_HallHeaderFile = pdecComponent.createFileSymbol("PDEC_HALL_HEADER", None)
+    pdecSym_HallHeaderFile.setSourcePath("../peripheral/pdec_u2263/templates/plib_pdec_hall.h.ftl")
+    pdecSym_HallHeaderFile.setOutputName("plib_"+pdecInstanceName.getValue().lower()+".h")
+    pdecSym_HallHeaderFile.setDestPath("/peripheral/pdec/")
+    pdecSym_HallHeaderFile.setProjectPath("config/" + configName + "/peripheral/pdec/")
+    pdecSym_HallHeaderFile.setType("HEADER")
+    pdecSym_HallHeaderFile.setMarkup(True)
+
+    pdecSym_HallSourceFile = pdecComponent.createFileSymbol("PDEC_HALL_SOURCE", None)
+    pdecSym_HallSourceFile.setSourcePath("../peripheral/pdec_u2263/templates/plib_pdec_hall.c.ftl")
+    pdecSym_HallSourceFile.setOutputName("plib_"+pdecInstanceName.getValue().lower()+".c")
+    pdecSym_HallSourceFile.setDestPath("/peripheral/pdec/")
+    pdecSym_HallSourceFile.setProjectPath("config/" + configName + "/peripheral/pdec/")
+    pdecSym_HallSourceFile.setType("SOURCE")
+    pdecSym_HallSourceFile.setMarkup(True)
+
+    pdecSym_CounterHeaderFile = pdecComponent.createFileSymbol("PDEC_COUNTER_HEADER", None)
+    pdecSym_CounterHeaderFile.setSourcePath("../peripheral/pdec_u2263/templates/plib_pdec_counter.h.ftl")
+    pdecSym_CounterHeaderFile.setOutputName("plib_"+pdecInstanceName.getValue().lower()+".h")
+    pdecSym_CounterHeaderFile.setDestPath("/peripheral/pdec/")
+    pdecSym_CounterHeaderFile.setProjectPath("config/" + configName + "/peripheral/pdec/")
+    pdecSym_CounterHeaderFile.setType("HEADER")
+    pdecSym_CounterHeaderFile.setMarkup(True)
+
+    pdecSym_CounterSourceFile = pdecComponent.createFileSymbol("PDEC_COUNTER_SOURCE", None)
+    pdecSym_CounterSourceFile.setSourcePath("../peripheral/pdec_u2263/templates/plib_pdec_counter.c.ftl")
+    pdecSym_CounterSourceFile.setOutputName("plib_"+pdecInstanceName.getValue().lower()+".c")
+    pdecSym_CounterSourceFile.setDestPath("/peripheral/pdec/")
+    pdecSym_CounterSourceFile.setProjectPath("config/" + configName + "/peripheral/pdec/")
+    pdecSym_CounterSourceFile.setType("SOURCE")
+    pdecSym_CounterSourceFile.setMarkup(True)
 
     pdecSym_SystemInitFile = pdecComponent.createFileSymbol("PDEC_SYS_INT", None)
     pdecSym_SystemInitFile.setType("STRING")

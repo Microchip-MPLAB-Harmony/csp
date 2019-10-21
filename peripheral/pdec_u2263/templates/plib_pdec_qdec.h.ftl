@@ -100,6 +100,10 @@ void ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}Stop( void );
 
 int16_t ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}PositionGet( void );
 
+uint16_t ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}RevolutionsGet( void );
+
+uint16_t ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}AngleGet( void );
+
 <#if PDEC_INTERRUPT == true>
 void ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}CallbackRegister( PDEC_${PDEC_CTRLA_MODE}_CALLBACK callback, uintptr_t context );
 <#else>
