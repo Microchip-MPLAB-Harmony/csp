@@ -59,12 +59,6 @@
 #include <stdbool.h>
 #include <string.h>
 #include "device.h"
-
-/* Number of configured FIFO */
-#define CAN_NUM_OF_FIFO             ${NUMBER_OF_FIFO}
-/* Maximum number of CAN Message buffers in each FIFO */
-#define CAN_FIFO_MESSAGE_BUFFER_MAX 32
-
 #include "plib_can_common.h"
 
 // DOM-IGNORE-BEGIN

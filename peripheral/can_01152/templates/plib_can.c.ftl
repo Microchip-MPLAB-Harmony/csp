@@ -56,6 +56,11 @@
 // Global Data
 // *****************************************************************************
 // *****************************************************************************
+/* Number of configured FIFO */
+#define CAN_NUM_OF_FIFO             ${NUMBER_OF_FIFO}
+/* Maximum number of CAN Message buffers in each FIFO */
+#define CAN_FIFO_MESSAGE_BUFFER_MAX 32
+
 #define CAN_CONFIGURATION_MODE      0x4
 #define CAN_OPERATION_MODE          ${CAN_OPMODE}
 #define CAN_NUM_OF_FILTER           ${NUMBER_OF_FILTER}
@@ -80,6 +85,7 @@
 
 <#if CAN_INTERRUPT_MODE == true>
 static CAN_OBJ ${CAN_INSTANCE_NAME?lower_case}Obj;
+static CAN_RX_MSG ${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_NUM_OF_FIFO][CAN_FIFO_MESSAGE_BUFFER_MAX];
 </#if>
 static CAN_TX_RX_MSG_BUFFER __attribute__((coherent, aligned(32))) can_message_buffer[CAN_MESSAGE_RAM_CONFIG_SIZE];
 
@@ -164,7 +170,7 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
     C${CAN_INSTANCE_NUM}INTSET = _C${CAN_INSTANCE_NUM}INT_SERRIE_MASK | _C${CAN_INSTANCE_NUM}INT_CERRIE_MASK | _C${CAN_INSTANCE_NUM}INT_IVRIE_MASK;
 
     /* Initialize the CAN PLib Object */
-    memset((void *)${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg, 0x00, sizeof(${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg));
+    memset((void *)${CAN_INSTANCE_NAME?lower_case}RxMsg, 0x00, sizeof(${CAN_INSTANCE_NAME?lower_case}RxMsg));
     ${CAN_INSTANCE_NAME?lower_case}Obj.state = CAN_STATE_IDLE;
 
 </#if>
@@ -341,10 +347,10 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
 <#if CAN_INTERRUPT_MODE == true>
     msgIndex = (uint8_t)(*(volatile uint32_t *)(&C${CAN_INSTANCE_NUM}FIFOCI0 + (fifoNum * CAN_FIFO_OFFSET)) & _C${CAN_INSTANCE_NUM}FIFOCI0_CFIFOCI_MASK);
     ${CAN_INSTANCE_NAME?lower_case}Obj.state = CAN_STATE_TRANSFER_RECEIVE;
-    ${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[fifoNum][msgIndex].id = id;
-    ${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[fifoNum][msgIndex].buffer = data;
-    ${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[fifoNum][msgIndex].size = length;
-    ${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[fifoNum][msgIndex].timestamp = timestamp;
+    ${CAN_INSTANCE_NAME?lower_case}RxMsg[fifoNum][msgIndex].id = id;
+    ${CAN_INSTANCE_NAME?lower_case}RxMsg[fifoNum][msgIndex].buffer = data;
+    ${CAN_INSTANCE_NAME?lower_case}RxMsg[fifoNum][msgIndex].size = length;
+    ${CAN_INSTANCE_NAME?lower_case}RxMsg[fifoNum][msgIndex].timestamp = timestamp;
     *(volatile uint32_t *)(&C${CAN_INSTANCE_NUM}FIFOINT0SET + (fifoNum * CAN_FIFO_OFFSET)) = _C${CAN_INSTANCE_NUM}FIFOINT0_RXNEMPTYIE_MASK;
     C${CAN_INSTANCE_NUM}INTSET = _C${CAN_INSTANCE_NUM}INT_RBIE_MASK;
     status = true;
@@ -751,29 +757,29 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
                     /* Get a pointer to RX message buffer */
                     rxMessage = (CAN_TX_RX_MSG_BUFFER *)PA_TO_KVA1(*(volatile uint32_t *)(&C${CAN_INSTANCE_NUM}FIFOUA0 + (fifoNum * CAN_FIFO_OFFSET)));
 
-                    if (${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[fifoNum][msgIndex].buffer != NULL)
+                    if (${CAN_INSTANCE_NAME?lower_case}RxMsg[fifoNum][msgIndex].buffer != NULL)
                     {
                         /* Check if it's a extended message type */
                         if (rxMessage->msgEID & CAN_MSG_IDE_MASK)
                         {
-                            *${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[fifoNum][msgIndex].id = ((rxMessage->msgSID & CAN_MSG_SID_MASK) << 18) | ((rxMessage->msgEID >> 10) & _C${CAN_INSTANCE_NUM}RXM0_EID_MASK);
+                            *${CAN_INSTANCE_NAME?lower_case}RxMsg[fifoNum][msgIndex].id = ((rxMessage->msgSID & CAN_MSG_SID_MASK) << 18) | ((rxMessage->msgEID >> 10) & _C${CAN_INSTANCE_NUM}RXM0_EID_MASK);
                         }
                         else
                         {
-                            *${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[fifoNum][msgIndex].id = rxMessage->msgSID & CAN_MSG_SID_MASK;
+                            *${CAN_INSTANCE_NAME?lower_case}RxMsg[fifoNum][msgIndex].id = rxMessage->msgSID & CAN_MSG_SID_MASK;
                         }
 
-                        *${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[fifoNum][msgIndex].size = rxMessage->msgEID & CAN_MSG_DLC_MASK;
+                        *${CAN_INSTANCE_NAME?lower_case}RxMsg[fifoNum][msgIndex].size = rxMessage->msgEID & CAN_MSG_DLC_MASK;
 
                         /* Copy the data into the payload */
-                        while (count < *${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[fifoNum][msgIndex].size)
+                        while (count < *${CAN_INSTANCE_NAME?lower_case}RxMsg[fifoNum][msgIndex].size)
                         {
-                            *${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[fifoNum][msgIndex].buffer++ = rxMessage->msgData[count++];
+                            *${CAN_INSTANCE_NAME?lower_case}RxMsg[fifoNum][msgIndex].buffer++ = rxMessage->msgData[count++];
                         }
 
-                        if (${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[fifoNum][msgIndex].timestamp != NULL)
+                        if (${CAN_INSTANCE_NAME?lower_case}RxMsg[fifoNum][msgIndex].timestamp != NULL)
                         {
-                            *${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[fifoNum][msgIndex].timestamp = (rxMessage->msgSID & CAN_MSG_TIMESTAMP_MASK) >> 16;
+                            *${CAN_INSTANCE_NAME?lower_case}RxMsg[fifoNum][msgIndex].timestamp = (rxMessage->msgSID & CAN_MSG_TIMESTAMP_MASK) >> 16;
                         }
                     }
                     /* Message processing is done, update the message buffer pointer. */
