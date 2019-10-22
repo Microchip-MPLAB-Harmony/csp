@@ -504,8 +504,7 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
         while (count < *length)
         {
 <#if CAN_TIMESTAMP_ENABLE == true>
-            dataIndex += count;
-            *data++ = rxMessage->data[dataIndex];
+            *data++ = rxMessage->data[dataIndex + count];
             count++;
 <#else>
             *data++ = rxMessage->data[count++];
