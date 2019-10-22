@@ -504,8 +504,7 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
         while (count < *length)
         {
 <#if CAN_TIMESTAMP_ENABLE == true>
-            *data++ = rxMessage->data[dataIndex + count];
-            count++;
+            *data++ = rxMessage->data[dataIndex + count++];
 <#else>
             *data++ = rxMessage->data[count++];
 </#if>
@@ -1028,9 +1027,7 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
                         while (count < *${CAN_INSTANCE_NAME?lower_case}RxMsg[fifoNum-1][msgIndex].size)
                         {
                             <#if CAN_TIMESTAMP_ENABLE == true>
-                            dataIndex += count;
-                            *${CAN_INSTANCE_NAME?lower_case}RxMsg[fifoNum-1][msgIndex].buffer++ = rxMessage->data[dataIndex];
-                            count++;
+                            *${CAN_INSTANCE_NAME?lower_case}RxMsg[fifoNum-1][msgIndex].buffer++ = rxMessage->data[dataIndex + count++];
                             <#else>
                             *${CAN_INSTANCE_NAME?lower_case}RxMsg[fifoNum-1][msgIndex].buffer++ = rxMessage->data[count++];
                             </#if>

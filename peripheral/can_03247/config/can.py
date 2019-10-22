@@ -246,16 +246,15 @@ def bitTimingCalculation(bitTiming, lowTq, highTq):
     return tseg1, tseg2
 
 def dataBitTimingCalculation(symbol, event):
-    if (Database.getSymbolValue(canInstanceName.getValue().lower(), "CAN_OPMODE") == 0x0):
-        tseg1, tseg2 = bitTimingCalculation("Data", 3, 49)
-        Database.setSymbolValue(canInstanceName.getValue().lower(), "DBT_TSEG1", tseg1)
-        Database.setSymbolValue(canInstanceName.getValue().lower(), "DBT_TSEG2", tseg2)
-        component = symbol.getComponent()
-        if (tseg2 > component.getSymbolByID("DBT_SJW").getMax()):
-            sjw = component.getSymbolByID("DBT_SJW").getMax()
-        else:
-            sjw = tseg2
-        Database.setSymbolValue(canInstanceName.getValue().lower(), "DBT_SJW", sjw)
+    tseg1, tseg2 = bitTimingCalculation("Data", 3, 49)
+    Database.setSymbolValue(canInstanceName.getValue().lower(), "DBT_TSEG1", tseg1)
+    Database.setSymbolValue(canInstanceName.getValue().lower(), "DBT_TSEG2", tseg2)
+    component = symbol.getComponent()
+    if (tseg2 > component.getSymbolByID("DBT_SJW").getMax()):
+        sjw = component.getSymbolByID("DBT_SJW").getMax()
+    else:
+        sjw = tseg2
+    Database.setSymbolValue(canInstanceName.getValue().lower(), "DBT_SJW", sjw)
 
 def nominalBitTimingCalculation(symbol, event):
     tseg1, tseg2 = bitTimingCalculation("Nominal", 4, 385)
