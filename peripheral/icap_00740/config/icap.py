@@ -33,6 +33,8 @@ icapValGrp_IC1CON_SIDL    = ATDF.getNode('/avr-tools-device-file/modules/module@
 
 cfgBifield_ICACLK           = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CFG"]/register-group@[name="CFG"]/register@[name="CFGCON"]/bitfield@[name="ICACLK"]')
 
+if all(x in Variables.get("__PROCESSOR") for x in ["PIC32MZ", "W"]):
+    cfgBifield_ICACLK           = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CFG"]/register-group@[name="CFG"]/register@[name="CFGCON0"]/bitfield@[name="IC_ACLK"]')
 ################################################################################
 #### Global Variables ####
 ################################################################################
