@@ -133,6 +133,8 @@
 #define CAN_MSG_TX_EXT_EID_MASK     0x0003FFFF
 #define CAN_MSG_RX_EXT_SID_MASK     0x000007FF
 #define CAN_MSG_RX_EXT_EID_MASK     0x1FFFF800
+#define CAN_MSG_FLT_EXT_SID_MASK    0x1FFC0000
+#define CAN_MSG_FLT_EXT_EID_MASK    0x0003FFFF
 
 <#if CAN_INTERRUPT_MODE == true>
 static CAN_OBJ ${CAN_INSTANCE_NAME?lower_case}Obj;
@@ -264,8 +266,8 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
     <#assign FILTER_FIFO_SELECT = CAN_INSTANCE_NAME + "_FILTER" + filter + "_FIFO_SELECT">
     <#assign FILTER_ENABLE = CAN_INSTANCE_NAME + "_FILTER" + filter + "_ENABLE">
     /* Filter ${filter} configuration */
-    CFD${CAN_INSTANCE_NUM}FLTOBJ${filter} = ${(.vars[FILTER_ID]?number > 2047)?then('((((${.vars[FILTER_ID]} & CAN_MSG_RX_EXT_SID_MASK) << 18) | ((${.vars[FILTER_ID]} & CAN_MSG_RX_EXT_EID_MASK) >> 11)) & CAN_MSG_EID_MASK) | _CFD${CAN_INSTANCE_NUM}FLTOBJ${filter}_EXIDE_MASK','(${.vars[FILTER_ID]} & CAN_MSG_SID_MASK)')};
-    CFD${CAN_INSTANCE_NUM}MASK${filter} = ${(.vars[FILTER_MASK_ID]?number > 2047)?then('((((${.vars[FILTER_MASK_ID]} & CAN_MSG_RX_EXT_SID_MASK) << 18) | ((${.vars[FILTER_MASK_ID]} & CAN_MSG_RX_EXT_EID_MASK) >> 11)) & CAN_MSG_EID_MASK) | _CFD${CAN_INSTANCE_NUM}MASK${filter}_MIDE_MASK','(${.vars[FILTER_MASK_ID]} & CAN_MSG_SID_MASK)')};
+    CFD${CAN_INSTANCE_NUM}FLTOBJ${filter} = ${(.vars[FILTER_ID]?number > 2047)?then('((((${.vars[FILTER_ID]} & CAN_MSG_FLT_EXT_SID_MASK) >> 18) | ((${.vars[FILTER_ID]} & CAN_MSG_FLT_EXT_EID_MASK) << 11)) & CAN_MSG_EID_MASK) | _CFD${CAN_INSTANCE_NUM}FLTOBJ${filter}_EXIDE_MASK','(${.vars[FILTER_ID]} & CAN_MSG_SID_MASK)')};
+    CFD${CAN_INSTANCE_NUM}MASK${filter} = ${(.vars[FILTER_MASK_ID]?number > 2047)?then('((((${.vars[FILTER_MASK_ID]} & CAN_MSG_FLT_EXT_SID_MASK) >> 18) | ((${.vars[FILTER_MASK_ID]} & CAN_MSG_FLT_EXT_EID_MASK) << 11)) & CAN_MSG_EID_MASK) | _CFD${CAN_INSTANCE_NUM}MASK${filter}_MIDE_MASK','(${.vars[FILTER_MASK_ID]} & CAN_MSG_SID_MASK)')};
     CFD${CAN_INSTANCE_NUM}FLTCON${FILTER_REG_INDEX?int}SET = ((${.vars[FILTER_FIFO_SELECT]} << _CFD${CAN_INSTANCE_NUM}FLTCON${FILTER_REG_INDEX?int}_F${filter}BP_POSITION) & _CFD${CAN_INSTANCE_NUM}FLTCON${FILTER_REG_INDEX?int}_F${filter}BP_MASK)<#if .vars[FILTER_ENABLE] == true>| _CFD${CAN_INSTANCE_NUM}FLTCON${FILTER_REG_INDEX?int}_FLTEN${filter}_MASK</#if>;
     </#list>
 
@@ -593,7 +595,7 @@ void ${CAN_INSTANCE_NAME}_MessageAcceptanceFilterSet(uint8_t filterNum, uint32_t
 
         if (id > CAN_MSG_SID_MASK)
         {
-            *(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}FLTOBJ0 + (filterNum * CAN_FILTER_OBJ_OFFSET)) = (id & CAN_MSG_EID_MASK) | _CFD${CAN_INSTANCE_NUM}FLTOBJ0_EXIDE_MASK;
+            *(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}FLTOBJ0 + (filterNum * CAN_FILTER_OBJ_OFFSET)) = ((((id & CAN_MSG_FLT_EXT_SID_MASK) >> 18) | ((id & CAN_MSG_FLT_EXT_EID_MASK) << 11)) & CAN_MSG_EID_MASK) | _CFD${CAN_INSTANCE_NUM}FLTOBJ0_EXIDE_MASK;
         }
         else
         {
@@ -627,7 +629,9 @@ uint32_t ${CAN_INSTANCE_NAME}_MessageAcceptanceFilterGet(uint8_t filterNum)
     {
         if (*(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}FLTOBJ0 + (filterNum * CAN_FILTER_OBJ_OFFSET)) & _CFD${CAN_INSTANCE_NUM}FLTOBJ0_EXIDE_MASK)
         {
-            id = (*(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}FLTOBJ0 + (filterNum * CAN_FILTER_OBJ_OFFSET)) & CAN_MSG_EID_MASK);
+            id = (((*(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}FLTOBJ0 + (filterNum * CAN_FILTER_OBJ_OFFSET)) & CAN_MSG_RX_EXT_SID_MASK) << 18)
+               | ((*(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}FLTOBJ0 + (filterNum * CAN_FILTER_OBJ_OFFSET)) & CAN_MSG_RX_EXT_EID_MASK) >> 11))
+               & CAN_MSG_EID_MASK;
         }
         else
         {
@@ -662,7 +666,7 @@ void ${CAN_INSTANCE_NAME}_MessageAcceptanceFilterMaskSet(uint8_t acceptanceFilte
 
     if (id > CAN_MSG_SID_MASK)
     {
-        *(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}MASK0 + (acceptanceFilterMaskNum * CAN_ACCEPTANCE_MASK_OFFSET)) = (id & CAN_MSG_EID_MASK) | _CFD${CAN_INSTANCE_NUM}MASK0_MIDE_MASK;
+        *(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}MASK0 + (acceptanceFilterMaskNum * CAN_ACCEPTANCE_MASK_OFFSET)) = ((((id & CAN_MSG_FLT_EXT_SID_MASK) >> 18) | ((id & CAN_MSG_FLT_EXT_EID_MASK) << 11)) & CAN_MSG_EID_MASK) | _CFD${CAN_INSTANCE_NUM}MASK0_MIDE_MASK;
     }
     else
     {
@@ -696,7 +700,9 @@ uint32_t ${CAN_INSTANCE_NAME}_MessageAcceptanceFilterMaskGet(uint8_t acceptanceF
 
     if (*(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}MASK0 + (acceptanceFilterMaskNum * CAN_ACCEPTANCE_MASK_OFFSET)) & _CFD${CAN_INSTANCE_NUM}MASK0_MIDE_MASK)
     {
-        id = (*(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}MASK0 + (acceptanceFilterMaskNum * CAN_ACCEPTANCE_MASK_OFFSET)) & CAN_MSG_EID_MASK);
+        id = (((*(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}MASK0 + (acceptanceFilterMaskNum * CAN_ACCEPTANCE_MASK_OFFSET)) & CAN_MSG_RX_EXT_SID_MASK) << 18)
+           | ((*(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}MASK0 + (acceptanceFilterMaskNum * CAN_ACCEPTANCE_MASK_OFFSET)) & CAN_MSG_RX_EXT_EID_MASK) >> 11))
+           & CAN_MSG_EID_MASK;
     }
     else
     {
