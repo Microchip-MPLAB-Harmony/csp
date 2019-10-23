@@ -23,7 +23,7 @@
 
 
 
-
+global _find_default_value
 def _find_default_value(bitfieldNode, initialRegValue):
     '''
     Helper function to lookup default value for a particular bitfield within a given register from atdf node
@@ -48,6 +48,7 @@ def _find_default_value(bitfieldNode, initialRegValue):
             break
     return((registerValue & mask) >> shift)
 
+global _find_key
 def _find_key(value, keypairs):
     '''
     Helper function that finds the keyname for the given value.  Needed for setting up combo symbol value.
@@ -60,6 +61,7 @@ def _find_key(value, keypairs):
     print("_find_key: could not find value in dictionary",val,str(value)) # should never get here
     return ""
 
+global _process_valuegroup_entry
 def _process_valuegroup_entry(node):
     '''
     Looks at input node and returns key name, description, and value for it.
@@ -120,7 +122,112 @@ def calcWaitStates(symbol, event):
             ws=0
 
     symbol.setValue(ws,2)
+    
+global updateCFGCON3
+def updateCFGCON3(menu,event):
+    # updates the CFGCON3 register based on one of 3 bitfield values that can change
+    value = int(Database.getSymbolValue("core", "CFGCON3_VALUE"))
+    if('SPLLPOSTDIV2' in event['id']):
+        mask = Database.getSymbolValue("core", "SPLLPOSTDIV2_MASK")
+    elif('ETHPLLPOSTDIV2' in event['id']):
+        mask = Database.getSymbolValue("core", "ETHPLLPOSTDIV2_MASK")
+    elif('BTPLLPOSTDIV2' in event['id']):
+        mask = Database.getSymbolValue("core", "ETHPLLPOSTDIV2_MASK")
+    else:
+        mask = '0'
+    maskval = int(mask.split('0x')[1],16)
+    newvalue = value & ~maskval
+    shift = 0
+    for ii in range(0,32):
+        if( ((maskval >> ii) & 1) != 0):
+            shift = ii
+            break
+    newvalue = newvalue + (int(event['value'])<<shift)
+    Database.setSymbolValue("core", "CFGCON3_VALUE", newvalue, 2)
 
+    
+    
+def make_config_reg_items(basenode, component, parentMenu):
+    # Extracts the configuration registers that are relevant.  There are some fields that are the only way to control certain settings
+    # and thus need to be exposed to the user.  CFGCONx registers have these fields.
+    node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CFG\"]/register-group/register@[name=\"CFGCON0\"]")
+    cfgcon0 = component.createIntegerSymbol('CFGCON0_VALUE', parentMenu)
+    cfgcon0.setVisible(False)
+    cfgcon0.setDefaultValue(int(node.getAttribute('initval'),16))
+    cfgcon0name = component.createStringSymbol('CFGCON0_NAME', parentMenu)
+    cfgcon0name.setVisible(False)
+    cfgcon0name.setDefaultValue(node.getAttribute('name'))
+    
+    node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CFG\"]/register-group/register@[name=\"CFGCON1\"]")
+    cfgcon1 = component.createIntegerSymbol('CFGCON1_VALUE', parentMenu)
+    cfgcon1.setVisible(False)
+    cfgcon1.setDefaultValue(int(node.getAttribute('initval'),16))
+    cfgcon1name = component.createStringSymbol('CFGCON1_NAME', parentMenu)
+    cfgcon1name.setVisible(False)
+    cfgcon1name.setDefaultValue(node.getAttribute('name'))
+    
+    node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CFG\"]/register-group/register@[name=\"CFGCON2\"]")
+    cfgcon2 = component.createIntegerSymbol('CFGCON2_VALUE', parentMenu)
+    cfgcon2.setVisible(False)
+    cfgcon2.setDefaultValue(int(node.getAttribute('initval'),16))
+    cfgcon2name = component.createStringSymbol('CFGCON2_NAME', parentMenu)
+    cfgcon2name.setVisible(False)
+    cfgcon2name.setDefaultValue(node.getAttribute('name'))
+    
+    node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CFG\"]/register-group/register@[name=\"CFGCON3\"]")
+    cfgcon3 = component.createIntegerSymbol('CFGCON3_VALUE', parentMenu)
+    cfgcon3.setVisible(False)
+    cfgcon3.setDefaultValue(int(node.getAttribute('initval'),16))
+    cfgcon3.setDependencies(updateCFGCON3,['CFG_SPLLPOSTDIV2', 'CFG_ETHPLLPOSTDIV2', 'CFG_BTPLLPOSTDIV2'])
+    cfgcon3name = component.createStringSymbol('CFGCON3_NAME', parentMenu)
+    cfgcon3name.setVisible(False)
+    cfgcon3name.setDefaultValue(node.getAttribute('name'))
+    
+    node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CFG\"]/register-group/register@[name=\"CFGCON4\"]")
+    cfgcon4 = component.createIntegerSymbol('CFGCON4_VALUE', parentMenu)
+    cfgcon4.setVisible(False)
+    cfgcon4.setDefaultValue(int(node.getAttribute('initval'),16))
+    cfgcon4name = component.createStringSymbol('CFGCON4_NAME', parentMenu)
+    cfgcon4name.setVisible(False)
+    cfgcon4name.setDefaultValue(node.getAttribute('name'))
+def populate_config_items(basenode, bitfieldHexSymbols, baseLabel, moduleNode, component, parentMenu, visibility):
+    register = basenode.getChildren() # these are <register > fields for fuse config section
+    for ii in range(len(register)):
+        porValue = register[ii].getAttribute('initval')
+        if(porValue != None):
+            symbolName = register[ii].getAttribute('name')
+            menuitem = component.createMenuSymbol(symbolName, parentMenu)
+            menuitem.setVisible(visibility)
+            menuitem.setLabel(symbolName)
+            bitfields = register[ii].getChildren()
+            for jj in range(len(bitfields)):
+                bitfieldName = bitfields[jj].getAttribute('name')
+                if(bitfieldName in bitfieldHexSymbols):
+                    bitfielditem = component.createHexSymbol(baseLabel+bitfieldName,menuitem) # symbol ID must match ftl file symbol
+                else: # key value type symbol
+                    submodnode = moduleNode.getChildren()   # <value-group > entries
+                    for kk in range(len(submodnode)): # scan over all <value-group ..> attributes (i.e., all bitfields) for our bitfieldName
+                        # extract field names from <value-group > items.  The part after the '__' is what we need here.
+                        temp = submodnode[kk].getAttribute('name')
+                        posn = temp.find('__')
+                        name = temp[posn+2:]
+        
+                        if(name == bitfieldName):  # if we have a matching <value-group >, look at all children <value > fields
+                            valuenode = submodnode[kk].getChildren()  # look at all the <value ..> entries underneath <value-group >
+                            keyVals = {}
+                            for ll in range(len(valuenode)):  # do this for each child <value ..> attribute for this bitfield
+                                keyVals[valuenode[ll].getAttribute("name")] = _process_valuegroup_entry(valuenode[ll])
+                    bitfielditem = component.createComboSymbol(baseLabel+bitfieldName, menuitem, sorted(keyVals.keys()))
+                    bitfielditem.setDefaultValue(_find_key(_find_default_value(bitfields[jj], porValue),keyVals))
+        
+                bitfielditem.setVisible(visibility)
+        
+                if(bitfieldName in bitfieldHexSymbols):
+                    bitfielditem.setDefaultValue(_find_default_value(bitfields[jj], porValue))
+        
+                label = bitfields[jj].getAttribute('caption')+' ('+bitfields[jj].getAttribute('name')+')'
+                bitfielditem.setLabel(label)
+                bitfielditem.setDescription(bitfields[jj].getAttribute('caption'))
 clkValGrp_DEVCFG0__FECCCON = ATDF.getNode('/avr-tools-device-file/modules/module@[name="FUSECONFIG"]/value-group@[name="DEVCFG0__FECCCON"]')
 print("Loading System Services for " + Variables.get("__PROCESSOR"))
 fuseModuleGrp = ATDF.getNode('/avr-tools-device-file/modules/module@[name="FUSECONFIG"]')
@@ -128,49 +235,14 @@ fuseModuleGrp = ATDF.getNode('/avr-tools-device-file/modules/module@[name="FUSEC
 # loaded from atdf file
 # Most fields are key/value pairs, but a handful of them are integer.  Need to know which ones those are.
 bitfieldHexSymbols = [ 'USERID', 'SOSCCFG', 'CANFDDIV', 'USBDMTRIM', 'USBDPTRIM' ]
-
 node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"FUSECONFIG\"]/register-group")
-register = node.getChildren() # these are <register > fields for fuse config section
-for ii in range(len(register)):
-    porValue = register[ii].getAttribute('initval')
-    symbolName = register[ii].getAttribute('name')
-    menuitem = coreComponent.createMenuSymbol(symbolName, devCfgMenu)
-    menuitem.setVisible(True)
-    menuitem.setLabel(symbolName)
-    bitfields = register[ii].getChildren()
-    for jj in range(len(bitfields)):
-        bitfieldName = bitfields[jj].getAttribute('name')
-        if(bitfieldName in bitfieldHexSymbols):
-            bitfielditem = coreComponent.createHexSymbol('CONFIG_'+bitfieldName,menuitem) # symbol ID must match ftl file symbol
-        else: # key value type symbol
-            moduleNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"FUSECONFIG\"]")
-            submodnode = moduleNode.getChildren()   # <value-group > entries
-            for kk in range(len(submodnode)): # scan over all <value-group ..> attributes (i.e., all bitfields) for our bitfieldName
-                # extract field names from <value-group > items.  The part after the '__' is what we need here.
-                temp = submodnode[kk].getAttribute('name')
-                posn = temp.find('__')
-                name = temp[posn+2:]
+populate_config_items(node, bitfieldHexSymbols, 'CONFIG_', ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"FUSECONFIG\"]"), coreComponent, devCfgMenu, True)
 
-                if(name == bitfieldName):  # if we have a matching <value-group >, look at all children <value > fields
-                    valuenode = submodnode[kk].getChildren()  # look at all the <value ..> entries underneath <value-group >
-                    keyVals = {}
-                    for ll in range(len(valuenode)):  # do this for each child <value ..> attribute for this bitfield
-                        keyVals[valuenode[ll].getAttribute("name")] = _process_valuegroup_entry(valuenode[ll])
+bitfieldHexSymbols = ['SPLLPOSTDIV2', 'ETHPLLPOSTDIV2', 'BTPLLPOSTDIV2']
+node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CFG\"]/register-group")
+populate_config_items(node, bitfieldHexSymbols, 'CFG_', ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CFG\"]"), coreComponent, devCfgMenu, True)
+make_config_reg_items(node, coreComponent, devCfgMenu)
 
-            bitfielditem = coreComponent.createComboSymbol('CONFIG_'+bitfieldName, menuitem, sorted(keyVals.keys()))
-            bitfielditem.setDefaultValue(_find_key(_find_default_value(bitfields[jj], porValue),keyVals))
-
-        bitfielditem.setVisible(True)
-
-        if(bitfieldName in bitfieldHexSymbols):
-            bitfielditem.setDefaultValue(_find_default_value(bitfields[jj], porValue))
-
-        label = bitfields[jj].getAttribute('caption')+' ('+bitfields[jj].getAttribute('name')+')'
-        bitfielditem.setLabel(label)
-        bitfielditem.setDescription(bitfields[jj].getAttribute('caption'))
-# End of scanning atdf file for parameters in fuse area
-
-# The following symbols are not used in Chicagoland, but are created for the clock manager.
 symbol = coreComponent.createBooleanSymbol("SYS_CLK_FSOSCEN_OVERRIDE", None)
 symbol.setDefaultValue(False)
 symbol.setReadOnly(True)
@@ -192,7 +264,7 @@ prefetchMenu.setDescription("Configure Prefetch and Flash")
 
 # load clock manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_pic32mzw/config/clk.py")
-#coreComponent.addPlugin("../peripheral/clk_pic32mz/plugin/clockmanager.jar")
+#coreComponent.addPlugin("../peripheral/clk_pic32mzw/plugin/clockmanager.jar")
 
 SYM_ECCCON = coreComponent.createKeyValueSetSymbol("CONFIG_CFGCON_ECCCON", prefetchMenu)
 SYM_ECCCON.addKey("ON", "0", "Flash ECC is enabled")
@@ -214,7 +286,7 @@ SYM_REFEN.setDefaultValue(1)
 
 SYM_PFMWS = coreComponent.createIntegerSymbol("CONFIG_PRECON_PFMWS", prefetchMenu)
 SYM_PFMWS.setReadOnly(False)
-SYM_PFMWS.setDefaultValue(2)
+SYM_PFMWS.setDefaultValue(5)
 SYM_PFMWS.setLabel("Program Flash memory wait states")
 SYM_PFMWS.setDependencies(calcWaitStates,["CPU_CLOCK_FREQUENCY", "CONFIG_CFGCON_ECCCON"])
 

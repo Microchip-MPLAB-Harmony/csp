@@ -111,6 +111,63 @@ void CLK_Initialize( void )
     /* SPLL_BYP     = ${SPLLCON_SPLL_BYP_VALUE}     */
     ${SPLLCON_REG} = 0x${SPLLCON_VALUE};  
     
+<#if USBPLL_ENABLE == true>
+    /* Configure UPLL */
+    /* UPLLBSWSEL   = ${UPLLCON_UPLLBSWSEL_VALUE} */
+    /* UPLLPWDN     = ${UPLLCON_UPLLPWDN_VALUE} */
+    /* UPLLPOSTDIV1 = ${UPLLCON_UPLLPOSTDIV1_VALUE} */
+    /* UPLLFLOCK    = ${UPLLCON_UPLLFLOCK_VALUE} */
+    /* UPLLRST      = ${UPLLCON_UPLLRST_VALUE} */
+    /* UPLLFBDIV    = ${UPLLCON_UPLLFBDIV_VALUE} */
+    /* UPLLREFDIV   = ${UPLLCON_UPLLREFDIV_VALUE} */
+    /* UPLL_BYP     = ${UPLLCON_UPLL_BYP_VALUE} */
+    ${UPLLCON_REG} = 0x${UPLLCON_VALUE};
+<#else>
+    /* Power down the UPLL */
+    UPLLCONbits.UPLLPWDN = 1;
+</#if>
+
+<#if EWPLL_ENABLE == true>
+    /* Configure EWPLL */
+    /* EWPLLBSWSEL   = ${EWPLLCON_EWPLLBSWSEL_VALUE} */
+    /* EWPLLPWDN     = ${EWPLLCON_EWPLLPWDN_VALUE} */
+    /* EWPLLPOSTDIV1 = ${EWPLLCON_EWPLLPOSTDIV1_VALUE} */
+    /* EWPLLFLOCK    = ${EWPLLCON_EWPLLFLOCK_VALUE} */
+    /* EWPLLRST      = ${EWPLLCON_EWPLLRST_VALUE} */
+    /* EWPLLFBDIV    = ${EWPLLCON_EWPLLFBDIV_VALUE} */
+    /* EWPLLREFDIV   = ${EWPLLCON_EWPLLREFDIV_VALUE} */
+    /* EWPLLICLK     = ${EWPLLCON_EWPLLICLK_VALUE} */
+    /* ETHCLKOUTEN   = ${EWPLLCON_ETHCLKOUTEN_VALUE} */
+    /* EWPLL_BYP     = ${EWPLLCON_EWPLL_BYP_VALUE} */
+    ${EWPLLCON_REG} = 0x${EWPLLCON_VALUE};
+<#else>
+    /* Power down the EWPLL */
+    EWPLLCONbits.EWPLLPWDN = 1;
+</#if>
+
+<#if BTPLL_ENABLE == true>
+    /* Configure BYPLL */
+    /* BTPLLBSWSEL   = ${BTPLLCON_BTPLLBSWSEL_VALUE} */
+    /* BTPLLPWDN     = ${BTPLLCON_BTPLLPWDN_VALUE} */
+    /* BTPLLPOSTDIV1 = ${BTPLLCON_BTPLLPOSTDIV1_VALUE} */
+    /* BTPLLFLOCK    = ${BTPLLCON_BTPLLFLOCK_VALUE} */
+    /* BTPLLRST      = ${BTPLLCON_BTPLLRST_VALUE} */
+    /* BTPLLFBDIV    = ${BTPLLCON_BTPLLFBDIV_VALUE} */
+    /* BTPLLREFDIV   = ${BTPLLCON_BTPLLREFDIV_VALUE} */
+    /* BTCLKOUTEN    = ${BTPLLCON_BTCLKOUTEN_VALUE} */
+    /* BTPLLICLK     = ${BTPLLCON_BTPLLCLK_VALUE} */
+    /* BTPLL_BYP     = ${BTPLLCON_BTPLL_BYP_VALUE} */
+    ${BTPLLCON_REG} = 0x${BTPLLCON_VALUE};
+<#else>
+    /* Power down the BTPLL */
+    BTPLLCONbits.BTPLLPWDN = 1;
+</#if>
+    
+    /* ETHPLLPOSTDIV2 = ${CFG_ETHPLLPOSTDIV2} */
+    /* SPLLPOSTDIV2   = ${CFG_SPLLPOSTDIV2} */
+    /* BTPLLPOSTDIV2  = ${CFG_BTPLLPOSTDIV2} */
+    ${CFGCON3_NAME} = ${CFGCON3_VALUE};
+    
     /* OSWEN    = ${OSCCON_OSWEN_VALUE}    */
     /* SOSCEN   = ${OSCCON_SOSCEN_VALUE}   */
     /* UFRCEN   = ${OSCCON_UFRCEN_VALUE}   */
@@ -193,14 +250,12 @@ void CLK_Initialize( void )
     <#assign REFOCONRODIV = "CONFIG_SYS_CLK_RODIV"+i>
 <#if .vars[ENBL] = true>
     /* Set up Reference Clock ${i} */
-    <#if .vars[REFCONVAL] != "0x200">
         <#lt>    /* REFO${i}CON register */
         <#lt>    /* ROSEL =  ${.vars[ROSELVAL]} */
         <#lt>    /* DIVSWEN = 1 */
         <#lt>    /* RODIV = ${.vars[REFOCONRODIV]} */
         <#lt>    ${.vars[REFCONREG]} = ${.vars[REFCONVAL]};
 
-    </#if>
     <#if .vars[REFOTRIMVAL] != "0x0">
         <#lt>    /* REFO${i}TRIM register */
         <#lt>    /* ROTRIM = ${.vars[ROTRIMVAL]} */
@@ -218,6 +273,7 @@ void CLK_Initialize( void )
     </#if>
 </#if>
 </#list>
+
 </#if>  <#-- CONFIG_HAVE_REFCLOCK == true -->
     /* Lock system since done with clock configuration */
     int_flag = (bool)__builtin_disable_interrupts();
