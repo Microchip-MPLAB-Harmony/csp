@@ -1,3 +1,17 @@
+<#compress>
+<#--Use reg value prefix based on mode of operation  -->
+<#assign REG_VAL_PREFIX = SDCARD_EMMCEN?string("E_MMC", "SD_SDIO")>
+<#-- Enable FCD if the mode of operation is EMMC or if CD capability exists but is not enabled  -->
+<#assign USE_FCD = SDCARD_EMMCEN || (SDCARD_SDCD_SUPPORT && !SDCARD_SDCDEN)>
+<#-- Disable card interrupt during initialization if used in sd card mode, has CD capability and the capability is not used  -->
+<#assign DISABLE_CD_INT_INIT = (!SDCARD_EMMCEN && SDCARD_SDCD_SUPPORT && !SDCARD_SDCDEN)>
+<#-- CD interrupt disable  -->
+<#assign SDMMC_CD_INT_DISABLE = " & ~(SDMMC_NISIER_SD_SDIO_CINS_Msk | SDMMC_NISIER_SD_SDIO_CREM_Msk)">
+<#-- CD interrupt enable -->
+<#assign SDMMC_CD_INT_ENABLE = " | (SDMMC_NISIER_SD_SDIO_CINS_Msk | SDMMC_NISIER_SD_SDIO_CREM_Msk)">
+<#-- Enable interrupts specific to EMMC or SDIO -->
+<#assign SDMMC_NISTER_VAL = SDCARD_EMMCEN?then("SDMMC_NISTER_E_MMC_Msk", "SDMMC_NISTER_SD_SDIO_Msk") + DISABLE_CD_INT_INIT?then(SDMMC_CD_INT_DISABLE,"")>
+</#compress>
 /*******************************************************************************
   ${SDMMC_INSTANCE_NAME} PLIB
 
@@ -53,7 +67,12 @@
 #define ${SDMMC_INSTANCE_NAME}_BASECLK_FREQUENCY                ${SDMMC_BASECLK_FREQ}
 #define ${SDMMC_INSTANCE_NAME}_MULTCLK_FREQUENCY                ${SDMMC_MULTCLK_FREQ}
 
+<#if SDCARD_EMMCEN == false>
 #define ${SDMMC_INSTANCE_NAME}_MAX_SUPPORTED_SDCLK_FREQUENCY    50000000UL
+<#else>
+#define ${SDMMC_INSTANCE_NAME}_MAX_SUPPORTED_SDCLK_FREQUENCY    52000000UL
+</#if>
+
 #define ${SDMMC_INSTANCE_NAME}_MAX_SUPPORTED_DIVIDER            0x3FF
 
 #define ${SDMMC_INSTANCE_NAME}_MAX_BLOCK_SIZE                   0x200
@@ -99,8 +118,12 @@ static void ${SDMMC_INSTANCE_NAME}_SetTransferMode ( uint32_t opcode )
 
     switch (opcode)
     {
+<#if !SDCARD_EMMCEN>
         case SDMMC_CMD_READ_SCR:
         case SDMMC_CMD_SET_BUS_WIDTH:
+<#else>
+        case SDMMC_CMD_SEND_EXT_CSD:
+</#if>
         case SDMMC_CMD_READ_SINGLE_BLOCK:
             /* Read single block of data from the device. */
             transferMode = (SDMMC_TMR_DMAEN_ENABLED | SDMMC_TMR_DTDSEL_Msk);
@@ -138,7 +161,7 @@ void ${SDMMC_INSTANCE_NAME}_InterruptHandler( void )
     eistr = ${SDMMC_INSTANCE_NAME}_REGS->SDMMC_EISTR;
     /* Save the error in a global variable for later use */
     ${SDMMC_INSTANCE_NAME?lower_case}Obj.errorStatus |= eistr;
-    <#if SDCARD_SDCDEN == true>
+    <#if SDCARD_EMMCEN == false && SDCARD_SDCDEN == true>
 
     if (nistr & SDMMC_NISTR_SD_SDIO_CINS_Msk)
     {
@@ -229,14 +252,35 @@ uint16_t ${SDMMC_INSTANCE_NAME}_DataErrorGet( void )
 
 void ${SDMMC_INSTANCE_NAME}_BusWidthSet ( SDMMC_BUS_WIDTH busWidth )
 {
+<#if SDCARD_EMMCEN>
+    uint8_t hc1r =  ${SDMMC_INSTANCE_NAME}_REGS->SDMMC_HC1R;
+    if(busWidth == SDMMC_BUS_WIDTH_8_BIT)
+    {
+       hc1r |= SDMMC_HC1R_E_MMC_EXTDW_Msk;
+    }
+    else
+    {
+        hc1r &= ~SDMMC_HC1R_E_MMC_EXTDW_Msk;
+        if (busWidth == SDMMC_BUS_WIDTH_4_BIT)
+        {
+            hc1r |= SDMMC_HC1R_E_MMC_DW_4_BIT;
+        }
+        else
+        {
+            hc1r &= ~SDMMC_HC1R_E_MMC_DW_4_BIT;
+        }
+    }
+    ${SDMMC_INSTANCE_NAME}_REGS->SDMMC_HC1R = hc1r;
+<#else>
     if (busWidth == SDMMC_BUS_WIDTH_4_BIT)
     {
-       ${SDMMC_INSTANCE_NAME}_REGS->SDMMC_HC1R |= SDMMC_HC1R_SD_SDIO_DW_4_BIT;
+        ${SDMMC_INSTANCE_NAME}_REGS->SDMMC_HC1R |= SDMMC_HC1R_SD_SDIO_DW_4_BIT;
     }
     else
     {
         ${SDMMC_INSTANCE_NAME}_REGS->SDMMC_HC1R &= ~SDMMC_HC1R_SD_SDIO_DW_4_BIT;
     }
+</#if>
 }
 
 void ${SDMMC_INSTANCE_NAME}_SpeedModeSet ( SDMMC_SPEED_MODE speedMode )
@@ -260,14 +304,14 @@ bool ${SDMMC_INSTANCE_NAME}_IsDatLineBusy ( void )
 {
     return (((${SDMMC_INSTANCE_NAME}_REGS->SDMMC_PSR & SDMMC_PSR_CMDINHD_Msk) == SDMMC_PSR_CMDINHD_Msk)? true : false);
 }
-<#if SDCARD_SDWP_SUPPORT == true>
+<#if SDCARD_EMMCEN == false && SDCARD_SDWPEN == true>
 
 bool ${SDMMC_INSTANCE_NAME}_IsWriteProtected ( void )
 {
     return (${SDMMC_INSTANCE_NAME}_REGS->SDMMC_PSR & SDMMC_PSR_WRPPL_Msk) ? false : true;
 }
 </#if>
-<#if SDCARD_SDCD_SUPPORT == true>
+<#if SDCARD_EMMCEN == false && SDCARD_SDCDEN == true>
 
 bool ${SDMMC_INSTANCE_NAME}_IsCardAttached ( void )
 {
@@ -523,7 +567,7 @@ void ${SDMMC_INSTANCE_NAME}_CommandSend (
     ${SDMMC_INSTANCE_NAME?lower_case}Obj.isDataInProgress = false;
     ${SDMMC_INSTANCE_NAME?lower_case}Obj.errorStatus = 0;
 
-<#if SDCARD_SDCDEN == true>
+<#if SDCARD_EMMCEN == false && SDCARD_SDCDEN == true>
     /* Keep the card insertion and removal interrupts enabled */
     normalIntSigEnable = (SDMMC_NISIER_SD_SDIO_CINS_Msk | SDMMC_NISIER_SD_SDIO_CREM_Msk);
 </#if>    
@@ -593,41 +637,38 @@ void ${SDMMC_INSTANCE_NAME}_CommandSend (
 void ${SDMMC_INSTANCE_NAME}_ModuleInit( void )
 {
     /* Reset module*/
-    ${SDMMC_INSTANCE_NAME}_REGS->SDMMC_SRR |= SDMMC_SRR_SWRSTALL_Msk;
+    ${SDMMC_INSTANCE_NAME}_REGS->SDMMC_SRR = SDMMC_SRR_SWRSTALL_Msk;
     while((${SDMMC_INSTANCE_NAME}_REGS->SDMMC_SRR & SDMMC_SRR_SWRSTALL_Msk) == SDMMC_SRR_SWRSTALL_Msk);
-
-    /* Clear the normal and error interrupt status flags */
-    ${SDMMC_INSTANCE_NAME}_REGS->SDMMC_EISTR = SDMMC_EISTR_SD_SDIO_Msk;
-    ${SDMMC_INSTANCE_NAME}_REGS->SDMMC_NISTR = SDMMC_NISTR_SD_SDIO_Msk;
-
-    /* Enable all the normal interrupt status and error status generation */
-    ${SDMMC_INSTANCE_NAME}_REGS->SDMMC_NISTER = SDMMC_NISTER_SD_SDIO_Msk;
-    ${SDMMC_INSTANCE_NAME}_REGS->SDMMC_EISTER = SDMMC_EISTER_SD_SDIO_Msk;
 
     /* Set timeout control register */
     ${SDMMC_INSTANCE_NAME}_REGS->SDMMC_TCR = SDMMC_TCR_DTCVAL(0xE);
 
-    /* Enable ADMA2 (Check CA0R capability register first) */
-    ${SDMMC_INSTANCE_NAME}_REGS->SDMMC_HC1R |= SDMMC_HC1R_SD_SDIO_DMASEL(2);
+    /* Configure maximum AHB burst size */
+	${SDMMC_INSTANCE_NAME}_REGS->SDMMC_ACR = SDMMC_ACR_BMAX_INCR16;
+
+    /* Enable ADMA2 */
+    ${SDMMC_INSTANCE_NAME}_REGS->SDMMC_HC1R = SDMMC_HC1R_${REG_VAL_PREFIX}_DMASEL_ADMA32;
+    <#if USE_FCD>
+    
+    /* Enable force card detect */
+    ${SDMMC_INSTANCE_NAME}_REGS->SDMMC_MC1R = SDMMC_MC1R_FCD_Msk;
+    </#if>
+    
+    /* Clear the normal and error interrupt status flags */
+    ${SDMMC_INSTANCE_NAME}_REGS->SDMMC_EISTR = SDMMC_EISTR_${REG_VAL_PREFIX}_Msk;
+    ${SDMMC_INSTANCE_NAME}_REGS->SDMMC_NISTR = SDMMC_NISTR_${REG_VAL_PREFIX}_Msk;
+
+    /* Enable normal and error interrupts that are used  */
+    ${SDMMC_INSTANCE_NAME}_REGS->SDMMC_NISTER = ${SDMMC_NISTER_VAL};
+    ${SDMMC_INSTANCE_NAME}_REGS->SDMMC_EISTER = SDMMC_EISTER_${REG_VAL_PREFIX}_Msk;
 
     /* Set SD Bus Power On */
+    /* (NOTE: Perform a read/modify write to preserve the values of the 
+        reserved bits */
     ${SDMMC_INSTANCE_NAME}_REGS->SDMMC_PCR |= SDMMC_PCR_SDBPWR_Msk;
-    <#if SDCARD_SDCD_SUPPORT == true && SDCARD_SDCDEN == false>
-    <#-- If card detection is supported but not enabled, use Force card detection to generate clock -->
-
-    ${SDMMC_INSTANCE_NAME}_REGS->SDMMC_MC1R |= SDMMC_MC1R_FCD_Msk;
-    </#if>
-
+    
     /* Set initial clock to 400 KHz*/
     ${SDMMC_INSTANCE_NAME}_ClockSet (SDMMC_CLOCK_FREQ_400_KHZ);
-
-    /* Clear the high speed bit and set the data width to 1-bit mode */
-    ${SDMMC_INSTANCE_NAME}_REGS->SDMMC_HC1R &= ~(SDMMC_HC1R_SD_SDIO_HSEN_Msk | SDMMC_HC1R_SD_SDIO_DW_Msk);
-
-<#if SDCARD_SDCDEN == true>
-    /* Enable card inserted and card removed interrupt signals */
-    ${SDMMC_INSTANCE_NAME}_REGS->SDMMC_NISIER = (SDMMC_NISIER_SD_SDIO_CINS_Msk | SDMMC_NISIER_SD_SDIO_CREM_Msk);
-</#if>    
 }
 
 void ${SDMMC_INSTANCE_NAME}_Initialize( void )

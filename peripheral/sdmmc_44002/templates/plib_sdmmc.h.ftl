@@ -64,11 +64,11 @@ void ${SDMMC_INSTANCE_NAME}_BlockCountSet( uint16_t numBlocks );
 bool ${SDMMC_INSTANCE_NAME}_IsCmdLineBusy ( void );
 
 bool ${SDMMC_INSTANCE_NAME}_IsDatLineBusy ( void );
-<#if SDCARD_SDWP_SUPPORT == true>
+<#if SDCARD_SDWPEN == true>
 
 bool ${SDMMC_INSTANCE_NAME}_IsWriteProtected ( void );
 </#if>
-<#if SDCARD_SDCD_SUPPORT == true>
+<#if SDCARD_SDCDEN == true>
 
 bool ${SDMMC_INSTANCE_NAME}_IsCardAttached ( void );
 </#if>
