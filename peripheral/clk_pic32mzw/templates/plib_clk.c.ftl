@@ -93,13 +93,13 @@ void CLK_Initialize( void )
     SYSKEY = 0xAA996655;
     SYSKEY = 0x556699AA;
 
-
     if (int_flag)
     {
         __builtin_mtc0(12, 0,(__builtin_mfc0(12, 0) | 0x0001)); /* enable interrupts */
     }
+
     OSCCONbits.FRCDIV = ${SYS_CLK_FRCDIV};
-  
+
     /* SPLLBSWSEL   = ${SPLLCON_SPLLBSWSEL_VALUE}   */
     /* SPLLPWDN     = ${SPLLCON_SPLLPWDN_VALUE}     */
     /* SPLLPOSTDIV1 = ${SPLLCON_SPLLPOSTDIV1_VALUE} */
@@ -109,8 +109,8 @@ void CLK_Initialize( void )
     /* SPLLREFDIV   = ${SPLLCON_SPLLREFDIV_VALUE}   */
     /* SPLLICLK     = ${SPLLCON_SPLLICLK_VALUE}     */
     /* SPLL_BYP     = ${SPLLCON_SPLL_BYP_VALUE}     */
-    ${SPLLCON_REG} = 0x${SPLLCON_VALUE};  
-    
+    ${SPLLCON_REG} = 0x${SPLLCON_VALUE};
+
 <#if USBPLL_ENABLE == true>
     /* Configure UPLL */
     /* UPLLBSWSEL   = ${UPLLCON_UPLLBSWSEL_VALUE} */
@@ -162,12 +162,12 @@ void CLK_Initialize( void )
     /* Power down the BTPLL */
     BTPLLCONbits.BTPLLPWDN = 1;
 </#if>
-    
+
     /* ETHPLLPOSTDIV2 = ${CFG_ETHPLLPOSTDIV2} */
     /* SPLLPOSTDIV2   = ${CFG_SPLLPOSTDIV2} */
     /* BTPLLPOSTDIV2  = ${CFG_BTPLLPOSTDIV2} */
     ${CFGCON3_NAME} = ${CFGCON3_VALUE};
-    
+
     /* OSWEN    = ${OSCCON_OSWEN_VALUE}    */
     /* SOSCEN   = ${OSCCON_SOSCEN_VALUE}   */
     /* UFRCEN   = ${OSCCON_UFRCEN_VALUE}   */
@@ -179,60 +179,79 @@ void CLK_Initialize( void )
     /* DRMEN    = ${OSCCON_DRMEN_VALUE}    */
     /* FRCDIV   = ${OSCCON_FRCDIV_VALUE}   */
     ${OSCCON_REG} = 0x${OSCCON_VALUE};
-    OSCCONSET = _OSCCON_OSWEN_MASK;  /* request oscillator switch to occur */
-    Nop();
-    Nop();
-    while( OSCCONbits.OSWEN )        /* wait for indication of successful clock change before proceeding */
-        ;
 
-    <#if CONFIG_SYS_CLK_PBCLK1_ENABLE == true && CONFIG_SYS_CLK_PBDIV1 != 2>
-    /* Peripheral Bus 1 is by default enabled, set its divisor */
+    OSCCONSET = _OSCCON_OSWEN_MASK;  /* request oscillator switch to occur */
+
+    Nop();
+    Nop();
+
+    while( OSCCONbits.OSWEN );        /* wait for indication of successful clock change before proceeding */
+
+<#if CONFIG_SYS_CLK_PBCLK1_ENABLE == true && CONFIG_SYS_CLK_PBDIV1 != 2>
+    <#lt>    /* Peripheral Bus 1 is by default enabled, set its divisor */
     <#lt>    /* PBDIV = ${CONFIG_SYS_CLK_PBDIV1} */
-    ${PBREGNAME1}bits.PBDIV = ${CONFIG_SYS_CLK_PBDIV1 -1};
-    </#if>
+    <#lt>    ${PBREGNAME1}bits.PBDIV = ${CONFIG_SYS_CLK_PBDIV1 - 1};
+
+</#if>
 <#if CONFIG_SYS_CLK_PBCLK2_ENABLE == true>
-    <#lt>    /* Peripheral Bus 2 is by default enabled, set its divisor */
-    <#lt>    /* PBDIV = ${CONFIG_SYS_CLK_PBDIV2} */
-    <#lt>    ${PBREGNAME2}bits.PBDIV = ${CONFIG_SYS_CLK_PBDIV2 -1};
+    <#if CONFIG_SYS_CLK_PBDIV2 != 2>
+        <#lt>    /* Peripheral Bus 2 is by default enabled, set its divisor */
+        <#lt>    /* PBDIV = ${CONFIG_SYS_CLK_PBDIV2} */
+        <#lt>    ${PBREGNAME2}bits.PBDIV = ${CONFIG_SYS_CLK_PBDIV2 - 1};
+
+    </#if>
 <#else>
     /* Disable Peripheral Bus 2 */
     ${PBREGNAME2}CLR = ${PBONMASK2};
 
 </#if>
 <#if CONFIG_SYS_CLK_PBCLK3_ENABLE == true>
-    <#lt>    /* Peripheral Bus 3 is by default enabled, set its divisor */
-    <#lt>    /* PBDIV = ${CONFIG_SYS_CLK_PBDIV3} */
-    <#lt>    ${PBREGNAME3}bits.PBDIV = ${CONFIG_SYS_CLK_PBDIV3 -1};
+    <#if CONFIG_SYS_CLK_PBDIV3 != 2>
+        <#lt>    /* Peripheral Bus 3 is by default enabled, set its divisor */
+        <#lt>    /* PBDIV = ${CONFIG_SYS_CLK_PBDIV3} */
+        <#lt>    ${PBREGNAME3}bits.PBDIV = ${CONFIG_SYS_CLK_PBDIV3 - 1};
+
+    </#if>
 <#else>
     /* Disable Peripheral Bus 3 */
     ${PBREGNAME3}CLR = ${PBONMASK3};
 
 </#if>
 <#if CONFIG_SYS_CLK_PBCLK4_ENABLE == true>
-    <#lt>    /* Peripheral Bus 4 is by default enabled, set its divisor */
-    <#lt>    /* PBDIV = ${CONFIG_SYS_CLK_PBDIV4} */
-    <#lt>    ${PBREGNAME4}bits.PBDIV = ${CONFIG_SYS_CLK_PBDIV4 -1};
+    <#if CONFIG_SYS_CLK_PBDIV4 != 2>
+        <#lt>    /* Peripheral Bus 4 is by default enabled, set its divisor */
+        <#lt>    /* PBDIV = ${CONFIG_SYS_CLK_PBDIV4} */
+        <#lt>    ${PBREGNAME4}bits.PBDIV = ${CONFIG_SYS_CLK_PBDIV4 - 1};
+
+    </#if>
 <#else>
     /* Disable Peripheral Bus 4 */
     ${PBREGNAME4}CLR = ${PBONMASK4};
 
 </#if>
 <#if CONFIG_SYS_CLK_PBCLK5_ENABLE == true>
-    <#lt>    /* Peripheral Bus 5 is by default enabled, set its divisor */
-    <#lt>    /* PBDIV = ${CONFIG_SYS_CLK_PBDIV5} */
-    <#lt>    ${PBREGNAME5}bits.PBDIV = ${CONFIG_SYS_CLK_PBDIV5 -1};
+    <#if CONFIG_SYS_CLK_PBDIV5 != 2>
+        <#lt>    /* Peripheral Bus 5 is by default enabled, set its divisor */
+        <#lt>    /* PBDIV = ${CONFIG_SYS_CLK_PBDIV5} */
+        <#lt>    ${PBREGNAME5}bits.PBDIV = ${CONFIG_SYS_CLK_PBDIV5 - 1};
+
+    </#if>
 <#else>
     /* Disable Peripheral Bus 5 */
     ${PBREGNAME5}CLR = ${PBONMASK5};
 
 </#if>
 <#if CONFIG_SYS_CLK_PBCLK6_ENABLE == true>
-    <#lt>    /* Peripheral Bus 6 is by default enabled, set its divisor */
-    <#lt>    /* PBDIV = ${CONFIG_SYS_CLK_PBDIV6} */
-    <#lt>    ${PBREGNAME6}bits.PBDIV = ${CONFIG_SYS_CLK_PBDIV6 -1};
+    <#if CONFIG_SYS_CLK_PBDIV6 != 1>
+        <#lt>    /* Peripheral Bus 6 is by default enabled, set its divisor */
+        <#lt>    /* PBDIV = ${CONFIG_SYS_CLK_PBDIV6} */
+        <#lt>    ${PBREGNAME6}bits.PBDIV = ${CONFIG_SYS_CLK_PBDIV6 - 1};
+
+    </#if>
 <#else>
     /* Disable Peripheral Bus 6 */
     ${PBREGNAME6}CLR = ${PBONMASK6};
+
 </#if>
 
 <#if CONFIG_HAVE_REFCLOCK == true>
@@ -273,11 +292,25 @@ void CLK_Initialize( void )
     </#if>
 </#if>
 </#list>
-
 </#if>  <#-- CONFIG_HAVE_REFCLOCK == true -->
+
+<#lt>    /* Peripheral Module Disable Configuration */
+<#lt>    CFGCON0bits.PMDLOCK = 0;
+
+<#list 1..PMD_COUNT + 1 as i>
+    <#assign PMDREG_VALUE = "PMD" + i + "_REG_VALUE">
+    <#if .vars[PMDREG_VALUE]?? && .vars[PMDREG_VALUE] != "None">
+        <#lt>    PMD${i} = 0x${.vars[PMDREG_VALUE]};
+    </#if>
+</#list>
+
+<#lt>    CFGCON0bits.PMDLOCK = 1;
+
     /* Lock system since done with clock configuration */
     int_flag = (bool)__builtin_disable_interrupts();
+
     SYSKEY = 0x33333333;
+
     if (int_flag) /* if interrupts originally were enabled, re-enable them */
     {
         __builtin_mtc0(12, 0,(__builtin_mfc0(12, 0) | 0x0001));
