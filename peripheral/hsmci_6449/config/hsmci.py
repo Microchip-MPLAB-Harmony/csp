@@ -97,6 +97,17 @@ def instantiateComponent(hsmciComponent):
     hsmciWPSupport.setDefaultValue(False)
     hsmciWPSupport.setVisible(False)
 
+    hsmci8BitSupport = hsmciComponent.createBooleanSymbol("SDCARD_8BIT_SUPPORT", None)
+    hsmci8BitSupport.setLabel("HSMCI 8Bit Support")
+    hsmci8BitSupport.setDefaultValue(False)
+    hsmci8BitSupport.setVisible(False)
+
+    hsmciEMMCSupport = hsmciComponent.createBooleanSymbol("SDCARD_EMMC_SUPPORT", None)
+    hsmciEMMCSupport.setLabel("HSMCI EMMC Support")
+    hsmciEMMCSupport.setDefaultValue(False)
+    hsmciEMMCSupport.setVisible(False)
+
+
     ############################################################################
     #### Dependency ####
     ############################################################################
