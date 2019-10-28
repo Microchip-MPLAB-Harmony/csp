@@ -71,6 +71,16 @@ def instantiateComponent(sdhcComponent):
     sdhcWPSupport.setDefaultValue(True)
     sdhcWPSupport.setVisible(False)
 
+    sdhc8BitSupport = sdhcComponent.createBooleanSymbol("SDCARD_8BIT_SUPPORT", None)
+    sdhc8BitSupport.setLabel("SDHC 8 Bit Support")
+    sdhc8BitSupport.setDefaultValue(False)
+    sdhc8BitSupport.setVisible(False)
+
+    sdhcEMMCSupport = sdhcComponent.createBooleanSymbol("SDCARD_EMMC_SUPPORT", None)
+    sdhcEMMCSupport.setLabel("SDHC EMMC Support")
+    sdhcEMMCSupport.setDefaultValue(False)
+    sdhcEMMCSupport.setVisible(False)
+
     sdhcCD = sdhcComponent.createBooleanSymbol("SDCARD_SDCDEN", None)
     sdhcCD.setLabel("Use SD Card Detect (SDCD#) Pin")
     sdhcCD.setDefaultValue(False)
