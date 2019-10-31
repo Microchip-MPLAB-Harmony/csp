@@ -304,7 +304,7 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/evic_02907/config/evic.py
 coreComponent.addPlugin("../peripheral/evic_02907/plugin/evic_02907.jar")
 
 # load dmt
-#execfile(Variables.get("__CORE_DIR") + "/../peripheral/dmt_01520/config/dmt.py")
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/dmt_01520/config/dmt.py")
 
 # load wdt
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_02674/config/wdt.py")

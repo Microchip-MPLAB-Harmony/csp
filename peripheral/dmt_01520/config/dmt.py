@@ -25,6 +25,8 @@
 ##################################### Global Variables ############################################
 ###################################################################################################
 
+global dmtEnableFuse
+
 global dmtHeaderFile
 global dmtSourceFile
 global dmtSystemDefFile
@@ -107,7 +109,12 @@ def updateDMTCountIntervalVisibleProperty(symbol, event):
 #############################################  DMT  ###############################################
 ###################################################################################################
 
-isDMTEnabled = (Database.getSymbolValue("core", "CONFIG_FDMTEN") == "ON")
+dmtEnableFuse = "CONFIG_FWDTEN"
+
+if Database.getSymbolValue("core", "CONFIG_FDMTEN") == None:
+    dmtEnableFuse = "CONFIG_DMTEN"
+
+isDMTEnabled = (Database.getSymbolValue("core", dmtEnableFuse) == "ON")
 dmtCountSelect = Database.getSymbolValue("core", "CONFIG_DMTCNT")
 dmtCountWindowInterval = Database.getSymbolValue("core", "CONFIG_DMTINTV")
 
