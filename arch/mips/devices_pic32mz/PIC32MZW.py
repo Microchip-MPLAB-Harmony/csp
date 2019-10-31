@@ -21,9 +21,8 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
 
-
-
 global _find_default_value
+
 def _find_default_value(bitfieldNode, initialRegValue):
     '''
     Helper function to lookup default value for a particular bitfield within a given register from atdf node
@@ -49,6 +48,7 @@ def _find_default_value(bitfieldNode, initialRegValue):
     return((registerValue & mask) >> shift)
 
 global _find_key
+
 def _find_key(value, keypairs):
     '''
     Helper function that finds the keyname for the given value.  Needed for setting up combo symbol value.
@@ -62,6 +62,7 @@ def _find_key(value, keypairs):
     return ""
 
 global _process_valuegroup_entry
+
 def _process_valuegroup_entry(node):
     '''
     Looks at input node and returns key name, description, and value for it.
@@ -97,9 +98,8 @@ def getCorePeripheralsInterruptDataStructure():
 
     return corePeripherals
 
-
-
 global SYM_ECCCON
+
 def calcWaitStates(symbol, event):
     sysclk = int(Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY"))
     ecc = int(SYM_ECCCON.getValue())
@@ -124,6 +124,7 @@ def calcWaitStates(symbol, event):
     symbol.setValue(ws,2)
     
 global updateCFGCON3
+
 def updateCFGCON3(menu,event):
     # updates the CFGCON3 register based on one of 3 bitfield values that can change
     value = int(Database.getSymbolValue("core", "CFGCON3_VALUE"))
@@ -144,8 +145,6 @@ def updateCFGCON3(menu,event):
             break
     newvalue = newvalue + (int(event['value'])<<shift)
     Database.setSymbolValue("core", "CFGCON3_VALUE", newvalue, 2)
-
-    
     
 def make_config_reg_items(basenode, component, parentMenu):
     # Extracts the configuration registers that are relevant.  There are some fields that are the only way to control certain settings
@@ -190,6 +189,7 @@ def make_config_reg_items(basenode, component, parentMenu):
     cfgcon4name = component.createStringSymbol('CFGCON4_NAME', parentMenu)
     cfgcon4name.setVisible(False)
     cfgcon4name.setDefaultValue(node.getAttribute('name'))
+
 def populate_config_items(basenode, bitfieldHexSymbols, baseLabel, moduleNode, component, parentMenu, visibility):
     register = basenode.getChildren() # these are <register > fields for fuse config section
     for ii in range(len(register)):
@@ -301,18 +301,17 @@ cacheMenu.setDescription("CACHE Configuration")
 #execfile(Variables.get("__CORE_DIR") + "/../peripheral/cache/config/cache.py")
 
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/evic_02907/config/evic.py")
-#coreComponent.addPlugin("../peripheral/evic_02907/plugin/evic_02907.jar")
+coreComponent.addPlugin("../peripheral/evic_02907/plugin/evic_02907.jar")
 
 # load dmt
 #execfile(Variables.get("__CORE_DIR") + "/../peripheral/dmt_01520/config/dmt.py")
 
 # load wdt
-#execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_02674/config/wdt.py")
-
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_02674/config/wdt.py")
 
 # load dma manager information
-#execfile(Variables.get("__CORE_DIR") + "/../peripheral/dmac_01500/config/dmac.py")
-#coreComponent.addPlugin("../peripheral/dmac_01500/plugin/dmamanager.jar")
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/dmac_01500/config/dmac.py")
+coreComponent.addPlugin("../peripheral/dmac_01500/plugin/dmamanager.jar")
 
 MLDOInitFile = coreComponent.createFileSymbol("MLDO_C_INIT", None)
 MLDOInitFile.setSourcePath("templates/system_pmu_mldo_trim.c.ftl")

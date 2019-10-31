@@ -26,6 +26,9 @@
 ##################################### Global Variables ############################################
 ###################################################################################################
 
+global wdtEnableFuse
+global wdtWindowSizeFuse
+
 global wdtSym_Use
 global wdtHeaderFile
 global wdtSourceFile
@@ -115,9 +118,9 @@ def updateWDTConfigCommentVisibleProperty(symbol, event):
 
 def updateWDTAllowedWindowPeriodVisibleProperty(symbol, event):
 
-    if event["id"] == "CONFIG_FWDTWINSZ" or event["id"] == "CONFIG_WDTPS":
+    if event["id"] == wdtWindowSizeFuse or event["id"] == "CONFIG_WDTPS":
         period = Database.getSymbolValue("core", "CONFIG_WDTPS")
-        windowSize = Database.getSymbolValue("core", "CONFIG_FWDTWINSZ")
+        windowSize = Database.getSymbolValue("core", wdtWindowSizeFuse)
 
         symbol.setValue(getWDTAllowedWindowPeriod(period, windowSize), 1)
     else:
@@ -130,10 +133,19 @@ def updateWDTAllowedWindowPeriodVisibleProperty(symbol, event):
 #############################################  WDT  ###############################################
 ###################################################################################################
 
-isWDTEnabled = (Database.getSymbolValue("core", "CONFIG_FWDTEN") == "ON")
+wdtEnableFuse = "CONFIG_FWDTEN"
+wdtWindowSizeFuse = "CONFIG_FWDTWINSZ"
+
+if Database.getSymbolValue("core", "CONFIG_FWDTEN") == None:
+    wdtEnableFuse = "CONFIG_WDTEN"
+
+if Database.getSymbolValue("core", "CONFIG_FWDTWINSZ") == None:
+    wdtWindowSizeFuse = "CONFIG_WDTWINSZ"
+
+isWDTEnabled = (Database.getSymbolValue("core", wdtEnableFuse) == "ON")
 isWDTWindowModeEnabled = (Database.getSymbolValue("core", "CONFIG_WINDIS") == "WINDOW")
 wdtTimeOut = Database.getSymbolValue("core", "CONFIG_WDTPS")
-wdtAllowedWindowSize = Database.getSymbolValue("core", "CONFIG_FWDTWINSZ")
+wdtAllowedWindowSize = Database.getSymbolValue("core", wdtWindowSizeFuse)
 
 wdtInstances = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"WDT\"]")
 
@@ -150,7 +162,7 @@ wdtSym_Use = coreComponent.createBooleanSymbol("WDT_USE", wdtMenu)
 wdtSym_Use.setLabel("Use WDT ?")
 wdtSym_Use.setDefaultValue(isWDTEnabled)
 wdtSym_Use.setReadOnly(isWDTEnabled)
-wdtSym_Use.setDependencies(updateWDTUseProperties, ["CONFIG_FWDTEN"])
+wdtSym_Use.setDependencies(updateWDTUseProperties, [wdtEnableFuse])
 
 #WDT Configuration comment
 wdtSym_ConfigComment = coreComponent.createCommentSymbol("WDT_CONFIG_COMMENT", wdtSym_Use)
@@ -183,7 +195,7 @@ wdtSym_AllowedWindowPeriod.setLabel("Configured WDT Allowed Window Period")
 wdtSym_AllowedWindowPeriod.setDefaultValue(getWDTAllowedWindowPeriod(wdtTimeOut, wdtAllowedWindowSize))
 wdtSym_AllowedWindowPeriod.setReadOnly(True)
 wdtSym_AllowedWindowPeriod.setVisible(isWDTEnabled and isWDTWindowModeEnabled)
-wdtSym_AllowedWindowPeriod.setDependencies(updateWDTAllowedWindowPeriodVisibleProperty, ["WDT_USE", "CONFIG_FWDTWINSZ", "CONFIG_WINDIS", "CONFIG_WDTPS"])
+wdtSym_AllowedWindowPeriod.setDependencies(updateWDTAllowedWindowPeriodVisibleProperty, ["WDT_USE", wdtWindowSizeFuse, "CONFIG_WINDIS", "CONFIG_WDTPS"])
 
 ###################################################################################################
 ####################################### Code Generation  ##########################################

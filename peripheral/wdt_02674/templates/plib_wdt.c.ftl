@@ -55,14 +55,14 @@
 // *****************************************************************************
 // *****************************************************************************
 
-<#if CONFIG_FWDTEN == "OFF">
-void ${WDT_INSTANCE_NAME}_Enable(void)
+<#if (CONFIG_FWDTEN?? && CONFIG_FWDTEN == "OFF") || (CONFIG_WDTEN?? && CONFIG_WDTEN == "OFF")>
+void ${WDT_INSTANCE_NAME}_Enable( void )
 {
     /* ON = 1 */
     WDTCONbits.ON = 1;
 }
 
-void ${WDT_INSTANCE_NAME}_Disable(void)
+void ${WDT_INSTANCE_NAME}_Disable( void )
 {
     /* ON = 0 */
     WDTCONbits.ON = 0;
@@ -83,7 +83,7 @@ void ${WDT_INSTANCE_NAME}_WindowDisable( void )
 }
 
 </#if>
-void ${WDT_INSTANCE_NAME}_Clear(void)
+void ${WDT_INSTANCE_NAME}_Clear( void )
 {
     <#-- Below is done family-by-family, as there are differences in clearing WDT -->
     /* Writing specific value to only upper 16 bits of WDTCON register clears WDT counter */

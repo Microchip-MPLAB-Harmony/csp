@@ -66,7 +66,7 @@
 // *****************************************************************************
 // *****************************************************************************
 
-<#if CONFIG_FWDTEN == "OFF">
+<#if (CONFIG_FWDTEN?? && CONFIG_FWDTEN == "OFF") || (CONFIG_WDTEN?? && CONFIG_WDTEN == "OFF")>
 void ${WDT_INSTANCE_NAME}_Enable( void );
 
 void ${WDT_INSTANCE_NAME}_Disable( void );
