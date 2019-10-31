@@ -922,18 +922,41 @@ def calculated_clock_frequencies(clk_comp, clk_menu, join_path, element_tree, ne
     sym_calc_freq_menu = clk_comp.createMenuSymbol("CALC_CLOCK_FREQ_MENU", clk_menu)
     sym_calc_freq_menu.setLabel("Calculated Clock Frequencies")
     sys_clk_freq = clk_comp.createStringSymbol("SYS_CLK_FREQ", sym_calc_freq_menu)
-    sys_clk_freq.setLabel("System Clock Frequency (HZ)")
+    sys_clk_freq.setLabel("System Clock Frequency (Hz)")
     node = ATDF.getNode('/avr-tools-device-file/devices/device/parameters/param@[name="__SYS_DEF_FREQ"]')
     sys_clk_freq.setDefaultValue(node.getAttribute("value"))
     sys_clk_freq.setReadOnly(True)
 
     # CPU_CLOCK_FREQUENCY symbol is needed for SYS_TIME
     cpu_clk_freq = clk_comp.createStringSymbol("CPU_CLOCK_FREQUENCY", sym_calc_freq_menu)
-    cpu_clk_freq.setLabel("CPU Clock Frequency (HZ)")
+    cpu_clk_freq.setLabel("CPU Clock Frequency (Hz)")
     cpu_clk_freq.setReadOnly(True)
     cpu_clk_freq.setDefaultValue(node.getAttribute("value"))
     cpu_clk_freq.setDependencies(cpuClockFreqCalc,["SYS_CLK_FREQ"])
 
+    # output clock frequency for this BTPLL
+    btpllclkFreq = clk_comp.createStringSymbol('BTCLK', sym_calc_freq_menu)
+    btpllclkFreq.setDefaultValue('0')  # by default disabled
+    btpllclkFreq.setLabel("Bluetooth Clock Frequency (Hz)")
+    btpllclkFreq.setVisible(True)
+    
+    # output clock frequencies for this PLL - there are 2 signals generated
+    ethclkFreq = clk_comp.createStringSymbol('ETHCLK', sym_calc_freq_menu)
+    ethclkFreq.setDefaultValue('0')   # by default disabled
+    ethclkFreq.setLabel("Ethernet Clock Frequency (Hz)")
+    ethclkFreq.setVisible(True)
+    
+    wificlkFreq = clk_comp.createStringSymbol('WIFICLK', sym_calc_freq_menu)
+    wificlkFreq.setDefaultValue('0')   # by default disabled
+    wificlkFreq.setLabel("Wifi Clock Frequency (Hz)")
+    wificlkFreq.setVisible(True)
+
+    # output clock frequency for this PLL
+    upllclkFreq = clk_comp.createStringSymbol('USBCLK', sym_calc_freq_menu)
+    upllclkFreq.setDefaultValue('0')   # by default disabled
+    upllclkFreq.setLabel("USB Clock Frequency (Hz)")
+    upllclkFreq.setVisible(True)
+    
     # Peripheral Bus clock frequencies
     index = 0
     for ii in pbclkEnNameList:  # this list has  "CONFIG_SYS_CLK_PBCLK"+pbus+"_ENABLE", where pbus is index from atdf file
@@ -1205,7 +1228,7 @@ def scan_atdf_for_btpllcon_fields(component, parentMenu, regNode, enableSymbolId
     btpllpostdiv2mask = component.createStringSymbol('BTPLLPOSTDIV2_MASK', parentMenu)
     btpllpostdiv2mask.setVisible(False)
     btpllpostdiv2mask.setDefaultValue(node.getAttribute('mask'))
-
+    
 def scan_atdf_for_ewpllcon_fields(component, parentMenu, regNode, enableSymbolId):
     '''
     This creates all the symbols for EWPLLCON register, obtaining all key/value pairs from atdf file
