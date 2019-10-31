@@ -164,18 +164,20 @@ def baudRateTrigger(symbol, event):
 
     brgVal = baudRateCalc(clk, baud)
 
+    uartSym_BaudError_Comment.setVisible(False)
+
     if brgVal < 1:
-        Log.writeErrorMessage("UART Clock source Frequency is low for the desired baud rate")
+        uartSym_BaudError_Comment.setVisible(True)
         return
     elif brgVal > 65535:
         brgVal = 65535
-        Log.writeErrorMessage("Desired baud rate is low for current UART Source Clock Frequency")
+        uartSym_BaudError_Comment.setVisible(True)
 
     symbol.setValue(brgVal, 2)
 
 def clockSourceFreq(symbol, event):
 
-    symbol.setValue(int(Database.getSymbolValue("core", uartInstanceName.getValue() + "_CLOCK_FREQUENCY")),2)
+    symbol.setValue(int(Database.getSymbolValue("core", uartInstanceName.getValue() + "_CLOCK_FREQUENCY")), 2)
 
 def u1ModecombineValues(symbol, event):
 
@@ -324,6 +326,7 @@ def instantiateComponent(uartComponent):
     global uartBitField_UxMODE_RUNOVF
     global uartBitField_UxMODE_CLKSEL
     global uartBitField_UxMODE_SLPEN
+    global uartSym_BaudError_Comment
 
     InterruptVector = []
     InterruptHandler = []
@@ -662,6 +665,11 @@ def instantiateComponent(uartComponent):
     uartBRGValue = uartComponent.createIntegerSymbol("BRG_VALUE", None)
     uartBRGValue.setVisible(False)
     uartBRGValue.setDependencies(baudRateTrigger, ["BAUD_RATE", "core." + uartInstanceName.getValue() + "_CLOCK_FREQUENCY"])
+
+    #UART Baud Rate not supported comment
+    uartSym_BaudError_Comment = uartComponent.createCommentSymbol("UART_BAUD_ERROR_COMMENT", None)
+    uartSym_BaudError_Comment.setLabel("********** UART Clock source value is low for the desired baud rate **********")
+    uartSym_BaudError_Comment.setVisible(False)
 
     #Use setValue instead of setDefaultValue to store symbol value in default.xml
     uartBRGValue.setValue(brgVal, 1)
