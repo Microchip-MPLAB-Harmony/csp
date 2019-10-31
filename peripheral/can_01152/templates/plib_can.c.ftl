@@ -155,7 +155,7 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
     /* Configure CAN Acceptance Filter Masks */
     <#list 0..(NUMBER_OF_ACCEPTANCE_FILTER_MASK-1) as mask>
     <#assign FILTER_MASK_ID = CAN_INSTANCE_NAME + "_MASK" + mask + "_ID">
-    C${CAN_INSTANCE_NUM}RXM${mask} = ${(.vars[FILTER_MASK_ID]?number > 2047)?then('(${.vars[FILTER_MASK_ID]} & _C${CAN_INSTANCE_NUM}RXM${mask}_EID_MASK) | (((${.vars[FILTER_MASK_ID]} & 0x1FFC0000u) >> 18u) << _C${CAN_INSTANCE_NUM}RXM${mask}_SID_POSITION)','(${.vars[FILTER_MASK_ID]} & CAN_MSG_SID_MASK) << _C${CAN_INSTANCE_NUM}RXM${mask}_SID_POSITION')};
+    C${CAN_INSTANCE_NUM}RXM${mask} = ${(.vars[FILTER_MASK_ID]?number > 2047)?then('(${.vars[FILTER_MASK_ID]} & _C${CAN_INSTANCE_NUM}RXM${mask}_EID_MASK) | (((${.vars[FILTER_MASK_ID]} & 0x1FFC0000u) >> 18u) << _C${CAN_INSTANCE_NUM}RXM${mask}_SID_POSITION) | _C${CAN_INSTANCE_NUM}RXM${mask}_MIDE_MASK','(${.vars[FILTER_MASK_ID]} & CAN_MSG_SID_MASK) << _C${CAN_INSTANCE_NUM}RXM${mask}_SID_POSITION')};
     </#list>
 
 <#if CAN_TIMESTAMP_ENABLE == true>
@@ -488,7 +488,7 @@ void ${CAN_INSTANCE_NAME}_MessageAcceptanceFilterMaskSet(uint8_t acceptanceFilte
     if (id > CAN_MSG_SID_MASK)
     {
         *(volatile uint32_t *)(&C${CAN_INSTANCE_NUM}RXM0 + (acceptanceFilterMaskNum * CAN_ACCEPTANCE_MASK_OFFSET)) = (id & _C${CAN_INSTANCE_NUM}RXM0_EID_MASK)
-                                                                       | (((id & 0x1FFC0000u) >> 18) << _C${CAN_INSTANCE_NUM}RXM0_SID_POSITION);
+                                                                       | (((id & 0x1FFC0000u) >> 18) << _C${CAN_INSTANCE_NUM}RXM0_SID_POSITION) | _C${CAN_INSTANCE_NUM}RXM0_MIDE_MASK;
     }
     else
     {
@@ -520,7 +520,7 @@ uint32_t ${CAN_INSTANCE_NAME}_MessageAcceptanceFilterMaskGet(uint8_t acceptanceF
 {
     uint32_t id = 0;
 
-    if (*(volatile uint32_t *)(&C${CAN_INSTANCE_NUM}RXM0 + (acceptanceFilterMaskNum * CAN_ACCEPTANCE_MASK_OFFSET)) & _C${CAN_INSTANCE_NUM}RXM0_EID_MASK)
+    if (*(volatile uint32_t *)(&C${CAN_INSTANCE_NUM}RXM0 + (acceptanceFilterMaskNum * CAN_ACCEPTANCE_MASK_OFFSET)) & _C${CAN_INSTANCE_NUM}RXM0_MIDE_MASK)
     {
         id = (*(volatile uint32_t *)(&C${CAN_INSTANCE_NUM}RXM0 + (acceptanceFilterMaskNum * CAN_ACCEPTANCE_MASK_OFFSET)) & _C${CAN_INSTANCE_NUM}RXM0_EID_MASK)
            | ((*(volatile uint32_t *)(&C${CAN_INSTANCE_NUM}RXM0 + (acceptanceFilterMaskNum * CAN_ACCEPTANCE_MASK_OFFSET)) & _C${CAN_INSTANCE_NUM}RXM0_SID_MASK) >> 3);
