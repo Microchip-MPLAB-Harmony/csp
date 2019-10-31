@@ -254,7 +254,7 @@ cacheMenu = coreComponent.createMenuSymbol("CACHE_MENU", mipsMenu)
 cacheMenu.setLabel("CACHE")
 cacheMenu.setDescription("CACHE Configuration")
 
-#execfile(Variables.get("__CORE_DIR") + "/../peripheral/cache/config/cache.py")
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/cache/config/cache.py")
 
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/evic_02907/config/evic.py")
 coreComponent.addPlugin("../peripheral/evic_02907/plugin/evic_02907.jar")
