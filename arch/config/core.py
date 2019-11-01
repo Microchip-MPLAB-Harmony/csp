@@ -213,10 +213,14 @@ def instantiateComponent( coreComponent ):
         deviceCacheHeaderName = "cache_cortex_m.h.ftl"
     elif "ARM926" in coreArch.getValue():
         baseArchDir = "arm"
-        compilers = [ "XC32" + naQualifier, "IAR", "KEIL" + naQualifier ]
+        compilers = [ "XC32", "IAR", "KEIL" + naQualifier ]
+        xc32Available = True
+        xc32Visibility = True
         iarAvailable = True
         iarVisiblity = True
         iarAllStacks = True
+        xc32AllStacks = True
+        multiCompilerSupport = True
         deviceCacheHeaderName = "cache_arm9.h.ftl"
     else: # "mips"
         isMips = True
@@ -336,11 +340,12 @@ def instantiateComponent( coreComponent ):
     compilerChoice.setVisible( True )
     compilerDefaultFound = False
     for index in range( 0, len( compilers ) ):
-        compilerChoice.addKey( compilers[ index ], str( index ), compilers[ index ] )
-        if (not compilerDefaultFound) and (naQualifier not in compilers[ index ]):
-            compilerDefaultFound = True
-            compilerChoice.setDefaultValue( index )
-            compilerChoice.setValue( index, 2 )
+        if naQualifier not in compilers[index]:
+            compilerChoice.addKey( compilers[ index ], str( index ), compilers[ index ] )
+            if (not compilerDefaultFound) and (naQualifier not in compilers[ index ]):
+                compilerDefaultFound = True
+                compilerChoice.setDefaultValue( index )
+                compilerChoice.setValue( index, 2 )
 
     compilerChoice.setReadOnly(not multiCompilerSupport)
 

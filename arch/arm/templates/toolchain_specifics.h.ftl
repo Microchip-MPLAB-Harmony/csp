@@ -69,7 +69,7 @@ static inline void __arm926_isb(void)
 {
 	asm("" ::: "memory");
 }
-    <#if COMPILER_CHOICE == "IAR">
+    <#if COMPILER_CHOICE == "IAR" || CoreArchitecture?contains("ARM926")>
         <#lt>#define __ALIGNED(x) __attribute__((aligned(x)))
     </#if>
 
