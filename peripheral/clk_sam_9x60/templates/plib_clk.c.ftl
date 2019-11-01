@@ -85,16 +85,16 @@ Initialize CPU clock
 static void initCPUClk(void)
 {
     PMC_REGS->PMC_CPU_CKR = (PMC_REGS->PMC_CPU_CKR & ~PMC_CPU_CKR_CSS_Msk) | PMC_CPU_CKR_CSS_SLOW_CLK;
-    while (PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk != PMC_SR_MCKRDY_Msk);
+    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk);
 
     PMC_REGS->PMC_CPU_CKR = (PMC_REGS->PMC_CPU_CKR & ~PMC_CPU_CKR_MDIV_Msk) | PMC_CPU_CKR_MDIV_${CLK_CPU_CKR_MDIV};
-    while (PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk != PMC_SR_MCKRDY_Msk);
+    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk);
 
     PMC_REGS->PMC_CPU_CKR = (PMC_REGS->PMC_CPU_CKR & ~PMC_CPU_CKR_PRES_Msk) | PMC_CPU_CKR_PRES_${CLK_CPU_CKR_PRES};
-    while (PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk != PMC_SR_MCKRDY_Msk);
+    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk);
 
     PMC_REGS->PMC_CPU_CKR = (PMC_REGS->PMC_CPU_CKR & ~PMC_CPU_CKR_CSS_Msk) | PMC_CPU_CKR_CSS_${CLK_CPU_CKR_CSS};
-    while (PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk != PMC_SR_MCKRDY_Msk);
+    while ((PMC_REGS->PMC_SR & PMC_SR_MCKRDY_Msk) != PMC_SR_MCKRDY_Msk);
 }
 </#if>
 <#if CLK_UPLL_EN>
@@ -179,7 +179,7 @@ static void initProgrammableClk(void)
     PMC_REGS->PMC_PCK[${i}] = PMC_PCK_CSS_${css} |\
                                 PMC_PCK_PRES(${pres});
     PMC_REGS->PMC_SCER |= PMC_SCDR_PCK${i}_Msk;
-    while (PMC_REGS->PMC_SR & PMC_SR_PCKRDY${i}_Msk != PMC_SR_PCKRDY${i}_Msk);
+    while ((PMC_REGS->PMC_SR & PMC_SR_PCKRDY${i}_Msk) != PMC_SR_PCKRDY${i}_Msk);
 </#if>
 </#list>
 }
