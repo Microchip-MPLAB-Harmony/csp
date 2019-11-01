@@ -91,7 +91,7 @@ int main ( void )
     TC0_CH0_CaptureStart();
     PWM_ChannelsStart(PWM_CHANNEL_0_MASK);
     
-    TC0_CH1_TimerCallbackRegister(timer0_channel1_callback, NULL);
+    TC0_CH1_TimerCallbackRegister(timer0_channel1_callback, 0);
     TC0_CH1_TimerStart();
     
     printf("\n\r---------------------------------------------------------");

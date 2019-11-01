@@ -72,12 +72,12 @@ int main ( void )
     
     printf("************** ***PWM Applications Demo **********************\r\n");
     printf("*Generates 3 PWM signals and one counter event as follows ****\r\n");
-    printf("*******PWM0: Period= 1ms , Duty = 25%, Active High ***********\r\n");
-    printf("*******PWM1: Period= 10ms , Duty = 50%, Active Low ***********\r\n");
-    printf("*******PWM2: Period= 100ms , Duty = 75%, Active High *********\r\n");
+    printf("*******PWM0: Period= 1ms , Duty = 25%%, Active High ***********\r\n");
+    printf("*******PWM1: Period= 10ms , Duty = 50%%, Active Low ***********\r\n");
+    printf("*******PWM2: Period= 100ms , Duty = 75%%, Active High *********\r\n");
     printf("*******Counter event: 1000ms counter overflow ****************\r\n");
     
-    PWM_CallbackRegister(pwm_callback, NULL);
+    PWM_CallbackRegister(pwm_callback, 0);
    
     PWM_ChannelCounterEventEnable(PWM_CHANNEL_3_MASK);
     

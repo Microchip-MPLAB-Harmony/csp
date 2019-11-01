@@ -203,7 +203,7 @@ int main( void )
 
     PIO_PinInterruptCallbackRegister( SW1_PIN, &sw1Callback, (uintptr_t) NULL );
     PIO_PinInterruptEnable( SW1_PIN );
-    WDT_CallbackRegister( wdtCallback, NULL );
+    WDT_CallbackRegister( wdtCallback, 0 );
 
     PIT_DelayMs( pitMs );
     ledColorType = LedGreenFlash;
