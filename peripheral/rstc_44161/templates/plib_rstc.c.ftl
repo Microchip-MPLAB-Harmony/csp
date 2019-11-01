@@ -121,6 +121,7 @@ bool RSTC${INSTANCE?string}_NRSTPinRead( void )
     <#lt>    // Capture the status and clear interrupt.  The RSTC status always has
     <#lt>    // the last reset cause 
     <#lt>    uint32_t interruptStatus = RSTC_REGS->RSTC_SR;
+    <#lt>    (void) interruptStatus;
     <#lt>    if( rstcObj.callback != NULL )
     <#lt>    {
     <#lt>        rstcObj.callback( rstcObj.context );
