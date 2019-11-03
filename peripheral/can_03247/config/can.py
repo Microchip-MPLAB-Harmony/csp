@@ -51,15 +51,13 @@ def _get_statReg_parms(vectorNumber):
     return regName
 
 def getIRQnumber(string):
+    irq_index = -1
     interruptsChildren = ATDF.getNode('/avr-tools-device-file/devices/device/interrupts').getChildren()
 
     for param in interruptsChildren:
         name = param.getAttribute("name")
         if string == name:
             irq_index = param.getAttribute("index")
-            break
-        elif string == name.replace('_',''):
-            irq_index = param.getAttribute("irq-index")
             break
 
     return irq_index
@@ -84,7 +82,7 @@ def canCreateFilter(component, menu, filterNumber):
 
     fifoSelect = component.createKeyValueSetSymbol(canInstanceName.getValue() + "_FILTER" + str(filterNumber) + "_FIFO_SELECT", filterMenu)
     fifoSelect.setLabel("Select FIFO")
-    fifoSelect_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CAN\"]/value-group@[name=\"CFD" + canInstanceNum.getValue() + "FLTCON" + str(filterNumber / 4) + "__F" + str(filterNumber) + "BP" + "\"]")
+    fifoSelect_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[id=\"03247\"]/value-group@[name=\"CFD" + canInstanceNum.getValue() + "FLTCON" + str(filterNumber / 4) + "__F" + str(filterNumber) + "BP" + "\"]")
     fifoSelect_Values = []
     fifoSelect_Values = fifoSelect_Node.getChildren()
     fifoSelect_Values = list(reversed(fifoSelect_Values))
@@ -122,7 +120,7 @@ def canCreateFifoConfig(component, menu, fifoNumber):
 
     fifoPayloadSize = component.createKeyValueSetSymbol(canInstanceName.getValue() + "_FIFO" + str(fifoNumber) + "_PAYLOAD_SIZE", fifoMenu)
     fifoPayloadSize.setLabel("Payload Size")
-    fifoPayloadSize_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CAN\"]/value-group@[name=\"CFD" + canInstanceNum.getValue() + "FIFOCON" + str(fifoNumber) + "__PLSIZE" + "\"]")
+    fifoPayloadSize_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[id=\"03247\"]/value-group@[name=\"CFD" + canInstanceNum.getValue() + "FIFOCON" + str(fifoNumber) + "__PLSIZE" + "\"]")
     fifoPayloadSize_Values = []
     fifoPayloadSize_Values = fifoPayloadSize_Node.getChildren()
     for index in range(len(fifoPayloadSize_Values)):
@@ -135,7 +133,7 @@ def canCreateFifoConfig(component, menu, fifoNumber):
 
     fifoMsgPriority = component.createKeyValueSetSymbol(canInstanceName.getValue() + "_FIFO" + str(fifoNumber) + "_MESSAGE_PRIORITY", fifoMenu)
     fifoMsgPriority.setLabel("Transmit Message Priority")
-    fifoMsgPriority_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CAN\"]/value-group@[name=\"CFD" + canInstanceNum.getValue() + "FIFOCON" + str(fifoNumber) + "__TXPRI" + "\"]")
+    fifoMsgPriority_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[id=\"03247\"]/value-group@[name=\"CFD" + canInstanceNum.getValue() + "FIFOCON" + str(fifoNumber) + "__TXPRI" + "\"]")
     fifoMsgPriority_Values = []
     fifoMsgPriority_Values = fifoMsgPriority_Node.getChildren()
     fifoMsgPriority_Values = list(reversed(fifoMsgPriority_Values))
@@ -177,18 +175,27 @@ def adjustFilters(symbol, event):
             fltr.setEnabled(False)
 
 def canInterruptSet(symbol, event):
-    Database.setSymbolValue("core", canInterruptVector, event["value"])
-    Database.setSymbolValue("core", canInterruptHandlerLock, event["value"])
-    interruptName = canInterruptHandler.split("_INTERRUPT_HANDLER")[0]
-    if event["value"] == True:
-        Database.setSymbolValue("core", canInterruptHandler, interruptName + "_InterruptHandler")
-    else:
-        Database.setSymbolValue("core", canInterruptHandler, interruptName + "_Handler")
+    for vector in canInterruptVector:
+        Database.setSymbolValue("core", vector, event["value"])
+    for lock in canInterruptHandlerLock:
+        Database.setSymbolValue("core", lock, event["value"])
+    for handler in canInterruptHandler:
+        interruptName = handler.split("_INTERRUPT_HANDLER")[0]
+        if event["value"] == True:
+            Database.setSymbolValue("core", handler, canInstanceName.getValue() + "_InterruptHandler")
+        else:
+            Database.setSymbolValue("core", handler, interruptName + "_Handler")
 
 def updateCanInterruptData(symbol, event):
-    component = symbol.getComponent()
-    canInterruptVectorUpdate = canInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
-    if canInterruptMode.getValue() == True and Database.getSymbolValue("core", canInterruptVectorUpdate) == True:
+    status = False
+
+    for id in canInterruptVectorUpdate:
+        id = id.replace("core.", "")
+        if Database.getSymbolValue("core", id) == True:
+            status = True
+            break
+
+    if canInterruptMode.getValue() == True and status == True:
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
@@ -292,6 +299,11 @@ def instantiateComponent(canComponent):
     global canCoreClockInvalidDataBitrateSym
     global canTimeQuantaInvalidDataBitrateSym
 
+    canInterruptVector = []
+    canInterruptHandler = []
+    canInterruptHandlerLock = []
+    canInterruptVectorUpdate = []
+
     canInstanceName = canComponent.createStringSymbol("CAN_INSTANCE_NAME", None)
     canInstanceName.setVisible(False)
     canInstanceName.setDefaultValue(canComponent.getID().upper())
@@ -306,7 +318,7 @@ def instantiateComponent(canComponent):
 
     canOpMode = canComponent.createKeyValueSetSymbol("CAN_OPMODE", None)
     canOpMode.setLabel("CAN Operation Mode")
-    canOpMode_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CAN\"]/value-group@[name=\"CFD" + canInstanceNum.getValue() + "CON__REQOP\"]")
+    canOpMode_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[id=\"03247\"]/value-group@[name=\"CFD" + canInstanceNum.getValue() + "CON__REQOP\"]")
     canOpMode_Values = []
     canOpMode_Values = canOpMode_Node.getChildren()
     canOpMode_Values = list(reversed(canOpMode_Values))
@@ -324,10 +336,49 @@ def instantiateComponent(canComponent):
     canInterruptMode.setLabel("Interrupt Mode")
     canInterruptMode.setDefaultValue(False)
 
-    canInterruptVector = canInstanceName.getValue() + "_INTERRUPT_ENABLE"
-    canInterruptHandler = canInstanceName.getValue() + "_INTERRUPT_HANDLER"
-    canInterruptHandlerLock = canInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK"
-    canInterruptVectorUpdate = canInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
+    canMultiVectorInterrupt = canComponent.createBooleanSymbol("CAN_MULTI_VECTOR_INTERRUPT", None)
+    canMultiVectorInterrupt.setVisible(False)
+    canMultiVectorInterrupt.setDefaultValue(False)
+
+    canIrq_index = -1
+    canIrq = canInstanceName.getValue() + "_RX"
+    canIRQNum = getIRQnumber(canIrq)
+    if canIRQNum != "-1":
+        canMultiVectorInterrupt.setValue(True)
+        canInterruptVector.append(canIrq + "_INTERRUPT_ENABLE")
+        canInterruptHandler.append(canIrq + "_INTERRUPT_HANDLER")
+        canInterruptHandlerLock.append(canIrq + "_INTERRUPT_HANDLER_LOCK")
+        canInterruptVectorUpdate.append("core." + canIrq + "_INTERRUPT_ENABLE_UPDATE")
+        canIrq_index = int(getIRQnumber(canIrq))
+
+        canInterruptVector.append(canInstanceName.getValue() + "_TX" + "_INTERRUPT_ENABLE")
+        canInterruptHandler.append(canInstanceName.getValue() + "_TX" + "_INTERRUPT_HANDLER")
+        canInterruptHandlerLock.append(canInstanceName.getValue() + "_TX" + "_INTERRUPT_HANDLER_LOCK")
+        canInterruptVectorUpdate.append("core." + canInstanceName.getValue() + "_TX" + "_INTERRUPT_ENABLE_UPDATE")
+
+        canInterruptVector.append(canInstanceName.getValue() + "_MISC" + "_INTERRUPT_ENABLE")
+        canInterruptHandler.append(canInstanceName.getValue() + "_MISC" + "_INTERRUPT_HANDLER")
+        canInterruptHandlerLock.append(canInstanceName.getValue() + "_MISC" + "_INTERRUPT_HANDLER_LOCK")
+        canInterruptVectorUpdate.append("core." + canInstanceName.getValue() + "_MISC" + "_INTERRUPT_ENABLE_UPDATE")
+    else:
+        canInterruptVector.append(canInstanceName.getValue() + "_INTERRUPT_ENABLE")
+        canInterruptHandler.append(canInstanceName.getValue() + "_INTERRUPT_HANDLER")
+        canInterruptHandlerLock.append(canInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK")
+        canInterruptVectorUpdate.append("core." + canInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE")
+        canIrq_index = int(getIRQnumber(canInstanceName.getValue()))
+
+    enblRegName = _get_enblReg_parms(canIrq_index)
+    statRegName = _get_statReg_parms(canIrq_index)
+
+    #IEC REG
+    canIEC = canComponent.createStringSymbol("CAN_IEC_REG", None)
+    canIEC.setDefaultValue(enblRegName)
+    canIEC.setVisible(False)
+
+    #IFS REG
+    canIFS = canComponent.createStringSymbol("CAN_IFS_REG", None)
+    canIFS.setDefaultValue(statRegName)
+    canIFS.setVisible(False)
 
     # CAN Bit Timing Calculation
     canBitTimingCalculationMenu = canComponent.createMenuSymbol("BIT_TIMING_CALCULATION", None)
@@ -336,7 +387,7 @@ def instantiateComponent(canComponent):
 
     canSelectClockSource = canComponent.createKeyValueSetSymbol("CAN_CORE_SELECT_CLOCK_SOURCE", canBitTimingCalculationMenu)
     canSelectClockSource.setLabel("Select Clock Source")
-    canSelectClockSource_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CAN\"]/value-group@[name=\"CFD" + canInstanceNum.getValue() + "CON__CLKSEL0" + "\"]")
+    canSelectClockSource_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[id=\"03247\"]/value-group@[name=\"CFD" + canInstanceNum.getValue() + "CON__CLKSEL0" + "\"]")
     canSelectClockSource_Values = []
     canSelectClockSource_Values = canSelectClockSource_Node.getChildren()
     canSelectClockSource_Values = list(reversed(canSelectClockSource_Values))
@@ -496,7 +547,7 @@ def instantiateComponent(canComponent):
 
     canTxQueuePayloadSize = canComponent.createKeyValueSetSymbol("TX_QUEUE_PAYLOAD_SIZE", canTxQueue)
     canTxQueuePayloadSize.setLabel("Payload Size")
-    canTxQueuePayloadSize_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CAN\"]/value-group@[name=\"CFD" + canInstanceNum.getValue() + "TXQCON__PLSIZE" + "\"]")
+    canTxQueuePayloadSize_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[id=\"03247\"]/value-group@[name=\"CFD" + canInstanceNum.getValue() + "TXQCON__PLSIZE" + "\"]")
     canTxQueuePayloadSize_Values = []
     canTxQueuePayloadSize_Values = canTxQueuePayloadSize_Node.getChildren()
     for index in range(len(canTxQueuePayloadSize_Values)):
@@ -510,7 +561,7 @@ def instantiateComponent(canComponent):
 
     canTxQueueMsgPriority = canComponent.createKeyValueSetSymbol("TX_QUEUE_MESSAGE_PRIORITY", canTxQueue)
     canTxQueueMsgPriority.setLabel("Tx Queue Message Priority")
-    canTxQueueMsgPriority_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CAN\"]/value-group@[name=\"CFD" + canInstanceNum.getValue() + "TXQCON__TXPRI" + "\"]")
+    canTxQueueMsgPriority_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[id=\"03247\"]/value-group@[name=\"CFD" + canInstanceNum.getValue() + "TXQCON__TXPRI" + "\"]")
     canTxQueueMsgPriority_Values = []
     canTxQueueMsgPriority_Values = canTxQueueMsgPriority_Node.getChildren()
     canTxQueueMsgPriority_Values = list(reversed(canTxQueueMsgPriority_Values))
@@ -533,7 +584,7 @@ def instantiateComponent(canComponent):
     canFifoNumber.setLabel("Number of FIFOs")
     canFifoNumber.setDefaultValue(2)
     canFifoNumber.setMin(1)
-    canRegs_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CAN\"]/register-group@[name=\"CAN\"]")
+    canRegs_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[id=\"03247\"]/register-group@[name=\"CAN\"]")
     canRegs_Values = []
     canRegs_Values = canRegs_Node.getChildren()
     maxFifoNum = 0
@@ -583,7 +634,7 @@ def instantiateComponent(canComponent):
     canTimestampEOF = canComponent.createKeyValueSetSymbol("CAN_TIMESTAMP_EOF", canTimestampEnable)
     canTimestampEOF.setLabel("Timestamp SOF/EOF")
     canTimestampEOF.setDescription("Time Stamp at Start of Frame or End of Frame")
-    canTimestampEOF_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CAN\"]/value-group@[name=\"CFD" + canInstanceNum.getValue() + "TSCON__TSEOF" + "\"]")
+    canTimestampEOF_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[id=\"03247\"]/value-group@[name=\"CFD" + canInstanceNum.getValue() + "TSCON__TSEOF" + "\"]")
     canTimestampEOF_Values = []
     canTimestampEOF_Values = canTimestampEOF_Node.getChildren()
     canTimestampEOF_Values = list(reversed(canTimestampEOF_Values))
@@ -600,7 +651,7 @@ def instantiateComponent(canComponent):
     canTimestampTSRES = canComponent.createKeyValueSetSymbol("CAN_TIMESTAMP_TSRES", canTimestampEOF)
     canTimestampTSRES.setLabel("Time Stamp Resolution(TSRES)")
     canTimestampTSRES.setDescription("Time Stamp Resolution bit for FD Frame only")
-    canTimestampTSRES_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CAN\"]/value-group@[name=\"CFD" + canInstanceNum.getValue() + "TSCON__TSRES" + "\"]")
+    canTimestampTSRES_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[id=\"03247\"]/value-group@[name=\"CFD" + canInstanceNum.getValue() + "TSCON__TSRES" + "\"]")
     canTimestampTSRES_Values = []
     canTimestampTSRES_Values = canTimestampTSRES_Node.getChildren()
     canTimestampTSRES_Values = list(reversed(canTimestampTSRES_Values))
@@ -619,25 +670,11 @@ def instantiateComponent(canComponent):
     caninterruptEnable.setVisible(False)
     caninterruptEnable.setDependencies(canInterruptSet, ["CAN_INTERRUPT_MODE"])
 
-    canIrq_index = int(getIRQnumber(canInstanceName.getValue()))
-    enblRegName = _get_enblReg_parms(canIrq_index)
-    statRegName = _get_statReg_parms(canIrq_index)
-
-    #IEC REG
-    canIEC = canComponent.createStringSymbol("CAN_IEC_REG", None)
-    canIEC.setDefaultValue(enblRegName)
-    canIEC.setVisible(False)
-
-    #IFS REG
-    canIFS = canComponent.createStringSymbol("CAN_IFS_REG", None)
-    canIFS.setDefaultValue(statRegName)
-    canIFS.setVisible(False)
-
     # Dependency Status for interrupt
     canIntEnComment = canComponent.createCommentSymbol("CAN_INTERRUPT_ENABLE_COMMENT", None)
     canIntEnComment.setVisible(False)
     canIntEnComment.setLabel("Warning!!! " + canInstanceName.getValue() + " Interrupt is Disabled in Interrupt Manager")
-    canIntEnComment.setDependencies(updateCanInterruptData, ["core." + canInterruptVectorUpdate])
+    canIntEnComment.setDependencies(updateCanInterruptData, canInterruptVectorUpdate)
 
     REG_MODULE_CAN = Register.getRegisterModule("CAN")
     configName = Variables.get("__CONFIGURATION_NAME")

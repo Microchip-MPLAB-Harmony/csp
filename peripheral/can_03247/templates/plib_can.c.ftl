@@ -208,7 +208,7 @@ static void CANLengthToDlcGet(uint8_t length, uint8_t *dlc)
 void ${CAN_INSTANCE_NAME}_Initialize(void)
 {
     /* Switch the CAN module ON */
-    CFD${CAN_INSTANCE_NUM}CONSET = _CFD${CAN_INSTANCE_NUM}CON_ON_MASK<#if CAN_CORE_SELECT_CLOCK_SOURCE == "0x1"> | _CFD${CAN_INSTANCE_NUM}CON_CLKSEL0_MASK</#if>;
+    CFD${CAN_INSTANCE_NUM}CON |= _CFD${CAN_INSTANCE_NUM}CON_ON_MASK<#if CAN_CORE_SELECT_CLOCK_SOURCE == "0x1"> | _CFD${CAN_INSTANCE_NUM}CON_CLKSEL0_MASK</#if>;
 
     /* Switch the CAN module to Configuration mode. Wait until the switch is complete */
     CFD${CAN_INSTANCE_NUM}CON = (CFD${CAN_INSTANCE_NUM}CON & ~_CFD${CAN_INSTANCE_NUM}CON_REQOP_MASK) | ((CAN_CONFIGURATION_MODE << _CFD${CAN_INSTANCE_NUM}CON_REQOP_POSITION) & _CFD${CAN_INSTANCE_NUM}CON_REQOP_MASK);
@@ -234,7 +234,7 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
 <#if TX_EVENT_FIFO_USE == true>
     /* Tx Event FIFO Configuration */
     CFD${CAN_INSTANCE_NUM}TEFCON = (((${TX_EVENT_FIFO_MESSAGE_BUFFER} - 1) << _CFD${CAN_INSTANCE_NUM}TEFCON_FSIZE_POSITION) & _CFD${CAN_INSTANCE_NUM}TEFCON_FSIZE_MASK)<#if CAN_TIMESTAMP_ENABLE == true> | _CFD${CAN_INSTANCE_NUM}TEFCON_TEFTSEN_MASK</#if>;
-    CFD${CAN_INSTANCE_NUM}CONSET = _CFD${CAN_INSTANCE_NUM}CON_STEF_MASK;
+    CFD${CAN_INSTANCE_NUM}CON |= _CFD${CAN_INSTANCE_NUM}CON_STEF_MASK;
 
 </#if>
 <#if TX_QUEUE_USE == true>
@@ -242,7 +242,7 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
     CFD${CAN_INSTANCE_NUM}TXQCON = (((${TX_QUEUE_MESSAGE_BUFFER} - 1) << _CFD${CAN_INSTANCE_NUM}TXQCON_FSIZE_POSITION) & _CFD${CAN_INSTANCE_NUM}TXQCON_FSIZE_MASK)
                | ((${TX_QUEUE_PAYLOAD_SIZE} << _CFD${CAN_INSTANCE_NUM}TXQCON_PLSIZE_POSITION) & _CFD${CAN_INSTANCE_NUM}TXQCON_PLSIZE_MASK)
                | ((${TX_QUEUE_MESSAGE_PRIORITY} << _CFD${CAN_INSTANCE_NUM}TXQCON_TXPRI_POSITION) & _CFD${CAN_INSTANCE_NUM}TXQCON_TXPRI_MASK);
-    CFD${CAN_INSTANCE_NUM}CONSET = _CFD${CAN_INSTANCE_NUM}CON_TXQEN_MASK;
+    CFD${CAN_INSTANCE_NUM}CON |= _CFD${CAN_INSTANCE_NUM}CON_TXQEN_MASK;
 
 </#if>
 
@@ -268,7 +268,7 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
     /* Filter ${filter} configuration */
     CFD${CAN_INSTANCE_NUM}FLTOBJ${filter} = ${(.vars[FILTER_ID]?number > 2047)?then('((((${.vars[FILTER_ID]} & CAN_MSG_FLT_EXT_SID_MASK) >> 18) | ((${.vars[FILTER_ID]} & CAN_MSG_FLT_EXT_EID_MASK) << 11)) & CAN_MSG_EID_MASK) | _CFD${CAN_INSTANCE_NUM}FLTOBJ${filter}_EXIDE_MASK','(${.vars[FILTER_ID]} & CAN_MSG_SID_MASK)')};
     CFD${CAN_INSTANCE_NUM}MASK${filter} = ${(.vars[FILTER_MASK_ID]?number > 2047)?then('((((${.vars[FILTER_MASK_ID]} & CAN_MSG_FLT_EXT_SID_MASK) >> 18) | ((${.vars[FILTER_MASK_ID]} & CAN_MSG_FLT_EXT_EID_MASK) << 11)) & CAN_MSG_EID_MASK) | _CFD${CAN_INSTANCE_NUM}MASK${filter}_MIDE_MASK','(${.vars[FILTER_MASK_ID]} & CAN_MSG_SID_MASK)')};
-    CFD${CAN_INSTANCE_NUM}FLTCON${FILTER_REG_INDEX?int}SET = ((${.vars[FILTER_FIFO_SELECT]} << _CFD${CAN_INSTANCE_NUM}FLTCON${FILTER_REG_INDEX?int}_F${filter}BP_POSITION) & _CFD${CAN_INSTANCE_NUM}FLTCON${FILTER_REG_INDEX?int}_F${filter}BP_MASK)<#if .vars[FILTER_ENABLE] == true>| _CFD${CAN_INSTANCE_NUM}FLTCON${FILTER_REG_INDEX?int}_FLTEN${filter}_MASK</#if>;
+    CFD${CAN_INSTANCE_NUM}FLTCON${FILTER_REG_INDEX?int} |= (((${.vars[FILTER_FIFO_SELECT]} << _CFD${CAN_INSTANCE_NUM}FLTCON${FILTER_REG_INDEX?int}_F${filter}BP_POSITION) & _CFD${CAN_INSTANCE_NUM}FLTCON${FILTER_REG_INDEX?int}_F${filter}BP_MASK)<#if .vars[FILTER_ENABLE] == true>| _CFD${CAN_INSTANCE_NUM}FLTCON${FILTER_REG_INDEX?int}_FLTEN${filter}_MASK</#if>);
     </#list>
 
 <#if CAN_TIMESTAMP_ENABLE == true>
@@ -281,8 +281,8 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
 </#if>
 <#if CAN_INTERRUPT_MODE == true>
     /* Set Interrupts */
-    ${CAN_IEC_REG}SET = _${CAN_IEC_REG}_CAN${CAN_INSTANCE_NUM}IE_MASK;
-    CFD${CAN_INSTANCE_NUM}INTSET = _CFD${CAN_INSTANCE_NUM}INT_SERRIE_MASK | _CFD${CAN_INSTANCE_NUM}INT_CERRIE_MASK | _CFD${CAN_INSTANCE_NUM}INT_IVMIE_MASK;
+    ${CAN_IEC_REG}SET = _${CAN_IEC_REG}_CAN${CAN_INSTANCE_NUM}IE_MASK<#if CAN_MULTI_VECTOR_INTERRUPT == true> | _${CAN_IEC_REG}_CAN${CAN_INSTANCE_NUM}RXIE_MASK | _${CAN_IEC_REG}_CAN${CAN_INSTANCE_NUM}TXIE_MASK</#if>;
+    CFD${CAN_INSTANCE_NUM}INT |= _CFD${CAN_INSTANCE_NUM}INT_SERRIE_MASK | _CFD${CAN_INSTANCE_NUM}INT_CERRIE_MASK | _CFD${CAN_INSTANCE_NUM}INT_IVMIE_MASK;
 
     /* Initialize the CAN PLib Object */
     memset((void *)${CAN_INSTANCE_NAME?lower_case}RxMsg, 0x00, sizeof(${CAN_INSTANCE_NAME?lower_case}RxMsg));
@@ -409,27 +409,27 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* 
 <#if TX_QUEUE_USE == true>
 <#if CAN_INTERRUPT_MODE == true>
             ${CAN_INSTANCE_NAME?lower_case}Obj.state = CAN_STATE_TRANSFER_TRANSMIT;
-            CFD${CAN_INSTANCE_NUM}TXQCONSET = _CFD${CAN_INSTANCE_NUM}TXQCON_TXQEIE_MASK;
+            CFD${CAN_INSTANCE_NUM}TXQCON |= _CFD${CAN_INSTANCE_NUM}TXQCON_TXQEIE_MASK;
 
 </#if>
             /* Request the transmit */
-            CFD${CAN_INSTANCE_NUM}TXQCONSET = _CFD${CAN_INSTANCE_NUM}TXQCON_UINC_MASK;
-            CFD${CAN_INSTANCE_NUM}TXQCONSET = _CFD${CAN_INSTANCE_NUM}TXQCON_TXREQ_MASK;
+            CFD${CAN_INSTANCE_NUM}TXQCON |= _CFD${CAN_INSTANCE_NUM}TXQCON_UINC_MASK;
+            CFD${CAN_INSTANCE_NUM}TXQCON |= _CFD${CAN_INSTANCE_NUM}TXQCON_TXREQ_MASK;
 </#if>
         }
         else
         {
 <#if CAN_INTERRUPT_MODE == true>
             ${CAN_INSTANCE_NAME?lower_case}Obj.state = CAN_STATE_TRANSFER_TRANSMIT;
-            *(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}FIFOCON1SET + ((fifoQueueNum - 1) * CAN_FIFO_OFFSET)) = _CFD${CAN_INSTANCE_NUM}FIFOCON1_TFERFFIE_MASK;
+            *(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}FIFOCON1 + ((fifoQueueNum - 1) * CAN_FIFO_OFFSET)) |= _CFD${CAN_INSTANCE_NUM}FIFOCON1_TFERFFIE_MASK;
 
 </#if>
             /* Request the transmit */
-            *(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}FIFOCON1SET + ((fifoQueueNum - 1) * CAN_FIFO_OFFSET)) = _CFD${CAN_INSTANCE_NUM}FIFOCON1_UINC_MASK;
-            *(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}FIFOCON1SET + ((fifoQueueNum - 1) * CAN_FIFO_OFFSET)) = _CFD${CAN_INSTANCE_NUM}FIFOCON1_TXREQ_MASK;
+            *(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}FIFOCON1 + ((fifoQueueNum - 1) * CAN_FIFO_OFFSET)) |= _CFD${CAN_INSTANCE_NUM}FIFOCON1_UINC_MASK;
+            *(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}FIFOCON1 + ((fifoQueueNum - 1) * CAN_FIFO_OFFSET)) |= _CFD${CAN_INSTANCE_NUM}FIFOCON1_TXREQ_MASK;
         }
 <#if CAN_INTERRUPT_MODE == true>
-        CFD${CAN_INSTANCE_NUM}INTSET = _CFD${CAN_INSTANCE_NUM}INT_TXIE_MASK;
+        CFD${CAN_INSTANCE_NUM}INT |= _CFD${CAN_INSTANCE_NUM}INT_TXIE_MASK;
 </#if>
     }
     return status;
@@ -513,7 +513,7 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
         }
 
         /* Message processing is done, update the message buffer pointer. */
-        *(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}FIFOCON1SET + ((fifoNum - 1) * CAN_FIFO_OFFSET)) = _CFD${CAN_INSTANCE_NUM}FIFOCON1_UINC_MASK;
+        *(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}FIFOCON1 + ((fifoNum - 1) * CAN_FIFO_OFFSET)) |= _CFD${CAN_INSTANCE_NUM}FIFOCON1_UINC_MASK;
 
         /* Message is processed successfully, so return true */
         status = true;
@@ -526,8 +526,8 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
     ${CAN_INSTANCE_NAME?lower_case}RxMsg[fifoNum-1][msgIndex].buffer = data;
     ${CAN_INSTANCE_NAME?lower_case}RxMsg[fifoNum-1][msgIndex].size = length;
     ${CAN_INSTANCE_NAME?lower_case}RxMsg[fifoNum-1][msgIndex].timestamp = timestamp;
-    *(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}FIFOCON1SET + ((fifoNum - 1) * CAN_FIFO_OFFSET)) = _CFD${CAN_INSTANCE_NUM}FIFOCON1_TFNRFNIE_MASK;
-    CFD${CAN_INSTANCE_NUM}INTSET = _CFD${CAN_INSTANCE_NUM}INT_RXIE_MASK;
+    *(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}FIFOCON1 + ((fifoNum - 1) * CAN_FIFO_OFFSET)) |= _CFD${CAN_INSTANCE_NUM}FIFOCON1_TFNRFNIE_MASK;
+    CFD${CAN_INSTANCE_NUM}INT |= _CFD${CAN_INSTANCE_NUM}INT_RXIE_MASK;
     status = true;
 </#if>
 
@@ -555,12 +555,12 @@ void ${CAN_INSTANCE_NAME}_MessageAbort(uint8_t fifoQueueNum)
     if (fifoQueueNum == 0)
     {
 <#if TX_QUEUE_USE == true>
-        CFD${CAN_INSTANCE_NUM}TXQCONCLR = _CFD${CAN_INSTANCE_NUM}TXQCON_TXREQ_MASK;
+        CFD${CAN_INSTANCE_NUM}TXQCON &= ~_CFD${CAN_INSTANCE_NUM}TXQCON_TXREQ_MASK;
 </#if>
     }
     else if (fifoQueueNum <= CAN_NUM_OF_FIFO)
     {
-        *(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}FIFOCON1CLR + ((fifoQueueNum - 1) * CAN_FIFO_OFFSET)) = _CFD${CAN_INSTANCE_NUM}FIFOCON1_TXREQ_MASK;
+        *(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}FIFOCON1 + ((fifoQueueNum - 1) * CAN_FIFO_OFFSET)) &= ~_CFD${CAN_INSTANCE_NUM}FIFOCON1_TXREQ_MASK;
     }
 }
 
@@ -591,7 +591,7 @@ void ${CAN_INSTANCE_NAME}_MessageAcceptanceFilterSet(uint8_t filterNum, uint32_t
         filterRegIndex = filterNum >> 2;
         filterEnableBit = (filterNum % 4 == 0)? _CFD${CAN_INSTANCE_NUM}FLTCON0_FLTEN0_MASK : 1 << ((((filterNum % 4) + 1) * 8) - 1);
 
-        *(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}FLTCON0CLR + (filterRegIndex * CAN_FILTER_OFFSET)) = filterEnableBit;
+        *(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}FLTCON0 + (filterRegIndex * CAN_FILTER_OFFSET)) &= ~filterEnableBit;
 
         if (id > CAN_MSG_SID_MASK)
         {
@@ -601,7 +601,7 @@ void ${CAN_INSTANCE_NAME}_MessageAcceptanceFilterSet(uint8_t filterNum, uint32_t
         {
             *(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}FLTOBJ0 + (filterNum * CAN_FILTER_OBJ_OFFSET)) = id & CAN_MSG_SID_MASK;
         }
-        *(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}FLTCON0SET + (filterRegIndex * CAN_FILTER_OFFSET)) = filterEnableBit;
+        *(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}FLTCON0 + (filterRegIndex * CAN_FILTER_OFFSET)) |= filterEnableBit;
     }
 }
 
@@ -763,7 +763,7 @@ bool ${CAN_INSTANCE_NAME}_TransmitEventFIFOElementGet(uint32_t *id, uint32_t *se
         }
 
         /* Tx Event FIFO Element read done, update the Tx Event FIFO tail */
-        CFD${CAN_INSTANCE_NUM}TEFCONSET = _CFD${CAN_INSTANCE_NUM}TEFCON_UINC_MASK;
+        CFD${CAN_INSTANCE_NUM}TEFCON |= _CFD${CAN_INSTANCE_NUM}TEFCON_UINC_MASK;
 
         /* Tx Event FIFO Element read successfully, so return true */
         status = true;
@@ -971,9 +971,9 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
     /* Check if error occurred */
     if (interruptStatus & (_CFD${CAN_INSTANCE_NUM}INT_SERRIF_MASK | _CFD${CAN_INSTANCE_NUM}INT_CERRIF_MASK | _CFD${CAN_INSTANCE_NUM}INT_IVMIF_MASK))
     {
-        CFD${CAN_INSTANCE_NUM}INTCLR = _CFD${CAN_INSTANCE_NUM}INT_SERRIE_MASK | _CFD${CAN_INSTANCE_NUM}INT_CERRIE_MASK | _CFD${CAN_INSTANCE_NUM}INT_IVMIE_MASK;
+        CFD${CAN_INSTANCE_NUM}INT &= ~(_CFD${CAN_INSTANCE_NUM}INT_SERRIE_MASK | _CFD${CAN_INSTANCE_NUM}INT_CERRIE_MASK | _CFD${CAN_INSTANCE_NUM}INT_IVMIE_MASK);
         ${CAN_IFS_REG}CLR = _${CAN_IFS_REG}_CAN${CAN_INSTANCE_NUM}IF_MASK;
-        CFD${CAN_INSTANCE_NUM}INTSET = _CFD${CAN_INSTANCE_NUM}INT_SERRIE_MASK | _CFD${CAN_INSTANCE_NUM}INT_CERRIE_MASK | _CFD${CAN_INSTANCE_NUM}INT_IVMIE_MASK;
+        CFD${CAN_INSTANCE_NUM}INT |= _CFD${CAN_INSTANCE_NUM}INT_SERRIE_MASK | _CFD${CAN_INSTANCE_NUM}INT_CERRIE_MASK | _CFD${CAN_INSTANCE_NUM}INT_IVMIE_MASK;
         errorStatus = CFD${CAN_INSTANCE_NUM}TREC;
 
         /* Check if error occurred */
@@ -1000,8 +1000,12 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
             fifoNum = (uint8_t)CFD${CAN_INSTANCE_NUM}VEC & _CFD${CAN_INSTANCE_NUM}VEC_ICODE_MASK;
             if (fifoNum <= CAN_NUM_OF_FIFO)
             {
-                *(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}FIFOCON1CLR + ((fifoNum - 1) * CAN_FIFO_OFFSET)) = _CFD${CAN_INSTANCE_NUM}FIFOCON1_TFNRFNIE_MASK;
+                *(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}FIFOCON1 + ((fifoNum - 1) * CAN_FIFO_OFFSET)) &= ~_CFD${CAN_INSTANCE_NUM}FIFOCON1_TFNRFNIE_MASK;
+                <#if CAN_MULTI_VECTOR_INTERRUPT == true>
+                ${CAN_IFS_REG}CLR = _${CAN_IFS_REG}_CAN${CAN_INSTANCE_NUM}RXIF_MASK;
+                <#else>
                 ${CAN_IFS_REG}CLR = _${CAN_IFS_REG}_CAN${CAN_INSTANCE_NUM}IF_MASK;
+                </#if>
                 fifoSize = (*(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}FIFOCON1 + ((fifoNum - 1) * CAN_FIFO_OFFSET)) & _CFD${CAN_INSTANCE_NUM}FIFOCON1_FSIZE_MASK) >> _CFD${CAN_INSTANCE_NUM}FIFOCON1_FSIZE_POSITION;
                 for (msgIndex = 0; msgIndex <= fifoSize; msgIndex++)
                 {
@@ -1040,10 +1044,10 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
                         }
                     }
                     /* Message processing is done, update the message buffer pointer. */
-                    *(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}FIFOCON1SET + ((fifoNum - 1) * CAN_FIFO_OFFSET)) = _CFD${CAN_INSTANCE_NUM}FIFOCON1_UINC_MASK;
+                    *(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}FIFOCON1 + ((fifoNum - 1) * CAN_FIFO_OFFSET)) |= _CFD${CAN_INSTANCE_NUM}FIFOCON1_UINC_MASK;
                 }
             }
-            CFD${CAN_INSTANCE_NUM}INTCLR = _CFD${CAN_INSTANCE_NUM}INT_RXIE_MASK;
+            CFD${CAN_INSTANCE_NUM}INT &= ~_CFD${CAN_INSTANCE_NUM}INT_RXIE_MASK;
             ${CAN_INSTANCE_NAME?lower_case}Obj.state = CAN_STATE_TRANSFER_DONE;
             if (${CAN_INSTANCE_NAME?lower_case}Obj.state == CAN_STATE_TRANSFER_DONE)
             {
@@ -1062,16 +1066,20 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
                 if (fifoNum == 0)
                 {
                     <#if TX_QUEUE_USE == true>
-                    CFD${CAN_INSTANCE_NUM}TXQCONCLR = _CFD${CAN_INSTANCE_NUM}TXQCON_TXQEIE_MASK;
+                    CFD${CAN_INSTANCE_NUM}TXQCON &= ~_CFD${CAN_INSTANCE_NUM}TXQCON_TXQEIE_MASK;
                     </#if>
                 }
                 else
                 {
-                    *(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}FIFOCON1CLR + ((fifoNum - 1) * CAN_FIFO_OFFSET)) = _CFD${CAN_INSTANCE_NUM}FIFOCON1_TFERFFIE_MASK;
+                    *(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}FIFOCON1 + ((fifoNum - 1) * CAN_FIFO_OFFSET)) &= ~_CFD${CAN_INSTANCE_NUM}FIFOCON1_TFERFFIE_MASK;
                 }
             }
+            <#if CAN_MULTI_VECTOR_INTERRUPT == true>
+            ${CAN_IFS_REG}CLR = _${CAN_IFS_REG}_CAN${CAN_INSTANCE_NUM}TXIF_MASK;
+            <#else>
             ${CAN_IFS_REG}CLR = _${CAN_IFS_REG}_CAN${CAN_INSTANCE_NUM}IF_MASK;
-            CFD${CAN_INSTANCE_NUM}INTCLR = _CFD${CAN_INSTANCE_NUM}INT_TXIE_MASK;
+            </#if>
+            CFD${CAN_INSTANCE_NUM}INT &= ~_CFD${CAN_INSTANCE_NUM}INT_TXIE_MASK;
             ${CAN_INSTANCE_NAME?lower_case}Obj.state = CAN_STATE_TRANSFER_DONE;
             if (${CAN_INSTANCE_NAME?lower_case}Obj.state == CAN_STATE_TRANSFER_DONE)
             {
