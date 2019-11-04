@@ -238,7 +238,7 @@ prefetchMenu.setDescription("Configure Prefetch and Flash")
 
 # load clock manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_pic32mzw/config/clk.py")
-#coreComponent.addPlugin("../peripheral/clk_pic32mzw/plugin/clockmanager.jar")
+coreComponent.addPlugin("../peripheral/clk_pic32mzw/plugin/clockmanager.jar")
 
 SYM_PFMWS = coreComponent.createIntegerSymbol("CONFIG_PRECON_PFMWS", prefetchMenu)
 SYM_PFMWS.setReadOnly(False)
