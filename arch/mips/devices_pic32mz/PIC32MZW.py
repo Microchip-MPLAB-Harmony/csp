@@ -98,31 +98,34 @@ def getCorePeripheralsInterruptDataStructure():
 
     return corePeripherals
 
-global SYM_ECCCON
+global getWaitStates
+
+def getWaitStates():
+
+    sysclk = int(Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY"))
+    ws = 7
+
+    if sysclk <= 250000000:
+        ws = 7
+    if sysclk <= 240000000:
+        ws = 6
+    if sysclk <= 200000000:
+        ws = 5
+    if sysclk <= 160000000:
+        ws = 4
+    if sysclk <= 120000000:
+        ws = 3
+    if sysclk <= 80000000:
+        ws = 2
+    if sysclk <= 40000000:
+        ws = 1
+
+    return ws
 
 def calcWaitStates(symbol, event):
-    sysclk = int(Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY"))
-    ecc = int(SYM_ECCCON.getValue())
-    ws=2
 
-    if(ecc < 2):
-        if (sysclk <= 200000000):
-            ws=2
-        if (sysclk <= 120000000):
-            ws=1
-        if(sysclk <= 60000000):
-            ws=0
+    symbol.setValue(getWaitStates(), 1)
 
-    else:
-        if (sysclk <= 200000000):
-            ws=2
-        if (sysclk <= 140000000):
-            ws=1
-        if(sysclk <= 74000000):
-            ws=0
-
-    symbol.setValue(ws,2)
-    
 global updateCFGCON3
 
 def updateCFGCON3(menu,event):
@@ -145,7 +148,7 @@ def updateCFGCON3(menu,event):
             break
     newvalue = newvalue + (int(event['value'])<<shift)
     Database.setSymbolValue("core", "CFGCON3_VALUE", newvalue, 2)
-    
+
 def make_config_reg_items(basenode, component, parentMenu):
     # Extracts the configuration registers that are relevant.  There are some fields that are the only way to control certain settings
     # and thus need to be exposed to the user.  CFGCONx registers have these fields.
@@ -156,7 +159,7 @@ def make_config_reg_items(basenode, component, parentMenu):
     cfgcon0name = component.createStringSymbol('CFGCON0_NAME', parentMenu)
     cfgcon0name.setVisible(False)
     cfgcon0name.setDefaultValue(node.getAttribute('name'))
-    
+
     node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CFG\"]/register-group/register@[name=\"CFGCON1\"]")
     cfgcon1 = component.createIntegerSymbol('CFGCON1_VALUE', parentMenu)
     cfgcon1.setVisible(False)
@@ -164,7 +167,7 @@ def make_config_reg_items(basenode, component, parentMenu):
     cfgcon1name = component.createStringSymbol('CFGCON1_NAME', parentMenu)
     cfgcon1name.setVisible(False)
     cfgcon1name.setDefaultValue(node.getAttribute('name'))
-    
+
     node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CFG\"]/register-group/register@[name=\"CFGCON2\"]")
     cfgcon2 = component.createIntegerSymbol('CFGCON2_VALUE', parentMenu)
     cfgcon2.setVisible(False)
@@ -172,7 +175,7 @@ def make_config_reg_items(basenode, component, parentMenu):
     cfgcon2name = component.createStringSymbol('CFGCON2_NAME', parentMenu)
     cfgcon2name.setVisible(False)
     cfgcon2name.setDefaultValue(node.getAttribute('name'))
-    
+
     node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CFG\"]/register-group/register@[name=\"CFGCON3\"]")
     cfgcon3 = component.createIntegerSymbol('CFGCON3_VALUE', parentMenu)
     cfgcon3.setVisible(False)
@@ -181,7 +184,7 @@ def make_config_reg_items(basenode, component, parentMenu):
     cfgcon3name = component.createStringSymbol('CFGCON3_NAME', parentMenu)
     cfgcon3name.setVisible(False)
     cfgcon3name.setDefaultValue(node.getAttribute('name'))
-    
+
     node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CFG\"]/register-group/register@[name=\"CFGCON4\"]")
     cfgcon4 = component.createIntegerSymbol('CFGCON4_VALUE', parentMenu)
     cfgcon4.setVisible(False)
@@ -211,7 +214,7 @@ def populate_config_items(basenode, bitfieldHexSymbols, baseLabel, moduleNode, c
                         temp = submodnode[kk].getAttribute('name')
                         posn = temp.find('__')
                         name = temp[posn+2:]
-        
+
                         if(name == bitfieldName):  # if we have a matching <value-group >, look at all children <value > fields
                             valuenode = submodnode[kk].getChildren()  # look at all the <value ..> entries underneath <value-group >
                             keyVals = {}
@@ -219,15 +222,16 @@ def populate_config_items(basenode, bitfieldHexSymbols, baseLabel, moduleNode, c
                                 keyVals[valuenode[ll].getAttribute("name")] = _process_valuegroup_entry(valuenode[ll])
                     bitfielditem = component.createComboSymbol(baseLabel+bitfieldName, menuitem, sorted(keyVals.keys()))
                     bitfielditem.setDefaultValue(_find_key(_find_default_value(bitfields[jj], porValue),keyVals))
-        
+
                 bitfielditem.setVisible(visibility)
-        
+
                 if(bitfieldName in bitfieldHexSymbols):
                     bitfielditem.setDefaultValue(_find_default_value(bitfields[jj], porValue))
-        
+
                 label = bitfields[jj].getAttribute('caption')+' ('+bitfields[jj].getAttribute('name')+')'
                 bitfielditem.setLabel(label)
                 bitfielditem.setDescription(bitfields[jj].getAttribute('caption'))
+
 clkValGrp_DEVCFG0__FECCCON = ATDF.getNode('/avr-tools-device-file/modules/module@[name="FUSECONFIG"]/value-group@[name="DEVCFG0__FECCCON"]')
 print("Loading System Services for " + Variables.get("__PROCESSOR"))
 fuseModuleGrp = ATDF.getNode('/avr-tools-device-file/modules/module@[name="FUSECONFIG"]')
@@ -259,36 +263,18 @@ mipsMenu.setLabel("MIPS Configuration")
 mipsMenu.setDescription("Configuration for MIPS processor")
 
 prefetchMenu = coreComponent.createMenuSymbol("PREFETCH_MENU", None)
-prefetchMenu.setLabel("Prefetch and Flash Configuration")
+prefetchMenu.setLabel("Flash Configuration")
 prefetchMenu.setDescription("Configure Prefetch and Flash")
 
 # load clock manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_pic32mzw/config/clk.py")
 #coreComponent.addPlugin("../peripheral/clk_pic32mzw/plugin/clockmanager.jar")
 
-SYM_ECCCON = coreComponent.createKeyValueSetSymbol("CONFIG_CFGCON_ECCCON", prefetchMenu)
-SYM_ECCCON.addKey("ON", "0", "Flash ECC is enabled")
-SYM_ECCCON.addKey("DYNAMIC", "1", "Dynamic Flash ECC is enabled")
-SYM_ECCCON.addKey("OFF", "2", "ECC and dynamic ECC are disabled")
-SYM_ECCCON.setLabel("Flash ECC Configuration")
-SYM_ECCCON.setOutputMode("Value")
-SYM_ECCCON.setDisplayMode("Description")
-SYM_ECCCON.setDefaultValue(2)
-SYM_ECCCON.setVisible(True)
-
-SYM_REFEN = coreComponent.createKeyValueSetSymbol("CONFIG_PRECON_PREFEN", prefetchMenu)
-SYM_REFEN.setLabel("Predictive Prefetch Configuration")
-SYM_REFEN.addKey("OPTION1", "0", "Disable predictive prefetch")
-SYM_REFEN.addKey("OPTION2", "1", "Enable predictive prefetch for CPU instructions only")
-SYM_REFEN.setOutputMode("Value")
-SYM_REFEN.setDisplayMode("Description")
-SYM_REFEN.setDefaultValue(1)
-
 SYM_PFMWS = coreComponent.createIntegerSymbol("CONFIG_PRECON_PFMWS", prefetchMenu)
 SYM_PFMWS.setReadOnly(False)
-SYM_PFMWS.setDefaultValue(5)
+SYM_PFMWS.setDefaultValue(getWaitStates())
 SYM_PFMWS.setLabel("Program Flash memory wait states")
-SYM_PFMWS.setDependencies(calcWaitStates,["CPU_CLOCK_FREQUENCY", "CONFIG_CFGCON_ECCCON"])
+SYM_PFMWS.setDependencies(calcWaitStates, ["CPU_CLOCK_FREQUENCY"])
 
 # load device specific pin manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/gpio_02467/config/gpio.py")
