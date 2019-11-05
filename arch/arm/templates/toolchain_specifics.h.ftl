@@ -74,6 +74,7 @@ static inline void __arm926_isb(void)
     </#if>
 
 #define __STATIC_INLINE static inline
+#define __WEAK __attribute__((weak))
 </#if>
 
 <#if "XC32" == COMPILER_CHOICE>
