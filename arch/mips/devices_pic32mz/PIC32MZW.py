@@ -151,31 +151,7 @@ def updateCFGCON3(menu,event):
 
 def make_config_reg_items(basenode, component, parentMenu):
     # Extracts the configuration registers that are relevant.  There are some fields that are the only way to control certain settings
-    # and thus need to be exposed to the user.  CFGCONx registers have these fields.
-    node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CFG\"]/register-group/register@[name=\"CFGCON0\"]")
-    cfgcon0 = component.createIntegerSymbol('CFGCON0_VALUE', parentMenu)
-    cfgcon0.setVisible(False)
-    cfgcon0.setDefaultValue(int(node.getAttribute('initval'),16))
-    cfgcon0name = component.createStringSymbol('CFGCON0_NAME', parentMenu)
-    cfgcon0name.setVisible(False)
-    cfgcon0name.setDefaultValue(node.getAttribute('name'))
-
-    node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CFG\"]/register-group/register@[name=\"CFGCON1\"]")
-    cfgcon1 = component.createIntegerSymbol('CFGCON1_VALUE', parentMenu)
-    cfgcon1.setVisible(False)
-    cfgcon1.setDefaultValue(int(node.getAttribute('initval'),16))
-    cfgcon1name = component.createStringSymbol('CFGCON1_NAME', parentMenu)
-    cfgcon1name.setVisible(False)
-    cfgcon1name.setDefaultValue(node.getAttribute('name'))
-
-    node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CFG\"]/register-group/register@[name=\"CFGCON2\"]")
-    cfgcon2 = component.createIntegerSymbol('CFGCON2_VALUE', parentMenu)
-    cfgcon2.setVisible(False)
-    cfgcon2.setDefaultValue(int(node.getAttribute('initval'),16))
-    cfgcon2name = component.createStringSymbol('CFGCON2_NAME', parentMenu)
-    cfgcon2name.setVisible(False)
-    cfgcon2name.setDefaultValue(node.getAttribute('name'))
-
+    # and thus need to be exposed to the user.  
     node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CFG\"]/register-group/register@[name=\"CFGCON3\"]")
     cfgcon3 = component.createIntegerSymbol('CFGCON3_VALUE', parentMenu)
     cfgcon3.setVisible(False)
@@ -185,19 +161,13 @@ def make_config_reg_items(basenode, component, parentMenu):
     cfgcon3name.setVisible(False)
     cfgcon3name.setDefaultValue(node.getAttribute('name'))
 
-    node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CFG\"]/register-group/register@[name=\"CFGCON4\"]")
-    cfgcon4 = component.createIntegerSymbol('CFGCON4_VALUE', parentMenu)
-    cfgcon4.setVisible(False)
-    cfgcon4.setDefaultValue(int(node.getAttribute('initval'),16))
-    cfgcon4name = component.createStringSymbol('CFGCON4_NAME', parentMenu)
-    cfgcon4name.setVisible(False)
-    cfgcon4name.setDefaultValue(node.getAttribute('name'))
 
 def populate_config_items(basenode, bitfieldHexSymbols, baseLabel, moduleNode, component, parentMenu, visibility):
-    register = basenode.getChildren() # these are <register > fields for fuse config section
+    no_symbol_list = ['CFGCON0','CFGCON1','CFGCON2','CFGCON4','CFGPG']  # not needed to populate symbols that user does not control
+    register = basenode.getChildren() # these are <register > fields for fuse or cfg sections
     for ii in range(len(register)):
         porValue = register[ii].getAttribute('initval')
-        if(porValue != None):
+        if((porValue != None) and (register[ii].getAttribute('name') not in no_symbol_list)):
             symbolName = register[ii].getAttribute('name')
             menuitem = component.createMenuSymbol(symbolName, parentMenu)
             menuitem.setVisible(visibility)
