@@ -972,7 +972,7 @@ def instantiateComponent(adchsComponent):
         BitFieldBaseName_TRGSRC = "TRGSRC"
         RegisterName = RegisterNameBase + str((channelID/4)+1)
         # trigger source
-        #adchsSym_ADCTRG__TRGSRC.append(channelID)
+        adchsSym_ADCTRG__TRGSRC.append(channelID)
         adchsSym_ADCTRG__TRGSRC[channelID] = adchsAddKeyValueSetFromATDFInitValue(
             adchsComponent, Module, RegisterName, BitFieldBaseName_TRGSRC +
             str(channelID), adchsSym_CH_ENABLE[channelID], False)
