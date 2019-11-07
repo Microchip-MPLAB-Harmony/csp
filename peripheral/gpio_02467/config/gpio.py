@@ -384,7 +384,7 @@ pin_map, pin_position = createPinMap(pioPackage)
 
 for pinNumber in range(1, packagePinCount + 1):
     pin.append(pinNumber)
-    pin[pinNumber-1]= coreComponent.createMenuSymbol("GPIO_PIN_CONFIGURATION" + str(pinNumber - 1), pinConfiguration)
+    pin[pinNumber-1]= coreComponent.createMenuSymbol("GPIO_PIN_CONFIGURATION" + str(pinNumber), pinConfiguration)
     pin[pinNumber-1].setLabel("Pin " + str(pin_position[pinNumber-1]))
     pin[pinNumber-1].setDescription("Configuration for Pin " + str(pinNumber-1))
 

@@ -286,7 +286,10 @@
                 <constraint type="enable">
                     <pair key="DRV_ADCHS_ANALOG_INPUT_ID_IDX[0-15]" value="ADCHS_AN15"/>
                 </constraint>
-            </function>												
+            </function>		
+			<function name="ANN1"/>
+			<function name="ANN0"/>
+													
 		</module>
         <module name="Clock" desc="Clock\n(OSC_ID_0)">
 			<function name="OSC1" analog="true">
@@ -345,14 +348,21 @@
                 </constraint>
             </function>
 		</module>
-        <module name="PTA" desc="PTA">
+        <module name="WiFi" desc="WiFi">
             <constraint type="enable">
                 <pair key="USE_DRV_PTA" value="y"/>
             </constraint>
-			<function name="PTA_BT_PRIO"/>
-			<function name="PTA_WLAN_ACTIVE"/>
-			<function name="PTA_BT_ACTIVE"/>
-			<function name="BT_CLK_OUT"/>
+			<function name="BT_PRIO"/>
+			<function name="WLAN_ACTIVE"/>
+			<function name="BT_ACTIVE"/>
+			<function name="RF_FE_1"/>
+			<function name="RF_FE_2"/>
+			<function name="RF_FE_3"/>	
+			<function name="RF_FE_4"/>	
+			<function name="RF_FE_5"/>
+			<function name="RF_FE_6"/>
+			<function name="RF_FE_7"/>	
+			<function name="RF_FE_8"/>								
 		</module>		
         <module name="CVD" desc="CVD">
 			<function name="CVD1">
@@ -429,7 +439,242 @@
 				<constraint type="enable">
 					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN15"/>
 				</constraint>
-			</function>						
+			</function>
+			<function name="CVD16">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN16"/>
+				</constraint>
+			</function>
+			<function name="CVD17">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN17"/>
+				</constraint>
+			</function>
+			<function name="CVD18">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN18"/>
+				</constraint>
+			</function>
+			<function name="CVD19">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN19"/>
+				</constraint>
+			</function>	
+			<function name="CVDR1">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN1"/>
+				</constraint>
+			</function>
+			<function name="CVDR2">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN2"/>
+				</constraint>
+			</function>
+			<function name="CVDR3">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN3"/>
+				</constraint>
+			</function>
+			<function name="CVDR4">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN4"/>
+				</constraint>
+			</function>
+			<function name="CVDR5">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN5"/>
+				</constraint>
+			</function>
+			<function name="CVDR6">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN6"/>
+				</constraint>
+			</function>
+			<function name="CVDR7">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN7"/>
+				</constraint>
+			</function>
+			<function name="CVDR8">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN8"/>
+				</constraint>
+			</function>
+			<function name="CVDR9">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN9"/>
+				</constraint>
+			</function>
+			<function name="CVDR10">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN10"/>
+				</constraint>
+			</function>
+			<function name="CVDR11">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN11"/>
+				</constraint>
+			</function>
+			<function name="CVDR12">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN12"/>
+				</constraint>
+			</function>
+			<function name="CVDR13">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN13"/>
+				</constraint>
+			</function>
+			<function name="CVDR14">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN14"/>
+				</constraint>
+			</function>
+			<function name="CVDR15">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN15"/>
+				</constraint>
+			</function>
+			<function name="CVDR16">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN16"/>
+				</constraint>
+			</function>
+			<function name="CVDR17">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN17"/>
+				</constraint>
+			</function>
+			<function name="CVDR18">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN18"/>
+				</constraint>
+			</function>
+			<function name="CVDR19">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN19"/>
+				</constraint>
+			</function>
+			<function name="CVDT0">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN1"/>
+				</constraint>
+			</function>			
+			<function name="CVDT1">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN1"/>
+				</constraint>
+			</function>
+			<function name="CVDT2">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN2"/>
+				</constraint>
+			</function>
+			<function name="CVDT3">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN3"/>
+				</constraint>
+			</function>
+			<function name="CVDT4">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN4"/>
+				</constraint>
+			</function>
+			<function name="CVDT5">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN5"/>
+				</constraint>
+			</function>
+			<function name="CVDT6">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN6"/>
+				</constraint>
+			</function>
+			<function name="CVDT7">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN7"/>
+				</constraint>
+			</function>
+			<function name="CVDT8">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN8"/>
+				</constraint>
+			</function>
+			<function name="CVDT9">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN9"/>
+				</constraint>
+			</function>
+			<function name="CVDT10">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN10"/>
+				</constraint>
+			</function>
+			<function name="CVDT11">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN11"/>
+				</constraint>
+			</function>
+			<function name="CVDT12">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN12"/>
+				</constraint>
+			</function>
+			<function name="CVDT13">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN13"/>
+				</constraint>
+			</function>
+			<function name="CVDT14">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN14"/>
+				</constraint>
+			</function>
+			<function name="CVDT15">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN15"/>
+				</constraint>
+			</function>
+			<function name="CVDT16">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN16"/>
+				</constraint>
+			</function>
+			<function name="CVDT17">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN17"/>
+				</constraint>
+			</function>
+			<function name="CVDT18">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN18"/>
+				</constraint>
+			</function>
+			<function name="CVDT19">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN19"/>
+				</constraint>
+			</function>	
+			<function name="CVDT20">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN20"/>
+				</constraint>
+			</function>
+			<function name="CVDT21">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN21"/>
+				</constraint>
+			</function>
+			<function name="CVDT22">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN22"/>
+				</constraint>
+			</function>
+			<function name="CVDT23">
+				<constraint type="enable">
+					<pair key="DRV_ADCHS_CVD_DIGITAL_COMPARATOR_ANALOG_INPUT_ID" value="ADCHS_AN23"/>
+				</constraint>
+			</function>																	
 		</module>
         <module name="Ethernet Controller" desc="Ethernet\nController\n(ETH_ID_0)">
             <constraint type="enable">
@@ -651,6 +896,8 @@
 			    	<pair key="TCPIP_EMAC_USE_ALT_RMII_PINS" value="y"/>
 			    </constraint>
             </function>
+			<function name="ETH_EXCLK_OUT"/>
+			<function name="ETH_CLK_OUT"/>			
 		</module>				
         <module name="IC1" desc="IC1 (IC_ID_1)">
             <constraint type="enable">
@@ -849,6 +1096,21 @@
 			    	<pair key="DRV_USART_SELECT_RTS_PIN_IDX[0-1]" value="USART_ID_1_HS"/>
 			    </constraint>
 		    </function>
+			<function name="U1CTSn">
+			    <constraint type="enable">
+			    	<pair key="DRV_USART_SELECT_CTS_PIN_IDX[0-1]" value="USART_ID_1_HS"/>
+			    </constraint>
+		    </function>			
+			<function name="U1RTSn">
+			    <constraint type="enable">
+			    	<pair key="DRV_USART_SELECT_CTS_PIN_IDX[0-1]" value="USART_ID_1_HS"/>
+			    </constraint>
+		    </function>
+			<function name="U1BCLK">
+			    <constraint type="enable">
+			    	<pair key="DRV_USART_SELECT_RTS_PIN_IDX[0-1]" value="USART_ID_1_HS"/>
+			    </constraint>
+		    </function>			
 		</module>
 		<module name="UART 2" desc="UART 2\n(USART_ID_2)">
 			<function name="U2RX">
@@ -920,6 +1182,16 @@
 			    	<pair key="DRV_SPI_SSOUT_PIN_DISPLAY_IDX[0-2]" value="SPI_ID_1"/>
 			    </constraint>
 		    </function>
+			<function name="SS1">
+			    <constraint type="enable">
+			    	<pair key="DRV_SPI_SSIN_PIN_DISPLAY_IDX[0-2]" value="SPI_ID_1"/>
+			    </constraint>
+		    </function>
+			<function name="FSYNC1">
+			    <constraint type="enable">
+			    	<pair key="DRV_SPI_SSOUT_PIN_DISPLAY_IDX[0-2]" value="SPI_ID_1"/>
+			    </constraint>
+		    </function>			
 		</module>
         <module name="SPI 2" desc="SPI 2\n(SPI_ID_2)">
 			<function name="SCK2">
@@ -1015,6 +1287,8 @@
 			    	<pair key="FUSBIDIO" value="ON"/>
 			    </constraint>
 			</function>
+			<function name="USBOEN"/>			
+			<function name="VBUSON"/>				
 		</module>
         <module name="CAN1" desc="CAN1\n(CAN_ID_1)">
             <constraint type="enable">
@@ -1099,6 +1373,11 @@
 			</constraint>
 			<function name="RESERVED"/>
 		</module>
+		<module name="LVD Voltage Reference">
+			<constraint type="enable"/>
+			<function name="LVDIN"/>
+
+		</module>		
 	</modules>
 </family>
 

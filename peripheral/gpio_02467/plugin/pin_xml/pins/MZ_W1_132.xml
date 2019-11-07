@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- This is an auto-generated pin data file created: 14:01:34 10/03/19 -->
+<!-- This is an auto-generated pin data file created: 14:03:23 11/07/19 -->
 <pinfile family="MZW1_132">
    <packages>
      <package diagram="MZ_W1_132_DQFN" id="1" name="DQFN" />
@@ -88,7 +88,6 @@
       </modifiers>
       <number package="1" pin="A14" />
       <function name="SS1" />
-      <function name="CS1" />
       <function name="FSYNC1" />
       <function name="RPA1" />
     </pin>
@@ -146,7 +145,7 @@
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="A24" />
-      <function name="PTA_BT_PRIO" />
+      <function name="BT_PRIO" />
       <function name="RPK6" />
     </pin>
     <pin name="VDD33">
@@ -382,9 +381,8 @@
     <pin name="NC">
        <number package="1" pin="A72" />
     </pin>
-    <pin name="VPMU_VDDC">
+    <pin name="VPMU_VDDC/PMU_VDDIO">
        <number package="1" pin="B1" />
-      <function name="pmu_vddio" />
     </pin>
     <pin name="RC14">
        <modifiers>
@@ -425,9 +423,8 @@
       <function name="CVDT17" />
       <function name="RPA0" />
     </pin>
-    <pin name="VREGCAP1">
+    <pin name="VREGCAP0/VREGCAP1">
        <number package="1" pin="B7" />
-      <function name="VREGCAP0" />
     </pin>
     <pin name="RC1">
        <modifiers>
@@ -518,7 +515,7 @@
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="B19" />
-      <function name="PTA_WLAN_ACTIVE" />
+      <function name="WLAN_ACTIVE" />
       <function name="RPK5" />
     </pin>
     <pin name="RK7">
@@ -526,7 +523,7 @@
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="B20" />
-      <function name="PTA_BT_ACTIVE" />
+      <function name="BT_ACTIVE" />
       <function name="RPK7" />
     </pin>
     <pin name="RK8">
@@ -712,15 +709,11 @@
       </modifiers>
       <number package="1" pin="B54" />
     </pin>
-    <pin name="VREGCAP6">
+    <pin name="VREGCAP3/VREGCAP5/VREGCAP6">
        <number package="1" pin="B55" />
-      <function name="VREGCAP3" />
-      <function name="VREGCAP5" />
     </pin>
-    <pin name="VREGCAP8">
+    <pin name="VREGCAP4/VREGCAP7/VREGCAP8">
        <number package="1" pin="B56" />
-      <function name="VREGCAP4" />
-      <function name="VREGCAP7" />
     </pin>
     <pin name="RC10">
        <modifiers>
