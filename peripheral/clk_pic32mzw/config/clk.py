@@ -939,13 +939,13 @@ def calculated_clock_frequencies(clk_comp, clk_menu, join_path, element_tree, ne
     btpllclkFreq.setDefaultValue('0')  # by default disabled
     btpllclkFreq.setLabel("Bluetooth Clock Frequency (Hz)")
     btpllclkFreq.setVisible(True)
-    
+
     # output clock frequencies for this PLL - there are 2 signals generated
     ethclkFreq = clk_comp.createStringSymbol('ETHCLK', sym_calc_freq_menu)
     ethclkFreq.setDefaultValue('0')   # by default disabled
     ethclkFreq.setLabel("Ethernet Clock Frequency (Hz)")
     ethclkFreq.setVisible(True)
-    
+
     wificlkFreq = clk_comp.createStringSymbol('WIFICLK', sym_calc_freq_menu)
     wificlkFreq.setDefaultValue('0')   # by default disabled
     wificlkFreq.setLabel("Wifi Clock Frequency (Hz)")
@@ -956,7 +956,7 @@ def calculated_clock_frequencies(clk_comp, clk_menu, join_path, element_tree, ne
     upllclkFreq.setDefaultValue('0')   # by default disabled
     upllclkFreq.setLabel("USB Clock Frequency (Hz)")
     upllclkFreq.setVisible(True)
-    
+
     # Peripheral Bus clock frequencies
     index = 0
     for ii in pbclkEnNameList:  # this list has  "CONFIG_SYS_CLK_PBCLK"+pbus+"_ENABLE", where pbus is index from atdf file
@@ -1228,7 +1228,7 @@ def scan_atdf_for_btpllcon_fields(component, parentMenu, regNode, enableSymbolId
     btpllpostdiv2mask = component.createStringSymbol('BTPLLPOSTDIV2_MASK', parentMenu)
     btpllpostdiv2mask.setVisible(False)
     btpllpostdiv2mask.setDefaultValue(node.getAttribute('mask'))
-    
+
 def scan_atdf_for_ewpllcon_fields(component, parentMenu, regNode, enableSymbolId):
     '''
     This creates all the symbols for EWPLLCON register, obtaining all key/value pairs from atdf file
@@ -2040,10 +2040,10 @@ if __name__ == "__main__":
     #ADCHS Clock source
     global adchs_clock_map
     adchs_clock_map = {}
-    adchs_clock_map[0] = "SYS_CLK_FREQ"
+    adchs_clock_map[0] = "CONFIG_SYS_CLK_PBCLK2_FREQ"
     adchs_clock_map[1] = "OSCCON_FRCDIV_VALUE"
     adchs_clock_map[2] = "CONFIG_SYS_CLK_REFCLK3_FREQ"
-    adchs_clock_map[3] = "CONFIG_SYS_CLK_PBCLK2_FREQ"
+    adchs_clock_map[3] = "SYS_CLK_FREQ"
 
     peripheralClockMenu = coreComponent.createMenuSymbol("PERIPHERAL_CLK_CONFIG", SYM_CLK_MENU)
     peripheralClockMenu.setLabel("Peripheral Clock Configuration")
