@@ -777,12 +777,12 @@ def instantiateComponent(adchsComponent):
     adchsSym_IEC0.setVisible(False)
 
 ##### Assumption is all the data result interrupt vectors are sequential
-    num_intrpt_in_first_iec = 32 - (Irq_index % 32)
+    num_intrpt_in_first_iec = int(32 - (Irq_index % 32))
     adchsSym_IFS0_INDEX = adchsComponent.createIntegerSymbol("ADCHS_IFS0_NUM_IRQ", None)
     adchsSym_IFS0_INDEX.setVisible(False)
     adchsSym_IFS0_INDEX.setDefaultValue( num_intrpt_in_first_iec)
 
-    if ((ADC_Max_Signals - (num_intrpt_in_first_iec))) >= 32:
+    if ((ADC_Max_Signals - (num_intrpt_in_first_iec))) >= 1:
         #IEC REG
         adchsSym_IEC1 = adchsComponent.createStringSymbol("ADCHS_IEC1_REG", None)
         adchsSym_IEC1.setDefaultValue("IEC"+str(enblRegIndex+1))
@@ -793,7 +793,7 @@ def instantiateComponent(adchsComponent):
         adchsSym_IFS1_INDEX.setVisible(False)
         adchsSym_IFS1_INDEX.setDefaultValue(32 + (num_intrpt_in_first_iec))
 
-    if ((ADC_Max_Signals - (num_intrpt_in_first_iec)) % 32) != 0 :
+    if ((ADC_Max_Signals - (num_intrpt_in_first_iec + 32))) >= 1 :
         #IEC REG
         adchsSym_IEC2 = adchsComponent.createStringSymbol("ADCHS_IEC2_REG", None)
         adchsSym_IEC2.setDefaultValue("IEC"+str(enblRegIndex+2))

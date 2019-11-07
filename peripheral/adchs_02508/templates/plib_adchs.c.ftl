@@ -55,7 +55,6 @@
     <#lt>ADCHS_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_CallbackObj[${ADCHS_NUM_SIGNALS - 1}];
 </#if>
 
-
 void ${ADCHS_INSTANCE_NAME}_Initialize()
 {
     ADCCON1bits.ON = 0;
@@ -64,14 +63,20 @@ void ${ADCHS_INSTANCE_NAME}_Initialize()
     <#assign ADCHS_CH_ENABLE = "ADCHS_"+ i + "_ENABLE">
     <#assign ADCHS_TIME = "ADCHS_ADCTIME" + i>
     <#if .vars[ADCHS_CH_ENABLE] == true>
+    <#if (__PROCESSOR?contains("PIC32MZ") && __PROCESSOR?contains("W"))>
+    <#else>
     ADC${i}CFG = DEVADC${i};
+    </#if>
     ADC${i}TIME = 0x${.vars[ADCHS_TIME]};
 
     </#if>
 </#list>
 
 <#if ADCHS_7_ENABLE == true>
+    <#if (__PROCESSOR?contains("PIC32MZ") && __PROCESSOR?contains("W"))>
+    <#else>
     ADC7CFG = DEVADC7;
+    </#if>
 </#if>
 
     ADCCON1 = 0x${ADCHS_ADCCON1};
@@ -97,12 +102,12 @@ void ${ADCHS_INSTANCE_NAME}_Initialize()
 
     /* Input scan */
     ADCCSS1 = 0x${ADCHS_ADCCSS1};
-    ADCCSS2 = 0x${ADCHS_ADCCSS2};
+    <#if ADCHS_NUM_SIGNALS gt 31>ADCCSS2 = 0x${ADCHS_ADCCSS2}; </#if>
 
 <#if ADCHS_INTERRUPT == true>
     /* Result interrupt enable */
     ADCGIRQEN1 = 0x${ADCHS_ADCGIRQEN1};
-    ADCGIRQEN2 = 0x${ADCHS_ADCGIRQEN2};
+    <#if ADCHS_NUM_SIGNALS gt 31>ADCGIRQEN2 = 0x${ADCHS_ADCGIRQEN2};</#if>
 
     /* Interrupt Enable */
     <#if ADCHS_IEC0_REG??>
@@ -158,10 +163,12 @@ void ${ADCHS_INSTANCE_NAME}_ChannelResultInterruptEnable (ADCHS_CHANNEL_NUM chan
     {
         ADCGIRQEN1 |= 0x01 << channel;
     }
+    <#if ADCHS_NUM_SIGNALS gt 31>
     else
     {
         ADCGIRQEN2 |= 0x01 << (channel - 32);
     }
+    </#if>
 }
 
 void ${ADCHS_INSTANCE_NAME}_ChannelResultInterruptDisable (ADCHS_CHANNEL_NUM channel)
@@ -170,22 +177,28 @@ void ${ADCHS_INSTANCE_NAME}_ChannelResultInterruptDisable (ADCHS_CHANNEL_NUM cha
     {
         ADCGIRQEN1 &= ~(0x01 << channel);
     }
+    <#if ADCHS_NUM_SIGNALS gt 31>
     else
     {
         ADCGIRQEN2 &= ~(0x01 << (channel - 32));
     }
+    </#if>
 }
 
+<#if (__PROCESSOR?contains("PIC32MZ") && __PROCESSOR?contains("W"))>
+<#else>
 void ${ADCHS_INSTANCE_NAME}_ChannelEarlyInterruptEnable (ADCHS_CHANNEL_NUM channel)
 {
     if (channel < ADCHS_CHANNEL_32)
     {
         ADCEIEN1 |= (0x01 << channel);
     }
+    <#if ADCHS_NUM_SIGNALS gt 31>
     else
     {
         ADCEIEN2 |= (0x01 << (channel - 32));
     }
+    </#if>
 }
 
 void ${ADCHS_INSTANCE_NAME}_ChannelEarlyInterruptDisable (ADCHS_CHANNEL_NUM channel)
@@ -194,11 +207,14 @@ void ${ADCHS_INSTANCE_NAME}_ChannelEarlyInterruptDisable (ADCHS_CHANNEL_NUM chan
     {
         ADCEIEN1 &= ~(0x01 << channel);
     }
+    <#if ADCHS_NUM_SIGNALS gt 31>
     else
     {
         ADCEIEN2 &= ~(0x01 << (channel - 32));
     }
+    </#if>
 }
+</#if>
 
 void ADCHS_GlobalEdgeConversionStart(void)
 {
@@ -220,27 +236,29 @@ void ADCHS_ChannelConversionStart(ADCHS_CHANNEL_NUM channel)
 /*Check if conversion result is available */
 bool ${ADCHS_INSTANCE_NAME}_ChannelResultIsReady(ADCHS_CHANNEL_NUM channel)
 {
-    bool status;
+    bool status = false;
     if (channel < ADCHS_CHANNEL_32)
     {
         status = (ADCDSTAT1 >> channel) & 0x01;
     }
+    <#if ADCHS_NUM_SIGNALS gt 31>
     else
     {
         status = (ADCDSTAT2 >> (channel - 32)) & 0x01;
     }
+    </#if>
     return status;
 }
 
 /* Read the conversion result */
 uint16_t ${ADCHS_INSTANCE_NAME}_ChannelResultGet(ADCHS_CHANNEL_NUM channel)
 {
-<#if __PROCESSOR?contains("PIC32MZ")>
+<#if (__PROCESSOR?contains("PIC32MK")) || (__PROCESSOR?contains("PIC32MZ") && __PROCESSOR?contains("W"))>
+    return (uint16_t) (*((&ADCDATA0) + (channel << 2)));
+<#elseif __PROCESSOR?contains("PIC32MZ")>
     return (*((&ADCDATA0) + channel));
 </#if>
-<#if __PROCESSOR?contains("PIC32MK")>
-    return (uint16_t) (*((&ADCDATA0) + (channel << 2)));
-</#if>
+
 }
 
 <#if ADCHS_INTERRUPT == true>
