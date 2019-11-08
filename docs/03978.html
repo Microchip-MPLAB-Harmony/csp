@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Hardware Setup</title>
+<title>Running The Application</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="03969.html" target="topic">MCAN Applications</a> &gt; <a href="03971.html" target="topic">mcan_normal_operation_blocking</a> &gt; <a href="03978.html" target="topic">Hardware Setup</a></div>
+<a href="05106.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="03967.html" target="topic">MCAN Applications</a> &gt; <a href="03969.html" target="topic">mcan_normal_operation_blocking</a> &gt; <a href="03978.html" target="topic">Running The Application</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05106.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03979.html" target="topic">Previous</a> | <a href="03971.html" target="topic">Up</a> | <a href="03980.html" target="topic">Next</a></div>
+<a href="03976.html" target="topic">Previous</a> | <a href="03969.html" target="topic">Up</a> | <a href="03970.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MCAN mcan_normal_operation_blocking Hardware Setup Topic Title: Hardware Setup)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MCAN mcan_normal_operation_blocking Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Hardware Setup</div>
+Running The Application</div>
 </div>
 </div>
 
@@ -48,197 +48,129 @@ Hardware Setup</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
-
+<p class="Element10">
+ &nbsp;</p>
+<p class="Element10">
+<strong><u>MCU Devices</u></strong>&nbsp;</p>
 <ol class="Element630">
-<li value="1" class="Element600"><strong>Project sam_e70_xult.X</strong>
+<li value="1" class="Element600">Open the Terminal application (Ex.:Tera term) on the computer for each board</li>
+<li value="2" class="Element600">Connect to the DEBUG UART Virtual COM port and configure the serial settings for each board as follows:
 <ul class="Element631">
-<li class="Element601"><strong>Hardware Used</strong>
-<ul class="Element632">
-<li class="Element602"><a href="#" onclick="openExternalLink('http://www.microchip.com/DevelopmentTools/ProductDetails/PartNO/DM320113');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM E70 Xplained Ultra Evaluation Kit</a><strong> </strong>- 2 boards</li>
+<li class="Element601">Baud : 115200</li>
+<li class="Element601">Data : 8 Bits</li>
+<li class="Element601">Parity : None</li>
+<li class="Element601">Stop : 1 Bit</li>
+<li class="Element601">Flow Control : None</li>
 </ul></li>
-<li class="Element601"><strong>Hardware Setup</strong>
-<ul class="Element632">
-<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
-<li class="Element602">Connect SAM E70 Xplained Ultra board to another SAM E70 Xplained Ultra board as per the pin connections shown below</li>
-</ul></li>
-</ul></li>
+<li value="3" class="Element600">Build and Program the application on both boards using the MPLAB X IDE.</li>
+<li value="4" class="Element600">Execute the steps and observe the output as described in the following table</li>
 </ol><div class="Element63">
 <div class="TableDiv">
 <table cellspacing="0" class="Table1">
 <tr>
-<td class="Element65" valign="top" width="50%">
+<td class="Element65" valign="top" width="4%">
 <div class="Element66">
-SAME70 XULT - 1&nbsp;</div></td><td class="Element65" valign="top" width="50%">
+Project Name&nbsp;</div></td><td class="Element65" valign="top" width="96%">
 <div class="Element66">
-SAME70 XULT - 2&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="50%">
+Output&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
 <div class="Element68">
-CAN_H&nbsp;</div></td><td class="Element67" valign="top" width="50%">
+sam_e70_xult.X&nbsp;</div></td><td class="Element67" valign="top" width="96%">
 <div class="Element68">
-CAN_H&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="50%">
+</p>
+<ul class="Element630">
+<li class="Element600">Press '2' to receive message from CAN Bus on terminal window of SAM E70 XULT board number 2.</li>
+<li class="Element600">Press '1' to transmit message to CAN Bus on terminal window of SAM E70 XULT board number 1.</li>
+<li class="Element600">Transmitting Message:Success will be displayed in the terminal window of SAM E70 XULT board number 1. CAN message will be displayed in the terminal window of SAM E70 XULT board number 2.</li>
+</ul><p class="Element68">
+&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
 <div class="Element68">
-GND&nbsp;</div></td><td class="Element67" valign="top" width="50%">
+sam_v71_xult.X&nbsp;</div></td><td class="Element67" valign="top" width="96%">
 <div class="Element68">
-GND&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="50%">
+</p>
+<ul class="Element630">
+<li class="Element600">Press '2' to receive message from CAN Bus on terminal window of SAM V71 XULT board number 2.</li>
+<li class="Element600">Press '1' to transmit message to CAN Bus on terminal window of SAM V71 XULT board number 1.</li>
+<li class="Element600">Transmitting Message:Success will be displayed in the terminal window of SAM V71 XULT board number 1. CAN message will be displayed in the terminal window of SAM V71 XULT board number 2.</li>
+</ul><p class="Element68">
+&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
 <div class="Element68">
-CAN_L&nbsp;</div></td><td class="Element67" valign="top" width="50%">
+sam_rh71_ek.X&nbsp;</div></td><td class="Element67" valign="top" width="96%">
 <div class="Element68">
-CAN_L&nbsp;</div></td></tr></table></div></div>
+</p>
+<ul class="Element630">
+<li class="Element600">Press '2' to receive message from CAN Bus on terminal window of SAM RH71 EK board number 2.</li>
+<li class="Element600">Press '1' to transmit message to CAN Bus on terminal window of SAM RH71 EK board number 1.</li>
+<li class="Element600">Transmitting Message:Success will be displayed in the terminal window of SAM RH71 EK board number 1. CAN message will be displayed in the terminal window of SAM RH71 EK board number 2.</li>
+</ul><p class="Element68">
+&nbsp;</div></td></tr></table></div></div>
+
+<ol class="Element630">
+<li value="5" class="Element600">Following will be terminal session’s output.</li>
+</ol><p class="Element10">
+<img src="mcan_normal_operation_blocking_output.png" border="0" alt="" title="">&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<strong><u>MPU Devices</u></strong></p>
+<ol class="Element630">
+<li value="1" class="Element600">Open the Terminal application (Ex.:Tera term) on the computer</li>
+<li value="2" class="Element600">Connect to the DEBUG UART Virtual COM port and configure the serial settings as follows:
+<ul class="Element631">
+<li class="Element601">Baud : 115200</li>
+<li class="Element601">Data : 8 Bits</li>
+<li class="Element601">Parity : None</li>
+<li class="Element601">Stop : 1 Bit</li>
+<li class="Element601">Flow Control : None</li>
+</ul></li>
+<li value="3" class="Element600">Build the IAR or MPLAB X project using IAR Embedded Workbench or MPLAB X IDE respectively</li>
+<li value="4" class="Element600">Use the output binary file (harmony.bin) to setup the board as detailed in <a href="03976.html" target="topic">hardware setup</a></li>
+<li value="5" class="Element600">Execute the steps and observe the output as described in the following table</li>
+</ol><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="15%">
+<div class="Element66">
+Project Name&nbsp;</div></td><td class="Element65" valign="top" width="85%">
+<div class="Element66">
+Output&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="15%">
+<div class="Element68">
+sam_a5d2_xult.IAR OR sam_a5d2_xult_xc32.X&nbsp;</div></td><td class="Element67" valign="top" width="85%">
+<div class="Element68">
+</p>
+<ul class="Element630">
+<li class="Element600">Send CAN messages to the SAMA5D2-XULT board from the CAN analyzer software</li>
+<li class="Element600">CAN message will be displayed in the terminal window</li>
+<li class="Element600">RGB LED will toggle in green color for every message received</li>
+<li class="Element600">Received message will be echoed back to the CAN analyzer software and terminal window.</li>
+</ul><p class="Element68">
+&nbsp;</div></td></tr></table></div></div>
 <p class="Element10">
 &nbsp;</p>
 
 <ol class="Element630">
-<li value="2" class="Element600"><strong>Project sam_v71_xult.X</strong>
+<li value="6" class="Element600">Open the CAN Analyzer Software and perform following steps
 <ul class="Element631">
-<li class="Element601"><strong>Hardware Used</strong>
-<ul class="Element632">
-<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/atsamv71-xult');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM V71 Xplained Ultra Evaluation Kit</a><strong> </strong>- 2 boards</li>
+<li class="Element601">Configure CAN Analyzer Software as per Hardware Setup mention in below screenshot</li>
+<li class="Element601">Send CAN message from CAN Analyzer Software.</li>
 </ul></li>
-<li class="Element601"><strong>Hardware Setup</strong>
-<ul class="Element632">
-<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
-<li class="Element602">Connect SAM V71 Xplained Ultra board to another SAM V71 Xplained Ultra board as per the pin connections shown below</li>
-</ul></li>
-</ul></li>
-</ol><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element65" valign="top" width="50%">
-<div class="Element66">
-SAMV71 XULT - 1&nbsp;</div></td><td class="Element65" valign="top" width="50%">
-<div class="Element66">
-SAMV71 XULT - 2&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="50%">
-<div class="Element68">
-CAN_H&nbsp;</div></td><td class="Element67" valign="top" width="50%">
-<div class="Element68">
-CAN_H&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="50%">
-<div class="Element68">
-CAN_L&nbsp;</div></td><td class="Element67" valign="top" width="50%">
-<div class="Element68">
-CAN_L&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="50%">
-<div class="Element68">
-GND, EXT1 PIN19&nbsp;</div></td><td class="Element67" valign="top" width="50%">
-<div class="Element68">
-GND, EXT1 PIN19&nbsp;</div></td></tr></table></div></div>
-<p class="Element10">
-&nbsp;</p>
-
+</ol><p class="Element10">
+<img src="CAN_Analyzer.png" border="0" alt="" title=""></p>
 <ol class="Element630">
-<li value="3" class="Element600"><strong>Project sam_rh71_ek.X</strong>
-<ul class="Element631">
-<li class="Element601"><strong>Hardware Used</strong>
-<ul class="Element632">
-<li class="Element602">SAM RH71 Evaluation Kit - 2 boards</li>
-</ul></li>
-<li class="Element601"><strong>Hardware Setup</strong>
-<ul class="Element632">
-<li class="Element602">Connect the Debug USB port on the board to the computer using a mini USB cable for each board</li>
-<li class="Element602">Connect the debugger probe to J33 for each board</li>
-<li class="Element602">Connect SAM RH71 Evaluation board to another SAM RH71 Evaluation board as per the pin connections shown below</li>
-</ul></li>
-</ul></li>
-</ol><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element65" valign="top" width="50%">
-<div class="Element66">
-SAMRH71 EK - 1&nbsp;</div></td><td class="Element65" valign="top" width="50%">
-<div class="Element66">
-SAMRH71 EK - 2&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="50%">
-<div class="Element68">
-CANH0, J13&nbsp;</div></td><td class="Element67" valign="top" width="50%">
-<div class="Element68">
-CANH0, J13&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="50%">
-<div class="Element68">
-CANL0, J13&nbsp;</div></td><td class="Element67" valign="top" width="50%">
-<div class="Element68">
-CANL0, J13&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="50%">
-<div class="Element68">
-GND, J5&nbsp;</div></td><td class="Element67" valign="top" width="50%">
-<div class="Element68">
-GND, J5&nbsp;</div></td></tr></table></div></div>
-<p class="Element10">
-&nbsp;</p>
-
-<ol class="Element630">
-<li value="4" class="Element600"><strong>Project sam_a5d2_xult.IAR OR sam_a5d2_xult_xc32.X</strong>
-<ul class="Element631">
-<li class="Element601"><strong>Hardware Used</strong>
-<ul class="Element632">
-<li class="Element602"><a href="#" onclick="openExternalLink('http://www.microchip.com/DevelopmentTools/ProductDetails/ATSAMA5D2C-XULT');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM A5D2 Xplained Ultra board</a></li>
-<li class="Element602"><a href="#" onclick="openExternalLink('https://www.mikroe.com/ata6563-click');"><img src="indicator_external_link.gif" border="0" alt="" title="">ATA6563 click Board</a></li>
-<li class="Element602"><a href="#" onclick="openExternalLink('http://www.microchip.com/Developmenttools/ProductDetails/APGDT002');"><img src="indicator_external_link.gif" border="0" alt="" title="">Microchip Can Bus Analyzer</a></li>
-<li class="Element602">SD Card with FAT32 file system</li>
-</ul></li>
-<li class="Element601"><strong>Hardware Setup</strong>
-<ul class="Element632">
-<li class="Element602">Setup the SD card
-<ul class="Element633">
-<li class="Element603">Download harmony MPU bootstrap loader from this <a href="#" onclick="openExternalLink('http://github.com/Microchip-MPLAB-Harmony/at91bootstrap/blob/master/boot.bin');"><img src="indicator_external_link.gif" border="0" alt="" title="">location</a></li>
-<li class="Element603">Copy the downloaded boot loader binary( boot.bin) and generated application binary (harmony.bin)into the SD card</li>
-<li class="Element603">Insert the SD card into the SDMMC1 slot on the board</li>
-</ul></li>
-<li class="Element602">Install Microchip CAN Bus Analyzer software on PC</li>
-<li class="Element602">Connect Microchip CAN Bus Analyzer to ATA6563 click board using female to female DB9 serial cable</li>
-<li class="Element602">Connect ATA6563 click board to the SAM A5D2 XULT as per the <strong>Pin connections</strong> shown below</li>
-<li class="Element602">Short (close) jumper JP2 (DEBUG_DIS) to disable external debug communication interface (J1)</li>
-<li class="Element602">Connect Microchip CAN Bus Analyzer to PC using USB Male-A to Male Mini-B cable</li>
-<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
-<li class="Element602"><strong>Pin connections</strong></li>
-</ul></li>
-</ul></li>
-</ol><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element65" valign="top" width="67%">
-<div class="Element66">
-SAMA5D2 XULT&nbsp;</div></td><td class="Element65" valign="top" width="33%">
-<div class="Element66">
-ATA6563 click board&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="67%">
-<div class="Element68">
-CANTX0 (PIN8), J9 Connector&nbsp;</div></td><td class="Element67" valign="top" width="33%">
-<div class="Element68">
-RX (PIN 14)&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="67%">
-<div class="Element68">
-CANRX0 (PIN7), J9 Connector&nbsp;</div></td><td class="Element67" valign="top" width="33%">
-<div class="Element68">
-TX (PIN 13)&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="67%">
-<div class="Element68">
-3V3 (PIN20), EXT1 Connector&nbsp;</div></td><td class="Element67" valign="top" width="33%">
-<div class="Element68">
-3V3 (PIN 7)&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="67%">
-<div class="Element68">
-VDD_5V (PIN3), J24 Connector&nbsp;</div></td><td class="Element67" valign="top" width="33%">
-<div class="Element68">
-5V (PIN 10)&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="67%">
-<div class="Element68">
-GND (PIN19), EXT1 Connector&nbsp;</div></td><td class="Element67" valign="top" width="33%">
-<div class="Element68">
-GND (PIN 9)&nbsp;</div></td></tr></table></div></div>
-</div>
+<li value="7" class="Element600">Following will be terminal session’s output.</li>
+</ol><p class="Element10">
+<img src="mcan_normal_operation_blocking_sama5d2.png" border="0" alt="" title=""></p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="03969.html" target="topic">MCAN Applications</a> &gt; <a href="03971.html" target="topic">mcan_normal_operation_blocking</a> &gt; <a href="03978.html" target="topic">Hardware Setup</a></div>
+<a href="05106.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="03967.html" target="topic">MCAN Applications</a> &gt; <a href="03969.html" target="topic">mcan_normal_operation_blocking</a> &gt; <a href="03978.html" target="topic">Running The Application</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -246,13 +178,13 @@ GND (PIN 9)&nbsp;</div></td></tr></table></div></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05106.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03979.html" target="topic">Previous</a> | <a href="03971.html" target="topic">Up</a> | <a href="03980.html" target="topic">Next</a></div>
+<a href="03976.html" target="topic">Previous</a> | <a href="03969.html" target="topic">Up</a> | <a href="03970.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MCAN mcan_normal_operation_blocking Hardware Setup Topic Title: Hardware Setup)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MCAN mcan_normal_operation_blocking Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

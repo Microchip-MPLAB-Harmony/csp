@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Running The Application</title>
+<title>EEPROM_ERROR Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="02005.html" target="topic">EEPROM Applications</a> &gt; <a href="02004.html" target="topic">eeprom_read_write</a> &gt; <a href="02009.html" target="topic">Running The Application</a></div>
+<a href="05106.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04698.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05105.html" target="topic">Peripheral Libraries</a> &gt; <a href="01997.html" target="topic">EEPROM Peripheral Library Help</a> &gt; <a href="01998.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="02009.html" target="topic">EEPROM_ERROR Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05106.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02007.html" target="topic">Previous</a> | <a href="02004.html" target="topic">Up</a> | <a href="02030.html" target="topic">Next</a></div>
+<a href="02014.html" target="topic">Previous</a> | <a href="01998.html" target="topic">Up</a> | <a href="02021.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: EEPROM eeprom_read_write Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: EEPROM_ERROR Topic Title: EEPROM_ERROR Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Running The Application</div>
+EEPROM_ERROR Enumeration</div>
 </div>
 </div>
 
@@ -46,35 +46,42 @@ Running The Application</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="4465736372697074696F6E"></a><div class="Element11">
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">EEPROM_ERROR_NONE</span></strong> = 0x0,
+  <strong><span style="color: #000000">EEPROM_ERROR_STATUS</span></strong> = _EECON_ERR_MASK
+} EEPROM_ERROR;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
+<div class="Element11">
 <div class="Element10">
-
-<ol class="Element630">
-<li value="1" class="Element600">Connect a micro USB cable to the DEBUG port.</li>
-<li value="2" class="Element600">Build and Program the application using the MPLAB X IDE.</li>
-<li value="3" class="Element600">The LED is turned ON when the EEPROM Write, Read, Erase and Bulk Erase is completed.</li>
-</ol><p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-The following table provides the LED name: </p><div class="Element63">
+<div class="Element272">
 <div class="TableDiv">
-<table cellspacing="0" class="Table1">
+<table cellspacing="0" class="Table3">
 <tr>
-<td class="Element65" valign="top" width="78%">
-<div class="Element66">
-Kit Name&nbsp;</div></td><td class="Element65" valign="top" width="22%">
-<div class="Element66">
-LED Name&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="78%">
-<div class="Element68">
-PIC32MK GP Development Kit&nbsp;</div></td><td class="Element67" valign="top" width="22%">
-<div class="Element68">
-LED 1&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="78%">
-<div class="Element68">
-PIC32MK GPL Curiosity Pro Board&nbsp;</div></td><td class="Element67" valign="top" width="22%">
-<div class="Element68">
-LED 1&nbsp;</div></td></tr></table></div></div>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+EEPROM_ERROR_NONE = 0x0&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+No error&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+EEPROM_ERROR_STATUS = _EECON_ERR_MASK&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+</p>
+<ul class="Element630">
+<li class="Element600">11 = A BOR event has occurred</li>
+<li class="Element600">10 = An attempted execution of a read or write operation with an invalid write OR command with a misaligned address (EEADDR&lt;1:0&gt; != 00)</li>
+<li class="Element600">01 = A Bulk or Page Erase or a Word Program verify error has occurred</li>
+<li class="Element600">00 = No error condition </li>
+</ul><p class="Element267">
+&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -82,7 +89,7 @@ LED 1&nbsp;</div></td></tr></table></div></div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="02005.html" target="topic">EEPROM Applications</a> &gt; <a href="02004.html" target="topic">eeprom_read_write</a> &gt; <a href="02009.html" target="topic">Running The Application</a></div>
+<a href="05106.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04698.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05105.html" target="topic">Peripheral Libraries</a> &gt; <a href="01997.html" target="topic">EEPROM Peripheral Library Help</a> &gt; <a href="01998.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="02009.html" target="topic">EEPROM_ERROR Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -90,13 +97,13 @@ LED 1&nbsp;</div></td></tr></table></div></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05106.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02007.html" target="topic">Previous</a> | <a href="02004.html" target="topic">Up</a> | <a href="02030.html" target="topic">Next</a></div>
+<a href="02014.html" target="topic">Previous</a> | <a href="01998.html" target="topic">Up</a> | <a href="02021.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: EEPROM eeprom_read_write Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: EEPROM_ERROR Topic Title: EEPROM_ERROR Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

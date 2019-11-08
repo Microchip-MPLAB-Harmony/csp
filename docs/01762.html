@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>DIVAS_DivmodSigned Function</title>
+<title>DIVAS_DivSigned Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="01758.html" target="topic">DIVAS Peripheral Library Help</a> &gt; <a href="01759.html" target="topic">Library Interface</a> &gt; b) Transaction Functions &gt; <a href="01762.html" target="topic">DIVAS_DivmodSigned Function</a></div>
+<a href="05106.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04698.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05105.html" target="topic">Peripheral Libraries</a> &gt; <a href="01756.html" target="topic">DIVAS Peripheral Library Help</a> &gt; <a href="01757.html" target="topic">Library Interface</a> &gt; b) Transaction Functions &gt; <a href="01762.html" target="topic">DIVAS_DivSigned Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05106.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01766.html" target="topic">Previous</a> | <a href="01759.html" target="topic">Up</a> | <a href="01763.html" target="topic">Next</a></div>
+<a href="01761.html" target="topic">Previous</a> | <a href="01757.html" target="topic">Up</a> | <a href="01763.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DIVAS_DivmodSigned@int32_t@int32_t Topic Title: DIVAS_DivmodSigned Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DIVAS_DivSigned@int32_t@int32_t Topic Title: DIVAS_DivSigned Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-DIVAS_DivmodSigned Function</div>
+DIVAS_DivSigned Function</div>
 </div>
 </div>
 
@@ -49,11 +49,11 @@ DIVAS_DivmodSigned Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function uses the DIVAS peripheral to perform a signed 32-bit division. The function takes a signed divisor and dividend as input, and returns quotient and remainder as 64-bit number</p></div>
+This function uses the DIVAS peripheral to perform a signed 32-bit division. The function takes a signed divisor and dividend and returns the quotient</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100">uint64_t <strong><span style="color: #000000">DIVAS_DivmodSigned</span></strong>(
+<div class="Element101"><div class="Element100"><pre class="Element100">int32_t <strong><span style="color: #000000">DIVAS_DivSigned</span></strong>(
     int32_t <strong><span style="color: #000000">numerator</span></strong>, 
     int32_t <strong><span style="color: #000000">denominator</span></strong>
 );</pre></div></div>
@@ -62,7 +62,7 @@ Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The peripheral should have been initialized by calling the <a href="01766.html" target="topic">DIVAS_Initialize</a>() function once.</p></div>
+The peripheral should have been initialized by calling the <a href="01764.html" target="topic">DIVAS_Initialize</a>() function once.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -94,7 +94,7 @@ Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Returns quotient and remainder as 64-bit number</p></div>
+Returns quotient</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
@@ -109,13 +109,12 @@ Example</div>
 <div class="Element10">
 <div class="Element13"><div class="Element12"><pre class="Element12">    int32_t dividend;
     int32_t divisor;
-    uint64_t divmod;
+    int32_t quotient;
 
     dividend = 10000;
     divisor = -2000;
 
-    divmod == DIVAS_DivmodSigned(dividend, divisor)
-
+    quotient == DIVAS_DivSigned(numerator, denominator)
 </pre></div></div>
 </div>
 </div>
@@ -124,7 +123,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="01758.html" target="topic">DIVAS Peripheral Library Help</a> &gt; <a href="01759.html" target="topic">Library Interface</a> &gt; b) Transaction Functions &gt; <a href="01762.html" target="topic">DIVAS_DivmodSigned Function</a></div>
+<a href="05106.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04698.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05105.html" target="topic">Peripheral Libraries</a> &gt; <a href="01756.html" target="topic">DIVAS Peripheral Library Help</a> &gt; <a href="01757.html" target="topic">Library Interface</a> &gt; b) Transaction Functions &gt; <a href="01762.html" target="topic">DIVAS_DivSigned Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -132,13 +131,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05106.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01766.html" target="topic">Previous</a> | <a href="01759.html" target="topic">Up</a> | <a href="01763.html" target="topic">Next</a></div>
+<a href="01761.html" target="topic">Previous</a> | <a href="01757.html" target="topic">Up</a> | <a href="01763.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DIVAS_DivmodSigned@int32_t@int32_t Topic Title: DIVAS_DivmodSigned Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DIVAS_DivSigned@int32_t@int32_t Topic Title: DIVAS_DivSigned Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

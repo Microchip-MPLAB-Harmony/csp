@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>FLEXCOMx_TWI_WriteRead Function</title>
+<title>FLEXCOM_USART_CALLBACK Type</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="02791.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02780.html" target="topic">I2C</a> &gt; <a href="02785.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="03012.html" target="topic">FLEXCOMx_TWI_WriteRead Function</a></div>
+<a href="05106.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04698.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05105.html" target="topic">Peripheral Libraries</a> &gt; <a href="02789.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02800.html" target="topic">USART</a> &gt; <a href="02805.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="03012.html" target="topic">FLEXCOM_USART_CALLBACK Type</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05106.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03011.html" target="topic">Previous</a> | <a href="02785.html" target="topic">Up</a> | <a href="03006.html" target="topic">Next</a></div>
+<a href="03058.html" target="topic">Previous</a> | <a href="02805.html" target="topic">Up</a> | <a href="03013.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: flexcom_11277_twi::FLEXCOMx_TWI_WriteRead@uint16_t@uint8_t *@size_t@uint8_t *@size_t Topic Title: FLEXCOMx_TWI_WriteRead Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: flexcom_11277_usart::FLEXCOM_USART_CALLBACK Topic Title: FLEXCOM_USART_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-FLEXCOMx_TWI_WriteRead Function</div>
+FLEXCOM_USART_CALLBACK Type</div>
 </div>
 </div>
 
@@ -49,23 +49,19 @@ FLEXCOMx_TWI_WriteRead Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function writes data from wdata buffer to the slave of given address and of size(in bytes) equal to wlength. Master then generates a repeated start and do a read operation. Read operation reads data into rdata buffer of size(in bytes) equal to rlength from the slave of given address. Master generates a stop condition after reading the data.</p></div>
+Callback Function Pointer&nbsp;</p>
+<p class="Element10">
+This data type defines the function signature for the FLEXCOM USART peripheral callback function. The FLEXCOM USART peripheral will call back the client's function with this signature when the FLEXCOM USART buffer event has occurred.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">FLEXCOMx_TWI_WriteRead</span></strong>(
-    uint16_t <strong><span style="color: #000000">address</span></strong>, 
-    uint8_t * <strong><span style="color: #000000">wdata</span></strong>, 
-    size_t <strong><span style="color: #000000">wlength</span></strong>, 
-    uint8_t * <strong><span style="color: #000000">rdata</span></strong>, 
-    size_t <strong><span style="color: #000000">rlength</span></strong>
-);</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000">FLEXCOM_USART_CALLBACK</span></strong>)(uintptr_t context);</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="03007.html" target="topic">FLEXCOMx_TWI_Initialize</a> must have been called for the associated FLEXCOM TWI instance.</p></div>
+<a href="03045.html" target="topic">FLEXCOMx_USART_Initialize</a> must have been called for the given FLEXCOM USART peripheral instance and <a href="03056.html" target="topic">FLEXCOMx_USART_WriteCallbackRegister</a> or <a href="03048.html" target="topic">FLEXCOMx_USART_ReadCallbackRegister</a> must have been called to set the function to be called.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -82,29 +78,9 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-address&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-7-bit / 10-bit slave address.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-wdata&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-pointer to write data buffer&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-wlength&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-write data length in bytes.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-rdata&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-pointer to read data buffer.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-rlength&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-read data length in bytes.&nbsp;</div></td></tr></table></div></div>
+Allows the caller to provide a context value (usually a pointer to the callers context for multi-instance clients).&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -112,19 +88,37 @@ Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Request status. True - Request was successful. False - Request has failed.</p></div>
+None.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">    uint8_t myTxData [NUM_BYTES] = {'1', '0', ' ', 'B', 'Y', 'T', 'E', 'S', '!', '!'};
-    uint8_t myRxData [NUM_BYTES] = {0};
+<div class="Element13"><div class="Element12"><pre class="Element12"><i><span style="color: #008000">// Data tracking what each of my instances is doing.</span></i>
+MY_DATA myData[2];
 
-    <strong><span style="color: #000080">if</span></strong>(!FLEXCOMx_TWI_WriteRead( SLAVE_ADDR, &amp;myTxData[0], NUM_BYTES, myRxData, NUM_BYTES ))
+<strong><span style="color: #000080">void</span></strong> MyUsartCallback ( uintptr_t context )
+{
+    MY_DATA *myData = (MY_DATA *)context;
+
+    <strong><span style="color: #000080">if</span></strong>(FLEXCOM_USART_ERROR_NONE != <a href="03044.html" target="topic">FLEXCOMx_USART_ErrorGet</a>())
     {
-        <i><span style="color: #008000">// error handling</span></i>
-    }</pre></div></div>
+        <i><span style="color: #008000">//Handle error case</span></i>
+    }
+    <strong><span style="color: #000080">else</span></strong>
+    {
+        <i><span style="color: #008000">//Transfer completed successfully</span></i>
+    }
+}
+
+<a href="03056.html" target="topic">FLEXCOMx_USART_WriteCallbackRegister</a>(MyUsartCallback, &amp;myData[0]);</pre></div></div>
 </div>
 </div>
 </div>
@@ -132,7 +126,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05108.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04700.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05107.html" target="topic">Peripheral Libraries</a> &gt; <a href="02791.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02780.html" target="topic">I2C</a> &gt; <a href="02785.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="03012.html" target="topic">FLEXCOMx_TWI_WriteRead Function</a></div>
+<a href="05106.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04698.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05105.html" target="topic">Peripheral Libraries</a> &gt; <a href="02789.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02800.html" target="topic">USART</a> &gt; <a href="02805.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="03012.html" target="topic">FLEXCOM_USART_CALLBACK Type</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -140,13 +134,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05108.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05106.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03011.html" target="topic">Previous</a> | <a href="02785.html" target="topic">Up</a> | <a href="03006.html" target="topic">Next</a></div>
+<a href="03058.html" target="topic">Previous</a> | <a href="02805.html" target="topic">Up</a> | <a href="03013.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: flexcom_11277_twi::FLEXCOMx_TWI_WriteRead@uint16_t@uint8_t *@size_t@uint8_t *@size_t Topic Title: FLEXCOMx_TWI_WriteRead Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: flexcom_11277_usart::FLEXCOM_USART_CALLBACK Topic Title: FLEXCOM_USART_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->
