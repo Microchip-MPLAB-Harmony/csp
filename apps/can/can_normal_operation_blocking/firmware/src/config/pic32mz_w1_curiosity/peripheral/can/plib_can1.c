@@ -111,10 +111,10 @@ void CAN1_Initialize(void)
     while(((C1CON & _C1CON_OPMOD_MASK) >> _C1CON_OPMOD_POSITION) != CAN_CONFIGURATION_MODE);
 
     /* Set the Bitrate to 500 Kbps */
-    C1CFG = ((7 << _C1CFG_BRP_POSITION) & _C1CFG_BRP_MASK)
+    C1CFG = ((9 << _C1CFG_BRP_POSITION) & _C1CFG_BRP_MASK)
                             | ((2 << _C1CFG_SJW_POSITION) & _C1CFG_SJW_MASK)
                             | ((2 << _C1CFG_SEG2PH_POSITION) & _C1CFG_SEG2PH_MASK)
-                            | ((6 << _C1CFG_SEG1PH_POSITION) & _C1CFG_SEG1PH_MASK)
+                            | ((4 << _C1CFG_SEG1PH_POSITION) & _C1CFG_SEG1PH_MASK)
                             | ((0 << _C1CFG_PRSEG_POSITION) & _C1CFG_PRSEG_MASK)
                             | _C1CFG_SEG2PHTS_MASK;
 

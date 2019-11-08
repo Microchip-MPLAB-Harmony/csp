@@ -102,14 +102,14 @@ void CLK_Initialize( void )
 
     /* SPLLBSWSEL   = 5   */
     /* SPLLPWDN     = PLL_ON     */
-    /* SPLLPOSTDIV1 = 5 */
+    /* SPLLPOSTDIV1 = 4 */
     /* SPLLFLOCK    = NO_ASSERT    */
     /* SPLLRST      = NO_ASSERT      */
-    /* SPLLFBDIV    = 25  */
+    /* SPLLFBDIV    = 20  */
     /* SPLLREFDIV   = 1   */
     /* SPLLICLK     = POSC     */
     /* SPLL_BYP     = NO_BYPASS     */
-    SPLLCON = 0x419045;
+    SPLLCON = 0x414045;
 
     /* Power down the UPLL */
     UPLLCONbits.UPLLPWDN = 1;

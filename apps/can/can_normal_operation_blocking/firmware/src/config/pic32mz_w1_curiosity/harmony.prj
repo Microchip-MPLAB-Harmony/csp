@@ -43,16 +43,16 @@
           <Name dnOrder="1">plib_can1.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_w1_curiosity/peripheral/can/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/can/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">E8F4FD69BA8B60BF43C54B595D694EA3</GeneratedChecksum>
-          <UserChecksum dnOrder="5">E8F4FD69BA8B60BF43C54B595D694EA3</UserChecksum>
+          <GeneratedChecksum dnOrder="4">320614DB9A6A70115D9BCBDFA1474B02</GeneratedChecksum>
+          <UserChecksum dnOrder="5">320614DB9A6A70115D9BCBDFA1474B02</UserChecksum>
         </File>
         <File dnOrder="5">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_clk.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_w1_curiosity/peripheral/clk/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/clk/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">996357AD2E8B82DC49770D6B520C5912</GeneratedChecksum>
-          <UserChecksum dnOrder="5">996357AD2E8B82DC49770D6B520C5912</UserChecksum>
+          <GeneratedChecksum dnOrder="4">7EC20AA66B057BD55F03719611EA8EFB</GeneratedChecksum>
+          <UserChecksum dnOrder="5">7EC20AA66B057BD55F03719611EA8EFB</UserChecksum>
         </File>
         <File dnOrder="6">
           <Type dnOrder="0">SOURCE</Type>
