@@ -93,24 +93,24 @@ void CLK_Initialize( void )
     SYSKEY = 0xAA996655;
     SYSKEY = 0x556699AA;
 
-
     if (int_flag)
     {
         __builtin_mtc0(12, 0,(__builtin_mfc0(12, 0) | 0x0001)); /* enable interrupts */
     }
+
     OSCCONbits.FRCDIV = 0;
-  
+
     /* SPLLBSWSEL   = 5   */
     /* SPLLPWDN     = PLL_ON     */
-    /* SPLLPOSTDIV1 = 5 */
+    /* SPLLPOSTDIV1 = 4 */
     /* SPLLFLOCK    = NO_ASSERT    */
     /* SPLLRST      = NO_ASSERT      */
-    /* SPLLFBDIV    = 25  */
+    /* SPLLFBDIV    = 20  */
     /* SPLLREFDIV   = 1   */
     /* SPLLICLK     = POSC     */
     /* SPLL_BYP     = NO_BYPASS     */
-    SPLLCON = 0x419055;  
-    
+    SPLLCON = 0x419045;
+
     /* Power down the UPLL */
     UPLLCONbits.UPLLPWDN = 1;
 
@@ -119,15 +119,15 @@ void CLK_Initialize( void )
 
     /* Power down the BTPLL */
     BTPLLCONbits.BTPLLPWDN = 1;
-    
+
     /* ETHPLLPOSTDIV2 = 0 */
     /* SPLLPOSTDIV2   = 0 */
     /* BTPLLPOSTDIV2  = 0 */
     CFGCON3 = 0;
-    
+
     /* OSWEN    = SWITCH_COMPLETE    */
     /* SOSCEN   = OFF   */
-    /* UFRCEN   = POSC   */
+    /* UFRCEN   = USBCLK   */
     /* CF       = NO_FAILDET       */
     /* SLPEN    = IDLE    */
     /* CLKLOCK  = UNLOCKED  */
@@ -136,36 +136,41 @@ void CLK_Initialize( void )
     /* DRMEN    = NO_EFFECT    */
     /* FRCDIV   = OSC_FRC_DIV_1   */
     OSCCON = 0x100;
+
     OSCCONSET = _OSCCON_OSWEN_MASK;  /* request oscillator switch to occur */
+
     Nop();
     Nop();
-    while( OSCCONbits.OSWEN )        /* wait for indication of successful clock change before proceeding */
-        ;
 
-    /* Peripheral Bus 1 is by default enabled, set its divisor */
-    /* PBDIV = 1 */
-    PB1DIVbits.PBDIV = 0;
-    /* Peripheral Bus 2 is by default enabled, set its divisor */
-    /* PBDIV = 1 */
-    PB2DIVbits.PBDIV = 0;
-    /* Peripheral Bus 3 is by default enabled, set its divisor */
-    /* PBDIV = 1 */
-    PB3DIVbits.PBDIV = 0;
-    /* Peripheral Bus 4 is by default enabled, set its divisor */
-    /* PBDIV = 1 */
-    PB4DIVbits.PBDIV = 0;
-    /* Peripheral Bus 5 is by default enabled, set its divisor */
-    /* PBDIV = 1 */
-    PB5DIVbits.PBDIV = 0;
-    /* Peripheral Bus 6 is by default enabled, set its divisor */
-    /* PBDIV = 1 */
-    PB6DIVbits.PBDIV = 0;
+    while( OSCCONbits.OSWEN );        /* wait for indication of successful clock change before proceeding */
 
+
+    /* Set up Reference Clock 1 */
+    /* REFO1CON register */
+    /* ROSEL =  FRC */
+    /* DIVSWEN = 1 */
+    /* RODIV = 1 */
+    REFO1CON = 0x10203;
+
+    /* Enable oscillator (ON bit) and Enable Output (OE bit) */
+    REFO1CONSET = 0x00001000 | 0x00008000;
 
   
+
+    /* Peripheral Module Disable Configuration */
+    CFGCON0bits.PMDLOCK = 0;
+
+    PMD1 = 0x25818981;
+    PMD2 = 0x7f0f0f;
+    PMD3 = 0x19031317;
+
+    CFGCON0bits.PMDLOCK = 1;
+
     /* Lock system since done with clock configuration */
     int_flag = (bool)__builtin_disable_interrupts();
+
     SYSKEY = 0x33333333;
+
     if (int_flag) /* if interrupts originally were enabled, re-enable them */
     {
         __builtin_mtc0(12, 0,(__builtin_mfc0(12, 0) | 0x0001));
