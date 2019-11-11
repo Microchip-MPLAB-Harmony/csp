@@ -50,7 +50,15 @@ void ${QSPI_INSTANCE_NAME}_Initialize(void)
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_CTRLA = QSPI_CTRLA_SWRST_Msk;
 
     // Set Mode Register values
-    ${QSPI_INSTANCE_NAME}_REGS->QSPI_CTRLB = QSPI_CTRLB_MODE_${QSPI_SMM};
+    /* MODE = ${QSPI_SMM} */
+    /* LOOPEN = ${QSPI_LOOPEN} */
+    /* WDRBT = 0 */
+    /* SMEMREG = 0 */
+    /* CSMODE = ${QSPI_CSMODE} */
+    /* DATALEN = ${QSPI_DATALEN} */
+    /* DLYCBT = 0 */
+    /* DLYCS = 0 */
+    ${QSPI_INSTANCE_NAME}_REGS->QSPI_CTRLB = QSPI_CTRLB_MODE_${QSPI_SMM} | QSPI_CTRLB_CSMODE_${QSPI_CSMODE} | QSPI_CTRLB_DATALEN(${QSPI_DATALEN});
 
     // Set serial clock register
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_BAUD = (QSPI_BAUD_BAUD(${QSPI_SCBR})) <#if QSPI_CPOL=="HIGH"> | QSPI_BAUD_CPOL_Msk </#if> <#if QSPI_CPHA=="TRAILING"> | QSPI_BAUD_CPHA_Msk </#if>;

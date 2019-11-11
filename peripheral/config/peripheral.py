@@ -42,8 +42,7 @@ peripherals = {
                 "UART_6418"     : ["UART"],
                 "USART_6089"    : ["UART"],
                 "USART_11278"   : ["UART"],
-                "QSPI_U2008"    : ["SQI"],
-                "QSPI_11171"    : ["SQI"],
+                "QSPI_U2008"    : ["SQI","SPI"],
                 "SQI_00206"     : ["SQI"],
                 "TC_U2212"      : ["TMR"],
                 "TC_U2249"      : ["TMR"],
@@ -75,7 +74,8 @@ peripherals = {
                 "TMR1_02141"    : ["TMR"]
 }
 
-if ("PIC32M" in Variables.get("__PROCESSOR")):
+processor = Variables.get("__PROCESSOR")
+if("PIC32M" in processor):
     coreTimerComponent = Module.CreateComponent("core_timer", "CORE TIMER", "/Peripherals/CORE TIMER/", "../peripheral/coretimer/config/coretimer.py")
     coreTimerComponent.addCapability("CORE_TIMER_TMR", "TMR")
     coreTimerComponent.setDisplayType("Peripheral Library")
@@ -83,6 +83,13 @@ if ("PIC32M" in Variables.get("__PROCESSOR")):
 periphNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals")
 modules = periphNode.getChildren()
 
+# Certain members of certain families use the QSPI peripheral only in SPI mode - this makes the capability key/value match for those parts
+if( (("SAMV7" in processor) or ("SAME7" in processor) or ("SAMS7" in processor)) and
+    (("J19" in processor[-4:]) or ("J20" in processor[-4:]) or ("J21" in processor[-4:])) ):
+    peripherals["QSPI_11171"]=["SPI"]
+else:
+    peripherals["QSPI_11171"]=["SPI","SQI"]   # most parts in the family support QSPI mode from the QSPI peripheral
+    
 for module in range (0, len(modules)):
 
     periphName = str(modules[module].getAttribute("name"))

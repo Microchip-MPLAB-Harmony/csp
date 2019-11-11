@@ -66,6 +66,7 @@ Interface definition of QSPI PLIB.
 // Section: Data Types
 // *****************************************************************************
 // *****************************************************************************
+typedef void (*QSPI_CALLBACK)(uintptr_t context);  /* callbacks supported in SPI-only mode */
 
 typedef enum
 {
@@ -91,6 +92,40 @@ typedef enum
     OPTL_4_BIT = QSPI_INSTRFRAME_OPTCODELEN_4BITS,
     OPTL_8_BIT = QSPI_INSTRFRAME_OPTCODELEN_8BITS
 } QSPI_OPTION_LENGTH;
+
+typedef enum
+{
+    QSPI_CLOCK_PHASE_TRAILING_EDGE = 0 << QSPI_BAUD_CPHA_Pos,
+    QSPI_CLOCK_PHASE_LEADING_EDGE = 1 << QSPI_BAUD_CPHA_Pos,
+
+    /* Force the compiler to reserve 32-bit space for each enum value */
+    QSPI_CLOCK_PHASE_INVALID = 0xFFFFFFFF
+} QSPI_CLOCK_PHASE;
+
+typedef enum
+{
+    QSPI_CLOCK_POLARITY_IDLE_LOW = 0 << QSPI_BAUD_CPOL_Pos,
+    QSPI_CLOCK_POLARITY_IDLE_HIGH = 1 << QSPI_BAUD_CPOL_Pos,
+
+    /* Force the compiler to reserve 32-bit space for each enum value */
+    QSPI_CLOCK_POLARITY_INVALID = 0xFFFFFFFF
+} QSPI_CLOCK_POLARITY;
+
+typedef enum
+{
+    QSPI_DATA_BITS_8 = QSPI_CTRLB_DATALEN_8BITS,
+    QSPI_DATA_BITS_9 = QSPI_CTRLB_DATALEN_9BITS,
+    QSPI_DATA_BITS_10 = QSPI_CTRLB_DATALEN_10BITS,
+    QSPI_DATA_BITS_11 = QSPI_CTRLB_DATALEN_11BITS,
+    QSPI_DATA_BITS_12 = QSPI_CTRLB_DATALEN_12BITS,
+    QSPI_DATA_BITS_13 = QSPI_CTRLB_DATALEN_13BITS,
+    QSPI_DATA_BITS_14 = QSPI_CTRLB_DATALEN_14BITS,
+    QSPI_DATA_BITS_15 = QSPI_CTRLB_DATALEN_15BITS,
+    QSPI_DATA_BITS_16 = QSPI_CTRLB_DATALEN_16BITS,
+
+    /* Force the compiler to reserve 32-bit space for each enum value */
+    QSPI_DATA_BITS_INVALID = 0xFFFFFFFF
+} QSPI_DATA_BITS;
 
 typedef struct {
     /* QSPI instruction code */
@@ -125,6 +160,27 @@ typedef struct {
     uint8_t dummy_cycles;
 } qspi_memory_xfer_t;
 
+typedef struct
+{
+    void*                   txBuffer;
+    void*                   rxBuffer;
+    size_t                  txSize;
+	size_t                  rxSize;
+	size_t                  dummySize;
+    size_t                  rxCount;
+    size_t                  txCount;
+    bool                    transferIsBusy;
+    QSPI_CALLBACK      		callback;
+    uintptr_t               context;
+} qspi_spi_obj;
+
+typedef struct
+{
+    uint32_t            clockFrequency;
+    QSPI_CLOCK_PHASE    clockPhase;
+    QSPI_CLOCK_POLARITY clockPolarity;
+    QSPI_DATA_BITS      dataBits;
+} QSPI_TRANSFER_SETUP;
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility

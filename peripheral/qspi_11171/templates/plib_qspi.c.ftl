@@ -44,6 +44,7 @@
 #include "plib_${QSPI_INSTANCE_NAME?lower_case}.h"
 #include "string.h" // memmove
 
+
 void ${QSPI_INSTANCE_NAME}_Initialize(void)
 {
     // Reset and Disable the qspi Module
@@ -53,10 +54,27 @@ void ${QSPI_INSTANCE_NAME}_Initialize(void)
         ;   // spin lock
     }
 
-    // Set Mode Register values
+    /* DLYCS  = 0x0 */
+    /* DLYBCT = 0x0 */
+    <#if (QSPI_NBBITS?has_content)>
+    /* NBBITS = ${QSPI_NBBITS} */
+    <#else>
+    /* NBBITS = 0x0 */
+    </#if>
+    /* CSMODE = 0x0 */
+    /* WDRBT  = 0 */
+    /* LLB    = 0 */
+    /* SMM    = ${QSPI_SMM} */
+    <#if (QSPI_NBBITS?has_content)>
+    ${QSPI_INSTANCE_NAME}_REGS->QSPI_MR = ( QSPI_MR_SMM_${QSPI_SMM} | QSPI_MR_NBBITS(${QSPI_NBBITS}));
+    <#else>
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_MR = ( QSPI_MR_SMM_${QSPI_SMM} );
+    </#if>
 
-    // Set serial clock register
+    /* CPOL = <#if QSPI_CPOL=="HIGH">1 <#else>0 </#if>*/
+    /* CPHA = <#if QSPI_CPHA=="TRAILING">1 <#else>0 </#if>*/
+    /* SCBR = ${QSPI_SCBR} */
+    /* DLYBS = 0 */
     ${QSPI_INSTANCE_NAME}_REGS->QSPI_SCR = (QSPI_SCR_SCBR(${QSPI_SCBR})) <#if QSPI_CPOL=="HIGH"> | QSPI_SCR_CPOL_Msk </#if> <#if QSPI_CPHA=="TRAILING"> | QSPI_SCR_CPHA_Msk </#if>;
 
     // Enable the qspi Module
