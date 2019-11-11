@@ -579,6 +579,11 @@ def instantiateComponent(canComponent):
     canFifoConfMenu.setLabel("FIFO Configuration")
     canFifoConfMenu.setDependencies(adjustFIFOs, ["NUMBER_OF_FIFO"])
 
+    canFifoOffset = canComponent.createStringSymbol("FIFO_OFFSET", None)
+    canFifoOffset.setLabel("FIFO Register offset")
+    canFifoOffset.setVisible(False)
+    canFifoOffset.setDefaultValue("0xc")
+
     # Number of FIFOs
     canFifoNumber = canComponent.createIntegerSymbol("NUMBER_OF_FIFO", canFifoConfMenu)
     canFifoNumber.setLabel("Number of FIFOs")
@@ -588,11 +593,18 @@ def instantiateComponent(canComponent):
     canRegs_Values = []
     canRegs_Values = canRegs_Node.getChildren()
     maxFifoNum = 0
+    fifoOffsetNum = 0
+    fifoOffset = []
     canFifoControlReg = "CFD" + canInstanceNum.getValue() + "FIFOCON"
     for index in range(len(canRegs_Values)):
         if canFifoControlReg in canRegs_Values[index].getAttribute("name"):
             maxFifoNum += 1
+            if fifoOffsetNum < 2:
+                fifoOffset.append(canRegs_Values[index].getAttribute("offset"))
+                fifoOffsetNum += 1
     canFifoNumber.setMax(maxFifoNum)
+    if fifoOffsetNum == 2:
+        canFifoOffset.setValue(str(hex((int(fifoOffset[1], 16) - int(fifoOffset[0], 16)) / 4)))
 
     # Create all FIFOs in a disabled state
     for fifo in range (canFifoNumber.getMax()):
@@ -603,17 +615,44 @@ def instantiateComponent(canComponent):
     canFilterMenu.setLabel("Filter Configuration")
     canFilterMenu.setDependencies(adjustFilters, ["NUMBER_OF_FILTER"])
 
+    canFilterOffset = canComponent.createStringSymbol("FILTER_OFFSET", None)
+    canFilterOffset.setLabel("Filter Register offset")
+    canFilterOffset.setVisible(False)
+    canFilterOffset.setDefaultValue("0x4")
+    filterOffsetNum = 0
+    filterOffset = []
+    canFilterConReg = "CFD" + canInstanceNum.getValue() + "FLTCON"
+    for index in range(len(canRegs_Values)):
+        if canFilterConReg in canRegs_Values[index].getAttribute("name"):
+            if filterOffsetNum < 2:
+                filterOffset.append(canRegs_Values[index].getAttribute("offset"))
+                filterOffsetNum += 1
+    if filterOffsetNum == 2:
+        canFilterOffset.setValue(str(hex((int(filterOffset[1], 16) - int(filterOffset[0], 16)) / 4)))
+
+    canFilterObjAndMaskOffset = canComponent.createStringSymbol("FILTER_OBJ_MASK_OFFSET", None)
+    canFilterObjAndMaskOffset.setLabel("Filter Object and Mask Register offset")
+    canFilterObjAndMaskOffset.setVisible(False)
+    canFilterObjAndMaskOffset.setDefaultValue("0x8")
+
     # Number of Filters
     canFilterNumber = canComponent.createIntegerSymbol("NUMBER_OF_FILTER", canFilterMenu)
     canFilterNumber.setLabel("Number of Filters")
     canFilterNumber.setDefaultValue(1)
     canFilterNumber.setMin(1)
     maxFilterNum = 0
+    filterObjOffsetNum = 0
+    filterObjOffset = []
     canFilterReg = "CFD" + canInstanceNum.getValue() + "FLTOBJ"
     for index in range(len(canRegs_Values)):
         if canFilterReg in canRegs_Values[index].getAttribute("name"):
             maxFilterNum += 1
+            if filterObjOffsetNum < 2:
+                filterObjOffset.append(canRegs_Values[index].getAttribute("offset"))
+                filterObjOffsetNum += 1
     canFilterNumber.setMax(maxFilterNum)
+    if filterObjOffsetNum == 2:
+        canFilterObjAndMaskOffset.setValue(str(hex((int(filterObjOffset[1], 16) - int(filterObjOffset[0], 16)) / 4)))
 
     #Create all filters in a disabled state
     for fltr in range (canFilterNumber.getMax()):
