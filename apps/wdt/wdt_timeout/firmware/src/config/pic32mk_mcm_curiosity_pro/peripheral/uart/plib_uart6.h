@@ -1,21 +1,20 @@
 /*******************************************************************************
-  WDT Peripheral Library
+  UART6 PLIB
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_wdt.c
+    plib_uart6.h
 
   Summary:
-    WDT Source File
+    UART6 PLIB Header File
 
   Description:
     None
 
 *******************************************************************************/
 
-// DOM-IGNORE-BEGIN
 /*******************************************************************************
 * Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
@@ -38,53 +37,60 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
+
+#ifndef PLIB_UART6_H
+#define PLIB_UART6_H
+
+#include <stddef.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include "device.h"
+#include "plib_uart_common.h"
+
+// DOM-IGNORE-BEGIN
+#ifdef __cplusplus  // Provide C++ Compatibility
+
+    extern "C" {
+
+#endif
 // DOM-IGNORE-END
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: Included Files
+// Section: Interface
 // *****************************************************************************
 // *****************************************************************************
 
-#include "device.h"
-#include "plib_wdt.h"
+#define UART6_FrequencyGet()    (uint32_t)(60000000UL)
 
-// *****************************************************************************
-// *****************************************************************************
-// Section: WDT Implementation
-// *****************************************************************************
-// *****************************************************************************
+/****************************** UART6 API *********************************/
 
-void WDT_Enable(void)
-{
-    /* ON = 1 */
-    WDTCONbits.ON = 1;
-}
+void UART6_Initialize( void );
 
-void WDT_Disable(void)
-{
-    /* ON = 0 */
-    WDTCONbits.ON = 0;
-}
+bool UART6_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcClkFreq );
 
-void WDT_WindowEnable( void )
-{
-    /* WDTWINEN = 1 */
-    WDTCONbits.WDTWINEN = 1;
-}
+bool UART6_Write( void *buffer, const size_t size );
 
-void WDT_WindowDisable( void )
-{
-    /* WDTWINEN = 0 */
-    WDTCONbits.WDTWINEN = 0;
-}
+bool UART6_Read( void *buffer, const size_t size );
 
-void WDT_Clear(void)
-{
-    /* Writing specific value to only upper 16 bits of WDTCON register clears WDT counter */
-    /* Only write to the upper 16 bits of the register when clearing. */
-    /* WDTCLRKEY = 0x5743 */
-    volatile uint16_t * wdtclrkey;
-    wdtclrkey = ( (volatile uint16_t *)&WDTCON ) + 1;
-    *wdtclrkey = 0x5743;
-}
+UART_ERROR UART6_ErrorGet( void );
+
+int UART6_ReadByte( void );
+
+bool UART6_ReceiverIsReady( void );
+
+void UART6_WriteByte( int data );
+
+bool UART6_TransmitterIsReady( void );
+
+bool UART6_TransmitComplete( void );
+
+// DOM-IGNORE-BEGIN
+#ifdef __cplusplus  // Provide C++ Compatibility
+
+    }
+
+#endif
+// DOM-IGNORE-END
+
+#endif // PLIB_UART6_H
