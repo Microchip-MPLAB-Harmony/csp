@@ -167,6 +167,15 @@ cacheMenu = coreComponent.createMenuSymbol("CACHE_MENU", cortexMenu)
 cacheMenu.setLabel("CMCC Configuration")
 cacheMenu.setDescription("CACHE Configuration")
 
+# TCM exists on D5x/E5x and cannot be disabled. Only its size can be  configured. 
+# We need this symbol defined so that the FTL will emit the code associated 
+# with TCM configuration.
+tcmEnable = coreComponent.createBooleanSymbol("TCM_ENABLE", cacheMenu)
+tcmEnable.setLabel("Enable TCM")
+tcmEnable.setDefaultValue(True)
+tcmEnable.setReadOnly(True)
+tcmEnable.setVisible(False)
+
 deviceTCMsize = coreComponent.createKeyValueSetSymbol("DEVICE_TCM_SIZE", cacheMenu)
 deviceTCMsize.setLabel("TCM and cache Size")
 deviceTCMsize.setOutputMode("Value")
@@ -175,7 +184,7 @@ deviceTCMsize.addKey("0KB", "2", "TCM: 0 KB, Cache: 4 KB" )
 deviceTCMsize.addKey("2KB", "1", "TCM: 2 KB, Cache: 2 KB")
 deviceTCMsize.addKey("3KB", "0", "TCM: 3 KB, Cache: 1 KB")
 deviceTCMsize.addKey("4KB", "3", "TCM: 4 KB,  Cache: 0 KB")
-deviceTCMsize.setSelectedKey("0KB",1)
+deviceTCMsize.setSelectedKey("0KB")
 
 
 dcacheEnable = coreComponent.createBooleanSymbol("DATA_CACHE_ENABLE", cacheMenu)

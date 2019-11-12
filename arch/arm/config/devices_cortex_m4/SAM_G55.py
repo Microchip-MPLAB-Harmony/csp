@@ -126,6 +126,15 @@ cacheMenu = coreComponent.createMenuSymbol("CACHE_MENU", cortexMenu)
 cacheMenu.setLabel("CMCC Configuration")
 cacheMenu.setDescription("CACHE Configuration")
 
+# TCM exists on G55 and cannot be disabled. Only its size can be  configured. 
+# We need this symbol defined so that the FTL will emit the code associated 
+# with TCM configuration.
+tcmEnable = coreComponent.createBooleanSymbol("TCM_ENABLE", cacheMenu)
+tcmEnable.setLabel("Enable TCM")
+tcmEnable.setDefaultValue(True)
+tcmEnable.setReadOnly(True)
+tcmEnable.setVisible(False)
+
 deviceTCMsize = coreComponent.createKeyValueSetSymbol("DEVICE_TCM_SIZE", cacheMenu)
 deviceTCMsize.setLabel("TCM and cache Size")
 deviceTCMsize.setOutputMode("Value")
@@ -134,7 +143,7 @@ deviceTCMsize.addKey("8KB", "3", "TCM: 8 KB, Cache: 8 KB")
 deviceTCMsize.addKey("10KB", "2", "TCM: 10 KB, Cache: 4 KB")
 deviceTCMsize.addKey("14KB", "1", "TCM: 14 KB, Cache: 2 KB")
 deviceTCMsize.addKey("16KB", "0", "TCM: 16 KB,  Cache: 0 KB")
-deviceTCMsize.setSelectedKey("8KB", 1)
+deviceTCMsize.setSelectedKey("8KB")
 
 
 dcacheEnable = coreComponent.createBooleanSymbol("DATA_CACHE_ENABLE", cacheMenu)

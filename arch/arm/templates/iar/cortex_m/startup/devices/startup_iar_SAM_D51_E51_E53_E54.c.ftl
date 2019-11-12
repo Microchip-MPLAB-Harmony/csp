@@ -7,9 +7,9 @@ __STATIC_INLINE void DCache_Enable(void);
 /** Program CMCC CSIZESW bits for TCM and cache configuration */
 __STATIC_INLINE void TCM_Configure(uint32_t tcmSize)
 {
-    <#if DEVICE_TCM_SIZE != "3">
-    <#lt>    CMCC_REGS->CMCC_CFG = CMCC_CFG_CSIZESW(tcmSize);
-    </#if>
+<#if DEVICE_TCM_SIZE != "3">
+    CMCC_REGS->CMCC_CFG = CMCC_CFG_CSIZESW(tcmSize);
+</#if>
 }
 
 /** Enable TCM memory */

@@ -7,21 +7,21 @@ __STATIC_INLINE void DCache_Enable(void);
 /** Program CMCC PRGCSIZE bits for TCM and cache configuration */
 __STATIC_INLINE void TCM_Configure(uint32_t tcmSize)
 {
-    <#if DEVICE_TCM_SIZE != "0">
-    <#lt>    CMCC_REGS->CMCC_CFG = CMCC_CFG_PRGCSIZE(tcmSize);
-    </#if>
+<#if DEVICE_TCM_SIZE != "0">
+    CMCC_REGS->CMCC_CFG = CMCC_CFG_PRGCSIZE(tcmSize);
+</#if>
 }
 
 /** Enable TCM memory */
 __STATIC_INLINE void  <#if COMPILER_CHOICE == "XC32">__attribute__((optimize("-O1"))) </#if>TCM_Enable(void)
 {
-    /* TCM cannot be enabled or disabled in SAME5x/SAMD5x family*/
+    /* TCM cannot be enabled or disabled in SAMG55 family*/
 }
 
 /* Disable TCM memory */
 __STATIC_INLINE void  <#if COMPILER_CHOICE == "XC32">__attribute__((optimize("-O1"))) </#if>TCM_Disable(void)
 {
-    /* TCM cannot be enabled or disabled in SAME5x/SAMD5x family*/
+    /* TCM cannot be enabled or disabled in SAMG55 family*/
 }
 
 __STATIC_INLINE void ICache_Enable(void)
