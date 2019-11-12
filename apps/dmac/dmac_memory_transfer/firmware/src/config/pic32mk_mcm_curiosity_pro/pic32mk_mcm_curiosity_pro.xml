@@ -43,22 +43,22 @@
             <User dnOrder="0" value="DIGITAL"/>
           </Values>
         </String>
-        <String dnOrder="8" id="BSP_PIN_58_MODE">
+        <String dnOrder="8" id="BSP_PIN_5_MODE">
           <Values dnOrder="0">
             <User dnOrder="0" value="DIGITAL"/>
           </Values>
         </String>
-        <String dnOrder="9" id="BSP_PIN_5_MODE">
-          <Values dnOrder="0">
-            <User dnOrder="0" value="DIGITAL"/>
-          </Values>
-        </String>
-        <String dnOrder="10" id="BSP_PIN_67_FUNCTION_TYPE">
+        <String dnOrder="9" id="BSP_PIN_67_FUNCTION_TYPE">
           <Values dnOrder="0">
             <User dnOrder="0" value="U6RX"/>
           </Values>
         </String>
-        <String dnOrder="11" id="BSP_PIN_67_MODE">
+        <String dnOrder="10" id="BSP_PIN_67_MODE">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="DIGITAL"/>
+          </Values>
+        </String>
+        <String dnOrder="11" id="BSP_PIN_68_MODE">
           <Values dnOrder="0">
             <User dnOrder="0" value="DIGITAL"/>
           </Values>
@@ -430,7 +430,7 @@
             </Boolean>
           </Attributes>
           <Values dnOrder="1">
-            <User dnOrder="0" value="39"/>
+            <User dnOrder="0" value="45"/>
           </Values>
         </KeyValueSet>
         <Combo dnOrder="81" id="SYS_PORT_PPS_OUTPUT_PIN_0">
