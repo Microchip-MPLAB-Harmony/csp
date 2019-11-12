@@ -1,10 +1,10 @@
 <#list EVIC_VECTOR_MIN..EVIC_VECTOR_MAX as i>
-    <#assign INT_NUMBER = "EVIC_" + i + "_NUMBER">
     <#assign INT_ENABLE_GENERATE = "EVIC_" + i + "_ENABLE_GENERATE">
     <#assign INT_VECTOR_SUB_IRQ_COUNT = "EVIC_" + i + "_VECTOR_SUB_IRQ_COUNT">
     <#if .vars[INT_VECTOR_SUB_IRQ_COUNT]?? && ((.vars[INT_VECTOR_SUB_IRQ_COUNT] > 1) == true)>
         <#list 0..(.vars[INT_VECTOR_SUB_IRQ_COUNT]) as j>
-            <#assign INT_HANDLER  = "EVIC_" + i + "_" + j + "_HANDLER">
+            <#assign INT_NUMBER = "EVIC_" + i + "_" + j + "_NUMBER">
+            <#assign INT_HANDLER = "EVIC_" + i + "_" + j + "_HANDLER">
             <#assign INT_ENABLE = "EVIC_" + i + "_" + j + "_ENABLE">
             <#if .vars[INT_ENABLE]?? && .vars[INT_ENABLE] == true>
                 <#if (HarmonyCore.SELECT_RTOS)?? && HarmonyCore.SELECT_RTOS != "BareMetal">
@@ -66,7 +66,8 @@
             </#if>
         </#list>
     <#else>
-        <#assign INT_HANDLER  = "EVIC_" + i + "_HANDLER">
+        <#assign INT_NUMBER = "EVIC_" + i + "_NUMBER">
+        <#assign INT_HANDLER = "EVIC_" + i + "_HANDLER">
         <#assign INT_ENABLE = "EVIC_" + i + "_ENABLE">
         <#assign INT_ENABLE_GENERATE = "EVIC_" + i + "_ENABLE_GENERATE">
         <#if .vars[INT_ENABLE]?? && .vars[INT_ENABLE] == true>
