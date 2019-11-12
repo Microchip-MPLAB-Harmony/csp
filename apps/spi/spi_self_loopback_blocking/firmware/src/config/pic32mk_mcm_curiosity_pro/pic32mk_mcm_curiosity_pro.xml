@@ -63,12 +63,12 @@
             <User dnOrder="0" value="DIGITAL"/>
           </Values>
         </String>
-        <String dnOrder="12" id="BSP_PIN_58_MODE">
+        <String dnOrder="12" id="BSP_PIN_5_MODE">
           <Values dnOrder="0">
             <User dnOrder="0" value="DIGITAL"/>
           </Values>
         </String>
-        <String dnOrder="13" id="BSP_PIN_5_MODE">
+        <String dnOrder="13" id="BSP_PIN_68_MODE">
           <Values dnOrder="0">
             <User dnOrder="0" value="DIGITAL"/>
           </Values>
@@ -233,179 +233,129 @@
             <User dnOrder="0" value="main_pic32mk_gp_db"/>
           </Values>
         </String>
-        <Boolean dnOrder="46" id="EVIC_164_ENABLE">
+        <Boolean dnOrder="46" id="EVIC_228_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="47" id="EVIC_164_HANDLER_LOCK">
+        <Boolean dnOrder="47" id="EVIC_228_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
-        <String dnOrder="48" id="EVIC_164_INTERRUPT_HANDLER">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="UART6_FAULT_Handler"/>
-          </Values>
-        </String>
-        <Boolean dnOrder="49" id="EVIC_165_ENABLE">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="false"/>
-          </Values>
-        </Boolean>
-        <Boolean dnOrder="50" id="EVIC_165_HANDLER_LOCK">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="false"/>
-          </Values>
-        </Boolean>
-        <String dnOrder="51" id="EVIC_165_INTERRUPT_HANDLER">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="UART6_RX_Handler"/>
-          </Values>
-        </String>
-        <Boolean dnOrder="52" id="EVIC_166_ENABLE">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="false"/>
-          </Values>
-        </Boolean>
-        <Boolean dnOrder="53" id="EVIC_166_HANDLER_LOCK">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="false"/>
-          </Values>
-        </Boolean>
-        <String dnOrder="54" id="EVIC_166_INTERRUPT_HANDLER">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="UART6_TX_Handler"/>
-          </Values>
-        </String>
-        <Boolean dnOrder="55" id="EVIC_228_ENABLE">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="false"/>
-          </Values>
-        </Boolean>
-        <Boolean dnOrder="56" id="EVIC_228_HANDLER_LOCK">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="false"/>
-          </Values>
-        </Boolean>
-        <String dnOrder="57" id="EVIC_228_INTERRUPT_HANDLER">
+        <String dnOrder="48" id="EVIC_228_INTERRUPT_HANDLER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="SPI6_RX_Handler"/>
           </Values>
         </String>
-        <Boolean dnOrder="58" id="EVIC_229_ENABLE">
+        <Boolean dnOrder="49" id="EVIC_229_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="59" id="EVIC_229_HANDLER_LOCK">
+        <Boolean dnOrder="50" id="EVIC_229_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
-        <String dnOrder="60" id="EVIC_229_INTERRUPT_HANDLER">
+        <String dnOrder="51" id="EVIC_229_INTERRUPT_HANDLER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="SPI6_TX_Handler"/>
           </Values>
         </String>
-        <File dnOrder="61" id="MAIN_C">
+        <File dnOrder="52" id="MAIN_C">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="name">
               <Value dnOrder="0">main_pic32mk_gp_db.c</Value>
             </String>
           </Attributes>
         </File>
-        <Hex dnOrder="62" id="PMD5_REG_VALUE">
+        <Hex dnOrder="53" id="PMD5_REG_VALUE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="4077854527"/>
           </Values>
         </Hex>
-        <Hex dnOrder="63" id="PMD6_REG_VALUE">
+        <Hex dnOrder="54" id="PMD6_REG_VALUE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="252510208"/>
           </Values>
         </Hex>
-        <Hex dnOrder="64" id="PMD7_REG_VALUE">
+        <Hex dnOrder="55" id="PMD7_REG_VALUE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Hex>
-        <Boolean dnOrder="65" id="SPI6_CLOCK_ENABLE">
+        <Boolean dnOrder="56" id="SPI6_CLOCK_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="spi6" value="true"/>
           </Values>
         </Boolean>
-        <Integer dnOrder="66" id="SPI6_CLOCK_FREQUENCY">
+        <Integer dnOrder="57" id="SPI6_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="60000000"/>
           </Values>
         </Integer>
-        <Boolean dnOrder="67" id="SPI6_RX_INTERRUPT_ENABLE">
+        <Boolean dnOrder="58" id="SPI6_RX_INTERRUPT_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="spi6" value="false"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="68" id="SPI6_RX_INTERRUPT_ENABLE_UPDATE">
+        <Boolean dnOrder="59" id="SPI6_RX_INTERRUPT_ENABLE_UPDATE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <String dnOrder="69" id="SPI6_RX_INTERRUPT_HANDLER">
+        <String dnOrder="60" id="SPI6_RX_INTERRUPT_HANDLER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="spi6" value="SPI6_RX_Handler"/>
           </Values>
         </String>
-        <Boolean dnOrder="70" id="SPI6_RX_INTERRUPT_HANDLER_LOCK">
+        <Boolean dnOrder="61" id="SPI6_RX_INTERRUPT_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="spi6" value="false"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="71" id="SPI6_TX_INTERRUPT_ENABLE">
+        <Boolean dnOrder="62" id="SPI6_TX_INTERRUPT_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="spi6" value="false"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="72" id="SPI6_TX_INTERRUPT_ENABLE_UPDATE">
+        <Boolean dnOrder="63" id="SPI6_TX_INTERRUPT_ENABLE_UPDATE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <String dnOrder="73" id="SPI6_TX_INTERRUPT_HANDLER">
+        <String dnOrder="64" id="SPI6_TX_INTERRUPT_HANDLER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="spi6" value="SPI6_TX_Handler"/>
           </Values>
         </String>
-        <Boolean dnOrder="74" id="SPI6_TX_INTERRUPT_HANDLER_LOCK">
+        <Boolean dnOrder="65" id="SPI6_TX_INTERRUPT_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="spi6" value="false"/>
           </Values>
         </Boolean>
-        <Hex dnOrder="75" id="SYS_PORT_A_ANSEL">
+        <Hex dnOrder="66" id="SYS_PORT_A_ANSEL">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="2"/>
           </Values>
         </Hex>
-        <Hex dnOrder="76" id="SYS_PORT_B_ANSEL">
+        <Hex dnOrder="67" id="SYS_PORT_B_ANSEL">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </Hex>
-        <Hex dnOrder="77" id="SYS_PORT_C_ANSEL">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="0"/>
-          </Values>
-        </Hex>
-        <Hex dnOrder="78" id="SYS_PORT_G_ANSEL">
+        <Hex dnOrder="68" id="SYS_PORT_G_ANSEL">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="512"/>
           </Values>
         </Hex>
-        <Hex dnOrder="79" id="SYS_PORT_G_TRIS">
+        <Hex dnOrder="69" id="SYS_PORT_G_TRIS">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="4096"/>
           </Values>
         </Hex>
-        <Combo dnOrder="80" id="SYS_PORT_PPS_INPUT_FUNCTION_0">
+        <Combo dnOrder="70" id="SYS_PORT_PPS_INPUT_FUNCTION_0">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
@@ -415,7 +365,7 @@
             <User dnOrder="0" value="SDI6"/>
           </Values>
         </Combo>
-        <KeyValueSet dnOrder="81" id="SYS_PORT_PPS_INPUT_PIN_0">
+        <KeyValueSet dnOrder="71" id="SYS_PORT_PPS_INPUT_PIN_0">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
@@ -425,37 +375,27 @@
             <User dnOrder="0" value="31"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="82" id="SYS_PORT_PPS_OUTPUT_FUNCTION_0">
+        <KeyValueSet dnOrder="72" id="SYS_PORT_PPS_OUTPUT_FUNCTION_0">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
           <Values dnOrder="1">
-            <User dnOrder="0" value="57"/>
+            <User dnOrder="0" value="17"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="83" id="SYS_PORT_PPS_OUTPUT_FUNCTION_1">
+        <KeyValueSet dnOrder="73" id="SYS_PORT_PPS_OUTPUT_FUNCTION_1">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
           <Values dnOrder="1">
-            <User dnOrder="0" value="15"/>
+            <User dnOrder="0" value="63"/>
           </Values>
         </KeyValueSet>
-        <Combo dnOrder="84" id="SYS_PORT_PPS_OUTPUT_PIN_0">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="visible">
-              <Value dnOrder="0">true</Value>
-            </Boolean>
-          </Attributes>
-          <Values dnOrder="1">
-            <User dnOrder="0" value="RPG9"/>
-          </Values>
-        </Combo>
-        <Combo dnOrder="85" id="SYS_PORT_PPS_OUTPUT_PIN_1">
+        <Combo dnOrder="74" id="SYS_PORT_PPS_OUTPUT_PIN_0">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
@@ -465,42 +405,32 @@
             <User dnOrder="0" value="RPA1"/>
           </Values>
         </Combo>
-        <Integer dnOrder="86" id="UART6_CLOCK_FREQUENCY">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="0"/>
+        <Combo dnOrder="75" id="SYS_PORT_PPS_OUTPUT_PIN_1">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="visible">
+              <Value dnOrder="0">true</Value>
+            </Boolean>
+          </Attributes>
+          <Values dnOrder="1">
+            <User dnOrder="0" value="RPG9"/>
           </Values>
-        </Integer>
-        <Boolean dnOrder="87" id="UART6_FAULT_INTERRUPT_ENABLE_UPDATE">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="true"/>
-          </Values>
-        </Boolean>
-        <Boolean dnOrder="88" id="UART6_RX_INTERRUPT_ENABLE_UPDATE">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="true"/>
-          </Values>
-        </Boolean>
-        <Boolean dnOrder="89" id="UART6_TX_INTERRUPT_ENABLE_UPDATE">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="true"/>
-          </Values>
-        </Boolean>
-        <Boolean dnOrder="90" id="USE_PPS_INPUT_0">
+        </Combo>
+        <Boolean dnOrder="76" id="USE_PPS_INPUT_0">
           <Values dnOrder="0">
             <User dnOrder="0" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="91" id="USE_PPS_OUTPUT_0">
+        <Boolean dnOrder="77" id="USE_PPS_OUTPUT_0">
           <Values dnOrder="0">
             <User dnOrder="0" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="92" id="USE_PPS_OUTPUT_1">
+        <Boolean dnOrder="78" id="USE_PPS_OUTPUT_1">
           <Values dnOrder="0">
             <User dnOrder="0" value="true"/>
           </Values>
         </Boolean>
-        <KeyValueSet dnOrder="93" id="clkSvcMode">
+        <KeyValueSet dnOrder="79" id="clkSvcMode">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
@@ -529,13 +459,13 @@
     </UniqueComponent>
   </Components>
   <UserData>
-    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="0"/>
-    <ComponentGraph dnOrder="1" id="__ROOTVIEW">
+    <ComponentGraph dnOrder="0" id="__ROOTVIEW">
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="core" x="240" y="20"/>
         <ElementPosition dnOrder="1" id="dfp" x="20" y="20"/>
         <ElementPosition dnOrder="2" id="spi6" x="340" y="20"/>
       </ElementPositions>
     </ComponentGraph>
+    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="1"/>
   </UserData>
 </Configuration>

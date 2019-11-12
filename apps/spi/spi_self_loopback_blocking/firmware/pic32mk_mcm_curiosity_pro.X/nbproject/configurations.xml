@@ -1,63 +1,78 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <configurationDescriptor version="65">
-  <logicalFolder displayName="root" name="root" projectFiles="true">
-    <logicalFolder displayName="Header Files" name="f1" projectFiles="true">
-      <logicalFolder displayName="config" name="f1" projectFiles="true">
-        <logicalFolder displayName="pic32mk_gpl_curiosity_pro" name="f1" projectFiles="true">
-          <logicalFolder displayName="peripheral" name="f1" projectFiles="true">
-            <logicalFolder displayName="clk" name="f1" projectFiles="true">
-              <itemPath>../src/config/pic32mk_gpl_curiosity_pro/peripheral/clk/plib_clk.h</itemPath>
+  <logicalFolder name="root" displayName="root" projectFiles="true">
+    <logicalFolder name="HeaderFiles"
+                   displayName="Header Files"
+                   projectFiles="true">
+      <logicalFolder name="f2" displayName="config" projectFiles="true">
+        <logicalFolder name="f1"
+                       displayName="pic32mk_mcm_curiosity_pro"
+                       projectFiles="true">
+          <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
+            <logicalFolder name="f1" displayName="clk" projectFiles="true">
+              <itemPath>../src/config/pic32mk_mcm_curiosity_pro/peripheral/clk/plib_clk.h</itemPath>
             </logicalFolder>
-            <logicalFolder displayName="gpio" name="f2" projectFiles="true">
-              <itemPath>../src/config/pic32mk_gpl_curiosity_pro/peripheral/gpio/plib_gpio.h</itemPath>
+            <logicalFolder name="f3" displayName="evic" projectFiles="true">
+              <itemPath>../src/config/pic32mk_mcm_curiosity_pro/peripheral/evic/plib_evic.h</itemPath>
             </logicalFolder>
-            <logicalFolder displayName="evic" name="f3" projectFiles="true">
-              <itemPath>../src/config/pic32mk_gpl_curiosity_pro/peripheral/evic/plib_evic.h</itemPath>
+            <logicalFolder name="f2" displayName="gpio" projectFiles="true">
+              <itemPath>../src/config/pic32mk_mcm_curiosity_pro/peripheral/gpio/plib_gpio.h</itemPath>
             </logicalFolder>
-            <logicalFolder displayName="spi" name="f4" projectFiles="true">
-              <itemPath>../src/config/pic32mk_gpl_curiosity_pro/peripheral/spi/plib_spi_common.h</itemPath>
-              <itemPath>../src/config/pic32mk_gpl_curiosity_pro/peripheral/spi/plib_spi6.h</itemPath>
+            <logicalFolder name="f4" displayName="spi" projectFiles="true">
+              <itemPath>../src/config/pic32mk_mcm_curiosity_pro/peripheral/spi/plib_spi_common.h</itemPath>
+              <itemPath>../src/config/pic32mk_mcm_curiosity_pro/peripheral/spi/plib_spi6.h</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <itemPath>../src/config/pic32mk_gpl_curiosity_pro/toolchain_specifics.h</itemPath>
-          <itemPath>../src/config/pic32mk_gpl_curiosity_pro/definitions.h</itemPath>
+          <itemPath>../src/config/pic32mk_mcm_curiosity_pro/toolchain_specifics.h</itemPath>
+          <itemPath>../src/config/pic32mk_mcm_curiosity_pro/definitions.h</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <logicalFolder displayName="packs" name="f2" projectFiles="true">
-        <logicalFolder displayName="PIC32MK1024GPL100_DFP" name="f1" projectFiles="true">
-          <itemPath>../src/packs/PIC32MK1024GPL100_DFP/device.h</itemPath>
+      <logicalFolder name="f1" displayName="packs" projectFiles="true">
+        <logicalFolder name="f1"
+                       displayName="PIC32MK1024MCM100_DFP"
+                       projectFiles="true">
+          <itemPath>../src/packs/PIC32MK1024MCM100_DFP/device.h</itemPath>
         </logicalFolder>
       </logicalFolder>
     </logicalFolder>
-    <logicalFolder displayName="Linker Files" name="f2" projectFiles="true"/>
-    <logicalFolder displayName="Source Files" name="f3" projectFiles="true">
-      <logicalFolder displayName="config" name="f1" projectFiles="true">
-        <logicalFolder displayName="pic32mk_gpl_curiosity_pro" name="f1" projectFiles="true">
-          <logicalFolder displayName="stdio" name="f1" projectFiles="true">
-            <itemPath>../src/config/pic32mk_gpl_curiosity_pro/stdio/xc32_monitor.c</itemPath>
+    <logicalFolder name="LinkerScript"
+                   displayName="Linker Files"
+                   projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="SourceFiles"
+                   displayName="Source Files"
+                   projectFiles="true">
+      <logicalFolder name="f1" displayName="config" projectFiles="true">
+        <logicalFolder name="f1"
+                       displayName="pic32mk_mcm_curiosity_pro"
+                       projectFiles="true">
+          <logicalFolder name="f2" displayName="peripheral" projectFiles="true">
+            <logicalFolder name="f1" displayName="clk" projectFiles="true">
+              <itemPath>../src/config/pic32mk_mcm_curiosity_pro/peripheral/clk/plib_clk.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f3" displayName="evic" projectFiles="true">
+              <itemPath>../src/config/pic32mk_mcm_curiosity_pro/peripheral/evic/plib_evic.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f2" displayName="gpio" projectFiles="true">
+              <itemPath>../src/config/pic32mk_mcm_curiosity_pro/peripheral/gpio/plib_gpio.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f4" displayName="spi" projectFiles="true">
+              <itemPath>../src/config/pic32mk_mcm_curiosity_pro/peripheral/spi/plib_spi6.c</itemPath>
+            </logicalFolder>
           </logicalFolder>
-          <logicalFolder displayName="peripheral" name="f2" projectFiles="true">
-            <logicalFolder displayName="clk" name="f1" projectFiles="true">
-              <itemPath>../src/config/pic32mk_gpl_curiosity_pro/peripheral/clk/plib_clk.c</itemPath>
-            </logicalFolder>
-            <logicalFolder displayName="gpio" name="f2" projectFiles="true">
-              <itemPath>../src/config/pic32mk_gpl_curiosity_pro/peripheral/gpio/plib_gpio.c</itemPath>
-            </logicalFolder>
-            <logicalFolder displayName="evic" name="f3" projectFiles="true">
-              <itemPath>../src/config/pic32mk_gpl_curiosity_pro/peripheral/evic/plib_evic.c</itemPath>
-            </logicalFolder>
-            <logicalFolder displayName="spi" name="f4" projectFiles="true">
-              <itemPath>../src/config/pic32mk_gpl_curiosity_pro/peripheral/spi/plib_spi6.c</itemPath>
-            </logicalFolder>
+          <logicalFolder name="f1" displayName="stdio" projectFiles="true">
+            <itemPath>../src/config/pic32mk_mcm_curiosity_pro/stdio/xc32_monitor.c</itemPath>
           </logicalFolder>
-          <itemPath>../src/config/pic32mk_gpl_curiosity_pro/initialization.c</itemPath>
-          <itemPath>../src/config/pic32mk_gpl_curiosity_pro/interrupts.c</itemPath>
-          <itemPath>../src/config/pic32mk_gpl_curiosity_pro/exceptions.c</itemPath>
+          <itemPath>../src/config/pic32mk_mcm_curiosity_pro/initialization.c</itemPath>
+          <itemPath>../src/config/pic32mk_mcm_curiosity_pro/interrupts.c</itemPath>
+          <itemPath>../src/config/pic32mk_mcm_curiosity_pro/exceptions.c</itemPath>
         </logicalFolder>
       </logicalFolder>
       <itemPath>../src/main_pic32mk_gp_db.c</itemPath>
     </logicalFolder>
-    <logicalFolder displayName="Important Files" name="f4" projectFiles="true">
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false">
       <itemPath>Makefile</itemPath>
     </logicalFolder>
   </logicalFolder>
@@ -66,19 +81,19 @@
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
-    <conf name="pic32mk_gpl_curiosity_pro" type="2">
+    <conf name="pic32mk_mcm_curiosity_pro" type="2">
       <toolsSet>
         <developmentServer>localhost</developmentServer>
-        <targetDevice>PIC32MK1024GPL100</targetDevice>
-        <targetHeader/>
-        <targetPluginBoard/>
-        <platformTool>RealICEPlatformTool</platformTool>
+        <targetDevice>PIC32MK1024MCM100</targetDevice>
+        <targetHeader></targetHeader>
+        <targetPluginBoard></targetPluginBoard>
+        <platformTool>pkob4hybrid</platformTool>
         <languageToolchain>XC32</languageToolchain>
         <languageToolchainVersion>2.00</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="PIC32MK-GP_DFP" vendor="Microchip" version="1.1.54"/>
+        <pack name="PIC32MK-MC_DFP" vendor="Microchip" version="1.2.80"/>
       </packs>
       <compileType>
         <linkerTool>
@@ -90,16 +105,16 @@
         <loading>
           <useAlternateLoadableFile>false</useAlternateLoadableFile>
           <parseOnProdLoad>false</parseOnProdLoad>
-          <alternateLoadableFile/>
+          <alternateLoadableFile></alternateLoadableFile>
         </loading>
         <subordinates>
         </subordinates>
       </compileType>
       <makeCustomizationType>
         <makeCustomizationPreStepEnabled>false</makeCustomizationPreStepEnabled>
-        <makeCustomizationPreStep/>
+        <makeCustomizationPreStep></makeCustomizationPreStep>
         <makeCustomizationPostStepEnabled>false</makeCustomizationPostStepEnabled>
-        <makeCustomizationPostStep/>
+        <makeCustomizationPostStep></makeCustomizationPostStep>
         <makeCustomizationPutChecksumInUserID>false</makeCustomizationPutChecksumInUserID>
         <makeCustomizationEnableLongLines>false</makeCustomizationEnableLongLines>
         <makeCustomizationNormalizeHexFile>false</makeCustomizationNormalizeHexFile>
@@ -111,7 +126,8 @@
         <property key="enable-symbols" value="true"/>
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
-        <property key="extra-include-directories" value="../src;../src/config/pic32mk_gpl_curiosity_pro;../src/packs/PIC32MK1024GPL100_DFP;../src/mips"/>
+        <property key="extra-include-directories"
+                  value="../src;../src/config/pic32mk_mcm_curiosity_pro;../src/packs/PIC32MK1024MCM100_DFP;;../src/mips"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
@@ -228,7 +244,8 @@
         <property key="TIMER3" value="true"/>
         <property key="TIMER4" value="true"/>
         <property key="TIMER5" value="true"/>
-        <property key="ToolFirmwareFilePath" value="Press to browse for a specific firmware version"/>
+        <property key="ToolFirmwareFilePath"
+                  value="Press to browse for a specific firmware version"/>
         <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
         <property key="UART1" value="true"/>
         <property key="UART2" value="true"/>
@@ -257,9 +274,6 @@
         <property key="programoptions.uselvpprogramming" value="false"/>
         <property key="voltagevalue" value="3.25"/>
       </PICkit3PlatformTool>
-      <RealICEPlatformTool>
-        <property key="firmware.download.all" value="false"/>
-      </RealICEPlatformTool>
     </conf>
   </confs>
 </configurationDescriptor>
