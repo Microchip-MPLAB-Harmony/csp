@@ -1,0 +1,1 @@
+#include "peripheral/cmcc/plib_${CMCC_INSTANCE_NAME?lower_case}.h"

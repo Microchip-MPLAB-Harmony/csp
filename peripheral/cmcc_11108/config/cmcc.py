@@ -77,3 +77,9 @@ cmccSourceFile.setOverwrite(True)
 cmccSourceFile.setMarkup(True)
 cmccSourceFile.setEnabled(True)
 
+# System Definition
+cmccSystemDefFile = coreComponent.createFileSymbol("CMCC_SYS_DEF_FILE", None)
+cmccSystemDefFile.setType("STRING")
+cmccSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+cmccSystemDefFile.setSourcePath("../peripheral/cmcc_11108/templates/system/definitions.h.ftl")
+cmccSystemDefFile.setMarkup(True)
