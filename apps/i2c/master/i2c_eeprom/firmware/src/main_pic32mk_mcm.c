@@ -52,8 +52,8 @@
 #include <stdlib.h>                     // Defines EXIT_FAILURE
 #include "definitions.h"                // SYS function prototypes
 #include <string.h>
-#define LED_ON()                       LED1_Set()
-#define LED_OFF()                      LED1_Clear()
+#define LED_ON()                            LED_Set()
+#define LED_OFF()                           LED_Clear()
 
 #define APP_AT24MAC_DEVICE_ADDR             0x0054
 #define APP_AT24MAC_MEMORY_ADDR             0x00
@@ -145,6 +145,7 @@ int main ( void )
                 I2C4_Write(APP_AT24MAC_DEVICE_ADDR, &ackData, APP_ACK_DATA_LENGTH);
 
                 state = APP_STATE_EEPROM_WRITE;
+                
                 break;
 
             case APP_STATE_EEPROM_WRITE:
@@ -158,8 +159,10 @@ int main ( void )
                 }
                 else if (transferStatus == APP_TRANSFER_STATUS_ERROR)
                 {
-                    /* EEPROM is not ready to accept new requests */
-                    state = APP_STATE_XFER_ERROR;
+                    /* EEPROM is not ready to accept new requests. 
+                     * Keep checking until it is ready */
+                    transferStatus = APP_TRANSFER_STATUS_IN_PROGRESS;
+                    I2C4_Write(APP_AT24MAC_DEVICE_ADDR, &ackData, APP_ACK_DATA_LENGTH);                    
                 }
                 break;
 
@@ -229,15 +232,20 @@ int main ( void )
                 break;
 
             case APP_STATE_XFER_SUCCESSFUL:
-            {
+            
                 LED_ON();
+                state = APP_STATE_IDLE;
                 break;
-            }
+            
             case APP_STATE_XFER_ERROR:
-            {
+            
                 LED_OFF();
+                state = APP_STATE_IDLE;
                 break;
-            }
+            
+            case APP_STATE_IDLE:
+                break;
+                
             default:
                 break;
         }
