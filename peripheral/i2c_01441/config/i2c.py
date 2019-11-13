@@ -99,15 +99,13 @@ def baudRateCalc(clk, baud):
     #I2CxBRG = [PBCLK/(2*FSCK) - (PBCLK*TPGOB)/2]  - 1
     #where TPGD = 130ns
 
-    I2CxBRG = (clk / (2 * baud) - (clk * 0.000000104) / 2)  - 1
+    I2CxBRG = (clk / (2 * baud) - (clk * 0.000000130) / 2)  - 1
 
     i2cSym_BaudError_Comment.setVisible(False)
 
-    if I2CxBRG < 0:
-        I2CxBRG = 0
+    if I2CxBRG < 4:
+        I2CxBRG = 4
         i2cSym_BaudError_Comment.setVisible(True)
-    elif I2CxBRG < 3:
-        I2CxBRG = 3
     elif I2CxBRG > i2cSymMaxBRG.getValue():
         I2CxBRG = i2cSymMaxBRG.getValue()
         i2cSym_BaudError_Comment.setVisible(True)
