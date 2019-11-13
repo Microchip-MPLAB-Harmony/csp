@@ -26,7 +26,7 @@ __STATIC_INLINE void  <#if COMPILER_CHOICE == "XC32">__attribute__((optimize("-O
 
 __STATIC_INLINE void ICache_Enable(void)
 {
-    <#if DEVICE_TCM_SIZE != "3">
+    <#if DEVICE_TCM_SIZE != "0">
         <#if (INSTRUCTION_CACHE_ENABLE)??>
             <#if (INSTRUCTION_CACHE_ENABLE)>
                 <#if DATA_CACHE_ENABLE??>
@@ -48,7 +48,7 @@ __STATIC_INLINE void ICache_Enable(void)
 
 __STATIC_INLINE void DCache_Enable(void)
 {
-    <#if DEVICE_TCM_SIZE != "3">
+    <#if DEVICE_TCM_SIZE != "0">
         <#if (DATA_CACHE_ENABLE)??>
             <#if (DATA_CACHE_ENABLE)>
                 <#if INSTRUCTION_CACHE_ENABLE??>
