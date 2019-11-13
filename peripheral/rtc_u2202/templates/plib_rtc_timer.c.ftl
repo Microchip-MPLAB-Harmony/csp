@@ -68,6 +68,10 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
                                                             ${RTC_MODE0_MATCHCLR?then("|RTC_MODE0_CTRL_MATCHCLR_Msk", "")};</@compress>
 
         <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_COMP = 0x${RTC_MODE0_TIMER_COMPARE};
+    <#lt>    while((${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_STATUS & RTC_STATUS_SYNCBUSY_Msk) == RTC_STATUS_SYNCBUSY_Msk)
+    <#lt>    {
+    <#lt>        /* Wait for Synchronization after writing Compare Value */
+    <#lt>    }
 
         <#if (RTC_MODE0_INTERRUPT = true) && (RTC_MODE0_INTENSET != "0")>
             <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_INTENSET = 0x${RTC_MODE0_INTENSET};
@@ -81,8 +85,20 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
         <#lt>                                                        RTC_MODE1_CTRL_PRESCALER(${RTC_MODE1_PRESCALER});</@compress>
 
         <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_COMP[0] = 0x${RTC_MODE1_COMPARE0_MATCH_VALUE};
+    <#lt>    while((${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_STATUS & RTC_STATUS_SYNCBUSY_Msk) == RTC_STATUS_SYNCBUSY_Msk)
+    <#lt>    {
+    <#lt>        /* Wait for Synchronization after writing Compare Value */
+    <#lt>    }
         <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_COMP[1] = 0x${RTC_MODE1_COMPARE1_MATCH_VALUE};
+    <#lt>    while((${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_STATUS & RTC_STATUS_SYNCBUSY_Msk) == RTC_STATUS_SYNCBUSY_Msk)
+    <#lt>    {
+    <#lt>        /* Wait for Synchronization after writing Compare Value */
+    <#lt>    }
         <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_PER = 0x${RTC_MODE1_TIMER_COUNTER_PERIOD};
+    <#lt>    while((${RTC_INSTANCE_NAME}_REGS->${RTC_MODULE_SELECTION}.RTC_STATUS & RTC_STATUS_SYNCBUSY_Msk) == RTC_STATUS_SYNCBUSY_Msk)
+    <#lt>    {
+    <#lt>        /* Wait for Synchronization after writing Compare Value */
+    <#lt>    }
 
         <#if (RTC_MODE1_INTERRUPT = true) && (RTC_MODE1_INTENSET != "0")>
             <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_INTENSET = 0x${RTC_MODE1_INTENSET};

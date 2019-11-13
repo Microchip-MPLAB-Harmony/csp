@@ -110,6 +110,11 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
         <#list 0..(RTC_MODE0_NUM_COMP - 1) as i>
         <#assign compareReg = "RTC_MODE0_TIMER_COMPARE" + i>
         <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_COMP[${i}] = 0x${.vars[compareReg]};
+        
+        <#lt>    while((${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_SYNCBUSY & RTC_MODE0_SYNCBUSY_COMP${i}_Msk) == RTC_MODE0_SYNCBUSY_COMP${i}_Msk)
+        <#lt>    {
+        <#lt>        /* Wait for Synchronization after writing Compare Value */
+        <#lt>    }
 
         </#list>
         </#if>
@@ -166,8 +171,18 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
         <#assign compareReg = "RTC_MODE1_COMPARE" + i + "_MATCH_VALUE">
         <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_COMP[${i}] = 0x${.vars[compareReg]};
 
+        <#lt>   while((${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_SYNCBUSY & RTC_MODE1_SYNCBUSY_COMP${i}_Msk) == RTC_MODE1_SYNCBUSY_COMP${i}_Msk)
+        <#lt>   {
+        <#lt>       /* Wait for Synchronization after writing Compare Value */
+        <#lt>   }
+
         </#list>
         <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_PER = 0x${RTC_MODE1_TIMER_COUNTER_PERIOD};
+
+        <#lt>    while((${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_SYNCBUSY & RTC_MODE1_SYNCBUSY_PER_Msk) == RTC_MODE1_SYNCBUSY_PER_Msk)
+        <#lt>    {
+        <#lt>        /* Wait for Synchronization after writing Counter Period */
+        <#lt>    }
 
         <#if (RTC_MODE1_INTERRUPT = true) && (RTC_MODE1_INTENSET != "0")>
         <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_INTENSET = 0x${RTC_MODE1_INTENSET};
