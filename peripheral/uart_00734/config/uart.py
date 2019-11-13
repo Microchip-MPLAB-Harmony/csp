@@ -178,19 +178,14 @@ def baudRateCalc(clk, baud):
     brgValLow = ((clk / baud) >> 4) - 1
     brgValHigh = ((clk / baud) >> 2) - 1
 
-    brgh  = int(uartSym_U1MODE_BRGH.getSelectedValue())
-    uxmode = int (Database.getSymbolValue(uartInstanceName.getValue().lower(), "UMODE_VALUE"))
-
     # Check if the baud value can be set with low baud settings
-    if((brgValHigh >= 0) and (brgValHigh <= 65535)) :
-        brgValue =  (((clk >> 2) + (baud >> 1)) / baud ) - 1
-        uartSym_U1MODE_BRGH.setValue(0, 2)
-        brghBitL = int(uartSym_U1MODE_BRGH.getSelectedValue())
-        return brgValue
-    elif((brgValLow >= 0) and (brgValLow <= 65535)) :
+    if((brgValLow >= 0) and (brgValLow <= 65535)) :
         brgValue = (((clk >> 4) + (baud >> 1)) / baud) - 1
         uartSym_U1MODE_BRGH.setValue(1, 2)
-        brghBitH = int(uartSym_U1MODE_BRGH.getSelectedValue())
+        return brgValue
+    elif((brgValHigh >= 0) and (brgValHigh <= 65535)) :
+        brgValue =  (((clk >> 2) + (baud >> 1)) / baud ) - 1
+        uartSym_U1MODE_BRGH.setValue(0, 2)
         return brgValue
     elif brgValLow > 65535:
         return brgValLow
@@ -206,7 +201,8 @@ def baudRateTrigger(symbol, event):
 
     uartSym_BaudError_Comment.setVisible(False)
 
-    if brgVal < 1:
+    if brgVal < 0:
+        brgVal = 0
         uartSym_BaudError_Comment.setVisible(True)
         return
     elif brgVal > 65535:
@@ -242,6 +238,13 @@ def u1ModecombineValues(symbol, event):
         uart1modeValue = uart1modeValue | (brghValue << 3)
 
     symbol.setValue(uart1modeValue, 2)
+
+def uartBRGHModeInfo(symbol, event):
+
+    if event["value"] == 1:
+        symbol.setLabel("*** Standard Speed mode 16x baud clock enabled (BRGH = 0) ***")
+    else:
+        symbol.setLabel("*** High Speed mode 4x baud clock enabled (BRGH = 1) ***")
 
 def updateUARTClockWarningStatus(symbol, event):
 
@@ -405,7 +408,7 @@ def instantiateComponent(uartComponent):
     uartSym_U1MODE_BRGH.setDisplayMode( "Description" )
     for ii in BRGH_names:
         uartSym_U1MODE_BRGH.addKey( ii['key'],ii['value'], ii['desc'] )
-    uartSym_U1MODE_BRGH.setReadOnly(True)
+    uartSym_U1MODE_BRGH.setVisible(False)
 
     uartSym_U1MODE = uartComponent.createHexSymbol("UMODE_VALUE", None)
     uartSym_U1MODE.setDefaultValue((int(uartSym_U1MODE_BRGH.getSelectedValue()) << 3) | (int(uartSym_U1MODE_PDSEL.getSelectedValue()) << 1) | (int(uartSym_U1MODE_STSEL.getSelectedValue()) << 0))
@@ -430,6 +433,10 @@ def instantiateComponent(uartComponent):
     uartBRGValue = uartComponent.createIntegerSymbol("BRG_VALUE", None)
     uartBRGValue.setVisible(False)
     uartBRGValue.setDependencies(baudRateTrigger, ["BAUD_RATE", "core." + uartInstanceName.getValue() + "_CLOCK_FREQUENCY"])
+
+    uartSymBRGHModeComment = uartComponent.createCommentSymbol("UART_BRGH_MODE_COMMENT", None)
+    uartSymBRGHModeComment.setLabel("*** Standard Speed mode 16x baud clock enabled (BRGH = 0) ***")
+    uartSymBRGHModeComment.setDependencies(uartBRGHModeInfo, ["UART_BRGH"])
 
     #UART Baud Rate not supported comment
     uartSym_BaudError_Comment = uartComponent.createCommentSymbol("UART_BAUD_ERROR_COMMENT", None)

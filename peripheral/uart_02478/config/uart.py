@@ -138,19 +138,14 @@ def baudRateCalc(clk, baud):
     brgValLow = ((clk / baud) >> 4) - 1
     brgValHigh = ((clk / baud) >> 2) - 1
 
-    brgh  = int(uartSym_UxMODE_BRGH.getSelectedValue())
-    uxmode = int (Database.getSymbolValue(uartInstanceName.getValue().lower(), "UMODE_VALUE"))
-
     # Check if the baud value can be set with low baud settings
-    if((brgValHigh >= 0) and (brgValHigh <= 65535)) :
-        brgValue =  (((clk >> 2) + (baud >> 1)) / baud ) - 1
-        uartSym_UxMODE_BRGH.setValue(0, 2)
-        brghBitL = int(uartSym_UxMODE_BRGH.getSelectedValue())
-        return brgValue
-    elif((brgValLow >= 0) and (brgValLow <= 65535)) :
+    if((brgValLow >= 0) and (brgValLow <= 65535)) :
         brgValue = (((clk >> 4) + (baud >> 1)) / baud) - 1
         uartSym_UxMODE_BRGH.setValue(1, 2)
-        brghBitH = int(uartSym_UxMODE_BRGH.getSelectedValue())
+        return brgValue
+    elif((brgValHigh >= 0) and (brgValHigh <= 65535)) :
+        brgValue =  (((clk >> 2) + (baud >> 1)) / baud ) - 1
+        uartSym_UxMODE_BRGH.setValue(0, 2)
         return brgValue
     elif brgValLow > 65535:
         return brgValLow
@@ -166,7 +161,8 @@ def baudRateTrigger(symbol, event):
 
     uartSym_BaudError_Comment.setVisible(False)
 
-    if brgVal < 1:
+    if brgVal < 0:
+        brgVal = 0
         uartSym_BaudError_Comment.setVisible(True)
         return
     elif brgVal > 65535:
@@ -293,6 +289,13 @@ def find_key_value(value, keypairs):
 
     print("find_key: could not find value in dictionary") # should never get here
     return ""
+
+def uartBRGHModeInfo(symbol, event):
+
+    if event["value"] == 1:
+        symbol.setLabel("*** Standard Speed mode 16x baud clock enabled (BRGH = 0) ***")
+    else:
+        symbol.setLabel("*** High Speed mode 4x baud clock enabled (BRGH = 1) ***")
 
 def updateUARTClockWarningStatus(symbol, event):
 
@@ -521,14 +524,14 @@ def instantiateComponent(uartComponent):
     uartSym_UxMODE_BRGH.setDisplayMode( "Description" )
     for ii in BRGH_names:
         uartSym_UxMODE_BRGH.addKey( ii['key'],ii['value'], ii['desc'] )
-    uartSym_UxMODE_BRGH.setReadOnly(True)
+    uartSym_UxMODE_BRGH.setVisible(False)
 
     #RXINV, Rx polarity inversion bit
     RXINV_names = []
     _get_bitfield_names(uartValGrp_UxMODE_RXINV, RXINV_names)
     uartSym_UxMODE_RXINV = uartComponent.createKeyValueSetSymbol("UART_RXINV", None)
     uartSym_UxMODE_RXINV.setLabel(uartBitField_UxMODE_RXINV.getAttribute("caption"))
-    uartSym_UxMODE_RXINV.setDefaultValue(find_key_value(0, RXINV_names)) # standard speed mode
+    uartSym_UxMODE_RXINV.setDefaultValue(find_key_value(0, RXINV_names)) # UXRX idle state is 1
     uartSym_UxMODE_RXINV.setOutputMode( "Value" )
     uartSym_UxMODE_RXINV.setDisplayMode( "Description" )
     uartSym_UxMODE_RXINV.setVisible(False)
@@ -666,6 +669,10 @@ def instantiateComponent(uartComponent):
     uartBRGValue.setVisible(False)
     uartBRGValue.setDependencies(baudRateTrigger, ["BAUD_RATE", "core." + uartInstanceName.getValue() + "_CLOCK_FREQUENCY"])
 
+    uartSymBRGHModeComment = uartComponent.createCommentSymbol("UART_BRGH_MODE_COMMENT", None)
+    uartSymBRGHModeComment.setLabel("*** Standard Speed mode 16x baud clock enabled (BRGH = 0) ***")
+    uartSymBRGHModeComment.setDependencies(uartBRGHModeInfo, ["UART_BRGH"])
+
     #UART Baud Rate not supported comment
     uartSym_BaudError_Comment = uartComponent.createCommentSymbol("UART_BAUD_ERROR_COMMENT", None)
     uartSym_BaudError_Comment.setLabel("********** UART Clock source value is low for the desired baud rate **********")
@@ -673,6 +680,24 @@ def instantiateComponent(uartComponent):
 
     #Use setValue instead of setDefaultValue to store symbol value in default.xml
     uartBRGValue.setValue(brgVal, 1)
+
+    ############################################################################
+    #### Dependency ####
+    ############################################################################
+
+    ## EVIC Interrupt Dynamic settings
+    setUARTInterruptData(uartSymInterruptMode.getValue())
+
+    uartSymIntEnComment = uartComponent.createCommentSymbol("UART_INTRRUPT_ENABLE_COMMENT", None)
+    uartSymIntEnComment.setLabel("Warning!!! " + uartInstanceName.getValue() + " Interrupt is Disabled in Interrupt Manager")
+    uartSymIntEnComment.setVisible(False)
+    uartSymIntEnComment.setDependencies(updateUARTInterruptData, ["USART_INTERRUPT_MODE"] + InterruptVectorUpdate)
+
+    # Clock Warning status
+    uartSym_ClkEnComment = uartComponent.createCommentSymbol("UART_CLOCK_ENABLE_COMMENT", None)
+    uartSym_ClkEnComment.setLabel("Warning!!! " + uartInstanceName.getValue() + " Peripheral Clock is Disabled in Clock Manager")
+    uartSym_ClkEnComment.setVisible(False)
+    uartSym_ClkEnComment.setDependencies(updateUARTClockWarningStatus, ["core." + uartInstanceName.getValue() + "_CLOCK_ENABLE"])
 
     ###################################################################################################
     ####################################### Driver Symbols ############################################
@@ -742,24 +767,6 @@ def instantiateComponent(uartComponent):
     uartSym_RxRegister = uartComponent.createStringSymbol("RECEIVE_DATA_REGISTER", None)
     uartSym_RxRegister.setDefaultValue("&(U" + uartInstanceNum.getValue() + "RXREG)")
     uartSym_RxRegister.setVisible(False)
-
-    ############################################################################
-    #### Dependency ####
-    ############################################################################
-
-    ## EVIC Interrupt Dynamic settings
-    setUARTInterruptData(uartSymInterruptMode.getValue())
-
-    uartSymIntEnComment = uartComponent.createCommentSymbol("UART_INTRRUPT_ENABLE_COMMENT", None)
-    uartSymIntEnComment.setLabel("Warning!!! " + uartInstanceName.getValue() + " Interrupt is Disabled in Interrupt Manager")
-    uartSymIntEnComment.setVisible(False)
-    uartSymIntEnComment.setDependencies(updateUARTInterruptData, ["USART_INTERRUPT_MODE"] + InterruptVectorUpdate)
-
-    # Clock Warning status
-    uartSym_ClkEnComment = uartComponent.createCommentSymbol("UART_CLOCK_ENABLE_COMMENT", None)
-    uartSym_ClkEnComment.setLabel("Warning!!! " + uartInstanceName.getValue() + " Peripheral Clock is Disabled in Clock Manager")
-    uartSym_ClkEnComment.setVisible(False)
-    uartSym_ClkEnComment.setDependencies(updateUARTClockWarningStatus, ["core." + uartInstanceName.getValue() + "_CLOCK_ENABLE"])
 
     ############################################################################
     #### Code Generation ####
