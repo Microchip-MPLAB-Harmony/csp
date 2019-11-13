@@ -752,7 +752,7 @@ def uartClockFreqCalc(symbol, event):
             freq = int(Database.getSymbolValue("core", "SYS_CLK_FREQ"))
         elif uartClkSrc == 1:
             # calculate FRC frequency
-            freqDiv = ''.join([i for i in Database.getSymbolValue("core", adchs_clock_map[adchsClkSrc]) if i.isdigit()])
+            freqDiv = ''.join([i for i in Database.getSymbolValue("core", "CONFIG_SYS_CLK_FRCDIV") if i.isdigit()])
             freq = 8000000 / int(freqDiv)
         elif uartClkSrc == 0:
             freq = int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_REFCLK1_FREQ"))
@@ -1712,7 +1712,7 @@ if __name__ == "__main__":
                 usbIndex = 1
                 for register in usbRegGroup:
                     regName = str(register.getAttribute("name"))
-                    if regName.startswith("U") and regName.endswith("CON"):
+                    if regName == ("U" + str(usbIndex) + "CON"):
                         availablePeripherals.append("USB" + str(usbIndex))
                         usbIndex += 1
             else:

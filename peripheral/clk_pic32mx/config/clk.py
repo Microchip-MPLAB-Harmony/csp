@@ -124,7 +124,8 @@ peripheralModuleDisableDict_5xx_6xx_7xx = {
         "CAN1": [],
         "CAN2": [],
         "RTCC": [],
-        "PMP": []
+        "PMP": [],
+        "ETH": []
 }
 
 def updateMaxFreq(symbol, event):
@@ -140,6 +141,18 @@ def updateMaxFreq(symbol, event):
             symbol.setValue(40000000, 2)
         elif event["value"] == 1:
             symbol.setValue(50000000, 2)
+
+def sysPeripheralClockFreqCalc(symbol, event):
+
+    freq = 0
+    periName = symbol.getID().split("_")[0]
+
+    if "_CLOCK_ENABLE" in event["id"] and event["value"]:
+        freq = int(Database.getSymbolValue("core", "SYS_CLK_FREQ"))
+    elif Database.getSymbolValue("core", periName + "_CLOCK_ENABLE"):
+        freq = int(event["value"])
+
+    symbol.setValue(freq, 1)
 
 def peripheralClockFreqCalc(symbol, event):
 
@@ -186,7 +199,7 @@ def uartClockFreqCalc(symbol, event):
             freq = int(Database.getSymbolValue("core", "SYS_CLK_FREQ"))
         elif uartClkSrc == 1:
             # calculate FRC frequency
-            freqDiv = ''.join([i for i in Database.getSymbolValue("core", adchs_clock_map[adchsClkSrc]) if i.isdigit()])
+            freqDiv = ''.join([i for i in Database.getSymbolValue("core", "CONFIG_SYS_CLK_FRCDIV") if i.isdigit()])
             freq = 8000000 / int(freqDiv)
 
     symbol.setValue(freq, 1)
@@ -207,6 +220,7 @@ def spiClockFreqCalc(symbol, event):
     symbol.setValue(freq, 1)
 
 def canClockFreqCalc(symbol, event):
+
     symbol.setValue(int(Database.getSymbolValue("core", "SYS_CLK_FREQ")))
 
 def updatePMDxRegValue(symbol, event):
@@ -300,13 +314,13 @@ def enableMenu(menu, event):
 
 def updateRefFreq(menu, event):
     if event["value"] == True:
-	    # get default value from atdf file
-	    targetName = "__REFCLK_DEF_FREQ"
-	    params = ATDF.getNode('/avr-tools-device-file/devices/device/parameters')
-	    paramsChildren = params.getChildren()
-	    for param in paramsChildren:  # find parameter we are interested in now
-	        if(param.getAttribute("name") == targetName):
-	            menu.setValue(param.getAttribute("value"),2)
+        # get default value from atdf file
+        targetName = "__REFCLK_DEF_FREQ"
+        params = ATDF.getNode('/avr-tools-device-file/devices/device/parameters')
+        paramsChildren = params.getChildren()
+        for param in paramsChildren:  # find parameter we are interested in now
+            if(param.getAttribute("name") == targetName):
+                menu.setValue(param.getAttribute("value"),2)
     else:
         menu.setValue("0",2)
 
@@ -1086,11 +1100,11 @@ if __name__ == "__main__":
     for register in cfgRegGroup:
         regName = str(register.getAttribute("name"))
         if regName.startswith("PMD"):
-            mask = 0x0		
+            mask = 0x0
             pmdCount += 1
             for bitfield in register.getChildren():
                 mask |= int(str(bitfield.getAttribute("mask")), 16)
-            pmdDict[pmdCount] = mask			
+            pmdDict[pmdCount] = mask
 
     peripheralClockMenu = coreComponent.createMenuSymbol("PERIPHERAL_CLK_CONFIG", SYM_CLK_MENU)
     peripheralClockMenu.setLabel("Peripheral Clock Configuration")
@@ -1153,6 +1167,8 @@ if __name__ == "__main__":
                                                                                         "CONFIG_SYS_CLK_REFCLK_FREQ"])
                     elif Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001290" and peripheralName.startswith("CAN"):
                         peripheral_clock_freq.setDependencies(canClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", "SYS_CLK_FREQ"])
+                    elif peripheralName.startswith("ETH"):
+                        peripheral_clock_freq.setDependencies(sysPeripheralClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", "SYS_CLK_FREQ"])
                     else:
                         peripheral_clock_freq.setDependencies(peripheralClockFreqCalc, [peripheralName + "_CLOCK_ENABLE", "CONFIG_SYS_CLK_PBCLK_FREQ"])
 

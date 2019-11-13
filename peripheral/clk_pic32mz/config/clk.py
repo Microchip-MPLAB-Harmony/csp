@@ -639,7 +639,7 @@ def uartClockFreqCalc(symbol, event):
             freq = int(Database.getSymbolValue("core", "SYS_CLK_FREQ"))
         elif uartClkSrc == 1:
             # calculate FRC frequency
-            freqDiv = ''.join([i for i in Database.getSymbolValue("core", adchs_clock_map[adchsClkSrc]) if i.isdigit()])
+            freqDiv = ''.join([i for i in Database.getSymbolValue("core", "CONFIG_SYS_CLK_FRCDIV") if i.isdigit()])
             freq = 8000000 / int(freqDiv)
 
     symbol.setValue(freq, 1)
