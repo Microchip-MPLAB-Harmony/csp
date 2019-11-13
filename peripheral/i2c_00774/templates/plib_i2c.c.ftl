@@ -171,7 +171,7 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
                 ${I2C_INSTANCE_NAME?lower_case}Obj.state = I2C_STATE_WAIT_STOP_CONDITION_COMPLETE;
             }
             break;
-            
+
         case I2C_STATE_READ_10BIT_MODE:
             if (!(${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_ACKSTAT_MASK))
             {
@@ -500,10 +500,10 @@ bool ${I2C_INSTANCE_NAME}_TransferSetup(I2C_TRANSFER_SETUP* setup, uint32_t srcC
         srcClkFreq = ${I2C_PLIB_CLOCK_FREQUENCY?eval}UL;
     }
 
-    baudValue = ((1.0/(2*i2cClkSpeed) - 104e-9)*(float)srcClkFreq) - 2;
+    baudValue = ((float)((float)srcClkFreq/2.0) * (1/(float)i2cClkSpeed - 0.000000130)) - 1;
 
-    /* I2CxBRG value cannot be 0 or 1 */
-    if ((baudValue == 0) || (baudValue == 1))
+    /* I2CxBRG value cannot be from 0 to 3 or more than the size of the baud rate register */
+    if ((baudValue < 4) || (baudValue > ${I2C_MAX_BRG}))
     {
         return false;
     }

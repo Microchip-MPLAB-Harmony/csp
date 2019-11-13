@@ -116,15 +116,13 @@ def baudRateCalc(clk, baud):
     #I2CxBRG = [PBCLK/(2*FSCK) - (PBCLK*TPGOB)/2]  - 1
     #where TPGD = 130ns
 
-    I2CxBRG = (clk / (2 * baud) - (clk * 0.000000104) / 2)  - 1
+    I2CxBRG = int ((clk / (2 * baud) - (clk * 0.000000130) / 2)  - 1)
 
     i2cSym_BaudError_Comment.setVisible(False)
 
-    if I2CxBRG < 0:
-        I2CxBRG = 0
+    if I2CxBRG < 4:
+        I2CxBRG = 4
         i2cSym_BaudError_Comment.setVisible(True)
-    elif I2CxBRG < 3:
-        I2CxBRG = 3
     elif I2CxBRG > i2cSymMaxBRG.getValue():
         I2CxBRG = i2cSymMaxBRG.getValue()
         i2cSym_BaudError_Comment.setVisible(True)
@@ -204,7 +202,7 @@ def instantiateComponent(i2cComponent):
     i2cSym_BAUD.setLabel("I2C Baud Rate (Hz)")
     i2cSym_BAUD.setDefaultValue(50000)
     i2cSym_BAUD.setMin(1)
-    i2cSym_BAUD.setMax(400000)
+    i2cSym_BAUD.setMax(1000000)
 
     #I2C Baud Rate not supported comment
     i2cSym_BaudError_Comment = i2cComponent.createCommentSymbol("I2C_BAUD_ERROR_COMMENT", None)
