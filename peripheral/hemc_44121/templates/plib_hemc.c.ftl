@@ -128,6 +128,11 @@ void ${HSDRAMC_INSTANCE_NAME}_Initialize( void )
      * Configure the Refresh Timer Register. */
     ${HSDRAMC_INSTANCE_NAME}_REGS->HSDRAMC_TR = ${HSDRAMC_TR_COUNT};
 
+    <#if HSDRAMC_WRITE_PROTECTION>
+    /* Enable Write Protection */
+    ${HSDRAMC_INSTANCE_NAME}_REGS->HSDRAMC_WPMR = (HSDRAMC_WPMR_WPKEY_PASSWD | HSDRAMC_WPMR_WPEN_Msk);
+    </#if>
+
 }
 </#if>
 
