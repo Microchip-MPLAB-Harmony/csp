@@ -136,7 +136,8 @@ packagePinCount = 0
 ## Number of unique pinouts
 global uniquePinout
 uniquePinout = 1
-
+global debounceFilterEnabledByDefault
+debounceFilterEnabledByDefault = False
 global availablePinDictionary
 availablePinDictionary = {}
 
@@ -157,6 +158,15 @@ pinBitPosition = []
 pincfgrValue = []
 drvSTRVal = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PIO"]/value-group@[name="PIO_CFGR0__DRVSTR"]')
 
+node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"PIO\"]/instance@[name=\"PIOA\"]/parameters/param@[name=\"DEBOUNCE_GLITCH_ACTIVE\"]")
+pioDebounceConf = coreComponent.createBooleanSymbol("PIO_DEBOUNCE_NOT_CONFIGURABLE", None)
+pioDebounceConf.setVisible(False)
+if node != None:
+	debounceFilterEnabledByDefault = True
+	pioDebounceConf.setDefaultValue(True)
+else:
+	debounceFilterEnabledByDefault = False
+	pioDebounceConf.setDefaultValue(False)
 
 ###########################################Local Variables################################################################
 
@@ -276,6 +286,7 @@ def pinCFGR (pin, cfgr_reg):
 	global port_mskr
 	global per_func
 	global interruptValues
+	global drvStrengthIsConfigurable
 	pin_num = int(str(pin.getID()).split("PIN_")[1].split("_CFGR_Value")[0])
 	port = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_PIO_CHANNEL")
 	bit_pos = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_PIO_PIN")
@@ -286,8 +297,9 @@ def pinCFGR (pin, cfgr_reg):
 	direction = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_DIR")
 	schmitt = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_ST")
 	tamper = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_TAMPER")
-	filterMask = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_IFEN")
-	filterclock = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_IFSCEN")
+	if debounceFilterEnabledByDefault == False:
+		filterMask = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_IFEN")
+		filterclock = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_IFSCEN")
 	driver = Database.getSymbolValue("core", "PIN_" + str(pin_num) + "_DRV")
 	if port:
 		if pullup:
@@ -306,10 +318,11 @@ def pinCFGR (pin, cfgr_reg):
 			cfgr |= 1 << 31
 		if driver:
 			cfgr |= driver << 16
-		if filterMask:
-			cfgr |= 1 << 12
-		if filterclock == 1:
-			cfgr |= 1 << 13
+		if debounceFilterEnabledByDefault == False:
+			if filterMask:
+				cfgr |= 1 << 12
+			if filterclock == 1:
+				cfgr |= 1 << 13
 
 		Database.setSymbolValue("core", "PORT_" + str(port) + "_CFGR_Value" + str(bit_pos), str(hex(cfgr)), 2)
 
@@ -525,11 +538,15 @@ for pinNumber in range(1, packagePinCount + 1):
 	pinFilter = coreComponent.createBooleanSymbol("PIN_" + str(pinNumber) + "_IFEN", pin[pinNumber-1])
 	pinFilter.setLabel("Glitch Filter Enable")
 	pinFilter.setDependencies(updateInputFilter, ["PIN_" + str(pinNumber) + "_PIO_FILTER"])
+	if debounceFilterEnabledByDefault:
+		pinFilter.setVisible(False)
 
 	pinFilterClock = coreComponent.createKeyValueSetSymbol("PIN_" + str(pinNumber) + "_IFSCEN", pin[pinNumber-1])
 	pinFilterClock.setLabel("Glitch filter Clock Source ")
 	pinFilterClock.addKey("MCK", str(0) , "The glitch filter is able to filter glitches with a duration < tmck/2" )
 	pinFilterClock.addKey("SLCK", str(1) , "The debouncing filter is able to filter pulses with a duration < tdiv_slck/2" )
+	if debounceFilterEnabledByDefault:
+		pinFilterClock.setVisible(False)
 
 	# This symbol ID name is split and pin number is extracted and used inside "setupInterrupt" function. so be careful while changing the name of this ID.
 	pinInterrupt.append(pinNumber)
