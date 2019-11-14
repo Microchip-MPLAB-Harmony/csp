@@ -338,7 +338,11 @@ def instantiateComponent(hemcComponent):
     hsdramcSym_WPMR_WPEN = hemcComponent.createBooleanSymbol("HSDRAMC_WRITE_PROTECTION", hsdramcSymMenu_features)
     hsdramcSym_WPMR_WPEN.setLabel("Enable Write Protection")
     hsdramcSym_WPMR_WPEN.setDefaultValue(False)
-    
+
+    hsdramcSym_CTRL_RMW = hemcComponent.createBooleanSymbol("HSDRAMC_RMW", hsdramcSymMenu_features)
+    hsdramcSym_CTRL_RMW.setLabel("Enable Read Modify Write")
+    hsdramcSym_CTRL_RMW.setDefaultValue(False)
+
     # HSDRAMC Timing Parameters
     hsdramcSymMenu_TIMING_MENU = hemcComponent.createMenuSymbol("HSDRAMC_TIMING_MENU", sdramMenu)
     hsdramcSymMenu_TIMING_MENU.setLabel("Configure SDRAM Timing Parameters")
