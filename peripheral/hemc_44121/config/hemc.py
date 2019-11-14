@@ -608,7 +608,7 @@ def instantiateComponent(hemcComponent):
         hsmcSym_MODE_DBW.setDisplayMode("Description")
         hsmcSym_MODE_DBW.addKey("HSMC_MODE_DBW_8_BIT", "0", "8-bit Data Bus")
         hsmcSym_MODE_DBW.addKey("HSMC_MODE_DBW_16_BIT", "1", "16-bit Data Bus")
-        hsmcSym_MODE_DBW.addKey("HSMC_MODE_DBW_32_BIT", "2", "16-bit Data Bus")
+        hsmcSym_MODE_DBW.addKey("HSMC_MODE_DBW_32_BIT", "2", "32-bit Data Bus")
         hsmcSym_MODE_DBW.setSelectedKey("HSMC_MODE_DBW_32_BIT", 2)
 
         hsmcSym_MODE_EXNW = hemcComponent.createKeyValueSetSymbol("HSMC_NWAIT_MODE_CS" + str(hsmcChipSelNum), hsmcSym_MODE_CS_REGISTER)
