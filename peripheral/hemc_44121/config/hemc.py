@@ -250,6 +250,8 @@ def instantiateComponent(hemcComponent):
         csBase = hemcComponent.createHexSymbol("CS_" + str(id) + "_MEMORY_BASE", csMenu)
         csBase.setLabel("Relative Base Address")
         csBase.setDefaultValue(0x3ffff)
+        csBase.setMin(0)
+        csBase.setMax(0x3ffff)
 
         csType = hemcComponent.createKeyValueSetSymbol("CS_" + str(id) + "_MEMORY_TYPE", csMenu)
         csType.setLabel("Memory Type")
