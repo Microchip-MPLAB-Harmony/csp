@@ -56,6 +56,7 @@
 // Section: Global Data
 // *****************************************************************************
 // *****************************************************************************
+
 <#assign I2C_PLIB = "I2C_INSTANCE_NAME">
 <#assign I2C_PLIB_CLOCK_FREQUENCY = "core." + I2C_PLIB?eval + "_CLOCK_FREQUENCY">
 
@@ -87,13 +88,11 @@ void ${I2C_INSTANCE_NAME}_Initialize(void)
     ${I2C_INSTANCE_NAME}CONCLR = _${I2C_INSTANCE_NAME}CON_SMEN_MASK;
 </#if>
 
-    /* Initialize master interrupt */
+    /* Clear master interrupt flag */
     ${I2C_MASTER_IFS_REG}CLR = _${I2C_MASTER_IFS_REG}_${I2C_INSTANCE_NAME}MIF_MASK;
-    ${I2C_MASTER_IEC_REG}SET = _${I2C_MASTER_IEC_REG}_${I2C_INSTANCE_NAME}MIE_MASK;
 
-    /* Initialize fault interrupt */
+    /* Clear fault interrupt flag */
     ${I2C_BUS_IFS_REG}CLR = _${I2C_BUS_IFS_REG}_${I2C_INSTANCE_NAME}BIF_MASK;
-    ${I2C_BUS_IEC_REG}SET = _${I2C_BUS_IEC_REG}_${I2C_INSTANCE_NAME}BIE_MASK;
 
     /* Turn on the I2C module */
     ${I2C_INSTANCE_NAME}CONSET = _${I2C_INSTANCE_NAME}CON_ON_MASK;
@@ -105,13 +104,18 @@ void ${I2C_INSTANCE_NAME}_Initialize(void)
 /* I2C state machine */
 static void ${I2C_INSTANCE_NAME}_TransferSM(void)
 {
+    ${I2C_MASTER_IFS_REG}CLR = _${I2C_MASTER_IFS_REG}_${I2C_INSTANCE_NAME}MIF_MASK;
+
     switch (${I2C_INSTANCE_NAME?lower_case}Obj.state)
     {
         case I2C_STATE_START_CONDITION:
             /* Generate Start Condition */
             ${I2C_INSTANCE_NAME}CONSET = _${I2C_INSTANCE_NAME}CON_SEN_MASK;
+            ${I2C_MASTER_IEC_REG}SET = _${I2C_MASTER_IEC_REG}_${I2C_INSTANCE_NAME}MIE_MASK;
+            ${I2C_BUS_IEC_REG}SET = _${I2C_BUS_IEC_REG}_${I2C_INSTANCE_NAME}BIE_MASK;
             ${I2C_INSTANCE_NAME?lower_case}Obj.state = I2C_STATE_ADDR_BYTE_1_SEND;
             break;
+
         case I2C_STATE_ADDR_BYTE_1_SEND:
             /* Is transmit buffer full? */
             if (!(${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_TBF_MASK))
@@ -139,6 +143,7 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
                 }
             }
             break;
+
         case I2C_STATE_ADDR_BYTE_2_SEND:
             /* Transmit the 2nd byte of the 10-bit slave address */
             <#if I2C_INCLUDE_FORCED_WRITE_API == true>
@@ -186,6 +191,7 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
                 ${I2C_INSTANCE_NAME?lower_case}Obj.state = I2C_STATE_WAIT_STOP_CONDITION_COMPLETE;
             }
             break;
+
         case I2C_STATE_ADDR_BYTE_1_SEND_10BIT_ONLY:
             /* Is transmit buffer full? */
             if (!(${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_TBF_MASK))
@@ -202,6 +208,7 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
                 ${I2C_INSTANCE_NAME?lower_case}Obj.state = I2C_STATE_WAIT_STOP_CONDITION_COMPLETE;
             }
             break;
+
         case I2C_STATE_WRITE:
             <#if I2C_INCLUDE_FORCED_WRITE_API == true>
             if ((!(${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_ACKSTAT_MASK)) || (${I2C_INSTANCE_NAME?lower_case}Obj.forcedWrite == true))
@@ -255,6 +262,7 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
                 ${I2C_INSTANCE_NAME?lower_case}Obj.state = I2C_STATE_WAIT_STOP_CONDITION_COMPLETE;
             }
             break;
+
         case I2C_STATE_READ:
             if (!(${I2C_INSTANCE_NAME}STAT & _${I2C_INSTANCE_NAME}STAT_ACKSTAT_MASK))
             {
@@ -310,6 +318,8 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
 
         case I2C_STATE_WAIT_STOP_CONDITION_COMPLETE:
             ${I2C_INSTANCE_NAME?lower_case}Obj.state = I2C_STATE_IDLE;
+            ${I2C_MASTER_IEC_REG}CLR = _${I2C_MASTER_IEC_REG}_${I2C_INSTANCE_NAME}MIE_MASK;
+            ${I2C_BUS_IEC_REG}CLR = _${I2C_BUS_IEC_REG}_${I2C_INSTANCE_NAME}BIE_MASK;
             if (${I2C_INSTANCE_NAME?lower_case}Obj.callback != NULL)
             {
                 ${I2C_INSTANCE_NAME?lower_case}Obj.callback(${I2C_INSTANCE_NAME?lower_case}Obj.context);
@@ -319,7 +329,6 @@ static void ${I2C_INSTANCE_NAME}_TransferSM(void)
         default:
             break;
     }
-    ${I2C_MASTER_IFS_REG}CLR = _${I2C_MASTER_IFS_REG}_${I2C_INSTANCE_NAME}MIF_MASK;
 }
 
 
@@ -364,11 +373,14 @@ bool ${I2C_INSTANCE_NAME}_Read(uint16_t address, uint8_t* rdata, size_t rlength)
     ${I2C_INSTANCE_NAME?lower_case}Obj.readCount           = 0;
     ${I2C_INSTANCE_NAME?lower_case}Obj.transferType        = I2C_TRANSFER_TYPE_READ;
     ${I2C_INSTANCE_NAME?lower_case}Obj.error               = I2C_ERROR_NONE;
-    ${I2C_INSTANCE_NAME?lower_case}Obj.state               = I2C_STATE_START_CONDITION;
+    ${I2C_INSTANCE_NAME?lower_case}Obj.state               = I2C_STATE_ADDR_BYTE_1_SEND;
     <#if I2C_INCLUDE_FORCED_WRITE_API == true>
     ${I2C_INSTANCE_NAME?lower_case}Obj.forcedWrite         = false;
     </#if>
-    ${I2C_INSTANCE_NAME}_TransferSM();
+
+    ${I2C_INSTANCE_NAME}CONSET                  = _${I2C_INSTANCE_NAME}CON_SEN_MASK;
+    ${I2C_MASTER_IEC_REG}SET                     = _${I2C_MASTER_IEC_REG}_${I2C_INSTANCE_NAME}MIE_MASK;
+    ${I2C_BUS_IEC_REG}SET                     = _${I2C_BUS_IEC_REG}_${I2C_INSTANCE_NAME}BIE_MASK;
 
     return true;
 }
@@ -391,12 +403,14 @@ bool ${I2C_INSTANCE_NAME}_Write(uint16_t address, uint8_t* wdata, size_t wlength
     ${I2C_INSTANCE_NAME?lower_case}Obj.readCount           = 0;
     ${I2C_INSTANCE_NAME?lower_case}Obj.transferType        = I2C_TRANSFER_TYPE_WRITE;
     ${I2C_INSTANCE_NAME?lower_case}Obj.error               = I2C_ERROR_NONE;
-    ${I2C_INSTANCE_NAME?lower_case}Obj.state               = I2C_STATE_START_CONDITION;
+    ${I2C_INSTANCE_NAME?lower_case}Obj.state               = I2C_STATE_ADDR_BYTE_1_SEND;
     <#if I2C_INCLUDE_FORCED_WRITE_API == true>
     ${I2C_INSTANCE_NAME?lower_case}Obj.forcedWrite         = false;
     </#if>
 
-    ${I2C_INSTANCE_NAME}_TransferSM();
+    ${I2C_INSTANCE_NAME}CONSET                  = _${I2C_INSTANCE_NAME}CON_SEN_MASK;
+    ${I2C_MASTER_IEC_REG}SET                     = _${I2C_MASTER_IEC_REG}_${I2C_INSTANCE_NAME}MIE_MASK;
+    ${I2C_BUS_IEC_REG}SET                     = _${I2C_BUS_IEC_REG}_${I2C_INSTANCE_NAME}BIE_MASK;
 
     return true;
 }
@@ -419,10 +433,12 @@ bool ${I2C_INSTANCE_NAME}_WriteForced(uint16_t address, uint8_t* wdata, size_t w
     ${I2C_INSTANCE_NAME?lower_case}Obj.readCount           = 0;
     ${I2C_INSTANCE_NAME?lower_case}Obj.transferType        = I2C_TRANSFER_TYPE_WRITE;
     ${I2C_INSTANCE_NAME?lower_case}Obj.error               = I2C_ERROR_NONE;
-    ${I2C_INSTANCE_NAME?lower_case}Obj.state               = I2C_STATE_START_CONDITION;
+    ${I2C_INSTANCE_NAME?lower_case}Obj.state               = I2C_STATE_ADDR_BYTE_1_SEND;
     ${I2C_INSTANCE_NAME?lower_case}Obj.forcedWrite         = true;
 
-    ${I2C_INSTANCE_NAME}_TransferSM();
+    ${I2C_INSTANCE_NAME}CONSET                  = _${I2C_INSTANCE_NAME}CON_SEN_MASK;
+    ${I2C_MASTER_IEC_REG}SET                     = _${I2C_MASTER_IEC_REG}_${I2C_INSTANCE_NAME}MIE_MASK;
+    ${I2C_BUS_IEC_REG}SET                     = _${I2C_BUS_IEC_REG}_${I2C_INSTANCE_NAME}BIE_MASK;
 
     return true;
 }
@@ -445,11 +461,14 @@ bool ${I2C_INSTANCE_NAME}_WriteRead(uint16_t address, uint8_t* wdata, size_t wle
     ${I2C_INSTANCE_NAME?lower_case}Obj.readCount           = 0;
     ${I2C_INSTANCE_NAME?lower_case}Obj.transferType        = I2C_TRANSFER_TYPE_WRITE;
     ${I2C_INSTANCE_NAME?lower_case}Obj.error               = I2C_ERROR_NONE;
-    ${I2C_INSTANCE_NAME?lower_case}Obj.state               = I2C_STATE_START_CONDITION;
+    ${I2C_INSTANCE_NAME?lower_case}Obj.state               = I2C_STATE_ADDR_BYTE_1_SEND;
     <#if I2C_INCLUDE_FORCED_WRITE_API == true>
     ${I2C_INSTANCE_NAME?lower_case}Obj.forcedWrite         = false;
     </#if>
-    ${I2C_INSTANCE_NAME}_TransferSM();
+
+    ${I2C_INSTANCE_NAME}CONSET                  = _${I2C_INSTANCE_NAME}CON_SEN_MASK;
+    ${I2C_MASTER_IEC_REG}SET                     = _${I2C_MASTER_IEC_REG}_${I2C_INSTANCE_NAME}MIE_MASK;
+    ${I2C_BUS_IEC_REG}SET                     = _${I2C_BUS_IEC_REG}_${I2C_INSTANCE_NAME}BIE_MASK;
 
     return true;
 }
