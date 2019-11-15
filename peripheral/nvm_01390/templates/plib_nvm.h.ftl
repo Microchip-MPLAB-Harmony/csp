@@ -55,7 +55,9 @@
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
- extern "C" {
+
+    extern "C" {
+
 #endif
 
 // DOM-IGNORE-END
@@ -85,28 +87,32 @@ typedef enum
 } NVM_ERROR;
 
 <#if INTERRUPT_ENABLE == true>
-    <#lt>typedef void (*NVM_CALLBACK)(uintptr_t context);
+    <#lt>typedef void (*NVM_CALLBACK)( uintptr_t context );
 </#if>
+
+void ${NVM_INSTANCE_NAME}_Initialize( void );
 
 bool ${NVM_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, const uint32_t address );
 
-bool ${NVM_INSTANCE_NAME}_WordWrite(uint32_t data, uint32_t address);
+bool ${NVM_INSTANCE_NAME}_WordWrite( uint32_t data, uint32_t address );
 
-bool ${NVM_INSTANCE_NAME}_RowWrite(uint32_t *data, uint32_t address);
+bool ${NVM_INSTANCE_NAME}_RowWrite( uint32_t *data, uint32_t address );
 
-bool ${NVM_INSTANCE_NAME}_PageErase(uint32_t address);
+bool ${NVM_INSTANCE_NAME}_PageErase( uint32_t address );
 
 NVM_ERROR ${NVM_INSTANCE_NAME}_ErrorGet( void );
 
 bool ${NVM_INSTANCE_NAME}_IsBusy( void );
 
 <#if INTERRUPT_ENABLE == true>
-    <#lt>void ${NVM_INSTANCE_NAME}_CallbackRegister ( NVM_CALLBACK callback, uintptr_t context );
+    <#lt>void ${NVM_INSTANCE_NAME}_CallbackRegister( NVM_CALLBACK callback, uintptr_t context );
 </#if>
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
-}
+
+    }
+
 #endif
 
 // DOM-IGNORE-END

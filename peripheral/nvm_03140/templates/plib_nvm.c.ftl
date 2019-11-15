@@ -88,8 +88,8 @@ typedef enum
 // Section: Local Functions                                                   */
 /* ************************************************************************** */
 /* ************************************************************************** */
-// *****************************************************************************
 
+// *****************************************************************************
 // *****************************************************************************
 // Section: ${NVM_INSTANCE_NAME} Implementation
 // *****************************************************************************
@@ -107,7 +107,7 @@ typedef enum
     <#lt>    ${NVM_INSTANCE_NAME?lower_case}Context         = context;
     <#lt>}
 
-    <#lt>void ${NVM_INSTANCE_NAME}_InterruptHandler(void)
+    <#lt>void ${NVM_INSTANCE_NAME}_InterruptHandler( void )
     <#lt>{
     <#lt>    ${NVM_IFS_REG}CLR = ${NVM_INSTANCE_NAME}_INTERRUPT_FLAG_MASK;
 
@@ -126,7 +126,7 @@ static void ${NVM_INSTANCE_NAME}_WriteUnlockSequence( void )
     NVMKEY = NVM_UNLOCK_KEY2;
 }
 
-static void ${NVM_INSTANCE_NAME}_StartOperationAtAddress( uint32_t address,  NVM_OPERATION_MODE operation)
+static void ${NVM_INSTANCE_NAME}_StartOperationAtAddress( uint32_t address,  NVM_OPERATION_MODE operation )
 {
     volatile uint32_t processorStatus;
 
@@ -177,13 +177,20 @@ static void ${NVM_INSTANCE_NAME}_StartOperationAtAddress( uint32_t address,  NVM
 // Section: Interface Functions                                               */
 /* ************************************************************************** */
 /* ************************************************************************** */
+
+void ${NVM_INSTANCE_NAME}_Initialize( void )
+{
+    NVM_StartOperationAtAddress( NVMADDR,  NO_OPERATION );
+}
+
 bool ${NVM_INSTANCE_NAME}_Read( uint32_t *data, uint32_t length, const uint32_t address )
 {
     memcpy((void *)data, (void *)KVA0_TO_KVA1(address), length);
 
     return true;
 }
-bool ${NVM_INSTANCE_NAME}_WordWrite(uint32_t data, uint32_t address)
+
+bool ${NVM_INSTANCE_NAME}_WordWrite( uint32_t data, uint32_t address )
 {
     NVMDATA0 = (uint32_t )data;
 
@@ -192,7 +199,7 @@ bool ${NVM_INSTANCE_NAME}_WordWrite(uint32_t data, uint32_t address)
     return true;
 }
 
-bool ${NVM_INSTANCE_NAME}_QuadWordWrite(uint32_t *data, uint32_t address)
+bool ${NVM_INSTANCE_NAME}_QuadWordWrite( uint32_t *data, uint32_t address )
 {
    NVMDATA0 = *(data++);
    NVMDATA1 = *(data++);
@@ -204,7 +211,7 @@ bool ${NVM_INSTANCE_NAME}_QuadWordWrite(uint32_t *data, uint32_t address)
    return true;
 }
 
-bool ${NVM_INSTANCE_NAME}_RowWrite(uint32_t *data, uint32_t address)
+bool ${NVM_INSTANCE_NAME}_RowWrite( uint32_t *data, uint32_t address )
 {
    NVMSRCADDR = (uint32_t )KVA_TO_PA(data);
 
@@ -213,7 +220,7 @@ bool ${NVM_INSTANCE_NAME}_RowWrite(uint32_t *data, uint32_t address)
    return true;
 }
 
-bool ${NVM_INSTANCE_NAME}_PageErase(uint32_t address)
+bool ${NVM_INSTANCE_NAME}_PageErase( uint32_t address )
 {
    ${NVM_INSTANCE_NAME}_StartOperationAtAddress(address,  PAGE_ERASE_OPERATION);
 
@@ -231,7 +238,7 @@ bool ${NVM_INSTANCE_NAME}_IsBusy( void )
     return (bool)NVMCONbits.WR;
 }
 
-void ${NVM_INSTANCE_NAME}_ProgramFlashWriteProtect( uint32_t laddress, uint32_t haddress)
+void ${NVM_INSTANCE_NAME}_ProgramFlashWriteProtect( uint32_t laddress, uint32_t haddress )
 {
     ${NVM_INSTANCE_NAME}_WriteUnlockSequence();
 	
@@ -239,11 +246,9 @@ void ${NVM_INSTANCE_NAME}_ProgramFlashWriteProtect( uint32_t laddress, uint32_t 
     NVMPWPLT = _NVMPWPLT_ULOCK_MASK;
 	NVMPWPGTESET = _NVMPWPGTE_ULOCK_MASK;
 
-    /* Program the address range
-     */
+    /* Program the address range */
     NVMPWPLT = (laddress & _NVMPWPLT_PWPLT_MASK) | _NVMPWPLT_ULOCK_MASK;
     NVMPWPGTE = (haddress & _NVMPWPGTE_PWPGTE_MASK) | _NVMPWPGTE_ULOCK_MASK;
-
 }
 
 void ${NVM_INSTANCE_NAME}_ProgramFlashWriteProtectLock( void )
@@ -254,4 +259,3 @@ void ${NVM_INSTANCE_NAME}_ProgramFlashWriteProtectLock( void )
     NVMPWPLTCLR = _NVMPWPLT_ULOCK_MASK;
 	NVMPWPGTECLR = _NVMPWPGTE_ULOCK_MASK;
 }
-

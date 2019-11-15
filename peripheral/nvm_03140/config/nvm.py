@@ -242,9 +242,9 @@ def instantiateComponent(nvmComponent):
     nvmEraseApiName.setReadOnly(True)
     nvmEraseApiName.setDefaultValue(eraseApiName)
 
-###################################################################################################
-####################################### Code Generation  ##########################################
-###################################################################################################
+    ###################################################################################################
+    ####################################### Code Generation  ##########################################
+    ###################################################################################################
 
     configName = Variables.get("__CONFIGURATION_NAME")
 
@@ -269,3 +269,9 @@ def instantiateComponent(nvmComponent):
     nvmSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     nvmSystemDefFile.setType("STRING")
     nvmSystemDefFile.setMarkup(True)
+
+    nvmSystemInitFile = nvmComponent.createFileSymbol("NVM_SYS_INIT", None)
+    nvmSystemInitFile.setSourcePath("../peripheral/nvm_03140/templates/system/initialization.c.ftl")
+    nvmSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+    nvmSystemInitFile.setType("STRING")
+    nvmSystemInitFile.setMarkup(True)

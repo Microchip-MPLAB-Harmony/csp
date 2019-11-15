@@ -1,1 +1,1 @@
-    ${NVM_INSTANCE_NAME}_Initialize( );
+    ${NVM_INSTANCE_NAME}_Initialize();
