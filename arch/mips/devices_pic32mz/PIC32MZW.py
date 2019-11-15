@@ -136,7 +136,7 @@ def updateCFGCON3(menu,event):
     elif('ETHPLLPOSTDIV2' in event['id']):
         mask = Database.getSymbolValue("core", "ETHPLLPOSTDIV2_MASK")
     elif('BTPLLPOSTDIV2' in event['id']):
-        mask = Database.getSymbolValue("core", "ETHPLLPOSTDIV2_MASK")
+        mask = Database.getSymbolValue("core", "BTPLLPOSTDIV2_MASK")
     else:
         mask = '0'
     maskval = int(mask.split('0x')[1],16)
