@@ -5,61 +5,116 @@
       <Symbols dnOrder="0">
         <Integer dnOrder="0" id="CAN_CORE_CLOCK_FREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="can1" value="120000000"/>
+            <Dynamic dnOrder="0" id="can1" value="80250000"/>
           </Values>
         </Integer>
         <Comment dnOrder="1" id="CAN_CORE_CLOCK_INVALID_COMMENT">
           <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="visible">
+              <Value dnOrder="0">false</Value>
+            </Boolean>
+          </Attributes>
+        </Comment>
+        <Comment dnOrder="2" id="CAN_CORE_CLOCK_INVALID_DATA_BITRAT_COMMENT">
+          <Attributes dnOrder="0">
             <String dnOrder="0" id="text">
               <Value dnOrder="0">Warning!!!&amp;#160;CAN1&amp;#160;Clock&amp;#160;Frequency&amp;#160;is&amp;#160;too&amp;#160;high&amp;#160;for&amp;#160;required&amp;#160;Data&amp;#160;Bit&amp;#160;Timing</Value>
             </String>
+            <Boolean dnOrder="1" id="visible">
+              <Value dnOrder="0">false</Value>
+            </Boolean>
           </Attributes>
         </Comment>
-        <Comment dnOrder="2" id="CAN_TIME_QUANTA_INVALID_COMMENT">
+        <KeyValueSet dnOrder="3" id="CAN_CORE_SELECT_CLOCK_SOURCE">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="0"/>
+          </Values>
+        </KeyValueSet>
+        <Boolean dnOrder="4" id="CAN_MULTI_VECTOR_INTERRUPT">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="can1" value="true"/>
+          </Values>
+        </Boolean>
+        <KeyValueSet dnOrder="5" id="CAN_OPMODE">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="0"/>
+          </Values>
+        </KeyValueSet>
+        <Comment dnOrder="6" id="CAN_TIME_QUANTA_INVALID_COMMENT">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="visible">
+              <Value dnOrder="0">false</Value>
+            </Boolean>
+          </Attributes>
+        </Comment>
+        <Comment dnOrder="7" id="CAN_TIME_QUANTA_INVALID_DATA_BITRATE_COMMENT">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="text">
               <Value dnOrder="0">Warning!!!&amp;#160;Number&amp;#160;of&amp;#160;Time&amp;#160;Quanta&amp;#160;is&amp;#160;too&amp;#160;high&amp;#160;for&amp;#160;required&amp;#160;Data&amp;#160;Bit&amp;#160;Timing</Value>
             </String>
+            <Boolean dnOrder="1" id="visible">
+              <Value dnOrder="0">false</Value>
+            </Boolean>
           </Attributes>
         </Comment>
-        <Integer dnOrder="3" id="DATA_BITRATE">
+        <Integer dnOrder="8" id="DATA_BITRATE">
           <Values dnOrder="0">
             <User dnOrder="0" value="2000"/>
           </Values>
         </Integer>
-        <Integer dnOrder="4" id="DBT_BRP">
+        <Integer dnOrder="9" id="DBT_BRP">
           <Values dnOrder="0">
-            <User dnOrder="0" value="2"/>
+            <User dnOrder="0" value="1"/>
           </Values>
         </Integer>
-        <Integer dnOrder="5" id="DBT_SJW">
+        <Integer dnOrder="10" id="DBT_SJW">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="can1" value="4"/>
           </Values>
         </Integer>
-        <Integer dnOrder="6" id="DBT_TSEG1">
+        <Integer dnOrder="11" id="DBT_TSEG1">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="can1" value="13"/>
           </Values>
         </Integer>
-        <Integer dnOrder="7" id="DBT_TSEG2">
+        <Integer dnOrder="12" id="DBT_TSEG2">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="can1" value="4"/>
           </Values>
         </Integer>
-        <Integer dnOrder="8" id="NBT_SJW">
+        <String dnOrder="13" id="FIFO_OFFSET">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="can1" value="3"/>
+            <Dynamic dnOrder="0" id="can1" value="0xc"/>
+          </Values>
+        </String>
+        <String dnOrder="14" id="FILTER_OBJ_MASK_OFFSET">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="can1" value="0x8"/>
+          </Values>
+        </String>
+        <String dnOrder="15" id="FILTER_OFFSET">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="can1" value="0x4"/>
+          </Values>
+        </String>
+        <Integer dnOrder="16" id="NBT_BRP">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="7"/>
           </Values>
         </Integer>
-        <Integer dnOrder="9" id="NBT_TSEG1">
+        <Integer dnOrder="17" id="NBT_SJW">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="can1" value="10"/>
+            <Dynamic dnOrder="0" id="can1" value="4"/>
           </Values>
         </Integer>
-        <Integer dnOrder="10" id="NBT_TSEG2">
+        <Integer dnOrder="18" id="NBT_TSEG1">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="can1" value="3"/>
+            <Dynamic dnOrder="0" id="can1" value="13"/>
+          </Values>
+        </Integer>
+        <Integer dnOrder="19" id="NBT_TSEG2">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="can1" value="4"/>
           </Values>
         </Integer>
       </Symbols>
@@ -131,22 +186,22 @@
             <User dnOrder="0" value="DIGITAL"/>
           </Values>
         </String>
-        <String dnOrder="13" id="BSP_PIN_58_MODE">
+        <String dnOrder="13" id="BSP_PIN_5_MODE">
           <Values dnOrder="0">
             <User dnOrder="0" value="DIGITAL"/>
           </Values>
         </String>
-        <String dnOrder="14" id="BSP_PIN_5_MODE">
-          <Values dnOrder="0">
-            <User dnOrder="0" value="DIGITAL"/>
-          </Values>
-        </String>
-        <String dnOrder="15" id="BSP_PIN_67_FUNCTION_TYPE">
+        <String dnOrder="14" id="BSP_PIN_67_FUNCTION_TYPE">
           <Values dnOrder="0">
             <User dnOrder="0" value="U6RX"/>
           </Values>
         </String>
-        <String dnOrder="16" id="BSP_PIN_67_MODE">
+        <String dnOrder="15" id="BSP_PIN_67_MODE">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="DIGITAL"/>
+          </Values>
+        </String>
+        <String dnOrder="16" id="BSP_PIN_68_MODE">
           <Values dnOrder="0">
             <User dnOrder="0" value="DIGITAL"/>
           </Values>
@@ -308,7 +363,7 @@
         </Boolean>
         <Integer dnOrder="48" id="CAN1_CLOCK_FREQUENCY">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="120000000"/>
+            <Dynamic dnOrder="0" id="core" value="80250000"/>
           </Values>
         </Integer>
         <Integer dnOrder="49" id="CAN2_CLOCK_FREQUENCY">
@@ -376,479 +431,588 @@
             <Dynamic dnOrder="0" id="core" value="3"/>
           </Values>
         </Integer>
-        <Combo dnOrder="62" id="CONFIG_FNOSC">
-          <Values dnOrder="0">
-            <User dnOrder="0" value="SPLL"/>
-          </Values>
-        </Combo>
-        <Combo dnOrder="63" id="CONFIG_FPLLICLK">
+        <Combo dnOrder="62" id="CONFIG_FPLLICLK">
           <Values dnOrder="0">
             <User dnOrder="0" value="PLL_POSC"/>
           </Values>
         </Combo>
-        <Combo dnOrder="64" id="CONFIG_FPLLIDIV">
-          <Values dnOrder="0">
-            <User dnOrder="0" value="DIV_1"/>
-          </Values>
-        </Combo>
-        <Combo dnOrder="65" id="CONFIG_FPLLMULT">
-          <Values dnOrder="0">
-            <User dnOrder="0" value="MUL_20"/>
-          </Values>
-        </Combo>
-        <Combo dnOrder="66" id="CONFIG_FPLLODIV">
+        <Combo dnOrder="63" id="CONFIG_FPLLIDIV">
           <Values dnOrder="0">
             <User dnOrder="0" value="DIV_2"/>
           </Values>
         </Combo>
-        <Combo dnOrder="67" id="CONFIG_ICESEL">
+        <Combo dnOrder="64" id="CONFIG_FPLLMULT">
           <Values dnOrder="0">
-            <User dnOrder="0" value="ICS_PGx2"/>
+            <User dnOrder="0" value="MUL_107"/>
           </Values>
         </Combo>
-        <Combo dnOrder="68" id="CONFIG_POSCMOD">
+        <Combo dnOrder="65" id="CONFIG_FPLLODIV">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="DIV_8"/>
+          </Values>
+        </Combo>
+        <Combo dnOrder="66" id="CONFIG_FPLLRNG">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="RANGE_5_10_MHZ"/>
+          </Values>
+        </Combo>
+        <Combo dnOrder="67" id="CONFIG_POSCMOD">
           <Values dnOrder="0">
             <User dnOrder="0" value="EC"/>
           </Values>
         </Combo>
-        <Combo dnOrder="69" id="CONFIG_SYS_CLK_FRCDIV">
+        <String dnOrder="68" id="CONFIG_SYS_CLK_PBCLK1_FREQ">
           <Values dnOrder="0">
-            <User dnOrder="0" value="DIV1"/>
+            <User dnOrder="0" value="40125000"/>
           </Values>
+        </String>
+        <String dnOrder="69" id="CONFIG_SYS_CLK_PBCLK2_FREQ">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="40125000"/>
+          </Values>
+        </String>
+        <String dnOrder="70" id="CONFIG_SYS_CLK_PBCLK3_FREQ">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="40125000"/>
+          </Values>
+        </String>
+        <String dnOrder="71" id="CONFIG_SYS_CLK_PBCLK4_FREQ">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="40125000"/>
+          </Values>
+        </String>
+        <String dnOrder="72" id="CONFIG_SYS_CLK_PBCLK6_FREQ">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="20062500"/>
+          </Values>
+        </String>
+        <String dnOrder="73" id="CONFIG_SYS_CLK_REFCLK1_FREQ">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="0"/>
+          </Values>
+        </String>
+        <String dnOrder="74" id="CONFIG_SYS_CLK_REFCLK2_FREQ">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="0"/>
+          </Values>
+        </String>
+        <String dnOrder="75" id="CONFIG_SYS_CLK_REFCLK3_FREQ">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="0"/>
+          </Values>
+        </String>
+        <Boolean dnOrder="76" id="CONFIG_SYS_CLK_REFCLK4_ENABLE">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="false"/>
+          </Values>
+        </Boolean>
+        <String dnOrder="77" id="CONFIG_SYS_CLK_REFCLK4_FREQ">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+            <User dnOrder="1" value="0"/>
+          </Values>
+        </String>
+        <Boolean dnOrder="78" id="CONFIG_SYS_CLK_REFCLK4_OE">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="visible">
+              <Value dnOrder="0">false</Value>
+            </Boolean>
+          </Attributes>
+        </Boolean>
+        <Combo dnOrder="79" id="CONFIG_SYS_CLK_REFCLK_SOURCE4">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="visible">
+              <Value dnOrder="0">false</Value>
+            </Boolean>
+          </Attributes>
         </Combo>
-        <String dnOrder="70" id="CONFIG_SYS_CLK_PBCLK1_FREQ">
+        <Integer dnOrder="80" id="CONFIG_SYS_CLK_RODIV4">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="visible">
+              <Value dnOrder="0">false</Value>
+            </Boolean>
+          </Attributes>
+        </Integer>
+        <Integer dnOrder="81" id="CONFIG_SYS_CLK_ROTRIM4">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="visible">
+              <Value dnOrder="0">false</Value>
+            </Boolean>
+          </Attributes>
+        </Integer>
+        <String dnOrder="82" id="CPU_CLOCK_FREQUENCY">
           <Values dnOrder="0">
-            <User dnOrder="0" value="60000000"/>
+            <Dynamic dnOrder="0" id="core" value="80250000"/>
           </Values>
         </String>
-        <String dnOrder="71" id="CONFIG_SYS_CLK_PBCLK2_FREQ">
-          <Values dnOrder="0">
-            <User dnOrder="0" value="60000000"/>
-          </Values>
-        </String>
-        <String dnOrder="72" id="CONFIG_SYS_CLK_PBCLK3_FREQ">
-          <Values dnOrder="0">
-            <User dnOrder="0" value="60000000"/>
-          </Values>
-        </String>
-        <String dnOrder="73" id="CONFIG_SYS_CLK_PBCLK4_FREQ">
-          <Values dnOrder="0">
-            <User dnOrder="0" value="60000000"/>
-          </Values>
-        </String>
-        <String dnOrder="74" id="CONFIG_SYS_CLK_PBCLK6_FREQ">
-          <Values dnOrder="0">
-            <User dnOrder="0" value="30000000"/>
-          </Values>
-        </String>
-        <String dnOrder="75" id="CONFIG_SYS_CLK_REFCLK1_FREQ">
-          <Values dnOrder="0">
-            <User dnOrder="0" value="0"/>
-          </Values>
-        </String>
-        <String dnOrder="76" id="CONFIG_SYS_CLK_REFCLK2_FREQ">
-          <Values dnOrder="0">
-            <User dnOrder="0" value="0"/>
-          </Values>
-        </String>
-        <String dnOrder="77" id="CONFIG_SYS_CLK_REFCLK3_FREQ">
-          <Values dnOrder="0">
-            <User dnOrder="0" value="0"/>
-          </Values>
-        </String>
-        <String dnOrder="78" id="CONFIG_SYS_CLK_REFCLK4_FREQ">
-          <Values dnOrder="0">
-            <User dnOrder="0" value="0"/>
-          </Values>
-        </String>
-        <String dnOrder="79" id="CPU_CLOCK_FREQUENCY">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="120000000"/>
-          </Values>
-        </String>
-        <Integer dnOrder="80" id="CTMU_CLOCK_FREQUENCY">
+        <Integer dnOrder="83" id="CTMU_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <String dnOrder="81" id="CoreMainFileName">
+        <String dnOrder="84" id="CoreMainFileName">
           <Values dnOrder="0">
-            <User dnOrder="0" value="main_pic32mk_gpl"/>
+            <User dnOrder="0" value="main_pic32mk_mcm"/>
           </Values>
         </String>
-        <Integer dnOrder="82" id="DMAC_CLOCK_FREQUENCY">
+        <Integer dnOrder="85" id="DMAC_CLOCK_FREQUENCY">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="120000000"/>
+            <Dynamic dnOrder="0" id="core" value="80250000"/>
           </Values>
         </Integer>
-        <Integer dnOrder="83" id="EEPROM_CLOCK_FREQUENCY">
+        <Integer dnOrder="86" id="EEPROM_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Boolean dnOrder="84" id="EVIC_164_ENABLE">
+        <Boolean dnOrder="87" id="EVIC_164_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="85" id="EVIC_164_HANDLER_LOCK">
+        <Boolean dnOrder="88" id="EVIC_164_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
-        <String dnOrder="86" id="EVIC_164_INTERRUPT_HANDLER">
+        <String dnOrder="89" id="EVIC_164_INTERRUPT_HANDLER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="UART6_FAULT_Handler"/>
           </Values>
         </String>
-        <Boolean dnOrder="87" id="EVIC_165_ENABLE">
+        <Boolean dnOrder="90" id="EVIC_165_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="88" id="EVIC_165_HANDLER_LOCK">
+        <Boolean dnOrder="91" id="EVIC_165_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
-        <String dnOrder="89" id="EVIC_165_INTERRUPT_HANDLER">
+        <String dnOrder="92" id="EVIC_165_INTERRUPT_HANDLER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="UART6_RX_Handler"/>
           </Values>
         </String>
-        <Boolean dnOrder="90" id="EVIC_166_ENABLE">
+        <Boolean dnOrder="93" id="EVIC_166_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="91" id="EVIC_166_HANDLER_LOCK">
+        <Boolean dnOrder="94" id="EVIC_166_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
-        <String dnOrder="92" id="EVIC_166_INTERRUPT_HANDLER">
+        <String dnOrder="95" id="EVIC_166_INTERRUPT_HANDLER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="UART6_TX_Handler"/>
           </Values>
         </String>
-        <Integer dnOrder="93" id="I2C1_CLOCK_FREQUENCY">
+        <Integer dnOrder="96" id="I2C1_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="94" id="I2C2_CLOCK_FREQUENCY">
+        <Integer dnOrder="97" id="I2C2_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="95" id="I2C3_CLOCK_FREQUENCY">
+        <Integer dnOrder="98" id="I2C3_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="96" id="I2C4_CLOCK_FREQUENCY">
+        <Integer dnOrder="99" id="I2C4_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="97" id="ICAP10_CLOCK_FREQUENCY">
+        <Integer dnOrder="100" id="ICAP10_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="98" id="ICAP11_CLOCK_FREQUENCY">
+        <Integer dnOrder="101" id="ICAP11_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="99" id="ICAP12_CLOCK_FREQUENCY">
+        <Integer dnOrder="102" id="ICAP12_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="100" id="ICAP13_CLOCK_FREQUENCY">
+        <Integer dnOrder="103" id="ICAP13_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="101" id="ICAP14_CLOCK_FREQUENCY">
+        <Integer dnOrder="104" id="ICAP14_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="102" id="ICAP15_CLOCK_FREQUENCY">
+        <Integer dnOrder="105" id="ICAP15_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="103" id="ICAP16_CLOCK_FREQUENCY">
+        <Integer dnOrder="106" id="ICAP16_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="104" id="ICAP1_CLOCK_FREQUENCY">
+        <Integer dnOrder="107" id="ICAP1_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="105" id="ICAP2_CLOCK_FREQUENCY">
+        <Integer dnOrder="108" id="ICAP2_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="106" id="ICAP3_CLOCK_FREQUENCY">
+        <Integer dnOrder="109" id="ICAP3_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="107" id="ICAP4_CLOCK_FREQUENCY">
+        <Integer dnOrder="110" id="ICAP4_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="108" id="ICAP5_CLOCK_FREQUENCY">
+        <Integer dnOrder="111" id="ICAP5_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="109" id="ICAP6_CLOCK_FREQUENCY">
+        <Integer dnOrder="112" id="ICAP6_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="110" id="ICAP7_CLOCK_FREQUENCY">
+        <Integer dnOrder="113" id="ICAP7_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="111" id="ICAP8_CLOCK_FREQUENCY">
+        <Integer dnOrder="114" id="ICAP8_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="112" id="ICAP9_CLOCK_FREQUENCY">
+        <Integer dnOrder="115" id="ICAP9_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <File dnOrder="113" id="MAIN_C">
+        <File dnOrder="116" id="MAIN_C">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="name">
-              <Value dnOrder="0">main_pic32mk_gpl.c</Value>
+              <Value dnOrder="0">main_pic32mk_mcm.c</Value>
             </String>
           </Attributes>
         </File>
-        <Integer dnOrder="114" id="OCMP10_CLOCK_FREQUENCY">
+        <Integer dnOrder="117" id="MCPWM10_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="115" id="OCMP11_CLOCK_FREQUENCY">
+        <Integer dnOrder="118" id="MCPWM11_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="116" id="OCMP12_CLOCK_FREQUENCY">
+        <Integer dnOrder="119" id="MCPWM12_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="117" id="OCMP13_CLOCK_FREQUENCY">
+        <Integer dnOrder="120" id="MCPWM1_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="118" id="OCMP14_CLOCK_FREQUENCY">
+        <Integer dnOrder="121" id="MCPWM2_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="119" id="OCMP15_CLOCK_FREQUENCY">
+        <Integer dnOrder="122" id="MCPWM3_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="120" id="OCMP16_CLOCK_FREQUENCY">
+        <Integer dnOrder="123" id="MCPWM4_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="121" id="OCMP1_CLOCK_FREQUENCY">
+        <Integer dnOrder="124" id="MCPWM5_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="122" id="OCMP2_CLOCK_FREQUENCY">
+        <Integer dnOrder="125" id="MCPWM6_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="123" id="OCMP3_CLOCK_FREQUENCY">
+        <Integer dnOrder="126" id="MCPWM7_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="124" id="OCMP4_CLOCK_FREQUENCY">
+        <Integer dnOrder="127" id="MCPWM8_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="125" id="OCMP5_CLOCK_FREQUENCY">
+        <Integer dnOrder="128" id="MCPWM9_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="126" id="OCMP6_CLOCK_FREQUENCY">
+        <Integer dnOrder="129" id="OCMP10_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="127" id="OCMP7_CLOCK_FREQUENCY">
+        <Integer dnOrder="130" id="OCMP11_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="128" id="OCMP8_CLOCK_FREQUENCY">
+        <Integer dnOrder="131" id="OCMP12_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="129" id="OCMP9_CLOCK_FREQUENCY">
+        <Integer dnOrder="132" id="OCMP13_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="130" id="OPAMP1_CLOCK_FREQUENCY">
+        <Integer dnOrder="133" id="OCMP14_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="131" id="OPAMP2_CLOCK_FREQUENCY">
+        <Integer dnOrder="134" id="OCMP15_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="132" id="OPAMP3_CLOCK_FREQUENCY">
+        <Integer dnOrder="135" id="OCMP16_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="133" id="OPAMP5_CLOCK_FREQUENCY">
+        <Integer dnOrder="136" id="OCMP1_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Hex dnOrder="134" id="PMD5_REG_VALUE">
+        <Integer dnOrder="137" id="OCMP2_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </Integer>
+        <Integer dnOrder="138" id="OCMP3_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </Integer>
+        <Integer dnOrder="139" id="OCMP4_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </Integer>
+        <Integer dnOrder="140" id="OCMP5_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </Integer>
+        <Integer dnOrder="141" id="OCMP6_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </Integer>
+        <Integer dnOrder="142" id="OCMP7_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </Integer>
+        <Integer dnOrder="143" id="OCMP8_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </Integer>
+        <Integer dnOrder="144" id="OCMP9_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </Integer>
+        <Integer dnOrder="145" id="OPAMP1_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </Integer>
+        <Integer dnOrder="146" id="OPAMP2_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </Integer>
+        <Integer dnOrder="147" id="OPAMP3_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </Integer>
+        <Integer dnOrder="148" id="OPAMP5_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </Integer>
+        <Hex dnOrder="149" id="PMD5_REG_VALUE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="3809427231"/>
           </Values>
         </Hex>
-        <Hex dnOrder="135" id="PMD6_REG_VALUE">
+        <Hex dnOrder="150" id="PMD6_REG_VALUE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="252510208"/>
           </Values>
         </Hex>
-        <Hex dnOrder="136" id="PMD7_REG_VALUE">
+        <Hex dnOrder="151" id="PMD7_REG_VALUE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Hex>
-        <Integer dnOrder="137" id="PMP_CLOCK_FREQUENCY">
+        <Integer dnOrder="152" id="PMP_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="138" id="REFO1_CLOCK_FREQUENCY">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="120000000"/>
-          </Values>
-        </Integer>
-        <Integer dnOrder="139" id="REFO2_CLOCK_FREQUENCY">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="120000000"/>
-          </Values>
-        </Integer>
-        <Integer dnOrder="140" id="REFO3_CLOCK_FREQUENCY">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="120000000"/>
-          </Values>
-        </Integer>
-        <Integer dnOrder="141" id="REFO4_CLOCK_FREQUENCY">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="120000000"/>
-          </Values>
-        </Integer>
-        <Integer dnOrder="142" id="RTCC_CLOCK_FREQUENCY">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="30000000"/>
-          </Values>
-        </Integer>
-        <Integer dnOrder="143" id="SPI1_CLOCK_FREQUENCY">
+        <Integer dnOrder="153" id="QEI1_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="144" id="SPI2_CLOCK_FREQUENCY">
+        <Integer dnOrder="154" id="QEI2_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="145" id="SPI3_CLOCK_FREQUENCY">
+        <Integer dnOrder="155" id="QEI3_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="146" id="SPI4_CLOCK_FREQUENCY">
+        <Integer dnOrder="156" id="QEI4_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="147" id="SPI5_CLOCK_FREQUENCY">
+        <Integer dnOrder="157" id="QEI5_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="148" id="SPI6_CLOCK_FREQUENCY">
+        <Integer dnOrder="158" id="QEI6_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <String dnOrder="149" id="SYS_CLK_FRCDIV">
+        <Integer dnOrder="159" id="REFO1_CLOCK_FREQUENCY">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="0"/>
+            <Dynamic dnOrder="0" id="core" value="80250000"/>
+          </Values>
+        </Integer>
+        <Integer dnOrder="160" id="REFO2_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="80250000"/>
+          </Values>
+        </Integer>
+        <Integer dnOrder="161" id="REFO3_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="80250000"/>
+          </Values>
+        </Integer>
+        <String dnOrder="162" id="REFO4TRIM_VALUE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0x0"/>
           </Values>
         </String>
-        <String dnOrder="150" id="SYS_CLK_FREQ">
+        <Integer dnOrder="163" id="REFO4_CLOCK_FREQUENCY">
           <Values dnOrder="0">
-            <User dnOrder="0" value="120000000"/>
+            <Dynamic dnOrder="0" id="core" value="80250000"/>
+          </Values>
+        </Integer>
+        <String dnOrder="164" id="REFOCON4_VALUE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0x200"/>
           </Values>
         </String>
-        <Hex dnOrder="151" id="SYS_PORT_A_ANSEL">
+        <Integer dnOrder="165" id="RTCC_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="20062500"/>
+          </Values>
+        </Integer>
+        <Integer dnOrder="166" id="SPI1_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </Integer>
+        <Integer dnOrder="167" id="SPI2_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </Integer>
+        <Integer dnOrder="168" id="SPI3_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </Integer>
+        <Integer dnOrder="169" id="SPI4_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </Integer>
+        <Integer dnOrder="170" id="SPI5_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </Integer>
+        <Integer dnOrder="171" id="SPI6_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </Integer>
+        <String dnOrder="172" id="SYS_CLK_FREQ">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="80250000"/>
+          </Values>
+        </String>
+        <Hex dnOrder="173" id="SYS_PORT_A_ANSEL">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="32784"/>
           </Values>
         </Hex>
-        <Hex dnOrder="152" id="SYS_PORT_C_ANSEL">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="0"/>
-          </Values>
-        </Hex>
-        <Hex dnOrder="153" id="SYS_PORT_E_ANSEL">
+        <Hex dnOrder="174" id="SYS_PORT_E_ANSEL">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="16385"/>
           </Values>
         </Hex>
-        <Hex dnOrder="154" id="SYS_PORT_G_ANSEL">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="0"/>
-          </Values>
-        </Hex>
-        <Hex dnOrder="155" id="SYS_PORT_G_TRIS">
+        <Hex dnOrder="175" id="SYS_PORT_G_TRIS">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="4096"/>
           </Values>
         </Hex>
-        <Combo dnOrder="156" id="SYS_PORT_PPS_INPUT_FUNCTION_0">
+        <Combo dnOrder="176" id="SYS_PORT_PPS_INPUT_FUNCTION_0">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
@@ -858,7 +1022,7 @@
             <User dnOrder="0" value="U6RX"/>
           </Values>
         </Combo>
-        <Combo dnOrder="157" id="SYS_PORT_PPS_INPUT_FUNCTION_1">
+        <Combo dnOrder="177" id="SYS_PORT_PPS_INPUT_FUNCTION_1">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
@@ -868,7 +1032,7 @@
             <User dnOrder="0" value="C1RX"/>
           </Values>
         </Combo>
-        <KeyValueSet dnOrder="158" id="SYS_PORT_PPS_INPUT_PIN_0">
+        <KeyValueSet dnOrder="178" id="SYS_PORT_PPS_INPUT_PIN_0">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
@@ -878,7 +1042,7 @@
             <User dnOrder="0" value="12"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="159" id="SYS_PORT_PPS_INPUT_PIN_1">
+        <KeyValueSet dnOrder="179" id="SYS_PORT_PPS_INPUT_PIN_1">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
@@ -888,27 +1052,27 @@
             <User dnOrder="0" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="160" id="SYS_PORT_PPS_OUTPUT_FUNCTION_0">
+        <KeyValueSet dnOrder="180" id="SYS_PORT_PPS_OUTPUT_FUNCTION_0">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
           <Values dnOrder="1">
-            <User dnOrder="0" value="39"/>
+            <User dnOrder="0" value="45"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="161" id="SYS_PORT_PPS_OUTPUT_FUNCTION_1">
+        <KeyValueSet dnOrder="181" id="SYS_PORT_PPS_OUTPUT_FUNCTION_1">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
           <Values dnOrder="1">
-            <User dnOrder="0" value="22"/>
+            <User dnOrder="0" value="28"/>
           </Values>
         </KeyValueSet>
-        <Combo dnOrder="162" id="SYS_PORT_PPS_OUTPUT_PIN_0">
+        <Combo dnOrder="182" id="SYS_PORT_PPS_OUTPUT_PIN_0">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
@@ -918,7 +1082,7 @@
             <User dnOrder="0" value="RPA4"/>
           </Values>
         </Combo>
-        <Combo dnOrder="163" id="SYS_PORT_PPS_OUTPUT_PIN_1">
+        <Combo dnOrder="183" id="SYS_PORT_PPS_OUTPUT_PIN_1">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
@@ -928,177 +1092,177 @@
             <User dnOrder="0" value="RPE0"/>
           </Values>
         </Combo>
-        <Integer dnOrder="164" id="TMR1_CLOCK_FREQUENCY">
+        <Integer dnOrder="184" id="TMR1_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="165" id="TMR2_CLOCK_FREQUENCY">
+        <Integer dnOrder="185" id="TMR2_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="166" id="TMR3_CLOCK_FREQUENCY">
+        <Integer dnOrder="186" id="TMR3_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="167" id="TMR4_CLOCK_FREQUENCY">
+        <Integer dnOrder="187" id="TMR4_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="168" id="TMR5_CLOCK_FREQUENCY">
+        <Integer dnOrder="188" id="TMR5_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="169" id="TMR6_CLOCK_FREQUENCY">
+        <Integer dnOrder="189" id="TMR6_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="170" id="TMR7_CLOCK_FREQUENCY">
+        <Integer dnOrder="190" id="TMR7_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="171" id="TMR8_CLOCK_FREQUENCY">
+        <Integer dnOrder="191" id="TMR8_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="172" id="TMR9_CLOCK_FREQUENCY">
+        <Integer dnOrder="192" id="TMR9_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="173" id="UART1_CLOCK_FREQUENCY">
+        <Integer dnOrder="193" id="UART1_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="174" id="UART2_CLOCK_FREQUENCY">
+        <Integer dnOrder="194" id="UART2_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="175" id="UART3_CLOCK_FREQUENCY">
+        <Integer dnOrder="195" id="UART3_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="176" id="UART4_CLOCK_FREQUENCY">
+        <Integer dnOrder="196" id="UART4_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="177" id="UART5_CLOCK_FREQUENCY">
+        <Integer dnOrder="197" id="UART5_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Boolean dnOrder="178" id="UART6_CLOCK_ENABLE">
+        <Boolean dnOrder="198" id="UART6_CLOCK_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="uart6" value="true"/>
           </Values>
         </Boolean>
-        <Integer dnOrder="179" id="UART6_CLOCK_FREQUENCY">
+        <Integer dnOrder="199" id="UART6_CLOCK_FREQUENCY">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="60000000"/>
+            <Dynamic dnOrder="0" id="core" value="40125000"/>
           </Values>
         </Integer>
-        <Boolean dnOrder="180" id="UART6_FAULT_INTERRUPT_ENABLE">
+        <Boolean dnOrder="200" id="UART6_FAULT_INTERRUPT_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="uart6" value="false"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="181" id="UART6_FAULT_INTERRUPT_ENABLE_UPDATE">
+        <Boolean dnOrder="201" id="UART6_FAULT_INTERRUPT_ENABLE_UPDATE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <String dnOrder="182" id="UART6_FAULT_INTERRUPT_HANDLER">
+        <String dnOrder="202" id="UART6_FAULT_INTERRUPT_HANDLER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="uart6" value="UART6_FAULT_Handler"/>
           </Values>
         </String>
-        <Boolean dnOrder="183" id="UART6_FAULT_INTERRUPT_HANDLER_LOCK">
+        <Boolean dnOrder="203" id="UART6_FAULT_INTERRUPT_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="uart6" value="false"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="184" id="UART6_RX_INTERRUPT_ENABLE">
+        <Boolean dnOrder="204" id="UART6_RX_INTERRUPT_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="uart6" value="false"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="185" id="UART6_RX_INTERRUPT_ENABLE_UPDATE">
+        <Boolean dnOrder="205" id="UART6_RX_INTERRUPT_ENABLE_UPDATE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <String dnOrder="186" id="UART6_RX_INTERRUPT_HANDLER">
+        <String dnOrder="206" id="UART6_RX_INTERRUPT_HANDLER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="uart6" value="UART6_RX_Handler"/>
           </Values>
         </String>
-        <Boolean dnOrder="187" id="UART6_RX_INTERRUPT_HANDLER_LOCK">
+        <Boolean dnOrder="207" id="UART6_RX_INTERRUPT_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="uart6" value="false"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="188" id="UART6_TX_INTERRUPT_ENABLE">
+        <Boolean dnOrder="208" id="UART6_TX_INTERRUPT_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="uart6" value="false"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="189" id="UART6_TX_INTERRUPT_ENABLE_UPDATE">
+        <Boolean dnOrder="209" id="UART6_TX_INTERRUPT_ENABLE_UPDATE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <String dnOrder="190" id="UART6_TX_INTERRUPT_HANDLER">
+        <String dnOrder="210" id="UART6_TX_INTERRUPT_HANDLER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="uart6" value="UART6_TX_Handler"/>
           </Values>
         </String>
-        <Boolean dnOrder="191" id="UART6_TX_INTERRUPT_HANDLER_LOCK">
+        <Boolean dnOrder="211" id="UART6_TX_INTERRUPT_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="uart6" value="false"/>
           </Values>
         </Boolean>
-        <Integer dnOrder="192" id="USB1_CLOCK_FREQUENCY">
+        <Integer dnOrder="212" id="USB1_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="193" id="USB2_CLOCK_FREQUENCY">
+        <Integer dnOrder="213" id="USB2_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Integer>
-        <Boolean dnOrder="194" id="USE_PPS_INPUT_0">
+        <Boolean dnOrder="214" id="USE_PPS_INPUT_0">
           <Values dnOrder="0">
             <User dnOrder="0" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="195" id="USE_PPS_INPUT_1">
+        <Boolean dnOrder="215" id="USE_PPS_INPUT_1">
           <Values dnOrder="0">
             <User dnOrder="0" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="196" id="USE_PPS_OUTPUT_0">
+        <Boolean dnOrder="216" id="USE_PPS_OUTPUT_0">
           <Values dnOrder="0">
             <User dnOrder="0" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="197" id="USE_PPS_OUTPUT_1">
+        <Boolean dnOrder="217" id="USE_PPS_OUTPUT_1">
           <Values dnOrder="0">
             <User dnOrder="0" value="true"/>
           </Values>
         </Boolean>
-        <KeyValueSet dnOrder="198" id="clkSvcMode">
+        <KeyValueSet dnOrder="218" id="clkSvcMode">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
@@ -1131,7 +1295,7 @@
       <Symbols dnOrder="0">
         <Integer dnOrder="0" id="BRG_VALUE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="uart6" value="129"/>
+            <Dynamic dnOrder="0" id="uart6" value="86"/>
           </Values>
         </Integer>
         <KeyValueSet dnOrder="1" id="UART_BRGH">
@@ -1141,7 +1305,7 @@
         </KeyValueSet>
         <Integer dnOrder="2" id="UART_CLOCK_FREQ">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="uart6" value="60000000"/>
+            <Dynamic dnOrder="0" id="uart6" value="40125000"/>
           </Values>
         </Integer>
         <Hex dnOrder="3" id="UMODE_VALUE">
@@ -1170,15 +1334,15 @@
     </UniqueComponent>
   </Components>
   <UserData>
-    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="0"/>
-    <ComponentGraph dnOrder="1" id="__ROOTVIEW">
+    <ComponentGraph dnOrder="0" id="__ROOTVIEW">
       <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="can1" x="320" y="20"/>
-        <ElementPosition dnOrder="1" id="core" x="220" y="20"/>
+        <ElementPosition dnOrder="0" id="can1" x="94" y="74"/>
+        <ElementPosition dnOrder="1" id="core" x="240" y="20"/>
         <ElementPosition dnOrder="2" id="dfp" x="20" y="20"/>
-        <ElementPosition dnOrder="3" id="stdio" x="189" y="92"/>
-        <ElementPosition dnOrder="4" id="uart6" x="30" y="60"/>
+        <ElementPosition dnOrder="3" id="stdio" x="484" y="41"/>
+        <ElementPosition dnOrder="4" id="uart6" x="340" y="31"/>
       </ElementPositions>
     </ComponentGraph>
+    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="1"/>
   </UserData>
 </Configuration>

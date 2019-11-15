@@ -313,9 +313,6 @@ typedef struct
 */
 typedef struct
 {
-    /* Rx Messages */
-    CAN_RX_MSG rxMsg[CAN_NUM_OF_FIFO][CAN_FIFO_MESSAGE_BUFFER_MAX];
-
     /* Transfer State */
     CAN_STATE state;
 

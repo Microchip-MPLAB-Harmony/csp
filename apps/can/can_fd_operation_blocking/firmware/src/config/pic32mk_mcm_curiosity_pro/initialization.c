@@ -57,7 +57,7 @@
 /*** DEVCFG0 ***/
 #pragma config DEBUG =      OFF
 #pragma config JTAGEN =     OFF
-#pragma config ICESEL =     ICS_PGx2
+#pragma config ICESEL =     ICS_PGx1
 #pragma config TRCEN =      OFF
 #pragma config BOOTISA =    MIPS32
 #pragma config FSLEEP =     OFF
@@ -86,11 +86,11 @@
 #pragma config FDMTEN =     OFF
 
 /*** DEVCFG2 ***/
-#pragma config FPLLIDIV =   DIV_1
+#pragma config FPLLIDIV =   DIV_2
 #pragma config FPLLRNG =    RANGE_5_10_MHZ
 #pragma config FPLLICLK =   PLL_POSC
-#pragma config FPLLMULT =   MUL_20
-#pragma config FPLLODIV =   DIV_2
+#pragma config FPLLMULT =   MUL_107
+#pragma config FPLLODIV =   DIV_8
 #pragma config DSBOREN =    ON
 #pragma config DSWDTPS =    DSPS32
 #pragma config DSWDTOSC =   LPRC
@@ -108,6 +108,7 @@
 #pragma config IOL1WAY =    ON
 #pragma config FUSBIDIO1 =   ON
 #pragma config FVBUSIO1 =  ON
+#pragma config PWMLOCK =  OFF
 
 /*** BF1SEQ ***/
 #pragma config TSEQ =       0x0

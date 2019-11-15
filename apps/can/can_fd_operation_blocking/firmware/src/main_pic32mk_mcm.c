@@ -110,7 +110,7 @@ int main ( void )
                     printf(" Transmitting CAN FD Message:");
                     messageID = 0x45A;
                     messageLength = 64;
-                    if (CAN1_MessageTransmit(messageID, messageLength, message, 1, CAN_MODE_FD_WITHOUT_BRS, CAN_MSG_TX_DATA_FRAME) == true)
+                    if (CAN1_MessageTransmit(messageID, messageLength, message, 1, CAN_MODE_FD_WITH_BRS, CAN_MSG_TX_DATA_FRAME) == true)
                     {
                         printf("Success \r\n");
                         LED_Toggle();
