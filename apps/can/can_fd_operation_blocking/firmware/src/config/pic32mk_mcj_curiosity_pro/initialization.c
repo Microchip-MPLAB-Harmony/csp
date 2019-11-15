@@ -74,7 +74,7 @@
 #pragma config DMTINTV =    WIN_127_128
 #pragma config FSOSCEN =    ON
 #pragma config IESO =       ON
-#pragma config POSCMOD =    OFF
+#pragma config POSCMOD =    EC
 #pragma config OSCIOFNC =   OFF
 #pragma config FCKSM =      CSECME
 #pragma config WDTPS =      PS1048576
@@ -86,11 +86,11 @@
 #pragma config FDMTEN =     OFF
 
 /*** DEVCFG2 ***/
-#pragma config FPLLIDIV =   DIV_1
+#pragma config FPLLIDIV =   DIV_2
 #pragma config FPLLRNG =    RANGE_5_10_MHZ
-#pragma config FPLLICLK =   PLL_FRC
-#pragma config FPLLMULT =   MUL_60
-#pragma config FPLLODIV =   DIV_4
+#pragma config FPLLICLK =   PLL_POSC
+#pragma config FPLLMULT =   MUL_107
+#pragma config FPLLODIV =   DIV_8
 #pragma config BORSEL =     LOW
 
 /*** DEVCFG3 ***/

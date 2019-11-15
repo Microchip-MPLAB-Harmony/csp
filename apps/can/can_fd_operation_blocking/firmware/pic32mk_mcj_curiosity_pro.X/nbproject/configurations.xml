@@ -75,7 +75,7 @@
           <itemPath>../src/config/pic32mk_mcj_curiosity_pro/exceptions.c</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <itemPath>../src/main_pic32mk.c</itemPath>
+      <itemPath>../src/main_pic32mk_mcj.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -100,7 +100,7 @@
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="PIC32MK-MC_DFP" vendor="Microchip" version="1.1.53"/>
+        <pack name="PIC32MK-MC_DFP" vendor="Microchip" version="1.2.84"/>
       </packs>
       <compileType>
         <linkerTool>
