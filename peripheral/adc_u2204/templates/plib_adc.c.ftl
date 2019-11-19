@@ -163,7 +163,7 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
     }
 
 <#if ADC_CALIB??>
-    uint32_t adc_linearity0 = (((*(uint64_t*)OTP4_ADDR) & ADC_LINEARITY0_Msk) >> ADC_LINEARITY0_POS);
+    uint32_t adc_linearity0 = (((*(uint64_t*)OTP4_ADDR) & (uint64_t)ADC_LINEARITY0_Msk) >> ADC_LINEARITY0_POS);
     uint32_t adc_linearity1 = (((*(uint64_t*)(OTP4_ADDR + 4)) & ADC_LINEARITY1_Msk) >> ADC_LINEARITY1_POS);
 
     /* Write linearity calibration and bias calibration */
@@ -178,7 +178,7 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
     ${ADC_INSTANCE_NAME}_REGS->ADC_REFCTRL = ADC_REFCTRL_REFSEL_${ADC_REFCTRL_REFSEL};
 
     /* positive and negative input pins */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_INPUTCTRL = ADC_POSINPUT_${ADC_INPUTCTRL_MUXPOS} | ADC_NEGINPUT_${ADC_INPUTCTRL_MUXNEG} \
+    ${ADC_INSTANCE_NAME}_REGS->ADC_INPUTCTRL = (uint32_t) ADC_POSINPUT_${ADC_INPUTCTRL_MUXPOS} | (uint32_t) ADC_NEGINPUT_${ADC_INPUTCTRL_MUXNEG} \
         | ADC_INPUTCTRL_INPUTSCAN(${ADC_INPUTCTRL_INPUTSCAN}) | ADC_INPUTCTRL_INPUTOFFSET(${ADC_INPUTCTRL_INPUTOFFSET}) | ADC_INPUTCTRL_GAIN_${ADC_INPUTCTRL_GAIN};
 
     /* Prescaler, Resolution & Operation Mode */
@@ -243,7 +243,7 @@ void ${ADC_INSTANCE_NAME}_Disable( void )
 void ${ADC_INSTANCE_NAME}_ChannelSelect( ADC_POSINPUT positiveInput, ADC_NEGINPUT negativeInput )
 {
     /* Configure pin scan mode and positive and negative input pins */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_INPUTCTRL = positiveInput | negativeInput;
+    ${ADC_INSTANCE_NAME}_REGS->ADC_INPUTCTRL = (uint32_t) positiveInput | (uint32_t) negativeInput;
 
     while(${ADC_INSTANCE_NAME}_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk)
     {
@@ -302,8 +302,8 @@ void ${ADC_INSTANCE_NAME}_CallbackRegister( ADC_CALLBACK callback, uintptr_t con
 
 void ${ADC_INSTANCE_NAME}_InterruptHandler( void )
 {
-    volatile ADC_STATUS status;
-    status = ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG;
+    ADC_STATUS status;
+    status = (ADC_STATUS) (${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG);
     /* Clear interrupt flag */
     ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG =  ${ADC_INTENSET_VAL};
     if (${ADC_INSTANCE_NAME}_CallbackObject.callback != NULL)
