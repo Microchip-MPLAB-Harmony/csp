@@ -119,7 +119,7 @@ void ${SUPC_INSTANCE_NAME}_WaitModeEnter (WAITMODE_FLASH_STATE flash_lpm, WAITMO
     __enable_irq();
     
     /* FLASH  Low power mode and Wakeup source	*/
-    PMC_REGS->PMC_FSMR = (flash_lpm | source);
+    PMC_REGS->PMC_FSMR = ((uint32_t) flash_lpm | (uint32_t) source);
     
     /* Set Flash Wait State at 0	*/
     EFC_REGS->EEFC_FMR = EEFC_FMR_FWS(0) | EEFC_FMR_CLOE_Msk;
