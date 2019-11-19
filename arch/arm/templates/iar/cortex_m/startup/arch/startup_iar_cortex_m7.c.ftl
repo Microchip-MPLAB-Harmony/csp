@@ -5,7 +5,11 @@ __STATIC_INLINE void TCM_Disable(void);
 </#if>
 __STATIC_INLINE void TCM_Configure(uint32_t tcmSize);
 __STATIC_INLINE void ICache_Enable(void);
+<#if DATA_CACHE_ENABLE??>
+<#if (DATA_CACHE_ENABLE)>
 __STATIC_INLINE void DCache_Enable(void);
+</#if>
+</#if>
 __STATIC_INLINE void FPU_Enable(void);
 
 /* Enable Instruction Cache */
@@ -14,11 +18,15 @@ __STATIC_INLINE void ICache_Enable(void)
     SCB_EnableICache();
 }
 
+<#if DATA_CACHE_ENABLE??>
+<#if (DATA_CACHE_ENABLE)>
 /* Enable Data Cache */
 __STATIC_INLINE void DCache_Enable(void)
 {
     SCB_EnableDCache();
 }
+</#if>
+</#if>
 
 #if (__FPU_PRESENT)
 
