@@ -54,7 +54,7 @@
 #define ${SDHC_INSTANCE_NAME}_BASE_CLOCK_FREQUENCY       ${SDHC_CLK_FREQ}
 #define ${SDHC_INSTANCE_NAME}_MAX_BLOCK_SIZE                   0x200
 
-static __attribute__((__aligned__(32))) SDHC_ADMA_DESCR ${SDHC_INSTANCE_NAME?lower_case}DmaDescrTable[${SDHC_INSTANCE_NAME}_DMA_NUM_DESCR_LINES];
+static       SDHC_ADMA_DESCR ${SDHC_INSTANCE_NAME?lower_case}DmaDescrTable[${SDHC_INSTANCE_NAME}_DMA_NUM_DESCR_LINES] __ALIGNED(32);
 
 static SDHC_OBJECT ${SDHC_INSTANCE_NAME?lower_case}Obj;
 
@@ -105,7 +105,7 @@ void ${SDHC_INSTANCE_NAME}_InterruptHandler(void)
 {
     uint16_t nistr = 0;
     uint16_t eistr = 0;
-    SDHC_XFER_STATUS xferStatus = 0;
+    SDHC_XFER_STATUS xferStatus = (SDHC_XFER_STATUS) 0;
 
     nistr = ${SDHC_INSTANCE_NAME}_REGS->SDHC_NISTR;
     eistr = ${SDHC_INSTANCE_NAME}_REGS->SDHC_EISTR;
