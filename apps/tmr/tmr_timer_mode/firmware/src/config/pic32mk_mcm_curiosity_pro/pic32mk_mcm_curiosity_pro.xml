@@ -33,12 +33,12 @@
             <User dnOrder="0" value="DIGITAL"/>
           </Values>
         </String>
-        <String dnOrder="6" id="BSP_PIN_58_MODE">
+        <String dnOrder="6" id="BSP_PIN_5_MODE">
           <Values dnOrder="0">
             <User dnOrder="0" value="DIGITAL"/>
           </Values>
         </String>
-        <String dnOrder="7" id="BSP_PIN_5_MODE">
+        <String dnOrder="7" id="BSP_PIN_68_MODE">
           <Values dnOrder="0">
             <User dnOrder="0" value="DIGITAL"/>
           </Values>
@@ -198,72 +198,97 @@
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <Boolean dnOrder="39" id="EVIC_9_ENABLE">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="true"/>
-          </Values>
-        </Boolean>
-        <Boolean dnOrder="40" id="EVIC_9_HANDLER_LOCK">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="true"/>
-          </Values>
-        </Boolean>
-        <String dnOrder="41" id="EVIC_9_INTERRUPT_HANDLER">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="TIMER_2_InterruptHandler"/>
-          </Values>
-        </String>
-        <Hex dnOrder="42" id="PMD4_REG_VALUE">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="268370429"/>
-          </Values>
-        </Hex>
-        <Hex dnOrder="43" id="PMD6_REG_VALUE">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="252510208"/>
-          </Values>
-        </Hex>
-        <Hex dnOrder="44" id="PMD7_REG_VALUE">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="0"/>
-          </Values>
-        </Hex>
-        <Hex dnOrder="45" id="SYS_PORT_G_TRIS">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="4096"/>
-          </Values>
-        </Hex>
-        <Boolean dnOrder="46" id="TIMER_2_INTERRUPT_ENABLE">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="tmr2" value="true"/>
-          </Values>
-        </Boolean>
-        <Boolean dnOrder="47" id="TIMER_2_INTERRUPT_ENABLE_UPDATE">
+        <Boolean dnOrder="39" id="EVIC_14_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
-        <String dnOrder="48" id="TIMER_2_INTERRUPT_HANDLER">
+        <Boolean dnOrder="40" id="EVIC_14_HANDLER_LOCK">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="false"/>
+          </Values>
+        </Boolean>
+        <String dnOrder="41" id="EVIC_14_INTERRUPT_HANDLER">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="TIMER_3_Handler"/>
+          </Values>
+        </String>
+        <Boolean dnOrder="42" id="EVIC_9_ENABLE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="true"/>
+          </Values>
+        </Boolean>
+        <Boolean dnOrder="43" id="EVIC_9_HANDLER_LOCK">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="true"/>
+          </Values>
+        </Boolean>
+        <String dnOrder="44" id="EVIC_9_INTERRUPT_HANDLER">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="TIMER_2_InterruptHandler"/>
+          </Values>
+        </String>
+        <Hex dnOrder="45" id="PMD4_REG_VALUE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="268370429"/>
+          </Values>
+        </Hex>
+        <Hex dnOrder="46" id="PMD6_REG_VALUE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="252510208"/>
+          </Values>
+        </Hex>
+        <Hex dnOrder="47" id="PMD7_REG_VALUE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </Hex>
+        <Hex dnOrder="48" id="SYS_PORT_G_TRIS">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="4096"/>
+          </Values>
+        </Hex>
+        <Boolean dnOrder="49" id="TIMER_2_INTERRUPT_ENABLE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="tmr2" value="true"/>
+          </Values>
+        </Boolean>
+        <Boolean dnOrder="50" id="TIMER_2_INTERRUPT_ENABLE_UPDATE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="false"/>
+          </Values>
+        </Boolean>
+        <String dnOrder="51" id="TIMER_2_INTERRUPT_HANDLER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="tmr2" value="TIMER_2_InterruptHandler"/>
           </Values>
         </String>
-        <Boolean dnOrder="49" id="TIMER_2_INTERRUPT_HANDLER_LOCK">
+        <Boolean dnOrder="52" id="TIMER_2_INTERRUPT_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="tmr2" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="50" id="TMR2_CLOCK_ENABLE">
+        <Boolean dnOrder="53" id="TIMER_3_INTERRUPT_ENABLE_UPDATE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="true"/>
+          </Values>
+        </Boolean>
+        <Boolean dnOrder="54" id="TMR2_CLOCK_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="tmr2" value="true"/>
           </Values>
         </Boolean>
-        <Integer dnOrder="51" id="TMR2_CLOCK_FREQUENCY">
+        <Integer dnOrder="55" id="TMR2_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="60000000"/>
           </Values>
         </Integer>
-        <KeyValueSet dnOrder="52" id="clkSvcMode">
+        <Integer dnOrder="56" id="TMR3_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </Integer>
+        <KeyValueSet dnOrder="57" id="clkSvcMode">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
@@ -275,7 +300,7 @@
       <Symbols dnOrder="0">
         <Hex dnOrder="0" id="TCON_REG_VALUE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="tmr2" value="120"/>
+            <Dynamic dnOrder="0" id="tmr2" value="8"/>
           </Values>
         </Hex>
         <KeyValueSet dnOrder="1" id="TIMER_32BIT_MODE_SEL">
@@ -283,44 +308,29 @@
             <User dnOrder="0" value="0"/>
           </Values>
         </KeyValueSet>
-        <Integer dnOrder="2" id="TIMER_CLOCK_FREQ">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="tmr2" value="234375"/>
-          </Values>
-        </Integer>
-        <Long dnOrder="3" id="TIMER_PERIOD">
+        <Long dnOrder="2" id="TIMER_PERIOD">
           <Attributes dnOrder="0">
             <Long dnOrder="0" id="max">
               <Value dnOrder="0">4294967295</Value>
             </Long>
           </Attributes>
           <Values dnOrder="1">
-            <Dynamic dnOrder="0" id="tmr2" value="234375"/>
+            <Dynamic dnOrder="0" id="tmr2" value="60000000"/>
           </Values>
         </Long>
-        <KeyValueSet dnOrder="4" id="TIMER_PRE_SCALER">
-          <Values dnOrder="0">
-            <User dnOrder="0" value="0"/>
-          </Values>
-        </KeyValueSet>
-        <Float dnOrder="5" id="TIMER_TIME_PERIOD_MS">
+        <Float dnOrder="3" id="TIMER_TIME_PERIOD_MS">
           <Attributes dnOrder="0">
             <Float dnOrder="0" id="max">
-              <Value dnOrder="0">1.8325194E7</Value>
+              <Value dnOrder="0">71582.79</Value>
             </Float>
           </Attributes>
           <Values dnOrder="1">
             <User dnOrder="0" value="1000.0"/>
           </Values>
         </Float>
-        <Integer dnOrder="6" id="TIMER_WIDTH">
+        <Integer dnOrder="4" id="TIMER_WIDTH">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="tmr2" value="32"/>
-          </Values>
-        </Integer>
-        <Integer dnOrder="7" id="TMR_PRESCALER_VALUE">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="tmr2" value="256"/>
           </Values>
         </Integer>
       </Symbols>
@@ -331,7 +341,7 @@
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="core" x="240" y="20"/>
         <ElementPosition dnOrder="1" id="dfp" x="20" y="20"/>
-        <ElementPosition dnOrder="2" id="tmr2" x="340" y="20"/>
+        <ElementPosition dnOrder="2" id="tmr2" x="29" y="59"/>
       </ElementPositions>
     </ComponentGraph>
     <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="1"/>
