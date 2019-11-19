@@ -245,7 +245,7 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
 </#if>
 
     /* positive and negative input pins */
-    <@compress single_line=true>${ADC_INSTANCE_NAME}_REGS->ADC_INPUTCTRL = ADC_POSINPUT_${ADC_INPUTCTRL_MUXPOS} | ADC_NEGINPUT_${ADC_INPUTCTRL_MUXNEG}
+    <@compress single_line=true>${ADC_INSTANCE_NAME}_REGS->ADC_INPUTCTRL = (uint16_t) ADC_POSINPUT_${ADC_INPUTCTRL_MUXPOS} | (uint16_t) ADC_NEGINPUT_${ADC_INPUTCTRL_MUXNEG}
                                                <#if ADC_INPUTCTRL_VAL?has_content>| ${ADC_INPUTCTRL_VAL}</#if>;</@compress>
 
     /* Resolution & Operation Mode */
@@ -307,7 +307,7 @@ void ${ADC_INSTANCE_NAME}_Disable( void )
 void ${ADC_INSTANCE_NAME}_ChannelSelect( ADC_POSINPUT positiveInput, ADC_NEGINPUT negativeInput )
 {
     /* Configure pin scan mode and positive and negative input pins */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_INPUTCTRL = positiveInput | negativeInput;
+    ${ADC_INSTANCE_NAME}_REGS->ADC_INPUTCTRL = (uint16_t) positiveInput | (uint16_t) negativeInput;
 
     while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY & ADC_SYNCBUSY_INPUTCTRL_Msk) == ADC_SYNCBUSY_INPUTCTRL_Msk)
     {
@@ -372,8 +372,8 @@ void ${ADC_INSTANCE_NAME}_CallbackRegister( ADC_CALLBACK callback, uintptr_t con
 <#if ADC_INTENSET_RESRDY = true>
 void ${ADC_INSTANCE_NAME}_RESRDY_InterruptHandler( void )
 {
-    volatile ADC_STATUS status;
-    status = ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_RESRDY_Msk;
+    ADC_STATUS status;
+    status = (ADC_STATUS) (${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_RESRDY_Msk);
     /* Clear interrupt flag */
     ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ADC_INTFLAG_RESRDY_Msk;
     if (${ADC_INSTANCE_NAME}_CallbackObject.callback != NULL)
