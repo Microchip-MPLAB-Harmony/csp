@@ -53,7 +53,7 @@ static HSMCI_OBJECT ${HSMCI_INSTANCE_NAME?lower_case}Obj;
 
 static void ${HSMCI_INSTANCE_NAME}_VariablesInit ( void )
 {
-    ${HSMCI_INSTANCE_NAME?lower_case}Obj.errorStatus = 0;
+    ${HSMCI_INSTANCE_NAME?lower_case}Obj.errorStatus = (HSMCI_ERROR_FLAGS) 0;
     ${HSMCI_INSTANCE_NAME?lower_case}Obj.isCmdInProgress = false;
     ${HSMCI_INSTANCE_NAME?lower_case}Obj.isDataInProgress = false;
     ${HSMCI_INSTANCE_NAME?lower_case}Obj.callback = false;
@@ -61,9 +61,9 @@ static void ${HSMCI_INSTANCE_NAME}_VariablesInit ( void )
 
 void ${HSMCI_INSTANCE_NAME}_InterruptHandler(void)
 {
-    volatile uint32_t intMask = 0;
-    volatile uint32_t intFlags = 0;
-    HSMCI_XFER_STATUS xferStatus = 0;
+    uint32_t intMask = 0;
+    uint32_t intFlags = 0;
+    HSMCI_XFER_STATUS xferStatus = (HSMCI_XFER_STATUS) 0;
 
     intMask = ${HSMCI_INSTANCE_NAME}_REGS->HSMCI_IMR;
     intFlags = ${HSMCI_INSTANCE_NAME}_REGS->HSMCI_SR;
@@ -209,11 +209,11 @@ void ${HSMCI_INSTANCE_NAME}_DmaSetup (
 {
     ${HSMCI_INSTANCE_NAME}_REGS->HSMCI_DMA = HSMCI_DMA_DMAEN_Msk;
 
-    ${XDMAC_INSTANCE_NAME}_ChannelDisable(${HSMCI_INSTANCE_NAME}_DMA_CHANNEL);
+    ${XDMAC_INSTANCE_NAME}_ChannelDisable((XDMAC_CHANNEL) ${HSMCI_INSTANCE_NAME}_DMA_CHANNEL);
 
     if (operation == HSMCI_DATA_TRANSFER_DIR_READ)
     {
-        ${XDMAC_INSTANCE_NAME}_ChannelSettingsSet(${HSMCI_INSTANCE_NAME}_DMA_CHANNEL,
+        ${XDMAC_INSTANCE_NAME}_ChannelSettingsSet((XDMAC_CHANNEL) ${HSMCI_INSTANCE_NAME}_DMA_CHANNEL,
                             XDMAC_CC_TYPE_PER_TRAN
                             | XDMAC_CC_MBSIZE_SINGLE
                             | XDMAC_CC_DSYNC_PER2MEM
@@ -227,7 +227,7 @@ void ${HSMCI_INSTANCE_NAME}_DmaSetup (
         );
 
         ${XDMAC_INSTANCE_NAME}_ChannelTransfer(
-            ${HSMCI_INSTANCE_NAME}_DMA_CHANNEL,
+            (XDMAC_CHANNEL) ${HSMCI_INSTANCE_NAME}_DMA_CHANNEL,
             (const void *)&(${HSMCI_INSTANCE_NAME}_REGS->HSMCI_FIFO[0]),
             (const void *)buffer,
             (numBytes/4)
@@ -235,7 +235,7 @@ void ${HSMCI_INSTANCE_NAME}_DmaSetup (
     }
     else
     {
-        ${XDMAC_INSTANCE_NAME}_ChannelSettingsSet(${HSMCI_INSTANCE_NAME}_DMA_CHANNEL,
+        ${XDMAC_INSTANCE_NAME}_ChannelSettingsSet((XDMAC_CHANNEL) ${HSMCI_INSTANCE_NAME}_DMA_CHANNEL,
                     XDMAC_CC_TYPE_PER_TRAN
                     | XDMAC_CC_MBSIZE_SINGLE
                     | XDMAC_CC_DSYNC_MEM2PER
@@ -249,7 +249,7 @@ void ${HSMCI_INSTANCE_NAME}_DmaSetup (
         );
 
         ${XDMAC_INSTANCE_NAME}_ChannelTransfer(
-            ${HSMCI_INSTANCE_NAME}_DMA_CHANNEL,
+            (XDMAC_CHANNEL) ${HSMCI_INSTANCE_NAME}_DMA_CHANNEL,
             (const void *)buffer,
             (const void *)&(${HSMCI_INSTANCE_NAME}_REGS->HSMCI_FIFO[0]),
             (numBytes/4)
@@ -362,7 +362,7 @@ void ${HSMCI_INSTANCE_NAME}_CommandSend (
     /* Clear the flags */
     ${HSMCI_INSTANCE_NAME?lower_case}Obj.isCmdInProgress = false;
     ${HSMCI_INSTANCE_NAME?lower_case}Obj.isDataInProgress = false;
-    ${HSMCI_INSTANCE_NAME?lower_case}Obj.errorStatus = 0;
+    ${HSMCI_INSTANCE_NAME?lower_case}Obj.errorStatus = (HSMCI_ERROR_FLAGS) 0;
 
     switch (respType)
     {
