@@ -241,10 +241,10 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
 <#else>
     <#if ADC_CTRLC_DIFFMODE == true>
     /* Positive and negative input pins */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_INPUTCTRL = ADC_POSINPUT_${ADC_INPUTCTRL_MUXPOS} | ADC_NEGINPUT_${ADC_INPUTCTRL_MUXNEG};
+    ${ADC_INSTANCE_NAME}_REGS->ADC_INPUTCTRL = (uint16_t) ADC_POSINPUT_${ADC_INPUTCTRL_MUXPOS} | (uint16_t) ADC_NEGINPUT_${ADC_INPUTCTRL_MUXNEG};
     <#else>
     /* Input pin */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_INPUTCTRL = ADC_POSINPUT_${ADC_INPUTCTRL_MUXPOS};
+    ${ADC_INSTANCE_NAME}_REGS->ADC_INPUTCTRL = (uint16_t) ADC_POSINPUT_${ADC_INPUTCTRL_MUXPOS};
     </#if>
 </#if>
 
@@ -307,7 +307,7 @@ void ${ADC_INSTANCE_NAME}_Disable( void )
 void ${ADC_INSTANCE_NAME}_ChannelSelect( ADC_POSINPUT positiveInput, ADC_NEGINPUT negativeInput )
 {
     /* Configure pin scan mode and positive and negative input pins */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_INPUTCTRL = positiveInput | negativeInput;
+    ${ADC_INSTANCE_NAME}_REGS->ADC_INPUTCTRL = (uint16_t) positiveInput | (uint16_t) negativeInput;
 
     while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY & ADC_SYNCBUSY_INPUTCTRL_Msk) == ADC_SYNCBUSY_INPUTCTRL_Msk)
     {
@@ -403,8 +403,8 @@ bool ${ADC_INSTANCE_NAME}_ConversionStatusGet( void )
 <#if ADC_INTENSET_WINMON = true && ADC_CTRLC_WINMODE != "0">
 void ${ADC_INSTANCE_NAME}_OTHER_InterruptHandler( void )
 {
-    volatile ADC_STATUS status;
-    status = ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG;
+    ADC_STATUS status;
+    status = (ADC_STATUS) (${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG);
     /* Clear interrupt flag */
     ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ADC_INTFLAG_WINMON_Msk | ADC_INTFLAG_OVERRUN_Msk;
     if (${ADC_INSTANCE_NAME}_CallbackObject.callback != NULL)
