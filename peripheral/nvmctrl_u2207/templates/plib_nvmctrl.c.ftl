@@ -197,7 +197,7 @@ bool ${NVMCTRL_INSTANCE_NAME}_RowErase( uint32_t address )
 NVMCTRL_ERROR ${NVMCTRL_INSTANCE_NAME}_ErrorGet( void )
 {
     status |= ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_STATUS;
-    return status;
+    return ((NVMCTRL_ERROR) status);
 }
 
 bool ${NVMCTRL_INSTANCE_NAME}_IsBusy(void)
