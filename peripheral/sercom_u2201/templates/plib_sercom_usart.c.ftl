@@ -241,13 +241,13 @@ bool ${SERCOM_INSTANCE_NAME}_USART_SerialSetup( USART_SERIAL_SETUP * serialSetup
             {
                 ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA |= SERCOM_USART_INT_CTRLA_FORM(0x0) <#if USART_SAMPLE_RATE??>| SERCOM_USART_INT_CTRLA_SAMPR(sampleRate)</#if>;
 
-                ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB |= serialSetup->dataWidth | serialSetup->stopBits;
+                ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB |= (uint32_t) serialSetup->dataWidth | (uint32_t) serialSetup->stopBits;
             }
             else
             {
                 ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA |= SERCOM_USART_INT_CTRLA_FORM(0x1) <#if USART_SAMPLE_RATE??>| SERCOM_USART_INT_CTRLA_SAMPR(sampleRate)</#if>;
 
-                ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB |= serialSetup->dataWidth | serialSetup->parity | serialSetup->stopBits;
+                ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB |= (uint32_t) serialSetup->dataWidth | (uint32_t) serialSetup->parity | (uint32_t) serialSetup->stopBits;
             }
 
             /* Wait for sync */
@@ -278,7 +278,7 @@ USART_ERROR ${SERCOM_INSTANCE_NAME}_USART_ErrorGet( void )
 {
     USART_ERROR errorStatus = USART_ERROR_NONE;
 
-    errorStatus = ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & (SERCOM_USART_INT_STATUS_PERR_Msk | SERCOM_USART_INT_STATUS_FERR_Msk | SERCOM_USART_INT_STATUS_BUFOVF_Msk);
+    errorStatus = (USART_ERROR) (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & (SERCOM_USART_INT_STATUS_PERR_Msk | SERCOM_USART_INT_STATUS_FERR_Msk | SERCOM_USART_INT_STATUS_BUFOVF_Msk));
 
     if(errorStatus != USART_ERROR_NONE)
     {
@@ -415,7 +415,7 @@ bool ${SERCOM_INSTANCE_NAME}_USART_Read( void *buffer, const size_t size )
             *pu8Data++ = ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA;
             processedSize++;
 
-            errorStatus = ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & (SERCOM_USART_INT_STATUS_PERR_Msk | SERCOM_USART_INT_STATUS_FERR_Msk | SERCOM_USART_INT_STATUS_BUFOVF_Msk);
+            errorStatus = (USART_ERROR) (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & (SERCOM_USART_INT_STATUS_PERR_Msk | SERCOM_USART_INT_STATUS_FERR_Msk | SERCOM_USART_INT_STATUS_BUFOVF_Msk));
 
             if(errorStatus != USART_ERROR_NONE)
             {
@@ -493,7 +493,7 @@ void static ${SERCOM_INSTANCE_NAME}_USART_ISR_ERR_Handler( void )
 {
     USART_ERROR errorStatus = USART_ERROR_NONE;
 
-    errorStatus = (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS &
+    errorStatus = (USART_ERROR) (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS &
                   (SERCOM_USART_INT_STATUS_PERR_Msk |
                   SERCOM_USART_INT_STATUS_FERR_Msk |
                   SERCOM_USART_INT_STATUS_BUFOVF_Msk));
@@ -517,11 +517,13 @@ void static ${SERCOM_INSTANCE_NAME}_USART_ISR_ERR_Handler( void )
 <#if USART_RX_ENABLE = true>
 void static ${SERCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
 {
+    uint16_t temp;
     if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBusyStatus == true)
     {
         if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize < ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxSize)
         {
-            ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBuffer[${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize++] = ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA;
+            temp = ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA;
+            ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBuffer[${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize++] = (uint8_t) (temp);
 
             if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize == ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxSize)
             {

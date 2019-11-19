@@ -162,7 +162,7 @@ bool ${SERCOM_INSTANCE_NAME}_I2C_TransferSetup(SERCOM_I2C_TRANSFER_SETUP* setup,
         return false;
     }
     
-    baudValue = ((((float)srcClkFreq)/i2cClkSpeed) - ((((float)srcClkFreq) * (${I2CM_TRISE}/1000000000.0)) + 10))/2.0;
+    baudValue = (uint32_t) (((((float)srcClkFreq)/i2cClkSpeed) - ((((float)srcClkFreq) * (${I2CM_TRISE}/1000000000.0)) + 10))/2.0);
     
     /* BAUD.BAUD must be non-zero */
     if (baudValue == 0)

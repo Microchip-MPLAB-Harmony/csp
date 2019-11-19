@@ -195,7 +195,7 @@ bool ${SERCOM_INSTANCE_NAME}_SPI_TransferSetup(SPI_TRANSFER_SETUP *setup, uint32
         if((baudValue > 0) & (baudValue <= 255))
         {
             /* Selection of the Clock Polarity and Clock Phase */
-            ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_CTRLA |= setup->clockPolarity | setup->clockPhase;
+            ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_CTRLA |= (uint32_t)setup->clockPolarity | (uint32_t)setup->clockPhase;
 
             /* Selection of the Baud Value */
             ${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_BAUD = baudValue;
