@@ -1,9 +1,20 @@
+<#if TCM_ENABLE??>
 __STATIC_INLINE void TCM_Disable(void);
 __STATIC_INLINE void TCM_Enable(void);
 __STATIC_INLINE void TCM_Configure(uint32_t tcmSize);
+</#if>
+<#if (INSTRUCTION_CACHE_ENABLE)??>
+<#if (INSTRUCTION_CACHE_ENABLE)>
 __STATIC_INLINE void ICache_Enable(void);
+</#if>
+</#if>
+<#if (DATA_CACHE_ENABLE)??>
+<#if (DATA_CACHE_ENABLE)>
 __STATIC_INLINE void DCache_Enable(void);
+</#if>
+</#if>
 
+<#if TCM_ENABLE??>
 /** Program CMCC PRGCSIZE bits for TCM and cache configuration */
 __STATIC_INLINE void TCM_Configure(uint32_t tcmSize)
 {
@@ -23,7 +34,10 @@ __STATIC_INLINE void  <#if COMPILER_CHOICE == "XC32">__attribute__((optimize("-O
 {
     /* TCM cannot be enabled or disabled in SAMG55 family*/
 }
+</#if>
 
+<#if (INSTRUCTION_CACHE_ENABLE)??>
+<#if (INSTRUCTION_CACHE_ENABLE)>
 __STATIC_INLINE void ICache_Enable(void)
 {
     <#if DEVICE_TCM_SIZE != "0">
@@ -45,7 +59,11 @@ __STATIC_INLINE void ICache_Enable(void)
         </#if>
     </#if>
 }
+</#if>
+</#if>
 
+<#if (DATA_CACHE_ENABLE)??>
+<#if (DATA_CACHE_ENABLE)>
 __STATIC_INLINE void DCache_Enable(void)
 {
     <#if DEVICE_TCM_SIZE != "0">
@@ -67,3 +85,5 @@ __STATIC_INLINE void DCache_Enable(void)
         </#if>
     </#if>
 }
+</#if>
+</#if>
