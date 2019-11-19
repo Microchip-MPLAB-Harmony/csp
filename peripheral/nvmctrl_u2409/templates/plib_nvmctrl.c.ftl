@@ -243,7 +243,7 @@ bool ${NVMCTRL_INSTANCE_NAME}_PageWrite( const uint32_t *data, const uint32_t ad
     }
 
     /* If write mode is manual, */
-    if ((${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLA & NVMCTRL_CTRLA_WMODE_MAN) == NVMCTRL_CTRLA_WMODE_MAN)
+    if ((${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLA & NVMCTRL_CTRLA_WMODE_Msk) == NVMCTRL_CTRLA_WMODE_MAN)
     {
         /* Set address and command */
         ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_CTRLB = NVMCTRL_CTRLB_CMD_WP | NVMCTRL_CTRLB_CMDEX_KEY;
@@ -266,8 +266,10 @@ bool ${NVMCTRL_INSTANCE_NAME}_BlockErase( uint32_t address )
 
 uint16_t ${NVMCTRL_INSTANCE_NAME}_ErrorGet( void )
 {
-    nvm_error |= ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTFLAG;
-
+    <#lt>    uint16_t temp;
+    <#lt>    /* Store previous and current error flags */
+    <#lt>    temp = ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTFLAG;
+    <#lt>    nvm_error |= temp;
     <#if INTERRUPT_ENABLE == false >
     /* Clear NVMCTRL INTFLAG register */
     NVMCTRL_REGS->NVMCTRL_INTFLAG = NVMCTRL_INTFLAG_Msk;
@@ -376,9 +378,11 @@ void ${NVMCTRL_INSTANCE_NAME}_DisableSmartEEPROMInterruptSource(NVMCTRL_INTERRUP
     <#lt>    ${NVMCTRL_INSTANCE_NAME?lower_case}CallbackObjMain.context = context;
     <#lt>}
     <#lt>void ${NVMCTRL_INSTANCE_NAME}_Main_Interrupt_Handler(void)
-    <#lt>{
+    <#lt>{   
+    <#lt>    uint16_t temp;
     <#lt>    /* Store previous and current error flags */
-    <#lt>    nvm_error |= ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTFLAG;
+    <#lt>    temp = ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTFLAG;
+    <#lt>    nvm_error |= temp;
 
     <#lt>    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTFLAG = ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTFLAG;
 
@@ -398,8 +402,10 @@ void ${NVMCTRL_INSTANCE_NAME}_DisableSmartEEPROMInterruptSource(NVMCTRL_INTERRUP
     <#lt>}
     <#lt>void ${NVMCTRL_INSTANCE_NAME}_SmartEEPROM_Interrupt_Handler(void)
     <#lt>{
+    <#lt>    uint16_t temp;
     <#lt>    /* Store previous and current error flags */
-    <#lt>    nvm_error |= ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTFLAG;
+    <#lt>    temp = ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTFLAG;
+    <#lt>    nvm_error |= temp;
 
     <#lt>    ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTFLAG = ${NVMCTRL_INSTANCE_NAME}_REGS->NVMCTRL_INTFLAG;
 
