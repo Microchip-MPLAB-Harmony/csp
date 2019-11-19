@@ -382,7 +382,7 @@ void ${TC_INSTANCE_NAME}_TimerCallbackRegister( TC_TIMER_CALLBACK callback, uint
 void ${TC_INSTANCE_NAME}_TimerInterruptHandler( void )
 {
     TC_TIMER_STATUS status;
-    status = ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG;
+    status = (TC_TIMER_STATUS) (${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG);
     /* Clear interrupt flags */
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_INTFLAG_Msk;
     if(${TC_INSTANCE_NAME}_CallbackObject.callback != NULL)
@@ -396,7 +396,7 @@ void ${TC_INSTANCE_NAME}_TimerInterruptHandler( void )
 bool ${TC_INSTANCE_NAME}_TimerPeriodHasExpired( void )
 {
     bool timer_status;
-    timer_status = ((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG) & TC_INTFLAG_OVF_Msk);
+    timer_status = (bool) ((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG) & TC_INTFLAG_OVF_Msk);
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = timer_status;
     return timer_status;
 }

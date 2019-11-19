@@ -306,7 +306,7 @@ void ${TC_INSTANCE_NAME}_CaptureCallbackRegister( TC_CAPTURE_CALLBACK callback, 
 void ${TC_INSTANCE_NAME}_CaptureInterruptHandler( void )
 {
     TC_CAPTURE_STATUS status;
-    status = ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG;
+    status = (TC_CAPTURE_STATUS) (${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG);
     /* Clear all interrupts */
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_INTFLAG_Msk;
 
@@ -321,7 +321,7 @@ void ${TC_INSTANCE_NAME}_CaptureInterruptHandler( void )
 TC_CAPTURE_STATUS ${TC_INSTANCE_NAME}_CaptureStatusGet(void)
 {
     TC_CAPTURE_STATUS capture_status;
-    capture_status = (${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG) & TC_CAPTURE_STATUS_MSK;
+    capture_status = (TC_CAPTURE_STATUS) ((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG) & TC_CAPTURE_STATUS_MSK);
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = capture_status;
     return capture_status;
 }

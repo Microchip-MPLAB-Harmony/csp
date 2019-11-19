@@ -492,7 +492,7 @@ void ${TC_INSTANCE_NAME}_CompareCallbackRegister( TC_COMPARE_CALLBACK callback, 
 void ${TC_INSTANCE_NAME}_CompareInterruptHandler( void )
 {
     TC_COMPARE_STATUS status;
-    status = ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG;
+    status = (TC_COMPARE_STATUS) (${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG);
     /* clear period interrupt */
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_INTFLAG_OVF_Msk;
     if(${TC_INSTANCE_NAME}_CallbackObject.callback != NULL)
@@ -506,7 +506,7 @@ void ${TC_INSTANCE_NAME}_CompareInterruptHandler( void )
 TC_COMPARE_STATUS ${TC_INSTANCE_NAME}_CompareStatusGet( void )
 {
     TC_COMPARE_STATUS compare_status;
-    compare_status = ((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG));
+    compare_status = ((TC_COMPARE_STATUS)(${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG));
     /* Clear timer overflow interrupt */
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = compare_status;
     return compare_status;
