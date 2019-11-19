@@ -1,21 +1,23 @@
 /*******************************************************************************
-  EVIC PLIB Implementation
+  Data Type definition of Timer PLIB
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_evic.c
+    plib_tmr2.h
 
   Summary:
-    EVIC PLIB Source File
+    Data Type definition of the Timer Peripheral Interface Plib.
 
   Description:
-    None
+    This file defines the Data Types for the Timer Plib.
+
+  Remarks:
+    None.
 
 *******************************************************************************/
 
-// DOM-IGNORE-BEGIN
 /*******************************************************************************
 * Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
@@ -38,67 +40,61 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
+
+#ifndef PLIB_TMR2_H
+#define PLIB_TMR2_H
+
+#include <stddef.h>
+#include <stdint.h>
+#include "device.h"
+#include "plib_tmr_common.h"
+
+// DOM-IGNORE-BEGIN
+#ifdef __cplusplus  // Provide C++ Compatibility
+
+    extern "C" {
+
+#endif
 // DOM-IGNORE-END
 
-#include "device.h"
-#include "plib_evic.h"
-
 // *****************************************************************************
 // *****************************************************************************
-// Section: IRQ Implementation
+// Section: Data Types
 // *****************************************************************************
 // *****************************************************************************
 
-void EVIC_Initialize( void )
-{
-    INTCONSET = _INTCON_MVEC_MASK;
+// *****************************************************************************
+// *****************************************************************************
+// Section: Interface Routines
+// *****************************************************************************
+// *****************************************************************************
 
-    /* Set up priority / subpriority of enabled interrupts */
-}
+// *****************************************************************************
+void TMR2_Initialize(void);
 
-void EVIC_SourceEnable( INT_SOURCE source )
-{
-    volatile uint32_t *IECx = (volatile uint32_t *) (&IEC0 + ((0x10 * (source / 32)) / 4));
-    volatile uint32_t *IECxSET = (volatile uint32_t *)(IECx + 2);
+void TMR2_Start(void);
 
-    *IECxSET = 1 << (source & 0x1f);
-}
+void TMR2_Stop(void);
 
-void EVIC_SourceDisable( INT_SOURCE source )
-{
-    volatile uint32_t *IECx = (volatile uint32_t *) (&IEC0 + ((0x10 * (source / 32)) / 4));
-    volatile uint32_t *IECxCLR = (volatile uint32_t *)(IECx + 1);
+void TMR2_PeriodSet(uint16_t);
 
-    *IECxCLR = 1 << (source & 0x1f);
-}
+uint16_t TMR2_PeriodGet(void);
 
-bool EVIC_SourceIsEnabled( INT_SOURCE source )
-{
-    volatile uint32_t *IECx = (volatile uint32_t *) (&IEC0 + ((0x10 * (source / 32)) / 4));
+uint16_t TMR2_CounterGet(void);
 
-    return (bool)((*IECx >> (source & 0x1f)) & 0x01);
-}
+uint32_t TMR2_FrequencyGet(void);
 
-bool EVIC_SourceStatusGet( INT_SOURCE source )
-{
-    volatile uint32_t *IFSx = (volatile uint32_t *)(&IFS0 + ((0x10 * (source / 32)) / 4));
+void TMR2_InterruptEnable(void);
 
-    return (bool)((*IFSx >> (source & 0x1f)) & 0x1);
-}
+void TMR2_InterruptDisable(void);
 
-void EVIC_SourceStatusSet( INT_SOURCE source )
-{
-    volatile uint32_t *IFSx = (volatile uint32_t *) (&IFS0 + ((0x10 * (source / 32)) / 4));
-    volatile uint32_t *IFSxSET = (volatile uint32_t *)(IFSx + 2);
+void TMR2_CallbackRegister( TMR_CALLBACK callback_fn, uintptr_t context );
 
-    *IFSxSET = 1 << (source & 0x1f);
-}
+// DOM-IGNORE-BEGIN
+#ifdef __cplusplus  // Provide C++ Compatibility
 
-void EVIC_SourceStatusClear( INT_SOURCE source )
-{
-    volatile uint32_t *IFSx = (volatile uint32_t *) (&IFS0 + ((0x10 * (source / 32)) / 4));
-    volatile uint32_t *IFSxCLR = (volatile uint32_t *)(IFSx + 1);
+    }
+#endif
+// DOM-IGNORE-END
 
-    *IFSxCLR = 1 << (source & 0x1f);
-}
-
+#endif /* PLIB_TMR2_H */

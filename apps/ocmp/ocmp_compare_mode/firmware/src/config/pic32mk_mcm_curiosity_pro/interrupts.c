@@ -1,25 +1,26 @@
 /*******************************************************************************
-  TMR Peripheral Library Interface Source File
+ System Interrupts File
 
-  Company
+  Company:
     Microchip Technology Inc.
 
-  File Name
-    plib_tmr2.c
+  File Name:
+    interrupt.c
 
-  Summary
-    TMR2 peripheral library source file.
+  Summary:
+    Interrupt vectors mapping
 
-  Description
-    This file implements the interface to the TMR peripheral library.  This
-    library provides access to and control of the associated peripheral
-    instance.
-
-*******************************************************************************/
+  Description:
+    This file maps all the interrupt vectors to their corresponding
+    implementations. If a particular module interrupt is used, then its ISR
+    definition can be found in corresponding PLIB source file. If a module
+    interrupt is not used, then its ISR implementation is mapped to dummy
+    handler.
+ *******************************************************************************/
 
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -39,9 +40,8 @@
 * FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
-*******************************************************************************/
+ *******************************************************************************/
 // DOM-IGNORE-END
-
 
 // *****************************************************************************
 // *****************************************************************************
@@ -49,65 +49,28 @@
 // *****************************************************************************
 // *****************************************************************************
 
-#include "device.h"
-#include "plib_tmr2.h"
+#include "definitions.h"
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: System Interrupt Vector Functions
+// *****************************************************************************
+// *****************************************************************************
+
+
+void TIMER_2_InterruptHandler( void );
 
 
 
-void TMR2_Initialize(void)
+/* All the handlers are defined here.  Each will call its PLIB-specific function. */
+void __ISR(_TIMER_2_VECTOR, ipl1AUTO) TIMER_2_Handler (void)
 {
-    /* Disable Timer */
-    T2CONCLR = _T2CON_ON_MASK;
-
-    /*
-    SIDL = 0
-    SYNC = 0
-    TGATE = 0
-    TCKPS =0
-    T32   = 0
-    TCS = 0
-    */
-    T2CONSET = 0x0;
-
-    /* Clear counter */
-    TMR2 = 0x0;
-
-    /*Set period */
-    PR2 = 18000U;
-
-
+    TIMER_2_InterruptHandler();
 }
 
 
-void TMR2_Start(void)
-{
-    T2CONSET = _T2CON_ON_MASK;
-}
 
 
-void TMR2_Stop (void)
-{
-    T2CONCLR = _T2CON_ON_MASK;
-}
-
-void TMR2_PeriodSet(uint16_t period)
-{
-    PR2  = period;
-}
-
-uint16_t TMR2_PeriodGet(void)
-{
-    return (uint16_t)PR2;
-}
-
-uint16_t TMR2_CounterGet(void)
-{
-    return (uint16_t)(TMR2);
-}
-
-
-uint32_t TMR2_FrequencyGet(void)
-{
-    return (60000000);
-}
-
+/*******************************************************************************
+ End of File
+*/

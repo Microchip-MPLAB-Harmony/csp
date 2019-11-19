@@ -108,6 +108,7 @@
 #pragma config IOL1WAY =    ON
 #pragma config FUSBIDIO1 =   ON
 #pragma config FVBUSIO1 =  ON
+#pragma config PWMLOCK =  OFF
 
 /*** BF1SEQ ***/
 #pragma config TSEQ =       0x0
@@ -186,6 +187,8 @@ void SYS_Initialize ( void* data )
 
     EVIC_Initialize();
 
+	/* Enable global interrupts */
+    __builtin_enable_interrupts();
 
 
 }

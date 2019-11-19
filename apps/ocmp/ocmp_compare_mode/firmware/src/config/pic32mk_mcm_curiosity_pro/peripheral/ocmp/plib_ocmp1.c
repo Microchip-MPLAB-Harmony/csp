@@ -59,7 +59,7 @@ void OCMP1_Initialize (void)
 
     OC1CON = 0x2;
 
-    OC1R = 15000;
+    OC1R = 2000;
 
 }
 

@@ -1,26 +1,22 @@
 /*******************************************************************************
- System Interrupts File
+  Output Compare OCMP2 Peripheral Library (PLIB)
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    interrupt.c
+    plib_ocmp2.c
 
   Summary:
-    Interrupt vectors mapping
+    OCMP2 Source File
 
   Description:
-    This file maps all the interrupt vectors to their corresponding
-    implementations. If a particular module interrupt is used, then its ISR
-    definition can be found in corresponding PLIB source file. If a module
-    interrupt is not used, then its ISR implementation is mapped to dummy
-    handler.
- *******************************************************************************/
+    None
 
-// DOM-IGNORE-BEGIN
+*******************************************************************************/
+
 /*******************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -40,31 +36,52 @@
 * FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
- *******************************************************************************/
-// DOM-IGNORE-END
+*******************************************************************************/
+#include "plib_ocmp2.h"
 
 // *****************************************************************************
-// *****************************************************************************
-// Section: Included Files
-// *****************************************************************************
-// *****************************************************************************
-
-#include "definitions.h"
 
 // *****************************************************************************
-// *****************************************************************************
-// Section: System Interrupt Vector Functions
+// Section: OCMP2 Implementation
 // *****************************************************************************
 // *****************************************************************************
 
+// *****************************************************************************
 
 
+void OCMP2_Initialize (void)
+{
+    /*Setup OC2CON        */
+    /*OCM         = 1        */
+    /*OCTSEL       = 0        */
+    /*OC32         = 0        */
+    /*SIDL         = false    */
+
+    OC2CON = 0x1;
+
+    OC2R = 2000;
+
+}
+
+void OCMP2_Enable (void)
+{
+    OC2CONSET = _OC2CON_ON_MASK;
+}
+
+void OCMP2_Disable (void)
+{
+    OC2CONCLR = _OC2CON_ON_MASK;
+}
 
 
-/* All the handlers are defined here.  Each will call its PLIB-specific function. */
+void OCMP2_CompareValueSet (uint16_t value)
+{
+    OC2R = value;
+}
+
+uint16_t OCMP2_CompareValueGet (void)
+{
+    return (uint16_t)OC2R;
+}
 
 
-
-/*******************************************************************************
- End of File
-*/
