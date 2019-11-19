@@ -64,10 +64,10 @@ typedef struct
 } DMAC_CH_OBJECT ;
 
 /* Initial write back memory section for DMAC */
-static  dmac_descriptor_registers_t _write_back_section[DMAC_CHANNELS_NUMBER]    __attribute__((aligned(16)));
+static  dmac_descriptor_registers_t _write_back_section[DMAC_CHANNELS_NUMBER]    __ALIGNED(16);
 
 /* Descriptor section for DMAC */
-static  dmac_descriptor_registers_t  descriptor_section[DMAC_CHANNELS_NUMBER]    __attribute__((aligned(16)));
+static  dmac_descriptor_registers_t  descriptor_section[DMAC_CHANNELS_NUMBER]    __ALIGNED(16);
 
 /* DMAC Channels object information structure */
 DMAC_CH_OBJECT dmacChannelObj[DMAC_CHANNELS_NUMBER];
@@ -85,7 +85,7 @@ This function initializes the DMAC controller of the device.
 void ${DMA_INSTANCE_NAME}_Initialize( void )
 {
     DMAC_CH_OBJECT *dmacChObj = (DMAC_CH_OBJECT *)&dmacChannelObj[0];
-    DMAC_CHANNEL channel = 0;
+    uint32_t channel = 0;
 
     /* Initialize DMAC Channel objects */
     for(channel = 0; channel < DMAC_CHANNELS_NUMBER; channel++)
@@ -193,7 +193,7 @@ bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMAC_CHANNEL channel, const void *src
        /*Set source address */
         if ( dmacDescReg->DMAC_BTCTRL & DMAC_BTCTRL_SRCINC_Msk)
         {
-            dmacDescReg->DMAC_SRCADDR = (uint32_t) (srcAddr + blockSize);
+            dmacDescReg->DMAC_SRCADDR = (uint32_t) ((intptr_t)srcAddr + blockSize);
         }
         else
         {
@@ -203,7 +203,7 @@ bool ${DMA_INSTANCE_NAME}_ChannelTransfer( DMAC_CHANNEL channel, const void *src
         /* Set destination address */
         if ( dmacDescReg->DMAC_BTCTRL & DMAC_BTCTRL_DSTINC_Msk)
         {
-            dmacDescReg->DMAC_DSTADDR = (uint32_t) (destAddr + blockSize);
+            dmacDescReg->DMAC_DSTADDR = (uint32_t) ((intptr_t)destAddr + blockSize);
         }
         else
         {
@@ -337,6 +337,7 @@ bool ${DMA_INSTANCE_NAME}_ChannelSettingsSet (DMAC_CHANNEL channel, DMAC_CHANNEL
     This function handles the DMA interrupt events.
 */
 <#list 0..3 as x>
+<#if x <= DMAC_HIGHEST_CHANNEL>
 void ${DMA_INSTANCE_NAME}_${x}_InterruptHandler( void )
 {
     DMAC_CH_OBJECT  *dmacChObj = NULL;
@@ -374,8 +375,8 @@ void ${DMA_INSTANCE_NAME}_${x}_InterruptHandler( void )
         dmacChObj->callback (event, dmacChObj->context);
     }
 }
+</#if>
 </#list>
-
 void ${DMA_INSTANCE_NAME}_OTHER_InterruptHandler( void )
 {
     DMAC_CH_OBJECT  *dmacChObj = NULL;
