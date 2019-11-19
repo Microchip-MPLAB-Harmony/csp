@@ -157,7 +157,6 @@
       </toolsSet>
       <packs>
         <pack name="SAMD11_DFP" vendor="Microchip" version="2.0.10"/>
-        <pack name="SAMD11_DFP" vendor="Microchip" version="2.0.10"/>
       </packs>
       <compileType>
         <linkerTool>

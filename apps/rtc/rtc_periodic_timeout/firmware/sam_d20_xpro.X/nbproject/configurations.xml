@@ -139,7 +139,6 @@
       </toolsSet>
       <packs>
         <pack name="SAMD20_DFP" vendor="Microchip" version="3.0.19"/>
-        <pack name="SAMD20_DFP" vendor="Microchip" version="3.0.19"/>
       </packs>
       <compileType>
         <linkerTool>
