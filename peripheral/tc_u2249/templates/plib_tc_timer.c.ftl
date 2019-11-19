@@ -382,7 +382,7 @@ void ${TC_INSTANCE_NAME}_TimerInterruptHandler( void )
     if (${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTENSET != 0)
     {
         TC_TIMER_STATUS status;
-        status = ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG;
+        status = (TC_TIMER_STATUS) ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG;
         /* Clear interrupt flags */
         ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_INTFLAG_Msk;
         if((status != TC_TIMER_STATUS_NONE) && ${TC_INSTANCE_NAME}_CallbackObject.callback != NULL)
