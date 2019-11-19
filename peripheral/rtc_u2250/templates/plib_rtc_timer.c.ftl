@@ -531,7 +531,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
             </#if>
         <#lt> TAMPER_CHANNEL ${RTC_INSTANCE_NAME}_TamperSourceGet( void )
         <#lt>{
-        <#lt>    return((${RTC_INSTANCE_NAME}_REGS->MODE${mode}.RTC_TAMPID) & (0xFF));
+        <#lt>    return((TAMPER_CHANNEL) ((${RTC_INSTANCE_NAME}_REGS->MODE${mode}.RTC_TAMPID) & (0xFF)));
         <#lt>}
 
         <#if RTC_MODULE_SELECTION = "MODE0">
@@ -568,7 +568,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     <#lt>void ${RTC_INSTANCE_NAME}_InterruptHandler( void )
     <#lt>{
     <#if RTC_MODULE_SELECTION = "MODE0">
-        <#lt>    ${RTC_INSTANCE_NAME?lower_case}Obj.timer32intCause = ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_INTFLAG;
+        <#lt>    ${RTC_INSTANCE_NAME?lower_case}Obj.timer32intCause = (RTC_TIMER32_INT_MASK) ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_INTFLAG;
         <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_INTFLAG = RTC_MODE0_INTFLAG_Msk;
         
         <#lt>    /* Invoke registered Callback function */
@@ -578,7 +578,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
         <#lt>    }
     <#else>
         <#lt>    /* Update the event in RTC Peripheral Callback object */
-        <#lt>    ${RTC_INSTANCE_NAME?lower_case}Obj.timer16intCause = ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_INTFLAG;
+        <#lt>    ${RTC_INSTANCE_NAME?lower_case}Obj.timer16intCause = (RTC_TIMER16_INT_MASK) ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_INTFLAG;
         <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_INTFLAG = RTC_MODE1_INTFLAG_Msk;
 
         <#lt>    /* Invoke registered Callback function */

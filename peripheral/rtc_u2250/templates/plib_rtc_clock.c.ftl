@@ -232,7 +232,7 @@ void ${RTC_INSTANCE_NAME}_RTCCTimeGet ( struct tm * currentTime )
         </#if>
         <#lt> TAMPER_CHANNEL ${RTC_INSTANCE_NAME}_TamperSourceGet( void )
         <#lt>{
-        <#lt>    return((${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_TAMPID) & (0xFF));
+        <#lt>    return((TAMPER_CHANNEL) (${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_TAMPID) & (0xFF));
         <#lt>}
 
         <#lt>void ${RTC_INSTANCE_NAME}_RTCCTimeStampGet(  struct tm * timeStamp  )
@@ -327,7 +327,7 @@ void ${RTC_INSTANCE_NAME}_RTCCTimeGet ( struct tm * currentTime )
 
     <#lt>void ${RTC_INSTANCE_NAME}_InterruptHandler(void)
     <#lt>{
-    <#lt>    ${RTC_INSTANCE_NAME?lower_case}Obj.intCause = ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_INTFLAG;
+    <#lt>    ${RTC_INSTANCE_NAME?lower_case}Obj.intCause = (RTC_CLOCK_INT_MASK) ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_INTFLAG;
 
     <#lt>    /* Clear All Interrupts */
     <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_INTFLAG = RTC_MODE2_INTFLAG_Msk;
