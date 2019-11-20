@@ -58,7 +58,7 @@
 void GPIO_Initialize ( void )
 {
     /* PORTA Initialization */
-    ANSELACLR = 0x9010; /* Digital Mode Enable */
+    ANSELACLR = 0x8010; /* Digital Mode Enable */
 
     /* PORTB Initialization */
     ANSELBCLR = 0x1; /* Digital Mode Enable */
@@ -81,12 +81,12 @@ void GPIO_Initialize ( void )
     CFGCONbits.IOLOCK = 0;
 
     /* PPS Input Remapping */
-    IC1R = 0;
     U6RXR = 13;
+    IC1R = 0;
 
     /* PPS Output Remapping */
-    RPB0R = 5;
     RPA4R = 11;
+    RPB0R = 5;
 
     /* Lock back the system after PPS configuration */
     SYSKEY = 0x00000000;
