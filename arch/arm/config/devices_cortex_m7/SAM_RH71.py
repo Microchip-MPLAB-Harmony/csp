@@ -110,7 +110,7 @@ tcmEnable.setVisible(True)
 tcmEccEnable = coreComponent.createBooleanSymbol("TCM_ECC_ENABLE", tcmMenu)
 tcmEccEnable.setLabel("Enable ECC for TCM")
 tcmEccEnable.setDefaultValue(True)
-tcmEccEnable.setVisible(True)
+tcmEccEnable.setVisible(False)
 
 flexRamEccEnable = coreComponent.createBooleanSymbol("FLEXRAM_ECC_SUPPORTED", tcmMenu)
 flexRamEccEnable.setDefaultValue(True)
