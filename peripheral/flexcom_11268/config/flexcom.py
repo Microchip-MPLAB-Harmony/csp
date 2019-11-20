@@ -129,15 +129,15 @@ def setFLEXCOMCodeGenerationProperty(symbol, event):
         flexcomSourceFile.setEnabled(False)
 
     component = symbol.getComponent()
-    if event["value"] == 0x1:
+    if flexcom_mode == "USART":
         component.setCapabilityEnabled(uartCapabilityId, True)
         component.setCapabilityEnabled(spiCapabilityId, False)
         component.setCapabilityEnabled(i2cCapabilityId, False)
-    elif event["value"] == 0x2:
+    elif flexcom_mode == "SPI":
         component.setCapabilityEnabled(uartCapabilityId, False)
         component.setCapabilityEnabled(spiCapabilityId, True)
         component.setCapabilityEnabled(i2cCapabilityId, False)
-    elif event["value"] == 0x3:
+    elif flexcom_mode == "TWI":
         component.setCapabilityEnabled(uartCapabilityId, False)
         component.setCapabilityEnabled(spiCapabilityId, False)
         component.setCapabilityEnabled(i2cCapabilityId, True)
@@ -188,7 +188,7 @@ def instantiateComponent(flexcomComponent):
     global flexcomInstanceName
     global deviceNamespace
     global interruptNamespace
-    global deviceHandlerLastName 
+    global deviceHandlerLastName
     global interruptSymbolEnable
     global interruptSymbolHandler
     global interruptSymbolHandlerLock
@@ -210,6 +210,12 @@ def instantiateComponent(flexcomComponent):
     interruptSymbolHandler = flexcomInstanceName.getValue() + "_INTERRUPT_HANDLER"
     interruptSymbolHandlerLock =  flexcomInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK"
 
+    #Flexcom Signals
+    flexcomDisableSPI = 0
+    flexcomSym_Signals = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"FLEXCOM\"]/instance@[name=\""+ flexcomInstanceName.getValue() +"\"]/signals")
+    if len(flexcomSym_Signals.getChildren()) < 3:
+        flexcomDisableSPI = 1
+
     #Flexcom Mode - NO_COM, USART, SPI, TWI
     flexcomSym_OperatingMode = flexcomComponent.createKeyValueSetSymbol("FLEXCOM_MODE", None)
     flexcomSym_OperatingMode.setLabel("FLEXCOM Operating Mode")
@@ -222,6 +228,10 @@ def instantiateComponent(flexcomComponent):
         flexcomSym_OperatingMode_Key_Name = flexcomSym_OperatingMode_Values[index].getAttribute("name")
         flexcomSym_OperatingMode_Key_Description = flexcomSym_OperatingMode_Values[index].getAttribute("caption")
         flexcomSym_OperatingMode_Key_Value = flexcomSym_OperatingMode_Values[index].getAttribute("value")
+        if flexcomDisableSPI == 1 and flexcomSym_OperatingMode_Key_Name == "SPI":
+            flexcomComponent.setCapabilityEnabled(flexcomInstanceName.getValue() + "_SPI", False)
+            spiCapabilityId = ""
+            continue;
         flexcomSym_OperatingMode.addKey(flexcomSym_OperatingMode_Key_Name, flexcomSym_OperatingMode_Key_Value, flexcomSym_OperatingMode_Key_Description)
 
     flexcomSym_OperatingMode.setDefaultValue(0)
