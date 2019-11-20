@@ -1,17 +1,17 @@
 /*******************************************************************************
-  TMR Peripheral Library Interface Source File
+  TMR1 Peripheral Library Interface Source File
 
   Company
     Microchip Technology Inc.
 
   File Name
-    plib_tmr3.c
+    plib_tmr1.c
 
   Summary
-    TMR3 peripheral library source file.
+    TMR1 peripheral library source file.
 
   Description
-    This file implements the interface to the TMR peripheral library.  This
+    This file implements the interface to the TMR1 peripheral library.  This
     library provides access to and control of the associated peripheral
     instance.
 
@@ -42,7 +42,6 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-
 // *****************************************************************************
 // *****************************************************************************
 // Section: Included Files
@@ -50,97 +49,98 @@
 // *****************************************************************************
 
 #include "device.h"
-#include "plib_tmr3.h"
+#include "plib_tmr1.h"
 
-static TMR_TIMER_OBJECT tmr3Obj;
+static TMR1_TIMER_OBJECT tmr1Obj;
 
-
-void TMR3_Initialize(void)
+void TMR1_Initialize(void)
 {
     /* Disable Timer */
-    T3CONCLR = _T3CON_ON_MASK;
+    T1CONCLR = _T1CON_ON_MASK;
 
     /*
     SIDL = 0
-    SYNC = 0
+    TWDIS = 0
+    TECS = 1
     TGATE = 0
-    TCKPS =7
-    T32   = 0
+    TCKPS = 3
+    TSYNC = 0
     TCS = 0
     */
-    T3CONSET = 0x70;
+    T1CONSET = 0x130;
 
     /* Clear counter */
-    TMR3 = 0x0;
+    TMR1 = 0x0;
 
     /*Set period */
-    PR3 = 70U;
+    PR1 = 23437;
 
-    IEC0SET = _IEC0_T3IE_MASK;
-
+    /* Setup TMR1 Interrupt */
+    TMR1_InterruptEnable();  /* Enable interrupt on the way out */
 }
 
 
-void TMR3_Start(void)
+void TMR1_Start (void)
 {
-    T3CONSET = _T3CON_ON_MASK;
+    T1CONSET = _T1CON_ON_MASK;
 }
 
 
-void TMR3_Stop (void)
+void TMR1_Stop (void)
 {
-    T3CONCLR = _T3CON_ON_MASK;
+    T1CONCLR = _T1CON_ON_MASK;
 }
 
-void TMR3_PeriodSet(uint16_t period)
+
+void TMR1_PeriodSet(uint16_t period)
 {
-    PR3  = period;
+    PR1 = period;
 }
 
-uint16_t TMR3_PeriodGet(void)
+
+uint16_t TMR1_PeriodGet(void)
 {
-    return (uint16_t)PR3;
+    return (uint16_t)PR1;
 }
 
-uint16_t TMR3_CounterGet(void)
+
+uint16_t TMR1_CounterGet(void)
 {
-    return (uint16_t)(TMR3);
+    return(TMR1);
 }
 
-
-uint32_t TMR3_FrequencyGet(void)
+uint32_t TMR1_FrequencyGet(void)
 {
     return (234375);
 }
 
-void TIMER_3_InterruptHandler (void)
+void TIMER_1_InterruptHandler (void)
 {
-    uint32_t status = IFS0bits.T3IF;
-    IFS0CLR = _IFS0_T3IF_MASK;
+    uint32_t status = IFS0bits.T1IF;
+    IFS0CLR = _IFS0_T1IF_MASK;
 
-    if((tmr3Obj.callback_fn != NULL))
+    if((tmr1Obj.callback_fn != NULL))
     {
-        tmr3Obj.callback_fn(status, tmr3Obj.context);
+        tmr1Obj.callback_fn(status, tmr1Obj.context);
     }
 }
 
 
-void TMR3_InterruptEnable(void)
+void TMR1_InterruptEnable(void)
 {
-
-    IEC0SET = _IEC0_T3IE_MASK;
+    IEC0SET = _IEC0_T1IE_MASK;
 }
 
 
-void TMR3_InterruptDisable(void)
+void TMR1_InterruptDisable(void)
 {
-    IEC0CLR = _IEC0_T3IE_MASK;
+    IEC0CLR = _IEC0_T1IE_MASK;
 }
 
 
-void TMR3_CallbackRegister( TMR_CALLBACK callback_fn, uintptr_t context )
+void TMR1_CallbackRegister( TMR1_CALLBACK callback_fn, uintptr_t context )
 {
-    /* Save callback_fn and context in local memory */
-    tmr3Obj.callback_fn = callback_fn;
-    tmr3Obj.context = context;
+    /* - Save callback_fn and context in local memory */
+    tmr1Obj.callback_fn = callback_fn;
+    tmr1Obj.context = context;
 }

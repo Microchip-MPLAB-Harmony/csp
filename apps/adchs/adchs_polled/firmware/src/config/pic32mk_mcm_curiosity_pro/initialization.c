@@ -57,7 +57,7 @@
 /*** DEVCFG0 ***/
 #pragma config DEBUG =      OFF
 #pragma config JTAGEN =     OFF
-#pragma config ICESEL =     ICS_PGx2
+#pragma config ICESEL =     ICS_PGx1
 #pragma config TRCEN =      OFF
 #pragma config BOOTISA =    MIPS32
 #pragma config FSLEEP =     OFF
@@ -108,6 +108,7 @@
 #pragma config IOL1WAY =    ON
 #pragma config FUSBIDIO1 =   ON
 #pragma config FVBUSIO1 =  ON
+#pragma config PWMLOCK =  OFF
 
 /*** BF1SEQ ***/
 #pragma config TSEQ =       0x0

@@ -1,20 +1,23 @@
 /*******************************************************************************
-  UART6 PLIB
+  TMR1 Peripheral Library Interface Header File
 
-  Company:
+  Company
     Microchip Technology Inc.
 
-  File Name:
-    plib_uart6.h
+  File Name
+    plib_tmr1_common.h
 
-  Summary:
-    UART6 PLIB Header File
+  Summary
+    TMR1 peripheral library interface.
 
-  Description:
-    None
+  Description
+    This file defines the interface to the TC peripheral library.  This
+    library provides access to and control of the associated peripheral
+    instance.
 
 *******************************************************************************/
 
+// DOM-IGNORE-BEGIN
 /*******************************************************************************
 * Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
@@ -37,58 +40,81 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
+// DOM-IGNORE-END
 
-#ifndef PLIB_UART6_H
-#define PLIB_UART6_H
+#ifndef PLIB_TMR1_COMMON_H    // Guards against multiple inclusion
+#define PLIB_TMR1_COMMON_H
 
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Included Files
+// *****************************************************************************
+// *****************************************************************************
+
+/*  This section lists the other files that are included in this file.
+*/
 #include <stddef.h>
-#include <stdbool.h>
-#include <stdint.h>
-#include "device.h"
-#include "plib_uart_common.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
-    extern "C" {
+extern "C" {
 
 #endif
+
 // DOM-IGNORE-END
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: Interface
+// Section: Data Types
 // *****************************************************************************
 // *****************************************************************************
+/*  The following data type definitions are used by the functions in this
+    interface and should be considered part of it.
+*/
 
-#define UART6_FrequencyGet()    (uint32_t)(60000000UL)
 
-/****************************** UART6 API *********************************/
+// *****************************************************************************
+/* TMR1_CALLBACK
 
-void UART6_Initialize( void );
+  Summary:
+    Use to register a callback with the TMR1.
 
-bool UART6_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcClkFreq );
+  Description:
+    When a match is asserted, a callback can be activated.
+    Use TMR1_CALLBACK as the function pointer to register the callback
+    with the match.
 
-bool UART6_Write( void *buffer, const size_t size );
+  Remarks:
+    The callback should look like:
+      void callback(handle, context);
+	Make sure the return value and parameters of the callback are correct.
+*/
 
-bool UART6_Read( void *buffer, const size_t size );
+typedef void (*TMR1_CALLBACK)(uint32_t status, uintptr_t context);
 
-UART_ERROR UART6_ErrorGet( void );
+// *****************************************************************************
 
-int UART6_ReadByte( void );
+typedef struct
+{
+    /*TMR1 callback function happens on Period match*/
+    TMR1_CALLBACK callback_fn;
+    /* - Client data (Event Context) that will be passed to callback */
+    uintptr_t context;
 
-bool UART6_ReceiverIsReady( void );
-
-void UART6_WriteByte( int data );
-
-bool UART6_TransmitterIsReady( void );
+}TMR1_TIMER_OBJECT;
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
-    }
+}
 
 #endif
 // DOM-IGNORE-END
 
-#endif // PLIB_UART6_H
+#endif //_PLIB_TMR1_COMMON_H
+
+/**
+ End of File
+*/
