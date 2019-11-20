@@ -131,11 +131,11 @@
                 </#if>
 
                 <#if .vars[pinchannel] == "F">
-                    <#assign PORTE_Pin_List = PORTF_Pin_List + [.vars[pinport]]>
+                    <#assign PORTF_Pin_List = PORTF_Pin_List + [.vars[pinport]]>
                 </#if>
 
                 <#if .vars[pinchannel] == "G">
-                    <#assign PORTE_Pin_List = PORTG_Pin_List + [.vars[pinport]]>
+                    <#assign PORTG_Pin_List = PORTG_Pin_List + [.vars[pinport]]>
                 </#if>
 
             </#if>
