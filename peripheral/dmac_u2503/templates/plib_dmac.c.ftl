@@ -249,6 +249,8 @@ void ${DMA_INSTANCE_NAME}_ChannelDisable ( DMAC_CHANNEL channel )
     /* Disable the DMA channel */
     ${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMAC_CHCTRLA &= (~DMAC_CHCTRLA_ENABLE_Pos);
 
+    while((${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMAC_CHCTRLA & DMAC_CHCTRLA_ENABLE_Msk) != 0);
+
     dmacChannelObj[channel].busyStatus=false;
 
 }
