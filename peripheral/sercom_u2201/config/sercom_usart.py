@@ -93,11 +93,33 @@ def updateUSARTBaudValueProperty(symbol, event):
 
     symbol.setValue(getUSARTBaudValue(), 1)
 
+def updateUSARTRS485GuardTimeValueProperty(symbol, event):
+
+    symbol.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT" and usartSym_CTRLA_TXPO.getSelectedValue() == "0x3")
+
+def updateUSARTFORMValueProperty(symbol, event):
+
+    if event["symbol"].getSelectedKey() == "NONE":
+        symbol.setValue(0)
+    else:
+        symbol.setValue(1)
+
 ###################################################################################################
 ############################################ USART ################################################
 ###################################################################################################
 
 global usartSym_Interrupt_Mode
+global usartSym_CTRLA_TXPO
+global usartSym_CTRLA_SAMPR
+global usartSym_SAMPLE_COUNT
+global usartSym_BAUD_VALUE
+global usartSym_BaudError_Comment
+global sampleRateSupported
+
+sampleRateSupported = False
+isFlowControlSupported = False
+isRS485Supported = False
+isErrorInterruptSupported = False
 
 #Interrupt/Non-Interrupt Mode
 usartSym_Interrupt_Mode = sercomComponent.createBooleanSymbol("USART_INTERRUPT_MODE", sercomSym_OperationMode)
@@ -136,7 +158,7 @@ for index in range(len(usartSym_CTRLA_RXPO_Values)):
     usartSym_CTRLA_RXPO.addKey(usartSym_CTRLA_RXPO_Key_Name, usartSym_CTRLA_RXPO_Key_Value, usartSym_CTRLA_RXPO_Key_Description)
 
 usartSym_CTRLA_RXPO.setDefaultValue(0)
-usartSym_CTRLA_RXPO.setOutputMode("Key")
+usartSym_CTRLA_RXPO.setOutputMode("Value")
 usartSym_CTRLA_RXPO.setDisplayMode("Description")
 usartSym_CTRLA_RXPO.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
 
@@ -151,14 +173,27 @@ for index in range(len(usartSym_CTRLA_TXPO_Values)):
     usartSym_CTRLA_TXPO_Key_Name = usartSym_CTRLA_TXPO_Values[index].getAttribute("name")
     usartSym_CTRLA_TXPO_Key_Description = usartSym_CTRLA_TXPO_Values[index].getAttribute("caption")
     usartSym_CTRLA_TXPO_Key_Value = usartSym_CTRLA_TXPO_Values[index].getAttribute("value")
+    usartSym_CTRLA_TXPO.addKey(usartSym_CTRLA_TXPO_Key_Name, usartSym_CTRLA_TXPO_Key_Value, usartSym_CTRLA_TXPO_Key_Description)
 
-    if int(usartSym_CTRLA_TXPO_Key_Value, 0) <= 1:
-        usartSym_CTRLA_TXPO.addKey(usartSym_CTRLA_TXPO_Key_Name, usartSym_CTRLA_TXPO_Key_Value, usartSym_CTRLA_TXPO_Key_Description)
+    if int(usartSym_CTRLA_TXPO_Key_Value, 0) == 2:
+        isFlowControlSupported = True
+    if int(usartSym_CTRLA_TXPO_Key_Value, 0) == 3:
+        isRS485Supported = True
 
 usartSym_CTRLA_TXPO.setDefaultValue(0)
-usartSym_CTRLA_TXPO.setOutputMode("Key")
+usartSym_CTRLA_TXPO.setOutputMode("Value")
 usartSym_CTRLA_TXPO.setDisplayMode("Description")
 usartSym_CTRLA_TXPO.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
+
+if isRS485Supported == True:
+    #USART RS485 mode Guard Time
+    usartSym_CTRLC_GTIME = sercomComponent.createIntegerSymbol("USART_CTRLC_GTIME", sercomSym_OperationMode)
+    usartSym_CTRLC_GTIME.setLabel("RS485 Guard Time")
+    usartSym_CTRLC_GTIME.setDefaultValue(0)
+    usartSym_CTRLC_GTIME.setMin(0)
+    usartSym_CTRLC_GTIME.setMax(7)
+    usartSym_CTRLC_GTIME.setVisible(False)
+    usartSym_CTRLC_GTIME.setDependencies(updateUSARTRS485GuardTimeValueProperty, ["SERCOM_MODE", "USART_TXPO"])
 
 #PMODE : USART PARITY MODE
 usartSym_CTRLB_PMODE = sercomComponent.createKeyValueSetSymbol("USART_PARITY_MODE", sercomSym_OperationMode)
@@ -207,9 +242,24 @@ usartSym_CTRLB_SBMODE.setOutputMode("Key")
 usartSym_CTRLB_SBMODE.setDisplayMode("Description")
 usartSym_CTRLB_SBMODE.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
 
-global sampleRateSupported
+#USART Frame Format
+usartSym_CTRLA_FORM = sercomComponent.createKeyValueSetSymbol("USART_FORM", sercomSym_OperationMode)
+usartSym_CTRLA_FORM.setLabel("Frame Format")
 
-sampleRateSupported = False
+usartSym_CTRLA_FORM_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_USART_CTRLA__FORM\"]")
+usartSym_CTRLA_FORM_Values = usartSym_CTRLA_FORM_Node.getChildren()
+
+for index in range(len(usartSym_CTRLA_FORM_Values)):
+    usartSym_CTRLA_FORM_Key_Name = usartSym_CTRLA_FORM_Values[index].getAttribute("name")
+    usartSym_CTRLA_FORM_Key_Description = usartSym_CTRLA_FORM_Values[index].getAttribute("caption")
+    usartSym_CTRLA_FORM_Key_Value = usartSym_CTRLA_FORM_Values[index].getAttribute("value")
+    usartSym_CTRLA_FORM.addKey(usartSym_CTRLA_FORM_Key_Name, usartSym_CTRLA_FORM_Key_Value, usartSym_CTRLA_FORM_Key_Description)
+
+usartSym_CTRLA_FORM.setDefaultValue(0)
+usartSym_CTRLA_FORM.setOutputMode("Value")
+usartSym_CTRLA_FORM.setDisplayMode("Description")
+usartSym_CTRLA_FORM.setVisible(False)
+usartSym_CTRLA_FORM.setDependencies(updateUSARTFORMValueProperty, ["USART_PARITY_MODE"])
 
 sampleRateNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SERCOM"]/register-group@[name="SERCOM"]/register@[modes="USART_INT",name="CTRLA"]')
 sampleRateValue = sampleRateNode.getChildren()
@@ -222,14 +272,12 @@ for index in range(len(sampleRateValue)):
 
 if sampleRateSupported == True:
     #USART Over-Sampling using Baud Rate generation
-    global usartSym_CTRLA_SAMPR
     usartSym_CTRLA_SAMPR = sercomComponent.createIntegerSymbol("USART_SAMPLE_RATE", sercomSym_OperationMode)
     usartSym_CTRLA_SAMPR.setLabel("Sample Rate")
     usartSym_CTRLA_SAMPR.setDefaultValue(0)
     usartSym_CTRLA_SAMPR.setVisible(False)
 
 #USART No Of Samples
-global usartSym_SAMPLE_COUNT
 usartSym_SAMPLE_COUNT = sercomComponent.createIntegerSymbol("USART_SAMPLE_COUNT", sercomSym_OperationMode)
 usartSym_SAMPLE_COUNT.setLabel("No Of Samples")
 usartSym_SAMPLE_COUNT.setDefaultValue(16)
@@ -243,20 +291,16 @@ usartSym_BAUD_RATE.setMin(1)
 usartSym_BAUD_RATE.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
 
 #USART Baud Value
-global usartSym_BAUD_VALUE
 usartSym_BAUD_VALUE = sercomComponent.createIntegerSymbol("USART_BAUD_VALUE", sercomSym_OperationMode)
 usartSym_BAUD_VALUE.setLabel("Baud Rate Value")
 usartSym_BAUD_VALUE.setVisible(False)
 usartSym_BAUD_VALUE.setDependencies(updateUSARTBaudValueProperty, ["USART_BAUD_RATE", "core." + sercomClkFrequencyId])
 
 #USART Baud Rate not supported comment
-global usartSym_BaudError_Comment
 usartSym_BaudError_Comment = sercomComponent.createCommentSymbol("USART_BAUD_ERROR_COMMENT", sercomSym_OperationMode)
 usartSym_BaudError_Comment.setLabel("********** USART Clock source value is low for the desired baud rate **********")
 usartSym_BaudError_Comment.setVisible(False)
 usartSym_BaudError_Comment.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
-
-errorInterruptSupported = False
 
 intensetNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SERCOM"]/register-group@[name="SERCOM"]/register@[modes="USART_INT",name="INTENSET"]')
 intensetValue = intensetNode.getChildren()
@@ -264,13 +308,23 @@ intensetValue = intensetNode.getChildren()
 for index in range(len(intensetValue)):
     bitFieldName = str(intensetValue[index].getAttribute("name"))
     if bitFieldName == "ERROR":
-        errorInterruptSupported = True
+        isErrorInterruptSupported = True
         break
 
 #USART is ERROR present
-sercomSym_ERROR = sercomComponent.createBooleanSymbol("USART_INTENSET_ERROR", None)
-sercomSym_ERROR.setVisible(False)
-sercomSym_ERROR.setDefaultValue(errorInterruptSupported)
+usartSym_ErrorInterrupt = sercomComponent.createBooleanSymbol("USART_INTENSET_ERROR", None)
+usartSym_ErrorInterrupt.setVisible(False)
+usartSym_ErrorInterrupt.setDefaultValue(isErrorInterruptSupported)
+
+#USART Flow Control supported
+usartSym_FlowControl = sercomComponent.createBooleanSymbol("USART_FLOW_CONTROL", None)
+usartSym_FlowControl.setVisible(False)
+usartSym_FlowControl.setDefaultValue(isFlowControlSupported)
+
+#USART RS485 mode supported
+usartSym_RS485 = sercomComponent.createBooleanSymbol("USART_RS485", None)
+usartSym_RS485.setVisible(False)
+usartSym_RS485.setDefaultValue(isRS485Supported)
 
 #Use setValue instead of setDefaultValue to store symbol value in default.xml
 usartSym_BAUD_VALUE.setValue(getUSARTBaudValue(), 1)

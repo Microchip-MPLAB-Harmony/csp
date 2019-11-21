@@ -105,11 +105,11 @@ void ${SERCOM_INSTANCE_NAME}_USART_Initialize( void )
      * Configures IBON
      */
     <@compress single_line=true>${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA = SERCOM_USART_INT_CTRLA_MODE_USART_INT_CLK |
-                                                                                       SERCOM_USART_INT_CTRLA_RXPO_${USART_RXPO} |
-                                                                                       SERCOM_USART_INT_CTRLA_TXPO_${USART_TXPO} |
+                                                                                       SERCOM_USART_INT_CTRLA_RXPO(${USART_RXPO}) |
+                                                                                       SERCOM_USART_INT_CTRLA_TXPO(${USART_TXPO}) |
                                                                                        SERCOM_USART_INT_CTRLA_DORD_Msk |
                                                                                        SERCOM_USART_INT_CTRLA_IBON_Msk |
-                                                                                       SERCOM_USART_INT_CTRLA_FORM(${(USART_PARITY_MODE == "NONE")?then('0x0', '0x1')})
+                                                                                       SERCOM_USART_INT_CTRLA_FORM(${USART_FORM})
                                                                                        <#if USART_SAMPLE_RATE??>| SERCOM_USART_INT_CTRLA_SAMPR(${USART_SAMPLE_RATE})</#if>
                                                                                        ${USART_RUNSTDBY?then('| SERCOM_USART_INT_CTRLA_RUNSTDBY_Msk', '')};</@compress>
 
@@ -136,6 +136,11 @@ void ${SERCOM_INSTANCE_NAME}_USART_Initialize( void )
     while(${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_SYNCBUSY);
 </#if>
 
+<#if USART_CTRLC_GTIME?? && USART_TXPO == "0x3">
+    /* Configures RS485 Guard Time */
+    ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLC = SERCOM_USART_INT_CTRLC_GTIME(${USART_CTRLC_GTIME});
+
+</#if>
     /* Enable the UART after the configurations */
     ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLA |= SERCOM_USART_INT_CTRLA_ENABLE_Msk;
 
@@ -314,22 +319,15 @@ bool ${SERCOM_INSTANCE_NAME}_USART_Write( void *buffer, const size_t size )
             ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txProcessedSize = 0;
             ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txBusyStatus = true;
 
-            if(size == 0)
+            /* Initiate the transfer by sending first byte */
+            if((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_DRE_Msk) == SERCOM_USART_INT_INTFLAG_DRE_Msk)
             {
-                writeStatus = true;
+                ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txBuffer[${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txProcessedSize++];
             }
-            else
-            {
-                /* Initiate the transfer by sending first byte */
-                if((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_DRE_Msk) == SERCOM_USART_INT_INTFLAG_DRE_Msk)
-                {
-                    ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txBuffer[${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txProcessedSize++];
-                }
 
-                ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTENSET = SERCOM_USART_INT_INTFLAG_DRE_Msk;
+            ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTENSET = SERCOM_USART_INT_INTFLAG_DRE_Msk;
 
-                writeStatus = true;
-            }
+            writeStatus = true;
         }
 </#if>
     }
@@ -502,7 +500,8 @@ void static ${SERCOM_INSTANCE_NAME}_USART_ISR_ERR_Handler( void )
 
     if(errorStatus != USART_ERROR_NONE)
     {
-        ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTENCLR = SERCOM_USART_INT_INTENCLR_ERROR_Msk;
+        /* Clear error and receive interrupt to abort on-going transfer */
+        ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTENCLR = SERCOM_USART_INT_INTENCLR_ERROR_Msk | SERCOM_USART_INT_INTENCLR_RXC_Msk;
 
         if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxCallback != NULL)
         {
