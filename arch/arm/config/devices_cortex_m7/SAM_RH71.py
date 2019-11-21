@@ -146,6 +146,9 @@ coreComponent.addPlugin("../peripheral/clk_sam_rh71/plugin/clk_sam_rh71.jar")
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/pio_11264/config/pio.py")
 coreComponent.addPlugin("../peripheral/pio_11264/plugin/pio_11264.jar")
 
+# load matrix
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/matrix_44138/config/matrix.py")
+
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/nvic/config/nvic.py")
 coreComponent.addPlugin("../peripheral/nvic/plugin/nvic.jar")
 
