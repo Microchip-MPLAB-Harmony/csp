@@ -110,7 +110,7 @@ bool ${DMA_INSTANCE_NAME}_ChannelLinkedListTransfer ( DMAC_CHANNEL channel, dmac
 </#if>
 DMAC_CHANNEL_CONFIG  ${DMA_INSTANCE_NAME}_ChannelSettingsGet ( DMAC_CHANNEL channel );
 bool  ${DMA_INSTANCE_NAME}_ChannelSettingsSet ( DMAC_CHANNEL channel, DMAC_CHANNEL_CONFIG settings );
-
+uint16_t ${DMA_INSTANCE_NAME}_ChannelGetTransferredCount( DMAC_CHANNEL channel );
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 

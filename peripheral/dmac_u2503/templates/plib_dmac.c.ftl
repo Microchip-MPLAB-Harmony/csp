@@ -255,6 +255,11 @@ void ${DMA_INSTANCE_NAME}_ChannelDisable ( DMAC_CHANNEL channel )
 
 }
 
+uint16_t ${DMA_INSTANCE_NAME}_ChannelGetTransferredCount( DMAC_CHANNEL channel )
+{
+    return(descriptor_section[channel].DMAC_BTCNT - _write_back_section[channel].DMAC_BTCNT);
+}
+
 <#if DMAC_LL_ENABLE = true>
 /*******************************************************************************
     This function submit a list of DMA transfers.
