@@ -65,6 +65,7 @@
 // *****************************************************************************
 // *****************************************************************************
 
+
 <#compress> <#-- To remove unwanted new lines -->
 
 <#--  =====================
@@ -116,12 +117,12 @@
                         <#assign PORT_PIN_PAD = "PORT_GROUP_" + gpioGroup + "_PAD_"  + gpioPinPos>
                         <#assign PORT_GROUP_NAME = "PORT_GROUP_NAME_" + gpioGroup>
                             <#lt>/*** Macros for ${gpioName} pin ***/
-                            <#lt>#define ${gpioName}_Set()               (PORT_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_OUTSET = 1 << ${gpioPinPos})
-                            <#lt>#define ${gpioName}_Clear()             (PORT_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_OUTCLR = 1 << ${gpioPinPos})
-                            <#lt>#define ${gpioName}_Toggle()            (PORT_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_OUTTGL = 1 << ${gpioPinPos})
-                            <#lt>#define ${gpioName}_Get()               (((PORT_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_IN >> ${gpioPinPos})) & 0x01)
-                            <#lt>#define ${gpioName}_OutputEnable()      (PORT_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_DIRSET = 1 << ${gpioPinPos})
-                            <#lt>#define ${gpioName}_InputEnable()       (PORT_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_DIRCLR = 1 << ${gpioPinPos})
+                            <#lt>#define ${gpioName}_Set()               (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_OUTSET = 1 << ${gpioPinPos})
+                            <#lt>#define ${gpioName}_Clear()             (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_OUTCLR = 1 << ${gpioPinPos})
+                            <#lt>#define ${gpioName}_Toggle()            (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_OUTTGL = 1 << ${gpioPinPos})
+                            <#lt>#define ${gpioName}_Get()               (((${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_IN >> ${gpioPinPos})) & 0x01)
+                            <#lt>#define ${gpioName}_OutputEnable()      (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_DIRSET = 1 << ${gpioPinPos})
+                            <#lt>#define ${gpioName}_InputEnable()       (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_DIRCLR = 1 << ${gpioPinPos})
                             <#lt>#define ${gpioName}_PIN                  PORT_PIN_${.vars[PORT_PIN_PAD]}
 
                     </#if>
@@ -159,7 +160,7 @@ typedef enum
     <#assign PORT_GROUP_NAME = "PORT_GROUP_NAME_" + i>
 
     /* Group ${.vars[PORT_GROUP_NAME]} */
-    PORT_GROUP_${.vars[PORT_GROUP_NAME]} = PORT_BASE_ADDRESS + ${.vars[PORT_GROUP_NAME]} * (0x80),
+    PORT_GROUP_${.vars[PORT_GROUP_NAME]} = ${PORT_REG_NAME}_BASE_ADDRESS + ${.vars[PORT_GROUP_NAME]} * (0x80),
 </#list>
 } PORT_GROUP;
 

@@ -40,6 +40,12 @@
 
 #include "plib_${EVSYS_INSTANCE_NAME?lower_case}.h"
 
+<#if core.TRUSTZONE_SUPPORTED??>
+    <#assign EVSYS_REG_NAME = EVSYS_INSTANCE_NAME + "_SEC">
+<#else>
+    <#assign EVSYS_REG_NAME = EVSYS_INSTANCE_NAME>
+</#if>
+
 <#if INTERRUPT_ACTIVE>
 	<#lt>EVSYS_OBJECT evsys[${NUM_SYNC_CHANNELS}];
 </#if>
@@ -47,7 +53,7 @@
 void ${EVSYS_INSTANCE_NAME}_Initialize( void )
 {
 <#if EVSYS_CHANNEL_SCHEDULING == "1">
-    ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_PRICTRL = EVSYS_PRICTRL_RREN_Msk;
+    ${EVSYS_REG_NAME}_REGS->EVSYS_PRICTRL = EVSYS_PRICTRL_RREN_Msk;
 </#if>
 <#assign TOTAL_CHANNEL = EVSYS_CHANNEL_NUMBER?number >
 <#assign TOTAL_USER = EVSYS_USER_NUMBER?number >
@@ -56,7 +62,7 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
 	<#assign CHANNEL = "EVSYS_USER_" + i >
 	<#if .vars[CHANNEL]?has_content>
 	<#if .vars[CHANNEL] != '0'>
-	${EVSYS_INSTANCE_NAME}_REGS->EVSYS_USER[${i}] = EVSYS_USER_CHANNEL(${.vars[CHANNEL]});
+	${EVSYS_REG_NAME}_REGS->EVSYS_USER[${i}] = EVSYS_USER_CHANNEL(${.vars[CHANNEL]});
 	</#if>
 	</#if>
 </#list>
@@ -75,14 +81,14 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
 	<#if .vars[CHANNEL_ENABLE]?has_content>
 	<#if (.vars[CHANNEL_ENABLE] != false)>
 	/* Event Channel ${i} Configuration */
-	${EVSYS_INSTANCE_NAME}_REGS->CHANNEL[${i}].EVSYS_CHANNEL = EVSYS_CHANNEL_EVGEN(${.vars[GENERATOR]}) | EVSYS_CHANNEL_PATH(${.vars[PATH]}) | EVSYS_CHANNEL_EDGSEL(${.vars[EDGE]}) \
+	${EVSYS_REG_NAME}_REGS->CHANNEL[${i}].EVSYS_CHANNEL = EVSYS_CHANNEL_EVGEN(${.vars[GENERATOR]}) | EVSYS_CHANNEL_PATH(${.vars[PATH]}) | EVSYS_CHANNEL_EDGSEL(${.vars[EDGE]}) \
 									${(.vars[RUNSTANDBY])?then('| EVSYS_CHANNEL_RUNSTDBY_Msk', '')} ${(.vars[ONDEMAND])?then('| EVSYS_CHANNEL_ONDEMAND_Msk', '')};
     <#if .vars[PATH] != '2' >
     <#if (.vars[EVD] || .vars[OVERRUN])>
     <#if .vars[EVD]>
-    ${EVSYS_INSTANCE_NAME}_REGS->CHANNEL[${i}].EVSYS_CHINTENSET = EVSYS_CHINTENSET_EVD_Msk ${(.vars[OVERRUN])?then('| EVSYS_CHINTENSET_OVR_Msk', '')};
+    ${EVSYS_REG_NAME}_REGS->CHANNEL[${i}].EVSYS_CHINTENSET = EVSYS_CHINTENSET_EVD_Msk ${(.vars[OVERRUN])?then('| EVSYS_CHINTENSET_OVR_Msk', '')};
     <#else>
-    ${EVSYS_INSTANCE_NAME}_REGS->CHANNEL[${i}].EVSYS_CHINTENSET = EVSYS_CHINTENSET_OVR_Msk;
+    ${EVSYS_REG_NAME}_REGS->CHANNEL[${i}].EVSYS_CHINTENSET = EVSYS_CHINTENSET_OVR_Msk;
     </#if>
     </#if>
 	</#if>
@@ -95,12 +101,12 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
 
 	<#lt>void ${EVSYS_INSTANCE_NAME}_InterruptEnable(EVSYS_CHANNEL channel, EVSYS_INT_MASK interrupt)
 	<#lt>{
-	<#lt>	${EVSYS_INSTANCE_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTENSET = interrupt;
+	<#lt>	${EVSYS_REG_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTENSET = interrupt;
 	<#lt>}
 
 	<#lt>void ${EVSYS_INSTANCE_NAME}_InterruptDisable(EVSYS_CHANNEL channel, EVSYS_INT_MASK interrupt)
 	<#lt>{
-	<#lt>	${EVSYS_INSTANCE_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTENCLR = interrupt;
+	<#lt>	${EVSYS_REG_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTENCLR = interrupt;
 	<#lt>}
 
 	<#lt>void ${EVSYS_INSTANCE_NAME}_CallbackRegister(EVSYS_CHANNEL channel, EVSYS_CALLBACK callback, uintptr_t context )
@@ -115,8 +121,8 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
 <#if .vars[INTERRUPT_MODE]>
 	<#lt>void ${EVSYS_INSTANCE_NAME}_${x}_InterruptHandler( void )
 	<#lt>{
-	<#lt>	volatile uint32_t status = ${EVSYS_INSTANCE_NAME}_REGS->CHANNEL[${x}].EVSYS_CHINTFLAG;
-	<#lt>	${EVSYS_INSTANCE_NAME}_REGS->CHANNEL[${x}].EVSYS_CHINTFLAG = EVSYS_CHINTFLAG_Msk;
+	<#lt>	volatile uint32_t status = ${EVSYS_REG_NAME}_REGS->CHANNEL[${x}].EVSYS_CHINTFLAG;
+	<#lt>	${EVSYS_REG_NAME}_REGS->CHANNEL[${x}].EVSYS_CHINTFLAG = EVSYS_CHINTFLAG_Msk;
 	<#lt>	if(evsys[${x}].callback != NULL)
     <#lt>   {
     <#lt>   	evsys[${x}].callback(status, evsys[${x}].context);
@@ -130,13 +136,13 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
 <#if EVSYS_INTERRUPT_MODE_OTHER>
 void ${EVSYS_INSTANCE_NAME}_OTHER_InterruptHandler( void )
 {
-    uint8_t channel = ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTPEND & EVSYS_INTPEND_ID_Msk;
-    volatile uint32_t status = ${EVSYS_INSTANCE_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTFLAG;
+    uint8_t channel = ${EVSYS_REG_NAME}_REGS->EVSYS_INTPEND & EVSYS_INTPEND_ID_Msk;
+    volatile uint32_t status = ${EVSYS_REG_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTFLAG;
     if(evsys[channel].callback != NULL)
     {
     	evsys[channel].callback(status, evsys[channel].context);
     }
-    ${EVSYS_INSTANCE_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTFLAG = EVSYS_CHINTFLAG_Msk;
+    ${EVSYS_REG_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTFLAG = EVSYS_CHINTFLAG_Msk;
 }
 </#if>
 </#if>

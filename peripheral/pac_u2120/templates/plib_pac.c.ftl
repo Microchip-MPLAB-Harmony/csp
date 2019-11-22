@@ -59,6 +59,12 @@
 // *****************************************************************************
 // *****************************************************************************
 
+<#if core.TRUSTZONE_SUPPORTED??>
+    <#assign PAC_REG_NAME = PAC_INSTANCE_NAME + "_SEC">
+<#else>
+    <#assign PAC_REG_NAME = PAC_INSTANCE_NAME>
+</#if>
+
 <#if PAC_INTERRRUPT_MODE = true>
 PAC_CALLBACK_OBJ ${PAC_INSTANCE_NAME?lower_case}CallbackObject;
 </#if>
@@ -73,19 +79,19 @@ void ${PAC_INSTANCE_NAME}_Initialize( void )
 {
 <#if PAC_INTERRRUPT_MODE == true>
     /* Enable PAC interrupt */
-    ${PAC_INSTANCE_NAME}_REGS->PAC_INTENSET = PAC_INTENSET_ERR_Msk;
+    ${PAC_REG_NAME}_REGS->PAC_INTENSET = PAC_INTENSET_ERR_Msk;
 
 </#if>
 <#if PAC_ERROR_EVENT == true>
     /* Enable PAC Error Event Output */
-    ${PAC_INSTANCE_NAME}_REGS->PAC_EVCTRL = PAC_EVCTRL_ERREO_Msk;
+    ${PAC_REG_NAME}_REGS->PAC_EVCTRL = PAC_EVCTRL_ERREO_Msk;
 </#if>
 }
 
 bool ${PAC_INSTANCE_NAME}_PeripheralIsProtected( PAC_PERIPHERAL peripheral )
 {
     bool status = false;
-    uint32_t *statusRegBaseAddr = (uint32_t*) &(PAC_REGS->PAC_STATUSA);
+    uint32_t *statusRegBaseAddr = (uint32_t*) &(${PAC_REG_NAME}_REGS->PAC_STATUSA);
 
     /* Verify if the peripheral is protected or not */
     status = (bool)((*(statusRegBaseAddr + (peripheral / 32))) & (1 << (peripheral % 32)));
@@ -96,7 +102,7 @@ bool ${PAC_INSTANCE_NAME}_PeripheralIsProtected( PAC_PERIPHERAL peripheral )
 void ${PAC_INSTANCE_NAME}_PeripheralProtectSetup( PAC_PERIPHERAL peripheral, PAC_PROTECTION operation )
 {
     /* Set Peripheral Access Control */
-    PAC_REGS->PAC_WRCTRL = PAC_WRCTRL_PERID(peripheral) | PAC_WRCTRL_KEY(operation);
+    ${PAC_REG_NAME}_REGS->PAC_WRCTRL = PAC_WRCTRL_PERID(peripheral) | PAC_WRCTRL_KEY(operation);
 }
 
 <#if PAC_INTERRRUPT_MODE = true>
@@ -115,12 +121,12 @@ void ${PAC_INSTANCE_NAME}_InterruptHandler( void )
     }
 
     /* Clear all interrupt flags to remove active interrupt requests */
-    PAC_REGS->PAC_INTFLAGAHB = PAC_INTFLAGAHB_Msk;
-    PAC_REGS->PAC_INTFLAGA = PAC_INTFLAGA_Msk;
-    PAC_REGS->PAC_INTFLAGB = PAC_INTFLAGB_Msk;
-    PAC_REGS->PAC_INTFLAGC = PAC_INTFLAGC_Msk;
+    ${PAC_REG_NAME}_REGS->PAC_INTFLAGAHB = PAC_INTFLAGAHB_Msk;
+    ${PAC_REG_NAME}_REGS->PAC_INTFLAGA = PAC_INTFLAGA_Msk;
+    ${PAC_REG_NAME}_REGS->PAC_INTFLAGB = PAC_INTFLAGB_Msk;
+    ${PAC_REG_NAME}_REGS->PAC_INTFLAGC = PAC_INTFLAGC_Msk;
     <#if INTFLAGD_AVAILABLE??>
-    PAC_REGS->PAC_INTFLAGD = PAC_INTFLAGD_Msk;
+    ${PAC_REG_NAME}_REGS->PAC_INTFLAGD = PAC_INTFLAGD_Msk;
     </#if>
 }
 </#if>

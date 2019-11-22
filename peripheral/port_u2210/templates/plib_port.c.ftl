@@ -81,19 +81,19 @@ void PORT_Initialize(void)
             <#assign PORT_OUT = "PORT_GROUP_" + n + "_OUT">
             <#assign PORT_CTRL = "PORT_GROUP_" + n + "_CTRL">
                 <#if "${.vars[PORT_DIR]}" != "0x0">
-                    <#lt>   PORT_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_DIR = ${.vars[PORT_DIR]};
+                    <#lt>   ${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_DIR = ${.vars[PORT_DIR]};
                 </#if>
                 <#if "${.vars[PORT_OUT]}" != "0x0">
-                    <#lt>   PORT_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_OUT = ${.vars[PORT_OUT]};
+                    <#lt>   ${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_OUT = ${.vars[PORT_OUT]};
                 </#if>
                 <#if "${.vars[PORT_CTRL]}" != "0x0">
-                    <#lt>   PORT_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_CTRL = ${.vars[PORT_CTRL]};
+                    <#lt>   ${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_CTRL = ${.vars[PORT_CTRL]};
                 </#if>
                 <#list 0..31 as i>
                     <#assign PORT_PINCONFIG = "PORT_GROUP_" + n + "_PINCFG" + i>
                     <#assign PORT_GROUP_PINCFG_INDEX = i>
                     <#if "${.vars[PORT_PINCONFIG]}" != "0x0">
-                        <#lt>   PORT_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_PINCFG[${PORT_GROUP_PINCFG_INDEX}] = ${.vars[PORT_PINCONFIG]};
+                        <#lt>   ${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_PINCFG[${PORT_GROUP_PINCFG_INDEX}] = ${.vars[PORT_PINCONFIG]};
                     </#if>
                 </#list>
 
@@ -101,12 +101,12 @@ void PORT_Initialize(void)
                     <#assign PORT_PINMUX = "PORT_GROUP_" + n + "_PMUX"+ i>
                     <#assign PORT_INDEX = i>
                     <#if "${.vars[PORT_PINMUX]}" != "0x0">
-                        <#lt>   PORT_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_PMUX[${PORT_INDEX}] = ${.vars[PORT_PINMUX]};
+                        <#lt>   ${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_PMUX[${PORT_INDEX}] = ${.vars[PORT_PINMUX]};
                     </#if>
                 </#list>
                 <#if .vars[PORT_GROUP_EVCTRL]??>
                 <#if "${.vars[PORT_GROUP_EVCTRL]}" != "0x0">
-                    <#lt>   PORT_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_EVCTRL = ${.vars[PORT_GROUP_EVCTRL]};
+                    <#lt>   ${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_EVCTRL = ${.vars[PORT_GROUP_EVCTRL]};
                 </#if>
                 </#if>
         </#if>

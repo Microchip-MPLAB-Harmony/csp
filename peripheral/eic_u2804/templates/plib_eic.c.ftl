@@ -53,6 +53,12 @@
 /* This section lists the other files that are included in this file.
 */
 
+<#if core.TRUSTZONE_SUPPORTED??>
+    <#assign EIC_REG_NAME = EIC_INSTANCE_NAME + "_SEC">
+<#else>
+    <#assign EIC_REG_NAME = EIC_INSTANCE_NAME>
+</#if>
+
 #include "plib_${EIC_INSTANCE_NAME?lower_case}.h"
 
 // *****************************************************************************
@@ -76,29 +82,29 @@ void ${EIC_INSTANCE_NAME}_Initialize (void)
 {
     /* Reset all registers in the EIC module to their initial state and
 	   EIC will be disabled. */
-    ${EIC_INSTANCE_NAME}_REGS->EIC_CTRLA |= EIC_CTRLA_SWRST_Msk;
+    ${EIC_REG_NAME}_REGS->EIC_CTRLA |= EIC_CTRLA_SWRST_Msk;
 
-    while((${EIC_INSTANCE_NAME}_REGS->EIC_SYNCBUSY & EIC_SYNCBUSY_SWRST_Msk) == EIC_SYNCBUSY_SWRST_Msk)
+    while((${EIC_REG_NAME}_REGS->EIC_SYNCBUSY & EIC_SYNCBUSY_SWRST_Msk) == EIC_SYNCBUSY_SWRST_Msk)
     {
         /* Wait for sync */
     }
 
     <#if EIC_CLKSEL == "1">
     /* EIC is clocked by ultra low power clock */
-    ${EIC_INSTANCE_NAME}_REGS->EIC_CTRLA |= EIC_CTRLA_CKSEL_Msk;
+    ${EIC_REG_NAME}_REGS->EIC_CTRLA |= EIC_CTRLA_CKSEL_Msk;
     <#else>
     /* EIC is by default clocked by GCLK */
     </#if>
 
     /* NMI Control register */
     <#if NMI_CTRL == true>
-    <@compress single_line=true>${EIC_INSTANCE_NAME}_REGS->EIC_NMICTRL =  EIC_NMICTRL_NMIASYNCH(${NMI_ASYNCH})
+    <@compress single_line=true>${EIC_REG_NAME}_REGS->EIC_NMICTRL =  EIC_NMICTRL_NMIASYNCH(${NMI_ASYNCH})
                                                         | EIC_NMICTRL_NMISENSE_${NMI_SENSE}
                                                         ${NMI_FILTEN?then('| EIC_NMICTRL_NMIFILTEN_Msk', '')};</@compress>
     </#if>
 
     /* Interrupt sense type and filter control for EXTINT channels 0 to 7*/
-    ${EIC_INSTANCE_NAME}_REGS->EIC_CONFIG =  EIC_CONFIG_SENSE0_${EIC_CONFIG_SENSE_0} ${EIC_CONFIG_FILTEN_0?then('| EIC_CONFIG_FILTEN0_Msk', '')} |
+    ${EIC_REG_NAME}_REGS->EIC_CONFIG =  EIC_CONFIG_SENSE0_${EIC_CONFIG_SENSE_0} ${EIC_CONFIG_FILTEN_0?then('| EIC_CONFIG_FILTEN0_Msk', '')} |
                               EIC_CONFIG_SENSE1_${EIC_CONFIG_SENSE_1} ${EIC_CONFIG_FILTEN_1?then('| EIC_CONFIG_FILTEN1_Msk', '')} |
                               EIC_CONFIG_SENSE2_${EIC_CONFIG_SENSE_2} ${EIC_CONFIG_FILTEN_2?then('| EIC_CONFIG_FILTEN2_Msk', '')} |
                               EIC_CONFIG_SENSE3_${EIC_CONFIG_SENSE_3} ${EIC_CONFIG_FILTEN_3?then('| EIC_CONFIG_FILTEN3_Msk', '')} |
@@ -110,22 +116,22 @@ void ${EIC_INSTANCE_NAME}_Initialize (void)
 
     <#if EIC_ASYNCH != "0">
     /* External Interrupt Asynchronous Mode enable */
-    ${EIC_INSTANCE_NAME}_REGS->EIC_ASYNCH = 0x${EIC_ASYNCH};
+    ${EIC_REG_NAME}_REGS->EIC_ASYNCH = 0x${EIC_ASYNCH};
     </#if>
 
     <#if EIC_DEBOUNCEN != "0">
     /* Debouncer enable */
-    ${EIC_INSTANCE_NAME}_REGS->EIC_DEBOUNCEN = 0x${EIC_DEBOUNCEN};
+    ${EIC_REG_NAME}_REGS->EIC_DEBOUNCEN = 0x${EIC_DEBOUNCEN};
     </#if>
 
     <#if EIC_EXTINTEO != "0">
     /* Event Control Output enable */
-    ${EIC_INSTANCE_NAME}_REGS->EIC_EVCTRL = 0x${EIC_EXTINTEO};
+    ${EIC_REG_NAME}_REGS->EIC_EVCTRL = 0x${EIC_EXTINTEO};
     </#if>
 
 	<#if EIC_DEBOUNCEN != "0">
     /* Debouncer Setting */
-    <@compress single_line=true>${EIC_INSTANCE_NAME}_REGS->EIC_DPRESCALER = EIC_DPRESCALER_PRESCALER0(${EIC_DEBOUNCER_PRESCALER_0})
+    <@compress single_line=true>${EIC_REG_NAME}_REGS->EIC_DPRESCALER = EIC_DPRESCALER_PRESCALER0(${EIC_DEBOUNCER_PRESCALER_0})
                                                         <#if EIC_DEBOUNCER_PRESCALER_1??>
                                                         | EIC_DPRESCALER_PRESCALER1(${EIC_DEBOUNCER_PRESCALER_1})
                                                         </#if>
@@ -138,7 +144,7 @@ void ${EIC_INSTANCE_NAME}_Initialize (void)
 
     <#if EIC_INT != "0">
     /* External Interrupt enable*/
-    ${EIC_INSTANCE_NAME}_REGS->EIC_INTENSET = 0x${EIC_INT};
+    ${EIC_REG_NAME}_REGS->EIC_INTENSET = 0x${EIC_INT};
 
     /* Callbacks for enabled interrupts */
     <#list 0..EIC_INT_COUNT as i>
@@ -153,9 +159,9 @@ void ${EIC_INSTANCE_NAME}_Initialize (void)
     </#list>
     </#if>
     /* Enable the EIC */
-    ${EIC_INSTANCE_NAME}_REGS->EIC_CTRLA |= EIC_CTRLA_ENABLE_Msk;
+    ${EIC_REG_NAME}_REGS->EIC_CTRLA |= EIC_CTRLA_ENABLE_Msk;
 
-    while((${EIC_INSTANCE_NAME}_REGS->EIC_SYNCBUSY & EIC_SYNCBUSY_ENABLE_Msk) == EIC_SYNCBUSY_ENABLE_Msk)
+    while((${EIC_REG_NAME}_REGS->EIC_SYNCBUSY & EIC_SYNCBUSY_ENABLE_Msk) == EIC_SYNCBUSY_ENABLE_Msk)
     {
         /* Wait for sync */
     }
@@ -164,12 +170,12 @@ void ${EIC_INSTANCE_NAME}_Initialize (void)
 
 void ${EIC_INSTANCE_NAME}_InterruptEnable (EIC_PIN pin)
 {
-    ${EIC_INSTANCE_NAME}_REGS->EIC_INTENSET = (1UL << pin);
+    ${EIC_REG_NAME}_REGS->EIC_INTENSET = (1UL << pin);
 }
 
 void ${EIC_INSTANCE_NAME}_InterruptDisable (EIC_PIN pin)
 {
-    ${EIC_INSTANCE_NAME}_REGS->EIC_INTENCLR = (1UL << pin);
+    ${EIC_REG_NAME}_REGS->EIC_INTENCLR = (1UL << pin);
 }
 
 void ${EIC_INSTANCE_NAME}_CallbackRegister(EIC_PIN pin, EIC_CALLBACK callback, uintptr_t context)
@@ -206,7 +212,7 @@ void ${EIC_INSTANCE_NAME}_InterruptHandler(void)
         if ((${EIC_INSTANCE_NAME?lower_case}CallbackObject[currentChannel].eicPinNo == currentChannel))
         {
             /* Read the interrupt flag status */
-            eicIntFlagStatus = ${EIC_INSTANCE_NAME}_REGS->EIC_INTFLAG & (1UL << currentChannel);
+            eicIntFlagStatus = ${EIC_REG_NAME}_REGS->EIC_INTFLAG & (1UL << currentChannel);
 
             if (eicIntFlagStatus)
             {
@@ -217,7 +223,7 @@ void ${EIC_INSTANCE_NAME}_InterruptHandler(void)
                 }
 
                 /* Clear interrupt flag */
-                ${EIC_INSTANCE_NAME}_REGS->EIC_INTFLAG = (1UL << currentChannel);
+                ${EIC_REG_NAME}_REGS->EIC_INTFLAG = (1UL << currentChannel);
             }
         }
     }
@@ -229,7 +235,7 @@ void ${EIC_INSTANCE_NAME}_InterruptHandler(void)
 void ${EIC_INSTANCE_NAME}_EXTINT_${x}_InterruptHandler(void)
 {
     /* Clear interrupt flag */
-    ${EIC_INSTANCE_NAME}_REGS->EIC_INTFLAG = (1UL << ${x});
+    ${EIC_REG_NAME}_REGS->EIC_INTFLAG = (1UL << ${x});
     /* Find any associated callback entries in the callback table */
     if ((${EIC_INSTANCE_NAME?lower_case}CallbackObject[${x}].callback != NULL))
     {
@@ -253,7 +259,7 @@ void ${EIC_INSTANCE_NAME}_OTHER_InterruptHandler(void)
         if ((${EIC_INSTANCE_NAME?lower_case}CallbackObject[currentChannel].eicPinNo == currentChannel))
         {
             /* Read the interrupt flag status */
-            eicIntFlagStatus = ${EIC_INSTANCE_NAME}_REGS->EIC_INTFLAG & (1UL << currentChannel);
+            eicIntFlagStatus = ${EIC_REG_NAME}_REGS->EIC_INTFLAG & (1UL << currentChannel);
 
             if (eicIntFlagStatus)
             {
@@ -264,7 +270,7 @@ void ${EIC_INSTANCE_NAME}_OTHER_InterruptHandler(void)
                 }
 
                 /* Clear interrupt flag */
-                ${EIC_INSTANCE_NAME}_REGS->EIC_INTFLAG = (1UL << currentChannel);
+                ${EIC_REG_NAME}_REGS->EIC_INTFLAG = (1UL << currentChannel);
             }
         }
     }
@@ -278,10 +284,10 @@ void ${EIC_INSTANCE_NAME}_OTHER_InterruptHandler(void)
 void NMI_InterruptHandler(void)
 {
     /* Find the triggered, run associated callback handlers */
-    if ((${EIC_INSTANCE_NAME}_REGS->EIC_NMIFLAG & EIC_NMIFLAG_NMI_Msk) == EIC_NMIFLAG_NMI_Msk)
+    if ((${EIC_REG_NAME}_REGS->EIC_NMIFLAG & EIC_NMIFLAG_NMI_Msk) == EIC_NMIFLAG_NMI_Msk)
     {
         /* Clear flag */
-        ${EIC_INSTANCE_NAME}_REGS->EIC_NMIFLAG = EIC_NMIFLAG_NMI_Msk;
+        ${EIC_REG_NAME}_REGS->EIC_NMIFLAG = EIC_NMIFLAG_NMI_Msk;
 
         /* Find any associated callback entries in the callback table */
         if (${EIC_INSTANCE_NAME?lower_case}NMICallbackObject.callback != NULL)

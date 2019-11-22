@@ -39,6 +39,12 @@ availablePinDictionary = {}
 
 global getAvailablePins
 
+portRegName = coreComponent.createStringSymbol("PORT_REG_NAME", None)
+portRegName.setVisible(False)
+if Database.getSymbolValue("core", "TRUSTZONE_SUPPORTED") != None:
+    portRegName.setValue("PORT_SEC")
+else:
+    portRegName.setValue("PORT")
 # API used by core to return available pins to sender component
 def getAvailablePins():
 
