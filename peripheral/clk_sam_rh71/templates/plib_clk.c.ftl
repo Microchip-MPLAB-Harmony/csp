@@ -293,6 +293,13 @@ Clock Initialize
 *********************************************************************************/
 void CLK_Initialize( void )
 {
+    <#if (DATA_CACHE_ENABLE)>
+    SCB_DisableDCache();
+    </#if>
+    <#if INSTRUCTION_CACHE_ENABLE>
+    SCB_DisableICache();
+    </#if>
+
     /* Initialize Slow Clock */
     CLK_SlowClockInitialize();
 
@@ -324,6 +331,13 @@ void CLK_Initialize( void )
     CLK_PeripheralClockInitialize();
 
 </#if>
+
+    <#if (DATA_CACHE_ENABLE)>
+    SCB_EnableDCache();
+    </#if>
+    <#if INSTRUCTION_CACHE_ENABLE>
+    SCB_EnableICache();
+    </#if>
 }
 <#--
 /*******************************************************************************
