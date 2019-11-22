@@ -127,8 +127,10 @@ def calcRefreshCount(time, rowlines, clk):
 
 
 def calcRefreshCount_CB(symbol, event):
+    global hemcComment
     global hemcInstanceName
     global hsdramcSym_CR__NR
+    hemcComment.setLabel("**** HEMC is running at " + str(Database.getSymbolValue("core", hemcInstanceName.getValue() + "_CLOCK_FREQUENCY")) + "Hz ****")
     clk = int(Database.getSymbolValue("core", hemcInstanceName.getValue() + "_CLOCK_FREQUENCY"))
     time = Database.getSymbolValue(hemcInstanceName.getValue().lower(), "HSDRAMC_REFRESH_TIME_IN_MS")
     rowlines = hsdramcSym_CR__NR.getSelectedKey()
@@ -218,10 +220,15 @@ def instantiateComponent(hemcComponent):
     global hsdramcSymMenu_features
     global hsdramcSymMenu_TIMING_MENU
     global useHSMC
+    global hemcComment
+
 
     hemcInstanceName = hemcComponent.createStringSymbol("HEMC_INSTANCE_NAME", None)
     hemcInstanceName.setVisible(False)
     hemcInstanceName.setDefaultValue(hemcComponent.getID().upper())
+
+    hemcComment = hemcComponent.createCommentSymbol("HEMC_COMMENT", None)
+    hemcComment.setLabel("**** HEMC is running at " + str(Database.getSymbolValue("core", hemcInstanceName.getValue() + "_CLOCK_FREQUENCY")) + "Hz ****")
 
     hsdramcInstanceName = hemcComponent.createStringSymbol("HSDRAMC_INSTANCE_NAME", None)
     hsdramcInstanceName.setVisible(False)
