@@ -807,12 +807,13 @@ def tcPCKVisible(symbol, event):
     clock0 = tcSym_CH_CMR_TCCLKS[0].getKeyDescription(int(tcSym_CH_CMR_TCCLKS[0].getSelectedValue()))
     clock1 = tcSym_CH_CMR_TCCLKS[1].getKeyDescription(int(tcSym_CH_CMR_TCCLKS[1].getSelectedValue()))
     clock2 = tcSym_CH_CMR_TCCLKS[2].getKeyDescription(int(tcSym_CH_CMR_TCCLKS[2].getSelectedValue()))
-    clock3 = tcSym_CH_CMR_TCCLKS[3].getKeyDescription(int(tcSym_CH_CMR_TCCLKS[3].getSelectedValue()))
+    if (tcSym_QDEC_PRESENT.getValue() == True):
+        clock3 = tcSym_CH_CMR_TCCLKS[3].getKeyDescription(int(tcSym_CH_CMR_TCCLKS[3].getSelectedValue()))
     if (clock0 == "PCK" or clock1 == "PCK" or clock2 == "PCK"):
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
-    if (tcSym_CH_EnableQEI.getValue() == True):
+    if (tcSym_QDEC_PRESENT.getValue() == True and tcSym_CH_EnableQEI.getValue() == True):
         if (clock3 == "PCK" and tcSym_CH_BMR_POSEN.getValue() == "SPEED"):
             symbol.setVisible(True)
         else:
