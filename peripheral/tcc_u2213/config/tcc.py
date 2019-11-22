@@ -161,11 +161,13 @@ def tccPWMFreqCalc(symbol, event):
         if clock_freq == 0:
             clock_freq = 1
         prescaler = int(tccSym_CTRLA_PRESCALER.getSelectedKey()[3:])
-        period = tccSym_PER_PER.getValue() + 1
+
         if (tccSym_WAVE_WAVEGEN.getValue() == 0): #single slope PWM
             slope = 1
+            period = tccSym_PER_PER.getValue() + 1
         else:
             slope = 2
+            period = tccSym_PER_PER.getValue()
         frequency = ((clock_freq / prescaler) / period) / slope
         symbol.setLabel("**** PWM Frequency is " +str(frequency)+ " Hz ****")
         symbol.setVisible(True)
@@ -399,11 +401,13 @@ def instantiateComponent(tccComponent):
     if clock_freq == 0:
         clock_freq = 1
     prescaler = int(tccSym_CTRLA_PRESCALER.getSelectedKey()[3:])
-    period = tccSym_PER_PER.getValue() + 1
+
     if (tccSym_WAVE_WAVEGEN.getValue() == 0):
         slope = 1
+        period = tccSym_PER_PER.getValue() + 1
     else:
         slope = 2
+        period = tccSym_PER_PER.getValue()
     frequency = ((clock_freq / prescaler) / period) / slope
     #Calculated frequency
     tccSym_Frequency = tccComponent.createCommentSymbol("TCC_FREQUENCY", None)
