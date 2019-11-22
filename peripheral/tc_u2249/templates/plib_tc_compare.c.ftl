@@ -223,6 +223,11 @@ uint8_t ${TC_INSTANCE_NAME}_Compare8bitCounterGet( void )
         /* Wait for Write Synchronization */
     }
 
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET & TC_CTRLBSET_CMD_Msk) != 0)
+    {
+        /* Wait for CMD to become zero */
+    }
+
     /* Read current count value */
     return (uint8_t)${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_COUNT;
 }
@@ -281,6 +286,11 @@ uint16_t ${TC_INSTANCE_NAME}_Compare16bitCounterGet( void )
     while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY & TC_SYNCBUSY_CTRLB_Msk) == TC_SYNCBUSY_CTRLB_Msk)
     {
         /* Wait for Write Synchronization */
+    }
+
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET & TC_CTRLBSET_CMD_Msk) != 0)
+    {
+        /* Wait for CMD to become zero */
     }
 
     /* Read current count value */
@@ -344,6 +354,11 @@ uint32_t ${TC_INSTANCE_NAME}_Compare32bitCounterGet( void )
         /* Wait for Write Synchronization */
     }
 
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET & TC_CTRLBSET_CMD_Msk) != 0)
+    {
+        /* Wait for CMD to become zero */
+    }
+    
     /* Read current count value */
     return ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_COUNT;
 }
