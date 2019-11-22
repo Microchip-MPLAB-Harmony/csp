@@ -71,8 +71,7 @@ def updateTCCInterruptStatus(symbol, event):
     component = symbol.getComponent()
     # For single interrupt line for peripheral
     if len(InterruptVector) == 1:
-        if (component.getSymbolValue("TCC_INTENSET_OVF") or component.getSymbolValue("TCC_INTENSET_FAULT0") or
-        component.getSymbolValue("TCC_INTENSET_FAULT1")):
+        if (event["value"] == True):
             Database.setSymbolValue("core", InterruptVector[0], True, 2)
             Database.setSymbolValue("core", InterruptHandlerLock[0], True, 2)
             Database.setSymbolValue("core", InterruptHandler[0], tccInstanceName.getValue() + "_PWMInterruptHandler", 2)

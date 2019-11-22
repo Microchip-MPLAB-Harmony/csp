@@ -413,7 +413,7 @@ void ${TCC_INSTANCE_NAME}_PWMPeriodInterruptDisable(void)
     <#lt>    ${TCC_INSTANCE_NAME}_CallbackObj.context = context;
     <#lt>}
 
-    <#if TCC_NUM_INT_LINES != 1>
+    <#if TCC_NUM_INT_LINES != 0>
         <#if TCC_INTENSET_OVF == true || TCC_INTENSET_FAULT0 == true || TCC_INTENSET_FAULT1 == true>
             <#lt>/* Interrupt Handler */
             <#lt>void ${TCC_INSTANCE_NAME}_PWMInterruptHandler(void)
