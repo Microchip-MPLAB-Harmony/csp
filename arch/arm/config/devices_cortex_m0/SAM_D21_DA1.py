@@ -40,12 +40,14 @@ deviceSecurity.setSelectedKey("DISABLED",1)
 deviceSecurity.setVisible(False)
 
 def setWindow(symbol, event):
-    if event["value"] & 1 == 1:
+    global wdtWindow
+    val = int(wdtWindow.getKeyValue(event["value"]), 16)
+    if val & 1 == 1:
         Database.setSymbolValue("core", "DEVICE_WDT_WINDOW_0", 1)
     else:
         Database.setSymbolValue("core", "DEVICE_WDT_WINDOW_0", 0)
     
-    symbol.setValue(event["value"] >> 1)
+    symbol.setValue(val >> 1)
 
 fuseSettings = coreComponent.createBooleanSymbol("FUSE_CONFIG_ENABLE", devCfgMenu)
 fuseSettings.setLabel("Generate Fuse Settings")
@@ -195,10 +197,27 @@ wdtWindowModeEnable.addKey("DISABLED", "0", "WDT window mode is disabled")
 wdtWindowModeEnable.addKey("ENABLED", "1", "WDT window mode is enabled")
 wdtWindowModeEnable.setSelectedKey("DISABLED", 1)
 
-wdtWindow = coreComponent.createHexSymbol("DEVICE_WDT_WINDOW", wdtFuseMenu)
+global wdtWindow
+
+wdtWindow_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"WDT\"]/value-group@[name=\"WDT_CONFIG__WINDOW\"]")
+wdtWindow_Values = []
+wdtWindow_Values = wdtWindow_Node.getChildren()
+
+wdtWindow = coreComponent.createKeyValueSetSymbol("DEVICE_WDT_WINDOW", wdtFuseMenu)
 wdtWindow.setLabel("WDT Window")
-wdtWindow.setMax(0xb)
-wdtWindow.setMin(0x0)
+for index in range(len(wdtWindow_Values)):
+    wdtWindow_Key_Name = wdtWindow_Values[index].getAttribute("name")
+
+    if wdtWindow_Key_Name[-1:] == "K":
+        wdtWindow_Key_Name = str(int(wdtWindow_Key_Name[:-1]) * 1024)
+
+    wdtWindow_Key_Description = wdtWindow_Values[index].getAttribute("caption")
+    wdtWindow_Key_Value = wdtWindow_Values[index].getAttribute("value")
+    wdtWindow.addKey(wdtWindow_Key_Name, wdtWindow_Key_Value, wdtWindow_Key_Description)
+
+wdtWindow.setDefaultValue(11)
+wdtWindow.setOutputMode("Key")
+wdtWindow.setDisplayMode("Description")
 
 wdtWindow_0 = coreComponent.createKeyValueSetSymbol("DEVICE_WDT_WINDOW_0", wdtFuseMenu)
 wdtWindow_0.setLabel("WDT Window bit 0")
