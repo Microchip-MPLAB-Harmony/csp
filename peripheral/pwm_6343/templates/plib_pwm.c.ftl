@@ -234,6 +234,8 @@ void ${PWM_INSTANCE_NAME}_Initialize (void)
     </#if>
     <#if PWM_FPV2_VAL?has_content>
     <#lt>    ${PWM_INSTANCE_NAME}_REGS->PWM_FPV2 = ${PWM_FPV2_VAL};
+    <#else>
+    <#lt>    ${PWM_INSTANCE_NAME}_REGS->PWM_FPV2 = 0x0;
     </#if>
     /* Fault mode configuration */
     ${PWM_INSTANCE_NAME}_REGS->PWM_FMR = PWM_FMR_FFIL(0x${PWM_FMR_FFIL_VAL?upper_case}) | PWM_FMR_FPOL(0x${PWM_FMR_FPOL_VAL?upper_case}) | PWM_FMR_FMOD(0x${PWM_FMR_FMOD_VAL?upper_case});
