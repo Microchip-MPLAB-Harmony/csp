@@ -184,6 +184,12 @@ def instantiateComponent(adcComponent):
     family = node.getChildren()[0].getAttribute("family")
     adcSym_MCU_FAMILY.setDefaultValue(node.getChildren()[0].getAttribute("family"))
 
+    fuse = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"FUSES\"]/register-group@[name=\"OTP4_FUSES\"]/register@[name=\"OTP4_WORD_1\"]/bitfield@[name=\"ADC_BIASCAL\"]")
+    if fuse is not None:
+        adcSym_CALIB = adcComponent.createStringSymbol("ADC_CALIB", None)
+        adcSym_CALIB.setVisible(False)
+        adcSym_CALIB.setDefaultValue("Callibration required")
+
     #prescaler configuration
     global adcSym_CTRLB_PRESCALER
     adcSym_CTRLB_PRESCALER = adcComponent.createKeyValueSetSymbol("ADC_CTRLB_PRESCALER", None)

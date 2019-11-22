@@ -133,7 +133,7 @@
 ADC_CALLBACK_OBJ ${ADC_INSTANCE_NAME}_CallbackObject;
 </#if>
 
-<#if ADC_MCU_FAMILY == "SAMD">
+<#if ADC_CALIB??>
 #define ADC_LINEARITY0_POS  (27)
 #define ADC_LINEARITY0_Msk   ((0x1F << ADC_LINEARITY0_POS))
 
@@ -162,7 +162,7 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
         /* Wait for Synchronization */
     }
 
-<#if ADC_MCU_FAMILY == "SAMD">
+<#if ADC_CALIB??>
     uint32_t adc_linearity0 = (((*(uint64_t*)OTP4_ADDR) & ADC_LINEARITY0_Msk) >> ADC_LINEARITY0_POS);
     uint32_t adc_linearity1 = (((*(uint64_t*)(OTP4_ADDR + 4)) & ADC_LINEARITY1_Msk) >> ADC_LINEARITY1_POS);
 
