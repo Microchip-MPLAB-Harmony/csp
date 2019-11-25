@@ -63,30 +63,6 @@ void print_menu(void)
 	       "  m: Display menu \r\n\r\n");
 }
 
-void CAN_PORT_Initialize ( void )
-{
-    /* PORTB Initialization */
-    ANSELBCLR = 0x20; /* Digital Mode Enable */
-
-    /* unlock system for PPS configuration */
-    SYSKEY = 0x00000000;
-    SYSKEY = 0xAA996655;
-    SYSKEY = 0x556699AA;
-    CFGCON0bits.IOLOCK = 0;
-
-    /* PPS Input Remapping */
-    C2RXR = 1;
-
-    /* PPS Output Remapping */
-    RPB5R = 6;
-
-    /* Lock back the system after PPS configuration */
-    SYSKEY = 0x00000000;
-    SYSKEY = 0xAA996655;
-    SYSKEY = 0x556699AA;
-    CFGCON0bits.IOLOCK = 1;
-}
-
 // *****************************************************************************
 // *****************************************************************************
 // Section: Main Entry Point
@@ -105,8 +81,6 @@ int main ( void )
 
     /* Initialize all modules */
     SYS_Initialize ( NULL );
-
-    CAN_PORT_Initialize();
 
     printf(" ------------------------------ \r\n");
     printf("            CAN FD Demo         \r\n");

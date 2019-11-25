@@ -185,14 +185,16 @@ void SYS_Initialize ( void* data )
   
     SYS_PMU_MLDO_TRIM();
     CLK_Initialize();
-	GPIO_Initialize();
     /* Configure Wait States */
     PRECONbits.PFMWS = 5;
 
 
-	UART1_Initialize();
-
     CAN2_Initialize();
+
+
+	GPIO_Initialize();
+
+	UART1_Initialize();
 
 
 
