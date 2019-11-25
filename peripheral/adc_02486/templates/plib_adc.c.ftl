@@ -143,7 +143,7 @@ bool ${ADC_INSTANCE_NAME}_ResultIsReady()
 /* Read the conversion result */
 uint32_t ${ADC_INSTANCE_NAME}_ResultGet(ADC_RESULT_BUFFER bufferNumber)
 {
-    return (*((&ADC1BUF0) + bufferNumber));
+    return (*((&ADC1BUF0) + (bufferNumber << 2)));
 }
 
 <#if ADC_INTERRUPT == true>
