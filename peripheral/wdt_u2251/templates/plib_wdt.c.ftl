@@ -89,9 +89,12 @@ void ${WDT_INSTANCE_NAME}_Disable( void )
 
 void ${WDT_INSTANCE_NAME}_Clear( void )
 {
-    /* Clear WDT and reset the WDT timer before the
-       timeout occurs */
-    ${WDT_INSTANCE_NAME}_REGS->WDT_CLEAR = WDT_CLEAR_CLEAR_KEY;
+    if ((${WDT_INSTANCE_NAME}_REGS->WDT_SYNCBUSY & WDT_SYNCBUSY_CLEAR_Msk) != WDT_SYNCBUSY_CLEAR_Msk)
+    {
+        /* Clear WDT and reset the WDT timer before the
+        timeout occurs */
+        ${WDT_INSTANCE_NAME}_REGS->WDT_CLEAR = WDT_CLEAR_CLEAR_KEY;
+    }
 }
 
 <#if WDT_EW_ENABLE = true>
