@@ -48,7 +48,7 @@
 <#assign TOTAL_NUM_OF_INT_USED = 0>
 
 <#-- count number of active interrupts and save it in variable -->
-<#list 1..CN_PIN_TOTAL as i>
+<#list 0..CN_PIN_TOTAL-1 as i>
     <#assign intConfig = "BSP_PIN_" + i + "_CN">
     <#if .vars[intConfig]?has_content>
         <#if (.vars[intConfig] == "True")>
@@ -64,7 +64,7 @@
     <#lt>/* Array to store pin objects of each configured interrupt */
     <#lt>GPIO_PIN_CALLBACK_OBJ cnPinObj[TOTAL_NUM_OF_INT_USED] =
                                 <#lt>    {
-                                <#list 1..CN_PIN_TOTAL as i>
+                                <#list 0..CN_PIN_TOTAL-1 as i>
                                     <#assign intConfig = "BSP_PIN_" + i + "_CN">
                                     <#assign gpioPin = "CN_PIN_" + i + "_NAME">
                                     <#if (.vars[intConfig]?has_content) && (.vars[intConfig] == "True")>
