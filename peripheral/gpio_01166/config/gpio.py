@@ -607,7 +607,7 @@ pioSource1File.setMarkup(True)
 
 pioSystemInitFile = coreComponent.createFileSymbol("GPIO_INIT", None)
 pioSystemInitFile.setType("STRING")
-pioSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE")
+pioSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE1")
 pioSystemInitFile.setSourcePath("../peripheral/gpio_01166/templates/system/initialization.c.ftl")
 pioSystemInitFile.setMarkup(True)
 
