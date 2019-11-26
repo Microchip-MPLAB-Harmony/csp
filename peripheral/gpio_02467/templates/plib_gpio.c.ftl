@@ -108,6 +108,17 @@
 */
 void GPIO_Initialize ( void )
 {
+      <#if (CoreSeries == 'PIC32MZW')>
+        <#if ((BSP_PIN_56_FUNCTION_TYPE == "TDI" || BSP_PIN_56_FUNCTION_TYPE == "") &&
+          (BSP_PIN_57_FUNCTION_TYPE == "TDO" || BSP_PIN_57_FUNCTION_TYPE == "") &&
+          (BSP_PIN_118_FUNCTION_TYPE == "TCK" || BSP_PIN_118_FUNCTION_TYPE == "") &&
+          (BSP_PIN_119_FUNCTION_TYPE == "TMS" || BSP_PIN_119_FUNCTION_TYPE == "")) >
+        <#else>
+          <#lt>    /* Disable JTAG since at least one of its pins is configured for Non-JTAG function */
+          <#lt>    CFGCON0bits.JTAGEN = 0;
+
+        </#if>
+      </#if>
 <#list 0..GPIO_CHANNEL_TOTAL-1 as i>
     <#assign channel = "GPIO_CHANNEL_" + i + "_NAME">
     <#if .vars[channel]?has_content>
@@ -145,7 +156,7 @@ void GPIO_Initialize ( void )
 </#list>
 
 <#if USE_PPS_INPUT_0 == true || USE_PPS_OUTPUT_0 == true>
-    /* unlock system for PPS configuration */
+    /* Unlock system for PPS configuration */
     SYSKEY = 0x00000000;
     SYSKEY = 0xAA996655;
     SYSKEY = 0x556699AA;
