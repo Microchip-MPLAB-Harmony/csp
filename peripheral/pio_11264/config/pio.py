@@ -570,6 +570,10 @@ packageUpdate = coreComponent.createBooleanSymbol("PACKAGE_UPDATE_DUMMY", None)
 packageUpdate.setVisible(False)
 packageUpdate.setDependencies(packageChange, ["COMPONENT_PACKAGE"])
 
+portTotalChannels = coreComponent.createIntegerSymbol("PORT_CHANNEL_TOTAL" , None)
+portTotalChannels.setVisible(False)
+portTotalChannels.setDefaultValue(len(pioSymChannel))
+
 for port in pioSymChannel:
 	mskr = 0
 	portLATCH = coreComponent.createStringSymbol("PORT_" + str(port) + "_LATCH", None)
@@ -590,6 +594,11 @@ for port in pioSymChannel:
 		pinmskr.setDefaultValue(str(hex(mskr)))
 
 for port in pioSymChannel:
+
+	portChannelName = coreComponent.createStringSymbol("PORT_CHANNEL_" + str(pioSymChannel.index(port)) + "_NAME" , None)
+	portChannelName.setVisible(False)
+	portChannelName.setDefaultValue(str(port))
+	
 	portIntEnable = coreComponent.createBooleanSymbol("PORT_" + str(port) + "_INTERRUPT_USED", None)
 	portIntEnable.setReadOnly(True)
 	portIntEnable.setVisible(False)

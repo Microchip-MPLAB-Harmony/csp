@@ -1182,7 +1182,7 @@ static inline void PIO_PinInterruptDisable(PIO_PIN pin)
      PORT_G_INTERRUPT_USED == true >
 // *****************************************************************************
 /* Function:
-    void PIO_PinInterruptCallbackRegister(
+    bool PIO_PinInterruptCallbackRegister(
         PIO_PIN pin,
         const PIO_PIN_CALLBACK callBack,
         uintptr_t context
@@ -1198,6 +1198,10 @@ static inline void PIO_PinInterruptDisable(PIO_PIN pin)
     At any point if application wants to stop the callback, it can call this
     function with "eventHandler" value as NULL.
 
+    If a pin is not configured for interrupt in Pin Manager and yet its callback
+    registration is attempted using this API, then registration doesn't happen
+    and API returns false indicating the same.    
+
   Precondition:
     The PIO_Initialize function must have been called.
 
@@ -1210,7 +1214,9 @@ static inline void PIO_PinInterruptDisable(PIO_PIN pin)
                    be used to identify any application specific value.
 
   Returns:
-    None.
+    Callback registration status:
+    - true: Callback was successfully registered
+    - false: Callback was not registered
 
   Example:
     <code>
@@ -1222,7 +1228,7 @@ static inline void PIO_PinInterruptDisable(PIO_PIN pin)
   Remarks:
     None.
 */
-void PIO_PinInterruptCallbackRegister(
+bool PIO_PinInterruptCallbackRegister(
     PIO_PIN pin,
     const   PIO_PIN_CALLBACK callBack,
     uintptr_t context
