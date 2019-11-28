@@ -83,8 +83,10 @@ static inline void __arm926_isb(void)
     <#lt>#define SECTION(a)     __attribute__((__section__(a)))
 
     <#if CACHE_ALIGN?? >
-        <#lt>#define CACHE_ALIGN    __ALIGNED(${CACHE_ALIGN})
+        <#lt>#define CACHE_LINE_SIZE    (${CACHE_ALIGN}u)
+        <#lt>#define CACHE_ALIGN        __ALIGNED(CACHE_LINE_SIZE)
     <#else>
+        <#lt>#define CACHE_LINE_SIZE    (4u)
         <#lt>#define CACHE_ALIGN
     </#if>
 <#elseif "IAR" == COMPILER_CHOICE>
@@ -96,8 +98,10 @@ static inline void __arm926_isb(void)
     <#lt>#define __inline__                      inline
 
     <#if CACHE_ALIGN?? >
-        <#lt>#define CACHE_ALIGN                     __ALIGNED(${CACHE_ALIGN})
+        <#lt>#define CACHE_LINE_SIZE                 (${CACHE_ALIGN}u)
+        <#lt>#define CACHE_ALIGN                     __ALIGNED(CACHE_LINE_SIZE)
     <#else>
+        <#lt>#define CACHE_LINE_SIZE                 (4u)
         <#lt>#define CACHE_ALIGN
     </#if>
 

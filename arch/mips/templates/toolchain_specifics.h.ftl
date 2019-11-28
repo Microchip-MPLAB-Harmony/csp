@@ -71,8 +71,10 @@
     <#lt>#endif
 
     <#if CACHE_ALIGN?? >
+        <#lt>#define CACHE_LINE_SIZE                (${CACHE_ALIGN}u)
         <#lt>#define CACHE_ALIGN                    __COHERENT
     <#else>
+        <#lt>#define CACHE_LINE_SIZE                (4u)
         <#lt>#define CACHE_ALIGN
     </#if>
 </#if>
