@@ -733,8 +733,12 @@ def instantiateComponent(mcanComponent):
     mcanTimeoutMode.setDependencies(hideMenu, ["MCAN_TIMEOUT"])
     mcanTimeoutMode.setDefaultValue(1)
 
+    mcanTimestampEnable = mcanComponent.createBooleanSymbol("TIMESTAMP_ENABLE", None)
+    mcanTimestampEnable.setLabel("Timestamp Enable")
+    mcanTimestampEnable.setDefaultValue(False)
+
     #timestamp Modes
-    mcanTimestampMode = mcanComponent.createKeyValueSetSymbol("TIMESTAMP_MODE", None)
+    mcanTimestampMode = mcanComponent.createKeyValueSetSymbol("TIMESTAMP_MODE", mcanTimestampEnable)
     mcanTimestampMode.setLabel("Timestamp mode")
     mcanTimestampMode.setDescription("EXT TIMESTAMP: external counter (needed for FD). ZERO: timestamp is always 0x0000. TCP INC: incremented according to TCP.")
     mcanTimestampMode.addKey("MCAN_TSCC_TSS_ALWAYS_0", "0", "ZERO")
@@ -743,6 +747,8 @@ def instantiateComponent(mcanComponent):
     mcanTimestampMode.setOutputMode("Key")
     mcanTimestampMode.setDisplayMode("Description")
     mcanTimestampMode.setDefaultValue(1)
+    mcanTimestampMode.setVisible(False)
+    mcanTimestampMode.setDependencies(hideMenu, ["TIMESTAMP_ENABLE"])
 
     #timestamp/timeout Counter Prescaler
     mcanTCP = mcanComponent.createIntegerSymbol("TIMESTAMP_PRESCALER", None)

@@ -210,9 +210,11 @@ void ${MCAN_INSTANCE_NAME}_Initialize(void)
     /* Extended ID AND Mask Register */
     ${MCAN_INSTANCE_NAME}_REGS->MCAN_XIDAM = MCAN_XIDAM_Msk;
 </#if>
+<#if TIMESTAMP_ENABLE || MCAN_TIMEOUT>
 
     /* Timestamp Counter Configuration Register */
-    ${MCAN_INSTANCE_NAME}_REGS->MCAN_TSCC = ${TIMESTAMP_MODE} | MCAN_TSCC_TCP(${TIMESTAMP_PRESCALER});
+    ${MCAN_INSTANCE_NAME}_REGS->MCAN_TSCC = MCAN_TSCC_TCP(${TIMESTAMP_PRESCALER})<#if TIMESTAMP_ENABLE == true> | ${TIMESTAMP_MODE}</#if>;
+</#if>
 <#if MCAN_TIMEOUT>
 
     /* Timeout Counter Configuration Register */
@@ -281,6 +283,7 @@ bool ${MCAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t*
 <#if TX_USE || TXBUF_USE>
     mcan_txbe_registers_t *fifo = NULL;
 </#if>
+    static uint8_t messageMarker = 0;
 
     switch (msgAttr)
     {
@@ -370,6 +373,8 @@ bool ${MCAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t*
     {
         fifo->MCAN_TXBE_0 |= MCAN_TXBE_0_RTR_Msk;
     }
+
+    fifo->MCAN_TXBE_1 |= ((++messageMarker << MCAN_TXBE_1_MM_Pos) & MCAN_TXBE_1_MM_Msk);
 <#if INTERRUPT_MODE == true>
 
     ${MCAN_INSTANCE_NAME}_REGS->MCAN_TXBTIE = 1U << tfqpi;
@@ -399,7 +404,7 @@ bool ${MCAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t*
 
 // *****************************************************************************
 /* Function:
-    bool ${MCAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, MCAN_MSG_RX_ATTRIBUTE msgAttr)
+    bool ${MCAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp, MCAN_MSG_RX_ATTRIBUTE msgAttr)
 
    Summary:
     Receives a message from CAN bus.
@@ -408,17 +413,18 @@ bool ${MCAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t*
     ${MCAN_INSTANCE_NAME}_Initialize must have been called for the associated MCAN instance.
 
    Parameters:
-    id      - Pointer to 11-bit / 29-bit identifier (ID) to be received.
-    length  - Pointer to data length in number of bytes to be received.
-    data    - pointer to destination data buffer
-    msgAttr - Message to be read from Rx FIFO0 or Rx FIFO1 or Rx Buffer
+    id        - Pointer to 11-bit / 29-bit identifier (ID) to be received.
+    length    - Pointer to data length in number of bytes to be received.
+    data      - pointer to destination data buffer
+    timestamp - Pointer to Rx message timestamp, timestamp value is 0 if timestamp is disabled
+    msgAttr   - Message to be read from Rx FIFO0 or Rx FIFO1 or Rx Buffer
 
    Returns:
     Request status.
     true  - Request was successful.
     false - Request has failed.
 */
-bool ${MCAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, MCAN_MSG_RX_ATTRIBUTE msgAttr)
+bool ${MCAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp, MCAN_MSG_RX_ATTRIBUTE msgAttr)
 {
 <#if INTERRUPT_MODE == false>
     uint8_t msgLength = 0;
@@ -486,6 +492,14 @@ bool ${MCAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t
             memcpy(data, (uint8_t *)&rxbeFifo->MCAN_RXBE_DATA, msgLength);
             *length = msgLength;
 
+<#if TIMESTAMP_ENABLE>
+            /* Get timestamp from received message */
+            if (timestamp != NULL)
+            {
+                *timestamp = (uint16_t)(rxbeFifo->MCAN_RXBE_1 & MCAN_RXBE_1_RXTS_Msk);
+            }
+
+</#if>
             /* Clear new data flag */
             if (rxgi < 32)
             {
@@ -530,6 +544,14 @@ bool ${MCAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t
             memcpy(data, (uint8_t *)&rxf0eFifo->MCAN_RXF0E_DATA, msgLength);
             *length = msgLength;
 
+<#if TIMESTAMP_ENABLE>
+            /* Get timestamp from received message */
+            if (timestamp != NULL)
+            {
+                *timestamp = (uint16_t)(rxf0eFifo->MCAN_RXF0E_1 & MCAN_RXF0E_1_RXTS_Msk);
+            }
+
+</#if>
             /* Ack the fifo position */
             ${MCAN_INSTANCE_NAME}_REGS->MCAN_RXF0A = MCAN_RXF0A_F0AI(rxgi);
 <#else>
@@ -567,6 +589,14 @@ bool ${MCAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t
             memcpy(data, (uint8_t *)&rxf1eFifo->MCAN_RXF1E_DATA, msgLength);
             *length = msgLength;
 
+<#if TIMESTAMP_ENABLE>
+            /* Get timestamp from received message */
+            if (timestamp != NULL)
+            {
+                *timestamp = (uint16_t)(rxf1eFifo->MCAN_RXF1E_1 & MCAN_RXF1E_1_RXTS_Msk);
+            }
+
+</#if>
             /* Ack the fifo position */
             ${MCAN_INSTANCE_NAME}_REGS->MCAN_RXF1A = MCAN_RXF1A_F1AI(rxgi);
 <#else>
@@ -583,8 +613,69 @@ bool ${MCAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t
     ${MCAN_INSTANCE_NAME?lower_case}Obj.rxId = id;
     ${MCAN_INSTANCE_NAME?lower_case}Obj.rxBuffer = data;
     ${MCAN_INSTANCE_NAME?lower_case}Obj.rxsize = length;
+    ${MCAN_INSTANCE_NAME?lower_case}Obj.timestamp = timestamp;
     ${MCAN_INSTANCE_NAME}_REGS->MCAN_IE |= rxInterrupt;
 </#if>
+    return status;
+}
+
+// *****************************************************************************
+/* Function:
+    bool ${MCAN_INSTANCE_NAME}_TransmitEventFIFOElementGet(uint32_t *id, uint8_t *messageMarker, uint16_t *timestamp)
+
+   Summary:
+    Get the Transmit Event FIFO Element for the transmitted message.
+
+   Precondition:
+    ${MCAN_INSTANCE_NAME}_Initialize must have been called for the associated MCAN instance.
+
+   Parameters:
+    id            - Pointer to 11-bit / 29-bit identifier (ID) to be received.
+    messageMarker - Pointer to Tx message message marker number to be received
+    timestamp     - Pointer to Tx message timestamp to be received, timestamp value is 0 if Timestamp is disabled
+
+   Returns:
+    Request status.
+    true  - Request was successful.
+    false - Request has failed.
+*/
+bool ${MCAN_INSTANCE_NAME}_TransmitEventFIFOElementGet(uint32_t *id, uint8_t *messageMarker, uint16_t *timestamp)
+{
+    mcan_txefe_registers_t *txEventFIFOElement = NULL;
+    uint8_t txefgi = 0;
+    bool status = false;
+
+    /* Check if Tx Event FIFO Element available */
+    if ((${MCAN_INSTANCE_NAME}_REGS->MCAN_TXEFS & MCAN_TXEFS_EFFL_Msk) != 0)
+    {
+        /* Get a pointer to Tx Event FIFO Element */
+        txefgi = (uint8_t)((${MCAN_INSTANCE_NAME}_REGS->MCAN_TXEFS & MCAN_TXEFS_EFGI_Msk) >> MCAN_TXEFS_EFGI_Pos);
+        txEventFIFOElement = (mcan_txefe_registers_t *) ((uint8_t *)${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txEventFIFOAddress + txefgi * sizeof(mcan_txefe_registers_t));
+
+        /* Check if it's a extended message type */
+        if (txEventFIFOElement->MCAN_TXEFE_0 & MCAN_TXEFE_0_XTD_Msk)
+        {
+            *id = txEventFIFOElement->MCAN_TXEFE_0 & MCAN_TXEFE_0_ID_Msk;
+        }
+        else
+        {
+            *id = (txEventFIFOElement->MCAN_TXEFE_0 >> 18) & MCAN_STD_ID_Msk;
+        }
+
+        *messageMarker = ((txEventFIFOElement->MCAN_TXEFE_1 & MCAN_TXEFE_1_MM_Msk) >> MCAN_TXEFE_1_MM_Pos);
+
+        /* Get timestamp from transmitted message */
+        if (timestamp != NULL)
+        {
+            *timestamp = (uint16_t)(txEventFIFOElement->MCAN_TXEFE_1 & MCAN_TXEFE_1_TXTS_Msk);
+        }
+
+        /* Ack the Tx Event FIFO position */
+        ${MCAN_INSTANCE_NAME}_REGS->MCAN_TXEFA = MCAN_TXEFA_EFAI(txefgi);
+
+        /* Tx Event FIFO Element read successfully, so return true */
+        status = true;
+    }
     return status;
 }
 
@@ -624,6 +715,29 @@ MCAN_ERROR ${MCAN_INSTANCE_NAME}_ErrorGet(void)
     }
 
     return error;
+}
+
+// *****************************************************************************
+/* Function:
+    void ${MCAN_INSTANCE_NAME}_ErrorCountGet(uint8_t *txErrorCount, uint8_t *rxErrorCount)
+
+   Summary:
+    Returns the transmit and receive error count during transfer.
+
+   Precondition:
+    ${MCAN_INSTANCE_NAME}_Initialize must have been called for the associated MCAN instance.
+
+   Parameters:
+    txErrorCount - Transmit Error Count to be received
+    rxErrorCount - Receive Error Count to be received
+
+   Returns:
+    None.
+*/
+void ${MCAN_INSTANCE_NAME}_ErrorCountGet(uint8_t *txErrorCount, uint8_t *rxErrorCount)
+{
+    *txErrorCount = (uint8_t)(${MCAN_INSTANCE_NAME}_REGS->MCAN_ECR & MCAN_ECR_TEC_Msk);
+    *rxErrorCount = (uint8_t)((${MCAN_INSTANCE_NAME}_REGS->MCAN_ECR & MCAN_ECR_REC_Msk) >> MCAN_ECR_REC_Pos);
 }
 
 // *****************************************************************************
@@ -1074,6 +1188,14 @@ void ${MCAN_INSTANCE_NAME}_INT0_InterruptHandler(void)
             memcpy(${MCAN_INSTANCE_NAME?lower_case}Obj.rxBuffer, (uint8_t *)&rxf0eFifo->MCAN_RXF0E_DATA, length);
             *${MCAN_INSTANCE_NAME?lower_case}Obj.rxsize = length;
 
+            <#if TIMESTAMP_ENABLE>
+            /* Get timestamp from received message */
+            if (${MCAN_INSTANCE_NAME?lower_case}Obj.timestamp != NULL)
+            {
+                *${MCAN_INSTANCE_NAME?lower_case}Obj.timestamp = (uint16_t)(rxf0eFifo->MCAN_RXF0E_1 & MCAN_RXF0E_1_RXTS_Msk);
+            }
+
+            </#if>
             /* Ack the fifo position */
             ${MCAN_INSTANCE_NAME}_REGS->MCAN_RXF0A = MCAN_RXF0A_F0AI(rxgi);
             ${MCAN_INSTANCE_NAME?lower_case}Obj.state = MCAN_STATE_TRANSFER_DONE;
@@ -1110,6 +1232,14 @@ void ${MCAN_INSTANCE_NAME}_INT0_InterruptHandler(void)
             memcpy(${MCAN_INSTANCE_NAME?lower_case}Obj.rxBuffer, (uint8_t *)&rxf1eFifo->MCAN_RXF1E_DATA, length);
             *${MCAN_INSTANCE_NAME?lower_case}Obj.rxsize = length;
 
+            <#if TIMESTAMP_ENABLE>
+            /* Get timestamp from received message */
+            if (${MCAN_INSTANCE_NAME?lower_case}Obj.timestamp != NULL)
+            {
+                *${MCAN_INSTANCE_NAME?lower_case}Obj.timestamp = (uint16_t)(rxf1eFifo->MCAN_RXF1E_1 & MCAN_RXF1E_1_RXTS_Msk);
+            }
+
+            </#if>
             /* Ack the fifo position */
             ${MCAN_INSTANCE_NAME}_REGS->MCAN_RXF1A = MCAN_RXF1A_F1AI(rxgi);
             ${MCAN_INSTANCE_NAME?lower_case}Obj.state = MCAN_STATE_TRANSFER_DONE;
@@ -1162,6 +1292,14 @@ void ${MCAN_INSTANCE_NAME}_INT0_InterruptHandler(void)
         memcpy(${MCAN_INSTANCE_NAME?lower_case}Obj.rxBuffer, (uint8_t *)&rxbeFifo->MCAN_RXBE_DATA, length);
         *${MCAN_INSTANCE_NAME?lower_case}Obj.rxsize = length;
 
+        <#if TIMESTAMP_ENABLE>
+        /* Get timestamp from received message */
+        if (${MCAN_INSTANCE_NAME?lower_case}Obj.timestamp != NULL)
+        {
+            *${MCAN_INSTANCE_NAME?lower_case}Obj.timestamp = (uint16_t)(rxbeFifo->MCAN_RXBE_1 & MCAN_RXBE_1_RXTS_Msk);
+        }
+
+        </#if>
         /* Clear new data flag */
         if (rxgi < 32)
         {
