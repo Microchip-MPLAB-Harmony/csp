@@ -119,6 +119,11 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
     ${CAN_INSTANCE_NAME?lower_case}Obj.state = CAN_STATE_IDLE;
 </#if>
 
+<#if TIMESTAMP_ENABLE>
+    /* Enable Timestamp */
+    ${CAN_INSTANCE_NAME}_REGS->CAN_MR &= ~CAN_MR_TTM_Msk;
+
+</#if>
     /* Enable CAN Controller */
     ${CAN_INSTANCE_NAME}_REGS->CAN_MR |= <#if TIMESTAMP_EOF_MODE == true>CAN_MR_TEOF_Msk | </#if>CAN_MR_CANEN_Msk;
 }
@@ -251,7 +256,7 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* 
 
 // *****************************************************************************
 /* Function:
-    bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, CAN_MAILBOX_RX_ATTRIBUTE mailboxAttr)
+    bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp, CAN_MAILBOX_RX_ATTRIBUTE mailboxAttr)
 
    Summary:
     Receives a message from CAN bus.
@@ -263,6 +268,7 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* 
     id          - Pointer to 11-bit / 29-bit identifier (ID) to be received.
     length      - Pointer to data length in number of bytes to be received.
     data        - pointer to destination data buffer
+    timestamp   - Pointer to Rx message timestamp
     mailboxAttr - Mailbox type either RX Mailbox or RX Mailbox with overwrite
 
    Returns:
@@ -270,7 +276,7 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* 
     true  - Request was successful.
     false - Request has failed.
 */
-bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, CAN_MAILBOX_RX_ATTRIBUTE mailboxAttr)
+bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp, CAN_MAILBOX_RX_ATTRIBUTE mailboxAttr)
 {
     uint8_t mailbox = 0;
     bool mbIsReady = false;
@@ -365,6 +371,15 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
                     data[dataIndex] = (${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MDH >> (8 * (dataIndex - 4))) & BYTE_MASK;
                 }
             }
+
+<#if TIMESTAMP_ENABLE>
+            /* Get timestamp from received message */
+            if (timestamp != NULL)
+            {
+                *timestamp = (uint16_t)(${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MSR & CAN_MSR_MTIMESTAMP_Msk);
+            }
+
+</#if>
             ${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MCR = CAN_MCR_MTCR_Msk;
             status = true;
 </#if>
@@ -379,6 +394,7 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
     ${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].id = id;
     ${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].buffer = data;
     ${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].size = length;
+    ${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].timestamp = timestamp;
     ${CAN_INSTANCE_NAME}_REGS->CAN_IER = 1U << mailbox;
 </#if>
     return status;
@@ -593,6 +609,29 @@ CAN_ERROR ${CAN_INSTANCE_NAME}_ErrorGet(void)
 <#else>
     return (CAN_ERROR)${CAN_INSTANCE_NAME?lower_case}Obj.errorStatus;
 </#if>
+}
+
+// *****************************************************************************
+/* Function:
+    void ${CAN_INSTANCE_NAME}_ErrorCountGet(uint16_t *txErrorCount, uint8_t *rxErrorCount)
+
+   Summary:
+    Returns the transmit and receive error count during transfer.
+
+   Precondition:
+    ${CAN_INSTANCE_NAME}_Initialize must have been called for the associated CAN instance.
+
+   Parameters:
+    txErrorCount - Transmit Error Count to be received
+    rxErrorCount - Receive Error Count to be received
+
+   Returns:
+    None.
+*/
+void ${CAN_INSTANCE_NAME}_ErrorCountGet(uint16_t *txErrorCount, uint8_t *rxErrorCount)
+{
+    *txErrorCount = (uint16_t)((${CAN_INSTANCE_NAME}_REGS->CAN_ECR & CAN_ECR_TEC_Msk) >> CAN_ECR_TEC_Pos);
+    *rxErrorCount = (uint8_t)(${CAN_INSTANCE_NAME}_REGS->CAN_ECR & CAN_ECR_REC_Msk);
 }
 
 // *****************************************************************************
@@ -813,6 +852,13 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
                                     ${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].buffer[dataIndex] = (${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MDH >> (8 * (dataIndex - 4))) & BYTE_MASK;
                                 }
                             }
+                            <#if TIMESTAMP_ENABLE>
+                            /* Get timestamp from received message */
+                            if (${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].timestamp != NULL)
+                            {
+                                *${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].timestamp = (uint16_t)(${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MSR & CAN_MSR_MTIMESTAMP_Msk);
+                            }
+                            </#if>
                         }
                         ${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MCR = CAN_MCR_MTCR_Msk;
                         ${CAN_INSTANCE_NAME?lower_case}Obj.mbState[mailbox] = CAN_MAILBOX_READY;

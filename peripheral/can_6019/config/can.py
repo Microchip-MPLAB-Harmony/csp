@@ -254,8 +254,13 @@ def instantiateComponent(canComponent):
                                               canMailbox_MMR_MOT.getValue() == 4))
         canMailbox_MAM_Identifier.setDependencies(symbolVisible, ["CAN_MMR" + str(MBNum) + "_MOT"])
 
+    canTimestampEnable = canComponent.createBooleanSymbol("TIMESTAMP_ENABLE", None)
+    canTimestampEnable.setLabel("Timestamp Enable")
+    canTimestampEnable.setDefaultValue(True)
+    canTimestampEnable.setReadOnly(True)
+
     #Timestamp EOF Mode
-    canTimestampEofMode = canComponent.createBooleanSymbol("TIMESTAMP_EOF_MODE", None)
+    canTimestampEofMode = canComponent.createBooleanSymbol("TIMESTAMP_EOF_MODE", canTimestampEnable)
     canTimestampEofMode.setLabel("Timestamp at end of message frame")
     canTimestampEofMode.setDescription("Timestamp at end of message frame : True, Timestamp at start of message frame : False")
     canTimestampEofMode.setDefaultValue(False)

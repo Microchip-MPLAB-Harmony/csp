@@ -75,7 +75,7 @@
 // *****************************************************************************
 void ${CAN_INSTANCE_NAME}_Initialize(void);
 bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, CAN_MAILBOX_TX_ATTRIBUTE mailboxAttr);
-bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, CAN_MAILBOX_RX_ATTRIBUTE mailboxAttr);
+bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp, CAN_MAILBOX_RX_ATTRIBUTE mailboxAttr);
 void ${CAN_INSTANCE_NAME}_MessageAbort(CAN_MAILBOX_MASK mailboxMask);
 void ${CAN_INSTANCE_NAME}_MessageIDSet(CAN_MAILBOX_NUM mailbox, uint32_t id);
 uint32_t ${CAN_INSTANCE_NAME}_MessageIDGet(CAN_MAILBOX_NUM mailbox);
@@ -83,6 +83,7 @@ void ${CAN_INSTANCE_NAME}_MessageAcceptanceMaskSet(CAN_MAILBOX_NUM mailbox, uint
 uint32_t ${CAN_INSTANCE_NAME}_MessageAcceptanceMaskGet(CAN_MAILBOX_NUM mailbox);
 uint16_t ${CAN_INSTANCE_NAME}_MessageTimestampGet(CAN_MAILBOX_NUM mailbox);
 CAN_ERROR ${CAN_INSTANCE_NAME}_ErrorGet(void);
+void ${CAN_INSTANCE_NAME}_ErrorCountGet(uint16_t *txErrorCount, uint8_t *rxErrorCount);
 bool ${CAN_INSTANCE_NAME}_InterruptGet(CAN_INTERRUPT_MASK interruptMask);
 void ${CAN_INSTANCE_NAME}_InterruptEnable(CAN_INTERRUPT_MASK interruptMask);
 void ${CAN_INSTANCE_NAME}_InterruptDisable(CAN_INTERRUPT_MASK interruptMask);
