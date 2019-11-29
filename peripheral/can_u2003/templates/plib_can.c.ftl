@@ -199,9 +199,11 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
     /* Extended ID AND Mask Register */
     ${CAN_INSTANCE_NAME}_REGS->CAN_XIDAM = CAN_XIDAM_Msk;
 </#if>
+<#if TIMESTAMP_ENABLE || CAN_TIMEOUT>
 
     /* Timestamp Counter Configuration Register */
-    ${CAN_INSTANCE_NAME}_REGS->CAN_TSCC = ${TIMESTAMP_MODE} | CAN_TSCC_TCP(${TIMESTAMP_PRESCALER});
+    ${CAN_INSTANCE_NAME}_REGS->CAN_TSCC = CAN_TSCC_TCP(${TIMESTAMP_PRESCALER})<#if TIMESTAMP_ENABLE == true> | ${TIMESTAMP_MODE}</#if>;
+</#if>
 <#if CAN_TIMEOUT>
 
     /* Timeout Counter Configuration Register */
@@ -266,6 +268,7 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* 
 <#if TX_USE || TXBUF_USE>
     can_txbe_registers_t *fifo = NULL;
 </#if>
+    static uint8_t messageMarker = 0;
 
     switch (msgAttr)
     {
@@ -353,6 +356,8 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* 
     {
         fifo->CAN_TXBE_0 |= CAN_TXBE_0_RTR_Msk;
     }
+
+    fifo->CAN_TXBE_1 |= ((++messageMarker << CAN_TXBE_1_MM_Pos) & CAN_TXBE_1_MM_Msk);
 <#if INTERRUPT_MODE == true>
 
     ${CAN_INSTANCE_NAME}_REGS->CAN_TXBTIE = 1U << tfqpi;
@@ -382,7 +387,7 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* 
 
 // *****************************************************************************
 /* Function:
-    bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, CAN_MSG_RX_ATTRIBUTE msgAttr)
+    bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp, CAN_MSG_RX_ATTRIBUTE msgAttr)
 
    Summary:
     Receives a message from CAN bus.
@@ -391,17 +396,18 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* 
     ${CAN_INSTANCE_NAME}_Initialize must have been called for the associated CAN instance.
 
    Parameters:
-    id      - Pointer to 11-bit / 29-bit identifier (ID) to be received.
-    length  - Pointer to data length in number of bytes to be received.
-    data    - pointer to destination data buffer
-    msgAttr - Message to be read from Rx FIFO0 or Rx FIFO1 or Rx Buffer
+    id        - Pointer to 11-bit / 29-bit identifier (ID) to be received.
+    length    - Pointer to data length in number of bytes to be received.
+    data      - pointer to destination data buffer
+    timestamp - Pointer to Rx message timestamp, timestamp value is 0 if timestamp is disabled
+    msgAttr   - Message to be read from Rx FIFO0 or Rx FIFO1 or Rx Buffer
 
    Returns:
     Request status.
     true  - Request was successful.
     false - Request has failed.
 */
-bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, CAN_MSG_RX_ATTRIBUTE msgAttr)
+bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp, CAN_MSG_RX_ATTRIBUTE msgAttr)
 {
 <#if INTERRUPT_MODE == false>
     uint8_t msgLength = 0;
@@ -469,6 +475,14 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
             memcpy(data, (uint8_t *)&rxbeFifo->CAN_RXBE_DATA, msgLength);
             *length = msgLength;
 
+<#if TIMESTAMP_ENABLE>
+            /* Get timestamp from received message */
+            if (timestamp != NULL)
+            {
+                *timestamp = (uint16_t)(rxbeFifo->CAN_RXBE_1 & CAN_RXBE_1_RXTS_Msk);
+            }
+
+</#if>
             /* Clear new data flag */
             if (rxgi < 32)
             {
@@ -513,6 +527,14 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
             memcpy(data, (uint8_t *)&rxf0eFifo->CAN_RXF0E_DATA, msgLength);
             *length = msgLength;
 
+<#if TIMESTAMP_ENABLE>
+            /* Get timestamp from received message */
+            if (timestamp != NULL)
+            {
+                *timestamp = (uint16_t)(rxf0eFifo->CAN_RXF0E_1 & CAN_RXF0E_1_RXTS_Msk);
+            }
+
+</#if>
             /* Ack the fifo position */
             ${CAN_INSTANCE_NAME}_REGS->CAN_RXF0A = CAN_RXF0A_F0AI(rxgi);
 <#else>
@@ -550,6 +572,14 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
             memcpy(data, (uint8_t *)&rxf1eFifo->CAN_RXF1E_DATA, msgLength);
             *length = msgLength;
 
+<#if TIMESTAMP_ENABLE>
+            /* Get timestamp from received message */
+            if (timestamp != NULL)
+            {
+                *timestamp = (uint16_t)(rxf1eFifo->CAN_RXF1E_1 & CAN_RXF1E_1_RXTS_Msk);
+            }
+
+</#if>
             /* Ack the fifo position */
             ${CAN_INSTANCE_NAME}_REGS->CAN_RXF1A = CAN_RXF1A_F1AI(rxgi);
 <#else>
@@ -566,8 +596,69 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
     ${CAN_INSTANCE_NAME?lower_case}Obj.rxId = id;
     ${CAN_INSTANCE_NAME?lower_case}Obj.rxBuffer = data;
     ${CAN_INSTANCE_NAME?lower_case}Obj.rxsize = length;
+    ${CAN_INSTANCE_NAME?lower_case}Obj.timestamp = timestamp;
     ${CAN_INSTANCE_NAME}_REGS->CAN_IE |= rxInterrupt;
 </#if>
+    return status;
+}
+
+// *****************************************************************************
+/* Function:
+    bool ${CAN_INSTANCE_NAME}_TransmitEventFIFOElementGet(uint32_t *id, uint8_t *messageMarker, uint16_t *timestamp)
+
+   Summary:
+    Get the Transmit Event FIFO Element for the transmitted message.
+
+   Precondition:
+    ${CAN_INSTANCE_NAME}_Initialize must have been called for the associated CAN instance.
+
+   Parameters:
+    id            - Pointer to 11-bit / 29-bit identifier (ID) to be received.
+    messageMarker - Pointer to Tx message message marker number to be received
+    timestamp     - Pointer to Tx message timestamp to be received, timestamp value is 0 if Timestamp is disabled
+
+   Returns:
+    Request status.
+    true  - Request was successful.
+    false - Request has failed.
+*/
+bool ${CAN_INSTANCE_NAME}_TransmitEventFIFOElementGet(uint32_t *id, uint8_t *messageMarker, uint16_t *timestamp)
+{
+    can_txefe_registers_t *txEventFIFOElement = NULL;
+    uint8_t txefgi = 0;
+    bool status = false;
+
+    /* Check if Tx Event FIFO Element available */
+    if ((${CAN_INSTANCE_NAME}_REGS->CAN_TXEFS & CAN_TXEFS_EFFL_Msk) != 0)
+    {
+        /* Get a pointer to Tx Event FIFO Element */
+        txefgi = (uint8_t)((${CAN_INSTANCE_NAME}_REGS->CAN_TXEFS & CAN_TXEFS_EFGI_Msk) >> CAN_TXEFS_EFGI_Pos);
+        txEventFIFOElement = (can_txefe_registers_t *) ((uint8_t *)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txEventFIFOAddress + txefgi * sizeof(can_txefe_registers_t));
+
+        /* Check if it's a extended message type */
+        if (txEventFIFOElement->CAN_TXEFE_0 & CAN_TXEFE_0_XTD_Msk)
+        {
+            *id = txEventFIFOElement->CAN_TXEFE_0 & CAN_TXEFE_0_ID_Msk;
+        }
+        else
+        {
+            *id = (txEventFIFOElement->CAN_TXEFE_0 >> 18) & CAN_STD_ID_Msk;
+        }
+
+        *messageMarker = ((txEventFIFOElement->CAN_TXEFE_1 & CAN_TXEFE_1_MM_Msk) >> CAN_TXEFE_1_MM_Pos);
+
+        /* Get timestamp from transmitted message */
+        if (timestamp != NULL)
+        {
+            *timestamp = (uint16_t)(txEventFIFOElement->CAN_TXEFE_1 & CAN_TXEFE_1_TXTS_Msk);
+        }
+
+        /* Ack the Tx Event FIFO position */
+        ${CAN_INSTANCE_NAME}_REGS->CAN_TXEFA = CAN_TXEFA_EFAI(txefgi);
+
+        /* Tx Event FIFO Element read successfully, so return true */
+        status = true;
+    }
     return status;
 }
 
@@ -603,6 +694,29 @@ CAN_ERROR ${CAN_INSTANCE_NAME}_ErrorGet(void)
     }
 
     return error;
+}
+
+// *****************************************************************************
+/* Function:
+    void ${CAN_INSTANCE_NAME}_ErrorCountGet(uint8_t *txErrorCount, uint8_t *rxErrorCount)
+
+   Summary:
+    Returns the transmit and receive error count during transfer.
+
+   Precondition:
+    ${CAN_INSTANCE_NAME}_Initialize must have been called for the associated CAN instance.
+
+   Parameters:
+    txErrorCount - Transmit Error Count to be received
+    rxErrorCount - Receive Error Count to be received
+
+   Returns:
+    None.
+*/
+void ${CAN_INSTANCE_NAME}_ErrorCountGet(uint8_t *txErrorCount, uint8_t *rxErrorCount)
+{
+    *txErrorCount = (uint8_t)(${CAN_INSTANCE_NAME}_REGS->CAN_ECR & CAN_ECR_TEC_Msk);
+    *rxErrorCount = (uint8_t)((${CAN_INSTANCE_NAME}_REGS->CAN_ECR & CAN_ECR_REC_Msk) >> CAN_ECR_REC_Pos);
 }
 
 // *****************************************************************************
@@ -1017,6 +1131,14 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
             memcpy(${CAN_INSTANCE_NAME?lower_case}Obj.rxBuffer, (uint8_t *)&rxf0eFifo->CAN_RXF0E_DATA, length);
             *${CAN_INSTANCE_NAME?lower_case}Obj.rxsize = length;
 
+            <#if TIMESTAMP_ENABLE>
+            /* Get timestamp from received message */
+            if (${CAN_INSTANCE_NAME?lower_case}Obj.timestamp != NULL)
+            {
+                *${CAN_INSTANCE_NAME?lower_case}Obj.timestamp = (uint16_t)(rxf0eFifo->CAN_RXF0E_1 & CAN_RXF0E_1_RXTS_Msk);
+            }
+
+            </#if>
             /* Ack the fifo position */
             ${CAN_INSTANCE_NAME}_REGS->CAN_RXF0A = CAN_RXF0A_F0AI(rxgi);
             ${CAN_INSTANCE_NAME?lower_case}Obj.state = CAN_STATE_TRANSFER_DONE;
@@ -1053,6 +1175,14 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
             memcpy(${CAN_INSTANCE_NAME?lower_case}Obj.rxBuffer, (uint8_t *)&rxf1eFifo->CAN_RXF1E_DATA, length);
             *${CAN_INSTANCE_NAME?lower_case}Obj.rxsize = length;
 
+            <#if TIMESTAMP_ENABLE>
+            /* Get timestamp from received message */
+            if (${CAN_INSTANCE_NAME?lower_case}Obj.timestamp != NULL)
+            {
+                *${CAN_INSTANCE_NAME?lower_case}Obj.timestamp = (uint16_t)(rxf1eFifo->CAN_RXF1E_1 & CAN_RXF1E_1_RXTS_Msk);
+            }
+
+            </#if>
             /* Ack the fifo position */
             ${CAN_INSTANCE_NAME}_REGS->CAN_RXF1A = CAN_RXF1A_F1AI(rxgi);
             ${CAN_INSTANCE_NAME?lower_case}Obj.state = CAN_STATE_TRANSFER_DONE;
@@ -1105,6 +1235,14 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
         memcpy(${CAN_INSTANCE_NAME?lower_case}Obj.rxBuffer, (uint8_t *)&rxbeFifo->CAN_RXBE_DATA, length);
         *${CAN_INSTANCE_NAME?lower_case}Obj.rxsize = length;
 
+        <#if TIMESTAMP_ENABLE>
+        /* Get timestamp from received message */
+        if (${CAN_INSTANCE_NAME?lower_case}Obj.timestamp != NULL)
+        {
+            *${CAN_INSTANCE_NAME?lower_case}Obj.timestamp = (uint16_t)(rxbeFifo->CAN_RXBE_1 & CAN_RXBE_1_RXTS_Msk);
+        }
+
+        </#if>
         /* Clear new data flag */
         if (rxgi < 32)
         {

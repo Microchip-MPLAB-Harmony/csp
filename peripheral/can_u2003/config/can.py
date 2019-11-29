@@ -689,8 +689,12 @@ def instantiateComponent(canComponent):
     canTimeoutMode.setDependencies(hideMenu, ["CAN_TIMEOUT"])
     canTimeoutMode.setDefaultValue(1)
 
+    canTimestampEnable = canComponent.createBooleanSymbol("TIMESTAMP_ENABLE", None)
+    canTimestampEnable.setLabel("Timestamp Enable")
+    canTimestampEnable.setDefaultValue(False)
+
     #timestamp Modes
-    canTimestampMode = canComponent.createKeyValueSetSymbol("TIMESTAMP_MODE", None)
+    canTimestampMode = canComponent.createKeyValueSetSymbol("TIMESTAMP_MODE", canTimestampEnable)
     canTimestampMode.setLabel("Timestamp mode")
     canTimestampMode.setDescription("EXT TIMESTAMP: external counter (needed for FD). ZERO: timestamp is always 0x0000. TCP INC: incremented according to TCP.")
     canTimestampMode.addKey("CAN_TSCC_TSS_ZERO", "0", "ZERO")
@@ -699,6 +703,8 @@ def instantiateComponent(canComponent):
     canTimestampMode.setOutputMode("Key")
     canTimestampMode.setDisplayMode("Description")
     canTimestampMode.setDefaultValue(1)
+    canTimestampMode.setVisible(False)
+    canTimestampMode.setDependencies(hideMenu, ["TIMESTAMP_ENABLE"])
 
     #timestamp/timeout Counter Prescaler
     canTCP = canComponent.createIntegerSymbol("TIMESTAMP_PRESCALER", None)
