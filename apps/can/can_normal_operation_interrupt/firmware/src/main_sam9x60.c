@@ -189,7 +189,7 @@ int main ( void )
                     state = APP_STATE_CAN_IDLE;
                     memset(rx_message, 0x00, sizeof(rx_message));
                     /* Receive New Message */
-                    if (!CAN1_MessageReceive(&rx_messageID, &rx_messageLength, rx_message, CAN_MAILBOX_DATA_FRAME_RX_OVERWRITE) == true)  
+                    if (!CAN1_MessageReceive(&rx_messageID, &rx_messageLength, rx_message, 0, CAN_MAILBOX_DATA_FRAME_RX_OVERWRITE) == true)  
                     {
                         printf("CAN1_MessageReceive request has failed\r\n");
                     }

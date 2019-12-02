@@ -129,6 +129,9 @@ void CAN1_Initialize(void)
     memset((void *)can1Obj.mbState, CAN_MAILBOX_READY, sizeof(can1Obj.mbState));
     can1Obj.state = CAN_STATE_IDLE;
 
+    /* Enable Timestamp */
+    CAN1_REGS->CAN_MR &= ~CAN_MR_TTM_Msk;
+
     /* Enable CAN Controller */
     CAN1_REGS->CAN_MR |= CAN_MR_CANEN_Msk;
 }
@@ -257,7 +260,7 @@ bool CAN1_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, CAN_MAILBO
 
 // *****************************************************************************
 /* Function:
-    bool CAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, CAN_MAILBOX_RX_ATTRIBUTE mailboxAttr)
+    bool CAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp, CAN_MAILBOX_RX_ATTRIBUTE mailboxAttr)
 
    Summary:
     Receives a message from CAN bus.
@@ -269,6 +272,7 @@ bool CAN1_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, CAN_MAILBO
     id          - Pointer to 11-bit / 29-bit identifier (ID) to be received.
     length      - Pointer to data length in number of bytes to be received.
     data        - pointer to destination data buffer
+    timestamp   - Pointer to Rx message timestamp
     mailboxAttr - Mailbox type either RX Mailbox or RX Mailbox with overwrite
 
    Returns:
@@ -276,7 +280,7 @@ bool CAN1_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, CAN_MAILBO
     true  - Request was successful.
     false - Request has failed.
 */
-bool CAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, CAN_MAILBOX_RX_ATTRIBUTE mailboxAttr)
+bool CAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp, CAN_MAILBOX_RX_ATTRIBUTE mailboxAttr)
 {
     uint8_t mailbox = 0;
     bool mbIsReady = false;
@@ -332,6 +336,7 @@ bool CAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, CAN_MAILB
     can1Obj.rxMsg[mailbox].id = id;
     can1Obj.rxMsg[mailbox].buffer = data;
     can1Obj.rxMsg[mailbox].size = length;
+    can1Obj.rxMsg[mailbox].timestamp = timestamp;
     CAN1_REGS->CAN_IER = 1U << mailbox;
     return status;
 }
@@ -524,6 +529,29 @@ CAN_ERROR CAN1_ErrorGet(void)
     }
 
     return (CAN_ERROR)can1Obj.errorStatus;
+}
+
+// *****************************************************************************
+/* Function:
+    void CAN1_ErrorCountGet(uint16_t *txErrorCount, uint8_t *rxErrorCount)
+
+   Summary:
+    Returns the transmit and receive error count during transfer.
+
+   Precondition:
+    CAN1_Initialize must have been called for the associated CAN instance.
+
+   Parameters:
+    txErrorCount - Transmit Error Count to be received
+    rxErrorCount - Receive Error Count to be received
+
+   Returns:
+    None.
+*/
+void CAN1_ErrorCountGet(uint16_t *txErrorCount, uint8_t *rxErrorCount)
+{
+    *txErrorCount = (uint16_t)((CAN1_REGS->CAN_ECR & CAN_ECR_TEC_Msk) >> CAN_ECR_TEC_Pos);
+    *rxErrorCount = (uint8_t)(CAN1_REGS->CAN_ECR & CAN_ECR_REC_Msk);
 }
 
 // *****************************************************************************
@@ -742,6 +770,11 @@ void CAN1_InterruptHandler(void)
                                 {
                                     can1Obj.rxMsg[mailbox].buffer[dataIndex] = (CAN1_REGS->CAN_MB[mailbox].CAN_MDH >> (8 * (dataIndex - 4))) & BYTE_MASK;
                                 }
+                            }
+                            /* Get timestamp from received message */
+                            if (can1Obj.rxMsg[mailbox].timestamp != NULL)
+                            {
+                                *can1Obj.rxMsg[mailbox].timestamp = (uint16_t)(CAN1_REGS->CAN_MB[mailbox].CAN_MSR & CAN_MSR_MTIMESTAMP_Msk);
                             }
                         }
                         CAN1_REGS->CAN_MB[mailbox].CAN_MCR = CAN_MCR_MTCR_Msk;

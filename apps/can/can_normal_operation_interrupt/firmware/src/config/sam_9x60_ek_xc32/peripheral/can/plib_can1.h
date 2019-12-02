@@ -75,7 +75,7 @@
 // *****************************************************************************
 void CAN1_Initialize(void);
 bool CAN1_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, CAN_MAILBOX_TX_ATTRIBUTE mailboxAttr);
-bool CAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, CAN_MAILBOX_RX_ATTRIBUTE mailboxAttr);
+bool CAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp, CAN_MAILBOX_RX_ATTRIBUTE mailboxAttr);
 void CAN1_MessageAbort(CAN_MAILBOX_MASK mailboxMask);
 void CAN1_MessageIDSet(CAN_MAILBOX_NUM mailbox, uint32_t id);
 uint32_t CAN1_MessageIDGet(CAN_MAILBOX_NUM mailbox);
@@ -83,6 +83,7 @@ void CAN1_MessageAcceptanceMaskSet(CAN_MAILBOX_NUM mailbox, uint32_t id);
 uint32_t CAN1_MessageAcceptanceMaskGet(CAN_MAILBOX_NUM mailbox);
 uint16_t CAN1_MessageTimestampGet(CAN_MAILBOX_NUM mailbox);
 CAN_ERROR CAN1_ErrorGet(void);
+void CAN1_ErrorCountGet(uint16_t *txErrorCount, uint8_t *rxErrorCount);
 bool CAN1_InterruptGet(CAN_INTERRUPT_MASK interruptMask);
 void CAN1_InterruptEnable(CAN_INTERRUPT_MASK interruptMask);
 void CAN1_InterruptDisable(CAN_INTERRUPT_MASK interruptMask);

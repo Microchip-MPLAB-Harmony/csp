@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-08-22T13:04:25Z */
+/* file generated from device description version 2019-09-09T16:15:12Z */
 #ifndef _SAM9X60_H_
 #define _SAM9X60_H_
 
@@ -619,7 +619,7 @@ void MC_Handler                    ( void );
 /**  DEVICE SIGNATURES FOR SAM9X60                                            */
 /* ************************************************************************** */
 #define CHIP_JTAGID                    _UL_(0X05B4403F)
-#define CHIP_CIDR                      _UL_(0X819B81A0)
+#define CHIP_CIDR                      _UL_(0X819B3540)
 #define CHIP_EXID                      _UL_(0X00000002)
 
 /* ************************************************************************** */
