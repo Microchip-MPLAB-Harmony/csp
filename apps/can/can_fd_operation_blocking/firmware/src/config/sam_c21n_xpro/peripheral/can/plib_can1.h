@@ -97,8 +97,10 @@
 // *****************************************************************************
 void CAN1_Initialize (void);
 bool CAN1_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, CAN_MODE mode, CAN_MSG_TX_ATTRIBUTE msgAttr);
-bool CAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, CAN_MSG_RX_ATTRIBUTE msgAttr);
+bool CAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp, CAN_MSG_RX_ATTRIBUTE msgAttr);
+bool CAN1_TransmitEventFIFOElementGet(uint32_t *id, uint8_t *messageMarker, uint16_t *timestamp);
 CAN_ERROR CAN1_ErrorGet(void);
+void CAN1_ErrorCountGet(uint8_t *txErrorCount, uint8_t *rxErrorCount);
 bool CAN1_InterruptGet(CAN_INTERRUPT_MASK interruptMask);
 void CAN1_InterruptClear(CAN_INTERRUPT_MASK interruptMask);
 void CAN1_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress);

@@ -184,9 +184,6 @@ void CAN1_Initialize(void)
     /* Extended ID AND Mask Register */
     CAN1_REGS->CAN_XIDAM = CAN_XIDAM_Msk;
 
-    /* Timestamp Counter Configuration Register */
-    CAN1_REGS->CAN_TSCC = CAN_TSCC_TSS_INC | CAN_TSCC_TCP(0);
-
     /* Set the operation mode */
     CAN1_REGS->CAN_CCCR = (CAN1_REGS->CAN_CCCR & ~CAN_CCCR_INIT_Msk) | CAN_CCCR_FDOE_Msk | CAN_CCCR_BRSE_Msk;
     while ((CAN1_REGS->CAN_CCCR & CAN_CCCR_INIT_Msk) == CAN_CCCR_INIT_Msk);
@@ -220,6 +217,7 @@ bool CAN1_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, CAN_MODE m
     uint8_t dlc = 0;
     uint8_t tfqpi = 0;
     can_txbe_registers_t *fifo = NULL;
+    static uint8_t messageMarker = 0;
 
     switch (msgAttr)
     {
@@ -275,6 +273,8 @@ bool CAN1_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, CAN_MODE m
         fifo->CAN_TXBE_0 |= CAN_TXBE_0_RTR_Msk;
     }
 
+    fifo->CAN_TXBE_1 |= ((++messageMarker << CAN_TXBE_1_MM_Pos) & CAN_TXBE_1_MM_Msk);
+
     /* request the transmit */
     CAN1_REGS->CAN_TXBAR = 1U << tfqpi;
 
@@ -283,7 +283,7 @@ bool CAN1_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, CAN_MODE m
 
 // *****************************************************************************
 /* Function:
-    bool CAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, CAN_MSG_RX_ATTRIBUTE msgAttr)
+    bool CAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp, CAN_MSG_RX_ATTRIBUTE msgAttr)
 
    Summary:
     Receives a message from CAN bus.
@@ -292,17 +292,18 @@ bool CAN1_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, CAN_MODE m
     CAN1_Initialize must have been called for the associated CAN instance.
 
    Parameters:
-    id      - Pointer to 11-bit / 29-bit identifier (ID) to be received.
-    length  - Pointer to data length in number of bytes to be received.
-    data    - pointer to destination data buffer
-    msgAttr - Message to be read from Rx FIFO0 or Rx FIFO1 or Rx Buffer
+    id        - Pointer to 11-bit / 29-bit identifier (ID) to be received.
+    length    - Pointer to data length in number of bytes to be received.
+    data      - pointer to destination data buffer
+    timestamp - Pointer to Rx message timestamp, timestamp value is 0 if timestamp is disabled
+    msgAttr   - Message to be read from Rx FIFO0 or Rx FIFO1 or Rx Buffer
 
    Returns:
     Request status.
     true  - Request was successful.
     false - Request has failed.
 */
-bool CAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, CAN_MSG_RX_ATTRIBUTE msgAttr)
+bool CAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp, CAN_MSG_RX_ATTRIBUTE msgAttr)
 {
     uint8_t msgLength = 0;
     uint8_t rxgi = 0;
@@ -439,6 +440,66 @@ bool CAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, CAN_MSG_R
 
 // *****************************************************************************
 /* Function:
+    bool CAN1_TransmitEventFIFOElementGet(uint32_t *id, uint8_t *messageMarker, uint16_t *timestamp)
+
+   Summary:
+    Get the Transmit Event FIFO Element for the transmitted message.
+
+   Precondition:
+    CAN1_Initialize must have been called for the associated CAN instance.
+
+   Parameters:
+    id            - Pointer to 11-bit / 29-bit identifier (ID) to be received.
+    messageMarker - Pointer to Tx message message marker number to be received
+    timestamp     - Pointer to Tx message timestamp to be received, timestamp value is 0 if Timestamp is disabled
+
+   Returns:
+    Request status.
+    true  - Request was successful.
+    false - Request has failed.
+*/
+bool CAN1_TransmitEventFIFOElementGet(uint32_t *id, uint8_t *messageMarker, uint16_t *timestamp)
+{
+    can_txefe_registers_t *txEventFIFOElement = NULL;
+    uint8_t txefgi = 0;
+    bool status = false;
+
+    /* Check if Tx Event FIFO Element available */
+    if ((CAN1_REGS->CAN_TXEFS & CAN_TXEFS_EFFL_Msk) != 0)
+    {
+        /* Get a pointer to Tx Event FIFO Element */
+        txefgi = (uint8_t)((CAN1_REGS->CAN_TXEFS & CAN_TXEFS_EFGI_Msk) >> CAN_TXEFS_EFGI_Pos);
+        txEventFIFOElement = (can_txefe_registers_t *) ((uint8_t *)can1Obj.msgRAMConfig.txEventFIFOAddress + txefgi * sizeof(can_txefe_registers_t));
+
+        /* Check if it's a extended message type */
+        if (txEventFIFOElement->CAN_TXEFE_0 & CAN_TXEFE_0_XTD_Msk)
+        {
+            *id = txEventFIFOElement->CAN_TXEFE_0 & CAN_TXEFE_0_ID_Msk;
+        }
+        else
+        {
+            *id = (txEventFIFOElement->CAN_TXEFE_0 >> 18) & CAN_STD_ID_Msk;
+        }
+
+        *messageMarker = ((txEventFIFOElement->CAN_TXEFE_1 & CAN_TXEFE_1_MM_Msk) >> CAN_TXEFE_1_MM_Pos);
+
+        /* Get timestamp from transmitted message */
+        if (timestamp != NULL)
+        {
+            *timestamp = (uint16_t)(txEventFIFOElement->CAN_TXEFE_1 & CAN_TXEFE_1_TXTS_Msk);
+        }
+
+        /* Ack the Tx Event FIFO position */
+        CAN1_REGS->CAN_TXEFA = CAN_TXEFA_EFAI(txefgi);
+
+        /* Tx Event FIFO Element read successfully, so return true */
+        status = true;
+    }
+    return status;
+}
+
+// *****************************************************************************
+/* Function:
     CAN_ERROR CAN1_ErrorGet(void)
 
    Summary:
@@ -469,6 +530,29 @@ CAN_ERROR CAN1_ErrorGet(void)
     }
 
     return error;
+}
+
+// *****************************************************************************
+/* Function:
+    void CAN1_ErrorCountGet(uint8_t *txErrorCount, uint8_t *rxErrorCount)
+
+   Summary:
+    Returns the transmit and receive error count during transfer.
+
+   Precondition:
+    CAN1_Initialize must have been called for the associated CAN instance.
+
+   Parameters:
+    txErrorCount - Transmit Error Count to be received
+    rxErrorCount - Receive Error Count to be received
+
+   Returns:
+    None.
+*/
+void CAN1_ErrorCountGet(uint8_t *txErrorCount, uint8_t *rxErrorCount)
+{
+    *txErrorCount = (uint8_t)(CAN1_REGS->CAN_ECR & CAN_ECR_TEC_Msk);
+    *rxErrorCount = (uint8_t)((CAN1_REGS->CAN_ECR & CAN_ECR_REC_Msk) >> CAN_ECR_REC_Pos);
 }
 
 // *****************************************************************************
