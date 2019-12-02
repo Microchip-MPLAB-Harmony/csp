@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-08-29T14:13:58Z */
+/* file generated from device description version 2019-10-25T08:30:06Z */
 #ifndef _SAMRH71F20B_H_
 #define _SAMRH71F20B_H_
 
@@ -635,7 +635,7 @@ void GMAC_Q5_Handler               ( void );
 #define SYSTEM_SIZE                    _UL_(0x10000000)    /* 262144kB Memory segment type: io */
 #define QSPIMEM_SIZE                   _UL_(0x08000000)    /* 131072kB Memory segment type: other */
 #define AXIMX_SIZE                     _UL_(0x00100000)    /* 1024kB Memory segment type: other */
-#define ITCM_SIZE                      _UL_(0x10000000)    /* 262144kB Memory segment type: other */
+#define ITCM_SIZE                      _UL_(0x00020000)    /*  128kB Memory segment type: other */
 #define IFLASH_SIZE                    _UL_(0x00020000)    /*  128kB Memory segment type: flash */
 #define IFLASH_PAGE_SIZE               _UL_(       256)
 #define IFLASH_NB_OF_PAGES             _UL_(       512)

@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-08-29T14:13:58Z */
+/* file generated from device description version 2019-10-25T08:30:06Z */
 #ifndef _SAMRH71_GMAC_COMPONENT_H_
 #define _SAMRH71_GMAC_COMPONENT_H_
 
@@ -1336,7 +1336,7 @@
 #define GMAC_TXLPITIME_Msk                    _U_(0x00FFFFFF)                                      /**< (GMAC_TXLPITIME) Register Mask  */
 
 
-/* -------- GMAC_ISRPQ : (GMAC Offset: 0x400) ( R/ 32) Interrupt Status Register Priority Queue (1..4) -------- */
+/* -------- GMAC_ISRPQ : (GMAC Offset: 0x400) ( R/ 32) Interrupt Status Register Priority Queue (1..5) -------- */
 #define GMAC_ISRPQ_RCOMP_Pos                  _U_(1)                                               /**< (GMAC_ISRPQ) Receive Complete Position */
 #define GMAC_ISRPQ_RCOMP_Msk                  (_U_(0x1) << GMAC_ISRPQ_RCOMP_Pos)                   /**< (GMAC_ISRPQ) Receive Complete Mask */
 #define GMAC_ISRPQ_RCOMP(value)               (GMAC_ISRPQ_RCOMP_Msk & ((value) << GMAC_ISRPQ_RCOMP_Pos))
@@ -1361,21 +1361,21 @@
 #define GMAC_ISRPQ_Msk                        _U_(0x00000CE6)                                      /**< (GMAC_ISRPQ) Register Mask  */
 
 
-/* -------- GMAC_TBQBAPQ : (GMAC Offset: 0x440) (R/W 32) Transmit Buffer Queue Base Address Register Priority Queue (1..4) -------- */
+/* -------- GMAC_TBQBAPQ : (GMAC Offset: 0x440) (R/W 32) Transmit Buffer Queue Base Address Register Priority Queue (1..5) -------- */
 #define GMAC_TBQBAPQ_TXBQBA_Pos               _U_(2)                                               /**< (GMAC_TBQBAPQ) Transmit Buffer Queue Base Address Position */
 #define GMAC_TBQBAPQ_TXBQBA_Msk               (_U_(0x3FFFFFFF) << GMAC_TBQBAPQ_TXBQBA_Pos)         /**< (GMAC_TBQBAPQ) Transmit Buffer Queue Base Address Mask */
 #define GMAC_TBQBAPQ_TXBQBA(value)            (GMAC_TBQBAPQ_TXBQBA_Msk & ((value) << GMAC_TBQBAPQ_TXBQBA_Pos))
 #define GMAC_TBQBAPQ_Msk                      _U_(0xFFFFFFFC)                                      /**< (GMAC_TBQBAPQ) Register Mask  */
 
 
-/* -------- GMAC_RBQBAPQ : (GMAC Offset: 0x480) (R/W 32) Receive Buffer Queue Base Address Register Priority Queue (1..4) -------- */
+/* -------- GMAC_RBQBAPQ : (GMAC Offset: 0x480) (R/W 32) Receive Buffer Queue Base Address Register Priority Queue (1..5) -------- */
 #define GMAC_RBQBAPQ_RXBQBA_Pos               _U_(2)                                               /**< (GMAC_RBQBAPQ) Receive Buffer Queue Base Address Position */
 #define GMAC_RBQBAPQ_RXBQBA_Msk               (_U_(0x3FFFFFFF) << GMAC_RBQBAPQ_RXBQBA_Pos)         /**< (GMAC_RBQBAPQ) Receive Buffer Queue Base Address Mask */
 #define GMAC_RBQBAPQ_RXBQBA(value)            (GMAC_RBQBAPQ_RXBQBA_Msk & ((value) << GMAC_RBQBAPQ_RXBQBA_Pos))
 #define GMAC_RBQBAPQ_Msk                      _U_(0xFFFFFFFC)                                      /**< (GMAC_RBQBAPQ) Register Mask  */
 
 
-/* -------- GMAC_RBSRPQ : (GMAC Offset: 0x4A0) (R/W 32) Receive Buffer Size Register Priority Queue (1..4) -------- */
+/* -------- GMAC_RBSRPQ : (GMAC Offset: 0x4A0) (R/W 32) Receive Buffer Size Register Priority Queue (1..5) -------- */
 #define GMAC_RBSRPQ_RBS_Pos                   _U_(0)                                               /**< (GMAC_RBSRPQ) Receive Buffer Size Position */
 #define GMAC_RBSRPQ_RBS_Msk                   (_U_(0xFFFF) << GMAC_RBSRPQ_RBS_Pos)                 /**< (GMAC_RBSRPQ) Receive Buffer Size Mask */
 #define GMAC_RBSRPQ_RBS(value)                (GMAC_RBSRPQ_RBS_Msk & ((value) << GMAC_RBSRPQ_RBS_Pos))
@@ -1407,8 +1407,8 @@
 
 
 /* -------- GMAC_ST1RPQ : (GMAC Offset: 0x500) (R/W 32) Screening Type 1 Register Priority Queue -------- */
-#define GMAC_ST1RPQ_QNB_Pos                   _U_(0)                                               /**< (GMAC_ST1RPQ) Queue Number (0-4) Position */
-#define GMAC_ST1RPQ_QNB_Msk                   (_U_(0x7) << GMAC_ST1RPQ_QNB_Pos)                    /**< (GMAC_ST1RPQ) Queue Number (0-4) Mask */
+#define GMAC_ST1RPQ_QNB_Pos                   _U_(0)                                               /**< (GMAC_ST1RPQ) Queue Number (0-5) Position */
+#define GMAC_ST1RPQ_QNB_Msk                   (_U_(0x7) << GMAC_ST1RPQ_QNB_Pos)                    /**< (GMAC_ST1RPQ) Queue Number (0-5) Mask */
 #define GMAC_ST1RPQ_QNB(value)                (GMAC_ST1RPQ_QNB_Msk & ((value) << GMAC_ST1RPQ_QNB_Pos))
 #define GMAC_ST1RPQ_DSTCM_Pos                 _U_(4)                                               /**< (GMAC_ST1RPQ) Differentiated Services or Traffic Class Match Position */
 #define GMAC_ST1RPQ_DSTCM_Msk                 (_U_(0xFF) << GMAC_ST1RPQ_DSTCM_Pos)                 /**< (GMAC_ST1RPQ) Differentiated Services or Traffic Class Match Mask */
@@ -1426,8 +1426,8 @@
 
 
 /* -------- GMAC_ST2RPQ : (GMAC Offset: 0x540) (R/W 32) Screening Type 2 Register Priority Queue -------- */
-#define GMAC_ST2RPQ_QNB_Pos                   _U_(0)                                               /**< (GMAC_ST2RPQ) Queue Number (0-4) Position */
-#define GMAC_ST2RPQ_QNB_Msk                   (_U_(0x7) << GMAC_ST2RPQ_QNB_Pos)                    /**< (GMAC_ST2RPQ) Queue Number (0-4) Mask */
+#define GMAC_ST2RPQ_QNB_Pos                   _U_(0)                                               /**< (GMAC_ST2RPQ) Queue Number (0-5) Position */
+#define GMAC_ST2RPQ_QNB_Msk                   (_U_(0x7) << GMAC_ST2RPQ_QNB_Pos)                    /**< (GMAC_ST2RPQ) Queue Number (0-5) Mask */
 #define GMAC_ST2RPQ_QNB(value)                (GMAC_ST2RPQ_QNB_Msk & ((value) << GMAC_ST2RPQ_QNB_Pos))
 #define GMAC_ST2RPQ_VLANP_Pos                 _U_(4)                                               /**< (GMAC_ST2RPQ) VLAN Priority Position */
 #define GMAC_ST2RPQ_VLANP_Msk                 (_U_(0x7) << GMAC_ST2RPQ_VLANP_Pos)                  /**< (GMAC_ST2RPQ) VLAN Priority Mask */
@@ -1462,7 +1462,7 @@
 #define GMAC_ST2RPQ_Msk                       _U_(0x7FFFFF77)                                      /**< (GMAC_ST2RPQ) Register Mask  */
 
 
-/* -------- GMAC_IERPQ : (GMAC Offset: 0x600) ( /W 32) Interrupt Enable Register Priority Queue (1..4) -------- */
+/* -------- GMAC_IERPQ : (GMAC Offset: 0x600) ( /W 32) Interrupt Enable Register Priority Queue (1..5) -------- */
 #define GMAC_IERPQ_RCOMP_Pos                  _U_(1)                                               /**< (GMAC_IERPQ) Receive Complete Position */
 #define GMAC_IERPQ_RCOMP_Msk                  (_U_(0x1) << GMAC_IERPQ_RCOMP_Pos)                   /**< (GMAC_IERPQ) Receive Complete Mask */
 #define GMAC_IERPQ_RCOMP(value)               (GMAC_IERPQ_RCOMP_Msk & ((value) << GMAC_IERPQ_RCOMP_Pos))
@@ -1487,7 +1487,7 @@
 #define GMAC_IERPQ_Msk                        _U_(0x00000CE6)                                      /**< (GMAC_IERPQ) Register Mask  */
 
 
-/* -------- GMAC_IDRPQ : (GMAC Offset: 0x620) ( /W 32) Interrupt Disable Register Priority Queue (1..4) -------- */
+/* -------- GMAC_IDRPQ : (GMAC Offset: 0x620) ( /W 32) Interrupt Disable Register Priority Queue (1..5) -------- */
 #define GMAC_IDRPQ_RCOMP_Pos                  _U_(1)                                               /**< (GMAC_IDRPQ) Receive Complete Position */
 #define GMAC_IDRPQ_RCOMP_Msk                  (_U_(0x1) << GMAC_IDRPQ_RCOMP_Pos)                   /**< (GMAC_IDRPQ) Receive Complete Mask */
 #define GMAC_IDRPQ_RCOMP(value)               (GMAC_IDRPQ_RCOMP_Msk & ((value) << GMAC_IDRPQ_RCOMP_Pos))
@@ -1512,7 +1512,7 @@
 #define GMAC_IDRPQ_Msk                        _U_(0x00000CE6)                                      /**< (GMAC_IDRPQ) Register Mask  */
 
 
-/* -------- GMAC_IMRPQ : (GMAC Offset: 0x640) (R/W 32) Interrupt Mask Register Priority Queue (1..4) -------- */
+/* -------- GMAC_IMRPQ : (GMAC Offset: 0x640) (R/W 32) Interrupt Mask Register Priority Queue (1..5) -------- */
 #define GMAC_IMRPQ_RCOMP_Pos                  _U_(1)                                               /**< (GMAC_IMRPQ) Receive Complete Position */
 #define GMAC_IMRPQ_RCOMP_Msk                  (_U_(0x1) << GMAC_IMRPQ_RCOMP_Pos)                   /**< (GMAC_IMRPQ) Receive Complete Mask */
 #define GMAC_IMRPQ_RCOMP(value)               (GMAC_IMRPQ_RCOMP_Msk & ((value) << GMAC_IMRPQ_RCOMP_Pos))
@@ -1650,18 +1650,18 @@
 #define GMAC_RXLPITIME_REG_OFST        (0x274)             /**< (GMAC_RXLPITIME) Received LPI Time Offset */
 #define GMAC_TXLPI_REG_OFST            (0x278)             /**< (GMAC_TXLPI) Transmit LPI Transitions Offset */
 #define GMAC_TXLPITIME_REG_OFST        (0x27C)             /**< (GMAC_TXLPITIME) Transmit LPI Time Offset */
-#define GMAC_ISRPQ_REG_OFST            (0x400)             /**< (GMAC_ISRPQ) Interrupt Status Register Priority Queue (1..4) Offset */
-#define GMAC_TBQBAPQ_REG_OFST          (0x440)             /**< (GMAC_TBQBAPQ) Transmit Buffer Queue Base Address Register Priority Queue (1..4) Offset */
-#define GMAC_RBQBAPQ_REG_OFST          (0x480)             /**< (GMAC_RBQBAPQ) Receive Buffer Queue Base Address Register Priority Queue (1..4) Offset */
-#define GMAC_RBSRPQ_REG_OFST           (0x4A0)             /**< (GMAC_RBSRPQ) Receive Buffer Size Register Priority Queue (1..4) Offset */
+#define GMAC_ISRPQ_REG_OFST            (0x400)             /**< (GMAC_ISRPQ) Interrupt Status Register Priority Queue (1..5) Offset */
+#define GMAC_TBQBAPQ_REG_OFST          (0x440)             /**< (GMAC_TBQBAPQ) Transmit Buffer Queue Base Address Register Priority Queue (1..5) Offset */
+#define GMAC_RBQBAPQ_REG_OFST          (0x480)             /**< (GMAC_RBQBAPQ) Receive Buffer Queue Base Address Register Priority Queue (1..5) Offset */
+#define GMAC_RBSRPQ_REG_OFST           (0x4A0)             /**< (GMAC_RBSRPQ) Receive Buffer Size Register Priority Queue (1..5) Offset */
 #define GMAC_CBSCR_REG_OFST            (0x4BC)             /**< (GMAC_CBSCR) Credit-Based Shaping Control Register Offset */
 #define GMAC_CBSISQA_REG_OFST          (0x4C0)             /**< (GMAC_CBSISQA) Credit-Based Shaping IdleSlope Register for Queue A Offset */
 #define GMAC_CBSISQB_REG_OFST          (0x4C4)             /**< (GMAC_CBSISQB) Credit-Based Shaping IdleSlope Register for Queue B Offset */
 #define GMAC_ST1RPQ_REG_OFST           (0x500)             /**< (GMAC_ST1RPQ) Screening Type 1 Register Priority Queue Offset */
 #define GMAC_ST2RPQ_REG_OFST           (0x540)             /**< (GMAC_ST2RPQ) Screening Type 2 Register Priority Queue Offset */
-#define GMAC_IERPQ_REG_OFST            (0x600)             /**< (GMAC_IERPQ) Interrupt Enable Register Priority Queue (1..4) Offset */
-#define GMAC_IDRPQ_REG_OFST            (0x620)             /**< (GMAC_IDRPQ) Interrupt Disable Register Priority Queue (1..4) Offset */
-#define GMAC_IMRPQ_REG_OFST            (0x640)             /**< (GMAC_IMRPQ) Interrupt Mask Register Priority Queue (1..4) Offset */
+#define GMAC_IERPQ_REG_OFST            (0x600)             /**< (GMAC_IERPQ) Interrupt Enable Register Priority Queue (1..5) Offset */
+#define GMAC_IDRPQ_REG_OFST            (0x620)             /**< (GMAC_IDRPQ) Interrupt Disable Register Priority Queue (1..5) Offset */
+#define GMAC_IMRPQ_REG_OFST            (0x640)             /**< (GMAC_IMRPQ) Interrupt Mask Register Priority Queue (1..5) Offset */
 #define GMAC_ST2ER_REG_OFST            (0x6E0)             /**< (GMAC_ST2ER) Screening Type 2 Ethertype Register Offset */
 
 #if !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__))
@@ -1796,14 +1796,14 @@ typedef struct
   __I   uint32_t                       GMAC_TXLPI;         /**< Offset: 0x278 (R/   32) Transmit LPI Transitions */
   __I   uint32_t                       GMAC_TXLPITIME;     /**< Offset: 0x27C (R/   32) Transmit LPI Time */
   __I   uint8_t                        Reserved8[0x180];
-  __I   uint32_t                       GMAC_ISRPQ[4];      /**< Offset: 0x400 (R/   32) Interrupt Status Register Priority Queue (1..4) */
-  __I   uint8_t                        Reserved9[0x30];
-  __IO  uint32_t                       GMAC_TBQBAPQ[4];    /**< Offset: 0x440 (R/W  32) Transmit Buffer Queue Base Address Register Priority Queue (1..4) */
-  __I   uint8_t                        Reserved10[0x30];
-  __IO  uint32_t                       GMAC_RBQBAPQ[4];    /**< Offset: 0x480 (R/W  32) Receive Buffer Queue Base Address Register Priority Queue (1..4) */
-  __I   uint8_t                        Reserved11[0x10];
-  __IO  uint32_t                       GMAC_RBSRPQ[4];     /**< Offset: 0x4A0 (R/W  32) Receive Buffer Size Register Priority Queue (1..4) */
-  __I   uint8_t                        Reserved12[0x0C];
+  __I   uint32_t                       GMAC_ISRPQ[5];      /**< Offset: 0x400 (R/   32) Interrupt Status Register Priority Queue (1..5) */
+  __I   uint8_t                        Reserved9[0x2C];
+  __IO  uint32_t                       GMAC_TBQBAPQ[5];    /**< Offset: 0x440 (R/W  32) Transmit Buffer Queue Base Address Register Priority Queue (1..5) */
+  __I   uint8_t                        Reserved10[0x2C];
+  __IO  uint32_t                       GMAC_RBQBAPQ[5];    /**< Offset: 0x480 (R/W  32) Receive Buffer Queue Base Address Register Priority Queue (1..5) */
+  __I   uint8_t                        Reserved11[0x0C];
+  __IO  uint32_t                       GMAC_RBSRPQ[5];     /**< Offset: 0x4A0 (R/W  32) Receive Buffer Size Register Priority Queue (1..5) */
+  __I   uint8_t                        Reserved12[0x08];
   __IO  uint32_t                       GMAC_CBSCR;         /**< Offset: 0x4BC (R/W  32) Credit-Based Shaping Control Register */
   __IO  uint32_t                       GMAC_CBSISQA;       /**< Offset: 0x4C0 (R/W  32) Credit-Based Shaping IdleSlope Register for Queue A */
   __IO  uint32_t                       GMAC_CBSISQB;       /**< Offset: 0x4C4 (R/W  32) Credit-Based Shaping IdleSlope Register for Queue B */
@@ -1812,12 +1812,12 @@ typedef struct
   __I   uint8_t                        Reserved14[0x30];
   __IO  uint32_t                       GMAC_ST2RPQ[8];     /**< Offset: 0x540 (R/W  32) Screening Type 2 Register Priority Queue */
   __I   uint8_t                        Reserved15[0xA0];
-  __O   uint32_t                       GMAC_IERPQ[4];      /**< Offset: 0x600 ( /W  32) Interrupt Enable Register Priority Queue (1..4) */
-  __I   uint8_t                        Reserved16[0x10];
-  __O   uint32_t                       GMAC_IDRPQ[4];      /**< Offset: 0x620 ( /W  32) Interrupt Disable Register Priority Queue (1..4) */
-  __I   uint8_t                        Reserved17[0x10];
-  __IO  uint32_t                       GMAC_IMRPQ[4];      /**< Offset: 0x640 (R/W  32) Interrupt Mask Register Priority Queue (1..4) */
-  __I   uint8_t                        Reserved18[0x90];
+  __O   uint32_t                       GMAC_IERPQ[5];      /**< Offset: 0x600 ( /W  32) Interrupt Enable Register Priority Queue (1..5) */
+  __I   uint8_t                        Reserved16[0x0C];
+  __O   uint32_t                       GMAC_IDRPQ[5];      /**< Offset: 0x620 ( /W  32) Interrupt Disable Register Priority Queue (1..5) */
+  __I   uint8_t                        Reserved17[0x0C];
+  __IO  uint32_t                       GMAC_IMRPQ[5];      /**< Offset: 0x640 (R/W  32) Interrupt Mask Register Priority Queue (1..5) */
+  __I   uint8_t                        Reserved18[0x8C];
   __IO  uint32_t                       GMAC_ST2ER[4];      /**< Offset: 0x6E0 (R/W  32) Screening Type 2 Ethertype Register */
   __I   uint8_t                        Reserved19[0x10];
         gmac_st2cw_registers_t         GMAC_ST2CW[GMAC_ST2CW_NUMBER]; /**< Offset: 0x700 Screening Type 2 Compare Word 0 Register */
