@@ -97,8 +97,10 @@
 // *****************************************************************************
 void MCAN1_Initialize (void);
 bool MCAN1_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, MCAN_MODE mode, MCAN_MSG_TX_ATTRIBUTE msgAttr);
-bool MCAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, MCAN_MSG_RX_ATTRIBUTE msgAttr);
+bool MCAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp, MCAN_MSG_RX_ATTRIBUTE msgAttr);
+bool MCAN1_TransmitEventFIFOElementGet(uint32_t *id, uint8_t *messageMarker, uint16_t *timestamp);
 MCAN_ERROR MCAN1_ErrorGet(void);
+void MCAN1_ErrorCountGet(uint8_t *txErrorCount, uint8_t *rxErrorCount);
 bool MCAN1_InterruptGet(MCAN_INTERRUPT_MASK interruptMask);
 void MCAN1_InterruptClear(MCAN_INTERRUPT_MASK interruptMask);
 void MCAN1_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress);
