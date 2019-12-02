@@ -35,8 +35,20 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
-#include "plib_${HEMC_INSTANCE_NAME?lower_case}.h"
+#include <string.h>
 #include "device.h"
+#include "plib_${HEMC_INSTANCE_NAME?lower_case}.h"
+
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Global Data
+// *****************************************************************************
+// *****************************************************************************
+
+<#if HECC_INTERRUPT_MODE == true>
+static HEMC_OBJ ${HEMC_INSTANCE_NAME?lower_case}Obj;
+</#if>
 
 // *****************************************************************************
 // *****************************************************************************
@@ -70,7 +82,7 @@ void ${HSDRAMC_INSTANCE_NAME}_Initialize( void )
 
     ${HSDRAMC_INSTANCE_NAME}_REGS->HSDRAMC_SDR = HSDRAMC_SDR_TRAS(${HSDRAMC_SDR_TRAS}) |  HSDRAMC_SDR_TRP(${HSDRAMC_SDR_TRP}) |  HSDRAMC_SDR_TRC_TRFC(${HSDRAMC_SDR_TRC_TRFC}) \
                                                 | HSDRAMC_SDR_TRCD(${HSDRAMC_SDR_TRCD}) | HSDRAMC_SDR_TWR(${HSDRAMC_SDR_TWR}) | HSDRAMC_SDR_TXSR(${HSDRAMC_SDR_TXSR});
-    ${HSDRAMC_INSTANCE_NAME}_REGS->HSDRAMC_CFR1= HSDRAMC_CFR1_TMRD(${HSDRAMC_CFR1_TMRD}) | HSDRAMC_CFR1_UNAL_Msk;
+    ${HSDRAMC_INSTANCE_NAME}_REGS->HSDRAMC_CFR1= HSDRAMC_CFR1_TMRD(${HSDRAMC_CFR1_TMRD});
 
     /* Step 2:
      * A pause of at least 200 us must be observed before a signal toggle */
@@ -185,12 +197,40 @@ void ${HSMC_INSTANCE_NAME}_Initialize( void )
 }
 void ${HEMC_INSTANCE_NAME}_Initialize( void )
 {
+<#assign HEMC_NCS0_WRITE_CONF = "CS_0_WRITE_ECC_CONF" >
+<#if (.vars[HEMC_NCS0_WRITE_CONF] == false) >
+    /* Read NCS0 Pin configuration for HECC */
+    uint8_t eccEnableDefault = ( (${HEMC_INSTANCE_NAME}_REGS->HEMC_HECC_CR0 & HEMC_HECC_CR0_ENABLE_Msk) >> HEMC_HECC_CR0_ENABLE_Pos);
+    uint8_t eccAlgoDefault = ( (${HEMC_INSTANCE_NAME}_REGS->HEMC_HECC_CR0 & HEMC_HECC_CR0_ECC12_ENABLE_Msk) >> HEMC_HECC_CR0_ECC12_ENABLE_Pos);
+</#if>
+
+    /* Enable NCS0 configuration modification through registers */
+    ${HEMC_INSTANCE_NAME}_REGS->HEMC_CR_NCS0 |= HEMC_CR_NCS0_WRITE_ECC_CONF(1);
+
   <#list 0..5 as i>
   <#assign HEMC_TYPE = "CS_" + i + "_MEMORY_TYPE" >
   <#assign HEMC_BANK =  "CS_" + i + "_MEMORY_BANK_SIZE">
   <#assign HEMC_ADDRESS = "CS_" + i + "_MEMORY_BASE" >
-    <#if (.vars[HEMC_ADDRESS] != "3ffff") || (i = 0)>
-    ${HEMC_INSTANCE_NAME}_REGS->HEMC_CR_NCS${i} = HEMC_CR_NCS${i}_TYPE(${.vars[HEMC_TYPE]}) | HEMC_CR_NCS${i}_ADDBASE(0x${.vars[HEMC_ADDRESS]}) | HEMC_CR_NCS${i}_BANKSIZE(${.vars[HEMC_BANK]});
+  <#assign HEMC_ECC_ENABLE = "CS_" + i + "_HECC_ENABLE" >
+  <#assign HEMC_ECC_BCH = "CS_" + i + "_HECC_BCH_ENABLE" >
+  <#assign NUM_SPACE_MULTILINE = "${HEMC_INSTANCE_NAME}_REGS->HEMC_CR_NCS${i}"?length >
+    <#if (i == 0) && (.vars[HEMC_NCS0_WRITE_CONF] == false) >
+    ${HEMC_INSTANCE_NAME}_REGS->HEMC_CR_NCS${i} = HEMC_CR_NCS${i}_TYPE(${.vars[HEMC_TYPE]}) |
+    <#list 1..NUM_SPACE_MULTILINE as j> </#list>   HEMC_CR_NCS${i}_ADDBASE(0x${.vars[HEMC_ADDRESS]}) |
+    <#list 1..NUM_SPACE_MULTILINE as j> </#list>   HEMC_CR_NCS${i}_BANKSIZE(${.vars[HEMC_BANK]}) |
+    <#list 1..NUM_SPACE_MULTILINE as j> </#list>   HEMC_CR_NCS${i}_WRITE_ECC_CONF(1) |
+    <#list 1..NUM_SPACE_MULTILINE as j> </#list>   HEMC_CR_NCS${i}_ENABLE(eccEnableDefault) |
+    <#list 1..NUM_SPACE_MULTILINE as j> </#list>   HEMC_CR_NCS${i}_ECC12_ENABLE(eccAlgoDefault);
+
+    <#else>
+    <#if (.vars[HEMC_ADDRESS] != "3ffff") || (i == 0) >
+    ${HEMC_INSTANCE_NAME}_REGS->HEMC_CR_NCS${i} = HEMC_CR_NCS${i}_TYPE(${.vars[HEMC_TYPE]}) |
+    <#list 1..NUM_SPACE_MULTILINE as j> </#list>   HEMC_CR_NCS${i}_ADDBASE(0x${.vars[HEMC_ADDRESS]}) |
+    <#list 1..NUM_SPACE_MULTILINE as j> </#list>   HEMC_CR_NCS${i}_BANKSIZE(${.vars[HEMC_BANK]})<#if (i == 0)> |
+    <#list 1..NUM_SPACE_MULTILINE as j> </#list>   HEMC_CR_NCS${i}_WRITE_ECC_CONF(1)</#if><#if .vars[HEMC_ECC_ENABLE]> |
+    <#list 1..NUM_SPACE_MULTILINE as j> </#list>   HEMC_CR_NCS${i}_ENABLE(1)</#if><#if .vars[HEMC_ECC_BCH]> |
+    <#list 1..NUM_SPACE_MULTILINE as j> </#list>   HEMC_CR_NCS${i}_ECC12_ENABLE(1)</#if>;
+    </#if>
     </#if>
   </#list>
   <#if USE_HSDRAM>
@@ -198,7 +238,279 @@ void ${HEMC_INSTANCE_NAME}_Initialize( void )
   </#if>
     ${HSMC_INSTANCE_NAME}_Initialize();
 
+<#assign IS_RAM_INIT = false >
+<#list 0..5 as i>
+<#assign HEMC_ADDRESS = "CS_" + i + "_START_ADDRESS" >
+<#assign HEMC_ECC_ENABLE = "CS_" + i + "_HECC_ENABLE" >
+<#assign HEMC_RAM_CHECK_BIT_INIT = "CS_" + i + "_RAM_CHECK_BIT_INIT" >
+<#assign HEMC_RAM_CHECK_BIT_INIT_SIZE = "CS_" + i + "_RAM_CHECK_BIT_INIT_SIZE" >
+<#if (.vars[HEMC_ECC_ENABLE] == true) && (.vars[HEMC_RAM_CHECK_BIT_INIT] == true)>
+    /* For RAM memories on NCS${i}, perform memory initialization of ECC check bit */
+    memset((void*)(${.vars[HEMC_ADDRESS]}), 0x00, 0x${.vars[HEMC_RAM_CHECK_BIT_INIT_SIZE]});
+    if (DATA_CACHE_IS_ENABLED())
+    {
+        DCACHE_CLEAN_INVALIDATE_BY_ADDR((void*)(${.vars[HEMC_ADDRESS]}), 0x${.vars[HEMC_RAM_CHECK_BIT_INIT_SIZE]});
+    }
+    <#if IS_RAM_INIT == false>
+       <#assign IS_RAM_INIT = true >
+    </#if>
+</#if>
+</#list>
+
+<#if IS_RAM_INIT == true>
+    /* Wait all memory is zeroized and clear previous interrupts when memory ECC wasn't initialized */
+    __DSB();
+    __ISB();
+    HEMC_HECC_STATUS dummyStatus = HEMC_HeccGetStatus();
+    /* Ignore the warning */
+    (void)dummyStatus;
+</#if>
+
+<#if HECC_INTERRUPT_MODE == true>
+    // Enable interrupts
+    ${HEMC_INSTANCE_NAME}_REGS->HEMC_HECC_IER = (HEMC_HECC_IER_MEM_FIX_Msk | HEMC_HECC_IER_MEM_NOFIX_Msk);
+</#if>
+
 } /* ${HEMC_INSTANCE_NAME}_Initialize */
+
+// *****************************************************************************
+/* Function:
+    void ${HEMC_INSTANCE_NAME}_HeccGetStatus(void)
+
+   Summary:
+    Get the HECC status of the ${HEMC_INSTANCE_NAME} peripheral.
+
+   Precondition:
+    None.
+
+   Parameters:
+    None.
+
+   Returns:
+    Current status of the ${HEMC_INSTANCE_NAME} peripheral.
+*/
+HEMC_HECC_STATUS ${HEMC_INSTANCE_NAME}_HeccGetStatus(void)
+{
+    return HEMC_REGS->HEMC_HECC_SR;
+}
+
+// *****************************************************************************
+/* Function:
+    void ${HEMC_INSTANCE_NAME}_HeccGetFailAddress(void)
+
+   Summary:
+    Get the last fail address were ECC error occurs in a HEMC memory.
+
+   Precondition:
+    None.
+
+   Parameters:
+    None.
+
+   Returns:
+    Fail address were fixable or unfixable error occured in a HEMC memory.
+*/
+uint32_t ${HEMC_INSTANCE_NAME}_HeccGetFailAddress(void)
+{
+    return HEMC_REGS->HEMC_HECC_FAILAR;
+}
+
+// *****************************************************************************
+/* Function:
+    void ${HEMC_INSTANCE_NAME}_HeccResetCounters(void)
+
+   Summary:
+    Reset Fix and NoFix error counters of the ${HEMC_INSTANCE_NAME} peripheral.
+
+   Precondition:
+    None.
+
+   Parameters:
+    None.
+
+   Returns:
+    None
+*/
+void ${HEMC_INSTANCE_NAME}_HeccResetCounters(void)
+{
+    HEMC_REGS->HEMC_HECC_CR0 |= (HEMC_HECC_CR0_RST_FIX_CPT_Msk | HEMC_HECC_CR0_RST_NOFIX_CPT_Msk);
+    HEMC_REGS->HEMC_HECC_CR1 |= (HEMC_HECC_CR1_RST_FIX_CPT_Msk | HEMC_HECC_CR1_RST_NOFIX_CPT_Msk);
+    HEMC_REGS->HEMC_HECC_CR2 |= (HEMC_HECC_CR2_RST_FIX_CPT_Msk | HEMC_HECC_CR2_RST_NOFIX_CPT_Msk);
+}
+
+<#if HECC_INTERRUPT_MODE == true>
+// *****************************************************************************
+/* Function:
+    void ${HEMC_INSTANCE_NAME}_FixCallbackRegister(HEMC_CALLBACK callback,
+                                                              uintptr_t context)
+
+   Summary:
+    Sets the pointer to the function (and it's context) to be called when the
+    given HEMC's ECC Fixable Error interrupt events occur.
+
+  Description:
+    This function sets the pointer to a client function to be called "back" when
+    the given HEMC's interrupt events occur. It also passes a context value
+    (usually a pointer to a context structure) that is passed into the function
+    when it is called. The specified callback function will be called from the
+    peripheral interrupt context.
+
+  Precondition:
+    ${HEMC_INSTANCE_NAME}_Initialize must have been called for the associated
+    HEMC instance.
+
+  Parameters:
+    callback      - A pointer to a function with a calling signature defined by
+                    the HEMC_CALLBACK data type. Setting this to NULL
+                    disables the callback feature.
+
+    contextHandle - A value (usually a pointer) passed (unused) into the
+                    function identified by the callback parameter.
+
+  Returns:
+    None.
+
+  Example:
+    <code>
+        // Refer to the description of the HEMC_CALLBACK data type for
+        // example usage.
+    </code>
+
+  Remarks:
+    None.
+*/
+void ${HEMC_INSTANCE_NAME}_FixCallbackRegister(HEMC_CALLBACK callback, uintptr_t contextHandle)
+{
+    if (callback == NULL)
+    {
+        return;
+    }
+
+    ${HEMC_INSTANCE_NAME?lower_case}Obj.fix_callback = callback;
+    ${HEMC_INSTANCE_NAME?lower_case}Obj.fix_context = contextHandle;
+}
+
+// *****************************************************************************
+/* Function:
+    void ${HEMC_INSTANCE_NAME}_NoFixCallbackRegister(HEMC_CALLBACK callback,
+                                                              uintptr_t context)
+
+   Summary:
+    Sets the pointer to the function (and it's context) to be called when the
+    given HEMC's ECC Not Fixable Error interrupt events occur.
+
+  Description:
+    This function sets the pointer to a client function to be called "back" when
+    the given HEMC's interrupt events occur. It also passes a context value
+    (usually a pointer to a context structure) that is passed into the function
+    when it is called. The specified callback function will be called from the
+    peripheral interrupt context.
+
+  Precondition:
+    ${HEMC_INSTANCE_NAME}_Initialize must have been called for the associated
+    HEMC instance.
+
+  Parameters:
+    callback      - A pointer to a function with a calling signature defined by
+                    the HEMC_CALLBACK data type. Setting this to NULL
+                    disables the callback feature.
+
+    contextHandle - A value (usually a pointer) passed (unused) into the
+                    function identified by the callback parameter.
+
+  Returns:
+    None.
+
+  Example:
+    <code>
+        // Refer to the description of the HEMC_CALLBACK data type for
+        // example usage.
+    </code>
+
+  Remarks:
+    None.
+*/
+void ${HEMC_INSTANCE_NAME}_NoFixCallbackRegister(HEMC_CALLBACK callback, uintptr_t contextHandle)
+{
+    if (callback == NULL)
+    {
+        return;
+    }
+
+    ${HEMC_INSTANCE_NAME?lower_case}Obj.nofix_callback = callback;
+    ${HEMC_INSTANCE_NAME?lower_case}Obj.nofix_context = contextHandle;
+}
+
+
+// *****************************************************************************
+/* Function:
+    void ${HEMC_INSTANCE_NAME}_FIX_InterruptHandler(void)
+
+   Summary:
+    ${HEMC_INSTANCE_NAME} Peripheral Interrupt Handler.
+
+   Description:
+    This function is ${HEMC_INSTANCE_NAME} Peripheral Interrupt Handler and will
+    called on every ${HEMC_INSTANCE_NAME} ECC Fixable error interrupt.
+
+   Precondition:
+    None.
+
+   Parameters:
+    None.
+
+   Returns:
+    None.
+
+   Remarks:
+    The function is called as peripheral instance's interrupt handler if the
+    instance interrupt is enabled. If peripheral instance's interrupt is not
+    enabled user need to call it from the main while loop of the application.
+*/
+void ${HEMC_INSTANCE_NAME}_INTFIX_InterruptHandler(void)
+{
+
+    if (${HEMC_INSTANCE_NAME?lower_case}Obj.fix_callback != NULL)
+    {
+        ${HEMC_INSTANCE_NAME?lower_case}Obj.fix_callback(${HEMC_INSTANCE_NAME?lower_case}Obj.fix_context);
+    }
+}
+
+// *****************************************************************************
+/* Function:
+    void ${HEMC_INSTANCE_NAME}_NOFIX_InterruptHandler(void)
+
+   Summary:
+    ${HEMC_INSTANCE_NAME} Peripheral Interrupt Handler.
+
+   Description:
+    This function is ${HEMC_INSTANCE_NAME} Peripheral Interrupt Handler and will
+    called on every ${HEMC_INSTANCE_NAME} ECC Not Fixable error interrupt.
+
+   Precondition:
+    None.
+
+   Parameters:
+    None.
+
+   Returns:
+    None.
+
+   Remarks:
+    The function is called as peripheral instance's interrupt handler if the
+    instance interrupt is enabled. If peripheral instance's interrupt is not
+    enabled user need to call it from the main while loop of the application.
+*/
+void ${HEMC_INSTANCE_NAME}_INTNOFIX_InterruptHandler(void)
+{
+
+    if (${HEMC_INSTANCE_NAME?lower_case}Obj.nofix_callback != NULL)
+    {
+        ${HEMC_INSTANCE_NAME?lower_case}Obj.nofix_callback(${HEMC_INSTANCE_NAME?lower_case}Obj.nofix_context);
+    }
+}
+</#if>
+
 /*******************************************************************************
  End of File
 */

@@ -41,6 +41,12 @@ global useHSMC
 useHSMC = []
 global sdRamcs
 sdRamcs = None
+global fixInterruptVector
+global fixInterruptHandler
+global fixInterruptHandlerLock
+global noFixInterruptVector
+global noFixInterruptHandler
+global noFixInterruptHandlerLock
 
 ################################################################################
 #### Register Information ####
@@ -111,11 +117,6 @@ def hideMenus(symbol, event):
         hsdramcSymMenu_features.setVisible(False)
         hsdramcSymMenu_TIMING_MENU.setVisible(False)
 
-
-    
-
-
-
 def calcRefreshCount(time, rowlines, clk):
     rowlines = rowlines[-2:]
     rowlines = int(rowlines)
@@ -124,8 +125,6 @@ def calcRefreshCount(time, rowlines, clk):
     return count
 
 # Function to set label based on the Refresh time in ms as selected in Combo Symbol HSDRAMC_CR_NR
-
-
 def calcRefreshCount_CB(symbol, event):
     global hemcComment
     global hemcInstanceName
@@ -142,7 +141,6 @@ def calcRefreshCount_CB(symbol, event):
 # MRS<3>    -> Burst Type
 # MRS<6:4>  -> CAS Latency
 
-
 def calcMRS(symbol, event):
     type = hsdramcSym_BURST_TYPE.getValue()
     length = hsdramcSym_BURST_LENGTH.getValue()
@@ -153,6 +151,46 @@ def calcMRS(symbol, event):
         mrs = (16 * cas) + length
     symbol.setValue(mrs, 1)
 
+def interruptControl(NVIC, event):
+    global fixInterruptVector
+    global fixInterruptHandler
+    global fixInterruptHandlerLock
+    global noFixInterruptVector
+    global noFixInterruptHandler
+    global noFixInterruptHandlerLock
+    Database.clearSymbolValue("core", fixInterruptVector)
+    Database.clearSymbolValue("core", fixInterruptHandler)
+    Database.clearSymbolValue("core", fixInterruptHandlerLock)
+    Database.clearSymbolValue("core", noFixInterruptVector)
+    Database.clearSymbolValue("core", noFixInterruptHandler)
+    Database.clearSymbolValue("core", noFixInterruptHandlerLock)
+    if (event["value"] == True):
+        Database.setSymbolValue("core", fixInterruptVector, True, 2)
+        Database.setSymbolValue("core", fixInterruptHandler, hemcInstanceName.getValue() + "_INTFIX_InterruptHandler", 2)
+        Database.setSymbolValue("core", fixInterruptHandlerLock, True, 2)
+        Database.setSymbolValue("core", noFixInterruptVector, True, 2)
+        Database.setSymbolValue("core", noFixInterruptHandler, hemcInstanceName.getValue() + "_INTNOFIX_InterruptHandler", 2)
+        Database.setSymbolValue("core", noFixInterruptHandlerLock, True, 2)
+    else :
+        Database.setSymbolValue("core", fixInterruptVector, False, 2)
+        Database.setSymbolValue("core", fixInterruptHandler, "HEMC_INTFIX_Handler", 2)
+        Database.setSymbolValue("core", fixInterruptHandlerLock, False, 2)
+        Database.setSymbolValue("core", noFixInterruptVector, False, 2)
+        Database.setSymbolValue("core", noFixInterruptHandler, "HEMC_INTNOFIX_Handler", 2)
+        Database.setSymbolValue("core", noFixInterruptHandlerLock, False, 2)
+
+def InterruptStatusWarning(symbol, event):
+    if (Database.getSymbolValue(hemcInstanceName.getValue().lower(), "HECC_INTERRUPT_MODE") == True):
+        symbol.setVisible(event["value"])
+
+def setVisibleIfEventTrue(symbol, event):
+    symbol.setVisible(event["value"])
+
+def checkAndupdateInitSize(symbol, event):
+    if ('_RAM_CHECK_BIT_INIT' in event['id']):
+        symbol.setVisible(event["value"])
+    else:
+        symbol.setValue(memSizeMap[event["value"]])
 
 ############################################################# HSMC ###################################################
 # Function to convert Bitfield mask string to Integer
@@ -168,7 +206,6 @@ def hsmcConvertMaskToInt( aRegMask ):
         else:
             break
     return ((2**numBits) - 1)       # return max value field can contain
-
 
 # Dependency function definition to enable visibility based on selection of Page Mode Enable
 def hsmcMemoryPageSizeModeVisible(symbol, event):
@@ -189,7 +226,6 @@ def hsmcTdfCyclesModeVisible(symbol, event):
         hsmcSym_MODE_TDF_CYCLES[hsmcChipSelNum].setVisible(True)
     else :
         hsmcSym_MODE_TDF_CYCLES[hsmcChipSelNum].setVisible(False)
-
 
 # Dependency function definition to enable visibility based on selection of Byte Access Type
 def hsmcByteAccessSelModeVisible(symbol, event):
@@ -216,7 +252,7 @@ def emcBaseCalculation(symbol, event):
     else:
         value = (int(startAddress, 0) - int(0x60000000))
         csBase[chipSelectId].setValue(value >> 14) 
-        Database.setSymbolValue(event["namespace"], "CS_" + str(chipSelectId) + "_END_ADDRESS", str(hex(int(startAddress, 0) + memSizeMap[bankSize])).replace("L", ""))
+        Database.setSymbolValue(event["namespace"], "CS_" + str(chipSelectId) + "_END_ADDRESS", str(hex(int(startAddress, 0) + memSizeMap[bankSize] -1 )).replace("L", ""))
     for i in range(0, chipSelectCount):
         if Database.getSymbolValue(event["namespace"], "CS_" + str(i) + "_MEMORY_BANK_SIZE") != 17:
             for j in range(0, chipSelectCount):
@@ -229,8 +265,6 @@ def emcBaseCalculation(symbol, event):
                         chipSelectComment[j].setValue(True)
                     else:
                         chipSelectComment[j].setValue(False)
-
-
 
 ################################################################################
 #### Component ####
@@ -258,7 +292,14 @@ def instantiateComponent(hemcComponent):
     csBase = []
     memSizeMap = {}
     chipSelectComment = []
-
+    global fixInterruptVectorUpdate
+    global fixInterruptVector
+    global fixInterruptHandler
+    global fixInterruptHandlerLock
+    global noFixInterruptVectorUpdate
+    global noFixInterruptVector
+    global noFixInterruptHandler
+    global noFixInterruptHandlerLock
 
     hemcInstanceName = hemcComponent.createStringSymbol("HEMC_INSTANCE_NAME", None)
     hemcInstanceName.setVisible(False)
@@ -314,7 +355,7 @@ def instantiateComponent(hemcComponent):
         csBankSize.setOutputMode("Value")
         csBankSize.setDisplayMode("Description")
         value = ValGrp_CR_Banksize.getChildren()
-        
+
         for i in range(0, len(value)):
             name = value[i].getAttribute("name")
             csBankSize.addKey(name, str(value[i].getAttribute("value")), value[i].getAttribute("caption"))
@@ -324,7 +365,7 @@ def instantiateComponent(hemcComponent):
                 memSizeMap[i] = int(re.search(r'\d+', name).group()) * 1024
             elif "MB" in name:
                 memSizeMap[i] = int(re.search(r'\d+', name).group()) * 1024 * 1024
-        
+
         csBankSize.setDefaultValue(17)
 
         csBase.append(id)
@@ -340,6 +381,49 @@ def instantiateComponent(hemcComponent):
         chipSelectComment[id] = hemcComponent.createBooleanSymbol("CS_" + str(id) + "_COMMENT", csMenu)
         chipSelectComment[id].setVisible(False)
         chipSelectComment[id].setDefaultValue(False)
+
+        # HEMC HECC Enable and Algorithm selection by chip select
+        if (id == 0):
+            csheccWriteEccConf = hemcComponent.createBooleanSymbol("CS_" + str(id) + "_WRITE_ECC_CONF", csMenu)
+            csheccWriteEccConf.setLabel("Override NCS0 ECC configuration Pins")
+            csheccWriteEccConf.setDefaultValue(False)
+
+        csheccEnable = hemcComponent.createBooleanSymbol("CS_" + str(id) + "_HECC_ENABLE", csMenu)
+        csheccEnable.setLabel("Enable ECC")
+        csheccEnable.setDefaultValue(False)
+        if (id == 0):
+            csheccEnable.setDependencies(setVisibleIfEventTrue, ["CS_" + str(id) + "_WRITE_ECC_CONF"])
+            csheccEnable.setVisible(False)
+
+        csheccEnableBCH = hemcComponent.createBooleanSymbol("CS_" + str(id) + "_HECC_BCH_ENABLE", csMenu)
+        csheccEnableBCH.setLabel("ECC use BCH Algorithm")
+        csheccEnableBCH.setDefaultValue(False)
+        if (id == 0):
+            csheccEnableBCH.setDependencies(setVisibleIfEventTrue, ["CS_" + str(id) + "_WRITE_ECC_CONF"])
+            csheccEnableBCH.setVisible(False)
+
+        csheccRamCheckBitInit = hemcComponent.createBooleanSymbol("CS_" + str(id) + "_RAM_CHECK_BIT_INIT", csMenu)
+        csheccRamCheckBitInit.setLabel("RAM need check bit initialization")
+        csheccEnableBCH.setDefaultValue(False)
+        if (id == 0):
+            csheccRamCheckBitInit.setDependencies(setVisibleIfEventTrue, ["CS_" + str(id) + "_WRITE_ECC_CONF"])
+            csheccRamCheckBitInit.setVisible(False)
+
+        csheccRamCheckBitInitSize = hemcComponent.createHexSymbol("CS_" + str(id) + "_RAM_CHECK_BIT_INIT_SIZE", csheccRamCheckBitInit)
+        csheccRamCheckBitInitSize.setLabel("Initialization size")
+        csheccRamCheckBitInitSize.setDefaultValue(0)
+        csheccRamCheckBitInitSize.setVisible(False)
+        csheccRamCheckBitInitSize.setDependencies(checkAndupdateInitSize, ["CS_" + str(id) + "_RAM_CHECK_BIT_INIT", "CS_" + str(id) + "_MEMORY_BANK_SIZE"])
+
+    # HEMC HECC interrupt and test mode menu
+    memHeccInterruptMode = hemcComponent.createBooleanSymbol("HECC_INTERRUPT_MODE", memMemu)
+    memHeccInterruptMode.setLabel("HECC Interrupt Mode")
+    memHeccInterruptMode.setDefaultValue(False)
+
+    memHeccInjectionTestMode = hemcComponent.createBooleanSymbol("HECC_INJECTION_TEST_MODE", memMemu)
+    memHeccInjectionTestMode.setLabel("Use HECC Injection Test Mode")
+    memHeccInjectionTestMode.setDefaultValue(False)
+
 ################################################ SDRAM Configuration ###############################################
     cpuclk = Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
     cpuclk = int(cpuclk)
@@ -704,6 +788,26 @@ def instantiateComponent(hemcComponent):
     # Enable Peripheral Clock in Clock manager
     Database.clearSymbolValue("core", hemcInstanceName.getValue()+"_CLOCK_ENABLE")
     Database.setSymbolValue("core", hemcInstanceName.getValue()+"_CLOCK_ENABLE", True, 2)
+
+    fixInterruptVector = hemcInstanceName.getValue() + "_INTFIX_INTERRUPT_ENABLE"
+    fixInterruptHandler = hemcInstanceName.getValue() + "_INTFIX_INTERRUPT_HANDLER"
+    fixInterruptHandlerLock = hemcInstanceName.getValue() + "_INTFIX_INTERRUPT_HANDLER_LOCK"
+    fixInterruptVectorUpdate = hemcInstanceName.getValue() + "_INTFIX_INTERRUPT_ENABLE_UPDATE"
+    noFixInterruptVector = hemcInstanceName.getValue() + "_INTNOFIX_INTERRUPT_ENABLE"
+    noFixInterruptHandler = hemcInstanceName.getValue() + "_INTNOFIX_INTERRUPT_HANDLER"
+    noFixInterruptHandlerLock = hemcInstanceName.getValue() + "_INTNOFIX_INTERRUPT_HANDLER_LOCK"
+    noFixInterruptVectorUpdate = hemcInstanceName.getValue() + "_INTNOFIX_INTERRUPT_ENABLE_UPDATE"
+
+    # NVIC Dynamic settings
+    hemcHeccinterruptControl = hemcComponent.createBooleanSymbol("NVIC_FLEXRAMECC_ENABLE", None)
+    hemcHeccinterruptControl.setDependencies(interruptControl, ["HECC_INTERRUPT_MODE"])
+    hemcHeccinterruptControl.setVisible(False)
+
+    # Dependency Status for interrupt
+    hemcHeccIntEnComment = hemcComponent.createCommentSymbol("HEMC_HECC_INTERRUPT_ENABLE_COMMENT", None)
+    hemcHeccIntEnComment.setVisible(False)
+    hemcHeccIntEnComment.setLabel("Warning!!! " + hemcInstanceName.getValue() + " Interrupt is Disabled in Interrupt Manager")
+    hemcHeccIntEnComment.setDependencies(InterruptStatusWarning, ["core." + fixInterruptVectorUpdate, "core." + noFixInterruptVectorUpdate])
 
 ############################################################################
 #### Code Generation ####
