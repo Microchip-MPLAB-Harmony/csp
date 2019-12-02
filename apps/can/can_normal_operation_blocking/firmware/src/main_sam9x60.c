@@ -133,7 +133,7 @@ int main ( void )
                             memset(rx_message, 0x00, sizeof(rx_message));
                             
                             /* Receive New Message */
-                            if (CAN1_MessageReceive(&rx_messageID, &rx_messageLength, rx_message, CAN_MAILBOX_DATA_FRAME_RX_OVERWRITE) == true)  
+                            if (CAN1_MessageReceive(&rx_messageID, &rx_messageLength, rx_message, 0, CAN_MAILBOX_DATA_FRAME_RX_OVERWRITE) == true)  
                             {
                                 printf(" New Message Received    \r\n");
                                 status = CAN1_ErrorGet();
