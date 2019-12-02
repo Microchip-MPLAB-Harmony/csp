@@ -173,7 +173,7 @@ int main ( void )
                 state = APP_STATE_MCAN_IDLE;
 
                 /* Receive FIFO 0 New Message */
-                if (!MCAN0_MessageReceive(&messageID, &messageLength, message, MCAN_MSG_ATTR_RX_FIFO0))
+                if (!MCAN0_MessageReceive(&messageID, &messageLength, message, 0, MCAN_MSG_ATTR_RX_FIFO0))
                 {
                     printf("MCAN0_MessageReceive request has failed\r\n");
                 }
