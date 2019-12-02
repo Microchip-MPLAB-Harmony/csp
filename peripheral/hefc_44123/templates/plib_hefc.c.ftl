@@ -71,7 +71,7 @@ bool ${HEFC_INSTANCE_NAME}_SectorErase( uint32_t address )
     /*Calculate the Page number to be passed for FARG register*/
     page_number = (address - IFLASH_ADDR) / IFLASH_PAGE_SIZE;
     /* Issue the FLASH erase operation*/
-    ${HEFC_INSTANCE_NAME}_REGS->HEFC_FCR = (HEFC_FCR_FCMD_EPA| HEFC_FCR_FARG(page_number|0x2)| HEFC_FCR_FKEY_PASSWD);
+    ${HEFC_INSTANCE_NAME}_REGS->HEFC_FCR = (HEFC_FCR_FCMD_EPA| HEFC_FCR_FARG((page_number << 2)|0x2)| HEFC_FCR_FKEY_PASSWD);
 
     status = 0;
 
