@@ -165,7 +165,7 @@ int main ( void )
                             memset(rx_message, 0x00, sizeof(rx_message));
                             
                             /* Receive FIFO 0 New Message */
-                            if (CAN1_MessageReceive(&rx_messageID, &rx_messageLength, rx_message, CAN_MSG_ATTR_RX_BUFFER) == true)  
+                            if (CAN1_MessageReceive(&rx_messageID, &rx_messageLength, rx_message, 0, CAN_MSG_ATTR_RX_BUFFER) == true)  
                             {
                                 printf(" New Message Received    \r\n");
                                 status = CAN1_ErrorGet();
@@ -220,7 +220,7 @@ int main ( void )
                             memset(rx_message, 0x00, sizeof(rx_message));
                             
                             /* Receive FIFO 0 New Message */
-                            if (CAN1_MessageReceive(&rx_messageID, &rx_messageLength, rx_message, CAN_MSG_ATTR_RX_FIFO0) == true)  
+                            if (CAN1_MessageReceive(&rx_messageID, &rx_messageLength, rx_message, 0, CAN_MSG_ATTR_RX_FIFO0) == true)  
                             {
                                 printf(" New Message Received    \r\n");
                                 status = CAN1_ErrorGet();
@@ -271,7 +271,7 @@ int main ( void )
                             memset(rx_message, 0x00, sizeof(rx_message));
                             
                             /* Receive FIFO 0 New Message */
-                            if (CAN1_MessageReceive(&rx_messageID, &rx_messageLength, rx_message, CAN_MSG_ATTR_RX_BUFFER) == true)  
+                            if (CAN1_MessageReceive(&rx_messageID, &rx_messageLength, rx_message, 0, CAN_MSG_ATTR_RX_BUFFER) == true)  
                             {
                                 printf(" New Message Received    \r\n");
                                 status = CAN1_ErrorGet();
@@ -326,7 +326,7 @@ int main ( void )
                             memset(rx_message, 0x00, sizeof(rx_message));
                             
                             /* Receive FIFO 0 New Message */
-                            if (CAN1_MessageReceive(&rx_messageID, &rx_messageLength, rx_message, CAN_MSG_ATTR_RX_FIFO1) == true)  
+                            if (CAN1_MessageReceive(&rx_messageID, &rx_messageLength, rx_message, 0, CAN_MSG_ATTR_RX_FIFO1) == true)  
                             {
                                 printf(" New Message Received    \r\n");
                                 status = CAN1_ErrorGet();

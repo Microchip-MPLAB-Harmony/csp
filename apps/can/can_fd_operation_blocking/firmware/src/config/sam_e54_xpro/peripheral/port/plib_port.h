@@ -66,6 +66,7 @@
 // *****************************************************************************
 
 
+
 /*** Macros for CAN_STDBY pin ***/
 #define CAN_STDBY_Set()               (PORT_REGS->GROUP[2].PORT_OUTSET = 1 << 13)
 #define CAN_STDBY_Clear()             (PORT_REGS->GROUP[2].PORT_OUTCLR = 1 << 13)
