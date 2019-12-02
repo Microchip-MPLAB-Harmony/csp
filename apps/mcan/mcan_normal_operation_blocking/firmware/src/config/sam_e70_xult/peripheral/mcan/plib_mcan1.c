@@ -118,9 +118,6 @@ void MCAN1_Initialize(void)
     /* Global Filter Configuration Register */
     MCAN1_REGS->MCAN_GFC = MCAN_GFC_ANFS(2) | MCAN_GFC_ANFE(2);
 
-    /* Timestamp Counter Configuration Register */
-    MCAN1_REGS->MCAN_TSCC = MCAN_TSCC_TSS_TCP_INC | MCAN_TSCC_TCP(0);
-
     /* Set the operation mode */
     MCAN1_REGS->MCAN_CCCR = MCAN_CCCR_INIT_DISABLED;
     while ((MCAN1_REGS->MCAN_CCCR & MCAN_CCCR_INIT_Msk) == MCAN_CCCR_INIT_Msk);
@@ -153,6 +150,7 @@ bool MCAN1_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, MCAN_MODE
 {
     uint8_t tfqpi = 0;
     mcan_txbe_registers_t *fifo = NULL;
+    static uint8_t messageMarker = 0;
 
     switch (msgAttr)
     {
@@ -198,6 +196,8 @@ bool MCAN1_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, MCAN_MODE
         fifo->MCAN_TXBE_0 |= MCAN_TXBE_0_RTR_Msk;
     }
 
+    fifo->MCAN_TXBE_1 |= ((++messageMarker << MCAN_TXBE_1_MM_Pos) & MCAN_TXBE_1_MM_Msk);
+
     /* request the transmit */
     MCAN1_REGS->MCAN_TXBAR = 1U << tfqpi;
 
@@ -206,7 +206,7 @@ bool MCAN1_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, MCAN_MODE
 
 // *****************************************************************************
 /* Function:
-    bool MCAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, MCAN_MSG_RX_ATTRIBUTE msgAttr)
+    bool MCAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp, MCAN_MSG_RX_ATTRIBUTE msgAttr)
 
    Summary:
     Receives a message from CAN bus.
@@ -215,17 +215,18 @@ bool MCAN1_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, MCAN_MODE
     MCAN1_Initialize must have been called for the associated MCAN instance.
 
    Parameters:
-    id      - Pointer to 11-bit / 29-bit identifier (ID) to be received.
-    length  - Pointer to data length in number of bytes to be received.
-    data    - pointer to destination data buffer
-    msgAttr - Message to be read from Rx FIFO0 or Rx FIFO1 or Rx Buffer
+    id        - Pointer to 11-bit / 29-bit identifier (ID) to be received.
+    length    - Pointer to data length in number of bytes to be received.
+    data      - pointer to destination data buffer
+    timestamp - Pointer to Rx message timestamp, timestamp value is 0 if timestamp is disabled
+    msgAttr   - Message to be read from Rx FIFO0 or Rx FIFO1 or Rx Buffer
 
    Returns:
     Request status.
     true  - Request was successful.
     false - Request has failed.
 */
-bool MCAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, MCAN_MSG_RX_ATTRIBUTE msgAttr)
+bool MCAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp, MCAN_MSG_RX_ATTRIBUTE msgAttr)
 {
     uint8_t msgLength = 0;
     uint8_t rxgi = 0;
@@ -305,6 +306,66 @@ bool MCAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, MCAN_MSG
 
 // *****************************************************************************
 /* Function:
+    bool MCAN1_TransmitEventFIFOElementGet(uint32_t *id, uint8_t *messageMarker, uint16_t *timestamp)
+
+   Summary:
+    Get the Transmit Event FIFO Element for the transmitted message.
+
+   Precondition:
+    MCAN1_Initialize must have been called for the associated MCAN instance.
+
+   Parameters:
+    id            - Pointer to 11-bit / 29-bit identifier (ID) to be received.
+    messageMarker - Pointer to Tx message message marker number to be received
+    timestamp     - Pointer to Tx message timestamp to be received, timestamp value is 0 if Timestamp is disabled
+
+   Returns:
+    Request status.
+    true  - Request was successful.
+    false - Request has failed.
+*/
+bool MCAN1_TransmitEventFIFOElementGet(uint32_t *id, uint8_t *messageMarker, uint16_t *timestamp)
+{
+    mcan_txefe_registers_t *txEventFIFOElement = NULL;
+    uint8_t txefgi = 0;
+    bool status = false;
+
+    /* Check if Tx Event FIFO Element available */
+    if ((MCAN1_REGS->MCAN_TXEFS & MCAN_TXEFS_EFFL_Msk) != 0)
+    {
+        /* Get a pointer to Tx Event FIFO Element */
+        txefgi = (uint8_t)((MCAN1_REGS->MCAN_TXEFS & MCAN_TXEFS_EFGI_Msk) >> MCAN_TXEFS_EFGI_Pos);
+        txEventFIFOElement = (mcan_txefe_registers_t *) ((uint8_t *)mcan1Obj.msgRAMConfig.txEventFIFOAddress + txefgi * sizeof(mcan_txefe_registers_t));
+
+        /* Check if it's a extended message type */
+        if (txEventFIFOElement->MCAN_TXEFE_0 & MCAN_TXEFE_0_XTD_Msk)
+        {
+            *id = txEventFIFOElement->MCAN_TXEFE_0 & MCAN_TXEFE_0_ID_Msk;
+        }
+        else
+        {
+            *id = (txEventFIFOElement->MCAN_TXEFE_0 >> 18) & MCAN_STD_ID_Msk;
+        }
+
+        *messageMarker = ((txEventFIFOElement->MCAN_TXEFE_1 & MCAN_TXEFE_1_MM_Msk) >> MCAN_TXEFE_1_MM_Pos);
+
+        /* Get timestamp from transmitted message */
+        if (timestamp != NULL)
+        {
+            *timestamp = (uint16_t)(txEventFIFOElement->MCAN_TXEFE_1 & MCAN_TXEFE_1_TXTS_Msk);
+        }
+
+        /* Ack the Tx Event FIFO position */
+        MCAN1_REGS->MCAN_TXEFA = MCAN_TXEFA_EFAI(txefgi);
+
+        /* Tx Event FIFO Element read successfully, so return true */
+        status = true;
+    }
+    return status;
+}
+
+// *****************************************************************************
+/* Function:
     MCAN_ERROR MCAN1_ErrorGet(void)
 
    Summary:
@@ -335,6 +396,29 @@ MCAN_ERROR MCAN1_ErrorGet(void)
     }
 
     return error;
+}
+
+// *****************************************************************************
+/* Function:
+    void MCAN1_ErrorCountGet(uint8_t *txErrorCount, uint8_t *rxErrorCount)
+
+   Summary:
+    Returns the transmit and receive error count during transfer.
+
+   Precondition:
+    MCAN1_Initialize must have been called for the associated MCAN instance.
+
+   Parameters:
+    txErrorCount - Transmit Error Count to be received
+    rxErrorCount - Receive Error Count to be received
+
+   Returns:
+    None.
+*/
+void MCAN1_ErrorCountGet(uint8_t *txErrorCount, uint8_t *rxErrorCount)
+{
+    *txErrorCount = (uint8_t)(MCAN1_REGS->MCAN_ECR & MCAN_ECR_TEC_Msk);
+    *rxErrorCount = (uint8_t)((MCAN1_REGS->MCAN_ECR & MCAN_ECR_REC_Msk) >> MCAN_ECR_REC_Pos);
 }
 
 // *****************************************************************************
