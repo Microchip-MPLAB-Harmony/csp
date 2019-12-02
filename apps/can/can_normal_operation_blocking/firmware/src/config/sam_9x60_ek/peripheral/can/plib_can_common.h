@@ -287,10 +287,11 @@ typedef void (*CAN_CALLBACK) (uintptr_t contextHandle);
 */
 typedef struct
 {
-    /* Rx Message ID, buffer and size */
+    /* Rx Message ID, buffer, size and timestamp */
     uint32_t *id;
     uint8_t  *buffer;
     uint8_t  *size;
+    uint16_t *timestamp;
 } CAN_RX_MSG;
 
 // *****************************************************************************
