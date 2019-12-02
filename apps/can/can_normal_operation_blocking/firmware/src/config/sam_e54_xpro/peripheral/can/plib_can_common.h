@@ -304,10 +304,11 @@ typedef struct
     /* Tx Buffer Index */
     uint32_t txBufferIndex;
 
-    /* Rx Message ID, buffer and size */
+    /* Rx Message ID, buffer, size and timestamp */
     uint32_t *rxId;
     uint8_t *rxBuffer;
     uint8_t *rxsize;
+    uint16_t *timestamp;
 
     /* Transfer State */
     CAN_STATE state;
