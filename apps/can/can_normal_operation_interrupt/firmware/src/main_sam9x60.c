@@ -170,7 +170,7 @@ int main ( void )
         if (state == APP_STATE_CAN_USER_INPUT)
         {
             /* Read user input */
-            DBGU_Read(&user_input, 1);
+            scanf("%c", (char *) &user_input);
             
             switch (user_input)
             {
@@ -178,7 +178,7 @@ int main ( void )
                     printf(" Transmitting Message:");
                     CAN1_CallbackRegister( APP_CAN_Callback, (uintptr_t)APP_STATE_CAN_TRANSMIT );
                     state = APP_STATE_CAN_IDLE;
-                    if (!CAN1_MessageTransmit(messageID, messageLength, message, CAN_MAILBOX_DATA_FRAME_TX) == true)
+                    if (CAN1_MessageTransmit(messageID, messageLength, message, CAN_MAILBOX_DATA_FRAME_TX) == false)
                     {
                         printf("CAN1_MessageTransmit request has failed\r\n");
                     }             
@@ -189,7 +189,7 @@ int main ( void )
                     state = APP_STATE_CAN_IDLE;
                     memset(rx_message, 0x00, sizeof(rx_message));
                     /* Receive New Message */
-                    if (!CAN1_MessageReceive(&rx_messageID, &rx_messageLength, rx_message, 0, CAN_MAILBOX_DATA_FRAME_RX_OVERWRITE) == true)  
+                    if (CAN1_MessageReceive(&rx_messageID, &rx_messageLength, rx_message, 0, CAN_MAILBOX_DATA_FRAME_RX_OVERWRITE) == false)  
                     {
                         printf("CAN1_MessageReceive request has failed\r\n");
                     }

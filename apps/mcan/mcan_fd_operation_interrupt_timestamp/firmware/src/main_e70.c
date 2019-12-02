@@ -169,7 +169,7 @@ int main ( void )
         if (state == APP_STATE_MCAN_USER_INPUT)
         {
             /* Read user input */
-            USART1_Read(&user_input, 1);
+            scanf("%c", (char *) &user_input);
             
             switch (user_input)
             {
@@ -182,7 +182,7 @@ int main ( void )
 					printf("  2: Send standard message with ID: 0x45A and 64 byte data 0 to 63. \r\n");
                     MCAN1_CallbackRegister( APP_MCAN_Callback, (uintptr_t)APP_STATE_MCAN_TRANSMIT );
                     state = APP_STATE_MCAN_IDLE;
-                    if (!MCAN1_MessageTransmit(messageID, messageLength, message, MCAN_MODE_FD_WITH_BRS, MCAN_MSG_ATTR_TX_FIFO_DATA_FRAME) == true)
+                    if (MCAN1_MessageTransmit(messageID, messageLength, message, MCAN_MODE_FD_WITH_BRS, MCAN_MSG_ATTR_TX_FIFO_DATA_FRAME) == false)
                     {
                         printf(" Failed \r\n");
                     }             
@@ -196,7 +196,7 @@ int main ( void )
 					printf("  3: Send standard message with ID: 0x469 and 64 byte data 128 to 191.\r\n");
 					MCAN1_CallbackRegister( APP_MCAN_Callback, (uintptr_t)APP_STATE_MCAN_TRANSMIT );
                     state = APP_STATE_MCAN_IDLE;
-					if (!MCAN1_MessageTransmit(messageID, messageLength, message, MCAN_MODE_FD_WITH_BRS, MCAN_MSG_ATTR_TX_FIFO_DATA_FRAME) == true)
+					if (MCAN1_MessageTransmit(messageID, messageLength, message, MCAN_MODE_FD_WITH_BRS, MCAN_MSG_ATTR_TX_FIFO_DATA_FRAME) == false)
                     {
                         printf(" Failed \r\n");
                     }             
@@ -208,7 +208,7 @@ int main ( void )
                     state = APP_STATE_MCAN_IDLE;
                     memset(rx_message, 0x00, sizeof(rx_message));
                     /* Receive New Message */
-                    if (!MCAN1_MessageReceive(&rx_messageID, &rx_messageLength, rx_message, &timestamp, MCAN_MSG_ATTR_RX_BUFFER) == true)  
+                    if (MCAN1_MessageReceive(&rx_messageID, &rx_messageLength, rx_message, &timestamp, MCAN_MSG_ATTR_RX_BUFFER) == false)  
                     {
                         printf("Message Reception Failed \r\n");
                     }
@@ -220,7 +220,7 @@ int main ( void )
                     state = APP_STATE_MCAN_IDLE;
                     memset(rx_message, 0x00, sizeof(rx_message));
                     /* Receive New Message */
-                    if (!MCAN1_MessageReceive(&rx_messageID, &rx_messageLength, rx_message, &timestamp, MCAN_MSG_ATTR_RX_FIFO0) == true)  
+                    if (MCAN1_MessageReceive(&rx_messageID, &rx_messageLength, rx_message, &timestamp, MCAN_MSG_ATTR_RX_FIFO0) == false)  
                     {
                         printf("Message Reception Failed \r\n");
                     }
@@ -232,7 +232,7 @@ int main ( void )
                     state = APP_STATE_MCAN_IDLE;
                     memset(rx_message, 0x00, sizeof(rx_message));
                     /* Receive New Message */
-                    if (!MCAN1_MessageReceive(&rx_messageID, &rx_messageLength, rx_message, &timestamp, MCAN_MSG_ATTR_RX_BUFFER) == true)  
+                    if (MCAN1_MessageReceive(&rx_messageID, &rx_messageLength, rx_message, &timestamp, MCAN_MSG_ATTR_RX_BUFFER) == false)  
                     {
                         printf("Message Reception Failed \r\n");
                     }
@@ -244,7 +244,7 @@ int main ( void )
                     state = APP_STATE_MCAN_IDLE;
                     memset(rx_message, 0x00, sizeof(rx_message));
                     /* Receive New Message */
-                    if (!MCAN1_MessageReceive(&rx_messageID, &rx_messageLength, rx_message, &timestamp, MCAN_MSG_ATTR_RX_FIFO1) == true)  
+                    if (MCAN1_MessageReceive(&rx_messageID, &rx_messageLength, rx_message, &timestamp, MCAN_MSG_ATTR_RX_FIFO1) == false)  
                     {
                         printf("Message Reception Failed \r\n");
                     }
@@ -258,7 +258,7 @@ int main ( void )
 					printf("  6: Send extended message with ID: 0x100000A5 and 64 byte data 0 to 63. \r\n");
                     MCAN1_CallbackRegister( APP_MCAN_Callback, (uintptr_t)APP_STATE_MCAN_TRANSMIT );
                     state = APP_STATE_MCAN_IDLE;
-                    if (!MCAN1_MessageTransmit(messageID, messageLength, message, MCAN_MODE_FD_WITH_BRS, MCAN_MSG_ATTR_TX_FIFO_DATA_FRAME) == true)
+                    if (MCAN1_MessageTransmit(messageID, messageLength, message, MCAN_MODE_FD_WITH_BRS, MCAN_MSG_ATTR_TX_FIFO_DATA_FRAME) == false)
                     {
                         printf(" Failed \r\n");
                     }             
@@ -272,7 +272,7 @@ int main ( void )
 					printf("  7: Send extended message with ID: 0x10000096 and 64 byte data 128 to 191. \r\n");
                     MCAN1_CallbackRegister( APP_MCAN_Callback, (uintptr_t)APP_STATE_MCAN_TRANSMIT );
                     state = APP_STATE_MCAN_IDLE;
-                    if (!MCAN1_MessageTransmit(messageID, messageLength, message, MCAN_MODE_FD_WITH_BRS, MCAN_MSG_ATTR_TX_FIFO_DATA_FRAME) == true)
+                    if (MCAN1_MessageTransmit(messageID, messageLength, message, MCAN_MODE_FD_WITH_BRS, MCAN_MSG_ATTR_TX_FIFO_DATA_FRAME) == false)
                     {
                         printf(" Failed \r\n");
                     }             
@@ -287,7 +287,7 @@ int main ( void )
 					printf("  a: Send normal standard message with ID: 0x469 and 8 byte data 0 to 7. \r\n");
                     MCAN1_CallbackRegister( APP_MCAN_Callback, (uintptr_t)APP_STATE_MCAN_TRANSMIT );
                     state = APP_STATE_MCAN_IDLE;
-                    if (!MCAN1_MessageTransmit(messageID, messageLength, message, MCAN_MODE_NORMAL, MCAN_MSG_ATTR_TX_FIFO_DATA_FRAME) == true)
+                    if (MCAN1_MessageTransmit(messageID, messageLength, message, MCAN_MODE_NORMAL, MCAN_MSG_ATTR_TX_FIFO_DATA_FRAME) == false)
                     {
                         printf(" Failed \r\n");
                     }             
