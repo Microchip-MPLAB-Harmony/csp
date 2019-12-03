@@ -58,6 +58,7 @@
 <#assign TC_CTRLBSET_VAL = "">
 <#assign TC_DRVCTRL_VAL = "">
 <#assign TC_EVCTRL_VAL = "">
+<#assign TC_INTENSET_VAL = "">
 <#if TC_COMPARE_CTRLBSET_DIR == "1">
     <#assign TC_CTRLBSET_VAL = "TC_CTRLBSET_DIR_Msk">
 </#if>
@@ -89,8 +90,32 @@
         <#assign TC_DRVCTRL_VAL = "TC_DRVCTRL_INVEN1_Msk">
     </#if>
 </#if>
+<#if TC_COMPARE_INTENSET_OVF == true>
+    <#assign TC_INTENSET_VAL = "TC_INTENSET_OVF_Msk">
+</#if>
+<#if TC_COMPARE_INTENSET_MC0 == true>
+    <#if TC_INTENSET_VAL != "">
+        <#assign TC_INTENSET_VAL = TC_INTENSET_VAL + " | TC_INTENSET_MC0_Msk">
+    <#else>
+        <#assign TC_INTENSET_VAL = "TC_INTENSET_MC0_Msk">
+    </#if>
+</#if>
+<#if TC_COMPARE_INTENSET_MC1 == true>
+    <#if TC_INTENSET_VAL != "">
+        <#assign TC_INTENSET_VAL = TC_INTENSET_VAL + " | TC_INTENSET_MC1_Msk">
+    <#else>
+        <#assign TC_INTENSET_VAL = "TC_INTENSET_MC1_Msk">
+    </#if>
+</#if>
 <#if TC_COMPARE_EVCTRL_OVFEO == true>
     <#assign TC_EVCTRL_VAL = "TC_EVCTRL_OVFEO_Msk">
+</#if>
+<#if TC_COMPARE_EVCTRL_MCEO0 == true>
+    <#if TC_EVCTRL_VAL != "">
+        <#assign TC_EVCTRL_VAL = TC_EVCTRL_VAL + " | TC_EVCTRL_MCEO0_Msk">
+    <#else>
+        <#assign TC_EVCTRL_VAL = "TC_EVCTRL_MCEO0_Msk">
+    </#if>
 </#if>
 <#if TC_COMPARE_EVCTRL_MCEO1 == true>
     <#if TC_EVCTRL_VAL != "">
@@ -115,7 +140,7 @@
 // *****************************************************************************
 // *****************************************************************************
 
-<#if TC_COMPARE_INTENSET_OVF = true>
+<#if TC_COMPARE_INTERRUPT_MODE = true>
 TC_COMPARE_CALLBACK_OBJ ${TC_INSTANCE_NAME}_CallbackObject;
 </#if>
 
@@ -155,18 +180,21 @@ void ${TC_INSTANCE_NAME}_CompareInitialize( void )
     /* Configure timer one shot mode & direction */
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_DRVCTRL = ${TC_DRVCTRL_VAL};
     </#if>
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[0] = ${TC_COMPARE_PERIOD}U;
-    <#if TC_COMPARE_WAVE_WAVEGEN == "MPWM">
+    <#if TC_CTRLA_MODE == "COUNT8" && (TC_COMPARE_WAVE_WAVEGEN == "NFRQ" || TC_COMPARE_WAVE_WAVEGEN == "NPWM")>
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_PER = ${TC_COMPARE_PERIOD}U;
+    </#if>
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[0] = ${TC_COMPARE_CC0}U;
+    <#if TC_COMPARE_WAVE_WAVEGEN != "MFRQ">
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[1] = ${TC_COMPARE_CC1}U;
     </#if>
 
     /* Clear all interrupt flags */
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_INTFLAG_Msk;
 
-    <#if TC_COMPARE_INTENSET_OVF = true>
+    <#if TC_COMPARE_INTERRUPT_MODE = true>
     /* Enable period Interrupt */
     ${TC_INSTANCE_NAME}_CallbackObject.callback = NULL;
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTENSET = TC_INTENSET_OVF_Msk;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTENSET = ${TC_INTENSET_VAL};
     </#if>
 
     <#if TC_EVCTRL_VAL?has_content>
@@ -243,28 +271,54 @@ void ${TC_INSTANCE_NAME}_Compare8bitCounterSet( uint8_t count )
     }
 }
 
+<#if TC_COMPARE_WAVE_WAVEGEN == "MFRQ" || TC_COMPARE_WAVE_WAVEGEN == "MPWM">
 /* Configure period value */
 void ${TC_INSTANCE_NAME}_Compare8bitPeriodSet( uint8_t period )
 {
     <#if TC_COMPARE_CTRLBSET_LUPD == true>
     /* Configure period value */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CCBUF[0] = period;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_PERBUF = period;
     <#else>
     /* Configure period value */
-    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[0] = period;
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_PER = period;
     </#if>
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY))
+    {
+        /* Wait for Write Synchronization */
+    }
 }
 
 /* Read period value */
 uint8_t ${TC_INSTANCE_NAME}_Compare8bitPeriodGet( void )
 {
     /* Get period value */
-    return (uint8_t)${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[0];
+    return (uint8_t)${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_PER;
+}
+<#else>
+/* Read period value */
+uint8_t ${TC_INSTANCE_NAME}_Compare8bitPeriodGet( void )
+{
+    return 0xFF;
+}
+</#if>
+
+/* Configure duty cycle value */
+void ${TC_INSTANCE_NAME}_Compare8bitMatch0Set( uint8_t compareValue )
+{
+<#if TC_COMPARE_CTRLBSET_LUPD == true>
+    /* Set new compare value for compare channel 0 */
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CCBUF[0] = compareValue;
+<#else>
+    /* Set new compare value for compare channel 0 */
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[0] = compareValue;
+</#if>
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY & TC_SYNCBUSY_CC0_Msk) == TC_SYNCBUSY_CC0_Msk)
+    {
+        /* Wait for Write Synchronization */
+    }
 }
 
-<#if TC_COMPARE_WAVE_WAVEGEN == "MPWM">
-/* Configure duty cycle value */
-void ${TC_INSTANCE_NAME}_Compare8bitSet( uint8_t compareValue )
+void ${TC_INSTANCE_NAME}_Compare8bitMatch1Set( uint8_t compareValue )
 {
 <#if TC_COMPARE_CTRLBSET_LUPD == true>
     /* Set new compare value for compare channel 1 */
@@ -273,8 +327,12 @@ void ${TC_INSTANCE_NAME}_Compare8bitSet( uint8_t compareValue )
     /* Set new compare value for compare channel 1 */
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[1] = compareValue;
 </#if>
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY & TC_SYNCBUSY_CC1_Msk) == TC_SYNCBUSY_CC1_Msk)
+    {
+        /* Wait for Write Synchronization */
+    }
 }
-</#if>
+
 
 <#elseif TC_CTRLA_MODE = "COUNT16">
 /* Get the current counter value */
@@ -308,6 +366,7 @@ void ${TC_INSTANCE_NAME}_Compare16bitCounterSet( uint16_t count )
     }
 }
 
+<#if TC_COMPARE_WAVE_WAVEGEN == "MFRQ" || TC_COMPARE_WAVE_WAVEGEN == "MPWM">
 /* Configure period value */
 void ${TC_INSTANCE_NAME}_Compare16bitPeriodSet( uint16_t period )
 {
@@ -318,6 +377,10 @@ void ${TC_INSTANCE_NAME}_Compare16bitPeriodSet( uint16_t period )
     /* Configure period value */
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[0] = period;
     </#if>
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY & TC_SYNCBUSY_CC0_Msk) == TC_SYNCBUSY_CC0_Msk)
+    {
+        /* Wait for Write Synchronization */
+    }
 }
 
 /* Read period value */
@@ -326,11 +389,33 @@ uint16_t ${TC_INSTANCE_NAME}_Compare16bitPeriodGet( void )
     /* Get period value */
     return (uint16_t)${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[0];
 }
+<#else>
+/* Read period value */
+uint16_t ${TC_INSTANCE_NAME}_Compare16bitPeriodGet( void )
+{
+    /* Get period value */
+    return 0xFFFF;
+}
+</#if>
 
-
-<#if TC_COMPARE_WAVE_WAVEGEN == "MPWM">
 /* Configure duty cycle value */
-void ${TC_INSTANCE_NAME}_Compare16bitSet( uint16_t compareValue )
+void ${TC_INSTANCE_NAME}_Compare16bitMatch0Set( uint16_t compareValue )
+{
+<#if TC_COMPARE_CTRLBSET_LUPD == true>
+    /* Set new compare value for compare channel 0 */
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CCBUF[0] = compareValue;
+<#else>
+    /* Set new compare value for compare channel 0 */
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[0] = compareValue;
+</#if>
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY & TC_SYNCBUSY_CC0_Msk) == TC_SYNCBUSY_CC0_Msk)
+    {
+        /* Wait for Write Synchronization */
+    }
+}
+
+/* Configure duty cycle value */
+void ${TC_INSTANCE_NAME}_Compare16bitMatch1Set( uint16_t compareValue )
 {
 <#if TC_COMPARE_CTRLBSET_LUPD == true>
     /* Set new compare value for compare channel 1 */
@@ -339,8 +424,12 @@ void ${TC_INSTANCE_NAME}_Compare16bitSet( uint16_t compareValue )
     /* Set new compare value for compare channel 1 */
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[1] = compareValue;
 </#if>
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY & TC_SYNCBUSY_CC1_Msk) == TC_SYNCBUSY_CC1_Msk)
+    {
+        /* Wait for Write Synchronization */
+    }
 }
-</#if>
+
 
 <#elseif TC_CTRLA_MODE = "COUNT32">
 /* Get the current counter value */
@@ -358,7 +447,7 @@ uint32_t ${TC_INSTANCE_NAME}_Compare32bitCounterGet( void )
     {
         /* Wait for CMD to become zero */
     }
-    
+
     /* Read current count value */
     return ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_COUNT;
 }
@@ -374,6 +463,7 @@ void ${TC_INSTANCE_NAME}_Compare32bitCounterSet( uint32_t count )
     }
 }
 
+<#if TC_COMPARE_WAVE_WAVEGEN == "MFRQ" || TC_COMPARE_WAVE_WAVEGEN == "MPWM">
 /* Configure period value */
 void ${TC_INSTANCE_NAME}_Compare32bitPeriodSet( uint32_t period )
 {
@@ -384,6 +474,10 @@ void ${TC_INSTANCE_NAME}_Compare32bitPeriodSet( uint32_t period )
     /* Configure period value */
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[0] = period;
     </#if>
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY & TC_SYNCBUSY_CC0_Msk) == TC_SYNCBUSY_CC0_Msk)
+    {
+        /* Wait for Write Synchronization */
+    }
 }
 
 /* Read period value */
@@ -392,10 +486,34 @@ uint32_t ${TC_INSTANCE_NAME}_Compare32bitPeriodGet( void )
     /* Get period value */
     return ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[0];
 }
+<#else>
+/* Read period value */
+uint32_t ${TC_INSTANCE_NAME}_Compare32bitPeriodGet( void )
+{
+    /* Get period value */
+    return 0xFFFFFFFF;
+}
+</#if>
 
-<#if TC_COMPARE_WAVE_WAVEGEN == "MPWM">
+
 /* Configure duty cycle value */
-void ${TC_INSTANCE_NAME}_Compare32bitSet( uint32_t compareValue )
+void ${TC_INSTANCE_NAME}_Compare32bitMatch0Set( uint32_t compareValue )
+{
+    <#if TC_COMPARE_CTRLBSET_LUPD == true>
+    /* Set new compare value for compare channel 0 */
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CCBUF[0] = compareValue;
+    <#else>
+    /* Set new compare value for compare channel 0 */
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[0] = compareValue;
+    </#if>
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY & TC_SYNCBUSY_CC0_Msk) == TC_SYNCBUSY_CC0_Msk)
+    {
+        /* Wait for Write Synchronization */
+    }
+}
+
+/* Configure duty cycle value */
+void ${TC_INSTANCE_NAME}_Compare32bitMatch1Set( uint32_t compareValue )
 {
     <#if TC_COMPARE_CTRLBSET_LUPD == true>
     /* Set new compare value for compare channel 1 */
@@ -404,13 +522,17 @@ void ${TC_INSTANCE_NAME}_Compare32bitSet( uint32_t compareValue )
     /* Set new compare value for compare channel 1 */
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CC[1] = compareValue;
     </#if>
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY & TC_SYNCBUSY_CC1_Msk) == TC_SYNCBUSY_CC1_Msk)
+    {
+        /* Wait for Write Synchronization */
+    }
 }
+
 </#if>
-</#if>
 
 
 
-<#if TC_COMPARE_INTENSET_OVF = true>
+<#if TC_COMPARE_INTERRUPT_MODE = true>
 /* Register callback function */
 void ${TC_INSTANCE_NAME}_CompareCallbackRegister( TC_COMPARE_CALLBACK callback, uintptr_t context )
 {
@@ -427,7 +549,7 @@ void ${TC_INSTANCE_NAME}_CompareInterruptHandler( void )
         TC_COMPARE_STATUS status;
         status = ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG;
         /* clear period interrupt */
-        ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_INTFLAG_OVF_Msk;
+        ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = TC_INTFLAG_Msk;
         if((status != TC_COMPARE_STATUS_NONE) && ${TC_INSTANCE_NAME}_CallbackObject.callback != NULL)
         {
             ${TC_INSTANCE_NAME}_CallbackObject.callback(status, ${TC_INSTANCE_NAME}_CallbackObject.context);
@@ -440,7 +562,7 @@ void ${TC_INSTANCE_NAME}_CompareInterruptHandler( void )
 TC_COMPARE_STATUS ${TC_INSTANCE_NAME}_CompareStatusGet( void )
 {
     TC_COMPARE_STATUS compare_status;
-    compare_status = ((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG) & TC_COMPARE_STATUS_MSK);
+    compare_status = ((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG));
     /* Clear timer overflow interrupt */
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_INTFLAG = compare_status;
     return compare_status;

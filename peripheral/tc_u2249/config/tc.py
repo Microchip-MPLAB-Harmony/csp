@@ -215,14 +215,14 @@ def updateTCInterruptStatus(symbol, event):
 
     global tcSym_Timer_INTENSET_OVF
     global tcSym_Timer_INTENSET_MC1
-    global tcSym_Compare_INTENSET_OVF
+    global tcSym_Compare_InterruptMode
     global tcSym_Capture_InterruptMode
     global tcSym_OperationMode
 
     if event["id"] == "TC_OPERATION_MODE":
         tcInterruptStatus = False
         tcTimerMode = (event["value"] == "Timer") and (tcSym_Timer_INTENSET_OVF.getValue() == True or tcSym_Timer_INTENSET_MC1.getValue() == True)
-        tcCompareMode = (event["value"] == "Compare") and (tcSym_Compare_INTENSET_OVF.getValue() == True)
+        tcCompareMode = (event["value"] == "Compare") and (tcSym_Compare_InterruptMode.getValue() == True)
         tcCaptureMode = (event["value"] == "Capture") and (tcSym_Capture_InterruptMode.getValue() == True)
 
         if tcTimerMode == True or tcCompareMode == True or tcCaptureMode == True:
@@ -242,12 +242,12 @@ def updateTCInterruptWarningStatus(symbol, event):
 
     global tcSym_Timer_INTENSET_OVF
     global tcSym_Timer_INTENSET_MC1
-    global tcSym_Compare_INTENSET_OVF
+    global tcSym_Compare_InterruptMode
     global tcSym_Capture_InterruptMode
     global tcSym_OperationMode
 
     tcTimerMode = (tcSym_OperationMode.getValue() == "Timer") and (tcSym_Timer_INTENSET_OVF.getValue() == True or tcSym_Timer_INTENSET_MC1.getValue() == True)
-    tcCompareMode = (tcSym_OperationMode.getValue() == "Compare") and (tcSym_Compare_INTENSET_OVF.getValue() == True)
+    tcCompareMode = (tcSym_OperationMode.getValue() == "Compare") and (tcSym_Compare_InterruptMode.getValue() == True)
     tcCaptureMode = (tcSym_OperationMode.getValue() == "Capture") and (tcSym_Capture_InterruptMode.getValue() == True)
 
     if tcTimerMode == True or tcCompareMode == True or tcCaptureMode == True:
@@ -564,7 +564,7 @@ def instantiateComponent(tcComponent):
 
     # Interrupt Dynamic settings
     tcSym_UpdateInterruptStatus = tcComponent.createBooleanSymbol("TC_INTERRUPT_STATUS", None)
-    tcSym_UpdateInterruptStatus.setDependencies(updateTCInterruptStatus, ["TC_OPERATION_MODE", "TC_TIMER_INTENSET_OVF", "TC_TIMER_INTENSET_MC1", "TC_COMPARE_INTENSET_OVF", "TC_CAPTURE_INTERRUPT"])
+    tcSym_UpdateInterruptStatus.setDependencies(updateTCInterruptStatus, ["TC_OPERATION_MODE", "TC_TIMER_INTENSET_OVF", "TC_TIMER_INTENSET_MC1", "TC_COMPARE_INTERRUPT_MODE", "TC_CAPTURE_INTERRUPT"])
     tcSym_UpdateInterruptStatus.setVisible(False)
 
     # Interrupt Warning status
