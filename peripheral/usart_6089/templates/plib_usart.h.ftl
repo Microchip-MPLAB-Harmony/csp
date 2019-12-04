@@ -57,6 +57,7 @@
 // Section: Interface
 // *****************************************************************************
 // *****************************************************************************
+
 #define ${USART_INSTANCE_NAME}_FrequencyGet()    (uint32_t)(${USART_CLOCK_FREQ}UL)
 
 /****************************** ${USART_INSTANCE_NAME} API *********************************/
@@ -72,9 +73,9 @@ bool ${USART_INSTANCE_NAME}_Write( void *buffer, const size_t size );
 bool ${USART_INSTANCE_NAME}_Read( void *buffer, const size_t size );
 
 <#if USART_INTERRUPT_MODE == false>
-int ${USART_INSTANCE_NAME}_ReadByte(void);
+int ${USART_INSTANCE_NAME}_ReadByte( void );
 
-void ${USART_INSTANCE_NAME}_WriteByte(int data);
+void ${USART_INSTANCE_NAME}_WriteByte( int data );
 
 bool ${USART_INSTANCE_NAME}_TransmitterIsReady( void );
 
@@ -104,5 +105,6 @@ void ${USART_INSTANCE_NAME}_ReadCallbackRegister( USART_CALLBACK callback, uintp
     }
 
 #endif
+
 // DOM-IGNORE-END
 #endif // PLIB_${USART_INSTANCE_NAME}_H

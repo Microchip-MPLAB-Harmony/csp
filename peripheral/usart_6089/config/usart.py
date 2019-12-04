@@ -23,14 +23,9 @@
 *****************************************************************************"""
 
 ################################################################################
-#### Register Information ####
-################################################################################
-
-usartValGrp_MR_PAR = ATDF.getNode('/avr-tools-device-file/modules/module@[name="USART"]/value-group@[name="US_MR__PAR"]')
-
-################################################################################
 #### Global Variables ####
 ################################################################################
+
 global usartInstanceName
 global interruptVector
 global interruptHandler
@@ -39,10 +34,13 @@ global interruptHandlerLock
 ################################################################################
 #### Business Logic ####
 ################################################################################
+
 def interruptControl(usartNVIC, event):
+
     Database.clearSymbolValue("core", interruptVector)
     Database.clearSymbolValue("core", interruptHandler)
     Database.clearSymbolValue("core", interruptHandlerLock)
+
     if (event["value"] == True):
         Database.setSymbolValue("core", interruptVector, True, 2)
         Database.setSymbolValue("core", interruptHandler, usartInstanceName.getValue() + "_InterruptHandler", 2)
@@ -53,14 +51,17 @@ def interruptControl(usartNVIC, event):
         Database.setSymbolValue("core", interruptHandlerLock, False, 2)
 
 def dependencyStatus(symbol, event):
+
     if (Database.getSymbolValue(usartInstanceName.getValue().lower(), "USART_INTERRUPT_MODE") == True):
         symbol.setVisible(event["value"])
 
 def clockWarningCb(symbol, event):
+
     symbol.setVisible(not event["value"])
 
 # Calculates BRG value
 def baudRateCalc(clk, baud, overSamp):
+
     if (overSamp == 0):
         brgVal = (clk / (16 * baud))
     else :
@@ -68,35 +69,45 @@ def baudRateCalc(clk, baud, overSamp):
 
     return brgVal
 
-
 def baudRateTrigger(symbol, event):
+
     global usartInstanceName
     clk = Database.getSymbolValue(usartInstanceName.getValue().lower(), "USART_CLOCK_FREQ")
     baud = Database.getSymbolValue(usartInstanceName.getValue().lower(), "BAUD_RATE")
     overSamp = Database.getSymbolValue(usartInstanceName.getValue().lower(), "USART_MR_OVER")
-    
+
     brgVal = baudRateCalc(clk, baud, overSamp)
-    
+
     usartBaudComment = event["source"].getSymbolByID("USART_BAUD_WARNING")
     usartBaudComment.setVisible(brgVal < 1)
-    
+
     symbol.setValue(brgVal, 2)
 
 def clockSourceFreq(symbol, event):
+
     symbol.clearValue()
     symbol.setValue(int(Database.getSymbolValue("core", usartInstanceName.getValue() + "_CLOCK_FREQUENCY")), 2)
 
 def dataWidthLogic(symbol, event):
+
     symbol.clearValue()
+
     if(event["value"] == 4):
         symbol.setValue(True, 2)
     else:
         symbol.setValue(False, 2)
 
+# Dependency Function for symbol visibility
+def updateUSARTDMAConfigurationVisbleProperty(symbol, event):
+
+    symbol.setVisible(event["value"])
+
 ################################################################################
 #### Component ####
 ################################################################################
+
 def instantiateComponent(usartComponent):
+
     global interruptVector
     global interruptHandler
     global interruptHandlerLock
@@ -111,17 +122,40 @@ def instantiateComponent(usartComponent):
     usartInterrupt.setLabel("Interrupt Mode")
     usartInterrupt.setDefaultValue(True)
 
+    # Add DMA support if Peripheral DMA Controller (PDC) exist in the UART register group
+    usartRegisterGroup = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"USART\"]/register-group@[name=\"USART\"]")
+    usartRegisterList = usartRegisterGroup.getChildren()
+
+    for index in range(0, len(usartRegisterList)):
+        if (usartRegisterList[index].getAttribute("name") == "US_RPR"):
+            usartRxDMAEnable = usartComponent.createBooleanSymbol("USE_USART_RX_DMA", None)
+            usartRxDMAEnable.setLabel("Enable DMA for Receive")
+            usartRxDMAEnable.setVisible(True)
+            usartRxDMAEnable.setDependencies(updateUSARTDMAConfigurationVisbleProperty, ["USART_INTERRUPT_MODE"])
+            break
+
+    for index in range(0, len(usartRegisterList)):
+        if (usartRegisterList[index].getAttribute("name") == "US_TPR"):
+            usartTxDMAEnable = usartComponent.createBooleanSymbol("USE_USART_TX_DMA", None)
+            usartTxDMAEnable.setLabel("Enable DMA for Transmit")
+            usartTxDMAEnable.setVisible(True)
+            usartTxDMAEnable.setDependencies(updateUSARTDMAConfigurationVisbleProperty, ["USART_INTERRUPT_MODE"])
+            break
+
+    usart_clock = []
+    node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"USART\"]/instance@[name=\"" + usartInstanceName.getValue() + "\"]/parameters")
+    usart_clock = node.getChildren()
+
     usartClkSrc = usartComponent.createKeyValueSetSymbol("USART_CLK_SRC", None)
     usartClkSrc.setLabel("Select Clock Source")
-    usart_clock = []
-    node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"USART\"]/instance@[name=\""+usartInstanceName.getValue()+"\"]/parameters")
-    usart_clock = node.getChildren()
+
     for clock in range(0, len(usart_clock)):
         if ("USCLKS" in usart_clock[clock].getAttribute("name")):
             if ("SCK" not in usart_clock[clock].getAttribute("name")):
                 name_split = usart_clock[clock].getAttribute("name").split("_")[1:]
                 name = "_".join(name_split)
                 usartClkSrc.addKey(name, usart_clock[clock].getAttribute("value"), usart_clock[clock].getAttribute("caption"))
+
     usartClkSrc.setDisplayMode("Description")
     usartClkSrc.setOutputMode("Key")
     usartClkSrc.setDefaultValue(0)
@@ -134,7 +168,7 @@ def instantiateComponent(usartComponent):
 
     usartBaud = usartComponent.createIntegerSymbol("BAUD_RATE", None)
     usartBaud.setLabel("Baud Rate")
-    usartBaud.setDefaultValue(9600)
+    usartBaud.setDefaultValue(115200)
 
     usartBaudComment = usartComponent.createCommentSymbol("USART_BAUD_WARNING", None)
     usartBaudComment.setLabel("USART Clock source value is low for the desired baud rate")
@@ -170,10 +204,9 @@ def instantiateComponent(usartComponent):
     usartSym_MR_CHRL.setDefaultValue(3)
 
     usartSym_MR_MODE9 = usartComponent.createBooleanSymbol("USART_MR_MODE9", None)
+    usartSym_MR_MODE9.setLabel("9 Bit Data Width")
     usartSym_MR_MODE9.setVisible(False)
     usartSym_MR_MODE9.setDependencies(dataWidthLogic, ["USART_MR_CHRL"])
-    usartSym_MR_MODE9.setLabel("9 Bit Data Width")
-    usartSym_MR_MODE9.setDefaultValue(False)
 
     #USART Transmit data register
     transmitRegister = usartComponent.createStringSymbol("TRANSMIT_DATA_REGISTER", None)
@@ -211,8 +244,10 @@ def instantiateComponent(usartComponent):
     usartSym_MR_CHRL_9_Mask.setVisible(False)
 
     parityList = []
+    usartValGrp_MR_PAR = ATDF.getNode('/avr-tools-device-file/modules/module@[name="USART"]/value-group@[name="US_MR__PAR"]')
+
     for id in range(0, len(usartValGrp_MR_PAR.getChildren())):
-        parityList.append(id+1)
+        parityList.append(id + 1)
         parityList[id] = usartValGrp_MR_PAR.getChildren()[id].getAttribute("name")
 
     usartSym_MR_PAR = usartComponent.createComboSymbol("USART_MR_PAR", None, parityList)
@@ -303,8 +338,8 @@ def instantiateComponent(usartComponent):
     interruptVectorUpdate = usartInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
 
     # Initial settings for CLK and NVIC
-    Database.clearSymbolValue("core", usartInstanceName.getValue()+"_CLOCK_ENABLE")
-    Database.setSymbolValue("core", usartInstanceName.getValue()+"_CLOCK_ENABLE", True, 2)
+    Database.clearSymbolValue("core", usartInstanceName.getValue() + "_CLOCK_ENABLE")
+    Database.setSymbolValue("core", usartInstanceName.getValue() + "_CLOCK_ENABLE", True, 2)
     Database.clearSymbolValue("core", interruptVector)
     Database.setSymbolValue("core", interruptVector, True, 2)
     Database.clearSymbolValue("core", interruptHandler)
@@ -321,7 +356,7 @@ def instantiateComponent(usartComponent):
     usartSymClkEnComment = usartComponent.createCommentSymbol("USART_CLK_ENABLE_COMMENT", None)
     usartSymClkEnComment.setVisible(False)
     usartSymClkEnComment.setLabel("Warning!!! USART Peripheral Clock is Disabled in Clock Manager")
-    usartSymClkEnComment.setDependencies(clockWarningCb, ["core."+usartInstanceName.getValue()+"_CLOCK_ENABLE"])
+    usartSymClkEnComment.setDependencies(clockWarningCb, ["core." + usartInstanceName.getValue() + "_CLOCK_ENABLE"])
 
     usartSymIntEnComment = usartComponent.createCommentSymbol("USART_NVIC_ENABLE_COMMENT", None)
     usartSymIntEnComment.setVisible(False)
@@ -331,6 +366,7 @@ def instantiateComponent(usartComponent):
     ############################################################################
     #### Code Generation ####
     ############################################################################
+
     configName = Variables.get("__CONFIGURATION_NAME")
 
     usartHeaderFile = usartComponent.createFileSymbol("USART_HEADER", None)

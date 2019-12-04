@@ -47,11 +47,20 @@
 // Section: ${USART_INSTANCE_NAME} Implementation
 // *****************************************************************************
 // *****************************************************************************
+<#assign useUSARTRxDMA = false>
+<#assign useUSARTTxDMA = false>
 <#if USART_INTERRUPT_MODE == true>
+<#if USE_USART_RX_DMA??>
+<#assign useUSARTRxDMA = USE_USART_RX_DMA>
+</#if>
+<#if USE_USART_TX_DMA??>
+<#assign useUSARTTxDMA = USE_USART_TX_DMA>
+</#if>
 
 USART_OBJECT ${USART_INSTANCE_NAME?lower_case}Obj;
 
-void static ${USART_INSTANCE_NAME}_ISR_RX_Handler( void )
+<#if useUSARTRxDMA == false>
+static void ${USART_INSTANCE_NAME}_ISR_RX_Handler( void )
 {
     if(${USART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus == true)
     {
@@ -63,7 +72,6 @@ void static ${USART_INSTANCE_NAME}_ISR_RX_Handler( void )
         /* Check if the buffer is done */
         if(${USART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize >= ${USART_INSTANCE_NAME?lower_case}Obj.rxSize)
         {
-
             ${USART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus = false;
 
             /* Disable Read, Overrun, Parity and Framing error interrupts */
@@ -80,11 +88,11 @@ void static ${USART_INSTANCE_NAME}_ISR_RX_Handler( void )
         /* Nothing to process */
         ;
     }
-
-    return;
 }
 
-void static ${USART_INSTANCE_NAME}_ISR_TX_Handler( void )
+</#if>
+<#if useUSARTTxDMA == false>
+static void ${USART_INSTANCE_NAME}_ISR_TX_Handler( void )
 {
     if(${USART_INSTANCE_NAME?lower_case}Obj.txBusyStatus == true)
     {
@@ -110,10 +118,9 @@ void static ${USART_INSTANCE_NAME}_ISR_TX_Handler( void )
         /* Nothing to process */
         ;
     }
-
-    return;
 }
 
+</#if>
 void ${USART_INSTANCE_NAME}_InterruptHandler( void )
 {
     /* Error status */
@@ -124,7 +131,12 @@ void ${USART_INSTANCE_NAME}_InterruptHandler( void )
         /* Client must call USARTx_ErrorGet() function to clear the errors */
 
         /* Disable Read, Overrun, Parity and Framing error interrupts */
+        <#if useUSARTRxDMA == true>
+        ${USART_INSTANCE_NAME}_REGS->US_PTCR = US_PTCR_RXTDIS_Msk;
+        ${USART_INSTANCE_NAME}_REGS->US_IDR = (US_IDR_USART_ENDRX_Msk | US_IDR_USART_FRAME_Msk | US_IDR_USART_PARE_Msk | US_IDR_USART_OVRE_Msk);
+        <#else>
         ${USART_INSTANCE_NAME}_REGS->US_IDR = (US_IDR_USART_RXRDY_Msk | US_IDR_USART_FRAME_Msk | US_IDR_USART_PARE_Msk | US_IDR_USART_OVRE_Msk);
+        </#if>
 
         ${USART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus = false;
 
@@ -136,39 +148,68 @@ void ${USART_INSTANCE_NAME}_InterruptHandler( void )
         }
     }
 
+    <#if useUSARTRxDMA == true>
+    if ((${USART_INSTANCE_NAME}_REGS->US_PTSR & US_PTSR_RXTEN_Msk) && (${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_USART_ENDRX_Msk))
+    {
+        if(${USART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus == true)
+        {
+            ${USART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus = false;
+            ${USART_INSTANCE_NAME}_REGS->US_PTCR = US_PTCR_RXTDIS_Msk;
+            ${USART_INSTANCE_NAME}_REGS->US_IDR = (US_IDR_USART_ENDRX_Msk | US_IDR_USART_FRAME_Msk | US_IDR_USART_PARE_Msk | US_IDR_USART_OVRE_Msk);
+
+            if( ${USART_INSTANCE_NAME?lower_case}Obj.rxCallback != NULL )
+            {
+                ${USART_INSTANCE_NAME?lower_case}Obj.rxCallback(${USART_INSTANCE_NAME?lower_case}Obj.rxContext);
+            }
+        }
+    }
+    <#else>
     /* Receiver status */
     if(US_CSR_USART_RXRDY_Msk == (${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_USART_RXRDY_Msk))
     {
         ${USART_INSTANCE_NAME}_ISR_RX_Handler();
     }
+    </#if>
 
+    <#if useUSARTTxDMA == true>
+    if ((${USART_INSTANCE_NAME}_REGS->US_PTSR & US_PTSR_TXTEN_Msk) && (${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_USART_ENDTX_Msk))
+    {
+        if(${USART_INSTANCE_NAME?lower_case}Obj.txBusyStatus == true)
+        {
+            ${USART_INSTANCE_NAME?lower_case}Obj.txBusyStatus = false;
+            ${USART_INSTANCE_NAME}_REGS->US_PTCR = US_PTCR_TXTDIS_Msk;
+            ${USART_INSTANCE_NAME}_REGS->US_IDR = US_IDR_USART_ENDTX_Msk;
+
+            if( ${USART_INSTANCE_NAME?lower_case}Obj.txCallback != NULL )
+            {
+                ${USART_INSTANCE_NAME?lower_case}Obj.txCallback(${USART_INSTANCE_NAME?lower_case}Obj.txContext);
+            }
+        }
+    }
+    <#else>
     /* Transmitter status */
     if(US_CSR_USART_TXRDY_Msk == (${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_USART_TXRDY_Msk))
     {
         ${USART_INSTANCE_NAME}_ISR_TX_Handler();
     }
-
-    return;
+    </#if>
 }
-
 </#if>
 
-void static ${USART_INSTANCE_NAME}_ErrorClear( void )
+static void ${USART_INSTANCE_NAME}_ErrorClear( void )
 {
     uint8_t dummyData = 0u;
 
-    ${USART_INSTANCE_NAME}_REGS->US_CR |= US_CR_USART_RSTSTA_Msk;
+    ${USART_INSTANCE_NAME}_REGS->US_CR = US_CR_USART_RSTSTA_Msk;
 
     /* Flush existing error bytes from the RX FIFO */
-    while( US_CSR_USART_RXRDY_Msk == (${USART_INSTANCE_NAME}_REGS->US_CSR& US_CSR_USART_RXRDY_Msk) )
+    while( US_CSR_USART_RXRDY_Msk == (${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_USART_RXRDY_Msk) )
     {
-        dummyData = (${USART_INSTANCE_NAME}_REGS->US_RHR& US_RHR_RXCHR_Msk);
+        dummyData = (${USART_INSTANCE_NAME}_REGS->US_RHR & US_RHR_RXCHR_Msk);
     }
 
     /* Ignore the warning */
     (void)dummyData;
-
-    return;
 }
 
 void ${USART_INSTANCE_NAME}_Initialize( void )
@@ -202,8 +243,6 @@ void ${USART_INSTANCE_NAME}_Initialize( void )
     ${USART_INSTANCE_NAME?lower_case}Obj.txBusyStatus = false;
     ${USART_INSTANCE_NAME?lower_case}Obj.txCallback = NULL;
 </#if>
-
-    return;
 }
 
 USART_ERROR ${USART_INSTANCE_NAME}_ErrorGet( void )
@@ -260,6 +299,7 @@ bool ${USART_INSTANCE_NAME}_SerialSetup( USART_SERIAL_SETUP *setup, uint32_t src
         {
             return false;
         }
+
         if (brgVal > 65535)
         {
             /* The requested baud is so low that the ratio of srcClkFreq to baud exceeds the 16-bit register value of CD register */
@@ -316,7 +356,6 @@ bool ${USART_INSTANCE_NAME}_Read( void *buffer, const size_t size )
         {
             status = true;
         }
-
 <#else>
         /* Check if receive request is in progress */
         if(${USART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus == false)
@@ -327,8 +366,15 @@ bool ${USART_INSTANCE_NAME}_Read( void *buffer, const size_t size )
             ${USART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus = true;
             status = true;
 
+            <#if useUSARTRxDMA == true>
+            ${USART_INSTANCE_NAME}_REGS->US_RPR = (uint32_t)buffer;
+            ${USART_INSTANCE_NAME}_REGS->US_RCR = (uint32_t)size;
+            ${USART_INSTANCE_NAME}_REGS->US_PTCR = US_PTCR_RXTEN_Msk;
+            ${USART_INSTANCE_NAME}_REGS->US_IER = (US_IER_USART_ENDRX_Msk | US_IER_USART_FRAME_Msk | US_IER_USART_PARE_Msk | US_IER_USART_OVRE_Msk);
+            <#else>
             /* Enable Read, Overrun, Parity and Framing error interrupts */
             ${USART_INSTANCE_NAME}_REGS->US_IER = (US_IER_USART_RXRDY_Msk | US_IER_USART_FRAME_Msk | US_IER_USART_PARE_Msk | US_IER_USART_OVRE_Msk);
+            </#if>
         }
 </#if>
     }
@@ -367,6 +413,12 @@ bool ${USART_INSTANCE_NAME}_Write( void *buffer, const size_t size )
             ${USART_INSTANCE_NAME?lower_case}Obj.txBusyStatus = true;
             status = true;
 
+            <#if useUSARTTxDMA == true>
+            ${USART_INSTANCE_NAME}_REGS->US_TPR = (uint32_t)buffer;
+            ${USART_INSTANCE_NAME}_REGS->US_TCR = (uint32_t)size;
+            ${USART_INSTANCE_NAME}_REGS->US_PTCR = US_PTCR_TXTEN_Msk;
+            ${USART_INSTANCE_NAME}_REGS->US_IER = US_IER_USART_ENDTX_Msk;
+            <#else>
             /* Initiate the transfer by sending first byte */
             if(US_CSR_USART_TXRDY_Msk == (${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_USART_TXRDY_Msk))
             {
@@ -375,6 +427,7 @@ bool ${USART_INSTANCE_NAME}_Write( void *buffer, const size_t size )
             }
 
             ${USART_INSTANCE_NAME}_REGS->US_IER = US_IER_USART_TXEMPTY_Msk;
+            </#if>
         }
 </#if>
     }
@@ -383,12 +436,12 @@ bool ${USART_INSTANCE_NAME}_Write( void *buffer, const size_t size )
 }
 
 <#if USART_INTERRUPT_MODE == false>
-int ${USART_INSTANCE_NAME}_ReadByte(void)
+int ${USART_INSTANCE_NAME}_ReadByte( void )
 {
     return(${USART_INSTANCE_NAME}_REGS->US_RHR & US_RHR_RXCHR_Msk);
 }
 
-void ${USART_INSTANCE_NAME}_WriteByte(int data)
+void ${USART_INSTANCE_NAME}_WriteByte( int data )
 {
     while ((US_CSR_USART_TXRDY_Msk == (${USART_INSTANCE_NAME}_REGS->US_CSR & US_CSR_USART_TXRDY_Msk)) == 0);
 
@@ -454,12 +507,20 @@ bool ${USART_INSTANCE_NAME}_ReadIsBusy( void )
 
 size_t ${USART_INSTANCE_NAME}_WriteCountGet( void )
 {
+    <#if useUSARTTxDMA == true>
+    return (${USART_INSTANCE_NAME?lower_case}Obj.txSize - ${USART_INSTANCE_NAME}_REGS->US_TCR);
+    <#else>
     return ${USART_INSTANCE_NAME?lower_case}Obj.txProcessedSize;
+    </#if>
 }
 
 size_t ${USART_INSTANCE_NAME}_ReadCountGet( void )
 {
+    <#if useUSARTRxDMA == true>
+    return (${USART_INSTANCE_NAME?lower_case}Obj.rxSize - ${USART_INSTANCE_NAME}_REGS->US_RCR);
+    <#else>
     return ${USART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize;
+    </#if>
 }
 
 </#if>
