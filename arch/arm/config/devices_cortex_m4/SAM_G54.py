@@ -1,6 +1,6 @@
 # coding: utf-8
 """*****************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -22,64 +22,26 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
 
-global xc32StackInTCMSym
-global xc32DTCMSizeSym
-global xc32ITCMSizeSym
-global tcmSize
-global tcmEnable
-
-# def xc32SetTcmSize(symbol, event):
-    # symObj=event["symbol"]
-    # if (symObj.getSelectedKey() == "0KB"):
-        # xc32DTCMSizeSym.setValue("")
-        # xc32ITCMSizeSym.setValue("")
-    # elif (symObj.getSelectedKey() == "32KB"):
-        # xc32DTCMSizeSym.setValue("0x8000")
-        # xc32ITCMSizeSym.setValue("0x8000")
-    # elif (symObj.getSelectedKey() == "64KB"):
-        # xc32DTCMSizeSym.setValue("0x10000")
-        # xc32ITCMSizeSym.setValue("0x10000")
-    # elif (symObj.getSelectedKey() == "128KB"):
-        # xc32DTCMSizeSym.setValue("0x20000")
-        # xc32ITCMSizeSym.setValue("0x20000")
-
-# def xc32SetStackInTcm(symbol, event):
-    # if (event["value"] == True):
-        # xc32StackInTCMSym.setValue("true")
-    # else:
-        # xc32StackInTCMSym.setValue("false")
-
-# def setTcmSize(symbol, event):
-    # symObj=event["symbol"]
-    # if (symObj.getSelectedKey()  == "0KB"):
-        # tcmSize.setValue("0 KB",2)
-        # tcmEnable.setValue(False,2)
-    # elif (symObj.getSelectedKey()  == "32KB"):
-        # tcmSize.setValue("32 KB",2)
-        # tcmEnable.setValue(True,2)
-    # elif (symObj.getSelectedKey()  == "64KB"):
-        # tcmSize.setValue("64 KB",2)
-        # tcmEnable.setValue(True,2)
-    # elif (symObj.getSelectedKey()  == "128KB"):
-        # tcmSize.setValue("128 KB",2)
-        # tcmEnable.setValue(True,2)
-
-
 # load family specific configurations
 print("Loading System Services for " + Variables.get("__PROCESSOR"))
 
-# load device specific configurations (fuses), temporary, to be removed once XC32 updated
-devCfgComment = coreComponent.createCommentSymbol("CoreCfgComment1", devCfgMenu)
+fuseSettings = coreComponent.createBooleanSymbol("FUSE_CONFIG_ENABLE", devCfgMenu)
+fuseSettings.setLabel("Generate Fuse Settings")
+fuseSettings.setDefaultValue(True)
+
+# load device specific configurations (fuses), temporary, to be removed once
+# XC32 updated
+devCfgComment = coreComponent.createCommentSymbol("CoreCfgComment1", fuseSettings)
 devCfgComment.setLabel("Note: Set Device Configuration Bits via Programming Tool")
 
 # Device Configuration
-deviceSecurity = coreComponent.createKeyValueSetSymbol("DEVICE_SECURITY", devCfgMenu)
+deviceSecurity = coreComponent.createKeyValueSetSymbol("DEVICE_SECURITY", fuseSettings)
 deviceSecurity.setLabel("Security")
 deviceSecurity.setOutputMode("Key")
 deviceSecurity.setDisplayMode("Description")
-deviceSecurity.addKey("CLEAR", "0", "Disable (Code Protection Disabled)" )
+deviceSecurity.addKey("CLEAR", "0", "Disable (Code Protection Disabled)")
 deviceSecurity.addKey("SET", "1", "Enable (Code Protection Enabled)")
-deviceSecurity.setSelectedKey("CLEAR",1)
+deviceSecurity.setSelectedKey("CLEAR", 1)
 
 # SysTick External Clock Source
 systickExternal = coreComponent.createBooleanSymbol("SYSTICK_EXTERNAL_CLOCK", devCfgMenu)
@@ -87,16 +49,13 @@ systickExternal.setLabel("External Clock Source for SysTick Available")
 systickExternal.setDefaultValue(True)
 systickExternal.setVisible(False)
 
-
-# deviceTCMsize = coreComponent.createKeyValueSetSymbol("DEVICE_TCM_SIZE", devCfgMenu)
-# deviceTCMsize.setLabel("TCM Size")
-# deviceTCMsize.setOutputMode("Value")
-# deviceTCMsize.setDisplayMode("Description")
-# deviceTCMsize.addKey("0KB", "0", "DTCM: 0KB, ITCM: 0KB" )
-# deviceTCMsize.addKey("32KB", "1", "DTCM: 32KB, ITCM: 32KB")
-# deviceTCMsize.addKey("64KB", "2", "DTCM: 64 KB, ITCM: 64KB")
-# deviceTCMsize.addKey("128KB", "3", "DTCM: 128 KB,  ITCM: 128KB")
-# deviceTCMsize.setSelectedKey("0KB",1)
+deviceBoot = coreComponent.createKeyValueSetSymbol("DEVICE_BOOT", fuseSettings)
+deviceBoot.setLabel("Boot Mode")
+deviceBoot.setOutputMode("Key")
+deviceBoot.setDisplayMode("Description")
+deviceBoot.addKey("CLEAR", "0", "Boot from ROM")
+deviceBoot.addKey("SET", "1", "Boot from Flash")
+deviceBoot.setSelectedKey("SET", 1)
 
 coreFPU = coreComponent.createBooleanSymbol("FPU_Available", devCfgMenu)
 coreFPU.setLabel("FPU Available")
@@ -114,76 +73,95 @@ cortexMenu = coreComponent.createMenuSymbol("CORTEX_MENU", None)
 cortexMenu.setLabel("Cortex-M4 Configuration")
 cortexMenu.setDescription("Configuration for Cortex M4")
 
-# Cortex-M4 IP Configuration
-# tcmMenu = coreComponent.createMenuSymbol("TCM_MENU", cortexMenu)
-# tcmMenu.setLabel("TCM")
-# tcmMenu.setDescription("TCM Configuration")
+def setMPUDefaultSettings():
 
-# tcmEnable = coreComponent.createBooleanSymbol("TCM_ENABLE", tcmMenu)
-# tcmEnable.setLabel("Enable TCM")
-# tcmEnable.setDefaultValue(False)
-# tcmEnable.setVisible(False)
+    mpuRegions = 8
 
-# tcmSize = coreComponent.createStringSymbol("TCM_SIZE", tcmMenu)
-# tcmSize.setLabel("TCM Size Selected through configuration Fuse")
-# tcmSize.setDefaultValue("0 KB")
-# tcmSize.setReadOnly(True)
-# tcmSize.setDependencies(setTcmSize, ["DEVICE_TCM_SIZE"])
+    mpuSettings = {
+                    "FLASH": ["MPU_ATTR_NORMAL_WT",         "MPU_RASR_AP_READWRITE_Val",    "",     "",   "0x00400000",  "2MB"],
+                    "SRAM": ["MPU_ATTR_NORMAL_WB_WA",       "MPU_RASR_AP_READWRITE_Val",    "True", "",   "0x20000000",  "2MB"],
+                    "PERIPHERALS": ["MPU_ATTR_DEVICE",      "MPU_RASR_AP_READWRITE_Val",    "",     "",   "0x40000000",  "256MB"],
+                    "SYSTEM": ["MPU_ATTR_STRONGLY_ORDERED", "MPU_RASR_AP_READWRITE_Val",    "",     "",   "0xE0000000",  "1MB"],
+                    "UHP_DPRAM": ["MPU_ATTR_DEVICE",        "MPU_RASR_AP_READWRITE_Val",    "",     "",   "0x20400000",  "1MB"],
+                   }
 
-# stackTCM = coreComponent.createBooleanSymbol("STACK_IN_TCM", tcmMenu)
-# stackTCM.setLabel("Locate Stack in TCM")
-# stackTCM.setDefaultValue(False)
+    mpuSetUpLogicList = ["FLASH", "SRAM", "PERIPHERALS", "SYSTEM", "UHP_DPRAM"]
 
-cacheMenu = coreComponent.createMenuSymbol("CACHE_MENU", cortexMenu)
-cacheMenu.setLabel("CACHE")
-cacheMenu.setDescription("CACHE Configuration")
+    return mpuRegions, mpuSettings, mpuSetUpLogicList
 
-dcacheEnable = coreComponent.createBooleanSymbol("DATA_CACHE_ENABLE", cacheMenu)
-dcacheEnable.setLabel("Enable Data Cache")
-dcacheEnable.setDefaultValue(False)
+global nvmWaitStates
 
-icacheEnable = coreComponent.createBooleanSymbol("INSTRUCTION_CACHE_ENABLE", cacheMenu)
-icacheEnable.setLabel("Enable Instruction Cache")
-icacheEnable.setDefaultValue(False)
+nvmWaitStates = {
 
+    # VDD > 1.6
+    12500000: 0,
+    25000000: 1,
+    38000000: 2,
+    51000000: 3,
+    64000000: 4,
+    76000000: 5,
+    88000000: 6,
+    96000000: 7
+}
+
+# SYSIO Pin configuration information (Required by PIO 11104)
+global getArchSYSIOInformation
+
+def getArchSYSIOInformation():
+
+    matrixName = "MATRIX"
+    sysioRegName = "CCFG_SYSIO"
+    sysioInfoDict = {}
+
+    #SYSIO information Dictionary is of the format {"SIGNAL_PAD":["FUNCTION_NAME":"SYSIO_MASK"]}
+    sysioInfoDict["PA21"] = ["UHP_DM", 0x00000400]
+    sysioInfoDict["PA22"] = ["UHP_DP", 0x00000800]
+    sysioInfoDict["PB4"] = ["ICE_TDI", 0x00000010]
+    sysioInfoDict["PB5"] = ["ICE_TDO/TRACESWO", 0x00000020]
+    sysioInfoDict["PB6"] = ["ICE_TMS/SWDIO", 0x00000040]
+    sysioInfoDict["PB7"] = ["ICE_TCK/SWDCLK", 0x00000080]
+    sysioInfoDict["PB12"] = ["EFC_ERASE", 0x00001000]
+
+    return matrixName, sysioRegName, sysioInfoDict
+
+periphNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"EFC\"]")
+modules = periphNode.getChildren()
+components = []
+for nvmctrl_instance in range(0, len(modules)):
+    components.append(str(modules[nvmctrl_instance].getAttribute("name")).lower())
+Database.activateComponents(components)
+
+# load device specific pin manager information
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/pio_11004/config/pio.py")
+coreComponent.addPlugin("../peripheral/pio_11004/plugin/pio_11004.jar")
 
 # # load clock manager information
-# execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_sam_e70/config/clk.py")
-# coreComponent.addPlugin("../peripheral/clk_sam_e70/plugin/clockmanager.jar")
-
-# # load device specific pin manager information
-# execfile(Variables.get("__CORE_DIR") + "/../peripheral/pio_11004/config/pio.py")
-# coreComponent.addPlugin("../peripheral/pio_11004/plugin/SAME70pinmanager.jar")
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_sam_g51_g53_g54/config/clock.py")
+coreComponent.addPlugin("../peripheral/clk_sam_g51_g53_g54/plugin/clockmanager.jar")
 
 # # load NVIC
-# execfile(Variables.get("__CORE_DIR") + "/../peripheral/nvic_m7/config/nvic.py")
-# coreComponent.addPlugin("../peripheral/nvic_m7/plugin/ARM_M7_NVICmanager.jar")
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/nvic/config/nvic.py")
+coreComponent.addPlugin("../peripheral/nvic/plugin/nvic.jar")
 
 # #load mpu
-# execfile(Variables.get("__CORE_DIR") + "/../peripheral/mpu/config/mpu.py")
-# coreComponent.addPlugin("../peripheral/mpu/plugin/MPUmanager.jar")
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/mpu/config/mpu.py")
+coreComponent.addPlugin("../peripheral/mpu/plugin/mpu.jar")
 
 # #load systick
-# execfile(Variables.get("__CORE_DIR") + "/../peripheral/systick/config/systick.py")
-
-# # load dma manager information
-# execfile(Variables.get("__CORE_DIR") + "/../peripheral/xdmac_11161/config/xdmac.py")
-# coreComponent.addPlugin("../peripheral/xdmac_11161/plugin/dmamanager.jar")
-
-# # load rswdt
-# execfile(Variables.get("__CORE_DIR") + "/../peripheral/rswdt_11110/config/rswdt.py")
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/systick/config/systick.py")
 
 # # load wdt
-# execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_6080/config/wdt.py")
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_6080/config/wdt.py")
 
-# # load device specific adc manager information
-# coreComponent.addPlugin("../peripheral/afec_11147/plugin/ARM_M7_ADCmanager.jar")
+global armLibCSourceFile
+global devconSystemInitFile
+global compilerSpecifics
 
+compilerSelected = compilerChoice.getSelectedKey().lower()
 
-# generate startup_xc32.c file
 armSysStartSourceFile = coreComponent.createFileSymbol("STARTUP_C", None)
-armSysStartSourceFile.setSourcePath("arm/templates/startup_xc32.c.ftl")
-armSysStartSourceFile.setOutputName("startup.c")
+armSysStartSourceFile.setSourcePath("../arch/arm/templates/" + compilerSelected + "/cortex_m/startup/startup_" + compilerSelected + ".c.ftl")
+armSysStartSourceFile.setOutputName("startup_" + compilerSelected + ".c")
 armSysStartSourceFile.setMarkup(True)
 armSysStartSourceFile.setOverwrite(True)
 armSysStartSourceFile.setDestPath("")
@@ -202,29 +180,10 @@ armLibCSourceFile.setProjectPath("config/" + configName + "/")
 armLibCSourceFile.setType("SOURCE")
 armLibCSourceFile.setDependencies(genSysSourceFile, ["CoreSysCallsFile", "CoreSysFiles"])
 
-# # set XC32 ITCM Size
-# xc32ITCMSizeSym = coreComponent.createSettingSymbol("XC32_ITCM_SIZE", None)
-# xc32ITCMSizeSym.setCategory("C32Global")
-# xc32ITCMSizeSym.setKey("mitcm")
-# xc32ITCMSizeSym.setValue("")
-# xc32ITCMSizeSym.setDependencies(xc32SetTcmSize, ["DEVICE_TCM_SIZE"])
+devconSystemInitFile = coreComponent.createFileSymbol("DEVICE_CONFIG_SYSTEM_INIT", None)
+devconSystemInitFile.setType("STRING")
+devconSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_CONFIG_BITS_INITIALIZATION")
+devconSystemInitFile.setSourcePath("arm/templates/common/fuses/SAM_G55.c.ftl")
+devconSystemInitFile.setMarkup(True)
 
-# # set XC32 DTCM Size
-# xc32DTCMSizeSym = coreComponent.createSettingSymbol("XC32_DTCM_SIZE", None)
-# xc32DTCMSizeSym.setCategory("C32Global")
-# xc32DTCMSizeSym.setKey("mdtcm")
-# xc32DTCMSizeSym.setValue("")
-# xc32DTCMSizeSym.setDependencies(xc32SetTcmSize, ["DEVICE_TCM_SIZE"])
-
-# # set XC32 Stack in TCM: True or False
-# xc32StackInTCMSym = coreComponent.createSettingSymbol("XC32_STACK_IN_TCM", None)
-# xc32StackInTCMSym.setCategory("C32Global")
-# xc32StackInTCMSym.setKey("mstacktcm")
-# xc32StackInTCMSym.setValue("false")
-# xc32StackInTCMSym.setDependencies(xc32SetStackInTcm, ["STACK_IN_TCM"])
-
-#devconSystemInitFile = coreComponent.createFileSymbol("DEVICE_CONFIG_SYSTEM_INIT", None)
-#devconSystemInitFile.setType("STRING")
-#devconSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_CONFIG_BITS_INITIALIZATION")
-#devconSystemInitFile.setSourcePath("arm/templates/SAM_E70_S70_V70_V71.c.ftl")
-#devconSystemInitFile.setMarkup(True)
+compilerSpecifics = [armSysStartSourceFile]
