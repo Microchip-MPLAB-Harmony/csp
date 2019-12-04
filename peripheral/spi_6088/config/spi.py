@@ -35,13 +35,29 @@ dummyDataDict = {
                     "_16_BIT"    :   0xFFFF,
                 }
 
+spiBitField_MR_MSTR = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/register-group@[name="SPI"]/register@[name="SPI_MR"]/bitfield@[name="MSTR"]')
+spiValGrp_MR_MSTR = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/value-group@[name="SPI_MR__MSTR"]')
+
+spiBitField_MR_PCS = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/register-group@[name="SPI"]/register@[name="SPI_MR"]/bitfield@[name="PCS"]')
+spiValGrp_MR_PCS = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/value-group@[name="SPI_MR__PCS"]')
+
+spiBitField_CSR_BITS = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/register-group@[name="SPI"]/register@[name="SPI_CSR"]/bitfield@[name="BITS"]')
+spiValGrp_CSR_BITS = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/value-group@[name="SPI_CSR__BITS"]')
+
+spiBitField_CSR_CPOL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/register-group@[name="SPI"]/register@[name="SPI_CSR"]/bitfield@[name="CPOL"]')
+spiValGrp_CSR_CPOL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/value-group@[name="SPI_CSR__CPOL"]')
+
+spiBitField_CSR_NCPHA = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/register-group@[name="SPI"]/register@[name="SPI_CSR"]/bitfield@[name="NCPHA"]')
+spiValGrp_CSR_NCPHA = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/value-group@[name="SPI_CSR__NCPHA"]')
 
 # clock frequency symbol update callback
 def SPISourceClockChanged(symbol, event):
+
     symbol.setValue(event["value"], 2)
 
 # Dependency Function to show or hide the warning message depending on Clock enable/disable status
 def ClockStatusWarning(symbol, event):
+
     if event["value"] == False:
        symbol.setVisible(True)
     else:
@@ -49,13 +65,22 @@ def ClockStatusWarning(symbol, event):
 
 # Dependency Function to show or hide the warning message depending on Interrupt enable/disable status
 def InterruptStatusWarning(symbol, event):
+
     global spiInterrupt
+
     if spiInterrupt.getValue() == True:
        symbol.setVisible(event["value"])
 
+# Dependency Function for symbol visibility
+def updateSPIDMAConfigurationVisbleProperty(symbol, event):
+
+    symbol.setVisible(event["value"])
+
 def ClockModeInfo(symbol, event):
+
     CPHA = Database.getSymbolValue(spiInstanceName.getValue().lower(), "SPI_CLOCK_PHASE")
     CPOL = Database.getSymbolValue(spiInstanceName.getValue().lower(), "SPI_CLOCK_POLARITY")
+
     if (CPOL == 0) and (CPHA == 0):
         symbol.setLabel("                                     ***SPI Mode 0 is Selected***")
     elif (CPOL == 0) and (CPHA == 1):
@@ -64,7 +89,6 @@ def ClockModeInfo(symbol, event):
         symbol.setLabel("                                     ***SPI Mode 2 is Selected***")
     else:
         symbol.setLabel("                                     ***SPI Mode 3 is Selected***")
-
 
 def setupSpiIntSymbolAndIntHandler(spiInterrupt, event):
     global spiSyminterruptVector
@@ -80,6 +104,7 @@ def setupSpiIntSymbolAndIntHandler(spiInterrupt, event):
         Database.clearSymbolValue("core", spiSyminterruptVector)
         Database.clearSymbolValue("core", spiSyminterruptHandler)
         Database.clearSymbolValue("core", spiSyminterruptHandlerLock)
+
         if (event["value"] == True):
             Database.setSymbolValue("core", spiSyminterruptVector, True, 1)
             Database.setSymbolValue("core", spiSyminterruptHandler, spiInstanceName.getValue() + "_InterruptHandler", 1)
@@ -108,10 +133,12 @@ def setupSpiIntSymbolAndIntHandler(spiInterrupt, event):
         spiInterrupt.setReadOnly(False)
 
 def getMasterClockFreq():
+
     clkSymMasterClockFreq = Database.getSymbolValue(spiInstanceName.getValue().lower(), "SPI_MASTER_CLOCK")
     return int(clkSymMasterClockFreq)
 
 def showMasterDependencies(spiSym_MR_Dependencies, event):
+
     if event["symbol"].getKey(event["value"]) == "MASTER":
         spiSym_MR_Dependencies.setVisible(True)
     else:
@@ -129,35 +156,25 @@ def SCBR_ValueUpdate(spiSym_CSR_SCBR_VALUE, event):
 
     SCBR = clk/baud
     spiSymInvalidClock.setVisible(SCBR < 1 or SCBR > 255)
+
     if SCBR == 0:
         SCBR = 1
     elif SCBR > 255:
         SCBR = 255
+
     spiSym_CSR_SCBR_VALUE.setValue(SCBR, 1)
 
 def calculateCSRIndex(spiSymCSRIndex, event):
+
     spiSymCSRIndex.setValue(int(event["symbol"].getKeyValue(event["value"])[-1]), 1)
 
 def DummyData_ValueUpdate(spiSymDummyData, event):
+
     spiSymDummyData.setValue(dummyDataDict[event["symbol"].getKey(event["value"])], 1)
     spiSymDummyData.setMax(dummyDataDict[event["symbol"].getKey(event["value"])])
 
-spiBitField_MR_MSTR = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/register-group@[name="SPI"]/register@[name="SPI_MR"]/bitfield@[name="MSTR"]')
-spiValGrp_MR_MSTR = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/value-group@[name="SPI_MR__MSTR"]')
-
-spiBitField_MR_PCS = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/register-group@[name="SPI"]/register@[name="SPI_MR"]/bitfield@[name="PCS"]')
-spiValGrp_MR_PCS = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/value-group@[name="SPI_MR__PCS"]')
-
-spiBitField_CSR_BITS = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/register-group@[name="SPI"]/register@[name="SPI_CSR"]/bitfield@[name="BITS"]')
-spiValGrp_CSR_BITS = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/value-group@[name="SPI_CSR__BITS"]')
-
-spiBitField_CSR_CPOL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/register-group@[name="SPI"]/register@[name="SPI_CSR"]/bitfield@[name="CPOL"]')
-spiValGrp_CSR_CPOL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/value-group@[name="SPI_CSR__CPOL"]')
-
-spiBitField_CSR_NCPHA = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/register-group@[name="SPI"]/register@[name="SPI_CSR"]/bitfield@[name="NCPHA"]')
-spiValGrp_CSR_NCPHA = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/value-group@[name="SPI_CSR__NCPHA"]')
-
 def instantiateComponent(spiComponent):
+
     global spiInstanceName
     global spiSyminterruptVector
     global spiSyminterruptHandler
@@ -183,17 +200,26 @@ def instantiateComponent(spiComponent):
     global spiDriverControlled
     spiDriverControlled = spiComponent.createBooleanSymbol("SPI_DRIVER_CONTROLLED", None)
     spiDriverControlled.setVisible(False)
-    spiDriverControlled.setDefaultValue(False)
 
     global spiInterrupt
     spiInterrupt = spiComponent.createBooleanSymbol("SPI_INTERRUPT_MODE", None)
     spiInterrupt.setLabel("Interrupt Mode")
     spiInterrupt.setDefaultValue(True)
+
     #By Default interrupt mode is enabled and corresponding information is passed to NVIC manager
     Database.setSymbolValue("core", spiSyminterruptVector, True, 1)
     Database.setSymbolValue("core", spiSyminterruptHandler, spiInstanceName.getValue() + "_InterruptHandler", 1)
     Database.setSymbolValue("core", spiSyminterruptHandlerLock, True, 1)
     spiInterrupt.setDependencies(setupSpiIntSymbolAndIntHandler, ["SPI_INTERRUPT_MODE", "SPI_DRIVER_CONTROLLED"])
+
+    spiRegisterGroup = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SPI\"]/register-group@[name=\"SPI\"]")
+    spiRegisterList = spiRegisterGroup.getChildren()
+    for index in range(0, len(spiRegisterList)):
+        if (spiRegisterList[index].getAttribute("name") == "SPI_RPR"):
+            spiDMAEnable = spiComponent.createBooleanSymbol("USE_SPI_DMA", None)
+            spiDMAEnable.setLabel("Enable DMA for Transmit and Receive")
+            spiDMAEnable.setDependencies(updateSPIDMAConfigurationVisbleProperty, ["SPI_INTERRUPT_MODE"])
+            break
 
     spiSym_MR_MSTR = spiComponent.createKeyValueSetSymbol("SPI_MR_MSTR", None)
     spiSym_MR_MSTR.setLabel(spiBitField_MR_MSTR.getAttribute("caption"))
@@ -208,6 +234,9 @@ def instantiateComponent(spiComponent):
         description = spiValGrp_MR_MSTR.getChildren()[id].getAttribute("caption")
         spiSym_MR_MSTR.addKey(valueName, value, description)
 
+    spiPCSMask = int(str(spiBitField_MR_PCS.getAttribute("mask")), 16)
+    spiPCSValue = spiPCSMask >> 16
+
     DefaultPCS = 0
     global spiSym_MR_PCS
     spiSym_MR_PCS = spiComponent.createKeyValueSetSymbol("SPI_MR_PCS", None)
@@ -219,8 +248,12 @@ def instantiateComponent(spiComponent):
 
     spiSym_MR_PCS.addKey("NPCS0", "NPCS0", "NPCS0 as Chip Select")
     spiSym_MR_PCS.addKey("NPCS1", "NPCS1", "NPCS1 as Chip Select")
-    spiSym_MR_PCS.addKey("NPCS2", "NPCS2", "NPCS2 as Chip Select")
-    spiSym_MR_PCS.addKey("NPCS3", "NPCS3", "NPCS3 as Chip Select")
+
+    # Check weather more than two chip select options are available
+    if spiPCSValue > 3:
+        spiSym_MR_PCS.addKey("NPCS2", "NPCS2", "NPCS2 as Chip Select")
+        spiSym_MR_PCS.addKey("NPCS3", "NPCS3", "NPCS3 as Chip Select")
+
     # When User wants to control his chip select himself (through some GPIO pin),
     # then all the NPCSx lines are free to be used as PIO pins. But in MR_PCS
     # field, one of the NPCS lines still has to be selected in order to decide
@@ -230,6 +263,7 @@ def instantiateComponent(spiComponent):
     spiSym_MR_PCS.addKey("GPIO", "NPCS0", "User Controlled Chip Select Through GPIO Pin")
 
     defaultIndex = int(spiSym_MR_PCS.getKey(DefaultPCS)[-1])
+
     # internal symbol, used to pass CSR register index to SPI FTL
     spiSymCSRIndex = spiComponent.createIntegerSymbol("SPI_CSR_INDEX", None)
     spiSymCSRIndex.setDefaultValue(defaultIndex)
@@ -240,31 +274,29 @@ def instantiateComponent(spiComponent):
     defaultSCBR = int(Database.getSymbolValue("core", spiInstanceName.getValue() + "_CLOCK_FREQUENCY"))/defaultbaudRate
 
     # Provide a source clock selection symbol for masks that supports it
-    valueGroupPath = "/avr-tools-device-file/modules/module@[name=\"SPI\"]/value-group@[name=\"SPI_MR__BRSRCCLK\"]"
-    valueGroup = ATDF.getNode(valueGroupPath)
-    if valueGroup is not None:
+    valueGroup = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SPI\"]/value-group@[name=\"SPI_MR__BRSRCCLK\"]")
+    if valueGroup != None:
+        values = valueGroup.getChildren()
+
         spiSymClockSrc = spiComponent.createKeyValueSetSymbol("SPI_CLK_SRC", None)
         spiSymClockSrc.setLabel(valueGroup.getAttribute("caption"))
-        values = valueGroup.getChildren()
+
         for index in range(len(values)):
-            spiSymClockSrc.addKey(values[index].getAttribute("name"),
-                                    values[index].getAttribute("value"),
-                                    values[index].getAttribute("caption"))
-            spiSymClockSrc.setOutputMode("Key")
-            spiSymClockSrc.setDisplayMode("Key")
+            spiSymClockSrc.addKey(values[index].getAttribute("name"), values[index].getAttribute("value"), values[index].getAttribute("caption"))
+
+        spiSymClockSrc.setOutputMode("Key")
+        spiSymClockSrc.setDisplayMode("Key")
 
     # Used to pass master clock frequency to SPI FTL
     spiSymMasterClock = spiComponent.createIntegerSymbol("SPI_MASTER_CLOCK", None)
     spiSymMasterClock.setLabel("Bit rate source clock frequency (Hz)")
     spiSymMasterClock.setDefaultValue(Database.getSymbolValue("core", spiInstanceName.getValue() + "_CLOCK_FREQUENCY" ))
-    spiSymMasterClock.setVisible(True)
     spiSymMasterClock.setReadOnly(True)
     spiSymMasterClock.setDependencies(SPISourceClockChanged, ["core." + spiInstanceName.getValue() + "_CLOCK_FREQUENCY"])
 
     spiSym_CSR_SCBR = spiComponent.createIntegerSymbol("SPI_BAUD_RATE", None)
     spiSym_CSR_SCBR.setLabel("Baud Rate in Hz")
     spiSym_CSR_SCBR.setDefaultValue(defaultbaudRate)
-    spiSym_CSR_SCBR.setVisible(True)
     spiSym_CSR_SCBR.setMin(1)
     spiSym_CSR_SCBR.setDependencies(showMasterDependencies, ["SPI_MR_MSTR"])
 
@@ -272,7 +304,6 @@ def instantiateComponent(spiComponent):
     spiSymInvalidClock = spiComponent.createCommentSymbol("SPI_CLOCK_INVALID_COMMENT", None)
     spiSymInvalidClock.setLabel("Cannot generate input baud rate from the configured source clock frequency !!!")
     spiSymInvalidClock.setVisible(False)
-
 
     #local variable for code generation
     spiSym_CSR_SCBR_VALUE = spiComponent.createIntegerSymbol("SPI_CSR_SCBR_VALUE", None)
@@ -285,7 +316,6 @@ def instantiateComponent(spiComponent):
     spiSym_CSR_BITS.setOutputMode("Key")
     spiSym_CSR_BITS.setDisplayMode("Description")
     spiSym_CSR_BITS.setDefaultValue(0)
-    spiSym_CSR_BITS.setVisible(True)
 
     for id in range(0,len(spiValGrp_CSR_BITS.getChildren())):
         valueName = spiValGrp_CSR_BITS.getChildren()[id].getAttribute("name")
@@ -349,7 +379,6 @@ def instantiateComponent(spiComponent):
     spiSym_CSR_BITS_16BIT.setVisible(False)
 
     spiSymDummyData = spiComponent.createHexSymbol("SPI_DUMMY_DATA", None)
-    spiSymDummyData.setVisible(True)
     spiSymDummyData.setLabel("Dummy Data")
     spiSymDummyData.setDescription("Dummy Data to be written during SPI Read")
     spiSymDummyData.setDefaultValue(0xFF)
@@ -361,7 +390,6 @@ def instantiateComponent(spiComponent):
     spiSym_CSR_CPOL.setOutputMode("Key")
     spiSym_CSR_CPOL.setDisplayMode("Description")
     spiSym_CSR_CPOL.setDefaultValue(0)
-    spiSym_CSR_CPOL.setVisible(True)
 
     for id in range(0, len(spiValGrp_CSR_CPOL.getChildren())):
         valueName = spiValGrp_CSR_CPOL.getChildren()[id].getAttribute("name")
@@ -413,7 +441,6 @@ def instantiateComponent(spiComponent):
     spiSym_API_Prefix.setVisible(False)
 
     spiSymClockModeComment = spiComponent.createCommentSymbol("SPI_CLOCK_MODE_COMMENT", None)
-    spiSymClockModeComment.setVisible(True)
     spiSymClockModeComment.setLabel("                                     ***SPI Mode 0 is Selected***")
     spiSymClockModeComment.setDependencies(ClockModeInfo, ["SPI_CLOCK_POLARITY","SPI_CLOCK_PHASE"])
 
@@ -449,7 +476,7 @@ def instantiateComponent(spiComponent):
 
     spiHeader1File = spiComponent.createFileSymbol("SPI_HEADER", None)
     spiHeader1File.setSourcePath("../peripheral/spi_6088/templates/plib_spix.h.ftl")
-    spiHeader1File.setOutputName("plib_"+spiInstanceName.getValue().lower()+".h")
+    spiHeader1File.setOutputName("plib_" + spiInstanceName.getValue().lower() + ".h")
     spiHeader1File.setDestPath("/peripheral/spi/")
     spiHeader1File.setProjectPath("config/" + configName +"/peripheral/spi/")
     spiHeader1File.setType("HEADER")
@@ -457,7 +484,7 @@ def instantiateComponent(spiComponent):
 
     spiSource1File = spiComponent.createFileSymbol("SPI_SOURCE", None)
     spiSource1File.setSourcePath("../peripheral/spi_6088/templates/plib_spix.c.ftl")
-    spiSource1File.setOutputName("plib_"+spiInstanceName.getValue().lower()+".c")
+    spiSource1File.setOutputName("plib_" + spiInstanceName.getValue().lower() + ".c")
     spiSource1File.setDestPath("/peripheral/spi/")
     spiSource1File.setProjectPath("config/" + configName +"/peripheral/spi/")
     spiSource1File.setType("SOURCE")

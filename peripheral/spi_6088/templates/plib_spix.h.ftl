@@ -54,20 +54,20 @@
 
 /****************************** ${SPI_INSTANCE_NAME} Interface *********************************/
 
-void ${SPI_INSTANCE_NAME}_Initialize ( void );
+void ${SPI_INSTANCE_NAME}_Initialize( void );
 
-bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize);
+bool ${SPI_INSTANCE_NAME}_WriteRead( void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize );
 
-bool ${SPI_INSTANCE_NAME}_Write(void* pTransmitData, size_t txSize);
+bool ${SPI_INSTANCE_NAME}_Write( void* pTransmitData, size_t txSize );
 
-bool ${SPI_INSTANCE_NAME}_Read(void* pReceiveData, size_t rxSize);
+bool ${SPI_INSTANCE_NAME}_Read( void* pReceiveData, size_t rxSize );
 
-bool ${SPI_INSTANCE_NAME}_TransferSetup (SPI_TRANSFER_SETUP *setup, uint32_t spiSourceClock);
+bool ${SPI_INSTANCE_NAME}_TransferSetup( SPI_TRANSFER_SETUP *setup, uint32_t spiSourceClock );
 
 <#if SPI_INTERRUPT_MODE == true>
-bool ${SPI_INSTANCE_NAME}_IsBusy(void);
+bool ${SPI_INSTANCE_NAME}_IsBusy( void );
 
-void ${SPI_INSTANCE_NAME}_CallbackRegister(const SPI_CALLBACK callback, uintptr_t context);
+void ${SPI_INSTANCE_NAME}_CallbackRegister( const SPI_CALLBACK callback, uintptr_t context );
 
 </#if>
 

@@ -47,21 +47,37 @@
 // *****************************************************************************
 // *****************************************************************************
 <#if SPI_INTERRUPT_MODE == true>
+
 /* Global object to save SPI Exchange related data */
 SPI_OBJECT ${SPI_INSTANCE_NAME?lower_case}Obj;
+<#if USE_SPI_DMA?? && USE_SPI_DMA == true>
+
+static uint8_t dummyDataBuffer[512];
+
+static void setupDMA( void* pTransmitData, void* pReceiveData, size_t size )
+{
+    /* Always set up the rx channel first */
+    ${SPI_INSTANCE_NAME}_REGS->SPI_RPR = (uint32_t) pReceiveData;
+    ${SPI_INSTANCE_NAME}_REGS->SPI_RCR = (uint32_t) size;
+    ${SPI_INSTANCE_NAME}_REGS->SPI_TPR = (uint32_t) pTransmitData;
+    ${SPI_INSTANCE_NAME}_REGS->SPI_TCR = (uint32_t) size;
+    ${SPI_INSTANCE_NAME}_REGS->SPI_PTCR = SPI_PTCR_RXTEN_Msk | SPI_PTCR_TXTEN_Msk;
+    ${SPI_INSTANCE_NAME}_REGS->SPI_IER = SPI_IER_ENDRX_Msk;
+}
+</#if>
 </#if>
 
-void ${SPI_INSTANCE_NAME}_Initialize ( void )
+void ${SPI_INSTANCE_NAME}_Initialize( void )
 {
     /* Disable and Reset the SPI*/
     ${SPI_INSTANCE_NAME}_REGS->SPI_CR = SPI_CR_SPIDIS_Msk | SPI_CR_SWRST_Msk;
 
 <#if SPI_MR_MSTR =="MASTER">
     /* Enable Master mode, <#if SPI_CLK_SRC??>select source clock, </#if>select particular NPCS line for chip select and disable mode fault detection */
-    ${SPI_INSTANCE_NAME}_REGS->SPI_MR =  SPI_MR_MSTR_Msk <#if SPI_CLK_SRC??>| SPI_MR_BRSRCCLK_${SPI_CLK_SRC} </#if><#if SPI_MR_PCS != "GPIO">| SPI_MR_PCS_${SPI_MR_PCS}<#else>| SPI_MR_PCS_NPCS0</#if> | SPI_MR_MODFDIS_Msk;
+    ${SPI_INSTANCE_NAME}_REGS->SPI_MR = SPI_MR_MSTR_Msk <#if SPI_CLK_SRC??>| SPI_MR_BRSRCCLK_${SPI_CLK_SRC} </#if><#if SPI_MR_PCS != "GPIO">| SPI_MR_PCS_${SPI_MR_PCS}<#else>| SPI_MR_PCS_NPCS0</#if> | SPI_MR_MODFDIS_Msk;
 <#else>
     /* SPI is by default in Slave Mode, disable mode fault detection <#if SPI_CLK_SRC??> and select source clock </#if>*/
-    ${SPI_INSTANCE_NAME}_REGS->SPI_MR =  SPI_MR_MODFDIS_Msk <#if SPI_CLK_SRC??>| SPI_MR_BRSRCCLK_${SPI_CLK_SRC}</#if>;
+    ${SPI_INSTANCE_NAME}_REGS->SPI_MR = SPI_MR_MODFDIS_Msk <#if SPI_CLK_SRC??>| SPI_MR_BRSRCCLK_${SPI_CLK_SRC}</#if>;
 </#if>
 
     /* Set up clock Polarity, data phase, Communication Width, Baud Rate<#if SPI_MR_PCS != "GPIO"> and Chip select active after transfer</#if> */
@@ -75,11 +91,10 @@ void ${SPI_INSTANCE_NAME}_Initialize ( void )
 
     /* Enable ${SPI_INSTANCE_NAME} */
     ${SPI_INSTANCE_NAME}_REGS->SPI_CR = SPI_CR_SPIEN_Msk;
-    return;
 }
 
 <#if SPI_INTERRUPT_MODE == false >
-bool ${SPI_INSTANCE_NAME}_WriteRead(void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize)
+bool ${SPI_INSTANCE_NAME}_WriteRead( void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize )
 {
     size_t txCount = 0;
     size_t rxCount = 0;
@@ -179,9 +194,71 @@ bool ${SPI_INSTANCE_NAME}_WriteRead(void* pTransmitData, size_t txSize, void* pR
         return isSuccess;
 }
 <#else>
-bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize)
+bool ${SPI_INSTANCE_NAME}_WriteRead( void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize )
 {
     bool isRequestAccepted = false;
+<#if USE_SPI_DMA?? && USE_SPI_DMA == true>
+    uint32_t size = 0;
+
+    /* Verify the request */
+    if((((txSize > 0) && (pTransmitData != NULL)) || ((rxSize > 0) && (pReceiveData != NULL))) && (${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy == false))
+    {
+        isRequestAccepted = true;
+
+        ${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy = true;
+
+        ${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer = pTransmitData;
+        ${SPI_INSTANCE_NAME?lower_case}Obj.rxBuffer = pReceiveData;
+        ${SPI_INSTANCE_NAME?lower_case}Obj.txCount = txSize;
+        ${SPI_INSTANCE_NAME?lower_case}Obj.rxCount = rxSize;
+
+        if ((txSize > 0) && (rxSize > 0))
+        {
+            /* Find the lower value among txSize and rxSize */
+            (txSize >= rxSize) ? (size = rxSize) : (size = txSize);
+
+            /* Calculate the remaining tx/rx bytes and total bytes transferred */
+            ${SPI_INSTANCE_NAME?lower_case}Obj.rxCount -= size;
+            ${SPI_INSTANCE_NAME?lower_case}Obj.txCount -= size;
+            ${SPI_INSTANCE_NAME?lower_case}Obj.nBytesTransferred = size;
+
+            setupDMA(pTransmitData, pReceiveData, size);
+        }
+        else
+        {
+            if (rxSize > 0)
+            {
+                /* txSize is 0. Need to use the dummy data buffer for transmission.
+                 * Find out the max data that can be received, given the limited size of the dummy data buffer.
+                 */
+                (rxSize > sizeof(dummyDataBuffer)) ?
+                    (size = sizeof(dummyDataBuffer)): (size = rxSize);
+
+                /* Calculate the remaining rx bytes and total bytes transferred */
+                ${SPI_INSTANCE_NAME?lower_case}Obj.rxCount -= size;
+                ${SPI_INSTANCE_NAME?lower_case}Obj.nBytesTransferred = size;
+
+                setupDMA(dummyDataBuffer, pReceiveData, size);
+            }
+            else
+            {
+                /* rxSize is 0. Need to use the dummy data buffer for reception.
+                 * Find out the max data that can be transmitted, given the limited size of the dummy data buffer.
+                 */
+                (txSize > sizeof(dummyDataBuffer)) ?
+                    (size = sizeof(dummyDataBuffer)): (size = txSize);
+
+                /* Calculate the remaining tx bytes and total bytes transferred */
+                ${SPI_INSTANCE_NAME?lower_case}Obj.txCount -= size;
+                ${SPI_INSTANCE_NAME?lower_case}Obj.nBytesTransferred = size;
+
+                setupDMA(pTransmitData, dummyDataBuffer, size);
+            }
+        }
+    }
+
+    return isRequestAccepted;
+<#else>
     uint32_t dummyData;
 
     /* Verify the request */
@@ -193,6 +270,7 @@ bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* p
         ${SPI_INSTANCE_NAME?lower_case}Obj.rxCount = 0;
         ${SPI_INSTANCE_NAME?lower_case}Obj.txCount = 0;
         ${SPI_INSTANCE_NAME?lower_case}Obj.dummySize = 0;
+
         if (pTransmitData != NULL)
         {
             ${SPI_INSTANCE_NAME?lower_case}Obj.txSize = txSize;
@@ -267,26 +345,29 @@ bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* p
     }
 
     return isRequestAccepted;
+</#if>
 }
 </#if>
 
-bool ${SPI_INSTANCE_NAME}_Write(void* pTransmitData, size_t txSize)
+bool ${SPI_INSTANCE_NAME}_Write( void* pTransmitData, size_t txSize )
 {
     return(${SPI_INSTANCE_NAME}_WriteRead(pTransmitData, txSize, NULL, 0));
 }
 
-bool ${SPI_INSTANCE_NAME}_Read(void* pReceiveData, size_t rxSize)
+bool ${SPI_INSTANCE_NAME}_Read( void* pReceiveData, size_t rxSize )
 {
     return(${SPI_INSTANCE_NAME}_WriteRead(NULL, 0, pReceiveData, rxSize));
 }
 
-bool ${SPI_INSTANCE_NAME}_TransferSetup (SPI_TRANSFER_SETUP * setup, uint32_t spiSourceClock )
+bool ${SPI_INSTANCE_NAME}_TransferSetup( SPI_TRANSFER_SETUP * setup, uint32_t spiSourceClock )
 {
     uint32_t scbr;
+
     if ((setup == NULL) || (setup->clockFrequency == 0))
     {
         return false;
     }
+
     if(spiSourceClock == 0)
     {
         // Fetch Master Clock Frequency directly
@@ -304,31 +385,86 @@ bool ${SPI_INSTANCE_NAME}_TransferSetup (SPI_TRANSFER_SETUP * setup, uint32_t sp
         scbr = 255;
     }
 
-    ${SPI_INSTANCE_NAME}_REGS->SPI_CSR[${SPI_CSR_INDEX}]= (uint32_t)setup->clockPolarity | (uint32_t)setup->clockPhase | (uint32_t)setup->dataBits | SPI_CSR_SCBR(scbr);
+    ${SPI_INSTANCE_NAME}_REGS->SPI_CSR[${SPI_CSR_INDEX}] = (uint32_t)setup->clockPolarity | (uint32_t)setup->clockPhase | (uint32_t)setup->dataBits | SPI_CSR_SCBR(scbr);
 
     return true;
 }
 
 <#if SPI_INTERRUPT_MODE == true >
-void ${SPI_INSTANCE_NAME}_CallbackRegister (SPI_CALLBACK callback, uintptr_t context)
+void ${SPI_INSTANCE_NAME}_CallbackRegister( SPI_CALLBACK callback, uintptr_t context )
 {
     ${SPI_INSTANCE_NAME?lower_case}Obj.callback = callback;
     ${SPI_INSTANCE_NAME?lower_case}Obj.context = context;
 }
 
-bool ${SPI_INSTANCE_NAME}_IsBusy()
+bool ${SPI_INSTANCE_NAME}_IsBusy( void )
 {
     return ((${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy) || ((${SPI_INSTANCE_NAME}_REGS->SPI_SR & SPI_SR_TXEMPTY_Msk) == 0));
 }
 
-void ${SPI_INSTANCE_NAME}_InterruptHandler(void)
+void ${SPI_INSTANCE_NAME}_InterruptHandler( void )
 {
-    uint32_t dataBits ;
+<#if USE_SPI_DMA?? && USE_SPI_DMA == true>
+    uint32_t size;
+    uint32_t index;
+<#else>
+    uint32_t dataBits;
     uint32_t receivedData;
     static bool isLastByteTransferInProgress = false;
 
     dataBits = ${SPI_INSTANCE_NAME}_REGS->SPI_CSR[${SPI_CSR_INDEX}] & SPI_CSR_BITS_Msk;
+</#if>
 
+    <#if USE_SPI_DMA?? && USE_SPI_DMA == true>
+    if(${SPI_INSTANCE_NAME?lower_case}Obj.rxCount > 0)
+    {
+        /* txPending is 0. Need to use the dummy data buffer for transmission.
+         * Find out the max data that can be received, given the limited size of the dummy data buffer.
+         */
+        (${SPI_INSTANCE_NAME?lower_case}Obj.rxCount > sizeof(dummyDataBuffer)) ?
+            (size = sizeof(dummyDataBuffer)): (size = ${SPI_INSTANCE_NAME?lower_case}Obj.rxCount);
+
+        index = ${SPI_INSTANCE_NAME?lower_case}Obj.nBytesTransferred;
+
+        /* Calculate the remaining rx bytes and total bytes transferred */
+        ${SPI_INSTANCE_NAME?lower_case}Obj.rxCount -= size;
+        ${SPI_INSTANCE_NAME?lower_case}Obj.nBytesTransferred += size;
+
+        setupDMA(dummyDataBuffer,(void *)&((uint8_t*)${SPI_INSTANCE_NAME?lower_case}Obj.rxBuffer)[index],size);
+    }
+    else if(${SPI_INSTANCE_NAME?lower_case}Obj.txCount > 0)
+    {
+        /* rxSize is 0. Need to use the dummy data buffer for reception.
+         * Find out the max data that can be transmitted, given the limited size of the dummy data buffer.
+         */
+        (${SPI_INSTANCE_NAME?lower_case}Obj.txCount > sizeof(dummyDataBuffer)) ?
+            (size = sizeof(dummyDataBuffer)): (size = ${SPI_INSTANCE_NAME?lower_case}Obj.txCount);
+
+        index = ${SPI_INSTANCE_NAME?lower_case}Obj.nBytesTransferred;
+
+        /* Calculate the remaining rx bytes and total bytes transferred */
+        ${SPI_INSTANCE_NAME?lower_case}Obj.txCount -= size;
+        ${SPI_INSTANCE_NAME?lower_case}Obj.nBytesTransferred += size;
+
+        setupDMA((void *)&((uint8_t*)${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[index], dummyDataBuffer, size);
+    }
+    else
+    {
+        ${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy = false;
+
+        <#if SPI_MR_PCS != "GPIO">
+        /* Set Last transfer to deassert NPCS after the last byte written in TDR has been transferred. */
+        ${SPI_INSTANCE_NAME}_REGS->SPI_CR = SPI_CR_LASTXFER_Msk;
+        </#if>
+        ${SPI_INSTANCE_NAME}_REGS->SPI_PTCR = SPI_PTCR_RXTDIS_Msk | SPI_PTCR_TXTDIS_Msk;
+        ${SPI_INSTANCE_NAME}_REGS->SPI_IDR = SPI_IDR_ENDRX_Msk;
+
+        if( ${SPI_INSTANCE_NAME?lower_case}Obj.callback != NULL )
+        {
+            ${SPI_INSTANCE_NAME?lower_case}Obj.callback(${SPI_INSTANCE_NAME?lower_case}Obj.context);
+        }
+    }
+    <#else>
     if ((${SPI_INSTANCE_NAME}_REGS->SPI_SR & SPI_SR_RDRF_Msk ) == SPI_SR_RDRF_Msk)
     {
         receivedData = (${SPI_INSTANCE_NAME}_REGS->SPI_RDR & SPI_RDR_RD_Msk) >> SPI_RDR_RD_Pos;
@@ -430,12 +566,6 @@ void ${SPI_INSTANCE_NAME}_InterruptHandler(void)
          */
         ${SPI_INSTANCE_NAME}_REGS->SPI_IER = SPI_IER_TXEMPTY_Msk;
     }
-
+    </#if>
 }
 </#if>
-
-
-/*******************************************************************************
- End of File
-*/
-
