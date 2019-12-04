@@ -47,11 +47,20 @@
 // Section: ${UART_INSTANCE_NAME} Implementation
 // *****************************************************************************
 // *****************************************************************************
+<#assign useUARTRxDMA = false>
+<#assign useUARTTxDMA = false>
 <#if USART_INTERRUPT_MODE == true>
+<#if USE_UART_RX_DMA??>
+<#assign useUARTRxDMA = USE_UART_RX_DMA>
+</#if>
+<#if USE_UART_TX_DMA??>
+<#assign useUARTTxDMA = USE_UART_TX_DMA>
+</#if>
 
 UART_OBJECT ${UART_INSTANCE_NAME?lower_case}Obj;
 
-void static ${UART_INSTANCE_NAME}_ISR_RX_Handler( void )
+<#if useUARTRxDMA == false>
+static void ${UART_INSTANCE_NAME}_ISR_RX_Handler( void )
 {
     if(${UART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus == true)
     {
@@ -81,7 +90,9 @@ void static ${UART_INSTANCE_NAME}_ISR_RX_Handler( void )
     }
 }
 
-void static ${UART_INSTANCE_NAME}_ISR_TX_Handler( void )
+</#if>
+<#if useUARTTxDMA == false>
+static void ${UART_INSTANCE_NAME}_ISR_TX_Handler( void )
 {
     if(${UART_INSTANCE_NAME?lower_case}Obj.txBusyStatus == true)
     {
@@ -109,6 +120,7 @@ void static ${UART_INSTANCE_NAME}_ISR_TX_Handler( void )
     }
 }
 
+</#if>
 void ${UART_INSTANCE_NAME}_InterruptHandler( void )
 {
     /* Error status */
@@ -119,7 +131,12 @@ void ${UART_INSTANCE_NAME}_InterruptHandler( void )
         /* Client must call UARTx_ErrorGet() function to clear the errors */
 
         /* Disable Read, Overrun, Parity and Framing error interrupts */
+        <#if useUARTRxDMA == true>
+        ${UART_INSTANCE_NAME}_REGS->UART_PTCR = UART_PTCR_RXTDIS_Msk;
+        ${UART_INSTANCE_NAME}_REGS->UART_IDR = (UART_IDR_ENDRX_Msk | UART_IDR_FRAME_Msk | UART_IDR_PARE_Msk | UART_IDR_OVRE_Msk);
+        <#else>
         ${UART_INSTANCE_NAME}_REGS->UART_IDR = (UART_IDR_RXRDY_Msk | UART_IDR_FRAME_Msk | UART_IDR_PARE_Msk | UART_IDR_OVRE_Msk);
+        </#if>
 
         ${UART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus = false;
 
@@ -131,31 +148,64 @@ void ${UART_INSTANCE_NAME}_InterruptHandler( void )
         }
     }
 
+    <#if useUARTRxDMA == true>
+    if ((${UART_INSTANCE_NAME}_REGS->UART_PTSR & UART_PTSR_RXTEN_Msk) && (${UART_INSTANCE_NAME}_REGS->UART_SR & UART_SR_ENDRX_Msk))
+    {
+        if(${UART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus == true)
+        {
+            ${UART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus = false;
+            ${UART_INSTANCE_NAME}_REGS->UART_PTCR = UART_PTCR_RXTDIS_Msk;
+            ${UART_INSTANCE_NAME}_REGS->UART_IDR = (UART_IDR_ENDRX_Msk | UART_IDR_FRAME_Msk | UART_IDR_PARE_Msk | UART_IDR_OVRE_Msk);
+
+            if( ${UART_INSTANCE_NAME?lower_case}Obj.rxCallback != NULL )
+            {
+                ${UART_INSTANCE_NAME?lower_case}Obj.rxCallback(${UART_INSTANCE_NAME?lower_case}Obj.rxContext);
+            }
+        }
+    }
+    <#else>
     /* Receiver status */
-    if(UART_SR_RXRDY_Msk == (${UART_INSTANCE_NAME}_REGS->UART_SR& UART_SR_RXRDY_Msk))
+    if(UART_SR_RXRDY_Msk == (${UART_INSTANCE_NAME}_REGS->UART_SR & UART_SR_RXRDY_Msk))
     {
         ${UART_INSTANCE_NAME}_ISR_RX_Handler();
     }
+    </#if>
 
+    <#if useUARTTxDMA == true>
+    if ((${UART_INSTANCE_NAME}_REGS->UART_PTSR & UART_PTSR_TXTEN_Msk) && (${UART_INSTANCE_NAME}_REGS->UART_SR & UART_SR_ENDTX_Msk))
+    {
+        if(${UART_INSTANCE_NAME?lower_case}Obj.txBusyStatus == true)
+        {
+            ${UART_INSTANCE_NAME?lower_case}Obj.txBusyStatus = false;
+            ${UART_INSTANCE_NAME}_REGS->UART_PTCR = UART_PTCR_TXTDIS_Msk;
+            ${UART_INSTANCE_NAME}_REGS->UART_IDR = UART_IDR_ENDTX_Msk;
+
+            if( ${UART_INSTANCE_NAME?lower_case}Obj.txCallback != NULL )
+            {
+                ${UART_INSTANCE_NAME?lower_case}Obj.txCallback(${UART_INSTANCE_NAME?lower_case}Obj.txContext);
+            }
+        }
+    }
+    <#else>
     /* Transmitter status */
     if(UART_SR_TXRDY_Msk == (${UART_INSTANCE_NAME}_REGS->UART_SR & UART_SR_TXRDY_Msk))
     {
         ${UART_INSTANCE_NAME}_ISR_TX_Handler();
     }
+    </#if>
 }
-
 </#if>
 
-void static ${UART_INSTANCE_NAME}_ErrorClear( void )
+static void ${UART_INSTANCE_NAME}_ErrorClear( void )
 {
     uint8_t dummyData = 0u;
 
     ${UART_INSTANCE_NAME}_REGS->UART_CR = UART_CR_RSTSTA_Msk;
 
     /* Flush existing error bytes from the RX FIFO */
-    while( UART_SR_RXRDY_Msk == (${UART_INSTANCE_NAME}_REGS->UART_SR& UART_SR_RXRDY_Msk) )
+    while( UART_SR_RXRDY_Msk == (${UART_INSTANCE_NAME}_REGS->UART_SR & UART_SR_RXRDY_Msk) )
     {
-        dummyData = (${UART_INSTANCE_NAME}_REGS->UART_RHR& UART_RHR_RXCHR_Msk);
+        dummyData = (${UART_INSTANCE_NAME}_REGS->UART_RHR & UART_RHR_RXCHR_Msk);
     }
 
     /* Ignore the warning */
@@ -171,7 +221,11 @@ void ${UART_INSTANCE_NAME}_Initialize( void )
     ${UART_INSTANCE_NAME}_REGS->UART_CR = (UART_CR_TXEN_Msk | UART_CR_RXEN_Msk);
 
     /* Configure ${UART_INSTANCE_NAME} mode */
+    <#if UART_CLK_SRC??>
     ${UART_INSTANCE_NAME}_REGS->UART_MR = ((UART_MR_BRSRCCK_${UART_CLK_SRC}) | (UART_MR_PAR_${UART_MR_PAR}) | (${UART_MR_FILTER?then(1,0)} << UART_MR_FILTER_Pos));
+    <#else>
+    ${UART_INSTANCE_NAME}_REGS->UART_MR = ((UART_MR_PAR_${UART_MR_PAR}) | (${UART_MR_FILTER?then(1,0)} << UART_MR_FILTER_Pos));
+    </#if>
 
     /* Configure ${UART_INSTANCE_NAME} Baud Rate */
     ${UART_INSTANCE_NAME}_REGS->UART_BRGR = UART_BRGR_CD(${BRG_VALUE});
@@ -278,7 +332,7 @@ bool ${UART_INSTANCE_NAME}_Read( void *buffer, const size_t size )
 
             if(UART_SR_RXRDY_Msk == (${UART_INSTANCE_NAME}_REGS->UART_SR & UART_SR_RXRDY_Msk))
             {
-                *lBuffer++ = (${UART_INSTANCE_NAME}_REGS->UART_RHR & UART_RHR_RXCHR_Msk);
+                *lBuffer++ = (${UART_INSTANCE_NAME}_REGS->UART_RHR& UART_RHR_RXCHR_Msk);
                 processedSize++;
             }
         }
@@ -297,8 +351,15 @@ bool ${UART_INSTANCE_NAME}_Read( void *buffer, const size_t size )
             ${UART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus = true;
             status = true;
 
+            <#if useUARTRxDMA == true>
+            ${UART_INSTANCE_NAME}_REGS->UART_RPR = (uint32_t)buffer;
+            ${UART_INSTANCE_NAME}_REGS->UART_RCR = (uint32_t)size;
+            ${UART_INSTANCE_NAME}_REGS->UART_PTCR = UART_PTCR_RXTEN_Msk;
+            ${UART_INSTANCE_NAME}_REGS->UART_IER = (UART_IER_ENDRX_Msk | UART_IER_FRAME_Msk | UART_IER_PARE_Msk | UART_IER_OVRE_Msk);
+            <#else>
             /* Enable Read, Overrun, Parity and Framing error interrupts */
             ${UART_INSTANCE_NAME}_REGS->UART_IER = (UART_IER_RXRDY_Msk | UART_IER_FRAME_Msk | UART_IER_PARE_Msk | UART_IER_OVRE_Msk);
+            </#if>
         }
 </#if>
     }
@@ -337,6 +398,12 @@ bool ${UART_INSTANCE_NAME}_Write( void *buffer, const size_t size )
             ${UART_INSTANCE_NAME?lower_case}Obj.txBusyStatus = true;
             status = true;
 
+            <#if useUARTTxDMA == true>
+            ${UART_INSTANCE_NAME}_REGS->UART_TPR = (uint32_t)buffer;
+            ${UART_INSTANCE_NAME}_REGS->UART_TCR = (uint32_t)size;
+            ${UART_INSTANCE_NAME}_REGS->UART_PTCR = UART_PTCR_TXTEN_Msk;
+            ${UART_INSTANCE_NAME}_REGS->UART_IER = UART_IER_ENDTX_Msk;
+            <#else>
             /* Initiate the transfer by sending first byte */
             if(UART_SR_TXRDY_Msk == (${UART_INSTANCE_NAME}_REGS->UART_SR & UART_SR_TXRDY_Msk))
             {
@@ -345,6 +412,7 @@ bool ${UART_INSTANCE_NAME}_Write( void *buffer, const size_t size )
             }
 
             ${UART_INSTANCE_NAME}_REGS->UART_IER = UART_IER_TXEMPTY_Msk;
+            </#if>
         }
 </#if>
     }
@@ -379,12 +447,20 @@ bool ${UART_INSTANCE_NAME}_ReadIsBusy( void )
 
 size_t ${UART_INSTANCE_NAME}_WriteCountGet( void )
 {
+    <#if useUARTTxDMA == true>
+    return (${UART_INSTANCE_NAME?lower_case}Obj.txSize - ${UART_INSTANCE_NAME}_REGS->UART_TCR);
+    <#else>
     return ${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize;
+    </#if>
 }
 
 size_t ${UART_INSTANCE_NAME}_ReadCountGet( void )
 {
+    <#if useUARTRxDMA == true>
+    return (${UART_INSTANCE_NAME?lower_case}Obj.rxSize - ${UART_INSTANCE_NAME}_REGS->UART_RCR);
+    <#else>
     return ${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize;
+    </#if>
 }
 
 </#if>
@@ -394,7 +470,7 @@ int ${UART_INSTANCE_NAME}_ReadByte(void)
     return(${UART_INSTANCE_NAME}_REGS->UART_RHR& UART_RHR_RXCHR_Msk);
 }
 
-void ${UART_INSTANCE_NAME}_WriteByte(int data)
+void ${UART_INSTANCE_NAME}_WriteByte( int data )
 {
     while ((UART_SR_TXRDY_Msk == (${UART_INSTANCE_NAME}_REGS->UART_SR & UART_SR_TXRDY_Msk)) == 0);
 

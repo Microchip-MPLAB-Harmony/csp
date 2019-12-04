@@ -23,17 +23,9 @@
 *****************************************************************************"""
 
 ################################################################################
-#### Register Information ####
-################################################################################
-
-uartValGrp_MR_PAR = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/value-group@[name="UART_MR__PAR"]')
-
-uartBitField_MR_FILTER = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/register-group@[name="UART"]/register@[name="UART_MR"]/bitfield@[name="FILTER"]')
-uartCaption_MR_FILTER = uartBitField_MR_FILTER.getAttribute("caption")
-
-################################################################################
 #### Global Variables ####
 ################################################################################
+
 global uartInstanceName
 global interruptVector
 global interruptHandler
@@ -42,13 +34,17 @@ global interruptHandlerLock
 ################################################################################
 #### Business Logic ####
 ################################################################################
+
 def interruptControl(uartNVIC, event):
+
     global interruptVector
     global interruptHandler
     global interruptHandlerLock
+
     Database.clearSymbolValue("core", interruptVector)
     Database.clearSymbolValue("core", interruptHandler)
     Database.clearSymbolValue("core", interruptHandlerLock)
+
     if (event["value"] == True):
         Database.setSymbolValue("core", interruptVector, True, 2)
         Database.setSymbolValue("core", interruptHandler, uartInstanceName.getValue() + "_InterruptHandler", 2)
@@ -59,11 +55,13 @@ def interruptControl(uartNVIC, event):
         Database.setSymbolValue("core", interruptHandlerLock, False, 2)
 
 def dependencyStatus(symbol, event):
+
     if (Database.getSymbolValue(uartInstanceName.getValue().lower(), "USART_INTERRUPT_MODE") == True):
         symbol.setVisible(event["value"])
 
 # Calculates BRG value
 def baudRateCalc(clk, baud):
+
     if (clk >= (16 * baud)):
         brgVal = (clk / (16 * baud))
     else :
@@ -72,20 +70,30 @@ def baudRateCalc(clk, baud):
     return brgVal
 
 def baudRateTrigger(symbol, event):
+
     clk = Database.getSymbolValue("core", uartInstanceName.getValue() + "_CLOCK_FREQUENCY")
     baud = Database.getSymbolValue(uartInstanceName.getValue().lower(), "BAUD_RATE")
+
     brgVal = baudRateCalc(clk, baud)
     uartClockInvalidSym.setVisible((brgVal < 1) or (brgVal > 65535))
     symbol.setValue(brgVal, 2)
 
 def clockSourceFreq(symbol, event):
+
     symbol.clearValue()
     symbol.setValue(int(Database.getSymbolValue("core", uartInstanceName.getValue() + "_CLOCK_FREQUENCY")), 2)
+
+# Dependency Function for symbol visibility
+def updateUARTDMAConfigurationVisbleProperty(symbol, event):
+
+    symbol.setVisible(event["value"])
 
 ################################################################################
 #### Component ####
 ################################################################################
+
 def instantiateComponent(uartComponent):
+
     global interruptVector
     global interruptHandler
     global interruptHandlerLock
@@ -100,19 +108,43 @@ def instantiateComponent(uartComponent):
     uartInterrupt.setLabel("Interrupt Mode")
     uartInterrupt.setDefaultValue(True)
 
+    # Add DMA support if Peripheral DMA Controller (PDC) exist in the UART register group
+    uartRegisterGroup = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"UART\"]/register-group@[name=\"UART\"]")
+    uartRegisterList = uartRegisterGroup.getChildren()
+
+    for index in range(0, len(uartRegisterList)):
+        if (uartRegisterList[index].getAttribute("name") == "UART_RPR"):
+            uartRxDMAEnable = uartComponent.createBooleanSymbol("USE_UART_RX_DMA", None)
+            uartRxDMAEnable.setLabel("Enable DMA for Receive")
+            uartRxDMAEnable.setVisible(True)
+            uartRxDMAEnable.setDependencies(updateUARTDMAConfigurationVisbleProperty, ["USART_INTERRUPT_MODE"])
+            break
+
+    for index in range(0, len(uartRegisterList)):
+        if (uartRegisterList[index].getAttribute("name") == "UART_TPR"):
+            uartTxDMAEnable = uartComponent.createBooleanSymbol("USE_UART_TX_DMA", None)
+            uartTxDMAEnable.setLabel("Enable DMA for Transmit")
+            uartTxDMAEnable.setVisible(True)
+            uartTxDMAEnable.setDependencies(updateUARTDMAConfigurationVisbleProperty, ["USART_INTERRUPT_MODE"])
+            break
+
+    uart_clock = []
+    node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"UART\"]/instance@[name=\"" + uartInstanceName.getValue() + "\"]/parameters")
+    uart_clock = node.getChildren()
+
     uartClkSrc = uartComponent.createKeyValueSetSymbol("UART_CLK_SRC", None)
     uartClkSrc.setLabel("Select Clock Source")
-    uart_clock = []
-    node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"UART\"]/instance@[name=\""+uartInstanceName.getValue()+"\"]/parameters")
-    uart_clock = node.getChildren()
+
     for clock in range(0, len(uart_clock)):
         if ("BRSRCCK" in uart_clock[clock].getAttribute("name")):
             name_split = uart_clock[clock].getAttribute("name").split("_")[1:]
             name = "_".join(name_split)
             uartClkSrc.addKey(name, uart_clock[clock].getAttribute("value"), uart_clock[clock].getAttribute("caption"))
+
     uartClkSrc.setDisplayMode("Description")
     uartClkSrc.setOutputMode("Key")
     uartClkSrc.setDefaultValue(0)
+    uartClkSrc.setVisible(uartClkSrc.getKeyCount() > 0)
 
     uartClkValue = uartComponent.createIntegerSymbol("UART_CLOCK_FREQ", None)
     uartClkValue.setLabel("Clock Frequency")
@@ -145,11 +177,11 @@ def instantiateComponent(uartComponent):
     uartDataWidth_8_Mask.setDefaultValue("0x0")
     uartDataWidth_8_Mask.setVisible(False)
 
+    uartValGrp_MR_PAR = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/value-group@[name="UART_MR__PAR"]')
     parityList = []
     for id in range(0, len(uartValGrp_MR_PAR.getChildren())):
-        parityList.append(id+1)
+        parityList.append(id + 1)
         parityList[id] = uartValGrp_MR_PAR.getChildren()[id].getAttribute("name")
-
 
     uartSym_MR_PAR = uartComponent.createComboSymbol("UART_MR_PAR", None, parityList)
     uartSym_MR_PAR.setLabel("Parity")
@@ -201,7 +233,7 @@ def instantiateComponent(uartComponent):
     uartStopBit_1_Mask.setVisible(False)
 
     uartSym_MR_FILTER = uartComponent.createBooleanSymbol("UART_MR_FILTER", None)
-    uartSym_MR_FILTER.setLabel(uartCaption_MR_FILTER)
+    uartSym_MR_FILTER.setLabel("Receiver Digital Filter")
     uartSym_MR_FILTER.setDefaultValue(False)
 
     #USART Overrun error Mask
@@ -234,8 +266,8 @@ def instantiateComponent(uartComponent):
     interruptVectorUpdate = uartInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
 
     # Initial settings for CLK and NVIC
-    Database.clearSymbolValue("core", uartInstanceName.getValue()+"_CLOCK_ENABLE")
-    Database.setSymbolValue("core", uartInstanceName.getValue()+"_CLOCK_ENABLE", True, 2)
+    Database.clearSymbolValue("core", uartInstanceName.getValue() + "_CLOCK_ENABLE")
+    Database.setSymbolValue("core", uartInstanceName.getValue() + "_CLOCK_ENABLE", True, 2)
     Database.clearSymbolValue("core", interruptVector)
     Database.setSymbolValue("core", interruptVector, True, 2)
     Database.clearSymbolValue("core", interruptHandler)
@@ -252,7 +284,7 @@ def instantiateComponent(uartComponent):
     uartSymClkEnComment = uartComponent.createCommentSymbol("UART_CLK_ENABLE_COMMENT", None)
     uartSymClkEnComment.setVisible(False)
     uartSymClkEnComment.setLabel("Warning!!! UART Peripheral Clock is Disabled in Clock Manager")
-    uartSymClkEnComment.setDependencies(dependencyStatus, ["core."+uartInstanceName.getValue()+"_CLOCK_ENABLE"])
+    uartSymClkEnComment.setDependencies(dependencyStatus, ["core." + uartInstanceName.getValue() + "_CLOCK_ENABLE"])
 
     uartSymIntEnComment = uartComponent.createCommentSymbol("UART_NVIC_ENABLE_COMMENT", None)
     uartSymIntEnComment.setVisible(False)
@@ -262,6 +294,7 @@ def instantiateComponent(uartComponent):
     ############################################################################
     #### Code Generation ####
     ############################################################################
+
     configName = Variables.get("__CONFIGURATION_NAME")
 
     uartHeaderFile = uartComponent.createFileSymbol("UART_HEADER", None)

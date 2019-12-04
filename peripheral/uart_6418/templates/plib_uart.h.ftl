@@ -57,6 +57,7 @@
 // Section: Interface
 // *****************************************************************************
 // *****************************************************************************
+
 #define ${UART_INSTANCE_NAME}_FrequencyGet()    (uint32_t)(${UART_CLOCK_FREQ}UL)
 
 /****************************** ${UART_INSTANCE_NAME} API *********************************/
@@ -104,5 +105,6 @@ void ${UART_INSTANCE_NAME}_ReadCallbackRegister( UART_CALLBACK callback, uintptr
     }
 
 #endif
+
 // DOM-IGNORE-END
 #endif // PLIB_${UART_INSTANCE_NAME}_H
