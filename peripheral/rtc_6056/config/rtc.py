@@ -29,11 +29,14 @@ global interruptHandler
 global interruptHandlerLock
 
 def interruptControl(symbol, event):
+
     global interruptVector
     global interruptHandler
+
     Database.clearSymbolValue("core", interruptVector)
     Database.clearSymbolValue("core", interruptHandler)
     Database.clearSymbolValue("core", interruptHandlerLock)
+
     if (event["value"] == True):
         Database.setSymbolValue("core", interruptVector, True, 2)
         Database.setSymbolValue("core", interruptHandler, rtcInstanceName.getValue() + "_InterruptHandler", 2)
@@ -43,32 +46,35 @@ def interruptControl(symbol, event):
         Database.setSymbolValue("core", interruptHandler, "RTC_Handler", 2)
         Database.setSymbolValue("core", interruptHandlerLock, False, 2)
 
+def rtcTHIGH(symbol, event):
 
-def rtcTHIGH(rtcSym_MR_THIGH, event):
-    data = rtcSym_MR_THIGH.getComponent()
+    data = symbol.getComponent()
     rtcOUT0 = data.getSymbolValue("RTC_MR_OUT0")
     rtcOUT1 = data.getSymbolValue("RTC_MR_OUT1")
+
     if rtcOUT0 != "PROG_PULSE" and rtcOUT1 != "PROG_PULSE":
-        rtcSym_MR_THIGH.setVisible(False)
+        symbol.setVisible(False)
     else:
-        rtcSym_MR_THIGH.setVisible(True)
+        symbol.setVisible(True)
 
+def rtcTPERIOD(symbol, event):
 
-def rtcTPERIOD(rtcSym_MR_TPERIOD, event):
-    data = rtcSym_MR_TPERIOD.getComponent()
+    data = symbol.getComponent()
     rtcOUT0 = data.getSymbolValue("RTC_MR_OUT0")
     rtcOUT1 = data.getSymbolValue("RTC_MR_OUT1")
-    if rtcOUT0 != "PROG_PULSE" and rtcOUT1 != "PROG_PULSE":
-        rtcSym_MR_TPERIOD.setVisible(False)
-    else:
-        rtcSym_MR_TPERIOD.setVisible(True)
 
+    if rtcOUT0 != "PROG_PULSE" and rtcOUT1 != "PROG_PULSE":
+        symbol.setVisible(False)
+    else:
+        symbol.setVisible(True)
 
 def instantiateComponent(rtcComponent):
+
     global rtcInstanceName
     global interruptVector
     global interruptHandler
     global interruptHandlerLock
+
     out0_names = []
     out1_names = []
     thigh_names = []
@@ -89,10 +95,8 @@ def instantiateComponent(rtcComponent):
     rtcValGrp_MR_OUT1 = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTC"]/value-group@[name="RTC_MR__OUT1"]')
 
     rtcBitField_MR_THIGH = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTC"]/register-group@[name="RTC"]/register@[name="RTC_MR"]/bitfield@[name="THIGH"]')
-    rtcValGrp_MR_THIGH = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTC"]/value-group@[name="RTC_MR__THIGH"]')
 
     rtcBitField_MR_TPERIOD = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTC"]/register-group@[name="RTC"]/register@[name="RTC_MR"]/bitfield@[name="TPERIOD"]')
-    rtcValGrp_MR_TPERIOD = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTC"]/value-group@[name="RTC_MR__TPERIOD"]')
 
     rtcBitField_CR_TIMEVSEL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTC"]/register-group@[name="RTC"]/register@[name="RTC_CR"]/bitfield@[name="TIMEVSEL"]')
     rtcValGrp_CR_TIMEVSEL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTC"]/value-group@[name="RTC_CR__TIMEVSEL"]')
@@ -100,17 +104,14 @@ def instantiateComponent(rtcComponent):
     rtcBitField_CR_CALEVSEL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTC"]/register-group@[name="RTC"]/register@[name="RTC_CR"]/bitfield@[name="CALEVSEL"]')
     rtcValGrp_CR_CALEVSEL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTC"]/value-group@[name="RTC_CR__CALEVSEL"]')
 
-    #Create the top menu
-    rtcMenu = rtcComponent.createMenuSymbol("RTC_MENU_0", None)
-    rtcMenu.setLabel("Hardware Settings ")
     #Create a Checkbox to enable disable interrupts
-    rtcInterrupt = rtcComponent.createBooleanSymbol("rtcEnableInterrupt", rtcMenu)
+    rtcInterrupt = rtcComponent.createBooleanSymbol("rtcEnableInterrupt", None)
     rtcInterrupt.setLabel("Enable Interrupt")
     rtcInterrupt.setDefaultValue(True)
 
-    interruptVector = rtcInstanceName.getValue()+"_INTERRUPT_ENABLE"
-    interruptHandler = rtcInstanceName.getValue()+"_INTERRUPT_HANDLER"
-    interruptHandlerLock = rtcInstanceName.getValue()+"_INTERRUPT_HANDLER_LOCK"
+    interruptVector = rtcInstanceName.getValue() + "_INTERRUPT_ENABLE"
+    interruptHandler = rtcInstanceName.getValue() + "_INTERRUPT_HANDLER"
+    interruptHandlerLock = rtcInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK"
 
     Database.clearSymbolValue("core", interruptVector)
     Database.setSymbolValue("core", interruptVector, True, 2)
@@ -125,59 +126,63 @@ def instantiateComponent(rtcComponent):
     rtcInterruptControl.setVisible(False)
 
     # Create a Checkbox to enable 12 -v- 24 HR mode
-    rtc12HrMode = rtcComponent.createBooleanSymbol("RTC_12HR_MODE", rtcMenu)
+    rtc12HrMode = rtcComponent.createBooleanSymbol("RTC_12HR_MODE", None)
     rtc12HrMode.setLabel("Enable 12 HR Mode")
-    rtc12HrMode.setDefaultValue(False)
     rtc12HrMode.setVisible(False)
 
     if rtcBitField_MR_UTC:
-        rtcSym_MR_UTC = rtcComponent.createBooleanSymbol("RTC_MR_UTC", rtcMenu)
+        rtcSym_MR_UTC = rtcComponent.createBooleanSymbol("RTC_MR_UTC", None)
         rtcSym_MR_UTC.setLabel("Enable UTC Mode")
-        rtcSym_MR_UTC.setDefaultValue( False )
 
     for id in range(0,len(rtcValGrp_MR_OUT0.getChildren())):
         out0_names.append(rtcValGrp_MR_OUT0.getChildren()[id].getAttribute("name"))
 
-    rtcSym_MR_OUT0 = rtcComponent.createComboSymbol("RTC_MR_OUT0", rtcMenu, out0_names)
+    rtcSym_MR_OUT0 = rtcComponent.createComboSymbol("RTC_MR_OUT0", None, out0_names)
     rtcSym_MR_OUT0.setLabel(rtcBitField_MR_OUT0.getAttribute("caption"))
     rtcSym_MR_OUT0.setDefaultValue("NO_WAVE")
 
-    for id in range(0,len(rtcValGrp_MR_OUT1.getChildren())):
+    for id in range(0, len(rtcValGrp_MR_OUT1.getChildren())):
         out1_names.append(rtcValGrp_MR_OUT1.getChildren()[id].getAttribute("name"))
 
-    rtcSym_MR_OUT1 = rtcComponent.createComboSymbol("RTC_MR_OUT1", rtcMenu, out1_names)
+    rtcSym_MR_OUT1 = rtcComponent.createComboSymbol("RTC_MR_OUT1", None, out1_names)
     rtcSym_MR_OUT1.setLabel(rtcBitField_MR_OUT1.getAttribute("caption"))
     rtcSym_MR_OUT1.setDefaultValue("NO_WAVE")
 
-    for id in range(0,len(rtcValGrp_MR_THIGH.getChildren())):
-        thigh_names.append(rtcValGrp_MR_THIGH.getChildren()[id].getAttribute("name"))
+    if rtcBitField_MR_THIGH != None:
+        rtcValGrp_MR_THIGH = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTC"]/value-group@[name="RTC_MR__THIGH"]')
+        if rtcValGrp_MR_THIGH != None:
+            for id in range(0, len(rtcValGrp_MR_THIGH.getChildren())):
+                thigh_names.append(rtcValGrp_MR_THIGH.getChildren()[id].getAttribute("name"))
 
-    rtcSym_MR_THIGH = rtcComponent.createComboSymbol("RTC_MR_THIGH", rtcMenu, thigh_names)
-    rtcSym_MR_THIGH.setLabel(rtcBitField_MR_THIGH.getAttribute("caption"))
-    rtcSym_MR_THIGH.setDefaultValue("H_31MS")
-    rtcSym_MR_THIGH.setVisible(False)
-    rtcSym_MR_THIGH.setDependencies(rtcTHIGH, ["RTC_MR_OUT0", "RTC_MR_OUT1"])
+            rtcSym_MR_THIGH = rtcComponent.createComboSymbol("RTC_MR_THIGH", None, thigh_names)
+            rtcSym_MR_THIGH.setLabel(rtcBitField_MR_THIGH.getAttribute("caption"))
+            rtcSym_MR_THIGH.setDefaultValue("H_31MS")
+            rtcSym_MR_THIGH.setVisible(False)
+            rtcSym_MR_THIGH.setDependencies(rtcTHIGH, ["RTC_MR_OUT0", "RTC_MR_OUT1"])
 
-    for id in range(0,len(rtcValGrp_MR_TPERIOD.getChildren())):
-        tperiod_names.append(rtcValGrp_MR_TPERIOD.getChildren()[id].getAttribute("name"))
+    if rtcBitField_MR_TPERIOD != None:
+        rtcValGrp_MR_TPERIOD = ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTC"]/value-group@[name="RTC_MR__TPERIOD"]')
+        if rtcValGrp_MR_TPERIOD != None:
+            for id in range(0, len(rtcValGrp_MR_TPERIOD.getChildren())):
+                tperiod_names.append(rtcValGrp_MR_TPERIOD.getChildren()[id].getAttribute("name"))
 
-    rtcSym_MR_TPERIOD = rtcComponent.createComboSymbol("RTC_MR_TPERIOD", rtcMenu, tperiod_names)
-    rtcSym_MR_TPERIOD.setLabel(rtcBitField_MR_TPERIOD.getAttribute("caption"))
-    rtcSym_MR_TPERIOD.setDefaultValue("P_1S")
-    rtcSym_MR_TPERIOD.setVisible(False)
-    rtcSym_MR_TPERIOD.setDependencies(rtcTPERIOD, ["RTC_MR_OUT0", "RTC_MR_OUT1"])
+            rtcSym_MR_TPERIOD = rtcComponent.createComboSymbol("RTC_MR_TPERIOD", None, tperiod_names)
+            rtcSym_MR_TPERIOD.setLabel(rtcBitField_MR_TPERIOD.getAttribute("caption"))
+            rtcSym_MR_TPERIOD.setDefaultValue("P_1S")
+            rtcSym_MR_TPERIOD.setVisible(False)
+            rtcSym_MR_TPERIOD.setDependencies(rtcTPERIOD, ["RTC_MR_OUT0", "RTC_MR_OUT1"])
 
     for id in range(0,len(rtcValGrp_CR_TIMEVSEL.getChildren())):
         timevsel_names.append(rtcValGrp_CR_TIMEVSEL.getChildren()[id].getAttribute("name"))
 
-    rtcSym_CR_TIMEVSEL= rtcComponent.createComboSymbol("RTC_CR_TIMEVSEL", rtcMenu, timevsel_names)
+    rtcSym_CR_TIMEVSEL= rtcComponent.createComboSymbol("RTC_CR_TIMEVSEL", None, timevsel_names)
     rtcSym_CR_TIMEVSEL.setLabel(rtcBitField_CR_TIMEVSEL.getAttribute("caption"))
     rtcSym_CR_TIMEVSEL.setDefaultValue("MINUTE")
 
     for id in range(0,len(rtcValGrp_CR_CALEVSEL.getChildren())):
         calevsel_names.append(rtcValGrp_CR_CALEVSEL.getChildren()[id].getAttribute("name"))
 
-    rtcSym_CR_CALEVSEL = rtcComponent.createComboSymbol("RTC_CR_CALEVSEL", rtcMenu, calevsel_names)
+    rtcSym_CR_CALEVSEL = rtcComponent.createComboSymbol("RTC_CR_CALEVSEL", None, calevsel_names)
     rtcSym_CR_CALEVSEL.setLabel(rtcBitField_CR_CALEVSEL.getAttribute("caption"))
     rtcSym_CR_CALEVSEL.setDefaultValue("WEEK")
 
@@ -191,24 +196,27 @@ def instantiateComponent(rtcComponent):
     rtcCommonHeaderFile.setDestPath("peripheral/rtc/")
     rtcCommonHeaderFile.setProjectPath("config/" + configName + "/peripheral/rtc/")
     rtcCommonHeaderFile.setType("HEADER")
+
     # Generate Output Header
     rtcHeaderFile = rtcComponent.createFileSymbol("RTC_HEADER_FILE", None)
     rtcHeaderFile.setSourcePath("../peripheral/rtc_6056/templates/plib_rtc.h.ftl")
     rtcHeaderFile.setMarkup(True)
-    rtcHeaderFile.setOutputName("plib_"+rtcInstanceName.getValue().lower()+".h")
+    rtcHeaderFile.setOutputName("plib_" + rtcInstanceName.getValue().lower() + ".h")
     rtcHeaderFile.setOverwrite(True)
     rtcHeaderFile.setDestPath("peripheral/rtc/")
     rtcHeaderFile.setProjectPath("config/" + configName + "/peripheral/rtc/")
     rtcHeaderFile.setType("HEADER")
+
     # Generate Output source
     rtcSourceFile = rtcComponent.createFileSymbol("RTC_C_SOURCE_FILE", None)
     rtcSourceFile.setSourcePath("../peripheral/rtc_6056/templates/plib_rtc.c.ftl")
     rtcSourceFile.setMarkup(True)
-    rtcSourceFile.setOutputName("plib_"+rtcInstanceName.getValue().lower()+".c")
+    rtcSourceFile.setOutputName("plib_" + rtcInstanceName.getValue().lower() + ".c")
     rtcSourceFile.setOverwrite(True)
     rtcSourceFile.setDestPath("peripheral/rtc/")
     rtcSourceFile.setProjectPath("config/" + configName + "/peripheral/rtc/")
     rtcSourceFile.setType("SOURCE")
+
     rtcSystemInitFile = rtcComponent.createFileSymbol("RTC_SYSTEM_INITIALIZE_FILE", None)
     rtcSystemInitFile.setType("STRING")
     rtcSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
@@ -220,4 +228,3 @@ def instantiateComponent(rtcComponent):
     rtcSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     rtcSystemDefFile.setSourcePath("../peripheral/rtc_6056/templates/system/definitions.h.ftl")
     rtcSystemDefFile.setMarkup(True)
-
