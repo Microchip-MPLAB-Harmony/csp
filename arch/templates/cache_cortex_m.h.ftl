@@ -12,8 +12,8 @@
     invalidates etc. For the DCache and ICache.
 
   Remarks:
-    This header should not define any prototypes or data definitions, or 
-    include any files that do.  The file only provides macro definitions for 
+    This header should not define any prototypes or data definitions, or
+    include any files that do.  The file only provides macro definitions for
     build-time.
 
 *******************************************************************************/
@@ -55,6 +55,8 @@
     define this configuration.
 */
 
+#include "device.h"
+
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
@@ -68,16 +70,20 @@ extern "C" {
 // Section: L1 Cache Configuration
 // *****************************************************************************
 // *****************************************************************************
+
+<#if CoreArchitecture != "CORTEX-M4">
+#define DATA_CACHE_IS_ENABLED()            			   (SCB->CCR & (uint32_t)SCB_CCR_DC_Msk)
+#define INSTRUCTION_CACHE_IS_ENABLED()     			   (SCB->CCR & (uint32_t)SCB_CCR_IC_Msk)
+</#if>
+
 <#if CoreArchitecture != "CORTEX-M4" && INSTRUCTION_CACHE_ENABLE?? && INSTRUCTION_CACHE_ENABLE == true>
     <#lt>#define ICACHE_ENABLE()                                SCB_EnableICache()
     <#lt>#define ICACHE_DISABLE()                               SCB_DisableICache()
     <#lt>#define ICACHE_INVALIDATE()                            SCB_InvalidateICache()
-    <#lt>#define INSTRUCTION_CACHE_ENABLED                      true
 <#else>
     <#lt>#define ICACHE_ENABLE()
     <#lt>#define ICACHE_DISABLE()
     <#lt>#define ICACHE_INVALIDATE()
-    <#lt>#define INSTRUCTION_CACHE_ENABLED                      false
 </#if>
 
 <#if CoreArchitecture != "CORTEX-M4" && DATA_CACHE_ENABLE?? && DATA_CACHE_ENABLE == true >
@@ -89,7 +95,6 @@ extern "C" {
     <#lt>#define DCACHE_CLEAN_BY_ADDR(addr,sz)                  SCB_CleanDCache_by_Addr(addr,sz)
     <#lt>#define DCACHE_INVALIDATE_BY_ADDR(addr,sz)             SCB_InvalidateDCache_by_Addr(addr,sz)
     <#lt>#define DCACHE_CLEAN_INVALIDATE_BY_ADDR(addr,sz)       SCB_CleanInvalidateDCache_by_Addr(addr,sz)
-    <#lt>#define DATA_CACHE_ENABLED                             true
 <#else>
     <#lt>#define DCACHE_ENABLE()
     <#lt>#define DCACHE_DISABLE()
@@ -99,7 +104,6 @@ extern "C" {
     <#lt>#define DCACHE_CLEAN_BY_ADDR(addr,sz)
     <#lt>#define DCACHE_INVALIDATE_BY_ADDR(addr,sz)
     <#lt>#define DCACHE_CLEAN_INVALIDATE_BY_ADDR(addr,sz)
-    <#lt>#define DATA_CACHE_ENABLED                             false
 </#if>
 
 //DOM-IGNORE-BEGIN
