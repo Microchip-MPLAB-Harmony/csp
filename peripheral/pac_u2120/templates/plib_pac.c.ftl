@@ -59,7 +59,7 @@
 // *****************************************************************************
 // *****************************************************************************
 
-<#if core.TRUSTZONE_SUPPORTED??>
+<#if TRUSTZONE_SUPPORTED??>
     <#assign PAC_REG_NAME = PAC_INSTANCE_NAME + "_SEC">
 <#else>
     <#assign PAC_REG_NAME = PAC_INSTANCE_NAME>
