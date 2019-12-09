@@ -94,6 +94,16 @@ static SERCOM_I2C_OBJ ${SERCOM_INSTANCE_NAME?lower_case}I2CObj;
 
 void ${SERCOM_INSTANCE_NAME}_I2C_Initialize(void)
 {
+	/* Reset the module */
+    ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_CTRLA = SERCOM_I2CM_CTRLA_SWRST_Msk ;
+	
+	/* Wait for synchronization */
+    <#if SERCOM_SYNCBUSY = false>
+    while((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_SYNCBUSY_Msk) & SERCOM_I2CM_STATUS_SYNCBUSY_Msk);
+    <#else>
+    while(${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_SYNCBUSY);
+    </#if>
+	
     /* Enable smart mode enable */
     ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_CTRLB = SERCOM_I2CM_CTRLB_SMEN_Msk;
 
