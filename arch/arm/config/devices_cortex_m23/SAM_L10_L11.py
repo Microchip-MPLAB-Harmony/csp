@@ -242,6 +242,7 @@ xc32LinkerMacro = coreComponent.createSettingSymbol("XC32_LINKER_MACRO", None)
 xc32LinkerMacro.setCategory("C32-LD")
 xc32LinkerMacro.setKey("preprocessor-macros")
 xc32LinkerMacro.setValue("SECURE")
+xc32LinkerMacro.setAppend(True, ";")
 
 armSysStartSourceFile = coreComponent.createFileSymbol("STARTUP_C", None)
 armSysStartSourceFile.setSourcePath("../arch/arm/templates/" + compilerSelected + "/cortex_m/startup/startup_" + compilerSelected + ".c.ftl")
