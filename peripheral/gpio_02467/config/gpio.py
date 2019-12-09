@@ -138,16 +138,17 @@ def pinModeCal(pin, event):
     pin_num = int((pin.getID()).split("_")[2])
     portChannel = pinChannel[pin_num-1].getValue()
 
-    if portChannel != "" and portChannel != "None" and pinHasAnalogFunctionMap.get(pin_position[pin_num-1]) == True:
-        channelIndex = pioSymChannel.index(portChannel)
+    if portChannel != "" and portChannel != "None":
         bit_pos = pinBitPosition[pin_num-1].getValue()
-        ANSEL_Value = gpioSym_GPIO_ANSEL[channelIndex].getValue()
+        if pinHasAnalogFunctionMap.get("R" + portChannel + str(bit_pos)) == True:
+            channelIndex = pioSymChannel.index(portChannel)
+            ANSEL_Value = gpioSym_GPIO_ANSEL[channelIndex].getValue()
 
-        if event["value"] == "DIGITAL":
-            ANSEL_Value |= 1 << bit_pos
-        else:
-            ANSEL_Value &= ~(1 << bit_pos)
-        gpioSym_GPIO_ANSEL[channelIndex].setValue(ANSEL_Value, 2)
+            if event["value"] == "DIGITAL":
+                ANSEL_Value |= 1 << bit_pos
+            else:
+                ANSEL_Value &= ~(1 << bit_pos)
+            gpioSym_GPIO_ANSEL[channelIndex].setValue(ANSEL_Value, 2)
 
 def pinInterruptCal(pin, event):
     global gpioSym_GPIO_CNEN
@@ -276,19 +277,18 @@ def createPinMap(packageSymbol):
 
     for myPins in root.findall('pins'):
         for myPin in myPins.findall('pin'):
-            analogFunction = False
+            pinHasAnalogFunctionMap[myPin.get("name")] = False
             for myFunction in myPin.findall('function'):
                 if myFunction.get("name").startswith("AN") and myFunction.get("name")[2].isnumeric():
-                    analogFunction = True
-                    break                    
+                    pinHasAnalogFunctionMap[myPin.get("name")] = True
+                    break               
+
             for myPackageNumber in myPin.findall('number'):
                 if packageIdMap.get(packageSymbol.getValue()) == myPackageNumber.get("package"):
                     if "BGA" or "VTLA" or "DQFN" in packageSymbol.getValue():
                         pin_map[myPackageNumber.get("pin")] = myPin.get("name")
-                        pinHasAnalogFunctionMap[myPackageNumber.get("pin")] = analogFunction
                     else:
                         pin_map[int(myPackageNumber.get("pin"))] = myPin.get("name")
-                        pinHasAnalogFunctionMap[int(myPackageNumber.get("pin"))] = analogFunction
 
     if "BGA" or "VTLA" or "DQFN" in packageSymbol.getValue():
         pin_position = sort_alphanumeric(pin_map.keys())
