@@ -51,7 +51,7 @@ def _get_statReg_parms(vectorNumber):
     return regName
 
 def getIRQnumber(string):
-    irq_index = -1
+    irq_index = "-1"
     interruptsChildren = ATDF.getNode('/avr-tools-device-file/devices/device/interrupts').getChildren()
 
     for param in interruptsChildren:
