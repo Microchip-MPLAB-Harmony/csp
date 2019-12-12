@@ -49,14 +49,13 @@
 // *****************************************************************************
 // *****************************************************************************
 
-/* This section lists the other files that are included in this file.
-*/
 #include "device.h"
-#include "plib_supc_common.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
+
     extern "C" {
+
 #endif
 // DOM-IGNORE-END
 
@@ -66,34 +65,107 @@
 // *****************************************************************************
 // *****************************************************************************
 
-typedef enum {
-    <#list 0..(SYS_GPBR_REGISTER-1) as i>
+typedef enum
+{
+<#list 0..(SYS_GPBR_REGISTER - 1) as i>
     GPBR_REGS_${i},
-    </#list>
+
+</#list>
 } GPBR_REGS_INDEX;
 
+typedef enum
+{
+    WAITMODE_WKUP_WKUP0 = PMC_FSMR_FSTT0_Msk,      // WKUP0 Pin
+
+    WAITMODE_WKUP_WKUP1 = PMC_FSMR_FSTT1_Msk,      // WKUP1 Pin
+
+    WAITMODE_WKUP_WKUP2 = PMC_FSMR_FSTT2_Msk,      // WKUP2 Pin
+
+    WAITMODE_WKUP_WKUP3 = PMC_FSMR_FSTT3_Msk,      // WKUP3 Pin
+
+    WAITMODE_WKUP_WKUP4 = PMC_FSMR_FSTT4_Msk,      // WKUP4 Pin
+
+    WAITMODE_WKUP_WKUP5 = PMC_FSMR_FSTT5_Msk,      // WKUP5 Pin
+
+    WAITMODE_WKUP_WKUP6 = PMC_FSMR_FSTT6_Msk,      // WKUP6 Pin
+
+    WAITMODE_WKUP_WKUP7 = PMC_FSMR_FSTT7_Msk,      // WKUP7 Pin
+
+    WAITMODE_WKUP_WKUP8 = PMC_FSMR_FSTT8_Msk,      // WKUP8 Pin
+
+    WAITMODE_WKUP_WKUP9 = PMC_FSMR_FSTT9_Msk,      // WKUP9 Pin
+
+    WAITMODE_WKUP_WKUP10 = PMC_FSMR_FSTT10_Msk,     // WKUP10 Pin
+
+    WAITMODE_WKUP_WKUP11 = PMC_FSMR_FSTT11_Msk,     // WKUP11 Pin
+
+    WAITMODE_WKUP_WKUP12 = PMC_FSMR_FSTT12_Msk,     // WKUP12 Pin
+
+    WAITMODE_WKUP_WKUP13 = PMC_FSMR_FSTT13_Msk,     // WKUP13 Pin
+
+    WAITMODE_WKUP_WKUP14 = PMC_FSMR_FSTT14_Msk,     // GMAC
+
+    WAITMODE_WKUP_WKUP15 = PMC_FSMR_FSTT15_Msk,     // DEBUG
+
+    WAITMODE_WKUP_RTT = PMC_FSMR_RTTAL_Msk,      // RTT
+
+    WAITMODE_WKUP_RTC = PMC_FSMR_RTCAL_Msk,      // RTC
+
+<#if (core.PMC_SCER_UDP??) || (core.PMC_SCER_UHP??)>
+    WAITMODE_WKUP_USB = PMC_FSMR_USBAL_Msk,      // USB
+
+</#if>
+} WAITMODE_WKUP_SOURCE;
+
+typedef enum
+{
+    WAITMODE_FLASH_STANDBY = PMC_FSMR_FLPM_FLASH_STANDBY,
+
+    WAITMODE_FLASH_DEEPSLEEP = PMC_FSMR_FLPM_FLASH_DEEP_POWERDOWN,
+
+} WAITMODE_FLASH_STATE;
+
+<#if SUPC_SMMR_SMIEN>
+typedef void (*SUPC_CALLBACK) ( uintptr_t context );
+
+typedef struct
+{
+    SUPC_CALLBACK callback;
+
+    uintptr_t     context;
+
+} SUPC_OBJECT;
+
+</#if>
 // *****************************************************************************
 // *****************************************************************************
 // Section: Interface Routines
 // *****************************************************************************
 // *****************************************************************************
 
-void ${SUPC_INSTANCE_NAME}_Initialize (void);
-void ${SUPC_INSTANCE_NAME}_SleepModeEnter (void);
-void ${SUPC_INSTANCE_NAME}_WaitModeEnter (WAITMODE_FLASH_STATE flash_lpm, WAITMODE_WKUP_SOURCE source);
-void ${SUPC_INSTANCE_NAME}_BackupModeEnter (void);
-uint32_t ${SUPC_INSTANCE_NAME}_GPBRRead (GPBR_REGS_INDEX reg);
-void ${SUPC_INSTANCE_NAME}_GPBRWrite(GPBR_REGS_INDEX reg, uint32_t data);
+void ${SUPC_INSTANCE_NAME}_Initialize( void );
 
-extern void	CLOCK_Initialize(void);
+void ${SUPC_INSTANCE_NAME}_SleepModeEnter( void );
+
+void ${SUPC_INSTANCE_NAME}_WaitModeEnter( WAITMODE_FLASH_STATE flash_lpm, WAITMODE_WKUP_SOURCE source );
+
+void ${SUPC_INSTANCE_NAME}_BackupModeEnter( void );
+
+uint32_t ${SUPC_INSTANCE_NAME}_GPBRRead( GPBR_REGS_INDEX reg );
+
+void ${SUPC_INSTANCE_NAME}_GPBRWrite( GPBR_REGS_INDEX reg, uint32_t data );
+
+extern void CLOCK_Initialize( void );
 
 <#if SUPC_SMMR_SMIEN>
-void ${SUPC_INSTANCE_NAME}_CallbackRegister (SUPC_CALLBACK callback, uintptr_t context);
+void ${SUPC_INSTANCE_NAME}_CallbackRegister( SUPC_CALLBACK callback, uintptr_t context );
 </#if>
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
+
     }
+
 #endif
 // DOM-IGNORE-END
 

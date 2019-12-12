@@ -27,71 +27,65 @@ from math import ceil
 ################################################################################
 #### Global Variables ####
 ################################################################################
+
 global interruptVector
 global interruptHandler
 global interruptHandlerLock
 global supcInstanceName
 
-#------------------------------------------------------------------------------
-#                     Global SUPC Array symbol declaration
-#------------------------------------------------------------------------------
 supcSym_WUIR_WKUPEN = []
 supcSym_WUIR_WKUPT = []
+
+sclk = [1, 3, 32, 512, 4096, 32768]
 
 ################################################################################
 #### Business Logic ####
 ################################################################################
-#-------------------------------------------------------------------------------
 
 def interruptControl(symbol, event):
+
     Database.clearSymbolValue("core", interruptVector)
     Database.clearSymbolValue("core", interruptHandler)
     Database.clearSymbolValue("core", interruptHandlerLock)
 
-    if (event["value"] == True):
+    if event["value"] == True:
         Database.setSymbolValue("core", interruptVector, True, 2)
         Database.setSymbolValue("core", interruptHandler, supcInstanceName.getValue() +  "_InterruptHandler", 2)
         Database.setSymbolValue("core", interruptHandlerLock, True, 2)
     else:
         Database.setSymbolValue("core", interruptVector, False, 2)
-        Database.setSymbolValue("core", interruptHandler, "SUPC_Handler", 2)
+        Database.setSymbolValue("core", interruptHandler, supcInstanceName.getValue() +  "_Handler", 2)
         Database.setSymbolValue("core", interruptHandlerLock, False, 2)
 
-def disableWKUP0(symbol,event):
-    if (event["value"] == True):
-        symbol.clearValue()
+def disableWKUP0(symbol, event):
+
+    if event["value"] == True:
         symbol.setValue(False, 1)
 
-def disableWKUP1(symbol,event):
-    if (event["value"] == True):
-        symbol.clearValue()
+def disableWKUP1(symbol, event):
+
+    if event["value"] == True:
         symbol.setValue(False, 1)
 
-def enableSM(symbol,event):
-    if (event["value"] == True):
-        symbol.clearValue()
-        symbol.setValue(True, 1)
+def calcPulseWidth(symbol, event):
 
-sclk=[1,3,32,512,4096,32768]
+    i = event["symbol"].getSelectedValue()
+    numSlck = sclk[int(i, 16)]
+    time = float(numSlck) / 32768
+    timeUsInt = int(time * 1e6)
+    timeMs = float(timeUsInt) / 1000
 
-def calcPulseWidth(symbol,event):
-    symObj=event["symbol"]
-    i=symObj.getSelectedValue()
-    numSlck=sclk[int(i)]
-    time= float(numSlck)/32768
-    timeUsInt=int(time*1e6)
-    timeMs=float(timeUsInt)/1000
-    symbol.setLabel("Minimum WKUPx Pulse Width: " + str(timeMs) + " ms ( "+str(numSlck)+" SLCK Cycles )")
+    symbol.setLabel("Minimum WKUPx Pulse Width: " + str(timeMs) + " ms ( " + str(numSlck) + " SLCK Cycles )")
 
-def disableBKUPRST(symbol,event):
-    if (event["value"] == False):
-        symbol.clearValue()
+def disableBKUPRST(symbol, event):
+
+    if event["value"] == False:
         symbol.setValue(False, 1)
-
 
 ################################################################################
 #### Component ####
 ################################################################################
+
 def instantiateComponent(supcComponent):
 
     global interruptVector
@@ -99,100 +93,82 @@ def instantiateComponent(supcComponent):
     global interruptHandlerLock
     global supcInstanceName
 
+    supcRegister_WUMR = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SUPC"]/register-group@[name="SUPC"]/register@[name="SUPC_WUMR"]')
+    supcRegister_PWMR = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SUPC"]/register-group@[name="SUPC"]/register@[name="SUPC_PWMR"]')
+    supcBitField_CR_VROFF = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SUPC"]/register-group@[name="SUPC"]/register@[name="SUPC_CR"]/bitfield@[name="VROFF"]')
+    supcBitField_MR_ONE = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SUPC"]/register-group@[name="SUPC"]/register@[name="SUPC_MR"]/bitfield@[name="ONE"]')
+    supcBitField_MR_ONEA = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SUPC"]/register-group@[name="SUPC"]/register@[name="SUPC_MR"]/bitfield@[name="ONEA"]')
+    supcBitField_MR_CTPSWITCH = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SUPC"]/register-group@[name="SUPC"]/register@[name="SUPC_MR"]/bitfield@[name="CTPSWITCH"]')
+    supcBitField_MR_CDPSWITCH = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SUPC"]/register-group@[name="SUPC"]/register@[name="SUPC_MR"]/bitfield@[name="CDPSWITCH"]')
+    supcBitField_MR_PSWITCH1 = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SUPC"]/register-group@[name="SUPC"]/register@[name="SUPC_MR"]/bitfield@[name="PSWITCH1"]')
+    supcBitField_MR_PSWITCH2 = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SUPC"]/register-group@[name="SUPC"]/register@[name="SUPC_MR"]/bitfield@[name="PSWITCH2"]')
+
     supcInstanceName = supcComponent.createStringSymbol("SUPC_INSTANCE_NAME", None)
     supcInstanceName.setVisible(False)
     supcInstanceName.setDefaultValue(supcComponent.getID().upper())
-    print("Running " + supcInstanceName.getValue())
 
     # SM configuration
-    supcSMMenu= supcComponent.createBooleanSymbol("SM_ENABLE", None)
-    supcSMMenu.setLabel("Enable Supply Monitor")
-    supcSMMenu.setDependencies(enableSM,["SUPC_WUMR_SMEN"])
+    supcSMMenu = supcComponent.createMenuSymbol("SM_ENABLE", None)
+    supcSMMenu.setLabel("Supply Monitor")
 
     supcSym_SMMR_SMTH = supcComponent.createKeyValueSetSymbol("SUPC_SMMR_SMTH", supcSMMenu)
     supcSym_SMMR_SMTH.setLabel("Supply Monitor Threshold")
-    supcSym_SMMR_SMTH.addKey("V1P6", "0", "1.6 V")
-    supcSym_SMMR_SMTH.addKey("V1P72", "1", "1.72 V")
-    supcSym_SMMR_SMTH.addKey("V1P84", "2", "1.84 V")
-    supcSym_SMMR_SMTH.addKey("V1P96", "3", "1.96 V")
-    supcSym_SMMR_SMTH.addKey("V2P08", "4", "2.08 V")
-    supcSym_SMMR_SMTH.addKey("V2P2", "5", "2.2 V")
-    supcSym_SMMR_SMTH.addKey("V2P32", "6", "2.32 V")
-    supcSym_SMMR_SMTH.addKey("V2P44", "7", "2.44 V")
-    supcSym_SMMR_SMTH.addKey("V2P56", "8", "2.56 V")
-    supcSym_SMMR_SMTH.addKey("V2P68", "9", "2.68 V")
-    supcSym_SMMR_SMTH.addKey("V2P8", "10", "2.8 V")
-    supcSym_SMMR_SMTH.addKey("V2P92", "11", "2.92 V")
-    supcSym_SMMR_SMTH.addKey("V3P04", "12", "3.04 V")
-    supcSym_SMMR_SMTH.addKey("V3P16", "13", "3.16 V")
-    supcSym_SMMR_SMTH.addKey("V3P28", "14", "3.28 V")
-    supcSym_SMMR_SMTH.addKey("V3P4", "15", "3.4 V")
+
+    supcValGrp_SMMR_SMTH = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SUPC"]/value-group@[name="SUPC_SMMR__SMTH"]')
+    supcValGrp_SMMR_SMTH_Values = supcValGrp_SMMR_SMTH.getChildren()
+
+    for index in range(len(supcValGrp_SMMR_SMTH_Values)):
+        supcValGrp_SMMR_SMTH_Key_Name = supcValGrp_SMMR_SMTH_Values[index].getAttribute("name")
+        supcValGrp_SMMR_SMTH_Key_Value = supcValGrp_SMMR_SMTH_Values[index].getAttribute("value")
+        supcValGrp_SMMR_SMTH_Key_Description = supcValGrp_SMMR_SMTH_Values[index].getAttribute("caption")
+        supcSym_SMMR_SMTH.addKey(supcValGrp_SMMR_SMTH_Key_Name, supcValGrp_SMMR_SMTH_Key_Value, supcValGrp_SMMR_SMTH_Key_Description)
+
     supcSym_SMMR_SMTH.setOutputMode("Value")
     supcSym_SMMR_SMTH.setDisplayMode("Description")
-    supcSym_SMMR_SMTH.setSelectedKey("V3P4",1)
-
+    supcSym_SMMR_SMTH.setSelectedKey(supcValGrp_SMMR_SMTH_Key_Name, 1)
 
     supcSym_SMMR_SMSMPL = supcComponent.createKeyValueSetSymbol("SUPC_SMMR_SMSMPL", supcSMMenu)
     supcSym_SMMR_SMSMPL.setLabel("Supply Monitor Sampling Period")
-    supcSym_SMMR_SMSMPL.addKey("_CSM", "1", "Monitor Continuously")
-    supcSym_SMMR_SMSMPL.addKey("_32SLCK", "2", "Monitor 1 SLCK per 32 SLCK period")
-    supcSym_SMMR_SMSMPL.addKey("_256SLCK", "3", "Monitor 1 SLCK per 256 SLCK period")
-    supcSym_SMMR_SMSMPL.addKey("_2048SLCK", "4", "Monitor 1 SLCK per 2048 SLCK period")
-    supcSym_SMMR_SMSMPL.setOutputMode("Key")
+
+    supcValGrp_SMMR_SMSMPL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SUPC"]/value-group@[name="SUPC_SMMR__SMSMPL"]')
+    supcValGrp_SMMR_SMSMPL_Values = supcValGrp_SMMR_SMSMPL.getChildren()
+
+    for index in range(len(supcValGrp_SMMR_SMSMPL_Values)):
+        supcValGrp_SMMR_SMSMPL_Key_Name = supcValGrp_SMMR_SMSMPL_Values[index].getAttribute("name")
+        supcValGrp_SMMR_SMSMPL_Key_Value = supcValGrp_SMMR_SMSMPL_Values[index].getAttribute("value")
+        supcValGrp_SMMR_SMSMPL_Key_Description = supcValGrp_SMMR_SMSMPL_Values[index].getAttribute("caption")
+        supcSym_SMMR_SMSMPL.addKey(supcValGrp_SMMR_SMSMPL_Key_Name, supcValGrp_SMMR_SMSMPL_Key_Value, supcValGrp_SMMR_SMSMPL_Key_Description)
+
+    supcSym_SMMR_SMSMPL.setOutputMode("Value")
     supcSym_SMMR_SMSMPL.setDisplayMode("Description")
-    supcSym_SMMR_SMSMPL.setSelectedKey("_CSM",1)
+    supcSym_SMMR_SMSMPL.setDefaultValue(0)
 
     supcSym_SMMR_SMIEN = supcComponent.createBooleanSymbol("SUPC_SMMR_SMIEN", supcSMMenu)
     supcSym_SMMR_SMIEN.setLabel("Enable Supply Monitor Interrupt")
-    supcSym_SMMR_SMIEN.setDefaultValue(False)
 
     supcSym_SMMR_SMRSTEN = supcComponent.createBooleanSymbol("SUPC_SMMR_SMRSTEN", supcSMMenu)
     supcSym_SMMR_SMRSTEN.setLabel("Enable Supply Monitor Reset")
-    supcSym_SMMR_SMRSTEN.setDefaultValue(False)
 
-    supcLPMenu = supcComponent.createMenuSymbol("LOW_POWER_MENU", None)
-    supcLPMenu.setLabel("Low Power Configuration")
+    supcSym_WUMR = supcComponent.createBooleanSymbol("SUPC_WUMR", None)
+    supcSym_WUMR.setVisible(False)
+    supcSym_WUMR.setDefaultValue(supcRegister_WUMR != None)
 
-    supcSym_WUMR_RTCEN = supcComponent.createBooleanSymbol("SUPC_WUMR_RTCEN", supcLPMenu)
-    supcSym_WUMR_RTCEN.setLabel("Enable RTC Alarm Wakeup")
-    supcSym_WUMR_RTCEN.setDefaultValue(False)
+    supcSym_PWMR = supcComponent.createBooleanSymbol("SUPC_PWMR", None)
+    supcSym_PWMR.setVisible(False)
+    supcSym_PWMR.setDefaultValue(supcRegister_PWMR != None)
 
-    supcSym_WUMR_RTTEN = supcComponent.createBooleanSymbol("SUPC_WUMR_RTTEN", supcLPMenu)
-    supcSym_WUMR_RTTEN.setLabel("Enable RTT Alarm Wakeup")
-    supcSym_WUMR_RTTEN.setDefaultValue(False)
+    supcSym_CR_VROFF = supcComponent.createBooleanSymbol("SUPC_CR_VROFF", None)
+    supcSym_CR_VROFF.setVisible(False)
+    supcSym_CR_VROFF.setDefaultValue(supcBitField_CR_VROFF != None)
 
-    supcSym_WUMR_SMEN = supcComponent.createBooleanSymbol("SUPC_WUMR_SMEN", supcLPMenu)
-    supcSym_WUMR_SMEN.setLabel("Enable Supply Monitor Wakeup")
-    supcSym_WUMR_SMEN.setDefaultValue(False)
+    supcSym_MR_ONE = supcComponent.createBooleanSymbol("SUPC_MR_ONE", None)
+    supcSym_MR_ONE.setVisible(False)
+    supcSym_MR_ONE.setDefaultValue(supcBitField_MR_ONE != None)
 
-    supcWKUPMenu = supcComponent.createMenuSymbol("WKUP_MENU", supcLPMenu)
-    supcWKUPMenu.setLabel("Configure Wakeup Pins (WKUPx)")
+    supcSym_MR_ONEA = supcComponent.createBooleanSymbol("SUPC_MR_ONEA", None)
+    supcSym_MR_ONEA.setVisible(False)
+    supcSym_MR_ONEA.setDefaultValue(supcBitField_MR_ONEA != None)
 
-    supcSym_WUMR_WKUPDBC = supcComponent.createKeyValueSetSymbol("SUPC_WUMR_WKUPDBC", supcWKUPMenu)
-    supcSym_WUMR_WKUPDBC.setLabel("Minimum Pulse Width for Wakeup Input")
-    supcSym_WUMR_WKUPDBC.addKey("IMMEDIATE", "0", "1 SLCK Period")
-    supcSym_WUMR_WKUPDBC.addKey("_3_SLCK", "1", "3 SLCK periods")
-    supcSym_WUMR_WKUPDBC.addKey("_32_SLCK", "2", "32 SLCK periods")
-    supcSym_WUMR_WKUPDBC.addKey("_512_SLCK", "3", "512 SLCK periods")
-    supcSym_WUMR_WKUPDBC.addKey("_4096_SLCK", "4", "4096 SLCK periods")
-    supcSym_WUMR_WKUPDBC.addKey("_32768_SLCK", "5", "32768 SLCK periods")
-    supcSym_WUMR_WKUPDBC.setOutputMode("Value")
-    supcSym_WUMR_WKUPDBC.setDisplayMode("Description")
-    supcSym_WUMR_WKUPDBC.setSelectedKey("IMMEDIATE",1)
-
-    supcSym_PULSE_WIDTH_COMMENT = supcComponent.createCommentSymbol("PULSE_WIDTH_COMMENT", supcWKUPMenu)
-    supcSym_PULSE_WIDTH_COMMENT.setVisible(True)
-    supcSym_PULSE_WIDTH_COMMENT.setLabel("Minimum WKUPx Pulse Width: 0.03 ms ( 1 SLCK Cycles )")
-    supcSym_PULSE_WIDTH_COMMENT.setDependencies(calcPulseWidth, ["SUPC_WUMR_WKUPDBC"])
-
-    supcSym_WUIR = supcComponent.createHexSymbol("SUPC_WUIR", supcWKUPMenu)
-    supcSym_WUIR.setVisible(False)
-
-    supcSym_WKUP_Inputs = supcComponent.createIntegerSymbol("SUPC_WKUP_INPUTS", supcWKUPMenu)
-    supcSym_WKUP_Inputs.setVisible(False)
-    supcSym_WKUP_Inputs.setDefaultValue(16)
-
-    #------------------------- ATDF Read -------------------------------------
     GPBR = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"GPBR\"]/register-group@[name=\"GPBR\"]/register")
     GPBRRegNum = GPBR.getAttribute("count")
 
@@ -200,47 +176,126 @@ def instantiateComponent(supcComponent):
     gpbrSym_SYSGPBR.setVisible(False)
     gpbrSym_SYSGPBR.setDefaultValue(int(GPBRRegNum))
 
-    packageName = str(Database.getSymbolValue("core", "COMPONENT_PACKAGE"))
-    availablePins = []        # array to save available pins
-    signal = [False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False] #array to save available signals
+    supcLPMenu = supcComponent.createMenuSymbol("LOW_POWER_MENU", None)
+    supcLPMenu.setLabel("Low Power Configuration")
 
-    children = []
-    val = ATDF.getNode("/avr-tools-device-file/pinouts/pinout@[name=\""+str(packageName)+"\"]")
-    children = val.getChildren()
-    for pad in range (0, len(children)):
-        availablePins.append(children[pad].getAttribute("pad"))
+    #Check weather wakeup support is there or not
+    if supcSym_WUMR.getValue():
+        supcSym_WUMR_RTCEN = supcComponent.createBooleanSymbol("SUPC_WUMR_RTCEN", supcLPMenu)
+        supcSym_WUMR_RTCEN.setLabel("Enable RTC Alarm Wakeup")
 
-    wakeup_signals = []
-    supc = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"SUPC\"]/instance@[name=\""+supcInstanceName.getValue()+"\"]/signals")
-    wakeup_signals = supc.getChildren()
-    for pad in range (0 , len(wakeup_signals)):
-        if "index" in wakeup_signals[pad].getAttributeList():
-            padSignal = wakeup_signals[pad].getAttribute("pad")
-            if padSignal in availablePins :
-                signal[int(wakeup_signals[pad].getAttribute("index"))] = True
+        supcSym_WUMR_RTTEN = supcComponent.createBooleanSymbol("SUPC_WUMR_RTTEN", supcLPMenu)
+        supcSym_WUMR_RTTEN.setLabel("Enable RTT Alarm Wakeup")
 
-    for id in range (0, len(signal)):
-       supcSym_WUIR_WKUPEN.append(id)
-       supcSym_WUIR_WKUPEN[id] = supcComponent.createBooleanSymbol("SUPC_WUIR_WKUPEN" + str(id), supcWKUPMenu)
-       supcSym_WUIR_WKUPEN[id].setLabel("Enable WKUP"+ str(id) +" Input")
-       supcSym_WUIR_WKUPEN[id].setDefaultValue(False)
-       if(signal[id] == False):
-           supcSym_WUIR_WKUPEN[id].setVisible(False)
+        supcSym_WUMR_SMEN = supcComponent.createBooleanSymbol("SUPC_WUMR_SMEN", supcLPMenu)
+        supcSym_WUMR_SMEN.setLabel("Enable Supply Monitor Wakeup")
 
-       supcSym_WUIR_WKUPT.append(id)
-       supcSym_WUIR_WKUPT[id] = supcComponent.createKeyValueSetSymbol("SUPC_WUIR_WKUPT" + str(id), supcSym_WUIR_WKUPEN[id])
-       supcSym_WUIR_WKUPT[id].setLabel("Select Wakeup Edge")
-       supcSym_WUIR_WKUPT[id].addKey("LOW", "0", "Falling Edge")
-       supcSym_WUIR_WKUPT[id].addKey("HIGH", "1", "Rising Edge")
-       supcSym_WUIR_WKUPT[id].setOutputMode("Key")
-       supcSym_WUIR_WKUPT[id].setDisplayMode("Description")
-       supcSym_WUIR_WKUPT[id].setSelectedKey("LOW",1)
-       if(signal[id] == False):
-           supcSym_WUIR_WKUPT[id].setVisible(False)
+        supcWKUPMenu = supcComponent.createMenuSymbol("WKUP_MENU", supcLPMenu)
+        supcWKUPMenu.setLabel("Configure Wakeup Pins (WKUPx)")
 
+        supcSym_WUMR_WKUPDBC = supcComponent.createKeyValueSetSymbol("SUPC_WUMR_WKUPDBC", supcWKUPMenu)
+        supcSym_WUMR_WKUPDBC.setLabel("Minimum Pulse Width for Wakeup Input")
 
-    supcSym_WUIR_WKUPEN[0].setDependencies(disableWKUP0,["SUPC_WUMR_LPDBCEN0"])
-    supcSym_WUIR_WKUPEN[1].setDependencies(disableWKUP1,["SUPC_WUMR_LPDBCEN1"])
+        supcValGrp_WUMR_WKUPDBC = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SUPC"]/value-group@[name="SUPC_WUMR__WKUPDBC"]')
+        supcValGrp_WUMR_WKUPDBC_Values = supcValGrp_WUMR_WKUPDBC.getChildren()
+
+        for index in range(len(supcValGrp_WUMR_WKUPDBC_Values)):
+            supcValGrp_WUMR_WKUPDBC_Key_Name = supcValGrp_WUMR_WKUPDBC_Values[index].getAttribute("name")
+            supcValGrp_WUMR_WKUPDBC_Key_Value = supcValGrp_WUMR_WKUPDBC_Values[index].getAttribute("value")
+            supcValGrp_WUMR_WKUPDBC_Key_Description = supcValGrp_WUMR_WKUPDBC_Values[index].getAttribute("caption")
+            supcSym_WUMR_WKUPDBC.addKey(supcValGrp_WUMR_WKUPDBC_Key_Name, supcValGrp_WUMR_WKUPDBC_Key_Value, supcValGrp_WUMR_WKUPDBC_Key_Description)
+
+        supcSym_WUMR_WKUPDBC.setOutputMode("Value")
+        supcSym_WUMR_WKUPDBC.setDisplayMode("Description")
+        supcSym_WUMR_WKUPDBC.setDefaultValue(0)
+
+        supcSym_PULSE_WIDTH_COMMENT = supcComponent.createCommentSymbol("PULSE_WIDTH_COMMENT", supcWKUPMenu)
+        supcSym_PULSE_WIDTH_COMMENT.setLabel("Minimum WKUPx Pulse Width: 0.03 ms ( 1 SLCK Cycles )")
+        supcSym_PULSE_WIDTH_COMMENT.setDependencies(calcPulseWidth, ["SUPC_WUMR_WKUPDBC"])
+
+        supcSym_WUIR = supcComponent.createHexSymbol("SUPC_WUIR", supcWKUPMenu)
+        supcSym_WUIR.setVisible(False)
+
+        supcSym_WKUP_Inputs = supcComponent.createIntegerSymbol("SUPC_WKUP_INPUTS", supcWKUPMenu)
+        supcSym_WKUP_Inputs.setVisible(False)
+        supcSym_WKUP_Inputs.setDefaultValue(16)
+
+        #------------------------- ATDF Read -------------------------------------
+        packageName = str(Database.getSymbolValue("core", "COMPONENT_PACKAGE"))
+        availablePins = []        # array to save available pins
+        signal = [False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False] #array to save available signals
+
+        children = []
+        val = ATDF.getNode("/avr-tools-device-file/pinouts/pinout@[name=\"" + str(packageName) + "\"]")
+        children = val.getChildren()
+        for pad in range (0, len(children)):
+            availablePins.append(children[pad].getAttribute("pad"))
+
+        wakeup_signals = []
+        supc = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"SUPC\"]/instance@[name=\"" + supcInstanceName.getValue() + "\"]/signals")
+        wakeup_signals = supc.getChildren()
+        for pad in range (0, len(wakeup_signals)):
+            if "index" in wakeup_signals[pad].getAttributeList():
+                padSignal = wakeup_signals[pad].getAttribute("pad")
+                if padSignal in availablePins:
+                    signal[int(wakeup_signals[pad].getAttribute("index"))] = True
+
+        for id in range (0, len(signal)):
+            supcSym_WUIR_WKUPEN.append(id)
+            supcSym_WUIR_WKUPEN[id] = supcComponent.createBooleanSymbol("SUPC_WUIR_WKUPEN" + str(id), supcWKUPMenu)
+            supcSym_WUIR_WKUPEN[id].setLabel("Enable WKUP" + str(id) + " Input")
+            if signal[id] == False:
+                supcSym_WUIR_WKUPEN[id].setVisible(False)
+
+            supcSym_WUIR_WKUPT.append(id)
+            supcSym_WUIR_WKUPT[id] = supcComponent.createKeyValueSetSymbol("SUPC_WUIR_WKUPT" + str(id), supcSym_WUIR_WKUPEN[id])
+            supcSym_WUIR_WKUPT[id].setLabel("Select Wakeup Edge")
+            supcSym_WUIR_WKUPT[id].addKey("LOW", "0", "Falling Edge")
+            supcSym_WUIR_WKUPT[id].addKey("HIGH", "1", "Rising Edge")
+            supcSym_WUIR_WKUPT[id].setOutputMode("Key")
+            supcSym_WUIR_WKUPT[id].setDisplayMode("Description")
+            supcSym_WUIR_WKUPT[id].setSelectedKey("LOW", 1)
+            if signal[id] == False:
+                supcSym_WUIR_WKUPT[id].setVisible(False)
+
+        supcSym_WUIR_WKUPEN[0].setDependencies(disableWKUP0, ["SUPC_WUMR_LPDBCEN0"])
+        supcSym_WUIR_WKUPEN[1].setDependencies(disableWKUP1, ["SUPC_WUMR_LPDBCEN1"])
+
+    if supcBitField_MR_CDPSWITCH != None:
+        supcDataRam = supcComponent.createBooleanSymbol("SUPC_CDPSWITCH", supcLPMenu)
+        supcDataRam.setLabel("Power Cache Data Ram")
+        supcDataRam.setDefaultValue(True)
+
+    if supcBitField_MR_CTPSWITCH != None:
+        supcTagRam = supcComponent.createBooleanSymbol("SUPC_CTPSWITCH", supcLPMenu)
+        supcTagRam.setLabel("Power Cache Tag Ram")
+        supcTagRam.setDefaultValue(True)
+
+    if supcBitField_MR_PSWITCH1 != None:
+        supcSRam1 = supcComponent.createBooleanSymbol("SUPC_PSWITCH1", supcLPMenu)
+        supcSRam1.setLabel("SRAM1 Power Switch")
+        supcSRam1.setDefaultValue(True)
+
+    if supcBitField_MR_PSWITCH2 != None:
+        supcSRam2 = supcComponent.createBooleanSymbol("SUPC_PSWITCH2", supcLPMenu)
+        supcSRam2.setLabel("SRAM2 Power Switch")
+        supcSRam2.setDefaultValue(True)
+
+    if supcSym_PWMR.getValue():
+        supcStartup = supcComponent.createBooleanSymbol("SUPC_STUPTIME", supcLPMenu)
+        supcStartup.setLabel("Enable Fast Startup")
+
+        for i in range(0, 7):
+            supcSRam = supcComponent.createBooleanSymbol("SUPC_SRAM" + str(i), supcLPMenu)
+            supcSRam.setLabel("Power SRAM Block" + str(i))
+            supcSRam.setDefaultValue(True)
+
+        supcUSBRAM = supcComponent.createBooleanSymbol("SUPC_DPRAMON", supcLPMenu)
+        supcUSBRAM.setLabel("Enable USB Dual-port RAM")
+        supcUSBRAM.setDefaultValue(True)
+
+    if supcBitField_MR_CDPSWITCH == None and supcBitField_MR_CTPSWITCH == None and supcBitField_MR_PSWITCH1 == None and supcBitField_MR_PSWITCH2 == None:
+        supcLPMenu.setVisible(False)
 
     # BOD configuration
     supcBODMenu = supcComponent.createMenuSymbol("BOD_MENU", None)
@@ -253,105 +308,76 @@ def instantiateComponent(supcComponent):
     supcSym_MR_BODRSTEN = supcComponent.createBooleanSymbol("SUPC_MR_BODRSTEN", supcSym_MR_BODDIS)
     supcSym_MR_BODRSTEN.setLabel("Enable Brownout Detector Reset")
     supcSym_MR_BODRSTEN.setDefaultValue(True)
-    supcSym_MR_BODRSTEN.setDependencies(disableBKUPRST,["SUPC_MR_BODDIS"])
+    supcSym_MR_BODRSTEN.setDependencies(disableBKUPRST, ["SUPC_MR_BODDIS"])
 
+    if supcSym_WUMR.getValue():
+        # Low-Power Debouncer configuration
+        supcDBMenu = supcComponent.createMenuSymbol("DB_MENU", None)
+        supcDBMenu.setLabel("Configure Low-Power Tamper Detection")
 
-    # Low-Power Debouncer configuration
-    supcDBMenu = supcComponent.createMenuSymbol("DB_MENU", None)
-    supcDBMenu.setLabel("Configure Low-Power Tamper Detection")
+        supcSym_WUMR_LPDBC = supcComponent.createKeyValueSetSymbol("SUPC_WUMR_LPDBC", supcDBMenu)
+        supcSym_WUMR_LPDBC.setLabel("Minimum Pulse Width on WKUP0/WKUP1 pins")
 
-    supcSym_WUMR_LPDBC = supcComponent.createKeyValueSetSymbol("SUPC_WUMR_LPDBC", supcDBMenu)
-    supcSym_WUMR_LPDBC.setLabel("Minimum Pulse Width on WKUP0/WKUP1 pins")
-    supcSym_WUMR_LPDBC.addKey("DISABLE", "0", "Disable")
-    supcSym_WUMR_LPDBC.addKey("_2_RTCOUT", "1", "2 RTCOUTx clock periods")
-    supcSym_WUMR_LPDBC.addKey("_3_RTCOUT", "2", "3 RTCOUTx clock periods")
-    supcSym_WUMR_LPDBC.addKey("_4_RTCOUT", "3", "4 RTCOUTx clock periods")
-    supcSym_WUMR_LPDBC.addKey("_5_RTCOUT", "4", "5 RTCOUTx clock periods")
-    supcSym_WUMR_LPDBC.addKey("_6_RTCOUT", "5", "6 RTCOUTx clock periods")
-    supcSym_WUMR_LPDBC.addKey("_7_RTCOUT", "6", "7 RTCOUTx clock periods")
-    supcSym_WUMR_LPDBC.addKey("_8_RTCOUT", "7", "8 RTCOUTx clock periods")
-    supcSym_WUMR_LPDBC.setOutputMode("Value")
-    supcSym_WUMR_LPDBC.setDisplayMode("Description")
-    supcSym_WUMR_LPDBC.setSelectedKey("DISABLE",1)
+        supcValGrp_WUMR_LPDBC = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SUPC"]/value-group@[name="SUPC_WUMR__LPDBC"]')
+        supcValGrp_WUMR_LPDBC_Values = supcValGrp_WUMR_LPDBC.getChildren()
 
-    supcSym_WUMR_LPDBCEN0 = supcComponent.createBooleanSymbol("SUPC_WUMR_LPDBCEN0", supcDBMenu)
-    supcSym_WUMR_LPDBCEN0.setLabel("Low-Power Debouncer Enable (WKUP0)")
-    supcSym_WUMR_LPDBCEN0.setDefaultValue(False)
+        for index in range(len(supcValGrp_WUMR_LPDBC_Values)):
+            supcValGrp_WUMR_LPDBC_Key_Name = supcValGrp_WUMR_LPDBC_Values[index].getAttribute("name")
+            supcValGrp_WUMR_LPDBC_Key_Value = supcValGrp_WUMR_LPDBC_Values[index].getAttribute("value")
+            supcValGrp_WUMR_LPDBC_Key_Description = supcValGrp_WUMR_LPDBC_Values[index].getAttribute("caption")
+            supcSym_WUMR_LPDBC.addKey(supcValGrp_WUMR_LPDBC_Key_Name, supcValGrp_WUMR_LPDBC_Key_Value, supcValGrp_WUMR_LPDBC_Key_Description)
 
-    supcSym_WUMR_LPDBCEN1 = supcComponent.createBooleanSymbol("SUPC_WUMR_LPDBCEN1", supcDBMenu)
-    supcSym_WUMR_LPDBCEN1.setLabel("Low-Power Debouncer Enable (WKUP1)")
-    supcSym_WUMR_LPDBCEN1.setDefaultValue(False)
+        supcSym_WUMR_LPDBC.setOutputMode("Value")
+        supcSym_WUMR_LPDBC.setDisplayMode("Description")
+        supcSym_WUMR_LPDBC.setDefaultValue(0)
 
-    supcSym_WUMR_LPDBCCLR = supcComponent.createBooleanSymbol("SUPC_WUMR_LPDBCCLR", supcDBMenu)
-    supcSym_WUMR_LPDBCCLR.setLabel("Clear general-purpose backup register (GPBR) on tamper detection ")
-    supcSym_WUMR_LPDBCCLR.setDefaultValue(False)
+        supcSym_WUMR_LPDBCEN0 = supcComponent.createBooleanSymbol("SUPC_WUMR_LPDBCEN0", supcDBMenu)
+        supcSym_WUMR_LPDBCEN0.setLabel("Low-Power Debouncer Enable (WKUP0)")
 
-     
-    supcDataRam = supcComponent.createBooleanSymbol("SUPC_CDPSWITCH", supcLPMenu)
-    supcDataRam.setLabel("Power Cache Data Ram")
-    supcDataRam.setDefaultValue(True)
-    
-    supcTagRam = supcComponent.createBooleanSymbol("SUPC_CTPSWITCH", supcLPMenu)
-    supcTagRam.setLabel("Power Cache Tag Ram")
-    supcTagRam.setDefaultValue(True)
+        supcSym_WUMR_LPDBCEN1 = supcComponent.createBooleanSymbol("SUPC_WUMR_LPDBCEN1", supcDBMenu)
+        supcSym_WUMR_LPDBCEN1.setLabel("Low-Power Debouncer Enable (WKUP1)")
 
-    supcStartup = supcComponent.createBooleanSymbol("SUPC_STUPTIME", supcLPMenu)
-    supcStartup.setLabel("Enable Fast Startup")
-    supcStartup.setDefaultValue(False)
+        supcSym_WUMR_LPDBCCLR = supcComponent.createBooleanSymbol("SUPC_WUMR_LPDBCCLR", supcDBMenu)
+        supcSym_WUMR_LPDBCCLR.setLabel("Clear general-purpose backup register (GPBR) on tamper detection ")
 
-    for i in range(0,7):
-        supcSRam = supcComponent.createBooleanSymbol("SUPC_SRAM" + str(i), supcLPMenu)
-        supcSRam.setLabel("Power SRAM Block" + str(i))
-        supcSRam.setDefaultValue(True)
-
-    supcUSBRAM = supcComponent.createBooleanSymbol("SUPC_DPRAMON", supcLPMenu)
-    supcUSBRAM.setLabel("Enable USB Dual-port RAM")
-    supcUSBRAM.setDefaultValue(True)
     ############################################################################
     #### Dependency ####
     ############################################################################
 
     # Setup Peripheral Interrupt in Interrupt manager
-    interruptVector = supcInstanceName.getValue()+"_INTERRUPT_ENABLE"
-    interruptHandler = supcInstanceName.getValue()+"_INTERRUPT_HANDLER"
-    interruptHandlerLock = supcInstanceName.getValue()+"_INTERRUPT_HANDLER_LOCK"
-    interruptVectorUpdate = supcInstanceName.getValue()+"_INTERRUPT_ENABLE_UPDATE"
+    interruptVector = supcInstanceName.getValue() + "_INTERRUPT_ENABLE"
+    interruptHandler = supcInstanceName.getValue() + "_INTERRUPT_HANDLER"
+    interruptHandlerLock = supcInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK"
+    interruptVectorUpdate = supcInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
 
     # NVIC Dynamic settings
     supcinterruptControl = supcComponent.createBooleanSymbol("NVIC_SUPC_ENABLE", None)
     supcinterruptControl.setDependencies(interruptControl, ["SUPC_SMMR_SMIEN"])
     supcinterruptControl.setVisible(False)
 
-############################################################################
-#### Code Generation ####
-############################################################################
+    ############################################################################
+    #### Code Generation ####
+    ############################################################################
+
     configName = Variables.get("__CONFIGURATION_NAME")
 
-    supcHeader1File = supcComponent.createFileSymbol("SUPC_HEADER1", None)
-    supcHeader1File.setSourcePath("../peripheral/supc_11228/templates/plib_supc_common.h")
-    supcHeader1File.setOutputName("plib_supc_common.h")
-    supcHeader1File.setDestPath("/peripheral/supc/")
-    supcHeader1File.setProjectPath("config/" + configName + "/peripheral/supc/")
-    supcHeader1File.setType("HEADER")
-    supcHeader1File.setOverwrite(True)
+    supcHeaderFile = supcComponent.createFileSymbol("SUPC_HEADER2", None)
+    supcHeaderFile.setMarkup(True)
+    supcHeaderFile.setSourcePath("../peripheral/supc_11228/templates/plib_supc.h.ftl")
+    supcHeaderFile.setOutputName("plib_" + supcInstanceName.getValue().lower() + ".h")
+    supcHeaderFile.setDestPath("/peripheral/supc/")
+    supcHeaderFile.setProjectPath("config/" + configName + "/peripheral/supc/")
+    supcHeaderFile.setType("HEADER")
+    supcHeaderFile.setOverwrite(True)
 
-    supcHeader2File = supcComponent.createFileSymbol("SUPC_HEADER2", None)
-    supcHeader2File.setMarkup(True)
-    supcHeader2File.setSourcePath("../peripheral/supc_11228/templates/plib_supc.h.ftl")
-    supcHeader2File.setOutputName("plib_"+supcInstanceName.getValue().lower()+".h")
-    supcHeader2File.setDestPath("/peripheral/supc/")
-    supcHeader2File.setProjectPath("config/" + configName + "/peripheral/supc/")
-    supcHeader2File.setType("HEADER")
-    supcHeader2File.setOverwrite(True)
-
-    supcSource1File = supcComponent.createFileSymbol("SUPC_SOURCE1", None)
-    supcSource1File.setMarkup(True)
-    supcSource1File.setSourcePath("../peripheral/supc_11228/templates/plib_supc.c.ftl")
-    supcSource1File.setOutputName("plib_"+supcInstanceName.getValue().lower()+".c")
-    supcSource1File.setDestPath("/peripheral/supc/")
-    supcSource1File.setProjectPath("config/" + configName + "/peripheral/supc/")
-    supcSource1File.setType("SOURCE")
-    supcSource1File.setOverwrite(True)
+    supcSourceFile = supcComponent.createFileSymbol("SUPC_SOURCE1", None)
+    supcSourceFile.setMarkup(True)
+    supcSourceFile.setSourcePath("../peripheral/supc_11228/templates/plib_supc.c.ftl")
+    supcSourceFile.setOutputName("plib_" + supcInstanceName.getValue().lower() + ".c")
+    supcSourceFile.setDestPath("/peripheral/supc/")
+    supcSourceFile.setProjectPath("config/" + configName + "/peripheral/supc/")
+    supcSourceFile.setType("SOURCE")
+    supcSourceFile.setOverwrite(True)
 
     supcSystemInitFile = supcComponent.createFileSymbol("SUPC_INIT", None)
     supcSystemInitFile.setType("STRING")
@@ -364,4 +390,3 @@ def instantiateComponent(supcComponent):
     supcSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     supcSystemDefFile.setSourcePath("../peripheral/supc_11228/templates/system/definitions.h.ftl")
     supcSystemDefFile.setMarkup(True)
-
