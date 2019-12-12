@@ -564,7 +564,7 @@ for id in clocks:
 
 CLK_MANAGER_SELECT = coreComponent.createStringSymbol("CLK_MANAGER_PLUGIN", None)
 CLK_MANAGER_SELECT.setVisible(False)
-CLK_MANAGER_SELECT.setDefaultValue("clk_sam_g55:SAMG55ClockModel")
+CLK_MANAGER_SELECT.setDefaultValue("clk_sam_g51_g53_g54:SAMG51G53G54ClockModel")
 
 ####################################### WAIT STATE ############################################
 
