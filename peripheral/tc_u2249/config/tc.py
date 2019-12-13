@@ -487,8 +487,11 @@ def instantiateComponent(tcComponent):
 
     #clock resolution display
     tcSym_Resolution = tcComponent.createCommentSymbol("TC_Resolution", None)
-    resolution = (int(tcSym_CTRLA_PRESCALER.getSelectedKey()[3:]) * 1000000000.0) / Database.getSymbolValue("core", tcInstanceName.getValue() + "_CLOCK_FREQUENCY")
-    tcSym_Resolution.setLabel("****Timer resolution is " + str(resolution) + " nS****")
+    if int(Database.getSymbolValue("core", tcInstanceName.getValue() + "_CLOCK_FREQUENCY")) != 0: 
+        resolution = (int(tcSym_CTRLA_PRESCALER.getSelectedKey()[3:]) * 1000000000.0) / Database.getSymbolValue("core", tcInstanceName.getValue() + "_CLOCK_FREQUENCY")
+        tcSym_Resolution.setLabel("****Timer resolution is " + str(resolution) + " nS****")
+    else:
+        tcSym_Resolution.setLabel("Warning!!! TC Peripheral Clock is Disabled in Clock Manager")
     if isMasterSlaveModeEnable == True:
         tcSym_Resolution.setVisible(False)
     tcSym_Resolution.setDependencies(tcResolutionCalc, [masterComponentSymbolId, "core."+tcInstanceName.getValue()+"_CLOCK_FREQUENCY", \
