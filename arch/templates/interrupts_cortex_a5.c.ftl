@@ -3,7 +3,7 @@
     <#lt>void __attribute__((optimize("-O1"),section(".text.DefaultInterruptHandler"),long_call))DefaultInterruptHandler( void )
     <#lt>{
         <#lt>#if defined(__DEBUG) || defined(__DEBUG_D)
-        <#lt>    __builtin_software_breakpoint();
+        <#lt>    asm("BKPT");
         <#lt>#endif
     <#lt>    while( 1 ){
     <#lt>    }
@@ -13,7 +13,7 @@
     <#lt>void __attribute__((optimize("-O1"),section(".text.DefaultInterruptHandlerForSpurious"),long_call))DefaultInterruptHandlerForSpurious( void )
     <#lt>{
         <#lt>#if defined(__DEBUG) || defined(__DEBUG_D)
-        <#lt>    __builtin_software_breakpoint();
+        <#lt>    asm("BKPT");
         <#lt>#endif
     <#lt>    ++spuriousEventCount;
     <#lt>}

@@ -62,7 +62,7 @@ def handleMessage(messageID, args):
 
     if messageID == "PIN_LIST":              # Indicates core to return available pins for device
         symbolDict = getAvailablePins()      # this API must be defined as global in every port plibs
-    
+
     elif messageID == "WAIT_STATES":
         symbolDict = nvmWaitStates
 
@@ -184,7 +184,7 @@ def instantiateComponent( coreComponent ):
     coreArch.setDefaultValue( ATDF.getNode( "/avr-tools-device-file/devices/device" ).getAttribute( "architecture" ) )
     coreArch.setReadOnly( True )
     coreArch.setVisible( False )
-    
+
     coreSeries = coreComponent.createStringSymbol( "CoreSeries", None )
     coreSeries.setDefaultValue( ATDF.getNode( "/avr-tools-device-file/devices/device" ).getAttribute( "series" ) )
     coreSeries.setReadOnly( True )
@@ -399,7 +399,7 @@ def instantiateComponent( coreComponent ):
         xc32UndStackSize.setLabel("Undefined Stack Size (bytes)")
         xc32UndStackSize.setDefaultValue(64)
         xc32UndStackSize.setVisible( xc32AllStacks )
-        
+
 
     xc32LdSymbolsMacrosMenu = coreComponent.createMenuSymbol("CoreXC32_SYMBOLS_MACROS", xc32LdMenu)
     xc32LdSymbolsMacrosMenu.setLabel("Symbols & Macros")
@@ -573,34 +573,36 @@ def instantiateComponent( coreComponent ):
     systemIntVectorsHandlesList =           coreComponent.createListSymbol( "LIST_SYSTEM_INTERRUPT_HANDLERS",           None )
     systemIntVectorsASMList =               coreComponent.createListSymbol( "LIST_SYSTEM_INTERRUPT_ASM",                None )
 
-    # generate exceptions.c file
-    exceptSourceFile = coreComponent.createFileSymbol("EXCEPTIONS_C", None)
-    if "PIC32M" in processor:
-        exceptSourceFile.setSourcePath("templates/exceptions_xc32_mips.c.ftl")
-    else:
-        exceptSourceFile.setSourcePath("templates/exceptions_xc32_cortex_m.c.ftl")
-    exceptSourceFile.setOutputName("exceptions.c")
-    exceptSourceFile.setMarkup(True)
-    exceptSourceFile.setOverwrite(True)
-    exceptSourceFile.setDestPath("")
-    exceptSourceFile.setProjectPath("config/" + configName + "/")
-    exceptSourceFile.setType("SOURCE")
-    exceptSourceFile.setDependencies( genSysSourceFile, [ "CoreSysExceptionFile", "CoreSysFiles", "FILTERING_EXCEPTION", "ADVANCED_EXCEPTION" ] )
+    if not ("CORTEX-A" in coreArch.getValue() or "ARM926" in coreArch.getValue()):
+        # generate exceptions.c file
+        exceptSourceFile = coreComponent.createFileSymbol("EXCEPTIONS_C", None)
+        if "PIC32M" in processor:
+            exceptSourceFile.setSourcePath("templates/exceptions_xc32_mips.c.ftl")
+        else:
+            exceptSourceFile.setSourcePath("templates/exceptions_xc32_cortex_m.c.ftl")
+        exceptSourceFile.setOutputName("exceptions.c")
+        exceptSourceFile.setMarkup(True)
+        exceptSourceFile.setOverwrite(True)
+        exceptSourceFile.setDestPath("")
+        exceptSourceFile.setProjectPath("config/" + configName + "/")
+        exceptSourceFile.setType("SOURCE")
+        exceptSourceFile.setDependencies( genSysSourceFile, [ "CoreSysExceptionFile", "CoreSysFiles", "FILTERING_EXCEPTION", "ADVANCED_EXCEPTION" ] )
 
-    # generate exceptionsHandler.s file
-    exceptionAsmSourceFile = coreComponent.createFileSymbol("EXCEPTIONS_ASM", None)
-    if "PIC32M" in processor:
-        exceptionAsmSourceFile.setSourcePath("templates/general-exception-context_mips.S.ftl")
-    else:
-        exceptionAsmSourceFile.setSourcePath("templates/exceptionsHandler.s.ftl")
-    exceptionAsmSourceFile.setOutputName("exceptionsHandler.S")
-    exceptionAsmSourceFile.setMarkup(True)
-    exceptionAsmSourceFile.setOverwrite(True)
-    exceptionAsmSourceFile.setDestPath("")
-    exceptionAsmSourceFile.setProjectPath("config/" + configName + "/")
-    exceptionAsmSourceFile.setType("SOURCE")
-    exceptionAsmSourceFile.setEnabled(False)
-    exceptionAsmSourceFile.setDependencies( genExceptionAsmSourceFile, ["CoreSysFiles", "CoreSysExceptionFile", "ADVANCED_EXCEPTION"])
+    if not ("CORTEX-A" in coreArch.getValue() or "ARM926" in coreArch.getValue()):
+        # generate exceptionsHandler.s file
+        exceptionAsmSourceFile = coreComponent.createFileSymbol("EXCEPTIONS_ASM", None)
+        if "PIC32M" in processor:
+            exceptionAsmSourceFile.setSourcePath("templates/general-exception-context_mips.S.ftl")
+        else:
+            exceptionAsmSourceFile.setSourcePath("templates/exceptionsHandler.s.ftl")
+        exceptionAsmSourceFile.setOutputName("exceptionsHandler.S")
+        exceptionAsmSourceFile.setMarkup(True)
+        exceptionAsmSourceFile.setOverwrite(True)
+        exceptionAsmSourceFile.setDestPath("")
+        exceptionAsmSourceFile.setProjectPath("config/" + configName + "/")
+        exceptionAsmSourceFile.setType("SOURCE")
+        exceptionAsmSourceFile.setEnabled(False)
+        exceptionAsmSourceFile.setDependencies( genExceptionAsmSourceFile, ["CoreSysFiles", "CoreSysExceptionFile", "ADVANCED_EXCEPTION"])
 
     # set XC32 heap size
     xc32HeapSizeSym = coreComponent.createSettingSymbol("XC32_HEAP", None)
