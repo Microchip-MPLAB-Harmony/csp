@@ -244,7 +244,8 @@ def instantiateComponent(flexcomComponent):
 
     # Dependency Status
     flexcomSym_ClkEnComment = flexcomComponent.createCommentSymbol("FLEXCOM_CLK_ENABLE_COMMENT", None)
-    flexcomSym_ClkEnComment.setVisible(False)
+    if Database.getSymbolValue("core", flexcomInstanceName.getValue() + "_CLOCK_ENABLE"):
+        flexcomSym_ClkEnComment.setVisible(False)
     flexcomSym_ClkEnComment.setLabel("Warning!!! " + flexcomComponent.getID().upper() + " Peripheral Clock is Disabled in Clock Manager")
     flexcomSym_ClkEnComment.setDependencies(dependencyStatus, ["core." + flexcomInstanceName.getValue() + "_CLOCK_ENABLE"])
 
