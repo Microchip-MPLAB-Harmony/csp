@@ -344,15 +344,34 @@ void MMU_Initialize(void)
 	                  | TTB_TYPE_SECT;
 
 	/* 0x20000000: EBI Chip Select 1 / DDR CS */
+<#if __PROCESSOR?matches("SAM9X60D6K")>
+	/* (1MB strongly ordered, 7MB cachable) */
+	for (addr = 0x200; addr < 0x201; addr++)
+<#else>
+<#if __PROCESSOR?matches("SAM9X60D1G")>
+	/* (16MB strongly ordered, 112MB cachable) */
+<#elseif __PROCESSOR?matches("SAM9X60D5M")>
+	/* (16MB strongly ordered, 48MB cachable) */
+<#else>
 	/* (16MB strongly ordered, 240MB cachable) */
+</#if>
 	for (addr = 0x200; addr < 0x210; addr++)
+</#if>
 		trns_tbl[addr] = TTB_SECT_ADDR(addr << 20)
 	                  | TTB_SECT_AP_FULL_ACCESS
 	                  | TTB_SECT_DOMAIN(0xf)
 	                  | TTB_SECT_STRONGLY_ORDERED
 	                  | TTB_SECT_SBO
 	                  | TTB_TYPE_SECT;
+<#if __PROCESSOR?matches("SAM9X60D1G")>
+	for (addr = 0x210; addr < 0x280; addr++)
+<#elseif __PROCESSOR?matches("SAM9X60D5M")>
+	for (addr = 0x210; addr < 0x240; addr++)
+<#elseif __PROCESSOR?matches("SAM9X60D6K")>
+	for (addr = 0x201; addr < 0x208; addr++)
+<#else>
 	for (addr = 0x210; addr < 0x300; addr++)
+</#if>
 		trns_tbl[addr] = TTB_SECT_ADDR(addr << 20)
 	                  | TTB_SECT_AP_FULL_ACCESS
 	                  | TTB_SECT_DOMAIN(0xf)

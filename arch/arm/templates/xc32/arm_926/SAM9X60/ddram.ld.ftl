@@ -11,8 +11,20 @@ SEARCH_DIR(.)
 MEMORY
 {
 	sram        (WX) : ORIGIN = 0x300000,   LENGTH = 64K  /* sram */
+<#if __PROCESSOR?matches("SAM9X60D1G")>
+	ram         (LWX!R) : ORIGIN = 0x21000000, LENGTH = 112M  /* ddr */
+<#elseif __PROCESSOR?matches("SAM9X60D5M")>
+	ram         (LWX!R) : ORIGIN = 0x21000000, LENGTH = 48M   /* ddr */
+<#elseif __PROCESSOR?matches("SAM9X60D6K")>
+	ram         (LWX!R) : ORIGIN = 0x20100000, LENGTH = 7M    /* ddr */
+<#else>
 	ram         (LWX!R) : ORIGIN = 0x21000000, LENGTH = 240M  /* ddr */
+</#if>
+<#if __PROCESSOR?matches("SAM9X60D6K")>
+	ram_nocache  (!RWX) : ORIGIN = 0x20000000, LENGTH = 1M   /* ddr (non-cached) */
+<#else>
 	ram_nocache  (!RWX) : ORIGIN = 0x20000000, LENGTH = 16M  /* ddr (non-cached) */
+</#if>
 	rom         (LRX) : ORIGIN = 0, LENGTH = 0
 }
 
