@@ -26,16 +26,6 @@ global  cmccHeaderFile
 global  cmccSourceFile
 global  cmccSystemDefFile
 
-def enableFileGen(symbol, event):
-
-    if (Database.getSymbolValue("core", "DATA_CACHE_ENABLE") == True) or (Database.getSymbolValue("core", "INSTRUCTION_CACHE_ENABLE") == True):
-        cmccHeaderFile.setEnabled(True)
-        cmccSourceFile.setEnabled(True)
-        cmccSystemDefFile.setEnabled(True)
-    else:
-        cmccHeaderFile.setEnabled(False)
-        cmccSourceFile.setEnabled(False)
-        cmccSystemDefFile.setEnabled(False)
 
 ############################################################################
 #### Code Generation ####
@@ -51,7 +41,6 @@ cmccHeaderFile.setType("HEADER")
 cmccHeaderFile.setOverwrite(True)
 cmccHeaderFile.setEnabled(True)
 cmccHeaderFile.setMarkup(True)
-cmccHeaderFile.setDependencies(enableFileGen, ["DATA_CACHE_ENABLE", "INSTRUCTION_CACHE_ENABLE"])
 
 cmccSourceFile = coreComponent.createFileSymbol("CMCC_FILE_1", None)
 cmccSourceFile.setSourcePath("../peripheral/cmcc_u2015/templates/plib_cmcc.c.ftl")

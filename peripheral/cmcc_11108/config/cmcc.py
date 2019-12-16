@@ -24,13 +24,6 @@ global  cmccHeaderFile
 global  cmccSourceFile
 global  cmccSystemDefFile
 
-def enableFileGen(symbol, event):
-    component = event["source"]
-    cmccHeaderFile = component.getSymbolByID("CMCC_HEADER_FILE")
-    cmccSourceFile = component.getSymbolByID("CMCC_SOURCE_FILE")
-    enableFileGen  = event["value"]
-    cmccHeaderFile.setEnabled(enableFileGen)
-    cmccSourceFile.setEnabled(enableFileGen)
 
 # CMCC 11008 is also implemented on masks which has multiple cores. In such 
 # cases, we only generate cache controller code for the core for which this
@@ -65,7 +58,6 @@ cmccHeaderFile.setType("HEADER")
 cmccHeaderFile.setOverwrite(True)
 cmccHeaderFile.setEnabled(True)
 cmccHeaderFile.setMarkup(True)
-cmccHeaderFile.setDependencies(enableFileGen, ["INSTRUCTION_CACHE_ENABLE"])
 
 cmccSourceFile = coreComponent.createFileSymbol("CMCC_SOURCE_FILE", None)
 cmccSourceFile.setSourcePath("../peripheral/cmcc_11108/templates/plib_cmcc.c.ftl")
