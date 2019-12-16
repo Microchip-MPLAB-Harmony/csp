@@ -127,7 +127,13 @@ void PIO_Initialize ( void )
 	<#lt> /* Port ${port} Slow clock Divider configuration */
 	<#lt>	PIO${port}_REGS->PIO_SCDR = ${.vars[PORT_SLCK]};
 	
-	</#if>	
+	</#if>
+
+	<#assign PORT_ISR = "PORT_" + port + "_NUM_INT_PINS" >
+	<#if .vars[PORT_ISR] != 0>
+    /* Clear the ISR register */ 
+	<#lt>	(uint32_t)PIO${port}_REGS->PIO_ISR;
+  </#if>	
 </#list>
 
 <#if TOTAL_NUM_OF_INT_USED gt 0>
@@ -188,7 +194,7 @@ void PIO_Initialize ( void )
 */
 uint32_t PIO_PortRead(PIO_PORT port)
 {
-    return ((pio_registers_t*)port)->PIO_PDSR;
+    return ((pio_group_registers_t*)port)->PIO_PDSR;
 }
 
 // *****************************************************************************
@@ -203,8 +209,8 @@ uint32_t PIO_PortRead(PIO_PORT port)
 */
 void PIO_PortWrite(PIO_PORT port, uint32_t mask, uint32_t value)
 {
-    ((pio_registers_t*)port)->PIO_MSKR = mask;
-    ((pio_registers_t*)port)->PIO_ODSR = value;
+    ((pio_group_registers_t*)port)->PIO_MSKR = mask;
+    ((pio_group_registers_t*)port)->PIO_ODSR = value;
 }
 
 // *****************************************************************************
@@ -219,7 +225,7 @@ void PIO_PortWrite(PIO_PORT port, uint32_t mask, uint32_t value)
 */
 uint32_t PIO_PortLatchRead(PIO_PORT port)
 {
-    return ((pio_registers_t*)port)->PIO_ODSR;
+    return ((pio_group_registers_t*)port)->PIO_ODSR;
 }
 
 // *****************************************************************************
@@ -234,7 +240,7 @@ uint32_t PIO_PortLatchRead(PIO_PORT port)
 */
 void PIO_PortSet(PIO_PORT port, uint32_t mask)
 {
-    ((pio_registers_t*)port)->PIO_SODR = mask;
+    ((pio_group_registers_t*)port)->PIO_SODR = mask;
 }
 
 // *****************************************************************************
@@ -249,7 +255,7 @@ void PIO_PortSet(PIO_PORT port, uint32_t mask)
 */
 void PIO_PortClear(PIO_PORT port, uint32_t mask)
 {
-    ((pio_registers_t*)port)->PIO_CODR = mask;
+    ((pio_group_registers_t*)port)->PIO_CODR = mask;
 }
 
 // *****************************************************************************
@@ -265,8 +271,8 @@ void PIO_PortClear(PIO_PORT port, uint32_t mask)
 void PIO_PortToggle(PIO_PORT port, uint32_t mask)
 {
     /* Write into Clr and Set registers */
-    ((pio_registers_t*)port)->PIO_MSKR = mask;
-    ((pio_registers_t*)port)->PIO_ODSR ^= mask;
+    ((pio_group_registers_t*)port)->PIO_MSKR = mask;
+    ((pio_group_registers_t*)port)->PIO_ODSR ^= mask;
 }
 
 // *****************************************************************************
@@ -281,8 +287,8 @@ void PIO_PortToggle(PIO_PORT port, uint32_t mask)
 */
 void PIO_PortInputEnable(PIO_PORT port, uint32_t mask)
 {
-    ((pio_registers_t*)port)->PIO_MSKR = mask;
-    ((pio_registers_t*)port)->PIO_CFGR &= ~(1 << PIO_CFGR_DIR_Pos);	
+    ((pio_group_registers_t*)port)->PIO_MSKR = mask;
+    ((pio_group_registers_t*)port)->PIO_CFGR &= ~(1 << PIO_CFGR_DIR_Pos);	
 }
 
 // *****************************************************************************
@@ -297,8 +303,8 @@ void PIO_PortInputEnable(PIO_PORT port, uint32_t mask)
 */
 void PIO_PortOutputEnable(PIO_PORT port, uint32_t mask)
 {
-    ((pio_registers_t*)port)->PIO_MSKR = mask;
-    ((pio_registers_t*)port)->PIO_CFGR |= (1 << PIO_CFGR_DIR_Pos);
+    ((pio_group_registers_t*)port)->PIO_MSKR = mask;
+    ((pio_group_registers_t*)port)->PIO_CFGR |= (1 << PIO_CFGR_DIR_Pos);
 }
 <#if PORT_A_INTERRUPT_USED == true ||
      PORT_B_INTERRUPT_USED == true ||
@@ -319,7 +325,7 @@ void PIO_PortOutputEnable(PIO_PORT port, uint32_t mask)
 */
 void PIO_PortInterruptEnable(PIO_PORT port, uint32_t mask)
 {
-    ((pio_registers_t*)port)->PIO_IER = mask;
+    ((pio_group_registers_t*)port)->PIO_IER = mask;
 }
 
 // *****************************************************************************
@@ -334,7 +340,7 @@ void PIO_PortInterruptEnable(PIO_PORT port, uint32_t mask)
 */
 void PIO_PortInterruptDisable(PIO_PORT port, uint32_t mask)
 {
-    ((pio_registers_t*)port)->PIO_IDR = mask;
+    ((pio_group_registers_t*)port)->PIO_IDR = mask;
 }
 
 // *****************************************************************************

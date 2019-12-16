@@ -58,6 +58,8 @@
 <#assign PORTC_Pin_List = []>
 <#assign PORTD_Pin_List = []>
 <#assign PORTE_Pin_List = []>
+<#assign PORTF_Pin_List = []>
+<#assign PORTG_Pin_List = []>
 
 <#list 1..PIO_PIN_TOTAL as i>
     <#assign pinport = "PIN_" + i + "_PIO_PIN">
@@ -79,6 +81,12 @@
 
             <#elseif .vars[pinchannel] == "E">
                 <#assign PORTE_Pin_List = PORTE_Pin_List + [.vars[pinport]]>
+
+            <#elseif .vars[pinchannel] == "F">
+                <#assign PORTF_Pin_List = PORTF_Pin_List + [.vars[pinport]]>
+
+            <#elseif .vars[pinchannel] == "G">
+                <#assign PORTG_Pin_List = PORTG_Pin_List + [.vars[pinport]]>
             </#if>
 
         </#if>
@@ -114,20 +122,26 @@
 typedef enum
 {
     <#if PORTA_Pin_List?has_content>
-    SYS_PORT_A = PIOA_BASE_ADDRESS,
+    SYS_PORT_A = (uint32_t)&(PIO_REGS->PIO_GROUP[0]),
     </#if>
     <#if PORTB_Pin_List?has_content>
-    SYS_PORT_B = PIOB_BASE_ADDRESS,
+    SYS_PORT_B = (uint32_t)&(PIO_REGS->PIO_GROUP[1]),
     </#if>
     <#if PORTC_Pin_List?has_content>
-    SYS_PORT_C = PIOC_BASE_ADDRESS,
+    SYS_PORT_C = (uint32_t)&(PIO_REGS->PIO_GROUP[2]),
     </#if>
     <#if PORTD_Pin_List?has_content>
-    SYS_PORT_D = PIOD_BASE_ADDRESS,
+    SYS_PORT_D = (uint32_t)&(PIO_REGS->PIO_GROUP[3]),
     </#if>
     <#if PORTE_Pin_List?has_content>
-    SYS_PORT_E = PIOE_BASE_ADDRESS
+    SYS_PORT_E = (uint32_t)&(PIO_REGS->PIO_GROUP[4]),
     </#if>
+<#if PIO_PORT_F_ENBALE>
+    SYS_PORT_F = (uint32_t)&(PIO_REGS->PIO_GROUP[5]),
+</#if>
+<#if PIO_PORT_G_ENBALE>
+    SYS_PORT_G = (uint32_t)&(PIO_REGS->PIO_GROUP[6])
+</#if>
 } SYS_PORT;
 
 
@@ -169,6 +183,14 @@ typedef enum
     <#assign PORTE_Pin_List =  PORTE_Pin_List?sort>
     <#list PORTE_Pin_List as pin>
     SYS_PORT_PIN_PE${pin} = ${pin+128},
+    </#list>
+    <#assign PORTF_Pin_List =  PORTF_Pin_List?sort>
+    <#list PORTF_Pin_List as pin>
+    SYS_PORT_PIN_PF${pin} = ${pin+160},
+    </#list>
+    <#assign PORTG_Pin_List =  PORTG_Pin_List?sort>
+    <#list PORTG_Pin_List as pin>
+    SYS_PORT_PIN_PG${pin} = ${pin+192},
     </#list>
     /* This element should not be used in any of the PORTS APIs.
        It will be used by other modules or application to denote that none of the PORT Pin is used */

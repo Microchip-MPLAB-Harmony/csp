@@ -1,6 +1,23 @@
 <#--  =====================
       MACRO mhc_process_leds
       ===================== -->
+
+#define PIOA_REGS       ((pio_group_registers_t*)(&(PIO_REGS->PIO_GROUP[0])))
+#define PIOB_REGS       ((pio_group_registers_t*)(&(PIO_REGS->PIO_GROUP[1])))
+#define PIOC_REGS       ((pio_group_registers_t*)(&(PIO_REGS->PIO_GROUP[2])))
+#define PIOD_REGS       ((pio_group_registers_t*)(&(PIO_REGS->PIO_GROUP[3])))
+<#if PIO_PORT_E_ENBALE>
+#define PIOE_REGS       ((pio_group_registers_t*)(&(PIO_REGS->PIO_GROUP[4])))
+</#if>
+
+<#if PIO_PORT_F_ENBALE>
+#define PIOF_REGS       ((pio_group_registers_t*)(&(PIO_REGS->PIO_GROUP[5])))
+</#if>
+
+<#if PIO_PORT_G_ENBALE>
+#define PIOG_REGS       ((pio_group_registers_t*)(&(PIO_REGS->PIO_GROUP[6])))
+</#if>
+
 <#compress> 
 <#macro mhc_process_leds>
 	<#assign LED_Name_List = []>
