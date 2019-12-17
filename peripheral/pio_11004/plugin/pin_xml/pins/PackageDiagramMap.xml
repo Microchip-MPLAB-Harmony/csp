@@ -13,5 +13,7 @@
 		<package diagram="JEDEC_MS_026D_BED_LQFP100" id="8" name="xQFx100" />
         <package diagram="MX_228_TFBGA" id="9" name="BGA228" />
         <package diagram="MX_49_WLCSP" id="10" name="WLCSP49" />
+        <package diagram="MX_233_TFBGA" id="11" name="BGA233" />
+        <package diagram="MX_196_TFBGA" id="12" name="BGA196" />
 	</packages>
 </pinfile>
