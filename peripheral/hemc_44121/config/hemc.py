@@ -202,12 +202,43 @@ def hsmcByteAccessSelModeVisible(symbol, event):
     else :
         hsmcSym_MODE_BAT[hsmcChipSelNum].setVisible(False)
 
+def emcBaseCalculation(symbol, event):
+    import re
+    global memSizeMap
+    global chipSelectComment
+    global csBase
+    chipSelectId = int(re.search(r'\d+', symbol.getID()).group())
+    startAddress = Database.getSymbolValue(event["namespace"], "CS_" + str(chipSelectId) + "_START_ADDRESS")
+    bankSize = Database.getSymbolValue(event["namespace"], "CS_" + str(chipSelectId) + "_MEMORY_BANK_SIZE")
+
+    if bankSize == 17:
+        csBase[chipSelectId].setValue(0x3ffff)
+    else:
+        value = (int(startAddress, 0) - int(0x60000000))
+        csBase[chipSelectId].setValue(value >> 14) 
+        Database.setSymbolValue(event["namespace"], "CS_" + str(chipSelectId) + "_END_ADDRESS", str(hex(int(startAddress, 0) + memSizeMap[bankSize])).replace("L", ""))
+    for i in range(0, chipSelectCount):
+        if Database.getSymbolValue(event["namespace"], "CS_" + str(i) + "_MEMORY_BANK_SIZE") != 17:
+            for j in range(0, chipSelectCount):
+                if j != i and  Database.getSymbolValue(event["namespace"], "CS_" + str(j) + "_MEMORY_BANK_SIZE") != 17:
+                    startA = int(Database.getSymbolValue(event["namespace"], "CS_" + str(j) + "_START_ADDRESS"), 0)
+                    startB = int(Database.getSymbolValue(event["namespace"], "CS_" + str(i) + "_START_ADDRESS"), 0)
+                    endA = int(Database.getSymbolValue(event["namespace"], "CS_" + str(j) + "_END_ADDRESS"), 0)
+                    endB = int(Database.getSymbolValue(event["namespace"], "CS_" + str(i) + "_END_ADDRESS"), 0)
+                    if (startA <= endB) and (startB <= endA):
+                        chipSelectComment[j].setValue(True)
+                    else:
+                        chipSelectComment[j].setValue(False)
+
+
+
 ################################################################################
 #### Component ####
 ################################################################################
 
 
 def instantiateComponent(hemcComponent):
+    import re
     global hsmcCSmenu
     global hemcInstanceName
     global hsdramcSym_CR__NR
@@ -221,6 +252,12 @@ def instantiateComponent(hemcComponent):
     global hsdramcSymMenu_TIMING_MENU
     global useHSMC
     global hemcComment
+    global chipSelectComment
+    global memSizeMap
+    global csBase
+    csBase = []
+    memSizeMap = {}
+    chipSelectComment = []
 
 
     hemcInstanceName = hemcComponent.createStringSymbol("HEMC_INSTANCE_NAME", None)
@@ -254,12 +291,6 @@ def instantiateComponent(hemcComponent):
         csMenu = hemcComponent.createMenuSymbol("CS_" + str(id) + "_MEMORY_MENU", memMemu)
         csMenu.setLabel("Chip Select " + str(id) + " Memory Configuration")
 
-        csBase = hemcComponent.createHexSymbol("CS_" + str(id) + "_MEMORY_BASE", csMenu)
-        csBase.setLabel("Relative Base Address")
-        csBase.setDefaultValue(0x3ffff)
-        csBase.setMin(0)
-        csBase.setMax(0x3ffff)
-
         csType = hemcComponent.createKeyValueSetSymbol("CS_" + str(id) + "_MEMORY_TYPE", csMenu)
         csType.setLabel("Memory Type")
         csType.setOutputMode("Value")
@@ -271,7 +302,7 @@ def instantiateComponent(hemcComponent):
         csStart = hemcComponent.createStringSymbol("CS_" + str(id) + "_START_ADDRESS", csMenu)
         csStart.setLabel("Start  Address")
         csStart.setDefaultValue("0x60000000")
-        csStart.setVisible(False)
+        csStart.setVisible(True)
         
         csEnd = hemcComponent.createStringSymbol("CS_" + str(id) + "_END_ADDRESS", csMenu)
         csEnd.setLabel("End  Address")
@@ -284,10 +315,31 @@ def instantiateComponent(hemcComponent):
         csBankSize.setDisplayMode("Description")
         value = ValGrp_CR_Banksize.getChildren()
         
-        for id in range(0, len(value)):
-            csBankSize.addKey(value[id].getAttribute("name"), str(value[id].getAttribute("value")), value[id].getAttribute("caption"))
+        for i in range(0, len(value)):
+            name = value[i].getAttribute("name")
+            csBankSize.addKey(name, str(value[i].getAttribute("value")), value[i].getAttribute("caption"))
+            if name == "NOT_USED":
+                memSizeMap[i] = 0
+            elif "KB" in name:
+                memSizeMap[i] = int(re.search(r'\d+', name).group()) * 1024
+            elif "MB" in name:
+                memSizeMap[i] = int(re.search(r'\d+', name).group()) * 1024 * 1024
+        
         csBankSize.setDefaultValue(17)
 
+        csBase.append(id)
+        csBase[id] = hemcComponent.createHexSymbol("CS_" + str(id) + "_MEMORY_BASE", csMenu)
+        csBase[id].setLabel("Relative Base Address")
+        csBase[id].setDefaultValue(0x3ffff)
+        csBase[id].setMin(0)
+        csBase[id].setMax(0x3ffff)
+        csBase[id].setDependencies(emcBaseCalculation, ["CS_" + str(id) + "_START_ADDRESS", "CS_" + str(id) + "_MEMORY_BANK_SIZE"])
+        csBase[id].setVisible(False)
+
+        chipSelectComment.append(id)
+        chipSelectComment[id] = hemcComponent.createBooleanSymbol("CS_" + str(id) + "_COMMENT", csMenu)
+        chipSelectComment[id].setVisible(False)
+        chipSelectComment[id].setDefaultValue(False)
 ################################################ SDRAM Configuration ###############################################
     cpuclk = Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")
     cpuclk = int(cpuclk)
