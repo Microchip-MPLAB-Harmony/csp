@@ -48,6 +48,21 @@
 <#assign TOTAL_NUM_OF_INT_USED = 0>
 <#assign portNumCbList = [0]>
 
+<#list 0..PORT_CHANNEL_TOTAL-1 as i>
+  <#assign channel = "PORT_CHANNEL_" + i + "_NAME">
+  <@"<#assign PORT_${.vars[channel]}_NUM_INT_PINS = 0>"?interpret />
+</#list>
+
+<#list 1..PIO_PIN_TOTAL as i>
+    <#assign pinchannel = "PIN_" + i + "_PIO_CHANNEL">
+    <#assign intConfig = "PIN_" + i + "_PIO_INTERRUPT">
+    <#if .vars[intConfig]?has_content>
+        <#if (.vars[intConfig] != "Disabled")>
+          <@"<#assign PORT_${.vars[pinchannel]}_NUM_INT_PINS = PORT_${.vars[pinchannel]}_NUM_INT_PINS + 1>"?interpret />
+        </#if>
+    </#if>
+</#list>
+
 <#-- count total number of active interrupts and save it in variable -->
 <#list 0..PORT_CHANNEL_TOTAL-1 as i>
     <#assign channel = "PORT_CHANNEL_" + i + "_NAME">

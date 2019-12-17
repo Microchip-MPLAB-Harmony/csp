@@ -1121,6 +1121,13 @@ static inline void PIO_PinOutputEnable(PIO_PIN pin)
     PIO_PortOutputEnable((PIO_PORT)(PIO_BASE_ADDRESS + (0x40 * (pin>>5))), 0x1 << (pin & 0x1F));
 }
 
+<#if PORT_A_INTERRUPT_USED == true ||
+     PORT_B_INTERRUPT_USED == true ||
+     PORT_C_INTERRUPT_USED == true ||
+     PORT_D_INTERRUPT_USED == true ||
+     PORT_E_INTERRUPT_USED == true ||
+     PORT_F_INTERRUPT_USED == true ||
+     PORT_G_INTERRUPT_USED == true >
 // *****************************************************************************
 /* Function:
     void PIO_PinInterruptEnable(PIO_PIN pin)
@@ -1190,13 +1197,6 @@ static inline void PIO_PinInterruptDisable(PIO_PIN pin)
     PIO_PortInterruptDisable((PIO_PORT)(PIO_BASE_ADDRESS + (0x40 * (pin>>5))), 0x1 << (pin & 0x1F));
 }
 
-<#if PORT_A_INTERRUPT_USED == true ||
-     PORT_B_INTERRUPT_USED == true ||
-     PORT_C_INTERRUPT_USED == true ||
-     PORT_D_INTERRUPT_USED == true ||
-     PORT_E_INTERRUPT_USED == true ||
-     PORT_F_INTERRUPT_USED == true ||
-     PORT_G_INTERRUPT_USED == true >
 // *****************************************************************************
 /* Function:
     bool PIO_PinInterruptCallbackRegister(
