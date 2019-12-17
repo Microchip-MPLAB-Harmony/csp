@@ -63,8 +63,8 @@ uint32_t frequency;
 volatile bool tc_buffer_ready = false;
 
 void capture_handler( TC_CAPTURE_STATUS status, uintptr_t context)
-{   
-    if ((status  & TC_CAPTURE_STAUTS_CAPTURE0_READY) == TC_CAPTURE_STAUTS_CAPTURE0_READY)
+{
+    if ((status  & TC_CAPTURE_STATUS_CAPTURE0_READY) == TC_CAPTURE_STATUS_CAPTURE0_READY)
     {
         tc_buffer_ready = true;
     }
@@ -78,21 +78,21 @@ void capture_handler( TC_CAPTURE_STATUS status, uintptr_t context)
 int main ( void )
 {
     uint16_t period,on_time;
-    uint16_t cmp_period, cmp_val=0; 
-    
+    uint16_t cmp_period, cmp_val=0;
+
     /* Initialize all modules */
     SYS_Initialize ( NULL );
-    
+
     SYSTICK_TimerStart();
     cmp_period = TC3_Compare16bitPeriodGet();
-    
+
     printf("\n\r---------------------------------------------------------");
     printf("\n\r                    TC Capture Demo                 ");
     printf("\n\r---------------------------------------------------------\n\r");
-    
+
     TC3_CompareStart();
     TC4_CaptureStart();
-    
+
     TC4_CaptureCallbackRegister(capture_handler, (uintptr_t)NULL);
 
     while (true )
@@ -104,24 +104,24 @@ int main ( void )
             cmp_val = CMP_VAL_INCREMENT;
         }
         TC3_Compare16bitMatch1Set(cmp_val);
-        
-        /* Wait for 1 second */ 
+
+        /* Wait for 1 second */
         SYSTICK_DelayMs(500);
-        
+
         /* Wait for capture event */
         while(tc_buffer_ready != true);
-           
-        /* Read Captured values */ 
+
+        /* Read Captured values */
         period = TC4_Capture16bitChannel0Get();
         on_time = TC4_Capture16bitChannel1Get();
 
         /* Compute Duty Cycle in percentage and Frequency in Hz */
         duty = ((on_time) * 100U) / period;
         frequency = (TC4_CaptureFrequencyGet() / period);
-        
+
         /* Send the measured data to console for display  */
         printf("Frequency: %d Hz \t Duty Cycle: %d %%",(int) frequency,(int) duty);
-        printf("\r\n");       
+        printf("\r\n");
         tc_buffer_ready = false;
     }
 
@@ -134,4 +134,3 @@ int main ( void )
 /*******************************************************************************
  End of File
 */
-
