@@ -134,6 +134,11 @@ uint16_t TC0_Compare16bitCounterGet( void )
         /* Wait for Write Synchronization */
     }
 
+    while((TC0_REGS->COUNT16.TC_CTRLBSET & TC_CTRLBSET_CMD_Msk) != 0)
+    {
+        /* Wait for CMD to become zero */
+    }
+
     /* Read current count value */
     return (uint16_t)TC0_REGS->COUNT16.TC_COUNT;
 }
@@ -154,6 +159,10 @@ void TC0_Compare16bitPeriodSet( uint16_t period )
 {
     /* Configure period value */
     TC0_REGS->COUNT16.TC_CCBUF[0] = period;
+    while((TC0_REGS->COUNT16.TC_SYNCBUSY & TC_SYNCBUSY_CC0_Msk) == TC_SYNCBUSY_CC0_Msk)
+    {
+        /* Wait for Write Synchronization */
+    }
 }
 
 /* Read period value */
@@ -163,6 +172,27 @@ uint16_t TC0_Compare16bitPeriodGet( void )
     return (uint16_t)TC0_REGS->COUNT16.TC_CC[0];
 }
 
+/* Configure duty cycle value */
+void TC0_Compare16bitMatch0Set( uint16_t compareValue )
+{
+    /* Set new compare value for compare channel 0 */
+    TC0_REGS->COUNT16.TC_CCBUF[0] = compareValue;
+    while((TC0_REGS->COUNT16.TC_SYNCBUSY & TC_SYNCBUSY_CC0_Msk) == TC_SYNCBUSY_CC0_Msk)
+    {
+        /* Wait for Write Synchronization */
+    }
+}
+
+/* Configure duty cycle value */
+void TC0_Compare16bitMatch1Set( uint16_t compareValue )
+{
+    /* Set new compare value for compare channel 1 */
+    TC0_REGS->COUNT16.TC_CCBUF[1] = compareValue;
+    while((TC0_REGS->COUNT16.TC_SYNCBUSY & TC_SYNCBUSY_CC1_Msk) == TC_SYNCBUSY_CC1_Msk)
+    {
+        /* Wait for Write Synchronization */
+    }
+}
 
 
 
@@ -172,7 +202,7 @@ uint16_t TC0_Compare16bitPeriodGet( void )
 TC_COMPARE_STATUS TC0_CompareStatusGet( void )
 {
     TC_COMPARE_STATUS compare_status;
-    compare_status = ((TC0_REGS->COUNT16.TC_INTFLAG) & TC_COMPARE_STATUS_MSK);
+    compare_status = ((TC_COMPARE_STATUS)(TC0_REGS->COUNT16.TC_INTFLAG));
     /* Clear timer overflow interrupt */
     TC0_REGS->COUNT16.TC_INTFLAG = compare_status;
     return compare_status;
