@@ -886,6 +886,7 @@ def instantiateComponent(mcpwmComponent):
         ioconDepList[channelID - 1].append("IOCON"+str(channelID)+"__FLTSRC")
         mcpwmSym_IOCON_FLTMOD = mcpwmAddKeyValueSetFromATDFInitValue(mcpwmComponent, Module, "IOCON"+str(channelID), "FLTMOD", mcpwmSym_FAULT_MENU, True)
         ioconDepList[channelID - 1].append("IOCON"+str(channelID)+"__FLTMOD")
+        mcpwmSym_IOCON_FLTMOD.setDefaultValue(2)
         mcpwmSym_IOCON_FLTPOL = mcpwmAddKeyValueSetFromATDFInitValue(mcpwmComponent, Module, "IOCON"+str(channelID), "FLTPOL", mcpwmSym_FAULT_MENU, True)
         ioconDepList[channelID - 1].append("IOCON"+str(channelID)+"__FLTPOL")
 
