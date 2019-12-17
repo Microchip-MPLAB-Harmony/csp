@@ -103,7 +103,7 @@
 			<function name="U1RX" direction="in"/>
 			<function name="U2CTS" direction="in"/>
 			<function name="PTG30IN" direction="in"/>
-			<function name="SS1 (in)" direction="in"/>
+			<function name="SS1IN" direction="in"/>
 			<function name="C1RX" direction="in"/>
 			<function name="ECRS" direction="in"/>
 			<function name="ERXD2" direction="in"/>
@@ -138,7 +138,7 @@
 			<function name="OCFA" direction="in"/>
 			<function name="U3CTS" direction="in"/>
 			<function name="PTG31IN" direction="in"/>
-			<function name="SS2 (in)" direction="in"/>
+			<function name="SS2IN" direction="in"/>
 			<function name="C2RX" direction="in"/>			
 						
 			<function name="U1RTS" direction="out" value="1"/>
@@ -1172,7 +1172,7 @@
 			    	<pair key="DRV_SPI_SDO_PIN_DISPLAY_IDX[0-2]" value="SPI_ID_1"/>
 			    </constraint>
 		    </function>
-			<function name="SS1 (in)">
+			<function name="SS1IN">
 			    <constraint type="enable">
 			    	<pair key="DRV_SPI_SSIN_PIN_DISPLAY_IDX[0-2]" value="SPI_ID_1"/>
 			    </constraint>
@@ -1209,7 +1209,7 @@
 			    	<pair key="DRV_SPI_SDO_PIN_DISPLAY_IDX[0-2]" value="SPI_ID_2"/>
 			    </constraint>
 		    </function>
-			<function name="SS2 (in)">
+			<function name="SS2IN">
 			    <constraint type="enable">
 			    	<pair key="DRV_SPI_SSIN_PIN_DISPLAY_IDX[0-2]" value="SPI_ID_2"/>
 			    </constraint>
