@@ -145,7 +145,7 @@ void TC1_CaptureInterruptHandler( void )
     if (TC1_REGS->COUNT16.TC_INTENSET != 0)
     {
         TC_CAPTURE_STATUS status;
-        status = TC1_REGS->COUNT16.TC_INTFLAG;
+        status = (TC_CAPTURE_STATUS) (TC1_REGS->COUNT16.TC_INTFLAG);
         /* Clear all interrupts */
         TC1_REGS->COUNT16.TC_INTFLAG = TC_INTFLAG_Msk;
 
