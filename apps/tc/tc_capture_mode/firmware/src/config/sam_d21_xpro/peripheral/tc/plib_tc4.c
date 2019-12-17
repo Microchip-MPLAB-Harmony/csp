@@ -157,7 +157,7 @@ void TC4_CaptureCallbackRegister( TC_CAPTURE_CALLBACK callback, uintptr_t contex
 void TC4_CaptureInterruptHandler( void )
 {
     TC_CAPTURE_STATUS status;
-    status = TC4_REGS->COUNT16.TC_INTFLAG;
+    status = (TC_CAPTURE_STATUS) (TC4_REGS->COUNT16.TC_INTFLAG);
     /* Clear all interrupts */
     TC4_REGS->COUNT16.TC_INTFLAG = TC_INTFLAG_Msk;
 
