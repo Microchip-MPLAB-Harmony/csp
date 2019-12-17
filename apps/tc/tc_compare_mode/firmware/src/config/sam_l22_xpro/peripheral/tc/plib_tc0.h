@@ -94,7 +94,6 @@ void TC0_CompareStop( void );
 
 uint32_t TC0_CompareFrequencyGet( void );
 
-
 void TC0_Compare16bitPeriodSet( uint16_t period );
 
 uint16_t TC0_Compare16bitPeriodGet( void );
@@ -103,7 +102,9 @@ uint16_t TC0_Compare16bitCounterGet( void );
 
 void TC0_Compare16bitCounterSet( uint16_t count );
 
-void TC0_Compare16bitSet( uint16_t compareValue );
+void TC0_Compare16bitMatch0Set( uint16_t compareValue );
+
+void TC0_Compare16bitMatch1Set( uint16_t compareValue );
 
 
 
