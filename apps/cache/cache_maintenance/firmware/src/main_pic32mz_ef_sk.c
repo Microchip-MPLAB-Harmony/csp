@@ -59,7 +59,6 @@
 #define LED_TOGGLE()            LED1_Toggle()
 
 #define READ_SIZE               10
-#define CACHE_LINE_SIZE         16                      // 16 Bytes per cache line
 #define BUFFER_SIZE             (2*CACHE_LINE_SIZE)     // Buffer size in terms of cache lines
 
 char __attribute__ ((aligned (16))) messageStart[] = "**** CACHE maintenance demo with UART ****\r\n\
