@@ -39,6 +39,7 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 // DOM-IGNORE-END
+
 #include "device.h"
 #include "plib_${ADC_INSTANCE_NAME?lower_case}.h"
 
@@ -72,7 +73,7 @@
 
 <#-- Differential mode -->
 <#if i % 2 == 0>
-    <#if (i == 0) || (i > 0 && ADC_MR_ANACH == false)>
+    <#if (i == 0) || (i > 0 && (ADC_MR_ANACH?? && ADC_MR_ANACH == false))>
         <#if .vars[ADC_CH_CHER] == true && .vars[ADC_CH_NEG_INP] != "GND">
             <#if ADC_DIFFR_DIFF != "">
                 <#assign ADC_DIFFR_DIFF = ADC_DIFFR_DIFF + " | " + "ADC_COR_DIFF"+i+"_Msk">
@@ -119,13 +120,13 @@
     <#if .vars[ADC_CH_SEQ1R_USCH]?? && .vars[ADC_CH_SEQ1R_USCH] != "NONE">
         <#if i < 8>
             <#if ADC_SEQ1R_USCH != "">
-                <#assign ADC_SEQ1R_USCH = ADC_SEQ1R_USCH + " | \n\t\t" + "ADC_SEQR1_USCH"+(i+1)+"(ADC_"+.vars[ADC_CH_SEQ1R_USCH]+")">
+                <#assign ADC_SEQ1R_USCH = ADC_SEQ1R_USCH + " | " + "ADC_SEQR1_USCH"+(i+1)+"(ADC_"+.vars[ADC_CH_SEQ1R_USCH]+")">
             <#else>
                 <#assign ADC_SEQ1R_USCH = "ADC_SEQR1_USCH"+(i+1)+"(ADC_"+.vars[ADC_CH_SEQ1R_USCH]+")">
             </#if>
         <#else>
             <#if ADC_SEQ2R_USCH != "">
-                <#assign ADC_SEQ2R_USCH = ADC_SEQ2R_USCH + " | \n\t\t" + "ADC_SEQ2R_USCH"+i+"(ADC_"+.vars[ADC_CH_SEQ1R_USCH]+")">
+                <#assign ADC_SEQ2R_USCH = ADC_SEQ2R_USCH + " | " + "ADC_SEQ2R_USCH"+i+"(ADC_"+.vars[ADC_CH_SEQ1R_USCH]+")">
             <#else>
                 <#assign ADC_SEQ2R_USCH = "ADC_SEQ2R_USCH"+i+"(ADC_"+.vars[ADC_CH_SEQ1R_USCH]+")">
             </#if>
@@ -171,56 +172,60 @@
 
 </#compress>
 
-<#-- *********************************************************************************************** -->
 // *****************************************************************************
 // *****************************************************************************
 // Section: ${ADC_INSTANCE_NAME} Implementation
 // *****************************************************************************
 // *****************************************************************************
+
 <#if ADC_INTERRUPT == true>
     <#lt>/* Object to hold callback function and context */
     <#lt>ADC_CALLBACK_OBJECT ${ADC_INSTANCE_NAME}_CallbackObj;
 </#if>
 
 /* Initialize ADC peripheral */
-void ${ADC_INSTANCE_NAME}_Initialize()
+void ${ADC_INSTANCE_NAME}_Initialize( void )
 {
     /* Software reset */
     ${ADC_INSTANCE_NAME}_REGS->ADC_CR = ADC_CR_SWRST_Msk;
 
     /* Prescaler and different time settings as per CLOCK section  */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_MR = ADC_MR_PRESCAL(${ADC_MR_PRESCAL}U) | ADC_MR_TRACKTIM(15U) |
-        ADC_MR_STARTUP_SUT64 ${(ADC_MR_ANACH == false)?then('| ADC_MR_ANACH_Msk', '')} |
-        ADC_MR_TRANSFER(2U) ${(ADC_CONV_MODE == "0")?then('| ADC_MR_FREERUN_Msk', '')} <#rt>
-        <#lt> ${(ADC_CONV_MODE == "2")?then('| (ADC_MR_TRGEN_Msk) | (ADC_MR_${ADC_MR_TRGSEL_VALUE})', '')};
+    <@compress single_line=true>${ADC_INSTANCE_NAME}_REGS->ADC_MR = ADC_MR_PRESCAL(${ADC_MR_PRESCAL}U)
+                                                                    | ADC_MR_TRACKTIM(15U)
+                                                                    | ADC_MR_STARTUP_SUT64
+                                                                    | ADC_MR_TRANSFER(2U)
+                                                                    <#if ADC_MR_ANACH??>${(ADC_MR_ANACH == false)?then('| ADC_MR_ANACH_Msk', '')}</#if>
+                                                                    ${(ADC_CONV_MODE == "0")?then('| ADC_MR_FREERUN_Msk', '')}
+                                                                    ${(ADC_CONV_MODE == "2")?then('| ADC_MR_TRGEN_Msk | ADC_MR_${ADC_MR_TRGSEL_VALUE}', '')};</@compress>
 
     /* resolution and sign mode of result */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_EMR = ${ADC_RES} ${ADC_STM}
-         |  ADC_EMR_${ADC_CLK_SRC} | ADC_EMR_TAG_Msk;
+    ${ADC_INSTANCE_NAME}_REGS->ADC_EMR = ${ADC_RES} ${ADC_STM}<#if ADC_CLK_SRC??> | ADC_EMR_${ADC_CLK_SRC}</#if> | ADC_EMR_TAG_Msk;
 
 <#if ADC_DIFFR_DIFF?has_content>
     /* Differential mode */
     ${ADC_INSTANCE_NAME}_REGS->ADC_COR = ${ADC_DIFFR_DIFF};
 
 </#if>
-
 <#if ADC_MR_USEQ == true>
     /* User defined channel conversion sequence */
     ${ADC_INSTANCE_NAME}_REGS->ADC_MR |= ADC_MR_USEQ_Msk;
+
     <#if ADC_SEQ1R_USCH?has_content>
-    <#lt>   ${ADC_INSTANCE_NAME}_REGS->ADC_SEQR1 = ${ADC_SEQ1R_USCH};
+    <#lt>    ${ADC_INSTANCE_NAME}_REGS->ADC_SEQR1 = ${ADC_SEQ1R_USCH};
+
     </#if>
     <#if ADC_SEQ2R_USCH?has_content>
-    <#lt>   ${ADC_INSTANCE_NAME}_REGS->ADC_SEQ2R = ${ADC_SEQ2R_USCH};
+    <#lt>    ${ADC_INSTANCE_NAME}_REGS->ADC_SEQ2R = ${ADC_SEQ2R_USCH};
+
     </#if>
 </#if>
-
 <#if ADC_IER_EOC?has_content>
     /* Enable interrupt */
     ${ADC_INSTANCE_NAME}_REGS->ADC_IER = ${ADC_IER_EOC};
-    ${ADC_INSTANCE_NAME}_CallbackObj.callback_fn = NULL;
-</#if>
 
+    ${ADC_INSTANCE_NAME}_CallbackObj.callback_fn = NULL;
+
+</#if>
 <#if ADC_CHER_CH?has_content>
     /* Enable channel */
     ${ADC_INSTANCE_NAME}_REGS->ADC_CHER = ${ADC_CHER_CH};
@@ -228,51 +233,52 @@ void ${ADC_INSTANCE_NAME}_Initialize()
 }
 
 /* Enable ADC channels */
-void ${ADC_INSTANCE_NAME}_ChannelsEnable (ADC_CHANNEL_MASK channelsMask)
+void ${ADC_INSTANCE_NAME}_ChannelsEnable( ADC_CHANNEL_MASK channelsMask )
 {
     ${ADC_INSTANCE_NAME}_REGS->ADC_CHER |= channelsMask;
 }
 
 /* Disable ADC channels */
-void ${ADC_INSTANCE_NAME}_ChannelsDisable (ADC_CHANNEL_MASK channelsMask)
+void ${ADC_INSTANCE_NAME}_ChannelsDisable( ADC_CHANNEL_MASK channelsMask )
 {
     ${ADC_INSTANCE_NAME}_REGS->ADC_CHDR |= channelsMask;
 }
 
 /* Enable channel end of conversion interrupt */
-void ${ADC_INSTANCE_NAME}_ChannelsInterruptEnable (ADC_INTERRUPT_MASK channelsInterruptMask)
+void ${ADC_INSTANCE_NAME}_ChannelsInterruptEnable( ADC_INTERRUPT_MASK channelsInterruptMask )
 {
     ${ADC_INSTANCE_NAME}_REGS->ADC_IER |= channelsInterruptMask;
 }
 
 /* Disable channel end of conversion interrupt */
-void ${ADC_INSTANCE_NAME}_ChannelsInterruptDisable (ADC_INTERRUPT_MASK channelsInterruptMask)
+void ${ADC_INSTANCE_NAME}_ChannelsInterruptDisable( ADC_INTERRUPT_MASK channelsInterruptMask )
 {
     ${ADC_INSTANCE_NAME}_REGS->ADC_IDR |= channelsInterruptMask;
 }
 
 /* Start the conversion with software trigger */
-void ${ADC_INSTANCE_NAME}_ConversionStart(void)
+void ${ADC_INSTANCE_NAME}_ConversionStart( void )
 {
     ${ADC_INSTANCE_NAME}_REGS->ADC_CR = 0x1U << ADC_CR_START_Pos;
 }
 
-/*Check if conversion result is available */
-bool ${ADC_INSTANCE_NAME}_ChannelResultIsReady(ADC_CHANNEL_NUM channel)
+/* Check if conversion result is available */
+bool ${ADC_INSTANCE_NAME}_ChannelResultIsReady( ADC_CHANNEL_NUM channel )
 {
     return (${ADC_INSTANCE_NAME}_REGS->ADC_ISR >> channel) & 0x1U;
 }
 
 /* Read the conversion result */
-uint16_t ${ADC_INSTANCE_NAME}_ChannelResultGet(ADC_CHANNEL_NUM channel)
+uint16_t ${ADC_INSTANCE_NAME}_ChannelResultGet( ADC_CHANNEL_NUM channel )
 {
     return (${ADC_INSTANCE_NAME}_REGS->ADC_CDR[channel]);
 }
 
 /* Configure the user defined conversion sequence */
-void ${ADC_INSTANCE_NAME}_ConversionSequenceSet(ADC_CHANNEL_NUM *channelList, uint8_t numChannel)
+void ${ADC_INSTANCE_NAME}_ConversionSequenceSet( ADC_CHANNEL_NUM *channelList, uint8_t numChannel )
 {
     uint8_t channelIndex;
+
     ${ADC_INSTANCE_NAME}_REGS->ADC_SEQR1 = 0U;
 
     for (channelIndex = 0U; channelIndex < ADC_SEQ1_CHANNEL_NUM; channelIndex++)
@@ -282,23 +288,22 @@ void ${ADC_INSTANCE_NAME}_ConversionSequenceSet(ADC_CHANNEL_NUM *channelList, ui
 }
 
 <#if ADC_INTERRUPT == true>
-    <#lt>/* Register the callback function */
-    <#lt>void ${ADC_INSTANCE_NAME}_CallbackRegister(ADC_CALLBACK callback, uintptr_t context)
-    <#lt>{
-    <#lt>    ${ADC_INSTANCE_NAME}_CallbackObj.callback_fn = callback;
-    <#lt>    ${ADC_INSTANCE_NAME}_CallbackObj.context = context;
-    <#lt>}
-</#if>
+/* Register the callback function */
+void ${ADC_INSTANCE_NAME}_CallbackRegister( ADC_CALLBACK callback, uintptr_t context )
+{
+    ${ADC_INSTANCE_NAME}_CallbackObj.callback_fn = callback;
 
-<#if ADC_INTERRUPT == true>
-    <#lt>/* Interrupt Handler */
-    <#lt>void ${ADC_INSTANCE_NAME}_InterruptHandler(void)
-    <#lt>{
-    <#lt>    uint32_t status;
-    <#lt>    status = ${ADC_INSTANCE_NAME}_REGS->ADC_ISR;
-    <#lt>    if (${ADC_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)
-    <#lt>    {
-    <#lt>        ${ADC_INSTANCE_NAME}_CallbackObj.callback_fn(status, ${ADC_INSTANCE_NAME}_CallbackObj.context);
-    <#lt>    }
-    <#lt>}
+    ${ADC_INSTANCE_NAME}_CallbackObj.context = context;
+}
+
+/* Interrupt Handler */
+void ${ADC_INSTANCE_NAME}_InterruptHandler( void )
+{
+    uint32_t status = ${ADC_INSTANCE_NAME}_REGS->ADC_ISR;
+
+    if (${ADC_INSTANCE_NAME}_CallbackObj.callback_fn != NULL)
+    {
+        ${ADC_INSTANCE_NAME}_CallbackObj.callback_fn(status, ${ADC_INSTANCE_NAME}_CallbackObj.context);
+    }
+}
 </#if>

@@ -23,7 +23,7 @@
 *****************************************************************************"""
 
 ###################################################################################################
-########################### Global variables   #################################
+######################################## Global variables #########################################
 ###################################################################################################
 
 global adcInstanceName
@@ -43,189 +43,204 @@ adcSym_CH_COCR_AOFF = []
 adcSym_CH_IER_EOC = []
 
 ###################################################################################################
-########################### Callback Functions   #################################
+############################################ Callbacks ############################################
 ###################################################################################################
 
 def adcClockControl(symbol, event):
+
     clockSet = False
-    Database.clearSymbolValue("core", adcInstanceName.getValue()+"_CLOCK_ENABLE")
+    Database.clearSymbolValue("core", adcInstanceName.getValue() + "_CLOCK_ENABLE")
+
     for channelID in range(0, adcSym_NUM_CHANNELS.getValue()):
-        if (adcSym_CH_CHER[channelID].getValue() == True):
+        if adcSym_CH_CHER[channelID].getValue() == True:
             clockSet = True
-    if(clockSet == True):
-        Database.setSymbolValue("core", adcInstanceName.getValue()+"_CLOCK_ENABLE", True, 2)
-    else:
-        Database.setSymbolValue("core", adcInstanceName.getValue()+"_CLOCK_ENABLE", False, 2)
+
+    Database.setSymbolValue("core", adcInstanceName.getValue() + "_CLOCK_ENABLE", clockSet, 2)
 
 def adcinterruptControl(symbol, event):
+
     nvicSet = False
-    interruptVector = adcInstanceName.getValue()+"_INTERRUPT_ENABLE"
-    interruptHandler = adcInstanceName.getValue()+"_INTERRUPT_HANDLER"
-    interruptHandlerLock = adcInstanceName.getValue()+"_INTERRUPT_HANDLER_LOCK"
+    interruptVector = adcInstanceName.getValue() + "_INTERRUPT_ENABLE"
+    interruptHandler = adcInstanceName.getValue() + "_INTERRUPT_HANDLER"
+    interruptHandlerLock = adcInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK"
+
     Database.clearSymbolValue("core", interruptVector)
     Database.clearSymbolValue("core", interruptHandler)
     Database.clearSymbolValue("core", interruptHandlerLock)
+
     for channelID in range(0, adcSym_NUM_CHANNELS.getValue()):
         if (adcSym_CH_IER_EOC[channelID].getValue() == True):
             nvicSet = True
-    if(nvicSet == True):
+
+    if nvicSet == True:
         Database.setSymbolValue("core", interruptVector, True, 2)
-        Database.setSymbolValue("core", interruptHandler, adcInstanceName.getValue()+"_InterruptHandler", 2)
+        Database.setSymbolValue("core", interruptHandler, adcInstanceName.getValue() + "_InterruptHandler", 2)
         Database.setSymbolValue("core", interruptHandlerLock, True, 2)
     else:
         Database.setSymbolValue("core", interruptVector, False, 2)
-        Database.setSymbolValue("core", interruptHandler, adcInstanceName.getValue()+"_Handler", 2)
+        Database.setSymbolValue("core", interruptHandler, adcInstanceName.getValue() + "_Handler", 2)
         Database.setSymbolValue("core", interruptHandlerLock, False, 2)
 
 def dependencyClockStatus(symbol, event):
+
     clockSet = False
-    clock = bool(Database.getSymbolValue("core", adcInstanceName.getValue()+"_CLOCK_ENABLE"))
+    clock = bool(Database.getSymbolValue("core", adcInstanceName.getValue() + "_CLOCK_ENABLE"))
+
     for channelID in range(0, adcSym_NUM_CHANNELS.getValue()):
-        if (adcSym_CH_CHER[channelID].getValue() == True):
+        if adcSym_CH_CHER[channelID].getValue() == True:
             clockSet = True
-    if(clockSet == True and clock == False):
+
+    if clockSet == True and clock == False:
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
 
 def dependencyIntStatus(symbol, event):
+
     nvicSet = False
-    interruptVectorUpdate = adcInstanceName.getValue()+"_INTERRUPT_ENABLE_UPDATE"
+    interruptVectorUpdate = adcInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
     nvic = bool(Database.getSymbolValue("core", interruptVectorUpdate))
+
     for channelID in range(0, adcSym_NUM_CHANNELS.getValue()):
-        if (adcSym_CH_IER_EOC[channelID].getValue() == True):
+        if adcSym_CH_IER_EOC[channelID].getValue() == True:
             nvicSet = True
-    if(nvicSet == True and nvic == True):
+
+    if nvicSet == True and nvic == True:
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
 
 def adcGetMasterClock():
+
     main_clk_freq = int(Database.getSymbolValue("core", adcInstanceName.getValue() + "_CLOCK_FREQUENCY"))
+
     return main_clk_freq
 
 def adcPrescalWarning(symbol, event):
+
     clock = adcGetMasterClock()
     prescaler = (adcSym_MR_PRESCAL.getValue() + 1) * 2
     adcFreq = clock / prescaler
-    if (adcFreq < 100000):
+
+    if adcFreq < 100000:
         symbol.setLabel("ADC Frequency < 100,000 Hz. Decrease prescaler value. ")
         symbol.setVisible(True)
-    elif (adcFreq > 10000000):
+    elif adcFreq > 10000000:
         symbol.setLabel("ADC Frequency > 10,000,000 Hz. Increase prescaler value. ")
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
 
 def adcFreqCalc(symbol, event):
+
     clock = adcGetMasterClock()
     prescaler = (adcSym_MR_PRESCAL.getValue() + 1) * 2
     adcFreq = clock / prescaler
+
     symbol.clearValue()
     symbol.setValue(adcFreq, 2)
 
 def adcCalcConversionTime(adcSym_CONV_TIME, event):
+
     clock = adcGetMasterClock()
     if (clock == 0):
         clock = 1
     prescaler = (adcSym_MR_PRESCAL.getValue() + 1) * 2
     result_resolution = adcSym_EMR_RES_VALUE.getSelectedKey()
     multiplier = 1
-    if (result_resolution == "NO_AVERAGE"):
-        multiplier = 1
-    if (result_resolution == "OSR4"):
-        multiplier = 4
-    if (result_resolution == "OSR16"):
-        multiplier = 16
-    if (result_resolution == "OSR64"):
-        multiplier = 64
-    if (result_resolution == "OSR256"):
-        multiplier = 256
-    conv_time = (prescaler * 20.0 * 1000000.0 * multiplier) / clock
-    adcSym_CONV_TIME.setLabel("**** Conversion Time is "+str(conv_time)+" us ****")
 
-def adcUserSeqVisible(adcSym_SEQ1R_USCHLocal, event):
+    if result_resolution == "NO_AVERAGE":
+        multiplier = 1
+    if result_resolution == "OSR4":
+        multiplier = 4
+    if result_resolution == "OSR16":
+        multiplier = 16
+    if result_resolution == "OSR64":
+        multiplier = 64
+    if result_resolution == "OSR256":
+        multiplier = 256
+
+    conv_time = (prescaler * 20.0 * 1000000.0 * multiplier) / clock
+    adcSym_CONV_TIME.setLabel("**** Conversion Time is " + str(conv_time) + " us ****")
+
+def adcUserSeqVisible(symbol, event):
+
     for channelID in range(0, len(seq)):
-        if (event["value"] == True):
-            adcSym_SEQ1R_USCH[channelID].setVisible(True)
-        else:
-            adcSym_SEQ1R_USCH[channelID].setVisible(False)
+        adcSym_SEQ1R_USCH[channelID].setVisible(event["value"])
 
 def adcCHNameVisible(symbol, event):
+
     id = []
     #split as per "_" to get the channel number
     id = symbol.getID().split("_")
     channelID = int(id[1])
-    if (event["value"] == True):
-        adcSym_CH_NAME[channelID].setVisible(True)
-    else:
-        adcSym_CH_NAME[channelID].setVisible(False)
+
+    adcSym_CH_NAME[channelID].setVisible(event["value"])
 
 def adcCHPosInpVisible(symbol, event):
+
     id = []
     #split as per "_" to get the channel number
     id = symbol.getID().split("_")
     channelID = int(id[1])
-    if (event["value"] == True):
-        adcSym_CH_PositiveInput[channelID].setVisible(True)
-    else:
-        adcSym_CH_PositiveInput[channelID].setVisible(False)
+
+    adcSym_CH_PositiveInput[channelID].setVisible(event["value"])
 
 def adcCHNegInpVisible(symbol, event):
+
     id = []
     #split as per "_" to get the channel number
     id = symbol.getID().split("_")
     channelID = int(id[1])
+
     component = symbol.getComponent()
-    if (component.getSymbolValue("ADC_MR_ANACH") == False):
-        if (component.getSymbolValue("ADC_"+str(channelID)+"_CHER") == True):
+    if component.getSymbolValue("ADC_MR_ANACH") == False:
+        if component.getSymbolValue("ADC_" + str(channelID) + "_CHER") == True:
             adcSym_CH_NegativeInput[channelID].setVisible(True)
         else:
             adcSym_CH_NegativeInput[channelID].setVisible(False)
     else:
-        if (channelID != 0):
+        if channelID != 0:
             adcSym_CH_NegativeInput[channelID].setVisible(False)
 
 def adcCHInterruptVisible(symbol, event):
+
     id = []
     #split as per "_" to get the channel number
     id = symbol.getID().split("_")
     channelID = int(id[1])
-    if (event["value"] == True):
-        adcSym_CH_IER_EOC[channelID].setVisible(True)
-    else:
-        adcSym_CH_IER_EOC[channelID].setVisible(False)
+
+    adcSym_CH_IER_EOC[channelID].setVisible(event["value"])
 
 def adcCHEnable(symbol, event):
+
     id = []
     #split as per "_" to get the channel number
     id = symbol.getID().split("_")
     channelID = int(id[1])
 
     #for diff mode, hide next odd channel
-    if(event["id"].find("_NEG_INP") > 0):
-        if(event["value"] == "AN"+str(channelID)):
+    if event["id"].find("_NEG_INP") > 0:
+        if event["value"] == "AN" + str(channelID):
             adcCHMenu[channelID].setVisible(False)
         else:
             adcCHMenu[channelID].setVisible(True)
 
 def adcTriggerVisible(symbol, event):
-    symObj = event["symbol"]
-    if(symObj.getSelectedKey() == "HW_TRIGGER"):
-        symbol.setVisible(True)
-    else:
-        symbol.setVisible(False)
+
+    symbol.setVisible(event["symbol"].getSelectedKey() == "HW_TRIGGER")
+
 ###################################################################################################
-########################### Component   #################################
+######################################### Component ###############################################
 ###################################################################################################
+
 def instantiateComponent(adcComponent):
+
     global adcInstanceName
+
     adcInstanceName = adcComponent.createStringSymbol("ADC_INSTANCE_NAME", None)
     adcInstanceName.setVisible(False)
     adcInstanceName.setDefaultValue(adcComponent.getID().upper())
-
-    Log.writeInfoMessage("Running " + adcInstanceName.getValue())
-
 
     #------------------------- ATDF Read -------------------------------------
     packageName = str(Database.getSymbolValue("core", "COMPONENT_PACKAGE"))
@@ -242,13 +257,13 @@ def instantiateComponent(adcComponent):
             pinout = children[index].getAttribute("pinout")
 
     children = []
-    val = ATDF.getNode("/avr-tools-device-file/pinouts/pinout@[name=\""+str(pinout)+"\"]")
+    val = ATDF.getNode("/avr-tools-device-file/pinouts/pinout@[name=\"" + str(pinout) + "\"]")
     children = val.getChildren()
     for pad in range(0, len(children)):
         availablePins.append(children[pad].getAttribute("pad"))
 
     adc_signals = []
-    adc = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"ADC\"]/instance@[name=\""+adcInstanceName.getValue()+"\"]/signals")
+    adc = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"ADC\"]/instance@[name=\"" + adcInstanceName.getValue() + "\"]/signals")
     adc_signals = adc.getChildren()
     for pad in range(0, len(adc_signals)):
         group = adc_signals[pad].getAttribute("group")
@@ -276,16 +291,19 @@ def instantiateComponent(adcComponent):
 
     adcSym_EMR_SRCCLK = adcComponent.createKeyValueSetSymbol("ADC_CLK_SRC", adcMenu)
     adcSym_EMR_SRCCLK.setLabel("Select Clock Source")
-    node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"ADC\"]/instance@[name=\""+adcInstanceName.getValue()+"\"]/parameters")
+
+    node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"ADC\"]/instance@[name=\"" + adcInstanceName.getValue() + "\"]/parameters")
     clkSource = []
     clkSource = node.getChildren()
     for clock in range (0, len(clkSource)):
         if "SRCCLK" in clkSource[clock].getAttribute("name"):
             adcSym_EMR_SRCCLK.addKey(clkSource[clock].getAttribute("name"), clkSource[clock].getAttribute("value"), clkSource[clock].getAttribute("caption"))
+
     adcSym_EMR_SRCCLK.setOutputMode("Key")
     adcSym_EMR_SRCCLK.setDisplayMode("Description")
+    adcSym_EMR_SRCCLK.setVisible(adcSym_EMR_SRCCLK.getKeyCount() > 0)
 
-    Database.setSymbolValue("core", adcInstanceName.getValue()+"_CLOCK_ENABLE", True, 2)
+    Database.setSymbolValue("core", adcInstanceName.getValue() + "_CLOCK_ENABLE", True, 2)
 
     #Clock prescaler
     global adcSym_MR_PRESCAL
@@ -299,8 +317,7 @@ def instantiateComponent(adcComponent):
     global adcSym_Clock
     adcSym_Clock = adcComponent.createIntegerSymbol("ADC_CLK", adcMenu)
     adcSym_Clock.setLabel("Clock Frequency (Hz)")
-    adcSym_Clock.setDefaultValue(Database.getSymbolValue("core", adcInstanceName.getValue() + "_CLOCK_FREQUENCY")/((adcSym_MR_PRESCAL.getValue()+1) * 2))
-    adcSym_Clock.setVisible(True)
+    adcSym_Clock.setDefaultValue(Database.getSymbolValue("core", adcInstanceName.getValue() + "_CLOCK_FREQUENCY") / ((adcSym_MR_PRESCAL.getValue() + 1 ) * 2))
     adcSym_Clock.setReadOnly(True)
     adcSym_Clock.setDependencies(adcFreqCalc, ["ADC_CLK_SRC", "ADC_MR_PRESCAL", "core." + adcInstanceName.getValue() + "_CLOCK_FREQUENCY"])
 
@@ -328,10 +345,12 @@ def instantiateComponent(adcComponent):
     adcSym_EMR_RES_VALUE.addKey("OSR256_M", "8", "16-bit - multi trigger averaging")
 
     clock = Database.getSymbolValue("core", adcInstanceName.getValue() + "_CLOCK_FREQUENCY")
+
     if (clock != 0):
         time = (adcSym_MR_PRESCAL.getValue() + 1) * 2 * 20.0 * 1000000.0 / Database.getSymbolValue("core", adcInstanceName.getValue() + "_CLOCK_FREQUENCY")
     else:
         time = 0
+
     #Conversion time
     adcSym_CONV_TIME = adcComponent.createCommentSymbol("ADC_CONV_TIME", adcMenu)
     adcSym_CONV_TIME.setLabel("**** Conversion Time is " + str(time) + " us ****")
@@ -353,6 +372,7 @@ def instantiateComponent(adcComponent):
     adcSym_MR_TRGSEL_VALUE.setDefaultValue(1)
     adcSym_MR_TRGSEL_VALUE.setOutputMode("Key")
     adcSym_MR_TRGSEL_VALUE.setDisplayMode("Description")
+
     trigger_values = []
     adc = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"ADC\"]/instance@[name=\""+adcInstanceName.getValue()+"\"]/parameters")
     trigger_values = adc.getChildren()
@@ -360,6 +380,7 @@ def instantiateComponent(adcComponent):
         if "TRGSEL" in trigger_values[param].getAttribute("name"):
             adcSym_MR_TRGSEL_VALUE.addKey(trigger_values[param].getAttribute("name"), trigger_values[param].getAttribute("value"), trigger_values[param].getAttribute("caption"))
     adcSym_MR_TRGSEL_VALUE.setDependencies(adcTriggerVisible, ["ADC_CONV_MODE"])
+
     #------------------------------------------------------------------------------------
     #user sequence menu
     adcUserSeq = adcComponent.createMenuSymbol("ADC_USER_SEQ", None)
@@ -372,7 +393,6 @@ def instantiateComponent(adcComponent):
     #enable user sequence
     adcSym_MR_USEQ = adcComponent.createBooleanSymbol("ADC_MR_USEQ", adcUserSeq)
     adcSym_MR_USEQ.setLabel("Enable User Sequence Mode")
-    adcSym_MR_USEQ.setDefaultValue(False)
 
     global seq
     node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/register-group/register@[name=\"ADC_SEQR1\"]")
@@ -381,7 +401,7 @@ def instantiateComponent(adcComponent):
     for channelID in range(0, len(seq)):
         #channel selection for user sequence
         adcSym_SEQ1R_USCH.append(channelID)
-        adcSym_SEQ1R_USCH[channelID] = adcComponent.createComboSymbol("ADC_SEQ1R_USCH"+str(channelID), adcSym_MR_USEQ, adcChannelsValues)
+        adcSym_SEQ1R_USCH[channelID] = adcComponent.createComboSymbol("ADC_SEQ1R_USCH" + str(channelID), adcSym_MR_USEQ, adcChannelsValues)
         adcSym_SEQ1R_USCH[channelID].setLabel("Select Channel for Sequence Number " + str(channelID + 1))
         adcSym_SEQ1R_USCH[channelID].setDefaultValue(adcChannelsValues[0])
         adcSym_SEQ1R_USCH[channelID].setVisible(False)
@@ -391,75 +411,77 @@ def instantiateComponent(adcComponent):
     adcCHConfMenu = adcComponent.createMenuSymbol("ADC_CH_CONF", None)
     adcCHConfMenu.setLabel("Channel Configuration")
 
-    adcSym_MR_ANACH = adcComponent.createBooleanSymbol("ADC_MR_ANACH", adcCHConfMenu)
-    adcSym_MR_ANACH.setLabel("Use Channel0 DIFF setting for all the analog channels")
-    adcSym_MR_ANACH.setDefaultValue(False)
+    adcBitField_MR_ANACH = ATDF.getNode('/avr-tools-device-file/modules/module@[name="ADC"]/register-group@[name="ADC"]/register@[name="ADC_MR"]/bitfield@[name="ANACH"]')
+
+    if adcBitField_MR_ANACH != None:
+        adcSym_MR_ANACH = adcComponent.createBooleanSymbol("ADC_MR_ANACH", adcCHConfMenu)
+        adcSym_MR_ANACH.setLabel("Use Channel0 DIFF setting for all the analog channels")
 
     # Loop runs for 8 channels and visibility of the channel is controlled as per available pins
     for channelID in range(0, len(channel)):
         #Channel menu
         global adcCHMenu
         adcCHMenu.append(channelID)
-        adcCHMenu[channelID] = adcComponent.createMenuSymbol("CH"+str(channelID), adcCHConfMenu)
-        adcCHMenu[channelID].setLabel("Channel "+str(channelID))
+        adcCHMenu[channelID] = adcComponent.createMenuSymbol("CH" + str(channelID), adcCHConfMenu)
+        adcCHMenu[channelID].setLabel("Channel " + str(channelID))
         #Show channels as per available pins in package
-        if (channel[channelID] == "False"):
+        if channel[channelID] == "False":
             adcCHMenu[channelID].setVisible(False)
 
         #Channel enable
         adcSym_CH_CHER.append(channelID)
-        adcSym_CH_CHER[channelID] = adcComponent.createBooleanSymbol("ADC_"+str(channelID)+"_CHER", adcCHMenu[channelID])
+        adcSym_CH_CHER[channelID] = adcComponent.createBooleanSymbol("ADC_" + str(channelID) + "_CHER", adcCHMenu[channelID])
         adcSym_CH_CHER[channelID].setLabel("Enable Channel " + str(channelID))
-        adcSym_CH_CHER[channelID].setDefaultValue(False)
 
         #for diff mode, CH0 and CH1
-        if (channelID % 2 == 1):
-            adcSym_CH_CHER[channelID].setDependencies(adcCHEnable, ["ADC_"+str(channelID-1)+"_NEG_INP"])
+        if channelID % 2 == 1:
+            adcSym_CH_CHER[channelID].setDependencies(adcCHEnable, ["ADC_" + str(channelID - 1) + "_NEG_INP"])
 
         #Channel name
         adcSym_CH_NAME.append(channelID)
-        adcSym_CH_NAME[channelID] = adcComponent.createStringSymbol("ADC_"+str(channelID)+"_NAME", adcSym_CH_CHER[channelID])
+        adcSym_CH_NAME[channelID] = adcComponent.createStringSymbol("ADC_" + str(channelID) + "_NAME", adcSym_CH_CHER[channelID])
         adcSym_CH_NAME[channelID].setLabel("Name")
-        adcSym_CH_NAME[channelID].setDefaultValue("CHANNEL_"+str(channelID))
+        adcSym_CH_NAME[channelID].setDefaultValue("CHANNEL_" + str(channelID))
         adcSym_CH_NAME[channelID].setVisible(False)
-        adcSym_CH_NAME[channelID].setDependencies(adcCHNameVisible, ["ADC_"+str(channelID)+"_CHER"])
+        adcSym_CH_NAME[channelID].setDependencies(adcCHNameVisible, ["ADC_" + str(channelID) + "_CHER"])
 
         #Channel positive input
         adcSym_CH_PositiveInput.append(channelID)
-        adcSym_CH_PositiveInput[channelID] = adcComponent.createStringSymbol("ADC_"+str(channelID)+"_POS_INP", adcSym_CH_CHER[channelID])
+        adcSym_CH_PositiveInput[channelID] = adcComponent.createStringSymbol("ADC_" + str(channelID) + "_POS_INP", adcSym_CH_CHER[channelID])
         adcSym_CH_PositiveInput[channelID].setLabel("Positive Input")
-        adcSym_CH_PositiveInput[channelID].setDefaultValue("AN"+str(channelID))
+        adcSym_CH_PositiveInput[channelID].setDefaultValue("AN" + str(channelID))
         adcSym_CH_PositiveInput[channelID].setReadOnly(True)
         adcSym_CH_PositiveInput[channelID].setVisible(False)
-        adcSym_CH_PositiveInput[channelID].setDependencies(adcCHPosInpVisible, ["ADC_"+str(channelID)+"_CHER"])
+        adcSym_CH_PositiveInput[channelID].setDependencies(adcCHPosInpVisible, ["ADC_" + str(channelID) + "_CHER"])
 
         #Channel negative input
         adcSym_CH_NegativeInput.append(channelID)
-        adc_EvenChNegInput = ["GND", "AN"+str(channelID+1)]
+        adc_EvenChNegInput = ["GND", "AN" + str(channelID + 1)]
         adc_OddChNegInput = ["GND"]
-        if (channelID % 2 == 1):
-            adcSym_CH_NegativeInput[channelID] = adcComponent.createComboSymbol("ADC_"+str(channelID)+"_NEG_INP", adcSym_CH_CHER[channelID], adc_OddChNegInput)
+
+        if channelID % 2 == 1:
+            adcSym_CH_NegativeInput[channelID] = adcComponent.createComboSymbol("ADC_" + str(channelID) + "_NEG_INP", adcSym_CH_CHER[channelID], adc_OddChNegInput)
             adcSym_CH_NegativeInput[channelID].setReadOnly(True)
         else:
-            adcSym_CH_NegativeInput[channelID] = adcComponent.createComboSymbol("ADC_"+str(channelID)+"_NEG_INP", adcSym_CH_CHER[channelID], adc_EvenChNegInput)
-            if (channel[channelID + 1] == "False"):
+            adcSym_CH_NegativeInput[channelID] = adcComponent.createComboSymbol("ADC_" + str(channelID) + "_NEG_INP", adcSym_CH_CHER[channelID], adc_EvenChNegInput)
+            if channel[channelID + 1] == "False":
                 adcSym_CH_NegativeInput[channelID].setReadOnly(True)
+
         adcSym_CH_NegativeInput[channelID].setLabel("Negative Input")
         adcSym_CH_NegativeInput[channelID].setDefaultValue("GND")
         adcSym_CH_NegativeInput[channelID].setVisible(False)
-        adcSym_CH_NegativeInput[channelID].setDependencies(adcCHNegInpVisible, ["ADC_"+str(channelID)+"_CHER", "ADC_MR_ANACH"])
+        adcSym_CH_NegativeInput[channelID].setDependencies(adcCHNegInpVisible, ["ADC_" + str(channelID) + "_CHER", "ADC_MR_ANACH"])
 
         #Channel interrupt
         adcSym_CH_IER_EOC.append(channelID)
-        adcSym_CH_IER_EOC[channelID] = adcComponent.createBooleanSymbol("ADC_"+str(channelID)+"_IER_EOC", adcSym_CH_CHER[channelID])
+        adcSym_CH_IER_EOC[channelID] = adcComponent.createBooleanSymbol("ADC_" + str(channelID) + "_IER_EOC", adcSym_CH_CHER[channelID])
         adcSym_CH_IER_EOC[channelID].setLabel("End of conversion interrupt")
-        adcSym_CH_IER_EOC[channelID].setDefaultValue(False)
         adcSym_CH_IER_EOC[channelID].setVisible(False)
-        adcSym_CH_IER_EOC[channelID].setDependencies(adcCHInterruptVisible, ["ADC_"+str(channelID)+"_CHER"])
+        adcSym_CH_IER_EOC[channelID].setDependencies(adcCHInterruptVisible, ["ADC_" + str(channelID) + "_CHER"])
 
     #--------------------------------------------------------------------------------------
     # Clock dynamic settings
-    adcSym_ClockControl = adcComponent.createBooleanSymbol(adcInstanceName.getValue()+"_CLOCK_ENABLE", None)
+    adcSym_ClockControl = adcComponent.createBooleanSymbol(adcInstanceName.getValue() + "_CLOCK_ENABLE", None)
     adcSym_ClockControl.setDependencies(adcClockControl, ["ADC_0_CHER", "ADC_1_CHER", "ADC_2_CHER", "ADC_3_CHER", "ADC_4_CHER", \
         "ADC_5_CHER", "ADC_6_CHER", "ADC_7_CHER"])
     adcSym_ClockControl.setVisible(False)
@@ -473,30 +495,28 @@ def instantiateComponent(adcComponent):
     # Dependency Status
     adcSym_ClkEnComment = adcComponent.createCommentSymbol("ADC_CLK_ENABLE_COMMENT", None)
     adcSym_ClkEnComment.setVisible(False)
-    adcSym_ClkEnComment.setLabel("Warning!!! "+adcInstanceName.getValue()+" Peripheral Clock is Disabled in Clock Manager")
-    adcSym_ClkEnComment.setDependencies(dependencyClockStatus, ["core."+adcInstanceName.getValue()+"_CLOCK_ENABLE", "ADC_0_CHER", "ADC_1_CHER", "ADC_2_CHER", "ADC_3_CHER", "ADC_4_CHER", \
+    adcSym_ClkEnComment.setLabel("Warning!!! " + adcInstanceName.getValue() + " Peripheral Clock is Disabled in Clock Manager")
+    adcSym_ClkEnComment.setDependencies(dependencyClockStatus, ["core." + adcInstanceName.getValue() + "_CLOCK_ENABLE", "ADC_0_CHER", "ADC_1_CHER", "ADC_2_CHER", "ADC_3_CHER", "ADC_4_CHER", \
         "ADC_5_CHER", "ADC_6_CHER", "ADC_7_CHER"])
     interruptVectorUpdate = adcInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
 
     adcSym_IntEnComment = adcComponent.createCommentSymbol("ADC_NVIC_ENABLE_COMMENT", None)
     adcSym_IntEnComment.setVisible(False)
-    adcSym_IntEnComment.setLabel("Warning!!! "+adcInstanceName.getValue()+" Interrupt is Disabled in Interrupt Manager")
+    adcSym_IntEnComment.setLabel("Warning!!! " + adcInstanceName.getValue() + " Interrupt is Disabled in Interrupt Manager")
     adcSym_IntEnComment.setDependencies(dependencyIntStatus, ["core." + interruptVectorUpdate, "ADC_0_IER_EOC", "ADC_1_IER_EOC", "ADC_2_IER_EOC", "ADC_3_IER_EOC", "ADC_4_IER_EOC",\
         "ADC_5_IER_EOC", "ADC_6_IER_EOC", "ADC_7_IER_EOC"])
 
-    configName = Variables.get("__CONFIGURATION_NAME")
+    ###################################################################################################
+    ######################################### Code Generation #########################################
+    ###################################################################################################
 
-###################################################################################################
-########################### Code Generation   #################################
-###################################################################################################
-    adc = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]")
-    adcID = adc.getAttribute("id")
+    configName = Variables.get("__CONFIGURATION_NAME")
 
     adcHeaderFile = adcComponent.createFileSymbol("ADC_HEADER", None)
     adcHeaderFile.setSourcePath("../peripheral/adc_6489/templates/plib_adc.h.ftl")
-    adcHeaderFile.setOutputName("plib_"+adcInstanceName.getValue().lower() + ".h")
+    adcHeaderFile.setOutputName("plib_" + adcInstanceName.getValue().lower() + ".h")
     adcHeaderFile.setDestPath("peripheral/adc/")
-    adcHeaderFile.setProjectPath("config/" + configName +"/peripheral/adc/")
+    adcHeaderFile.setProjectPath("config/" + configName + "/peripheral/adc/")
     adcHeaderFile.setType("HEADER")
     adcHeaderFile.setMarkup(True)
 
@@ -504,14 +524,14 @@ def instantiateComponent(adcComponent):
     adcGlobalHeaderFile.setSourcePath("../peripheral/adc_6489/templates/plib_adc_common.h")
     adcGlobalHeaderFile.setOutputName("plib_adc_common.h")
     adcGlobalHeaderFile.setDestPath("peripheral/adc/")
-    adcGlobalHeaderFile.setProjectPath("config/" + configName +"/peripheral/adc/")
+    adcGlobalHeaderFile.setProjectPath("config/" + configName + "/peripheral/adc/")
     adcGlobalHeaderFile.setType("HEADER")
 
     adcSource1File = adcComponent.createFileSymbol("ADC_SOURCE", None)
     adcSource1File.setSourcePath("../peripheral/adc_6489/templates/plib_adc.c.ftl")
-    adcSource1File.setOutputName("plib_"+adcInstanceName.getValue().lower()+".c")
+    adcSource1File.setOutputName("plib_" + adcInstanceName.getValue().lower() + ".c")
     adcSource1File.setDestPath("peripheral/adc/")
-    adcSource1File.setProjectPath("config/" + configName +"/peripheral/adc/")
+    adcSource1File.setProjectPath("config/" + configName + "/peripheral/adc/")
     adcSource1File.setType("SOURCE")
     adcSource1File.setMarkup(True)
 
