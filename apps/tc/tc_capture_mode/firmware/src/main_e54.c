@@ -102,7 +102,7 @@ int main ( void )
         {
             cmp_val = CMP_VAL_INCREMENT;
         }
-        TC0_Compare16bitSet(cmp_val);
+        TC0_Compare16bitMatch1Set(cmp_val);
         
         /* Wait for 1 second */ 
         SYSTICK_DelayMs(500);
