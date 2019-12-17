@@ -80,10 +80,11 @@ void TC6_CompareInitialize( void )
     }
 
     /* Configure counter mode & prescaler */
-    TC6_REGS->COUNT16.TC_CTRLA = TC_CTRLA_MODE_COUNT16 | TC_CTRLA_PRESCALER_DIV64 | TC_CTRLA_WAVEGEN_MFRQ ;
+    TC6_REGS->COUNT16.TC_CTRLA = TC_CTRLA_MODE_COUNT16 | TC_CTRLA_PRESCALER_DIV64 | TC_CTRLA_WAVEGEN_NFRQ ;
 
 
-    TC6_REGS->COUNT16.TC_CC[0] = 10000U;
+    TC6_REGS->COUNT16.TC_CC[0] = 24U;
+    TC6_REGS->COUNT16.TC_CC[1] = 3000U;
 
     /* Clear all interrupt flags */
     TC6_REGS->COUNT16.TC_INTFLAG = TC_INTFLAG_Msk;
@@ -147,29 +148,32 @@ void TC6_Compare16bitCounterSet( uint16_t count )
     }
 }
 
-/* Configure period value */
-void TC6_Compare16bitPeriodSet( uint16_t period )
+/* Read period value */
+uint16_t TC6_Compare16bitPeriodGet( void )
 {
-    /* Configure period value */
-    TC6_REGS->COUNT16.TC_CC[0] = period;
+    return 0xFFFF;
+}
+
+/* Configure duty cycle value */
+void TC6_Compare16bitMatch0Set( uint16_t compareValue )
+{
+    /* Set new compare value for compare channel 0 */
+    TC6_REGS->COUNT16.TC_CC[0] = compareValue;
     while((TC6_REGS->COUNT16.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
     {
         /* Wait for Write Synchronization */
     }
 }
 
-/* Read period value */
-uint16_t TC6_Compare16bitPeriodGet( void )
+/* Configure duty cycle value */
+void TC6_Compare16bitMatch1Set( uint16_t compareValue )
 {
-    /* Write command to force CC register read synchronization */
-    TC6_REGS->COUNT16.TC_READREQ = TC_READREQ_RREQ_Msk | TC_COUNT16_CC_REG_OFST;
-
+    /* Set new compare value for compare channel 1 */
+    TC6_REGS->COUNT16.TC_CC[1] = compareValue;
     while((TC6_REGS->COUNT16.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
     {
         /* Wait for Write Synchronization */
     }
-    /* Get period value */
-    return (uint16_t)TC6_REGS->COUNT16.TC_CC[0];
 }
 
 
@@ -180,7 +184,7 @@ uint16_t TC6_Compare16bitPeriodGet( void )
 TC_COMPARE_STATUS TC6_CompareStatusGet( void )
 {
     TC_COMPARE_STATUS compare_status;
-    compare_status = ((TC6_REGS->COUNT16.TC_INTFLAG) & TC_COMPARE_STATUS_MSK);
+    compare_status = ((TC_COMPARE_STATUS)(TC6_REGS->COUNT16.TC_INTFLAG));
     /* Clear timer overflow interrupt */
     TC6_REGS->COUNT16.TC_INTFLAG = compare_status;
     return compare_status;
