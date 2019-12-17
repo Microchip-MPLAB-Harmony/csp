@@ -488,160 +488,165 @@
             <Dynamic dnOrder="0" id="core" value="0x40"/>
           </Values>
         </String>
-        <Boolean dnOrder="95" id="SERCOM3_CORE_CLOCK_ENABLE">
+        <String dnOrder="95" id="PORT_REG_NAME">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="PORT"/>
+          </Values>
+        </String>
+        <Boolean dnOrder="96" id="SERCOM3_CORE_CLOCK_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="sercom3" value="true"/>
           </Values>
         </Boolean>
-        <Integer dnOrder="96" id="SERCOM3_CORE_CLOCK_FREQUENCY">
+        <Integer dnOrder="97" id="SERCOM3_CORE_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="48000000"/>
           </Values>
         </Integer>
-        <Boolean dnOrder="97" id="SERCOM3_INTERRUPT_ENABLE">
+        <Boolean dnOrder="98" id="SERCOM3_INTERRUPT_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="sercom3" value="false"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="98" id="SERCOM3_INTERRUPT_ENABLE_UPDATE">
+        <Boolean dnOrder="99" id="SERCOM3_INTERRUPT_ENABLE_UPDATE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <String dnOrder="99" id="SERCOM3_INTERRUPT_HANDLER">
+        <String dnOrder="100" id="SERCOM3_INTERRUPT_HANDLER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="sercom3" value="SERCOM3_Handler"/>
           </Values>
         </String>
-        <Boolean dnOrder="100" id="SERCOM3_INTERRUPT_HANDLER_LOCK">
+        <Boolean dnOrder="101" id="SERCOM3_INTERRUPT_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="sercom3" value="false"/>
           </Values>
         </Boolean>
-        <File dnOrder="101" id="SYSTICK_FILE_0">
+        <File dnOrder="102" id="SYSTICK_FILE_0">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </File>
-        <File dnOrder="102" id="SYSTICK_FILE_1">
+        <File dnOrder="103" id="SYSTICK_FILE_1">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </File>
-        <File dnOrder="103" id="SYSTICK_FILE_2">
+        <File dnOrder="104" id="SYSTICK_FILE_2">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </File>
-        <Menu dnOrder="104" id="SYSTICK_MENU_0">
+        <Menu dnOrder="105" id="SYSTICK_MENU_0">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </Menu>
-        <String dnOrder="105" id="SYSTICK_PERIOD">
+        <String dnOrder="106" id="SYSTICK_PERIOD">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0xbb80"/>
           </Values>
         </String>
-        <Integer dnOrder="106" id="SYSTICK_PERIOD_US">
+        <Integer dnOrder="107" id="SYSTICK_PERIOD_US">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="1000"/>
           </Values>
         </Integer>
-        <Boolean dnOrder="107" id="SysTick_INTERRUPT_ENABLE">
+        <Boolean dnOrder="108" id="SysTick_INTERRUPT_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="108" id="SysTick_INTERRUPT_ENABLE_UPDATE">
+        <Boolean dnOrder="109" id="SysTick_INTERRUPT_ENABLE_UPDATE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="109" id="SysTick_INTERRUPT_HANDLER_LOCK">
+        <Boolean dnOrder="110" id="SysTick_INTERRUPT_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="110" id="TC0_CLOCK_ENABLE">
+        <Boolean dnOrder="111" id="TC0_CLOCK_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="tc0" value="true"/>
           </Values>
         </Boolean>
-        <Integer dnOrder="111" id="TC0_CLOCK_FREQUENCY">
+        <Integer dnOrder="112" id="TC0_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="48000000"/>
           </Values>
         </Integer>
-        <Boolean dnOrder="112" id="TC0_INTERRUPT_ENABLE">
+        <Boolean dnOrder="113" id="TC0_INTERRUPT_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="tc0" value="false"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="113" id="TC0_INTERRUPT_ENABLE_UPDATE">
+        <Boolean dnOrder="114" id="TC0_INTERRUPT_ENABLE_UPDATE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <String dnOrder="114" id="TC0_INTERRUPT_HANDLER">
+        <String dnOrder="115" id="TC0_INTERRUPT_HANDLER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="tc0" value="TC0_Handler"/>
           </Values>
         </String>
-        <Boolean dnOrder="115" id="TC0_INTERRUPT_HANDLER_LOCK">
+        <Boolean dnOrder="116" id="TC0_INTERRUPT_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="tc0" value="false"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="116" id="TC1_CLOCK_ENABLE">
+        <Boolean dnOrder="117" id="TC1_CLOCK_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="tc1" value="true"/>
           </Values>
         </Boolean>
-        <Integer dnOrder="117" id="TC1_CLOCK_FREQUENCY">
+        <Integer dnOrder="118" id="TC1_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="48000000"/>
           </Values>
         </Integer>
-        <Boolean dnOrder="118" id="TC1_INTERRUPT_ENABLE">
+        <Boolean dnOrder="119" id="TC1_INTERRUPT_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="tc1" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="119" id="TC1_INTERRUPT_ENABLE_UPDATE">
+        <Boolean dnOrder="120" id="TC1_INTERRUPT_ENABLE_UPDATE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
-        <String dnOrder="120" id="TC1_INTERRUPT_HANDLER">
+        <String dnOrder="121" id="TC1_INTERRUPT_HANDLER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="tc1" value="TC1_CaptureInterruptHandler"/>
           </Values>
         </String>
-        <Boolean dnOrder="121" id="TC1_INTERRUPT_HANDLER_LOCK">
+        <Boolean dnOrder="122" id="TC1_INTERRUPT_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="tc1" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="122" id="USE_SYSTICK_INTERRUPT">
+        <Boolean dnOrder="123" id="USE_SYSTICK_INTERRUPT">
           <Values dnOrder="0">
             <User dnOrder="0" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="123" id="systickEnable">
+        <Boolean dnOrder="124" id="systickEnable">
           <Values dnOrder="0">
             <User dnOrder="0" value="true"/>
           </Values>
         </Boolean>
-        <File dnOrder="124" id="systickSystemInitFile">
+        <File dnOrder="125" id="systickSystemInitFile">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">true</Value>
@@ -891,12 +896,7 @@
           </Values>
         </String>
         <KeyValueSet dnOrder="2" id="SERCOM_MODE">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="readOnly">
-              <Value dnOrder="0">true</Value>
-            </Boolean>
-          </Attributes>
-          <Values dnOrder="1">
+          <Values dnOrder="0">
             <Dynamic dnOrder="0" id="sercom3" value="0"/>
           </Values>
         </KeyValueSet>
@@ -1021,79 +1021,97 @@
             </Boolean>
           </Attributes>
         </File>
-        <Long dnOrder="2" id="TC_COMPARE_CC1">
+        <Long dnOrder="2" id="TC_COMPARE_CC0">
+          <Attributes dnOrder="0">
+            <Long dnOrder="0" id="max">
+              <Value dnOrder="0">65535</Value>
+            </Long>
+          </Attributes>
+          <Values dnOrder="1">
+            <User dnOrder="0" value="60000"/>
+          </Values>
+        </Long>
+        <Long dnOrder="3" id="TC_COMPARE_CC1">
           <Attributes dnOrder="0">
             <Long dnOrder="0" id="max">
               <Value dnOrder="0">60000</Value>
             </Long>
+            <Boolean dnOrder="1" id="visible">
+              <Value dnOrder="0">true</Value>
+            </Boolean>
           </Attributes>
           <Values dnOrder="1">
             <User dnOrder="0" value="0"/>
           </Values>
         </Long>
-        <File dnOrder="3" id="TC_COMPARE_HEADER">
+        <File dnOrder="4" id="TC_COMPARE_HEADER">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </File>
-        <Menu dnOrder="4" id="TC_COMPARE_MENU">
+        <Menu dnOrder="5" id="TC_COMPARE_MENU">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </Menu>
-        <Long dnOrder="5" id="TC_COMPARE_PERIOD">
+        <Long dnOrder="6" id="TC_COMPARE_PERIOD">
           <Values dnOrder="0">
             <User dnOrder="0" value="60000"/>
           </Values>
         </Long>
-        <Comment dnOrder="6" id="TC_COMPARE_PERIOD_COMMENT">
+        <Comment dnOrder="7" id="TC_COMPARE_PERIOD_COMMENT">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="text">
-              <Value dnOrder="0">****&amp;#160;Timer&amp;#160;Period&amp;#160;is&amp;#160;1250.0&amp;#160;us&amp;#160;****</Value>
+              <Value dnOrder="0">****&amp;#160;Compare&amp;#160;Period&amp;#160;is&amp;#160;1250.0&amp;#160;us&amp;#160;****</Value>
             </String>
           </Attributes>
         </Comment>
-        <File dnOrder="7" id="TC_COMPARE_SOURCE">
+        <File dnOrder="8" id="TC_COMPARE_SOURCE">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </File>
-        <Integer dnOrder="8" id="TC_FREQUENCY">
+        <KeyValueSet dnOrder="9" id="TC_COMPARE_WAVE_WAVEGEN">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="3"/>
+          </Values>
+        </KeyValueSet>
+        <Integer dnOrder="10" id="TC_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="tc0" value="48000000"/>
           </Values>
         </Integer>
-        <Combo dnOrder="9" id="TC_OPERATION_MODE">
+        <Combo dnOrder="11" id="TC_OPERATION_MODE">
           <Values dnOrder="0">
             <User dnOrder="0" value="Compare"/>
           </Values>
         </Combo>
-        <File dnOrder="10" id="TC_TIMER_HEADER">
+        <File dnOrder="12" id="TC_TIMER_HEADER">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">false</Value>
             </Boolean>
           </Attributes>
         </File>
-        <Menu dnOrder="11" id="TC_TIMER_MENU">
+        <Menu dnOrder="13" id="TC_TIMER_MENU">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">false</Value>
             </Boolean>
           </Attributes>
         </Menu>
-        <Long dnOrder="12" id="TC_TIMER_PERIOD">
+        <Long dnOrder="14" id="TC_TIMER_PERIOD">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="tc0" value="48000"/>
           </Values>
         </Long>
-        <File dnOrder="13" id="TC_TIMER_SOURCE">
+        <File dnOrder="15" id="TC_TIMER_SOURCE">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">false</Value>
