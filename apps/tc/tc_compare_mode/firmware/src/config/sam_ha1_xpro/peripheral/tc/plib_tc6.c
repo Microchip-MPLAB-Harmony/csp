@@ -175,7 +175,18 @@ uint16_t TC6_Compare16bitPeriodGet( void )
 
 
 /* Configure duty cycle value */
-void TC6_Compare16bitSet( uint16_t compareValue )
+void TC6_Compare16bitMatch0Set( uint16_t compareValue )
+{
+    /* Set new compare value for compare channel 0 */
+    TC6_REGS->COUNT16.TC_CC[0] = compareValue;
+    while((TC6_REGS->COUNT16.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
+    {
+        /* Wait for Write Synchronization */
+    }
+}
+
+/* Configure duty cycle value */
+void TC6_Compare16bitMatch1Set( uint16_t compareValue )
 {
     /* Set new compare value for compare channel 1 */
     TC6_REGS->COUNT16.TC_CC[1] = compareValue;
@@ -187,11 +198,13 @@ void TC6_Compare16bitSet( uint16_t compareValue )
 
 
 
+
+
 /* Get interrupt flag status */
 TC_COMPARE_STATUS TC6_CompareStatusGet( void )
 {
     TC_COMPARE_STATUS compare_status;
-    compare_status = ((TC6_REGS->COUNT16.TC_INTFLAG) & TC_COMPARE_STATUS_MSK);
+    compare_status = ((TC_COMPARE_STATUS)(TC6_REGS->COUNT16.TC_INTFLAG));
     /* Clear timer overflow interrupt */
     TC6_REGS->COUNT16.TC_INTFLAG = compare_status;
     return compare_status;

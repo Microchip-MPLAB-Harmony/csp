@@ -122,6 +122,8 @@ void SYS_Initialize ( void* data )
     CLOCK_Initialize();
 
 
+
+
     TC7_CompareInitialize();
 
     NVMCTRL_Initialize( );
