@@ -21,24 +21,40 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
+
+################################################################################
+#### Component ####
+################################################################################
+
 def instantiateComponent(mem2memComponent):
+
     mem2memInstanceName = mem2memComponent.createStringSymbol("MEM2MEM_INSTANCE_NAME", None)
     mem2memInstanceName.setVisible(False)
     mem2memInstanceName.setDefaultValue(mem2memComponent.getID().upper())
-    Database.setSymbolValue("core", mem2memInstanceName.getValue()+"_CLOCK_ENABLE", True)
-    
+
+    mem2memBitField_PTSR_ERR = ATDF.getNode('/avr-tools-device-file/modules/module@[name="MEM2MEM"]/register-group@[name="MEM2MEM"]/register@[name="MEM2MEM_PTSR"]/bitfield@[name="ERR"]')
+
+    # Transfer Bus Error Report
+    mem2memSym_PTSR_ERR = mem2memComponent.createBooleanSymbol("MEM2MEM_PTSR_ERR", None)
+    mem2memSym_PTSR_ERR.setVisible(False)
+    mem2memSym_PTSR_ERR.setDefaultValue(mem2memBitField_PTSR_ERR != None)
+
+    Database.setSymbolValue("core", mem2memInstanceName.getValue() + "_CLOCK_ENABLE", True)
+
     interruptVector = mem2memInstanceName.getValue() + "_INTERRUPT_ENABLE"
     interruptHandler = mem2memInstanceName.getValue() + "_INTERRUPT_HANDLER"
     interruptHandlerLock = mem2memInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK"
 
     Database.clearSymbolValue("core", interruptVector)
     Database.setSymbolValue("core", interruptVector, True, 2)
-
     Database.clearSymbolValue("core", interruptHandler)
     Database.setSymbolValue("core", interruptHandler, mem2memInstanceName.getValue() + "_InterruptHandler", 2)
-
     Database.clearSymbolValue("core", interruptHandlerLock)
     Database.setSymbolValue("core", interruptHandlerLock, True, 2)
+
+    ############################################################################
+    #### Code Generation ####
+    ############################################################################
 
     configName = Variables.get("__CONFIGURATION_NAME")
 
