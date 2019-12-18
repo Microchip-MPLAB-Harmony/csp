@@ -48,6 +48,7 @@
 #include <stddef.h>                     // Defines NULL
 #include <stdbool.h>                    // Defines true
 #include <stdlib.h>                     // Defines EXIT_FAILURE
+#include <stdarg.h>
 #include "definitions.h"                // SYS function prototypes
 
 /* Application's state machine enum */
@@ -135,7 +136,7 @@ void print_menu(void)
 
 void PrintFormattedData (const char * format, ...)
 {
-    va_list args;
+    va_list args = {0};
     va_start (args, format);
     vprintf (format, args);
     va_end (args);
