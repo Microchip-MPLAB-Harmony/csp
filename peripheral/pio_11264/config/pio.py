@@ -386,9 +386,7 @@ pioEnable.setLabel("Use PIO PLIB?")
 pioEnable.setDefaultValue(True)
 pioEnable.setReadOnly(True)
 
-for pio in pioSymChannel:
-    if Database.getSymbolValue("core", "PIO" + pio +"_CLOCK_ENABLE") != None:
-        Database.setSymbolValue("core",  "PIO" + pio +"_CLOCK_ENABLE", True)
+Database.setSymbolValue("core",  "PIO_CLOCK_ENABLE", True)
 
 # Build package pinout map
 packageNode = ATDF.getNode("/avr-tools-device-file/variants")
