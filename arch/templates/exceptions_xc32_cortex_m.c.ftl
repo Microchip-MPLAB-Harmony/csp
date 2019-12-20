@@ -295,7 +295,9 @@ void NonMaskableInt_Handler(void)
     <#lt>   printf(" HFSR  = 0x%08lX\r\n", SCB->HFSR); // HardFault Status
     <#lt>   printf(" DFSR  = 0x%08lX\r\n", SCB->DFSR); // Debug Fault Status
     <#lt>   printf(" AFSR  = 0x%08lX\r\n", SCB->AFSR); // Auxiliary Fault Status
-    <#lt>   if (bfsr & 0x04) printf(" ABFSR = 0x%08lX\r\n", SCB->ABFSR);
+    <#if CoreArchitecture == "CORTEX-M7">
+        <#lt>   if (bfsr & 0x04) printf(" ABFSR = 0x%08lX\r\n", SCB->ABFSR);
+    </#if>
     <#lt>   if (bfsr & 0x80) printf(" BFAR = 0x%08lX\r\n", bus_fault_address);
 
     <#lt>   printf("- Misc\r\n");
