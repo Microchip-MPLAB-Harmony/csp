@@ -219,7 +219,7 @@ void ${HEMC_INSTANCE_NAME}_Initialize( void )
     <#list 1..NUM_SPACE_MULTILINE as j> </#list>   HEMC_CR_NCS${i}_ADDBASE(0x${.vars[HEMC_ADDRESS]}) |
     <#list 1..NUM_SPACE_MULTILINE as j> </#list>   HEMC_CR_NCS${i}_BANKSIZE(${.vars[HEMC_BANK]}) |
     <#list 1..NUM_SPACE_MULTILINE as j> </#list>   HEMC_CR_NCS${i}_WRITE_ECC_CONF(1) |
-    <#list 1..NUM_SPACE_MULTILINE as j> </#list>   HEMC_CR_NCS${i}_ENABLE(eccEnableDefault) |
+    <#list 1..NUM_SPACE_MULTILINE as j> </#list>   HEMC_CR_NCS${i}_ECC_ENABLE(eccEnableDefault) |
     <#list 1..NUM_SPACE_MULTILINE as j> </#list>   HEMC_CR_NCS${i}_ECC12_ENABLE(eccAlgoDefault);
 
     <#else>
@@ -228,7 +228,7 @@ void ${HEMC_INSTANCE_NAME}_Initialize( void )
     <#list 1..NUM_SPACE_MULTILINE as j> </#list>   HEMC_CR_NCS${i}_ADDBASE(0x${.vars[HEMC_ADDRESS]}) |
     <#list 1..NUM_SPACE_MULTILINE as j> </#list>   HEMC_CR_NCS${i}_BANKSIZE(${.vars[HEMC_BANK]})<#if (i == 0)> |
     <#list 1..NUM_SPACE_MULTILINE as j> </#list>   HEMC_CR_NCS${i}_WRITE_ECC_CONF(1)</#if><#if .vars[HEMC_ECC_ENABLE]> |
-    <#list 1..NUM_SPACE_MULTILINE as j> </#list>   HEMC_CR_NCS${i}_ENABLE(1)</#if><#if .vars[HEMC_ECC_BCH]> |
+    <#list 1..NUM_SPACE_MULTILINE as j> </#list>   HEMC_CR_NCS${i}_ECC_ENABLE(1)</#if><#if .vars[HEMC_ECC_BCH]> |
     <#list 1..NUM_SPACE_MULTILINE as j> </#list>   HEMC_CR_NCS${i}_ECC12_ENABLE(1)</#if>;
     </#if>
     </#if>
