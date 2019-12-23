@@ -85,23 +85,30 @@ __STATIC_INLINE void DCache_Enable(void);
 /** Program CMCC PRGCSIZE bits for TCM and cache configuration */
 __STATIC_INLINE void TCM_Configure(uint32_t tcmSize)
 {
-        CMCC_REGS->CMCC_CFG = CMCC_CFG_PRGCSIZE(tcmSize);
+    CMCC_REGS->CMCC_CFG = CMCC_CFG_PRGCSIZE(tcmSize);
 }
 
 /** Enable TCM memory */
 __STATIC_INLINE void  __attribute__((optimize("-O1"))) TCM_Enable(void)
 {
-    /* TCM cannot be enabled or disabled in SAME5x/SAMD5x family*/
+    /* TCM cannot be enabled or disabled in SAMG55 family*/
 }
 
 /* Disable TCM memory */
 __STATIC_INLINE void  __attribute__((optimize("-O1"))) TCM_Disable(void)
 {
-    /* TCM cannot be enabled or disabled in SAME5x/SAMD5x family*/
+    /* TCM cannot be enabled or disabled in SAMG55 family*/
 }
 
 __STATIC_INLINE void ICache_Enable(void)
 {
+    CMCC_REGS->CMCC_CTRL &= ~(CMCC_CTRL_CEN_Msk);
+    while((CMCC_REGS->CMCC_SR & CMCC_SR_CSTS_Msk) == CMCC_SR_CSTS_Msk)
+    {
+        /*Wait for the operation to complete*/
+    }
+    CMCC_REGS->CMCC_CFG |= (CMCC_CFG_DCDIS_Msk);
+    CMCC_REGS->CMCC_CTRL = (CMCC_CTRL_CEN_Msk);
 }
 
 __STATIC_INLINE void DCache_Enable(void)
@@ -139,6 +146,10 @@ void __attribute__((optimize("-O1"), section(".text.Reset_Handler"), long_call))
     FPU_Enable();
 #endif
 
+	TCM_Configure(3);
+
+    /* Enable TCM   */
+    TCM_Enable();
 
     /* Initialize data after TCM is enabled.
      * Data initialization from the XC32 .dinit template */
