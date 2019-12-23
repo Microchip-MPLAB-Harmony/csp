@@ -55,13 +55,13 @@
 // *****************************************************************************
 // *****************************************************************************
 
-void WDT_Enable(void)
+void WDT_Enable( void )
 {
     /* ON = 1 */
     WDTCONbits.ON = 1;
 }
 
-void WDT_Disable(void)
+void WDT_Disable( void )
 {
     /* ON = 0 */
     WDTCONbits.ON = 0;
@@ -79,7 +79,7 @@ void WDT_WindowDisable( void )
     WDTCONbits.WDTWINEN = 0;
 }
 
-void WDT_Clear(void)
+void WDT_Clear( void )
 {
     /* Writing specific value to only upper 16 bits of WDTCON register clears WDT counter */
     /* Only write to the upper 16 bits of the register when clearing. */
