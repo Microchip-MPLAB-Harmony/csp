@@ -771,71 +771,71 @@
             <User dnOrder="0" value="E"/>
           </Values>
         </String>
-        <Boolean dnOrder="137" id="PIOA_CLOCK_ENABLE">
+        <String dnOrder="137" id="PIOA_INTERRUPT_MAP_TYPE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="RedirectedToNonSecure"/>
+          </Values>
+        </String>
+        <KeyValueSet dnOrder="138" id="PIOA_INTERRUPT_PRIORITY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="7"/>
+          </Values>
+        </KeyValueSet>
+        <KeyValueSet dnOrder="139" id="PIOA_INTERRUPT_SRC_TYPE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </KeyValueSet>
+        <String dnOrder="140" id="PIOB_INTERRUPT_MAP_TYPE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="RedirectedToNonSecure"/>
+          </Values>
+        </String>
+        <KeyValueSet dnOrder="141" id="PIOB_INTERRUPT_PRIORITY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="7"/>
+          </Values>
+        </KeyValueSet>
+        <KeyValueSet dnOrder="142" id="PIOB_INTERRUPT_SRC_TYPE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </KeyValueSet>
+        <String dnOrder="143" id="PIOC_INTERRUPT_MAP_TYPE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="RedirectedToNonSecure"/>
+          </Values>
+        </String>
+        <KeyValueSet dnOrder="144" id="PIOC_INTERRUPT_PRIORITY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="7"/>
+          </Values>
+        </KeyValueSet>
+        <KeyValueSet dnOrder="145" id="PIOC_INTERRUPT_SRC_TYPE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </KeyValueSet>
+        <String dnOrder="146" id="PIOD_INTERRUPT_MAP_TYPE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="RedirectedToNonSecure"/>
+          </Values>
+        </String>
+        <KeyValueSet dnOrder="147" id="PIOD_INTERRUPT_PRIORITY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="7"/>
+          </Values>
+        </KeyValueSet>
+        <KeyValueSet dnOrder="148" id="PIOD_INTERRUPT_SRC_TYPE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </KeyValueSet>
+        <Boolean dnOrder="149" id="PIO_CLOCK_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <String dnOrder="138" id="PIOA_INTERRUPT_MAP_TYPE">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="RedirectedToNonSecure"/>
-          </Values>
-        </String>
-        <KeyValueSet dnOrder="139" id="PIOA_INTERRUPT_PRIORITY">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="7"/>
-          </Values>
-        </KeyValueSet>
-        <KeyValueSet dnOrder="140" id="PIOA_INTERRUPT_SRC_TYPE">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="0"/>
-          </Values>
-        </KeyValueSet>
-        <String dnOrder="141" id="PIOB_INTERRUPT_MAP_TYPE">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="RedirectedToNonSecure"/>
-          </Values>
-        </String>
-        <KeyValueSet dnOrder="142" id="PIOB_INTERRUPT_PRIORITY">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="7"/>
-          </Values>
-        </KeyValueSet>
-        <KeyValueSet dnOrder="143" id="PIOB_INTERRUPT_SRC_TYPE">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="0"/>
-          </Values>
-        </KeyValueSet>
-        <String dnOrder="144" id="PIOC_INTERRUPT_MAP_TYPE">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="RedirectedToNonSecure"/>
-          </Values>
-        </String>
-        <KeyValueSet dnOrder="145" id="PIOC_INTERRUPT_PRIORITY">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="7"/>
-          </Values>
-        </KeyValueSet>
-        <KeyValueSet dnOrder="146" id="PIOC_INTERRUPT_SRC_TYPE">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="0"/>
-          </Values>
-        </KeyValueSet>
-        <String dnOrder="147" id="PIOD_INTERRUPT_MAP_TYPE">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="RedirectedToNonSecure"/>
-          </Values>
-        </String>
-        <KeyValueSet dnOrder="148" id="PIOD_INTERRUPT_PRIORITY">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="7"/>
-          </Values>
-        </KeyValueSet>
-        <KeyValueSet dnOrder="149" id="PIOD_INTERRUPT_SRC_TYPE">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="0"/>
-          </Values>
-        </KeyValueSet>
         <KeyValueSet dnOrder="150" id="PIT_INTERRUPT_PRIORITY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
@@ -2616,7 +2616,8 @@
     </UniqueComponent>
   </Components>
   <UserData>
-    <ComponentGraph dnOrder="0" id="__ROOTVIEW">
+    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="0"/>
+    <ComponentGraph dnOrder="1" id="__ROOTVIEW">
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="cmsis" x="340" y="20"/>
         <ElementPosition dnOrder="1" id="core" x="240" y="20"/>
@@ -2626,6 +2627,5 @@
         <ElementPosition dnOrder="5" id="uart1" x="190" y="60"/>
       </ElementPositions>
     </ComponentGraph>
-    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="1"/>
   </UserData>
 </Configuration>

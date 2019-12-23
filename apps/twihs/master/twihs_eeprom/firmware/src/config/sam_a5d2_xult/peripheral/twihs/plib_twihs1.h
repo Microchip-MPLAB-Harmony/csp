@@ -1,18 +1,23 @@
 /*******************************************************************************
-  System Exceptions File
+  TWIHS Peripheral Library Interface Header File
 
-  File Name:
-    exceptions.c
+  Company
+    Microchip Technology Inc.
 
-  Summary:
-    This file contains a function which overrides the default _weak_ exception
-    handlers provided by the interrupt.c file.
+  File Name
+    plib_twihs1.h
 
-  Description:
-    This file redefines the default _weak_  exception handler with a more debug
-    friendly one. If an unexpected exception occurs the code will stop in a
-    while(1) loop.
- *******************************************************************************/
+  Summary
+    TWIHS peripheral library interface.
+
+  Description
+    This file defines the interface to the TWIHS peripheral library.  This
+    library provides access to and control of the associated peripheral
+    instance.
+
+  Remarks:
+
+*******************************************************************************/
 
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
@@ -39,81 +44,53 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
+#ifndef PLIB_TWIHS1_H
+#define PLIB_TWIHS1_H
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-#include "definitions.h"
 
-// *****************************************************************************
-// *****************************************************************************
-// Section: Exception Handling Routine
-// *****************************************************************************
-// *****************************************************************************
+#include "plib_twihs_master.h"
 
-/* Brief default interrupt handlers for core IRQs.*/
+// DOM-IGNORE-BEGIN
+#ifdef __cplusplus  // Provide C++ Compatibility
 
-void NonMaskableInt_Handler(void)
-{
-#if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
-    __builtin_software_breakpoint();
+    extern "C" {
+
 #endif
-    while (1)
-    {
+// DOM-IGNORE-END
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Interface Routines
+// *****************************************************************************
+// *****************************************************************************
+
+void TWIHS1_Initialize( void );
+
+void TWIHS1_CallbackRegister( TWIHS_CALLBACK callback, uintptr_t contextHandle );
+
+bool TWIHS1_IsBusy( void );
+
+bool TWIHS1_Read( uint16_t address, uint8_t *pdata, size_t length );
+
+bool TWIHS1_Write( uint16_t address, uint8_t *pdata, size_t length );
+
+bool TWIHS1_WriteRead( uint16_t address, uint8_t *wdata, size_t wlength, uint8_t *rdata, size_t rlength );
+
+TWIHS_ERROR TWIHS1_ErrorGet( void );
+
+bool TWIHS1_TransferSetup( TWIHS_TRANSFER_SETUP* setup, uint32_t srcClkFreq );
+
+// DOM-IGNORE-BEGIN
+#ifdef __cplusplus  // Provide C++ Compatibility
+
     }
-}
 
-void HardFault_Handler(void)
-{
-#if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
-   __builtin_software_breakpoint();
 #endif
-   while (1)
-   {
-   }
-}
+// DOM-IGNORE-END
 
-void DebugMonitor_Handler(void)
-{
-#if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
-   __builtin_software_breakpoint();
-#endif
-   while (1)
-   {
-   }
-}
-
-void MemoryManagement_Handler(void)
-{
-#if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
-   __builtin_software_breakpoint();
-#endif
-   while (1)
-   {
-   }
-}
-
-void BusFault_Handler(void)
-{
-#if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
-   __builtin_software_breakpoint();
-#endif
-   while (1)
-   {
-   }
-}
-
-void UsageFault_Handler(void)
-{
-#if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
-   __builtin_software_breakpoint();
-#endif
-   while (1)
-   {
-   }
-}
-/*******************************************************************************
- End of File
- */
-
+#endif //PLIB_TWIHS1_H

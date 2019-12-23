@@ -1,20 +1,20 @@
 /*******************************************************************************
-  UART1 PLIB
+  Matrix (AHB) PLIB
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_uart1.h
+    plib_matrix.c
 
   Summary:
-    UART1 PLIB Header File
+    AHB Matrix PLIB implementation file
 
   Description:
-    None
-
+    Configure AHB masters and slaves.
 *******************************************************************************/
 
+// DOM-IGNORE-BEGIN
 /*******************************************************************************
 * Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
 *
@@ -37,55 +37,45 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
-
-#ifndef PLIB_UART1_H
-#define PLIB_UART1_H
-
-#include "plib_uart_common.h"
-
-// DOM-IGNORE-BEGIN
-#ifdef __cplusplus  // Provide C++ Compatibility
-
-    extern "C" {
-
-#endif
 // DOM-IGNORE-END
 
+
 // *****************************************************************************
 // *****************************************************************************
-// Section: Interface
+// Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-#define UART1_FrequencyGet()    (uint32_t)(83000000UL)
+#include <device.h>
 
-/****************************** UART1 API *********************************/
+// *****************************************************************************
+/* Function:
+    void Matrix_Initialize(void)
 
-void UART1_Initialize( void );
+  Summary:
+    Initialize AHB Masters and Slaves.
 
-UART_ERROR UART1_ErrorGet( void );
+  Description:
+    Inialize AHB Masters and Slaves and peripheral's as secure or non-secure.
 
-bool UART1_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcClkFreq );
+  Remarks:
+    Until security is implemented all peripherals will be non-secure.
+*/
+void Matrix_Initialize(void)
+{
+    int i;
+    uint32_t key;
 
-bool UART1_Write( void *buffer, const size_t size );
-
-bool UART1_Read( void *buffer, const size_t size );
-
-int UART1_ReadByte( void );
-
-void UART1_WriteByte( int data );
-
-bool UART1_TransmitterIsReady( void );
-
-bool UART1_TransmitComplete( void );
-
-bool UART1_ReceiverIsReady( void );
-
-
-// DOM-IGNORE-BEGIN
-#ifdef __cplusplus  // Provide C++ Compatibility
-
+    for (i=0; i<3; i++) {
+        MATRIX0_REGS->MATRIX_SPSELR[i] = MATRIX_SPSELR_Msk;
+        MATRIX1_REGS->MATRIX_SPSELR[i] = MATRIX_SPSELR_Msk;
     }
 
-#endif
-// DOM-IGNORE-END
-#endif // PLIB_UART1_H
+    key = 0xb6d81c4d ^ SFR_REGS->SFR_SN1;
+    key &= 0xfffffffe;
+
+    SFR_REGS->SFR_AICREDIR = key | SFR_AICREDIR_NSAIC_Msk;
+}
+
+/*******************************************************************************
+ End of File
+*/

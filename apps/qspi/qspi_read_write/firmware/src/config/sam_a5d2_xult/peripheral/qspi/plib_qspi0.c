@@ -65,9 +65,9 @@ void QSPI0_Initialize(void)
 
     /* CPOL = 0 */
     /* CPHA = 0 */
-    /* SCBR = 1 */
+    /* SCBR = 2 */
     /* DLYBS = 0 */
-    QSPI0_REGS->QSPI_SCR = (QSPI_SCR_SCBR(1))  ;
+    QSPI0_REGS->QSPI_SCR = (QSPI_SCR_SCBR(2))  ;
 
     // Enable the qspi Module
     QSPI0_REGS->QSPI_CR = QSPI_CR_QSPIEN_Msk;

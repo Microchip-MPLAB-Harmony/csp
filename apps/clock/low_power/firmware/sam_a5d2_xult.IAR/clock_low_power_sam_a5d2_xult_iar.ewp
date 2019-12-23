@@ -351,6 +351,7 @@
                     <state>$PROJ_DIR$/../../firmware/src/packs/CMSIS/CMSIS/Core_A/Include</state>
                     <state>$PROJ_DIR$/../../firmware/src/packs/CMSIS</state>
                     <state>$PROJ_DIR$/../../firmware/src/arm</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\arm</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -626,6 +627,7 @@
                     <state>$PROJ_DIR$/../../firmware/src/packs/CMSIS/CMSIS/Core_A/Include</state>
                     <state>$PROJ_DIR$/../../firmware/src/packs/CMSIS</state>
                     <state>$PROJ_DIR$/../../firmware/src/arm</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\arm</state>
                 </option>
                 <option>
                     <name>AExtraOptionsCheckV2</name>
@@ -778,7 +780,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>$PROJ_DIR$/../../firmware/src/config/sam_a5d2_xult_iar/ddr.icf</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult_iar\ddr.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>
@@ -1412,6 +1414,7 @@
                     <state>$PROJ_DIR$/../../firmware/src/packs/CMSIS/CMSIS/Core_A/Include</state>
                     <state>$PROJ_DIR$/../../firmware/src/packs/CMSIS</state>
                     <state>$PROJ_DIR$/../../firmware/src/arm</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\arm</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -1687,6 +1690,7 @@
                     <state>$PROJ_DIR$/../../firmware/src/packs/CMSIS/CMSIS/Core_A/Include</state>
                     <state>$PROJ_DIR$/../../firmware/src/packs/CMSIS</state>
                     <state>$PROJ_DIR$/../../firmware/src/arm</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\arm</state>
                 </option>
                 <option>
                     <name>AExtraOptionsCheckV2</name>
@@ -1839,7 +1843,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>$PROJ_DIR$/../../firmware/src/config/sam_a5d2_xult_iar/ddr.icf</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult_iar\ddr.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>
@@ -2143,15 +2147,6 @@
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\aic.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\DSP\Include\arm_common_tables.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\DSP\Include\arm_const_structs.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\DSP\Include\arm_math.h</name>
-            </file>
-            <file>
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\atsama5d27.h</name>
             </file>
             <file>
@@ -2351,9 +2346,6 @@
             <name>Source Files</name>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_iar\cstartup.s</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_iar\exceptions.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_iar\fault_handlers.c</name>

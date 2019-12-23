@@ -2389,15 +2389,6 @@
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\aic.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\DSP\Include\arm_common_tables.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\DSP\Include\arm_const_structs.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\DSP\Include\arm_math.h</name>
-            </file>
-            <file>
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\atsama5d27.h</name>
             </file>
             <file>
@@ -2585,9 +2576,6 @@
             <name>Source Files</name>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\cstartup.s</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\exceptions.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\fault_handlers.c</name>
