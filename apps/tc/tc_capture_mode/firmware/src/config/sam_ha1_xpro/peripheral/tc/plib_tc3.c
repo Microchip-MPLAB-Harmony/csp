@@ -80,7 +80,7 @@ void TC3_CompareInitialize( void )
     }
 
     /* Configure counter mode & prescaler */
-    TC3_REGS->COUNT16.TC_CTRLA = TC_CTRLA_MODE_COUNT16 | TC_CTRLA_PRESCALER_DIV1 | TC_CTRLA_WAVEGEN_NPWM ;
+    TC3_REGS->COUNT16.TC_CTRLA = TC_CTRLA_MODE_COUNT16 | TC_CTRLA_PRESCALER_DIV1 | TC_CTRLA_WAVEGEN_MPWM ;
 
 
     TC3_REGS->COUNT16.TC_CC[0] = 60000U;
@@ -148,11 +148,31 @@ void TC3_Compare16bitCounterSet( uint16_t count )
     }
 }
 
+/* Configure period value */
+void TC3_Compare16bitPeriodSet( uint16_t period )
+{
+    /* Configure period value */
+    TC3_REGS->COUNT16.TC_CC[0] = period;
+    while((TC3_REGS->COUNT16.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
+    {
+        /* Wait for Write Synchronization */
+    }
+}
+
 /* Read period value */
 uint16_t TC3_Compare16bitPeriodGet( void )
 {
-    return 0xFFFF;
+    /* Write command to force CC register read synchronization */
+    TC3_REGS->COUNT16.TC_READREQ = TC_READREQ_RREQ_Msk | TC_COUNT16_CC_REG_OFST;
+
+    while((TC3_REGS->COUNT16.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
+    {
+        /* Wait for Write Synchronization */
+    }
+    /* Get period value */
+    return (uint16_t)TC3_REGS->COUNT16.TC_CC[0];
 }
+
 
 /* Configure duty cycle value */
 void TC3_Compare16bitMatch0Set( uint16_t compareValue )

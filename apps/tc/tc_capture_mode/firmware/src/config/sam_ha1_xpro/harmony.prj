@@ -115,8 +115,8 @@
           <Name dnOrder="1">plib_tc3.c</Name>
           <LogicalPath dnOrder="2">config/sam_ha1_xpro/peripheral/tc/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/tc/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">13E1DD82E696DF6F635E294AE8A0F2D1</GeneratedChecksum>
-          <UserChecksum dnOrder="5">13E1DD82E696DF6F635E294AE8A0F2D1</UserChecksum>
+          <GeneratedChecksum dnOrder="4">578E39467EF785C7376A404007F9181F</GeneratedChecksum>
+          <UserChecksum dnOrder="5">578E39467EF785C7376A404007F9181F</UserChecksum>
         </File>
         <File dnOrder="14">
           <Type dnOrder="0">SOURCE</Type>
@@ -419,8 +419,8 @@
           <Name dnOrder="1">plib_tc3.h</Name>
           <LogicalPath dnOrder="2">config/sam_ha1_xpro/peripheral/tc/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/tc/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">CF48B9A4C17BEE91283A01F0D3E02DA7</GeneratedChecksum>
-          <UserChecksum dnOrder="5">CF48B9A4C17BEE91283A01F0D3E02DA7</UserChecksum>
+          <GeneratedChecksum dnOrder="4">8635680086236A34939E13EF462E52C0</GeneratedChecksum>
+          <UserChecksum dnOrder="5">8635680086236A34939E13EF462E52C0</UserChecksum>
         </File>
         <File dnOrder="52">
           <Type dnOrder="0">HEADER</Type>
@@ -435,8 +435,8 @@
           <Name dnOrder="1">plib_tc_common.h</Name>
           <LogicalPath dnOrder="2">config/sam_ha1_xpro/peripheral/tc/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/tc/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">8FFED42979E9560DBD315A966A8D551E</GeneratedChecksum>
-          <UserChecksum dnOrder="5">8FFED42979E9560DBD315A966A8D551E</UserChecksum>
+          <GeneratedChecksum dnOrder="4">9123F379ED6F3FD032D954CC559D102A</GeneratedChecksum>
+          <UserChecksum dnOrder="5">9123F379ED6F3FD032D954CC559D102A</UserChecksum>
         </File>
         <File dnOrder="54">
           <Type dnOrder="0">HEADER</Type>
