@@ -46,16 +46,17 @@
 // Section: SPI0 Implementation
 // *****************************************************************************
 // *****************************************************************************
+
 /* Global object to save SPI Exchange related data */
 SPI_OBJECT spi0Obj;
 
-void SPI0_Initialize ( void )
+void SPI0_Initialize( void )
 {
     /* Disable and Reset the SPI*/
     SPI0_REGS->SPI_CR = SPI_CR_SPIDIS_Msk | SPI_CR_SWRST_Msk;
 
     /* Enable Master mode, select particular NPCS line for chip select and disable mode fault detection */
-    SPI0_REGS->SPI_MR =  SPI_MR_MSTR_Msk | SPI_MR_PCS_NPCS0 | SPI_MR_MODFDIS_Msk;
+    SPI0_REGS->SPI_MR = SPI_MR_MSTR_Msk | SPI_MR_PCS_NPCS0 | SPI_MR_MODFDIS_Msk;
 
     /* Set up clock Polarity, data phase, Communication Width, Baud Rate and Chip select active after transfer */
     SPI0_REGS->SPI_CSR[0] = SPI_CSR_CPOL_IDLE_LOW | SPI_CSR_NCPHA_VALID_LEADING_EDGE | SPI_CSR_BITS_8_BIT | SPI_CSR_SCBR(150) | SPI_CSR_CSAAT_Msk;
@@ -66,10 +67,9 @@ void SPI0_Initialize ( void )
 
     /* Enable SPI0 */
     SPI0_REGS->SPI_CR = SPI_CR_SPIEN_Msk;
-    return;
 }
 
-bool SPI0_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize)
+bool SPI0_WriteRead( void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize )
 {
     bool isRequestAccepted = false;
     uint32_t dummyData;
@@ -83,6 +83,7 @@ bool SPI0_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, siz
         spi0Obj.rxCount = 0;
         spi0Obj.txCount = 0;
         spi0Obj.dummySize = 0;
+
         if (pTransmitData != NULL)
         {
             spi0Obj.txSize = txSize;
@@ -159,23 +160,25 @@ bool SPI0_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, siz
     return isRequestAccepted;
 }
 
-bool SPI0_Write(void* pTransmitData, size_t txSize)
+bool SPI0_Write( void* pTransmitData, size_t txSize )
 {
     return(SPI0_WriteRead(pTransmitData, txSize, NULL, 0));
 }
 
-bool SPI0_Read(void* pReceiveData, size_t rxSize)
+bool SPI0_Read( void* pReceiveData, size_t rxSize )
 {
     return(SPI0_WriteRead(NULL, 0, pReceiveData, rxSize));
 }
 
-bool SPI0_TransferSetup (SPI_TRANSFER_SETUP * setup, uint32_t spiSourceClock )
+bool SPI0_TransferSetup( SPI_TRANSFER_SETUP * setup, uint32_t spiSourceClock )
 {
     uint32_t scbr;
+
     if ((setup == NULL) || (setup->clockFrequency == 0))
     {
         return false;
     }
+
     if(spiSourceClock == 0)
     {
         // Fetch Master Clock Frequency directly
@@ -193,25 +196,25 @@ bool SPI0_TransferSetup (SPI_TRANSFER_SETUP * setup, uint32_t spiSourceClock )
         scbr = 255;
     }
 
-    SPI0_REGS->SPI_CSR[0]= (uint32_t)setup->clockPolarity | (uint32_t)setup->clockPhase | (uint32_t)setup->dataBits | SPI_CSR_SCBR(scbr);
+    SPI0_REGS->SPI_CSR[0] = (uint32_t)setup->clockPolarity | (uint32_t)setup->clockPhase | (uint32_t)setup->dataBits | SPI_CSR_SCBR(scbr);
 
     return true;
 }
 
-void SPI0_CallbackRegister (SPI_CALLBACK callback, uintptr_t context)
+void SPI0_CallbackRegister( SPI_CALLBACK callback, uintptr_t context )
 {
     spi0Obj.callback = callback;
     spi0Obj.context = context;
 }
 
-bool SPI0_IsBusy()
+bool SPI0_IsBusy( void )
 {
     return ((spi0Obj.transferIsBusy) || ((SPI0_REGS->SPI_SR & SPI_SR_TXEMPTY_Msk) == 0));
 }
 
-void SPI0_InterruptHandler(void)
+void SPI0_InterruptHandler( void )
 {
-    uint32_t dataBits ;
+    uint32_t dataBits;
     uint32_t receivedData;
     static bool isLastByteTransferInProgress = false;
 
@@ -316,11 +319,4 @@ void SPI0_InterruptHandler(void)
          */
         SPI0_REGS->SPI_IER = SPI_IER_TXEMPTY_Msk;
     }
-
 }
-
-
-/*******************************************************************************
- End of File
-*/
-
