@@ -23,9 +23,9 @@
               <itemPath>../src/config/sam_ha1_xpro/peripheral/port/plib_port.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f2" displayName="sercom" projectFiles="true">
-              <logicalFolder name="f1" displayName="i2cm" projectFiles="true">
-                <itemPath>../src/config/sam_ha1_xpro/peripheral/sercom/i2cm/plib_sercom_i2c_master.h</itemPath>
-                <itemPath>../src/config/sam_ha1_xpro/peripheral/sercom/i2cm/plib_sercom2_i2c.h</itemPath>
+              <logicalFolder name="f1" displayName="i2c_master" projectFiles="true">
+                <itemPath>../src/config/sam_ha1_xpro/peripheral/sercom/i2c_master/plib_sercom_i2c_master_common.h</itemPath>
+                <itemPath>../src/config/sam_ha1_xpro/peripheral/sercom/i2c_master/plib_sercom2_i2c_master.h</itemPath>
               </logicalFolder>
             </logicalFolder>
           </logicalFolder>
@@ -110,8 +110,8 @@
               <itemPath>../src/config/sam_ha1_xpro/peripheral/port/plib_port.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f2" displayName="sercom" projectFiles="true">
-              <logicalFolder name="f1" displayName="i2cm" projectFiles="true">
-                <itemPath>../src/config/sam_ha1_xpro/peripheral/sercom/i2cm/plib_sercom2_i2c.c</itemPath>
+              <logicalFolder name="f1" displayName="i2c_master" projectFiles="true">
+                <itemPath>../src/config/sam_ha1_xpro/peripheral/sercom/i2c_master/plib_sercom2_i2c_master.c</itemPath>
               </logicalFolder>
             </logicalFolder>
           </logicalFolder>
@@ -150,7 +150,7 @@
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="SAMHA1_DFP" vendor="Microchip" version="2.0.28"/>
+        <pack name="SAMHA1_DFP" vendor="Microchip" version="2.0.34"/>
         <pack name="CMSIS" vendor="ARM" version="5.4.0"/>
       </packs>
       <compileType>
