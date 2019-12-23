@@ -94,9 +94,6 @@
             <path>\..\..\packs\CMSIS\CMSIS\Core_A\Include\cmsis_iccarm.h</path>
             <path>\..\..\packs\CMSIS\CMSIS\Core_A\Include\cmsis_cp15.h</path>
             <path>\..\..\packs\CMSIS\CMSIS\Core_A\Include\core_ca.h</path>
-            <path>\..\..\packs\CMSIS\CMSIS\DSP\Include\arm_common_tables.h</path>
-            <path>\..\..\packs\CMSIS\CMSIS\DSP\Include\arm_const_structs.h</path>
-            <path>\..\..\packs\CMSIS\CMSIS\DSP\Include\arm_math.h</path>
             <path>\peripheral\rstc\plib_rstc_common.h</path>
             <path>\peripheral\rstc\plib_rstc.h</path>
         </group>
@@ -104,7 +101,6 @@
             <path>\..\..\main.c</path>
             <path>\initialization.c</path>
             <path>\interrupts.c</path>
-            <path>\exceptions.c</path>
             <path>\stdio\iar_monitor.c</path>
             <path>\peripheral\mmu\plib_mmu.c</path>
             <path>\peripheral\matrix\plib_matrix.c</path>
