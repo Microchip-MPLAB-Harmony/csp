@@ -106,6 +106,8 @@ void SYS_Initialize ( void* data )
     CLOCK_Initialize();
 	PIO_Initialize();
 
+
+
     AFEC1_Initialize();
 
 	SYSTICK_TimerInitialize();
