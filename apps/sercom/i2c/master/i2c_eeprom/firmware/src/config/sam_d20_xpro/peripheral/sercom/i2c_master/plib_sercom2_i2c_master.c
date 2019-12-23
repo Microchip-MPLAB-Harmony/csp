@@ -48,7 +48,7 @@
 // *****************************************************************************
 // *****************************************************************************
 
-#include "plib_sercom2_i2c.h"
+#include "plib_sercom2_i2c_master.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -86,6 +86,12 @@ static SERCOM_I2C_OBJ sercom2I2CObj;
 
 void SERCOM2_I2C_Initialize(void)
 {
+	/* Reset the module */
+    SERCOM2_REGS->I2CM.SERCOM_CTRLA = SERCOM_I2CM_CTRLA_SWRST_Msk ;
+	
+	/* Wait for synchronization */
+    while((SERCOM2_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_SYNCBUSY_Msk) & SERCOM_I2CM_STATUS_SYNCBUSY_Msk);
+	
     /* Enable smart mode enable */
     SERCOM2_REGS->I2CM.SERCOM_CTRLB = SERCOM_I2CM_CTRLB_SMEN_Msk;
 
@@ -138,7 +144,7 @@ bool SERCOM2_I2C_TransferSetup(SERCOM_I2C_TRANSFER_SETUP* setup, uint32_t srcClk
         return false;
     }
     
-    baudValue = ((((float)srcClkFreq)/i2cClkSpeed) - ((((float)srcClkFreq) * (100/1000000000.0)) + 10))/2.0;
+    baudValue = (uint32_t) (((((float)srcClkFreq)/i2cClkSpeed) - ((((float)srcClkFreq) * (100/1000000000.0)) + 10))/2.0);
     
     /* BAUD.BAUD must be non-zero */
     if (baudValue == 0)
