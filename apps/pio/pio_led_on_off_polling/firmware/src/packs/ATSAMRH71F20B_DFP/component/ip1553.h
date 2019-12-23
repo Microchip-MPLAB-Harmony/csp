@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-08-29T14:13:58Z */
+/* file generated from device description version 2019-12-20T15:37:42Z */
 #ifndef _SAMRH71_IP1553_COMPONENT_H_
 #define _SAMRH71_IP1553_COMPONENT_H_
 
@@ -452,18 +452,18 @@
 #define IP1553_CTRL3_Msk                      _U_(0xFFFFFFFF)                                      /**< (IP1553_CTRL3) Register Mask  */
 
 
-/* -------- IP1553_ARR : (IP1553 Offset: 0x3C) (R/W 32) Address Register Read -------- */
-#define IP1553_ARR_REG_ADDR_APB_R_Pos         _U_(0)                                               /**< (IP1553_ARR) RX base address Position */
-#define IP1553_ARR_REG_ADDR_APB_R_Msk         (_U_(0xFFFFFFFF) << IP1553_ARR_REG_ADDR_APB_R_Pos)   /**< (IP1553_ARR) RX base address Mask */
-#define IP1553_ARR_REG_ADDR_APB_R(value)      (IP1553_ARR_REG_ADDR_APB_R_Msk & ((value) << IP1553_ARR_REG_ADDR_APB_R_Pos))
-#define IP1553_ARR_Msk                        _U_(0xFFFFFFFF)                                      /**< (IP1553_ARR) Register Mask  */
-
-
-/* -------- IP1553_ARW : (IP1553 Offset: 0x40) (R/W 32) Address Register Write -------- */
+/* -------- IP1553_ARW : (IP1553 Offset: 0x3C) (R/W 32) Address Register Write -------- */
 #define IP1553_ARW_REG_ADDR_APB_W_Pos         _U_(0)                                               /**< (IP1553_ARW) TX base address Position */
 #define IP1553_ARW_REG_ADDR_APB_W_Msk         (_U_(0xFFFFFFFF) << IP1553_ARW_REG_ADDR_APB_W_Pos)   /**< (IP1553_ARW) TX base address Mask */
 #define IP1553_ARW_REG_ADDR_APB_W(value)      (IP1553_ARW_REG_ADDR_APB_W_Msk & ((value) << IP1553_ARW_REG_ADDR_APB_W_Pos))
 #define IP1553_ARW_Msk                        _U_(0xFFFFFFFF)                                      /**< (IP1553_ARW) Register Mask  */
+
+
+/* -------- IP1553_ARR : (IP1553 Offset: 0x40) (R/W 32) Address Register Read -------- */
+#define IP1553_ARR_REG_ADDR_APB_R_Pos         _U_(0)                                               /**< (IP1553_ARR) RX base address Position */
+#define IP1553_ARR_REG_ADDR_APB_R_Msk         (_U_(0xFFFFFFFF) << IP1553_ARR_REG_ADDR_APB_R_Pos)   /**< (IP1553_ARR) RX base address Mask */
+#define IP1553_ARR_REG_ADDR_APB_R(value)      (IP1553_ARR_REG_ADDR_APB_R_Msk & ((value) << IP1553_ARR_REG_ADDR_APB_R_Pos))
+#define IP1553_ARR_Msk                        _U_(0xFFFFFFFF)                                      /**< (IP1553_ARR) Register Mask  */
 
 
 /* -------- IP1553_RXBSR : (IP1553 Offset: 0x44) (R/W 32) Rx Buffer Status Register -------- */
@@ -892,8 +892,8 @@
 #define IP1553_CTRL1_REG_OFST          (0x30)              /**< (IP1553_CTRL1) Control Register 1 Offset */
 #define IP1553_CTRL2_REG_OFST          (0x34)              /**< (IP1553_CTRL2) Control Register 2 Offset */
 #define IP1553_CTRL3_REG_OFST          (0x38)              /**< (IP1553_CTRL3) Control Register 3 Offset */
-#define IP1553_ARR_REG_OFST            (0x3C)              /**< (IP1553_ARR) Address Register Read Offset */
-#define IP1553_ARW_REG_OFST            (0x40)              /**< (IP1553_ARW) Address Register Write Offset */
+#define IP1553_ARW_REG_OFST            (0x3C)              /**< (IP1553_ARW) Address Register Write Offset */
+#define IP1553_ARR_REG_OFST            (0x40)              /**< (IP1553_ARR) Address Register Read Offset */
 #define IP1553_RXBSR_REG_OFST          (0x44)              /**< (IP1553_RXBSR) Rx Buffer Status Register Offset */
 #define IP1553_RXBAER_REG_OFST         (0x48)              /**< (IP1553_RXBAER) Rx Buffer Access Error Register Offset */
 #define IP1553_TXBSR_REG_OFST          (0x4C)              /**< (IP1553_TXBSR) Tx Buffer Status Register Offset */
@@ -917,8 +917,8 @@ typedef struct
   __I   uint32_t                       IP1553_CTRL1;       /**< Offset: 0x30 (R/   32) Control Register 1 */
   __I   uint32_t                       IP1553_CTRL2;       /**< Offset: 0x34 (R/   32) Control Register 2 */
   __I   uint32_t                       IP1553_CTRL3;       /**< Offset: 0x38 (R/   32) Control Register 3 */
-  __IO  uint32_t                       IP1553_ARR;         /**< Offset: 0x3C (R/W  32) Address Register Read */
-  __IO  uint32_t                       IP1553_ARW;         /**< Offset: 0x40 (R/W  32) Address Register Write */
+  __IO  uint32_t                       IP1553_ARW;         /**< Offset: 0x3C (R/W  32) Address Register Write */
+  __IO  uint32_t                       IP1553_ARR;         /**< Offset: 0x40 (R/W  32) Address Register Read */
   __IO  uint32_t                       IP1553_RXBSR;       /**< Offset: 0x44 (R/W  32) Rx Buffer Status Register */
   __IO  uint32_t                       IP1553_RXBAER;      /**< Offset: 0x48 (R/W  32) Rx Buffer Access Error Register */
   __IO  uint32_t                       IP1553_TXBSR;       /**< Offset: 0x4C (R/W  32) Tx Buffer Status Register */

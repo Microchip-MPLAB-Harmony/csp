@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-08-29T14:13:58Z */
+/* file generated from device description version 2019-12-20T15:37:42Z */
 #ifndef _SAMRH71_HEMC_COMPONENT_H_
 #define _SAMRH71_HEMC_COMPONENT_H_
 
@@ -77,7 +77,16 @@
 #define HEMC_CR_NCS0_ADDBASE_Pos              _U_(7)                                               /**< (HEMC_CR_NCS0) relative base address of NCS area Position */
 #define HEMC_CR_NCS0_ADDBASE_Msk              (_U_(0x3FFFF) << HEMC_CR_NCS0_ADDBASE_Pos)           /**< (HEMC_CR_NCS0) relative base address of NCS area Mask */
 #define HEMC_CR_NCS0_ADDBASE(value)           (HEMC_CR_NCS0_ADDBASE_Msk & ((value) << HEMC_CR_NCS0_ADDBASE_Pos))
-#define HEMC_CR_NCS0_Msk                      _U_(0x01FFFFFF)                                      /**< (HEMC_CR_NCS0) Register Mask  */
+#define HEMC_CR_NCS0_WRITE_ECC_CONF_Pos       _U_(29)                                              /**< (HEMC_CR_NCS0) ECC Configuration Protection Enable Position */
+#define HEMC_CR_NCS0_WRITE_ECC_CONF_Msk       (_U_(0x1) << HEMC_CR_NCS0_WRITE_ECC_CONF_Pos)        /**< (HEMC_CR_NCS0) ECC Configuration Protection Enable Mask */
+#define HEMC_CR_NCS0_WRITE_ECC_CONF(value)    (HEMC_CR_NCS0_WRITE_ECC_CONF_Msk & ((value) << HEMC_CR_NCS0_WRITE_ECC_CONF_Pos))
+#define HEMC_CR_NCS0_ECC_ENABLE_Pos           _U_(30)                                              /**< (HEMC_CR_NCS0) ECC Protection Enable Position */
+#define HEMC_CR_NCS0_ECC_ENABLE_Msk           (_U_(0x1) << HEMC_CR_NCS0_ECC_ENABLE_Pos)            /**< (HEMC_CR_NCS0) ECC Protection Enable Mask */
+#define HEMC_CR_NCS0_ECC_ENABLE(value)        (HEMC_CR_NCS0_ECC_ENABLE_Msk & ((value) << HEMC_CR_NCS0_ECC_ENABLE_Pos))
+#define HEMC_CR_NCS0_ECC12_ENABLE_Pos         _U_(31)                                              /**< (HEMC_CR_NCS0) BCH ECC Enable Position */
+#define HEMC_CR_NCS0_ECC12_ENABLE_Msk         (_U_(0x1) << HEMC_CR_NCS0_ECC12_ENABLE_Pos)          /**< (HEMC_CR_NCS0) BCH ECC Enable Mask */
+#define HEMC_CR_NCS0_ECC12_ENABLE(value)      (HEMC_CR_NCS0_ECC12_ENABLE_Msk & ((value) << HEMC_CR_NCS0_ECC12_ENABLE_Pos))
+#define HEMC_CR_NCS0_Msk                      _U_(0xE1FFFFFF)                                      /**< (HEMC_CR_NCS0) Register Mask  */
 
 
 /* -------- HEMC_CR_NCS1 : (HEMC Offset: 0x04) (R/W 32) HEMC Control Register NCS 1 -------- */
@@ -129,7 +138,13 @@
 #define HEMC_CR_NCS1_ADDBASE_Pos              _U_(7)                                               /**< (HEMC_CR_NCS1) relative base address of NCS area Position */
 #define HEMC_CR_NCS1_ADDBASE_Msk              (_U_(0x3FFFF) << HEMC_CR_NCS1_ADDBASE_Pos)           /**< (HEMC_CR_NCS1) relative base address of NCS area Mask */
 #define HEMC_CR_NCS1_ADDBASE(value)           (HEMC_CR_NCS1_ADDBASE_Msk & ((value) << HEMC_CR_NCS1_ADDBASE_Pos))
-#define HEMC_CR_NCS1_Msk                      _U_(0x01FFFFFF)                                      /**< (HEMC_CR_NCS1) Register Mask  */
+#define HEMC_CR_NCS1_ECC_ENABLE_Pos           _U_(30)                                              /**< (HEMC_CR_NCS1) ECC Protection Enable Position */
+#define HEMC_CR_NCS1_ECC_ENABLE_Msk           (_U_(0x1) << HEMC_CR_NCS1_ECC_ENABLE_Pos)            /**< (HEMC_CR_NCS1) ECC Protection Enable Mask */
+#define HEMC_CR_NCS1_ECC_ENABLE(value)        (HEMC_CR_NCS1_ECC_ENABLE_Msk & ((value) << HEMC_CR_NCS1_ECC_ENABLE_Pos))
+#define HEMC_CR_NCS1_ECC12_ENABLE_Pos         _U_(31)                                              /**< (HEMC_CR_NCS1) BCH ECC Enable Position */
+#define HEMC_CR_NCS1_ECC12_ENABLE_Msk         (_U_(0x1) << HEMC_CR_NCS1_ECC12_ENABLE_Pos)          /**< (HEMC_CR_NCS1) BCH ECC Enable Mask */
+#define HEMC_CR_NCS1_ECC12_ENABLE(value)      (HEMC_CR_NCS1_ECC12_ENABLE_Msk & ((value) << HEMC_CR_NCS1_ECC12_ENABLE_Pos))
+#define HEMC_CR_NCS1_Msk                      _U_(0xC1FFFFFF)                                      /**< (HEMC_CR_NCS1) Register Mask  */
 
 
 /* -------- HEMC_CR_NCS2 : (HEMC Offset: 0x08) (R/W 32) HEMC Control Register NCS 2 -------- */
@@ -181,7 +196,13 @@
 #define HEMC_CR_NCS2_ADDBASE_Pos              _U_(7)                                               /**< (HEMC_CR_NCS2) relative base address of NCS area Position */
 #define HEMC_CR_NCS2_ADDBASE_Msk              (_U_(0x3FFFF) << HEMC_CR_NCS2_ADDBASE_Pos)           /**< (HEMC_CR_NCS2) relative base address of NCS area Mask */
 #define HEMC_CR_NCS2_ADDBASE(value)           (HEMC_CR_NCS2_ADDBASE_Msk & ((value) << HEMC_CR_NCS2_ADDBASE_Pos))
-#define HEMC_CR_NCS2_Msk                      _U_(0x01FFFFFF)                                      /**< (HEMC_CR_NCS2) Register Mask  */
+#define HEMC_CR_NCS2_ECC_ENABLE_Pos           _U_(30)                                              /**< (HEMC_CR_NCS2) ECC Protection Enable Position */
+#define HEMC_CR_NCS2_ECC_ENABLE_Msk           (_U_(0x1) << HEMC_CR_NCS2_ECC_ENABLE_Pos)            /**< (HEMC_CR_NCS2) ECC Protection Enable Mask */
+#define HEMC_CR_NCS2_ECC_ENABLE(value)        (HEMC_CR_NCS2_ECC_ENABLE_Msk & ((value) << HEMC_CR_NCS2_ECC_ENABLE_Pos))
+#define HEMC_CR_NCS2_ECC12_ENABLE_Pos         _U_(31)                                              /**< (HEMC_CR_NCS2) BCH ECC Enable Position */
+#define HEMC_CR_NCS2_ECC12_ENABLE_Msk         (_U_(0x1) << HEMC_CR_NCS2_ECC12_ENABLE_Pos)          /**< (HEMC_CR_NCS2) BCH ECC Enable Mask */
+#define HEMC_CR_NCS2_ECC12_ENABLE(value)      (HEMC_CR_NCS2_ECC12_ENABLE_Msk & ((value) << HEMC_CR_NCS2_ECC12_ENABLE_Pos))
+#define HEMC_CR_NCS2_Msk                      _U_(0xC1FFFFFF)                                      /**< (HEMC_CR_NCS2) Register Mask  */
 
 
 /* -------- HEMC_CR_NCS3 : (HEMC Offset: 0x0C) (R/W 32) HEMC Control Register NCS 3 -------- */
@@ -233,7 +254,13 @@
 #define HEMC_CR_NCS3_ADDBASE_Pos              _U_(7)                                               /**< (HEMC_CR_NCS3) relative base address of NCS area Position */
 #define HEMC_CR_NCS3_ADDBASE_Msk              (_U_(0x3FFFF) << HEMC_CR_NCS3_ADDBASE_Pos)           /**< (HEMC_CR_NCS3) relative base address of NCS area Mask */
 #define HEMC_CR_NCS3_ADDBASE(value)           (HEMC_CR_NCS3_ADDBASE_Msk & ((value) << HEMC_CR_NCS3_ADDBASE_Pos))
-#define HEMC_CR_NCS3_Msk                      _U_(0x01FFFFFF)                                      /**< (HEMC_CR_NCS3) Register Mask  */
+#define HEMC_CR_NCS3_ECC_ENABLE_Pos           _U_(30)                                              /**< (HEMC_CR_NCS3) ECC Protection Enable Position */
+#define HEMC_CR_NCS3_ECC_ENABLE_Msk           (_U_(0x1) << HEMC_CR_NCS3_ECC_ENABLE_Pos)            /**< (HEMC_CR_NCS3) ECC Protection Enable Mask */
+#define HEMC_CR_NCS3_ECC_ENABLE(value)        (HEMC_CR_NCS3_ECC_ENABLE_Msk & ((value) << HEMC_CR_NCS3_ECC_ENABLE_Pos))
+#define HEMC_CR_NCS3_ECC12_ENABLE_Pos         _U_(31)                                              /**< (HEMC_CR_NCS3) BCH ECC Enable Position */
+#define HEMC_CR_NCS3_ECC12_ENABLE_Msk         (_U_(0x1) << HEMC_CR_NCS3_ECC12_ENABLE_Pos)          /**< (HEMC_CR_NCS3) BCH ECC Enable Mask */
+#define HEMC_CR_NCS3_ECC12_ENABLE(value)      (HEMC_CR_NCS3_ECC12_ENABLE_Msk & ((value) << HEMC_CR_NCS3_ECC12_ENABLE_Pos))
+#define HEMC_CR_NCS3_Msk                      _U_(0xC1FFFFFF)                                      /**< (HEMC_CR_NCS3) Register Mask  */
 
 
 /* -------- HEMC_CR_NCS4 : (HEMC Offset: 0x10) (R/W 32) HEMC Control Register NCS 4 -------- */
@@ -285,7 +312,13 @@
 #define HEMC_CR_NCS4_ADDBASE_Pos              _U_(7)                                               /**< (HEMC_CR_NCS4) relative base address of NCS area Position */
 #define HEMC_CR_NCS4_ADDBASE_Msk              (_U_(0x3FFFF) << HEMC_CR_NCS4_ADDBASE_Pos)           /**< (HEMC_CR_NCS4) relative base address of NCS area Mask */
 #define HEMC_CR_NCS4_ADDBASE(value)           (HEMC_CR_NCS4_ADDBASE_Msk & ((value) << HEMC_CR_NCS4_ADDBASE_Pos))
-#define HEMC_CR_NCS4_Msk                      _U_(0x01FFFFFF)                                      /**< (HEMC_CR_NCS4) Register Mask  */
+#define HEMC_CR_NCS4_ECC_ENABLE_Pos           _U_(30)                                              /**< (HEMC_CR_NCS4) ECC Protection Enable Position */
+#define HEMC_CR_NCS4_ECC_ENABLE_Msk           (_U_(0x1) << HEMC_CR_NCS4_ECC_ENABLE_Pos)            /**< (HEMC_CR_NCS4) ECC Protection Enable Mask */
+#define HEMC_CR_NCS4_ECC_ENABLE(value)        (HEMC_CR_NCS4_ECC_ENABLE_Msk & ((value) << HEMC_CR_NCS4_ECC_ENABLE_Pos))
+#define HEMC_CR_NCS4_ECC12_ENABLE_Pos         _U_(31)                                              /**< (HEMC_CR_NCS4) BCH ECC Enable Position */
+#define HEMC_CR_NCS4_ECC12_ENABLE_Msk         (_U_(0x1) << HEMC_CR_NCS4_ECC12_ENABLE_Pos)          /**< (HEMC_CR_NCS4) BCH ECC Enable Mask */
+#define HEMC_CR_NCS4_ECC12_ENABLE(value)      (HEMC_CR_NCS4_ECC12_ENABLE_Msk & ((value) << HEMC_CR_NCS4_ECC12_ENABLE_Pos))
+#define HEMC_CR_NCS4_Msk                      _U_(0xC1FFFFFF)                                      /**< (HEMC_CR_NCS4) Register Mask  */
 
 
 /* -------- HEMC_CR_NCS5 : (HEMC Offset: 0x14) (R/W 32) HEMC Control Register NCS 5 -------- */
@@ -337,7 +370,13 @@
 #define HEMC_CR_NCS5_ADDBASE_Pos              _U_(7)                                               /**< (HEMC_CR_NCS5) relative base address of NCS area Position */
 #define HEMC_CR_NCS5_ADDBASE_Msk              (_U_(0x3FFFF) << HEMC_CR_NCS5_ADDBASE_Pos)           /**< (HEMC_CR_NCS5) relative base address of NCS area Mask */
 #define HEMC_CR_NCS5_ADDBASE(value)           (HEMC_CR_NCS5_ADDBASE_Msk & ((value) << HEMC_CR_NCS5_ADDBASE_Pos))
-#define HEMC_CR_NCS5_Msk                      _U_(0x01FFFFFF)                                      /**< (HEMC_CR_NCS5) Register Mask  */
+#define HEMC_CR_NCS5_ECC_ENABLE_Pos           _U_(30)                                              /**< (HEMC_CR_NCS5) ECC Protection Enable Position */
+#define HEMC_CR_NCS5_ECC_ENABLE_Msk           (_U_(0x1) << HEMC_CR_NCS5_ECC_ENABLE_Pos)            /**< (HEMC_CR_NCS5) ECC Protection Enable Mask */
+#define HEMC_CR_NCS5_ECC_ENABLE(value)        (HEMC_CR_NCS5_ECC_ENABLE_Msk & ((value) << HEMC_CR_NCS5_ECC_ENABLE_Pos))
+#define HEMC_CR_NCS5_ECC12_ENABLE_Pos         _U_(31)                                              /**< (HEMC_CR_NCS5) BCH ECC Enable Position */
+#define HEMC_CR_NCS5_ECC12_ENABLE_Msk         (_U_(0x1) << HEMC_CR_NCS5_ECC12_ENABLE_Pos)          /**< (HEMC_CR_NCS5) BCH ECC Enable Mask */
+#define HEMC_CR_NCS5_ECC12_ENABLE(value)      (HEMC_CR_NCS5_ECC12_ENABLE_Msk & ((value) << HEMC_CR_NCS5_ECC12_ENABLE_Pos))
+#define HEMC_CR_NCS5_Msk                      _U_(0xC1FFFFFF)                                      /**< (HEMC_CR_NCS5) Register Mask  */
 
 
 /* -------- HEMC_CTRL : (HEMC Offset: 0x18) (R/W 32) HEMC Polarity Control register -------- */
@@ -577,7 +616,7 @@
 #define HEMC_SR_Msk                           _U_(0x0000001E)                                      /**< (HEMC_SR) Register Mask  */
 
 
-/* -------- HEMC_HECC_CR0 : (HEMC Offset: 0x100) (R/W 32) HECC Control Register (ChannelNumbers = 0) 0 -------- */
+/* -------- HEMC_HECC_CR0 : (HEMC Offset: 0x100) (R/W 32) HECC Control Register Channel 0 (HSMC) -------- */
 #define HEMC_HECC_CR0_ENABLE_Pos              _U_(0)                                               /**< (HEMC_HECC_CR0) ECC protection enable Position */
 #define HEMC_HECC_CR0_ENABLE_Msk              (_U_(0x1) << HEMC_HECC_CR0_ENABLE_Pos)               /**< (HEMC_HECC_CR0) ECC protection enable Mask */
 #define HEMC_HECC_CR0_ENABLE(value)           (HEMC_HECC_CR0_ENABLE_Msk & ((value) << HEMC_HECC_CR0_ENABLE_Pos))
@@ -599,7 +638,7 @@
 #define HEMC_HECC_CR0_Msk                     _U_(0x00000077)                                      /**< (HEMC_HECC_CR0) Register Mask  */
 
 
-/* -------- HEMC_HECC_CR1 : (HEMC Offset: 0x104) (R/W 32) HECC Control Register (ChannelNumbers = 0) 1 -------- */
+/* -------- HEMC_HECC_CR1 : (HEMC Offset: 0x104) (R/W 32) HECC Control Register Channel 1 (HSDRAMC) -------- */
 #define HEMC_HECC_CR1_ENABLE_Pos              _U_(0)                                               /**< (HEMC_HECC_CR1) ECC protection enable Position */
 #define HEMC_HECC_CR1_ENABLE_Msk              (_U_(0x1) << HEMC_HECC_CR1_ENABLE_Pos)               /**< (HEMC_HECC_CR1) ECC protection enable Mask */
 #define HEMC_HECC_CR1_ENABLE(value)           (HEMC_HECC_CR1_ENABLE_Msk & ((value) << HEMC_HECC_CR1_ENABLE_Pos))
@@ -621,7 +660,7 @@
 #define HEMC_HECC_CR1_Msk                     _U_(0x00000077)                                      /**< (HEMC_HECC_CR1) Register Mask  */
 
 
-/* -------- HEMC_HECC_CR2 : (HEMC Offset: 0x108) (R/W 32) HECC Control Register (ChannelNumbers = 0) 2 -------- */
+/* -------- HEMC_HECC_CR2 : (HEMC Offset: 0x108) (R/W 32) HECC Control Register Channel 2 (HSDRAMC) -------- */
 #define HEMC_HECC_CR2_ENABLE_Pos              _U_(0)                                               /**< (HEMC_HECC_CR2) ECC protection enable Position */
 #define HEMC_HECC_CR2_ENABLE_Msk              (_U_(0x1) << HEMC_HECC_CR2_ENABLE_Pos)               /**< (HEMC_HECC_CR2) ECC protection enable Mask */
 #define HEMC_HECC_CR2_ENABLE(value)           (HEMC_HECC_CR2_ENABLE_Msk & ((value) << HEMC_HECC_CR2_ENABLE_Pos))
@@ -643,402 +682,25 @@
 #define HEMC_HECC_CR2_Msk                     _U_(0x00000077)                                      /**< (HEMC_HECC_CR2) Register Mask  */
 
 
-/* -------- HEMC_HECC_CR3 : (HEMC Offset: 0x10C) (R/W 32) HECC Control Register (ChannelNumbers = 0) 3 -------- */
-#define HEMC_HECC_CR3_ENABLE_Pos              _U_(0)                                               /**< (HEMC_HECC_CR3) ECC protection enable Position */
-#define HEMC_HECC_CR3_ENABLE_Msk              (_U_(0x1) << HEMC_HECC_CR3_ENABLE_Pos)               /**< (HEMC_HECC_CR3) ECC protection enable Mask */
-#define HEMC_HECC_CR3_ENABLE(value)           (HEMC_HECC_CR3_ENABLE_Msk & ((value) << HEMC_HECC_CR3_ENABLE_Pos))
-#define HEMC_HECC_CR3_TEST_MODE_RD_Pos        _U_(1)                                               /**< (HEMC_HECC_CR3) test mode of ECC protection - read mode Position */
-#define HEMC_HECC_CR3_TEST_MODE_RD_Msk        (_U_(0x1) << HEMC_HECC_CR3_TEST_MODE_RD_Pos)         /**< (HEMC_HECC_CR3) test mode of ECC protection - read mode Mask */
-#define HEMC_HECC_CR3_TEST_MODE_RD(value)     (HEMC_HECC_CR3_TEST_MODE_RD_Msk & ((value) << HEMC_HECC_CR3_TEST_MODE_RD_Pos))
-#define HEMC_HECC_CR3_TEST_MODE_WR_Pos        _U_(2)                                               /**< (HEMC_HECC_CR3) test mode of ECC protection - write mode Position */
-#define HEMC_HECC_CR3_TEST_MODE_WR_Msk        (_U_(0x1) << HEMC_HECC_CR3_TEST_MODE_WR_Pos)         /**< (HEMC_HECC_CR3) test mode of ECC protection - write mode Mask */
-#define HEMC_HECC_CR3_TEST_MODE_WR(value)     (HEMC_HECC_CR3_TEST_MODE_WR_Msk & ((value) << HEMC_HECC_CR3_TEST_MODE_WR_Pos))
-#define HEMC_HECC_CR3_RST_FIX_CPT_Pos         _U_(4)                                               /**< (HEMC_HECC_CR3) reset the fixable error counter Position */
-#define HEMC_HECC_CR3_RST_FIX_CPT_Msk         (_U_(0x1) << HEMC_HECC_CR3_RST_FIX_CPT_Pos)          /**< (HEMC_HECC_CR3) reset the fixable error counter Mask */
-#define HEMC_HECC_CR3_RST_FIX_CPT(value)      (HEMC_HECC_CR3_RST_FIX_CPT_Msk & ((value) << HEMC_HECC_CR3_RST_FIX_CPT_Pos))
-#define HEMC_HECC_CR3_RST_NOFIX_CPT_Pos       _U_(5)                                               /**< (HEMC_HECC_CR3) reset the un-fixable error counter Position */
-#define HEMC_HECC_CR3_RST_NOFIX_CPT_Msk       (_U_(0x1) << HEMC_HECC_CR3_RST_NOFIX_CPT_Pos)        /**< (HEMC_HECC_CR3) reset the un-fixable error counter Mask */
-#define HEMC_HECC_CR3_RST_NOFIX_CPT(value)    (HEMC_HECC_CR3_RST_NOFIX_CPT_Msk & ((value) << HEMC_HECC_CR3_RST_NOFIX_CPT_Pos))
-#define HEMC_HECC_CR3_ECC12_ENABLE_Pos        _U_(6)                                               /**< (HEMC_HECC_CR3) BCH ECC enable Position */
-#define HEMC_HECC_CR3_ECC12_ENABLE_Msk        (_U_(0x1) << HEMC_HECC_CR3_ECC12_ENABLE_Pos)         /**< (HEMC_HECC_CR3) BCH ECC enable Mask */
-#define HEMC_HECC_CR3_ECC12_ENABLE(value)     (HEMC_HECC_CR3_ECC12_ENABLE_Msk & ((value) << HEMC_HECC_CR3_ECC12_ENABLE_Pos))
-#define HEMC_HECC_CR3_Msk                     _U_(0x00000077)                                      /**< (HEMC_HECC_CR3) Register Mask  */
-
-
-/* -------- HEMC_HECC_CR4 : (HEMC Offset: 0x110) (R/W 32) HECC Control Register (ChannelNumbers = 0) 4 -------- */
-#define HEMC_HECC_CR4_ENABLE_Pos              _U_(0)                                               /**< (HEMC_HECC_CR4) ECC protection enable Position */
-#define HEMC_HECC_CR4_ENABLE_Msk              (_U_(0x1) << HEMC_HECC_CR4_ENABLE_Pos)               /**< (HEMC_HECC_CR4) ECC protection enable Mask */
-#define HEMC_HECC_CR4_ENABLE(value)           (HEMC_HECC_CR4_ENABLE_Msk & ((value) << HEMC_HECC_CR4_ENABLE_Pos))
-#define HEMC_HECC_CR4_TEST_MODE_RD_Pos        _U_(1)                                               /**< (HEMC_HECC_CR4) test mode of ECC protection - read mode Position */
-#define HEMC_HECC_CR4_TEST_MODE_RD_Msk        (_U_(0x1) << HEMC_HECC_CR4_TEST_MODE_RD_Pos)         /**< (HEMC_HECC_CR4) test mode of ECC protection - read mode Mask */
-#define HEMC_HECC_CR4_TEST_MODE_RD(value)     (HEMC_HECC_CR4_TEST_MODE_RD_Msk & ((value) << HEMC_HECC_CR4_TEST_MODE_RD_Pos))
-#define HEMC_HECC_CR4_TEST_MODE_WR_Pos        _U_(2)                                               /**< (HEMC_HECC_CR4) test mode of ECC protection - write mode Position */
-#define HEMC_HECC_CR4_TEST_MODE_WR_Msk        (_U_(0x1) << HEMC_HECC_CR4_TEST_MODE_WR_Pos)         /**< (HEMC_HECC_CR4) test mode of ECC protection - write mode Mask */
-#define HEMC_HECC_CR4_TEST_MODE_WR(value)     (HEMC_HECC_CR4_TEST_MODE_WR_Msk & ((value) << HEMC_HECC_CR4_TEST_MODE_WR_Pos))
-#define HEMC_HECC_CR4_RST_FIX_CPT_Pos         _U_(4)                                               /**< (HEMC_HECC_CR4) reset the fixable error counter Position */
-#define HEMC_HECC_CR4_RST_FIX_CPT_Msk         (_U_(0x1) << HEMC_HECC_CR4_RST_FIX_CPT_Pos)          /**< (HEMC_HECC_CR4) reset the fixable error counter Mask */
-#define HEMC_HECC_CR4_RST_FIX_CPT(value)      (HEMC_HECC_CR4_RST_FIX_CPT_Msk & ((value) << HEMC_HECC_CR4_RST_FIX_CPT_Pos))
-#define HEMC_HECC_CR4_RST_NOFIX_CPT_Pos       _U_(5)                                               /**< (HEMC_HECC_CR4) reset the un-fixable error counter Position */
-#define HEMC_HECC_CR4_RST_NOFIX_CPT_Msk       (_U_(0x1) << HEMC_HECC_CR4_RST_NOFIX_CPT_Pos)        /**< (HEMC_HECC_CR4) reset the un-fixable error counter Mask */
-#define HEMC_HECC_CR4_RST_NOFIX_CPT(value)    (HEMC_HECC_CR4_RST_NOFIX_CPT_Msk & ((value) << HEMC_HECC_CR4_RST_NOFIX_CPT_Pos))
-#define HEMC_HECC_CR4_ECC12_ENABLE_Pos        _U_(6)                                               /**< (HEMC_HECC_CR4) BCH ECC enable Position */
-#define HEMC_HECC_CR4_ECC12_ENABLE_Msk        (_U_(0x1) << HEMC_HECC_CR4_ECC12_ENABLE_Pos)         /**< (HEMC_HECC_CR4) BCH ECC enable Mask */
-#define HEMC_HECC_CR4_ECC12_ENABLE(value)     (HEMC_HECC_CR4_ECC12_ENABLE_Msk & ((value) << HEMC_HECC_CR4_ECC12_ENABLE_Pos))
-#define HEMC_HECC_CR4_Msk                     _U_(0x00000077)                                      /**< (HEMC_HECC_CR4) Register Mask  */
-
-
-/* -------- HEMC_HECC_CR5 : (HEMC Offset: 0x114) (R/W 32) HECC Control Register (ChannelNumbers = 0) 5 -------- */
-#define HEMC_HECC_CR5_ENABLE_Pos              _U_(0)                                               /**< (HEMC_HECC_CR5) ECC protection enable Position */
-#define HEMC_HECC_CR5_ENABLE_Msk              (_U_(0x1) << HEMC_HECC_CR5_ENABLE_Pos)               /**< (HEMC_HECC_CR5) ECC protection enable Mask */
-#define HEMC_HECC_CR5_ENABLE(value)           (HEMC_HECC_CR5_ENABLE_Msk & ((value) << HEMC_HECC_CR5_ENABLE_Pos))
-#define HEMC_HECC_CR5_TEST_MODE_RD_Pos        _U_(1)                                               /**< (HEMC_HECC_CR5) test mode of ECC protection - read mode Position */
-#define HEMC_HECC_CR5_TEST_MODE_RD_Msk        (_U_(0x1) << HEMC_HECC_CR5_TEST_MODE_RD_Pos)         /**< (HEMC_HECC_CR5) test mode of ECC protection - read mode Mask */
-#define HEMC_HECC_CR5_TEST_MODE_RD(value)     (HEMC_HECC_CR5_TEST_MODE_RD_Msk & ((value) << HEMC_HECC_CR5_TEST_MODE_RD_Pos))
-#define HEMC_HECC_CR5_TEST_MODE_WR_Pos        _U_(2)                                               /**< (HEMC_HECC_CR5) test mode of ECC protection - write mode Position */
-#define HEMC_HECC_CR5_TEST_MODE_WR_Msk        (_U_(0x1) << HEMC_HECC_CR5_TEST_MODE_WR_Pos)         /**< (HEMC_HECC_CR5) test mode of ECC protection - write mode Mask */
-#define HEMC_HECC_CR5_TEST_MODE_WR(value)     (HEMC_HECC_CR5_TEST_MODE_WR_Msk & ((value) << HEMC_HECC_CR5_TEST_MODE_WR_Pos))
-#define HEMC_HECC_CR5_RST_FIX_CPT_Pos         _U_(4)                                               /**< (HEMC_HECC_CR5) reset the fixable error counter Position */
-#define HEMC_HECC_CR5_RST_FIX_CPT_Msk         (_U_(0x1) << HEMC_HECC_CR5_RST_FIX_CPT_Pos)          /**< (HEMC_HECC_CR5) reset the fixable error counter Mask */
-#define HEMC_HECC_CR5_RST_FIX_CPT(value)      (HEMC_HECC_CR5_RST_FIX_CPT_Msk & ((value) << HEMC_HECC_CR5_RST_FIX_CPT_Pos))
-#define HEMC_HECC_CR5_RST_NOFIX_CPT_Pos       _U_(5)                                               /**< (HEMC_HECC_CR5) reset the un-fixable error counter Position */
-#define HEMC_HECC_CR5_RST_NOFIX_CPT_Msk       (_U_(0x1) << HEMC_HECC_CR5_RST_NOFIX_CPT_Pos)        /**< (HEMC_HECC_CR5) reset the un-fixable error counter Mask */
-#define HEMC_HECC_CR5_RST_NOFIX_CPT(value)    (HEMC_HECC_CR5_RST_NOFIX_CPT_Msk & ((value) << HEMC_HECC_CR5_RST_NOFIX_CPT_Pos))
-#define HEMC_HECC_CR5_ECC12_ENABLE_Pos        _U_(6)                                               /**< (HEMC_HECC_CR5) BCH ECC enable Position */
-#define HEMC_HECC_CR5_ECC12_ENABLE_Msk        (_U_(0x1) << HEMC_HECC_CR5_ECC12_ENABLE_Pos)         /**< (HEMC_HECC_CR5) BCH ECC enable Mask */
-#define HEMC_HECC_CR5_ECC12_ENABLE(value)     (HEMC_HECC_CR5_ECC12_ENABLE_Msk & ((value) << HEMC_HECC_CR5_ECC12_ENABLE_Pos))
-#define HEMC_HECC_CR5_Msk                     _U_(0x00000077)                                      /**< (HEMC_HECC_CR5) Register Mask  */
-
-
-/* -------- HEMC_HECC_CR6 : (HEMC Offset: 0x118) (R/W 32) HECC Control Register (ChannelNumbers = 0) 6 -------- */
-#define HEMC_HECC_CR6_ENABLE_Pos              _U_(0)                                               /**< (HEMC_HECC_CR6) ECC protection enable Position */
-#define HEMC_HECC_CR6_ENABLE_Msk              (_U_(0x1) << HEMC_HECC_CR6_ENABLE_Pos)               /**< (HEMC_HECC_CR6) ECC protection enable Mask */
-#define HEMC_HECC_CR6_ENABLE(value)           (HEMC_HECC_CR6_ENABLE_Msk & ((value) << HEMC_HECC_CR6_ENABLE_Pos))
-#define HEMC_HECC_CR6_TEST_MODE_RD_Pos        _U_(1)                                               /**< (HEMC_HECC_CR6) test mode of ECC protection - read mode Position */
-#define HEMC_HECC_CR6_TEST_MODE_RD_Msk        (_U_(0x1) << HEMC_HECC_CR6_TEST_MODE_RD_Pos)         /**< (HEMC_HECC_CR6) test mode of ECC protection - read mode Mask */
-#define HEMC_HECC_CR6_TEST_MODE_RD(value)     (HEMC_HECC_CR6_TEST_MODE_RD_Msk & ((value) << HEMC_HECC_CR6_TEST_MODE_RD_Pos))
-#define HEMC_HECC_CR6_TEST_MODE_WR_Pos        _U_(2)                                               /**< (HEMC_HECC_CR6) test mode of ECC protection - write mode Position */
-#define HEMC_HECC_CR6_TEST_MODE_WR_Msk        (_U_(0x1) << HEMC_HECC_CR6_TEST_MODE_WR_Pos)         /**< (HEMC_HECC_CR6) test mode of ECC protection - write mode Mask */
-#define HEMC_HECC_CR6_TEST_MODE_WR(value)     (HEMC_HECC_CR6_TEST_MODE_WR_Msk & ((value) << HEMC_HECC_CR6_TEST_MODE_WR_Pos))
-#define HEMC_HECC_CR6_RST_FIX_CPT_Pos         _U_(4)                                               /**< (HEMC_HECC_CR6) reset the fixable error counter Position */
-#define HEMC_HECC_CR6_RST_FIX_CPT_Msk         (_U_(0x1) << HEMC_HECC_CR6_RST_FIX_CPT_Pos)          /**< (HEMC_HECC_CR6) reset the fixable error counter Mask */
-#define HEMC_HECC_CR6_RST_FIX_CPT(value)      (HEMC_HECC_CR6_RST_FIX_CPT_Msk & ((value) << HEMC_HECC_CR6_RST_FIX_CPT_Pos))
-#define HEMC_HECC_CR6_RST_NOFIX_CPT_Pos       _U_(5)                                               /**< (HEMC_HECC_CR6) reset the un-fixable error counter Position */
-#define HEMC_HECC_CR6_RST_NOFIX_CPT_Msk       (_U_(0x1) << HEMC_HECC_CR6_RST_NOFIX_CPT_Pos)        /**< (HEMC_HECC_CR6) reset the un-fixable error counter Mask */
-#define HEMC_HECC_CR6_RST_NOFIX_CPT(value)    (HEMC_HECC_CR6_RST_NOFIX_CPT_Msk & ((value) << HEMC_HECC_CR6_RST_NOFIX_CPT_Pos))
-#define HEMC_HECC_CR6_ECC12_ENABLE_Pos        _U_(6)                                               /**< (HEMC_HECC_CR6) BCH ECC enable Position */
-#define HEMC_HECC_CR6_ECC12_ENABLE_Msk        (_U_(0x1) << HEMC_HECC_CR6_ECC12_ENABLE_Pos)         /**< (HEMC_HECC_CR6) BCH ECC enable Mask */
-#define HEMC_HECC_CR6_ECC12_ENABLE(value)     (HEMC_HECC_CR6_ECC12_ENABLE_Msk & ((value) << HEMC_HECC_CR6_ECC12_ENABLE_Pos))
-#define HEMC_HECC_CR6_Msk                     _U_(0x00000077)                                      /**< (HEMC_HECC_CR6) Register Mask  */
-
-
-/* -------- HEMC_HECC_CR7 : (HEMC Offset: 0x11C) (R/W 32) HECC Control Register (ChannelNumbers = 0) 7 -------- */
-#define HEMC_HECC_CR7_ENABLE_Pos              _U_(0)                                               /**< (HEMC_HECC_CR7) ECC protection enable Position */
-#define HEMC_HECC_CR7_ENABLE_Msk              (_U_(0x1) << HEMC_HECC_CR7_ENABLE_Pos)               /**< (HEMC_HECC_CR7) ECC protection enable Mask */
-#define HEMC_HECC_CR7_ENABLE(value)           (HEMC_HECC_CR7_ENABLE_Msk & ((value) << HEMC_HECC_CR7_ENABLE_Pos))
-#define HEMC_HECC_CR7_TEST_MODE_RD_Pos        _U_(1)                                               /**< (HEMC_HECC_CR7) test mode of ECC protection - read mode Position */
-#define HEMC_HECC_CR7_TEST_MODE_RD_Msk        (_U_(0x1) << HEMC_HECC_CR7_TEST_MODE_RD_Pos)         /**< (HEMC_HECC_CR7) test mode of ECC protection - read mode Mask */
-#define HEMC_HECC_CR7_TEST_MODE_RD(value)     (HEMC_HECC_CR7_TEST_MODE_RD_Msk & ((value) << HEMC_HECC_CR7_TEST_MODE_RD_Pos))
-#define HEMC_HECC_CR7_TEST_MODE_WR_Pos        _U_(2)                                               /**< (HEMC_HECC_CR7) test mode of ECC protection - write mode Position */
-#define HEMC_HECC_CR7_TEST_MODE_WR_Msk        (_U_(0x1) << HEMC_HECC_CR7_TEST_MODE_WR_Pos)         /**< (HEMC_HECC_CR7) test mode of ECC protection - write mode Mask */
-#define HEMC_HECC_CR7_TEST_MODE_WR(value)     (HEMC_HECC_CR7_TEST_MODE_WR_Msk & ((value) << HEMC_HECC_CR7_TEST_MODE_WR_Pos))
-#define HEMC_HECC_CR7_RST_FIX_CPT_Pos         _U_(4)                                               /**< (HEMC_HECC_CR7) reset the fixable error counter Position */
-#define HEMC_HECC_CR7_RST_FIX_CPT_Msk         (_U_(0x1) << HEMC_HECC_CR7_RST_FIX_CPT_Pos)          /**< (HEMC_HECC_CR7) reset the fixable error counter Mask */
-#define HEMC_HECC_CR7_RST_FIX_CPT(value)      (HEMC_HECC_CR7_RST_FIX_CPT_Msk & ((value) << HEMC_HECC_CR7_RST_FIX_CPT_Pos))
-#define HEMC_HECC_CR7_RST_NOFIX_CPT_Pos       _U_(5)                                               /**< (HEMC_HECC_CR7) reset the un-fixable error counter Position */
-#define HEMC_HECC_CR7_RST_NOFIX_CPT_Msk       (_U_(0x1) << HEMC_HECC_CR7_RST_NOFIX_CPT_Pos)        /**< (HEMC_HECC_CR7) reset the un-fixable error counter Mask */
-#define HEMC_HECC_CR7_RST_NOFIX_CPT(value)    (HEMC_HECC_CR7_RST_NOFIX_CPT_Msk & ((value) << HEMC_HECC_CR7_RST_NOFIX_CPT_Pos))
-#define HEMC_HECC_CR7_ECC12_ENABLE_Pos        _U_(6)                                               /**< (HEMC_HECC_CR7) BCH ECC enable Position */
-#define HEMC_HECC_CR7_ECC12_ENABLE_Msk        (_U_(0x1) << HEMC_HECC_CR7_ECC12_ENABLE_Pos)         /**< (HEMC_HECC_CR7) BCH ECC enable Mask */
-#define HEMC_HECC_CR7_ECC12_ENABLE(value)     (HEMC_HECC_CR7_ECC12_ENABLE_Msk & ((value) << HEMC_HECC_CR7_ECC12_ENABLE_Pos))
-#define HEMC_HECC_CR7_Msk                     _U_(0x00000077)                                      /**< (HEMC_HECC_CR7) Register Mask  */
-
-
-/* -------- HEMC_HECC_CR8 : (HEMC Offset: 0x120) (R/W 32) HECC Control Register (ChannelNumbers = 0) 8 -------- */
-#define HEMC_HECC_CR8_ENABLE_Pos              _U_(0)                                               /**< (HEMC_HECC_CR8) ECC protection enable Position */
-#define HEMC_HECC_CR8_ENABLE_Msk              (_U_(0x1) << HEMC_HECC_CR8_ENABLE_Pos)               /**< (HEMC_HECC_CR8) ECC protection enable Mask */
-#define HEMC_HECC_CR8_ENABLE(value)           (HEMC_HECC_CR8_ENABLE_Msk & ((value) << HEMC_HECC_CR8_ENABLE_Pos))
-#define HEMC_HECC_CR8_TEST_MODE_RD_Pos        _U_(1)                                               /**< (HEMC_HECC_CR8) test mode of ECC protection - read mode Position */
-#define HEMC_HECC_CR8_TEST_MODE_RD_Msk        (_U_(0x1) << HEMC_HECC_CR8_TEST_MODE_RD_Pos)         /**< (HEMC_HECC_CR8) test mode of ECC protection - read mode Mask */
-#define HEMC_HECC_CR8_TEST_MODE_RD(value)     (HEMC_HECC_CR8_TEST_MODE_RD_Msk & ((value) << HEMC_HECC_CR8_TEST_MODE_RD_Pos))
-#define HEMC_HECC_CR8_TEST_MODE_WR_Pos        _U_(2)                                               /**< (HEMC_HECC_CR8) test mode of ECC protection - write mode Position */
-#define HEMC_HECC_CR8_TEST_MODE_WR_Msk        (_U_(0x1) << HEMC_HECC_CR8_TEST_MODE_WR_Pos)         /**< (HEMC_HECC_CR8) test mode of ECC protection - write mode Mask */
-#define HEMC_HECC_CR8_TEST_MODE_WR(value)     (HEMC_HECC_CR8_TEST_MODE_WR_Msk & ((value) << HEMC_HECC_CR8_TEST_MODE_WR_Pos))
-#define HEMC_HECC_CR8_RST_FIX_CPT_Pos         _U_(4)                                               /**< (HEMC_HECC_CR8) reset the fixable error counter Position */
-#define HEMC_HECC_CR8_RST_FIX_CPT_Msk         (_U_(0x1) << HEMC_HECC_CR8_RST_FIX_CPT_Pos)          /**< (HEMC_HECC_CR8) reset the fixable error counter Mask */
-#define HEMC_HECC_CR8_RST_FIX_CPT(value)      (HEMC_HECC_CR8_RST_FIX_CPT_Msk & ((value) << HEMC_HECC_CR8_RST_FIX_CPT_Pos))
-#define HEMC_HECC_CR8_RST_NOFIX_CPT_Pos       _U_(5)                                               /**< (HEMC_HECC_CR8) reset the un-fixable error counter Position */
-#define HEMC_HECC_CR8_RST_NOFIX_CPT_Msk       (_U_(0x1) << HEMC_HECC_CR8_RST_NOFIX_CPT_Pos)        /**< (HEMC_HECC_CR8) reset the un-fixable error counter Mask */
-#define HEMC_HECC_CR8_RST_NOFIX_CPT(value)    (HEMC_HECC_CR8_RST_NOFIX_CPT_Msk & ((value) << HEMC_HECC_CR8_RST_NOFIX_CPT_Pos))
-#define HEMC_HECC_CR8_ECC12_ENABLE_Pos        _U_(6)                                               /**< (HEMC_HECC_CR8) BCH ECC enable Position */
-#define HEMC_HECC_CR8_ECC12_ENABLE_Msk        (_U_(0x1) << HEMC_HECC_CR8_ECC12_ENABLE_Pos)         /**< (HEMC_HECC_CR8) BCH ECC enable Mask */
-#define HEMC_HECC_CR8_ECC12_ENABLE(value)     (HEMC_HECC_CR8_ECC12_ENABLE_Msk & ((value) << HEMC_HECC_CR8_ECC12_ENABLE_Pos))
-#define HEMC_HECC_CR8_Msk                     _U_(0x00000077)                                      /**< (HEMC_HECC_CR8) Register Mask  */
-
-
-/* -------- HEMC_HECC_CR9 : (HEMC Offset: 0x124) (R/W 32) HECC Control Register (ChannelNumbers = 0) 9 -------- */
-#define HEMC_HECC_CR9_ENABLE_Pos              _U_(0)                                               /**< (HEMC_HECC_CR9) ECC protection enable Position */
-#define HEMC_HECC_CR9_ENABLE_Msk              (_U_(0x1) << HEMC_HECC_CR9_ENABLE_Pos)               /**< (HEMC_HECC_CR9) ECC protection enable Mask */
-#define HEMC_HECC_CR9_ENABLE(value)           (HEMC_HECC_CR9_ENABLE_Msk & ((value) << HEMC_HECC_CR9_ENABLE_Pos))
-#define HEMC_HECC_CR9_TEST_MODE_RD_Pos        _U_(1)                                               /**< (HEMC_HECC_CR9) test mode of ECC protection - read mode Position */
-#define HEMC_HECC_CR9_TEST_MODE_RD_Msk        (_U_(0x1) << HEMC_HECC_CR9_TEST_MODE_RD_Pos)         /**< (HEMC_HECC_CR9) test mode of ECC protection - read mode Mask */
-#define HEMC_HECC_CR9_TEST_MODE_RD(value)     (HEMC_HECC_CR9_TEST_MODE_RD_Msk & ((value) << HEMC_HECC_CR9_TEST_MODE_RD_Pos))
-#define HEMC_HECC_CR9_TEST_MODE_WR_Pos        _U_(2)                                               /**< (HEMC_HECC_CR9) test mode of ECC protection - write mode Position */
-#define HEMC_HECC_CR9_TEST_MODE_WR_Msk        (_U_(0x1) << HEMC_HECC_CR9_TEST_MODE_WR_Pos)         /**< (HEMC_HECC_CR9) test mode of ECC protection - write mode Mask */
-#define HEMC_HECC_CR9_TEST_MODE_WR(value)     (HEMC_HECC_CR9_TEST_MODE_WR_Msk & ((value) << HEMC_HECC_CR9_TEST_MODE_WR_Pos))
-#define HEMC_HECC_CR9_RST_FIX_CPT_Pos         _U_(4)                                               /**< (HEMC_HECC_CR9) reset the fixable error counter Position */
-#define HEMC_HECC_CR9_RST_FIX_CPT_Msk         (_U_(0x1) << HEMC_HECC_CR9_RST_FIX_CPT_Pos)          /**< (HEMC_HECC_CR9) reset the fixable error counter Mask */
-#define HEMC_HECC_CR9_RST_FIX_CPT(value)      (HEMC_HECC_CR9_RST_FIX_CPT_Msk & ((value) << HEMC_HECC_CR9_RST_FIX_CPT_Pos))
-#define HEMC_HECC_CR9_RST_NOFIX_CPT_Pos       _U_(5)                                               /**< (HEMC_HECC_CR9) reset the un-fixable error counter Position */
-#define HEMC_HECC_CR9_RST_NOFIX_CPT_Msk       (_U_(0x1) << HEMC_HECC_CR9_RST_NOFIX_CPT_Pos)        /**< (HEMC_HECC_CR9) reset the un-fixable error counter Mask */
-#define HEMC_HECC_CR9_RST_NOFIX_CPT(value)    (HEMC_HECC_CR9_RST_NOFIX_CPT_Msk & ((value) << HEMC_HECC_CR9_RST_NOFIX_CPT_Pos))
-#define HEMC_HECC_CR9_ECC12_ENABLE_Pos        _U_(6)                                               /**< (HEMC_HECC_CR9) BCH ECC enable Position */
-#define HEMC_HECC_CR9_ECC12_ENABLE_Msk        (_U_(0x1) << HEMC_HECC_CR9_ECC12_ENABLE_Pos)         /**< (HEMC_HECC_CR9) BCH ECC enable Mask */
-#define HEMC_HECC_CR9_ECC12_ENABLE(value)     (HEMC_HECC_CR9_ECC12_ENABLE_Msk & ((value) << HEMC_HECC_CR9_ECC12_ENABLE_Pos))
-#define HEMC_HECC_CR9_Msk                     _U_(0x00000077)                                      /**< (HEMC_HECC_CR9) Register Mask  */
-
-
-/* -------- HEMC_HECC_CR10 : (HEMC Offset: 0x128) (R/W 32) HECC Control Register (ChannelNumbers = 0) 10 -------- */
-#define HEMC_HECC_CR10_ENABLE_Pos             _U_(0)                                               /**< (HEMC_HECC_CR10) ECC protection enable Position */
-#define HEMC_HECC_CR10_ENABLE_Msk             (_U_(0x1) << HEMC_HECC_CR10_ENABLE_Pos)              /**< (HEMC_HECC_CR10) ECC protection enable Mask */
-#define HEMC_HECC_CR10_ENABLE(value)          (HEMC_HECC_CR10_ENABLE_Msk & ((value) << HEMC_HECC_CR10_ENABLE_Pos))
-#define HEMC_HECC_CR10_TEST_MODE_RD_Pos       _U_(1)                                               /**< (HEMC_HECC_CR10) test mode of ECC protection - read mode Position */
-#define HEMC_HECC_CR10_TEST_MODE_RD_Msk       (_U_(0x1) << HEMC_HECC_CR10_TEST_MODE_RD_Pos)        /**< (HEMC_HECC_CR10) test mode of ECC protection - read mode Mask */
-#define HEMC_HECC_CR10_TEST_MODE_RD(value)    (HEMC_HECC_CR10_TEST_MODE_RD_Msk & ((value) << HEMC_HECC_CR10_TEST_MODE_RD_Pos))
-#define HEMC_HECC_CR10_TEST_MODE_WR_Pos       _U_(2)                                               /**< (HEMC_HECC_CR10) test mode of ECC protection - write mode Position */
-#define HEMC_HECC_CR10_TEST_MODE_WR_Msk       (_U_(0x1) << HEMC_HECC_CR10_TEST_MODE_WR_Pos)        /**< (HEMC_HECC_CR10) test mode of ECC protection - write mode Mask */
-#define HEMC_HECC_CR10_TEST_MODE_WR(value)    (HEMC_HECC_CR10_TEST_MODE_WR_Msk & ((value) << HEMC_HECC_CR10_TEST_MODE_WR_Pos))
-#define HEMC_HECC_CR10_RST_FIX_CPT_Pos        _U_(4)                                               /**< (HEMC_HECC_CR10) reset the fixable error counter Position */
-#define HEMC_HECC_CR10_RST_FIX_CPT_Msk        (_U_(0x1) << HEMC_HECC_CR10_RST_FIX_CPT_Pos)         /**< (HEMC_HECC_CR10) reset the fixable error counter Mask */
-#define HEMC_HECC_CR10_RST_FIX_CPT(value)     (HEMC_HECC_CR10_RST_FIX_CPT_Msk & ((value) << HEMC_HECC_CR10_RST_FIX_CPT_Pos))
-#define HEMC_HECC_CR10_RST_NOFIX_CPT_Pos      _U_(5)                                               /**< (HEMC_HECC_CR10) reset the un-fixable error counter Position */
-#define HEMC_HECC_CR10_RST_NOFIX_CPT_Msk      (_U_(0x1) << HEMC_HECC_CR10_RST_NOFIX_CPT_Pos)       /**< (HEMC_HECC_CR10) reset the un-fixable error counter Mask */
-#define HEMC_HECC_CR10_RST_NOFIX_CPT(value)   (HEMC_HECC_CR10_RST_NOFIX_CPT_Msk & ((value) << HEMC_HECC_CR10_RST_NOFIX_CPT_Pos))
-#define HEMC_HECC_CR10_ECC12_ENABLE_Pos       _U_(6)                                               /**< (HEMC_HECC_CR10) BCH ECC enable Position */
-#define HEMC_HECC_CR10_ECC12_ENABLE_Msk       (_U_(0x1) << HEMC_HECC_CR10_ECC12_ENABLE_Pos)        /**< (HEMC_HECC_CR10) BCH ECC enable Mask */
-#define HEMC_HECC_CR10_ECC12_ENABLE(value)    (HEMC_HECC_CR10_ECC12_ENABLE_Msk & ((value) << HEMC_HECC_CR10_ECC12_ENABLE_Pos))
-#define HEMC_HECC_CR10_Msk                    _U_(0x00000077)                                      /**< (HEMC_HECC_CR10) Register Mask  */
-
-
-/* -------- HEMC_HECC_CR11 : (HEMC Offset: 0x12C) (R/W 32) HECC Control Register (ChannelNumbers = 0) 11 -------- */
-#define HEMC_HECC_CR11_ENABLE_Pos             _U_(0)                                               /**< (HEMC_HECC_CR11) ECC protection enable Position */
-#define HEMC_HECC_CR11_ENABLE_Msk             (_U_(0x1) << HEMC_HECC_CR11_ENABLE_Pos)              /**< (HEMC_HECC_CR11) ECC protection enable Mask */
-#define HEMC_HECC_CR11_ENABLE(value)          (HEMC_HECC_CR11_ENABLE_Msk & ((value) << HEMC_HECC_CR11_ENABLE_Pos))
-#define HEMC_HECC_CR11_TEST_MODE_RD_Pos       _U_(1)                                               /**< (HEMC_HECC_CR11) test mode of ECC protection - read mode Position */
-#define HEMC_HECC_CR11_TEST_MODE_RD_Msk       (_U_(0x1) << HEMC_HECC_CR11_TEST_MODE_RD_Pos)        /**< (HEMC_HECC_CR11) test mode of ECC protection - read mode Mask */
-#define HEMC_HECC_CR11_TEST_MODE_RD(value)    (HEMC_HECC_CR11_TEST_MODE_RD_Msk & ((value) << HEMC_HECC_CR11_TEST_MODE_RD_Pos))
-#define HEMC_HECC_CR11_TEST_MODE_WR_Pos       _U_(2)                                               /**< (HEMC_HECC_CR11) test mode of ECC protection - write mode Position */
-#define HEMC_HECC_CR11_TEST_MODE_WR_Msk       (_U_(0x1) << HEMC_HECC_CR11_TEST_MODE_WR_Pos)        /**< (HEMC_HECC_CR11) test mode of ECC protection - write mode Mask */
-#define HEMC_HECC_CR11_TEST_MODE_WR(value)    (HEMC_HECC_CR11_TEST_MODE_WR_Msk & ((value) << HEMC_HECC_CR11_TEST_MODE_WR_Pos))
-#define HEMC_HECC_CR11_RST_FIX_CPT_Pos        _U_(4)                                               /**< (HEMC_HECC_CR11) reset the fixable error counter Position */
-#define HEMC_HECC_CR11_RST_FIX_CPT_Msk        (_U_(0x1) << HEMC_HECC_CR11_RST_FIX_CPT_Pos)         /**< (HEMC_HECC_CR11) reset the fixable error counter Mask */
-#define HEMC_HECC_CR11_RST_FIX_CPT(value)     (HEMC_HECC_CR11_RST_FIX_CPT_Msk & ((value) << HEMC_HECC_CR11_RST_FIX_CPT_Pos))
-#define HEMC_HECC_CR11_RST_NOFIX_CPT_Pos      _U_(5)                                               /**< (HEMC_HECC_CR11) reset the un-fixable error counter Position */
-#define HEMC_HECC_CR11_RST_NOFIX_CPT_Msk      (_U_(0x1) << HEMC_HECC_CR11_RST_NOFIX_CPT_Pos)       /**< (HEMC_HECC_CR11) reset the un-fixable error counter Mask */
-#define HEMC_HECC_CR11_RST_NOFIX_CPT(value)   (HEMC_HECC_CR11_RST_NOFIX_CPT_Msk & ((value) << HEMC_HECC_CR11_RST_NOFIX_CPT_Pos))
-#define HEMC_HECC_CR11_ECC12_ENABLE_Pos       _U_(6)                                               /**< (HEMC_HECC_CR11) BCH ECC enable Position */
-#define HEMC_HECC_CR11_ECC12_ENABLE_Msk       (_U_(0x1) << HEMC_HECC_CR11_ECC12_ENABLE_Pos)        /**< (HEMC_HECC_CR11) BCH ECC enable Mask */
-#define HEMC_HECC_CR11_ECC12_ENABLE(value)    (HEMC_HECC_CR11_ECC12_ENABLE_Msk & ((value) << HEMC_HECC_CR11_ECC12_ENABLE_Pos))
-#define HEMC_HECC_CR11_Msk                    _U_(0x00000077)                                      /**< (HEMC_HECC_CR11) Register Mask  */
-
-
-/* -------- HEMC_HECC_CR12 : (HEMC Offset: 0x130) (R/W 32) HECC Control Register (ChannelNumbers = 0) 12 -------- */
-#define HEMC_HECC_CR12_ENABLE_Pos             _U_(0)                                               /**< (HEMC_HECC_CR12) ECC protection enable Position */
-#define HEMC_HECC_CR12_ENABLE_Msk             (_U_(0x1) << HEMC_HECC_CR12_ENABLE_Pos)              /**< (HEMC_HECC_CR12) ECC protection enable Mask */
-#define HEMC_HECC_CR12_ENABLE(value)          (HEMC_HECC_CR12_ENABLE_Msk & ((value) << HEMC_HECC_CR12_ENABLE_Pos))
-#define HEMC_HECC_CR12_TEST_MODE_RD_Pos       _U_(1)                                               /**< (HEMC_HECC_CR12) test mode of ECC protection - read mode Position */
-#define HEMC_HECC_CR12_TEST_MODE_RD_Msk       (_U_(0x1) << HEMC_HECC_CR12_TEST_MODE_RD_Pos)        /**< (HEMC_HECC_CR12) test mode of ECC protection - read mode Mask */
-#define HEMC_HECC_CR12_TEST_MODE_RD(value)    (HEMC_HECC_CR12_TEST_MODE_RD_Msk & ((value) << HEMC_HECC_CR12_TEST_MODE_RD_Pos))
-#define HEMC_HECC_CR12_TEST_MODE_WR_Pos       _U_(2)                                               /**< (HEMC_HECC_CR12) test mode of ECC protection - write mode Position */
-#define HEMC_HECC_CR12_TEST_MODE_WR_Msk       (_U_(0x1) << HEMC_HECC_CR12_TEST_MODE_WR_Pos)        /**< (HEMC_HECC_CR12) test mode of ECC protection - write mode Mask */
-#define HEMC_HECC_CR12_TEST_MODE_WR(value)    (HEMC_HECC_CR12_TEST_MODE_WR_Msk & ((value) << HEMC_HECC_CR12_TEST_MODE_WR_Pos))
-#define HEMC_HECC_CR12_RST_FIX_CPT_Pos        _U_(4)                                               /**< (HEMC_HECC_CR12) reset the fixable error counter Position */
-#define HEMC_HECC_CR12_RST_FIX_CPT_Msk        (_U_(0x1) << HEMC_HECC_CR12_RST_FIX_CPT_Pos)         /**< (HEMC_HECC_CR12) reset the fixable error counter Mask */
-#define HEMC_HECC_CR12_RST_FIX_CPT(value)     (HEMC_HECC_CR12_RST_FIX_CPT_Msk & ((value) << HEMC_HECC_CR12_RST_FIX_CPT_Pos))
-#define HEMC_HECC_CR12_RST_NOFIX_CPT_Pos      _U_(5)                                               /**< (HEMC_HECC_CR12) reset the un-fixable error counter Position */
-#define HEMC_HECC_CR12_RST_NOFIX_CPT_Msk      (_U_(0x1) << HEMC_HECC_CR12_RST_NOFIX_CPT_Pos)       /**< (HEMC_HECC_CR12) reset the un-fixable error counter Mask */
-#define HEMC_HECC_CR12_RST_NOFIX_CPT(value)   (HEMC_HECC_CR12_RST_NOFIX_CPT_Msk & ((value) << HEMC_HECC_CR12_RST_NOFIX_CPT_Pos))
-#define HEMC_HECC_CR12_ECC12_ENABLE_Pos       _U_(6)                                               /**< (HEMC_HECC_CR12) BCH ECC enable Position */
-#define HEMC_HECC_CR12_ECC12_ENABLE_Msk       (_U_(0x1) << HEMC_HECC_CR12_ECC12_ENABLE_Pos)        /**< (HEMC_HECC_CR12) BCH ECC enable Mask */
-#define HEMC_HECC_CR12_ECC12_ENABLE(value)    (HEMC_HECC_CR12_ECC12_ENABLE_Msk & ((value) << HEMC_HECC_CR12_ECC12_ENABLE_Pos))
-#define HEMC_HECC_CR12_Msk                    _U_(0x00000077)                                      /**< (HEMC_HECC_CR12) Register Mask  */
-
-
-/* -------- HEMC_HECC_CR13 : (HEMC Offset: 0x134) (R/W 32) HECC Control Register (ChannelNumbers = 0) 13 -------- */
-#define HEMC_HECC_CR13_ENABLE_Pos             _U_(0)                                               /**< (HEMC_HECC_CR13) ECC protection enable Position */
-#define HEMC_HECC_CR13_ENABLE_Msk             (_U_(0x1) << HEMC_HECC_CR13_ENABLE_Pos)              /**< (HEMC_HECC_CR13) ECC protection enable Mask */
-#define HEMC_HECC_CR13_ENABLE(value)          (HEMC_HECC_CR13_ENABLE_Msk & ((value) << HEMC_HECC_CR13_ENABLE_Pos))
-#define HEMC_HECC_CR13_TEST_MODE_RD_Pos       _U_(1)                                               /**< (HEMC_HECC_CR13) test mode of ECC protection - read mode Position */
-#define HEMC_HECC_CR13_TEST_MODE_RD_Msk       (_U_(0x1) << HEMC_HECC_CR13_TEST_MODE_RD_Pos)        /**< (HEMC_HECC_CR13) test mode of ECC protection - read mode Mask */
-#define HEMC_HECC_CR13_TEST_MODE_RD(value)    (HEMC_HECC_CR13_TEST_MODE_RD_Msk & ((value) << HEMC_HECC_CR13_TEST_MODE_RD_Pos))
-#define HEMC_HECC_CR13_TEST_MODE_WR_Pos       _U_(2)                                               /**< (HEMC_HECC_CR13) test mode of ECC protection - write mode Position */
-#define HEMC_HECC_CR13_TEST_MODE_WR_Msk       (_U_(0x1) << HEMC_HECC_CR13_TEST_MODE_WR_Pos)        /**< (HEMC_HECC_CR13) test mode of ECC protection - write mode Mask */
-#define HEMC_HECC_CR13_TEST_MODE_WR(value)    (HEMC_HECC_CR13_TEST_MODE_WR_Msk & ((value) << HEMC_HECC_CR13_TEST_MODE_WR_Pos))
-#define HEMC_HECC_CR13_RST_FIX_CPT_Pos        _U_(4)                                               /**< (HEMC_HECC_CR13) reset the fixable error counter Position */
-#define HEMC_HECC_CR13_RST_FIX_CPT_Msk        (_U_(0x1) << HEMC_HECC_CR13_RST_FIX_CPT_Pos)         /**< (HEMC_HECC_CR13) reset the fixable error counter Mask */
-#define HEMC_HECC_CR13_RST_FIX_CPT(value)     (HEMC_HECC_CR13_RST_FIX_CPT_Msk & ((value) << HEMC_HECC_CR13_RST_FIX_CPT_Pos))
-#define HEMC_HECC_CR13_RST_NOFIX_CPT_Pos      _U_(5)                                               /**< (HEMC_HECC_CR13) reset the un-fixable error counter Position */
-#define HEMC_HECC_CR13_RST_NOFIX_CPT_Msk      (_U_(0x1) << HEMC_HECC_CR13_RST_NOFIX_CPT_Pos)       /**< (HEMC_HECC_CR13) reset the un-fixable error counter Mask */
-#define HEMC_HECC_CR13_RST_NOFIX_CPT(value)   (HEMC_HECC_CR13_RST_NOFIX_CPT_Msk & ((value) << HEMC_HECC_CR13_RST_NOFIX_CPT_Pos))
-#define HEMC_HECC_CR13_ECC12_ENABLE_Pos       _U_(6)                                               /**< (HEMC_HECC_CR13) BCH ECC enable Position */
-#define HEMC_HECC_CR13_ECC12_ENABLE_Msk       (_U_(0x1) << HEMC_HECC_CR13_ECC12_ENABLE_Pos)        /**< (HEMC_HECC_CR13) BCH ECC enable Mask */
-#define HEMC_HECC_CR13_ECC12_ENABLE(value)    (HEMC_HECC_CR13_ECC12_ENABLE_Msk & ((value) << HEMC_HECC_CR13_ECC12_ENABLE_Pos))
-#define HEMC_HECC_CR13_Msk                    _U_(0x00000077)                                      /**< (HEMC_HECC_CR13) Register Mask  */
-
-
-/* -------- HEMC_HECC_CR14 : (HEMC Offset: 0x138) (R/W 32) HECC Control Register (ChannelNumbers = 0) 14 -------- */
-#define HEMC_HECC_CR14_ENABLE_Pos             _U_(0)                                               /**< (HEMC_HECC_CR14) ECC protection enable Position */
-#define HEMC_HECC_CR14_ENABLE_Msk             (_U_(0x1) << HEMC_HECC_CR14_ENABLE_Pos)              /**< (HEMC_HECC_CR14) ECC protection enable Mask */
-#define HEMC_HECC_CR14_ENABLE(value)          (HEMC_HECC_CR14_ENABLE_Msk & ((value) << HEMC_HECC_CR14_ENABLE_Pos))
-#define HEMC_HECC_CR14_TEST_MODE_RD_Pos       _U_(1)                                               /**< (HEMC_HECC_CR14) test mode of ECC protection - read mode Position */
-#define HEMC_HECC_CR14_TEST_MODE_RD_Msk       (_U_(0x1) << HEMC_HECC_CR14_TEST_MODE_RD_Pos)        /**< (HEMC_HECC_CR14) test mode of ECC protection - read mode Mask */
-#define HEMC_HECC_CR14_TEST_MODE_RD(value)    (HEMC_HECC_CR14_TEST_MODE_RD_Msk & ((value) << HEMC_HECC_CR14_TEST_MODE_RD_Pos))
-#define HEMC_HECC_CR14_TEST_MODE_WR_Pos       _U_(2)                                               /**< (HEMC_HECC_CR14) test mode of ECC protection - write mode Position */
-#define HEMC_HECC_CR14_TEST_MODE_WR_Msk       (_U_(0x1) << HEMC_HECC_CR14_TEST_MODE_WR_Pos)        /**< (HEMC_HECC_CR14) test mode of ECC protection - write mode Mask */
-#define HEMC_HECC_CR14_TEST_MODE_WR(value)    (HEMC_HECC_CR14_TEST_MODE_WR_Msk & ((value) << HEMC_HECC_CR14_TEST_MODE_WR_Pos))
-#define HEMC_HECC_CR14_RST_FIX_CPT_Pos        _U_(4)                                               /**< (HEMC_HECC_CR14) reset the fixable error counter Position */
-#define HEMC_HECC_CR14_RST_FIX_CPT_Msk        (_U_(0x1) << HEMC_HECC_CR14_RST_FIX_CPT_Pos)         /**< (HEMC_HECC_CR14) reset the fixable error counter Mask */
-#define HEMC_HECC_CR14_RST_FIX_CPT(value)     (HEMC_HECC_CR14_RST_FIX_CPT_Msk & ((value) << HEMC_HECC_CR14_RST_FIX_CPT_Pos))
-#define HEMC_HECC_CR14_RST_NOFIX_CPT_Pos      _U_(5)                                               /**< (HEMC_HECC_CR14) reset the un-fixable error counter Position */
-#define HEMC_HECC_CR14_RST_NOFIX_CPT_Msk      (_U_(0x1) << HEMC_HECC_CR14_RST_NOFIX_CPT_Pos)       /**< (HEMC_HECC_CR14) reset the un-fixable error counter Mask */
-#define HEMC_HECC_CR14_RST_NOFIX_CPT(value)   (HEMC_HECC_CR14_RST_NOFIX_CPT_Msk & ((value) << HEMC_HECC_CR14_RST_NOFIX_CPT_Pos))
-#define HEMC_HECC_CR14_ECC12_ENABLE_Pos       _U_(6)                                               /**< (HEMC_HECC_CR14) BCH ECC enable Position */
-#define HEMC_HECC_CR14_ECC12_ENABLE_Msk       (_U_(0x1) << HEMC_HECC_CR14_ECC12_ENABLE_Pos)        /**< (HEMC_HECC_CR14) BCH ECC enable Mask */
-#define HEMC_HECC_CR14_ECC12_ENABLE(value)    (HEMC_HECC_CR14_ECC12_ENABLE_Msk & ((value) << HEMC_HECC_CR14_ECC12_ENABLE_Pos))
-#define HEMC_HECC_CR14_Msk                    _U_(0x00000077)                                      /**< (HEMC_HECC_CR14) Register Mask  */
-
-
-/* -------- HEMC_HECC_CR15 : (HEMC Offset: 0x13C) (R/W 32) HECC Control Register (ChannelNumbers = 0) 15 -------- */
-#define HEMC_HECC_CR15_ENABLE_Pos             _U_(0)                                               /**< (HEMC_HECC_CR15) ECC protection enable Position */
-#define HEMC_HECC_CR15_ENABLE_Msk             (_U_(0x1) << HEMC_HECC_CR15_ENABLE_Pos)              /**< (HEMC_HECC_CR15) ECC protection enable Mask */
-#define HEMC_HECC_CR15_ENABLE(value)          (HEMC_HECC_CR15_ENABLE_Msk & ((value) << HEMC_HECC_CR15_ENABLE_Pos))
-#define HEMC_HECC_CR15_TEST_MODE_RD_Pos       _U_(1)                                               /**< (HEMC_HECC_CR15) test mode of ECC protection - read mode Position */
-#define HEMC_HECC_CR15_TEST_MODE_RD_Msk       (_U_(0x1) << HEMC_HECC_CR15_TEST_MODE_RD_Pos)        /**< (HEMC_HECC_CR15) test mode of ECC protection - read mode Mask */
-#define HEMC_HECC_CR15_TEST_MODE_RD(value)    (HEMC_HECC_CR15_TEST_MODE_RD_Msk & ((value) << HEMC_HECC_CR15_TEST_MODE_RD_Pos))
-#define HEMC_HECC_CR15_TEST_MODE_WR_Pos       _U_(2)                                               /**< (HEMC_HECC_CR15) test mode of ECC protection - write mode Position */
-#define HEMC_HECC_CR15_TEST_MODE_WR_Msk       (_U_(0x1) << HEMC_HECC_CR15_TEST_MODE_WR_Pos)        /**< (HEMC_HECC_CR15) test mode of ECC protection - write mode Mask */
-#define HEMC_HECC_CR15_TEST_MODE_WR(value)    (HEMC_HECC_CR15_TEST_MODE_WR_Msk & ((value) << HEMC_HECC_CR15_TEST_MODE_WR_Pos))
-#define HEMC_HECC_CR15_RST_FIX_CPT_Pos        _U_(4)                                               /**< (HEMC_HECC_CR15) reset the fixable error counter Position */
-#define HEMC_HECC_CR15_RST_FIX_CPT_Msk        (_U_(0x1) << HEMC_HECC_CR15_RST_FIX_CPT_Pos)         /**< (HEMC_HECC_CR15) reset the fixable error counter Mask */
-#define HEMC_HECC_CR15_RST_FIX_CPT(value)     (HEMC_HECC_CR15_RST_FIX_CPT_Msk & ((value) << HEMC_HECC_CR15_RST_FIX_CPT_Pos))
-#define HEMC_HECC_CR15_RST_NOFIX_CPT_Pos      _U_(5)                                               /**< (HEMC_HECC_CR15) reset the un-fixable error counter Position */
-#define HEMC_HECC_CR15_RST_NOFIX_CPT_Msk      (_U_(0x1) << HEMC_HECC_CR15_RST_NOFIX_CPT_Pos)       /**< (HEMC_HECC_CR15) reset the un-fixable error counter Mask */
-#define HEMC_HECC_CR15_RST_NOFIX_CPT(value)   (HEMC_HECC_CR15_RST_NOFIX_CPT_Msk & ((value) << HEMC_HECC_CR15_RST_NOFIX_CPT_Pos))
-#define HEMC_HECC_CR15_ECC12_ENABLE_Pos       _U_(6)                                               /**< (HEMC_HECC_CR15) BCH ECC enable Position */
-#define HEMC_HECC_CR15_ECC12_ENABLE_Msk       (_U_(0x1) << HEMC_HECC_CR15_ECC12_ENABLE_Pos)        /**< (HEMC_HECC_CR15) BCH ECC enable Mask */
-#define HEMC_HECC_CR15_ECC12_ENABLE(value)    (HEMC_HECC_CR15_ECC12_ENABLE_Msk & ((value) << HEMC_HECC_CR15_ECC12_ENABLE_Pos))
-#define HEMC_HECC_CR15_Msk                    _U_(0x00000077)                                      /**< (HEMC_HECC_CR15) Register Mask  */
-
-
-/* -------- HEMC_HECC_TESTCB0 : (HEMC Offset: 0x140) (R/W 32) HECC Test mode Register (ChannelNumbers = 0) 0 -------- */
+/* -------- HEMC_HECC_TESTCB0 : (HEMC Offset: 0x140) (R/W 32) HECC Test mode Register Channel 0 (HSMC) -------- */
 #define HEMC_HECC_TESTCB0_TCB1_Pos            _U_(0)                                               /**< (HEMC_HECC_TESTCB0) test check bit (16 bit) Position */
 #define HEMC_HECC_TESTCB0_TCB1_Msk            (_U_(0xFFFF) << HEMC_HECC_TESTCB0_TCB1_Pos)          /**< (HEMC_HECC_TESTCB0) test check bit (16 bit) Mask */
 #define HEMC_HECC_TESTCB0_TCB1(value)         (HEMC_HECC_TESTCB0_TCB1_Msk & ((value) << HEMC_HECC_TESTCB0_TCB1_Pos))
 #define HEMC_HECC_TESTCB0_Msk                 _U_(0x0000FFFF)                                      /**< (HEMC_HECC_TESTCB0) Register Mask  */
 
 
-/* -------- HEMC_HECC_TESTCB1 : (HEMC Offset: 0x144) (R/W 32) HECC Test mode Register (ChannelNumbers = 0) 1 -------- */
+/* -------- HEMC_HECC_TESTCB1 : (HEMC Offset: 0x144) (R/W 32) HECC Test mode Register Channel 1 (HSDRAMC) -------- */
 #define HEMC_HECC_TESTCB1_TCB1_Pos            _U_(0)                                               /**< (HEMC_HECC_TESTCB1) test check bit (16 bit) Position */
 #define HEMC_HECC_TESTCB1_TCB1_Msk            (_U_(0xFFFF) << HEMC_HECC_TESTCB1_TCB1_Pos)          /**< (HEMC_HECC_TESTCB1) test check bit (16 bit) Mask */
 #define HEMC_HECC_TESTCB1_TCB1(value)         (HEMC_HECC_TESTCB1_TCB1_Msk & ((value) << HEMC_HECC_TESTCB1_TCB1_Pos))
 #define HEMC_HECC_TESTCB1_Msk                 _U_(0x0000FFFF)                                      /**< (HEMC_HECC_TESTCB1) Register Mask  */
 
 
-/* -------- HEMC_HECC_TESTCB2 : (HEMC Offset: 0x148) (R/W 32) HECC Test mode Register (ChannelNumbers = 0) 2 -------- */
+/* -------- HEMC_HECC_TESTCB2 : (HEMC Offset: 0x148) (R/W 32) HECC Test mode Register Channel 2 (HSDRAMC) -------- */
 #define HEMC_HECC_TESTCB2_TCB1_Pos            _U_(0)                                               /**< (HEMC_HECC_TESTCB2) test check bit (16 bit) Position */
 #define HEMC_HECC_TESTCB2_TCB1_Msk            (_U_(0xFFFF) << HEMC_HECC_TESTCB2_TCB1_Pos)          /**< (HEMC_HECC_TESTCB2) test check bit (16 bit) Mask */
 #define HEMC_HECC_TESTCB2_TCB1(value)         (HEMC_HECC_TESTCB2_TCB1_Msk & ((value) << HEMC_HECC_TESTCB2_TCB1_Pos))
 #define HEMC_HECC_TESTCB2_Msk                 _U_(0x0000FFFF)                                      /**< (HEMC_HECC_TESTCB2) Register Mask  */
-
-
-/* -------- HEMC_HECC_TESTCB3 : (HEMC Offset: 0x14C) (R/W 32) HECC Test mode Register (ChannelNumbers = 0) 3 -------- */
-#define HEMC_HECC_TESTCB3_TCB1_Pos            _U_(0)                                               /**< (HEMC_HECC_TESTCB3) test check bit (16 bit) Position */
-#define HEMC_HECC_TESTCB3_TCB1_Msk            (_U_(0xFFFF) << HEMC_HECC_TESTCB3_TCB1_Pos)          /**< (HEMC_HECC_TESTCB3) test check bit (16 bit) Mask */
-#define HEMC_HECC_TESTCB3_TCB1(value)         (HEMC_HECC_TESTCB3_TCB1_Msk & ((value) << HEMC_HECC_TESTCB3_TCB1_Pos))
-#define HEMC_HECC_TESTCB3_Msk                 _U_(0x0000FFFF)                                      /**< (HEMC_HECC_TESTCB3) Register Mask  */
-
-
-/* -------- HEMC_HECC_TESTCB4 : (HEMC Offset: 0x150) (R/W 32) HECC Test mode Register (ChannelNumbers = 0) 4 -------- */
-#define HEMC_HECC_TESTCB4_TCB1_Pos            _U_(0)                                               /**< (HEMC_HECC_TESTCB4) test check bit (16 bit) Position */
-#define HEMC_HECC_TESTCB4_TCB1_Msk            (_U_(0xFFFF) << HEMC_HECC_TESTCB4_TCB1_Pos)          /**< (HEMC_HECC_TESTCB4) test check bit (16 bit) Mask */
-#define HEMC_HECC_TESTCB4_TCB1(value)         (HEMC_HECC_TESTCB4_TCB1_Msk & ((value) << HEMC_HECC_TESTCB4_TCB1_Pos))
-#define HEMC_HECC_TESTCB4_Msk                 _U_(0x0000FFFF)                                      /**< (HEMC_HECC_TESTCB4) Register Mask  */
-
-
-/* -------- HEMC_HECC_TESTCB5 : (HEMC Offset: 0x154) (R/W 32) HECC Test mode Register (ChannelNumbers = 0) 5 -------- */
-#define HEMC_HECC_TESTCB5_TCB1_Pos            _U_(0)                                               /**< (HEMC_HECC_TESTCB5) test check bit (16 bit) Position */
-#define HEMC_HECC_TESTCB5_TCB1_Msk            (_U_(0xFFFF) << HEMC_HECC_TESTCB5_TCB1_Pos)          /**< (HEMC_HECC_TESTCB5) test check bit (16 bit) Mask */
-#define HEMC_HECC_TESTCB5_TCB1(value)         (HEMC_HECC_TESTCB5_TCB1_Msk & ((value) << HEMC_HECC_TESTCB5_TCB1_Pos))
-#define HEMC_HECC_TESTCB5_Msk                 _U_(0x0000FFFF)                                      /**< (HEMC_HECC_TESTCB5) Register Mask  */
-
-
-/* -------- HEMC_HECC_TESTCB6 : (HEMC Offset: 0x158) (R/W 32) HECC Test mode Register (ChannelNumbers = 0) 6 -------- */
-#define HEMC_HECC_TESTCB6_TCB1_Pos            _U_(0)                                               /**< (HEMC_HECC_TESTCB6) test check bit (16 bit) Position */
-#define HEMC_HECC_TESTCB6_TCB1_Msk            (_U_(0xFFFF) << HEMC_HECC_TESTCB6_TCB1_Pos)          /**< (HEMC_HECC_TESTCB6) test check bit (16 bit) Mask */
-#define HEMC_HECC_TESTCB6_TCB1(value)         (HEMC_HECC_TESTCB6_TCB1_Msk & ((value) << HEMC_HECC_TESTCB6_TCB1_Pos))
-#define HEMC_HECC_TESTCB6_Msk                 _U_(0x0000FFFF)                                      /**< (HEMC_HECC_TESTCB6) Register Mask  */
-
-
-/* -------- HEMC_HECC_TESTCB7 : (HEMC Offset: 0x15C) (R/W 32) HECC Test mode Register (ChannelNumbers = 0) 7 -------- */
-#define HEMC_HECC_TESTCB7_TCB1_Pos            _U_(0)                                               /**< (HEMC_HECC_TESTCB7) test check bit (16 bit) Position */
-#define HEMC_HECC_TESTCB7_TCB1_Msk            (_U_(0xFFFF) << HEMC_HECC_TESTCB7_TCB1_Pos)          /**< (HEMC_HECC_TESTCB7) test check bit (16 bit) Mask */
-#define HEMC_HECC_TESTCB7_TCB1(value)         (HEMC_HECC_TESTCB7_TCB1_Msk & ((value) << HEMC_HECC_TESTCB7_TCB1_Pos))
-#define HEMC_HECC_TESTCB7_Msk                 _U_(0x0000FFFF)                                      /**< (HEMC_HECC_TESTCB7) Register Mask  */
-
-
-/* -------- HEMC_HECC_TESTCB8 : (HEMC Offset: 0x160) (R/W 32) HECC Test mode Register (ChannelNumbers = 0) 8 -------- */
-#define HEMC_HECC_TESTCB8_TCB1_Pos            _U_(0)                                               /**< (HEMC_HECC_TESTCB8) test check bit (16 bit) Position */
-#define HEMC_HECC_TESTCB8_TCB1_Msk            (_U_(0xFFFF) << HEMC_HECC_TESTCB8_TCB1_Pos)          /**< (HEMC_HECC_TESTCB8) test check bit (16 bit) Mask */
-#define HEMC_HECC_TESTCB8_TCB1(value)         (HEMC_HECC_TESTCB8_TCB1_Msk & ((value) << HEMC_HECC_TESTCB8_TCB1_Pos))
-#define HEMC_HECC_TESTCB8_Msk                 _U_(0x0000FFFF)                                      /**< (HEMC_HECC_TESTCB8) Register Mask  */
-
-
-/* -------- HEMC_HECC_TESTCB9 : (HEMC Offset: 0x164) (R/W 32) HECC Test mode Register (ChannelNumbers = 0) 9 -------- */
-#define HEMC_HECC_TESTCB9_TCB1_Pos            _U_(0)                                               /**< (HEMC_HECC_TESTCB9) test check bit (16 bit) Position */
-#define HEMC_HECC_TESTCB9_TCB1_Msk            (_U_(0xFFFF) << HEMC_HECC_TESTCB9_TCB1_Pos)          /**< (HEMC_HECC_TESTCB9) test check bit (16 bit) Mask */
-#define HEMC_HECC_TESTCB9_TCB1(value)         (HEMC_HECC_TESTCB9_TCB1_Msk & ((value) << HEMC_HECC_TESTCB9_TCB1_Pos))
-#define HEMC_HECC_TESTCB9_Msk                 _U_(0x0000FFFF)                                      /**< (HEMC_HECC_TESTCB9) Register Mask  */
-
-
-/* -------- HEMC_HECC_TESTCB10 : (HEMC Offset: 0x168) (R/W 32) HECC Test mode Register (ChannelNumbers = 0) 10 -------- */
-#define HEMC_HECC_TESTCB10_TCB1_Pos           _U_(0)                                               /**< (HEMC_HECC_TESTCB10) test check bit (16 bit) Position */
-#define HEMC_HECC_TESTCB10_TCB1_Msk           (_U_(0xFFFF) << HEMC_HECC_TESTCB10_TCB1_Pos)         /**< (HEMC_HECC_TESTCB10) test check bit (16 bit) Mask */
-#define HEMC_HECC_TESTCB10_TCB1(value)        (HEMC_HECC_TESTCB10_TCB1_Msk & ((value) << HEMC_HECC_TESTCB10_TCB1_Pos))
-#define HEMC_HECC_TESTCB10_Msk                _U_(0x0000FFFF)                                      /**< (HEMC_HECC_TESTCB10) Register Mask  */
-
-
-/* -------- HEMC_HECC_TESTCB11 : (HEMC Offset: 0x16C) (R/W 32) HECC Test mode Register (ChannelNumbers = 0) 11 -------- */
-#define HEMC_HECC_TESTCB11_TCB1_Pos           _U_(0)                                               /**< (HEMC_HECC_TESTCB11) test check bit (16 bit) Position */
-#define HEMC_HECC_TESTCB11_TCB1_Msk           (_U_(0xFFFF) << HEMC_HECC_TESTCB11_TCB1_Pos)         /**< (HEMC_HECC_TESTCB11) test check bit (16 bit) Mask */
-#define HEMC_HECC_TESTCB11_TCB1(value)        (HEMC_HECC_TESTCB11_TCB1_Msk & ((value) << HEMC_HECC_TESTCB11_TCB1_Pos))
-#define HEMC_HECC_TESTCB11_Msk                _U_(0x0000FFFF)                                      /**< (HEMC_HECC_TESTCB11) Register Mask  */
-
-
-/* -------- HEMC_HECC_TESTCB12 : (HEMC Offset: 0x170) (R/W 32) HECC Test mode Register (ChannelNumbers = 0) 12 -------- */
-#define HEMC_HECC_TESTCB12_TCB1_Pos           _U_(0)                                               /**< (HEMC_HECC_TESTCB12) test check bit (16 bit) Position */
-#define HEMC_HECC_TESTCB12_TCB1_Msk           (_U_(0xFFFF) << HEMC_HECC_TESTCB12_TCB1_Pos)         /**< (HEMC_HECC_TESTCB12) test check bit (16 bit) Mask */
-#define HEMC_HECC_TESTCB12_TCB1(value)        (HEMC_HECC_TESTCB12_TCB1_Msk & ((value) << HEMC_HECC_TESTCB12_TCB1_Pos))
-#define HEMC_HECC_TESTCB12_Msk                _U_(0x0000FFFF)                                      /**< (HEMC_HECC_TESTCB12) Register Mask  */
-
-
-/* -------- HEMC_HECC_TESTCB13 : (HEMC Offset: 0x174) (R/W 32) HECC Test mode Register (ChannelNumbers = 0) 13 -------- */
-#define HEMC_HECC_TESTCB13_TCB1_Pos           _U_(0)                                               /**< (HEMC_HECC_TESTCB13) test check bit (16 bit) Position */
-#define HEMC_HECC_TESTCB13_TCB1_Msk           (_U_(0xFFFF) << HEMC_HECC_TESTCB13_TCB1_Pos)         /**< (HEMC_HECC_TESTCB13) test check bit (16 bit) Mask */
-#define HEMC_HECC_TESTCB13_TCB1(value)        (HEMC_HECC_TESTCB13_TCB1_Msk & ((value) << HEMC_HECC_TESTCB13_TCB1_Pos))
-#define HEMC_HECC_TESTCB13_Msk                _U_(0x0000FFFF)                                      /**< (HEMC_HECC_TESTCB13) Register Mask  */
-
-
-/* -------- HEMC_HECC_TESTCB14 : (HEMC Offset: 0x178) (R/W 32) HECC Test mode Register (ChannelNumbers = 0) 14 -------- */
-#define HEMC_HECC_TESTCB14_TCB1_Pos           _U_(0)                                               /**< (HEMC_HECC_TESTCB14) test check bit (16 bit) Position */
-#define HEMC_HECC_TESTCB14_TCB1_Msk           (_U_(0xFFFF) << HEMC_HECC_TESTCB14_TCB1_Pos)         /**< (HEMC_HECC_TESTCB14) test check bit (16 bit) Mask */
-#define HEMC_HECC_TESTCB14_TCB1(value)        (HEMC_HECC_TESTCB14_TCB1_Msk & ((value) << HEMC_HECC_TESTCB14_TCB1_Pos))
-#define HEMC_HECC_TESTCB14_Msk                _U_(0x0000FFFF)                                      /**< (HEMC_HECC_TESTCB14) Register Mask  */
-
-
-/* -------- HEMC_HECC_TESTCB15 : (HEMC Offset: 0x17C) (R/W 32) HECC Test mode Register (ChannelNumbers = 0) 15 -------- */
-#define HEMC_HECC_TESTCB15_TCB1_Pos           _U_(0)                                               /**< (HEMC_HECC_TESTCB15) test check bit (16 bit) Position */
-#define HEMC_HECC_TESTCB15_TCB1_Msk           (_U_(0xFFFF) << HEMC_HECC_TESTCB15_TCB1_Pos)         /**< (HEMC_HECC_TESTCB15) test check bit (16 bit) Mask */
-#define HEMC_HECC_TESTCB15_TCB1(value)        (HEMC_HECC_TESTCB15_TCB1_Msk & ((value) << HEMC_HECC_TESTCB15_TCB1_Pos))
-#define HEMC_HECC_TESTCB15_Msk                _U_(0x0000FFFF)                                      /**< (HEMC_HECC_TESTCB15) Register Mask  */
 
 
 /* -------- HEMC_HECC_SR : (HEMC Offset: 0x180) ( R/ 32) HECC Status Register -------- */
@@ -1125,38 +787,12 @@
 #define HEMC_IMR_REG_OFST              (0x40)              /**< (HEMC_IMR) HEMC Interrupt Mask Register Offset */
 #define HEMC_ISR_REG_OFST              (0x44)              /**< (HEMC_ISR) HEMC Interrupt Status Register Offset */
 #define HEMC_SR_REG_OFST               (0x48)              /**< (HEMC_SR) HEMC Status Register Offset */
-#define HEMC_HECC_CR0_REG_OFST         (0x100)             /**< (HEMC_HECC_CR0) HECC Control Register (ChannelNumbers = 0) 0 Offset */
-#define HEMC_HECC_CR1_REG_OFST         (0x104)             /**< (HEMC_HECC_CR1) HECC Control Register (ChannelNumbers = 0) 1 Offset */
-#define HEMC_HECC_CR2_REG_OFST         (0x108)             /**< (HEMC_HECC_CR2) HECC Control Register (ChannelNumbers = 0) 2 Offset */
-#define HEMC_HECC_CR3_REG_OFST         (0x10C)             /**< (HEMC_HECC_CR3) HECC Control Register (ChannelNumbers = 0) 3 Offset */
-#define HEMC_HECC_CR4_REG_OFST         (0x110)             /**< (HEMC_HECC_CR4) HECC Control Register (ChannelNumbers = 0) 4 Offset */
-#define HEMC_HECC_CR5_REG_OFST         (0x114)             /**< (HEMC_HECC_CR5) HECC Control Register (ChannelNumbers = 0) 5 Offset */
-#define HEMC_HECC_CR6_REG_OFST         (0x118)             /**< (HEMC_HECC_CR6) HECC Control Register (ChannelNumbers = 0) 6 Offset */
-#define HEMC_HECC_CR7_REG_OFST         (0x11C)             /**< (HEMC_HECC_CR7) HECC Control Register (ChannelNumbers = 0) 7 Offset */
-#define HEMC_HECC_CR8_REG_OFST         (0x120)             /**< (HEMC_HECC_CR8) HECC Control Register (ChannelNumbers = 0) 8 Offset */
-#define HEMC_HECC_CR9_REG_OFST         (0x124)             /**< (HEMC_HECC_CR9) HECC Control Register (ChannelNumbers = 0) 9 Offset */
-#define HEMC_HECC_CR10_REG_OFST        (0x128)             /**< (HEMC_HECC_CR10) HECC Control Register (ChannelNumbers = 0) 10 Offset */
-#define HEMC_HECC_CR11_REG_OFST        (0x12C)             /**< (HEMC_HECC_CR11) HECC Control Register (ChannelNumbers = 0) 11 Offset */
-#define HEMC_HECC_CR12_REG_OFST        (0x130)             /**< (HEMC_HECC_CR12) HECC Control Register (ChannelNumbers = 0) 12 Offset */
-#define HEMC_HECC_CR13_REG_OFST        (0x134)             /**< (HEMC_HECC_CR13) HECC Control Register (ChannelNumbers = 0) 13 Offset */
-#define HEMC_HECC_CR14_REG_OFST        (0x138)             /**< (HEMC_HECC_CR14) HECC Control Register (ChannelNumbers = 0) 14 Offset */
-#define HEMC_HECC_CR15_REG_OFST        (0x13C)             /**< (HEMC_HECC_CR15) HECC Control Register (ChannelNumbers = 0) 15 Offset */
-#define HEMC_HECC_TESTCB0_REG_OFST     (0x140)             /**< (HEMC_HECC_TESTCB0) HECC Test mode Register (ChannelNumbers = 0) 0 Offset */
-#define HEMC_HECC_TESTCB1_REG_OFST     (0x144)             /**< (HEMC_HECC_TESTCB1) HECC Test mode Register (ChannelNumbers = 0) 1 Offset */
-#define HEMC_HECC_TESTCB2_REG_OFST     (0x148)             /**< (HEMC_HECC_TESTCB2) HECC Test mode Register (ChannelNumbers = 0) 2 Offset */
-#define HEMC_HECC_TESTCB3_REG_OFST     (0x14C)             /**< (HEMC_HECC_TESTCB3) HECC Test mode Register (ChannelNumbers = 0) 3 Offset */
-#define HEMC_HECC_TESTCB4_REG_OFST     (0x150)             /**< (HEMC_HECC_TESTCB4) HECC Test mode Register (ChannelNumbers = 0) 4 Offset */
-#define HEMC_HECC_TESTCB5_REG_OFST     (0x154)             /**< (HEMC_HECC_TESTCB5) HECC Test mode Register (ChannelNumbers = 0) 5 Offset */
-#define HEMC_HECC_TESTCB6_REG_OFST     (0x158)             /**< (HEMC_HECC_TESTCB6) HECC Test mode Register (ChannelNumbers = 0) 6 Offset */
-#define HEMC_HECC_TESTCB7_REG_OFST     (0x15C)             /**< (HEMC_HECC_TESTCB7) HECC Test mode Register (ChannelNumbers = 0) 7 Offset */
-#define HEMC_HECC_TESTCB8_REG_OFST     (0x160)             /**< (HEMC_HECC_TESTCB8) HECC Test mode Register (ChannelNumbers = 0) 8 Offset */
-#define HEMC_HECC_TESTCB9_REG_OFST     (0x164)             /**< (HEMC_HECC_TESTCB9) HECC Test mode Register (ChannelNumbers = 0) 9 Offset */
-#define HEMC_HECC_TESTCB10_REG_OFST    (0x168)             /**< (HEMC_HECC_TESTCB10) HECC Test mode Register (ChannelNumbers = 0) 10 Offset */
-#define HEMC_HECC_TESTCB11_REG_OFST    (0x16C)             /**< (HEMC_HECC_TESTCB11) HECC Test mode Register (ChannelNumbers = 0) 11 Offset */
-#define HEMC_HECC_TESTCB12_REG_OFST    (0x170)             /**< (HEMC_HECC_TESTCB12) HECC Test mode Register (ChannelNumbers = 0) 12 Offset */
-#define HEMC_HECC_TESTCB13_REG_OFST    (0x174)             /**< (HEMC_HECC_TESTCB13) HECC Test mode Register (ChannelNumbers = 0) 13 Offset */
-#define HEMC_HECC_TESTCB14_REG_OFST    (0x178)             /**< (HEMC_HECC_TESTCB14) HECC Test mode Register (ChannelNumbers = 0) 14 Offset */
-#define HEMC_HECC_TESTCB15_REG_OFST    (0x17C)             /**< (HEMC_HECC_TESTCB15) HECC Test mode Register (ChannelNumbers = 0) 15 Offset */
+#define HEMC_HECC_CR0_REG_OFST         (0x100)             /**< (HEMC_HECC_CR0) HECC Control Register Channel 0 (HSMC) Offset */
+#define HEMC_HECC_CR1_REG_OFST         (0x104)             /**< (HEMC_HECC_CR1) HECC Control Register Channel 1 (HSDRAMC) Offset */
+#define HEMC_HECC_CR2_REG_OFST         (0x108)             /**< (HEMC_HECC_CR2) HECC Control Register Channel 2 (HSDRAMC) Offset */
+#define HEMC_HECC_TESTCB0_REG_OFST     (0x140)             /**< (HEMC_HECC_TESTCB0) HECC Test mode Register Channel 0 (HSMC) Offset */
+#define HEMC_HECC_TESTCB1_REG_OFST     (0x144)             /**< (HEMC_HECC_TESTCB1) HECC Test mode Register Channel 1 (HSDRAMC) Offset */
+#define HEMC_HECC_TESTCB2_REG_OFST     (0x148)             /**< (HEMC_HECC_TESTCB2) HECC Test mode Register Channel 2 (HSDRAMC) Offset */
 #define HEMC_HECC_SR_REG_OFST          (0x180)             /**< (HEMC_HECC_SR) HECC Status Register Offset */
 #define HEMC_HECC_IER_REG_OFST         (0x184)             /**< (HEMC_HECC_IER) HECC Interrupt Enable Register Offset */
 #define HEMC_HECC_IDR_REG_OFST         (0x188)             /**< (HEMC_HECC_IDR) HECC Interrupt Disable Register Offset */
@@ -1187,38 +823,14 @@ typedef struct
   __I   uint32_t                       HEMC_ISR;           /**< Offset: 0x44 (R/   32) HEMC Interrupt Status Register */
   __I   uint32_t                       HEMC_SR;            /**< Offset: 0x48 (R/   32) HEMC Status Register */
   __I   uint8_t                        Reserved2[0xB4];
-  __IO  uint32_t                       HEMC_HECC_CR0;      /**< Offset: 0x100 (R/W  32) HECC Control Register (ChannelNumbers = 0) 0 */
-  __IO  uint32_t                       HEMC_HECC_CR1;      /**< Offset: 0x104 (R/W  32) HECC Control Register (ChannelNumbers = 0) 1 */
-  __IO  uint32_t                       HEMC_HECC_CR2;      /**< Offset: 0x108 (R/W  32) HECC Control Register (ChannelNumbers = 0) 2 */
-  __IO  uint32_t                       HEMC_HECC_CR3;      /**< Offset: 0x10C (R/W  32) HECC Control Register (ChannelNumbers = 0) 3 */
-  __IO  uint32_t                       HEMC_HECC_CR4;      /**< Offset: 0x110 (R/W  32) HECC Control Register (ChannelNumbers = 0) 4 */
-  __IO  uint32_t                       HEMC_HECC_CR5;      /**< Offset: 0x114 (R/W  32) HECC Control Register (ChannelNumbers = 0) 5 */
-  __IO  uint32_t                       HEMC_HECC_CR6;      /**< Offset: 0x118 (R/W  32) HECC Control Register (ChannelNumbers = 0) 6 */
-  __IO  uint32_t                       HEMC_HECC_CR7;      /**< Offset: 0x11C (R/W  32) HECC Control Register (ChannelNumbers = 0) 7 */
-  __IO  uint32_t                       HEMC_HECC_CR8;      /**< Offset: 0x120 (R/W  32) HECC Control Register (ChannelNumbers = 0) 8 */
-  __IO  uint32_t                       HEMC_HECC_CR9;      /**< Offset: 0x124 (R/W  32) HECC Control Register (ChannelNumbers = 0) 9 */
-  __IO  uint32_t                       HEMC_HECC_CR10;     /**< Offset: 0x128 (R/W  32) HECC Control Register (ChannelNumbers = 0) 10 */
-  __IO  uint32_t                       HEMC_HECC_CR11;     /**< Offset: 0x12C (R/W  32) HECC Control Register (ChannelNumbers = 0) 11 */
-  __IO  uint32_t                       HEMC_HECC_CR12;     /**< Offset: 0x130 (R/W  32) HECC Control Register (ChannelNumbers = 0) 12 */
-  __IO  uint32_t                       HEMC_HECC_CR13;     /**< Offset: 0x134 (R/W  32) HECC Control Register (ChannelNumbers = 0) 13 */
-  __IO  uint32_t                       HEMC_HECC_CR14;     /**< Offset: 0x138 (R/W  32) HECC Control Register (ChannelNumbers = 0) 14 */
-  __IO  uint32_t                       HEMC_HECC_CR15;     /**< Offset: 0x13C (R/W  32) HECC Control Register (ChannelNumbers = 0) 15 */
-  __IO  uint32_t                       HEMC_HECC_TESTCB0;  /**< Offset: 0x140 (R/W  32) HECC Test mode Register (ChannelNumbers = 0) 0 */
-  __IO  uint32_t                       HEMC_HECC_TESTCB1;  /**< Offset: 0x144 (R/W  32) HECC Test mode Register (ChannelNumbers = 0) 1 */
-  __IO  uint32_t                       HEMC_HECC_TESTCB2;  /**< Offset: 0x148 (R/W  32) HECC Test mode Register (ChannelNumbers = 0) 2 */
-  __IO  uint32_t                       HEMC_HECC_TESTCB3;  /**< Offset: 0x14C (R/W  32) HECC Test mode Register (ChannelNumbers = 0) 3 */
-  __IO  uint32_t                       HEMC_HECC_TESTCB4;  /**< Offset: 0x150 (R/W  32) HECC Test mode Register (ChannelNumbers = 0) 4 */
-  __IO  uint32_t                       HEMC_HECC_TESTCB5;  /**< Offset: 0x154 (R/W  32) HECC Test mode Register (ChannelNumbers = 0) 5 */
-  __IO  uint32_t                       HEMC_HECC_TESTCB6;  /**< Offset: 0x158 (R/W  32) HECC Test mode Register (ChannelNumbers = 0) 6 */
-  __IO  uint32_t                       HEMC_HECC_TESTCB7;  /**< Offset: 0x15C (R/W  32) HECC Test mode Register (ChannelNumbers = 0) 7 */
-  __IO  uint32_t                       HEMC_HECC_TESTCB8;  /**< Offset: 0x160 (R/W  32) HECC Test mode Register (ChannelNumbers = 0) 8 */
-  __IO  uint32_t                       HEMC_HECC_TESTCB9;  /**< Offset: 0x164 (R/W  32) HECC Test mode Register (ChannelNumbers = 0) 9 */
-  __IO  uint32_t                       HEMC_HECC_TESTCB10; /**< Offset: 0x168 (R/W  32) HECC Test mode Register (ChannelNumbers = 0) 10 */
-  __IO  uint32_t                       HEMC_HECC_TESTCB11; /**< Offset: 0x16C (R/W  32) HECC Test mode Register (ChannelNumbers = 0) 11 */
-  __IO  uint32_t                       HEMC_HECC_TESTCB12; /**< Offset: 0x170 (R/W  32) HECC Test mode Register (ChannelNumbers = 0) 12 */
-  __IO  uint32_t                       HEMC_HECC_TESTCB13; /**< Offset: 0x174 (R/W  32) HECC Test mode Register (ChannelNumbers = 0) 13 */
-  __IO  uint32_t                       HEMC_HECC_TESTCB14; /**< Offset: 0x178 (R/W  32) HECC Test mode Register (ChannelNumbers = 0) 14 */
-  __IO  uint32_t                       HEMC_HECC_TESTCB15; /**< Offset: 0x17C (R/W  32) HECC Test mode Register (ChannelNumbers = 0) 15 */
+  __IO  uint32_t                       HEMC_HECC_CR0;      /**< Offset: 0x100 (R/W  32) HECC Control Register Channel 0 (HSMC) */
+  __IO  uint32_t                       HEMC_HECC_CR1;      /**< Offset: 0x104 (R/W  32) HECC Control Register Channel 1 (HSDRAMC) */
+  __IO  uint32_t                       HEMC_HECC_CR2;      /**< Offset: 0x108 (R/W  32) HECC Control Register Channel 2 (HSDRAMC) */
+  __I   uint8_t                        Reserved3[0x34];
+  __IO  uint32_t                       HEMC_HECC_TESTCB0;  /**< Offset: 0x140 (R/W  32) HECC Test mode Register Channel 0 (HSMC) */
+  __IO  uint32_t                       HEMC_HECC_TESTCB1;  /**< Offset: 0x144 (R/W  32) HECC Test mode Register Channel 1 (HSDRAMC) */
+  __IO  uint32_t                       HEMC_HECC_TESTCB2;  /**< Offset: 0x148 (R/W  32) HECC Test mode Register Channel 2 (HSDRAMC) */
+  __I   uint8_t                        Reserved4[0x34];
   __I   uint32_t                       HEMC_HECC_SR;       /**< Offset: 0x180 (R/   32) HECC Status Register */
   __O   uint32_t                       HEMC_HECC_IER;      /**< Offset: 0x184 ( /W  32) HECC Interrupt Enable Register */
   __O   uint32_t                       HEMC_HECC_IDR;      /**< Offset: 0x188 ( /W  32) HECC Interrupt Disable Register */
