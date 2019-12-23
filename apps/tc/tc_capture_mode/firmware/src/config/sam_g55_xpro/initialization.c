@@ -106,6 +106,8 @@ void SYS_Initialize ( void* data )
 
     CLOCK_Initialize();
 
+
+
     FLEXCOM7_USART_Initialize();
 
 	SYSTICK_TimerInitialize();
