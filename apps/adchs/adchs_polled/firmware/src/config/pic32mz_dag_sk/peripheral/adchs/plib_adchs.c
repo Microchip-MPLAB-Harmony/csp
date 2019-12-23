@@ -51,7 +51,6 @@
 // *****************************************************************************
 
 
-
 void ADCHS_Initialize()
 {
     ADCCON1bits.ON = 0;
@@ -84,7 +83,7 @@ void ADCHS_Initialize()
 
     /* Input scan */
     ADCCSS1 = 0x0;
-    ADCCSS2 = 0x0;
+    ADCCSS2 = 0x0; 
 
     /* Turn ON ADC */
     ADCCON1bits.ON = 1;
@@ -180,7 +179,7 @@ void ADCHS_ChannelConversionStart(ADCHS_CHANNEL_NUM channel)
 /*Check if conversion result is available */
 bool ADCHS_ChannelResultIsReady(ADCHS_CHANNEL_NUM channel)
 {
-    bool status;
+    bool status = false;
     if (channel < ADCHS_CHANNEL_32)
     {
         status = (ADCDSTAT1 >> channel) & 0x01;
@@ -196,6 +195,7 @@ bool ADCHS_ChannelResultIsReady(ADCHS_CHANNEL_NUM channel)
 uint16_t ADCHS_ChannelResultGet(ADCHS_CHANNEL_NUM channel)
 {
     return (*((&ADCDATA0) + channel));
+
 }
 
 
