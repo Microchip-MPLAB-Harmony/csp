@@ -939,12 +939,12 @@
       <Symbols dnOrder="0">
         <Integer dnOrder="0" id="BRG_VALUE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="uart1" value="216"/>
+            <Dynamic dnOrder="0" id="uart1" value="53"/>
           </Values>
         </Integer>
         <KeyValueSet dnOrder="1" id="UART_BRGH">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="uart1" value="0"/>
+            <Dynamic dnOrder="0" id="uart1" value="1"/>
           </Values>
         </KeyValueSet>
         <Integer dnOrder="2" id="UART_CLOCK_FREQ">
@@ -954,7 +954,7 @@
         </Integer>
         <Hex dnOrder="3" id="UMODE_VALUE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="uart1" value="8"/>
+            <Dynamic dnOrder="0" id="uart1" value="0"/>
           </Values>
         </Hex>
         <Boolean dnOrder="4" id="USART_INTERRUPT_MODE">
