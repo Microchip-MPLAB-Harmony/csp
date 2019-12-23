@@ -70,7 +70,7 @@
 #define NVMCTRL_RWWEEPROM_START_ADDRESS    (0x00400000U)
 #define NVMCTRL_RWWEEPROM_SIZE             (0x2000U)
 #define NVMCTRL_RWWEEPROM_PAGESIZE         (64U)
-#define NVMCTRL_RWWEEPROM_ROWSIZE          (0U)
+#define NVMCTRL_RWWEEPROM_ROWSIZE          (256U)
 
 
 typedef enum
