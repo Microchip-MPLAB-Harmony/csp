@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-06-28T15:51:57Z */
+/* file generated from device description version 2019-11-25T07:00:47Z */
 #ifndef _SAMD11_EVSYS_COMPONENT_H_
 #define _SAMD11_EVSYS_COMPONENT_H_
 
