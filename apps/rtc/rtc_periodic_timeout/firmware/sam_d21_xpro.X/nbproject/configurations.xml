@@ -2,32 +2,25 @@
 <configurationDescriptor version="65">
   <logicalFolder displayName="root" name="root" projectFiles="true">
     <logicalFolder displayName="Header Files" name="f1" projectFiles="true">
-      <logicalFolder displayName="config" name="f1" projectFiles="true">
-        <logicalFolder displayName="sam_d21_xpro" name="f1" projectFiles="true">
-          <logicalFolder displayName="peripheral" name="f1" projectFiles="true">
-            <logicalFolder displayName="nvmctrl" name="f1" projectFiles="true">
-              <itemPath>../src/config/sam_d21_xpro/peripheral/nvmctrl/plib_nvmctrl.h</itemPath>
-            </logicalFolder>
-            <logicalFolder displayName="port" name="f2" projectFiles="true">
-              <itemPath>../src/config/sam_d21_xpro/peripheral/port/plib_port.h</itemPath>
-            </logicalFolder>
-            <logicalFolder displayName="clock" name="f3" projectFiles="true">
-              <itemPath>../src/config/sam_d21_xpro/peripheral/clock/plib_clock.h</itemPath>
-            </logicalFolder>
-            <logicalFolder displayName="nvic" name="f4" projectFiles="true">
-              <itemPath>../src/config/sam_d21_xpro/peripheral/nvic/plib_nvic.h</itemPath>
-            </logicalFolder>
-            <logicalFolder displayName="rtc" name="f5" projectFiles="true">
-              <itemPath>../src/config/sam_d21_xpro/peripheral/rtc/plib_rtc.h</itemPath>
+      <logicalFolder displayName="packs" name="f1" projectFiles="true">
+        <logicalFolder displayName="CMSIS" name="f1" projectFiles="true">
+          <logicalFolder displayName="CMSIS" name="f1" projectFiles="true">
+            <logicalFolder displayName="Core" name="f1" projectFiles="true">
+              <logicalFolder displayName="Include" name="f1" projectFiles="true">
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armcc.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang_ltm.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_version.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_compiler.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_iccarm.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_gcc.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/core_cm0plus.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/mpu_armv7.h</itemPath>
+              </logicalFolder>
             </logicalFolder>
           </logicalFolder>
-          <itemPath>../src/config/sam_d21_xpro/device_cache.h</itemPath>
-          <itemPath>../src/config/sam_d21_xpro/toolchain_specifics.h</itemPath>
-          <itemPath>../src/config/sam_d21_xpro/definitions.h</itemPath>
         </logicalFolder>
-      </logicalFolder>
-      <logicalFolder displayName="packs" name="f2" projectFiles="true">
-        <logicalFolder displayName="ATSAMD21J18A_DFP" name="f1" projectFiles="true">
+        <logicalFolder displayName="ATSAMD21J18A_DFP" name="f2" projectFiles="true">
           <logicalFolder displayName="component" name="f1" projectFiles="true">
             <itemPath>../src/packs/ATSAMD21J18A_DFP/component/ac.h</itemPath>
             <itemPath>../src/packs/ATSAMD21J18A_DFP/component/adc.h</itemPath>
@@ -59,30 +52,29 @@
           <itemPath>../src/packs/ATSAMD21J18A_DFP/device.h</itemPath>
           <itemPath>../src/packs/ATSAMD21J18A_DFP/atsamd21j18a.h</itemPath>
         </logicalFolder>
-        <logicalFolder displayName="CMSIS" name="f2" projectFiles="true">
-          <logicalFolder displayName="CMSIS" name="f1" projectFiles="true">
-            <logicalFolder displayName="Core" name="f1" projectFiles="true">
-              <logicalFolder displayName="Include" name="f1" projectFiles="true">
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_compiler.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_iccarm.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_gcc.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armcc.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang_ltm.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/tz_context.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/core_cm0plus.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/mpu_armv7.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_version.h</itemPath>
-              </logicalFolder>
+      </logicalFolder>
+      <logicalFolder displayName="config" name="f2" projectFiles="true">
+        <logicalFolder displayName="sam_d21_xpro" name="f1" projectFiles="true">
+          <logicalFolder displayName="peripheral" name="f1" projectFiles="true">
+            <logicalFolder displayName="nvmctrl" name="f1" projectFiles="true">
+              <itemPath>../src/config/sam_d21_xpro/peripheral/nvmctrl/plib_nvmctrl.h</itemPath>
             </logicalFolder>
-            <logicalFolder displayName="DSP" name="f2" projectFiles="true">
-              <logicalFolder displayName="Include" name="f1" projectFiles="true">
-                <itemPath>../src/packs/CMSIS/CMSIS/DSP/Include/arm_common_tables.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/DSP/Include/arm_const_structs.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/DSP/Include/arm_math.h</itemPath>
-              </logicalFolder>
+            <logicalFolder displayName="port" name="f2" projectFiles="true">
+              <itemPath>../src/config/sam_d21_xpro/peripheral/port/plib_port.h</itemPath>
+            </logicalFolder>
+            <logicalFolder displayName="clock" name="f3" projectFiles="true">
+              <itemPath>../src/config/sam_d21_xpro/peripheral/clock/plib_clock.h</itemPath>
+            </logicalFolder>
+            <logicalFolder displayName="nvic" name="f4" projectFiles="true">
+              <itemPath>../src/config/sam_d21_xpro/peripheral/nvic/plib_nvic.h</itemPath>
+            </logicalFolder>
+            <logicalFolder displayName="rtc" name="f5" projectFiles="true">
+              <itemPath>../src/config/sam_d21_xpro/peripheral/rtc/plib_rtc.h</itemPath>
             </logicalFolder>
           </logicalFolder>
+          <itemPath>../src/config/sam_d21_xpro/device_cache.h</itemPath>
+          <itemPath>../src/config/sam_d21_xpro/toolchain_specifics.h</itemPath>
+          <itemPath>../src/config/sam_d21_xpro/definitions.h</itemPath>
         </logicalFolder>
       </logicalFolder>
     </logicalFolder>
