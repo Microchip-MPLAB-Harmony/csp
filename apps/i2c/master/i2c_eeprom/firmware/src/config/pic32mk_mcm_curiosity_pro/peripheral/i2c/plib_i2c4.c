@@ -57,6 +57,7 @@
 // *****************************************************************************
 // *****************************************************************************
 
+
 static I2C_OBJ i2c4Obj;
 
 void I2C4_Initialize(void)
@@ -73,13 +74,11 @@ void I2C4_Initialize(void)
     I2C4CONCLR = _I2C4CON_DISSLW_MASK;
     I2C4CONCLR = _I2C4CON_SMEN_MASK;
 
-    /* Initialize master interrupt */
+    /* Clear master interrupt flag */
     IFS6CLR = _IFS6_I2C4MIF_MASK;
-    IEC6SET = _IEC6_I2C4MIE_MASK;
 
-    /* Initialize fault interrupt */
+    /* Clear fault interrupt flag */
     IFS6CLR = _IFS6_I2C4BIF_MASK;
-    IEC6SET = _IEC6_I2C4BIE_MASK;
 
     /* Turn on the I2C module */
     I2C4CONSET = _I2C4CON_ON_MASK;
@@ -91,13 +90,18 @@ void I2C4_Initialize(void)
 /* I2C state machine */
 static void I2C4_TransferSM(void)
 {
+    IFS6CLR = _IFS6_I2C4MIF_MASK;
+
     switch (i2c4Obj.state)
     {
         case I2C_STATE_START_CONDITION:
             /* Generate Start Condition */
             I2C4CONSET = _I2C4CON_SEN_MASK;
+            IEC6SET = _IEC6_I2C4MIE_MASK;
+            IEC6SET = _IEC6_I2C4BIE_MASK;
             i2c4Obj.state = I2C_STATE_ADDR_BYTE_1_SEND;
             break;
+
         case I2C_STATE_ADDR_BYTE_1_SEND:
             /* Is transmit buffer full? */
             if (!(I2C4STAT & _I2C4STAT_TBF_MASK))
@@ -125,6 +129,7 @@ static void I2C4_TransferSM(void)
                 }
             }
             break;
+
         case I2C_STATE_ADDR_BYTE_2_SEND:
             /* Transmit the 2nd byte of the 10-bit slave address */
             if (!(I2C4STAT & _I2C4STAT_ACKSTAT_MASK))
@@ -152,7 +157,7 @@ static void I2C4_TransferSM(void)
                 i2c4Obj.state = I2C_STATE_WAIT_STOP_CONDITION_COMPLETE;
             }
             break;
-            
+
         case I2C_STATE_READ_10BIT_MODE:
             if (!(I2C4STAT & _I2C4STAT_ACKSTAT_MASK))
             {
@@ -168,6 +173,7 @@ static void I2C4_TransferSM(void)
                 i2c4Obj.state = I2C_STATE_WAIT_STOP_CONDITION_COMPLETE;
             }
             break;
+
         case I2C_STATE_ADDR_BYTE_1_SEND_10BIT_ONLY:
             /* Is transmit buffer full? */
             if (!(I2C4STAT & _I2C4STAT_TBF_MASK))
@@ -184,6 +190,7 @@ static void I2C4_TransferSM(void)
                 i2c4Obj.state = I2C_STATE_WAIT_STOP_CONDITION_COMPLETE;
             }
             break;
+
         case I2C_STATE_WRITE:
             if (!(I2C4STAT & _I2C4STAT_ACKSTAT_MASK))
             {
@@ -233,6 +240,7 @@ static void I2C4_TransferSM(void)
                 i2c4Obj.state = I2C_STATE_WAIT_STOP_CONDITION_COMPLETE;
             }
             break;
+
         case I2C_STATE_READ:
             if (!(I2C4STAT & _I2C4STAT_ACKSTAT_MASK))
             {
@@ -288,6 +296,8 @@ static void I2C4_TransferSM(void)
 
         case I2C_STATE_WAIT_STOP_CONDITION_COMPLETE:
             i2c4Obj.state = I2C_STATE_IDLE;
+            IEC6CLR = _IEC6_I2C4MIE_MASK;
+            IEC6CLR = _IEC6_I2C4BIE_MASK;
             if (i2c4Obj.callback != NULL)
             {
                 i2c4Obj.callback(i2c4Obj.context);
@@ -297,7 +307,6 @@ static void I2C4_TransferSM(void)
         default:
             break;
     }
-    IFS6CLR = _IFS6_I2C4MIF_MASK;
 }
 
 
@@ -342,8 +351,11 @@ bool I2C4_Read(uint16_t address, uint8_t* rdata, size_t rlength)
     i2c4Obj.readCount           = 0;
     i2c4Obj.transferType        = I2C_TRANSFER_TYPE_READ;
     i2c4Obj.error               = I2C_ERROR_NONE;
-    i2c4Obj.state               = I2C_STATE_START_CONDITION;
-    I2C4_TransferSM();
+    i2c4Obj.state               = I2C_STATE_ADDR_BYTE_1_SEND;
+
+    I2C4CONSET                  = _I2C4CON_SEN_MASK;
+    IEC6SET                     = _IEC6_I2C4MIE_MASK;
+    IEC6SET                     = _IEC6_I2C4BIE_MASK;
 
     return true;
 }
@@ -366,9 +378,11 @@ bool I2C4_Write(uint16_t address, uint8_t* wdata, size_t wlength)
     i2c4Obj.readCount           = 0;
     i2c4Obj.transferType        = I2C_TRANSFER_TYPE_WRITE;
     i2c4Obj.error               = I2C_ERROR_NONE;
-    i2c4Obj.state               = I2C_STATE_START_CONDITION;
+    i2c4Obj.state               = I2C_STATE_ADDR_BYTE_1_SEND;
 
-    I2C4_TransferSM();
+    I2C4CONSET                  = _I2C4CON_SEN_MASK;
+    IEC6SET                     = _IEC6_I2C4MIE_MASK;
+    IEC6SET                     = _IEC6_I2C4BIE_MASK;
 
     return true;
 }
@@ -391,8 +405,11 @@ bool I2C4_WriteRead(uint16_t address, uint8_t* wdata, size_t wlength, uint8_t* r
     i2c4Obj.readCount           = 0;
     i2c4Obj.transferType        = I2C_TRANSFER_TYPE_WRITE;
     i2c4Obj.error               = I2C_ERROR_NONE;
-    i2c4Obj.state               = I2C_STATE_START_CONDITION;
-    I2C4_TransferSM();
+    i2c4Obj.state               = I2C_STATE_ADDR_BYTE_1_SEND;
+
+    I2C4CONSET                  = _I2C4CON_SEN_MASK;
+    IEC6SET                     = _IEC6_I2C4MIE_MASK;
+    IEC6SET                     = _IEC6_I2C4BIE_MASK;
 
     return true;
 }
@@ -430,15 +447,26 @@ bool I2C4_TransferSetup(I2C_TRANSFER_SETUP* setup, uint32_t srcClkFreq )
         srcClkFreq = 60000000UL;
     }
 
-    baudValue = ((1.0/(2*i2cClkSpeed) - 104e-9)*(float)srcClkFreq) - 2;
+    baudValue = ((float)((float)srcClkFreq/2.0) * (1/(float)i2cClkSpeed - 0.000000130)) - 1;
 
-    /* I2CxBRG value cannot be 0 or 1 */
-    if ((baudValue == 0) || (baudValue == 1))
+    /* I2CxBRG value cannot be from 0 to 3 or more than the size of the baud rate register */
+    if ((baudValue < 4) || (baudValue > 65535))
     {
         return false;
     }
 
     I2C4BRG = baudValue;
+
+    /* Enable slew rate for 400 kHz clock speed; disable for all other speeds */
+
+    if (i2cClkSpeed == 400000)
+    {
+        I2C4CONCLR = _I2C4CON_DISSLW_MASK;;
+    }
+    else
+    {
+        I2C4CONSET = _I2C4CON_DISSLW_MASK;;
+    }
 
     return true;
 }
