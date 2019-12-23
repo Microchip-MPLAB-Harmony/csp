@@ -83,9 +83,12 @@ void WDT_Disable( void )
 
 void WDT_Clear( void )
 {
-    /* Clear WDT and reset the WDT timer before the
-       timeout occurs */
-    WDT_REGS->WDT_CLEAR = WDT_CLEAR_CLEAR_KEY;
+    if ((WDT_REGS->WDT_SYNCBUSY & WDT_SYNCBUSY_CLEAR_Msk) != WDT_SYNCBUSY_CLEAR_Msk)
+    {
+        /* Clear WDT and reset the WDT timer before the
+        timeout occurs */
+        WDT_REGS->WDT_CLEAR = WDT_CLEAR_CLEAR_KEY;
+    }
 }
 
 void WDT_CallbackRegister( WDT_CALLBACK callback, uintptr_t context)
