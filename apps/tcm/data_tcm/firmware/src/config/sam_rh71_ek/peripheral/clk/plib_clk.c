@@ -110,7 +110,7 @@ Initialize Peripheral Clock
 static void CLK_PeripheralClockInitialize(void)
 {
     PMC_REGS->PMC_PCR = PMC_PCR_EN_Msk | PMC_PCR_CMD_Msk | PMC_PCR_PID(8); /* FLEXCOM1 */
-    PMC_REGS->PMC_PCR = PMC_PCR_EN_Msk | PMC_PCR_CMD_Msk | PMC_PCR_PID(10); /* PIOA */
+    PMC_REGS->PMC_PCR = PMC_PCR_EN_Msk | PMC_PCR_CMD_Msk | PMC_PCR_PID(10); /* PIO */
     PMC_REGS->PMC_PCR = PMC_PCR_EN_Msk | PMC_PCR_CMD_Msk | PMC_PCR_PID(64); /* XDMAC */
 }
 
@@ -119,6 +119,9 @@ Clock Initialize
 *********************************************************************************/
 void CLK_Initialize( void )
 {
+    SCB_DisableDCache();
+    SCB_DisableICache();
+
     /* Initialize Slow Clock */
     CLK_SlowClockInitialize();
 
@@ -134,4 +137,7 @@ void CLK_Initialize( void )
     /* Initialize Peripheral Clock */
     CLK_PeripheralClockInitialize();
 
+
+    SCB_EnableDCache();
+    SCB_EnableICache();
 }

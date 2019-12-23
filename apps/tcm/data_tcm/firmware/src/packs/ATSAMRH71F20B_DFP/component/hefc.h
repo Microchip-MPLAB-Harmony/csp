@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-08-29T14:13:58Z */
+/* file generated from device description version 2019-12-20T15:37:42Z */
 #ifndef _SAMRH71_HEFC_COMPONENT_H_
 #define _SAMRH71_HEFC_COMPONENT_H_
 
@@ -696,6 +696,54 @@
 #define HEFC_HECC_FAILAR_Msk                  _U_(0xFFFFFFFF)                                      /**< (HEFC_HECC_FAILAR) Register Mask  */
 
 
+/* -------- HEFC_GPNVM_MISC : (HEFC Offset: 0x00) (R/W 32) HEFC GPNVM word miscellaneous -------- */
+#define HEFC_GPNVM_MISC_DEBUG_INTF_Pos        _U_(1)                                               /**< (HEFC_GPNVM_MISC) Debug interface Selection Position */
+#define HEFC_GPNVM_MISC_DEBUG_INTF_Msk        (_U_(0x1) << HEFC_GPNVM_MISC_DEBUG_INTF_Pos)         /**< (HEFC_GPNVM_MISC) Debug interface Selection Mask */
+#define HEFC_GPNVM_MISC_DEBUG_INTF(value)     (HEFC_GPNVM_MISC_DEBUG_INTF_Msk & ((value) << HEFC_GPNVM_MISC_DEBUG_INTF_Pos))
+#define   HEFC_GPNVM_MISC_DEBUG_INTF_JTAG_Val _U_(0x0)                                             /**< (HEFC_GPNVM_MISC) JTAG  */
+#define   HEFC_GPNVM_MISC_DEBUG_INTF_SWD_Val  _U_(0x1)                                             /**< (HEFC_GPNVM_MISC) SWD  */
+#define HEFC_GPNVM_MISC_DEBUG_INTF_JTAG       (HEFC_GPNVM_MISC_DEBUG_INTF_JTAG_Val << HEFC_GPNVM_MISC_DEBUG_INTF_Pos) /**< (HEFC_GPNVM_MISC) JTAG Position  */
+#define HEFC_GPNVM_MISC_DEBUG_INTF_SWD        (HEFC_GPNVM_MISC_DEBUG_INTF_SWD_Val << HEFC_GPNVM_MISC_DEBUG_INTF_Pos) /**< (HEFC_GPNVM_MISC) SWD Position  */
+#define HEFC_GPNVM_MISC_PFD_TRIM_Pos          _U_(8)                                               /**< (HEFC_GPNVM_MISC) PFD Trim value Position */
+#define HEFC_GPNVM_MISC_PFD_TRIM_Msk          (_U_(0x7) << HEFC_GPNVM_MISC_PFD_TRIM_Pos)           /**< (HEFC_GPNVM_MISC) PFD Trim value Mask */
+#define HEFC_GPNVM_MISC_PFD_TRIM(value)       (HEFC_GPNVM_MISC_PFD_TRIM_Msk & ((value) << HEFC_GPNVM_MISC_PFD_TRIM_Pos))
+#define HEFC_GPNVM_MISC_Msk                   _U_(0x00000702)                                      /**< (HEFC_GPNVM_MISC) Register Mask  */
+
+
+/* -------- HEFC_GPNVM_RC_TRIM : (HEFC Offset: 0x04) (R/W 32) HEFC GPNVM word RC trim (1..3) -------- */
+#define HEFC_GPNVM_RC_TRIM_RC_TTRIM_Pos       _U_(0)                                               /**< (HEFC_GPNVM_RC_TRIM) RC Temperature Trim Position */
+#define HEFC_GPNVM_RC_TRIM_RC_TTRIM_Msk       (_U_(0x3) << HEFC_GPNVM_RC_TRIM_RC_TTRIM_Pos)        /**< (HEFC_GPNVM_RC_TRIM) RC Temperature Trim Mask */
+#define HEFC_GPNVM_RC_TRIM_RC_TTRIM(value)    (HEFC_GPNVM_RC_TRIM_RC_TTRIM_Msk & ((value) << HEFC_GPNVM_RC_TRIM_RC_TTRIM_Pos))
+#define HEFC_GPNVM_RC_TRIM_RC2_TTRIM_Pos      _U_(2)                                               /**< (HEFC_GPNVM_RC_TRIM) RC2 Temperature Trim Position */
+#define HEFC_GPNVM_RC_TRIM_RC2_TTRIM_Msk      (_U_(0x3) << HEFC_GPNVM_RC_TRIM_RC2_TTRIM_Pos)       /**< (HEFC_GPNVM_RC_TRIM) RC2 Temperature Trim Mask */
+#define HEFC_GPNVM_RC_TRIM_RC2_TTRIM(value)   (HEFC_GPNVM_RC_TRIM_RC2_TTRIM_Msk & ((value) << HEFC_GPNVM_RC_TRIM_RC2_TTRIM_Pos))
+#define HEFC_GPNVM_RC_TRIM_RC_FTRIM_4MHZ_Pos  _U_(4)                                               /**< (HEFC_GPNVM_RC_TRIM) RC Frequency Trim 4MHz Position */
+#define HEFC_GPNVM_RC_TRIM_RC_FTRIM_4MHZ_Msk  (_U_(0x7) << HEFC_GPNVM_RC_TRIM_RC_FTRIM_4MHZ_Pos)   /**< (HEFC_GPNVM_RC_TRIM) RC Frequency Trim 4MHz Mask */
+#define HEFC_GPNVM_RC_TRIM_RC_FTRIM_4MHZ(value) (HEFC_GPNVM_RC_TRIM_RC_FTRIM_4MHZ_Msk & ((value) << HEFC_GPNVM_RC_TRIM_RC_FTRIM_4MHZ_Pos))
+#define HEFC_GPNVM_RC_TRIM_RC_FTRIM_8MHZ_Pos  _U_(7)                                               /**< (HEFC_GPNVM_RC_TRIM) RC Frequency Trim 8MHz Position */
+#define HEFC_GPNVM_RC_TRIM_RC_FTRIM_8MHZ_Msk  (_U_(0x7) << HEFC_GPNVM_RC_TRIM_RC_FTRIM_8MHZ_Pos)   /**< (HEFC_GPNVM_RC_TRIM) RC Frequency Trim 8MHz Mask */
+#define HEFC_GPNVM_RC_TRIM_RC_FTRIM_8MHZ(value) (HEFC_GPNVM_RC_TRIM_RC_FTRIM_8MHZ_Msk & ((value) << HEFC_GPNVM_RC_TRIM_RC_FTRIM_8MHZ_Pos))
+#define HEFC_GPNVM_RC_TRIM_RC_FTRIM_10MHZ_Pos _U_(10)                                              /**< (HEFC_GPNVM_RC_TRIM) RC Frequency Trim 10MHz Position */
+#define HEFC_GPNVM_RC_TRIM_RC_FTRIM_10MHZ_Msk (_U_(0x7) << HEFC_GPNVM_RC_TRIM_RC_FTRIM_10MHZ_Pos)  /**< (HEFC_GPNVM_RC_TRIM) RC Frequency Trim 10MHz Mask */
+#define HEFC_GPNVM_RC_TRIM_RC_FTRIM_10MHZ(value) (HEFC_GPNVM_RC_TRIM_RC_FTRIM_10MHZ_Msk & ((value) << HEFC_GPNVM_RC_TRIM_RC_FTRIM_10MHZ_Pos))
+#define HEFC_GPNVM_RC_TRIM_RC_FTRIM_12MHZ_Pos _U_(13)                                              /**< (HEFC_GPNVM_RC_TRIM) RC Frequency Trim 12MHz Position */
+#define HEFC_GPNVM_RC_TRIM_RC_FTRIM_12MHZ_Msk (_U_(0x7) << HEFC_GPNVM_RC_TRIM_RC_FTRIM_12MHZ_Pos)  /**< (HEFC_GPNVM_RC_TRIM) RC Frequency Trim 12MHz Mask */
+#define HEFC_GPNVM_RC_TRIM_RC_FTRIM_12MHZ(value) (HEFC_GPNVM_RC_TRIM_RC_FTRIM_12MHZ_Msk & ((value) << HEFC_GPNVM_RC_TRIM_RC_FTRIM_12MHZ_Pos))
+#define HEFC_GPNVM_RC_TRIM_RC2_FTRIM_4MHZ_Pos _U_(16)                                              /**< (HEFC_GPNVM_RC_TRIM) RC2 Frequency Trim 4MHz Position */
+#define HEFC_GPNVM_RC_TRIM_RC2_FTRIM_4MHZ_Msk (_U_(0x7) << HEFC_GPNVM_RC_TRIM_RC2_FTRIM_4MHZ_Pos)  /**< (HEFC_GPNVM_RC_TRIM) RC2 Frequency Trim 4MHz Mask */
+#define HEFC_GPNVM_RC_TRIM_RC2_FTRIM_4MHZ(value) (HEFC_GPNVM_RC_TRIM_RC2_FTRIM_4MHZ_Msk & ((value) << HEFC_GPNVM_RC_TRIM_RC2_FTRIM_4MHZ_Pos))
+#define HEFC_GPNVM_RC_TRIM_RC2_FTRIM_8MHZ_Pos _U_(19)                                              /**< (HEFC_GPNVM_RC_TRIM) RC2 Frequency Trim 8MHz Position */
+#define HEFC_GPNVM_RC_TRIM_RC2_FTRIM_8MHZ_Msk (_U_(0x7) << HEFC_GPNVM_RC_TRIM_RC2_FTRIM_8MHZ_Pos)  /**< (HEFC_GPNVM_RC_TRIM) RC2 Frequency Trim 8MHz Mask */
+#define HEFC_GPNVM_RC_TRIM_RC2_FTRIM_8MHZ(value) (HEFC_GPNVM_RC_TRIM_RC2_FTRIM_8MHZ_Msk & ((value) << HEFC_GPNVM_RC_TRIM_RC2_FTRIM_8MHZ_Pos))
+#define HEFC_GPNVM_RC_TRIM_RC2_FTRIM_10MHZ_Pos _U_(22)                                              /**< (HEFC_GPNVM_RC_TRIM) RC2 Frequency Trim 10MHz Position */
+#define HEFC_GPNVM_RC_TRIM_RC2_FTRIM_10MHZ_Msk (_U_(0x7) << HEFC_GPNVM_RC_TRIM_RC2_FTRIM_10MHZ_Pos) /**< (HEFC_GPNVM_RC_TRIM) RC2 Frequency Trim 10MHz Mask */
+#define HEFC_GPNVM_RC_TRIM_RC2_FTRIM_10MHZ(value) (HEFC_GPNVM_RC_TRIM_RC2_FTRIM_10MHZ_Msk & ((value) << HEFC_GPNVM_RC_TRIM_RC2_FTRIM_10MHZ_Pos))
+#define HEFC_GPNVM_RC_TRIM_RC2_FTRIM_12MHZ_Pos _U_(25)                                              /**< (HEFC_GPNVM_RC_TRIM) RC2 Frequency Trim 12MHz Position */
+#define HEFC_GPNVM_RC_TRIM_RC2_FTRIM_12MHZ_Msk (_U_(0x7) << HEFC_GPNVM_RC_TRIM_RC2_FTRIM_12MHZ_Pos) /**< (HEFC_GPNVM_RC_TRIM) RC2 Frequency Trim 12MHz Mask */
+#define HEFC_GPNVM_RC_TRIM_RC2_FTRIM_12MHZ(value) (HEFC_GPNVM_RC_TRIM_RC2_FTRIM_12MHZ_Msk & ((value) << HEFC_GPNVM_RC_TRIM_RC2_FTRIM_12MHZ_Pos))
+#define HEFC_GPNVM_RC_TRIM_Msk                _U_(0x0FFFFFFF)                                      /**< (HEFC_GPNVM_RC_TRIM) Register Mask  */
+
+
 /** \brief HEFC register offsets definitions */
 #define HEFC_FMR_REG_OFST              (0x00)              /**< (HEFC_FMR) HEFC Flash Mode Register Offset */
 #define HEFC_FCR_REG_OFST              (0x04)              /**< (HEFC_FCR) HEFC Flash Command Register Offset */
@@ -740,6 +788,8 @@
 #define HEFC_HECC_IDR_REG_OFST         (0x188)             /**< (HEFC_HECC_IDR) HECC Interrupt Disable Register Offset */
 #define HEFC_HECC_IMR_REG_OFST         (0x18C)             /**< (HEFC_HECC_IMR) HECC Interrupt Mask Register Offset */
 #define HEFC_HECC_FAILAR_REG_OFST      (0x190)             /**< (HEFC_HECC_FAILAR) HECC Fail address register Offset */
+#define HEFC_GPNVM_MISC_REG_OFST       (0x00)              /**< (HEFC_GPNVM_MISC) HEFC GPNVM word miscellaneous Offset */
+#define HEFC_GPNVM_RC_TRIM_REG_OFST    (0x04)              /**< (HEFC_GPNVM_RC_TRIM) HEFC GPNVM word RC trim (1..3) Offset */
 
 #if !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__))
 /** \brief HEFC register API structure */
@@ -792,6 +842,13 @@ typedef struct
   __I   uint32_t                       HEFC_HECC_IMR;      /**< Offset: 0x18C (R/   32) HECC Interrupt Mask Register */
   __I   uint32_t                       HEFC_HECC_FAILAR;   /**< Offset: 0x190 (R/   32) HECC Fail address register */
 } hefc_registers_t;
+
+/** \brief GPNVMBITS register API structure */
+typedef struct
+{  /* GPNVM Bits */
+  __IO  uint32_t                       HEFC_GPNVM_MISC;    /**< Offset: 0x00 (R/W  32) HEFC GPNVM word miscellaneous */
+  __IO  uint32_t                       HEFC_GPNVM_RC_TRIM[3]; /**< Offset: 0x04 (R/W  32) HEFC GPNVM word RC trim (1..3) */
+} hefc_gpnvmbits_registers_t;
 
 
 #endif /* !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__)) */
