@@ -225,12 +225,12 @@ resetHandler:
 	ldr     sp, =_undstack
 	bic     sp, sp, #0x7
 
-/* Set up the system mode stack pointer */
+/* Set up the user/system mode stack pointer */
 
 	bic     r0, r0, #MODE_MSK
 	orr     r0, r0, #ARM_MODE_SYS
 	msr     CPSR_c, r0
-	ldr     sp, =_sysstack
+	ldr     sp, =_cstack
 	bic     sp, sp, #0x7
 
 /* Set up the supervisor mode stack pointer */
@@ -238,7 +238,7 @@ resetHandler:
 	bic     r0, r0, #MODE_MSK
 	orr     r0, r0, #ARM_MODE_SVC
 	msr     CPSR_c, r0
-	ldr     sp, =_cstack
+	ldr     sp, =_svcstack
 	bic     sp, sp, #0x7
 
 /* Relocate */

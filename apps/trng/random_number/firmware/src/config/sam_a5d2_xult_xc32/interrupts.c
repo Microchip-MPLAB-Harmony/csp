@@ -61,7 +61,7 @@
 void __attribute__((optimize("-O1"),section(".text.DefaultInterruptHandler"),long_call))DefaultInterruptHandler( void )
 {
 #if defined(__DEBUG) || defined(__DEBUG_D)
-    __builtin_software_breakpoint();
+    asm("BKPT");
 #endif
     while( 1 ){
     }
@@ -70,7 +70,7 @@ uint32_t spuriousEventCount = 0;
 void __attribute__((optimize("-O1"),section(".text.DefaultInterruptHandlerForSpurious"),long_call))DefaultInterruptHandlerForSpurious( void )
 {
 #if defined(__DEBUG) || defined(__DEBUG_D)
-    __builtin_software_breakpoint();
+    asm("BKPT");
 #endif
     ++spuriousEventCount;
 }
