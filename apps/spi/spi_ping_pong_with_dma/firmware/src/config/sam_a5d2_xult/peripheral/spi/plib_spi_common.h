@@ -115,14 +115,15 @@ typedef struct
     void*                   txBuffer;
     void*                   rxBuffer;
     size_t                  txSize;
-	size_t                  rxSize;
-	size_t                  dummySize;
+    size_t                  rxSize;
+    size_t                  dummySize;
     size_t                  rxCount;
     size_t                  txCount;
     bool                    transferIsBusy;
-    SPI_CALLBACK       		callback;
+    SPI_CALLBACK            callback;
     uintptr_t               context;
-
+    /* Number of bytes transferred */
+    size_t                  nBytesTransferred;
 } SPI_OBJECT ;
 
 /* Provide C++ Compatibility */
