@@ -101,6 +101,10 @@ void SYS_Initialize ( void* data )
 
 	PIO_Initialize();
 
+
+
+    MATRIX_Initialize();
+
 	SYSTICK_TimerInitialize();
     XDMAC_Initialize();
 
