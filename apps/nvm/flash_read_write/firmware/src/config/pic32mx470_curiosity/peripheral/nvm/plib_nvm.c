@@ -87,8 +87,8 @@ typedef enum
 // Section: Local Functions                                                   */
 /* ************************************************************************** */
 /* ************************************************************************** */
-// *****************************************************************************
 
+// *****************************************************************************
 // *****************************************************************************
 // Section: NVM Implementation
 // *****************************************************************************
@@ -105,7 +105,7 @@ void NVM_CallbackRegister( NVM_CALLBACK callback, uintptr_t context )
     nvmContext         = context;
 }
 
-void NVM_InterruptHandler(void)
+void NVM_InterruptHandler( void )
 {
     IFS0CLR = NVM_INTERRUPT_FLAG_MASK;
 
@@ -115,7 +115,7 @@ void NVM_InterruptHandler(void)
     }
 }
 
-static void NVM_StartOperationAtAddress( uint32_t address,  NVM_OPERATION_MODE operation)
+static void NVM_StartOperationAtAddress( uint32_t address,  NVM_OPERATION_MODE operation )
 {
     volatile uint32_t processorStatus;
 
@@ -151,13 +151,20 @@ static void NVM_StartOperationAtAddress( uint32_t address,  NVM_OPERATION_MODE o
 // Section: Interface Functions                                               */
 /* ************************************************************************** */
 /* ************************************************************************** */
+
+void NVM_Initialize( void )
+{
+    NVM_StartOperationAtAddress( NVMADDR,  NO_OPERATION );
+}
+
 bool NVM_Read( uint32_t *data, uint32_t length, const uint32_t address )
 {
     memcpy((void *)data, (void *)KVA0_TO_KVA1(address), length);
 
     return true;
 }
-bool NVM_WordWrite(uint32_t data, uint32_t address)
+
+bool NVM_WordWrite( uint32_t data, uint32_t address )
 {
     NVMDATA = (uint32_t )data;
 
@@ -166,7 +173,7 @@ bool NVM_WordWrite(uint32_t data, uint32_t address)
     return true;
 }
 
-bool NVM_RowWrite(uint32_t *data, uint32_t address)
+bool NVM_RowWrite( uint32_t *data, uint32_t address )
 {
    NVMSRCADDR = (uint32_t )KVA_TO_PA(data);
 
@@ -175,7 +182,7 @@ bool NVM_RowWrite(uint32_t *data, uint32_t address)
    return true;
 }
 
-bool NVM_PageErase(uint32_t address)
+bool NVM_PageErase( uint32_t address )
 {
    NVM_StartOperationAtAddress(address,  PAGE_ERASE_OPERATION);
 
