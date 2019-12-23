@@ -143,7 +143,7 @@ uint32_t RTC_BackupRegisterGet( BACKUP_REGISTER reg )
 }
  TAMPER_CHANNEL RTC_TamperSourceGet( void )
 {
-    return((RTC_REGS->MODE2.RTC_TAMPID) & (0xFF));
+    return((TAMPER_CHANNEL) (RTC_REGS->MODE2.RTC_TAMPID) & (0xFF));
 }
 
 void RTC_RTCCTimeStampGet(  struct tm * timeStamp  )
@@ -200,13 +200,13 @@ void RTC_RTCCCallbackRegister ( RTC_CALLBACK callback, uintptr_t context)
 
 void RTC_InterruptHandler(void)
 {
-    rtcObj.intCause = RTC_REGS->MODE2.RTC_INTFLAG;
+    rtcObj.intCause = (RTC_CLOCK_INT_MASK) RTC_REGS->MODE2.RTC_INTFLAG;
 
+    /* Clear All Interrupts */
+    RTC_REGS->MODE2.RTC_INTFLAG = RTC_MODE2_INTFLAG_Msk;
+    
     if(rtcObj.alarmCallback != NULL)
     {
         rtcObj.alarmCallback(rtcObj.intCause, rtcObj.context);
     }
-
-    /* Clear All Interrupts */
-    RTC_REGS->MODE2.RTC_INTFLAG = RTC_MODE2_INTFLAG_Msk;
 }
