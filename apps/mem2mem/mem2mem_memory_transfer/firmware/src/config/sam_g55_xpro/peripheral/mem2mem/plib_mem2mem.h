@@ -43,19 +43,30 @@ Description:
 #ifndef MEM2MEM_H    // Guards against multiple inclusion
 #define MEM2MEM_H
 
+// *****************************************************************************
+// *****************************************************************************
+// Included Files
+// *****************************************************************************
+// *****************************************************************************
+
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
+
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
+
     extern "C" {
+
 #endif
 // DOM-IGNORE-END
 
 typedef enum
 {
     MEM2MEM_TRANSFER_WIDTH_BYTE,
+
     MEM2MEM_TRANSFER_WIDTH_HALFWORD,
+
     MEM2MEM_TRANSFER_WIDTH_WORD,
 
 } MEM2MEM_TRANSFER_WIDTH;
@@ -70,16 +81,32 @@ typedef enum
 
 } MEM2MEM_TRANSFER_EVENT;
 
-typedef void (*MEM2MEM_CALLBACK)(MEM2MEM_TRANSFER_EVENT event, uintptr_t context);
+typedef void (*MEM2MEM_CALLBACK)( MEM2MEM_TRANSFER_EVENT event, uintptr_t context );
 
-bool MEM2MEM_ChannelTransfer (const void *srcAddr, const void *destAddr, size_t blockSize, MEM2MEM_TRANSFER_WIDTH twidth);
+typedef struct
+{
+    MEM2MEM_CALLBACK    callback;
+
+    uintptr_t           context;
+
+} MEM2MEM_OBJECT;
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Interface Routines
+// *****************************************************************************
+// *****************************************************************************
+
+bool MEM2MEM_ChannelTransfer( const void *srcAddr, const void *destAddr, size_t blockSize, MEM2MEM_TRANSFER_WIDTH twidth );
+
 void MEM2MEM_CallbackRegister( MEM2MEM_CALLBACK callback, uintptr_t context );
-
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
-}
+
+    }
+
 #endif
 // DOM-IGNORE-END
 
-#endif
+#endif    //PLIB_MEM2MEM_H

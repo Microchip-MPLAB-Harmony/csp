@@ -38,24 +38,39 @@ Description:
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
+// DOM-IGNORE-END
+
+// *****************************************************************************
+// *****************************************************************************
+// Included Files
+// *****************************************************************************
+// *****************************************************************************
 
 #include "device.h"
 #include "plib_mem2mem.h"
 
-typedef struct
-{
-    MEM2MEM_CALLBACK          callback;
-    uintptr_t             context;
-} MEM2MEM_OBJECT ;
+// *****************************************************************************
+// *****************************************************************************
+// Global Data
+// *****************************************************************************
+// *****************************************************************************
 
 MEM2MEM_OBJECT mem2mem;
 
-bool MEM2MEM_ChannelTransfer (const void *srcAddr, const void *destAddr, size_t blockSize, MEM2MEM_TRANSFER_WIDTH twidth)
+// *****************************************************************************
+// *****************************************************************************
+// MEM2MEM PLib Interface Routines
+// *****************************************************************************
+// *****************************************************************************
+
+bool MEM2MEM_ChannelTransfer( const void *srcAddr, const void *destAddr, size_t blockSize, MEM2MEM_TRANSFER_WIDTH twidth )
 {
     bool status = false;
+
     if ((MEM2MEM_REGS->MEM2MEM_ISR & MEM2MEM_ISR_RXEND_Msk) ==  MEM2MEM_ISR_RXEND_Msk)
     {
         uint16_t count = blockSize / (1 << twidth);
+
         MEM2MEM_REGS->MEM2MEM_MR = twidth;
         MEM2MEM_REGS->MEM2MEM_TPR = (uint32_t) srcAddr;
         MEM2MEM_REGS->MEM2MEM_TCR = count;
@@ -63,23 +78,30 @@ bool MEM2MEM_ChannelTransfer (const void *srcAddr, const void *destAddr, size_t 
         MEM2MEM_REGS->MEM2MEM_RCR = count;
         MEM2MEM_REGS->MEM2MEM_IER = MEM2MEM_IER_RXEND_Msk;
         MEM2MEM_REGS->MEM2MEM_PTCR = MEM2MEM_PTCR_RXTEN_Msk | MEM2MEM_PTCR_TXTEN_Msk;
+
         status = true;
     }
+
     return status;
 }
 
 void MEM2MEM_CallbackRegister( MEM2MEM_CALLBACK callback, uintptr_t context )
 {
     mem2mem.callback = callback;
+
     mem2mem.context = context;
 }
 
-void MEM2MEM_InterruptHandler()
+void MEM2MEM_InterruptHandler( void )
 {
+    uint8_t error = MEM2MEM_TRANSFER_EVENT_COMPLETE;
+
     MEM2MEM_REGS->MEM2MEM_IDR = MEM2MEM_IDR_RXEND_Msk;
-    volatile uint8_t error = MEM2MEM_REGS->MEM2MEM_PTSR & MEM2MEM_PTSR_ERR_Msk;
+
+    error = MEM2MEM_REGS->MEM2MEM_PTSR & MEM2MEM_PTSR_ERR_Msk;
+
     MEM2MEM_REGS->MEM2MEM_PTCR = MEM2MEM_PTCR_ERRCLR_Msk;
-    
+
     if (mem2mem.callback != NULL)
     {
         mem2mem.callback((MEM2MEM_TRANSFER_EVENT)error, mem2mem.context);
