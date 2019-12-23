@@ -110,6 +110,6 @@ bool ADC_ResultIsReady()
 /* Read the conversion result */
 uint32_t ADC_ResultGet(ADC_RESULT_BUFFER bufferNumber)
 {
-    return (*((&ADC1BUF0) + bufferNumber));
+    return (*((&ADC1BUF0) + (bufferNumber << 2)));
 }
 
