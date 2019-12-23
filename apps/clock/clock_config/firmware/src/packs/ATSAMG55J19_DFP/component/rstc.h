@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-07-26T12:18:55Z */
+/* file generated from device description version 2019-12-16T02:54:59Z */
 #ifndef _SAMG55_RSTC_COMPONENT_H_
 #define _SAMG55_RSTC_COMPONENT_H_
 
