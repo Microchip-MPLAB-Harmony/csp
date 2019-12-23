@@ -43,10 +43,6 @@
 
 #include "plib_pio.h"
 
-
-
-
-
 /******************************************************************************
   Function:
     PIO_Initialize ( void )
@@ -63,6 +59,7 @@ void PIO_Initialize ( void )
 	PIOA_REGS->PIO_MSKR = 0x7c00000;
 	PIOA_REGS->PIO_CFGR = 0x3;
 	
+
  /* Port B Peripheral function GPIO configuration */
 	PIOB_REGS->PIO_MSKR = 0x201;
 	PIOB_REGS->PIO_CFGR = 0x0;
@@ -71,6 +68,8 @@ void PIO_Initialize ( void )
 	PIOB_REGS->PIO_MSKR = 0x1;
 	PIOB_REGS->PIO_CFGR = (PIOB_REGS->PIO_CFGR & (PIO_CFGR_FUNC_Msk)) | 0x100;
 	
+
+
  /* Port D Peripheral function A configuration */
 	PIOD_REGS->PIO_MSKR = 0x3c20cL;
 	PIOD_REGS->PIO_CFGR = 0x1;
@@ -79,6 +78,12 @@ void PIO_Initialize ( void )
 	PIOD_REGS->PIO_MSKR = 0xf8000000L;
 	PIOD_REGS->PIO_CFGR = 0x2;
 	
+
+
+
+
+
+
 }
 
 // *****************************************************************************
@@ -111,7 +116,7 @@ void PIO_Initialize ( void )
 */
 uint32_t PIO_PortRead(PIO_PORT port)
 {
-    return ((pio_registers_t*)port)->PIO_PDSR;
+    return ((pio_group_registers_t*)port)->PIO_PDSR;
 }
 
 // *****************************************************************************
@@ -126,8 +131,8 @@ uint32_t PIO_PortRead(PIO_PORT port)
 */
 void PIO_PortWrite(PIO_PORT port, uint32_t mask, uint32_t value)
 {
-    ((pio_registers_t*)port)->PIO_MSKR = mask;
-    ((pio_registers_t*)port)->PIO_ODSR = value;
+    ((pio_group_registers_t*)port)->PIO_MSKR = mask;
+    ((pio_group_registers_t*)port)->PIO_ODSR = value;
 }
 
 // *****************************************************************************
@@ -142,7 +147,7 @@ void PIO_PortWrite(PIO_PORT port, uint32_t mask, uint32_t value)
 */
 uint32_t PIO_PortLatchRead(PIO_PORT port)
 {
-    return ((pio_registers_t*)port)->PIO_ODSR;
+    return ((pio_group_registers_t*)port)->PIO_ODSR;
 }
 
 // *****************************************************************************
@@ -157,7 +162,7 @@ uint32_t PIO_PortLatchRead(PIO_PORT port)
 */
 void PIO_PortSet(PIO_PORT port, uint32_t mask)
 {
-    ((pio_registers_t*)port)->PIO_SODR = mask;
+    ((pio_group_registers_t*)port)->PIO_SODR = mask;
 }
 
 // *****************************************************************************
@@ -172,7 +177,7 @@ void PIO_PortSet(PIO_PORT port, uint32_t mask)
 */
 void PIO_PortClear(PIO_PORT port, uint32_t mask)
 {
-    ((pio_registers_t*)port)->PIO_CODR = mask;
+    ((pio_group_registers_t*)port)->PIO_CODR = mask;
 }
 
 // *****************************************************************************
@@ -188,8 +193,8 @@ void PIO_PortClear(PIO_PORT port, uint32_t mask)
 void PIO_PortToggle(PIO_PORT port, uint32_t mask)
 {
     /* Write into Clr and Set registers */
-    ((pio_registers_t*)port)->PIO_MSKR = mask;
-    ((pio_registers_t*)port)->PIO_ODSR ^= mask;
+    ((pio_group_registers_t*)port)->PIO_MSKR = mask;
+    ((pio_group_registers_t*)port)->PIO_ODSR ^= mask;
 }
 
 // *****************************************************************************
@@ -204,8 +209,8 @@ void PIO_PortToggle(PIO_PORT port, uint32_t mask)
 */
 void PIO_PortInputEnable(PIO_PORT port, uint32_t mask)
 {
-    ((pio_registers_t*)port)->PIO_MSKR = mask;
-    ((pio_registers_t*)port)->PIO_CFGR &= ~(1 << PIO_CFGR_DIR_Pos);	
+    ((pio_group_registers_t*)port)->PIO_MSKR = mask;
+    ((pio_group_registers_t*)port)->PIO_CFGR &= ~(1 << PIO_CFGR_DIR_Pos);	
 }
 
 // *****************************************************************************
@@ -220,42 +225,9 @@ void PIO_PortInputEnable(PIO_PORT port, uint32_t mask)
 */
 void PIO_PortOutputEnable(PIO_PORT port, uint32_t mask)
 {
-    ((pio_registers_t*)port)->PIO_MSKR = mask;
-    ((pio_registers_t*)port)->PIO_CFGR |= (1 << PIO_CFGR_DIR_Pos);
+    ((pio_group_registers_t*)port)->PIO_MSKR = mask;
+    ((pio_group_registers_t*)port)->PIO_CFGR |= (1 << PIO_CFGR_DIR_Pos);
 }
-
-// *****************************************************************************
-/* Function:
-    void PIO_PortInterruptEnable(PIO_PORT port, uint32_t mask)
-
-  Summary:
-    Enables IO interrupt on selected IO pins of a port.
-
-  Remarks:
-    See plib_pio.h for more details.
-*/
-void PIO_PortInterruptEnable(PIO_PORT port, uint32_t mask)
-{
-    ((pio_registers_t*)port)->PIO_IER = mask;
-}
-
-// *****************************************************************************
-/* Function:
-    void PIO_PortInterruptDisable(PIO_PORT port, uint32_t mask)
-
-  Summary:
-    Disables IO interrupt on selected IO pins of a port.
-
-  Remarks:
-    See plib_pio.h for more details.
-*/
-void PIO_PortInterruptDisable(PIO_PORT port, uint32_t mask)
-{
-    ((pio_registers_t*)port)->PIO_IDR = mask;
-}
-
-
-
 
 
 /*******************************************************************************
