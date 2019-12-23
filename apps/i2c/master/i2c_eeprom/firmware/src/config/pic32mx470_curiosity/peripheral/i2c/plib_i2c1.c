@@ -68,7 +68,7 @@ void I2C1_Initialize(void)
     /* Disable the I2C Bus collision interrupt */
     IEC1CLR = _IEC1_I2C1BIE_MASK;
 
-    I2C1BRG = 476;
+    I2C1BRG = 475;
 
     I2C1CONCLR = _I2C1CON_SIDL_MASK;
     I2C1CONCLR = _I2C1CON_DISSLW_MASK;
@@ -90,6 +90,8 @@ void I2C1_Initialize(void)
 /* I2C state machine */
 static void I2C1_TransferSM(void)
 {
+    IFS1CLR = _IFS1_I2C1MIF_MASK;
+
     switch (i2c1Obj.state)
     {
         case I2C_STATE_START_CONDITION:
@@ -99,6 +101,7 @@ static void I2C1_TransferSM(void)
             IEC1SET = _IEC1_I2C1BIE_MASK;
             i2c1Obj.state = I2C_STATE_ADDR_BYTE_1_SEND;
             break;
+
         case I2C_STATE_ADDR_BYTE_1_SEND:
             /* Is transmit buffer full? */
             if (!(I2C1STAT & _I2C1STAT_TBF_MASK))
@@ -126,6 +129,7 @@ static void I2C1_TransferSM(void)
                 }
             }
             break;
+
         case I2C_STATE_ADDR_BYTE_2_SEND:
             /* Transmit the 2nd byte of the 10-bit slave address */
             if (!(I2C1STAT & _I2C1STAT_ACKSTAT_MASK))
@@ -153,7 +157,7 @@ static void I2C1_TransferSM(void)
                 i2c1Obj.state = I2C_STATE_WAIT_STOP_CONDITION_COMPLETE;
             }
             break;
-            
+
         case I2C_STATE_READ_10BIT_MODE:
             if (!(I2C1STAT & _I2C1STAT_ACKSTAT_MASK))
             {
@@ -169,6 +173,7 @@ static void I2C1_TransferSM(void)
                 i2c1Obj.state = I2C_STATE_WAIT_STOP_CONDITION_COMPLETE;
             }
             break;
+
         case I2C_STATE_ADDR_BYTE_1_SEND_10BIT_ONLY:
             /* Is transmit buffer full? */
             if (!(I2C1STAT & _I2C1STAT_TBF_MASK))
@@ -185,6 +190,7 @@ static void I2C1_TransferSM(void)
                 i2c1Obj.state = I2C_STATE_WAIT_STOP_CONDITION_COMPLETE;
             }
             break;
+
         case I2C_STATE_WRITE:
             if (!(I2C1STAT & _I2C1STAT_ACKSTAT_MASK))
             {
@@ -234,6 +240,7 @@ static void I2C1_TransferSM(void)
                 i2c1Obj.state = I2C_STATE_WAIT_STOP_CONDITION_COMPLETE;
             }
             break;
+
         case I2C_STATE_READ:
             if (!(I2C1STAT & _I2C1STAT_ACKSTAT_MASK))
             {
@@ -300,7 +307,7 @@ static void I2C1_TransferSM(void)
         default:
             break;
     }
-    IFS1CLR = _IFS1_I2C1MIF_MASK;
+
 }
 
 
@@ -441,10 +448,10 @@ bool I2C1_TransferSetup(I2C_TRANSFER_SETUP* setup, uint32_t srcClkFreq )
         srcClkFreq = 48000000UL;
     }
 
-    baudValue = ((1.0/(2*i2cClkSpeed) - 104e-9)*(float)srcClkFreq) - 2;
+    baudValue = ((float)((float)srcClkFreq/2.0) * (1/(float)i2cClkSpeed - 0.000000130)) - 1;
 
-    /* I2CxBRG value cannot be 0 or 1 */
-    if ((baudValue == 0) || (baudValue == 1))
+    /* I2CxBRG value cannot be from 0 to 3 or more than the size of the baud rate register */
+    if ((baudValue < 4) || (baudValue > 4095))
     {
         return false;
     }
