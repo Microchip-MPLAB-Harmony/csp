@@ -39,6 +39,7 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 // DOM-IGNORE-END
+
 #include "device.h"
 #include "plib_adc.h"
 
@@ -51,74 +52,70 @@
 // *****************************************************************************
 // *****************************************************************************
 
+
 /* Initialize ADC peripheral */
-void ADC_Initialize()
+void ADC_Initialize( void )
 {
     /* Software reset */
     ADC_REGS->ADC_CR = ADC_CR_SWRST_Msk;
 
     /* Prescaler and different time settings as per CLOCK section  */
-    ADC_REGS->ADC_MR = ADC_MR_PRESCAL(7U) | ADC_MR_TRACKTIM(15U) |
-        ADC_MR_STARTUP_SUT64 | ADC_MR_ANACH_Msk |
-        ADC_MR_TRANSFER(2U)   ;
+    ADC_REGS->ADC_MR = ADC_MR_PRESCAL(7U) | ADC_MR_TRACKTIM(15U) | ADC_MR_STARTUP_SUT64 | ADC_MR_TRANSFER(2U) | ADC_MR_ANACH_Msk ;
 
     /* resolution and sign mode of result */
-    ADC_REGS->ADC_EMR = ADC_EMR_OSR_NO_AVERAGE 
-         |  ADC_EMR_SRCCLK_PERIPH_CLK | ADC_EMR_TAG_Msk;
-
-
-
+    ADC_REGS->ADC_EMR = ADC_EMR_OSR_NO_AVERAGE  | ADC_EMR_SRCCLK_PERIPH_CLK | ADC_EMR_TAG_Msk;
 
     /* Enable channel */
     ADC_REGS->ADC_CHER = ADC_CHER_CH0_Msk;
 }
 
 /* Enable ADC channels */
-void ADC_ChannelsEnable (ADC_CHANNEL_MASK channelsMask)
+void ADC_ChannelsEnable( ADC_CHANNEL_MASK channelsMask )
 {
     ADC_REGS->ADC_CHER |= channelsMask;
 }
 
 /* Disable ADC channels */
-void ADC_ChannelsDisable (ADC_CHANNEL_MASK channelsMask)
+void ADC_ChannelsDisable( ADC_CHANNEL_MASK channelsMask )
 {
     ADC_REGS->ADC_CHDR |= channelsMask;
 }
 
 /* Enable channel end of conversion interrupt */
-void ADC_ChannelsInterruptEnable (ADC_INTERRUPT_MASK channelsInterruptMask)
+void ADC_ChannelsInterruptEnable( ADC_INTERRUPT_MASK channelsInterruptMask )
 {
     ADC_REGS->ADC_IER |= channelsInterruptMask;
 }
 
 /* Disable channel end of conversion interrupt */
-void ADC_ChannelsInterruptDisable (ADC_INTERRUPT_MASK channelsInterruptMask)
+void ADC_ChannelsInterruptDisable( ADC_INTERRUPT_MASK channelsInterruptMask )
 {
     ADC_REGS->ADC_IDR |= channelsInterruptMask;
 }
 
 /* Start the conversion with software trigger */
-void ADC_ConversionStart(void)
+void ADC_ConversionStart( void )
 {
     ADC_REGS->ADC_CR = 0x1U << ADC_CR_START_Pos;
 }
 
-/*Check if conversion result is available */
-bool ADC_ChannelResultIsReady(ADC_CHANNEL_NUM channel)
+/* Check if conversion result is available */
+bool ADC_ChannelResultIsReady( ADC_CHANNEL_NUM channel )
 {
     return (ADC_REGS->ADC_ISR >> channel) & 0x1U;
 }
 
 /* Read the conversion result */
-uint16_t ADC_ChannelResultGet(ADC_CHANNEL_NUM channel)
+uint16_t ADC_ChannelResultGet( ADC_CHANNEL_NUM channel )
 {
     return (ADC_REGS->ADC_CDR[channel]);
 }
 
 /* Configure the user defined conversion sequence */
-void ADC_ConversionSequenceSet(ADC_CHANNEL_NUM *channelList, uint8_t numChannel)
+void ADC_ConversionSequenceSet( ADC_CHANNEL_NUM *channelList, uint8_t numChannel )
 {
     uint8_t channelIndex;
+
     ADC_REGS->ADC_SEQR1 = 0U;
 
     for (channelIndex = 0U; channelIndex < ADC_SEQ1_CHANNEL_NUM; channelIndex++)
@@ -126,5 +123,4 @@ void ADC_ConversionSequenceSet(ADC_CHANNEL_NUM *channelList, uint8_t numChannel)
         ADC_REGS->ADC_SEQR1 |= channelList[channelIndex] << (channelIndex * 4U);
     }
 }
-
 
