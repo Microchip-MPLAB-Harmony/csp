@@ -2055,7 +2055,7 @@
               <Value dnOrder="0">10000</Value>
             </Long>
             <Boolean dnOrder="1" id="visible">
-              <Value dnOrder="0">false</Value>
+              <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
           <Values dnOrder="1">
@@ -2064,7 +2064,7 @@
         </Long>
         <KeyValueSet dnOrder="4" id="TC_COMPARE_CTRLA_WAVEGEN">
           <Values dnOrder="0">
-            <User dnOrder="0" value="1"/>
+            <User dnOrder="0" value="3"/>
           </Values>
         </KeyValueSet>
         <File dnOrder="5" id="TC_COMPARE_HEADER">
@@ -2176,20 +2176,23 @@
         <Long dnOrder="2" id="TC_COMPARE_CC0">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
-              <Value dnOrder="0">Compare&amp;#160;0&amp;#160;Value</Value>
+              <Value dnOrder="0">Compare&amp;#160;0&amp;#160;Value&amp;#160;(Period)</Value>
             </String>
             <Long dnOrder="1" id="max">
               <Value dnOrder="0">65535</Value>
             </Long>
           </Attributes>
+          <Values dnOrder="1">
+            <User dnOrder="0" value="10000"/>
+          </Values>
         </Long>
         <Long dnOrder="3" id="TC_COMPARE_CC1">
           <Attributes dnOrder="0">
             <Long dnOrder="0" id="max">
-              <Value dnOrder="0">65535</Value>
+              <Value dnOrder="0">10000</Value>
             </Long>
             <Boolean dnOrder="1" id="visible">
-              <Value dnOrder="0">true</Value>
+              <Value dnOrder="0">false</Value>
             </Boolean>
           </Attributes>
           <Values dnOrder="1">
@@ -2198,7 +2201,7 @@
         </Long>
         <KeyValueSet dnOrder="4" id="TC_COMPARE_CTRLA_WAVEGEN">
           <Values dnOrder="0">
-            <User dnOrder="0" value="0"/>
+            <User dnOrder="0" value="1"/>
           </Values>
         </KeyValueSet>
         <File dnOrder="5" id="TC_COMPARE_HEADER">
@@ -2223,7 +2226,7 @@
         <Comment dnOrder="8" id="TC_COMPARE_PERIOD_COMMENT">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="text">
-              <Value dnOrder="0">****&amp;#160;Compare&amp;#160;Period&amp;#160;is&amp;#160;87430.3598873&amp;#160;us&amp;#160;****</Value>
+              <Value dnOrder="0">****&amp;#160;Compare&amp;#160;Period&amp;#160;is&amp;#160;13341.0177596&amp;#160;us&amp;#160;****</Value>
             </String>
           </Attributes>
         </Comment>
@@ -2240,7 +2243,7 @@
               <Value dnOrder="0">****&amp;#160;Period&amp;#160;Value&amp;#160;is&amp;#160;0xffff&amp;#160;****</Value>
             </String>
             <Boolean dnOrder="1" id="visible">
-              <Value dnOrder="0">true</Value>
+              <Value dnOrder="0">false</Value>
             </Boolean>
           </Attributes>
         </Comment>
