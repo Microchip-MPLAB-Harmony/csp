@@ -52,7 +52,7 @@
 /* This section lists the other files that are included in this file.
 */
 
-#include "plib_sercom_i2c_master.h"
+#include "plib_sercom_i2c_master_common.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
