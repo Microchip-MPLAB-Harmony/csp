@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-06-07T05:54:14Z */
+/* file generated from device description version 2019-11-24T15:57:35Z */
 #ifndef _SAML10_OPAMP_COMPONENT_H_
 #define _SAML10_OPAMP_COMPONENT_H_
 
@@ -104,22 +104,22 @@
 #define OPAMP_OPAMPCTRL0_POTMUX_Pos           _U_(13)                                              /**< (OPAMP_OPAMPCTRL0) Potentiometer Selection Position */
 #define OPAMP_OPAMPCTRL0_POTMUX_Msk           (_U_(0x7) << OPAMP_OPAMPCTRL0_POTMUX_Pos)            /**< (OPAMP_OPAMPCTRL0) Potentiometer Selection Mask */
 #define OPAMP_OPAMPCTRL0_POTMUX(value)        (OPAMP_OPAMPCTRL0_POTMUX_Msk & ((value) << OPAMP_OPAMPCTRL0_POTMUX_Pos))
-#define   OPAMP_OPAMPCTRL0_POTMUX_14R_2R_Val  _U_(0x0)                                             /**< (OPAMP_OPAMPCTRL0) Gain = 0.14  */
-#define   OPAMP_OPAMPCTRL0_POTMUX_12R_4R_Val  _U_(0x1)                                             /**< (OPAMP_OPAMPCTRL0) Gain = 0.33  */
-#define   OPAMP_OPAMPCTRL0_POTMUX_8R_8R_Val   _U_(0x2)                                             /**< (OPAMP_OPAMPCTRL0) Gain = 1  */
-#define   OPAMP_OPAMPCTRL0_POTMUX_6R_10R_Val  _U_(0x3)                                             /**< (OPAMP_OPAMPCTRL0) Gain = 1.67  */
-#define   OPAMP_OPAMPCTRL0_POTMUX_4R_12R_Val  _U_(0x4)                                             /**< (OPAMP_OPAMPCTRL0) Gain = 3  */
-#define   OPAMP_OPAMPCTRL0_POTMUX_3R_13R_Val  _U_(0x5)                                             /**< (OPAMP_OPAMPCTRL0) Gain = 4.33  */
-#define   OPAMP_OPAMPCTRL0_POTMUX_2R_14R_Val  _U_(0x6)                                             /**< (OPAMP_OPAMPCTRL0) Gain = 7  */
-#define   OPAMP_OPAMPCTRL0_POTMUX_R_15R_Val   _U_(0x7)                                             /**< (OPAMP_OPAMPCTRL0) Gain = 15  */
-#define OPAMP_OPAMPCTRL0_POTMUX_14R_2R        (OPAMP_OPAMPCTRL0_POTMUX_14R_2R_Val << OPAMP_OPAMPCTRL0_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL0) Gain = 0.14 Position  */
-#define OPAMP_OPAMPCTRL0_POTMUX_12R_4R        (OPAMP_OPAMPCTRL0_POTMUX_12R_4R_Val << OPAMP_OPAMPCTRL0_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL0) Gain = 0.33 Position  */
-#define OPAMP_OPAMPCTRL0_POTMUX_8R_8R         (OPAMP_OPAMPCTRL0_POTMUX_8R_8R_Val << OPAMP_OPAMPCTRL0_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL0) Gain = 1 Position  */
-#define OPAMP_OPAMPCTRL0_POTMUX_6R_10R        (OPAMP_OPAMPCTRL0_POTMUX_6R_10R_Val << OPAMP_OPAMPCTRL0_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL0) Gain = 1.67 Position  */
-#define OPAMP_OPAMPCTRL0_POTMUX_4R_12R        (OPAMP_OPAMPCTRL0_POTMUX_4R_12R_Val << OPAMP_OPAMPCTRL0_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL0) Gain = 3 Position  */
-#define OPAMP_OPAMPCTRL0_POTMUX_3R_13R        (OPAMP_OPAMPCTRL0_POTMUX_3R_13R_Val << OPAMP_OPAMPCTRL0_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL0) Gain = 4.33 Position  */
-#define OPAMP_OPAMPCTRL0_POTMUX_2R_14R        (OPAMP_OPAMPCTRL0_POTMUX_2R_14R_Val << OPAMP_OPAMPCTRL0_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL0) Gain = 7 Position  */
-#define OPAMP_OPAMPCTRL0_POTMUX_R_15R         (OPAMP_OPAMPCTRL0_POTMUX_R_15R_Val << OPAMP_OPAMPCTRL0_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL0) Gain = 15 Position  */
+#define   OPAMP_OPAMPCTRL0_POTMUX_14R_2R_Val  _U_(0x0)                                             /**< (OPAMP_OPAMPCTRL0) R1 = 14R, R2 = 2R  */
+#define   OPAMP_OPAMPCTRL0_POTMUX_12R_4R_Val  _U_(0x1)                                             /**< (OPAMP_OPAMPCTRL0) R1 = 12R, R2 = 4R  */
+#define   OPAMP_OPAMPCTRL0_POTMUX_8R_8R_Val   _U_(0x2)                                             /**< (OPAMP_OPAMPCTRL0) R1 = 8R, R2 = 8R  */
+#define   OPAMP_OPAMPCTRL0_POTMUX_6R_10R_Val  _U_(0x3)                                             /**< (OPAMP_OPAMPCTRL0) R1 = 6R, R2 = 10R  */
+#define   OPAMP_OPAMPCTRL0_POTMUX_4R_12R_Val  _U_(0x4)                                             /**< (OPAMP_OPAMPCTRL0) R1 = 4R, R2 = 12R  */
+#define   OPAMP_OPAMPCTRL0_POTMUX_3R_13R_Val  _U_(0x5)                                             /**< (OPAMP_OPAMPCTRL0) R1 = 3R, R2 = 13R  */
+#define   OPAMP_OPAMPCTRL0_POTMUX_2R_14R_Val  _U_(0x6)                                             /**< (OPAMP_OPAMPCTRL0) R1 = 2R, R2 = 14R  */
+#define   OPAMP_OPAMPCTRL0_POTMUX_R_15R_Val   _U_(0x7)                                             /**< (OPAMP_OPAMPCTRL0) R1 = 1R, R2 = 15R  */
+#define OPAMP_OPAMPCTRL0_POTMUX_14R_2R        (OPAMP_OPAMPCTRL0_POTMUX_14R_2R_Val << OPAMP_OPAMPCTRL0_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL0) R1 = 14R, R2 = 2R Position  */
+#define OPAMP_OPAMPCTRL0_POTMUX_12R_4R        (OPAMP_OPAMPCTRL0_POTMUX_12R_4R_Val << OPAMP_OPAMPCTRL0_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL0) R1 = 12R, R2 = 4R Position  */
+#define OPAMP_OPAMPCTRL0_POTMUX_8R_8R         (OPAMP_OPAMPCTRL0_POTMUX_8R_8R_Val << OPAMP_OPAMPCTRL0_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL0) R1 = 8R, R2 = 8R Position  */
+#define OPAMP_OPAMPCTRL0_POTMUX_6R_10R        (OPAMP_OPAMPCTRL0_POTMUX_6R_10R_Val << OPAMP_OPAMPCTRL0_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL0) R1 = 6R, R2 = 10R Position  */
+#define OPAMP_OPAMPCTRL0_POTMUX_4R_12R        (OPAMP_OPAMPCTRL0_POTMUX_4R_12R_Val << OPAMP_OPAMPCTRL0_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL0) R1 = 4R, R2 = 12R Position  */
+#define OPAMP_OPAMPCTRL0_POTMUX_3R_13R        (OPAMP_OPAMPCTRL0_POTMUX_3R_13R_Val << OPAMP_OPAMPCTRL0_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL0) R1 = 3R, R2 = 13R Position  */
+#define OPAMP_OPAMPCTRL0_POTMUX_2R_14R        (OPAMP_OPAMPCTRL0_POTMUX_2R_14R_Val << OPAMP_OPAMPCTRL0_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL0) R1 = 2R, R2 = 14R Position  */
+#define OPAMP_OPAMPCTRL0_POTMUX_R_15R         (OPAMP_OPAMPCTRL0_POTMUX_R_15R_Val << OPAMP_OPAMPCTRL0_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL0) R1 = 1R, R2 = 15R Position  */
 #define OPAMP_OPAMPCTRL0_MUXPOS_Pos           _U_(16)                                              /**< (OPAMP_OPAMPCTRL0) Positive Input Mux Selection Position */
 #define OPAMP_OPAMPCTRL0_MUXPOS_Msk           (_U_(0xF) << OPAMP_OPAMPCTRL0_MUXPOS_Pos)            /**< (OPAMP_OPAMPCTRL0) Positive Input Mux Selection Mask */
 #define OPAMP_OPAMPCTRL0_MUXPOS(value)        (OPAMP_OPAMPCTRL0_MUXPOS_Msk & ((value) << OPAMP_OPAMPCTRL0_MUXPOS_Pos))
@@ -188,22 +188,22 @@
 #define OPAMP_OPAMPCTRL1_POTMUX_Pos           _U_(13)                                              /**< (OPAMP_OPAMPCTRL1) Potentiometer Selection Position */
 #define OPAMP_OPAMPCTRL1_POTMUX_Msk           (_U_(0x7) << OPAMP_OPAMPCTRL1_POTMUX_Pos)            /**< (OPAMP_OPAMPCTRL1) Potentiometer Selection Mask */
 #define OPAMP_OPAMPCTRL1_POTMUX(value)        (OPAMP_OPAMPCTRL1_POTMUX_Msk & ((value) << OPAMP_OPAMPCTRL1_POTMUX_Pos))
-#define   OPAMP_OPAMPCTRL1_POTMUX_14R_2R_Val  _U_(0x0)                                             /**< (OPAMP_OPAMPCTRL1) Gain = 0.14  */
-#define   OPAMP_OPAMPCTRL1_POTMUX_12R_4R_Val  _U_(0x1)                                             /**< (OPAMP_OPAMPCTRL1) Gain = 0.33  */
-#define   OPAMP_OPAMPCTRL1_POTMUX_8R_8R_Val   _U_(0x2)                                             /**< (OPAMP_OPAMPCTRL1) Gain = 1  */
-#define   OPAMP_OPAMPCTRL1_POTMUX_6R_10R_Val  _U_(0x3)                                             /**< (OPAMP_OPAMPCTRL1) Gain = 1.67  */
-#define   OPAMP_OPAMPCTRL1_POTMUX_4R_12R_Val  _U_(0x4)                                             /**< (OPAMP_OPAMPCTRL1) Gain = 3  */
-#define   OPAMP_OPAMPCTRL1_POTMUX_3R_13R_Val  _U_(0x5)                                             /**< (OPAMP_OPAMPCTRL1) Gain = 4.33  */
-#define   OPAMP_OPAMPCTRL1_POTMUX_2R_14R_Val  _U_(0x6)                                             /**< (OPAMP_OPAMPCTRL1) Gain = 7  */
-#define   OPAMP_OPAMPCTRL1_POTMUX_R_15R_Val   _U_(0x7)                                             /**< (OPAMP_OPAMPCTRL1) Gain = 15  */
-#define OPAMP_OPAMPCTRL1_POTMUX_14R_2R        (OPAMP_OPAMPCTRL1_POTMUX_14R_2R_Val << OPAMP_OPAMPCTRL1_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL1) Gain = 0.14 Position  */
-#define OPAMP_OPAMPCTRL1_POTMUX_12R_4R        (OPAMP_OPAMPCTRL1_POTMUX_12R_4R_Val << OPAMP_OPAMPCTRL1_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL1) Gain = 0.33 Position  */
-#define OPAMP_OPAMPCTRL1_POTMUX_8R_8R         (OPAMP_OPAMPCTRL1_POTMUX_8R_8R_Val << OPAMP_OPAMPCTRL1_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL1) Gain = 1 Position  */
-#define OPAMP_OPAMPCTRL1_POTMUX_6R_10R        (OPAMP_OPAMPCTRL1_POTMUX_6R_10R_Val << OPAMP_OPAMPCTRL1_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL1) Gain = 1.67 Position  */
-#define OPAMP_OPAMPCTRL1_POTMUX_4R_12R        (OPAMP_OPAMPCTRL1_POTMUX_4R_12R_Val << OPAMP_OPAMPCTRL1_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL1) Gain = 3 Position  */
-#define OPAMP_OPAMPCTRL1_POTMUX_3R_13R        (OPAMP_OPAMPCTRL1_POTMUX_3R_13R_Val << OPAMP_OPAMPCTRL1_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL1) Gain = 4.33 Position  */
-#define OPAMP_OPAMPCTRL1_POTMUX_2R_14R        (OPAMP_OPAMPCTRL1_POTMUX_2R_14R_Val << OPAMP_OPAMPCTRL1_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL1) Gain = 7 Position  */
-#define OPAMP_OPAMPCTRL1_POTMUX_R_15R         (OPAMP_OPAMPCTRL1_POTMUX_R_15R_Val << OPAMP_OPAMPCTRL1_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL1) Gain = 15 Position  */
+#define   OPAMP_OPAMPCTRL1_POTMUX_14R_2R_Val  _U_(0x0)                                             /**< (OPAMP_OPAMPCTRL1) R1 = 14R, R2 = 2R  */
+#define   OPAMP_OPAMPCTRL1_POTMUX_12R_4R_Val  _U_(0x1)                                             /**< (OPAMP_OPAMPCTRL1) R1 = 12R, R2 = 4R  */
+#define   OPAMP_OPAMPCTRL1_POTMUX_8R_8R_Val   _U_(0x2)                                             /**< (OPAMP_OPAMPCTRL1) R1 = 8R, R2 = 8R  */
+#define   OPAMP_OPAMPCTRL1_POTMUX_6R_10R_Val  _U_(0x3)                                             /**< (OPAMP_OPAMPCTRL1) R1 = 6R, R2 = 10R  */
+#define   OPAMP_OPAMPCTRL1_POTMUX_4R_12R_Val  _U_(0x4)                                             /**< (OPAMP_OPAMPCTRL1) R1 = 4R, R2 = 12R  */
+#define   OPAMP_OPAMPCTRL1_POTMUX_3R_13R_Val  _U_(0x5)                                             /**< (OPAMP_OPAMPCTRL1) R1 = 3R, R2 = 13R  */
+#define   OPAMP_OPAMPCTRL1_POTMUX_2R_14R_Val  _U_(0x6)                                             /**< (OPAMP_OPAMPCTRL1) R1 = 2R, R2 = 14R  */
+#define   OPAMP_OPAMPCTRL1_POTMUX_R_15R_Val   _U_(0x7)                                             /**< (OPAMP_OPAMPCTRL1) R1 = 1R, R2 = 15R  */
+#define OPAMP_OPAMPCTRL1_POTMUX_14R_2R        (OPAMP_OPAMPCTRL1_POTMUX_14R_2R_Val << OPAMP_OPAMPCTRL1_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL1) R1 = 14R, R2 = 2R Position  */
+#define OPAMP_OPAMPCTRL1_POTMUX_12R_4R        (OPAMP_OPAMPCTRL1_POTMUX_12R_4R_Val << OPAMP_OPAMPCTRL1_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL1) R1 = 12R, R2 = 4R Position  */
+#define OPAMP_OPAMPCTRL1_POTMUX_8R_8R         (OPAMP_OPAMPCTRL1_POTMUX_8R_8R_Val << OPAMP_OPAMPCTRL1_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL1) R1 = 8R, R2 = 8R Position  */
+#define OPAMP_OPAMPCTRL1_POTMUX_6R_10R        (OPAMP_OPAMPCTRL1_POTMUX_6R_10R_Val << OPAMP_OPAMPCTRL1_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL1) R1 = 6R, R2 = 10R Position  */
+#define OPAMP_OPAMPCTRL1_POTMUX_4R_12R        (OPAMP_OPAMPCTRL1_POTMUX_4R_12R_Val << OPAMP_OPAMPCTRL1_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL1) R1 = 4R, R2 = 12R Position  */
+#define OPAMP_OPAMPCTRL1_POTMUX_3R_13R        (OPAMP_OPAMPCTRL1_POTMUX_3R_13R_Val << OPAMP_OPAMPCTRL1_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL1) R1 = 3R, R2 = 13R Position  */
+#define OPAMP_OPAMPCTRL1_POTMUX_2R_14R        (OPAMP_OPAMPCTRL1_POTMUX_2R_14R_Val << OPAMP_OPAMPCTRL1_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL1) R1 = 2R, R2 = 14R Position  */
+#define OPAMP_OPAMPCTRL1_POTMUX_R_15R         (OPAMP_OPAMPCTRL1_POTMUX_R_15R_Val << OPAMP_OPAMPCTRL1_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL1) R1 = 1R, R2 = 15R Position  */
 #define OPAMP_OPAMPCTRL1_MUXPOS_Pos           _U_(16)                                              /**< (OPAMP_OPAMPCTRL1) Positive Input Mux Selection Position */
 #define OPAMP_OPAMPCTRL1_MUXPOS_Msk           (_U_(0xF) << OPAMP_OPAMPCTRL1_MUXPOS_Pos)            /**< (OPAMP_OPAMPCTRL1) Positive Input Mux Selection Mask */
 #define OPAMP_OPAMPCTRL1_MUXPOS(value)        (OPAMP_OPAMPCTRL1_MUXPOS_Msk & ((value) << OPAMP_OPAMPCTRL1_MUXPOS_Pos))
@@ -272,22 +272,22 @@
 #define OPAMP_OPAMPCTRL2_POTMUX_Pos           _U_(13)                                              /**< (OPAMP_OPAMPCTRL2) Potentiometer Selection Position */
 #define OPAMP_OPAMPCTRL2_POTMUX_Msk           (_U_(0x7) << OPAMP_OPAMPCTRL2_POTMUX_Pos)            /**< (OPAMP_OPAMPCTRL2) Potentiometer Selection Mask */
 #define OPAMP_OPAMPCTRL2_POTMUX(value)        (OPAMP_OPAMPCTRL2_POTMUX_Msk & ((value) << OPAMP_OPAMPCTRL2_POTMUX_Pos))
-#define   OPAMP_OPAMPCTRL2_POTMUX_14R_2R_Val  _U_(0x0)                                             /**< (OPAMP_OPAMPCTRL2) Gain = 0.14  */
-#define   OPAMP_OPAMPCTRL2_POTMUX_12R_4R_Val  _U_(0x1)                                             /**< (OPAMP_OPAMPCTRL2) Gain = 0.33  */
-#define   OPAMP_OPAMPCTRL2_POTMUX_8R_8R_Val   _U_(0x2)                                             /**< (OPAMP_OPAMPCTRL2) Gain = 1  */
-#define   OPAMP_OPAMPCTRL2_POTMUX_6R_10R_Val  _U_(0x3)                                             /**< (OPAMP_OPAMPCTRL2) Gain = 1.67  */
-#define   OPAMP_OPAMPCTRL2_POTMUX_4R_12R_Val  _U_(0x4)                                             /**< (OPAMP_OPAMPCTRL2) Gain = 3  */
-#define   OPAMP_OPAMPCTRL2_POTMUX_3R_13R_Val  _U_(0x5)                                             /**< (OPAMP_OPAMPCTRL2) Gain = 4.33  */
-#define   OPAMP_OPAMPCTRL2_POTMUX_2R_14R_Val  _U_(0x6)                                             /**< (OPAMP_OPAMPCTRL2) Gain = 7  */
-#define   OPAMP_OPAMPCTRL2_POTMUX_R_15R_Val   _U_(0x7)                                             /**< (OPAMP_OPAMPCTRL2) Gain = 15  */
-#define OPAMP_OPAMPCTRL2_POTMUX_14R_2R        (OPAMP_OPAMPCTRL2_POTMUX_14R_2R_Val << OPAMP_OPAMPCTRL2_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL2) Gain = 0.14 Position  */
-#define OPAMP_OPAMPCTRL2_POTMUX_12R_4R        (OPAMP_OPAMPCTRL2_POTMUX_12R_4R_Val << OPAMP_OPAMPCTRL2_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL2) Gain = 0.33 Position  */
-#define OPAMP_OPAMPCTRL2_POTMUX_8R_8R         (OPAMP_OPAMPCTRL2_POTMUX_8R_8R_Val << OPAMP_OPAMPCTRL2_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL2) Gain = 1 Position  */
-#define OPAMP_OPAMPCTRL2_POTMUX_6R_10R        (OPAMP_OPAMPCTRL2_POTMUX_6R_10R_Val << OPAMP_OPAMPCTRL2_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL2) Gain = 1.67 Position  */
-#define OPAMP_OPAMPCTRL2_POTMUX_4R_12R        (OPAMP_OPAMPCTRL2_POTMUX_4R_12R_Val << OPAMP_OPAMPCTRL2_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL2) Gain = 3 Position  */
-#define OPAMP_OPAMPCTRL2_POTMUX_3R_13R        (OPAMP_OPAMPCTRL2_POTMUX_3R_13R_Val << OPAMP_OPAMPCTRL2_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL2) Gain = 4.33 Position  */
-#define OPAMP_OPAMPCTRL2_POTMUX_2R_14R        (OPAMP_OPAMPCTRL2_POTMUX_2R_14R_Val << OPAMP_OPAMPCTRL2_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL2) Gain = 7 Position  */
-#define OPAMP_OPAMPCTRL2_POTMUX_R_15R         (OPAMP_OPAMPCTRL2_POTMUX_R_15R_Val << OPAMP_OPAMPCTRL2_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL2) Gain = 15 Position  */
+#define   OPAMP_OPAMPCTRL2_POTMUX_14R_2R_Val  _U_(0x0)                                             /**< (OPAMP_OPAMPCTRL2) R1 = 14R, R2 = 2R  */
+#define   OPAMP_OPAMPCTRL2_POTMUX_12R_4R_Val  _U_(0x1)                                             /**< (OPAMP_OPAMPCTRL2) R1 = 12R, R2 = 4R  */
+#define   OPAMP_OPAMPCTRL2_POTMUX_8R_8R_Val   _U_(0x2)                                             /**< (OPAMP_OPAMPCTRL2) R1 = 8R, R2 = 8R  */
+#define   OPAMP_OPAMPCTRL2_POTMUX_6R_10R_Val  _U_(0x3)                                             /**< (OPAMP_OPAMPCTRL2) R1 = 6R, R2 = 10R  */
+#define   OPAMP_OPAMPCTRL2_POTMUX_4R_12R_Val  _U_(0x4)                                             /**< (OPAMP_OPAMPCTRL2) R1 = 4R, R2 = 12R  */
+#define   OPAMP_OPAMPCTRL2_POTMUX_3R_13R_Val  _U_(0x5)                                             /**< (OPAMP_OPAMPCTRL2) R1 = 3R, R2 = 13R  */
+#define   OPAMP_OPAMPCTRL2_POTMUX_2R_14R_Val  _U_(0x6)                                             /**< (OPAMP_OPAMPCTRL2) R1 = 2R, R2 = 14R  */
+#define   OPAMP_OPAMPCTRL2_POTMUX_R_15R_Val   _U_(0x7)                                             /**< (OPAMP_OPAMPCTRL2) R1 = 1R, R2 = 15R  */
+#define OPAMP_OPAMPCTRL2_POTMUX_14R_2R        (OPAMP_OPAMPCTRL2_POTMUX_14R_2R_Val << OPAMP_OPAMPCTRL2_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL2) R1 = 14R, R2 = 2R Position  */
+#define OPAMP_OPAMPCTRL2_POTMUX_12R_4R        (OPAMP_OPAMPCTRL2_POTMUX_12R_4R_Val << OPAMP_OPAMPCTRL2_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL2) R1 = 12R, R2 = 4R Position  */
+#define OPAMP_OPAMPCTRL2_POTMUX_8R_8R         (OPAMP_OPAMPCTRL2_POTMUX_8R_8R_Val << OPAMP_OPAMPCTRL2_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL2) R1 = 8R, R2 = 8R Position  */
+#define OPAMP_OPAMPCTRL2_POTMUX_6R_10R        (OPAMP_OPAMPCTRL2_POTMUX_6R_10R_Val << OPAMP_OPAMPCTRL2_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL2) R1 = 6R, R2 = 10R Position  */
+#define OPAMP_OPAMPCTRL2_POTMUX_4R_12R        (OPAMP_OPAMPCTRL2_POTMUX_4R_12R_Val << OPAMP_OPAMPCTRL2_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL2) R1 = 4R, R2 = 12R Position  */
+#define OPAMP_OPAMPCTRL2_POTMUX_3R_13R        (OPAMP_OPAMPCTRL2_POTMUX_3R_13R_Val << OPAMP_OPAMPCTRL2_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL2) R1 = 3R, R2 = 13R Position  */
+#define OPAMP_OPAMPCTRL2_POTMUX_2R_14R        (OPAMP_OPAMPCTRL2_POTMUX_2R_14R_Val << OPAMP_OPAMPCTRL2_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL2) R1 = 2R, R2 = 14R Position  */
+#define OPAMP_OPAMPCTRL2_POTMUX_R_15R         (OPAMP_OPAMPCTRL2_POTMUX_R_15R_Val << OPAMP_OPAMPCTRL2_POTMUX_Pos) /**< (OPAMP_OPAMPCTRL2) R1 = 1R, R2 = 15R Position  */
 #define OPAMP_OPAMPCTRL2_MUXPOS_Pos           _U_(16)                                              /**< (OPAMP_OPAMPCTRL2) Positive Input Mux Selection Position */
 #define OPAMP_OPAMPCTRL2_MUXPOS_Msk           (_U_(0xF) << OPAMP_OPAMPCTRL2_MUXPOS_Pos)            /**< (OPAMP_OPAMPCTRL2) Positive Input Mux Selection Mask */
 #define OPAMP_OPAMPCTRL2_MUXPOS(value)        (OPAMP_OPAMPCTRL2_MUXPOS_Msk & ((value) << OPAMP_OPAMPCTRL2_MUXPOS_Pos))
