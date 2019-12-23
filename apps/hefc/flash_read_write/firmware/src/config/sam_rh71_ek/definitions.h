@@ -51,6 +51,7 @@
 #include "peripheral/hefc/plib_hefc.h"
 #include "peripheral/clk/plib_clk.h"
 #include "peripheral/pio/plib_pio.h"
+#include "peripheral/matrix/plib_matrix.h"
 #include "peripheral/nvic/plib_nvic.h"
 
 // DOM-IGNORE-BEGIN

@@ -20,13 +20,119 @@
  *
  */
 
-/* file generated from device description version 2019-08-29T14:13:58Z */
+/* file generated from device description version 2019-12-20T15:37:42Z */
 #ifndef _SAMRH71_ICM_COMPONENT_H_
 #define _SAMRH71_ICM_COMPONENT_H_
 
 /* ************************************************************************** */
 /*   SOFTWARE API DEFINITION FOR ICM                                          */
 /* ************************************************************************** */
+
+/* -------- ICM_RADDR : (ICM Offset: 0x00) (R/W 32) Region Start Address -------- */
+#define ICM_RADDR_RADDR_Pos                   _U_(0)                                               /**< (ICM_RADDR) Region Start Address Position */
+#define ICM_RADDR_RADDR_Msk                   (_U_(0xFFFFFFFF) << ICM_RADDR_RADDR_Pos)             /**< (ICM_RADDR) Region Start Address Mask */
+#define ICM_RADDR_RADDR(value)                (ICM_RADDR_RADDR_Msk & ((value) << ICM_RADDR_RADDR_Pos))
+#define ICM_RADDR_Msk                         _U_(0xFFFFFFFF)                                      /**< (ICM_RADDR) Register Mask  */
+
+
+/* -------- ICM_RCFG : (ICM Offset: 0x04) (R/W 32) Region Configuration -------- */
+#define ICM_RCFG_RESETVALUE                   _U_(0x00)                                            /**<  (ICM_RCFG) Region Configuration  Reset Value */
+
+#define ICM_RCFG_CDWBN_Pos                    _U_(0)                                               /**< (ICM_RCFG) Compare Digest Write Back Position */
+#define ICM_RCFG_CDWBN_Msk                    (_U_(0x1) << ICM_RCFG_CDWBN_Pos)                     /**< (ICM_RCFG) Compare Digest Write Back Mask */
+#define ICM_RCFG_CDWBN(value)                 (ICM_RCFG_CDWBN_Msk & ((value) << ICM_RCFG_CDWBN_Pos))
+#define   ICM_RCFG_CDWBN_WRBA_Val             _U_(0x0)                                             /**< (ICM_RCFG)   */
+#define   ICM_RCFG_CDWBN_COMP_Val             _U_(0x1)                                             /**< (ICM_RCFG)   */
+#define ICM_RCFG_CDWBN_WRBA                   (ICM_RCFG_CDWBN_WRBA_Val << ICM_RCFG_CDWBN_Pos)      /**< (ICM_RCFG)  Position  */
+#define ICM_RCFG_CDWBN_COMP                   (ICM_RCFG_CDWBN_COMP_Val << ICM_RCFG_CDWBN_Pos)      /**< (ICM_RCFG)  Position  */
+#define ICM_RCFG_WRAP_Pos                     _U_(1)                                               /**< (ICM_RCFG) Region Wrap Position */
+#define ICM_RCFG_WRAP_Msk                     (_U_(0x1) << ICM_RCFG_WRAP_Pos)                      /**< (ICM_RCFG) Region Wrap Mask */
+#define ICM_RCFG_WRAP(value)                  (ICM_RCFG_WRAP_Msk & ((value) << ICM_RCFG_WRAP_Pos))
+#define   ICM_RCFG_WRAP_NO_Val                _U_(0x0)                                             /**< (ICM_RCFG)   */
+#define   ICM_RCFG_WRAP_YES_Val               _U_(0x1)                                             /**< (ICM_RCFG)   */
+#define ICM_RCFG_WRAP_NO                      (ICM_RCFG_WRAP_NO_Val << ICM_RCFG_WRAP_Pos)          /**< (ICM_RCFG)  Position  */
+#define ICM_RCFG_WRAP_YES                     (ICM_RCFG_WRAP_YES_Val << ICM_RCFG_WRAP_Pos)         /**< (ICM_RCFG)  Position  */
+#define ICM_RCFG_EOM_Pos                      _U_(2)                                               /**< (ICM_RCFG) End of Monitoring Position */
+#define ICM_RCFG_EOM_Msk                      (_U_(0x1) << ICM_RCFG_EOM_Pos)                       /**< (ICM_RCFG) End of Monitoring Mask */
+#define ICM_RCFG_EOM(value)                   (ICM_RCFG_EOM_Msk & ((value) << ICM_RCFG_EOM_Pos))  
+#define   ICM_RCFG_EOM_NO_Val                 _U_(0x0)                                             /**< (ICM_RCFG)   */
+#define   ICM_RCFG_EOM_YES_Val                _U_(0x1)                                             /**< (ICM_RCFG)   */
+#define ICM_RCFG_EOM_NO                       (ICM_RCFG_EOM_NO_Val << ICM_RCFG_EOM_Pos)            /**< (ICM_RCFG)  Position  */
+#define ICM_RCFG_EOM_YES                      (ICM_RCFG_EOM_YES_Val << ICM_RCFG_EOM_Pos)           /**< (ICM_RCFG)  Position  */
+#define ICM_RCFG_RHIEN_Pos                    _U_(4)                                               /**< (ICM_RCFG) Region Hash Interrupt Enable Position */
+#define ICM_RCFG_RHIEN_Msk                    (_U_(0x1) << ICM_RCFG_RHIEN_Pos)                     /**< (ICM_RCFG) Region Hash Interrupt Enable Mask */
+#define ICM_RCFG_RHIEN(value)                 (ICM_RCFG_RHIEN_Msk & ((value) << ICM_RCFG_RHIEN_Pos))
+#define   ICM_RCFG_RHIEN_EN_Val               _U_(0x0)                                             /**< (ICM_RCFG)   */
+#define   ICM_RCFG_RHIEN_DIS_Val              _U_(0x1)                                             /**< (ICM_RCFG)   */
+#define ICM_RCFG_RHIEN_EN                     (ICM_RCFG_RHIEN_EN_Val << ICM_RCFG_RHIEN_Pos)        /**< (ICM_RCFG)  Position  */
+#define ICM_RCFG_RHIEN_DIS                    (ICM_RCFG_RHIEN_DIS_Val << ICM_RCFG_RHIEN_Pos)       /**< (ICM_RCFG)  Position  */
+#define ICM_RCFG_DMIEN_Pos                    _U_(5)                                               /**< (ICM_RCFG) Region Digest Mismatch Interrupt Enable Position */
+#define ICM_RCFG_DMIEN_Msk                    (_U_(0x1) << ICM_RCFG_DMIEN_Pos)                     /**< (ICM_RCFG) Region Digest Mismatch Interrupt Enable Mask */
+#define ICM_RCFG_DMIEN(value)                 (ICM_RCFG_DMIEN_Msk & ((value) << ICM_RCFG_DMIEN_Pos))
+#define   ICM_RCFG_DMIEN_EN_Val               _U_(0x0)                                             /**< (ICM_RCFG)   */
+#define   ICM_RCFG_DMIEN_DIS_Val              _U_(0x1)                                             /**< (ICM_RCFG)   */
+#define ICM_RCFG_DMIEN_EN                     (ICM_RCFG_DMIEN_EN_Val << ICM_RCFG_DMIEN_Pos)        /**< (ICM_RCFG)  Position  */
+#define ICM_RCFG_DMIEN_DIS                    (ICM_RCFG_DMIEN_DIS_Val << ICM_RCFG_DMIEN_Pos)       /**< (ICM_RCFG)  Position  */
+#define ICM_RCFG_BEIEN_Pos                    _U_(6)                                               /**< (ICM_RCFG) Region Bus Error Interrupt Enable Position */
+#define ICM_RCFG_BEIEN_Msk                    (_U_(0x1) << ICM_RCFG_BEIEN_Pos)                     /**< (ICM_RCFG) Region Bus Error Interrupt Enable Mask */
+#define ICM_RCFG_BEIEN(value)                 (ICM_RCFG_BEIEN_Msk & ((value) << ICM_RCFG_BEIEN_Pos))
+#define   ICM_RCFG_BEIEN_EN_Val               _U_(0x0)                                             /**< (ICM_RCFG)   */
+#define   ICM_RCFG_BEIEN_DIS_Val              _U_(0x1)                                             /**< (ICM_RCFG)   */
+#define ICM_RCFG_BEIEN_EN                     (ICM_RCFG_BEIEN_EN_Val << ICM_RCFG_BEIEN_Pos)        /**< (ICM_RCFG)  Position  */
+#define ICM_RCFG_BEIEN_DIS                    (ICM_RCFG_BEIEN_DIS_Val << ICM_RCFG_BEIEN_Pos)       /**< (ICM_RCFG)  Position  */
+#define ICM_RCFG_WCIEN_Pos                    _U_(7)                                               /**< (ICM_RCFG) Region Wrap Condition Detected Interrupt Enable Position */
+#define ICM_RCFG_WCIEN_Msk                    (_U_(0x1) << ICM_RCFG_WCIEN_Pos)                     /**< (ICM_RCFG) Region Wrap Condition Detected Interrupt Enable Mask */
+#define ICM_RCFG_WCIEN(value)                 (ICM_RCFG_WCIEN_Msk & ((value) << ICM_RCFG_WCIEN_Pos))
+#define   ICM_RCFG_WCIEN_EN_Val               _U_(0x0)                                             /**< (ICM_RCFG)   */
+#define   ICM_RCFG_WCIEN_DIS_Val              _U_(0x1)                                             /**< (ICM_RCFG)   */
+#define ICM_RCFG_WCIEN_EN                     (ICM_RCFG_WCIEN_EN_Val << ICM_RCFG_WCIEN_Pos)        /**< (ICM_RCFG)  Position  */
+#define ICM_RCFG_WCIEN_DIS                    (ICM_RCFG_WCIEN_DIS_Val << ICM_RCFG_WCIEN_Pos)       /**< (ICM_RCFG)  Position  */
+#define ICM_RCFG_ECIEN_Pos                    _U_(8)                                               /**< (ICM_RCFG) Region End bit Condition detected Interrupt Enable Position */
+#define ICM_RCFG_ECIEN_Msk                    (_U_(0x1) << ICM_RCFG_ECIEN_Pos)                     /**< (ICM_RCFG) Region End bit Condition detected Interrupt Enable Mask */
+#define ICM_RCFG_ECIEN(value)                 (ICM_RCFG_ECIEN_Msk & ((value) << ICM_RCFG_ECIEN_Pos))
+#define   ICM_RCFG_ECIEN_EN_Val               _U_(0x0)                                             /**< (ICM_RCFG)   */
+#define   ICM_RCFG_ECIEN_DIS_Val              _U_(0x1)                                             /**< (ICM_RCFG)   */
+#define ICM_RCFG_ECIEN_EN                     (ICM_RCFG_ECIEN_EN_Val << ICM_RCFG_ECIEN_Pos)        /**< (ICM_RCFG)  Position  */
+#define ICM_RCFG_ECIEN_DIS                    (ICM_RCFG_ECIEN_DIS_Val << ICM_RCFG_ECIEN_Pos)       /**< (ICM_RCFG)  Position  */
+#define ICM_RCFG_SUIEN_Pos                    _U_(9)                                               /**< (ICM_RCFG) Region Status Updated Interrupt Enable Position */
+#define ICM_RCFG_SUIEN_Msk                    (_U_(0x1) << ICM_RCFG_SUIEN_Pos)                     /**< (ICM_RCFG) Region Status Updated Interrupt Enable Mask */
+#define ICM_RCFG_SUIEN(value)                 (ICM_RCFG_SUIEN_Msk & ((value) << ICM_RCFG_SUIEN_Pos))
+#define   ICM_RCFG_SUIEN_EN_Val               _U_(0x0)                                             /**< (ICM_RCFG)   */
+#define   ICM_RCFG_SUIEN_DIS_Val              _U_(0x1)                                             /**< (ICM_RCFG)   */
+#define ICM_RCFG_SUIEN_EN                     (ICM_RCFG_SUIEN_EN_Val << ICM_RCFG_SUIEN_Pos)        /**< (ICM_RCFG)  Position  */
+#define ICM_RCFG_SUIEN_DIS                    (ICM_RCFG_SUIEN_DIS_Val << ICM_RCFG_SUIEN_Pos)       /**< (ICM_RCFG)  Position  */
+#define ICM_RCFG_PROCDLY_Pos                  _U_(10)                                              /**< (ICM_RCFG) SHA Processing Delay Position */
+#define ICM_RCFG_PROCDLY_Msk                  (_U_(0x1) << ICM_RCFG_PROCDLY_Pos)                   /**< (ICM_RCFG) SHA Processing Delay Mask */
+#define ICM_RCFG_PROCDLY(value)               (ICM_RCFG_PROCDLY_Msk & ((value) << ICM_RCFG_PROCDLY_Pos))
+#define   ICM_RCFG_PROCDLY_SHORT_Val          _U_(0x0)                                             /**< (ICM_RCFG)   */
+#define   ICM_RCFG_PROCDLY_LONG_Val           _U_(0x1)                                             /**< (ICM_RCFG)   */
+#define ICM_RCFG_PROCDLY_SHORT                (ICM_RCFG_PROCDLY_SHORT_Val << ICM_RCFG_PROCDLY_Pos) /**< (ICM_RCFG)  Position  */
+#define ICM_RCFG_PROCDLY_LONG                 (ICM_RCFG_PROCDLY_LONG_Val << ICM_RCFG_PROCDLY_Pos)  /**< (ICM_RCFG)  Position  */
+#define ICM_RCFG_ALGO_Pos                     _U_(12)                                              /**< (ICM_RCFG) SHA Algorithm Position */
+#define ICM_RCFG_ALGO_Msk                     (_U_(0x7) << ICM_RCFG_ALGO_Pos)                      /**< (ICM_RCFG) SHA Algorithm Mask */
+#define ICM_RCFG_ALGO(value)                  (ICM_RCFG_ALGO_Msk & ((value) << ICM_RCFG_ALGO_Pos))
+#define   ICM_RCFG_ALGO_SHA1_Val              _U_(0x0)                                             /**< (ICM_RCFG) SHA1 algorithm processed  */
+#define   ICM_RCFG_ALGO_SHA256_Val            _U_(0x1)                                             /**< (ICM_RCFG) SHA256 algorithm processed  */
+#define   ICM_RCFG_ALGO_SHA224_Val            _U_(0x4)                                             /**< (ICM_RCFG) SHA224 algorithm processed  */
+#define ICM_RCFG_ALGO_SHA1                    (ICM_RCFG_ALGO_SHA1_Val << ICM_RCFG_ALGO_Pos)        /**< (ICM_RCFG) SHA1 algorithm processed Position  */
+#define ICM_RCFG_ALGO_SHA256                  (ICM_RCFG_ALGO_SHA256_Val << ICM_RCFG_ALGO_Pos)      /**< (ICM_RCFG) SHA256 algorithm processed Position  */
+#define ICM_RCFG_ALGO_SHA224                  (ICM_RCFG_ALGO_SHA224_Val << ICM_RCFG_ALGO_Pos)      /**< (ICM_RCFG) SHA224 algorithm processed Position  */
+#define ICM_RCFG_Msk                          _U_(0x000077F7)                                      /**< (ICM_RCFG) Register Mask  */
+
+
+/* -------- ICM_RCTRL : (ICM Offset: 0x08) (R/W 32) Region Control -------- */
+#define ICM_RCTRL_TRSIZE_Pos                  _U_(0)                                               /**< (ICM_RCTRL) Transfer Size for the Current Chunk of Data Position */
+#define ICM_RCTRL_TRSIZE_Msk                  (_U_(0xFFFF) << ICM_RCTRL_TRSIZE_Pos)                /**< (ICM_RCTRL) Transfer Size for the Current Chunk of Data Mask */
+#define ICM_RCTRL_TRSIZE(value)               (ICM_RCTRL_TRSIZE_Msk & ((value) << ICM_RCTRL_TRSIZE_Pos))
+#define ICM_RCTRL_Msk                         _U_(0x0000FFFF)                                      /**< (ICM_RCTRL) Register Mask  */
+
+
+/* -------- ICM_RNEXT : (ICM Offset: 0x0C) (R/W 32) Region Next Address -------- */
+#define ICM_RNEXT_NEXT_Pos                    _U_(2)                                               /**< (ICM_RNEXT) Region Transfer Descriptor Next Address Position */
+#define ICM_RNEXT_NEXT_Msk                    (_U_(0x3FFFFFFF) << ICM_RNEXT_NEXT_Pos)              /**< (ICM_RNEXT) Region Transfer Descriptor Next Address Mask */
+#define ICM_RNEXT_NEXT(value)                 (ICM_RNEXT_NEXT_Msk & ((value) << ICM_RNEXT_NEXT_Pos))
+#define ICM_RNEXT_Msk                         _U_(0xFFFFFFFC)                                      /**< (ICM_RNEXT) Register Mask  */
+
 
 /* -------- ICM_CFG : (ICM Offset: 0x00) (R/W 32) Configuration Register -------- */
 #define ICM_CFG_WBDIS_Pos                     _U_(0)                                               /**< (ICM_CFG) Write Back Disable Position */
@@ -59,13 +165,7 @@
 #define ICM_CFG_UALGO_SHA1                    (ICM_CFG_UALGO_SHA1_Val << ICM_CFG_UALGO_Pos)        /**< (ICM_CFG) SHA1 algorithm processed Position  */
 #define ICM_CFG_UALGO_SHA256                  (ICM_CFG_UALGO_SHA256_Val << ICM_CFG_UALGO_Pos)      /**< (ICM_CFG) SHA256 algorithm processed Position  */
 #define ICM_CFG_UALGO_SHA224                  (ICM_CFG_UALGO_SHA224_Val << ICM_CFG_UALGO_Pos)      /**< (ICM_CFG) SHA224 algorithm processed Position  */
-#define ICM_CFG_HAPROT_Pos                    _U_(16)                                              /**< (ICM_CFG) Region Hash Area Protection Position */
-#define ICM_CFG_HAPROT_Msk                    (_U_(0x3F) << ICM_CFG_HAPROT_Pos)                    /**< (ICM_CFG) Region Hash Area Protection Mask */
-#define ICM_CFG_HAPROT(value)                 (ICM_CFG_HAPROT_Msk & ((value) << ICM_CFG_HAPROT_Pos))
-#define ICM_CFG_DAPROT_Pos                    _U_(24)                                              /**< (ICM_CFG) Region Descriptor Area Protection Position */
-#define ICM_CFG_DAPROT_Msk                    (_U_(0x3F) << ICM_CFG_DAPROT_Pos)                    /**< (ICM_CFG) Region Descriptor Area Protection Mask */
-#define ICM_CFG_DAPROT(value)                 (ICM_CFG_DAPROT_Msk & ((value) << ICM_CFG_DAPROT_Pos))
-#define ICM_CFG_Msk                           _U_(0x3F3FF3F7)                                      /**< (ICM_CFG) Register Mask  */
+#define ICM_CFG_Msk                           _U_(0x0000F3F7)                                      /**< (ICM_CFG) Register Mask  */
 
 
 /* -------- ICM_CTRL : (ICM Offset: 0x04) ( /W 32) Control Register -------- */
@@ -319,6 +419,10 @@
 
 
 /** \brief ICM register offsets definitions */
+#define ICM_RADDR_REG_OFST             (0x00)              /**< (ICM_RADDR) Region Start Address Offset */
+#define ICM_RCFG_REG_OFST              (0x04)              /**< (ICM_RCFG) Region Configuration Offset */
+#define ICM_RCTRL_REG_OFST             (0x08)              /**< (ICM_RCTRL) Region Control Offset */
+#define ICM_RNEXT_REG_OFST             (0x0C)              /**< (ICM_RNEXT) Region Next Address Offset */
 #define ICM_CFG_REG_OFST               (0x00)              /**< (ICM_CFG) Configuration Register Offset */
 #define ICM_CTRL_REG_OFST              (0x04)              /**< (ICM_CTRL) Control Register Offset */
 #define ICM_SR_REG_OFST                (0x08)              /**< (ICM_SR) Status Register Offset */
@@ -341,6 +445,19 @@
 #define ICM_WPSR_REG_OFST              (0xE8)              /**< (ICM_WPSR) ICM Write Protection Status Register Offset */
 
 #if !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__))
+/** \brief ICM_DESCRIPTOR register API structure */
+typedef struct
+{  /* Region Descriptor Structure */
+  __IO  uint32_t                       ICM_RADDR;          /**< Offset: 0x00 (R/W  32) Region Start Address */
+  __IO  uint32_t                       ICM_RCFG;           /**< Offset: 0x04 (R/W  32) Region Configuration */
+  __IO  uint32_t                       ICM_RCTRL;          /**< Offset: 0x08 (R/W  32) Region Control */
+  __IO  uint32_t                       ICM_RNEXT;          /**< Offset: 0x0C (R/W  32) Region Next Address */
+} icm_descriptor_registers_t
+#ifdef __GNUC__
+  __attribute__ ((aligned (8)))
+#endif
+;
+
 /** \brief ICM register API structure */
 typedef struct
 {
@@ -371,4 +488,7 @@ typedef struct
 
 
 #endif /* !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__)) */
+/** \brief ICM_DESCRIPTOR memory section attribute */
+#define SECTION_ICM_DESCRIPTOR
+
 #endif /* _SAMRH71_ICM_COMPONENT_H_ */
