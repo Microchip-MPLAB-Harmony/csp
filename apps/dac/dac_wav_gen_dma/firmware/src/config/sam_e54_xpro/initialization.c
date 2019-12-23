@@ -120,6 +120,8 @@ void SYS_Initialize ( void* data )
     CLOCK_Initialize();
 
 
+
+
     EVSYS_Initialize();
 
     DMAC_Initialize();
