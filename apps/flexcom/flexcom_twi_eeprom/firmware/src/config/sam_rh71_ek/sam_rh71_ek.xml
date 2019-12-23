@@ -176,12 +176,12 @@
             <User dnOrder="0" value="GPIO"/>
           </Values>
         </String>
-        <Boolean dnOrder="34" id="PIOA_CLOCK_ENABLE">
+        <Boolean dnOrder="34" id="PIO_CLOCK_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <Integer dnOrder="35" id="PIOA_CLOCK_FREQUENCY">
+        <Integer dnOrder="35" id="PIO_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="50000000"/>
           </Values>
@@ -391,12 +391,7 @@
     <UniqueComponent dnOrder="2" id="dfp"/>
     <UniqueComponent dnOrder="3" id="flexcom9">
       <Symbols dnOrder="0">
-        <Integer dnOrder="0" id="BRG_VALUE">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="flexcom9" value="27"/>
-          </Values>
-        </Integer>
-        <File dnOrder="1" id="FLEXCOM9_COMMON_HEADER">
+        <File dnOrder="0" id="FLEXCOM9_COMMON_HEADER">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="dest">
               <Value dnOrder="0">/peripheral/flexcom/twi/</Value>
@@ -415,7 +410,7 @@
             </String>
           </Attributes>
         </File>
-        <File dnOrder="2" id="FLEXCOM9_HEADER">
+        <File dnOrder="1" id="FLEXCOM9_HEADER">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="dest">
               <Value dnOrder="0">/peripheral/flexcom/twi/</Value>
@@ -437,7 +432,7 @@
             </String>
           </Attributes>
         </File>
-        <File dnOrder="3" id="FLEXCOM9_SOURCE">
+        <File dnOrder="2" id="FLEXCOM9_SOURCE">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="dest">
               <Value dnOrder="0">/peripheral/flexcom/twi/</Value>
@@ -456,22 +451,22 @@
             </String>
           </Attributes>
         </File>
-        <KeyValueSet dnOrder="4" id="FLEXCOM_MODE">
+        <KeyValueSet dnOrder="3" id="FLEXCOM_MODE">
           <Values dnOrder="0">
-            <User dnOrder="0" value="3"/>
+            <User dnOrder="0" value="2"/>
           </Values>
         </KeyValueSet>
-        <Integer dnOrder="5" id="FLEXCOM_SPI_CSR_SCBR_VALUE">
+        <Integer dnOrder="4" id="FLEXCOM_SPI_CSR_SCBR_VALUE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="flexcom9" value="50"/>
           </Values>
         </Integer>
-        <Integer dnOrder="6" id="FLEXCOM_SPI_PERIPHERAL_CLOCK">
+        <Integer dnOrder="5" id="FLEXCOM_SPI_PERIPHERAL_CLOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="flexcom9" value="50000000"/>
           </Values>
         </Integer>
-        <File dnOrder="7" id="FLEXCOM_SYS_DEF">
+        <File dnOrder="6" id="FLEXCOM_SYS_DEF">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="markup">
               <Value dnOrder="0">true</Value>
@@ -487,7 +482,7 @@
             </String>
           </Attributes>
         </File>
-        <File dnOrder="8" id="FLEXCOM_SYS_INIT">
+        <File dnOrder="7" id="FLEXCOM_SYS_INIT">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="markup">
               <Value dnOrder="0">true</Value>
@@ -503,68 +498,63 @@
             </String>
           </Attributes>
         </File>
-        <Integer dnOrder="9" id="FLEXCOM_TWI_CLK_SRC_FREQ">
+        <Integer dnOrder="8" id="FLEXCOM_TWI_CLK_SRC_FREQ">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="flexcom9" value="50000000"/>
           </Values>
         </Integer>
-        <KeyValueSet dnOrder="10" id="FLEXCOM_TWI_CWGR_BRSRCCLK">
+        <KeyValueSet dnOrder="9" id="FLEXCOM_TWI_CWGR_BRSRCCLK">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </KeyValueSet>
-        <Integer dnOrder="11" id="FLEXCOM_TWI_CWGR_CHDIV">
+        <Integer dnOrder="10" id="FLEXCOM_TWI_CWGR_CHDIV">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="flexcom9" value="59"/>
           </Values>
         </Integer>
-        <Integer dnOrder="12" id="FLEXCOM_TWI_CWGR_CKDIV">
+        <Integer dnOrder="11" id="FLEXCOM_TWI_CWGR_CKDIV">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="flexcom9" value="0"/>
           </Values>
         </Integer>
-        <Integer dnOrder="13" id="FLEXCOM_TWI_CWGR_CLDIV">
+        <Integer dnOrder="12" id="FLEXCOM_TWI_CWGR_CLDIV">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="flexcom9" value="59"/>
           </Values>
         </Integer>
-        <Combo dnOrder="14" id="FLEXCOM_TWI_OPMODE">
+        <Combo dnOrder="13" id="FLEXCOM_TWI_OPMODE">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </Combo>
-        <Integer dnOrder="15" id="FLEXCOM_USART_MR_OVER">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="flexcom9" value="0"/>
-          </Values>
-        </Integer>
-        <Integer dnOrder="16" id="FLEX_USART_CLOCK_FREQ">
+        <Integer dnOrder="14" id="FLEX_USART_CLOCK_FREQ">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="flexcom9" value="50000000"/>
           </Values>
         </Integer>
-        <Integer dnOrder="17" id="I2C_CLOCK_SPEED">
+        <Integer dnOrder="15" id="I2C_CLOCK_SPEED">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </Integer>
-        <String dnOrder="18" id="RECEIVE_DATA_REGISTER">
+        <String dnOrder="16" id="RECEIVE_DATA_REGISTER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="flexcom9" value="&amp;(FLEXCOM9_REGS-&gt;FLEX_TWI_RHR)"/>
           </Values>
         </String>
-        <String dnOrder="19" id="TRANSMIT_DATA_REGISTER">
+        <String dnOrder="17" id="TRANSMIT_DATA_REGISTER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="flexcom9" value="&amp;(FLEXCOM9_REGS-&gt;FLEX_TWI_THR)"/>
           </Values>
         </String>
-        <Boolean dnOrder="20" id="TWI_INTERRUPT_MODE">
+        <Boolean dnOrder="18" id="TWI_INTERRUPT_MODE">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
@@ -573,14 +563,7 @@
         </Boolean>
       </Symbols>
       <Attachments dnOrder="1">
-        <DirectCapability dnOrder="0" id="FLEXCOM9_SPI">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="enabled">
-              <Value dnOrder="0">false</Value>
-            </Boolean>
-          </Attributes>
-        </DirectCapability>
-        <DirectCapability dnOrder="1" id="FLEXCOM9_UART">
+        <DirectCapability dnOrder="0" id="FLEXCOM9_UART">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">false</Value>
@@ -591,14 +574,14 @@
     </UniqueComponent>
   </Components>
   <UserData>
-    <ComponentGraph dnOrder="0" id="__ROOTVIEW">
+    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="0"/>
+    <ComponentGraph dnOrder="1" id="__ROOTVIEW">
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="cmsis" x="320" y="20"/>
         <ElementPosition dnOrder="1" id="core" x="220" y="20"/>
         <ElementPosition dnOrder="2" id="dfp" x="20" y="20"/>
-        <ElementPosition dnOrder="3" id="flexcom9" x="440" y="20"/>
+        <ElementPosition dnOrder="3" id="flexcom9" x="461" y="20"/>
       </ElementPositions>
     </ComponentGraph>
-    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="1"/>
   </UserData>
 </Configuration>
