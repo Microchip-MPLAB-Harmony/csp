@@ -56,6 +56,7 @@
 // Section: Interface
 // *****************************************************************************
 // *****************************************************************************
+
 #define USART1_FrequencyGet()    (uint32_t)(150000000UL)
 
 /****************************** USART1 API *********************************/
@@ -70,9 +71,9 @@ bool USART1_Write( void *buffer, const size_t size );
 
 bool USART1_Read( void *buffer, const size_t size );
 
-int USART1_ReadByte(void);
+int USART1_ReadByte( void );
 
-void USART1_WriteByte(int data);
+void USART1_WriteByte( int data );
 
 bool USART1_TransmitterIsReady( void );
 
@@ -87,5 +88,6 @@ bool USART1_ReceiverIsReady( void );
     }
 
 #endif
+
 // DOM-IGNORE-END
 #endif // PLIB_USART1_H

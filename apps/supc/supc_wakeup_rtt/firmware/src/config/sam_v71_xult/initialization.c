@@ -106,6 +106,8 @@ void SYS_Initialize ( void* data )
     CLOCK_Initialize();
 	PIO_Initialize();
 
+
+
 	SYSTICK_TimerInitialize();
 	RSWDT_REGS->RSWDT_MR = RSWDT_MR_WDDIS_Msk;	// Disable RSWDT 
 
