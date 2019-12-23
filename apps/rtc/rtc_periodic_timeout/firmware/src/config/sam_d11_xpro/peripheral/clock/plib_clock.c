@@ -57,15 +57,16 @@
 
 static void SYSCTRL_Initialize( void )
 {
-    /* Configure 8MHz Oscillator */
-    SYSCTRL_REGS->SYSCTRL_OSC8M = (SYSCTRL_REGS->SYSCTRL_OSC8M & (SYSCTRL_OSC8M_CALIB_Msk | SYSCTRL_OSC8M_FRANGE_Msk)) | SYSCTRL_OSC8M_ENABLE_Msk | SYSCTRL_OSC8M_PRESC(0x0) ;
+    /****************** OSC32K Initialization  ******************************/
+    uint32_t calibValue = (uint32_t)(((*(uint64_t*)0x806020) >> 38 ) & 0x7f);
 
-    while((SYSCTRL_REGS->SYSCTRL_PCLKSR & SYSCTRL_PCLKSR_OSC8MRDY_Msk) != SYSCTRL_PCLKSR_OSC8MRDY_Msk)
+    /* Configure 32K RC oscillator */
+    SYSCTRL_REGS->SYSCTRL_OSC32K = SYSCTRL_OSC32K_CALIB(calibValue) | SYSCTRL_OSC32K_STARTUP(0) | SYSCTRL_OSC32K_ENABLE_Msk | SYSCTRL_OSC32K_EN32K_Msk ;
+
+    while(!((SYSCTRL_REGS->SYSCTRL_PCLKSR & SYSCTRL_PCLKSR_OSC32KRDY_Msk) == SYSCTRL_PCLKSR_OSC32KRDY_Msk))
     {
-        /* Waiting for the OSC8M Ready state */
+        /* Waiting for the OSC32K Ready state */
     }
-
-    SYSCTRL_REGS->SYSCTRL_OSC32K = 0x0;
 }
 
 
@@ -112,9 +113,9 @@ static void GCLK0_Initialize( void )
 
 static void GCLK1_Initialize( void )
 {
-    GCLK_REGS->GCLK_GENCTRL = GCLK_GENCTRL_SRC(6) | GCLK_GENCTRL_GENEN_Msk | GCLK_GENCTRL_ID(1);
+    GCLK_REGS->GCLK_GENCTRL = GCLK_GENCTRL_SRC(4) | GCLK_GENCTRL_GENEN_Msk | GCLK_GENCTRL_ID(1);
 
-    GCLK_REGS->GCLK_GENDIV = GCLK_GENDIV_DIV(7812) | GCLK_GENDIV_ID(1);
+    GCLK_REGS->GCLK_GENDIV = GCLK_GENDIV_DIV(32) | GCLK_GENDIV_ID(1);
 
     while((GCLK_REGS->GCLK_STATUS & GCLK_STATUS_SYNCBUSY_Msk) == GCLK_STATUS_SYNCBUSY_Msk)
     {
@@ -140,4 +141,6 @@ void CLOCK_Initialize( void )
     PM_REGS->PM_APBCMASK = 0x100;
 
 
+    /* Disable RC oscillator */
+    SYSCTRL_REGS->SYSCTRL_OSC8M = 0x0;
 }
