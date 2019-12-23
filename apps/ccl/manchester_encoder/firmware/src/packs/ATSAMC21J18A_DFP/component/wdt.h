@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-08-07T06:35:22Z */
+/* file generated from device description version 2019-11-25T02:24:13Z */
 #ifndef _SAMC21_WDT_COMPONENT_H_
 #define _SAMC21_WDT_COMPONENT_H_
 

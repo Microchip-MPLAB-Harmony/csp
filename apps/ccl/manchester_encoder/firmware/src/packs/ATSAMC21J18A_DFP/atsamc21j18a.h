@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-08-07T06:35:20Z */
+/* file generated from device description version 2019-11-25T02:24:12Z */
 #ifndef _SAMC21J18A_H_
 #define _SAMC21J18A_H_
 
