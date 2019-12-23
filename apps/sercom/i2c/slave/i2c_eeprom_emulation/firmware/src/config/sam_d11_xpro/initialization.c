@@ -53,23 +53,23 @@
 // Section: Configuration Bits
 // ****************************************************************************
 // ****************************************************************************
-#pragma config NVMCTRL_BOOTPROT = 0
-#pragma config NVMCTRL_EEPROM_SIZE = 0
+#pragma config NVMCTRL_BOOTPROT = SIZE_0BYTES
+#pragma config NVMCTRL_EEPROM_SIZE = SIZE_0BYTES
 #pragma config BOD33USERLEVEL = 0x7 // Enter Hexadecimal value
-#pragma config BOD33_EN = SET
-#pragma config BOD33_ACTION = 0
+#pragma config BOD33_EN = ENABLED
+#pragma config BOD33_ACTION = RESET
 
-#pragma config BOD33_HYST = CLEAR
+#pragma config BOD33_HYST = DISABLED
 #pragma config NVMCTRL_REGION_LOCKS = 0xffff // Enter Hexadecimal value
 
-#pragma config WDT_ENABLE = CLEAR
-#pragma config WDT_ALWAYSON = CLEAR
-#pragma config WDT_PER = 0xb
+#pragma config WDT_ENABLE = DISABLED
+#pragma config WDT_ALWAYSON = DISABLED
+#pragma config WDT_PER = CYC16384
 
 #pragma config WDT_WINDOW_0 = SET
 #pragma config WDT_WINDOW_1 = 0x4 // Enter Hexadecimal value
-#pragma config WDT_EWOFFSET = 0xb
-#pragma config WDT_WEN = CLEAR
+#pragma config WDT_EWOFFSET = CYC16384
+#pragma config WDT_WEN = DISABLED
 
 
 
@@ -120,6 +120,8 @@ void SYS_Initialize ( void* data )
     PORT_Initialize();
 
     CLOCK_Initialize();
+
+
 
 
     NVMCTRL_Initialize( );
