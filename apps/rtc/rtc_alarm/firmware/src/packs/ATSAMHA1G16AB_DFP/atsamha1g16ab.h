@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-10-21T09:26:56Z */
+/* file generated from device description version 2019-11-25T06:58:39Z */
 #ifndef _SAMHA1G16AB_H_
 #define _SAMHA1G16AB_H_
 
