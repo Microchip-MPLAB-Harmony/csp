@@ -54,15 +54,15 @@
 
 /****************************** SPI0 Interface *********************************/
 
-void SPI0_Initialize ( void );
+void SPI0_Initialize( void );
 
-bool SPI0_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize);
+bool SPI0_WriteRead( void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize );
 
-bool SPI0_Write(void* pTransmitData, size_t txSize);
+bool SPI0_Write( void* pTransmitData, size_t txSize );
 
-bool SPI0_Read(void* pReceiveData, size_t rxSize);
+bool SPI0_Read( void* pReceiveData, size_t rxSize );
 
-bool SPI0_TransferSetup (SPI_TRANSFER_SETUP *setup, uint32_t spiSourceClock);
+bool SPI0_TransferSetup( SPI_TRANSFER_SETUP *setup, uint32_t spiSourceClock );
 
 
 /* Provide C++ Compatibility */
