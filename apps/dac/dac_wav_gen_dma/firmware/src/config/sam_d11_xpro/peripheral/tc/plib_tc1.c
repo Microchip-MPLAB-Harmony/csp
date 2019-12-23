@@ -179,7 +179,7 @@ uint16_t TC1_Timer16bitPeriodGet( void )
 bool TC1_TimerPeriodHasExpired( void )
 {
     bool timer_status;
-    timer_status = ((TC1_REGS->COUNT16.TC_INTFLAG) & TC_INTFLAG_OVF_Msk);
+    timer_status = (bool) ((TC1_REGS->COUNT16.TC_INTFLAG) & TC_INTFLAG_OVF_Msk);
     TC1_REGS->COUNT16.TC_INTFLAG = timer_status;
     return timer_status;
 }
