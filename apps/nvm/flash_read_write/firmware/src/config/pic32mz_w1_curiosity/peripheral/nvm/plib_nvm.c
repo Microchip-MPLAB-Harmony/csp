@@ -88,8 +88,8 @@ typedef enum
 // Section: Local Functions                                                   */
 /* ************************************************************************** */
 /* ************************************************************************** */
-// *****************************************************************************
 
+// *****************************************************************************
 // *****************************************************************************
 // Section: NVM Implementation
 // *****************************************************************************
@@ -106,7 +106,7 @@ void NVM_CallbackRegister( NVM_CALLBACK callback, uintptr_t context )
     nvmContext         = context;
 }
 
-void NVM_InterruptHandler(void)
+void NVM_InterruptHandler( void )
 {
     IFS0CLR = NVM_INTERRUPT_FLAG_MASK;
 
@@ -124,7 +124,7 @@ static void NVM_WriteUnlockSequence( void )
     NVMKEY = NVM_UNLOCK_KEY2;
 }
 
-static void NVM_StartOperationAtAddress( uint32_t address,  NVM_OPERATION_MODE operation)
+static void NVM_StartOperationAtAddress( uint32_t address,  NVM_OPERATION_MODE operation )
 {
     volatile uint32_t processorStatus;
 
@@ -173,13 +173,20 @@ static void NVM_StartOperationAtAddress( uint32_t address,  NVM_OPERATION_MODE o
 // Section: Interface Functions                                               */
 /* ************************************************************************** */
 /* ************************************************************************** */
+
+void NVM_Initialize( void )
+{
+    NVM_StartOperationAtAddress( NVMADDR,  NO_OPERATION );
+}
+
 bool NVM_Read( uint32_t *data, uint32_t length, const uint32_t address )
 {
     memcpy((void *)data, (void *)KVA0_TO_KVA1(address), length);
 
     return true;
 }
-bool NVM_WordWrite(uint32_t data, uint32_t address)
+
+bool NVM_WordWrite( uint32_t data, uint32_t address )
 {
     NVMDATA0 = (uint32_t )data;
 
@@ -188,7 +195,7 @@ bool NVM_WordWrite(uint32_t data, uint32_t address)
     return true;
 }
 
-bool NVM_QuadWordWrite(uint32_t *data, uint32_t address)
+bool NVM_QuadWordWrite( uint32_t *data, uint32_t address )
 {
    NVMDATA0 = *(data++);
    NVMDATA1 = *(data++);
@@ -200,7 +207,7 @@ bool NVM_QuadWordWrite(uint32_t *data, uint32_t address)
    return true;
 }
 
-bool NVM_RowWrite(uint32_t *data, uint32_t address)
+bool NVM_RowWrite( uint32_t *data, uint32_t address )
 {
    NVMSRCADDR = (uint32_t )KVA_TO_PA(data);
 
@@ -209,7 +216,7 @@ bool NVM_RowWrite(uint32_t *data, uint32_t address)
    return true;
 }
 
-bool NVM_PageErase(uint32_t address)
+bool NVM_PageErase( uint32_t address )
 {
    NVM_StartOperationAtAddress(address,  PAGE_ERASE_OPERATION);
 
@@ -227,7 +234,7 @@ bool NVM_IsBusy( void )
     return (bool)NVMCONbits.WR;
 }
 
-void NVM_ProgramFlashWriteProtect( uint32_t laddress, uint32_t haddress)
+void NVM_ProgramFlashWriteProtect( uint32_t laddress, uint32_t haddress )
 {
     NVM_WriteUnlockSequence();
 	
@@ -235,11 +242,9 @@ void NVM_ProgramFlashWriteProtect( uint32_t laddress, uint32_t haddress)
     NVMPWPLT = _NVMPWPLT_ULOCK_MASK;
 	NVMPWPGTESET = _NVMPWPGTE_ULOCK_MASK;
 
-    /* Program the address range
-     */
+    /* Program the address range */
     NVMPWPLT = (laddress & _NVMPWPLT_PWPLT_MASK) | _NVMPWPLT_ULOCK_MASK;
     NVMPWPGTE = (haddress & _NVMPWPGTE_PWPGTE_MASK) | _NVMPWPGTE_ULOCK_MASK;
-
 }
 
 void NVM_ProgramFlashWriteProtectLock( void )
@@ -250,4 +255,3 @@ void NVM_ProgramFlashWriteProtectLock( void )
     NVMPWPLTCLR = _NVMPWPLT_ULOCK_MASK;
 	NVMPWPGTECLR = _NVMPWPGTE_ULOCK_MASK;
 }
-
