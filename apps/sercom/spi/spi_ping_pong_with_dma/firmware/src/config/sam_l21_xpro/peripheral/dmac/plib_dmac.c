@@ -68,10 +68,10 @@ typedef struct
 } DMAC_CH_OBJECT ;
 
 /* Initial write back memory section for DMAC */
-static  dmac_descriptor_registers_t _write_back_section[DMAC_CHANNELS_NUMBER]    __attribute__((aligned(16)))  SECTION(".lpram");
+ SECTION(".lpram") static  dmac_descriptor_registers_t _write_back_section[DMAC_CHANNELS_NUMBER]    __ALIGNED(16);
 
 /* Descriptor section for DMAC */
-static  dmac_descriptor_registers_t  descriptor_section[DMAC_CHANNELS_NUMBER]    __attribute__((aligned(16)))  SECTION(".lpram");
+ SECTION(".lpram") static  dmac_descriptor_registers_t  descriptor_section[DMAC_CHANNELS_NUMBER]    __ALIGNED(16);
 
 /* DMAC Channels object information structure */
 DMAC_CH_OBJECT dmacChannelObj[DMAC_CHANNELS_NUMBER];
@@ -89,7 +89,7 @@ This function initializes the DMAC controller of the device.
 void DMAC_Initialize( void )
 {
     DMAC_CH_OBJECT *dmacChObj = (DMAC_CH_OBJECT *)&dmacChannelObj[0];
-    DMAC_CHANNEL channel = 0;
+    uint16_t channel = 0;
 
     /* Initialize DMAC Channel objects */
     for(channel = 0; channel < DMAC_CHANNELS_NUMBER; channel++)
@@ -158,7 +158,7 @@ bool DMAC_ChannelTransfer( DMAC_CHANNEL channel, const void *srcAddr, const void
         /* Set source address */
         if (dmacDescReg->DMAC_BTCTRL & DMAC_BTCTRL_SRCINC_Msk)
         {
-            dmacDescReg->DMAC_SRCADDR = (uint32_t) (srcAddr + blockSize);
+            dmacDescReg->DMAC_SRCADDR = (uint32_t) ((intptr_t)srcAddr + blockSize);
         }
         else
         {
@@ -168,7 +168,7 @@ bool DMAC_ChannelTransfer( DMAC_CHANNEL channel, const void *srcAddr, const void
         /* Set destination address */
         if (dmacDescReg->DMAC_BTCTRL & DMAC_BTCTRL_DSTINC_Msk)
         {
-            dmacDescReg->DMAC_DSTADDR = (uint32_t) (destAddr + blockSize);
+            dmacDescReg->DMAC_DSTADDR = (uint32_t) ((intptr_t)destAddr + blockSize);
         }
         else
         {
@@ -188,7 +188,8 @@ bool DMAC_ChannelTransfer( DMAC_CHANNEL channel, const void *srcAddr, const void
         DMAC_REGS->DMAC_CHCTRLA |= DMAC_CHCTRLA_ENABLE_Msk;
 
         /* Verify if Trigger source is Software Trigger */
-        if (((DMAC_REGS->DMAC_CHCTRLB & DMAC_CHCTRLB_TRIGSRC_Msk) >> DMAC_CHCTRLB_TRIGSRC_Pos) == 0x00)
+        if ((((DMAC_REGS->DMAC_CHCTRLB & DMAC_CHCTRLB_TRIGSRC_Msk) >> DMAC_CHCTRLB_TRIGSRC_Pos) == 0x00) 
+                                        && ((DMAC_REGS->DMAC_CHCTRLB & DMAC_CHCTRLB_EVIE_Msk) != DMAC_CHCTRLB_EVIE_Msk))
         {
             /* Trigger the DMA transfer */
             DMAC_REGS->DMAC_SWTRIGCTRL |= (1 << channel);
@@ -221,7 +222,14 @@ void DMAC_ChannelDisable ( DMAC_CHANNEL channel )
     /* Disable the DMA channel */
     DMAC_REGS->DMAC_CHCTRLA &= (~DMAC_CHCTRLA_ENABLE_Pos);
 
+    while((DMAC_REGS->DMAC_CHCTRLA & DMAC_CHCTRLA_ENABLE_Msk) != 0);
+
     dmacChannelObj[channel].busyStatus = false;
+}
+
+uint16_t DMAC_ChannelGetTransferredCount( DMAC_CHANNEL channel )
+{
+    return(descriptor_section[channel].DMAC_BTCNT - _write_back_section[channel].DMAC_BTCNT);
 }
 
 /*******************************************************************************
