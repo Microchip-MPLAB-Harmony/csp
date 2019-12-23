@@ -107,13 +107,6 @@
                 <itemPath>../src/packs/CMSIS/CMSIS/Core_A/Include/core_ca.h</itemPath>
               </logicalFolder>
             </logicalFolder>
-            <logicalFolder displayName="DSP" name="f2" projectFiles="true">
-              <logicalFolder displayName="Include" name="f1" projectFiles="true">
-                <itemPath>../src/packs/CMSIS/CMSIS/DSP/Include/arm_common_tables.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/DSP/Include/arm_const_structs.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/DSP/Include/arm_math.h</itemPath>
-              </logicalFolder>
-            </logicalFolder>
           </logicalFolder>
         </logicalFolder>
       </logicalFolder>
@@ -159,7 +152,6 @@
           </logicalFolder>
           <itemPath>../src/config/sam_a5d2_xult_xc32/initialization.c</itemPath>
           <itemPath>../src/config/sam_a5d2_xult_xc32/interrupts.c</itemPath>
-          <itemPath>../src/config/sam_a5d2_xult_xc32/exceptions.c</itemPath>
           <itemPath>../src/config/sam_a5d2_xult_xc32/cstartup.S</itemPath>
           <itemPath>../src/config/sam_a5d2_xult_xc32/fault_handlers.c</itemPath>
         </logicalFolder>
