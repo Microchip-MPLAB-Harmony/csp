@@ -67,7 +67,7 @@ void SDRAMC_Initialize( void )
      * Configure SDRAM features and timing parameters */
     SDRAMC_REGS->SDRAMC_CR = SDRAMC_CR_NC_COL8 | SDRAMC_CR_NR_ROW11 | SDRAMC_CR_NB_BANK2 | SDRAMC_CR_DBW_Msk \
                                 | SDRAMC_CR_TRAS(6) |  SDRAMC_CR_TRP(3) |  SDRAMC_CR_TRC_TRFC(9) \
-                                | SDRAMC_CR_TRCD(3) | SDRAMC_CR_CAS(0x3) | SDRAMC_CR_TWR(2) | SDRAMC_CR_TXSR(10);
+                                | SDRAMC_CR_TRCD(3) | SDRAMC_CR_CAS(0x3) | SDRAMC_CR_TWR(2) | SDRAMC_CR_TXSR(10U);
 
     SDRAMC_REGS->SDRAMC_CFR1= SDRAMC_CFR1_TMRD(2) | SDRAMC_CFR1_UNAL_Msk;
 
