@@ -90,7 +90,7 @@ void ADC_Initialize( void )
     ADC_REGS->ADC_REFCTRL = ADC_REFCTRL_REFSEL_INTVCC2;
 
     /* Input pin */
-    ADC_REGS->ADC_INPUTCTRL = ADC_POSINPUT_AIN0;
+    ADC_REGS->ADC_INPUTCTRL = (uint16_t) ADC_POSINPUT_AIN0;
 
     /* Resolution & Operation Mode */
     ADC_REGS->ADC_CTRLC = ADC_CTRLC_RESSEL_12BIT | ADC_CTRLC_WINMODE(2) ;
@@ -138,7 +138,7 @@ void ADC_Disable( void )
 void ADC_ChannelSelect( ADC_POSINPUT positiveInput, ADC_NEGINPUT negativeInput )
 {
     /* Configure pin scan mode and positive and negative input pins */
-    ADC_REGS->ADC_INPUTCTRL = positiveInput | negativeInput;
+    ADC_REGS->ADC_INPUTCTRL = (uint16_t) positiveInput | (uint16_t) negativeInput;
 
     while((ADC_REGS->ADC_SYNCBUSY & ADC_SYNCBUSY_INPUTCTRL_Msk) == ADC_SYNCBUSY_INPUTCTRL_Msk)
     {
@@ -217,8 +217,8 @@ bool ADC_ConversionStatusGet( void )
 }
 void ADC_OTHER_InterruptHandler( void )
 {
-    volatile ADC_STATUS status;
-    status = ADC_REGS->ADC_INTFLAG;
+    ADC_STATUS status;
+    status = (ADC_STATUS) (ADC_REGS->ADC_INTFLAG);
     /* Clear interrupt flag */
     ADC_REGS->ADC_INTFLAG = ADC_INTFLAG_WINMON_Msk | ADC_INTFLAG_OVERRUN_Msk;
     if (ADC_CallbackObject.callback != NULL)
