@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-03-25T22:24:54Z */
+/* file generated from device description version 2019-11-25T06:48:59Z */
 #ifndef _SAMD20_AC_COMPONENT_H_
 #define _SAMD20_AC_COMPONENT_H_
 
