@@ -47,13 +47,13 @@
 // *****************************************************************************
 // *****************************************************************************
 
-void SPI1_Initialize ( void )
+void SPI1_Initialize( void )
 {
     /* Disable and Reset the SPI*/
     SPI1_REGS->SPI_CR = SPI_CR_SPIDIS_Msk | SPI_CR_SWRST_Msk;
 
     /* Enable Master mode, select source clock, select particular NPCS line for chip select and disable mode fault detection */
-    SPI1_REGS->SPI_MR =  SPI_MR_MSTR_Msk | SPI_MR_BRSRCCLK_PERIPH_CLK | SPI_MR_PCS_NPCS0 | SPI_MR_MODFDIS_Msk;
+    SPI1_REGS->SPI_MR = SPI_MR_MSTR_Msk | SPI_MR_BRSRCCLK_PERIPH_CLK | SPI_MR_PCS_NPCS0 | SPI_MR_MODFDIS_Msk;
 
     /* Set up clock Polarity, data phase, Communication Width, Baud Rate */
     SPI1_REGS->SPI_CSR[0] = SPI_CSR_CPOL_IDLE_LOW | SPI_CSR_NCPHA_VALID_LEADING_EDGE | SPI_CSR_BITS_8_BIT | SPI_CSR_SCBR(83);
@@ -61,10 +61,9 @@ void SPI1_Initialize ( void )
 
     /* Enable SPI1 */
     SPI1_REGS->SPI_CR = SPI_CR_SPIEN_Msk;
-    return;
 }
 
-bool SPI1_WriteRead(void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize)
+bool SPI1_WriteRead( void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize )
 {
     size_t txCount = 0;
     size_t rxCount = 0;
@@ -159,23 +158,25 @@ bool SPI1_WriteRead(void* pTransmitData, size_t txSize, void* pReceiveData, size
         return isSuccess;
 }
 
-bool SPI1_Write(void* pTransmitData, size_t txSize)
+bool SPI1_Write( void* pTransmitData, size_t txSize )
 {
     return(SPI1_WriteRead(pTransmitData, txSize, NULL, 0));
 }
 
-bool SPI1_Read(void* pReceiveData, size_t rxSize)
+bool SPI1_Read( void* pReceiveData, size_t rxSize )
 {
     return(SPI1_WriteRead(NULL, 0, pReceiveData, rxSize));
 }
 
-bool SPI1_TransferSetup (SPI_TRANSFER_SETUP * setup, uint32_t spiSourceClock )
+bool SPI1_TransferSetup( SPI_TRANSFER_SETUP * setup, uint32_t spiSourceClock )
 {
     uint32_t scbr;
+
     if ((setup == NULL) || (setup->clockFrequency == 0))
     {
         return false;
     }
+
     if(spiSourceClock == 0)
     {
         // Fetch Master Clock Frequency directly
@@ -193,14 +194,8 @@ bool SPI1_TransferSetup (SPI_TRANSFER_SETUP * setup, uint32_t spiSourceClock )
         scbr = 255;
     }
 
-    SPI1_REGS->SPI_CSR[0]= (uint32_t)setup->clockPolarity | (uint32_t)setup->clockPhase | (uint32_t)setup->dataBits | SPI_CSR_SCBR(scbr);
+    SPI1_REGS->SPI_CSR[0] = (uint32_t)setup->clockPolarity | (uint32_t)setup->clockPhase | (uint32_t)setup->dataBits | SPI_CSR_SCBR(scbr);
 
     return true;
 }
-
-
-
-/*******************************************************************************
- End of File
-*/
 

@@ -54,15 +54,15 @@
 
 /****************************** SPI1 Interface *********************************/
 
-void SPI1_Initialize ( void );
+void SPI1_Initialize( void );
 
-bool SPI1_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize);
+bool SPI1_WriteRead( void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize );
 
-bool SPI1_Write(void* pTransmitData, size_t txSize);
+bool SPI1_Write( void* pTransmitData, size_t txSize );
 
-bool SPI1_Read(void* pReceiveData, size_t rxSize);
+bool SPI1_Read( void* pReceiveData, size_t rxSize );
 
-bool SPI1_TransferSetup (SPI_TRANSFER_SETUP *setup, uint32_t spiSourceClock);
+bool SPI1_TransferSetup( SPI_TRANSFER_SETUP *setup, uint32_t spiSourceClock );
 
 
 /* Provide C++ Compatibility */
