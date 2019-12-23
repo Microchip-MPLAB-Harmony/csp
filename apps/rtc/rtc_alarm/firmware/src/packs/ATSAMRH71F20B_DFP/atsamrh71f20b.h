@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-08-29T14:13:58Z */
+/* file generated from device description version 2019-12-20T15:37:49Z */
 #ifndef _SAMRH71F20B_H_
 #define _SAMRH71F20B_H_
 
@@ -126,10 +126,10 @@ typedef enum IRQn
   MCAN0_INT1_IRQn           =  37, /**< 37  Controller Area Network (MCAN0)     */
   MCAN1_INT0_IRQn           =  38, /**< 38  Controller Area Network (MCAN1)     */
   MCAN1_INT1_IRQn           =  39, /**< 39  Controller Area Network (MCAN1)     */
-  TCMRAM_INTFIX_IRQn        =  40, /**< 40  HECC (TCMECC)                       */
-  TCMRAM_INTNOFIX_IRQn      =  41, /**< 41  HECC (TCMECC)                       */
-  FLEXRAM_INTFIX_IRQn       =  42, /**< 42  FLEXRAMECC (FLEXRAMECC)             */
-  FLEXRAM_INTNOFIX_IRQn     =  43, /**< 43  FLEXRAMECC (FLEXRAMECC)             */
+  TCMECC_INTFIX_IRQn        =  40, /**< 40  HECC (TCMECC)                       */
+  TCMECC_INTNOFIX_IRQn      =  41, /**< 41  HECC (TCMECC)                       */
+  FLEXRAMECC_INTFIX_IRQn    =  42, /**< 42  FLEXRAMECC (FLEXRAMECC)             */
+  FLEXRAMECC_INTNOFIX_IRQn  =  43, /**< 43  FLEXRAMECC (FLEXRAMECC)             */
   SHA_IRQn                  =  44, /**< 44  Secure Hash Algorithm (SHA)         */
   FLEXCOM8_IRQn             =  45, /**< 45  Flexible Serial Communication (FLEXCOM8) */
   FLEXCOM9_IRQn             =  46, /**< 46  Flexible Serial Communication (FLEXCOM9) */
@@ -150,8 +150,7 @@ typedef enum IRQn
   SFR_IRQn                  =  62, /**< 62  Special Function Registers (SFR)    */
   TRNG_IRQn                 =  63, /**< 63  True Random Number Generator (TRNG) */
   XDMAC_IRQn                =  64, /**< 64  Extensible DMA Controller (XDMAC)   */
-  SPW_INT0_IRQn             =  65, /**< 65  SpW (SPW)                           */
-  SPW_INT1_IRQn             =  66, /**< 66  SpW (SPW)                           */
+  SPW_IRQn                  =  65, /**< 65  SpW (SPW)                           */
   IP1553_IRQn               =  68, /**< 68  IP 1553 (IP1553)                    */
   GMAC_IRQn                 =  69, /**< 69  Gigabit Ethernet MAC (GMAC)         */
   GMAC_Q1_IRQn              =  70, /**< 70  Gigabit Ethernet MAC (GMAC)         */
@@ -227,10 +226,10 @@ typedef struct _DeviceVectors
   void* pfnMCAN0_INT1_Handler;                   /*  37 Controller Area Network (MCAN0) */
   void* pfnMCAN1_INT0_Handler;                   /*  38 Controller Area Network (MCAN1) */
   void* pfnMCAN1_INT1_Handler;                   /*  39 Controller Area Network (MCAN1) */
-  void* pfnTCMRAM_INTFIX_Handler;                /*  40 HECC (TCMECC) */
-  void* pfnTCMRAM_INTNOFIX_Handler;              /*  41 HECC (TCMECC) */
-  void* pfnFLEXRAM_INTFIX_Handler;               /*  42 FLEXRAMECC (FLEXRAMECC) */
-  void* pfnFLEXRAM_INTNOFIX_Handler;             /*  43 FLEXRAMECC (FLEXRAMECC) */
+  void* pfnTCMECC_INTFIX_Handler;                /*  40 HECC (TCMECC) */
+  void* pfnTCMECC_INTNOFIX_Handler;              /*  41 HECC (TCMECC) */
+  void* pfnFLEXRAMECC_INTFIX_Handler;            /*  42 FLEXRAMECC (FLEXRAMECC) */
+  void* pfnFLEXRAMECC_INTNOFIX_Handler;          /*  43 FLEXRAMECC (FLEXRAMECC) */
   void* pfnSHA_Handler;                          /*  44 Secure Hash Algorithm (SHA) */
   void* pfnFLEXCOM8_Handler;                     /*  45 Flexible Serial Communication (FLEXCOM8) */
   void* pfnFLEXCOM9_Handler;                     /*  46 Flexible Serial Communication (FLEXCOM9) */
@@ -252,8 +251,8 @@ typedef struct _DeviceVectors
   void* pfnSFR_Handler;                          /*  62 Special Function Registers (SFR) */
   void* pfnTRNG_Handler;                         /*  63 True Random Number Generator (TRNG) */
   void* pfnXDMAC_Handler;                        /*  64 Extensible DMA Controller (XDMAC) */
-  void* pfnSPW_INT0_Handler;                     /*  65 SpW (SPW) */
-  void* pfnSPW_INT1_Handler;                     /*  66 SpW (SPW) */
+  void* pfnSPW_Handler;                          /*  65 SpW (SPW) */
+  void* pvReserved66;
   void* pvReserved67;
   void* pfnIP1553_Handler;                       /*  68 IP 1553 (IP1553) */
   void* pfnGMAC_Handler;                         /*  69 Gigabit Ethernet MAC (GMAC) */
@@ -329,10 +328,10 @@ void MCAN0_INT0_Handler            ( void );
 void MCAN0_INT1_Handler            ( void );
 void MCAN1_INT0_Handler            ( void );
 void MCAN1_INT1_Handler            ( void );
-void TCMRAM_INTFIX_Handler         ( void );
-void TCMRAM_INTNOFIX_Handler       ( void );
-void FLEXRAM_INTFIX_Handler        ( void );
-void FLEXRAM_INTNOFIX_Handler      ( void );
+void TCMECC_INTFIX_Handler         ( void );
+void TCMECC_INTNOFIX_Handler       ( void );
+void FLEXRAMECC_INTFIX_Handler     ( void );
+void FLEXRAMECC_INTNOFIX_Handler   ( void );
 void SHA_Handler                   ( void );
 void FLEXCOM8_Handler              ( void );
 void FLEXCOM9_Handler              ( void );
@@ -353,8 +352,7 @@ void HEMC_INTNOFIX_Handler         ( void );
 void SFR_Handler                   ( void );
 void TRNG_Handler                  ( void );
 void XDMAC_Handler                 ( void );
-void SPW_INT0_Handler              ( void );
-void SPW_INT1_Handler              ( void );
+void SPW_Handler                   ( void );
 void IP1553_Handler                ( void );
 void GMAC_Handler                  ( void );
 void GMAC_Q1_Handler               ( void );
@@ -491,6 +489,8 @@ void GMAC_Q5_Handler               ( void );
 #define ID_TC3_CHANNEL2  ( 58) /**< \brief Timer Counter (TC3_CHANNEL2) */
 #define ID_TRNG          ( 63) /**< \brief True Random Number Generator (TRNG) */
 #define ID_XDMAC         ( 64) /**< \brief Extensible DMA Controller (XDMAC) */
+#define ID_SPW_SPW       ( 65) /**< \brief SpW (SPW_SPW) */
+#define ID_SPW_SPW_TIMETICK ( 66) /**< \brief SpW (SPW_SPW_TIMETICK) */
 #define ID_IP1553        ( 68) /**< \brief IP 1553 (IP1553) */
 #define ID_GMAC          ( 69) /**< \brief Gigabit Ethernet MAC (GMAC) */
 
@@ -528,13 +528,7 @@ void GMAC_Q5_Handler               ( void );
 #define MCAN0_REGS                       ((mcan_registers_t*)0x40058000)               /**< \brief MCAN0 Registers Address      */
 #define MCAN1_REGS                       ((mcan_registers_t*)0x4005c000)               /**< \brief MCAN1 Registers Address      */
 #define NMIC_REGS                        ((nmic_registers_t*)0x400a8000)               /**< \brief NMIC Registers Address       */
-#define PIOA_REGS                        ((pio_registers_t*)0x40008000)                /**< \brief PIOA Registers Address       */
-#define PIOB_REGS                        ((pio_registers_t*)0x40008040)                /**< \brief PIOB Registers Address       */
-#define PIOC_REGS                        ((pio_registers_t*)0x40008080)                /**< \brief PIOC Registers Address       */
-#define PIOD_REGS                        ((pio_registers_t*)0x400080c0)                /**< \brief PIOD Registers Address       */
-#define PIOE_REGS                        ((pio_registers_t*)0x40008100)                /**< \brief PIOE Registers Address       */
-#define PIOF_REGS                        ((pio_registers_t*)0x40008140)                /**< \brief PIOF Registers Address       */
-#define PIOG_REGS                        ((pio_registers_t*)0x40008180)                /**< \brief PIOG Registers Address       */
+#define PIO_REGS                         ((pio_registers_t*)0x40008000)                /**< \brief PIO Registers Address        */
 #define PMC_REGS                         ((pmc_registers_t*)0x4000c000)                /**< \brief PMC Registers Address        */
 #define PWM0_REGS                        ((pwm_registers_t*)0x40068000)                /**< \brief PWM0 Registers Address       */
 #define PWM1_REGS                        ((pwm_registers_t*)0x4006c000)                /**< \brief PWM1 Registers Address       */
@@ -588,13 +582,7 @@ void GMAC_Q5_Handler               ( void );
 #define MCAN0_BASE_ADDRESS               _UL_(0x40058000)                              /**< \brief MCAN0 Base Address */
 #define MCAN1_BASE_ADDRESS               _UL_(0x4005c000)                              /**< \brief MCAN1 Base Address */
 #define NMIC_BASE_ADDRESS                _UL_(0x400a8000)                              /**< \brief NMIC Base Address */
-#define PIOA_BASE_ADDRESS                _UL_(0x40008000)                              /**< \brief PIOA Base Address */
-#define PIOB_BASE_ADDRESS                _UL_(0x40008040)                              /**< \brief PIOB Base Address */
-#define PIOC_BASE_ADDRESS                _UL_(0x40008080)                              /**< \brief PIOC Base Address */
-#define PIOD_BASE_ADDRESS                _UL_(0x400080c0)                              /**< \brief PIOD Base Address */
-#define PIOE_BASE_ADDRESS                _UL_(0x40008100)                              /**< \brief PIOE Base Address */
-#define PIOF_BASE_ADDRESS                _UL_(0x40008140)                              /**< \brief PIOF Base Address */
-#define PIOG_BASE_ADDRESS                _UL_(0x40008180)                              /**< \brief PIOG Base Address */
+#define PIO_BASE_ADDRESS                 _UL_(0x40008000)                              /**< \brief PIO Base Address */
 #define PMC_BASE_ADDRESS                 _UL_(0x4000c000)                              /**< \brief PMC Base Address */
 #define PWM0_BASE_ADDRESS                _UL_(0x40068000)                              /**< \brief PWM0 Base Address */
 #define PWM1_BASE_ADDRESS                _UL_(0x4006c000)                              /**< \brief PWM1 Base Address */
@@ -635,7 +623,7 @@ void GMAC_Q5_Handler               ( void );
 #define SYSTEM_SIZE                    _UL_(0x10000000)    /* 262144kB Memory segment type: io */
 #define QSPIMEM_SIZE                   _UL_(0x08000000)    /* 131072kB Memory segment type: other */
 #define AXIMX_SIZE                     _UL_(0x00100000)    /* 1024kB Memory segment type: other */
-#define ITCM_SIZE                      _UL_(0x10000000)    /* 262144kB Memory segment type: other */
+#define ITCM_SIZE                      _UL_(0x00020000)    /*  128kB Memory segment type: other */
 #define IFLASH_SIZE                    _UL_(0x00020000)    /*  128kB Memory segment type: flash */
 #define IFLASH_PAGE_SIZE               _UL_(       256)
 #define IFLASH_NB_OF_PAGES             _UL_(       512)
