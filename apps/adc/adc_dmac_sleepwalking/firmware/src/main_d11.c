@@ -54,7 +54,7 @@
 #include <string.h>
 #include "definitions.h"                // SYS function prototypes
 
-#define DMAC_TRANSFER_BYTECOUNT 32
+#define TRANSFER_SIZE 16
 #define RTC_COMPARE_VAL 100
 
 #define LED_OFF     LED_Set
@@ -62,7 +62,7 @@
 
 volatile bool dma_ch0Done = false;
 uint32_t myAppObj = 0;
-uint8_t adc_result_array[DMAC_TRANSFER_BYTECOUNT];
+uint16_t adc_result_array[TRANSFER_SIZE];
 
 void DmacCh0Cb(DMAC_TRANSFER_EVENT returned_evnt, uintptr_t MyDmacContext)
 {
@@ -98,7 +98,7 @@ int main ( void )
     RTC_Timer32CompareSet(RTC_COMPARE_VAL);
     
     DMAC_ChannelCallbackRegister(DMAC_CHANNEL_0, DmacCh0Cb, (uintptr_t)&myAppObj);
-    DMAC_ChannelTransfer(DMAC_CHANNEL_0, (const void *)&ADC_REGS->ADC_RESULT, (const void *)adc_result_array, DMAC_TRANSFER_BYTECOUNT);
+    DMAC_ChannelTransfer(DMAC_CHANNEL_0, (const void *)&ADC_REGS->ADC_RESULT, (const void *)adc_result_array, sizeof(adc_result_array));
     
     printf("\r---------------------------------------------------------\n");
     printf("\n\r                    ADC DMA Sleepwalking Demo                 \n");
@@ -114,7 +114,7 @@ int main ( void )
             printf("\r\nTransferred 16 results to array in SRAM\r\n");
             dma_ch0Done = false;
             /* Configure the next transfer */
-            DMAC_ChannelTransfer(DMAC_CHANNEL_0, (const void *)&ADC_REGS->ADC_RESULT, (const void *)adc_result_array, DMAC_TRANSFER_BYTECOUNT);
+            DMAC_ChannelTransfer(DMAC_CHANNEL_0, (const void *)&ADC_REGS->ADC_RESULT, (const void *)adc_result_array, sizeof(adc_result_array));
         }
     }
 
