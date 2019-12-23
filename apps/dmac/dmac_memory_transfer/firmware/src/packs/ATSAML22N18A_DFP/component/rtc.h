@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-06-04T17:42:06Z */
+/* file generated from device description version 2019-11-24T16:22:29Z */
 #ifndef _SAML22_RTC_COMPONENT_H_
 #define _SAML22_RTC_COMPONENT_H_
 
