@@ -61,6 +61,17 @@
 // *****************************************************************************
 // *****************************************************************************
 
+#define PIOA_REGS       ((pio_group_registers_t*)(&(PIO_REGS->PIO_GROUP[0])))
+#define PIOB_REGS       ((pio_group_registers_t*)(&(PIO_REGS->PIO_GROUP[1])))
+#define PIOC_REGS       ((pio_group_registers_t*)(&(PIO_REGS->PIO_GROUP[2])))
+#define PIOD_REGS       ((pio_group_registers_t*)(&(PIO_REGS->PIO_GROUP[3])))
+#define PIOE_REGS       ((pio_group_registers_t*)(&(PIO_REGS->PIO_GROUP[4])))
+
+#define PIOF_REGS       ((pio_group_registers_t*)(&(PIO_REGS->PIO_GROUP[5])))
+
+#define PIOG_REGS       ((pio_group_registers_t*)(&(PIO_REGS->PIO_GROUP[6])))
+
+
 
 
 /*** Macros for LED pin ***/
@@ -124,25 +135,25 @@
 typedef enum
 {
     /* Port A Pins */
-    PIO_PORT_A = PIOA_BASE_ADDRESS,
+    PIO_PORT_A = (uint32_t)&(PIO_REGS->PIO_GROUP[0]),
 
     /* Port B Pins */
-    PIO_PORT_B = PIOB_BASE_ADDRESS,
+    PIO_PORT_B = (uint32_t)&(PIO_REGS->PIO_GROUP[1]),
 
     /* Port C Pins */
-    PIO_PORT_C = PIOC_BASE_ADDRESS,
+    PIO_PORT_C = (uint32_t)&(PIO_REGS->PIO_GROUP[2]),
 
     /* Port D Pins */
-    PIO_PORT_D = PIOD_BASE_ADDRESS,
+    PIO_PORT_D = (uint32_t)&(PIO_REGS->PIO_GROUP[3]),
 
     /* Port E Pins */
-    PIO_PORT_E = PIOE_BASE_ADDRESS,
+    PIO_PORT_E = (uint32_t)&(PIO_REGS->PIO_GROUP[4]),
 
     /* Port F Pins */
-    PIO_PORT_F = PIOF_BASE_ADDRESS,
+    PIO_PORT_F = (uint32_t)&(PIO_REGS->PIO_GROUP[5]),
 
     /* Port G Pins */
-    PIO_PORT_G = PIOG_BASE_ADDRESS
+    PIO_PORT_G = (uint32_t)&(PIO_REGS->PIO_GROUP[6])
 
 } PIO_PORT;
 
@@ -285,7 +296,80 @@ typedef enum
     PIO_PIN_PD29 = 125,
     PIO_PIN_PD30 = 126,
     PIO_PIN_PD31 = 127,
-    PIO_PIN_PE28 = 156,
+    PIO_PIN_PE0 = 128,
+    PIO_PIN_PE1 = 129,
+    PIO_PIN_PE2 = 130,
+    PIO_PIN_PE3 = 131,
+    PIO_PIN_PE4 = 132,
+    PIO_PIN_PE5 = 133,
+    PIO_PIN_PE6 = 134,
+    PIO_PIN_PE7 = 135,
+    PIO_PIN_PE8 = 136,
+    PIO_PIN_PE9 = 137,
+    PIO_PIN_PE10 = 138,
+    PIO_PIN_PE11 = 139,
+    PIO_PIN_PE12 = 140,
+    PIO_PIN_PF0 = 160,
+    PIO_PIN_PF1 = 161,
+    PIO_PIN_PF2 = 162,
+    PIO_PIN_PF3 = 163,
+    PIO_PIN_PF4 = 164,
+    PIO_PIN_PF5 = 165,
+    PIO_PIN_PF6 = 166,
+    PIO_PIN_PF7 = 167,
+    PIO_PIN_PF8 = 168,
+    PIO_PIN_PF9 = 169,
+    PIO_PIN_PF10 = 170,
+    PIO_PIN_PF11 = 171,
+    PIO_PIN_PF12 = 172,
+    PIO_PIN_PF13 = 173,
+    PIO_PIN_PF14 = 174,
+    PIO_PIN_PF15 = 175,
+    PIO_PIN_PF16 = 176,
+    PIO_PIN_PF17 = 177,
+    PIO_PIN_PF18 = 178,
+    PIO_PIN_PF19 = 179,
+    PIO_PIN_PF20 = 180,
+    PIO_PIN_PF21 = 181,
+    PIO_PIN_PF22 = 182,
+    PIO_PIN_PF23 = 183,
+    PIO_PIN_PF24 = 184,
+    PIO_PIN_PF25 = 185,
+    PIO_PIN_PF26 = 186,
+    PIO_PIN_PF27 = 187,
+    PIO_PIN_PF28 = 188,
+    PIO_PIN_PF29 = 189,
+    PIO_PIN_PF30 = 190,
+    PIO_PIN_PG0 = 192,
+    PIO_PIN_PG1 = 193,
+    PIO_PIN_PG2 = 194,
+    PIO_PIN_PG3 = 195,
+    PIO_PIN_PG4 = 196,
+    PIO_PIN_PG5 = 197,
+    PIO_PIN_PG6 = 198,
+    PIO_PIN_PG7 = 199,
+    PIO_PIN_PG8 = 200,
+    PIO_PIN_PG9 = 201,
+    PIO_PIN_PG10 = 202,
+    PIO_PIN_PG11 = 203,
+    PIO_PIN_PG12 = 204,
+    PIO_PIN_PG13 = 205,
+    PIO_PIN_PG14 = 206,
+    PIO_PIN_PG15 = 207,
+    PIO_PIN_PG16 = 208,
+    PIO_PIN_PG17 = 209,
+    PIO_PIN_PG18 = 210,
+    PIO_PIN_PG19 = 211,
+    PIO_PIN_PG20 = 212,
+    PIO_PIN_PG21 = 213,
+    PIO_PIN_PG22 = 214,
+    PIO_PIN_PG23 = 215,
+    PIO_PIN_PG24 = 216,
+    PIO_PIN_PG25 = 217,
+    PIO_PIN_PG26 = 218,
+    PIO_PIN_PG27 = 219,
+    PIO_PIN_PG30 = 222,
+    PIO_PIN_PG31 = 223,
 
     /* This element should not be used in any of the PIO APIs.
        It will be used by other modules or application to denote that none of the PIO Pin is used */
@@ -843,7 +927,7 @@ typedef struct {
 */
 static inline void PIO_PinWrite(PIO_PIN pin, bool value)
 {
-    PIO_PortWrite((PIO_PORT)(PIOA_BASE_ADDRESS + (0x40 * (pin>>5))), (uint32_t)(0x1) << (pin & 0x1f), (uint32_t)(value) << (pin & 0x1f));
+    PIO_PortWrite((PIO_PORT)(PIO_BASE_ADDRESS + (0x40 * (pin>>5))), (uint32_t)(0x1) << (pin & 0x1f), (uint32_t)(value) << (pin & 0x1f));
 }
 
 // *****************************************************************************
@@ -883,7 +967,7 @@ static inline void PIO_PinWrite(PIO_PIN pin, bool value)
 
 static inline bool PIO_PinRead(PIO_PIN pin)
 {
-    return (bool)((PIO_PortRead((PIO_PORT)(PIOA_BASE_ADDRESS + (0x40 * (pin>>5)))) >> (pin & 0x1F)) & 0x1);
+    return (bool)((PIO_PortRead((PIO_PORT)(PIO_BASE_ADDRESS + (0x40 * (pin>>5)))) >> (pin & 0x1F)) & 0x1);
 }
 
 
@@ -921,7 +1005,7 @@ static inline bool PIO_PinRead(PIO_PIN pin)
 */
 static inline bool PIO_PinLatchRead(PIO_PIN pin)
 {
-    return (bool)((PIO_PortLatchRead((PIO_PORT)(PIOA_BASE_ADDRESS + (0x40 * (pin>>5)))) >> (pin & 0x1F)) & 0x1);
+    return (bool)((PIO_PortLatchRead((PIO_PORT)(PIO_BASE_ADDRESS + (0x40 * (pin>>5)))) >> (pin & 0x1F)) & 0x1);
 }
 
 // *****************************************************************************
@@ -955,7 +1039,7 @@ static inline bool PIO_PinLatchRead(PIO_PIN pin)
 */
 static inline void PIO_PinToggle(PIO_PIN pin)
 {
-    PIO_PortToggle((PIO_PORT)(PIOA_BASE_ADDRESS + (0x40 * (pin>>5))), 0x1 << (pin & 0x1F));
+    PIO_PortToggle((PIO_PORT)(PIO_BASE_ADDRESS + (0x40 * (pin>>5))), 0x1 << (pin & 0x1F));
 }
 
 // *****************************************************************************
@@ -989,7 +1073,7 @@ static inline void PIO_PinToggle(PIO_PIN pin)
 */
 static inline void PIO_PinSet(PIO_PIN pin)
 {
-    PIO_PortSet((PIO_PORT)(PIOA_BASE_ADDRESS + (0x40 * (pin>>5))), 0x1 << (pin & 0x1F));
+    PIO_PortSet((PIO_PORT)(PIO_BASE_ADDRESS + (0x40 * (pin>>5))), 0x1 << (pin & 0x1F));
 }
 
 // *****************************************************************************
@@ -1023,7 +1107,7 @@ static inline void PIO_PinSet(PIO_PIN pin)
 */
 static inline void PIO_PinClear(PIO_PIN pin)
 {
-    PIO_PortClear((PIO_PORT)(PIOA_BASE_ADDRESS + (0x40 * (pin>>5))), 0x1 << (pin & 0x1F));
+    PIO_PortClear((PIO_PORT)(PIO_BASE_ADDRESS + (0x40 * (pin>>5))), 0x1 << (pin & 0x1F));
 }
 
 // *****************************************************************************
@@ -1057,7 +1141,7 @@ static inline void PIO_PinClear(PIO_PIN pin)
 */
 static inline void PIO_PinInputEnable(PIO_PIN pin)
 {
-    PIO_PortInputEnable((PIO_PORT)(PIOA_BASE_ADDRESS + (0x40 * (pin>>5))), 0x1 << (pin & 0x1F));
+    PIO_PortInputEnable((PIO_PORT)(PIO_BASE_ADDRESS + (0x40 * (pin>>5))), 0x1 << (pin & 0x1F));
 }
 
 // *****************************************************************************
@@ -1091,7 +1175,7 @@ static inline void PIO_PinInputEnable(PIO_PIN pin)
 */
 static inline void PIO_PinOutputEnable(PIO_PIN pin)
 {
-    PIO_PortOutputEnable((PIO_PORT)(PIOA_BASE_ADDRESS + (0x40 * (pin>>5))), 0x1 << (pin & 0x1F));
+    PIO_PortOutputEnable((PIO_PORT)(PIO_BASE_ADDRESS + (0x40 * (pin>>5))), 0x1 << (pin & 0x1F));
 }
 
 // *****************************************************************************
@@ -1125,7 +1209,7 @@ static inline void PIO_PinOutputEnable(PIO_PIN pin)
 */
 static inline void PIO_PinInterruptEnable(PIO_PIN pin)
 {
-    PIO_PortInterruptEnable((PIO_PORT)(PIOA_BASE_ADDRESS + (0x40 * (pin>>5))), 0x1 << (pin & 0x1F));
+    PIO_PortInterruptEnable((PIO_PORT)(PIO_BASE_ADDRESS + (0x40 * (pin>>5))), 0x1 << (pin & 0x1F));
 }
 
 
@@ -1160,12 +1244,12 @@ static inline void PIO_PinInterruptEnable(PIO_PIN pin)
 */
 static inline void PIO_PinInterruptDisable(PIO_PIN pin)
 {
-    PIO_PortInterruptDisable((PIO_PORT)(PIOA_BASE_ADDRESS + (0x40 * (pin>>5))), 0x1 << (pin & 0x1F));
+    PIO_PortInterruptDisable((PIO_PORT)(PIO_BASE_ADDRESS + (0x40 * (pin>>5))), 0x1 << (pin & 0x1F));
 }
 
 // *****************************************************************************
 /* Function:
-    void PIO_PinInterruptCallbackRegister(
+    bool PIO_PinInterruptCallbackRegister(
         PIO_PIN pin,
         const PIO_PIN_CALLBACK callBack,
         uintptr_t context
@@ -1181,6 +1265,10 @@ static inline void PIO_PinInterruptDisable(PIO_PIN pin)
     At any point if application wants to stop the callback, it can call this
     function with "eventHandler" value as NULL.
 
+    If a pin is not configured for interrupt in Pin Manager and yet its callback
+    registration is attempted using this API, then registration doesn't happen
+    and API returns false indicating the same.    
+
   Precondition:
     The PIO_Initialize function must have been called.
 
@@ -1193,7 +1281,9 @@ static inline void PIO_PinInterruptDisable(PIO_PIN pin)
                    be used to identify any application specific value.
 
   Returns:
-    None.
+    Callback registration status:
+    - true: Callback was successfully registered
+    - false: Callback was not registered
 
   Example:
     <code>
@@ -1205,7 +1295,7 @@ static inline void PIO_PinInterruptDisable(PIO_PIN pin)
   Remarks:
     None.
 */
-void PIO_PinInterruptCallbackRegister(
+bool PIO_PinInterruptCallbackRegister(
     PIO_PIN pin,
     const   PIO_PIN_CALLBACK callBack,
     uintptr_t context
