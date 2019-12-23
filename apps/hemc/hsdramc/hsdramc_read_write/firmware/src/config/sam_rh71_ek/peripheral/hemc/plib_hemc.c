@@ -35,8 +35,17 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
-#include "plib_hemc.h"
+#include <string.h>
 #include "device.h"
+#include "plib_hemc.h"
+
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Global Data
+// *****************************************************************************
+// *****************************************************************************
+
 
 // *****************************************************************************
 // *****************************************************************************
@@ -64,12 +73,12 @@ void HSDRAMC_Initialize( void )
 
     /* Step 1:
      * Configure SDRAM features and timing parameters */
-    HSDRAMC_REGS->HSDRAMC_CR = HSDRAMC_CR_NC_COL9 | HSDRAMC_CR_NR_ROW13 | HSDRAMC_CR_NB_BANK4 \
+    HSDRAMC_REGS->HSDRAMC_CR = HSDRAMC_CR_NC_COL9 | HSDRAMC_CR_NR_ROW13 | HSDRAMC_CR_NB_BANK4\
                                                 | HSDRAMC_CR_CAS(3) ;
 
     HSDRAMC_REGS->HSDRAMC_SDR = HSDRAMC_SDR_TRAS(5) |  HSDRAMC_SDR_TRP(2) |  HSDRAMC_SDR_TRC_TRFC(6) \
                                                 | HSDRAMC_SDR_TRCD(2) | HSDRAMC_SDR_TWR(2) | HSDRAMC_SDR_TXSR(7);
-    HSDRAMC_REGS->HSDRAMC_CFR1= HSDRAMC_CFR1_TMRD(2) | HSDRAMC_CFR1_UNAL_Msk;
+    HSDRAMC_REGS->HSDRAMC_CFR1= HSDRAMC_CFR1_TMRD(2);
 
     /* Step 2:
      * A pause of at least 200 us must be observed before a signal toggle */
@@ -127,6 +136,7 @@ void HSDRAMC_Initialize( void )
      * Configure the Refresh Timer Register. */
     HSDRAMC_REGS->HSDRAMC_TR = 195;
 
+
 }
 
 void HSMC_Initialize( void )
@@ -140,12 +150,97 @@ void HSMC_Initialize( void )
 }
 void HEMC_Initialize( void )
 {
-    HEMC_REGS->HEMC_CR_NCS0 = HEMC_CR_NCS0_TYPE(0) | HEMC_CR_NCS0_ADDBASE(0x3ffff) | HEMC_CR_NCS0_BANKSIZE(0x1F);
-    HEMC_REGS->HEMC_CR_NCS4 = HEMC_CR_NCS4_TYPE(1) | HEMC_CR_NCS4_ADDBASE(0x1000) | HEMC_CR_NCS4_BANKSIZE(0xC);
+    /* Read NCS0 Pin configuration for HECC */
+    uint8_t eccEnableDefault = ( (HEMC_REGS->HEMC_HECC_CR0 & HEMC_HECC_CR0_ENABLE_Msk) >> HEMC_HECC_CR0_ENABLE_Pos);
+    uint8_t eccAlgoDefault = ( (HEMC_REGS->HEMC_HECC_CR0 & HEMC_HECC_CR0_ECC12_ENABLE_Msk) >> HEMC_HECC_CR0_ECC12_ENABLE_Pos);
+
+    /* Enable NCS0 configuration modification through registers */
+    HEMC_REGS->HEMC_CR_NCS0 |= HEMC_CR_NCS0_WRITE_ECC_CONF(1);
+
+    HEMC_REGS->HEMC_CR_NCS0 = HEMC_CR_NCS0_TYPE(0) |
+                              HEMC_CR_NCS0_ADDBASE(0x3ffff) |
+                              HEMC_CR_NCS0_BANKSIZE(0x1F) |
+                              HEMC_CR_NCS0_WRITE_ECC_CONF(1) |
+                              HEMC_CR_NCS0_ECC_ENABLE(eccEnableDefault) |
+                              HEMC_CR_NCS0_ECC12_ENABLE(eccAlgoDefault);
+
+    HEMC_REGS->HEMC_CR_NCS4 = HEMC_CR_NCS4_TYPE(1) |
+                              HEMC_CR_NCS4_ADDBASE(0x1000) |
+                              HEMC_CR_NCS4_BANKSIZE(0xC);
     HSDRAMC_Initialize();
     HSMC_Initialize();
 
+
+
+
 } /* HEMC_Initialize */
+
+// *****************************************************************************
+/* Function:
+    void HEMC_HeccGetStatus(void)
+
+   Summary:
+    Get the HECC status of the HEMC peripheral.
+
+   Precondition:
+    None.
+
+   Parameters:
+    None.
+
+   Returns:
+    Current status of the HEMC peripheral.
+*/
+HEMC_HECC_STATUS HEMC_HeccGetStatus(void)
+{
+    return HEMC_REGS->HEMC_HECC_SR;
+}
+
+// *****************************************************************************
+/* Function:
+    void HEMC_HeccGetFailAddress(void)
+
+   Summary:
+    Get the last fail address were ECC error occurs in a HEMC memory.
+
+   Precondition:
+    None.
+
+   Parameters:
+    None.
+
+   Returns:
+    Fail address were fixable or unfixable error occured in a HEMC memory.
+*/
+uint32_t HEMC_HeccGetFailAddress(void)
+{
+    return HEMC_REGS->HEMC_HECC_FAILAR;
+}
+
+// *****************************************************************************
+/* Function:
+    void HEMC_HeccResetCounters(void)
+
+   Summary:
+    Reset Fix and NoFix error counters of the HEMC peripheral.
+
+   Precondition:
+    None.
+
+   Parameters:
+    None.
+
+   Returns:
+    None
+*/
+void HEMC_HeccResetCounters(void)
+{
+    HEMC_REGS->HEMC_HECC_CR0 |= (HEMC_HECC_CR0_RST_FIX_CPT_Msk | HEMC_HECC_CR0_RST_NOFIX_CPT_Msk);
+    HEMC_REGS->HEMC_HECC_CR1 |= (HEMC_HECC_CR1_RST_FIX_CPT_Msk | HEMC_HECC_CR1_RST_NOFIX_CPT_Msk);
+    HEMC_REGS->HEMC_HECC_CR2 |= (HEMC_HECC_CR2_RST_FIX_CPT_Msk | HEMC_HECC_CR2_RST_NOFIX_CPT_Msk);
+}
+
+
 /*******************************************************************************
  End of File
 */

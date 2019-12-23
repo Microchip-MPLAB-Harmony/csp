@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-08-29T14:13:58Z */
+/* file generated from device description version 2019-12-20T15:37:42Z */
 #ifndef _SAMRH71_PMC_COMPONENT_H_
 #define _SAMRH71_PMC_COMPONENT_H_
 
@@ -278,12 +278,12 @@
 #define PMC_IER_LOCKA_Pos                     _U_(1)                                               /**< (PMC_IER) PLLA Lock Interrupt Enable Position */
 #define PMC_IER_LOCKA_Msk                     (_U_(0x1) << PMC_IER_LOCKA_Pos)                      /**< (PMC_IER) PLLA Lock Interrupt Enable Mask */
 #define PMC_IER_LOCKA(value)                  (PMC_IER_LOCKA_Msk & ((value) << PMC_IER_LOCKA_Pos))
+#define PMC_IER_LOCKB_Pos                     _U_(2)                                               /**< (PMC_IER) PLLB Lock Interrupt Enable Position */
+#define PMC_IER_LOCKB_Msk                     (_U_(0x1) << PMC_IER_LOCKB_Pos)                      /**< (PMC_IER) PLLB Lock Interrupt Enable Mask */
+#define PMC_IER_LOCKB(value)                  (PMC_IER_LOCKB_Msk & ((value) << PMC_IER_LOCKB_Pos))
 #define PMC_IER_MCKRDY_Pos                    _U_(3)                                               /**< (PMC_IER) Master Clock Ready Interrupt Enable Position */
 #define PMC_IER_MCKRDY_Msk                    (_U_(0x1) << PMC_IER_MCKRDY_Pos)                     /**< (PMC_IER) Master Clock Ready Interrupt Enable Mask */
 #define PMC_IER_MCKRDY(value)                 (PMC_IER_MCKRDY_Msk & ((value) << PMC_IER_MCKRDY_Pos))
-#define PMC_IER_LOCKB_Pos                     _U_(6)                                               /**< (PMC_IER) PLLB Lock Interrupt Enable Position */
-#define PMC_IER_LOCKB_Msk                     (_U_(0x1) << PMC_IER_LOCKB_Pos)                      /**< (PMC_IER) PLLB Lock Interrupt Enable Mask */
-#define PMC_IER_LOCKB(value)                  (PMC_IER_LOCKB_Msk & ((value) << PMC_IER_LOCKB_Pos))
 #define PMC_IER_PCKRDY0_Pos                   _U_(8)                                               /**< (PMC_IER) Programmable Clock Ready 0 Interrupt Enable Position */
 #define PMC_IER_PCKRDY0_Msk                   (_U_(0x1) << PMC_IER_PCKRDY0_Pos)                    /**< (PMC_IER) Programmable Clock Ready 0 Interrupt Enable Mask */
 #define PMC_IER_PCKRDY0(value)                (PMC_IER_PCKRDY0_Msk & ((value) << PMC_IER_PCKRDY0_Pos))
@@ -320,7 +320,7 @@
 #define PMC_IER_CPUMON_Pos                    _U_(23)                                              /**< (PMC_IER) CPU Clock Monitor Interrupt Enable Position */
 #define PMC_IER_CPUMON_Msk                    (_U_(0x1) << PMC_IER_CPUMON_Pos)                     /**< (PMC_IER) CPU Clock Monitor Interrupt Enable Mask */
 #define PMC_IER_CPUMON(value)                 (PMC_IER_CPUMON_Msk & ((value) << PMC_IER_CPUMON_Pos))
-#define PMC_IER_Msk                           _U_(0x00A77F4B)                                      /**< (PMC_IER) Register Mask  */
+#define PMC_IER_Msk                           _U_(0x00A77F0F)                                      /**< (PMC_IER) Register Mask  */
 
 #define PMC_IER_PCKRDY_Pos                    _U_(8)                                               /**< (PMC_IER Position) Programmable Clock Ready x Interrupt Enable */
 #define PMC_IER_PCKRDY_Msk                    (_U_(0x7F) << PMC_IER_PCKRDY_Pos)                    /**< (PMC_IER Mask) PCKRDY */
@@ -333,12 +333,12 @@
 #define PMC_IDR_LOCKA_Pos                     _U_(1)                                               /**< (PMC_IDR) PLLA Lock Interrupt Disable Position */
 #define PMC_IDR_LOCKA_Msk                     (_U_(0x1) << PMC_IDR_LOCKA_Pos)                      /**< (PMC_IDR) PLLA Lock Interrupt Disable Mask */
 #define PMC_IDR_LOCKA(value)                  (PMC_IDR_LOCKA_Msk & ((value) << PMC_IDR_LOCKA_Pos))
+#define PMC_IDR_LOCKB_Pos                     _U_(2)                                               /**< (PMC_IDR) PLLB Lock Interrupt Disable Position */
+#define PMC_IDR_LOCKB_Msk                     (_U_(0x1) << PMC_IDR_LOCKB_Pos)                      /**< (PMC_IDR) PLLB Lock Interrupt Disable Mask */
+#define PMC_IDR_LOCKB(value)                  (PMC_IDR_LOCKB_Msk & ((value) << PMC_IDR_LOCKB_Pos))
 #define PMC_IDR_MCKRDY_Pos                    _U_(3)                                               /**< (PMC_IDR) Master Clock Ready Interrupt Disable Position */
 #define PMC_IDR_MCKRDY_Msk                    (_U_(0x1) << PMC_IDR_MCKRDY_Pos)                     /**< (PMC_IDR) Master Clock Ready Interrupt Disable Mask */
 #define PMC_IDR_MCKRDY(value)                 (PMC_IDR_MCKRDY_Msk & ((value) << PMC_IDR_MCKRDY_Pos))
-#define PMC_IDR_LOCKB_Pos                     _U_(6)                                               /**< (PMC_IDR) PLLB Lock Interrupt Disable Position */
-#define PMC_IDR_LOCKB_Msk                     (_U_(0x1) << PMC_IDR_LOCKB_Pos)                      /**< (PMC_IDR) PLLB Lock Interrupt Disable Mask */
-#define PMC_IDR_LOCKB(value)                  (PMC_IDR_LOCKB_Msk & ((value) << PMC_IDR_LOCKB_Pos))
 #define PMC_IDR_PCKRDY0_Pos                   _U_(8)                                               /**< (PMC_IDR) Programmable Clock Ready 0 Interrupt Disable Position */
 #define PMC_IDR_PCKRDY0_Msk                   (_U_(0x1) << PMC_IDR_PCKRDY0_Pos)                    /**< (PMC_IDR) Programmable Clock Ready 0 Interrupt Disable Mask */
 #define PMC_IDR_PCKRDY0(value)                (PMC_IDR_PCKRDY0_Msk & ((value) << PMC_IDR_PCKRDY0_Pos))
@@ -375,7 +375,7 @@
 #define PMC_IDR_CPUMON_Pos                    _U_(23)                                              /**< (PMC_IDR) CPU Clock Monitor Interrupt Disable Position */
 #define PMC_IDR_CPUMON_Msk                    (_U_(0x1) << PMC_IDR_CPUMON_Pos)                     /**< (PMC_IDR) CPU Clock Monitor Interrupt Disable Mask */
 #define PMC_IDR_CPUMON(value)                 (PMC_IDR_CPUMON_Msk & ((value) << PMC_IDR_CPUMON_Pos))
-#define PMC_IDR_Msk                           _U_(0x00A77F4B)                                      /**< (PMC_IDR) Register Mask  */
+#define PMC_IDR_Msk                           _U_(0x00A77F0F)                                      /**< (PMC_IDR) Register Mask  */
 
 #define PMC_IDR_PCKRDY_Pos                    _U_(8)                                               /**< (PMC_IDR Position) Programmable Clock Ready x Interrupt Disable */
 #define PMC_IDR_PCKRDY_Msk                    (_U_(0x7F) << PMC_IDR_PCKRDY_Pos)                    /**< (PMC_IDR Mask) PCKRDY */
@@ -388,12 +388,12 @@
 #define PMC_SR_LOCKA_Pos                      _U_(1)                                               /**< (PMC_SR) PLLA Lock Status Position */
 #define PMC_SR_LOCKA_Msk                      (_U_(0x1) << PMC_SR_LOCKA_Pos)                       /**< (PMC_SR) PLLA Lock Status Mask */
 #define PMC_SR_LOCKA(value)                   (PMC_SR_LOCKA_Msk & ((value) << PMC_SR_LOCKA_Pos))  
+#define PMC_SR_LOCKB_Pos                      _U_(2)                                               /**< (PMC_SR) PLLB Lock Status Position */
+#define PMC_SR_LOCKB_Msk                      (_U_(0x1) << PMC_SR_LOCKB_Pos)                       /**< (PMC_SR) PLLB Lock Status Mask */
+#define PMC_SR_LOCKB(value)                   (PMC_SR_LOCKB_Msk & ((value) << PMC_SR_LOCKB_Pos))  
 #define PMC_SR_MCKRDY_Pos                     _U_(3)                                               /**< (PMC_SR) Master Clock Status Position */
 #define PMC_SR_MCKRDY_Msk                     (_U_(0x1) << PMC_SR_MCKRDY_Pos)                      /**< (PMC_SR) Master Clock Status Mask */
 #define PMC_SR_MCKRDY(value)                  (PMC_SR_MCKRDY_Msk & ((value) << PMC_SR_MCKRDY_Pos))
-#define PMC_SR_LOCKB_Pos                      _U_(6)                                               /**< (PMC_SR) PLLB Lock Status Position */
-#define PMC_SR_LOCKB_Msk                      (_U_(0x1) << PMC_SR_LOCKB_Pos)                       /**< (PMC_SR) PLLB Lock Status Mask */
-#define PMC_SR_LOCKB(value)                   (PMC_SR_LOCKB_Msk & ((value) << PMC_SR_LOCKB_Pos))  
 #define PMC_SR_OSCSELS_Pos                    _U_(7)                                               /**< (PMC_SR) Monitoring Domain Slow Clock Source Oscillator Selection Position */
 #define PMC_SR_OSCSELS_Msk                    (_U_(0x1) << PMC_SR_OSCSELS_Pos)                     /**< (PMC_SR) Monitoring Domain Slow Clock Source Oscillator Selection Mask */
 #define PMC_SR_OSCSELS(value)                 (PMC_SR_OSCSELS_Msk & ((value) << PMC_SR_OSCSELS_Pos))
@@ -439,7 +439,7 @@
 #define PMC_SR_CPUMON_Pos                     _U_(23)                                              /**< (PMC_SR) CPU Clock Monitor Error Position */
 #define PMC_SR_CPUMON_Msk                     (_U_(0x1) << PMC_SR_CPUMON_Pos)                      /**< (PMC_SR) CPU Clock Monitor Error Mask */
 #define PMC_SR_CPUMON(value)                  (PMC_SR_CPUMON_Msk & ((value) << PMC_SR_CPUMON_Pos))
-#define PMC_SR_Msk                            _U_(0x00BF7FCB)                                      /**< (PMC_SR) Register Mask  */
+#define PMC_SR_Msk                            _U_(0x00BF7F8F)                                      /**< (PMC_SR) Register Mask  */
 
 #define PMC_SR_PCKRDY_Pos                     _U_(8)                                               /**< (PMC_SR Position) Programmable Clock Ready Status */
 #define PMC_SR_PCKRDY_Msk                     (_U_(0x7F) << PMC_SR_PCKRDY_Pos)                     /**< (PMC_SR Mask) PCKRDY */
@@ -452,12 +452,12 @@
 #define PMC_IMR_LOCKA_Pos                     _U_(1)                                               /**< (PMC_IMR) PLLA Lock Interrupt Mask Position */
 #define PMC_IMR_LOCKA_Msk                     (_U_(0x1) << PMC_IMR_LOCKA_Pos)                      /**< (PMC_IMR) PLLA Lock Interrupt Mask Mask */
 #define PMC_IMR_LOCKA(value)                  (PMC_IMR_LOCKA_Msk & ((value) << PMC_IMR_LOCKA_Pos))
+#define PMC_IMR_LOCKB_Pos                     _U_(2)                                               /**< (PMC_IMR) PLLB Lock Interrupt Mask Position */
+#define PMC_IMR_LOCKB_Msk                     (_U_(0x1) << PMC_IMR_LOCKB_Pos)                      /**< (PMC_IMR) PLLB Lock Interrupt Mask Mask */
+#define PMC_IMR_LOCKB(value)                  (PMC_IMR_LOCKB_Msk & ((value) << PMC_IMR_LOCKB_Pos))
 #define PMC_IMR_MCKRDY_Pos                    _U_(3)                                               /**< (PMC_IMR) Master Clock Ready Interrupt Mask Position */
 #define PMC_IMR_MCKRDY_Msk                    (_U_(0x1) << PMC_IMR_MCKRDY_Pos)                     /**< (PMC_IMR) Master Clock Ready Interrupt Mask Mask */
 #define PMC_IMR_MCKRDY(value)                 (PMC_IMR_MCKRDY_Msk & ((value) << PMC_IMR_MCKRDY_Pos))
-#define PMC_IMR_LOCKB_Pos                     _U_(6)                                               /**< (PMC_IMR) PLLB Lock Interrupt Mask Position */
-#define PMC_IMR_LOCKB_Msk                     (_U_(0x1) << PMC_IMR_LOCKB_Pos)                      /**< (PMC_IMR) PLLB Lock Interrupt Mask Mask */
-#define PMC_IMR_LOCKB(value)                  (PMC_IMR_LOCKB_Msk & ((value) << PMC_IMR_LOCKB_Pos))
 #define PMC_IMR_PCKRDY0_Pos                   _U_(8)                                               /**< (PMC_IMR) Programmable Clock Ready 0 Interrupt Mask Position */
 #define PMC_IMR_PCKRDY0_Msk                   (_U_(0x1) << PMC_IMR_PCKRDY0_Pos)                    /**< (PMC_IMR) Programmable Clock Ready 0 Interrupt Mask Mask */
 #define PMC_IMR_PCKRDY0(value)                (PMC_IMR_PCKRDY0_Msk & ((value) << PMC_IMR_PCKRDY0_Pos))
@@ -494,7 +494,7 @@
 #define PMC_IMR_CPUMON_Pos                    _U_(23)                                              /**< (PMC_IMR) CPU Clock Monitor Error Interrupt Mask Position */
 #define PMC_IMR_CPUMON_Msk                    (_U_(0x1) << PMC_IMR_CPUMON_Pos)                     /**< (PMC_IMR) CPU Clock Monitor Error Interrupt Mask Mask */
 #define PMC_IMR_CPUMON(value)                 (PMC_IMR_CPUMON_Msk & ((value) << PMC_IMR_CPUMON_Pos))
-#define PMC_IMR_Msk                           _U_(0x00A77F4B)                                      /**< (PMC_IMR) Register Mask  */
+#define PMC_IMR_Msk                           _U_(0x00A77F0F)                                      /**< (PMC_IMR) Register Mask  */
 
 #define PMC_IMR_PCKRDY_Pos                    _U_(8)                                               /**< (PMC_IMR Position) Programmable Clock Ready x Interrupt Mask */
 #define PMC_IMR_PCKRDY_Msk                    (_U_(0x7F) << PMC_IMR_PCKRDY_Pos)                    /**< (PMC_IMR Mask) PCKRDY */
@@ -1526,7 +1526,15 @@
 #define PMC_OSC2_OSCRCF_8_MHZ                 (PMC_OSC2_OSCRCF_8_MHZ_Val << PMC_OSC2_OSCRCF_Pos)   /**< (PMC_OSC2) The 2nd RC oscillator frequency is at 8 MHZ Position  */
 #define PMC_OSC2_OSCRCF_10_MHZ                (PMC_OSC2_OSCRCF_10_MHZ_Val << PMC_OSC2_OSCRCF_Pos)  /**< (PMC_OSC2) The 2nd RC oscillator frequency is at 10 MHZ Position  */
 #define PMC_OSC2_OSCRCF_12_MHZ                (PMC_OSC2_OSCRCF_12_MHZ_Val << PMC_OSC2_OSCRCF_Pos)  /**< (PMC_OSC2) The 2nd RC oscillator frequency is at 12 MHZ Position  */
-#define PMC_OSC2_Msk                          _U_(0x00000031)                                      /**< (PMC_OSC2) Register Mask  */
+#define PMC_OSC2_EN_WR_CALIB_Pos              _U_(8)                                               /**< (PMC_OSC2) Enable Calibration Register Write Position */
+#define PMC_OSC2_EN_WR_CALIB_Msk              (_U_(0x1) << PMC_OSC2_EN_WR_CALIB_Pos)               /**< (PMC_OSC2) Enable Calibration Register Write Mask */
+#define PMC_OSC2_EN_WR_CALIB(value)           (PMC_OSC2_EN_WR_CALIB_Msk & ((value) << PMC_OSC2_EN_WR_CALIB_Pos))
+#define PMC_OSC2_KEY_Pos                      _U_(16)                                              /**< (PMC_OSC2) Register Write Access Password Position */
+#define PMC_OSC2_KEY_Msk                      (_U_(0xFF) << PMC_OSC2_KEY_Pos)                      /**< (PMC_OSC2) Register Write Access Password Mask */
+#define PMC_OSC2_KEY(value)                   (PMC_OSC2_KEY_Msk & ((value) << PMC_OSC2_KEY_Pos))  
+#define   PMC_OSC2_KEY_PASSWD_Val             _U_(0x37)                                            /**< (PMC_OSC2) Writing any other value in this field aborts the write operation.Always reads as 0.  */
+#define PMC_OSC2_KEY_PASSWD                   (PMC_OSC2_KEY_PASSWD_Val << PMC_OSC2_KEY_Pos)        /**< (PMC_OSC2) Writing any other value in this field aborts the write operation.Always reads as 0. Position  */
+#define PMC_OSC2_Msk                          _U_(0x00FF0131)                                      /**< (PMC_OSC2) Register Mask  */
 
 
 /* -------- PMC_OCR2 : (PMC Offset: 0x1B4) (R/W 32) Oscillator Calibration Register 2 -------- */
