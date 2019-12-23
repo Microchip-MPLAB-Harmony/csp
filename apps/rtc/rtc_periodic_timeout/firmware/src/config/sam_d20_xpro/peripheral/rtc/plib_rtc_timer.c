@@ -62,6 +62,10 @@ void RTC_Initialize(void)
     RTC_REGS->MODE0.RTC_CTRL = RTC_MODE0_CTRL_MODE(0) | RTC_MODE0_CTRL_PRESCALER(0x0) |RTC_MODE0_CTRL_MATCHCLR_Msk;
 
     RTC_REGS->MODE0.RTC_COMP = 0x100;
+    while((RTC_REGS->MODE0.RTC_STATUS & RTC_STATUS_SYNCBUSY_Msk) == RTC_STATUS_SYNCBUSY_Msk)
+    {
+        /* Wait for Synchronization after writing Compare Value */
+    }
 
 }
 
@@ -148,7 +152,7 @@ void RTC_Timer32CallbackRegister ( RTC_TIMER32_CALLBACK callback, uintptr_t cont
 
 void RTC_InterruptHandler(void)
 {
-    rtcObj.timer32intCause = RTC_REGS->MODE0.RTC_INTFLAG;
+    rtcObj.timer32intCause = (RTC_TIMER32_INT_MASK) RTC_REGS->MODE0.RTC_INTFLAG;
     RTC_REGS->MODE0.RTC_INTFLAG = RTC_MODE0_INTFLAG_Msk;
 
     /* Invoke registered Callback function */
