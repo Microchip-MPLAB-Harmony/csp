@@ -50,6 +50,7 @@
 #include <stdbool.h>
 #include "peripheral/clk/plib_clk.h"
 #include "peripheral/pio/plib_pio.h"
+#include "peripheral/matrix/plib_matrix.h"
 #include "peripheral/nvic/plib_nvic.h"
 #include "peripheral/flexcom/usart/plib_flexcom1_usart.h"
 
