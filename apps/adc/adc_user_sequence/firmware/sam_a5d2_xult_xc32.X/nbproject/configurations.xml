@@ -2,43 +2,28 @@
 <configurationDescriptor version="65">
   <logicalFolder displayName="root" name="root" projectFiles="true">
     <logicalFolder displayName="Header Files" name="f1" projectFiles="true">
-      <logicalFolder displayName="config" name="f1" projectFiles="true">
-        <logicalFolder displayName="sam_a5d2_xult_xc32" name="f1" projectFiles="true">
-          <logicalFolder displayName="peripheral" name="f1" projectFiles="true">
-            <logicalFolder displayName="uart" name="f1" projectFiles="true">
-              <itemPath>../src/config/sam_a5d2_xult_xc32/peripheral/uart/plib_uart_common.h</itemPath>
-              <itemPath>../src/config/sam_a5d2_xult_xc32/peripheral/uart/plib_uart1.h</itemPath>
+      <logicalFolder displayName="packs" name="f1" projectFiles="true">
+        <logicalFolder displayName="CMSIS" name="f1" projectFiles="true">
+          <logicalFolder displayName="CMSIS" name="f1" projectFiles="true">
+            <logicalFolder displayName="Core_A" name="f1" projectFiles="true">
+              <logicalFolder displayName="Include" name="f1" projectFiles="true">
+                <itemPath>../src/packs/CMSIS/CMSIS/Core_A/Include/cmsis_compiler.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core_A/Include/cmsis_gcc.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core_A/Include/cmsis_iccarm.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core_A/Include/cmsis_cp15.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core_A/Include/core_ca.h</itemPath>
+              </logicalFolder>
             </logicalFolder>
-            <logicalFolder displayName="pit" name="f2" projectFiles="true">
-              <itemPath>../src/config/sam_a5d2_xult_xc32/peripheral/pit/plib_pit.h</itemPath>
-            </logicalFolder>
-            <logicalFolder displayName="mmu" name="f3" projectFiles="true">
-              <itemPath>../src/config/sam_a5d2_xult_xc32/peripheral/mmu/plib_mmu.h</itemPath>
-            </logicalFolder>
-            <logicalFolder displayName="matrix" name="f4" projectFiles="true">
-              <itemPath>../src/config/sam_a5d2_xult_xc32/peripheral/matrix/plib_matrix.h</itemPath>
-            </logicalFolder>
-            <logicalFolder displayName="clk" name="f5" projectFiles="true">
-              <itemPath>../src/config/sam_a5d2_xult_xc32/peripheral/clk/plib_clk.h</itemPath>
-            </logicalFolder>
-            <logicalFolder displayName="pio" name="f6" projectFiles="true">
-              <itemPath>../src/config/sam_a5d2_xult_xc32/peripheral/pio/plib_pio.h</itemPath>
-            </logicalFolder>
-            <logicalFolder displayName="aic" name="f7" projectFiles="true">
-              <itemPath>../src/config/sam_a5d2_xult_xc32/peripheral/aic/plib_aic.h</itemPath>
-            </logicalFolder>
-            <logicalFolder displayName="adc" name="f8" projectFiles="true">
-              <itemPath>../src/config/sam_a5d2_xult_xc32/peripheral/adc/plib_adc.h</itemPath>
-              <itemPath>../src/config/sam_a5d2_xult_xc32/peripheral/adc/plib_adc_common.h</itemPath>
+            <logicalFolder displayName="DSP" name="f2" projectFiles="true">
+              <logicalFolder displayName="Include" name="f1" projectFiles="true">
+                <itemPath>../src/packs/CMSIS/CMSIS/DSP/Include/arm_common_tables.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/DSP/Include/arm_const_structs.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/DSP/Include/arm_math.h</itemPath>
+              </logicalFolder>
             </logicalFolder>
           </logicalFolder>
-          <itemPath>../src/config/sam_a5d2_xult_xc32/device_cache.h</itemPath>
-          <itemPath>../src/config/sam_a5d2_xult_xc32/toolchain_specifics.h</itemPath>
-          <itemPath>../src/config/sam_a5d2_xult_xc32/definitions.h</itemPath>
         </logicalFolder>
-      </logicalFolder>
-      <logicalFolder displayName="packs" name="f2" projectFiles="true">
-        <logicalFolder displayName="ATSAMA5D27_DFP" name="f1" projectFiles="true">
+        <logicalFolder displayName="ATSAMA5D27_DFP" name="f2" projectFiles="true">
           <logicalFolder displayName="component" name="f1" projectFiles="true">
             <itemPath>../src/packs/ATSAMA5D27_DFP/component/acc.h</itemPath>
             <itemPath>../src/packs/ATSAMA5D27_DFP/component/adc.h</itemPath>
@@ -96,25 +81,40 @@
           <itemPath>../src/packs/ATSAMA5D27_DFP/device.h</itemPath>
           <itemPath>../src/packs/ATSAMA5D27_DFP/atsama5d27.h</itemPath>
         </logicalFolder>
-        <logicalFolder displayName="CMSIS" name="f2" projectFiles="true">
-          <logicalFolder displayName="CMSIS" name="f1" projectFiles="true">
-            <logicalFolder displayName="Core_A" name="f1" projectFiles="true">
-              <logicalFolder displayName="Include" name="f1" projectFiles="true">
-                <itemPath>../src/packs/CMSIS/CMSIS/Core_A/Include/cmsis_compiler.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core_A/Include/cmsis_gcc.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core_A/Include/cmsis_iccarm.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core_A/Include/cmsis_cp15.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core_A/Include/core_ca.h</itemPath>
-              </logicalFolder>
+      </logicalFolder>
+      <logicalFolder displayName="config" name="f2" projectFiles="true">
+        <logicalFolder displayName="sam_a5d2_xult_xc32" name="f1" projectFiles="true">
+          <logicalFolder displayName="peripheral" name="f1" projectFiles="true">
+            <logicalFolder displayName="uart" name="f1" projectFiles="true">
+              <itemPath>../src/config/sam_a5d2_xult_xc32/peripheral/uart/plib_uart_common.h</itemPath>
+              <itemPath>../src/config/sam_a5d2_xult_xc32/peripheral/uart/plib_uart1.h</itemPath>
             </logicalFolder>
-            <logicalFolder displayName="DSP" name="f2" projectFiles="true">
-              <logicalFolder displayName="Include" name="f1" projectFiles="true">
-                <itemPath>../src/packs/CMSIS/CMSIS/DSP/Include/arm_common_tables.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/DSP/Include/arm_const_structs.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/DSP/Include/arm_math.h</itemPath>
-              </logicalFolder>
+            <logicalFolder displayName="pit" name="f2" projectFiles="true">
+              <itemPath>../src/config/sam_a5d2_xult_xc32/peripheral/pit/plib_pit.h</itemPath>
+            </logicalFolder>
+            <logicalFolder displayName="mmu" name="f3" projectFiles="true">
+              <itemPath>../src/config/sam_a5d2_xult_xc32/peripheral/mmu/plib_mmu.h</itemPath>
+            </logicalFolder>
+            <logicalFolder displayName="matrix" name="f4" projectFiles="true">
+              <itemPath>../src/config/sam_a5d2_xult_xc32/peripheral/matrix/plib_matrix.h</itemPath>
+            </logicalFolder>
+            <logicalFolder displayName="clk" name="f5" projectFiles="true">
+              <itemPath>../src/config/sam_a5d2_xult_xc32/peripheral/clk/plib_clk.h</itemPath>
+            </logicalFolder>
+            <logicalFolder displayName="pio" name="f6" projectFiles="true">
+              <itemPath>../src/config/sam_a5d2_xult_xc32/peripheral/pio/plib_pio.h</itemPath>
+            </logicalFolder>
+            <logicalFolder displayName="aic" name="f7" projectFiles="true">
+              <itemPath>../src/config/sam_a5d2_xult_xc32/peripheral/aic/plib_aic.h</itemPath>
+            </logicalFolder>
+            <logicalFolder displayName="adc" name="f8" projectFiles="true">
+              <itemPath>../src/config/sam_a5d2_xult_xc32/peripheral/adc/plib_adc.h</itemPath>
+              <itemPath>../src/config/sam_a5d2_xult_xc32/peripheral/adc/plib_adc_common.h</itemPath>
             </logicalFolder>
           </logicalFolder>
+          <itemPath>../src/config/sam_a5d2_xult_xc32/device_cache.h</itemPath>
+          <itemPath>../src/config/sam_a5d2_xult_xc32/toolchain_specifics.h</itemPath>
+          <itemPath>../src/config/sam_a5d2_xult_xc32/definitions.h</itemPath>
         </logicalFolder>
       </logicalFolder>
     </logicalFolder>
@@ -159,7 +159,6 @@
           </logicalFolder>
           <itemPath>../src/config/sam_a5d2_xult_xc32/initialization.c</itemPath>
           <itemPath>../src/config/sam_a5d2_xult_xc32/interrupts.c</itemPath>
-          <itemPath>../src/config/sam_a5d2_xult_xc32/exceptions.c</itemPath>
           <itemPath>../src/config/sam_a5d2_xult_xc32/cstartup.S</itemPath>
           <itemPath>../src/config/sam_a5d2_xult_xc32/fault_handlers.c</itemPath>
         </logicalFolder>
