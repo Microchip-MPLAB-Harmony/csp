@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-07-26T12:18:55Z */
+/* file generated from device description version 2019-12-16T02:54:59Z */
 #ifndef _SAMG55_SUPC_COMPONENT_H_
 #define _SAMG55_SUPC_COMPONENT_H_
 
@@ -55,6 +55,38 @@
 #define SUPC_SMMR_SMTH_Pos                    _U_(0)                                               /**< (SUPC_SMMR) Supply Monitor Threshold Position */
 #define SUPC_SMMR_SMTH_Msk                    (_U_(0xF) << SUPC_SMMR_SMTH_Pos)                     /**< (SUPC_SMMR) Supply Monitor Threshold Mask */
 #define SUPC_SMMR_SMTH(value)                 (SUPC_SMMR_SMTH_Msk & ((value) << SUPC_SMMR_SMTH_Pos))
+#define   SUPC_SMMR_SMTH_V1P6_Val             _U_(0x0)                                             /**< (SUPC_SMMR) 1.6 V  */
+#define   SUPC_SMMR_SMTH_V1P72_Val            _U_(0x1)                                             /**< (SUPC_SMMR) 1.72 V  */
+#define   SUPC_SMMR_SMTH_V1P84_Val            _U_(0x2)                                             /**< (SUPC_SMMR) 1.84 V  */
+#define   SUPC_SMMR_SMTH_V1P96_Val            _U_(0x3)                                             /**< (SUPC_SMMR) 1.96 V  */
+#define   SUPC_SMMR_SMTH_V2P08_Val            _U_(0x4)                                             /**< (SUPC_SMMR) 2.08 V  */
+#define   SUPC_SMMR_SMTH_V2P2_Val             _U_(0x5)                                             /**< (SUPC_SMMR) 2.2 V  */
+#define   SUPC_SMMR_SMTH_V2P32_Val            _U_(0x6)                                             /**< (SUPC_SMMR) 2.32 V  */
+#define   SUPC_SMMR_SMTH_V2P44_Val            _U_(0x7)                                             /**< (SUPC_SMMR) 2.44 V  */
+#define   SUPC_SMMR_SMTH_V2P56_Val            _U_(0x8)                                             /**< (SUPC_SMMR) 2.56 V  */
+#define   SUPC_SMMR_SMTH_V2P68_Val            _U_(0x9)                                             /**< (SUPC_SMMR) 2.68 V  */
+#define   SUPC_SMMR_SMTH_V2P8_Val             _U_(0xA)                                             /**< (SUPC_SMMR) 2.8 V  */
+#define   SUPC_SMMR_SMTH_V2P92_Val            _U_(0xB)                                             /**< (SUPC_SMMR) 2.92 V  */
+#define   SUPC_SMMR_SMTH_V3P04_Val            _U_(0xC)                                             /**< (SUPC_SMMR) 3.04 V  */
+#define   SUPC_SMMR_SMTH_V3P16_Val            _U_(0xD)                                             /**< (SUPC_SMMR) 3.16 V  */
+#define   SUPC_SMMR_SMTH_V3P28_Val            _U_(0xE)                                             /**< (SUPC_SMMR) 3.28 V  */
+#define   SUPC_SMMR_SMTH_V3P4_Val             _U_(0xF)                                             /**< (SUPC_SMMR) 3.4 V  */
+#define SUPC_SMMR_SMTH_V1P6                   (SUPC_SMMR_SMTH_V1P6_Val << SUPC_SMMR_SMTH_Pos)      /**< (SUPC_SMMR) 1.6 V Position  */
+#define SUPC_SMMR_SMTH_V1P72                  (SUPC_SMMR_SMTH_V1P72_Val << SUPC_SMMR_SMTH_Pos)     /**< (SUPC_SMMR) 1.72 V Position  */
+#define SUPC_SMMR_SMTH_V1P84                  (SUPC_SMMR_SMTH_V1P84_Val << SUPC_SMMR_SMTH_Pos)     /**< (SUPC_SMMR) 1.84 V Position  */
+#define SUPC_SMMR_SMTH_V1P96                  (SUPC_SMMR_SMTH_V1P96_Val << SUPC_SMMR_SMTH_Pos)     /**< (SUPC_SMMR) 1.96 V Position  */
+#define SUPC_SMMR_SMTH_V2P08                  (SUPC_SMMR_SMTH_V2P08_Val << SUPC_SMMR_SMTH_Pos)     /**< (SUPC_SMMR) 2.08 V Position  */
+#define SUPC_SMMR_SMTH_V2P2                   (SUPC_SMMR_SMTH_V2P2_Val << SUPC_SMMR_SMTH_Pos)      /**< (SUPC_SMMR) 2.2 V Position  */
+#define SUPC_SMMR_SMTH_V2P32                  (SUPC_SMMR_SMTH_V2P32_Val << SUPC_SMMR_SMTH_Pos)     /**< (SUPC_SMMR) 2.32 V Position  */
+#define SUPC_SMMR_SMTH_V2P44                  (SUPC_SMMR_SMTH_V2P44_Val << SUPC_SMMR_SMTH_Pos)     /**< (SUPC_SMMR) 2.44 V Position  */
+#define SUPC_SMMR_SMTH_V2P56                  (SUPC_SMMR_SMTH_V2P56_Val << SUPC_SMMR_SMTH_Pos)     /**< (SUPC_SMMR) 2.56 V Position  */
+#define SUPC_SMMR_SMTH_V2P68                  (SUPC_SMMR_SMTH_V2P68_Val << SUPC_SMMR_SMTH_Pos)     /**< (SUPC_SMMR) 2.68 V Position  */
+#define SUPC_SMMR_SMTH_V2P8                   (SUPC_SMMR_SMTH_V2P8_Val << SUPC_SMMR_SMTH_Pos)      /**< (SUPC_SMMR) 2.8 V Position  */
+#define SUPC_SMMR_SMTH_V2P92                  (SUPC_SMMR_SMTH_V2P92_Val << SUPC_SMMR_SMTH_Pos)     /**< (SUPC_SMMR) 2.92 V Position  */
+#define SUPC_SMMR_SMTH_V3P04                  (SUPC_SMMR_SMTH_V3P04_Val << SUPC_SMMR_SMTH_Pos)     /**< (SUPC_SMMR) 3.04 V Position  */
+#define SUPC_SMMR_SMTH_V3P16                  (SUPC_SMMR_SMTH_V3P16_Val << SUPC_SMMR_SMTH_Pos)     /**< (SUPC_SMMR) 3.16 V Position  */
+#define SUPC_SMMR_SMTH_V3P28                  (SUPC_SMMR_SMTH_V3P28_Val << SUPC_SMMR_SMTH_Pos)     /**< (SUPC_SMMR) 3.28 V Position  */
+#define SUPC_SMMR_SMTH_V3P4                   (SUPC_SMMR_SMTH_V3P4_Val << SUPC_SMMR_SMTH_Pos)      /**< (SUPC_SMMR) 3.4 V Position  */
 #define SUPC_SMMR_SMSMPL_Pos                  _U_(8)                                               /**< (SUPC_SMMR) Supply Monitor Sampling Period Position */
 #define SUPC_SMMR_SMSMPL_Msk                  (_U_(0x7) << SUPC_SMMR_SMSMPL_Pos)                   /**< (SUPC_SMMR) Supply Monitor Sampling Period Mask */
 #define SUPC_SMMR_SMSMPL(value)               (SUPC_SMMR_SMSMPL_Msk & ((value) << SUPC_SMMR_SMSMPL_Pos))
