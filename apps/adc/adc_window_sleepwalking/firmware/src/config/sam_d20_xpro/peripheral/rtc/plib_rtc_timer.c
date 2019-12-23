@@ -60,6 +60,10 @@ void RTC_Initialize(void)
     RTC_REGS->MODE0.RTC_CTRL = RTC_MODE0_CTRL_MODE(0) | RTC_MODE0_CTRL_PRESCALER(0x0) |RTC_MODE0_CTRL_MATCHCLR_Msk;
 
     RTC_REGS->MODE0.RTC_COMP = 0x1500;
+    while((RTC_REGS->MODE0.RTC_STATUS & RTC_STATUS_SYNCBUSY_Msk) == RTC_STATUS_SYNCBUSY_Msk)
+    {
+        /* Wait for Synchronization after writing Compare Value */
+    }
 
 RTC_REGS->MODE0.RTC_EVCTRL = 0x100;
 }
