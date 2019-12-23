@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-08-06T08:46:35Z */
+/* file generated from device description version 2019-11-24T16:15:02Z */
 #ifndef _SAML21J18B_H_
 #define _SAML21J18B_H_
 
