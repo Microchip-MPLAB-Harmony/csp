@@ -168,7 +168,7 @@ uint32_t RTC_Timer32FrequencyGet ( void )
 
  TAMPER_CHANNEL RTC_TamperSourceGet( void )
 {
-    return((RTC_REGS->MODE0.RTC_TAMPID) & (0xFF));
+    return((TAMPER_CHANNEL) ((RTC_REGS->MODE0.RTC_TAMPID) & (0xFF)));
 }
 
 uint32_t RTC_Timer32TimeStampGet( void )
