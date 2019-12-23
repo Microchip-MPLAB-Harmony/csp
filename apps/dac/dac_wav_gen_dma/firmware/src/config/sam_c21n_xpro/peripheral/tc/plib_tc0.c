@@ -137,6 +137,11 @@ uint32_t TC0_Timer32bitCounterGet( void )
         /* Wait for Write Synchronization */
     }
 
+    while((TC0_REGS->COUNT32.TC_CTRLBSET & TC_CTRLBSET_CMD_Msk) != 0)
+    {
+        /* Wait for CMD to become zero */
+    }
+    
     /* Read current count value */
     return TC0_REGS->COUNT32.TC_COUNT;
 
