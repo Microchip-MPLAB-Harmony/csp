@@ -105,7 +105,7 @@ void ADC0_Initialize( void )
 
 
     /* positive and negative input pins */
-    ADC0_REGS->ADC_INPUTCTRL = ADC_POSINPUT_AIN1 | ADC_NEGINPUT_GND ;
+    ADC0_REGS->ADC_INPUTCTRL = (uint16_t) ADC_POSINPUT_AIN1 | (uint16_t) ADC_NEGINPUT_GND ;
 
     /* Resolution & Operation Mode */
     ADC0_REGS->ADC_CTRLB = ADC_CTRLB_RESSEL_12BIT | ADC_CTRLB_WINMODE(0) ;
@@ -147,7 +147,7 @@ void ADC0_Disable( void )
 void ADC0_ChannelSelect( ADC_POSINPUT positiveInput, ADC_NEGINPUT negativeInput )
 {
     /* Configure pin scan mode and positive and negative input pins */
-    ADC0_REGS->ADC_INPUTCTRL = positiveInput | negativeInput;
+    ADC0_REGS->ADC_INPUTCTRL = (uint16_t) positiveInput | (uint16_t) negativeInput;
 
     while((ADC0_REGS->ADC_SYNCBUSY & ADC_SYNCBUSY_INPUTCTRL_Msk) == ADC_SYNCBUSY_INPUTCTRL_Msk)
     {
