@@ -57,6 +57,9 @@
 */
 void GPIO_Initialize ( void )
 {
+    /* Disable JTAG since at least one of its pins is configured for Non-JTAG function */
+    CFGCON0bits.JTAGEN = 0;
+
     /* PORTA Initialization */
     ANSELACLR = 0x4400; /* Digital Mode Enable */
 
@@ -68,7 +71,7 @@ void GPIO_Initialize ( void )
     /* PORTK Initialization */
 
 
-    /* unlock system for PPS configuration */
+    /* Unlock system for PPS configuration */
     SYSKEY = 0x00000000;
     SYSKEY = 0xAA996655;
     SYSKEY = 0x556699AA;
