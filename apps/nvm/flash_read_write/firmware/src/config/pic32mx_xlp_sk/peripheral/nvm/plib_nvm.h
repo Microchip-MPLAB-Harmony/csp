@@ -55,7 +55,9 @@
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
- extern "C" {
+
+    extern "C" {
+
 #endif
 
 // DOM-IGNORE-END
@@ -79,25 +81,29 @@ typedef enum
 
 } NVM_ERROR;
 
-typedef void (*NVM_CALLBACK)(uintptr_t context);
+typedef void (*NVM_CALLBACK)( uintptr_t context );
+
+void NVM_Initialize( void );
 
 bool NVM_Read( uint32_t *data, uint32_t length, const uint32_t address );
 
-bool NVM_WordWrite(uint32_t data, uint32_t address);
+bool NVM_WordWrite( uint32_t data, uint32_t address );
 
-bool NVM_RowWrite(uint32_t *data, uint32_t address);
+bool NVM_RowWrite( uint32_t *data, uint32_t address );
 
-bool NVM_PageErase(uint32_t address);
+bool NVM_PageErase( uint32_t address );
 
 NVM_ERROR NVM_ErrorGet( void );
 
 bool NVM_IsBusy( void );
 
-void NVM_CallbackRegister ( NVM_CALLBACK callback, uintptr_t context );
+void NVM_CallbackRegister( NVM_CALLBACK callback, uintptr_t context );
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
-}
+
+    }
+
 #endif
 
 // DOM-IGNORE-END
