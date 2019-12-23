@@ -55,6 +55,7 @@
 #include "peripheral/port/plib_port.h"
 #include "peripheral/clock/plib_clock.h"
 #include "peripheral/nvic/plib_nvic.h"
+#include "peripheral/cmcc/plib_cmcc.h"
 #include "peripheral/freqm/plib_freqm.h"
 
 // DOM-IGNORE-BEGIN
