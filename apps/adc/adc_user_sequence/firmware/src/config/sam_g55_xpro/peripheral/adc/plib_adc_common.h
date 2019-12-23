@@ -45,15 +45,11 @@
 #ifndef PLIB_ADC_COMMON_H    // Guards against multiple inclusion
 #define PLIB_ADC_COMMON_H
 
-
 // *****************************************************************************
 // *****************************************************************************
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-
-/*  This section lists the other files that are included in this file.
-*/
 
 #include <stddef.h>
 #include <stdbool.h>
@@ -62,10 +58,9 @@
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
-extern "C" {
+    extern "C" {
 
 #endif
-
 // DOM-IGNORE-END
 
 // *****************************************************************************
@@ -84,8 +79,8 @@ typedef enum
     ADC_CH5_MASK = (1U << 5U),
     ADC_CH6_MASK = (1U << 6U),
     ADC_CH7_MASK = (1U << 7U),
-}ADC_CHANNEL_MASK;
-// *****************************************************************************
+
+} ADC_CHANNEL_MASK;
 
 typedef enum
 {
@@ -97,10 +92,8 @@ typedef enum
     ADC_CH5,
     ADC_CH6,
     ADC_CH7,
-}ADC_CHANNEL_NUM;
-// *****************************************************************************
 
-// *****************************************************************************
+} ADC_CHANNEL_NUM;
 
 typedef enum
 {
@@ -112,32 +105,25 @@ typedef enum
     ADC_INTERRUPT_EOC_5_MASK = (1U << 5U),
     ADC_INTERRUPT_EOC_6_MASK = (1U << 6U),
     ADC_INTERRUPT_EOC_7_MASK = (1U << 7U),
-}ADC_INTERRUPT_MASK;
 
-// *****************************************************************************
+} ADC_INTERRUPT_MASK;
 
-typedef void (*ADC_CALLBACK)(uint32_t status, uintptr_t context);
-// *****************************************************************************
+typedef void (*ADC_CALLBACK)( uint32_t status, uintptr_t context );
 
 typedef struct
 {
     ADC_CALLBACK callback_fn;
+
     uintptr_t context;
-}ADC_CALLBACK_OBJECT;
 
-
-
+} ADC_CALLBACK_OBJECT;
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
-}
+    }
 
 #endif
 // DOM-IGNORE-END
 
 #endif //PLIB_ADC_COMMMON_H
-
-/**
- End of File
-*/

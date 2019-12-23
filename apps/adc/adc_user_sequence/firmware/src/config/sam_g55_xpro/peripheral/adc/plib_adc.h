@@ -45,22 +45,18 @@
 #ifndef PLIB_ADC_H    // Guards against multiple inclusion
 #define PLIB_ADC_H
 
-
 // *****************************************************************************
 // *****************************************************************************
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
 
-/*  This section lists the other files that are included in this file.
-*/
-
 #include "plib_adc_common.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
-extern "C" {
+    extern "C" {
 
 #endif
 
@@ -71,9 +67,7 @@ extern "C" {
 // Section: Data Types
 // *****************************************************************************
 // *****************************************************************************
-/*  The following data type definitions are used by the functions in this
-    interface and should be considered part it.
-*/
+
 #define ADC_CH0_MAX_OUTPUT (65535U)
 #define ADC_CH0_MIN_OUTPUT (0U)
 #define CHANNEL_0 (0U)
@@ -86,47 +80,38 @@ extern "C" {
 #define ADC_CH2_MIN_OUTPUT (0U)
 #define CHANNEL_2 (2U)
 /***********************************************************************/
-
 // *****************************************************************************
 // *****************************************************************************
 // Section: Interface Routines
 // *****************************************************************************
 // *****************************************************************************
-/* The following functions make up the methods (set of possible operations) of
-   this interface.
-*/
 
-void ADC_Initialize (void);
+void ADC_Initialize( void );
 
-void ADC_ChannelsEnable (ADC_CHANNEL_MASK channelsMask);
+void ADC_ChannelsEnable( ADC_CHANNEL_MASK channelsMask );
 
-void ADC_ChannelsDisable (ADC_CHANNEL_MASK channelsMask);
+void ADC_ChannelsDisable( ADC_CHANNEL_MASK channelsMask );
 
-void ADC_ChannelsInterruptEnable (ADC_INTERRUPT_MASK channelsInterruptMask);
+void ADC_ChannelsInterruptEnable( ADC_INTERRUPT_MASK channelsInterruptMask );
 
-void ADC_ChannelsInterruptDisable (ADC_INTERRUPT_MASK channelsInterruptMask);
+void ADC_ChannelsInterruptDisable( ADC_INTERRUPT_MASK channelsInterruptMask );
 
-void ADC_ConversionStart(void);
+void ADC_ConversionStart( void );
 
-bool ADC_ChannelResultIsReady(ADC_CHANNEL_NUM channel);
+bool ADC_ChannelResultIsReady( ADC_CHANNEL_NUM channel );
 
-uint16_t ADC_ChannelResultGet(ADC_CHANNEL_NUM channel);
+uint16_t ADC_ChannelResultGet( ADC_CHANNEL_NUM channel );
 
-void ADC_ConversionSequenceSet(ADC_CHANNEL_NUM *channelList, uint8_t numChannel);
+void ADC_ConversionSequenceSet( ADC_CHANNEL_NUM *channelList, uint8_t numChannel );
 
-void ADC_CallbackRegister(ADC_CALLBACK callback, uintptr_t context);
-// *****************************************************************************
+void ADC_CallbackRegister( ADC_CALLBACK callback, uintptr_t context );
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
-}
+    }
 
 #endif
 // DOM-IGNORE-END
 
 #endif //PLIB_ADC_H
-
-/**
- End of File
-*/
