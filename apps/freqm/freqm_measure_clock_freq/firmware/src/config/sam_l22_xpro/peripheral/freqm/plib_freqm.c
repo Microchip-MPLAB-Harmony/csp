@@ -122,7 +122,7 @@ FREQM_ERROR FREQM_ErrorGet(void)
 {
     FREQM_ERROR errorStatus = FREQM_ERROR_NONE;
 
-    errorStatus = FREQM_REGS->FREQM_STATUS & FREQM_STATUS_OVF_Msk;
+    errorStatus = (FREQM_ERROR) (FREQM_REGS->FREQM_STATUS & FREQM_STATUS_OVF_Msk);
 
     /* Clear overflow status */
     FREQM_REGS->FREQM_STATUS = FREQM_STATUS_OVF_Msk;
