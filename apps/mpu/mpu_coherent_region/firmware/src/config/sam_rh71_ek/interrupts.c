@@ -120,10 +120,10 @@ void MCAN0_INT0_Handler         ( void ) __attribute__((weak, alias("Dummy_Handl
 void MCAN0_INT1_Handler         ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void MCAN1_INT0_Handler         ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void MCAN1_INT1_Handler         ( void ) __attribute__((weak, alias("Dummy_Handler")));
-void TCMRAM_INTFIX_Handler      ( void ) __attribute__((weak, alias("Dummy_Handler")));
-void TCMRAM_INTNOFIX_Handler    ( void ) __attribute__((weak, alias("Dummy_Handler")));
-void FLEXRAM_INTFIX_Handler     ( void ) __attribute__((weak, alias("Dummy_Handler")));
-void FLEXRAM_INTNOFIX_Handler   ( void ) __attribute__((weak, alias("Dummy_Handler")));
+void TCMECC_INTFIX_Handler      ( void ) __attribute__((weak, alias("Dummy_Handler")));
+void TCMECC_INTNOFIX_Handler    ( void ) __attribute__((weak, alias("Dummy_Handler")));
+void FLEXRAMECC_INTFIX_Handler  ( void ) __attribute__((weak, alias("Dummy_Handler")));
+void FLEXRAMECC_INTNOFIX_Handler ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void SHA_Handler                ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void FLEXCOM8_Handler           ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void FLEXCOM9_Handler           ( void ) __attribute__((weak, alias("Dummy_Handler")));
@@ -144,8 +144,7 @@ void HEMC_INTNOFIX_Handler      ( void ) __attribute__((weak, alias("Dummy_Handl
 void SFR_Handler                ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void TRNG_Handler               ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void XDMAC_InterruptHandler     ( void ) __attribute__((weak, alias("Dummy_Handler")));
-void SPW_INT0_Handler           ( void ) __attribute__((weak, alias("Dummy_Handler")));
-void SPW_INT1_Handler           ( void ) __attribute__((weak, alias("Dummy_Handler")));
+void SPW_Handler                ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void IP1553_Handler             ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void GMAC_Handler               ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void GMAC_Q1_Handler            ( void ) __attribute__((weak, alias("Dummy_Handler")));
@@ -216,10 +215,10 @@ const DeviceVectors exception_table=
     .pfnMCAN0_INT1_Handler         = ( void * ) MCAN0_INT1_Handler,
     .pfnMCAN1_INT0_Handler         = ( void * ) MCAN1_INT0_Handler,
     .pfnMCAN1_INT1_Handler         = ( void * ) MCAN1_INT1_Handler,
-    .pfnTCMRAM_INTFIX_Handler      = ( void * ) TCMRAM_INTFIX_Handler,
-    .pfnTCMRAM_INTNOFIX_Handler    = ( void * ) TCMRAM_INTNOFIX_Handler,
-    .pfnFLEXRAM_INTFIX_Handler     = ( void * ) FLEXRAM_INTFIX_Handler,
-    .pfnFLEXRAM_INTNOFIX_Handler   = ( void * ) FLEXRAM_INTNOFIX_Handler,
+    .pfnTCMECC_INTFIX_Handler      = ( void * ) TCMECC_INTFIX_Handler,
+    .pfnTCMECC_INTNOFIX_Handler    = ( void * ) TCMECC_INTNOFIX_Handler,
+    .pfnFLEXRAMECC_INTFIX_Handler  = ( void * ) FLEXRAMECC_INTFIX_Handler,
+    .pfnFLEXRAMECC_INTNOFIX_Handler = ( void * ) FLEXRAMECC_INTNOFIX_Handler,
     .pfnSHA_Handler                = ( void * ) SHA_Handler,
     .pfnFLEXCOM8_Handler           = ( void * ) FLEXCOM8_Handler,
     .pfnFLEXCOM9_Handler           = ( void * ) FLEXCOM9_Handler,
@@ -240,8 +239,7 @@ const DeviceVectors exception_table=
     .pfnSFR_Handler                = ( void * ) SFR_Handler,
     .pfnTRNG_Handler               = ( void * ) TRNG_Handler,
     .pfnXDMAC_Handler              = ( void * ) XDMAC_InterruptHandler,
-    .pfnSPW_INT0_Handler           = ( void * ) SPW_INT0_Handler,
-    .pfnSPW_INT1_Handler           = ( void * ) SPW_INT1_Handler,
+    .pfnSPW_Handler                = ( void * ) SPW_Handler,
     .pfnIP1553_Handler             = ( void * ) IP1553_Handler,
     .pfnGMAC_Handler               = ( void * ) GMAC_Handler,
     .pfnGMAC_Q1_Handler            = ( void * ) GMAC_Q1_Handler,
