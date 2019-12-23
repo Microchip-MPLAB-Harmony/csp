@@ -101,6 +101,10 @@ void SYS_Initialize ( void* data )
 
 	PIO_Initialize();
 
+
+
+    MATRIX_Initialize();
+
 	WDT_REGS->WDT_MR = WDT_MR_WDDIS_Msk; 		// Disable WDT 
 
     FLEXCOM2_SPI_Initialize();
