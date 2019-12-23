@@ -54,6 +54,7 @@
 #include "peripheral/clock/plib_clock.h"
 #include "peripheral/nvic/plib_nvic.h"
 #include "peripheral/pac/plib_pac.h"
+#include "peripheral/cmcc/plib_cmcc.h"
 #include "peripheral/dsu/plib_dsu.h"
 
 // DOM-IGNORE-BEGIN
