@@ -2,38 +2,25 @@
 <configurationDescriptor version="65">
   <logicalFolder displayName="root" name="root" projectFiles="true">
     <logicalFolder displayName="Header Files" name="f1" projectFiles="true">
-      <logicalFolder displayName="config" name="f1" projectFiles="true">
-        <logicalFolder displayName="sam_d11_xpro" name="f1" projectFiles="true">
-          <logicalFolder displayName="peripheral" name="f1" projectFiles="true">
-            <logicalFolder displayName="nvmctrl" name="f1" projectFiles="true">
-              <itemPath>../src/config/sam_d11_xpro/peripheral/nvmctrl/plib_nvmctrl.h</itemPath>
-            </logicalFolder>
-            <logicalFolder displayName="evsys" name="f2" projectFiles="true">
-              <itemPath>../src/config/sam_d11_xpro/peripheral/evsys/plib_evsys.h</itemPath>
-            </logicalFolder>
-            <logicalFolder displayName="sercom" name="f3" projectFiles="true">
-              <logicalFolder displayName="spim" name="f1" projectFiles="true">
-                <itemPath>../src/config/sam_d11_xpro/peripheral/sercom/spim/plib_sercom0_spi.h</itemPath>
-                <itemPath>../src/config/sam_d11_xpro/peripheral/sercom/spim/plib_sercom_spi_common.h</itemPath>
+      <logicalFolder displayName="packs" name="f1" projectFiles="true">
+        <logicalFolder displayName="CMSIS" name="f1" projectFiles="true">
+          <logicalFolder displayName="CMSIS" name="f1" projectFiles="true">
+            <logicalFolder displayName="Core" name="f1" projectFiles="true">
+              <logicalFolder displayName="Include" name="f1" projectFiles="true">
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang_ltm.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_version.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_compiler.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_iccarm.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_gcc.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armcc.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/core_cm0plus.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/mpu_armv7.h</itemPath>
               </logicalFolder>
             </logicalFolder>
-            <logicalFolder displayName="port" name="f4" projectFiles="true">
-              <itemPath>../src/config/sam_d11_xpro/peripheral/port/plib_port.h</itemPath>
-            </logicalFolder>
-            <logicalFolder displayName="clock" name="f5" projectFiles="true">
-              <itemPath>../src/config/sam_d11_xpro/peripheral/clock/plib_clock.h</itemPath>
-            </logicalFolder>
-            <logicalFolder displayName="nvic" name="f6" projectFiles="true">
-              <itemPath>../src/config/sam_d11_xpro/peripheral/nvic/plib_nvic.h</itemPath>
-            </logicalFolder>
           </logicalFolder>
-          <itemPath>../src/config/sam_d11_xpro/device_cache.h</itemPath>
-          <itemPath>../src/config/sam_d11_xpro/toolchain_specifics.h</itemPath>
-          <itemPath>../src/config/sam_d11_xpro/definitions.h</itemPath>
         </logicalFolder>
-      </logicalFolder>
-      <logicalFolder displayName="packs" name="f2" projectFiles="true">
-        <logicalFolder displayName="ATSAMD11D14AM_DFP" name="f1" projectFiles="true">
+        <logicalFolder displayName="ATSAMD11D14AM_DFP" name="f2" projectFiles="true">
           <logicalFolder displayName="component" name="f1" projectFiles="true">
             <itemPath>../src/packs/ATSAMD11D14AM_DFP/component/ac.h</itemPath>
             <itemPath>../src/packs/ATSAMD11D14AM_DFP/component/adc.h</itemPath>
@@ -64,30 +51,35 @@
           <itemPath>../src/packs/ATSAMD11D14AM_DFP/device.h</itemPath>
           <itemPath>../src/packs/ATSAMD11D14AM_DFP/atsamd11d14am.h</itemPath>
         </logicalFolder>
-        <logicalFolder displayName="CMSIS" name="f2" projectFiles="true">
-          <logicalFolder displayName="CMSIS" name="f1" projectFiles="true">
-            <logicalFolder displayName="Core" name="f1" projectFiles="true">
-              <logicalFolder displayName="Include" name="f1" projectFiles="true">
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_compiler.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_iccarm.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_gcc.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armcc.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang_ltm.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/tz_context.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/core_cm0plus.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/mpu_armv7.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_version.h</itemPath>
+      </logicalFolder>
+      <logicalFolder displayName="config" name="f2" projectFiles="true">
+        <logicalFolder displayName="sam_d11_xpro" name="f1" projectFiles="true">
+          <logicalFolder displayName="peripheral" name="f1" projectFiles="true">
+            <logicalFolder displayName="nvmctrl" name="f1" projectFiles="true">
+              <itemPath>../src/config/sam_d11_xpro/peripheral/nvmctrl/plib_nvmctrl.h</itemPath>
+            </logicalFolder>
+            <logicalFolder displayName="evsys" name="f2" projectFiles="true">
+              <itemPath>../src/config/sam_d11_xpro/peripheral/evsys/plib_evsys.h</itemPath>
+            </logicalFolder>
+            <logicalFolder displayName="sercom" name="f3" projectFiles="true">
+              <logicalFolder displayName="spim" name="f1" projectFiles="true">
+                <itemPath>../src/config/sam_d11_xpro/peripheral/sercom/spim/plib_sercom0_spi.h</itemPath>
+                <itemPath>../src/config/sam_d11_xpro/peripheral/sercom/spim/plib_sercom_spi_common.h</itemPath>
               </logicalFolder>
             </logicalFolder>
-            <logicalFolder displayName="DSP" name="f2" projectFiles="true">
-              <logicalFolder displayName="Include" name="f1" projectFiles="true">
-                <itemPath>../src/packs/CMSIS/CMSIS/DSP/Include/arm_common_tables.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/DSP/Include/arm_const_structs.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/DSP/Include/arm_math.h</itemPath>
-              </logicalFolder>
+            <logicalFolder displayName="port" name="f4" projectFiles="true">
+              <itemPath>../src/config/sam_d11_xpro/peripheral/port/plib_port.h</itemPath>
+            </logicalFolder>
+            <logicalFolder displayName="clock" name="f5" projectFiles="true">
+              <itemPath>../src/config/sam_d11_xpro/peripheral/clock/plib_clock.h</itemPath>
+            </logicalFolder>
+            <logicalFolder displayName="nvic" name="f6" projectFiles="true">
+              <itemPath>../src/config/sam_d11_xpro/peripheral/nvic/plib_nvic.h</itemPath>
             </logicalFolder>
           </logicalFolder>
+          <itemPath>../src/config/sam_d11_xpro/device_cache.h</itemPath>
+          <itemPath>../src/config/sam_d11_xpro/toolchain_specifics.h</itemPath>
+          <itemPath>../src/config/sam_d11_xpro/definitions.h</itemPath>
         </logicalFolder>
       </logicalFolder>
     </logicalFolder>
