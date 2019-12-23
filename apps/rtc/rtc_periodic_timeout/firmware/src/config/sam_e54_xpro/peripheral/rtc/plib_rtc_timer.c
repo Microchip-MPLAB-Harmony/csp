@@ -61,8 +61,18 @@ void RTC_Initialize(void)
     RTC_REGS->MODE0.RTC_CTRLA = RTC_MODE0_CTRLA_MODE(0) | RTC_MODE0_CTRLA_PRESCALER(0x1) | RTC_MODE0_CTRLA_COUNTSYNC_Msk |RTC_MODE0_CTRLA_MATCHCLR_Msk ;
 
     RTC_REGS->MODE0.RTC_COMP[0] = 0x100;
+        
+    while((RTC_REGS->MODE0.RTC_SYNCBUSY & RTC_MODE0_SYNCBUSY_COMP0_Msk) == RTC_MODE0_SYNCBUSY_COMP0_Msk)
+    {
+        /* Wait for Synchronization after writing Compare Value */
+    }
 
     RTC_REGS->MODE0.RTC_COMP[1] = 0x100;
+        
+    while((RTC_REGS->MODE0.RTC_SYNCBUSY & RTC_MODE0_SYNCBUSY_COMP1_Msk) == RTC_MODE0_SYNCBUSY_COMP1_Msk)
+    {
+        /* Wait for Synchronization after writing Compare Value */
+    }
 
 }
 
@@ -159,7 +169,7 @@ uint32_t RTC_BackupRegisterGet( BACKUP_REGISTER reg )
 }
  TAMPER_CHANNEL RTC_TamperSourceGet( void )
 {
-    return((RTC_REGS->MODE0.RTC_TAMPID) & (0xFF));
+    return((TAMPER_CHANNEL) ((RTC_REGS->MODE0.RTC_TAMPID) & (0xFF)));
 }
 
 uint32_t RTC_Timer32TimeStampGet( void )
@@ -175,13 +185,12 @@ void RTC_Timer32CallbackRegister ( RTC_TIMER32_CALLBACK callback, uintptr_t cont
 
 void RTC_InterruptHandler( void )
 {
-    rtcObj.timer32intCause = RTC_REGS->MODE0.RTC_INTFLAG;
-
+    rtcObj.timer32intCause = (RTC_TIMER32_INT_MASK) RTC_REGS->MODE0.RTC_INTFLAG;
+    RTC_REGS->MODE0.RTC_INTFLAG = RTC_MODE0_INTFLAG_Msk;
+        
     /* Invoke registered Callback function */
     if(rtcObj.timer32BitCallback != NULL)
     {
         rtcObj.timer32BitCallback( rtcObj.timer32intCause, rtcObj.context );
     }
-
-    RTC_REGS->MODE0.RTC_INTFLAG = RTC_MODE0_INTFLAG_Msk;
 }
