@@ -92,7 +92,7 @@ int main ( void )
     RTC_Timer32Start();
     RTC_Timer32CompareSet(RTC_COMPARE_VAL);
     AC_CallbackRegister(ac_callBack,comparator_context);
-    printf("\r\n\r\nAC Demo - RTC triggers AC comparison on PA04\r\n");
+    printf("\r AC Demo - RTC triggers AC comparison on PA04 \n");
 
     while ( true )
     {
@@ -105,11 +105,11 @@ int main ( void )
             if(change_detect)
             {
                 change_detect = false;
-                printf("\r\nPA04 voltage is above detect level\r\n");
+                printf("\r PA04 voltage is above detect level \n");
             }
             else
             {
-                printf("\r\nPA04 voltage is below detect level\r\n");
+                printf("\r PA04 voltage is below detect level \n");
             }
         }
     }
