@@ -86,13 +86,13 @@ void UART1_Initialize( void )
     /* STSEL  = 0 */
     /* PDSEL = 0 */
 
-    U1MODE = 0x8;
+    U1MODE = 0x0;
 
     /* Enable UART1 Receiver and Transmitter */
     U1STASET = (_U1STA_UTXEN_MASK | _U1STA_URXEN_MASK);
 
     /* BAUD Rate register Setup */
-    U1BRG = 103;
+    U1BRG = 25;
 
     /* Turn ON UART1 */
     U1MODESET = _U1MODE_ON_MASK;
@@ -266,6 +266,18 @@ bool UART1_TransmitterIsReady( void )
     }
 
     return status;
+}
+
+bool UART1_TransmitComplete( void )
+{
+    bool transmitComplete = false;
+
+    if((U1STA & _U1STA_TRMT_MASK))
+    {
+        transmitComplete = true;
+    }
+
+    return transmitComplete;
 }
 
 int UART1_ReadByte( void )
