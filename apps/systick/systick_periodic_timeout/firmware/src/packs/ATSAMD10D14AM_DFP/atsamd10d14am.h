@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-06-28T15:51:29Z */
+/* file generated from device description version 2019-11-25T07:00:39Z */
 #ifndef _SAMD10D14AM_H_
 #define _SAMD10D14AM_H_
 
