@@ -43,18 +43,11 @@
 
 #include "plib_pio.h"
 
+/* Array to store callback objects of each configured interrupt */
+PIO_PIN_CALLBACK_OBJ portPinCbObj[1];
 
-
-		
-/* port B current number of callbacks */
-uint8_t portBCurNumCb = 0;
-
-/* port B maximum number of callbacks */
-uint8_t portBMaxNumCb = 2;
-
-/* port B callback objects */
-PIO_PIN_CALLBACK_OBJ portBPinCbObj[2];
-
+/* Array to store number of interrupts in each PORT Channel + previous interrupt count */
+uint8_t portNumCb[7 + 1] = { 0, 0, 1, 1, 1, 1, 1, 1, };
 
 /******************************************************************************
   Function:
@@ -68,6 +61,7 @@ PIO_PIN_CALLBACK_OBJ portBPinCbObj[2];
 */
 void PIO_Initialize ( void )
 {
+
  /* Port B Peripheral function GPIO configuration */
 	PIOB_REGS->PIO_MSKR = 0x201;
 	PIOB_REGS->PIO_CFGR = 0x0;
@@ -83,10 +77,28 @@ void PIO_Initialize ( void )
  /* Port B Latch configuration */
 	PIOB_REGS->PIO_SODR = 0x1;
 	
+
+    /* Clear the ISR register */ 
+	(uint32_t)PIOB_REGS->PIO_ISR;
+
  /* Port D Peripheral function A configuration */
 	PIOD_REGS->PIO_MSKR = 0x3c00cL;
 	PIOD_REGS->PIO_CFGR = 0x1;
 	
+
+
+
+
+
+    uint32_t i;
+    /* Initialize Interrupt Pin data structures */
+    portPinCbObj[0 + 0].pin = PIO_PIN_PB9;
+    
+    for(i=0; i<1; i++)
+    {
+        portPinCbObj[i].callback = NULL;
+    }
+
 }
 
 // *****************************************************************************
@@ -119,7 +131,7 @@ void PIO_Initialize ( void )
 */
 uint32_t PIO_PortRead(PIO_PORT port)
 {
-    return ((pio_registers_t*)port)->PIO_PDSR;
+    return ((pio_group_registers_t*)port)->PIO_PDSR;
 }
 
 // *****************************************************************************
@@ -134,8 +146,8 @@ uint32_t PIO_PortRead(PIO_PORT port)
 */
 void PIO_PortWrite(PIO_PORT port, uint32_t mask, uint32_t value)
 {
-    ((pio_registers_t*)port)->PIO_MSKR = mask;
-    ((pio_registers_t*)port)->PIO_ODSR = value;
+    ((pio_group_registers_t*)port)->PIO_MSKR = mask;
+    ((pio_group_registers_t*)port)->PIO_ODSR = value;
 }
 
 // *****************************************************************************
@@ -150,7 +162,7 @@ void PIO_PortWrite(PIO_PORT port, uint32_t mask, uint32_t value)
 */
 uint32_t PIO_PortLatchRead(PIO_PORT port)
 {
-    return ((pio_registers_t*)port)->PIO_ODSR;
+    return ((pio_group_registers_t*)port)->PIO_ODSR;
 }
 
 // *****************************************************************************
@@ -165,7 +177,7 @@ uint32_t PIO_PortLatchRead(PIO_PORT port)
 */
 void PIO_PortSet(PIO_PORT port, uint32_t mask)
 {
-    ((pio_registers_t*)port)->PIO_SODR = mask;
+    ((pio_group_registers_t*)port)->PIO_SODR = mask;
 }
 
 // *****************************************************************************
@@ -180,7 +192,7 @@ void PIO_PortSet(PIO_PORT port, uint32_t mask)
 */
 void PIO_PortClear(PIO_PORT port, uint32_t mask)
 {
-    ((pio_registers_t*)port)->PIO_CODR = mask;
+    ((pio_group_registers_t*)port)->PIO_CODR = mask;
 }
 
 // *****************************************************************************
@@ -196,8 +208,8 @@ void PIO_PortClear(PIO_PORT port, uint32_t mask)
 void PIO_PortToggle(PIO_PORT port, uint32_t mask)
 {
     /* Write into Clr and Set registers */
-    ((pio_registers_t*)port)->PIO_MSKR = mask;
-    ((pio_registers_t*)port)->PIO_ODSR ^= mask;
+    ((pio_group_registers_t*)port)->PIO_MSKR = mask;
+    ((pio_group_registers_t*)port)->PIO_ODSR ^= mask;
 }
 
 // *****************************************************************************
@@ -212,8 +224,8 @@ void PIO_PortToggle(PIO_PORT port, uint32_t mask)
 */
 void PIO_PortInputEnable(PIO_PORT port, uint32_t mask)
 {
-    ((pio_registers_t*)port)->PIO_MSKR = mask;
-    ((pio_registers_t*)port)->PIO_CFGR &= ~(1 << PIO_CFGR_DIR_Pos);	
+    ((pio_group_registers_t*)port)->PIO_MSKR = mask;
+    ((pio_group_registers_t*)port)->PIO_CFGR &= ~(1 << PIO_CFGR_DIR_Pos);	
 }
 
 // *****************************************************************************
@@ -228,10 +240,9 @@ void PIO_PortInputEnable(PIO_PORT port, uint32_t mask)
 */
 void PIO_PortOutputEnable(PIO_PORT port, uint32_t mask)
 {
-    ((pio_registers_t*)port)->PIO_MSKR = mask;
-    ((pio_registers_t*)port)->PIO_CFGR |= (1 << PIO_CFGR_DIR_Pos);
+    ((pio_group_registers_t*)port)->PIO_MSKR = mask;
+    ((pio_group_registers_t*)port)->PIO_CFGR |= (1 << PIO_CFGR_DIR_Pos);
 }
-
 // *****************************************************************************
 /* Function:
     void PIO_PortInterruptEnable(PIO_PORT port, uint32_t mask)
@@ -244,7 +255,7 @@ void PIO_PortOutputEnable(PIO_PORT port, uint32_t mask)
 */
 void PIO_PortInterruptEnable(PIO_PORT port, uint32_t mask)
 {
-    ((pio_registers_t*)port)->PIO_IER = mask;
+    ((pio_group_registers_t*)port)->PIO_IER = mask;
 }
 
 // *****************************************************************************
@@ -259,7 +270,7 @@ void PIO_PortInterruptEnable(PIO_PORT port, uint32_t mask)
 */
 void PIO_PortInterruptDisable(PIO_PORT port, uint32_t mask)
 {
-    ((pio_registers_t*)port)->PIO_IDR = mask;
+    ((pio_group_registers_t*)port)->PIO_IDR = mask;
 }
 
 // *****************************************************************************
@@ -270,7 +281,7 @@ void PIO_PortInterruptDisable(PIO_PORT port, uint32_t mask)
 
 // *****************************************************************************
 /* Function:
-    void PIO_PinInterruptCallbackRegister(
+    bool PIO_PinInterruptCallbackRegister(
         PIO_PIN pin,
         const PIO_PIN_CALLBACK callback,
         uintptr_t context
@@ -282,33 +293,27 @@ void PIO_PortInterruptDisable(PIO_PORT port, uint32_t mask)
   Remarks:
     See plib_pio.h for more details.
 */
-void PIO_PinInterruptCallbackRegister(
+bool PIO_PinInterruptCallbackRegister(
     PIO_PIN pin,
     const PIO_PIN_CALLBACK callback,
     uintptr_t context
 )
 {
+    uint8_t i;
     uint8_t portIndex;
+
     portIndex = pin >> 5;
 
-    switch( portIndex )
+    for(i = portNumCb[portIndex]; i < portNumCb[portIndex +1]; i++)
     {
-        case 1:
+        if (portPinCbObj[i].pin == pin)
         {
-            if( portBCurNumCb < portBMaxNumCb )
-            {
-                portBPinCbObj[ portBCurNumCb ].pin   = pin;
-                portBPinCbObj[ portBCurNumCb ].callback = callback;
-                portBPinCbObj[ portBCurNumCb ].context  = context;
-                portBCurNumCb++;
-            }
-            break;
-        }
-        default:
-        {
-            break;
+            portPinCbObj[i].callback = callback;
+            portPinCbObj[i].context  = context;
+            return true;
         }
     }
+    return false;
 }
 
 // *****************************************************************************
@@ -334,22 +339,19 @@ void PIO_PinInterruptCallbackRegister(
 void PIOB_InterruptHandler(void)
 {
     uint32_t status;
-    uint8_t i;
+    uint8_t j;
 
     status  = PIOB_REGS->PIO_ISR;
     status &= PIOB_REGS->PIO_IMR;
 	
-	for( i = 0; i < portBCurNumCb; i++ )
+	for( j = 0; j < 1; j++ )
 	{
-		if( ( status & ( 1 << (portBPinCbObj[i].pin & 0x1F) ) ) &&
-			portBPinCbObj[i].callback != NULL )
+		if((status & ( 1 << (portPinCbObj[j].pin & 0x1F) ) ) && (portPinCbObj[j].callback != NULL))
 		{
-			portBPinCbObj[i].callback ( portBPinCbObj[i].pin, portBPinCbObj[i].context );
+			portPinCbObj[j].callback ( portPinCbObj[j].pin, portPinCbObj[j].context );
 		}
-	}
+	}   
 }
-
-
 
 /*******************************************************************************
  End of File
