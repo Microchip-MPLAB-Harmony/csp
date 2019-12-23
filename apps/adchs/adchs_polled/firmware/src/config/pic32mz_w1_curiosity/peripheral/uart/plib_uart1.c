@@ -85,7 +85,7 @@ void UART1_Initialize( void )
     /* Set up UxMODE bits */
     /* STSEL  = 0*/
     /* PDSEL = 0 */
-    /* BRGH = 1 */
+    /* BRGH = 0 */
     /* RXINV = 0 */
     /* ABAUD = 0 */
     /* LPBACK = 0 */
@@ -94,13 +94,13 @@ void UART1_Initialize( void )
     /* RUNOVF = 0 */
     /* CLKSEL = 0 */
     /* SLPEN = 0 */
-    U1MODE = 0x8;
+    U1MODE = 0x0;
 
     /* Enable UART1 Receiver and Transmitter */
     U1STASET = (_U1STA_UTXEN_MASK | _U1STA_URXEN_MASK);
 
     /* BAUD Rate register Setup */
-    U1BRG = 216;
+    U1BRG = 53;
 
     /* Turn ON UART1 */
     U1MODESET = _U1MODE_ON_MASK;
