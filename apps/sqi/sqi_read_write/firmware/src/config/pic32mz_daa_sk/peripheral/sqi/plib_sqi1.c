@@ -124,6 +124,9 @@ void SQI1_DMASetup(void)
 
 void SQI1_DMATransfer(sqi_dma_desc_t *sqiDmaDesc)
 {
+    // Reset RX FIFO before starting DMA
+    SQI1CFGbits.RXBUFRST = 1;
+
     // Initialize the root buffer descriptor
     SQI1BDBASEADD   = (uint32_t)sqiDmaDesc;
 
