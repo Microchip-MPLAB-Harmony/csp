@@ -145,13 +145,12 @@ void RTC_Timer32CallbackRegister ( RTC_TIMER32_CALLBACK callback, uintptr_t cont
 
 void RTC_InterruptHandler( void )
 {
-    rtcObj.timer32intCause = RTC_REGS->MODE0.RTC_INTFLAG;
-
+    rtcObj.timer32intCause = (RTC_TIMER32_INT_MASK) RTC_REGS->MODE0.RTC_INTFLAG;
+    RTC_REGS->MODE0.RTC_INTFLAG = RTC_MODE0_INTFLAG_Msk;
+        
     /* Invoke registered Callback function */
     if(rtcObj.timer32BitCallback != NULL)
     {
         rtcObj.timer32BitCallback( rtcObj.timer32intCause, rtcObj.context );
     }
-
-    RTC_REGS->MODE0.RTC_INTFLAG = RTC_MODE0_INTFLAG_Msk;
 }
