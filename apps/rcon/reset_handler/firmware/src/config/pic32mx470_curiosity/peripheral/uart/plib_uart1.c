@@ -268,6 +268,18 @@ bool UART1_TransmitterIsReady( void )
     return status;
 }
 
+bool UART1_TransmitComplete( void )
+{
+    bool transmitComplete = false;
+
+    if((U1STA & _U1STA_TRMT_MASK))
+    {
+        transmitComplete = true;
+    }
+
+    return transmitComplete;
+}
+
 int UART1_ReadByte( void )
 {
     return(U1RXREG);

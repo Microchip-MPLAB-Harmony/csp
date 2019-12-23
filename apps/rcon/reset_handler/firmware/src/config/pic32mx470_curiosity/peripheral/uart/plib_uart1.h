@@ -83,6 +83,8 @@ void UART1_WriteByte( int data );
 
 bool UART1_TransmitterIsReady( void );
 
+bool UART1_TransmitComplete( void );
+
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
