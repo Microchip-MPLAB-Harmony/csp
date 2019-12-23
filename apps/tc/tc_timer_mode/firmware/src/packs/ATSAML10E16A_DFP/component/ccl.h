@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-06-07T05:54:14Z */
+/* file generated from device description version 2019-11-24T15:57:35Z */
 #ifndef _SAML10_CCL_COMPONENT_H_
 #define _SAML10_CCL_COMPONENT_H_
 
