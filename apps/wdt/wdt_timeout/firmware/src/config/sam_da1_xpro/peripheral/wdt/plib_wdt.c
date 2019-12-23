@@ -82,11 +82,11 @@ void WDT_Disable( void )
 
 void WDT_Clear( void )
 {
-    /* Clear WDT and reset the WDT timer before the
-       timeout occurs */
-    WDT_REGS->WDT_CLEAR = WDT_CLEAR_CLEAR_KEY;
-
-    /* Wait for synchronization */
-    while(WDT_REGS->WDT_STATUS);
+    if (WDT_REGS->WDT_STATUS == 0)
+    {
+        /* Clear WDT and reset the WDT timer before the
+        timeout occurs */
+        WDT_REGS->WDT_CLEAR = WDT_CLEAR_CLEAR_KEY;
+    }
 }
 
