@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-06-28T15:51:38Z */
+/* file generated from device description version 2019-11-25T07:00:42Z */
 #ifndef _SAMD10_DMAC_COMPONENT_H_
 #define _SAMD10_DMAC_COMPONENT_H_
 
