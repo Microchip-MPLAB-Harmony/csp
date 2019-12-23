@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-06-07T05:54:14Z */
+/* file generated from device description version 2019-11-24T15:57:35Z */
 #ifndef _SAML10_SERCOM_COMPONENT_H_
 #define _SAML10_SERCOM_COMPONENT_H_
 
@@ -384,10 +384,14 @@
 #define SERCOM_USART_EXT_CTRLA_TXPO_Pos       _U_(16)                                              /**< (SERCOM_USART_EXT_CTRLA) Transmit Data Pinout Position */
 #define SERCOM_USART_EXT_CTRLA_TXPO_Msk       (_U_(0x3) << SERCOM_USART_EXT_CTRLA_TXPO_Pos)        /**< (SERCOM_USART_EXT_CTRLA) Transmit Data Pinout Mask */
 #define SERCOM_USART_EXT_CTRLA_TXPO(value)    (SERCOM_USART_EXT_CTRLA_TXPO_Msk & ((value) << SERCOM_USART_EXT_CTRLA_TXPO_Pos))
-#define   SERCOM_USART_EXT_CTRLA_TXPO_PAD0_Val _U_(0x0)                                             /**< (SERCOM_USART_EXT_CTRLA) SERCOM PAD[0] is used for data transmission  */
-#define   SERCOM_USART_EXT_CTRLA_TXPO_PAD2_Val _U_(0x1)                                             /**< (SERCOM_USART_EXT_CTRLA) SERCOM PAD[2] is used for data transmission  */
-#define SERCOM_USART_EXT_CTRLA_TXPO_PAD0      (SERCOM_USART_EXT_CTRLA_TXPO_PAD0_Val << SERCOM_USART_EXT_CTRLA_TXPO_Pos) /**< (SERCOM_USART_EXT_CTRLA) SERCOM PAD[0] is used for data transmission Position  */
-#define SERCOM_USART_EXT_CTRLA_TXPO_PAD2      (SERCOM_USART_EXT_CTRLA_TXPO_PAD2_Val << SERCOM_USART_EXT_CTRLA_TXPO_Pos) /**< (SERCOM_USART_EXT_CTRLA) SERCOM PAD[2] is used for data transmission Position  */
+#define   SERCOM_USART_EXT_CTRLA_TXPO_PAD0_Val _U_(0x0)                                             /**< (SERCOM_USART_EXT_CTRLA) PAD[0] = TxD; PAD[1] = XCK  */
+#define   SERCOM_USART_EXT_CTRLA_TXPO_PAD1_Val _U_(0x1)                                             /**< (SERCOM_USART_EXT_CTRLA) PAD[2] = TxD; PAD[3] = XCK  */
+#define   SERCOM_USART_EXT_CTRLA_TXPO_PAD2_Val _U_(0x2)                                             /**< (SERCOM_USART_EXT_CTRLA) PAD[0] = TxD; PAD[2] = RTS; PAD[3] = CTS  */
+#define   SERCOM_USART_EXT_CTRLA_TXPO_PAD3_Val _U_(0x3)                                             /**< (SERCOM_USART_EXT_CTRLA) PAD[0] = TxD; PAD[1] = XCK; PAD[2] = TE  */
+#define SERCOM_USART_EXT_CTRLA_TXPO_PAD0      (SERCOM_USART_EXT_CTRLA_TXPO_PAD0_Val << SERCOM_USART_EXT_CTRLA_TXPO_Pos) /**< (SERCOM_USART_EXT_CTRLA) PAD[0] = TxD; PAD[1] = XCK Position  */
+#define SERCOM_USART_EXT_CTRLA_TXPO_PAD1      (SERCOM_USART_EXT_CTRLA_TXPO_PAD1_Val << SERCOM_USART_EXT_CTRLA_TXPO_Pos) /**< (SERCOM_USART_EXT_CTRLA) PAD[2] = TxD; PAD[3] = XCK Position  */
+#define SERCOM_USART_EXT_CTRLA_TXPO_PAD2      (SERCOM_USART_EXT_CTRLA_TXPO_PAD2_Val << SERCOM_USART_EXT_CTRLA_TXPO_Pos) /**< (SERCOM_USART_EXT_CTRLA) PAD[0] = TxD; PAD[2] = RTS; PAD[3] = CTS Position  */
+#define SERCOM_USART_EXT_CTRLA_TXPO_PAD3      (SERCOM_USART_EXT_CTRLA_TXPO_PAD3_Val << SERCOM_USART_EXT_CTRLA_TXPO_Pos) /**< (SERCOM_USART_EXT_CTRLA) PAD[0] = TxD; PAD[1] = XCK; PAD[2] = TE Position  */
 #define SERCOM_USART_EXT_CTRLA_RXPO_Pos       _U_(20)                                              /**< (SERCOM_USART_EXT_CTRLA) Receive Data Pinout Position */
 #define SERCOM_USART_EXT_CTRLA_RXPO_Msk       (_U_(0x3) << SERCOM_USART_EXT_CTRLA_RXPO_Pos)        /**< (SERCOM_USART_EXT_CTRLA) Receive Data Pinout Mask */
 #define SERCOM_USART_EXT_CTRLA_RXPO(value)    (SERCOM_USART_EXT_CTRLA_RXPO_Msk & ((value) << SERCOM_USART_EXT_CTRLA_RXPO_Pos))
@@ -402,17 +406,27 @@
 #define SERCOM_USART_EXT_CTRLA_SAMPA_Pos      _U_(22)                                              /**< (SERCOM_USART_EXT_CTRLA) Sample Adjustment Position */
 #define SERCOM_USART_EXT_CTRLA_SAMPA_Msk      (_U_(0x3) << SERCOM_USART_EXT_CTRLA_SAMPA_Pos)       /**< (SERCOM_USART_EXT_CTRLA) Sample Adjustment Mask */
 #define SERCOM_USART_EXT_CTRLA_SAMPA(value)   (SERCOM_USART_EXT_CTRLA_SAMPA_Msk & ((value) << SERCOM_USART_EXT_CTRLA_SAMPA_Pos))
+#define   SERCOM_USART_EXT_CTRLA_SAMPA_ADJ0_Val _U_(0x0)                                             /**< (SERCOM_USART_EXT_CTRLA) 16x Over-sampling = 7-8-9; 8x Over-sampling = 3-4-5  */
+#define   SERCOM_USART_EXT_CTRLA_SAMPA_ADJ1_Val _U_(0x1)                                             /**< (SERCOM_USART_EXT_CTRLA) 16x Over-sampling = 9-10-11; 8x Over-sampling = 4-5-6  */
+#define   SERCOM_USART_EXT_CTRLA_SAMPA_ADJ2_Val _U_(0x2)                                             /**< (SERCOM_USART_EXT_CTRLA) 16x Over-sampling = 11-12-13; 8x Over-sampling = 5-6-7  */
+#define   SERCOM_USART_EXT_CTRLA_SAMPA_ADJ3_Val _U_(0x3)                                             /**< (SERCOM_USART_EXT_CTRLA) 16x Over-sampling = 13-14-15; 8x Over-sampling = 6-7-8  */
+#define SERCOM_USART_EXT_CTRLA_SAMPA_ADJ0     (SERCOM_USART_EXT_CTRLA_SAMPA_ADJ0_Val << SERCOM_USART_EXT_CTRLA_SAMPA_Pos) /**< (SERCOM_USART_EXT_CTRLA) 16x Over-sampling = 7-8-9; 8x Over-sampling = 3-4-5 Position  */
+#define SERCOM_USART_EXT_CTRLA_SAMPA_ADJ1     (SERCOM_USART_EXT_CTRLA_SAMPA_ADJ1_Val << SERCOM_USART_EXT_CTRLA_SAMPA_Pos) /**< (SERCOM_USART_EXT_CTRLA) 16x Over-sampling = 9-10-11; 8x Over-sampling = 4-5-6 Position  */
+#define SERCOM_USART_EXT_CTRLA_SAMPA_ADJ2     (SERCOM_USART_EXT_CTRLA_SAMPA_ADJ2_Val << SERCOM_USART_EXT_CTRLA_SAMPA_Pos) /**< (SERCOM_USART_EXT_CTRLA) 16x Over-sampling = 11-12-13; 8x Over-sampling = 5-6-7 Position  */
+#define SERCOM_USART_EXT_CTRLA_SAMPA_ADJ3     (SERCOM_USART_EXT_CTRLA_SAMPA_ADJ3_Val << SERCOM_USART_EXT_CTRLA_SAMPA_Pos) /**< (SERCOM_USART_EXT_CTRLA) 16x Over-sampling = 13-14-15; 8x Over-sampling = 6-7-8 Position  */
 #define SERCOM_USART_EXT_CTRLA_FORM_Pos       _U_(24)                                              /**< (SERCOM_USART_EXT_CTRLA) Frame Format Position */
 #define SERCOM_USART_EXT_CTRLA_FORM_Msk       (_U_(0xF) << SERCOM_USART_EXT_CTRLA_FORM_Pos)        /**< (SERCOM_USART_EXT_CTRLA) Frame Format Mask */
 #define SERCOM_USART_EXT_CTRLA_FORM(value)    (SERCOM_USART_EXT_CTRLA_FORM_Msk & ((value) << SERCOM_USART_EXT_CTRLA_FORM_Pos))
 #define   SERCOM_USART_EXT_CTRLA_FORM_USART_FRAME_NO_PARITY_Val _U_(0x0)                                             /**< (SERCOM_USART_EXT_CTRLA) USART frame  */
 #define   SERCOM_USART_EXT_CTRLA_FORM_USART_FRAME_WITH_PARITY_Val _U_(0x1)                                             /**< (SERCOM_USART_EXT_CTRLA) USART frame with parity  */
-#define   SERCOM_USART_EXT_CTRLA_FORM_USART_FRAME_AUTO_BAUD_NO_PARITY_Val _U_(0x4)                                             /**< (SERCOM_USART_EXT_CTRLA) Auto-baud - break detection and auto-baud  */
+#define   SERCOM_USART_EXT_CTRLA_FORM_USART_FRAME_AUTO_BAUD_NO_PARITY_Val _U_(0x4)                                             /**< (SERCOM_USART_EXT_CTRLA) Auto-baud (LIN Slave) - break detection and auto-baud  */
 #define   SERCOM_USART_EXT_CTRLA_FORM_USART_FRAME_AUTO_BAUD_WITH_PARITY_Val _U_(0x5)                                             /**< (SERCOM_USART_EXT_CTRLA) Auto-baud - break detection and auto-baud with parity  */
+#define   SERCOM_USART_EXT_CTRLA_FORM_USART_FRAME_ISO_7816_Val _U_(0x7)                                             /**< (SERCOM_USART_EXT_CTRLA) ISO 7816  */
 #define SERCOM_USART_EXT_CTRLA_FORM_USART_FRAME_NO_PARITY (SERCOM_USART_EXT_CTRLA_FORM_USART_FRAME_NO_PARITY_Val << SERCOM_USART_EXT_CTRLA_FORM_Pos) /**< (SERCOM_USART_EXT_CTRLA) USART frame Position  */
 #define SERCOM_USART_EXT_CTRLA_FORM_USART_FRAME_WITH_PARITY (SERCOM_USART_EXT_CTRLA_FORM_USART_FRAME_WITH_PARITY_Val << SERCOM_USART_EXT_CTRLA_FORM_Pos) /**< (SERCOM_USART_EXT_CTRLA) USART frame with parity Position  */
-#define SERCOM_USART_EXT_CTRLA_FORM_USART_FRAME_AUTO_BAUD_NO_PARITY (SERCOM_USART_EXT_CTRLA_FORM_USART_FRAME_AUTO_BAUD_NO_PARITY_Val << SERCOM_USART_EXT_CTRLA_FORM_Pos) /**< (SERCOM_USART_EXT_CTRLA) Auto-baud - break detection and auto-baud Position  */
+#define SERCOM_USART_EXT_CTRLA_FORM_USART_FRAME_AUTO_BAUD_NO_PARITY (SERCOM_USART_EXT_CTRLA_FORM_USART_FRAME_AUTO_BAUD_NO_PARITY_Val << SERCOM_USART_EXT_CTRLA_FORM_Pos) /**< (SERCOM_USART_EXT_CTRLA) Auto-baud (LIN Slave) - break detection and auto-baud Position  */
 #define SERCOM_USART_EXT_CTRLA_FORM_USART_FRAME_AUTO_BAUD_WITH_PARITY (SERCOM_USART_EXT_CTRLA_FORM_USART_FRAME_AUTO_BAUD_WITH_PARITY_Val << SERCOM_USART_EXT_CTRLA_FORM_Pos) /**< (SERCOM_USART_EXT_CTRLA) Auto-baud - break detection and auto-baud with parity Position  */
+#define SERCOM_USART_EXT_CTRLA_FORM_USART_FRAME_ISO_7816 (SERCOM_USART_EXT_CTRLA_FORM_USART_FRAME_ISO_7816_Val << SERCOM_USART_EXT_CTRLA_FORM_Pos) /**< (SERCOM_USART_EXT_CTRLA) ISO 7816 Position  */
 #define SERCOM_USART_EXT_CTRLA_CMODE_Pos      _U_(28)                                              /**< (SERCOM_USART_EXT_CTRLA) Communication Mode Position */
 #define SERCOM_USART_EXT_CTRLA_CMODE_Msk      (_U_(0x1) << SERCOM_USART_EXT_CTRLA_CMODE_Pos)       /**< (SERCOM_USART_EXT_CTRLA) Communication Mode Mask */
 #define SERCOM_USART_EXT_CTRLA_CMODE(value)   (SERCOM_USART_EXT_CTRLA_CMODE_Msk & ((value) << SERCOM_USART_EXT_CTRLA_CMODE_Pos))
@@ -489,10 +503,14 @@
 #define SERCOM_USART_INT_CTRLA_TXPO_Pos       _U_(16)                                              /**< (SERCOM_USART_INT_CTRLA) Transmit Data Pinout Position */
 #define SERCOM_USART_INT_CTRLA_TXPO_Msk       (_U_(0x3) << SERCOM_USART_INT_CTRLA_TXPO_Pos)        /**< (SERCOM_USART_INT_CTRLA) Transmit Data Pinout Mask */
 #define SERCOM_USART_INT_CTRLA_TXPO(value)    (SERCOM_USART_INT_CTRLA_TXPO_Msk & ((value) << SERCOM_USART_INT_CTRLA_TXPO_Pos))
-#define   SERCOM_USART_INT_CTRLA_TXPO_PAD0_Val _U_(0x0)                                             /**< (SERCOM_USART_INT_CTRLA) SERCOM PAD[0] is used for data transmission  */
-#define   SERCOM_USART_INT_CTRLA_TXPO_PAD2_Val _U_(0x1)                                             /**< (SERCOM_USART_INT_CTRLA) SERCOM PAD[2] is used for data transmission  */
-#define SERCOM_USART_INT_CTRLA_TXPO_PAD0      (SERCOM_USART_INT_CTRLA_TXPO_PAD0_Val << SERCOM_USART_INT_CTRLA_TXPO_Pos) /**< (SERCOM_USART_INT_CTRLA) SERCOM PAD[0] is used for data transmission Position  */
-#define SERCOM_USART_INT_CTRLA_TXPO_PAD2      (SERCOM_USART_INT_CTRLA_TXPO_PAD2_Val << SERCOM_USART_INT_CTRLA_TXPO_Pos) /**< (SERCOM_USART_INT_CTRLA) SERCOM PAD[2] is used for data transmission Position  */
+#define   SERCOM_USART_INT_CTRLA_TXPO_PAD0_Val _U_(0x0)                                             /**< (SERCOM_USART_INT_CTRLA) PAD[0] = TxD; PAD[1] = XCK  */
+#define   SERCOM_USART_INT_CTRLA_TXPO_PAD1_Val _U_(0x1)                                             /**< (SERCOM_USART_INT_CTRLA) PAD[2] = TxD; PAD[3] = XCK  */
+#define   SERCOM_USART_INT_CTRLA_TXPO_PAD2_Val _U_(0x2)                                             /**< (SERCOM_USART_INT_CTRLA) PAD[0] = TxD; PAD[2] = RTS; PAD[3] = CTS  */
+#define   SERCOM_USART_INT_CTRLA_TXPO_PAD3_Val _U_(0x3)                                             /**< (SERCOM_USART_INT_CTRLA) PAD[0] = TxD; PAD[1] = XCK; PAD[2] = TE  */
+#define SERCOM_USART_INT_CTRLA_TXPO_PAD0      (SERCOM_USART_INT_CTRLA_TXPO_PAD0_Val << SERCOM_USART_INT_CTRLA_TXPO_Pos) /**< (SERCOM_USART_INT_CTRLA) PAD[0] = TxD; PAD[1] = XCK Position  */
+#define SERCOM_USART_INT_CTRLA_TXPO_PAD1      (SERCOM_USART_INT_CTRLA_TXPO_PAD1_Val << SERCOM_USART_INT_CTRLA_TXPO_Pos) /**< (SERCOM_USART_INT_CTRLA) PAD[2] = TxD; PAD[3] = XCK Position  */
+#define SERCOM_USART_INT_CTRLA_TXPO_PAD2      (SERCOM_USART_INT_CTRLA_TXPO_PAD2_Val << SERCOM_USART_INT_CTRLA_TXPO_Pos) /**< (SERCOM_USART_INT_CTRLA) PAD[0] = TxD; PAD[2] = RTS; PAD[3] = CTS Position  */
+#define SERCOM_USART_INT_CTRLA_TXPO_PAD3      (SERCOM_USART_INT_CTRLA_TXPO_PAD3_Val << SERCOM_USART_INT_CTRLA_TXPO_Pos) /**< (SERCOM_USART_INT_CTRLA) PAD[0] = TxD; PAD[1] = XCK; PAD[2] = TE Position  */
 #define SERCOM_USART_INT_CTRLA_RXPO_Pos       _U_(20)                                              /**< (SERCOM_USART_INT_CTRLA) Receive Data Pinout Position */
 #define SERCOM_USART_INT_CTRLA_RXPO_Msk       (_U_(0x3) << SERCOM_USART_INT_CTRLA_RXPO_Pos)        /**< (SERCOM_USART_INT_CTRLA) Receive Data Pinout Mask */
 #define SERCOM_USART_INT_CTRLA_RXPO(value)    (SERCOM_USART_INT_CTRLA_RXPO_Msk & ((value) << SERCOM_USART_INT_CTRLA_RXPO_Pos))
@@ -507,17 +525,27 @@
 #define SERCOM_USART_INT_CTRLA_SAMPA_Pos      _U_(22)                                              /**< (SERCOM_USART_INT_CTRLA) Sample Adjustment Position */
 #define SERCOM_USART_INT_CTRLA_SAMPA_Msk      (_U_(0x3) << SERCOM_USART_INT_CTRLA_SAMPA_Pos)       /**< (SERCOM_USART_INT_CTRLA) Sample Adjustment Mask */
 #define SERCOM_USART_INT_CTRLA_SAMPA(value)   (SERCOM_USART_INT_CTRLA_SAMPA_Msk & ((value) << SERCOM_USART_INT_CTRLA_SAMPA_Pos))
+#define   SERCOM_USART_INT_CTRLA_SAMPA_ADJ0_Val _U_(0x0)                                             /**< (SERCOM_USART_INT_CTRLA) 16x Over-sampling = 7-8-9; 8x Over-sampling = 3-4-5  */
+#define   SERCOM_USART_INT_CTRLA_SAMPA_ADJ1_Val _U_(0x1)                                             /**< (SERCOM_USART_INT_CTRLA) 16x Over-sampling = 9-10-11; 8x Over-sampling = 4-5-6  */
+#define   SERCOM_USART_INT_CTRLA_SAMPA_ADJ2_Val _U_(0x2)                                             /**< (SERCOM_USART_INT_CTRLA) 16x Over-sampling = 11-12-13; 8x Over-sampling = 5-6-7  */
+#define   SERCOM_USART_INT_CTRLA_SAMPA_ADJ3_Val _U_(0x3)                                             /**< (SERCOM_USART_INT_CTRLA) 16x Over-sampling = 13-14-15; 8x Over-sampling = 6-7-8  */
+#define SERCOM_USART_INT_CTRLA_SAMPA_ADJ0     (SERCOM_USART_INT_CTRLA_SAMPA_ADJ0_Val << SERCOM_USART_INT_CTRLA_SAMPA_Pos) /**< (SERCOM_USART_INT_CTRLA) 16x Over-sampling = 7-8-9; 8x Over-sampling = 3-4-5 Position  */
+#define SERCOM_USART_INT_CTRLA_SAMPA_ADJ1     (SERCOM_USART_INT_CTRLA_SAMPA_ADJ1_Val << SERCOM_USART_INT_CTRLA_SAMPA_Pos) /**< (SERCOM_USART_INT_CTRLA) 16x Over-sampling = 9-10-11; 8x Over-sampling = 4-5-6 Position  */
+#define SERCOM_USART_INT_CTRLA_SAMPA_ADJ2     (SERCOM_USART_INT_CTRLA_SAMPA_ADJ2_Val << SERCOM_USART_INT_CTRLA_SAMPA_Pos) /**< (SERCOM_USART_INT_CTRLA) 16x Over-sampling = 11-12-13; 8x Over-sampling = 5-6-7 Position  */
+#define SERCOM_USART_INT_CTRLA_SAMPA_ADJ3     (SERCOM_USART_INT_CTRLA_SAMPA_ADJ3_Val << SERCOM_USART_INT_CTRLA_SAMPA_Pos) /**< (SERCOM_USART_INT_CTRLA) 16x Over-sampling = 13-14-15; 8x Over-sampling = 6-7-8 Position  */
 #define SERCOM_USART_INT_CTRLA_FORM_Pos       _U_(24)                                              /**< (SERCOM_USART_INT_CTRLA) Frame Format Position */
 #define SERCOM_USART_INT_CTRLA_FORM_Msk       (_U_(0xF) << SERCOM_USART_INT_CTRLA_FORM_Pos)        /**< (SERCOM_USART_INT_CTRLA) Frame Format Mask */
 #define SERCOM_USART_INT_CTRLA_FORM(value)    (SERCOM_USART_INT_CTRLA_FORM_Msk & ((value) << SERCOM_USART_INT_CTRLA_FORM_Pos))
 #define   SERCOM_USART_INT_CTRLA_FORM_USART_FRAME_NO_PARITY_Val _U_(0x0)                                             /**< (SERCOM_USART_INT_CTRLA) USART frame  */
 #define   SERCOM_USART_INT_CTRLA_FORM_USART_FRAME_WITH_PARITY_Val _U_(0x1)                                             /**< (SERCOM_USART_INT_CTRLA) USART frame with parity  */
-#define   SERCOM_USART_INT_CTRLA_FORM_USART_FRAME_AUTO_BAUD_NO_PARITY_Val _U_(0x4)                                             /**< (SERCOM_USART_INT_CTRLA) Auto-baud - break detection and auto-baud  */
+#define   SERCOM_USART_INT_CTRLA_FORM_USART_FRAME_AUTO_BAUD_NO_PARITY_Val _U_(0x4)                                             /**< (SERCOM_USART_INT_CTRLA) Auto-baud (LIN Slave) - break detection and auto-baud  */
 #define   SERCOM_USART_INT_CTRLA_FORM_USART_FRAME_AUTO_BAUD_WITH_PARITY_Val _U_(0x5)                                             /**< (SERCOM_USART_INT_CTRLA) Auto-baud - break detection and auto-baud with parity  */
+#define   SERCOM_USART_INT_CTRLA_FORM_USART_FRAME_ISO_7816_Val _U_(0x7)                                             /**< (SERCOM_USART_INT_CTRLA) ISO 7816  */
 #define SERCOM_USART_INT_CTRLA_FORM_USART_FRAME_NO_PARITY (SERCOM_USART_INT_CTRLA_FORM_USART_FRAME_NO_PARITY_Val << SERCOM_USART_INT_CTRLA_FORM_Pos) /**< (SERCOM_USART_INT_CTRLA) USART frame Position  */
 #define SERCOM_USART_INT_CTRLA_FORM_USART_FRAME_WITH_PARITY (SERCOM_USART_INT_CTRLA_FORM_USART_FRAME_WITH_PARITY_Val << SERCOM_USART_INT_CTRLA_FORM_Pos) /**< (SERCOM_USART_INT_CTRLA) USART frame with parity Position  */
-#define SERCOM_USART_INT_CTRLA_FORM_USART_FRAME_AUTO_BAUD_NO_PARITY (SERCOM_USART_INT_CTRLA_FORM_USART_FRAME_AUTO_BAUD_NO_PARITY_Val << SERCOM_USART_INT_CTRLA_FORM_Pos) /**< (SERCOM_USART_INT_CTRLA) Auto-baud - break detection and auto-baud Position  */
+#define SERCOM_USART_INT_CTRLA_FORM_USART_FRAME_AUTO_BAUD_NO_PARITY (SERCOM_USART_INT_CTRLA_FORM_USART_FRAME_AUTO_BAUD_NO_PARITY_Val << SERCOM_USART_INT_CTRLA_FORM_Pos) /**< (SERCOM_USART_INT_CTRLA) Auto-baud (LIN Slave) - break detection and auto-baud Position  */
 #define SERCOM_USART_INT_CTRLA_FORM_USART_FRAME_AUTO_BAUD_WITH_PARITY (SERCOM_USART_INT_CTRLA_FORM_USART_FRAME_AUTO_BAUD_WITH_PARITY_Val << SERCOM_USART_INT_CTRLA_FORM_Pos) /**< (SERCOM_USART_INT_CTRLA) Auto-baud - break detection and auto-baud with parity Position  */
+#define SERCOM_USART_INT_CTRLA_FORM_USART_FRAME_ISO_7816 (SERCOM_USART_INT_CTRLA_FORM_USART_FRAME_ISO_7816_Val << SERCOM_USART_INT_CTRLA_FORM_Pos) /**< (SERCOM_USART_INT_CTRLA) ISO 7816 Position  */
 #define SERCOM_USART_INT_CTRLA_CMODE_Pos      _U_(28)                                              /**< (SERCOM_USART_INT_CTRLA) Communication Mode Position */
 #define SERCOM_USART_INT_CTRLA_CMODE_Msk      (_U_(0x1) << SERCOM_USART_INT_CTRLA_CMODE_Pos)       /**< (SERCOM_USART_INT_CTRLA) Communication Mode Mask */
 #define SERCOM_USART_INT_CTRLA_CMODE(value)   (SERCOM_USART_INT_CTRLA_CMODE_Msk & ((value) << SERCOM_USART_INT_CTRLA_CMODE_Pos))
@@ -1396,7 +1424,13 @@
 #define SERCOM_USART_EXT_STATUS_COLL_Pos      _U_(5)                                               /**< (SERCOM_USART_EXT_STATUS) Collision Detected Position */
 #define SERCOM_USART_EXT_STATUS_COLL_Msk      (_U_(0x1) << SERCOM_USART_EXT_STATUS_COLL_Pos)       /**< (SERCOM_USART_EXT_STATUS) Collision Detected Mask */
 #define SERCOM_USART_EXT_STATUS_COLL(value)   (SERCOM_USART_EXT_STATUS_COLL_Msk & ((value) << SERCOM_USART_EXT_STATUS_COLL_Pos))
-#define SERCOM_USART_EXT_STATUS_Msk           _U_(0x003F)                                          /**< (SERCOM_USART_EXT_STATUS) Register Mask  */
+#define SERCOM_USART_EXT_STATUS_TXE_Pos       _U_(6)                                               /**< (SERCOM_USART_EXT_STATUS) Transmitter Empty Position */
+#define SERCOM_USART_EXT_STATUS_TXE_Msk       (_U_(0x1) << SERCOM_USART_EXT_STATUS_TXE_Pos)        /**< (SERCOM_USART_EXT_STATUS) Transmitter Empty Mask */
+#define SERCOM_USART_EXT_STATUS_TXE(value)    (SERCOM_USART_EXT_STATUS_TXE_Msk & ((value) << SERCOM_USART_EXT_STATUS_TXE_Pos))
+#define SERCOM_USART_EXT_STATUS_ITER_Pos      _U_(7)                                               /**< (SERCOM_USART_EXT_STATUS) Maximum Number of Repetitions Reached Position */
+#define SERCOM_USART_EXT_STATUS_ITER_Msk      (_U_(0x1) << SERCOM_USART_EXT_STATUS_ITER_Pos)       /**< (SERCOM_USART_EXT_STATUS) Maximum Number of Repetitions Reached Mask */
+#define SERCOM_USART_EXT_STATUS_ITER(value)   (SERCOM_USART_EXT_STATUS_ITER_Msk & ((value) << SERCOM_USART_EXT_STATUS_ITER_Pos))
+#define SERCOM_USART_EXT_STATUS_Msk           _U_(0x00FF)                                          /**< (SERCOM_USART_EXT_STATUS) Register Mask  */
 
 
 /* -------- SERCOM_USART_INT_STATUS : (SERCOM Offset: 0x1A) (R/W 16) USART_INT Status -------- */
@@ -1420,7 +1454,13 @@
 #define SERCOM_USART_INT_STATUS_COLL_Pos      _U_(5)                                               /**< (SERCOM_USART_INT_STATUS) Collision Detected Position */
 #define SERCOM_USART_INT_STATUS_COLL_Msk      (_U_(0x1) << SERCOM_USART_INT_STATUS_COLL_Pos)       /**< (SERCOM_USART_INT_STATUS) Collision Detected Mask */
 #define SERCOM_USART_INT_STATUS_COLL(value)   (SERCOM_USART_INT_STATUS_COLL_Msk & ((value) << SERCOM_USART_INT_STATUS_COLL_Pos))
-#define SERCOM_USART_INT_STATUS_Msk           _U_(0x003F)                                          /**< (SERCOM_USART_INT_STATUS) Register Mask  */
+#define SERCOM_USART_INT_STATUS_TXE_Pos       _U_(6)                                               /**< (SERCOM_USART_INT_STATUS) Transmitter Empty Position */
+#define SERCOM_USART_INT_STATUS_TXE_Msk       (_U_(0x1) << SERCOM_USART_INT_STATUS_TXE_Pos)        /**< (SERCOM_USART_INT_STATUS) Transmitter Empty Mask */
+#define SERCOM_USART_INT_STATUS_TXE(value)    (SERCOM_USART_INT_STATUS_TXE_Msk & ((value) << SERCOM_USART_INT_STATUS_TXE_Pos))
+#define SERCOM_USART_INT_STATUS_ITER_Pos      _U_(7)                                               /**< (SERCOM_USART_INT_STATUS) Maximum Number of Repetitions Reached Position */
+#define SERCOM_USART_INT_STATUS_ITER_Msk      (_U_(0x1) << SERCOM_USART_INT_STATUS_ITER_Pos)       /**< (SERCOM_USART_INT_STATUS) Maximum Number of Repetitions Reached Mask */
+#define SERCOM_USART_INT_STATUS_ITER(value)   (SERCOM_USART_INT_STATUS_ITER_Msk & ((value) << SERCOM_USART_INT_STATUS_ITER_Pos))
+#define SERCOM_USART_INT_STATUS_Msk           _U_(0x00FF)                                          /**< (SERCOM_USART_INT_STATUS) Register Mask  */
 
 
 /* -------- SERCOM_I2CM_SYNCBUSY : (SERCOM Offset: 0x1C) ( R/ 32) I2CM Synchronization Busy -------- */
@@ -1492,7 +1532,10 @@
 #define SERCOM_USART_EXT_SYNCBUSY_CTRLB_Pos   _U_(2)                                               /**< (SERCOM_USART_EXT_SYNCBUSY) CTRLB Synchronization Busy Position */
 #define SERCOM_USART_EXT_SYNCBUSY_CTRLB_Msk   (_U_(0x1) << SERCOM_USART_EXT_SYNCBUSY_CTRLB_Pos)    /**< (SERCOM_USART_EXT_SYNCBUSY) CTRLB Synchronization Busy Mask */
 #define SERCOM_USART_EXT_SYNCBUSY_CTRLB(value) (SERCOM_USART_EXT_SYNCBUSY_CTRLB_Msk & ((value) << SERCOM_USART_EXT_SYNCBUSY_CTRLB_Pos))
-#define SERCOM_USART_EXT_SYNCBUSY_Msk         _U_(0x00000007)                                      /**< (SERCOM_USART_EXT_SYNCBUSY) Register Mask  */
+#define SERCOM_USART_EXT_SYNCBUSY_RXERRCNT_Pos _U_(3)                                               /**< (SERCOM_USART_EXT_SYNCBUSY) RXERRCNT Synchronization Busy Position */
+#define SERCOM_USART_EXT_SYNCBUSY_RXERRCNT_Msk (_U_(0x1) << SERCOM_USART_EXT_SYNCBUSY_RXERRCNT_Pos) /**< (SERCOM_USART_EXT_SYNCBUSY) RXERRCNT Synchronization Busy Mask */
+#define SERCOM_USART_EXT_SYNCBUSY_RXERRCNT(value) (SERCOM_USART_EXT_SYNCBUSY_RXERRCNT_Msk & ((value) << SERCOM_USART_EXT_SYNCBUSY_RXERRCNT_Pos))
+#define SERCOM_USART_EXT_SYNCBUSY_Msk         _U_(0x0000000F)                                      /**< (SERCOM_USART_EXT_SYNCBUSY) Register Mask  */
 
 
 /* -------- SERCOM_USART_INT_SYNCBUSY : (SERCOM Offset: 0x1C) ( R/ 32) USART_INT Synchronization Busy -------- */
@@ -1507,7 +1550,28 @@
 #define SERCOM_USART_INT_SYNCBUSY_CTRLB_Pos   _U_(2)                                               /**< (SERCOM_USART_INT_SYNCBUSY) CTRLB Synchronization Busy Position */
 #define SERCOM_USART_INT_SYNCBUSY_CTRLB_Msk   (_U_(0x1) << SERCOM_USART_INT_SYNCBUSY_CTRLB_Pos)    /**< (SERCOM_USART_INT_SYNCBUSY) CTRLB Synchronization Busy Mask */
 #define SERCOM_USART_INT_SYNCBUSY_CTRLB(value) (SERCOM_USART_INT_SYNCBUSY_CTRLB_Msk & ((value) << SERCOM_USART_INT_SYNCBUSY_CTRLB_Pos))
-#define SERCOM_USART_INT_SYNCBUSY_Msk         _U_(0x00000007)                                      /**< (SERCOM_USART_INT_SYNCBUSY) Register Mask  */
+#define SERCOM_USART_INT_SYNCBUSY_RXERRCNT_Pos _U_(3)                                               /**< (SERCOM_USART_INT_SYNCBUSY) RXERRCNT Synchronization Busy Position */
+#define SERCOM_USART_INT_SYNCBUSY_RXERRCNT_Msk (_U_(0x1) << SERCOM_USART_INT_SYNCBUSY_RXERRCNT_Pos) /**< (SERCOM_USART_INT_SYNCBUSY) RXERRCNT Synchronization Busy Mask */
+#define SERCOM_USART_INT_SYNCBUSY_RXERRCNT(value) (SERCOM_USART_INT_SYNCBUSY_RXERRCNT_Msk & ((value) << SERCOM_USART_INT_SYNCBUSY_RXERRCNT_Pos))
+#define SERCOM_USART_INT_SYNCBUSY_Msk         _U_(0x0000000F)                                      /**< (SERCOM_USART_INT_SYNCBUSY) Register Mask  */
+
+
+/* -------- SERCOM_USART_EXT_RXERRCNT : (SERCOM Offset: 0x20) ( R/ 8) USART_EXT Receive Error Count -------- */
+#define SERCOM_USART_EXT_RXERRCNT_RESETVALUE  _U_(0x00)                                            /**<  (SERCOM_USART_EXT_RXERRCNT) USART_EXT Receive Error Count  Reset Value */
+
+#define SERCOM_USART_EXT_RXERRCNT_RXERRCNT_Pos _U_(0)                                               /**< (SERCOM_USART_EXT_RXERRCNT) Receive Error Count Position */
+#define SERCOM_USART_EXT_RXERRCNT_RXERRCNT_Msk (_U_(0xFF) << SERCOM_USART_EXT_RXERRCNT_RXERRCNT_Pos) /**< (SERCOM_USART_EXT_RXERRCNT) Receive Error Count Mask */
+#define SERCOM_USART_EXT_RXERRCNT_RXERRCNT(value) (SERCOM_USART_EXT_RXERRCNT_RXERRCNT_Msk & ((value) << SERCOM_USART_EXT_RXERRCNT_RXERRCNT_Pos))
+#define SERCOM_USART_EXT_RXERRCNT_Msk         _U_(0xFF)                                            /**< (SERCOM_USART_EXT_RXERRCNT) Register Mask  */
+
+
+/* -------- SERCOM_USART_INT_RXERRCNT : (SERCOM Offset: 0x20) ( R/ 8) USART_INT Receive Error Count -------- */
+#define SERCOM_USART_INT_RXERRCNT_RESETVALUE  _U_(0x00)                                            /**<  (SERCOM_USART_INT_RXERRCNT) USART_INT Receive Error Count  Reset Value */
+
+#define SERCOM_USART_INT_RXERRCNT_RXERRCNT_Pos _U_(0)                                               /**< (SERCOM_USART_INT_RXERRCNT) Receive Error Count Position */
+#define SERCOM_USART_INT_RXERRCNT_RXERRCNT_Msk (_U_(0xFF) << SERCOM_USART_INT_RXERRCNT_RXERRCNT_Pos) /**< (SERCOM_USART_INT_RXERRCNT) Receive Error Count Mask */
+#define SERCOM_USART_INT_RXERRCNT_RXERRCNT(value) (SERCOM_USART_INT_RXERRCNT_RXERRCNT_Msk & ((value) << SERCOM_USART_INT_RXERRCNT_RXERRCNT_Pos))
+#define SERCOM_USART_INT_RXERRCNT_Msk         _U_(0xFF)                                            /**< (SERCOM_USART_INT_RXERRCNT) Register Mask  */
 
 
 /* -------- SERCOM_I2CM_ADDR : (SERCOM Offset: 0x24) (R/W 32) I2CM Address -------- */
@@ -1724,6 +1788,8 @@
 #define SERCOM_SPIS_SYNCBUSY_REG_OFST  (0x1C)              /**< (SERCOM_SPIS_SYNCBUSY) SPIS Synchronization Busy Offset */
 #define SERCOM_USART_EXT_SYNCBUSY_REG_OFST (0x1C)              /**< (SERCOM_USART_EXT_SYNCBUSY) USART_EXT Synchronization Busy Offset */
 #define SERCOM_USART_INT_SYNCBUSY_REG_OFST (0x1C)              /**< (SERCOM_USART_INT_SYNCBUSY) USART_INT Synchronization Busy Offset */
+#define SERCOM_USART_EXT_RXERRCNT_REG_OFST (0x20)              /**< (SERCOM_USART_EXT_RXERRCNT) USART_EXT Receive Error Count Offset */
+#define SERCOM_USART_INT_RXERRCNT_REG_OFST (0x20)              /**< (SERCOM_USART_INT_RXERRCNT) USART_INT Receive Error Count Offset */
 #define SERCOM_I2CM_ADDR_REG_OFST      (0x24)              /**< (SERCOM_I2CM_ADDR) I2CM Address Offset */
 #define SERCOM_I2CS_ADDR_REG_OFST      (0x24)              /**< (SERCOM_I2CS_ADDR) I2CS Address Offset */
 #define SERCOM_SPIM_ADDR_REG_OFST      (0x24)              /**< (SERCOM_SPIM_ADDR) SPIM Address Offset */
@@ -1846,7 +1912,8 @@ typedef struct
   __I   uint8_t                        Reserved4[0x01];
   __IO  uint16_t                       SERCOM_STATUS;      /**< Offset: 0x1A (R/W  16) USART_EXT Status */
   __I   uint32_t                       SERCOM_SYNCBUSY;    /**< Offset: 0x1C (R/   32) USART_EXT Synchronization Busy */
-  __I   uint8_t                        Reserved5[0x08];
+  __I   uint8_t                        SERCOM_RXERRCNT;    /**< Offset: 0x20 (R/   8) USART_EXT Receive Error Count */
+  __I   uint8_t                        Reserved5[0x07];
   __IO  uint16_t                       SERCOM_DATA;        /**< Offset: 0x28 (R/W  16) USART_EXT Data */
   __I   uint8_t                        Reserved6[0x06];
   __IO  uint8_t                        SERCOM_DBGCTRL;     /**< Offset: 0x30 (R/W  8) USART_EXT Debug Control */
@@ -1869,7 +1936,8 @@ typedef struct
   __I   uint8_t                        Reserved4[0x01];
   __IO  uint16_t                       SERCOM_STATUS;      /**< Offset: 0x1A (R/W  16) USART_INT Status */
   __I   uint32_t                       SERCOM_SYNCBUSY;    /**< Offset: 0x1C (R/   32) USART_INT Synchronization Busy */
-  __I   uint8_t                        Reserved5[0x08];
+  __I   uint8_t                        SERCOM_RXERRCNT;    /**< Offset: 0x20 (R/   8) USART_INT Receive Error Count */
+  __I   uint8_t                        Reserved5[0x07];
   __IO  uint16_t                       SERCOM_DATA;        /**< Offset: 0x28 (R/W  16) USART_INT Data */
   __I   uint8_t                        Reserved6[0x06];
   __IO  uint8_t                        SERCOM_DBGCTRL;     /**< Offset: 0x30 (R/W  8) USART_INT Debug Control */
