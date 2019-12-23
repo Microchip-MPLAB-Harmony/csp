@@ -121,6 +121,8 @@ void SYS_Initialize ( void* data )
     CLOCK_Initialize();
 
 
+
+
     NVMCTRL_Initialize( );
 
     SERCOM4_USART_Initialize();
