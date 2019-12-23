@@ -59,8 +59,18 @@ void RTC_Initialize(void)
     RTC_REGS->MODE0.RTC_CTRLA = RTC_MODE0_CTRLA_MODE(0) | RTC_MODE0_CTRLA_PRESCALER(0x1) | RTC_MODE0_CTRLA_COUNTSYNC_Msk |RTC_MODE0_CTRLA_MATCHCLR_Msk ;
 
     RTC_REGS->MODE0.RTC_COMP[0] = 0x200;
+        
+    while((RTC_REGS->MODE0.RTC_SYNCBUSY & RTC_MODE0_SYNCBUSY_COMP0_Msk) == RTC_MODE0_SYNCBUSY_COMP0_Msk)
+    {
+        /* Wait for Synchronization after writing Compare Value */
+    }
 
     RTC_REGS->MODE0.RTC_COMP[1] = 0x0;
+        
+    while((RTC_REGS->MODE0.RTC_SYNCBUSY & RTC_MODE0_SYNCBUSY_COMP1_Msk) == RTC_MODE0_SYNCBUSY_COMP1_Msk)
+    {
+        /* Wait for Synchronization after writing Compare Value */
+    }
 
     RTC_REGS->MODE0.RTC_EVCTRL = 0x100;
 }
@@ -202,7 +212,7 @@ uint32_t RTC_BackupRegisterGet( BACKUP_REGISTER reg )
 }
  TAMPER_CHANNEL RTC_TamperSourceGet( void )
 {
-    return((RTC_REGS->MODE0.RTC_TAMPID) & (0xFF));
+    return((TAMPER_CHANNEL) ((RTC_REGS->MODE0.RTC_TAMPID) & (0xFF)));
 }
 
 uint32_t RTC_Timer32TimeStampGet( void )
