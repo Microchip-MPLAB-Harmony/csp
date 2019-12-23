@@ -19,8 +19,8 @@
           <Name dnOrder="1">initialization.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_w1_curiosity/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">0E8C11EA88F6D0F698CCAC3896C1AE39</GeneratedChecksum>
-          <UserChecksum dnOrder="5">0E8C11EA88F6D0F698CCAC3896C1AE39</UserChecksum>
+          <GeneratedChecksum dnOrder="4">0C71BDD12DDE88AD8C25494DD838F738</GeneratedChecksum>
+          <UserChecksum dnOrder="5">0C71BDD12DDE88AD8C25494DD838F738</UserChecksum>
         </File>
         <File dnOrder="2">
           <Type dnOrder="0">SOURCE</Type>
@@ -43,8 +43,8 @@
           <Name dnOrder="1">plib_clk.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_w1_curiosity/peripheral/clk/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/clk/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">D8EA095315B094C1E159A92F0EA04DFF</GeneratedChecksum>
-          <UserChecksum dnOrder="5">D8EA095315B094C1E159A92F0EA04DFF</UserChecksum>
+          <GeneratedChecksum dnOrder="4">D0964ED9A6628E553654B53D5E22B76A</GeneratedChecksum>
+          <UserChecksum dnOrder="5">D0964ED9A6628E553654B53D5E22B76A</UserChecksum>
         </File>
         <File dnOrder="5">
           <Type dnOrder="0">SOURCE</Type>
@@ -75,8 +75,8 @@
           <Name dnOrder="1">plib_uart1.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_w1_curiosity/peripheral/uart/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/uart/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">ED80C8FE3C4364E3E4F17B8CA54584D4</GeneratedChecksum>
-          <UserChecksum dnOrder="5">ED80C8FE3C4364E3E4F17B8CA54584D4</UserChecksum>
+          <GeneratedChecksum dnOrder="4">6911F63D68B01086CAE596E3D7E7103E</GeneratedChecksum>
+          <UserChecksum dnOrder="5">6911F63D68B01086CAE596E3D7E7103E</UserChecksum>
         </File>
         <File dnOrder="9">
           <Type dnOrder="0">SOURCE</Type>
@@ -163,24 +163,24 @@
           <Name dnOrder="1">toolchain_specifics.h</Name>
           <LogicalPath dnOrder="2">config/pic32mz_w1_curiosity/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">F7924D60AC5CC08996AB2DAEC62D3C54</GeneratedChecksum>
-          <UserChecksum dnOrder="5">F7924D60AC5CC08996AB2DAEC62D3C54</UserChecksum>
+          <GeneratedChecksum dnOrder="4">9D344CAF1743381AA0EA1641ABCDE373</GeneratedChecksum>
+          <UserChecksum dnOrder="5">9D344CAF1743381AA0EA1641ABCDE373</UserChecksum>
         </File>
       </Files>
       <Settings dnOrder="1">
         <Setting append="true" category="C32" delimiter=";" dnOrder="0" key="extra-include-directories" value="../src;../src/config/pic32mz_w1_curiosity;../src/packs/PIC32MZ1025W104132_DFP;;../src/mips"/>
         <Setting category="C32-LD" dnOrder="1" key="heap-size" value="512"/>
         <Setting category="C32-LD" dnOrder="2" key="no-device-startup-code" value="true"/>
-        <Setting category="C32-LD" dnOrder="3" key="preprocessor-macros" value=""/>
+        <Setting append="true" category="C32-LD" delimiter=";" dnOrder="3" key="preprocessor-macros" value=""/>
       </Settings>
     </Manifest>
     <Settings dnOrder="4">
       <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.6.0"/>
-      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MZ-W_DFP\1.1.128\atdf\PIC32MZ1025W104132.atdf"/>
+      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MZ-W_DFP\1.1.145\atdf\PIC32MZ1025W104132.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
       <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
-      <Setting dnOrder="5" key="PackageFilter" value="csp;"/>
+      <Setting dnOrder="5" key="PackageFilter" value="bootloader;bsp;core;csp;"/>
     </Settings>
   </Configurator>
 </Configuration>
