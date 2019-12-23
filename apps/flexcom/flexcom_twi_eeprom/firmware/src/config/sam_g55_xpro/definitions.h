@@ -51,6 +51,7 @@
 #include "peripheral/pio/plib_pio.h"
 #include "peripheral/clock/plib_clock.h"
 #include "peripheral/nvic/plib_nvic.h"
+#include "peripheral/cmcc/plib_cmcc.h"
 #include "peripheral/efc/plib_efc.h"
 #include "peripheral/flexcom/twi/plib_flexcom6_twi.h"
 
