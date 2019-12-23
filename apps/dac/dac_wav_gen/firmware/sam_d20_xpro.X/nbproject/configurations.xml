@@ -2,7 +2,52 @@
 <configurationDescriptor version="65">
   <logicalFolder displayName="root" name="root" projectFiles="true">
     <logicalFolder displayName="Header Files" name="f1" projectFiles="true">
-      <logicalFolder displayName="config" name="f1" projectFiles="true">
+      <logicalFolder displayName="packs" name="f1" projectFiles="true">
+        <logicalFolder displayName="CMSIS" name="f1" projectFiles="true">
+          <logicalFolder displayName="CMSIS" name="f1" projectFiles="true">
+            <logicalFolder displayName="Core" name="f1" projectFiles="true">
+              <logicalFolder displayName="Include" name="f1" projectFiles="true">
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armcc.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang_ltm.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_version.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_compiler.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_iccarm.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_gcc.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/core_cm0plus.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/mpu_armv7.h</itemPath>
+              </logicalFolder>
+            </logicalFolder>
+          </logicalFolder>
+        </logicalFolder>
+        <logicalFolder displayName="ATSAMD20J18_DFP" name="f2" projectFiles="true">
+          <logicalFolder displayName="component" name="f1" projectFiles="true">
+            <itemPath>../src/packs/ATSAMD20J18_DFP/component/ac.h</itemPath>
+            <itemPath>../src/packs/ATSAMD20J18_DFP/component/adc.h</itemPath>
+            <itemPath>../src/packs/ATSAMD20J18_DFP/component/dac.h</itemPath>
+            <itemPath>../src/packs/ATSAMD20J18_DFP/component/dsu.h</itemPath>
+            <itemPath>../src/packs/ATSAMD20J18_DFP/component/eic.h</itemPath>
+            <itemPath>../src/packs/ATSAMD20J18_DFP/component/evsys.h</itemPath>
+            <itemPath>../src/packs/ATSAMD20J18_DFP/component/gclk.h</itemPath>
+            <itemPath>../src/packs/ATSAMD20J18_DFP/component/nvmctrl.h</itemPath>
+            <itemPath>../src/packs/ATSAMD20J18_DFP/component/pac.h</itemPath>
+            <itemPath>../src/packs/ATSAMD20J18_DFP/component/pm.h</itemPath>
+            <itemPath>../src/packs/ATSAMD20J18_DFP/component/port.h</itemPath>
+            <itemPath>../src/packs/ATSAMD20J18_DFP/component/ptc.h</itemPath>
+            <itemPath>../src/packs/ATSAMD20J18_DFP/component/rtc.h</itemPath>
+            <itemPath>../src/packs/ATSAMD20J18_DFP/component/sercom.h</itemPath>
+            <itemPath>../src/packs/ATSAMD20J18_DFP/component/sysctrl.h</itemPath>
+            <itemPath>../src/packs/ATSAMD20J18_DFP/component/tc.h</itemPath>
+            <itemPath>../src/packs/ATSAMD20J18_DFP/component/wdt.h</itemPath>
+          </logicalFolder>
+          <logicalFolder displayName="pio" name="f2" projectFiles="true">
+            <itemPath>../src/packs/ATSAMD20J18_DFP/pio/samd20j18.h</itemPath>
+          </logicalFolder>
+          <itemPath>../src/packs/ATSAMD20J18_DFP/device.h</itemPath>
+          <itemPath>../src/packs/ATSAMD20J18_DFP/atsamd20j18.h</itemPath>
+        </logicalFolder>
+      </logicalFolder>
+      <logicalFolder displayName="config" name="f2" projectFiles="true">
         <logicalFolder displayName="sam_d20_xpro" name="f1" projectFiles="true">
           <logicalFolder displayName="peripheral" name="f1" projectFiles="true">
             <logicalFolder displayName="nvmctrl" name="f1" projectFiles="true">
@@ -34,59 +79,6 @@
           <itemPath>../src/config/sam_d20_xpro/device_cache.h</itemPath>
           <itemPath>../src/config/sam_d20_xpro/toolchain_specifics.h</itemPath>
           <itemPath>../src/config/sam_d20_xpro/definitions.h</itemPath>
-        </logicalFolder>
-      </logicalFolder>
-      <logicalFolder displayName="packs" name="f2" projectFiles="true">
-        <logicalFolder displayName="ATSAMD20J18_DFP" name="f1" projectFiles="true">
-          <logicalFolder displayName="component" name="f1" projectFiles="true">
-            <itemPath>../src/packs/ATSAMD20J18_DFP/component/ac.h</itemPath>
-            <itemPath>../src/packs/ATSAMD20J18_DFP/component/adc.h</itemPath>
-            <itemPath>../src/packs/ATSAMD20J18_DFP/component/dac.h</itemPath>
-            <itemPath>../src/packs/ATSAMD20J18_DFP/component/dsu.h</itemPath>
-            <itemPath>../src/packs/ATSAMD20J18_DFP/component/eic.h</itemPath>
-            <itemPath>../src/packs/ATSAMD20J18_DFP/component/evsys.h</itemPath>
-            <itemPath>../src/packs/ATSAMD20J18_DFP/component/gclk.h</itemPath>
-            <itemPath>../src/packs/ATSAMD20J18_DFP/component/nvmctrl.h</itemPath>
-            <itemPath>../src/packs/ATSAMD20J18_DFP/component/pac.h</itemPath>
-            <itemPath>../src/packs/ATSAMD20J18_DFP/component/pm.h</itemPath>
-            <itemPath>../src/packs/ATSAMD20J18_DFP/component/port.h</itemPath>
-            <itemPath>../src/packs/ATSAMD20J18_DFP/component/ptc.h</itemPath>
-            <itemPath>../src/packs/ATSAMD20J18_DFP/component/rtc.h</itemPath>
-            <itemPath>../src/packs/ATSAMD20J18_DFP/component/sercom.h</itemPath>
-            <itemPath>../src/packs/ATSAMD20J18_DFP/component/sysctrl.h</itemPath>
-            <itemPath>../src/packs/ATSAMD20J18_DFP/component/tc.h</itemPath>
-            <itemPath>../src/packs/ATSAMD20J18_DFP/component/wdt.h</itemPath>
-          </logicalFolder>
-          <logicalFolder displayName="pio" name="f2" projectFiles="true">
-            <itemPath>../src/packs/ATSAMD20J18_DFP/pio/samd20j18.h</itemPath>
-          </logicalFolder>
-          <itemPath>../src/packs/ATSAMD20J18_DFP/device.h</itemPath>
-          <itemPath>../src/packs/ATSAMD20J18_DFP/atsamd20j18.h</itemPath>
-        </logicalFolder>
-        <logicalFolder displayName="CMSIS" name="f2" projectFiles="true">
-          <logicalFolder displayName="CMSIS" name="f1" projectFiles="true">
-            <logicalFolder displayName="Core" name="f1" projectFiles="true">
-              <logicalFolder displayName="Include" name="f1" projectFiles="true">
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_compiler.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_iccarm.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_gcc.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armcc.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang_ltm.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/tz_context.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/core_cm0plus.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/mpu_armv7.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_version.h</itemPath>
-              </logicalFolder>
-            </logicalFolder>
-            <logicalFolder displayName="DSP" name="f2" projectFiles="true">
-              <logicalFolder displayName="Include" name="f1" projectFiles="true">
-                <itemPath>../src/packs/CMSIS/CMSIS/DSP/Include/arm_common_tables.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/DSP/Include/arm_const_structs.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/DSP/Include/arm_math.h</itemPath>
-              </logicalFolder>
-            </logicalFolder>
-          </logicalFolder>
         </logicalFolder>
       </logicalFolder>
     </logicalFolder>
