@@ -19,8 +19,8 @@
           <Name dnOrder="1">initialization.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_dag_sk/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">6E7E23D00B26AE0A6500772EAE34E556</GeneratedChecksum>
-          <UserChecksum dnOrder="5">6E7E23D00B26AE0A6500772EAE34E556</UserChecksum>
+          <GeneratedChecksum dnOrder="4">7F96BEC2E75751D2891CD8C75CADEF92</GeneratedChecksum>
+          <UserChecksum dnOrder="5">7F96BEC2E75751D2891CD8C75CADEF92</UserChecksum>
         </File>
         <File dnOrder="2">
           <Type dnOrder="0">SOURCE</Type>
@@ -91,16 +91,16 @@
           <Name dnOrder="1">plib_gpio.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_dag_sk/peripheral/gpio/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/gpio/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">5FEE4367039CD7080D2323DF1FBE456B</GeneratedChecksum>
-          <UserChecksum dnOrder="5">5FEE4367039CD7080D2323DF1FBE456B</UserChecksum>
+          <GeneratedChecksum dnOrder="4">7E16E97848D3131F7A6EFA2B9448EDEA</GeneratedChecksum>
+          <UserChecksum dnOrder="5">7E16E97848D3131F7A6EFA2B9448EDEA</UserChecksum>
         </File>
         <File dnOrder="11">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_uart2.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_dag_sk/peripheral/uart/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/uart/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">E1EEB80FEF0FCB3ADC12047B090AC249</GeneratedChecksum>
-          <UserChecksum dnOrder="5">E1EEB80FEF0FCB3ADC12047B090AC249</UserChecksum>
+          <GeneratedChecksum dnOrder="4">B82245BFB9C177D6DBBDEB0EA8F247D6</GeneratedChecksum>
+          <UserChecksum dnOrder="5">B82245BFB9C177D6DBBDEB0EA8F247D6</UserChecksum>
         </File>
         <File dnOrder="12">
           <Type dnOrder="0">SOURCE</Type>
@@ -203,24 +203,24 @@
           <Name dnOrder="1">toolchain_specifics.h</Name>
           <LogicalPath dnOrder="2">config/pic32mz_dag_sk/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">F7924D60AC5CC08996AB2DAEC62D3C54</GeneratedChecksum>
-          <UserChecksum dnOrder="5">F7924D60AC5CC08996AB2DAEC62D3C54</UserChecksum>
+          <GeneratedChecksum dnOrder="4">9D344CAF1743381AA0EA1641ABCDE373</GeneratedChecksum>
+          <UserChecksum dnOrder="5">9D344CAF1743381AA0EA1641ABCDE373</UserChecksum>
         </File>
       </Files>
       <Settings dnOrder="1">
         <Setting append="true" category="C32" delimiter=";" dnOrder="0" key="extra-include-directories" value="../src;../src/config/pic32mz_dag_sk;../src/packs/PIC32MZ2064DAG169_DFP;;../src/mips"/>
         <Setting category="C32-LD" dnOrder="1" key="heap-size" value="512"/>
         <Setting category="C32-LD" dnOrder="2" key="no-device-startup-code" value="true"/>
-        <Setting category="C32-LD" dnOrder="3" key="preprocessor-macros" value=""/>
+        <Setting append="true" category="C32-LD" delimiter=";" dnOrder="3" key="preprocessor-macros" value=""/>
       </Settings>
     </Manifest>
     <Settings dnOrder="4">
-      <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.5.1"/>
-      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MZ_DA_DFP\1.0.70\atdf\PIC32MZ2064DAG169.atdf"/>
+      <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.6.0"/>
+      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MZ_DA_DFP\1.1.98\atdf\PIC32MZ2064DAG169.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
       <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
-      <Setting dnOrder="5" key="PackageFilter" value="csp;"/>
+      <Setting dnOrder="5" key="PackageFilter" value="bootloader;bsp;core;csp;"/>
     </Settings>
   </Configurator>
 </Configuration>
