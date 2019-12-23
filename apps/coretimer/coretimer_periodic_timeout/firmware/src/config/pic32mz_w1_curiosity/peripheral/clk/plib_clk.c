@@ -127,7 +127,7 @@ void CLK_Initialize( void )
 
     /* OSWEN    = SWITCH_COMPLETE    */
     /* SOSCEN   = OFF   */
-    /* UFRCEN   = POSC   */
+    /* UFRCEN   = USBCLK   */
     /* CF       = NO_FAILDET       */
     /* SLPEN    = IDLE    */
     /* CLKLOCK  = UNLOCKED  */
