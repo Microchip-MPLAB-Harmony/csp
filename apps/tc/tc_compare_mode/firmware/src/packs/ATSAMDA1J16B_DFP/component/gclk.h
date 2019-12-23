@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-11-25T06:56:52Z */
+/* file generated from device description version 2019-12-19T02:19:18Z */
 #ifndef _SAMDA1_GCLK_COMPONENT_H_
 #define _SAMDA1_GCLK_COMPONENT_H_
 
