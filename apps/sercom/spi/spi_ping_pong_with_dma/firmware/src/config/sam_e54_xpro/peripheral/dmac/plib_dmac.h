@@ -105,7 +105,7 @@ void DMAC_ChannelDisable ( DMAC_CHANNEL channel );
 bool DMAC_ChannelLinkedListTransfer ( DMAC_CHANNEL channel, dmac_descriptor_registers_t * channelDesc );
 DMAC_CHANNEL_CONFIG  DMAC_ChannelSettingsGet ( DMAC_CHANNEL channel );
 bool  DMAC_ChannelSettingsSet ( DMAC_CHANNEL channel, DMAC_CHANNEL_CONFIG settings );
-
+uint16_t DMAC_ChannelGetTransferredCount( DMAC_CHANNEL channel );
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
