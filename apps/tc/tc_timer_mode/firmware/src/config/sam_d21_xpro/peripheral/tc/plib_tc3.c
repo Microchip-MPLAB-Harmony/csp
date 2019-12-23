@@ -190,7 +190,7 @@ void TC3_TimerCallbackRegister( TC_TIMER_CALLBACK callback, uintptr_t context )
 void TC3_TimerInterruptHandler( void )
 {
     TC_TIMER_STATUS status;
-    status = TC3_REGS->COUNT16.TC_INTFLAG;
+    status = (TC_TIMER_STATUS) (TC3_REGS->COUNT16.TC_INTFLAG);
     /* Clear interrupt flags */
     TC3_REGS->COUNT16.TC_INTFLAG = TC_INTFLAG_Msk;
     if(TC3_CallbackObject.callback != NULL)
