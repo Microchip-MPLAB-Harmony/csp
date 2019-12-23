@@ -50,7 +50,15 @@ void QSPI_Initialize(void)
     QSPI_REGS->QSPI_CTRLA = QSPI_CTRLA_SWRST_Msk;
 
     // Set Mode Register values
-    QSPI_REGS->QSPI_CTRLB = QSPI_CTRLB_MODE_MEMORY;
+    /* MODE = MEMORY */
+    /* LOOPEN = 0 */
+    /* WDRBT = 0 */
+    /* SMEMREG = 0 */
+    /* CSMODE = NORELOAD */
+    /* DATALEN = 0x6 */
+    /* DLYCBT = 0 */
+    /* DLYCS = 0 */
+    QSPI_REGS->QSPI_CTRLB = QSPI_CTRLB_MODE_MEMORY | QSPI_CTRLB_CSMODE_NORELOAD | QSPI_CTRLB_DATALEN(0x6);
 
     // Set serial clock register
     QSPI_REGS->QSPI_BAUD = (QSPI_BAUD_BAUD(9))  ;
@@ -119,7 +127,7 @@ static bool qspi_setup_transfer( qspi_memory_xfer_t *qspi_memory_xfer, uint8_t t
     QSPI_REGS->QSPI_INSTRFRAME = mask;
 
     /* To synchronize APB and AHB accesses */
-    (volatile uint32_t)QSPI_REGS->QSPI_INSTRFRAME;
+    (uint32_t)QSPI_REGS->QSPI_INSTRFRAME;
 
     return true;
 }
@@ -177,7 +185,7 @@ bool QSPI_RegisterRead( qspi_register_xfer_t *qspi_register_xfer, uint32_t *rx_d
     QSPI_REGS->QSPI_INSTRFRAME = mask;
 
     /* To synchronize APB and AHB accesses */
-    (volatile uint32_t)QSPI_REGS->QSPI_INSTRFRAME;
+    (uint32_t)QSPI_REGS->QSPI_INSTRFRAME;
 
     /* Read the register content */
     qspi_memcpy_8bit((uint8_t *)rx_data , (uint8_t *)qspi_buffer,  rx_data_length);
@@ -215,7 +223,7 @@ bool QSPI_RegisterWrite( qspi_register_xfer_t *qspi_register_xfer, uint32_t *tx_
     QSPI_REGS->QSPI_INSTRFRAME = mask;
 
     /* To synchronize APB and AHB accesses */
-    (volatile uint32_t)QSPI_REGS->QSPI_INSTRFRAME;
+    (uint32_t)QSPI_REGS->QSPI_INSTRFRAME;
 
     /* Write the content to register */
     qspi_memcpy_8bit((uint8_t *)qspi_buffer, (uint8_t *)tx_data, tx_data_length);
@@ -263,7 +271,7 @@ bool QSPI_MemoryRead( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *rx_data, u
     }
 
     /* Dummy Read to clear QSPI_SR.INSTRE and QSPI_SR.CSR */
-    (volatile uint32_t)QSPI_REGS->QSPI_INTFLAG;
+    (uint32_t)QSPI_REGS->QSPI_INTFLAG;
 
     __DSB();
     __ISB();
