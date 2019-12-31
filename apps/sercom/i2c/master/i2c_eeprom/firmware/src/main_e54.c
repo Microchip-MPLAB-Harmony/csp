@@ -57,15 +57,14 @@
 
 #define APP_AT24MAC_DEVICE_ADDR             0x0056
 #define APP_AT24MAC_MEMORY_ADDR             0x00
-#define APP_AT24MAC_MEMORY_ADDR1            0x00
-#define APP_TRANSMIT_DATA_LENGTH            6
+#define APP_TRANSMIT_DATA_LENGTH            5
 #define APP_ACK_DATA_LENGTH                 1
-#define APP_RECEIVE_DUMMY_WRITE_LENGTH      2
+#define APP_RECEIVE_DUMMY_WRITE_LENGTH      1
 #define APP_RECEIVE_DATA_LENGTH             4
 
 static uint8_t testTxData[APP_TRANSMIT_DATA_LENGTH] =
 {
-    APP_AT24MAC_MEMORY_ADDR,APP_AT24MAC_MEMORY_ADDR1,
+    APP_AT24MAC_MEMORY_ADDR,
     'M','C','H','P',
 };
 
@@ -217,7 +216,7 @@ int main ( void )
 
             case APP_STATE_VERIFY:
 
-                if (memcmp(&testTxData[2], &testRxData[0], APP_RECEIVE_DATA_LENGTH) != 0)
+                if (memcmp(&testTxData[1], &testRxData[0], APP_RECEIVE_DATA_LENGTH) != 0)
                 {
                     /* It means received data is not same as transmitted data */
                     state = APP_STATE_XFER_ERROR;
