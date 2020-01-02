@@ -91,7 +91,7 @@ void ${ICAP_INSTANCE_NAME}_Initialize (void)
     IC${INDEX}CON = 0x${ICxCON_VALUE};
 
     <#if ICAP_CFGCON_ICACLK?? && ICAP_CFGCON_ICACLK?c == 'true'>
-    CFGCON |= _CFGCON_ICACLK_MASK;
+    ${ICAP_CFG_REG_NAME} |= ${ICAP_CFGCON_ICACLK_MASK};
     </#if>
 
 <#if (ICAPx_IEC_REG == ERROR_IEC_REG) && ICAP_IEC_REG_VAL?has_content>

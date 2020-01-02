@@ -24,6 +24,9 @@
 ################################################################################
 #### Register Information ####
 ################################################################################
+
+configRegName = "CFGCON"
+
 icapValGrp_IC1CON_ICM     = ATDF.getNode('/avr-tools-device-file/modules/module@[name="ICAP"]/value-group@[name="IC1CON__ICM"]')
 icapValGrp_IC1CON_ICI     = ATDF.getNode('/avr-tools-device-file/modules/module@[name="ICAP"]/value-group@[name="IC1CON__ICI"]')
 icapValGrp_IC1CON_ICTMR   = ATDF.getNode('/avr-tools-device-file/modules/module@[name="ICAP"]/value-group@[name="IC1CON__ICTMR"]')
@@ -35,9 +38,12 @@ cfgBifield_ICACLK           = ATDF.getNode('/avr-tools-device-file/modules/modul
 
 if all(x in Variables.get("__PROCESSOR") for x in ["PIC32MZ", "W"]):
     cfgBifield_ICACLK           = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CFG"]/register-group@[name="CFG"]/register@[name="CFGCON0"]/bitfield@[name="IC_ACLK"]')
+    configRegName = "CFGCON0"
+
 ################################################################################
 #### Global Variables ####
 ################################################################################
+
 global icapInstanceName
 global icapSym_ICxCON_ICM
 global icapSym_ICxCON_ICI
@@ -49,9 +55,11 @@ global icapSym_CFGCON_ICACLK
 
 global interruptsChildren
 interruptsChildren = ATDF.getNode('/avr-tools-device-file/devices/device/interrupts').getChildren()
+
 ################################################################################
 #### Business Logic ####
 ################################################################################
+
 def dependencyStatus(symbol, event):
     component = symbol.getComponent()
     num_int_lines = component.getSymbolValue("ICAP_NUM_INT_LINES")
@@ -203,9 +211,11 @@ def icapInterruptSet(symbol, event):
 def updateICAPClockWarningStatus(symbol, event):
 
     symbol.setVisible(not event["value"])
+
 ################################################################################
 #### Component ####
 ################################################################################
+
 def instantiateComponent(icapComponent):
     global icapInstanceName
     global icapSym_ICxCON_ICM
@@ -236,6 +246,10 @@ def instantiateComponent(icapComponent):
     instanceNum = filter(str.isdigit,str(icapComponent.getID()))
     icapInstanceNum.setDefaultValue(instanceNum)
 
+    icapConfigRegName = icapComponent.createStringSymbol("ICAP_CFG_REG_NAME", None)
+    icapConfigRegName.setVisible(False)
+    icapConfigRegName.setDefaultValue(configRegName)
+
     #Clock enable
     Database.setSymbolValue("core", icapInstanceName.getValue() + "_CLOCK_ENABLE", True, 1)
 
@@ -254,6 +268,10 @@ def instantiateComponent(icapComponent):
         icapSym_CFGCON_ICACLK = icapComponent.createBooleanSymbol("ICAP_CFGCON_ICACLK", None)
         icapSym_CFGCON_ICACLK.setLabel("Use Alternate Timer Source")
         icapSym_CFGCON_ICACLK.setDefaultValue(0)
+
+        icapSym_CFGCON_ICACLK_MASK = icapComponent.createStringSymbol("ICAP_CFGCON_ICACLK_MASK", None)
+        icapSym_CFGCON_ICACLK_MASK.setVisible(False)
+        icapSym_CFGCON_ICACLK_MASK.setDefaultValue(cfgBifield_ICACLK.getAttribute("mask"))
 
     #Timer source
     icapxICTMR_names = []
