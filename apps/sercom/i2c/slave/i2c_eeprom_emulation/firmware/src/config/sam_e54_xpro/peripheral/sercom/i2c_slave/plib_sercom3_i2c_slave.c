@@ -150,7 +150,7 @@ SERCOM_I2C_SLAVE_ACK_STATUS SERCOM3_I2C_LastByteAckStatusGet(void)
     return (SERCOM3_REGS->I2CS.SERCOM_STATUS & SERCOM_I2CS_STATUS_RXNACK_Msk)? SERCOM_I2C_SLAVE_ACK_STATUS_RECEIVED_NAK : SERCOM_I2C_SLAVE_ACK_STATUS_RECEIVED_ACK;
 }
 
-void SERCOM3_I2C_SendCommand(SERCOM_I2C_SLAVE_COMMAND command)
+void SERCOM3_I2C_CommandSet(SERCOM_I2C_SLAVE_COMMAND command)
 {
     if (command == SERCOM_I2C_SLAVE_COMMAND_SEND_ACK)
     {
@@ -192,11 +192,11 @@ void SERCOM3_I2C_InterruptHandler(void)
             {
                 if (sercom3I2CSObj.callback(SERCOM_I2C_SLAVE_TRANSFER_EVENT_ADDR_MATCH, sercom3I2CSObj.context) == true)
                 {
-                    SERCOM3_I2C_SendCommand(SERCOM_I2C_SLAVE_COMMAND_SEND_ACK);
+                    SERCOM3_I2C_CommandSet(SERCOM_I2C_SLAVE_COMMAND_SEND_ACK);
                 }
                 else
                 {
-                    SERCOM3_I2C_SendCommand(SERCOM_I2C_SLAVE_COMMAND_SEND_NAK);
+                    SERCOM3_I2C_CommandSet(SERCOM_I2C_SLAVE_COMMAND_SEND_NAK);
                 }
             }
         }
@@ -208,11 +208,11 @@ void SERCOM3_I2C_InterruptHandler(void)
                 {
                     if (sercom3I2CSObj.callback(SERCOM_I2C_SLAVE_TRANSFER_EVENT_RX_READY, sercom3I2CSObj.context) == true)
                     {
-                        SERCOM3_I2C_SendCommand(SERCOM_I2C_SLAVE_COMMAND_SEND_ACK);
+                        SERCOM3_I2C_CommandSet(SERCOM_I2C_SLAVE_COMMAND_SEND_ACK);
                     }
                     else
                     {
-                        SERCOM3_I2C_SendCommand(SERCOM_I2C_SLAVE_COMMAND_SEND_NAK);
+                        SERCOM3_I2C_CommandSet(SERCOM_I2C_SLAVE_COMMAND_SEND_NAK);
                     }
                 }
                 else
@@ -221,11 +221,11 @@ void SERCOM3_I2C_InterruptHandler(void)
                     {
                         sercom3I2CSObj.callback(SERCOM_I2C_SLAVE_TRANSFER_EVENT_TX_READY, sercom3I2CSObj.context);
                         sercom3I2CSObj.isFirstRxAfterAddressPending = false;
-                        SERCOM3_I2C_SendCommand(SERCOM_I2C_SLAVE_COMMAND_RECEIVE_ACK_NAK);
+                        SERCOM3_I2C_CommandSet(SERCOM_I2C_SLAVE_COMMAND_RECEIVE_ACK_NAK);
                     }
                     else
                     {
-                        SERCOM3_I2C_SendCommand(SERCOM_I2C_SLAVE_COMMAND_WAIT_FOR_START);
+                        SERCOM3_I2C_CommandSet(SERCOM_I2C_SLAVE_COMMAND_WAIT_FOR_START);
                     }
                 }
             }
