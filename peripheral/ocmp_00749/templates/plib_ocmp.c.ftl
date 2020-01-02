@@ -71,7 +71,7 @@ void ${OCMP_INSTANCE_NAME}_Initialize (void)
     OC${INDEX}CON = 0x${OCxCON_VALUE};
 
   <#if OCMP_CFGCON_OCACLK?? && OCMP_CFGCON_OCACLK?c == 'true'>
-    CFGCON |= _CFGCON_OCACLK_MASK;
+    ${OCMP_CFG_REG_NAME} |= ${OCMP_CFGCON_OCACLK_MASK};
   </#if>
     OC${INDEX}R = ${OCMP_OCxR};
     <#if mode == 4 || mode == 5>

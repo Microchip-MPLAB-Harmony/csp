@@ -24,6 +24,9 @@
 ################################################################################
 #### Register Information ####
 ################################################################################
+
+configRegName = "CFGCON"
+
 ocmpValGrp_OCxCON_OCM       = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OCMP"]/value-group@[name="OC1CON__OCM"]')
 ocmpValGrp_OCxCON_OC32      = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OCMP"]/value-group@[name="OC1CON__OC32"]')
 ocmpValGrp_OCxCON_SIDL      = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OCMP"]/value-group@[name="OC1CON__SIDL"]')
@@ -32,6 +35,8 @@ cfgBifield_OCACLK           = ATDF.getNode('/avr-tools-device-file/modules/modul
 
 if all(x in Variables.get("__PROCESSOR") for x in ["PIC32MZ", "W"]):
     cfgBifield_OCACLK           = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CFG"]/register-group@[name="CFG"]/register@[name="CFGCON0"]/bitfield@[name="OC_ACLK"]')
+    configRegName = "CFGCON0"
+
 ################################################################################
 #### Global Variables ####
 ################################################################################
@@ -192,6 +197,7 @@ def ocmpCommentVisible(symbol, event):
 def updateOCMPClockWarningStatus(symbol, event):
 
     symbol.setVisible(not event["value"])
+
 ################################################################################
 #### Component ####
 ################################################################################
@@ -222,6 +228,10 @@ def instantiateComponent(ocmpComponent):
     instanceNum = filter(str.isdigit,str(ocmpComponent.getID()))
     ocmpInstanceNum.setDefaultValue(instanceNum)
 
+    ocmpConfigRegName = ocmpComponent.createStringSymbol("OCMP_CFG_REG_NAME", None)
+    ocmpConfigRegName.setVisible(False)
+    ocmpConfigRegName.setDefaultValue(configRegName)
+
     #Clock enable
     Database.setSymbolValue("core", ocmpInstanceName.getValue() + "_CLOCK_ENABLE", True, 1)
 
@@ -242,6 +252,10 @@ def instantiateComponent(ocmpComponent):
         ocmpSym_CFGCON_OCACLK = ocmpComponent.createBooleanSymbol("OCMP_CFGCON_OCACLK", None)
         ocmpSym_CFGCON_OCACLK.setLabel("Use Alternate Timer Source")
         ocmpSym_CFGCON_OCACLK.setVisible(cfgBifield_OCACLK != None)
+
+        ocmpSym_CFGCON_OCACLK_MASK = ocmpComponent.createStringSymbol("OCMP_CFGCON_OCACLK_MASK", None)
+        ocmpSym_CFGCON_OCACLK_MASK.setVisible(False)
+        ocmpSym_CFGCON_OCACLK_MASK.setDefaultValue(cfgBifield_OCACLK.getAttribute("mask"))
 
     ocmpxOCTSEL_names = []
     ocmpSym_OCxCON_OCTSEL_ALT = ocmpComponent.createKeyValueSetSymbol("OCMP_OCxCON_OCTSEL_ALT", None)
