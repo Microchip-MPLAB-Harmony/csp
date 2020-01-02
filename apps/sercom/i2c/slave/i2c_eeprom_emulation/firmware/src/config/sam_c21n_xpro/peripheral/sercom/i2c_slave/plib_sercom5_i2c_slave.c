@@ -150,7 +150,7 @@ SERCOM_I2C_SLAVE_ACK_STATUS SERCOM5_I2C_LastByteAckStatusGet(void)
     return (SERCOM5_REGS->I2CS.SERCOM_STATUS & SERCOM_I2CS_STATUS_RXNACK_Msk)? SERCOM_I2C_SLAVE_ACK_STATUS_RECEIVED_NAK : SERCOM_I2C_SLAVE_ACK_STATUS_RECEIVED_ACK;
 }
 
-void SERCOM5_I2C_SendCommand(SERCOM_I2C_SLAVE_COMMAND command)
+void SERCOM5_I2C_CommandSet(SERCOM_I2C_SLAVE_COMMAND command)
 {
     if (command == SERCOM_I2C_SLAVE_COMMAND_SEND_ACK)
     {
@@ -192,11 +192,11 @@ void SERCOM5_I2C_InterruptHandler(void)
             {
                 if (sercom5I2CSObj.callback(SERCOM_I2C_SLAVE_TRANSFER_EVENT_ADDR_MATCH, sercom5I2CSObj.context) == true)
                 {
-                    SERCOM5_I2C_SendCommand(SERCOM_I2C_SLAVE_COMMAND_SEND_ACK);
+                    SERCOM5_I2C_CommandSet(SERCOM_I2C_SLAVE_COMMAND_SEND_ACK);
                 }
                 else
                 {
-                    SERCOM5_I2C_SendCommand(SERCOM_I2C_SLAVE_COMMAND_SEND_NAK);
+                    SERCOM5_I2C_CommandSet(SERCOM_I2C_SLAVE_COMMAND_SEND_NAK);
                 }
             }
         }
@@ -208,11 +208,11 @@ void SERCOM5_I2C_InterruptHandler(void)
                 {
                     if (sercom5I2CSObj.callback(SERCOM_I2C_SLAVE_TRANSFER_EVENT_RX_READY, sercom5I2CSObj.context) == true)
                     {
-                        SERCOM5_I2C_SendCommand(SERCOM_I2C_SLAVE_COMMAND_SEND_ACK);
+                        SERCOM5_I2C_CommandSet(SERCOM_I2C_SLAVE_COMMAND_SEND_ACK);
                     }
                     else
                     {
-                        SERCOM5_I2C_SendCommand(SERCOM_I2C_SLAVE_COMMAND_SEND_NAK);
+                        SERCOM5_I2C_CommandSet(SERCOM_I2C_SLAVE_COMMAND_SEND_NAK);
                     }
                 }
                 else
@@ -221,11 +221,11 @@ void SERCOM5_I2C_InterruptHandler(void)
                     {
                         sercom5I2CSObj.callback(SERCOM_I2C_SLAVE_TRANSFER_EVENT_TX_READY, sercom5I2CSObj.context);
                         sercom5I2CSObj.isFirstRxAfterAddressPending = false;
-                        SERCOM5_I2C_SendCommand(SERCOM_I2C_SLAVE_COMMAND_RECEIVE_ACK_NAK);
+                        SERCOM5_I2C_CommandSet(SERCOM_I2C_SLAVE_COMMAND_RECEIVE_ACK_NAK);
                     }
                     else
                     {
-                        SERCOM5_I2C_SendCommand(SERCOM_I2C_SLAVE_COMMAND_WAIT_FOR_START);
+                        SERCOM5_I2C_CommandSet(SERCOM_I2C_SLAVE_COMMAND_WAIT_FOR_START);
                     }
                 }
             }
