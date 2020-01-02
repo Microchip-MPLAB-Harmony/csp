@@ -44,12 +44,13 @@ def baudRateCalc(clk, baud):
         brgVal = 0
         overSamp = 0
 
+    if flexcomSym_OperatingMode.getSelectedKey() == "USART":
         flexcomClockInvalidSym.setVisible((brgVal < 1))
 
     return [brgVal, overSamp]
 
 def baudRateTrigger(symbol, event):
-    if Database.getSymbolValue(deviceNamespace, "FLEXCOM_MODE") == 0x1:
+    if flexcomSym_OperatingMode.getSelectedKey() == "USART":
         if Database.getSymbolValue(deviceNamespace, "FLEXCOM_USART_MR_USCLKS") == 0x3:
             clk = Database.getSymbolValue(deviceNamespace, "EXTERNAL_CLOCK_FREQ")
         else:
@@ -67,7 +68,7 @@ def clockSourceFreq(symbol, event):
     if (event["id"] == "FLEXCOM_USART_MR_USCLKS" or (event["id"] == flexcomInstanceName.getValue() + "_CLOCK_FREQUENCY")):
         symbol.setValue(int(Database.getSymbolValue("core", flexcomInstanceName.getValue() + "_CLOCK_FREQUENCY")), 2)
     if (event["id"] == "FLEXCOM_MODE"):
-        if event["value"] == 0x1:
+        if flexcomSym_OperatingMode.getSelectedKey() == "USART":
             symbol.setVisible(True)
         else :
             symbol.setVisible(False)
@@ -90,7 +91,7 @@ def ExternalClkSymbolVisible(symbol, event):
         symbol.setVisible(False)
 
 def symbolVisible(symbol, event):
-    if event["value"] == 0x1:
+    if flexcomSym_OperatingMode.getSelectedKey() == "USART":
         symbol.setVisible(True)
     else :
         symbol.setVisible(False)

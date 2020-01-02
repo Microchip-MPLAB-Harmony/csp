@@ -50,7 +50,7 @@ def ClockModeInfo(symbol, event):
         symbol.setLabel("***FLEXCOM SPI Mode 2 is Selected***")
     # Symbol Visible Property
     if event["id"] == "FLEXCOM_MODE":
-        if event["value"] == 0x2:
+        if flexcomSym_OperatingMode.getSelectedKey() == "SPI":
             symbol.setVisible(True)
         else:
             symbol.setVisible(False)
@@ -66,7 +66,7 @@ def SCBR_ValueUpdate(spiSym_CSR_SCBR_VALUE, event):
 
     SCBR = clk/baud
 
-    if Database.getSymbolValue(deviceNamespace, "FLEXCOM_MODE") == 0x2:
+    if flexcomSym_OperatingMode.getSelectedKey() == "SPI":
         flexcomClockInvalidSym.setVisible((SCBR < 1))
 
     if SCBR == 0:
@@ -107,7 +107,7 @@ def SpiControlDriverDependancyStatus(symbol, event):
         component.getSymbolByID("SPI_INTERRUPT_MODE").setReadOnly(False)
 
 def symbolVisible(symbol, event):
-    if event["value"] == 0x2:
+    if flexcomSym_OperatingMode.getSelectedKey() == "SPI":
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)

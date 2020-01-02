@@ -42,10 +42,10 @@ def dependencyStatus(symbol, event):
         status = False
 
     if (event["id"] == interruptSymbolEnable):
-        if ((Database.getSymbolValue(deviceNamespace, "FLEXCOM_MODE") == 0x0)
-        or (Database.getSymbolValue(deviceNamespace, "FLEXCOM_MODE") == 0x1 and Database.getSymbolValue(deviceNamespace, "USART_INTERRUPT_MODE") == False)
-        or (Database.getSymbolValue(deviceNamespace, "FLEXCOM_MODE") == 0x2 and Database.getSymbolValue(deviceNamespace, "SPI_INTERRUPT_MODE") == False)
-        or (Database.getSymbolValue(deviceNamespace, "FLEXCOM_MODE") == 0x3 and Database.getSymbolValue(deviceNamespace, "TWI_INTERRUPT_MODE") == False)):
+        if ((flexcomSym_OperatingMode.getSelectedKey() == "NO_COM")
+        or (flexcomSym_OperatingMode.getSelectedKey() == "USART" and Database.getSymbolValue(deviceNamespace, "USART_INTERRUPT_MODE") == False)
+        or (flexcomSym_OperatingMode.getSelectedKey() == "SPI" and Database.getSymbolValue(deviceNamespace, "SPI_INTERRUPT_MODE") == False)
+        or (flexcomSym_OperatingMode.getSelectedKey() == "TWI" and Database.getSymbolValue(deviceNamespace, "TWI_INTERRUPT_MODE") == False)):
             status = False
 
     symbol.setVisible(status)

@@ -33,7 +33,7 @@ def getFlexcomTwiClockDividerValue(flexcomTwiClkSpeed):
     peripheralClockFreq = int(Database.getSymbolValue("core", flexcomInstanceName.getValue() + "_CLOCK_FREQUENCY"))
     cldiv = peripheralClockFreq / ( flexcomTwiClkSpeed * 2 ) - 3
 
-    if Database.getSymbolValue(deviceNamespace, "FLEXCOM_MODE") == 0x3:
+    if flexcomSym_OperatingMode.getSelectedKey() == "TWI":
         flexcomClockInvalidSym.setVisible((cldiv < 1))
 
     while int(cldiv) > clockDividerMaxValue and ckdiv < clockDividerMinValue:
@@ -56,7 +56,7 @@ def setFlexcomTwiClockSourceFreq(symbol, event):
     symbol.setValue(Database.getSymbolValue("core", flexcomInstanceName.getValue() + "_CLOCK_FREQUENCY"), 1)
 
 def symbolVisible(symbol, event):
-    if event["value"] == 0x3:
+    if flexcomSym_OperatingMode.getSelectedKey() == "TWI":
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
