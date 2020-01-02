@@ -49,7 +49,21 @@ __STATIC_INLINE void FPU_Enable(void)
     }
 }
 #endif
+__STATIC_INLINE void TCM_Enable(void);
+__STATIC_INLINE void TCM_Configure(uint32_t tcmSize);
 __STATIC_INLINE void ICache_Enable(void);
+/** Program CMCC CSIZESW bits for TCM and cache configuration */
+__STATIC_INLINE void TCM_Configure(uint32_t tcmSize)
+{
+    CMCC_REGS->CMCC_CFG = CMCC_CFG_CSIZESW(tcmSize);
+}
+
+/** Enable TCM memory */
+__STATIC_INLINE void  TCM_Enable(void)
+{
+    /* TCM cannot be enabled or disabled in SAME5x/SAMD5x family*/
+}
+
 __STATIC_INLINE void ICache_Enable(void)
 {
     CMCC_REGS->CMCC_CTRL &= ~(CMCC_CTRL_CEN_Msk);
@@ -68,6 +82,9 @@ void Reset_Handler(void)
     FPU_Enable();
     #endif
 
+    TCM_Configure(2);
+    /* Enable TCM   */
+    TCM_Enable();
 
      /* Execute relocations & zero BSS */
      __iar_data_init3();

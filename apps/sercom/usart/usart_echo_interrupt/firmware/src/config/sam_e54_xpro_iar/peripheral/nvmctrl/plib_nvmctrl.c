@@ -97,7 +97,7 @@ bool NVMCTRL_QuadWordWrite(const uint32_t *data, const uint32_t address)
     else
     {
         /* Configure Quad Word Write */
-        NVMCTRL_SetWriteMode(NVMCTRL_WMODE_ADW);
+        NVMCTRL_SetWriteMode(NVMCTRL_WMODE_AQW);
 
         /* Writing 32-bit data into the given address.  Writes to the page buffer must be 32 bits. */
         for (i = 0; i <= 3; i++)

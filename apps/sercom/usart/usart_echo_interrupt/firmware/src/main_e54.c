@@ -59,8 +59,8 @@
 
 char messageStart[] = "****  USART echo demo: Non-blocking Transfer with the interrupt  ****\r\n\
 **** Type 10 characters. The received characters are echoed back, and the LED is toggled ****\r\n";
-char receiveBuffer[RX_BUFFER_SIZE] = {};
-char echoBuffer[RX_BUFFER_SIZE+4] = {};
+char receiveBuffer[RX_BUFFER_SIZE] = {0};
+char echoBuffer[RX_BUFFER_SIZE+4] = {0};
 char messageError[] = "**** USART error occurred ****\r\n";
 
 bool errorStatus = false;
