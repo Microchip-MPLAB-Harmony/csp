@@ -75,8 +75,8 @@
           <Name dnOrder="1">plib_nvmctrl.c</Name>
           <LogicalPath dnOrder="2">config/sam_l10_xpro/peripheral/nvmctrl/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/nvmctrl/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">9A0BEBDFC195D4395D7D3DFE4787AA5B</GeneratedChecksum>
-          <UserChecksum dnOrder="5">9A0BEBDFC195D4395D7D3DFE4787AA5B</UserChecksum>
+          <GeneratedChecksum dnOrder="4">5B19C25F77B7B44EB38287580BA5A510</GeneratedChecksum>
+          <UserChecksum dnOrder="5">5B19C25F77B7B44EB38287580BA5A510</UserChecksum>
         </File>
         <File dnOrder="9">
           <Type dnOrder="0">SOURCE</Type>
@@ -99,8 +99,8 @@
           <Name dnOrder="1">plib_sercom1_i2c_slave.c</Name>
           <LogicalPath dnOrder="2">config/sam_l10_xpro/peripheral/sercom/i2c_slave/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/sercom/i2c_slave/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">D76A2C8CE66D8B711BF891BDD9FFDCAC</GeneratedChecksum>
-          <UserChecksum dnOrder="5">D76A2C8CE66D8B711BF891BDD9FFDCAC</UserChecksum>
+          <GeneratedChecksum dnOrder="4">7F8DE806F57A0A1D5C4A0467F431EB7B</GeneratedChecksum>
+          <UserChecksum dnOrder="5">7F8DE806F57A0A1D5C4A0467F431EB7B</UserChecksum>
         </File>
         <File dnOrder="12">
           <Type dnOrder="0">SOURCE</Type>
@@ -123,32 +123,32 @@
           <Name dnOrder="1">ac.h</Name>
           <LogicalPath dnOrder="2">packs/ATSAML10E16A_DFP/component/</LogicalPath>
           <PhysicalPath dnOrder="3">/../../packs/ATSAML10E16A_DFP/component/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">DEE70A777F9F165F07F479FBE14408BC</GeneratedChecksum>
-          <UserChecksum dnOrder="5">DEE70A777F9F165F07F479FBE14408BC</UserChecksum>
+          <GeneratedChecksum dnOrder="4">FFE37AA49BFE4BCB512AAAE1CDAF5915</GeneratedChecksum>
+          <UserChecksum dnOrder="5">FFE37AA49BFE4BCB512AAAE1CDAF5915</UserChecksum>
         </File>
         <File dnOrder="15">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">adc.h</Name>
           <LogicalPath dnOrder="2">packs/ATSAML10E16A_DFP/component/</LogicalPath>
           <PhysicalPath dnOrder="3">/../../packs/ATSAML10E16A_DFP/component/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">74EDFBC9FC204F7FD1BE08FD6C2D2682</GeneratedChecksum>
-          <UserChecksum dnOrder="5">74EDFBC9FC204F7FD1BE08FD6C2D2682</UserChecksum>
+          <GeneratedChecksum dnOrder="4">7537B408E7761F28EE533FC8D61CAB01</GeneratedChecksum>
+          <UserChecksum dnOrder="5">7537B408E7761F28EE533FC8D61CAB01</UserChecksum>
         </File>
         <File dnOrder="16">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">atsaml10e16a.h</Name>
           <LogicalPath dnOrder="2">packs/ATSAML10E16A_DFP/</LogicalPath>
           <PhysicalPath dnOrder="3">/../../packs/ATSAML10E16A_DFP/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">B6AF722A4EAD148B9F11B3DB48618628</GeneratedChecksum>
-          <UserChecksum dnOrder="5">B6AF722A4EAD148B9F11B3DB48618628</UserChecksum>
+          <GeneratedChecksum dnOrder="4">C65D1C7703DA2B1BB52E9849AC0C68F2</GeneratedChecksum>
+          <UserChecksum dnOrder="5">C65D1C7703DA2B1BB52E9849AC0C68F2</UserChecksum>
         </File>
         <File dnOrder="17">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">ccl.h</Name>
           <LogicalPath dnOrder="2">packs/ATSAML10E16A_DFP/component/</LogicalPath>
           <PhysicalPath dnOrder="3">/../../packs/ATSAML10E16A_DFP/component/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">DF614B8F0755C122C70F3A52C2BCB63F</GeneratedChecksum>
-          <UserChecksum dnOrder="5">DF614B8F0755C122C70F3A52C2BCB63F</UserChecksum>
+          <GeneratedChecksum dnOrder="4">5BD6837CE6918600C720C4C4FB68778A</GeneratedChecksum>
+          <UserChecksum dnOrder="5">5BD6837CE6918600C720C4C4FB68778A</UserChecksum>
         </File>
         <File dnOrder="18">
           <Type dnOrder="0">HEADER</Type>
@@ -219,8 +219,8 @@
           <Name dnOrder="1">dac.h</Name>
           <LogicalPath dnOrder="2">packs/ATSAML10E16A_DFP/component/</LogicalPath>
           <PhysicalPath dnOrder="3">/../../packs/ATSAML10E16A_DFP/component/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">C61C6417E6618A125C6BD37DD78AA1BF</GeneratedChecksum>
-          <UserChecksum dnOrder="5">C61C6417E6618A125C6BD37DD78AA1BF</UserChecksum>
+          <GeneratedChecksum dnOrder="4">4C24B7C059D13622ABFD88A042EF9591</GeneratedChecksum>
+          <UserChecksum dnOrder="5">4C24B7C059D13622ABFD88A042EF9591</UserChecksum>
         </File>
         <File dnOrder="27">
           <Type dnOrder="0">HEADER</Type>
@@ -243,72 +243,72 @@
           <Name dnOrder="1">device_cache.h</Name>
           <LogicalPath dnOrder="2">config/sam_l10_xpro/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">9ED2219AFB6FDB7A6E9A066E468DAE8B</GeneratedChecksum>
-          <UserChecksum dnOrder="5">9ED2219AFB6FDB7A6E9A066E468DAE8B</UserChecksum>
+          <GeneratedChecksum dnOrder="4">E95046F5E32C686DFC28E77070067C5F</GeneratedChecksum>
+          <UserChecksum dnOrder="5">E95046F5E32C686DFC28E77070067C5F</UserChecksum>
         </File>
         <File dnOrder="30">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">dmac.h</Name>
           <LogicalPath dnOrder="2">packs/ATSAML10E16A_DFP/component/</LogicalPath>
           <PhysicalPath dnOrder="3">/../../packs/ATSAML10E16A_DFP/component/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">55440489BA71A558E540615368AFE3BA</GeneratedChecksum>
-          <UserChecksum dnOrder="5">55440489BA71A558E540615368AFE3BA</UserChecksum>
+          <GeneratedChecksum dnOrder="4">05A05FE5393DE431592DC76C7E4D815E</GeneratedChecksum>
+          <UserChecksum dnOrder="5">05A05FE5393DE431592DC76C7E4D815E</UserChecksum>
         </File>
         <File dnOrder="31">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">dsu.h</Name>
           <LogicalPath dnOrder="2">packs/ATSAML10E16A_DFP/component/</LogicalPath>
           <PhysicalPath dnOrder="3">/../../packs/ATSAML10E16A_DFP/component/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">262E895F6E44CD9AD6DAEF0008F145D6</GeneratedChecksum>
-          <UserChecksum dnOrder="5">262E895F6E44CD9AD6DAEF0008F145D6</UserChecksum>
+          <GeneratedChecksum dnOrder="4">18D3BB7C7543C9328EF5F3D5BC03C66D</GeneratedChecksum>
+          <UserChecksum dnOrder="5">18D3BB7C7543C9328EF5F3D5BC03C66D</UserChecksum>
         </File>
         <File dnOrder="32">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">eic.h</Name>
           <LogicalPath dnOrder="2">packs/ATSAML10E16A_DFP/component/</LogicalPath>
           <PhysicalPath dnOrder="3">/../../packs/ATSAML10E16A_DFP/component/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">FE73EABACE151464C64CB5D6376055DC</GeneratedChecksum>
-          <UserChecksum dnOrder="5">FE73EABACE151464C64CB5D6376055DC</UserChecksum>
+          <GeneratedChecksum dnOrder="4">4620569040864E6B6D0E008AB726BE1A</GeneratedChecksum>
+          <UserChecksum dnOrder="5">4620569040864E6B6D0E008AB726BE1A</UserChecksum>
         </File>
         <File dnOrder="33">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">evsys.h</Name>
           <LogicalPath dnOrder="2">packs/ATSAML10E16A_DFP/component/</LogicalPath>
           <PhysicalPath dnOrder="3">/../../packs/ATSAML10E16A_DFP/component/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">8C7D9424A37F252E2A6CAE6865394774</GeneratedChecksum>
-          <UserChecksum dnOrder="5">8C7D9424A37F252E2A6CAE6865394774</UserChecksum>
+          <GeneratedChecksum dnOrder="4">C42B9AD038F5B27ACB5F15FEA7AF397D</GeneratedChecksum>
+          <UserChecksum dnOrder="5">C42B9AD038F5B27ACB5F15FEA7AF397D</UserChecksum>
         </File>
         <File dnOrder="34">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">freqm.h</Name>
           <LogicalPath dnOrder="2">packs/ATSAML10E16A_DFP/component/</LogicalPath>
           <PhysicalPath dnOrder="3">/../../packs/ATSAML10E16A_DFP/component/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">72EFB28E7B83830E83F2341025AD8951</GeneratedChecksum>
-          <UserChecksum dnOrder="5">72EFB28E7B83830E83F2341025AD8951</UserChecksum>
+          <GeneratedChecksum dnOrder="4">0D5DFD9278A659A6E528E05C4E6CC979</GeneratedChecksum>
+          <UserChecksum dnOrder="5">0D5DFD9278A659A6E528E05C4E6CC979</UserChecksum>
         </File>
         <File dnOrder="35">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">gclk.h</Name>
           <LogicalPath dnOrder="2">packs/ATSAML10E16A_DFP/component/</LogicalPath>
           <PhysicalPath dnOrder="3">/../../packs/ATSAML10E16A_DFP/component/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">F3832AF7356678C1E63834A011A83838</GeneratedChecksum>
-          <UserChecksum dnOrder="5">F3832AF7356678C1E63834A011A83838</UserChecksum>
+          <GeneratedChecksum dnOrder="4">1018675A7B6AEF068A09F695E5DD312F</GeneratedChecksum>
+          <UserChecksum dnOrder="5">1018675A7B6AEF068A09F695E5DD312F</UserChecksum>
         </File>
         <File dnOrder="36">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">idau.h</Name>
           <LogicalPath dnOrder="2">packs/ATSAML10E16A_DFP/component/</LogicalPath>
           <PhysicalPath dnOrder="3">/../../packs/ATSAML10E16A_DFP/component/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">6669FDD945CE17E4CAD6AA2277E89CCA</GeneratedChecksum>
-          <UserChecksum dnOrder="5">6669FDD945CE17E4CAD6AA2277E89CCA</UserChecksum>
+          <GeneratedChecksum dnOrder="4">8324BD35C6039B09919E8B4839A299F9</GeneratedChecksum>
+          <UserChecksum dnOrder="5">8324BD35C6039B09919E8B4839A299F9</UserChecksum>
         </File>
         <File dnOrder="37">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">mclk.h</Name>
           <LogicalPath dnOrder="2">packs/ATSAML10E16A_DFP/component/</LogicalPath>
           <PhysicalPath dnOrder="3">/../../packs/ATSAML10E16A_DFP/component/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">999747047651BE1B8EE5E905BE2EA349</GeneratedChecksum>
-          <UserChecksum dnOrder="5">999747047651BE1B8EE5E905BE2EA349</UserChecksum>
+          <GeneratedChecksum dnOrder="4">E96EDBA9FB3BFBF0DDE102E32F5636DF</GeneratedChecksum>
+          <UserChecksum dnOrder="5">E96EDBA9FB3BFBF0DDE102E32F5636DF</UserChecksum>
         </File>
         <File dnOrder="38">
           <Type dnOrder="0">HEADER</Type>
@@ -323,40 +323,40 @@
           <Name dnOrder="1">nvmctrl.h</Name>
           <LogicalPath dnOrder="2">packs/ATSAML10E16A_DFP/component/</LogicalPath>
           <PhysicalPath dnOrder="3">/../../packs/ATSAML10E16A_DFP/component/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">7612B48081219BF6EA144CCE24AD0FB4</GeneratedChecksum>
-          <UserChecksum dnOrder="5">7612B48081219BF6EA144CCE24AD0FB4</UserChecksum>
+          <GeneratedChecksum dnOrder="4">DC82E5B8430AB2C07BB4722E60F4E601</GeneratedChecksum>
+          <UserChecksum dnOrder="5">DC82E5B8430AB2C07BB4722E60F4E601</UserChecksum>
         </File>
         <File dnOrder="40">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">opamp.h</Name>
           <LogicalPath dnOrder="2">packs/ATSAML10E16A_DFP/component/</LogicalPath>
           <PhysicalPath dnOrder="3">/../../packs/ATSAML10E16A_DFP/component/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">5B415FBB05D140B1ADD456A9DC94EA5C</GeneratedChecksum>
-          <UserChecksum dnOrder="5">5B415FBB05D140B1ADD456A9DC94EA5C</UserChecksum>
+          <GeneratedChecksum dnOrder="4">49E0418B0D7EC2430360B5E1EFA5E597</GeneratedChecksum>
+          <UserChecksum dnOrder="5">49E0418B0D7EC2430360B5E1EFA5E597</UserChecksum>
         </File>
         <File dnOrder="41">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">osc32kctrl.h</Name>
           <LogicalPath dnOrder="2">packs/ATSAML10E16A_DFP/component/</LogicalPath>
           <PhysicalPath dnOrder="3">/../../packs/ATSAML10E16A_DFP/component/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">466E79E017FE5734C8661A975E468984</GeneratedChecksum>
-          <UserChecksum dnOrder="5">466E79E017FE5734C8661A975E468984</UserChecksum>
+          <GeneratedChecksum dnOrder="4">9BA84BB4727ADD8DF096253FFB4D7BF8</GeneratedChecksum>
+          <UserChecksum dnOrder="5">9BA84BB4727ADD8DF096253FFB4D7BF8</UserChecksum>
         </File>
         <File dnOrder="42">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">oscctrl.h</Name>
           <LogicalPath dnOrder="2">packs/ATSAML10E16A_DFP/component/</LogicalPath>
           <PhysicalPath dnOrder="3">/../../packs/ATSAML10E16A_DFP/component/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">14509C36B18C6EA9EE9786B5CC1C0E3C</GeneratedChecksum>
-          <UserChecksum dnOrder="5">14509C36B18C6EA9EE9786B5CC1C0E3C</UserChecksum>
+          <GeneratedChecksum dnOrder="4">D4CC899BEBCAE0DAEE3B57353424BD50</GeneratedChecksum>
+          <UserChecksum dnOrder="5">D4CC899BEBCAE0DAEE3B57353424BD50</UserChecksum>
         </File>
         <File dnOrder="43">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">pac.h</Name>
           <LogicalPath dnOrder="2">packs/ATSAML10E16A_DFP/component/</LogicalPath>
           <PhysicalPath dnOrder="3">/../../packs/ATSAML10E16A_DFP/component/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">CA19CDCB27D1ABE4A62E35C8F2D2785B</GeneratedChecksum>
-          <UserChecksum dnOrder="5">CA19CDCB27D1ABE4A62E35C8F2D2785B</UserChecksum>
+          <GeneratedChecksum dnOrder="4">C13A4DC9463EB6B57808E1ED46D1FB2A</GeneratedChecksum>
+          <UserChecksum dnOrder="5">C13A4DC9463EB6B57808E1ED46D1FB2A</UserChecksum>
         </File>
         <File dnOrder="44">
           <Type dnOrder="0">HEADER</Type>
@@ -403,16 +403,16 @@
           <Name dnOrder="1">plib_port.h</Name>
           <LogicalPath dnOrder="2">config/sam_l10_xpro/peripheral/port/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/port/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">8D7D0CE25437125FAC06837CFFC9DFD7</GeneratedChecksum>
-          <UserChecksum dnOrder="5">8D7D0CE25437125FAC06837CFFC9DFD7</UserChecksum>
+          <GeneratedChecksum dnOrder="4">343D0EF9C8CC5CEFA5FCEA9C772A6199</GeneratedChecksum>
+          <UserChecksum dnOrder="5">343D0EF9C8CC5CEFA5FCEA9C772A6199</UserChecksum>
         </File>
         <File dnOrder="50">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_sercom1_i2c_slave.h</Name>
           <LogicalPath dnOrder="2">config/sam_l10_xpro/peripheral/sercom/i2c_slave/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/sercom/i2c_slave/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">DECBBDE764170CA2784CA995FB6F065D</GeneratedChecksum>
-          <UserChecksum dnOrder="5">DECBBDE764170CA2784CA995FB6F065D</UserChecksum>
+          <GeneratedChecksum dnOrder="4">6E7424D78369A7CBB2A4D2C3FFAA3FDD</GeneratedChecksum>
+          <UserChecksum dnOrder="5">6E7424D78369A7CBB2A4D2C3FFAA3FDD</UserChecksum>
         </File>
         <File dnOrder="51">
           <Type dnOrder="0">HEADER</Type>
@@ -427,96 +427,96 @@
           <Name dnOrder="1">pm.h</Name>
           <LogicalPath dnOrder="2">packs/ATSAML10E16A_DFP/component/</LogicalPath>
           <PhysicalPath dnOrder="3">/../../packs/ATSAML10E16A_DFP/component/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">9FCB3A639670CB07CC90D7445E33B6A3</GeneratedChecksum>
-          <UserChecksum dnOrder="5">9FCB3A639670CB07CC90D7445E33B6A3</UserChecksum>
+          <GeneratedChecksum dnOrder="4">20085F5B34CCD6636994D3262C0BA22B</GeneratedChecksum>
+          <UserChecksum dnOrder="5">20085F5B34CCD6636994D3262C0BA22B</UserChecksum>
         </File>
         <File dnOrder="53">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">port.h</Name>
           <LogicalPath dnOrder="2">packs/ATSAML10E16A_DFP/component/</LogicalPath>
           <PhysicalPath dnOrder="3">/../../packs/ATSAML10E16A_DFP/component/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">0E93B8F4F7C434A9F1C6D1F0B9EBAD00</GeneratedChecksum>
-          <UserChecksum dnOrder="5">0E93B8F4F7C434A9F1C6D1F0B9EBAD00</UserChecksum>
+          <GeneratedChecksum dnOrder="4">6D789EA66B5560408B6E89A8E54D128C</GeneratedChecksum>
+          <UserChecksum dnOrder="5">6D789EA66B5560408B6E89A8E54D128C</UserChecksum>
         </File>
         <File dnOrder="54">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">ptc.h</Name>
           <LogicalPath dnOrder="2">packs/ATSAML10E16A_DFP/component/</LogicalPath>
           <PhysicalPath dnOrder="3">/../../packs/ATSAML10E16A_DFP/component/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">A8EE943DE19BE35730756E5AA6BEBAD3</GeneratedChecksum>
-          <UserChecksum dnOrder="5">A8EE943DE19BE35730756E5AA6BEBAD3</UserChecksum>
+          <GeneratedChecksum dnOrder="4">198EDA9B2A2A18B4317E2225C6D7D005</GeneratedChecksum>
+          <UserChecksum dnOrder="5">198EDA9B2A2A18B4317E2225C6D7D005</UserChecksum>
         </File>
         <File dnOrder="55">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">rstc.h</Name>
           <LogicalPath dnOrder="2">packs/ATSAML10E16A_DFP/component/</LogicalPath>
           <PhysicalPath dnOrder="3">/../../packs/ATSAML10E16A_DFP/component/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">447EDE0AB19E0311C78DE70C503FC1DF</GeneratedChecksum>
-          <UserChecksum dnOrder="5">447EDE0AB19E0311C78DE70C503FC1DF</UserChecksum>
+          <GeneratedChecksum dnOrder="4">8285D32036E7744BDC99A4554E71B151</GeneratedChecksum>
+          <UserChecksum dnOrder="5">8285D32036E7744BDC99A4554E71B151</UserChecksum>
         </File>
         <File dnOrder="56">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">rtc.h</Name>
           <LogicalPath dnOrder="2">packs/ATSAML10E16A_DFP/component/</LogicalPath>
           <PhysicalPath dnOrder="3">/../../packs/ATSAML10E16A_DFP/component/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">314C3171BFC2F4FACD7815513C071995</GeneratedChecksum>
-          <UserChecksum dnOrder="5">314C3171BFC2F4FACD7815513C071995</UserChecksum>
+          <GeneratedChecksum dnOrder="4">445C7339F0E6EBE486815BFE7CC046D2</GeneratedChecksum>
+          <UserChecksum dnOrder="5">445C7339F0E6EBE486815BFE7CC046D2</UserChecksum>
         </File>
         <File dnOrder="57">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">saml10e16a.h</Name>
           <LogicalPath dnOrder="2">packs/ATSAML10E16A_DFP/pio/</LogicalPath>
           <PhysicalPath dnOrder="3">/../../packs/ATSAML10E16A_DFP/pio/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">05046DB6C8EB2FEEFD514CF89E7C651B</GeneratedChecksum>
-          <UserChecksum dnOrder="5">05046DB6C8EB2FEEFD514CF89E7C651B</UserChecksum>
+          <GeneratedChecksum dnOrder="4">75009B61157EE6F042598B686FE7E5A6</GeneratedChecksum>
+          <UserChecksum dnOrder="5">75009B61157EE6F042598B686FE7E5A6</UserChecksum>
         </File>
         <File dnOrder="58">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">sercom.h</Name>
           <LogicalPath dnOrder="2">packs/ATSAML10E16A_DFP/component/</LogicalPath>
           <PhysicalPath dnOrder="3">/../../packs/ATSAML10E16A_DFP/component/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">19EC06569F2E891AF204298CEE219545</GeneratedChecksum>
-          <UserChecksum dnOrder="5">19EC06569F2E891AF204298CEE219545</UserChecksum>
+          <GeneratedChecksum dnOrder="4">B119EDA60184E2899CE7590774978DB7</GeneratedChecksum>
+          <UserChecksum dnOrder="5">B119EDA60184E2899CE7590774978DB7</UserChecksum>
         </File>
         <File dnOrder="59">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">supc.h</Name>
           <LogicalPath dnOrder="2">packs/ATSAML10E16A_DFP/component/</LogicalPath>
           <PhysicalPath dnOrder="3">/../../packs/ATSAML10E16A_DFP/component/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">710EEF07FC29B90A8112387DDE8EE6A9</GeneratedChecksum>
-          <UserChecksum dnOrder="5">710EEF07FC29B90A8112387DDE8EE6A9</UserChecksum>
+          <GeneratedChecksum dnOrder="4">8AB23339A2DA451509865C042BFB8C53</GeneratedChecksum>
+          <UserChecksum dnOrder="5">8AB23339A2DA451509865C042BFB8C53</UserChecksum>
         </File>
         <File dnOrder="60">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">tc.h</Name>
           <LogicalPath dnOrder="2">packs/ATSAML10E16A_DFP/component/</LogicalPath>
           <PhysicalPath dnOrder="3">/../../packs/ATSAML10E16A_DFP/component/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">6332858F1293650FB95B3B62F46B5F7A</GeneratedChecksum>
-          <UserChecksum dnOrder="5">6332858F1293650FB95B3B62F46B5F7A</UserChecksum>
+          <GeneratedChecksum dnOrder="4">6014FE36D0CBFE4C051D6E7B76F37AD8</GeneratedChecksum>
+          <UserChecksum dnOrder="5">6014FE36D0CBFE4C051D6E7B76F37AD8</UserChecksum>
         </File>
         <File dnOrder="61">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">toolchain_specifics.h</Name>
           <LogicalPath dnOrder="2">config/sam_l10_xpro/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">4F3C5B6A299E310404C004FB60312B4A</GeneratedChecksum>
-          <UserChecksum dnOrder="5">4F3C5B6A299E310404C004FB60312B4A</UserChecksum>
+          <GeneratedChecksum dnOrder="4">121C643DD06A3ACE7D56658E0AF041A3</GeneratedChecksum>
+          <UserChecksum dnOrder="5">121C643DD06A3ACE7D56658E0AF041A3</UserChecksum>
         </File>
         <File dnOrder="62">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">tram.h</Name>
           <LogicalPath dnOrder="2">packs/ATSAML10E16A_DFP/component/</LogicalPath>
           <PhysicalPath dnOrder="3">/../../packs/ATSAML10E16A_DFP/component/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">0F75FF01B56077D82DDF43C0101BC480</GeneratedChecksum>
-          <UserChecksum dnOrder="5">0F75FF01B56077D82DDF43C0101BC480</UserChecksum>
+          <GeneratedChecksum dnOrder="4">1FCC9F28C76CE601CF2475278D6ABDC6</GeneratedChecksum>
+          <UserChecksum dnOrder="5">1FCC9F28C76CE601CF2475278D6ABDC6</UserChecksum>
         </File>
         <File dnOrder="63">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">trng.h</Name>
           <LogicalPath dnOrder="2">packs/ATSAML10E16A_DFP/component/</LogicalPath>
           <PhysicalPath dnOrder="3">/../../packs/ATSAML10E16A_DFP/component/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">0B4DB52B5C19D6638524AED906384A9D</GeneratedChecksum>
-          <UserChecksum dnOrder="5">0B4DB52B5C19D6638524AED906384A9D</UserChecksum>
+          <GeneratedChecksum dnOrder="4">AD6D0EA140556428D0D09172E89B2CCD</GeneratedChecksum>
+          <UserChecksum dnOrder="5">AD6D0EA140556428D0D09172E89B2CCD</UserChecksum>
         </File>
         <File dnOrder="64">
           <Type dnOrder="0">HEADER</Type>
@@ -531,24 +531,25 @@
           <Name dnOrder="1">wdt.h</Name>
           <LogicalPath dnOrder="2">packs/ATSAML10E16A_DFP/component/</LogicalPath>
           <PhysicalPath dnOrder="3">/../../packs/ATSAML10E16A_DFP/component/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">A65FD4F77B5FCF179C45F096E6F56A6A</GeneratedChecksum>
-          <UserChecksum dnOrder="5">A65FD4F77B5FCF179C45F096E6F56A6A</UserChecksum>
+          <GeneratedChecksum dnOrder="4">089311B9467BD3D85A323EB027F392A0</GeneratedChecksum>
+          <UserChecksum dnOrder="5">089311B9467BD3D85A323EB027F392A0</UserChecksum>
         </File>
       </Files>
       <Settings dnOrder="1">
         <Setting append="true" category="C32" delimiter=";" dnOrder="0" key="extra-include-directories" value="../src;../src/config/sam_l10_xpro;../src/packs/ATSAML10E16A_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/arm"/>
         <Setting category="C32-LD" dnOrder="1" key="heap-size" value="512"/>
         <Setting category="C32-LD" dnOrder="2" key="no-device-startup-code" value="true"/>
-        <Setting category="C32-LD" dnOrder="3" key="preprocessor-macros" value=""/>
+        <Setting append="true" category="C32-LD" delimiter=";" dnOrder="3" key="preprocessor-macros" value=""/>
+        <Setting append="true" category="C32-LD" delimiter=";" dnOrder="4" key="preprocessor-macros" value="SECURE"/>
       </Settings>
     </Manifest>
     <Settings dnOrder="4">
       <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.6.0"/>
-      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAML10_DFP\3.0.39\atdf\ATSAML10E16A.atdf"/>
+      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAML10_DFP\3.1.55\atdf\ATSAML10E16A.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
       <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
-      <Setting dnOrder="5" key="PackageFilter" value="csp;"/>
+      <Setting dnOrder="5" key="PackageFilter" value="bootloader;bsp;core;cryptoauthlib;csp;"/>
     </Settings>
   </Configurator>
 </Configuration>
