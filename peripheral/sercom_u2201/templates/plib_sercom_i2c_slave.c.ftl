@@ -216,7 +216,7 @@ void ${SERCOM_INSTANCE_NAME}_I2C_AckActionSet(SERCOM_I2C_SLAVE_ACK_ACTION_SEND a
     }
 }
 <#else>
-void ${SERCOM_INSTANCE_NAME}_I2C_SendCommand(SERCOM_I2C_SLAVE_COMMAND command)
+void ${SERCOM_INSTANCE_NAME}_I2C_CommandSet(SERCOM_I2C_SLAVE_COMMAND command)
 {
     if (command == SERCOM_I2C_SLAVE_COMMAND_SEND_ACK)
     {
@@ -307,11 +307,11 @@ void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
             {
                 if (${SERCOM_INSTANCE_NAME?lower_case}I2CSObj.callback(SERCOM_I2C_SLAVE_TRANSFER_EVENT_ADDR_MATCH, ${SERCOM_INSTANCE_NAME?lower_case}I2CSObj.context) == true)
                 {
-                    ${SERCOM_INSTANCE_NAME}_I2C_SendCommand(SERCOM_I2C_SLAVE_COMMAND_SEND_ACK);
+                    ${SERCOM_INSTANCE_NAME}_I2C_CommandSet(SERCOM_I2C_SLAVE_COMMAND_SEND_ACK);
                 }
                 else
                 {
-                    ${SERCOM_INSTANCE_NAME}_I2C_SendCommand(SERCOM_I2C_SLAVE_COMMAND_SEND_NAK);
+                    ${SERCOM_INSTANCE_NAME}_I2C_CommandSet(SERCOM_I2C_SLAVE_COMMAND_SEND_NAK);
                 }
             }
         }
@@ -323,11 +323,11 @@ void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
                 {
                     if (${SERCOM_INSTANCE_NAME?lower_case}I2CSObj.callback(SERCOM_I2C_SLAVE_TRANSFER_EVENT_RX_READY, ${SERCOM_INSTANCE_NAME?lower_case}I2CSObj.context) == true)
                     {
-                        ${SERCOM_INSTANCE_NAME}_I2C_SendCommand(SERCOM_I2C_SLAVE_COMMAND_SEND_ACK);
+                        ${SERCOM_INSTANCE_NAME}_I2C_CommandSet(SERCOM_I2C_SLAVE_COMMAND_SEND_ACK);
                     }
                     else
                     {
-                        ${SERCOM_INSTANCE_NAME}_I2C_SendCommand(SERCOM_I2C_SLAVE_COMMAND_SEND_NAK);
+                        ${SERCOM_INSTANCE_NAME}_I2C_CommandSet(SERCOM_I2C_SLAVE_COMMAND_SEND_NAK);
                     }
                 }
                 else
@@ -336,11 +336,11 @@ void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
                     {
                         ${SERCOM_INSTANCE_NAME?lower_case}I2CSObj.callback(SERCOM_I2C_SLAVE_TRANSFER_EVENT_TX_READY, ${SERCOM_INSTANCE_NAME?lower_case}I2CSObj.context);
                         ${SERCOM_INSTANCE_NAME?lower_case}I2CSObj.isFirstRxAfterAddressPending = false;
-                        ${SERCOM_INSTANCE_NAME}_I2C_SendCommand(SERCOM_I2C_SLAVE_COMMAND_RECEIVE_ACK_NAK);
+                        ${SERCOM_INSTANCE_NAME}_I2C_CommandSet(SERCOM_I2C_SLAVE_COMMAND_RECEIVE_ACK_NAK);
                     }
                     else
                     {
-                        ${SERCOM_INSTANCE_NAME}_I2C_SendCommand(SERCOM_I2C_SLAVE_COMMAND_WAIT_FOR_START);
+                        ${SERCOM_INSTANCE_NAME}_I2C_CommandSet(SERCOM_I2C_SLAVE_COMMAND_WAIT_FOR_START);
                     }
                 }
             }
