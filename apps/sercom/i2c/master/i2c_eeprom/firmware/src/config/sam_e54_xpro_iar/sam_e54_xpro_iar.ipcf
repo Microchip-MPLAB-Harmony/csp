@@ -24,8 +24,8 @@
         <group name="Header Files" relRoot="$PROJ_DIR$\..\..\firmware\src\config\sam_e54_xpro_iar">
             <path>\peripheral\nvmctrl\plib_nvmctrl.h</path>
             <path>\peripheral\evsys\plib_evsys.h</path>
-            <path>\peripheral\sercom\i2cm\plib_sercom_i2c_master.h</path>
-            <path>\peripheral\sercom\i2cm\plib_sercom7_i2c.h</path>
+            <path>\peripheral\sercom\i2c_master\plib_sercom_i2c_master_common.h</path>
+            <path>\peripheral\sercom\i2c_master\plib_sercom7_i2c_master.h</path>
             <path>\device_cache.h</path>
             <path>\toolchain_specifics.h</path>
             <path>\definitions.h</path>
@@ -88,7 +88,7 @@
         <group name="Source Files" relRoot="$PROJ_DIR$\..\..\firmware\src\config\sam_e54_xpro_iar">
             <path>\peripheral\nvmctrl\plib_nvmctrl.c</path>
             <path>\peripheral\evsys\plib_evsys.c</path>
-            <path>\peripheral\sercom\i2cm\plib_sercom7_i2c.c</path>
+            <path>\peripheral\sercom\i2c_master\plib_sercom7_i2c_master.c</path>
             <path>\..\..\main_e54.c</path>
             <path>\initialization.c</path>
             <path>\interrupts.c</path>

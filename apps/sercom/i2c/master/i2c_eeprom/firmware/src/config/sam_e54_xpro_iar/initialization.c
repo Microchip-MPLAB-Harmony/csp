@@ -104,6 +104,8 @@ void SYS_Initialize ( void* data )
     CLOCK_Initialize();
 
 
+
+
     EVSYS_Initialize();
 
     SERCOM7_I2C_Initialize();

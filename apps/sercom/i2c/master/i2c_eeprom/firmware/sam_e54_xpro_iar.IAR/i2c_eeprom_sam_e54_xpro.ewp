@@ -66,7 +66,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>8.32.2.19370</state>
+                    <state>8.40.2.22864</state>
                 </option>
                 <option>
                     <name>GeneralEnableMisra</name>
@@ -697,7 +697,7 @@
             <name>ILINK</name>
             <archiveVersion>0</archiveVersion>
             <data>
-                <version>22</version>
+                <version>23</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -1016,6 +1016,22 @@
                 <option>
                     <name>OILinkExtraOption</name>
                     <state>1</state>
+                </option>
+                <option>
+                    <name>IlinkRawBinaryFile2</name>
+                    <state></state>
+                </option>
+                <option>
+                    <name>IlinkRawBinarySymbol2</name>
+                    <state></state>
+                </option>
+                <option>
+                    <name>IlinkRawBinarySegment2</name>
+                    <state></state>
+                </option>
+                <option>
+                    <name>IlinkRawBinaryAlign2</name>
+                    <state></state>
                 </option>
             </data>
         </settings>
@@ -1742,7 +1758,7 @@
             <name>ILINK</name>
             <archiveVersion>0</archiveVersion>
             <data>
-                <version>22</version>
+                <version>23</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>0</debug>
                 <option>
@@ -2062,6 +2078,22 @@
                     <name>OILinkExtraOption</name>
                     <state>1</state>
                 </option>
+                <option>
+                    <name>IlinkRawBinaryFile2</name>
+                    <state></state>
+                </option>
+                <option>
+                    <name>IlinkRawBinarySymbol2</name>
+                    <state></state>
+                </option>
+                <option>
+                    <name>IlinkRawBinarySegment2</name>
+                    <state></state>
+                </option>
+                <option>
+                    <name>IlinkRawBinaryAlign2</name>
+                    <state></state>
+                </option>
             </data>
         </settings>
         <settings>
@@ -2225,10 +2257,10 @@
                 <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\peripheral\port\plib_port.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\peripheral\sercom\i2cm\plib_sercom7_i2c.h</name>
+                <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\peripheral\sercom\i2c_master\plib_sercom7_i2c_master.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\peripheral\sercom\i2cm\plib_sercom_i2c_master.h</name>
+                <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\peripheral\sercom\i2c_master\plib_sercom_i2c_master_common.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\pm.h</name>
@@ -2318,7 +2350,7 @@
                 <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\peripheral\port\plib_port.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\peripheral\sercom\i2cm\plib_sercom7_i2c.c</name>
+                <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\peripheral\sercom\i2c_master\plib_sercom7_i2c_master.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\startup_iar.c</name>
