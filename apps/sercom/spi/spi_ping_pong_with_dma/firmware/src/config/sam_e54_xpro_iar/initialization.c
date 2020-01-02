@@ -104,6 +104,8 @@ void SYS_Initialize ( void* data )
     CLOCK_Initialize();
 
 
+
+
     SERCOM6_SPI_Initialize();
 
     DMAC_Initialize();

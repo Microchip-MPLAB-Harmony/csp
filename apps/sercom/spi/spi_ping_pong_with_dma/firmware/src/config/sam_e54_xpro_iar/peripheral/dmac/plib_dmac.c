@@ -179,7 +179,8 @@ bool DMAC_ChannelTransfer( DMAC_CHANNEL channel, const void *srcAddr, const void
         DMAC_REGS->CHANNEL[channel].DMAC_CHCTRLA |= DMAC_CHCTRLA_ENABLE_Msk;
 
         /* Verify if Trigger source is Software Trigger */
-        if ( ((DMAC_REGS->CHANNEL[channel].DMAC_CHCTRLA & DMAC_CHCTRLA_TRIGSRC_Msk) >> DMAC_CHCTRLA_TRIGSRC_Pos) == 0x00)
+        if ((((DMAC_REGS->CHANNEL[channel].DMAC_CHCTRLA & DMAC_CHCTRLA_TRIGSRC_Msk) >> DMAC_CHCTRLA_TRIGSRC_Pos) == 0x00)
+                                                && (((DMAC_REGS->CHANNEL[channel].DMAC_CHEVCTRL & DMAC_CHEVCTRL_EVIE_Msk)) != DMAC_CHEVCTRL_EVIE_Msk))
         {
             /* Trigger the DMA transfer */
             DMAC_REGS->DMAC_SWTRIGCTRL |= (1 << channel);
@@ -208,8 +209,15 @@ void DMAC_ChannelDisable ( DMAC_CHANNEL channel )
     /* Disable the DMA channel */
     DMAC_REGS->CHANNEL[channel].DMAC_CHCTRLA &= (~DMAC_CHCTRLA_ENABLE_Pos);
 
+    while((DMAC_REGS->CHANNEL[channel].DMAC_CHCTRLA & DMAC_CHCTRLA_ENABLE_Msk) != 0);
+
     dmacChannelObj[channel].busyStatus=false;
 
+}
+
+uint16_t DMAC_ChannelGetTransferredCount( DMAC_CHANNEL channel )
+{
+    return(descriptor_section[channel].DMAC_BTCNT - _write_back_section[channel].DMAC_BTCNT);
 }
 
 /*******************************************************************************
