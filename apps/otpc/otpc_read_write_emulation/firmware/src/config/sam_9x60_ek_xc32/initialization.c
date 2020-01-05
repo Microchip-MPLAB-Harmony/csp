@@ -101,6 +101,8 @@ void SYS_Initialize ( void* data )
 
 	PIO_Initialize();
 
+
+
     OTPC_Initialize();
     MMU_Initialize();
 
