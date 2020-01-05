@@ -2557,9 +2557,6 @@
                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\cstartup.s</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\exceptions.c</name>
-            </file>
-            <file>
                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\stdio\iar_monitor.c</name>
             </file>
             <file>
