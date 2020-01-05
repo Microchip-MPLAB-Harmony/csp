@@ -86,6 +86,7 @@
 <#if CAN_INTERRUPT_MODE == true>
 static CAN_OBJ ${CAN_INSTANCE_NAME?lower_case}Obj;
 static CAN_RX_MSG ${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_NUM_OF_FIFO][CAN_FIFO_MESSAGE_BUFFER_MAX];
+static CAN_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}CallbackObj[CAN_NUM_OF_FIFO];
 </#if>
 static CAN_TX_RX_MSG_BUFFER __attribute__((coherent, aligned(32))) can_message_buffer[CAN_MESSAGE_RAM_CONFIG_SIZE];
 
@@ -171,7 +172,6 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
 
     /* Initialize the CAN PLib Object */
     memset((void *)${CAN_INSTANCE_NAME?lower_case}RxMsg, 0x00, sizeof(${CAN_INSTANCE_NAME?lower_case}RxMsg));
-    ${CAN_INSTANCE_NAME?lower_case}Obj.state = CAN_STATE_IDLE;
 
 </#if>
     /* Switch the CAN module to CAN_OPERATION_MODE. Wait until the switch is complete */
@@ -252,7 +252,6 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* 
         }
 
 <#if CAN_INTERRUPT_MODE == true>
-        ${CAN_INSTANCE_NAME?lower_case}Obj.state = CAN_STATE_TRANSFER_TRANSMIT;
         *(volatile uint32_t *)(&C${CAN_INSTANCE_NUM}FIFOINT0SET + (fifoNum * CAN_FIFO_OFFSET)) = _C${CAN_INSTANCE_NUM}FIFOINT0_TXEMPTYIE_MASK;
 
 </#if>
@@ -346,7 +345,6 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
 </#if>
 <#if CAN_INTERRUPT_MODE == true>
     msgIndex = (uint8_t)(*(volatile uint32_t *)(&C${CAN_INSTANCE_NUM}FIFOCI0 + (fifoNum * CAN_FIFO_OFFSET)) & _C${CAN_INSTANCE_NUM}FIFOCI0_CFIFOCI_MASK);
-    ${CAN_INSTANCE_NAME?lower_case}Obj.state = CAN_STATE_TRANSFER_RECEIVE;
     ${CAN_INSTANCE_NAME?lower_case}RxMsg[fifoNum][msgIndex].id = id;
     ${CAN_INSTANCE_NAME?lower_case}RxMsg[fifoNum][msgIndex].buffer = data;
     ${CAN_INSTANCE_NAME?lower_case}RxMsg[fifoNum][msgIndex].size = length;
@@ -623,36 +621,7 @@ bool ${CAN_INSTANCE_NAME}_InterruptGet(uint8_t fifoNum, CAN_FIFO_INTERRUPT_FLAG_
 <#if CAN_INTERRUPT_MODE == true>
 // *****************************************************************************
 /* Function:
-    bool ${CAN_INSTANCE_NAME}_IsBusy(void)
-
-   Summary:
-    Returns the Peripheral busy status.
-
-   Precondition:
-    ${CAN_INSTANCE_NAME}_Initialize must have been called for the associated CAN instance.
-
-   Parameters:
-    None.
-
-   Returns:
-    true - Busy.
-    false - Not busy.
-*/
-bool ${CAN_INSTANCE_NAME}_IsBusy(void)
-{
-    if (${CAN_INSTANCE_NAME?lower_case}Obj.state == CAN_STATE_IDLE)
-    {
-        return false;
-    }
-    else
-    {
-        return true;
-    }
-}
-
-// *****************************************************************************
-/* Function:
-    void ${CAN_INSTANCE_NAME}_CallbackRegister(CAN_CALLBACK callback, uintptr_t contextHandle)
+    void ${CAN_INSTANCE_NAME}_CallbackRegister(CAN_CALLBACK callback, uintptr_t contextHandle, uint8_t fifoNum)
 
    Summary:
     Sets the pointer to the function (and it's context) to be called when the
@@ -665,21 +634,23 @@ bool ${CAN_INSTANCE_NAME}_IsBusy(void)
     callback - A pointer to a function with a calling signature defined
     by the CAN_CALLBACK data type.
 
+    fifoNum - Tx/Rx FIFO number
+
     context - A value (usually a pointer) passed (unused) into the function
     identified by the callback parameter.
 
    Returns:
     None.
 */
-void ${CAN_INSTANCE_NAME}_CallbackRegister(CAN_CALLBACK callback, uintptr_t contextHandle)
+void ${CAN_INSTANCE_NAME}_CallbackRegister(CAN_CALLBACK callback, uintptr_t contextHandle, uint8_t fifoNum)
 {
     if (callback == NULL)
     {
         return;
     }
 
-    ${CAN_INSTANCE_NAME?lower_case}Obj.callback = callback;
-    ${CAN_INSTANCE_NAME?lower_case}Obj.context = contextHandle;
+    ${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoNum].callback = callback;
+    ${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoNum].context = contextHandle;
 }
 
 // *****************************************************************************
@@ -733,12 +704,14 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
                                                           (errorStatus & _C${CAN_INSTANCE_NUM}TREC_TXBP_MASK) |
                                                           (errorStatus & _C${CAN_INSTANCE_NUM}TREC_TXBO_MASK));
 
-        ${CAN_INSTANCE_NAME?lower_case}Obj.state = CAN_STATE_ERROR;
-        /* Client must call ${CAN_INSTANCE_NAME}_ErrorGet function to get errors */
-        if (${CAN_INSTANCE_NAME?lower_case}Obj.callback != NULL)
+        fifoNum = (uint8_t)C${CAN_INSTANCE_NUM}VEC & _C${CAN_INSTANCE_NUM}VEC_ICODE_MASK;
+        if (fifoNum < CAN_NUM_OF_FIFO)
         {
-            ${CAN_INSTANCE_NAME?lower_case}Obj.callback(${CAN_INSTANCE_NAME?lower_case}Obj.context);
-            ${CAN_INSTANCE_NAME?lower_case}Obj.state = CAN_STATE_IDLE;
+            /* Client must call ${CAN_INSTANCE_NAME}_ErrorGet function to get errors */
+            if (${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoNum].callback != NULL)
+            {
+                ${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoNum].callback(${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoNum].context);
+            }
         }
     }
     else
@@ -787,14 +760,9 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
                 }
             }
             C${CAN_INSTANCE_NUM}INTCLR = _C${CAN_INSTANCE_NUM}INT_RBIF_MASK | _C${CAN_INSTANCE_NUM}INT_RBIE_MASK;
-            ${CAN_INSTANCE_NAME?lower_case}Obj.state = CAN_STATE_TRANSFER_DONE;
-            if (${CAN_INSTANCE_NAME?lower_case}Obj.state == CAN_STATE_TRANSFER_DONE)
+            if (${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoNum].callback != NULL)
             {
-                if (${CAN_INSTANCE_NAME?lower_case}Obj.callback != NULL)
-                {
-                    ${CAN_INSTANCE_NAME?lower_case}Obj.callback(${CAN_INSTANCE_NAME?lower_case}Obj.context);
-                    ${CAN_INSTANCE_NAME?lower_case}Obj.state = CAN_STATE_IDLE;
-                }
+                ${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoNum].callback(${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoNum].context);
             }
         }
         if (C${CAN_INSTANCE_NUM}INT & _C${CAN_INSTANCE_NUM}INT_TBIF_MASK)
@@ -806,14 +774,9 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
             }
             ${CAN_IFS_REG}CLR = _${CAN_IFS_REG}_CAN${CAN_INSTANCE_NUM}IF_MASK;
             C${CAN_INSTANCE_NUM}INTCLR = _C${CAN_INSTANCE_NUM}INT_TBIF_MASK | _C${CAN_INSTANCE_NUM}INT_TBIE_MASK;
-            ${CAN_INSTANCE_NAME?lower_case}Obj.state = CAN_STATE_TRANSFER_DONE;
-            if (${CAN_INSTANCE_NAME?lower_case}Obj.state == CAN_STATE_TRANSFER_DONE)
+            if (${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoNum].callback != NULL)
             {
-                if (${CAN_INSTANCE_NAME?lower_case}Obj.callback != NULL)
-                {
-                    ${CAN_INSTANCE_NAME?lower_case}Obj.callback(${CAN_INSTANCE_NAME?lower_case}Obj.context);
-                    ${CAN_INSTANCE_NAME?lower_case}Obj.state = CAN_STATE_IDLE;
-                }
+                ${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoNum].callback(${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoNum].context);
             }
         }
     }
