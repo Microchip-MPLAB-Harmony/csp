@@ -3,113 +3,112 @@
   <Components>
     <UniqueComponent dnOrder="0" id="can1">
       <Symbols dnOrder="0">
-        <Comment dnOrder="0" id="CAN_CORE_CLOCK_INVALID_DATA_BITRAT_COMMENT">
+        <Integer dnOrder="0" id="CAN_CORE_CLOCK_FREQ">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="can1" value="80250000"/>
+          </Values>
+        </Integer>
+        <Comment dnOrder="1" id="CAN_CORE_CLOCK_INVALID_DATA_BITRAT_COMMENT">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="text">
               <Value dnOrder="0">Warning!!!&amp;#160;CAN1&amp;#160;Clock&amp;#160;Frequency&amp;#160;is&amp;#160;too&amp;#160;high&amp;#160;for&amp;#160;required&amp;#160;Data&amp;#160;Bit&amp;#160;Timing</Value>
             </String>
-            <Boolean dnOrder="1" id="visible">
-              <Value dnOrder="0">false</Value>
-            </Boolean>
           </Attributes>
         </Comment>
-        <Boolean dnOrder="1" id="CAN_INTERRUPT_MODE">
+        <Boolean dnOrder="2" id="CAN_INTERRUPT_MODE">
           <Values dnOrder="0">
             <User dnOrder="0" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="2" id="CAN_TIMESTAMP_ENABLE">
+        <Boolean dnOrder="3" id="CAN_TIMESTAMP_ENABLE">
           <Values dnOrder="0">
             <User dnOrder="0" value="true"/>
           </Values>
         </Boolean>
-        <KeyValueSet dnOrder="3" id="CAN_TIMESTAMP_EOF">
+        <KeyValueSet dnOrder="4" id="CAN_TIMESTAMP_EOF">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </KeyValueSet>
-        <Integer dnOrder="4" id="CAN_TIMESTAMP_PRESCALER">
+        <Integer dnOrder="5" id="CAN_TIMESTAMP_PRESCALER">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </Integer>
-        <KeyValueSet dnOrder="5" id="CAN_TIMESTAMP_TSRES">
+        <KeyValueSet dnOrder="6" id="CAN_TIMESTAMP_TSRES">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </KeyValueSet>
-        <Comment dnOrder="6" id="CAN_TIME_QUANTA_INVALID_DATA_BITRATE_COMMENT">
+        <Comment dnOrder="7" id="CAN_TIME_QUANTA_INVALID_DATA_BITRATE_COMMENT">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="text">
               <Value dnOrder="0">Warning!!!&amp;#160;Number&amp;#160;of&amp;#160;Time&amp;#160;Quanta&amp;#160;is&amp;#160;too&amp;#160;high&amp;#160;for&amp;#160;required&amp;#160;Data&amp;#160;Bit&amp;#160;Timing</Value>
             </String>
-            <Boolean dnOrder="1" id="visible">
-              <Value dnOrder="0">false</Value>
-            </Boolean>
           </Attributes>
         </Comment>
-        <Integer dnOrder="7" id="DATA_BITRATE">
+        <Integer dnOrder="8" id="DATA_BITRATE">
           <Values dnOrder="0">
             <User dnOrder="0" value="2000"/>
           </Values>
         </Integer>
-        <Integer dnOrder="8" id="DBT_BRP">
+        <Integer dnOrder="9" id="DBT_BRP">
           <Values dnOrder="0">
             <User dnOrder="0" value="1"/>
           </Values>
         </Integer>
-        <Integer dnOrder="9" id="DBT_SJW">
+        <Integer dnOrder="10" id="DBT_SJW">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="can1" value="4"/>
           </Values>
         </Integer>
-        <Integer dnOrder="10" id="DBT_TSEG1">
+        <Integer dnOrder="11" id="DBT_TSEG1">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="can1" value="13"/>
           </Values>
         </Integer>
-        <Integer dnOrder="11" id="DBT_TSEG2">
+        <Integer dnOrder="12" id="DBT_TSEG2">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="can1" value="4"/>
           </Values>
         </Integer>
-        <String dnOrder="12" id="FIFO_OFFSET">
+        <String dnOrder="13" id="FIFO_OFFSET">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="can1" value="0xc"/>
           </Values>
         </String>
-        <String dnOrder="13" id="FILTER_OBJ_MASK_OFFSET">
+        <String dnOrder="14" id="FILTER_OBJ_MASK_OFFSET">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="can1" value="0x8"/>
           </Values>
         </String>
-        <String dnOrder="14" id="FILTER_OFFSET">
+        <String dnOrder="15" id="FILTER_OFFSET">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="can1" value="0x4"/>
           </Values>
         </String>
-        <Integer dnOrder="15" id="NBT_BRP">
+        <Integer dnOrder="16" id="NBT_BRP">
           <Values dnOrder="0">
             <User dnOrder="0" value="7"/>
           </Values>
         </Integer>
-        <Integer dnOrder="16" id="NBT_SJW">
+        <Integer dnOrder="17" id="NBT_SJW">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="can1" value="4"/>
           </Values>
         </Integer>
-        <Integer dnOrder="17" id="NBT_TSEG1">
+        <Integer dnOrder="18" id="NBT_TSEG1">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="can1" value="13"/>
           </Values>
         </Integer>
-        <Integer dnOrder="18" id="NBT_TSEG2">
+        <Integer dnOrder="19" id="NBT_TSEG2">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="can1" value="4"/>
           </Values>
