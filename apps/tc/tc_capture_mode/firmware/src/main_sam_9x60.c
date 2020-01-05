@@ -58,7 +58,7 @@ float duty;
 /* Calculated frequency of the input waveform in Hz*/
 float frequency;
 
-bool one_sec_delay_timer_fired = false;
+volatile bool one_sec_delay_timer_fired = false;
 void timer0_channel1_callback(TC_TIMER_STATUS status, uintptr_t context)
 {
   if( status == TC_TIMER_PERIOD_MATCH)
