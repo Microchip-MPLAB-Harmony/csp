@@ -43,8 +43,8 @@
           <Name dnOrder="1">plib_can1.c</Name>
           <LogicalPath dnOrder="2">config/pic32mx_eth_sk2/peripheral/can/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/can/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">641066AC6401FB1A0FFFB72D9C7944A1</GeneratedChecksum>
-          <UserChecksum dnOrder="5">641066AC6401FB1A0FFFB72D9C7944A1</UserChecksum>
+          <GeneratedChecksum dnOrder="4">34982E8B683D608EF1AC7B4C21790329</GeneratedChecksum>
+          <UserChecksum dnOrder="5">34982E8B683D608EF1AC7B4C21790329</UserChecksum>
         </File>
         <File dnOrder="5">
           <Type dnOrder="0">SOURCE</Type>
@@ -99,16 +99,16 @@
           <Name dnOrder="1">plib_can1.h</Name>
           <LogicalPath dnOrder="2">config/pic32mx_eth_sk2/peripheral/can/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/can/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">07A786FCC4B6CEF2CD5A5A2A055772A6</GeneratedChecksum>
-          <UserChecksum dnOrder="5">07A786FCC4B6CEF2CD5A5A2A055772A6</UserChecksum>
+          <GeneratedChecksum dnOrder="4">7952B4EF07792B426E9EF18FA159DF08</GeneratedChecksum>
+          <UserChecksum dnOrder="5">7952B4EF07792B426E9EF18FA159DF08</UserChecksum>
         </File>
         <File dnOrder="12">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_can_common.h</Name>
           <LogicalPath dnOrder="2">config/pic32mx_eth_sk2/peripheral/can/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/can/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">8BB6FCFEED4B5E7634CBDF11DEE9A6DB</GeneratedChecksum>
-          <UserChecksum dnOrder="5">8BB6FCFEED4B5E7634CBDF11DEE9A6DB</UserChecksum>
+          <GeneratedChecksum dnOrder="4">17919696C67053CCF135C207239152FF</GeneratedChecksum>
+          <UserChecksum dnOrder="5">17919696C67053CCF135C207239152FF</UserChecksum>
         </File>
         <File dnOrder="13">
           <Type dnOrder="0">HEADER</Type>
@@ -156,7 +156,7 @@
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
       <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
-      <Setting dnOrder="5" key="PackageFilter" value="bsp;core;csp;expresslogic_threadx;net;usb;"/>
+      <Setting dnOrder="5" key="PackageFilter" value="bsp;core;csp;expresslogic_threadx;net;"/>
     </Settings>
   </Configurator>
 </Configuration>
