@@ -91,6 +91,7 @@
 
 static CAN_OBJ can1Obj;
 static CAN_RX_MSG can1RxMsg[CAN_NUM_OF_FIFO][CAN_FIFO_MESSAGE_BUFFER_MAX];
+static CAN_CALLBACK_OBJ can1CallbackObj[CAN_NUM_OF_FIFO + 1];
 static uint8_t __attribute__((coherent, aligned(16))) can_message_buffer[CAN_MESSAGE_RAM_CONFIG_SIZE];
 static const uint8_t dlcToLength[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 12, 16, 20, 24, 32, 48, 64};
 
@@ -211,7 +212,6 @@ void CAN1_Initialize(void)
 
     /* Initialize the CAN PLib Object */
     memset((void *)can1RxMsg, 0x00, sizeof(can1RxMsg));
-    can1Obj.state = CAN_STATE_IDLE;
 
     /* Switch the CAN module to CAN_OPERATION_MODE. Wait until the switch is complete */
     CFD1CON = (CFD1CON & ~_CFD1CON_REQOP_MASK) | ((CAN_OPERATION_MODE << _CFD1CON_REQOP_POSITION) & _CFD1CON_REQOP_MASK);
@@ -311,7 +311,6 @@ bool CAN1_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, uint8_t fi
 
         if (fifoQueueNum == 0)
         {
-            can1Obj.state = CAN_STATE_TRANSFER_TRANSMIT;
             CFD1TXQCON |= _CFD1TXQCON_TXQEIE_MASK;
 
             /* Request the transmit */
@@ -320,7 +319,6 @@ bool CAN1_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, uint8_t fi
         }
         else
         {
-            can1Obj.state = CAN_STATE_TRANSFER_TRANSMIT;
             *(volatile uint32_t *)(&CFD1FIFOCON1 + ((fifoQueueNum - 1) * CAN_FIFO_OFFSET)) |= _CFD1FIFOCON1_TFERFFIE_MASK;
 
             /* Request the transmit */
@@ -365,7 +363,6 @@ bool CAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint32_t 
     }
 
     msgIndex = (uint8_t)((*(volatile uint32_t *)(&CFD1FIFOSTA1 + ((fifoNum - 1) * CAN_FIFO_OFFSET)) & _CFD1FIFOSTA1_FIFOCI_MASK) >> 8);
-    can1Obj.state = CAN_STATE_TRANSFER_RECEIVE;
     can1RxMsg[fifoNum-1][msgIndex].id = id;
     can1RxMsg[fifoNum-1][msgIndex].buffer = data;
     can1RxMsg[fifoNum-1][msgIndex].size = length;
@@ -685,36 +682,7 @@ bool CAN1_InterruptGet(uint8_t fifoQueueNum, CAN_FIFO_INTERRUPT_FLAG_MASK fifoIn
 
 // *****************************************************************************
 /* Function:
-    bool CAN1_IsBusy(void)
-
-   Summary:
-    Returns the Peripheral busy status.
-
-   Precondition:
-    CAN1_Initialize must have been called for the associated CAN instance.
-
-   Parameters:
-    None.
-
-   Returns:
-    true - Busy.
-    false - Not busy.
-*/
-bool CAN1_IsBusy(void)
-{
-    if (can1Obj.state == CAN_STATE_IDLE)
-    {
-        return false;
-    }
-    else
-    {
-        return true;
-    }
-}
-
-// *****************************************************************************
-/* Function:
-    void CAN1_CallbackRegister(CAN_CALLBACK callback, uintptr_t contextHandle)
+    void CAN1_CallbackRegister(CAN_CALLBACK callback, uintptr_t contextHandle, uint8_t fifoQueueNum)
 
    Summary:
     Sets the pointer to the function (and it's context) to be called when the
@@ -726,6 +694,7 @@ bool CAN1_IsBusy(void)
    Parameters:
     callback - A pointer to a function with a calling signature defined
     by the CAN_CALLBACK data type.
+    fifoQueueNum - Tx Queue or Tx/Rx FIFO number
 
     context - A value (usually a pointer) passed (unused) into the function
     identified by the callback parameter.
@@ -733,15 +702,15 @@ bool CAN1_IsBusy(void)
    Returns:
     None.
 */
-void CAN1_CallbackRegister(CAN_CALLBACK callback, uintptr_t contextHandle)
+void CAN1_CallbackRegister(CAN_CALLBACK callback, uintptr_t contextHandle, uint8_t fifoQueueNum)
 {
     if (callback == NULL)
     {
         return;
     }
 
-    can1Obj.callback = callback;
-    can1Obj.context = contextHandle;
+    can1CallbackObj[fifoQueueNum].callback = callback;
+    can1CallbackObj[fifoQueueNum].context = contextHandle;
 }
 
 // *****************************************************************************
@@ -796,12 +765,14 @@ void CAN1_InterruptHandler(void)
                                                           (errorStatus & _CFD1TREC_TXBP_MASK) |
                                                           (errorStatus & _CFD1TREC_TXBO_MASK));
 
-        can1Obj.state = CAN_STATE_ERROR;
-        /* Client must call CAN1_ErrorGet function to get errors */
-        if (can1Obj.callback != NULL)
+        fifoNum = (uint8_t)CFD1VEC & _CFD1VEC_ICODE_MASK;
+        if (fifoNum <= CAN_NUM_OF_FIFO)
         {
-            can1Obj.callback(can1Obj.context);
-            can1Obj.state = CAN_STATE_IDLE;
+            /* Client must call CAN1_ErrorGet function to get errors */
+            if (can1CallbackObj[fifoNum].callback != NULL)
+            {
+                can1CallbackObj[fifoNum].callback(can1CallbackObj[fifoNum].context);
+            }
         }
     }
     else
@@ -850,14 +821,9 @@ void CAN1_InterruptHandler(void)
                 }
             }
             CFD1INT &= ~_CFD1INT_RXIE_MASK;
-            can1Obj.state = CAN_STATE_TRANSFER_DONE;
-            if (can1Obj.state == CAN_STATE_TRANSFER_DONE)
+            if (can1CallbackObj[fifoNum].callback != NULL)
             {
-                if (can1Obj.callback != NULL)
-                {
-                    can1Obj.callback(can1Obj.context);
-                    can1Obj.state = CAN_STATE_IDLE;
-                }
+                can1CallbackObj[fifoNum].callback(can1CallbackObj[fifoNum].context);
             }
         }
         if (CFD1INT & _CFD1INT_TXIF_MASK)
@@ -876,14 +842,9 @@ void CAN1_InterruptHandler(void)
             }
             IFS5CLR = _IFS5_CAN1IF_MASK;
             CFD1INT &= ~_CFD1INT_TXIE_MASK;
-            can1Obj.state = CAN_STATE_TRANSFER_DONE;
-            if (can1Obj.state == CAN_STATE_TRANSFER_DONE)
+            if (can1CallbackObj[fifoNum].callback != NULL)
             {
-                if (can1Obj.callback != NULL)
-                {
-                    can1Obj.callback(can1Obj.context);
-                    can1Obj.state = CAN_STATE_IDLE;
-                }
+                can1CallbackObj[fifoNum].callback(can1CallbackObj[fifoNum].context);
             }
         }
     }
