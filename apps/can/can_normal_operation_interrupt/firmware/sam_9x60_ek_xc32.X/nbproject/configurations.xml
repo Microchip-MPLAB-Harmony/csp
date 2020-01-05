@@ -130,7 +130,6 @@
           </logicalFolder>
           <itemPath>../src/config/sam_9x60_ek_xc32/initialization.c</itemPath>
           <itemPath>../src/config/sam_9x60_ek_xc32/interrupts.c</itemPath>
-          <itemPath>../src/config/sam_9x60_ek_xc32/exceptions.c</itemPath>
           <itemPath>../src/config/sam_9x60_ek_xc32/cstartup.S</itemPath>
           <itemPath>../src/config/sam_9x60_ek_xc32/vectortrap.s</itemPath>
         </logicalFolder>

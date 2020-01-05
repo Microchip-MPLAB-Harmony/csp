@@ -176,7 +176,7 @@ int main ( void )
             {
                 case '1': 
                     printf(" Transmitting Message:");
-                    CAN1_CallbackRegister( APP_CAN_Callback, (uintptr_t)APP_STATE_CAN_TRANSMIT );
+                    CAN1_TxCallbackRegister( APP_CAN_Callback, (uintptr_t)APP_STATE_CAN_TRANSMIT, CAN_MAILBOX_DATA_FRAME_TX );
                     state = APP_STATE_CAN_IDLE;
                     if (CAN1_MessageTransmit(messageID, messageLength, message, CAN_MAILBOX_DATA_FRAME_TX) == false)
                     {
@@ -185,7 +185,7 @@ int main ( void )
                     break;
                 case '2':
                     printf(" Waiting for message: \r\n");
-                    CAN1_CallbackRegister( APP_CAN_Callback, (uintptr_t)APP_STATE_CAN_RECEIVE );
+                    CAN1_RxCallbackRegister( APP_CAN_Callback, (uintptr_t)APP_STATE_CAN_RECEIVE, CAN_MAILBOX_DATA_FRAME_RX_OVERWRITE );
                     state = APP_STATE_CAN_IDLE;
                     memset(rx_message, 0x00, sizeof(rx_message));
                     /* Receive New Message */

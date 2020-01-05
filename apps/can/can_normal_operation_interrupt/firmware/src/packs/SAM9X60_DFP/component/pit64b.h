@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-09-09T16:15:13Z */
+/* file generated from device description version 2019-12-16T13:49:13Z */
 #ifndef _SAM9X_PIT64B_COMPONENT_H_
 #define _SAM9X_PIT64B_COMPONENT_H_
 
