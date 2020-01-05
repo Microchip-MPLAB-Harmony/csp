@@ -24,12 +24,11 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
         MODULE  ?cstartup
 
         ;; Forward declaration of sections.
-        SECTION IRQ_STACK:DATA:NOROOT(2)
-        SECTION FIQ_STACK:DATA:NOROOT(2)
-        SECTION ABT_STACK:DATA:NOROOT(2)
-        SECTION UND_STACK:DATA:NOROOT(2)
-        SECTION SYS_STACK:DATA:NOROOT(2)
-        SECTION SVC_STACK:DATA:NOROOT(2)
+        SECTION IRQ_STACK:DATA:NOROOT(3)
+        SECTION FIQ_STACK:DATA:NOROOT(3)
+        SECTION ABT_STACK:DATA:NOROOT(3)
+        SECTION UND_STACK:DATA:NOROOT(3)
+        SECTION SVC_STACK:DATA:NOROOT(3)
         SECTION CSTACK:DATA:NOROOT(3)
 
 //------------------------------------------------------------------------------
@@ -268,24 +267,22 @@ __iar_program_start:
         ldr     sp, =SFE(UND_STACK)
         bic     sp, sp, #0x7
 
-        ; Set up the sys mode stack pointer
+        ; Set up the usr/sys mode stack pointer
 
         bic     r0, r0, #MODE_MSK
         orr     r0, r0, #ARM_MODE_SYS
         msr     CPSR_c, r0
-        ldr     sp, =SFE(SYS_STACK)
+        ldr     sp, =SFE(CSTACK)
         bic     sp, sp, #0x7
 
-        ; Can't set up the user mode stack here as we can't
-        ; switch out of user mode using cpsr
-
-        ; Set up the supervisor mode stack pointer
-
+        ; Set up the supervisor mode stack pointer 
         bic     r0 ,r0, #MODE_MSK
         orr     r0 ,r0, #ARM_MODE_SVC
         msr     cpsr_c, r0
         ldr     sp, =SFE(SVC_STACK)
         bic     sp, sp, #0x7
+
+        ; Stay in SVC mode for the remainder of the program execution
 
         ; Execute relocations & zero BSS
 
