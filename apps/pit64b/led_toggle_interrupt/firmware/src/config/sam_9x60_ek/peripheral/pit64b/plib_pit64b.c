@@ -131,6 +131,7 @@ void PIT64B_TimerCallbackSet(PIT64B_CALLBACK callback, uintptr_t context)
 void PIT64B_InterruptHandler(void)
 {
     uint32_t reg = PIT64B_REGS->PIT64B_ISR;
+    (void)reg;
     pit64b.tickCounter++;
     if(pit64b.callback)
         pit64b.callback(pit64b.context);

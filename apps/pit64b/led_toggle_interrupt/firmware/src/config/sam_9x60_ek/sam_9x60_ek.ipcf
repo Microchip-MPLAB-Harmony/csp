@@ -88,7 +88,6 @@
             <path>\..\..\main.c</path>
             <path>\initialization.c</path>
             <path>\interrupts.c</path>
-            <path>\exceptions.c</path>
             <path>\stdio\iar_monitor.c</path>
             <path>\peripheral\mmu\plib_mmu.c</path>
             <path>\peripheral\clk\plib_clk.c</path>
