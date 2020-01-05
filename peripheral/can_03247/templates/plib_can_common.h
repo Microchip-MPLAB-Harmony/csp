@@ -155,38 +155,6 @@ typedef enum
 } CAN_ERROR;
 
 // *****************************************************************************
-/* CAN State.
-
-   Summary:
-    CAN PLib Task State.
-
-   Description:
-    This data type defines the CAN Task State.
-
-   Remarks:
-    None.
-
-*/
-typedef enum {
-
-    /* CAN PLib Task Error State */
-    CAN_STATE_ERROR = -1,
-
-    /* CAN PLib Task Idle State */
-    CAN_STATE_IDLE,
-
-    /* CAN PLib Task Transfer Transmit State */
-    CAN_STATE_TRANSFER_TRANSMIT,
-
-    /* CAN PLib Task Transfer Receive State */
-    CAN_STATE_TRANSFER_RECEIVE,
-
-    /* CAN PLib Task Transfer Done State */
-    CAN_STATE_TRANSFER_DONE
-
-} CAN_STATE;
-
-// *****************************************************************************
 /* CAN Callback
 
    Summary:
@@ -300,6 +268,27 @@ typedef struct
 } CAN_TX_EVENT_FIFO_ELEMENT;
 
 // *****************************************************************************
+/* CAN Callback Object
+
+   Summary:
+    CAN transfer event callback structure.
+
+   Description:
+    This data structure stores transfer event callback and it's context.
+
+   Remarks:
+    None.
+*/
+typedef struct
+{
+    /* Transfer Event Callback */
+    CAN_CALLBACK callback;
+
+    /* Transfer Event Callback Context */
+    uintptr_t context;
+} CAN_CALLBACK_OBJ;
+
+// *****************************************************************************
 /* CAN PLib Instance Object
 
    Summary:
@@ -313,15 +302,6 @@ typedef struct
 */
 typedef struct
 {
-    /* Transfer State */
-    CAN_STATE state;
-
-    /* Transfer Event Callback */
-    CAN_CALLBACK callback;
-
-    /* Transfer Event Callback Context */
-    uintptr_t context;
-
     /* CAN Error Status */
     uint32_t errorStatus;
 } CAN_OBJ;

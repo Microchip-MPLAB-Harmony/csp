@@ -87,8 +87,7 @@ CAN_ERROR ${CAN_INSTANCE_NAME}_ErrorGet(void);
 void ${CAN_INSTANCE_NAME}_ErrorCountGet(uint8_t *txErrorCount, uint8_t *rxErrorCount);
 bool ${CAN_INSTANCE_NAME}_InterruptGet(uint8_t fifoQueueNum, CAN_FIFO_INTERRUPT_FLAG_MASK fifoInterruptFlagMask);
 <#if CAN_INTERRUPT_MODE == true>
-bool ${CAN_INSTANCE_NAME}_IsBusy(void);
-void ${CAN_INSTANCE_NAME}_CallbackRegister(CAN_CALLBACK callback, uintptr_t contextHandle);
+void ${CAN_INSTANCE_NAME}_CallbackRegister(CAN_CALLBACK callback, uintptr_t contextHandle, uint8_t fifoQueueNum);
 </#if>
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
