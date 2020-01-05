@@ -101,6 +101,8 @@ void SYS_Initialize ( void* data )
 
 	PIO_Initialize();
 
+
+
     QSPI_Initialize();
 
     MMU_Initialize();
