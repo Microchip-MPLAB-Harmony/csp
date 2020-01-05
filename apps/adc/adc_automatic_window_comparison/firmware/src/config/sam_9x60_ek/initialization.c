@@ -101,6 +101,8 @@ void SYS_Initialize ( void* data )
 
 	PIO_Initialize();
 
+
+
 	PIT_TimerInitialize();
 
     MMU_Initialize();
