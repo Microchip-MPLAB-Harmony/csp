@@ -155,7 +155,7 @@ int main ( void )
             {
                 while(SW1_Get() == SW1_PRESSED_STATE);
                 xferContext = APP_STATE_CAN_TRANSMIT;
-                CAN1_CallbackRegister( APP_CAN_Callback, (uintptr_t)APP_STATE_CAN_TRANSMIT );
+                CAN1_CallbackRegister( APP_CAN_Callback, (uintptr_t)APP_STATE_CAN_TRANSMIT, 0 );
                 state = APP_STATE_CAN_IDLE;
                 /* Transmit a Message */
                 CAN1_MessageTransmit(messageID, messageLength, message, 0, CAN_MSG_TX_DATA_FRAME);
@@ -165,7 +165,7 @@ int main ( void )
         {
             if (CAN1_InterruptGet(1, CAN_FIFO_INTERRUPT_RXNEMPTYIF_MASK))
             {
-                CAN1_CallbackRegister( APP_CAN_Callback, (uintptr_t)APP_STATE_CAN_RECEIVE );
+                CAN1_CallbackRegister( APP_CAN_Callback, (uintptr_t)APP_STATE_CAN_RECEIVE, 1 );
                 state = APP_STATE_CAN_IDLE;
                 memset(rx_message, 0x00, sizeof(rx_message));
                 /* Receive New Message */
