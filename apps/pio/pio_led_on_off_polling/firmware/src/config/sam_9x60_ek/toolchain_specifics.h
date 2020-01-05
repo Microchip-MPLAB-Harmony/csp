@@ -25,10 +25,13 @@
 #define TOOLCHAIN_SPECIFICS_H
 
 
-static inline void __NOP()
+#ifndef __NOP
+#define __NOP __arm926_nop
+static inline void __arm926_nop()
 {
     asm("nop");
 }
+#endif //__NOP
 
 static inline void __disable_irq( void )
 {   // read, modify and write back the CPSR
@@ -44,23 +47,39 @@ static inline void __enable_irq( void )
     asm("MSR cpsr_c, r0");
 }
 
-static inline void __DMB(void)
+#ifndef __DMB
+#define __DMB    __arm926_dmb
+static inline void __arm926_dmb(void)
 {
 	asm("" ::: "memory");
 }
+#endif //__DMB
 
-static inline void __DSB(void)
+#ifndef __DSB
+#define __DSB    __arm926_dsb
+static inline void __arm926_dsb(void)
 {
 	asm("mcr p15, 0, %0, c7, c10, 4" :: "r"(0) : "memory");
 }
+#endif //__DSB
 
-static inline void __ISB(void)
+#ifndef __ISB
+#define __ISB __arm926_isb
+static inline void __arm926_isb(void)
 {
 	asm("" ::: "memory");
 }
+#endif //__ISB
+
 #define __ALIGNED(x) __attribute__((aligned(x)))
 
+#ifndef __STATIC_INLINE
 #define __STATIC_INLINE static inline
+#endif //__STATIC_INLINE
+
+#ifndef   __WEAK
+#define __WEAK __attribute__((weak))
+#endif // __WEAK
 
 #define COMPILER_PRAGMA(arg)            _Pragma(#arg)
 #define SECTION(a)                      COMPILER_PRAGMA(location = a)
@@ -69,7 +88,8 @@ static inline void __ISB(void)
 #include <stdint.h>
 #define __inline__                      inline
 
-#define CACHE_ALIGN                     __ALIGNED(32)
+#define CACHE_LINE_SIZE                 (32u)
+#define CACHE_ALIGN                     __ALIGNED(CACHE_LINE_SIZE)
 
 // ************************************************************************
 // H3_IAR_SYS_TYPES 
