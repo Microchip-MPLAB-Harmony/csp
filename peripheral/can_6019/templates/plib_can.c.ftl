@@ -116,7 +116,6 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
     // Initialize the CAN PLib Object
     memset((void *)${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg, 0x00, sizeof(${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg));
     memset((void *)${CAN_INSTANCE_NAME?lower_case}Obj.mbState, CAN_MAILBOX_READY, sizeof(${CAN_INSTANCE_NAME?lower_case}Obj.mbState));
-    ${CAN_INSTANCE_NAME?lower_case}Obj.state = CAN_STATE_IDLE;
 </#if>
 
 <#if TIMESTAMP_ENABLE>
@@ -241,10 +240,6 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* 
         default:
             return status;
     }
-<#if INTERRUPT_MODE == true>
-
-    ${CAN_INSTANCE_NAME?lower_case}Obj.state = CAN_STATE_TRANSFER_TRANSMIT;
-</#if>
 
     /* Request the transmit */
     ${CAN_INSTANCE_NAME}_REGS->CAN_TCR = 1U << mailbox;
@@ -390,7 +385,6 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
 <#if INTERRUPT_MODE == true>
     status = true;
     ${CAN_INSTANCE_NAME?lower_case}Obj.mbState[mailbox] = CAN_MAILBOX_BUSY;
-    ${CAN_INSTANCE_NAME?lower_case}Obj.state = CAN_STATE_TRANSFER_RECEIVE;
     ${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].id = id;
     ${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].buffer = data;
     ${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].size = length;
@@ -701,36 +695,7 @@ void ${CAN_INSTANCE_NAME}_InterruptDisable(CAN_INTERRUPT_MASK interruptMask)
 <#if INTERRUPT_MODE == true>
 // *****************************************************************************
 /* Function:
-    bool ${CAN_INSTANCE_NAME}_IsBusy(void)
-
-   Summary:
-    Returns the Peripheral busy status.
-
-   Precondition:
-    ${CAN_INSTANCE_NAME}_Initialize must have been called for the associated CAN instance.
-
-   Parameters:
-    None.
-
-   Returns:
-    true - Busy.
-    false - Not busy.
-*/
-bool ${CAN_INSTANCE_NAME}_IsBusy(void)
-{
-    if (${CAN_INSTANCE_NAME?lower_case}Obj.state == CAN_STATE_IDLE)
-    {
-        return false;
-    }
-    else
-    {
-        return true;
-    }
-}
-
-// *****************************************************************************
-/* Function:
-    void ${CAN_INSTANCE_NAME}_CallbackRegister(CAN_CALLBACK callback, uintptr_t contextHandle)
+    bool ${CAN_INSTANCE_NAME}_TxCallbackRegister(CAN_CALLBACK callback, uintptr_t contextHandle, CAN_MAILBOX_TX_ATTRIBUTE mailboxAttr)
 
    Summary:
     Sets the pointer to the function (and it's context) to be called when the
@@ -746,18 +711,133 @@ bool ${CAN_INSTANCE_NAME}_IsBusy(void)
     context - A value (usually a pointer) passed (unused) into the function
     identified by the callback parameter.
 
+    mailboxAttr - Mailbox type TX Mailbox or Consumer Mailbox or Producer Mailbox
+
+   Returns:
+    Request status.
+    true  - Request was successful.
+    false - Request has failed.
+*/
+bool ${CAN_INSTANCE_NAME}_TxCallbackRegister(CAN_CALLBACK callback, uintptr_t contextHandle, CAN_MAILBOX_TX_ATTRIBUTE mailboxAttr)
+{
+    uint8_t mailbox = 0;
+    bool mbIsReady = false;
+
+    if (callback == NULL)
+    {
+        return false;
+    }
+
+    for (mailbox = 0; mailbox < CAN_MB_NUMBER; mailbox++)
+    {
+        switch (${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MMR & CAN_MMR_MOT_Msk)
+        {
+            case CAN_MMR_MOT_MB_TX:
+                if ((mailboxAttr == CAN_MAILBOX_DATA_FRAME_TX) &&
+                   ((${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MSR & CAN_MSR_MRDY_Msk) == CAN_MSR_MRDY_Msk))
+                {
+                    mbIsReady = true;
+                }
+                break;
+            case CAN_MMR_MOT_MB_PRODUCER:
+                if ((mailboxAttr == CAN_MAILBOX_DATA_FRAME_PRODUCER) &&
+                   ((${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MSR & CAN_MSR_MRDY_Msk) == CAN_MSR_MRDY_Msk))
+                {
+                    mbIsReady = true;
+                }
+                break;
+            case CAN_MMR_MOT_MB_CONSUMER:
+                if (mailboxAttr == CAN_MAILBOX_REMOTE_FRAME_CONSUMER)
+                {
+                    mbIsReady = true;
+                }
+                break;
+            default:
+                break;
+        }
+        if (mbIsReady)
+            break;
+    }
+
+    if (!mbIsReady)
+        return false;
+
+    ${CAN_INSTANCE_NAME?lower_case}Obj.mbCallback[mailbox].callback = callback;
+    ${CAN_INSTANCE_NAME?lower_case}Obj.mbCallback[mailbox].context = contextHandle;
+    return true;
+}
+
+// *****************************************************************************
+/* Function:
+    bool ${CAN_INSTANCE_NAME}_RxCallbackRegister(CAN_CALLBACK callback, uintptr_t contextHandle, CAN_MAILBOX_RX_ATTRIBUTE mailboxAttr)
+
+   Summary:
+    Sets the pointer to the function (and it's context) to be called when the
+    given CAN's transfer events occur.
+
+   Precondition:
+    ${CAN_INSTANCE_NAME}_Initialize must have been called for the associated CAN instance.
+
+   Parameters:
+    callback - A pointer to a function with a calling signature defined
+    by the CAN_CALLBACK data type.
+
+    context - A value (usually a pointer) passed (unused) into the function
+    identified by the callback parameter.
+
+    mailboxAttr - Mailbox type either RX Mailbox or RX Mailbox with overwrite
+
    Returns:
     None.
 */
-void ${CAN_INSTANCE_NAME}_CallbackRegister(CAN_CALLBACK callback, uintptr_t contextHandle)
+bool ${CAN_INSTANCE_NAME}_RxCallbackRegister(CAN_CALLBACK callback, uintptr_t contextHandle, CAN_MAILBOX_RX_ATTRIBUTE mailboxAttr)
 {
+    uint8_t mailbox = 0;
+    bool mbIsReady = false;
+
     if (callback == NULL)
     {
-        return;
+        return false;
     }
 
-    ${CAN_INSTANCE_NAME?lower_case}Obj.callback = callback;
-    ${CAN_INSTANCE_NAME?lower_case}Obj.context = contextHandle;
+    for (mailbox = 0; mailbox < CAN_MB_NUMBER; mailbox++)
+    {
+        switch (${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MMR & CAN_MMR_MOT_Msk)
+        {
+            case CAN_MMR_MOT_MB_RX:
+                if ((mailboxAttr == CAN_MAILBOX_DATA_FRAME_RX) &&
+                    (${CAN_INSTANCE_NAME?lower_case}Obj.mbState[mailbox] == CAN_MAILBOX_READY))
+                {
+                    mbIsReady = true;
+                }
+                break;
+            case CAN_MMR_MOT_MB_RX_OVERWRITE:
+                if ((mailboxAttr == CAN_MAILBOX_DATA_FRAME_RX_OVERWRITE) &&
+                    (${CAN_INSTANCE_NAME?lower_case}Obj.mbState[mailbox] == CAN_MAILBOX_READY))
+                {
+                    mbIsReady = true;
+                }
+                break;
+            case CAN_MMR_MOT_MB_CONSUMER:
+                if ((mailboxAttr == CAN_MAILBOX_DATA_FRAME_CONSUMER) &&
+                    (${CAN_INSTANCE_NAME?lower_case}Obj.mbState[mailbox] == CAN_MAILBOX_READY))
+                {
+                    mbIsReady = true;
+                }
+                break;
+            default:
+                break;
+        }
+        if (mbIsReady)
+            break;
+    }
+
+    if (!mbIsReady)
+        return false;
+
+    ${CAN_INSTANCE_NAME?lower_case}Obj.mbCallback[mailbox].callback = callback;
+    ${CAN_INSTANCE_NAME?lower_case}Obj.mbCallback[mailbox].context = contextHandle;
+    return true;
 }
 
 // *****************************************************************************
@@ -800,12 +880,14 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
                                                           (interruptStatus & CAN_SR_AERR_Msk) |
                                                           (interruptStatus & CAN_SR_FERR_Msk) |
                                                           (interruptStatus & CAN_SR_BERR_Msk));
-        ${CAN_INSTANCE_NAME?lower_case}Obj.state = CAN_STATE_ERROR;
-        /* Client must call ${CAN_INSTANCE_NAME}_ErrorGet function to get errors */
-        if (${CAN_INSTANCE_NAME?lower_case}Obj.callback != NULL)
+
+        for (uint8_t mailbox = 0; mailbox < CAN_MB_NUMBER; mailbox++)
         {
-            ${CAN_INSTANCE_NAME?lower_case}Obj.callback(${CAN_INSTANCE_NAME?lower_case}Obj.context);
-            ${CAN_INSTANCE_NAME?lower_case}Obj.state = CAN_STATE_IDLE;
+            /* Client must call ${CAN_INSTANCE_NAME}_ErrorGet function to get errors */
+            if (${CAN_INSTANCE_NAME?lower_case}Obj.mbCallback[mailbox].callback != NULL)
+            {
+                ${CAN_INSTANCE_NAME?lower_case}Obj.mbCallback[mailbox].callback(${CAN_INSTANCE_NAME?lower_case}Obj.mbCallback[mailbox].context);
+            }
         }
     }
     else
@@ -862,27 +944,17 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
                         }
                         ${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MCR = CAN_MCR_MTCR_Msk;
                         ${CAN_INSTANCE_NAME?lower_case}Obj.mbState[mailbox] = CAN_MAILBOX_READY;
-                        ${CAN_INSTANCE_NAME?lower_case}Obj.state = CAN_STATE_TRANSFER_DONE;
-                        if (${CAN_INSTANCE_NAME?lower_case}Obj.state == CAN_STATE_TRANSFER_DONE)
+                        if (${CAN_INSTANCE_NAME?lower_case}Obj.mbCallback[mailbox].callback != NULL)
                         {
-                            if (${CAN_INSTANCE_NAME?lower_case}Obj.callback != NULL)
-                            {
-                                ${CAN_INSTANCE_NAME?lower_case}Obj.callback(${CAN_INSTANCE_NAME?lower_case}Obj.context);
-                                ${CAN_INSTANCE_NAME?lower_case}Obj.state = CAN_STATE_IDLE;
-                            }
+                            ${CAN_INSTANCE_NAME?lower_case}Obj.mbCallback[mailbox].callback(${CAN_INSTANCE_NAME?lower_case}Obj.mbCallback[mailbox].context);
                         }
                         break;
                     case CAN_MMR_MOT_MB_TX:
                     case CAN_MMR_MOT_MB_PRODUCER:
                         ${CAN_INSTANCE_NAME}_REGS->CAN_IDR = 1U << mailbox;
-                        ${CAN_INSTANCE_NAME?lower_case}Obj.state = CAN_STATE_TRANSFER_DONE;
-                        if (${CAN_INSTANCE_NAME?lower_case}Obj.state == CAN_STATE_TRANSFER_DONE)
+                        if (${CAN_INSTANCE_NAME?lower_case}Obj.mbCallback[mailbox].callback != NULL)
                         {
-                            if (${CAN_INSTANCE_NAME?lower_case}Obj.callback != NULL)
-                            {
-                                ${CAN_INSTANCE_NAME?lower_case}Obj.callback(${CAN_INSTANCE_NAME?lower_case}Obj.context);
-                                ${CAN_INSTANCE_NAME?lower_case}Obj.state = CAN_STATE_IDLE;
-                            }
+                            ${CAN_INSTANCE_NAME?lower_case}Obj.mbCallback[mailbox].callback(${CAN_INSTANCE_NAME?lower_case}Obj.mbCallback[mailbox].context);
                         }
                         break;
                     default:
