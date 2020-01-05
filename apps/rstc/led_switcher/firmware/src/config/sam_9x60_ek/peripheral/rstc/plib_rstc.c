@@ -97,6 +97,7 @@ void RSTC_InterruptHandler( void )
     // Capture the status and clear interrupt.  The RSTC status always has
     // the last reset cause 
     uint32_t interruptStatus = RSTC_REGS->RSTC_SR;
+    (void) interruptStatus;
     if( rstcObj.callback != NULL )
     {
         rstcObj.callback( rstcObj.context );
