@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-10-25T08:30:06Z */
+/* file generated from device description version 2019-12-20T15:37:49Z */
 #ifndef _SAMRH71F20B_GPIO_H_
 #define _SAMRH71F20B_GPIO_H_
 

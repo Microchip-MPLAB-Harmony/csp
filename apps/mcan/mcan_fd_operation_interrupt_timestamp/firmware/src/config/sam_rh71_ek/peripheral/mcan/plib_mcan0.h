@@ -108,8 +108,8 @@ bool MCAN0_StandardFilterElementSet(uint8_t filterNumber, mcan_sidfe_registers_t
 bool MCAN0_StandardFilterElementGet(uint8_t filterNumber, mcan_sidfe_registers_t *stdMsgIDFilterElement);
 bool MCAN0_ExtendedFilterElementSet(uint8_t filterNumber, mcan_xidfe_registers_t *extMsgIDFilterElement);
 bool MCAN0_ExtendedFilterElementGet(uint8_t filterNumber, mcan_xidfe_registers_t *extMsgIDFilterElement);
-bool MCAN0_IsBusy(void);
-void MCAN0_CallbackRegister(MCAN_CALLBACK callback, uintptr_t contextHandle);
+void MCAN0_TxCallbackRegister(MCAN_CALLBACK callback, uintptr_t contextHandle);
+void MCAN0_RxCallbackRegister(MCAN_CALLBACK callback, uintptr_t contextHandle, MCAN_MSG_RX_ATTRIBUTE msgAttr);
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
     }

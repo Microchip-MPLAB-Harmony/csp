@@ -166,7 +166,7 @@
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="SAMRH71_DFP" vendor="Microchip" version="1.0.44"/>
+        <pack name="SAMRH71_DFP" vendor="Microchip" version="1.1.65"/>
         <pack name="CMSIS" vendor="ARM" version="5.4.0"/>
       </packs>
       <compileType>
@@ -344,7 +344,7 @@
         <property key="common-include-directories" value=""/>
         <property key="gp-relative-option" value=""/>
         <property key="legacy-libc" value="false"/>
-        <property key="mdtcm" value="0x20000"/>
+        <property key="mdtcm" value="0x40000"/>
         <property key="mitcm" value="0x20000"/>
         <property key="mstacktcm" value="false"/>
         <property key="omit-pack-options" value="1"/>

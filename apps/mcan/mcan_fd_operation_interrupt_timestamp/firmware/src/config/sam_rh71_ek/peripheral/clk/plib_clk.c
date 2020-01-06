@@ -101,7 +101,7 @@ Initialize Peripheral Clock
 static void CLK_PeripheralClockInitialize(void)
 {
     PMC_REGS->PMC_PCR = PMC_PCR_EN_Msk | PMC_PCR_CMD_Msk | PMC_PCR_PID(8); /* FLEXCOM1 */
-    PMC_REGS->PMC_PCR = PMC_PCR_EN_Msk | PMC_PCR_CMD_Msk | PMC_PCR_PID(10); /* PIOA */
+    PMC_REGS->PMC_PCR = PMC_PCR_EN_Msk | PMC_PCR_CMD_Msk | PMC_PCR_PID(10); /* PIO */
     PMC_REGS->PMC_PCR = PMC_PCR_EN_Msk | PMC_PCR_CMD_Msk | PMC_PCR_PID(36)  /* MCAN0 */
         | PMC_PCR_GCLKEN_Msk | PMC_PCR_GCLKCSS_MCK_CLK | PMC_PCR_GCLKDIV(0);
 }

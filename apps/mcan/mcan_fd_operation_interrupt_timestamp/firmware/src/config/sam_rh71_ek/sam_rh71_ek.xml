@@ -378,12 +378,12 @@
             <User dnOrder="0" value=""/>
           </Values>
         </String>
-        <Boolean dnOrder="72" id="PIOA_CLOCK_ENABLE">
+        <Boolean dnOrder="72" id="PIO_CLOCK_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <Integer dnOrder="73" id="PIOA_CLOCK_FREQUENCY">
+        <Integer dnOrder="73" id="PIO_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="50000000"/>
           </Values>

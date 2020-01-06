@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-10-25T08:30:06Z */
+/* file generated from device description version 2019-12-20T15:37:42Z */
 #ifndef _SAMRH71_PIO_COMPONENT_H_
 #define _SAMRH71_PIO_COMPONENT_H_
 
@@ -297,9 +297,9 @@
 #define PIO_CFGR_PDEN_Msk                     (_U_(0x1) << PIO_CFGR_PDEN_Pos)                      /**< (PIO_CFGR) Pull-Down Enable Mask */
 #define PIO_CFGR_PDEN(value)                  (PIO_CFGR_PDEN_Msk & ((value) << PIO_CFGR_PDEN_Pos))
 #define   PIO_CFGR_PDEN_DISABLED_Val          _U_(0x0)                                             /**< (PIO_CFGR) Pull-Down is disabled for the selected I/O lines.  */
-#define   PIO_CFGR_PDEN_ENABLED_Val           _U_(0x1)                                             /**< (PIO_CFGR) Pull-Down is enabled for the selected I/O lines only if PUEN is 0(1).  */
+#define   PIO_CFGR_PDEN_ENABLED_Val           _U_(0x1)                                             /**< (PIO_CFGR) Pull-Down is enabled for the selected I/O lines only if PUEN is 0.  */
 #define PIO_CFGR_PDEN_DISABLED                (PIO_CFGR_PDEN_DISABLED_Val << PIO_CFGR_PDEN_Pos)    /**< (PIO_CFGR) Pull-Down is disabled for the selected I/O lines. Position  */
-#define PIO_CFGR_PDEN_ENABLED                 (PIO_CFGR_PDEN_ENABLED_Val << PIO_CFGR_PDEN_Pos)     /**< (PIO_CFGR) Pull-Down is enabled for the selected I/O lines only if PUEN is 0(1). Position  */
+#define PIO_CFGR_PDEN_ENABLED                 (PIO_CFGR_PDEN_ENABLED_Val << PIO_CFGR_PDEN_Pos)     /**< (PIO_CFGR) Pull-Down is enabled for the selected I/O lines only if PUEN is 0. Position  */
 #define PIO_CFGR_OPD_Pos                      _U_(14)                                              /**< (PIO_CFGR) Open-Drain Position */
 #define PIO_CFGR_OPD_Msk                      (_U_(0x1) << PIO_CFGR_OPD_Pos)                       /**< (PIO_CFGR) Open-Drain Mask */
 #define PIO_CFGR_OPD(value)                   (PIO_CFGR_OPD_Msk & ((value) << PIO_CFGR_OPD_Pos))  
@@ -1355,7 +1355,7 @@
 #define PIO_WPSR_REG_OFST              (0x5E4)             /**< (PIO_WPSR) PIO Write Protection Status Register Offset */
 
 #if !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__))
-/** \brief PIO register API structure */
+/** \brief PIO_GROUP register API structure */
 typedef struct
 {
   __IO  uint32_t                       PIO_MSKR;           /**< Offset: 0x00 (R/W  32) PIO Mask Register */
@@ -1372,9 +1372,17 @@ typedef struct
   __I   uint32_t                       PIO_ISR;            /**< Offset: 0x2C (R/   32) PIO Interrupt Status Register */
   __I   uint8_t                        Reserved2[0x0C];
   __O   uint32_t                       PIO_IOFR;           /**< Offset: 0x3C ( /W  32) PIO I/O Freeze Configuration Register */
-  __I   uint8_t                        Reserved3[0x4C0];
+} pio_group_registers_t;
+
+#define PIO_GROUP_NUMBER _U_(7)
+
+/** \brief PIO register API structure */
+typedef struct
+{
+        pio_group_registers_t          PIO_GROUP[PIO_GROUP_NUMBER]; /**< Offset: 0x00  */
+  __I   uint8_t                        Reserved1[0x340];
   __IO  uint32_t                       PIO_SCDR;           /**< Offset: 0x500 (R/W  32) PIO Slow Clock Divider Debouncing Register */
-  __I   uint8_t                        Reserved4[0xDC];
+  __I   uint8_t                        Reserved2[0xDC];
   __IO  uint32_t                       PIO_WPMR;           /**< Offset: 0x5E0 (R/W  32) PIO Write Protection Mode Register */
   __I   uint32_t                       PIO_WPSR;           /**< Offset: 0x5E4 (R/   32) PIO Write Protection Status Register */
 } pio_registers_t;
