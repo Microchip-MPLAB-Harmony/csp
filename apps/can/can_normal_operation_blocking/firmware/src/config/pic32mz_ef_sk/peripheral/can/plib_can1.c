@@ -56,6 +56,11 @@
 // Global Data
 // *****************************************************************************
 // *****************************************************************************
+/* Number of configured FIFO */
+#define CAN_NUM_OF_FIFO             2
+/* Maximum number of CAN Message buffers in each FIFO */
+#define CAN_FIFO_MESSAGE_BUFFER_MAX 32
+
 #define CAN_CONFIGURATION_MODE      0x4
 #define CAN_OPERATION_MODE          0x0
 #define CAN_NUM_OF_FILTER           1
@@ -189,7 +194,7 @@ bool CAN1_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, uint8_t fi
 
         if (msgAttr == CAN_MSG_TX_REMOTE_FRAME)
         {
-            txMessage->msgEID = CAN_MSG_RTR_MASK;
+            txMessage->msgEID |= CAN_MSG_RTR_MASK;
         }
         else
         {
@@ -415,7 +420,7 @@ void CAN1_MessageAcceptanceFilterMaskSet(uint8_t acceptanceFilterMaskNum, uint32
     if (id > CAN_MSG_SID_MASK)
     {
         *(volatile uint32_t *)(&C1RXM0 + (acceptanceFilterMaskNum * CAN_ACCEPTANCE_MASK_OFFSET)) = (id & _C1RXM0_EID_MASK)
-                                                                       | (((id & 0x1FFC0000u) >> 18) << _C1RXM0_SID_POSITION);
+                                                                       | (((id & 0x1FFC0000u) >> 18) << _C1RXM0_SID_POSITION) | _C1RXM0_MIDE_MASK;
     }
     else
     {
@@ -447,7 +452,7 @@ uint32_t CAN1_MessageAcceptanceFilterMaskGet(uint8_t acceptanceFilterMaskNum)
 {
     uint32_t id = 0;
 
-    if (*(volatile uint32_t *)(&C1RXM0 + (acceptanceFilterMaskNum * CAN_ACCEPTANCE_MASK_OFFSET)) & _C1RXM0_EID_MASK)
+    if (*(volatile uint32_t *)(&C1RXM0 + (acceptanceFilterMaskNum * CAN_ACCEPTANCE_MASK_OFFSET)) & _C1RXM0_MIDE_MASK)
     {
         id = (*(volatile uint32_t *)(&C1RXM0 + (acceptanceFilterMaskNum * CAN_ACCEPTANCE_MASK_OFFSET)) & _C1RXM0_EID_MASK)
            | ((*(volatile uint32_t *)(&C1RXM0 + (acceptanceFilterMaskNum * CAN_ACCEPTANCE_MASK_OFFSET)) & _C1RXM0_SID_MASK) >> 3);

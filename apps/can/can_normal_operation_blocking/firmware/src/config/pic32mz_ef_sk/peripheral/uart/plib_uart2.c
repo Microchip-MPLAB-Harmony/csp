@@ -86,13 +86,13 @@ void UART2_Initialize( void )
     /* STSEL  = 0 */
     /* PDSEL = 0 */
 
-    U2MODE = 0x8;
+    U2MODE = 0x0;
 
     /* Enable UART2 Receiver and Transmitter */
     U2STASET = (_U2STA_UTXEN_MASK | _U2STA_URXEN_MASK);
 
     /* BAUD Rate register Setup */
-    U2BRG = 216;
+    U2BRG = 53;
 
     /* Turn ON UART2 */
     U2MODESET = _U2MODE_ON_MASK;
