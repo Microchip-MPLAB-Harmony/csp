@@ -168,7 +168,7 @@ int main ( void )
         {
             case APP_STATE_MCAN_RECEIVE:
             {
-                MCAN0_CallbackRegister( APP_MCAN_Callback, (uintptr_t)APP_STATE_MCAN_RECEIVE );
+                MCAN0_RxCallbackRegister( APP_MCAN_Callback, (uintptr_t)APP_STATE_MCAN_RECEIVE, MCAN_MSG_ATTR_RX_FIFO0 );
 
                 state = APP_STATE_MCAN_IDLE;
 
@@ -181,7 +181,7 @@ int main ( void )
             }
             case APP_STATE_MCAN_TRANSMIT:
             {
-                MCAN0_CallbackRegister( APP_MCAN_Callback, (uintptr_t)APP_STATE_MCAN_TRANSMIT );
+                MCAN0_TxCallbackRegister( APP_MCAN_Callback, (uintptr_t)APP_STATE_MCAN_TRANSMIT );
 
                 state = APP_STATE_MCAN_IDLE;
 

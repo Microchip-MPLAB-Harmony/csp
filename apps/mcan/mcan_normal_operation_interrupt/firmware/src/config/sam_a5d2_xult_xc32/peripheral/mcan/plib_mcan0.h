@@ -100,8 +100,8 @@ void MCAN0_ErrorCountGet(uint8_t *txErrorCount, uint8_t *rxErrorCount);
 bool MCAN0_InterruptGet(MCAN_INTERRUPT_MASK interruptMask);
 void MCAN0_InterruptClear(MCAN_INTERRUPT_MASK interruptMask);
 void MCAN0_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress);
-bool MCAN0_IsBusy(void);
-void MCAN0_CallbackRegister(MCAN_CALLBACK callback, uintptr_t contextHandle);
+void MCAN0_TxCallbackRegister(MCAN_CALLBACK callback, uintptr_t contextHandle);
+void MCAN0_RxCallbackRegister(MCAN_CALLBACK callback, uintptr_t contextHandle, MCAN_MSG_RX_ATTRIBUTE msgAttr);
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
     }

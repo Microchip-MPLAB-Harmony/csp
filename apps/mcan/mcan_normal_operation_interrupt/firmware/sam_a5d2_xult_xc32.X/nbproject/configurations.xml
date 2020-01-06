@@ -155,7 +155,6 @@
           </logicalFolder>
           <itemPath>../src/config/sam_a5d2_xult_xc32/initialization.c</itemPath>
           <itemPath>../src/config/sam_a5d2_xult_xc32/interrupts.c</itemPath>
-          <itemPath>../src/config/sam_a5d2_xult_xc32/exceptions.c</itemPath>
           <itemPath>../src/config/sam_a5d2_xult_xc32/cstartup.S</itemPath>
           <itemPath>../src/config/sam_a5d2_xult_xc32/fault_handlers.c</itemPath>
         </logicalFolder>
@@ -181,7 +180,7 @@
       </toolsSet>
       <packs>
         <pack name="CMSIS" vendor="ARM" version="5.0.1"/>
-        <pack name="SAMA5D2_DFP" vendor="Microchip" version="1.1.12"/>
+        <pack name="SAMA5D2_DFP" vendor="Microchip" version="1.1.11"/>
       </packs>
       <compileType>
         <linkerTool>
