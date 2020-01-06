@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-10-25T08:30:06Z */
+/* file generated from device description version 2019-12-20T15:37:42Z */
 #ifndef _SAMRH71_PMC_COMPONENT_H_
 #define _SAMRH71_PMC_COMPONENT_H_
 
@@ -1526,7 +1526,15 @@
 #define PMC_OSC2_OSCRCF_8_MHZ                 (PMC_OSC2_OSCRCF_8_MHZ_Val << PMC_OSC2_OSCRCF_Pos)   /**< (PMC_OSC2) The 2nd RC oscillator frequency is at 8 MHZ Position  */
 #define PMC_OSC2_OSCRCF_10_MHZ                (PMC_OSC2_OSCRCF_10_MHZ_Val << PMC_OSC2_OSCRCF_Pos)  /**< (PMC_OSC2) The 2nd RC oscillator frequency is at 10 MHZ Position  */
 #define PMC_OSC2_OSCRCF_12_MHZ                (PMC_OSC2_OSCRCF_12_MHZ_Val << PMC_OSC2_OSCRCF_Pos)  /**< (PMC_OSC2) The 2nd RC oscillator frequency is at 12 MHZ Position  */
-#define PMC_OSC2_Msk                          _U_(0x00000031)                                      /**< (PMC_OSC2) Register Mask  */
+#define PMC_OSC2_EN_WR_CALIB_Pos              _U_(8)                                               /**< (PMC_OSC2) Enable Calibration Register Write Position */
+#define PMC_OSC2_EN_WR_CALIB_Msk              (_U_(0x1) << PMC_OSC2_EN_WR_CALIB_Pos)               /**< (PMC_OSC2) Enable Calibration Register Write Mask */
+#define PMC_OSC2_EN_WR_CALIB(value)           (PMC_OSC2_EN_WR_CALIB_Msk & ((value) << PMC_OSC2_EN_WR_CALIB_Pos))
+#define PMC_OSC2_KEY_Pos                      _U_(16)                                              /**< (PMC_OSC2) Register Write Access Password Position */
+#define PMC_OSC2_KEY_Msk                      (_U_(0xFF) << PMC_OSC2_KEY_Pos)                      /**< (PMC_OSC2) Register Write Access Password Mask */
+#define PMC_OSC2_KEY(value)                   (PMC_OSC2_KEY_Msk & ((value) << PMC_OSC2_KEY_Pos))  
+#define   PMC_OSC2_KEY_PASSWD_Val             _U_(0x37)                                            /**< (PMC_OSC2) Writing any other value in this field aborts the write operation.Always reads as 0.  */
+#define PMC_OSC2_KEY_PASSWD                   (PMC_OSC2_KEY_PASSWD_Val << PMC_OSC2_KEY_Pos)        /**< (PMC_OSC2) Writing any other value in this field aborts the write operation.Always reads as 0. Position  */
+#define PMC_OSC2_Msk                          _U_(0x00FF0131)                                      /**< (PMC_OSC2) Register Mask  */
 
 
 /* -------- PMC_OCR2 : (PMC Offset: 0x1B4) (R/W 32) Oscillator Calibration Register 2 -------- */
