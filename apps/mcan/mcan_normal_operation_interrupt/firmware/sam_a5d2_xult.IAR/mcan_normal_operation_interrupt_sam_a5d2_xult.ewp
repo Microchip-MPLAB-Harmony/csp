@@ -2344,9 +2344,6 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\cstartup.s</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\exceptions.c</name>
-            </file>
-            <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\fault_handlers.c</name>
             </file>
             <file>
