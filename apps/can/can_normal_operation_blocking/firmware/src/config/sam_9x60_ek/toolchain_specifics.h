@@ -63,15 +63,23 @@ static inline void __arm926_dsb(void)
 }
 #endif //__DSB
 
+#ifndef __ISB
 #define __ISB __arm926_isb
 static inline void __arm926_isb(void)
 {
 	asm("" ::: "memory");
 }
+#endif //__ISB
+
 #define __ALIGNED(x) __attribute__((aligned(x)))
 
+#ifndef __STATIC_INLINE
 #define __STATIC_INLINE static inline
+#endif //__STATIC_INLINE
+
+#ifndef   __WEAK
 #define __WEAK __attribute__((weak))
+#endif // __WEAK
 
 #define COMPILER_PRAGMA(arg)            _Pragma(#arg)
 #define SECTION(a)                      COMPILER_PRAGMA(location = a)
