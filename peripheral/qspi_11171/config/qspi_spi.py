@@ -55,7 +55,8 @@ def DummyData_ValueUpdate(spiSymDummyData, event):
 qspiBitField_MR_NBBITS = qspiReg_MR.getBitfield("NBBITS")
 qspiValGrp_MR_NBBITS = qspiRegModule.getValueGroup(qspiBitField_MR_NBBITS.getValueGroupName())
 qspiBitField_MR_LLBBITS = qspiReg_MR.getBitfield("LLB")
-qspiValGrp_MR_LLBBITS = qspiRegModule.getValueGroup(qspiBitField_MR_LLBBITS.getValueGroupName())
+if qspiBitField_MR_LLBBITS is not None:
+    qspiValGrp_MR_LLBBITS = qspiRegModule.getValueGroup(qspiBitField_MR_LLBBITS.getValueGroupName())
 
 processor = Variables.get("__PROCESSOR")
 if( (("SAMV7" in processor) or ("SAME7" in processor) or ("SAMS7" in processor)) and
@@ -77,17 +78,18 @@ for id in range(0,count):
     qspiNBBITS.addKey(valueName, qspiValGrp_MR_NBBITS.getValue(valueName).getValue(), qspiValGrp_MR_NBBITS.getValue(valueName).getDescription())
 
 # loopback mode
-count = qspiValGrp_MR_LLBBITS.getValueCount()
-qspiLLBBITS = qspiComponent.createKeyValueSetSymbol("QSPI_LLBBITS", qspiMenu)
-qspiLLBBITS.setLabel(qspiBitField_MR_LLBBITS.getDescription())
-qspiLLBBITS.setVisible(True)
-qspiLLBBITS.setOutputMode("Value")
-qspiLLBBITS.setDisplayMode("Description")
-qspiLLBBITS.setSelectedKey("DISABLED",1)
-qspiLLBBITS.setReadOnly(False)
-for id in range(0,count):
-    valueName = qspiValGrp_MR_LLBBITS.getValueNames()[id]
-    qspiLLBBITS.addKey(valueName, qspiValGrp_MR_LLBBITS.getValue(valueName).getValue(), qspiValGrp_MR_LLBBITS.getValue(valueName).getDescription())
+if qspiBitField_MR_LLBBITS is not None:
+    count = qspiValGrp_MR_LLBBITS.getValueCount()
+    qspiLLBBITS = qspiComponent.createKeyValueSetSymbol("QSPI_LLBBITS", qspiMenu)
+    qspiLLBBITS.setLabel(qspiBitField_MR_LLBBITS.getDescription())
+    qspiLLBBITS.setVisible(True)
+    qspiLLBBITS.setOutputMode("Value")
+    qspiLLBBITS.setDisplayMode("Description")
+    qspiLLBBITS.setSelectedKey("DISABLED",1)
+    qspiLLBBITS.setReadOnly(False)
+    for id in range(0,count):
+        valueName = qspiValGrp_MR_LLBBITS.getValueNames()[id]
+        qspiLLBBITS.addKey(valueName, qspiValGrp_MR_LLBBITS.getValue(valueName).getValue(), qspiValGrp_MR_LLBBITS.getValue(valueName).getDescription())
 
 
 
