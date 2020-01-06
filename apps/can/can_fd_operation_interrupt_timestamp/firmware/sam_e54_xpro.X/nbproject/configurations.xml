@@ -182,7 +182,7 @@
       </toolsSet>
       <packs>
         <pack name="CMSIS" vendor="ARM" version="5.4.0"/>
-        <pack name="SAME54_DFP" vendor="Microchip" version="3.1.45"/>
+        <pack name="SAME54_DFP" vendor="Microchip" version="3.1.43"/>
       </packs>
       <compileType>
         <linkerTool>
