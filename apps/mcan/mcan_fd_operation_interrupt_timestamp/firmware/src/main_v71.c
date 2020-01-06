@@ -180,7 +180,7 @@ int main ( void )
 						message[loop_count] = loop_count;
 					}                
 					printf("  2: Send standard message with ID: 0x45A and 64 byte data 0 to 63. \r\n");
-                    MCAN1_CallbackRegister( APP_MCAN_Callback, (uintptr_t)APP_STATE_MCAN_TRANSMIT );
+                    MCAN1_TxCallbackRegister( APP_MCAN_Callback, (uintptr_t)APP_STATE_MCAN_TRANSMIT );
                     state = APP_STATE_MCAN_IDLE;
                     if (MCAN1_MessageTransmit(messageID, messageLength, message, MCAN_MODE_FD_WITH_BRS, MCAN_MSG_ATTR_TX_FIFO_DATA_FRAME) == false)
                     {
@@ -194,7 +194,7 @@ int main ( void )
 						message[loop_count - 128] = loop_count;
 					}                
 					printf("  3: Send standard message with ID: 0x469 and 64 byte data 128 to 191.\r\n");
-					MCAN1_CallbackRegister( APP_MCAN_Callback, (uintptr_t)APP_STATE_MCAN_TRANSMIT );
+					MCAN1_TxCallbackRegister( APP_MCAN_Callback, (uintptr_t)APP_STATE_MCAN_TRANSMIT );
                     state = APP_STATE_MCAN_IDLE;
 					if (MCAN1_MessageTransmit(messageID, messageLength, message, MCAN_MODE_FD_WITH_BRS, MCAN_MSG_ATTR_TX_FIFO_DATA_FRAME) == false)
                     {
@@ -204,7 +204,7 @@ int main ( void )
 				case '0':
 					printf(" ID set in the range already \r\n");
 					printf(" Waiting for message: \r\n");
-                    MCAN1_CallbackRegister( APP_MCAN_Callback, (uintptr_t)APP_STATE_MCAN_RECEIVE );
+                    MCAN1_RxCallbackRegister( APP_MCAN_Callback, (uintptr_t)APP_STATE_MCAN_RECEIVE, MCAN_MSG_ATTR_RX_BUFFER );
                     state = APP_STATE_MCAN_IDLE;
                     memset(rx_message, 0x00, sizeof(rx_message));
                     /* Receive New Message */
@@ -216,7 +216,7 @@ int main ( void )
 				case '1':
 					printf(" ID set in the range already \r\n");
 					printf(" Waiting for message: \r\n");
-                    MCAN1_CallbackRegister( APP_MCAN_Callback, (uintptr_t)APP_STATE_MCAN_RECEIVE );
+                    MCAN1_RxCallbackRegister( APP_MCAN_Callback, (uintptr_t)APP_STATE_MCAN_RECEIVE, MCAN_MSG_ATTR_RX_FIFO0 );
                     state = APP_STATE_MCAN_IDLE;
                     memset(rx_message, 0x00, sizeof(rx_message));
                     /* Receive New Message */
@@ -228,7 +228,7 @@ int main ( void )
 				case '4':
 					printf(" ID set in the range already \r\n");
 					printf(" Waiting for message: \r\n");
-                    MCAN1_CallbackRegister( APP_MCAN_Callback, (uintptr_t)APP_STATE_MCAN_RECEIVE );
+                    MCAN1_RxCallbackRegister( APP_MCAN_Callback, (uintptr_t)APP_STATE_MCAN_RECEIVE, MCAN_MSG_ATTR_RX_BUFFER );
                     state = APP_STATE_MCAN_IDLE;
                     memset(rx_message, 0x00, sizeof(rx_message));
                     /* Receive New Message */
@@ -240,7 +240,7 @@ int main ( void )
 				case '5':
 					printf(" ID set in the range already \r\n");
 					printf(" Waiting for message: \r\n");
-                    MCAN1_CallbackRegister( APP_MCAN_Callback, (uintptr_t)APP_STATE_MCAN_RECEIVE );
+                    MCAN1_RxCallbackRegister( APP_MCAN_Callback, (uintptr_t)APP_STATE_MCAN_RECEIVE, MCAN_MSG_ATTR_RX_FIFO1 );
                     state = APP_STATE_MCAN_IDLE;
                     memset(rx_message, 0x00, sizeof(rx_message));
                     /* Receive New Message */
@@ -256,7 +256,7 @@ int main ( void )
 						message[loop_count] = loop_count;
 					}                
 					printf("  6: Send extended message with ID: 0x100000A5 and 64 byte data 0 to 63. \r\n");
-                    MCAN1_CallbackRegister( APP_MCAN_Callback, (uintptr_t)APP_STATE_MCAN_TRANSMIT );
+                    MCAN1_TxCallbackRegister( APP_MCAN_Callback, (uintptr_t)APP_STATE_MCAN_TRANSMIT );
                     state = APP_STATE_MCAN_IDLE;
                     if (MCAN1_MessageTransmit(messageID, messageLength, message, MCAN_MODE_FD_WITH_BRS, MCAN_MSG_ATTR_TX_FIFO_DATA_FRAME) == false)
                     {
@@ -270,7 +270,7 @@ int main ( void )
 						message[loop_count - 128] = loop_count;
 					}
 					printf("  7: Send extended message with ID: 0x10000096 and 64 byte data 128 to 191. \r\n");
-                    MCAN1_CallbackRegister( APP_MCAN_Callback, (uintptr_t)APP_STATE_MCAN_TRANSMIT );
+                    MCAN1_TxCallbackRegister( APP_MCAN_Callback, (uintptr_t)APP_STATE_MCAN_TRANSMIT );
                     state = APP_STATE_MCAN_IDLE;
                     if (MCAN1_MessageTransmit(messageID, messageLength, message, MCAN_MODE_FD_WITH_BRS, MCAN_MSG_ATTR_TX_FIFO_DATA_FRAME) == false)
                     {
@@ -285,7 +285,7 @@ int main ( void )
 						message[loop_count] = loop_count;
 					}
 					printf("  a: Send normal standard message with ID: 0x469 and 8 byte data 0 to 7. \r\n");
-                    MCAN1_CallbackRegister( APP_MCAN_Callback, (uintptr_t)APP_STATE_MCAN_TRANSMIT );
+                    MCAN1_TxCallbackRegister( APP_MCAN_Callback, (uintptr_t)APP_STATE_MCAN_TRANSMIT );
                     state = APP_STATE_MCAN_IDLE;
                     if (MCAN1_MessageTransmit(messageID, messageLength, message, MCAN_MODE_NORMAL, MCAN_MSG_ATTR_TX_FIFO_DATA_FRAME) == false)
                     {

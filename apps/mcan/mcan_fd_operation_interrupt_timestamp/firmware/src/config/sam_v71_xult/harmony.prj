@@ -43,8 +43,8 @@
           <Name dnOrder="1">main_v71.c</Name>
           <LogicalPath dnOrder="2"/>
           <PhysicalPath dnOrder="3">/../../</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">F81A00E640818EDFB9E79C9BD241AEF4</GeneratedChecksum>
-          <UserChecksum dnOrder="5">F81A00E640818EDFB9E79C9BD241AEF4</UserChecksum>
+          <GeneratedChecksum dnOrder="4"/>
+          <UserChecksum dnOrder="5"/>
         </File>
         <File dnOrder="5">
           <Type dnOrder="0">SOURCE</Type>
@@ -67,8 +67,8 @@
           <Name dnOrder="1">plib_mcan1.c</Name>
           <LogicalPath dnOrder="2">config/sam_v71_xult/peripheral/mcan/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/mcan/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">4667E6CA50B8401B771586B928958870</GeneratedChecksum>
-          <UserChecksum dnOrder="5">4667E6CA50B8401B771586B928958870</UserChecksum>
+          <GeneratedChecksum dnOrder="4">6D90375A8381F3E75A19DDC69606714F</GeneratedChecksum>
+          <UserChecksum dnOrder="5">6D90375A8381F3E75A19DDC69606714F</UserChecksum>
         </File>
         <File dnOrder="8">
           <Type dnOrder="0">SOURCE</Type>
@@ -99,8 +99,8 @@
           <Name dnOrder="1">plib_usart1.c</Name>
           <LogicalPath dnOrder="2">config/sam_v71_xult/peripheral/usart/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/usart/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">37C718A16DA6E93B1090883EF670E26B</GeneratedChecksum>
-          <UserChecksum dnOrder="5">37C718A16DA6E93B1090883EF670E26B</UserChecksum>
+          <GeneratedChecksum dnOrder="4">17E65B2ED91C90EAB4EAA5F46967B2F5</GeneratedChecksum>
+          <UserChecksum dnOrder="5">17E65B2ED91C90EAB4EAA5F46967B2F5</UserChecksum>
         </File>
         <File dnOrder="12">
           <Type dnOrder="0">SOURCE</Type>
@@ -251,8 +251,8 @@
           <Name dnOrder="1">device_cache.h</Name>
           <LogicalPath dnOrder="2">config/sam_v71_xult/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">3ED2C1D9BD295E1B1E1864B52AE72D95</GeneratedChecksum>
-          <UserChecksum dnOrder="5">3ED2C1D9BD295E1B1E1864B52AE72D95</UserChecksum>
+          <GeneratedChecksum dnOrder="4">9FD18F0D30B89945CC141BA0DE2ABE90</GeneratedChecksum>
+          <UserChecksum dnOrder="5">9FD18F0D30B89945CC141BA0DE2ABE90</UserChecksum>
         </File>
         <File dnOrder="31">
           <Type dnOrder="0">HEADER</Type>
@@ -371,16 +371,16 @@
           <Name dnOrder="1">plib_mcan1.h</Name>
           <LogicalPath dnOrder="2">config/sam_v71_xult/peripheral/mcan/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/mcan/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">D81DE9C1567EA8F9590D7CB656F98462</GeneratedChecksum>
-          <UserChecksum dnOrder="5">D81DE9C1567EA8F9590D7CB656F98462</UserChecksum>
+          <GeneratedChecksum dnOrder="4">1D7C218DF37C9CC956C501EAA68E0E82</GeneratedChecksum>
+          <UserChecksum dnOrder="5">1D7C218DF37C9CC956C501EAA68E0E82</UserChecksum>
         </File>
         <File dnOrder="46">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_mcan_common.h</Name>
           <LogicalPath dnOrder="2">config/sam_v71_xult/peripheral/mcan/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/mcan/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">AA1924E728EA96C5FD6A1C2157F7AEF1</GeneratedChecksum>
-          <UserChecksum dnOrder="5">AA1924E728EA96C5FD6A1C2157F7AEF1</UserChecksum>
+          <GeneratedChecksum dnOrder="4">6038C872CF0F33D9116DAEA8F73D8399</GeneratedChecksum>
+          <UserChecksum dnOrder="5">6038C872CF0F33D9116DAEA8F73D8399</UserChecksum>
         </File>
         <File dnOrder="47">
           <Type dnOrder="0">HEADER</Type>
@@ -491,8 +491,8 @@
           <Name dnOrder="1">samv71q21b.h</Name>
           <LogicalPath dnOrder="2">packs/ATSAMV71Q21B_DFP/pio/</LogicalPath>
           <PhysicalPath dnOrder="3">/../../packs/ATSAMV71Q21B_DFP/pio/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">4985C7E8D4A9326BB46DA9845A0CC79E</GeneratedChecksum>
-          <UserChecksum dnOrder="5">4985C7E8D4A9326BB46DA9845A0CC79E</UserChecksum>
+          <GeneratedChecksum dnOrder="4">2EDCD8822A8633411ED130A306D930EF</GeneratedChecksum>
+          <UserChecksum dnOrder="5">2EDCD8822A8633411ED130A306D930EF</UserChecksum>
         </File>
         <File dnOrder="61">
           <Type dnOrder="0">HEADER</Type>
@@ -619,7 +619,7 @@
         <Setting append="true" category="C32" delimiter=";" dnOrder="0" key="extra-include-directories" value="../src;../src/config/sam_v71_xult;../src/packs/ATSAMV71Q21B_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/arm"/>
         <Setting category="C32-LD" dnOrder="1" key="heap-size" value="512"/>
         <Setting category="C32-LD" dnOrder="2" key="no-device-startup-code" value="true"/>
-        <Setting category="C32-LD" dnOrder="3" key="preprocessor-macros" value=""/>
+        <Setting append="true" category="C32-LD" delimiter=";" dnOrder="3" key="preprocessor-macros" value=""/>
         <Setting category="C32Global" dnOrder="4" key="mdtcm" value=""/>
         <Setting category="C32Global" dnOrder="5" key="mitcm" value=""/>
         <Setting category="C32Global" dnOrder="6" key="mstacktcm" value="false"/>
@@ -627,11 +627,11 @@
     </Manifest>
     <Settings dnOrder="4">
       <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.6.0"/>
-      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAMV71_DFP\4.1.49\samv71b\atdf\ATSAMV71Q21B.atdf"/>
+      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAMV71_DFP\4.2.57\samv71b\atdf\ATSAMV71Q21B.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
       <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
-      <Setting dnOrder="5" key="PackageFilter" value="bsp;core;csp;expresslogic_threadx;net;usb;"/>
+      <Setting dnOrder="5" key="PackageFilter" value="bsp;core;csp;expresslogic_threadx;net;"/>
     </Settings>
   </Configurator>
 </Configuration>

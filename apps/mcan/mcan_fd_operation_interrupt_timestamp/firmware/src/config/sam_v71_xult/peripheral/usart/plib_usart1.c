@@ -47,22 +47,20 @@
 // *****************************************************************************
 // *****************************************************************************
 
-void static USART1_ErrorClear( void )
+static void USART1_ErrorClear( void )
 {
     uint8_t dummyData = 0u;
 
-    USART1_REGS->US_CR |= US_CR_USART_RSTSTA_Msk;
+    USART1_REGS->US_CR = US_CR_USART_RSTSTA_Msk;
 
     /* Flush existing error bytes from the RX FIFO */
-    while( US_CSR_USART_RXRDY_Msk == (USART1_REGS->US_CSR& US_CSR_USART_RXRDY_Msk) )
+    while( US_CSR_USART_RXRDY_Msk == (USART1_REGS->US_CSR & US_CSR_USART_RXRDY_Msk) )
     {
-        dummyData = (USART1_REGS->US_RHR& US_RHR_RXCHR_Msk);
+        dummyData = (USART1_REGS->US_RHR & US_RHR_RXCHR_Msk);
     }
 
     /* Ignore the warning */
     (void)dummyData;
-
-    return;
 }
 
 void USART1_Initialize( void )
@@ -78,8 +76,6 @@ void USART1_Initialize( void )
 
     /* Configure USART1 Baud Rate */
     USART1_REGS->US_BRGR = US_BRGR_CD(81);
-
-    return;
 }
 
 USART_ERROR USART1_ErrorGet( void )
@@ -128,6 +124,7 @@ bool USART1_SerialSetup( USART_SERIAL_SETUP *setup, uint32_t srcClkFreq )
         {
             return false;
         }
+
         if (brgVal > 65535)
         {
             /* The requested baud is so low that the ratio of srcClkFreq to baud exceeds the 16-bit register value of CD register */
@@ -181,7 +178,6 @@ bool USART1_Read( void *buffer, const size_t size )
         {
             status = true;
         }
-
     }
 
     return status;
@@ -210,12 +206,12 @@ bool USART1_Write( void *buffer, const size_t size )
     return status;
 }
 
-int USART1_ReadByte(void)
+int USART1_ReadByte( void )
 {
     return(USART1_REGS->US_RHR & US_RHR_RXCHR_Msk);
 }
 
-void USART1_WriteByte(int data)
+void USART1_WriteByte( int data )
 {
     while ((US_CSR_USART_TXRDY_Msk == (USART1_REGS->US_CSR & US_CSR_USART_TXRDY_Msk)) == 0);
 

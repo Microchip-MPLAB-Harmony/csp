@@ -170,7 +170,7 @@
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="SAMV71_DFP" vendor="Microchip" version="4.1.52"/>
+        <pack name="SAMV71_DFP" vendor="Microchip" version="4.1.49"/>
         <pack name="CMSIS" vendor="ARM" version="5.4.0"/>
       </packs>
       <compileType>

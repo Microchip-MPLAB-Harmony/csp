@@ -57,8 +57,11 @@
 // Global Data
 // *****************************************************************************
 // *****************************************************************************
-#define MCAN_STD_ID_Msk    0x7FF
+#define MCAN_STD_ID_Msk        0x7FF
+#define MCAN_CALLBACK_TX_INDEX 3
 
+static MCAN_RX_MSG mcan1RxMsg[3][1];
+static MCAN_CALLBACK_OBJ mcan1CallbackObj[4];
 static MCAN_OBJ mcan1Obj;
 
 static const mcan_sidfe_registers_t mcan1StdFilter[] =
@@ -202,10 +205,9 @@ void MCAN1_Initialize(void)
 
     // Initialize the MCAN PLib Object
     mcan1Obj.txBufferIndex = 0;
-    mcan1Obj.rxId = 0;
-    mcan1Obj.rxBuffer = 0;
-    mcan1Obj.rxsize = 0;
-    mcan1Obj.state = MCAN_STATE_IDLE;
+    mcan1Obj.rxBufferIndex1 = 0;
+    mcan1Obj.rxBufferIndex2 = 0;
+    memset((void *)mcan1RxMsg, 0x00, sizeof(mcan1RxMsg));
     memset((void*)&mcan1Obj.msgRAMConfig, 0x00, sizeof(MCAN_MSG_RAM_CONFIG));
 }
 
@@ -295,7 +297,6 @@ bool MCAN1_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, MCAN_MODE
     fifo->MCAN_TXBE_1 |= ((++messageMarker << MCAN_TXBE_1_MM_Pos) & MCAN_TXBE_1_MM_Msk);
 
     MCAN1_REGS->MCAN_TXBTIE = 1U << tfqpi;
-    mcan1Obj.state = MCAN_STATE_TRANSFER_TRANSMIT;
 
     /* request the transmit */
     MCAN1_REGS->MCAN_TXBAR = 1U << tfqpi;
@@ -328,32 +329,61 @@ bool MCAN1_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, MCAN_MODE
 */
 bool MCAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp, MCAN_MSG_RX_ATTRIBUTE msgAttr)
 {
-    uint32_t rxInterrupt = 0;
+    uint8_t bufferIndex = 0;
     bool status = false;
 
     switch (msgAttr)
     {
         case MCAN_MSG_ATTR_RX_BUFFER:
-            rxInterrupt = MCAN_IE_DRXE_Msk;
+            for (bufferIndex = 0; bufferIndex < 1; bufferIndex++)
+            {
+                if (bufferIndex < 32)
+                {
+                    if ((mcan1Obj.rxBufferIndex1 & (1 << (bufferIndex & 0x1F))) == 0)
+                    {
+                        mcan1Obj.rxBufferIndex1 |= (1 << (bufferIndex & 0x1F));
+                        break;
+                    }
+                }
+                else if ((mcan1Obj.rxBufferIndex2 & (1 << ((bufferIndex - 32) & 0x1F))) == 0)
+                {
+                    mcan1Obj.rxBufferIndex2 |= (1 << ((bufferIndex - 32) & 0x1F));
+                    break;
+                }
+            }
+            if(bufferIndex == 1)
+            {
+                /* The Rx buffers are full */
+                return false;
+            }
+            mcan1RxMsg[msgAttr][bufferIndex].rxId = id;
+            mcan1RxMsg[msgAttr][bufferIndex].rxBuffer = data;
+            mcan1RxMsg[msgAttr][bufferIndex].rxsize = length;
+            mcan1RxMsg[msgAttr][bufferIndex].timestamp = timestamp;
+            MCAN1_REGS->MCAN_IE |= MCAN_IE_DRXE_Msk;
             status = true;
             break;
         case MCAN_MSG_ATTR_RX_FIFO0:
-            rxInterrupt = MCAN_IE_RF0NE_Msk;
+            bufferIndex = (uint8_t)((MCAN1_REGS->MCAN_RXF0S & MCAN_RXF0S_F0GI_Msk) >> MCAN_RXF0S_F0GI_Pos);
+            mcan1RxMsg[msgAttr][bufferIndex].rxId = id;
+            mcan1RxMsg[msgAttr][bufferIndex].rxBuffer = data;
+            mcan1RxMsg[msgAttr][bufferIndex].rxsize = length;
+            mcan1RxMsg[msgAttr][bufferIndex].timestamp = timestamp;
+            MCAN1_REGS->MCAN_IE |= MCAN_IE_RF0NE_Msk;
             status = true;
             break;
         case MCAN_MSG_ATTR_RX_FIFO1:
-            rxInterrupt = MCAN_IE_RF1NE_Msk;
+            bufferIndex = (uint8_t)((MCAN1_REGS->MCAN_RXF1S & MCAN_RXF1S_F1GI_Msk) >> MCAN_RXF1S_F1GI_Pos);
+            mcan1RxMsg[msgAttr][bufferIndex].rxId = id;
+            mcan1RxMsg[msgAttr][bufferIndex].rxBuffer = data;
+            mcan1RxMsg[msgAttr][bufferIndex].rxsize = length;
+            mcan1RxMsg[msgAttr][bufferIndex].timestamp = timestamp;
+            MCAN1_REGS->MCAN_IE |= MCAN_IE_RF1NE_Msk;
             status = true;
             break;
         default:
             return status;
     }
-    mcan1Obj.state = MCAN_STATE_TRANSFER_RECEIVE;
-    mcan1Obj.rxId = id;
-    mcan1Obj.rxBuffer = data;
-    mcan1Obj.rxsize = length;
-    mcan1Obj.timestamp = timestamp;
-    MCAN1_REGS->MCAN_IE |= rxInterrupt;
     return status;
 }
 
@@ -731,36 +761,7 @@ bool MCAN1_ExtendedFilterElementGet(uint8_t filterNumber, mcan_xidfe_registers_t
 
 // *****************************************************************************
 /* Function:
-    bool MCAN1_IsBusy(void)
-
-   Summary:
-    Returns the Peripheral busy status.
-
-   Precondition:
-    MCAN1_Initialize must have been called for the associated MCAN instance.
-
-   Parameters:
-    None.
-
-   Returns:
-    true - Busy.
-    false - Not busy.
-*/
-bool MCAN1_IsBusy(void)
-{
-    if (mcan1Obj.state == MCAN_STATE_IDLE)
-    {
-        return false;
-    }
-    else
-    {
-        return true;
-    }
-}
-
-// *****************************************************************************
-/* Function:
-    void MCAN1_CallbackRegister(MCAN_CALLBACK callback, uintptr_t contextHandle)
+    void MCAN1_TxCallbackRegister(MCAN_CALLBACK callback, uintptr_t contextHandle)
 
    Summary:
     Sets the pointer to the function (and it's context) to be called when the
@@ -773,21 +774,55 @@ bool MCAN1_IsBusy(void)
     callback - A pointer to a function with a calling signature defined
     by the MCAN_CALLBACK data type.
 
-    context - A value (usually a pointer) passed (unused) into the function
+    contextHandle - A value (usually a pointer) passed (unused) into the function
     identified by the callback parameter.
 
    Returns:
     None.
 */
-void MCAN1_CallbackRegister(MCAN_CALLBACK callback, uintptr_t contextHandle)
+void MCAN1_TxCallbackRegister(MCAN_CALLBACK callback, uintptr_t contextHandle)
 {
     if (callback == NULL)
     {
         return;
     }
 
-    mcan1Obj.callback = callback;
-    mcan1Obj.context = contextHandle;
+    mcan1CallbackObj[MCAN_CALLBACK_TX_INDEX].callback = callback;
+    mcan1CallbackObj[MCAN_CALLBACK_TX_INDEX].context = contextHandle;
+}
+
+// *****************************************************************************
+/* Function:
+    void MCAN1_RxCallbackRegister(MCAN_CALLBACK callback, uintptr_t contextHandle, MCAN_MSG_RX_ATTRIBUTE msgAttr)
+
+   Summary:
+    Sets the pointer to the function (and it's context) to be called when the
+    given MCAN's transfer events occur.
+
+   Precondition:
+    MCAN1_Initialize must have been called for the associated MCAN instance.
+
+   Parameters:
+    callback - A pointer to a function with a calling signature defined
+    by the MCAN_CALLBACK data type.
+
+    contextHandle - A value (usually a pointer) passed (unused) into the function
+    identified by the callback parameter.
+
+    msgAttr   - Message to be read from Rx FIFO0 or Rx FIFO1 or Rx Buffer
+
+   Returns:
+    None.
+*/
+void MCAN1_RxCallbackRegister(MCAN_CALLBACK callback, uintptr_t contextHandle, MCAN_MSG_RX_ATTRIBUTE msgAttr)
+{
+    if (callback == NULL)
+    {
+        return;
+    }
+
+    mcan1CallbackObj[msgAttr].callback = callback;
+    mcan1CallbackObj[msgAttr].context = contextHandle;
 }
 
 // *****************************************************************************
@@ -828,12 +863,13 @@ void MCAN1_INT0_InterruptHandler(void)
     if (ir & MCAN_IR_BO_Msk)
     {
         MCAN1_REGS->MCAN_IR = MCAN_IR_BO_Msk;
-        mcan1Obj.state = MCAN_STATE_ERROR;
-        /* Client must call MCAN1_ErrorGet function to get and clear errors */
-        if (mcan1Obj.callback != NULL)
+        for (uint8_t fifoIndex = 0; fifoIndex < 4; fifoIndex++)
         {
-            mcan1Obj.callback(mcan1Obj.context);
-            mcan1Obj.state = MCAN_STATE_IDLE;
+            /* Client must call MCAN1_ErrorGet function to get and clear errors */
+            if (mcan1CallbackObj[fifoIndex].callback != NULL)
+            {
+                mcan1CallbackObj[fifoIndex].callback(mcan1CallbackObj[fifoIndex].context);
+            }
         }
     }
     /* New Message in Rx FIFO 0 */
@@ -851,29 +887,33 @@ void MCAN1_INT0_InterruptHandler(void)
             /* Get received identifier */
             if (rxf0eFifo->MCAN_RXF0E_0 & MCAN_RXF0E_0_XTD_Msk)
             {
-                *mcan1Obj.rxId = rxf0eFifo->MCAN_RXF0E_0 & MCAN_RXF0E_0_ID_Msk;
+                *mcan1RxMsg[MCAN_MSG_ATTR_RX_FIFO0][rxgi].rxId = rxf0eFifo->MCAN_RXF0E_0 & MCAN_RXF0E_0_ID_Msk;
             }
             else
             {
-                *mcan1Obj.rxId = (rxf0eFifo->MCAN_RXF0E_0 >> 18) & MCAN_STD_ID_Msk;
+                *mcan1RxMsg[MCAN_MSG_ATTR_RX_FIFO0][rxgi].rxId = (rxf0eFifo->MCAN_RXF0E_0 >> 18) & MCAN_STD_ID_Msk;
             }
 
             /* Get received data length */
             length = MCANDlcToLengthGet(((rxf0eFifo->MCAN_RXF0E_1 & MCAN_RXF0E_1_DLC_Msk) >> MCAN_RXF0E_1_DLC_Pos));
 
             /* Copy data to user buffer */
-            memcpy(mcan1Obj.rxBuffer, (uint8_t *)&rxf0eFifo->MCAN_RXF0E_DATA, length);
-            *mcan1Obj.rxsize = length;
+            memcpy(mcan1RxMsg[MCAN_MSG_ATTR_RX_FIFO0][rxgi].rxBuffer, (uint8_t *)&rxf0eFifo->MCAN_RXF0E_DATA, length);
+            *mcan1RxMsg[MCAN_MSG_ATTR_RX_FIFO0][rxgi].rxsize = length;
 
             /* Get timestamp from received message */
-            if (mcan1Obj.timestamp != NULL)
+            if (mcan1RxMsg[MCAN_MSG_ATTR_RX_FIFO0][rxgi].timestamp != NULL)
             {
-                *mcan1Obj.timestamp = (uint16_t)(rxf0eFifo->MCAN_RXF0E_1 & MCAN_RXF0E_1_RXTS_Msk);
+                *mcan1RxMsg[MCAN_MSG_ATTR_RX_FIFO0][rxgi].timestamp = (uint16_t)(rxf0eFifo->MCAN_RXF0E_1 & MCAN_RXF0E_1_RXTS_Msk);
             }
 
             /* Ack the fifo position */
             MCAN1_REGS->MCAN_RXF0A = MCAN_RXF0A_F0AI(rxgi);
-            mcan1Obj.state = MCAN_STATE_TRANSFER_DONE;
+
+            if (mcan1CallbackObj[MCAN_MSG_ATTR_RX_FIFO0].callback != NULL)
+            {
+                mcan1CallbackObj[MCAN_MSG_ATTR_RX_FIFO0].callback(mcan1CallbackObj[MCAN_MSG_ATTR_RX_FIFO0].context);
+            }
         }
     }
     /* New Message in Rx FIFO 1 */
@@ -891,29 +931,33 @@ void MCAN1_INT0_InterruptHandler(void)
             /* Get received identifier */
             if (rxf1eFifo->MCAN_RXF1E_0 & MCAN_RXF1E_0_XTD_Msk)
             {
-                *mcan1Obj.rxId = rxf1eFifo->MCAN_RXF1E_0 & MCAN_RXF1E_0_ID_Msk;
+                *mcan1RxMsg[MCAN_MSG_ATTR_RX_FIFO1][rxgi].rxId = rxf1eFifo->MCAN_RXF1E_0 & MCAN_RXF1E_0_ID_Msk;
             }
             else
             {
-                *mcan1Obj.rxId = (rxf1eFifo->MCAN_RXF1E_0 >> 18) & MCAN_STD_ID_Msk;
+                *mcan1RxMsg[MCAN_MSG_ATTR_RX_FIFO1][rxgi].rxId = (rxf1eFifo->MCAN_RXF1E_0 >> 18) & MCAN_STD_ID_Msk;
             }
 
             /* Get received data length */
             length = MCANDlcToLengthGet(((rxf1eFifo->MCAN_RXF1E_1 & MCAN_RXF1E_1_DLC_Msk) >> MCAN_RXF1E_1_DLC_Pos));
 
             /* Copy data to user buffer */
-            memcpy(mcan1Obj.rxBuffer, (uint8_t *)&rxf1eFifo->MCAN_RXF1E_DATA, length);
-            *mcan1Obj.rxsize = length;
+            memcpy(mcan1RxMsg[MCAN_MSG_ATTR_RX_FIFO1][rxgi].rxBuffer, (uint8_t *)&rxf1eFifo->MCAN_RXF1E_DATA, length);
+            *mcan1RxMsg[MCAN_MSG_ATTR_RX_FIFO1][rxgi].rxsize = length;
 
             /* Get timestamp from received message */
-            if (mcan1Obj.timestamp != NULL)
+            if (mcan1RxMsg[MCAN_MSG_ATTR_RX_FIFO1][rxgi].timestamp != NULL)
             {
-                *mcan1Obj.timestamp = (uint16_t)(rxf1eFifo->MCAN_RXF1E_1 & MCAN_RXF1E_1_RXTS_Msk);
+                *mcan1RxMsg[MCAN_MSG_ATTR_RX_FIFO1][rxgi].timestamp = (uint16_t)(rxf1eFifo->MCAN_RXF1E_1 & MCAN_RXF1E_1_RXTS_Msk);
             }
 
             /* Ack the fifo position */
             MCAN1_REGS->MCAN_RXF1A = MCAN_RXF1A_F1AI(rxgi);
-            mcan1Obj.state = MCAN_STATE_TRANSFER_DONE;
+
+            if (mcan1CallbackObj[MCAN_MSG_ATTR_RX_FIFO1].callback != NULL)
+            {
+                mcan1CallbackObj[MCAN_MSG_ATTR_RX_FIFO1].callback(mcan1CallbackObj[MCAN_MSG_ATTR_RX_FIFO1].context);
+            }
         }
     }
     /* New Message in Dedicated Rx Buffer */
@@ -947,36 +991,47 @@ void MCAN1_INT0_InterruptHandler(void)
         /* Get received identifier */
         if (rxbeFifo->MCAN_RXBE_0 & MCAN_RXBE_0_XTD_Msk)
         {
-            *mcan1Obj.rxId = rxbeFifo->MCAN_RXBE_0 & MCAN_RXBE_0_ID_Msk;
+            *mcan1RxMsg[MCAN_MSG_ATTR_RX_BUFFER][rxgi].rxId = rxbeFifo->MCAN_RXBE_0 & MCAN_RXBE_0_ID_Msk;
         }
         else
         {
-            *mcan1Obj.rxId = (rxbeFifo->MCAN_RXBE_0 >> 18) & MCAN_STD_ID_Msk;
+            *mcan1RxMsg[MCAN_MSG_ATTR_RX_BUFFER][rxgi].rxId = (rxbeFifo->MCAN_RXBE_0 >> 18) & MCAN_STD_ID_Msk;
         }
 
         /* Get received data length */
         length = MCANDlcToLengthGet(((rxbeFifo->MCAN_RXBE_1 & MCAN_RXBE_1_DLC_Msk) >> MCAN_RXBE_1_DLC_Pos));
 
         /* Copy data to user buffer */
-        memcpy(mcan1Obj.rxBuffer, (uint8_t *)&rxbeFifo->MCAN_RXBE_DATA, length);
-        *mcan1Obj.rxsize = length;
+        memcpy(mcan1RxMsg[MCAN_MSG_ATTR_RX_BUFFER][rxgi].rxBuffer, (uint8_t *)&rxbeFifo->MCAN_RXBE_DATA, length);
+        *mcan1RxMsg[MCAN_MSG_ATTR_RX_BUFFER][rxgi].rxsize = length;
 
         /* Get timestamp from received message */
-        if (mcan1Obj.timestamp != NULL)
+        if (mcan1RxMsg[MCAN_MSG_ATTR_RX_BUFFER][rxgi].timestamp != NULL)
         {
-            *mcan1Obj.timestamp = (uint16_t)(rxbeFifo->MCAN_RXBE_1 & MCAN_RXBE_1_RXTS_Msk);
+            *mcan1RxMsg[MCAN_MSG_ATTR_RX_BUFFER][rxgi].timestamp = (uint16_t)(rxbeFifo->MCAN_RXBE_1 & MCAN_RXBE_1_RXTS_Msk);
         }
 
         /* Clear new data flag */
         if (rxgi < 32)
         {
             MCAN1_REGS->MCAN_NDAT1 = (1 << rxgi);
+            if (0 != (mcan1Obj.rxBufferIndex1 & (1 << (rxgi & 0x1F))))
+            {
+                mcan1Obj.rxBufferIndex1 &= (~(1 << (rxgi & 0x1F)));
+            }
         }
         else
         {
             MCAN1_REGS->MCAN_NDAT2 = (1 << (rxgi - 32));
+            if (0 != (mcan1Obj.rxBufferIndex2 & (1 << ((rxgi - 32) & 0x1F))))
+            {
+                mcan1Obj.rxBufferIndex2 &= (~(1 << ((rxgi - 32) & 0x1F)));
+            }
         }
-        mcan1Obj.state = MCAN_STATE_TRANSFER_DONE;
+        if (mcan1CallbackObj[MCAN_MSG_ATTR_RX_BUFFER].callback != NULL)
+        {
+            mcan1CallbackObj[MCAN_MSG_ATTR_RX_BUFFER].callback(mcan1CallbackObj[MCAN_MSG_ATTR_RX_BUFFER].context);
+        }
     }
 
     /* TX Completed */
@@ -990,8 +1045,11 @@ void MCAN1_INT0_InterruptHandler(void)
                 (MCAN1_REGS->MCAN_TXBTIE & (1 << (bufferIndex & 0x1F))))
             {
                 MCAN1_REGS->MCAN_TXBTIE &= ~(1 << (bufferIndex & 0x1F));
-                mcan1Obj.state = MCAN_STATE_TRANSFER_DONE;
             }
+        }
+        if (mcan1CallbackObj[MCAN_CALLBACK_TX_INDEX].callback != NULL)
+        {
+            mcan1CallbackObj[MCAN_CALLBACK_TX_INDEX].callback(mcan1CallbackObj[MCAN_CALLBACK_TX_INDEX].context);
         }
     }
 
@@ -1007,15 +1065,6 @@ void MCAN1_INT0_InterruptHandler(void)
             {
                 break;
             }
-            mcan1Obj.state = MCAN_STATE_TRANSFER_DONE;
-        }
-    }
-    if (mcan1Obj.state == MCAN_STATE_TRANSFER_DONE)
-    {
-        if (mcan1Obj.callback != NULL)
-        {
-            mcan1Obj.callback(mcan1Obj.context);
-            mcan1Obj.state = MCAN_STATE_IDLE;
         }
     }
 }
