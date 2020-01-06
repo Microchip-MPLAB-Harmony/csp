@@ -57,8 +57,29 @@
 // Global Data
 // *****************************************************************************
 // *****************************************************************************
-#define CAN_STD_ID_Msk    0x7FF
+#define CAN_STD_ID_Msk        0x7FF
+<#if INTERRUPT_MODE == true>
+#define CAN_CALLBACK_TX_INDEX 3
 
+<#assign NUM_OF_FIFO = 2>
+<#assign NUM_OF_ELEMENTS = 1>
+ <#if RXF0_USE>
+  <#assign NUM_OF_ELEMENTS = RXF0_ELEMENTS>
+ </#if>
+ <#if RXF1_USE>
+  <#if NUM_OF_ELEMENTS?number < RXF1_ELEMENTS>
+   <#assign NUM_OF_ELEMENTS = RXF1_ELEMENTS>
+  </#if>
+ </#if>
+ <#if RXBUF_USE>
+ <#assign NUM_OF_FIFO = NUM_OF_FIFO + 1>
+  <#if NUM_OF_ELEMENTS?number < RX_BUFFER_ELEMENTS>
+   <#assign NUM_OF_ELEMENTS = RX_BUFFER_ELEMENTS>
+  </#if>
+ </#if>
+static CAN_RX_MSG ${CAN_INSTANCE_NAME?lower_case}RxMsg[${NUM_OF_FIFO}][${NUM_OF_ELEMENTS}];
+static CAN_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}CallbackObj[4];
+</#if>
 static CAN_OBJ ${CAN_INSTANCE_NAME?lower_case}Obj;
 <#if FILTERS_STD?number gt 0>
 <#assign numInstance=FILTERS_STD?number>
@@ -226,10 +247,9 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
 
     // Initialize the CAN PLib Object
     ${CAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex = 0;
-    ${CAN_INSTANCE_NAME?lower_case}Obj.rxId = 0;
-    ${CAN_INSTANCE_NAME?lower_case}Obj.rxBuffer = 0;
-    ${CAN_INSTANCE_NAME?lower_case}Obj.rxsize = 0;
-    ${CAN_INSTANCE_NAME?lower_case}Obj.state = CAN_STATE_IDLE;
+    ${CAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex1 = 0;
+    ${CAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex2 = 0;
+    memset((void *)${CAN_INSTANCE_NAME?lower_case}RxMsg, 0x00, sizeof(${CAN_INSTANCE_NAME?lower_case}RxMsg));
 </#if>
     memset((void*)&${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig, 0x00, sizeof(CAN_MSG_RAM_CONFIG));
 }
@@ -361,7 +381,6 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* 
 <#if INTERRUPT_MODE == true>
 
     ${CAN_INSTANCE_NAME}_REGS->CAN_TXBTIE = 1U << tfqpi;
-    ${CAN_INSTANCE_NAME?lower_case}Obj.state = CAN_STATE_TRANSFER_TRANSMIT;
 </#if>
 
     /* request the transmit */
@@ -422,7 +441,7 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
     can_rxf1e_registers_t *rxf1eFifo = NULL;
 </#if>
 <#else>
-    uint32_t rxInterrupt = 0;
+    uint8_t bufferIndex = 0;
 </#if>
     bool status = false;
 
@@ -493,7 +512,32 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
                 ${CAN_INSTANCE_NAME}_REGS->CAN_NDAT2 = (1 << (rxgi - 32));
             }
 <#else>
-            rxInterrupt = CAN_IE_DRXE_Msk;
+            for (bufferIndex = 0; bufferIndex < ${RX_BUFFER_ELEMENTS}; bufferIndex++)
+            {
+                if (bufferIndex < 32)
+                {
+                    if ((${CAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex1 & (1 << (bufferIndex & 0x1F))) == 0)
+                    {
+                        ${CAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex1 |= (1 << (bufferIndex & 0x1F));
+                        break;
+                    }
+                }
+                else if ((${CAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex2 & (1 << ((bufferIndex - 32) & 0x1F))) == 0)
+                {
+                    ${CAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex2 |= (1 << ((bufferIndex - 32) & 0x1F));
+                    break;
+                }
+            }
+            if(bufferIndex == ${RX_BUFFER_ELEMENTS})
+            {
+                /* The Rx buffers are full */
+                return false;
+            }
+            ${CAN_INSTANCE_NAME?lower_case}RxMsg[msgAttr][bufferIndex].rxId = id;
+            ${CAN_INSTANCE_NAME?lower_case}RxMsg[msgAttr][bufferIndex].rxBuffer = data;
+            ${CAN_INSTANCE_NAME?lower_case}RxMsg[msgAttr][bufferIndex].rxsize = length;
+            ${CAN_INSTANCE_NAME?lower_case}RxMsg[msgAttr][bufferIndex].timestamp = timestamp;
+            ${CAN_INSTANCE_NAME}_REGS->CAN_IE |= CAN_IE_DRXE_Msk;
 </#if>
             status = true;
             break;
@@ -538,7 +582,12 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
             /* Ack the fifo position */
             ${CAN_INSTANCE_NAME}_REGS->CAN_RXF0A = CAN_RXF0A_F0AI(rxgi);
 <#else>
-            rxInterrupt = CAN_IE_RF0NE_Msk;
+            bufferIndex = (uint8_t)((${CAN_INSTANCE_NAME}_REGS->CAN_RXF0S & CAN_RXF0S_F0GI_Msk) >> CAN_RXF0S_F0GI_Pos);
+            ${CAN_INSTANCE_NAME?lower_case}RxMsg[msgAttr][bufferIndex].rxId = id;
+            ${CAN_INSTANCE_NAME?lower_case}RxMsg[msgAttr][bufferIndex].rxBuffer = data;
+            ${CAN_INSTANCE_NAME?lower_case}RxMsg[msgAttr][bufferIndex].rxsize = length;
+            ${CAN_INSTANCE_NAME?lower_case}RxMsg[msgAttr][bufferIndex].timestamp = timestamp;
+            ${CAN_INSTANCE_NAME}_REGS->CAN_IE |= CAN_IE_RF0NE_Msk;
 </#if>
             status = true;
             break;
@@ -583,7 +632,12 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
             /* Ack the fifo position */
             ${CAN_INSTANCE_NAME}_REGS->CAN_RXF1A = CAN_RXF1A_F1AI(rxgi);
 <#else>
-            rxInterrupt = CAN_IE_RF1NE_Msk;
+            bufferIndex = (uint8_t)((${CAN_INSTANCE_NAME}_REGS->CAN_RXF1S & CAN_RXF1S_F1GI_Msk) >> CAN_RXF1S_F1GI_Pos);
+            ${CAN_INSTANCE_NAME?lower_case}RxMsg[msgAttr][bufferIndex].rxId = id;
+            ${CAN_INSTANCE_NAME?lower_case}RxMsg[msgAttr][bufferIndex].rxBuffer = data;
+            ${CAN_INSTANCE_NAME?lower_case}RxMsg[msgAttr][bufferIndex].rxsize = length;
+            ${CAN_INSTANCE_NAME?lower_case}RxMsg[msgAttr][bufferIndex].timestamp = timestamp;
+            ${CAN_INSTANCE_NAME}_REGS->CAN_IE |= CAN_IE_RF1NE_Msk;
 </#if>
             status = true;
             break;
@@ -591,14 +645,6 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
         default:
             return status;
     }
-<#if INTERRUPT_MODE == true>
-    ${CAN_INSTANCE_NAME?lower_case}Obj.state = CAN_STATE_TRANSFER_RECEIVE;
-    ${CAN_INSTANCE_NAME?lower_case}Obj.rxId = id;
-    ${CAN_INSTANCE_NAME?lower_case}Obj.rxBuffer = data;
-    ${CAN_INSTANCE_NAME?lower_case}Obj.rxsize = length;
-    ${CAN_INSTANCE_NAME?lower_case}Obj.timestamp = timestamp;
-    ${CAN_INSTANCE_NAME}_REGS->CAN_IE |= rxInterrupt;
-</#if>
     return status;
 }
 
@@ -990,36 +1036,7 @@ bool ${CAN_INSTANCE_NAME}_ExtendedFilterElementGet(uint8_t filterNumber, can_xid
 <#if INTERRUPT_MODE == true>
 // *****************************************************************************
 /* Function:
-    bool ${CAN_INSTANCE_NAME}_IsBusy(void)
-
-   Summary:
-    Returns the Peripheral busy status.
-
-   Precondition:
-    ${CAN_INSTANCE_NAME}_Initialize must have been called for the associated CAN instance.
-
-   Parameters:
-    None.
-
-   Returns:
-    true - Busy.
-    false - Not busy.
-*/
-bool ${CAN_INSTANCE_NAME}_IsBusy(void)
-{
-    if (${CAN_INSTANCE_NAME?lower_case}Obj.state == CAN_STATE_IDLE)
-    {
-        return false;
-    }
-    else
-    {
-        return true;
-    }
-}
-
-// *****************************************************************************
-/* Function:
-    void ${CAN_INSTANCE_NAME}_CallbackRegister(CAN_CALLBACK callback, uintptr_t contextHandle)
+    void ${CAN_INSTANCE_NAME}_TxCallbackRegister(CAN_CALLBACK callback, uintptr_t contextHandle)
 
    Summary:
     Sets the pointer to the function (and it's context) to be called when the
@@ -1032,21 +1049,55 @@ bool ${CAN_INSTANCE_NAME}_IsBusy(void)
     callback - A pointer to a function with a calling signature defined
     by the CAN_CALLBACK data type.
 
-    context - A value (usually a pointer) passed (unused) into the function
+    contextHandle - A value (usually a pointer) passed (unused) into the function
     identified by the callback parameter.
 
    Returns:
     None.
 */
-void ${CAN_INSTANCE_NAME}_CallbackRegister(CAN_CALLBACK callback, uintptr_t contextHandle)
+void ${CAN_INSTANCE_NAME}_TxCallbackRegister(CAN_CALLBACK callback, uintptr_t contextHandle)
 {
     if (callback == NULL)
     {
         return;
     }
 
-    ${CAN_INSTANCE_NAME?lower_case}Obj.callback = callback;
-    ${CAN_INSTANCE_NAME?lower_case}Obj.context = contextHandle;
+    ${CAN_INSTANCE_NAME?lower_case}CallbackObj[CAN_CALLBACK_TX_INDEX].callback = callback;
+    ${CAN_INSTANCE_NAME?lower_case}CallbackObj[CAN_CALLBACK_TX_INDEX].context = contextHandle;
+}
+
+// *****************************************************************************
+/* Function:
+    void ${CAN_INSTANCE_NAME}_RxCallbackRegister(CAN_CALLBACK callback, uintptr_t contextHandle, CAN_MSG_RX_ATTRIBUTE msgAttr)
+
+   Summary:
+    Sets the pointer to the function (and it's context) to be called when the
+    given CAN's transfer events occur.
+
+   Precondition:
+    ${CAN_INSTANCE_NAME}_Initialize must have been called for the associated CAN instance.
+
+   Parameters:
+    callback - A pointer to a function with a calling signature defined
+    by the CAN_CALLBACK data type.
+
+    contextHandle - A value (usually a pointer) passed (unused) into the function
+    identified by the callback parameter.
+
+    msgAttr   - Message to be read from Rx FIFO0 or Rx FIFO1 or Rx Buffer
+
+   Returns:
+    None.
+*/
+void ${CAN_INSTANCE_NAME}_RxCallbackRegister(CAN_CALLBACK callback, uintptr_t contextHandle, CAN_MSG_RX_ATTRIBUTE msgAttr)
+{
+    if (callback == NULL)
+    {
+        return;
+    }
+
+    ${CAN_INSTANCE_NAME?lower_case}CallbackObj[msgAttr].callback = callback;
+    ${CAN_INSTANCE_NAME?lower_case}CallbackObj[msgAttr].context = contextHandle;
 }
 
 // *****************************************************************************
@@ -1093,12 +1144,13 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
     if (ir & CAN_IR_BO_Msk)
     {
         ${CAN_INSTANCE_NAME}_REGS->CAN_IR = CAN_IR_BO_Msk;
-        ${CAN_INSTANCE_NAME?lower_case}Obj.state = CAN_STATE_ERROR;
-        /* Client must call ${CAN_INSTANCE_NAME}_ErrorGet function to get and clear errors */
-        if (${CAN_INSTANCE_NAME?lower_case}Obj.callback != NULL)
+        for (uint8_t fifoIndex = 0; fifoIndex < 4; fifoIndex++)
         {
-            ${CAN_INSTANCE_NAME?lower_case}Obj.callback(${CAN_INSTANCE_NAME?lower_case}Obj.context);
-            ${CAN_INSTANCE_NAME?lower_case}Obj.state = CAN_STATE_IDLE;
+            /* Client must call ${CAN_INSTANCE_NAME}_ErrorGet function to get and clear errors */
+            if (${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoIndex].callback != NULL)
+            {
+                ${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoIndex].callback(${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoIndex].context);
+            }
         }
     }
 <#if RXF0_USE>
@@ -1117,31 +1169,35 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
             /* Get received identifier */
             if (rxf0eFifo->CAN_RXF0E_0 & CAN_RXF0E_0_XTD_Msk)
             {
-                *${CAN_INSTANCE_NAME?lower_case}Obj.rxId = rxf0eFifo->CAN_RXF0E_0 & CAN_RXF0E_0_ID_Msk;
+                *${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_FIFO0][rxgi].rxId = rxf0eFifo->CAN_RXF0E_0 & CAN_RXF0E_0_ID_Msk;
             }
             else
             {
-                *${CAN_INSTANCE_NAME?lower_case}Obj.rxId = (rxf0eFifo->CAN_RXF0E_0 >> 18) & CAN_STD_ID_Msk;
+                *${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_FIFO0][rxgi].rxId = (rxf0eFifo->CAN_RXF0E_0 >> 18) & CAN_STD_ID_Msk;
             }
 
             /* Get received data length */
             length = CANDlcToLengthGet(((rxf0eFifo->CAN_RXF0E_1 & CAN_RXF0E_1_DLC_Msk) >> CAN_RXF0E_1_DLC_Pos));
 
             /* Copy data to user buffer */
-            memcpy(${CAN_INSTANCE_NAME?lower_case}Obj.rxBuffer, (uint8_t *)&rxf0eFifo->CAN_RXF0E_DATA, length);
-            *${CAN_INSTANCE_NAME?lower_case}Obj.rxsize = length;
+            memcpy(${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_FIFO0][rxgi].rxBuffer, (uint8_t *)&rxf0eFifo->CAN_RXF0E_DATA, length);
+            *${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_FIFO0][rxgi].rxsize = length;
 
             <#if TIMESTAMP_ENABLE>
             /* Get timestamp from received message */
-            if (${CAN_INSTANCE_NAME?lower_case}Obj.timestamp != NULL)
+            if (${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_FIFO0][rxgi].timestamp != NULL)
             {
-                *${CAN_INSTANCE_NAME?lower_case}Obj.timestamp = (uint16_t)(rxf0eFifo->CAN_RXF0E_1 & CAN_RXF0E_1_RXTS_Msk);
+                *${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_FIFO0][rxgi].timestamp = (uint16_t)(rxf0eFifo->CAN_RXF0E_1 & CAN_RXF0E_1_RXTS_Msk);
             }
 
             </#if>
             /* Ack the fifo position */
             ${CAN_INSTANCE_NAME}_REGS->CAN_RXF0A = CAN_RXF0A_F0AI(rxgi);
-            ${CAN_INSTANCE_NAME?lower_case}Obj.state = CAN_STATE_TRANSFER_DONE;
+
+            if (${CAN_INSTANCE_NAME?lower_case}CallbackObj[CAN_MSG_ATTR_RX_FIFO0].callback != NULL)
+            {
+                ${CAN_INSTANCE_NAME?lower_case}CallbackObj[CAN_MSG_ATTR_RX_FIFO0].callback(${CAN_INSTANCE_NAME?lower_case}CallbackObj[CAN_MSG_ATTR_RX_FIFO0].context);
+            }
         }
     }
 </#if>
@@ -1161,31 +1217,35 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
             /* Get received identifier */
             if (rxf1eFifo->CAN_RXF1E_0 & CAN_RXF1E_0_XTD_Msk)
             {
-                *${CAN_INSTANCE_NAME?lower_case}Obj.rxId = rxf1eFifo->CAN_RXF1E_0 & CAN_RXF1E_0_ID_Msk;
+                *${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_FIFO1][rxgi].rxId = rxf1eFifo->CAN_RXF1E_0 & CAN_RXF1E_0_ID_Msk;
             }
             else
             {
-                *${CAN_INSTANCE_NAME?lower_case}Obj.rxId = (rxf1eFifo->CAN_RXF1E_0 >> 18) & CAN_STD_ID_Msk;
+                *${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_FIFO1][rxgi].rxId = (rxf1eFifo->CAN_RXF1E_0 >> 18) & CAN_STD_ID_Msk;
             }
 
             /* Get received data length */
             length = CANDlcToLengthGet(((rxf1eFifo->CAN_RXF1E_1 & CAN_RXF1E_1_DLC_Msk) >> CAN_RXF1E_1_DLC_Pos));
 
             /* Copy data to user buffer */
-            memcpy(${CAN_INSTANCE_NAME?lower_case}Obj.rxBuffer, (uint8_t *)&rxf1eFifo->CAN_RXF1E_DATA, length);
-            *${CAN_INSTANCE_NAME?lower_case}Obj.rxsize = length;
+            memcpy(${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_FIFO1][rxgi].rxBuffer, (uint8_t *)&rxf1eFifo->CAN_RXF1E_DATA, length);
+            *${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_FIFO1][rxgi].rxsize = length;
 
             <#if TIMESTAMP_ENABLE>
             /* Get timestamp from received message */
-            if (${CAN_INSTANCE_NAME?lower_case}Obj.timestamp != NULL)
+            if (${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_FIFO1][rxgi].timestamp != NULL)
             {
-                *${CAN_INSTANCE_NAME?lower_case}Obj.timestamp = (uint16_t)(rxf1eFifo->CAN_RXF1E_1 & CAN_RXF1E_1_RXTS_Msk);
+                *${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_FIFO1][rxgi].timestamp = (uint16_t)(rxf1eFifo->CAN_RXF1E_1 & CAN_RXF1E_1_RXTS_Msk);
             }
 
             </#if>
             /* Ack the fifo position */
             ${CAN_INSTANCE_NAME}_REGS->CAN_RXF1A = CAN_RXF1A_F1AI(rxgi);
-            ${CAN_INSTANCE_NAME?lower_case}Obj.state = CAN_STATE_TRANSFER_DONE;
+
+            if (${CAN_INSTANCE_NAME?lower_case}CallbackObj[CAN_MSG_ATTR_RX_FIFO1].callback != NULL)
+            {
+                ${CAN_INSTANCE_NAME?lower_case}CallbackObj[CAN_MSG_ATTR_RX_FIFO1].callback(${CAN_INSTANCE_NAME?lower_case}CallbackObj[CAN_MSG_ATTR_RX_FIFO1].context);
+            }
         }
     }
 </#if>
@@ -1221,25 +1281,25 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
         /* Get received identifier */
         if (rxbeFifo->CAN_RXBE_0 & CAN_RXBE_0_XTD_Msk)
         {
-            *${CAN_INSTANCE_NAME?lower_case}Obj.rxId = rxbeFifo->CAN_RXBE_0 & CAN_RXBE_0_ID_Msk;
+            *${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_BUFFER][rxgi].rxId = rxbeFifo->CAN_RXBE_0 & CAN_RXBE_0_ID_Msk;
         }
         else
         {
-            *${CAN_INSTANCE_NAME?lower_case}Obj.rxId = (rxbeFifo->CAN_RXBE_0 >> 18) & CAN_STD_ID_Msk;
+            *${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_BUFFER][rxgi].rxId = (rxbeFifo->CAN_RXBE_0 >> 18) & CAN_STD_ID_Msk;
         }
 
         /* Get received data length */
         length = CANDlcToLengthGet(((rxbeFifo->CAN_RXBE_1 & CAN_RXBE_1_DLC_Msk) >> CAN_RXBE_1_DLC_Pos));
 
         /* Copy data to user buffer */
-        memcpy(${CAN_INSTANCE_NAME?lower_case}Obj.rxBuffer, (uint8_t *)&rxbeFifo->CAN_RXBE_DATA, length);
-        *${CAN_INSTANCE_NAME?lower_case}Obj.rxsize = length;
+        memcpy(${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_BUFFER][rxgi].rxBuffer, (uint8_t *)&rxbeFifo->CAN_RXBE_DATA, length);
+        *${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_BUFFER][rxgi].rxsize = length;
 
         <#if TIMESTAMP_ENABLE>
         /* Get timestamp from received message */
-        if (${CAN_INSTANCE_NAME?lower_case}Obj.timestamp != NULL)
+        if (${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_BUFFER][rxgi].timestamp != NULL)
         {
-            *${CAN_INSTANCE_NAME?lower_case}Obj.timestamp = (uint16_t)(rxbeFifo->CAN_RXBE_1 & CAN_RXBE_1_RXTS_Msk);
+            *${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_BUFFER][rxgi].timestamp = (uint16_t)(rxbeFifo->CAN_RXBE_1 & CAN_RXBE_1_RXTS_Msk);
         }
 
         </#if>
@@ -1247,12 +1307,23 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
         if (rxgi < 32)
         {
             ${CAN_INSTANCE_NAME}_REGS->CAN_NDAT1 = (1 << rxgi);
+            if (0 != (${CAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex1 & (1 << (rxgi & 0x1F))))
+            {
+                ${CAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex1 &= (~(1 << (rxgi & 0x1F)));
+            }
         }
         else
         {
             ${CAN_INSTANCE_NAME}_REGS->CAN_NDAT2 = (1 << (rxgi - 32));
+            if (0 != (${CAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex2 & (1 << ((rxgi - 32) & 0x1F))))
+            {
+                ${CAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex2 &= (~(1 << ((rxgi - 32) & 0x1F)));
+            }
         }
-        ${CAN_INSTANCE_NAME?lower_case}Obj.state = CAN_STATE_TRANSFER_DONE;
+        if (${CAN_INSTANCE_NAME?lower_case}CallbackObj[CAN_MSG_ATTR_RX_BUFFER].callback != NULL)
+        {
+            ${CAN_INSTANCE_NAME?lower_case}CallbackObj[CAN_MSG_ATTR_RX_BUFFER].callback(${CAN_INSTANCE_NAME?lower_case}CallbackObj[CAN_MSG_ATTR_RX_BUFFER].context);
+        }
     }
 </#if>
 
@@ -1274,8 +1345,11 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
                     ${CAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex &= (~(1 << (bufferIndex & 0x1F)));
                 }
                 </#if>
-                ${CAN_INSTANCE_NAME?lower_case}Obj.state = CAN_STATE_TRANSFER_DONE;
             }
+        }
+        if (${CAN_INSTANCE_NAME?lower_case}CallbackObj[CAN_CALLBACK_TX_INDEX].callback != NULL)
+        {
+            ${CAN_INSTANCE_NAME?lower_case}CallbackObj[CAN_CALLBACK_TX_INDEX].callback(${CAN_INSTANCE_NAME?lower_case}CallbackObj[CAN_CALLBACK_TX_INDEX].context);
         }
     }
 
@@ -1303,17 +1377,6 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
                 ${CAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex &= (~(1 << ((fifoIndex + ${TX_BUFFER_ELEMENTS}) & 0x1F)));
             }
             </#if>
-            ${CAN_INSTANCE_NAME?lower_case}Obj.state = CAN_STATE_TRANSFER_DONE;
-        }
-    }
-</#if>
-<#if RXF0_USE || RXF1_USE || RXBUF_USE || TX_USE || TXBUF_USE>
-    if (${CAN_INSTANCE_NAME?lower_case}Obj.state == CAN_STATE_TRANSFER_DONE)
-    {
-        if (${CAN_INSTANCE_NAME?lower_case}Obj.callback != NULL)
-        {
-            ${CAN_INSTANCE_NAME?lower_case}Obj.callback(${CAN_INSTANCE_NAME?lower_case}Obj.context);
-            ${CAN_INSTANCE_NAME?lower_case}Obj.state = CAN_STATE_IDLE;
         }
     }
 </#if>
