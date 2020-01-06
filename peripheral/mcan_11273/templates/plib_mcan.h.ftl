@@ -168,8 +168,8 @@ bool ${MCAN_INSTANCE_NAME}_ExtendedFilterElementSet(uint8_t filterNumber, mcan_x
 bool ${MCAN_INSTANCE_NAME}_ExtendedFilterElementGet(uint8_t filterNumber, mcan_xidfe_registers_t *extMsgIDFilterElement);
 </#if>
 <#if INTERRUPT_MODE == true>
-bool ${MCAN_INSTANCE_NAME}_IsBusy(void);
-void ${MCAN_INSTANCE_NAME}_CallbackRegister(MCAN_CALLBACK callback, uintptr_t contextHandle);
+void ${MCAN_INSTANCE_NAME}_TxCallbackRegister(MCAN_CALLBACK callback, uintptr_t contextHandle);
+void ${MCAN_INSTANCE_NAME}_RxCallbackRegister(MCAN_CALLBACK callback, uintptr_t contextHandle, MCAN_MSG_RX_ATTRIBUTE msgAttr);
 </#if>
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

@@ -57,8 +57,29 @@
 // Global Data
 // *****************************************************************************
 // *****************************************************************************
-#define MCAN_STD_ID_Msk    0x7FF
+#define MCAN_STD_ID_Msk        0x7FF
+<#if INTERRUPT_MODE == true>
+#define MCAN_CALLBACK_TX_INDEX 3
 
+<#assign NUM_OF_FIFO = 2>
+<#assign NUM_OF_ELEMENTS = 1>
+ <#if RXF0_USE>
+  <#assign NUM_OF_ELEMENTS = RXF0_ELEMENTS>
+ </#if>
+ <#if RXF1_USE>
+  <#if NUM_OF_ELEMENTS?number < RXF1_ELEMENTS>
+   <#assign NUM_OF_ELEMENTS = RXF1_ELEMENTS>
+  </#if>
+ </#if>
+ <#if RXBUF_USE>
+ <#assign NUM_OF_FIFO = NUM_OF_FIFO + 1>
+  <#if NUM_OF_ELEMENTS?number < RX_BUFFER_ELEMENTS>
+   <#assign NUM_OF_ELEMENTS = RX_BUFFER_ELEMENTS>
+  </#if>
+ </#if>
+static MCAN_RX_MSG ${MCAN_INSTANCE_NAME?lower_case}RxMsg[${NUM_OF_FIFO}][${NUM_OF_ELEMENTS}];
+static MCAN_CALLBACK_OBJ ${MCAN_INSTANCE_NAME?lower_case}CallbackObj[4];
+</#if>
 static MCAN_OBJ ${MCAN_INSTANCE_NAME?lower_case}Obj;
 <#if FILTERS_STD?number gt 0>
 <#assign numInstance=FILTERS_STD?number>
@@ -241,10 +262,9 @@ void ${MCAN_INSTANCE_NAME}_Initialize(void)
 
     // Initialize the MCAN PLib Object
     ${MCAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex = 0;
-    ${MCAN_INSTANCE_NAME?lower_case}Obj.rxId = 0;
-    ${MCAN_INSTANCE_NAME?lower_case}Obj.rxBuffer = 0;
-    ${MCAN_INSTANCE_NAME?lower_case}Obj.rxsize = 0;
-    ${MCAN_INSTANCE_NAME?lower_case}Obj.state = MCAN_STATE_IDLE;
+    ${MCAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex1 = 0;
+    ${MCAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex2 = 0;
+    memset((void *)${MCAN_INSTANCE_NAME?lower_case}RxMsg, 0x00, sizeof(${MCAN_INSTANCE_NAME?lower_case}RxMsg));
 </#if>
     memset((void*)&${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig, 0x00, sizeof(MCAN_MSG_RAM_CONFIG));
 }
@@ -378,7 +398,6 @@ bool ${MCAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t*
 <#if INTERRUPT_MODE == true>
 
     ${MCAN_INSTANCE_NAME}_REGS->MCAN_TXBTIE = 1U << tfqpi;
-    ${MCAN_INSTANCE_NAME?lower_case}Obj.state = MCAN_STATE_TRANSFER_TRANSMIT;
 </#if>
 
     /* request the transmit */
@@ -439,7 +458,7 @@ bool ${MCAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t
     mcan_rxf1e_registers_t *rxf1eFifo = NULL;
 </#if>
 <#else>
-    uint32_t rxInterrupt = 0;
+    uint8_t bufferIndex = 0;
 </#if>
     bool status = false;
 
@@ -510,7 +529,32 @@ bool ${MCAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t
                 ${MCAN_INSTANCE_NAME}_REGS->MCAN_NDAT2 = (1 << (rxgi - 32));
             }
 <#else>
-            rxInterrupt = MCAN_IE_DRXE_Msk;
+            for (bufferIndex = 0; bufferIndex < ${RX_BUFFER_ELEMENTS}; bufferIndex++)
+            {
+                if (bufferIndex < 32)
+                {
+                    if ((${MCAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex1 & (1 << (bufferIndex & 0x1F))) == 0)
+                    {
+                        ${MCAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex1 |= (1 << (bufferIndex & 0x1F));
+                        break;
+                    }
+                }
+                else if ((${MCAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex2 & (1 << ((bufferIndex - 32) & 0x1F))) == 0)
+                {
+                    ${MCAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex2 |= (1 << ((bufferIndex - 32) & 0x1F));
+                    break;
+                }
+            }
+            if(bufferIndex == ${RX_BUFFER_ELEMENTS})
+            {
+                /* The Rx buffers are full */
+                return false;
+            }
+            ${MCAN_INSTANCE_NAME?lower_case}RxMsg[msgAttr][bufferIndex].rxId = id;
+            ${MCAN_INSTANCE_NAME?lower_case}RxMsg[msgAttr][bufferIndex].rxBuffer = data;
+            ${MCAN_INSTANCE_NAME?lower_case}RxMsg[msgAttr][bufferIndex].rxsize = length;
+            ${MCAN_INSTANCE_NAME?lower_case}RxMsg[msgAttr][bufferIndex].timestamp = timestamp;
+            ${MCAN_INSTANCE_NAME}_REGS->MCAN_IE |= MCAN_IE_DRXE_Msk;
 </#if>
             status = true;
             break;
@@ -555,7 +599,12 @@ bool ${MCAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t
             /* Ack the fifo position */
             ${MCAN_INSTANCE_NAME}_REGS->MCAN_RXF0A = MCAN_RXF0A_F0AI(rxgi);
 <#else>
-            rxInterrupt = MCAN_IE_RF0NE_Msk;
+            bufferIndex = (uint8_t)((${MCAN_INSTANCE_NAME}_REGS->MCAN_RXF0S & MCAN_RXF0S_F0GI_Msk) >> MCAN_RXF0S_F0GI_Pos);
+            ${MCAN_INSTANCE_NAME?lower_case}RxMsg[msgAttr][bufferIndex].rxId = id;
+            ${MCAN_INSTANCE_NAME?lower_case}RxMsg[msgAttr][bufferIndex].rxBuffer = data;
+            ${MCAN_INSTANCE_NAME?lower_case}RxMsg[msgAttr][bufferIndex].rxsize = length;
+            ${MCAN_INSTANCE_NAME?lower_case}RxMsg[msgAttr][bufferIndex].timestamp = timestamp;
+            ${MCAN_INSTANCE_NAME}_REGS->MCAN_IE |= MCAN_IE_RF0NE_Msk;
 </#if>
             status = true;
             break;
@@ -600,7 +649,12 @@ bool ${MCAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t
             /* Ack the fifo position */
             ${MCAN_INSTANCE_NAME}_REGS->MCAN_RXF1A = MCAN_RXF1A_F1AI(rxgi);
 <#else>
-            rxInterrupt = MCAN_IE_RF1NE_Msk;
+            bufferIndex = (uint8_t)((${MCAN_INSTANCE_NAME}_REGS->MCAN_RXF1S & MCAN_RXF1S_F1GI_Msk) >> MCAN_RXF1S_F1GI_Pos);
+            ${MCAN_INSTANCE_NAME?lower_case}RxMsg[msgAttr][bufferIndex].rxId = id;
+            ${MCAN_INSTANCE_NAME?lower_case}RxMsg[msgAttr][bufferIndex].rxBuffer = data;
+            ${MCAN_INSTANCE_NAME?lower_case}RxMsg[msgAttr][bufferIndex].rxsize = length;
+            ${MCAN_INSTANCE_NAME?lower_case}RxMsg[msgAttr][bufferIndex].timestamp = timestamp;
+            ${MCAN_INSTANCE_NAME}_REGS->MCAN_IE |= MCAN_IE_RF1NE_Msk;
 </#if>
             status = true;
             break;
@@ -608,14 +662,6 @@ bool ${MCAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t
         default:
             return status;
     }
-<#if INTERRUPT_MODE == true>
-    ${MCAN_INSTANCE_NAME?lower_case}Obj.state = MCAN_STATE_TRANSFER_RECEIVE;
-    ${MCAN_INSTANCE_NAME?lower_case}Obj.rxId = id;
-    ${MCAN_INSTANCE_NAME?lower_case}Obj.rxBuffer = data;
-    ${MCAN_INSTANCE_NAME?lower_case}Obj.rxsize = length;
-    ${MCAN_INSTANCE_NAME?lower_case}Obj.timestamp = timestamp;
-    ${MCAN_INSTANCE_NAME}_REGS->MCAN_IE |= rxInterrupt;
-</#if>
     return status;
 }
 
@@ -1047,36 +1093,7 @@ bool ${MCAN_INSTANCE_NAME}_ExtendedFilterElementGet(uint8_t filterNumber, mcan_x
 <#if INTERRUPT_MODE == true>
 // *****************************************************************************
 /* Function:
-    bool ${MCAN_INSTANCE_NAME}_IsBusy(void)
-
-   Summary:
-    Returns the Peripheral busy status.
-
-   Precondition:
-    ${MCAN_INSTANCE_NAME}_Initialize must have been called for the associated MCAN instance.
-
-   Parameters:
-    None.
-
-   Returns:
-    true - Busy.
-    false - Not busy.
-*/
-bool ${MCAN_INSTANCE_NAME}_IsBusy(void)
-{
-    if (${MCAN_INSTANCE_NAME?lower_case}Obj.state == MCAN_STATE_IDLE)
-    {
-        return false;
-    }
-    else
-    {
-        return true;
-    }
-}
-
-// *****************************************************************************
-/* Function:
-    void ${MCAN_INSTANCE_NAME}_CallbackRegister(MCAN_CALLBACK callback, uintptr_t contextHandle)
+    void ${MCAN_INSTANCE_NAME}_TxCallbackRegister(MCAN_CALLBACK callback, uintptr_t contextHandle)
 
    Summary:
     Sets the pointer to the function (and it's context) to be called when the
@@ -1089,21 +1106,55 @@ bool ${MCAN_INSTANCE_NAME}_IsBusy(void)
     callback - A pointer to a function with a calling signature defined
     by the MCAN_CALLBACK data type.
 
-    context - A value (usually a pointer) passed (unused) into the function
+    contextHandle - A value (usually a pointer) passed (unused) into the function
     identified by the callback parameter.
 
    Returns:
     None.
 */
-void ${MCAN_INSTANCE_NAME}_CallbackRegister(MCAN_CALLBACK callback, uintptr_t contextHandle)
+void ${MCAN_INSTANCE_NAME}_TxCallbackRegister(MCAN_CALLBACK callback, uintptr_t contextHandle)
 {
     if (callback == NULL)
     {
         return;
     }
 
-    ${MCAN_INSTANCE_NAME?lower_case}Obj.callback = callback;
-    ${MCAN_INSTANCE_NAME?lower_case}Obj.context = contextHandle;
+    ${MCAN_INSTANCE_NAME?lower_case}CallbackObj[MCAN_CALLBACK_TX_INDEX].callback = callback;
+    ${MCAN_INSTANCE_NAME?lower_case}CallbackObj[MCAN_CALLBACK_TX_INDEX].context = contextHandle;
+}
+
+// *****************************************************************************
+/* Function:
+    void ${MCAN_INSTANCE_NAME}_RxCallbackRegister(MCAN_CALLBACK callback, uintptr_t contextHandle, MCAN_MSG_RX_ATTRIBUTE msgAttr)
+
+   Summary:
+    Sets the pointer to the function (and it's context) to be called when the
+    given MCAN's transfer events occur.
+
+   Precondition:
+    ${MCAN_INSTANCE_NAME}_Initialize must have been called for the associated MCAN instance.
+
+   Parameters:
+    callback - A pointer to a function with a calling signature defined
+    by the MCAN_CALLBACK data type.
+
+    contextHandle - A value (usually a pointer) passed (unused) into the function
+    identified by the callback parameter.
+
+    msgAttr   - Message to be read from Rx FIFO0 or Rx FIFO1 or Rx Buffer
+
+   Returns:
+    None.
+*/
+void ${MCAN_INSTANCE_NAME}_RxCallbackRegister(MCAN_CALLBACK callback, uintptr_t contextHandle, MCAN_MSG_RX_ATTRIBUTE msgAttr)
+{
+    if (callback == NULL)
+    {
+        return;
+    }
+
+    ${MCAN_INSTANCE_NAME?lower_case}CallbackObj[msgAttr].callback = callback;
+    ${MCAN_INSTANCE_NAME?lower_case}CallbackObj[msgAttr].context = contextHandle;
 }
 
 // *****************************************************************************
@@ -1150,12 +1201,13 @@ void ${MCAN_INSTANCE_NAME}_INT0_InterruptHandler(void)
     if (ir & MCAN_IR_BO_Msk)
     {
         ${MCAN_INSTANCE_NAME}_REGS->MCAN_IR = MCAN_IR_BO_Msk;
-        ${MCAN_INSTANCE_NAME?lower_case}Obj.state = MCAN_STATE_ERROR;
-        /* Client must call ${MCAN_INSTANCE_NAME}_ErrorGet function to get and clear errors */
-        if (${MCAN_INSTANCE_NAME?lower_case}Obj.callback != NULL)
+        for (uint8_t fifoIndex = 0; fifoIndex < 4; fifoIndex++)
         {
-            ${MCAN_INSTANCE_NAME?lower_case}Obj.callback(${MCAN_INSTANCE_NAME?lower_case}Obj.context);
-            ${MCAN_INSTANCE_NAME?lower_case}Obj.state = MCAN_STATE_IDLE;
+            /* Client must call ${MCAN_INSTANCE_NAME}_ErrorGet function to get and clear errors */
+            if (${MCAN_INSTANCE_NAME?lower_case}CallbackObj[fifoIndex].callback != NULL)
+            {
+                ${MCAN_INSTANCE_NAME?lower_case}CallbackObj[fifoIndex].callback(${MCAN_INSTANCE_NAME?lower_case}CallbackObj[fifoIndex].context);
+            }
         }
     }
 <#if RXF0_USE>
@@ -1174,31 +1226,35 @@ void ${MCAN_INSTANCE_NAME}_INT0_InterruptHandler(void)
             /* Get received identifier */
             if (rxf0eFifo->MCAN_RXF0E_0 & MCAN_RXF0E_0_XTD_Msk)
             {
-                *${MCAN_INSTANCE_NAME?lower_case}Obj.rxId = rxf0eFifo->MCAN_RXF0E_0 & MCAN_RXF0E_0_ID_Msk;
+                *${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_FIFO0][rxgi].rxId = rxf0eFifo->MCAN_RXF0E_0 & MCAN_RXF0E_0_ID_Msk;
             }
             else
             {
-                *${MCAN_INSTANCE_NAME?lower_case}Obj.rxId = (rxf0eFifo->MCAN_RXF0E_0 >> 18) & MCAN_STD_ID_Msk;
+                *${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_FIFO0][rxgi].rxId = (rxf0eFifo->MCAN_RXF0E_0 >> 18) & MCAN_STD_ID_Msk;
             }
 
             /* Get received data length */
             length = MCANDlcToLengthGet(((rxf0eFifo->MCAN_RXF0E_1 & MCAN_RXF0E_1_DLC_Msk) >> MCAN_RXF0E_1_DLC_Pos));
 
             /* Copy data to user buffer */
-            memcpy(${MCAN_INSTANCE_NAME?lower_case}Obj.rxBuffer, (uint8_t *)&rxf0eFifo->MCAN_RXF0E_DATA, length);
-            *${MCAN_INSTANCE_NAME?lower_case}Obj.rxsize = length;
+            memcpy(${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_FIFO0][rxgi].rxBuffer, (uint8_t *)&rxf0eFifo->MCAN_RXF0E_DATA, length);
+            *${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_FIFO0][rxgi].rxsize = length;
 
             <#if TIMESTAMP_ENABLE>
             /* Get timestamp from received message */
-            if (${MCAN_INSTANCE_NAME?lower_case}Obj.timestamp != NULL)
+            if (${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_FIFO0][rxgi].timestamp != NULL)
             {
-                *${MCAN_INSTANCE_NAME?lower_case}Obj.timestamp = (uint16_t)(rxf0eFifo->MCAN_RXF0E_1 & MCAN_RXF0E_1_RXTS_Msk);
+                *${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_FIFO0][rxgi].timestamp = (uint16_t)(rxf0eFifo->MCAN_RXF0E_1 & MCAN_RXF0E_1_RXTS_Msk);
             }
 
             </#if>
             /* Ack the fifo position */
             ${MCAN_INSTANCE_NAME}_REGS->MCAN_RXF0A = MCAN_RXF0A_F0AI(rxgi);
-            ${MCAN_INSTANCE_NAME?lower_case}Obj.state = MCAN_STATE_TRANSFER_DONE;
+
+            if (${MCAN_INSTANCE_NAME?lower_case}CallbackObj[MCAN_MSG_ATTR_RX_FIFO0].callback != NULL)
+            {
+                ${MCAN_INSTANCE_NAME?lower_case}CallbackObj[MCAN_MSG_ATTR_RX_FIFO0].callback(${MCAN_INSTANCE_NAME?lower_case}CallbackObj[MCAN_MSG_ATTR_RX_FIFO0].context);
+            }
         }
     }
 </#if>
@@ -1218,31 +1274,35 @@ void ${MCAN_INSTANCE_NAME}_INT0_InterruptHandler(void)
             /* Get received identifier */
             if (rxf1eFifo->MCAN_RXF1E_0 & MCAN_RXF1E_0_XTD_Msk)
             {
-                *${MCAN_INSTANCE_NAME?lower_case}Obj.rxId = rxf1eFifo->MCAN_RXF1E_0 & MCAN_RXF1E_0_ID_Msk;
+                *${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_FIFO1][rxgi].rxId = rxf1eFifo->MCAN_RXF1E_0 & MCAN_RXF1E_0_ID_Msk;
             }
             else
             {
-                *${MCAN_INSTANCE_NAME?lower_case}Obj.rxId = (rxf1eFifo->MCAN_RXF1E_0 >> 18) & MCAN_STD_ID_Msk;
+                *${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_FIFO1][rxgi].rxId = (rxf1eFifo->MCAN_RXF1E_0 >> 18) & MCAN_STD_ID_Msk;
             }
 
             /* Get received data length */
             length = MCANDlcToLengthGet(((rxf1eFifo->MCAN_RXF1E_1 & MCAN_RXF1E_1_DLC_Msk) >> MCAN_RXF1E_1_DLC_Pos));
 
             /* Copy data to user buffer */
-            memcpy(${MCAN_INSTANCE_NAME?lower_case}Obj.rxBuffer, (uint8_t *)&rxf1eFifo->MCAN_RXF1E_DATA, length);
-            *${MCAN_INSTANCE_NAME?lower_case}Obj.rxsize = length;
+            memcpy(${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_FIFO1][rxgi].rxBuffer, (uint8_t *)&rxf1eFifo->MCAN_RXF1E_DATA, length);
+            *${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_FIFO1][rxgi].rxsize = length;
 
             <#if TIMESTAMP_ENABLE>
             /* Get timestamp from received message */
-            if (${MCAN_INSTANCE_NAME?lower_case}Obj.timestamp != NULL)
+            if (${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_FIFO1][rxgi].timestamp != NULL)
             {
-                *${MCAN_INSTANCE_NAME?lower_case}Obj.timestamp = (uint16_t)(rxf1eFifo->MCAN_RXF1E_1 & MCAN_RXF1E_1_RXTS_Msk);
+                *${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_FIFO1][rxgi].timestamp = (uint16_t)(rxf1eFifo->MCAN_RXF1E_1 & MCAN_RXF1E_1_RXTS_Msk);
             }
 
             </#if>
             /* Ack the fifo position */
             ${MCAN_INSTANCE_NAME}_REGS->MCAN_RXF1A = MCAN_RXF1A_F1AI(rxgi);
-            ${MCAN_INSTANCE_NAME?lower_case}Obj.state = MCAN_STATE_TRANSFER_DONE;
+
+            if (${MCAN_INSTANCE_NAME?lower_case}CallbackObj[MCAN_MSG_ATTR_RX_FIFO1].callback != NULL)
+            {
+                ${MCAN_INSTANCE_NAME?lower_case}CallbackObj[MCAN_MSG_ATTR_RX_FIFO1].callback(${MCAN_INSTANCE_NAME?lower_case}CallbackObj[MCAN_MSG_ATTR_RX_FIFO1].context);
+            }
         }
     }
 </#if>
@@ -1278,25 +1338,25 @@ void ${MCAN_INSTANCE_NAME}_INT0_InterruptHandler(void)
         /* Get received identifier */
         if (rxbeFifo->MCAN_RXBE_0 & MCAN_RXBE_0_XTD_Msk)
         {
-            *${MCAN_INSTANCE_NAME?lower_case}Obj.rxId = rxbeFifo->MCAN_RXBE_0 & MCAN_RXBE_0_ID_Msk;
+            *${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_BUFFER][rxgi].rxId = rxbeFifo->MCAN_RXBE_0 & MCAN_RXBE_0_ID_Msk;
         }
         else
         {
-            *${MCAN_INSTANCE_NAME?lower_case}Obj.rxId = (rxbeFifo->MCAN_RXBE_0 >> 18) & MCAN_STD_ID_Msk;
+            *${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_BUFFER][rxgi].rxId = (rxbeFifo->MCAN_RXBE_0 >> 18) & MCAN_STD_ID_Msk;
         }
 
         /* Get received data length */
         length = MCANDlcToLengthGet(((rxbeFifo->MCAN_RXBE_1 & MCAN_RXBE_1_DLC_Msk) >> MCAN_RXBE_1_DLC_Pos));
 
         /* Copy data to user buffer */
-        memcpy(${MCAN_INSTANCE_NAME?lower_case}Obj.rxBuffer, (uint8_t *)&rxbeFifo->MCAN_RXBE_DATA, length);
-        *${MCAN_INSTANCE_NAME?lower_case}Obj.rxsize = length;
+        memcpy(${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_BUFFER][rxgi].rxBuffer, (uint8_t *)&rxbeFifo->MCAN_RXBE_DATA, length);
+        *${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_BUFFER][rxgi].rxsize = length;
 
         <#if TIMESTAMP_ENABLE>
         /* Get timestamp from received message */
-        if (${MCAN_INSTANCE_NAME?lower_case}Obj.timestamp != NULL)
+        if (${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_BUFFER][rxgi].timestamp != NULL)
         {
-            *${MCAN_INSTANCE_NAME?lower_case}Obj.timestamp = (uint16_t)(rxbeFifo->MCAN_RXBE_1 & MCAN_RXBE_1_RXTS_Msk);
+            *${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_BUFFER][rxgi].timestamp = (uint16_t)(rxbeFifo->MCAN_RXBE_1 & MCAN_RXBE_1_RXTS_Msk);
         }
 
         </#if>
@@ -1304,12 +1364,23 @@ void ${MCAN_INSTANCE_NAME}_INT0_InterruptHandler(void)
         if (rxgi < 32)
         {
             ${MCAN_INSTANCE_NAME}_REGS->MCAN_NDAT1 = (1 << rxgi);
+            if (0 != (${MCAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex1 & (1 << (rxgi & 0x1F))))
+            {
+                ${MCAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex1 &= (~(1 << (rxgi & 0x1F)));
+            }
         }
         else
         {
             ${MCAN_INSTANCE_NAME}_REGS->MCAN_NDAT2 = (1 << (rxgi - 32));
+            if (0 != (${MCAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex2 & (1 << ((rxgi - 32) & 0x1F))))
+            {
+                ${MCAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex2 &= (~(1 << ((rxgi - 32) & 0x1F)));
+            }
         }
-        ${MCAN_INSTANCE_NAME?lower_case}Obj.state = MCAN_STATE_TRANSFER_DONE;
+        if (${MCAN_INSTANCE_NAME?lower_case}CallbackObj[MCAN_MSG_ATTR_RX_BUFFER].callback != NULL)
+        {
+            ${MCAN_INSTANCE_NAME?lower_case}CallbackObj[MCAN_MSG_ATTR_RX_BUFFER].callback(${MCAN_INSTANCE_NAME?lower_case}CallbackObj[MCAN_MSG_ATTR_RX_BUFFER].context);
+        }
     }
 </#if>
 
@@ -1331,8 +1402,11 @@ void ${MCAN_INSTANCE_NAME}_INT0_InterruptHandler(void)
                     ${MCAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex &= (~(1 << (bufferIndex & 0x1F)));
                 }
                 </#if>
-                ${MCAN_INSTANCE_NAME?lower_case}Obj.state = MCAN_STATE_TRANSFER_DONE;
             }
+        }
+        if (${MCAN_INSTANCE_NAME?lower_case}CallbackObj[MCAN_CALLBACK_TX_INDEX].callback != NULL)
+        {
+            ${MCAN_INSTANCE_NAME?lower_case}CallbackObj[MCAN_CALLBACK_TX_INDEX].callback(${MCAN_INSTANCE_NAME?lower_case}CallbackObj[MCAN_CALLBACK_TX_INDEX].context);
         }
     }
 
@@ -1360,17 +1434,6 @@ void ${MCAN_INSTANCE_NAME}_INT0_InterruptHandler(void)
                 ${MCAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex &= (~(1 << ((fifoIndex + ${TX_BUFFER_ELEMENTS}) & 0x1F)));
             }
             </#if>
-            ${MCAN_INSTANCE_NAME?lower_case}Obj.state = MCAN_STATE_TRANSFER_DONE;
-        }
-    }
-</#if>
-<#if RXF0_USE || RXF1_USE || RXBUF_USE || TX_USE || TXBUF_USE>
-    if (${MCAN_INSTANCE_NAME?lower_case}Obj.state == MCAN_STATE_TRANSFER_DONE)
-    {
-        if (${MCAN_INSTANCE_NAME?lower_case}Obj.callback != NULL)
-        {
-            ${MCAN_INSTANCE_NAME?lower_case}Obj.callback(${MCAN_INSTANCE_NAME?lower_case}Obj.context);
-            ${MCAN_INSTANCE_NAME?lower_case}Obj.state = MCAN_STATE_IDLE;
         }
     }
 </#if>
