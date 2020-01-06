@@ -204,38 +204,6 @@ typedef enum
 }MCAN_INTERRUPT_MASK;
 
 // *****************************************************************************
-/* MCAN State.
-
-   Summary:
-    MCAN PLib Task State.
-
-   Description:
-    This data type defines the MCAN Task State.
-
-   Remarks:
-    None.
-
-*/
-typedef enum {
-
-    /* MCAN PLib Task Error State */
-    MCAN_STATE_ERROR = -1,
-
-    /* MCAN PLib Task Idle State */
-    MCAN_STATE_IDLE,
-
-    /* MCAN PLib Task Transfer Transmit State */
-    MCAN_STATE_TRANSFER_TRANSMIT,
-
-    /* MCAN PLib Task Transfer Receive State */
-    MCAN_STATE_TRANSFER_RECEIVE,
-
-    /* MCAN PLib Task Transfer Done State */
-    MCAN_STATE_TRANSFER_DONE
-
-} MCAN_STATE;
-
-// *****************************************************************************
 /* MCAN Callback
 
    Summary:
@@ -288,6 +256,51 @@ typedef struct
 } MCAN_MSG_RAM_CONFIG;
 
 // *****************************************************************************
+/* MCAN RX Message
+
+   Summary:
+    MCAN RX Message Buffer structure.
+
+   Description:
+    This data structure stores RX Message.
+
+   Remarks:
+    None.
+*/
+typedef struct
+{
+    /* Rx Message ID */
+    uint32_t *rxId;
+    /* Rx Message buffer */
+    uint8_t *rxBuffer;
+    /* Rx Message size */
+    uint8_t *rxsize;
+    /* Rx Message timestamp */
+    uint16_t *timestamp;
+} MCAN_RX_MSG;
+
+// *****************************************************************************
+/* MCAN Callback Object
+
+   Summary:
+    MCAN transfer event callback structure.
+
+   Description:
+    This data structure stores transfer event callback and it's context.
+
+   Remarks:
+    None.
+*/
+typedef struct
+{
+    /* Transfer Event Callback */
+    MCAN_CALLBACK callback;
+
+    /* Transfer Event Callback Context */
+    uintptr_t context;
+} MCAN_CALLBACK_OBJ;
+
+// *****************************************************************************
 /* MCAN PLib Instance Object
 
    Summary:
@@ -303,21 +316,9 @@ typedef struct
 {
     /* Tx Buffer Index */
     uint32_t txBufferIndex;
-
-    /* Rx Message ID, buffer, size and timestamp */
-    uint32_t *rxId;
-    uint8_t *rxBuffer;
-    uint8_t *rxsize;
-    uint16_t *timestamp;
-
-    /* Transfer State */
-    MCAN_STATE state;
-
-    /* Transfer Event Callback */
-    MCAN_CALLBACK callback;
-
-    /* Transfer Event Callback Context */
-    uintptr_t context;
+    /* Rx Buffer Index */
+    uint32_t rxBufferIndex1;
+    uint32_t rxBufferIndex2;
 
     /* Message RAM Configuration */
     MCAN_MSG_RAM_CONFIG msgRAMConfig;
