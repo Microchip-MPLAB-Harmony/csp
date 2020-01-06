@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-10-25T08:30:06Z */
+/* file generated from device description version 2019-12-20T15:37:42Z */
 #ifndef _SAMRH71_FLEXRAMECC_COMPONENT_H_
 #define _SAMRH71_FLEXRAMECC_COMPONENT_H_
 
@@ -51,7 +51,10 @@
 
 
 /* -------- FLEXRAMECC_TESTCB1 : (FLEXRAMECC Offset: 0x04) (R/W 32) FLEXRAMECC Test mode register 1 -------- */
-#define FLEXRAMECC_TESTCB1_Msk                _U_(0x00000000)                                      /**< (FLEXRAMECC_TESTCB1) Register Mask  */
+#define FLEXRAMECC_TESTCB1_TCB1_Pos           _U_(0)                                               /**< (FLEXRAMECC_TESTCB1) Test Check Bit Position */
+#define FLEXRAMECC_TESTCB1_TCB1_Msk           (_U_(0xFF) << FLEXRAMECC_TESTCB1_TCB1_Pos)           /**< (FLEXRAMECC_TESTCB1) Test Check Bit Mask */
+#define FLEXRAMECC_TESTCB1_TCB1(value)        (FLEXRAMECC_TESTCB1_TCB1_Msk & ((value) << FLEXRAMECC_TESTCB1_TCB1_Pos))
+#define FLEXRAMECC_TESTCB1_Msk                _U_(0x000000FF)                                      /**< (FLEXRAMECC_TESTCB1) Register Mask  */
 
 
 /* -------- FLEXRAMECC_SR : (FLEXRAMECC Offset: 0x0C) ( R/ 32) FLEXRAMECC Status register -------- */

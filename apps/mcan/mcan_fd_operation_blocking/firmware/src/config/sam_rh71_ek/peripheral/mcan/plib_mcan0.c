@@ -57,8 +57,7 @@
 // Global Data
 // *****************************************************************************
 // *****************************************************************************
-#define MCAN_STD_ID_Msk    0x7FF
-
+#define MCAN_STD_ID_Msk        0x7FF
 static MCAN_OBJ mcan0Obj;
 
 static const mcan_sidfe_registers_t mcan0StdFilter[] =

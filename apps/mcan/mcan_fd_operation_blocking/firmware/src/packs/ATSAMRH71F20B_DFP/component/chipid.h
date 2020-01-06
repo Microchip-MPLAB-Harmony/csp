@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-10-25T08:30:06Z */
+/* file generated from device description version 2019-12-20T15:37:42Z */
 #ifndef _SAMRH71_CHIPID_COMPONENT_H_
 #define _SAMRH71_CHIPID_COMPONENT_H_
 
