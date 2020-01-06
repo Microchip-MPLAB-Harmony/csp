@@ -57,8 +57,7 @@
 // Global Data
 // *****************************************************************************
 // *****************************************************************************
-#define CAN_STD_ID_Msk    0x7FF
-
+#define CAN_STD_ID_Msk        0x7FF
 static CAN_OBJ can1Obj;
 
 static const can_sidfe_registers_t can1StdFilter[] =

@@ -1201,14 +1201,6 @@ void ${MCAN_INSTANCE_NAME}_INT0_InterruptHandler(void)
     if (ir & MCAN_IR_BO_Msk)
     {
         ${MCAN_INSTANCE_NAME}_REGS->MCAN_IR = MCAN_IR_BO_Msk;
-        for (uint8_t fifoIndex = 0; fifoIndex < 4; fifoIndex++)
-        {
-            /* Client must call ${MCAN_INSTANCE_NAME}_ErrorGet function to get and clear errors */
-            if (${MCAN_INSTANCE_NAME?lower_case}CallbackObj[fifoIndex].callback != NULL)
-            {
-                ${MCAN_INSTANCE_NAME?lower_case}CallbackObj[fifoIndex].callback(${MCAN_INSTANCE_NAME?lower_case}CallbackObj[fifoIndex].context);
-            }
-        }
     }
 <#if RXF0_USE>
     /* New Message in Rx FIFO 0 */

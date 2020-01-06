@@ -860,14 +860,6 @@ void CAN1_InterruptHandler(void)
     if (ir & CAN_IR_BO_Msk)
     {
         CAN1_REGS->CAN_IR = CAN_IR_BO_Msk;
-        for (uint8_t fifoIndex = 0; fifoIndex < 4; fifoIndex++)
-        {
-            /* Client must call CAN1_ErrorGet function to get and clear errors */
-            if (can1CallbackObj[fifoIndex].callback != NULL)
-            {
-                can1CallbackObj[fifoIndex].callback(can1CallbackObj[fifoIndex].context);
-            }
-        }
     }
     /* New Message in Rx FIFO 0 */
     if (ir & CAN_IR_RF0N_Msk)

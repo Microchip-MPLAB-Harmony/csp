@@ -795,21 +795,13 @@ void CAN1_InterruptHandler(void)
        (CAN_SR_BOFF_Msk | CAN_SR_CERR_Msk | CAN_SR_SERR_Msk |
         CAN_SR_AERR_Msk | CAN_SR_FERR_Msk | CAN_SR_BERR_Msk))
     {
+        /* App must call CAN1_ErrorGet function to get errors */
         can1Obj.errorStatus = ((interruptStatus & CAN_SR_BOFF_Msk) |
                                                           (interruptStatus & CAN_SR_CERR_Msk) |
                                                           (interruptStatus & CAN_SR_SERR_Msk) |
                                                           (interruptStatus & CAN_SR_AERR_Msk) |
                                                           (interruptStatus & CAN_SR_FERR_Msk) |
                                                           (interruptStatus & CAN_SR_BERR_Msk));
-
-        for (uint8_t mailbox = 0; mailbox < CAN_MB_NUMBER; mailbox++)
-        {
-            /* Client must call CAN1_ErrorGet function to get errors */
-            if (can1Obj.mbCallback[mailbox].callback != NULL)
-            {
-                can1Obj.mbCallback[mailbox].callback(can1Obj.mbCallback[mailbox].context);
-            }
-        }
     }
     else
     {

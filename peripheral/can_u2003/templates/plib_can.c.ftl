@@ -1144,14 +1144,6 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
     if (ir & CAN_IR_BO_Msk)
     {
         ${CAN_INSTANCE_NAME}_REGS->CAN_IR = CAN_IR_BO_Msk;
-        for (uint8_t fifoIndex = 0; fifoIndex < 4; fifoIndex++)
-        {
-            /* Client must call ${CAN_INSTANCE_NAME}_ErrorGet function to get and clear errors */
-            if (${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoIndex].callback != NULL)
-            {
-                ${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoIndex].callback(${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoIndex].context);
-            }
-        }
     }
 <#if RXF0_USE>
     /* New Message in Rx FIFO 0 */

@@ -863,14 +863,6 @@ void MCAN1_INT0_InterruptHandler(void)
     if (ir & MCAN_IR_BO_Msk)
     {
         MCAN1_REGS->MCAN_IR = MCAN_IR_BO_Msk;
-        for (uint8_t fifoIndex = 0; fifoIndex < 4; fifoIndex++)
-        {
-            /* Client must call MCAN1_ErrorGet function to get and clear errors */
-            if (mcan1CallbackObj[fifoIndex].callback != NULL)
-            {
-                mcan1CallbackObj[fifoIndex].callback(mcan1CallbackObj[fifoIndex].context);
-            }
-        }
     }
     /* New Message in Rx FIFO 0 */
     if (ir & MCAN_IR_RF0N_Msk)
