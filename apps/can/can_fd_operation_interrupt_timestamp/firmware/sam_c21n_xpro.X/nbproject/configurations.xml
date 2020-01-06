@@ -168,7 +168,7 @@
       </toolsSet>
       <packs>
         <pack name="CMSIS" vendor="ARM" version="5.4.0"/>
-        <pack name="SAMC21_DFP" vendor="Microchip" version="3.1.50"/>
+        <pack name="SAMC21_DFP" vendor="Microchip" version="3.1.49"/>
       </packs>
       <compileType>
         <linkerTool>

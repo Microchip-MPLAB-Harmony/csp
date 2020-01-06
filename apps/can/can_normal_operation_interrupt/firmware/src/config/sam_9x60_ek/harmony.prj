@@ -523,8 +523,8 @@
           <Name dnOrder="1">toolchain_specifics.h</Name>
           <LogicalPath dnOrder="2">config/sam_9x60_ek/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">EC4A3288A765280E6466FD76F52A2151</GeneratedChecksum>
-          <UserChecksum dnOrder="5">EC4A3288A765280E6466FD76F52A2151</UserChecksum>
+          <GeneratedChecksum dnOrder="4">1C993C2F525A43BDB142DE34AD7B7871</GeneratedChecksum>
+          <UserChecksum dnOrder="5">1C993C2F525A43BDB142DE34AD7B7871</UserChecksum>
         </File>
         <File dnOrder="65">
           <Type dnOrder="0">HEADER</Type>

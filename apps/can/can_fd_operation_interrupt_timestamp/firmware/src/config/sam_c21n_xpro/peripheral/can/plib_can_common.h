@@ -204,38 +204,6 @@ typedef enum
 }CAN_INTERRUPT_MASK;
 
 // *****************************************************************************
-/* CAN State.
-
-   Summary:
-    CAN PLib Task State.
-
-   Description:
-    This data type defines the CAN Task State.
-
-   Remarks:
-    None.
-
-*/
-typedef enum {
-
-    /* CAN PLib Task Error State */
-    CAN_STATE_ERROR = -1,
-
-    /* CAN PLib Task Idle State */
-    CAN_STATE_IDLE,
-
-    /* CAN PLib Task Transfer Transmit State */
-    CAN_STATE_TRANSFER_TRANSMIT,
-
-    /* CAN PLib Task Transfer Receive State */
-    CAN_STATE_TRANSFER_RECEIVE,
-
-    /* CAN PLib Task Transfer Done State */
-    CAN_STATE_TRANSFER_DONE
-
-} CAN_STATE;
-
-// *****************************************************************************
 /* CAN Callback
 
    Summary:
@@ -288,6 +256,51 @@ typedef struct
 } CAN_MSG_RAM_CONFIG;
 
 // *****************************************************************************
+/* CAN RX Message
+
+   Summary:
+    CAN RX Message Buffer structure.
+
+   Description:
+    This data structure stores RX Message.
+
+   Remarks:
+    None.
+*/
+typedef struct
+{
+    /* Rx Message ID */
+    uint32_t *rxId;
+    /* Rx Message buffer */
+    uint8_t *rxBuffer;
+    /* Rx Message size */
+    uint8_t *rxsize;
+    /* Rx Message timestamp */
+    uint16_t *timestamp;
+} CAN_RX_MSG;
+
+// *****************************************************************************
+/* CAN Callback Object
+
+   Summary:
+    CAN transfer event callback structure.
+
+   Description:
+    This data structure stores transfer event callback and it's context.
+
+   Remarks:
+    None.
+*/
+typedef struct
+{
+    /* Transfer Event Callback */
+    CAN_CALLBACK callback;
+
+    /* Transfer Event Callback Context */
+    uintptr_t context;
+} CAN_CALLBACK_OBJ;
+
+// *****************************************************************************
 /* CAN PLib Instance Object
 
    Summary:
@@ -303,21 +316,9 @@ typedef struct
 {
     /* Tx Buffer Index */
     uint32_t txBufferIndex;
-
-    /* Rx Message ID, buffer, size and timestamp */
-    uint32_t *rxId;
-    uint8_t *rxBuffer;
-    uint8_t *rxsize;
-    uint16_t *timestamp;
-
-    /* Transfer State */
-    CAN_STATE state;
-
-    /* Transfer Event Callback */
-    CAN_CALLBACK callback;
-
-    /* Transfer Event Callback Context */
-    uintptr_t context;
+    /* Rx Buffer Index */
+    uint32_t rxBufferIndex1;
+    uint32_t rxBufferIndex2;
 
     /* Message RAM Configuration */
     CAN_MSG_RAM_CONFIG msgRAMConfig;
