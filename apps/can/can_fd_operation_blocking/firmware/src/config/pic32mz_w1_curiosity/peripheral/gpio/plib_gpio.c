@@ -69,7 +69,7 @@ void GPIO_Initialize ( void )
     TRISKCLR = 0x2; /* Direction Control */
 
 
-    /* unlock system for PPS configuration */
+    /* Unlock system for PPS configuration */
     SYSKEY = 0x00000000;
     SYSKEY = 0xAA996655;
     SYSKEY = 0x556699AA;
