@@ -52,7 +52,7 @@ def onAttachmentConnected(source, target):
         localComponent.setCapabilityEnabled(uartCapabilityId, False)
         localComponent.setCapabilityEnabled(spiCapabilityId, False)
         localComponent.setCapabilityEnabled(i2cCapabilityId, True)
-        if remoteID == "bootloader":
+        if remoteID == "i2c_bootloader":
             sercomSym_OperationMode.setSelectedKey("I2CS", 2)
             i2csSym_Interrupt_Mode.setValue(False)
             i2csSym_Interrupt_Mode.setReadOnly(True)
@@ -79,7 +79,7 @@ def onAttachmentDisconnected(source, target):
     localComponent.setCapabilityEnabled(spiCapabilityId, True)
     localComponent.setCapabilityEnabled(i2cCapabilityId, True)
     
-    if remoteID == "bootloader" and connectID == i2cCapabilityId:
+    if remoteID == "i2c_bootloader" and connectID == i2cCapabilityId:
         i2csSym_Interrupt_Mode.setValue(i2csSym_Interrupt_Mode.getDefaultValue())
         i2csSym_Interrupt_Mode.setReadOnly(False)
         i2csSym_CTRLB_SMEN.setValue(i2csSym_CTRLB_SMEN.getDefaultValue())
