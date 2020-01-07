@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-12-13T09:11:40Z */
+/* file generated from device description version 2019-12-16T13:49:10Z */
 #ifndef _SAM9X60D1G_H_
 #define _SAM9X60D1G_H_
 

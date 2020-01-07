@@ -148,7 +148,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>jlink</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>2.40</languageToolchainVersion>
+        <languageToolchainVersion>2.30</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
