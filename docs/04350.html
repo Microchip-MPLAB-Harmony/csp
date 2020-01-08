@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>NVM_Read Function</title>
+<title>NVM_ErrorGet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05106.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04698.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05105.html" target="topic">Peripheral Libraries</a> &gt; <a href="04268.html" target="topic">NVM Peripheral Library Help</a> &gt; <a href="04269.html" target="topic">Library Interface</a> &gt; b) Transaction Functions &gt; <a href="04350.html" target="topic">NVM_Read Function</a></div>
+<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04870.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05374.html" target="topic">Peripheral Libraries</a> &gt; <a href="04287.html" target="topic">NVM Peripheral Library Help</a> &gt; <a href="04288.html" target="topic">Library Interface</a> &gt; c) Status Functions &gt; <a href="04350.html" target="topic">NVM_ErrorGet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05106.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04338.html" target="topic">Previous</a> | <a href="04269.html" target="topic">Up</a> | <a href="04345.html" target="topic">Next</a></div>
+<a href="04351.html" target="topic">Previous</a> | <a href="04288.html" target="topic">Up</a> | <a href="04344.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nvm_02819::NVM_Read@uint32_t *@uint32_t@uint32_t Topic Title: NVM_Read Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nvm_02629::NVM_ErrorGet Topic Title: NVM_ErrorGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-NVM_Read Function</div>
+NVM_ErrorGet Function</div>
 </div>
 </div>
 
@@ -49,24 +49,27 @@ NVM_Read Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Reads length number of bytes from a given address in FLASH memory into the user buffer.</p></div>
+This function returns the erorr status of the last NVM operation.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">NVM_Read</span></strong>(
-    uint32_t * <strong><span style="color: #000000">data</span></strong>, 
-    uint32_t <strong><span style="color: #000000">length</span></strong>, 
-    uint32_t <strong><span style="color: #000000">address</span></strong>
-);</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><a href="04346.html" target="topic">NVM_ERROR</a> <strong><span style="color: #000000">NVM_ErrorGet</span></strong>();</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None</p></div>
+None.</p></div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Return <a href="04346.html" target="topic">NVM_ERROR</a> type of value. In case of error, this value can be a combination of multiple and different error conditions.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
@@ -76,8 +79,16 @@ None.</p></div>
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">uint8_t buffer[256];
-NVM_Read( (uint32_t *) buffer, 256, 0x9D100000);</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">
+<strong><span style="color: #000080">if</span></strong>(NVM_ErrorGet() != NVM_ERROR_NONE)
+{
+    <i><span style="color: #008000">// The error status can indicate multiple error conditions.</span></i>
+    <strong><span style="color: #000080">if</span></strong>(NVM_ErrorGet() &amp; (NVM_ERROR_WRITE | NVM_ERROR_LOWVOLTAGE))
+    {
+        <i><span style="color: #008000">// There are multiple error conditions.</span></i>
+    }
+}
+</pre></div></div>
 </div>
 </div>
 </div>
@@ -85,7 +96,7 @@ NVM_Read( (uint32_t *) buffer, 256, 0x9D100000);</pre></div></div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05106.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04698.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05105.html" target="topic">Peripheral Libraries</a> &gt; <a href="04268.html" target="topic">NVM Peripheral Library Help</a> &gt; <a href="04269.html" target="topic">Library Interface</a> &gt; b) Transaction Functions &gt; <a href="04350.html" target="topic">NVM_Read Function</a></div>
+<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04870.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05374.html" target="topic">Peripheral Libraries</a> &gt; <a href="04287.html" target="topic">NVM Peripheral Library Help</a> &gt; <a href="04288.html" target="topic">Library Interface</a> &gt; c) Status Functions &gt; <a href="04350.html" target="topic">NVM_ErrorGet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -93,13 +104,13 @@ NVM_Read( (uint32_t *) buffer, 256, 0x9D100000);</pre></div></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05106.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04338.html" target="topic">Previous</a> | <a href="04269.html" target="topic">Up</a> | <a href="04345.html" target="topic">Next</a></div>
+<a href="04351.html" target="topic">Previous</a> | <a href="04288.html" target="topic">Up</a> | <a href="04344.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nvm_02819::NVM_Read@uint32_t *@uint32_t@uint32_t Topic Title: NVM_Read Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nvm_02629::NVM_ErrorGet Topic Title: NVM_ErrorGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

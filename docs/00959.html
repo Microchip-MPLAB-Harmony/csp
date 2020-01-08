@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Running The Application</title>
+<title>Hardware Setup</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05106.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="00951.html" target="topic">CAN Applications</a> &gt; <a href="00949.html" target="topic">can_normal_operation_blocking</a> &gt; <a href="00959.html" target="topic">Running The Application</a></div>
+<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="00953.html" target="topic">CAN Applications</a> &gt; <a href="00949.html" target="topic">can_fd_operation_interrupt_timestamp</a> &gt; <a href="00959.html" target="topic">Hardware Setup</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05106.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00957.html" target="topic">Previous</a> | <a href="00949.html" target="topic">Up</a> | <a href="00950.html" target="topic">Next</a></div>
+<a href="00960.html" target="topic">Previous</a> | <a href="00949.html" target="topic">Up</a> | <a href="00961.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CAN can_normal_operation_blocking Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CAN can_fd_operation_interrupt_timestamp Hardware Setup Topic Title: Hardware Setup)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Running The Application</div>
+Hardware Setup</div>
 </div>
 </div>
 
@@ -48,264 +48,154 @@ Running The Application</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
-<p class="Element10">
-<strong><u>MPLAB X IDE</u></strong></p>
+
 <ol class="Element630">
-<li value="1" class="Element600">Build and Program the application on both boards using the MPLAB X IDE.</li>
-</ol><p class="Element10">
-<strong><i>Note:</strong> Do not execute below Step-2 and Step-3 for PIC32MX1/2/5 Starter Kit and PIC32 Ethernet Starter Kit II as UART is not available for these boards.</i></p>
-<ol class="Element630">
-<li value="2" class="Element600">Open the Terminal application (Ex.:Tera term) on the computer</li>
-<li value="3" class="Element600">Connect to the DEBUG UART Virtual COM port and configure the serial settings as follows:
+<li value="1" class="Element600"><strong>Project sam_c21n_xpro.X</strong>
 <ul class="Element631">
-<li class="Element601">Baud : 115200</li>
-<li class="Element601">Data : 8 Bit</li>
-<li class="Element601">Parity : None</li>
-<li class="Element601">Stop : 1 Bit</li>
-<li class="Element601">Flow Control : None</li>
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/atsamc21n-xpro');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM C21N Xplained Pro Evaluation Kit</a><strong> </strong>- 2 boards</li>
 </ul></li>
-<li value="4" class="Element600">Execute the steps and observe the output as described in the following table</li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+<li class="Element602">Connect SAM C21N Xplained Pro Evaluation Kit to another SAM C21N Xplained Pro Evaluation Kit as per the pin connections shown below</li>
+</ul></li>
+</ul></li>
 </ol><div class="Element63">
 <div class="TableDiv">
 <table cellspacing="0" class="Table1">
 <tr>
-<td class="Element65" valign="top" width="4%">
+<td class="Element65" valign="top" width="50%">
 <div class="Element66">
-Project Name&nbsp;</div></td><td class="Element65" valign="top" width="96%">
+SAMC21N XPRO - 1&nbsp;</div></td><td class="Element65" valign="top" width="50%">
 <div class="Element66">
-Output&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="4%">
+SAMC21N XPRO - 2&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="50%">
 <div class="Element68">
-sam_c21n_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="96%">
+CANH1, PIN 1&nbsp;</div></td><td class="Element67" valign="top" width="50%">
 <div class="Element68">
-</p>
-<ul class="Element630">
-<li class="Element600">Press '2' to receive message from CAN Bus on terminal window of SAM C21N XPRO - 2 board.</li>
-<li class="Element600">Press '1' to transmit message to CAN Bus on terminal window of SAM C21N XPRO - 1 board.</li>
-<li class="Element600">Transmitting Message:Success will be displayed in the terminal window of SAM C21N XPRO - 1 board. CAN message will be displayed in the terminal window of SAM C21N XPRO - 2 board.</li>
-</ul><p class="Element68">
-&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="4%">
+CANH1, PIN 1&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="50%">
 <div class="Element68">
-sam_e54_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="96%">
+CANL1, PIN 2&nbsp;</div></td><td class="Element67" valign="top" width="50%">
 <div class="Element68">
-</p>
-<ul class="Element630">
-<li class="Element600">Press '2' to receive message from CAN Bus on terminal window of SAM E54 XPRO - 2 board.</li>
-<li class="Element600">Press '1' to transmit message to CAN Bus on terminal window of SAM E54 XPRO - 1 board.</li>
-<li class="Element600">Transmitting Message:Success will be displayed in the terminal window of SAM E54 XPRO - 1 board. CAN message will be displayed in the terminal window of SAM E54 XPRO - 2 board.</li>
-</ul><p class="Element68">
-&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="4%">
+CANL1, PIN 2&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="50%">
 <div class="Element68">
-pic32mk_gp_db.X&nbsp;</div></td><td class="Element67" valign="top" width="96%">
+GND, EXT1 PIN19&nbsp;</div></td><td class="Element67" valign="top" width="50%">
 <div class="Element68">
-</p>
-<ul class="Element630">
-<li class="Element600">Press '1' to transmit message to CAN Bus on terminal window of PIC32MK GP DB board.</li>
-<li class="Element600">Transmitting Message:Success will be displayed in the terminal window of PIC32MK GP DB board board. CAN message will be displayed in the CAN analyzer software.</li>
-<li class="Element600">Press '2' to receive message from CAN Bus on terminal window of PIC32MK GP DB board.</li>
-<li class="Element600">Send following CAN message from CAN analyzer software</li>
-</ul><p class="Element68">
-ID : 0x469, DLC : 8, Data: 1, 2, 3, 4, 5, 6, 7, 8</p>
-<ul class="Element630">
-<li class="Element600">CAN message will be displayed in the terminal window of PIC32MK GP DB board</li>
-<li class="Element600">LED1 toggles at each message transmission or reception</li>
-</ul><p class="Element68">
-&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="4%">
-<div class="Element68">
-pic32mx_125_sk.X&nbsp;</div></td><td class="Element67" valign="top" width="96%">
-<div class="Element68">
-</p>
-<ul class="Element630">
-<li class="Element600">Press Switch 'SW1' to transmit message to CAN Bus on terminal window of PIC32MX 1/2/5 SK board.</li>
-<li class="Element600">CAN message will be displayed in the CAN analyzer software.</li>
-<li class="Element600">Send following CAN message from CAN analyzer software</li>
-</ul><p class="Element68">
-ID : 0x469, DLC : 8, Data: 1, 2, 3, 4, 5, 6, 7, 8</p>
-<ul class="Element630">
-<li class="Element600">LED1 toggles at each message transmission or reception</li>
-</ul><p class="Element68">
-&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="4%">
-<div class="Element68">
-pic32mx_eth_sk2.X&nbsp;</div></td><td class="Element67" valign="top" width="96%">
-<div class="Element68">
-</p>
-<ul class="Element630">
-<li class="Element600">Press Switch 'SW1' to transmit message to CAN Bus on terminal window of PIC32MX ETH SK II board.</li>
-<li class="Element600">CAN message will be displayed in the CAN analyzer software.</li>
-<li class="Element600">Send following CAN message from CAN analyzer software</li>
-</ul><p class="Element68">
-ID : 0x469, DLC : 8, Data: 1, 2, 3, 4, 5, 6, 7, 8</p>
-<ul class="Element630">
-<li class="Element600">LED1 toggles at each message transmission or reception</li>
-</ul><p class="Element68">
-&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="4%">
-<div class="Element68">
-pic32mz_ef_sk.X&nbsp;</div></td><td class="Element67" valign="top" width="96%">
-<div class="Element68">
-</p>
-<ul class="Element630">
-<li class="Element600">Press '1' to transmit message to CAN Bus on terminal window of PIC32MZ EF SK board.</li>
-<li class="Element600">Transmitting Message:Success will be displayed in the terminal window of PIC32MZ EF SK board board. CAN message will be displayed in the CAN analyzer software.</li>
-<li class="Element600">Press '2' to receive message from CAN Bus on terminal window of PIC32MZ EF SK board.</li>
-<li class="Element600">Send following CAN message from CAN analyzer software</li>
-</ul><p class="Element68">
-ID : 0x469, DLC : 8, Data: 1, 2, 3, 4, 5, 6, 7, 8</p>
-<ul class="Element630">
-<li class="Element600">CAN message will be displayed in the terminal window of PIC32MZ EF SK board</li>
-<li class="Element600">LED1 toggles at each message transmission or reception</li>
-</ul><p class="Element68">
-&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="4%">
-<div class="Element68">
-pic32mz_w1_curiosity.X&nbsp;</div></td><td class="Element67" valign="top" width="96%">
-<div class="Element68">
-</p>
-<ul class="Element630">
-<li class="Element600">Press '1' to transmit message to CAN Bus on terminal window of PIC32MZ Wi-Fi Curiosity board.</li>
-<li class="Element600">Transmitting Message:Success will be displayed in the terminal window of PIC32MZ Wi-Fi Curiosity board. CAN message will be displayed in the CAN analyzer software.</li>
-<li class="Element600">Press '2' to receive message from CAN Bus on terminal window of PIC32MZ Wi-Fi Curiosity board.</li>
-<li class="Element600">Send following CAN message from CAN analyzer software</li>
-</ul><p class="Element68">
-ID : 0x469, DLC : 8, Data: 1, 2, 3, 4, 5, 6, 7, 8</p>
-<ul class="Element630">
-<li class="Element600">CAN message will be displayed in the terminal window of PIC32MZ Wi-Fi Curiosity board</li>
-<li class="Element600">LED(RED, D202) toggles at each message transmission or reception</li>
-</ul><p class="Element68">
-&nbsp;</div></td></tr></table></div></div>
-
-<ol class="Element630">
-<li value="5" class="Element600">Observe the output as follow.</li>
-</ol><p class="Element10">
-For sam_c21n_xpro.X and sam_e54_xpro.X output as follow:&nbsp;</p>
-<p class="Element10">
-<img src="can_normal_operation_blocking_output.png" border="0" alt="" title="">&nbsp;</p>
+GND, EXT1 PIN19&nbsp;</div></td></tr></table></div></div>
 <p class="Element10">
 &nbsp;</p>
-<p class="Element10">
-For pic32mk_gp_db.X, pic32mz_ef_sk.X and pic32mz_w1_curiosity.X output as follow:</p>
-<ul class="Element630">
-<li class="Element600">Open the CAN Analyzer Software and perform following steps
+
+<ol class="Element630">
+<li value="2" class="Element600"><strong>Project sam_e54_xpro.X</strong>
 <ul class="Element631">
-<li class="Element601">Configure CAN Analyzer Software as per below table. Click on Setup -&gt; Hardware Setup</li>
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/atsame54-xpro');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM E54 Xplained Pro Evaluation Kit</a><strong> </strong>- 2 boards</li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+<li class="Element602">Connect SAM E54 Xplained Pro Evaluation Kit to another SAM E54 Xplained Pro Evaluation Kit as per the pin connections shown below</li>
+</ul></li>
+</ul></li>
+</ol><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="50%">
+<div class="Element66">
+SAME54 XPRO - 1&nbsp;</div></td><td class="Element65" valign="top" width="50%">
+<div class="Element66">
+SAME54 XPRO - 2&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="50%">
+<div class="Element68">
+CANH, PIN 1&nbsp;</div></td><td class="Element67" valign="top" width="50%">
+<div class="Element68">
+CANH, PIN 1&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="50%">
+<div class="Element68">
+CANL, PIN 2&nbsp;</div></td><td class="Element67" valign="top" width="50%">
+<div class="Element68">
+CANL, PIN 2&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="50%">
+<div class="Element68">
+GND, EXT1 PIN19&nbsp;</div></td><td class="Element67" valign="top" width="50%">
+<div class="Element68">
+GND, EXT1 PIN19&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="3" class="Element600"><strong>Project pic32mk_mcj_curiosity_pro.X</strong></li>
+</ol>
+<ul class="Element630">
+<li class="Element600"><strong>Hardware Used</strong>
+<ul class="Element631">
+<li class="Element601">PIC32MK MCJ Curiosity Pro Board- 2 boards</li>
+<li class="Element601"><a href="#" onclick="openExternalLink('https://www.microchip.com/Developmenttools/ProductDetails/ATMBUSADAPTER-XPRO');"><img src="indicator_external_link.gif" border="0" alt="" title="">mikroBus Xplained Pro board</a> - 2 boards</li>
+<li class="Element601"><a href="#" onclick="openExternalLink('https://www.mikroe.com/usb-uart-click');"><img src="indicator_external_link.gif" border="0" alt="" title="">USB UART click board</a> - 2 boards</li>
+</ul></li>
+<li class="Element600"><strong>Hardware Setup</strong>
+<ul class="Element631">
+<li class="Element601">Connect the <a href="#" onclick="openExternalLink('https://www.microchip.com/Developmenttools/ProductDetails/ATMBUSADAPTER-XPRO');"><img src="indicator_external_link.gif" border="0" alt="" title="">mikroBus Xplained Pro board</a> with <a href="#" onclick="openExternalLink('https://www.mikroe.com/usb-uart-click');"><img src="indicator_external_link.gif" border="0" alt="" title="">USB UART click board</a> to J501 for each board.</li>
+<li class="Element601">Connect mini USB cable to USB UART click board for each board. This will enumerate the USB to UART port.</li>
+<li class="Element601">Connect the Debug USB port (J1) to the computer using a micro USB cable for each board</li>
+<li class="Element601">Connect PIC32MK MCJ Curiosity Pro Board to another PIC32MK MCJ Curiosity Pro Board as per the pin connections shown below</li>
 </ul></li>
 </ul><div class="Element63">
 <div class="TableDiv">
 <table cellspacing="0" class="Table1">
 <tr>
-<td class="Element65" valign="top" width="71%">
+<td class="Element65" valign="top" width="50%">
 <div class="Element66">
-Description&nbsp;</div></td><td class="Element65" valign="top" width="29%">
+PIC32MK MCJ Curiosity Pro Board - 1&nbsp;</div></td><td class="Element65" valign="top" width="50%">
 <div class="Element66">
-Settings&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="71%">
+PIC32MK MCJ Curiosity Pro Board - 2&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="50%">
 <div class="Element68">
-CAN Bitrate Control&nbsp;</div></td><td class="Element67" valign="top" width="29%">
+J504, CANH, PIN 1&nbsp;</div></td><td class="Element67" valign="top" width="50%">
 <div class="Element68">
-500 Kbps&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="71%">
+J504, CANH, PIN 1&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="50%">
 <div class="Element68">
-CAN Mode Control&nbsp;</div></td><td class="Element67" valign="top" width="29%">
+J504, GND, PIN 2&nbsp;</div></td><td class="Element67" valign="top" width="50%">
 <div class="Element68">
-Normal Mode&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="71%">
+J504, GND, PIN 2&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="50%">
 <div class="Element68">
-Bus Termination Control&nbsp;</div></td><td class="Element67" valign="top" width="29%">
+J504, CANL, PIN 3&nbsp;</div></td><td class="Element67" valign="top" width="50%">
 <div class="Element68">
-ON&nbsp;</div></td></tr></table></div></div>
-<p class="Element10">
-<img src="CAN_PICMK_GP_DB.jpg" border="0" alt="" title="">&nbsp;</p>
+J504, CANL, PIN 3&nbsp;</div></td></tr></table></div></div>
 <p class="Element10">
 &nbsp;</p>
-<p class="Element10">
-For pic32mx_125_sk.X and pic32mx_eth_sk2.X output as follow:</p>
-<ul class="Element630">
-<li class="Element600">Open the CAN Analyzer Software and perform following steps
-<ul class="Element631">
-<li class="Element601">Configure CAN Analyzer Software as per below table. Click on Setup -&gt; Hardware Setup</li>
-</ul></li>
-</ul><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element65" valign="top" width="71%">
-<div class="Element66">
-Description&nbsp;</div></td><td class="Element65" valign="top" width="29%">
-<div class="Element66">
-Settings&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="71%">
-<div class="Element68">
-CAN Bitrate Control&nbsp;</div></td><td class="Element67" valign="top" width="29%">
-<div class="Element68">
-500 Kbps&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="71%">
-<div class="Element68">
-CAN Mode Control&nbsp;</div></td><td class="Element67" valign="top" width="29%">
-<div class="Element68">
-Normal Mode&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="71%">
-<div class="Element68">
-Bus Termination Control&nbsp;</div></td><td class="Element67" valign="top" width="29%">
-<div class="Element68">
-ON&nbsp;</div></td></tr></table></div></div>
-<p class="Element10">
-<img src="CAN_PICMX_125.jpg" border="0" alt="" title="">&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong><u>IAR Embedded work bench</u></strong></p>
-<ol class="Element630">
-<li value="1" class="Element600">Open the Terminal application (Ex.:Tera term) on the computer for each SAM 9X60 Evaluation Kit board.</li>
-<li value="2" class="Element600">Connect to the USB to DBGU COM port and configure the serial settings for each SAM 9X60 Evaluation Kit board as follows:
-<ul class="Element631">
-<li class="Element601">Baud : 115200</li>
-<li class="Element601">Data : 8 Bits</li>
-<li class="Element601">Parity : None</li>
-<li class="Element601">Stop : 1 Bit</li>
-<li class="Element601">Flow Control : None</li>
-</ul></li>
-<li value="3" class="Element600">Build the project using IAR Embedded Workbench</li>
-<li value="4" class="Element600">Use the output binary file (harmony.bin) to setup the board as detailed in <a href="00957.html" target="topic">hardware setup</a> for each SAM 9X60 Evaluation Kit board</li>
-<li value="5" class="Element600">Execute the steps and observe the output as described in the following table</li>
-</ol><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element65" valign="top" width="6%">
-<div class="Element66">
-Project Name&nbsp;</div></td><td class="Element65" valign="top" width="94%">
-<div class="Element66">
-Output&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="6%">
-<div class="Element68">
-sam_9x60_ek.IAR&nbsp;</div></td><td class="Element67" valign="top" width="94%">
-<div class="Element68">
-</p>
-<ul class="Element630">
-<li class="Element600">Press '2' to receive message from CAN Bus on terminal window of SAM 9X60 EK - 2 board.</li>
-<li class="Element600">Press '1' to transmit message to CAN Bus on terminal window of SAM 9X60 EK - 1 board.</li>
-<li class="Element600">Transmitting Message:Success will be displayed in the terminal window of SAM 9X60 EK - 1 board. CAN message will be displayed in the terminal window of SAM 9X60 EK - 2 board.</li>
-<li class="Element600">RGB_LED (Green) toggles at each message transmission or reception</li>
-</ul><p class="Element68">
-&nbsp;</div></td></tr></table></div></div>
 
 <ol class="Element630">
-<li value="6" class="Element600">Following will be terminal session’s output.</li>
-</ol><p class="Element10">
-<img src="can_normal_operation_blocking_output.png" border="0" alt="" title=""></p></div>
+<li value="4" class="Element600"><strong>Project pic32mk_mcm_curiosity_pro.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602">PIC32MK MCM Curiosity Pro Board- 2 boards</li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">Connect DB9 male to male cable from J402 on PIC32MK MCM Curiosity Pro Board-1 to J402 on PIC32MK MCM Curiosity Pro Board-2</li>
+<li class="Element602">Connect the USB to UART port (J400) to the computer using a micro USB cable for each board</li>
+<li class="Element602">Connect the Debug USB port (J500) to the computer using a micro USB cable for each board</li>
+<li class="Element602">Short (close) J20 Jumper for each board</li>
+</ul></li>
+</ul></li>
+</ol></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05106.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="00951.html" target="topic">CAN Applications</a> &gt; <a href="00949.html" target="topic">can_normal_operation_blocking</a> &gt; <a href="00959.html" target="topic">Running The Application</a></div>
+<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="00953.html" target="topic">CAN Applications</a> &gt; <a href="00949.html" target="topic">can_fd_operation_interrupt_timestamp</a> &gt; <a href="00959.html" target="topic">Hardware Setup</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -313,13 +203,13 @@ sam_9x60_ek.IAR&nbsp;</div></td><td class="Element67" valign="top" width="94%">
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05106.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00957.html" target="topic">Previous</a> | <a href="00949.html" target="topic">Up</a> | <a href="00950.html" target="topic">Next</a></div>
+<a href="00960.html" target="topic">Previous</a> | <a href="00949.html" target="topic">Up</a> | <a href="00961.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CAN can_normal_operation_blocking Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CAN can_fd_operation_interrupt_timestamp Hardware Setup Topic Title: Hardware Setup)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

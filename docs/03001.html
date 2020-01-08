@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>FLEXCOM_TWI_TRANSFER_SETUP Structure</title>
+<title>FLEXCOMx_SPI_Write Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05106.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04698.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05105.html" target="topic">Peripheral Libraries</a> &gt; <a href="02789.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02778.html" target="topic">I2C</a> &gt; <a href="02783.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="03001.html" target="topic">FLEXCOM_TWI_TRANSFER_SETUP Structure</a></div>
+<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04870.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05374.html" target="topic">Peripheral Libraries</a> &gt; <a href="02804.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02805.html" target="topic">SPI</a> &gt; <a href="02810.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="03001.html" target="topic">FLEXCOMx_SPI_Write Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05106.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02993.html" target="topic">Previous</a> | <a href="02783.html" target="topic">Up</a> | <a href="03070.html" target="topic">Next</a></div>
+<a href="02999.html" target="topic">Previous</a> | <a href="02810.html" target="topic">Up</a> | <a href="03002.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: flexcom_11277_twi::FLEXCOM_TWI_TRANSFER_SETUP Topic Title: FLEXCOM_TWI_TRANSFER_SETUP Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: flexcom_11277_spi::FLEXCOMx_SPI_Write@void*@size_t Topic Title: FLEXCOMx_SPI_Write Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-FLEXCOM_TWI_TRANSFER_SETUP Structure</div>
+FLEXCOMx_SPI_Write Function</div>
 </div>
 </div>
 
@@ -49,48 +49,106 @@ FLEXCOM_TWI_TRANSFER_SETUP Structure</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-FLEXCOM TWI Transfer Setup&nbsp;</p>
+This function should be used to write &quot;txSize&quot; number of bytes on FLEXCOMx SPI module. Data pointed by pTransmitData is transmitted.&nbsp;</p>
 <p class="Element10">
-This data structure defines the TWI Clock Speed.</p></div>
+The function will work differently as per the configuration done in MHC as described below:&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<ol class="Element630">
+<li value="1" class="Element600">Blocking Configuration (Non-Interrupt mode): When &quot;Interrupt Mode&quot; option is unchecked in GUI, the generated code for that particular FLEXCOM SPI PLIB instance will be blocking. In this particular mode, the Write API will not return until all the requested data is transferred.</li>
+</ol><p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+After transferring all the data, boolean status 'True' is returned indicating operation completion.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<ol class="Element630">
+<li value="2" class="Element600">Non-Blocking Configuration (Interrupt mode): When &quot;Interrupt Mode&quot; option is selected in GUI, the generated code for that particular FLEXCOM SPI PLIB instance will be Non-blocking in nature. In this particular mode, application will give the data transfer responsibility to the PLIB and come back and start doing other activities, FLEXCOM SPI Data transaction will happen in the corresponding ISR. in this mode, the transmit data locations provided by user must remain valid until the data transfer is complete. Application can check the data transfer completion status via callback or polling mechanism. In case of callback, it needs to be registered prior to calling the Write API. Data transfer status polling can be done using &quot;<a href="02998.html" target="topic">FLEXCOMx_SPI_IsBusy</a>&quot; API.</li>
+</ol></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
-  uint32_t <strong><span style="color: #000000">clkSpeed</span></strong>;
-} FLEXCOM_TWI_TRANSFER_SETUP;</pre></div></div>
-<a name="4D656D62657273"></a><div class="Element14">
-Members</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">FLEXCOMx_SPI_Write</span></strong>(
+    <strong><span style="color: #000080">void</span></strong>* <strong><span style="color: #000000">pTransmitData</span></strong>, 
+    size_t <strong><span style="color: #000000">txSize</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element272">
-<div class="TableDiv">
-<table cellspacing="0" class="Table3">
-<tr>
-<td class="Element260" valign="top" width="35%">
-<div class="Element261">
-Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
-<div class="Element265">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-uint32_t clkSpeed;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-FLEXCOM TWI Clock Speed&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+The <a href="02997.html" target="topic">FLEXCOMx_SPI_Initialize</a> function must have been called. Callback has to be registered using <a href="02996.html" target="topic">FLEXCOMx_SPI_CallbackRegister</a> API if the peripheral instance has been configured in Interrupt mode and transfer completion status needs to be communicated back to application via callback.</p></div>
 </div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+*pTransmitData&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Pointer to the data which has to be transmitted. if it is NULL, that means only data receiving is expected. For 9 to 15bit mode, data should be right aligned in the 16 bit memory location.<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+txSize&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Number of bytes to be transmitted. Always, size should be given in terms of bytes. For example, if 5 16-bit data are to be transmitted, the transmit size should be 10 bytes.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+In Blocking mode, API returns True once the transfer is complete. It returns False if txSize parameter is 0 and transmit data pointer is NULL.&nbsp;</p>
+<p class="Element10">
+In interrupt mode, if previous buffer request is not completed and a new transfer request comes, then this API will reject the new request and will return &quot;False&quot;. Also, Same as blocking mode, It returns False if txSize parameter is 0 and transmit data pointer is NULL.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+Non-blocking interrupt mode configuration implementation of this function will be used by Harmony driver implementation APIs.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">uint8_t     txBuffer[4];
+size_t      txSize = 4;
+<strong><span style="color: #000080">bool</span></strong>        reqAccepted;
+
+<a href="02997.html" target="topic">FLEXCOMx_SPI_Initialize</a>();
+
+<a href="02996.html" target="topic">FLEXCOMx_SPI_CallbackRegister</a>(&amp;APP_SPITransferHandler, NULL);
+
+reqAccepted = FLEXCOMx_SPI_Write(&amp;txBuffer, txSize);
+
+<strong><span style="color: #000080">void</span></strong> APP_SPITransferHandler(uintptr_t context)
+{
+    <strong><span style="color: #000080">if</span></strong>(FLEXCOMx_SPI_ErrorGet() == FLEXCOM_SPI_ERROR_NONE)
+    {
+        Transfer was completed without error, <strong><span style="color: #000080">do</span></strong> something <strong><span style="color: #000080">else</span></strong> now.
+    }
+}</pre></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05106.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04698.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05105.html" target="topic">Peripheral Libraries</a> &gt; <a href="02789.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02778.html" target="topic">I2C</a> &gt; <a href="02783.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="03001.html" target="topic">FLEXCOM_TWI_TRANSFER_SETUP Structure</a></div>
+<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04870.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05374.html" target="topic">Peripheral Libraries</a> &gt; <a href="02804.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02805.html" target="topic">SPI</a> &gt; <a href="02810.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="03001.html" target="topic">FLEXCOMx_SPI_Write Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -98,13 +156,13 @@ None.</p></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05106.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02993.html" target="topic">Previous</a> | <a href="02783.html" target="topic">Up</a> | <a href="03070.html" target="topic">Next</a></div>
+<a href="02999.html" target="topic">Previous</a> | <a href="02810.html" target="topic">Up</a> | <a href="03002.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: flexcom_11277_twi::FLEXCOM_TWI_TRANSFER_SETUP Topic Title: FLEXCOM_TWI_TRANSFER_SETUP Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: flexcom_11277_spi::FLEXCOMx_SPI_Write@void*@size_t Topic Title: FLEXCOMx_SPI_Write Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

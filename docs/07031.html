@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>WAITMODE_WKUP_SOURCE Enumeration</title>
+<title>SERCOMx_USART_TransmitterIsReady Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05106.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04698.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05105.html" target="topic">Peripheral Libraries</a> &gt; <a href="06947.html" target="topic">SUPC Peripheral Library Help</a> &gt; <a href="06948.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="07031.html" target="topic">WAITMODE_WKUP_SOURCE Enumeration</a></div>
+<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04870.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05374.html" target="topic">Peripheral Libraries</a> &gt; <a href="06898.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="06909.html" target="topic">USART</a> &gt; <a href="06913.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="07031.html" target="topic">SERCOMx_USART_TransmitterIsReady Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05106.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="07028.html" target="topic">Previous</a> | <a href="06948.html" target="topic">Up</a> | <a href="06972.html" target="topic">Next</a></div>
+<a href="07028.html" target="topic">Previous</a> | <a href="06913.html" target="topic">Up</a> | <a href="07030.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: supc_6452::WAITMODE_WKUP_SOURCE Topic Title: WAITMODE_WKUP_SOURCE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_usart::SERCOMx_USART_TransmitterIsReady Topic Title: SERCOMx_USART_TransmitterIsReady Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-WAITMODE_WKUP_SOURCE Enumeration</div>
+SERCOMx_USART_TransmitterIsReady Function</div>
 </div>
 </div>
 
@@ -49,156 +49,59 @@ WAITMODE_WKUP_SOURCE Enumeration</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Wakeup Input Source&nbsp;</p>
+This function returns the hardware status associated with the transmit hardware FIFO of the given USART peripheral instance. When the transmitter is ready, user can submit data to be transmitted.&nbsp;</p>
 <p class="Element10">
-This enumeration identifies possible wakeup input source for exit from Wait mode.</p></div>
+This function is available only in non-interrupt mode of operation. It can be used to achieve non-blocking behavior of write request in the non-interrupt mode. If non-blocking behavior is desired, this function should be called to check if the transmitter is ready and then the <a href="07032.html" target="topic">SERCOMx_USART_Write</a>() function should be called with a buffer size of 1.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
-  <strong><span style="color: #000000">WAITMODE_WKUP_WKUP0</span></strong>,
-  <strong><span style="color: #000000">WAITMODE_WKUP_WKUP1</span></strong>,
-  <strong><span style="color: #000000">WAITMODE_WKUP_WKUP2</span></strong>,
-  <strong><span style="color: #000000">WAITMODE_WKUP_WKUP3</span></strong>,
-  <strong><span style="color: #000000">WAITMODE_WKUP_WKUP4</span></strong>,
-  <strong><span style="color: #000000">WAITMODE_WKUP_WKUP5</span></strong>,
-  <strong><span style="color: #000000">WAITMODE_WKUP_WKUP6</span></strong>,
-  <strong><span style="color: #000000">WAITMODE_WKUP_WKUP7</span></strong>,
-  <strong><span style="color: #000000">WAITMODE_WKUP_WKUP8</span></strong>,
-  <strong><span style="color: #000000">WAITMODE_WKUP_WKUP9</span></strong>,
-  <strong><span style="color: #000000">WAITMODE_WKUP_WKUP10</span></strong>,
-  <strong><span style="color: #000000">WAITMODE_WKUP_WKUP11</span></strong>,
-  <strong><span style="color: #000000">WAITMODE_WKUP_WKUP12</span></strong>,
-  <strong><span style="color: #000000">WAITMODE_WKUP_WKUP13</span></strong>,
-  <strong><span style="color: #000000">WAITMODE_WKUP_GMAC</span></strong>,
-  <strong><span style="color: #000000">WAITMODE_WKUP_DEBUG</span></strong>,
-  <strong><span style="color: #000000">WAITMODE_WKUP_RTT</span></strong>,
-  <strong><span style="color: #000000">WAITMODE_WKUP_RTC</span></strong>,
-  <strong><span style="color: #000000">WAITMODE_WKUP_USB</span></strong>
-} WAITMODE_WKUP_SOURCE;</pre></div></div>
-<a name="4D656D62657273"></a><div class="Element14">
-Members</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">SERCOMx_USART_TransmitterIsReady</span></strong>();</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element272">
-<div class="TableDiv">
-<table cellspacing="0" class="Table3">
-<tr>
-<td class="Element260" valign="top" width="35%">
-<div class="Element261">
-Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
-<div class="Element265">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-WAITMODE_WKUP_WKUP0&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Wakeup 0 pin configured for Fast Startup Input 0&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-WAITMODE_WKUP_WKUP1&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Wakeup 1 pin configured for Fast Startup Input 1&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-WAITMODE_WKUP_WKUP2&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Wakeup 2 pin configured for Fast Startup Input 2&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-WAITMODE_WKUP_WKUP3&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Wakeup 3 pin configured for Fast Startup Input 3&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-WAITMODE_WKUP_WKUP4&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Wakeup 4 pin configured for Fast Startup Input 4&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-WAITMODE_WKUP_WKUP5&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Wakeup 5 pin configured for Fast Startup Input 5&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-WAITMODE_WKUP_WKUP6&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Wakeup 6 pin configured for Fast Startup Input 6&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-WAITMODE_WKUP_WKUP7&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Wakeup 7 pin configured for Fast Startup Input 7&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-WAITMODE_WKUP_WKUP8&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Wakeup 8 pin configured for Fast Startup Input 8&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-WAITMODE_WKUP_WKUP9&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Wakeup 9 pin configured for Fast Startup Input 9&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-WAITMODE_WKUP_WKUP10&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Wakeup 10 pin configured for Fast Startup Input 10&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-WAITMODE_WKUP_WKUP11&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Wakeup 11 pin configured for Fast Startup Input 11&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-WAITMODE_WKUP_WKUP12&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Wakeup 12 pin configured for Fast Startup Input 12&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-WAITMODE_WKUP_WKUP13&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Wakeup 13 pin configured for Fast Startup Input 13&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-WAITMODE_WKUP_GMAC&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Wakeup source configured for GMAC&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-WAITMODE_WKUP_DEBUG&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Wakeup source configured for debug request&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-WAITMODE_WKUP_RTT&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Wakeup source configured for RTT alarm&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-WAITMODE_WKUP_RTC&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Wakeup source configured for RTC alarm&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-WAITMODE_WKUP_USB&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Wakeup source configured for USB alarm&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+<a href="07022.html" target="topic">SERCOMx_USART_Initialize</a> must have been called for the associated USART instance.</p></div>
 </div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+
+<ul class="Element630">
+<li class="Element600">true - if transmit hardware FIFO has empty space to accept data.</li>
+<li class="Element600">false - if transmit hardware FIFO is full.</li>
+</ul></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+If user submits write request for more than 1 byte after checking the ready status, then write API will block until the submitted length of data is processed. This is the native behavior of the write API in the non-interrupt or blocking mode of the library.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">
+<strong><span style="color: #000080">if</span></strong>(<strong><span style="color: #000080">true</span></strong> == SERCOM0_USART_TransmitterIsReady())
+{
+    <i><span style="color: #008000">// Empty space is available in Transmitter FIFO, hence can write a byte</span></i>
+    SERCOM0_USART_Write(&quot;A&quot;, 1);
+}
+<strong><span style="color: #000080">else</span></strong>
+{
+    <i><span style="color: #008000">//Transmitter is busy</span></i>
+}</pre></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05106.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04698.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05105.html" target="topic">Peripheral Libraries</a> &gt; <a href="06947.html" target="topic">SUPC Peripheral Library Help</a> &gt; <a href="06948.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="07031.html" target="topic">WAITMODE_WKUP_SOURCE Enumeration</a></div>
+<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04870.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05374.html" target="topic">Peripheral Libraries</a> &gt; <a href="06898.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="06909.html" target="topic">USART</a> &gt; <a href="06913.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="07031.html" target="topic">SERCOMx_USART_TransmitterIsReady Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -206,13 +109,13 @@ None.</p></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05106.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="07028.html" target="topic">Previous</a> | <a href="06948.html" target="topic">Up</a> | <a href="06972.html" target="topic">Next</a></div>
+<a href="07028.html" target="topic">Previous</a> | <a href="06913.html" target="topic">Up</a> | <a href="07030.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: supc_6452::WAITMODE_WKUP_SOURCE Topic Title: WAITMODE_WKUP_SOURCE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_usart::SERCOMx_USART_TransmitterIsReady Topic Title: SERCOMx_USART_TransmitterIsReady Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

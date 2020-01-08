@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>CANx_IsBusy Function</title>
+<title>CANx_RxCallbackRegister Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05106.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04698.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05105.html" target="topic">Peripheral Libraries</a> &gt; <a href="00942.html" target="topic">CAN Peripheral Library Help</a> &gt; <a href="00943.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="01177.html" target="topic">CANx_IsBusy Function</a></div>
+<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04870.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05374.html" target="topic">Peripheral Libraries</a> &gt; <a href="00942.html" target="topic">CAN Peripheral Library Help</a> &gt;  &gt; <a href="01177.html" target="topic">CANx_RxCallbackRegister Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05106.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01172.html" target="topic">Previous</a> | <a href="00943.html" target="topic">Up</a> | <a href="01094.html" target="topic">Next</a></div>
+</div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: can_6019::CANx_IsBusy Topic Title: CANx_IsBusy Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: can_6019::CANx_RxCallbackRegister@CAN_CALLBACK@uintptr_t@CAN_MAILBOX_RX_ATTRIBUTE Topic Title: CANx_RxCallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-CANx_IsBusy Function</div>
+CANx_RxCallbackRegister Function</div>
 </div>
 </div>
 
@@ -48,28 +48,71 @@ CANx_IsBusy Function</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">CANx_IsBusy</span></strong>();</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">CANx_RxCallbackRegister</span></strong>(
+    <a href="01090.html" target="topic">CAN_CALLBACK</a> <strong><span style="color: #000000">callback</span></strong>, 
+    uintptr_t <strong><span style="color: #000000">contextHandle</span></strong>, 
+    <a href="01142.html" target="topic">CAN_MAILBOX_RX_ATTRIBUTE</a> <strong><span style="color: #000000">mailboxAttr</span></strong>
+);</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="01173.html" target="topic">CANx_Initialize</a> must have been called for the associated CAN instance.</p></div>
+<a href="01165.html" target="topic">CANx_Initialize</a> must have been called for the associated CAN instance.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+callback&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+A pointer to a function with a calling signature defined by the <a href="01090.html" target="topic">CAN_CALLBACK</a> data type.<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+contextHandle&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+A value (usually a pointer) passed (unused) into the function identified by the callback parameter.<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+mailboxAttr&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Mailbox type either RX Mailbox or RX Mailbox with overwrite&nbsp;</div></td></tr></table></div></div>
+</div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-true - Busy. false - Not busy.</p></div>
+Request status. true - Request was successful. false - Request has failed.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">if</span></strong> (CAN0_IsBusy())
+<div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">void</span></strong> CAN0_callbackHandler (uintptr_t context)
 {
-}</pre></div></div>
+}
+CAN0_RxCallbackRegister(CAN0_callbackHandler, 0, CAN_MAILBOX_DATA_FRAME_RX_OVERWRITE);
+CAN0_MessageReceive(&amp;rx_messageID, &amp;rx_messageLength, rx_message, &amp;timestamp, CAN_MAILBOX_DATA_FRAME_RX_OVERWRITE);</pre></div></div>
 </div>
 </div>
 </div>
@@ -77,7 +120,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05106.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04698.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05105.html" target="topic">Peripheral Libraries</a> &gt; <a href="00942.html" target="topic">CAN Peripheral Library Help</a> &gt; <a href="00943.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="01177.html" target="topic">CANx_IsBusy Function</a></div>
+<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04870.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05374.html" target="topic">Peripheral Libraries</a> &gt; <a href="00942.html" target="topic">CAN Peripheral Library Help</a> &gt;  &gt; <a href="01177.html" target="topic">CANx_RxCallbackRegister Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -85,13 +128,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05106.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01172.html" target="topic">Previous</a> | <a href="00943.html" target="topic">Up</a> | <a href="01094.html" target="topic">Next</a></div>
+</div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: can_6019::CANx_IsBusy Topic Title: CANx_IsBusy Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: can_6019::CANx_RxCallbackRegister@CAN_CALLBACK@uintptr_t@CAN_MAILBOX_RX_ATTRIBUTE Topic Title: CANx_RxCallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

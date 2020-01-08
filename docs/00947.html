@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05106.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04698.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05105.html" target="topic">Peripheral Libraries</a> &gt; <a href="00942.html" target="topic">CAN Peripheral Library Help</a> &gt; <a href="00947.html" target="topic">Using the Library</a></div>
+<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04870.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05374.html" target="topic">Peripheral Libraries</a> &gt; <a href="00942.html" target="topic">CAN Peripheral Library Help</a> &gt; <a href="00947.html" target="topic">Using the Library</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,7 +26,7 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05106.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
 <a href="00938.html" target="topic">Previous</a> | <a href="00942.html" target="topic">Up</a> | <a href="00943.html" target="topic">Next</a></div>
@@ -75,7 +75,7 @@ if (CAN1_InterruptGet(CAN_INTERRUPT_MB1_MASK))&nbsp;</p>
 <p class="Element10">
 /* Receive FIFO 0 New Message */&nbsp;</p>
 <p class="Element10">
-CAN1_MessageReceive(&amp;rx_messageID, &amp;rx_messageLength, rx_message, CAN_MAILBOX_DATA_FRAME_RX_OVERWRITE);&nbsp;</p>
+CAN1_MessageReceive(&amp;rx_messageID, &amp;rx_messageLength, rx_message, 0, CAN_MAILBOX_DATA_FRAME_RX_OVERWRITE);&nbsp;</p>
 <p class="Element10">
 &nbsp;</p>
 <p class="Element10">
@@ -165,7 +165,7 @@ while(1)&nbsp;</p>
 <p class="Element10">
 /* Transmitting Message */&nbsp;</p>
 <p class="Element10">
-CAN1_CallbackRegister( APP_CAN_Callback, (uintptr_t)APP_STATE_CAN_TRANSMIT );&nbsp;</p>
+CAN1_TxCallbackRegister( APP_CAN_Callback, (uintptr_t)APP_STATE_CAN_TRANSMIT, CAN_MAILBOX_DATA_FRAME_TX );&nbsp;</p>
 <p class="Element10">
 CAN1_MessageTransmit(messageID, messageLength, message, CAN_MAILBOX_DATA_FRAME_TX);&nbsp;</p>
 <p class="Element10">
@@ -173,16 +173,16 @@ CAN1_MessageTransmit(messageID, messageLength, message, CAN_MAILBOX_DATA_FRAME_T
 <p class="Element10">
 /* Receiving Message */&nbsp;</p>
 <p class="Element10">
-CAN1_CallbackRegister( APP_CAN_Callback, (uintptr_t)APP_STATE_CAN_RECEIVE );&nbsp;</p>
+CAN1_RxCallbackRegister( APP_CAN_Callback, (uintptr_t)APP_STATE_CAN_RECEIVE, CAN_MAILBOX_DATA_FRAME_RX_OVERWRITE );&nbsp;</p>
 <p class="Element10">
-CAN1_MessageReceive(&amp;rx_messageID, &amp;rx_messageLength, rx_message, CAN_MAILBOX_DATA_FRAME_RX_OVERWRITE);</p></div>
+CAN1_MessageReceive(&amp;rx_messageID, &amp;rx_messageLength, rx_message, 0, CAN_MAILBOX_DATA_FRAME_RX_OVERWRITE);</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05106.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04698.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05105.html" target="topic">Peripheral Libraries</a> &gt; <a href="00942.html" target="topic">CAN Peripheral Library Help</a> &gt; <a href="00947.html" target="topic">Using the Library</a></div>
+<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04870.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05374.html" target="topic">Peripheral Libraries</a> &gt; <a href="00942.html" target="topic">CAN Peripheral Library Help</a> &gt; <a href="00947.html" target="topic">Using the Library</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -190,7 +190,7 @@ CAN1_MessageReceive(&amp;rx_messageID, &amp;rx_messageLength, rx_message, CAN_MA
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05106.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
 <a href="00938.html" target="topic">Previous</a> | <a href="00942.html" target="topic">Up</a> | <a href="00943.html" target="topic">Next</a></div>

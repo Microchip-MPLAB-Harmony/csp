@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>SPIx_WriteRead Function</title>
+<title>Library Interface</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05106.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04698.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05105.html" target="topic">Peripheral Libraries</a> &gt; <a href="06774.html" target="topic">SPI Peripheral Library Help</a> &gt; <a href="06775.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="06882.html" target="topic">SPIx_WriteRead Function</a></div>
+<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04870.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05374.html" target="topic">Peripheral Libraries</a> &gt; <a href="06898.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="06876.html" target="topic">I2C</a> &gt; <a href="06877.html" target="topic">Master</a> &gt; <a href="06882.html" target="topic">Library Interface</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05106.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06881.html" target="topic">Previous</a> | <a href="06775.html" target="topic">Up</a> | <a href="06873.html" target="topic">Next</a></div>
+<a href="06886.html" target="topic">Previous</a> | <a href="06877.html" target="topic">Up</a> | <a href="06940.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SPIx_WriteRead@void*@size_t@void*@size_t Topic Title: SPIx_WriteRead Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SERCOM U2201 I2C master Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-SPIx_WriteRead Function</div>
+Library Interface</div>
 </div>
 </div>
 
@@ -48,93 +48,168 @@ SPIx_WriteRead Function</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
-<p class="Element10">
-This function should be used to write &quot;txSize&quot; number of bytes and read &quot;rxSize&quot; number of bytes on SPI x module. Data pointed by pTransmitData is transmitted and received data is saved in the location pointed by pReceiveData.</p></div>
 </div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">SPIx_WriteRead</span></strong>(
-    <strong><span style="color: #000080">void</span></strong>* <strong><span style="color: #000000">pTransmitData</span></strong>, 
-    size_t <strong><span style="color: #000000">txSize</span></strong>, 
-    <strong><span style="color: #000080">void</span></strong>* <strong><span style="color: #000000">pReceiveData</span></strong>, 
-    size_t <strong><span style="color: #000000">rxSize</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
+</div>
+<a name="612920496E697469616C697A6174696F6E2046756E6374696F6E"></a><div class="Element14">
+a) Initialization Function</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-The <a href="06872.html" target="topic">SPIx_Initialize</a> function must have been called.&nbsp;</p>
-<p class="Element10">
-Callback has to be registered using <a href="06855.html" target="topic">SPIx_CallbackRegister</a> API if the peripheral instance has been configured in Interrupt mode and transfer completion status needs to be communicated back to application via callback.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
+<div class="Element212">
 <div class="TableDiv">
-<table cellspacing="0" class="Table2">
+<table cellspacing="0" class="Table0">
 <tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-*pTransmitData&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Pointer to the data which has to be transmitted. if it is NULL, that means only data receiving is expected. For 9 to 15bit mode, data should be right aligned in the 16 bit memory location.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-txSize&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Number of bytes to be transmitted. Always, size should be given in terms of bytes. For example, if 5 16-bit data are to be transmitted, the transmit size should be 10 bytes.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-*pReceiveData&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Pointer to the location where received data has to be stored. It is user's responsibility to ensure pointed location has sufficient memory to store the read data. if it is NULL, that means only data transmission is expected. For 9 to 15bit mode, received data will be right aligned in the 16 bit memory location.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-rxSize&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Number of bytes to be received. Always, size should be given in terms of bytes. For example, if 5 16-bit data are to be received, the receive size should be 10 bytes. if &quot;n&quot; number of bytes has to be received AFTER transmitting &quot;m&quot; number of bytes, then &quot;rxSize&quot; should be set as &quot;m+n&quot;.&nbsp;</div></td></tr></table></div></div>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="06940.html" target="topic">SERCOMx_I2C_Initialize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Initializes the instance of the SERCOM peripheral operating in I2C mode.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
+<a name="62292053657475702046756E6374696F6E73"></a><div class="Element14">
+b) Setup Functions</div>
 <div class="Element11">
 <div class="Element10">
-
-<ul class="Element630">
-<li class="Element600">In Blocking mode, API returns True once the transfer is complete. It returns False if either of the size parameters are 0 and corresponding data pointer is NULL.</li>
-</ul><p class="Element10">
-&nbsp;</p>
-
-<ul class="Element630">
-<li class="Element600">In interrupt mode, if previous buffer request is not completed and a new transfer request comes, then this API will reject the new request and will return &quot;False&quot;. Also, Same as blocking mode, It returns False if either of the size parameters are 0 and corresponding data pointer is NULL.</li>
-</ul></div>
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="06943.html" target="topic">SERCOMx_I2C_TransferSetup</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Dynamic setup of TWIHS Peripheral.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="06938.html" target="topic">SERCOMx_I2C_CallbackRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Sets the pointer to the function (and it's context) to be called when the given SERCOM I2C's transfer events occur.&nbsp;</div></td></tr></table></div></div>
 </div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
+</div>
+<a name="6329205472616E73616374696F6E2046756E6374696F6E73"></a><div class="Element14">
+c) Transaction Functions</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-Non-blocking interrupt mode configuration implementation of this function. will be used by Harmony driver implementation APIs.</p></div>
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="06942.html" target="topic">SERCOMx_I2C_Read</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Reads data from the slave.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="06944.html" target="topic">SERCOMx_I2C_Write</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Writes data to the slave.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="06945.html" target="topic">SERCOMx_I2C_WriteRead</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Write and Read data from Slave.&nbsp;</div></td></tr></table></div></div>
 </div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
+</div>
+<a name="6429205374617475732046756E6374696F6E73"></a><div class="Element14">
+d) Status Functions</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">uint8_t     txBuffer[4];
-uint8_t     rxBuffer[10];
-size_t      txSize = 4;
-size_t      rxSize = 10;
-<strong><span style="color: #000080">bool</span></strong>        reqAccepted;
-
-reqAccepted = SPI1_WriteRead(&amp;txBuffer, txSize, &amp;rxBuffer, rxSize);</pre></div></div>
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="06939.html" target="topic">SERCOMx_I2C_ErrorGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Returns the latest error that occurred on the bus.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="06941.html" target="topic">SERCOMx_I2C_IsBusy</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Returns the Peripheral busy status.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="6529204461746120547970657320616E6420436F6E7374616E7473"></a><div class="Element14">
+e) Data Types and Constants</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="06931.html" target="topic">SERCOM_I2C_CALLBACK</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Defines the data type and function signature for the SERCOM I2C peripheral callback function.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="06932.html" target="topic">SERCOM_I2C_ERROR</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Defines the possible errors that the SERCOM I2C peripheral can generate.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="06936.html" target="topic">SERCOM_I2C_TRANSFER_SETUP</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+I2C transfer setup data structure&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -142,7 +217,7 @@ reqAccepted = SPI1_WriteRead(&amp;txBuffer, txSize, &amp;rxBuffer, rxSize);</pre
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05106.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04698.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05105.html" target="topic">Peripheral Libraries</a> &gt; <a href="06774.html" target="topic">SPI Peripheral Library Help</a> &gt; <a href="06775.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="06882.html" target="topic">SPIx_WriteRead Function</a></div>
+<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04870.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05374.html" target="topic">Peripheral Libraries</a> &gt; <a href="06898.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="06876.html" target="topic">I2C</a> &gt; <a href="06877.html" target="topic">Master</a> &gt; <a href="06882.html" target="topic">Library Interface</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -150,13 +225,13 @@ reqAccepted = SPI1_WriteRead(&amp;txBuffer, txSize, &amp;rxBuffer, rxSize);</pre
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05106.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06881.html" target="topic">Previous</a> | <a href="06775.html" target="topic">Up</a> | <a href="06873.html" target="topic">Next</a></div>
+<a href="06886.html" target="topic">Previous</a> | <a href="06877.html" target="topic">Up</a> | <a href="06940.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SPIx_WriteRead@void*@size_t@void*@size_t Topic Title: SPIx_WriteRead Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SERCOM U2201 I2C master Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

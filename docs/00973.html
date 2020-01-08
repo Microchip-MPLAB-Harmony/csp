@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Using the Library</title>
+<title>Running The Application</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05106.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04698.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05105.html" target="topic">Peripheral Libraries</a> &gt; <a href="00968.html" target="topic">CAN Peripheral Library Help</a> &gt; <a href="00973.html" target="topic">Using the Library</a></div>
+<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="00953.html" target="topic">CAN Applications</a> &gt; <a href="00952.html" target="topic">can_normal_operation_interrupt_timestamp</a> &gt; <a href="00973.html" target="topic">Running The Application</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05106.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00964.html" target="topic">Previous</a> | <a href="00968.html" target="topic">Up</a> | <a href="00969.html" target="topic">Next</a></div>
+<a href="00971.html" target="topic">Previous</a> | <a href="00952.html" target="topic">Up</a> | <a href="00970.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CAN u2003 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CAN can_normal_operation_interrupt_timestamp Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Using the Library</div>
+Running The Application</div>
 </div>
 </div>
 
@@ -49,190 +49,235 @@ Using the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The CAN library supports the Normal and CAN-FD modes. The CAN Normal or CAN-FD mode can transfer message in a polling or an interrupt mode.&nbsp;</p>
+<strong><u>MCU Devices</u></strong></p>
+<ol class="Element630">
+<li value="1" class="Element600">Build and Program the application on both boards using the MPLAB X IDE.</li>
+</ol><p class="Element10">
+<strong><i>Note:</strong> Do not execute below Step-2 and Step-3 for PIC32MX1/2/5 Starter Kit and PIC32 Ethernet Starter Kit II as UART is not available for these boards.</i></p>
+<ol class="Element630">
+<li value="2" class="Element600">Open the Terminal application (Ex.:Tera term) on the computer</li>
+<li value="3" class="Element600">Connect to the DEBUG UART Virtual COM port and configure the serial settings as follows:
+<ul class="Element631">
+<li class="Element601">Baud : 115200</li>
+<li class="Element601">Data : 8 Bit</li>
+<li class="Element601">Parity : None</li>
+<li class="Element601">Stop : 1 Bit</li>
+<li class="Element601">Flow Control : None</li>
+</ul></li>
+<li value="4" class="Element600">Execute the steps and observe the output as described in the following table</li>
+</ol><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="4%">
+<div class="Element66">
+Project Name&nbsp;</div></td><td class="Element65" valign="top" width="96%">
+<div class="Element66">
+Output&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
+<div class="Element68">
+pic32mk_gp_db.X&nbsp;</div></td><td class="Element67" valign="top" width="96%">
+<div class="Element68">
+</p>
+<ul class="Element630">
+<li class="Element600">Press '1' to transmit message to CAN Bus on terminal window of PIC32MK GP DB board.</li>
+<li class="Element600">Transmitting Message:Success will be displayed in the terminal window of PIC32MK GP DB board board. CAN message will be displayed in the CAN analyzer software.</li>
+<li class="Element600">Press '2' to receive message from CAN Bus on terminal window of PIC32MK GP DB board.</li>
+<li class="Element600">Send following CAN message from CAN analyzer software</li>
+</ul><p class="Element68">
+ID : 0x469, DLC : 8, Data: 1, 2, 3, 4, 5, 6, 7, 8</p>
+<ul class="Element630">
+<li class="Element600">CAN message will be displayed in the terminal window of PIC32MK GP DB board</li>
+<li class="Element600">LED1 toggles at each message transmission or reception</li>
+</ul><p class="Element68">
+&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
+<div class="Element68">
+pic32mx_125_sk.X&nbsp;</div></td><td class="Element67" valign="top" width="96%">
+<div class="Element68">
+</p>
+<ul class="Element630">
+<li class="Element600">Press Switch 'SW1' to transmit message to CAN Bus on terminal window of PIC32MX 1/2/5 SK board.</li>
+<li class="Element600">CAN message will be displayed in the CAN analyzer software.</li>
+<li class="Element600">Send following CAN message from CAN analyzer software</li>
+</ul><p class="Element68">
+ID : 0x469, DLC : 8, Data: 1, 2, 3, 4, 5, 6, 7, 8</p>
+<ul class="Element630">
+<li class="Element600">LED1 toggles at each message transmission or reception</li>
+</ul><p class="Element68">
+&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
+<div class="Element68">
+pic32mx_eth_sk2.X&nbsp;</div></td><td class="Element67" valign="top" width="96%">
+<div class="Element68">
+</p>
+<ul class="Element630">
+<li class="Element600">Press Switch 'SW1' to transmit message to CAN Bus on terminal window of PIC32MX ETH SK II board.</li>
+<li class="Element600">CAN message will be displayed in the CAN analyzer software.</li>
+<li class="Element600">Send following CAN message from CAN analyzer software</li>
+</ul><p class="Element68">
+ID : 0x469, DLC : 8, Data: 1, 2, 3, 4, 5, 6, 7, 8</p>
+<ul class="Element630">
+<li class="Element600">LED1 toggles at each message transmission or reception</li>
+</ul><p class="Element68">
+&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
+<div class="Element68">
+pic32mz_ef_sk.X&nbsp;</div></td><td class="Element67" valign="top" width="96%">
+<div class="Element68">
+</p>
+<ul class="Element630">
+<li class="Element600">Press '1' to transmit message to CAN Bus on terminal window of PIC32MZ EF SK board.</li>
+<li class="Element600">Transmitting Message:Success will be displayed in the terminal window of PIC32MZ EF SK board board. CAN message will be displayed in the CAN analyzer software.</li>
+<li class="Element600">Press '2' to receive message from CAN Bus on terminal window of PIC32MZ EF SK board.</li>
+<li class="Element600">Send following CAN message from CAN analyzer software</li>
+</ul><p class="Element68">
+ID : 0x469, DLC : 8, Data: 1, 2, 3, 4, 5, 6, 7, 8</p>
+<ul class="Element630">
+<li class="Element600">CAN message will be displayed in the terminal window of PIC32MZ EF SK board</li>
+<li class="Element600">LED1 toggles at each message transmission or reception</li>
+</ul><p class="Element68">
+&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
+<div class="Element68">
+pic32mz_w1_curiosity.X&nbsp;</div></td><td class="Element67" valign="top" width="96%">
+<div class="Element68">
+</p>
+<ul class="Element630">
+<li class="Element600">Press '1' to transmit message to CAN Bus on terminal window of PIC32MZ W1 Curiosity Board.</li>
+<li class="Element600">Transmitting Message:Success will be displayed in the terminal window of PIC32MZ W1 Curiosity Board. CAN message will be displayed in the CAN analyzer software.</li>
+<li class="Element600">Press '2' to receive message from CAN Bus on terminal window of PIC32MZ W1 Curiosity Board.</li>
+<li class="Element600">Send following CAN message from CAN analyzer software</li>
+</ul><p class="Element68">
+ID : 0x469, DLC : 8, Data: 1, 2, 3, 4, 5, 6, 7, 8</p>
+<ul class="Element630">
+<li class="Element600">CAN message will be displayed in the terminal window of PIC32MZ W1 Curiosity Board</li>
+<li class="Element600">LED(RED, D202) toggles at each message transmission or reception</li>
+</ul><p class="Element68">
+&nbsp;</div></td></tr></table></div></div>
+
+<ol class="Element630">
+<li value="5" class="Element600">Observe the output as follow.</li>
+</ol><p class="Element10">
+For pic32mk_gp_db.X, pic32mz_ef_sk.X and pic32mz_w1_curiosity.X output as follow:</p>
+<ul class="Element630">
+<li class="Element600">Open the CAN Analyzer Software and perform following steps
+<ul class="Element631">
+<li class="Element601">Configure CAN Analyzer Software as per below table. Click on Setup -&gt; Hardware Setup</li>
+</ul></li>
+</ul><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="71%">
+<div class="Element66">
+Description&nbsp;</div></td><td class="Element65" valign="top" width="29%">
+<div class="Element66">
+Settings&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="71%">
+<div class="Element68">
+CAN Bitrate Control&nbsp;</div></td><td class="Element67" valign="top" width="29%">
+<div class="Element68">
+500 Kbps&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="71%">
+<div class="Element68">
+CAN Mode Control&nbsp;</div></td><td class="Element67" valign="top" width="29%">
+<div class="Element68">
+Normal Mode&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="71%">
+<div class="Element68">
+Bus Termination Control&nbsp;</div></td><td class="Element67" valign="top" width="29%">
+<div class="Element68">
+ON&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+<img src="CAN_PICM_int.jpg" border="0" alt="" title="">&nbsp;</p>
 <p class="Element10">
 &nbsp;</p>
 <p class="Element10">
-<strong>CAN Message RAM Configuration</strong>&nbsp;</p>
+For pic32mx_125_sk.X and pic32mx_eth_sk2.X output as follow:</p>
+<ul class="Element630">
+<li class="Element600">Open the CAN Analyzer Software and perform following steps
+<ul class="Element631">
+<li class="Element601">Configure CAN Analyzer Software as per below table. Click on Setup -&gt; Hardware Setup</li>
+</ul></li>
+</ul><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="71%">
+<div class="Element66">
+Description&nbsp;</div></td><td class="Element65" valign="top" width="29%">
+<div class="Element66">
+Settings&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="71%">
+<div class="Element68">
+CAN Bitrate Control&nbsp;</div></td><td class="Element67" valign="top" width="29%">
+<div class="Element68">
+500 Kbps&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="71%">
+<div class="Element68">
+CAN Mode Control&nbsp;</div></td><td class="Element67" valign="top" width="29%">
+<div class="Element68">
+Normal Mode&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="71%">
+<div class="Element68">
+Bus Termination Control&nbsp;</div></td><td class="Element67" valign="top" width="29%">
+<div class="Element68">
+ON&nbsp;</div></td></tr></table></div></div>
 <p class="Element10">
-Allocate CAN Message RAM Configuration in contiguous non-cacheable buffer as uint8_t Mcan0MessageRAM[CAN0_MESSAGE_RAM_CONFIG_SIZE] __attribute__((aligned (32))), here additional attribute such as __attribute__((__section__(&quot;.region_nocache&quot;))) or __attribute__((space(data), section (&quot;.ram_nocache&quot;))) should be added if cache is enabled and non-cacheable section should be created in linker script.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong>CAN normal operation with polling</strong>&nbsp;</p>
-<p class="Element10">
-The following example shows the CAN normal mode operation with polling implementation.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-int main(void)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-/* Set Message RAM Configuration */&nbsp;</p>
-<p class="Element10">
-CAN0_MessageRAMConfigSet(Mcan0MessageRAM);&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-while (1)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-/* Check if there is a receive FIFO 0 New Message */&nbsp;</p>
-<p class="Element10">
-if (CAN0_InterruptGet(CAN_INTERRUPT_RF0N_MASK))&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-CAN0_InterruptClear(CAN_INTERRUPT_RF0N_MASK);&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-/* Receive FIFO 0 New Message */&nbsp;</p>
-<p class="Element10">
-CAN0_MessageReceive(&amp;messageID, &amp;messageLength, message, CAN_MSG_ATTR_RX_FIFO0);&nbsp;</p>
+<img src="CAN_PICMX_125.jpg" border="0" alt="" title="">&nbsp;</p>
 <p class="Element10">
 &nbsp;</p>
 <p class="Element10">
-/* Transmit back received Message */&nbsp;</p>
-<p class="Element10">
-CAN0_MessageTransmit(messageID, messageLength, message, CAN_MODE_NORMAL, CAN_MSG_ATTR_TX_FIFO_DATA_FRAME);&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
 &nbsp;</p>
 <p class="Element10">
-<strong>CAN normal operation with interrupt</strong>&nbsp;</p>
-<p class="Element10">
-The following example shows the CAN normal mode operation with interrupt implementation.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-void APP_CAN_Callback(uintptr_t context)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-/* Check CAN Status */&nbsp;</p>
-<p class="Element10">
-status = CAN0_ErrorGet();&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-if (((status &amp; CAN_PSR_LEC_Msk) == CAN_ERROR_NONE) || ((status &amp; CAN_PSR_LEC_Msk) == CAN_PSR_LEC_NO_CHANGE))&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-switch ((APP_STATES)context)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-case APP_STATE_CAN_RECEIVE:&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-state = APP_STATE_CAN_TRANSMIT;&nbsp;</p>
-<p class="Element10">
-break;&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-default:&nbsp;</p>
-<p class="Element10">
-break;&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-int main(void)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-/* Set Message RAM Configuration */&nbsp;</p>
-<p class="Element10">
-CAN0_MessageRAMConfigSet(Mcan0MessageRAM);&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-while(1)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-/* Check the application's current state. */&nbsp;</p>
-<p class="Element10">
-switch (state)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-case APP_STATE_CAN_RECEIVE:&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-CAN0_CallbackRegister( APP_CAN_Callback, (uintptr_t)APP_STATE_CAN_RECEIVE );&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-state = APP_STATE_CAN_IDLE;&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-/* Receive FIFO 0 New Message */&nbsp;</p>
-<p class="Element10">
-CAN0_MessageReceive(&amp;messageID, &amp;messageLength, message, CAN_MSG_ATTR_RX_FIFO0);&nbsp;</p>
-<p class="Element10">
-break;&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-case APP_STATE_CAN_TRANSMIT:&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-CAN0_CallbackRegister( APP_CAN_Callback, (uintptr_t)APP_STATE_CAN_TRANSMIT );&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-state = APP_STATE_CAN_IDLE;&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-/* Transmit back received Message */&nbsp;</p>
-<p class="Element10">
-CAN0_MessageTransmit(messageID, messageLength, message, CAN_MODE_NORMAL, CAN_MSG_ATTR_TX_FIFO_DATA_FRAME);&nbsp;</p>
-<p class="Element10">
-break;&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-case APP_STATE_CAN_IDLE:&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-/* Application can do other task here */&nbsp;</p>
-<p class="Element10">
-break;&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-default:&nbsp;</p>
-<p class="Element10">
-break;</p></div>
+<strong><u>MPU Devices</u></strong></p>
+<ol class="Element630">
+<li value="1" class="Element600">Open the Terminal application (Ex.:Tera term) on the computer for each SAM 9X60 Evaluation Kit board.</li>
+<li value="2" class="Element600">Connect to the USB to DBGU COM port and configure the serial settings for each SAM 9X60 Evaluation Kit board as follows:
+<ul class="Element631">
+<li class="Element601">Baud : 115200</li>
+<li class="Element601">Data : 8 Bits</li>
+<li class="Element601">Parity : None</li>
+<li class="Element601">Stop : 1 Bit</li>
+<li class="Element601">Flow Control : None</li>
+</ul></li>
+<li value="3" class="Element600">Build the MPLAB X project using MPLAB X IDE</li>
+<li value="4" class="Element600">Use the output binary file (harmony.bin) to setup the board as detailed in <a href="00963.html" target="topic">hardware setup</a> for each SAM 9X60 Evaluation Kit board</li>
+<li value="5" class="Element600">Execute the steps and observe the output as described in the following table</li>
+</ol><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="6%">
+<div class="Element66">
+Project Name&nbsp;</div></td><td class="Element65" valign="top" width="94%">
+<div class="Element66">
+Output&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="6%">
+<div class="Element68">
+sam_9x60_ek_xc32.X&nbsp;</div></td><td class="Element67" valign="top" width="94%">
+<div class="Element68">
+</p>
+<ul class="Element630">
+<li class="Element600">Press '2' to receive message from CAN Bus on terminal window of SAM 9X60 EK - 2 board.</li>
+<li class="Element600">Press '1' to transmit message to CAN Bus on terminal window of SAM 9X60 EK - 1 board.</li>
+<li class="Element600">Transmitting Message:Success will be displayed in the terminal window of SAM 9X60 EK - 1 board. CAN message will be displayed in the terminal window of SAM 9X60 EK - 2 board.</li>
+<li class="Element600">RGB_LED (Green) toggles at each message transmission or reception</li>
+</ul><p class="Element68">
+&nbsp;</div></td></tr></table></div></div>
+
+<ol class="Element630">
+<li value="6" class="Element600">Following will be terminal session’s output.</li>
+</ol><p class="Element10">
+<img src="sam9x60_int.jpg" border="0" alt="" title=""></p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05106.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04698.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05105.html" target="topic">Peripheral Libraries</a> &gt; <a href="00968.html" target="topic">CAN Peripheral Library Help</a> &gt; <a href="00973.html" target="topic">Using the Library</a></div>
+<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="00953.html" target="topic">CAN Applications</a> &gt; <a href="00952.html" target="topic">can_normal_operation_interrupt_timestamp</a> &gt; <a href="00973.html" target="topic">Running The Application</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -240,13 +285,13 @@ break;</p></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05106.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00964.html" target="topic">Previous</a> | <a href="00968.html" target="topic">Up</a> | <a href="00969.html" target="topic">Next</a></div>
+<a href="00971.html" target="topic">Previous</a> | <a href="00952.html" target="topic">Up</a> | <a href="00970.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CAN u2003 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CAN can_normal_operation_interrupt_timestamp Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->
