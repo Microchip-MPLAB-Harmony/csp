@@ -428,7 +428,7 @@ bool PIO_PinInterruptCallbackRegister(
 */
 void PIO${.vars[channel]}_InterruptHandler(void)
 {
-    uint32_t status;
+    uint32_t status = 0;
     uint8_t j;
 
     status  = PIO${.vars[channel]}_REGS->PIO_ISR;
