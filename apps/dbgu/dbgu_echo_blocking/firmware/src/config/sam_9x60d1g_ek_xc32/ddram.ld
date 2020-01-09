@@ -31,7 +31,7 @@ SECTIONS
 	.text 0x23f00000 :
 	{
 		. = ALIGN(4);
-		_sfixed = .;
+		PROVIDE(_sfixed = .);
 		*(.textEntry)
 		*(.text .text.* .gnu.linkonce.t.*)
 		*(.rodata .rodata* .gnu.linkonce.r.*)
@@ -40,15 +40,15 @@ SECTIONS
 		. = ALIGN(4);
 		KEEP(*(.init))
 		. = ALIGN(4);
-		__preinit_array_start = .;
+		PROVIDE(__preinit_array_start = .);
 		KEEP(*(.preinit_array))
-		__preinit_array_end = .;
+		PROVIDE(__preinit_array_end = .);
 
 		. = ALIGN(4);
-		__init_array_start = .;
+		PROVIDE(__init_array_start = .);
 		KEEP(*(SORT(.init_array.*)))
 		KEEP(*(.init_array))
-		__init_array_end = .;
+		PROVIDE(__init_array_end = .);
 
 		. = ALIGN(0x4);
 		KEEP(*crtbegin.o(.ctors))
@@ -60,10 +60,10 @@ SECTIONS
 		KEEP(*(.fini))
 
 		. = ALIGN(4);
-		__fini_array_start = .;
+		PROVIDE(__fini_array_start = .);
 		KEEP(*(.fini_array))
 		KEEP(*(SORT(.fini_array.*)))
-		__fini_array_end = .;
+		PROVIDE(__fini_array_end = .);
 
 		KEEP(*crtbegin.o(.dtors))
 		KEEP(*(EXCLUDE_FILE (*crtend.o) .dtors))
@@ -78,7 +78,7 @@ SECTIONS
     {
 		*(.data .data.*);
 		. = ALIGN(4);
-		_efixed = .;            /* End of text section */
+		PROVIDE(_efixed = .);            /* End of text section */
     } >ram
 
 	/* .ARM.exidx is sorted, so has to go in its own output section.  */
@@ -91,16 +91,16 @@ SECTIONS
 
 	/* _etext must be just before .relocate section */
 	. = ALIGN(4);
-	_etext = .;
+	PROVIDE(_etext = .);
 
 	.relocate :
 	{
 		. = ALIGN(4);
-		_srelocate = .;
+		PROVIDE(_srelocate = .);
 		KEEP(*(.vectors .vectors.*))
 		*(.ramfunc)
 		. = ALIGN(4);
-		_erelocate = .;
+		PROVIDE(_erelocate = .);
 	} >sram AT>ram
 
 	.region_cache_aligned_const :
@@ -132,11 +132,11 @@ SECTIONS
 	.bss (NOLOAD) :
 	{
 		. = ALIGN(4);
-		_szero = .;
+		PROVIDE(_szero = .);
 		*(.bss .bss.*)
 		*(COMMON)
 		. = ALIGN(4);
-		_ezero = .;
+		PROVIDE(_ezero = .);
 	} >ram
 
 	.region_cache_aligned (NOLOAD) :
@@ -149,9 +149,9 @@ SECTIONS
 	.heap (NOLOAD) :
 	{
 		. = ALIGN(4);
-		__heap_start__ = .;
+		PROVIDE(__heap_start__ = .);
 		. += HEAP_SIZE;
-		__heap_end__ = .;
+		PROVIDE(__heap_end__ = .);
 	} >ram
 
 	.stacks (NOLOAD) :
