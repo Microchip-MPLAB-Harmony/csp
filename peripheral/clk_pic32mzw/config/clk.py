@@ -710,7 +710,7 @@ def updatePLLBwselValue(refDivider, fbDivider, postDiv, sourceUsed):
     # POSC and FRC as the reference clock source
     if(sourceUsed == 'FRC'):  # FRC
         Fref = 8000000
-    elif(sourceUsed == 'POSC'):  # POSC
+    elif((sourceUsed=='POSC') or (sourceUsed=='USBCLK')):  # POSC or USBCLK(for USBPLL only)
         Fref = 40000000
 
     Fvco = Fref * fbDivider / refDivider
