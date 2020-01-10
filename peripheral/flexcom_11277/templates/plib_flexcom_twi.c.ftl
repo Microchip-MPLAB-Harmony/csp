@@ -308,7 +308,22 @@ bool ${FLEXCOM_INSTANCE_NAME}_TWI_IsBusy(void)
 
 bool ${FLEXCOM_INSTANCE_NAME}_TWI_Read(uint16_t address, uint8_t *pdata, size_t length)
 {
-    return (${FLEXCOM_INSTANCE_NAME}_TWI_WriteRead(address, NULL, 0, pdata, length));
+    // Check for ongoing transfer
+    if( ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.state != FLEXCOM_TWI_STATE_IDLE )
+    {
+        return false;
+    }
+
+    ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.address=address;
+    ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.readBuffer=pdata;
+    ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.readSize=length;
+    ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeBuffer=NULL;
+    ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeSize=0;
+    ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.error = FLEXCOM_TWI_ERROR_NONE;
+
+    ${FLEXCOM_INSTANCE_NAME}_TWI_InitiateTransfer(address, true);
+
+    return true;
 }
 
 // *****************************************************************************
@@ -334,7 +349,22 @@ bool ${FLEXCOM_INSTANCE_NAME}_TWI_Read(uint16_t address, uint8_t *pdata, size_t 
 
 bool ${FLEXCOM_INSTANCE_NAME}_TWI_Write(uint16_t address, uint8_t *pdata, size_t length)
 {
-    return (${FLEXCOM_INSTANCE_NAME}_TWI_WriteRead(address, pdata, length, NULL, 0));
+    // Check for ongoing transfer
+    if( ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.state != FLEXCOM_TWI_STATE_IDLE )
+    {
+        return false;
+    }
+
+    ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.address=address;
+    ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.readBuffer=NULL;
+    ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.readSize=0;
+    ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeBuffer=pdata;
+    ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeSize=length;
+    ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.error = FLEXCOM_TWI_ERROR_NONE;
+
+    ${FLEXCOM_INSTANCE_NAME}_TWI_InitiateTransfer(address, false);
+
+    return true;
 }
 
 // *****************************************************************************
@@ -362,24 +392,23 @@ bool ${FLEXCOM_INSTANCE_NAME}_TWI_Write(uint16_t address, uint8_t *pdata, size_t
 
 bool ${FLEXCOM_INSTANCE_NAME}_TWI_WriteRead(uint16_t address, uint8_t *wdata, size_t wlength, uint8_t *rdata, size_t rlength)
 {
-    bool status = true;
 
     // Check for ongoing transfer
     if( ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.state != FLEXCOM_TWI_STATE_IDLE )
     {
-        status = false;
+        return false;
     }
 
-    ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.address = address;
-    ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.readBuffer = rdata;
-    ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.readSize = rlength;
-    ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeBuffer = wdata;
-    ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeSize = wlength;
+    ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.address=address;
+    ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.readBuffer=rdata;
+    ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.readSize=rlength;
+    ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeBuffer=wdata;
+    ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.writeSize=wlength;
     ${FLEXCOM_INSTANCE_NAME?lower_case}TwiObj.error = FLEXCOM_TWI_ERROR_NONE;
 
     ${FLEXCOM_INSTANCE_NAME}_TWI_InitiateTransfer(address, false);
 
-    return status;
+    return true;
 }
 
 // *****************************************************************************
