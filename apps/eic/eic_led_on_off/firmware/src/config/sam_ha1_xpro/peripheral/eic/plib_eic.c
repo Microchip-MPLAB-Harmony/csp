@@ -81,7 +81,7 @@ void EIC_Initialize(void)
     EIC_REGS->EIC_CONFIG[0] = EIC_CONFIG_SENSE0_NONE  |
                               EIC_CONFIG_SENSE1_NONE  |
                               EIC_CONFIG_SENSE2_NONE  |
-                              EIC_CONFIG_SENSE3_RISE  |
+                              EIC_CONFIG_SENSE3_RISE | EIC_CONFIG_FILTEN3_Msk |
                               EIC_CONFIG_SENSE4_NONE  |
                               EIC_CONFIG_SENSE5_NONE  |
                               EIC_CONFIG_SENSE6_NONE  |

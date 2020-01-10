@@ -95,7 +95,7 @@ void EIC_Initialize(void)
                               EIC_CONFIG_SENSE4_NONE  |
                               EIC_CONFIG_SENSE5_NONE  |
                               EIC_CONFIG_SENSE6_NONE  |
-                              EIC_CONFIG_SENSE7_RISE ;
+                              EIC_CONFIG_SENSE7_RISE | EIC_CONFIG_FILTEN7_Msk;
 
     /* External Interrupt enable*/
     EIC_REGS->EIC_INTENSET = 0x8000;

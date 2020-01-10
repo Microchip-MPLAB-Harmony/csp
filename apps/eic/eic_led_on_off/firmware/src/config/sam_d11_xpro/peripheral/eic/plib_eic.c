@@ -76,7 +76,7 @@ void EIC_Initialize(void)
     }
 
     /* NMI Control register */
-    EIC_REGS->EIC_NMICTRL = EIC_NMICTRL_NMISENSE_RISE ;
+    EIC_REGS->EIC_NMICTRL = EIC_NMICTRL_NMISENSE_RISE | EIC_NMICTRL_NMIFILTEN_Msk;
 
     /* Interrupt sense type and filter control for EXTINT channels 0 to 7 */
     EIC_REGS->EIC_CONFIG[0] = EIC_CONFIG_SENSE0_NONE  |
