@@ -159,6 +159,11 @@ SECTIONS
 		PROVIDE(_ezero = .);
 	} >ram
 
+<#if USE_THREADX_VECTORS>
+	PROVIDE (end = .);
+	_end = .;
+
+</#if>
 	.region_cache_aligned (NOLOAD) :
 	{
 		. = ALIGN(32);
