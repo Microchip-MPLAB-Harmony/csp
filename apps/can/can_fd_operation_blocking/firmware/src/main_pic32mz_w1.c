@@ -183,6 +183,8 @@ int main ( void )
                         }
                     }
                     break;
+                case 'm':
+                    break;
                 default:
                     printf(" Invalid Input \r\n");
                     break;
