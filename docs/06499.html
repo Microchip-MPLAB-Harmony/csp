@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>RTT_CALLBACK Type</title>
+<title>Running The Application</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04870.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05374.html" target="topic">Peripheral Libraries</a> &gt; <a href="06487.html" target="topic">RTT Peripheral Library Help</a> &gt; <a href="06488.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="06499.html" target="topic">RTT_CALLBACK Type</a></div>
+<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="06494.html" target="topic">RTT Applications</a> &gt; <a href="06495.html" target="topic">rtt_periodic_timeout</a> &gt; <a href="06499.html" target="topic">Running The Application</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -29,12 +29,12 @@ Microchip 32-bit Chip Support Package</div>
 <a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06502.html" target="topic">Previous</a> | <a href="06488.html" target="topic">Up</a> | <a href="06507.html" target="topic">Next</a></div>
+<a href="06497.html" target="topic">Previous</a> | <a href="06495.html" target="topic">Up</a> | <a href="06523.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RTT_CALLBACK Topic Title: RTT_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RTT rtt_periodic_timeout Running Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-RTT_CALLBACK Type</div>
+Running The Application</div>
 </div>
 </div>
 
@@ -49,58 +49,75 @@ RTT_CALLBACK Type</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Callback Function Pointer&nbsp;</p>
+<strong><u>MCU Devices</u></strong></p>
+<ol class="Element630">
+<li value="1" class="Element600">Build and Program the application using the MPLAB X IDE</li>
+<li value="2" class="Element600">The LED blinks continuously</li>
+</ol><p class="Element10">
+&nbsp;</p>
 <p class="Element10">
-This data type defines the function signature for the RTT peripheral callback function. The RTT peripheral will call back the client's function with this signature once the alarm match or periodic interrupt occurs.</p></div>
-</div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000">RTT_CALLBACK</span></strong>)(<a href="06507.html" target="topic">RTT_INTERRUPT_TYPE</a> type, uintptr_t context);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-<a href="06500.html" target="topic">RTT_CallbackRegister</a> must have been called to set the function to be called.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
+The following table provides the LED name. </p><div class="Element63">
 <div class="TableDiv">
-<table cellspacing="0" class="Table2">
+<table cellspacing="0" class="Table1">
 <tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Allows the caller to provide a context value (usually a pointer to the callers context for multi-instance clients).<br>&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-type&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Reason for the interrupt&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
+<td class="Element65" valign="top" width="85%">
+<div class="Element66">
+Kit Name&nbsp;</div></td><td class="Element65" valign="top" width="15%">
+<div class="Element66">
+LED Name&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="85%">
+<div class="Element68">
+SAM E70 Xplained Ultra Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="15%">
+<div class="Element68">
+LED1&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="85%">
+<div class="Element68">
+SAM G55 Xplained PRO evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="15%">
+<div class="Element68">
+LED0&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="85%">
+<div class="Element68">
+SAM RH71 Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="15%">
+<div class="Element68">
+LED0&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="85%">
+<div class="Element68">
+SAM V71 Xplained Ultra Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="15%">
+<div class="Element68">
+LED0&nbsp;</div></td></tr></table></div></div>
 <p class="Element10">
-None.</p></div>
+&nbsp;</p>
+<p class="Element10">
+<strong><u>MPU Devices</u></strong></p>
+<ol class="Element630">
+<li value="1" class="Element600">Build the IAR or MPLAB X project using IAR Embedded Workbench or MPLAB X IDE respectively</li>
+<li value="2" class="Element600">Use the output binary file (harmony.bin) to setup the board as detailed in <a href="06497.html" target="topic">hardware setup</a></li>
+<li value="3" class="Element600">LED blinks at every 1 second</li>
+</ol><p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+The following table provides the LED name. </p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="59%">
+<div class="Element66">
+Kit Name&nbsp;</div></td><td class="Element65" valign="top" width="41%">
+<div class="Element66">
+LED Name&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="59%">
+<div class="Element68">
+SAM9X60 evaluation kit&nbsp;</div></td><td class="Element67" valign="top" width="41%">
+<div class="Element68">
+RGB_LED(Blue)&nbsp;</div></td></tr></table></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04870.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05374.html" target="topic">Peripheral Libraries</a> &gt; <a href="06487.html" target="topic">RTT Peripheral Library Help</a> &gt; <a href="06488.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="06499.html" target="topic">RTT_CALLBACK Type</a></div>
+<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="06494.html" target="topic">RTT Applications</a> &gt; <a href="06495.html" target="topic">rtt_periodic_timeout</a> &gt; <a href="06499.html" target="topic">Running The Application</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -111,10 +128,10 @@ Microchip 32-bit Chip Support Package</div>
 <a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06502.html" target="topic">Previous</a> | <a href="06488.html" target="topic">Up</a> | <a href="06507.html" target="topic">Next</a></div>
+<a href="06497.html" target="topic">Previous</a> | <a href="06495.html" target="topic">Up</a> | <a href="06523.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RTT_CALLBACK Topic Title: RTT_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RTT rtt_periodic_timeout Running Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>RTC_Timer32FrequencyGet Function</title>
+<title>RTC_Timer32CounterHasOverflowed Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04870.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05374.html" target="topic">Peripheral Libraries</a> &gt; <a href="06188.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="06189.html" target="topic">32-bit Timer (Mode 0)</a> &gt; <a href="06194.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="06415.html" target="topic">RTC_Timer32FrequencyGet Function</a></div>
+<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04870.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05374.html" target="topic">Peripheral Libraries</a> &gt; <a href="06190.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="06191.html" target="topic">32-bit Timer (Mode 0)</a> &gt; <a href="06196.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="06415.html" target="topic">RTC_Timer32CounterHasOverflowed Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -29,12 +29,12 @@ Microchip 32-bit Chip Support Package</div>
 <a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06418.html" target="topic">Previous</a> | <a href="06194.html" target="topic">Up</a> | <a href="06417.html" target="topic">Next</a></div>
+<a href="06412.html" target="topic">Previous</a> | <a href="06196.html" target="topic">Up</a> | <a href="06350.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::RTC_Timer32FrequencyGet Topic Title: RTC_Timer32FrequencyGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::RTC_Timer32CounterHasOverflowed Topic Title: RTC_Timer32CounterHasOverflowed Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-RTC_Timer32FrequencyGet Function</div>
+RTC_Timer32CounterHasOverflowed Function</div>
 </div>
 </div>
 
@@ -49,24 +49,24 @@ RTC_Timer32FrequencyGet Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function returns the frequency at which the 32-bit timer counter is operating. The return value can be used to compute the period that needs to be set in order to operate the timer counter at a desired frequency.</p></div>
+This function will return true if the 32-bit counter has overflowed. An overflow occurs when the counter values transitions from 0xFFFFFFFF to 0x0. This function can be used to validate the timer count when using the timer counter as a counter. Calling the function will clear the internal overflow flags if these flags were set at the time of calling the function.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100">uint32_t <strong><span style="color: #000000">RTC_Timer32FrequencyGet</span></strong>();</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">RTC_Timer32CounterHasOverflowed</span></strong>();</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+<a href="06340.html" target="topic">RTC_Initialize</a>, <a href="06421.html" target="topic">RTC_Timer32Start</a> must have been called for the associated RTC instance. The RTC peripheral should have been configured in 32-bit Timer Counter mode.</p></div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Returns the frequency at which the 32-bit timer counter is operating.</p></div>
+true - Counter has overflowed. false - Counter not overflowed.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
@@ -79,13 +79,28 @@ None.</p></div>
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">    <i><span style="color: #008000">// Compute the period required to operate the timer at 1KHz.</span></i>
+<div class="Element13"><div class="Element12"><pre class="Element12">    uint32_t cycles = 0;
+    <a href="06340.html" target="topic">RTC_Initialize</a>();
 
-    uint32_t desiredFrequency = 1000;
-    uint32_t period = RTC_Timer32FrequencyGet()/desiredFrequency;
-    <a href="06338.html" target="topic">RTC_Initialize</a>();
-    <a href="06411.html" target="topic">RTC_Timer32CompareSet</a>(period);
-</pre></div></div>
+    <i><span style="color: #008000">// Clear the period set as we want to operate as a counter.</span></i>
+    <a href="06413.html" target="topic">RTC_Timer32CompareSet</a>(0);
+    <a href="06416.html" target="topic">RTC_Timer32CounterSet</a>(0);
+    <a href="06421.html" target="topic">RTC_Timer32Start</a>();
+
+    <i><span style="color: #008000">// This is the task who execution duration needs to be measured.</span></i>
+    SomeTask();
+
+    <a href="06422.html" target="topic">RTC_Timer32Stop</a>();
+    <strong><span style="color: #000080">if</span></strong>(!RTC_Timer32CounterHasOverflowed())
+    {
+        <i><span style="color: #008000">// cycles will contains the execution time of SomeTask() in terms of</span></i>
+        <i><span style="color: #008000">// timer count.</span></i>
+        cycles = <a href="06414.html" target="topic">RTC_Timer32CounterGet</a>();
+    }
+    <strong><span style="color: #000080">else</span></strong>
+    {
+        <i><span style="color: #008000">// Timer overflowed. Handle this differently.</span></i>
+    }</pre></div></div>
 </div>
 </div>
 </div>
@@ -93,7 +108,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04870.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05374.html" target="topic">Peripheral Libraries</a> &gt; <a href="06188.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="06189.html" target="topic">32-bit Timer (Mode 0)</a> &gt; <a href="06194.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="06415.html" target="topic">RTC_Timer32FrequencyGet Function</a></div>
+<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04870.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05374.html" target="topic">Peripheral Libraries</a> &gt; <a href="06190.html" target="topic">RTC Peripheral Library Help</a> &gt; <a href="06191.html" target="topic">32-bit Timer (Mode 0)</a> &gt; <a href="06196.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="06415.html" target="topic">RTC_Timer32CounterHasOverflowed Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -104,10 +119,10 @@ Microchip 32-bit Chip Support Package</div>
 <a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06418.html" target="topic">Previous</a> | <a href="06194.html" target="topic">Up</a> | <a href="06417.html" target="topic">Next</a></div>
+<a href="06412.html" target="topic">Previous</a> | <a href="06196.html" target="topic">Up</a> | <a href="06350.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::RTC_Timer32FrequencyGet Topic Title: RTC_Timer32FrequencyGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtc_u2250::RTC_Timer32CounterHasOverflowed Topic Title: RTC_Timer32CounterHasOverflowed Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

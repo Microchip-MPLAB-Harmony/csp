@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Running The Application</title>
+<title>Hardware Setup</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="07575.html" target="topic">TC Applications</a> &gt; <a href="07576.html" target="topic">tc_capture_mode</a> &gt; <a href="07582.html" target="topic">Running The Application</a></div>
+<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="07577.html" target="topic">TC Applications</a> &gt; <a href="07578.html" target="topic">tc_capture_mode</a> &gt; <a href="07582.html" target="topic">Hardware Setup</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -29,12 +29,12 @@ Microchip 32-bit Chip Support Package</div>
 <a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="07580.html" target="topic">Previous</a> | <a href="07576.html" target="topic">Up</a> | <a href="07577.html" target="topic">Next</a></div>
+<a href="07583.html" target="topic">Previous</a> | <a href="07578.html" target="topic">Up</a> | <a href="07584.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC tc_capture_mode Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC tc_capture_mode Hardware Setup Topic Title: Hardware Setup)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Running The Application</div>
+Hardware Setup</div>
 </div>
 </div>
 
@@ -48,152 +48,312 @@ Running The Application</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
-<p class="Element10">
-<strong><u>MCU Devices</u></strong>&nbsp;</p>
 
 <ol class="Element630">
-<li value="1" class="Element600">Open the Terminal application (Ex.:Tera term) on the computer.</li>
-<li value="2" class="Element600">Connect to the EDBG Virtual COM port and configure the serial settings as follows:
+<li value="1" class="Element600"><strong>Project sam_9x60_ek.IAR OR sam_9x60_ek_xc32.X</strong>
 <ul class="Element631">
-<li class="Element601">Baud : 115200</li>
-<li class="Element601">Data : 8 Bits</li>
-<li class="Element601">Parity : None</li>
-<li class="Element601">Stop : 1 Bit</li>
-<li class="Element601">Flow Control : None</li>
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602">SAM 9X60 Evaluation Kit board (Rev. B)</li>
+<li class="Element602">SD Card with FAT32 file system</li>
 </ul></li>
-<li value="3" class="Element600">Build and Program the application using the MPLAB X IDE.</li>
-<li value="4" class="Element600">Console displays the frequency and duty cycle of the input signal.</li>
-<li value="5" class="Element600">Observe the output as described in the following table:</li>
-</ol><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element65" valign="top" width="8%">
-<div class="Element66">
-Project Name&nbsp;</div></td><td class="Element65" valign="top" width="92%">
-<div class="Element66">
-Output&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="8%">
-<div class="Element68">
-sam_c21n_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="92%">
-<div class="Element68">
-Success: Console displays frequency and duty cycle of input signal. Frequency is constant (800 Hz) and duty cycle changes by 1%.<br><br><img src="output_tc_capture_mode_samc21.png" border="0" alt="" title="">&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="8%">
-<div class="Element68">
-sam_d11_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="92%">
-<div class="Element68">
-Success: Console displays frequency and duty cycle of input signal. Frequency is constant (800 Hz) and duty cycle changes by 1%.<br><img src="output_tc_capture_mode_same54.png" border="0" alt="" title="">&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="8%">
-<div class="Element68">
-sam_d20_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="92%">
-<div class="Element68">
-Success: Console displays frequency and duty cycle of input signal. Frequency is constant (799 Hz) and duty cycle changes by 1%.<br><img src="output_tc_capture_mode_samd2x.png" border="0" alt="" title="">&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="8%">
-<div class="Element68">
-sam_d21_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="92%">
-<div class="Element68">
-Success: Console displays frequency and duty cycle of input signal. Frequency is constant (800 Hz) and duty cycle changes by 1%.<br><img src="output_tc_capture_mode_same54.png" border="0" alt="" title="">&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="8%">
-<div class="Element68">
-sam_da1_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="92%">
-<div class="Element68">
-Success: Console displays frequency and duty cycle of input signal. Frequency is constant (800 Hz) and duty cycle changes by 1%.<br><img src="output_tc_capture_mode_same54.png" border="0" alt="" title="">&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="8%">
-<div class="Element68">
-sam_e54_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="92%">
-<div class="Element68">
-Success: Console displays frequency and duty cycle of input signal. Frequency is constant (799 Hz) and duty cycle changes by 1%.<br><img src="output_tc_capture_mode_same54.png" border="0" alt="" title="">&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="8%">
-<div class="Element68">
-sam_e70_xult.X&nbsp;</div></td><td class="Element67" valign="top" width="92%">
-<div class="Element68">
-Success: Console displays frequency and duty cycle of input signal. Frequency is constant (2500 Hz) and duty cycle changes by 1%.<br><img src="output_tc_capture_mode.png" border="0" alt="" title="">&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="8%">
-<div class="Element68">
-sam_g55_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="92%">
-<div class="Element68">
-Success: Console displays frequency and duty cycle of input signal. Frequency is constant (2499 Hz) and duty cycle changes by 1%.<br><img src="output_tc_capture_mode_samg55.png" border="0" alt="" title="">&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="8%">
-<div class="Element68">
-sam_ha1_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="92%">
-<div class="Element68">
-Success: Console displays frequency and duty cycle of input signal. Frequency is constant (800 Hz) and duty cycle changes by 1%.<br><img src="output_tc_capture_mode_saml21.png" border="0" alt="" title="">&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="8%">
-<div class="Element68">
-sam_l10_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="92%">
-<div class="Element68">
-Success: Console displays frequency and duty cycle of input signal. Frequency is constant (800 Hz) and duty cycle changes by 1%.<br><img src="output_tc_capture_mode_saml21.png" border="0" alt="" title="">&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="8%">
-<div class="Element68">
-sam_l21_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="92%">
-<div class="Element68">
-Success: Console displays frequency and duty cycle of input signal. Frequency is constant (800 Hz) and duty cycle changes by 1%.<br><img src="output_tc_capture_mode_saml21.png" border="0" alt="" title="">&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="8%">
-<div class="Element68">
-sam_l22_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="92%">
-<div class="Element68">
-Success: Console displays frequency and duty cycle of input signal. Frequency is constant (800 Hz) and duty cycle changes by 1%.<br><img src="output_tc_capture_mode_saml22.png" border="0" alt="" title="">&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="8%">
-<div class="Element68">
-sam_rh71_ek.X&nbsp;</div></td><td class="Element67" valign="top" width="92%">
-<div class="Element68">
-Success: Console displays frequency and duty cycle of input signal. Frequency is constant (2500 Hz) and duty cycle changes by 1%.<br><img src="output_tc_capture_mode_samv71.png" border="0" alt="" title="">&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="8%">
-<div class="Element68">
-sam_v71_xult.X&nbsp;</div></td><td class="Element67" valign="top" width="92%">
-<div class="Element68">
-Success: Console displays frequency and duty cycle of input signal. Frequency is constant (2500 Hz) and duty cycle changes by 1%.<br><img src="output_tc_capture_mode_samv71.png" border="0" alt="" title="">&nbsp;</div></td></tr></table></div></div>
-<p class="Element10">
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">Setup the SD card
+<ul class="Element633">
+<li class="Element603">Download harmony MPU bootstrap loader from this <a href="#" onclick="openExternalLink('http://github.com/Microchip-MPLAB-Harmony/at91bootstrap/blob/sam9x60ek/boot.bin');"><img src="indicator_external_link.gif" border="0" alt="" title="">location</a></li>
+<li class="Element603">Copy the downloaded boot loader binary( boot.bin) and generated application binary (harmony.bin)into the SD card</li>
+<li class="Element603">Insert the SD card into the SDMMC connector J4 on the board</li>
+</ul></li>
+<li class="Element602">Connect the USB port J22 on board to the computer using a micro USB cable (to enable debug com port)</li>
+<li class="Element602">Connect the USB port J7 on board to the computer using a micro USB cable (to power the board)</li>
+<li class="Element602">Use a jumper wire to short pin 32 of connector J16 with Pin RX of Mikrobus connector</li>
+<li class="Element602"><i>Note: Reset push button on SAM9X60 EK is labeled as SW3</i></li>
+</ul></li>
+</ul></li>
+</ol><p class="Element10">
 &nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong><u>MPU Devices</u></strong></p>
+
 <ol class="Element630">
-<li value="1" class="Element600">Build the IAR or MPLAB X project using IAR Embedded Workbench or MPLAB X IDE respectively</li>
-<li value="2" class="Element600">Use the output binary file (harmony.bin) to setup the board as detailed in <a href="07580.html" target="topic">hardware setup</a></li>
-<li value="3" class="Element600">Open the Terminal application (Ex.:Tera term) on the computer</li>
-<li value="4" class="Element600">Connect to the EDBG Virtual COM port and configure the serial settings as follows:
+<li value="2" class="Element600"><strong>Project sam_a5d2_xult.IAR OR sam_a5d2_xult_xc32.X</strong>
 <ul class="Element631">
-<li class="Element601">Baud : 115200</li>
-<li class="Element601">Data : 8 Bits</li>
-<li class="Element601">Parity : None</li>
-<li class="Element601">Stop : 1 Bit</li>
-<li class="Element601">Flow Control : None</li>
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602"><a href="#" onclick="openExternalLink('http://www.microchip.com/DevelopmentTools/ProductDetails/ATSAMA5D2C-XULT');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM A5D2 Xplained Ultra board</a></li>
+<li class="Element602">SD Card with FAT32 file system</li>
 </ul></li>
-<li value="5" class="Element600">Reset the board to run the application</li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">Setup the SD card
+<ul class="Element633">
+<li class="Element603">Download harmony MPU bootstrap loader from this <a href="#" onclick="openExternalLink('http://github.com/Microchip-MPLAB-Harmony/at91bootstrap/blob/master/boot.bin');"><img src="indicator_external_link.gif" border="0" alt="" title="">location</a></li>
+<li class="Element603">Copy the downloaded boot loader binary( boot.bin) and generated application binary (harmony.bin)into the SD card</li>
+<li class="Element603">Insert the SD card into the SDMMC1 slot on the board</li>
+</ul></li>
+<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+<li class="Element602">Use a jumper wire to connect J8-PIN8 to J22-PIN6</li>
+</ul></li>
+</ul></li>
+</ol><p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="3" class="Element600"><strong>Project sam_c21n_xpro.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/atsamc21n-xpro');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM C21N Xplained Pro Evaluation Kit.</a></li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">TC0 generates the PWM waveform on pin PA09</li>
+<li class="Element602">TC1 is configured in capture mode. Capture trigger is provided by input event line. TC0 output is routed using EIC and EVSYS to TC1 input event line</li>
+<li class="Element602">Use a jumper wire to connect &quot;Pin 4 of EXT2 (TC0_W01)&quot; to &quot;Pin 6 of EXT2 (EIC_EXTINT5)&quot;</li>
+<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+</ul></li>
+</ul></li>
+</ol><p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="4" class="Element600"><strong>Project sam_d11_xpro.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/atsamd11-xpro');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM D11 Xplained Pro Evaluation Kit.</a></li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">TC1 generates the PWM waveform on pin PA17</li>
+<li class="Element602">TC2 is configured in capture mode. Capture trigger is provided by input event line. TC1 output is routed using EIC and EVSYS to TC2 input event line</li>
+<li class="Element602">Use a jumper wire to connect &quot;Pin 8 of EXT1 (TC1_W01)&quot; to &quot;Pin 5 of EXT1 (EIC_EXTINT4)&quot;</li>
+<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+</ul></li>
+</ul></li>
+</ol><p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="5" class="Element600"><strong>Project sam_d20_xpro.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/ATSAMD20-XPRO');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM D20 Xplained Pro Evaluation Kit.</a></li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">TC3 generates the PWM waveform on pin PA19</li>
+<li class="Element602">TC4 is configured in capture mode. Capture trigger is provided by input event line. TC3 output is routed using EIC and EVSYS to TC4 input event line</li>
+<li class="Element602">Use a jumper wire to connect &quot;Pin 18 of EXT2 (TC3_W01)&quot; to &quot;Pin 17 of EXT2 (EIC_EXTINT0)&quot;</li>
+<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+</ul></li>
+</ul></li>
+</ol><p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="6" class="Element600"><strong>Project sam_d21_xpro.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/atsamd21-xpro');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM D21 Xplained Pro Evaluation Kit.</a></li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">TC3 generates the PWM waveform on pin PA19</li>
+<li class="Element602">TC4 is configured in capture mode. Capture trigger is provided by input event line. TC3 output is routed using EIC and EVSYS to TC4 input event line</li>
+<li class="Element602">Use a jumper wire to connect &quot;Pin 18 of EXT2 (TC3_W01)&quot; to &quot;Pin 17 of EXT2 (EIC_EXTINT0)&quot;</li>
+<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+</ul></li>
+</ul></li>
+</ol><p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="7" class="Element600"><strong>Project sam_da1_xpro.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/DevelopmentTools/ProductDetails/PartNO/ATSAMDA1-XPRO');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM DA1 Xplained Pro Evaluation Kit.</a></li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">TC3 generates the PWM waveform on pin PA19</li>
+<li class="Element602">TC4 is configured in capture mode. Capture trigger is provided by input event line. TC3 output is routed using EIC and EVSYS to TC4 input event line</li>
+<li class="Element602">Use a jumper wire to connect &quot;Pin 18 of EXT2 (TC3_W01)&quot; to &quot;Pin 17 of EXT2 (EIC_EXTINT0)&quot;</li>
+<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+</ul></li>
+</ul></li>
+</ol><p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="8" class="Element600"><strong>Project sam_e54_xpro.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/atsame54-xpro');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM E54 Xplained Pro Evaluation Kit</a></li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">TC0 generates the PWM waveform on pin PA05</li>
+<li class="Element602">TC1 is configured in capture mode. Capture trigger is provided by input event line. TC0 output is routed using EIC and EVSYS to TC1 input event line</li>
+<li class="Element602">Use a jumper wire to connect &quot;Pin 13 of EXT1 (TC0_W01)&quot; to &quot;Pin 3 of EXT1 (EIC_EXTINT4)&quot;</li>
+<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+</ul></li>
+</ul></li>
+</ol><p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="9" class="Element600"><strong>Project sam_e70_xult.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/DevelopmentTools/ProductDetails/PartNO/DM320113');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM E70 Xplained Ultra Evaluation Kit</a></li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">TC1 generates the PWM waveform on pin PC30</li>
+<li class="Element602">TC0 is configured in capture mode with the input signal connected to pin PA00</li>
+<li class="Element602">Use a jumper wire to connect &quot;Pin 8 of EXT1 (TC1_TIOB5)&quot; to &quot;Pin 7 of EXT1 (TC0_TIOA0)&quot;</li>
+<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+</ul></li>
+</ul></li>
+</ol><p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="10" class="Element600"><strong>Project sam_g55_xpro.X</strong></li>
 </ol>
 <ul class="Element630">
-<li class="Element600"><i>Note: In addition to program output, bootloader outputs its log messages to the same console. These messages will be displayed immediately after reset and are not captured here.</i></li>
+<li class="Element600"><strong>Hardware Used</strong>
+<ul class="Element631">
+<li class="Element601"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/atsamg55-xpro');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM G55 Xplained Pro Evaluation Kit</a></li>
+</ul></li>
+<li class="Element600"><strong>Hardware Setup</strong>
+<ul class="Element631">
+<li class="Element601">TC0_CH0 generates the PWM waveform on pin PA00</li>
+<li class="Element601">TC0_CH1 is configured in capture mode with the input signal connected to pin PA23</li>
+<li class="Element601">Use a jumper wire to connect &quot;Pin 8 of EXT1 (TC0_TIOA1)&quot; to &quot;Pin 7 of EXT1 (TC0_TIOA0)&quot;</li>
+<li class="Element601">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+</ul></li>
 </ul><p class="Element10">
 &nbsp;</p>
-<div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element65" valign="top" width="16%">
-<div class="Element66">
-Project Name&nbsp;</div></td><td class="Element65" valign="top" width="84%">
-<div class="Element66">
-Output&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="16%">
-<div class="Element68">
-sam_a5d2_xult.IAR OR sam_a5d2_xult_xc32.X&nbsp;</div></td><td class="Element67" valign="top" width="84%">
-<div class="Element68">
-Success: Console displays frequency and duty cycle of input signal. Frequency is constant (2500 Hz) and duty cycle changes by 8%<br><img src="output_tc_capture_mode_sama5d2.png" border="0" alt="" title="">&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="16%">
-<div class="Element68">
-sam_9x60_ek.IAR&nbsp;</div></td><td class="Element67" valign="top" width="84%">
-<div class="Element68">
-Success:Console displays frequency and duty cycle of input signal. Frequency is constant (1000Hz) and duty cycle changes by 10%<br><br><img src="output_tc_capture_mode_sam9x60.png" border="0" alt="" title="">&nbsp;</div></td></tr></table></div></div>
-</div>
+
+<ol class="Element630">
+<li value="11" class="Element600"><strong>Project sam_ha1_xpro.X</strong></li>
+</ol>
+<ul class="Element630">
+<li class="Element600"><strong>Hardware Used</strong>
+<ul class="Element631">
+<li class="Element601"><a href="#" onclick="openExternalLink('https://www.microchip.com/DevelopmentTools/ProductDetails/PartNO/ATSAMHA1G16A-XPRO');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM HA1G16A Xplained Pro Evaluation Kit</a></li>
+</ul></li>
+<li class="Element600"><strong>Hardware Setup</strong>
+<ul class="Element631">
+<li class="Element601">TC3 generates the PWM waveform on pin PA19</li>
+<li class="Element601">TC6 is configured in capture mode. Capture trigger is provided by input event line. TC3 output is routed using EIC and EVSYS to TC6 input event line</li>
+<li class="Element601">Use a jumper wire to connect &quot;Pin 8 of EXT1 (TC3_W01)&quot; to &quot;Pin 9 of EXT3 (EIC_EXTINT0)&quot;</li>
+<li class="Element601">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+</ul></li>
+</ul><p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="12" class="Element600"><strong>Project sam_l10_xpro.X</strong></li>
+</ol>
+<ul class="Element630">
+<li class="Element600"><strong>Hardware Used</strong>
+<ul class="Element631">
+<li class="Element601"><a href="#" onclick="openExternalLink('https://www.microchip.com/DevelopmentTools/ProductDetails/dm320204');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM L10 Xplained Pro Evaluation Kit</a></li>
+</ul></li>
+<li class="Element600"><strong>Hardware Setup</strong>
+<ul class="Element631">
+<li class="Element601">TC0 generates the PWM waveform on pin PA04</li>
+<li class="Element601">TC1 is configured in capture mode. Capture trigger is provided by input event line. TC0 output is routed using EIC and EVSYS to TC1 input event line</li>
+<li class="Element601">Use a jumper wire to connect &quot;Pin 17 of EXT1 (TC0_W00)&quot; to &quot;Pin 3 of microBus Connector (EIC_EXTINT5)&quot;</li>
+<li class="Element601">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+</ul></li>
+</ul><p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="13" class="Element600"><strong>Project sam_l21_xpro.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/ATSAML21-XPRO-B');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM L21 Xplained Pro Evaluation Kit</a></li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">TC0 generates the PWM waveform on pin PB09</li>
+<li class="Element602">TC1 is configured in capture mode. Capture trigger is provided by input event line. TC0 output is routed using EIC and EVSYS to TC1 input event line</li>
+<li class="Element602">Use a jumper wire to connect &quot;Pin 13 of EXT1 (TC0_W01)&quot; to &quot;Pin 15 of EXT2 (EIC_EXTINT1)&quot;</li>
+<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+</ul></li>
+</ul></li>
+</ol><p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="14" class="Element600"><strong>Project sam_l22_xpro.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/ATSAML22-XPRO-B');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM L22 Xplained Pro Evaluation Kit</a></li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">TC0 generates the PWM waveform on pin PB09</li>
+<li class="Element602">TC1 is configured in capture mode. Capture trigger is provided by input event line. TC0 output is routed using EIC and EVSYS to TC1 input event line</li>
+<li class="Element602">Use a jumper wire to connect &quot;Pin 8 of EXT1 (TC0_W01)&quot; to &quot;Pin 9 of EXT1 (EIC_EXTINT10)&quot;</li>
+<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+</ul></li>
+</ul></li>
+</ol><p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="15" class="Element600"><strong>Project sam_rh71_ek.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602">SAM RH71 Evaluation Kit</li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">TC1 generates the PWM waveform on pin PA1</li>
+<li class="Element602">TC0 is configured in capture mode with the input signal connected to pin PA04</li>
+<li class="Element602">Use a jumper wire to connect &quot;Pin 7 of J24&quot; to &quot;Pin 10 of J24&quot;</li>
+</ul></li>
+<li class="Element601">Connect the debugger probe to J33</li>
+</ul></li>
+</ol><p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="16" class="Element600"><strong>Project sam_v71_xult.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/atsamv71-xult');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM V71 Xplained Ultra Evaluation Kit</a></li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">TC1 generates the PWM waveform on pin PC30</li>
+<li class="Element602">TC0 is configured in capture mode with the input signal connected to pin PA00</li>
+<li class="Element602">Use a jumper wire to connect &quot;Pin 8 of EXT1 (TC1_TIOB5)&quot; to &quot;Pin 7 of EXT1 (TC0_TIOA0)&quot;</li>
+<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+</ul></li>
+</ul></li>
+</ol></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="07575.html" target="topic">TC Applications</a> &gt; <a href="07576.html" target="topic">tc_capture_mode</a> &gt; <a href="07582.html" target="topic">Running The Application</a></div>
+<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="07577.html" target="topic">TC Applications</a> &gt; <a href="07578.html" target="topic">tc_capture_mode</a> &gt; <a href="07582.html" target="topic">Hardware Setup</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -204,10 +364,10 @@ Microchip 32-bit Chip Support Package</div>
 <a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="07580.html" target="topic">Previous</a> | <a href="07576.html" target="topic">Up</a> | <a href="07577.html" target="topic">Next</a></div>
+<a href="07583.html" target="topic">Previous</a> | <a href="07578.html" target="topic">Up</a> | <a href="07584.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC tc_capture_mode Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC tc_capture_mode Hardware Setup Topic Title: Hardware Setup)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -50,11 +50,11 @@ Hardware Setup</div>
 <div class="Element10">
 
 <ol class="Element630">
-<li value="1" class="Element600"> <strong> Project sam_9x60_ek.IAR</strong>
+<li value="1" class="Element600"> <strong> Project sam_9x60_ek.IAR OR sam_9x60_ek_xc32.X OR sam_9x60d1g_ek_xc32.X</strong>
 <ul class="Element631">
 <li class="Element601"><strong>Hardware Used</strong>
 <ul class="Element632">
-<li class="Element602">SAM 9X60 Evaluation Kit board</li>
+<li class="Element602">SAM 9X60 Evaluation Kit board (Rev.B)</li>
 <li class="Element602">SD Card with FAT32 file system</li>
 </ul></li>
 <li class="Element601"><strong>Hardware Setup</strong>
@@ -63,9 +63,10 @@ Hardware Setup</div>
 <ul class="Element633">
 <li class="Element603">Download harmony MPU bootstrap loader from this <a href="#" onclick="openExternalLink('http://github.com/Microchip-MPLAB-Harmony/at91bootstrap/blob/sam9x60ek/boot.bin');"><img src="indicator_external_link.gif" border="0" alt="" title="">location</a></li>
 <li class="Element603">Copy the downloaded boot loader binary( boot.bin) and generated application binary (harmony.bin)into the SD card</li>
-<li class="Element603">Insert the SD card into the SDMMC connector J5 on the board</li>
+<li class="Element603">Insert the SD card into the SDMMC connector J4 on the board</li>
 </ul></li>
-<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+<li class="Element602">Connect the USB port J22 on board to the computer using a micro USB cable (to enable debug com port)</li>
+<li class="Element602">Connect the USB port J7 on board to the computer using a micro USB cable (to power the board)</li>
 <li class="Element602">Note: Reset push button on SAM9X60 EK is labeled as SW3</li>
 </ul></li>
 </ul></li>

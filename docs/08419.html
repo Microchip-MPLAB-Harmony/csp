@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Introduction</title>
+<title>Using the Library</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04870.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05374.html" target="topic">Peripheral Libraries</a> &gt; <a href="08420.html" target="topic">WDT Peripheral Library Help</a> &gt; <a href="08419.html" target="topic">Introduction</a></div>
+<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04870.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05374.html" target="topic">Peripheral Libraries</a> &gt; <a href="08416.html" target="topic">WDT Peripheral Library Help</a> &gt; <a href="08419.html" target="topic">Using the Library</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -29,12 +29,12 @@ Microchip 32-bit Chip Support Package</div>
 <a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="08420.html" target="topic">Previous</a> | <a href="08420.html" target="topic">Up</a> | <a href="08418.html" target="topic">Next</a></div>
+<a href="08414.html" target="topic">Previous</a> | <a href="08416.html" target="topic">Up</a> | <a href="08417.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: WDT 01385 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: WDT 00781 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Introduction</div>
+Using the Library</div>
 </div>
 </div>
 
@@ -49,21 +49,18 @@ Introduction</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The Watchdog timer (WDT) is designed to give an added level of safety in critical systems, to ensure a system reset is triggered in the case of a deadlock or other software malfunction that prevents normal device operation. It operates from the internal Low-Power Oscillator (LPRC) clock source. Various WDT time-out periods can be selected using the WDT postscaler. The WDT can also be used to wake the device from Sleep or Idle mode.&nbsp;</p>
+The Watchdog Timer (WDT) runs independent of the rest of the system, causing system resets whenever it times out. However, the application software should ensure that the timeout never occurs by resetting the WDT periodically as long as the software is in a known healthy state. If the system hangs or program execution is corrupted, the WDT will not receive its periodic reset, and will eventually time out and cause a system reset.&nbsp;</p>
 <p class="Element10">
-The following are some of the key features of the WDT module:</p>
-<ul class="Element630">
-<li class="Element600">Configuration or software controlled</li>
-<li class="Element600">User-configurable time-out period</li>
-<li class="Element600">Can wake the device from Sleep or Idle</li>
-</ul></div>
+&nbsp;</p>
+<p class="Element10">
+In many systems, there is an obvious upper boundary to the amount of time each iteration of the main application loop can be expected to run, before a malfunction can be assumed (either due to a deadlock waiting on hardware or software, or due to other means). When the Watchdog is configured with a timeout period equal to this upper boundary, a malfunction in the system will force a full system reset to allow for a graceful recovery.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04870.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05374.html" target="topic">Peripheral Libraries</a> &gt; <a href="08420.html" target="topic">WDT Peripheral Library Help</a> &gt; <a href="08419.html" target="topic">Introduction</a></div>
+<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04870.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05374.html" target="topic">Peripheral Libraries</a> &gt; <a href="08416.html" target="topic">WDT Peripheral Library Help</a> &gt; <a href="08419.html" target="topic">Using the Library</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -74,10 +71,10 @@ Microchip 32-bit Chip Support Package</div>
 <a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="08420.html" target="topic">Previous</a> | <a href="08420.html" target="topic">Up</a> | <a href="08418.html" target="topic">Next</a></div>
+<a href="08414.html" target="topic">Previous</a> | <a href="08416.html" target="topic">Up</a> | <a href="08417.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: WDT 01385 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: WDT 00781 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->
