@@ -24,4 +24,4 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 -->
-#include "peripheral/otpc/plib_${OTPC_INSTANCE_NAME}.h"
+#include "peripheral/otpc/plib_${OTPC_INSTANCE_NAME?lower_case}.h"
