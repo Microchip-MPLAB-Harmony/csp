@@ -595,6 +595,113 @@ def mcpwmChClockEnable(symbol, event):
         Database.setSymbolValue("core", mcpwmInstanceName.getValue() + str(channelID) + "_CLOCK_ENABLE", True, 1)
     else:
         Database.setSymbolValue("core", mcpwmInstanceName.getValue() + str(channelID) + "_CLOCK_ENABLE", False, 1)
+
+################################################################################
+#### Dependency ####
+################################################################################
+def onAttachmentConnected(source, target):
+    localComponent = source["component"]
+    remoteComponent = target["component"]
+    remoteID = remoteComponent.getID()
+    connectID = source["id"]
+    targetID = target["id"]
+
+
+def onAttachmentDisconnected(source, target):
+    localComponent = source["component"]
+    remoteComponent = target["component"]
+    remoteID = remoteComponent.getID()
+    connectID = source["id"]
+    targetID = target["id"]
+    resetChannels()
+
+global lastPwmChU
+lastPwmChU = 1
+global lastPwmChV
+lastPwmChV = 2
+global lastPwmChW
+lastPwmChW = 3
+
+def resetChannels():
+    global lastPwmChU
+    global lastPwmChV
+    global lastPwmChW
+    component = str(mcpwmInstanceName.getValue()).lower()
+    #disable PWM channels
+    Database.setSymbolValue(component, "MCPWM_CHANNEL"+str(lastPwmChU), False)
+    Database.setSymbolValue(component, "MCPWM_CHANNEL"+str(lastPwmChV), False)
+    Database.setSymbolValue(component, "MCPWM_CHANNEL"+str(lastPwmChW), False)
+    #disbale interrupt
+    Database.setSymbolValue(component, "PWMCON"+str(lastPwmChU)+"__FLTIEN", False)
+
+def handleMessage(messageID, args):
+    global lastPwmChU
+    global lastPwmChV
+    global lastPwmChW
+    component = str(mcpwmInstanceName.getValue()).lower()
+    if (messageID == "PMSM_FOC_PWM_CONF"):
+        freq = args['PWM_FREQ']
+        clock = int(Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY"))
+        period = int(clock)/int(freq)/2
+        Database.setSymbolValue(component, "PTPER__PTPER", period)
+
+        resetChannels()
+
+        lastPwmChU = pwmChU = args['PWM_PH_U']
+        lastPwmChV = pwmChV = args['PWM_PH_V']
+        lastPwmChW = pwmChW = args['PWM_PH_W']
+
+        #macros for channel numbers
+        Database.setSymbolValue(component, "PWM_PH_U", "MCPWM_CH_"+str(pwmChU))
+        Database.setSymbolValue(component, "PWM_PH_V", "MCPWM_CH_"+str(pwmChV))
+        Database.setSymbolValue(component, "PWM_PH_W", "MCPWM_CH_"+str(pwmChW))
+        Database.setSymbolValue(component, "INTR_PWM_FAULT", "INT_SOURCE_PWM"+str(pwmChU))
+
+        #enable PWM channels
+        Database.setSymbolValue(component, "MCPWM_CHANNEL"+str(pwmChU), True)
+        Database.setSymbolValue(component, "MCPWM_CHANNEL"+str(pwmChV), True)
+        Database.setSymbolValue(component, "MCPWM_CHANNEL"+str(pwmChW), True)
+
+        #center-aligned symmetric mode
+        Database.setSymbolValue(component, "PWMCON"+str(pwmChU)+"__ECAM", 1)
+        Database.setSymbolValue(component, "PWMCON"+str(pwmChV)+"__ECAM", 1)
+        Database.setSymbolValue(component, "PWMCON"+str(pwmChW)+"__ECAM", 1)
+
+        #dead-Time 1 us
+        deadtime = int(Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")) / 1000000
+        Database.setSymbolValue(component, "DTR"+str(pwmChU)+"__DTR", deadtime)
+        Database.setSymbolValue(component, "ALTDTR"+str(pwmChU)+"__ALTDTR", deadtime)
+        Database.setSymbolValue(component, "DTR"+str(pwmChV)+"__DTR", deadtime)
+        Database.setSymbolValue(component, "ALTDTR"+str(pwmChV)+"__ALTDTR", deadtime)
+        Database.setSymbolValue(component, "DTR"+str(pwmChW)+"__DTR", deadtime)
+        Database.setSymbolValue(component, "ALTDTR"+str(pwmChW)+"__ALTDTR", deadtime)
+
+        #Trigger
+        Database.setSymbolValue(component, "TRGCON"+str(pwmChU)+"__TRGSEL", 1)
+        Database.setSymbolValue(component, "TRGCON"+str(pwmChV)+"__TRGSEL", 1)
+        Database.setSymbolValue(component, "TRGCON"+str(pwmChW)+"__TRGSEL", 1)
+        Database.setSymbolValue(component, "TRIG"+str(pwmChU)+"__TRGCMP", period - 10)
+        Database.setSymbolValue(component, "TRIG"+str(pwmChV)+"__TRGCMP", period - 10)
+        Database.setSymbolValue(component, "TRIG"+str(pwmChW)+"__TRGCMP", period - 10)
+
+        #Fault
+        global mcpwmSym_IOCON_FLTSRC
+        fault = args['PWM_FAULT']
+        mcpwmSym_IOCON_FLTSRC[pwmChU].setSelectedKey(str(fault))
+        mcpwmSym_IOCON_FLTSRC[pwmChV].setSelectedKey(str(fault))
+        mcpwmSym_IOCON_FLTSRC[pwmChW].setSelectedKey(str(fault))
+        Database.setSymbolValue(component, "IOCON"+str(pwmChU)+"__FLTMOD", 1)
+        Database.setSymbolValue(component, "IOCON"+str(pwmChV)+"__FLTMOD", 1)
+        Database.setSymbolValue(component, "IOCON"+str(pwmChW)+"__FLTMOD", 1)
+        Database.setSymbolValue(component, "IOCON"+str(pwmChU)+"__FLTPOL", 1)
+        Database.setSymbolValue(component, "IOCON"+str(pwmChV)+"__FLTPOL", 1)
+        Database.setSymbolValue(component, "IOCON"+str(pwmChW)+"__FLTPOL", 1)
+        Database.setSymbolValue(component, "PWMCON"+str(pwmChU)+"__FLTIEN", True)
+
+
+
+
+
 ################################################################################
 #### Component ####
 ################################################################################
@@ -613,6 +720,51 @@ def instantiateComponent(mcpwmComponent):
     mcpwmInstanceNum.setVisible(False)
     instanceNum = filter(str.isdigit,str(mcpwmComponent.getID()))
     mcpwmInstanceNum.setDefaultValue(instanceNum)
+
+    mcpwmStartApi = mcpwmComponent.createStringSymbol("PWM_START_API", None)
+    mcpwmStartApi.setVisible(False)
+    mcpwmStartApi.setValue("MCPWM_Start")
+
+    mcpwmStopApi = mcpwmComponent.createStringSymbol("PWM_STOP_API", None)
+    mcpwmStopApi.setVisible(False)
+    mcpwmStopApi.setValue("MCPWM_Stop")
+
+    mcpwmPeriodApi = mcpwmComponent.createStringSymbol("PWM_GET_PERIOD_API", None)
+    mcpwmPeriodApi.setVisible(False)
+    mcpwmPeriodApi.setValue("MCPWM_PrimaryPeriodGet")
+
+    mcpwmDutyApi = mcpwmComponent.createStringSymbol("PWM_SET_DUTY_API", None)
+    mcpwmDutyApi.setVisible(False)
+    mcpwmDutyApi.setValue("MCPWM_ChannelPrimaryDutySet")
+
+    mcpwmOpDisableApi = mcpwmComponent.createStringSymbol("PWM_OUTPUT_DISABLE_API", None)
+    mcpwmOpDisableApi.setVisible(False)
+    mcpwmOpDisableApi.setValue("MCPWM_ChannelPinsOwnershipDisable")
+
+    mcpwmOpEnableApi = mcpwmComponent.createStringSymbol("PWM_OUTPUT_ENABLE_API", None)
+    mcpwmOpEnableApi.setVisible(False)
+    mcpwmOpEnableApi.setValue("MCPWM_ChannelPinsOwnershipEnable")
+
+    mcpwmCallbackApi = mcpwmComponent.createStringSymbol("PWM_CALLBACK_API", None)
+    mcpwmCallbackApi.setVisible(False)
+    mcpwmCallbackApi.setValue("MCPWM_CallbackRegister")
+
+    mcpwmPhU = mcpwmComponent.createStringSymbol("PWM_PH_U", None)
+    mcpwmPhU.setVisible(False)
+    mcpwmPhU.setValue("MCPWM_CH_1")
+
+    mcpwmPhV = mcpwmComponent.createStringSymbol("PWM_PH_V", None)
+    mcpwmPhV.setVisible(False)
+    mcpwmPhV.setValue("MCPWM_CH_2")
+
+    mcpwmPhW = mcpwmComponent.createStringSymbol("PWM_PH_W", None)
+    mcpwmPhW.setVisible(False)
+    mcpwmPhW.setValue("MCPWM_CH_3")
+
+    mcpwmFaultInt = mcpwmComponent.createStringSymbol("INTR_PWM_FAULT", None)
+    mcpwmFaultInt.setVisible(False)
+    mcpwmFaultInt.setValue("INT_SOURCE_PWM1")
+
 
     MCPWM_MAX_CHANNELS = 0
     ModuleName = "MCPWM"
@@ -713,6 +865,9 @@ def instantiateComponent(mcpwmComponent):
     mcpwmSym_STCON_SSEIEN.setDefaultValue(False)
     stconDepList.append("STCON__SSEIEN")
 
+    global mcpwmSym_IOCON_FLTSRC
+    mcpwmSym_IOCON_FLTSRC = []
+    mcpwmSym_IOCON_FLTSRC.append(0)
     # channel configurations
     for channelID in range (1, mcpwmSym_NUM_CHANNELS.getValue() + 1):
         mcpwmSym_CHANNEL_MENU = mcpwmComponent.createBooleanSymbol("MCPWM_CHANNEL"+str(channelID), None)
@@ -882,7 +1037,8 @@ def instantiateComponent(mcpwmComponent):
         mcpwmSym_FAULT_MENU = mcpwmComponent.createMenuSymbol("MCPWM_FAULT_MENU"+str(channelID), mcpwmSym_CHANNEL_MENU)
         mcpwmSym_FAULT_MENU.setLabel("Fault Configurations")
 
-        mcpwmSym_IOCON_FLTSRC = mcpwmAddKeyValueSetFromATDFInitValue(mcpwmComponent, Module, "IOCON"+str(channelID), "FLTSRC", mcpwmSym_FAULT_MENU, True)
+        mcpwmSym_IOCON_FLTSRC.append(channelID)
+        mcpwmSym_IOCON_FLTSRC[channelID] = mcpwmAddKeyValueSetFromATDFInitValue(mcpwmComponent, Module, "IOCON"+str(channelID), "FLTSRC", mcpwmSym_FAULT_MENU, True)
         ioconDepList[channelID - 1].append("IOCON"+str(channelID)+"__FLTSRC")
         mcpwmSym_IOCON_FLTMOD = mcpwmAddKeyValueSetFromATDFInitValue(mcpwmComponent, Module, "IOCON"+str(channelID), "FLTMOD", mcpwmSym_FAULT_MENU, True)
         ioconDepList[channelID - 1].append("IOCON"+str(channelID)+"__FLTMOD")
