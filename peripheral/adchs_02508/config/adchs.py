@@ -27,7 +27,7 @@ import math
 ###################################################################################################
 
 global adchsInstanceName
-
+global adchsSym_ADCTRGMODE__SHxALT
 # A set of arrays for keeping track of each chanel's parameters.
 adchsCHMenu = []
 adchsCONMenu = [None] * 64
@@ -673,6 +673,164 @@ def adchsSharedConvRateCalc(symbol, event):
     symbol.setValue((1000000.0 / ((2 + samc + resolution) * tadc )), 2)
     ch_enable = component.getSymbolValue("ADCHS_"+str(channelID)+"_ENABLE")
     symbol.setVisible(ch_enable)
+
+###################################################################################################
+########################### Dependency   #################################
+###################################################################################################
+def onAttachmentConnected(source, target):
+    localComponent = source["component"]
+    remoteComponent = target["component"]
+    remoteID = remoteComponent.getID()
+    connectID = source["id"]
+    targetID = target["id"]
+
+
+def onAttachmentDisconnected(source, target):
+    localComponent = source["component"]
+    remoteComponent = target["component"]
+    remoteID = remoteComponent.getID()
+    connectID = source["id"]
+    targetID = target["id"]
+    resetChannels()
+
+
+global lastAdcChU
+lastAdcChU = 0
+global lastAdcChV
+lastAdcChV = 4
+global lastADCChPot
+lastADCChPot = 7
+global lastADCChVdc
+lastADCChVdc = 7
+
+def resetChannels():
+    global lastAdcChU
+    global lastAdcChV
+    global lastADCChPot
+    global lastADCChVdc
+
+    component = str(adchsInstanceName.getValue()).lower()
+    Database.setSymbolValue(component, "ADCHS_"+str(lastAdcChU)+"_ENABLE", False)
+    Database.setSymbolValue(component, "ADCHS_"+str(lastAdcChV)+"_ENABLE", False)
+    Database.setSymbolValue(component, "ADCHS_"+str(lastADCChPot)+"_ENABLE", False)
+    Database.setSymbolValue(component, "ADCHS_"+str(lastADCChVdc)+"_ENABLE", False)
+
+    Database.setSymbolValue(component, "ADCGIRQEN"+str((lastAdcChU/4) + 1)+"__AGIEN"+str(lastAdcChU), False)
+
+
+
+def handleMessage(messageID, args):
+    global adchsSym_ADCTRGMODE__SHxALT
+    global adchsSym_ADCCON1__SELRES
+    global adchsSym_ADCTRG__TRGSRC
+    global lastAdcChU
+    global lastAdcChV
+    global lastADCChPot
+    global lastADCChVdc
+
+    if (messageID == "PMSM_FOC_ADC_CH_CONF"):
+        component = str(adchsInstanceName.getValue()).lower()
+
+        resetChannels()
+
+        lastAdcChU = phUModule = args['PHASE_U']
+        phUCh = args['PHASE_U_CH']
+        lastAdcChV = phVModule = args['PHASE_V']
+        phVCh = args['PHASE_V_CH']
+        lastADCChVdc = phDCBusModule = args['VDC']
+        phDCBusCh = args['VDC_CH']
+        lastADCChPot = phPotModule = args['POT']
+        phPotCh = args['POT_CH']
+        resolution = args['RESOLUTION']
+        trigger = args['TRIGGER']
+
+        # Find the key index of the trigger as a PWM channel as per TRIGGER argument
+        count = adchsSym_ADCTRG__TRGSRC[(phUModule/4) + 1].getKeyCount()
+        triggerIndex = 0
+        for i in range(0,count):
+            if ("PWM Generator "+str(trigger) in adchsSym_ADCTRG__TRGSRC[(phUModule/4) + 1].getKey(i) ):
+                triggerIndex = i
+                break
+
+        # Enable ADC modules, alternate channel, trigger as PWM Phase U, Ph U interrupt
+        if (phUModule < 7):
+            Database.setSymbolValue(component, "ADC_CH_PHASE_U", "ADCHS_CH"+str(phUModule))
+            Database.setSymbolValue(component, "ADCTRG"+str((phUModule/4) + 1)+"__TRGSRC"+str(phUModule), triggerIndex)
+            Database.setSymbolValue(component, "INTERRUPT_ADC_RESULT", "INT_SOURCE_ADC_DATA"+str(phUModule))
+            Database.setSymbolValue(component, "AN"+str(phUModule), True)
+            #interrupt of Ph U channel
+            Database.setSymbolValue(component, "ADCGIRQEN"+str((phUModule/4) + 1)+"__AGIEN"+str(phUModule), True)
+            adchsSym_ADCTRGMODE__SHxALT[phUModule].setSelectedKey("AN"+str(args['PHASE_U_CH']))
+            #resolution
+            adchsSym_ADCTIME__SELRES[phUModule].setSelectedKey(str(resolution)+" bits")
+
+        else:
+            Database.setSymbolValue(component, "ADC_CH_PHASE_U", "ADCHS_CH"+str(phUCh))
+            Database.setSymbolValue(component, "ADCTRG"+str((phUModule/4) + 1)+"__TRGSRC"+str(phUCh), triggerIndex)
+            Database.setSymbolValue(component, "INTERRUPT_ADC_RESULT", "INT_SOURCE_ADC_DATA"+str(phUCh))
+            #interrupt of Ph U channel
+            Database.setSymbolValue(component, "ADCGIRQEN"+str((phUModule/4) + 1)+"__AGIEN"+str(phUCh), True)
+            Database.setSymbolValue(component, "AN"+str(phUCh), True)
+            #resolution
+            if resolution == "12":
+                adchsSym_ADCCON1__SELRES.setSelectedKey(str(resolution)+" bits (default)")
+            else:
+                adchsSym_ADCCON1__SELRES.setSelectedKey(str(resolution)+" bits")
+
+        if (phVModule < 7):
+            Database.setSymbolValue(component, "ADC_CH_PHASE_V", "ADCHS_CH"+str(phVModule))
+            Database.setSymbolValue(component, "ADCTRG"+str((phVModule/4) + 1)+"__TRGSRC"+str(phVModule), triggerIndex)
+            adchsSym_ADCTRGMODE__SHxALT[phVModule].setSelectedKey("AN"+str(args['PHASE_V_CH']))
+            Database.setSymbolValue(component, "AN"+str(phVModule), True)
+            adchsSym_ADCTIME__SELRES[phVModule].setSelectedKey(str(resolution)+" bits")
+        else:
+            Database.setSymbolValue(component, "ADC_CH_PHASE_V", "ADCHS_CH"+str(phVCh))
+            Database.setSymbolValue(component, "ADCTRG"+str((phVModule/4) + 1)+"__TRGSRC"+str(phVCh), triggerIndex)
+            Database.setSymbolValue(component, "AN"+str(phVCh), True)
+            #resolution
+            if resolution == "12":
+                adchsSym_ADCCON1__SELRES.setSelectedKey(str(resolution)+" bits (default)")
+            else:
+                adchsSym_ADCCON1__SELRES.setSelectedKey(str(resolution)+" bits")
+
+        if (phDCBusModule < 7):
+            Database.setSymbolValue(component, "ADC_CH_VDC_BUS", "ADCHS_CH"+str(phDCBusModule))
+            Database.setSymbolValue(component, "ADCTRG"+str((phDCBusModule/4) + 1)+"__TRGSRC"+str(phDCBusModule), triggerIndex)
+            adchsSym_ADCTRGMODE__SHxALT[phDCBusModule].setSelectedKey("AN"+str(args['VDC_CH']))
+            Database.setSymbolValue(component, "AN"+str(phDCBusModule), True)
+            adchsSym_ADCTIME__SELRES[phDCBusModule].setSelectedKey(str(resolution)+" bits")
+        else:
+            Database.setSymbolValue(component, "ADC_CH_VDC_BUS", "ADCHS_CH"+str(phDCBusCh))
+            Database.setSymbolValue(component, "ADCTRG"+str((phDCBusCh/4) + 1)+"__TRGSRC"+str(phDCBusCh), triggerIndex)
+            Database.setSymbolValue(component, "AN"+str(phDCBusCh), True)
+            #resolution
+            if resolution == "12":
+                adchsSym_ADCCON1__SELRES.setSelectedKey(str(resolution)+" bits (default)")
+            else:
+                adchsSym_ADCCON1__SELRES.setSelectedKey(str(resolution)+" bits")
+
+        if (phPotModule < 7):
+            Database.setSymbolValue(component, "ADC_CH_POT", "ADCHS_CH"+str(phPotModule))
+            Database.setSymbolValue(component, "ADCTRG"+str((phPotModule/4) + 1)+"__TRGSRC"+str(phPotModule), triggerIndex)
+            adchsSym_ADCTRGMODE__SHxALT[phPotModule].setSelectedKey("AN"+str(args['POT_CH']))
+            Database.setSymbolValue(component, "AN"+str(phPotModule), True)
+            adchsSym_ADCTIME__SELRES[phPotModule].setSelectedKey(str(resolution)+" bits")
+        else:
+            Database.setSymbolValue(component, "ADC_CH_POT", "ADCHS_CH"+str(phPotCh))
+            Database.setSymbolValue(component, "ADCTRG"+str((phPotCh/4) + 1)+"__TRGSRC"+str(phPotCh), triggerIndex)
+            Database.setSymbolValue(component, "AN"+str(phPotCh), True)
+            #resolution
+            if str(resolution) == "12":
+                adchsSym_ADCCON1__SELRES.setSelectedKey(str(resolution)+" bits (default)")
+            else:
+                adchsSym_ADCCON1__SELRES.setSelectedKey(str(resolution)+" bits")
+
+        #Enable ADC Module
+        Database.setSymbolValue(component, "ADCHS_"+str(phUModule)+"_ENABLE", True)
+        Database.setSymbolValue(component, "ADCHS_"+str(phVModule)+"_ENABLE", True)
+        Database.setSymbolValue(component, "ADCHS_"+str(phDCBusModule)+"_ENABLE", True)
+        Database.setSymbolValue(component, "ADCHS_"+str(phPotModule)+"_ENABLE", True)
+
 ###################################################################################################
 ########################### Component   #################################
 ###################################################################################################
@@ -694,6 +852,39 @@ def instantiateComponent(adchsComponent):
     adchsInstanceName.setDefaultValue(adchsComponent.getID().upper())
     Module = adchsInstanceName.getValue()
     Log.writeInfoMessage("Running " + Module)
+
+    #----------------- motor control APIs ---------------------------------
+    adchsConvAPI = adchsComponent.createStringSymbol("ADC_START_CONV_API", None)
+    adchsConvAPI.setVisible(False)
+    adchsConvAPI.setValue("ADCHS_ChannelConversionStart")
+
+    adchsResultAPI = adchsComponent.createStringSymbol("ADC_GET_RESULT_API", None)
+    adchsResultAPI.setVisible(False)
+    adchsResultAPI.setValue("ADCHS_ChannelResultGet")
+
+    adchsCallbackAPI = adchsComponent.createStringSymbol("ADC_CALLBACK_API", None)
+    adchsCallbackAPI.setVisible(False)
+    adchsCallbackAPI.setValue("ADCHS_CallbackRegister")
+
+    adchsPhUCh = adchsComponent.createStringSymbol("ADC_CH_PHASE_U", None)
+    adchsPhUCh.setVisible(False)
+    adchsPhUCh.setValue("ADCHS_CH0")
+
+    adchsPhVCh = adchsComponent.createStringSymbol("ADC_CH_PHASE_V", None)
+    adchsPhVCh.setVisible(False)
+    adchsPhVCh.setValue("ADCHS_CH4")
+
+    adchsVdcCh = adchsComponent.createStringSymbol("ADC_CH_VDC_BUS", None)
+    adchsVdcCh.setVisible(False)
+    adchsVdcCh.setValue("ADCHS_CH10")
+
+    adchsPotCh = adchsComponent.createStringSymbol("ADC_CH_POT", None)
+    adchsPotCh.setVisible(False)
+    adchsPotCh.setValue("ADCHS_CH15")
+
+    adchsResultInt = adchsComponent.createStringSymbol("INTERRUPT_ADC_RESULT", None)
+    adchsResultInt.setVisible(False)
+    adchsResultInt.setValue("INT_SOURCE_ADC_DATA0")
 
     #Clock enable
     Database.setSymbolValue("core", adchsInstanceName.getValue() + "_CLOCK_ENABLE", True, 1)
@@ -866,9 +1057,11 @@ def instantiateComponent(adchsComponent):
 ########## ADCHS Module Configurations  ################################################
 ########################################################################
     adchsSym_ADCCON3__DIGEN = []
+    global adchsSym_ADCTRGMODE__SHxALT
     adchsSym_ADCTRGMODE__SHxALT = []
     adchsSym_ADCTIME__SAMC = []
     adchsSym_ADCTIME__ADCDIV = []
+    global adchsSym_ADCTIME__SELRES
     adchsSym_ADCTIME__SELRES = []
     adchsSym_ADCTRG__TRGSRC = [None] * MAX_AVAILABLE_SIGNALS
     adchsSym_ADCTRGSNS__LVL = []
@@ -1031,6 +1224,7 @@ def instantiateComponent(adchsComponent):
     adchsSym_ADCCON2__SAMC.setDependencies(adchsVisibilityOnEvent, ["ADCHS_"+str(channelID)+"_ENABLE"])
 
     # result resolution
+    global adchsSym_ADCCON1__SELRES
     adchsSym_ADCCON1__SELRES = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module,
         "ADCCON1", "SELRES", adchsSym_CH_ENABLE7, False)
     adchsSym_ADCCON1__SELRES.setDependencies(adchsVisibilityOnEvent, ["ADCHS_"+str(channelID)+"_ENABLE"])
