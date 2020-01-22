@@ -71,7 +71,10 @@ peripherals = {
                 "DBGU_6059"     : ["UART"],
                 "PMP_00751"     : ["PMP"],
                 "TMR1_00687"    : ["TMR"],
-                "TMR1_02141"    : ["TMR"]
+                "TMR1_02141"    : ["TMR"],
+				"ADCHS_02508"   : ["ADC"],
+				"MCPWM_01477"   : ["PWM"],
+                "QEI_01494"     : ["ENCODER"],
 }
 
 processor = Variables.get("__PROCESSOR")
@@ -89,7 +92,7 @@ if( (("SAMV7" in processor) or ("SAME7" in processor) or ("SAMS7" in processor))
     peripherals["QSPI_11171"]=["SPI"]
 else:
     peripherals["QSPI_11171"]=["SPI","SQI"]   # most parts in the family support QSPI mode from the QSPI peripheral
-    
+
 for module in range (0, len(modules)):
 
     periphName = str(modules[module].getAttribute("name"))
