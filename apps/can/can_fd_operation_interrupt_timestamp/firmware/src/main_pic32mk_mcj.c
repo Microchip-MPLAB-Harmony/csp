@@ -176,7 +176,7 @@ int main ( void )
         if (state == APP_STATE_CAN_USER_INPUT)
         {
             /* Read user input */
-            UART2_Read((void *)&user_input, 1);
+            UART1_Read((void *)&user_input, 1);
             
             switch (user_input)
             {
@@ -213,8 +213,12 @@ int main ( void )
                         printf("CAN1_MessageReceive request has failed\r\n");
                     }
                     break;
+                case 'm':
+                    print_menu();
+                    break;
                 default:
                     printf(" Invalid Input \r\n");
+                    print_menu();
                     break;
             }
         }
