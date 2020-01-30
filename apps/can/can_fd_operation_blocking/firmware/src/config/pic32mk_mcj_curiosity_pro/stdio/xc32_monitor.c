@@ -43,7 +43,7 @@
 int _mon_getc(int canblock)
 {
    volatile int c = 0;
-   while(UART2_Read((void*)&c, 1) != true);
+   while(UART1_Read((void*)&c, 1) != true);
    return c;
 }
 
@@ -52,6 +52,6 @@ void _mon_putc(char c)
    uint8_t size = 0;
    do
    {
-       size = UART2_Write((void*)&c, 1);
+       size = UART1_Write((void*)&c, 1);
    }while (size != 1);
 }

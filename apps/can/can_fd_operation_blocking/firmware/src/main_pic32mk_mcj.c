@@ -98,11 +98,11 @@ int main ( void )
     {
         /* Maintain state machines of all polled Harmony modules. */
         /* Check if there is a received character */
-        if(UART2_ReceiverIsReady() == true)
+        if(UART1_ReceiverIsReady() == true)
         {
-            if(UART2_ErrorGet() == UART_ERROR_NONE)
+            if(UART1_ErrorGet() == UART_ERROR_NONE)
             {
-                UART2_Read((void *)&user_input, 1);
+                UART1_Read((void *)&user_input, 1);
             }
             switch (user_input)
             {
@@ -182,6 +182,8 @@ int main ( void )
                             }
                         }
                     }
+                    break;
+                case 'm':
                     break;
                 default:
                     printf(" Invalid Input \r\n");
