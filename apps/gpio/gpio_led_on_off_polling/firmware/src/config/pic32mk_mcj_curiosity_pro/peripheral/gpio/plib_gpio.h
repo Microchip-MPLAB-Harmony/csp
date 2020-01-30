@@ -62,13 +62,13 @@
 // *****************************************************************************
 
 /*** Macros for SWITCH pin ***/
-#define SWITCH_Set()               (LATESET = (1<<13))
-#define SWITCH_Clear()             (LATECLR = (1<<13))
-#define SWITCH_Toggle()            (LATEINV= (1<<13))
-#define SWITCH_Get()               ((PORTE >> 13) & 0x1)
-#define SWITCH_OutputEnable()      (TRISECLR = (1<<13))
-#define SWITCH_InputEnable()       (TRISESET = (1<<13))
-#define SWITCH_PIN                  GPIO_PIN_RE13
+#define SWITCH_Set()               (LATBSET = (1<<8))
+#define SWITCH_Clear()             (LATBCLR = (1<<8))
+#define SWITCH_Toggle()            (LATBINV= (1<<8))
+#define SWITCH_Get()               ((PORTB >> 8) & 0x1)
+#define SWITCH_OutputEnable()      (TRISBCLR = (1<<8))
+#define SWITCH_InputEnable()       (TRISBSET = (1<<8))
+#define SWITCH_PIN                  GPIO_PIN_RB8
 /*** Macros for LED pin ***/
 #define LED_Set()               (LATASET = (1<<10))
 #define LED_Clear()             (LATACLR = (1<<10))

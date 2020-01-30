@@ -68,8 +68,6 @@ void GPIO_Initialize ( void )
     /* PORTD Initialization */
 
     /* PORTE Initialization */
-    ANSELECLR = 0x2000; /* Digital Mode Enable */
-    CNPUESET = 0x2000; /* Pull-Up Enable */
 
     /* PORTF Initialization */
 
