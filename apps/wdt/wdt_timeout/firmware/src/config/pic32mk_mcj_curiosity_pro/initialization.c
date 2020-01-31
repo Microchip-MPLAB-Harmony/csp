@@ -72,7 +72,7 @@
 /*** DEVCFG1 ***/
 #pragma config FNOSC =      SPLL
 #pragma config DMTINTV =    WIN_127_128
-#pragma config FSOSCEN =    ON
+#pragma config FSOSCEN =    OFF
 #pragma config IESO =       ON
 #pragma config POSCMOD =    OFF
 #pragma config OSCIOFNC =   OFF
@@ -166,7 +166,7 @@ void SYS_Initialize ( void* data )
 	GPIO_Initialize();
 
     CORETIMER_Initialize();
-	UART2_Initialize();
+	UART1_Initialize();
 
 
 

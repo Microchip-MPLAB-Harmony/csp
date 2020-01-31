@@ -1,26 +1,23 @@
 /*******************************************************************************
- System Interrupts File
+  Main Source File
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    interrupt.c
+    main.c
 
   Summary:
-    Interrupt vectors mapping
+    This file contains the "main" function for a project.
 
   Description:
-    This file maps all the interrupt vectors to their corresponding
-    implementations. If a particular module interrupt is used, then its ISR
-    definition can be found in corresponding PLIB source file. If a module
-    interrupt is not used, then its ISR implementation is mapped to dummy
-    handler.
+    This file contains the "main" function for a project.  The
+    "main" function calls the "SYS_Initialize" function to initialize the state
+    machines of all modules in the system
  *******************************************************************************/
 
-// DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -40,8 +37,7 @@
 * FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
- *******************************************************************************/
-// DOM-IGNORE-END
+*******************************************************************************/
 
 // *****************************************************************************
 // *****************************************************************************
@@ -49,26 +45,62 @@
 // *****************************************************************************
 // *****************************************************************************
 
-#include "definitions.h"
+#include <stddef.h>                     // Defines NULL
+#include <stdbool.h>                    // Defines true
+#include <stdlib.h>                     // Defines EXIT_FAILURE
+#include "definitions.h"               // SYS function prototypes
 
-// *****************************************************************************
-// *****************************************************************************
-// Section: System Interrupt Vector Functions
-// *****************************************************************************
-// *****************************************************************************
+#define LED_Off()                        LED_Set()
+#define LED_On()                         LED_Clear()
 
+volatile bool switch_pressed = false;
 
-void CORE_TIMER_InterruptHandler( void );
-
-
-
-/* All the handlers are defined here.  Each will call its PLIB-specific function. */
-void __ISR(_CORE_TIMER_VECTOR, ipl1AUTO) CORE_TIMER_Handler (void)
+void switch_handler( GPIO_PIN pin, uintptr_t context )
 {
-    CORE_TIMER_InterruptHandler();
+    switch_pressed = true;
 }
 
+// *****************************************************************************
+// *****************************************************************************
+// Section: Main Entry Point
+// *****************************************************************************
+// *****************************************************************************
 
+int main ( void )
+{
+    /* Initialize all modules */
+    SYS_Initialize ( NULL );
+    printf ("\n\r -------------------------------------------------------------");
+    printf ("\n\r                      WATCHDOG Timer DEMO                     ");
+    printf ("\n\r -------------------------------------------------------------");
+    printf ("\n\r Press switch to emulate deadlock ");
+
+    WDT_Enable();
+    CORETIMER_Start();
+    switch_pressed = false;
+
+    while ( true )
+    {
+        switch_pressed = (bool)SWITCH_Get();
+        if(switch_pressed == true)
+        {
+            CORETIMER_DelayMs(100);
+            LED_Toggle();
+            WDT_Clear();
+        }
+        else
+        {
+            LED_Off();
+            printf ("\n\r Emulating deadlock................ ");
+            printf ("\n\r WDT should reset device in 4 seconds ");
+            while(1);
+        }
+    }
+
+    /* Execution should not come here during normal operation */
+
+    return ( EXIT_FAILURE );
+}
 
 
 /*******************************************************************************

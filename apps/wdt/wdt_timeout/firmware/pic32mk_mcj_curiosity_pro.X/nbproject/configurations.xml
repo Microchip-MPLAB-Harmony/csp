@@ -21,7 +21,7 @@
             </logicalFolder>
             <logicalFolder name="f2" displayName="uart" projectFiles="true">
               <itemPath>../src/config/pic32mk_mcj_curiosity_pro/peripheral/uart/plib_uart_common.h</itemPath>
-              <itemPath>../src/config/pic32mk_mcj_curiosity_pro/peripheral/uart/plib_uart2.h</itemPath>
+              <itemPath>../src/config/pic32mk_mcj_curiosity_pro/peripheral/uart/plib_uart1.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f6" displayName="wdt" projectFiles="true">
               <itemPath>../src/config/pic32mk_mcj_curiosity_pro/peripheral/wdt/plib_wdt.h</itemPath>
@@ -63,7 +63,7 @@
               <itemPath>../src/config/pic32mk_mcj_curiosity_pro/peripheral/gpio/plib_gpio.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f2" displayName="uart" projectFiles="true">
-              <itemPath>../src/config/pic32mk_mcj_curiosity_pro/peripheral/uart/plib_uart2.c</itemPath>
+              <itemPath>../src/config/pic32mk_mcj_curiosity_pro/peripheral/uart/plib_uart1.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f6" displayName="wdt" projectFiles="true">
               <itemPath>../src/config/pic32mk_mcj_curiosity_pro/peripheral/wdt/plib_wdt.c</itemPath>
@@ -77,7 +77,7 @@
           <itemPath>../src/config/pic32mk_mcj_curiosity_pro/exceptions.c</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <itemPath>../src/main_pic32mz.c</itemPath>
+      <itemPath>../src/main_pic32mk_mcj.c</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
@@ -93,7 +93,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>pkob4hybrid</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>2.20</languageToolchainVersion>
+        <languageToolchainVersion>2.30</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
@@ -412,6 +412,7 @@
         <property key="UART1" value="true"/>
         <property key="UART2" value="true"/>
         <property key="communication.interface" value=""/>
+        <property key="communication.interface.jtag" value="2wire"/>
         <property key="communication.speed" value="${communication.speed.default}"/>
         <property key="debugoptions.useswbreakpoints" value="false"/>
         <property key="memories.aux" value="false"/>
@@ -432,6 +433,8 @@
         <property key="programoptions.pgmentry.voltage" value="low"/>
         <property key="programoptions.pgmspeed" value="Med"/>
         <property key="programoptions.preservedataflash" value="false"/>
+        <property key="programoptions.preservedataflash.ranges"
+                  value="${memories.dataflash.default}"/>
         <property key="programoptions.preserveeeprom" value="false"/>
         <property key="programoptions.preserveeeprom.ranges" value=""/>
         <property key="programoptions.preserveprogram.ranges" value="1d000000-1d07ffff"/>

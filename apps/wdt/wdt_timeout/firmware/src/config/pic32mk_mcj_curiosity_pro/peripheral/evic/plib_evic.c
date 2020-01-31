@@ -55,7 +55,6 @@ void EVIC_Initialize( void )
 
     /* Set up priority / subpriority of enabled interrupts */
     IPC0SET = 0x4 | 0x0;  /* CORE_TIMER:  Priority 1 / Subpriority 0 */
-    IPC12SET = 0x4 | 0x0;  /* CHANGE_NOTICE_E:  Priority 1 / Subpriority 0 */
 }
 
 void EVIC_SourceEnable( INT_SOURCE source )
