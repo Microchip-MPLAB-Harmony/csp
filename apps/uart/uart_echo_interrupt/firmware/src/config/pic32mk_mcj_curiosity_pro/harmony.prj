@@ -19,20 +19,20 @@
           <Name dnOrder="1">initialization.c</Name>
           <LogicalPath dnOrder="2">config/pic32mk_mcj_curiosity_pro/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">599421360764158D94FAF41DFDA9D16D</GeneratedChecksum>
-          <UserChecksum dnOrder="5">599421360764158D94FAF41DFDA9D16D</UserChecksum>
+          <GeneratedChecksum dnOrder="4">3D9404473973FFAAC9A759FDF26426C4</GeneratedChecksum>
+          <UserChecksum dnOrder="5">3D9404473973FFAAC9A759FDF26426C4</UserChecksum>
         </File>
         <File dnOrder="2">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">interrupts.c</Name>
           <LogicalPath dnOrder="2">config/pic32mk_mcj_curiosity_pro/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">D67C400DD158EF7A7818F076E7671632</GeneratedChecksum>
-          <UserChecksum dnOrder="5">D67C400DD158EF7A7818F076E7671632</UserChecksum>
+          <GeneratedChecksum dnOrder="4">87FB9BBF8EBFCCB70A3D35EE90DD5527</GeneratedChecksum>
+          <UserChecksum dnOrder="5">87FB9BBF8EBFCCB70A3D35EE90DD5527</UserChecksum>
         </File>
         <File dnOrder="3">
           <Type dnOrder="0">SOURCE</Type>
-          <Name dnOrder="1">main.c</Name>
+          <Name dnOrder="1">main_pic32mk_mcj.c</Name>
           <LogicalPath dnOrder="2"/>
           <PhysicalPath dnOrder="3">/../../</PhysicalPath>
           <GeneratedChecksum dnOrder="4"/>
@@ -43,32 +43,32 @@
           <Name dnOrder="1">plib_clk.c</Name>
           <LogicalPath dnOrder="2">config/pic32mk_mcj_curiosity_pro/peripheral/clk/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/clk/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">EFF6EF4EFD47951E405286B32DB12980</GeneratedChecksum>
-          <UserChecksum dnOrder="5">EFF6EF4EFD47951E405286B32DB12980</UserChecksum>
+          <GeneratedChecksum dnOrder="4">4221E0F27A7A89F15F60265D99299782</GeneratedChecksum>
+          <UserChecksum dnOrder="5">4221E0F27A7A89F15F60265D99299782</UserChecksum>
         </File>
         <File dnOrder="5">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_evic.c</Name>
           <LogicalPath dnOrder="2">config/pic32mk_mcj_curiosity_pro/peripheral/evic/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/evic/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">D6A5E0386DD5AA5649C356B84817455A</GeneratedChecksum>
-          <UserChecksum dnOrder="5">D6A5E0386DD5AA5649C356B84817455A</UserChecksum>
+          <GeneratedChecksum dnOrder="4">E5057994540DC4DDC3D671C9BE1885D5</GeneratedChecksum>
+          <UserChecksum dnOrder="5">E5057994540DC4DDC3D671C9BE1885D5</UserChecksum>
         </File>
         <File dnOrder="6">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_gpio.c</Name>
           <LogicalPath dnOrder="2">config/pic32mk_mcj_curiosity_pro/peripheral/gpio/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/gpio/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">2B760DCD9F4C34B7F5BAF34C2315EA05</GeneratedChecksum>
-          <UserChecksum dnOrder="5">2B760DCD9F4C34B7F5BAF34C2315EA05</UserChecksum>
+          <GeneratedChecksum dnOrder="4">0004F510F5E678B0B006B15760BF3E27</GeneratedChecksum>
+          <UserChecksum dnOrder="5">0004F510F5E678B0B006B15760BF3E27</UserChecksum>
         </File>
         <File dnOrder="7">
           <Type dnOrder="0">SOURCE</Type>
-          <Name dnOrder="1">plib_uart2.c</Name>
+          <Name dnOrder="1">plib_uart1.c</Name>
           <LogicalPath dnOrder="2">config/pic32mk_mcj_curiosity_pro/peripheral/uart/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/uart/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">3F55AAB9394E5C21C476A7BC95177251</GeneratedChecksum>
-          <UserChecksum dnOrder="5">3F55AAB9394E5C21C476A7BC95177251</UserChecksum>
+          <GeneratedChecksum dnOrder="4">E0581B183B897E94C2F1E7FDF033F2D5</GeneratedChecksum>
+          <UserChecksum dnOrder="5">E0581B183B897E94C2F1E7FDF033F2D5</UserChecksum>
         </File>
         <File dnOrder="8">
           <Type dnOrder="0">SOURCE</Type>
@@ -83,8 +83,8 @@
           <Name dnOrder="1">definitions.h</Name>
           <LogicalPath dnOrder="2">config/pic32mk_mcj_curiosity_pro/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">D692B02EF4922E841AAF8DA756CECC1E</GeneratedChecksum>
-          <UserChecksum dnOrder="5">D692B02EF4922E841AAF8DA756CECC1E</UserChecksum>
+          <GeneratedChecksum dnOrder="4">E5452BACE2FC14552A7BE87A43B4B446</GeneratedChecksum>
+          <UserChecksum dnOrder="5">E5452BACE2FC14552A7BE87A43B4B446</UserChecksum>
         </File>
         <File dnOrder="10">
           <Type dnOrder="0">HEADER</Type>
@@ -120,11 +120,11 @@
         </File>
         <File dnOrder="14">
           <Type dnOrder="0">HEADER</Type>
-          <Name dnOrder="1">plib_uart2.h</Name>
+          <Name dnOrder="1">plib_uart1.h</Name>
           <LogicalPath dnOrder="2">config/pic32mk_mcj_curiosity_pro/peripheral/uart/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/uart/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">9156E7153EE3F0C7900D3F94830CC3C0</GeneratedChecksum>
-          <UserChecksum dnOrder="5">9156E7153EE3F0C7900D3F94830CC3C0</UserChecksum>
+          <GeneratedChecksum dnOrder="4">20D8CBFBF40F435D169C4D98666A5A9D</GeneratedChecksum>
+          <UserChecksum dnOrder="5">20D8CBFBF40F435D169C4D98666A5A9D</UserChecksum>
         </File>
         <File dnOrder="15">
           <Type dnOrder="0">HEADER</Type>
@@ -139,24 +139,24 @@
           <Name dnOrder="1">toolchain_specifics.h</Name>
           <LogicalPath dnOrder="2">config/pic32mk_mcj_curiosity_pro/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">5F0B87C955FBF569CBD67F4861B6B7AD</GeneratedChecksum>
-          <UserChecksum dnOrder="5">5F0B87C955FBF569CBD67F4861B6B7AD</UserChecksum>
+          <GeneratedChecksum dnOrder="4">9A7344615980CB9443B6436E41E2155A</GeneratedChecksum>
+          <UserChecksum dnOrder="5">9A7344615980CB9443B6436E41E2155A</UserChecksum>
         </File>
       </Files>
       <Settings dnOrder="1">
         <Setting append="true" category="C32" delimiter=";" dnOrder="0" key="extra-include-directories" value="../src;../src/config/pic32mk_mcj_curiosity_pro;../src/packs/PIC32MK0512MCJ064_DFP;;../src/mips"/>
         <Setting category="C32-LD" dnOrder="1" key="heap-size" value="512"/>
         <Setting category="C32-LD" dnOrder="2" key="no-device-startup-code" value="true"/>
-        <Setting category="C32-LD" dnOrder="3" key="preprocessor-macros" value=""/>
+        <Setting append="true" category="C32-LD" delimiter=";" dnOrder="3" key="preprocessor-macros" value=""/>
       </Settings>
     </Manifest>
     <Settings dnOrder="4">
-      <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.5.1"/>
-      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MK-MC_DFP\1.0.45\atdf\PIC32MK0512MCJ064.atdf"/>
+      <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.6.0"/>
+      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MK-MC_DFP\1.2.84\atdf\PIC32MK0512MCJ064.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
       <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
-      <Setting dnOrder="5" key="PackageFilter" value="csp;"/>
+      <Setting dnOrder="5" key="PackageFilter" value="aws_cloud;bootloader;bsp;core;csp;ethercat;expresslogic_threadx;gfx;micrium_ucos3;net;touch;wireless;"/>
     </Settings>
   </Configurator>
 </Configuration>

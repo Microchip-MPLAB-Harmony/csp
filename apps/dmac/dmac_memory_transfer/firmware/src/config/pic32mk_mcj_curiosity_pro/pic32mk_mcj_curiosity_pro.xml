@@ -18,146 +18,146 @@
             <User dnOrder="0" value="DIGITAL"/>
           </Values>
         </String>
-        <String dnOrder="3" id="BSP_PIN_36_FUNCTION_NAME">
+        <String dnOrder="3" id="BSP_PIN_34_FUNCTION_TYPE">
           <Values dnOrder="0">
-            <User dnOrder="0" value=""/>
+            <User dnOrder="0" value="U1TX"/>
           </Values>
         </String>
-        <String dnOrder="4" id="BSP_PIN_36_FUNCTION_TYPE">
-          <Values dnOrder="0">
-            <User dnOrder="0" value="U2RX"/>
-          </Values>
-        </String>
-        <String dnOrder="5" id="BSP_PIN_36_MODE">
+        <String dnOrder="4" id="BSP_PIN_34_MODE">
           <Values dnOrder="0">
             <User dnOrder="0" value="DIGITAL"/>
           </Values>
         </String>
-        <String dnOrder="6" id="BSP_PIN_3_MODE">
+        <String dnOrder="5" id="BSP_PIN_3_MODE">
           <Values dnOrder="0">
             <User dnOrder="0" value="DIGITAL"/>
           </Values>
         </String>
-        <String dnOrder="7" id="BSP_PIN_42_MODE">
+        <String dnOrder="6" id="BSP_PIN_42_MODE">
           <Values dnOrder="0">
             <User dnOrder="0" value="DIGITAL"/>
           </Values>
         </String>
-        <String dnOrder="8" id="BSP_PIN_43_MODE">
+        <String dnOrder="7" id="BSP_PIN_43_MODE">
           <Values dnOrder="0">
             <User dnOrder="0" value="DIGITAL"/>
           </Values>
         </String>
-        <String dnOrder="9" id="BSP_PIN_44_MODE">
+        <String dnOrder="8" id="BSP_PIN_44_MODE">
           <Values dnOrder="0">
             <User dnOrder="0" value="DIGITAL"/>
           </Values>
         </String>
-        <String dnOrder="10" id="BSP_PIN_50_MODE">
+        <String dnOrder="9" id="BSP_PIN_50_MODE">
           <Values dnOrder="0">
             <User dnOrder="0" value="DIGITAL"/>
           </Values>
         </String>
-        <String dnOrder="11" id="BSP_PIN_51_MODE">
+        <String dnOrder="10" id="BSP_PIN_51_MODE">
           <Values dnOrder="0">
             <User dnOrder="0" value="DIGITAL"/>
           </Values>
         </String>
-        <String dnOrder="12" id="BSP_PIN_52_MODE">
+        <String dnOrder="11" id="BSP_PIN_52_MODE">
           <Values dnOrder="0">
             <User dnOrder="0" value="DIGITAL"/>
           </Values>
         </String>
-        <String dnOrder="13" id="BSP_PIN_53_MODE">
+        <String dnOrder="12" id="BSP_PIN_53_MODE">
           <Values dnOrder="0">
             <User dnOrder="0" value="DIGITAL"/>
           </Values>
         </String>
-        <String dnOrder="14" id="BSP_PIN_54_MODE">
+        <String dnOrder="13" id="BSP_PIN_54_MODE">
           <Values dnOrder="0">
             <User dnOrder="0" value="DIGITAL"/>
           </Values>
         </String>
-        <String dnOrder="15" id="BSP_PIN_55_MODE">
+        <String dnOrder="14" id="BSP_PIN_55_MODE">
           <Values dnOrder="0">
             <User dnOrder="0" value="DIGITAL"/>
           </Values>
         </String>
-        <String dnOrder="16" id="BSP_PIN_58_MODE">
+        <String dnOrder="15" id="BSP_PIN_58_MODE">
           <Values dnOrder="0">
             <User dnOrder="0" value="DIGITAL"/>
           </Values>
         </String>
-        <String dnOrder="17" id="BSP_PIN_59_MODE">
+        <String dnOrder="16" id="BSP_PIN_59_MODE">
           <Values dnOrder="0">
             <User dnOrder="0" value="DIGITAL"/>
           </Values>
         </String>
-        <String dnOrder="18" id="BSP_PIN_60_MODE">
+        <String dnOrder="17" id="BSP_PIN_60_MODE">
           <Values dnOrder="0">
             <User dnOrder="0" value="DIGITAL"/>
           </Values>
         </String>
-        <String dnOrder="19" id="BSP_PIN_61_MODE">
+        <String dnOrder="18" id="BSP_PIN_61_MODE">
           <Values dnOrder="0">
             <User dnOrder="0" value="DIGITAL"/>
           </Values>
         </String>
-        <String dnOrder="20" id="BSP_PIN_62_MODE">
+        <String dnOrder="19" id="BSP_PIN_62_MODE">
           <Values dnOrder="0">
             <User dnOrder="0" value="DIGITAL"/>
           </Values>
         </String>
-        <String dnOrder="21" id="BSP_PIN_63_MODE">
+        <String dnOrder="20" id="BSP_PIN_63_MODE">
           <Values dnOrder="0">
             <User dnOrder="0" value="DIGITAL"/>
           </Values>
         </String>
-        <String dnOrder="22" id="BSP_PIN_64_DIR">
+        <String dnOrder="21" id="BSP_PIN_64_DIR">
           <Values dnOrder="0">
             <User dnOrder="0" value="Out"/>
           </Values>
         </String>
-        <String dnOrder="23" id="BSP_PIN_64_FUNCTION_NAME">
+        <String dnOrder="22" id="BSP_PIN_64_FUNCTION_NAME">
           <Values dnOrder="0">
             <User dnOrder="0" value="LED"/>
           </Values>
         </String>
-        <String dnOrder="24" id="BSP_PIN_64_FUNCTION_TYPE">
+        <String dnOrder="23" id="BSP_PIN_64_FUNCTION_TYPE">
           <Values dnOrder="0">
             <User dnOrder="0" value="GPIO"/>
           </Values>
         </String>
-        <String dnOrder="25" id="BSP_PIN_64_LAT">
+        <String dnOrder="24" id="BSP_PIN_64_LAT">
           <Values dnOrder="0">
             <User dnOrder="0" value="High"/>
           </Values>
         </String>
-        <String dnOrder="26" id="BSP_PIN_64_MODE">
+        <String dnOrder="25" id="BSP_PIN_64_MODE">
           <Values dnOrder="0">
             <User dnOrder="0" value="DIGITAL"/>
           </Values>
         </String>
-        <String dnOrder="27" id="BSP_PIN_7_MODE">
+        <String dnOrder="26" id="BSP_PIN_6_FUNCTION_TYPE">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="U1RX"/>
+          </Values>
+        </String>
+        <String dnOrder="27" id="BSP_PIN_6_MODE">
           <Values dnOrder="0">
             <User dnOrder="0" value="DIGITAL"/>
           </Values>
         </String>
-        <String dnOrder="28" id="BSP_PIN_8_FUNCTION_TYPE">
-          <Values dnOrder="0">
-            <User dnOrder="0" value="U2TX"/>
-          </Values>
-        </String>
-        <String dnOrder="29" id="BSP_PIN_8_MODE">
+        <String dnOrder="28" id="BSP_PIN_7_MODE">
           <Values dnOrder="0">
             <User dnOrder="0" value="DIGITAL"/>
           </Values>
         </String>
-        <KeyValueSet dnOrder="30" id="COMPILER_CHOICE">
+        <KeyValueSet dnOrder="29" id="COMPILER_CHOICE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
+        <Combo dnOrder="30" id="CONFIG_FSOSCEN">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="OFF"/>
+          </Values>
+        </Combo>
         <Combo dnOrder="31" id="CONFIG_ICESEL">
           <Values dnOrder="0">
             <User dnOrder="0" value="ICS_PGx2"/>
@@ -261,234 +261,304 @@
             <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="50" id="EVIC_56_ENABLE">
+        <Boolean dnOrder="50" id="EVIC_38_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="51" id="EVIC_56_HANDLER_LOCK">
+        <Boolean dnOrder="51" id="EVIC_38_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
-        <String dnOrder="52" id="EVIC_56_INTERRUPT_HANDLER">
+        <String dnOrder="52" id="EVIC_38_INTERRUPT_HANDLER">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="UART1_FAULT_Handler"/>
+          </Values>
+        </String>
+        <Boolean dnOrder="53" id="EVIC_39_ENABLE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="false"/>
+          </Values>
+        </Boolean>
+        <Boolean dnOrder="54" id="EVIC_39_HANDLER_LOCK">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="false"/>
+          </Values>
+        </Boolean>
+        <String dnOrder="55" id="EVIC_39_INTERRUPT_HANDLER">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="UART1_RX_Handler"/>
+          </Values>
+        </String>
+        <Boolean dnOrder="56" id="EVIC_40_ENABLE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="false"/>
+          </Values>
+        </Boolean>
+        <Boolean dnOrder="57" id="EVIC_40_HANDLER_LOCK">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="false"/>
+          </Values>
+        </Boolean>
+        <String dnOrder="58" id="EVIC_40_INTERRUPT_HANDLER">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="UART1_TX_Handler"/>
+          </Values>
+        </String>
+        <Boolean dnOrder="59" id="EVIC_56_ENABLE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="false"/>
+          </Values>
+        </Boolean>
+        <Boolean dnOrder="60" id="EVIC_56_HANDLER_LOCK">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="false"/>
+          </Values>
+        </Boolean>
+        <String dnOrder="61" id="EVIC_56_INTERRUPT_HANDLER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="UART2_FAULT_Handler"/>
           </Values>
         </String>
-        <Boolean dnOrder="53" id="EVIC_57_ENABLE">
+        <Boolean dnOrder="62" id="EVIC_57_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="54" id="EVIC_57_HANDLER_LOCK">
+        <Boolean dnOrder="63" id="EVIC_57_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
-        <String dnOrder="55" id="EVIC_57_INTERRUPT_HANDLER">
+        <String dnOrder="64" id="EVIC_57_INTERRUPT_HANDLER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="UART2_RX_Handler"/>
           </Values>
         </String>
-        <Boolean dnOrder="56" id="EVIC_58_ENABLE">
+        <Boolean dnOrder="65" id="EVIC_58_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="57" id="EVIC_58_HANDLER_LOCK">
+        <Boolean dnOrder="66" id="EVIC_58_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
-        <String dnOrder="58" id="EVIC_58_INTERRUPT_HANDLER">
+        <String dnOrder="67" id="EVIC_58_INTERRUPT_HANDLER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="UART2_TX_Handler"/>
           </Values>
         </String>
-        <Boolean dnOrder="59" id="EVIC_72_ENABLE">
+        <Boolean dnOrder="68" id="EVIC_72_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="60" id="EVIC_72_HANDLER_LOCK">
+        <Boolean dnOrder="69" id="EVIC_72_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <String dnOrder="61" id="EVIC_72_INTERRUPT_HANDLER">
+        <String dnOrder="70" id="EVIC_72_INTERRUPT_HANDLER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="DMA0_InterruptHandler"/>
           </Values>
         </String>
-        <File dnOrder="62" id="MAIN_C">
+        <File dnOrder="71" id="MAIN_C">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="name">
               <Value dnOrder="0">main_pic32mk_mcj_curiosity_pro.c</Value>
             </String>
           </Attributes>
         </File>
-        <Hex dnOrder="63" id="PMD1_REG_VALUE">
+        <Hex dnOrder="72" id="PMD1_REG_VALUE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="4294967294"/>
           </Values>
         </Hex>
-        <Hex dnOrder="64" id="PMD5_REG_VALUE">
+        <Hex dnOrder="73" id="PMD5_REG_VALUE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="4026531837"/>
+            <Dynamic dnOrder="0" id="core" value="4026531838"/>
           </Values>
         </Hex>
-        <Hex dnOrder="65" id="PMD6_REG_VALUE">
+        <Hex dnOrder="74" id="PMD6_REG_VALUE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="4294963455"/>
           </Values>
         </Hex>
-        <Hex dnOrder="66" id="PMD7_REG_VALUE">
+        <Hex dnOrder="75" id="PMD7_REG_VALUE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="4294967279"/>
           </Values>
         </Hex>
-        <Hex dnOrder="67" id="SYS_PORT_A_ANSEL">
+        <Hex dnOrder="76" id="SYS_PORT_A_ANSEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="16384"/>
+            <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </Hex>
-        <Hex dnOrder="68" id="SYS_PORT_A_LAT">
+        <Hex dnOrder="77" id="SYS_PORT_A_LAT">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="1024"/>
           </Values>
         </Hex>
-        <Hex dnOrder="69" id="SYS_PORT_A_TRIS">
+        <Hex dnOrder="78" id="SYS_PORT_A_TRIS">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="1024"/>
           </Values>
         </Hex>
-        <Hex dnOrder="70" id="SYS_PORT_G_ANSEL">
+        <Hex dnOrder="79" id="SYS_PORT_E_ANSEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="512"/>
+            <Dynamic dnOrder="0" id="core" value="1"/>
           </Values>
         </Hex>
-        <Combo dnOrder="71" id="SYS_PORT_PPS_INPUT_FUNCTION_0">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="visible">
-              <Value dnOrder="0">true</Value>
-            </Boolean>
-          </Attributes>
-          <Values dnOrder="1">
-            <User dnOrder="0" value="U2RX"/>
-          </Values>
-        </Combo>
-        <KeyValueSet dnOrder="72" id="SYS_PORT_PPS_INPUT_PIN_0">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="visible">
-              <Value dnOrder="0">true</Value>
-            </Boolean>
-          </Attributes>
-          <Values dnOrder="1">
-            <User dnOrder="0" value="7"/>
-          </Values>
-        </KeyValueSet>
-        <KeyValueSet dnOrder="73" id="SYS_PORT_PPS_OUTPUT_FUNCTION_0">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="visible">
-              <Value dnOrder="0">true</Value>
-            </Boolean>
-          </Attributes>
-          <Values dnOrder="1">
-            <User dnOrder="0" value="19"/>
-          </Values>
-        </KeyValueSet>
-        <Combo dnOrder="74" id="SYS_PORT_PPS_OUTPUT_PIN_0">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="visible">
-              <Value dnOrder="0">true</Value>
-            </Boolean>
-          </Attributes>
-          <Values dnOrder="1">
-            <User dnOrder="0" value="RPG9"/>
-          </Values>
-        </Combo>
-        <Boolean dnOrder="75" id="UART2_CLOCK_ENABLE">
+        <Hex dnOrder="80" id="SYS_PORT_G_ANSEL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="uart2" value="true"/>
+            <Dynamic dnOrder="0" id="core" value="256"/>
+          </Values>
+        </Hex>
+        <Combo dnOrder="81" id="SYS_PORT_PPS_INPUT_FUNCTION_0">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="visible">
+              <Value dnOrder="0">true</Value>
+            </Boolean>
+          </Attributes>
+          <Values dnOrder="1">
+            <User dnOrder="0" value="U1RX"/>
+          </Values>
+        </Combo>
+        <KeyValueSet dnOrder="82" id="SYS_PORT_PPS_INPUT_PIN_0">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="visible">
+              <Value dnOrder="0">true</Value>
+            </Boolean>
+          </Attributes>
+          <Values dnOrder="1">
+            <User dnOrder="0" value="13"/>
+          </Values>
+        </KeyValueSet>
+        <KeyValueSet dnOrder="83" id="SYS_PORT_PPS_OUTPUT_FUNCTION_0">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="visible">
+              <Value dnOrder="0">true</Value>
+            </Boolean>
+          </Attributes>
+          <Values dnOrder="1">
+            <User dnOrder="0" value="20"/>
+          </Values>
+        </KeyValueSet>
+        <Combo dnOrder="84" id="SYS_PORT_PPS_OUTPUT_PIN_0">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="visible">
+              <Value dnOrder="0">true</Value>
+            </Boolean>
+          </Attributes>
+          <Values dnOrder="1">
+            <User dnOrder="0" value="RPE0"/>
+          </Values>
+        </Combo>
+        <Boolean dnOrder="85" id="UART1_CLOCK_ENABLE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="uart1" value="true"/>
           </Values>
         </Boolean>
-        <Integer dnOrder="76" id="UART2_CLOCK_FREQUENCY">
+        <Integer dnOrder="86" id="UART1_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="60000000"/>
           </Values>
         </Integer>
-        <Boolean dnOrder="77" id="UART2_FAULT_INTERRUPT_ENABLE">
+        <Boolean dnOrder="87" id="UART1_FAULT_INTERRUPT_ENABLE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="uart2" value="false"/>
+            <Dynamic dnOrder="0" id="uart1" value="false"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="78" id="UART2_FAULT_INTERRUPT_ENABLE_UPDATE">
+        <Boolean dnOrder="88" id="UART1_FAULT_INTERRUPT_ENABLE_UPDATE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <String dnOrder="79" id="UART2_FAULT_INTERRUPT_HANDLER">
+        <String dnOrder="89" id="UART1_FAULT_INTERRUPT_HANDLER">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="uart2" value="UART2_FAULT_Handler"/>
+            <Dynamic dnOrder="0" id="uart1" value="UART1_FAULT_Handler"/>
           </Values>
         </String>
-        <Boolean dnOrder="80" id="UART2_FAULT_INTERRUPT_HANDLER_LOCK">
+        <Boolean dnOrder="90" id="UART1_FAULT_INTERRUPT_HANDLER_LOCK">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="uart2" value="false"/>
+            <Dynamic dnOrder="0" id="uart1" value="false"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="81" id="UART2_RX_INTERRUPT_ENABLE">
+        <Boolean dnOrder="91" id="UART1_RX_INTERRUPT_ENABLE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="uart2" value="false"/>
+            <Dynamic dnOrder="0" id="uart1" value="false"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="82" id="UART2_RX_INTERRUPT_ENABLE_UPDATE">
+        <Boolean dnOrder="92" id="UART1_RX_INTERRUPT_ENABLE_UPDATE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <String dnOrder="83" id="UART2_RX_INTERRUPT_HANDLER">
+        <String dnOrder="93" id="UART1_RX_INTERRUPT_HANDLER">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="uart2" value="UART2_RX_Handler"/>
+            <Dynamic dnOrder="0" id="uart1" value="UART1_RX_Handler"/>
           </Values>
         </String>
-        <Boolean dnOrder="84" id="UART2_RX_INTERRUPT_HANDLER_LOCK">
+        <Boolean dnOrder="94" id="UART1_RX_INTERRUPT_HANDLER_LOCK">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="uart2" value="false"/>
+            <Dynamic dnOrder="0" id="uart1" value="false"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="85" id="UART2_TX_INTERRUPT_ENABLE">
+        <Boolean dnOrder="95" id="UART1_TX_INTERRUPT_ENABLE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="uart2" value="false"/>
+            <Dynamic dnOrder="0" id="uart1" value="false"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="86" id="UART2_TX_INTERRUPT_ENABLE_UPDATE">
+        <Boolean dnOrder="96" id="UART1_TX_INTERRUPT_ENABLE_UPDATE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <String dnOrder="87" id="UART2_TX_INTERRUPT_HANDLER">
+        <String dnOrder="97" id="UART1_TX_INTERRUPT_HANDLER">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="uart2" value="UART2_TX_Handler"/>
+            <Dynamic dnOrder="0" id="uart1" value="UART1_TX_Handler"/>
           </Values>
         </String>
-        <Boolean dnOrder="88" id="UART2_TX_INTERRUPT_HANDLER_LOCK">
+        <Boolean dnOrder="98" id="UART1_TX_INTERRUPT_HANDLER_LOCK">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="uart2" value="false"/>
+            <Dynamic dnOrder="0" id="uart1" value="false"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="89" id="USE_PPS_INPUT_0">
+        <Integer dnOrder="99" id="UART2_CLOCK_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="0"/>
+          </Values>
+        </Integer>
+        <Boolean dnOrder="100" id="UART2_FAULT_INTERRUPT_ENABLE_UPDATE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="true"/>
+          </Values>
+        </Boolean>
+        <Boolean dnOrder="101" id="UART2_RX_INTERRUPT_ENABLE_UPDATE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="true"/>
+          </Values>
+        </Boolean>
+        <Boolean dnOrder="102" id="UART2_TX_INTERRUPT_ENABLE_UPDATE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="true"/>
+          </Values>
+        </Boolean>
+        <Boolean dnOrder="103" id="USE_PPS_INPUT_0">
           <Values dnOrder="0">
             <User dnOrder="0" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="90" id="USE_PPS_OUTPUT_0">
+        <Boolean dnOrder="104" id="USE_PPS_OUTPUT_0">
           <Values dnOrder="0">
             <User dnOrder="0" value="true"/>
           </Values>
         </Boolean>
-        <KeyValueSet dnOrder="91" id="clkSvcMode">
+        <KeyValueSet dnOrder="105" id="clkSvcMode">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
@@ -500,7 +570,7 @@
       <Symbols dnOrder="0">
         <String dnOrder="0" id="DEBUG_PERIPHERAL">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="stdio" value="uart2"/>
+            <Dynamic dnOrder="0" id="stdio" value="uart1"/>
           </Values>
         </String>
       </Symbols>
@@ -508,45 +578,40 @@
         <DirectDependency dnOrder="0" id="UART">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="targetComponentID">
-              <Value dnOrder="0">uart2</Value>
+              <Value dnOrder="0">uart1</Value>
             </String>
             <String dnOrder="1" id="targetAttachmentID">
-              <Value dnOrder="0">UART2_UART</Value>
+              <Value dnOrder="0">UART1_UART</Value>
             </String>
           </Attributes>
         </DirectDependency>
       </Attachments>
     </UniqueComponent>
-    <UniqueComponent dnOrder="3" id="uart2">
+    <UniqueComponent dnOrder="3" id="uart1">
       <Symbols dnOrder="0">
         <Integer dnOrder="0" id="BRG_VALUE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="uart2" value="129"/>
+            <Dynamic dnOrder="0" id="uart1" value="32"/>
           </Values>
         </Integer>
         <KeyValueSet dnOrder="1" id="UART_BRGH">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="uart2" value="0"/>
+            <Dynamic dnOrder="0" id="uart1" value="1"/>
           </Values>
         </KeyValueSet>
-        <Integer dnOrder="2" id="UART_CLOCK_FREQ">
+        <Hex dnOrder="2" id="UMODE_VALUE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="uart2" value="60000000"/>
-          </Values>
-        </Integer>
-        <Hex dnOrder="3" id="UMODE_VALUE">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="uart2" value="8"/>
+            <Dynamic dnOrder="0" id="uart1" value="0"/>
           </Values>
         </Hex>
-        <Boolean dnOrder="4" id="USART_INTERRUPT_MODE">
+        <Boolean dnOrder="3" id="USART_INTERRUPT_MODE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="stdio" value="false"/>
           </Values>
         </Boolean>
       </Symbols>
       <Attachments dnOrder="1">
-        <DirectCapability dnOrder="0" id="UART2_UART">
+        <DirectCapability dnOrder="0" id="UART1_UART">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="targetComponentID">
               <Value dnOrder="0">stdio</Value>
@@ -560,14 +625,14 @@
     </UniqueComponent>
   </Components>
   <UserData>
-    <ComponentGraph dnOrder="0" id="__ROOTVIEW">
+    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="0"/>
+    <ComponentGraph dnOrder="1" id="__ROOTVIEW">
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="core" x="240" y="20"/>
         <ElementPosition dnOrder="1" id="dfp" x="20" y="20"/>
-        <ElementPosition dnOrder="2" id="stdio" x="500" y="20"/>
-        <ElementPosition dnOrder="3" id="uart2" x="340" y="20"/>
+        <ElementPosition dnOrder="2" id="stdio" x="495" y="34"/>
+        <ElementPosition dnOrder="3" id="uart1" x="340" y="20"/>
       </ElementPositions>
     </ComponentGraph>
-    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="1"/>
   </UserData>
 </Configuration>

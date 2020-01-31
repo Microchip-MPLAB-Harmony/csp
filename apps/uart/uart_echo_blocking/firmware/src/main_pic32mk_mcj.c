@@ -1,18 +1,21 @@
 /*******************************************************************************
-  System Definitions
+  Main Source File
+
+  Company:
+    Microchip Technology Inc.
 
   File Name:
-    definitions.h
+    main.c
 
   Summary:
-    project system definitions.
+    This file contains the "main" function for a project.
 
   Description:
-    This file contains the system-wide prototypes and definitions for a project.
-
+    This file contains the "main" function for a project.  The
+    "main" function calls the "SYS_Initialize" function to initialize the state
+    machines of all modules in the system
  *******************************************************************************/
 
-//DOM-IGNORE-BEGIN
 /*******************************************************************************
 * Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
 *
@@ -34,99 +37,80 @@
 * FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
- *******************************************************************************/
-//DOM-IGNORE-END
-
-#ifndef DEFINITIONS_H
-#define DEFINITIONS_H
+*******************************************************************************/
 
 // *****************************************************************************
 // *****************************************************************************
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-#include <stdint.h>
-#include <stddef.h>
-#include <stdbool.h>
-#include "peripheral/uart/plib_uart1.h"
-#include "peripheral/clk/plib_clk.h"
-#include "peripheral/gpio/plib_gpio.h"
-#include "peripheral/evic/plib_evic.h"
 
-// DOM-IGNORE-BEGIN
-#ifdef __cplusplus  // Provide C++ Compatibility
+#include <stddef.h>                     // Defines NULL
+#include <stdbool.h>                    // Defines true
+#include <stdlib.h>                     // Defines EXIT_FAILURE
+#include "definitions.h"                // SYS function prototypes
 
-extern "C" {
+#define RX_BUFFER_SIZE 256
 
-#endif
-// DOM-IGNORE-END
-
-// *****************************************************************************
-// *****************************************************************************
-// Section: System Functions
-// *****************************************************************************
-// *****************************************************************************
+char messageStart[] = "**** UART Line Echo Demo: Blocking Transfer without the interrupt ****\r\n\
+**** Type a line of characters and press the Enter key. **** \r\n\
+**** Entered line will be echoed back, and the LED is toggled. ****\r\n";
+char newline[] = "\r\n";
+char errorMessage[] = "\r\n**** UART error has occurred ****\r\n";
+char receiveBuffer[RX_BUFFER_SIZE] = {};
+char data = 0;
 
 // *****************************************************************************
-/* System Initialization Function
+// *****************************************************************************
+// Section: Main Entry Point
+// *****************************************************************************
+// *****************************************************************************
 
-  Function:
-    void SYS_Initialize( void *data )
+int main ( void )
+{
+    uint8_t rxCounter=0;
 
-  Summary:
-    Function that initializes all modules in the system.
+    /* Initialize all modules */
+    SYS_Initialize ( NULL );    
 
-  Description:
-    This function initializes all modules in the system, including any drivers,
-    services, middleware, and applications.
-
-  Precondition:
-    None.
-
-  Parameters:
-    data            - Pointer to the data structure containing any data
-                      necessary to initialize the module. This pointer may
-                      be null if no data is required and default initialization
-                      is to be used.
-
-  Returns:
-    None.
-
-  Example:
-    <code>
-    SYS_Initialize ( NULL );
+    /* Send start message */
+    UART1_Write(&messageStart, sizeof(messageStart));
 
     while ( true )
     {
-        SYS_Tasks ( );
+        /* Check if there is a received character */
+        if(UART1_ReceiverIsReady() == true)
+        {
+            if(UART1_ErrorGet() == UART_ERROR_NONE)
+            {
+                UART1_Read(&data, 1);
+
+                if((data == '\n') || (data == '\r'))
+                {
+                    UART1_Write(newline,sizeof(newline));
+                    UART1_Write(receiveBuffer,rxCounter);
+                    UART1_Write(newline,sizeof(newline));
+                    rxCounter = 0;
+                    LED_Toggle();
+                }
+                else
+                {
+                    receiveBuffer[rxCounter++] = data;
+                }
+            }
+            else
+            {
+                UART1_Write(errorMessage,sizeof(errorMessage));
+            }
+        }
     }
-    </code>
 
-  Remarks:
-    This function will only be called once, after system reset.
-*/
+    /* Execution should not come here during normal operation */
 
-void SYS_Initialize( void *data );
-
-/* Nullify SYS_Tasks() if only PLIBs are used. */
-#define     SYS_Tasks()
-
-// *****************************************************************************
-// *****************************************************************************
-// Section: extern declarations
-// *****************************************************************************
-// *****************************************************************************
-
-
-
-
-//DOM-IGNORE-BEGIN
-#ifdef __cplusplus
+    return ( EXIT_FAILURE );
 }
-#endif
-//DOM-IGNORE-END
 
-#endif /* DEFINITIONS_H */
+
 /*******************************************************************************
  End of File
 */

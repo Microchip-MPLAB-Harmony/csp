@@ -105,7 +105,7 @@
         </String>
         <String dnOrder="20" id="BSP_PIN_64_FUNCTION_NAME">
           <Values dnOrder="0">
-            <User dnOrder="0" value="LED1"/>
+            <User dnOrder="0" value="LED2"/>
           </Values>
         </String>
         <String dnOrder="21" id="BSP_PIN_64_FUNCTION_TYPE">
@@ -113,87 +113,114 @@
             <User dnOrder="0" value="GPIO"/>
           </Values>
         </String>
-        <String dnOrder="22" id="BSP_PIN_64_MODE">
+        <String dnOrder="22" id="BSP_PIN_64_LAT">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="High"/>
+          </Values>
+        </String>
+        <String dnOrder="23" id="BSP_PIN_64_MODE">
           <Values dnOrder="0">
             <User dnOrder="0" value="DIGITAL"/>
           </Values>
         </String>
-        <String dnOrder="23" id="BSP_PIN_7_MODE">
+        <String dnOrder="24" id="BSP_PIN_7_MODE">
           <Values dnOrder="0">
             <User dnOrder="0" value="DIGITAL"/>
           </Values>
         </String>
-        <KeyValueSet dnOrder="24" id="COMPILER_CHOICE">
+        <KeyValueSet dnOrder="25" id="COMPILER_CHOICE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>
         </KeyValueSet>
-        <Combo dnOrder="25" id="CONFIG_ICESEL">
+        <Combo dnOrder="26" id="CONFIG_FSOSCEN">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="OFF"/>
+          </Values>
+        </Combo>
+        <Combo dnOrder="27" id="CONFIG_ICESEL">
           <Values dnOrder="0">
             <User dnOrder="0" value="ICS_PGx2"/>
           </Values>
         </Combo>
-        <Boolean dnOrder="26" id="EVIC_31_ENABLE">
+        <String dnOrder="28" id="CoreMainFileName">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="main_pic32mk_mcj"/>
+          </Values>
+        </String>
+        <Boolean dnOrder="29" id="EVIC_31_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="27" id="EVIC_31_HANDLER_LOCK">
+        <Boolean dnOrder="30" id="EVIC_31_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <String dnOrder="28" id="EVIC_31_INTERRUPT_HANDLER">
+        <String dnOrder="31" id="EVIC_31_INTERRUPT_HANDLER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="NVM_InterruptHandler"/>
           </Values>
         </String>
-        <Boolean dnOrder="29" id="FLASH_CONTROL_INTERRUPT_ENABLE">
+        <Boolean dnOrder="32" id="FLASH_CONTROL_INTERRUPT_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="nvm" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="30" id="FLASH_CONTROL_INTERRUPT_ENABLE_UPDATE">
+        <Boolean dnOrder="33" id="FLASH_CONTROL_INTERRUPT_ENABLE_UPDATE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="false"/>
           </Values>
         </Boolean>
-        <String dnOrder="31" id="FLASH_CONTROL_INTERRUPT_HANDLER">
+        <String dnOrder="34" id="FLASH_CONTROL_INTERRUPT_HANDLER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="nvm" value="NVM_InterruptHandler"/>
           </Values>
         </String>
-        <Boolean dnOrder="32" id="FLASH_CONTROL_INTERRUPT_HANDLER_LOCK">
+        <Boolean dnOrder="35" id="FLASH_CONTROL_INTERRUPT_HANDLER_LOCK">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="nvm" value="true"/>
           </Values>
         </Boolean>
-        <Hex dnOrder="33" id="PMD1_REG_VALUE">
+        <File dnOrder="36" id="MAIN_C">
+          <Attributes dnOrder="0">
+            <String dnOrder="0" id="name">
+              <Value dnOrder="0">main_pic32mk_mcj.c</Value>
+            </String>
+          </Attributes>
+        </File>
+        <Hex dnOrder="37" id="PMD1_REG_VALUE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="4294967294"/>
           </Values>
         </Hex>
-        <Hex dnOrder="34" id="PMD5_REG_VALUE">
+        <Hex dnOrder="38" id="PMD5_REG_VALUE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="4026531839"/>
           </Values>
         </Hex>
-        <Hex dnOrder="35" id="PMD6_REG_VALUE">
+        <Hex dnOrder="39" id="PMD6_REG_VALUE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="4294963455"/>
           </Values>
         </Hex>
-        <Hex dnOrder="36" id="PMD7_REG_VALUE">
+        <Hex dnOrder="40" id="PMD7_REG_VALUE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="4294967279"/>
           </Values>
         </Hex>
-        <Hex dnOrder="37" id="SYS_PORT_A_TRIS">
+        <Hex dnOrder="41" id="SYS_PORT_A_LAT">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="1024"/>
           </Values>
         </Hex>
-        <KeyValueSet dnOrder="38" id="clkSvcMode">
+        <Hex dnOrder="42" id="SYS_PORT_A_TRIS">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core" value="1024"/>
+          </Values>
+        </Hex>
+        <KeyValueSet dnOrder="43" id="clkSvcMode">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="0"/>
           </Values>

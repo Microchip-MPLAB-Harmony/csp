@@ -119,7 +119,7 @@
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories"
-                  value="../src;../src/config/pic32mk_mcj_curiosity_pro;../src/packs/PIC32MK0512MCJ064_DFP;../src/mips"/>
+                  value="../src;../src/config/pic32mk_mcj_curiosity_pro;../src/packs/PIC32MK0512MCJ064_DFP;;../src/mips"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
@@ -415,7 +415,7 @@
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="1d000000-1d07ffff"/>
         <property key="programmerToGoFilePath"
-                  value="D:/h3/csp/apps/clock/clock_config/firmware/pic32mk_mcj_curiosity_pro.X/debug/pic32mk_mcj_curiosity_pro/pic32mk_mcj_curiosity_pro_ptg"/>
+                  value="E:/H3/csp/apps/clock/clock_config/firmware/pic32mk_mcj_curiosity_pro.X/debug/pic32mk_mcj_curiosity_pro/pic32mk_mcj_curiosity_pro_ptg"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.pgmentry.voltage" value="low"/>

@@ -62,13 +62,13 @@
 // *****************************************************************************
 
 /*** Macros for USER_SWITCH pin ***/
-#define USER_SWITCH_Set()               (LATESET = (1<<13))
-#define USER_SWITCH_Clear()             (LATECLR = (1<<13))
-#define USER_SWITCH_Toggle()            (LATEINV= (1<<13))
-#define USER_SWITCH_Get()               ((PORTE >> 13) & 0x1)
-#define USER_SWITCH_OutputEnable()      (TRISECLR = (1<<13))
-#define USER_SWITCH_InputEnable()       (TRISESET = (1<<13))
-#define USER_SWITCH_PIN                  GPIO_PIN_RE13
+#define USER_SWITCH_Set()               (LATBSET = (1<<8))
+#define USER_SWITCH_Clear()             (LATBCLR = (1<<8))
+#define USER_SWITCH_Toggle()            (LATBINV= (1<<8))
+#define USER_SWITCH_Get()               ((PORTB >> 8) & 0x1)
+#define USER_SWITCH_OutputEnable()      (TRISBCLR = (1<<8))
+#define USER_SWITCH_InputEnable()       (TRISBSET = (1<<8))
+#define USER_SWITCH_PIN                  GPIO_PIN_RB8
 /*** Macros for LED pin ***/
 #define LED_Set()               (LATASET = (1<<10))
 #define LED_Clear()             (LATACLR = (1<<10))

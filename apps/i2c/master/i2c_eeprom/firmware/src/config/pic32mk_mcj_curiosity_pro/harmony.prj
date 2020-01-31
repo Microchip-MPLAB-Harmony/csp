@@ -19,8 +19,8 @@
           <Name dnOrder="1">initialization.c</Name>
           <LogicalPath dnOrder="2">config/pic32mk_mcj_curiosity_pro/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">6877F1E686CB466C843ED2FCCA80930B</GeneratedChecksum>
-          <UserChecksum dnOrder="5">6877F1E686CB466C843ED2FCCA80930B</UserChecksum>
+          <GeneratedChecksum dnOrder="4">7C1FD07DF94F598C3BCDC96CA0C74545</GeneratedChecksum>
+          <UserChecksum dnOrder="5">7C1FD07DF94F598C3BCDC96CA0C74545</UserChecksum>
         </File>
         <File dnOrder="2">
           <Type dnOrder="0">SOURCE</Type>
@@ -156,7 +156,7 @@
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
       <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
-      <Setting dnOrder="5" key="PackageFilter" value="bootloader;bsp;core;csp;"/>
+      <Setting dnOrder="5" key="PackageFilter" value="aws_cloud;bootloader;bsp;core;csp;ethercat;expresslogic_threadx;gfx;micrium_ucos3;net;touch;wireless;"/>
     </Settings>
   </Configurator>
 </Configuration>

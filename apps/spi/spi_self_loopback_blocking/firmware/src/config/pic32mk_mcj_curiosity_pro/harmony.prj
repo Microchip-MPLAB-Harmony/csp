@@ -19,8 +19,8 @@
           <Name dnOrder="1">initialization.c</Name>
           <LogicalPath dnOrder="2">config/pic32mk_mcj_curiosity_pro/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">5793A5BFCC93A41F94C7D87C84CCD9B4</GeneratedChecksum>
-          <UserChecksum dnOrder="5">5793A5BFCC93A41F94C7D87C84CCD9B4</UserChecksum>
+          <GeneratedChecksum dnOrder="4">9FA643882C1F5A3B1E3CA19DF05786E7</GeneratedChecksum>
+          <UserChecksum dnOrder="5">9FA643882C1F5A3B1E3CA19DF05786E7</UserChecksum>
         </File>
         <File dnOrder="2">
           <Type dnOrder="0">SOURCE</Type>
@@ -43,8 +43,8 @@
           <Name dnOrder="1">plib_clk.c</Name>
           <LogicalPath dnOrder="2">config/pic32mk_mcj_curiosity_pro/peripheral/clk/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/clk/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">0E8B7AFD9B6B2D6F6F6ACDC398B442A8</GeneratedChecksum>
-          <UserChecksum dnOrder="5">0E8B7AFD9B6B2D6F6F6ACDC398B442A8</UserChecksum>
+          <GeneratedChecksum dnOrder="4">8B97CB057D166888A9F00A9C33DC3767</GeneratedChecksum>
+          <UserChecksum dnOrder="5">8B97CB057D166888A9F00A9C33DC3767</UserChecksum>
         </File>
         <File dnOrder="5">
           <Type dnOrder="0">SOURCE</Type>
@@ -59,16 +59,16 @@
           <Name dnOrder="1">plib_gpio.c</Name>
           <LogicalPath dnOrder="2">config/pic32mk_mcj_curiosity_pro/peripheral/gpio/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/gpio/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">91A3138E7C864F50829F4C246C30DD80</GeneratedChecksum>
-          <UserChecksum dnOrder="5">91A3138E7C864F50829F4C246C30DD80</UserChecksum>
+          <GeneratedChecksum dnOrder="4">E7ACDB217C97BCF7D0889FC5A2DDC428</GeneratedChecksum>
+          <UserChecksum dnOrder="5">E7ACDB217C97BCF7D0889FC5A2DDC428</UserChecksum>
         </File>
         <File dnOrder="7">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_spi2.c</Name>
           <LogicalPath dnOrder="2">config/pic32mk_mcj_curiosity_pro/peripheral/spi/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/spi/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">D1BE430B1BE2EA69433D388ECE6D5E90</GeneratedChecksum>
-          <UserChecksum dnOrder="5">D1BE430B1BE2EA69433D388ECE6D5E90</UserChecksum>
+          <GeneratedChecksum dnOrder="4">19C5A7C3A02D4CA823F8DCE0B16C3D17</GeneratedChecksum>
+          <UserChecksum dnOrder="5">19C5A7C3A02D4CA823F8DCE0B16C3D17</UserChecksum>
         </File>
         <File dnOrder="8">
           <Type dnOrder="0">SOURCE</Type>
@@ -139,15 +139,15 @@
           <Name dnOrder="1">toolchain_specifics.h</Name>
           <LogicalPath dnOrder="2">config/pic32mk_mcj_curiosity_pro/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">5F0B87C955FBF569CBD67F4861B6B7AD</GeneratedChecksum>
-          <UserChecksum dnOrder="5">5F0B87C955FBF569CBD67F4861B6B7AD</UserChecksum>
+          <GeneratedChecksum dnOrder="4">9A7344615980CB9443B6436E41E2155A</GeneratedChecksum>
+          <UserChecksum dnOrder="5">9A7344615980CB9443B6436E41E2155A</UserChecksum>
         </File>
       </Files>
       <Settings dnOrder="1">
         <Setting append="true" category="C32" delimiter=";" dnOrder="0" key="extra-include-directories" value="../src;../src/config/pic32mk_mcj_curiosity_pro;../src/packs/PIC32MK0512MCJ064_DFP;;../src/mips"/>
         <Setting category="C32-LD" dnOrder="1" key="heap-size" value="512"/>
         <Setting category="C32-LD" dnOrder="2" key="no-device-startup-code" value="true"/>
-        <Setting category="C32-LD" dnOrder="3" key="preprocessor-macros" value=""/>
+        <Setting append="true" category="C32-LD" delimiter=";" dnOrder="3" key="preprocessor-macros" value=""/>
       </Settings>
     </Manifest>
     <Settings dnOrder="4">
@@ -156,7 +156,7 @@
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
       <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
-      <Setting dnOrder="5" key="PackageFilter" value="bootloader;bsp;core;csp;"/>
+      <Setting dnOrder="5" key="PackageFilter" value="aws_cloud;bootloader;bsp;core;csp;ethercat;expresslogic_threadx;gfx;micrium_ucos3;net;touch;wireless;"/>
     </Settings>
   </Configurator>
 </Configuration>
