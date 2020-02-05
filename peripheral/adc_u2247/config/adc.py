@@ -30,10 +30,38 @@ global adcInstanceName
 adcSym_SEQCTRL_SEQ = []
 global multiVectorSupport
 multiVectorSupport = False
+global ADCfilesArray
+global InterruptVectorSecurity
+ADCfilesArray = []
 ###################################################################################################
 ########################################## Callbacks  #############################################
 ###################################################################################################
 
+def fileUpdate(symbol, event):
+    global ADCfilesArray
+    global InterruptVectorSecurity
+    if event["value"] == False:
+        ADCfilesArray[0].setSecurity("SECURE")
+        ADCfilesArray[1].setSecurity("SECURE")
+        ADCfilesArray[2].setSecurity("SECURE")
+        ADCfilesArray[3].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        ADCfilesArray[4].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+        if len(InterruptVectorSecurity) != 1:
+            for vector in InterruptVectorSecurity:
+                Database.setSymbolValue("core", vector, False)
+        else:
+            Database.setSymbolValue("core", InterruptVectorSecurity, False)
+    else:
+        ADCfilesArray[0].setSecurity("NON_SECURE")
+        ADCfilesArray[1].setSecurity("NON_SECURE")
+        ADCfilesArray[2].setSecurity("NON_SECURE")
+        ADCfilesArray[3].setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        ADCfilesArray[4].setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+        if len(InterruptVectorSecurity) != 1:
+            for vector in InterruptVectorSecurity:
+                Database.setSymbolValue("core", vector, True)
+        else:
+            Database.setSymbolValue("core", InterruptVectorSecurity, True)
 
 def updateADCInterruptStatus(symbol, event):
     global multiVectorSupport
@@ -204,6 +232,7 @@ def instantiateComponent(adcComponent):
     global InterruptVectorUpdate
     global adcInstanceName
     global multiVectorSupport
+    global InterruptVectorSecurity
 
     adcInstanceName = adcComponent.createStringSymbol("ADC_INSTANCE_NAME", None)
     adcInstanceName.setVisible(False)
@@ -585,6 +614,7 @@ def instantiateComponent(adcComponent):
         InterruptHandler = []
         InterruptHandlerLock = []
         InterruptVectorUpdate = []
+        InterruptVectorSecurity = []
         multiVectorSupport = adcComponent.createBooleanSymbol("MULTI_VECTOR_SUPPORT", None)
         multiVectorSupport.setVisible(False)
 
@@ -599,6 +629,7 @@ def instantiateComponent(adcComponent):
                 InterruptHandlerLock.append(name + "_INTERRUPT_HANDLER_LOCK")
                 InterruptVectorUpdate.append(
                     "core." + name + "_INTERRUPT_ENABLE_UPDATE")
+                InterruptVectorSecurity.append(name + "_SET_NON_SECURE")
         adcSym_IntLines = adcComponent.createIntegerSymbol("ADC_NUM_INT_LINES", None)
         adcSym_IntLines.setVisible(False)
         adcSym_IntLines.setDefaultValue((len(InterruptVector) - 1))
@@ -622,7 +653,7 @@ def instantiateComponent(adcComponent):
         InterruptHandler = adcInstanceName.getValue() + "_INTERRUPT_HANDLER"
         InterruptHandlerLock = adcInstanceName.getValue()+ "_INTERRUPT_HANDLER_LOCK"
         InterruptVectorUpdate = adcInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
-
+        InterruptVectorSecurity = adcInstanceName.getValue() + "_SET_NON_SECURE"
         # Interrupt Dynamic settings
         adcSym_UpdateInterruptStatus = adcComponent.createBooleanSymbol("ADC_INTERRUPT_STATUS", None)
         adcSym_UpdateInterruptStatus.setDependencies(updateADCInterruptStatus, ["ADC_INTENSET_RESRDY", "ADC_INTENSET_WINMON"])
@@ -649,6 +680,15 @@ def instantiateComponent(adcComponent):
     adcModuleNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]")
     adcModuleID = adcModuleNode.getAttribute("id")
 
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        global ADCfilesArray
+        adcIsNonSecure = Database.getSymbolValue("core", adcComponent.getID().upper() + "_IS_NON_SECURE")
+        if len(InterruptVectorSecurity) != 1:
+            for vector in InterruptVectorSecurity:
+                Database.setSymbolValue("core", vector, adcIsNonSecure)
+        else:
+            Database.setSymbolValue("core", InterruptVectorSecurity, adcIsNonSecure)
+
     adcSym_CommonHeaderFile = adcComponent.createFileSymbol("ADC_COMMON_HEADER", None)
     adcSym_CommonHeaderFile.setSourcePath("../peripheral/adc_u2247/templates/plib_adc_common.h.ftl")
     adcSym_CommonHeaderFile.setOutputName("plib_adc_common.h")
@@ -656,6 +696,10 @@ def instantiateComponent(adcComponent):
     adcSym_CommonHeaderFile.setProjectPath("config/" + configName + "/peripheral/adc/")
     adcSym_CommonHeaderFile.setType("HEADER")
     adcSym_CommonHeaderFile.setMarkup(True)
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        ADCfilesArray.append(adcSym_CommonHeaderFile)
+        if adcIsNonSecure == False:
+            adcSym_CommonHeaderFile.setSecurity("SECURE")
 
     adcSym_HeaderFile = adcComponent.createFileSymbol("ADC_HEADER", None)
     adcSym_HeaderFile.setSourcePath("../peripheral/adc_u2247/templates/plib_adc.h.ftl")
@@ -664,6 +708,10 @@ def instantiateComponent(adcComponent):
     adcSym_HeaderFile.setProjectPath("config/" + configName + "/peripheral/adc/")
     adcSym_HeaderFile.setType("HEADER")
     adcSym_HeaderFile.setMarkup(True)
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        ADCfilesArray.append(adcSym_HeaderFile)
+        if adcIsNonSecure == False:
+            adcSym_HeaderFile.setSecurity("SECURE")
 
     adcSym_SourceFile = adcComponent.createFileSymbol("ADC_SOURCE", None)
     adcSym_SourceFile.setSourcePath("../peripheral/adc_u2247/templates/plib_adc.c.ftl")
@@ -672,18 +720,31 @@ def instantiateComponent(adcComponent):
     adcSym_SourceFile.setProjectPath("config/" + configName + "/peripheral/adc/")
     adcSym_SourceFile.setType("SOURCE")
     adcSym_SourceFile.setMarkup(True)
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        ADCfilesArray.append(adcSym_SourceFile)
+        if adcIsNonSecure == False:
+            adcSym_SourceFile.setSecurity("SECURE")
 
     adcSym_SystemInitFile = adcComponent.createFileSymbol("ADC_SYS_INIT", None)
     adcSym_SystemInitFile.setType("STRING")
     adcSym_SystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
     adcSym_SystemInitFile.setSourcePath("../peripheral/adc_u2247/templates/system/initialization.c.ftl")
     adcSym_SystemInitFile.setMarkup(True)
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        ADCfilesArray.append(adcSym_SystemInitFile)
+        if adcIsNonSecure == False:
+            adcSym_SystemInitFile.setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
 
     adcSym_SystemDefFile = adcComponent.createFileSymbol("ADC_SYS_DEF", None)
     adcSym_SystemDefFile.setType("STRING")
     adcSym_SystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     adcSym_SystemDefFile.setSourcePath("../peripheral/adc_u2247/templates/system/definitions.h.ftl")
     adcSym_SystemDefFile.setMarkup(True)
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        ADCfilesArray.append(adcSym_SystemDefFile)
+        adcSym_SystemDefFile.setDependencies(fileUpdate, ["core." + adcComponent.getID().upper() + "_IS_NON_SECURE"])
+        if adcIsNonSecure == False:
+            adcSym_SystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
 
     # load ADC manager
     adcComponent.addPlugin("../peripheral/adc_u2247/plugin/adc_u2247.jar")
