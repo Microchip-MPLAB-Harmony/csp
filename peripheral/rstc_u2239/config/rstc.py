@@ -25,6 +25,29 @@
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
+global rstcWakeupNum
+
+global RSTCfilesArray
+RSTCfilesArray = []
+
+def fileUpdate(symbol, event):
+    global RSTCfilesArray
+    global rstcWakeupNum
+    if event["value"] == False:
+        RSTCfilesArray[0].setSecurity("SECURE")
+        RSTCfilesArray[1].setSecurity("SECURE")
+        RSTCfilesArray[2].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+        if rstcWakeupNum != None:
+            RSTCfilesArray[3].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+
+    else:
+        RSTCfilesArray[0].setSecurity("NON_SECURE")
+        RSTCfilesArray[1].setSecurity("NON_SECURE")
+        RSTCfilesArray[2].setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+        if rstcWakeupNum != None:
+            RSTCfilesArray[3].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+
+
 def wakeupEnableCalculate(symbol, event):
     wakeupId = int(event["id"].split("_")[1])
     if event["value"]:
@@ -40,6 +63,7 @@ def wakeupPolarityCalculate(symbol, event):
         symbol.setValue((symbol.getValue() & ~(1 << wakeupId)), 2)
 
 def instantiateComponent(rstcComponent):
+    global rstcWakeupNum
     rstcWakeupNum = None
     rstcInstanceName = rstcComponent.createStringSymbol("RSTC_INSTANCE_NAME", None)
     rstcInstanceName.setVisible(False)
@@ -167,3 +191,18 @@ def instantiateComponent(rstcComponent):
         RSTCSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
         RSTCSystemInitFile.setSourcePath("../peripheral/rstc_u2239/templates/system/initialization.c.ftl")
         RSTCSystemInitFile.setMarkup(True)
+
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        global RSTCfilesArray
+        rstcIsNonSecure = Database.getSymbolValue("core", rstcComponent.getID().upper() + "_IS_NON_SECURE")
+        rstcSym_SystemDefFile.setDependencies(fileUpdate, ["core." + rstcComponent.getID().upper() + "_IS_NON_SECURE"])
+        RSTCfilesArray.append(rstcSym_HeaderFile)
+        RSTCfilesArray.append(rstcSym_SourceFile)
+        RSTCfilesArray.append(rstcSym_SystemDefFile)
+        if rstcIsNonSecure == False:
+            RSTCfilesArray[0].setSecurity("SECURE")
+            RSTCfilesArray[1].setSecurity("SECURE")
+            RSTCfilesArray[2].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+            if rstcWakeupNum != None:
+                RSTCfilesArray.append(RSTCSystemInitFile)
+                RSTCfilesArray[3].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
