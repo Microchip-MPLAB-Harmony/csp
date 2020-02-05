@@ -56,12 +56,12 @@
 // *****************************************************************************
 // *****************************************************************************
 
-<#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
+
 <#if INTERRUPT_ACTIVE>
 <#list 0..NUM_SYNC_CHANNELS as i>
 	<#assign EVSYS_NONSEC = "EVSYS_NONSEC_" + i >
 	<#if .vars[EVSYS_NONSEC]?has_content>
-	<#if .vars[EVSYS_NONSEC] == "SECURE">
+	<#if .vars[EVSYS_NONSEC] == "NON-SECURE">
 	<#lt>typedef enum
 	<#lt>{
 	<#lt>	EVSYS_INT_EVD = EVSYS_CHINTENSET_EVD_Msk,
@@ -71,10 +71,10 @@
 
     <#lt>typedef enum
     <#lt>{<#list 0..NUM_SYNC_CHANNELS as i>
-    <#assign EVSYS_NONSEC = "EVSYS_NONSEC_" + i >
-    <#if .vars[EVSYS_NONSEC] == "SECURE">
-    <#lt>	EVSYS_CHANNEL_${i} = ${i},
-    </#if></#list>
+        <#assign EVSYS_NONSEC = "EVSYS_NONSEC_" + i >
+    <#if .vars[EVSYS_NONSEC] == "NON-SECURE">
+    <#lt>	EVSYS_CHANNEL_${i} = ${i},</#if></#list>
+
     <#lt>} EVSYS_CHANNEL;
 
 	<#lt>typedef void (*EVSYS_CALLBACK)(uint32_t int_cause, uintptr_t context);
@@ -89,38 +89,13 @@
 	</#if>
 </#list>
 </#if>
-<#else>
-<#if INTERRUPT_ACTIVE>
-	<#lt>typedef enum
-	<#lt>{
-	<#lt>	EVSYS_INT_EVD = EVSYS_CHINTENSET_EVD_Msk,
-	<#lt>	EVSYS_INT_OVERRUN = EVSYS_CHINTENSET_OVR_Msk,
 
-	<#lt>} EVSYS_INT_MASK;
-
-    <#lt>typedef enum
-    <#lt>{<#list 0..NUM_SYNC_CHANNELS as i>
-    <#lt>	EVSYS_CHANNEL_${i} = ${i},</#list>
-
-    <#lt>} EVSYS_CHANNEL;
-
-	<#lt>typedef void (*EVSYS_CALLBACK)(uint32_t int_cause, uintptr_t context);
-
-	<#lt>typedef struct
-	<#lt>{
-	<#lt>	EVSYS_CALLBACK          callback;
-	<#lt>	uintptr_t               context;
-	<#lt>} EVSYS_OBJECT ;
-</#if>
-</#if>
 /***************************** EVSYS API *******************************/
-void ${EVSYS_INSTANCE_NAME}_Initialize( void );
-<#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
 <#if INTERRUPT_ACTIVE>
 <#list 0..NUM_SYNC_CHANNELS as i>
 	<#assign EVSYS_NONSEC = "EVSYS_NONSEC_" + i >
 	<#if .vars[EVSYS_NONSEC]?has_content>
-	<#if .vars[EVSYS_NONSEC] == "SECURE">
+	<#if .vars[EVSYS_NONSEC] == "NON-SECURE">
 	<#lt>void ${EVSYS_INSTANCE_NAME}_CallbackRegister(EVSYS_CHANNEL channel, EVSYS_CALLBACK callback, uintptr_t context );
 	<#lt>void ${EVSYS_INSTANCE_NAME}_InterruptDisable(EVSYS_CHANNEL channel, EVSYS_INT_MASK interrupt);
 	<#lt>void ${EVSYS_INSTANCE_NAME}_InterruptEnable(EVSYS_CHANNEL channel, EVSYS_INT_MASK interrupt);
@@ -129,13 +104,7 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void );
 	</#if>
 </#list>
 </#if>
-<#else>
-<#if INTERRUPT_ACTIVE>
-	<#lt>void ${EVSYS_INSTANCE_NAME}_CallbackRegister(EVSYS_CHANNEL channel, EVSYS_CALLBACK callback, uintptr_t context );
-	<#lt>void ${EVSYS_INSTANCE_NAME}_InterruptDisable(EVSYS_CHANNEL channel, EVSYS_INT_MASK interrupt);
-	<#lt>void ${EVSYS_INSTANCE_NAME}_InterruptEnable(EVSYS_CHANNEL channel, EVSYS_INT_MASK interrupt);
-</#if>
-</#if>
+
 #ifdef __cplusplus // Provide C++ Compatibility
  }
 #endif

@@ -35,6 +35,11 @@ global InterruptVector
 global InterruptHandler
 global InterruptHandlerLock
 
+global EVSYSfilesArray
+global InterruptVectorSecurity
+InterruptVectorSecurity = []
+EVSYSfilesArray = []
+
 channel = 0
 path = {}
 user = {}
@@ -134,6 +139,42 @@ def updateEVSYSInterruptWarringStatus(symbol, event):
     if evsysInterrupt.getValue() == True:
         symbol.setVisible(event["value"])
 
+def evsysNonSecCalculation(symbol, event):
+    global numsyncChannels
+    nonSecure = False
+    channel = int(event["id"].split("_")[2])
+    if Database.getSymbolValue(event["namespace"], "EVSYS_CHANNEL_" + str(channel)):
+        if not str(event["id"]).startswith("EVSYS_CHANNEL_"):
+            if(event["value"] == True):
+                symbol.setValue((symbol.getValue() | (0x1 << channel)))
+                nonSecure = True
+            else:
+                symbol.setValue((symbol.getValue() & (~(0x1 << channel))))
+                nonSecure = False
+        else:
+            if(Database.getSymbolValue(event["namespace"], "EIC_NONSEC_" + str(channel)) == True):
+                symbol.setValue((symbol.getValue() | (0x1 << channel)))
+                nonSecure = True
+            else:
+                symbol.setValue((symbol.getValue() & (~(0x1 << channel))))
+                nonSecure = False
+    else:
+        symbol.setValue((symbol.getValue() & (~(0x1 << channel))))
+        nonSecure = False
+
+    if channel < numsyncChannels:
+        Database.setSymbolValue("core", InterruptVectorSecurity[channel], nonSecure)
+
+def fileGenLogic(symbol, event):
+    global EVSYSfilesArray
+    if int(Database.getSymbolValue(event["namespace"], "EVSYS_NONSEC")) > 0 and Database.getSymbolValue(event["namespace"], "INTERRUPT_ACTIVE"):
+        EVSYSfilesArray[0].setEnabled(True)
+        EVSYSfilesArray[1].setEnabled(True)
+        EVSYSfilesArray[2].setEnabled(True)
+    else:
+        EVSYSfilesArray[0].setEnabled(False)
+        EVSYSfilesArray[1].setEnabled(False)
+        EVSYSfilesArray[2].setEnabled(False)
 
 def instantiateComponent(evsysComponent):
     global evsysInstanceName
@@ -150,7 +191,7 @@ def instantiateComponent(evsysComponent):
     global channel
     global channelUserMap
     channelUserMap={}
-
+    evsysnonSecList = []
     global evsysGenerator
     evsysGenerator=[]
     channelUserDependency=[]
@@ -251,6 +292,20 @@ def instantiateComponent(evsysComponent):
         evsysChannelMenu.setDependencies(
             channelMenu, ["EVSYS_CHANNEL_" + str(id)])
 
+        if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":        
+            evsysSecurity = evsysComponent.createKeyValueSetSymbol("EVSYS_NONSEC_" + str(id), evsysChannelMenu)
+            evsysSecurity.setLabel("Security mode")
+            evsysSecurity.addKey("SECURE", "0", "False")
+            evsysSecurity.addKey("NON-SECURE", "1", "True")
+            evsysSecurity.setOutputMode("Key")
+            evsysSecurity.setDisplayMode("Key")
+            evsysSecurity.setVisible(True)
+            evsysSecurity.setDefaultValue(0)
+            evsysnonSecList.append("EVSYS_NONSEC_" + str(id))
+            evsysnonSecList.append("EVSYS_CHANNEL_" + str(id))
+
+
+
         evsysGenerator.append(id)
         evsysGenerator[id]=evsysComponent.createKeyValueSetSymbol(
             "EVSYS_CHANNEL_" + str(id) + "_GENERATOR", evsysChannelMenu)
@@ -337,6 +392,12 @@ def instantiateComponent(evsysComponent):
         "EVSYS_USER_MENU", evsysSym_Menu)
     evsysUserMenu.setLabel("EVSYS User SETTINGS ")
 
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        nonSecReg = evsysComponent.createHexSymbol("EVSYS_NONSEC" , None)
+        nonSecReg.setDefaultValue(0)
+        nonSecReg.setVisible(False)
+        nonSecReg.setDependencies(evsysNonSecCalculation, evsysnonSecList) 
+
     for id in user.keys():
         evsysUserChannel=evsysComponent.createKeyValueSetSymbol(
             "EVSYS_USER_" + str(id), evsysUserMenu)
@@ -361,6 +422,7 @@ def instantiateComponent(evsysComponent):
             InterruptHandlerLock.append(name + "_INTERRUPT_HANDLER_LOCK")
             InterruptVectorUpdate.append(
                 "core." + name + "_INTERRUPT_ENABLE_UPDATE")
+            InterruptVectorSecurity.append(name + "_SET_NON_SECURE")
 
     # Interrupt Warning status
     evsysSym_IntEnComment=evsysComponent.createCommentSymbol(
@@ -426,3 +488,40 @@ def instantiateComponent(evsysComponent):
 
     evsysComponent.addPlugin(
         "../peripheral/evsys_u2504/plugin/eventsystem.jar")
+
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        nonSecevsysSym_HeaderFile=evsysComponent.createFileSymbol("EVSYS_HEADER_NON_SEC", None)
+        nonSecevsysSym_HeaderFile.setSourcePath("../peripheral/evsys_u2504/templates/trustZone/plib_evsys.h.ftl")
+        nonSecevsysSym_HeaderFile.setOutputName("plib_" + evsysInstanceName.getValue().lower() + ".h")
+        nonSecevsysSym_HeaderFile.setDestPath("peripheral/evsys")
+        nonSecevsysSym_HeaderFile.setProjectPath("config/" + configName + "/peripheral/evsys")
+        nonSecevsysSym_HeaderFile.setType("HEADER")
+        nonSecevsysSym_HeaderFile.setMarkup(True)
+        nonSecevsysSym_HeaderFile.setEnabled(False)
+
+        nonSecevsysSym_SourceFile=evsysComponent.createFileSymbol("EVSYS_SOURCE_NON_SEC", None)
+        nonSecevsysSym_SourceFile.setSourcePath("../peripheral/evsys_u2504/templates/trustZone/plib_evsys.c.ftl")
+        nonSecevsysSym_SourceFile.setOutputName("plib_" + evsysInstanceName.getValue().lower() + ".c")
+        nonSecevsysSym_SourceFile.setDestPath("peripheral/evsys")
+        nonSecevsysSym_SourceFile.setProjectPath("config/" + configName + "/peripheral/evsys")
+        nonSecevsysSym_SourceFile.setType("SOURCE")
+        nonSecevsysSym_SourceFile.setMarkup(True)
+        nonSecevsysSym_SourceFile.setEnabled(False)
+
+        nonSecevsysSystemDefFile=evsysComponent.createFileSymbol("EVSYS_SYS_DEF_NON_SEC", None)
+        nonSecevsysSystemDefFile.setType("STRING")
+        nonSecevsysSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+        nonSecevsysSystemDefFile.setSourcePath("../peripheral/evsys_u2504/templates/system/definitions.h.ftl")
+        nonSecevsysSystemDefFile.setMarkup(True)
+        nonSecevsysSystemDefFile.setEnabled(False)
+        nonSecevsysSystemDefFile.setDependencies(fileGenLogic, ["EVSYS_NONSEC", "INTERRUPT_ACTIVE"])
+
+        EVSYSfilesArray.append(nonSecevsysSym_HeaderFile)
+        EVSYSfilesArray.append(nonSecevsysSym_SourceFile)
+        EVSYSfilesArray.append(nonSecevsysSystemDefFile)
+
+
+        evsysSym_HeaderFile.setSecurity("SECURE")
+        evsysSym_SourceFile.setSecurity("SECURE")
+        evsysSystemInitFile.setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        evsysSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")

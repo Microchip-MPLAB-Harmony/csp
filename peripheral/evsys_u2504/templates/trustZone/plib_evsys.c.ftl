@@ -1,0 +1,123 @@
+/*******************************************************************************
+  EVSYS Peripheral Library
+
+  Company:
+    Microchip Technology Inc.
+
+  File Name:
+    plib_${EVSYS_INSTANCE_NAME?lower_case}.c
+
+  Summary:
+    EVSYS Source File
+
+  Description:
+    None
+
+*******************************************************************************/
+
+/*******************************************************************************
+* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+*
+* Subject to your compliance with these terms, you may use Microchip software
+* and any derivatives exclusively with Microchip products. It is your
+* responsibility to comply with third party license terms applicable to your
+* use of third party software (including open source software) that may
+* accompany Microchip software.
+*
+* THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER
+* EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED
+* WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A
+* PARTICULAR PURPOSE.
+*
+* IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE,
+* INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND
+* WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS
+* BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE
+* FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
+* ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
+* THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
+*******************************************************************************/
+
+#include "plib_${EVSYS_INSTANCE_NAME?lower_case}.h"
+
+
+<#assign EVSYS_REG_NAME = EVSYS_INSTANCE_NAME>
+
+
+<#if INTERRUPT_ACTIVE>
+<#list 0..NUM_SYNC_CHANNELS as i>
+	<#assign EVSYS_NONSEC = "EVSYS_NONSEC_" + i >
+	<#if .vars[EVSYS_NONSEC]?has_content>
+	<#if .vars[EVSYS_NONSEC] == "NON-SECURE">
+	<#lt>EVSYS_OBJECT evsys[${NUM_SYNC_CHANNELS}];
+	<#break>
+	</#if>
+	</#if>
+</#list>
+</#if>
+
+<#if INTERRUPT_ACTIVE>
+<#list 0..NUM_SYNC_CHANNELS as i>
+	<#assign EVSYS_NONSEC = "EVSYS_NONSEC_" + i >
+	<#if .vars[EVSYS_NONSEC]?has_content>
+	<#if .vars[EVSYS_NONSEC] == "NON-SECURE">
+
+	<#lt>void ${EVSYS_INSTANCE_NAME}_InterruptEnable(EVSYS_CHANNEL channel, EVSYS_INT_MASK interrupt)
+	<#lt>{
+	<#lt>	${EVSYS_REG_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTENSET = interrupt;
+	<#lt>}
+
+	<#lt>void ${EVSYS_INSTANCE_NAME}_InterruptDisable(EVSYS_CHANNEL channel, EVSYS_INT_MASK interrupt)
+	<#lt>{
+	<#lt>	${EVSYS_REG_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTENCLR = interrupt;
+	<#lt>}
+
+	<#lt>void ${EVSYS_INSTANCE_NAME}_CallbackRegister(EVSYS_CHANNEL channel, EVSYS_CALLBACK callback, uintptr_t context )
+	<#lt>{
+	<#lt>	evsys[channel].callback = callback;
+	<#lt>	evsys[channel].context = context;
+	<#lt>}
+	<#break>
+	</#if>
+	</#if>
+</#list>
+</#if>
+<#list 0..NUM_SYNC_CHANNELS as x>
+<#assign INTERRUPT_MODE = "EVSYS_INTERRUPT_MODE" + x>
+<#if .vars[INTERRUPT_MODE]??>
+<#if .vars[INTERRUPT_MODE]>
+<#list 0..NUM_SYNC_CHANNELS as i>
+	<#assign EVSYS_NONSEC = "EVSYS_NONSEC_" + i >
+	<#if .vars[EVSYS_NONSEC]?has_content>
+	<#if .vars[EVSYS_NONSEC] == "NON-SECURE">
+	<#lt>void ${EVSYS_INSTANCE_NAME}_${x}_InterruptHandler( void )
+	<#lt>{
+	<#lt>	volatile uint32_t status = ${EVSYS_REG_NAME}_REGS->CHANNEL[${x}].EVSYS_CHINTFLAG;
+	<#lt>	${EVSYS_REG_NAME}_REGS->CHANNEL[${x}].EVSYS_CHINTFLAG = EVSYS_CHINTFLAG_Msk;
+	<#lt>	if(evsys[${x}].callback != NULL)
+    <#lt>   {
+    <#lt>   	evsys[${x}].callback(status, evsys[${x}].context);
+    <#lt>   }
+	<#lt>}
+	<#break>
+	</#if>
+	</#if>
+</#list>
+</#if>
+</#if>
+</#list>
+
+<#if EVSYS_INTERRUPT_MODE_OTHER??>
+<#if EVSYS_INTERRUPT_MODE_OTHER>
+void ${EVSYS_INSTANCE_NAME}_OTHER_InterruptHandler( void )
+{
+    uint8_t channel = ${EVSYS_REG_NAME}_REGS->EVSYS_INTPEND & EVSYS_INTPEND_ID_Msk;
+    volatile uint32_t status = ${EVSYS_REG_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTFLAG;
+    if(evsys[channel].callback != NULL)
+    {
+    	evsys[channel].callback(status, evsys[channel].context);
+    }
+    ${EVSYS_REG_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTFLAG = EVSYS_CHINTFLAG_Msk;
+}
+</#if>
+</#if>
