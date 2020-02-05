@@ -211,3 +211,9 @@ pacSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHER
 pacSystemInitFile.setSourcePath("../peripheral/pac_u2120/templates/system/initialization.c.ftl")
 pacSystemInitFile.setMarkup(True)
 pacSystemInitFile.setEnabled(False)
+
+if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+    pacSym_HeaderFile.setSecurity("SECURE")
+    pacSym_SourceFile.setSecurity("SECURE")
+    pacSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+    pacSystemInitFile.setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")

@@ -59,10 +59,10 @@
 // *****************************************************************************
 // *****************************************************************************
 
-<#if TRUSTZONE_SUPPORTED??>
+<#assign PAC_REG_NAME = PAC_INSTANCE_NAME>
+
+<#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
     <#assign PAC_REG_NAME = PAC_INSTANCE_NAME + "_SEC">
-<#else>
-    <#assign PAC_REG_NAME = PAC_INSTANCE_NAME>
 </#if>
 
 <#if PAC_INTERRRUPT_MODE = true>
