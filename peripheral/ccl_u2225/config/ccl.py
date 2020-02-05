@@ -27,6 +27,22 @@ global interruptHandler
 global interruptHandlerLock
 global symLutctrlEnableName
 global shiftDict
+global CCLfilesArray
+CCLfilesArray = []
+
+def fileUpdate(symbol, event):
+    global CCLfilesArray
+    if event["value"] == False:
+        CCLfilesArray[0].setSecurity("SECURE")
+        CCLfilesArray[1].setSecurity("SECURE")
+        CCLfilesArray[2].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        CCLfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+
+    else:
+        CCLfilesArray[0].setSecurity("NON_SECURE")
+        CCLfilesArray[1].setSecurity("NON_SECURE")
+        CCLfilesArray[2].setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        CCLfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
 
 
 def cclATDFRegisterGroupPath(ModuleName):
@@ -799,3 +815,16 @@ def instantiateComponent(cclComponent):
     cclSystemDefFile.setSourcePath("../peripheral/ccl_u2225/templates/system/definitions.h.ftl")
     cclSystemDefFile.setMarkup(True)
 
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        global CCLfilesArray
+        cclIsNonSecure = Database.getSymbolValue("core", cclComponent.getID().upper() + "_IS_NON_SECURE")
+        cclSystemDefFile.setDependencies(fileUpdate, ["core." + cclComponent.getID().upper() + "_IS_NON_SECURE"])
+        CCLfilesArray.append(cclMainSourceFile)
+        CCLfilesArray.append(cclInstHeaderFile)
+        CCLfilesArray.append(cclSystemInitFile)
+        CCLfilesArray.append(cclSystemDefFile)
+        if cclIsNonSecure == False:
+            CCLfilesArray[0].setSecurity("SECURE")
+            CCLfilesArray[1].setSecurity("SECURE")
+            CCLfilesArray[2].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+            CCLfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
