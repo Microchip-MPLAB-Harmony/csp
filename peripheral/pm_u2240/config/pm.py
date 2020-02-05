@@ -25,6 +25,30 @@
 ###################################################################################################
 ########################################## Callbacks  #############################################
 ###################################################################################################
+global PMfilesArray
+PMfilesArray = []
+
+def fileUpdate(symbol, event):
+    global PMfilesArray
+    if event["value"] == False:
+        PMfilesArray[0].setSecurity("SECURE")
+        PMfilesArray[1].setSecurity("SECURE")
+        PMfilesArray[2].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_START")
+        PMfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+        PMfilesArray[4].setEnabled(False)
+        PMfilesArray[5].setEnabled(False)
+        PMfilesArray[6].setEnabled(False)
+
+
+    else:
+        PMfilesArray[0].setSecurity("NON_SECURE")
+        PMfilesArray[1].setSecurity("NON_SECURE")
+        PMfilesArray[2].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_START")
+        PMfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+        PMfilesArray[4].setEnabled(True)
+        PMfilesArray[5].setEnabled(True)
+        PMfilesArray[6].setEnabled(True)
+
 
 def updatePMClockWarringStatus(symbol, event):
 
@@ -278,3 +302,49 @@ def instantiateComponent(pmComponent):
     pmSymSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     pmSymSystemDefFile.setSourcePath("../peripheral/pm_u2240/templates/system/definitions.h.ftl")
     pmSymSystemDefFile.setMarkup(True)
+
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        global PMfilesArray
+        pmIsNonSecure = Database.getSymbolValue("core", pmComponent.getID().upper() + "_IS_NON_SECURE")
+        pmSymSystemDefFile.setDependencies(fileUpdate, ["core." + pmComponent.getID().upper() + "_IS_NON_SECURE"])
+
+        secpmSym_HeaderFile = pmComponent.createFileSymbol("PM_HEADER_SECURE", None)
+        secpmSym_HeaderFile.setSourcePath("../peripheral/pm_u2240/templates/trustZone/plib_pm_secure.h.ftl")
+        secpmSym_HeaderFile.setOutputName("plib_" + pmInstanceName.getValue().lower() + ".h")
+        secpmSym_HeaderFile.setDestPath("/peripheral/pm/")
+        secpmSym_HeaderFile.setProjectPath("config/" + configName + "/peripheral/pm/")
+        secpmSym_HeaderFile.setType("HEADER")
+        secpmSym_HeaderFile.setMarkup(True)
+        secpmSym_HeaderFile.setSecurity("SECURE")
+        secpmSym_HeaderFile.setEnabled(pmIsNonSecure)
+
+        secpmSym_SourceFile = pmComponent.createFileSymbol("PM_SOURCE_SECURE", None)
+        secpmSym_SourceFile.setSourcePath("../peripheral/pm_u2240/templates/trustZone/plib_pm_secure.c.ftl")
+        secpmSym_SourceFile.setOutputName("plib_" + pmInstanceName.getValue().lower() + ".c")
+        secpmSym_SourceFile.setDestPath("/peripheral/pm/")
+        secpmSym_SourceFile.setProjectPath("config/" + configName + "/peripheral/pm/")
+        secpmSym_SourceFile.setType("SOURCE")
+        secpmSym_SourceFile.setMarkup(True)
+        secpmSym_SourceFile.setSecurity("SECURE")
+        secpmSym_SourceFile.setEnabled(pmIsNonSecure)
+
+        secpmSymSystemDefFile = pmComponent.createFileSymbol("PM_SYS_DEF_SECURE", None)
+        secpmSymSystemDefFile.setType("STRING")
+        secpmSymSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+        secpmSymSystemDefFile.setSourcePath("../peripheral/pm_u2240/templates/system/definitions.h.ftl")
+        secpmSymSystemDefFile.setMarkup(True)
+        secpmSymSystemDefFile.setEnabled(pmIsNonSecure)
+
+        pmSym_SystemInitFile.setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_START")
+
+        PMfilesArray.append(pmSym_HeaderFile)
+        PMfilesArray.append(pmSym_SourceFile)
+        PMfilesArray.append(pmSym_SystemInitFile)
+        PMfilesArray.append(pmSymSystemDefFile)
+        PMfilesArray.append(secpmSym_HeaderFile)
+        PMfilesArray.append(secpmSym_SourceFile)
+        PMfilesArray.append(secpmSymSystemDefFile)
+        if pmIsNonSecure == False:
+            PMfilesArray[0].setSecurity("SECURE")
+            PMfilesArray[1].setSecurity("SECURE")
+            PMfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")

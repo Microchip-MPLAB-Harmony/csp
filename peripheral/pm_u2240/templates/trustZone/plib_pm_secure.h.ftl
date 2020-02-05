@@ -72,37 +72,9 @@
 // Section: Interface Routines
 // *****************************************************************************
 // *****************************************************************************
-<#if __TRUSTZONE_ENABLED?? &&  __TRUSTZONE_ENABLED == "true" && core.PM_IS_NON_SECURE >
-<#else>
+
 void ${PM_INSTANCE_NAME}_Initialize( void );
-</#if>
-void ${PM_INSTANCE_NAME}_IdleModeEnter( void );
 
-void ${PM_INSTANCE_NAME}_StandbyModeEnter( void );
-
-<#if HAS_BACKUP_SLEEP??>
-void ${PM_INSTANCE_NAME}_BackupModeEnter( void );
-
-</#if>
-<#if HAS_OFF_SLEEP??>
-void ${PM_INSTANCE_NAME}_OffModeEnter( void );
-
-</#if>
-<#if HAS_IORET_BIT??>
-void ${PM_INSTANCE_NAME}_IO_RetentionSet( void );
-
-void ${PM_INSTANCE_NAME}_IO_RetentionClear( void );
-</#if>
-<#if HAS_PLCFG??>
-typedef enum
-{
-    PLCFG_PLSEL0 = PM_PLCFG_PLSEL_PL0,
-    PLCFG_PLSEL2 = PM_PLCFG_PLSEL_PL2
-}PLCFG_PLSEL;
-
-bool ${PM_INSTANCE_NAME}_ConfigurePerformanceLevel(PLCFG_PLSEL plsel);
-
-</#if>
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
