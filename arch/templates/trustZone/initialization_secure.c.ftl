@@ -43,11 +43,6 @@
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-<#if HarmonyCore??>
-    <#if HarmonyCore.ENABLE_APP_FILE == true >
-        <#lt>#include "configuration.h"
-    </#if>
-</#if>
 #include "definitions.h"
 #include "device.h"
 
@@ -58,45 +53,7 @@
 // Section: Configuration Bits
 // ****************************************************************************
 // ****************************************************************************
-<#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
-<#-- In case of TrustZone Fuse settings are set in secure mode -->
-<#else>
-${LIST_SYSTEM_INIT_C_CONFIG_BITS_INITIALIZATION}
-</#if>
-
-
-// *****************************************************************************
-// *****************************************************************************
-// Section: Driver Initialization Data
-// *****************************************************************************
-// *****************************************************************************
-${LIST_SYSTEM_INIT_C_DRIVER_INITIALIZATION_DATA}
-
-// *****************************************************************************
-// *****************************************************************************
-// Section: System Data
-// *****************************************************************************
-// *****************************************************************************
-<#if HarmonyCore??>
-    <#if HarmonyCore.ENABLE_APP_FILE == true >
-        <#lt>/* Structure to hold the object handles for the modules in the system. */
-        <#lt>SYSTEM_OBJECTS sysObj;
-    </#if>
-</#if>
-
-// *****************************************************************************
-// *****************************************************************************
-// Section: Library/Stack Initialization Data
-// *****************************************************************************
-// *****************************************************************************
-${LIST_SYSTEM_INIT_C_LIBRARY_INITIALIZATION_DATA}
-
-// *****************************************************************************
-// *****************************************************************************
-// Section: System Initialization
-// *****************************************************************************
-// *****************************************************************************
-${LIST_SYSTEM_INIT_C_SYSTEM_INITIALIZATION}
+${LIST_SYSTEM_SECURE_INIT_C_CONFIG_BITS_INITIALIZATION}
 
 
 /*******************************************************************************
@@ -111,20 +68,12 @@ ${LIST_SYSTEM_INIT_C_SYSTEM_INITIALIZATION}
 
 void SYS_Initialize ( void* data )
 {
-    <#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_START}  <#-- global disable of interrupts before initializing anything -->
-    <#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE}
-    <#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS1}
-    <#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE1}
-    <#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS}
-    <#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_DRIVERS}
-    <#lt>${LIST_SYSTEM_INIT_C_INITIALIZE_SYSTEM_SERVICES}
-    <#lt>${LIST_SYSTEM_INIT_C_INITIALIZE_MIDDLEWARE}
-    <#if HarmonyCore??>
-        <#lt><#if HarmonyCore.ENABLE_APP_FILE == true >
-                <#lt>${LIST_SYSTEM_INIT_C_APP_INITIALIZE_DATA}
-        <#lt></#if>
-    </#if>
-    <#lt>${LIST_SYSTEM_INIT_INTERRUPTS}
+    <#lt>${LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_START}  <#-- global disable of interrupts before initializing anything -->
+    <#lt>${LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_CORE}
+    <#lt>${LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS1}
+    <#lt>${LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_CORE1}
+    <#lt>${LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS}
+    <#lt>${LIST_SYSTEM_SECURE_INIT_INTERRUPTS}
 }
 
 
