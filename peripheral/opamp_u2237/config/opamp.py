@@ -23,16 +23,27 @@
 *****************************************************************************"""
 from math import ceil
 #########################################    Global Variables ----START       #########################################################
-global InterruptVector
-global InterruptHandler
-global InterruptHandlerLock
 global opampInstanceName
-
+global OPAMPfilesArray
+OPAMPfilesArray = []
 
 #######################################################################################################################################
 #####################################        Callback Funtions ----START      #########################################################
 #######################################################################################################################################
 
+def fileUpdate(symbol, event):
+    global OPAMPfilesArray
+    if event["value"] == False:
+        OPAMPfilesArray[0].setSecurity("SECURE")
+        OPAMPfilesArray[1].setSecurity("SECURE")
+        OPAMPfilesArray[2].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        OPAMPfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+
+    else:
+        OPAMPfilesArray[0].setSecurity("NON_SECURE")
+        OPAMPfilesArray[1].setSecurity("NON_SECURE")
+        OPAMPfilesArray[2].setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        OPAMPfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
 
 #Update Symbol Visibility
 def setOpampSymbolVisibility(MySymbol, event):
@@ -65,7 +76,6 @@ def updateOPAMPClockWarningStatus(MySymbol, event):
 #######################################################################################################################################
 
 def instantiateComponent(opampComponent):
-
     global opampInstanceName
     global opampSym_OPAMPCTRL_ENABLE
     opampSym_OPAMPCTRL_ENABLE = []
@@ -398,3 +408,16 @@ def instantiateComponent(opampComponent):
     opampSystemDefFile.setSourcePath("../peripheral/opamp_u2237/templates/system/definitions.h.ftl")
     opampSystemDefFile.setMarkup(True)
 
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        global OPAMPfilesArray
+        opampIsNonSecure = Database.getSymbolValue("core", opampComponent.getID().upper() + "_IS_NON_SECURE")
+        opampSystemDefFile.setDependencies(fileUpdate, ["core." + opampComponent.getID().upper() + "_IS_NON_SECURE"])
+        OPAMPfilesArray.append(opampHeader1File)
+        OPAMPfilesArray.append(opampSource1File)
+        OPAMPfilesArray.append(opampSystemInitFile)
+        OPAMPfilesArray.append(opampSystemDefFile)
+        if opampIsNonSecure == False:
+            OPAMPfilesArray[0].setSecurity("SECURE")
+            OPAMPfilesArray[1].setSecurity("SECURE")
+            OPAMPfilesArray[2].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+            OPAMPfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
