@@ -22,6 +22,22 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
 
+global TRAMfilesArray
+TRAMfilesArray = []
+
+def fileUpdate(symbol, event):
+    global TRAMfilesArray
+    if event["value"] == False:
+        TRAMfilesArray[0].setSecurity("SECURE")
+        TRAMfilesArray[1].setSecurity("SECURE")
+        TRAMfilesArray[2].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        TRAMfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+
+    else:
+        TRAMfilesArray[0].setSecurity("NON_SECURE")
+        TRAMfilesArray[1].setSecurity("NON_SECURE")
+        TRAMfilesArray[2].setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        TRAMfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
 
 def instantiateComponent(tramComponent):
     global tramInstanceName
@@ -79,3 +95,17 @@ def instantiateComponent(tramComponent):
     tramSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
     tramSystemInitFile.setSourcePath("../peripheral/tram_u2801/templates/system/initialization.c.ftl")
     tramSystemInitFile.setMarkup(True)
+
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        global TRAMfilesArray
+        tramIsNonSecure = Database.getSymbolValue("core", tramComponent.getID().upper() + "_IS_NON_SECURE")
+        tramSystemDefFile.setDependencies(fileUpdate, ["core." + tramComponent.getID().upper() + "_IS_NON_SECURE"])
+        TRAMfilesArray.append(tramHeaderFile)
+        TRAMfilesArray.append(tramSourceFile)
+        TRAMfilesArray.append(tramSystemInitFile)
+        TRAMfilesArray.append(tramSystemDefFile)
+        if tramIsNonSecure == False:
+            TRAMfilesArray[0].setSecurity("SECURE")
+            TRAMfilesArray[1].setSecurity("SECURE")
+            TRAMfilesArray[2].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+            TRAMfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
