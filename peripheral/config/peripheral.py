@@ -81,6 +81,11 @@ peripherals = {
                 "PDEC_U2263"    : ["QDEC", "HALL"]
 }
 
+# a dictionary to translate the new id mentioned in ATDF to old id used in csp
+peripheral_ID_map = {
+    "RTC_03608" : "RTC_U2250"
+}
+
 processor = Variables.get("__PROCESSOR")
 if("PIC32M" in processor):
     coreTimerComponent = Module.CreateComponent("core_timer", "CORE TIMER", "/Peripherals/CORE TIMER/", "../peripheral/coretimer/config/coretimer.py")
@@ -107,6 +112,9 @@ for module in range (0, len(modules)):
 
     periphName = str(modules[module].getAttribute("name"))
     periphID = str(modules[module].getAttribute("id"))
+    if (periphName + "_" + periphID) in peripheral_ID_map:
+        periphID = peripheral_ID_map[periphName + "_" + periphID].split("_")[1]
+
     periphScript = "/peripheral/" + periphName.lower() + "_" + periphID.lower() + \
                     "/config/" + periphName.lower() + ".py"
 
