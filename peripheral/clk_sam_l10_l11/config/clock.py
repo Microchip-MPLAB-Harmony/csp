@@ -1641,3 +1641,9 @@ clockSystemDefFile.setType("STRING")
 clockSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
 clockSystemDefFile.setSourcePath("../peripheral/clk_sam_l10_l11/templates/system/definitions.h.ftl")
 clockSystemDefFile.setMarkup(True)
+
+if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+    clockSym_OSCCTRL_HeaderFile.setSecurity("SECURE")
+    clockSym_OSCCTRL_SourceFile.setSecurity("SECURE")
+    clockSystemInitFile.setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_CORE")
+    clockSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
