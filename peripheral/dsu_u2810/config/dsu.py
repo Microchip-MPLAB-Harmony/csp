@@ -25,6 +25,20 @@
 ################################################################################
 #############             DSU DATABASE COMPONENTS         ######################
 ################################################################################
+global DSUfilesArray
+DSUfilesArray = []
+
+def fileUpdate(symbol, event):
+    global DSUfilesArray
+    if event["value"] == False:
+        DSUfilesArray[0].setSecurity("SECURE")
+        DSUfilesArray[1].setSecurity("SECURE")
+        DSUfilesArray[2].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+
+    else:
+        DSUfilesArray[0].setSecurity("NON_SECURE")
+        DSUfilesArray[1].setSecurity("NON_SECURE")
+        DSUfilesArray[2].setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
 
 
 def instantiateComponent(dsuComponent):
@@ -61,3 +75,15 @@ def instantiateComponent(dsuComponent):
     dsuSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     dsuSystemDefFile.setSourcePath("../peripheral/dsu_u2810/templates/system/definitions.h.ftl")
     dsuSystemDefFile.setMarkup(True)
+
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        global DSUfilesArray
+        dsuIsNonSecure = Database.getSymbolValue("core", dsuComponent.getID().upper() + "_IS_NON_SECURE")
+        dsuSystemDefFile.setDependencies(fileUpdate, ["core." + dsuComponent.getID().upper() + "_IS_NON_SECURE"])
+        DSUfilesArray.append(dsuSym_HeaderFile)
+        DSUfilesArray.append(dsuSym_SourceFile)
+        DSUfilesArray.append(dsuSystemDefFile)
+        if dsuIsNonSecure == False:
+            DSUfilesArray[0].setSecurity("SECURE")
+            DSUfilesArray[1].setSecurity("SECURE")
+            DSUfilesArray[2].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
