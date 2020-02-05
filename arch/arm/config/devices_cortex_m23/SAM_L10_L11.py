@@ -25,13 +25,30 @@
 # load family specific configurations
 print("Loading System Services for " + Variables.get("__PROCESSOR"))
 
-if "SAML11" in Variables.get("__PROCESSOR"):
+if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
     trustZoneSupported = coreComponent.createBooleanSymbol("TRUSTZONE_SUPPORTED", devCfgMenu)
     trustZoneSupported.setVisible(False)
+    registerGroup = ["USER_FUSES", "BOCOR_FUSES"]
+else:
+    registerGroup = ["USER_FUSES"]
+
+print Variables.get("__PROJECT_SRC_PATH")
+print Variables.get("__PROJECT_FIRMWARE_PATH")
+print Variables.get("__CONFIGURATION_ROOT_PATH")
+print Variables.get("__CONFIGURATION_NAME")
 
 # load device specific configurations (fuses), temporary, to be removed once XC32 updated
 devCfgComment = coreComponent.createCommentSymbol("CoreCfgComment1", devCfgMenu)
 devCfgComment.setLabel("Note: Set Device Configuration Bits via Programming Tool")
+
+
+def getDefaultVal(initVal, mask):
+    value = int(initVal, 16) & int(mask, 16)
+    mask = int(mask, 16)
+    while (mask % 2) == 0:
+        mask = mask >> 1
+        value = value >> 1
+    return value
 
 def setDMACDefaultSettings():
 
@@ -76,73 +93,82 @@ fuseSettings = coreComponent.createBooleanSymbol("FUSE_CONFIG_ENABLE", fuseMenu)
 fuseSettings.setLabel("Generate Fuse Settings")
 fuseSettings.setDefaultValue(True)
 
-registerGroup = "USER_FUSES"
-registerNames = ["USER_WORD_0", "USER_WORD_1"]
-
-default = [0x7,  #NVMCTRL_NSULCK
-            0x6, #BOD33USERLEVEL
-            0,   #BOD33_DIS
-            1,   #BOD33_ACTION
-            0,   #WDT_RUNSTDBY
-            0,   #WDT_ENABLE
-            0,   #WDT_ALWAYSON
-            11,  #WDT_PER
-            11,  #WDT_WINDOW
-            11,  #WDT_EWOFFSET
-            0,   #WDT_WEN
-            0,   #BOD33_HYST
-            ]
+global fuseMapSymbol
+fuseMapSymbol = {}
 numfuses = 0
 
-for i in range(0, len(registerNames)):
-    path = "/avr-tools-device-file/modules/module@[name=\"" + "FUSES" + "\"]/register-group@[name=\"" + registerGroup + "\"]/register@[name=\"" + registerNames[i] + "\"]"
-    fuseNode = ATDF.getNode(path)
-    fuseNodeValues = fuseNode.getChildren()
-    for index in range(0, len(fuseNodeValues)):
-        key = fuseNodeValues[index].getAttribute("name")
-        caption=fuseNodeValues[index].getAttribute("caption")
-        valueGroup = fuseNodeValues[index].getAttribute("values")
-        stringSymbol = coreComponent.createStringSymbol("FUSE_SYMBOL_NAME" + str(numfuses), fuseSettings)
-        stringSymbol.setDefaultValue(key)
-        stringSymbol.setVisible(False)
-        if valueGroup == None:
-            mask = fuseNodeValues[index].getAttribute("mask")
-            count = bin((int(mask, 16))).count("1")
-            if count == 1:
-                keyValueSymbol = coreComponent.createKeyValueSetSymbol("FUSE_SYMBOL_VALUE" + str(numfuses), fuseSettings)
-                keyValueSymbol.setLabel(caption)
-                keyValueSymbol.addKey("CLEAR", "0", "CLEAR")
-                keyValueSymbol.addKey("SET", "1", "SET")
-                keyValueSymbol.setDefaultValue(default[numfuses])
-                keyValueSymbol.setOutputMode("Key")
-                keyValueSymbol.setDisplayMode("Description")
-            else:
-                hexSymbol = coreComponent.createHexSymbol("FUSE_SYMBOL_VALUE" + str(numfuses), fuseSettings)
-                hexSymbol.setLabel(caption)
-                hexSymbol.setMin(0)
-                hexSymbol.setMax(getMaxValue(mask))
-                hexSymbol.setDefaultValue(default[numfuses])
-        else:
-            valueGroupPath = "/avr-tools-device-file/modules/module@[name=\"" + "FUSES" + "\"]/value-group@[name=\"" + valueGroup + "\"]"
-            valueGroupNode = ATDF.getNode(valueGroupPath)
-            valueGroupChildren = valueGroupNode.getChildren()
-            keyValueSymbol = coreComponent.createKeyValueSetSymbol("FUSE_SYMBOL_VALUE" + str(numfuses), fuseSettings)
-            keyValueSymbol.setLabel(caption)
-            for j in range(0, len(valueGroupChildren)):
-                name = valueGroupChildren[j].getAttribute("name")
-                value = valueGroupChildren[j].getAttribute("value")
-                caption = valueGroupChildren[j].getAttribute("caption")
-                keyValueSymbol.addKey(name, str(value), caption)
-            keyValueSymbol.setDefaultValue(default[numfuses])
-            keyValueSymbol.setOutputMode("Value")
-            keyValueSymbol.setDisplayMode("Description")
+global memoryFuseMaxValue
+memoryFuseMaxValue = {}
 
-        numfuses = numfuses + 1
+for group in range(0, len(registerGroup)):
+    #registerNames = ["USER_WORD_0", "USER_WORD_1", "USER_WORD_2", "USER_WORD_3", "USER_WORD_4", "USER_WORD_5", "USER_WORD_6"]
+        registerNamesnode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"" + "FUSES" + "\"]/register-group@[name=\"" + registerGroup[group] + "\"]")
+        registerNamesvalue = registerNamesnode.getChildren()
+        for regNameindex in range(0, len(registerNamesvalue)):
+            registerNames = registerNamesvalue[regNameindex].getAttribute("name")
+            path = "/avr-tools-device-file/modules/module@[name=\"" + "FUSES" + "\"]/register-group@[name=\"" + registerGroup[group] + "\"]/register@[name=\"" + registerNames + "\"]"
+            fuseNode = ATDF.getNode(path)
+            initVal = fuseNode.getAttribute("initval")
+
+            fuseNodeValues = fuseNode.getChildren()
+            for index in range(0, len(fuseNodeValues)):
+                key = fuseNodeValues[index].getAttribute("name")
+                caption=fuseNodeValues[index].getAttribute("caption")
+                valueGroup = fuseNodeValues[index].getAttribute("values")
+                stringSymbol = coreComponent.createStringSymbol("FUSE_SYMBOL_NAME" + str(numfuses), fuseSettings)
+                stringSymbol.setDefaultValue(key)
+                stringSymbol.setVisible(False)
+                fuseMapSymbol[stringSymbol.getValue()] = "FUSE_SYMBOL_VALUE" + str(numfuses)
+                if valueGroup == None:
+                    mask = fuseNodeValues[index].getAttribute("mask")
+                    count = bin((int(mask, 16))).count("1")
+                    if count == 1:
+                        keyValueSymbol = coreComponent.createKeyValueSetSymbol("FUSE_SYMBOL_VALUE" + str(numfuses), fuseSettings)
+                        keyValueSymbol.setLabel(caption)
+                        keyValueSymbol.addKey("CLEAR", "0", "CLEAR")
+                        keyValueSymbol.addKey("SET", "1", "SET")
+                        keyValueSymbol.setDefaultValue(getDefaultVal(initVal, mask))
+                        keyValueSymbol.setOutputMode("Key")
+                        keyValueSymbol.setDisplayMode("Description")
+                        # we will handle memory assignment and peripheral assignment using trustzone manager creating abstraction over fuses
+                        if "NONSEC" in key:
+                            keyValueSymbol.setVisible(True)
+                    else:
+                        hexSymbol = coreComponent.createHexSymbol("FUSE_SYMBOL_VALUE" + str(numfuses), fuseSettings)
+                        hexSymbol.setLabel(caption)
+                        hexSymbol.setMin(0)
+                        hexSymbol.setMax(getMaxValue(mask))
+                        hexSymbol.setDefaultValue(getDefaultVal(initVal, mask))
+                        # we will handle memory assignment and peripheral assignment using trustzone manager creating abstraction over fuses
+                        if "IDAU_" in key:
+                            memoryFuseMaxValue[key] = [int(getMaxValue(mask)), getDefaultVal(initVal, mask), caption]
+                            hexSymbol.setVisible(True)
+                else:
+                    mask = fuseNodeValues[index].getAttribute("mask")
+                    valueGroupPath = "/avr-tools-device-file/modules/module@[name=\"" + "FUSES" + "\"]/value-group@[name=\"" + valueGroup + "\"]"
+                    valueGroupNode = ATDF.getNode(valueGroupPath)
+                    valueGroupChildren = valueGroupNode.getChildren()
+                    keyValueSymbol = coreComponent.createKeyValueSetSymbol("FUSE_SYMBOL_VALUE" + str(numfuses), fuseSettings)
+                    keyValueSymbol.setLabel(caption)
+                    for j in range(0, len(valueGroupChildren)):
+                        name = valueGroupChildren[j].getAttribute("name")
+                        value = valueGroupChildren[j].getAttribute("value")
+                        caption = valueGroupChildren[j].getAttribute("caption")
+                        keyValueSymbol.addKey(name, str(value), caption)
+                    keyValueSymbol.setDefaultValue(getDefaultVal(initVal, mask))
+                    keyValueSymbol.setOutputMode("Value")
+                    keyValueSymbol.setDisplayMode("Description")
+
+                numfuses = numfuses + 1
 
 fuse = coreComponent.createIntegerSymbol("NUMBER_OF_FUSES", fuseSettings)
 fuse.setDefaultValue(numfuses)
 fuse.setVisible(False)
 
+if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+    # Setup TrustZone Manager
+    execfile(Variables.get("__CORE_DIR") + "/config/trusZoneManager.py")
+    
 coreFPU = coreComponent.createBooleanSymbol("FPU_Available", devCfgMenu)
 coreFPU.setLabel("FPU Available")
 coreFPU.setDefaultValue(False)
@@ -202,6 +228,8 @@ coreComponent.addPlugin("../peripheral/nvic/plugin/nvic.jar")
 #load systick
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/systick/config/systick.py")
 
+if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+    execfile(Variables.get("__CORE_DIR") + "/../peripheral/systick_s/config/systick.py")
 #load dma manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/dmac_u2223/config/dmac.py")
 coreComponent.addPlugin("../peripheral/dmac_u2223/plugin/dmamanager.jar")
@@ -232,17 +260,11 @@ for evsys_instance in range (0, len(modules)):
 Database.activateComponents(components)
 
 global armLibCSourceFile
+global secarmLibCSourceFile
 global devconSystemInitFile
 global compilerSpecifics
 
 compilerSelected = compilerChoice.getSelectedKey().lower()
-
-# set XC32 ITCM Size
-xc32LinkerMacro = coreComponent.createSettingSymbol("XC32_LINKER_MACRO", None)
-xc32LinkerMacro.setCategory("C32-LD")
-xc32LinkerMacro.setKey("preprocessor-macros")
-xc32LinkerMacro.setValue("SECURE")
-xc32LinkerMacro.setAppend(True, ";")
 
 armSysStartSourceFile = coreComponent.createFileSymbol("STARTUP_C", None)
 armSysStartSourceFile.setSourcePath("../arch/arm/templates/" + compilerSelected + "/cortex_m/startup/startup_" + compilerSelected + ".c.ftl")
@@ -266,10 +288,42 @@ armLibCSourceFile.setProjectPath("config/" + configName + "/")
 armLibCSourceFile.setType("SOURCE")
 armLibCSourceFile.setDependencies(genSysSourceFile, ["CoreSysCallsFile", "CoreSysFiles"])
 
+if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+    secarmSysStartSourceFile = coreComponent.createFileSymbol("SEC_STARTUP_C", None)
+    secarmSysStartSourceFile.setSourcePath("../arch/arm/templates/" + compilerSelected + "/cortex_m/startup/startup_" + compilerSelected + ".c.ftl")
+    secarmSysStartSourceFile.setOutputName("startup_" + compilerSelected + ".c")
+    secarmSysStartSourceFile.setMarkup(True)
+    secarmSysStartSourceFile.setOverwrite(True)
+    secarmSysStartSourceFile.setDestPath("")
+    secarmSysStartSourceFile.setProjectPath("config/" + configName + "/")
+    secarmSysStartSourceFile.setType("SOURCE")
+    secarmSysStartSourceFile.setSecurity("SECURE")
+    secarmSysStartSourceFile.setDependencies(
+        genSysSourceFile, ["CoreSysStartupFile", "CoreSysFiles"])
+
+    # generate libc_syscalls.c file
+    secarmLibCSourceFile = coreComponent.createFileSymbol("SEC_LIBC_SYSCALLS_C", None)
+    secarmLibCSourceFile.setSourcePath("arm/templates/xc32/libc_syscalls.c.ftl")
+    secarmLibCSourceFile.setOutputName("libc_syscalls.c")
+    secarmLibCSourceFile.setMarkup(True)
+    secarmLibCSourceFile.setOverwrite(True)
+    secarmLibCSourceFile.setDestPath("")
+    secarmLibCSourceFile.setProjectPath("config/" + configName + "/")
+    secarmLibCSourceFile.setType("SOURCE")
+    secarmLibCSourceFile.setSecurity("SECURE")
+    secarmLibCSourceFile.setDependencies(genSysSourceFile, ["CoreSysCallsFile", "CoreSysFiles"])
+    compilerSpecifics = [armSysStartSourceFile, secarmSysStartSourceFile]
+
+else:
+    compilerSpecifics = [armSysStartSourceFile]
+
 devconSystemInitFile = coreComponent.createFileSymbol("DEVICE_CONFIG_SYSTEM_INIT", None)
 devconSystemInitFile.setType("STRING")
-devconSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_CONFIG_BITS_INITIALIZATION")
+if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+    devconSystemInitFile.setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_CONFIG_BITS_INITIALIZATION")
+else:
+    devconSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_CONFIG_BITS_INITIALIZATION")
 devconSystemInitFile.setSourcePath("arm/templates/common/fuses/SAM_L10_L11.c.ftl")
+
 devconSystemInitFile.setMarkup(True)
 
-compilerSpecifics = [armSysStartSourceFile]
