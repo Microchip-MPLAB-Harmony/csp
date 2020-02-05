@@ -356,6 +356,25 @@ UART_ERROR ${UART_INSTANCE_NAME}_ErrorGet( void )
     return errors;
 }
 
+bool ${UART_INSTANCE_NAME}_AutoBaudQuery( void )
+{
+    if(U${UART_INSTANCE_NUM}MODE & _U${UART_INSTANCE_NUM}MODE_ABAUD_MASK)
+        return true;
+    else
+        return false;
+}
+
+void ${UART_INSTANCE_NAME}_AutoBaudSet( bool enable )
+{
+    if( enable == true )
+    {
+        U${UART_INSTANCE_NUM}MODESET = _U${UART_INSTANCE_NUM}MODE_ABAUD_MASK;
+    }
+
+    /* Turning off ABAUD if it was on can lead to unpredictable behavior, so that
+       direction of control is not allowed in this function.                      */
+}
+
 <#if USART_INTERRUPT_MODE == true>
 void ${UART_INSTANCE_NAME}_ReadCallbackRegister( UART_CALLBACK callback, uintptr_t context )
 {
@@ -507,7 +526,7 @@ void UART_${UART_INSTANCE_NUM}_InterruptHandler (void)
 }
 </#if>
 
-<#else>
+<#else>  <#--Not interrupt mode-->
 void ${UART_INSTANCE_NAME}_WriteByte(int data)
 {
     while ((U${UART_INSTANCE_NUM}STA & _U${UART_INSTANCE_NUM}STA_UTXBF_MASK));

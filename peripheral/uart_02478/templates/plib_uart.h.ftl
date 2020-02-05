@@ -76,6 +76,10 @@ bool ${UART_INSTANCE_NAME}_Read( void *buffer, const size_t size );
 
 UART_ERROR ${UART_INSTANCE_NAME}_ErrorGet( void );
 
+bool ${UART_INSTANCE_NAME}_AutoBaudQuery( void );
+
+void ${UART_INSTANCE_NAME}_AutoBaudSet( bool enable );
+
 <#if USART_INTERRUPT_MODE == true>
 bool ${UART_INSTANCE_NAME}_ReadIsBusy( void );
 

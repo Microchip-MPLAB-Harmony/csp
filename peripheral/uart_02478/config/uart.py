@@ -558,7 +558,7 @@ def instantiateComponent(uartComponent):
     uartSym_UxMODE_LPBACK.setDefaultValue(find_key_value(0, LPBACK_names)) # loopback mode disabled
     uartSym_UxMODE_LPBACK.setOutputMode( "Value" )
     uartSym_UxMODE_LPBACK.setDisplayMode( "Description" )
-    uartSym_UxMODE_LPBACK.setVisible(False)
+    uartSym_UxMODE_LPBACK.setVisible(True)
     for ii in LPBACK_names:
         uartSym_UxMODE_LPBACK.addKey( ii['key'],ii['value'], ii['desc'] )
 
