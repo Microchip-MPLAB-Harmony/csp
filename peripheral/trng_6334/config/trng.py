@@ -27,6 +27,27 @@ global interruptVector
 global interruptHandler
 global trngInstanceName
 global interruptHandlerLock
+global TRNGfilesArray
+global InterruptVectorSecurity
+TRNGfilesArray = []
+###################################################################################################
+########################################## Callbacks  #############################################
+###################################################################################################
+
+def fileUpdate(symbol, event):
+    global TRNGfilesArray
+    global InterruptVectorSecurity
+    if event["value"] == False:
+        TRNGfilesArray[0].setSecurity("SECURE")
+        TRNGfilesArray[1].setSecurity("SECURE")
+        TRNGfilesArray[2].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+        Database.setSymbolValue("core", InterruptVectorSecurity, False)
+
+    else:
+        TRNGfilesArray[0].setSecurity("NON_SECURE")
+        TRNGfilesArray[1].setSecurity("NON_SECURE")
+        TRNGfilesArray[2].setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+        Database.setSymbolValue("core", InterruptVectorSecurity, True)
 
 def interruptControl(NVIC, event):
     global interruptVector
@@ -49,7 +70,7 @@ def instantiateComponent(trngComponent):
     global interruptHandler
     global trngInstanceName
     global interruptHandlerLock
-
+    global InterruptVectorSecurity
 
     trngInstanceName = trngComponent.createStringSymbol("TRNG_INSTANCE_NAME", None)
     trngInstanceName.setVisible(False)
@@ -71,7 +92,7 @@ def instantiateComponent(trngComponent):
     interruptHandler = trngInstanceName.getValue()+"_INTERRUPT_HANDLER"
     interruptHandlerLock = trngInstanceName.getValue()+"_INTERRUPT_HANDLER_LOCK"
     interruptVectorUpdate = trngInstanceName.getValue()+"_INTERRUPT_ENABLE_UPDATE"
-
+    InterruptVectorSecurity = trngInstanceName.getValue() + "_SET_NON_SECURE"
 
     trngReserved = trngComponent.createBooleanSymbol("TRNG_Reserved", None)
     trngReserved.setLabel("TRNG Reserved")
@@ -130,6 +151,19 @@ def instantiateComponent(trngComponent):
     trngSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     trngSystemDefFile.setSourcePath("../peripheral/trng_6334/templates/system/definitions.h.ftl")
     trngSystemDefFile.setMarkup(True)
+
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        global TRNGfilesArray
+        trngIsNonSecure = Database.getSymbolValue("core", trngComponent.getID().upper() + "_IS_NON_SECURE")
+        trngSystemDefFile.setDependencies(fileUpdate, ["core." + trngComponent.getID().upper() + "_IS_NON_SECURE"])
+        TRNGfilesArray.append(trngHeaderFile)
+        TRNGfilesArray.append(trngSourceFile)
+        TRNGfilesArray.append(trngSystemDefFile)
+        Database.setSymbolValue("core", InterruptVectorSecurity, trngIsNonSecure)
+        if trngIsNonSecure == False:
+            TRNGfilesArray[0].setSecurity("SECURE")
+            TRNGfilesArray[1].setSecurity("SECURE")
+            TRNGfilesArray[2].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
 
 def showWarning(trngWarning, event):
     trngWarning.setVisible(event["value"])
