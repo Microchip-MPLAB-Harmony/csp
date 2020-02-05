@@ -27,7 +27,6 @@ global tcInstanceMasterValue
 global isMasterSlaveModeEnable
 global tySym_Slave_Mode
 global tcSym_OperationMode
-
 global InterruptVector
 global InterruptHandler
 global InterruptHandlerLock
@@ -38,10 +37,39 @@ global periodSetApiName_Sym
 global counterApiName_Sym
 global timerWidth_Sym
 global timerPeriodMax_Sym
-
+global TCfilesArray
+global InterruptVectorSecurity
+TCfilesArray = []
 ###################################################################################################
 ########################################## Callbacks  #############################################
 ###################################################################################################
+
+def fileUpdate(symbol, event):
+    global TCfilesArray
+    global InterruptVectorSecurity
+    if event["value"] == False:
+        TCfilesArray[0].setSecurity("SECURE")
+        TCfilesArray[1].setSecurity("SECURE")
+        TCfilesArray[2].setSecurity("SECURE")
+        TCfilesArray[3].setSecurity("SECURE")
+        TCfilesArray[4].setSecurity("SECURE")
+        TCfilesArray[5].setSecurity("SECURE")
+        TCfilesArray[6].setSecurity("SECURE")
+        TCfilesArray[7].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        TCfilesArray[8].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+        Database.setSymbolValue("core", InterruptVectorSecurity, False)
+
+    else:
+        TCfilesArray[0].setSecurity("NON_SECURE")
+        TCfilesArray[1].setSecurity("NON_SECURE")
+        TCfilesArray[2].setSecurity("NON_SECURE")
+        TCfilesArray[3].setSecurity("NON_SECURE")
+        TCfilesArray[4].setSecurity("NON_SECURE")
+        TCfilesArray[5].setSecurity("NON_SECURE")
+        TCfilesArray[6].setSecurity("NON_SECURE")
+        TCfilesArray[7].setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        TCfilesArray[8].setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+        Database.setSymbolValue("core", InterruptVectorSecurity, True)
 
 def sysTime8bitCommentVisibility(symbol, event):
     global sysTimePlibMode
@@ -328,6 +356,7 @@ def instantiateComponent(tcComponent):
     global sysTimeComponentId
     global sysTimePlibMode
     global sysTime8bitComment
+    global InterruptVectorSecurity
 
     tcInstanceName = tcComponent.createStringSymbol("TC_INSTANCE_NAME", None)
     tcInstanceName.setVisible(False)
@@ -559,6 +588,7 @@ def instantiateComponent(tcComponent):
     InterruptHandler = tcInstanceName.getValue() + "_INTERRUPT_HANDLER"
     InterruptHandlerLock = tcInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK"
     InterruptVectorUpdate = tcInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
+    InterruptVectorSecurity = tcInstanceName.getValue() + "_SET_NON_SECURE"
 
     # Initial settings for CLK and Interrupt
     Database.setSymbolValue("core", InterruptVector, True, 2)
@@ -655,3 +685,28 @@ def instantiateComponent(tcComponent):
     tcSym_SystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     tcSym_SystemDefFile.setSourcePath("../peripheral/tc_u2249/templates/system/definitions.h.ftl")
     tcSym_SystemDefFile.setMarkup(True)
+
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        global TCfilesArray
+        tcIsNonSecure = Database.getSymbolValue("core", tcComponent.getID().upper() + "_IS_NON_SECURE")
+        tcSym_SystemDefFile.setDependencies(fileUpdate, ["core." + tcComponent.getID().upper() + "_IS_NON_SECURE"])
+        TCfilesArray.append(tcSym_CommonHeaderFile)
+        TCfilesArray.append(tcSym_TimerHeaderFile)
+        TCfilesArray.append(tcSym_TimerSourceFile)
+        TCfilesArray.append(tcSym_CompareHeaderFile)
+        TCfilesArray.append(tcSym_CompareSourceFile)
+        TCfilesArray.append(tcSym_CaptureHeaderFile)
+        TCfilesArray.append(tcSym_CaptureSourceFile)
+        TCfilesArray.append(tcSym_SystemInitFile)
+        TCfilesArray.append(tcSym_SystemInitFile)
+        Database.setSymbolValue("core", InterruptVectorSecurity, tcIsNonSecure)
+        if tcIsNonSecure == False:
+            TCfilesArray[0].setSecurity("SECURE")
+            TCfilesArray[1].setSecurity("SECURE")
+            TCfilesArray[2].setSecurity("SECURE")
+            TCfilesArray[3].setSecurity("SECURE")
+            TCfilesArray[4].setSecurity("SECURE")
+            TCfilesArray[5].setSecurity("SECURE")
+            TCfilesArray[6].setSecurity("SECURE")
+            TCfilesArray[7].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+            TCfilesArray[8].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
