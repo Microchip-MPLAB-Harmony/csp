@@ -26,6 +26,22 @@
 ########################################## Callbacks  #############################################
 ###################################################################################################
 
+global DACfilesArray
+DACfilesArray = []
+
+def fileUpdate(symbol, event):
+    global DACfilesArray
+    if event["value"] == False:
+        DACfilesArray[0].setSecurity("SECURE")
+        DACfilesArray[1].setSecurity("SECURE")
+        DACfilesArray[2].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        DACfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+
+    else:
+        DACfilesArray[0].setSecurity("NON_SECURE")
+        DACfilesArray[1].setSecurity("NON_SECURE")
+        DACfilesArray[2].setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        DACfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
 
 def updateDACClockWarringStatus(symbol, event):
 
@@ -63,7 +79,6 @@ def evsysControl(symbol, event):
 
 
 def instantiateComponent(dacComponent):
-
     dacNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"DAC\"]/register-group@[name=\"DAC\"]/register@[name=\"STATUS\"]/bitfield@[name=\"SYNCBUSY\"]")
     if dacNode:
         syncbusyExists = dacComponent.createBooleanSymbol("STATUS_SYNCBUSY_AVAILABLE", None)
@@ -230,3 +245,17 @@ def instantiateComponent(dacComponent):
     dacSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     dacSystemDefFile.setSourcePath("../peripheral/dac_u2214/templates/system/definitions.h.ftl")
     dacSystemDefFile.setMarkup(True)
+
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        global DACfilesArray
+        dacIsNonSecure = Database.getSymbolValue("core", dacComponent.getID().upper() + "_IS_NON_SECURE")
+        dacSystemDefFile.setDependencies(fileUpdate, ["core." + dacComponent.getID().upper() + "_IS_NON_SECURE"])
+        DACfilesArray.append(dacHeaderFile)
+        DACfilesArray.append(dacSourceFile)
+        DACfilesArray.append(dacSystemInitFile)
+        DACfilesArray.append(dacSystemDefFile)
+        if dacIsNonSecure == False:
+            DACfilesArray[0].setSecurity("SECURE")
+            DACfilesArray[1].setSecurity("SECURE")
+            DACfilesArray[2].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+            DACfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
