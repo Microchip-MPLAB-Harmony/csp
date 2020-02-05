@@ -38,18 +38,18 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
-<#if stdio??>
-    <#if stdio.DEBUG_PERIPHERAL?has_content>
+<#if stdio_s??>
+    <#if stdio_s.SECURE_SECURE_DEBUG_PERIPHERAL?has_content>
         <#lt>#include "definitions.h"
     </#if>
 </#if>
 
 int _mon_getc(int canblock)
 {
-    <#if stdio??>
-        <#if stdio.DEBUG_PERIPHERAL?has_content>
+    <#if stdio_s??>
+        <#if stdio_s.SECURE_DEBUG_PERIPHERAL?has_content>
         <#lt>   volatile int c = 0;
-        <#lt>   while(${.vars["${stdio.DEBUG_PERIPHERAL?lower_case}"].USART_PLIB_API_PREFIX}_Read((void*)&c, 1) != true);
+        <#lt>   while(${.vars["${stdio_s.SECURE_DEBUG_PERIPHERAL?lower_case}"].USART_PLIB_API_PREFIX}_Read((void*)&c, 1) != true);
         <#lt>   return c;
         <#else>
             <#lt>   return 0;
@@ -61,12 +61,12 @@ int _mon_getc(int canblock)
 
 void _mon_putc(char c)
 {
-    <#if stdio??>
-        <#if stdio.DEBUG_PERIPHERAL?has_content>
+    <#if stdio_s??>
+        <#if stdio_s.SECURE_DEBUG_PERIPHERAL?has_content>
         <#lt>   uint8_t size = 0;
         <#lt>   do
         <#lt>   {
-        <#lt>       size = ${.vars["${stdio.DEBUG_PERIPHERAL?lower_case}"].USART_PLIB_API_PREFIX}_Write((void*)&c, 1);
+        <#lt>       size = ${.vars["${stdio_s.SECURE_DEBUG_PERIPHERAL?lower_case}"].USART_PLIB_API_PREFIX}_Write((void*)&c, 1);
         <#lt>   }while (size != 1);
         </#if>
     </#if>
