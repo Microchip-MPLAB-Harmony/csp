@@ -26,10 +26,29 @@ global InterruptVector
 global InterruptHandler
 global InterruptHandlerLock
 global freqmInstanceName
-
+global FRQMfilesArray
+global InterruptVectorSecurity
+FRQMfilesArray = []
 ###################################################################################################
 ########################################## Callbacks  #############################################
 ###################################################################################################
+
+def fileUpdate(symbol, event):
+    global FRQMfilesArray
+    global InterruptVectorSecurity
+    if event["value"] == False:
+        FRQMfilesArray[0].setSecurity("SECURE")
+        FRQMfilesArray[1].setSecurity("SECURE")
+        FRQMfilesArray[2].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        FRQMfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+        Database.setSymbolValue("core", InterruptVectorSecurity, False)
+
+    else:
+        FRQMfilesArray[0].setSecurity("NON_SECURE")
+        FRQMfilesArray[1].setSecurity("NON_SECURE")
+        FRQMfilesArray[2].setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        FRQMfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+        Database.setSymbolValue("core", InterruptVectorSecurity, True)
 
 def updateFREQMInterruptStatus(symbol, event):
 
@@ -85,6 +104,7 @@ def instantiateComponent(freqmComponent):
     global InterruptHandlerLock
     global freqmInstanceName
     global freqmSym_INTERRUPTMODE
+    global InterruptVectorSecurity
 
     freqmInstanceName = freqmComponent.createStringSymbol("FREQM_INSTANCE_NAME", None)
     freqmInstanceName.setVisible(False)
@@ -162,6 +182,7 @@ def instantiateComponent(freqmComponent):
     InterruptHandler = freqmInstanceName.getValue() + "_INTERRUPT_HANDLER"
     InterruptHandlerLock = freqmInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK"
     InterruptVectorUpdate = freqmInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
+    InterruptVectorSecurity = freqmInstanceName.getValue() + "_SET_NON_SECURE"
 
     # Interrupt Dynamic settings
     freqmSym_UpdateInterruptStatus = freqmComponent.createBooleanSymbol("FREQM_INTERRUPT_STATUS", None)
@@ -221,3 +242,18 @@ def instantiateComponent(freqmComponent):
     freqmSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     freqmSystemDefFile.setSourcePath("../peripheral/freqm_u2257/templates/system/definitions.h.ftl")
     freqmSystemDefFile.setMarkup(True)
+
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        global FRQMfilesArray
+        freqmIsNonSecure = Database.getSymbolValue("core", freqmComponent.getID().upper() + "_IS_NON_SECURE")
+        freqmSystemDefFile.setDependencies(fileUpdate, ["core." + freqmComponent.getID().upper() + "_IS_NON_SECURE"])
+        FRQMfilesArray.append(freqmSym_HeaderFile)
+        FRQMfilesArray.append(freqmSym_SourceFile)
+        FRQMfilesArray.append(freqmSystemInitFile)
+        FRQMfilesArray.append(freqmSystemDefFile)
+        Database.setSymbolValue("core", InterruptVectorSecurity, freqmIsNonSecure)
+        if freqmIsNonSecure == False:
+            FRQMfilesArray[0].setSecurity("SECURE")
+            FRQMfilesArray[1].setSecurity("SECURE")
+            FRQMfilesArray[2].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+            FRQMfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
