@@ -65,68 +65,25 @@
 // *****************************************************************************
 // *****************************************************************************
 
-<#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
-  <#compress> <#-- To remove unwanted new lines -->
 
-  <#--  =====================
-        MACRO mhc_process_gpio
-        ===================== -->
-  <#macro mhc_process_gpio>
-      <#assign GPIO_Name_List = []>
-      <#assign GPIO_PortPin_List = []>
-      <#assign GPIO_PortGroup_List = []>
+<#compress> <#-- To remove unwanted new lines -->
 
-      <#list 1..PORT_PIN_COUNT as i>
-          <#assign functype = "PIN_" + i + "_FUNCTION_TYPE">
-          <#assign funcname = "PIN_" + i + "_FUNCTION_NAME">
-          <#assign pinport  = "PIN_" + i + "_PORT_PIN">
-          <#assign pingroup = "PIN_" + i + "_GROUP">
-          <#assign pinisSecure = "PIN_" + i + "_IS_NON_SECURE">
+<#--  =====================
+      MACRO mhc_process_gpio
+      ===================== -->
+<#macro mhc_process_gpio>
+    <#assign GPIO_Name_List = []>
+    <#assign GPIO_PortPin_List = []>
+    <#assign GPIO_PortGroup_List = []>
 
-          <#if .vars[pinisSecure] == "SECURE">
-            <#if .vars[functype]?has_content>
-                <#if .vars[functype] == "GPIO">
-                    <#if .vars[funcname]?has_content>
-                        <#if .vars[pinport]?has_content>
-                            <#if .vars[pingroup]?has_content>
+    <#list 1..PORT_PIN_COUNT as i>
+        <#assign functype = "PIN_" + i + "_FUNCTION_TYPE">
+        <#assign funcname = "PIN_" + i + "_FUNCTION_NAME">
+        <#assign pinport  = "PIN_" + i + "_PORT_PIN">
+        <#assign pingroup = "PIN_" + i + "_GROUP">
+        <#assign pinisSecure = "PIN_" + i + "_IS_NON_SECURE">
 
-                                <#assign GPIO_Name_List = GPIO_Name_List + [.vars[funcname]]>
-                                <#assign GPIO_PortPin_List = GPIO_PortPin_List + [.vars[pinport]]>
-                                <#assign GPIO_PortGroup_List = GPIO_PortGroup_List + [.vars[pingroup]]>
-
-                            </#if>
-                        </#if>
-                    </#if>
-                </#if>
-            </#if>
-          </#if>
-      </#list>
-  </#macro>
-
-  <#--  =====================
-        MACRO execution
-        ===================== -->
-
-  <@mhc_process_gpio/>
-  </#compress>
-<#else>
-  <#compress> <#-- To remove unwanted new lines -->
-
-  <#--  =====================
-        MACRO mhc_process_gpio
-        ===================== -->
-  <#macro mhc_process_gpio>
-      <#assign GPIO_Name_List = []>
-      <#assign GPIO_PortPin_List = []>
-      <#assign GPIO_PortGroup_List = []>
-
-      <#list 1..PORT_PIN_COUNT as i>
-          <#assign functype = "PIN_" + i + "_FUNCTION_TYPE">
-          <#assign funcname = "PIN_" + i + "_FUNCTION_NAME">
-          <#assign pinport  = "PIN_" + i + "_PORT_PIN">
-          <#assign pingroup = "PIN_" + i + "_GROUP">
-
-
+        <#if .vars[pinisSecure] == "NON-SECURE">
           <#if .vars[functype]?has_content>
               <#if .vars[functype] == "GPIO">
                   <#if .vars[funcname]?has_content>
@@ -142,16 +99,16 @@
                   </#if>
               </#if>
           </#if>
-      </#list>
-  </#macro>
+        </#if>
+    </#list>
+</#macro>
 
-  <#--  =====================
-        MACRO execution
-        ===================== -->
+<#--  =====================
+      MACRO execution
+      ===================== -->
 
-  <@mhc_process_gpio/>
-  </#compress>
-</#if>
+<@mhc_process_gpio/>
+</#compress>
 
 <#if (GPIO_Name_List?size > 0)>
     <#list GPIO_Name_List as gpioName>
@@ -162,12 +119,12 @@
                         <#assign PORT_PIN_PAD = "PORT_GROUP_" + gpioGroup + "_PAD_"  + gpioPinPos>
                         <#assign PORT_GROUP_NAME = "PORT_GROUP_NAME_" + gpioGroup>
                             <#lt>/*** Macros for ${gpioName} pin ***/
-                            <#lt>#define ${gpioName}_Set()               (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_OUTSET = 1 << ${gpioPinPos})
-                            <#lt>#define ${gpioName}_Clear()             (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_OUTCLR = 1 << ${gpioPinPos})
-                            <#lt>#define ${gpioName}_Toggle()            (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_OUTTGL = 1 << ${gpioPinPos})
-                            <#lt>#define ${gpioName}_Get()               (((${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_IN >> ${gpioPinPos})) & 0x01)
-                            <#lt>#define ${gpioName}_OutputEnable()      (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_DIRSET = 1 << ${gpioPinPos})
-                            <#lt>#define ${gpioName}_InputEnable()       (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_DIRCLR = 1 << ${gpioPinPos})
+                            <#lt>#define ${gpioName}_Set()               (PORT_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_OUTSET = 1 << ${gpioPinPos})
+                            <#lt>#define ${gpioName}_Clear()             (PORT_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_OUTCLR = 1 << ${gpioPinPos})
+                            <#lt>#define ${gpioName}_Toggle()            (PORT_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_OUTTGL = 1 << ${gpioPinPos})
+                            <#lt>#define ${gpioName}_Get()               (((PORT_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_IN >> ${gpioPinPos})) & 0x01)
+                            <#lt>#define ${gpioName}_OutputEnable()      (PORT_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_DIRSET = 1 << ${gpioPinPos})
+                            <#lt>#define ${gpioName}_InputEnable()       (PORT_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_DIRCLR = 1 << ${gpioPinPos})
                             <#lt>#define ${gpioName}_PIN                  PORT_PIN_${.vars[PORT_PIN_PAD]}
 
                     </#if>
@@ -205,7 +162,7 @@ typedef enum
     <#assign PORT_GROUP_NAME = "PORT_GROUP_NAME_" + i>
 
     /* Group ${.vars[PORT_GROUP_NAME]} */
-    PORT_GROUP_${.vars[PORT_GROUP_NAME]} = ${PORT_REG_NAME}_BASE_ADDRESS + ${.vars[PORT_GROUP_NAME]} * (0x80),
+    PORT_GROUP_${.vars[PORT_GROUP_NAME]} = PORT_BASE_ADDRESS + ${.vars[PORT_GROUP_NAME]} * (0x80),
 </#list>
 } PORT_GROUP;
 
@@ -230,35 +187,21 @@ typedef enum
 
 typedef enum
 {
-<#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
-  <#list 0..PORT_PIN_COUNT as k>
-      <#assign PORT_PIN_INDEX = "PORT_PIN_INDEX_" + k>
-      <#assign PORT_PIN_PAD = "PORT_PIN_PAD_" + k>
-      <#assign pinIndex = k + 1>
-      <#assign pinisSecure = "PIN_" + pinIndex + "_IS_NON_SECURE">
-        <#if (.vars[pinisSecure]?has_content) && (.vars[pinisSecure]) == "SECURE">
-          <#if .vars[PORT_PIN_PAD]?has_content>
-              <#if (.vars[PORT_PIN_PAD] != "None")>
-                  <#lt>    /* ${.vars[PORT_PIN_PAD]} pin */
-                  <#lt>    PORT_PIN_${.vars[PORT_PIN_PAD]} = ${.vars[PORT_PIN_INDEX]},
+<#list 0..PORT_PIN_COUNT as k>
+    <#assign PORT_PIN_INDEX = "PORT_PIN_INDEX_" + k>
+    <#assign PORT_PIN_PAD = "PORT_PIN_PAD_" + k>
+    <#assign pinIndex = k + 1>
+    <#assign pinisSecure = "PIN_" + pinIndex + "_IS_NON_SECURE">
+        <#if (.vars[pinisSecure]?has_content) && (.vars[pinisSecure]) == "NON-SECURE">
+        <#if .vars[PORT_PIN_PAD]?has_content>
+            <#if (.vars[PORT_PIN_PAD] != "None")>
+                <#lt>    /* ${.vars[PORT_PIN_PAD]} pin */
+                <#lt>    PORT_PIN_${.vars[PORT_PIN_PAD]} = ${.vars[PORT_PIN_INDEX]},
 
-              </#if>
-          </#if>
+            </#if>
         </#if>
-  </#list>
-<#else>
-  <#list 0..PORT_PIN_COUNT as k>
-      <#assign PORT_PIN_INDEX = "PORT_PIN_INDEX_" + k>
-      <#assign PORT_PIN_PAD = "PORT_PIN_PAD_" + k>
-          <#if .vars[PORT_PIN_PAD]?has_content>
-              <#if (.vars[PORT_PIN_PAD] != "None")>
-                  <#lt>    /* ${.vars[PORT_PIN_PAD]} pin */
-                  <#lt>    PORT_PIN_${.vars[PORT_PIN_PAD]} = ${.vars[PORT_PIN_INDEX]},
-
-              </#if>
-          </#if>
-  </#list>
-</#if>
+        </#if>
+</#list>
     /* This element should not be used in any of the PORT APIs.
      * It will be used by other modules or application to denote that none of
      * the PORT Pin is used */
@@ -271,40 +214,6 @@ typedef enum
 // Section: Generated API based on pin configurations done in Pin Manager
 // *****************************************************************************
 // *****************************************************************************
-
-// *****************************************************************************
-/* Function:
-    void PORT_Initialize(void)
-
-  Summary:
-    Initializes the PORT Library.
-
-  Description:
-    This function initializes all ports and pins as configured in the
-    MHC Pin Manager.
-
-  Precondition:
-    None.
-
-  Parameters:
-    None.
-
-  Returns:
-    None.
-
-  Example:
-    <code>
-
-    PORT_Initialize();
-
-    </code>
-
-  Remarks:
-    The function should be called once before calling any other PORTS PLIB
-    functions.
-*/
-
-void PORT_Initialize(void);
 
 // *****************************************************************************
 // *****************************************************************************

@@ -41,7 +41,7 @@ global getAvailablePins
 
 portRegName = coreComponent.createStringSymbol("PORT_REG_NAME", None)
 portRegName.setVisible(False)
-if Database.getSymbolValue("core", "TRUSTZONE_SUPPORTED") != None:
+if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
     portRegName.setValue("PORT_SEC")
 else:
     portRegName.setValue("PORT")
@@ -189,7 +189,7 @@ def evsysControl(symbol, event):
 
     channelId = symbol.getID().split("_")[2]
 
-    for i in range (0,len(group)):
+    for i in range (0,4):
         enable = Database.getSymbolValue("core", "PORT_"+ channelId + "_EVACT"+str(i)+"_ENABLE")
         action = int(Database.getSymbolValue("core", "PORT_"+ channelId + "_EVACT"+str(i)+"_ACTION"))
         pin = int(Database.getSymbolValue("core", "PORT_"+ channelId + "_EVACT"+str(i)+"_PIN"))
@@ -255,6 +255,18 @@ def setupPortPinMux(portSym_PORT_PMUX_local, event):
     prevID = event["id"]
     prevVal = event["value"]
 
+def update_port_nonsec_mask(symbol, event):
+    pinNum = event["id"].split("_IS_NON_SECURE")[0].split("PIN_")[1]
+    portGroup = ord(Database.getSymbolValue("core", "PIN_" + str(pinNum) + "_PORT_GROUP")) - 65
+    pinPos = int(Database.getSymbolValue("core", "PIN_" + str(pinNum) + "_PORT_PIN"))
+    portNonSecRegValue = int(Database.getSymbolValue("core", "PORT_GROUP_" + str(portGroup) + "_NONSEC"))
+
+    if event["value"] == 1:
+        portNonSecRegValue = portNonSecRegValue | 1<<pinPos
+    else:
+        portNonSecRegValue = portNonSecRegValue & ~(1<<pinPos)
+    
+    Database.setSymbolValue("core", "PORT_GROUP_" + str(portGroup) + "_NONSEC", long(portNonSecRegValue))
 ###################################################################################################
 ######################################### PORT Main Menu  #########################################
 ###################################################################################################
@@ -491,6 +503,18 @@ for pinNumber in range(1, internalPincount + 1):
     portSym_PIN_PINCFG[pinNumber-1].setReadOnly(True)
     portSym_PIN_PINCFG[pinNumber-1].setVisible(False)
     portSym_PIN_PINCFG[pinNumber-1].setDependencies(setupPortPINCFG, ["PIN_" + str(pinNumber) +"_INEN", "PIN_" + str(pinNumber) +"_PULLEN", "PIN_" + str(pinNumber) +"_PERIPHERAL_FUNCTION", "PIN_" + str(pinNumber) + "_DRVSTR"])
+    
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        pinSecurity = coreComponent.createKeyValueSetSymbol("PIN_" + str(pinNumber) + "_IS_NON_SECURE", pin[pinNumber-1])
+        pinSecurity.setLabel("Security mode")
+        pinSecurity.addKey("SECURE", "0", "False")
+        pinSecurity.addKey("NON-SECURE", "1", "True")
+        pinSecurity.setOutputMode("Key")
+        pinSecurity.setDisplayMode("Key")
+        pinSecurity.setVisible(True)
+        pinSecurity.setDefaultValue(0)
+        pinSecurity.setDependencies(update_port_nonsec_mask, ["PIN_" + str(pinNumber) + "_IS_NON_SECURE"])
+
 
 ###################################################################################################
 ################################# PORT Configuration related code #################################
@@ -626,9 +650,15 @@ for portNumber in range(0, len(group)):
 
         portSym_PORT_EVCTRL = coreComponent.createStringSymbol("PORT_GROUP_" + str(portNumber) + "_EVCTRL", port[portNumber])
         portSym_PORT_EVCTRL.setLabel("Port Event Control")
-        portSym_PORT_EVCTRL.setVisible(visibility)
+        portSym_PORT_EVCTRL.setVisible(True)
+        #portSym_PORT_EVCTRL.setVisible(visibility)
         portSym_PORT_EVCTRL.setDefaultValue(str(hex(0)))
         portSym_PORT_EVCTRL.setDependencies(evsysControl, evsysDep)
+        
+        if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+            pin_nonsec_mask = coreComponent.createHexSymbol("PORT_GROUP_" + str(portNumber) + "_NONSEC", port[portNumber])
+            pin_nonsec_mask.setVisible(False)
+            pin_nonsec_mask.setDefaultValue(0)
 
 ###################################################################################################
 ####################################### Code Generation  ##########################################
@@ -684,3 +714,33 @@ portSym_SystemDefFile.setSourcePath("../peripheral/port_u2210/templates/system/d
 portSym_SystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
 portSym_SystemDefFile.setType("STRING")
 portSym_SystemDefFile.setMarkup(True)
+
+if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+    nonSecportSym_HeaderFile = coreComponent.createFileSymbol("PORT_HEADER_NONSEC", None)
+    nonSecportSym_HeaderFile.setSourcePath("../peripheral/port_u2210/templates/trustZone/plib_port_nonsecure.h.ftl")
+    nonSecportSym_HeaderFile.setOutputName("plib_port.h")
+    nonSecportSym_HeaderFile.setDestPath("/peripheral/port/")
+    nonSecportSym_HeaderFile.setProjectPath("config/" + configName + "/peripheral/port/")
+    nonSecportSym_HeaderFile.setType("HEADER")
+    nonSecportSym_HeaderFile.setMarkup(True)
+
+    nonportSym_SourceFile = coreComponent.createFileSymbol("PORT_SOURCE_NONSEC", None)
+    nonportSym_SourceFile.setSourcePath("../peripheral/port_u2210/templates/trustZone/plib_port_nonsecure.c.ftl")
+    nonportSym_SourceFile.setOutputName("plib_port.c")
+    nonportSym_SourceFile.setDestPath("/peripheral/port/")
+    nonportSym_SourceFile.setProjectPath("config/" + configName + "/peripheral/port/")
+    nonportSym_SourceFile.setType("SOURCE")
+    nonportSym_SourceFile.setMarkup(True)
+    
+    nonSecportSym_SystemDefFile = coreComponent.createFileSymbol("PORT_SYS_DEF_NONSEC", None)
+    nonSecportSym_SystemDefFile.setSourcePath("../peripheral/port_u2210/templates/system/definitions.h.ftl")
+    nonSecportSym_SystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+    nonSecportSym_SystemDefFile.setType("STRING")
+    nonSecportSym_SystemDefFile.setMarkup(True)
+
+
+    portSym_HeaderFile.setSecurity("SECURE")
+    portSym_SourceFile.setSecurity("SECURE")
+    portSym_SystemInitFile.setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_CORE")
+    portSym_SystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+

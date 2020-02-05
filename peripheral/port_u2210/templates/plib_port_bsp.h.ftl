@@ -1,87 +1,184 @@
-<#--  =====================
-      MACRO mhc_process_leds
-      ===================== -->
+<#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
 
-<#compress>
-<#macro mhc_process_leds>
-    <#assign LED_Name_List = []>
-    <#assign LED_PortPin_List = []>
-    <#assign LED_PortGroup_List = []>
-    <#assign LED_ActiveLevel_List = []>
+    <#--  =====================
+        MACRO mhc_process_leds
+        ===================== -->
 
-    <#list 1..PORT_PIN_COUNT as i>
-        <#assign functype = "PIN_" + i + "_FUNCTION_TYPE">
-        <#assign funcname = "PIN_" + i + "_FUNCTION_NAME">
-        <#assign pinport  = "PIN_" + i + "_PORT_PIN">
-        <#assign pingroup = "PIN_" + i + "_PORT_GROUP">
+    <#compress>
+    <#macro mhc_process_leds>
+        <#assign LED_Name_List = []>
+        <#assign LED_PortPin_List = []>
+        <#assign LED_PortGroup_List = []>
+        <#assign LED_ActiveLevel_List = []>
 
-        <#if .vars[functype]?has_content>
-            <#if (.vars[functype] == "LED_AH") || (.vars[functype] == "LED_AL")>
-                <#if .vars[funcname]?has_content>
-                    <#if .vars[pinport]?has_content>
-                        <#if .vars[pingroup]?has_content>
+        <#list 1..PORT_PIN_COUNT as i>
+            <#assign functype = "PIN_" + i + "_FUNCTION_TYPE">
+            <#assign funcname = "PIN_" + i + "_FUNCTION_NAME">
+            <#assign pinport  = "PIN_" + i + "_PORT_PIN">
+            <#assign pingroup = "PIN_" + i + "_PORT_GROUP">
+            <#assign pinisSecure = "PIN_" + i + "_IS_NON_SECURE">
 
-                            <#assign LED_Name_List = LED_Name_List + [.vars[funcname]]>
-                            <#assign LED_PortPin_List = LED_PortPin_List + [.vars[pinport]]>
-                            <#assign LED_PortGroup_List = LED_PortGroup_List + [.vars[pingroup]]>
-                            <#if (.vars[functype] == "LED_AH")>
-                                <#assign LED_ActiveLevel_List = LED_ActiveLevel_List + ["High"]>
-                            <#else>
-                                <#assign LED_ActiveLevel_List = LED_ActiveLevel_List + ["Low"]>
+            <#if .vars[pinisSecure] == "NON-SECURE">
+            <#if .vars[functype]?has_content>
+                <#if (.vars[functype] == "LED_AH") || (.vars[functype] == "LED_AL")>
+                    <#if .vars[funcname]?has_content>
+                        <#if .vars[pinport]?has_content>
+                            <#if .vars[pingroup]?has_content>
+
+                                <#assign LED_Name_List = LED_Name_List + [.vars[funcname]]>
+                                <#assign LED_PortPin_List = LED_PortPin_List + [.vars[pinport]]>
+                                <#assign LED_PortGroup_List = LED_PortGroup_List + [.vars[pingroup]]>
+                                <#if (.vars[functype] == "LED_AH")>
+                                    <#assign LED_ActiveLevel_List = LED_ActiveLevel_List + ["High"]>
+                                <#else>
+                                    <#assign LED_ActiveLevel_List = LED_ActiveLevel_List + ["Low"]>
+                                </#if>
+
                             </#if>
-
                         </#if>
                     </#if>
                 </#if>
             </#if>
-        </#if>
-    </#list>
-</#macro>
+            </#if>
+        </#list>
+    </#macro>
 
-<#--  =====================
-      MACRO mhc_process_switches
-      ===================== -->
-<#macro mhc_process_switches>
-    <#assign SWITCH_Name_List = []>
-    <#assign SWITCH_PortPin_List = []>
-    <#assign SWITCH_PortGroup_List = []>
-    <#assign SWITCH_ActiveLevel_List = []>
+    <#--  =====================
+        MACRO mhc_process_switches
+        ===================== -->
+    <#macro mhc_process_switches>
+        <#assign SWITCH_Name_List = []>
+        <#assign SWITCH_PortPin_List = []>
+        <#assign SWITCH_PortGroup_List = []>
+        <#assign SWITCH_ActiveLevel_List = []>
 
-    <#list 1..PORT_PIN_COUNT as i>
-        <#assign functype = "PIN_" + i + "_FUNCTION_TYPE">
-        <#assign funcname = "PIN_" + i + "_FUNCTION_NAME">
-        <#assign pinport = "PIN_" + i + "_PORT_PIN">
-        <#assign pingroup = "PIN_" + i + "_PORT_GROUP">
+        <#list 1..PORT_PIN_COUNT as i>
+            <#assign functype = "PIN_" + i + "_FUNCTION_TYPE">
+            <#assign funcname = "PIN_" + i + "_FUNCTION_NAME">
+            <#assign pinport = "PIN_" + i + "_PORT_PIN">
+            <#assign pingroup = "PIN_" + i + "_PORT_GROUP">
+            <#assign pinisSecure = "PIN_" + i + "_IS_NON_SECURE">
 
-        <#if .vars[functype]?has_content>
-            <#if (.vars[functype] == "SWITCH_AH") || (.vars[functype] == "SWITCH_AL")>
-                <#if .vars[funcname]?has_content>
-                    <#if .vars[pinport]?has_content>
-                        <#if .vars[pingroup]?has_content>
+            <#if .vars[pinisSecure] == "NON-SECURE">
+            <#if .vars[functype]?has_content>
+                <#if (.vars[functype] == "SWITCH_AH") || (.vars[functype] == "SWITCH_AL")>
+                    <#if .vars[funcname]?has_content>
+                        <#if .vars[pinport]?has_content>
+                            <#if .vars[pingroup]?has_content>
 
-                            <#assign SWITCH_Name_List = SWITCH_Name_List + [.vars[funcname]]>
-                            <#assign SWITCH_PortPin_List = SWITCH_PortPin_List + [.vars[pinport]]>
-                            <#assign SWITCH_PortGroup_List = SWITCH_PortGroup_List + [.vars[pingroup]]>
-                            <#if (.vars[functype] == "SWITCH_AH")>
-                                <#assign SWITCH_ActiveLevel_List = SWITCH_ActiveLevel_List + ["High"]>
-                            <#else>
-                                <#assign SWITCH_ActiveLevel_List = SWITCH_ActiveLevel_List + ["Low"]>
+                                <#assign SWITCH_Name_List = SWITCH_Name_List + [.vars[funcname]]>
+                                <#assign SWITCH_PortPin_List = SWITCH_PortPin_List + [.vars[pinport]]>
+                                <#assign SWITCH_PortGroup_List = SWITCH_PortGroup_List + [.vars[pingroup]]>
+                                <#if (.vars[functype] == "SWITCH_AH")>
+                                    <#assign SWITCH_ActiveLevel_List = SWITCH_ActiveLevel_List + ["High"]>
+                                <#else>
+                                    <#assign SWITCH_ActiveLevel_List = SWITCH_ActiveLevel_List + ["Low"]>
+                                </#if>
+
                             </#if>
-
                         </#if>
                     </#if>
                 </#if>
             </#if>
-        </#if>
-    </#list>
-</#macro>
+            </#if>
+        </#list>
+    </#macro>
 
 
-<#--  =====================
-      MACRO execution
-      ===================== -->
-<@mhc_process_leds/>
-<@mhc_process_switches/>
+    <#--  =====================
+        MACRO execution
+        ===================== -->
+    <@mhc_process_leds/>
+    <@mhc_process_switches/>
+    </#compress>
+<#else>
+    <#--  =====================
+        MACRO mhc_process_leds
+        ===================== -->
+
+    <#compress>
+    <#macro mhc_process_leds>
+        <#assign LED_Name_List = []>
+        <#assign LED_PortPin_List = []>
+        <#assign LED_PortGroup_List = []>
+        <#assign LED_ActiveLevel_List = []>
+
+        <#list 1..PORT_PIN_COUNT as i>
+            <#assign functype = "PIN_" + i + "_FUNCTION_TYPE">
+            <#assign funcname = "PIN_" + i + "_FUNCTION_NAME">
+            <#assign pinport  = "PIN_" + i + "_PORT_PIN">
+            <#assign pingroup = "PIN_" + i + "_PORT_GROUP">
+
+            <#if .vars[functype]?has_content>
+                <#if (.vars[functype] == "LED_AH") || (.vars[functype] == "LED_AL")>
+                    <#if .vars[funcname]?has_content>
+                        <#if .vars[pinport]?has_content>
+                            <#if .vars[pingroup]?has_content>
+
+                                <#assign LED_Name_List = LED_Name_List + [.vars[funcname]]>
+                                <#assign LED_PortPin_List = LED_PortPin_List + [.vars[pinport]]>
+                                <#assign LED_PortGroup_List = LED_PortGroup_List + [.vars[pingroup]]>
+                                <#if (.vars[functype] == "LED_AH")>
+                                    <#assign LED_ActiveLevel_List = LED_ActiveLevel_List + ["High"]>
+                                <#else>
+                                    <#assign LED_ActiveLevel_List = LED_ActiveLevel_List + ["Low"]>
+                                </#if>
+
+                            </#if>
+                        </#if>
+                    </#if>
+                </#if>
+            </#if>
+        </#list>
+    </#macro>
+
+    <#--  =====================
+        MACRO mhc_process_switches
+        ===================== -->
+    <#macro mhc_process_switches>
+        <#assign SWITCH_Name_List = []>
+        <#assign SWITCH_PortPin_List = []>
+        <#assign SWITCH_PortGroup_List = []>
+        <#assign SWITCH_ActiveLevel_List = []>
+
+        <#list 1..PORT_PIN_COUNT as i>
+            <#assign functype = "PIN_" + i + "_FUNCTION_TYPE">
+            <#assign funcname = "PIN_" + i + "_FUNCTION_NAME">
+            <#assign pinport = "PIN_" + i + "_PORT_PIN">
+            <#assign pingroup = "PIN_" + i + "_PORT_GROUP">
+
+            <#if .vars[functype]?has_content>
+                <#if (.vars[functype] == "SWITCH_AH") || (.vars[functype] == "SWITCH_AL")>
+                    <#if .vars[funcname]?has_content>
+                        <#if .vars[pinport]?has_content>
+                            <#if .vars[pingroup]?has_content>
+
+                                <#assign SWITCH_Name_List = SWITCH_Name_List + [.vars[funcname]]>
+                                <#assign SWITCH_PortPin_List = SWITCH_PortPin_List + [.vars[pinport]]>
+                                <#assign SWITCH_PortGroup_List = SWITCH_PortGroup_List + [.vars[pingroup]]>
+                                <#if (.vars[functype] == "SWITCH_AH")>
+                                    <#assign SWITCH_ActiveLevel_List = SWITCH_ActiveLevel_List + ["High"]>
+                                <#else>
+                                    <#assign SWITCH_ActiveLevel_List = SWITCH_ActiveLevel_List + ["Low"]>
+                                </#if>
+
+                            </#if>
+                        </#if>
+                    </#if>
+                </#if>
+            </#if>
+        </#list>
+    </#macro>
+
+
+    <#--  =====================
+        MACRO execution
+        ===================== -->
+    <@mhc_process_leds/>
+    <@mhc_process_switches/>
+    </#compress>
+</#if>
+
 <#assign myHash = { "A": 0, "B": 1, "C": "2", "D": 3, "E": 4}>
 <#if (LED_Name_List?size > 0)>
     <#list LED_Name_List as ledName>
@@ -138,7 +235,7 @@
         </#list>
     </#list>
 </#if>
-</#compress>
+
 
 <#--
 /*******************************************************************************

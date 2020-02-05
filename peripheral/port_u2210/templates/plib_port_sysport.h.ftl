@@ -51,15 +51,32 @@ typedef enum
 
 typedef enum
 {
-<#list 0..PORT_PIN_COUNT as k>
-    <#assign PORT_PIN_INDEX = "PORT_PIN_INDEX_" + k>
-    <#assign PORT_PIN_PAD = "PORT_PIN_PAD_" + k>
-        <#if .vars[PORT_PIN_PAD]?has_content>
-            <#if (.vars[PORT_PIN_PAD] != "None")>
-                <#lt>    SYS_PORT_PIN_${.vars[PORT_PIN_PAD]} = ${.vars[PORT_PIN_INDEX]},
-            </#if>
-        </#if>
-</#list>
+<#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
+  <#list 0..PORT_PIN_COUNT as k>
+      <#assign PORT_PIN_INDEX = "PORT_PIN_INDEX_" + k>
+      <#assign PORT_PIN_PAD = "PORT_PIN_PAD_" + k>
+      <#assign pinIndex = k + 1>
+      <#assign pinisSecure = "PIN_" + pinIndex + "_IS_NON_SECURE">
+        <#if (.vars[pinisSecure]?has_content) && (.vars[pinisSecure]) == "NON-SECURE">      
+          <#if .vars[PORT_PIN_PAD]?has_content>
+              <#if (.vars[PORT_PIN_PAD] != "None")>
+                  <#lt>    SYS_PORT_PIN_${.vars[PORT_PIN_PAD]} = ${.vars[PORT_PIN_INDEX]},
+              </#if>
+          </#if>
+          </#if>
+  </#list>
+<#else>
+  <#list 0..PORT_PIN_COUNT as k>
+      <#assign PORT_PIN_INDEX = "PORT_PIN_INDEX_" + k>
+      <#assign PORT_PIN_PAD = "PORT_PIN_PAD_" + k>
+      
+          <#if .vars[PORT_PIN_PAD]?has_content>
+              <#if (.vars[PORT_PIN_PAD] != "None")>
+                  <#lt>    SYS_PORT_PIN_${.vars[PORT_PIN_PAD]} = ${.vars[PORT_PIN_INDEX]},
+              </#if>
+          </#if>
+  </#list>
+</#if>
     /* This element should not be used in any of the PORTS APIs.
        It will be used by other modules or application to denote that none of the PORT Pin is used */
     SYS_PORT_PIN_NONE = -1
