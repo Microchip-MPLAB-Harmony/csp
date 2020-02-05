@@ -39,6 +39,11 @@ global dmacSystemDefFile
 
 global dmacEnable
 
+global DMACfilesArray
+global dmacInterruptVectorSecurity
+dmacInterruptVectorSecurity  = []
+DMACfilesArray = []
+
 # Parse atdf xml file to get instance name for the peripheral which has DMA id.
 # And construct a list of PERIDs
 
@@ -105,6 +110,29 @@ if count > 1:
 ################################################################################
 #### Business Logic ####
 ################################################################################
+def dmacfileUpdate(symbol, event):
+    global DMACfilesArray
+    global dmacInterruptVectorSecurity
+    if event["value"] == False:
+        DMACfilesArray[0].setSecurity("SECURE")
+        DMACfilesArray[1].setSecurity("SECURE")
+        DMACfilesArray[2].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        DMACfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+        if len(dmacInterruptVectorSecurity) != 1:
+            for vector in dmacInterruptVectorSecurity:
+                Database.setSymbolValue("core", vector, False)
+        else:
+            Database.setSymbolValue("core", dmacInterruptVectorSecurity, False)
+    else:
+        DMACfilesArray[0].setSecurity("NON_SECURE")
+        DMACfilesArray[1].setSecurity("NON_SECURE")
+        DMACfilesArray[2].setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        DMACfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+        if len(dmacInterruptVectorSecurity) != 1:
+            for vector in dmacInterruptVectorSecurity:
+                Database.setSymbolValue("core", vector, True)
+        else:
+            Database.setSymbolValue("core", dmacInterruptVectorSecurity, True)
 
 def dmacTriggerLogic(symbol, event):
 
@@ -175,6 +203,7 @@ def onGlobalEnableLogic(symbol, event):
 
     global dmacInstanceName
     global dmacMultiVectorSupported
+    global dmacInterruptVectorSecurity
 
     # clock enable
     Database.clearSymbolValue("core", dmacInstanceName.getValue() + "_CLOCK_ENABLE")
@@ -184,6 +213,7 @@ def onGlobalEnableLogic(symbol, event):
         InterruptVector = []
         InterruptHandler = []
         InterruptHandlerLock = []
+        dmacInterruptVectorSecurity  = []
         # interrupt enable
         vectorValues = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts").getChildren()
         for id in range(0, len(vectorValues)):
@@ -192,6 +222,7 @@ def onGlobalEnableLogic(symbol, event):
                 InterruptVector.append(name + "_INTERRUPT_ENABLE")
                 InterruptHandler.append(name + "_INTERRUPT_HANDLER")
                 InterruptHandlerLock.append(name + "_INTERRUPT_HANDLER_LOCK")
+                dmacInterruptVectorSecurity.append(name + "_SET_NON_SECURE")
 
         if event["value"] == True:
             for i in range(0, len(InterruptHandler)):
@@ -209,6 +240,7 @@ def onGlobalEnableLogic(symbol, event):
         InterruptVector = dmacInstanceName.getValue()+"_INTERRUPT_ENABLE"
         InterruptHandler = dmacInstanceName.getValue()+"_INTERRUPT_HANDLER"
         InterruptHandlerLock = dmacInstanceName.getValue()+"_INTERRUPT_HANDLER_LOCK"
+        dmacInterruptVectorSecurity = dmacInstanceName.getValue() + "_SET_NON_SECURE"
 
         Database.clearSymbolValue("core", InterruptVector)
         Database.setSymbolValue("core", InterruptVector, event["value"], 2)
@@ -651,3 +683,24 @@ dmacSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
 dmacSystemDefFile.setSourcePath("../peripheral/dmac_u2223/templates/system/definitions.h.ftl")
 dmacSystemDefFile.setMarkup(True)
 dmacSystemDefFile.setEnabled(False)
+
+
+if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+    global DMACfilesArray
+    dmacIsNonSecure = Database.getSymbolValue("core", dmacInstanceName.getValue() + "_IS_NON_SECURE")
+    dmacSystemDefFile.setDependencies(dmacfileUpdate, ["core." + dmacInstanceName.getValue() + "_IS_NON_SECURE"])
+    DMACfilesArray.append(dmacHeaderFile)
+    DMACfilesArray.append(dmacSourceFile)
+    DMACfilesArray.append(dmacSystemInitFile)
+    DMACfilesArray.append(dmacSystemDefFile)
+    if len(dmacInterruptVectorSecurity) != 1:
+        for vector in dmacInterruptVectorSecurity:
+            Database.setSymbolValue("core", vector, dmacIsNonSecure)
+    else:
+        Database.setSymbolValue("core", dmacInterruptVectorSecurity, dmacIsNonSecure)
+        
+    if dmacIsNonSecure == False:
+        DMACfilesArray[0].setSecurity("SECURE")
+        DMACfilesArray[1].setSecurity("SECURE")
+        DMACfilesArray[2].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        DMACfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
