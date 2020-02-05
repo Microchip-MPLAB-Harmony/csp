@@ -28,12 +28,21 @@ global InterruptHandler
 InterruptHandler = []
 global InterruptHandlerLock
 InterruptHandlerLock =[]
+global EICfilesArray
+global InterruptVectorSecurity
+InterruptVectorSecurity = []
+global interruptSecurityState
+interruptSecurityState = []
+EICfilesArray = []
 global eicInstanceName
 global intPrev
 intPrev = 0
+global secPrev
+secPrev = 0
 ###################################################################################################
 ######################################### Callbacks ###############################################
 ###################################################################################################
+
 global DEBOUNCEN_Code
 
 def confMenu(symbol, event):
@@ -80,7 +89,76 @@ def codeGenerationForEVCCTRL_EXTINTEO(symbol, event):
         symbol.setValue((symbol.getValue() & (~(0x1 << channel))) , 1)
         if isEVCTL:
             Database.setSymbolValue("evsys","GENERATOR_EIC_EXTINT_" + str(channel) + "_ACTIVE", False, 2)
+def fileGenLogic(symbol, event):
+    global EICfilesArray
+    if int(Database.getSymbolValue(event["namespace"], "EIC_NONSEC")) > 0 or int(Database.getSymbolValue(event["namespace"], "NMI_IS_NON_SECURE")) == 1:
+        EICfilesArray[0].setEnabled(True)
+        EICfilesArray[1].setEnabled(True)
+        EICfilesArray[2].setEnabled(True)
+        EICfilesArray[3].setEnabled(True)
+    else:
+        EICfilesArray[0].setEnabled(False)
+        EICfilesArray[1].setEnabled(False)
+        EICfilesArray[2].setEnabled(False)
+        EICfilesArray[3].setEnabled(False)
 
+def updateEicInterruptSecurity(symbol, event):
+    global InterruptVectorSecurity
+    global interruptSecurityState
+    import math
+    global InterruptVector
+    global InterruptHandlerLock
+    global InterruptHandler
+    global secPrev
+    global extIntCount
+    if "EIC_NONSEC" in event["id"]:
+        Database.setSymbolValue(event["namespace"], "EIC_NUM_NONSEC_CHANNEL", (bin(event["value"])[2:]).count('1'))
+        value = event["value"] ^ secPrev
+        if value > 0:
+            bitPos = int(math.log(value, 2))
+            if sharedVector:
+                if bitPos < len(InterruptVector) - 1: 
+                    #for TrustZone
+                    if Database.getSymbolValue(event["namespace"], "EIC_NONSEC_" + str(bitPos)) != None:
+                        if Database.getSymbolValue(event["namespace"], "EIC_NONSEC_" + str(bitPos)) == 0:
+                            Database.setSymbolValue("core", InterruptVectorSecurity[bitPos], False)
+                            interruptSecurityState[bitPos] = False
+                        else:
+                            Database.setSymbolValue("core", InterruptVectorSecurity[bitPos], True) 
+                            interruptSecurityState[bitPos] = True
+                            
+                else:
+                    nonsecureInterrupt = False
+                    for i in range(extIntCount - len(InterruptVector) - 2, extIntCount):
+                        if Database.getSymbolValue(event["namespace"], "EIC_CHAN_" + str(i)):
+                            if Database.getSymbolValue(event["namespace"], "EIC_NONSEC_" + str(i)) == 0:
+                                nonsecureInterrupt = False
+                                break
+                            else:
+                                nonsecureInterrupt = True
+                    interruptSecurityState[(len(InterruptVector) - 1)] = nonsecureInterrupt
+                    Database.setSymbolValue("core", InterruptVectorSecurity[(len(InterruptVector) - 1)], nonsecureInterrupt)
+                    Database.setSymbolValue(event["namespace"], "EIC_OTHER_HANDLER_IS_NON_SEC", nonsecureInterrupt)
+            else:
+                result = bool(event["value"] & (1<<bitPos))
+                Database.setSymbolValue("core", InterruptVectorSecurity[bitPos], result)
+                interruptSecurityState[bitPos] = result
+        secPrev = event["value"]
+    else:
+        bitPos = int (event["id"].split("EIC_CHAN_")[1])
+        if sharedVector:
+            if bitPos >= len(InterruptVector) - 1: 
+                nonsecureInterrupt = False
+                for i in range(extIntCount - len(InterruptVector) - 2, extIntCount):
+                    if Database.getSymbolValue(event["namespace"], "EIC_CHAN_" + str(i)):
+                        if Database.getSymbolValue(event["namespace"], "EIC_NONSEC_" + str(i)) == 0:
+                            nonsecureInterrupt = False
+                            break
+                        else:
+                            nonsecureInterrupt = True
+                interruptSecurityState[(len(InterruptVector) - 1)] = nonsecureInterrupt
+                Database.setSymbolValue("core", InterruptVectorSecurity[(len(InterruptVector) - 1)], nonsecureInterrupt)
+                Database.setSymbolValue(event["namespace"], "EIC_OTHER_HANDLER_IS_NON_SEC", nonsecureInterrupt)
 
 def updateEICInterruptStatus(symbol, event):
     import math
@@ -171,6 +249,7 @@ def instantiateComponent(eicComponent):
     eicSym_debounceList =[]
     eicSym_InterruptList = []
     eicSym_Channel = []
+    eicSym_nonSecList = []
     global DEBOUNCEN_Code
     global EXTINT_Code
     global eicInstanceName
@@ -228,6 +307,16 @@ def instantiateComponent(eicComponent):
     nmiConfMenu.setDependencies(confMenu, ["NMI_CTRL"])
     nmiConfMenu.setVisible(False)
 
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        nmiSecurity = eicComponent.createKeyValueSetSymbol("NMI_IS_NON_SECURE", nmiConfMenu)
+        nmiSecurity.setLabel("Security mode")
+        nmiSecurity.addKey("SECURE", "0", "False")
+        nmiSecurity.addKey("NON-SECURE", "1", "True")
+        nmiSecurity.setOutputMode("Key")
+        nmiSecurity.setDisplayMode("Key")
+        nmiSecurity.setVisible(True)
+        nmiSecurity.setDefaultValue(0)
+
     #NMIASYNCH
     NMI_ASYNCH_Selection = eicComponent.createKeyValueSetSymbol("NMI_ASYNCH" , nmiConfMenu)
     NMI_ASYNCH_Selection.setLabel("NMI Detection Clock")
@@ -280,6 +369,17 @@ def instantiateComponent(eicComponent):
         # populate a list with IDs for code generation dependency
         eicSym_Channel.append("EIC_CHAN_" + str(extIntIndex))
 
+        if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+            eicSecurity = eicComponent.createKeyValueSetSymbol("EIC_NONSEC_" + str(extIntIndex), eicConfiguration)
+            eicSecurity.setLabel("Security mode")
+            eicSecurity.addKey("SECURE", "0", "False")
+            eicSecurity.addKey("NON-SECURE", "1", "True")
+            eicSecurity.setOutputMode("Key")
+            eicSecurity.setDisplayMode("Key")
+            eicSecurity.setVisible(True)
+            eicSecurity.setDefaultValue(0)
+            eicSym_nonSecList.append("EIC_NONSEC_" + str(extIntIndex))
+            
         eicINT = eicComponent.createBooleanSymbol("EIC_INT_" + str(extIntIndex) , eicConfiguration)
         eicINT.setLabel("Enable Interrupt")
         eicSym_InterruptList.append("EIC_INT_" + str(extIntIndex))
@@ -349,6 +449,7 @@ def instantiateComponent(eicComponent):
     eicSym_eventsList.extend(eicSym_Channel)
     eicSym_asynchList.extend(eicSym_Channel)
     eicSym_InterruptList.extend(eicSym_Channel)
+    eicSym_nonSecList.extend(eicSym_Channel)
 
     eicCalculation = eicComponent.createMenuSymbol("REG_MENU", None)
     eicCalculation.setVisible(False)
@@ -362,6 +463,15 @@ def instantiateComponent(eicComponent):
     ASYNCH_Code.setDefaultValue(0)
     ASYNCH_Code.setVisible(False)
     ASYNCH_Code.setDependencies(codeGenerationForEVCCTRL_EXTINTEO, eicSym_asynchList)
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        nonSecReg = eicComponent.createHexSymbol("EIC_NONSEC" , eicCalculation)
+        nonSecReg.setDefaultValue(0)
+        nonSecReg.setVisible(True)
+        nonSecReg.setDependencies(codeGenerationForEVCCTRL_EXTINTEO, eicSym_nonSecList) 
+
+        nonSecChannel = eicComponent.createIntegerSymbol("EIC_NUM_NONSEC_CHANNEL" , eicCalculation)
+        nonSecChannel.setDefaultValue(0)
+        nonSecChannel.setVisible(True)
 
     DEBOUNCEN_Code = eicComponent.createHexSymbol("EIC_DEBOUNCEN" , eicCalculation)
     DEBOUNCEN_Code.setDefaultValue(0)
@@ -475,6 +585,8 @@ def instantiateComponent(eicComponent):
             InterruptHandlerLock.append(name + "_INTERRUPT_HANDLER_LOCK")
             InterruptVectorUpdate.append(
                 "core." + name + "_INTERRUPT_ENABLE_UPDATE")
+            InterruptVectorSecurity.append(name + "_SET_NON_SECURE")
+            interruptSecurityState.append(False)
 
     eicIntLines = eicComponent.createIntegerSymbol("NUM_INT_LINES", None)
     eicIntLines.setVisible(False)
@@ -484,7 +596,9 @@ def instantiateComponent(eicComponent):
         sharedVector = True
         eicOtherHandler = eicComponent.createBooleanSymbol("EIC_OTHER_HANDLER_ACTIVE", None)
         eicOtherHandler.setVisible(False)
-        
+        if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+            eicOtherHandlerNonSec = eicComponent.createBooleanSymbol("EIC_OTHER_HANDLER_IS_NON_SEC", None)
+            eicOtherHandlerNonSec.setVisible(False)
         
     NMIInterruptHandler = "NonMaskableInt_INTERRUPT_HANDLER"
 
@@ -505,6 +619,13 @@ def instantiateComponent(eicComponent):
     eicSym_ClkEnComment.setVisible(False)
     eicSym_ClkEnComment.setDependencies(updateEICClockWarringStatus, ["core."+eicInstanceName.getValue()+"_CLOCK_ENABLE"])
 
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        eicnonSecDepList = []
+        eicnonSecDepList.append("EIC_NONSEC")
+        eicnonSecDepList.extend(eicSym_Channel)
+        eicSym_UpdateInterruptSecurity = eicComponent.createBooleanSymbol("EIC_SECURITY_STATUS", None)
+        eicSym_UpdateInterruptSecurity.setDependencies(updateEicInterruptSecurity, eicnonSecDepList)
+        eicSym_UpdateInterruptSecurity.setVisible(False)
     ###################################################################################################
     ####################################### Code Generation  ##########################################
     ###################################################################################################
@@ -538,3 +659,48 @@ def instantiateComponent(eicComponent):
     eicSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     eicSystemDefFile.setSourcePath("../peripheral/eic_u2804/templates/system/definitions.h.ftl")
     eicSystemDefFile.setMarkup(True)
+
+
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+
+        nonseceicHeader1File = eicComponent.createFileSymbol("EIC_HEADER_NONSEC", None)
+        nonseceicHeader1File.setSourcePath("../peripheral/eic_u2804/templates/trustZone/plib_eic.h.ftl")
+        nonseceicHeader1File.setOutputName("plib_"+eicInstanceName.getValue().lower()+".h")
+        nonseceicHeader1File.setDestPath("/peripheral/eic/")
+        nonseceicHeader1File.setProjectPath("config/" + configName + "/peripheral/eic/")
+        nonseceicHeader1File.setType("HEADER")
+        nonseceicHeader1File.setMarkup(True)
+        nonseceicHeader1File.setEnabled(False)
+
+        nonseceicSource1File = eicComponent.createFileSymbol("EIC_SOURCE_NONSEC", None)
+        nonseceicSource1File.setSourcePath("../peripheral/eic_u2804/templates/trustZone/plib_eic.c.ftl")
+        nonseceicSource1File.setOutputName("plib_"+eicInstanceName.getValue().lower()+".c")
+        nonseceicSource1File.setDestPath("/peripheral/eic/")
+        nonseceicSource1File.setProjectPath("config/" + configName + "/peripheral/eic/")
+        nonseceicSource1File.setType("SOURCE")
+        nonseceicSource1File.setMarkup(True)
+        nonseceicSource1File.setEnabled(False)
+
+        nonseceicSystemDefFile = eicComponent.createFileSymbol("EIC_SYS_DEF_NONSEC", None)
+        nonseceicSystemDefFile.setType("STRING")
+        nonseceicSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+        nonseceicSystemDefFile.setSourcePath("../peripheral/eic_u2804/templates/system/definitions.h.ftl")
+        nonseceicSystemDefFile.setMarkup(True)
+        nonseceicSystemDefFile.setEnabled(False)
+        nonseceicSystemDefFile.setDependencies(fileGenLogic, ["EIC_NONSEC", "NMI_IS_NON_SECURE"])
+
+        nonseceicSystemInitFile = eicComponent.createFileSymbol("EIC_SYS_INT_NONSEC", None)
+        nonseceicSystemInitFile.setType("STRING")
+        nonseceicSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        nonseceicSystemInitFile.setSourcePath("../peripheral/eic_u2804/templates/system/initialization.c.ftl")
+        nonseceicSystemInitFile.setMarkup(True)
+
+        EICfilesArray.append(nonseceicHeader1File)
+        EICfilesArray.append(nonseceicSource1File)
+        EICfilesArray.append(nonseceicSystemDefFile)
+        EICfilesArray.append(nonseceicSystemInitFile)
+
+        eicHeader1File.setSecurity("SECURE")
+        eicSource1File.setSecurity("SECURE")
+        eicSystemInitFile.setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        eicSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")

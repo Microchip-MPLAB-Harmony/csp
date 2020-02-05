@@ -52,11 +52,9 @@
 // *****************************************************************************
 /* This section lists the other files that are included in this file.
 */
-
-<#if core.TRUSTZONE_SUPPORTED??>
+<#assign EIC_REG_NAME = EIC_INSTANCE_NAME>
+<#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
     <#assign EIC_REG_NAME = EIC_INSTANCE_NAME + "_SEC">
-<#else>
-    <#assign EIC_REG_NAME = EIC_INSTANCE_NAME>
 </#if>
 
 #include "plib_${EIC_INSTANCE_NAME?lower_case}.h"
@@ -72,10 +70,18 @@
 EIC_CALLBACK_OBJ    ${EIC_INSTANCE_NAME?lower_case}CallbackObject[EXTINT_COUNT];
 </#if>
 
+<#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
+<#if (NMI_IS_NON_SECURE == "SECURE") && (NMI_CTRL == true)>
+/* EIC NMI Callback object */
+EIC_NMI_CALLBACK_OBJ ${EIC_INSTANCE_NAME?lower_case}NMICallbackObject;
+
+</#if>
+<#else>
 <#if NMI_CTRL == true>
 /* EIC NMI Callback object */
 EIC_NMI_CALLBACK_OBJ ${EIC_INSTANCE_NAME?lower_case}NMICallbackObject;
 
+</#if>
 </#if>
 
 void ${EIC_INSTANCE_NAME}_Initialize (void)
@@ -145,7 +151,20 @@ void ${EIC_INSTANCE_NAME}_Initialize (void)
     <#if EIC_INT != "0">
     /* External Interrupt enable*/
     ${EIC_REG_NAME}_REGS->EIC_INTENSET = 0x${EIC_INT};
-
+<#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
+    /* Callbacks for enabled interrupts */
+    <#list 0..EIC_INT_COUNT as i>
+        <#assign EIC_INT_CHANNEL = "EIC_CHAN_" + i>
+        <#assign EIC_NON_SEC_CHANNEL = "EIC_NONSEC_" + i>
+            <#if .vars[EIC_INT_CHANNEL]?has_content>
+                <#if (.vars[EIC_INT_CHANNEL] != false) && .vars[EIC_NON_SEC_CHANNEL] == "SECURE">
+                    <#lt>    ${EIC_INSTANCE_NAME?lower_case}CallbackObject[${i}].eicPinNo = EIC_PIN_${i};
+                <#else>
+                    <#lt>    ${EIC_INSTANCE_NAME?lower_case}CallbackObject[${i}].eicPinNo = EIC_PIN_MAX;
+                </#if>
+            </#if>
+    </#list>
+<#else>
     /* Callbacks for enabled interrupts */
     <#list 0..EIC_INT_COUNT as i>
         <#assign EIC_INT_CHANNEL = "EIC_CHAN_" + i>
@@ -158,6 +177,11 @@ void ${EIC_INSTANCE_NAME}_Initialize (void)
             </#if>
     </#list>
     </#if>
+</#if>
+
+<#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true" && (NMI_IS_NON_SECURE == "NON-SECURE" || EIC_NONSEC != "0")>
+    ${EIC_REG_NAME}_REGS->EIC_NONSEC = 0x${EIC_NONSEC} <#if NMI_IS_NON_SECURE == "NON-SECURE">| EIC_NONSEC_NMI_Msk</#if>;
+</#if>
     /* Enable the EIC */
     ${EIC_REG_NAME}_REGS->EIC_CTRLA |= EIC_CTRLA_ENABLE_Msk;
 
@@ -189,6 +213,8 @@ void ${EIC_INSTANCE_NAME}_CallbackRegister(EIC_PIN pin, EIC_CALLBACK callback, u
 }
 
 </#if>
+<#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true" && NMI_IS_NON_SECURE == "NON-SECURE">
+<#else> 
 <#if NMI_CTRL == true>
 void ${EIC_INSTANCE_NAME}_NMICallbackRegister(EIC_NMI_CALLBACK callback, uintptr_t context)
 {
@@ -196,10 +222,12 @@ void ${EIC_INSTANCE_NAME}_NMICallbackRegister(EIC_NMI_CALLBACK callback, uintptr
 
     ${EIC_INSTANCE_NAME?lower_case}NMICallbackObject.context  = context;
 }
+</#if>
 
 </#if>
-<#if EIC_INT != "0">
-<#if NUM_INT_LINES == 0>
+<#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
+    <#if EIC_INT != "0">
+    <#if NUM_INT_LINES == 0>
 void ${EIC_INSTANCE_NAME}_InterruptHandler(void)
 {
     uint8_t currentChannel = 0;
@@ -228,10 +256,11 @@ void ${EIC_INSTANCE_NAME}_InterruptHandler(void)
         }
     }
 }
-<#else>
-<#list 0..(NUM_INT_LINES-1) as x>
-<#assign Enable = "EIC_INT_" + x>
-<#if .vars[Enable]>
+    <#else>
+    <#list 0..(NUM_INT_LINES-1) as x>
+    <#assign Enable = "EIC_INT_" + x>
+    <#assign EIC_NON_SEC = "EIC_NONSEC_" + x>
+    <#if .vars[Enable] && (.vars[EIC_NON_SEC] == "SECURE")>
 void ${EIC_INSTANCE_NAME}_EXTINT_${x}_InterruptHandler(void)
 {
     /* Clear interrupt flag */
@@ -243,10 +272,10 @@ void ${EIC_INSTANCE_NAME}_EXTINT_${x}_InterruptHandler(void)
     }
 
 }
-</#if>
-</#list>
-<#if EIC_OTHER_HANDLER_ACTIVE??>
-<#if EIC_OTHER_HANDLER_ACTIVE>
+    </#if>
+    </#list>
+    <#if EIC_OTHER_HANDLER_ACTIVE??>
+    <#if EIC_OTHER_HANDLER_ACTIVE &&  (EIC_OTHER_HANDLER_IS_NON_SEC == false)>
 void ${EIC_INSTANCE_NAME}_OTHER_InterruptHandler(void)
 {
     uint8_t currentChannel = 0;
@@ -275,11 +304,114 @@ void ${EIC_INSTANCE_NAME}_OTHER_InterruptHandler(void)
         }
     }
 }
-</#if>
-</#if>
-</#if>
+    </#if>
+    </#if>
+    </#if>
 
 </#if>
+<#else>
+    <#if EIC_INT != "0">
+    <#if NUM_INT_LINES == 0>
+void ${EIC_INSTANCE_NAME}_InterruptHandler(void)
+{
+    uint8_t currentChannel = 0;
+    uint32_t eicIntFlagStatus = 0;
+
+    /* Find any triggered channels, run associated callback handlers */
+    for (currentChannel = 0; currentChannel < EXTINT_COUNT; currentChannel++)
+    {
+        /* Verify if the EXTINT x Interrupt Pin is enabled */
+        if ((${EIC_INSTANCE_NAME?lower_case}CallbackObject[currentChannel].eicPinNo == currentChannel))
+        {
+            /* Read the interrupt flag status */
+            eicIntFlagStatus = ${EIC_REG_NAME}_REGS->EIC_INTFLAG & (1UL << currentChannel);
+
+            if (eicIntFlagStatus)
+            {
+                /* Find any associated callback entries in the callback table */
+                if ((${EIC_INSTANCE_NAME?lower_case}CallbackObject[currentChannel].callback != NULL))
+                {
+                    ${EIC_INSTANCE_NAME?lower_case}CallbackObject[currentChannel].callback(${EIC_INSTANCE_NAME?lower_case}CallbackObject[currentChannel].context);
+                }
+
+                /* Clear interrupt flag */
+                ${EIC_REG_NAME}_REGS->EIC_INTFLAG = (1UL << currentChannel);
+            }
+        }
+    }
+}
+    <#else>
+    <#list 0..(NUM_INT_LINES-1) as x>
+    <#assign Enable = "EIC_INT_" + x>
+    <#if .vars[Enable]>
+void ${EIC_INSTANCE_NAME}_EXTINT_${x}_InterruptHandler(void)
+{
+    /* Clear interrupt flag */
+    ${EIC_REG_NAME}_REGS->EIC_INTFLAG = (1UL << ${x});
+    /* Find any associated callback entries in the callback table */
+    if ((${EIC_INSTANCE_NAME?lower_case}CallbackObject[${x}].callback != NULL))
+    {
+        ${EIC_INSTANCE_NAME?lower_case}CallbackObject[${x}].callback(${EIC_INSTANCE_NAME?lower_case}CallbackObject[${x}].context);
+    }
+
+}
+    </#if>
+    </#list>
+    <#if EIC_OTHER_HANDLER_ACTIVE??>
+    <#if EIC_OTHER_HANDLER_ACTIVE>
+void ${EIC_INSTANCE_NAME}_OTHER_InterruptHandler(void)
+{
+    uint8_t currentChannel = 0;
+    uint32_t eicIntFlagStatus = 0;
+
+    /* Find any triggered channels, run associated callback handlers */
+    for (currentChannel = ${NUM_INT_LINES}; currentChannel < EXTINT_COUNT; currentChannel++)
+    {
+        /* Verify if the EXTINT x Interrupt Pin is enabled */
+        if ((${EIC_INSTANCE_NAME?lower_case}CallbackObject[currentChannel].eicPinNo == currentChannel))
+        {
+            /* Read the interrupt flag status */
+            eicIntFlagStatus = ${EIC_REG_NAME}_REGS->EIC_INTFLAG & (1UL << currentChannel);
+
+            if (eicIntFlagStatus)
+            {
+                /* Find any associated callback entries in the callback table */
+                if ((${EIC_INSTANCE_NAME?lower_case}CallbackObject[currentChannel].callback != NULL))
+                {
+                    ${EIC_INSTANCE_NAME?lower_case}CallbackObject[currentChannel].callback(${EIC_INSTANCE_NAME?lower_case}CallbackObject[currentChannel].context);
+                }
+
+                /* Clear interrupt flag */
+                ${EIC_REG_NAME}_REGS->EIC_INTFLAG = (1UL << currentChannel);
+            }
+        }
+    }
+}
+    </#if>
+    </#if>
+    </#if>
+
+</#if>
+</#if>
+<#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
+<#if (NMI_IS_NON_SECURE == "SECURE") && (NMI_CTRL == true)>
+void NMI_InterruptHandler(void)
+{
+    /* Find the triggered, run associated callback handlers */
+    if ((${EIC_REG_NAME}_REGS->EIC_NMIFLAG & EIC_NMIFLAG_NMI_Msk) == EIC_NMIFLAG_NMI_Msk)
+    {
+        /* Clear flag */
+        ${EIC_REG_NAME}_REGS->EIC_NMIFLAG = EIC_NMIFLAG_NMI_Msk;
+
+        /* Find any associated callback entries in the callback table */
+        if (${EIC_INSTANCE_NAME?lower_case}NMICallbackObject.callback != NULL)
+        {
+            ${EIC_INSTANCE_NAME?lower_case}NMICallbackObject.callback(${EIC_INSTANCE_NAME?lower_case}NMICallbackObject.context);
+        }
+    }
+}
+</#if>
+<#else>
 <#if NMI_CTRL == true>
 void NMI_InterruptHandler(void)
 {
@@ -296,4 +428,5 @@ void NMI_InterruptHandler(void)
         }
     }
 }
+</#if>
 </#if>

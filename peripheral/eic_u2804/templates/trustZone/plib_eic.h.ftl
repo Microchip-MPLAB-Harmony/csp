@@ -75,39 +75,39 @@
 /* The following data type definitions are used by the functions in this
     interface and should be considered part of it.
 */
-<#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
-/* EIC Secure Pin Count */
-#define EXTINT_COUNT                        (${EIC_INT_COUNT}U)
-<#else>
+
 /* EIC Pin Count */
 #define EXTINT_COUNT                        (${EIC_INT_COUNT}U)
-</#if>
+
+// *****************************************************************************
+/* EIC Pins
+
+  Summary:
+    Identifies the available EIC pins.
+
+  Description:
+    This enumeration identifies all the available EIC pins. Not all pins will be
+    implemented in a device. The pins described here are for documentation
+    purposes only. The MHC will generate this enumeration with the enabled EIC
+    pins only. The application should not use the constant value that are
+    assigned to enumeration constants as this may vary between devices.
+
+  Remarks:
+    None.
+*/
 
 typedef enum
 {
-<#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
 <#list 0..EIC_INT_COUNT as i>
     <#assign EIC_INT_CHANNEL = "EIC_CHAN_" + i>
     <#assign EIC_NON_SEC_CHANNEL = "EIC_NONSEC_" + i>
         <#if .vars[EIC_INT_CHANNEL]?has_content>
-            <#if (.vars[EIC_INT_CHANNEL] != false) && .vars[EIC_NON_SEC_CHANNEL] == "SECURE">
+            <#if (.vars[EIC_INT_CHANNEL] != false) && .vars[EIC_NON_SEC_CHANNEL] == "NON-SECURE">
     <#lt>    /* External Interrupt Controller Pin ${i} */
     <#lt>    EIC_PIN_${i} = ${i},
             </#if>
             </#if>
 </#list>
-<#else>
-<#list 0..EIC_INT_COUNT as i>
-    <#assign EIC_INT_CHANNEL = "EIC_CHAN_" + i>
-        <#if .vars[EIC_INT_CHANNEL]?has_content>
-            <#if (.vars[EIC_INT_CHANNEL] != false)>
-    <#lt>    /* External Interrupt Controller Pin ${i} */
-    <#lt>    EIC_PIN_${i} = ${i},
-
-            </#if>
-        </#if>
-</#list>
-</#if>
     EIC_PIN_MAX = 16
 
 } EIC_PIN;
@@ -130,22 +130,8 @@ typedef struct
 } EIC_CALLBACK_OBJ;
 </#if>
 
-<#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
-<#if (NMI_IS_NON_SECURE == "SECURE") && (NMI_CTRL == true)>
-typedef void (*EIC_NMI_CALLBACK) (uintptr_t context);
-
-typedef struct
-{
-    /* NMI Callback Handler */
-    EIC_NMI_CALLBACK callback;
-
-    /* NMI Client context */
-    uintptr_t       context;
-
-} EIC_NMI_CALLBACK_OBJ;
-</#if>
-<#else>
 <#if NMI_CTRL == true>
+
 typedef void (*EIC_NMI_CALLBACK) (uintptr_t context);
 
 typedef struct
@@ -158,17 +144,6 @@ typedef struct
 
 } EIC_NMI_CALLBACK_OBJ;
 </#if>
-</#if>
-
-// *****************************************************************************
-// *****************************************************************************
-// Section: Interface Routines
-// *****************************************************************************
-// *****************************************************************************
-/* The following functions make up the methods (set of possible operations) of
-    this interface.
-*/
-
 void ${EIC_INSTANCE_NAME}_Initialize (void);
 <#if EIC_INT != "0">
 void ${EIC_INSTANCE_NAME}_InterruptEnable (EIC_PIN pin);
@@ -176,13 +151,8 @@ void ${EIC_INSTANCE_NAME}_InterruptDisable (EIC_PIN pin);
 void ${EIC_INSTANCE_NAME}_CallbackRegister(EIC_PIN pin, EIC_CALLBACK callback, uintptr_t context);
 
 </#if>
-<#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
-<#if (NMI_IS_NON_SECURE == "SECURE") && (NMI_CTRL == true)>
+
+<#if (NMI_IS_NON_SECURE == "NON-SECURE") && (NMI_CTRL == true)>
 void ${EIC_INSTANCE_NAME}_NMICallbackRegister(EIC_NMI_CALLBACK callback, uintptr_t context);
-</#if>
-<#else>
-<#if NMI_CTRL == true>
-void ${EIC_INSTANCE_NAME}_NMICallbackRegister(EIC_NMI_CALLBACK callback, uintptr_t context);
-</#if>
 </#if>
 #endif /* PLIB_${EIC_INSTANCE_NAME}_H */
