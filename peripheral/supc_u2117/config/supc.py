@@ -30,6 +30,28 @@ global supcSym_BODVDD_ACTCFG
 global supcSym_BOD33_RUNBKUP
 global supcInstanceName
 global supcSym_INTENSET
+global SUPCfilesArray
+global InterruptVectorSecurity
+SUPCfilesArray = []
+
+
+def fileUpdate(symbol, event):
+    global SUPCfilesArray
+    global InterruptVectorSecurity
+    if event["value"] == False:
+        SUPCfilesArray[0].setSecurity("SECURE")
+        SUPCfilesArray[1].setSecurity("SECURE")
+        SUPCfilesArray[2].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        SUPCfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+        Database.setSymbolValue("core", InterruptVectorSecurity, False)
+
+    else:
+        SUPCfilesArray[0].setSecurity("NON_SECURE")
+        SUPCfilesArray[1].setSecurity("NON_SECURE")
+        SUPCfilesArray[2].setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        SUPCfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+        Database.setSymbolValue("core", InterruptVectorSecurity, True)
+
 
 def updateBODVisibleProperty(symbol, event):
     symbol.setVisible(event["value"])
@@ -68,12 +90,15 @@ def instantiateComponent(supcComponent):
     global supcSym_VREF_ONDEMAND
     global supcInstanceName
     global supcSym_INTENSET
+    global InterruptVectorSecurity
+
     vsvstepPresent = False
     vsperPresent = False
     supcInstanceName = supcComponent.createStringSymbol("SUPC_INSTANCE_NAME", None)
     supcInstanceName.setVisible(False)
     supcInstanceName.setDefaultValue(supcComponent.getID().upper())
-    
+
+    InterruptVectorSecurity = supcInstanceName.getValue()+  "_SET_NON_SECURE"
     #checkVREF register
     vrefNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SUPC\"]/register-group/register@[name=\"VREG\"]")
     vrefNodeValues = vrefNode.getChildren()
@@ -408,3 +433,18 @@ def instantiateComponent(supcComponent):
     supcSym_SystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     supcSym_SystemDefFile.setSourcePath("../peripheral/supc_u2117/templates/system/definitions.h.ftl")
     supcSym_SystemDefFile.setMarkup(True)
+
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        global SUPCfilesArray
+        supcIsNonSecure = Database.getSymbolValue("core", supcComponent.getID().upper() + "_IS_NON_SECURE")
+        supcSym_SystemDefFile.setDependencies(fileUpdate, ["core." + supcComponent.getID().upper() + "_IS_NON_SECURE"])
+        SUPCfilesArray.append(supcSym_HeaderFile)
+        SUPCfilesArray.append(supcSym_SourceFile)
+        SUPCfilesArray.append(supcSym_SystemInitFile)
+        SUPCfilesArray.append(supcSym_SystemDefFile)
+        Database.setSymbolValue("core", InterruptVectorSecurity, supcIsNonSecure)
+        if supcIsNonSecure == False:
+            SUPCfilesArray[0].setSecurity("SECURE")
+            SUPCfilesArray[1].setSecurity("SECURE")
+            SUPCfilesArray[2].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+            SUPCfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
