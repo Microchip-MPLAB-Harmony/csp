@@ -107,6 +107,21 @@ def instantiateComponent(cmsisComponent):
             headerFile.setEnabled(cmsisCoreEnableSym.getValue())
             headerFile.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"]), ["CMSIS_CORE_ENABLE"])
 
+            if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+                #for Secure
+                headerFile = cmsisComponent.createFileSymbol("SEC_" + szSymbol, None)
+                headerFile.setRelative(False)
+                headerFile.setSourcePath(Variables.get("__CMSIS_PACK_DIR") + "/CMSIS/Core/Include/" + headerFileName)
+                headerFile.setOutputName(headerFileName)
+                headerFile.setMarkup(False)
+                headerFile.setOverwrite(True)
+                headerFile.setDestPath("../../packs/CMSIS/CMSIS/Core/Include/")
+                headerFile.setProjectPath("packs/CMSIS/CMSIS/Core/Include/")
+                headerFile.setType("HEADER")
+                headerFile.setSecurity("SECURE")
+                headerFile.setEnabled(cmsisCoreEnableSym.getValue())
+                headerFile.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"]), ["CMSIS_CORE_ENABLE"])
+
 ################################################################################
 ############################### CMSIS DSP ######################################
 ################################################################################
@@ -132,6 +147,21 @@ def instantiateComponent(cmsisComponent):
             headerFile.setType("HEADER")
             headerFile.setEnabled(cmsisDSPEnableSym.getValue())
             headerFile.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"]), ["CMSIS_DSP_ENABLE"])
+
+            if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+                #for Secure
+                headerFile = cmsisComponent.createFileSymbol("SEC_" + szSymbol, None)
+                headerFile.setRelative(False)
+                headerFile.setSourcePath(Variables.get("__CMSIS_PACK_DIR") + "/CMSIS/DSP/Include/" + headerFileName)
+                headerFile.setOutputName(headerFileName)
+                headerFile.setMarkup(False)
+                headerFile.setOverwrite(True)
+                headerFile.setDestPath("../../packs/CMSIS/CMSIS/DSP/Include/")
+                headerFile.setProjectPath("packs/CMSIS/CMSIS/DSP/Include/")
+                headerFile.setType("HEADER")
+                headerFile.setSecurity("SECURE")
+                headerFile.setEnabled(cmsisDSPEnableSym.getValue())
+                headerFile.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"]), ["CMSIS_DSP_ENABLE"])
         
         #CMSIS DSP include path setting symbol
         cmsisDSPIncludeSetting = cmsisComponent.createSettingSymbol("CMSIS_DSP_INCLUDE_DIRS", None)
@@ -141,6 +171,17 @@ def instantiateComponent(cmsisComponent):
         cmsisDSPIncludeSetting.setAppend(True, ";")
         cmsisDSPIncludeSetting.setEnabled(cmsisDSPEnableSym.getValue())
         cmsisDSPIncludeSetting.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"]), ["CMSIS_DSP_ENABLE"])
+
+        if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+            #CMSIS DSP include path setting symbol for Secure
+            cmsisDSPIncludeSetting = cmsisComponent.createSettingSymbol("SEC_CMSIS_DSP_INCLUDE_DIRS", None)
+            cmsisDSPIncludeSetting.setCategory("C32")
+            cmsisDSPIncludeSetting.setKey("extra-include-directories")
+            cmsisDSPIncludeSetting.setValue("../src/packs/CMSIS/CMSIS/DSP/Include/")
+            cmsisDSPIncludeSetting.setAppend(True, ";")
+            cmsisDSPIncludeSetting.setEnabled(cmsisDSPEnableSym.getValue())
+            cmsisDSPIncludeSetting.setSecurity("SECURE")
+            cmsisDSPIncludeSetting.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"]), ["CMSIS_DSP_ENABLE"])
         
         # Construct the library name
         if cortexType in v8Cores:
@@ -171,6 +212,15 @@ def instantiateComponent(cmsisComponent):
         libraryFileSym.setEnabled(cmsisDSPEnableSym.getValue())
         libraryFileSym.setDependencies(dspLibCallback, ["CMSIS_DSP_ENABLE","core.COMPILER_CHOICE"])
 
+        if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+            #for Secure
+            libraryFileSym = cmsisComponent.createLibrarySymbol("SEC_CMSIS_DSP_LIB_" + libCoreName, None)
+            setDspLibParameters(libraryFileSym,0)
+            # TO-DO Uncomment this once MHC supports it for Library interface
+            #libraryFileSym.setSecurity("SECURE")
+            libraryFileSym.setEnabled(cmsisDSPEnableSym.getValue())
+            libraryFileSym.setDependencies(dspLibCallback, ["CMSIS_DSP_ENABLE","core.COMPILER_CHOICE"])
+
 ################################################################################
 ############################### CMSIS NN #######################################
 ################################################################################
@@ -195,6 +245,21 @@ def instantiateComponent(cmsisComponent):
             headerFile.setEnabled(cmsisNNEnableSym.getValue())
             headerFile.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"]), ["CMSIS_NN_ENABLE"])
 
+            if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+                #for Secure
+                headerFile = cmsisComponent.createFileSymbol("SEC_" + szSymbol, None)
+                headerFile.setRelative(False)
+                headerFile.setSourcePath(cmsisNNIncludePath + os.sep + headerFileName)
+                headerFile.setOutputName(headerFileName)
+                headerFile.setMarkup(False)
+                headerFile.setOverwrite(True)
+                headerFile.setDestPath("../../packs/CMSIS/CMSIS/NN/Include/")
+                headerFile.setProjectPath("packs/CMSIS/CMSIS/NN/Include/")
+                headerFile.setType("HEADER")
+                headerFile.setEnabled(cmsisNNEnableSym.getValue())
+                headerFile.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"]), ["CMSIS_NN_ENABLE"])
+                headerFile.setSecurity("SECURE")
+
         #CMSIS NN include path setting symbol
         cmsisNNIncludeSetting = cmsisComponent.createSettingSymbol("CMSIS_NN_INCLUDE_DIRS", None)
         cmsisNNIncludeSetting.setCategory("C32")
@@ -203,7 +268,18 @@ def instantiateComponent(cmsisComponent):
         cmsisNNIncludeSetting.setAppend(True, ";")
         cmsisNNIncludeSetting.setEnabled(cmsisNNEnableSym.getValue())
         cmsisNNIncludeSetting.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"]), ["CMSIS_NN_ENABLE"])
-        
+
+        if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+            #CMSIS NN include path setting symbol for Secure
+            cmsisNNIncludeSetting = cmsisComponent.createSettingSymbol("SEC_CMSIS_NN_INCLUDE_DIRS", None)
+            cmsisNNIncludeSetting.setCategory("C32")
+            cmsisNNIncludeSetting.setKey("extra-include-directories")
+            cmsisNNIncludeSetting.setValue("../src/packs/CMSIS/CMSIS/NN/Include/")
+            cmsisNNIncludeSetting.setAppend(True, ";")
+            cmsisNNIncludeSetting.setEnabled(cmsisNNEnableSym.getValue())
+            cmsisNNIncludeSetting.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"]), ["CMSIS_NN_ENABLE"])
+            cmsisNNIncludeSetting.setSecurity("SECURE")
+
         #Create source file symbols
         cmsisNNSourcePath = os.path.join(Variables.get("__CMSIS_PACK_DIR"), "CMSIS", "NN", "Source")
         for root,_,files in os.walk(cmsisNNSourcePath):
@@ -220,6 +296,21 @@ def instantiateComponent(cmsisComponent):
                 sourceFile.setType("SOURCE")
                 sourceFile.setEnabled(cmsisNNEnableSym.getValue())
                 sourceFile.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"]), ["CMSIS_NN_ENABLE"])
+
+                if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+                    #for Secure
+                    sourceFile = cmsisComponent.createFileSymbol("SEC_" + szSymbol, None)
+                    sourceFile.setRelative(False)
+                    sourceFile.setSourcePath(os.path.join(root, sourceFileName))
+                    sourceFile.setOutputName(sourceFileName)
+                    sourceFile.setMarkup(False)
+                    sourceFile.setOverwrite(True)
+                    sourceFile.setDestPath(os.path.normpath("../../packs/CMSIS/CMSIS/NN/Source/" + os.path.basename(root)))
+                    sourceFile.setProjectPath(os.path.normpath("packs/CMSIS/CMSIS/NN/Source/" + os.path.basename(root)))
+                    sourceFile.setType("SOURCE")
+                    sourceFile.setSecurity("SECURE")
+                    sourceFile.setEnabled(cmsisNNEnableSym.getValue())
+                    sourceFile.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"]), ["CMSIS_NN_ENABLE"])
 
     #If this is a cortex A device
     elif cortexType.startswith("a"):

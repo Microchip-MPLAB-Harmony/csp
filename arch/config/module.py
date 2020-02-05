@@ -40,6 +40,11 @@ def loadModule():
     stdioComponent = Module.CreateComponent("stdio", "STDIO", "/Tools/", "../arch/stdio/config/stdio.py")
     stdioComponent.addDependency("UART","UART",False,True)
 
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        # initiate stdio
+        stdioComponent = Module.CreateComponent("stdio_s", "Secure STDIO", "/Tools/", "../arch/stdio/config/stdio_secure.py")
+        stdioComponent.addDependency("UART","UART",False,True)
+
     # load device specific peripherals
     d = dict(locals(), **globals())
     execfile(Module.getPath() + "../../csp/peripheral/config/peripheral.py", d, d)

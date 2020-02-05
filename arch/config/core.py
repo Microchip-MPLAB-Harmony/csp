@@ -153,6 +153,7 @@ def instantiateComponent( coreComponent ):
     global armLibCSourceFile
     global devconSystemInitFile
     global debugSourceFile
+    global secdebugSourceFile
     global naQualifier
     global xc32Menu
     global xc32Available
@@ -644,6 +645,7 @@ def instantiateComponent( coreComponent ):
     xc32NoDeviceStartupCodeSym.setKey("no-device-startup-code")
     xc32NoDeviceStartupCodeSym.setValue("true")
 
+    global compilerSelected
     compilerSelected = compilerChoice.getSelectedKey().replace( naQualifier, "" ).lower()
     debugSourceFile = coreComponent.createFileSymbol( "DEBUG_CONSOLE_C", None )
     debugSourceFile.setMarkup( True )
@@ -676,6 +678,7 @@ def compilerUpdate( symbol, event ):
     global compilerSpecifics        # used in processor + ".py" modules
     global devconSystemInitFile     # set in processor + ".py" modules
     global armLibCSourceFile        # set in processor + ".py" modules
+    global secarmLibCSourceFile
     global debugSourceFile          # set in core/system/console/config/sys_console.py
     global naQualifier              # warning not use; but not prohibited
     global xc32Menu
@@ -683,7 +686,7 @@ def compilerUpdate( symbol, event ):
     global iarMenu
     global iarAvailable
     global processor
-
+    
     compilersVisibleFlag = True
 
     compilerSelected = event[ "symbol" ].getSelectedKey()
@@ -697,6 +700,8 @@ def compilerUpdate( symbol, event ):
     if not compilerSpecifics:
         compilerSpecifics = []
     compilerSpecifics.append( debugSourceFile )
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+       compilerSpecifics.append( secdebugSourceFile ) 
 
     if compilerSelected == "IAR":
         xc32Menu.setVisible(False)
@@ -704,12 +709,18 @@ def compilerUpdate( symbol, event ):
             devconSystemInitFile.setEnabled( False )
         if armLibCSourceFile != None:
             armLibCSourceFile.setEnabled( False )
+        if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+            if secarmLibCSourceFile != None:
+                secarmLibCSourceFile.setEnabled( False )
     elif compilerSelected == "XC32":
         iarMenu.setVisible(False)
         if devconSystemInitFile != None:
             devconSystemInitFile.setEnabled( True )
         if armLibCSourceFile != None:
             armLibCSourceFile.setEnabled( True )
+        if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+            if secarmLibCSourceFile != None:
+                secarmLibCSourceFile.setEnabled( True )        
     elif compilerSelected == "KEIL":
         xc32Menu.setVisible(False)
         iarMenu.setVisible(False)
@@ -717,6 +728,9 @@ def compilerUpdate( symbol, event ):
             devconSystemInitFile.setEnabled( False )
         if armLibCSourceFile != None:
             armLibCSourceFile.setEnabled( False )
+        if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+            if secarmLibCSourceFile != None:
+                secarmLibCSourceFile.setEnabled( False )
 
     for file in compilerSpecifics:
         updatePath( file, compilerSelected.lower() )
