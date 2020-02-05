@@ -133,6 +133,12 @@ def updateNVICVectorParametersValue(symbol, event):
 
     symbol.setValue(event["value"], 2)
 
+def updateSecurity(symbol, event):
+    if event["value"]:
+        symbol.setValue(1)
+    else:
+        symbol.setValue(0)
+
 ################################################################################
 #### Component ####
 ################################################################################
@@ -217,6 +223,11 @@ for vectorDict in nvicVectorDataStructure:
         nvicVectorPeriHandlerLockList.setLabel("Vector Peripheral Handler Lock")
         nvicVectorPeriHandlerLockList.setVisible(False)
 
+        if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+            nvicSecureSetup = coreComponent.createBooleanSymbol(vName + "_SET_NON_SECURE", nvicMenu)
+            nvicSecureSetup.setLabel("Peripheral Interrupt Security Setup")
+            nvicSecureSetup.setVisible(False)
+
         nvicVectorEnable[index].append(listIndex)
         nvicVectorEnable[index][listIndex] = coreComponent.createBooleanSymbol("NVIC_" + str(vIndex) + "_" + str(listIndex) + "_ENABLE", nvicMenu)
         nvicVectorEnable[index][listIndex].setLabel("Enable " + vDescription + " Interrupt")
@@ -276,7 +287,16 @@ for vectorDict in nvicVectorDataStructure:
         nvicVectorHandlerLock[index][listIndex].setVisible(False)
         nvicVectorHandlerLock[index][listIndex].setDefaultValue(vectorSettings[vector][6])
         nvicVectorHandlerLock[index][listIndex].setDependencies(updateNVICVectorParametersValue, [vName + "_INTERRUPT_HANDLER_LOCK"])
-
+        if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+            nvicSecurity = coreComponent.createKeyValueSetSymbol("NVIC_" + str(vIndex) + "_" + str(listIndex) + "_SECURITY_TYPE", nvicVectorEnable[index][listIndex])
+            nvicSecurity.setLabel("Interrupt Security mode")
+            nvicSecurity.addKey("SECURE", "0", "False")
+            nvicSecurity.addKey("NON-SECURE", "1", "True")
+            nvicSecurity.setOutputMode("Key")
+            nvicSecurity.setDisplayMode("Key")
+            nvicSecurity.setVisible(True)
+            nvicSecurity.setDefaultValue(0)
+            nvicSecurity.setDependencies(updateSecurity, [vName + "_SET_NON_SECURE"])
         # only if multiple peripherals connected to same interrupt line
         if len(handlerList) > 1:
 
@@ -381,3 +401,27 @@ nvicSystemIntTableFile.setType("STRING")
 nvicSystemIntTableFile.setOutputName("core.LIST_SYSTEM_INTERRUPT_HANDLERS")
 nvicSystemIntTableFile.setSourcePath("../peripheral/nvic/templates/system/interrupts_vector_table.h.ftl")
 nvicSystemIntTableFile.setMarkup(True)
+
+if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+    secnvicSystemIntMultipleHandleFile = coreComponent.createFileSymbol("SEC_NVIC_MULTIPLE_HANDLER", None)
+    secnvicSystemIntMultipleHandleFile.setType("STRING")
+    secnvicSystemIntMultipleHandleFile.setOutputName("core.LIST_SYSTEM_INTERRUPT_SECURE_MULTIPLE_HANDLERS")
+    secnvicSystemIntMultipleHandleFile.setSourcePath("../peripheral/nvic/templates/system/trustZone/interrupts_multiple_handlers_secure.h.ftl")
+    secnvicSystemIntMultipleHandleFile.setMarkup(True)
+
+    secnvicSystemIntWeakHandleFile = coreComponent.createFileSymbol("SEC_NVIC_INT_HANDLER", None)
+    secnvicSystemIntWeakHandleFile.setType("STRING")
+    secnvicSystemIntWeakHandleFile.setOutputName("core.LIST_SYSTEM_INTERRUPT_SECURE_WEAK_HANDLERS")
+    secnvicSystemIntWeakHandleFile.setSourcePath("../peripheral/nvic/templates/system/trustZone/interrupts_weak_handlers_secure.h.ftl")
+    secnvicSystemIntWeakHandleFile.setMarkup(True)
+
+    secnvicSystemIntTableFile = coreComponent.createFileSymbol("SEC_NVIC_INT_TABLE", None)
+    secnvicSystemIntTableFile.setType("STRING")
+    secnvicSystemIntTableFile.setOutputName("core.LIST_SYSTEM_INTERRUPT_SECURE_HANDLERS")
+    secnvicSystemIntTableFile.setSourcePath("../peripheral/nvic/templates/system/trustZone/interrupts_vector_table_secure.h.ftl")
+    secnvicSystemIntTableFile.setMarkup(True)
+    
+    nvicHeaderFile.setSecurity("SECURE")
+    nvicSourceFile.setSecurity("SECURE")
+    nvicSystemInitFile.setOutputName("core.LIST_SYSTEM_SECURE_INIT_INTERRUPTS")
+    nvicSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")

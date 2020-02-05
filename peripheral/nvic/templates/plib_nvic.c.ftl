@@ -70,6 +70,7 @@ void NVIC_Initialize( void )
         <#assign NVIC_VECTOR_ENABLE_GENERATE = "NVIC_" + i + "_" + j + "_ENABLE_GENERATE">
         <#assign NVIC_VECTOR_PRIORITY = "NVIC_" + i + "_" + j + "_PRIORITY">
         <#assign NVIC_VECTOR_PRIORITY_GENERATE = "NVIC_" + i + "_" + j + "_PRIORITY_GENERATE">
+        <#assign NVIC_VECTOR_NONSECURE = "NVIC_" + i + "_" + j + "_SECURITY_TYPE">
             <#if .vars[NVIC_VECTOR_ENABLE]?has_content && (.vars[NVIC_VECTOR_ENABLE] != false)>
                 <#if .vars[NVIC_VECTOR_PRIORITY_GENERATE]?has_content && (.vars[NVIC_VECTOR_PRIORITY_GENERATE] != false)>
                     <#if .vars[NVIC_VECTOR_PRIORITY]?has_content && (.vars[NVIC_VECTOR_PRIORITY]?number != 0)>
@@ -77,6 +78,11 @@ void NVIC_Initialize( void )
                     </#if>
                     <#if .vars[NVIC_VECTOR_ENABLE_GENERATE]?has_content && (.vars[NVIC_VECTOR_ENABLE_GENERATE] != false)>
                         <#lt>    NVIC_EnableIRQ(${.vars[NVIC_VECTOR_NAME]}_IRQn);
+                    </#if>
+                    <#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
+                    <#if (.vars[NVIC_VECTOR_NONSECURE] == "NON-SECURE")>
+                        <#lt>    NVIC_SetTargetState(${.vars[NVIC_VECTOR_NAME]}_IRQn);
+                        </#if>
                     </#if>
                     <#break>
                 </#if>
