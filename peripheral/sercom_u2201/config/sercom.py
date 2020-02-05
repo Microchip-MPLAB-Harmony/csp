@@ -25,6 +25,54 @@
 ###################################################################################################
 ########################################## Callbacks  #############################################
 ###################################################################################################
+global SERCOMfilesArray
+global InterruptVectorSecurity
+InterruptVectorSecurity = []
+SERCOMfilesArray = []
+
+def fileUpdate(symbol, event):
+    global SERCOMfilesArray
+    global InterruptVectorSecurity
+    if event["value"] == False:
+        SERCOMfilesArray[0].setSecurity("SECURE")
+        SERCOMfilesArray[1].setSecurity("SECURE")
+        SERCOMfilesArray[2].setSecurity("SECURE")
+        SERCOMfilesArray[3].setSecurity("SECURE")
+        SERCOMfilesArray[4].setSecurity("SECURE")
+        SERCOMfilesArray[5].setSecurity("SECURE")
+        SERCOMfilesArray[6].setSecurity("SECURE")
+        SERCOMfilesArray[7].setSecurity("SECURE")
+        SERCOMfilesArray[8].setSecurity("SECURE")
+        SERCOMfilesArray[9].setSecurity("SECURE")
+        SERCOMfilesArray[10].setSecurity("SECURE")
+        SERCOMfilesArray[11].setSecurity("SECURE")
+        SERCOMfilesArray[12].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        SERCOMfilesArray[13].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+        if len(InterruptVectorSecurity) != 1:
+            for vector in InterruptVectorSecurity:
+                Database.setSymbolValue("core", vector, False)
+        else:
+            Database.setSymbolValue("core", InterruptVectorSecurity, False)
+    else:
+        SERCOMfilesArray[0].setSecurity("NON_SECURE")
+        SERCOMfilesArray[1].setSecurity("NON_SECURE")
+        SERCOMfilesArray[2].setSecurity("NON_SECURE")
+        SERCOMfilesArray[3].setSecurity("NON_SECURE")
+        SERCOMfilesArray[4].setSecurity("NON_SECURE")
+        SERCOMfilesArray[5].setSecurity("NON_SECURE")
+        SERCOMfilesArray[6].setSecurity("NON_SECURE")
+        SERCOMfilesArray[7].setSecurity("NON_SECURE")
+        SERCOMfilesArray[8].setSecurity("NON_SECURE")
+        SERCOMfilesArray[9].setSecurity("NON_SECURE")
+        SERCOMfilesArray[10].setSecurity("NON_SECURE")
+        SERCOMfilesArray[11].setSecurity("NON_SECURE")
+        SERCOMfilesArray[12].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        SERCOMfilesArray[13].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+        if len(InterruptVectorSecurity) != 1:
+            for vector in InterruptVectorSecurity:
+                Database.setSymbolValue("core", vector, True)
+        else:
+            Database.setSymbolValue("core", InterruptVectorSecurity, True)
 
 def onAttachmentConnected(source, target):
 
@@ -247,6 +295,7 @@ def instantiateComponent(sercomComponent):
     global sercomInstanceName
     global sercomSym_OperationMode
     global sercomClkFrequencyId
+    global InterruptVectorSecurity
 
     InterruptVector = []
     InterruptHandler = []
@@ -332,6 +381,7 @@ def instantiateComponent(sercomComponent):
             InterruptHandler.append(name + "_INTERRUPT_HANDLER")
             InterruptHandlerLock.append(name + "_INTERRUPT_HANDLER_LOCK")
             InterruptVectorUpdate.append("core." + name + "_INTERRUPT_ENABLE_UPDATE")
+            InterruptVectorSecurity.append(name + "_SET_NON_SECURE")
 
     # Initial settings for Interrupt
     setSERCOMInterruptData(True, "USART")
@@ -473,3 +523,43 @@ def instantiateComponent(sercomComponent):
     sercomSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     sercomSystemDefFile.setSourcePath("../peripheral/sercom_u2201/templates/system/definitions.h.ftl")
     sercomSystemDefFile.setMarkup(True)
+
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        global SERCOMfilesArray
+        sercomIsNonSecure = Database.getSymbolValue("core", sercomComponent.getID().upper() + "_IS_NON_SECURE")
+        sercomSystemDefFile.setDependencies(fileUpdate, ["core." + sercomComponent.getID().upper() + "_IS_NON_SECURE"])
+        SERCOMfilesArray.append(usartHeaderFile)
+        SERCOMfilesArray.append(usartCommonHeaderFile)
+        SERCOMfilesArray.append(usartSourceFile)
+        SERCOMfilesArray.append(spiSym_HeaderFile)
+        SERCOMfilesArray.append(spiSym_Header1File)
+        SERCOMfilesArray.append(spiSym_SourceFile)
+        SERCOMfilesArray.append(i2cmMasterHeaderFile)
+        SERCOMfilesArray.append(i2cmHeaderFile)
+        SERCOMfilesArray.append(i2cmSourceFile)
+        SERCOMfilesArray.append(i2csSlaveHeaderFile)
+        SERCOMfilesArray.append(i2csHeaderFile)
+        SERCOMfilesArray.append(i2csSourceFile)
+        SERCOMfilesArray.append(sercomSystemInitFile)
+        SERCOMfilesArray.append(sercomSystemDefFile)       
+        if len(InterruptVectorSecurity) != 1:
+            for vector in InterruptVectorSecurity:
+                Database.setSymbolValue("core", vector, sercomIsNonSecure)
+        else:
+            Database.setSymbolValue("core", InterruptVectorSecurity, sercomIsNonSecure)
+            
+        if sercomIsNonSecure == False:
+            SERCOMfilesArray[0].setSecurity("SECURE")
+            SERCOMfilesArray[1].setSecurity("SECURE")
+            SERCOMfilesArray[2].setSecurity("SECURE")
+            SERCOMfilesArray[3].setSecurity("SECURE")
+            SERCOMfilesArray[4].setSecurity("SECURE")
+            SERCOMfilesArray[5].setSecurity("SECURE")
+            SERCOMfilesArray[6].setSecurity("SECURE")
+            SERCOMfilesArray[7].setSecurity("SECURE")
+            SERCOMfilesArray[8].setSecurity("SECURE")
+            SERCOMfilesArray[9].setSecurity("SECURE")
+            SERCOMfilesArray[10].setSecurity("SECURE")
+            SERCOMfilesArray[11].setSecurity("SECURE")
+            SERCOMfilesArray[12].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+            SERCOMfilesArray[13].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
