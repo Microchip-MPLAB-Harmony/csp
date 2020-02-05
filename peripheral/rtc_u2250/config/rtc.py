@@ -29,10 +29,30 @@ global InterruptHandlerLock
 global rtcInstanceName
 global eventMap
 global eventMapInverse
-
+global RTCfilesArray
+global InterruptVectorSecurity
+RTCfilesArray = []
 ################################################################################
 #                        Callback Functions                      ########
 ################################################################################
+
+def fileUpdate(symbol, event):
+    global RTCfilesArray
+    global InterruptVectorSecurity
+    if event["value"] == False:
+        RTCfilesArray[0].setSecurity("SECURE")
+        RTCfilesArray[1].setSecurity("SECURE")
+        RTCfilesArray[2].setSecurity("SECURE")
+        RTCfilesArray[3].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        RTCfilesArray[4].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+        Database.setSymbolValue("core", InterruptVectorSecurity, False)
+    else:
+        RTCfilesArray[0].setSecurity("NON_SECURE")
+        RTCfilesArray[1].setSecurity("NON_SECURE")
+        RTCfilesArray[2].setSecurity("NON_SECURE")
+        RTCfilesArray[3].setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        RTCfilesArray[4].setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+        Database.setSymbolValue("core", InterruptVectorSecurity, True)
 
 def sysTimeCalendarModeCommentVisibility(symbol, event):
     global sysTimeComponentId
@@ -463,6 +483,7 @@ def instantiateComponent(rtcComponent):
     global InterruptVector
     global InterruptHandler
     global InterruptHandlerLock
+    global InterruptVectorSecurity
     global rtcInstanceName
     global timerStartApiName_Sym
     global timeStopApiName_Sym
@@ -523,6 +544,7 @@ def instantiateComponent(rtcComponent):
     InterruptHandler = rtcInstanceName.getValue() + "_INTERRUPT_HANDLER"
     InterruptHandlerLock = rtcInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK"
     InterruptVectorUpdate = rtcInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
+    InterruptVectorSecurity = rtcInstanceName.getValue() + "_SET_NON_SECURE"
 
     rtcNode = ATDF.getNode(
         '/avr-tools-device-file/modules/module@[name="RTC"]/register-group@[name="RTC"]')
@@ -1275,6 +1297,23 @@ def instantiateComponent(rtcComponent):
     rtcSystemDefFile.setSourcePath(
         "../peripheral/rtc_u2250/templates/system/definitions.h.ftl")
     rtcSystemDefFile.setMarkup(True)
+
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        global RTCfilesArray
+        rtcIsNonSecure = Database.getSymbolValue("core", rtcComponent.getID().upper() + "_IS_NON_SECURE")
+        rtcSystemDefFile.setDependencies(fileUpdate, ["core." + rtcComponent.getID().upper() + "_IS_NON_SECURE"])
+        RTCfilesArray.append(rtcHeaderFile)
+        RTCfilesArray.append(rtcSourceFile)
+        RTCfilesArray.append(rtcSource1File)
+        RTCfilesArray.append(rtcSystemInitFile)
+        RTCfilesArray.append(rtcSystemDefFile)
+        Database.setSymbolValue("core", InterruptVectorSecurity, rtcIsNonSecure)
+        if rtcIsNonSecure == False:
+            RTCfilesArray[0].setSecurity("SECURE")
+            RTCfilesArray[1].setSecurity("SECURE")
+            RTCfilesArray[2].setSecurity("SECURE")
+            RTCfilesArray[3].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+            RTCfilesArray[4].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
 
 def onAttachmentConnected(source, target):
 
