@@ -351,14 +351,22 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlSym_SystemInitFile.setType("STRING")
     nvmctrlSym_SystemInitFile.setMarkup(True)
 
-    nvmctrlSym_SystemInitFile = nvmctrlComponent.createFileSymbol("NVMCTRL_SYS_INIT_0", None)
-    nvmctrlSym_SystemInitFile.setSourcePath("../peripheral/nvmctrl_u2802/templates/system/nvm_waitstate.h.ftl")
-    nvmctrlSym_SystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_START")
-    nvmctrlSym_SystemInitFile.setType("STRING")
-    nvmctrlSym_SystemInitFile.setMarkup(True)
+    nvmctrlSym_SystemInitFile1 = nvmctrlComponent.createFileSymbol("NVMCTRL_SYS_INIT_0", None)
+    nvmctrlSym_SystemInitFile1.setSourcePath("../peripheral/nvmctrl_u2802/templates/system/nvm_waitstate.h.ftl")
+    nvmctrlSym_SystemInitFile1.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_START")
+    nvmctrlSym_SystemInitFile1.setType("STRING")
+    nvmctrlSym_SystemInitFile1.setMarkup(True)
 
     nvmctrlSystemDefFile = nvmctrlComponent.createFileSymbol("NVMCTRL_SYS_DEF", None)
     nvmctrlSystemDefFile.setSourcePath("../peripheral/nvmctrl_u2802/templates/system/definitions.h.ftl")
     nvmctrlSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     nvmctrlSystemDefFile.setType("STRING")
     nvmctrlSystemDefFile.setMarkup(True)
+
+
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        nvmctrlSym_HeaderFile.setSecurity("SECURE")
+        nvmctrlSym_SourceFile.setSecurity("SECURE")
+        nvmctrlSym_SystemInitFile.setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        nvmctrlSym_SystemInitFile1.setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_START")
+        nvmctrlSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")

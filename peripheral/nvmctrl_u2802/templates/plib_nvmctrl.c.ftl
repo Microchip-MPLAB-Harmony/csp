@@ -50,10 +50,9 @@
 #include <string.h>
 #include "plib_${NVMCTRL_INSTANCE_NAME?lower_case}.h"
 
-<#if core.TRUSTZONE_SUPPORTED??>
+<#assign NVMCTRL_REG_NAME = NVMCTRL_INSTANCE_NAME>
+<#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
     <#assign NVMCTRL_REG_NAME = NVMCTRL_INSTANCE_NAME + "_SEC">
-<#else>
-    <#assign NVMCTRL_REG_NAME = NVMCTRL_INSTANCE_NAME>
 </#if>
 // *****************************************************************************
 // *****************************************************************************
