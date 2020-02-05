@@ -28,10 +28,27 @@ global wdtInterruptHandler
 global wdtInterruptHandlerLock
 global wdtSym_Use
 global wdtSym_CTRLA_EW
-
+global WDTfilesArray
+global wdtInterruptVectorSecurity
+WDTfilesArray = []
 ###################################################################################################
 ########################################## Callbacks  #############################################
 ###################################################################################################
+
+def wdtfileUpdate(symbol, event):
+    global WDTfilesArray
+    global wdtInterruptVectorSecurity
+    if event["value"] == False:
+        WDTfilesArray[0].setSecurity("SECURE")
+        WDTfilesArray[1].setSecurity("SECURE")
+        WDTfilesArray[2].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+        Database.setSymbolValue("core", wdtInterruptVectorSecurity, False)
+
+    else:
+        WDTfilesArray[0].setSecurity("NON_SECURE")
+        WDTfilesArray[1].setSecurity("NON_SECURE")
+        WDTfilesArray[2].setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+        Database.setSymbolValue("core", wdtInterruptVectorSecurity, True)
 
 def updateWDTInterruptStatus(symbol, event):
 
@@ -110,6 +127,7 @@ wdtInterruptVector = wdtInstanceName.getValue() + "_INTERRUPT_ENABLE"
 wdtInterruptHandler = wdtInstanceName.getValue() + "_INTERRUPT_HANDLER"
 wdtInterruptHandlerLock = wdtInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK"
 wdtInterruptVectorUpdate = wdtInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"
+wdtInterruptVectorSecurity = wdtInstanceName.getValue() + "_SET_NON_SECURE"
 
 # Interrupt Dynamic settings
 wdtSym_UpdateInterruptStatus = coreComponent.createBooleanSymbol("WDT_INTERRUPT_STATUS", wdtSym_Use)
@@ -155,3 +173,16 @@ wdtSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
 wdtSystemDefFile.setSourcePath("../peripheral/wdt_u2251/templates/system/definitions.h.ftl")
 wdtSystemDefFile.setMarkup(True)
 wdtSystemDefFile.setEnabled(False)
+
+if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+    global WDTfilesArray
+    wdtIsNonSecure = Database.getSymbolValue("core", wdtInstanceName.getValue() + "_IS_NON_SECURE")
+    wdtSystemDefFile.setDependencies(wdtfileUpdate, ["core." + wdtInstanceName.getValue() + "_IS_NON_SECURE"])
+    WDTfilesArray.append(wdtHeaderFile)
+    WDTfilesArray.append(wdtSourceFile)
+    WDTfilesArray.append(wdtSystemDefFile)
+    Database.setSymbolValue("core", wdtInterruptVectorSecurity, wdtIsNonSecure)
+    if wdtIsNonSecure == False:
+        WDTfilesArray[0].setSecurity("SECURE")
+        WDTfilesArray[1].setSecurity("SECURE")
+        WDTfilesArray[2].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
