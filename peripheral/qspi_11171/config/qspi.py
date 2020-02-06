@@ -100,6 +100,12 @@ def onAttachmentConnected(source, target):
         qspiSMM.setReadOnly(True)
         qspiSMM.setReadOnly(False)
         qspiSMM.setSelectedKey("SPI", 2)
+    elif connectID == qspiCapabilityId:
+        localComponent.setCapabilityEnabled(spiCapabilityId, False)
+        localComponent.setCapabilityEnabled(qspiCapabilityId, True)
+        qspiSMM.setReadOnly(True)
+        qspiSMM.setReadOnly(False)
+        qspiSMM.setSelectedKey("MEMORY", 2)
 
     qspiSMM.setReadOnly(True)
 
@@ -141,7 +147,7 @@ def instantiateComponent(qspiComponent):
     qspiCapabilityId = qspiInstanceName.getValue() + "_SQI"
     spiCapabilityId = qspiInstanceName.getValue() + "_SPI"
 
-    #Enable Clock for QSPI instance 
+    #Enable Clock for QSPI instance
     Database.clearSymbolValue("core", qspiInstanceName.getValue() + "_CLOCK_ENABLE")
     Database.setSymbolValue("core", qspiInstanceName.getValue() + "_CLOCK_ENABLE", True, 1)
 
@@ -250,7 +256,7 @@ def instantiateComponent(qspiComponent):
     qspiSource1File.setOverwrite(True)
     qspiSource1File.setDependencies( setFilesEnabled, ["QSPI_SMM"] )
     qspiSource1File.setEnabled(qspiSMM.getSelectedKey() == "MEMORY")
-    
+
     # QSPI-spi mode header file
     qspiSpiHeader2File = qspiComponent.createFileSymbol("QSPISPI_HEADER2", None)
     qspiSpiHeader2File.setSourcePath("../peripheral/qspi_11171/templates/plib_qspi_spi.h.ftl")
@@ -275,7 +281,7 @@ def instantiateComponent(qspiComponent):
     qspiSpiSource1File.setDependencies( setFilesEnabled, ["QSPI_SMM"] )
     qspiSpiSource1File.setEnabled(qspiSMM.getSelectedKey() == "SPI")
 
-    #QSPI Initialize 
+    #QSPI Initialize
     qspiSystemInitFile = qspiComponent.createFileSymbol("QSPI_INIT", None)
     qspiSystemInitFile.setType("STRING")
     qspiSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")

@@ -48,6 +48,12 @@ def DummyData_ValueUpdate(spiSymDummyData, event):
     spiSymDummyData.setValue(dummyDataDict[event["symbol"].getKey(event["value"])], 1)
     spiSymDummyData.setMax(dummyDataDict[event["symbol"].getKey(event["value"])])
 
+def symbolVisible(symbol, event):
+    if event["symbol"].getSelectedKey() == "SPI":
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+
 ###################################################################################################
 ######################################## QSPI IN SPI MODE #########################################
 ###################################################################################################
@@ -68,7 +74,7 @@ if( (("SAMV7" in processor) or ("SAME7" in processor) or ("SAMS7" in processor))
 count = qspiValGrp_MR_NBBITS.getValueCount()
 qspiNBBITS = qspiComponent.createKeyValueSetSymbol("QSPI_NBBITS", qspiMenu)
 qspiNBBITS.setLabel(qspiBitField_MR_NBBITS.getDescription())
-qspiNBBITS.setVisible(True)
+qspiNBBITS.setVisible(False)
 qspiNBBITS.setOutputMode("Value")
 qspiNBBITS.setDisplayMode("Description")
 qspiNBBITS.setSelectedKey("_16_BIT",1)
@@ -76,13 +82,14 @@ qspiNBBITS.setReadOnly(False)
 for id in range(0,count):
     valueName = qspiValGrp_MR_NBBITS.getValueNames()[id]
     qspiNBBITS.addKey(valueName, qspiValGrp_MR_NBBITS.getValue(valueName).getValue(), qspiValGrp_MR_NBBITS.getValue(valueName).getDescription())
+qspiNBBITS.setDependencies(symbolVisible, ["QSPI_SMM"])
 
 # loopback mode
 if qspiBitField_MR_LLBBITS is not None:
     count = qspiValGrp_MR_LLBBITS.getValueCount()
     qspiLLBBITS = qspiComponent.createKeyValueSetSymbol("QSPI_LLBBITS", qspiMenu)
     qspiLLBBITS.setLabel(qspiBitField_MR_LLBBITS.getDescription())
-    qspiLLBBITS.setVisible(True)
+    qspiLLBBITS.setVisible(False)
     qspiLLBBITS.setOutputMode("Value")
     qspiLLBBITS.setDisplayMode("Description")
     qspiLLBBITS.setSelectedKey("DISABLED",1)
@@ -90,7 +97,7 @@ if qspiBitField_MR_LLBBITS is not None:
     for id in range(0,count):
         valueName = qspiValGrp_MR_LLBBITS.getValueNames()[id]
         qspiLLBBITS.addKey(valueName, qspiValGrp_MR_LLBBITS.getValue(valueName).getValue(), qspiValGrp_MR_LLBBITS.getValue(valueName).getDescription())
-
+    qspiLLBBITS.setDependencies(symbolVisible, ["QSPI_SMM"])
 
 
 #SPI Transmit data register
