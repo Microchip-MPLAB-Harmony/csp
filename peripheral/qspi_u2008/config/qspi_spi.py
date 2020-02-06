@@ -55,6 +55,12 @@ def DummyData_ValueUpdate(spiSymDummyData, event):
     spiSymDummyData.setValue(dummyDataDict[event["symbol"].getKey(event["value"])], 1)
     spiSymDummyData.setMax(dummyDataDict[event["symbol"].getKey(event["value"])])
 
+def symbolVisible(symbol, event):
+    if event["symbol"].getSelectedKey() == "SPI":
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+
 ###################################################################################################
 ######################################## QSPI IN SPI MODE #########################################
 ###################################################################################################
@@ -70,7 +76,7 @@ qspiValGrp_CTRLB_LOOPEN = qspiRegModule.getValueGroup(qspiBitField_CTRLB_LOOPEN.
 count = qspiValGrp_CTRLB_DATALEN.getValueCount()
 qspiDATALEN = qspiComponent.createKeyValueSetSymbol("QSPI_DATALEN", qspiMenu)
 qspiDATALEN.setLabel(qspiBitField_CTRLB_DATALEN.getDescription())
-qspiDATALEN.setVisible(True)
+qspiDATALEN.setVisible(False)
 qspiDATALEN.setOutputMode("Value")
 qspiDATALEN.setDisplayMode("Description")
 qspiDATALEN.setSelectedKey("16BITS",1)
@@ -78,12 +84,13 @@ qspiDATALEN.setReadOnly(False)
 for id in range(0,count):
     valueName = qspiValGrp_CTRLB_DATALEN.getValueNames()[id]
     qspiDATALEN.addKey(valueName, qspiValGrp_CTRLB_DATALEN.getValue(valueName).getValue(), qspiValGrp_CTRLB_DATALEN.getValue(valueName).getDescription())
+qspiDATALEN.setDependencies(symbolVisible, ["QSPI_SMM"])
 
 # loopback mode
 count = qspiValGrp_CTRLB_LOOPEN.getValueCount()
 qspiLOOPEN = qspiComponent.createKeyValueSetSymbol("QSPI_LOOPEN", qspiMenu)
 qspiLOOPEN.setLabel(qspiBitField_CTRLB_LOOPEN.getDescription())
-qspiLOOPEN.setVisible(True)
+qspiLOOPEN.setVisible(False)
 qspiLOOPEN.setOutputMode("Value")
 qspiLOOPEN.setDisplayMode("Description")
 qspiLOOPEN.setSelectedKey("DISABLED",1)
@@ -91,6 +98,7 @@ qspiLOOPEN.setReadOnly(False)
 for id in range(0,count):
     valueName = qspiValGrp_CTRLB_LOOPEN.getValueNames()[id]
     qspiLOOPEN.addKey(valueName, qspiValGrp_CTRLB_LOOPEN.getValue(valueName).getValue(), qspiValGrp_CTRLB_LOOPEN.getValue(valueName).getDescription())
+qspiLOOPEN.setDependencies(symbolVisible, ["QSPI_SMM"])
 
 #SPI Transmit data register
 transmitRegister = qspiComponent.createStringSymbol("TRANSMIT_DATA_REGISTER", None)

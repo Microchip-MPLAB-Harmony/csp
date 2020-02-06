@@ -53,7 +53,7 @@ def setFilesEnabled(symbol, event):
     qspiSource1File.setEnabled(symObj.getSelectedKey() == "MEMORY")
     qspiSpiHeader2File.setEnabled(symObj.getSelectedKey() == "SPI")
     qspiSpiSource1File.setEnabled(symObj.getSelectedKey() == "SPI")
-    
+
 def onAttachmentConnected(source, target):
 
     global qspiSMM
@@ -71,6 +71,12 @@ def onAttachmentConnected(source, target):
         qspiSMM.setReadOnly(True)
         qspiSMM.setReadOnly(False)
         qspiSMM.setSelectedKey("SPI", 2)
+    elif connectID == qspiCapabilityId:
+        localComponent.setCapabilityEnabled(spiCapabilityId, False)
+        localComponent.setCapabilityEnabled(qspiCapabilityId, True)
+        qspiSMM.setReadOnly(True)
+        qspiSMM.setReadOnly(False)
+        qspiSMM.setSelectedKey("MEMORY", 2)
 
     qspiSMM.setReadOnly(True)
 
@@ -109,7 +115,7 @@ def instantiateComponent(qspiComponent):
 
     qspiCapabilityId = qspiInstanceName.getValue() + "_SQI"
     spiCapabilityId = qspiInstanceName.getValue() + "_SPI"
-    
+
     qspiMenu = qspiComponent.createMenuSymbol("QSPI", None)
     qspiMenu.setLabel("Hardware Settings ")
 
@@ -204,7 +210,7 @@ def instantiateComponent(qspiComponent):
     qspiSource1File.setOverwrite(True)
     qspiSource1File.setDependencies( setFilesEnabled, ["QSPI_SMM"] )
     qspiSource1File.setEnabled(qspiSMM.getSelectedKey() == "MEMORY")
-    
+
     # QSPI-spi mode header file
     qspiSpiHeader2File = qspiComponent.createFileSymbol("QSPISPI_HEADER2", None)
     qspiSpiHeader2File.setSourcePath("../peripheral/qspi_u2008/templates/plib_qspi_spi.h.ftl")
