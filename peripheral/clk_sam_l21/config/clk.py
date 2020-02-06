@@ -130,12 +130,16 @@ def setDfllFreq(symbol, event):
     freq = 0
     if enable:
         mode = Database.getSymbolValue("core", "CONFIG_CLOCK_DFLL_OPMODE")
+        usbCrm = Database.getSymbolValue("core", "CONFIG_CLOCK_DFLL_USB")
+        mul = int(Database.getSymbolValue("core", "CONFIG_CLOCK_DFLL_MUL"))
         if mode == 0:
             freq = 48000000
-        else:
-            mul = int(Database.getSymbolValue("core", "CONFIG_CLOCK_DFLL_MUL"))
+        elif ((mode == 1) and (usbCrm == False)):
             refFreq = int(Database.getSymbolValue("core", "GCLK_ID_0_FREQ"))
             freq = mul * refFreq
+
+        elif (mode == 1) and (usbCrm == True):
+            freq = mul * 1000
 
     prevFreq = symbol.getValue()
 
@@ -408,6 +412,7 @@ dfllFreq.setLabel("DFLL Clock Frequency")
 dfllFreq.setDependencies(setDfllFreq, ["CONFIG_CLOCK_DFLL_ENABLE",
                                        "CONFIG_CLOCK_DFLL_OPMODE",
                                        "CONFIG_CLOCK_DFLL_MUL",
+                                       "CONFIG_CLOCK_DFLL_USB",
                                        "GCLK_ID_0_FREQ"])
 ############################   DPLL Components    ############################
 #Digital Phase Locked Loop(DPLL) Enable
@@ -986,7 +991,7 @@ def codeGen(symbol, event):
     codeList = []
 
     if (Database.getSymbolValue("core", "CONFIG_CLOCK_DFLL_ENABLE")) == True:
-        if((int(Database.getSymbolValue("core", "CONFIG_CLOCK_DFLL_OPMODE"))) == 1):
+        if((int(Database.getSymbolValue("core", "CONFIG_CLOCK_DFLL_OPMODE"))) == 1 and (Database.getSymbolValue("core", "CONFIG_CLOCK_DFLL_USB") == False)):
             sourceDestmap["GCLK" + str(Database.getSymbolValue("core", "GCLK_ID_0_GENSEL"))].append("DFLL")
 
     if (Database.getSymbolValue("core", "CONFIG_CLOCK_DPLL_ENABLE")) == True :
@@ -1428,6 +1433,7 @@ codeGenerationDep.append("CONFIG_CLOCK_DFLL_OPMODE")
 codeGenerationDep.append("GCLK_ID_1_GENSEL")
 codeGenerationDep.append("GCLK_ID_0_CHEN")
 codeGenerationDep.append("GCLK_ID_1_CHEN")
+codeGenerationDep.append("CONFIG_CLOCK_DFLL_USB")
 codeGenerationList.setDependencies(codeGen, codeGenerationDep)
 codeGenerationList.addValue("    DFLL_Initialize();")
 codeGenerationList.addValue("    GCLK0_Initialize();")

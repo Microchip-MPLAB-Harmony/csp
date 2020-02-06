@@ -179,12 +179,16 @@ def setDfllFreq(symbol, event):
     freq = 0
     if enable:
         mode = Database.getSymbolValue("core", "CONFIG_CLOCK_DFLL_OPMODE")
+        usbCrm = Database.getSymbolValue("core", "CONFIG_CLOCK_DFLL_USB")
+        mul = int(Database.getSymbolValue("core", "CONFIG_CLOCK_DFLL_MUL"))
         if mode == 0:
             freq = 48000000
-        else:
-            mul = int(Database.getSymbolValue("core", "CONFIG_CLOCK_DFLL_MUL"))
+        elif ((mode == 1) and (usbCrm == False)):
             refFreq = int(Database.getSymbolValue("core", "GCLK_ID_0_FREQ"))
             freq = mul * refFreq
+
+        elif (mode == 1) and (usbCrm == True):
+            freq = mul * 1000
 
     prevFreq = symbol.getValue()
 
@@ -714,6 +718,7 @@ dfllFreq.setLabel("DFLL Clock Frequency")
 dfllFreq.setDependencies(setDfllFreq, ["CONFIG_CLOCK_DFLL_ENABLE",
                                        "CONFIG_CLOCK_DFLL_OPMODE",
                                        "CONFIG_CLOCK_DFLL_MUL",
+                                       "CONFIG_CLOCK_DFLL_USB",
                                        "GCLK_ID_0_FREQ"])
 
 
@@ -1097,7 +1102,7 @@ def codeGen(symbol, event):
     codeList = []
 
     if (Database.getSymbolValue("core", "CONFIG_CLOCK_DFLL_ENABLE")) == True:
-        if((int(Database.getSymbolValue("core", "CONFIG_CLOCK_DFLL_OPMODE"))) == 1):
+        if((int(Database.getSymbolValue("core", "CONFIG_CLOCK_DFLL_OPMODE"))) == 1 and (Database.getSymbolValue("core", "CONFIG_CLOCK_DFLL_USB") == False)):
             sourceDestmap["GCLK" + str(Database.getSymbolValue("core",
                                                                "GCLK_ID_0_GENSEL"))].append("DFLL")
 
@@ -1611,6 +1616,7 @@ codeGenerationDep.append("CONFIG_CLOCK_DPLL0_REF_CLOCK")
 codeGenerationDep.append("CONFIG_CLOCK_DPLL1_REF_CLOCK")
 codeGenerationDep.append("CONFIG_CLOCK_DPLL0_ENABLE")
 codeGenerationDep.append("CONFIG_CLOCK_DPLL1_ENABLE")
+codeGenerationDep.append("CONFIG_CLOCK_DFLL_USB")
 codeGenerationList.setDependencies(codeGen, codeGenerationDep)
 codeGenerationList.addValue("   GCLK0_Initialize();")
 codeGenerationList.addValue("   DFLL_Initialize();")

@@ -200,11 +200,13 @@ static void DFLL_Initialize(void)
 <#if CONFIG_CLOCK_DFLL_ENABLE == true >
 <#if CONFIG_CLOCK_DFLL_OPMODE == "1">
     /****************** DFLL Initialization  *********************************/
+    <#if CONFIG_CLOCK_DFLL_USB == false>
     GCLK_REGS->GCLK_PCHCTRL[${GCLK_ID_0_INDEX}] = GCLK_PCHCTRL_GEN(${GCLK_ID_0_GENSEL})${GCLK_ID_0_WRITELOCK?then(' | GCLK_PCHCTRL_WRTLOCK_Msk', ' ')} | GCLK_PCHCTRL_CHEN_Msk;
     while ((GCLK_REGS->GCLK_PCHCTRL[${GCLK_ID_0_INDEX}] & GCLK_PCHCTRL_CHEN_Msk) != GCLK_PCHCTRL_CHEN_Msk)
     {
         /* Wait for synchronization */
     }
+    </#if>
 
     OSCCTRL_REGS->OSCCTRL_DFLLMUL = OSCCTRL_DFLLMUL_MUL(${CONFIG_CLOCK_DFLL_MUL}) | OSCCTRL_DFLLMUL_FSTEP(${CONFIG_CLOCK_DFLL_FINE}) | OSCCTRL_DFLLMUL_CSTEP(${CONFIG_CLOCK_DFLL_COARSE});
     while((OSCCTRL_REGS->OSCCTRL_DFLLSYNC & OSCCTRL_DFLLSYNC_DFLLMUL_Msk) == OSCCTRL_DFLLSYNC_DFLLMUL_Msk )
@@ -235,12 +237,12 @@ static void DFLL_Initialize(void)
 
     while((OSCCTRL_REGS->OSCCTRL_DFLLSYNC & OSCCTRL_DFLLSYNC_ENABLE_Msk) == OSCCTRL_DFLLSYNC_ENABLE_Msk )
     {
-        /* Waiting for the DPLL enable synchronization */
+        /* Waiting for the DFLL enable synchronization */
     }
 
     while((OSCCTRL_REGS->OSCCTRL_STATUS & OSCCTRL_STATUS_DFLLRDY_Msk) != OSCCTRL_STATUS_DFLLRDY_Msk)
     {
-        /* Waiting for the XOSC Ready state */
+        /* Waiting for the DFLL Ready state */
     }
 <#else>
     <#if (CONFIG_CLOCK_DFLL_ONDEMAND == "0") || CONFIG_CLOCK_DFLL_RUNSTDY>
