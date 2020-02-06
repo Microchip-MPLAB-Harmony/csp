@@ -25,6 +25,23 @@
 ########################################## Callbacks  #############################################
 ###################################################################################################
 
+global updateSDASetupRegisterValue
+global updateSDASetupTimeMaxValueInNanoSeconds
+
+def updateSDASetupTimeMaxValueInNanoSeconds():
+    sda_setup_reg_max_value = int(Database.getSymbolValue(sercomInstanceName.getValue().lower(), "I2CS_SDASETUP_MAX_VALUE"))
+    cpu_clk_period = 1.0/int(Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY"))
+    sda_setup_time_ns = (cpu_clk_period) * (6 + (16*sda_setup_reg_max_value))
+    return int(sda_setup_time_ns*1e9)
+
+def updateSDASetupRegisterValue():
+    sda_setup_time_ns = int(Database.getSymbolValue(sercomInstanceName.getValue().lower(), "I2CS_SDASETUP_TIME_NS")) * 1e-9
+    cpu_clk_frequency = int(Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY"))
+    sda_setup_reg_value = ((sda_setup_time_ns * cpu_clk_frequency) - 6 )/16
+    if sda_setup_reg_value < 0:
+        sda_setup_reg_value = 0
+    Database.setSymbolValue(sercomInstanceName.getValue().lower(), "I2CS_SDASETUP_TIME_REG_VALUE", int(sda_setup_reg_value))
+
 # I2CS Components Visible Property
 def updateI2CSlaveConfigurationVisibleProperty(symbol, event):
 
@@ -34,6 +51,10 @@ def updateI2CSlaveConfigurationVisibleProperty(symbol, event):
             symbol.setLabel("I2C Slave Address (10-bit)")
         else:
             symbol.setLabel("I2C Slave Address (7-bit)")
+    elif symbol.getID() == "I2CS_SDASETUP_TIME_NS":
+        updateSDASetupRegisterValue()
+        symbol.setMax(updateSDASetupTimeMaxValueInNanoSeconds())
+
     symbol.setVisible(sercomSym_OperationMode.getSelectedKey() == "I2CS")
 
 
@@ -78,6 +99,53 @@ i2csSym_CTRLA_SDAHOLD.setOutputMode("Key")
 i2csSym_CTRLA_SDAHOLD.setDisplayMode("Description")
 i2csSym_CTRLA_SDAHOLD.setDependencies(updateI2CSlaveConfigurationVisibleProperty, ["SERCOM_MODE"])
 
+#-----------------------------------------------------------------------------------
+# SDA Setup Time
+sdaSetupTimeSupported = False
+sdaSetupTimeMask = 0
+sdaSetupTimeReferenceNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SERCOM"]/register-group@[name="SERCOM"]')
+
+sdaSetupTimeValue = sdaSetupTimeReferenceNode.getChildren()
+
+# Check if CTRLC register exists
+for index in range(len(sdaSetupTimeValue)):
+    if str(sdaSetupTimeValue[index].getAttribute("modes")) == "I2CS":
+        if str(sdaSetupTimeValue[index].getAttribute("name")) == "CTRLC":
+            sdaSetupTimeSupported = True
+            break
+
+# Check if CTRLC register has the SDASETUP bitfield.
+if sdaSetupTimeSupported == True:
+    sdaSetupTimeSupported = False
+    sdaSetupTimeReferenceNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SERCOM"]/register-group@[name="SERCOM"]/register@[modes="I2CS",name="CTRLC"]')
+    sdaSetupTimeValue = sdaSetupTimeReferenceNode.getChildren()
+    for index in range(len(sdaSetupTimeValue)):
+        if str(sdaSetupTimeValue[index].getAttribute("name")) == "SDASETUP":
+            sdaSetupTimeMask = int(sdaSetupTimeValue[index].getAttribute("mask"), 16)
+            i2csSym_SDASETUP_MaxValue = sercomComponent.createIntegerSymbol("I2CS_SDASETUP_MAX_VALUE", sercomSym_OperationMode)
+            i2csSym_SDASETUP_MaxValue.setLabel("SDA Setup Time Max Register Value")
+            i2csSym_SDASETUP_MaxValue.setVisible(False)
+            i2csSym_SDASETUP_MaxValue.setDefaultValue(sdaSetupTimeMask)
+            sdaSetupTimeSupported = True
+            break
+
+# CTRLC register exists and has SDASETUP bitfield
+if sdaSetupTimeSupported == True:
+    i2csSym_SDASETUP = sercomComponent.createBooleanSymbol("I2CS_SDASETUP_TIME_SUPPORT", sercomSym_OperationMode)
+    i2csSym_SDASETUP.setVisible(False)
+    i2csSym_SDASETUP.setValue(True)
+
+    i2csSym_SDASETUP_Value = sercomComponent.createIntegerSymbol("I2CS_SDASETUP_TIME_NS", sercomSym_OperationMode)
+    i2csSym_SDASETUP_Value.setLabel("SDA Setup Time (ns)")
+    i2csSym_SDASETUP_Value.setVisible(False)
+    i2csSym_SDASETUP_Value.setDefaultValue(250)
+    i2csSym_SDASETUP_Value.setDependencies(updateI2CSlaveConfigurationVisibleProperty, ["I2CS_SDASETUP_TIME_NS", "SERCOM_MODE", "core.CPU_CLOCK_FREQUENCY"])
+
+    i2csSym_SDASETUP_RegValue = sercomComponent.createIntegerSymbol("I2CS_SDASETUP_TIME_REG_VALUE", sercomSym_OperationMode)
+    i2csSym_SDASETUP_RegValue.setLabel("SDA Setup Time Register Value")
+    i2csSym_SDASETUP_RegValue.setVisible(False)
+    i2csSym_SDASETUP_RegValue.setDefaultValue(0)
+    i2csSym_SDASETUP_RegValue.setMax(sdaSetupTimeMask)
 #-----------------------------------------------------------------------------------
 # 10-bit support
 TenBitAddrSupported = False
