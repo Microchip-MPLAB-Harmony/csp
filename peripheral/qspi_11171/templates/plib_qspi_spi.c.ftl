@@ -226,7 +226,7 @@ bool ${QSPI_INSTANCE_NAME}_IsBusy()
     return ((qspiObj.transferIsBusy) || ((${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_TXEMPTY_Msk ) == 0));
 }
 
-void ${QSPI_INSTANCE_NAME}_Handler(void)
+void ${QSPI_INSTANCE_NAME}_InterruptHandler(void)
 {
     uint32_t dataBits ;
     uint32_t receivedData;

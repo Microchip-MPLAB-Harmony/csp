@@ -82,6 +82,19 @@ def setMasterClkDependency(qspiMasterClkComment, masterClkSymbol):
     else:
         qspiMasterClkComment.setVisible(False)
 
+def setupQspiIntSymbolAndIntHandler(symbol, event):
+    global qspiSyminterruptVector
+    global qspiSyminterruptHandler
+    global qspiSyminterruptHandlerLock
+
+    if(event["symbol"].getSelectedKey() == "SPI"):
+        Database.setSymbolValue("core", qspiSyminterruptVector, True)
+        Database.setSymbolValue("core", qspiSyminterruptHandler, qspiInstanceName.getValue() + "_InterruptHandler")
+        Database.setSymbolValue("core", qspiSyminterruptHandlerLock, True)
+    else:
+        Database.setSymbolValue("core", qspiSyminterruptVector, False)
+        Database.setSymbolValue("core", qspiSyminterruptHandler, qspiInstanceName.getValue() + "_Handler")
+        Database.setSymbolValue("core", qspiSyminterruptHandlerLock, False)
 
 def onAttachmentConnected(source, target):
 
@@ -138,11 +151,18 @@ def instantiateComponent(qspiComponent):
     global qspiSpiHeader2File
     global qspiSpiSource1File
     global qspiCPOL
+    global qspiSyminterruptVector
+    global qspiSyminterruptHandler
+    global qspiSyminterruptHandlerLock
 
     qspiInstanceName = qspiComponent.createStringSymbol("QSPI_INSTANCE_NAME", None)
     qspiInstanceName.setVisible(False)
     qspiInstanceName.setDefaultValue(qspiComponent.getID().upper())
-    print("Running " + qspiInstanceName.getValue())
+    Log.writeInfoMessage("Running " + qspiInstanceName.getValue())
+
+    qspiSyminterruptVector = qspiInstanceName.getValue() + "_INTERRUPT_ENABLE"
+    qspiSyminterruptHandler = qspiInstanceName.getValue() + "_INTERRUPT_HANDLER"
+    qspiSyminterruptHandlerLock = qspiInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK"
 
     qspiCapabilityId = qspiInstanceName.getValue() + "_SQI"
     spiCapabilityId = qspiInstanceName.getValue() + "_SPI"
@@ -167,6 +187,7 @@ def instantiateComponent(qspiComponent):
     for id in range(0,count):
         valueName = qspiValGrp_MR_SMM.getValueNames()[id]
         qspiSMM.addKey(valueName, qspiValGrp_MR_SMM.getValue(valueName).getValue(), qspiValGrp_MR_SMM.getValue(valueName).getDescription())
+    qspiSMM.setDependencies(setupQspiIntSymbolAndIntHandler, ["QSPI_SMM"])
 
     qspiCSMODE = qspiComponent.createComboSymbol("QSPI_CSMODE", qspiMenu, qspiValGrp_MR_CSMODE.getValueNames())
     qspiCSMODE.setVisible(False)

@@ -211,7 +211,7 @@ void AES_Handler                ( void ) __attribute__((weak, alias("Dummy_Handl
 void TRNG_Handler               ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void ICM_Handler                ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void PUKCC_Handler              ( void ) __attribute__((weak, alias("Dummy_Handler")));
-void QSPI_Handler               ( void ) __attribute__((weak, alias("Dummy_Handler")));
+void QSPI_InterruptHandler      ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void SDHC0_Handler              ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void SDHC1_Handler              ( void ) __attribute__((weak, alias("Dummy_Handler")));
 
@@ -368,7 +368,7 @@ const DeviceVectors exception_table=
     .pfnTRNG_Handler               = ( void * ) TRNG_Handler,
     .pfnICM_Handler                = ( void * ) ICM_Handler,
     .pfnPUKCC_Handler              = ( void * ) PUKCC_Handler,
-    .pfnQSPI_Handler               = ( void * ) QSPI_Handler,
+    .pfnQSPI_Handler               = ( void * ) QSPI_InterruptHandler,
     .pfnSDHC0_Handler              = ( void * ) SDHC0_Handler,
     .pfnSDHC1_Handler              = ( void * ) SDHC1_Handler,
 

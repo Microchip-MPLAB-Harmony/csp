@@ -228,7 +228,7 @@ bool QSPI_IsBusy()
     return ((qspiObj.transferIsBusy) || ((QSPI_REGS->QSPI_INTFLAG & QSPI_INTFLAG_DRE_Msk ) == 0));
 }
 
-void QSPI_Handler(void)
+void QSPI_InterruptHandler(void)
 {
     uint32_t dataBits ;
     uint32_t receivedData;

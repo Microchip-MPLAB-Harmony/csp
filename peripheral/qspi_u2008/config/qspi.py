@@ -54,6 +54,20 @@ def setFilesEnabled(symbol, event):
     qspiSpiHeader2File.setEnabled(symObj.getSelectedKey() == "SPI")
     qspiSpiSource1File.setEnabled(symObj.getSelectedKey() == "SPI")
 
+def setupQspiIntSymbolAndIntHandler(symbol, event):
+    global qspiSyminterruptVector
+    global qspiSyminterruptHandler
+    global qspiSyminterruptHandlerLock
+
+    if(event["symbol"].getSelectedKey() == "SPI"):
+        Database.setSymbolValue("core", qspiSyminterruptVector, True)
+        Database.setSymbolValue("core", qspiSyminterruptHandler, qspiInstanceName.getValue() + "_InterruptHandler")
+        Database.setSymbolValue("core", qspiSyminterruptHandlerLock, True)
+    else:
+        Database.setSymbolValue("core", qspiSyminterruptVector, False)
+        Database.setSymbolValue("core", qspiSyminterruptHandler, qspiInstanceName.getValue() + "_Handler")
+        Database.setSymbolValue("core", qspiSyminterruptHandlerLock, False)
+
 def onAttachmentConnected(source, target):
 
     global qspiSMM
@@ -107,11 +121,18 @@ def instantiateComponent(qspiComponent):
     global qspiSpiHeader2File
     global qspiSpiSource1File
     global qspiCPOL
+    global qspiSyminterruptVector
+    global qspiSyminterruptHandler
+    global qspiSyminterruptHandlerLock
 
     qspiInstanceName = qspiComponent.createStringSymbol("QSPI_INSTANCE_NAME", None)
     qspiInstanceName.setVisible(False)
     qspiInstanceName.setDefaultValue(qspiComponent.getID().upper())
-    print("Running " + qspiInstanceName.getValue())
+    Log.writeInfoMessage("Running " + qspiInstanceName.getValue())
+
+    qspiSyminterruptVector = qspiInstanceName.getValue() + "_INTERRUPT_ENABLE"
+    qspiSyminterruptHandler = qspiInstanceName.getValue() + "_INTERRUPT_HANDLER"
+    qspiSyminterruptHandlerLock = qspiInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK"
 
     qspiCapabilityId = qspiInstanceName.getValue() + "_SQI"
     spiCapabilityId = qspiInstanceName.getValue() + "_SPI"
@@ -135,6 +156,7 @@ def instantiateComponent(qspiComponent):
     qspiSMM.setDisplayMode("Description")
     qspiSMM.setDefaultValue(1)
     qspiSMM.setReadOnly(False)
+    qspiSMM.setDependencies(setupQspiIntSymbolAndIntHandler, ["QSPI_SMM"])
 
     qspiCS = []
     qspiCSNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="QSPI"]/value-group@[name="QSPI_CTRLB__CSMODE"]')
