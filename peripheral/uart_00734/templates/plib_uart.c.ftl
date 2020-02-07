@@ -402,13 +402,13 @@ void ${UART_INSTANCE_NAME}_RX_InterruptHandler (void)
 {
     if(${UART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus == true)
     {
+        /* Clear ${UART_INSTANCE_NAME} RX Interrupt flag */
+        ${UART_RX_IFS_REG}CLR = _${UART_RX_IFS_REG}_U${UART_INSTANCE_NUM}RXIF_MASK;
+
         while((_U${UART_INSTANCE_NUM}STA_URXDA_MASK == (U${UART_INSTANCE_NUM}STA & _U${UART_INSTANCE_NUM}STA_URXDA_MASK)) && (${UART_INSTANCE_NAME?lower_case}Obj.rxSize > ${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize) )
         {
             ${UART_INSTANCE_NAME?lower_case}Obj.rxBuffer[${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize++] = (uint8_t )(U${UART_INSTANCE_NUM}RXREG);
         }
-
-        /* Clear ${UART_INSTANCE_NAME} RX Interrupt flag after reading data buffer */
-        ${UART_RX_IFS_REG}CLR = _${UART_RX_IFS_REG}_U${UART_INSTANCE_NUM}RXIF_MASK;
 
         /* Check if the buffer is done */
         if(${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize >= ${UART_INSTANCE_NAME?lower_case}Obj.rxSize)
@@ -439,13 +439,13 @@ void ${UART_INSTANCE_NAME}_TX_InterruptHandler (void)
 {
     if(${UART_INSTANCE_NAME?lower_case}Obj.txBusyStatus == true)
     {
+        /* Clear ${UART_INSTANCE_NAME}TX Interrupt flag */
+        ${UART_TX_IFS_REG}CLR = _${UART_TX_IFS_REG}_U${UART_INSTANCE_NUM}TXIF_MASK;
+
         while((!(U${UART_INSTANCE_NUM}STA & _U${UART_INSTANCE_NUM}STA_UTXBF_MASK)) && (${UART_INSTANCE_NAME?lower_case}Obj.txSize > ${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize) )
         {
             U${UART_INSTANCE_NUM}TXREG = ${UART_INSTANCE_NAME?lower_case}Obj.txBuffer[${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize++];
         }
-
-        /* Clear ${UART_INSTANCE_NAME}TX Interrupt flag after writing to buffer */
-        ${UART_TX_IFS_REG}CLR = _${UART_TX_IFS_REG}_U${UART_INSTANCE_NUM}TXIF_MASK;
 
         /* Check if the buffer is done */
         if(${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize >= ${UART_INSTANCE_NAME?lower_case}Obj.txSize)
