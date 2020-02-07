@@ -27,6 +27,13 @@
 ###################################################################################################
 
 global getI2CBaudValue
+global getCalculatedI2CClockSpeed
+
+def getCalculatedI2CClockSpeed(f_gclk, trise, baud):
+    global desiredI2CBaudRate
+    desiredI2CBaudRate = False
+    f_scl = int(f_gclk/(10 + baud + float("{0:.15f}".format(float(trise * f_gclk) / 1000000000))))
+    return f_scl
 
 def getI2CBaudValue():
 
@@ -34,31 +41,52 @@ def getI2CBaudValue():
 
     baud = 0
     mode = 0
-    refClkFreq = int(Database.getSymbolValue("core", sercomClkFrequencyId))
-    clkSpeed = int(Database.getSymbolValue(sercomInstanceName.getValue().lower(), "I2C_CLOCK_SPEED")) * 1000
+    calculated_f_scl = -1
+    f_gclk = int(Database.getSymbolValue("core", sercomClkFrequencyId))
+    f_scl = int(Database.getSymbolValue(sercomInstanceName.getValue().lower(), "I2C_CLOCK_SPEED")) * 1000
     trise = Database.getSymbolValue(sercomInstanceName.getValue().lower(), "I2CM_TRISE")
+    
+    # Standard mode = 100 KHz, Fast mode = upto 400 KHz, Fast mode plus = upto 1 MHz
+    # Fast Mode Plus requires SCL High:SCL Low = 1:2
+    # Baud.baudlow != 0, SCL Low controlled by Baud.baudlow, SCL High controlled by Baud.baud
+    # Baud.baudlow = 0, SCL Low and SCL High are controlled by Baud.baud
+    # Mode = 0 covers Standard and Fast mode, Mode = 1 covers Fast Mode Plus
 
     if speedSupported == True:
         mode = Database.getSymbolValue(sercomInstanceName.getValue().lower(), "I2CM_MODE")
 
     # Check if baudrate is outside of valid range
-    if refClkFreq >= (2 * clkSpeed):
+    if f_gclk >= (2 * f_scl):
         desiredI2CBaudRate = True
         i2cmSym_BaudError_Comment.setVisible(False)
 
-        baudlow = int(round(((refClkFreq / clkSpeed) * (1 - float("{0:.15f}".format(float(trise * clkSpeed) / 1000000000)))) - 10))
+        baudValue = int(round(((f_gclk / f_scl) * (1 - float("{0:.15f}".format(float(trise * f_scl) / 1000000000)))) - 10))
 
-        if baudlow >= (0xFF * 2) or (baudlow <= 1):
-            baud = 0
-        else:
-            if mode == 0:
-                baud = ((baudlow / 2) + (((baudlow / 2) + 1) << 8)) if(baudlow & 0x1) \
-                else (baudlow / 2)
+        if (mode == 0):
+            if baudValue >= (0xFF * 2):
+                calculated_f_scl = getCalculatedI2CClockSpeed(f_gclk, trise, (0xFF * 2))
+                baud = 0xFF
+            elif baudValue <= 1:
+                calculated_f_scl = getCalculatedI2CClockSpeed(f_gclk, trise, 2)
+                baud = 1
             else:
-                baud = ((baudlow / 3) + ((((2 * baudlow) / 3) + 1) << 8)) if(baudlow & 0x1) \
-                else (baudlow / 3)
+                baud = baudValue/2
+        else:
+            if baudValue >= 382:
+                calculated_f_scl = getCalculatedI2CClockSpeed(f_gclk, trise, 382)
+                baud = (255 << 8) | 127
+            elif baudValue <= 3:
+                calculated_f_scl = getCalculatedI2CClockSpeed(f_gclk, trise, 3)
+                baud = (2 << 8) | 1
+            else:
+                baud = ((baudValue * 2)/3) << 8
+                baud |= (baudValue/3)
+        if desiredI2CBaudRate == False:
+            i2cmSym_BaudError_Comment.setLabel("**** Achievable I2C Clock Frequency = " + str(calculated_f_scl) + "Hz")
+            i2cmSym_BaudError_Comment.setVisible(sercomSym_OperationMode.getSelectedKey() == "I2CM")
     else:
         desiredI2CBaudRate = False
+        i2cmSym_BaudError_Comment.setLabel("**** Reference Clock Frequency too low for generating the desired I2C Clock ")
         i2cmSym_BaudError_Comment.setVisible(sercomSym_OperationMode.getSelectedKey() == "I2CM")
 
     return baud
@@ -173,14 +201,15 @@ i2cmSym_TRISEVALUE.setVisible(False)
 i2cmSym_TRISEVALUE.setDependencies(updateI2CMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
 
 # I2C BAUD register value
-i2cmSym_BAUDREGVALUE = sercomComponent.createIntegerSymbol("I2CM_BAUD", sercomSym_OperationMode)
+i2cmSym_BAUDREGVALUE = sercomComponent.createHexSymbol("I2CM_BAUD", sercomSym_OperationMode)
 i2cmSym_BAUDREGVALUE.setLabel("I2C BAUD")
 i2cmSym_BAUDREGVALUE.setVisible(False)
 i2cmSym_BAUDREGVALUE.setReadOnly(True)
+i2cmSym_BAUDREGVALUE.setHexOutputMode(True)
 if speedSupported == True:
-    i2cmSym_BAUDREGVALUE.setDependencies(updateI2CBaudValueProperty, ["I2C_CLOCK_SPEED", "I2CM_TRISE", "core." + sercomClkFrequencyId])
-else:
     i2cmSym_BAUDREGVALUE.setDependencies(updateI2CBaudValueProperty, ["I2CM_MODE", "I2C_CLOCK_SPEED", "I2CM_TRISE", "core." + sercomClkFrequencyId])
+else:
+    i2cmSym_BAUDREGVALUE.setDependencies(updateI2CBaudValueProperty, ["I2C_CLOCK_SPEED", "I2CM_TRISE", "core." + sercomClkFrequencyId])
 
 #I2C Baud Rate not supported comment
 global i2cmSym_BaudError_Comment
