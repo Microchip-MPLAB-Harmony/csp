@@ -3,6 +3,19 @@
 
 # Microchip MPLAB® Harmony 3 Release Notes
 
+## CSP Release v3.6.1
+### New Features
+- Regenerated PIC32MK MCJ Family Applications to work with updated Board
+
+### Bug fixes
+- None
+
+### Known Issues
+- Same as v3.6.0
+
+### Development Tools
+- Same as v3.6.0
+
 ## CSP Release v3.6.0
 ### New Features
 
