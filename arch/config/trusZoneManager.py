@@ -79,11 +79,16 @@ for mem_idx in range(0, len(addr_space_children)):
         maxFlashSize = coreComponent.createIntegerSymbol("DEVICE_FLASH_SIZE", None)
         maxFlashSize.setVisible(False)
         maxFlashSize.setDefaultValue(int(addr_space_children[mem_idx].getAttribute("size"), 16))
-    
+
     if (mem_seg == "HSRAM"):
         maxRamSize = coreComponent.createIntegerSymbol("DEVICE_RAM_SIZE", None)
         maxRamSize.setVisible(False)
         maxRamSize.setDefaultValue(int(addr_space_children[mem_idx].getAttribute("size"), 16))
+
+    if (mem_seg == "DATAFLASH"):
+        maxDataflashSize = coreComponent.createIntegerSymbol("DEVICE_DATAFLASH_SIZE", None)
+        maxDataflashSize.setVisible(False)
+        maxDataflashSize.setDefaultValue(int(addr_space_children[mem_idx].getAttribute("size"), 16))
 
 for key in memoryFuseMaxValue.keys():
     asSizeSymbol = coreComponent.createKeyValueSetSymbol( str(key) + "_SIZE", memoryMenu)
@@ -102,6 +107,10 @@ for key in memoryFuseMaxValue.keys():
     asSizeSymbol.setOutputMode("Key")
     asSizeSymbol.setDisplayMode("Description")
     memoryfusedependencyList.append(str(key) + "_SIZE")
+
+    asGranularitySymbol =  coreComponent.createIntegerSymbol( str(key) + "_GRANULARITY", memoryMenu)
+    asGranularitySymbol.setVisible(False)
+    asGranularitySymbol.setDefaultValue(memoryGranularity[key])
 
 memfuseUpdateCallback = coreComponent.createBooleanSymbol("DUMMY_MEM_SYMBOL_CALLBACK", None)
 memfuseUpdateCallback.setVisible(False)
@@ -241,7 +250,7 @@ def calculateRSSize(symbol, event):
 
 
 # for Secure Project
-# set Linker Macros required for XC32 
+# set Linker Macros required for XC32
 xc32LinkerMacro = coreComponent.createSettingSymbol("XC32_LINKER_MACRO", None)
 xc32LinkerMacro.setCategory("C32-LD")
 xc32LinkerMacro.setKey("preprocessor-macros")
@@ -249,7 +258,7 @@ xc32LinkerMacro.setValue("SECURE")
 xc32LinkerMacro.setAppend(True, ";")
 xc32LinkerMacro.setSecurity("SECURE")
 
-# set Linker Macros requirefor XC32 
+# set Linker Macros requirefor XC32
 xc32LinkerMacro = coreComponent.createSettingSymbol("XC32_LINKER_MACRO_AS_SIZE", None)
 xc32LinkerMacro.setCategory("C32-LD")
 xc32LinkerMacro.setKey("preprocessor-macros")
@@ -258,7 +267,7 @@ xc32LinkerMacro.setAppend(True, ";")
 xc32LinkerMacro.setDependencies(calculateASSize, [fuseMapSymbol["IDAU_AS"]])
 xc32LinkerMacro.setSecurity("SECURE")
 
-# # set Linker Macros requirefor XC32 
+# # set Linker Macros requirefor XC32
 xc32LinkerMacro = coreComponent.createSettingSymbol("XC32_LINKER_MACRO_ANSC_SIZE", None)
 xc32LinkerMacro.setCategory("C32-LD")
 xc32LinkerMacro.setKey("preprocessor-macros")
@@ -267,7 +276,7 @@ xc32LinkerMacro.setAppend(True, ";")
 xc32LinkerMacro.setDependencies(calculateANSCSize, [fuseMapSymbol["IDAU_ANSC"]])
 xc32LinkerMacro.setSecurity("SECURE")
 
-# # set Linker Macros requirefor XC32 
+# # set Linker Macros requirefor XC32
 xc32LinkerMacro = coreComponent.createSettingSymbol("XC32_LINKER_MACRO_RS_SIZE", None)
 xc32LinkerMacro.setCategory("C32-LD")
 xc32LinkerMacro.setKey("preprocessor-macros")
@@ -277,7 +286,7 @@ xc32LinkerMacro.setDependencies(calculateRSSize, [fuseMapSymbol["IDAU_RS"]])
 xc32LinkerMacro.setSecurity("SECURE")
 
 #For Non Secure
-# set Linker Macros requirefor XC32 
+# set Linker Macros requirefor XC32
 xc32LinkerMacro = coreComponent.createSettingSymbol("XC32_LINKER_MACRO_AS_SIZE_NON_SECURE", None)
 xc32LinkerMacro.setCategory("C32-LD")
 xc32LinkerMacro.setKey("preprocessor-macros")
@@ -287,7 +296,7 @@ xc32LinkerMacro.setDependencies(calculateASSize, [fuseMapSymbol["IDAU_AS"]])
 
 
 
-# set Linker Macros requirefor XC32 
+# set Linker Macros requirefor XC32
 xc32LinkerMacro = coreComponent.createSettingSymbol("XC32_LINKER_MACRO_RS_SIZE_NON_SECURE", None)
 xc32LinkerMacro.setCategory("C32-LD")
 xc32LinkerMacro.setKey("preprocessor-macros")
