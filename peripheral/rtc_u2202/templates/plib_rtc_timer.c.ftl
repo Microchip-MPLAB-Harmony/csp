@@ -262,7 +262,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     <#lt>        /* Wait for Synchronization before reading value from Count Register */
     <#lt>    }
 
-    <#lt>    return(${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_COUNT) + 3;
+    <#lt>    return(${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_COUNT) + 6;
     <#lt>}
 
     <#lt>uint32_t ${RTC_INSTANCE_NAME}_Timer32PeriodGet ( void )
@@ -338,7 +338,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     <#lt>        /* Wait for Synchronization after reading value from Count Register */
     <#lt>    }
 
-    <#lt>    return (${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_COUNT) + 3;
+    <#lt>    return (${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_COUNT) + 6;
     <#lt>}
 
     <#lt>uint16_t ${RTC_INSTANCE_NAME}_Timer16PeriodGet ( void )
