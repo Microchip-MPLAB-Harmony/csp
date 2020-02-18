@@ -200,6 +200,22 @@ for ii in range(len(register)):
         bitfielditem.setDescription(bitfields[jj].getAttribute('caption'))
 # End of scanning atdf file for parameters in fuse area
 
+# following three symbols are used for PIC32MX 5xx/6xx/7xx series of devices.
+if ATDF.getNode('/avr-tools-device-file/modules/module@[name="CFG"]/value-group@[name="DDPCON__JTAGEN"]') != None:
+    jtagEnable = coreComponent.createBooleanSymbol("DDPCON_JTAG_ENABLE", devCfgMenu)
+    jtagEnable.setLabel("Enable JTAG Port")
+    jtagEnable.setDefaultValue(False)
+
+if ATDF.getNode('/avr-tools-device-file/modules/module@[name="CFG"]/value-group@[name="DDPCON__TDOEN"]') != None:
+    tdoEnable = coreComponent.createBooleanSymbol("DDPCON_TDO_ENABLE", devCfgMenu)
+    tdoEnable.setLabel("Enable TDO for 2-Wire JTAG")
+    tdoEnable.setDefaultValue(False)
+
+if ATDF.getNode('/avr-tools-device-file/modules/module@[name="CFG"]/value-group@[name="DDPCON__TROEN"]') != None:
+    traceEnable = coreComponent.createBooleanSymbol("DDPCON_TRACE_ENABLE", devCfgMenu)
+    traceEnable.setLabel("Enable Trace Output")
+    traceEnable.setDefaultValue(False)
+
 # The following symbols are not used in Chicagoland, but are created for the clock manager.
 symbol = coreComponent.createBooleanSymbol("SYS_CLK_FSOSCEN_OVERRIDE", None)
 symbol.setDefaultValue(False)

@@ -13,4 +13,15 @@
     /* Set the SRAM wait states to zero */
     BMXCONbits.BMXWSDRM = 0;
 
-
+<#if (DDPCON_JTAG_ENABLE?? && DDPCON_JTAG_ENABLE == false) || (DDPCON_TDO_ENABLE?? && DDPCON_TDO_ENABLE == true) || (DDPCON_TRACE_ENABLE?? && DDPCON_TRACE_ENABLE == true)>
+    /* Configure Debug Data Port */
+</#if>
+<#if DDPCON_JTAG_ENABLE?? && DDPCON_JTAG_ENABLE == false>
+    DDPCONbits.JTAGEN = 0;
+</#if>
+<#if DDPCON_TDO_ENABLE?? && DDPCON_TDO_ENABLE == true>
+    DDPCONbits.TDOEN = 1;
+</#if>
+<#if DDPCON_TRACE_ENABLE?? && DDPCON_TRACE_ENABLE == true>
+    DDPCONbits.TROEN = 1;
+</#if>        
