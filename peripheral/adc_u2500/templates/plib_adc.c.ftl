@@ -307,7 +307,8 @@ void ${ADC_INSTANCE_NAME}_Disable( void )
 void ${ADC_INSTANCE_NAME}_ChannelSelect( ADC_POSINPUT positiveInput, ADC_NEGINPUT negativeInput )
 {
     /* Configure pin scan mode and positive and negative input pins */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_INPUTCTRL = (uint16_t) positiveInput | (uint16_t) negativeInput;
+    ${ADC_INSTANCE_NAME}_REGS->ADC_INPUTCTRL &= ~(ADC_INPUTCTRL_MUXPOS_Msk | ADC_INPUTCTRL_MUXNEG_Msk);
+    ${ADC_INSTANCE_NAME}_REGS->ADC_INPUTCTRL |= (uint16_t) positiveInput | (uint16_t) negativeInput;
 
     while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY & ADC_SYNCBUSY_INPUTCTRL_Msk) == ADC_SYNCBUSY_INPUTCTRL_Msk)
     {
