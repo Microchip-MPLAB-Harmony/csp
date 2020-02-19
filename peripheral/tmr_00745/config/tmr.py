@@ -299,9 +299,10 @@ def calcTimerFreq(symbol, event):
 def timerMaxValue(symbol, event):
     component = symbol.getComponent()
     clock = component.getSymbolValue("TIMER_CLOCK_FREQ")
-    if(clock == 0):
-        clock = 1
-    resolution = 1000.0/float(clock)
+    if(clock != 0):
+        resolution = 1000.0/float(clock)
+    else:
+        resolution = 0
     mode_32 = component.getSymbolValue("TIMER_32BIT_MODE_SEL")
     if(mode_32 == 0):
         symbol.setMax(4294967295.0 * resolution)
@@ -315,7 +316,7 @@ def timerPeriodCalc(symbol, event):
     clock = component.getSymbolValue("TIMER_CLOCK_FREQ")
     if(clock != 0):
         resolution = 1000.0/clock
-        period = component.getSymbolValue("TIMER_TIME_PERIOD_MS") / resolution
+        period = (component.getSymbolValue("TIMER_TIME_PERIOD_MS") / resolution) - 1
         symbol.setValue(long(period), 2)
         slave = component.getSymbolValue("TIMER_SLAVE")
         symbol.setVisible(not bool(slave))
@@ -540,7 +541,7 @@ def instantiateComponent(tmrComponent):
     tmrSym_PERIOD_MS.setVisible(not bool(slave))
 
     if clock != 0:
-        period = tmrSym_PERIOD_MS.getValue() / resolution
+        period = (tmrSym_PERIOD_MS.getValue() / resolution) - 1
     else:
         period = 0
 

@@ -313,9 +313,10 @@ def calcTimerFreq(symbol, event):
 def timerMaxValue(symbol, event):
     component = symbol.getComponent()
     clock = component.getSymbolValue("TIMER1_CLOCK_FREQ")
-    if(clock == 0):
-        clock = 1
-    resolution = 1000.0/float(clock)
+    if(clock != 0):
+        resolution = 1000.0/float(clock)
+    else:
+        resolution = 0
     symbol.setMax(65535.0 * resolution)
 
 def timerPeriodCalc(symbol, event):
@@ -323,7 +324,7 @@ def timerPeriodCalc(symbol, event):
     clock = component.getSymbolValue("TIMER1_CLOCK_FREQ")
     if(clock != 0):
         resolution = 1000.0/clock
-        period = component.getSymbolValue("TIMER1_TIME_PERIOD_MS") / resolution
+        period = (component.getSymbolValue("TIMER1_TIME_PERIOD_MS") / resolution) - 1
         symbol.setValue(long(period), 2)
     else:
         symbol.setValue(0, 2)
@@ -505,7 +506,7 @@ def instantiateComponent(tmr1Component):
     tmr1Sym_PERIOD_MS.setDependencies(timerMaxValue, ["core." + tmr1InstanceName.getValue() + "_CLOCK_FREQUENCY", "TIMER1_CLOCK_FREQ"])
 
     if clock != 0:
-        period = tmr1Sym_PERIOD_MS.getValue() / resolution
+        period = (tmr1Sym_PERIOD_MS.getValue() / resolution) - 1
     else:
         period = 0
 
