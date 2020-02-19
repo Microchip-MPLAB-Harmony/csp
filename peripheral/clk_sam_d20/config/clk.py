@@ -428,7 +428,7 @@ dfllCoarse.setLabel("Coarse Maximum Step")
 dfllFine = coreComponent.createIntegerSymbol("CONFIG_CLOCK_DFLL_FINE", dfll_Menu)
 dfllFine.setDefaultValue(1)
 dfllFine.setMin(0)
-dfllFine.setMax(255)
+dfllFine.setMax(1023)
 dfllFine.setLabel("Fine Maximum Step")
 
 dfllMul = coreComponent.createIntegerSymbol("CONFIG_CLOCK_DFLL_MUL", dfll_Menu)

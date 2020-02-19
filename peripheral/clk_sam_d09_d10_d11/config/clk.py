@@ -493,7 +493,7 @@ dfllFine = coreComponent.createIntegerSymbol("CONFIG_CLOCK_DFLL_FINE", dfll_Menu
 dfllFine.setLabel("Fine Maximum Step")
 dfllFine.setDefaultValue(1)
 dfllFine.setMin(0)
-dfllFine.setMax(255)
+dfllFine.setMax(1023)
 
 dfllMul = coreComponent.createIntegerSymbol("CONFIG_CLOCK_DFLL_MUL", dfll_Menu)
 dfllMul.setLabel("DFLL Multiply Factor")
