@@ -174,7 +174,7 @@ void INPUT_CAPTURE_${INDEX}_InterruptHandler(void)
 
 bool ${ICAP_INSTANCE_NAME}_CaptureStatusGet (void)
 {
-    bool status;
+    bool status = false;
     status = ((IC${INDEX}CON >> ICAP_STATUS_BUFNOTEMPTY) & 0x1);
     return status;
 }
@@ -201,7 +201,7 @@ void INPUT_CAPTURE_${INDEX}_ERROR_InterruptHandler(void)
 
 bool ${ICAP_INSTANCE_NAME}_ErrorStatusGet (void)
 {
-    bool status;
+    bool status = false;
     status = ((IC${INDEX}CON >> ICAP_STATUS_OVERFLOW) & 0x1);
     return status;
 }
