@@ -44,20 +44,6 @@ def fileUpdate(symbol, event):
         OPAMPfilesArray[1].setSecurity("NON_SECURE")
         OPAMPfilesArray[2].setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
         OPAMPfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-
-#Update Symbol Visibility
-def setOpampSymbolVisibility(MySymbol, event):
-    
-    MySymbol.setVisible(event["value"])
-
-#Toggle Symbol Visibility
-def toggleOpampSymbolVisibility(MySymbol, event):
-   
-    symObj = event["symbol"]
-    if symObj.getValue() == True:
-        MySymbol.setVisible(False)
-    else:
-        MySymbol.setVisible(True)
     
 #Show warning if APB clock is not enabled
 def updateOPAMPClockWarningStatus(MySymbol, event):
@@ -225,9 +211,16 @@ def instantiateComponent(opampComponent):
         #RES2OUT
         opampSym_OPAMPCTRL_RES2OUT.append(opampID)
         opampSym_OPAMPCTRL_RES2OUT[opampID] = opampComponent.createBooleanSymbol("OPAMP_OPAMPCTRL_" + str(opampID) + "_RES2OUT", opampSym_Menu)
-        opampSym_OPAMPCTRL_RES2OUT[opampID].setLabel("Connect resitor ladder to op amp output")
+        opampSym_OPAMPCTRL_RES2OUT[opampID].setLabel("Connect resistor ladder to op amp output")
         opampSym_OPAMPCTRL_RES2OUT[opampID].setDescription("Enable this if the resistor ladder is going to be used in the feedback path of the op amp");
-        
+
+        #RES2VCC
+        opampSym_OPAMPCTRL_RES2VCC.append(opampID)
+        opampSym_OPAMPCTRL_RES2VCC[opampID] = opampComponent.createBooleanSymbol("OPAMP_OPAMPCTRL_" + str(opampID) + "_RES2VCC", opampSym_Menu)
+        opampSym_OPAMPCTRL_RES2VCC[opampID].setLabel("Connect resistor ladder to VCC")
+        opampSym_OPAMPCTRL_RES2VCC[opampID].setDefaultValue(False)
+        opampSym_OPAMPCTRL_RES2VCC[opampID].setDescription("Enable this if the resistor ladder is used to form a voltage divider. In this case resistor R1 should be connected to GND");
+            
         #POTMUX
         opampSym_OPAMPCTRL_POTMUX.append(opampID)
         opampSym_OPAMPCTRL_POTMUX[opampID] = opampComponent.createKeyValueSetSymbol("OPAMP_OPAMPCTRL_" + str(opampID) + "_POTMUX", opampSym_Menu)
@@ -294,15 +287,6 @@ def instantiateComponent(opampComponent):
         opampSym_OPAMPCTRL_ONDEMAND[opampID].setLabel("Enable On-demand operation")
         opampSym_OPAMPCTRL_ONDEMAND[opampID].setDescription("Enable op amp only when another peripheral is requesting the op amp to be used as an input");
         
-        #RES2VCC
-        opampSym_OPAMPCTRL_RES2VCC.append(opampID)
-        opampSym_OPAMPCTRL_RES2VCC[opampID] = opampComponent.createBooleanSymbol("OPAMP_OPAMPCTRL_" + str(opampID) + "_RES2VCC", opampSym_Menu)
-        opampSym_OPAMPCTRL_RES2VCC[opampID].setLabel("Connect the resitor ladder to VCC")
-        opampSym_OPAMPCTRL_RES2VCC[opampID].setDefaultValue(False)
-        opampSym_OPAMPCTRL_RES2VCC[opampID].setDescription("Enable this if the resistor ladder is used to form a voltage divider. In this case resistor R1 should be connected to GND");
-        #If R2 is connected to output of Op Amp, then do not allow R2 to be connected to VCC
-        opampSym_OPAMPCTRL_RES2VCC[opampID].setDependencies(toggleOpampSymbolVisibility, ["OPAMP_OPAMPCTRL_" + str(opampID) + "_RES2OUT"])
-    
     #Disable voltage doubler
     opampSym_CTRLA_LPMUX = opampComponent.createBooleanSymbol("OPAMP_CTRLA_LPMUX", None)
     opampSym_CTRLA_LPMUX.setLabel("Disable voltage doubler")
