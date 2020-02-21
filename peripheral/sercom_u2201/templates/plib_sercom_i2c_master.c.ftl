@@ -153,7 +153,9 @@ bool ${SERCOM_INSTANCE_NAME}_I2C_TransferSetup(SERCOM_I2C_TRANSFER_SETUP* setup,
 {
     uint32_t baudValue;
     uint32_t i2cClkSpeed;
+<#if I2CM_MODE??>		
     uint32_t i2cSpeedMode = 0;
+</#if>	
 
     if (setup == NULL)
     {
@@ -193,6 +195,7 @@ bool ${SERCOM_INSTANCE_NAME}_I2C_TransferSetup(SERCOM_I2C_TRANSFER_SETUP* setup,
             baudValue /= 2;
         }
     }
+<#if I2CM_MODE??>	
     else
     {
         /* To maintain the ratio of SCL_L:SCL_H to 2:1, the max value of BAUD_LOW<15:8>:BAUD<7:0> can be 0xFF:0x7F. Hence BAUD_LOW + BAUD can not exceed 255+127 = 382 */
@@ -213,6 +216,12 @@ bool ${SERCOM_INSTANCE_NAME}_I2C_TransferSetup(SERCOM_I2C_TRANSFER_SETUP* setup,
         }
         i2cSpeedMode = 1;
     }
+<#else>
+    else
+	{
+		return false;
+	}
+</#if>	
 
     /* Disable the I2C before changing the I2C clock speed */
     ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_CTRLA &= ~SERCOM_I2CM_CTRLA_ENABLE_Msk;
@@ -227,7 +236,9 @@ bool ${SERCOM_INSTANCE_NAME}_I2C_TransferSetup(SERCOM_I2C_TRANSFER_SETUP* setup,
     /* Baud rate - Master Baud Rate*/
     ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_BAUD = (SERCOM_I2CM_BAUD_BAUDLOW(baudValue >> 8) | SERCOM_I2CM_BAUD_BAUD(baudValue));
 
+<#if I2CM_MODE??>	
     ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_CTRLA  = ((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_CTRLA & ~SERCOM_I2CM_CTRLA_SPEED_Msk) | (SERCOM_I2CM_CTRLA_SPEED(i2cSpeedMode)));
+</#if>
 
     /* Re-enable the I2C module */
     ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_CTRLA |= SERCOM_I2CM_CTRLA_ENABLE_Msk;
