@@ -195,8 +195,6 @@ def instantiateComponent(opampComponent):
         opampSym_OPAMPCTRL_RES1MUX[opampID] = opampComponent.createKeyValueSetSymbol("OPAMP_OPAMPCTRL_" + str(opampID) + "_RES1MUX", opampSym_OPAMPCTRL_RES1EN[opampID])
         opampSym_OPAMPCTRL_RES1MUX[opampID].setLabel("Resistor R1 connection")
         opampSym_OPAMPCTRL_RES1MUX[opampID].setDescription("These bits select the connection of R1 resistor of the potentiometer")
-        opampSym_OPAMPCTRL_RES1MUX[opampID].setDependencies(setOpampSymbolVisibility, ["OPAMP_OPAMPCTRL_" + str(opampID) + "_RES1EN"])
-        opampSym_OPAMPCTRL_RES1MUX[opampID].setVisible(False)
 
         if (opampID == 0):
             opampSym_OPAMPCTRL_RES1MUX_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"OPAMP\"]/value-group@[name=\"OPAMP_OPAMPCTRL0__RES1MUX\"]")
