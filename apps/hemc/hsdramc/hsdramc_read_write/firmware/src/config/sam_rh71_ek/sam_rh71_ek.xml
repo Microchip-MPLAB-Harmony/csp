@@ -1397,12 +1397,12 @@
             <User dnOrder="0" value="A"/>
           </Values>
         </String>
-        <Boolean dnOrder="275" id="PIOA_CLOCK_ENABLE">
+        <Boolean dnOrder="275" id="PIO_CLOCK_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="true"/>
           </Values>
         </Boolean>
-        <Integer dnOrder="276" id="PIOA_CLOCK_FREQUENCY">
+        <Integer dnOrder="276" id="PIO_CLOCK_FREQUENCY">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core" value="50000000"/>
           </Values>
@@ -2080,172 +2080,190 @@
     </UniqueComponent>
     <UniqueComponent dnOrder="4" id="hemc">
       <Symbols dnOrder="0">
-        <KeyValueSet dnOrder="0" id="CS_4_MEMORY_BANK_SIZE">
+        <String dnOrder="0" id="CS_4_END_ADDRESS">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="hemc" value="0x61ffffff"/>
+          </Values>
+        </String>
+        <KeyValueSet dnOrder="1" id="CS_4_MEMORY_BANK_SIZE">
           <Values dnOrder="0">
             <User dnOrder="0" value="12"/>
           </Values>
         </KeyValueSet>
-        <Hex dnOrder="1" id="CS_4_MEMORY_BASE">
+        <Hex dnOrder="2" id="CS_4_MEMORY_BASE">
           <Values dnOrder="0">
-            <User dnOrder="0" value="4096"/>
+            <Dynamic dnOrder="0" id="hemc" value="0"/>
+            <User dnOrder="1" value="4096"/>
           </Values>
         </Hex>
-        <KeyValueSet dnOrder="2" id="CS_4_MEMORY_TYPE">
+        <KeyValueSet dnOrder="3" id="CS_4_MEMORY_TYPE">
           <Values dnOrder="0">
             <User dnOrder="0" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="3" id="HSDRAMC_CR__NB">
+        <Hex dnOrder="4" id="CS_4_RAM_CHECK_BIT_INIT_SIZE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="hemc" value="33554432"/>
+          </Values>
+        </Hex>
+        <Comment dnOrder="5" id="HEMC_COMMENT">
+          <Attributes dnOrder="0">
+            <String dnOrder="0" id="text">
+              <Value dnOrder="0">****&amp;#160;HEMC&amp;#160;is&amp;#160;running&amp;#160;at&amp;#160;100000000Hz&amp;#160;****</Value>
+            </String>
+          </Attributes>
+        </Comment>
+        <KeyValueSet dnOrder="6" id="HSDRAMC_CR__NB">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="hemc" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="4" id="HSDRAMC_CR__NC">
+        <KeyValueSet dnOrder="7" id="HSDRAMC_CR__NC">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="hemc" value="1"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="5" id="HSDRAMC_CR__NR">
+        <KeyValueSet dnOrder="8" id="HSDRAMC_CR__NR">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="hemc" value="2"/>
           </Values>
         </KeyValueSet>
-        <Menu dnOrder="6" id="HSDRAMC_FEATURE_MENU">
+        <Menu dnOrder="9" id="HSDRAMC_FEATURE_MENU">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </Menu>
-        <Menu dnOrder="7" id="HSDRAMC_MR_MENU">
+        <Menu dnOrder="10" id="HSDRAMC_MR_MENU">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </Menu>
-        <Menu dnOrder="8" id="HSDRAMC_TIMING_MENU">
+        <Menu dnOrder="11" id="HSDRAMC_TIMING_MENU">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </Menu>
-        <Integer dnOrder="9" id="HSDRAMC_TR_COUNT">
+        <Integer dnOrder="12" id="HSDRAMC_TR_COUNT">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="hemc" value="195"/>
           </Values>
         </Integer>
-        <Comment dnOrder="10" id="HSDRAM_COMPONENT">
+        <Comment dnOrder="13" id="HSDRAM_COMPONENT">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">false</Value>
             </Boolean>
           </Attributes>
         </Comment>
-        <Boolean dnOrder="11" id="HSMC_CHIP_SELECT4">
+        <Boolean dnOrder="14" id="HSMC_CHIP_SELECT4">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">false</Value>
             </Boolean>
           </Attributes>
         </Boolean>
-        <KeyValueSet dnOrder="12" id="HSMC_DATA_BUS_CS0">
+        <KeyValueSet dnOrder="15" id="HSMC_DATA_BUS_CS0">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="hemc" value="2"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="13" id="HSMC_DATA_BUS_CS1">
+        <KeyValueSet dnOrder="16" id="HSMC_DATA_BUS_CS1">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="hemc" value="2"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="14" id="HSMC_DATA_BUS_CS2">
+        <KeyValueSet dnOrder="17" id="HSMC_DATA_BUS_CS2">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="hemc" value="2"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="15" id="HSMC_DATA_BUS_CS3">
+        <KeyValueSet dnOrder="18" id="HSMC_DATA_BUS_CS3">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="hemc" value="2"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="16" id="HSMC_DATA_BUS_CS4">
+        <KeyValueSet dnOrder="19" id="HSMC_DATA_BUS_CS4">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="hemc" value="2"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="17" id="HSMC_DATA_BUS_CS5">
+        <KeyValueSet dnOrder="20" id="HSMC_DATA_BUS_CS5">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="hemc" value="2"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="18" id="HSMC_NWAIT_MODE_CS0">
+        <KeyValueSet dnOrder="21" id="HSMC_NWAIT_MODE_CS0">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="hemc" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="19" id="HSMC_NWAIT_MODE_CS1">
+        <KeyValueSet dnOrder="22" id="HSMC_NWAIT_MODE_CS1">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="hemc" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="20" id="HSMC_NWAIT_MODE_CS2">
+        <KeyValueSet dnOrder="23" id="HSMC_NWAIT_MODE_CS2">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="hemc" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="21" id="HSMC_NWAIT_MODE_CS3">
+        <KeyValueSet dnOrder="24" id="HSMC_NWAIT_MODE_CS3">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="hemc" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="22" id="HSMC_NWAIT_MODE_CS4">
+        <KeyValueSet dnOrder="25" id="HSMC_NWAIT_MODE_CS4">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="hemc" value="0"/>
           </Values>
         </KeyValueSet>
-        <KeyValueSet dnOrder="23" id="HSMC_NWAIT_MODE_CS5">
+        <KeyValueSet dnOrder="26" id="HSMC_NWAIT_MODE_CS5">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="hemc" value="0"/>
           </Values>
         </KeyValueSet>
-        <Hex dnOrder="24" id="SDRAMC_START_ADDRESS">
+        <Hex dnOrder="27" id="SDRAMC_START_ADDRESS">
           <Values dnOrder="0">
             <User dnOrder="0" value="1677721600"/>
           </Values>
         </Hex>
-        <Boolean dnOrder="25" id="USE_HSDRAM">
+        <Boolean dnOrder="28" id="USE_HSDRAM">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="hemc" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="26" id="USE_HSMC_0">
+        <Boolean dnOrder="29" id="USE_HSMC_0">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="hemc" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="27" id="USE_HSMC_1">
+        <Boolean dnOrder="30" id="USE_HSMC_1">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="hemc" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="28" id="USE_HSMC_2">
+        <Boolean dnOrder="31" id="USE_HSMC_2">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="hemc" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="29" id="USE_HSMC_3">
+        <Boolean dnOrder="32" id="USE_HSMC_3">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="hemc" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="30" id="USE_HSMC_4">
+        <Boolean dnOrder="33" id="USE_HSMC_4">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="hemc" value="false"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="31" id="USE_HSMC_5">
+        <Boolean dnOrder="34" id="USE_HSMC_5">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="hemc" value="true"/>
           </Values>
