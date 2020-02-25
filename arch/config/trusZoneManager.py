@@ -335,6 +335,12 @@ xc32LinkerLibraryPath.setKey("appendMe")
 xc32LinkerLibraryPath.setValue( "-l:libsecure_gateway_veneer.lib")
 xc32LinkerLibraryPath.setAppend(True, ";")
 
+xc32LinkerLibraryDirectoryPath = coreComponent.createSettingSymbol("XC32_LINKER_LIBRARY_DIR_PATH", None)
+xc32LinkerLibraryDirectoryPath.setCategory("C32-LD")
+xc32LinkerLibraryDirectoryPath.setKey("extra-lib-directories")
+xc32LinkerLibraryDirectoryPath.setValue("../../../Secure/firmware/" + str(Variables.get("__SECURE_PROJECT_FOLDER_NAME")))
+xc32LinkerLibraryDirectoryPath.setAppend(True, ";")
+
 # set XC32 option to not use the device startup code
 xc32NoDeviceStartupCodeSym = coreComponent.createSettingSymbol("SEC_XC32_NO_DEVICE_STARTUP_CODE", None)
 xc32NoDeviceStartupCodeSym.setCategory("C32-LD")
