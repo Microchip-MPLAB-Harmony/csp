@@ -339,7 +339,7 @@ bool PIO_PinInterruptCallbackRegister(
 */
 void PIOC_InterruptHandler(void)
 {
-    uint32_t status;
+    uint32_t status = 0;
     uint8_t j;
 
     status  = PIOC_REGS->PIO_ISR;
