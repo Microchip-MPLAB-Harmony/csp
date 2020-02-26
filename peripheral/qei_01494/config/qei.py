@@ -348,6 +348,55 @@ def _get_statReg_parms(vectorNumber):
     regName = "IFS"+str(index)
     return regName
 
+
+###################################################################################################
+########################### Dependency   #################################
+###################################################################################################
+def onAttachmentConnected(source, target):
+    localComponent = source["component"]
+    remoteComponent = target["component"]
+    remoteID = remoteComponent.getID()
+    connectID = source["id"]
+    targetID = target["id"]
+
+
+def onAttachmentDisconnected(source, target):
+    localComponent = source["component"]
+    remoteComponent = target["component"]
+    remoteID = remoteComponent.getID()
+    connectID = source["id"]
+    targetID = target["id"]
+    resetSettings()
+
+
+def resetSettings():
+    component = str(qeiInstanceName.getValue()).lower()
+    #comparator
+    Database.setSymbolValue(component, "QEI"+str(instanceNum)+"ICC__ICCH", long(0))
+    Database.setSymbolValue(component, "QEI"+str(instanceNum)+"CMPL__CMPL", long(0))
+    # Enable input filter
+    Database.setSymbolValue(component, "QEI"+str(instanceNum)+"IOC__FLTREN", 0)
+    #position module mode
+    Database.setSymbolValue(component, "QEI"+str(instanceNum)+"CON__PIMOD", 0)
+
+
+def handleMessage(messageID, args):
+
+    if (messageID == "PMSM_FOC_ENCODER_CONF"):
+        component = str(qeiInstanceName.getValue()).lower()
+
+        resetSettings()
+
+        pulses = long(args['PULSES_PER_REV'])
+        #comparator
+        Database.setSymbolValue(component, "QEI"+str(instanceNum)+"ICC__ICCH", long(pulses))
+        Database.setSymbolValue(component, "QEI"+str(instanceNum)+"CMPL__CMPL", long(1))
+        # Enable input filter
+        Database.setSymbolValue(component, "QEI"+str(instanceNum)+"IOC__FLTREN", 1)
+        #position module mode
+        Database.setSymbolValue(component, "QEI"+str(instanceNum)+"CON__PIMOD", 6)
+
+
 ################################################################################
 #### Business Logic ####
 ################################################################################
@@ -444,6 +493,31 @@ def instantiateComponent(qeiComponent):
     qeiInstanceNum.setVisible(False)
     instanceNum = filter(str.isdigit,str(qeiComponent.getID()))
     qeiInstanceNum.setDefaultValue(instanceNum)
+
+    #----------------- motor control APIs ---------------------------------
+    qeiStartAPI = qeiComponent.createStringSymbol("ENCODER_START_API", None)
+    qeiStartAPI.setVisible(False)
+    qeiStartAPI.setValue(qeiInstanceName.getValue() + "_Start")
+
+    qeiStopAPI = qeiComponent.createStringSymbol("ENCODER_STOP_API", None)
+    qeiStopAPI.setVisible(False)
+    qeiStopAPI.setValue(qeiInstanceName.getValue() + "_Stop")
+
+    qeiPositionGetAPI = qeiComponent.createStringSymbol("ENCODER_POS_GET_API", None)
+    qeiPositionGetAPI.setVisible(False)
+    qeiPositionGetAPI.setValue(qeiInstanceName.getValue() + "_PositionGet")
+
+    qeiSpeedGetAPI = qeiComponent.createStringSymbol("ENCODER_SPEED_GET_API", None)
+    qeiSpeedGetAPI.setVisible(False)
+    qeiSpeedGetAPI.setValue(qeiInstanceName.getValue() + "_VelocityGet")
+
+    qeiPositionSetAPI = qeiComponent.createStringSymbol("ENCODER_POS_SET_API", None)
+    qeiPositionSetAPI.setVisible(False)
+    qeiPositionSetAPI.setValue(qeiInstanceName.getValue() + "_PositionCountSet")
+
+    qeiSpeedSetAPI = qeiComponent.createStringSymbol("ENCODER_SPEED_SET_API", None)
+    qeiSpeedSetAPI.setVisible(False)
+    qeiSpeedSetAPI.setValue(qeiInstanceName.getValue() + "_VelocityCountSet")
 
     #Clock enable
     Database.setSymbolValue("core", qeiInstanceName.getValue() + "_CLOCK_ENABLE", True, 1)

@@ -91,6 +91,10 @@ uint32_t ${QEI_INSTANCE_NAME}_PulseIntervalGet();
 
 void ${QEI_INSTANCE_NAME}_PositionWindowSet(uint32_t high_threshold, uint32_t low_threshold);
 
+void ${QEI_INSTANCE_NAME}_PositionCountSet(uint32_t position_count);
+
+void ${QEI_INSTANCE_NAME}_VelocityCountSet(uint32_t velocity_count);
+
 <#if INTERRUPT_MODE == true>
 void ${QEI_INSTANCE_NAME}_CallbackRegister(QEI_CALLBACK callback, uintptr_t context);
 </#if>

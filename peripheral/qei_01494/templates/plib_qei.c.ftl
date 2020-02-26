@@ -151,6 +151,16 @@ void ${QEI_INSTANCE_NAME}_PositionWindowSet(uint32_t high_threshold, uint32_t lo
     QEI${QEI_INSTANCE_NUM}CMPL = low_threshold;
 }
 
+void ${QEI_INSTANCE_NAME}_PositionCountSet(uint32_t position_count)
+{
+    POS${QEI_INSTANCE_NUM}CNT = position_count;
+}
+
+void ${QEI_INSTANCE_NAME}_VelocityCountSet(uint32_t velocity_count)
+{
+    VEL${QEI_INSTANCE_NUM}CNT = velocity_count;
+}
+
 <#if INTERRUPT_MODE == true>
 void ${QEI_INSTANCE_NAME}_CallbackRegister(QEI_CALLBACK callback, uintptr_t context)
 {
