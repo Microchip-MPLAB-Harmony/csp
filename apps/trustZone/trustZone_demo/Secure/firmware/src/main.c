@@ -27,7 +27,7 @@
 #include <stdlib.h>                     // Defines EXIT_FAILURE
 #include "definitions.h"                // SYS function prototypes
 
-#define TZ_START_NS 0x00008000
+#define TZ_START_NS 0x8000
 
 /* typedef for non-secure callback functions */
 typedef void (*funcptr_void) (void) __attribute__((cmse_nonsecure_call));
@@ -54,14 +54,8 @@ int main ( void )
     
     /* Start non-secure state software application */
     NonSecure_ResetHandler();
-    while ( true )
-    {
-        /* Maintain state machines of all polled MPLAB Harmony modules. */
-        SYS_Tasks ( );
-    }
 
     /* Execution should not come here during normal operation */
-
     return ( EXIT_FAILURE );
 }
 

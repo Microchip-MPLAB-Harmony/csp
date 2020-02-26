@@ -7,22 +7,22 @@
       <logicalFolder name="f1" displayName="config" projectFiles="true">
         <logicalFolder name="f1" displayName="sam_l11_xpro" projectFiles="true">
           <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
-            <logicalFolder name="f5" displayName="clock" projectFiles="true">
+            <logicalFolder name="f4" displayName="clock" projectFiles="true">
               <itemPath>../src/config/sam_l11_xpro/peripheral/clock/plib_clock.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f2" displayName="evsys" projectFiles="true">
               <itemPath>../src/config/sam_l11_xpro/peripheral/evsys/plib_evsys.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f6" displayName="nvic" projectFiles="true">
+            <logicalFolder name="f5" displayName="nvic" projectFiles="true">
               <itemPath>../src/config/sam_l11_xpro/peripheral/nvic/plib_nvic.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f1" displayName="nvmctrl" projectFiles="true">
               <itemPath>../src/config/sam_l11_xpro/peripheral/nvmctrl/plib_nvmctrl.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f3" displayName="pm" projectFiles="true">
+            <logicalFolder name="f6" displayName="pm" projectFiles="true">
               <itemPath>../src/config/sam_l11_xpro/peripheral/pm/plib_pm.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f4" displayName="port" projectFiles="true">
+            <logicalFolder name="f3" displayName="port" projectFiles="true">
               <itemPath>../src/config/sam_l11_xpro/peripheral/port/plib_port.h</itemPath>
             </logicalFolder>
           </logicalFolder>
@@ -31,7 +31,7 @@
           <itemPath>../src/config/sam_l11_xpro/toolchain_specifics.h</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <logicalFolder name="f2" displayName="packs" projectFiles="true">
+      <logicalFolder name="f3" displayName="packs" projectFiles="true">
         <logicalFolder name="f1" displayName="ATSAML11E16A_DFP" projectFiles="true">
           <logicalFolder name="f1" displayName="component" projectFiles="true">
             <itemPath>../src/packs/ATSAML11E16A_DFP/component/ac.h</itemPath>
@@ -88,7 +88,7 @@
           </logicalFolder>
         </logicalFolder>
       </logicalFolder>
-      <logicalFolder name="f3" displayName="trustZone" projectFiles="true">
+      <logicalFolder name="f2" displayName="trustZone" projectFiles="true">
         <itemPath>../src/trustZone/veneer.h</itemPath>
         <itemPath>../src/trustZone/secure.h</itemPath>
       </logicalFolder>
@@ -103,22 +103,22 @@
       <logicalFolder name="f1" displayName="config" projectFiles="true">
         <logicalFolder name="f1" displayName="sam_l11_xpro" projectFiles="true">
           <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
-            <logicalFolder name="f5" displayName="clock" projectFiles="true">
+            <logicalFolder name="f4" displayName="clock" projectFiles="true">
               <itemPath>../src/config/sam_l11_xpro/peripheral/clock/plib_clock.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f2" displayName="evsys" projectFiles="true">
               <itemPath>../src/config/sam_l11_xpro/peripheral/evsys/plib_evsys.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f6" displayName="nvic" projectFiles="true">
+            <logicalFolder name="f5" displayName="nvic" projectFiles="true">
               <itemPath>../src/config/sam_l11_xpro/peripheral/nvic/plib_nvic.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f1" displayName="nvmctrl" projectFiles="true">
               <itemPath>../src/config/sam_l11_xpro/peripheral/nvmctrl/plib_nvmctrl.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f3" displayName="pm" projectFiles="true">
+            <logicalFolder name="f6" displayName="pm" projectFiles="true">
               <itemPath>../src/config/sam_l11_xpro/peripheral/pm/plib_pm.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f4" displayName="port" projectFiles="true">
+            <logicalFolder name="f3" displayName="port" projectFiles="true">
               <itemPath>../src/config/sam_l11_xpro/peripheral/port/plib_port.c</itemPath>
             </logicalFolder>
           </logicalFolder>
@@ -127,6 +127,7 @@
           </logicalFolder>
           <itemPath>../src/config/sam_l11_xpro/interrupts.c</itemPath>
           <itemPath>../src/config/sam_l11_xpro/initialization.c</itemPath>
+          <itemPath>../src/config/sam_l11_xpro/exceptions.c</itemPath>
           <itemPath>../src/config/sam_l11_xpro/startup_xc32.c</itemPath>
           <itemPath>../src/config/sam_l11_xpro/libc_syscalls.c</itemPath>
         </logicalFolder>
@@ -156,7 +157,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>Simulator</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>2.40</languageToolchainVersion>
+        <languageToolchainVersion>2.30</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
@@ -267,14 +268,14 @@
         <property key="oXC32ld-extra-opts" value=""/>
         <property key="optimization-level" value=""/>
         <property key="preprocessor-macros"
-                  value="SECURE;AS=0x8000;ANSC=0x400;RS=0x2000"/>
+                  value="SECURE;AS=0x8000;ANSC=0x400;RS=0x2000;BOOTPROT=0x0"/>
         <property key="remove-unused-sections" value="true"/>
         <property key="report-memory-usage" value="false"/>
         <property key="stack-size" value=""/>
         <property key="symbol-stripping" value=""/>
         <property key="trace-symbols" value=""/>
         <property key="warn-section-align" value="false"/>
-        <appendMe value="--out-implib=libsecure_gateway_veneer.lib ,--cmse-implib"/>
+        <appendMe value="--out-implib=trustZone_basic_Secure_sg_veneer.lib ,--cmse-implib"/>
       </C32-LD>
       <C32CPP>
         <property key="additional-warnings" value="false"/>

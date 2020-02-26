@@ -44,13 +44,13 @@ void SWITCH_handler(uintptr_t context)
 }
 int main ( void )
 {
-
     volatile funcptr_void NonSecure_ResetHandler;
 
     /* Initialize all modules */
     SYS_Initialize ( NULL );
     
     EIC_CallbackRegister(EIC_PIN_5, SWITCH_handler,  (uintptr_t) NULL);
+
     /* Set non-secure main stack (MSP_NS) */
     __TZ_set_MSP_NS(*((uint32_t *)(TZ_START_NS)));
     
@@ -59,14 +59,8 @@ int main ( void )
     
     /* Start non-secure state software application */
     NonSecure_ResetHandler();
-    while ( true )
-    {
-        /* Maintain state machines of all polled MPLAB Harmony modules. */
-        SYS_Tasks ( );
-    }
 
     /* Execution should not come here during normal operation */
-
     return ( EXIT_FAILURE );
 }
 

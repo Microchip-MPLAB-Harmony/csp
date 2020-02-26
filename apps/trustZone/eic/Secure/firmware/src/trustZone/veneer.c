@@ -49,7 +49,7 @@
 #include "secure.h"    /* Header file with secure interface API */
 
 /* Non-secure callable (entry) function */
-int __attribute__((cmse_nonsecure_entry)) secure_func1(int x)
+int __attribute__((cmse_nonsecure_entry)) secure_add(int x, int y)
 {
-	return func1(x);
+	return add(x, y);
 }

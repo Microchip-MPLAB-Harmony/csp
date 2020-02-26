@@ -12,7 +12,7 @@
             <asminc-extensions/>
             <sourceEncoding>ISO-8859-1</sourceEncoding>
             <make-dep-projects>
-                <make-dep-project>D:\Harmony3\csp\apps\trustZone\eic\Secure\firmware\eic_pin_toggle_Secure.X</make-dep-project>
+                <make-dep-project>../../../Secure/firmware/eic_pin_toggle_Secure.X</make-dep-project>
             </make-dep-projects>
             <sourceRootList>
                 <sourceRootElem>../src</sourceRootElem>

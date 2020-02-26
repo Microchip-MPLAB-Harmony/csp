@@ -41,8 +41,8 @@
 #include "secure.h"    /* Header file with secure interface API */
 #include "definitions.h"
 
-int func1(int x)
+int add(int x, int y)
 {
-	return x + 3;
+	return (x + y);
 }
 

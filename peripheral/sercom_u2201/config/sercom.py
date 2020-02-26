@@ -66,8 +66,8 @@ def fileUpdate(symbol, event):
         SERCOMfilesArray[9].setSecurity("NON_SECURE")
         SERCOMfilesArray[10].setSecurity("NON_SECURE")
         SERCOMfilesArray[11].setSecurity("NON_SECURE")
-        SERCOMfilesArray[12].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-        SERCOMfilesArray[13].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+        SERCOMfilesArray[12].setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        SERCOMfilesArray[13].setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
         if len(InterruptVectorSecurity) != 1:
             for vector in InterruptVectorSecurity:
                 Database.setSymbolValue("core", vector, True)

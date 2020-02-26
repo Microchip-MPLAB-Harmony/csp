@@ -50,6 +50,6 @@
 #define VENEER_H_
 
 /* Non-secure callable functions */
-extern int secure_func1(int x);
+extern int secure_add(int x, int y);
 
 #endif /* VENEER_H_ */

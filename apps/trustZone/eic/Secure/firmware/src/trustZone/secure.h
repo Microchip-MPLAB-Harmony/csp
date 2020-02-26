@@ -41,6 +41,6 @@
 #ifndef SECURE_H_
 #define SECURE_H_
 
-extern int func1(int x);
+extern int add(int x, int y);
 
 #endif /* SECURE_H_ */

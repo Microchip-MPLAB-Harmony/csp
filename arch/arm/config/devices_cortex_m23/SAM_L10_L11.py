@@ -32,11 +32,6 @@ if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_E
 else:
     registerGroup = ["USER_FUSES"]
 
-print Variables.get("__PROJECT_SRC_PATH")
-print Variables.get("__PROJECT_FIRMWARE_PATH")
-print Variables.get("__CONFIGURATION_ROOT_PATH")
-print Variables.get("__CONFIGURATION_NAME")
-
 # load device specific configurations (fuses), temporary, to be removed once XC32 updated
 devCfgComment = coreComponent.createCommentSymbol("CoreCfgComment1", devCfgMenu)
 devCfgComment.setLabel("Note: Set Device Configuration Bits via Programming Tool")
@@ -132,7 +127,7 @@ for group in range(0, len(registerGroup)):
                         keyValueSymbol.setDisplayMode("Description")
                         # we will handle memory assignment and peripheral assignment using trustzone manager creating abstraction over fuses
                         if "NONSEC" in key:
-                            keyValueSymbol.setVisible(True)
+                            keyValueSymbol.setVisible(False)
                     else:
                         hexSymbol = coreComponent.createHexSymbol("FUSE_SYMBOL_VALUE" + str(numfuses), fuseSettings)
                         hexSymbol.setLabel(caption)
@@ -142,7 +137,7 @@ for group in range(0, len(registerGroup)):
                         # we will handle memory assignment and peripheral assignment using trustzone manager creating abstraction over fuses
                         if "IDAU_" in key:
                             memoryFuseMaxValue[key] = [int(getMaxValue(mask)), getDefaultVal(initVal, mask), caption]
-                            hexSymbol.setVisible(True)
+                            hexSymbol.setVisible(False)
                 else:
                     mask = fuseNodeValues[index].getAttribute("mask")
                     valueGroupPath = "/avr-tools-device-file/modules/module@[name=\"" + "FUSES" + "\"]/value-group@[name=\"" + valueGroup + "\"]"
@@ -167,7 +162,7 @@ fuse.setVisible(False)
 
 if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
     # Setup TrustZone Manager
-    execfile(Variables.get("__CORE_DIR") + "/config/trusZoneManager.py")
+    execfile(Variables.get("__CORE_DIR") + "/config/trustZoneManager.py")
     
 coreFPU = coreComponent.createBooleanSymbol("FPU_Available", devCfgMenu)
 coreFPU.setLabel("FPU Available")

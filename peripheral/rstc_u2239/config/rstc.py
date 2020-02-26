@@ -45,7 +45,7 @@ def fileUpdate(symbol, event):
         RSTCfilesArray[1].setSecurity("NON_SECURE")
         RSTCfilesArray[2].setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
         if rstcWakeupNum != None:
-            RSTCfilesArray[3].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+            RSTCfilesArray[3].setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
 
 
 def wakeupEnableCalculate(symbol, event):

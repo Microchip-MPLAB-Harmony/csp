@@ -60,9 +60,9 @@ void NVIC_Initialize( void )
     NVIC_SetPriority(RTC_IRQn, 3);
     NVIC_EnableIRQ(RTC_IRQn);
     NVIC_SetTargetState(RTC_IRQn);
-    NVIC_SetPriority(EIC_0_IRQn, 3);
-    NVIC_EnableIRQ(EIC_0_IRQn);
-    NVIC_SetTargetState(EIC_0_IRQn);
+    NVIC_SetPriority(EIC_EXTINT_0_IRQn, 3);
+    NVIC_EnableIRQ(EIC_EXTINT_0_IRQn);
+    NVIC_SetTargetState(EIC_EXTINT_0_IRQn);
     NVIC_SetPriority(EIC_OTHER_IRQn, 3);
     NVIC_EnableIRQ(EIC_OTHER_IRQn);
 

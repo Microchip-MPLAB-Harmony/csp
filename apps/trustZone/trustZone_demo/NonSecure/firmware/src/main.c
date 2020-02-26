@@ -60,8 +60,8 @@ int main ( void )
     printf("\n\r-------------------------------------------------------------");
     display_menu();
     
-    uint16_t x = 0;
-    uint16_t y = 0;
+    uint32_t x = 0;
+    uint32_t y = 0;
     uint32_t result = 0;
     while(1)
     {
@@ -70,13 +70,13 @@ int main ( void )
             case ADD:
             {
                 printf("\n\rEnter the first 16 bit unsigned number:- \t");
-                scanf("%hu", &x);
+                scanf("%lu", &x);
                 printf("\n\rEnter the second 16 bit unsigned number:- \t");
-                scanf("%hu", &y);
-                result = secure_add(x, y);
+                scanf("%lu", &y);
+                result = secure_add((uint16_t)x, (uint16_t)y);
 
-                printf("\n\rThe first 16 bit unsigned number is:- %hu\t", x);
-                printf("\n\rThe first 16 bit unsigned number is:- %hu\t", y);
+                printf("\n\rThe first 16 bit unsigned number is:- %lu\t", x);
+                printf("\n\rThe first 16 bit unsigned number is:- %lu\t", y);
                 printf("\n\rThe result is:- \t%lu", result);
 
                 display_menu();
@@ -85,13 +85,13 @@ int main ( void )
             case MULTIPLY:
             {
                 printf("\n\rEnter the first 16 bit unsigned number:- \t");
-                scanf("%hu", &x);
+                scanf("%lu", &x);
                 printf("\n\rEnter the second 16 bit unsigned number:- \t");
-                scanf("%hu", &y);
-                result = secure_multiply(x, y);
+                scanf("%lu", &y);
+                result = secure_multiply((uint16_t)x, (uint16_t)y);
                 
-                printf("\n\rThe first 16 bit unsigned number is:- %hu\t", x);
-                printf("\n\rThe first 16 bit unsigned number is:- %hu\t", y);
+                printf("\n\rThe first 16 bit unsigned number is:- %lu\t", x);
+                printf("\n\rThe first 16 bit unsigned number is:- %lu\t", y);
                 printf("\n\rThe result is:- \t%lu", result);
                 display_menu();
                 break;

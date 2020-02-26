@@ -4,7 +4,7 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <logicalFolder name="f2" displayName="config" projectFiles="true">
+      <logicalFolder name="f1" displayName="config" projectFiles="true">
         <logicalFolder name="f1" displayName="sam_l11_xpro" projectFiles="true">
           <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
             <logicalFolder name="f1" displayName="port" projectFiles="true">
@@ -19,7 +19,7 @@
           <itemPath>../../../NonSecure/firmware/src/config/sam_l11_xpro/definitions.h</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <logicalFolder name="f1" displayName="packs" projectFiles="true">
+      <logicalFolder name="f3" displayName="packs" projectFiles="true">
         <logicalFolder name="f1" displayName="ATSAML11E16A_DFP" projectFiles="true">
           <logicalFolder name="f1" displayName="component" projectFiles="true">
             <itemPath>../../../NonSecure/firmware/src/packs/ATSAML11E16A_DFP/component/ac.h</itemPath>
@@ -76,7 +76,7 @@
           </logicalFolder>
         </logicalFolder>
       </logicalFolder>
-      <logicalFolder name="f3" displayName="trustZone" projectFiles="true">
+      <logicalFolder name="f2" displayName="trustZone" projectFiles="true">
         <itemPath>../../../NonSecure/firmware/src/trustZone/veneer.h</itemPath>
       </logicalFolder>
     </logicalFolder>
@@ -128,7 +128,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>EdbgTool</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>2.40</languageToolchainVersion>
+        <languageToolchainVersion>2.30</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
@@ -143,12 +143,12 @@
         <archiverTool>
         </archiverTool>
         <loading>
-          <makeArtifact PL="D:\Harmony3\csp\apps\trustZone\systick\Secure\firmware\systick_periodic_timeout_Secure.X"
+          <makeArtifact PL="../../../Secure/firmware/systick_periodic_timeout_Secure.X"
                         CT="1"
                         CN="sam_l11_xpro"
                         AC="true"
                         BL="true"
-                        WD="D:\Harmony3\csp\apps\trustZone\systick\Secure\firmware\systick_periodic_timeout_Secure.X"
+                        WD="../../../Secure/firmware/systick_periodic_timeout_Secure.X"
                         BC="${MAKE}  -f Makefile CONF=sam_l11_xpro"
                         DBC="${MAKE}  -f Makefile CONF=sam_l11_xpro TYPE_IMAGE=DEBUG_RUN"
                         CC="rm -rf &quot;build/sam_l11_xpro&quot; &quot;dist/sam_l11_xpro&quot;"
@@ -261,7 +261,7 @@
         <property key="exclude-floating-point-library" value="false"/>
         <property key="exclude-standard-libraries" value="false"/>
         <property key="extra-lib-directories"
-                  value="..\..\..\Secure\firmware\systick_periodic_timeout_Secure.X"/>
+                  value="..\..\..\Secure\firmware\systick_periodic_timeout_Secure.X;../../../Secure/firmware/systick_periodic_timeout_Secure.X"/>
         <property key="fill-flash-options-addr" value=""/>
         <property key="fill-flash-options-const" value=""/>
         <property key="fill-flash-options-how" value="0"/>
@@ -282,7 +282,7 @@
         <property key="no-startup-files" value="false"/>
         <property key="oXC32ld-extra-opts" value=""/>
         <property key="optimization-level" value=""/>
-        <property key="preprocessor-macros" value="AS=0x8000;RS=0x2000"/>
+        <property key="preprocessor-macros" value="AS=0x8000;RS=0x2000;BOOTPROT=0x0"/>
         <property key="remove-unused-sections" value="true"/>
         <property key="report-memory-usage" value="false"/>
         <property key="serial-length" value=""/>
@@ -291,7 +291,7 @@
         <property key="symbol-stripping" value=""/>
         <property key="trace-symbols" value=""/>
         <property key="warn-section-align" value="false"/>
-        <appendMe value="-l:libsecure_gateway_veneer.lib"/>
+        <appendMe value="-l:systick_periodic_timeout_Secure_sg_veneer.lib"/>
       </C32-LD>
       <C32CPP>
         <property key="additional-warnings" value="false"/>
@@ -356,6 +356,8 @@
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="0-ffff"/>
         <property key="poweroptions.powerenable" value="false"/>
+        <property key="programmerToGoFilePath"
+                  value="D:/H3/csp/apps/trustZone/systick/NonSecure/firmware/systick_periodic_timeout_NonSecure.X/debug/sam_l11_xpro/systick_periodic_timeout_NonSecure_ptg"/>
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.preservedataflash" value="false"/>
         <property key="programoptions.preservedataflash.ranges"

@@ -73,7 +73,6 @@ addr_space_children = addr_space.getChildren()
 
 for mem_idx in range(0, len(addr_space_children)):
     mem_seg     = addr_space_children[mem_idx].getAttribute("name")
-    mem_type    = addr_space_children[mem_idx].getAttribute("type")
 
     if (mem_seg == "FLASH"):
         maxFlashSize = coreComponent.createIntegerSymbol("DEVICE_FLASH_SIZE", None)
@@ -125,8 +124,6 @@ nonSecStartAddress.setVisible(False)
 nonSecStartAddress.setDependencies(nonSecStartAddressCalculate, ["IDAU_AS_SIZE", "IDAU_BOOTPROT_SIZE"])
 
 secSystemDefinitionsHeadersList =      coreComponent.createListSymbol( "LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES",       None )
-secsystemIntHeadersList =                  coreComponent.createListSymbol( "LIST_SYSTEM_INTERRUPT_SECURE_C_INCLUDES",         None )
-secsystemIntVectorsList =                  coreComponent.createListSymbol( "LIST_SYSTEM_INTERRUPT_SECURE_C_VECTORS",          None )
 secsystemIntVectorsMultipleHandlesList =   coreComponent.createListSymbol( "LIST_SYSTEM_INTERRUPT_SECURE_MULTIPLE_HANDLERS",  None )
 secsystemIntVectorsWeakHandlesList =       coreComponent.createListSymbol( "LIST_SYSTEM_INTERRUPT_SECURE_WEAK_HANDLERS",      None )
 secsystemIntVectorsHandlesList =           coreComponent.createListSymbol( "LIST_SYSTEM_INTERRUPT_SECURE_HANDLERS",           None )
@@ -151,7 +148,7 @@ secdefHeaderFile.setSecurity("SECURE")
 
 ## cache macros
 secdeviceCacheHeaderFile = coreComponent.createFileSymbol("SECURE_DEVICE_CACHE_H", None)
-secdeviceCacheHeaderFile.setSourcePath( "/templates/trustZone/cache_cortex_m_secure.h.ftl")
+secdeviceCacheHeaderFile.setSourcePath( "/templates/cache_cortex_m.h.ftl")
 secdeviceCacheHeaderFile.setOutputName("device_cache.h")
 secdeviceCacheHeaderFile.setMarkup(True)
 secdeviceCacheHeaderFile.setOverwrite(True)
@@ -247,7 +244,8 @@ def calculateANSCSize(symbol, event):
     symbol.setValue("ANSC=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_ANSC"]) * int(memoryGranularity["IDAU_ANSC"]))).replace("L", ""))
 def calculateRSSize(symbol, event):
     symbol.setValue("RS=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_RS"]) * int(memoryGranularity["IDAU_RS"]))).replace("L", ""))
-
+def calculateBootProtSize(symbol, event):
+    symbol.setValue("BOOTPROT=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_BOOTPROT"]) * int(memoryGranularity["IDAU_BOOTPROT"]))).replace("L", ""))
 
 # for Secure Project
 # set Linker Macros required for XC32
@@ -258,7 +256,7 @@ xc32LinkerMacro.setValue("SECURE")
 xc32LinkerMacro.setAppend(True, ";")
 xc32LinkerMacro.setSecurity("SECURE")
 
-# set Linker Macros requirefor XC32
+# set Linker Macros required for XC32
 xc32LinkerMacro = coreComponent.createSettingSymbol("XC32_LINKER_MACRO_AS_SIZE", None)
 xc32LinkerMacro.setCategory("C32-LD")
 xc32LinkerMacro.setKey("preprocessor-macros")
@@ -267,7 +265,7 @@ xc32LinkerMacro.setAppend(True, ";")
 xc32LinkerMacro.setDependencies(calculateASSize, [fuseMapSymbol["IDAU_AS"]])
 xc32LinkerMacro.setSecurity("SECURE")
 
-# # set Linker Macros requirefor XC32
+# set Linker Macros required for XC32
 xc32LinkerMacro = coreComponent.createSettingSymbol("XC32_LINKER_MACRO_ANSC_SIZE", None)
 xc32LinkerMacro.setCategory("C32-LD")
 xc32LinkerMacro.setKey("preprocessor-macros")
@@ -276,7 +274,7 @@ xc32LinkerMacro.setAppend(True, ";")
 xc32LinkerMacro.setDependencies(calculateANSCSize, [fuseMapSymbol["IDAU_ANSC"]])
 xc32LinkerMacro.setSecurity("SECURE")
 
-# # set Linker Macros requirefor XC32
+# set Linker Macros required for XC32
 xc32LinkerMacro = coreComponent.createSettingSymbol("XC32_LINKER_MACRO_RS_SIZE", None)
 xc32LinkerMacro.setCategory("C32-LD")
 xc32LinkerMacro.setKey("preprocessor-macros")
@@ -285,24 +283,38 @@ xc32LinkerMacro.setAppend(True, ";")
 xc32LinkerMacro.setDependencies(calculateRSSize, [fuseMapSymbol["IDAU_RS"]])
 xc32LinkerMacro.setSecurity("SECURE")
 
+# set Linker Macros required for XC32
+xc32LinkerMacro = coreComponent.createSettingSymbol("XC32_LINKER_MACRO_BOOTPROT_SIZE", None)
+xc32LinkerMacro.setCategory("C32-LD")
+xc32LinkerMacro.setKey("preprocessor-macros")
+xc32LinkerMacro.setValue("BOOTPROT=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_BOOTPROT"]) * int(memoryGranularity["IDAU_BOOTPROT"]))).replace("L", ""))
+xc32LinkerMacro.setAppend(True, ";")
+xc32LinkerMacro.setDependencies(calculateBootProtSize, [fuseMapSymbol["IDAU_BOOTPROT"]])
+xc32LinkerMacro.setSecurity("SECURE")
+
 #For Non Secure
-# set Linker Macros requirefor XC32
+# set Linker Macros required for XC32
 xc32LinkerMacro = coreComponent.createSettingSymbol("XC32_LINKER_MACRO_AS_SIZE_NON_SECURE", None)
 xc32LinkerMacro.setCategory("C32-LD")
 xc32LinkerMacro.setKey("preprocessor-macros")
 xc32LinkerMacro.setValue("AS=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_AS"]) * int(memoryGranularity["IDAU_AS"]))).replace("L", ""))
-#xc32LinkerMacro.setAppend(True, ";")
 xc32LinkerMacro.setDependencies(calculateASSize, [fuseMapSymbol["IDAU_AS"]])
 
-
-
-# set Linker Macros requirefor XC32
+# set Linker Macros required for XC32
 xc32LinkerMacro = coreComponent.createSettingSymbol("XC32_LINKER_MACRO_RS_SIZE_NON_SECURE", None)
 xc32LinkerMacro.setCategory("C32-LD")
 xc32LinkerMacro.setKey("preprocessor-macros")
 xc32LinkerMacro.setValue("RS=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_RS"]) * int(memoryGranularity["IDAU_RS"]))).replace("L", ""))
 xc32LinkerMacro.setAppend(True, ";")
 xc32LinkerMacro.setDependencies(calculateRSSize, [fuseMapSymbol["IDAU_RS"]])
+
+# set Linker Macros required for XC32
+xc32LinkerMacro = coreComponent.createSettingSymbol("XC32_LINKER_MACRO_BOOTPROT_SIZE_NON_SECURE", None)
+xc32LinkerMacro.setCategory("C32-LD")
+xc32LinkerMacro.setKey("preprocessor-macros")
+xc32LinkerMacro.setValue("BOOTPROT=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_BOOTPROT"]) * int(memoryGranularity["IDAU_BOOTPROT"]))).replace("L", ""))
+xc32LinkerMacro.setAppend(True, ";")
+xc32LinkerMacro.setDependencies(calculateBootProtSize, [fuseMapSymbol["IDAU_BOOTPROT"]])
 
 defSym = coreComponent.createSettingSymbol("SEC_XC32_INCLUDE_DIRS", None)
 defSym.setCategory("C32")
@@ -325,14 +337,14 @@ xc32CMSECompilerFlag.setSecurity("SECURE")
 xc32CMSELinkerFlag =  coreComponent.createSettingSymbol("SEC_XC32_LINKER_CMSE_FLAG", None)
 xc32CMSELinkerFlag.setCategory("C32-LD")
 xc32CMSELinkerFlag.setKey("appendMe")
-xc32CMSELinkerFlag.setValue( "--out-implib=libsecure_gateway_veneer.lib ,--cmse-implib")
+xc32CMSELinkerFlag.setValue( "--out-implib=" + str(Variables.get("__SECURE_PROJECT_FOLDER_NAME")).replace('.X', '') + "_sg_veneer.lib" + " ,--cmse-implib")
 xc32CMSELinkerFlag.setAppend(True, ";")
 xc32CMSELinkerFlag.setSecurity("SECURE")
 
 xc32LinkerLibraryPath =  coreComponent.createSettingSymbol("XC32_LINKER_LIBRARY_", None)
 xc32LinkerLibraryPath.setCategory("C32-LD")
 xc32LinkerLibraryPath.setKey("appendMe")
-xc32LinkerLibraryPath.setValue( "-l:libsecure_gateway_veneer.lib")
+xc32LinkerLibraryPath.setValue( "-l:" + str(Variables.get("__SECURE_PROJECT_FOLDER_NAME")).replace('.X', '') + "_sg_veneer.lib")
 xc32LinkerLibraryPath.setAppend(True, ";")
 
 xc32LinkerLibraryDirectoryPath = coreComponent.createSettingSymbol("XC32_LINKER_LIBRARY_DIR_PATH", None)
@@ -381,5 +393,7 @@ secexceptSourceFile.setOverwrite(True)
 secexceptSourceFile.setDestPath("")
 secexceptSourceFile.setProjectPath("config/" + configName + "/")
 secexceptSourceFile.setType("SOURCE")
-secexceptSourceFile.setDependencies( genSysSourceFile, [ "CoreSysExceptionFile", "CoreSysFiles", "FILTERING_EXCEPTION", "ADVANCED_EXCEPTION" ] )
+secexceptSourceFile.setDependencies( genSysSourceFile, [ "CoreSysExceptionFile", "CoreSysFiles", "ADVANCED_EXCEPTION" ] )
 secexceptSourceFile.setSecurity("SECURE")
+
+coreComponent.addPlugin("../arch/config/plugin/trust_zone_manager.jar")

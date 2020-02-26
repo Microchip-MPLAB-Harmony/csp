@@ -43,7 +43,7 @@ def fileUpdate(symbol, event):
     else:
         PMfilesArray[0].setSecurity("NON_SECURE")
         PMfilesArray[1].setSecurity("NON_SECURE")
-        PMfilesArray[2].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_START")
+        PMfilesArray[2].setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_START")
         PMfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
         PMfilesArray[4].setEnabled(True)
         PMfilesArray[5].setEnabled(True)

@@ -12,7 +12,7 @@
             <asminc-extensions/>
             <sourceEncoding>ISO-8859-1</sourceEncoding>
             <make-dep-projects>
-                <make-dep-project>D:\Harmony3\csp\apps\trustZone\evsys\Secure\firmware\evsys_trigger_Secure.X</make-dep-project>
+                <make-dep-project>../../../Secure/firmware/evsys_trigger_Secure.X</make-dep-project>
             </make-dep-projects>
             <sourceRootList>
                 <sourceRootElem>../src</sourceRootElem>
