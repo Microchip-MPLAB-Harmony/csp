@@ -251,37 +251,37 @@ def hideMenu_clearValues(menu, event):
         posn = event["id"].find("__")  # find which LUT block this callback was called for; we'll need it below
         if(posn != -1):
             lutBlock = int(event["id"][posn-1])  # the LUT block number is just before the underscore characters
-            if(cclLuctrlInsel0[lutBlock].getValue()!=0):      # if statements here and below reduce time delay when deselecting LUT enable box
+            if(int(cclLuctrlInsel0[lutBlock].getKeyValue(int(cclLuctrlInsel0[lutBlock].getValue())))!=0):      # if statements here and below reduce time delay when deselecting LUT enable box
                 cclLuctrlInsel0[lutBlock].setReadOnly(True)   # this setting of true/false is needed to make setValue() of symbol apply
                 cclLuctrlInsel0[lutBlock].setReadOnly(False)
                 cclLuctrlInsel0[lutBlock].setValue(0)
                 cclLuctrlInsel0[lutBlock].clearValue()        # clearValue() removes the purple highlight indication from the menu
-            if(cclLuctrlInsel1[lutBlock].getValue()!=0):
+            if(int(cclLuctrlInsel1[lutBlock].getKeyValue(int(cclLuctrlInsel1[lutBlock].getValue())))!=0):
                 cclLuctrlInsel1[lutBlock].setReadOnly(True) 
                 cclLuctrlInsel1[lutBlock].setReadOnly(False)
                 cclLuctrlInsel1[lutBlock].setValue(0)
                 cclLuctrlInsel1[lutBlock].clearValue()
-            if(cclLuctrlInsel2[lutBlock].getValue()!=0):
+            if(int(cclLuctrlInsel2[lutBlock].getKeyValue(int(cclLuctrlInsel2[lutBlock].getValue())))!=0):
                 cclLuctrlInsel2[lutBlock].setReadOnly(True) 
                 cclLuctrlInsel2[lutBlock].setReadOnly(False)
                 cclLuctrlInsel2[lutBlock].setValue(0)
                 cclLuctrlInsel2[lutBlock].clearValue()
-            if(cclLuctrlFiltsel[lutBlock].getValue()!=0):
+            if(int(cclLuctrlFiltsel[lutBlock].getKeyValue(int(cclLuctrlFiltsel[lutBlock].getValue())))!=0):
                 cclLuctrlFiltsel[lutBlock].setReadOnly(True) 
                 cclLuctrlFiltsel[lutBlock].setReadOnly(False)
                 cclLuctrlFiltsel[lutBlock].setValue(0)
                 cclLuctrlFiltsel[lutBlock].clearValue()
-            if(cclLuctrlLuteo[lutBlock].getValue()!=0):
+            if(int(cclLuctrlLuteo[lutBlock].getKeyValue(int(cclLuctrlLuteo[lutBlock].getValue())))!=0):
                 cclLuctrlLuteo[lutBlock].setReadOnly(True) 
                 cclLuctrlLuteo[lutBlock].setReadOnly(False)
                 cclLuctrlLuteo[lutBlock].setValue(0)
                 cclLuctrlLuteo[lutBlock].clearValue()
-            if(cclLuctrlLutei[lutBlock].getValue()!=0):
+            if(int(cclLuctrlLutei[lutBlock].getKeyValue(int(cclLuctrlLutei[lutBlock].getValue())))!=0):
                 cclLuctrlLutei[lutBlock].setReadOnly(True) 
                 cclLuctrlLutei[lutBlock].setReadOnly(False)
                 cclLuctrlLutei[lutBlock].setValue(0)
                 cclLuctrlLutei[lutBlock].clearValue()
-            if(cclLuctrlInvei[lutBlock].getValue()!=0):
+            if(int(cclLuctrlInvei[lutBlock].getKeyValue(int(cclLuctrlInvei[lutBlock].getValue())))!=0):
                 cclLuctrlInvei[lutBlock].setReadOnly(True) 
                 cclLuctrlInvei[lutBlock].setReadOnly(False)
                 cclLuctrlInvei[lutBlock].setValue(0)
@@ -291,7 +291,7 @@ def hideMenu_clearValues(menu, event):
                 cclLuctrlTruth[lutBlock].setReadOnly(False)
                 cclLuctrlTruth[lutBlock].setValue(0)
                 cclLuctrlTruth[lutBlock].clearValue()
-            if(cclLuctrlEdgesel[lutBlock].getValue()!=0):
+            if(int(cclLuctrlEdgesel[lutBlock].getKeyValue(int(cclLuctrlEdgesel[lutBlock].getValue())))!=0):
                 cclLuctrlEdgesel[lutBlock].setReadOnly(True)   
                 cclLuctrlEdgesel[lutBlock].setReadOnly(False)
                 cclLuctrlEdgesel[lutBlock].setValue(0)
@@ -328,28 +328,28 @@ def cclCalcLUTCTRL(symbol, event):
             regValue += cclLutctrlEnable[lutBlock].getValue() << findLsb(int(cclLutctrlEnable_mask,16))
     elif(bitfieldName == 'FILTSEL'):
         regValue &= ~int(cclLuctrlFiltsel_mask,16)
-        regValue += cclLuctrlFiltsel[lutBlock].getValue() << findLsb(int(cclLuctrlFiltsel_mask,16))
+        regValue += int(cclLuctrlFiltsel[lutBlock].getKeyValue(int(cclLuctrlFiltsel[lutBlock].getValue()))) << findLsb(int(cclLuctrlFiltsel_mask,16))
     elif(bitfieldName == 'EDGESEL'):
         regValue &= ~int(cclLuctrlEdgesel_mask,16)
-        regValue += cclLuctrlEdgesel[lutBlock].getValue() << findLsb(int(cclLuctrlEdgesel_mask,16))
+        regValue += int(cclLuctrlEdgesel[lutBlock].getKeyValue(int(cclLuctrlEdgesel[lutBlock].getValue()))) << findLsb(int(cclLuctrlEdgesel_mask,16))
     elif(bitfieldName == 'INSEL0'):
         regValue &= ~int(cclLuctrlInsel0_mask,16)
-        regValue += cclLuctrlInsel0[lutBlock].getValue() << findLsb(int(cclLuctrlInsel0_mask,16))
+        regValue += int(cclLuctrlInsel0[lutBlock].getKeyValue(int(cclLuctrlInsel0[lutBlock].getValue()))) << findLsb(int(cclLuctrlInsel0_mask,16))
     elif(bitfieldName == 'INSEL1'):
         regValue &= ~int(cclLuctrlInsel1_mask,16)
-        regValue += cclLuctrlInsel1[lutBlock].getValue() << findLsb(int(cclLuctrlInsel1_mask,16))
+        regValue += int(cclLuctrlInsel1[lutBlock].getKeyValue(int(cclLuctrlInsel1[lutBlock].getValue()))) << findLsb(int(cclLuctrlInsel1_mask,16))
     elif(bitfieldName == 'INSEL2'):
         regValue &= ~int(cclLuctrlInsel2_mask,16)
-        regValue += cclLuctrlInsel2[lutBlock].getValue() << findLsb(int(cclLuctrlInsel2_mask,16))
+        regValue += int(cclLuctrlInsel2[lutBlock].getKeyValue(int(cclLuctrlInsel2[lutBlock].getValue()))) << findLsb(int(cclLuctrlInsel2_mask,16))
     elif(bitfieldName == 'INVEI'):
         regValue &= ~int(cclLuctrlInvei_mask,16)
-        regValue += cclLuctrlInvei[lutBlock].getValue() << findLsb(int(cclLuctrlInvei_mask,16))
+        regValue += int(cclLuctrlInvei[lutBlock].getKeyValue(int(cclLuctrlInvei[lutBlock].getValue()))) << findLsb(int(cclLuctrlInvei_mask,16))
     elif(bitfieldName == 'LUTEI'):
         regValue &= ~int(cclLuctrlLutei_mask,16)
-        regValue += cclLuctrlLutei[lutBlock].getValue() << findLsb(int(cclLuctrlLutei_mask,16))
+        regValue += int(cclLuctrlLutei[lutBlock].getKeyValue(int(cclLuctrlLutei[lutBlock].getValue()))) << findLsb(int(cclLuctrlLutei_mask,16))
     elif(bitfieldName == 'LUTEO'):
         regValue &= ~int(cclLuctrlLuteo_mask,16)
-        regValue += cclLuctrlLuteo[lutBlock].getValue() << findLsb(int(cclLuctrlLuteo_mask,16))
+        regValue += int(cclLuctrlLuteo[lutBlock].getKeyValue(int(cclLuctrlLuteo[lutBlock].getValue()))) << findLsb(int(cclLuctrlLuteo_mask,16))
     elif(bitfieldName == 'TRUTH'):
         regValue &= ~int(cclLuctrlTruth_mask,16)
         regValue += cclLuctrlTruth[lutBlock].getValue() << findLsb(int(cclLuctrlTruth_mask,16))
@@ -360,7 +360,7 @@ def cclCalcSEQCTRL(symbol, event):
     seqBlock = int(event["id"][7],16)  # block number is at position 7
     regValue = cclsym_SEQCTRL[int(event["id"][7])].getValue()
     regValue &= ~int(cclSeqctrlSeqsel_mask,16)
-    regValue += cclSeqctrlSeqsel[seqBlock].getValue() << findLsb(int(cclSeqctrlSeqsel_mask,16))
+    regValue += int(cclSeqctrlSeqsel[seqBlock].getKeyValue(int(cclSeqctrlSeqsel[seqBlock].getValue()))) << findLsb(int(cclSeqctrlSeqsel_mask,16))
     cclsym_SEQCTRL[int(event["id"][7])].setValue(regValue,2)
 
 def cclCalcCTRL(symbol, event):
@@ -370,11 +370,11 @@ def cclCalcCTRL(symbol, event):
 
     if(bitfieldName == 'ENABLE'):
         regValue &= ~int(cclCtrlEnable_mask,16)
-        regValue += cclCtrlEnable.getValue() << findLsb(int(cclCtrlEnable_mask,16))
+        regValue += int(cclCtrlEnable.getKeyValue(int(cclCtrlEnable.getValue()))) << findLsb(int(cclCtrlEnable_mask,16))
     elif(bitfieldName == 'RUNSTDBY'):
         #regValue &= ~int(cclCtrlEnable_mask,16)  # clear the ENABLE bit as can't set RUNSTDBY bit if it's set
         regValue &= ~int(cclCtrlRunstdby_mask,16)
-        regValue += cclCtrlRunstdby.getValue() << findLsb(int(cclCtrlRunstdby_mask,16))
+        regValue += int(cclCtrlRunstdby.getKeyValue(int(cclCtrlRunstdby.getValue()))) << findLsb(int(cclCtrlRunstdby_mask,16))
     cclsym_CTRL.setValue(regValue,2)
 
 def showWarningMenu(symbol, event):
@@ -451,14 +451,14 @@ def cclWarning(symbol, event):
     trigger = False
     for ii in range(0,lutSize):  # scan over all LUT blocks in CCL module seeing if anything needing the clock is set
         if(cclLutctrlEnable[ii].getValue() == True):
-            if((cclLuctrlInsel0[ii].getValue() == 3) or (cclLuctrlInsel1[ii].getValue() == 3) or  # input is event type
-               (cclLuctrlInsel2[ii].getValue() == 3) or                                           # input is event type
-               (cclLuctrlEdgesel[ii].getValue() == 1) or                                          # edge detector is enabled
-               (cclLuctrlFiltsel[ii].getValue() == 1) or (cclLuctrlFiltsel[ii].getValue() == 2)): # filter is enabled
+            if((int(cclLuctrlInsel0[ii].getKeyValue(int(cclLuctrlInsel0[ii].getValue()))) == 3) or (int(cclLuctrlInsel1[ii].getKeyValue(int(cclLuctrlInsel1[ii].getValue()))) == 3) or  # input is event type
+               (int(cclLuctrlInsel2[ii].getKeyValue(int(cclLuctrlInsel2[ii].getValue()))) == 3) or                                           # input is event type
+               (int(cclLuctrlEdgesel[ii].getKeyValue(int(cclLuctrlEdgesel[ii].getValue()))) == 1) or                                          # edge detector is enabled
+               (int(cclLuctrlFiltsel[ii].getKeyValue(int(cclLuctrlFiltsel[ii].getValue()))) == 1) or (int(cclLuctrlFiltsel[ii].getKeyValue(int(cclLuctrlFiltsel[ii].getValue()))) == 2)): # filter is enabled
                 trigger = True
                 break
     for ii in range(0,seqSize):  # scan over all sequential blocks in CCL module seeing if anything needing the clock is set
-        if(cclSeqctrlSeqsel[ii].getValue() != 0):  # sequential logic is enabled
+        if(int(cclSeqctrlSeqsel[ii].getKeyValue(int(cclSeqctrlSeqsel[ii].getValue()))) != 0):  # sequential logic is enabled
             trigger = True
             break
 
@@ -482,7 +482,7 @@ def checkEdgeWarning(symbol, event):
         posn = event["id"].find("__")  # find which LUT block this callback was called for; we'll need it below
         if(posn != -1):
             lutBlock = int(event["id"][posn-1])
-            if((cclLuctrlEdgesel[lutBlock].getValue()==1) and (cclLuctrlFiltsel[lutBlock].getValue()==0)):  # edge selector is enabled and filter is disabled
+            if((int(cclLuctrlEdgesel[lutBlock].getKeyValue(int(cclLuctrlEdgesel[lutBlock].getValue())))==1) and (int(cclLuctrlFiltsel[lutBlock].getKeyValue(int(cclLuctrlFiltsel[lutBlock].getValue())))==0)):  # edge selector is enabled and filter is disabled
                 cclLuctrlEdgeselWarning[lutBlock].setVisible(True)
             else:
                 cclLuctrlEdgeselWarning[lutBlock].setVisible(False)
