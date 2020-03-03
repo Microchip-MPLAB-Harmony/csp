@@ -1188,6 +1188,7 @@ void ${MCAN_INSTANCE_NAME}_INT0_InterruptHandler(void)
     uint8_t rxgi = 0;
 <#if RXBUF_USE>
     mcan_rxbe_registers_t *rxbeFifo = NULL;
+    uint8_t bufferIndex = 0;
 </#if>
 <#if RXF0_USE>
     mcan_rxf0e_registers_t *rxf0eFifo = NULL;
@@ -1327,28 +1328,45 @@ void ${MCAN_INSTANCE_NAME}_INT0_InterruptHandler(void)
         }
         rxbeFifo = (mcan_rxbe_registers_t *) ((uint8_t *)${MCAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxBuffersAddress + rxgi * ${MCAN_INSTANCE_NAME}_RX_BUFFER_ELEMENT_SIZE);
 
+        for (bufferIndex = 0; bufferIndex < ${RX_BUFFER_ELEMENTS}; bufferIndex++)
+        {
+            if (bufferIndex < 32)
+            {
+                if ((${MCAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex1 & (1 << (bufferIndex & 0x1F))) == (1 << (bufferIndex & 0x1F)))
+                {
+                    ${MCAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex1 &= ~(1 << (bufferIndex & 0x1F));
+                    break;
+                }
+            }
+            else if ((${MCAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex2 & (1 << ((bufferIndex - 32) & 0x1F))) == (1 << ((bufferIndex - 32) & 0x1F)))
+            {
+                ${MCAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex2 &= ~(1 << ((bufferIndex - 32) & 0x1F));
+                break;
+            }
+        }
+
         /* Get received identifier */
         if (rxbeFifo->MCAN_RXBE_0 & MCAN_RXBE_0_XTD_Msk)
         {
-            *${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_BUFFER][rxgi].rxId = rxbeFifo->MCAN_RXBE_0 & MCAN_RXBE_0_ID_Msk;
+            *${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_BUFFER][bufferIndex].rxId = rxbeFifo->MCAN_RXBE_0 & MCAN_RXBE_0_ID_Msk;
         }
         else
         {
-            *${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_BUFFER][rxgi].rxId = (rxbeFifo->MCAN_RXBE_0 >> 18) & MCAN_STD_ID_Msk;
+            *${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_BUFFER][bufferIndex].rxId = (rxbeFifo->MCAN_RXBE_0 >> 18) & MCAN_STD_ID_Msk;
         }
 
         /* Get received data length */
         length = MCANDlcToLengthGet(((rxbeFifo->MCAN_RXBE_1 & MCAN_RXBE_1_DLC_Msk) >> MCAN_RXBE_1_DLC_Pos));
 
         /* Copy data to user buffer */
-        memcpy(${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_BUFFER][rxgi].rxBuffer, (uint8_t *)&rxbeFifo->MCAN_RXBE_DATA, length);
-        *${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_BUFFER][rxgi].rxsize = length;
+        memcpy(${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_BUFFER][bufferIndex].rxBuffer, (uint8_t *)&rxbeFifo->MCAN_RXBE_DATA, length);
+        *${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_BUFFER][bufferIndex].rxsize = length;
 
         <#if TIMESTAMP_ENABLE>
         /* Get timestamp from received message */
-        if (${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_BUFFER][rxgi].timestamp != NULL)
+        if (${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_BUFFER][bufferIndex].timestamp != NULL)
         {
-            *${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_BUFFER][rxgi].timestamp = (uint16_t)(rxbeFifo->MCAN_RXBE_1 & MCAN_RXBE_1_RXTS_Msk);
+            *${MCAN_INSTANCE_NAME?lower_case}RxMsg[MCAN_MSG_ATTR_RX_BUFFER][bufferIndex].timestamp = (uint16_t)(rxbeFifo->MCAN_RXBE_1 & MCAN_RXBE_1_RXTS_Msk);
         }
 
         </#if>
@@ -1356,18 +1374,10 @@ void ${MCAN_INSTANCE_NAME}_INT0_InterruptHandler(void)
         if (rxgi < 32)
         {
             ${MCAN_INSTANCE_NAME}_REGS->MCAN_NDAT1 = (1 << rxgi);
-            if (0 != (${MCAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex1 & (1 << (rxgi & 0x1F))))
-            {
-                ${MCAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex1 &= (~(1 << (rxgi & 0x1F)));
-            }
         }
         else
         {
             ${MCAN_INSTANCE_NAME}_REGS->MCAN_NDAT2 = (1 << (rxgi - 32));
-            if (0 != (${MCAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex2 & (1 << ((rxgi - 32) & 0x1F))))
-            {
-                ${MCAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex2 &= (~(1 << ((rxgi - 32) & 0x1F)));
-            }
         }
         if (${MCAN_INSTANCE_NAME?lower_case}CallbackObj[MCAN_MSG_ATTR_RX_BUFFER].callback != NULL)
         {
