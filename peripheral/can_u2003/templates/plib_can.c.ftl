@@ -1131,6 +1131,7 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
     uint8_t rxgi = 0;
 <#if RXBUF_USE>
     can_rxbe_registers_t *rxbeFifo = NULL;
+    uint8_t bufferIndex = 0;
 </#if>
 <#if RXF0_USE>
     can_rxf0e_registers_t *rxf0eFifo = NULL;
@@ -1270,28 +1271,45 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
         }
         rxbeFifo = (can_rxbe_registers_t *) ((uint8_t *)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxBuffersAddress + rxgi * ${CAN_INSTANCE_NAME}_RX_BUFFER_ELEMENT_SIZE);
 
+        for (bufferIndex = 0; bufferIndex < ${RX_BUFFER_ELEMENTS}; bufferIndex++)
+        {
+            if (bufferIndex < 32)
+            {
+                if ((${CAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex1 & (1 << (bufferIndex & 0x1F))) == (1 << (bufferIndex & 0x1F)))
+                {
+                    ${CAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex1 &= ~(1 << (bufferIndex & 0x1F));
+                    break;
+                }
+            }
+            else if ((${CAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex2 & (1 << ((bufferIndex - 32) & 0x1F))) == (1 << ((bufferIndex - 32) & 0x1F)))
+            {
+                ${CAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex2 &= ~(1 << ((bufferIndex - 32) & 0x1F));
+                break;
+            }
+        }
+
         /* Get received identifier */
         if (rxbeFifo->CAN_RXBE_0 & CAN_RXBE_0_XTD_Msk)
         {
-            *${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_BUFFER][rxgi].rxId = rxbeFifo->CAN_RXBE_0 & CAN_RXBE_0_ID_Msk;
+            *${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_BUFFER][bufferIndex].rxId = rxbeFifo->CAN_RXBE_0 & CAN_RXBE_0_ID_Msk;
         }
         else
         {
-            *${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_BUFFER][rxgi].rxId = (rxbeFifo->CAN_RXBE_0 >> 18) & CAN_STD_ID_Msk;
+            *${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_BUFFER][bufferIndex].rxId = (rxbeFifo->CAN_RXBE_0 >> 18) & CAN_STD_ID_Msk;
         }
 
         /* Get received data length */
         length = CANDlcToLengthGet(((rxbeFifo->CAN_RXBE_1 & CAN_RXBE_1_DLC_Msk) >> CAN_RXBE_1_DLC_Pos));
 
         /* Copy data to user buffer */
-        memcpy(${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_BUFFER][rxgi].rxBuffer, (uint8_t *)&rxbeFifo->CAN_RXBE_DATA, length);
-        *${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_BUFFER][rxgi].rxsize = length;
+        memcpy(${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_BUFFER][bufferIndex].rxBuffer, (uint8_t *)&rxbeFifo->CAN_RXBE_DATA, length);
+        *${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_BUFFER][bufferIndex].rxsize = length;
 
         <#if TIMESTAMP_ENABLE>
         /* Get timestamp from received message */
-        if (${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_BUFFER][rxgi].timestamp != NULL)
+        if (${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_BUFFER][bufferIndex].timestamp != NULL)
         {
-            *${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_BUFFER][rxgi].timestamp = (uint16_t)(rxbeFifo->CAN_RXBE_1 & CAN_RXBE_1_RXTS_Msk);
+            *${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_BUFFER][bufferIndex].timestamp = (uint16_t)(rxbeFifo->CAN_RXBE_1 & CAN_RXBE_1_RXTS_Msk);
         }
 
         </#if>
@@ -1299,18 +1317,10 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
         if (rxgi < 32)
         {
             ${CAN_INSTANCE_NAME}_REGS->CAN_NDAT1 = (1 << rxgi);
-            if (0 != (${CAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex1 & (1 << (rxgi & 0x1F))))
-            {
-                ${CAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex1 &= (~(1 << (rxgi & 0x1F)));
-            }
         }
         else
         {
             ${CAN_INSTANCE_NAME}_REGS->CAN_NDAT2 = (1 << (rxgi - 32));
-            if (0 != (${CAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex2 & (1 << ((rxgi - 32) & 0x1F))))
-            {
-                ${CAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex2 &= (~(1 << ((rxgi - 32) & 0x1F)));
-            }
         }
         if (${CAN_INSTANCE_NAME?lower_case}CallbackObj[CAN_MSG_ATTR_RX_BUFFER].callback != NULL)
         {
