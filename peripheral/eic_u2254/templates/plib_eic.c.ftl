@@ -122,7 +122,7 @@ void ${EIC_INSTANCE_NAME}_Initialize (void)
     ${EIC_INSTANCE_NAME}_REGS->EIC_ASYNCH = 0x${EIC_ASYNCH};
     </#if>
 
-    <#if EIC_DEBOUNCEN != "0">
+    <#if EIC_DEBOUNCEN?? && EIC_DEBOUNCEN != "0">
     /* Debouncer enable */
     ${EIC_INSTANCE_NAME}_REGS->EIC_DEBOUNCEN = 0x${EIC_DEBOUNCEN};
     </#if>
@@ -132,7 +132,7 @@ void ${EIC_INSTANCE_NAME}_Initialize (void)
     ${EIC_INSTANCE_NAME}_REGS->EIC_EVCTRL = 0x${EIC_EXTINTEO};
     </#if>
 
-	<#if EIC_DEBOUNCEN != "0">
+	<#if EIC_DEBOUNCEN?? && EIC_DEBOUNCEN != "0">
     /* Debouncer Setting */
     <@compress single_line=true>${EIC_INSTANCE_NAME}_REGS->EIC_DPRESCALER = EIC_DPRESCALER_PRESCALER0(${EIC_DEBOUNCER_PRESCALER_0})
                                                         | EIC_DPRESCALER_PRESCALER1(${EIC_DEBOUNCER_PRESCALER_1})

@@ -341,11 +341,11 @@ def instantiateComponent(eicComponent):
     ASYNCH_Code.setDefaultValue(0)
     ASYNCH_Code.setVisible(False)
     ASYNCH_Code.setDependencies(codeGenerationForEVCCTRL_EXTINTEO, eicSym_asynchList)
-
-    DEBOUNCEN_Code = eicComponent.createHexSymbol("EIC_DEBOUNCEN" , eicCalculation)
-    DEBOUNCEN_Code.setDefaultValue(0)
-    DEBOUNCEN_Code.setVisible(False)
+    
     if debounceSupported.getValue():
+        DEBOUNCEN_Code = eicComponent.createHexSymbol("EIC_DEBOUNCEN" , eicCalculation)
+        DEBOUNCEN_Code.setDefaultValue(0)
+        DEBOUNCEN_Code.setVisible(False)
         DEBOUNCEN_Code.setDependencies(codeGenerationForEVCCTRL_EXTINTEO, eicSym_debounceList)
 
     EXTINT_Code = eicComponent.createHexSymbol("EIC_INT" , eicCalculation)
@@ -354,7 +354,7 @@ def instantiateComponent(eicComponent):
     EXTINT_Code.setDependencies(codeGenerationForEVCCTRL_EXTINTEO, eicSym_InterruptList)
 
     eicDebounceMenu = eicComponent.createMenuSymbol("DEBOUNCE_MENU", None)
-    eicDebounceMenu.setLabel("Debouncer ConfiGuration")
+    eicDebounceMenu.setLabel("Debouncer Configuration")
     eicDebounceMenu.setVisible(False)
     if debounceSupported.getValue():
         eicDebounceMenu.setDependencies(debounceMenu, ["EIC_DEBOUNCEN"])
