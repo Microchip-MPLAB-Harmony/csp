@@ -165,8 +165,16 @@ def updateEVICVectorEnableUpdateValue(symbol, event):
     symbol.setValue(not event["value"], 2)
 
 def updateEVICVectorParametersValue(symbol, event):
+    symbol.setValue(event["value"])
 
-    symbol.setValue(event["value"], 2)
+def updateEVICVectorParametersValue1(symbol, event):
+    if "SELECT_RTOS" in event["id"]:
+        symbolId = symbol.getID()
+        vectorIndex=symbolId.split("_")[1]
+        if not ((event["value"] == "ThreadX") and (vectorIndex == "1")): # Software Interrupt 0 is not used by ThreadX
+            symbol.setValue((event["value"] != "BareMetal"))
+    else:
+        symbol.setValue(event["value"])
 
 def updateEVICVectorSettings(symbol, event):
 
@@ -316,7 +324,7 @@ for vectorDict in evicVectorDataStructure:
 
         evicVectorHandlerLock = coreComponent.createBooleanSymbol("EVIC_" + str(vIndex) + "_HANDLER_LOCK", evicVectorEnable)
         evicVectorHandlerLock.setVisible(False)
-        evicVectorHandlerLock.setDependencies(updateEVICVectorParametersValue, [vName + "_INTERRUPT_HANDLER_LOCK"])
+        evicVectorHandlerLock.setDependencies(updateEVICVectorParametersValue1, [vName + "_INTERRUPT_HANDLER_LOCK"])
 
         evicVectorEnableUpdate = coreComponent.createBooleanSymbol(vName + "_INTERRUPT_ENABLE_UPDATE", evicVectorEnable)
         evicVectorEnableUpdate.setVisible(False)
@@ -331,7 +339,8 @@ for vectorDict in evicVectorDataStructure:
             vector = "Peripheral"
 
             evicVectorHandlerLock.setDefaultValue(evicVectorSettings[vector][9])
-            evicVectorHandlerLock.setDependencies(updateEVICVectorSettings, ["HarmonyCore.SELECT_RTOS"])
+            # override the dependency to add "SELECT_RTOS" symbol
+            evicVectorHandlerLock.setDependencies(updateEVICVectorParametersValue1, [vName + "_INTERRUPT_HANDLER_LOCK", "HarmonyCore.SELECT_RTOS"])
 
             evicVectorEnableLock = coreComponent.createBooleanSymbol("EVIC_" + str(vIndex) + "_ENABLE_LOCK", evicVectorEnable)
             evicVectorEnableLock.setVisible(False)
