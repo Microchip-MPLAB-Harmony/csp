@@ -87,6 +87,15 @@ def setSysFileVisibility (symbol, event):
     symbol.setVisible(event["value"])
     symbol.setValue(event["value"], 1)
 
+def alignmentWarning(symbol,event):
+    symbol.setVisible((event["value"] % 8) != 0)
+
+def setKeilHeapStackSize(symbol, event):
+    size = event["source"].getSymbolValue("KEIL_STACK_SIZE")
+    size += event["source"].getSymbolValue("KEIL_HEAP_SIZE")
+    symbol.setValue("0x%X" % size)
+
+
 def genMainSourceFile(symbol, event):
     mainName    = Database.getSymbolValue("core", "CoreMainFileName")
     genMainSrc  = Database.getSymbolValue("core", "CoreMainFile")
@@ -96,6 +105,7 @@ def genMainSourceFile(symbol, event):
         symbol.setEnabled(True)
     else:
         symbol.setEnabled(False)
+
 
 def genSysSourceFile(symbol, event):
     global processor
@@ -160,6 +170,9 @@ def instantiateComponent( coreComponent ):
     global iarMenu
     global iarAvailable
     global processor
+    global keilMenu
+    global keilAvailable
+
     compilerSpecifics =     None
     armLibCSourceFile =     None
     devconSystemInitFile =  None
@@ -464,6 +477,62 @@ def instantiateComponent( coreComponent ):
     iarUndStackSize.setDefaultValue(64)
     iarUndStackSize.setVisible( iarAllStacks )
 
+    ## keil Tool Config
+    keilMenu = coreComponent.createMenuSymbol("CoreKEILMenu", toolChainMenu)
+    keilMenu.setLabel("KEIL Global Options")
+    keilMenu.setVisible( keilAvailable == True)
+
+    keilLdMenu = coreComponent.createMenuSymbol("CoreKEIL_LD", keilMenu)
+    keilLdMenu.setLabel( "Linker" )
+
+    keilLdGeneralMenu = coreComponent.createMenuSymbol("CoreKEIL_LD_General", keilLdMenu)
+    keilLdGeneralMenu.setLabel( "General" )
+
+    keilStackSize = coreComponent.createIntegerSymbol("KEIL_STACK_SIZE", keilLdGeneralMenu)
+    keilStackSize.setLabel( "Stack Size (bytes)" )
+    keilStackSize.setDefaultValue( 4096 )
+
+    keilStackWarning = coreComponent.createMenuSymbol("KEIL_STACK_WARNING", keilLdGeneralMenu)
+    keilStackWarning.setLabel("******** Main stack size needs to be integer multiple of 8 *******")
+    keilStackWarning.setVisible( False )
+    keilStackWarning.setDependencies(alignmentWarning, ["KEIL_STACK_SIZE"])
+
+    keilHeapSize = coreComponent.createIntegerSymbol("KEIL_HEAP_SIZE", keilLdGeneralMenu)
+    keilHeapSize.setLabel( "Heap Size (bytes)" )
+    keilHeapSize.setDefaultValue( 512 )
+
+    keilHeapWarning = coreComponent.createMenuSymbol("KEIL_HEAP_WARNING", keilLdGeneralMenu)
+    keilHeapWarning.setLabel("******** Heap size needs to be an integer multiple of 8 *******")
+    keilHeapWarning.setVisible( False )
+    keilHeapWarning.setDependencies(alignmentWarning, ["KEIL_HEAP_SIZE"])
+
+    keilHeapStackSize = coreComponent.createStringSymbol("KEIL_STACK_HEAP_SIZE", keilLdGeneralMenu)
+    keilHeapStackSize.setVisible(False)
+    keilHeapStackSize.setValue("0x%X" % (keilStackSize.getValue() + keilHeapSize.getValue()))
+    keilHeapStackSize.setDependencies(setKeilHeapStackSize, ["KEIL_STACK_SIZE", "KEIL_HEAP_SIZE"])
+
+    if "CORTEX-M" in coreArch.getValue():
+        #ROM and RAM memory map
+        nodeIFLASH = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[type=\"flash\"]")
+        if nodeIFLASH is not None:
+            startAddressIROM1 = coreComponent.createStringSymbol("IROM1_START", None)
+            startAddressIROM1.setVisible(False)
+            startAddressIROM1.setDefaultValue(nodeIFLASH.getAttribute("start"))
+
+            sizeAddressIROM1 = coreComponent.createStringSymbol("IROM1_SIZE", None)
+            sizeAddressIROM1.setVisible(False)
+            sizeAddressIROM1.setDefaultValue(nodeIFLASH.getAttribute("size"))
+
+        nodeIRAM = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[type=\"ram\"]")
+        if nodeIRAM is not None:
+            startAddressIRAM1 = coreComponent.createStringSymbol("IRAM1_START", None)
+            startAddressIRAM1.setVisible(False)
+            startAddressIRAM1.setDefaultValue(nodeIRAM.getAttribute("start"))
+
+            sizeAddressIRAM1 = coreComponent.createStringSymbol("IRAM1_SIZE", None)
+            sizeAddressIRAM1.setVisible(False)
+            sizeAddressIRAM1.setDefaultValue(nodeIRAM.getAttribute("size"))
+
     #################### Main File ####################
     # generate main.c file
     mainSourceFile = coreComponent.createFileSymbol("MAIN_C", None)
@@ -605,6 +674,18 @@ def instantiateComponent( coreComponent ):
         exceptionAsmSourceFile.setEnabled(False)
         exceptionAsmSourceFile.setDependencies( genExceptionAsmSourceFile, ["CoreSysFiles", "CoreSysExceptionFile", "ADVANCED_EXCEPTION"])
 
+    if "CORTEX-M" in coreArch.getValue():
+        linkerFile = coreComponent.createFileSymbol("LINKER_SCRIPT", None)
+        linkerFile.setSourcePath("arm/templates/keil/cortex_m/startup/scatter_file.sct")
+        linkerFile.setOutputName(configName + ".sct")
+        linkerFile.setMarkup(True)
+        linkerFile.setOverwrite(True)
+        linkerFile.setDestPath("")
+        linkerFile.setProjectPath("config/" + configName + "/")
+        linkerFile.setType("LINKER")
+        linkerFile.setEnabled(compilerChoice.getSelectedKey == "KEIL")
+        linkerFile.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"] == 2), ["COMPILER_CHOICE"])
+
     # set XC32 heap size
     xc32HeapSizeSym = coreComponent.createSettingSymbol("XC32_HEAP", None)
     xc32HeapSizeSym.setCategory("C32-LD")
@@ -686,7 +767,8 @@ def compilerUpdate( symbol, event ):
     global iarMenu
     global iarAvailable
     global processor
-    
+    global keilMenu
+
     compilersVisibleFlag = True
 
     compilerSelected = event[ "symbol" ].getSelectedKey()
@@ -696,15 +778,17 @@ def compilerUpdate( symbol, event ):
 
     xc32Menu.setVisible( compilersVisibleFlag and xc32Available )
     iarMenu.setVisible(  compilersVisibleFlag and iarAvailable )
+    keilMenu.setVisible(compilersVisibleFlag and keilAvailable)
 
     if not compilerSpecifics:
         compilerSpecifics = []
     compilerSpecifics.append( debugSourceFile )
     if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
-       compilerSpecifics.append( secdebugSourceFile ) 
+       compilerSpecifics.append( secdebugSourceFile )
 
     if compilerSelected == "IAR":
         xc32Menu.setVisible(False)
+        keilMenu.setVisible(False)
         if devconSystemInitFile != None:
             devconSystemInitFile.setEnabled( False )
         if armLibCSourceFile != None:
@@ -714,13 +798,14 @@ def compilerUpdate( symbol, event ):
                 secarmLibCSourceFile.setEnabled( False )
     elif compilerSelected == "XC32":
         iarMenu.setVisible(False)
+        keilMenu.setVisible(False)
         if devconSystemInitFile != None:
             devconSystemInitFile.setEnabled( True )
         if armLibCSourceFile != None:
             armLibCSourceFile.setEnabled( True )
         if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
             if secarmLibCSourceFile != None:
-                secarmLibCSourceFile.setEnabled( True )        
+                secarmLibCSourceFile.setEnabled( True )
     elif compilerSelected == "KEIL":
         xc32Menu.setVisible(False)
         iarMenu.setVisible(False)

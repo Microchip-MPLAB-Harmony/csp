@@ -15,7 +15,7 @@ void __attribute__((optimize("-O1"),section(".text.Dummy_Handler"),long_call))Du
 }
 <#elseif COMPILER_CHOICE == "KEIL">
 /* Brief default interrupt handler for unused IRQs.*/
-void __attribute__((section(".text.Dummy_Handler"),long_call))Dummy_Handler(void)
+void __attribute__((section(".text.Dummy_Handler")))Dummy_Handler(void)
 {
     while (1)
     {
@@ -43,7 +43,9 @@ __attribute__ ((section(".vectors")))
 <#elseif COMPILER_CHOICE == "IAR">
 #pragma location = ".intvec"
 <#elseif COMPILER_CHOICE == "KEIL">
-__attribute__ ((section(".vectors")))
+extern unsigned int Image$$ARM_LIB_STACKHEAP$$ZI$$Limit;
+
+__attribute__ ((section("RESET")))
 </#if>
 <#if COMPILER_CHOICE == "XC32">
 const DeviceVectors exception_table=
@@ -54,6 +56,7 @@ const DeviceVectors exception_table=
 const DeviceVectors __Vectors=
 {
     /* Configure Initial Stack Pointer, using linker-generated symbols */
+    .pvStack = (void *)(&Image$$ARM_LIB_STACKHEAP$$ZI$$Limit),
 <#elseif COMPILER_CHOICE == "IAR">
 __root const DeviceVectors __vector_table=
 {

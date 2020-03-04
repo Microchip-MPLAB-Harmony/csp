@@ -50,14 +50,14 @@ void Reset_Handler(void);
 </#if>
 </#if>
 /* Optional application-provided functions */
-extern void __attribute__((weak,long_call)) _on_reset(void);
-extern void __attribute__((weak,long_call)) _on_bootstrap(void);
+extern void __attribute__((weak)) _on_reset(void);
+extern void __attribute__((weak)) _on_bootstrap(void);
 
 /**
  * \brief This is the code that gets called on processor reset.
  * To initialize the device, and call the main() routine.
  */
-void __attribute__((section(".text.Reset_Handler"), long_call)) Reset_Handler(void)
+void __attribute__((section(".text.Reset_Handler"))) Reset_Handler(void)
 {
     uint32_t *pSrc;
 
@@ -118,10 +118,10 @@ void __attribute__((section(".text.Reset_Handler"), long_call)) Reset_Handler(vo
         _on_bootstrap();
     }
 
-    /* Execute entry point to the C library initialization routine, 
+    /* Execute entry point to the C library initialization routine,
        which eventually executes application's main function */
     __main();
-    
+
     /* Infinite loop */
     while (1) {}
 }
