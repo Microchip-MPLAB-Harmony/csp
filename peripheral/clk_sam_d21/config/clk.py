@@ -206,18 +206,6 @@ osc8MEnable.setLabel("8MHz Internal Oscillator(OSC8M) Enable")
 osc8MEnable.setDescription("Internal 8mhz Oscillator Configuration enable feature")
 osc8MEnable.setDefaultValue(True)
 
-osc8MOverwrite = coreComponent.createBooleanSymbol("CONFIG_CLOCK_OSC8M_CALIB_OVERWRITE", sysctrl_OSC8M)
-osc8MOverwrite.setLabel("Overwrite Default Oscillator Calibration")
-osc8MOverwrite.setDescription("Overwrite Default Oscillator Calibration")
-osc8MOverwrite.setDefaultValue(False)
-
-osc8MCalibValue = coreComponent.createIntegerSymbol("CONFIG_CLOCK_OSC8M_CALIB_VALUE", sysctrl_OSC8M)
-osc8MCalibValue.setLabel("Oscillator Calibration Value")
-osc8MCalibValue.setDescription("Set the Oscillator Calibration Value")
-osc8MCalibValue.setMin(0)
-osc8MCalibValue.setMax(0xFFF)
-osc8MCalibValue.setDefaultValue(0)
-
 osc8MFreqVal = coreComponent.createIntegerSymbol("CONFIG_CLOCK_OSC8M_FREQ", sysctrl_OSC8M)
 osc8MFreqVal.setLabel("Set OSC8M Frequency")
 osc8MFreqVal.setDescription("Default frequency range of OSC 8m can be changed using the FREQRANGE and CALIB bitfields in fuse settings")

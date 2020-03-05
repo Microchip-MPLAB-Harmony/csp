@@ -60,26 +60,17 @@ static void SYSCTRL_Initialize(void)
     SYSCTRL_REGS->SYSCTRL_XOSC |= SYSCTRL_XOSC_AMPGC_Msk;
     </#if>
 </#if>
-<#if CONFIG_CLOCK_OSC8M_ENABLE == true>
-    <#if (CONFIG_CLOCK_OSC8M_RUNSTDY == true) || (CONFIG_CLOCK_OSC8M_ONDEMAND == "ENABLE" || CONFIG_CLOCK_OSC8M_PRES != "0x3")>
+<#if ((CONFIG_CLOCK_OSC8M_ENABLE == true) && (CONFIG_CLOCK_OSC8M_RUNSTDY == true || CONFIG_CLOCK_OSC8M_ONDEMAND == "ENABLE" || CONFIG_CLOCK_OSC8M_PRES != "0x3"))>
 
 	/* Configure 8MHz Oscillator */
-    <#if CONFIG_CLOCK_OSC8M_CALIB_OVERWRITE == false>
     <@compress single_line=true>SYSCTRL_REGS->SYSCTRL_OSC8M = (SYSCTRL_REGS->SYSCTRL_OSC8M & (SYSCTRL_OSC8M_CALIB_Msk | SYSCTRL_OSC8M_FRANGE_Msk)) | SYSCTRL_OSC8M_ENABLE_Msk | SYSCTRL_OSC8M_PRESC(${CONFIG_CLOCK_OSC8M_PRES})
                                                              ${CONFIG_CLOCK_OSC8M_RUNSTDY?then('| SYSCTRL_OSC8M_RUNSTDBY_Msk',' ')}
                                                              ${(CONFIG_CLOCK_OSC8M_ONDEMAND == "ENABLE")?then('| SYSCTRL_OSC8M_ONDEMAND_Msk',' ')};</@compress>
-    <#else>
-    <@compress single_line=true>SYSCTRL_REGS->SYSCTRL_OSC8M = (SYSCTRL_REGS->SYSCTRL_OSC8M & SYSCTRL_OSC8M_FRANGE_Msk) | SYSCTRL_OSC8M_CALIB(${CONFIG_CLOCK_OSC8M_CALIB_VALUE}) | SYSCTRL_OSC8M_ENABLE_Msk | SYSCTRL_OSC8M_PRESC(${CONFIG_CLOCK_OSC8M_PRES})
-                                                             ${CONFIG_CLOCK_OSC8M_RUNSTDY?then('| SYSCTRL_OSC8M_RUNSTDBY_Msk',' ')}
-                                                             ${(CONFIG_CLOCK_OSC8M_ONDEMAND == "ENABLE")?then('| SYSCTRL_OSC8M_ONDEMAND_Msk',' ')};</@compress>
-    </#if>
 
     while((SYSCTRL_REGS->SYSCTRL_PCLKSR & SYSCTRL_PCLKSR_OSC8MRDY_Msk) != SYSCTRL_PCLKSR_OSC8MRDY_Msk)
     {
         /* Waiting for the OSC8M Ready state */
     }
-
-    </#if>
 </#if>
 <#if CONF_CLOCK_XOSC32K_ENABLE == true>
     /****************** XOSC32K initialization  ******************************/
