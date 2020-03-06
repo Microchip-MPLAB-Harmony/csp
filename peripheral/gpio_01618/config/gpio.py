@@ -319,7 +319,7 @@ def createPinMap(packageSymbol):
         for myPin in myPins.findall('pin'):
             pinHasAnalogFunctionMap[myPin.get("name")] = False
             for myFunction in myPin.findall('function'):
-                if myFunction.get("name").startswith("AN") and myFunction.get("name")[2].isnumeric():
+                if (myFunction.get("name").startswith("AN") and myFunction.get("name")[2].isnumeric()) or ("VREF" in myFunction.get("name")):
                     pinHasAnalogFunctionMap[myPin.get("name")] = True
                     break                    
                                 
