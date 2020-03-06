@@ -87,7 +87,7 @@ EIC_NMI_CALLBACK_OBJ ${EIC_INSTANCE_NAME?lower_case}NMICallbackObject;
 void ${EIC_INSTANCE_NAME}_Initialize (void)
 {
     /* Reset all registers in the EIC module to their initial state and
-	   EIC will be disabled. */
+       EIC will be disabled. */
     ${EIC_REG_NAME}_REGS->EIC_CTRLA |= EIC_CTRLA_SWRST_Msk;
 
     while((${EIC_REG_NAME}_REGS->EIC_SYNCBUSY & EIC_SYNCBUSY_SWRST_Msk) == EIC_SYNCBUSY_SWRST_Msk)
@@ -125,7 +125,7 @@ void ${EIC_INSTANCE_NAME}_Initialize (void)
     ${EIC_REG_NAME}_REGS->EIC_ASYNCH = 0x${EIC_ASYNCH};
     </#if>
 
-    <#if EIC_DEBOUNCEN != "0">
+    <#if EIC_DEBOUNCEN?? && EIC_DEBOUNCEN != "0">
     /* Debouncer enable */
     ${EIC_REG_NAME}_REGS->EIC_DEBOUNCEN = 0x${EIC_DEBOUNCEN};
     </#if>
@@ -135,7 +135,7 @@ void ${EIC_INSTANCE_NAME}_Initialize (void)
     ${EIC_REG_NAME}_REGS->EIC_EVCTRL = 0x${EIC_EXTINTEO};
     </#if>
 
-	<#if EIC_DEBOUNCEN != "0">
+    <#if EIC_DEBOUNCEN?? && EIC_DEBOUNCEN != "0">
     /* Debouncer Setting */
     <@compress single_line=true>${EIC_REG_NAME}_REGS->EIC_DPRESCALER = EIC_DPRESCALER_PRESCALER0(${EIC_DEBOUNCER_PRESCALER_0})
                                                         <#if EIC_DEBOUNCER_PRESCALER_1??>
@@ -146,7 +146,7 @@ void ${EIC_INSTANCE_NAME}_Initialize (void)
                                                         <#if EIC_DEBOUNCER_NO_STATES_1??>
                                                         ${(EIC_DEBOUNCER_NO_STATES_1 == "1")?then('| EIC_DPRESCALER_STATES1_Msk' , '')}
                                                         </#if>;</@compress>
-	</#if>
+    </#if>
 
     <#if EIC_INT != "0">
     /* External Interrupt enable*/
@@ -214,7 +214,7 @@ void ${EIC_INSTANCE_NAME}_CallbackRegister(EIC_PIN pin, EIC_CALLBACK callback, u
 
 </#if>
 <#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true" && NMI_IS_NON_SECURE == "NON-SECURE">
-<#else> 
+<#else>
 <#if NMI_CTRL == true>
 void ${EIC_INSTANCE_NAME}_NMICallbackRegister(EIC_NMI_CALLBACK callback, uintptr_t context)
 {

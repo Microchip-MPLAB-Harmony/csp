@@ -117,16 +117,16 @@ def updateEicInterruptSecurity(symbol, event):
         if value > 0:
             bitPos = int(math.log(value, 2))
             if sharedVector:
-                if bitPos < len(InterruptVector) - 1: 
+                if bitPos < len(InterruptVector) - 1:
                     #for TrustZone
                     if Database.getSymbolValue(event["namespace"], "EIC_NONSEC_" + str(bitPos)) != None:
                         if Database.getSymbolValue(event["namespace"], "EIC_NONSEC_" + str(bitPos)) == 0:
                             Database.setSymbolValue("core", InterruptVectorSecurity[bitPos], False)
                             interruptSecurityState[bitPos] = False
                         else:
-                            Database.setSymbolValue("core", InterruptVectorSecurity[bitPos], True) 
+                            Database.setSymbolValue("core", InterruptVectorSecurity[bitPos], True)
                             interruptSecurityState[bitPos] = True
-                            
+
                 else:
                     nonsecureInterrupt = False
                     for i in range(extIntCount - len(InterruptVector) - 2, extIntCount):
@@ -147,7 +147,7 @@ def updateEicInterruptSecurity(symbol, event):
     else:
         bitPos = int (event["id"].split("EIC_CHAN_")[1])
         if sharedVector:
-            if bitPos >= len(InterruptVector) - 1: 
+            if bitPos >= len(InterruptVector) - 1:
                 nonsecureInterrupt = False
                 for i in range(extIntCount - len(InterruptVector) - 2, extIntCount):
                     if Database.getSymbolValue(event["namespace"], "EIC_CHAN_" + str(i)):
@@ -179,7 +179,7 @@ def updateEICInterruptStatus(symbol, event):
         if value > 0:
             bitPos = int(math.log(value, 2))
             if sharedVector:
-                if bitPos < len(InterruptVector) - 1: 
+                if bitPos < len(InterruptVector) - 1:
                     result = bool(event["value"] & (1<<bitPos))
                     Database.setSymbolValue("core", InterruptVector[bitPos], result, 2)
                     Database.setSymbolValue("core", InterruptHandlerLock[bitPos], result, 2)
@@ -379,7 +379,7 @@ def instantiateComponent(eicComponent):
             eicSecurity.setVisible(True)
             eicSecurity.setDefaultValue(0)
             eicSym_nonSecList.append("EIC_NONSEC_" + str(extIntIndex))
-            
+
         eicINT = eicComponent.createBooleanSymbol("EIC_INT_" + str(extIntIndex) , eicConfiguration)
         eicINT.setLabel("Enable Interrupt")
         eicSym_InterruptList.append("EIC_INT_" + str(extIntIndex))
@@ -467,16 +467,16 @@ def instantiateComponent(eicComponent):
         nonSecReg = eicComponent.createHexSymbol("EIC_NONSEC" , eicCalculation)
         nonSecReg.setDefaultValue(0)
         nonSecReg.setVisible(True)
-        nonSecReg.setDependencies(codeGenerationForEVCCTRL_EXTINTEO, eicSym_nonSecList) 
+        nonSecReg.setDependencies(codeGenerationForEVCCTRL_EXTINTEO, eicSym_nonSecList)
 
         nonSecChannel = eicComponent.createIntegerSymbol("EIC_NUM_NONSEC_CHANNEL" , eicCalculation)
         nonSecChannel.setDefaultValue(0)
         nonSecChannel.setVisible(True)
 
-    DEBOUNCEN_Code = eicComponent.createHexSymbol("EIC_DEBOUNCEN" , eicCalculation)
-    DEBOUNCEN_Code.setDefaultValue(0)
-    DEBOUNCEN_Code.setVisible(False)
     if debounceSupported.getValue():
+        DEBOUNCEN_Code = eicComponent.createHexSymbol("EIC_DEBOUNCEN" , eicCalculation)
+        DEBOUNCEN_Code.setDefaultValue(0)
+        DEBOUNCEN_Code.setVisible(False)
         DEBOUNCEN_Code.setDependencies(codeGenerationForEVCCTRL_EXTINTEO, eicSym_debounceList)
 
     EXTINT_Code = eicComponent.createHexSymbol("EIC_INT" , eicCalculation)
@@ -485,7 +485,7 @@ def instantiateComponent(eicComponent):
     EXTINT_Code.setDependencies(codeGenerationForEVCCTRL_EXTINTEO, eicSym_InterruptList)
 
     eicDebounceMenu = eicComponent.createMenuSymbol("DEBOUNCE_MENU", None)
-    eicDebounceMenu.setLabel("Debouncer ConfiGuration")
+    eicDebounceMenu.setLabel("Debouncer Configuration")
     eicDebounceMenu.setVisible(False)
     if debounceSupported.getValue():
         eicDebounceMenu.setDependencies(debounceMenu, ["EIC_DEBOUNCEN"])
@@ -599,7 +599,7 @@ def instantiateComponent(eicComponent):
         if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
             eicOtherHandlerNonSec = eicComponent.createBooleanSymbol("EIC_OTHER_HANDLER_IS_NON_SEC", None)
             eicOtherHandlerNonSec.setVisible(False)
-        
+
     NMIInterruptHandler = "NonMaskableInt_INTERRUPT_HANDLER"
 
     # Interrupt Dynamic settings
