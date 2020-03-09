@@ -279,7 +279,7 @@ def createPinMap(packageSymbol):
         for myPin in myPins.findall('pin'):
             pinHasAnalogFunctionMap[myPin.get("name")] = False
             for myFunction in myPin.findall('function'):
-                if myFunction.get("name").startswith("AN") and myFunction.get("name")[2].isnumeric():
+                if myFunction.get("name").startswith("AN") and myFunction.get("name")[-1].isnumeric():
                     pinHasAnalogFunctionMap[myPin.get("name")] = True
                     break               
 
