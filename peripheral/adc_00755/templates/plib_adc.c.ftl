@@ -69,7 +69,7 @@ void ${ADC_INSTANCE_NAME}_Initialize()
 <#if ADC_AD1CHS != "0">
     AD1CHS = 0x${ADC_AD1CHS};
 </#if>
-<#if ADC_AD1CSSL != "0">
+<#if ADC_AD1CSSL != "0" && AD1CON2__CSCNA == true>
     /* Input Scan */
     AD1CSSL = 0x${ADC_AD1CSSL};
 </#if>
