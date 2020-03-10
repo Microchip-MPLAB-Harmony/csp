@@ -810,6 +810,28 @@ void ${CAN_INSTANCE_NAME}_InterruptClear(CAN_INTERRUPT_MASK interruptMask)
 
 // *****************************************************************************
 /* Function:
+    bool ${CAN_INSTANCE_NAME}_TxFIFOIsFull(void)
+
+   Summary:
+    Returns true if Tx FIFO is full otherwise false.
+
+   Precondition:
+    ${CAN_INSTANCE_NAME}_Initialize must have been called for the associated CAN instance.
+
+   Parameters:
+    None
+
+   Returns:
+    true  - Tx FIFO is full.
+    false - Tx FIFO is not full.
+*/
+bool ${CAN_INSTANCE_NAME}_TxFIFOIsFull(void)
+{
+    return (${CAN_INSTANCE_NAME}_REGS->CAN_TXFQS & CAN_TXFQS_TFQF_Msk);
+}
+
+// *****************************************************************************
+/* Function:
     void ${CAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
 
    Summary:
