@@ -87,6 +87,7 @@ void ${CAN_INSTANCE_NAME}_ErrorCountGet(uint16_t *txErrorCount, uint8_t *rxError
 bool ${CAN_INSTANCE_NAME}_InterruptGet(CAN_INTERRUPT_MASK interruptMask);
 void ${CAN_INSTANCE_NAME}_InterruptEnable(CAN_INTERRUPT_MASK interruptMask);
 void ${CAN_INSTANCE_NAME}_InterruptDisable(CAN_INTERRUPT_MASK interruptMask);
+bool ${CAN_INSTANCE_NAME}_MailboxIsReady(CAN_MAILBOX_NUM mailbox);
 <#if INTERRUPT_MODE == true>
 bool ${CAN_INSTANCE_NAME}_TxCallbackRegister(CAN_CALLBACK callback, uintptr_t contextHandle, CAN_MAILBOX_TX_ATTRIBUTE mailboxAttr);
 bool ${CAN_INSTANCE_NAME}_RxCallbackRegister(CAN_CALLBACK callback, uintptr_t contextHandle, CAN_MAILBOX_RX_ATTRIBUTE mailboxAttr);
