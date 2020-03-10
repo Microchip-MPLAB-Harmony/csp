@@ -870,6 +870,35 @@ bool ${CAN_INSTANCE_NAME}_InterruptGet(uint8_t fifoQueueNum, CAN_FIFO_INTERRUPT_
     }
 }
 
+// *****************************************************************************
+/* Function:
+    bool ${CAN_INSTANCE_NAME}_TxFIFOQueueIsFull(uint8_t fifoQueueNum)
+
+   Summary:
+    Returns true if Tx FIFO/Queue is full otherwise false.
+
+   Precondition:
+    ${CAN_INSTANCE_NAME}_Initialize must have been called for the associated CAN instance.
+
+   Parameters:
+    fifoQueueNum - FIFO/Queue number
+
+   Returns:
+    true  - Tx FIFO/Queue is full.
+    false - Tx FIFO/Queue is not full.
+*/
+bool ${CAN_INSTANCE_NAME}_TxFIFOQueueIsFull(uint8_t fifoQueueNum)
+{
+    if (fifoQueueNum == 0)
+    {
+        return ((CFD${CAN_INSTANCE_NUM}TXQSTA & _CFD${CAN_INSTANCE_NUM}TXQSTA_TXQNIF_MASK) != _CFD${CAN_INSTANCE_NUM}TXQSTA_TXQNIF_MASK);
+    }
+    else
+    {
+        return ((*(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}FIFOSTA1 + ((fifoQueueNum - 1) * CAN_FIFO_OFFSET)) & _CFD${CAN_INSTANCE_NUM}FIFOSTA1_TFNRFNIF_MASK) != _CFD${CAN_INSTANCE_NUM}FIFOSTA1_TFNRFNIF_MASK);
+    }
+}
+
 <#if CAN_INTERRUPT_MODE == true>
 // *****************************************************************************
 /* Function:
