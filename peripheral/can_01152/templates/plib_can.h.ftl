@@ -83,6 +83,7 @@ uint32_t ${CAN_INSTANCE_NAME}_MessageAcceptanceFilterMaskGet(uint8_t acceptanceF
 CAN_ERROR ${CAN_INSTANCE_NAME}_ErrorGet(void);
 void ${CAN_INSTANCE_NAME}_ErrorCountGet(uint8_t *txErrorCount, uint8_t *rxErrorCount);
 bool ${CAN_INSTANCE_NAME}_InterruptGet(uint8_t fifoNum, CAN_FIFO_INTERRUPT_FLAG_MASK fifoInterruptFlagMask);
+bool ${CAN_INSTANCE_NAME}_TxFIFOIsFull(uint8_t fifoNum);
 <#if CAN_INTERRUPT_MODE == true>
 void ${CAN_INSTANCE_NAME}_CallbackRegister(CAN_CALLBACK callback, uintptr_t contextHandle, uint8_t fifoNum);
 </#if>
