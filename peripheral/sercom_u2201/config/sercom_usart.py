@@ -80,6 +80,34 @@ def getUSARTBaudValue():
 ########################################## Callbacks  #############################################
 ###################################################################################################
 
+def updateRingBufferSizeVisibleProperty(symbol, event):
+    global usartSym_RingBuffer_Enable
+    global usartSym_CTRLB_RXEN
+    global usartSym_CTRLB_TXEN
+    global usartSym_Interrupt_Mode
+
+    # Enable RX ring buffer size option if Ring buffer is enabled and RX is enabled.
+    if symbol.getID() == "USART_RX_RING_BUFFER_SIZE":
+        if ((sercomSym_OperationMode.getSelectedKey() == "USART_INT") and (usartSym_CTRLB_RXEN.getValue() == True)):
+            symbol.setVisible(usartSym_RingBuffer_Enable.getValue())
+        else:
+            symbol.setVisible(False)
+    # Enable TX ring buffer size option if Ring buffer is enabled and TX is enabled.
+    elif symbol.getID() == "USART_TX_RING_BUFFER_SIZE":
+        if ((sercomSym_OperationMode.getSelectedKey() == "USART_INT") and (usartSym_CTRLB_TXEN.getValue() == True)):
+            symbol.setVisible(usartSym_RingBuffer_Enable.getValue())
+        else:
+            symbol.setVisible(False)
+    # If Interrupt is enabled, make ring buffer option visible. Additionally, make interrupt option read-only if ring buffer is enabled.
+    # Remove read-only on interrupt if ring buffer is disabled.
+    elif symbol.getID() == "USART_RING_BUFFER_ENABLE":
+        if (sercomSym_OperationMode.getSelectedKey() == "USART_INT"):
+            usartSym_Interrupt_Mode.setReadOnly(symbol.getValue())
+            symbol.setVisible(usartSym_Interrupt_Mode.getValue())
+        else:
+            symbol.setVisible(False)
+            usartSym_Interrupt_Mode.setReadOnly(False)
+
 def updateUSARTConfigurationVisibleProperty(symbol, event):
 
     global desiredUSARTBaudRate
@@ -115,6 +143,9 @@ global usartSym_SAMPLE_COUNT
 global usartSym_BAUD_VALUE
 global usartSym_BaudError_Comment
 global sampleRateSupported
+global usartSym_RingBuffer_Enable
+global usartSym_CTRLB_RXEN
+global usartSym_CTRLB_TXEN
 
 sampleRateSupported = False
 isFlowControlSupported = False
@@ -138,6 +169,28 @@ usartSym_CTRLB_TXEN = sercomComponent.createBooleanSymbol("USART_TX_ENABLE", ser
 usartSym_CTRLB_TXEN.setLabel("Transmit Enable")
 usartSym_CTRLB_TXEN.setDefaultValue(True)
 usartSym_CTRLB_TXEN.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
+
+#Enable Ring buffer?
+usartSym_RingBuffer_Enable = sercomComponent.createBooleanSymbol("USART_RING_BUFFER_ENABLE", sercomSym_OperationMode)
+usartSym_RingBuffer_Enable.setLabel("Enable Ring Buffer ?")
+usartSym_RingBuffer_Enable.setDefaultValue(False)
+usartSym_RingBuffer_Enable.setDependencies(updateRingBufferSizeVisibleProperty, ["SERCOM_MODE", "USART_INTERRUPT_MODE", "USART_RING_BUFFER_ENABLE"])
+
+usartSym_TXRingBuffer_Size = sercomComponent.createIntegerSymbol("USART_TX_RING_BUFFER_SIZE", usartSym_RingBuffer_Enable)
+usartSym_TXRingBuffer_Size.setLabel("TX Ring Buffer Size")
+usartSym_TXRingBuffer_Size.setMin(2)
+usartSym_TXRingBuffer_Size.setMax(65535)
+usartSym_TXRingBuffer_Size.setDefaultValue(128)
+usartSym_TXRingBuffer_Size.setVisible(False)
+usartSym_TXRingBuffer_Size.setDependencies(updateRingBufferSizeVisibleProperty, ["SERCOM_MODE", "USART_RING_BUFFER_ENABLE", "USART_TX_ENABLE"])
+
+usartSym_RXRingBuffer_Size = sercomComponent.createIntegerSymbol("USART_RX_RING_BUFFER_SIZE", usartSym_RingBuffer_Enable)
+usartSym_RXRingBuffer_Size.setLabel("RX Ring Buffer Size")
+usartSym_RXRingBuffer_Size.setMin(2)
+usartSym_RXRingBuffer_Size.setMax(65535)
+usartSym_RXRingBuffer_Size.setDefaultValue(128)
+usartSym_RXRingBuffer_Size.setVisible(False)
+usartSym_RXRingBuffer_Size.setDependencies(updateRingBufferSizeVisibleProperty, ["SERCOM_MODE", "USART_RING_BUFFER_ENABLE", "USART_RX_ENABLE"])
 
 #Run in StandBy
 usartSym_CTRLA_RUNSTDBY = sercomComponent.createBooleanSymbol("USART_RUNSTDBY", sercomSym_OperationMode)

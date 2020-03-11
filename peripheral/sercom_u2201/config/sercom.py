@@ -25,6 +25,7 @@
 ###################################################################################################
 ########################################## Callbacks  #############################################
 ###################################################################################################
+
 global SERCOMfilesArray
 global InterruptVectorSecurity
 InterruptVectorSecurity = []
@@ -73,6 +74,19 @@ def fileUpdate(symbol, event):
                 Database.setSymbolValue("core", vector, True)
         else:
             Database.setSymbolValue("core", InterruptVectorSecurity, True)
+
+def handleMessage(messageID, args):
+    global usartSym_RingBuffer_Enable
+    result_dict = {}
+
+    if (messageID == "ENABLE_UART_RING_BUFFER_MODE"):
+        usartSym_RingBuffer_Enable.setReadOnly(True)
+        usartSym_RingBuffer_Enable.setValue(True)
+    if (messageID == "DISABLE_UART_RING_BUFFER_MODE"):
+        usartSym_RingBuffer_Enable.setReadOnly(False)
+        usartSym_RingBuffer_Enable.setValue(False)
+
+    return result_dict
 
 def onAttachmentConnected(source, target):
 
@@ -126,7 +140,7 @@ def onAttachmentDisconnected(source, target):
     localComponent.setCapabilityEnabled(uartCapabilityId, True)
     localComponent.setCapabilityEnabled(spiCapabilityId, True)
     localComponent.setCapabilityEnabled(i2cCapabilityId, True)
-    
+
     if remoteID == "i2c_bootloader" and connectID == i2cCapabilityId:
         i2csSym_Interrupt_Mode.setValue(i2csSym_Interrupt_Mode.getDefaultValue())
         i2csSym_Interrupt_Mode.setReadOnly(False)
@@ -210,7 +224,7 @@ def updateSERCOMInterruptData(symbol, event):
     sercomI2CMode = (sercomSym_OperationMode.getSelectedKey() == "I2CM") and (i2cSym_Interrupt_Mode.getValue() == True)
     sercomI2CSlaveMode = (sercomSym_OperationMode.getSelectedKey() == "I2CS") and (i2csSym_Interrupt_Mode.getValue() == True)
 
-    if event["id"] == "SERCOM_MODE":        
+    if event["id"] == "SERCOM_MODE":
         if sercomSym_OperationMode.getSelectedKey() == "SPIS":
             # To be implemented
             pass
@@ -278,6 +292,24 @@ def updateSERCOMDMATransferRegister(symbol, event):
         pass
     else:
         symbol.setValue("", 1)
+
+def USARTFileGeneration(symbol, event):
+    componentID = symbol.getID()
+    filepath = ""
+    ringBufferModeEnabled = event["value"]
+
+    if componentID == "SERCOM_USART_HEADER":
+        if ringBufferModeEnabled == True:
+            filepath = "../peripheral/sercom_u2201/templates/plib_sercom_usart_ring_buffer.h.ftl"
+        else:
+            filepath = "../peripheral/sercom_u2201/templates/plib_sercom_usart.h.ftl"    
+    elif componentID == "SERCOM_USART_SOURCE":
+        if ringBufferModeEnabled == True:
+            filepath = "../peripheral/sercom_u2201/templates/plib_sercom_usart_ring_buffer.c.ftl"
+        else:
+            filepath = "../peripheral/sercom_u2201/templates/plib_sercom_usart.c.ftl"
+
+    symbol.setSourcePath(filepath)
 
 ###################################################################################################
 ########################################## Component  #############################################
@@ -412,6 +444,7 @@ def instantiateComponent(sercomComponent):
     usartHeaderFile.setType("HEADER")
     usartHeaderFile.setMarkup(True)
     usartHeaderFile.setEnabled(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
+    usartHeaderFile.setDependencies(USARTFileGeneration, ["USART_RING_BUFFER_ENABLE"])
 
     usartCommonHeaderFile = sercomComponent.createFileSymbol("SERCOM_USART_COMMON_HEADER", None)
     usartCommonHeaderFile.setSourcePath("../peripheral/sercom_u2201/templates/plib_sercom_usart_common.h")
@@ -430,6 +463,8 @@ def instantiateComponent(sercomComponent):
     usartSourceFile.setType("SOURCE")
     usartSourceFile.setMarkup(True)
     usartSourceFile.setEnabled(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
+    usartSourceFile.setDependencies(USARTFileGeneration, ["USART_RING_BUFFER_ENABLE"])
+
 
     spiSym_HeaderFile = sercomComponent.createFileSymbol("SERCOM_SPIM_HEADER", None)
     spiSym_HeaderFile.setSourcePath("../peripheral/sercom_u2201/templates/plib_sercom_spi.h.ftl")
@@ -484,7 +519,7 @@ def instantiateComponent(sercomComponent):
     i2cmSourceFile.setType("SOURCE")
     i2cmSourceFile.setMarkup(True)
     i2cmSourceFile.setEnabled(sercomSym_OperationMode.getSelectedKey() == "I2CM")
-    
+
     i2csSlaveHeaderFile = sercomComponent.createFileSymbol("SERCOM_I2CS_SLAVE_HEADER", None)
     i2csSlaveHeaderFile.setSourcePath("../peripheral/sercom_u2201/templates/plib_sercom_i2c_slave_common.h.ftl")
     i2csSlaveHeaderFile.setOutputName("plib_sercom_i2c_slave_common.h")
