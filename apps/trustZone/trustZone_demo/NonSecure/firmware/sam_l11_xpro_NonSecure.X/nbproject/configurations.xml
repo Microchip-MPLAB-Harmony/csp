@@ -131,14 +131,14 @@
         <targetDevice>ATSAML11E16A</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>EdbgTool</platformTool>
+        <platformTool></platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>2.30</languageToolchainVersion>
+        <languageToolchainVersion>2.40</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
+        <pack name="SAML11_DFP" vendor="Microchip" version="3.1.75"/>
         <pack name="CMSIS" vendor="ARM" version="5.4.0"/>
-        <pack name="SAML11_DFP" vendor="Microchip" version="3.0.48"/>
       </packs>
       <compileType>
         <linkerTool>
@@ -148,20 +148,20 @@
         <archiverTool>
         </archiverTool>
         <loading>
-          <makeArtifact PL="../../../Secure/firmware/trustZone_basic_Secure.X"
+          <makeArtifact PL="../../../Secure/firmware/sam_l11_xpro_Secure.X"
                         CT="1"
                         CN="sam_l11_xpro"
                         AC="true"
                         BL="true"
-                        WD="../../../Secure/firmware/trustZone_basic_Secure.X"
+                        WD="../../../Secure/firmware/sam_l11_xpro_Secure.X"
                         BC="${MAKE}  -f Makefile CONF=sam_l11_xpro"
                         DBC="${MAKE}  -f Makefile CONF=sam_l11_xpro TYPE_IMAGE=DEBUG_RUN"
                         CC="rm -rf &quot;build/sam_l11_xpro&quot; &quot;dist/sam_l11_xpro&quot;"
-                        OP="dist/sam_l11_xpro/production/trustZone_basic_Secure.X.production.hex"
-                        DOP="dist/sam_l11_xpro/debug/trustZone_basic_Secure.X.debug.elf"
-                        FL="dist/sam_l11_xpro/production/trustZone_basic_Secure.X.production.hex"
-                        PD="dist/sam_l11_xpro/production/trustZone_basic_Secure.X.production.elf"
-                        DD="dist/sam_l11_xpro/debug/trustZone_basic_Secure.X.debug.elf">
+                        OP="dist/sam_l11_xpro/production/sam_l11_xpro_Secure.X.production.hex"
+                        DOP="dist/sam_l11_xpro/debug/sam_l11_xpro_Secure.X.debug.elf"
+                        FL="dist/sam_l11_xpro/production/sam_l11_xpro_Secure.X.production.hex"
+                        PD="dist/sam_l11_xpro/production/sam_l11_xpro_Secure.X.production.elf"
+                        DD="dist/sam_l11_xpro/debug/sam_l11_xpro_Secure.X.debug.elf">
           </makeArtifact>
           <useAlternateLoadableFile>false</useAlternateLoadableFile>
           <parseOnProdLoad>false</parseOnProdLoad>
@@ -266,7 +266,7 @@
         <property key="exclude-floating-point-library" value="false"/>
         <property key="exclude-standard-libraries" value="false"/>
         <property key="extra-lib-directories"
-                  value="..\..\..\Secure\firmware\trustZone_basic_Secure.X;../../../Secure/firmware/trustZone_basic_Secure.X"/>
+                  value="..\..\..\Secure\firmware\sam_l11_xpro_Secure.X;../../../Secure/firmware/sam_l11_xpro_Secure.X"/>
         <property key="fill-flash-options-addr" value=""/>
         <property key="fill-flash-options-const" value=""/>
         <property key="fill-flash-options-how" value="0"/>
@@ -296,7 +296,7 @@
         <property key="symbol-stripping" value=""/>
         <property key="trace-symbols" value=""/>
         <property key="warn-section-align" value="false"/>
-        <appendMe value="-l:trustZone_basic_Secure_sg_veneer.lib"/>
+        <appendMe value="-l:sam_l11_xpro_Secure_sg_veneer.lib"/>
       </C32-LD>
       <C32CPP>
         <property key="additional-warnings" value="false"/>
@@ -334,6 +334,7 @@
         <property key="mdtcm" value=""/>
         <property key="mitcm" value=""/>
         <property key="mstacktcm" value="false"/>
+        <property key="omit-pack-options" value="1"/>
         <property key="relaxed-math" value="false"/>
         <property key="save-temps" value="false"/>
         <property key="wpo-lto" value="false"/>
@@ -346,6 +347,8 @@
         <property key="debugoptions.useswbreakpoints" value="false"/>
         <property key="firmware.path"
                   value="Press to browse for a specific firmware version"/>
+        <property key="firmware.toolpack"
+                  value="Press to select which tool pack to use"/>
         <property key="firmware.update.action" value="firmware.update.use.latest"/>
         <property key="memories.aux" value="false"/>
         <property key="memories.bootflash" value="true"/>
@@ -361,8 +364,6 @@
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="0-ffff"/>
         <property key="poweroptions.powerenable" value="false"/>
-        <property key="programmerToGoFilePath"
-                  value="D:/H3/csp/apps/trustZone/trustZone_demo/NonSecure/firmware/trustZone_basic_NonSecure.X/debug/sam_l11_xpro/trustZone_basic_NonSecure_ptg"/>
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.preservedataflash" value="false"/>
         <property key="programoptions.preservedataflash.ranges"
@@ -373,6 +374,10 @@
         <property key="programoptions.preserveprogramrange" value="false"/>
         <property key="programoptions.preserveuserid" value="false"/>
         <property key="programoptions.programuserotp" value="false"/>
+        <property key="toolpack.updateoptions"
+                  value="toolpack.updateoptions.uselatestoolpack"/>
+        <property key="toolpack.updateoptions.packversion"
+                  value="Press to select which tool pack to use"/>
         <property key="voltagevalue" value=""/>
       </EdbgTool>
       <PICkit3PlatformTool>

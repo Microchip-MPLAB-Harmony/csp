@@ -1126,9 +1126,9 @@
       <Settings dnOrder="1">
         <Setting append="true" category="C32" delimiter=";" dnOrder="0" key="appendMe" security="SECURE" value="-mcmse"/>
         <Setting append="true" category="C32" delimiter=";" dnOrder="1" key="extra-include-directories" security="NON_SECURE" value="../src;../src/config/sam_l11_xpro;../src/packs/ATSAML11E16A_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/arm"/>
-        <Setting append="true" category="C32-LD" delimiter=";" dnOrder="2" key="appendMe" security="SECURE" value="--out-implib=trustZone_basic_Secure_sg_veneer.lib ,--cmse-implib"/>
-        <Setting append="true" category="C32-LD" delimiter=";" dnOrder="3" key="appendMe" security="NON_SECURE" value="-l:trustZone_basic_Secure_sg_veneer.lib"/>
-        <Setting append="true" category="C32-LD" delimiter=";" dnOrder="4" key="extra-lib-directories" security="NON_SECURE" value="../../../Secure/firmware/trustZone_basic_Secure.X"/>
+        <Setting append="true" category="C32-LD" delimiter=";" dnOrder="2" key="appendMe" security="SECURE" value="--out-implib=sam_l11_xpro_Secure_sg_veneer.lib ,--cmse-implib"/>
+        <Setting append="true" category="C32-LD" delimiter=";" dnOrder="3" key="appendMe" security="NON_SECURE" value="-l:sam_l11_xpro_Secure_sg_veneer.lib"/>
+        <Setting append="true" category="C32-LD" delimiter=";" dnOrder="4" key="extra-lib-directories" security="NON_SECURE" value="../../../Secure/firmware/sam_l11_xpro_Secure.X"/>
         <Setting category="C32-LD" dnOrder="5" key="heap-size" security="NON_SECURE" value="512"/>
         <Setting category="C32-LD" dnOrder="6" key="no-device-startup-code" security="NON_SECURE" value="true"/>
         <Setting append="true" category="C32-LD" delimiter=";" dnOrder="7" key="preprocessor-macros" security="NON_SECURE" value=""/>
