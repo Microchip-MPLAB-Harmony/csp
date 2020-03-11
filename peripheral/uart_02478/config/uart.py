@@ -32,6 +32,20 @@ interruptsChildren = ATDF.getNode('/avr-tools-device-file/devices/device/interru
 #### Business Logic ####
 ################################################################################
 
+def handleMessage(messageID, args):
+    global uartSym_RingBuffer_Enable
+    result_dict = {}
+
+    if (messageID == "ENABLE_UART_RING_BUFFER_MODE"):
+        uartSym_RingBuffer_Enable.setReadOnly(True)
+        uartSym_RingBuffer_Enable.setValue(True)
+    if (messageID == "DISABLE_UART_RING_BUFFER_MODE"):
+        uartSym_RingBuffer_Enable.setReadOnly(False)
+        uartSym_RingBuffer_Enable.setValue(False)
+
+    return result_dict
+
+
 def setUARTInterruptData(status):
 
     for id in InterruptVector:
@@ -301,6 +315,45 @@ def updateUARTClockWarningStatus(symbol, event):
 
     symbol.setVisible(not event["value"])
 
+def updateSymbolVisibility(symbol, event):
+    global uartSymInterruptMode
+    global uartSym_RingBuffer_Enable
+
+    # Enable RX ring buffer size option if Ring buffer is enabled.
+    if symbol.getID() == "UART_RX_RING_BUFFER_SIZE":
+        symbol.setVisible(uartSym_RingBuffer_Enable.getValue())
+    # Enable TX ring buffer size option if Ring buffer is enabled.
+    elif symbol.getID() == "UART_TX_RING_BUFFER_SIZE":
+        symbol.setVisible(uartSym_RingBuffer_Enable.getValue())
+    # If Interrupt is enabled, make ring buffer option visible. Additionally, make interrupt option read-only if ring buffer is enabled.
+    # Remove read-only on interrupt if ring buffer is disabled.
+    elif symbol.getID() == "UART_RING_BUFFER_ENABLE":
+        uartSymInterruptMode.setReadOnly(symbol.getValue())
+        symbol.setVisible(uartSymInterruptMode.getValue())
+
+def UARTFileGeneration(symbol, event):
+    componentID = symbol.getID()
+    filepath = ""
+    ringBufferModeEnabled = event["value"]
+
+    if componentID == "UART_HEADER":
+        if ringBufferModeEnabled == True:
+            filepath = "../peripheral/uart_02478/templates/plib_uart_ring_buffer.h.ftl"
+        else:
+            filepath = "../peripheral/uart_02478/templates/plib_uart.h.ftl"
+    elif componentID == "UART_COMMON_HEADER":
+        if ringBufferModeEnabled == True:
+            filepath = "../peripheral/uart_02478/templates/plib_uart_ring_buffer_common.h"
+        else:
+            filepath = "../peripheral/uart_02478/templates/plib_uart_common.h"
+    elif componentID == "UART_SOURCE":
+        if ringBufferModeEnabled == True:
+            filepath = "../peripheral/uart_02478/templates/plib_uart_ring_buffer.c.ftl"
+        else:
+            filepath = "../peripheral/uart_02478/templates/plib_uart.c.ftl"
+
+    symbol.setSourcePath(filepath)
+
 ################################################################################
 #### Component ####
 ################################################################################
@@ -330,6 +383,7 @@ def instantiateComponent(uartComponent):
     global uartBitField_UxMODE_CLKSEL
     global uartBitField_UxMODE_SLPEN
     global uartSym_BaudError_Comment
+    global uartSym_RingBuffer_Enable
 
     InterruptVector = []
     InterruptHandler = []
@@ -400,9 +454,33 @@ def instantiateComponent(uartComponent):
     #Clock enable
     Database.setSymbolValue("core", uartInstanceName.getValue() + "_CLOCK_ENABLE", True, 1)
 
+    # Enable Interrupts?
     uartSymInterruptMode = uartComponent.createBooleanSymbol("USART_INTERRUPT_MODE", None)
     uartSymInterruptMode.setLabel("Enable Interrrupts ?")
     uartSymInterruptMode.setDefaultValue(True)
+
+    #Enable Ring buffer?
+    uartSym_RingBuffer_Enable = uartComponent.createBooleanSymbol("UART_RING_BUFFER_ENABLE", None)
+    uartSym_RingBuffer_Enable.setLabel("Enable Ring Buffer ?")
+    uartSym_RingBuffer_Enable.setDefaultValue(False)
+    uartSym_RingBuffer_Enable.setVisible(Database.getSymbolValue(uartInstanceName.getValue().lower(), "USART_INTERRUPT_MODE"))
+    uartSym_RingBuffer_Enable.setDependencies(updateSymbolVisibility, ["UART_RING_BUFFER_ENABLE", "USART_INTERRUPT_MODE"])
+
+    uartSym_TXRingBuffer_Size = uartComponent.createIntegerSymbol("UART_TX_RING_BUFFER_SIZE", uartSym_RingBuffer_Enable)
+    uartSym_TXRingBuffer_Size.setLabel("TX Ring Buffer Size")
+    uartSym_TXRingBuffer_Size.setMin(2)
+    uartSym_TXRingBuffer_Size.setMax(65535)
+    uartSym_TXRingBuffer_Size.setDefaultValue(128)
+    uartSym_TXRingBuffer_Size.setVisible(False)
+    uartSym_TXRingBuffer_Size.setDependencies(updateSymbolVisibility, ["UART_RING_BUFFER_ENABLE"])
+
+    uartSym_RXRingBuffer_Size = uartComponent.createIntegerSymbol("UART_RX_RING_BUFFER_SIZE", uartSym_RingBuffer_Enable)
+    uartSym_RXRingBuffer_Size.setLabel("RX Ring Buffer Size")
+    uartSym_RXRingBuffer_Size.setMin(2)
+    uartSym_RXRingBuffer_Size.setMax(65535)
+    uartSym_RXRingBuffer_Size.setDefaultValue(128)
+    uartSym_RXRingBuffer_Size.setVisible(False)
+    uartSym_RXRingBuffer_Size.setDependencies(updateSymbolVisibility, ["UART_RING_BUFFER_ENABLE"])
 
     uartIrq = "UART_" + uartInstanceNum.getValue()
     uartVectorNum = getVectorIndex(uartIrq)
@@ -558,7 +636,7 @@ def instantiateComponent(uartComponent):
     uartSym_UxMODE_LPBACK.setDefaultValue(find_key_value(0, LPBACK_names)) # loopback mode disabled
     uartSym_UxMODE_LPBACK.setOutputMode( "Value" )
     uartSym_UxMODE_LPBACK.setDisplayMode( "Description" )
-    uartSym_UxMODE_LPBACK.setVisible(True)
+    uartSym_UxMODE_LPBACK.setVisible(False)
     for ii in LPBACK_names:
         uartSym_UxMODE_LPBACK.addKey( ii['key'],ii['value'], ii['desc'] )
 
@@ -780,7 +858,7 @@ def instantiateComponent(uartComponent):
     uartHeaderFile.setProjectPath("config/" + configName + "/peripheral/uart/")
     uartHeaderFile.setType("HEADER")
     uartHeaderFile.setMarkup(False)
-    uartHeaderFile.setOverwrite(True)
+    uartHeaderFile.setOverwrite(True)    
 
     uartHeader1File = uartComponent.createFileSymbol("UART_HEADER", None)
     uartHeader1File.setSourcePath("../peripheral/uart_02478/templates/plib_uart.h.ftl")
@@ -790,6 +868,7 @@ def instantiateComponent(uartComponent):
     uartHeader1File.setType("HEADER")
     uartHeader1File.setOverwrite(True)
     uartHeader1File.setMarkup(True)
+    uartHeader1File.setDependencies(UARTFileGeneration, ["UART_RING_BUFFER_ENABLE"])
 
     uartSource1File = uartComponent.createFileSymbol("UART_SOURCE", None)
     uartSource1File.setSourcePath("../peripheral/uart_02478/templates/plib_uart.c.ftl")
@@ -799,6 +878,7 @@ def instantiateComponent(uartComponent):
     uartSource1File.setType("SOURCE")
     uartSource1File.setOverwrite(True)
     uartSource1File.setMarkup(True)
+    uartSource1File.setDependencies(UARTFileGeneration, ["UART_RING_BUFFER_ENABLE"])
 
     uartSystemInitFile = uartComponent.createFileSymbol("UART_INIT", None)
     uartSystemInitFile.setType("STRING")
