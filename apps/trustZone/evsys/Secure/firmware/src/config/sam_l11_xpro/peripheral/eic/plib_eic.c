@@ -66,7 +66,7 @@
 void EIC_Initialize (void)
 {
     /* Reset all registers in the EIC module to their initial state and
-	   EIC will be disabled. */
+       EIC will be disabled. */
     EIC_SEC_REGS->EIC_CTRLA |= EIC_CTRLA_SWRST_Msk;
 
     while((EIC_SEC_REGS->EIC_SYNCBUSY & EIC_SYNCBUSY_SWRST_Msk) == EIC_SYNCBUSY_SWRST_Msk)

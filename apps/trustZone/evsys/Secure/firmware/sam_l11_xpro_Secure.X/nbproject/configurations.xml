@@ -7,77 +7,96 @@
       <logicalFolder name="f1" displayName="config" projectFiles="true">
         <logicalFolder name="f1" displayName="sam_l11_xpro" projectFiles="true">
           <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
-            <logicalFolder name="f2" displayName="eic" projectFiles="true">
-              <itemPath>../../../NonSecure/firmware/src/config/sam_l11_xpro/peripheral/eic/plib_eic.h</itemPath>
+            <logicalFolder name="f4" displayName="clock" projectFiles="true">
+              <itemPath>../src/config/sam_l11_xpro/peripheral/clock/plib_clock.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f1" displayName="port" projectFiles="true">
-              <itemPath>../../../NonSecure/firmware/src/config/sam_l11_xpro/peripheral/port/plib_port.h</itemPath>
+            <logicalFolder name="f7" displayName="eic" projectFiles="true">
+              <itemPath>../src/config/sam_l11_xpro/peripheral/eic/plib_eic.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f2" displayName="evsys" projectFiles="true">
+              <itemPath>../src/config/sam_l11_xpro/peripheral/evsys/plib_evsys.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f5" displayName="nvic" projectFiles="true">
+              <itemPath>../src/config/sam_l11_xpro/peripheral/nvic/plib_nvic.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f1" displayName="nvmctrl" projectFiles="true">
+              <itemPath>../src/config/sam_l11_xpro/peripheral/nvmctrl/plib_nvmctrl.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f6" displayName="pm" projectFiles="true">
+              <itemPath>../src/config/sam_l11_xpro/peripheral/pm/plib_pm.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f3" displayName="port" projectFiles="true">
+              <itemPath>../src/config/sam_l11_xpro/peripheral/port/plib_port.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f8" displayName="rtc" projectFiles="true">
+              <itemPath>../src/config/sam_l11_xpro/peripheral/rtc/plib_rtc.h</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <itemPath>../../../NonSecure/firmware/src/config/sam_l11_xpro/device_cache.h</itemPath>
-          <itemPath>../../../NonSecure/firmware/src/config/sam_l11_xpro/toolchain_specifics.h</itemPath>
-          <itemPath>../../../NonSecure/firmware/src/config/sam_l11_xpro/definitions.h</itemPath>
+          <itemPath>../src/config/sam_l11_xpro/definitions.h</itemPath>
+          <itemPath>../src/config/sam_l11_xpro/device_cache.h</itemPath>
+          <itemPath>../src/config/sam_l11_xpro/toolchain_specifics.h</itemPath>
         </logicalFolder>
       </logicalFolder>
       <logicalFolder name="f3" displayName="packs" projectFiles="true">
         <logicalFolder name="f1" displayName="ATSAML11E16A_DFP" projectFiles="true">
           <logicalFolder name="f1" displayName="component" projectFiles="true">
-            <itemPath>../../../NonSecure/firmware/src/packs/ATSAML11E16A_DFP/component/ac.h</itemPath>
-            <itemPath>../../../NonSecure/firmware/src/packs/ATSAML11E16A_DFP/component/adc.h</itemPath>
-            <itemPath>../../../NonSecure/firmware/src/packs/ATSAML11E16A_DFP/component/ccl.h</itemPath>
-            <itemPath>../../../NonSecure/firmware/src/packs/ATSAML11E16A_DFP/component/dac.h</itemPath>
-            <itemPath>../../../NonSecure/firmware/src/packs/ATSAML11E16A_DFP/component/dmac.h</itemPath>
-            <itemPath>../../../NonSecure/firmware/src/packs/ATSAML11E16A_DFP/component/dsu.h</itemPath>
-            <itemPath>../../../NonSecure/firmware/src/packs/ATSAML11E16A_DFP/component/eic.h</itemPath>
-            <itemPath>../../../NonSecure/firmware/src/packs/ATSAML11E16A_DFP/component/evsys.h</itemPath>
-            <itemPath>../../../NonSecure/firmware/src/packs/ATSAML11E16A_DFP/component/freqm.h</itemPath>
-            <itemPath>../../../NonSecure/firmware/src/packs/ATSAML11E16A_DFP/component/gclk.h</itemPath>
-            <itemPath>../../../NonSecure/firmware/src/packs/ATSAML11E16A_DFP/component/idau.h</itemPath>
-            <itemPath>../../../NonSecure/firmware/src/packs/ATSAML11E16A_DFP/component/mclk.h</itemPath>
-            <itemPath>../../../NonSecure/firmware/src/packs/ATSAML11E16A_DFP/component/nvmctrl.h</itemPath>
-            <itemPath>../../../NonSecure/firmware/src/packs/ATSAML11E16A_DFP/component/opamp.h</itemPath>
-            <itemPath>../../../NonSecure/firmware/src/packs/ATSAML11E16A_DFP/component/osc32kctrl.h</itemPath>
-            <itemPath>../../../NonSecure/firmware/src/packs/ATSAML11E16A_DFP/component/oscctrl.h</itemPath>
-            <itemPath>../../../NonSecure/firmware/src/packs/ATSAML11E16A_DFP/component/pac.h</itemPath>
-            <itemPath>../../../NonSecure/firmware/src/packs/ATSAML11E16A_DFP/component/pm.h</itemPath>
-            <itemPath>../../../NonSecure/firmware/src/packs/ATSAML11E16A_DFP/component/port.h</itemPath>
-            <itemPath>../../../NonSecure/firmware/src/packs/ATSAML11E16A_DFP/component/ptc.h</itemPath>
-            <itemPath>../../../NonSecure/firmware/src/packs/ATSAML11E16A_DFP/component/rstc.h</itemPath>
-            <itemPath>../../../NonSecure/firmware/src/packs/ATSAML11E16A_DFP/component/rtc.h</itemPath>
-            <itemPath>../../../NonSecure/firmware/src/packs/ATSAML11E16A_DFP/component/sercom.h</itemPath>
-            <itemPath>../../../NonSecure/firmware/src/packs/ATSAML11E16A_DFP/component/supc.h</itemPath>
-            <itemPath>../../../NonSecure/firmware/src/packs/ATSAML11E16A_DFP/component/tc.h</itemPath>
-            <itemPath>../../../NonSecure/firmware/src/packs/ATSAML11E16A_DFP/component/tram.h</itemPath>
-            <itemPath>../../../NonSecure/firmware/src/packs/ATSAML11E16A_DFP/component/trng.h</itemPath>
-            <itemPath>../../../NonSecure/firmware/src/packs/ATSAML11E16A_DFP/component/wdt.h</itemPath>
+            <itemPath>../src/packs/ATSAML11E16A_DFP/component/ac.h</itemPath>
+            <itemPath>../src/packs/ATSAML11E16A_DFP/component/adc.h</itemPath>
+            <itemPath>../src/packs/ATSAML11E16A_DFP/component/ccl.h</itemPath>
+            <itemPath>../src/packs/ATSAML11E16A_DFP/component/dac.h</itemPath>
+            <itemPath>../src/packs/ATSAML11E16A_DFP/component/dmac.h</itemPath>
+            <itemPath>../src/packs/ATSAML11E16A_DFP/component/dsu.h</itemPath>
+            <itemPath>../src/packs/ATSAML11E16A_DFP/component/eic.h</itemPath>
+            <itemPath>../src/packs/ATSAML11E16A_DFP/component/evsys.h</itemPath>
+            <itemPath>../src/packs/ATSAML11E16A_DFP/component/freqm.h</itemPath>
+            <itemPath>../src/packs/ATSAML11E16A_DFP/component/gclk.h</itemPath>
+            <itemPath>../src/packs/ATSAML11E16A_DFP/component/idau.h</itemPath>
+            <itemPath>../src/packs/ATSAML11E16A_DFP/component/mclk.h</itemPath>
+            <itemPath>../src/packs/ATSAML11E16A_DFP/component/nvmctrl.h</itemPath>
+            <itemPath>../src/packs/ATSAML11E16A_DFP/component/opamp.h</itemPath>
+            <itemPath>../src/packs/ATSAML11E16A_DFP/component/osc32kctrl.h</itemPath>
+            <itemPath>../src/packs/ATSAML11E16A_DFP/component/oscctrl.h</itemPath>
+            <itemPath>../src/packs/ATSAML11E16A_DFP/component/pac.h</itemPath>
+            <itemPath>../src/packs/ATSAML11E16A_DFP/component/pm.h</itemPath>
+            <itemPath>../src/packs/ATSAML11E16A_DFP/component/port.h</itemPath>
+            <itemPath>../src/packs/ATSAML11E16A_DFP/component/ptc.h</itemPath>
+            <itemPath>../src/packs/ATSAML11E16A_DFP/component/rstc.h</itemPath>
+            <itemPath>../src/packs/ATSAML11E16A_DFP/component/rtc.h</itemPath>
+            <itemPath>../src/packs/ATSAML11E16A_DFP/component/sercom.h</itemPath>
+            <itemPath>../src/packs/ATSAML11E16A_DFP/component/supc.h</itemPath>
+            <itemPath>../src/packs/ATSAML11E16A_DFP/component/tc.h</itemPath>
+            <itemPath>../src/packs/ATSAML11E16A_DFP/component/tram.h</itemPath>
+            <itemPath>../src/packs/ATSAML11E16A_DFP/component/trng.h</itemPath>
+            <itemPath>../src/packs/ATSAML11E16A_DFP/component/wdt.h</itemPath>
           </logicalFolder>
           <logicalFolder name="f2" displayName="pio" projectFiles="true">
-            <itemPath>../../../NonSecure/firmware/src/packs/ATSAML11E16A_DFP/pio/saml11e16a.h</itemPath>
+            <itemPath>../src/packs/ATSAML11E16A_DFP/pio/saml11e16a.h</itemPath>
           </logicalFolder>
-          <itemPath>../../../NonSecure/firmware/src/packs/ATSAML11E16A_DFP/device.h</itemPath>
-          <itemPath>../../../NonSecure/firmware/src/packs/ATSAML11E16A_DFP/atsaml11e16a.h</itemPath>
+          <itemPath>../src/packs/ATSAML11E16A_DFP/device.h</itemPath>
+          <itemPath>../src/packs/ATSAML11E16A_DFP/atsaml11e16a.h</itemPath>
         </logicalFolder>
         <logicalFolder name="f2" displayName="CMSIS" projectFiles="true">
           <logicalFolder name="f1" displayName="CMSIS" projectFiles="true">
             <logicalFolder name="f1" displayName="Core" projectFiles="true">
               <logicalFolder name="f1" displayName="Include" projectFiles="true">
-                <itemPath>../../../NonSecure/firmware/src/packs/CMSIS/CMSIS/Core/Include/cmsis_version.h</itemPath>
-                <itemPath>../../../NonSecure/firmware/src/packs/CMSIS/CMSIS/Core/Include/cmsis_compiler.h</itemPath>
-                <itemPath>../../../NonSecure/firmware/src/packs/CMSIS/CMSIS/Core/Include/cmsis_iccarm.h</itemPath>
-                <itemPath>../../../NonSecure/firmware/src/packs/CMSIS/CMSIS/Core/Include/cmsis_gcc.h</itemPath>
-                <itemPath>../../../NonSecure/firmware/src/packs/CMSIS/CMSIS/Core/Include/cmsis_armcc.h</itemPath>
-                <itemPath>../../../NonSecure/firmware/src/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang.h</itemPath>
-                <itemPath>../../../NonSecure/firmware/src/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang_ltm.h</itemPath>
-                <itemPath>../../../NonSecure/firmware/src/packs/CMSIS/CMSIS/Core/Include/core_cm23.h</itemPath>
-                <itemPath>../../../NonSecure/firmware/src/packs/CMSIS/CMSIS/Core/Include/mpu_armv8.h</itemPath>
-                <itemPath>../../../NonSecure/firmware/src/packs/CMSIS/CMSIS/Core/Include/tz_context.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_version.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_compiler.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_iccarm.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_gcc.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armcc.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang_ltm.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/core_cm23.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/mpu_armv8.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/tz_context.h</itemPath>
               </logicalFolder>
             </logicalFolder>
           </logicalFolder>
         </logicalFolder>
       </logicalFolder>
       <logicalFolder name="f2" displayName="trustZone" projectFiles="true">
-        <itemPath>../../../NonSecure/firmware/src/trustZone/veneer.h</itemPath>
+        <itemPath>../src/trustZone/veneer.h</itemPath>
+        <itemPath>../src/trustZone/secure.h</itemPath>
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
@@ -89,25 +108,47 @@
                    projectFiles="true">
       <logicalFolder name="f1" displayName="config" projectFiles="true">
         <logicalFolder name="f1" displayName="sam_l11_xpro" projectFiles="true">
-          <logicalFolder name="f2" displayName="peripheral" projectFiles="true">
-            <logicalFolder name="f2" displayName="eic" projectFiles="true">
-              <itemPath>../../../NonSecure/firmware/src/config/sam_l11_xpro/peripheral/eic/plib_eic.c</itemPath>
+          <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
+            <logicalFolder name="f4" displayName="clock" projectFiles="true">
+              <itemPath>../src/config/sam_l11_xpro/peripheral/clock/plib_clock.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f1" displayName="port" projectFiles="true">
-              <itemPath>../../../NonSecure/firmware/src/config/sam_l11_xpro/peripheral/port/plib_port.c</itemPath>
+            <logicalFolder name="f7" displayName="eic" projectFiles="true">
+              <itemPath>../src/config/sam_l11_xpro/peripheral/eic/plib_eic.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f2" displayName="evsys" projectFiles="true">
+              <itemPath>../src/config/sam_l11_xpro/peripheral/evsys/plib_evsys.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f5" displayName="nvic" projectFiles="true">
+              <itemPath>../src/config/sam_l11_xpro/peripheral/nvic/plib_nvic.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f1" displayName="nvmctrl" projectFiles="true">
+              <itemPath>../src/config/sam_l11_xpro/peripheral/nvmctrl/plib_nvmctrl.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f6" displayName="pm" projectFiles="true">
+              <itemPath>../src/config/sam_l11_xpro/peripheral/pm/plib_pm.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f3" displayName="port" projectFiles="true">
+              <itemPath>../src/config/sam_l11_xpro/peripheral/port/plib_port.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f8" displayName="rtc" projectFiles="true">
+              <itemPath>../src/config/sam_l11_xpro/peripheral/rtc/plib_rtc_timer.c</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f1" displayName="stdio" projectFiles="true">
-            <itemPath>../../../NonSecure/firmware/src/config/sam_l11_xpro/stdio/xc32_monitor.c</itemPath>
+          <logicalFolder name="f2" displayName="stdio" projectFiles="true">
+            <itemPath>../src/config/sam_l11_xpro/stdio/xc32_monitor.c</itemPath>
           </logicalFolder>
-          <itemPath>../../../NonSecure/firmware/src/config/sam_l11_xpro/initialization.c</itemPath>
-          <itemPath>../../../NonSecure/firmware/src/config/sam_l11_xpro/interrupts.c</itemPath>
-          <itemPath>../../../NonSecure/firmware/src/config/sam_l11_xpro/exceptions.c</itemPath>
-          <itemPath>../../../NonSecure/firmware/src/config/sam_l11_xpro/startup_xc32.c</itemPath>
-          <itemPath>../../../NonSecure/firmware/src/config/sam_l11_xpro/libc_syscalls.c</itemPath>
+          <itemPath>../src/config/sam_l11_xpro/interrupts.c</itemPath>
+          <itemPath>../src/config/sam_l11_xpro/initialization.c</itemPath>
+          <itemPath>../src/config/sam_l11_xpro/exceptions.c</itemPath>
+          <itemPath>../src/config/sam_l11_xpro/startup_xc32.c</itemPath>
+          <itemPath>../src/config/sam_l11_xpro/libc_syscalls.c</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <itemPath>../../../NonSecure/firmware/src/main.c</itemPath>
+      <logicalFolder name="f2" displayName="trustZone" projectFiles="true">
+        <itemPath>../src/trustZone/veneer.c</itemPath>
+        <itemPath>../src/trustZone/secure.c</itemPath>
+      </logicalFolder>
+      <itemPath>../src/main.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -126,14 +167,14 @@
         <targetDevice>ATSAML11E16A</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>EdbgTool</platformTool>
+        <platformTool>Simulator</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>2.30</languageToolchainVersion>
+        <languageToolchainVersion>2.40</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="SAML11_DFP" vendor="Microchip" version="3.0.48"/>
         <pack name="CMSIS" vendor="ARM" version="5.4.0"/>
+        <pack name="SAML11_DFP" vendor="Microchip" version="3.1.75"/>
       </packs>
       <compileType>
         <linkerTool>
@@ -143,21 +184,6 @@
         <archiverTool>
         </archiverTool>
         <loading>
-          <makeArtifact PL="../../../Secure/firmware/evsys_trigger_Secure.X"
-                        CT="1"
-                        CN="sam_l11_xpro"
-                        AC="true"
-                        BL="true"
-                        WD="../../../Secure/firmware/evsys_trigger_Secure.X"
-                        BC="${MAKE}  -f Makefile CONF=sam_l11_xpro"
-                        DBC="${MAKE}  -f Makefile CONF=sam_l11_xpro TYPE_IMAGE=DEBUG_RUN"
-                        CC="rm -rf &quot;build/sam_l11_xpro&quot; &quot;dist/sam_l11_xpro&quot;"
-                        OP="dist/sam_l11_xpro/production/evsys_trigger_Secure.X.production.hex"
-                        DOP="dist/sam_l11_xpro/debug/evsys_trigger_Secure.X.debug.elf"
-                        FL="dist/sam_l11_xpro/production/evsys_trigger_Secure.X.production.hex"
-                        PD="dist/sam_l11_xpro/production/evsys_trigger_Secure.X.production.elf"
-                        DD="dist/sam_l11_xpro/debug/evsys_trigger_Secure.X.debug.elf">
-          </makeArtifact>
           <useAlternateLoadableFile>false</useAlternateLoadableFile>
           <parseOnProdLoad>false</parseOnProdLoad>
           <alternateLoadableFile></alternateLoadableFile>
@@ -224,6 +250,7 @@
         <property key="use-cci" value="false"/>
         <property key="use-iar" value="false"/>
         <property key="use-indirect-calls" value="false"/>
+        <appendMe value="-mcmse"/>
       </C32>
       <C32-AR>
         <property key="additional-options-chop-files" value="false"/>
@@ -260,8 +287,7 @@
         <property key="enable-check-sections" value="false"/>
         <property key="exclude-floating-point-library" value="false"/>
         <property key="exclude-standard-libraries" value="false"/>
-        <property key="extra-lib-directories"
-                  value="..\..\..\Secure\firmware\evsys_trigger_Secure.X;../../../Secure/firmware/evsys_trigger_Secure.X"/>
+        <property key="extra-lib-directories" value=""/>
         <property key="fill-flash-options-addr" value=""/>
         <property key="fill-flash-options-const" value=""/>
         <property key="fill-flash-options-how" value="0"/>
@@ -272,7 +298,7 @@
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-cross-reference-file" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
-        <property key="heap-size" value="512"/>
+        <property key="heap-size" value="0"/>
         <property key="input-libraries" value=""/>
         <property key="kseg-length" value=""/>
         <property key="kseg-origin" value=""/>
@@ -282,7 +308,8 @@
         <property key="no-startup-files" value="false"/>
         <property key="oXC32ld-extra-opts" value=""/>
         <property key="optimization-level" value=""/>
-        <property key="preprocessor-macros" value="AS=0x8000;RS=0x2000;BOOTPROT=0x0"/>
+        <property key="preprocessor-macros"
+                  value="SECURE;AS=0x8000;ANSC=0x400;RS=0x2000;BOOTPROT=0x0"/>
         <property key="remove-unused-sections" value="true"/>
         <property key="report-memory-usage" value="false"/>
         <property key="serial-length" value=""/>
@@ -291,7 +318,7 @@
         <property key="symbol-stripping" value=""/>
         <property key="trace-symbols" value=""/>
         <property key="warn-section-align" value="false"/>
-        <appendMe value="-l:evsys_trigger_Secure_sg_veneer.lib"/>
+        <appendMe value="--out-implib=sam_l11_xpro_Secure_sg_veneer.lib ,--cmse-implib"/>
       </C32-LD>
       <C32CPP>
         <property key="additional-warnings" value="false"/>
@@ -329,47 +356,11 @@
         <property key="mdtcm" value=""/>
         <property key="mitcm" value=""/>
         <property key="mstacktcm" value="false"/>
+        <property key="omit-pack-options" value="1"/>
         <property key="relaxed-math" value="false"/>
         <property key="save-temps" value="false"/>
         <property key="wpo-lto" value="false"/>
       </C32Global>
-      <EdbgTool>
-        <property key="AutoSelectMemRanges" value="auto"/>
-        <property key="communication.activationmode" value="nohv"/>
-        <property key="communication.interface" value="swd"/>
-        <property key="communication.speed" value="2.000"/>
-        <property key="debugoptions.useswbreakpoints" value="false"/>
-        <property key="firmware.path"
-                  value="Press to browse for a specific firmware version"/>
-        <property key="firmware.update.action" value="firmware.update.use.latest"/>
-        <property key="memories.aux" value="false"/>
-        <property key="memories.bootflash" value="true"/>
-        <property key="memories.configurationmemory" value="true"/>
-        <property key="memories.configurationmemory2" value="true"/>
-        <property key="memories.dataflash" value="true"/>
-        <property key="memories.eeprom" value="true"/>
-        <property key="memories.exclude.configurationmemory" value="true"/>
-        <property key="memories.flashdata" value="true"/>
-        <property key="memories.id" value="true"/>
-        <property key="memories.instruction.ram.ranges"
-                  value="${memories.instruction.ram.ranges}"/>
-        <property key="memories.programmemory" value="true"/>
-        <property key="memories.programmemory.ranges" value="0-ffff"/>
-        <property key="poweroptions.powerenable" value="false"/>
-        <property key="programmerToGoFilePath"
-                  value="D:/H3/csp/apps/trustZone/evsys/NonSecure/firmware/evsys_trigger_NonSecure.X/debug/sam_l11_xpro/evsys_trigger_NonSecure_ptg"/>
-        <property key="programoptions.eraseb4program" value="true"/>
-        <property key="programoptions.preservedataflash" value="false"/>
-        <property key="programoptions.preservedataflash.ranges"
-                  value="${memories.dataflash.default}"/>
-        <property key="programoptions.preserveeeprom" value="false"/>
-        <property key="programoptions.preserveeeprom.ranges" value=""/>
-        <property key="programoptions.preserveprogram.ranges" value="0-20003fff"/>
-        <property key="programoptions.preserveprogramrange" value="false"/>
-        <property key="programoptions.preserveuserid" value="false"/>
-        <property key="programoptions.programuserotp" value="false"/>
-        <property key="voltagevalue" value=""/>
-      </EdbgTool>
       <PICkit3PlatformTool>
         <property key="ADC 1" value="true"/>
         <property key="AutoSelectMemRanges" value="auto"/>
@@ -699,6 +690,10 @@
                   value="report"/>
         <property key="warningmessagebreakoptions.W0245_ADC_BUFREGEN_NOT_ALLOWED"
                   value="report"/>
+        <property key="warningmessagebreakoptions.W0246_ADC_ACCUMULATION_BAD_RESSEL"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W0247_ADC_CONVERSION_BAD_RESSEL"
+                  value="report"/>
         <property key="warningmessagebreakoptions.W0400_PWM_PWM_FASTER_THAN_FOSC"
                   value="report"/>
         <property key="warningmessagebreakoptions.W0600_WDT_2ND_WDT_MR_WRITE"
@@ -798,6 +793,8 @@
         <property key="warningmessagebreakoptions.W7003_SMT_WIN_SELECTION_NOT_SUPPORT"
                   value="report"/>
         <property key="warningmessagebreakoptions.W8001_OSC_INVALID_CLOCK_SOURCE"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W8002_OSC_RESERVED_FEXTOSC"
                   value="report"/>
         <property key="warningmessagebreakoptions.W9001_TMR_GATE_AND_EXTCLOCK_ENABLED"
                   value="report"/>
