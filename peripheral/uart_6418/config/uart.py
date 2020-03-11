@@ -88,6 +88,30 @@ def updateUARTDMAConfigurationVisbleProperty(symbol, event):
 
     symbol.setVisible(event["value"])
 
+def updateSymbolVisibility(symbol, event):
+    global uartSymInterruptMode
+
+    if event["id"] == "USART_INTERRUPT_MODE" or event["id"] == "UART_RING_BUFFER_ENABLE":
+        symbol.setVisible(event["value"])
+
+def UARTFileGeneration(symbol, event):
+    componentID = symbol.getID()
+    filepath = ""
+    ringBufferModeEnabled = event["value"]
+
+    if componentID == "UART_HEADER1":
+        if ringBufferModeEnabled == True:
+            filepath = "../peripheral/uart_6418/templates/plib_uart_ring_buffer.h.ftl"
+        else:
+            filepath = "../peripheral/uart_6418/templates/plib_uart.h.ftl"
+    elif componentID == "UART_SOURCE1":
+        if ringBufferModeEnabled == True:
+            filepath = "../peripheral/uart_6418/templates/plib_uart_ring_buffer.c.ftl"
+        else:
+            filepath = "../peripheral/uart_6418/templates/plib_uart.c.ftl"
+
+    symbol.setSourcePath(filepath)
+
 ################################################################################
 #### Component ####
 ################################################################################
@@ -107,6 +131,29 @@ def instantiateComponent(uartComponent):
     uartInterrupt = uartComponent.createBooleanSymbol("USART_INTERRUPT_MODE", None)
     uartInterrupt.setLabel("Interrupt Mode")
     uartInterrupt.setDefaultValue(True)
+
+    #Enable Ring buffer?
+    uartSym_RingBuffer_Enable = uartComponent.createBooleanSymbol("UART_RING_BUFFER_ENABLE", None)
+    uartSym_RingBuffer_Enable.setLabel("Enable Ring Buffer ?")
+    uartSym_RingBuffer_Enable.setDefaultValue(False)
+    uartSym_RingBuffer_Enable.setVisible(Database.getSymbolValue(uartInstanceName.getValue().lower(), "USART_INTERRUPT_MODE"))
+    uartSym_RingBuffer_Enable.setDependencies(updateSymbolVisibility, ["USART_INTERRUPT_MODE"])
+
+    uartSym_TXRingBuffer_Size = uartComponent.createIntegerSymbol("UART_TX_RING_BUFFER_SIZE", uartSym_RingBuffer_Enable)
+    uartSym_TXRingBuffer_Size.setLabel("TX Ring Buffer Size")
+    uartSym_TXRingBuffer_Size.setMin(2)
+    uartSym_TXRingBuffer_Size.setMax(65535)
+    uartSym_TXRingBuffer_Size.setDefaultValue(128)
+    uartSym_TXRingBuffer_Size.setVisible(False)
+    uartSym_TXRingBuffer_Size.setDependencies(updateSymbolVisibility, ["UART_RING_BUFFER_ENABLE"])
+
+    uartSym_RXRingBuffer_Size = uartComponent.createIntegerSymbol("UART_RX_RING_BUFFER_SIZE", uartSym_RingBuffer_Enable)
+    uartSym_RXRingBuffer_Size.setLabel("RX Ring Buffer Size")
+    uartSym_RXRingBuffer_Size.setMin(2)
+    uartSym_RXRingBuffer_Size.setMax(65535)
+    uartSym_RXRingBuffer_Size.setDefaultValue(128)
+    uartSym_RXRingBuffer_Size.setVisible(False)
+    uartSym_RXRingBuffer_Size.setDependencies(updateSymbolVisibility, ["UART_RING_BUFFER_ENABLE"])
 
     # Add DMA support if Peripheral DMA Controller (PDC) exist in the UART register group
     uartRegisterGroup = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"UART\"]/register-group@[name=\"UART\"]")
@@ -313,6 +360,7 @@ def instantiateComponent(uartComponent):
     uartHeader1File.setType("HEADER")
     uartHeader1File.setOverwrite(True)
     uartHeader1File.setMarkup(True)
+    uartHeader1File.setDependencies(UARTFileGeneration, ["UART_RING_BUFFER_ENABLE"])
 
     uartSource1File = uartComponent.createFileSymbol("UART_SOURCE1", None)
     uartSource1File.setSourcePath("../peripheral/uart_6418/templates/plib_uart.c.ftl")
@@ -322,6 +370,7 @@ def instantiateComponent(uartComponent):
     uartSource1File.setType("SOURCE")
     uartSource1File.setOverwrite(True)
     uartSource1File.setMarkup(True)
+    uartSource1File.setDependencies(UARTFileGeneration, ["UART_RING_BUFFER_ENABLE"])
 
     uartSystemInitFile = uartComponent.createFileSymbol("UART_INIT", None)
     uartSystemInitFile.setType("STRING")
