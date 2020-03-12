@@ -44,7 +44,9 @@
 // *****************************************************************************
 // *****************************************************************************
 <#if HarmonyCore??>
-    <#if HarmonyCore.ENABLE_APP_FILE == true >
+    <#if HarmonyCore.ENABLE_DRV_COMMON == true ||
+         HarmonyCore.ENABLE_SYS_COMMON == true ||
+         HarmonyCore.ENABLE_APP_FILE == true >
         <#lt>#include "configuration.h"
     </#if>
 </#if>
@@ -78,7 +80,8 @@ ${LIST_SYSTEM_INIT_C_DRIVER_INITIALIZATION_DATA}
 // *****************************************************************************
 // *****************************************************************************
 <#if HarmonyCore??>
-    <#if HarmonyCore.ENABLE_APP_FILE == true >
+    <#if HarmonyCore.ENABLE_DRV_COMMON == true ||
+         HarmonyCore.ENABLE_SYS_COMMON == true >
         <#lt>/* Structure to hold the object handles for the modules in the system. */
         <#lt>SYSTEM_OBJECTS sysObj;
     </#if>

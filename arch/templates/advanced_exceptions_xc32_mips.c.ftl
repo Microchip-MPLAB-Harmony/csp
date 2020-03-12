@@ -46,7 +46,9 @@
 // *****************************************************************************
 // *****************************************************************************
 <#if HarmonyCore??>
-    <#if HarmonyCore.ENABLE_APP_FILE == true >
+    <#if HarmonyCore.ENABLE_DRV_COMMON == true ||
+         HarmonyCore.ENABLE_SYS_COMMON == true ||
+         HarmonyCore.ENABLE_APP_FILE == true >
         <#lt>#include "configuration.h"
     </#if>
 </#if>

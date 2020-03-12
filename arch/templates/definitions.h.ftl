@@ -117,85 +117,88 @@ extern "C" {
 void SYS_Initialize( void *data );
 
 <#if HarmonyCore??>
-    <#if HarmonyCore.ENABLE_APP_FILE == true >
-// *****************************************************************************
-/* System Tasks Function
+    <#if HarmonyCore.ENABLE_DRV_COMMON == true ||
+         HarmonyCore.ENABLE_SYS_COMMON == true ||
+         HarmonyCore.ENABLE_APP_FILE == true >
+        <#lt>// *****************************************************************************
+        <#lt>/* System Tasks Function
 
-  Function:
-    void SYS_Tasks ( void );
+        <#lt>Function:
+        <#lt>    void SYS_Tasks ( void );
 
-  Summary:
-    Function that performs all polled system tasks.
+        <#lt>Summary:
+        <#lt>    Function that performs all polled system tasks.
 
-  Description:
-    This function performs all polled system tasks by calling the state machine
-    "tasks" functions for all polled modules in the system, including drivers,
-    services, middleware and applications.
+        <#lt>Description:
+        <#lt>    This function performs all polled system tasks by calling the state machine
+        <#lt>    "tasks" functions for all polled modules in the system, including drivers,
+        <#lt>    services, middleware and applications.
 
-  Precondition:
-    The SYS_Initialize function must have been called and completed.
+        <#lt>Precondition:
+        <#lt>    The SYS_Initialize function must have been called and completed.
 
-  Parameters:
-    None.
+        <#lt>Parameters:
+        <#lt>    None.
 
-  Returns:
-    None.
+        <#lt>Returns:
+        <#lt>    None.
 
-  Example:
-    <code>
-    SYS_Initialize ( NULL );
+        <#lt>Example:
+        <#lt>    <code>
+        <#lt>    SYS_Initialize ( NULL );
 
-    while ( true )
-    {
-        SYS_Tasks ( );
-    }
-    </code>
+        <#lt>    while ( true )
+        <#lt>    {
+        <#lt>        SYS_Tasks ( );
+        <#lt>    }
+        <#lt>    </code>
 
-  Remarks:
-    If the module is interrupt driven, the system will call this routine from
-    an interrupt context.
-*/
+        <#lt>Remarks:
+        <#lt>    If the module is interrupt driven, the system will call this routine from
+        <#lt>    an interrupt context.
+        <#lt>*/
 
-void SYS_Tasks ( void );
+        <#lt>void SYS_Tasks ( void );
 
-// *****************************************************************************
-// *****************************************************************************
-// Section: Type Definitions
-// *****************************************************************************
-// *****************************************************************************
-
-// *****************************************************************************
-/* System Objects
-
-  Summary:
-    Structure holding the system's object handles
-
-  Description:
-    This structure contains the object handles for all objects in the
-    MPLAB Harmony project's system configuration.
-
-  Remarks:
-    These handles are returned from the "Initialize" functions for each module
-    and must be passed into the "Tasks" function for each module.
-*/
-
-typedef struct
-{
-<#if LIST_SYSTEM_DEFINITIONS_H_OBJECTS?length gt 0>
-${LIST_SYSTEM_DEFINITIONS_H_OBJECTS}
-<#else>
-    char RESERVED;
-</#if>
-} SYSTEM_OBJECTS;
-
+        <#if HarmonyCore.ENABLE_DRV_COMMON == true ||
+            HarmonyCore.ENABLE_SYS_COMMON == true >
+            <#lt>// *****************************************************************************
+            <#lt>// *****************************************************************************
+            <#lt>// Section: Type Definitions
+            <#lt>// *****************************************************************************
+            <#lt>// *****************************************************************************
+    
+            <#lt>// *****************************************************************************
+            <#lt>/* System Objects
+        
+            <#lt>Summary:
+            <#lt>    Structure holding the system's object handles
+        
+            <#lt>Description:
+            <#lt>    This structure contains the object handles for all objects in the
+            <#lt>    MPLAB Harmony project's system configuration.
+        
+            <#lt>Remarks:
+            <#lt>    These handles are returned from the "Initialize" functions for each module
+            <#lt>    and must be passed into the "Tasks" function for each module.
+            <#lt>*/
+        
+            <#lt>typedef struct
+            <#lt>{
+            <#if LIST_SYSTEM_DEFINITIONS_H_OBJECTS?length gt 0>
+                <#lt>${LIST_SYSTEM_DEFINITIONS_H_OBJECTS}
+            <#else>
+                <#lt>    char RESERVED;
+            </#if>
+            <#lt>} SYSTEM_OBJECTS;
+        </#if>
     <#else>
-/* Nullify SYS_Tasks() if only PLIBs are used. */
-#define     SYS_Tasks()
-
+        <#lt>/* Nullify SYS_Tasks() if only PLIBs are used. */
+        <#lt>#define     SYS_Tasks()
     </#if>
 <#else>
-/* Nullify SYS_Tasks() if only PLIBs are used. */
-#define     SYS_Tasks()
+    <#lt>/* Nullify SYS_Tasks() if only PLIBs are used. */
+    <#lt>#define     SYS_Tasks()
 </#if>
 
 // *****************************************************************************
@@ -207,7 +210,8 @@ ${LIST_SYSTEM_DEFINITIONS_H_OBJECTS}
 ${LIST_SYSTEM_DEFINITIONS_H_EXTERNS}
 
 <#if HarmonyCore??>
-    <#if HarmonyCore.ENABLE_APP_FILE == true >
+    <#if HarmonyCore.ENABLE_DRV_COMMON == true ||
+         HarmonyCore.ENABLE_SYS_COMMON == true >
         <#lt>extern SYSTEM_OBJECTS sysObj;
     </#if>
 </#if>
