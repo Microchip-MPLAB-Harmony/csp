@@ -68,7 +68,8 @@
 <#list 0..(TCC_NUM_CHANNELS-1) as i>
 <#assign CH_NUM = i >
 <#assign TCC_POLARITY = "TCC_"+i+"_WAVE_POL">
-<#assign TCC_MCEO = "TCC_EVCTRL_MC_" + i>
+<#assign TCC_MCEO = "TCC_EVCTRL_MCEO_" + i>
+<#assign TCC_MCEI = "TCC_EVCTRL_MCEI_" + i>
 <#assign TCC_INT_MC = "TCC_INTENSET_MC_" + i>
 <#-- Dead Time -->
 <#if TCC_IS_DEAD_TIME == 1 && i < TCC_NUM_OUTPUTS/2>
@@ -107,11 +108,20 @@
 <#-- Events -->
 <#if .vars[TCC_MCEO] == true>
     <#if TCC_EVCTRL_VAL != "">
-        <#assign TCC_EVCTRL_VAL = TCC_EVCTRL_VAL + " | TCC_EVCTRL_MCEO"+i+"_Msk">
+        <#assign TCC_EVCTRL_VAL = TCC_EVCTRL_VAL + "\n \t \t | TCC_EVCTRL_MCEO"+i+"_Msk">
     <#else>
         <#assign TCC_EVCTRL_VAL = "TCC_EVCTRL_MCEO"+i+"_Msk">
     </#if>
 </#if>
+
+<#if .vars[TCC_MCEI] == true>
+    <#if TCC_EVCTRL_VAL != "">
+        <#assign TCC_EVCTRL_VAL = TCC_EVCTRL_VAL + "\n \t \t | TCC_EVCTRL_MCEI"+i+"_Msk">
+    <#else>
+        <#assign TCC_EVCTRL_VAL = "TCC_EVCTRL_MCEI"+i+"_Msk">
+    </#if>
+</#if>
+
 
 <#if .vars[TCC_INT_MC] == true>
     <#if TCC_INTENSET_VAL != "">
@@ -207,6 +217,29 @@
         <#assign TCC_EVCTRL_VAL = "TCC_EVCTRL_OVFEO_Msk">
     </#if>
 </#if>
+
+<#if TCC_EVCTRL_EVACT0 != "OFF">
+    <#if TCC_EVCTRL_VAL != "">
+        <#assign TCC_EVCTRL_VAL = TCC_EVCTRL_VAL + "\n \t \t | TCC_EVCTRL_EVACT0_" + TCC_EVCTRL_EVACT0>
+    <#else>
+        <#assign TCC_EVCTRL_VAL = "TCC_EVCTRL_EVACT0_" + TCC_EVCTRL_EVACT0>
+    </#if>
+    <#if TCC_EVCTRL_TCINV0 == true>
+        <#assign TCC_EVCTRL_VAL = TCC_EVCTRL_VAL + " | TCC_EVCTRL_TCINV0_Msk">
+    </#if>
+</#if>
+
+<#if TCC_EVCTRL_EVACT1 != "OFF">
+    <#if TCC_EVCTRL_VAL != "">
+        <#assign TCC_EVCTRL_VAL = TCC_EVCTRL_VAL + "\n \t \t | TCC_EVCTRL_EVACT1_"+TCC_EVCTRL_EVACT1>
+    <#else>
+        <#assign TCC_EVCTRL_VAL = "TCC_EVCTRL_EVACT0_"+TCC_EVCTRL_EVACT1>
+    </#if>
+    <#if TCC_EVCTRL_TCINV1 == true>
+        <#assign TCC_EVCTRL_VAL = TCC_EVCTRL_VAL + " | TCC_EVCTRL_TCINV1_Msk">
+    </#if>
+</#if>
+
 </#compress>
 
 <#if TCC_INTERRUPT == true>
@@ -254,36 +287,20 @@ void ${TCC_INSTANCE_NAME}_PWMInitialize(void)
     ${TCC_INSTANCE_NAME}_REGS->TCC_PER = ${TCC_PER_PER}U;
 </#if>
 
-<#if TCC_EVCTRL_EVACT != "Disabled">
-    /* Fault configurations */
-    <#if TCC_EVCTRL_EVACT == "Event 0 Rising Edge">
-        <#lt>    ${TCC_INSTANCE_NAME}_REGS->TCC_EVCTRL = TCC_EVCTRL_TCEI0_Msk | TCC_EVCTRL_EVACT0_FAULT;
-    <#elseif TCC_EVCTRL_EVACT == "Event 0 Falling Edge">
-        <#lt>    ${TCC_INSTANCE_NAME}_REGS->TCC_EVCTRL = TCC_EVCTRL_TCEI0_Msk | TCC_EVCTRL_TCINV0_Msk | TCC_EVCTRL_EVACT0_FAULT;
-    <#elseif TCC_EVCTRL_EVACT == "Event 1 Rising Edge">
-        <#lt>    ${TCC_INSTANCE_NAME}_REGS->TCC_EVCTRL = TCC_EVCTRL_TCEI1_Msk | TCC_EVCTRL_EVACT1_FAULT;
-    <#elseif TCC_EVCTRL_EVACT == "Event 1 Falling Edge">
-        <#lt>    ${TCC_INSTANCE_NAME}_REGS->TCC_EVCTRL = TCC_EVCTRL_TCEI1_Msk | TCC_EVCTRL_TCINV1_Msk | TCC_EVCTRL_EVACT1_FAULT;
-    </#if>
-    <#if TCC_EVCTRL_EVACT == "Event 0 Rising Edge" || TCC_EVCTRL_EVACT == "Event 0 Falling Edge">
-        <#lt>    ${TCC_INSTANCE_NAME}_REGS->TCC_DRVCTRL = TCC_DRVCTRL_FILTERVAL0(${TCC_DRVCTRL_FILTERVAL}U) <#rt>
-                        <#lt><#if TCC_DRVCTRL_FAULT_VAL?has_content>| ${TCC_DRVCTRL_FAULT_VAL}</#if>;
-    <#else>
-        <#lt>    ${TCC_INSTANCE_NAME}_REGS->TCC_DRVCTRL = TCC_DRVCTRL_FILTERVAL1(${TCC_DRVCTRL_FILTERVAL}U) <#rt>
-                        <#lt><#if TCC_DRVCTRL_FAULT_VAL?has_content>| ${TCC_DRVCTRL_FAULT_VAL}</#if>;
-    </#if>
-</#if>
-
 <#if TCC_PATT_VAL?has_content>
     ${TCC_INSTANCE_NAME}_REGS->TCC_PATT = ${TCC_PATT_VAL};
 </#if>
-
+<#if TCC_EVCTRL_EVACT0 == "FAULT" || TCC_EVCTRL_EVACT1 == "FAULT">
+    ${TCC_INSTANCE_NAME}_REGS->TCC_DRVCTRL = TCC_DRVCTRL_FILTERVAL0(${TCC_DRVCTRL_FILTERVAL}U)
+          | TCC_DRVCTRL_FILTERVAL1(${TCC_DRVCTRL_FILTERVAL1}U)<#rt>
+                <#lt><#if TCC_DRVCTRL_FAULT_VAL?has_content>| ${TCC_DRVCTRL_FAULT_VAL}</#if>;
+</#if>
 <#if TCC_INTENSET_VAL?has_content>
     ${TCC_INSTANCE_NAME}_REGS->TCC_INTENSET = ${TCC_INTENSET_VAL};
 </#if>
 
 <#if TCC_EVCTRL_VAL?has_content>
-    ${TCC_INSTANCE_NAME}_REGS->TCC_EVCTRL |= ${TCC_EVCTRL_VAL};
+    ${TCC_INSTANCE_NAME}_REGS->TCC_EVCTRL = ${TCC_EVCTRL_VAL};
 </#if>
     while (${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY)
     {

@@ -42,6 +42,7 @@ tccSym_Channel_WAVE_SWAP = []
 tccSym_Channel_WEXCTRL_DTIEN = []
 tccSym_Channel_INTENSET_MC = []
 tccSym_Channel_EVCTRL_MCEO = []
+tccSym_Channel_EVCTRL_MCEI = []
 tccSym_DRVCTRL_NRE_NRV = []
 tccSym_PATT_PGE = []
 tccSym_PATT_PGV = []
@@ -53,19 +54,28 @@ def tccEvsys(symbol, event):
     if(event["id"] == "TCC_EVCTRL_OVFEO"):
         Database.setSymbolValue("evsys", "GENERATOR_"+str(tccInstanceName.getValue())+"_OVF_ACTIVE", event["value"], 2)
 
-    if(event["id"] == "TCC_EVCTRL_EVACT"):
-        Database.setSymbolValue("evsys", "USER_"+str(tccInstanceName.getValue())+"_EV_0_READY", False, 2)
-        Database.setSymbolValue("evsys", "USER_"+str(tccInstanceName.getValue())+"_EV_1_READY", False, 2)
-        if (event["value"] == "Event 0 Rising Edge" or event["value"] == "Event 0 Falling Edge"):
+    if(event["id"] == "TCC_EVCTRL_EVACT0"):
+        if (event["value"] != 0):
             Database.setSymbolValue("evsys", "USER_"+str(tccInstanceName.getValue())+"_EV_0_READY", True, 2)
-        elif (event["value"] == "Event 1 Rising Edge" or event["value"] == "Event 1 Falling Edge"):
-            Database.setSymbolValue("evsys", "USER_"+str(tccInstanceName.getValue())+"_EV_1_READY", True, 2)
+        else:
+            Database.setSymbolValue("evsys", "USER_"+str(tccInstanceName.getValue())+"_EV_0_READY", False, 2)
 
-    if("EVCTRL_MC" in event["id"]):
-        mcInstance = event["id"].split("_")[2:]
-        event_name = "_" + "_".join(mcInstance)
-        print(event_name)
+    if(event["id"] == "TCC_EVCTRL_EVACT1"):
+        if (event["value"] != 0):
+            Database.setSymbolValue("evsys", "USER_"+str(tccInstanceName.getValue())+"_EV_1_READY", True, 2)
+        else:
+            Database.setSymbolValue("evsys", "USER_"+str(tccInstanceName.getValue())+"_EV_1_READY", False, 2)
+
+    if("EVCTRL_MCEO" in event["id"]):
+        mcInstance = event["id"].split("_")[2][:2]
+        event_name = "_" + (mcInstance) + "_" + event["id"].split("_")[3]
         Database.setSymbolValue("evsys", "GENERATOR_"+str(tccInstanceName.getValue())+ str(event_name)+"_ACTIVE", event["value"], 2)
+
+    if("EVCTRL_MCEI" in event["id"]):
+        mcInstance = event["id"].split("_")[2][:2]
+        event_name = "_" + (mcInstance) + "_" + event["id"].split("_")[3]
+        Database.setSymbolValue("evsys", "USER_"+str(tccInstanceName.getValue())+ str(event_name)+"_READY", event["value"], 2)
+
 
 def updateTCCInterruptStatus(symbol, event):
     component = symbol.getComponent()
@@ -136,10 +146,21 @@ def tccDirVisible(symbol, event):
         symbol.setVisible(not event["value"])
 
 def tccFaultVisible(symbol, event):
-    if(event["value"] == "Disabled"):
-        symbol.setVisible(False)
+    global tccSym_EVCTRL_EVACT0
+    global tccSym_EVCTRL_EVACT1
+    fault0 = tccSym_EVCTRL_EVACT0.getSelectedKey()
+    fault1 = tccSym_EVCTRL_EVACT1.getSelectedKey()
+
+    if "TCC_FAULT_COMMENT" in symbol.getID():
+        if (fault0 == "FAULT" or fault1 == "FAULT"):
+            symbol.setVisible(False)
+        else:
+            symbol.setVisible(True)
     else:
-        symbol.setVisible(True)
+        if (fault0 == "FAULT" or fault1 == "FAULT"):
+            symbol.setVisible(True)
+        else:
+            symbol.setVisible(False)
 
 def tccDeadTimeVisible(symbol, event):
     if (tccSym_Channel_WEXCTRL_DTIEN[0].getValue() == True or tccSym_Channel_WEXCTRL_DTIEN[1].getValue() == True or
@@ -187,21 +208,17 @@ def tccDeadTimeCalc(symbol, event):
 def tccSlaveCommentVisible(symbol, event):
     symbol.setVisible(event["value"])
 
-def tccFault0IntVisible(symbol, event):
-    if ("Event 0" in event["value"]):
-        symbol.setVisible(True)
-    else:
-        symbol.setVisible(False)
-
-def tccFault1IntVisible(symbol, event):
-    if ("Event 1" in event["value"]):
-        symbol.setVisible(True)
-    else:
-        symbol.setVisible(False)
-
 def tccSlaveModeVisibility(symbol, event):
-    print(not event["value"])
     symbol.setVisible(not event["value"])
+
+def tccIpEventVisible(symbol, event):
+    symbol.setVisible(event["value"])
+
+def tccEvent0Visible(symbol, event):
+    if event["value"] == 1 or event["value"] == 2:
+        symbol.setVisible(False)
+    else:
+        symbol.setVisible(True)
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
@@ -473,10 +490,17 @@ def instantiateComponent(tccComponent):
 
         #compare match event out
         tccSym_Channel_EVCTRL_MCEO.append(channelID)
-        tccSym_Channel_EVCTRL_MCEO[channelID] = tccComponent.createBooleanSymbol("TCC_EVCTRL_MC_"+str(channelID), tccSym_Channel_Menu[channelID])
-        tccSym_Channel_EVCTRL_MCEO[channelID].setLabel("Enable Compare Match Event Out")
+        tccSym_Channel_EVCTRL_MCEO[channelID] = tccComponent.createBooleanSymbol("TCC_EVCTRL_MCEO_"+str(channelID), tccSym_Channel_Menu[channelID])
+        tccSym_Channel_EVCTRL_MCEO[channelID].setLabel("Enable Compare Match Event OUT")
         tccSym_Channel_EVCTRL_MCEO[channelID].setDefaultValue(False)
-        eventDepList.append("TCC_EVCTRL_MC_"+str(channelID))
+        eventDepList.append("TCC_EVCTRL_MCEO_"+str(channelID))
+
+        #compare match event in
+        tccSym_Channel_EVCTRL_MCEI.append(channelID)
+        tccSym_Channel_EVCTRL_MCEI[channelID] = tccComponent.createBooleanSymbol("TCC_EVCTRL_MCEI_"+str(channelID), tccSym_Channel_Menu[channelID])
+        tccSym_Channel_EVCTRL_MCEI[channelID].setLabel("Enable Compare Match Event IN")
+        tccSym_Channel_EVCTRL_MCEI[channelID].setDefaultValue(False)
+        eventDepList.append("TCC_EVCTRL_MCEI_"+str(channelID))
 
     #dead time menu
     tccSym_DeadTime_Menu = tccComponent.createMenuSymbol("TCC_DEAD_TIME_MENU", None)
@@ -515,51 +539,6 @@ def instantiateComponent(tccComponent):
     tccSym_DTHS_COMMENT.setLabel("**** High side dead time is "+str(high_deadtime)+ " uS ****")
     tccSym_DTHS_COMMENT.setDependencies(tccDeadTimeCalc, ["TCC_WEXCTRL_DTHS", "core."+tccInstanceName.getValue()+"_CLOCK_FREQUENCY", "TCC_CTRLA_PRESCALER"])
 
-    #Fault menu
-    tccSym_Fault_Menu = tccComponent.createMenuSymbol("TCC_FAULT_MENU", None)
-    tccSym_Fault_Menu.setLabel("Fault Configurations")
-
-    #fault source
-    fault_source = ["Disabled", "Event 0 Rising Edge", "Event 0 Falling Edge", "Event 1 Rising Edge", "Event 1 Falling Edge"]
-    tccSym_EVCTRL_EVACT = tccComponent.createComboSymbol("TCC_EVCTRL_EVACT", tccSym_Fault_Menu, fault_source)
-    tccSym_EVCTRL_EVACT.setLabel("Select Fault Source")
-    eventDepList.append("TCC_EVCTRL_EVACT")
-
-    #fault filter value
-    tccSym_DRVCTRL_FILTERVAL = tccComponent.createIntegerSymbol("TCC_DRVCTRL_FILTERVAL", tccSym_EVCTRL_EVACT)
-    tccSym_DRVCTRL_FILTERVAL.setLabel("Filter Value")
-    tccSym_DRVCTRL_FILTERVAL.setMin(0)
-    tccSym_DRVCTRL_FILTERVAL.setMax(15)
-    tccSym_DRVCTRL_FILTERVAL.setDefaultValue(0)
-    tccSym_DRVCTRL_FILTERVAL.setVisible(False)
-    tccSym_DRVCTRL_FILTERVAL.setDependencies(tccFaultVisible, ["TCC_EVCTRL_EVACT"])
-
-    #output polarity after fault
-    for output in range(0, numOfOutputs):
-        tccSym_DRVCTRL_NRE_NRV.append(output)
-        tccSym_DRVCTRL_NRE_NRV[output] = tccComponent.createKeyValueSetSymbol("TCC_"+str(output)+"_DRVCTRL_NRE_NRV", tccSym_EVCTRL_EVACT)
-        tccSym_DRVCTRL_NRE_NRV[output].setLabel("Select Level for Output " +str(output))
-        tccSym_DRVCTRL_NRE_NRV[output].setVisible(False)
-        tccSym_DRVCTRL_NRE_NRV[output].addKey("Tri-state", "-1", "Tri-state")
-        tccSym_DRVCTRL_NRE_NRV[output].addKey("Low", "0", "Low")
-        tccSym_DRVCTRL_NRE_NRV[output].addKey("High", "1", "High")
-        tccSym_DRVCTRL_NRE_NRV[output].setOutputMode("Value")
-        tccSym_DRVCTRL_NRE_NRV[output].setDisplayMode("Description")
-        tccSym_DRVCTRL_NRE_NRV[output].setDependencies(tccFaultVisible, ["TCC_EVCTRL_EVACT"])
-
-    tccSym_INTENSET_FAULT0 = tccComponent.createBooleanSymbol("TCC_INTENSET_FAULT0", tccSym_EVCTRL_EVACT)
-    tccSym_INTENSET_FAULT0.setLabel("Enable Fault 0 Interrupt")
-    tccSym_INTENSET_FAULT0.setDefaultValue(False)
-    tccSym_INTENSET_FAULT0.setVisible(False)
-    tccSym_INTENSET_FAULT0.setDependencies(tccFault0IntVisible, ["TCC_EVCTRL_EVACT"])
-    interruptDepList.append("TCC_INTENSET_FAULT0")
-
-    tccSym_INTENSET_FAULT1 = tccComponent.createBooleanSymbol("TCC_INTENSET_FAULT1", tccSym_EVCTRL_EVACT)
-    tccSym_INTENSET_FAULT1.setLabel("Enable Fault 1 Interrupt")
-    tccSym_INTENSET_FAULT1.setDefaultValue(False)
-    tccSym_INTENSET_FAULT1.setVisible(False)
-    tccSym_INTENSET_FAULT1.setDependencies(tccFault1IntVisible, ["TCC_EVCTRL_EVACT"])
-    interruptDepList.append("TCC_INTENSET_FAULT1")
 
     if (patternGenImplemented == 1):
         #Pattern Generation menu
@@ -581,6 +560,98 @@ def instantiateComponent(tccComponent):
             tccSym_PATT_PGV[output].setOutputMode("Value")
             tccSym_PATT_PGV[output].setDisplayMode("Description")
             tccSym_PATT_PGV[output].setDependencies(tccPattgenVisible, ["TCC_"+str(output)+"PATT_PGE"])
+
+    tccSym_InputEvents_Menu = tccComponent.createMenuSymbol("TCC_INPUT_EVENTS", None)
+    tccSym_InputEvents_Menu.setLabel("Input Events Configuration")
+
+    global tccSym_EVCTRL_EVACT0
+    tccSym_EVCTRL_EVACT0 = tccComponent.createKeyValueSetSymbol("TCC_EVCTRL_EVACT0", tccSym_InputEvents_Menu)
+    tccSym_EVCTRL_EVACT0.setLabel("Select Input Event 0 Action")
+    tccSym_EVCTRL_EVACT0.addKey("OFF", "0", "Disabled")
+    tccSym_EVCTRL_EVACT0.addKey("RETRIGGER", "1", "Start, restart or retrigger counter")
+    tccSym_EVCTRL_EVACT0.addKey("COUNTEV", "2", "Count on event")
+    tccSym_EVCTRL_EVACT0.addKey("START", "3", "Start counter")
+    tccSym_EVCTRL_EVACT0.addKey("INC", "4", "Increment counter")
+    tccSym_EVCTRL_EVACT0.addKey("COUNT", "5", "Count on active state of asynchronous event")
+    tccSym_EVCTRL_EVACT0.addKey("FAULT", "7", "Non-recoverable fault")
+    tccSym_EVCTRL_EVACT0.setDisplayMode("Description")
+    tccSym_EVCTRL_EVACT0.setOutputMode("Key")
+    eventDepList.append("TCC_EVCTRL_EVACT0")
+
+    tccSym_EVCTRL_TCINV0 = tccComponent.createBooleanSymbol("TCC_EVCTRL_TCINV0", tccSym_EVCTRL_EVACT0)
+    tccSym_EVCTRL_TCINV0.setLabel("Invert Input Event 0")
+    tccSym_EVCTRL_TCINV0.setVisible(False)
+    tccSym_EVCTRL_TCINV0.setDependencies(tccIpEventVisible, ["TCC_EVCTRL_EVACT0"])
+
+    global tccSym_EVCTRL_EVACT1
+    tccSym_EVCTRL_EVACT1 = tccComponent.createKeyValueSetSymbol("TCC_EVCTRL_EVACT1", tccSym_InputEvents_Menu)
+    tccSym_EVCTRL_EVACT1.setLabel("Select Input Event 1 Action")
+    tccSym_EVCTRL_EVACT1.addKey("OFF", "0", "Disabled")
+    tccSym_EVCTRL_EVACT1.addKey("RETRIGGER", "1", "Start, restart or retrigger counter")
+    tccSym_EVCTRL_EVACT1.addKey("DIR", "2", "Direction control")
+    tccSym_EVCTRL_EVACT1.addKey("STOP", "3", "Stop counter")
+    tccSym_EVCTRL_EVACT1.addKey("DEC", "4", "Increment counter")
+    tccSym_EVCTRL_EVACT1.addKey("FAULT", "7", "Non-recoverable fault")
+    tccSym_EVCTRL_EVACT1.setDisplayMode("Description")
+    tccSym_EVCTRL_EVACT1.setOutputMode("Key")
+    eventDepList.append("TCC_EVCTRL_EVACT1")
+
+    tccSym_EVCTRL_TCINV1 = tccComponent.createBooleanSymbol("TCC_EVCTRL_TCINV1", tccSym_EVCTRL_EVACT1)
+    tccSym_EVCTRL_TCINV1.setLabel("Invert Input Event 1")
+    tccSym_EVCTRL_TCINV1.setVisible(False)
+    tccSym_EVCTRL_TCINV1.setDependencies(tccIpEventVisible, ["TCC_EVCTRL_EVACT1"])
+
+    #Fault menu
+    tccSym_Fault_Menu = tccComponent.createMenuSymbol("TCC_FAULT_MENU", None)
+    tccSym_Fault_Menu.setLabel("Fault Configurations")
+
+    tccSym_Fault_Comment = tccComponent.createCommentSymbol("TCC_FAULT_COMMENT", tccSym_Fault_Menu)
+    tccSym_Fault_Comment.setLabel("**** Select input event action as non-recoverable fault ****")
+    tccSym_Fault_Comment.setDependencies(tccFaultVisible, ["TCC_EVCTRL_EVACT0", "TCC_EVCTRL_EVACT1"])
+
+    #fault filter value
+    tccSym_DRVCTRL_FILTERVAL = tccComponent.createIntegerSymbol("TCC_DRVCTRL_FILTERVAL", tccSym_Fault_Menu)
+    tccSym_DRVCTRL_FILTERVAL.setLabel(" Fault 0 Filter Value")
+    tccSym_DRVCTRL_FILTERVAL.setMin(0)
+    tccSym_DRVCTRL_FILTERVAL.setMax(15)
+    tccSym_DRVCTRL_FILTERVAL.setDefaultValue(0)
+    tccSym_DRVCTRL_FILTERVAL.setVisible(False)
+    tccSym_DRVCTRL_FILTERVAL.setDependencies(tccFaultVisible, ["TCC_EVCTRL_EVACT0", "TCC_EVCTRL_EVACT1"])
+
+    tccSym_DRVCTRL_FILTERVAL1 = tccComponent.createIntegerSymbol("TCC_DRVCTRL_FILTERVAL1", tccSym_Fault_Menu)
+    tccSym_DRVCTRL_FILTERVAL1.setLabel(" Fault 1 Filter Value")
+    tccSym_DRVCTRL_FILTERVAL1.setMin(0)
+    tccSym_DRVCTRL_FILTERVAL1.setMax(15)
+    tccSym_DRVCTRL_FILTERVAL1.setDefaultValue(0)
+    tccSym_DRVCTRL_FILTERVAL1.setVisible(False)
+    tccSym_DRVCTRL_FILTERVAL1.setDependencies(tccFaultVisible, ["TCC_EVCTRL_EVACT0", "TCC_EVCTRL_EVACT1"])
+
+    #output polarity after fault
+    for output in range(0, numOfOutputs):
+        tccSym_DRVCTRL_NRE_NRV.append(output)
+        tccSym_DRVCTRL_NRE_NRV[output] = tccComponent.createKeyValueSetSymbol("TCC_"+str(output)+"_DRVCTRL_NRE_NRV", tccSym_Fault_Menu)
+        tccSym_DRVCTRL_NRE_NRV[output].setLabel("Select Level for Output " +str(output))
+        tccSym_DRVCTRL_NRE_NRV[output].setVisible(False)
+        tccSym_DRVCTRL_NRE_NRV[output].addKey("Tri-state", "-1", "Tri-state")
+        tccSym_DRVCTRL_NRE_NRV[output].addKey("Low", "0", "Low")
+        tccSym_DRVCTRL_NRE_NRV[output].addKey("High", "1", "High")
+        tccSym_DRVCTRL_NRE_NRV[output].setOutputMode("Value")
+        tccSym_DRVCTRL_NRE_NRV[output].setDisplayMode("Description")
+        tccSym_DRVCTRL_NRE_NRV[output].setDependencies(tccFaultVisible, ["TCC_EVCTRL_EVACT0", "TCC_EVCTRL_EVACT1"])
+
+    tccSym_INTENSET_FAULT0 = tccComponent.createBooleanSymbol("TCC_INTENSET_FAULT0", tccSym_Fault_Menu)
+    tccSym_INTENSET_FAULT0.setLabel("Enable Fault 0 Interrupt")
+    tccSym_INTENSET_FAULT0.setDefaultValue(False)
+    tccSym_INTENSET_FAULT0.setVisible(False)
+    tccSym_INTENSET_FAULT0.setDependencies(tccFaultVisible, ["TCC_EVCTRL_EVACT0", "TCC_EVCTRL_EVACT1"])
+    interruptDepList.append("TCC_INTENSET_FAULT0")
+
+    tccSym_INTENSET_FAULT1 = tccComponent.createBooleanSymbol("TCC_INTENSET_FAULT1", tccSym_Fault_Menu)
+    tccSym_INTENSET_FAULT1.setLabel("Enable Fault 1 Interrupt")
+    tccSym_INTENSET_FAULT1.setDefaultValue(False)
+    tccSym_INTENSET_FAULT1.setVisible(False)
+    tccSym_INTENSET_FAULT1.setDependencies(tccFaultVisible, ["TCC_EVCTRL_EVACT0", "TCC_EVCTRL_EVACT1"])
+    interruptDepList.append("TCC_INTENSET_FAULT1")
 
     tccSym_CTRLA_RUNSTDBY = tccComponent.createBooleanSymbol("TCC_CTRLA_RUNSTDBY", None)
     tccSym_CTRLA_RUNSTDBY.setLabel("Run during Standby")
