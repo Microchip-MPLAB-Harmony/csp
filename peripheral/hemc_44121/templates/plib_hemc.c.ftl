@@ -291,12 +291,12 @@ void ${HEMC_INSTANCE_NAME}_Initialize( void )
 */
 HEMC_HECC_STATUS ${HEMC_INSTANCE_NAME}_HeccGetStatus(void)
 {
-    return HEMC_REGS->HEMC_HECC_SR;
+    return (HEMC_HECC_STATUS)(HEMC_REGS->HEMC_HECC_SR);
 }
 
 // *****************************************************************************
 /* Function:
-    void ${HEMC_INSTANCE_NAME}_HeccGetFailAddress(void)
+    uint32_t* ${HEMC_INSTANCE_NAME}_HeccGetFailAddress(void)
 
    Summary:
     Get the last fail address were ECC error occurs in a HEMC memory.
@@ -308,11 +308,11 @@ HEMC_HECC_STATUS ${HEMC_INSTANCE_NAME}_HeccGetStatus(void)
     None.
 
    Returns:
-    Fail address were fixable or unfixable error occured in a HEMC memory.
+    Pointer of fail address were fixable or unfixable error occured in a HEMC memory.
 */
-uint32_t ${HEMC_INSTANCE_NAME}_HeccGetFailAddress(void)
+uint32_t* ${HEMC_INSTANCE_NAME}_HeccGetFailAddress(void)
 {
-    return HEMC_REGS->HEMC_HECC_FAILAR;
+    return (uint32_t*)(HEMC_REGS->HEMC_HECC_FAILAR);
 }
 
 // *****************************************************************************

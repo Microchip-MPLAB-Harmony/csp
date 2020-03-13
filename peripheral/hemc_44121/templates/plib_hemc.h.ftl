@@ -65,9 +65,9 @@
 */
 typedef enum
 {
-    HEMC_HEMC_CH_HSMC = 0,   /* HECC Channel for HSMC memories */
-    HEMC_HEMC_CH_HSDRAMC = 1,  /* HECC Channel for HSDRAMC memories */
-}HEMC_HEMC_CHANNEL;
+    HEMC_HEMC_CH_HSMC = 0,    /* HECC Channel for HSMC memories */
+    HEMC_HEMC_CH_HSDRAMC = 1  /* HECC Channel for HSDRAMC memories */
+} HEMC_HEMC_CHANNEL;
 
 // *****************************************************************************
 /* HEMC HECC status
@@ -89,7 +89,7 @@ typedef enum
     HEMC_HECC_STATUS_TYPE = HEMC_HECC_SR_TYPE_Msk,
     /* Force the compiler to reserve 32-bit memory for enum */
     HEMC_HECC_STATUS_INVALID = 0xFFFFFFFF
-}HEMC_HECC_STATUS;
+} HEMC_HECC_STATUS;
 
 // *****************************************************************************
 
@@ -143,7 +143,7 @@ void ${HEMC_INSTANCE_NAME}_Initialize( void );
 
 HEMC_HECC_STATUS ${HEMC_INSTANCE_NAME}_HeccGetStatus(void);
 
-uint32_t ${HEMC_INSTANCE_NAME}_HeccGetFailAddress(void);
+uint32_t* ${HEMC_INSTANCE_NAME}_HeccGetFailAddress(void);
 
 void ${HEMC_INSTANCE_NAME}_HeccResetCounters(void);
 
@@ -188,14 +188,14 @@ static inline void ${HEMC_INSTANCE_NAME}_TestModeReadEnable(HEMC_HEMC_CHANNEL ch
     if (channel == HEMC_HEMC_CH_HSMC)
     {
         HEMC_REGS->HEMC_HECC_CR0 |= HEMC_HECC_CR0_TEST_MODE_RD_Msk;
-        while (!(HEMC_REGS->HEMC_HECC_CR0 & HEMC_HECC_CR0_TEST_MODE_RD_Msk));
+        while ( (HEMC_REGS->HEMC_HECC_CR0 & HEMC_HECC_CR0_TEST_MODE_RD_Msk) != HEMC_HECC_CR0_TEST_MODE_RD_Msk );
     }
     else
     {
         HEMC_REGS->HEMC_HECC_CR1 |= HEMC_HECC_CR1_TEST_MODE_RD_Msk;
-        while (!(HEMC_REGS->HEMC_HECC_CR1 & HEMC_HECC_CR1_TEST_MODE_RD_Msk));
+        while ( (HEMC_REGS->HEMC_HECC_CR1 & HEMC_HECC_CR1_TEST_MODE_RD_Msk) != HEMC_HECC_CR1_TEST_MODE_RD_Msk );
         HEMC_REGS->HEMC_HECC_CR2 |= HEMC_HECC_CR2_TEST_MODE_RD_Msk;
-        while (!(HEMC_REGS->HEMC_HECC_CR2 & HEMC_HECC_CR2_TEST_MODE_RD_Msk));
+        while ( (HEMC_REGS->HEMC_HECC_CR2 & HEMC_HECC_CR2_TEST_MODE_RD_Msk) != HEMC_HECC_CR2_TEST_MODE_RD_Msk );
     }
 }
 
@@ -220,14 +220,14 @@ static inline void ${HEMC_INSTANCE_NAME}_TestModeReadDisable(HEMC_HEMC_CHANNEL c
     if (channel == HEMC_HEMC_CH_HSMC)
     {
         HEMC_REGS->HEMC_HECC_CR0 &= ~(HEMC_HECC_CR0_TEST_MODE_RD_Msk);
-        while ((HEMC_REGS->HEMC_HECC_CR0 & HEMC_HECC_CR0_TEST_MODE_RD_Msk));
+        while ( (HEMC_REGS->HEMC_HECC_CR0 & HEMC_HECC_CR0_TEST_MODE_RD_Msk) == HEMC_HECC_CR0_TEST_MODE_RD_Msk );
     }
     else
     {
         HEMC_REGS->HEMC_HECC_CR1 &= ~(HEMC_HECC_CR1_TEST_MODE_RD_Msk);
-        while ((HEMC_REGS->HEMC_HECC_CR1 & HEMC_HECC_CR1_TEST_MODE_RD_Msk));
+        while ( (HEMC_REGS->HEMC_HECC_CR1 & HEMC_HECC_CR1_TEST_MODE_RD_Msk) == HEMC_HECC_CR1_TEST_MODE_RD_Msk );
         HEMC_REGS->HEMC_HECC_CR2 &= ~(HEMC_HECC_CR2_TEST_MODE_RD_Msk);
-        while ((HEMC_REGS->HEMC_HECC_CR2 & HEMC_HECC_CR2_TEST_MODE_RD_Msk));
+        while ( (HEMC_REGS->HEMC_HECC_CR2 & HEMC_HECC_CR2_TEST_MODE_RD_Msk) == HEMC_HECC_CR2_TEST_MODE_RD_Msk );
     }
 }
 
@@ -254,14 +254,14 @@ static inline void ${HEMC_INSTANCE_NAME}_TestModeWriteEnable(HEMC_HEMC_CHANNEL c
     if (channel == HEMC_HEMC_CH_HSMC)
     {
         HEMC_REGS->HEMC_HECC_CR0 |= HEMC_HECC_CR0_TEST_MODE_WR_Msk;
-        while (!(HEMC_REGS->HEMC_HECC_CR0 & HEMC_HECC_CR0_TEST_MODE_WR_Msk));
+        while ( (HEMC_REGS->HEMC_HECC_CR0 & HEMC_HECC_CR0_TEST_MODE_WR_Msk) != HEMC_HECC_CR0_TEST_MODE_WR_Msk );
     }
     else
     {
         HEMC_REGS->HEMC_HECC_CR1 |= HEMC_HECC_CR1_TEST_MODE_WR_Msk;
-        while (!(HEMC_REGS->HEMC_HECC_CR1 & HEMC_HECC_CR1_TEST_MODE_WR_Msk));
+        while ( (HEMC_REGS->HEMC_HECC_CR1 & HEMC_HECC_CR1_TEST_MODE_WR_Msk) != HEMC_HECC_CR1_TEST_MODE_WR_Msk );
         HEMC_REGS->HEMC_HECC_CR2 |= HEMC_HECC_CR2_TEST_MODE_WR_Msk;
-        while (!(HEMC_REGS->HEMC_HECC_CR2 & HEMC_HECC_CR2_TEST_MODE_WR_Msk));
+        while ( (HEMC_REGS->HEMC_HECC_CR2 & HEMC_HECC_CR2_TEST_MODE_WR_Msk) != HEMC_HECC_CR2_TEST_MODE_WR_Msk );
     }
 
 }
@@ -287,14 +287,14 @@ static inline void ${HEMC_INSTANCE_NAME}_TestModeWriteDisable(HEMC_HEMC_CHANNEL 
     if (channel == HEMC_HEMC_CH_HSMC)
     {
         HEMC_REGS->HEMC_HECC_CR0 &= ~(HEMC_HECC_CR0_TEST_MODE_WR_Msk);
-        while ((HEMC_REGS->HEMC_HECC_CR0 & HEMC_HECC_CR0_TEST_MODE_WR_Msk));
+        while ( (HEMC_REGS->HEMC_HECC_CR0 & HEMC_HECC_CR0_TEST_MODE_WR_Msk) == HEMC_HECC_CR0_TEST_MODE_WR_Msk );
     }
     else
     {
         HEMC_REGS->HEMC_HECC_CR1 &= ~(HEMC_HECC_CR1_TEST_MODE_WR_Msk);
-        while ((HEMC_REGS->HEMC_HECC_CR1 & HEMC_HECC_CR1_TEST_MODE_WR_Msk));
+        while ( (HEMC_REGS->HEMC_HECC_CR1 & HEMC_HECC_CR1_TEST_MODE_WR_Msk) == HEMC_HECC_CR1_TEST_MODE_WR_Msk );
         HEMC_REGS->HEMC_HECC_CR2 &= ~(HEMC_HECC_CR2_TEST_MODE_WR_Msk);
-        while ((HEMC_REGS->HEMC_HECC_CR2 & HEMC_HECC_CR2_TEST_MODE_WR_Msk));
+        while ( (HEMC_REGS->HEMC_HECC_CR2 & HEMC_HECC_CR2_TEST_MODE_WR_Msk) == HEMC_HECC_CR2_TEST_MODE_WR_Msk );
     }
 }
 
@@ -318,11 +318,11 @@ static inline uint16_t ${HEMC_INSTANCE_NAME}_TestModeGetCbValue(HEMC_HEMC_CHANNE
 {
     if (channel == HEMC_HEMC_CH_HSMC)
     {
-        return HEMC_REGS->HEMC_HECC_TESTCB0 & HEMC_HECC_TESTCB0_TCB1_Msk;
+        return (uint16_t)(HEMC_REGS->HEMC_HECC_TESTCB0 & HEMC_HECC_TESTCB0_TCB1_Msk);
     }
     else
     {
-        return HEMC_REGS->HEMC_HECC_TESTCB1 & HEMC_HECC_TESTCB1_TCB1_Msk;
+        return (uint16_t)(HEMC_REGS->HEMC_HECC_TESTCB1 & HEMC_HECC_TESTCB1_TCB1_Msk);
     }
 }
 
