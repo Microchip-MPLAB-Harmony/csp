@@ -56,7 +56,7 @@
 </#macro>
 </#compress>
 
-<#if PMC_CKGR_UCKR_UPLLEN && !USE_BOOTLOADER_CLOCKS>
+<#if PMC_CKGR_UCKR_UPLLEN>
 /*********************************************************************************
 Initialize UTMI PLL  (UPLLCK)
 *********************************************************************************/
@@ -66,10 +66,10 @@ static void CLK_UTMIPLLInitialize(void)
     /* Set the UTMI reference clock */
     uint32_t sfr_utmiclktrim_val = SFR_REGS->SFR_UTMICKTRIM & ~SFR_UTMICKTRIM_FREQ_Msk;
 	SFR_REGS->SFR_UTMICKTRIM = sfr_utmiclktrim_val | SFR_UTMICKTRIM_FREQ${UTMI_CKTRIM_FREQ};
-	
+
 	/* Enable UPLL and configure UPLL lock time */
 	PMC_REGS->CKGR_UCKR = CKGR_UCKR_UPLLEN_Msk | CKGR_UCKR_UPLLCOUNT(${PMC_CKGR_UCKR_UPLLCOUNT});
-	
+
 	/* Wait until PLL Lock occurs */
     while ((PMC_REGS->PMC_SR & PMC_SR_LOCKU_Msk) != PMC_SR_LOCKU_Msk);
 }
@@ -101,15 +101,15 @@ static void CLK_AudioPLLInitialize(void)
 
 <#if PMC_SCER_UHPCLK>
 /*********************************************************************************
-Initialize USB FS clock 
+Initialize USB FS clock
 *********************************************************************************/
 
 static void CLK_USBClockInitialize ( void )
-{    	
+{
     /* Configure Full-Speed USB Clock source and Clock Divider */
 	PMC_REGS->PMC_USB = PMC_USB_USBDIV(${PMC_USB_USBDIV-1}) <#if PMC_USB_USBS == "UPLL_CLK"> | PMC_USB_USBS_Msk</#if>;
-	
-	
+
+
 	/* Enable Full-Speed USB Clock Output */
     PMC_REGS->PMC_SCER = PMC_SCER_UHP(1);
 }
@@ -130,7 +130,7 @@ static void CLK_GenericClockInitialize(void)
 <#assign GEN_DIV_VAL = .vars[GEN_DIV] - 1>
     <#if .vars[GEN_ENABLE] == true>
     /* Enable GCLK for peripheral ID ${pid} */
-    PMC_REGS->PMC_PCR = PMC_PCR_PID(${pid}) | PMC_PCR_GCKCSS(${GEN_CSS_VAL}) | PMC_PCR_CMD_Msk | PMC_PCR_GCKDIV(${GEN_DIV_VAL}) | PMC_PCR_EN_Msk | PMC_PCR_GCKEN_Msk; 
+    PMC_REGS->PMC_PCR = PMC_PCR_PID(${pid}) | PMC_PCR_GCKCSS(${GEN_CSS_VAL}) | PMC_PCR_CMD_Msk | PMC_PCR_GCKDIV(${GEN_DIV_VAL}) | PMC_PCR_EN_Msk | PMC_PCR_GCKEN_Msk;
     </#if>
 </#if>
 </#list>
@@ -153,8 +153,8 @@ static void CLK_ProgrammableClockInitialize(void)
 
 	/* Enable selected programmable clock	*/
 	PMC_REGS->PMC_SCER = ${PMC_SCER_PCKX_MSK};
-	
-	/* Wait for clock to be ready	*/	
+
+	/* Wait for clock to be ready	*/
 	while((PMC_REGS->PMC_SR & (${PMC_SR_PCKRDYX_MSK}) ) != (${PMC_SR_PCKRDYX_MSK}));
 }
 </#if>
@@ -201,13 +201,13 @@ Clock Initialize
 *********************************************************************************/
 
 void CLK_Initialize( void )
-{ 
+{
 <#if PMC_AUDIO_PLL0_PLLEN>
     /* Initialize Audio PLL */
     CLK_AudioPLLInitialize();
 
 </#if>
-<#if PMC_CKGR_UCKR_UPLLEN && !USE_BOOTLOADER_CLOCKS>
+<#if PMC_CKGR_UCKR_UPLLEN>
 	/* Initialize UTMI PLL */
 	CLK_UTMIPLLInitialize();
 

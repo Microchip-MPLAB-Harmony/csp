@@ -727,8 +727,7 @@ def __utmi_pll_clock_menu(clk_comp, clk_menu):
     # utmi clock enable
     sym_utmi_pllen = clk_comp.createBooleanSymbol("PMC_CKGR_UCKR_UPLLEN", utmi_clock_menu)
     sym_utmi_pllen.setLabel("UTMI PLL enable")
-    sym_utmi_pllen.setDefaultValue(True)
-    sama5d2_fixed_clk_sym_dict["PMC_CKGR_UCKR_UPLLEN"] = sym_utmi_pllen
+    sym_utmi_pllen.setDefaultValue(False)
 
     # UPLL startup time
     sym_ckgr_uckr_upllcount = clk_comp.createIntegerSymbol("PMC_CKGR_UCKR_UPLLCOUNT", utmi_clock_menu)
@@ -738,7 +737,6 @@ def __utmi_pll_clock_menu(clk_comp, clk_menu):
     sym_ckgr_uckr_upllcount.setMax(15)
     sym_ckgr_uckr_upllcount.setReadOnly(not sym_utmi_pllen.getValue())
     sym_ckgr_uckr_upllcount.setDependencies(set_component_editable, ["PMC_CKGR_UCKR_UPLLEN"])
-    sama5d2_fixed_clk_sym_dict["PMC_CKGR_UCKR_UPLLCOUNT"] = sym_ckgr_uckr_upllcount
 
     # create symbol for FREQ bitfield of UTMI_CKTRIM register
     sym_utmi_cktrim = clk_comp.createKeyValueSetSymbol("UTMI_CKTRIM_FREQ", utmi_clock_menu)
@@ -747,26 +745,22 @@ def __utmi_pll_clock_menu(clk_comp, clk_menu):
     sym_utmi_cktrim.setReadOnly(True)
     sym_utmi_cktrim.setDisplayMode("Description")
     sym_utmi_cktrim.setOutputMode("Key")
-    sama5d2_fixed_clk_sym_dict["UTMI_CKTRIM_FREQ"] = sym_utmi_cktrim
 
     sym_main_clk_multiplier = clk_comp.createIntegerSymbol("CLK_UTMI_MULTIPLIER", utmi_clock_menu)
     sym_main_clk_multiplier.setLabel("Main clock multiplier")
     sym_main_clk_multiplier.setDefaultValue(40)
     sym_main_clk_multiplier.setVisible(False)
-    sama5d2_fixed_clk_sym_dict["CLK_UTMI_MULTIPLIER"] = sym_main_clk_multiplier
 
     # utmi invalid main clock comment
     sym_utmi_invalid_comment = clk_comp.createCommentSymbol("CLK_UTMI_INVALID_MAIN_CLOCK", utmi_clock_menu)
     sym_utmi_invalid_comment.setLabel("Current main clock cannot generate a valid UTMI clock of 480 MHz !!!")
     sym_utmi_invalid_comment.setVisible(False)
-    sama5d2_fixed_clk_sym_dict["CLK_UTMI_INVALID_MAIN_CLOCK"] = sym_utmi_invalid_comment
 
     # utmi clock frequency symbol
     sym_clk_utmi_freq = clk_comp.createIntegerSymbol("UPLL_CLK_FREQUENCY", utmi_clock_menu)
     sym_clk_utmi_freq.setLabel("UTMI clock frequency(Hz)")
     sym_clk_utmi_freq.setDefaultValue(CLK_SAMA5D2_CONSTANTS_DICT["UTMI_PLL_FREQ"])
     sym_clk_utmi_freq.setReadOnly(True)
-    sama5d2_fixed_clk_sym_dict["UPLL_CLK_FREQUENCY"] = sym_clk_utmi_freq
 
 
 def __mck_clock_menu(clk_comp, clk_menu):
@@ -1170,7 +1164,7 @@ def __peripheral_clock_menu(clk_comp, clk_menu, join_path, element_tree, update_
     # for the peripheral which has clock id
     for peripheral in atdf_content.iter("module"):
         for instance in peripheral.iter("instance"):
-                
+
             for param in instance.iter("param"):
                 if "CLOCK_ID" in param.attrib["name"]:
 
@@ -1430,7 +1424,7 @@ global create_default_freq_symbol
 def create_default_freq_symbol (instance_name, clock_comp, clk_menu):
     # find the bus clock freq symbol
     bus_clk_freq = "PCLOCK_HS_CLOCK_FREQUENCY" if instance_name in hs_peripherals_list else "PCLOCK_LS_CLOCK_FREQUENCY"
-    
+
     sym_peripheral_clock_freq = clock_comp.createIntegerSymbol(instance_name + "_CLOCK_FREQUENCY", clk_menu)
     sym_peripheral_clock_freq.setVisible(False)
     sym_peripheral_clock_freq.setReadOnly(True)
