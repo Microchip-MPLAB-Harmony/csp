@@ -190,12 +190,18 @@ def combineCMxCONConfigValues(MySymbol, event):
     dep_symbol = event["symbol"].getID()
     symbol_parts = (dep_symbol.split('_', 2))
     cmp_id = int(symbol_parts[1]) - 1
-    
+
     cchValue     = cmpSym_CMx_CON_CCH[cmp_id].getValue() << 0
     crefValue    = cmpSym_CMx_CON_CREF[cmp_id].getValue() << 4
     evpolValue   = cmpSym_CMx_CON_EVPOL[cmp_id].getValue() << 6
-    ampmodValue  = cmpSym_CMx_CON_AMPMOD[cmp_id].getValue() << 10
-    oaoValue     = cmpSym_CMx_CON_OAO[cmp_id].getValue() << 11
+    if cmpSym_CMx_CON_AMPMOD_present[cmp_id] == True:
+        ampmodValue  = cmpSym_CMx_CON_AMPMOD[cmp_id].getValue() << 10
+    else:
+        ampmodValue = 0
+    if cmpSym_CMx_CON_OAO_present[cmp_id] == True:
+        oaoValue     = cmpSym_CMx_CON_OAO[cmp_id].getValue() << 11
+    else:
+        oaoValue = 0
     oplpwrValue  = cmpSym_CMx_CON_OPLPWR[cmp_id].getValue() << 12
     cpolValue    = cmpSym_CMx_CON_CPOL[cmp_id].getValue() << 13
     coeValue     = cmpSym_CMx_CON_COE[cmp_id].getValue() << 14
@@ -344,7 +350,7 @@ def instantiateComponent(cmpComponent):
     cmpSym_CMx_CON_CFDIV = []
     global cmpSym_CMx_CON_CFDIV_present
     cmpSym_CMx_CON_CFDIV_present = []
-    
+
     global cmpSym_CMxCON
     cmpSym_CMxCON = []
     global cmpSym_CMxMSKCON
@@ -458,7 +464,7 @@ def instantiateComponent(cmpComponent):
         cmpSym_CMx_CON_EVPOL[id].setDisplayMode("Description")
         for ii in cmp_x_EVPOL_names:
             cmpSym_CMx_CON_EVPOL[id].addKey( ii['desc'], ii['value'], ii['key'] )
-        
+
         #Op amp Mode Enable - bitfield not present in all devices
         #Not available on Op Amp Comparator 4 (CM4)
         cmpSym_CMx_CON_AMPMOD.append(id)
@@ -472,11 +478,11 @@ def instantiateComponent(cmpComponent):
             else:
                 cmpSym_CMx_CON_AMPMOD[id].setVisible(False)  # use default, false value - results in no impact to computed register value
             cmpSym_CMx_CON_AMPMOD[id].setDefaultValue(False)
-        
+
         #Op amp Output Enable
         #Not available on Op Amp Comparator 4 (CM4)
         cmpSym_CMx_CON_OAO.append(id)
-        cmpSym_CMx_CON_OAO_present.append(id)   
+        cmpSym_CMx_CON_OAO_present.append(id)
         if (id != 3):
             cmpSym_CMx_CON_OAO[id] = cmpComponent.createBooleanSymbol("CMP_"+str(id+1)+"_CON_OAO", cmpSym_CMx_CON_STRING[id])
             if("OAO" in CMxCON_list):
@@ -486,7 +492,7 @@ def instantiateComponent(cmpComponent):
             else:
                 cmpSym_CMx_CON_OAO[id].setVisible(False)
             cmpSym_CMx_CON_OAO[id].setDefaultValue(False)
-        
+
         #Op amp Power Mode - bitfield not present in all devices
         cmpSym_CMx_CON_OPLPWR.append(id)
         cmpSym_CMx_CON_OPLPWR_present.append(id)
@@ -498,7 +504,7 @@ def instantiateComponent(cmpComponent):
         else:
             cmpSym_CMx_CON_OPLPWR[id].setVisible(False)
         cmpSym_CMx_CON_OPLPWR[id].setDefaultValue(False)
-        
+
         #Comparator output invert
         cmpSym_CMx_CON_CPOL.append(id)
         cmpSym_CMx_CON_CPOL[id] = cmpComponent.createBooleanSymbol("CMP_" +  str(id + 1) + "_CON_CPOL", cmpSym_CMx_CON_STRING[id])
@@ -509,7 +515,7 @@ def instantiateComponent(cmpComponent):
         cmpSym_CMx_CON_COE[id] = cmpComponent.createBooleanSymbol("CMP_"+str(id+1)+"_CON_COE", cmpSym_CMx_CON_STRING[id])
         cmpSym_CMx_CON_COE[id].setLabel(cmpBitFld_CMx_CON_COE.getAttribute("caption"))
         cmpSym_CMx_CON_COE[id].setDefaultValue(False)
-    
+
         #Op amp enable - bitfield not present in all devices
         cmpSym_CMx_CON_OPAON.append(id)
         cmpSym_CMx_CON_OPAON_present.append(id)
@@ -521,7 +527,7 @@ def instantiateComponent(cmpComponent):
         else:
             cmpSym_CMx_CON_OPAON[id].setVisible(False)
         cmpSym_CMx_CON_OPAON[id].setDefaultValue(False)
-    
+
         #Op amp fixed gain enable - bitfield not present in all devices
         cmpSym_CMx_CON_ENPGA.append(id)
         cmpSym_CMx_CON_ENPGA_present.append(id)
@@ -545,7 +551,7 @@ def instantiateComponent(cmpComponent):
         else:
             cmpSym_CMx_CON_HYSPOL[id].setVisible(False)
         cmpSym_CMx_CON_HYSPOL[id].setDefaultValue(False)
-    
+
         #Op amp Hysteresis Selection - bitfield not present in all devices
         cmpSym_CMx_CON_HYSSEL.append(id)
         cmpSym_CMx_CON_HYSSEL_present.append(id)
@@ -563,7 +569,7 @@ def instantiateComponent(cmpComponent):
             cmpSym_CMx_CON_HYSSEL[id] =  cmpComponent.createBooleanSymbol("CMP_"+str(id+1)+"_CON_HYSSEL", cmpSym_CMx_CON_STRING[id])
             cmpSym_CMx_CON_HYSSEL[id].setVisible(False)
             cmpSym_CMx_CON_HYSSEL[id].setDefaultValue(False)
-        
+
         #Op amp Comparator Output Filter Clock Source Select - bitfield not present in all devices
         cmpSym_CMx_CON_CFSEL.append(id)
         cmpSym_CMx_CON_CFSEL_present.append(id)
@@ -576,7 +582,7 @@ def instantiateComponent(cmpComponent):
             cmpSym_CMx_CON_CFSEL[id].setLabel(cmpBitFld_CMx_CON_CFSEL.getAttribute("caption"))
             cmpSym_CMx_CON_CFSEL[id].setDefaultValue(0)
             for ii in cmp_x_CFSEL_names:
-                cmpSym_CMx_CON_CFSEL[id].addKey( ii['desc'], ii['value'], ii['key'] )     
+                cmpSym_CMx_CON_CFSEL[id].addKey( ii['desc'], ii['value'], ii['key'] )
         else:
             cmpSym_CMx_CON_CFSEL[id] =  cmpComponent.createBooleanSymbol("CMP_"+str(id+1)+"_CON_CFSEL", cmpSym_CMx_CON_STRING[id])
             cmpSym_CMx_CON_CFSEL[id].setVisible(False)
@@ -593,7 +599,7 @@ def instantiateComponent(cmpComponent):
         else:
             cmpSym_CMx_CON_CFLTREN[id].setVisible(False)
         cmpSym_CMx_CON_CFLTREN[id].setDefaultValue(False)
-        
+
         #Op amp Comparator Output Filter Clock Divide Select - bitfield not present in all devices
         cmpSym_CMx_CON_CFDIV.append(id)
         cmpSym_CMx_CON_CFDIV_present.append(id)
@@ -611,7 +617,7 @@ def instantiateComponent(cmpComponent):
             cmpSym_CMx_CON_CFDIV[id] =  cmpComponent.createBooleanSymbol("CMP_"+str(id+1)+"_CON_CFDIV", cmpSym_CMx_CON_STRING[id])
             cmpSym_CMx_CON_CFDIV[id].setVisible(False)
             cmpSym_CMx_CON_CFDIV[id].setDefaultValue(False)
-        
+
         #Collecting user input to combine into CMPxCON register
         #CMPxCON is updated every time a user selection changes
         cmpSym_CMxCON.append(id)
@@ -619,8 +625,8 @@ def instantiateComponent(cmpComponent):
         cmpSym_CMxCON[id].setDefaultValue(0)
         cmpSym_CMxCON[id].setVisible(False)
         cmpSym_CMxCON[id].setDependencies(combineCMxCONConfigValues, ["CMP_"+str(id+1)+"_CON_CREF", "CMP_"+str(id+1)+"_CON_CCH", "CMP_"+str(id+1)+"_CON_EVPOL", "CMP_"+str(id+1)+"_CON_AMPMOD", "CMP_"+str(id+1)+"_CON_OAO", "CMP_"+str(id+1)+"_CON_CPOL", "CMP_"+str(id+1)+"_CON_COE", "CMP_"+str(id+1)+"_CON_OPAON", "CMP_"+str(id+1)+"_CON_ENPGA", "CMP_"+str(id+1)+"_CON_HYSPOL", "CMP_"+str(id+1)+"_CON_HYSSEL", "CMP_"+str(id+1)+"_CON_CFSEL", "CMP_"+str(id+1)+"_CON_CFLTREN", "CMP_"+str(id+1)+"_CON_CFDIV", "CMP_"+str(id+1)+"_CON_OPLPWR"])
-         
-        
+
+
         #Menu item for output blanking. Only available on PIC32MKxxMCxx devices.
         if( ("PIC32MK" in Variables.get("__PROCESSOR")) and (("MC" in Variables.get("__PROCESSOR"))) ):
             cmpSym_CMx_MSKCON_STRING.append(id)
@@ -839,4 +845,3 @@ def instantiateComponent(cmpComponent):
     cmpSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     cmpSystemDefFile.setSourcePath("../peripheral/cmp_01427/templates/system/system_definitions.h.ftl")
     cmpSystemDefFile.setMarkup(True)
-
