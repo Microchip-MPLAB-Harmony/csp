@@ -1,0 +1,3 @@
+<#if !rtc?? || !rtt?? || !rstc?? || !pit??>
+	SYSC_Disable( );
+</#if>

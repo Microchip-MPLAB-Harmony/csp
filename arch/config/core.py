@@ -598,6 +598,7 @@ def instantiateComponent( coreComponent ):
     systemInitFuseList =        coreComponent.createListSymbol( "LIST_SYSTEM_INIT_C_CONFIG_BITS_INITIALIZATION",    None )
     systemInitDrvList =         coreComponent.createListSymbol( "LIST_SYSTEM_INIT_C_DRIVER_INITIALIZATION_DATA",    None )
     systemInitLibList =         coreComponent.createListSymbol( "LIST_SYSTEM_INIT_C_LIBRARY_INITIALIZATION_DATA",   None )
+    systemInitStaticFuncList =  coreComponent.createListSymbol( "LIST_SYSTEM_INIT_C_INITIALIZER_STATIC_FUNCTIONS",  None )
     systemInitSysList =         coreComponent.createListSymbol( "LIST_SYSTEM_INIT_C_SYSTEM_INITIALIZATION",         None )
     systemAppInitDataList =     coreComponent.createListSymbol( "LIST_SYSTEM_INIT_C_APP_INITIALIZE_DATA",           None )
 

@@ -77,6 +77,19 @@ coreComponent.addPlugin("../peripheral/xdmac_11161/plugin/dmamanager.jar")
 # load wdt
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_44154/config/wdt.py")
 
+
+syscSharedInterruptFile = coreComponent.createFileSymbol("SYSC_INITIALIZE_DEF", None)
+syscSharedInterruptFile.setType("STRING")
+syscSharedInterruptFile.setOutputName("core.LIST_SYSTEM_INIT_C_INITIALIZER_STATIC_FUNCTIONS")
+syscSharedInterruptFile.setSourcePath("arm/templates/common/shared_interrupt/SAM9X6.c.ftl")
+syscSharedInterruptFile.setMarkup(True)
+
+syscSharedInterruptSysInitFile = coreComponent.createFileSymbol("SYSC_INITIALIZE_CALL", None)
+syscSharedInterruptSysInitFile.setType("STRING")
+syscSharedInterruptSysInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_START")
+syscSharedInterruptSysInitFile.setSourcePath("arm/templates/common/shared_interrupt/sysc_initialize.c.ftl")
+syscSharedInterruptSysInitFile.setMarkup(True)
+
 compiler_choice = deviceFamily.getComponent().getSymbolByID("COMPILER_CHOICE")
 #if compiler_choice.getSelectedKey() == "XC32":
 armSysStartSourceFile = coreComponent.createFileSymbol(None, None)
