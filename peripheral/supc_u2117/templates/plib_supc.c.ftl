@@ -293,7 +293,7 @@ void ${SUPC_INSTANCE_NAME}_Initialize( void )
 </#if>
 <#if SUPC_INTERRUPT_ENABLE = true>
     /* Enable BOD33 detect interrupt */
-    ${SUPC_INSTANCE_NAME}_REGS->SUPC_INTENSET = SUPC_INTFLAG_BOD33DET_Msk;
+    ${SUPC_INSTANCE_NAME}_REGS->SUPC_INTENSET = SUPC_INTFLAG_${SUPC_BOD_NAME}DET_Msk;
 </#if>
 }
 
@@ -345,8 +345,8 @@ void ${SUPC_INSTANCE_NAME}_InterruptHandler( void )
 {
     if ((${SUPC_INSTANCE_NAME}_REGS->SUPC_INTFLAG & SUPC_INTFLAG_${SUPC_BOD_NAME}DET_Msk) == SUPC_INTFLAG_${SUPC_BOD_NAME}DET_Msk)
     {
-        ${SUPC_INSTANCE_NAME}_REGS->SUPC_INTFLAG = SUPC_INTFLAG_${SUPC_BOD_NAME}DET_Msk;        
-		
+        ${SUPC_INSTANCE_NAME}_REGS->SUPC_INTFLAG = SUPC_INTFLAG_${SUPC_BOD_NAME}DET_Msk;
+
 		if (${SUPC_INSTANCE_NAME?lower_case}CallbackObject.callback != NULL)
         {
             ${SUPC_INSTANCE_NAME?lower_case}CallbackObject.callback(${SUPC_INSTANCE_NAME?lower_case}CallbackObject.context);
