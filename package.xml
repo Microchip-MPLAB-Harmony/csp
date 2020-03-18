@@ -1,3 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Package name="csp" required="true">
+    <Dependencies>
+        <Dependency name="mhc" version="3.3.5"/>
+        <Dependency name="dev_packs" version="3.6.1"/>
+    </Dependencies>
 </Package>
