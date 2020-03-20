@@ -40,6 +40,22 @@ cacheAlign.setLabel("Cache Alignment Length")
 cacheAlign.setVisible(False)
 cacheAlign.setDefaultValue(32)
 
+ddrNoCacheStart = int(Database.getSymbolValue("core", "DDRAM_NO_CACHE_START"), 0)
+ddrCacheStart = int(Database.getSymbolValue("core", "DDRAM_CACHE_START"), 0)
+ddrCacheEnd = int(Database.getSymbolValue("core", "DDRAM_CACHE_END"), 0)
+
+noCacheBegin = coreComponent.createStringSymbol("NO_CACHE_START", cacheMenu)
+noCacheBegin.setVisible(False)
+noCacheBegin.setDefaultValue("0x%X"% (ddrNoCacheStart >> 20))
+
+cacheBegin = coreComponent.createStringSymbol("CACHE_START", cacheMenu)
+cacheBegin.setVisible(False)
+cacheBegin.setDefaultValue("0x%X"% (ddrCacheStart >> 20))
+
+cacheEnd = coreComponent.createStringSymbol("CACHE_END", cacheMenu)
+cacheEnd.setVisible(False)
+cacheEnd.setDefaultValue("0x%X"% ((ddrCacheEnd + 1) >> 20))
+
 configName = Variables.get("__CONFIGURATION_NAME")
 
 mmuFile = coreComponent.createFileSymbol("MMU_C", None)

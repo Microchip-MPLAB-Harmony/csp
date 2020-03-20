@@ -386,14 +386,14 @@ void MMU_Initialize(void)
 
     /* 0x20000000: DDR Chip Select */
     /* (16MB strongly ordered, 448MB cacheable) */
-    for (addr = 0x200; addr < 0x210; addr++)
+    for (addr = ${NO_CACHE_START}; addr < ${CACHE_START}; addr++)
         tlb[addr] = TTB_SECT_ADDR(addr << 20)
                       | TTB_SECT_AP_FULL_ACCESS
                       | TTB_SECT_DOMAIN(0xf)
                       | TTB_SECT_EXEC
                       | TTB_SECT_STRONGLY_ORDERED
                       | TTB_TYPE_SECT;
-    for (addr = 0x210; addr < 0x400; addr++)
+    for (addr = ${CACHE_START}; addr < ${CACHE_END}; addr++)
         tlb[addr] = TTB_SECT_ADDR(addr << 20)
                       | TTB_SECT_AP_FULL_ACCESS
                       | TTB_SECT_DOMAIN(0xf)

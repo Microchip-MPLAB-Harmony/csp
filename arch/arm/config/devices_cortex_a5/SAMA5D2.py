@@ -101,6 +101,52 @@ Database.setSymbolValue("core", "APP_START_ADDRESS", dramStartAddress.getValue()
 
 memory_loc.setDependencies(setAppStartAddress, ["EXECUTION_MEMORY", "DRAM_APP_START_ADDRESS"])
 
+#DRAM cache configuration
+ddr_node = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"DDR_CS\"]")
+processor = Variables.get("__PROCESSOR")
+ddr_start = int(ddr_node.getAttribute("start"), 0)
+#Set 16MB as non-cacheable region and rest as cacheable region
+non_cacheable_size = 16 * pow(2, 20)
+if processor.endswith("2G"):
+    #2 Gbit memory
+    ddr_size = (2 * pow(2,30)) / 8
+elif processor.endswith("1G"):
+    # 1 Gbit memory
+    ddr_size = (1 * pow(2,30)) / 8
+elif processor.endswith("5M"):
+    #512 Mbit memory
+    ddr_size = (512 * pow(2,20)) / 8
+    #reduce the non cacheable region to 8 MB
+    non_cacheable_size = 8 * pow(2, 20)
+else:
+    #Non SiP variants, use entire DRAM region
+    ddr_size = int(ddr_node.getAttribute("size"), 0)
+
+dram_non_cacheable_start_addr = coreComponent.createStringSymbol("DDRAM_NO_CACHE_START", None)
+dram_non_cacheable_start_addr.setVisible(False)
+dram_non_cacheable_start_addr.setDefaultValue("0x%X" % ddr_start)
+
+dram_non_cacheable_size = coreComponent.createStringSymbol("DDRAM_NO_CACHE_SIZE", None)
+dram_non_cacheable_size.setVisible(False)
+dram_non_cacheable_size.setDefaultValue("0x%X" % non_cacheable_size)
+
+dram_non_cacheable_end_addr = coreComponent.createStringSymbol("DDRAM_NO_CACHE_END", None)
+dram_non_cacheable_end_addr.setVisible(False)
+dram_non_cacheable_end_addr.setDefaultValue("0x%X" % (ddr_start + non_cacheable_size - 1))
+
+dram_cacheable_start_addr = coreComponent.createStringSymbol("DDRAM_CACHE_START", None)
+dram_cacheable_start_addr.setVisible(False)
+dram_cacheable_start_addr.setDefaultValue("0x%X" % (ddr_start + non_cacheable_size))
+
+dram_cacheable_size = coreComponent.createStringSymbol("DDRAM_CACHE_SIZE", None)
+dram_cacheable_size.setVisible(False)
+dram_cacheable_size.setDefaultValue("0x%X" % (ddr_size - non_cacheable_size))
+
+dram_cacheable_end_addr = coreComponent.createStringSymbol("DDRAM_CACHE_END", None)
+dram_cacheable_end_addr.setVisible(False)
+dram_cacheable_end_addr.setDefaultValue("0x%X" % (ddr_start + ddr_size - 1))
+
+
 #load MMU with default 1:1 mapping so we can use cache
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/mmu_v7a/config/mmu.py")
 
