@@ -56,10 +56,15 @@ def updateStartupFile(symbol, event):
         symbol.setOutputName("cstartup.s")
 
 def setAppStartAddress(symbol, event):
-    if event["value"] == "DDR":
-        Database.setSymbolValue("core", "APP_START_ADDRESS", "0x26f00000")
+    comp = event["source"]
+    ddr_mem =  comp.getSymbolValue("EXECUTION_MEMORY") == "DDR"
+    if ddr_mem:
+        exec_addr = comp.getSymbolValue("DRAM_APP_START_ADDRESS")
+        comp.setSymbolValue("APP_START_ADDRESS", exec_addr)
     else:
-        Database.setSymbolValue("core", "APP_START_ADDRESS", "0x0")
+        comp.setSymbolValue("APP_START_ADDRESS", "0x0")
+
+    comp.getSymbolByID("DRAM_APP_START_ADDRESS").setVisible(ddr_mem)
 
 print ("Loading System Services for " + Variables.get("__PROCESSOR"))
 
@@ -84,12 +89,17 @@ threadXVectors.setReadOnly(True)
 threadXVectors.setDefaultValue(False)
 
 #SRAM or DDR
-Database.setSymbolValue("core", "APP_START_ADDRESS", "0x26f00000")
 memory_loc = coreComponent.createComboSymbol("EXECUTION_MEMORY", cortexMenu, ['DDR', 'SRAM'])
 memory_loc.setLabel("Execution Memory")
 memory_loc.setDefaultValue("DDR")
 memory_loc.setDescription("Generate image to run out of either SRAM or DDR")
-memory_loc.setDependencies(setAppStartAddress, ["EXECUTION_MEMORY"])
+
+dramStartAddress = coreComponent.createStringSymbol("DRAM_APP_START_ADDRESS", cortexMenu)
+dramStartAddress.setLabel("Execution start address in DDR")
+dramStartAddress.setDefaultValue("0x26f00000")
+Database.setSymbolValue("core", "APP_START_ADDRESS", dramStartAddress.getValue())
+
+memory_loc.setDependencies(setAppStartAddress, ["EXECUTION_MEMORY", "DRAM_APP_START_ADDRESS"])
 
 #load MMU with default 1:1 mapping so we can use cache
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/mmu_v7a/config/mmu.py")
