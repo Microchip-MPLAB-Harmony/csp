@@ -18,25 +18,25 @@
 #define PIOG_REGS       ((pio_group_registers_t*)(&(PIO_REGS->PIO_GROUP[6])))
 </#if>
 
-<#compress> 
+<#compress>
 <#macro mhc_process_leds>
 	<#assign LED_Name_List = []>
 	<#assign LED_PortPin_List = []>
 	<#assign LED_PortChannel_List = []>
 	<#assign LED_ActiveLevel_List = []>
-	
+
 	<#list 1..PIO_PIN_TOTAL as i>
 		<#assign functype = "PIN_" + i + "_FUNCTION_TYPE">
 		<#assign funcname = "PIN_" + i + "_FUNCTION_NAME">
 		<#assign pinport = "PIN_" + i + "_PIO_PIN">
 		<#assign pinchannel = "PIN_" + i + "_PIO_CHANNEL">
-		
+
 		<#if .vars[functype]?has_content>
 			<#if (.vars[functype] == "LED_AH") || (.vars[functype] == "LED_AL")>
 				<#if .vars[funcname]?has_content>
 					<#if .vars[pinport]?has_content>
 						<#if .vars[pinchannel]?has_content>
-						
+
 							<#assign LED_Name_List = LED_Name_List + [.vars[funcname]]>
 							<#assign LED_PortPin_List = LED_PortPin_List + [.vars[pinport]]>
 							<#assign LED_PortChannel_List = LED_PortChannel_List + [.vars[pinchannel]]>
@@ -45,7 +45,7 @@
 							<#else>
 								<#assign LED_ActiveLevel_List = LED_ActiveLevel_List + ["Low"]>
 							</#if>
-							
+
 						</#if>
 					</#if>
 				</#if>
@@ -62,7 +62,7 @@
 	<#assign SWITCH_PortPin_List = []>
 	<#assign SWITCH_PortChannel_List = []>
 	<#assign SWITCH_ActiveLevel_List = []>
-	
+
 	<#list 1..PIO_PIN_TOTAL as i>
 		<#assign functype = "PIN_" + i + "_FUNCTION_TYPE">
 		<#assign funcname = "PIN_" + i + "_FUNCTION_NAME">
@@ -74,7 +74,7 @@
 				<#if .vars[funcname]?has_content>
 					<#if .vars[pinport]?has_content>
 						<#if .vars[pinchannel]?has_content>
-						
+
 							<#assign SWITCH_Name_List = SWITCH_Name_List + [.vars[funcname]]>
 							<#assign SWITCH_PortPin_List = SWITCH_PortPin_List + [.vars[pinport]]>
 							<#assign SWITCH_PortChannel_List = SWITCH_PortChannel_List + [.vars[pinchannel]]>
@@ -83,7 +83,7 @@
 							<#else>
 								<#assign SWITCH_ActiveLevel_List = SWITCH_ActiveLevel_List + ["Low"]>
 							</#if>
-							
+
 						</#if>
 					</#if>
 				</#if>
@@ -100,19 +100,19 @@
 	<#assign VBUS_PortPin_List = []>
 	<#assign VBUS_PortChannel_List = []>
 	<#assign VBUS_ActiveLevel_List = []>
-	
+
 	<#list 1..PIO_PIN_TOTAL as i>
 		<#assign functype = "PIN_" + i + "_FUNCTION_TYPE">
 		<#assign funcname = "PIN_" + i + "_FUNCTION_NAME">
 		<#assign pinport = "PIN_" + i + "_PIO_PIN">
 		<#assign pinchannel = "PIN_" + i + "_PIO_CHANNEL">
-		
+
 		<#if .vars[functype]?has_content>
 			<#if (.vars[functype] == "VBUS_AH") || (.vars[functype] == "VBUS_AL") || (.vars[functype] == "VBUS")>
 				<#if .vars[funcname]?has_content>
 					<#if .vars[pinport]?has_content>
 						<#if .vars[pinchannel]?has_content>
-						
+
 							<#assign VBUS_Name_List = VBUS_Name_List + [.vars[funcname]]>
 							<#assign VBUS_PortPin_List = VBUS_PortPin_List + [.vars[pinport]]>
 							<#assign VBUS_PortChannel_List = VBUS_PortChannel_List + [.vars[pinchannel]]>
@@ -121,7 +121,7 @@
 							<#else>
 								<#assign VBUS_ActiveLevel_List = VBUS_ActiveLevel_List + ["Low"]>
 							</#if>
-							
+
 						</#if>
 					</#if>
 				</#if>
@@ -143,24 +143,24 @@
 		<#list LED_PortChannel_List as ledChannel>
 			<#list LED_PortPin_List as ledPinPos>
 				<#list LED_ActiveLevel_List as ledActiveLevel>
-				
+
 					<#if ledName?counter == ledChannel?counter>
 						<#if ledName?counter == ledPinPos?counter>
 							<#if ledName?counter == ledActiveLevel?counter>
 								/*** LED Macros for ${ledName} ***/
-								#define ${ledName}_Toggle()     do { PIO${ledChannel}_REGS->PIO_MSKR = (1<<${ledPinPos}); (PIO${ledChannel}_REGS->PIO_ODSR ^= (1<<${ledPinPos})); } while (0)
+								#define ${ledName}_Toggle()     do { PIO${ledChannel}_REGS->PIO_MSKR = (1U<<${ledPinPos}); (PIO${ledChannel}_REGS->PIO_ODSR ^= (1U<<${ledPinPos})); } while (0)
 								#define ${ledName}_Get()        ((PIO${ledChannel}_REGS->PIO_PDSR >> ${ledPinPos}) & 0x1)
 								<#if ledActiveLevel == "High">
-									#define ${ledName}_On()         (PIO${ledChannel}_REGS->PIO_SODR = (1<<${ledPinPos}))
-									#define ${ledName}_Off()        (PIO${ledChannel}_REGS->PIO_CODR = (1<<${ledPinPos}))
+									#define ${ledName}_On()         (PIO${ledChannel}_REGS->PIO_SODR = (1U<<${ledPinPos}))
+									#define ${ledName}_Off()        (PIO${ledChannel}_REGS->PIO_CODR = (1U<<${ledPinPos}))
 								<#else>
-									#define ${ledName}_On()         (PIO${ledChannel}_REGS->PIO_CODR = (1<<${ledPinPos}))
-									#define ${ledName}_Off()        (PIO${ledChannel}_REGS->PIO_SODR = (1<<${ledPinPos}))
+									#define ${ledName}_On()         (PIO${ledChannel}_REGS->PIO_CODR = (1U<<${ledPinPos}))
+									#define ${ledName}_Off()        (PIO${ledChannel}_REGS->PIO_SODR = (1U<<${ledPinPos}))
 								</#if>
 							</#if>
 						</#if>
 					</#if>
-					
+
 				</#list>
 			</#list>
 		</#list>
@@ -172,7 +172,7 @@
 		<#list SWITCH_PortChannel_List as switchChannel>
 			<#list SWITCH_PortPin_List as switchPinPos>
 				<#list SWITCH_ActiveLevel_List as switchActiveLevel>
-				
+
 					<#if switchName?counter == switchChannel?counter>
 						<#if switchName?counter == switchPinPos?counter>
 							<#if switchName?counter == switchActiveLevel?counter>
@@ -188,8 +188,8 @@
 							</#if>
 						</#if>
 					</#if>
-					
-				</#list>					
+
+				</#list>
 			</#list>
 		</#list>
 	</#list>
@@ -206,19 +206,19 @@
 							<#if vbusChannel?counter == vbusActiveLevel?counter>
 								/*** VBUS Macros for ${vbusName} ***/
 								<#if vbusActiveLevel == "High">
-									#define ${vbusName}_PowerEnable()         (PIO${vbusChannel}_REGS->PIO_SODR = (1<<${vbusPinPos}))
-									#define ${vbusName}_PowerDisable()        (PIO${vbusChannel}_REGS->PIO_CODR = (1<<${vbusPinPos}))
+									#define ${vbusName}_PowerEnable()         (PIO${vbusChannel}_REGS->PIO_SODR = (1U<<${vbusPinPos}))
+									#define ${vbusName}_PowerDisable()        (PIO${vbusChannel}_REGS->PIO_CODR = (1U<<${vbusPinPos}))
 								<#else>
-									#define ${vbusName}_PowerEnable()         (PIO${vbusChannel}_REGS->PIO_CODR = (1<<${vbusPinPos}))
-									#define ${vbusName}_PowerEnable()         (PIO${vbusChannel}_REGS->PIO_SODR = (1<<${vbusPinPos}))
+									#define ${vbusName}_PowerEnable()         (PIO${vbusChannel}_REGS->PIO_CODR = (1U<<${vbusPinPos}))
+									#define ${vbusName}_PowerEnable()         (PIO${vbusChannel}_REGS->PIO_SODR = (1U<<${vbusPinPos}))
 								</#if>
 							</#if>
 						</#if>
-					</#if>					
+					</#if>
 				</#list>
 			</#list>
 		</#list>
-	</#list>		
+	</#list>
 </#if>
 </#compress>
 
