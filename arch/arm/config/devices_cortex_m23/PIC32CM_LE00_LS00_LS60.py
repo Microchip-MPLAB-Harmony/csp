@@ -211,7 +211,7 @@ coreComponent.addPlugin("../peripheral/port_u2210/plugin/port_u2210.jar")
 
 # load clock manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/clk_pic32cm_le00_ls00_ls60/config/clock.py")
-coreComponent.addPlugin("../peripheral/clk_pic32cm_le00_ls00_ls60/plugin/clk_pic32cm_le00_ls00.jar")
+coreComponent.addPlugin("../peripheral/clk_pic32cm_le00_ls00_ls60/plugin/clk_pic32cm_le00_ls00_ls60.jar")
 
 #load mpu
 # execfile(Variables.get("__CORE_DIR") + "/../peripheral/mpu/config/mpu.py")
