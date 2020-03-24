@@ -305,6 +305,8 @@ def instantiateComponent(spiComponent):
     spiValGrp_SPIxCON_MCLKSEL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/value-group@[name="' + spiInstanceName.getValue() + 'CON__MCLKSEL"]')
     spiBitField_SPIxCON_MCLKSEL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/register-group@[name="SPI"]/register@[name="' + spiInstanceName.getValue() + 'CON"]/bitfield@[name="MCLKSEL"]')
 
+    spiValGrp_SPIxCON_SMP = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/value-group@[name="' + spiInstanceName.getValue() + 'CON__SMP"]')
+    
     #Clock enable
     Database.setSymbolValue("core", spiInstanceName.getValue() + "_CLOCK_ENABLE", True, 1)
 
@@ -460,6 +462,16 @@ def instantiateComponent(spiComponent):
     spiSym_SPICON_CLKPH.setDisplayMode( "Description" )
     for ii in clkph_names:
         spiSym_SPICON_CLKPH.addKey( ii['key'],ii['value'], ii['desc'] )
+
+    smp_names = []
+    _get_bitfield_names(spiValGrp_SPIxCON_SMP, smp_names)
+    spiSym_SPICON_SMP = spiComponent.createKeyValueSetSymbol( "SPI_SPICON_SMP",None)
+    spiSym_SPICON_SMP.setLabel("SPI Data Input Sample Phase bit")
+    spiSym_SPICON_SMP.setDefaultValue(1)
+    spiSym_SPICON_SMP.setOutputMode( "Value" )
+    spiSym_SPICON_SMP.setDisplayMode( "Description" )
+    for ii in smp_names:
+        spiSym_SPICON_SMP.addKey( ii['key'],ii['value'], ii['desc'] )
 
     ## Slave slect pin enable bit
     ssen_names = []
