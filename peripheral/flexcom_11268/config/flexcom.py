@@ -24,6 +24,8 @@
 ################################################################################
 #### Business Logic ####
 ################################################################################
+global flexcomSym_RingBuffer_Enable
+
 def flexcomInterruptEnableDisableCallback( uartInterruptEnableDisable, event ):
     flexcom_mode = flexcomSym_OperatingMode.getSelectedKey()
     if (flexcom_mode != "NO_COM") and (Database.getSymbolValue(deviceNamespace, flexcom_mode + "_INTERRUPT_MODE") == True):
@@ -83,11 +85,19 @@ def onCapabilityDisconnected(event):
     flexcomSym_OperatingMode.setReadOnly(False)
 
 def setFLEXCOMCodeGenerationProperty(symbol, event):
+    global flexcomSym_RingBuffer_Enable   
+
+    usartRingBufferMode = ""
+    
     ####################################### Code Generation  ##########################################
     configName = Variables.get("__CONFIGURATION_NAME")
     flexcom_mode = flexcomSym_OperatingMode.getSelectedKey()
+    if flexcom_mode == "USART":
+        if flexcomSym_RingBuffer_Enable.getValue() == True:
+            usartRingBufferMode = "_ring_buffer"
+            
     if (flexcom_mode != "NO_COM"):
-        flexcomHeaderFile.setSourcePath("../peripheral/flexcom_" + flexcomModuleID + "/templates/plib_flexcom_" + flexcom_mode.lower() + ".h.ftl")
+        flexcomHeaderFile.setSourcePath("../peripheral/flexcom_" + flexcomModuleID + "/templates/plib_flexcom_" + flexcom_mode.lower() + usartRingBufferMode + ".h.ftl")
         flexcomHeaderFile.setOutputName("plib_" + deviceNamespace + "_" + flexcom_mode.lower() + ".h")
         flexcomHeaderFile.setDestPath("/peripheral/flexcom/" + flexcom_mode.lower() + "/")
         flexcomHeaderFile.setProjectPath("config/" + configName + "/peripheral/flexcom/" + flexcom_mode.lower() + "/")
@@ -106,7 +116,7 @@ def setFLEXCOMCodeGenerationProperty(symbol, event):
         flexcomCommonHeaderFile.setType("HEADER")
         flexcomCommonHeaderFile.setEnabled(True)
 
-        flexcomSourceFile.setSourcePath("../peripheral/flexcom_" + flexcomModuleID + "/templates/plib_flexcom" + "_" + flexcom_mode.lower() + ".c.ftl")
+        flexcomSourceFile.setSourcePath("../peripheral/flexcom_" + flexcomModuleID + "/templates/plib_flexcom" + "_" + flexcom_mode.lower() + usartRingBufferMode + ".c.ftl")
         flexcomSourceFile.setOutputName("plib_" + deviceNamespace + "_" + flexcom_mode.lower() + ".c")
         flexcomSourceFile.setDestPath("/peripheral/flexcom/" + flexcom_mode.lower() + "/")
         flexcomSourceFile.setProjectPath("config/" + configName + "/peripheral/flexcom/" + flexcom_mode.lower() + "/")
@@ -278,7 +288,7 @@ def instantiateComponent(flexcomComponent):
     flexcomSym_CodeGeneration = flexcomComponent.createIntegerSymbol("FLEXCOM_CODE_GENERATION", None)
     flexcomSym_CodeGeneration.setDefaultValue(flexcomSym_OperatingMode.getValue())
     flexcomSym_CodeGeneration.setVisible(False)
-    flexcomSym_CodeGeneration.setDependencies(setFLEXCOMCodeGenerationProperty, ["FLEXCOM_MODE"])
+    flexcomSym_CodeGeneration.setDependencies(setFLEXCOMCodeGenerationProperty, ["FLEXCOM_MODE", "USART_RING_BUFFER_ENABLE"])
     flexcomModuleNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"FLEXCOM\"]")
     flexcomModuleID = flexcomModuleNode.getAttribute("id")
 
