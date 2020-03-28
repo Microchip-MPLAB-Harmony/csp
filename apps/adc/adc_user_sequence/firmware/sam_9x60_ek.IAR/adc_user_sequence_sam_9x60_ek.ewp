@@ -32,11 +32,11 @@
                 </option>
                 <option>
                     <name>Input description</name>
-                    <state></state>
+                    <state>Automatic choice of formatter, without multibyte support.</state>
                 </option>
                 <option>
                     <name>Output description</name>
-                    <state></state>
+                    <state>Automatic choice of formatter, without multibyte support.</state>
                 </option>
                 <option>
                     <name>GOutputBinary</name>
@@ -58,11 +58,11 @@
                 </option>
                 <option>
                     <name>RTDescription</name>
-                    <state></state>
+                    <state>Use the normal configuration of the C/C++ runtime library. No locale interface, C locale, no file descriptor support, no multibytes in printf and scanf, and no hex floats in strtod.</state>
                 </option>
                 <option>
                     <name>OGProductVersion</name>
-                    <state>8.32.3.20186</state>
+                    <state>8.40.1.21529</state>
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
@@ -86,7 +86,7 @@
                 </option>
                 <option>
                     <name>GEndianModeBE</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>OGBufferedTerminalOutput</name>
@@ -117,7 +117,7 @@
                 <option>
                     <name>GBECoreSlave</name>
                     <version>27</version>
-                    <state>38</state>
+                    <state>12</state>
                 </option>
                 <option>
                     <name>OGUseCmsis</name>
@@ -220,8 +220,7 @@
                 <debug>1</debug>
                 <option>
                     <name>CCDefines</name>
-                    <state></state>
-                </option>
+                    </option>
                 <option>
                     <name>CCPreprocFile</name>
                     <state>0</state>
@@ -345,13 +344,13 @@
                 </option>
                 <option>
                     <name>CCIncludePath2</name>
-                    <state>$PROJ_DIR$\..\..\firmware\src</state>
-                    <state>$PROJ_DIR$\..\..\firmware\src\config\sam_9x60_ek</state>
-                    <state>$PROJ_DIR$\..\..\firmware\src\packs\SAM9X60_DFP</state>
-                    <state>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS\CMSIS\Core\Include</state>
-                    <state>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS</state>
-                    <state>$PROJ_DIR$\..\..\firmware\src\arm</state>
-                </option>
+                    <state>$PROJ_DIR$\..\src</state>
+                    <state>$PROJ_DIR$\..\src\config\sam_9x60_ek</state>
+                    <state>$PROJ_DIR$\..\src\packs\SAM9X60_DFP</state>
+                    <state>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\Core\Include</state>
+                    <state>$PROJ_DIR$\..\src\packs\CMSIS</state>
+                    <state>$PROJ_DIR$\..\src\arm</state>
+                    </option>
                 <option>
                     <name>CCStdIncCheck</name>
                     <state>0</state>
@@ -528,8 +527,7 @@
                 </option>
                 <option>
                     <name>ADefines</name>
-                    <state></state>
-                </option>
+                    </option>
                 <option>
                     <name>AList</name>
                     <state>0</state>
@@ -604,7 +602,7 @@
                 </option>
                 <option>
                     <name>AOutputFile</name>
-                    <state>$FILE_BNAME$.o</state>
+                    <state></state>
                 </option>
                 <option>
                     <name>ALimitErrorsCheck</name>
@@ -620,13 +618,7 @@
                 </option>
                 <option>
                     <name>AUserIncludes</name>
-                    <state>$PROJ_DIR$\..\..\firmware\src</state>
-                    <state>$PROJ_DIR$\..\..\firmware\src\config\sam_9x60_ek</state>
-                    <state>$PROJ_DIR$\..\..\firmware\src\packs\SAM9X60_DFP</state>
-                    <state>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS\CMSIS\Core\Include</state>
-                    <state>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS</state>
-                    <state>$PROJ_DIR$\..\..\firmware\src\arm</state>
-                </option>
+                    </option>
                 <option>
                     <name>AExtraOptionsCheckV2</name>
                     <state>0</state>
@@ -714,7 +706,7 @@
                 </option>
                 <option>
                     <name>IlinkOutputFile</name>
-                    <state>adc_user_sequence_sam_9x60_ek.out</state>
+                    <state>sam_9x60_ek.out</state>
                 </option>
                 <option>
                     <name>IlinkDebugInfoEnable</name>
@@ -778,7 +770,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>$PROJ_DIR$\..\..\firmware\src\config\sam_9x60_ek\ddram.icf</state>
+                    <state>$PROJ_DIR$\..\src\config\sam_9x60_ek\ddram.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>
@@ -826,7 +818,7 @@
                 </option>
                 <option>
                     <name>IlinkAdditionalLibs</name>
-                    <state></state>
+                    
                 </option>
                 <option>
                     <name>IlinkOverrideProgramEntryLabel</name>
@@ -838,7 +830,7 @@
                 </option>
                 <option>
                     <name>IlinkProgramEntryLabel</name>
-                    <state></state>
+                    <state>__iar_program_start</state>
                 </option>
                 <option>
                     <name>DoFill</name>
@@ -1061,6 +1053,11 @@
             <archiveVersion>0</archiveVersion>
             <data />
         </settings>
+        <settings>
+            <name>Coder</name>
+            <archiveVersion>0</archiveVersion>
+            <data />
+        </settings>
     </configuration>
     <configuration>
         <name>Release</name>
@@ -1093,11 +1090,11 @@
                 </option>
                 <option>
                     <name>Input description</name>
-                    <state></state>
+                    <state>Automatic choice of formatter, without multibyte support.</state>
                 </option>
                 <option>
                     <name>Output description</name>
-                    <state></state>
+                    <state>Automatic choice of formatter, without multibyte support.</state>
                 </option>
                 <option>
                     <name>GOutputBinary</name>
@@ -1119,15 +1116,15 @@
                 </option>
                 <option>
                     <name>RTDescription</name>
-                    <state></state>
+                    <state>Use the normal configuration of the C/C++ runtime library. No locale interface, C locale, no file descriptor support, no multibytes in printf and scanf, and no hex floats in strtod.</state>
                 </option>
                 <option>
                     <name>OGProductVersion</name>
-                    <state>8.32.3.20186</state>
+                    <state>8.40.1.21529</state>
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state></state>
+                    <state>8.40.1.21529</state>
                 </option>
                 <option>
                     <name>GeneralEnableMisra</name>
@@ -1147,7 +1144,7 @@
                 </option>
                 <option>
                     <name>GEndianModeBE</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>OGBufferedTerminalOutput</name>
@@ -1173,12 +1170,12 @@
                 </option>
                 <option>
                     <name>RTConfigPath2</name>
-                    <state></state>
+                    <state>$TOOLKIT_DIR$\inc\c\DLib_Config_Normal.h</state>
                 </option>
                 <option>
                     <name>GBECoreSlave</name>
                     <version>27</version>
-                    <state>38</state>
+                    <state>12</state>
                 </option>
                 <option>
                     <name>OGUseCmsis</name>
@@ -1195,11 +1192,11 @@
                 <option>
                     <name>CoreVariant</name>
                     <version>27</version>
-                    <state>38</state>
+                    <state>12</state>
                 </option>
                 <option>
                     <name>GFPUDeviceSlave</name>
-                    <state>-</state>
+                    <state>SAM9X60	Microchip SAM9X60</state>
                 </option>
                 <option>
                     <name>FPU2</name>
@@ -1218,7 +1215,7 @@
                 <option>
                     <name>GFPUCoreSlave2</name>
                     <version>27</version>
-                    <state>38</state>
+                    <state>12</state>
                 </option>
                 <option>
                     <name>OGCMSISPackSelectDevice</name>
@@ -1282,7 +1279,7 @@
                 <option>
                     <name>CCDefines</name>
                     <state>NDEBUG</state>
-                </option>
+                    </option>
                 <option>
                     <name>CCPreprocFile</name>
                     <state>0</state>
@@ -1390,7 +1387,7 @@
                 </option>
                 <option>
                     <name>OutputFile</name>
-                    <state></state>
+                    <state>$FILE_BNAME$.o</state>
                 </option>
                 <option>
                     <name>CCLibConfigHeader</name>
@@ -1406,13 +1403,13 @@
                 </option>
                 <option>
                     <name>CCIncludePath2</name>
-                    <state>$PROJ_DIR$\..\..\firmware\src</state>
-                    <state>$PROJ_DIR$\..\..\firmware\src\config\sam_9x60_ek</state>
-                    <state>$PROJ_DIR$\..\..\firmware\src\packs\SAM9X60_DFP</state>
-                    <state>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS\CMSIS\Core\Include</state>
-                    <state>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS</state>
-                    <state>$PROJ_DIR$\..\..\firmware\src\arm</state>
-                </option>
+                    <state>$PROJ_DIR$\..\src</state>
+                    <state>$PROJ_DIR$\..\src\config\sam_9x60_ek</state>
+                    <state>$PROJ_DIR$\..\src\packs\SAM9X60_DFP</state>
+                    <state>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\Core\Include</state>
+                    <state>$PROJ_DIR$\..\src\packs\CMSIS</state>
+                    <state>$PROJ_DIR$\..\src\arm</state>
+                    </option>
                 <option>
                     <name>CCStdIncCheck</name>
                     <state>0</state>
@@ -1423,7 +1420,7 @@
                 </option>
                 <option>
                     <name>IProcessorMode2</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>CCOptLevel</name>
@@ -1436,7 +1433,7 @@
                 </option>
                 <option>
                     <name>CCOptLevelSlave</name>
-                    <state>1</state>
+                    <state>3</state>
                 </option>
                 <option>
                     <name>CompilerMisraRules98</name>
@@ -1589,8 +1586,7 @@
                 </option>
                 <option>
                     <name>ADefines</name>
-                    <state></state>
-                </option>
+                    </option>
                 <option>
                     <name>AList</name>
                     <state>0</state>
@@ -1681,13 +1677,7 @@
                 </option>
                 <option>
                     <name>AUserIncludes</name>
-                    <state>$PROJ_DIR$\..\..\firmware\src</state>
-                    <state>$PROJ_DIR$\..\..\firmware\src\config\sam_9x60_ek</state>
-                    <state>$PROJ_DIR$\..\..\firmware\src\packs\SAM9X60_DFP</state>
-                    <state>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS\CMSIS\Core\Include</state>
-                    <state>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS</state>
-                    <state>$PROJ_DIR$\..\..\firmware\src\arm</state>
-                </option>
+                    </option>
                 <option>
                     <name>AExtraOptionsCheckV2</name>
                     <state>0</state>
@@ -1712,15 +1702,15 @@
                 <option>
                     <name>OOCOutputFormat</name>
                     <version>3</version>
-                    <state>0</state>
+                    <state>3</state>
                 </option>
                 <option>
                     <name>OCOutputOverride</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>OOCOutputFile</name>
-                    <state></state>
+                    <state>harmony.bin</state>
                 </option>
                 <option>
                     <name>OOCCommandLineProducer</name>
@@ -1728,7 +1718,7 @@
                 </option>
                 <option>
                     <name>OOCObjCopyEnable</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
             </data>
         </settings>
@@ -1775,7 +1765,7 @@
                 </option>
                 <option>
                     <name>IlinkOutputFile</name>
-                    <state>###Unitialized###</state>
+                    <state>sam_9x60_ek.out</state>
                 </option>
                 <option>
                     <name>IlinkDebugInfoEnable</name>
@@ -1839,7 +1829,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>$PROJ_DIR$\..\..\firmware\src\config\sam_9x60_ek\ddram.icf</state>
+                    <state>$PROJ_DIR$\..\src\config\sam_9x60_ek\ddram.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>
@@ -1899,7 +1889,7 @@
                 </option>
                 <option>
                     <name>IlinkProgramEntryLabel</name>
-                    <state></state>
+                    <state>__iar_program_start</state>
                 </option>
                 <option>
                     <name>DoFill</name>
@@ -2122,242 +2112,323 @@
             <archiveVersion>0</archiveVersion>
             <data />
         </settings>
+        <settings>
+            <name>Coder</name>
+            <archiveVersion>0</archiveVersion>
+            <data />
+        </settings>
     </configuration>
     <group>
-        <name>IAR Project Connection File</name>
+        <name>Harmony3</name>
         <group>
             <name>Header Files</name>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\adc.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\aes.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\aic.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\bsc.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\can.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\classd.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\mmu\cp15.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\dbgu.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\definitions.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\device.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\device_cache.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\emac.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\flexcom.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\gfx2d.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\gpbr.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\i2smcc.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\isi.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\lcdc.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\matrix.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\mpddrc.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\otpc.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\pio.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\pit.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\pit64b.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\adc\plib_adc.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\adc\plib_adc_common.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\aic\plib_aic.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\clk\plib_clk.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\dbgu\plib_dbgu.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\dbgu\plib_dbgu_common.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\mmu\plib_mmu.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\pio\plib_pio.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\pit\plib_pit.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\pmc.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\pmecc.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\pmerrloc.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\pwm.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\qspi.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\rstc.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\rtc.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\rtt.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\pio\sam9x60.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\sam9x60.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\sckc.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\sdmmc.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\sdramc.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\sfr.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\sha.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\shdwc.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\smc.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\ssc.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\syscwp.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\tc.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\tdes.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\toolchain_specifics.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\trng.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\udphs.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\uhpfs.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\uhphs.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\wdt.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\xdmac.h</name>
-            </file>
+            <group>
+                <name>config</name>
+                <group>
+                    <name>sam_9x60_ek</name>
+                    <group>
+                        <name>peripheral</name>
+                        <group>
+                            <name>pit</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\pit\plib_pit.h</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>mmu</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\mmu\plib_mmu.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\mmu\cp15.h</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>clk</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\clk\plib_clk.h</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>pio</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\pio\plib_pio.h</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>aic</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\aic\plib_aic.h</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>adc</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\adc\plib_adc.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\adc\plib_adc_common.h</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>dbgu</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\dbgu\plib_dbgu_common.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\dbgu\plib_dbgu.h</name>
+                            </file>
+                        </group>
+                    </group>
+                    <file>
+                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\device_cache.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\toolchain_specifics.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\definitions.h</name>
+                    </file>
+                </group>
+            </group>
+            <group>
+                <name>packs</name>
+                <group>
+                    <name>SAM9X60_DFP</name>
+                    <file>
+                        <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\device.h</name>
+                    </file>
+                    <group>
+                        <name>component</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\adc.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\aes.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\aic.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\bsc.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\can.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\classd.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\dbgu.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\emac.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\flexcom.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\gfx2d.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\gpbr.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\i2smcc.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\isi.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\lcdc.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\matrix.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\mpddrc.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\otpc.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\pio.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\pit.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\pit64b.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\pmc.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\pmecc.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\pmerrloc.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\pwm.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\qspi.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\rstc.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\rtc.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\rtt.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\sckc.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\sdmmc.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\sdramc.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\sfr.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\sha.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\shdwc.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\smc.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\ssc.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\syscwp.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\tc.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\tdes.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\trng.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\udphs.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\uhpfs.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\uhphs.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\wdt.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\xdmac.h</name>
+                        </file>
+                    </group>
+                    <file>
+                        <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\sam9x60.h</name>
+                    </file>
+                    <group>
+                        <name>pio</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\pio\sam9x60.h</name>
+                        </file>
+                    </group>
+                </group>
+            </group>
         </group>
         <group>
             <name>Source Files</name>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\cstartup.s</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\exceptions.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\stdio\iar_monitor.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\initialization.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\interrupts.c</name>
-            </file>
+            <group>
+                <name>config</name>
+                <group>
+                    <name>sam_9x60_ek</name>
+                    <group>
+                        <name>peripheral</name>
+                        <group>
+                            <name>pit</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\pit\plib_pit.c</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>mmu</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\mmu\plib_mmu.c</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>clk</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\clk\plib_clk.c</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>pio</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\pio\plib_pio.c</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>aic</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\aic\plib_aic.c</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>adc</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\adc\plib_adc.c</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>dbgu</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\dbgu\plib_dbgu.c</name>
+                            </file>
+                        </group>
+                    </group>
+                    <file>
+                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\initialization.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\interrupts.c</name>
+                    </file>
+                    <group>
+                        <name>stdio</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\stdio\iar_monitor.c</name>
+                        </file>
+                    </group>
+                    <file>
+                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\cstartup.s</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\vectortrap.s</name>
+                    </file>
+                </group>
+            </group>
             <file>
                 <name>$PROJ_DIR$\..\src\main_sam9x60.c</name>
             </file>
+        </group>
+        <group>
+            <name>Linker File</name>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\adc\plib_adc.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\aic\plib_aic.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\clk\plib_clk.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\dbgu\plib_dbgu.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\mmu\plib_mmu.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\pio\plib_pio.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\pit\plib_pit.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\vectortrap.s</name>
+                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\ddram.icf</name>
             </file>
         </group>
     </group>
-    <file>
-        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\sam_9x60_ek.ipcf</name>
-    </file>
+    
 </project>
