@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <workspace>
     <project>
         <path>$WS_DIR$\spi_ping_pong_with_dma_sam_e54_xpro.ewp</path>
     </project>
-    <batchBuild />
 </workspace>
