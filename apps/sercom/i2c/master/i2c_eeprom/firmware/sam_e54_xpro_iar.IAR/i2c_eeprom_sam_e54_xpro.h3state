@@ -1,0 +1,24 @@
+{
+    "linker": {
+        "script": ""
+    }, 
+    "assembler": {
+        "macros": [], 
+        "includes": []
+    }, 
+    "general": {
+        "name": "sam_e54_xpro_iar", 
+        "device": "ATSAME54P20A"
+    }, 
+    "compiler": {
+        "macros": [], 
+        "includes": [
+            "..\\src", 
+            "..\\src\\config\\sam_e54_xpro_iar", 
+            "..\\src\\packs\\ATSAME54P20A_DFP", 
+            "..\\src\\packs\\CMSIS\\CMSIS\\Core\\Include", 
+            "..\\src\\packs\\CMSIS", 
+            "..\\src\\arm"
+        ]
+    }
+}

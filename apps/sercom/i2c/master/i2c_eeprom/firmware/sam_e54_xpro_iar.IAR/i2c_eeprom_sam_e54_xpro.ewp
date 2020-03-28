@@ -62,11 +62,11 @@
                 </option>
                 <option>
                     <name>OGProductVersion</name>
-                    <state>8.32.2.19370</state>
+                    <state>8.40.1.21529</state>
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>8.40.2.22864</state>
+                    <state>8.40.1.21529</state>
                 </option>
                 <option>
                     <name>GeneralEnableMisra</name>
@@ -220,8 +220,7 @@
                 <debug>1</debug>
                 <option>
                     <name>CCDefines</name>
-                    <state></state>
-                </option>
+                    </option>
                 <option>
                     <name>CCPreprocFile</name>
                     <state>0</state>
@@ -345,13 +344,13 @@
                 </option>
                 <option>
                     <name>CCIncludePath2</name>
-                    <state>$PROJ_DIR$\..\..\firmware\src</state>
-                    <state>$PROJ_DIR$\..\..\firmware\src\config\sam_e54_xpro_iar</state>
-                    <state>$PROJ_DIR$\..\..\firmware\src\packs\ATSAME54P20A_DFP</state>
-                    <state>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS\CMSIS\Core\Include</state>
-                    <state>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS</state>
-                    <state>$PROJ_DIR$\..\..\firmware\src\arm</state>
-                </option>
+                    <state>$PROJ_DIR$\..\src</state>
+                    <state>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar</state>
+                    <state>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP</state>
+                    <state>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\Core\Include</state>
+                    <state>$PROJ_DIR$\..\src\packs\CMSIS</state>
+                    <state>$PROJ_DIR$\..\src\arm</state>
+                    </option>
                 <option>
                     <name>CCStdIncCheck</name>
                     <state>0</state>
@@ -528,8 +527,7 @@
                 </option>
                 <option>
                     <name>ADefines</name>
-                    <state></state>
-                </option>
+                    </option>
                 <option>
                     <name>AList</name>
                     <state>0</state>
@@ -620,13 +618,7 @@
                 </option>
                 <option>
                     <name>AUserIncludes</name>
-                    <state>$PROJ_DIR$\..\..\firmware\src</state>
-                    <state>$PROJ_DIR$\..\..\firmware\src\config\sam_e54_xpro_iar</state>
-                    <state>$PROJ_DIR$\..\..\firmware\src\packs\ATSAME54P20A_DFP</state>
-                    <state>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS\CMSIS\Core\Include</state>
-                    <state>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS</state>
-                    <state>$PROJ_DIR$\..\..\firmware\src\arm</state>
-                </option>
+                    </option>
                 <option>
                     <name>AExtraOptionsCheckV2</name>
                     <state>0</state>
@@ -714,7 +706,7 @@
                 </option>
                 <option>
                     <name>IlinkOutputFile</name>
-                    <state>i2c_eeprom_sam_e54_xpro.out</state>
+                    <state>sam_e54_xpro_iar.out</state>
                 </option>
                 <option>
                     <name>IlinkDebugInfoEnable</name>
@@ -778,7 +770,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>$TOOLKIT_DIR$\config\linker\Microchip\same54x20\flash.icf</state>
+                    <state>lnk0t.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>
@@ -826,7 +818,7 @@
                 </option>
                 <option>
                     <name>IlinkAdditionalLibs</name>
-                    <state></state>
+                    
                 </option>
                 <option>
                     <name>IlinkOverrideProgramEntryLabel</name>
@@ -1011,7 +1003,7 @@
                 </option>
                 <option>
                     <name>IlinkTrustzoneImportLibraryOut</name>
-                    <state>i2c_eeprom_sam_e54_xpro_import_lib.o</state>
+                    <state>###Unitialized###</state>
                 </option>
                 <option>
                     <name>OILinkExtraOption</name>
@@ -1061,6 +1053,11 @@
             <archiveVersion>0</archiveVersion>
             <data />
         </settings>
+        <settings>
+            <name>Coder</name>
+            <archiveVersion>0</archiveVersion>
+            <data />
+        </settings>
     </configuration>
     <configuration>
         <name>Release</name>
@@ -1093,11 +1090,11 @@
                 </option>
                 <option>
                     <name>Input description</name>
-                    <state></state>
+                    <state>Automatic choice of formatter, without multibyte support.</state>
                 </option>
                 <option>
                     <name>Output description</name>
-                    <state></state>
+                    <state>Automatic choice of formatter, without multibyte support.</state>
                 </option>
                 <option>
                     <name>GOutputBinary</name>
@@ -1119,15 +1116,15 @@
                 </option>
                 <option>
                     <name>RTDescription</name>
-                    <state></state>
+                    <state>Use the normal configuration of the C/C++ runtime library. No locale interface, C locale, no file descriptor support, no multibytes in printf and scanf, and no hex floats in strtod.</state>
                 </option>
                 <option>
                     <name>OGProductVersion</name>
-                    <state>8.32.2.19370</state>
+                    <state>8.40.1.21529</state>
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state></state>
+                    <state>8.40.1.21529</state>
                 </option>
                 <option>
                     <name>GeneralEnableMisra</name>
@@ -1147,7 +1144,7 @@
                 </option>
                 <option>
                     <name>GEndianModeBE</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>OGBufferedTerminalOutput</name>
@@ -1173,12 +1170,12 @@
                 </option>
                 <option>
                     <name>RTConfigPath2</name>
-                    <state></state>
+                    <state>$TOOLKIT_DIR$\inc\c\DLib_Config_Normal.h</state>
                 </option>
                 <option>
                     <name>GBECoreSlave</name>
                     <version>27</version>
-                    <state>38</state>
+                    <state>39</state>
                 </option>
                 <option>
                     <name>OGUseCmsis</name>
@@ -1195,21 +1192,21 @@
                 <option>
                     <name>CoreVariant</name>
                     <version>27</version>
-                    <state>38</state>
+                    <state>39</state>
                 </option>
                 <option>
                     <name>GFPUDeviceSlave</name>
-                    <state>-</state>
+                    <state>ATSAME54P20A	Microchip ATSAME54P20A</state>
                 </option>
                 <option>
                     <name>FPU2</name>
                     <version>0</version>
-                    <state>0</state>
+                    <state>4</state>
                 </option>
                 <option>
                     <name>NrRegs</name>
                     <version>0</version>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>NEON</name>
@@ -1218,7 +1215,7 @@
                 <option>
                     <name>GFPUCoreSlave2</name>
                     <version>27</version>
-                    <state>38</state>
+                    <state>39</state>
                 </option>
                 <option>
                     <name>OGCMSISPackSelectDevice</name>
@@ -1259,7 +1256,7 @@
                 </option>
                 <option>
                     <name>DSPExtension</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>TrustZone</name>
@@ -1282,7 +1279,7 @@
                 <option>
                     <name>CCDefines</name>
                     <state>NDEBUG</state>
-                </option>
+                    </option>
                 <option>
                     <name>CCPreprocFile</name>
                     <state>0</state>
@@ -1390,7 +1387,7 @@
                 </option>
                 <option>
                     <name>OutputFile</name>
-                    <state></state>
+                    <state>$FILE_BNAME$.o</state>
                 </option>
                 <option>
                     <name>CCLibConfigHeader</name>
@@ -1406,13 +1403,13 @@
                 </option>
                 <option>
                     <name>CCIncludePath2</name>
-                    <state>$PROJ_DIR$\..\..\firmware\src</state>
-                    <state>$PROJ_DIR$\..\..\firmware\src\config\sam_e54_xpro_iar</state>
-                    <state>$PROJ_DIR$\..\..\firmware\src\packs\ATSAME54P20A_DFP</state>
-                    <state>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS\CMSIS\Core\Include</state>
-                    <state>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS</state>
-                    <state>$PROJ_DIR$\..\..\firmware\src\arm</state>
-                </option>
+                    <state>$PROJ_DIR$\..\src</state>
+                    <state>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar</state>
+                    <state>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP</state>
+                    <state>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\Core\Include</state>
+                    <state>$PROJ_DIR$\..\src\packs\CMSIS</state>
+                    <state>$PROJ_DIR$\..\src\arm</state>
+                    </option>
                 <option>
                     <name>CCStdIncCheck</name>
                     <state>0</state>
@@ -1436,7 +1433,7 @@
                 </option>
                 <option>
                     <name>CCOptLevelSlave</name>
-                    <state>1</state>
+                    <state>3</state>
                 </option>
                 <option>
                     <name>CompilerMisraRules98</name>
@@ -1589,8 +1586,7 @@
                 </option>
                 <option>
                     <name>ADefines</name>
-                    <state></state>
-                </option>
+                    </option>
                 <option>
                     <name>AList</name>
                     <state>0</state>
@@ -1681,13 +1677,7 @@
                 </option>
                 <option>
                     <name>AUserIncludes</name>
-                    <state>$PROJ_DIR$\..\..\firmware\src</state>
-                    <state>$PROJ_DIR$\..\..\firmware\src\config\sam_e54_xpro_iar</state>
-                    <state>$PROJ_DIR$\..\..\firmware\src\packs\ATSAME54P20A_DFP</state>
-                    <state>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS\CMSIS\Core\Include</state>
-                    <state>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS</state>
-                    <state>$PROJ_DIR$\..\..\firmware\src\arm</state>
-                </option>
+                    </option>
                 <option>
                     <name>AExtraOptionsCheckV2</name>
                     <state>0</state>
@@ -1775,7 +1765,7 @@
                 </option>
                 <option>
                     <name>IlinkOutputFile</name>
-                    <state>###Unitialized###</state>
+                    <state>sam_e54_xpro_iar.out</state>
                 </option>
                 <option>
                     <name>IlinkDebugInfoEnable</name>
@@ -1891,7 +1881,7 @@
                 </option>
                 <option>
                     <name>IlinkOverrideProgramEntryLabel</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>IlinkProgramEntryLabelSelect</name>
@@ -1899,7 +1889,7 @@
                 </option>
                 <option>
                     <name>IlinkProgramEntryLabel</name>
-                    <state></state>
+                    <state>Reset_Handler</state>
                 </option>
                 <option>
                     <name>DoFill</name>
@@ -2122,242 +2112,338 @@
             <archiveVersion>0</archiveVersion>
             <data />
         </settings>
+        <settings>
+            <name>Coder</name>
+            <archiveVersion>0</archiveVersion>
+            <data />
+        </settings>
     </configuration>
     <group>
-        <name>IAR Project Connection File</name>
+        <name>Harmony3</name>
         <group>
             <name>Header Files</name>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\ac.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\adc.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\aes.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\atsame54p20a.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\can.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\ccl.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\cmcc.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\Core\Include\cmsis_armcc.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\Core\Include\cmsis_armclang.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\Core\Include\cmsis_armclang_ltm.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\Core\Include\cmsis_compiler.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\Core\Include\cmsis_gcc.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\Core\Include\cmsis_iccarm.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\Core\Include\cmsis_version.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\Core\Include\core_cm4.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\dac.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\definitions.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\device.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\device_cache.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\dmac.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\dsu.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\eic.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\evsys.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\freqm.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\gclk.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\gmac.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\hmatrixb.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\i2s.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\icm.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\mclk.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\Core\Include\mpu_armv7.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\nvmctrl.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\osc32kctrl.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\oscctrl.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\pac.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\pcc.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\pdec.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\peripheral\clock\plib_clock.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\peripheral\cmcc\plib_cmcc.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\peripheral\evsys\plib_evsys.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\peripheral\nvic\plib_nvic.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\peripheral\nvmctrl\plib_nvmctrl.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\peripheral\port\plib_port.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\peripheral\sercom\i2c_master\plib_sercom7_i2c_master.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\peripheral\sercom\i2c_master\plib_sercom_i2c_master_common.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\pm.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\port.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\pukcc.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\qspi.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\ramecc.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\rstc.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\rtc.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\pio\same54p20a.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\sdhc.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\sercom.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\supc.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\tc.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\tcc.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\toolchain_specifics.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\trng.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\usb.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\wdt.h</name>
-            </file>
+            <group>
+                <name>config</name>
+                <group>
+                    <name>sam_e54_xpro_iar</name>
+                    <group>
+                        <name>peripheral</name>
+                        <group>
+                            <name>nvmctrl</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\peripheral\nvmctrl\plib_nvmctrl.h</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>evsys</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\peripheral\evsys\plib_evsys.h</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>sercom</name>
+                            <group>
+                                <name>i2c_master</name>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\peripheral\sercom\i2c_master\plib_sercom_i2c_master_common.h</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\peripheral\sercom\i2c_master\plib_sercom7_i2c_master.h</name>
+                                </file>
+                            </group>
+                        </group>
+                        <group>
+                            <name>port</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\peripheral\port\plib_port.h</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>clock</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\peripheral\clock\plib_clock.h</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>nvic</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\peripheral\nvic\plib_nvic.h</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>cmcc</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\peripheral\cmcc\plib_cmcc.h</name>
+                            </file>
+                        </group>
+                    </group>
+                    <file>
+                        <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\device_cache.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\toolchain_specifics.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\definitions.h</name>
+                    </file>
+                </group>
+            </group>
+            <group>
+                <name>packs</name>
+                <group>
+                    <name>ATSAME54P20A_DFP</name>
+                    <file>
+                        <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\device.h</name>
+                    </file>
+                    <group>
+                        <name>component</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\ac.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\adc.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\aes.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\can.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\ccl.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\cmcc.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\dac.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\dmac.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\dsu.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\eic.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\evsys.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\freqm.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\gclk.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\gmac.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\hmatrixb.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\i2s.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\icm.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\mclk.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\nvmctrl.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\osc32kctrl.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\oscctrl.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\pac.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\pcc.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\pdec.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\pm.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\port.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\pukcc.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\qspi.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\ramecc.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\rstc.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\rtc.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\sdhc.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\sercom.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\supc.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\tc.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\tcc.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\trng.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\usb.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\wdt.h</name>
+                        </file>
+                    </group>
+                    <file>
+                        <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\atsame54p20a.h</name>
+                    </file>
+                    <group>
+                        <name>pio</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\pio\same54p20a.h</name>
+                        </file>
+                    </group>
+                </group>
+                <group>
+                    <name>CMSIS</name>
+                    <group>
+                        <name>CMSIS</name>
+                        <group>
+                            <name>Core</name>
+                            <group>
+                                <name>Include</name>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\Core\Include\cmsis_version.h</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\Core\Include\cmsis_compiler.h</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\Core\Include\cmsis_iccarm.h</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\Core\Include\cmsis_gcc.h</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\Core\Include\cmsis_armcc.h</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\Core\Include\cmsis_armclang.h</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\Core\Include\cmsis_armclang_ltm.h</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\Core\Include\core_cm4.h</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\Core\Include\mpu_armv7.h</name>
+                                </file>
+                            </group>
+                        </group>
+                    </group>
+                </group>
+            </group>
         </group>
         <group>
             <name>Source Files</name>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\exceptions.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\stdio\iar_monitor.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\initialization.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\interrupts.c</name>
-            </file>
+            <group>
+                <name>config</name>
+                <group>
+                    <name>sam_e54_xpro_iar</name>
+                    <group>
+                        <name>peripheral</name>
+                        <group>
+                            <name>nvmctrl</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\peripheral\nvmctrl\plib_nvmctrl.c</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>evsys</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\peripheral\evsys\plib_evsys.c</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>sercom</name>
+                            <group>
+                                <name>i2c_master</name>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\peripheral\sercom\i2c_master\plib_sercom7_i2c_master.c</name>
+                                </file>
+                            </group>
+                        </group>
+                        <group>
+                            <name>port</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\peripheral\port\plib_port.c</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>clock</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\peripheral\clock\plib_clock.c</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>nvic</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\peripheral\nvic\plib_nvic.c</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>cmcc</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\peripheral\cmcc\plib_cmcc.c</name>
+                            </file>
+                        </group>
+                    </group>
+                    <file>
+                        <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\initialization.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\interrupts.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\exceptions.c</name>
+                    </file>
+                    <group>
+                        <name>stdio</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\stdio\iar_monitor.c</name>
+                        </file>
+                    </group>
+                    <file>
+                        <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\startup_iar.c</name>
+                    </file>
+                </group>
+            </group>
             <file>
                 <name>$PROJ_DIR$\..\src\main_e54.c</name>
             </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\peripheral\clock\plib_clock.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\peripheral\cmcc\plib_cmcc.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\peripheral\evsys\plib_evsys.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\peripheral\nvic\plib_nvic.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\peripheral\nvmctrl\plib_nvmctrl.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\peripheral\port\plib_port.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\peripheral\sercom\i2c_master\plib_sercom7_i2c_master.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\startup_iar.c</name>
-            </file>
         </group>
     </group>
-    <file>
-        <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\sam_e54_xpro_iar.ipcf</name>
-    </file>
+    
 </project>
