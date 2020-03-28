@@ -87,6 +87,7 @@ void CAN1_ErrorCountGet(uint16_t *txErrorCount, uint8_t *rxErrorCount);
 bool CAN1_InterruptGet(CAN_INTERRUPT_MASK interruptMask);
 void CAN1_InterruptEnable(CAN_INTERRUPT_MASK interruptMask);
 void CAN1_InterruptDisable(CAN_INTERRUPT_MASK interruptMask);
+bool CAN1_MailboxIsReady(CAN_MAILBOX_NUM mailbox);
 bool CAN1_TxCallbackRegister(CAN_CALLBACK callback, uintptr_t contextHandle, CAN_MAILBOX_TX_ATTRIBUTE mailboxAttr);
 bool CAN1_RxCallbackRegister(CAN_CALLBACK callback, uintptr_t contextHandle, CAN_MAILBOX_RX_ATTRIBUTE mailboxAttr);
 // DOM-IGNORE-BEGIN
