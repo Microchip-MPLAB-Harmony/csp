@@ -1,7 +1,7 @@
 /**
  * \brief Header file for ATSAMA5D27
  *
- * Copyright (c) 2019 Microchip Technology Inc. and its subsidiaries.
+ * Copyright (c) 2020 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip software and any derivatives
  * exclusively with Microchip products. It is your responsibility to comply with third party license
@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-12-06T14:18:29Z */
+/* file generated from device description version 2020-03-18T12:52:54Z */
 #ifndef _SAMA5D27_H_
 #define _SAMA5D27_H_
 
@@ -109,7 +109,7 @@ typedef enum IRQn
   SPI0_IRQn                 =  33, /**< 33  Serial Peripheral Interface (SPI0)  */
   SPI1_IRQn                 =  34, /**< 34  Serial Peripheral Interface (SPI1)  */
   TC0_IRQn                  =  35, /**< 35  Timer Counter (TC0)                 */
-  TC1_IRQn                  =  36, /**< 36  Timer Counter (TC0)                 */
+  TC1_IRQn                  =  36, /**< 36  Timer Counter (TC1)                 */
   PWM_IRQn                  =  38, /**< 38  Pulse Width Modulation Controller (PWM) */
   ADC_IRQn                  =  40, /**< 40  Analog-to-Digital Converter (ADC)   */
   UDPHS_IRQn                =  42, /**< 42  USB High Speed Device Port (UDPHS)  */
@@ -208,7 +208,7 @@ typedef struct _DeviceVectors
   void* pfnSPI0_Handler;                         /*  33 Serial Peripheral Interface (SPI0) */
   void* pfnSPI1_Handler;                         /*  34 Serial Peripheral Interface (SPI1) */
   void* pfnTC0_Handler;                          /*  35 Timer Counter (TC0) */
-  void* pfnTC1_Handler;                          /*  36 Timer Counter (TC0) */
+  void* pfnTC1_Handler;                          /*  36 Timer Counter (TC1) */
   void* pvReserved37;
   void* pfnPWM_Handler;                          /*  38 Pulse Width Modulation Controller (PWM) */
   void* pvReserved39;
