@@ -455,6 +455,28 @@ void MCAN0_InterruptClear(MCAN_INTERRUPT_MASK interruptMask)
 
 // *****************************************************************************
 /* Function:
+    bool MCAN0_TxFIFOIsFull(void)
+
+   Summary:
+    Returns true if Tx FIFO is full otherwise false.
+
+   Precondition:
+    MCAN0_Initialize must have been called for the associated MCAN instance.
+
+   Parameters:
+    None
+
+   Returns:
+    true  - Tx FIFO is full.
+    false - Tx FIFO is not full.
+*/
+bool MCAN0_TxFIFOIsFull(void)
+{
+    return (MCAN0_REGS->MCAN_TXFQS & MCAN_TXFQS_TFQF_Msk);
+}
+
+// *****************************************************************************
+/* Function:
     void MCAN0_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
 
    Summary:
