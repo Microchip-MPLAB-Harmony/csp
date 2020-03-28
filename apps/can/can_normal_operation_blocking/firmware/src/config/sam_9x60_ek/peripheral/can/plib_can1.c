@@ -645,3 +645,25 @@ void CAN1_InterruptDisable(CAN_INTERRUPT_MASK interruptMask)
     CAN1_REGS->CAN_IDR = interruptMask;
 }
 
+// *****************************************************************************
+/* Function:
+    bool CAN1_MailboxIsReady(CAN_MAILBOX_NUM mailbox)
+
+   Summary:
+    Returns true if Mailbox is ready otherwise false.
+
+   Precondition:
+    CAN1_Initialize must have been called for the associated CAN instance.
+
+   Parameters:
+    mailbox - Mailbox number
+
+   Returns:
+    true  - Mailbox is ready and Mailbox data registers can be read/written.
+    false - Mailbox is not ready and Mailbox data registers can not be read/written.
+*/
+bool CAN1_MailboxIsReady(CAN_MAILBOX_NUM mailbox)
+{
+    return ((CAN1_REGS->CAN_MB[mailbox].CAN_MSR & CAN_MSR_MRDY_Msk) == CAN_MSR_MRDY_Msk);
+}
+
