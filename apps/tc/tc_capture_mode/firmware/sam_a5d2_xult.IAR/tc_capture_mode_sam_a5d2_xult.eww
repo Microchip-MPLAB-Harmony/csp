@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <workspace>
     <project>
         <path>$WS_DIR$\tc_capture_mode_sam_a5d2_xult.ewp</path>
     </project>
-    <batchBuild />
 </workspace>
