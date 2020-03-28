@@ -99,6 +99,7 @@ MCAN_ERROR MCAN0_ErrorGet(void);
 void MCAN0_ErrorCountGet(uint8_t *txErrorCount, uint8_t *rxErrorCount);
 bool MCAN0_InterruptGet(MCAN_INTERRUPT_MASK interruptMask);
 void MCAN0_InterruptClear(MCAN_INTERRUPT_MASK interruptMask);
+bool MCAN0_TxFIFOIsFull(void);
 void MCAN0_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress);
 void MCAN0_TxCallbackRegister(MCAN_CALLBACK callback, uintptr_t contextHandle);
 void MCAN0_RxCallbackRegister(MCAN_CALLBACK callback, uintptr_t contextHandle, MCAN_MSG_RX_ATTRIBUTE msgAttr);
