@@ -384,7 +384,7 @@ def instantiateComponent(eicComponent):
         eicINT.setLabel("Enable Interrupt")
         eicSym_InterruptList.append("EIC_INT_" + str(extIntIndex))
 
-        #EVCTRL - External Interrupt Event Output Enable 0..7 Channel number
+        #EVCTRL - External Interrupt Event Output Enable 0..7/15 Channel number
         EVCCTRL_EXTINTEO_Selection = eicComponent.createBooleanSymbol("EIC_EXTINTEO_" + str(extIntIndex) , eicConfiguration)
         EVCCTRL_EXTINTEO_Selection.setLabel("Enable Event Output")
 
@@ -414,7 +414,13 @@ def instantiateComponent(eicComponent):
         CONFIG_SENSE_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_CONFIG_SENSE_" + str(extIntIndex) , eicConfiguration)
         CONFIG_SENSE_SelectionSymbol.setLabel("External Interrupt" + str(extIntIndex) + " Edge Selection")
 
-        eicConfigSenseNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"EIC_CONFIG__SENSE0\"]")
+        eicConfigSenseValGrp = ""
+        eicConfigSenseModuleNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]")
+        for index in range(len(eicConfigSenseModuleNode.getChildren())):
+            if "EIC_CONFIG__SENSE" in eicConfigSenseModuleNode.getChildren()[index].getAttribute("name"):
+                eicConfigSenseValGrp = eicConfigSenseModuleNode.getChildren()[index].getAttribute("name")
+                break;
+        eicConfigSenseNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"" + eicConfigSenseValGrp + "\"]")
 
         for index in range(len(eicConfigSenseNode.getChildren())):
             eicConfigSenseKeyName = eicConfigSenseNode.getChildren()[index].getAttribute("name")
@@ -494,8 +500,6 @@ def instantiateComponent(eicComponent):
         PRESCALER_TICKON_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_PRESCALER_TICKON" , eicDebounceMenu)
         PRESCALER_TICKON_SelectionSymbol.setLabel("Debouncer Sampler Clock Source")
 
-        eicTickOnNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"EIC_DPRESCALER__TICKON\"]")
-
         for index in range(len(eicTickOnNode.getChildren())):
             eicTickOnKeyName = eicTickOnNode.getChildren()[index].getAttribute("name")
             eicTickOnKeyDescription = eicTickOnNode.getChildren()[index].getAttribute("caption")
@@ -510,7 +514,8 @@ def instantiateComponent(eicComponent):
         DEBOUNCER_NO_STATES_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_DEBOUNCER_NO_STATES_0" , eicDebounceMenu)
         DEBOUNCER_NO_STATES_SelectionSymbol.setLabel("Valid Pin States for EXTINT[7:0]")
 
-        eicStatesxNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"EIC_DPRESCALER__STATES0\"]")
+        eicStates0Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/register-group@[name=\"EIC\"]/register@[name=\"DPRESCALER\"]/bitfield@[name=\"STATES0\"]")
+        eicStatesxNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"" + eicStates0Node.getAttribute("values") + "\"]")
 
         for index in range(len(eicStatesxNode.getChildren())):
             eicStatesxKeyName = eicStatesxNode.getChildren()[index].getAttribute("name")
@@ -526,7 +531,8 @@ def instantiateComponent(eicComponent):
         DEBOUNCER_PRESCALER_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_DEBOUNCER_PRESCALER_0" , eicDebounceMenu)
         DEBOUNCER_PRESCALER_SelectionSymbol.setLabel("Debouncer Prescaler for EXTINT[7:0]")
 
-        eicPrescalerNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"EIC_DPRESCALER__PRESCALER0\"]")
+        eicPrescaler0Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/register-group@[name=\"EIC\"]/register@[name=\"DPRESCALER\"]/bitfield@[name=\"PRESCALER0\"]")
+        eicPrescalerNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"" + eicPrescaler0Node.getAttribute("values") + "\"]")
 
         for index in range(len(eicPrescalerNode.getChildren())):
             eicPrescalerKeyName = eicPrescalerNode.getChildren()[index].getAttribute("name")
@@ -538,13 +544,13 @@ def instantiateComponent(eicComponent):
         DEBOUNCER_PRESCALER_SelectionSymbol.setOutputMode("Value")
         DEBOUNCER_PRESCALER_SelectionSymbol.setDisplayMode("Description")
 
-        eicStatesxNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"EIC_DPRESCALER__STATES1\"]")
+        eicStates1Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/register-group@[name=\"EIC\"]/register@[name=\"DPRESCALER\"]/bitfield@[name=\"STATES1\"]")
+        eicStatesxNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"" + eicStates1Node.getAttribute("values") + "\"]")
         if eicStatesxNode != None:
             #DEBOUNCER - Number of States x (8:15)
             DEBOUNCER_NO_STATES_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_DEBOUNCER_NO_STATES_1" , eicDebounceMenu)
             DEBOUNCER_NO_STATES_SelectionSymbol.setLabel("Valid Pin States Duration for EXTINT[15:8]")
 
-            eicStatesxNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"EIC_DPRESCALER__STATES1\"]")
             for index in range(len(eicStatesxNode.getChildren())):
                 eicStatesxKeyName = eicStatesxNode.getChildren()[index].getAttribute("name")
                 eicStatesxKeyDescription = eicStatesxNode.getChildren()[index].getAttribute("caption")
@@ -559,7 +565,8 @@ def instantiateComponent(eicComponent):
             DEBOUNCER_PRESCALER_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_DEBOUNCER_PRESCALER_1" , eicDebounceMenu)
             DEBOUNCER_PRESCALER_SelectionSymbol.setLabel("Debouncer Prescaler for EXTINT[15:8]")
 
-            eicPrescalerNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"EIC_DPRESCALER__PRESCALER1\"]")
+            eicPrescaler1Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/register-group@[name=\"EIC\"]/register@[name=\"DPRESCALER\"]/bitfield@[name=\"PRESCALER1\"]")
+            eicPrescalerNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"" + eicPrescaler1Node.getAttribute("values") + "\"]")
 
             for index in range(len(eicPrescalerNode.getChildren())):
                 eicPrescalerKeyName = eicPrescalerNode.getChildren()[index].getAttribute("name")
@@ -681,6 +688,13 @@ def instantiateComponent(eicComponent):
         nonseceicSource1File.setMarkup(True)
         nonseceicSource1File.setEnabled(False)
 
+        nonseceicSystemInitFile = eicComponent.createFileSymbol("EIC_SYS_INT_NONSEC", None)
+        nonseceicSystemInitFile.setType("STRING")
+        nonseceicSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        nonseceicSystemInitFile.setSourcePath("../peripheral/eic_u2804/templates/system/initialization.c.ftl")
+        nonseceicSystemInitFile.setMarkup(True)
+        nonseceicSystemInitFile.setEnabled(False)
+
         nonseceicSystemDefFile = eicComponent.createFileSymbol("EIC_SYS_DEF_NONSEC", None)
         nonseceicSystemDefFile.setType("STRING")
         nonseceicSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
@@ -688,12 +702,6 @@ def instantiateComponent(eicComponent):
         nonseceicSystemDefFile.setMarkup(True)
         nonseceicSystemDefFile.setEnabled(False)
         nonseceicSystemDefFile.setDependencies(fileGenLogic, ["EIC_NONSEC", "NMI_IS_NON_SECURE"])
-
-        nonseceicSystemInitFile = eicComponent.createFileSymbol("EIC_SYS_INT_NONSEC", None)
-        nonseceicSystemInitFile.setType("STRING")
-        nonseceicSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
-        nonseceicSystemInitFile.setSourcePath("../peripheral/eic_u2804/templates/system/initialization.c.ftl")
-        nonseceicSystemInitFile.setMarkup(True)
 
         EICfilesArray.append(nonseceicHeader1File)
         EICfilesArray.append(nonseceicSource1File)
