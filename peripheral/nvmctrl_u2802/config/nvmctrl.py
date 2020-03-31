@@ -300,6 +300,11 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlEraseApiName.setReadOnly(True)
     nvmctrlEraseApiName.setDefaultValue(eraseApiName)
 
+    nvmctrlNonSecureUnlockBNSNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"NVMCTRL\"]/register-group@[name=\"NVMCTRL\"]/register@[name=\"NSULCK\"]/bitfield@[name=\"BNS\"]")
+    nvmctrlNonSecureUnlockBNS = nvmctrlComponent.createBooleanSymbol("NVMCTRL_NSULCK_BNS", None)
+    nvmctrlNonSecureUnlockBNS.setVisible(False)
+    nvmctrlNonSecureUnlockBNS.setDefaultValue(nvmctrlNonSecureUnlockBNSNode != None)
+
     ############################################################################
     #### Dependency ####
     ############################################################################
@@ -362,7 +367,6 @@ def instantiateComponent(nvmctrlComponent):
     nvmctrlSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     nvmctrlSystemDefFile.setType("STRING")
     nvmctrlSystemDefFile.setMarkup(True)
-
 
     if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
         nvmctrlSym_HeaderFile.setSecurity("SECURE")
