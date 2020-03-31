@@ -22,9 +22,28 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
 
+global DACfilesArray
+global InterruptVectorSecurity
+DACfilesArray = []
 ###################################################################################################
 ########################################## Callbacks  #############################################
 ###################################################################################################
+def fileUpdate(symbol, event):
+    global DACfilesArray
+    global InterruptVectorSecurity
+    if event["value"] == False:
+        DACfilesArray[0].setSecurity("SECURE")
+        DACfilesArray[1].setSecurity("SECURE")
+        DACfilesArray[2].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        DACfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+        Database.setSymbolValue("core", InterruptVectorSecurity, False)
+    else:
+        DACfilesArray[0].setSecurity("NON_SECURE")
+        DACfilesArray[1].setSecurity("NON_SECURE")
+        DACfilesArray[2].setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        DACfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+        Database.setSymbolValue("core", InterruptVectorSecurity, True)
+
 def menuVisiblity(symbol, event):
     symbol.setVisible(not bool(event["value"]))
 
@@ -97,16 +116,18 @@ def evsysSetup(symbol, event):
 ################################################################################
 
 def instantiateComponent(dacComponent):
-
+    global InterruptVectorSecurity
     evctrldep = []
 
     dacInstanceName = dacComponent.createStringSymbol("DAC_INSTANCE_NAME", None)
     dacInstanceName.setVisible(False)
     dacInstanceName.setDefaultValue(dacComponent.getID().upper())
 
+    InterruptVectorSecurity = dacInstanceName.getValue() + "_SET_NON_SECURE"
+
     #Clock enable
     Database.setSymbolValue("core", dacInstanceName.getValue() + "_CLOCK_ENABLE", True, 2)
-    
+
     dacMode = dacComponent.createKeyValueSetSymbol("DAC_OPERATING_MODE", None)
     dacMode.setLabel("Select DAC Output Mode")
     dacMode.addKey("SINGLE_ENDED", "0", "Single-Ended Output")
@@ -207,7 +228,7 @@ def instantiateComponent(dacComponent):
         dacSym_Event = dacComponent.createBooleanSymbol("DAC_EVSYS" + str(channel) , channelEvent)
         dacSym_Event.setVisible(False)
         dacSym_Event.setDependencies(evsysSetup, evctrldep)
-    
+
     # Clock Warning status
     dacSym_ClkEnComment = dacComponent.createCommentSymbol("DAC_CLOCK_ENABLE_COMMENT", None)
     dacSym_ClkEnComment.setLabel("Warning!!!" + dacInstanceName.getValue() + " Clock is Disabled in Clock Manager")
@@ -254,3 +275,18 @@ def instantiateComponent(dacComponent):
     dacSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     dacSystemDefFile.setSourcePath("../peripheral/dac_u2244/templates/system/definitions.h.ftl")
     dacSystemDefFile.setMarkup(True)
+
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        global DACfilesArray
+        dacIsNonSecure = Database.getSymbolValue("core", dacComponent.getID().upper() + "_IS_NON_SECURE")
+        dacSystemDefFile.setDependencies(fileUpdate, ["core." + dacComponent.getID().upper() + "_IS_NON_SECURE"])
+        DACfilesArray.append(dacHeaderFile)
+        DACfilesArray.append(dacSourceFile)
+        DACfilesArray.append(dacSystemInitFile)
+        DACfilesArray.append(dacSystemDefFile)
+        Database.setSymbolValue("core", InterruptVectorSecurity, dacIsNonSecure)
+        if dacIsNonSecure == False:
+            DACfilesArray[0].setSecurity("SECURE")
+            DACfilesArray[1].setSecurity("SECURE")
+            DACfilesArray[2].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+            DACfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
