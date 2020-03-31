@@ -54,6 +54,7 @@
 #include <string.h>
 #include "definitions.h"                // SYS function prototypes
 
+#define ADC_VREF                (3.3f)
 #define TRANSFER_SIZE 16
 #define RTC_COMPARE_VAL 100
 
@@ -63,6 +64,7 @@
 volatile bool dma_ch0Done = false;
 uint32_t myAppObj = 0;
 uint16_t adc_result_array[TRANSFER_SIZE];
+float input_voltage;
 
 void DmacCh0Cb(DMAC_TRANSFER_EVENT returned_evnt, uintptr_t MyDmacContext)
 {
@@ -85,6 +87,7 @@ void DmacCh0Cb(DMAC_TRANSFER_EVENT returned_evnt, uintptr_t MyDmacContext)
 
 int main ( void )
 {
+    uint16_t sample;
     /* Initialize all modules */
     SYS_Initialize ( NULL );
     LED_OFF();
@@ -108,6 +111,12 @@ int main ( void )
         if(dma_ch0Done == true)
         {
             printf("\r\nTransferred 16 results to array in SRAM\r\n");
+            for (sample = 0; sample < TRANSFER_SIZE; sample++)
+            {
+                input_voltage = (float)adc_result_array[sample] * ADC_VREF / 4095U;
+
+                printf("ADC Count = 0x%03x, ADC Input Voltage = %d.%02d V \n\r", adc_result_array[sample], (int)input_voltage, (int)((input_voltage - (int)input_voltage)*100.0));
+            }            
             dma_ch0Done = false;
             /* Configure the next transfer */
             DMAC_ChannelTransfer(DMAC_CHANNEL_0, (const void *)&ADC_REGS->ADC_RESULT, (const void *)adc_result_array, sizeof(adc_result_array));
