@@ -173,7 +173,10 @@ dmtHeaderFile.setMarkup(True)
 dmtHeaderFile.setEnabled(dmtSym_Use.getValue())
 
 dmtSourceFile = coreComponent.createFileSymbol("DMT_SOURCE", None)
-dmtSourceFile.setSourcePath("../peripheral/dmt_01520/templates/plib_dmt.c.ftl")
+if "PIC32M" in Variables.get("__PROCESSOR"):
+    dmtSourceFile.setSourcePath("../peripheral/dmt_01520/templates/plib_dmt.c.ftl")
+else: # for PIC32C devices
+    dmtSourceFile.setSourcePath("../peripheral/dmt_01520/templates/plib_dmt_pic32c.c.ftl")
 dmtSourceFile.setOutputName("plib_" + dmtInstanceName.getValue().lower() + ".c")
 dmtSourceFile.setDestPath("/peripheral/dmt/")
 dmtSourceFile.setProjectPath("config/" + configName + "/peripheral/dmt/")
