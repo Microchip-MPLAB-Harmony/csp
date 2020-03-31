@@ -98,6 +98,7 @@ void ${EIC_INSTANCE_NAME}_Initialize (void)
     </#if>
 
     /* Interrupt sense type and filter control for EXTINT channels 0 to 7*/
+    <#if EIC_CONFIG_SENSE_8??> 
     ${EIC_INSTANCE_NAME}_REGS->EIC_CONFIG[0] =  EIC_CONFIG_SENSE0_${EIC_CONFIG_SENSE_0} ${EIC_CONFIG_FILTEN_0?then('| EIC_CONFIG_FILTEN0_Msk', '')} |
                               EIC_CONFIG_SENSE1_${EIC_CONFIG_SENSE_1} ${EIC_CONFIG_FILTEN_1?then('| EIC_CONFIG_FILTEN1_Msk', '')} |
                               EIC_CONFIG_SENSE2_${EIC_CONFIG_SENSE_2} ${EIC_CONFIG_FILTEN_2?then('| EIC_CONFIG_FILTEN2_Msk', '')} |
@@ -105,17 +106,29 @@ void ${EIC_INSTANCE_NAME}_Initialize (void)
                               EIC_CONFIG_SENSE4_${EIC_CONFIG_SENSE_4} ${EIC_CONFIG_FILTEN_4?then('| EIC_CONFIG_FILTEN4_Msk', '')} |
                               EIC_CONFIG_SENSE5_${EIC_CONFIG_SENSE_5} ${EIC_CONFIG_FILTEN_5?then('| EIC_CONFIG_FILTEN5_Msk', '')} |
                               EIC_CONFIG_SENSE6_${EIC_CONFIG_SENSE_6} ${EIC_CONFIG_FILTEN_6?then('| EIC_CONFIG_FILTEN6_Msk', '')} |
-                              EIC_CONFIG_SENSE7_${EIC_CONFIG_SENSE_7} ${EIC_CONFIG_FILTEN_7?then('| EIC_CONFIG_FILTEN7_Msk', '')};
+                              EIC_CONFIG_SENSE7_${EIC_CONFIG_SENSE_7} ${EIC_CONFIG_FILTEN_7?then('| EIC_CONFIG_FILTEN7_Msk', '')} ;
 
     /* Interrupt sense type and filter control for EXTINT channels 8 to 15 */
-    ${EIC_INSTANCE_NAME}_REGS->EIC_CONFIG[1] =  EIC_CONFIG_SENSE0_${EIC_CONFIG_SENSE_8} ${EIC_CONFIG_FILTEN_8?then('| EIC_CONFIG_FILTEN0_Msk', '')} |
-                              EIC_CONFIG_SENSE1_${EIC_CONFIG_SENSE_9} ${EIC_CONFIG_FILTEN_9?then('| EIC_CONFIG_FILTEN1_Msk', '')} |
-                              EIC_CONFIG_SENSE2_${EIC_CONFIG_SENSE_10} ${EIC_CONFIG_FILTEN_10?then('| EIC_CONFIG_FILTEN2_Msk', '')} |
-                              EIC_CONFIG_SENSE3_${EIC_CONFIG_SENSE_11} ${EIC_CONFIG_FILTEN_11?then('| EIC_CONFIG_FILTEN3_Msk', '')} |
-                              EIC_CONFIG_SENSE4_${EIC_CONFIG_SENSE_12} ${EIC_CONFIG_FILTEN_12?then('| EIC_CONFIG_FILTEN4_Msk', '')} |
-                              EIC_CONFIG_SENSE5_${EIC_CONFIG_SENSE_13} ${EIC_CONFIG_FILTEN_13?then('| EIC_CONFIG_FILTEN5_Msk', '')} |
-                              EIC_CONFIG_SENSE6_${EIC_CONFIG_SENSE_14} ${EIC_CONFIG_FILTEN_14?then('| EIC_CONFIG_FILTEN6_Msk', '')} |
-                              EIC_CONFIG_SENSE7_${EIC_CONFIG_SENSE_15} ${EIC_CONFIG_FILTEN_15?then('| EIC_CONFIG_FILTEN7_Msk', '')};
+    ${EIC_INSTANCE_NAME}_REGS->EIC_CONFIG[1] =  EIC_CONFIG_SENSE0_${EIC_CONFIG_SENSE_8} ${EIC_CONFIG_FILTEN_8?then('| EIC_CONFIG_FILTEN0_Msk', '')}
+        <#if EIC_CONFIG_SENSE_9??> |  EIC_CONFIG_SENSE1_${EIC_CONFIG_SENSE_9} ${EIC_CONFIG_FILTEN_9?then('| EIC_CONFIG_FILTEN1_Msk', '')} </#if>
+        <#if EIC_CONFIG_SENSE_10??> |  EIC_CONFIG_SENSE2_${EIC_CONFIG_SENSE_10} ${EIC_CONFIG_FILTEN_10?then('| EIC_CONFIG_FILTEN2_Msk', '')} </#if>
+        <#if EIC_CONFIG_SENSE_11??> |  EIC_CONFIG_SENSE3_${EIC_CONFIG_SENSE_11} ${EIC_CONFIG_FILTEN_11?then('| EIC_CONFIG_FILTEN3_Msk', '')} </#if>
+        <#if EIC_CONFIG_SENSE_12??> |  EIC_CONFIG_SENSE4_${EIC_CONFIG_SENSE_12} ${EIC_CONFIG_FILTEN_12?then('| EIC_CONFIG_FILTEN4_Msk', '')} </#if>
+        <#if EIC_CONFIG_SENSE_13??> |  EIC_CONFIG_SENSE5_${EIC_CONFIG_SENSE_13} ${EIC_CONFIG_FILTEN_13?then('| EIC_CONFIG_FILTEN5_Msk', '')} </#if>
+        <#if EIC_CONFIG_SENSE_14??> |  EIC_CONFIG_SENSE6_${EIC_CONFIG_SENSE_14} ${EIC_CONFIG_FILTEN_14?then('| EIC_CONFIG_FILTEN6_Msk', '')} </#if>
+        <#if EIC_CONFIG_SENSE_15??> |  EIC_CONFIG_SENSE7_${EIC_CONFIG_SENSE_15} ${EIC_CONFIG_FILTEN_15?then('| EIC_CONFIG_FILTEN7_Msk', '')} </#if> ;
+    
+    <#else>
+    ${EIC_INSTANCE_NAME}_REGS->EIC_CONFIG=  EIC_CONFIG_SENSE0_${EIC_CONFIG_SENSE_0} ${EIC_CONFIG_FILTEN_0?then('| EIC_CONFIG_FILTEN0_Msk', '')}
+            <#if EIC_CONFIG_SENSE_1??> |  EIC_CONFIG_SENSE1_${EIC_CONFIG_SENSE_1} ${EIC_CONFIG_FILTEN_1?then('| EIC_CONFIG_FILTEN1_Msk', '')} </#if>
+            <#if EIC_CONFIG_SENSE_2??> |  EIC_CONFIG_SENSE2_${EIC_CONFIG_SENSE_2} ${EIC_CONFIG_FILTEN_2?then('| EIC_CONFIG_FILTEN2_Msk', '')} </#if>
+            <#if EIC_CONFIG_SENSE_3??> |  EIC_CONFIG_SENSE3_${EIC_CONFIG_SENSE_3} ${EIC_CONFIG_FILTEN_3?then('| EIC_CONFIG_FILTEN3_Msk', '')} </#if>
+            <#if EIC_CONFIG_SENSE_4??> |  EIC_CONFIG_SENSE4_${EIC_CONFIG_SENSE_4} ${EIC_CONFIG_FILTEN_4?then('| EIC_CONFIG_FILTEN4_Msk', '')} </#if>
+            <#if EIC_CONFIG_SENSE_5??> |  EIC_CONFIG_SENSE5_${EIC_CONFIG_SENSE_5} ${EIC_CONFIG_FILTEN_5?then('| EIC_CONFIG_FILTEN5_Msk', '')} </#if>
+            <#if EIC_CONFIG_SENSE_6??> |  EIC_CONFIG_SENSE6_${EIC_CONFIG_SENSE_6} ${EIC_CONFIG_FILTEN_6?then('| EIC_CONFIG_FILTEN6_Msk', '')} </#if>
+            <#if EIC_CONFIG_SENSE_7??> |  EIC_CONFIG_SENSE7_${EIC_CONFIG_SENSE_7} ${EIC_CONFIG_FILTEN_7?then('| EIC_CONFIG_FILTEN7_Msk', '')} </#if> ;
+
+    </#if>
 
     <#if EIC_ASYNCH != "0">
     /* External Interrupt Asynchronous Mode enable */
