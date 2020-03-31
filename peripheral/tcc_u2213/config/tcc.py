@@ -48,9 +48,30 @@ tccSym_DRVCTRL_NRE_NRV = []
 tccSym_PATT_PGE = []
 tccSym_PATT_PGV = []
 
+global TCCfilesArray
+global InterruptVectorSecurity
+TCCfilesArray = []
 ###################################################################################################
 ########################################## Callbacks  #############################################
 ###################################################################################################
+def fileUpdate(symbol, event):
+    global TCCfilesArray
+    global InterruptVectorSecurity
+    if event["value"] == False:
+        TCCfilesArray[0].setSecurity("SECURE")
+        TCCfilesArray[1].setSecurity("SECURE")
+        TCCfilesArray[2].setSecurity("SECURE")
+        TCCfilesArray[3].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        TCCfilesArray[4].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+        Database.setSymbolValue("core", InterruptVectorSecurity, False)
+    else:
+        TCCfilesArray[0].setSecurity("NON_SECURE")
+        TCCfilesArray[1].setSecurity("NON_SECURE")
+        TCCfilesArray[2].setSecurity("NON_SECURE")
+        TCCfilesArray[3].setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        TCCfilesArray[4].setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+        Database.setSymbolValue("core", InterruptVectorSecurity, True)
+
 def tccEvsys(symbol, event):
     if(event["id"] == "TCC_EVCTRL_OVFEO"):
         Database.setSymbolValue("evsys", "GENERATOR_"+str(tccInstanceName.getValue())+"_OVF_ACTIVE", event["value"], 2)
@@ -338,12 +359,15 @@ def instantiateComponent(tccComponent):
     global tccInstanceName
     global tccSym_INTENSET_OVF
     global InterruptVectorUpdate
+    global InterruptVectorSecurity
     eventDepList = []
     interruptDepList = []
 
     tccInstanceName = tccComponent.createStringSymbol("TCC_INSTANCE_NAME", None)
     tccInstanceName.setVisible(False)
     tccInstanceName.setDefaultValue(tccComponent.getID().upper())
+
+    InterruptVectorSecurity = tccInstanceName.getValue() + "_SET_NON_SECURE"
 
     #clock enable
     Database.setSymbolValue("core", tccInstanceName.getValue() + "_CLOCK_ENABLE", True, 2)
@@ -915,3 +939,20 @@ def instantiateComponent(tccComponent):
     tccSym_SystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     tccSym_SystemDefFile.setSourcePath("../peripheral/tcc_u2213/templates/system/definitions.h.ftl")
     tccSym_SystemDefFile.setMarkup(True)
+
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        global TCCfilesArray
+        tccIsNonSecure = Database.getSymbolValue("core", tccComponent.getID().upper() + "_IS_NON_SECURE")
+        tccSym_SystemDefFile.setDependencies(fileUpdate, ["core." + tccComponent.getID().upper() + "_IS_NON_SECURE"])
+        TCCfilesArray.append(tccSym_PWMHeaderFile)
+        TCCfilesArray.append(tccSym_PWMSourceFile)
+        TCCfilesArray.append(tccSym_PWMGlobalHeaderFile)
+        TCCfilesArray.append(tccSym_SystemInitFile)
+        TCCfilesArray.append(tccSym_SystemDefFile)
+        Database.setSymbolValue("core", InterruptVectorSecurity, tccIsNonSecure)
+        if tccIsNonSecure == False:
+            TCCfilesArray[0].setSecurity("SECURE")
+            TCCfilesArray[1].setSecurity("SECURE")
+            TCCfilesArray[2].setSecurity("SECURE")
+            TCCfilesArray[3].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+            TCCfilesArray[4].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
