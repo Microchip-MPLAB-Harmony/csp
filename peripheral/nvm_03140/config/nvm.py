@@ -97,7 +97,10 @@ def instantiateComponent(nvmComponent):
     nvmInstanceName.setDefaultValue(nvmComponent.getID().upper())
     Log.writeInfoMessage("Running " + nvmInstanceName.getValue())
 
-    nvmFlashNode = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"code\"]")
+    if "PIC32M" in Variables.get("__PROCESSOR"):
+        nvmFlashNode = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"code\"]")
+    else:
+        nvmFlashNode = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[name=\"FLASH\"]")
 
     ##### Do not modify below symbol names as they are used by Memory Driver #####
 
@@ -249,7 +252,10 @@ def instantiateComponent(nvmComponent):
     configName = Variables.get("__CONFIGURATION_NAME")
 
     nvmSym_HeaderFile = nvmComponent.createFileSymbol("NVM_HEADER", None)
-    nvmSym_HeaderFile.setSourcePath("../peripheral/nvm_03140/templates/plib_nvm.h.ftl")
+    if "PIC32M" in Variables.get("__PROCESSOR"):
+        nvmSym_HeaderFile.setSourcePath("../peripheral/nvm_03140/templates/plib_nvm.h.ftl")
+    else: # for PIC32C devices
+        nvmSym_HeaderFile.setSourcePath("../peripheral/nvm_03140/templates/plib_nvm_pic32c.h.ftl")
     nvmSym_HeaderFile.setOutputName("plib_"+nvmInstanceName.getValue().lower()+".h")
     nvmSym_HeaderFile.setDestPath("/peripheral/nvm/")
     nvmSym_HeaderFile.setProjectPath("config/" + configName + "/peripheral/nvm/")
@@ -257,7 +263,10 @@ def instantiateComponent(nvmComponent):
     nvmSym_HeaderFile.setMarkup(True)
 
     nvmSym_SourceFile = nvmComponent.createFileSymbol("NVM_SOURCE", None)
-    nvmSym_SourceFile.setSourcePath("../peripheral/nvm_03140/templates/plib_nvm.c.ftl")
+    if "PIC32M" in Variables.get("__PROCESSOR"):
+        nvmSym_SourceFile.setSourcePath("../peripheral/nvm_03140/templates/plib_nvm.c.ftl")
+    else: # for PIC32C devices
+        nvmSym_SourceFile.setSourcePath("../peripheral/nvm_03140/templates/plib_nvm_pic32c.c.ftl")
     nvmSym_SourceFile.setOutputName("plib_"+nvmInstanceName.getValue().lower()+".c")
     nvmSym_SourceFile.setDestPath("/peripheral/nvm/")
     nvmSym_SourceFile.setProjectPath("config/" + configName + "/peripheral/nvm/")
