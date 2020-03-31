@@ -27,6 +27,25 @@ global interruptVector
 global interruptHandler
 global trngInstanceName
 global interruptHandlerLock
+global TRNGfilesArray
+global InterruptVectorSecurity
+TRNGfilesArray = []
+
+def fileUpdate(symbol, event):
+    global TRNGfilesArray
+    global InterruptVectorSecurity
+    if event["value"] == False:
+        TRNGfilesArray[0].setSecurity("SECURE")
+        TRNGfilesArray[1].setSecurity("SECURE")
+        TRNGfilesArray[2].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        TRNGfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
+        Database.setSymbolValue("core", InterruptVectorSecurity, False)
+    else:
+        TRNGfilesArray[0].setSecurity("NON_SECURE")
+        TRNGfilesArray[1].setSecurity("NON_SECURE")
+        TRNGfilesArray[2].setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+        TRNGfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+        Database.setSymbolValue("core", InterruptVectorSecurity, True)
 
 def interruptControl(NVIC, event):
     global interruptVector
@@ -43,13 +62,13 @@ def interruptControl(NVIC, event):
 
 def trngEVSYS(symbol, event):
     Database.setSymbolValue("evsys0","GENERATOR_TRNG_READY_ACTIVE", event["value"], 2)
-    
+
 def instantiateComponent(trngComponent):
     global interruptVector
     global interruptHandler
     global trngInstanceName
     global interruptHandlerLock
-
+    global InterruptVectorSecurity
 
     trngInstanceName = trngComponent.createStringSymbol("TRNG_INSTANCE_NAME", None)
     trngInstanceName.setVisible(False)
@@ -60,7 +79,7 @@ def instantiateComponent(trngComponent):
     interruptHandler = trngInstanceName.getValue()+"_INTERRUPT_HANDLER"
     interruptHandlerLock = trngInstanceName.getValue()+"_INTERRUPT_HANDLER_LOCK"
     interruptVectorUpdate = trngInstanceName.getValue()+"_INTERRUPT_ENABLE_UPDATE"
-
+    InterruptVectorSecurity = trngInstanceName.getValue() + "_SET_NON_SECURE"
 
     trngReserved = trngComponent.createBooleanSymbol("TRNG_Reserved", None)
     trngReserved.setLabel("TRNG Reserved")
@@ -80,16 +99,16 @@ def instantiateComponent(trngComponent):
     trngInterrupt = trngComponent.createBooleanSymbol("trngEnableInterrupt", trngMenu)
     trngInterrupt.setLabel("Enable Interrupts")
     trngInterrupt.setDefaultValue(False)
-    
+
         #Create a Checkbox to enable disable interrupts
     trngInterrupt = trngComponent.createBooleanSymbol("trngEnableEvent", trngMenu)
     trngInterrupt.setLabel("Enable Data Ready Event Output")
     trngInterrupt.setDefaultValue(False)
-    
+
     trngEvent = trngComponent.createBooleanSymbol("DUMMY", trngMenu)
     trngEvent.setVisible(False)
     trngEvent.setDependencies(trngEVSYS, ["trngEnableEvent"])
-    
+
     trngSTDBY = trngComponent.createBooleanSymbol("TRNG_STANDBY", trngMenu)
     trngSTDBY.setLabel("Run Trng in Standby sleep mode")
 
@@ -129,13 +148,28 @@ def instantiateComponent(trngComponent):
     trngSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     trngSystemDefFile.setSourcePath("../peripheral/trng_u2242/templates/system/definitions.h.ftl")
     trngSystemDefFile.setMarkup(True)
-    
-        #System Initialization
+
+    #System Initialization
     trngSystemInitFile = trngComponent.createFileSymbol("TRNG_SYS_INIT", None)
     trngSystemInitFile.setType("STRING")
     trngSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
     trngSystemInitFile.setSourcePath("../peripheral/trng_u2242/templates/system/initialization.c.ftl")
     trngSystemInitFile.setMarkup(True)
+
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        global TRNGfilesArray
+        trngIsNonSecure = Database.getSymbolValue("core", trngComponent.getID().upper() + "_IS_NON_SECURE")
+        trngSystemDefFile.setDependencies(fileUpdate, ["core." + trngComponent.getID().upper() + "_IS_NON_SECURE"])
+        TRNGfilesArray.append(trngHeaderFile)
+        TRNGfilesArray.append(trngSourceFile)
+        TRNGfilesArray.append(trngSystemInitFile)
+        TRNGfilesArray.append(trngSystemDefFile)
+        Database.setSymbolValue("core", InterruptVectorSecurity, trngIsNonSecure)
+        if trngIsNonSecure == False:
+            TRNGfilesArray[0].setSecurity("SECURE")
+            TRNGfilesArray[1].setSecurity("SECURE")
+            TRNGfilesArray[2].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
+            TRNGfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
 
 def showWarning(trngWarning, event):
     trngWarning.setVisible(event["value"])
