@@ -6,7 +6,7 @@ def setUpMemFuse(symbol, event):
 def setUpFuse(symbol, event):
     global fuseMapSymbol
     for key in fuseMapSymbol.keys():
-        if key.split("_")[1] == event["id"].split("_IS_NON_SECURE")[0]:
+        if '_' in key and key.split("_")[1] == event["id"].split("_IS_NON_SECURE")[0]:
             if event["value"]:
                 Database.setSymbolValue("core", fuseMapSymbol[key], 1)
             else:
@@ -121,6 +121,8 @@ Database.setSymbolValue("core", "IDAU_ANSC_SIZE", 512 / (memoryGranularity["IDAU
 
 nonSecStartAddress = coreComponent.createHexSymbol("NON_SEC_START_ADDRESS", None)
 nonSecStartAddress.setVisible(False)
+nonSecStartAddress.setDefaultValue((int(Database.getSymbolValue("core", "IDAU_AS_SIZE")) * memoryGranularity["IDAU_AS"])
+                                 + (int(Database.getSymbolValue("core", "IDAU_BOOTPROT_SIZE")) * memoryGranularity["IDAU_BOOTPROT"]))
 nonSecStartAddress.setDependencies(nonSecStartAddressCalculate, ["IDAU_AS_SIZE", "IDAU_BOOTPROT_SIZE"])
 
 secSystemDefinitionsHeadersList =      coreComponent.createListSymbol( "LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES",       None )
