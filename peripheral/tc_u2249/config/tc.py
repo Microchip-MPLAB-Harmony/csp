@@ -58,7 +58,6 @@ def fileUpdate(symbol, event):
         TCfilesArray[7].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS")
         TCfilesArray[8].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
         Database.setSymbolValue("core", InterruptVectorSecurity, False)
-
     else:
         TCfilesArray[0].setSecurity("NON_SECURE")
         TCfilesArray[1].setSecurity("NON_SECURE")
@@ -698,7 +697,7 @@ def instantiateComponent(tcComponent):
         TCfilesArray.append(tcSym_CaptureHeaderFile)
         TCfilesArray.append(tcSym_CaptureSourceFile)
         TCfilesArray.append(tcSym_SystemInitFile)
-        TCfilesArray.append(tcSym_SystemInitFile)
+        TCfilesArray.append(tcSym_SystemDefFile)
         Database.setSymbolValue("core", InterruptVectorSecurity, tcIsNonSecure)
         if tcIsNonSecure == False:
             TCfilesArray[0].setSecurity("SECURE")
