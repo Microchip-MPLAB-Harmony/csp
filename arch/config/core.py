@@ -66,6 +66,12 @@ def handleMessage(messageID, args):
     elif messageID == "WAIT_STATES":
         symbolDict = nvmWaitStates
 
+    elif (messageID == "DMA_CHANNEL_ENABLE"):
+        Database.setSymbolValue("core", args["dma_channel"], True)
+
+    elif (messageID == "DMA_CHANNEL_DISABLE"):
+        Database.setSymbolValue("core", args["dma_channel"], False)
+
     return symbolDict
 
 def genExceptionAsmSourceFile(symbol, event):
