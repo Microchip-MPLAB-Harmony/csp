@@ -13,3 +13,5 @@
 **/*.IAR/settings
 **/*.IAR/*.dep
 **/*.IAR/*.custom_argvars
+**/*.KEIL/Objects
+**/*.KEIL/*.uvguix.*
