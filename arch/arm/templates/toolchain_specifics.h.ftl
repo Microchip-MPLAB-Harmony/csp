@@ -26,66 +26,69 @@
 
 <#if CoreArchitecture?contains("ARM926")>
 
-#ifndef __NOP
-#define __NOP __arm926_nop
-static inline void __arm926_nop()
-{
-    asm("nop");
-}
-#endif //__NOP
+    <#lt>#ifndef __NOP
+    <#lt>#define __NOP __arm926_nop
+    <#lt>static inline void __arm926_nop()
+    <#lt>{
+    <#lt>    asm("nop");
+    <#lt>}
+    <#lt>#endif //__NOP
 
-static inline void __disable_irq( void )
-{   // read, modify and write back the CPSR
-    asm("MRS r0, cpsr");
-    asm("ORR r0, r0, #0xC0");
-    asm("MSR cpsr_c, r0");
-}
+    <#lt>static inline void __disable_irq( void )
+    <#lt>{   // read, modify and write back the CPSR
+    <#lt>    asm("MRS r0, cpsr");
+    <#lt>    asm("ORR r0, r0, #0xC0");
+    <#lt>    asm("MSR cpsr_c, r0");
+    <#lt>}
 
-static inline void __enable_irq( void )
-{   // read, modify and write back the CPSR
-    asm("MRS r0, cpsr");
-    asm("BIC r0, r0, #0x80");
-    asm("MSR cpsr_c, r0");
-}
+    <#lt>static inline void __enable_irq( void )
+    <#lt>{   // read, modify and write back the CPSR
+    <#lt>    asm("MRS r0, cpsr");
+    <#lt>    asm("BIC r0, r0, #0x80");
+    <#lt>    asm("MSR cpsr_c, r0");
+    <#lt>}
 
-#ifndef __DMB
-#define __DMB    __arm926_dmb
-static inline void __arm926_dmb(void)
-{
-	asm("" ::: "memory");
-}
-#endif //__DMB
+    <#lt>#ifndef __DMB
+    <#lt>#define __DMB    __arm926_dmb
+    <#lt>static inline void __arm926_dmb(void)
+    <#lt>{
+    <#lt>    asm("" ::: "memory");
+    <#lt>}
+    <#lt>#endif //__DMB
 
-#ifndef __DSB
-#define __DSB    __arm926_dsb
-static inline void __arm926_dsb(void)
-{
-	asm("mcr p15, 0, %0, c7, c10, 4" :: "r"(0) : "memory");
-}
-#endif //__DSB
+    <#lt>#ifndef __DSB
+    <#lt>#define __DSB    __arm926_dsb
+    <#lt>static inline void __arm926_dsb(void)
+    <#lt>{
+    <#lt>    asm("mcr p15, 0, %0, c7, c10, 4" :: "r"(0) : "memory");
+    <#lt>}
+    <#lt>#endif //__DSB
 
-#ifndef __ISB
-#define __ISB __arm926_isb
-static inline void __arm926_isb(void)
-{
-	asm("" ::: "memory");
-}
-#endif //__ISB
+    <#lt>#ifndef __ISB
+    <#lt>#define __ISB __arm926_isb
+    <#lt>static inline void __arm926_isb(void)
+    <#lt>{
+    <#lt>    asm("" ::: "memory");
+    <#lt>}
+    <#lt>#endif //__ISB
 
-<#if COMPILER_CHOICE == "IAR" || CoreArchitecture?contains("ARM926")>
-    <#lt>#define __ALIGNED(x) __attribute__((aligned(x)))
-</#if>
+    <#if COMPILER_CHOICE == "IAR" || CoreArchitecture?contains("ARM926")>
+        <#lt>#define __ALIGNED(x) __attribute__((aligned(x)))
+    </#if>
 
-#ifndef __STATIC_INLINE
-#define __STATIC_INLINE static inline
-#endif //__STATIC_INLINE
+    <#lt>#ifndef __STATIC_INLINE
+    <#lt>#define __STATIC_INLINE static inline
+    <#lt>#endif //__STATIC_INLINE
 
-#ifndef   __WEAK
-#define __WEAK __attribute__((weak))
-#endif // __WEAK
+    <#lt>#ifndef   __WEAK
+    <#lt>#define __WEAK __attribute__((weak))
+    <#lt>#endif // __WEAK
 </#if>
 
 <#if "XC32" == COMPILER_CHOICE>
+    <#if CoreArchitecture?contains("ARM926") == false >
+        <#lt>#include "cmsis_compiler.h"
+    </#if>
     <#lt>#include <sys/types.h>
     <#lt>#define NO_INIT        __attribute__((section(".no_init")))
     <#lt>#define SECTION(a)     __attribute__((__section__(a)))
@@ -98,6 +101,9 @@ static inline void __arm926_isb(void)
         <#lt>#define CACHE_ALIGN
     </#if>
 <#elseif "IAR" == COMPILER_CHOICE>
+    <#if CoreArchitecture?contains("ARM926") == false >
+        <#lt>#include "cmsis_compiler.h"
+    </#if>
     <#lt>#define COMPILER_PRAGMA(arg)            _Pragma(#arg)
     <#lt>#define SECTION(a)                      COMPILER_PRAGMA(location = a)
     <#lt>#define NO_INIT                         __no_init
