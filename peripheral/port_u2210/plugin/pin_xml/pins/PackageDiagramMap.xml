@@ -24,5 +24,6 @@
         <package diagram="SAM_36_WLCSP" id="17" name="WLCSP32" />
         <package diagram="MX_24_QFN" id="18" name="QFN24" />
         <package diagram="MX_24_SOIC_SPDIP_SSOP" id="19" name="SSOP24" />
+        <package diagram="SAM_27_WLCSP" id="20" name="WLCSP27" />
 	</packages>
 </pinfile>
