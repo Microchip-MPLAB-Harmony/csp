@@ -265,7 +265,8 @@ for i in range(0, 2):
     oscctrlSym_XOSCCTRL_OSCILLATOR_FREQUENCY.setDescription(
         "Setting the XOSC Frequency")
     oscctrlSym_XOSCCTRL_OSCILLATOR_FREQUENCY.setDefaultValue(8000000)
-    oscctrlSym_XOSCCTRL_OSCILLATOR_FREQUENCY.setMax(32000000)
+    oscctrlSym_XOSCCTRL_OSCILLATOR_FREQUENCY.setMin(0)
+    oscctrlSym_XOSCCTRL_OSCILLATOR_FREQUENCY.setMax(48000000)
 
     # Oscillator Current Multiplier
     xoscImult = coreComponent.createIntegerSymbol(
