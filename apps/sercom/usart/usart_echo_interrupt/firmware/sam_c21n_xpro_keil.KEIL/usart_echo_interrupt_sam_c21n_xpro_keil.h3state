@@ -1,0 +1,23 @@
+{
+    "linker": {
+        "script": "..\\src\\config\\sam_c21n_xpro_keil\\sam_c21n_xpro_keil.sct"
+    }, 
+    "assembler": {
+        "macros": [], 
+        "includes": []
+    }, 
+    "general": {
+        "name": "sam_c21n_xpro_keil", 
+        "device": "ATSAMC21N18A"
+    }, 
+    "compiler": {
+        "macros": [], 
+        "includes": [
+            "..\\src", 
+            "..\\src\\config\\sam_c21n_xpro_keil", 
+            "..\\src\\packs\\ATSAMC21N18A_DFP", 
+            "..\\src\\packs\\CMSIS\\CMSIS\\Core\\Include", 
+            "..\\src\\packs\\CMSIS"
+        ]
+    }
+}
