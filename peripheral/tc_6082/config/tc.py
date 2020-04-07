@@ -226,7 +226,6 @@ def handleMessage(messageID, args):
         sysTimeChannel_Sym.setVisible(True)
         tc_channel = sysTimeChannel_Sym.getSelectedKey()
         channelID = int(tc_channel[3])
-        print sysTimePLIBConfig
         sysTimePlibMode.setValue(sysTimePLIBConfig["plib_mode"])
         sysTimePLIBModeConfig(channelID, sysTimePlibMode.getValue())
         if sysTimePLIBConfig["plib_mode"] == "SYS_TIME_PLIB_MODE_PERIOD":
@@ -245,6 +244,12 @@ def handleMessage(messageID, args):
         #Set the Time Period (Milli Sec)
         sysTimeTickRateMs.setValue(args["sys_time_tick_ms"])
         tcSym_CH_TimerPeriod[channelID].setValue(sysTimeTickRateMs.getValue())
+
+    if (messageID == "PMSM_FOC_ENCODER_CONF"):
+        component = str(tcInstanceName.getValue()).lower()
+        Database.setSymbolValue(component, "TC_ENABLE_QEI", True)
+        Database.setSymbolValue(component, "TC_BMR_POSEN", "POSITION")
+        Database.setSymbolValue(component, "TC_CH0_RESET", 2)
 
     return dummy_dict
 
@@ -919,6 +924,10 @@ def onAttachmentDisconnected(source, target):
         #----
         tcSym_SYS_TIME_CONNECTED[channelID].setValue(False)
 
+    if (remoteID == "pmsm_foc"):
+        component = str(tcInstanceName.getValue()).lower()
+        Database.setSymbolValue(component, "TC_ENABLE_QEI", False)
+
 def sysTime_ChannelSelection(symbol,event):
     global timerStartApiName_Sym
     global timeStopApiName_Sym
@@ -1127,6 +1136,31 @@ def instantiateComponent(tcComponent):
     irqEnumName_Sym.setVisible(False)
 #------------------------------------------------------------
 
+    #----------------- motor control APIs ---------------------------------
+    tcStartAPI = tcComponent.createStringSymbol("ENCODER_START_API", None)
+    tcStartAPI.setVisible(False)
+    tcStartAPI.setValue(tcInstanceName.getValue() + "_QuadratureStart")
+
+    tcStopAPI = tcComponent.createStringSymbol("ENCODER_STOP_API", None)
+    tcStopAPI.setVisible(False)
+    tcStopAPI.setValue(tcInstanceName.getValue() + "_QuadratureStop")
+
+    tcPositionGetAPI = tcComponent.createStringSymbol("ENCODER_POS_GET_API", None)
+    tcPositionGetAPI.setVisible(False)
+    tcPositionGetAPI.setValue(tcInstanceName.getValue() + "_QuadraturePositionGet")
+
+    tcSpeedGetAPI = tcComponent.createStringSymbol("ENCODER_SPEED_GET_API", None)
+    tcSpeedGetAPI.setVisible(False)
+    tcSpeedGetAPI.setValue("")
+
+    tcPositionSetAPI = tcComponent.createStringSymbol("ENCODER_POS_SET_API", None)
+    tcPositionSetAPI.setVisible(False)
+    tcPositionSetAPI.setValue("")
+
+    tcSpeedSetAPI = tcComponent.createStringSymbol("ENCODER_SPEED_SET_API", None)
+    tcSpeedSetAPI.setVisible(False)
+    tcSpeedSetAPI.setValue("")
+#------------------------------------------------------------------------------
 
     #*****************************QUADRATURE******************************
     if tcSym_QDEC_PRESENT.getValue() == True:
