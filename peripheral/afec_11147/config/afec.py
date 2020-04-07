@@ -258,11 +258,136 @@ def afecTriggerVisible(symbol, event):
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
+
+###################################################################################################
+########################### Dependency   #################################
+###################################################################################################
+global lastAdcModuleU, lastAdcChU
+lastAdcChU = 0
+global lastAdcModuleV, lastAdcChV
+lastAdcChV = 6
+global lastAdcModulePot, lastADCChPot
+lastADCChPot = 10
+global lastAdcModuleVdc, lastADCChVdc
+lastADCChVdc = 7
+lastAdcModuleU = lastAdcModuleV = lastAdcModulePot = lastAdcModuleVdc = 0
+
+def onAttachmentConnected(source, target):
+    localComponent = source["component"]
+    remoteComponent = target["component"]
+    remoteID = remoteComponent.getID()
+    connectID = source["id"]
+    targetID = target["id"]
+
+
+def onAttachmentDisconnected(source, target):
+    localComponent = source["component"]
+    remoteComponent = target["component"]
+    remoteID = remoteComponent.getID()
+    connectID = source["id"]
+    targetID = target["id"]
+    resetChannelsForPMSMFOC()
+
+# Disable ADC channels and interrupt
+def resetChannelsForPMSMFOC():
+    global lastAdcModuleU,lastAdcChU
+    global lastAdcModuleV, lastAdcChV
+    global lastAdcModulePot, lastADCChPot
+    global lastAdcModuleVdc, lastADCChVdc
+
+    component = str(afecInstanceName.getValue()).lower()
+    instanceNum = int(filter(str.isdigit,str(afecInstanceName.getValue())))
+    if (int(lastAdcModuleU) == instanceNum):
+        Database.setSymbolValue(component, "AFEC_"+str(lastAdcChU)+"_CHER", False)
+        Database.setSymbolValue(component, "AFEC"+str((lastAdcChU))+"_IER_EOC", False)
+    if (int(lastAdcModuleV) == instanceNum):
+        Database.setSymbolValue(component, "AFEC_"+str(lastAdcChV)+"_CHER", False)
+    if (int(lastAdcModulePot) == instanceNum):
+        Database.setSymbolValue(component, "AFEC_"+str(lastADCChPot)+"_CHER", False)
+    if (int(lastAdcModuleVdc) == instanceNum):
+        Database.setSymbolValue(component, "AFEC_"+str(lastADCChVdc)+"_CHER", False)
+    Database.setSymbolValue(component, "AFEC_CONV_MODE", 0)
+
+
+def handleMessage(messageID, args):
+    dict = {}
+
+    if (messageID == "PMSM_FOC_ADC_CH_CONF"):
+        component = str(afecInstanceName.getValue()).lower()
+        instanceNum = int(filter(str.isdigit,str(afecInstanceName.getValue())))
+        dict['ADC_MAX_CH'] = Database.getSymbolValue(component, "AFEC_NUM_CHANNELS")
+        dict['ADC_MAX_MODULES'] = Database.getSymbolValue(component, "AFEC_NUM_MODULES")
+        #Change ADC channels if they are changed in the PMSM_FOC
+        resetChannelsForPMSMFOC()
+        AdcConfigForPMSMFOC(component, instanceNum, args)
+
+    return dict
+
+# ADC configurations needed for PMSM_FOC component
+def AdcConfigForPMSMFOC(component, instanceNum, args):
+    global afecSym_MR_TRGSEL_VALUE
+
+    global lastAdcModuleU, lastAdcChU
+    global lastAdcModuleV, lastAdcChV
+    global lastAdcModulePot, lastADCChPot
+    global lastAdcModuleVdc, lastADCChVdc
+
+    lastAdcModuleU = phUModule = args['PHASE_U']
+    lastAdcChU = phUCh = args['PHASE_U_CH']
+    lastAdcModuleV = phVModule = args['PHASE_V']
+    lastAdcChV = phVCh = args['PHASE_V_CH']
+    lastAdcModuleVdc = phDCBusModule = args['VDC']
+    lastADCChVdc = phDCBusCh = args['VDC_CH']
+    lastAdcModulePot = phPotModule = args['POT']
+    lastADCChPot = phPotCh = args['POT_CH']
+    resolution = args['RESOLUTION']
+    trigger = args['TRIGGER']
+
+    # Find the key index of the trigger as a PWM channel as per TRIGGER argument
+    count = afecSym_MR_TRGSEL_VALUE.getKeyCount()
+    triggerIndex = 0
+    for i in range(0,count):
+        if ("PWM"+str(trigger) in afecSym_MR_TRGSEL_VALUE.getKeyDescription(i) ):
+            triggerIndex = i
+            break
+
+    #fine the key index of the RESOLUTION
+    count = afecSym_EMR_RES_VALUE.getKeyCount()
+    resIndex = 0
+    for i in range(0,count):
+        if (str(resolution) in afecSym_EMR_RES_VALUE.getKeyDescription(i) ):
+            resIndex = i
+            break
+
+    # Enable ADC modules, Ph U interrupt
+    if (int(phUModule) == instanceNum):
+        Database.setSymbolValue(component, "AFEC_"+str(phUCh)+"_CHER", True)
+        Database.setSymbolValue(component, "AFEC_"+str((phUCh))+"_IER_EOC", True)
+        #dual sample and hold for ph U
+        if (phUCh < (len(channel)/2)):
+            Database.setSymbolValue(component, "AFEC_"+str(phUCh)+"_SHMR_DUAL", True)
+        Database.setSymbolValue(component, "ADC_CH_PHASE_U", "AFEC_CH"+str(phUCh))
+    if (int(phVModule) == instanceNum):
+        Database.setSymbolValue(component, "AFEC_"+str(phVCh)+"_CHER", True)
+        Database.setSymbolValue(component, "ADC_CH_PHASE_V", "AFEC_CH"+str(phVCh))
+    if (int(phPotModule) == instanceNum):
+        Database.setSymbolValue(component, "AFEC_"+str(phPotCh)+"_CHER", True)
+        Database.setSymbolValue(component, "ADC_CH_POT", "AFEC_CH"+str(phPotCh))
+    if (int(phDCBusModule) == instanceNum):
+        Database.setSymbolValue(component, "AFEC_"+str(phDCBusCh)+"_CHER", True)
+        Database.setSymbolValue(component, "ADC_CH_VDC_BUS", "AFEC_CH"+str(phDCBusCh))
+
+    if (int(phUModule) == instanceNum):
+        Database.setSymbolValue(component, "AFEC_CONV_MODE", 2) #HW trigger
+        Database.setSymbolValue(component, "AFEC_MR_TRGSEL_VALUE", triggerIndex) #trigger as PWM Phase U
+    Database.setSymbolValue(component, "AFEC_EMR_RES_VALUE", resIndex) #resolution
+
 ###################################################################################################
 ########################### Component   #################################
 ###################################################################################################
 def instantiateComponent(afecComponent):
     global afecInstanceName
+    global channel
     afecInstanceName = afecComponent.createStringSymbol("AFEC_INSTANCE_NAME", None)
     afecInstanceName.setVisible(False)
     afecInstanceName.setDefaultValue(afecComponent.getID().upper())
@@ -304,6 +429,43 @@ def instantiateComponent(afecComponent):
     afecSym_AvailableChannels = afecComponent.createComboSymbol("AFEC_AVAILABLE_CHANNELS", None, channel)
     afecSym_AvailableChannels.setVisible(False)
 
+    #----------------- motor control APIs ---------------------------------
+    afecConvAPI = afecComponent.createStringSymbol("ADC_START_CONV_API", None)
+    afecConvAPI.setVisible(False)
+    afecConvAPI.setValue(afecInstanceName.getValue()+"_ConversionStart")
+
+    afecResultAPI = afecComponent.createStringSymbol("ADC_GET_RESULT_API", None)
+    afecResultAPI.setVisible(False)
+    afecResultAPI.setValue(afecInstanceName.getValue()+"_ChannelResultGet")
+
+    afecResultReadyAPI = afecComponent.createStringSymbol("ADC_IS_RESULT_READY_API", None)
+    afecResultReadyAPI.setVisible(False)
+    afecResultReadyAPI.setValue(afecInstanceName.getValue()+"_ChannelResultIsReady")
+
+    afecCallbackAPI = afecComponent.createStringSymbol("ADC_CALLBACK_API", None)
+    afecCallbackAPI.setVisible(False)
+    afecCallbackAPI.setValue(afecInstanceName.getValue()+"_CallbackRegister")
+
+    afecPhUCh = afecComponent.createStringSymbol("ADC_CH_PHASE_U", None)
+    afecPhUCh.setVisible(False)
+    afecPhUCh.setValue("AFEC_CH0")
+
+    afecPhVCh = afecComponent.createStringSymbol("ADC_CH_PHASE_V", None)
+    afecPhVCh.setVisible(False)
+    afecPhVCh.setValue("AFEC_CH6")
+
+    afecVdcCh = afecComponent.createStringSymbol("ADC_CH_VDC_BUS", None)
+    afecVdcCh.setVisible(False)
+    afecVdcCh.setValue("AFEC_CH7")
+
+    afecPotCh = afecComponent.createStringSymbol("ADC_CH_POT", None)
+    afecPotCh.setVisible(False)
+    afecPotCh.setValue("AFEC_CH10")
+
+    afecResultInt = afecComponent.createStringSymbol("INTERRUPT_ADC_RESULT", None)
+    afecResultInt.setVisible(False)
+    afecResultInt.setValue(afecInstanceName.getValue()+"_IRQn")
+
     afecMenu = afecComponent.createMenuSymbol("AFEC_MENU", None)
     afecMenu.setLabel("ADC Configuration")
 
@@ -311,6 +473,12 @@ def instantiateComponent(afecComponent):
     afecSym_NUM_CHANNELS = afecComponent.createIntegerSymbol("AFEC_NUM_CHANNELS", afecMenu)
     afecSym_NUM_CHANNELS.setDefaultValue(12)
     afecSym_NUM_CHANNELS.setVisible(False)
+
+    #number of AFEC modules
+    afecSym_NUM_MODULES = afecComponent.createIntegerSymbol("AFEC_NUM_MODULES", afecMenu)
+    afecSym_NUM_MODULES.setVisible(False)
+    afec = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"AFEC\"]")
+    afecSym_NUM_MODULES.setDefaultValue(len(afec.getChildren()))
 
     #Clock prescaler
     global afecSym_MR_PRESCAL
@@ -344,13 +512,13 @@ def instantiateComponent(afecComponent):
     afecSym_EMR_RES_VALUE.setDisplayMode("Description")
     afecSym_EMR_RES_VALUE.addKey("NO_AVERAGE", "0", "12-bit")
     afecSym_EMR_RES_VALUE.addKey("OSR4", "1", "13-bit - single trigger averaging")
-    afecSym_EMR_RES_VALUE.addKey("OSR4", "2", "13-bit - multi trigger averaging")
+    afecSym_EMR_RES_VALUE.addKey("OSR4_", "2", "13-bit - multi trigger averaging")
     afecSym_EMR_RES_VALUE.addKey("OSR16", "3", "14-bit - single trigger averaging")
-    afecSym_EMR_RES_VALUE.addKey("OSR16", "4", "14-bit - multi trigger averaging")
+    afecSym_EMR_RES_VALUE.addKey("OSR16_", "4", "14-bit - multi trigger averaging")
     afecSym_EMR_RES_VALUE.addKey("OSR64", "5", "15-bit - single trigger averaging")
-    afecSym_EMR_RES_VALUE.addKey("OSR64", "6", "15-bit - multi trigger averaging")
+    afecSym_EMR_RES_VALUE.addKey("OSR64_", "6", "15-bit - multi trigger averaging")
     afecSym_EMR_RES_VALUE.addKey("OSR256", "7", "16-bit - single trigger averaging")
-    afecSym_EMR_RES_VALUE.addKey("OSR256", "8", "16-bit - multi trigger averaging")
+    afecSym_EMR_RES_VALUE.addKey("OSR256_", "8", "16-bit - multi trigger averaging")
 
     #Conversion time
     afecSym_CONV_TIME = afecComponent.createCommentSymbol("AFEC_CONV_TIME", afecMenu)
@@ -378,6 +546,7 @@ def instantiateComponent(afecComponent):
     afecSym_CONV_MODE.addKey("HW_TRIGGER", "2", "Hardware Trigger")
 
     #Trigger
+    global afecSym_MR_TRGSEL_VALUE
     afecSym_MR_TRGSEL_VALUE = afecComponent.createKeyValueSetSymbol("AFEC_MR_TRGSEL_VALUE", afecSym_CONV_MODE)
     afecSym_MR_TRGSEL_VALUE.setLabel("Select External Trigger Input")
     afecSym_MR_TRGSEL_VALUE.setVisible(False)
@@ -547,7 +716,7 @@ def instantiateComponent(afecComponent):
     afecSym_IntEnComment.setLabel("Warning!!! "+afecInstanceName.getValue()+" Interrupt is Disabled in Interrupt Manager")
     afecSym_IntEnComment.setDependencies(dependencyIntStatus, ["core." + interruptVectorUpdate, "AFEC_0_IER_EOC", "AFEC_1_IER_EOC", "AFEC_2_IER_EOC", "AFEC_3_IER_EOC", "AFEC_4_IER_EOC",\
         "AFEC_5_IER_EOC", "AFEC_6_IER_EOC", "AFEC_7_IER_EOC", "AFEC_8_IER_EOC", "AFEC_9_IER_EOC", "AFEC_10_IER_EOC", "AFEC_11_IER_EOC"])
-    
+
     configName = Variables.get("__CONFIGURATION_NAME")
 
 ###################################################################################################
@@ -590,5 +759,5 @@ def instantiateComponent(afecComponent):
     afecSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     afecSystemDefFile.setSourcePath("../peripheral/afec_11147/templates/system/definitions.h.ftl")
     afecSystemDefFile.setMarkup(True)
-    
+
     afecComponent.addPlugin("../peripheral/afec_11147/plugin/afec_11147.jar")

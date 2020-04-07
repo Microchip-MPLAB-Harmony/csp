@@ -727,11 +727,15 @@ def handleMessage(messageID, args):
     global lastAdcChV
     global lastADCChPot
     global lastADCChVdc
+    dict = {}
 
     if (messageID == "PMSM_FOC_ADC_CH_CONF"):
         component = str(adchsInstanceName.getValue()).lower()
 
         resetChannels()
+
+        dict['ADC_MAX_CH'] = ADC_Max_Signals
+        dict['ADC_MAX_MODULES'] = 8
 
         lastAdcChU = phUModule = args['PHASE_U']
         phUCh = args['PHASE_U_CH']
@@ -831,6 +835,7 @@ def handleMessage(messageID, args):
         Database.setSymbolValue(component, "ADCHS_"+str(phDCBusModule)+"_ENABLE", True)
         Database.setSymbolValue(component, "ADCHS_"+str(phPotModule)+"_ENABLE", True)
 
+    return dict
 ###################################################################################################
 ########################### Component   #################################
 ###################################################################################################
@@ -861,6 +866,10 @@ def instantiateComponent(adchsComponent):
     adchsResultAPI = adchsComponent.createStringSymbol("ADC_GET_RESULT_API", None)
     adchsResultAPI.setVisible(False)
     adchsResultAPI.setValue("ADCHS_ChannelResultGet")
+
+    adchsResultReadyAPI = adchsComponent.createStringSymbol("ADC_IS_RESULT_READY_API", None)
+    adchsResultReadyAPI.setVisible(False)
+    adchsResultReadyAPI.setValue("ADCHS_ChannelResultIsReady")
 
     adchsCallbackAPI = adchsComponent.createStringSymbol("ADC_CALLBACK_API", None)
     adchsCallbackAPI.setVisible(False)
