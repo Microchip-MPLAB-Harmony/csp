@@ -1,0 +1,23 @@
+{
+    "linker": {
+        "script": "..\\src\\config\\sam_l10_xpro_keil\\sam_l10_xpro_keil.sct"
+    }, 
+    "assembler": {
+        "macros": [], 
+        "includes": []
+    }, 
+    "general": {
+        "name": "sam_l10_xpro_keil", 
+        "device": "ATSAML10E16A"
+    }, 
+    "compiler": {
+        "macros": [], 
+        "includes": [
+            "..\\src", 
+            "..\\src\\config\\sam_l10_xpro_keil", 
+            "..\\src\\packs\\ATSAML10E16A_DFP", 
+            "..\\src\\packs\\CMSIS\\CMSIS\\Core\\Include", 
+            "..\\src\\packs\\CMSIS"
+        ]
+    }
+}
