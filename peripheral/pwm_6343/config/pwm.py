@@ -60,12 +60,15 @@ pwmFaultIndexMenu = []
 pwmSym_PWM_FMR_FPOL = []
 pwmSym_PWM_FMR_FMOD = []
 pwmSym_PWM_FPV_FPVH = []
+pwmSym_PWM_IER1_FCHID = []
 pwmSym_PWM_FPV_FPVL = []
 
 global pwminterruptVector
 global pwminterruptHandler
 global pwminterruptHandlerLock
 global pwminterruptVectorUpdate
+global interruptDepList
+interruptDepList = []
 
 ###################################################################################################
 ########################### Callback functions for dependencies   #################################
@@ -73,6 +76,7 @@ global pwminterruptVectorUpdate
 #channel number is extracted as 2nd character in ID. like PWM0_xxx, PWM1_xxx
 
 def pwminterruptControl(symbol, event):
+    global pwmSym_PWM_IER1_FCHID
     Database.clearSymbolValue("core", pwminterruptVector)
     Database.clearSymbolValue("core", pwminterruptHandler)
     Database.clearSymbolValue("core", pwminterruptHandlerLock)
@@ -80,7 +84,8 @@ def pwminterruptControl(symbol, event):
     for channelID in range(0, 4):
         if (pwmSym_PWM_IER1_CHID[channelID].getValue() == True):
             nvicEnable = True
-
+        if (pwmSym_PWM_IER1_FCHID[channelID].getValue() == True):
+            nvicEnable = True
     if(nvicEnable == True):
         Database.setSymbolValue("core", pwminterruptVector, True, 2)
         Database.setSymbolValue("core", pwminterruptHandler, pwmInstanceName.getValue() + "_InterruptHandler", 2)
@@ -110,14 +115,34 @@ def pwmClkDependencyStatus(symbol, event):
 
 def pwmNVICDependencyStatus(symbol, event):
     nvic = bool(Database.getSymbolValue("core", pwminterruptVectorUpdate))
+    nvicEnable = False
+    for channelID in range(0, 4):
+        if (pwmSym_PWM_IER1_CHID[channelID].getValue() == True):
+            nvicEnable = True
+        if (pwmSym_PWM_IER1_FCHID[channelID].getValue() == True):
+            nvicEnable = True
 
     if(pwmSym_CH_Enable[0].getValue() == True or pwmSym_CH_Enable[1].getValue() == True or pwmSym_CH_Enable[2].getValue() == True or pwmSym_CH_Enable[3].getValue() == True):
-        if ((nvic == True) and (pwmSym_PWM_IER1_CHID[0].getValue() == True or pwmSym_PWM_IER1_CHID[1].getValue() == True or pwmSym_PWM_IER1_CHID[2].getValue() == True or pwmSym_PWM_IER1_CHID[3].getValue() == True)):
+        if ((nvic == True) and (nvicEnable == True)):
             symbol.setVisible(True)
         else:
             symbol.setVisible(False)
     else:
         symbol.setVisible(False)
+
+def pwmIER1Calc(symbol, event):
+    component = symbol.getComponent()
+    f0 = int(component.getSymbolValue("PWM_FAULT_0_IER1_FCHID")) << 16
+    f1 = int(component.getSymbolValue("PWM_FAULT_1_IER1_FCHID")) << 17
+    f2 = int(component.getSymbolValue("PWM_FAULT_2_IER1_FCHID")) << 18
+    f3 = int(component.getSymbolValue("PWM_FAULT_3_IER1_FCHID")) << 19
+    c0 = int(component.getSymbolValue("PWM_CH_0_IER1_CHID"))
+    c1 = int(component.getSymbolValue("PWM_CH_1_IER1_CHID")) << 1
+    c2 = int(component.getSymbolValue("PWM_CH_2_IER1_CHID")) << 2
+    c3 = int(component.getSymbolValue("PWM_CH_3_IER1_CHID")) << 3
+    val = f0 + f1+ f2+ f3 + c0+ c1+ c2 + c3
+    symbol.setValue(val)
+
 
 def pwmAlignmentVisible(symbol, event):
     if (event["value"] == 1):
@@ -319,6 +344,126 @@ def pwmFaultFMRUpdate(symbol, event):
     else:
         symbol.setValue(currentValue & ~(1 << faultIndex), 1)
 
+################################################################################
+#### Dependency ####
+################################################################################
+def onAttachmentConnected(source, target):
+    localComponent = source["component"]
+    remoteComponent = target["component"]
+    remoteID = remoteComponent.getID()
+    connectID = source["id"]
+    targetID = target["id"]
+
+def onAttachmentDisconnected(source, target):
+    localComponent = source["component"]
+    remoteComponent = target["component"]
+    remoteID = remoteComponent.getID()
+    connectID = source["id"]
+    targetID = target["id"]
+    resetChannels()
+
+global lastPwmChU
+lastPwmChU = 0
+global lastPwmChV
+lastPwmChV = 1
+global lastPwmChW
+lastPwmChW = 2
+
+def resetChannels():
+    global lastPwmChU
+    global lastPwmChV
+    global lastPwmChW
+    component = str(pwmInstanceName.getValue()).lower()
+    #disable PWM channels
+    Database.setSymbolValue(component, "PWM_CH_"+str(lastPwmChU)+"_ENABLE", False)
+    Database.setSymbolValue(component, "PWM_CH_"+str(lastPwmChV)+"_ENABLE", False)
+    Database.setSymbolValue(component, "PWM_CH_"+str(lastPwmChW)+"_ENABLE", False)
+    #disbale interrupt
+    Database.setSymbolValue(component, "PWM_FAULT"+str(lastPwmChU)+"_IER1_FCHID", False)
+
+def handleMessage(messageID, args):
+    global lastPwmChU
+    global lastPwmChV
+    global lastPwmChW
+    component = str(pwmInstanceName.getValue()).lower()
+    dict = {}
+    if (messageID == "PMSM_FOC_PWM_CONF"):
+        resetChannels()
+
+        dict['PWM_MAX_CH'] = 4
+
+        lastPwmChU = pwmChU = args['PWM_PH_U']
+        lastPwmChV = pwmChV = args['PWM_PH_V']
+        lastPwmChW = pwmChW = args['PWM_PH_W']
+
+        freq = args['PWM_FREQ']
+        clock = int(Database.getSymbolValue("core", pwmInstanceName.getValue() + "_CLOCK_FREQUENCY"))
+        period = int(clock)/int(freq)/2
+
+        Database.setSymbolValue(component, "PWM_CH_"+str(pwmChU)+"_CPRD", period)
+        Database.setSymbolValue(component, "PWM_CH_"+str(pwmChV)+"_CPRD", period)
+        Database.setSymbolValue(component, "PWM_CH_"+str(pwmChW)+"_CPRD", period)
+        Database.setSymbolValue(component, "PWM_CH_"+str(pwmChU)+"_CDTY", 0)
+        Database.setSymbolValue(component, "PWM_CH_"+str(pwmChV)+"_CDTY", 0)
+        Database.setSymbolValue(component, "PWM_CH_"+str(pwmChW)+"_CDTY", 0)
+
+        #synchronous Channels
+        if (pwmChU != 0):
+            Database.setSymbolValue(component, "PWM_CH_"+str(pwmChU)+"_SYNCENABLE", True)
+        if (pwmChV != 0):
+            Database.setSymbolValue(component, "PWM_CH_"+str(pwmChV)+"_SYNCENABLE", True)
+        if (pwmChW != 0):
+            Database.setSymbolValue(component, "PWM_CH_"+str(pwmChW)+"_SYNCENABLE", True)
+
+        #macros for channel numbers
+        Database.setSymbolValue(component, "PWM_PH_U", "PWM_CHANNEL_"+str(pwmChU))
+        Database.setSymbolValue(component, "PWM_PH_V", "PWM_CHANNEL_"+str(pwmChV))
+        Database.setSymbolValue(component, "PWM_PH_W", "PWM_CHANNEL_"+str(pwmChW))
+        Database.setSymbolValue(component, "INTR_PWM_FAULT", pwmInstanceName.getValue()+"_IRQn")
+        mask = (1 << pwmChU) + (1 << pwmChV) + (1 << pwmChW)
+        pwmPhMask.setValue(mask)
+
+        #enable PWM channels
+        Database.setSymbolValue(component, "PWM_CH_"+str(pwmChU)+"_ENABLE", True)
+        Database.setSymbolValue(component, "PWM_CH_"+str(pwmChV)+"_ENABLE", True)
+        Database.setSymbolValue(component, "PWM_CH_"+str(pwmChW)+"_ENABLE", True)
+
+        #center-aligned symmetric mode
+        Database.setSymbolValue(component, "PWM_CH_"+str(pwmChU)+"_CMR_CALG", 1)
+        Database.setSymbolValue(component, "PWM_CH_"+str(pwmChV)+"_CMR_CALG", 1)
+        Database.setSymbolValue(component, "PWM_CH_"+str(pwmChW)+"_CMR_CALG", 1)
+
+        #dead-Time
+        dt = args['PWM_DEAD_TIME']
+        deadtime = int((clock) * float(dt)) / 1000000
+        Database.setSymbolValue(component, "PWM_CH_"+str(pwmChU)+"_CMR_DTE", True)
+        Database.setSymbolValue(component, "PWM_CH_"+str(pwmChV)+"_CMR_DTE", True)
+        Database.setSymbolValue(component, "PWM_CH_"+str(pwmChW)+"_CMR_DTE", True)
+        Database.setSymbolValue(component, "PWM_CH_"+str(pwmChU)+"_DT_DTL", deadtime)
+        Database.setSymbolValue(component, "PWM_CH_"+str(pwmChU)+"_DT_DTH", deadtime)
+        Database.setSymbolValue(component, "PWM_CH_"+str(pwmChV)+"_DT_DTL", deadtime)
+        Database.setSymbolValue(component, "PWM_CH_"+str(pwmChV)+"_DT_DTH", deadtime)
+        Database.setSymbolValue(component, "PWM_CH_"+str(pwmChW)+"_DT_DTL", deadtime)
+        Database.setSymbolValue(component, "PWM_CH_"+str(pwmChW)+"_DT_DTH", deadtime)
+
+        #Trigger
+        Database.setSymbolValue(component, "PWM_COMP_0_CMPM_CEN", True)
+        Database.setSymbolValue(component, "PWM_COMP_0_ELMR0_CSEL", True)
+        Database.setSymbolValue(component, "PWM_COMP_0_CMPV_CV", 10)
+
+        #Fault
+        Database.setSymbolValue(component, "PWM_CH_"+str(pwmChU)+"_FAULT_ENABLE", True)
+        Database.setSymbolValue(component, "PWM_CH_"+str(pwmChV)+"_FAULT_ENABLE", True)
+        Database.setSymbolValue(component, "PWM_CH_"+str(pwmChW)+"_FAULT_ENABLE", True)
+        Database.setSymbolValue(component, "PWM_FAULT_"+str(pwmChU)+"_IER1_FCHID", True)
+        global pwmSym_PWM_FPE
+        fault = args['PWM_FAULT']
+        Database.setSymbolValue(component, "PWM_FMR_FMOD_INDEX_" + str(fault)[-1], 0)
+        pwmSym_PWM_FPE[pwmChU].setSelectedKey(str(fault))
+        pwmSym_PWM_FPE[pwmChV].setSelectedKey(str(fault))
+        pwmSym_PWM_FPE[pwmChW].setSelectedKey(str(fault))
+
+    return dict
 ###################################################################################################
 ########################### Component   #################################
 ###################################################################################################
@@ -361,6 +506,57 @@ def instantiateComponent(pwmComponent):
             else:
                 channel[int(pwm_signals[pad].getAttribute("index"))] = False
     #-----------------------------------------------------------------------------------------------------------
+
+    pwmStartApi = pwmComponent.createStringSymbol("PWM_START_API", None)
+    pwmStartApi.setVisible(False)
+    pwmStartApi.setValue(pwmInstanceName.getValue()+"_ChannelsStart")
+
+    pwmStopApi = pwmComponent.createStringSymbol("PWM_STOP_API", None)
+    pwmStopApi.setVisible(False)
+    pwmStopApi.setValue(pwmInstanceName.getValue()+"_ChannelsStop")
+
+    pwmPeriodApi = pwmComponent.createStringSymbol("PWM_GET_PERIOD_API", None)
+    pwmPeriodApi.setVisible(False)
+    pwmPeriodApi.setValue(pwmInstanceName.getValue()+"_ChannelPeriodGet")
+
+    pwmDutyApi = pwmComponent.createStringSymbol("PWM_SET_DUTY_API", None)
+    pwmDutyApi.setVisible(False)
+    pwmDutyApi.setValue(pwmInstanceName.getValue() + "_ChannelDutySet")
+
+    pwmOpDisableApi = pwmComponent.createStringSymbol("PWM_OUTPUT_DISABLE_API", None)
+    pwmOpDisableApi.setVisible(False)
+    pwmOpDisableApi.setValue(pwmInstanceName.getValue() + "_ChannelOverrideDisable")
+
+    pwmOpEnableApi = pwmComponent.createStringSymbol("PWM_OUTPUT_ENABLE_API", None)
+    pwmOpEnableApi.setVisible(False)
+    pwmOpEnableApi.setValue(pwmInstanceName.getValue() + "_ChannelOverrideEnable")
+
+    pwmCallbackApi = pwmComponent.createStringSymbol("PWM_CALLBACK_API", None)
+    pwmCallbackApi.setVisible(False)
+    pwmCallbackApi.setValue(pwmInstanceName.getValue() + "_CallbackRegister")
+
+    pwmPhU = pwmComponent.createStringSymbol("PWM_PH_U", None)
+    pwmPhU.setVisible(False)
+    pwmPhU.setValue("PWM_CHANNEL_0")
+
+    pwmPhV = pwmComponent.createStringSymbol("PWM_PH_V", None)
+    pwmPhV.setVisible(False)
+    pwmPhV.setValue("PWM_CHANNEL_1")
+
+    pwmPhW = pwmComponent.createStringSymbol("PWM_PH_W", None)
+    pwmPhW.setVisible(False)
+    pwmPhW.setValue("PWM_CHANNEL_2")
+
+    global pwmPhMask
+    pwmPhMask = pwmComponent.createHexSymbol("PWM_PH_MASK", None)
+    pwmPhMask.setVisible(False)
+    pwmPhMask.setValue(0x7)
+
+    pwmFaultInt = pwmComponent.createStringSymbol("INTR_PWM_FAULT", None)
+    pwmFaultInt.setVisible(False)
+    pwmFaultInt.setValue(pwmInstanceName.getValue()+"_IRQn")
+
+#-----------------------------------------------------------------------------------------------------------
 
     #Clock menu
     pwmClockMenu = pwmComponent.createMenuSymbol("PWM_CLOCK", None)
@@ -597,6 +793,7 @@ def instantiateComponent(pwmComponent):
         pwmSym_PWM_Fault_Enable[channelID].setDependencies(pwmChannelConfVisible, ["PWM_CH_"+str(channelID)+"_ENABLE"])
 
         #fault source
+        global pwmSym_PWM_FPE
         pwmSym_PWM_FPE.append(channelID)
         pwmSym_PWM_FPE[channelID] = pwmComponent.createKeyValueSetSymbol("PWM_CH_"+str(channelID)+"_FPE", pwmSym_PWM_Fault_Enable[channelID])
         pwmSym_PWM_FPE[channelID].setLabel("Select Fault Source")
@@ -636,13 +833,26 @@ def instantiateComponent(pwmComponent):
         pwmSym_PWM_FPV_FPVH[channelID].setVisible(False)
         pwmSym_PWM_FPV_FPVH[channelID].setDependencies(pwmChannelConfVisible, ["PWM_CH_"+str(channelID)+"_FAULT_ENABLE"])
 
+        global pwmSym_PWM_IER1_FCHID
+        pwmSym_PWM_IER1_FCHID.append(channelID)
+        pwmSym_PWM_IER1_FCHID[channelID] = pwmComponent.createBooleanSymbol("PWM_FAULT_"+str(channelID)+"_IER1_FCHID", pwmSym_PWM_Fault_Enable[channelID])
+        pwmSym_PWM_IER1_FCHID[channelID].setLabel("Enable Fault Interrupt")
+        pwmSym_PWM_IER1_FCHID[channelID].setVisible(False)
+        pwmSym_PWM_IER1_FCHID[channelID].setDependencies(pwmChannelConfVisible, ["PWM_CH_"+str(channelID)+"_FAULT_ENABLE"])
+        interruptDepList.append("PWM_FAULT_"+str(channelID)+"_IER1_FCHID")
+
         #interrupt enable
         pwmSym_PWM_IER1_CHID.append(channelID)
         pwmSym_PWM_IER1_CHID[channelID] = pwmComponent.createBooleanSymbol("PWM_CH_"+str(channelID)+"_IER1_CHID", pwmSym_CH_Enable[channelID])
-        pwmSym_PWM_IER1_CHID[channelID].setLabel("Enable Counter Event")
+        pwmSym_PWM_IER1_CHID[channelID].setLabel("Enable Counter Period Interrupt")
         pwmSym_PWM_IER1_CHID[channelID].setDefaultValue(False)
         pwmSym_PWM_IER1_CHID[channelID].setVisible(False)
         pwmSym_PWM_IER1_CHID[channelID].setDependencies(pwmChannelConfVisible, ["PWM_CH_"+str(channelID)+"_ENABLE"])
+        interruptDepList.append("PWM_CH_"+str(channelID)+"_IER1_CHID")
+
+    pwmSym_PWM_IER1_REG = pwmComponent.createHexSymbol("PWM_IER1_REG", None)
+    pwmSym_PWM_IER1_REG.setVisible(False)
+    pwmSym_PWM_IER1_REG.setDependencies(pwmIER1Calc, interruptDepList)
 
     #-----------------------------------------------------------------------------------------------------------
 
@@ -692,6 +902,7 @@ def instantiateComponent(pwmComponent):
             pwmFaultFPOLSymNameList.append(pwmFPOLSymName)
 
             # Fault mode
+            global pwmSym_PWM_FMR_FMOD
             pwmFMODSymName = "PWM_FMR_FMOD_INDEX_" + faultID
             pwmSym_PWM_FMR_FMOD = pwmComponent.createKeyValueSetSymbol(pwmFMODSymName, pwmFaultIndexMenu)
             pwmSym_PWM_FMR_FMOD.setLabel("Select Fault Mode")
@@ -835,7 +1046,7 @@ def instantiateComponent(pwmComponent):
 
     # NVIC Dynamic settings
     pwmSym_interruptControl = pwmComponent.createBooleanSymbol("PWM_NVIC_ENABLE", None)
-    pwmSym_interruptControl.setDependencies(pwminterruptControl, ["PWM_CH_0_IER1_CHID", "PWM_CH_1_IER1_CHID", "PWM_CH_2_IER1_CHID", "PWM_CH_3_IER1_CHID"])
+    pwmSym_interruptControl.setDependencies(pwminterruptControl, interruptDepList)
     pwmSym_interruptControl.setVisible(False)
 
     # Clock Dynamic settings
@@ -850,12 +1061,17 @@ def instantiateComponent(pwmComponent):
 
     pwmSymClkEnComment.setDependencies(pwmClkDependencyStatus, ["core."+pwmInstanceName.getValue()+"_CLOCK_ENABLE", "PWM_CH_0_ENABLE", "PWM_CH_1_ENABLE", "PWM_CH_2_ENABLE", "PWM_CH_3_ENABLE"])
 
+    interruptCommentDepList = interruptDepList[:]
+    interruptCommentDepList.append("core." + pwminterruptVectorUpdate)
+    interruptCommentDepList.append("PWM_CH_0_ENABLE")
+    interruptCommentDepList.append( "PWM_CH_1_ENABLE")
+    interruptCommentDepList.append( "PWM_CH_2_ENABLE")
+    interruptCommentDepList.append("PWM_CH_3_ENABLE")
 
     pwmSymIntEnComment = pwmComponent.createCommentSymbol("PWM_NVIC_ENABLE_COMMENT", None)
     pwmSymIntEnComment.setVisible(False)
     pwmSymIntEnComment.setLabel("Warning!!! PWM Interrupt is Disabled in Interrupt Manager")
-    pwmSymIntEnComment.setDependencies(pwmNVICDependencyStatus, ["core." + pwminterruptVectorUpdate, "PWM_CH_0_IER1_CHID", "PWM_CH_1_IER1_CHID", "PWM_CH_2_IER1_CHID", "PWM_CH_3_IER1_CHID", \
-        "PWM_CH_0_ENABLE", "PWM_CH_1_ENABLE", "PWM_CH_2_ENABLE", "PWM_CH_3_ENABLE"])
+    pwmSymIntEnComment.setDependencies(pwmNVICDependencyStatus, interruptCommentDepList)
 
 
 

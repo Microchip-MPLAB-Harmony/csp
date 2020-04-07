@@ -87,8 +87,9 @@ extern "C" {
 <#assign PWM_INTERRUPT = false>
 <#list 0..3 as i>
     <#assign PWM_IER1_CHID = "PWM_CH_"+i+"_IER1_CHID">
+    <#assign PWM_IER1_FCHID = "PWM_FAULT_"+i+"_IER1_FCHID">
     <#assign PWM_CH_ENABLE = "PWM_CH_"+ i +"_ENABLE">
-    <#if .vars[PWM_CH_ENABLE] == true && .vars[PWM_IER1_CHID] == true>
+    <#if .vars[PWM_CH_ENABLE] == true && (.vars[PWM_IER1_CHID] == true || .vars[PWM_IER1_FCHID] == true)>
         <#assign PWM_INTERRUPT = true>
     </#if>
 </#list>
@@ -119,6 +120,10 @@ void ${PWM_INSTANCE_NAME}_ChannelCounterEventDisable (PWM_CHANNEL_MASK  channelM
 void ${PWM_INSTANCE_NAME}_SyncUpdateEnable (void);
 
 void ${PWM_INSTANCE_NAME}_FaultStatusClear(PWM_FAULT_ID fault_id);
+
+void ${PWM_INSTANCE_NAME}_ChannelOverrideEnable(PWM_CHANNEL_NUM channel);
+
+void ${PWM_INSTANCE_NAME}_ChannelOverrideDisable(PWM_CHANNEL_NUM channel);
 
 <#if PWM_INTERRUPT == true>
 void ${PWM_INSTANCE_NAME}_CallbackRegister(PWM_CALLBACK callback, uintptr_t context);

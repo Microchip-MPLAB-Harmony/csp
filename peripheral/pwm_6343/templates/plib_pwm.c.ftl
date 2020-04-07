@@ -73,6 +73,7 @@
 <#assign PWM_FPV_FPVL = "PWM_FAULT_"+i+"_FPV_FPVL">
 <#assign PWM_FPV_FPVH = "PWM_FAULT_"+i+"_FPV_FPVH">
 <#assign PWM_IER1_CHID = "PWM_CH_"+i+"_IER1_CHID">
+<#assign PWM_IER1_FCHID = "PWM_FAULT_"+i+"_IER1_FCHID">
 
 <#-- Fault configuration preparation -->
 <#if .vars[PWM_CH_ENABLE] == true && .vars[PWM_Fault_Enable] == true>
@@ -110,7 +111,7 @@
     </#if>
 </#if>
 
-<#if .vars[PWM_CH_ENABLE] == true && .vars[PWM_IER1_CHID] == true>
+<#if .vars[PWM_CH_ENABLE] == true && (.vars[PWM_IER1_CHID] == true || .vars[PWM_IER1_FCHID] == true)>
     <#assign PWM_INTERRUPT = true>
 </#if>
 
@@ -190,6 +191,7 @@ void ${PWM_INSTANCE_NAME}_Initialize (void)
 <#assign PWM_Fault_Enable = "PWM_CH_"+i+"_FAULT_ENABLE">
 <#assign PWM_FPE = "PWM_CH_"+i+"_FPE">
 <#assign PWM_IER1_CHID = "PWM_CH_"+i+"_IER1_CHID">
+<#assign PWM_IER1_FCHID = "PWM_FAULT_"+i+"_IER1_FCHID">
     <#if .vars[PWM_CH_ENABLE] == true>
 
     /************** Channel ${CH_NUM} *************************/
@@ -217,9 +219,9 @@ void ${PWM_INSTANCE_NAME}_Initialize (void)
             <#lt>    /* Dead time */
             <#lt>    ${PWM_INSTANCE_NAME}_REGS->PWM_CH_NUM[${CH_NUM}].PWM_DT = (${.vars[PWM_DT_DTL]}U << PWM_DT_DTL_Pos) | (${.vars[PWM_DT_DTH]}U);
         </#if> <#-- PWM_CMR_DTE -->
-        <#if .vars[PWM_IER1_CHID] == true>
+        <#if PWM_INTERRUPT == true>
         <#lt>    /* Enable counter event */
-        <#lt>    ${PWM_INSTANCE_NAME}_REGS->PWM_IER1 = (0x1U << ${CH_NUM}U);
+        <#lt>    ${PWM_INSTANCE_NAME}_REGS->PWM_IER1 = 0x${PWM_IER1_REG};
         <#lt>    ${PWM_INSTANCE_NAME}_CallbackObj.callback_fn = NULL;
         </#if>
     </#if> <#-- PWM_CH_ENABLE -->
@@ -326,6 +328,19 @@ void ${PWM_INSTANCE_NAME}_SyncUpdateEnable (void)
 void ${PWM_INSTANCE_NAME}_FaultStatusClear(PWM_FAULT_ID fault_id)
 {
     ${PWM_INSTANCE_NAME}_REGS->PWM_FCR = 0x1U << fault_id;
+}
+
+/* Override PWM outputs */
+void ${PWM_INSTANCE_NAME}_ChannelOverrideEnable(PWM_CHANNEL_NUM channel)
+{
+    ${PWM_INSTANCE_NAME}_REGS->PWM_OS &= ~((1 << channel) | (1 << (channel + 16)));
+    ${PWM_INSTANCE_NAME}_REGS->PWM_OS |= ((0 << channel) | (0 << (channel + 16)));
+}
+
+/* Disable override of PWM outputs */
+void ${PWM_INSTANCE_NAME}_ChannelOverrideDisable(PWM_CHANNEL_NUM channel)
+{
+    ${PWM_INSTANCE_NAME}_REGS->PWM_OS |= ((1 << channel) | (1 << (channel + 16)));
 }
 
 <#if PWM_INTERRUPT == true>
