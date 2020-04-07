@@ -638,12 +638,16 @@ def handleMessage(messageID, args):
     global lastPwmChU
     global lastPwmChV
     global lastPwmChW
+    global mcpwmSym_NUM_CHANNELS
+    dict = {}
     component = str(mcpwmInstanceName.getValue()).lower()
     if (messageID == "PMSM_FOC_PWM_CONF"):
         freq = args['PWM_FREQ']
         clock = int(Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY"))
         period = int(clock)/int(freq)/2
         Database.setSymbolValue(component, "PTPER__PTPER", period)
+
+        dict['PWM_MAX_CH'] = mcpwmSym_NUM_CHANNELS.getValue()
 
         resetChannels()
 
@@ -661,6 +665,8 @@ def handleMessage(messageID, args):
         Database.setSymbolValue(component, "MCPWM_CHANNEL"+str(pwmChU), True)
         Database.setSymbolValue(component, "MCPWM_CHANNEL"+str(pwmChV), True)
         Database.setSymbolValue(component, "MCPWM_CHANNEL"+str(pwmChW), True)
+        mask = (1 << pwmChU) + (1 << pwmChV) + (1 << pwmChW)
+        mcpwmPhMask.setValue(mask)
 
         #center-aligned symmetric mode
         Database.setSymbolValue(component, "PWMCON"+str(pwmChU)+"__ECAM", 1)
@@ -668,7 +674,8 @@ def handleMessage(messageID, args):
         Database.setSymbolValue(component, "PWMCON"+str(pwmChW)+"__ECAM", 1)
 
         #dead-Time 1 us
-        deadtime = int(Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")) / 1000000
+        dt = args['PWM_DEAD_TIME']
+        deadtime = int(int(Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")) * float(dt) / (1000000))
         Database.setSymbolValue(component, "DTR"+str(pwmChU)+"__DTR", deadtime)
         Database.setSymbolValue(component, "ALTDTR"+str(pwmChU)+"__ALTDTR", deadtime)
         Database.setSymbolValue(component, "DTR"+str(pwmChV)+"__DTR", deadtime)
@@ -698,9 +705,7 @@ def handleMessage(messageID, args):
         Database.setSymbolValue(component, "IOCON"+str(pwmChW)+"__FLTPOL", 1)
         Database.setSymbolValue(component, "PWMCON"+str(pwmChU)+"__FLTIEN", True)
 
-
-
-
+    return dict
 
 ################################################################################
 #### Component ####
@@ -761,6 +766,11 @@ def instantiateComponent(mcpwmComponent):
     mcpwmPhW.setVisible(False)
     mcpwmPhW.setValue("MCPWM_CH_3")
 
+    global mcpwmPhMask
+    mcpwmPhMask = mcpwmComponent.createHexSymbol("PWM_PH_MASK", None)
+    mcpwmPhMask.setVisible(False)
+    mcpwmPhMask.setValue(0x7)
+
     mcpwmFaultInt = mcpwmComponent.createStringSymbol("INTR_PWM_FAULT", None)
     mcpwmFaultInt.setVisible(False)
     mcpwmFaultInt.setValue("INT_SOURCE_PWM1")
@@ -777,6 +787,7 @@ def instantiateComponent(mcpwmComponent):
            MCPWM_MAX_CHANNELS += 1
 
 
+    global mcpwmSym_NUM_CHANNELS
     mcpwmSym_NUM_CHANNELS = mcpwmComponent.createIntegerSymbol("MCPWM_NUM_CHANNELS", None)
     mcpwmSym_NUM_CHANNELS.setVisible(False)
     mcpwmSym_NUM_CHANNELS.setDefaultValue(MCPWM_MAX_CHANNELS)
