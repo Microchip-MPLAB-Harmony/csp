@@ -82,6 +82,7 @@
 #define CAN_MSG_EID_MASK            0x1FFFFFFF
 #define CAN_MSG_DLC_MASK            0xF
 #define CAN_MSG_RTR_MASK            0x200
+#define CAN_MSG_SRR_MASK            0x20000000
 
 <#if CAN_INTERRUPT_MODE == true>
 static CAN_OBJ ${CAN_INSTANCE_NAME?lower_case}Obj;
@@ -270,7 +271,7 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* 
 
 // *****************************************************************************
 /* Function:
-    bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp, uint8_t fifoNum)
+    bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp, uint8_t fifoNum, CAN_MSG_RX_ATTRIBUTE *msgAttr)
 
    Summary:
     Receives a message from CAN bus.
@@ -284,13 +285,14 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* 
     data        - Pointer to destination data buffer
     timestamp   - Pointer to Rx message timestamp, timestamp value is 0 if Timestamp is disabled in C${CAN_INSTANCE_NUM}CON
     fifoNum     - FIFO number
+    msgAttr     - Data frame or Remote frame to be received
 
    Returns:
     Request status.
     true  - Request was successful.
     false - Request has failed.
 */
-bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp, uint8_t fifoNum)
+bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp, uint8_t fifoNum, CAN_MSG_RX_ATTRIBUTE *msgAttr)
 {
 <#if CAN_INTERRUPT_MODE == false>
     CAN_TX_RX_MSG_BUFFER *rxMessage = NULL;
@@ -317,10 +319,26 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
         if (rxMessage->msgEID & CAN_MSG_IDE_MASK)
         {
             *id = ((rxMessage->msgSID & CAN_MSG_SID_MASK) << 18) | ((rxMessage->msgEID >> 10) & _C${CAN_INSTANCE_NUM}RXM0_EID_MASK);
+            if (rxMessage->msgEID & CAN_MSG_RTR_MASK)
+            {
+                *msgAttr = CAN_MSG_RX_REMOTE_FRAME;
+            }
+            else
+            {
+                *msgAttr = CAN_MSG_RX_DATA_FRAME;
+            }
         }
         else
         {
             *id = rxMessage->msgSID & CAN_MSG_SID_MASK;
+            if (rxMessage->msgEID & CAN_MSG_SRR_MASK)
+            {
+                *msgAttr = CAN_MSG_RX_REMOTE_FRAME;
+            }
+            else
+            {
+                *msgAttr = CAN_MSG_RX_DATA_FRAME;
+            }
         }
 
         *length = rxMessage->msgEID & CAN_MSG_DLC_MASK;
@@ -349,6 +367,7 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
     ${CAN_INSTANCE_NAME?lower_case}RxMsg[fifoNum][msgIndex].buffer = data;
     ${CAN_INSTANCE_NAME?lower_case}RxMsg[fifoNum][msgIndex].size = length;
     ${CAN_INSTANCE_NAME?lower_case}RxMsg[fifoNum][msgIndex].timestamp = timestamp;
+    ${CAN_INSTANCE_NAME?lower_case}RxMsg[fifoNum][msgIndex].msgAttr = msgAttr;
     *(volatile uint32_t *)(&C${CAN_INSTANCE_NUM}FIFOINT0SET + (fifoNum * CAN_FIFO_OFFSET)) = _C${CAN_INSTANCE_NUM}FIFOINT0_RXNEMPTYIE_MASK;
     C${CAN_INSTANCE_NUM}INTSET = _C${CAN_INSTANCE_NUM}INT_RBIE_MASK;
     status = true;
@@ -758,10 +777,26 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
                         if (rxMessage->msgEID & CAN_MSG_IDE_MASK)
                         {
                             *${CAN_INSTANCE_NAME?lower_case}RxMsg[fifoNum][msgIndex].id = ((rxMessage->msgSID & CAN_MSG_SID_MASK) << 18) | ((rxMessage->msgEID >> 10) & _C${CAN_INSTANCE_NUM}RXM0_EID_MASK);
+                            if (rxMessage->msgEID & CAN_MSG_RTR_MASK)
+                            {
+                                *${CAN_INSTANCE_NAME?lower_case}RxMsg[fifoNum][msgIndex].msgAttr = CAN_MSG_RX_REMOTE_FRAME;
+                            }
+                            else
+                            {
+                                *${CAN_INSTANCE_NAME?lower_case}RxMsg[fifoNum][msgIndex].msgAttr = CAN_MSG_RX_DATA_FRAME;
+                            }
                         }
                         else
                         {
                             *${CAN_INSTANCE_NAME?lower_case}RxMsg[fifoNum][msgIndex].id = rxMessage->msgSID & CAN_MSG_SID_MASK;
+                            if (rxMessage->msgEID & CAN_MSG_SRR_MASK)
+                            {
+                                *${CAN_INSTANCE_NAME?lower_case}RxMsg[fifoNum][msgIndex].msgAttr = CAN_MSG_RX_REMOTE_FRAME;
+                            }
+                            else
+                            {
+                                *${CAN_INSTANCE_NAME?lower_case}RxMsg[fifoNum][msgIndex].msgAttr = CAN_MSG_RX_DATA_FRAME;
+                            }
                         }
 
                         *${CAN_INSTANCE_NAME?lower_case}RxMsg[fifoNum][msgIndex].size = rxMessage->msgEID & CAN_MSG_DLC_MASK;
