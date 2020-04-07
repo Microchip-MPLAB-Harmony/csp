@@ -46,7 +46,6 @@ peripherals = {
                 "SQI_00206"     : ["SQI"],
                 "TC_U2212"      : ["TMR"],
                 "TC_U2249"      : ["TMR"],
-                "TC_6082"       : ["TMR"],
                 "TC_44162"      : ["TMR"],
                 "PIT_6079"      : ["TMR"],
                 "RTT_6081"      : ["TMR"],
@@ -73,8 +72,10 @@ peripherals = {
                 "TMR1_00687"    : ["TMR"],
                 "TMR1_02141"    : ["TMR"],
 				"ADCHS_02508"   : ["ADC"],
+                "AFEC_11147"     : ["ADC"],
 				"MCPWM_01477"   : ["PWM"],
-                "QEI_01494"     : ["ENCODER"],
+                "PWM_6343"      : ["PWM"],
+                "QEI_01494"     : ["QDEC"],
 }
 
 processor = Variables.get("__PROCESSOR")
@@ -92,6 +93,12 @@ if( (("SAMV7" in processor) or ("SAME7" in processor) or ("SAMS7" in processor))
     peripherals["QSPI_11171"]=["SPI"]
 else:
     peripherals["QSPI_11171"]=["SPI","SQI"]   # most parts in the family support QSPI mode from the QSPI peripheral
+
+#Cortex M7 devices support quadrature encoder mode
+if( (("SAMV7" in processor) or ("SAME7" in processor) or ("SAMS7" in processor) or ("SAMRH71" in processor)) ):
+    peripherals["TC_6082"]=["TMR","QDEC"]
+else:
+    peripherals["TC_6082"]=["TMR"]
 
 for module in range (0, len(modules)):
 
