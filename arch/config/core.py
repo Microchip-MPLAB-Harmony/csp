@@ -717,13 +717,12 @@ def instantiateComponent( coreComponent ):
         defSym.setValue( "../src;../src/config/" + configName
                         + ";../src/packs/" + processor + "_DFP;"
                         + corePath
-                        + ";../src/" + baseArchDir
                         )
     else:
         defSym.setValue( "../src;../src/config/" + configName
                         + ";../src/packs/" + processor + "_DFP;"
                         + corePath
-                        + ";../src/packs/CMSIS/;../src/" + baseArchDir
+                        + ";../src/packs/CMSIS/"
                         )
     defSym.setAppend(True, ";")
 
