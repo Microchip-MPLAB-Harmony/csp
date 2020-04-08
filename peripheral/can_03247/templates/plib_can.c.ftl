@@ -268,8 +268,8 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
     /* Configure CAN Filters */
     <#list 0..(NUMBER_OF_FILTER-1) as filter>
     <#assign FILTER_REG_INDEX = filter/4>
-    <#assign FILTER_ID = CAN_INSTANCE_NAME + "_FILTER" + filter + "_ID">
-    <#assign FILTER_MASK_ID = CAN_INSTANCE_NAME + "_FILTER" + filter + "_MASK_ID">
+    <#assign FILTER_ID = CAN_INSTANCE_NAME + "_FILTER" + filter + "_ID_DECIMAL">
+    <#assign FILTER_MASK_ID = CAN_INSTANCE_NAME + "_FILTER" + filter + "_MASK_ID_DECIMAL">
     <#assign FILTER_FIFO_SELECT = CAN_INSTANCE_NAME + "_FILTER" + filter + "_FIFO_SELECT">
     <#assign FILTER_ENABLE = CAN_INSTANCE_NAME + "_FILTER" + filter + "_ENABLE">
     /* Filter ${filter} configuration */

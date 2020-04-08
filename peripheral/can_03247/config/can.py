@@ -62,6 +62,9 @@ def getIRQnumber(string):
 
     return irq_index
 
+def symbolSetValue(symbol, event):
+    symbol.setValue(event["value"])
+
 def canCreateFilter(component, menu, filterNumber):
     filterMenu = component.createMenuSymbol(canInstanceName.getValue() + "_FILTER"+ str(filterNumber), menu)
     filterMenu.setLabel("Filter " + str(filterNumber))
@@ -70,15 +73,27 @@ def canCreateFilter(component, menu, filterNumber):
     filterEnable.setLabel("Filter Enable")
     filterEnable.setDefaultValue(True if filterNumber < 1 else False)
 
-    id = component.createIntegerSymbol(canInstanceName.getValue() + "_FILTER" + str(filterNumber) + "_ID", filterMenu)
+    id = component.createHexSymbol(canInstanceName.getValue() + "_FILTER" + str(filterNumber) + "_ID", filterMenu)
     id.setLabel("Filter ID")
     id.setMin(0)
-    id.setMax(536870911)
+    id.setMax(0x1FFFFFFF)
 
-    maskId = component.createIntegerSymbol(canInstanceName.getValue() + "_FILTER" + str(filterNumber) + "_MASK_ID", filterMenu)
+    idDecimal = component.createIntegerSymbol(canInstanceName.getValue() + "_FILTER" + str(filterNumber) + "_ID_DECIMAL", filterMenu)
+    idDecimal.setVisible(False)
+    idDecimal.setMin(0)
+    idDecimal.setMax(536870911)
+    idDecimal.setDependencies(symbolSetValue, [canInstanceName.getValue() + "_FILTER" + str(filterNumber) + "_ID"])
+
+    maskId = component.createHexSymbol(canInstanceName.getValue() + "_FILTER" + str(filterNumber) + "_MASK_ID", filterMenu)
     maskId.setLabel("Mask ID")
     maskId.setMin(0)
-    maskId.setMax(536870911)
+    maskId.setMax(0x1FFFFFFF)
+
+    maskIdDecimal = component.createIntegerSymbol(canInstanceName.getValue() + "_FILTER" + str(filterNumber) + "_MASK_ID_DECIMAL", filterMenu)
+    maskIdDecimal.setVisible(False)
+    maskIdDecimal.setMin(0)
+    maskIdDecimal.setMax(536870911)
+    maskIdDecimal.setDependencies(symbolSetValue, [canInstanceName.getValue() + "_FILTER" + str(filterNumber) + "_MASK_ID"])
 
     fifoSelect = component.createKeyValueSetSymbol(canInstanceName.getValue() + "_FILTER" + str(filterNumber) + "_FIFO_SELECT", filterMenu)
     fifoSelect.setLabel("Select FIFO")
