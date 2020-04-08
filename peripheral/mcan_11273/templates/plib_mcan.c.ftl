@@ -89,8 +89,8 @@ static const mcan_sidfe_registers_t ${MCAN_INSTANCE_NAME?lower_case}StdFilter[] 
     <#list 1..(numInstance) as idx>
     {
         .MCAN_SIDFE_0 = MCAN_SIDFE_0_SFT(${.vars["${MCAN_INSTANCE_NAME}_STD_FILTER${idx}_TYPE"]}) |
-                  MCAN_SIDFE_0_SFID1(${.vars["${MCAN_INSTANCE_NAME}_STD_FILTER${idx}_SFID1"]}) |
-                  MCAN_SIDFE_0_SFID2(${.vars["${MCAN_INSTANCE_NAME}_STD_FILTER${idx}_SFID2"]}) |
+                  MCAN_SIDFE_0_SFID1(0x${.vars["${MCAN_INSTANCE_NAME}_STD_FILTER${idx}_SFID1"]}) |
+                  MCAN_SIDFE_0_SFID2(0x${.vars["${MCAN_INSTANCE_NAME}_STD_FILTER${idx}_SFID2"]}) |
                   MCAN_SIDFE_0_SFEC(${.vars["${MCAN_INSTANCE_NAME}_STD_FILTER${idx}_CONFIG"]})
     },
      </#list>
@@ -103,8 +103,8 @@ static const mcan_xidfe_registers_t ${MCAN_INSTANCE_NAME?lower_case}ExtFilter[] 
 {
     <#list 1..(numInstance) as idx>
     {
-        .MCAN_XIDFE_0 = MCAN_XIDFE_0_EFID1(${.vars["${MCAN_INSTANCE_NAME}_EXT_FILTER${idx}_EFID1"]}) | MCAN_XIDFE_0_EFEC(${.vars["${MCAN_INSTANCE_NAME}_EXT_FILTER${idx}_CONFIG"]}),
-        .MCAN_XIDFE_1 = MCAN_XIDFE_1_EFID2(${.vars["${MCAN_INSTANCE_NAME}_EXT_FILTER${idx}_EFID2"]}) | MCAN_XIDFE_1_EFT(${.vars["${MCAN_INSTANCE_NAME}_EXT_FILTER${idx}_TYPE"]}),
+        .MCAN_XIDFE_0 = MCAN_XIDFE_0_EFID1(0x${.vars["${MCAN_INSTANCE_NAME}_EXT_FILTER${idx}_EFID1"]}) | MCAN_XIDFE_0_EFEC(${.vars["${MCAN_INSTANCE_NAME}_EXT_FILTER${idx}_CONFIG"]}),
+        .MCAN_XIDFE_1 = MCAN_XIDFE_1_EFID2(0x${.vars["${MCAN_INSTANCE_NAME}_EXT_FILTER${idx}_EFID2"]}) | MCAN_XIDFE_1_EFT(${.vars["${MCAN_INSTANCE_NAME}_EXT_FILTER${idx}_TYPE"]}),
     },
      </#list>
 };
