@@ -89,8 +89,8 @@ static const can_sidfe_registers_t ${CAN_INSTANCE_NAME?lower_case}StdFilter[] =
     <#list 1..(numInstance) as idx>
     {
         .CAN_SIDFE_0 = CAN_SIDFE_0_SFT(${.vars["${CAN_INSTANCE_NAME}_STD_FILTER${idx}_TYPE"]}) |
-                  CAN_SIDFE_0_SFID1(${.vars["${CAN_INSTANCE_NAME}_STD_FILTER${idx}_SFID1"]}) |
-                  CAN_SIDFE_0_SFID2(${.vars["${CAN_INSTANCE_NAME}_STD_FILTER${idx}_SFID2"]}) |
+                  CAN_SIDFE_0_SFID1(0x${.vars["${CAN_INSTANCE_NAME}_STD_FILTER${idx}_SFID1"]}) |
+                  CAN_SIDFE_0_SFID2(0x${.vars["${CAN_INSTANCE_NAME}_STD_FILTER${idx}_SFID2"]}) |
                   CAN_SIDFE_0_SFEC(${.vars["${CAN_INSTANCE_NAME}_STD_FILTER${idx}_CONFIG"]})
     },
      </#list>
@@ -103,8 +103,8 @@ static const can_xidfe_registers_t ${CAN_INSTANCE_NAME?lower_case}ExtFilter[] =
 {
     <#list 1..(numInstance) as idx>
     {
-        .CAN_XIDFE_0 = CAN_XIDFE_0_EFID1(${.vars["${CAN_INSTANCE_NAME}_EXT_FILTER${idx}_EFID1"]}) | CAN_XIDFE_0_EFEC(${.vars["${CAN_INSTANCE_NAME}_EXT_FILTER${idx}_CONFIG"]}),
-        .CAN_XIDFE_1 = CAN_XIDFE_1_EFID2(${.vars["${CAN_INSTANCE_NAME}_EXT_FILTER${idx}_EFID2"]}) | CAN_XIDFE_1_EFT(${.vars["${CAN_INSTANCE_NAME}_EXT_FILTER${idx}_TYPE"]}),
+        .CAN_XIDFE_0 = CAN_XIDFE_0_EFID1(0x${.vars["${CAN_INSTANCE_NAME}_EXT_FILTER${idx}_EFID1"]}) | CAN_XIDFE_0_EFEC(${.vars["${CAN_INSTANCE_NAME}_EXT_FILTER${idx}_CONFIG"]}),
+        .CAN_XIDFE_1 = CAN_XIDFE_1_EFID2(0x${.vars["${CAN_INSTANCE_NAME}_EXT_FILTER${idx}_EFID2"]}) | CAN_XIDFE_1_EFT(${.vars["${CAN_INSTANCE_NAME}_EXT_FILTER${idx}_TYPE"]}),
     },
      </#list>
 };
