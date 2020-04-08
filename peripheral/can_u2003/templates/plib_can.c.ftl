@@ -406,7 +406,8 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* 
 
 // *****************************************************************************
 /* Function:
-    bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp, CAN_MSG_RX_ATTRIBUTE msgAttr)
+    bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp,
+                                             CAN_MSG_RX_ATTRIBUTE msgAttr, CAN_MSG_RX_FRAME_ATTRIBUTE *msgFrameAttr)
 
    Summary:
     Receives a message from CAN bus.
@@ -415,18 +416,20 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* 
     ${CAN_INSTANCE_NAME}_Initialize must have been called for the associated CAN instance.
 
    Parameters:
-    id        - Pointer to 11-bit / 29-bit identifier (ID) to be received.
-    length    - Pointer to data length in number of bytes to be received.
-    data      - pointer to destination data buffer
-    timestamp - Pointer to Rx message timestamp, timestamp value is 0 if timestamp is disabled
-    msgAttr   - Message to be read from Rx FIFO0 or Rx FIFO1 or Rx Buffer
+    id           - Pointer to 11-bit / 29-bit identifier (ID) to be received.
+    length       - Pointer to data length in number of bytes to be received.
+    data         - pointer to destination data buffer
+    timestamp    - Pointer to Rx message timestamp, timestamp value is 0 if timestamp is disabled
+    msgAttr      - Message to be read from Rx FIFO0 or Rx FIFO1 or Rx Buffer
+    msgFrameAttr - Data frame or Remote frame to be received
 
    Returns:
     Request status.
     true  - Request was successful.
     false - Request has failed.
 */
-bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp, CAN_MSG_RX_ATTRIBUTE msgAttr)
+bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp,
+                                         CAN_MSG_RX_ATTRIBUTE msgAttr, CAN_MSG_RX_FRAME_ATTRIBUTE *msgFrameAttr)
 {
 <#if INTERRUPT_MODE == false>
     uint8_t msgLength = 0;
@@ -487,6 +490,16 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
                 *id = (rxbeFifo->CAN_RXBE_0 >> 18) & CAN_STD_ID_Msk;
             }
 
+            /* Check RTR and FDF bits for Remote/Data Frame */
+            if ((rxbeFifo->CAN_RXBE_0 & CAN_RXBE_0_RTR_Msk) && ((rxbeFifo->CAN_RXBE_1 & CAN_RXBE_1_FDF_Msk) == 0))
+            {
+                *msgFrameAttr = CAN_MSG_RX_REMOTE_FRAME;
+            }
+            else
+            {
+                *msgFrameAttr = CAN_MSG_RX_DATA_FRAME;
+            }
+
             /* Get received data length */
             msgLength = CANDlcToLengthGet(((rxbeFifo->CAN_RXBE_1 & CAN_RXBE_1_DLC_Msk) >> CAN_RXBE_1_DLC_Pos));
 
@@ -537,6 +550,7 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
             ${CAN_INSTANCE_NAME?lower_case}RxMsg[msgAttr][bufferIndex].rxBuffer = data;
             ${CAN_INSTANCE_NAME?lower_case}RxMsg[msgAttr][bufferIndex].rxsize = length;
             ${CAN_INSTANCE_NAME?lower_case}RxMsg[msgAttr][bufferIndex].timestamp = timestamp;
+            ${CAN_INSTANCE_NAME?lower_case}RxMsg[msgAttr][bufferIndex].msgFrameAttr = msgFrameAttr;
             ${CAN_INSTANCE_NAME}_REGS->CAN_IE |= CAN_IE_DRXE_Msk;
 </#if>
             status = true;
@@ -564,6 +578,16 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
                 *id = (rxf0eFifo->CAN_RXF0E_0 >> 18) & CAN_STD_ID_Msk;
             }
 
+            /* Check RTR and FDF bits for Remote/Data Frame */
+            if ((rxf0eFifo->CAN_RXF0E_0 & CAN_RXF0E_0_RTR_Msk) && ((rxf0eFifo->CAN_RXF0E_1 & CAN_RXF0E_1_FDF_Msk) == 0))
+            {
+                *msgFrameAttr = CAN_MSG_RX_REMOTE_FRAME;
+            }
+            else
+            {
+                *msgFrameAttr = CAN_MSG_RX_DATA_FRAME;
+            }
+
             /* Get received data length */
             msgLength = CANDlcToLengthGet(((rxf0eFifo->CAN_RXF0E_1 & CAN_RXF0E_1_DLC_Msk) >> CAN_RXF0E_1_DLC_Pos));
 
@@ -587,6 +611,7 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
             ${CAN_INSTANCE_NAME?lower_case}RxMsg[msgAttr][bufferIndex].rxBuffer = data;
             ${CAN_INSTANCE_NAME?lower_case}RxMsg[msgAttr][bufferIndex].rxsize = length;
             ${CAN_INSTANCE_NAME?lower_case}RxMsg[msgAttr][bufferIndex].timestamp = timestamp;
+            ${CAN_INSTANCE_NAME?lower_case}RxMsg[msgAttr][bufferIndex].msgFrameAttr = msgFrameAttr;
             ${CAN_INSTANCE_NAME}_REGS->CAN_IE |= CAN_IE_RF0NE_Msk;
 </#if>
             status = true;
@@ -614,6 +639,16 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
                 *id = (rxf1eFifo->CAN_RXF1E_0 >> 18) & CAN_STD_ID_Msk;
             }
 
+            /* Check RTR and FDF bits for Remote/Data Frame */
+            if ((rxf1eFifo->CAN_RXF1E_0 & CAN_RXF1E_0_RTR_Msk) && ((rxf1eFifo->CAN_RXF1E_1 & CAN_RXF1E_1_FDF_Msk) == 0))
+            {
+                *msgFrameAttr = CAN_MSG_RX_REMOTE_FRAME;
+            }
+            else
+            {
+                *msgFrameAttr = CAN_MSG_RX_DATA_FRAME;
+            }
+
             /* Get received data length */
             msgLength = CANDlcToLengthGet(((rxf1eFifo->CAN_RXF1E_1 & CAN_RXF1E_1_DLC_Msk) >> CAN_RXF1E_1_DLC_Pos));
 
@@ -637,6 +672,7 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
             ${CAN_INSTANCE_NAME?lower_case}RxMsg[msgAttr][bufferIndex].rxBuffer = data;
             ${CAN_INSTANCE_NAME?lower_case}RxMsg[msgAttr][bufferIndex].rxsize = length;
             ${CAN_INSTANCE_NAME?lower_case}RxMsg[msgAttr][bufferIndex].timestamp = timestamp;
+            ${CAN_INSTANCE_NAME?lower_case}RxMsg[msgAttr][bufferIndex].msgFrameAttr = msgFrameAttr;
             ${CAN_INSTANCE_NAME}_REGS->CAN_IE |= CAN_IE_RF1NE_Msk;
 </#if>
             status = true;
@@ -1191,6 +1227,16 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
                 *${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_FIFO0][rxgi].rxId = (rxf0eFifo->CAN_RXF0E_0 >> 18) & CAN_STD_ID_Msk;
             }
 
+            /* Check RTR and FDF bits for Remote/Data Frame */
+            if ((rxf0eFifo->CAN_RXF0E_0 & CAN_RXF0E_0_RTR_Msk) && ((rxf0eFifo->CAN_RXF0E_1 & CAN_RXF0E_1_FDF_Msk) == 0))
+            {
+                *${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_FIFO0][rxgi].msgFrameAttr = CAN_MSG_RX_REMOTE_FRAME;
+            }
+            else
+            {
+                *${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_FIFO0][rxgi].msgFrameAttr = CAN_MSG_RX_DATA_FRAME;
+            }
+
             /* Get received data length */
             length = CANDlcToLengthGet(((rxf0eFifo->CAN_RXF0E_1 & CAN_RXF0E_1_DLC_Msk) >> CAN_RXF0E_1_DLC_Pos));
 
@@ -1237,6 +1283,16 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
             else
             {
                 *${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_FIFO1][rxgi].rxId = (rxf1eFifo->CAN_RXF1E_0 >> 18) & CAN_STD_ID_Msk;
+            }
+
+            /* Check RTR and FDF bits for Remote/Data Frame */
+            if ((rxf1eFifo->CAN_RXF1E_0 & CAN_RXF1E_0_RTR_Msk) && ((rxf1eFifo->CAN_RXF1E_1 & CAN_RXF1E_1_FDF_Msk) == 0))
+            {
+                *${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_FIFO1][rxgi].msgFrameAttr = CAN_MSG_RX_REMOTE_FRAME;
+            }
+            else
+            {
+                *${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_FIFO1][rxgi].msgFrameAttr = CAN_MSG_RX_DATA_FRAME;
             }
 
             /* Get received data length */
@@ -1318,6 +1374,16 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
         else
         {
             *${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_BUFFER][bufferIndex].rxId = (rxbeFifo->CAN_RXBE_0 >> 18) & CAN_STD_ID_Msk;
+        }
+
+        /* Check RTR and FDF bits for Remote/Data Frame */
+        if ((rxbeFifo->CAN_RXBE_0 & CAN_RXBE_0_RTR_Msk) && ((rxbeFifo->CAN_RXBE_1 & CAN_RXBE_1_FDF_Msk) == 0))
+        {
+            *${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_BUFFER][bufferIndex].msgFrameAttr = CAN_MSG_RX_REMOTE_FRAME;
+        }
+        else
+        {
+            *${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_BUFFER][bufferIndex].msgFrameAttr = CAN_MSG_RX_DATA_FRAME;
         }
 
         /* Get received data length */
