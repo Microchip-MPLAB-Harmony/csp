@@ -251,7 +251,8 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* 
 
 // *****************************************************************************
 /* Function:
-    bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp, CAN_MAILBOX_RX_ATTRIBUTE mailboxAttr)
+    bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp,
+                                             CAN_MAILBOX_RX_ATTRIBUTE mailboxAttr, CAN_MSG_RX_ATTRIBUTE *msgAttr)
 
    Summary:
     Receives a message from CAN bus.
@@ -265,13 +266,15 @@ bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* 
     data        - pointer to destination data buffer
     timestamp   - Pointer to Rx message timestamp
     mailboxAttr - Mailbox type either RX Mailbox or RX Mailbox with overwrite
+    msgAttr     - Data frame or Remote frame to be received
 
    Returns:
     Request status.
     true  - Request was successful.
     false - Request has failed.
 */
-bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp, CAN_MAILBOX_RX_ATTRIBUTE mailboxAttr)
+bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp,
+                                         CAN_MAILBOX_RX_ATTRIBUTE mailboxAttr, CAN_MSG_RX_ATTRIBUTE *msgAttr)
 {
     uint8_t mailbox = 0;
     bool mbIsReady = false;
@@ -345,6 +348,17 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
             {
                 *id = (${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MID & CAN_MID_MIDvA_Msk) >> CAN_MID_MIDvA_Pos;
             }
+
+            if ((${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MSR & CAN_MSR_MRTR_Msk) &&
+               (mailboxAttr != CAN_MAILBOX_DATA_FRAME_CONSUMER))
+            {
+                *msgAttr = CAN_MSG_RX_REMOTE_FRAME;
+            }
+            else
+            {
+                *msgAttr = CAN_MSG_RX_DATA_FRAME;
+            }
+
             *length = (${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MSR & CAN_MSR_MDLC_Msk) >> CAN_MSR_MDLC_Pos;
             /* Copy the data into the payload */
             for (; dataIndex < *length; dataIndex++)
@@ -389,6 +403,7 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
     ${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].buffer = data;
     ${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].size = length;
     ${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].timestamp = timestamp;
+    ${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].msgAttr = msgAttr;
     ${CAN_INSTANCE_NAME}_REGS->CAN_IER = 1U << mailbox;
 </#if>
     return status;
@@ -927,6 +942,17 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
                             {
                                 *${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].id = (${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MID & CAN_MID_MIDvA_Msk) >> CAN_MID_MIDvA_Pos;
                             }
+
+                            if ((${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MSR & CAN_MSR_MRTR_Msk) &&
+                               ((${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MMR & CAN_MMR_MOT_Msk) != CAN_MMR_MOT_MB_CONSUMER))
+                            {
+                                *${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].msgAttr = CAN_MSG_RX_REMOTE_FRAME;
+                            }
+                            else
+                            {
+                                *${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].msgAttr = CAN_MSG_RX_DATA_FRAME;
+                            }
+
                             *${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].size = (${CAN_INSTANCE_NAME}_REGS->CAN_MB[mailbox].CAN_MSR & CAN_MSR_MDLC_Msk) >> CAN_MSR_MDLC_Pos;
                             /* Copy the data into the payload */
                             for (uint8_t dataIndex = 0; dataIndex < *${CAN_INSTANCE_NAME?lower_case}Obj.rxMsg[mailbox].size; dataIndex++)
