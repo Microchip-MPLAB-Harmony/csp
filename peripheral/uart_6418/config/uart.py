@@ -35,6 +35,19 @@ global interruptHandlerLock
 #### Business Logic ####
 ################################################################################
 
+def handleMessage(messageID, args):
+    global uartSym_RingBuffer_Enable
+    result_dict = {}
+
+    if (messageID == "ENABLE_UART_RING_BUFFER_MODE"):
+        uartSym_RingBuffer_Enable.setReadOnly(True)
+        uartSym_RingBuffer_Enable.setValue(True)
+    if (messageID == "DISABLE_UART_RING_BUFFER_MODE"):
+        uartSym_RingBuffer_Enable.setReadOnly(False)
+        uartSym_RingBuffer_Enable.setValue(False)
+
+    return result_dict
+
 def interruptControl(uartNVIC, event):
 
     global interruptVector
@@ -123,6 +136,7 @@ def instantiateComponent(uartComponent):
     global interruptHandlerLock
     global uartInstanceName
     global uartClockInvalidSym
+    global uartSym_RingBuffer_Enable
 
     uartInstanceName = uartComponent.createStringSymbol("UART_INSTANCE_NAME", None)
     uartInstanceName.setVisible(False)
