@@ -96,8 +96,8 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
     /* Configure Mailbox */
     <#list 0..(NUMBER_OF_MAILBOX-1) as mailbox>
     <#assign MMR_MOT = "CAN_MMR" + mailbox + "_MOT">
-    <#assign MID_ID = "CAN_MID" + mailbox + "_ID">
-    <#assign MAM_ID = "CAN_MAM" + mailbox + "_ID">
+    <#assign MID_ID = "CAN_MID" + mailbox + "_ID_DECIMAL">
+    <#assign MAM_ID = "CAN_MAM" + mailbox + "_ID_DECIMAL">
     ${CAN_INSTANCE_NAME}_REGS->CAN_IDR = CAN_IDR_MB${mailbox}_Msk;
     ${CAN_INSTANCE_NAME}_REGS->CAN_MB[${mailbox}].CAN_MCR = 0;
     <#if .vars[MMR_MOT] == "MB_RX" || .vars[MMR_MOT] == "MB_RX_OVERWRITE" || .vars[MMR_MOT] == "MB_CONSUMER">

@@ -92,6 +92,9 @@ def symbolVisible(symbol, event):
     else:
         symbol.setVisible(False)
 
+def symbolSetValue(symbol, event):
+    symbol.setValue(event["value"])
+
 def instantiateComponent(canComponent):
     global canInstanceName
     global interruptVector
@@ -234,25 +237,39 @@ def instantiateComponent(canComponent):
         canMailbox_MMR_MOT.setOutputMode("Key")
         canMailbox_MMR_MOT.setVisible(True)
 
-        canMailbox_MID_Identifier = canComponent.createIntegerSymbol("CAN_MID" + str(MBNum) + "_ID", canMailboxMenu)
+        canMailbox_MID_Identifier = canComponent.createHexSymbol("CAN_MID" + str(MBNum) + "_ID", canMailboxMenu)
         canMailbox_MID_Identifier.setLabel("Message ID")
         canMailbox_MID_Identifier.setMin(0)
-        canMailbox_MID_Identifier.setMax(536870911)
+        canMailbox_MID_Identifier.setMax(0x1FFFFFFF)
         canMailbox_MID_Identifier.setDefaultValue(0)
         canMailbox_MID_Identifier.setVisible((canMailbox_MMR_MOT.getValue() == 1 or
                                               canMailbox_MMR_MOT.getValue() == 2 or
                                               canMailbox_MMR_MOT.getValue() == 4))
         canMailbox_MID_Identifier.setDependencies(symbolVisible, ["CAN_MMR" + str(MBNum) + "_MOT"])
 
-        canMailbox_MAM_Identifier = canComponent.createIntegerSymbol("CAN_MAM" + str(MBNum) + "_ID", canMailboxMenu)
+        canMailbox_MID_IdentifierDecimal = canComponent.createIntegerSymbol("CAN_MID" + str(MBNum) + "_ID_DECIMAL", canMailboxMenu)
+        canMailbox_MID_IdentifierDecimal.setVisible(False)
+        canMailbox_MID_IdentifierDecimal.setMin(0)
+        canMailbox_MID_IdentifierDecimal.setMax(536870911)
+        canMailbox_MID_IdentifierDecimal.setDefaultValue(0)
+        canMailbox_MID_IdentifierDecimal.setDependencies(symbolSetValue, ["CAN_MID" + str(MBNum) + "_ID"])
+
+        canMailbox_MAM_Identifier = canComponent.createHexSymbol("CAN_MAM" + str(MBNum) + "_ID", canMailboxMenu)
         canMailbox_MAM_Identifier.setLabel("Message Acceptance Mask ID")
         canMailbox_MAM_Identifier.setMin(0)
-        canMailbox_MAM_Identifier.setMax(536870911)
+        canMailbox_MAM_Identifier.setMax(0x1FFFFFFF)
         canMailbox_MAM_Identifier.setDefaultValue(0)
         canMailbox_MAM_Identifier.setVisible((canMailbox_MMR_MOT.getValue() == 1 or
                                               canMailbox_MMR_MOT.getValue() == 2 or
                                               canMailbox_MMR_MOT.getValue() == 4))
         canMailbox_MAM_Identifier.setDependencies(symbolVisible, ["CAN_MMR" + str(MBNum) + "_MOT"])
+
+        canMailbox_MAM_IdentifierDecimal = canComponent.createIntegerSymbol("CAN_MAM" + str(MBNum) + "_ID_DECIMAL", canMailboxMenu)
+        canMailbox_MAM_IdentifierDecimal.setVisible(False)
+        canMailbox_MAM_IdentifierDecimal.setMin(0)
+        canMailbox_MAM_IdentifierDecimal.setMax(536870911)
+        canMailbox_MAM_IdentifierDecimal.setDefaultValue(0)
+        canMailbox_MAM_IdentifierDecimal.setDependencies(symbolSetValue, ["CAN_MAM" + str(MBNum) + "_ID"])
 
     canTimestampEnable = canComponent.createBooleanSymbol("TIMESTAMP_ENABLE", None)
     canTimestampEnable.setLabel("Timestamp Enable")
