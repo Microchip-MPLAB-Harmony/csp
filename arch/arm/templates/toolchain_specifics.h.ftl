@@ -120,7 +120,7 @@
     </#if>
 
     <#lt>// ************************************************************************
-    <#lt>// H3_IAR_SYS_TYPES 
+    <#lt>// H3_IAR_SYS_TYPES
 
     <#lt>#define ssize_t                         long
 
@@ -218,6 +218,20 @@
     <#lt>#define EWOULDBLOCK     (80) /* Operation would block */
     <#lt>#define EXDEV           (81) /* Cross-device link */
 
+<#elseif "KEIL" == COMPILER_CHOICE>
+    <#if CoreArchitecture?contains("ARM926") == false >
+        <#lt>#include "cmsis_compiler.h"
+    </#if>
+    <#lt>#define NO_INIT        __attribute__((section(".no_init")))
+    <#lt>#define SECTION(a)     __attribute__((__section__(a)))
+
+    <#if CACHE_ALIGN?? >
+        <#lt>#define CACHE_LINE_SIZE    (${CACHE_ALIGN}u)
+        <#lt>#define CACHE_ALIGN        __ALIGNED(CACHE_LINE_SIZE)
+    <#else>
+        <#lt>#define CACHE_LINE_SIZE    (4u)
+        <#lt>#define CACHE_ALIGN
+    </#if>
 </#if>
 
 
