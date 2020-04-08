@@ -20,8 +20,7 @@ __STATIC_INLINE void DCache_Enable(void)
     SCB_EnableDCache();
 }
 
-#if (__ARM_FP==14) || (__ARM_FP==4)
-
+#if (__FPU_USED == 1)
 /* Enable FPU */
 __STATIC_INLINE void FPU_Enable(void)
 {
@@ -38,4 +37,4 @@ uint32_t prim;
         __enable_irq();
     }
 }
-#endif /* (__ARM_FP==14) || (__ARM_FP==4) */
+#endif /* (__FPU_USED == 1) */

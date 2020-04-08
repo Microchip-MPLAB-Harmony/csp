@@ -44,10 +44,10 @@ void __iar_data_init3(void);
 void Reset_Handler(void)
 {
 <#if FPU_Available>
-    #if (__FPU_PRESENT)
-    /* Enable the FPU if the application is built with -mfloat-abi=softfp or -mfloat-abi=hard */
+    #if (__FPU_USED == 1)
+    /* Enable the FPU if the application is built with --fpu option */
     FPU_Enable();
-    #endif
+    #endif /* __FPU_USED */
 </#if>
 
 <#if TCM_ENABLE??>

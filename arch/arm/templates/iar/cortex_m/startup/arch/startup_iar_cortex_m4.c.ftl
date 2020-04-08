@@ -1,6 +1,5 @@
+#if (__FPU_USED == 1)
 __STATIC_INLINE void FPU_Enable(void);
-
-#if (__FPU_PRESENT)
 
 /* Enable FPU */
 __STATIC_INLINE void FPU_Enable(void)
@@ -18,4 +17,4 @@ __STATIC_INLINE void FPU_Enable(void)
         __enable_irq();
     }
 }
-#endif
+#endif /* (__FPU_USED == 1) */

@@ -68,8 +68,8 @@ void __attribute__((section(".text.Reset_Handler"))) Reset_Handler(void)
     }
 
 <#if FPU_Available>
-#if (__ARM_FP==14) || (__ARM_FP==4)
-    /* Enable the FPU if the application is built with -mfloat-abi=softfp or -mfloat-abi=hard */
+#if (__FPU_USED == 1)
+    /* Enable the FPU if the application is built with --fpu options */
     FPU_Enable();
 #endif
 </#if>
