@@ -145,7 +145,7 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
     /* Configure CAN Filters */
     <#list 0..(NUMBER_OF_FILTER-1) as filter>
     <#assign FILTER_REG_INDEX = filter/4>
-    <#assign FILTER_ID = CAN_INSTANCE_NAME + "_FILTER" + filter + "_ID">
+    <#assign FILTER_ID = CAN_INSTANCE_NAME + "_FILTER" + filter + "_ID_DECIMAL">
     <#assign FILTER_FIFO_SELECT = CAN_INSTANCE_NAME + "_FILTER" + filter + "_FIFO_SELECT">
     <#assign FILTER_MASK_SELECT = CAN_INSTANCE_NAME + "_FILTER" + filter + "_MASK_SELECT">
     <#assign FILTER_ENABLE = CAN_INSTANCE_NAME + "_FILTER" + filter + "_ENABLE">
@@ -156,7 +156,7 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
 
     /* Configure CAN Acceptance Filter Masks */
     <#list 0..(NUMBER_OF_ACCEPTANCE_FILTER_MASK-1) as mask>
-    <#assign FILTER_MASK_ID = CAN_INSTANCE_NAME + "_MASK" + mask + "_ID">
+    <#assign FILTER_MASK_ID = CAN_INSTANCE_NAME + "_MASK" + mask + "_ID_DECIMAL">
     C${CAN_INSTANCE_NUM}RXM${mask} = ${(.vars[FILTER_MASK_ID]?number > 2047)?then('(${.vars[FILTER_MASK_ID]} & _C${CAN_INSTANCE_NUM}RXM${mask}_EID_MASK) | (((${.vars[FILTER_MASK_ID]} & 0x1FFC0000u) >> 18u) << _C${CAN_INSTANCE_NUM}RXM${mask}_SID_POSITION) | _C${CAN_INSTANCE_NUM}RXM${mask}_MIDE_MASK','(${.vars[FILTER_MASK_ID]} & CAN_MSG_SID_MASK) << _C${CAN_INSTANCE_NUM}RXM${mask}_SID_POSITION')};
     </#list>
 
