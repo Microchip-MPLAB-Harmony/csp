@@ -262,6 +262,26 @@ UART_ERROR UART6_ErrorGet( void )
     return errors;
 }
 
+bool UART6_AutoBaudQuery( void )
+{
+    if(U6MODE & _U6MODE_ABAUD_MASK)
+        return true;
+    else
+        return false;
+}
+
+void UART6_AutoBaudSet( bool enable )
+{
+    if( enable == true )
+    {
+        U6MODESET = _U6MODE_ABAUD_MASK;
+    }
+
+    /* Turning off ABAUD if it was on can lead to unpredictable behavior, so that
+       direction of control is not allowed in this function.                      */
+}
+
+  
 void UART6_WriteByte(int data)
 {
     while ((U6STA & _U6STA_UTXBF_MASK));
