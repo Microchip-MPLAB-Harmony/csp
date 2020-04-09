@@ -123,6 +123,24 @@ typedef enum
 } MCAN_MSG_RX_ATTRIBUTE;
 
 // *****************************************************************************
+/* MCAN Message Object Type RX Frame Attribute
+
+   Summary:
+    MCAN Message RX Frame Attribute for Data Frame and Remote Frame.
+
+   Description:
+    This data type defines MCAN Message RX Frame Attribute for Data Frame and Remote Frame.
+
+   Remarks:
+    None.
+*/
+typedef enum
+{
+    MCAN_MSG_RX_DATA_FRAME = 0,
+    MCAN_MSG_RX_REMOTE_FRAME
+} MCAN_MSG_RX_FRAME_ATTRIBUTE;
+
+// *****************************************************************************
 /* MCAN Transfer Error
 
    Summary:
@@ -277,6 +295,8 @@ typedef struct
     uint8_t *rxsize;
     /* Rx Message timestamp */
     uint16_t *timestamp;
+    /* Rx Message frame attribute */
+    MCAN_MSG_RX_FRAME_ATTRIBUTE *msgFrameAttr;
 } MCAN_RX_MSG;
 
 // *****************************************************************************
