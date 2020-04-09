@@ -68,14 +68,14 @@ static const can_sidfe_registers_t can1StdFilter[] =
 {
     {
         .CAN_SIDFE_0 = CAN_SIDFE_0_SFT(0) |
-                  CAN_SIDFE_0_SFID1(1129) |
-                  CAN_SIDFE_0_SFID2(1129) |
+                  CAN_SIDFE_0_SFID1(0x0) |
+                  CAN_SIDFE_0_SFID2(0x0) |
                   CAN_SIDFE_0_SFEC(1)
     },
     {
         .CAN_SIDFE_0 = CAN_SIDFE_0_SFT(0) |
-                  CAN_SIDFE_0_SFID1(1114) |
-                  CAN_SIDFE_0_SFID2(0) |
+                  CAN_SIDFE_0_SFID1(0x0) |
+                  CAN_SIDFE_0_SFID2(0x0) |
                   CAN_SIDFE_0_SFEC(7)
     },
 };
@@ -83,12 +83,12 @@ static const can_sidfe_registers_t can1StdFilter[] =
 static const can_xidfe_registers_t can1ExtFilter[] =
 {
     {
-        .CAN_XIDFE_0 = CAN_XIDFE_0_EFID1(268435621) | CAN_XIDFE_0_EFEC(7),
-        .CAN_XIDFE_1 = CAN_XIDFE_1_EFID2(0) | CAN_XIDFE_1_EFT(0),
+        .CAN_XIDFE_0 = CAN_XIDFE_0_EFID1(0x0) | CAN_XIDFE_0_EFEC(7),
+        .CAN_XIDFE_1 = CAN_XIDFE_1_EFID2(0x0) | CAN_XIDFE_1_EFT(0),
     },
     {
-        .CAN_XIDFE_0 = CAN_XIDFE_0_EFID1(268435606) | CAN_XIDFE_0_EFEC(2),
-        .CAN_XIDFE_1 = CAN_XIDFE_1_EFID2(268435606) | CAN_XIDFE_1_EFT(0),
+        .CAN_XIDFE_0 = CAN_XIDFE_0_EFID1(0x0) | CAN_XIDFE_0_EFEC(2),
+        .CAN_XIDFE_1 = CAN_XIDFE_1_EFID2(0x0) | CAN_XIDFE_1_EFT(0),
     },
 };
 
@@ -307,7 +307,8 @@ bool CAN1_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, CAN_MODE m
 
 // *****************************************************************************
 /* Function:
-    bool CAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp, CAN_MSG_RX_ATTRIBUTE msgAttr)
+    bool CAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp,
+                                             CAN_MSG_RX_ATTRIBUTE msgAttr, CAN_MSG_RX_FRAME_ATTRIBUTE *msgFrameAttr)
 
    Summary:
     Receives a message from CAN bus.
@@ -316,18 +317,20 @@ bool CAN1_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, CAN_MODE m
     CAN1_Initialize must have been called for the associated CAN instance.
 
    Parameters:
-    id        - Pointer to 11-bit / 29-bit identifier (ID) to be received.
-    length    - Pointer to data length in number of bytes to be received.
-    data      - pointer to destination data buffer
-    timestamp - Pointer to Rx message timestamp, timestamp value is 0 if timestamp is disabled
-    msgAttr   - Message to be read from Rx FIFO0 or Rx FIFO1 or Rx Buffer
+    id           - Pointer to 11-bit / 29-bit identifier (ID) to be received.
+    length       - Pointer to data length in number of bytes to be received.
+    data         - pointer to destination data buffer
+    timestamp    - Pointer to Rx message timestamp, timestamp value is 0 if timestamp is disabled
+    msgAttr      - Message to be read from Rx FIFO0 or Rx FIFO1 or Rx Buffer
+    msgFrameAttr - Data frame or Remote frame to be received
 
    Returns:
     Request status.
     true  - Request was successful.
     false - Request has failed.
 */
-bool CAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp, CAN_MSG_RX_ATTRIBUTE msgAttr)
+bool CAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp,
+                                         CAN_MSG_RX_ATTRIBUTE msgAttr, CAN_MSG_RX_FRAME_ATTRIBUTE *msgFrameAttr)
 {
     uint8_t bufferIndex = 0;
     bool status = false;
@@ -360,6 +363,7 @@ bool CAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t 
             can1RxMsg[msgAttr][bufferIndex].rxBuffer = data;
             can1RxMsg[msgAttr][bufferIndex].rxsize = length;
             can1RxMsg[msgAttr][bufferIndex].timestamp = timestamp;
+            can1RxMsg[msgAttr][bufferIndex].msgFrameAttr = msgFrameAttr;
             CAN1_REGS->CAN_IE |= CAN_IE_DRXE_Msk;
             status = true;
             break;
@@ -369,6 +373,7 @@ bool CAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t 
             can1RxMsg[msgAttr][bufferIndex].rxBuffer = data;
             can1RxMsg[msgAttr][bufferIndex].rxsize = length;
             can1RxMsg[msgAttr][bufferIndex].timestamp = timestamp;
+            can1RxMsg[msgAttr][bufferIndex].msgFrameAttr = msgFrameAttr;
             CAN1_REGS->CAN_IE |= CAN_IE_RF0NE_Msk;
             status = true;
             break;
@@ -378,6 +383,7 @@ bool CAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t 
             can1RxMsg[msgAttr][bufferIndex].rxBuffer = data;
             can1RxMsg[msgAttr][bufferIndex].rxsize = length;
             can1RxMsg[msgAttr][bufferIndex].timestamp = timestamp;
+            can1RxMsg[msgAttr][bufferIndex].msgFrameAttr = msgFrameAttr;
             CAN1_REGS->CAN_IE |= CAN_IE_RF1NE_Msk;
             status = true;
             break;
@@ -545,6 +551,28 @@ bool CAN1_InterruptGet(CAN_INTERRUPT_MASK interruptMask)
 void CAN1_InterruptClear(CAN_INTERRUPT_MASK interruptMask)
 {
     CAN1_REGS->CAN_IR = interruptMask;
+}
+
+// *****************************************************************************
+/* Function:
+    bool CAN1_TxFIFOIsFull(void)
+
+   Summary:
+    Returns true if Tx FIFO is full otherwise false.
+
+   Precondition:
+    CAN1_Initialize must have been called for the associated CAN instance.
+
+   Parameters:
+    None
+
+   Returns:
+    true  - Tx FIFO is full.
+    false - Tx FIFO is not full.
+*/
+bool CAN1_TxFIFOIsFull(void)
+{
+    return (CAN1_REGS->CAN_TXFQS & CAN_TXFQS_TFQF_Msk);
 }
 
 // *****************************************************************************
@@ -852,6 +880,7 @@ void CAN1_InterruptHandler(void)
     uint8_t length = 0;
     uint8_t rxgi = 0;
     can_rxbe_registers_t *rxbeFifo = NULL;
+    uint8_t bufferIndex = 0;
     can_rxf0e_registers_t *rxf0eFifo = NULL;
     can_rxf1e_registers_t *rxf1eFifo = NULL;
     uint32_t ir = CAN1_REGS->CAN_IR;
@@ -881,6 +910,16 @@ void CAN1_InterruptHandler(void)
             else
             {
                 *can1RxMsg[CAN_MSG_ATTR_RX_FIFO0][rxgi].rxId = (rxf0eFifo->CAN_RXF0E_0 >> 18) & CAN_STD_ID_Msk;
+            }
+
+            /* Check RTR and FDF bits for Remote/Data Frame */
+            if ((rxf0eFifo->CAN_RXF0E_0 & CAN_RXF0E_0_RTR_Msk) && ((rxf0eFifo->CAN_RXF0E_1 & CAN_RXF0E_1_FDF_Msk) == 0))
+            {
+                *can1RxMsg[CAN_MSG_ATTR_RX_FIFO0][rxgi].msgFrameAttr = CAN_MSG_RX_REMOTE_FRAME;
+            }
+            else
+            {
+                *can1RxMsg[CAN_MSG_ATTR_RX_FIFO0][rxgi].msgFrameAttr = CAN_MSG_RX_DATA_FRAME;
             }
 
             /* Get received data length */
@@ -925,6 +964,16 @@ void CAN1_InterruptHandler(void)
             else
             {
                 *can1RxMsg[CAN_MSG_ATTR_RX_FIFO1][rxgi].rxId = (rxf1eFifo->CAN_RXF1E_0 >> 18) & CAN_STD_ID_Msk;
+            }
+
+            /* Check RTR and FDF bits for Remote/Data Frame */
+            if ((rxf1eFifo->CAN_RXF1E_0 & CAN_RXF1E_0_RTR_Msk) && ((rxf1eFifo->CAN_RXF1E_1 & CAN_RXF1E_1_FDF_Msk) == 0))
+            {
+                *can1RxMsg[CAN_MSG_ATTR_RX_FIFO1][rxgi].msgFrameAttr = CAN_MSG_RX_REMOTE_FRAME;
+            }
+            else
+            {
+                *can1RxMsg[CAN_MSG_ATTR_RX_FIFO1][rxgi].msgFrameAttr = CAN_MSG_RX_DATA_FRAME;
             }
 
             /* Get received data length */
@@ -977,45 +1026,64 @@ void CAN1_InterruptHandler(void)
         }
         rxbeFifo = (can_rxbe_registers_t *) ((uint8_t *)can1Obj.msgRAMConfig.rxBuffersAddress + rxgi * CAN1_RX_BUFFER_ELEMENT_SIZE);
 
+        for (bufferIndex = 0; bufferIndex < 1; bufferIndex++)
+        {
+            if (bufferIndex < 32)
+            {
+                if ((can1Obj.rxBufferIndex1 & (1 << (bufferIndex & 0x1F))) == (1 << (bufferIndex & 0x1F)))
+                {
+                    can1Obj.rxBufferIndex1 &= ~(1 << (bufferIndex & 0x1F));
+                    break;
+                }
+            }
+            else if ((can1Obj.rxBufferIndex2 & (1 << ((bufferIndex - 32) & 0x1F))) == (1 << ((bufferIndex - 32) & 0x1F)))
+            {
+                can1Obj.rxBufferIndex2 &= ~(1 << ((bufferIndex - 32) & 0x1F));
+                break;
+            }
+        }
+
         /* Get received identifier */
         if (rxbeFifo->CAN_RXBE_0 & CAN_RXBE_0_XTD_Msk)
         {
-            *can1RxMsg[CAN_MSG_ATTR_RX_BUFFER][rxgi].rxId = rxbeFifo->CAN_RXBE_0 & CAN_RXBE_0_ID_Msk;
+            *can1RxMsg[CAN_MSG_ATTR_RX_BUFFER][bufferIndex].rxId = rxbeFifo->CAN_RXBE_0 & CAN_RXBE_0_ID_Msk;
         }
         else
         {
-            *can1RxMsg[CAN_MSG_ATTR_RX_BUFFER][rxgi].rxId = (rxbeFifo->CAN_RXBE_0 >> 18) & CAN_STD_ID_Msk;
+            *can1RxMsg[CAN_MSG_ATTR_RX_BUFFER][bufferIndex].rxId = (rxbeFifo->CAN_RXBE_0 >> 18) & CAN_STD_ID_Msk;
+        }
+
+        /* Check RTR and FDF bits for Remote/Data Frame */
+        if ((rxbeFifo->CAN_RXBE_0 & CAN_RXBE_0_RTR_Msk) && ((rxbeFifo->CAN_RXBE_1 & CAN_RXBE_1_FDF_Msk) == 0))
+        {
+            *can1RxMsg[CAN_MSG_ATTR_RX_BUFFER][bufferIndex].msgFrameAttr = CAN_MSG_RX_REMOTE_FRAME;
+        }
+        else
+        {
+            *can1RxMsg[CAN_MSG_ATTR_RX_BUFFER][bufferIndex].msgFrameAttr = CAN_MSG_RX_DATA_FRAME;
         }
 
         /* Get received data length */
         length = CANDlcToLengthGet(((rxbeFifo->CAN_RXBE_1 & CAN_RXBE_1_DLC_Msk) >> CAN_RXBE_1_DLC_Pos));
 
         /* Copy data to user buffer */
-        memcpy(can1RxMsg[CAN_MSG_ATTR_RX_BUFFER][rxgi].rxBuffer, (uint8_t *)&rxbeFifo->CAN_RXBE_DATA, length);
-        *can1RxMsg[CAN_MSG_ATTR_RX_BUFFER][rxgi].rxsize = length;
+        memcpy(can1RxMsg[CAN_MSG_ATTR_RX_BUFFER][bufferIndex].rxBuffer, (uint8_t *)&rxbeFifo->CAN_RXBE_DATA, length);
+        *can1RxMsg[CAN_MSG_ATTR_RX_BUFFER][bufferIndex].rxsize = length;
 
         /* Get timestamp from received message */
-        if (can1RxMsg[CAN_MSG_ATTR_RX_BUFFER][rxgi].timestamp != NULL)
+        if (can1RxMsg[CAN_MSG_ATTR_RX_BUFFER][bufferIndex].timestamp != NULL)
         {
-            *can1RxMsg[CAN_MSG_ATTR_RX_BUFFER][rxgi].timestamp = (uint16_t)(rxbeFifo->CAN_RXBE_1 & CAN_RXBE_1_RXTS_Msk);
+            *can1RxMsg[CAN_MSG_ATTR_RX_BUFFER][bufferIndex].timestamp = (uint16_t)(rxbeFifo->CAN_RXBE_1 & CAN_RXBE_1_RXTS_Msk);
         }
 
         /* Clear new data flag */
         if (rxgi < 32)
         {
             CAN1_REGS->CAN_NDAT1 = (1 << rxgi);
-            if (0 != (can1Obj.rxBufferIndex1 & (1 << (rxgi & 0x1F))))
-            {
-                can1Obj.rxBufferIndex1 &= (~(1 << (rxgi & 0x1F)));
-            }
         }
         else
         {
             CAN1_REGS->CAN_NDAT2 = (1 << (rxgi - 32));
-            if (0 != (can1Obj.rxBufferIndex2 & (1 << ((rxgi - 32) & 0x1F))))
-            {
-                can1Obj.rxBufferIndex2 &= (~(1 << ((rxgi - 32) & 0x1F)));
-            }
         }
         if (can1CallbackObj[CAN_MSG_ATTR_RX_BUFFER].callback != NULL)
         {
