@@ -262,6 +262,26 @@ UART_ERROR UART1_ErrorGet( void )
     return errors;
 }
 
+bool UART1_AutoBaudQuery( void )
+{
+    if(U1MODE & _U1MODE_ABAUD_MASK)
+        return true;
+    else
+        return false;
+}
+
+void UART1_AutoBaudSet( bool enable )
+{
+    if( enable == true )
+    {
+        U1MODESET = _U1MODE_ABAUD_MASK;
+    }
+
+    /* Turning off ABAUD if it was on can lead to unpredictable behavior, so that
+       direction of control is not allowed in this function.                      */
+}
+
+  
 void UART1_WriteByte(int data)
 {
     while ((U1STA & _U1STA_UTXBF_MASK));
