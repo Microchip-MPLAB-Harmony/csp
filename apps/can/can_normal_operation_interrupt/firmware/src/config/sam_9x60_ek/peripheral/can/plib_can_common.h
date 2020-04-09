@@ -98,6 +98,24 @@ typedef enum
 } CAN_MAILBOX_RX_ATTRIBUTE;
 
 // *****************************************************************************
+/* CAN Message Object Type RX Attribute
+
+   Summary:
+    CAN Message RX Attribute for Data Frame and Remote Frame.
+
+   Description:
+    This data type defines CAN Message RX Attribute for Data Frame and Remote Frame.
+
+   Remarks:
+    None.
+*/
+typedef enum
+{
+    CAN_MSG_RX_DATA_FRAME = 0,
+    CAN_MSG_RX_REMOTE_FRAME
+} CAN_MSG_RX_ATTRIBUTE;
+
+// *****************************************************************************
 /* CAN Mailbox Number
 
    Summary:
@@ -255,11 +273,12 @@ typedef void (*CAN_CALLBACK) (uintptr_t contextHandle);
 */
 typedef struct
 {
-    /* Rx Message ID, buffer, size and timestamp */
-    uint32_t *id;
-    uint8_t  *buffer;
-    uint8_t  *size;
-    uint16_t *timestamp;
+    /* Rx Message ID, buffer, size, timestamp and attribute */
+    uint32_t             *id;
+    uint8_t              *buffer;
+    uint8_t              *size;
+    uint16_t             *timestamp;
+    CAN_MSG_RX_ATTRIBUTE *msgAttr;
 } CAN_RX_MSG;
 
 // *****************************************************************************
