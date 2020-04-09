@@ -76,6 +76,24 @@ typedef enum
 } CAN_MSG_TX_ATTRIBUTE;
 
 // *****************************************************************************
+/* CAN Message Object Type RX Attribute
+
+   Summary:
+    CAN Message RX Attribute for Data Frame and Remote Frame.
+
+   Description:
+    This data type defines CAN Message RX Attribute for Data Frame and Remote Frame.
+
+   Remarks:
+    None.
+*/
+typedef enum
+{
+    CAN_MSG_RX_DATA_FRAME = 0,
+    CAN_MSG_RX_REMOTE_FRAME
+} CAN_MSG_RX_ATTRIBUTE;
+
+// *****************************************************************************
 /* CAN FIFO Interrupt Status Flag Mask
 
    Summary:
@@ -157,6 +175,8 @@ typedef struct
     uint8_t  *size;
     /* Rx Message timestamp */
     uint16_t *timestamp;
+    /* Rx Message attribute */
+    CAN_MSG_RX_ATTRIBUTE *msgAttr;
 } CAN_RX_MSG;
 
 // *****************************************************************************
