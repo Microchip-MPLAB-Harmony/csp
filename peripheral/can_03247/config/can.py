@@ -162,6 +162,22 @@ def canCreateFifoConfig(component, menu, fifoNumber):
     fifoMsgPriority.setVisible(True if fifoNumber < 2 else False)
     fifoMsgPriority.setDependencies(hideMenu, [canInstanceName.getValue() + "_FIFO" + str(fifoNumber) + "_TXEN"])
 
+    fifoRTREnable = component.createKeyValueSetSymbol(canInstanceName.getValue() + "_FIFO" + str(fifoNumber) + "_RTREN", fifoMenu)
+    fifoRTREnable.setLabel("Auto RTR Enable")
+    fifoRTREnable_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[id=\"03247\"]/value-group@[name=\"CFD" + canInstanceNum.getValue() + "FIFOCON" + str(fifoNumber) + "__RTREN" + "\"]")
+    fifoRTREnable_Values = []
+    fifoRTREnable_Values = fifoRTREnable_Node.getChildren()
+    fifoRTREnable_Values = list(reversed(fifoRTREnable_Values))
+    for index in range(len(fifoRTREnable_Values)):
+        fifoRTREnable_Key_Value = fifoRTREnable_Values[index].getAttribute("value")
+        fifoRTREnable_Key_Description = fifoRTREnable_Values[index].getAttribute("caption")
+        fifoRTREnable.addKey(fifoRTREnable_Key_Value, fifoRTREnable_Key_Value, fifoRTREnable_Key_Description)
+    fifoRTREnable.setDisplayMode("Value")
+    fifoRTREnable.setOutputMode("Value")
+    fifoRTREnable.setDefaultValue(0)
+    fifoRTREnable.setVisible(True if fifoNumber < 2 else False)
+    fifoRTREnable.setDependencies(hideMenu, [canInstanceName.getValue() + "_FIFO" + str(fifoNumber) + "_TXEN"])
+
     if (fifoNumber > Database.getSymbolValue(canInstanceName.getValue().lower(), "NUMBER_OF_FIFO")):
         fifoMenu.setVisible(False)
         fifoMenu.setEnabled(False)

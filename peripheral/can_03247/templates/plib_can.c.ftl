@@ -259,8 +259,9 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
     <#assign TX_FIFO_ENABLE = CAN_INSTANCE_NAME + "_FIFO" + fifo + "_TXEN" >
     <#assign FIFO_PAYLOAD_SIZE = CAN_INSTANCE_NAME + "_FIFO" + fifo + "_PAYLOAD_SIZE" >
     <#assign TX_FIFO_PRIORITY = CAN_INSTANCE_NAME + "_FIFO" + fifo + "_MESSAGE_PRIORITY">
+    <#assign TX_FIFO_RTREN = CAN_INSTANCE_NAME + "_FIFO" + fifo + "_RTREN">
     CFD${CAN_INSTANCE_NUM}FIFOCON${fifo} = (((${.vars[FIFO_SIZE]} - 1) << _CFD${CAN_INSTANCE_NUM}FIFOCON${fifo}_FSIZE_POSITION) & _CFD${CAN_INSTANCE_NUM}FIFOCON${fifo}_FSIZE_MASK)<#rt>
-                 <#lt><#if .vars[TX_FIFO_ENABLE] == "0x1"> | _CFD${CAN_INSTANCE_NUM}FIFOCON${fifo}_TXEN_MASK | ((${.vars[TX_FIFO_PRIORITY]} << _CFD${CAN_INSTANCE_NUM}FIFOCON${fifo}_TXPRI_POSITION) & _CFD${CAN_INSTANCE_NUM}FIFOCON${fifo}_TXPRI_MASK)</#if><#rt>
+                 <#lt><#if .vars[TX_FIFO_ENABLE] == "0x1"> | _CFD${CAN_INSTANCE_NUM}FIFOCON${fifo}_TXEN_MASK | ((${.vars[TX_FIFO_PRIORITY]} << _CFD${CAN_INSTANCE_NUM}FIFOCON${fifo}_TXPRI_POSITION) & _CFD${CAN_INSTANCE_NUM}FIFOCON${fifo}_TXPRI_MASK) | ((${.vars[TX_FIFO_RTREN]} << _CFD${CAN_INSTANCE_NUM}FIFOCON${fifo}_RTREN_POSITION) & _CFD${CAN_INSTANCE_NUM}FIFOCON${fifo}_RTREN_MASK)</#if><#rt>
                  <#lt><#if .vars[TX_FIFO_ENABLE] == "0x0" && CAN_TIMESTAMP_ENABLE == true> | _CFD${CAN_INSTANCE_NUM}FIFOCON${fifo}_RXTSEN_MASK </#if><#rt>
                  <#lt> | ((${.vars[FIFO_PAYLOAD_SIZE]} << _CFD${CAN_INSTANCE_NUM}FIFOCON${fifo}_PLSIZE_POSITION) & _CFD${CAN_INSTANCE_NUM}FIFOCON${fifo}_PLSIZE_MASK);
     </#list>
@@ -908,6 +909,81 @@ bool ${CAN_INSTANCE_NAME}_TxFIFOQueueIsFull(uint8_t fifoQueueNum)
     {
         return ((*(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}FIFOSTA1 + ((fifoQueueNum - 1) * CAN_FIFO_OFFSET)) & _CFD${CAN_INSTANCE_NUM}FIFOSTA1_TFNRFNIF_MASK) != _CFD${CAN_INSTANCE_NUM}FIFOSTA1_TFNRFNIF_MASK);
     }
+}
+
+// *****************************************************************************
+/* Function:
+    bool ${CAN_INSTANCE_NAME}_AutoRTRResponseSet(uint32_t id, uint8_t length, uint8_t* data, uint8_t fifoNum)
+
+   Summary:
+    Set the Auto RTR response for remote transmit request.
+
+   Precondition:
+    ${CAN_INSTANCE_NAME}_Initialize must have been called for the associated CAN instance.
+    Auto RTR Enable must be set to 0x1 for the requested Transmit FIFO in MHC configuration.
+
+   Parameters:
+    id           - 11-bit / 29-bit identifier (ID).
+    length       - Length of data buffer in number of bytes.
+    data         - Pointer to source data buffer
+    fifoNum      - FIFO Number
+
+   Returns:
+    Request status.
+    true  - Request was successful.
+    false - Request has failed.
+*/
+bool ${CAN_INSTANCE_NAME}_AutoRTRResponseSet(uint32_t id, uint8_t length, uint8_t* data, uint8_t fifoNum)
+{
+    CAN_TX_MSG_OBJECT *txMessage = NULL;
+    uint8_t count = 0;
+    bool status = false;
+
+    if (fifoNum <= CAN_NUM_OF_FIFO)
+    {
+        if ((*(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}FIFOSTA1 + ((fifoNum - 1) * CAN_FIFO_OFFSET)) & _CFD${CAN_INSTANCE_NUM}FIFOSTA1_TFNRFNIF_MASK) == _CFD${CAN_INSTANCE_NUM}FIFOSTA1_TFNRFNIF_MASK)
+        {
+            txMessage = (CAN_TX_MSG_OBJECT *)PA_TO_KVA1(*(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}FIFOUA1 + ((fifoNum - 1) * CAN_FIFO_OFFSET)));
+            status = true;
+        }
+    }
+
+    if (status)
+    {
+        /* Check the id whether it falls under SID or EID,
+         * SID max limit is 0x7FF, so anything beyond that is EID */
+        if (id > CAN_MSG_SID_MASK)
+        {
+            txMessage->t0 = (((id & CAN_MSG_TX_EXT_SID_MASK) >> 18) | ((id & CAN_MSG_TX_EXT_EID_MASK) << 11)) & CAN_MSG_EID_MASK;
+            txMessage->t1 = CAN_MSG_IDE_MASK;
+        }
+        else
+        {
+            txMessage->t0 = id;
+            txMessage->t1 = 0;
+        }
+
+        /* Limit length */
+        if (length > 8)
+            length = 8;
+        txMessage->t1 |= length;
+
+        while(count < length)
+        {
+            txMessage->data[count++] = *data++;
+        }
+
+<#if CAN_INTERRUPT_MODE == true>
+        *(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}FIFOCON1 + ((fifoNum - 1) * CAN_FIFO_OFFSET)) |= _CFD${CAN_INSTANCE_NUM}FIFOCON1_TFERFFIE_MASK;
+
+</#if>
+        /* Set UINC to respond to RTR */
+        *(volatile uint32_t *)(&CFD${CAN_INSTANCE_NUM}FIFOCON1 + ((fifoNum - 1) * CAN_FIFO_OFFSET)) |= _CFD${CAN_INSTANCE_NUM}FIFOCON1_UINC_MASK;
+<#if CAN_INTERRUPT_MODE == true>
+        CFD${CAN_INSTANCE_NUM}INT |= _CFD${CAN_INSTANCE_NUM}INT_TXIE_MASK;
+</#if>
+    }
+    return status;
 }
 
 <#if CAN_INTERRUPT_MODE == true>
