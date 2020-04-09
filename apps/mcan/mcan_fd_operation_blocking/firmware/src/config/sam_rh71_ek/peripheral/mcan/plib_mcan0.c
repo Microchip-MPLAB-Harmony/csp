@@ -64,13 +64,13 @@ static const mcan_sidfe_registers_t mcan0StdFilter[] =
 {
     {
         .MCAN_SIDFE_0 = MCAN_SIDFE_0_SFT(0) |
-                  MCAN_SIDFE_0_SFID1(0x0) |
-                  MCAN_SIDFE_0_SFID2(0x0) |
+                  MCAN_SIDFE_0_SFID1(0x469) |
+                  MCAN_SIDFE_0_SFID2(0x469) |
                   MCAN_SIDFE_0_SFEC(1)
     },
     {
         .MCAN_SIDFE_0 = MCAN_SIDFE_0_SFT(0) |
-                  MCAN_SIDFE_0_SFID1(0x0) |
+                  MCAN_SIDFE_0_SFID1(0x45a) |
                   MCAN_SIDFE_0_SFID2(0x0) |
                   MCAN_SIDFE_0_SFEC(7)
     },
@@ -79,12 +79,12 @@ static const mcan_sidfe_registers_t mcan0StdFilter[] =
 static const mcan_xidfe_registers_t mcan0ExtFilter[] =
 {
     {
-        .MCAN_XIDFE_0 = MCAN_XIDFE_0_EFID1(0x0) | MCAN_XIDFE_0_EFEC(7),
+        .MCAN_XIDFE_0 = MCAN_XIDFE_0_EFID1(0x100000a5) | MCAN_XIDFE_0_EFEC(7),
         .MCAN_XIDFE_1 = MCAN_XIDFE_1_EFID2(0x0) | MCAN_XIDFE_1_EFT(0),
     },
     {
-        .MCAN_XIDFE_0 = MCAN_XIDFE_0_EFID1(0x0) | MCAN_XIDFE_0_EFEC(2),
-        .MCAN_XIDFE_1 = MCAN_XIDFE_1_EFID2(0x0) | MCAN_XIDFE_1_EFT(0),
+        .MCAN_XIDFE_0 = MCAN_XIDFE_0_EFID1(0x10000096) | MCAN_XIDFE_0_EFEC(2),
+        .MCAN_XIDFE_1 = MCAN_XIDFE_1_EFID2(0x10000096) | MCAN_XIDFE_1_EFT(0),
     },
 };
 

@@ -77,7 +77,8 @@ int main ( void )
     uint8_t rx_message[8];
     uint32_t rx_messageID = 0;
     uint8_t rx_messageLength = 0;
-    
+    MCAN_MSG_RX_FRAME_ATTRIBUTE msgFrameAttr = MCAN_MSG_RX_DATA_FRAME;
+
     /* Initialize all modules */
     SYS_Initialize ( NULL );
 
@@ -135,7 +136,7 @@ int main ( void )
                             memset(rx_message, 0x00, sizeof(rx_message));
                             
                             /* Receive FIFO 0 New Message */
-                            if (MCAN0_MessageReceive(&rx_messageID, &rx_messageLength, rx_message, 0, MCAN_MSG_ATTR_RX_FIFO0) == true)  
+                            if (MCAN0_MessageReceive(&rx_messageID, &rx_messageLength, rx_message, 0, MCAN_MSG_ATTR_RX_FIFO0, &msgFrameAttr) == true)  
                             {
                                 printf(" New Message Received    \r\n");
                                 status = MCAN0_ErrorGet();

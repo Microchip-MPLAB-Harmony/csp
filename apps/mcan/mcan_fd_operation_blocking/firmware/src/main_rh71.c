@@ -59,6 +59,7 @@ uint8_t messageLength = 0;
 uint8_t rx_messageLength = 0;
 uint8_t loop_count;
 volatile uint8_t user_input = 0;
+MCAN_MSG_RX_FRAME_ATTRIBUTE msgFrameAttr = MCAN_MSG_RX_DATA_FRAME;
 
 uint8_t MCAN0MessageRAM[MCAN0_MESSAGE_RAM_CONFIG_SIZE] __attribute__((aligned (32)))__attribute__((space(data), section (".ram_nocache")));
         
@@ -163,7 +164,7 @@ int main ( void )
                             memset(rx_message, 0x00, sizeof(rx_message));
                             
                             /* Receive FIFO 0 New Message */
-                            if (MCAN0_MessageReceive(&rx_messageID, &rx_messageLength, rx_message, 0, MCAN_MSG_ATTR_RX_BUFFER) == true)  
+                            if (MCAN0_MessageReceive(&rx_messageID, &rx_messageLength, rx_message, 0, MCAN_MSG_ATTR_RX_BUFFER, &msgFrameAttr) == true)  
                             {
                                 printf(" New Message Received    \r\n");
                                 status = MCAN0_ErrorGet();
@@ -218,7 +219,7 @@ int main ( void )
                             memset(rx_message, 0x00, sizeof(rx_message));
                             
                             /* Receive FIFO 0 New Message */
-                            if (MCAN0_MessageReceive(&rx_messageID, &rx_messageLength, rx_message, 0, MCAN_MSG_ATTR_RX_FIFO0) == true)  
+                            if (MCAN0_MessageReceive(&rx_messageID, &rx_messageLength, rx_message, 0, MCAN_MSG_ATTR_RX_FIFO0, &msgFrameAttr) == true)  
                             {
                                 printf(" New Message Received    \r\n");
                                 status = MCAN0_ErrorGet();
@@ -269,7 +270,7 @@ int main ( void )
                             memset(rx_message, 0x00, sizeof(rx_message));
                             
                             /* Receive FIFO 0 New Message */
-                            if (MCAN0_MessageReceive(&rx_messageID, &rx_messageLength, rx_message, 0, MCAN_MSG_ATTR_RX_BUFFER) == true)  
+                            if (MCAN0_MessageReceive(&rx_messageID, &rx_messageLength, rx_message, 0, MCAN_MSG_ATTR_RX_BUFFER, &msgFrameAttr) == true)  
                             {
                                 printf(" New Message Received    \r\n");
                                 status = MCAN0_ErrorGet();
@@ -324,7 +325,7 @@ int main ( void )
                             memset(rx_message, 0x00, sizeof(rx_message));
                             
                             /* Receive FIFO 0 New Message */
-                            if (MCAN0_MessageReceive(&rx_messageID, &rx_messageLength, rx_message, 0, MCAN_MSG_ATTR_RX_FIFO1) == true)  
+                            if (MCAN0_MessageReceive(&rx_messageID, &rx_messageLength, rx_message, 0, MCAN_MSG_ATTR_RX_FIFO1, &msgFrameAttr) == true)  
                             {
                                 printf(" New Message Received    \r\n");
                                 status = MCAN0_ErrorGet();

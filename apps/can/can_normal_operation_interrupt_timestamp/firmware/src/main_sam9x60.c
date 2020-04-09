@@ -77,6 +77,7 @@ static uint8_t rx_message[8];
 static uint32_t rx_messageID = 0;
 static uint8_t rx_messageLength = 0;
 static uint16_t timestamp = 0;
+static CAN_MSG_RX_ATTRIBUTE msgAttr = CAN_MSG_RX_DATA_FRAME;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -190,7 +191,7 @@ int main ( void )
                     state = APP_STATE_CAN_IDLE;
                     memset(rx_message, 0x00, sizeof(rx_message));
                     /* Receive New Message */
-                    if (CAN1_MessageReceive(&rx_messageID, &rx_messageLength, rx_message, &timestamp, CAN_MAILBOX_DATA_FRAME_RX_OVERWRITE) == false)  
+                    if (CAN1_MessageReceive(&rx_messageID, &rx_messageLength, rx_message, &timestamp, CAN_MAILBOX_DATA_FRAME_RX_OVERWRITE, &msgAttr) == false)  
                     {
                         printf("CAN1_MessageReceive request has failed\r\n");
                     }

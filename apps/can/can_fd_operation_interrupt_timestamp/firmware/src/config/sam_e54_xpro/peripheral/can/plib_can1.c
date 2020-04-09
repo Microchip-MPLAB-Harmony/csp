@@ -68,13 +68,13 @@ static const can_sidfe_registers_t can1StdFilter[] =
 {
     {
         .CAN_SIDFE_0 = CAN_SIDFE_0_SFT(0) |
-                  CAN_SIDFE_0_SFID1(0x0) |
-                  CAN_SIDFE_0_SFID2(0x0) |
+                  CAN_SIDFE_0_SFID1(0x469) |
+                  CAN_SIDFE_0_SFID2(0x469) |
                   CAN_SIDFE_0_SFEC(1)
     },
     {
         .CAN_SIDFE_0 = CAN_SIDFE_0_SFT(0) |
-                  CAN_SIDFE_0_SFID1(0x0) |
+                  CAN_SIDFE_0_SFID1(0x45a) |
                   CAN_SIDFE_0_SFID2(0x0) |
                   CAN_SIDFE_0_SFEC(7)
     },
@@ -83,12 +83,12 @@ static const can_sidfe_registers_t can1StdFilter[] =
 static const can_xidfe_registers_t can1ExtFilter[] =
 {
     {
-        .CAN_XIDFE_0 = CAN_XIDFE_0_EFID1(0x0) | CAN_XIDFE_0_EFEC(7),
+        .CAN_XIDFE_0 = CAN_XIDFE_0_EFID1(0x100000a5) | CAN_XIDFE_0_EFEC(7),
         .CAN_XIDFE_1 = CAN_XIDFE_1_EFID2(0x0) | CAN_XIDFE_1_EFT(0),
     },
     {
-        .CAN_XIDFE_0 = CAN_XIDFE_0_EFID1(0x0) | CAN_XIDFE_0_EFEC(2),
-        .CAN_XIDFE_1 = CAN_XIDFE_1_EFID2(0x0) | CAN_XIDFE_1_EFT(0),
+        .CAN_XIDFE_0 = CAN_XIDFE_0_EFID1(0x10000096) | CAN_XIDFE_0_EFEC(2),
+        .CAN_XIDFE_1 = CAN_XIDFE_1_EFID2(0x10000096) | CAN_XIDFE_1_EFT(0),
     },
 };
 

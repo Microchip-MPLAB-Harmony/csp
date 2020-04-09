@@ -83,6 +83,7 @@ int main ( void )
     uint8_t message[64];
     uint8_t messageLength = 0;
     uint32_t status = 0;
+    MCAN_MSG_RX_FRAME_ATTRIBUTE msgFrameAttr = MCAN_MSG_RX_DATA_FRAME;
 
     /* Initialize all modules */
     SYS_Initialize ( NULL );
@@ -108,7 +109,7 @@ int main ( void )
             {
                 memset(message, 0x00, sizeof(message));
                 /* Receive FIFO 0 New Message */
-                if (MCAN0_MessageReceive(&messageID, &messageLength, message, 0, MCAN_MSG_ATTR_RX_FIFO0))
+                if (MCAN0_MessageReceive(&messageID, &messageLength, message, 0, MCAN_MSG_ATTR_RX_FIFO0, &msgFrameAttr))
                 {
                     /* Transmit back received Message */
                     if (!MCAN0_MessageTransmit(messageID, messageLength, message, MCAN_MODE_NORMAL, MCAN_MSG_ATTR_TX_FIFO_DATA_FRAME))

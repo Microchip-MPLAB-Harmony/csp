@@ -150,6 +150,7 @@ int main ( void )
     uint32_t messageID = 0;
     uint8_t message[64] = {0};
     uint8_t messageLength = 0;
+    MCAN_MSG_RX_FRAME_ATTRIBUTE msgFrameAttr = MCAN_MSG_RX_DATA_FRAME;
 
     /* Initialize all modules */
     SYS_Initialize ( NULL );
@@ -173,7 +174,7 @@ int main ( void )
                 state = APP_STATE_MCAN_IDLE;
 
                 /* Receive FIFO 0 New Message */
-                if (!MCAN0_MessageReceive(&messageID, &messageLength, message, 0, MCAN_MSG_ATTR_RX_FIFO0))
+                if (!MCAN0_MessageReceive(&messageID, &messageLength, message, 0, MCAN_MSG_ATTR_RX_FIFO0, &msgFrameAttr))
                 {
                     printf("MCAN0_MessageReceive request has failed\r\n");
                 }

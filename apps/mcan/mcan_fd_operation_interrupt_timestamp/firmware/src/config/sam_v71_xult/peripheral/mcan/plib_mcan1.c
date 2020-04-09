@@ -68,14 +68,14 @@ static const mcan_sidfe_registers_t mcan1StdFilter[] =
 {
     {
         .MCAN_SIDFE_0 = MCAN_SIDFE_0_SFT(0) |
-                  MCAN_SIDFE_0_SFID1(1129) |
-                  MCAN_SIDFE_0_SFID2(1129) |
+                  MCAN_SIDFE_0_SFID1(0x469) |
+                  MCAN_SIDFE_0_SFID2(0x469) |
                   MCAN_SIDFE_0_SFEC(1)
     },
     {
         .MCAN_SIDFE_0 = MCAN_SIDFE_0_SFT(0) |
-                  MCAN_SIDFE_0_SFID1(1114) |
-                  MCAN_SIDFE_0_SFID2(0) |
+                  MCAN_SIDFE_0_SFID1(0x45a) |
+                  MCAN_SIDFE_0_SFID2(0x0) |
                   MCAN_SIDFE_0_SFEC(7)
     },
 };
@@ -83,12 +83,12 @@ static const mcan_sidfe_registers_t mcan1StdFilter[] =
 static const mcan_xidfe_registers_t mcan1ExtFilter[] =
 {
     {
-        .MCAN_XIDFE_0 = MCAN_XIDFE_0_EFID1(268435621) | MCAN_XIDFE_0_EFEC(7),
-        .MCAN_XIDFE_1 = MCAN_XIDFE_1_EFID2(0) | MCAN_XIDFE_1_EFT(0),
+        .MCAN_XIDFE_0 = MCAN_XIDFE_0_EFID1(0x100000a5) | MCAN_XIDFE_0_EFEC(7),
+        .MCAN_XIDFE_1 = MCAN_XIDFE_1_EFID2(0x0) | MCAN_XIDFE_1_EFT(0),
     },
     {
-        .MCAN_XIDFE_0 = MCAN_XIDFE_0_EFID1(268435606) | MCAN_XIDFE_0_EFEC(2),
-        .MCAN_XIDFE_1 = MCAN_XIDFE_1_EFID2(268435606) | MCAN_XIDFE_1_EFT(0),
+        .MCAN_XIDFE_0 = MCAN_XIDFE_0_EFID1(0x10000096) | MCAN_XIDFE_0_EFEC(2),
+        .MCAN_XIDFE_1 = MCAN_XIDFE_1_EFID2(0x10000096) | MCAN_XIDFE_1_EFT(0),
     },
 };
 
@@ -307,7 +307,8 @@ bool MCAN1_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, MCAN_MODE
 
 // *****************************************************************************
 /* Function:
-    bool MCAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp, MCAN_MSG_RX_ATTRIBUTE msgAttr)
+    bool MCAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp,
+                                              MCAN_MSG_RX_ATTRIBUTE msgAttr, MCAN_MSG_RX_FRAME_ATTRIBUTE *msgFrameAttr)
 
    Summary:
     Receives a message from CAN bus.
@@ -316,18 +317,20 @@ bool MCAN1_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, MCAN_MODE
     MCAN1_Initialize must have been called for the associated MCAN instance.
 
    Parameters:
-    id        - Pointer to 11-bit / 29-bit identifier (ID) to be received.
-    length    - Pointer to data length in number of bytes to be received.
-    data      - pointer to destination data buffer
-    timestamp - Pointer to Rx message timestamp, timestamp value is 0 if timestamp is disabled
-    msgAttr   - Message to be read from Rx FIFO0 or Rx FIFO1 or Rx Buffer
+    id           - Pointer to 11-bit / 29-bit identifier (ID) to be received.
+    length       - Pointer to data length in number of bytes to be received.
+    data         - pointer to destination data buffer
+    timestamp    - Pointer to Rx message timestamp, timestamp value is 0 if timestamp is disabled
+    msgAttr      - Message to be read from Rx FIFO0 or Rx FIFO1 or Rx Buffer
+    msgFrameAttr - Data frame or Remote frame to be received
 
    Returns:
     Request status.
     true  - Request was successful.
     false - Request has failed.
 */
-bool MCAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp, MCAN_MSG_RX_ATTRIBUTE msgAttr)
+bool MCAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp,
+                                          MCAN_MSG_RX_ATTRIBUTE msgAttr, MCAN_MSG_RX_FRAME_ATTRIBUTE *msgFrameAttr)
 {
     uint8_t bufferIndex = 0;
     bool status = false;
@@ -360,6 +363,7 @@ bool MCAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t
             mcan1RxMsg[msgAttr][bufferIndex].rxBuffer = data;
             mcan1RxMsg[msgAttr][bufferIndex].rxsize = length;
             mcan1RxMsg[msgAttr][bufferIndex].timestamp = timestamp;
+            mcan1RxMsg[msgAttr][bufferIndex].msgFrameAttr = msgFrameAttr;
             MCAN1_REGS->MCAN_IE |= MCAN_IE_DRXE_Msk;
             status = true;
             break;
@@ -369,6 +373,7 @@ bool MCAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t
             mcan1RxMsg[msgAttr][bufferIndex].rxBuffer = data;
             mcan1RxMsg[msgAttr][bufferIndex].rxsize = length;
             mcan1RxMsg[msgAttr][bufferIndex].timestamp = timestamp;
+            mcan1RxMsg[msgAttr][bufferIndex].msgFrameAttr = msgFrameAttr;
             MCAN1_REGS->MCAN_IE |= MCAN_IE_RF0NE_Msk;
             status = true;
             break;
@@ -378,6 +383,7 @@ bool MCAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t
             mcan1RxMsg[msgAttr][bufferIndex].rxBuffer = data;
             mcan1RxMsg[msgAttr][bufferIndex].rxsize = length;
             mcan1RxMsg[msgAttr][bufferIndex].timestamp = timestamp;
+            mcan1RxMsg[msgAttr][bufferIndex].msgFrameAttr = msgFrameAttr;
             MCAN1_REGS->MCAN_IE |= MCAN_IE_RF1NE_Msk;
             status = true;
             break;
@@ -545,6 +551,28 @@ bool MCAN1_InterruptGet(MCAN_INTERRUPT_MASK interruptMask)
 void MCAN1_InterruptClear(MCAN_INTERRUPT_MASK interruptMask)
 {
     MCAN1_REGS->MCAN_IR = interruptMask;
+}
+
+// *****************************************************************************
+/* Function:
+    bool MCAN1_TxFIFOIsFull(void)
+
+   Summary:
+    Returns true if Tx FIFO is full otherwise false.
+
+   Precondition:
+    MCAN1_Initialize must have been called for the associated MCAN instance.
+
+   Parameters:
+    None
+
+   Returns:
+    true  - Tx FIFO is full.
+    false - Tx FIFO is not full.
+*/
+bool MCAN1_TxFIFOIsFull(void)
+{
+    return (MCAN1_REGS->MCAN_TXFQS & MCAN_TXFQS_TFQF_Msk);
 }
 
 // *****************************************************************************
@@ -855,6 +883,7 @@ void MCAN1_INT0_InterruptHandler(void)
     uint8_t length = 0;
     uint8_t rxgi = 0;
     mcan_rxbe_registers_t *rxbeFifo = NULL;
+    uint8_t bufferIndex = 0;
     mcan_rxf0e_registers_t *rxf0eFifo = NULL;
     mcan_rxf1e_registers_t *rxf1eFifo = NULL;
     uint32_t ir = MCAN1_REGS->MCAN_IR;
@@ -884,6 +913,16 @@ void MCAN1_INT0_InterruptHandler(void)
             else
             {
                 *mcan1RxMsg[MCAN_MSG_ATTR_RX_FIFO0][rxgi].rxId = (rxf0eFifo->MCAN_RXF0E_0 >> 18) & MCAN_STD_ID_Msk;
+            }
+
+            /* Check RTR and FDF bits for Remote/Data Frame */
+            if ((rxf0eFifo->MCAN_RXF0E_0 & MCAN_RXF0E_0_RTR_Msk) && ((rxf0eFifo->MCAN_RXF0E_1 & MCAN_RXF0E_1_FDF_Msk) == 0))
+            {
+                *mcan1RxMsg[MCAN_MSG_ATTR_RX_FIFO0][rxgi].msgFrameAttr = MCAN_MSG_RX_REMOTE_FRAME;
+            }
+            else
+            {
+                *mcan1RxMsg[MCAN_MSG_ATTR_RX_FIFO0][rxgi].msgFrameAttr = MCAN_MSG_RX_DATA_FRAME;
             }
 
             /* Get received data length */
@@ -928,6 +967,16 @@ void MCAN1_INT0_InterruptHandler(void)
             else
             {
                 *mcan1RxMsg[MCAN_MSG_ATTR_RX_FIFO1][rxgi].rxId = (rxf1eFifo->MCAN_RXF1E_0 >> 18) & MCAN_STD_ID_Msk;
+            }
+
+            /* Check RTR and FDF bits for Remote/Data Frame */
+            if ((rxf1eFifo->MCAN_RXF1E_0 & MCAN_RXF1E_0_RTR_Msk) && ((rxf1eFifo->MCAN_RXF1E_1 & MCAN_RXF1E_1_FDF_Msk) == 0))
+            {
+                *mcan1RxMsg[MCAN_MSG_ATTR_RX_FIFO1][rxgi].msgFrameAttr = MCAN_MSG_RX_REMOTE_FRAME;
+            }
+            else
+            {
+                *mcan1RxMsg[MCAN_MSG_ATTR_RX_FIFO1][rxgi].msgFrameAttr = MCAN_MSG_RX_DATA_FRAME;
             }
 
             /* Get received data length */
@@ -980,45 +1029,64 @@ void MCAN1_INT0_InterruptHandler(void)
         }
         rxbeFifo = (mcan_rxbe_registers_t *) ((uint8_t *)mcan1Obj.msgRAMConfig.rxBuffersAddress + rxgi * MCAN1_RX_BUFFER_ELEMENT_SIZE);
 
+        for (bufferIndex = 0; bufferIndex < 1; bufferIndex++)
+        {
+            if (bufferIndex < 32)
+            {
+                if ((mcan1Obj.rxBufferIndex1 & (1 << (bufferIndex & 0x1F))) == (1 << (bufferIndex & 0x1F)))
+                {
+                    mcan1Obj.rxBufferIndex1 &= ~(1 << (bufferIndex & 0x1F));
+                    break;
+                }
+            }
+            else if ((mcan1Obj.rxBufferIndex2 & (1 << ((bufferIndex - 32) & 0x1F))) == (1 << ((bufferIndex - 32) & 0x1F)))
+            {
+                mcan1Obj.rxBufferIndex2 &= ~(1 << ((bufferIndex - 32) & 0x1F));
+                break;
+            }
+        }
+
         /* Get received identifier */
         if (rxbeFifo->MCAN_RXBE_0 & MCAN_RXBE_0_XTD_Msk)
         {
-            *mcan1RxMsg[MCAN_MSG_ATTR_RX_BUFFER][rxgi].rxId = rxbeFifo->MCAN_RXBE_0 & MCAN_RXBE_0_ID_Msk;
+            *mcan1RxMsg[MCAN_MSG_ATTR_RX_BUFFER][bufferIndex].rxId = rxbeFifo->MCAN_RXBE_0 & MCAN_RXBE_0_ID_Msk;
         }
         else
         {
-            *mcan1RxMsg[MCAN_MSG_ATTR_RX_BUFFER][rxgi].rxId = (rxbeFifo->MCAN_RXBE_0 >> 18) & MCAN_STD_ID_Msk;
+            *mcan1RxMsg[MCAN_MSG_ATTR_RX_BUFFER][bufferIndex].rxId = (rxbeFifo->MCAN_RXBE_0 >> 18) & MCAN_STD_ID_Msk;
+        }
+
+        /* Check RTR and FDF bits for Remote/Data Frame */
+        if ((rxbeFifo->MCAN_RXBE_0 & MCAN_RXBE_0_RTR_Msk) && ((rxbeFifo->MCAN_RXBE_1 & MCAN_RXBE_1_FDF_Msk) == 0))
+        {
+            *mcan1RxMsg[MCAN_MSG_ATTR_RX_BUFFER][bufferIndex].msgFrameAttr = MCAN_MSG_RX_REMOTE_FRAME;
+        }
+        else
+        {
+            *mcan1RxMsg[MCAN_MSG_ATTR_RX_BUFFER][bufferIndex].msgFrameAttr = MCAN_MSG_RX_DATA_FRAME;
         }
 
         /* Get received data length */
         length = MCANDlcToLengthGet(((rxbeFifo->MCAN_RXBE_1 & MCAN_RXBE_1_DLC_Msk) >> MCAN_RXBE_1_DLC_Pos));
 
         /* Copy data to user buffer */
-        memcpy(mcan1RxMsg[MCAN_MSG_ATTR_RX_BUFFER][rxgi].rxBuffer, (uint8_t *)&rxbeFifo->MCAN_RXBE_DATA, length);
-        *mcan1RxMsg[MCAN_MSG_ATTR_RX_BUFFER][rxgi].rxsize = length;
+        memcpy(mcan1RxMsg[MCAN_MSG_ATTR_RX_BUFFER][bufferIndex].rxBuffer, (uint8_t *)&rxbeFifo->MCAN_RXBE_DATA, length);
+        *mcan1RxMsg[MCAN_MSG_ATTR_RX_BUFFER][bufferIndex].rxsize = length;
 
         /* Get timestamp from received message */
-        if (mcan1RxMsg[MCAN_MSG_ATTR_RX_BUFFER][rxgi].timestamp != NULL)
+        if (mcan1RxMsg[MCAN_MSG_ATTR_RX_BUFFER][bufferIndex].timestamp != NULL)
         {
-            *mcan1RxMsg[MCAN_MSG_ATTR_RX_BUFFER][rxgi].timestamp = (uint16_t)(rxbeFifo->MCAN_RXBE_1 & MCAN_RXBE_1_RXTS_Msk);
+            *mcan1RxMsg[MCAN_MSG_ATTR_RX_BUFFER][bufferIndex].timestamp = (uint16_t)(rxbeFifo->MCAN_RXBE_1 & MCAN_RXBE_1_RXTS_Msk);
         }
 
         /* Clear new data flag */
         if (rxgi < 32)
         {
             MCAN1_REGS->MCAN_NDAT1 = (1 << rxgi);
-            if (0 != (mcan1Obj.rxBufferIndex1 & (1 << (rxgi & 0x1F))))
-            {
-                mcan1Obj.rxBufferIndex1 &= (~(1 << (rxgi & 0x1F)));
-            }
         }
         else
         {
             MCAN1_REGS->MCAN_NDAT2 = (1 << (rxgi - 32));
-            if (0 != (mcan1Obj.rxBufferIndex2 & (1 << ((rxgi - 32) & 0x1F))))
-            {
-                mcan1Obj.rxBufferIndex2 &= (~(1 << ((rxgi - 32) & 0x1F)));
-            }
         }
         if (mcan1CallbackObj[MCAN_MSG_ATTR_RX_BUFFER].callback != NULL)
         {

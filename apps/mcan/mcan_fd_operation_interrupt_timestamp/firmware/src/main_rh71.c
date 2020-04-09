@@ -76,6 +76,7 @@ static uint8_t rx_messageLength = 0;
 static uint8_t loop_count = 0;
 static uint8_t user_input = 0;
 static uint16_t timestamp = 0;
+static MCAN_MSG_RX_FRAME_ATTRIBUTE msgFrameAttr = MCAN_MSG_RX_DATA_FRAME;
 /* Variable to save application state */
 volatile static APP_STATES state = APP_STATE_MCAN_USER_INPUT;
 
@@ -208,7 +209,7 @@ int main ( void )
                     state = APP_STATE_MCAN_IDLE;
                     memset(rx_message, 0x00, sizeof(rx_message));
                     /* Receive New Message */
-                    if (MCAN0_MessageReceive(&rx_messageID, &rx_messageLength, rx_message, &timestamp, MCAN_MSG_ATTR_RX_BUFFER) == false)  
+                    if (MCAN0_MessageReceive(&rx_messageID, &rx_messageLength, rx_message, &timestamp, MCAN_MSG_ATTR_RX_BUFFER, &msgFrameAttr) == false)  
                     {
                         printf("Message Reception Failed \r\n");
                     }
@@ -220,7 +221,7 @@ int main ( void )
                     state = APP_STATE_MCAN_IDLE;
                     memset(rx_message, 0x00, sizeof(rx_message));
                     /* Receive New Message */
-                    if (MCAN0_MessageReceive(&rx_messageID, &rx_messageLength, rx_message, &timestamp, MCAN_MSG_ATTR_RX_FIFO0) == false)  
+                    if (MCAN0_MessageReceive(&rx_messageID, &rx_messageLength, rx_message, &timestamp, MCAN_MSG_ATTR_RX_FIFO0, &msgFrameAttr) == false)  
                     {
                         printf("Message Reception Failed \r\n");
                     }
@@ -232,7 +233,7 @@ int main ( void )
                     state = APP_STATE_MCAN_IDLE;
                     memset(rx_message, 0x00, sizeof(rx_message));
                     /* Receive New Message */
-                    if (MCAN0_MessageReceive(&rx_messageID, &rx_messageLength, rx_message, &timestamp, MCAN_MSG_ATTR_RX_BUFFER) == false)  
+                    if (MCAN0_MessageReceive(&rx_messageID, &rx_messageLength, rx_message, &timestamp, MCAN_MSG_ATTR_RX_BUFFER, &msgFrameAttr) == false)  
                     {
                         printf("Message Reception Failed \r\n");
                     }
@@ -244,7 +245,7 @@ int main ( void )
                     state = APP_STATE_MCAN_IDLE;
                     memset(rx_message, 0x00, sizeof(rx_message));
                     /* Receive New Message */
-                    if (MCAN0_MessageReceive(&rx_messageID, &rx_messageLength, rx_message, &timestamp, MCAN_MSG_ATTR_RX_FIFO1) == false)  
+                    if (MCAN0_MessageReceive(&rx_messageID, &rx_messageLength, rx_message, &timestamp, MCAN_MSG_ATTR_RX_FIFO1, &msgFrameAttr) == false)  
                     {
                         printf("Message Reception Failed \r\n");
                     }

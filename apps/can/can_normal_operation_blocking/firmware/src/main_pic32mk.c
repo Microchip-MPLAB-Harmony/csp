@@ -74,6 +74,7 @@ int main ( void )
     uint8_t rx_messageLength = 0;
     uint8_t count = 0;
     uint8_t user_input = 0;
+    CAN_MSG_RX_ATTRIBUTE msgAttr = CAN_MSG_RX_DATA_FRAME;
 
     /* Initialize all modules */
     SYS_Initialize ( NULL );
@@ -129,7 +130,7 @@ int main ( void )
                                 memset(rx_message, 0x00, sizeof(rx_message));
 
                                 /* Receive New Message */
-                                if (CAN1_MessageReceive(&rx_messageID, &rx_messageLength, rx_message, 0, 1) == true)
+                                if (CAN1_MessageReceive(&rx_messageID, &rx_messageLength, rx_message, 0, 1, &msgAttr) == true)
                                 {
                                     printf(" New Message Received    \r\n");
                                     status = CAN1_ErrorGet();

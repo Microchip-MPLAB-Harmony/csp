@@ -77,7 +77,8 @@ int main ( void )
     uint8_t rx_message[8];
     uint32_t rx_messageID = 0;
     uint8_t rx_messageLength = 0;
-    
+    CAN_MSG_RX_ATTRIBUTE msgAttr = CAN_MSG_RX_DATA_FRAME;
+
     /* Initialize all modules */
     SYS_Initialize ( NULL );
 
@@ -133,7 +134,7 @@ int main ( void )
                             memset(rx_message, 0x00, sizeof(rx_message));
                             
                             /* Receive New Message */
-                            if (CAN1_MessageReceive(&rx_messageID, &rx_messageLength, rx_message, 0, CAN_MAILBOX_DATA_FRAME_RX_OVERWRITE) == true)  
+                            if (CAN1_MessageReceive(&rx_messageID, &rx_messageLength, rx_message, 0, CAN_MAILBOX_DATA_FRAME_RX_OVERWRITE, &msgAttr) == true)  
                             {
                                 printf(" New Message Received    \r\n");
                                 status = CAN1_ErrorGet();
