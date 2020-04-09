@@ -175,6 +175,22 @@ def canCreateFifoConfig(component, menu, fifoNumber):
     fifoTxPriority.setVisible(True if fifoNumber < 1 else False)
     fifoTxPriority.setDependencies(hideMenu, [canInstanceName.getValue() + "_FIFO" + str(fifoNumber) + "_TXEN"])
 
+    fifoRTREnable = component.createKeyValueSetSymbol(canInstanceName.getValue() + "_FIFO" + str(fifoNumber) + "_RTREN", fifoMenu)
+    fifoRTREnable.setLabel("Auto RTR Enable")
+    fifoRTREnable_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CAN\"]/value-group@[name=\"C" + canInstanceNum.getValue() + "FIFOCON" + str(fifoNumber) + "__RTREN\"]")
+    fifoRTREnable_Values = []
+    fifoRTREnable_Values = fifoRTREnable_Node.getChildren()
+    fifoRTREnable_Values = list(reversed(fifoRTREnable_Values))
+    for index in range(len(fifoRTREnable_Values)):
+        fifoRTREnable_Key_Value = fifoRTREnable_Values[index].getAttribute("value")
+        fifoRTREnable_Key_Description = fifoRTREnable_Values[index].getAttribute("caption")
+        fifoRTREnable.addKey(fifoRTREnable_Key_Description, fifoRTREnable_Key_Value, fifoRTREnable_Key_Description)
+    fifoRTREnable.setDisplayMode("Description")
+    fifoRTREnable.setOutputMode("Value")
+    fifoRTREnable.setDefaultValue(0)
+    fifoRTREnable.setVisible(True if fifoNumber < 1 else False)
+    fifoRTREnable.setDependencies(hideMenu, [canInstanceName.getValue() + "_FIFO" + str(fifoNumber) + "_TXEN"])
+
     if (fifoNumber >= Database.getSymbolValue(canInstanceName.getValue().lower(), "NUMBER_OF_FIFO")):
         fifoMenu.setVisible(False)
         fifoMenu.setEnabled(False)
@@ -421,6 +437,21 @@ def instantiateComponent(canComponent):
     syncJumpWidth.setMax(3)
     syncJumpWidth.setDefaultValue(sjw)
     syncJumpWidth.setReadOnly(True)
+
+    canConfigSAM = canComponent.createKeyValueSetSymbol("CAN_CFG_SAM", canNominalBitTimingMenu)
+    canConfigSAM.setLabel("Sample of the CAN Bus Line bit")
+    canConfigSAM.setDescription("3 Time bit sampling is not allowed if BRP is less than 2")
+    canConfigSAM_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CAN\"]/value-group@[name=\"C" + canInstanceNum.getValue() + "CFG__SAM\"]")
+    canConfigSAM_Values = []
+    canConfigSAM_Values = canConfigSAM_Node.getChildren()
+    canConfigSAM_Values = list(reversed(canConfigSAM_Values))
+    for index in range(len(canConfigSAM_Values)):
+        canConfigSAM_Key_Value = canConfigSAM_Values[index].getAttribute("value")
+        canConfigSAM_Key_Description = canConfigSAM_Values[index].getAttribute("caption")
+        canConfigSAM.addKey(canConfigSAM_Key_Description, canConfigSAM_Key_Value, canConfigSAM_Key_Description)
+    canConfigSAM.setDisplayMode("Key")
+    canConfigSAM.setOutputMode("Value")
+    canConfigSAM.setDefaultValue(0)
 
     # CAN Message FIFO configuration
     canFifoConfMenu = canComponent.createMenuSymbol("FIFO_CONF_MENU", None)

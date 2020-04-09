@@ -127,7 +127,7 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
                             | ((${PHASE2} << _C${CAN_INSTANCE_NUM}CFG_SEG2PH_POSITION) & _C${CAN_INSTANCE_NUM}CFG_SEG2PH_MASK)
                             | ((${PHASE1} << _C${CAN_INSTANCE_NUM}CFG_SEG1PH_POSITION) & _C${CAN_INSTANCE_NUM}CFG_SEG1PH_MASK)
                             | ((${PROPAG} << _C${CAN_INSTANCE_NUM}CFG_PRSEG_POSITION) & _C${CAN_INSTANCE_NUM}CFG_PRSEG_MASK)
-                            | _C${CAN_INSTANCE_NUM}CFG_SEG2PHTS_MASK;
+                            | _C${CAN_INSTANCE_NUM}CFG_SEG2PHTS_MASK<#if CAN_CFG_SAM == "0x1"> | _C${CAN_INSTANCE_NUM}CFG_SAM_MASK</#if>;
 
     /* Set FIFO base address for all message buffers */
     C${CAN_INSTANCE_NUM}FIFOBA = (uint32_t)KVA_TO_PA(can_message_buffer);
@@ -137,9 +137,8 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
     <#assign FIFO_SIZE = CAN_INSTANCE_NAME + "_FIFO" + fifo + "_SIZE">
     <#assign TX_FIFO_ENABLE = CAN_INSTANCE_NAME + "_FIFO" + fifo + "_TXEN" >
     <#assign TX_FIFO_PRIORITY = CAN_INSTANCE_NAME + "_FIFO" + fifo + "_TXPR">
-    C${CAN_INSTANCE_NUM}FIFOCON${fifo} = (((${.vars[FIFO_SIZE]} - 1) << _C${CAN_INSTANCE_NUM}FIFOCON${fifo}_FSIZE_POSITION) & _C${CAN_INSTANCE_NUM}FIFOCON${fifo}_FSIZE_MASK)
-                                           <#if .vars[TX_FIFO_ENABLE] == "0x1">| _C${CAN_INSTANCE_NUM}FIFOCON${fifo}_TXEN_MASK</#if>
-                                           | ((${.vars[TX_FIFO_PRIORITY]} << _C${CAN_INSTANCE_NUM}FIFOCON${fifo}_TXPRI_POSITION) & _C${CAN_INSTANCE_NUM}FIFOCON${fifo}_TXPRI_MASK);
+    <#assign TX_FIFO_RTREN = CAN_INSTANCE_NAME + "_FIFO" + fifo + "_RTREN">
+    C${CAN_INSTANCE_NUM}FIFOCON${fifo} = (((${.vars[FIFO_SIZE]} - 1) << _C${CAN_INSTANCE_NUM}FIFOCON${fifo}_FSIZE_POSITION) & _C${CAN_INSTANCE_NUM}FIFOCON${fifo}_FSIZE_MASK)<#if .vars[TX_FIFO_ENABLE] == "0x1"> | _C${CAN_INSTANCE_NUM}FIFOCON${fifo}_TXEN_MASK | ((${.vars[TX_FIFO_PRIORITY]} << _C${CAN_INSTANCE_NUM}FIFOCON${fifo}_TXPRI_POSITION) & _C${CAN_INSTANCE_NUM}FIFOCON${fifo}_TXPRI_MASK) | ((${.vars[TX_FIFO_RTREN]} << _C${CAN_INSTANCE_NUM}FIFOCON${fifo}_RTREN_POSITION) & _C${CAN_INSTANCE_NUM}FIFOCON${fifo}_RTREN_MASK)</#if>;
     </#list>
 
     /* Configure CAN Filters */
@@ -657,6 +656,78 @@ bool ${CAN_INSTANCE_NAME}_InterruptGet(uint8_t fifoNum, CAN_FIFO_INTERRUPT_FLAG_
 bool ${CAN_INSTANCE_NAME}_TxFIFOIsFull(uint8_t fifoNum)
 {
     return ((*(volatile uint32_t *)(&C${CAN_INSTANCE_NUM}FIFOINT0 + (fifoNum * CAN_FIFO_OFFSET)) & _C${CAN_INSTANCE_NUM}FIFOINT0_TXNFULLIF_MASK) != _C${CAN_INSTANCE_NUM}FIFOINT0_TXNFULLIF_MASK);
+}
+
+// *****************************************************************************
+/* Function:
+    bool ${CAN_INSTANCE_NAME}_AutoRTRResponseSet(uint32_t id, uint8_t length, uint8_t* data, uint8_t fifoNum)
+
+   Summary:
+    Set the Auto RTR response for remote transmit request.
+
+   Precondition:
+    ${CAN_INSTANCE_NAME}_Initialize must have been called for the associated CAN instance.
+    Auto RTR Enable must be set to 0x1 for the requested Transmit FIFO in MHC configuration.
+
+   Parameters:
+    id          - 11-bit / 29-bit identifier (ID).
+    length      - length of data buffer in number of bytes.
+    data        - pointer to source data buffer
+    fifoNum     - FIFO number
+
+   Returns:
+    Request status.
+    true  - Request was successful.
+    false - Request has failed.
+*/
+bool ${CAN_INSTANCE_NAME}_AutoRTRResponseSet(uint32_t id, uint8_t length, uint8_t* data, uint8_t fifoNum)
+{
+    CAN_TX_RX_MSG_BUFFER *txMessage = NULL;
+    uint8_t count = 0;
+    bool status = false;
+
+    if ((*(volatile uint32_t *)(&C${CAN_INSTANCE_NUM}FIFOINT0 + (fifoNum * CAN_FIFO_OFFSET)) & _C${CAN_INSTANCE_NUM}FIFOINT0_TXNFULLIF_MASK) == _C${CAN_INSTANCE_NUM}FIFOINT0_TXNFULLIF_MASK)
+    {
+        txMessage = (CAN_TX_RX_MSG_BUFFER *)PA_TO_KVA1(*(volatile uint32_t *)(&C${CAN_INSTANCE_NUM}FIFOUA0 + (fifoNum * CAN_FIFO_OFFSET)));
+
+        /* Check the id whether it falls under SID or EID,
+         * SID max limit is 0x7FF, so anything beyond that is EID */
+        if (id > CAN_MSG_SID_MASK)
+        {
+            txMessage->msgSID = (id & CAN_MSG_EID_MASK) >> 18;
+            txMessage->msgEID = ((id & 0x3FFFF) << 10) | CAN_MSG_IDE_MASK;
+        }
+        else
+        {
+            txMessage->msgSID = id;
+            txMessage->msgEID = 0;
+        }
+
+        if (length > 8)
+        {
+            length = 8;
+        }
+        txMessage->msgEID |= length;
+
+        while(count < length)
+        {
+            txMessage->msgData[count++] = *data++;
+        }
+
+<#if CAN_INTERRUPT_MODE == true>
+        *(volatile uint32_t *)(&C${CAN_INSTANCE_NUM}FIFOINT0SET + (fifoNum * CAN_FIFO_OFFSET)) = _C${CAN_INSTANCE_NUM}FIFOINT0_TXEMPTYIE_MASK;
+
+</#if>
+        /* Set UINC to respond to RTR */
+        *(volatile uint32_t *)(&C${CAN_INSTANCE_NUM}FIFOCON0SET + (fifoNum * CAN_FIFO_OFFSET)) = _C${CAN_INSTANCE_NUM}FIFOCON0_UINC_MASK;
+
+<#if CAN_INTERRUPT_MODE == true>
+        C${CAN_INSTANCE_NUM}INTSET = _C${CAN_INSTANCE_NUM}INT_TBIE_MASK;
+
+</#if>
+        status = true;
+    }
+    return status;
 }
 
 <#if CAN_INTERRUPT_MODE == true>
