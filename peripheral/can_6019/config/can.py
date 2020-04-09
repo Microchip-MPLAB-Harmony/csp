@@ -202,6 +202,21 @@ def instantiateComponent(canComponent):
     syncJumpWidth.setDefaultValue(sjw)
     syncJumpWidth.setReadOnly(True)
 
+    canConfigSMP = canComponent.createKeyValueSetSymbol("CAN_CFG_SMP", canNominalBitTimingMenu)
+    canConfigSMP.setLabel("Sampling Mode")
+    canConfigSMP.setDescription("SMP Sampling Mode is automatically disabled if BRP is 0")
+    canConfigSMP_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CAN\"]/value-group@[name=\"CAN_BR__SMP\"]")
+    canConfigSMP_Values = []
+    canConfigSMP_Values = canConfigSMP_Node.getChildren()
+    for index in range(len(canConfigSMP_Values)):
+        canConfigSMP_Key_Value = canConfigSMP_Values[index].getAttribute("value")
+        canConfigSMP_Key_Name = canConfigSMP_Values[index].getAttribute("name")
+        canConfigSMP_Key_Description = canConfigSMP_Values[index].getAttribute("caption")
+        canConfigSMP.addKey(canConfigSMP_Key_Name, canConfigSMP_Key_Value, canConfigSMP_Key_Description)
+    canConfigSMP.setDisplayMode("Key")
+    canConfigSMP.setOutputMode("Value")
+    canConfigSMP.setDefaultValue(0)
+
     # Mailbox configuration
     canMailboxConfigurationMenu = canComponent.createMenuSymbol("MAILBOX_CONFIGURATION", None)
     canMailboxConfigurationMenu.setLabel("Mailbox Configuration")
