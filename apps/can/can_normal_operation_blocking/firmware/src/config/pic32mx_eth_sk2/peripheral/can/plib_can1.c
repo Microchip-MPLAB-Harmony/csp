@@ -77,6 +77,7 @@
 #define CAN_MSG_EID_MASK            0x1FFFFFFF
 #define CAN_MSG_DLC_MASK            0xF
 #define CAN_MSG_RTR_MASK            0x200
+#define CAN_MSG_SRR_MASK            0x20000000
 
 static CAN_TX_RX_MSG_BUFFER __attribute__((coherent, aligned(32))) can_message_buffer[CAN_MESSAGE_RAM_CONFIG_SIZE];
 
@@ -122,12 +123,8 @@ void CAN1_Initialize(void)
     C1FIFOBA = (uint32_t)KVA_TO_PA(can_message_buffer);
 
     /* Configure CAN FIFOs */
-    C1FIFOCON0 = (((1 - 1) << _C1FIFOCON0_FSIZE_POSITION) & _C1FIFOCON0_FSIZE_MASK)
-                                           | _C1FIFOCON0_TXEN_MASK
-                                           | ((0x0 << _C1FIFOCON0_TXPRI_POSITION) & _C1FIFOCON0_TXPRI_MASK);
-    C1FIFOCON1 = (((1 - 1) << _C1FIFOCON1_FSIZE_POSITION) & _C1FIFOCON1_FSIZE_MASK)
-                                           
-                                           | ((0x0 << _C1FIFOCON1_TXPRI_POSITION) & _C1FIFOCON1_TXPRI_MASK);
+    C1FIFOCON0 = (((1 - 1) << _C1FIFOCON0_FSIZE_POSITION) & _C1FIFOCON0_FSIZE_MASK) | _C1FIFOCON0_TXEN_MASK | ((0x0 << _C1FIFOCON0_TXPRI_POSITION) & _C1FIFOCON0_TXPRI_MASK) | ((0x0 << _C1FIFOCON0_RTREN_POSITION) & _C1FIFOCON0_RTREN_MASK);
+    C1FIFOCON1 = (((1 - 1) << _C1FIFOCON1_FSIZE_POSITION) & _C1FIFOCON1_FSIZE_MASK);
 
     /* Configure CAN Filters */
     C1RXF0 = (0 & CAN_MSG_SID_MASK) << _C1RXF0_SID_POSITION;
@@ -221,7 +218,7 @@ bool CAN1_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, uint8_t fi
 
 // *****************************************************************************
 /* Function:
-    bool CAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp, uint8_t fifoNum)
+    bool CAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp, uint8_t fifoNum, CAN_MSG_RX_ATTRIBUTE *msgAttr)
 
    Summary:
     Receives a message from CAN bus.
@@ -235,13 +232,14 @@ bool CAN1_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, uint8_t fi
     data        - Pointer to destination data buffer
     timestamp   - Pointer to Rx message timestamp, timestamp value is 0 if Timestamp is disabled in C1CON
     fifoNum     - FIFO number
+    msgAttr     - Data frame or Remote frame to be received
 
    Returns:
     Request status.
     true  - Request was successful.
     false - Request has failed.
 */
-bool CAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp, uint8_t fifoNum)
+bool CAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp, uint8_t fifoNum, CAN_MSG_RX_ATTRIBUTE *msgAttr)
 {
     CAN_TX_RX_MSG_BUFFER *rxMessage = NULL;
     uint8_t count = 0;
@@ -262,10 +260,26 @@ bool CAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t 
         if (rxMessage->msgEID & CAN_MSG_IDE_MASK)
         {
             *id = ((rxMessage->msgSID & CAN_MSG_SID_MASK) << 18) | ((rxMessage->msgEID >> 10) & _C1RXM0_EID_MASK);
+            if (rxMessage->msgEID & CAN_MSG_RTR_MASK)
+            {
+                *msgAttr = CAN_MSG_RX_REMOTE_FRAME;
+            }
+            else
+            {
+                *msgAttr = CAN_MSG_RX_DATA_FRAME;
+            }
         }
         else
         {
             *id = rxMessage->msgSID & CAN_MSG_SID_MASK;
+            if (rxMessage->msgEID & CAN_MSG_SRR_MASK)
+            {
+                *msgAttr = CAN_MSG_RX_REMOTE_FRAME;
+            }
+            else
+            {
+                *msgAttr = CAN_MSG_RX_DATA_FRAME;
+            }
         }
 
         *length = rxMessage->msgEID & CAN_MSG_DLC_MASK;
@@ -544,5 +558,91 @@ bool CAN1_InterruptGet(uint8_t fifoNum, CAN_FIFO_INTERRUPT_FLAG_MASK fifoInterru
         return false;
     }
     return ((*(volatile uint32_t *)(&C1FIFOINT0 + (fifoNum * CAN_FIFO_OFFSET)) & fifoInterruptFlagMask) != 0x0);
+}
+
+// *****************************************************************************
+/* Function:
+    bool CAN1_TxFIFOIsFull(uint8_t fifoNum)
+
+   Summary:
+    Returns true if Tx FIFO is full otherwise false.
+
+   Precondition:
+    CAN1_Initialize must have been called for the associated CAN instance.
+
+   Parameters:
+    fifoNum - FIFO number
+
+   Returns:
+    true  - Tx FIFO is full.
+    false - Tx FIFO is not full.
+*/
+bool CAN1_TxFIFOIsFull(uint8_t fifoNum)
+{
+    return ((*(volatile uint32_t *)(&C1FIFOINT0 + (fifoNum * CAN_FIFO_OFFSET)) & _C1FIFOINT0_TXNFULLIF_MASK) != _C1FIFOINT0_TXNFULLIF_MASK);
+}
+
+// *****************************************************************************
+/* Function:
+    bool CAN1_AutoRTRResponseSet(uint32_t id, uint8_t length, uint8_t* data, uint8_t fifoNum)
+
+   Summary:
+    Set the Auto RTR response for remote transmit request.
+
+   Precondition:
+    CAN1_Initialize must have been called for the associated CAN instance.
+    Auto RTR Enable must be set to 0x1 for the requested Transmit FIFO in MHC configuration.
+
+   Parameters:
+    id          - 11-bit / 29-bit identifier (ID).
+    length      - length of data buffer in number of bytes.
+    data        - pointer to source data buffer
+    fifoNum     - FIFO number
+
+   Returns:
+    Request status.
+    true  - Request was successful.
+    false - Request has failed.
+*/
+bool CAN1_AutoRTRResponseSet(uint32_t id, uint8_t length, uint8_t* data, uint8_t fifoNum)
+{
+    CAN_TX_RX_MSG_BUFFER *txMessage = NULL;
+    uint8_t count = 0;
+    bool status = false;
+
+    if ((*(volatile uint32_t *)(&C1FIFOINT0 + (fifoNum * CAN_FIFO_OFFSET)) & _C1FIFOINT0_TXNFULLIF_MASK) == _C1FIFOINT0_TXNFULLIF_MASK)
+    {
+        txMessage = (CAN_TX_RX_MSG_BUFFER *)PA_TO_KVA1(*(volatile uint32_t *)(&C1FIFOUA0 + (fifoNum * CAN_FIFO_OFFSET)));
+
+        /* Check the id whether it falls under SID or EID,
+         * SID max limit is 0x7FF, so anything beyond that is EID */
+        if (id > CAN_MSG_SID_MASK)
+        {
+            txMessage->msgSID = (id & CAN_MSG_EID_MASK) >> 18;
+            txMessage->msgEID = ((id & 0x3FFFF) << 10) | CAN_MSG_IDE_MASK;
+        }
+        else
+        {
+            txMessage->msgSID = id;
+            txMessage->msgEID = 0;
+        }
+
+        if (length > 8)
+        {
+            length = 8;
+        }
+        txMessage->msgEID |= length;
+
+        while(count < length)
+        {
+            txMessage->msgData[count++] = *data++;
+        }
+
+        /* Set UINC to respond to RTR */
+        *(volatile uint32_t *)(&C1FIFOCON0SET + (fifoNum * CAN_FIFO_OFFSET)) = _C1FIFOCON0_UINC_MASK;
+
+        status = true;
+    }
+    return status;
 }
 
