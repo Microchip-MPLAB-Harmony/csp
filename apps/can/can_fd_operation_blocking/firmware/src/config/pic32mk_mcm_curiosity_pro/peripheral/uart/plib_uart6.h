@@ -75,6 +75,10 @@ bool UART6_Read( void *buffer, const size_t size );
 
 UART_ERROR UART6_ErrorGet( void );
 
+bool UART6_AutoBaudQuery( void );
+
+void UART6_AutoBaudSet( bool enable );
+
 int UART6_ReadByte( void );
 
 bool UART6_ReceiverIsReady( void );
