@@ -64,14 +64,14 @@ static const can_sidfe_registers_t can1StdFilter[] =
 {
     {
         .CAN_SIDFE_0 = CAN_SIDFE_0_SFT(0) |
-                  CAN_SIDFE_0_SFID1(1129) |
-                  CAN_SIDFE_0_SFID2(1129) |
+                  CAN_SIDFE_0_SFID1(0x0) |
+                  CAN_SIDFE_0_SFID2(0x0) |
                   CAN_SIDFE_0_SFEC(1)
     },
     {
         .CAN_SIDFE_0 = CAN_SIDFE_0_SFT(0) |
-                  CAN_SIDFE_0_SFID1(1114) |
-                  CAN_SIDFE_0_SFID2(0) |
+                  CAN_SIDFE_0_SFID1(0x0) |
+                  CAN_SIDFE_0_SFID2(0x0) |
                   CAN_SIDFE_0_SFEC(7)
     },
 };
@@ -79,12 +79,12 @@ static const can_sidfe_registers_t can1StdFilter[] =
 static const can_xidfe_registers_t can1ExtFilter[] =
 {
     {
-        .CAN_XIDFE_0 = CAN_XIDFE_0_EFID1(268435621) | CAN_XIDFE_0_EFEC(7),
-        .CAN_XIDFE_1 = CAN_XIDFE_1_EFID2(0) | CAN_XIDFE_1_EFT(0),
+        .CAN_XIDFE_0 = CAN_XIDFE_0_EFID1(0x0) | CAN_XIDFE_0_EFEC(7),
+        .CAN_XIDFE_1 = CAN_XIDFE_1_EFID2(0x0) | CAN_XIDFE_1_EFT(0),
     },
     {
-        .CAN_XIDFE_0 = CAN_XIDFE_0_EFID1(268435606) | CAN_XIDFE_0_EFEC(2),
-        .CAN_XIDFE_1 = CAN_XIDFE_1_EFID2(268435606) | CAN_XIDFE_1_EFT(0),
+        .CAN_XIDFE_0 = CAN_XIDFE_0_EFID1(0x0) | CAN_XIDFE_0_EFEC(2),
+        .CAN_XIDFE_1 = CAN_XIDFE_1_EFID2(0x0) | CAN_XIDFE_1_EFT(0),
     },
 };
 
@@ -282,7 +282,8 @@ bool CAN1_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, CAN_MODE m
 
 // *****************************************************************************
 /* Function:
-    bool CAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp, CAN_MSG_RX_ATTRIBUTE msgAttr)
+    bool CAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp,
+                                             CAN_MSG_RX_ATTRIBUTE msgAttr, CAN_MSG_RX_FRAME_ATTRIBUTE *msgFrameAttr)
 
    Summary:
     Receives a message from CAN bus.
@@ -291,18 +292,20 @@ bool CAN1_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, CAN_MODE m
     CAN1_Initialize must have been called for the associated CAN instance.
 
    Parameters:
-    id        - Pointer to 11-bit / 29-bit identifier (ID) to be received.
-    length    - Pointer to data length in number of bytes to be received.
-    data      - pointer to destination data buffer
-    timestamp - Pointer to Rx message timestamp, timestamp value is 0 if timestamp is disabled
-    msgAttr   - Message to be read from Rx FIFO0 or Rx FIFO1 or Rx Buffer
+    id           - Pointer to 11-bit / 29-bit identifier (ID) to be received.
+    length       - Pointer to data length in number of bytes to be received.
+    data         - pointer to destination data buffer
+    timestamp    - Pointer to Rx message timestamp, timestamp value is 0 if timestamp is disabled
+    msgAttr      - Message to be read from Rx FIFO0 or Rx FIFO1 or Rx Buffer
+    msgFrameAttr - Data frame or Remote frame to be received
 
    Returns:
     Request status.
     true  - Request was successful.
     false - Request has failed.
 */
-bool CAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp, CAN_MSG_RX_ATTRIBUTE msgAttr)
+bool CAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp,
+                                         CAN_MSG_RX_ATTRIBUTE msgAttr, CAN_MSG_RX_FRAME_ATTRIBUTE *msgFrameAttr)
 {
     uint8_t msgLength = 0;
     uint8_t rxgi = 0;
@@ -351,6 +354,16 @@ bool CAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t 
                 *id = (rxbeFifo->CAN_RXBE_0 >> 18) & CAN_STD_ID_Msk;
             }
 
+            /* Check RTR and FDF bits for Remote/Data Frame */
+            if ((rxbeFifo->CAN_RXBE_0 & CAN_RXBE_0_RTR_Msk) && ((rxbeFifo->CAN_RXBE_1 & CAN_RXBE_1_FDF_Msk) == 0))
+            {
+                *msgFrameAttr = CAN_MSG_RX_REMOTE_FRAME;
+            }
+            else
+            {
+                *msgFrameAttr = CAN_MSG_RX_DATA_FRAME;
+            }
+
             /* Get received data length */
             msgLength = CANDlcToLengthGet(((rxbeFifo->CAN_RXBE_1 & CAN_RXBE_1_DLC_Msk) >> CAN_RXBE_1_DLC_Pos));
 
@@ -389,6 +402,16 @@ bool CAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t 
                 *id = (rxf0eFifo->CAN_RXF0E_0 >> 18) & CAN_STD_ID_Msk;
             }
 
+            /* Check RTR and FDF bits for Remote/Data Frame */
+            if ((rxf0eFifo->CAN_RXF0E_0 & CAN_RXF0E_0_RTR_Msk) && ((rxf0eFifo->CAN_RXF0E_1 & CAN_RXF0E_1_FDF_Msk) == 0))
+            {
+                *msgFrameAttr = CAN_MSG_RX_REMOTE_FRAME;
+            }
+            else
+            {
+                *msgFrameAttr = CAN_MSG_RX_DATA_FRAME;
+            }
+
             /* Get received data length */
             msgLength = CANDlcToLengthGet(((rxf0eFifo->CAN_RXF0E_1 & CAN_RXF0E_1_DLC_Msk) >> CAN_RXF0E_1_DLC_Pos));
 
@@ -418,6 +441,16 @@ bool CAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t 
             else
             {
                 *id = (rxf1eFifo->CAN_RXF1E_0 >> 18) & CAN_STD_ID_Msk;
+            }
+
+            /* Check RTR and FDF bits for Remote/Data Frame */
+            if ((rxf1eFifo->CAN_RXF1E_0 & CAN_RXF1E_0_RTR_Msk) && ((rxf1eFifo->CAN_RXF1E_1 & CAN_RXF1E_1_FDF_Msk) == 0))
+            {
+                *msgFrameAttr = CAN_MSG_RX_REMOTE_FRAME;
+            }
+            else
+            {
+                *msgFrameAttr = CAN_MSG_RX_DATA_FRAME;
             }
 
             /* Get received data length */
@@ -595,6 +628,28 @@ bool CAN1_InterruptGet(CAN_INTERRUPT_MASK interruptMask)
 void CAN1_InterruptClear(CAN_INTERRUPT_MASK interruptMask)
 {
     CAN1_REGS->CAN_IR = interruptMask;
+}
+
+// *****************************************************************************
+/* Function:
+    bool CAN1_TxFIFOIsFull(void)
+
+   Summary:
+    Returns true if Tx FIFO is full otherwise false.
+
+   Precondition:
+    CAN1_Initialize must have been called for the associated CAN instance.
+
+   Parameters:
+    None
+
+   Returns:
+    true  - Tx FIFO is full.
+    false - Tx FIFO is not full.
+*/
+bool CAN1_TxFIFOIsFull(void)
+{
+    return (CAN1_REGS->CAN_TXFQS & CAN_TXFQS_TFQF_Msk);
 }
 
 // *****************************************************************************
