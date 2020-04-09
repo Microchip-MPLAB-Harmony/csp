@@ -74,7 +74,7 @@
 // *****************************************************************************
 void CAN2_Initialize(void);
 bool CAN2_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, uint8_t fifoQueueNum, CAN_MODE mode, CAN_MSG_TX_ATTRIBUTE msgAttr);
-bool CAN2_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint32_t *timestamp, uint8_t fifoNum);
+bool CAN2_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint32_t *timestamp, uint8_t fifoNum, CAN_MSG_RX_ATTRIBUTE *msgAttr);
 void CAN2_MessageAbort(uint8_t fifoQueueNum);
 void CAN2_MessageAcceptanceFilterSet(uint8_t filterNum, uint32_t id);
 uint32_t CAN2_MessageAcceptanceFilterGet(uint8_t filterNum);
@@ -84,6 +84,8 @@ bool CAN2_TransmitEventFIFOElementGet(uint32_t *id, uint32_t *sequence, uint32_t
 CAN_ERROR CAN2_ErrorGet(void);
 void CAN2_ErrorCountGet(uint8_t *txErrorCount, uint8_t *rxErrorCount);
 bool CAN2_InterruptGet(uint8_t fifoQueueNum, CAN_FIFO_INTERRUPT_FLAG_MASK fifoInterruptFlagMask);
+bool CAN2_TxFIFOQueueIsFull(uint8_t fifoQueueNum);
+bool CAN2_AutoRTRResponseSet(uint32_t id, uint8_t length, uint8_t* data, uint8_t fifoNum);
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
     }

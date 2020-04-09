@@ -188,7 +188,7 @@ void CAN2_Initialize(void)
 
 
     /* Configure CAN FIFOs */
-    CFD2FIFOCON1 = (((1 - 1) << _CFD2FIFOCON1_FSIZE_POSITION) & _CFD2FIFOCON1_FSIZE_MASK) | _CFD2FIFOCON1_TXEN_MASK | ((0x0 << _CFD2FIFOCON1_TXPRI_POSITION) & _CFD2FIFOCON1_TXPRI_MASK) | ((0x7 << _CFD2FIFOCON1_PLSIZE_POSITION) & _CFD2FIFOCON1_PLSIZE_MASK);
+    CFD2FIFOCON1 = (((1 - 1) << _CFD2FIFOCON1_FSIZE_POSITION) & _CFD2FIFOCON1_FSIZE_MASK) | _CFD2FIFOCON1_TXEN_MASK | ((0x0 << _CFD2FIFOCON1_TXPRI_POSITION) & _CFD2FIFOCON1_TXPRI_MASK) | ((0x0 << _CFD2FIFOCON1_RTREN_POSITION) & _CFD2FIFOCON1_RTREN_MASK) | ((0x7 << _CFD2FIFOCON1_PLSIZE_POSITION) & _CFD2FIFOCON1_PLSIZE_MASK);
     CFD2FIFOCON2 = (((1 - 1) << _CFD2FIFOCON2_FSIZE_POSITION) & _CFD2FIFOCON2_FSIZE_MASK) | ((0x7 << _CFD2FIFOCON2_PLSIZE_POSITION) & _CFD2FIFOCON2_PLSIZE_MASK);
 
     /* Configure CAN Filters */
@@ -311,7 +311,7 @@ bool CAN2_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, uint8_t fi
 
 // *****************************************************************************
 /* Function:
-    bool CAN2_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint32_t *timestamp, uint8_t fifoNum)
+    bool CAN2_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint32_t *timestamp, uint8_t fifoNum, CAN_MSG_RX_ATTRIBUTE *msgAttr)
 
    Summary:
     Receives a message from CAN bus.
@@ -325,13 +325,14 @@ bool CAN2_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, uint8_t fi
     data        - Pointer to destination data buffer
     timestamp   - Pointer to Rx message timestamp, timestamp value is 0 if Timestamp is disabled in CFD2TSCON
     fifoNum     - FIFO number
+    msgAttr     - Data frame or Remote frame to be received
 
    Returns:
     Request status.
     true  - Request was successful.
     false - Request has failed.
 */
-bool CAN2_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint32_t *timestamp, uint8_t fifoNum)
+bool CAN2_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint32_t *timestamp, uint8_t fifoNum, CAN_MSG_RX_ATTRIBUTE *msgAttr)
 {
     CAN_RX_MSG_OBJECT *rxMessage = NULL;
     uint8_t count = 0;
@@ -356,6 +357,15 @@ bool CAN2_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint32_t 
         else
         {
             *id = rxMessage->r0 & CAN_MSG_SID_MASK;
+        }
+
+        if ((rxMessage->r1 & CAN_MSG_RTR_MASK) && ((rxMessage->r1 & CAN_MSG_FDF_MASK) == 0))
+        {
+            *msgAttr = CAN_MSG_RX_REMOTE_FRAME;
+        }
+        else
+        {
+            *msgAttr = CAN_MSG_RX_DATA_FRAME;
         }
 
         *length = dlcToLength[(rxMessage->r1 & CAN_MSG_DLC_MASK)];
@@ -694,5 +704,102 @@ bool CAN2_InterruptGet(uint8_t fifoQueueNum, CAN_FIFO_INTERRUPT_FLAG_MASK fifoIn
     {
         return ((*(volatile uint32_t *)(&CFD2FIFOSTA1 + ((fifoQueueNum - 1) * CAN_FIFO_OFFSET)) & fifoInterruptFlagMask) != 0x0);
     }
+}
+
+// *****************************************************************************
+/* Function:
+    bool CAN2_TxFIFOQueueIsFull(uint8_t fifoQueueNum)
+
+   Summary:
+    Returns true if Tx FIFO/Queue is full otherwise false.
+
+   Precondition:
+    CAN2_Initialize must have been called for the associated CAN instance.
+
+   Parameters:
+    fifoQueueNum - FIFO/Queue number
+
+   Returns:
+    true  - Tx FIFO/Queue is full.
+    false - Tx FIFO/Queue is not full.
+*/
+bool CAN2_TxFIFOQueueIsFull(uint8_t fifoQueueNum)
+{
+    if (fifoQueueNum == 0)
+    {
+        return ((CFD2TXQSTA & _CFD2TXQSTA_TXQNIF_MASK) != _CFD2TXQSTA_TXQNIF_MASK);
+    }
+    else
+    {
+        return ((*(volatile uint32_t *)(&CFD2FIFOSTA1 + ((fifoQueueNum - 1) * CAN_FIFO_OFFSET)) & _CFD2FIFOSTA1_TFNRFNIF_MASK) != _CFD2FIFOSTA1_TFNRFNIF_MASK);
+    }
+}
+
+// *****************************************************************************
+/* Function:
+    bool CAN2_AutoRTRResponseSet(uint32_t id, uint8_t length, uint8_t* data, uint8_t fifoNum)
+
+   Summary:
+    Set the Auto RTR response for remote transmit request.
+
+   Precondition:
+    CAN2_Initialize must have been called for the associated CAN instance.
+    Auto RTR Enable must be set to 0x1 for the requested Transmit FIFO in MHC configuration.
+
+   Parameters:
+    id           - 11-bit / 29-bit identifier (ID).
+    length       - Length of data buffer in number of bytes.
+    data         - Pointer to source data buffer
+    fifoNum      - FIFO Number
+
+   Returns:
+    Request status.
+    true  - Request was successful.
+    false - Request has failed.
+*/
+bool CAN2_AutoRTRResponseSet(uint32_t id, uint8_t length, uint8_t* data, uint8_t fifoNum)
+{
+    CAN_TX_MSG_OBJECT *txMessage = NULL;
+    uint8_t count = 0;
+    bool status = false;
+
+    if (fifoNum <= CAN_NUM_OF_FIFO)
+    {
+        if ((*(volatile uint32_t *)(&CFD2FIFOSTA1 + ((fifoNum - 1) * CAN_FIFO_OFFSET)) & _CFD2FIFOSTA1_TFNRFNIF_MASK) == _CFD2FIFOSTA1_TFNRFNIF_MASK)
+        {
+            txMessage = (CAN_TX_MSG_OBJECT *)PA_TO_KVA1(*(volatile uint32_t *)(&CFD2FIFOUA1 + ((fifoNum - 1) * CAN_FIFO_OFFSET)));
+            status = true;
+        }
+    }
+
+    if (status)
+    {
+        /* Check the id whether it falls under SID or EID,
+         * SID max limit is 0x7FF, so anything beyond that is EID */
+        if (id > CAN_MSG_SID_MASK)
+        {
+            txMessage->t0 = (((id & CAN_MSG_TX_EXT_SID_MASK) >> 18) | ((id & CAN_MSG_TX_EXT_EID_MASK) << 11)) & CAN_MSG_EID_MASK;
+            txMessage->t1 = CAN_MSG_IDE_MASK;
+        }
+        else
+        {
+            txMessage->t0 = id;
+            txMessage->t1 = 0;
+        }
+
+        /* Limit length */
+        if (length > 8)
+            length = 8;
+        txMessage->t1 |= length;
+
+        while(count < length)
+        {
+            txMessage->data[count++] = *data++;
+        }
+
+        /* Set UINC to respond to RTR */
+        *(volatile uint32_t *)(&CFD2FIFOCON1 + ((fifoNum - 1) * CAN_FIFO_OFFSET)) |= _CFD2FIFOCON1_UINC_MASK;
+    }
+    return status;
 }
 
