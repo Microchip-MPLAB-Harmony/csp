@@ -246,7 +246,8 @@ bool CAN1_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, CAN_MAILBO
 
 // *****************************************************************************
 /* Function:
-    bool CAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp, CAN_MAILBOX_RX_ATTRIBUTE mailboxAttr)
+    bool CAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp,
+                                             CAN_MAILBOX_RX_ATTRIBUTE mailboxAttr, CAN_MSG_RX_ATTRIBUTE *msgAttr)
 
    Summary:
     Receives a message from CAN bus.
@@ -260,13 +261,15 @@ bool CAN1_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, CAN_MAILBO
     data        - pointer to destination data buffer
     timestamp   - Pointer to Rx message timestamp
     mailboxAttr - Mailbox type either RX Mailbox or RX Mailbox with overwrite
+    msgAttr     - Data frame or Remote frame to be received
 
    Returns:
     Request status.
     true  - Request was successful.
     false - Request has failed.
 */
-bool CAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp, CAN_MAILBOX_RX_ATTRIBUTE mailboxAttr)
+bool CAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp,
+                                         CAN_MAILBOX_RX_ATTRIBUTE mailboxAttr, CAN_MSG_RX_ATTRIBUTE *msgAttr)
 {
     uint8_t mailbox = 0;
     bool mbIsReady = false;
@@ -320,6 +323,17 @@ bool CAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t 
             {
                 *id = (CAN1_REGS->CAN_MB[mailbox].CAN_MID & CAN_MID_MIDvA_Msk) >> CAN_MID_MIDvA_Pos;
             }
+
+            if ((CAN1_REGS->CAN_MB[mailbox].CAN_MSR & CAN_MSR_MRTR_Msk) &&
+               (mailboxAttr != CAN_MAILBOX_DATA_FRAME_CONSUMER))
+            {
+                *msgAttr = CAN_MSG_RX_REMOTE_FRAME;
+            }
+            else
+            {
+                *msgAttr = CAN_MSG_RX_DATA_FRAME;
+            }
+
             *length = (CAN1_REGS->CAN_MB[mailbox].CAN_MSR & CAN_MSR_MDLC_Msk) >> CAN_MSR_MDLC_Pos;
             /* Copy the data into the payload */
             for (; dataIndex < *length; dataIndex++)
