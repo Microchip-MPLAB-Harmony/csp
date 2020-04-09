@@ -9,145 +9,162 @@
         <File dnOrder="0">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">exceptions.c</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_eth_sk2/</LogicalPath>
-          <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">3477C6F788508451FADB8F17D7E78273</GeneratedChecksum>
-          <UserChecksum dnOrder="5">3477C6F788508451FADB8F17D7E78273</UserChecksum>
+          <Security dnOrder="2"/>
+          <LogicalPath dnOrder="3">config/pic32mx_eth_sk2/</LogicalPath>
+          <PhysicalPath dnOrder="4">/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">3477C6F788508451FADB8F17D7E78273</GeneratedChecksum>
+          <UserChecksum dnOrder="6">3477C6F788508451FADB8F17D7E78273</UserChecksum>
         </File>
         <File dnOrder="1">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">initialization.c</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_eth_sk2/</LogicalPath>
-          <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">8412618616AB923ABB519CF447E80093</GeneratedChecksum>
-          <UserChecksum dnOrder="5">8412618616AB923ABB519CF447E80093</UserChecksum>
+          <Security dnOrder="2"/>
+          <LogicalPath dnOrder="3">config/pic32mx_eth_sk2/</LogicalPath>
+          <PhysicalPath dnOrder="4">/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">8412618616AB923ABB519CF447E80093</GeneratedChecksum>
+          <UserChecksum dnOrder="6">8412618616AB923ABB519CF447E80093</UserChecksum>
         </File>
         <File dnOrder="2">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">interrupts.c</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_eth_sk2/</LogicalPath>
-          <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">B889A1C7C990C92DC90EDFCC216969BF</GeneratedChecksum>
-          <UserChecksum dnOrder="5">B889A1C7C990C92DC90EDFCC216969BF</UserChecksum>
+          <Security dnOrder="2"/>
+          <LogicalPath dnOrder="3">config/pic32mx_eth_sk2/</LogicalPath>
+          <PhysicalPath dnOrder="4">/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">B889A1C7C990C92DC90EDFCC216969BF</GeneratedChecksum>
+          <UserChecksum dnOrder="6">B889A1C7C990C92DC90EDFCC216969BF</UserChecksum>
         </File>
         <File dnOrder="3">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">main_pic32mx.c</Name>
-          <LogicalPath dnOrder="2"/>
-          <PhysicalPath dnOrder="3">/../../</PhysicalPath>
-          <GeneratedChecksum dnOrder="4"/>
-          <UserChecksum dnOrder="5"/>
+          <Security dnOrder="2"/>
+          <LogicalPath dnOrder="3"/>
+          <PhysicalPath dnOrder="4">/../../</PhysicalPath>
+          <GeneratedChecksum dnOrder="5"/>
+          <UserChecksum dnOrder="6"/>
         </File>
         <File dnOrder="4">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_can1.c</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_eth_sk2/peripheral/can/</LogicalPath>
-          <PhysicalPath dnOrder="3">/peripheral/can/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">34982E8B683D608EF1AC7B4C21790329</GeneratedChecksum>
-          <UserChecksum dnOrder="5">34982E8B683D608EF1AC7B4C21790329</UserChecksum>
+          <Security dnOrder="2"/>
+          <LogicalPath dnOrder="3">config/pic32mx_eth_sk2/peripheral/can/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/can/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">34982E8B683D608EF1AC7B4C21790329</GeneratedChecksum>
+          <UserChecksum dnOrder="6">34982E8B683D608EF1AC7B4C21790329</UserChecksum>
         </File>
         <File dnOrder="5">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_clk.c</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_eth_sk2/peripheral/clk/</LogicalPath>
-          <PhysicalPath dnOrder="3">/peripheral/clk/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">9854678C3A3E4E9544EC7450ACBAE52A</GeneratedChecksum>
-          <UserChecksum dnOrder="5">9854678C3A3E4E9544EC7450ACBAE52A</UserChecksum>
+          <Security dnOrder="2"/>
+          <LogicalPath dnOrder="3">config/pic32mx_eth_sk2/peripheral/clk/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/clk/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">9854678C3A3E4E9544EC7450ACBAE52A</GeneratedChecksum>
+          <UserChecksum dnOrder="6">9854678C3A3E4E9544EC7450ACBAE52A</UserChecksum>
         </File>
         <File dnOrder="6">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_evic.c</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_eth_sk2/peripheral/evic/</LogicalPath>
-          <PhysicalPath dnOrder="3">/peripheral/evic/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">0B1B641D06A589B2CF8A404CA22FEDB0</GeneratedChecksum>
-          <UserChecksum dnOrder="5">0B1B641D06A589B2CF8A404CA22FEDB0</UserChecksum>
+          <Security dnOrder="2"/>
+          <LogicalPath dnOrder="3">config/pic32mx_eth_sk2/peripheral/evic/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/evic/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">0B1B641D06A589B2CF8A404CA22FEDB0</GeneratedChecksum>
+          <UserChecksum dnOrder="6">0B1B641D06A589B2CF8A404CA22FEDB0</UserChecksum>
         </File>
         <File dnOrder="7">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_gpio.c</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_eth_sk2/peripheral/gpio/</LogicalPath>
-          <PhysicalPath dnOrder="3">/peripheral/gpio/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">1AC456B0726951BD0DC4E0EBA03E03DB</GeneratedChecksum>
-          <UserChecksum dnOrder="5">1AC456B0726951BD0DC4E0EBA03E03DB</UserChecksum>
+          <Security dnOrder="2"/>
+          <LogicalPath dnOrder="3">config/pic32mx_eth_sk2/peripheral/gpio/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/gpio/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">1AC456B0726951BD0DC4E0EBA03E03DB</GeneratedChecksum>
+          <UserChecksum dnOrder="6">1AC456B0726951BD0DC4E0EBA03E03DB</UserChecksum>
         </File>
         <File dnOrder="8">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">xc32_monitor.c</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_eth_sk2/stdio/</LogicalPath>
-          <PhysicalPath dnOrder="3">/stdio/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">0CDCE9B6891797FCD2AEA243F841353F</GeneratedChecksum>
-          <UserChecksum dnOrder="5">0CDCE9B6891797FCD2AEA243F841353F</UserChecksum>
+          <Security dnOrder="2"/>
+          <LogicalPath dnOrder="3">config/pic32mx_eth_sk2/stdio/</LogicalPath>
+          <PhysicalPath dnOrder="4">/stdio/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">0CDCE9B6891797FCD2AEA243F841353F</GeneratedChecksum>
+          <UserChecksum dnOrder="6">0CDCE9B6891797FCD2AEA243F841353F</UserChecksum>
         </File>
         <File dnOrder="9">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">definitions.h</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_eth_sk2/</LogicalPath>
-          <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">5ABBC64A8C964788833E6390542B70C4</GeneratedChecksum>
-          <UserChecksum dnOrder="5">5ABBC64A8C964788833E6390542B70C4</UserChecksum>
+          <Security dnOrder="2"/>
+          <LogicalPath dnOrder="3">config/pic32mx_eth_sk2/</LogicalPath>
+          <PhysicalPath dnOrder="4">/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">5ABBC64A8C964788833E6390542B70C4</GeneratedChecksum>
+          <UserChecksum dnOrder="6">5ABBC64A8C964788833E6390542B70C4</UserChecksum>
         </File>
         <File dnOrder="10">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">device.h</Name>
-          <LogicalPath dnOrder="2">packs/PIC32MX795F512L_DFP/</LogicalPath>
-          <PhysicalPath dnOrder="3">/../../packs/PIC32MX795F512L_DFP/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">5D5C52527AB1435153DB9B50ADE6B79D</GeneratedChecksum>
-          <UserChecksum dnOrder="5">5D5C52527AB1435153DB9B50ADE6B79D</UserChecksum>
+          <Security dnOrder="2"/>
+          <LogicalPath dnOrder="3">packs/PIC32MX795F512L_DFP/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/PIC32MX795F512L_DFP/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">5D5C52527AB1435153DB9B50ADE6B79D</GeneratedChecksum>
+          <UserChecksum dnOrder="6">5D5C52527AB1435153DB9B50ADE6B79D</UserChecksum>
         </File>
         <File dnOrder="11">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_can1.h</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_eth_sk2/peripheral/can/</LogicalPath>
-          <PhysicalPath dnOrder="3">/peripheral/can/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">7952B4EF07792B426E9EF18FA159DF08</GeneratedChecksum>
-          <UserChecksum dnOrder="5">7952B4EF07792B426E9EF18FA159DF08</UserChecksum>
+          <Security dnOrder="2"/>
+          <LogicalPath dnOrder="3">config/pic32mx_eth_sk2/peripheral/can/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/can/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">7952B4EF07792B426E9EF18FA159DF08</GeneratedChecksum>
+          <UserChecksum dnOrder="6">7952B4EF07792B426E9EF18FA159DF08</UserChecksum>
         </File>
         <File dnOrder="12">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_can_common.h</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_eth_sk2/peripheral/can/</LogicalPath>
-          <PhysicalPath dnOrder="3">/peripheral/can/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">17919696C67053CCF135C207239152FF</GeneratedChecksum>
-          <UserChecksum dnOrder="5">17919696C67053CCF135C207239152FF</UserChecksum>
+          <Security dnOrder="2"/>
+          <LogicalPath dnOrder="3">config/pic32mx_eth_sk2/peripheral/can/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/can/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">17919696C67053CCF135C207239152FF</GeneratedChecksum>
+          <UserChecksum dnOrder="6">17919696C67053CCF135C207239152FF</UserChecksum>
         </File>
         <File dnOrder="13">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_clk.h</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_eth_sk2/peripheral/clk/</LogicalPath>
-          <PhysicalPath dnOrder="3">/peripheral/clk/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">7066CC390335CF75126E2A50C46E3BDD</GeneratedChecksum>
-          <UserChecksum dnOrder="5">7066CC390335CF75126E2A50C46E3BDD</UserChecksum>
+          <Security dnOrder="2"/>
+          <LogicalPath dnOrder="3">config/pic32mx_eth_sk2/peripheral/clk/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/clk/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">7066CC390335CF75126E2A50C46E3BDD</GeneratedChecksum>
+          <UserChecksum dnOrder="6">7066CC390335CF75126E2A50C46E3BDD</UserChecksum>
         </File>
         <File dnOrder="14">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_evic.h</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_eth_sk2/peripheral/evic/</LogicalPath>
-          <PhysicalPath dnOrder="3">/peripheral/evic/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">1BA4A111238723BF8148CF1BC7442A3C</GeneratedChecksum>
-          <UserChecksum dnOrder="5">1BA4A111238723BF8148CF1BC7442A3C</UserChecksum>
+          <Security dnOrder="2"/>
+          <LogicalPath dnOrder="3">config/pic32mx_eth_sk2/peripheral/evic/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/evic/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">1BA4A111238723BF8148CF1BC7442A3C</GeneratedChecksum>
+          <UserChecksum dnOrder="6">1BA4A111238723BF8148CF1BC7442A3C</UserChecksum>
         </File>
         <File dnOrder="15">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_gpio.h</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_eth_sk2/peripheral/gpio/</LogicalPath>
-          <PhysicalPath dnOrder="3">/peripheral/gpio/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">3C20DD6CA020A738DE34602A3174074F</GeneratedChecksum>
-          <UserChecksum dnOrder="5">3C20DD6CA020A738DE34602A3174074F</UserChecksum>
+          <Security dnOrder="2"/>
+          <LogicalPath dnOrder="3">config/pic32mx_eth_sk2/peripheral/gpio/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/gpio/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">3C20DD6CA020A738DE34602A3174074F</GeneratedChecksum>
+          <UserChecksum dnOrder="6">3C20DD6CA020A738DE34602A3174074F</UserChecksum>
         </File>
         <File dnOrder="16">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">toolchain_specifics.h</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_eth_sk2/</LogicalPath>
-          <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">9A7344615980CB9443B6436E41E2155A</GeneratedChecksum>
-          <UserChecksum dnOrder="5">9A7344615980CB9443B6436E41E2155A</UserChecksum>
+          <Security dnOrder="2"/>
+          <LogicalPath dnOrder="3">config/pic32mx_eth_sk2/</LogicalPath>
+          <PhysicalPath dnOrder="4">/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">9A7344615980CB9443B6436E41E2155A</GeneratedChecksum>
+          <UserChecksum dnOrder="6">9A7344615980CB9443B6436E41E2155A</UserChecksum>
         </File>
       </Files>
       <Settings dnOrder="1">
-        <Setting append="true" category="C32" delimiter=";" dnOrder="0" key="extra-include-directories" value="../src;../src/config/pic32mx_eth_sk2;../src/packs/PIC32MX795F512L_DFP;;../src/mips"/>
-        <Setting category="C32-LD" dnOrder="1" key="heap-size" value="512"/>
-        <Setting category="C32-LD" dnOrder="2" key="no-device-startup-code" value="true"/>
-        <Setting append="true" category="C32-LD" delimiter=";" dnOrder="3" key="preprocessor-macros" value=""/>
+        <Setting append="true" category="C32" delimiter=";" dnOrder="0" key="extra-include-directories" security="" value="../src;../src/config/pic32mx_eth_sk2;../src/packs/PIC32MX795F512L_DFP;;../src/mips"/>
+        <Setting category="C32-LD" dnOrder="1" key="heap-size" security="" value="512"/>
+        <Setting category="C32-LD" dnOrder="2" key="no-device-startup-code" security="" value="true"/>
+        <Setting append="true" category="C32-LD" delimiter=";" dnOrder="3" key="preprocessor-macros" security="" value=""/>
       </Settings>
     </Manifest>
     <Settings dnOrder="4">
