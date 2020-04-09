@@ -257,7 +257,8 @@ bool CAN1_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, CAN_MAILBO
 
 // *****************************************************************************
 /* Function:
-    bool CAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp, CAN_MAILBOX_RX_ATTRIBUTE mailboxAttr)
+    bool CAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp,
+                                             CAN_MAILBOX_RX_ATTRIBUTE mailboxAttr, CAN_MSG_RX_ATTRIBUTE *msgAttr)
 
    Summary:
     Receives a message from CAN bus.
@@ -271,13 +272,15 @@ bool CAN1_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, CAN_MAILBO
     data        - pointer to destination data buffer
     timestamp   - Pointer to Rx message timestamp
     mailboxAttr - Mailbox type either RX Mailbox or RX Mailbox with overwrite
+    msgAttr     - Data frame or Remote frame to be received
 
    Returns:
     Request status.
     true  - Request was successful.
     false - Request has failed.
 */
-bool CAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp, CAN_MAILBOX_RX_ATTRIBUTE mailboxAttr)
+bool CAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t *timestamp,
+                                         CAN_MAILBOX_RX_ATTRIBUTE mailboxAttr, CAN_MSG_RX_ATTRIBUTE *msgAttr)
 {
     uint8_t mailbox = 0;
     bool mbIsReady = false;
@@ -333,6 +336,7 @@ bool CAN1_MessageReceive(uint32_t *id, uint8_t *length, uint8_t *data, uint16_t 
     can1Obj.rxMsg[mailbox].buffer = data;
     can1Obj.rxMsg[mailbox].size = length;
     can1Obj.rxMsg[mailbox].timestamp = timestamp;
+    can1Obj.rxMsg[mailbox].msgAttr = msgAttr;
     CAN1_REGS->CAN_IER = 1U << mailbox;
     return status;
 }
@@ -616,6 +620,28 @@ void CAN1_InterruptDisable(CAN_INTERRUPT_MASK interruptMask)
 
 // *****************************************************************************
 /* Function:
+    bool CAN1_MailboxIsReady(CAN_MAILBOX_NUM mailbox)
+
+   Summary:
+    Returns true if Mailbox is ready otherwise false.
+
+   Precondition:
+    CAN1_Initialize must have been called for the associated CAN instance.
+
+   Parameters:
+    mailbox - Mailbox number
+
+   Returns:
+    true  - Mailbox is ready and Mailbox data registers can be read/written.
+    false - Mailbox is not ready and Mailbox data registers can not be read/written.
+*/
+bool CAN1_MailboxIsReady(CAN_MAILBOX_NUM mailbox)
+{
+    return ((CAN1_REGS->CAN_MB[mailbox].CAN_MSR & CAN_MSR_MRDY_Msk) == CAN_MSR_MRDY_Msk);
+}
+
+// *****************************************************************************
+/* Function:
     bool CAN1_TxCallbackRegister(CAN_CALLBACK callback, uintptr_t contextHandle, CAN_MAILBOX_TX_ATTRIBUTE mailboxAttr)
 
    Summary:
@@ -826,6 +852,17 @@ void CAN1_InterruptHandler(void)
                             {
                                 *can1Obj.rxMsg[mailbox].id = (CAN1_REGS->CAN_MB[mailbox].CAN_MID & CAN_MID_MIDvA_Msk) >> CAN_MID_MIDvA_Pos;
                             }
+
+                            if ((CAN1_REGS->CAN_MB[mailbox].CAN_MSR & CAN_MSR_MRTR_Msk) &&
+                               ((CAN1_REGS->CAN_MB[mailbox].CAN_MMR & CAN_MMR_MOT_Msk) != CAN_MMR_MOT_MB_CONSUMER))
+                            {
+                                *can1Obj.rxMsg[mailbox].msgAttr = CAN_MSG_RX_REMOTE_FRAME;
+                            }
+                            else
+                            {
+                                *can1Obj.rxMsg[mailbox].msgAttr = CAN_MSG_RX_DATA_FRAME;
+                            }
+
                             *can1Obj.rxMsg[mailbox].size = (CAN1_REGS->CAN_MB[mailbox].CAN_MSR & CAN_MSR_MDLC_Msk) >> CAN_MSR_MDLC_Pos;
                             /* Copy the data into the payload */
                             for (uint8_t dataIndex = 0; dataIndex < *can1Obj.rxMsg[mailbox].size; dataIndex++)
