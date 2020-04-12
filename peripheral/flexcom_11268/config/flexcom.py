@@ -26,6 +26,19 @@
 ################################################################################
 global flexcomSym_RingBuffer_Enable
 
+def handleMessage(messageID, args):
+    global flexcomSym_RingBuffer_Enable
+    result_dict = {}
+
+    if (messageID == "ENABLE_UART_RING_BUFFER_MODE"):
+        flexcomSym_RingBuffer_Enable.setReadOnly(True)
+        flexcomSym_RingBuffer_Enable.setValue(True)
+    if (messageID == "DISABLE_UART_RING_BUFFER_MODE"):
+        flexcomSym_RingBuffer_Enable.setReadOnly(False)
+        flexcomSym_RingBuffer_Enable.setValue(False)
+
+    return result_dict
+
 def flexcomInterruptEnableDisableCallback( uartInterruptEnableDisable, event ):
     flexcom_mode = flexcomSym_OperatingMode.getSelectedKey()
     if (flexcom_mode != "NO_COM") and (Database.getSymbolValue(deviceNamespace, flexcom_mode + "_INTERRUPT_MODE") == True):
