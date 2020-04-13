@@ -77,7 +77,7 @@
 
 typedef enum
 {
-<#list 0..DMAC_HIGHEST_CHANNEL - 1 as i>
+<#list 0..DMAC_HIGHEST_CHANNEL as i>
     <#assign DMAC_CHCTRLA_ENABLE    = "DMAC_ENABLE_CH_"  + i>
     <#if (.vars[DMAC_CHCTRLA_ENABLE] == true)>
     /* DMAC Channel ${i} */

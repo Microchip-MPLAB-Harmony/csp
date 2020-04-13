@@ -52,7 +52,7 @@
 // *****************************************************************************
 // *****************************************************************************
 
-#define DMAC_CHANNELS_NUMBER        ${DMAC_HIGHEST_CHANNEL}
+#define DMAC_CHANNELS_NUMBER        ${DMAC_HIGHEST_CHANNEL+1}
 
 /* DMAC channels object configuration structure */
 typedef struct
@@ -108,7 +108,7 @@ void ${DMA_INSTANCE_NAME}_Initialize( void )
                                                                            DMAC_PRICTRL0_LVLPRI1(${DMAC_LVLXPRIO_1}) | <#if DMAC_LVLXPRIO_1 == "1">DMAC_PRICTRL0_RRLVLEN1_Msk |</#if>
                                                                            DMAC_PRICTRL0_LVLPRI2(${DMAC_LVLXPRIO_2}) | <#if DMAC_LVLXPRIO_2 == "1">DMAC_PRICTRL0_RRLVLEN2_Msk |</#if>
                                                                            DMAC_PRICTRL0_LVLPRI3(${DMAC_LVLXPRIO_3})<#if DMAC_LVLXPRIO_3 == "1"> | DMAC_PRICTRL0_RRLVLEN3_Msk</#if>;</@compress>
-    <#list 0..DMAC_HIGHEST_CHANNEL - 1 as i>
+    <#list 0..DMAC_HIGHEST_CHANNEL as i>
         <#assign DMAC_CHCTRLA_ENABLE    = "DMAC_ENABLE_CH_"           + i>
         <#assign DMAC_CHCTRLA_RUNSTDBY  = "DMAC_CHCTRLA_RUNSTDBY_CH_" + i>
         <#assign DMAC_CHCTRLA_TRIGACT   = "DMAC_CHCTRLA_TRIGACT_CH_"  + i>
@@ -333,61 +333,16 @@ bool ${DMA_INSTANCE_NAME}_ChannelSettingsSet (DMAC_CHANNEL channel, DMAC_CHANNEL
     return true;
 }
 
-/*******************************************************************************
-    This function handles the DMA interrupt events.
-*/
-<#list 0..3 as x>
-<#if x <= DMAC_HIGHEST_CHANNEL>
-void ${DMA_INSTANCE_NAME}_${x}_InterruptHandler( void )
+//*******************************************************************************
+//    Functions to handle DMA interrupt events.
+//*******************************************************************************
+void _DMAC_interruptHandler(uint8_t channel)
 {
     DMAC_CH_OBJECT  *dmacChObj = NULL;
     volatile uint32_t chanIntFlagStatus = 0;
     DMAC_TRANSFER_EVENT event   = DMAC_TRANSFER_EVENT_ERROR;
 
-	dmacChObj = (DMAC_CH_OBJECT *)&dmacChannelObj[${x}];
-
-    /* Get the DMAC channel interrupt status */
-    chanIntFlagStatus = ${DMA_INSTANCE_NAME}_REGS->CHANNEL[${x}].DMAC_CHINTFLAG;
-
-    /* Verify if DMAC Channel Transfer complete flag is set */
-    if (chanIntFlagStatus & DMAC_CHINTENCLR_TCMPL_Msk)
-    {
-        /* Clear the transfer complete flag */
-        ${DMA_INSTANCE_NAME}_REGS->CHANNEL[${x}].DMAC_CHINTFLAG = DMAC_CHINTENCLR_TCMPL_Msk;
-
-        event = DMAC_TRANSFER_EVENT_COMPLETE;
-        dmacChObj->busyStatus = false;
-    }
-
-    /* Verify if DMAC Channel Error flag is set */
-    if (chanIntFlagStatus & DMAC_CHINTENCLR_TERR_Msk)
-    {
-        /* Clear transfer error flag */
-        ${DMA_INSTANCE_NAME}_REGS->CHANNEL[${x}].DMAC_CHINTFLAG = DMAC_CHINTENCLR_TERR_Msk;
-
-        event = DMAC_TRANSFER_EVENT_ERROR;
-        dmacChObj->busyStatus = false;
-    }
-
-    /* Execute the callback function */
-    if (dmacChObj->callback != NULL)
-    {
-        dmacChObj->callback (event, dmacChObj->context);
-    }
-}
-</#if>
-</#list>
-void ${DMA_INSTANCE_NAME}_OTHER_InterruptHandler( void )
-{
-    DMAC_CH_OBJECT  *dmacChObj = NULL;
-    uint8_t channel = 0;
-    volatile uint32_t chanIntFlagStatus = 0;
-    DMAC_TRANSFER_EVENT event   = DMAC_TRANSFER_EVENT_ERROR;
-
-    /* Get active channel number */
-    channel =  ${DMA_INSTANCE_NAME}_REGS->DMAC_INTPEND & DMAC_INTPEND_ID_Msk;
-
-	dmacChObj = (DMAC_CH_OBJECT *)&dmacChannelObj[channel];
+    dmacChObj = (DMAC_CH_OBJECT *)&dmacChannelObj[channel];
 
     /* Get the DMAC channel interrupt status */
     chanIntFlagStatus = ${DMA_INSTANCE_NAME}_REGS->CHANNEL[channel].DMAC_CHINTFLAG;
@@ -418,3 +373,29 @@ void ${DMA_INSTANCE_NAME}_OTHER_InterruptHandler( void )
         dmacChObj->callback (event, dmacChObj->context);
     }
 }
+
+<#list 0..DMA_INT_LINES-1 as x>
+<#assign DMAC_INT_NAME  = "DMA_INT_NAME_"  + x>
+<#assign res =.vars[DMAC_INT_NAME]?matches(r"(\d+)")>
+
+<#if (res) && ((res?groups[1])?number <= DMAC_HIGHEST_CHANNEL)>
+void ${DMA_INSTANCE_NAME}_${res?groups[1]}_InterruptHandler( void )
+{
+	_DMAC_interruptHandler(${res?groups[1]});
+}
+
+<#elseif (.vars[DMAC_INT_NAME] == "OTHER") &&  (4 <= DMAC_HIGHEST_CHANNEL) >
+void ${DMA_INSTANCE_NAME}_${.vars[DMAC_INT_NAME]}_InterruptHandler( void )
+{
+    uint8_t channel = 0;
+
+    for(channel = 4; channel <= ${DMAC_HIGHEST_CHANNEL}; channel++)
+    {
+        if ((${DMA_INSTANCE_NAME}_REGS->DMAC_INTSTATUS >> channel) & 0x1)
+        {
+            _DMAC_interruptHandler(channel);
+        }
+    }
+}
+</#if>
+</#list>

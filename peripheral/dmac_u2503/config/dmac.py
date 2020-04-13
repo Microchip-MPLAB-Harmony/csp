@@ -162,7 +162,7 @@ def dmacGlobalLogic(symbol, event):
     # Check if the list is not empty first since list element is accessed in the code
     if dmacActiveChannels:
         if symbol.getID() == "DMAC_HIGHEST_CHANNEL":
-            symbol.setValue(int(dmacActiveChannels[0]) + 1, 2)
+            symbol.setValue(int(dmacActiveChannels[0]), 2)
 
     if symbol.getID() == "DMA_ENABLE":
         if dmacActiveChannels and symbol.getValue() == False:
@@ -312,13 +312,24 @@ dmacMenu = coreComponent.createMenuSymbol("DMAC_MENU", None)
 dmacMenu.setLabel("DMA (DMAC)")
 dmacMenu.setDescription("DMA (DMAC) Configuration")
 
-dmacNumLines = 0
+dmacNumIntLines = 0
 
 vectorValues = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts").getChildren()
 
 for id in range(0, len(vectorValues)):
     if vectorValues[id].getAttribute("module-instance") == "DMAC":
-        dmacNumLines = dmacNumLines + 1
+        dmacIntName = coreComponent.createStringSymbol("DMA_INT_NAME_" + str(dmacNumIntLines) , dmacMenu)
+        dmacIntName.setDefaultValue(vectorValues[id].getAttribute("name").replace("DMAC_", ""))
+        dmacIntName.setVisible(False)
+
+        dmacNumIntLines = dmacNumIntLines + 1
+
+dmacIntLines = coreComponent.createIntegerSymbol("DMA_INT_LINES", dmacMenu)
+dmacIntLines.setDefaultValue(dmacNumIntLines)
+dmacIntLines.setVisible(False)
+
+
+
 
 # DMA_ENABLE: Needed to conditionally generate API mapping in DMA System service
 dmacEnable = coreComponent.createBooleanSymbol("DMA_ENABLE", dmacMenu)
