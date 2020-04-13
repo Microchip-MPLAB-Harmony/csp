@@ -38,6 +38,19 @@ global dbguInstanceName
 ################################################################################
 #### Business Logic ####
 ################################################################################
+def handleMessage(messageID, args):
+    global dbguSym_RingBuffer_Enable
+    result_dict = {}
+
+    if (messageID == "ENABLE_UART_RING_BUFFER_MODE"):
+        dbguSym_RingBuffer_Enable.setReadOnly(True)
+        dbguSym_RingBuffer_Enable.setValue(True)
+    if (messageID == "DISABLE_UART_RING_BUFFER_MODE"):
+        dbguSym_RingBuffer_Enable.setReadOnly(False)
+        dbguSym_RingBuffer_Enable.setValue(False)
+
+    return result_dict
+
 def interruptControl(dbguInt, event):
     global interruptVector
     global interruptHandler
@@ -55,6 +68,9 @@ def dependencyStatus(symbol, event):
     if (Database.getSymbolValue(dbguInstanceName.getValue().lower(), "USART_INTERRUPT_MODE") == True):
         symbol.setVisible(event["value"])
 
+def clockWarningVisible(symbol, event):
+    symbol.setVisible(not event["value"])
+
 # Calculates BRG value
 def baudRateCalc(clk, baud):
     global dbguClockInvalidSym
@@ -71,6 +87,40 @@ def baudRateTrigger(symbol, event):
 def clockSourceFreq(symbol, event):
     symbol.setValue(int(Database.getSymbolValue("core", dbguInstanceName.getValue() + "_CLOCK_FREQUENCY")), 2)
 
+def updateSymbolVisibility(symbol, event):
+    global dbguSym_RingBuffer_Enable
+    global dbguInterrupt
+
+    # Enable RX ring buffer size option if Ring buffer is enabled.
+    if symbol.getID() == "DBGU_RX_RING_BUFFER_SIZE":
+        symbol.setVisible(dbguSym_RingBuffer_Enable.getValue())
+    # Enable TX ring buffer size option if Ring buffer is enabled.
+    elif symbol.getID() == "DBGU_TX_RING_BUFFER_SIZE":
+        symbol.setVisible(dbguSym_RingBuffer_Enable.getValue())
+    # If Interrupt is enabled, make ring buffer option visible. Additionally, make interrupt option read-only if ring buffer is enabled.
+    # Remove read-only on interrupt if ring buffer is disabled.
+    elif symbol.getID() == "DBGU_RING_BUFFER_ENABLE":
+        dbguInterrupt.setReadOnly(symbol.getValue())
+        symbol.setVisible(dbguInterrupt.getValue())
+
+def DBGUFileGeneration(symbol, event):
+    componentID = symbol.getID()
+    filepath = ""
+    ringBufferModeEnabled = event["value"]
+
+    if componentID == "DBGU_HEADER":
+        if ringBufferModeEnabled == True:
+            filepath = "../peripheral/dbgu_6059/templates/plib_dbgu_ring_buffer.h.ftl"
+        else:
+            filepath = "../peripheral/dbgu_6059/templates/plib_dbgu.h.ftl"
+    elif componentID == "DBGU_SOURCE":
+        if ringBufferModeEnabled == True:
+            filepath = "../peripheral/dbgu_6059/templates/plib_dbgu_ring_buffer.c.ftl"
+        else:
+            filepath = "../peripheral/dbgu_6059/templates/plib_dbgu.c.ftl"
+
+    symbol.setSourcePath(filepath)
+
 ################################################################################
 #### Component ####
 ################################################################################
@@ -80,6 +130,8 @@ def instantiateComponent(dbguComponent):
     global interruptHandler
     global interruptHandlerLock
     global dbguClockInvalidSym
+    global dbguInterrupt
+    global dbguSym_RingBuffer_Enable
 
     dbguInstanceName = dbguComponent.createStringSymbol("DBGU_INSTANCE_NAME", None)
     dbguInstanceName.setVisible(False)
@@ -90,6 +142,29 @@ def instantiateComponent(dbguComponent):
     dbguInterrupt = dbguComponent.createBooleanSymbol("USART_INTERRUPT_MODE", None)
     dbguInterrupt.setLabel("Interrupt Mode")
     dbguInterrupt.setDefaultValue(True)
+
+    #Enable Ring buffer?
+    dbguSym_RingBuffer_Enable = dbguComponent.createBooleanSymbol("DBGU_RING_BUFFER_ENABLE", None)
+    dbguSym_RingBuffer_Enable.setLabel("Enable Ring Buffer ?")
+    dbguSym_RingBuffer_Enable.setDefaultValue(False)
+    dbguSym_RingBuffer_Enable.setVisible(Database.getSymbolValue(dbguInstanceName.getValue().lower(), "USART_INTERRUPT_MODE"))
+    dbguSym_RingBuffer_Enable.setDependencies(updateSymbolVisibility, ["DBGU_RING_BUFFER_ENABLE", "USART_INTERRUPT_MODE"])
+
+    dbguSym_TXRingBuffer_Size = dbguComponent.createIntegerSymbol("DBGU_TX_RING_BUFFER_SIZE", dbguSym_RingBuffer_Enable)
+    dbguSym_TXRingBuffer_Size.setLabel("TX Ring Buffer Size")
+    dbguSym_TXRingBuffer_Size.setMin(2)
+    dbguSym_TXRingBuffer_Size.setMax(65535)
+    dbguSym_TXRingBuffer_Size.setDefaultValue(128)
+    dbguSym_TXRingBuffer_Size.setVisible(False)
+    dbguSym_TXRingBuffer_Size.setDependencies(updateSymbolVisibility, ["DBGU_RING_BUFFER_ENABLE"])
+
+    dbguSym_RXRingBuffer_Size = dbguComponent.createIntegerSymbol("DBGU_RX_RING_BUFFER_SIZE", dbguSym_RingBuffer_Enable)
+    dbguSym_RXRingBuffer_Size.setLabel("RX Ring Buffer Size")
+    dbguSym_RXRingBuffer_Size.setMin(2)
+    dbguSym_RXRingBuffer_Size.setMax(65535)
+    dbguSym_RXRingBuffer_Size.setDefaultValue(128)
+    dbguSym_RXRingBuffer_Size.setVisible(False)
+    dbguSym_RXRingBuffer_Size.setDependencies(updateSymbolVisibility, ["DBGU_RING_BUFFER_ENABLE"])
 
     dbguClkSrc = dbguComponent.createKeyValueSetSymbol("DBGU_CLK_SRC", None)
     dbguClkSrc.setLabel("Select Clock Source")
@@ -236,7 +311,7 @@ def instantiateComponent(dbguComponent):
     dbguSymClkEnComment = dbguComponent.createCommentSymbol("DBGU_CLK_ENABLE_COMMENT", None)
     dbguSymClkEnComment.setVisible(False)
     dbguSymClkEnComment.setLabel("Warning!!! DBGU Peripheral Clock is Disabled in Clock Manager")
-    dbguSymClkEnComment.setDependencies(dependencyStatus, ["core."+dbguInstanceName.getValue()+"_CLOCK_ENABLE"])
+    dbguSymClkEnComment.setDependencies(clockWarningVisible, ["core." + dbguInstanceName.getValue() + "_CLOCK_ENABLE"])
 
     dbguSymIntEnComment = dbguComponent.createCommentSymbol("DBGU_INTERRUPT_ENABLE_COMMENT", None)
     dbguSymIntEnComment.setVisible(False)
@@ -264,6 +339,7 @@ def instantiateComponent(dbguComponent):
     dbguHeader1File.setType("HEADER")
     dbguHeader1File.setOverwrite(True)
     dbguHeader1File.setMarkup(True)
+    dbguHeader1File.setDependencies(DBGUFileGeneration, ["DBGU_RING_BUFFER_ENABLE"])
 
     dbguSource1File = dbguComponent.createFileSymbol("DBGU_SOURCE", None)
     dbguSource1File.setSourcePath("../peripheral/dbgu_6059/templates/plib_dbgu.c.ftl")
@@ -273,6 +349,7 @@ def instantiateComponent(dbguComponent):
     dbguSource1File.setType("SOURCE")
     dbguSource1File.setOverwrite(True)
     dbguSource1File.setMarkup(True)
+    dbguSource1File.setDependencies(DBGUFileGeneration, ["DBGU_RING_BUFFER_ENABLE"])
 
     dbguSystemInitFile = dbguComponent.createFileSymbol("DBGU_INIT", None)
     dbguSystemInitFile.setType("STRING")
