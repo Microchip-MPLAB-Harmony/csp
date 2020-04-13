@@ -112,18 +112,18 @@ def evsysIntset(interrupt, val):
         val["namespace"], "EVSYS_CHANNEL_" + str(channel) + "_OVERRUN")
     result = event or overflow
     interrupt.setValue(result, 2)
-    if Database.getSymbolValue(val["namespace"], "INTERRUPT_ACTIVE") != result:
-        Database.setSymbolValue(val["namespace"], "INTERRUPT_ACTIVE", result, 2)
 
-    if channel >= len(InterruptVector) - 1:
-        Database.setSymbolValue(val["namespace"], "EVSYS_INTERRUPT_MODE_OTHER", False, 2)
-        for id in range(len(InterruptVector) - 1 , numsyncChannels):
-            if (Database.getSymbolValue(val["namespace"], "EVSYS_CHANNEL_" + str(id) + "_EVENT")
-                or Database.getSymbolValue(val["namespace"], "EVSYS_CHANNEL_" + str(id) + "_OVERRUN")):
+    Database.setSymbolValue(val["namespace"], "EVSYS_INTERRUPT_MODE_OTHER", False, 2)
+    Database.setSymbolValue(val["namespace"], "INTERRUPT_ACTIVE", False, 2)
+    for id in range(0 , numsyncChannels):
+        if (Database.getSymbolValue(val["namespace"], "EVSYS_CHANNEL_" + str(id) + "_EVENT")
+            or Database.getSymbolValue(val["namespace"], "EVSYS_CHANNEL_" + str(id) + "_OVERRUN")):
+            # store the maximum channel number for which interrupt is enabled (to be used in FTL)
+            Database.setSymbolValue(val["namespace"], "EVSYS_INTERRUPT_MAX_CHANNEL", id, 2)
+            Database.setSymbolValue(val["namespace"], "INTERRUPT_ACTIVE", True, 2)
+            if (id >= len(InterruptVector) - 1):
                 Database.setSymbolValue(val["namespace"], "EVSYS_INTERRUPT_MODE_OTHER", True, 2)
-                # store the maximum channel number for which interrupt is enabled (to be used in FTL)
-                Database.setSymbolValue(val["namespace"], "EVSYS_INTERRUPT_MAX_CHANNEL", id, 2)
-                
+
 
     if channel > len(InterruptVector) - 1:
         channel = len(InterruptVector) - 1
