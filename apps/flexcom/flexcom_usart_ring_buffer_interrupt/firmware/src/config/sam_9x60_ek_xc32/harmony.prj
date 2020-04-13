@@ -1,0 +1,657 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Configuration>
+  <Configurator>
+    <Name dnOrder="0" value="sam_9x60_ek_xc32"/>
+    <Processor dnOrder="1" value="SAM9X60"/>
+    <Harmony dnOrder="2" path="../../../.."/>
+    <Manifest dnOrder="3">
+      <Files dnOrder="0">
+        <File dnOrder="0">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">cstartup.S</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/sam_9x60_ek_xc32/</LogicalPath>
+          <PhysicalPath dnOrder="4">/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">0D9BCD9C9592F135AC284EA42906FFE7</GeneratedChecksum>
+          <UserChecksum dnOrder="6">0D9BCD9C9592F135AC284EA42906FFE7</UserChecksum>
+        </File>
+        <File dnOrder="1">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">initialization.c</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/sam_9x60_ek_xc32/</LogicalPath>
+          <PhysicalPath dnOrder="4">/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">6D2006859927899A1175995DE204D6D7</GeneratedChecksum>
+          <UserChecksum dnOrder="6">6D2006859927899A1175995DE204D6D7</UserChecksum>
+        </File>
+        <File dnOrder="2">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">interrupts.c</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/sam_9x60_ek_xc32/</LogicalPath>
+          <PhysicalPath dnOrder="4">/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">CDA3B01DBF6378688D2B70C34CCB7629</GeneratedChecksum>
+          <UserChecksum dnOrder="6">CDA3B01DBF6378688D2B70C34CCB7629</UserChecksum>
+        </File>
+        <File dnOrder="3">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">main_sam9x60.c</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3"/>
+          <PhysicalPath dnOrder="4">/../../</PhysicalPath>
+          <GeneratedChecksum dnOrder="5"/>
+          <UserChecksum dnOrder="6"/>
+        </File>
+        <File dnOrder="4">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">plib_aic.c</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/sam_9x60_ek_xc32/peripheral/aic/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/aic/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">50F5368B4E0DC4B4BC378FDC8A00D6E1</GeneratedChecksum>
+          <UserChecksum dnOrder="6">50F5368B4E0DC4B4BC378FDC8A00D6E1</UserChecksum>
+        </File>
+        <File dnOrder="5">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">plib_clk.c</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/sam_9x60_ek_xc32/peripheral/clk/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/clk/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">460C51EF4D8D7CC87D1E249D4E877001</GeneratedChecksum>
+          <UserChecksum dnOrder="6">460C51EF4D8D7CC87D1E249D4E877001</UserChecksum>
+        </File>
+        <File dnOrder="6">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">plib_flexcom5_usart.c</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/sam_9x60_ek_xc32/peripheral/flexcom/usart/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/flexcom/usart/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">41C230328AE5C0652AF82C8E5544F8C0</GeneratedChecksum>
+          <UserChecksum dnOrder="6">41C230328AE5C0652AF82C8E5544F8C0</UserChecksum>
+        </File>
+        <File dnOrder="7">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">plib_mmu.c</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/sam_9x60_ek_xc32/peripheral/mmu/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/mmu/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">097422317693DFDB1F477D9E21E76D53</GeneratedChecksum>
+          <UserChecksum dnOrder="6">097422317693DFDB1F477D9E21E76D53</UserChecksum>
+        </File>
+        <File dnOrder="8">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">plib_pio.c</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/sam_9x60_ek_xc32/peripheral/pio/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/pio/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">08D18580ADDCBA1990BD07A4C21ACE5C</GeneratedChecksum>
+          <UserChecksum dnOrder="6">08D18580ADDCBA1990BD07A4C21ACE5C</UserChecksum>
+        </File>
+        <File dnOrder="9">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">vectortrap.s</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/sam_9x60_ek_xc32/</LogicalPath>
+          <PhysicalPath dnOrder="4">/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">97434B1A8170A7E29EA666D55FF3F212</GeneratedChecksum>
+          <UserChecksum dnOrder="6">97434B1A8170A7E29EA666D55FF3F212</UserChecksum>
+        </File>
+        <File dnOrder="10">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">xc32_monitor.c</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/sam_9x60_ek_xc32/stdio/</LogicalPath>
+          <PhysicalPath dnOrder="4">/stdio/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">A9F55E7CB78F22D9000CA03DC635973C</GeneratedChecksum>
+          <UserChecksum dnOrder="6">A9F55E7CB78F22D9000CA03DC635973C</UserChecksum>
+        </File>
+        <File dnOrder="11">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">adc.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/component/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/component/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">F5187437E80DD09BAB8E98ED56411A7A</GeneratedChecksum>
+          <UserChecksum dnOrder="6">F5187437E80DD09BAB8E98ED56411A7A</UserChecksum>
+        </File>
+        <File dnOrder="12">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">aes.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/component/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/component/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">E3F0A4C787D8F7FD65C3E74A7CB49E28</GeneratedChecksum>
+          <UserChecksum dnOrder="6">E3F0A4C787D8F7FD65C3E74A7CB49E28</UserChecksum>
+        </File>
+        <File dnOrder="13">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">aic.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/component/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/component/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">DDEF7D3F7F38DCA4F0B270F24E4C64E5</GeneratedChecksum>
+          <UserChecksum dnOrder="6">DDEF7D3F7F38DCA4F0B270F24E4C64E5</UserChecksum>
+        </File>
+        <File dnOrder="14">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">bsc.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/component/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/component/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">F620E2C5B04072846021F5169811DF75</GeneratedChecksum>
+          <UserChecksum dnOrder="6">F620E2C5B04072846021F5169811DF75</UserChecksum>
+        </File>
+        <File dnOrder="15">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">can.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/component/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/component/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">B45FB1D5B78C911D75B3EC1071087282</GeneratedChecksum>
+          <UserChecksum dnOrder="6">B45FB1D5B78C911D75B3EC1071087282</UserChecksum>
+        </File>
+        <File dnOrder="16">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">classd.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/component/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/component/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">44863BF49EA859CDD9A7DF41A222E111</GeneratedChecksum>
+          <UserChecksum dnOrder="6">44863BF49EA859CDD9A7DF41A222E111</UserChecksum>
+        </File>
+        <File dnOrder="17">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">cp15.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/sam_9x60_ek_xc32/peripheral/mmu/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/mmu/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">8B35997040E0D61B0C62411FF7C4E9C1</GeneratedChecksum>
+          <UserChecksum dnOrder="6">8B35997040E0D61B0C62411FF7C4E9C1</UserChecksum>
+        </File>
+        <File dnOrder="18">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">dbgu.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/component/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/component/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">D81EA3B446C4C8765772B37AE09CCF90</GeneratedChecksum>
+          <UserChecksum dnOrder="6">D81EA3B446C4C8765772B37AE09CCF90</UserChecksum>
+        </File>
+        <File dnOrder="19">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">definitions.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/sam_9x60_ek_xc32/</LogicalPath>
+          <PhysicalPath dnOrder="4">/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">F43D016AF890C7DB07E8052F471A7610</GeneratedChecksum>
+          <UserChecksum dnOrder="6">F43D016AF890C7DB07E8052F471A7610</UserChecksum>
+        </File>
+        <File dnOrder="20">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">device.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">B3E9E4F385DE97E9DC1497A73FC97DA2</GeneratedChecksum>
+          <UserChecksum dnOrder="6">B3E9E4F385DE97E9DC1497A73FC97DA2</UserChecksum>
+        </File>
+        <File dnOrder="21">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">device_cache.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/sam_9x60_ek_xc32/</LogicalPath>
+          <PhysicalPath dnOrder="4">/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">7254700FC13F4B4E1929CADEB2F317FE</GeneratedChecksum>
+          <UserChecksum dnOrder="6">7254700FC13F4B4E1929CADEB2F317FE</UserChecksum>
+        </File>
+        <File dnOrder="22">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">emac.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/component/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/component/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">55FD891E1F9447F8B84233907A2DD419</GeneratedChecksum>
+          <UserChecksum dnOrder="6">55FD891E1F9447F8B84233907A2DD419</UserChecksum>
+        </File>
+        <File dnOrder="23">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">flexcom.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/component/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/component/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">17051D0E297FF40304298362FD51CEA9</GeneratedChecksum>
+          <UserChecksum dnOrder="6">17051D0E297FF40304298362FD51CEA9</UserChecksum>
+        </File>
+        <File dnOrder="24">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">gfx2d.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/component/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/component/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">CADA3C5448DABD196A7E52DA81B2B2E3</GeneratedChecksum>
+          <UserChecksum dnOrder="6">CADA3C5448DABD196A7E52DA81B2B2E3</UserChecksum>
+        </File>
+        <File dnOrder="25">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">gpbr.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/component/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/component/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">014447E13C69382642D9AF6E37591738</GeneratedChecksum>
+          <UserChecksum dnOrder="6">014447E13C69382642D9AF6E37591738</UserChecksum>
+        </File>
+        <File dnOrder="26">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">i2smcc.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/component/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/component/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">90626110D87CED8AD1B0DBA4F3A72477</GeneratedChecksum>
+          <UserChecksum dnOrder="6">90626110D87CED8AD1B0DBA4F3A72477</UserChecksum>
+        </File>
+        <File dnOrder="27">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">isi.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/component/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/component/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">757BE3B14F7398CFE7813625B0C63BB2</GeneratedChecksum>
+          <UserChecksum dnOrder="6">757BE3B14F7398CFE7813625B0C63BB2</UserChecksum>
+        </File>
+        <File dnOrder="28">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">lcdc.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/component/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/component/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">F3E53C6DCFBC9287AA35CB876CF47E6E</GeneratedChecksum>
+          <UserChecksum dnOrder="6">F3E53C6DCFBC9287AA35CB876CF47E6E</UserChecksum>
+        </File>
+        <File dnOrder="29">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">matrix.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/component/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/component/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">F3A19D713C0B5B58320BF85150650B8A</GeneratedChecksum>
+          <UserChecksum dnOrder="6">F3A19D713C0B5B58320BF85150650B8A</UserChecksum>
+        </File>
+        <File dnOrder="30">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">mpddrc.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/component/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/component/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">4B1D40770C6C01B3D57A02D884CAC62E</GeneratedChecksum>
+          <UserChecksum dnOrder="6">4B1D40770C6C01B3D57A02D884CAC62E</UserChecksum>
+        </File>
+        <File dnOrder="31">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">otpc.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/component/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/component/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">D1D3968F4019E64787BADEE46E3969CC</GeneratedChecksum>
+          <UserChecksum dnOrder="6">D1D3968F4019E64787BADEE46E3969CC</UserChecksum>
+        </File>
+        <File dnOrder="32">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">pio.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/component/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/component/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">80EF8B45C7A53BD23CD8BE276AE901BF</GeneratedChecksum>
+          <UserChecksum dnOrder="6">80EF8B45C7A53BD23CD8BE276AE901BF</UserChecksum>
+        </File>
+        <File dnOrder="33">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">pit.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/component/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/component/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">9074E1BEDF7D225391282F2060856473</GeneratedChecksum>
+          <UserChecksum dnOrder="6">9074E1BEDF7D225391282F2060856473</UserChecksum>
+        </File>
+        <File dnOrder="34">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">pit64b.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/component/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/component/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">CCABCE206BBDBCDB39977359851521FD</GeneratedChecksum>
+          <UserChecksum dnOrder="6">CCABCE206BBDBCDB39977359851521FD</UserChecksum>
+        </File>
+        <File dnOrder="35">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">plib_aic.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/sam_9x60_ek_xc32/peripheral/aic/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/aic/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">7A8398DAB4C77A530FAFB842EFE6D1A2</GeneratedChecksum>
+          <UserChecksum dnOrder="6">7A8398DAB4C77A530FAFB842EFE6D1A2</UserChecksum>
+        </File>
+        <File dnOrder="36">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">plib_clk.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/sam_9x60_ek_xc32/peripheral/clk/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/clk/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">9747186CED8796D90F269DAE9D90C24B</GeneratedChecksum>
+          <UserChecksum dnOrder="6">9747186CED8796D90F269DAE9D90C24B</UserChecksum>
+        </File>
+        <File dnOrder="37">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">plib_flexcom5_usart.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/sam_9x60_ek_xc32/peripheral/flexcom/usart/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/flexcom/usart/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">8AB354ACB9777A314657DCB276E25A89</GeneratedChecksum>
+          <UserChecksum dnOrder="6">8AB354ACB9777A314657DCB276E25A89</UserChecksum>
+        </File>
+        <File dnOrder="38">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">plib_flexcom_usart_local.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/sam_9x60_ek_xc32/peripheral/flexcom/usart/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/flexcom/usart/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">F35B34B1D7286D8A5AF72DCA9D3B1DE5</GeneratedChecksum>
+          <UserChecksum dnOrder="6">F35B34B1D7286D8A5AF72DCA9D3B1DE5</UserChecksum>
+        </File>
+        <File dnOrder="39">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">plib_mmu.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/sam_9x60_ek_xc32/peripheral/mmu/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/mmu/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">53692CB5F4391E126593D39BD431C323</GeneratedChecksum>
+          <UserChecksum dnOrder="6">53692CB5F4391E126593D39BD431C323</UserChecksum>
+        </File>
+        <File dnOrder="40">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">plib_pio.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/sam_9x60_ek_xc32/peripheral/pio/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/pio/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">30C7A759ED524A60EC74C769E35AB1F5</GeneratedChecksum>
+          <UserChecksum dnOrder="6">30C7A759ED524A60EC74C769E35AB1F5</UserChecksum>
+        </File>
+        <File dnOrder="41">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">pmc.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/component/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/component/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">14AB0C757D1540E68A3F5D635B12C34C</GeneratedChecksum>
+          <UserChecksum dnOrder="6">14AB0C757D1540E68A3F5D635B12C34C</UserChecksum>
+        </File>
+        <File dnOrder="42">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">pmecc.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/component/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/component/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">228BF99FC7DE327F382C921BDAA79AF5</GeneratedChecksum>
+          <UserChecksum dnOrder="6">228BF99FC7DE327F382C921BDAA79AF5</UserChecksum>
+        </File>
+        <File dnOrder="43">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">pmerrloc.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/component/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/component/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">51781A7E7BD8D2B24C81DF6137EF37C4</GeneratedChecksum>
+          <UserChecksum dnOrder="6">51781A7E7BD8D2B24C81DF6137EF37C4</UserChecksum>
+        </File>
+        <File dnOrder="44">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">pwm.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/component/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/component/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">848C9979B47DE84FF182CA518025B432</GeneratedChecksum>
+          <UserChecksum dnOrder="6">848C9979B47DE84FF182CA518025B432</UserChecksum>
+        </File>
+        <File dnOrder="45">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">qspi.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/component/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/component/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">10097A59EFDDB8C2269E18E32A5C95A1</GeneratedChecksum>
+          <UserChecksum dnOrder="6">10097A59EFDDB8C2269E18E32A5C95A1</UserChecksum>
+        </File>
+        <File dnOrder="46">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">rstc.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/component/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/component/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">76CBC5D648BA4EF3DC77E2163128ECA4</GeneratedChecksum>
+          <UserChecksum dnOrder="6">76CBC5D648BA4EF3DC77E2163128ECA4</UserChecksum>
+        </File>
+        <File dnOrder="47">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">rtc.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/component/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/component/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">D5772E29B2E6FBB2E50912D679EC0B6B</GeneratedChecksum>
+          <UserChecksum dnOrder="6">D5772E29B2E6FBB2E50912D679EC0B6B</UserChecksum>
+        </File>
+        <File dnOrder="48">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">rtt.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/component/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/component/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">7DE4AA880375EF1C123FBF0C1A60D83C</GeneratedChecksum>
+          <UserChecksum dnOrder="6">7DE4AA880375EF1C123FBF0C1A60D83C</UserChecksum>
+        </File>
+        <File dnOrder="49">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">sam9x60.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">75D8B6A40CF057E51063FB272FD10885</GeneratedChecksum>
+          <UserChecksum dnOrder="6">75D8B6A40CF057E51063FB272FD10885</UserChecksum>
+        </File>
+        <File dnOrder="50">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">sam9x60.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/pio/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/pio/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">D595B826366A695CC6D39E93ADA0CBD2</GeneratedChecksum>
+          <UserChecksum dnOrder="6">D595B826366A695CC6D39E93ADA0CBD2</UserChecksum>
+        </File>
+        <File dnOrder="51">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">sckc.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/component/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/component/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">663D89FA9C38FB9E02320B399576593E</GeneratedChecksum>
+          <UserChecksum dnOrder="6">663D89FA9C38FB9E02320B399576593E</UserChecksum>
+        </File>
+        <File dnOrder="52">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">sdmmc.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/component/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/component/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">5FAAAEEA7CC23A001568850A8E3CC394</GeneratedChecksum>
+          <UserChecksum dnOrder="6">5FAAAEEA7CC23A001568850A8E3CC394</UserChecksum>
+        </File>
+        <File dnOrder="53">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">sdramc.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/component/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/component/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">E1CE4F1541D1E6373E1608218CA97775</GeneratedChecksum>
+          <UserChecksum dnOrder="6">E1CE4F1541D1E6373E1608218CA97775</UserChecksum>
+        </File>
+        <File dnOrder="54">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">sfr.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/component/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/component/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">272D1D77D468924E84E87DA61E6F640D</GeneratedChecksum>
+          <UserChecksum dnOrder="6">272D1D77D468924E84E87DA61E6F640D</UserChecksum>
+        </File>
+        <File dnOrder="55">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">sha.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/component/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/component/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">8C72BA5A8A9D06194191A95799A368EE</GeneratedChecksum>
+          <UserChecksum dnOrder="6">8C72BA5A8A9D06194191A95799A368EE</UserChecksum>
+        </File>
+        <File dnOrder="56">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">shdwc.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/component/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/component/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">653D899CE8919E50457B0A584EA621E1</GeneratedChecksum>
+          <UserChecksum dnOrder="6">653D899CE8919E50457B0A584EA621E1</UserChecksum>
+        </File>
+        <File dnOrder="57">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">smc.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/component/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/component/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">51B4F87A32B7836E237184A2E0F805A9</GeneratedChecksum>
+          <UserChecksum dnOrder="6">51B4F87A32B7836E237184A2E0F805A9</UserChecksum>
+        </File>
+        <File dnOrder="58">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">ssc.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/component/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/component/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">1AF202CCDA19C770BAE1D630F194CC90</GeneratedChecksum>
+          <UserChecksum dnOrder="6">1AF202CCDA19C770BAE1D630F194CC90</UserChecksum>
+        </File>
+        <File dnOrder="59">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">syscwp.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/component/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/component/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">7775847A3CAECF6B5681E50FAE20A3D1</GeneratedChecksum>
+          <UserChecksum dnOrder="6">7775847A3CAECF6B5681E50FAE20A3D1</UserChecksum>
+        </File>
+        <File dnOrder="60">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">tc.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/component/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/component/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">A47FB1FC500DEC631BE445DD4D7B0D82</GeneratedChecksum>
+          <UserChecksum dnOrder="6">A47FB1FC500DEC631BE445DD4D7B0D82</UserChecksum>
+        </File>
+        <File dnOrder="61">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">tdes.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/component/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/component/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">AB9D3291FDBAC09FE7BBCDDE46D936CE</GeneratedChecksum>
+          <UserChecksum dnOrder="6">AB9D3291FDBAC09FE7BBCDDE46D936CE</UserChecksum>
+        </File>
+        <File dnOrder="62">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">toolchain_specifics.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/sam_9x60_ek_xc32/</LogicalPath>
+          <PhysicalPath dnOrder="4">/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">645E61E94C831530E2CF683CC7D54724</GeneratedChecksum>
+          <UserChecksum dnOrder="6">645E61E94C831530E2CF683CC7D54724</UserChecksum>
+        </File>
+        <File dnOrder="63">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">trng.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/component/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/component/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">2049C183B951462713C5F5E856C858A2</GeneratedChecksum>
+          <UserChecksum dnOrder="6">2049C183B951462713C5F5E856C858A2</UserChecksum>
+        </File>
+        <File dnOrder="64">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">udphs.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/component/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/component/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">4E0E8BC1E13967D3762A045CDD548152</GeneratedChecksum>
+          <UserChecksum dnOrder="6">4E0E8BC1E13967D3762A045CDD548152</UserChecksum>
+        </File>
+        <File dnOrder="65">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">uhpfs.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/component/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/component/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">04AC6440A109D33CA6925B006045F4C5</GeneratedChecksum>
+          <UserChecksum dnOrder="6">04AC6440A109D33CA6925B006045F4C5</UserChecksum>
+        </File>
+        <File dnOrder="66">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">uhphs.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/component/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/component/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">8586440D10B1F61F7263ACA9EA0CE8F7</GeneratedChecksum>
+          <UserChecksum dnOrder="6">8586440D10B1F61F7263ACA9EA0CE8F7</UserChecksum>
+        </File>
+        <File dnOrder="67">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">wdt.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/component/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/component/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">063C157D2F1855A26523CBEF00E0A08B</GeneratedChecksum>
+          <UserChecksum dnOrder="6">063C157D2F1855A26523CBEF00E0A08B</UserChecksum>
+        </File>
+        <File dnOrder="68">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">xdmac.h</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/SAM9X60_DFP/component/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/SAM9X60_DFP/component/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">FAC730BFCB84C6309B90D2564B64F3F6</GeneratedChecksum>
+          <UserChecksum dnOrder="6">FAC730BFCB84C6309B90D2564B64F3F6</UserChecksum>
+        </File>
+        <File dnOrder="69">
+          <Type dnOrder="0">LINKER</Type>
+          <Name dnOrder="1">ddram.ld</Name>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/sam_9x60_ek_xc32/</LogicalPath>
+          <PhysicalPath dnOrder="4">/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">E7F022F17D6107BA0566FBD8EF7C4DB5</GeneratedChecksum>
+          <UserChecksum dnOrder="6">E7F022F17D6107BA0566FBD8EF7C4DB5</UserChecksum>
+        </File>
+      </Files>
+      <Settings dnOrder="1">
+        <Setting append="true" category="C32" delimiter=";" dnOrder="0" key="extra-include-directories" security="NON_SECURE" value="../src;../src/config/sam_9x60_ek_xc32;../src/packs/SAM9X60_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/"/>
+        <Setting category="C32-LD" dnOrder="1" key="heap-size" security="NON_SECURE" value="512"/>
+        <Setting category="C32-LD" dnOrder="2" key="no-device-startup-code" security="NON_SECURE" value="true"/>
+        <Setting append="true" category="C32-LD" delimiter=";" dnOrder="3" key="preprocessor-macros" security="NON_SECURE" value="ROM_ORIGIN=0x0x23f00000;ROM_LENGTH=-0x23f00000"/>
+      </Settings>
+    </Manifest>
+    <Settings dnOrder="4">
+      <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.6.0"/>
+      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAM9X60_DFP\1.1.23\atdf\SAM9X60.atdf"/>
+      <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
+      <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
+      <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
+      <Setting dnOrder="5" key="PackageFilter" value="bsp;core;csp;expresslogic_threadx;micrium_ucos3;net;"/>
+      <Setting dnOrder="6" key="TRUSTZONE" value="false"/>
+    </Settings>
+  </Configurator>
+</Configuration>
