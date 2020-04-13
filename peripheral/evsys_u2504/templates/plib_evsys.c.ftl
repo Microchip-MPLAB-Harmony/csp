@@ -184,35 +184,43 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
 </#if>
 </#list>
 <#else>
-<#list 0..NUM_SYNC_CHANNELS as x>
-<#assign INTERRUPT_MODE = "EVSYS_INTERRUPT_MODE" + x>
-<#if .vars[INTERRUPT_MODE]??>
-<#if .vars[INTERRUPT_MODE]>
-	<#lt>void ${EVSYS_INSTANCE_NAME}_${x}_InterruptHandler( void )
-	<#lt>{
-	<#lt>	volatile uint32_t status = ${EVSYS_REG_NAME}_REGS->CHANNEL[${x}].EVSYS_CHINTFLAG;
-	<#lt>	${EVSYS_REG_NAME}_REGS->CHANNEL[${x}].EVSYS_CHINTFLAG = EVSYS_CHINTFLAG_Msk;
-	<#lt>	if(evsys[${x}].callback != NULL)
-    <#lt>   {
-    <#lt>   	evsys[${x}].callback(status, evsys[${x}].context);
-    <#lt>   }
-	<#lt>}
-</#if>
-</#if>
-</#list>
+    <#list 0..EVSYS_INT_LINES-1 as x>
+            <#assign EVENT_SYSTEM_INT_NAME  = "EVSYS_INT_NAME_"  + x>
+            <#assign res =.vars[EVENT_SYSTEM_INT_NAME]?matches(r"(\d+)")>
+            <#if res>
+                <#assign INTERRUPT_MODE = "EVSYS_INTERRUPT_MODE" + (res?groups[1])?number>
+                <#if .vars[INTERRUPT_MODE]?? && (.vars[INTERRUPT_MODE] == true)>
+                    <#lt>void ${EVSYS_INSTANCE_NAME}_${res?groups[1]}_InterruptHandler( void )
+                    <#lt>{
+                    <#lt>    volatile uint32_t status = ${EVSYS_REG_NAME}_REGS->CHANNEL[${res?groups[1]}].EVSYS_CHINTFLAG;
+                    <#lt>    ${EVSYS_REG_NAME}_REGS->CHANNEL[${res?groups[1]}].EVSYS_CHINTFLAG = EVSYS_CHINTFLAG_Msk;
+                    <#lt>    if(evsys[${res?groups[1]}].callback != NULL)
+                    <#lt>    {
+                    <#lt>        evsys[${res?groups[1]}].callback(status, evsys[${res?groups[1]}].context);
+                    <#lt>    }
+                    <#lt>}
+                </#if>
+            </#if>
+    </#list>
 </#if>
 
 <#if EVSYS_INTERRUPT_MODE_OTHER??>
 	<#if EVSYS_INTERRUPT_MODE_OTHER>
-	void ${EVSYS_INSTANCE_NAME}_OTHER_InterruptHandler( void )
-	{
-		uint8_t channel = ${EVSYS_REG_NAME}_REGS->EVSYS_INTPEND & EVSYS_INTPEND_ID_Msk;
-		volatile uint32_t status = ${EVSYS_REG_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTFLAG;
-		if(evsys[channel].callback != NULL)
-		{
-			evsys[channel].callback(status, evsys[channel].context);
-		}
-		${EVSYS_REG_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTFLAG = EVSYS_CHINTFLAG_Msk;
-	}
+		<#lt>void ${EVSYS_INSTANCE_NAME}_OTHER_InterruptHandler( void )
+		<#lt>{
+		<#lt>	uint8_t channel;
+		<#lt>	for(channel = 4; channel <= ${EVSYS_INTERRUPT_MAX_CHANNEL}; channel++)
+		<#lt>	{
+		<#lt>    	if ((${EVSYS_REG_NAME}_REGS->EVSYS_INTSTATUS >> channel) & 0x1)
+		<#lt>    	{
+		<#lt>			volatile uint32_t status = ${EVSYS_REG_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTFLAG;
+		<#lt>			if(evsys[channel].callback != NULL)
+		<#lt>			{
+		<#lt>				evsys[channel].callback(status, evsys[channel].context);
+		<#lt>			}
+		<#lt>			${EVSYS_REG_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTFLAG = EVSYS_CHINTFLAG_Msk;
+		<#lt>		}
+		<#lt>	}
+		<#lt>}
 	</#if>
 </#if>

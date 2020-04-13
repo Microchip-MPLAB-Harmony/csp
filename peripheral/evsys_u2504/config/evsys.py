@@ -115,12 +115,15 @@ def evsysIntset(interrupt, val):
     if Database.getSymbolValue(val["namespace"], "INTERRUPT_ACTIVE") != result:
         Database.setSymbolValue(val["namespace"], "INTERRUPT_ACTIVE", result, 2)
 
-    if channel > len(InterruptVector) - 1:
+    if channel >= len(InterruptVector) - 1:
         Database.setSymbolValue(val["namespace"], "EVSYS_INTERRUPT_MODE_OTHER", False, 2)
         for id in range(len(InterruptVector) - 1 , numsyncChannels):
             if (Database.getSymbolValue(val["namespace"], "EVSYS_CHANNEL_" + str(id) + "_EVENT")
                 or Database.getSymbolValue(val["namespace"], "EVSYS_CHANNEL_" + str(id) + "_OVERRUN")):
                 Database.setSymbolValue(val["namespace"], "EVSYS_INTERRUPT_MODE_OTHER", True, 2)
+                # store the maximum channel number for which interrupt is enabled (to be used in FTL)
+                Database.setSymbolValue(val["namespace"], "EVSYS_INTERRUPT_MAX_CHANNEL", id, 2)
+                
 
     if channel > len(InterruptVector) - 1:
         channel = len(InterruptVector) - 1
@@ -411,6 +414,8 @@ def instantiateComponent(evsysComponent):
     ############################################################################
     #### Dependency ####
     ############################################################################
+    evsysNumIntLines = 0
+    
     vectorNode=ATDF.getNode(
         "/avr-tools-device-file/devices/device/interrupts")
     vectorValues=vectorNode.getChildren()
@@ -423,6 +428,15 @@ def instantiateComponent(evsysComponent):
             InterruptVectorUpdate.append(
                 "core." + name + "_INTERRUPT_ENABLE_UPDATE")
             InterruptVectorSecurity.append(name + "_SET_NON_SECURE")
+
+            evsysIntName = evsysComponent.createStringSymbol("EVSYS_INT_NAME_" + str(evsysNumIntLines) , evsysUserMenu)
+            evsysIntName.setDefaultValue(vectorValues[id].getAttribute("name").replace("EVSYS_", ""))
+            evsysIntName.setVisible(False)
+            evsysNumIntLines = evsysNumIntLines + 1
+
+    evsysIntLines = evsysComponent.createIntegerSymbol("EVSYS_INT_LINES", evsysUserMenu)
+    evsysIntLines.setDefaultValue(evsysNumIntLines)
+    evsysIntLines.setVisible(False)
 
     # Interrupt Warning status
     evsysSym_IntEnComment=evsysComponent.createCommentSymbol(
@@ -438,10 +452,12 @@ def instantiateComponent(evsysComponent):
     evsysInterruptMode.setVisible(False)
     
     if numsyncChannels > len(InterruptVector):
-        evsysIntOther = evsysComponent.createBooleanSymbol(
-                "EVSYS_INTERRUPT_MODE_OTHER", evsysSym_Menu)
+        evsysIntOther = evsysComponent.createBooleanSymbol("EVSYS_INTERRUPT_MODE_OTHER", evsysSym_Menu)
         evsysIntOther.setVisible(False)
-         
+        
+        evsysIntEnableForMaxChannel = evsysComponent.createIntegerSymbol("EVSYS_INTERRUPT_MAX_CHANNEL", evsysSym_Menu)
+        evsysIntEnableForMaxChannel.setVisible(False)
+        evsysIntEnableForMaxChannel.setDefaultValue(0)
     # ################################################################################
     # ##########             CODE GENERATION             #############################
     # ################################################################################
