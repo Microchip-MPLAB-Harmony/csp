@@ -87,6 +87,8 @@ extern "C" {
 </#list>
 </#compress>
 
+
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Interface Routines
@@ -115,6 +117,10 @@ uint16_t ${ADCHS_INSTANCE_NAME}_ChannelResultGet(ADCHS_CHANNEL_NUM channel);
 
 <#if ADCHS_INTERRUPT == true>
     <#lt>void ${ADCHS_INSTANCE_NAME}_CallbackRegister(ADCHS_CHANNEL_NUM channel, ADCHS_CALLBACK callback, uintptr_t context);
+</#if>
+
+<#if ADCCON2__EOSIEN == true>
+    <#lt>void ${ADCHS_INSTANCE_NAME}_EOSCallbackRegister(ADCHS_EOS_CALLBACK callback, uintptr_t context);
 </#if>
 
 // *****************************************************************************

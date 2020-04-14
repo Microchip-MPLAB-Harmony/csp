@@ -390,7 +390,8 @@ def adchsCalcADCCON2(symbol, event):
     component = symbol.getComponent()
     adcdiv = component.getSymbolValue("ADCCON2__ADCDIV") << 0
     samc = component.getSymbolValue("ADCCON2__SAMC") << 16
-    adccon2 = adcdiv + samc
+    eos = int(component.getSymbolValue("ADCCON2__EOSIEN")) << 13
+    adccon2 = adcdiv + samc + eos
     symbol.setValue(adccon2, 2)
 
 def adchsCalcADCCON3(symbol, event):
@@ -614,6 +615,20 @@ def adchsInterruptMode(symbol, event):
         Database.setSymbolValue("core", InterruptHandler, interruptName + "_InterruptHandler", 1)
     else:
         Database.setSymbolValue("core", InterruptHandler, interruptName + "_Handler", 1)
+
+def adchsEOSInterrupt(symbol, event):
+    InterruptVector = "ADC_EOS_INTERRUPT_ENABLE"
+    InterruptHandlerLock = "ADC_EOS_INTERRUPT_HANDLER_LOCK"
+    InterruptHandler = "ADC_EOS_INTERRUPT_HANDLER"
+
+    Database.setSymbolValue("core", InterruptVector, event["value"], 2)
+    Database.setSymbolValue("core", InterruptHandlerLock, event["value"], 2)
+    interruptName = InterruptHandler.split("_INTERRUPT_HANDLER")[0]
+    if(event["value"] == True):
+        Database.setSymbolValue("core", InterruptHandler, interruptName + "_InterruptHandler", 1)
+    else:
+        Database.setSymbolValue("core", InterruptHandler, interruptName + "_Handler", 1)
+
 
 def getTCLKValue():
     clk_freq = Database.getSymbolValue("core", "ADCHS_CLOCK_FREQUENCY")
@@ -959,6 +974,22 @@ def instantiateComponent(adchsComponent):
                     ADC_Max_Class_1and2 += 1
     ADC_Max_Class_2 = ADC_Max_Class_1and2 - ADC_Max_Class_1
 
+    #Calculate the proper ADC_EOS interrupt registers using IRQ#
+    irqString = "ADC_EOS"
+    Irq_index = int(getIRQnumber(irqString))
+    statRegName = _get_statReg_parms(Irq_index)
+    enblRegIndex = _get_enblReg_parms(Irq_index)
+
+    #IEC REG
+    adchsSym_EOS_IEC = adchsComponent.createStringSymbol("ADCHS_EOS_IEC_REG", None)
+    adchsSym_EOS_IEC.setDefaultValue("IEC"+str(enblRegIndex))
+    adchsSym_EOS_IEC.setVisible(False)
+
+    #IFS REG
+    adchsSym_EOS_IFS = adchsComponent.createStringSymbol("ADCHS_EOS_IFS_REG", None)
+    adchsSym_EOS_IFS.setDefaultValue("IFS"+str(enblRegIndex))
+    adchsSym_EOS_IFS.setVisible(False)
+
     #Calculate the proper interrupt registers using IRQ#
     irqString = "ADC_DATA0"
     Irq_index = int(getIRQnumber(irqString))
@@ -1286,6 +1317,11 @@ def instantiateComponent(adchsComponent):
     adchsSym_ADCCON1__STRGSRC.setLabel("Select Trigger Source")
     adchsSym_ADCCON1__STRGSRC.setDependencies(adchsVisibilityOnEvent, ["ADCHS_7_ENABLE"])
 
+    #End of scan interrupt
+    adchsSym_ADCCON2__EOSIEN = adchsAddBooleanFromATDF1ValueValueGroup(
+        adchsComponent, Module, "ADCCON2", "EOSIEN", adchsSym_class3, True)
+    adchsSym_ADCCON2__EOSIEN.setLabel("Enable End Of Scan (EOS) Interrupt")
+
     for channelID in range(ADC_Max_Class_1and2, ADC_Max_Signals):
         if (ADC_Input_Signals_List[channelID] == True):
             RegisterBaseName_ADCCSS = "ADCCSS"
@@ -1385,7 +1421,7 @@ def instantiateComponent(adchsComponent):
     adchsSym_ADCCON1.setDefaultValue(0x600000)
     adchsSym_ADCCON1.setDependencies(adchsCalcADCCON1, adccon1_deplist)
 
-    adccon2_deplist = ["ADCCON2__CVDCPL", "ADCCON2__ADCDIV", "ADCCON2__SAMC", "ADCHS_7_ENABLE"]
+    adccon2_deplist = ["ADCCON2__CVDCPL", "ADCCON2__ADCDIV", "ADCCON2__SAMC", "ADCHS_7_ENABLE", "ADCCON2__EOSIEN"]
     adchsSym_ADCCON2 = adchsComponent.createHexSymbol("ADCHS_ADCCON2", adchsMenu)
     adchsSym_ADCCON2.setLabel("ADCCON2 register value")
     adchsSym_ADCCON2.setVisible(False)
@@ -1505,6 +1541,10 @@ def instantiateComponent(adchsComponent):
     adchsSym_InterruptMode = adchsComponent.createBooleanSymbol("ADCHS_INTERRUPT", None)
     adchsSym_InterruptMode.setVisible(False)
     adchsSym_InterruptMode.setDependencies(adchsInterruptMode, adcinterruptmode_deplist)
+
+    adchsSym_EOSInterrupt = adchsComponent.createStringSymbol("ADCHS_EOS_INTERRUPT", None)
+    adchsSym_EOSInterrupt.setVisible(False)
+    adchsSym_EOSInterrupt.setDependencies(adchsEOSInterrupt, ["ADCCON2__EOSIEN"])
 
     # Clock Warning status
     adchsSym_ClkEnComment = adchsComponent.createCommentSymbol("ADCHS_CLOCK_ENABLE_COMMENT", None)

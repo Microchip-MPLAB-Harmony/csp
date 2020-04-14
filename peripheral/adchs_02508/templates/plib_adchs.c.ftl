@@ -55,6 +55,11 @@
     <#lt>ADCHS_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_CallbackObj[${ADCHS_NUM_SIGNALS - 1}];
 </#if>
 
+<#if ADCCON2__EOSIEN == true>
+    <#lt>/* Object to hold callback function and context for end of scan interrupt*/
+    <#lt>ADCHS_EOS_CALLBACK_OBJECT ${ADCHS_INSTANCE_NAME}_EOSCallbackObj;
+</#if>
+
 void ${ADCHS_INSTANCE_NAME}_Initialize()
 {
     ADCCON1bits.ON = 0;
@@ -119,6 +124,14 @@ void ${ADCHS_INSTANCE_NAME}_Initialize()
     <#if ADCHS_IEC2_REG??>
     ${ADCHS_IEC2_REG}SET = 0x${ADCHS_IEC2};
     </#if>
+</#if>
+<#if ADCCON2__EOSIEN == true>
+<#if __PROCESSOR?contains("PIC32MZ")>
+    ${ADCHS_EOS_IEC_REG}SET = _${ADCHS_EOS_IEC_REG}_ADCEOSIE_MASK;
+</#if>
+<#if __PROCESSOR?contains("PIC32MK")>
+    ${ADCHS_EOS_IEC_REG}SET = _${ADCHS_EOS_IEC_REG}_AD1EOSIE_MASK;
+</#if>
 </#if>
     /* Turn ON ADC */
     ADCCON1bits.ON = 1;
@@ -266,6 +279,31 @@ void ${ADCHS_INSTANCE_NAME}_CallbackRegister(ADCHS_CHANNEL_NUM channel, ADCHS_CA
 {
     ${ADCHS_INSTANCE_NAME}_CallbackObj[channel].callback_fn = callback;
     ${ADCHS_INSTANCE_NAME}_CallbackObj[channel].context = context;
+}
+</#if>
+
+<#if ADCCON2__EOSIEN == true>
+void ${ADCHS_INSTANCE_NAME}_EOSCallbackRegister(ADCHS_EOS_CALLBACK callback, uintptr_t context)
+{
+    ${ADCHS_INSTANCE_NAME}_EOSCallbackObj.callback_fn = callback;
+    ${ADCHS_INSTANCE_NAME}_EOSCallbackObj.context = context;
+}
+
+
+void ADC_EOS_InterruptHandler(void)
+{
+    uint32_t status = ADCCON2;
+<#if __PROCESSOR?contains("PIC32MZ")>
+    ${ADCHS_EOS_IFS_REG}CLR = _${ADCHS_EOS_IFS_REG}_ADCEOSIF_MASK;
+</#if>
+<#if __PROCESSOR?contains("PIC32MK")>
+    ${ADCHS_EOS_IFS_REG}CLR = _${ADCHS_EOS_IFS_REG}_AD1EOSIF_MASK;
+</#if>
+    if (${ADCHS_INSTANCE_NAME}_EOSCallbackObj.callback_fn != NULL)
+    {
+      ${ADCHS_INSTANCE_NAME}_EOSCallbackObj.callback_fn(${ADCHS_INSTANCE_NAME}_EOSCallbackObj.context);
+    }
+    (void) status;
 }
 </#if>
 
