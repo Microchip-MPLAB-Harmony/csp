@@ -377,11 +377,11 @@ void _DMAC_interruptHandler(uint8_t channel)
 <#list 0..DMA_INT_LINES-1 as x>
 <#assign DMAC_INT_NAME  = "DMA_INT_NAME_"  + x>
 <#assign res =.vars[DMAC_INT_NAME]?matches(r"(\d+)")>
-
+<#assign res2 =.vars[DMAC_INT_NAME]?matches(r"(\d+)_(\d+)")>
 <#if (res) && ((res?groups[1])?number <= DMAC_HIGHEST_CHANNEL)>
 void ${DMA_INSTANCE_NAME}_${res?groups[1]}_InterruptHandler( void )
 {
-	_DMAC_interruptHandler(${res?groups[1]});
+   _DMAC_interruptHandler(${res?groups[1]});
 }
 
 <#elseif (.vars[DMAC_INT_NAME] == "OTHER") &&  (4 <= DMAC_HIGHEST_CHANNEL) >
@@ -394,6 +394,20 @@ void ${DMA_INSTANCE_NAME}_${.vars[DMAC_INT_NAME]}_InterruptHandler( void )
         if ((${DMA_INSTANCE_NAME}_REGS->DMAC_INTSTATUS >> channel) & 0x1)
         {
             _DMAC_interruptHandler(channel);
+        }
+    }
+}
+
+<#elseif (res2) && ((res2?groups[1])?number <= DMAC_HIGHEST_CHANNEL) >
+void ${DMA_INSTANCE_NAME}_${.vars[DMAC_INT_NAME]}_InterruptHandler( void )
+{
+    uint8_t channel = 0;
+
+    for(channel = ${res2?groups[1]}; channel <= ${res2?groups[2]}; channel++)
+    {
+        if ((${DMA_INSTANCE_NAME}_REGS->DMAC_INTSTATUS >> channel) & 0x1)
+        {
+           _DMAC_interruptHandler(channel);
         }
     }
 }
