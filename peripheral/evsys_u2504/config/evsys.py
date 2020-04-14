@@ -112,13 +112,12 @@ def evsysIntset(interrupt, val):
         val["namespace"], "EVSYS_CHANNEL_" + str(channel) + "_OVERRUN")
     result = event or overflow
     interrupt.setValue(result, 2)
-
     Database.setSymbolValue(val["namespace"], "EVSYS_INTERRUPT_MODE_OTHER", False, 2)
     Database.setSymbolValue(val["namespace"], "INTERRUPT_ACTIVE", False, 2)
+
     for id in range(0 , numsyncChannels):
         if (Database.getSymbolValue(val["namespace"], "EVSYS_CHANNEL_" + str(id) + "_EVENT")
             or Database.getSymbolValue(val["namespace"], "EVSYS_CHANNEL_" + str(id) + "_OVERRUN")):
-            # store the maximum channel number for which interrupt is enabled (to be used in FTL)
             Database.setSymbolValue(val["namespace"], "EVSYS_INTERRUPT_MAX_CHANNEL", id, 2)
             Database.setSymbolValue(val["namespace"], "INTERRUPT_ACTIVE", True, 2)
             if (id >= len(InterruptVector) - 1):
@@ -432,6 +431,7 @@ def instantiateComponent(evsysComponent):
             evsysIntName = evsysComponent.createStringSymbol("EVSYS_INT_NAME_" + str(evsysNumIntLines) , evsysUserMenu)
             evsysIntName.setDefaultValue(vectorValues[id].getAttribute("name").replace("EVSYS_", ""))
             evsysIntName.setVisible(False)
+
             evsysNumIntLines = evsysNumIntLines + 1
 
     evsysIntLines = evsysComponent.createIntegerSymbol("EVSYS_INT_LINES", evsysUserMenu)
@@ -454,7 +454,7 @@ def instantiateComponent(evsysComponent):
     if numsyncChannels > len(InterruptVector):
         evsysIntOther = evsysComponent.createBooleanSymbol("EVSYS_INTERRUPT_MODE_OTHER", evsysSym_Menu)
         evsysIntOther.setVisible(False)
-        
+         
         evsysIntEnableForMaxChannel = evsysComponent.createIntegerSymbol("EVSYS_INTERRUPT_MAX_CHANNEL", evsysSym_Menu)
         evsysIntEnableForMaxChannel.setVisible(False)
         evsysIntEnableForMaxChannel.setDefaultValue(0)
