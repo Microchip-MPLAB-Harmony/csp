@@ -401,4 +401,4 @@ secexceptSourceFile.setType("SOURCE")
 secexceptSourceFile.setDependencies( genSysSourceFile, [ "CoreSysExceptionFile", "CoreSysFiles", "ADVANCED_EXCEPTION" ] )
 secexceptSourceFile.setSecurity("SECURE")
 
-coreComponent.addPlugin("../arch/config/plugin/trust_zone_manager.jar")
+coreComponent.addPlugin("../arch/config/plugin/trustzone_manager.jar")
