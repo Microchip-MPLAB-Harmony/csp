@@ -208,55 +208,38 @@ def setSERCOMInterruptData(status, sercomMode):
             Database.setSymbolValue("core", id, interruptName + "_Handler", 1)
 
 def updateSERCOMInterruptData(symbol, event):
-
-    global i2cSym_Interrupt_Mode
-    global spiSym_Interrupt_Mode
-    global usartSym_Interrupt_Mode
     global sercomSym_OperationMode
-    global sercomSym_IntEnComment
-    global i2csSym_Interrupt_Mode
+    global sercomInstanceName
 
     sercomMode = ""
     status = False
+    interruptEnable = False
 
-    sercomUSARTMode = (sercomSym_OperationMode.getSelectedKey() == "USART_INT") and (usartSym_Interrupt_Mode.getValue() == True)
-    sercomSPIMode = (sercomSym_OperationMode.getSelectedKey() == "SPIM") and (spiSym_Interrupt_Mode.getValue() == True)
-    sercomI2CMode = (sercomSym_OperationMode.getSelectedKey() == "I2CM") and (i2cSym_Interrupt_Mode.getValue() == True)
-    sercomI2CSlaveMode = (sercomSym_OperationMode.getSelectedKey() == "I2CS") and (i2csSym_Interrupt_Mode.getValue() == True)
-
-    if event["id"] == "SERCOM_MODE":
+    if event["id"] == "SERCOM_MODE" or "INTERRUPT_MODE" in event["id"]:
         if sercomSym_OperationMode.getSelectedKey() == "SPIS":
             # To be implemented
             pass
         elif sercomSym_OperationMode.getSelectedKey() == "USART_EXT":
             # To be implemented
             pass
-        else:
-            sercomInterruptStatus = False
-
-            if sercomUSARTMode == True:
-                sercomMode = "USART"
-                sercomInterruptStatus = True
-            elif sercomSPIMode == True:
-                sercomMode = "SPI"
-                sercomInterruptStatus = True
-            elif sercomI2CMode == True:
-                sercomMode = "I2C"
-                sercomInterruptStatus = True
-            elif sercomI2CSlaveMode == True:
-                sercomMode = "I2C"
-                sercomInterruptStatus = True
-
-            setSERCOMInterruptData(sercomInterruptStatus, sercomMode)
-    elif "INTERRUPT_MODE" in event["id"]:
-        if sercomSym_OperationMode.getSelectedKey() == "USART_INT":
+        elif (sercomSym_OperationMode.getSelectedKey() == "USART_INT"):
             sercomMode = "USART"
-        elif sercomSym_OperationMode.getSelectedKey() == "SPIM":
+            if (Database.getSymbolValue(sercomInstanceName.getValue().lower(), "USART_INTERRUPT_MODE") == True):
+                interruptEnable = True
+        elif (sercomSym_OperationMode.getSelectedKey() == "SPIM"):
             sercomMode = "SPI"
-        elif sercomSym_OperationMode.getSelectedKey() == "I2CM" or sercomSym_OperationMode.getSelectedKey() == "I2CS":
+            if (Database.getSymbolValue(sercomInstanceName.getValue().lower(), "SPI_INTERRUPT_MODE") == True):
+                interruptEnable = True
+        elif (sercomSym_OperationMode.getSelectedKey() == "I2CM"):
             sercomMode = "I2C"
+            if (Database.getSymbolValue(sercomInstanceName.getValue().lower(), "I2C_INTERRUPT_MODE") == True):
+                interruptEnable = True
+        elif (sercomSym_OperationMode.getSelectedKey() == "I2CS"):
+            sercomMode = "I2C"
+            if (Database.getSymbolValue(sercomInstanceName.getValue().lower(), "I2CS_INTERRUPT_MODE") == True):
+                interruptEnable = True
 
-        setSERCOMInterruptData(event["value"], sercomMode)
+        setSERCOMInterruptData(interruptEnable, sercomMode)
 
     for id in InterruptVectorUpdate:
         id = id.replace("core.", "")
@@ -264,7 +247,7 @@ def updateSERCOMInterruptData(symbol, event):
             status = True
             break
 
-    if (sercomUSARTMode == True or sercomSPIMode == True or sercomI2CMode == True) and status == True:
+    if (sercomUSARTMode == True or sercomSPIMode == True or sercomI2CMode == True or sercomI2CSlaveMode == True) and status == True:
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
@@ -302,7 +285,7 @@ def USARTFileGeneration(symbol, event):
         if ringBufferModeEnabled == True:
             filepath = "../peripheral/sercom_u2201/templates/plib_sercom_usart_ring_buffer.h.ftl"
         else:
-            filepath = "../peripheral/sercom_u2201/templates/plib_sercom_usart.h.ftl"    
+            filepath = "../peripheral/sercom_u2201/templates/plib_sercom_usart.h.ftl"
     elif componentID == "SERCOM_USART_SOURCE":
         if ringBufferModeEnabled == True:
             filepath = "../peripheral/sercom_u2201/templates/plib_sercom_usart_ring_buffer.c.ftl"
@@ -416,13 +399,14 @@ def instantiateComponent(sercomComponent):
             InterruptVectorSecurity.append(name + "_SET_NON_SECURE")
 
     # Initial settings for Interrupt
-    setSERCOMInterruptData(True, "USART")
+    if (sercomSym_OperationMode.getSelectedKey() == "USART_INT") and (Database.getSymbolValue(sercomInstanceName.getValue().lower(), "USART_INTERRUPT_MODE") == True):
+        setSERCOMInterruptData(True, "USART")
 
     # Interrupt Warning status
     sercomSym_IntEnComment = sercomComponent.createCommentSymbol("SERCOM_INTERRUPT_ENABLE_COMMENT", None)
     sercomSym_IntEnComment.setVisible(False)
     sercomSym_IntEnComment.setLabel("Warning!!! " + sercomInstanceName.getValue() + " Interrupt is Disabled in Interrupt Manager")
-    sercomSym_IntEnComment.setDependencies(updateSERCOMInterruptData, ["SERCOM_MODE", "USART_INTERRUPT_MODE", "SPI_INTERRUPT_MODE", "I2CS_INTERRUPT_MODE"] + InterruptVectorUpdate)
+    sercomSym_IntEnComment.setDependencies(updateSERCOMInterruptData, ["SERCOM_MODE", "USART_INTERRUPT_MODE", "SPI_INTERRUPT_MODE", "I2CS_INTERRUPT_MODE", "I2C_INTERRUPT_MODE"] + InterruptVectorUpdate)
 
     # Clock Warning status
     sercomSym_ClkEnComment = sercomComponent.createCommentSymbol("SERCOM_CLOCK_ENABLE_COMMENT", None)
@@ -576,13 +560,13 @@ def instantiateComponent(sercomComponent):
         SERCOMfilesArray.append(i2csHeaderFile)
         SERCOMfilesArray.append(i2csSourceFile)
         SERCOMfilesArray.append(sercomSystemInitFile)
-        SERCOMfilesArray.append(sercomSystemDefFile)       
+        SERCOMfilesArray.append(sercomSystemDefFile)
         if len(InterruptVectorSecurity) != 1:
             for vector in InterruptVectorSecurity:
                 Database.setSymbolValue("core", vector, sercomIsNonSecure)
         else:
             Database.setSymbolValue("core", InterruptVectorSecurity, sercomIsNonSecure)
-            
+
         if sercomIsNonSecure == False:
             SERCOMfilesArray[0].setSecurity("SECURE")
             SERCOMfilesArray[1].setSecurity("SECURE")
