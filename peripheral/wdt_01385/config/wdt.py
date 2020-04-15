@@ -67,7 +67,7 @@ wdtTimeOutDictionary = {
 wdtAllowedWindowDictionary = {
 
     "WINSZ_25"      :       "0.25",
-    "WINSZ_37"      :       "37.5",
+    "WINSZ_37"      :       "0.375",
     "WINSZ_50"      :       "0.50",
     "WINSZ_75"      :       "0.75"
 }
