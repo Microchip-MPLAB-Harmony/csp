@@ -129,7 +129,7 @@ def setupPortPINCFG(usePortLocalPINCFG, event):
         if driveStrength == 0:
             cfgValue &= ~(1 << 6)
         elif driveStrength == 1:
-            cfgValue |= (1 << 6) 
+            cfgValue |= (1 << 6)
         if peripheralFunc not in peripheralFunctionality and peripheralFunc != "":
             cfgValue |= (1 << 0)
         else :
@@ -265,7 +265,7 @@ def update_port_nonsec_mask(symbol, event):
         portNonSecRegValue = portNonSecRegValue | 1<<pinPos
     else:
         portNonSecRegValue = portNonSecRegValue & ~(1<<pinPos)
-    
+
     Database.setSymbolValue("core", "PORT_GROUP_" + str(portGroup) + "_NONSEC", long(portNonSecRegValue))
 ###################################################################################################
 ######################################### PORT Main Menu  #########################################
@@ -503,7 +503,7 @@ for pinNumber in range(1, internalPincount + 1):
     portSym_PIN_PINCFG[pinNumber-1].setReadOnly(True)
     portSym_PIN_PINCFG[pinNumber-1].setVisible(False)
     portSym_PIN_PINCFG[pinNumber-1].setDependencies(setupPortPINCFG, ["PIN_" + str(pinNumber) +"_INEN", "PIN_" + str(pinNumber) +"_PULLEN", "PIN_" + str(pinNumber) +"_PERIPHERAL_FUNCTION", "PIN_" + str(pinNumber) + "_DRVSTR"])
-    
+
     if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
         pinSecurity = coreComponent.createKeyValueSetSymbol("PIN_" + str(pinNumber) + "_IS_NON_SECURE", pin[pinNumber-1])
         pinSecurity.setLabel("Security mode")
@@ -654,7 +654,7 @@ for portNumber in range(0, len(group)):
         #portSym_PORT_EVCTRL.setVisible(visibility)
         portSym_PORT_EVCTRL.setDefaultValue(str(hex(0)))
         portSym_PORT_EVCTRL.setDependencies(evsysControl, evsysDep)
-        
+
         if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
             pin_nonsec_mask = coreComponent.createHexSymbol("PORT_GROUP_" + str(portNumber) + "_NONSEC", port[portNumber])
             pin_nonsec_mask.setVisible(False)
@@ -691,11 +691,11 @@ bspIncludeFile.setOutputName("core.LIST_BSP_MACRO_INCLUDES")
 bspIncludeFile.setSourcePath("../peripheral/port_u2210/templates/plib_port_bsp.h.ftl")
 bspIncludeFile.setMarkup(True)
 
-bspIncludeFile = coreComponent.createFileSymbol("PORT_BSP_SOURCE", None)
-bspIncludeFile.setType("STRING")
-bspIncludeFile.setOutputName("core.LIST_BSP_INITIALIZATION")
-bspIncludeFile.setSourcePath("../peripheral/port_u2210/templates/plib_port_bsp.c.ftl")
-bspIncludeFile.setMarkup(True)
+bspSourceFile = coreComponent.createFileSymbol("PORT_BSP_SOURCE", None)
+bspSourceFile.setType("STRING")
+bspSourceFile.setOutputName("core.LIST_BSP_INITIALIZATION")
+bspSourceFile.setSourcePath("../peripheral/port_u2210/templates/plib_port_bsp.c.ftl")
+bspSourceFile.setMarkup(True)
 
 sysPortIncludeFile = coreComponent.createFileSymbol("PIO_SYSPORT_H", None)
 sysPortIncludeFile.setType("STRING")
@@ -731,13 +731,26 @@ if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_E
     nonportSym_SourceFile.setProjectPath("config/" + configName + "/peripheral/port/")
     nonportSym_SourceFile.setType("SOURCE")
     nonportSym_SourceFile.setMarkup(True)
-    
+
     nonSecportSym_SystemDefFile = coreComponent.createFileSymbol("PORT_SYS_DEF_NONSEC", None)
     nonSecportSym_SystemDefFile.setSourcePath("../peripheral/port_u2210/templates/system/definitions.h.ftl")
     nonSecportSym_SystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     nonSecportSym_SystemDefFile.setType("STRING")
     nonSecportSym_SystemDefFile.setMarkup(True)
 
+    bspSecureIncludeFile = coreComponent.createFileSymbol("PORT_BSP_SECURE_HEADER", None)
+    bspSecureIncludeFile.setType("STRING")
+    bspSecureIncludeFile.setOutputName("core.LIST_BSP_MACRO_SECURE_INCLUDES")
+    bspSecureIncludeFile.setSourcePath("../peripheral/port_u2210/templates/trustZone/plib_port_bsp_secure.h.ftl")
+    bspSecureIncludeFile.setMarkup(True)
+    bspSecureIncludeFile.setSecurity("SECURE")
+
+    bspSecureSourceFile = coreComponent.createFileSymbol("PORT_BSP_SECURE_SOURCE", None)
+    bspSecureSourceFile.setType("STRING")
+    bspSecureSourceFile.setOutputName("core.LIST_BSP_SECURE_INITIALIZATION")
+    bspSecureSourceFile.setSourcePath("../peripheral/port_u2210/templates/trustZone/plib_port_bsp_secure.c.ftl")
+    bspSecureSourceFile.setMarkup(True)
+    bspSecureSourceFile.setSecurity("SECURE")
 
     portSym_HeaderFile.setSecurity("SECURE")
     portSym_SourceFile.setSecurity("SECURE")

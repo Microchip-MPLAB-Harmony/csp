@@ -1,7 +1,6 @@
 <#--  =====================
-      MACRO mhc_process_leds
-      ===================== -->
-
+    MACRO mhc_process_leds
+    ===================== -->
 <#compress>
 <#macro mhc_process_leds>
     <#assign LED_Name_List = []>
@@ -16,8 +15,7 @@
         <#assign pingroup = "PIN_" + i + "_PORT_GROUP">
         <#assign pinisSecure = "PIN_" + i + "_IS_NON_SECURE">
 
-        <#if .vars[pinisSecure] == "NON-SECURE">
-
+        <#if .vars[pinisSecure] == "SECURE">
         <#if .vars[functype]?has_content>
             <#if (.vars[functype] == "LED_AH") || (.vars[functype] == "LED_AL")>
                 <#if .vars[funcname]?has_content>
@@ -43,8 +41,8 @@
 </#macro>
 
 <#--  =====================
-      MACRO mhc_process_switches
-      ===================== -->
+    MACRO mhc_process_switches
+    ===================== -->
 <#macro mhc_process_switches>
     <#assign SWITCH_Name_List = []>
     <#assign SWITCH_PortPin_List = []>
@@ -58,8 +56,7 @@
         <#assign pingroup = "PIN_" + i + "_PORT_GROUP">
         <#assign pinisSecure = "PIN_" + i + "_IS_NON_SECURE">
 
-        <#if .vars[pinisSecure] == "NON-SECURE">
-
+        <#if .vars[pinisSecure] == "SECURE">
         <#if .vars[functype]?has_content>
             <#if (.vars[functype] == "SWITCH_AH") || (.vars[functype] == "SWITCH_AL")>
                 <#if .vars[funcname]?has_content>
@@ -84,35 +81,34 @@
     </#list>
 </#macro>
 
-
 <#--  =====================
-      MACRO execution
-      ===================== -->
+    MACRO execution
+    ===================== -->
 <@mhc_process_leds/>
 <@mhc_process_switches/>
+</#compress>
+
 <#assign myHash = { "A": 0, "B": 1, "C": "2", "D": 3, "E": 4}>
 <#if (LED_Name_List?size > 0)>
     <#list LED_Name_List as ledName>
         <#list LED_PortGroup_List as ledGroup>
             <#list LED_PortPin_List as ledPinPos>
                 <#list LED_ActiveLevel_List as ledActiveLevel>
-
                     <#if ledName?counter == ledGroup?counter>
                         <#if ledName?counter == ledPinPos?counter>
                             <#if ledName?counter == ledActiveLevel?counter>
-                                /*** LED Macros for ${ledName} ***/
-                                #define ${ledName}_Toggle()         (${PORT_REG_NAME}_REGS->GROUP[${myHash[ledGroup]}].PORT_OUTTGL = 1 << ${ledPinPos})
+                                <#lt>/*** LED Macros for ${ledName} ***/
+                                <#lt>#define ${ledName}_Toggle()     (PORT_SEC_REGS->GROUP[${myHash[ledGroup]}].PORT_OUTTGL = 1 << ${ledPinPos})
                                 <#if ledActiveLevel == "High">
-                                    #define ${ledName}_On()         (${PORT_REG_NAME}_REGS->GROUP[${myHash[ledGroup]}].PORT_OUTSET = 1 << ${ledPinPos})
-                                    #define ${ledName}_Off()        (${PORT_REG_NAME}_REGS->GROUP[${myHash[ledGroup]}].PORT_OUTCLR = 1 << ${ledPinPos})
+                                    <#lt>#define ${ledName}_On()         (PORT_SEC_REGS->GROUP[${myHash[ledGroup]}].PORT_OUTSET = 1 << ${ledPinPos})
+                                    <#lt>#define ${ledName}_Off()        (PORT_SEC_REGS->GROUP[${myHash[ledGroup]}].PORT_OUTCLR = 1 << ${ledPinPos})
                                 <#else>
-                                    #define ${ledName}_On()         (${PORT_REG_NAME}_REGS->GROUP[${myHash[ledGroup]}].PORT_OUTCLR = 1 << ${ledPinPos})
-                                    #define ${ledName}_Off()        (${PORT_REG_NAME}_REGS->GROUP[${myHash[ledGroup]}].PORT_OUTSET = 1 << ${ledPinPos})
+                                    <#lt>#define ${ledName}_On()         (PORT_SEC_REGS->GROUP[${myHash[ledGroup]}].PORT_OUTCLR = 1 << ${ledPinPos})
+                                    <#lt>#define ${ledName}_Off()        (PORT_SEC_REGS->GROUP[${myHash[ledGroup]}].PORT_OUTSET = 1 << ${ledPinPos})
                                 </#if>
                             </#if>
                         </#if>
                     </#if>
-
                 </#list>
             </#list>
         </#list>
@@ -124,29 +120,26 @@
         <#list SWITCH_PortGroup_List as switchGroup>
             <#list SWITCH_PortPin_List as switchPinPos>
                 <#list SWITCH_ActiveLevel_List as switchActiveLevel>
-
                     <#if switchName?counter == switchGroup?counter>
                         <#if switchName?counter == switchPinPos?counter>
                             <#if switchName?counter == switchActiveLevel?counter>
-                                /*** SWITCH Macros for ${switchName} ***/
-                                #define ${switchName}_Get()     ((${PORT_REG_NAME}_REGS->GROUP[${myHash[switchGroup]}].PORT_IN >> ${switchPinPos}) & 0x01)
+                                <#lt>/*** SWITCH Macros for ${switchName} ***/
+                                <#lt>#define ${switchName}_Get()     ((PORT_SEC_REGS->GROUP[${myHash[switchGroup]}].PORT_IN >> ${switchPinPos}) & 0x01)
                                 <#if switchActiveLevel == "High">
-                                    #define ${switchName}_STATE_PRESSED  1
-                                    #define ${switchName}_STATE_RELEASED 0
+                                    <#lt>#define ${switchName}_STATE_PRESSED  1
+                                    <#lt>#define ${switchName}_STATE_RELEASED 0
                                 <#else>
-                                    #define ${switchName}_STATE_PRESSED   0
-                                    #define ${switchName}_STATE_RELEASED  1
+                                    <#lt>#define ${switchName}_STATE_PRESSED   0
+                                    <#lt>#define ${switchName}_STATE_RELEASED  1
                                 </#if>
                             </#if>
                         </#if>
                     </#if>
-
                 </#list>
             </#list>
         </#list>
     </#list>
 </#if>
-</#compress>
 
 <#--
 /*******************************************************************************

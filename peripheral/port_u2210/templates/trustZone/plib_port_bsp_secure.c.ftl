@@ -1,6 +1,6 @@
 <#--  =====================
-      MACRO mhc_process_leds
-      ===================== -->
+    MACRO mhc_process_leds
+    ===================== -->
 <#compress>
 <#macro mhc_process_leds>
     <#assign LED_Name_List = []>
@@ -15,7 +15,7 @@
         <#assign pingroup = "PIN_" + i + "_PORT_GROUP">
         <#assign pinisSecure = "PIN_" + i + "_IS_NON_SECURE">
 
-        <#if .vars[pinisSecure] == "SECURE">       
+        <#if .vars[pinisSecure] == "SECURE">
 
         <#if .vars[functype]?has_content>
             <#if (.vars[functype] == "LED_AH") || (.vars[functype] == "LED_AL")>
@@ -42,8 +42,8 @@
 </#macro>
 
 <#--  =====================
-      MACRO mhc_process_switches
-      ===================== -->
+    MACRO mhc_process_switches
+    ===================== -->
 <#macro mhc_process_switches>
     <#assign SWITCH_Name_List = []>
     <#assign SWITCH_PortPin_List = []>
@@ -55,7 +55,9 @@
         <#assign funcname = "PIN_" + i + "_FUNCTION_NAME">
         <#assign pinport  = "PIN_" + i + "_PORT_PIN">
         <#assign pingroup = "PIN_" + i + "_PORT_GROUP">
+        <#assign pinisSecure = "PIN_" + i + "_IS_NON_SECURE">
 
+        <#if .vars[pinisSecure] == "SECURE">
         <#if .vars[functype]?has_content>
             <#if (.vars[functype] == "SWITCH_AH") || (.vars[functype] == "SWITCH_AL")>
                 <#if .vars[funcname]?has_content>
@@ -76,22 +78,23 @@
                 </#if>
             </#if>
         </#if>
+        </#if>
     </#list>
 </#macro>
 
 
 <#--  =====================
-      MACRO execution
-      ===================== -->
+    MACRO execution
+    ===================== -->
 <@mhc_process_leds/>
 <@mhc_process_switches/>
 </#compress>
 
 <#if (LED_Name_List?size > 0)>
     /* Switch off LEDs */
-    <#list LED_Name_List as led>
-        ${led}_Off();
-    </#list>
+  <#list LED_Name_List as led>
+    ${led}_Off();
+  </#list>
 </#if>
 <#--
 /*******************************************************************************

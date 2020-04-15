@@ -1,5 +1,4 @@
 <#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
-
     <#--  =====================
         MACRO mhc_process_leds
         ===================== -->
@@ -17,7 +16,7 @@
             <#assign pingroup = "PIN_" + i + "_PORT_GROUP">
             <#assign pinisSecure = "PIN_" + i + "_IS_NON_SECURE">
 
-            <#if .vars[pinisSecure] == "NON-SECURE">            
+            <#if .vars[pinisSecure] == "NON-SECURE">
 
             <#if .vars[functype]?has_content>
                 <#if (.vars[functype] == "LED_AH") || (.vars[functype] == "LED_AL")>
@@ -91,7 +90,6 @@
     <@mhc_process_leds/>
     <@mhc_process_switches/>
     </#compress>
-
 <#else>
     <#--  =====================
         MACRO mhc_process_leds
@@ -181,9 +179,9 @@
 
 <#if (LED_Name_List?size > 0)>
     /* Switch off LEDs */
-    <#list LED_Name_List as led>
-        ${led}_Off();
-    </#list>
+  <#list LED_Name_List as led>
+    ${led}_Off();
+  </#list>
 </#if>
 <#--
 /*******************************************************************************

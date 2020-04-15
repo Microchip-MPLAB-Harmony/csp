@@ -138,6 +138,9 @@ secsystemInitCore1List =       coreComponent.createListSymbol( "LIST_SYSTEM_SECU
 secsystemInitPeripheralList =  coreComponent.createListSymbol( "LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS",    None )
 secsystemInterruptEnableList = coreComponent.createListSymbol( "LIST_SYSTEM_SECURE_INIT_INTERRUPTS",    None )
 
+BspSecureHeaderIncludeList   = coreComponent.createListSymbol( "LIST_BSP_MACRO_SECURE_INCLUDES",    None )
+BspSecureInitList            = coreComponent.createListSymbol( "LIST_BSP_SECURE_INITIALIZATION",    None )
+
 secdefHeaderFile = coreComponent.createFileSymbol("SECURE_DEFINITIONS_H", None)
 secdefHeaderFile.setSourcePath("templates/trustzone/definitions_secure.h.ftl")
 secdefHeaderFile.setOutputName("definitions.h")
