@@ -6,5 +6,8 @@
 		<package diagram="LFBGA289" id="3" name="LFBGA289" />
 		<package diagram="TFBGA196" id="4" name="TFBGA196" />
 		<package diagram="CQFP256" id="5" name="CQFP256" />
+        <package diagram="TFBGA256" id="6" name="TFBGA256" />
+        <package diagram="TFBGA289" id="7" name="TFBGA289" />
+        <package diagram="TFBGA361" id="8" name="TFBGA361" />
 	</packages>
 </pinfile>

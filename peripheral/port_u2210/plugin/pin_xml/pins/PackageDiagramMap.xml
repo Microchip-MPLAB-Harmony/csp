@@ -21,9 +21,14 @@
         <package diagram="MX_56_WLCSP" id="14" name="WLCSP56" />   
         <package diagram="MX_120_TFBGA" id="15" name="TFBGA120" />
         <package diagram="MX_100_BGA" id="16" name="BGA100" />
-        <package diagram="SAM_36_WLCSP" id="17" name="WLCSP32" />
+        <package diagram="SAM_32_WLCSP" id="17" name="WLCSP32" />
         <package diagram="MX_24_QFN" id="18" name="QFN24" />
         <package diagram="MX_24_SOIC_SPDIP_SSOP" id="19" name="SSOP24" />
         <package diagram="SAM_27_WLCSP" id="20" name="WLCSP27" />
+        <package diagram="SAM_20_WLCSP" id="21" name="WLCSP20" />
+        <package diagram="SAM_45_WLCSP" id="22" name="WLCSP45" />
+        <package diagram="SAM_35_WLCSP" id="23" name="WLCSP35" />
+        <package diagram="SAM_64_WLCSP" id="24" name="WLCSP64" />
+        <package diagram="SAM_49_WLCSP" id="25" name="WLCSP49" />
 	</packages>
 </pinfile>

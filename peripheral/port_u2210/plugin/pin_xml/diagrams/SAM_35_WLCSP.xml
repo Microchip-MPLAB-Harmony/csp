@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<diagram min_x="600" min_y="600" >
+	<shape type="complex_rect" width="300" height="290" />    
+	<shape type="string" y="-240" line="000000" val="$DEVICE_NAME" orientation="right" size="16"/>
+    <shape type="string_array" x="-115" y="-165" line="000000" vals="A,B,C,D,E,F" orientation="left" size="14" margin="46" stroke="2"/>
+	<shape type="string_array" x="-180" y="-100" line="000000" vals="1,2,3,4,5,6" orientation="down" size="14" margin="46" stroke="2" />
+	<!-- <layout type="grid" pin_margin="25" pin_name_margin="0" pin_rows="7" pin_cols="7" pin_radius="10" /> -->
+    <layout type="row">
+        <row pins="A1-A6" x="-120" y="-120" margin="24" direction="down" 
+             pin_radius="11" pin_name_location="none"
+			 pin_number_location="inside" pin_number_size="10" pin_number_margin="6" pin_number_orientation="up" />
+        <row pins="B1-B6" x="-75" y="-120" margin="24" direction="down" 
+             pin_radius="11" pin_name_location="none"
+			 pin_number_location="inside" pin_number_size="10" pin_number_margin="6" pin_number_orientation="up" />
+        <row pins="C1-C6" x="-30" y="-120" margin="24" direction="down" 
+             pin_radius="11" pin_name_location="none"
+			 pin_number_location="inside" pin_number_size="10" pin_number_margin="6" pin_number_orientation="up" />
+        <row pins="D1-D6" x="15" y="-120" margin="24" direction="down" 
+             pin_radius="11" pin_name_location="none"
+			 pin_number_location="inside" pin_number_size="10" pin_number_margin="6" pin_number_orientation="up" />
+        <row pins="E1-E6" x="60" y="-120" margin="24" direction="down" 
+             pin_radius="11" pin_name_location="none"
+			 pin_number_location="inside" pin_number_size="10" pin_number_margin="6" pin_number_orientation="up" />
+        <row pins="F1-F6" x="105" y="-120" margin="24" direction="down" 
+             pin_radius="11" pin_name_location="none"
+			 pin_number_location="inside" pin_number_size="10" pin_number_margin="6" pin_number_orientation="up" />
+    </layout>
+</diagram>

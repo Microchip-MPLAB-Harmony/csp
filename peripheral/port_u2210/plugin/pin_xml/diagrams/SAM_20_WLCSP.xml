@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<diagram min_x="600" min_y="600" >
+	<shape type="complex_rect" width="250" height="250" />    
+	<shape type="string" y="-240" line="000000" val="$DEVICE_NAME" orientation="right" size="16"/>
+    <shape type="string_array" x="-95" y="-155" line="000000" vals="A,B,C,D,E" orientation="left" size="14" margin="46" stroke="2"/>
+	<shape type="string_array" x="-170" y="-75" line="000000" vals="1,2,3,4" orientation="down" size="14" margin="52" stroke="2" />
+	<!-- <layout type="grid" pin_margin="25" pin_name_margin="0" pin_rows="7" pin_cols="7" pin_radius="10" /> -->
+    <layout type="row">
+        <row pins="A1-A4" x="-100" y="-90" margin="30" direction="down" 
+             pin_radius="11" pin_name_location="none"
+			 pin_number_location="inside" pin_number_size="10" pin_number_margin="6" pin_number_orientation="up" />
+        <row pins="B1-B4" x="-55" y="-90" margin="30" direction="down" 
+             pin_radius="11" pin_name_location="none"
+			 pin_number_location="inside" pin_number_size="10" pin_number_margin="6" pin_number_orientation="up" />
+        <row pins="C1-C4" x="-10" y="-90" margin="30" direction="down" 
+             pin_radius="11" pin_name_location="none"
+			 pin_number_location="inside" pin_number_size="10" pin_number_margin="6" pin_number_orientation="up" />
+        <row pins="D1-D4" x="35" y="-90" margin="30" direction="down" 
+             pin_radius="11" pin_name_location="none"
+			 pin_number_location="inside" pin_number_size="10" pin_number_margin="6" pin_number_orientation="up" />
+        <row pins="E1-E4" x="80" y="-90" margin="30" direction="down" 
+             pin_radius="11" pin_name_location="none"
+			 pin_number_location="inside" pin_number_size="10" pin_number_margin="6" pin_number_orientation="up" />
+    </layout>
+</diagram>
