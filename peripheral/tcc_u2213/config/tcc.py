@@ -219,6 +219,101 @@ def tccEvent0Visible(symbol, event):
         symbol.setVisible(False)
     else:
         symbol.setVisible(True)
+
+################################################################################
+#### Dependency ####
+################################################################################
+def onAttachmentConnected(source, target):
+    localComponent = source["component"]
+    remoteComponent = target["component"]
+    remoteID = remoteComponent.getID()
+    connectID = source["id"]
+    targetID = target["id"]
+
+def onAttachmentDisconnected(source, target):
+    localComponent = source["component"]
+    remoteComponent = target["component"]
+    remoteID = remoteComponent.getID()
+    connectID = source["id"]
+    targetID = target["id"]
+    resetChannels()
+
+global lastPwmChU
+lastPwmChU = 0
+global lastPwmChV
+lastPwmChV = 1
+global lastPwmChW
+lastPwmChW = 2
+
+def resetChannels():
+    global lastPwmChU
+    global lastPwmChV
+    global lastPwmChW
+    component = str(tccInstanceName.getValue()).lower()
+    #disbale interrupt
+    Database.setSymbolValue(component, "TCC_EVCTRL_EVACT1", 0)
+    Database.setSymbolValue(component, "TCC_INTENSET_FAULT1", False)
+
+def handleMessage(messageID, args):
+    global lastPwmChU
+    global lastPwmChV
+    global lastPwmChW
+    component = str(tccInstanceName.getValue()).lower()
+    dict = {}
+    if (messageID == "PMSM_FOC_PWM_CONF"):
+        resetChannels()
+
+        dict['PWM_MAX_CH'] = 4
+
+        lastPwmChU = pwmChU = args['PWM_PH_U']
+        lastPwmChV = pwmChV = args['PWM_PH_V']
+        lastPwmChW = pwmChW = args['PWM_PH_W']
+
+        freq = args['PWM_FREQ']
+        clock = int(Database.getSymbolValue("core", tccInstanceName.getValue() + "_CLOCK_FREQUENCY"))
+        period = int(clock)/int(freq)/2
+
+        Database.setSymbolValue(component, "TCC_PER_PER", period)
+        Database.setSymbolValue(component, "TCC_WAVE_WAVEGEN", 1)
+        Database.setSymbolValue(component, "TCC_EVCTRL_OVFEO", True)
+
+        Database.setSymbolValue(component, "TCC_"+str(pwmChU)+"_CC", 0)
+        Database.setSymbolValue(component, "TCC_"+str(pwmChV)+"_CC", 0)
+        Database.setSymbolValue(component, "TCC_"+str(pwmChW)+"_CC", 0)
+
+        #macros for channel numbers
+        Database.setSymbolValue(component, "PWM_PH_U", tccInstanceName.getValue()+"_CHANNEL"+str(pwmChU))
+        Database.setSymbolValue(component, "PWM_PH_V", tccInstanceName.getValue()+"_CHANNEL"+str(pwmChV))
+        Database.setSymbolValue(component, "PWM_PH_W", tccInstanceName.getValue()+"_CHANNEL"+str(pwmChW))
+        Database.setSymbolValue(component, "INTR_PWM_FAULT", tccInstanceName.getValue()+"_OTHER_IRQn")
+        mask = (1 << pwmChU) + (1 << pwmChV) + (1 << pwmChW)
+        tccPhMask.setValue(mask)
+
+        tccPatternMask.setValue((mask << 4) + mask)
+
+        #dead-Time
+        dt = args['PWM_DEAD_TIME']
+        deadtime = int((clock) * float(dt)) / 1000000
+        Database.setSymbolValue(component, "TCC_"+str(pwmChU)+"_WEXCTRL_DTIEN", True)
+        Database.setSymbolValue(component, "TCC_"+str(pwmChV)+"_WEXCTRL_DTIEN", True)
+        Database.setSymbolValue(component, "TCC_"+str(pwmChW)+"_WEXCTRL_DTIEN", True)
+        Database.setSymbolValue(component, "TCC_WEXCTRL_DTHS", deadtime)
+        Database.setSymbolValue(component, "TCC_WEXCTRL_DTLS", deadtime)
+
+        #Fault
+        Database.setSymbolValue(component, "TCC_EVCTRL_EVACT1", 5)
+        Database.setSymbolValue(component, "TCC_INTENSET_FAULT1", True)
+        fault = args['PWM_FAULT']
+        Database.setSymbolValue(component, "TCC_0_DRVCTRL_NRE_NRV", 1)
+        Database.setSymbolValue(component, "TCC_1_DRVCTRL_NRE_NRV", 1)
+        Database.setSymbolValue(component, "TCC_2_DRVCTRL_NRE_NRV", 1)
+        Database.setSymbolValue(component, "TCC_3_DRVCTRL_NRE_NRV", 1)
+        Database.setSymbolValue(component, "TCC_4_DRVCTRL_NRE_NRV", 1)
+        Database.setSymbolValue(component, "TCC_5_DRVCTRL_NRE_NRV", 1)
+        Database.setSymbolValue(component, "TCC_6_DRVCTRL_NRE_NRV", 1)
+        Database.setSymbolValue(component, "TCC_7_DRVCTRL_NRE_NRV", 1)
+
+    return dict
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
@@ -359,6 +454,64 @@ def instantiateComponent(tccComponent):
         tccSym_Slave_Mode_Comment.setVisible(False)
         tccSym_Slave_Mode_Comment.setDependencies(tccSlaveCommentVisible, ["TCC_SLAVE_MODE"])
     ###########################################################################################
+
+    #------------------------Motor Control APIs----------------------------------------------------
+
+    tccStartApi = tccComponent.createStringSymbol("PWM_START_API", None)
+    tccStartApi.setVisible(False)
+    tccStartApi.setValue(tccInstanceName.getValue()+"_PWMStart")
+
+    tccStopApi = tccComponent.createStringSymbol("PWM_STOP_API", None)
+    tccStopApi.setVisible(False)
+    tccStopApi.setValue(tccInstanceName.getValue()+"_PWMStop")
+
+    tccPeriodApi = tccComponent.createStringSymbol("PWM_GET_PERIOD_API", None)
+    tccPeriodApi.setVisible(False)
+    tccPeriodApi.setValue(tccInstanceName.getValue()+"_PWM"+str(size)+"bitPeriodGet")
+
+    tccDutyApi = tccComponent.createStringSymbol("PWM_SET_DUTY_API", None)
+    tccDutyApi.setVisible(False)
+    tccDutyApi.setValue(tccInstanceName.getValue() + "_PWM"+str(size)+"bitDutySet")
+
+    tccOpDisableApi = tccComponent.createStringSymbol("PWM_OUTPUT_DISABLE_API", None)
+    tccOpDisableApi.setVisible(False)
+    tccOpDisableApi.setValue(tccInstanceName.getValue() + "_PWMPatternSet")
+
+    tccOpEnableApi = tccComponent.createStringSymbol("PWM_OUTPUT_ENABLE_API", None)
+    tccOpEnableApi.setVisible(False)
+    tccOpEnableApi.setValue(tccInstanceName.getValue() + "_PWMPatternSet")
+
+    tccCallbackApi = tccComponent.createStringSymbol("PWM_CALLBACK_API", None)
+    tccCallbackApi.setVisible(False)
+    tccCallbackApi.setValue(tccInstanceName.getValue() + "_PWMCallbackRegister")
+
+    tccPhU = tccComponent.createStringSymbol("PWM_PH_U", None)
+    tccPhU.setVisible(False)
+    tccPhU.setValue(tccInstanceName.getValue() + "CHANNEL0")
+
+    tccPhV = tccComponent.createStringSymbol("PWM_PH_V", None)
+    tccPhV.setVisible(False)
+    tccPhV.setValue(tccInstanceName.getValue() + "CHANNEL1")
+
+    tccPhW = tccComponent.createStringSymbol("PWM_PH_W", None)
+    tccPhW.setVisible(False)
+    tccPhW.setValue(tccInstanceName.getValue() + "CHANNEL2")
+
+    global tccPhMask
+    tccPhMask = tccComponent.createHexSymbol("PWM_PH_MASK", None)
+    tccPhMask.setVisible(False)
+    tccPhMask.setValue(0x7)
+
+    global tccPatternMask
+    tccPatternMask = tccComponent.createHexSymbol("PWM_PATTERN_MASK", None)
+    tccPatternMask.setVisible(False)
+    tccPatternMask.setValue(0x77)
+
+    tccFaultInt = tccComponent.createStringSymbol("INTR_PWM_FAULT", None)
+    tccFaultInt.setVisible(False)
+    tccFaultInt.setValue(tccInstanceName.getValue()+"_OTHER_IRQn")
+
+#-----------------------------------------------------------------------------------------------------------
 
     #prescaler configuration
     global tccSym_CTRLA_PRESCALER

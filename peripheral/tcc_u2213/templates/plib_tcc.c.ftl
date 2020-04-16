@@ -220,9 +220,9 @@
 
 <#if TCC_EVCTRL_EVACT0 != "OFF">
     <#if TCC_EVCTRL_VAL != "">
-        <#assign TCC_EVCTRL_VAL = TCC_EVCTRL_VAL + "\n \t \t | TCC_EVCTRL_EVACT0_" + TCC_EVCTRL_EVACT0>
+        <#assign TCC_EVCTRL_VAL = TCC_EVCTRL_VAL + "\n \t \t | TCC_EVCTRL_TCEI0_Msk | TCC_EVCTRL_EVACT0_" + TCC_EVCTRL_EVACT0>
     <#else>
-        <#assign TCC_EVCTRL_VAL = "TCC_EVCTRL_EVACT0_" + TCC_EVCTRL_EVACT0>
+        <#assign TCC_EVCTRL_VAL = "TCC_EVCTRL_TCEI0_Msk | TCC_EVCTRL_EVACT0_" + TCC_EVCTRL_EVACT0>
     </#if>
     <#if TCC_EVCTRL_TCINV0 == true>
         <#assign TCC_EVCTRL_VAL = TCC_EVCTRL_VAL + " | TCC_EVCTRL_TCINV0_Msk">
@@ -231,9 +231,9 @@
 
 <#if TCC_EVCTRL_EVACT1 != "OFF">
     <#if TCC_EVCTRL_VAL != "">
-        <#assign TCC_EVCTRL_VAL = TCC_EVCTRL_VAL + "\n \t \t | TCC_EVCTRL_EVACT1_"+TCC_EVCTRL_EVACT1>
+        <#assign TCC_EVCTRL_VAL = TCC_EVCTRL_VAL + "\n \t \t | TCC_EVCTRL_TCEI1_Msk | TCC_EVCTRL_EVACT1_"+TCC_EVCTRL_EVACT1>
     <#else>
-        <#assign TCC_EVCTRL_VAL = "TCC_EVCTRL_EVACT0_"+TCC_EVCTRL_EVACT1>
+        <#assign TCC_EVCTRL_VAL = "TCC_EVCTRL_TCEI1_Msk | TCC_EVCTRL_EVACT1_"+TCC_EVCTRL_EVACT1>
     </#if>
     <#if TCC_EVCTRL_TCINV1 == true>
         <#assign TCC_EVCTRL_VAL = TCC_EVCTRL_VAL + " | TCC_EVCTRL_TCINV1_Msk">
