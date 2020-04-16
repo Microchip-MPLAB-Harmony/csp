@@ -352,6 +352,56 @@ def pdecCounterLabelChange(symbol, event):
         symbol.setLabel(" Period Value")
     else:
         symbol.setLabel("Compare CC0 Value")
+
+###################################################################################################
+########################### Dependency   #################################
+###################################################################################################
+def onAttachmentConnected(source, target):
+    localComponent = source["component"]
+    remoteComponent = target["component"]
+    remoteID = remoteComponent.getID()
+    connectID = source["id"]
+    targetID = target["id"]
+    global pdecInstanceName
+    if connectID == pdecInstanceName.getValue() + "_QDEC":
+        localComponent.setCapabilityEnabled(pdecInstanceName.getValue() + "_QDEC", True)
+        localComponent.setCapabilityEnabled(pdecInstanceName.getValue() + "_HALL", False)
+
+
+def onAttachmentDisconnected(source, target):
+    localComponent = source["component"]
+    remoteComponent = target["component"]
+    remoteID = remoteComponent.getID()
+    connectID = source["id"]
+    targetID = target["id"]
+    resetSettings()
+    global pdecInstanceName
+    localComponent.setCapabilityEnabled(pdecInstanceName.getValue() + "_QDEC", True)
+    localComponent.setCapabilityEnabled(pdecInstanceName.getValue() + "_HALL", True)
+
+
+def resetSettings():
+    component = str(pdecInstanceName.getValue()).lower()
+    Database.setSymbolValue(component, "PDEC_CTRLA_MODE", 0)
+    Database.setSymbolValue(component, "PDEC_CTRLA_ANGULAR", 10)
+
+def handleMessage(messageID, args):
+
+    dict = {}
+    if (messageID == "PMSM_FOC_ENCODER_CONF"):
+        component = str(pdecInstanceName.getValue()).lower()
+
+        resetSettings()
+
+        pulses = long(args['PULSES_PER_REV'])
+
+        Database.setSymbolValue(component, "PDEC_CTRLA_MODE", 0)
+        Database.setSymbolValue(component, "PDEC_CTRLA_PEREN", False)
+        Database.setSymbolValue(component, "PDEC_INDEX", "Disabled")
+        Database.setSymbolValue(component, "PDEC_CTRLA_ANGULAR", 16)
+
+    return dict
+
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
@@ -380,6 +430,31 @@ def instantiateComponent(pdecComponent):
 
     #clock enable
     Database.setSymbolValue("core", pdecInstanceName.getValue()+"_CLOCK_ENABLE", True, 2)
+
+    #----------------- motor control APIs ---------------------------------
+    pdecStartAPI = pdecComponent.createStringSymbol("ENCODER_START_API", None)
+    pdecStartAPI.setVisible(False)
+    pdecStartAPI.setValue(pdecInstanceName.getValue() + "_QDECStart")
+
+    pdecStopAPI = pdecComponent.createStringSymbol("ENCODER_STOP_API", None)
+    pdecStopAPI.setVisible(False)
+    pdecStopAPI.setValue(pdecInstanceName.getValue() + "_QDECStop")
+
+    pdecPositionGetAPI = pdecComponent.createStringSymbol("ENCODER_POS_GET_API", None)
+    pdecPositionGetAPI.setVisible(False)
+    pdecPositionGetAPI.setValue(pdecInstanceName.getValue() + "_QDECPositionGet")
+
+    pdecSpeedGetAPI = pdecComponent.createStringSymbol("ENCODER_SPEED_GET_API", None)
+    pdecSpeedGetAPI.setVisible(False)
+    pdecSpeedGetAPI.setValue("")
+
+    pdecPositionSetAPI = pdecComponent.createStringSymbol("ENCODER_POS_SET_API", None)
+    pdecPositionSetAPI.setVisible(False)
+    pdecPositionSetAPI.setValue("")
+
+    pdecSpeedSetAPI = pdecComponent.createStringSymbol("ENCODER_SPEED_SET_API", None)
+    pdecSpeedSetAPI.setVisible(False)
+    pdecSpeedSetAPI.setValue("")
 
     #prescaler
     global pdecSym_PRESC_PRESC
@@ -487,7 +562,7 @@ def instantiateComponent(pdecComponent):
 
     pdecSym_FILTER = pdecComponent.createIntegerSymbol("PDEC_FILTER", pdecSym_QDEC_MENU)
     pdecSym_FILTER.setLabel("Select Filter Value")
-    pdecSym_FILTER.setDefaultValue(5)
+    pdecSym_FILTER.setDefaultValue(2)
     pdecSym_FILTER.setMin(0)
     pdecSym_FILTER.setMax(255)
 
