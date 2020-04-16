@@ -72,10 +72,13 @@ peripherals = {
                 "TMR1_00687"    : ["TMR"],
                 "TMR1_02141"    : ["TMR"],
 				"ADCHS_02508"   : ["ADC"],
-                "AFEC_11147"     : ["ADC"],
+                "AFEC_11147"    : ["ADC"],
+                "ADC_U2500"     : ["ADC"],
 				"MCPWM_01477"   : ["PWM"],
                 "PWM_6343"      : ["PWM"],
+                "TCC_U2213"     : ["PWM"],                
                 "QEI_01494"     : ["QDEC"],
+                "PDEC_U2263"    : ["QDEC", "HALL"]
 }
 
 processor = Variables.get("__PROCESSOR")
