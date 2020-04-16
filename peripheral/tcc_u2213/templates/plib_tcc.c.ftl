@@ -68,6 +68,7 @@
 <#list 0..(TCC_NUM_CHANNELS-1) as i>
 <#assign CH_NUM = i >
 <#assign TCC_POLARITY = "TCC_"+i+"_WAVE_POL">
+<#assign TCC_POLARITY_NPWM = "TCC_"+i+"_WAVE_POL_NPWM">
 <#assign TCC_MCEO = "TCC_EVCTRL_MCEO_" + i>
 <#assign TCC_MCEI = "TCC_EVCTRL_MCEI_" + i>
 <#assign TCC_INT_MC = "TCC_INTENSET_MC_" + i>
@@ -103,6 +104,14 @@
             <#assign TCC_WAVE_VAL = "TCC_WAVE_POL"+i+"_Msk">
         </#if>
     </#if>
+<#elseif (TCC_WAVE_WAVEGEN == "NPWM")>
+<#if .vars[TCC_POLARITY_NPWM] == "1">
+    <#if TCC_WAVE_VAL != "">
+        <#assign TCC_WAVE_VAL = TCC_WAVE_VAL + " | TCC_WAVE_POL"+i+"_Msk">
+    <#else>
+        <#assign TCC_WAVE_VAL = "TCC_WAVE_POL"+i+"_Msk">
+    </#if>
+</#if>
 </#if>
 <#-- polarity end -->
 <#-- Events -->

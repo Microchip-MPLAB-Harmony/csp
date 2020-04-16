@@ -38,6 +38,7 @@ global numOfChannels
 tccSym_Channel_Menu = []
 tccSym_Channel_CC = []
 tccSym_Channel_Polarity = []
+tccSym_Channel_Polarity_NPWM = []
 tccSym_Channel_WAVE_SWAP = []
 tccSym_Channel_WEXCTRL_DTIEN = []
 tccSym_Channel_INTENSET_MC = []
@@ -220,6 +221,17 @@ def tccEvent0Visible(symbol, event):
     else:
         symbol.setVisible(True)
 
+def tccSingleSlopeVisible(symbol, event):
+    if (event["value"] == 0):
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+
+def tccDualSlopeVisible(symbol, event):
+    if (event["value"] != 0):
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
 ################################################################################
 #### Dependency ####
 ################################################################################
@@ -611,14 +623,27 @@ def instantiateComponent(tccComponent):
         tccSym_Channel_CC[channelID].setMin(0)
         tccSym_Channel_CC[channelID].setMax(pow(2, size) - 1)
 
-        #output polarity
+        #output polarity for dual slope
         tccSym_Channel_Polarity.append(channelID)
         tccSym_Channel_Polarity[channelID] = tccComponent.createKeyValueSetSymbol("TCC_"+str(channelID)+"_WAVE_POL", tccSym_Channel_Menu[channelID])
         tccSym_Channel_Polarity[channelID].setLabel("Output Polarity")
-        tccSym_Channel_Polarity[channelID].addKey("LOW","0","Waveform starts at low level")
-        tccSym_Channel_Polarity[channelID].addKey("HIGH","1","Waveform starts at high level")
+        tccSym_Channel_Polarity[channelID].addKey("LOW","0","Output is ~DIR when counter matches CCx value")
+        tccSym_Channel_Polarity[channelID].addKey("HIGH","1","Output is DIR when counter matches CCx value")
         tccSym_Channel_Polarity[channelID].setOutputMode("Value")
         tccSym_Channel_Polarity[channelID].setDisplayMode("Description")
+        tccSym_Channel_Polarity[channelID].setVisible(False)
+        tccSym_Channel_Polarity[channelID].setDependencies(tccDualSlopeVisible, ["TCC_WAVE_WAVEGEN"])
+
+        #output polarity for single slope
+        tccSym_Channel_Polarity_NPWM.append(channelID)
+        tccSym_Channel_Polarity_NPWM[channelID] = tccComponent.createKeyValueSetSymbol("TCC_"+str(channelID)+"_WAVE_POL_NPWM", tccSym_Channel_Menu[channelID])
+        tccSym_Channel_Polarity_NPWM[channelID].setLabel("Output Polarity")
+        tccSym_Channel_Polarity_NPWM[channelID].addKey("LOW","0","Output is ~DIR and set to DIR when counter matches CCx value")
+        tccSym_Channel_Polarity_NPWM[channelID].addKey("HIGH","1","Output is DIR and set to ~DIR when counter matches CCx value")
+        tccSym_Channel_Polarity_NPWM[channelID].setOutputMode("Value")
+        tccSym_Channel_Polarity_NPWM[channelID].setDisplayMode("Description")
+        tccSym_Channel_Polarity_NPWM[channelID].setVisible(True)
+        tccSym_Channel_Polarity_NPWM[channelID].setDependencies(tccSingleSlopeVisible, ["TCC_WAVE_WAVEGEN"])
 
         if (deadTimeImplemented == 1 and (channelID < (numOfOutputs/2))):
             #dead time
