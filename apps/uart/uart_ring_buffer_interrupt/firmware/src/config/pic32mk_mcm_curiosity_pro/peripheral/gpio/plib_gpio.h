@@ -61,14 +61,6 @@
 // *****************************************************************************
 // *****************************************************************************
 
-/*** Macros for LED pin ***/
-#define LED_Set()               (LATGSET = (1<<12))
-#define LED_Clear()             (LATGCLR = (1<<12))
-#define LED_Toggle()            (LATGINV= (1<<12))
-#define LED_Get()               ((PORTG >> 12) & 0x1)
-#define LED_OutputEnable()      (TRISGCLR = (1<<12))
-#define LED_InputEnable()       (TRISGSET = (1<<12))
-#define LED_PIN                  GPIO_PIN_RG12
 
 
 // *****************************************************************************

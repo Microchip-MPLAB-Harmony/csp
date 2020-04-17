@@ -62,8 +62,6 @@ void GPIO_Initialize ( void )
     /* PORTB Initialization */
 
     /* PORTC Initialization */
-    LATC = 0x20; /* Initial Latch Value */
-    TRISCCLR = 0x20; /* Direction Control */
 
 
     /* unlock system for PPS configuration */

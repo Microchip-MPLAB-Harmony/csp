@@ -61,14 +61,6 @@
 // *****************************************************************************
 // *****************************************************************************
 
-/*** Macros for LED1 pin ***/
-#define LED1_Set()               (LATCSET = (1<<5))
-#define LED1_Clear()             (LATCCLR = (1<<5))
-#define LED1_Toggle()            (LATCINV= (1<<5))
-#define LED1_Get()               ((PORTC >> 5) & 0x1)
-#define LED1_OutputEnable()      (TRISCCLR = (1<<5))
-#define LED1_InputEnable()       (TRISCSET = (1<<5))
-#define LED1_PIN                  GPIO_PIN_RC5
 
 
 // *****************************************************************************

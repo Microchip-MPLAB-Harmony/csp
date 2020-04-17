@@ -61,14 +61,6 @@
 // *****************************************************************************
 // *****************************************************************************
 
-/*** Macros for LED pin ***/
-#define LED_Set()               (LATASET = (1<<10))
-#define LED_Clear()             (LATACLR = (1<<10))
-#define LED_Toggle()            (LATAINV= (1<<10))
-#define LED_Get()               ((PORTA >> 10) & 0x1)
-#define LED_OutputEnable()      (TRISACLR = (1<<10))
-#define LED_InputEnable()       (TRISASET = (1<<10))
-#define LED_PIN                  GPIO_PIN_RA10
 
 
 // *****************************************************************************
