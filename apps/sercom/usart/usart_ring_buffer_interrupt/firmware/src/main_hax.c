@@ -41,11 +41,11 @@ volatile bool rxThresholdEventReceived = false;
 // *****************************************************************************
 // *****************************************************************************
 
-void usartReadEventHandler(USART_EVENT event, uintptr_t context )
+void usartReadEventHandler(SERCOM_USART_EVENT event, uintptr_t context )
 {
     uint32_t nBytesAvailable = 0;
     
-    if (event == USART_EVENT_READ_THRESHOLD_REACHED)
+    if (event == SERCOM_USART_EVENT_READ_THRESHOLD_REACHED)
     {
         /* Receiver should atleast have the thershold number of bytes in the ring buffer */
         nBytesAvailable = SERCOM1_USART_ReadCountGet();
@@ -54,7 +54,7 @@ void usartReadEventHandler(USART_EVENT event, uintptr_t context )
     }
 }
 
-void usartWriteEventHandler(USART_EVENT event, uintptr_t context )
+void usartWriteEventHandler(SERCOM_USART_EVENT event, uintptr_t context )
 {
     txThresholdEventReceived = true;
 }

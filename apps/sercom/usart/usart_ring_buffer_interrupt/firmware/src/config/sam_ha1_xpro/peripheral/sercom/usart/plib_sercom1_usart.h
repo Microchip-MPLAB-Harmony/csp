@@ -87,7 +87,7 @@ bool SERCOM1_USART_WriteNotificationEnable(bool isEnabled, bool isPersistent);
 
 void SERCOM1_USART_WriteThresholdSet(uint32_t nBytesThreshold);
 
-void SERCOM1_USART_WriteCallbackRegister( SERCOM_USART_CALLBACK callback, uintptr_t context);
+void SERCOM1_USART_WriteCallbackRegister( SERCOM_USART_RING_BUFFER_CALLBACK callback, uintptr_t context);
 
 size_t SERCOM1_USART_Read(uint8_t* pRdBuffer, const size_t size);
 
@@ -101,7 +101,7 @@ bool SERCOM1_USART_ReadNotificationEnable(bool isEnabled, bool isPersistent);
 
 void SERCOM1_USART_ReadThresholdSet(uint32_t nBytesThreshold);
 
-void SERCOM1_USART_ReadCallbackRegister( SERCOM_USART_CALLBACK callback, uintptr_t context);
+void SERCOM1_USART_ReadCallbackRegister( SERCOM_USART_RING_BUFFER_CALLBACK callback, uintptr_t context);
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

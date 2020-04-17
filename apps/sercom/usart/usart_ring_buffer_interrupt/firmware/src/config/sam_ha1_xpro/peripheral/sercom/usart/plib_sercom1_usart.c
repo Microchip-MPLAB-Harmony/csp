@@ -60,7 +60,7 @@
 /* SERCOM1 USART baud value for 115200 Hz baud rate */
 #define SERCOM1_USART_INT_BAUD_VALUE            (63019U)
 
-SERCOM_USART_OBJECT sercom1USARTObj;
+SERCOM_USART_RING_BUFFER_OBJECT sercom1USARTObj;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -260,7 +260,7 @@ static inline bool SERCOM1_USART_RxPushByte(uint8_t rdByte)
         /* Queue is full - Report it to the application. Application gets a chance to free up space by reading data out from the RX ring buffer */
         if(sercom1USARTObj.rdCallback != NULL)
         {
-            sercom1USARTObj.rdCallback(USART_EVENT_READ_BUFFER_FULL, sercom1USARTObj.rdContext);
+            sercom1USARTObj.rdCallback(SERCOM_USART_EVENT_READ_BUFFER_FULL, sercom1USARTObj.rdContext);
 
             /* Read the indices again in case application has freed up space in RX ring buffer */
             tempInIndex = sercom1USARTObj.rdInIndex + 1;
@@ -302,14 +302,14 @@ static void SERCOM1_USART_ReadNotificationSend(void)
             {
                 if (nUnreadBytesAvailable >= sercom1USARTObj.rdThreshold)
                 {
-                    sercom1USARTObj.rdCallback(USART_EVENT_READ_THRESHOLD_REACHED, sercom1USARTObj.rdContext);
+                    sercom1USARTObj.rdCallback(SERCOM_USART_EVENT_READ_THRESHOLD_REACHED, sercom1USARTObj.rdContext);
                 }
             }
             else
             {
                 if (nUnreadBytesAvailable == sercom1USARTObj.rdThreshold)
                 {
-                    sercom1USARTObj.rdCallback(USART_EVENT_READ_THRESHOLD_REACHED, sercom1USARTObj.rdContext);
+                    sercom1USARTObj.rdCallback(SERCOM_USART_EVENT_READ_THRESHOLD_REACHED, sercom1USARTObj.rdContext);
                 }
             }
         }
@@ -393,7 +393,7 @@ void SERCOM1_USART_ReadThresholdSet(uint32_t nBytesThreshold)
     }
 }
 
-void SERCOM1_USART_ReadCallbackRegister( SERCOM_USART_CALLBACK callback, uintptr_t context)
+void SERCOM1_USART_ReadCallbackRegister( SERCOM_USART_RING_BUFFER_CALLBACK callback, uintptr_t context)
 {
     sercom1USARTObj.rdCallback = callback;
 
@@ -460,14 +460,14 @@ static void SERCOM1_USART_WriteNotificationSend(void)
             {
                 if (nFreeWrBufferCount >= sercom1USARTObj.wrThreshold)
                 {
-                    sercom1USARTObj.wrCallback(USART_EVENT_WRITE_THRESHOLD_REACHED, sercom1USARTObj.wrContext);
+                    sercom1USARTObj.wrCallback(SERCOM_USART_EVENT_WRITE_THRESHOLD_REACHED, sercom1USARTObj.wrContext);
                 }
             }
             else
             {
                 if (nFreeWrBufferCount == sercom1USARTObj.wrThreshold)
                 {
-                    sercom1USARTObj.wrCallback(USART_EVENT_WRITE_THRESHOLD_REACHED, sercom1USARTObj.wrContext);
+                    sercom1USARTObj.wrCallback(SERCOM_USART_EVENT_WRITE_THRESHOLD_REACHED, sercom1USARTObj.wrContext);
                 }
             }
         }
@@ -565,7 +565,7 @@ void SERCOM1_USART_WriteThresholdSet(uint32_t nBytesThreshold)
     }
 }
 
-void SERCOM1_USART_WriteCallbackRegister( SERCOM_USART_CALLBACK callback, uintptr_t context)
+void SERCOM1_USART_WriteCallbackRegister( SERCOM_USART_RING_BUFFER_CALLBACK callback, uintptr_t context)
 {
     sercom1USARTObj.wrCallback = callback;
 
@@ -588,7 +588,7 @@ void static SERCOM1_USART_ISR_ERR_Handler( void )
 
         if(sercom1USARTObj.rdCallback != NULL)
         {
-            sercom1USARTObj.rdCallback(USART_EVENT_READ_ERROR, sercom1USARTObj.rdContext);
+            sercom1USARTObj.rdCallback(SERCOM_USART_EVENT_READ_ERROR, sercom1USARTObj.rdContext);
         }
 
         /* In case of errors are not cleared by client using ErrorGet API */

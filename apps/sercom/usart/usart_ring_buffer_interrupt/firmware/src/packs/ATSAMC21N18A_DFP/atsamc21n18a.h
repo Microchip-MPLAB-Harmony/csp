@@ -1,7 +1,7 @@
 /**
  * \brief Header file for ATSAMC21N18A
  *
- * Copyright (c) 2019 Microchip Technology Inc. and its subsidiaries.
+ * Copyright (c) 2020 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip software and any derivatives
  * exclusively with Microchip products. It is your responsibility to comply with third party license
@@ -287,8 +287,8 @@ void PTC_Handler                   ( void );
 #include "component/mclk.h"
 #include "component/mtb.h"
 #include "component/nvmctrl.h"
-#include "component/oscctrl.h"
 #include "component/osc32kctrl.h"
+#include "component/oscctrl.h"
 #include "component/pac.h"
 #include "component/pm.h"
 #include "component/port.h"
@@ -551,7 +551,7 @@ void PTC_Handler                   ( void );
 /* ************************************************************************** */
 /**  DEVICE SIGNATURES FOR SAMC21N18A                                         */
 /* ************************************************************************** */
-#define DSU_DID                        _UL_(0X11011420)
+#define CHIP_DSU_DID                   _UL_(0X11011420)
 
 /* ************************************************************************** */
 /**  ELECTRICAL DEFINITIONS FOR SAMC21N18A                                    */
