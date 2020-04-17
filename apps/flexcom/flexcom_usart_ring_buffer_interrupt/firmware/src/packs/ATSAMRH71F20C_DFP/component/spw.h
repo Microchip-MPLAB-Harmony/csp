@@ -1,7 +1,7 @@
 /**
  * \brief Component description for SPW
  *
- * Copyright (c) 2019 Microchip Technology Inc. and its subsidiaries.
+ * Copyright (c) 2020 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip software and any derivatives
  * exclusively with Microchip products. It is your responsibility to comply with third party license
@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-12-20T15:37:42Z */
+/* file generated from device description version 2020-02-03T17:22:07Z */
 #ifndef _SAMRH71_SPW_COMPONENT_H_
 #define _SAMRH71_SPW_COMPONENT_H_
 
@@ -44,7 +44,7 @@
 #define SPW_ROUTER_STS_Msk                    _U_(0xFFFF1F1F)                                      /**< (SPW_ROUTER_STS) Register Mask  */
 
 
-/* -------- SPW_ROUTER_CFG : (SPW Offset: 0x04) ( R/ 32) SpW Router Config -------- */
+/* -------- SPW_ROUTER_CFG : (SPW Offset: 0x04) (R/W 32) SpW Router Config -------- */
 #define SPW_ROUTER_CFG_LAENA_Pos              _U_(0)                                               /**< (SPW_ROUTER_CFG) LA Routing Enable Position */
 #define SPW_ROUTER_CFG_LAENA_Msk              (_U_(0x1) << SPW_ROUTER_CFG_LAENA_Pos)               /**< (SPW_ROUTER_CFG) LA Routing Enable Mask */
 #define SPW_ROUTER_CFG_LAENA(value)           (SPW_ROUTER_CFG_LAENA_Msk & ((value) << SPW_ROUTER_CFG_LAENA_Pos))
@@ -5288,7 +5288,7 @@
 typedef struct
 {
   __I   uint32_t                       SPW_ROUTER_STS;     /**< Offset: 0x00 (R/   32) SpW Router Status */
-  __I   uint32_t                       SPW_ROUTER_CFG;     /**< Offset: 0x04 (R/   32) SpW Router Config */
+  __IO  uint32_t                       SPW_ROUTER_CFG;     /**< Offset: 0x04 (R/W  32) SpW Router Config */
   __I   uint32_t                       SPW_ROUTER_TIMEOUT; /**< Offset: 0x08 (R/   32) SpW Router Timeout */
   __I   uint8_t                        Reserved1[0x74];
   __IO  uint32_t                       SPW_ROUTER_TABLE[224]; /**< Offset: 0x80 (R/W  32) SpW Router Table (Logical addresses 32 to 255, index 0 for logical address 32) */

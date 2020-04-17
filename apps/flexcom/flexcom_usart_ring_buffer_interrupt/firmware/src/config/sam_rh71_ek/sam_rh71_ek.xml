@@ -185,22 +185,22 @@
         </String>
         <String dnOrder="35" id="PIN_88_DIR">
           <Values dnOrder="0">
-            <User dnOrder="0" value="Out"/>
+            <User dnOrder="0" value=""/>
           </Values>
         </String>
         <String dnOrder="36" id="PIN_88_FUNCTION_NAME">
           <Values dnOrder="0">
-            <User dnOrder="0" value="LED"/>
+            <User dnOrder="0" value=""/>
           </Values>
         </String>
         <String dnOrder="37" id="PIN_88_FUNCTION_TYPE">
           <Values dnOrder="0">
-            <User dnOrder="0" value="GPIO"/>
+            <User dnOrder="0" value=""/>
           </Values>
         </String>
         <String dnOrder="38" id="PIN_88_PERIPHERAL_FUNCTION">
           <Values dnOrder="0">
-            <User dnOrder="0" value="GPIO"/>
+            <User dnOrder="0" value=""/>
           </Values>
         </String>
         <Boolean dnOrder="39" id="PIO_CLOCK_ENABLE">
@@ -215,7 +215,7 @@
         </Integer>
         <String dnOrder="41" id="PORT_B_CFGR_Value19">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="0x100"/>
+            <Dynamic dnOrder="0" id="core" value="0x0"/>
           </Values>
         </String>
         <String dnOrder="42" id="PORT_B_MSKR_ValueA">
@@ -255,7 +255,7 @@
         </String>
         <String dnOrder="49" id="PORT_B_MSKR_ValueGPIO">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="core" value="0x80000"/>
+            <Dynamic dnOrder="0" id="core" value="0x0"/>
           </Values>
         </String>
         <String dnOrder="50" id="PORT_F_MSKR_ValueA">
@@ -595,31 +595,36 @@
             </Boolean>
           </Attributes>
         </KeyValueSet>
-        <KeyValueSet dnOrder="18" id="FLEX_USART_MR_NBSTOP">
+        <Boolean dnOrder="18" id="FLEX_USART_MR_MODE9">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="flexcom1" value="false"/>
+          </Values>
+        </Boolean>
+        <KeyValueSet dnOrder="19" id="FLEX_USART_MR_NBSTOP">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </KeyValueSet>
-        <KeyValueSet dnOrder="19" id="FLEX_USART_MR_PAR">
+        <KeyValueSet dnOrder="20" id="FLEX_USART_MR_PAR">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </KeyValueSet>
-        <String dnOrder="20" id="RECEIVE_DATA_REGISTER">
+        <String dnOrder="21" id="RECEIVE_DATA_REGISTER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="flexcom1" value="&amp;(FLEXCOM1_REGS-&gt;FLEX_US_RHR)"/>
           </Values>
         </String>
-        <String dnOrder="21" id="TRANSMIT_DATA_REGISTER">
+        <String dnOrder="22" id="TRANSMIT_DATA_REGISTER">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="flexcom1" value="&amp;(FLEXCOM1_REGS-&gt;FLEX_US_THR)"/>
           </Values>
         </String>
-        <Boolean dnOrder="22" id="USART_INTERRUPT_MODE">
+        <Boolean dnOrder="23" id="USART_INTERRUPT_MODE">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="readOnly">
               <Value dnOrder="0">true</Value>
@@ -629,7 +634,7 @@
             </Boolean>
           </Attributes>
         </Boolean>
-        <Boolean dnOrder="23" id="USART_RING_BUFFER_ENABLE">
+        <Boolean dnOrder="24" id="USART_RING_BUFFER_ENABLE">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
@@ -639,7 +644,7 @@
             <User dnOrder="0" value="true"/>
           </Values>
         </Boolean>
-        <Integer dnOrder="24" id="USART_RX_RING_BUFFER_SIZE">
+        <Integer dnOrder="25" id="USART_RX_RING_BUFFER_SIZE">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
@@ -649,7 +654,7 @@
             <User dnOrder="0" value="20"/>
           </Values>
         </Integer>
-        <Integer dnOrder="25" id="USART_TX_RING_BUFFER_SIZE">
+        <Integer dnOrder="26" id="USART_TX_RING_BUFFER_SIZE">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>

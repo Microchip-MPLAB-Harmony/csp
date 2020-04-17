@@ -74,26 +74,6 @@
 
 
 
-/*** Macros for LED pin ***/
-#define LED_Set()               (PIOB_REGS->PIO_SODR = (1<<19))
-#define LED_Clear()             (PIOB_REGS->PIO_CODR = (1<<19))
-#define LED_Toggle()            do {\
-                                            PIOB_REGS->PIO_MSKR = (1<<19); \
-                                            PIOB_REGS->PIO_ODSR ^= (1<<19);\
-                                        } while (0)
-#define LED_Get()               ((PIOB_REGS->PIO_PDSR >> 19) & 0x1)
-#define LED_OutputEnable()      do {\
-                                            PIOB_REGS->PIO_MSKR = (1<<19); \
-										     PIOB_REGS->PIO_CFGR |=(1 << PIO_CFGR_DIR_Pos);\
-                                        }while(0)
-#define LED_InputEnable()       do { \
-                                            PIOB_REGS->PIO_MSKR = (1<<19); \
-										     PIOB_REGS->PIO_CFGR &= ~(1 << PIO_CFGR_DIR_Pos);\
-                                        } while (0)
-#define LED_InterruptEnable()   (PIOB_REGS->PIO_IER = (1<<19))
-#define LED_InterruptDisable()  (PIOB_REGS->PIO_IDR = (1<<19))
-#define LED_PIN                  PIO_PIN_PB19
-
 
 // *****************************************************************************
 /* PIO Port
