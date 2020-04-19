@@ -239,7 +239,8 @@ def updateSERCOMInterruptData(symbol, event):
             if (Database.getSymbolValue(sercomInstanceName.getValue().lower(), "I2CS_INTERRUPT_MODE") == True):
                 interruptEnable = True
 
-        setSERCOMInterruptData(interruptEnable, sercomMode)
+        if (sercomMode != ""):
+            setSERCOMInterruptData(interruptEnable, sercomMode)
 
     for id in InterruptVectorUpdate:
         id = id.replace("core.", "")
@@ -247,7 +248,7 @@ def updateSERCOMInterruptData(symbol, event):
             status = True
             break
 
-    if (sercomUSARTMode == True or sercomSPIMode == True or sercomI2CMode == True or sercomI2CSlaveMode == True) and status == True:
+    if ((sercomMode != "") and (status == True)):
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
