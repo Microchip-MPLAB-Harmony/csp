@@ -1,7 +1,7 @@
 /**
  * \brief Header file for ATSAMHA1G16AB
  *
- * Copyright (c) 2019 Microchip Technology Inc. and its subsidiaries.
+ * Copyright (c) 2020 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip software and any derivatives
  * exclusively with Microchip products. It is your responsibility to comply with third party license
@@ -479,7 +479,7 @@ void PTC_Handler                   ( void );
 /* ************************************************************************** */
 /**  DEVICE SIGNATURES FOR SAMHA1G16AB                                        */
 /* ************************************************************************** */
-#define DSU_DID                        _UL_(0X1001157A)
+#define CHIP_DSU_DID                   _UL_(0X1001157A)
 
 /* ************************************************************************** */
 /**  ELECTRICAL DEFINITIONS FOR SAMHA1G16AB                                   */
