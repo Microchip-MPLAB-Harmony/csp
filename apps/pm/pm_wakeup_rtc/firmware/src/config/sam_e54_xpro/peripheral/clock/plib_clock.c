@@ -100,12 +100,12 @@ static void DFLL_Initialize(void)
 
     while((OSCCTRL_REGS->OSCCTRL_DFLLSYNC & OSCCTRL_DFLLSYNC_ENABLE_Msk) == OSCCTRL_DFLLSYNC_ENABLE_Msk )
     {
-        /* Waiting for the DPLL enable synchronization */
+        /* Waiting for the DFLL enable synchronization */
     }
 
     while((OSCCTRL_REGS->OSCCTRL_STATUS & OSCCTRL_STATUS_DFLLRDY_Msk) != OSCCTRL_STATUS_DFLLRDY_Msk)
     {
-        /* Waiting for the XOSC Ready state */
+        /* Waiting for the DFLL Ready state */
     }
 }
 
