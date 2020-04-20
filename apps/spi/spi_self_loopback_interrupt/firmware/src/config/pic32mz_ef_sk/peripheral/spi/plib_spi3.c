@@ -57,6 +57,7 @@ SPI_OBJECT spi3Obj;
 #define SPI3_CON_ENHBUF                     (1 << _SPI3CON_ENHBUF_POSITION)
 #define SPI3_CON_MCLKSEL                    (0 << _SPI3CON_MCLKSEL_POSITION)
 #define SPI3_CON_MSSEN                      (1 << _SPI3CON_MSSEN_POSITION)
+#define SPI3_CON_SMP                        (0 << _SPI3CON_SMP_POSITION)
 
 void SPI3_Initialize ( void )
 {
@@ -94,7 +95,7 @@ void SPI3_Initialize ( void )
     MSSEN = 1
     MCLKSEL = 0
     */
-    SPI3CONSET = (SPI3_CON_MSSEN | SPI3_CON_MCLKSEL | SPI3_CON_ENHBUF | SPI3_CON_MODE_32_MODE_16 | SPI3_CON_CKE | SPI3_CON_CKP | SPI3_CON_MSTEN);
+    SPI3CONSET = (SPI3_CON_MSSEN | SPI3_CON_MCLKSEL | SPI3_CON_ENHBUF | SPI3_CON_MODE_32_MODE_16 | SPI3_CON_CKE | SPI3_CON_CKP | SPI3_CON_MSTEN | SPI3_CON_SMP);
 
     /* Enable transmit interrupt when transmit buffer is completely empty (STXISEL = '01') */
     /* Enable receive interrupt when the receive buffer is not empty (SRXISEL = '01') */
