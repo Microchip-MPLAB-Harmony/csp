@@ -4,11 +4,11 @@
 
 
 project: spi_ping_pong_with_dma
-creation_date: 2020-04-20T19:25:56.103+05:30[Asia/Calcutta]	# ISO 8601 format: https://www.w3.org/TR/NOTE-datetime
+creation_date: 2020-04-21T16:05:36.604+05:30[Asia/Calcutta]	# ISO 8601 format: https://www.w3.org/TR/NOTE-datetime
 operating_system: Windows 10
-mhc_mode: Headless				# [IDE|Standalone|Headless]
-mplabx_version: -		# if MPLAB X plugin only
-plugin_version: -		# if MPLAB X plugin only
+mhc_mode: IDE				# [IDE|Standalone|Headless]
+mplabx_version: v5.40		# if MPLAB X plugin only
+plugin_version: v3.5.0		# if MPLAB X plugin only
 
 modules:
     - {name: "bsp", version: ""}

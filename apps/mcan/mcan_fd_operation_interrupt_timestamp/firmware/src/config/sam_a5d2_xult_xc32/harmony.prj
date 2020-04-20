@@ -183,8 +183,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">packs/ATSAMA5D27_DFP/</LogicalPath>
           <PhysicalPath dnOrder="4">/../../packs/ATSAMA5D27_DFP/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">C0234EB1CDB6A31EECFF3594A7200483</GeneratedChecksum>
-          <UserChecksum dnOrder="6">C0234EB1CDB6A31EECFF3594A7200483</UserChecksum>
+          <GeneratedChecksum dnOrder="5">FC2827A99B0DED891F41F6D940CFB875</GeneratedChecksum>
+          <UserChecksum dnOrder="6">FC2827A99B0DED891F41F6D940CFB875</UserChecksum>
         </File>
         <File dnOrder="20">
           <Type dnOrder="0">HEADER</Type>
@@ -759,8 +759,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_a5d2_xult_xc32/</LogicalPath>
           <PhysicalPath dnOrder="4">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">E85CF28B8811B71BA8F72ACDEB05BFCB</GeneratedChecksum>
-          <UserChecksum dnOrder="6">E85CF28B8811B71BA8F72ACDEB05BFCB</UserChecksum>
+          <GeneratedChecksum dnOrder="5">9974A4D7107231BC0E3BE4F74DDB132C</GeneratedChecksum>
+          <UserChecksum dnOrder="6">9974A4D7107231BC0E3BE4F74DDB132C</UserChecksum>
         </File>
       </Files>
       <Settings dnOrder="1">
