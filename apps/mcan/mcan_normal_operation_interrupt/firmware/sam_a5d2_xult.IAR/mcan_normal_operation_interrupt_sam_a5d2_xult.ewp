@@ -345,11 +345,11 @@
                 </option>
                 <option>
                     <name>CCIncludePath2</name>
-                    <state>$PROJ_DIR$\..\src\packs\CMSIS</state>
+                    <state>$PROJ_DIR$\..\src</state>
                     <state>$PROJ_DIR$\..\src\config\sam_a5d2_xult</state>
                     <state>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP</state>
                     <state>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\Core_A\Include</state>
-                    <state>$PROJ_DIR$\..\src</state>
+                    <state>$PROJ_DIR$\..\src\packs\CMSIS</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -1404,11 +1404,11 @@
                 </option>
                 <option>
                     <name>CCIncludePath2</name>
-                    <state>$PROJ_DIR$\..\src\packs\CMSIS</state>
+                    <state>$PROJ_DIR$\..\src</state>
                     <state>$PROJ_DIR$\..\src\config\sam_a5d2_xult</state>
                     <state>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP</state>
                     <state>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\Core_A\Include</state>
-                    <state>$PROJ_DIR$\..\src</state>
+                    <state>$PROJ_DIR$\..\src\packs\CMSIS</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
