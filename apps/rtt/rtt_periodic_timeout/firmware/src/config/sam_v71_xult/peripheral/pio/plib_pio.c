@@ -57,6 +57,7 @@
 */
 void PIO_Initialize ( void )
 {
+    MATRIX_REGS->CCFG_SYSIO = 0x0;
 
     /************************ PIO A Initialization ************************/
     ((pio_registers_t*)PIO_PORT_A)->PIO_PER = 0xFFFFFFFF;
