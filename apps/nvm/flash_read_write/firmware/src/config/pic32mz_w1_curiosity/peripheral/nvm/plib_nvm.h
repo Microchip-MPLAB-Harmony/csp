@@ -89,9 +89,9 @@ void NVM_Initialize( void );
 
 bool NVM_Read( uint32_t *data, uint32_t length, const uint32_t address );
 
-bool NVM_WordWrite( uint32_t data, uint32_t address );
+bool NVM_SingleDoubleWordWrite( uint32_t *data, uint32_t address );
 
-bool NVM_QuadWordWrite( uint32_t *data, uint32_t address );
+bool NVM_QuadDoubleWordWrite( uint32_t *data, uint32_t address );
 
 bool NVM_RowWrite( uint32_t *data, uint32_t address );
 
