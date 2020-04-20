@@ -123,13 +123,15 @@ void UART2_Initialize( void )
 
     /* Initialize instance object */
     uart2Obj.rdCallback = NULL;
-    uart2Obj.rdInIndex = uart2Obj.rdOutIndex = 0;
+    uart2Obj.rdInIndex = 0;
+	uart2Obj.rdOutIndex = 0;
     uart2Obj.isRdNotificationEnabled = false;
     uart2Obj.isRdNotifyPersistently = false;
     uart2Obj.rdThreshold = 0;
 
     uart2Obj.wrCallback = NULL;
-    uart2Obj.wrInIndex = uart2Obj.wrOutIndex = 0;
+    uart2Obj.wrInIndex = 0;
+	uart2Obj.wrOutIndex = 0;
     uart2Obj.isWrNotificationEnabled = false;
     uart2Obj.isWrNotifyPersistently = false;
     uart2Obj.wrThreshold = 0;
@@ -293,12 +295,17 @@ static void UART2_ReadNotificationSend(void)
 size_t UART2_Read(uint8_t* pRdBuffer, const size_t size)
 {
     size_t nBytesRead = 0;
+	uint32_t rdOutIndex;
+	uint32_t rdInIndex;
 
     while (nBytesRead < size)
     {
         UART2_RX_INT_DISABLE();
+		
+		rdOutIndex = uart2Obj.rdOutIndex;
+		rdInIndex = uart2Obj.rdInIndex;
 
-        if (uart2Obj.rdOutIndex != uart2Obj.rdInIndex)
+        if (rdOutIndex != rdInIndex)
         {
             pRdBuffer[nBytesRead++] = UART2_ReadBuffer[uart2Obj.rdOutIndex++];
 
@@ -321,19 +328,21 @@ size_t UART2_Read(uint8_t* pRdBuffer, const size_t size)
 size_t UART2_ReadCountGet(void)
 {
     size_t nUnreadBytesAvailable;
+	uint32_t rdInIndex;
+	uint32_t rdOutIndex;
+	
+	/* Take a snapshot of indices to avoid processing in critical section */
+	rdInIndex = uart2Obj.rdInIndex;
+	rdOutIndex = uart2Obj.rdOutIndex;	
 
-    UART2_RX_INT_DISABLE();
-
-    if ( uart2Obj.rdInIndex >=  uart2Obj.rdOutIndex)
+    if ( rdInIndex >=  rdOutIndex)
     {
-        nUnreadBytesAvailable =  uart2Obj.rdInIndex -  uart2Obj.rdOutIndex;
+        nUnreadBytesAvailable =  rdInIndex -  rdOutIndex;
     }
     else
     {
-        nUnreadBytesAvailable =  (UART2_READ_BUFFER_SIZE -  uart2Obj.rdOutIndex) + uart2Obj.rdInIndex;
+        nUnreadBytesAvailable =  (UART2_READ_BUFFER_SIZE -  rdOutIndex) + rdInIndex;
     }
-
-    UART2_RX_INT_ENABLE();
 
     return nUnreadBytesAvailable;
 }
@@ -378,8 +387,10 @@ void UART2_ReadCallbackRegister( UART_RING_BUFFER_CALLBACK callback, uintptr_t c
 static bool UART2_TxPullByte(uint8_t* pWrByte)
 {
     bool isSuccess = false;
+	uint32_t wrOutIndex = uart2Obj.wrOutIndex;
+	uint32_t wrInIndex = uart2Obj.wrInIndex;
 
-    if (uart2Obj.wrOutIndex != uart2Obj.wrInIndex)
+    if (wrOutIndex != wrInIndex)
     {
         *pWrByte = UART2_WriteBuffer[uart2Obj.wrOutIndex++];
 
@@ -450,14 +461,18 @@ static void UART2_WriteNotificationSend(void)
 static size_t UART2_WritePendingBytesGet(void)
 {
     size_t nPendingTxBytes;
+	
+	/* Take a snapshot of indices to avoid processing in critical section */
+	uint32_t wrOutIndex = uart2Obj.wrOutIndex;
+	uint32_t wrInIndex = uart2Obj.wrInIndex;
 
-    if ( uart2Obj.wrInIndex >=  uart2Obj.wrOutIndex)
+    if ( wrInIndex >=  wrOutIndex)
     {
-        nPendingTxBytes =  uart2Obj.wrInIndex -  uart2Obj.wrOutIndex;
+        nPendingTxBytes =  wrInIndex - wrOutIndex;
     }
     else
     {
-        nPendingTxBytes =  (UART2_WRITE_BUFFER_SIZE -  uart2Obj.wrOutIndex) + uart2Obj.wrInIndex;
+        nPendingTxBytes =  (UART2_WRITE_BUFFER_SIZE -  wrOutIndex) + wrInIndex;
     }
 
     return nPendingTxBytes;
@@ -467,15 +482,7 @@ size_t UART2_WriteCountGet(void)
 {
     size_t nPendingTxBytes;
 
-    UART2_TX_INT_DISABLE();
-
-    nPendingTxBytes = UART2_WritePendingBytesGet();
-
-    /* Enable transmit interrupt only if any data is pending for transmission */
-    if (UART2_WritePendingBytesGet() > 0)
-    {
-        UART2_TX_INT_ENABLE();
-    }
+    nPendingTxBytes = UART2_WritePendingBytesGet();    
 
     return nPendingTxBytes;
 }
