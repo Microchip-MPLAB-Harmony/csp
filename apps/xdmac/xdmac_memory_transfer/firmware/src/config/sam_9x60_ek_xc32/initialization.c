@@ -84,6 +84,63 @@
 
 
 
+// *****************************************************************************
+// *****************************************************************************
+// Section: Local initialization functions
+// *****************************************************************************
+// *****************************************************************************
+/*******************************************************************************
+  Function:
+    void SYSC_Disable ( void )
+
+  Summary:
+    Disables ununsed SYSC peripherals
+
+  Remarks:
+ */
+static void SYSC_Disable( void )
+{
+    //save context and disable write protection
+    uint32_t sysc_wpmr = SYSCWP_REGS->SYSCWP_SYSC_WPMR &
+      (SYSCWP_SYSC_WPMR_WPEN_Msk | SYSCWP_SYSC_WPMR_WPITEN_Msk);
+    SYSCWP_REGS->SYSCWP_SYSC_WPMR = SYSCWP_SYSC_WPMR_WPKEY_PASSWD &
+                                    ~(SYSCWP_SYSC_WPMR_WPITEN_Msk |
+                                    SYSCWP_SYSC_WPMR_WPITEN_Msk);
+
+
+    /* ----------------------------   RTC  -------------------------------*/
+    //Disable interrupts
+    RTC_REGS->RTC_IDR = RTC_IDR_Msk;
+
+    //Clear interrupt status
+    RTC_REGS->RTC_SCCR = RTC_SCCR_Msk;
+
+    /* ----------------------------   RTT  -------------------------------*/
+    //Disable Timer and interrupt
+    uint32_t rtt_mr = RTT_REGS->RTT_MR;
+    RTT_REGS->RTT_MR = rtt_mr & ~(RTT_MR_RTTDIS_Msk | RTT_MR_RTTINCIEN_Msk);
+
+    //Clear status
+    RTT_REGS->RTT_SR;
+
+    /* ----------------------------   RSTC  ------------------------------*/
+    // Disable interrupt
+    uint32_t rstc_mr = RSTC_REGS->RSTC_MR & (RSTC_MR_ENGCLR_Msk |
+                                             RSTC_MR_ERSTL_Msk |
+                                             RSTC_MR_URSTIEN_Msk |
+                                             RSTC_MR_URSTASYNC_Msk |
+                                             RSTC_MR_SCKSW_Msk |
+                                             RSTC_MR_URSTEN_Msk);
+    rstc_mr = rstc_mr & (~RSTC_MR_URSTIEN_Msk);
+    RSTC_REGS->RSTC_MR = RSTC_MR_KEY_PASSWD | rstc_mr;
+
+   //Context restore SYSC write protect registers
+   SYSCWP_REGS->SYSCWP_SYSC_WPMR = (SYSCWP_SYSC_WPMR_WPKEY_PASSWD | sysc_wpmr);
+}
+
+
+
+
 /*******************************************************************************
   Function:
     void SYS_Initialize ( void *data )
@@ -96,6 +153,8 @@
 
 void SYS_Initialize ( void* data )
 {
+	SYSC_Disable( );
+
   
     CLK_Initialize();
 
