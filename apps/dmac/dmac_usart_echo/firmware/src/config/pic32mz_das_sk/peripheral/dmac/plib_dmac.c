@@ -398,7 +398,7 @@ void DMA0_InterruptHandler (void)
 {
     DMAC_CHANNEL_OBJECT *chanObj;
     DMAC_TRANSFER_EVENT dmaEvent = DMAC_TRANSFER_EVENT_NONE;
-    bool retVal;
+    bool retVal = false;
 
     /* Find out the channel object */
     chanObj = (DMAC_CHANNEL_OBJECT *) &gDMAChannelObj[0];
@@ -468,7 +468,7 @@ void DMA1_InterruptHandler (void)
 {
     DMAC_CHANNEL_OBJECT *chanObj;
     DMAC_TRANSFER_EVENT dmaEvent = DMAC_TRANSFER_EVENT_NONE;
-    bool retVal;
+    bool retVal = false;
 
     /* Find out the channel object */
     chanObj = (DMAC_CHANNEL_OBJECT *) &gDMAChannelObj[1];
