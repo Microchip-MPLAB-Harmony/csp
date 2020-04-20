@@ -73,7 +73,7 @@ void TMR1_Initialize(void)
     TMR1 = 0x0;
 
     /*Set period */
-    PR1 = 7812;
+    PR1 = 7811;
 
     /* Setup TMR1 Interrupt */
     TMR1_InterruptEnable();  /* Enable interrupt on the way out */
