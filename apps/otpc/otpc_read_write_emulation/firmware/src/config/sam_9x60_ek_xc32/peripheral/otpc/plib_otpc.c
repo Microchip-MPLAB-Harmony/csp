@@ -411,7 +411,7 @@ otpc_error_code_t OTPC_WritePacket(const OTPC_NEW_PACKET *packet,
 	uint32_t isr_reg, mr_reg, ar_reg;
 	uint16_t payload_size;
 	uint16_t backup_size;
-	uint16_t size_field;
+	uint16_t size_field=0;
 	bool must_invalidate = false;
 	bool is_key = false;
     bool ready_to_program   =   false;
