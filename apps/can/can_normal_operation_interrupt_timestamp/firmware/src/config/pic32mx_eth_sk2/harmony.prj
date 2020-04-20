@@ -9,7 +9,7 @@
         <File dnOrder="0">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">exceptions.c</Name>
-          <Security dnOrder="2"/>
+          <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/pic32mx_eth_sk2/</LogicalPath>
           <PhysicalPath dnOrder="4">/</PhysicalPath>
           <GeneratedChecksum dnOrder="5">3477C6F788508451FADB8F17D7E78273</GeneratedChecksum>
@@ -18,16 +18,16 @@
         <File dnOrder="1">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">initialization.c</Name>
-          <Security dnOrder="2"/>
+          <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/pic32mx_eth_sk2/</LogicalPath>
           <PhysicalPath dnOrder="4">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">8412618616AB923ABB519CF447E80093</GeneratedChecksum>
-          <UserChecksum dnOrder="6">8412618616AB923ABB519CF447E80093</UserChecksum>
+          <GeneratedChecksum dnOrder="5">49E3D72B1857E3DB309F4034D049C2BD</GeneratedChecksum>
+          <UserChecksum dnOrder="6">49E3D72B1857E3DB309F4034D049C2BD</UserChecksum>
         </File>
         <File dnOrder="2">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">interrupts.c</Name>
-          <Security dnOrder="2"/>
+          <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/pic32mx_eth_sk2/</LogicalPath>
           <PhysicalPath dnOrder="4">/</PhysicalPath>
           <GeneratedChecksum dnOrder="5">B889A1C7C990C92DC90EDFCC216969BF</GeneratedChecksum>
@@ -36,7 +36,7 @@
         <File dnOrder="3">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">main_pic32mx.c</Name>
-          <Security dnOrder="2"/>
+          <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3"/>
           <PhysicalPath dnOrder="4">/../../</PhysicalPath>
           <GeneratedChecksum dnOrder="5"/>
@@ -45,16 +45,16 @@
         <File dnOrder="4">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_can1.c</Name>
-          <Security dnOrder="2"/>
+          <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/pic32mx_eth_sk2/peripheral/can/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/can/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">34982E8B683D608EF1AC7B4C21790329</GeneratedChecksum>
-          <UserChecksum dnOrder="6">34982E8B683D608EF1AC7B4C21790329</UserChecksum>
+          <GeneratedChecksum dnOrder="5">1ED5D01048D85B5EC168E411863EA896</GeneratedChecksum>
+          <UserChecksum dnOrder="6">1ED5D01048D85B5EC168E411863EA896</UserChecksum>
         </File>
         <File dnOrder="5">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_clk.c</Name>
-          <Security dnOrder="2"/>
+          <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/pic32mx_eth_sk2/peripheral/clk/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/clk/</PhysicalPath>
           <GeneratedChecksum dnOrder="5">9854678C3A3E4E9544EC7450ACBAE52A</GeneratedChecksum>
@@ -63,7 +63,7 @@
         <File dnOrder="6">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_evic.c</Name>
-          <Security dnOrder="2"/>
+          <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/pic32mx_eth_sk2/peripheral/evic/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/evic/</PhysicalPath>
           <GeneratedChecksum dnOrder="5">0B1B641D06A589B2CF8A404CA22FEDB0</GeneratedChecksum>
@@ -72,7 +72,7 @@
         <File dnOrder="7">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_gpio.c</Name>
-          <Security dnOrder="2"/>
+          <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/pic32mx_eth_sk2/peripheral/gpio/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/gpio/</PhysicalPath>
           <GeneratedChecksum dnOrder="5">1AC456B0726951BD0DC4E0EBA03E03DB</GeneratedChecksum>
@@ -81,16 +81,16 @@
         <File dnOrder="8">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">xc32_monitor.c</Name>
-          <Security dnOrder="2"/>
+          <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/pic32mx_eth_sk2/stdio/</LogicalPath>
           <PhysicalPath dnOrder="4">/stdio/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">0CDCE9B6891797FCD2AEA243F841353F</GeneratedChecksum>
-          <UserChecksum dnOrder="6">0CDCE9B6891797FCD2AEA243F841353F</UserChecksum>
+          <GeneratedChecksum dnOrder="5">A9F55E7CB78F22D9000CA03DC635973C</GeneratedChecksum>
+          <UserChecksum dnOrder="6">A9F55E7CB78F22D9000CA03DC635973C</UserChecksum>
         </File>
         <File dnOrder="9">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">definitions.h</Name>
-          <Security dnOrder="2"/>
+          <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/pic32mx_eth_sk2/</LogicalPath>
           <PhysicalPath dnOrder="4">/</PhysicalPath>
           <GeneratedChecksum dnOrder="5">5ABBC64A8C964788833E6390542B70C4</GeneratedChecksum>
@@ -99,7 +99,7 @@
         <File dnOrder="10">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">device.h</Name>
-          <Security dnOrder="2"/>
+          <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">packs/PIC32MX795F512L_DFP/</LogicalPath>
           <PhysicalPath dnOrder="4">/../../packs/PIC32MX795F512L_DFP/</PhysicalPath>
           <GeneratedChecksum dnOrder="5">5D5C52527AB1435153DB9B50ADE6B79D</GeneratedChecksum>
@@ -108,25 +108,25 @@
         <File dnOrder="11">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_can1.h</Name>
-          <Security dnOrder="2"/>
+          <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/pic32mx_eth_sk2/peripheral/can/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/can/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">7952B4EF07792B426E9EF18FA159DF08</GeneratedChecksum>
-          <UserChecksum dnOrder="6">7952B4EF07792B426E9EF18FA159DF08</UserChecksum>
+          <GeneratedChecksum dnOrder="5">1F3AF8B8622B256224CB2A11EC6711BF</GeneratedChecksum>
+          <UserChecksum dnOrder="6">1F3AF8B8622B256224CB2A11EC6711BF</UserChecksum>
         </File>
         <File dnOrder="12">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_can_common.h</Name>
-          <Security dnOrder="2"/>
+          <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/pic32mx_eth_sk2/peripheral/can/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/can/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">17919696C67053CCF135C207239152FF</GeneratedChecksum>
-          <UserChecksum dnOrder="6">17919696C67053CCF135C207239152FF</UserChecksum>
+          <GeneratedChecksum dnOrder="5">8AFBDF00241A310A8769EBA143EE6601</GeneratedChecksum>
+          <UserChecksum dnOrder="6">8AFBDF00241A310A8769EBA143EE6601</UserChecksum>
         </File>
         <File dnOrder="13">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_clk.h</Name>
-          <Security dnOrder="2"/>
+          <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/pic32mx_eth_sk2/peripheral/clk/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/clk/</PhysicalPath>
           <GeneratedChecksum dnOrder="5">7066CC390335CF75126E2A50C46E3BDD</GeneratedChecksum>
@@ -135,7 +135,7 @@
         <File dnOrder="14">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_evic.h</Name>
-          <Security dnOrder="2"/>
+          <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/pic32mx_eth_sk2/peripheral/evic/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/evic/</PhysicalPath>
           <GeneratedChecksum dnOrder="5">1BA4A111238723BF8148CF1BC7442A3C</GeneratedChecksum>
@@ -144,7 +144,7 @@
         <File dnOrder="15">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_gpio.h</Name>
-          <Security dnOrder="2"/>
+          <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/pic32mx_eth_sk2/peripheral/gpio/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/gpio/</PhysicalPath>
           <GeneratedChecksum dnOrder="5">3C20DD6CA020A738DE34602A3174074F</GeneratedChecksum>
@@ -153,7 +153,7 @@
         <File dnOrder="16">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">toolchain_specifics.h</Name>
-          <Security dnOrder="2"/>
+          <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/pic32mx_eth_sk2/</LogicalPath>
           <PhysicalPath dnOrder="4">/</PhysicalPath>
           <GeneratedChecksum dnOrder="5">9A7344615980CB9443B6436E41E2155A</GeneratedChecksum>
@@ -161,10 +161,10 @@
         </File>
       </Files>
       <Settings dnOrder="1">
-        <Setting append="true" category="C32" delimiter=";" dnOrder="0" key="extra-include-directories" security="" value="../src;../src/config/pic32mx_eth_sk2;../src/packs/PIC32MX795F512L_DFP;;../src/mips"/>
-        <Setting category="C32-LD" dnOrder="1" key="heap-size" security="" value="512"/>
-        <Setting category="C32-LD" dnOrder="2" key="no-device-startup-code" security="" value="true"/>
-        <Setting append="true" category="C32-LD" delimiter=";" dnOrder="3" key="preprocessor-macros" security="" value=""/>
+        <Setting append="true" category="C32" delimiter=";" dnOrder="0" key="extra-include-directories" security="NON_SECURE" value="../src;../src/config/pic32mx_eth_sk2;../src/packs/PIC32MX795F512L_DFP;"/>
+        <Setting category="C32-LD" dnOrder="1" key="heap-size" security="NON_SECURE" value="512"/>
+        <Setting category="C32-LD" dnOrder="2" key="no-device-startup-code" security="NON_SECURE" value="true"/>
+        <Setting append="true" category="C32-LD" delimiter=";" dnOrder="3" key="preprocessor-macros" security="NON_SECURE" value=""/>
       </Settings>
     </Manifest>
     <Settings dnOrder="4">
