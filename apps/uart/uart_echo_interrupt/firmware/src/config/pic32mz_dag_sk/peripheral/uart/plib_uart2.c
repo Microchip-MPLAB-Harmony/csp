@@ -293,6 +293,25 @@ UART_ERROR UART2_ErrorGet( void )
     return errors;
 }
 
+bool UART2_AutoBaudQuery( void )
+{
+    if(U2MODE & _U2MODE_ABAUD_MASK)
+        return true;
+    else
+        return false;
+}
+
+void UART2_AutoBaudSet( bool enable )
+{
+    if( enable == true )
+    {
+        U2MODESET = _U2MODE_ABAUD_MASK;
+    }
+
+    /* Turning off ABAUD if it was on can lead to unpredictable behavior, so that
+       direction of control is not allowed in this function.                      */
+}
+
 void UART2_ReadCallbackRegister( UART_CALLBACK callback, uintptr_t context )
 {
     uart2Obj.rxCallback = callback;
@@ -348,13 +367,13 @@ void UART2_RX_InterruptHandler (void)
 {
     if(uart2Obj.rxBusyStatus == true)
     {
+        /* Clear UART2 RX Interrupt flag */
+        IFS4CLR = _IFS4_U2RXIF_MASK;
+
         while((_U2STA_URXDA_MASK == (U2STA & _U2STA_URXDA_MASK)) && (uart2Obj.rxSize > uart2Obj.rxProcessedSize) )
         {
             uart2Obj.rxBuffer[uart2Obj.rxProcessedSize++] = (uint8_t )(U2RXREG);
         }
-
-        /* Clear UART2 RX Interrupt flag after reading data buffer */
-        IFS4CLR = _IFS4_U2RXIF_MASK;
 
         /* Check if the buffer is done */
         if(uart2Obj.rxProcessedSize >= uart2Obj.rxSize)
@@ -381,13 +400,13 @@ void UART2_TX_InterruptHandler (void)
 {
     if(uart2Obj.txBusyStatus == true)
     {
+        /* Clear UART2TX Interrupt flag */
+        IFS4CLR = _IFS4_U2TXIF_MASK;
+
         while((!(U2STA & _U2STA_UTXBF_MASK)) && (uart2Obj.txSize > uart2Obj.txProcessedSize) )
         {
             U2TXREG = uart2Obj.txBuffer[uart2Obj.txProcessedSize++];
         }
-
-        /* Clear UART2TX Interrupt flag after writing to buffer */
-        IFS4CLR = _IFS4_U2TXIF_MASK;
 
         /* Check if the buffer is done */
         if(uart2Obj.txProcessedSize >= uart2Obj.txSize)
