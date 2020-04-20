@@ -1,7 +1,7 @@
 /**
  * \brief Header file for ATSAMDA1J16B
  *
- * Copyright (c) 2019 Microchip Technology Inc. and its subsidiaries.
+ * Copyright (c) 2020 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip software and any derivatives
  * exclusively with Microchip products. It is your responsibility to comply with third party license
@@ -492,7 +492,7 @@ void I2S_Handler                   ( void );
 /* ************************************************************************** */
 /**  DEVICE SIGNATURES FOR SAMDA1J16B                                         */
 /* ************************************************************************** */
-#define DSU_DID                        _UL_(0X10011564)
+#define CHIP_DSU_DID                   _UL_(0X10011564)
 
 /* ************************************************************************** */
 /**  ELECTRICAL DEFINITIONS FOR SAMDA1J16B                                    */
