@@ -1,7 +1,7 @@
 /**
  * \brief Header file for ATSAMD11D14AM
  *
- * Copyright (c) 2019 Microchip Technology Inc. and its subsidiaries.
+ * Copyright (c) 2020 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip software and any derivatives
  * exclusively with Microchip products. It is your responsibility to comply with third party license
@@ -421,7 +421,7 @@ void PTC_Handler                   ( void );
 /* ************************************************************************** */
 /**  DEVICE SIGNATURES FOR SAMD11D14AM                                        */
 /* ************************************************************************** */
-#define DSU_DID                        _UL_(0X10030100)
+#define CHIP_DSU_DID                   _UL_(0X10030100)
 
 /* ************************************************************************** */
 /**  ELECTRICAL DEFINITIONS FOR SAMD11D14AM                                   */
