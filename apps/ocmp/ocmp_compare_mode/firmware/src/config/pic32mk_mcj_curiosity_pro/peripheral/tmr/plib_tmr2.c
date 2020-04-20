@@ -74,7 +74,7 @@ void TMR2_Initialize(void)
     TMR2 = 0x0;
 
     /*Set period */
-    PR2 = 18000U;
+    PR2 = 17999U;
 
     IEC0SET = _IEC0_T2IE_MASK;
 
