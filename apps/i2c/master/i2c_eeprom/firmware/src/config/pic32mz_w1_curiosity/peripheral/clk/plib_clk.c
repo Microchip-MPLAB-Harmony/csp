@@ -120,10 +120,10 @@ void CLK_Initialize( void )
     /* Power down the BTPLL */
     BTPLLCONbits.BTPLLPWDN = 1;
 
-    /* ETHPLLPOSTDIV2 = 0 */
+    /* ETHPLLPOSTDIV2 = a */
     /* SPLLPOSTDIV2   = 0 */
     /* BTPLLPOSTDIV2  = 0 */
-    CFGCON3 = 0;
+    CFGCON3 = 10;
 
     /* OSWEN    = SWITCH_COMPLETE    */
     /* SOSCEN   = OFF   */
