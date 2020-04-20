@@ -72,7 +72,7 @@ void TMR2_Initialize(void)
     TMR2 = 0x0;
 
     /*Set period */
-    PR2 = 36000U;
+    PR2 = 35999U;
 
 
 }
