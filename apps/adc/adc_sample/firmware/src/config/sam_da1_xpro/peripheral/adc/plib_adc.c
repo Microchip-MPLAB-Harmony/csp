@@ -141,8 +141,12 @@ void ADC_Disable( void )
 /* Configure channel input */
 void ADC_ChannelSelect( ADC_POSINPUT positiveInput, ADC_NEGINPUT negativeInput )
 {
-    /* Configure pin scan mode and positive and negative input pins */
-    ADC_REGS->ADC_INPUTCTRL = (uint32_t) positiveInput | (uint32_t) negativeInput;
+    /* Configure positive and negative input pins */
+    uint32_t channel;
+    channel = ADC_REGS->ADC_INPUTCTRL;
+    channel &= ~(ADC_INPUTCTRL_MUXPOS_Msk | ADC_INPUTCTRL_MUXNEG_Msk);
+    channel |= (uint16_t) positiveInput | (uint16_t) negativeInput;
+    ADC_REGS->ADC_INPUTCTRL = channel;
 
     while(ADC_REGS->ADC_STATUS & ADC_STATUS_SYNCBUSY_Msk)
     {
