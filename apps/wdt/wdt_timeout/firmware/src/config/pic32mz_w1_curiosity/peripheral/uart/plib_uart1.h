@@ -75,6 +75,10 @@ bool UART1_Read( void *buffer, const size_t size );
 
 UART_ERROR UART1_ErrorGet( void );
 
+bool UART1_AutoBaudQuery( void );
+
+void UART1_AutoBaudSet( bool enable );
+
 int UART1_ReadByte( void );
 
 bool UART1_ReceiverIsReady( void );
