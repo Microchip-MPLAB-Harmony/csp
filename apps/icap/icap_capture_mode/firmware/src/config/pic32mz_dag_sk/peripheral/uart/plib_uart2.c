@@ -262,6 +262,26 @@ UART_ERROR UART2_ErrorGet( void )
     return errors;
 }
 
+bool UART2_AutoBaudQuery( void )
+{
+    if(U2MODE & _U2MODE_ABAUD_MASK)
+        return true;
+    else
+        return false;
+}
+
+void UART2_AutoBaudSet( bool enable )
+{
+    if( enable == true )
+    {
+        U2MODESET = _U2MODE_ABAUD_MASK;
+    }
+
+    /* Turning off ABAUD if it was on can lead to unpredictable behavior, so that
+       direction of control is not allowed in this function.                      */
+}
+
+  
 void UART2_WriteByte(int data)
 {
     while ((U2STA & _U2STA_UTXBF_MASK));
