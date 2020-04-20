@@ -153,8 +153,12 @@ void ADC0_Disable( void )
 /* Configure channel input */
 void ADC0_ChannelSelect( ADC_POSINPUT positiveInput, ADC_NEGINPUT negativeInput )
 {
-    /* Configure pin scan mode and positive and negative input pins */
-    ADC0_REGS->ADC_INPUTCTRL = (uint16_t) positiveInput | (uint16_t) negativeInput;
+    /* Configure positive and negative input pins */
+    uint32_t channel;
+    channel = ADC0_REGS->ADC_INPUTCTRL;
+    channel &= ~(ADC_INPUTCTRL_MUXPOS_Msk | ADC_INPUTCTRL_MUXNEG_Msk);
+    channel |= (uint16_t) positiveInput | (uint16_t) negativeInput;
+    ADC0_REGS->ADC_INPUTCTRL = channel;
 
     while((ADC0_REGS->ADC_SYNCBUSY & ADC_SYNCBUSY_INPUTCTRL_Msk) == ADC_SYNCBUSY_INPUTCTRL_Msk)
     {
@@ -205,6 +209,21 @@ uint16_t ADC0_ConversionResultGet( void )
 uint16_t ADC0_LastConversionResultGet( void )
 {
     return (uint16_t)ADC0_REGS->ADC_RESS;
+}
+
+void ADC0_InterruptsClear(ADC_STATUS interruptMask)
+{
+    ADC0_REGS->ADC_INTFLAG = interruptMask;
+}
+
+void ADC0_InterruptsEnable(ADC_STATUS interruptMask)
+{
+    ADC0_REGS->ADC_INTENSET = interruptMask;
+}
+
+void ADC0_InterruptsDisable(ADC_STATUS interruptMask)
+{
+    ADC0_REGS->ADC_INTENCLR = interruptMask;
 }
 
 /* Register callback function */
