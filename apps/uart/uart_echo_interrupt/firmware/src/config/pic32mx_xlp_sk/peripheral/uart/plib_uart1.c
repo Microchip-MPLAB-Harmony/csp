@@ -293,6 +293,25 @@ UART_ERROR UART1_ErrorGet( void )
     return errors;
 }
 
+bool UART1_AutoBaudQuery( void )
+{
+    if(U1MODE & _U1MODE_ABAUD_MASK)
+        return true;
+    else
+        return false;
+}
+
+void UART1_AutoBaudSet( bool enable )
+{
+    if( enable == true )
+    {
+        U1MODESET = _U1MODE_ABAUD_MASK;
+    }
+
+    /* Turning off ABAUD if it was on can lead to unpredictable behavior, so that
+       direction of control is not allowed in this function.                      */
+}
+
 void UART1_ReadCallbackRegister( UART_CALLBACK callback, uintptr_t context )
 {
     uart1Obj.rxCallback = callback;
@@ -348,13 +367,13 @@ static void UART1_RX_InterruptHandler (void)
 {
     if(uart1Obj.rxBusyStatus == true)
     {
+        /* Clear UART1 RX Interrupt flag */
+        IFS1CLR = _IFS1_U1RXIF_MASK;
+
         while((_U1STA_URXDA_MASK == (U1STA & _U1STA_URXDA_MASK)) && (uart1Obj.rxSize > uart1Obj.rxProcessedSize) )
         {
             uart1Obj.rxBuffer[uart1Obj.rxProcessedSize++] = (uint8_t )(U1RXREG);
         }
-
-        /* Clear UART1 RX Interrupt flag after reading data buffer */
-        IFS1CLR = _IFS1_U1RXIF_MASK;
 
         /* Check if the buffer is done */
         if(uart1Obj.rxProcessedSize >= uart1Obj.rxSize)
@@ -381,13 +400,13 @@ static void UART1_TX_InterruptHandler (void)
 {
     if(uart1Obj.txBusyStatus == true)
     {
+        /* Clear UART1TX Interrupt flag */
+        IFS1CLR = _IFS1_U1TXIF_MASK;
+
         while((!(U1STA & _U1STA_UTXBF_MASK)) && (uart1Obj.txSize > uart1Obj.txProcessedSize) )
         {
             U1TXREG = uart1Obj.txBuffer[uart1Obj.txProcessedSize++];
         }
-
-        /* Clear UART1TX Interrupt flag after writing to buffer */
-        IFS1CLR = _IFS1_U1TXIF_MASK;
 
         /* Check if the buffer is done */
         if(uart1Obj.txProcessedSize >= uart1Obj.txSize)
