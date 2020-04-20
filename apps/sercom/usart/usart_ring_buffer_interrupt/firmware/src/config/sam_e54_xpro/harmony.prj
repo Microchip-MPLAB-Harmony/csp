@@ -102,8 +102,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_e54_xpro/peripheral/sercom/usart/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/sercom/usart/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">14F20BA8F9277EB1FF8CFE5B93F60508</GeneratedChecksum>
-          <UserChecksum dnOrder="6">14F20BA8F9277EB1FF8CFE5B93F60508</UserChecksum>
+          <GeneratedChecksum dnOrder="5">42BF0B6A47BABCD02852FFC9D595C9F2</GeneratedChecksum>
+          <UserChecksum dnOrder="6">42BF0B6A47BABCD02852FFC9D595C9F2</UserChecksum>
         </File>
         <File dnOrder="11">
           <Type dnOrder="0">SOURCE</Type>
@@ -689,7 +689,7 @@
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
       <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
-      <Setting dnOrder="5" key="PackageFilter" value="bootloader;bsp;core;cryptoauthlib;csp;micrium_ucos3;net;touch;usb;"/>
+      <Setting dnOrder="5" key="PackageFilter" value="bsp;core;csp;"/>
     </Settings>
   </Configurator>
 </Configuration>
