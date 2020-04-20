@@ -65,8 +65,7 @@
 // *****************************************************************************
 // *****************************************************************************
 
-
-
+  
 /*** Macros for EEPROM_WP pin ***/
 #define EEPROM_WP_Set()               (PORT_REGS->GROUP[0].PORT_OUTSET = 1 << 4)
 #define EEPROM_WP_Clear()             (PORT_REGS->GROUP[0].PORT_OUTCLR = 1 << 4)
