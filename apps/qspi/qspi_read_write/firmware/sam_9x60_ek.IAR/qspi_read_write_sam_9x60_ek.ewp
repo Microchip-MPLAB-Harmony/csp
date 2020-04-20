@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="UTF-8"?>
 <project>
     <fileVersion>3</fileVersion>
     <configuration>
@@ -66,7 +66,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>8.40.1.21529</state>
+                    <state>8.50.1.24770</state>
                 </option>
                 <option>
                     <name>GeneralEnableMisra</name>
@@ -116,7 +116,7 @@
                 </option>
                 <option>
                     <name>GBECoreSlave</name>
-                    <version>27</version>
+                    <version>28</version>
                     <state>12</state>
                 </option>
                 <option>
@@ -133,7 +133,7 @@
                 </option>
                 <option>
                     <name>CoreVariant</name>
-                    <version>27</version>
+                    <version>28</version>
                     <state>12</state>
                 </option>
                 <option>
@@ -156,7 +156,7 @@
                 </option>
                 <option>
                     <name>GFPUCoreSlave2</name>
-                    <version>27</version>
+                    <version>28</version>
                     <state>12</state>
                 </option>
                 <option>
@@ -190,11 +190,11 @@
                 </option>
                 <option>
                     <name>GenLocaleTags</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>GenLocaleDisplayOnly</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>DSPExtension</name>
@@ -215,11 +215,12 @@
             <name>ICCARM</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>35</version>
+                <version>36</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
                     <name>CCDefines</name>
+                    <state></state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>
@@ -259,19 +260,19 @@
                 </option>
                 <option>
                     <name>CCDiagSuppress</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>CCDiagRemark</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>CCDiagWarning</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>CCDiagError</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>CCObjPrefix</name>
@@ -300,7 +301,7 @@
                 </option>
                 <option>
                     <name>IExtraOptions</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>CCLangConformance</name>
@@ -336,7 +337,7 @@
                 </option>
                 <option>
                     <name>PreInclude</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>CompilerMisraOverride</name>
@@ -470,6 +471,10 @@
                     <name>OICompilerExtraOption</name>
                     <state>1</state>
                 </option>
+                <option>
+                    <name>CCStackProtection</name>
+                    <state>0</state>
+                </option>
             </data>
         </settings>
         <settings>
@@ -506,15 +511,15 @@
                 </option>
                 <option>
                     <name>AWarnOne</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>AWarnRange1</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>AWarnRange2</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>ADebug</name>
@@ -526,6 +531,7 @@
                 </option>
                 <option>
                     <name>ADefines</name>
+                    <state></state>
                 </option>
                 <option>
                     <name>AList</name>
@@ -601,7 +607,7 @@
                 </option>
                 <option>
                     <name>AOutputFile</name>
-                    <state />
+                    <state>$FILE_BNAME$.o</state>
                 </option>
                 <option>
                     <name>ALimitErrorsCheck</name>
@@ -617,6 +623,7 @@
                 </option>
                 <option>
                     <name>AUserIncludes</name>
+                    <state></state>
                 </option>
                 <option>
                     <name>AExtraOptionsCheckV2</name>
@@ -624,7 +631,7 @@
                 </option>
                 <option>
                     <name>AExtraOptionsV2</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>AsmNoLiteralPool</name>
@@ -666,8 +673,8 @@
             <name>CUSTOM</name>
             <archiveVersion>3</archiveVersion>
             <data>
-                <extensions />
-                <cmdline />
+                <extensions></extensions>
+                <cmdline></cmdline>
                 <hasPrio>0</hasPrio>
             </data>
         </settings>
@@ -680,8 +687,8 @@
             <name>BUILDACTION</name>
             <archiveVersion>1</archiveVersion>
             <data>
-                <prebuild />
-                <postbuild />
+                <prebuild></prebuild>
+                <postbuild></postbuild>
             </data>
         </settings>
         <settings>
@@ -713,31 +720,31 @@
                 </option>
                 <option>
                     <name>IlinkKeepSymbols</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>IlinkRawBinaryFile</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>IlinkRawBinarySymbol</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>IlinkRawBinarySegment</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>IlinkRawBinaryAlign</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>IlinkDefines</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>IlinkConfigDefines</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>IlinkMapFile</name>
@@ -773,7 +780,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>IlinkEnableRemarks</name>
@@ -781,19 +788,19 @@
                 </option>
                 <option>
                     <name>IlinkSuppressDiags</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>IlinkTreatAsRem</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>IlinkTreatAsWarn</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>IlinkTreatAsErr</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>IlinkWarningsAreErrors</name>
@@ -805,7 +812,7 @@
                 </option>
                 <option>
                     <name>IlinkExtraOptions</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>IlinkLowLevelInterfaceSlave</name>
@@ -817,7 +824,7 @@
                 </option>
                 <option>
                     <name>IlinkAdditionalLibs</name>
-                    
+                    <state></state>
                 </option>
                 <option>
                     <name>IlinkOverrideProgramEntryLabel</name>
@@ -952,11 +959,11 @@
                 </option>
                 <option>
                     <name>IlinkStackControlFile</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>IlinkStackCallGraphFile</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>CrcAlgorithm</name>
@@ -978,7 +985,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile_AltDefault</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>IlinkEncInput</name>
@@ -1002,7 +1009,7 @@
                 </option>
                 <option>
                     <name>IlinkTrustzoneImportLibraryOut</name>
-                    <state>###Unitialized###</state>
+                    <state>qspi_read_write_sam_9x60_ek_import_lib.o</state>
                 </option>
                 <option>
                     <name>OILinkExtraOption</name>
@@ -1010,19 +1017,19 @@
                 </option>
                 <option>
                     <name>IlinkRawBinaryFile2</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>IlinkRawBinarySymbol2</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>IlinkRawBinarySegment2</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>IlinkRawBinaryAlign2</name>
-                    <state />
+                    <state></state>
                 </option>
             </data>
         </settings>
@@ -1035,7 +1042,7 @@
                 <debug>1</debug>
                 <option>
                     <name>IarchiveInputs</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>IarchiveOverride</name>
@@ -1173,7 +1180,7 @@
                 </option>
                 <option>
                     <name>GBECoreSlave</name>
-                    <version>27</version>
+                    <version>28</version>
                     <state>12</state>
                 </option>
                 <option>
@@ -1190,7 +1197,7 @@
                 </option>
                 <option>
                     <name>CoreVariant</name>
-                    <version>27</version>
+                    <version>28</version>
                     <state>12</state>
                 </option>
                 <option>
@@ -1213,7 +1220,7 @@
                 </option>
                 <option>
                     <name>GFPUCoreSlave2</name>
-                    <version>27</version>
+                    <version>28</version>
                     <state>12</state>
                 </option>
                 <option>
@@ -1247,11 +1254,11 @@
                 </option>
                 <option>
                     <name>GenLocaleTags</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>GenLocaleDisplayOnly</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>DSPExtension</name>
@@ -1272,7 +1279,7 @@
             <name>ICCARM</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>35</version>
+                <version>36</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>0</debug>
                 <option>
@@ -1317,19 +1324,19 @@
                 </option>
                 <option>
                     <name>CCDiagSuppress</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>CCDiagRemark</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>CCDiagWarning</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>CCDiagError</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>CCObjPrefix</name>
@@ -1358,7 +1365,7 @@
                 </option>
                 <option>
                     <name>IExtraOptions</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>CCLangConformance</name>
@@ -1394,7 +1401,7 @@
                 </option>
                 <option>
                     <name>PreInclude</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>CompilerMisraOverride</name>
@@ -1528,6 +1535,10 @@
                     <name>OICompilerExtraOption</name>
                     <state>1</state>
                 </option>
+                <option>
+                    <name>CCStackProtection</name>
+                    <state>0</state>
+                </option>
             </data>
         </settings>
         <settings>
@@ -1564,15 +1575,15 @@
                 </option>
                 <option>
                     <name>AWarnOne</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>AWarnRange1</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>AWarnRange2</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>ADebug</name>
@@ -1584,6 +1595,7 @@
                 </option>
                 <option>
                     <name>ADefines</name>
+                    <state></state>
                 </option>
                 <option>
                     <name>AList</name>
@@ -1659,7 +1671,7 @@
                 </option>
                 <option>
                     <name>AOutputFile</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>ALimitErrorsCheck</name>
@@ -1675,6 +1687,7 @@
                 </option>
                 <option>
                     <name>AUserIncludes</name>
+                    <state></state>
                 </option>
                 <option>
                     <name>AExtraOptionsCheckV2</name>
@@ -1682,7 +1695,7 @@
                 </option>
                 <option>
                     <name>AExtraOptionsV2</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>AsmNoLiteralPool</name>
@@ -1724,8 +1737,8 @@
             <name>CUSTOM</name>
             <archiveVersion>3</archiveVersion>
             <data>
-                <extensions />
-                <cmdline />
+                <extensions></extensions>
+                <cmdline></cmdline>
                 <hasPrio>0</hasPrio>
             </data>
         </settings>
@@ -1738,8 +1751,8 @@
             <name>BUILDACTION</name>
             <archiveVersion>1</archiveVersion>
             <data>
-                <prebuild />
-                <postbuild />
+                <prebuild></prebuild>
+                <postbuild></postbuild>
             </data>
         </settings>
         <settings>
@@ -1771,31 +1784,31 @@
                 </option>
                 <option>
                     <name>IlinkKeepSymbols</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>IlinkRawBinaryFile</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>IlinkRawBinarySymbol</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>IlinkRawBinarySegment</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>IlinkRawBinaryAlign</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>IlinkDefines</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>IlinkConfigDefines</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>IlinkMapFile</name>
@@ -1831,7 +1844,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>IlinkEnableRemarks</name>
@@ -1839,19 +1852,19 @@
                 </option>
                 <option>
                     <name>IlinkSuppressDiags</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>IlinkTreatAsRem</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>IlinkTreatAsWarn</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>IlinkTreatAsErr</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>IlinkWarningsAreErrors</name>
@@ -1863,7 +1876,7 @@
                 </option>
                 <option>
                     <name>IlinkExtraOptions</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>IlinkLowLevelInterfaceSlave</name>
@@ -1875,7 +1888,7 @@
                 </option>
                 <option>
                     <name>IlinkAdditionalLibs</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>IlinkOverrideProgramEntryLabel</name>
@@ -2010,11 +2023,11 @@
                 </option>
                 <option>
                     <name>IlinkStackControlFile</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>IlinkStackCallGraphFile</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>CrcAlgorithm</name>
@@ -2036,7 +2049,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile_AltDefault</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>IlinkEncInput</name>
@@ -2068,19 +2081,19 @@
                 </option>
                 <option>
                     <name>IlinkRawBinaryFile2</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>IlinkRawBinarySymbol2</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>IlinkRawBinarySegment2</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>IlinkRawBinaryAlign2</name>
-                    <state />
+                    <state></state>
                 </option>
             </data>
         </settings>
@@ -2093,7 +2106,7 @@
                 <debug>0</debug>
                 <option>
                     <name>IarchiveInputs</name>
-                    <state />
+                    <state></state>
                 </option>
                 <option>
                     <name>IarchiveOverride</name>
@@ -2127,21 +2140,9 @@
                     <group>
                         <name>peripheral</name>
                         <group>
-                            <name>qspi</name>
+                            <name>aic</name>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\qspi\plib_qspi_common.h</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\qspi\plib_qspi.h</name>
-                            </file>
-                        </group>
-                        <group>
-                            <name>mmu</name>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\mmu\plib_mmu.h</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\mmu\cp15.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\aic\plib_aic.h</name>
                             </file>
                         </group>
                         <group>
@@ -2151,15 +2152,18 @@
                             </file>
                         </group>
                         <group>
-                            <name>pio</name>
+                            <name>mmu</name>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\pio\plib_pio.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\mmu\cp15.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\mmu\plib_mmu.h</name>
                             </file>
                         </group>
                         <group>
-                            <name>aic</name>
+                            <name>pio</name>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\aic\plib_aic.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\pio\plib_pio.h</name>
                             </file>
                         </group>
                         <group>
@@ -2168,15 +2172,24 @@
                                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\pit64b\plib_pit64b.h</name>
                             </file>
                         </group>
+                        <group>
+                            <name>qspi</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\qspi\plib_qspi.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\qspi\plib_qspi_common.h</name>
+                            </file>
+                        </group>
                     </group>
+                    <file>
+                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\definitions.h</name>
+                    </file>
                     <file>
                         <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\device_cache.h</name>
                     </file>
                     <file>
                         <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\toolchain_specifics.h</name>
-                    </file>
-                    <file>
-                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\definitions.h</name>
                     </file>
                 </group>
             </group>
@@ -2184,9 +2197,6 @@
                 <name>packs</name>
                 <group>
                     <name>SAM9X60_DFP</name>
-                    <file>
-                        <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\device.h</name>
-                    </file>
                     <group>
                         <name>component</name>
                         <file>
@@ -2325,17 +2335,26 @@
                             <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\xdmac.h</name>
                         </file>
                     </group>
-                    <file>
-                        <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\sam9x60.h</name>
-                    </file>
                     <group>
                         <name>pio</name>
                         <file>
                             <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\pio\sam9x60.h</name>
                         </file>
                     </group>
+                    <file>
+                        <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\device.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\sam9x60.h</name>
+                    </file>
                 </group>
             </group>
+        </group>
+        <group>
+            <name>Linker File</name>
+            <file>
+                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\ddram.icf</name>
+            </file>
         </group>
         <group>
             <name>Source Files</name>
@@ -2346,15 +2365,9 @@
                     <group>
                         <name>peripheral</name>
                         <group>
-                            <name>qspi</name>
+                            <name>aic</name>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\qspi\plib_qspi.c</name>
-                            </file>
-                        </group>
-                        <group>
-                            <name>mmu</name>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\mmu\plib_mmu.c</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\aic\plib_aic.c</name>
                             </file>
                         </group>
                         <group>
@@ -2364,15 +2377,15 @@
                             </file>
                         </group>
                         <group>
-                            <name>pio</name>
+                            <name>mmu</name>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\pio\plib_pio.c</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\mmu\plib_mmu.c</name>
                             </file>
                         </group>
                         <group>
-                            <name>aic</name>
+                            <name>pio</name>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\aic\plib_aic.c</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\pio\plib_pio.c</name>
                             </file>
                         </group>
                         <group>
@@ -2381,13 +2394,13 @@
                                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\pit64b\plib_pit64b.c</name>
                             </file>
                         </group>
+                        <group>
+                            <name>qspi</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\qspi\plib_qspi.c</name>
+                            </file>
+                        </group>
                     </group>
-                    <file>
-                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\initialization.c</name>
-                    </file>
-                    <file>
-                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\interrupts.c</name>
-                    </file>
                     <group>
                         <name>stdio</name>
                         <file>
@@ -2398,19 +2411,25 @@
                         <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\cstartup.s</name>
                     </file>
                     <file>
+                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\initialization.c</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\interrupts.c</name>
+                    </file>
+                    <file>
                         <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\vectortrap.s</name>
                     </file>
                 </group>
             </group>
             <file>
+                <name>$PROJ_DIR$\..\src\app_sam_9x60_ek.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\app_sam_9x60_ek.h</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\src\main.c</name>
             </file>
         </group>
-        <group>
-            <name>Linker File</name>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\ddram.icf</name>
-            </file>
-        </group>
     </group>
-    </project>
+</project>
