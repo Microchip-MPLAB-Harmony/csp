@@ -4,7 +4,11 @@
 
 
 project: dsu_crc32_generate
+<<<<<<< HEAD
 creation_date: 2020-04-21T01:25:01.133+05:30[Asia/Calcutta]	# ISO 8601 format: https://www.w3.org/TR/NOTE-datetime
+=======
+creation_date: 2020-04-21T02:10:44.457+05:30[Asia/Calcutta]	# ISO 8601 format: https://www.w3.org/TR/NOTE-datetime
+>>>>>>> [DSU] Regenerated demo for dsu_dsu_crc32_generate_sam_ha1_xpro
 operating_system: Windows 10
 mhc_mode: Headless				# [IDE|Standalone|Headless]
 mplabx_version: -		# if MPLAB X plugin only
