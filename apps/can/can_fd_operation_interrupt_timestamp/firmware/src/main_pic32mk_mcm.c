@@ -214,8 +214,12 @@ int main ( void )
                         printf("CAN1_MessageReceive request has failed\r\n");
                     }
                     break;
+                case 'm':
+                    print_menu();
+                    break;
                 default:
                     printf(" Invalid Input \r\n");
+                    print_menu();
                     break;
             }
         }
