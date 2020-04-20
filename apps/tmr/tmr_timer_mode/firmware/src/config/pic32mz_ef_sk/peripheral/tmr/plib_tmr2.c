@@ -73,7 +73,7 @@ void TMR2_Initialize(void)
     TMR2 = 0x0;
 
     /*Set period */
-    PR2 = 99999999U;
+    PR2 = 99999998U;
 
     /* Enable TMR Interrupt of odd numbered timer in 32-bit mode */
     IEC0SET = _IEC0_T3IE_MASK;
