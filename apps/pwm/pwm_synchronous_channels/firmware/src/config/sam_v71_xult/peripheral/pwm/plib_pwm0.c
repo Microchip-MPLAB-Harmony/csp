@@ -81,7 +81,7 @@ void PWM0_Initialize (void)
     PWM0_REGS->PWM_CH_NUM[0].PWM_DT = (100U << PWM_DT_DTL_Pos) | (100U);
          
     /* Enable counter event */
-    PWM0_REGS->PWM_IER1 = (0x1U << 0U);
+    PWM0_REGS->PWM_IER1 = 0x1;
     PWM0_CallbackObj.callback_fn = NULL;
      
 
@@ -93,6 +93,9 @@ void PWM0_Initialize (void)
     /* Dead time */
     PWM0_REGS->PWM_CH_NUM[1].PWM_DT = (100U << PWM_DT_DTL_Pos) | (100U);
          
+    /* Enable counter event */
+    PWM0_REGS->PWM_IER1 = 0x1;
+    PWM0_CallbackObj.callback_fn = NULL;
      
 
     /************** Channel 2 *************************/
@@ -103,6 +106,9 @@ void PWM0_Initialize (void)
     /* Dead time */
     PWM0_REGS->PWM_CH_NUM[2].PWM_DT = (100U << PWM_DT_DTL_Pos) | (100U);
          
+    /* Enable counter event */
+    PWM0_REGS->PWM_IER1 = 0x1;
+    PWM0_CallbackObj.callback_fn = NULL;
      
  
 }
@@ -166,6 +172,19 @@ void PWM0_SyncUpdateEnable (void)
 void PWM0_FaultStatusClear(PWM_FAULT_ID fault_id)
 {
     PWM0_REGS->PWM_FCR = 0x1U << fault_id;
+}
+
+/* Override PWM outputs */
+void PWM0_ChannelOverrideEnable(PWM_CHANNEL_NUM channel)
+{
+    PWM0_REGS->PWM_OS &= ~((1 << channel) | (1 << (channel + 16)));
+    PWM0_REGS->PWM_OS |= ((0 << channel) | (0 << (channel + 16)));
+}
+
+/* Disable override of PWM outputs */
+void PWM0_ChannelOverrideDisable(PWM_CHANNEL_NUM channel)
+{
+    PWM0_REGS->PWM_OS |= ((1 << channel) | (1 << (channel + 16)));
 }
 
  /* Register callback function */
