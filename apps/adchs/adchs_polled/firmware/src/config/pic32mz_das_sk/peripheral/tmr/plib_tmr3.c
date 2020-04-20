@@ -72,7 +72,7 @@ void TMR3_Initialize(void)
     TMR3 = 0x0;
 
     /*Set period */
-    PR3 = 58593U;
+    PR3 = 58592U;
 
 
 }
