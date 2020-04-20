@@ -132,7 +132,7 @@ void RTCC_InterruptDisable(RTCC_INT_MASK interrupt)
 
 bool RTCC_TimeSet( struct tm *Time )
 {
-    uint32_t timeField, dateField;
+    uint32_t timeField = 0, dateField = 0;
 
     timeField = (decimaltobcd(Time->tm_hour) << _RTCTIME_HR01_POSITION) & (_RTCTIME_HR10_MASK | _RTCTIME_HR01_MASK);
     timeField |= (decimaltobcd(Time->tm_min) << _RTCTIME_MIN01_POSITION) & (_RTCTIME_MIN10_MASK | _RTCTIME_MIN01_MASK);
