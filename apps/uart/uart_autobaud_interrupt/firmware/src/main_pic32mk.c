@@ -63,27 +63,27 @@ int main ( void )
     /* Initialize all modules */
     SYS_Initialize ( NULL );
     
-    UART4_ReadCallbackRegister( UART_ReadCallback, NULL );    
-    UART4_WriteCallbackRegister( UART_WriteCallback, NULL );    
+    UART6_ReadCallbackRegister( UART_ReadCallback, NULL );    
+    UART6_WriteCallbackRegister( UART_WriteCallback, NULL );    
        
     /* Start up auto-baud sensing feature */
-    UART4_AutoBaudSet(true);
-    while(UART4_AutoBaudQuery()==true);     
+    UART6_AutoBaudSet(true);
+    while(UART6_AutoBaudQuery()==true);     
     
-    UART4_Write((void*)baudRateDetectedMsg, sizeof(baudRateDetectedMsg));
+    UART6_Write((void*)baudRateDetectedMsg, sizeof(baudRateDetectedMsg));
     
     while ( true )
     {   
         if(uartWriteDone == true)
         {   
             uartWriteDone = false;    
-            UART4_Read(&received_char, 1);
+            UART6_Read(&received_char, 1);
         }                       
         if(uartReadDone == true)
         {
             uartReadDone = false;
             /* Echo the received character back */
-            UART4_Write(&received_char, 1);
+            UART6_Write(&received_char, 1);
         }
     }
 
