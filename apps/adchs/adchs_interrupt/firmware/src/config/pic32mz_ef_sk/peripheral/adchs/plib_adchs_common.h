@@ -139,6 +139,8 @@ typedef enum
 // *****************************************************************************
 
 typedef void (*ADCHS_CALLBACK)(ADCHS_CHANNEL_NUM channel, uintptr_t context);
+
+typedef void (*ADCHS_EOS_CALLBACK)(uintptr_t context);
 // *****************************************************************************
 
 typedef struct
@@ -146,6 +148,12 @@ typedef struct
     ADCHS_CALLBACK callback_fn;
     uintptr_t context;
 }ADCHS_CALLBACK_OBJECT;
+
+typedef struct
+{
+    ADCHS_EOS_CALLBACK callback_fn;
+    uintptr_t context;
+}ADCHS_EOS_CALLBACK_OBJECT;
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
