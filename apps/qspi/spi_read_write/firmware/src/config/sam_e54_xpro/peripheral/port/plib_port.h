@@ -65,8 +65,7 @@
 // *****************************************************************************
 // *****************************************************************************
 
-
-
+  
 /*** Macros for WRITE_PROTECT pin ***/
 #define WRITE_PROTECT_Set()               (PORT_REGS->GROUP[0].PORT_OUTSET = 1 << 10)
 #define WRITE_PROTECT_Clear()             (PORT_REGS->GROUP[0].PORT_OUTCLR = 1 << 10)
