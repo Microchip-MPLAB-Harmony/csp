@@ -64,6 +64,7 @@ uint8_t portNumCb[PIO_MAX_NUM_OF_CHANNELS + 1] = {0, 1, 1, 1, 1, 1};
 */
 void PIO_Initialize ( void )
 {
+    MATRIX_REGS->CCFG_SYSIO = 0x0;
 
     /************************ PIO A Initialization ************************/
     ((pio_registers_t*)PIO_PORT_A)->PIO_PER = 0xFFFFFFFF;
