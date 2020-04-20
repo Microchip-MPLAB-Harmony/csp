@@ -338,7 +338,7 @@ bool PIO_PinInterruptCallbackRegister(
 */
 void PIOB_InterruptHandler(void)
 {
-    uint32_t status;
+    uint32_t status = 0;
     uint8_t j;
 
     status  = PIOB_REGS->PIO_ISR;
