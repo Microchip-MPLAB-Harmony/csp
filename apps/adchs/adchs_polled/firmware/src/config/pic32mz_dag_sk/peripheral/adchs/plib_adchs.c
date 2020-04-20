@@ -51,6 +51,7 @@
 // *****************************************************************************
 
 
+
 void ADCHS_Initialize()
 {
     ADCCON1bits.ON = 0;
@@ -197,6 +198,7 @@ uint16_t ADCHS_ChannelResultGet(ADCHS_CHANNEL_NUM channel)
     return (*((&ADCDATA0) + channel));
 
 }
+
 
 
 
