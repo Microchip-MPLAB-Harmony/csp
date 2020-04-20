@@ -78,7 +78,7 @@ int main ( void )
     SYS_Initialize ( NULL );
     
     printf("\n\r---------------------------------------------------------");
-    printf("\n\r                    ADC Polled Mode Demo                 ");
+    printf("\n\r                    ADC Interrupt Mode Demo                 ");
     printf("\n\r---------------------------------------------------------\n\r"); 
     
     ADCHS_CallbackRegister(ADCHS_CH15, ADC_ResultHandler, (uintptr_t)NULL);
