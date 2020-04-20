@@ -308,7 +308,22 @@ bool FLEXCOM6_TWI_IsBusy(void)
 
 bool FLEXCOM6_TWI_Read(uint16_t address, uint8_t *pdata, size_t length)
 {
-    return (FLEXCOM6_TWI_WriteRead(address, NULL, 0, pdata, length));
+    // Check for ongoing transfer
+    if( flexcom6TwiObj.state != FLEXCOM_TWI_STATE_IDLE )
+    {
+        return false;
+    }
+
+    flexcom6TwiObj.address=address;
+    flexcom6TwiObj.readBuffer=pdata;
+    flexcom6TwiObj.readSize=length;
+    flexcom6TwiObj.writeBuffer=NULL;
+    flexcom6TwiObj.writeSize=0;
+    flexcom6TwiObj.error = FLEXCOM_TWI_ERROR_NONE;
+
+    FLEXCOM6_TWI_InitiateTransfer(address, true);
+
+    return true;
 }
 
 // *****************************************************************************
@@ -334,7 +349,22 @@ bool FLEXCOM6_TWI_Read(uint16_t address, uint8_t *pdata, size_t length)
 
 bool FLEXCOM6_TWI_Write(uint16_t address, uint8_t *pdata, size_t length)
 {
-    return (FLEXCOM6_TWI_WriteRead(address, pdata, length, NULL, 0));
+    // Check for ongoing transfer
+    if( flexcom6TwiObj.state != FLEXCOM_TWI_STATE_IDLE )
+    {
+        return false;
+    }
+
+    flexcom6TwiObj.address=address;
+    flexcom6TwiObj.readBuffer=NULL;
+    flexcom6TwiObj.readSize=0;
+    flexcom6TwiObj.writeBuffer=pdata;
+    flexcom6TwiObj.writeSize=length;
+    flexcom6TwiObj.error = FLEXCOM_TWI_ERROR_NONE;
+
+    FLEXCOM6_TWI_InitiateTransfer(address, false);
+
+    return true;
 }
 
 // *****************************************************************************
@@ -362,24 +392,23 @@ bool FLEXCOM6_TWI_Write(uint16_t address, uint8_t *pdata, size_t length)
 
 bool FLEXCOM6_TWI_WriteRead(uint16_t address, uint8_t *wdata, size_t wlength, uint8_t *rdata, size_t rlength)
 {
-    bool status = true;
 
     // Check for ongoing transfer
     if( flexcom6TwiObj.state != FLEXCOM_TWI_STATE_IDLE )
     {
-        status = false;
+        return false;
     }
 
-    flexcom6TwiObj.address = address;
-    flexcom6TwiObj.readBuffer = rdata;
-    flexcom6TwiObj.readSize = rlength;
-    flexcom6TwiObj.writeBuffer = wdata;
-    flexcom6TwiObj.writeSize = wlength;
+    flexcom6TwiObj.address=address;
+    flexcom6TwiObj.readBuffer=rdata;
+    flexcom6TwiObj.readSize=rlength;
+    flexcom6TwiObj.writeBuffer=wdata;
+    flexcom6TwiObj.writeSize=wlength;
     flexcom6TwiObj.error = FLEXCOM_TWI_ERROR_NONE;
 
     FLEXCOM6_TWI_InitiateTransfer(address, false);
 
-    return status;
+    return true;
 }
 
 // *****************************************************************************
