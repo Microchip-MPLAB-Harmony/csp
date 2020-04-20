@@ -92,6 +92,9 @@ void SERCOM3_I2C_Initialize(void)
     /* Wait for synchronization */
     while(SERCOM3_REGS->I2CS.SERCOM_SYNCBUSY);
 
+    /* Set SDA Setup time */
+    SERCOM3_REGS->I2CS.SERCOM_CTRLC = SERCOM_I2CS_CTRLC_SDASETUP(1);
+
     /* Set the slave address */
     SERCOM3_REGS->I2CS.SERCOM_ADDR = SERCOM_I2CS_ADDR_ADDR(0x54) ;
 
