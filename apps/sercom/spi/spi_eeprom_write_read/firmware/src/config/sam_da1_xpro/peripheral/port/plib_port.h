@@ -65,8 +65,7 @@
 // *****************************************************************************
 // *****************************************************************************
 
-
-
+  
 /*** Macros for EEPROM_HOLD pin ***/
 #define EEPROM_HOLD_Set()               (PORT_REGS->GROUP[1].PORT_OUTSET = 1 << 12)
 #define EEPROM_HOLD_Clear()             (PORT_REGS->GROUP[1].PORT_OUTCLR = 1 << 12)
