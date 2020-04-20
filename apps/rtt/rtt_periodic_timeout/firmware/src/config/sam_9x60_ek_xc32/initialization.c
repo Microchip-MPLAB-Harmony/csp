@@ -84,6 +84,63 @@
 
 
 
+// *****************************************************************************
+// *****************************************************************************
+// Section: Local initialization functions
+// *****************************************************************************
+// *****************************************************************************
+/*******************************************************************************
+  Function:
+    void SYSC_Disable ( void )
+
+  Summary:
+    Disables ununsed SYSC peripherals
+
+  Remarks:
+ */
+static void SYSC_Disable( void )
+{
+    //save context and disable write protection
+    uint32_t sysc_wpmr = SYSCWP_REGS->SYSCWP_SYSC_WPMR &
+      (SYSCWP_SYSC_WPMR_WPEN_Msk | SYSCWP_SYSC_WPMR_WPITEN_Msk);
+    SYSCWP_REGS->SYSCWP_SYSC_WPMR = SYSCWP_SYSC_WPMR_WPKEY_PASSWD &
+                                    ~(SYSCWP_SYSC_WPMR_WPITEN_Msk |
+                                    SYSCWP_SYSC_WPMR_WPITEN_Msk);
+
+
+    /* ----------------------------   RTC  -------------------------------*/
+    //Disable interrupts
+    RTC_REGS->RTC_IDR = RTC_IDR_Msk;
+
+    //Clear interrupt status
+    RTC_REGS->RTC_SCCR = RTC_SCCR_Msk;
+
+    /* ----------------------------   RSTC  ------------------------------*/
+    // Disable interrupt
+    uint32_t rstc_mr = RSTC_REGS->RSTC_MR & (RSTC_MR_ENGCLR_Msk |
+                                             RSTC_MR_ERSTL_Msk |
+                                             RSTC_MR_URSTIEN_Msk |
+                                             RSTC_MR_URSTASYNC_Msk |
+                                             RSTC_MR_SCKSW_Msk |
+                                             RSTC_MR_URSTEN_Msk);
+    rstc_mr = rstc_mr & (~RSTC_MR_URSTIEN_Msk);
+    RSTC_REGS->RSTC_MR = RSTC_MR_KEY_PASSWD | rstc_mr;
+
+    /* ----------------------------   PIT  -------------------------------*/
+    //Disable Timer and interrupt
+    uint32_t pit_mr = PIT_REGS->PIT_MR & PIT_MR_PIV_Msk;
+    PIT_REGS->PIT_MR = pit_mr & ~(PIT_MR_PITEN_Msk | PIT_MR_PITIEN_Msk);
+
+    //Clear status
+    PIT_REGS->PIT_SR;
+
+   //Context restore SYSC write protect registers
+   SYSCWP_REGS->SYSCWP_SYSC_WPMR = (SYSCWP_SYSC_WPMR_WPKEY_PASSWD | sysc_wpmr);
+}
+
+
+
+
 /*******************************************************************************
   Function:
     void SYS_Initialize ( void *data )
@@ -96,6 +153,8 @@
 
 void SYS_Initialize ( void* data )
 {
+	SYSC_Disable( );
+
   
     CLK_Initialize();
 
