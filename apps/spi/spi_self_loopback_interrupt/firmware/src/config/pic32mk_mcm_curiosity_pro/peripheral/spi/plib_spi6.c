@@ -57,6 +57,7 @@ SPI_OBJECT spi6Obj;
 #define SPI6_CON_ENHBUF                     (1 << _SPI6CON_ENHBUF_POSITION)
 #define SPI6_CON_MCLKSEL                    (0 << _SPI6CON_MCLKSEL_POSITION)
 #define SPI6_CON_MSSEN                      (0 << _SPI6CON_MSSEN_POSITION)
+#define SPI6_CON_SMP                        (0 << _SPI6CON_SMP_POSITION)
 
 void SPI6_Initialize ( void )
 {
@@ -94,7 +95,7 @@ void SPI6_Initialize ( void )
     MSSEN = 0
     MCLKSEL = 0
     */
-    SPI6CONSET = (SPI6_CON_MSSEN | SPI6_CON_MCLKSEL | SPI6_CON_ENHBUF | SPI6_CON_MODE_32_MODE_16 | SPI6_CON_CKE | SPI6_CON_CKP | SPI6_CON_MSTEN);
+    SPI6CONSET = (SPI6_CON_MSSEN | SPI6_CON_MCLKSEL | SPI6_CON_ENHBUF | SPI6_CON_MODE_32_MODE_16 | SPI6_CON_CKE | SPI6_CON_CKP | SPI6_CON_MSTEN | SPI6_CON_SMP);
 
     /* Enable transmit interrupt when transmit buffer is completely empty (STXISEL = '01') */
     /* Enable receive interrupt when the receive buffer is not empty (SRXISEL = '01') */
