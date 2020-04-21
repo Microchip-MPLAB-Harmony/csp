@@ -52,4 +52,3 @@ void EVSYS_Initialize( void )
 									| EVSYS_CHANNEL_RUNSTDBY_Msk ;
 }
 
-
