@@ -1,7 +1,7 @@
 /**
  * \brief Component description for EVSYS
  *
- * Copyright (c) 2019 Microchip Technology Inc. and its subsidiaries.
+ * Copyright (c) 2020 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip software and any derivatives
  * exclusively with Microchip products. It is your responsibility to comply with third party license
@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-11-24T15:57:35Z */
+/* file generated from device description version 2020-02-04T13:16:04Z */
 #ifndef _SAML10_EVSYS_COMPONENT_H_
 #define _SAML10_EVSYS_COMPONENT_H_
 
@@ -540,7 +540,7 @@ typedef struct
   __I   uint8_t                        EVSYS_CHSTATUS;     /**< Offset: 0x07 (R/   8) Channel n Status */
 } evsys_channel_registers_t;
 
-#define CHANNEL_NUMBER _U_(8)
+#define EVSYS_CHANNEL_NUMBER _U_(8)
 
 /** \brief EVSYS register API structure */
 typedef struct
@@ -555,7 +555,7 @@ typedef struct
   __I   uint32_t                       EVSYS_INTSTATUS;    /**< Offset: 0x14 (R/   32) Interrupt Status */
   __I   uint32_t                       EVSYS_BUSYCH;       /**< Offset: 0x18 (R/   32) Busy Channels */
   __I   uint32_t                       EVSYS_READYUSR;     /**< Offset: 0x1C (R/   32) Ready Users */
-        evsys_channel_registers_t      CHANNEL[CHANNEL_NUMBER]; /**< Offset: 0x20  */
+        evsys_channel_registers_t      CHANNEL[EVSYS_CHANNEL_NUMBER]; /**< Offset: 0x20  */
   __I   uint8_t                        Reserved4[0xC0];
   __IO  uint8_t                        EVSYS_USER[23];     /**< Offset: 0x120 (R/W  8) User Multiplexer n */
   __I   uint8_t                        Reserved5[0x9D];
