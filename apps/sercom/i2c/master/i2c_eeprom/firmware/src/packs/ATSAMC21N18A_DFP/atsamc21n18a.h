@@ -1,7 +1,7 @@
 /**
  * \brief Header file for ATSAMC21N18A
  *
- * Copyright (c) 2019 Microchip Technology Inc. and its subsidiaries.
+ * Copyright (c) 2020 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip software and any derivatives
  * exclusively with Microchip products. It is your responsibility to comply with third party license
@@ -82,12 +82,12 @@ typedef enum IRQn
   PendSV_IRQn               =  -2, /**< -2  Pendable request for system service */
   SysTick_IRQn              =  -1, /**< -1  System Tick Timer                   */
 /******  SAMC21N18A specific Interrupt Numbers ***********************************/
-  MCLK_IRQn                 =   0, /**< 0   Shared between MCLK OSCCTRL OSC32KCTRL PAC PM SUPC (MCLK) */
-  OSCCTRL_IRQn              =   0, /**< 0   Shared between MCLK OSCCTRL OSC32KCTRL PAC PM SUPC (OSCCTRL) */
   OSC32KCTRL_IRQn           =   0, /**< 0   Shared between MCLK OSCCTRL OSC32KCTRL PAC PM SUPC (OSC32KCTRL) */
+  OSCCTRL_IRQn              =   0, /**< 0   Shared between MCLK OSCCTRL OSC32KCTRL PAC PM SUPC (OSCCTRL) */
+  MCLK_IRQn                 =   0, /**< 0   Shared between MCLK OSCCTRL OSC32KCTRL PAC PM SUPC (MCLK) */
   PAC_IRQn                  =   0, /**< 0   Shared between MCLK OSCCTRL OSC32KCTRL PAC PM SUPC (PAC) */
-  PM_IRQn                   =   0, /**< 0   Shared between MCLK OSCCTRL OSC32KCTRL PAC PM SUPC (PM) */
   SUPC_IRQn                 =   0, /**< 0   Shared between MCLK OSCCTRL OSC32KCTRL PAC PM SUPC (SUPC) */
+  PM_IRQn                   =   0, /**< 0   Shared between MCLK OSCCTRL OSC32KCTRL PAC PM SUPC (PM) */
   WDT_IRQn                  =   1, /**< 1   Watchdog Timer (WDT)                */
   RTC_IRQn                  =   2, /**< 2   Real-Time Counter (RTC)             */
   EIC_IRQn                  =   3, /**< 3   External Interrupt Controller (EIC) */
@@ -96,10 +96,10 @@ typedef enum IRQn
   NVMCTRL_IRQn              =   6, /**< 6   Non-Volatile Memory Controller (NVMCTRL) */
   DMAC_IRQn                 =   7, /**< 7   Direct Memory Access Controller (DMAC) */
   EVSYS_IRQn                =   8, /**< 8   Event System Interface (EVSYS)      */
-  SERCOM0_IRQn              =   9, /**< 9   Shared between SERCOM0 SERCOM6 (SERCOM0) */
   SERCOM6_IRQn              =   9, /**< 9   Shared between SERCOM0 SERCOM6 (SERCOM6) */
-  SERCOM1_IRQn              =  10, /**< 10  Shared between SERCOM1 SERCOM7 (SERCOM1) */
+  SERCOM0_IRQn              =   9, /**< 9   Shared between SERCOM0 SERCOM6 (SERCOM0) */
   SERCOM7_IRQn              =  10, /**< 10  Shared between SERCOM1 SERCOM7 (SERCOM7) */
+  SERCOM1_IRQn              =  10, /**< 10  Shared between SERCOM1 SERCOM7 (SERCOM1) */
   SERCOM2_IRQn              =  11, /**< 11  Serial Communication Interface (SERCOM2) */
   SERCOM3_IRQn              =  12, /**< 12  Serial Communication Interface (SERCOM3) */
   SERCOM4_IRQn              =  13, /**< 13  Serial Communication Interface (SERCOM4) */
@@ -109,12 +109,12 @@ typedef enum IRQn
   TCC0_IRQn                 =  17, /**< 17  Timer Counter Control (TCC0)        */
   TCC1_IRQn                 =  18, /**< 18  Timer Counter Control (TCC1)        */
   TCC2_IRQn                 =  19, /**< 19  Timer Counter Control (TCC2)        */
-  TC0_IRQn                  =  20, /**< 20  Shared between TC0 TC5 (TC0)        */
   TC5_IRQn                  =  20, /**< 20  Shared between TC0 TC5 (TC5)        */
-  TC1_IRQn                  =  21, /**< 21  Shared between TC1 TC6 (TC1)        */
+  TC0_IRQn                  =  20, /**< 20  Shared between TC0 TC5 (TC0)        */
   TC6_IRQn                  =  21, /**< 21  Shared between TC1 TC6 (TC6)        */
-  TC2_IRQn                  =  22, /**< 22  Shared between TC2 TC7 (TC2)        */
+  TC1_IRQn                  =  21, /**< 21  Shared between TC1 TC6 (TC1)        */
   TC7_IRQn                  =  22, /**< 22  Shared between TC2 TC7 (TC7)        */
+  TC2_IRQn                  =  22, /**< 22  Shared between TC2 TC7 (TC2)        */
   TC3_IRQn                  =  23, /**< 23  Basic Timer Counter (TC3)           */
   TC4_IRQn                  =  24, /**< 24  Basic Timer Counter (TC4)           */
   ADC0_IRQn                 =  25, /**< 25  Analog Digital Converter (ADC0)     */
@@ -287,8 +287,8 @@ void PTC_Handler                   ( void );
 #include "component/mclk.h"
 #include "component/mtb.h"
 #include "component/nvmctrl.h"
-#include "component/oscctrl.h"
 #include "component/osc32kctrl.h"
+#include "component/oscctrl.h"
 #include "component/pac.h"
 #include "component/pm.h"
 #include "component/port.h"
@@ -551,7 +551,7 @@ void PTC_Handler                   ( void );
 /* ************************************************************************** */
 /**  DEVICE SIGNATURES FOR SAMC21N18A                                         */
 /* ************************************************************************** */
-#define DSU_DID                        _UL_(0X11011420)
+#define CHIP_DSU_DID                   _UL_(0X11011420)
 
 /* ************************************************************************** */
 /**  ELECTRICAL DEFINITIONS FOR SAMC21N18A                                    */
