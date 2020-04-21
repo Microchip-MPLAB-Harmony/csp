@@ -76,6 +76,7 @@ void PORT_Initialize(void)
    PORT_REGS->GROUP[0].PORT_OUT = 0x80;
    PORT_REGS->GROUP[0].PORT_PINCFG[7] = 0x2;
 
+                
 }
 
 // *****************************************************************************
