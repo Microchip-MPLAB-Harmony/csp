@@ -92,6 +92,7 @@ void SERCOM2_I2C_Initialize(void)
     /* Wait for synchronization */
     while(SERCOM2_REGS->I2CS.SERCOM_SYNCBUSY);
 
+
     /* Set the slave address */
     SERCOM2_REGS->I2CS.SERCOM_ADDR = SERCOM_I2CS_ADDR_ADDR(0x54) ;
 
