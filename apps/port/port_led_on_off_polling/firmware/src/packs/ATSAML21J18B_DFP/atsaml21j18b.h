@@ -1,7 +1,7 @@
 /**
  * \brief Header file for ATSAML21J18B
  *
- * Copyright (c) 2019 Microchip Technology Inc. and its subsidiaries.
+ * Copyright (c) 2020 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip software and any derivatives
  * exclusively with Microchip products. It is your responsibility to comply with third party license
@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-11-24T16:15:02Z */
+/* file generated from device description version 2020-03-04T04:55:10Z */
 #ifndef _SAML21J18B_H_
 #define _SAML21J18B_H_
 
@@ -271,8 +271,8 @@ void TRNG_Handler                  ( void );
 #include "component/mtb.h"
 #include "component/nvmctrl.h"
 #include "component/opamp.h"
-#include "component/oscctrl.h"
 #include "component/osc32kctrl.h"
+#include "component/oscctrl.h"
 #include "component/pac.h"
 #include "component/pm.h"
 #include "component/port.h"
@@ -511,7 +511,7 @@ void TRNG_Handler                  ( void );
 /* ************************************************************************** */
 /**  DEVICE SIGNATURES FOR SAML21J18B                                         */
 /* ************************************************************************** */
-#define DSU_DID                        _UL_(0X1081020F)
+#define CHIP_DSU_DID                   _UL_(0X1081020F)
 
 /* ************************************************************************** */
 /**  ELECTRICAL DEFINITIONS FOR SAML21J18B                                    */

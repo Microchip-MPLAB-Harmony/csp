@@ -65,8 +65,7 @@
 // *****************************************************************************
 // *****************************************************************************
 
-
-
+  
 /*** Macros for SWITCH pin ***/
 #define SWITCH_Set()               (PORT_REGS->GROUP[0].PORT_OUTSET = 1 << 2)
 #define SWITCH_Clear()             (PORT_REGS->GROUP[0].PORT_OUTCLR = 1 << 2)
