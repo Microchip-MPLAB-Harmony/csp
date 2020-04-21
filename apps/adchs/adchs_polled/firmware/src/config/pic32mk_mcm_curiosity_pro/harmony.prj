@@ -9,193 +9,216 @@
         <File dnOrder="0">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">exceptions.c</Name>
-          <LogicalPath dnOrder="2">config/pic32mk_mcm_curiosity_pro/</LogicalPath>
-          <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">3477C6F788508451FADB8F17D7E78273</GeneratedChecksum>
-          <UserChecksum dnOrder="5">3477C6F788508451FADB8F17D7E78273</UserChecksum>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/pic32mk_mcm_curiosity_pro/</LogicalPath>
+          <PhysicalPath dnOrder="4">/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">3477C6F788508451FADB8F17D7E78273</GeneratedChecksum>
+          <UserChecksum dnOrder="6">3477C6F788508451FADB8F17D7E78273</UserChecksum>
         </File>
         <File dnOrder="1">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">initialization.c</Name>
-          <LogicalPath dnOrder="2">config/pic32mk_mcm_curiosity_pro/</LogicalPath>
-          <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">6486610A6042434C3787E70774CE7510</GeneratedChecksum>
-          <UserChecksum dnOrder="5">6486610A6042434C3787E70774CE7510</UserChecksum>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/pic32mk_mcm_curiosity_pro/</LogicalPath>
+          <PhysicalPath dnOrder="4">/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">334B8AC460954D4101EE89329F710002</GeneratedChecksum>
+          <UserChecksum dnOrder="6">334B8AC460954D4101EE89329F710002</UserChecksum>
         </File>
         <File dnOrder="2">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">interrupts.c</Name>
-          <LogicalPath dnOrder="2">config/pic32mk_mcm_curiosity_pro/</LogicalPath>
-          <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">AC03E3CA7436F90D9419A0002C401BC6</GeneratedChecksum>
-          <UserChecksum dnOrder="5">AC03E3CA7436F90D9419A0002C401BC6</UserChecksum>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/pic32mk_mcm_curiosity_pro/</LogicalPath>
+          <PhysicalPath dnOrder="4">/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">AC03E3CA7436F90D9419A0002C401BC6</GeneratedChecksum>
+          <UserChecksum dnOrder="6">AC03E3CA7436F90D9419A0002C401BC6</UserChecksum>
         </File>
         <File dnOrder="3">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">main_pic32mk_mcm.c</Name>
-          <LogicalPath dnOrder="2"/>
-          <PhysicalPath dnOrder="3">/../../</PhysicalPath>
-          <GeneratedChecksum dnOrder="4"/>
-          <UserChecksum dnOrder="5"/>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3"/>
+          <PhysicalPath dnOrder="4">/../../</PhysicalPath>
+          <GeneratedChecksum dnOrder="5"/>
+          <UserChecksum dnOrder="6"/>
         </File>
         <File dnOrder="4">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_adchs.c</Name>
-          <LogicalPath dnOrder="2">config/pic32mk_mcm_curiosity_pro/peripheral/adchs/</LogicalPath>
-          <PhysicalPath dnOrder="3">/peripheral/adchs/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">94ADD015799D2992EB3DE6A2FD1C17FD</GeneratedChecksum>
-          <UserChecksum dnOrder="5">94ADD015799D2992EB3DE6A2FD1C17FD</UserChecksum>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/pic32mk_mcm_curiosity_pro/peripheral/adchs/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/adchs/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">94ADD015799D2992EB3DE6A2FD1C17FD</GeneratedChecksum>
+          <UserChecksum dnOrder="6">94ADD015799D2992EB3DE6A2FD1C17FD</UserChecksum>
         </File>
         <File dnOrder="5">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_clk.c</Name>
-          <LogicalPath dnOrder="2">config/pic32mk_mcm_curiosity_pro/peripheral/clk/</LogicalPath>
-          <PhysicalPath dnOrder="3">/peripheral/clk/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">A067E4BD6101475B1A6ECB4FBB6B7B90</GeneratedChecksum>
-          <UserChecksum dnOrder="5">A067E4BD6101475B1A6ECB4FBB6B7B90</UserChecksum>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/pic32mk_mcm_curiosity_pro/peripheral/clk/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/clk/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">85BD30C36710B202A4478E137091968C</GeneratedChecksum>
+          <UserChecksum dnOrder="6">85BD30C36710B202A4478E137091968C</UserChecksum>
         </File>
         <File dnOrder="6">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_evic.c</Name>
-          <LogicalPath dnOrder="2">config/pic32mk_mcm_curiosity_pro/peripheral/evic/</LogicalPath>
-          <PhysicalPath dnOrder="3">/peripheral/evic/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">58A43330BB77E8DAF4FC38DA6C7AB6F1</GeneratedChecksum>
-          <UserChecksum dnOrder="5">58A43330BB77E8DAF4FC38DA6C7AB6F1</UserChecksum>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/pic32mk_mcm_curiosity_pro/peripheral/evic/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/evic/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">58A43330BB77E8DAF4FC38DA6C7AB6F1</GeneratedChecksum>
+          <UserChecksum dnOrder="6">58A43330BB77E8DAF4FC38DA6C7AB6F1</UserChecksum>
         </File>
         <File dnOrder="7">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_gpio.c</Name>
-          <LogicalPath dnOrder="2">config/pic32mk_mcm_curiosity_pro/peripheral/gpio/</LogicalPath>
-          <PhysicalPath dnOrder="3">/peripheral/gpio/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">FB567F5599E6FFA1E30C22071980AC04</GeneratedChecksum>
-          <UserChecksum dnOrder="5">FB567F5599E6FFA1E30C22071980AC04</UserChecksum>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/pic32mk_mcm_curiosity_pro/peripheral/gpio/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/gpio/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">9AA4DCE9AAF1E06D57949FD54DB048B9</GeneratedChecksum>
+          <UserChecksum dnOrder="6">9AA4DCE9AAF1E06D57949FD54DB048B9</UserChecksum>
         </File>
         <File dnOrder="8">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_tmr3.c</Name>
-          <LogicalPath dnOrder="2">config/pic32mk_mcm_curiosity_pro/peripheral/tmr/</LogicalPath>
-          <PhysicalPath dnOrder="3">/peripheral/tmr/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">E18161BF6DE181B8A55A806BA90DF8CB</GeneratedChecksum>
-          <UserChecksum dnOrder="5">E18161BF6DE181B8A55A806BA90DF8CB</UserChecksum>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/pic32mk_mcm_curiosity_pro/peripheral/tmr/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/tmr/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">7FFDBC99E5FEE8A22D8797FCB1249D5E</GeneratedChecksum>
+          <UserChecksum dnOrder="6">7FFDBC99E5FEE8A22D8797FCB1249D5E</UserChecksum>
         </File>
         <File dnOrder="9">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_uart6.c</Name>
-          <LogicalPath dnOrder="2">config/pic32mk_mcm_curiosity_pro/peripheral/uart/</LogicalPath>
-          <PhysicalPath dnOrder="3">/peripheral/uart/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">33431FD278FAEA8C6E34597646122E1A</GeneratedChecksum>
-          <UserChecksum dnOrder="5">33431FD278FAEA8C6E34597646122E1A</UserChecksum>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/pic32mk_mcm_curiosity_pro/peripheral/uart/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/uart/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">267C60526CE87D716C23F11AFD79858A</GeneratedChecksum>
+          <UserChecksum dnOrder="6">267C60526CE87D716C23F11AFD79858A</UserChecksum>
         </File>
         <File dnOrder="10">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">xc32_monitor.c</Name>
-          <LogicalPath dnOrder="2">config/pic32mk_mcm_curiosity_pro/stdio/</LogicalPath>
-          <PhysicalPath dnOrder="3">/stdio/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">4BBDD52CA72372F7CFF475B7E8B07C73</GeneratedChecksum>
-          <UserChecksum dnOrder="5">4BBDD52CA72372F7CFF475B7E8B07C73</UserChecksum>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/pic32mk_mcm_curiosity_pro/stdio/</LogicalPath>
+          <PhysicalPath dnOrder="4">/stdio/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">99A3824297E8878AAACA0DBEC52BCD6C</GeneratedChecksum>
+          <UserChecksum dnOrder="6">99A3824297E8878AAACA0DBEC52BCD6C</UserChecksum>
         </File>
         <File dnOrder="11">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">definitions.h</Name>
-          <LogicalPath dnOrder="2">config/pic32mk_mcm_curiosity_pro/</LogicalPath>
-          <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">89AB0EA94A2D6EA3A2A3BB0D7772CDEF</GeneratedChecksum>
-          <UserChecksum dnOrder="5">89AB0EA94A2D6EA3A2A3BB0D7772CDEF</UserChecksum>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/pic32mk_mcm_curiosity_pro/</LogicalPath>
+          <PhysicalPath dnOrder="4">/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">89AB0EA94A2D6EA3A2A3BB0D7772CDEF</GeneratedChecksum>
+          <UserChecksum dnOrder="6">89AB0EA94A2D6EA3A2A3BB0D7772CDEF</UserChecksum>
         </File>
         <File dnOrder="12">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">device.h</Name>
-          <LogicalPath dnOrder="2">packs/PIC32MK1024MCM100_DFP/</LogicalPath>
-          <PhysicalPath dnOrder="3">/../../packs/PIC32MK1024MCM100_DFP/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">5D5C52527AB1435153DB9B50ADE6B79D</GeneratedChecksum>
-          <UserChecksum dnOrder="5">5D5C52527AB1435153DB9B50ADE6B79D</UserChecksum>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/PIC32MK1024MCM100_DFP/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/PIC32MK1024MCM100_DFP/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">5D5C52527AB1435153DB9B50ADE6B79D</GeneratedChecksum>
+          <UserChecksum dnOrder="6">5D5C52527AB1435153DB9B50ADE6B79D</UserChecksum>
         </File>
         <File dnOrder="13">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_adchs.h</Name>
-          <LogicalPath dnOrder="2">config/pic32mk_mcm_curiosity_pro/peripheral/adchs/</LogicalPath>
-          <PhysicalPath dnOrder="3">/peripheral/adchs/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">C55F0EB9BF38C510CEAA5B6D71B3CA75</GeneratedChecksum>
-          <UserChecksum dnOrder="5">C55F0EB9BF38C510CEAA5B6D71B3CA75</UserChecksum>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/pic32mk_mcm_curiosity_pro/peripheral/adchs/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/adchs/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">C55F0EB9BF38C510CEAA5B6D71B3CA75</GeneratedChecksum>
+          <UserChecksum dnOrder="6">C55F0EB9BF38C510CEAA5B6D71B3CA75</UserChecksum>
         </File>
         <File dnOrder="14">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_adchs_common.h</Name>
-          <LogicalPath dnOrder="2">config/pic32mk_mcm_curiosity_pro/peripheral/adchs/</LogicalPath>
-          <PhysicalPath dnOrder="3">/peripheral/adchs/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">326066A731975D491B72B4802ADE30BA</GeneratedChecksum>
-          <UserChecksum dnOrder="5">326066A731975D491B72B4802ADE30BA</UserChecksum>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/pic32mk_mcm_curiosity_pro/peripheral/adchs/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/adchs/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">5485BB926F2ECC7BD1D7B2DE51ED2795</GeneratedChecksum>
+          <UserChecksum dnOrder="6">5485BB926F2ECC7BD1D7B2DE51ED2795</UserChecksum>
         </File>
         <File dnOrder="15">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_clk.h</Name>
-          <LogicalPath dnOrder="2">config/pic32mk_mcm_curiosity_pro/peripheral/clk/</LogicalPath>
-          <PhysicalPath dnOrder="3">/peripheral/clk/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">7066CC390335CF75126E2A50C46E3BDD</GeneratedChecksum>
-          <UserChecksum dnOrder="5">7066CC390335CF75126E2A50C46E3BDD</UserChecksum>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/pic32mk_mcm_curiosity_pro/peripheral/clk/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/clk/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">7066CC390335CF75126E2A50C46E3BDD</GeneratedChecksum>
+          <UserChecksum dnOrder="6">7066CC390335CF75126E2A50C46E3BDD</UserChecksum>
         </File>
         <File dnOrder="16">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_evic.h</Name>
-          <LogicalPath dnOrder="2">config/pic32mk_mcm_curiosity_pro/peripheral/evic/</LogicalPath>
-          <PhysicalPath dnOrder="3">/peripheral/evic/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">D270E1FFFF82CBEE613690DC9636B8F9</GeneratedChecksum>
-          <UserChecksum dnOrder="5">D270E1FFFF82CBEE613690DC9636B8F9</UserChecksum>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/pic32mk_mcm_curiosity_pro/peripheral/evic/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/evic/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">D270E1FFFF82CBEE613690DC9636B8F9</GeneratedChecksum>
+          <UserChecksum dnOrder="6">D270E1FFFF82CBEE613690DC9636B8F9</UserChecksum>
         </File>
         <File dnOrder="17">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_gpio.h</Name>
-          <LogicalPath dnOrder="2">config/pic32mk_mcm_curiosity_pro/peripheral/gpio/</LogicalPath>
-          <PhysicalPath dnOrder="3">/peripheral/gpio/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">9E868904EF3A6C6D7888450EE241FFD5</GeneratedChecksum>
-          <UserChecksum dnOrder="5">9E868904EF3A6C6D7888450EE241FFD5</UserChecksum>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/pic32mk_mcm_curiosity_pro/peripheral/gpio/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/gpio/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">9E868904EF3A6C6D7888450EE241FFD5</GeneratedChecksum>
+          <UserChecksum dnOrder="6">9E868904EF3A6C6D7888450EE241FFD5</UserChecksum>
         </File>
         <File dnOrder="18">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_tmr3.h</Name>
-          <LogicalPath dnOrder="2">config/pic32mk_mcm_curiosity_pro/peripheral/tmr/</LogicalPath>
-          <PhysicalPath dnOrder="3">/peripheral/tmr/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">AB441E032FD7B269DB6B2AA5661A890C</GeneratedChecksum>
-          <UserChecksum dnOrder="5">AB441E032FD7B269DB6B2AA5661A890C</UserChecksum>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/pic32mk_mcm_curiosity_pro/peripheral/tmr/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/tmr/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">AB441E032FD7B269DB6B2AA5661A890C</GeneratedChecksum>
+          <UserChecksum dnOrder="6">AB441E032FD7B269DB6B2AA5661A890C</UserChecksum>
         </File>
         <File dnOrder="19">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_tmr_common.h</Name>
-          <LogicalPath dnOrder="2">config/pic32mk_mcm_curiosity_pro/peripheral/tmr/</LogicalPath>
-          <PhysicalPath dnOrder="3">/peripheral/tmr/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">D948F2CE092CAB556EF299D3CCD83A55</GeneratedChecksum>
-          <UserChecksum dnOrder="5">D948F2CE092CAB556EF299D3CCD83A55</UserChecksum>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/pic32mk_mcm_curiosity_pro/peripheral/tmr/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/tmr/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">D948F2CE092CAB556EF299D3CCD83A55</GeneratedChecksum>
+          <UserChecksum dnOrder="6">D948F2CE092CAB556EF299D3CCD83A55</UserChecksum>
         </File>
         <File dnOrder="20">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_uart6.h</Name>
-          <LogicalPath dnOrder="2">config/pic32mk_mcm_curiosity_pro/peripheral/uart/</LogicalPath>
-          <PhysicalPath dnOrder="3">/peripheral/uart/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">DCA8F9A0C45D3723D6AFFB43C62E547E</GeneratedChecksum>
-          <UserChecksum dnOrder="5">DCA8F9A0C45D3723D6AFFB43C62E547E</UserChecksum>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/pic32mk_mcm_curiosity_pro/peripheral/uart/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/uart/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">8C0D30955FCB8BEFE0E3AC5103F57776</GeneratedChecksum>
+          <UserChecksum dnOrder="6">8C0D30955FCB8BEFE0E3AC5103F57776</UserChecksum>
         </File>
         <File dnOrder="21">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_uart_common.h</Name>
-          <LogicalPath dnOrder="2">config/pic32mk_mcm_curiosity_pro/peripheral/uart/</LogicalPath>
-          <PhysicalPath dnOrder="3">/peripheral/uart/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">ACBD2B4A88E233BD4B260CD136DA33A8</GeneratedChecksum>
-          <UserChecksum dnOrder="5">ACBD2B4A88E233BD4B260CD136DA33A8</UserChecksum>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/pic32mk_mcm_curiosity_pro/peripheral/uart/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/uart/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">CB4B34D1ABCE74BF62A89A7FF936BE91</GeneratedChecksum>
+          <UserChecksum dnOrder="6">CB4B34D1ABCE74BF62A89A7FF936BE91</UserChecksum>
         </File>
         <File dnOrder="22">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">toolchain_specifics.h</Name>
-          <LogicalPath dnOrder="2">config/pic32mk_mcm_curiosity_pro/</LogicalPath>
-          <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">5F0B87C955FBF569CBD67F4861B6B7AD</GeneratedChecksum>
-          <UserChecksum dnOrder="5">5F0B87C955FBF569CBD67F4861B6B7AD</UserChecksum>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/pic32mk_mcm_curiosity_pro/</LogicalPath>
+          <PhysicalPath dnOrder="4">/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">9A7344615980CB9443B6436E41E2155A</GeneratedChecksum>
+          <UserChecksum dnOrder="6">9A7344615980CB9443B6436E41E2155A</UserChecksum>
         </File>
       </Files>
       <Settings dnOrder="1">
-        <Setting append="true" category="C32" delimiter=";" dnOrder="0" key="extra-include-directories" value="../src;../src/config/pic32mk_mcm_curiosity_pro;../src/packs/PIC32MK1024MCM100_DFP;;../src/mips"/>
-        <Setting category="C32-LD" dnOrder="1" key="heap-size" value="512"/>
-        <Setting category="C32-LD" dnOrder="2" key="no-device-startup-code" value="true"/>
-        <Setting category="C32-LD" dnOrder="3" key="preprocessor-macros" value=""/>
+        <Setting append="true" category="C32" delimiter=";" dnOrder="0" key="extra-include-directories" security="NON_SECURE" value="../src;../src/config/pic32mk_mcm_curiosity_pro;../src/packs/PIC32MK1024MCM100_DFP;"/>
+        <Setting category="C32-LD" dnOrder="1" key="heap-size" security="NON_SECURE" value="512"/>
+        <Setting category="C32-LD" dnOrder="2" key="no-device-startup-code" security="NON_SECURE" value="true"/>
+        <Setting append="true" category="C32-LD" delimiter=";" dnOrder="3" key="preprocessor-macros" security="NON_SECURE" value=""/>
       </Settings>
     </Manifest>
     <Settings dnOrder="4">

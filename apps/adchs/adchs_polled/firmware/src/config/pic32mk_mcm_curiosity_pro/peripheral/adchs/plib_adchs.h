@@ -75,6 +75,8 @@ extern "C" {
     interface and should be considered part it.
 */
 #define CHANNEL_0 (0U)
+
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Interface Routines
@@ -100,6 +102,7 @@ void ADCHS_ChannelEarlyInterruptDisable (ADCHS_CHANNEL_NUM channel);
 
 bool ADCHS_ChannelResultIsReady(ADCHS_CHANNEL_NUM channel);
 uint16_t ADCHS_ChannelResultGet(ADCHS_CHANNEL_NUM channel);
+
 
 
 // *****************************************************************************
