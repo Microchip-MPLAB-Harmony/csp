@@ -53,7 +53,6 @@
 /* This section lists the other files that are included in this file.
 */
 
-
 #include "plib_eic.h"
 
 // *****************************************************************************
@@ -67,7 +66,7 @@
 void EIC_Initialize (void)
 {
     /* Reset all registers in the EIC module to their initial state and
-	   EIC will be disabled. */
+       EIC will be disabled. */
     EIC_REGS->EIC_CTRLA |= EIC_CTRLA_SWRST_Msk;
 
     while((EIC_REGS->EIC_SYNCBUSY & EIC_SYNCBUSY_SWRST_Msk) == EIC_SYNCBUSY_SWRST_Msk)
@@ -96,6 +95,7 @@ void EIC_Initialize (void)
     EIC_REGS->EIC_EVCTRL = 0x10;
 
 
+
     /* Enable the EIC */
     EIC_REGS->EIC_CTRLA |= EIC_CTRLA_ENABLE_Msk;
 
@@ -104,3 +104,4 @@ void EIC_Initialize (void)
         /* Wait for sync */
     }
 }
+
