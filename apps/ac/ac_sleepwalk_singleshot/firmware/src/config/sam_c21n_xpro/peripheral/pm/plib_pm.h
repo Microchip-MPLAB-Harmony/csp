@@ -72,9 +72,7 @@
 // Section: Interface Routines
 // *****************************************************************************
 // *****************************************************************************
-
 void PM_Initialize( void );
-
 void PM_IdleModeEnter( void );
 
 void PM_StandbyModeEnter( void );
