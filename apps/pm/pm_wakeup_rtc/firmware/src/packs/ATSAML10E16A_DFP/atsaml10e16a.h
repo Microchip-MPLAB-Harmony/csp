@@ -1,7 +1,7 @@
 /**
  * \brief Header file for ATSAML10E16A
  *
- * Copyright (c) 2019 Microchip Technology Inc. and its subsidiaries.
+ * Copyright (c) 2020 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip software and any derivatives
  * exclusively with Microchip products. It is your responsibility to comply with third party license
@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-11-24T15:57:35Z */
+/* file generated from device description version 2020-02-04T13:16:04Z */
 #ifndef _SAML10E16A_H_
 #define _SAML10E16A_H_
 
@@ -89,10 +89,10 @@ typedef enum IRQn
   SUPC_IRQn                 =   0, /**< 0   Shared between MCLK OSCCTRL OSC32KCTRL PM SUPC (SUPC) */
   WDT_IRQn                  =   1, /**< 1   Watchdog Timer (WDT)                */
   RTC_IRQn                  =   2, /**< 2   Real-Time Counter (RTC)             */
-  EIC_0_IRQn                =   3, /**< 3   External Interrupt Controller (EIC) */
-  EIC_1_IRQn                =   4, /**< 4   External Interrupt Controller (EIC) */
-  EIC_2_IRQn                =   5, /**< 5   External Interrupt Controller (EIC) */
-  EIC_3_IRQn                =   6, /**< 6   External Interrupt Controller (EIC) */
+  EIC_EXTINT_0_IRQn         =   3, /**< 3   External Interrupt Controller (EIC) */
+  EIC_EXTINT_1_IRQn         =   4, /**< 4   External Interrupt Controller (EIC) */
+  EIC_EXTINT_2_IRQn         =   5, /**< 5   External Interrupt Controller (EIC) */
+  EIC_EXTINT_3_IRQn         =   6, /**< 6   External Interrupt Controller (EIC) */
   EIC_OTHER_IRQn            =   7, /**< 7   External Interrupt Controller (EIC) */
   FREQM_IRQn                =   8, /**< 8   Frequency Meter (FREQM)             */
   NVMCTRL_IRQn              =   9, /**< 9   Non-Volatile Memory Controller (NVMCTRL) */
@@ -162,10 +162,10 @@ typedef struct _DeviceVectors
   void* pfnSYSTEM_Handler;                       /*   0 System peripherals shared interrupt (MCLK OSCCTRL OSC32KCTRL PM SUPC) */
   void* pfnWDT_Handler;                          /*   1 Watchdog Timer (WDT) */
   void* pfnRTC_Handler;                          /*   2 Real-Time Counter (RTC) */
-  void* pfnEIC_0_Handler;                        /*   3 External Interrupt Controller (EIC) */
-  void* pfnEIC_1_Handler;                        /*   4 External Interrupt Controller (EIC) */
-  void* pfnEIC_2_Handler;                        /*   5 External Interrupt Controller (EIC) */
-  void* pfnEIC_3_Handler;                        /*   6 External Interrupt Controller (EIC) */
+  void* pfnEIC_EXTINT_0_Handler;                 /*   3 External Interrupt Controller (EIC) */
+  void* pfnEIC_EXTINT_1_Handler;                 /*   4 External Interrupt Controller (EIC) */
+  void* pfnEIC_EXTINT_2_Handler;                 /*   5 External Interrupt Controller (EIC) */
+  void* pfnEIC_EXTINT_3_Handler;                 /*   6 External Interrupt Controller (EIC) */
   void* pfnEIC_OTHER_Handler;                    /*   7 External Interrupt Controller (EIC) */
   void* pfnFREQM_Handler;                        /*   8 Frequency Meter (FREQM) */
   void* pfnNVMCTRL_Handler;                      /*   9 Non-Volatile Memory Controller (NVMCTRL) */
@@ -230,10 +230,10 @@ void SysTick_Handler               ( void );
 void SYSTEM_Handler                ( void );
 void WDT_Handler                   ( void );
 void RTC_Handler                   ( void );
-void EIC_0_Handler                 ( void );
-void EIC_1_Handler                 ( void );
-void EIC_2_Handler                 ( void );
-void EIC_3_Handler                 ( void );
+void EIC_EXTINT_0_Handler          ( void );
+void EIC_EXTINT_1_Handler          ( void );
+void EIC_EXTINT_2_Handler          ( void );
+void EIC_EXTINT_3_Handler          ( void );
 void EIC_OTHER_Handler             ( void );
 void FREQM_Handler                 ( void );
 void NVMCTRL_Handler               ( void );
@@ -321,8 +321,8 @@ void TRAM_Handler                  ( void );
 #include "component/mclk.h"
 #include "component/nvmctrl.h"
 #include "component/opamp.h"
-#include "component/oscctrl.h"
 #include "component/osc32kctrl.h"
+#include "component/oscctrl.h"
 #include "component/pac.h"
 #include "component/pm.h"
 #include "component/port.h"
@@ -530,7 +530,7 @@ void TRAM_Handler                  ( void );
 /* ************************************************************************** */
 /**  DEVICE SIGNATURES FOR SAML10E16A                                         */
 /* ************************************************************************** */
-#define DSU_DID                        _UL_(0X20840000)
+#define CHIP_DSU_DID                   _UL_(0X20840000)
 
 /* ************************************************************************** */
 /**  ELECTRICAL DEFINITIONS FOR SAML10E16A                                    */
