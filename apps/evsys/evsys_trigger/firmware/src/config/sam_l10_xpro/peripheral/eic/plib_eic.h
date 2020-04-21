@@ -75,26 +75,8 @@
 /* The following data type definitions are used by the functions in this
     interface and should be considered part of it.
 */
-
 /* EIC Pin Count */
 #define EXTINT_COUNT                        (8U)
-
-// *****************************************************************************
-/* EIC Pins
-
-  Summary:
-    Identifies the available EIC pins.
-
-  Description:
-    This enumeration identifies all the available EIC pins. Not all pins will be
-    implemented in a device. The pins described here are for documentation
-    purposes only. The MHC will generate this enumeration with the enabled EIC
-    pins only. The application should not use the constant value that are
-    assigned to enumeration constants as this may vary between devices.
-
-  Remarks:
-    None.
-*/
 
 typedef enum
 {
@@ -116,68 +98,5 @@ typedef enum
     this interface.
 */
 
-// *****************************************************************************
-/* Function:
-    void EIC_Initialize (void);
-
-  Summary:
-    Initializes given instance of EIC peripheral.
-
-  Description:
-    This function initializes given instance of EIC peripheral of the device
-    with the values configured in MHC GUI.
-
-  Precondition:
-    MHC GUI should be configured with the right values.
-
-  Parameters:
-    None.
-
-  Returns:
-    None.
-
-  Example:
-    <code>
-    EIC_Initialize();
-    </code>
-
-  Remarks:
-    This function should only be called once during system initialization
-    before any other EIC function is called.
-*/
-
 void EIC_Initialize (void);
-
-// *****************************************************************************
-/* Function:
-    void EIC_InterruptEnable (EIC_PIN pin)
-
-  Summary:
-    Enables interrupts on a pin.
-
-  Description
-    This function enables interrupts on an external interrupt pin.
-    When enabled, the interrupt pin sense will be configured as per the
-    configuration set in MHC.
-
-   Precondition:
-    EIC_Initialize() function must have been called for the
-    associated instance.
-
-   Parameters:
-    pin - EIC Pin number
-
-   Returns:
-    None
-
-   Example:
-    <code>
-    EIC_Initialize();
-    EIC_InterruptEnable(EIC_PIN_3);
-    </code>
-
-  Remarks:
-    None.
-*/
-
 #endif /* PLIB_EIC_H */
