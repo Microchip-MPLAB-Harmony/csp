@@ -79,6 +79,7 @@ void PORT_Initialize(void)
    PORT_REGS->GROUP[0].PORT_PMUX[2] = 0x40;
    PORT_REGS->GROUP[0].PORT_PMUX[9] = 0x4;
    PORT_REGS->GROUP[0].PORT_PMUX[12] = 0x40;
+                
 }
 
 // *****************************************************************************
