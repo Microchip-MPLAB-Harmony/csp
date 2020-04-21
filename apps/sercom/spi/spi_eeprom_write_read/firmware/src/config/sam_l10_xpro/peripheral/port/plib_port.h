@@ -65,8 +65,7 @@
 // *****************************************************************************
 // *****************************************************************************
 
-
-
+  
 /*** Macros for EEPROM_CS pin ***/
 #define EEPROM_CS_Set()               (PORT_REGS->GROUP[0].PORT_OUTSET = 1 << 5)
 #define EEPROM_CS_Clear()             (PORT_REGS->GROUP[0].PORT_OUTCLR = 1 << 5)

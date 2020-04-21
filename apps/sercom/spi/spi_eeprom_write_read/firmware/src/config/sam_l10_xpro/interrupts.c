@@ -79,10 +79,10 @@ void SysTick_Handler            ( void ) __attribute__((weak, alias("Dummy_Handl
 void SYSTEM_Handler             ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void WDT_Handler                ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void RTC_Handler                ( void ) __attribute__((weak, alias("Dummy_Handler")));
-void EIC_0_Handler              ( void ) __attribute__((weak, alias("Dummy_Handler")));
-void EIC_1_Handler              ( void ) __attribute__((weak, alias("Dummy_Handler")));
-void EIC_2_Handler              ( void ) __attribute__((weak, alias("Dummy_Handler")));
-void EIC_3_Handler              ( void ) __attribute__((weak, alias("Dummy_Handler")));
+void EIC_EXTINT_0_Handler       ( void ) __attribute__((weak, alias("Dummy_Handler")));
+void EIC_EXTINT_1_Handler       ( void ) __attribute__((weak, alias("Dummy_Handler")));
+void EIC_EXTINT_2_Handler       ( void ) __attribute__((weak, alias("Dummy_Handler")));
+void EIC_EXTINT_3_Handler       ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void EIC_OTHER_Handler          ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void FREQM_Handler              ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void NVMCTRL_Handler            ( void ) __attribute__((weak, alias("Dummy_Handler")));
@@ -140,10 +140,10 @@ const DeviceVectors exception_table=
     .pfnSYSTEM_Handler             = ( void * ) SYSTEM_Handler,
     .pfnWDT_Handler                = ( void * ) WDT_Handler,
     .pfnRTC_Handler                = ( void * ) RTC_Handler,
-    .pfnEIC_0_Handler              = ( void * ) EIC_0_Handler,
-    .pfnEIC_1_Handler              = ( void * ) EIC_1_Handler,
-    .pfnEIC_2_Handler              = ( void * ) EIC_2_Handler,
-    .pfnEIC_3_Handler              = ( void * ) EIC_3_Handler,
+    .pfnEIC_EXTINT_0_Handler       = ( void * ) EIC_EXTINT_0_Handler,
+    .pfnEIC_EXTINT_1_Handler       = ( void * ) EIC_EXTINT_1_Handler,
+    .pfnEIC_EXTINT_2_Handler       = ( void * ) EIC_EXTINT_2_Handler,
+    .pfnEIC_EXTINT_3_Handler       = ( void * ) EIC_EXTINT_3_Handler,
     .pfnEIC_OTHER_Handler          = ( void * ) EIC_OTHER_Handler,
     .pfnFREQM_Handler              = ( void * ) FREQM_Handler,
     .pfnNVMCTRL_Handler            = ( void * ) NVMCTRL_Handler,
