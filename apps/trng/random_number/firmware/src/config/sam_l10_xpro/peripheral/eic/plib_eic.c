@@ -53,7 +53,6 @@
 /* This section lists the other files that are included in this file.
 */
 
-
 #include "plib_eic.h"
 
 // *****************************************************************************
@@ -69,7 +68,7 @@ EIC_CALLBACK_OBJ    eicCallbackObject[EXTINT_COUNT];
 void EIC_Initialize (void)
 {
     /* Reset all registers in the EIC module to their initial state and
-	   EIC will be disabled. */
+       EIC will be disabled. */
     EIC_REGS->EIC_CTRLA |= EIC_CTRLA_SWRST_Msk;
 
     while((EIC_REGS->EIC_SYNCBUSY & EIC_SYNCBUSY_SWRST_Msk) == EIC_SYNCBUSY_SWRST_Msk)
@@ -98,7 +97,6 @@ void EIC_Initialize (void)
 
     /* External Interrupt enable*/
     EIC_REGS->EIC_INTENSET = 0x20;
-
     /* Callbacks for enabled interrupts */
     eicCallbackObject[0].eicPinNo = EIC_PIN_MAX;
     eicCallbackObject[1].eicPinNo = EIC_PIN_MAX;
@@ -108,6 +106,7 @@ void EIC_Initialize (void)
     eicCallbackObject[5].eicPinNo = EIC_PIN_5;
     eicCallbackObject[6].eicPinNo = EIC_PIN_MAX;
     eicCallbackObject[7].eicPinNo = EIC_PIN_MAX;
+
     /* Enable the EIC */
     EIC_REGS->EIC_CTRLA |= EIC_CTRLA_ENABLE_Msk;
 
@@ -136,6 +135,7 @@ void EIC_CallbackRegister(EIC_PIN pin, EIC_CALLBACK callback, uintptr_t context)
         eicCallbackObject[pin].context  = context;
     }
 }
+
 
 void EIC_OTHER_InterruptHandler(void)
 {
