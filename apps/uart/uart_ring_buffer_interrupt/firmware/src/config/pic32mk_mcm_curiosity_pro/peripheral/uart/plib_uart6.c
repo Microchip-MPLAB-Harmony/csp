@@ -126,13 +126,15 @@ void UART6_Initialize( void )
 
     /* Initialize instance object */
     uart6Obj.rdCallback = NULL;
-    uart6Obj.rdInIndex = uart6Obj.rdOutIndex = 0;
+    uart6Obj.rdInIndex = 0;
+	uart6Obj.rdOutIndex = 0;
     uart6Obj.isRdNotificationEnabled = false;
     uart6Obj.isRdNotifyPersistently = false;
     uart6Obj.rdThreshold = 0;
 
     uart6Obj.wrCallback = NULL;
-    uart6Obj.wrInIndex = uart6Obj.wrOutIndex = 0;
+    uart6Obj.wrInIndex = 0;
+	uart6Obj.wrOutIndex = 0;
     uart6Obj.isWrNotificationEnabled = false;
     uart6Obj.isWrNotifyPersistently = false;
     uart6Obj.wrThreshold = 0;
@@ -300,12 +302,17 @@ static void UART6_ReadNotificationSend(void)
 size_t UART6_Read(uint8_t* pRdBuffer, const size_t size)
 {
     size_t nBytesRead = 0;
+	uint32_t rdOutIndex;
+	uint32_t rdInIndex;
 
     while (nBytesRead < size)
     {
         UART6_RX_INT_DISABLE();
+		
+		rdOutIndex = uart6Obj.rdOutIndex;
+		rdInIndex = uart6Obj.rdInIndex;
 
-        if (uart6Obj.rdOutIndex != uart6Obj.rdInIndex)
+        if (rdOutIndex != rdInIndex)
         {
             pRdBuffer[nBytesRead++] = UART6_ReadBuffer[uart6Obj.rdOutIndex++];
 
@@ -328,19 +335,21 @@ size_t UART6_Read(uint8_t* pRdBuffer, const size_t size)
 size_t UART6_ReadCountGet(void)
 {
     size_t nUnreadBytesAvailable;
+	uint32_t rdInIndex;
+	uint32_t rdOutIndex;
+	
+	/* Take a snapshot of indices to avoid creation of critical section */
+	rdInIndex = uart6Obj.rdInIndex;
+	rdOutIndex = uart6Obj.rdOutIndex;
 
-    UART6_RX_INT_DISABLE();
-
-    if ( uart6Obj.rdInIndex >=  uart6Obj.rdOutIndex)
+    if ( rdInIndex >=  rdOutIndex)
     {
-        nUnreadBytesAvailable =  uart6Obj.rdInIndex -  uart6Obj.rdOutIndex;
+        nUnreadBytesAvailable =  rdInIndex -  rdOutIndex;
     }
     else
     {
-        nUnreadBytesAvailable =  (UART6_READ_BUFFER_SIZE -  uart6Obj.rdOutIndex) + uart6Obj.rdInIndex;
+        nUnreadBytesAvailable =  (UART6_READ_BUFFER_SIZE -  rdOutIndex) + rdInIndex;
     }
-
-    UART6_RX_INT_ENABLE();
 
     return nUnreadBytesAvailable;
 }
@@ -385,8 +394,10 @@ void UART6_ReadCallbackRegister( UART_RING_BUFFER_CALLBACK callback, uintptr_t c
 static bool UART6_TxPullByte(uint8_t* pWrByte)
 {
     bool isSuccess = false;
+	uint32_t wrOutIndex = uart6Obj.wrOutIndex;
+	uint32_t wrInIndex = uart6Obj.wrInIndex;
 
-    if (uart6Obj.wrOutIndex != uart6Obj.wrInIndex)
+    if (wrOutIndex != wrInIndex)
     {
         *pWrByte = UART6_WriteBuffer[uart6Obj.wrOutIndex++];
 
@@ -457,14 +468,18 @@ static void UART6_WriteNotificationSend(void)
 static size_t UART6_WritePendingBytesGet(void)
 {
     size_t nPendingTxBytes;
+	
+	/* Take a snapshot of indices to avoid creation of critical section */
+	uint32_t wrOutIndex = uart6Obj.wrOutIndex;
+	uint32_t wrInIndex = uart6Obj.wrInIndex;
 
-    if ( uart6Obj.wrInIndex >=  uart6Obj.wrOutIndex)
+    if ( wrInIndex >=  wrOutIndex)
     {
-        nPendingTxBytes =  uart6Obj.wrInIndex -  uart6Obj.wrOutIndex;
+        nPendingTxBytes =  wrInIndex -  wrOutIndex;
     }
     else
     {
-        nPendingTxBytes =  (UART6_WRITE_BUFFER_SIZE -  uart6Obj.wrOutIndex) + uart6Obj.wrInIndex;
+        nPendingTxBytes =  (UART6_WRITE_BUFFER_SIZE -  wrOutIndex) + wrInIndex;
     }
 
     return nPendingTxBytes;
@@ -473,16 +488,8 @@ static size_t UART6_WritePendingBytesGet(void)
 size_t UART6_WriteCountGet(void)
 {
     size_t nPendingTxBytes;
-
-    UART6_TX_INT_DISABLE();
-
-    nPendingTxBytes = UART6_WritePendingBytesGet();
-
-    /* Enable transmit interrupt only if any data is pending for transmission */
-    if (UART6_WritePendingBytesGet() > 0)
-    {
-        UART6_TX_INT_ENABLE();
-    }
+    
+    nPendingTxBytes = UART6_WritePendingBytesGet();    
 
     return nPendingTxBytes;
 }

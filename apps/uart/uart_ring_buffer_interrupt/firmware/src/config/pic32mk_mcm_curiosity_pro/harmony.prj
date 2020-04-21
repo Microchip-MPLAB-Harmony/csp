@@ -75,8 +75,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/pic32mk_mcm_curiosity_pro/peripheral/uart/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/uart/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">EBA76A575FC79C3709B1899222E6D47F</GeneratedChecksum>
-          <UserChecksum dnOrder="6">EBA76A575FC79C3709B1899222E6D47F</UserChecksum>
+          <GeneratedChecksum dnOrder="5">3F9F9108D48A59A0478A5CB16D8107A9</GeneratedChecksum>
+          <UserChecksum dnOrder="6">3F9F9108D48A59A0478A5CB16D8107A9</UserChecksum>
         </File>
         <File dnOrder="8">
           <Type dnOrder="0">SOURCE</Type>
@@ -173,7 +173,7 @@
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
       <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
-      <Setting dnOrder="5" key="PackageFilter" value="bootloader;bsp;core;cryptoauthlib;csp;micrium_ucos3;net;touch;usb;"/>
+      <Setting dnOrder="5" key="PackageFilter" value="bsp;core;csp;gfx;motor_control;validation;x2c;"/>
     </Settings>
   </Configurator>
 </Configuration>
