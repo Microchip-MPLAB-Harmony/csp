@@ -171,6 +171,8 @@ int main ( void )
 
     /* Initialize all modules */
     SYS_Initialize ( NULL );
+    
+    LED_Off();
 
     while ( true )
     {
