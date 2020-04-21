@@ -115,12 +115,14 @@ void SERCOM0_USART_Initialize( void )
 
     /* Initialize instance object */
     sercom0USARTObj.rdCallback = NULL;
-    sercom0USARTObj.rdInIndex = sercom0USARTObj.rdOutIndex = 0;
+    sercom0USARTObj.rdInIndex = 0;
+	sercom0USARTObj.rdOutIndex = 0;
     sercom0USARTObj.isRdNotificationEnabled = false;
     sercom0USARTObj.isRdNotifyPersistently = false;
     sercom0USARTObj.rdThreshold = 0;
     sercom0USARTObj.wrCallback = NULL;
-    sercom0USARTObj.wrInIndex = sercom0USARTObj.wrOutIndex = 0;
+    sercom0USARTObj.wrInIndex = 0;
+	sercom0USARTObj.wrOutIndex = 0;
     sercom0USARTObj.isWrNotificationEnabled = false;
     sercom0USARTObj.isWrNotifyPersistently = false;
     sercom0USARTObj.wrThreshold = 0;
@@ -319,12 +321,17 @@ static void SERCOM0_USART_ReadNotificationSend(void)
 size_t SERCOM0_USART_Read(uint8_t* pRdBuffer, const size_t size)
 {
     size_t nBytesRead = 0;
+	uint32_t rdOutIndex;
+	uint32_t rdInIndex;
 
     while (nBytesRead < size)
     {
         SERCOM0_USART_RX_INT_DISABLE();
+		
+		rdOutIndex = sercom0USARTObj.rdOutIndex;
+		rdInIndex = sercom0USARTObj.rdInIndex;
 
-        if (sercom0USARTObj.rdOutIndex != sercom0USARTObj.rdInIndex)
+        if (rdOutIndex != rdInIndex)
         {
             pRdBuffer[nBytesRead++] = SERCOM0_USART_ReadBuffer[sercom0USARTObj.rdOutIndex++];
 
@@ -347,19 +354,21 @@ size_t SERCOM0_USART_Read(uint8_t* pRdBuffer, const size_t size)
 size_t SERCOM0_USART_ReadCountGet(void)
 {
     size_t nUnreadBytesAvailable;
+	uint32_t rdOutIndex;
+	uint32_t rdInIndex;
+	
+	/* Take a snapshot of indices to avoid creation of critical section */
+	rdOutIndex = sercom0USARTObj.rdOutIndex;
+	rdInIndex = sercom0USARTObj.rdInIndex;
 
-    SERCOM0_USART_RX_INT_DISABLE();
-
-    if ( sercom0USARTObj.rdInIndex >=  sercom0USARTObj.rdOutIndex)
+    if ( rdInIndex >=  rdOutIndex)
     {
-        nUnreadBytesAvailable =  sercom0USARTObj.rdInIndex -  sercom0USARTObj.rdOutIndex;
+        nUnreadBytesAvailable =  rdInIndex - rdOutIndex;
     }
     else
     {
-        nUnreadBytesAvailable =  (SERCOM0_USART_READ_BUFFER_SIZE -  sercom0USARTObj.rdOutIndex) + sercom0USARTObj.rdInIndex;
+        nUnreadBytesAvailable =  (SERCOM0_USART_READ_BUFFER_SIZE -  rdOutIndex) + rdInIndex;
     }
-
-    SERCOM0_USART_RX_INT_ENABLE();
 
     return nUnreadBytesAvailable;
 }
@@ -405,8 +414,10 @@ void SERCOM0_USART_ReadCallbackRegister( SERCOM_USART_RING_BUFFER_CALLBACK callb
 static bool SERCOM0_USART_TxPullByte(uint8_t* pWrByte)
 {
     bool isSuccess = false;
+	uint32_t wrInIndex = sercom0USARTObj.wrInIndex;
+	uint32_t wrOutIndex = sercom0USARTObj.wrOutIndex;
 
-    if (sercom0USARTObj.wrOutIndex != sercom0USARTObj.wrInIndex)
+    if (wrOutIndex != wrInIndex)
     {
         *pWrByte = SERCOM0_USART_WriteBuffer[sercom0USARTObj.wrOutIndex++];
 
@@ -477,14 +488,18 @@ static void SERCOM0_USART_WriteNotificationSend(void)
 static size_t SERCOM0_USART_WritePendingBytesGet(void)
 {
     size_t nPendingTxBytes;
+	
+	/* Take a snapshot of indices to avoid creation of critical section */
+	uint32_t wrInIndex = sercom0USARTObj.wrInIndex;
+	uint32_t wrOutIndex = sercom0USARTObj.wrOutIndex;
 
-    if ( sercom0USARTObj.wrInIndex >=  sercom0USARTObj.wrOutIndex)
+    if ( wrInIndex >= wrOutIndex)
     {
-        nPendingTxBytes =  sercom0USARTObj.wrInIndex -  sercom0USARTObj.wrOutIndex;
+        nPendingTxBytes =  wrInIndex - wrOutIndex;
     }
     else
     {
-        nPendingTxBytes =  (SERCOM0_USART_WRITE_BUFFER_SIZE -  sercom0USARTObj.wrOutIndex) + sercom0USARTObj.wrInIndex;
+        nPendingTxBytes =  (SERCOM0_USART_WRITE_BUFFER_SIZE -  wrOutIndex) + wrInIndex;
     }
 
     return nPendingTxBytes;
@@ -494,16 +509,8 @@ size_t SERCOM0_USART_WriteCountGet(void)
 {
     size_t nPendingTxBytes;
 
-    SERCOM0_USART_TX_INT_DISABLE();
-
     nPendingTxBytes = SERCOM0_USART_WritePendingBytesGet();
-
-    /* Enable transmit interrupt only if any data is pending for transmission */
-    if (SERCOM0_USART_WritePendingBytesGet() > 0)
-    {
-        SERCOM0_USART_TX_INT_ENABLE();
-    }
-
+    
     return nPendingTxBytes;
 }
 
