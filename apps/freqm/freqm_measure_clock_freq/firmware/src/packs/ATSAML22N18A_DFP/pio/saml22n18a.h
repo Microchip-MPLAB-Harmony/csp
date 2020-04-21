@@ -1,7 +1,7 @@
 /**
  * \brief Peripheral I/O description for SAML22N18A
  *
- * Copyright (c) 2019 Microchip Technology Inc. and its subsidiaries.
+ * Copyright (c) 2020 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip software and any derivatives
  * exclusively with Microchip products. It is your responsibility to comply with third party license
@@ -1099,6 +1099,126 @@
 #define PORT_PA20H_GCLK_IO4                        ((1UL) << 20)
 
 /* ========== PORT definition for PTC peripheral ========== */
+#define PIN_PA11B_PTC_X0                           (11L)        
+#define MUX_PA11B_PTC_X0                           (1L)        
+#define PINMUX_PA11B_PTC_X0                        ((PIN_PA11B_PTC_X0 << 16) | MUX_PA11B_PTC_X0)
+#define PORT_PA11B_PTC_X0                          ((1UL) << 11)
+
+#define PIN_PA10B_PTC_X1                           (10L)        
+#define MUX_PA10B_PTC_X1                           (1L)        
+#define PINMUX_PA10B_PTC_X1                        ((PIN_PA10B_PTC_X1 << 16) | MUX_PA10B_PTC_X1)
+#define PORT_PA10B_PTC_X1                          ((1UL) << 10)
+
+#define PIN_PA09B_PTC_X2                           (9L)         
+#define MUX_PA09B_PTC_X2                           (1L)        
+#define PINMUX_PA09B_PTC_X2                        ((PIN_PA09B_PTC_X2 << 16) | MUX_PA09B_PTC_X2)
+#define PORT_PA09B_PTC_X2                          ((1UL) << 9)
+
+#define PIN_PA08B_PTC_X3                           (8L)         
+#define MUX_PA08B_PTC_X3                           (1L)        
+#define PINMUX_PA08B_PTC_X3                        ((PIN_PA08B_PTC_X3 << 16) | MUX_PA08B_PTC_X3)
+#define PORT_PA08B_PTC_X3                          ((1UL) << 8)
+
+#define PIN_PC05B_PTC_X4                           (69L)        
+#define MUX_PC05B_PTC_X4                           (1L)        
+#define PINMUX_PC05B_PTC_X4                        ((PIN_PC05B_PTC_X4 << 16) | MUX_PC05B_PTC_X4)
+#define PORT_PC05B_PTC_X4                          ((1UL) << 5)
+
+#define PIN_PC06B_PTC_X5                           (70L)        
+#define MUX_PC06B_PTC_X5                           (1L)        
+#define PINMUX_PC06B_PTC_X5                        ((PIN_PC06B_PTC_X5 << 16) | MUX_PC06B_PTC_X5)
+#define PORT_PC06B_PTC_X5                          ((1UL) << 6)
+
+#define PIN_PC02B_PTC_X6                           (66L)        
+#define MUX_PC02B_PTC_X6                           (1L)        
+#define PINMUX_PC02B_PTC_X6                        ((PIN_PC02B_PTC_X6 << 16) | MUX_PC02B_PTC_X6)
+#define PORT_PC02B_PTC_X6                          ((1UL) << 2)
+
+#define PIN_PC03B_PTC_X7                           (67L)        
+#define MUX_PC03B_PTC_X7                           (1L)        
+#define PINMUX_PC03B_PTC_X7                        ((PIN_PC03B_PTC_X7 << 16) | MUX_PC03B_PTC_X7)
+#define PORT_PC03B_PTC_X7                          ((1UL) << 3)
+
+#define PIN_PA02B_PTC_X8                           (2L)         
+#define MUX_PA02B_PTC_X8                           (1L)        
+#define PINMUX_PA02B_PTC_X8                        ((PIN_PA02B_PTC_X8 << 16) | MUX_PA02B_PTC_X8)
+#define PORT_PA02B_PTC_X8                          ((1UL) << 2)
+
+#define PIN_PA03B_PTC_X9                           (3L)         
+#define MUX_PA03B_PTC_X9                           (1L)        
+#define PINMUX_PA03B_PTC_X9                        ((PIN_PA03B_PTC_X9 << 16) | MUX_PA03B_PTC_X9)
+#define PORT_PA03B_PTC_X9                          ((1UL) << 3)
+
+#define PIN_PB04B_PTC_X10                          (36L)        
+#define MUX_PB04B_PTC_X10                          (1L)        
+#define PINMUX_PB04B_PTC_X10                       ((PIN_PB04B_PTC_X10 << 16) | MUX_PB04B_PTC_X10)
+#define PORT_PB04B_PTC_X10                         ((1UL) << 4)
+
+#define PIN_PB05B_PTC_X11                          (37L)        
+#define MUX_PB05B_PTC_X11                          (1L)        
+#define PINMUX_PB05B_PTC_X11                       ((PIN_PB05B_PTC_X11 << 16) | MUX_PB05B_PTC_X11)
+#define PORT_PB05B_PTC_X11                         ((1UL) << 5)
+
+#define PIN_PB06B_PTC_X12                          (38L)        
+#define MUX_PB06B_PTC_X12                          (1L)        
+#define PINMUX_PB06B_PTC_X12                       ((PIN_PB06B_PTC_X12 << 16) | MUX_PB06B_PTC_X12)
+#define PORT_PB06B_PTC_X12                         ((1UL) << 6)
+
+#define PIN_PB07B_PTC_X13                          (39L)        
+#define MUX_PB07B_PTC_X13                          (1L)        
+#define PINMUX_PB07B_PTC_X13                       ((PIN_PB07B_PTC_X13 << 16) | MUX_PB07B_PTC_X13)
+#define PORT_PB07B_PTC_X13                         ((1UL) << 7)
+
+#define PIN_PB08B_PTC_X14                          (40L)        
+#define MUX_PB08B_PTC_X14                          (1L)        
+#define PINMUX_PB08B_PTC_X14                       ((PIN_PB08B_PTC_X14 << 16) | MUX_PB08B_PTC_X14)
+#define PORT_PB08B_PTC_X14                         ((1UL) << 8)
+
+#define PIN_PB09B_PTC_X15                          (41L)        
+#define MUX_PB09B_PTC_X15                          (1L)        
+#define PINMUX_PB09B_PTC_X15                       ((PIN_PB09B_PTC_X15 << 16) | MUX_PB09B_PTC_X15)
+#define PORT_PB09B_PTC_X15                         ((1UL) << 9)
+
+#define PIN_PA20B_PTC_X16                          (20L)        
+#define MUX_PA20B_PTC_X16                          (1L)        
+#define PINMUX_PA20B_PTC_X16                       ((PIN_PA20B_PTC_X16 << 16) | MUX_PA20B_PTC_X16)
+#define PORT_PA20B_PTC_X16                         ((1UL) << 20)
+
+#define PIN_PA21B_PTC_X17                          (21L)        
+#define MUX_PA21B_PTC_X17                          (1L)        
+#define PINMUX_PA21B_PTC_X17                       ((PIN_PA21B_PTC_X17 << 16) | MUX_PA21B_PTC_X17)
+#define PORT_PA21B_PTC_X17                         ((1UL) << 21)
+
+#define PIN_PA22B_PTC_X18                          (22L)        
+#define MUX_PA22B_PTC_X18                          (1L)        
+#define PINMUX_PA22B_PTC_X18                       ((PIN_PA22B_PTC_X18 << 16) | MUX_PA22B_PTC_X18)
+#define PORT_PA22B_PTC_X18                         ((1UL) << 22)
+
+#define PIN_PA23B_PTC_X19                          (23L)        
+#define MUX_PA23B_PTC_X19                          (1L)        
+#define PINMUX_PA23B_PTC_X19                       ((PIN_PA23B_PTC_X19 << 16) | MUX_PA23B_PTC_X19)
+#define PORT_PA23B_PTC_X19                         ((1UL) << 23)
+
+#define PIN_PC28B_PTC_X20                          (92L)        
+#define MUX_PC28B_PTC_X20                          (1L)        
+#define PINMUX_PC28B_PTC_X20                       ((PIN_PC28B_PTC_X20 << 16) | MUX_PC28B_PTC_X20)
+#define PORT_PC28B_PTC_X20                         ((1UL) << 28)
+
+#define PIN_PA27B_PTC_X21                          (27L)        
+#define MUX_PA27B_PTC_X21                          (1L)        
+#define PINMUX_PA27B_PTC_X21                       ((PIN_PA27B_PTC_X21 << 16) | MUX_PA27B_PTC_X21)
+#define PORT_PA27B_PTC_X21                         ((1UL) << 27)
+
+#define PIN_PA30B_PTC_X22                          (30L)        
+#define MUX_PA30B_PTC_X22                          (1L)        
+#define PINMUX_PA30B_PTC_X22                       ((PIN_PA30B_PTC_X22 << 16) | MUX_PA30B_PTC_X22)
+#define PORT_PA30B_PTC_X22                         ((1UL) << 30)
+
+#define PIN_PA31B_PTC_X23                          (31L)        
+#define MUX_PA31B_PTC_X23                          (1L)        
+#define PINMUX_PA31B_PTC_X23                       ((PIN_PA31B_PTC_X23 << 16) | MUX_PA31B_PTC_X23)
+#define PORT_PA31B_PTC_X23                         ((1UL) << 31)
+
 #define PIN_PA04B_PTC_X24                          (4L)         
 #define MUX_PA04B_PTC_X24                          (1L)        
 #define PINMUX_PA04B_PTC_X24                       ((PIN_PA04B_PTC_X24 << 16) | MUX_PA04B_PTC_X24)
@@ -1139,240 +1259,120 @@
 #define PINMUX_PA19B_PTC_X31                       ((PIN_PA19B_PTC_X31 << 16) | MUX_PA19B_PTC_X31)
 #define PORT_PA19B_PTC_X31                         ((1UL) << 19)
 
-#define PIN_PA11B_PTC_X0                           (11L)        
-#define MUX_PA11B_PTC_X0                           (1L)        
-#define PINMUX_PA11B_PTC_X0                        ((PIN_PA11B_PTC_X0 << 16) | MUX_PA11B_PTC_X0)
-#define PORT_PA11B_PTC_X0                          ((1UL) << 11)
-
 #define PIN_PA11B_PTC_Y0                           (11L)        
 #define MUX_PA11B_PTC_Y0                           (1L)        
 #define PINMUX_PA11B_PTC_Y0                        ((PIN_PA11B_PTC_Y0 << 16) | MUX_PA11B_PTC_Y0)
 #define PORT_PA11B_PTC_Y0                          ((1UL) << 11)
-
-#define PIN_PA10B_PTC_X1                           (10L)        
-#define MUX_PA10B_PTC_X1                           (1L)        
-#define PINMUX_PA10B_PTC_X1                        ((PIN_PA10B_PTC_X1 << 16) | MUX_PA10B_PTC_X1)
-#define PORT_PA10B_PTC_X1                          ((1UL) << 10)
 
 #define PIN_PA10B_PTC_Y1                           (10L)        
 #define MUX_PA10B_PTC_Y1                           (1L)        
 #define PINMUX_PA10B_PTC_Y1                        ((PIN_PA10B_PTC_Y1 << 16) | MUX_PA10B_PTC_Y1)
 #define PORT_PA10B_PTC_Y1                          ((1UL) << 10)
 
-#define PIN_PA09B_PTC_X2                           (9L)         
-#define MUX_PA09B_PTC_X2                           (1L)        
-#define PINMUX_PA09B_PTC_X2                        ((PIN_PA09B_PTC_X2 << 16) | MUX_PA09B_PTC_X2)
-#define PORT_PA09B_PTC_X2                          ((1UL) << 9)
-
 #define PIN_PA09B_PTC_Y2                           (9L)         
 #define MUX_PA09B_PTC_Y2                           (1L)        
 #define PINMUX_PA09B_PTC_Y2                        ((PIN_PA09B_PTC_Y2 << 16) | MUX_PA09B_PTC_Y2)
 #define PORT_PA09B_PTC_Y2                          ((1UL) << 9)
-
-#define PIN_PA08B_PTC_X3                           (8L)         
-#define MUX_PA08B_PTC_X3                           (1L)        
-#define PINMUX_PA08B_PTC_X3                        ((PIN_PA08B_PTC_X3 << 16) | MUX_PA08B_PTC_X3)
-#define PORT_PA08B_PTC_X3                          ((1UL) << 8)
 
 #define PIN_PA08B_PTC_Y3                           (8L)         
 #define MUX_PA08B_PTC_Y3                           (1L)        
 #define PINMUX_PA08B_PTC_Y3                        ((PIN_PA08B_PTC_Y3 << 16) | MUX_PA08B_PTC_Y3)
 #define PORT_PA08B_PTC_Y3                          ((1UL) << 8)
 
-#define PIN_PC05B_PTC_X4                           (69L)        
-#define MUX_PC05B_PTC_X4                           (1L)        
-#define PINMUX_PC05B_PTC_X4                        ((PIN_PC05B_PTC_X4 << 16) | MUX_PC05B_PTC_X4)
-#define PORT_PC05B_PTC_X4                          ((1UL) << 5)
-
 #define PIN_PC05B_PTC_Y4                           (69L)        
 #define MUX_PC05B_PTC_Y4                           (1L)        
 #define PINMUX_PC05B_PTC_Y4                        ((PIN_PC05B_PTC_Y4 << 16) | MUX_PC05B_PTC_Y4)
 #define PORT_PC05B_PTC_Y4                          ((1UL) << 5)
-
-#define PIN_PC06B_PTC_X5                           (70L)        
-#define MUX_PC06B_PTC_X5                           (1L)        
-#define PINMUX_PC06B_PTC_X5                        ((PIN_PC06B_PTC_X5 << 16) | MUX_PC06B_PTC_X5)
-#define PORT_PC06B_PTC_X5                          ((1UL) << 6)
 
 #define PIN_PC06B_PTC_Y5                           (70L)        
 #define MUX_PC06B_PTC_Y5                           (1L)        
 #define PINMUX_PC06B_PTC_Y5                        ((PIN_PC06B_PTC_Y5 << 16) | MUX_PC06B_PTC_Y5)
 #define PORT_PC06B_PTC_Y5                          ((1UL) << 6)
 
-#define PIN_PC02B_PTC_X6                           (66L)        
-#define MUX_PC02B_PTC_X6                           (1L)        
-#define PINMUX_PC02B_PTC_X6                        ((PIN_PC02B_PTC_X6 << 16) | MUX_PC02B_PTC_X6)
-#define PORT_PC02B_PTC_X6                          ((1UL) << 2)
-
 #define PIN_PC02B_PTC_Y6                           (66L)        
 #define MUX_PC02B_PTC_Y6                           (1L)        
 #define PINMUX_PC02B_PTC_Y6                        ((PIN_PC02B_PTC_Y6 << 16) | MUX_PC02B_PTC_Y6)
 #define PORT_PC02B_PTC_Y6                          ((1UL) << 2)
-
-#define PIN_PC03B_PTC_X7                           (67L)        
-#define MUX_PC03B_PTC_X7                           (1L)        
-#define PINMUX_PC03B_PTC_X7                        ((PIN_PC03B_PTC_X7 << 16) | MUX_PC03B_PTC_X7)
-#define PORT_PC03B_PTC_X7                          ((1UL) << 3)
 
 #define PIN_PC03B_PTC_Y7                           (67L)        
 #define MUX_PC03B_PTC_Y7                           (1L)        
 #define PINMUX_PC03B_PTC_Y7                        ((PIN_PC03B_PTC_Y7 << 16) | MUX_PC03B_PTC_Y7)
 #define PORT_PC03B_PTC_Y7                          ((1UL) << 3)
 
-#define PIN_PA02B_PTC_X8                           (2L)         
-#define MUX_PA02B_PTC_X8                           (1L)        
-#define PINMUX_PA02B_PTC_X8                        ((PIN_PA02B_PTC_X8 << 16) | MUX_PA02B_PTC_X8)
-#define PORT_PA02B_PTC_X8                          ((1UL) << 2)
-
 #define PIN_PA02B_PTC_Y8                           (2L)         
 #define MUX_PA02B_PTC_Y8                           (1L)        
 #define PINMUX_PA02B_PTC_Y8                        ((PIN_PA02B_PTC_Y8 << 16) | MUX_PA02B_PTC_Y8)
 #define PORT_PA02B_PTC_Y8                          ((1UL) << 2)
-
-#define PIN_PA03B_PTC_X9                           (3L)         
-#define MUX_PA03B_PTC_X9                           (1L)        
-#define PINMUX_PA03B_PTC_X9                        ((PIN_PA03B_PTC_X9 << 16) | MUX_PA03B_PTC_X9)
-#define PORT_PA03B_PTC_X9                          ((1UL) << 3)
 
 #define PIN_PA03B_PTC_Y9                           (3L)         
 #define MUX_PA03B_PTC_Y9                           (1L)        
 #define PINMUX_PA03B_PTC_Y9                        ((PIN_PA03B_PTC_Y9 << 16) | MUX_PA03B_PTC_Y9)
 #define PORT_PA03B_PTC_Y9                          ((1UL) << 3)
 
-#define PIN_PB04B_PTC_X10                          (36L)        
-#define MUX_PB04B_PTC_X10                          (1L)        
-#define PINMUX_PB04B_PTC_X10                       ((PIN_PB04B_PTC_X10 << 16) | MUX_PB04B_PTC_X10)
-#define PORT_PB04B_PTC_X10                         ((1UL) << 4)
-
 #define PIN_PB04B_PTC_Y10                          (36L)        
 #define MUX_PB04B_PTC_Y10                          (1L)        
 #define PINMUX_PB04B_PTC_Y10                       ((PIN_PB04B_PTC_Y10 << 16) | MUX_PB04B_PTC_Y10)
 #define PORT_PB04B_PTC_Y10                         ((1UL) << 4)
-
-#define PIN_PB05B_PTC_X11                          (37L)        
-#define MUX_PB05B_PTC_X11                          (1L)        
-#define PINMUX_PB05B_PTC_X11                       ((PIN_PB05B_PTC_X11 << 16) | MUX_PB05B_PTC_X11)
-#define PORT_PB05B_PTC_X11                         ((1UL) << 5)
 
 #define PIN_PB05B_PTC_Y11                          (37L)        
 #define MUX_PB05B_PTC_Y11                          (1L)        
 #define PINMUX_PB05B_PTC_Y11                       ((PIN_PB05B_PTC_Y11 << 16) | MUX_PB05B_PTC_Y11)
 #define PORT_PB05B_PTC_Y11                         ((1UL) << 5)
 
-#define PIN_PB06B_PTC_X12                          (38L)        
-#define MUX_PB06B_PTC_X12                          (1L)        
-#define PINMUX_PB06B_PTC_X12                       ((PIN_PB06B_PTC_X12 << 16) | MUX_PB06B_PTC_X12)
-#define PORT_PB06B_PTC_X12                         ((1UL) << 6)
-
 #define PIN_PB06B_PTC_Y12                          (38L)        
 #define MUX_PB06B_PTC_Y12                          (1L)        
 #define PINMUX_PB06B_PTC_Y12                       ((PIN_PB06B_PTC_Y12 << 16) | MUX_PB06B_PTC_Y12)
 #define PORT_PB06B_PTC_Y12                         ((1UL) << 6)
-
-#define PIN_PB07B_PTC_X13                          (39L)        
-#define MUX_PB07B_PTC_X13                          (1L)        
-#define PINMUX_PB07B_PTC_X13                       ((PIN_PB07B_PTC_X13 << 16) | MUX_PB07B_PTC_X13)
-#define PORT_PB07B_PTC_X13                         ((1UL) << 7)
 
 #define PIN_PB07B_PTC_Y13                          (39L)        
 #define MUX_PB07B_PTC_Y13                          (1L)        
 #define PINMUX_PB07B_PTC_Y13                       ((PIN_PB07B_PTC_Y13 << 16) | MUX_PB07B_PTC_Y13)
 #define PORT_PB07B_PTC_Y13                         ((1UL) << 7)
 
-#define PIN_PB08B_PTC_X14                          (40L)        
-#define MUX_PB08B_PTC_X14                          (1L)        
-#define PINMUX_PB08B_PTC_X14                       ((PIN_PB08B_PTC_X14 << 16) | MUX_PB08B_PTC_X14)
-#define PORT_PB08B_PTC_X14                         ((1UL) << 8)
-
 #define PIN_PB08B_PTC_Y14                          (40L)        
 #define MUX_PB08B_PTC_Y14                          (1L)        
 #define PINMUX_PB08B_PTC_Y14                       ((PIN_PB08B_PTC_Y14 << 16) | MUX_PB08B_PTC_Y14)
 #define PORT_PB08B_PTC_Y14                         ((1UL) << 8)
-
-#define PIN_PB09B_PTC_X15                          (41L)        
-#define MUX_PB09B_PTC_X15                          (1L)        
-#define PINMUX_PB09B_PTC_X15                       ((PIN_PB09B_PTC_X15 << 16) | MUX_PB09B_PTC_X15)
-#define PORT_PB09B_PTC_X15                         ((1UL) << 9)
 
 #define PIN_PB09B_PTC_Y15                          (41L)        
 #define MUX_PB09B_PTC_Y15                          (1L)        
 #define PINMUX_PB09B_PTC_Y15                       ((PIN_PB09B_PTC_Y15 << 16) | MUX_PB09B_PTC_Y15)
 #define PORT_PB09B_PTC_Y15                         ((1UL) << 9)
 
-#define PIN_PA20B_PTC_X16                          (20L)        
-#define MUX_PA20B_PTC_X16                          (1L)        
-#define PINMUX_PA20B_PTC_X16                       ((PIN_PA20B_PTC_X16 << 16) | MUX_PA20B_PTC_X16)
-#define PORT_PA20B_PTC_X16                         ((1UL) << 20)
-
 #define PIN_PA20B_PTC_Y16                          (20L)        
 #define MUX_PA20B_PTC_Y16                          (1L)        
 #define PINMUX_PA20B_PTC_Y16                       ((PIN_PA20B_PTC_Y16 << 16) | MUX_PA20B_PTC_Y16)
 #define PORT_PA20B_PTC_Y16                         ((1UL) << 20)
-
-#define PIN_PA21B_PTC_X17                          (21L)        
-#define MUX_PA21B_PTC_X17                          (1L)        
-#define PINMUX_PA21B_PTC_X17                       ((PIN_PA21B_PTC_X17 << 16) | MUX_PA21B_PTC_X17)
-#define PORT_PA21B_PTC_X17                         ((1UL) << 21)
 
 #define PIN_PA21B_PTC_Y17                          (21L)        
 #define MUX_PA21B_PTC_Y17                          (1L)        
 #define PINMUX_PA21B_PTC_Y17                       ((PIN_PA21B_PTC_Y17 << 16) | MUX_PA21B_PTC_Y17)
 #define PORT_PA21B_PTC_Y17                         ((1UL) << 21)
 
-#define PIN_PA22B_PTC_X18                          (22L)        
-#define MUX_PA22B_PTC_X18                          (1L)        
-#define PINMUX_PA22B_PTC_X18                       ((PIN_PA22B_PTC_X18 << 16) | MUX_PA22B_PTC_X18)
-#define PORT_PA22B_PTC_X18                         ((1UL) << 22)
-
 #define PIN_PA22B_PTC_Y18                          (22L)        
 #define MUX_PA22B_PTC_Y18                          (1L)        
 #define PINMUX_PA22B_PTC_Y18                       ((PIN_PA22B_PTC_Y18 << 16) | MUX_PA22B_PTC_Y18)
 #define PORT_PA22B_PTC_Y18                         ((1UL) << 22)
-
-#define PIN_PA23B_PTC_X19                          (23L)        
-#define MUX_PA23B_PTC_X19                          (1L)        
-#define PINMUX_PA23B_PTC_X19                       ((PIN_PA23B_PTC_X19 << 16) | MUX_PA23B_PTC_X19)
-#define PORT_PA23B_PTC_X19                         ((1UL) << 23)
 
 #define PIN_PA23B_PTC_Y19                          (23L)        
 #define MUX_PA23B_PTC_Y19                          (1L)        
 #define PINMUX_PA23B_PTC_Y19                       ((PIN_PA23B_PTC_Y19 << 16) | MUX_PA23B_PTC_Y19)
 #define PORT_PA23B_PTC_Y19                         ((1UL) << 23)
 
-#define PIN_PC28B_PTC_X20                          (92L)        
-#define MUX_PC28B_PTC_X20                          (1L)        
-#define PINMUX_PC28B_PTC_X20                       ((PIN_PC28B_PTC_X20 << 16) | MUX_PC28B_PTC_X20)
-#define PORT_PC28B_PTC_X20                         ((1UL) << 28)
-
 #define PIN_PC28B_PTC_Y20                          (92L)        
 #define MUX_PC28B_PTC_Y20                          (1L)        
 #define PINMUX_PC28B_PTC_Y20                       ((PIN_PC28B_PTC_Y20 << 16) | MUX_PC28B_PTC_Y20)
 #define PORT_PC28B_PTC_Y20                         ((1UL) << 28)
-
-#define PIN_PA27B_PTC_X21                          (27L)        
-#define MUX_PA27B_PTC_X21                          (1L)        
-#define PINMUX_PA27B_PTC_X21                       ((PIN_PA27B_PTC_X21 << 16) | MUX_PA27B_PTC_X21)
-#define PORT_PA27B_PTC_X21                         ((1UL) << 27)
 
 #define PIN_PA27B_PTC_Y21                          (27L)        
 #define MUX_PA27B_PTC_Y21                          (1L)        
 #define PINMUX_PA27B_PTC_Y21                       ((PIN_PA27B_PTC_Y21 << 16) | MUX_PA27B_PTC_Y21)
 #define PORT_PA27B_PTC_Y21                         ((1UL) << 27)
 
-#define PIN_PA30B_PTC_X22                          (30L)        
-#define MUX_PA30B_PTC_X22                          (1L)        
-#define PINMUX_PA30B_PTC_X22                       ((PIN_PA30B_PTC_X22 << 16) | MUX_PA30B_PTC_X22)
-#define PORT_PA30B_PTC_X22                         ((1UL) << 30)
-
 #define PIN_PA30B_PTC_Y22                          (30L)        
 #define MUX_PA30B_PTC_Y22                          (1L)        
 #define PINMUX_PA30B_PTC_Y22                       ((PIN_PA30B_PTC_Y22 << 16) | MUX_PA30B_PTC_Y22)
 #define PORT_PA30B_PTC_Y22                         ((1UL) << 30)
-
-#define PIN_PA31B_PTC_X23                          (31L)        
-#define MUX_PA31B_PTC_X23                          (1L)        
-#define PINMUX_PA31B_PTC_X23                       ((PIN_PA31B_PTC_X23 << 16) | MUX_PA31B_PTC_X23)
-#define PORT_PA31B_PTC_X23                         ((1UL) << 31)
 
 #define PIN_PA31B_PTC_Y23                          (31L)        
 #define MUX_PA31B_PTC_Y23                          (1L)        
