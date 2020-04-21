@@ -76,11 +76,6 @@ static void DFLL_Initialize(void)
 
     /* Configure DFLL    */
     OSCCTRL_REGS->OSCCTRL_DFLLCTRL = OSCCTRL_DFLLCTRL_ENABLE_Msk | OSCCTRL_DFLLCTRL_RUNSTDBY_Msk ;
-
-    while((OSCCTRL_REGS->OSCCTRL_STATUS & OSCCTRL_STATUS_DFLLRDY_Msk) != OSCCTRL_STATUS_DFLLRDY_Msk)
-    {
-        /* Waiting for the Ready state */
-    }
     
     while((OSCCTRL_REGS->OSCCTRL_STATUS & OSCCTRL_STATUS_DFLLRDY_Msk) != OSCCTRL_STATUS_DFLLRDY_Msk)
     {
