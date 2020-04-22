@@ -84,12 +84,14 @@ void ${DBGU_INSTANCE_NAME}_Initialize( void )
 
     /* Initialize instance object */
     ${DBGU_INSTANCE_NAME?lower_case}Obj.rdCallback = NULL;
-    ${DBGU_INSTANCE_NAME?lower_case}Obj.rdInIndex = ${DBGU_INSTANCE_NAME?lower_case}Obj.rdOutIndex = 0;
+    ${DBGU_INSTANCE_NAME?lower_case}Obj.rdInIndex = 0;
+    ${DBGU_INSTANCE_NAME?lower_case}Obj.rdOutIndex = 0;
     ${DBGU_INSTANCE_NAME?lower_case}Obj.isRdNotificationEnabled = false;
     ${DBGU_INSTANCE_NAME?lower_case}Obj.isRdNotifyPersistently = false;
     ${DBGU_INSTANCE_NAME?lower_case}Obj.rdThreshold = 0;
     ${DBGU_INSTANCE_NAME?lower_case}Obj.wrCallback = NULL;
-    ${DBGU_INSTANCE_NAME?lower_case}Obj.wrInIndex = ${DBGU_INSTANCE_NAME?lower_case}Obj.wrOutIndex = 0;
+    ${DBGU_INSTANCE_NAME?lower_case}Obj.wrInIndex = 0;
+    ${DBGU_INSTANCE_NAME?lower_case}Obj.wrOutIndex = 0;
     ${DBGU_INSTANCE_NAME?lower_case}Obj.isWrNotificationEnabled = false;
     ${DBGU_INSTANCE_NAME?lower_case}Obj.isWrNotifyPersistently = false;
     ${DBGU_INSTANCE_NAME?lower_case}Obj.wrThreshold = 0;
@@ -242,12 +244,17 @@ static void ${DBGU_INSTANCE_NAME}_ReadNotificationSend(void)
 size_t ${DBGU_INSTANCE_NAME}_Read(uint8_t* pRdBuffer, const size_t size)
 {
     size_t nBytesRead = 0;
+    uint32_t rdOutIndex;
+    uint32_t rdInIndex;
 
     while (nBytesRead < size)
     {
         ${DBGU_INSTANCE_NAME}_RX_INT_DISABLE();
 
-        if (${DBGU_INSTANCE_NAME?lower_case}Obj.rdOutIndex != ${DBGU_INSTANCE_NAME?lower_case}Obj.rdInIndex)
+        rdOutIndex = ${DBGU_INSTANCE_NAME?lower_case}Obj.rdOutIndex;
+        rdInIndex = ${DBGU_INSTANCE_NAME?lower_case}Obj.rdInIndex;
+
+        if (rdOutIndex != rdInIndex)
         {
             pRdBuffer[nBytesRead++] = ${DBGU_INSTANCE_NAME}_ReadBuffer[${DBGU_INSTANCE_NAME?lower_case}Obj.rdOutIndex++];
 
@@ -270,16 +277,21 @@ size_t ${DBGU_INSTANCE_NAME}_Read(uint8_t* pRdBuffer, const size_t size)
 size_t ${DBGU_INSTANCE_NAME}_ReadCountGet(void)
 {
     size_t nUnreadBytesAvailable;
+    uint32_t rdInIndex;
+    uint32_t rdOutIndex;
 
     ${DBGU_INSTANCE_NAME}_RX_INT_DISABLE();
 
-    if ( ${DBGU_INSTANCE_NAME?lower_case}Obj.rdInIndex >=  ${DBGU_INSTANCE_NAME?lower_case}Obj.rdOutIndex)
+    rdInIndex = ${DBGU_INSTANCE_NAME?lower_case}Obj.rdInIndex;
+    rdOutIndex = ${DBGU_INSTANCE_NAME?lower_case}Obj.rdOutIndex;
+
+    if ( rdInIndex >=  rdOutIndex)
     {
-        nUnreadBytesAvailable =  ${DBGU_INSTANCE_NAME?lower_case}Obj.rdInIndex -  ${DBGU_INSTANCE_NAME?lower_case}Obj.rdOutIndex;
+        nUnreadBytesAvailable =  rdInIndex - rdOutIndex;
     }
     else
     {
-        nUnreadBytesAvailable =  (${DBGU_INSTANCE_NAME}_READ_BUFFER_SIZE -  ${DBGU_INSTANCE_NAME?lower_case}Obj.rdOutIndex) + ${DBGU_INSTANCE_NAME?lower_case}Obj.rdInIndex;
+        nUnreadBytesAvailable =  (${DBGU_INSTANCE_NAME}_READ_BUFFER_SIZE -  rdOutIndex) + rdInIndex;
     }
 
     ${DBGU_INSTANCE_NAME}_RX_INT_ENABLE();
@@ -327,8 +339,10 @@ void ${DBGU_INSTANCE_NAME}_ReadCallbackRegister( DBGU_RING_BUFFER_CALLBACK callb
 static bool ${DBGU_INSTANCE_NAME}_TxPullByte(uint8_t* pWrByte)
 {
     bool isSuccess = false;
+    uint32_t wrOutIndex = ${DBGU_INSTANCE_NAME?lower_case}Obj.wrOutIndex;
+    uint32_t wrInIndex = ${DBGU_INSTANCE_NAME?lower_case}Obj.wrInIndex;
 
-    if (${DBGU_INSTANCE_NAME?lower_case}Obj.wrOutIndex != ${DBGU_INSTANCE_NAME?lower_case}Obj.wrInIndex)
+    if (wrOutIndex != wrInIndex)
     {
         *pWrByte = ${DBGU_INSTANCE_NAME}_WriteBuffer[${DBGU_INSTANCE_NAME?lower_case}Obj.wrOutIndex++];
 
@@ -399,14 +413,16 @@ static void ${DBGU_INSTANCE_NAME}_WriteNotificationSend(void)
 static size_t ${DBGU_INSTANCE_NAME}_WritePendingBytesGet(void)
 {
     size_t nPendingTxBytes;
+    uint32_t wrOutIndex = ${DBGU_INSTANCE_NAME?lower_case}Obj.wrOutIndex;
+    uint32_t wrInIndex = ${DBGU_INSTANCE_NAME?lower_case}Obj.wrInIndex;
 
-    if ( ${DBGU_INSTANCE_NAME?lower_case}Obj.wrInIndex >=  ${DBGU_INSTANCE_NAME?lower_case}Obj.wrOutIndex)
+    if ( wrInIndex >=  wrOutIndex)
     {
-        nPendingTxBytes =  ${DBGU_INSTANCE_NAME?lower_case}Obj.wrInIndex -  ${DBGU_INSTANCE_NAME?lower_case}Obj.wrOutIndex;
+        nPendingTxBytes =  wrInIndex -  wrOutIndex;
     }
     else
     {
-        nPendingTxBytes =  (${DBGU_INSTANCE_NAME}_WRITE_BUFFER_SIZE -  ${DBGU_INSTANCE_NAME?lower_case}Obj.wrOutIndex) + ${DBGU_INSTANCE_NAME?lower_case}Obj.wrInIndex;
+        nPendingTxBytes =  (${DBGU_INSTANCE_NAME}_WRITE_BUFFER_SIZE -  wrOutIndex) + wrInIndex;
     }
 
     return nPendingTxBytes;
@@ -421,7 +437,7 @@ size_t ${DBGU_INSTANCE_NAME}_WriteCountGet(void)
     nPendingTxBytes = ${DBGU_INSTANCE_NAME}_WritePendingBytesGet();
 
     /* Enable transmit interrupt only if any data is pending for transmission */
-    if (${DBGU_INSTANCE_NAME}_WritePendingBytesGet() > 0)
+    if (nPendingTxBytes > 0)
     {
         ${DBGU_INSTANCE_NAME}_TX_INT_ENABLE();
     }
