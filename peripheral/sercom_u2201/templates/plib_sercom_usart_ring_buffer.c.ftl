@@ -144,14 +144,16 @@ void ${SERCOM_INSTANCE_NAME}_USART_Initialize( void )
 <#if USART_RX_ENABLE = true>
     /* Initialize instance object */
     ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdCallback = NULL;
-    ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdInIndex = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdOutIndex = 0;
+    ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdInIndex = 0;
+	${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdOutIndex = 0;
     ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.isRdNotificationEnabled = false;
     ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.isRdNotifyPersistently = false;
     ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdThreshold = 0;
 </#if>
 <#if USART_TX_ENABLE = true>
     ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrCallback = NULL;
-    ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrInIndex = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrOutIndex = 0;
+    ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrInIndex = 0;
+	${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrOutIndex = 0;
     ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.isWrNotificationEnabled = false;
     ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.isWrNotifyPersistently = false;
     ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrThreshold = 0;
@@ -384,12 +386,17 @@ static void ${SERCOM_INSTANCE_NAME}_USART_ReadNotificationSend(void)
 size_t ${SERCOM_INSTANCE_NAME}_USART_Read(uint8_t* pRdBuffer, const size_t size)
 {
     size_t nBytesRead = 0;
+	uint32_t rdOutIndex;
+	uint32_t rdInIndex;
 
     while (nBytesRead < size)
     {
         ${SERCOM_INSTANCE_NAME}_USART_RX_INT_DISABLE();
+		
+		rdOutIndex = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdOutIndex;
+		rdInIndex = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdInIndex;
 
-        if (${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdOutIndex != ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdInIndex)
+        if (rdOutIndex != rdInIndex)
         {
             pRdBuffer[nBytesRead++] = ${SERCOM_INSTANCE_NAME}_USART_ReadBuffer[${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdOutIndex++];
 
@@ -412,16 +419,21 @@ size_t ${SERCOM_INSTANCE_NAME}_USART_Read(uint8_t* pRdBuffer, const size_t size)
 size_t ${SERCOM_INSTANCE_NAME}_USART_ReadCountGet(void)
 {
     size_t nUnreadBytesAvailable;
+	uint32_t rdOutIndex;
+	uint32_t rdInIndex;
 
     ${SERCOM_INSTANCE_NAME}_USART_RX_INT_DISABLE();
+	
+	rdOutIndex = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdOutIndex;
+	rdInIndex = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdInIndex;
 
-    if ( ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdInIndex >=  ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdOutIndex)
+    if ( rdInIndex >=  rdOutIndex)
     {
-        nUnreadBytesAvailable =  ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdInIndex -  ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdOutIndex;
+        nUnreadBytesAvailable =  rdInIndex - rdOutIndex;
     }
     else
     {
-        nUnreadBytesAvailable =  (${SERCOM_INSTANCE_NAME}_USART_READ_BUFFER_SIZE -  ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdOutIndex) + ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdInIndex;
+        nUnreadBytesAvailable =  (${SERCOM_INSTANCE_NAME}_USART_READ_BUFFER_SIZE -  rdOutIndex) + rdInIndex;
     }
 
     ${SERCOM_INSTANCE_NAME}_USART_RX_INT_ENABLE();
@@ -472,8 +484,10 @@ void ${SERCOM_INSTANCE_NAME}_USART_ReadCallbackRegister( SERCOM_USART_RING_BUFFE
 static bool ${SERCOM_INSTANCE_NAME}_USART_TxPullByte(uint8_t* pWrByte)
 {
     bool isSuccess = false;
+	uint32_t wrInIndex = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrInIndex;
+	uint32_t wrOutIndex = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrOutIndex;
 
-    if (${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrOutIndex != ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrInIndex)
+    if (wrOutIndex != wrInIndex)
     {
         *pWrByte = ${SERCOM_INSTANCE_NAME}_USART_WriteBuffer[${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrOutIndex++];
 
@@ -544,14 +558,16 @@ static void ${SERCOM_INSTANCE_NAME}_USART_WriteNotificationSend(void)
 static size_t ${SERCOM_INSTANCE_NAME}_USART_WritePendingBytesGet(void)
 {
     size_t nPendingTxBytes;
+	uint32_t wrInIndex = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrInIndex;
+	uint32_t wrOutIndex = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrOutIndex;
 
-    if ( ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrInIndex >=  ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrOutIndex)
+    if ( wrInIndex >= wrOutIndex)
     {
-        nPendingTxBytes =  ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrInIndex -  ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrOutIndex;
+        nPendingTxBytes =  wrInIndex - wrOutIndex;
     }
     else
     {
-        nPendingTxBytes =  (${SERCOM_INSTANCE_NAME}_USART_WRITE_BUFFER_SIZE -  ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrOutIndex) + ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrInIndex;
+        nPendingTxBytes =  (${SERCOM_INSTANCE_NAME}_USART_WRITE_BUFFER_SIZE -  wrOutIndex) + wrInIndex;
     }
 
     return nPendingTxBytes;
@@ -566,7 +582,7 @@ size_t ${SERCOM_INSTANCE_NAME}_USART_WriteCountGet(void)
     nPendingTxBytes = ${SERCOM_INSTANCE_NAME}_USART_WritePendingBytesGet();
 
     /* Enable transmit interrupt only if any data is pending for transmission */
-    if (${SERCOM_INSTANCE_NAME}_USART_WritePendingBytesGet() > 0)
+    if (nPendingTxBytes > 0)
     {
         ${SERCOM_INSTANCE_NAME}_USART_TX_INT_ENABLE();
     }
