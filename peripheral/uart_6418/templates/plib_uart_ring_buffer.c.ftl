@@ -279,9 +279,8 @@ size_t ${UART_INSTANCE_NAME}_ReadCountGet(void)
     size_t nUnreadBytesAvailable;
 	uint32_t rdInIndex;
 	uint32_t rdOutIndex;
-
-    ${UART_INSTANCE_NAME}_RX_INT_DISABLE();
-	
+    
+	/* Take  snapshot of indices to avoid creation of critical section */
 	rdInIndex = ${UART_INSTANCE_NAME?lower_case}Obj.rdInIndex;
 	rdOutIndex = ${UART_INSTANCE_NAME?lower_case}Obj.rdOutIndex;
 
@@ -293,9 +292,7 @@ size_t ${UART_INSTANCE_NAME}_ReadCountGet(void)
     {
         nUnreadBytesAvailable =  (${UART_INSTANCE_NAME}_READ_BUFFER_SIZE -  rdOutIndex) + rdInIndex;
     }
-
-    ${UART_INSTANCE_NAME}_RX_INT_ENABLE();
-
+    
     return nUnreadBytesAvailable;
 }
 
@@ -413,6 +410,8 @@ static void ${UART_INSTANCE_NAME}_WriteNotificationSend(void)
 static size_t ${UART_INSTANCE_NAME}_WritePendingBytesGet(void)
 {
     size_t nPendingTxBytes;
+	
+	/* Take a snapshot of indices to avoid creation of critical section */
 	uint32_t wrOutIndex = ${UART_INSTANCE_NAME?lower_case}Obj.wrOutIndex;
 	uint32_t wrInIndex = ${UART_INSTANCE_NAME?lower_case}Obj.wrInIndex;
 
@@ -430,17 +429,9 @@ static size_t ${UART_INSTANCE_NAME}_WritePendingBytesGet(void)
 
 size_t ${UART_INSTANCE_NAME}_WriteCountGet(void)
 {
-    size_t nPendingTxBytes;
-
-    ${UART_INSTANCE_NAME}_TX_INT_DISABLE();
+    size_t nPendingTxBytes;    
 
     nPendingTxBytes = ${UART_INSTANCE_NAME}_WritePendingBytesGet();
-
-    /* Enable transmit interrupt only if any data is pending for transmission */
-    if (nPendingTxBytes > 0)
-    {
-        ${UART_INSTANCE_NAME}_TX_INT_ENABLE();
-    }
 
     return nPendingTxBytes;
 }
