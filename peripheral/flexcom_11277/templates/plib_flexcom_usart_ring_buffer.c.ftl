@@ -281,6 +281,8 @@ static void ${FLEXCOM_INSTANCE_NAME}_USART_WriteNotificationSend(void)
 static size_t ${FLEXCOM_INSTANCE_NAME}_USART_WritePendingBytesGet(void)
 {
     size_t nPendingTxBytes;
+	
+	/* Take a snapshot of indices to avoid creation of critical section */
 	uint32_t wrOutIndex = ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.wrOutIndex;
 	uint32_t wrInIndex = ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.wrInIndex;
 
@@ -300,16 +302,8 @@ size_t ${FLEXCOM_INSTANCE_NAME}_USART_WriteCountGet(void)
 {
     size_t nPendingTxBytes;
 
-    ${FLEXCOM_INSTANCE_NAME}_USART_TX_INT_DISABLE();
-
     nPendingTxBytes = ${FLEXCOM_INSTANCE_NAME}_USART_WritePendingBytesGet();
-
-    /* Enable transmit interrupt only if any data is pending for transmission */
-    if (nPendingTxBytes > 0)
-    {
-        ${FLEXCOM_INSTANCE_NAME}_USART_TX_INT_ENABLE();
-    }
-
+    
     return nPendingTxBytes;
 }
 
@@ -490,9 +484,8 @@ size_t ${FLEXCOM_INSTANCE_NAME}_USART_ReadCountGet(void)
     size_t nUnreadBytesAvailable;
 	uint32_t rdOutIndex;
 	uint32_t rdInIndex;
-
-    ${FLEXCOM_INSTANCE_NAME}_USART_RX_INT_DISABLE();
 	
+	/* Take a snapshot of indices to avoid creation of critical section */
 	rdOutIndex = ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdOutIndex;
 	rdInIndex = ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdInIndex;
 
@@ -504,8 +497,6 @@ size_t ${FLEXCOM_INSTANCE_NAME}_USART_ReadCountGet(void)
     {
         nUnreadBytesAvailable =  (${FLEXCOM_INSTANCE_NAME}_USART_READ_BUFFER_SIZE -  rdOutIndex) + rdInIndex;
     }
-
-    ${FLEXCOM_INSTANCE_NAME}_USART_RX_INT_ENABLE();
 
     return nUnreadBytesAvailable;
 }
