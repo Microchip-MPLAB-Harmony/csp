@@ -292,10 +292,9 @@ size_t ${USART_INSTANCE_NAME}_ReadCountGet(void)
 {
     size_t nUnreadBytesAvailable;	
 	uint32_t rdOutIndex;
-	uint32_t rdInIndex;
-
-    ${USART_INSTANCE_NAME}_RX_INT_DISABLE();
+	uint32_t rdInIndex;    
 	
+	/* Take a snapshot of indices to avoid creation of critical section */
 	rdOutIndex = ${USART_INSTANCE_NAME?lower_case}Obj.rdOutIndex;
 	rdInIndex = ${USART_INSTANCE_NAME?lower_case}Obj.rdInIndex;
 
@@ -306,9 +305,7 @@ size_t ${USART_INSTANCE_NAME}_ReadCountGet(void)
     else
     {
         nUnreadBytesAvailable =  (${USART_INSTANCE_NAME}_READ_BUFFER_SIZE -  rdOutIndex) + rdInIndex;
-    }
-
-    ${USART_INSTANCE_NAME}_RX_INT_ENABLE();
+    }    
 
     return nUnreadBytesAvailable;
 }
@@ -427,6 +424,8 @@ static void ${USART_INSTANCE_NAME}_WriteNotificationSend(void)
 static size_t ${USART_INSTANCE_NAME}_WritePendingBytesGet(void)
 {
     size_t nPendingTxBytes;
+	
+	/* Take a snapshot of indices to avoid creation of critical section */
 	uint32_t wrOutIndex = ${USART_INSTANCE_NAME?lower_case}Obj.wrOutIndex;
 	uint32_t wrInIndex = ${USART_INSTANCE_NAME?lower_case}Obj.wrInIndex;
 
@@ -446,15 +445,7 @@ size_t ${USART_INSTANCE_NAME}_WriteCountGet(void)
 {
     size_t nPendingTxBytes;
 
-    ${USART_INSTANCE_NAME}_TX_INT_DISABLE();
-
-    nPendingTxBytes = ${USART_INSTANCE_NAME}_WritePendingBytesGet();
-
-    /* Enable transmit interrupt only if any data is pending for transmission */
-    if (nPendingTxBytes > 0)
-    {
-        ${USART_INSTANCE_NAME}_TX_INT_ENABLE();
-    }
+    nPendingTxBytes = ${USART_INSTANCE_NAME}_WritePendingBytesGet();    
 
     return nPendingTxBytes;
 }
