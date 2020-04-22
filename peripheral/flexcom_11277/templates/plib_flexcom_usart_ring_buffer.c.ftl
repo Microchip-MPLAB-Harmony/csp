@@ -90,12 +90,14 @@ void ${FLEXCOM_INSTANCE_NAME}_USART_Initialize( void )
     USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_BRGR = US_BRGR_CD(${BRG_VALUE});
 	
 	${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdCallback = NULL;
-    ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdInIndex = ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdOutIndex = 0;
+    ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdInIndex = 0;
+	${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdOutIndex = 0;
     ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.isRdNotificationEnabled = false;
     ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.isRdNotifyPersistently = false;
     ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdThreshold = 0;
     ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.wrCallback = NULL;
-    ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.wrInIndex = ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.wrOutIndex = 0;
+    ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.wrInIndex = 0;
+	${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.wrOutIndex = 0;
     ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.isWrNotificationEnabled = false;
     ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.isWrNotifyPersistently = false;
     ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.wrThreshold = 0;   
@@ -205,8 +207,10 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_SerialSetup( FLEXCOM_USART_SERIAL_SETUP *set
 static bool ${FLEXCOM_INSTANCE_NAME}_USART_TxPullByte(uint8_t* pWrByte)
 {
     bool isSuccess = false;
+	uint32_t wrOutIndex = ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.wrOutIndex;
+	uint32_t wrInIndex = ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.wrInIndex;
 
-    if (${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.wrOutIndex != ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.wrInIndex)
+    if (wrOutIndex != wrInIndex)
     {
         *pWrByte = ${FLEXCOM_INSTANCE_NAME}_USART_WriteBuffer[${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.wrOutIndex++];
 
@@ -277,14 +281,16 @@ static void ${FLEXCOM_INSTANCE_NAME}_USART_WriteNotificationSend(void)
 static size_t ${FLEXCOM_INSTANCE_NAME}_USART_WritePendingBytesGet(void)
 {
     size_t nPendingTxBytes;
+	uint32_t wrOutIndex = ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.wrOutIndex;
+	uint32_t wrInIndex = ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.wrInIndex;
 
-    if ( ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.wrInIndex >=  ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.wrOutIndex)
+    if ( wrInIndex >=  wrOutIndex)
     {
-        nPendingTxBytes =  ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.wrInIndex -  ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.wrOutIndex;
+        nPendingTxBytes =  wrInIndex - wrOutIndex;
     }
     else
     {
-        nPendingTxBytes =  (${FLEXCOM_INSTANCE_NAME}_USART_WRITE_BUFFER_SIZE -  ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.wrOutIndex) + ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.wrInIndex;
+        nPendingTxBytes =  (${FLEXCOM_INSTANCE_NAME}_USART_WRITE_BUFFER_SIZE -  wrOutIndex) + wrInIndex;
     }
 
     return nPendingTxBytes;
@@ -299,7 +305,7 @@ size_t ${FLEXCOM_INSTANCE_NAME}_USART_WriteCountGet(void)
     nPendingTxBytes = ${FLEXCOM_INSTANCE_NAME}_USART_WritePendingBytesGet();
 
     /* Enable transmit interrupt only if any data is pending for transmission */
-    if (${FLEXCOM_INSTANCE_NAME}_USART_WritePendingBytesGet() > 0)
+    if (nPendingTxBytes > 0)
     {
         ${FLEXCOM_INSTANCE_NAME}_USART_TX_INT_ENABLE();
     }
@@ -449,12 +455,17 @@ static void ${FLEXCOM_INSTANCE_NAME}_USART_ReadNotificationSend(void)
 size_t ${FLEXCOM_INSTANCE_NAME}_USART_Read(uint8_t* pRdBuffer, const size_t size)
 {
     size_t nBytesRead = 0;
+	uint32_t rdOutIndex;
+	uint32_t rdInIndex;
 
     while (nBytesRead < size)
     {
         ${FLEXCOM_INSTANCE_NAME}_USART_RX_INT_DISABLE();
+		
+		rdOutIndex = ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdOutIndex;
+		rdInIndex = ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdInIndex;
 
-        if (${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdOutIndex != ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdInIndex)
+        if (rdOutIndex != rdInIndex)
         {
             pRdBuffer[nBytesRead++] = ${FLEXCOM_INSTANCE_NAME}_USART_ReadBuffer[${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdOutIndex++];
 
@@ -477,16 +488,21 @@ size_t ${FLEXCOM_INSTANCE_NAME}_USART_Read(uint8_t* pRdBuffer, const size_t size
 size_t ${FLEXCOM_INSTANCE_NAME}_USART_ReadCountGet(void)
 {
     size_t nUnreadBytesAvailable;
+	uint32_t rdOutIndex;
+	uint32_t rdInIndex;
 
     ${FLEXCOM_INSTANCE_NAME}_USART_RX_INT_DISABLE();
+	
+	rdOutIndex = ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdOutIndex;
+	rdInIndex = ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdInIndex;
 
-    if ( ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdInIndex >=  ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdOutIndex)
+    if ( rdInIndex >= rdOutIndex)
     {
-        nUnreadBytesAvailable =  ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdInIndex -  ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdOutIndex;
+        nUnreadBytesAvailable =  rdInIndex - rdOutIndex;
     }
     else
     {
-        nUnreadBytesAvailable =  (${FLEXCOM_INSTANCE_NAME}_USART_READ_BUFFER_SIZE -  ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdOutIndex) + ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdInIndex;
+        nUnreadBytesAvailable =  (${FLEXCOM_INSTANCE_NAME}_USART_READ_BUFFER_SIZE -  rdOutIndex) + rdInIndex;
     }
 
     ${FLEXCOM_INSTANCE_NAME}_USART_RX_INT_ENABLE();
