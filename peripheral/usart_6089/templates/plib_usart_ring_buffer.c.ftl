@@ -84,12 +84,14 @@ void ${USART_INSTANCE_NAME}_Initialize( void )
 
     /* Initialize instance object */
     ${USART_INSTANCE_NAME?lower_case}Obj.rdCallback = NULL;
-    ${USART_INSTANCE_NAME?lower_case}Obj.rdInIndex = ${USART_INSTANCE_NAME?lower_case}Obj.rdOutIndex = 0;
+    ${USART_INSTANCE_NAME?lower_case}Obj.rdInIndex = 0;
+	${USART_INSTANCE_NAME?lower_case}Obj.rdOutIndex = 0;
     ${USART_INSTANCE_NAME?lower_case}Obj.isRdNotificationEnabled = false;
     ${USART_INSTANCE_NAME?lower_case}Obj.isRdNotifyPersistently = false;
     ${USART_INSTANCE_NAME?lower_case}Obj.rdThreshold = 0;
     ${USART_INSTANCE_NAME?lower_case}Obj.wrCallback = NULL;
-    ${USART_INSTANCE_NAME?lower_case}Obj.wrInIndex = ${USART_INSTANCE_NAME?lower_case}Obj.wrOutIndex = 0;
+    ${USART_INSTANCE_NAME?lower_case}Obj.wrInIndex = 0;
+	${USART_INSTANCE_NAME?lower_case}Obj.wrOutIndex = 0;
     ${USART_INSTANCE_NAME?lower_case}Obj.isWrNotificationEnabled = false;
     ${USART_INSTANCE_NAME?lower_case}Obj.isWrNotifyPersistently = false;
     ${USART_INSTANCE_NAME?lower_case}Obj.wrThreshold = 0;
@@ -256,12 +258,17 @@ static void ${USART_INSTANCE_NAME}_ReadNotificationSend(void)
 size_t ${USART_INSTANCE_NAME}_Read(uint8_t* pRdBuffer, const size_t size)
 {
     size_t nBytesRead = 0;
+	uint32_t rdOutIndex;
+	uint32_t rdInIndex;
 
     while (nBytesRead < size)
     {
         ${USART_INSTANCE_NAME}_RX_INT_DISABLE();
+		
+		rdOutIndex = ${USART_INSTANCE_NAME?lower_case}Obj.rdOutIndex;
+		rdInIndex = ${USART_INSTANCE_NAME?lower_case}Obj.rdInIndex;
 
-        if (${USART_INSTANCE_NAME?lower_case}Obj.rdOutIndex != ${USART_INSTANCE_NAME?lower_case}Obj.rdInIndex)
+        if (rdOutIndex != rdInIndex)
         {
             pRdBuffer[nBytesRead++] = ${USART_INSTANCE_NAME}_ReadBuffer[${USART_INSTANCE_NAME?lower_case}Obj.rdOutIndex++];
 
@@ -283,17 +290,22 @@ size_t ${USART_INSTANCE_NAME}_Read(uint8_t* pRdBuffer, const size_t size)
 
 size_t ${USART_INSTANCE_NAME}_ReadCountGet(void)
 {
-    size_t nUnreadBytesAvailable;
+    size_t nUnreadBytesAvailable;	
+	uint32_t rdOutIndex;
+	uint32_t rdInIndex;
 
     ${USART_INSTANCE_NAME}_RX_INT_DISABLE();
+	
+	rdOutIndex = ${USART_INSTANCE_NAME?lower_case}Obj.rdOutIndex;
+	rdInIndex = ${USART_INSTANCE_NAME?lower_case}Obj.rdInIndex;
 
-    if ( ${USART_INSTANCE_NAME?lower_case}Obj.rdInIndex >=  ${USART_INSTANCE_NAME?lower_case}Obj.rdOutIndex)
+    if ( rdInIndex >=  rdOutIndex)
     {
-        nUnreadBytesAvailable =  ${USART_INSTANCE_NAME?lower_case}Obj.rdInIndex -  ${USART_INSTANCE_NAME?lower_case}Obj.rdOutIndex;
+        nUnreadBytesAvailable =  rdInIndex - rdOutIndex;
     }
     else
     {
-        nUnreadBytesAvailable =  (${USART_INSTANCE_NAME}_READ_BUFFER_SIZE -  ${USART_INSTANCE_NAME?lower_case}Obj.rdOutIndex) + ${USART_INSTANCE_NAME?lower_case}Obj.rdInIndex;
+        nUnreadBytesAvailable =  (${USART_INSTANCE_NAME}_READ_BUFFER_SIZE -  rdOutIndex) + rdInIndex;
     }
 
     ${USART_INSTANCE_NAME}_RX_INT_ENABLE();
@@ -341,8 +353,10 @@ void ${USART_INSTANCE_NAME}_ReadCallbackRegister( USART_RING_BUFFER_CALLBACK cal
 static bool ${USART_INSTANCE_NAME}_TxPullByte(uint8_t* pWrByte)
 {
     bool isSuccess = false;
+	uint32_t wrOutIndex = ${USART_INSTANCE_NAME?lower_case}Obj.wrOutIndex;
+	uint32_t wrInIndex = ${USART_INSTANCE_NAME?lower_case}Obj.wrInIndex;
 
-    if (${USART_INSTANCE_NAME?lower_case}Obj.wrOutIndex != ${USART_INSTANCE_NAME?lower_case}Obj.wrInIndex)
+    if (wrOutIndex != wrInIndex)
     {
         *pWrByte = ${USART_INSTANCE_NAME}_WriteBuffer[${USART_INSTANCE_NAME?lower_case}Obj.wrOutIndex++];
 
@@ -413,14 +427,16 @@ static void ${USART_INSTANCE_NAME}_WriteNotificationSend(void)
 static size_t ${USART_INSTANCE_NAME}_WritePendingBytesGet(void)
 {
     size_t nPendingTxBytes;
+	uint32_t wrOutIndex = ${USART_INSTANCE_NAME?lower_case}Obj.wrOutIndex;
+	uint32_t wrInIndex = ${USART_INSTANCE_NAME?lower_case}Obj.wrInIndex;
 
-    if ( ${USART_INSTANCE_NAME?lower_case}Obj.wrInIndex >=  ${USART_INSTANCE_NAME?lower_case}Obj.wrOutIndex)
+    if ( wrInIndex >= wrOutIndex)
     {
-        nPendingTxBytes =  ${USART_INSTANCE_NAME?lower_case}Obj.wrInIndex -  ${USART_INSTANCE_NAME?lower_case}Obj.wrOutIndex;
+        nPendingTxBytes =  wrInIndex -  wrOutIndex;
     }
     else
     {
-        nPendingTxBytes =  (${USART_INSTANCE_NAME}_WRITE_BUFFER_SIZE -  ${USART_INSTANCE_NAME?lower_case}Obj.wrOutIndex) + ${USART_INSTANCE_NAME?lower_case}Obj.wrInIndex;
+        nPendingTxBytes =  (${USART_INSTANCE_NAME}_WRITE_BUFFER_SIZE -  wrOutIndex) + wrInIndex;
     }
 
     return nPendingTxBytes;
@@ -435,7 +451,7 @@ size_t ${USART_INSTANCE_NAME}_WriteCountGet(void)
     nPendingTxBytes = ${USART_INSTANCE_NAME}_WritePendingBytesGet();
 
     /* Enable transmit interrupt only if any data is pending for transmission */
-    if (${USART_INSTANCE_NAME}_WritePendingBytesGet() > 0)
+    if (nPendingTxBytes > 0)
     {
         ${USART_INSTANCE_NAME}_TX_INT_ENABLE();
     }
