@@ -421,9 +421,8 @@ size_t ${SERCOM_INSTANCE_NAME}_USART_ReadCountGet(void)
     size_t nUnreadBytesAvailable;
 	uint32_t rdOutIndex;
 	uint32_t rdInIndex;
-
-    ${SERCOM_INSTANCE_NAME}_USART_RX_INT_DISABLE();
 	
+	/* Take a snapshot of indices to avoid creation of critical section */
 	rdOutIndex = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdOutIndex;
 	rdInIndex = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdInIndex;
 
@@ -435,8 +434,6 @@ size_t ${SERCOM_INSTANCE_NAME}_USART_ReadCountGet(void)
     {
         nUnreadBytesAvailable =  (${SERCOM_INSTANCE_NAME}_USART_READ_BUFFER_SIZE -  rdOutIndex) + rdInIndex;
     }
-
-    ${SERCOM_INSTANCE_NAME}_USART_RX_INT_ENABLE();
 
     return nUnreadBytesAvailable;
 }
@@ -558,6 +555,8 @@ static void ${SERCOM_INSTANCE_NAME}_USART_WriteNotificationSend(void)
 static size_t ${SERCOM_INSTANCE_NAME}_USART_WritePendingBytesGet(void)
 {
     size_t nPendingTxBytes;
+	
+	/* Take a snapshot of indices to avoid creation of critical section */
 	uint32_t wrInIndex = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrInIndex;
 	uint32_t wrOutIndex = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrOutIndex;
 
@@ -577,16 +576,8 @@ size_t ${SERCOM_INSTANCE_NAME}_USART_WriteCountGet(void)
 {
     size_t nPendingTxBytes;
 
-    ${SERCOM_INSTANCE_NAME}_USART_TX_INT_DISABLE();
-
     nPendingTxBytes = ${SERCOM_INSTANCE_NAME}_USART_WritePendingBytesGet();
-
-    /* Enable transmit interrupt only if any data is pending for transmission */
-    if (nPendingTxBytes > 0)
-    {
-        ${SERCOM_INSTANCE_NAME}_USART_TX_INT_ENABLE();
-    }
-
+    
     return nPendingTxBytes;
 }
 
