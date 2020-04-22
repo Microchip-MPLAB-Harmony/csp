@@ -280,8 +280,7 @@ size_t ${DBGU_INSTANCE_NAME}_ReadCountGet(void)
     uint32_t rdInIndex;
     uint32_t rdOutIndex;
 
-    ${DBGU_INSTANCE_NAME}_RX_INT_DISABLE();
-
+    /* Take  snapshot of indices to avoid creation of critical section */
     rdInIndex = ${DBGU_INSTANCE_NAME?lower_case}Obj.rdInIndex;
     rdOutIndex = ${DBGU_INSTANCE_NAME?lower_case}Obj.rdOutIndex;
 
@@ -293,8 +292,6 @@ size_t ${DBGU_INSTANCE_NAME}_ReadCountGet(void)
     {
         nUnreadBytesAvailable =  (${DBGU_INSTANCE_NAME}_READ_BUFFER_SIZE -  rdOutIndex) + rdInIndex;
     }
-
-    ${DBGU_INSTANCE_NAME}_RX_INT_ENABLE();
 
     return nUnreadBytesAvailable;
 }
@@ -413,6 +410,8 @@ static void ${DBGU_INSTANCE_NAME}_WriteNotificationSend(void)
 static size_t ${DBGU_INSTANCE_NAME}_WritePendingBytesGet(void)
 {
     size_t nPendingTxBytes;
+
+    /* Take a snapshot of indices to avoid creation of critical section */
     uint32_t wrOutIndex = ${DBGU_INSTANCE_NAME?lower_case}Obj.wrOutIndex;
     uint32_t wrInIndex = ${DBGU_INSTANCE_NAME?lower_case}Obj.wrInIndex;
 
@@ -432,15 +431,7 @@ size_t ${DBGU_INSTANCE_NAME}_WriteCountGet(void)
 {
     size_t nPendingTxBytes;
 
-    ${DBGU_INSTANCE_NAME}_TX_INT_DISABLE();
-
     nPendingTxBytes = ${DBGU_INSTANCE_NAME}_WritePendingBytesGet();
-
-    /* Enable transmit interrupt only if any data is pending for transmission */
-    if (nPendingTxBytes > 0)
-    {
-        ${DBGU_INSTANCE_NAME}_TX_INT_ENABLE();
-    }
 
     return nPendingTxBytes;
 }
