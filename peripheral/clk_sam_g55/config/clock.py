@@ -577,6 +577,7 @@ usbSRC.setDefaultValue(1)
 usbDIV = coreComponent.createIntegerSymbol("PMC_USB_USBDIV", usbclkMenu)
 usbDIV.setLabel("USB_48M Divider")
 usbDIV.setDefaultValue(1)
+usbDIV.setMin(0)
 usbDIV.setMax(15)
 
 uhpEn = coreComponent.createBooleanSymbol("PMC_SCER_UDP", usbclkMenu)
