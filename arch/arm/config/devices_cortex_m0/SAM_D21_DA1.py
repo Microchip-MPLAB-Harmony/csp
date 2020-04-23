@@ -46,7 +46,7 @@ def setWindow(symbol, event):
         Database.setSymbolValue("core", "DEVICE_WDT_WINDOW_0", 1)
     else:
         Database.setSymbolValue("core", "DEVICE_WDT_WINDOW_0", 0)
-    
+
     symbol.setValue(val >> 1)
 
 fuseSettings = coreComponent.createBooleanSymbol("FUSE_CONFIG_ENABLE", devCfgMenu)
@@ -307,7 +307,7 @@ nvmWaitStates = { #VDD > 2.7
                     24000000 : 0,
                     48000000 : 1
                 }
-                
+
 periphNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"NVMCTRL\"]")
 modules = periphNode.getChildren()
 components = []
@@ -383,3 +383,7 @@ devconSystemInitFile.setSourcePath("arm/templates/common/fuses/SAM_D20_D21.c.ftl
 devconSystemInitFile.setMarkup(True)
 
 compilerSpecifics = [armSysStartSourceFile]
+
+#Override default sizes for IAR stack and heap
+iarUsrStackSize.setDefaultValue(0x400)
+iarHeapSize.setDefaultValue(0x0)

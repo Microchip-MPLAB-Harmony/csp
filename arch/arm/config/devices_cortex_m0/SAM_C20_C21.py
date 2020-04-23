@@ -267,7 +267,7 @@ nvmWaitStates = { #VDD > 2.7
                     38000000 : 1,
                     48000000 : 2
                 }
-                
+
 periphNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"NVMCTRL\"]")
 modules = periphNode.getChildren()
 components = []
@@ -347,3 +347,7 @@ devconSystemInitFile.setSourcePath("arm/templates/common/fuses/SAM_C20_C21.c.ftl
 devconSystemInitFile.setMarkup(True)
 
 compilerSpecifics = [armSysStartSourceFile]
+
+#Override default sizes for IAR stack and heap
+iarUsrStackSize.setDefaultValue(0x400)
+iarHeapSize.setDefaultValue(0x0)

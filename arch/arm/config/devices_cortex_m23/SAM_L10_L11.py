@@ -54,7 +54,7 @@ def setDMACDefaultSettings():
                     }
 
     return triggerSettings
-    
+
 # Device Configuration
 deviceSecurity = coreComponent.createKeyValueSetSymbol("DEVICE_SECURITY", devCfgMenu)
 deviceSecurity.setLabel("Security")
@@ -163,7 +163,7 @@ fuse.setVisible(False)
 if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
     # Setup TrustZone Manager
     execfile(Variables.get("__CORE_DIR") + "/config/trustZoneManager.py")
-    
+
 coreFPU = coreComponent.createBooleanSymbol("FPU_Available", devCfgMenu)
 coreFPU.setLabel("FPU Available")
 coreFPU.setDefaultValue(False)

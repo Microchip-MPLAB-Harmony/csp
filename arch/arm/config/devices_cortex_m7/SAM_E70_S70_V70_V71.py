@@ -194,7 +194,7 @@ def getArchSYSIOInformation():
     sysioInfoDict["PB7"] = ["ICE_TCK/SWDCLK", 0x00000080]
     sysioInfoDict["PB12"] = ["EFC_ERASE", 0x00001000]
     return matrixName, sysioRegName, sysioInfoDict
-                
+
 periphNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"EFC\"]")
 modules = periphNode.getChildren()
 components = []
@@ -337,3 +337,7 @@ devconSystemInitFile.setSourcePath("arm/templates/common/fuses/SAM_E70_S70_V70_V
 devconSystemInitFile.setMarkup(True)
 
 compilerSpecifics = [armSysStartSourceFile]
+
+#Override default sizes for IAR stack and heap
+iarUsrStackSize.setDefaultValue( 0x0400 )
+iarHeapSize.setDefaultValue(0x0200)

@@ -213,3 +213,7 @@ xc32StackInTCMSym.setValue("false")
 xc32StackInTCMSym.setDependencies(xc32SetStackInTcm, ["STACK_IN_TCM"])
 
 compilerSpecifics = [armSysStartSourceFile]
+
+#Override default sizes for IAR stack and heap
+iarUsrStackSize.setDefaultValue( 0x0400 )
+iarHeapSize.setDefaultValue(0x0200)

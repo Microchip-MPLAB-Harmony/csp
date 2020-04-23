@@ -126,8 +126,8 @@ cacheMenu = coreComponent.createMenuSymbol("CACHE_MENU", cortexMenu)
 cacheMenu.setLabel("CMCC Configuration")
 cacheMenu.setDescription("CACHE Configuration")
 
-# TCM exists on G55 and cannot be disabled. Only its size can be  configured. 
-# We need this symbol defined so that the FTL will emit the code associated 
+# TCM exists on G55 and cannot be disabled. Only its size can be  configured.
+# We need this symbol defined so that the FTL will emit the code associated
 # with TCM configuration.
 tcmEnable = coreComponent.createBooleanSymbol("TCM_ENABLE", cacheMenu)
 tcmEnable.setLabel("Enable TCM")
@@ -294,3 +294,7 @@ devconSystemInitFile.setSourcePath("arm/templates/common/fuses/SAM_G55.c.ftl")
 devconSystemInitFile.setMarkup(True)
 
 compilerSpecifics = [armSysStartSourceFile]
+
+#Override default sizes for IAR stack and heap
+iarUsrStackSize.setDefaultValue(0x1000)
+iarHeapSize.setDefaultValue(0x2000)

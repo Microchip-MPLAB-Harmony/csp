@@ -348,3 +348,8 @@ devconSystemInitFile.setSourcePath("arm/templates/common/fuses/SAM_D20_D21.c.ftl
 devconSystemInitFile.setMarkup(True)
 
 compilerSpecifics = [armSysStartSourceFile]
+
+#Override default sizes for IAR stack and heap
+iarUsrStackSize.setDefaultValue(0x400)
+iarHeapSize.setDefaultValue(0x0)
+

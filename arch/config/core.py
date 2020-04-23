@@ -113,6 +113,21 @@ def genMainSourceFile(symbol, event):
         symbol.setEnabled(False)
 
 
+def updateCortexMLinkerScript(symbol, event):
+    compilerChoice = event["source"].getSymbolByID("COMPILER_CHOICE")
+    configName = Variables.get( "__CONFIGURATION_NAME" )
+    coreArch = event["source"].getSymbolByID("CoreArchitecture")
+    if compilerChoice.getSelectedKey() == "KEIL":
+        symbol.setSourcePath("arm/templates/keil/cortex_m/startup/scatter_file.sct")
+        symbol.setOutputName(configName + ".sct")
+        symbol.setEnabled(True)
+    elif compilerChoice.getSelectedKey() == "IAR"and coreArch.getValue() not in ["CORTEX-M23"]:
+        symbol.setSourcePath("arm/templates/iar/cortex_m/startup/iar_config_file.icf.ftl")
+        symbol.setOutputName("flash.icf")
+        symbol.setEnabled(True)
+    else:
+        symbol.setEnabled(False)
+
 def genSysSourceFile(symbol, event):
     global processor
     coreSysFileEnabled = Database.getSymbolValue("core", "CoreSysFiles")
@@ -518,6 +533,11 @@ def instantiateComponent( coreComponent ):
     keilHeapStackSize.setDependencies(setKeilHeapStackSize, ["KEIL_STACK_SIZE", "KEIL_HEAP_SIZE"])
 
     if "CORTEX-M" in coreArch.getValue():
+        #Symbols relevant to custom linker scripts
+        deviceName = coreComponent.createStringSymbol("DEVICE_NAME", None)
+        deviceName.setVisible(False)
+        deviceName.setDefaultValue(Variables.get("__PROCESSOR"))
+
         #ROM and RAM memory map
         nodeIFLASH = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[type=\"flash\"]")
         if nodeIFLASH is not None:
@@ -529,6 +549,13 @@ def instantiateComponent( coreComponent ):
             sizeAddressIROM1.setVisible(False)
             sizeAddressIROM1.setDefaultValue(nodeIFLASH.getAttribute("size"))
 
+            endAddressIROM1 = coreComponent.createStringSymbol("IROM1_END", None)
+            endAddressIROM1.setVisible(False)
+            startAddressInt = int(nodeIFLASH.getAttribute("start"), 16)
+            sizeInt = int(nodeIFLASH.getAttribute("size"), 16)
+            endAddressInt = startAddressInt + sizeInt - 1
+            endAddressIROM1.setDefaultValue("0x%08X" % endAddressInt)
+
         nodeIRAM = ATDF.getNode("/avr-tools-device-file/devices/device/address-spaces/address-space/memory-segment@[type=\"ram\"]")
         if nodeIRAM is not None:
             startAddressIRAM1 = coreComponent.createStringSymbol("IRAM1_START", None)
@@ -538,6 +565,13 @@ def instantiateComponent( coreComponent ):
             sizeAddressIRAM1 = coreComponent.createStringSymbol("IRAM1_SIZE", None)
             sizeAddressIRAM1.setVisible(False)
             sizeAddressIRAM1.setDefaultValue(nodeIRAM.getAttribute("size"))
+
+            endAddressIRAM1 = coreComponent.createStringSymbol("IRAM1_END", None)
+            endAddressIRAM1.setVisible(False)
+            startAddressInt = int(nodeIRAM.getAttribute("start"), 16)
+            sizeInt = int(nodeIRAM.getAttribute("size"), 16)
+            endAddressInt = startAddressInt + sizeInt - 1
+            endAddressIRAM1.setDefaultValue("0x%08X" % endAddressInt)
 
     #################### Main File ####################
     # generate main.c file
@@ -683,15 +717,23 @@ def instantiateComponent( coreComponent ):
 
     if "CORTEX-M" in coreArch.getValue():
         linkerFile = coreComponent.createFileSymbol("LINKER_SCRIPT", None)
-        linkerFile.setSourcePath("arm/templates/keil/cortex_m/startup/scatter_file.sct")
-        linkerFile.setOutputName(configName + ".sct")
         linkerFile.setMarkup(True)
         linkerFile.setOverwrite(True)
-        linkerFile.setDestPath("")
-        linkerFile.setProjectPath("config/" + configName + "/")
         linkerFile.setType("LINKER")
-        linkerFile.setEnabled(compilerChoice.getSelectedKey == "KEIL")
-        linkerFile.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"] == 2), ["COMPILER_CHOICE"])
+        linkerFile.setProjectPath("config/" + configName + "/")
+        linkerFile.setDestPath("")
+        linkerFile.setDependencies(updateCortexMLinkerScript, ["COMPILER_CHOICE"])
+        if compilerChoice.getSelectedKey() == "KEIL":
+            linkerFile.setSourcePath("arm/templates/keil/cortex_m/startup/scatter_file.sct")
+            linkerFile.setOutputName(configName + ".sct")
+            linkerFile.setEnabled(True)
+        elif compilerChoice.getSelectedKey() == "IAR" and coreArch.getValue() not in ["CORTEX-M23"]:
+            linkerFile.setSourcePath("arm/templates/iar/cortex_m/startup/iar_config_file.icf.ftl")
+            linkerFile.setOutputName("flash.icf")
+            linkerFile.setEnabled(True)
+        else:
+            linkerFile.setEnabled(False)
+
 
     # set XC32 heap size
     xc32HeapSizeSym = coreComponent.createSettingSymbol("XC32_HEAP", None)

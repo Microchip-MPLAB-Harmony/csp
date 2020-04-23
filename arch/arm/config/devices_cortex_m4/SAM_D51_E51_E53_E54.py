@@ -167,8 +167,8 @@ cacheMenu = coreComponent.createMenuSymbol("CACHE_MENU", cortexMenu)
 cacheMenu.setLabel("CMCC Configuration")
 cacheMenu.setDescription("CACHE Configuration")
 
-# TCM exists on D5x/E5x and cannot be disabled. Only its size can be  configured. 
-# We need this symbol defined so that the FTL will emit the code associated 
+# TCM exists on D5x/E5x and cannot be disabled. Only its size can be  configured.
+# We need this symbol defined so that the FTL will emit the code associated
 # with TCM configuration.
 tcmEnable = coreComponent.createBooleanSymbol("TCM_ENABLE", cacheMenu)
 tcmEnable.setLabel("Enable TCM")
@@ -247,7 +247,7 @@ nvmWaitStates = { #VDD > 2.7
                     119000000 : 4,
                     120000000 : 5
                 }
-                
+
 periphNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"NVMCTRL\"]")
 modules = periphNode.getChildren()
 components = []
@@ -354,3 +354,7 @@ devconSystemInitFile.setSourcePath("arm/templates/common/fuses/SAM_D51_E51_E53_E
 devconSystemInitFile.setMarkup(True)
 
 compilerSpecifics = [armSysStartSourceFile]
+
+#Override default sizes for IAR stack and heap
+iarUsrStackSize.setDefaultValue(0xC000)
+iarHeapSize.setDefaultValue(0x0)
