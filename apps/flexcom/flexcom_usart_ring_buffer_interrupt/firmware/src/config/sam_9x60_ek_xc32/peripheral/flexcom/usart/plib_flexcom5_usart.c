@@ -92,12 +92,14 @@ void FLEXCOM5_USART_Initialize( void )
     FLEXCOM5_REGS->FLEX_US_BRGR = FLEX_US_BRGR_CD(108);
 	
 	flexcom5UsartObj.rdCallback = NULL;
-    flexcom5UsartObj.rdInIndex = flexcom5UsartObj.rdOutIndex = 0;
+    flexcom5UsartObj.rdInIndex = 0;
+	flexcom5UsartObj.rdOutIndex = 0;
     flexcom5UsartObj.isRdNotificationEnabled = false;
     flexcom5UsartObj.isRdNotifyPersistently = false;
     flexcom5UsartObj.rdThreshold = 0;
     flexcom5UsartObj.wrCallback = NULL;
-    flexcom5UsartObj.wrInIndex = flexcom5UsartObj.wrOutIndex = 0;
+    flexcom5UsartObj.wrInIndex = 0;
+	flexcom5UsartObj.wrOutIndex = 0;
     flexcom5UsartObj.isWrNotificationEnabled = false;
     flexcom5UsartObj.isWrNotifyPersistently = false;
     flexcom5UsartObj.wrThreshold = 0;   
@@ -205,8 +207,10 @@ bool FLEXCOM5_USART_SerialSetup( FLEXCOM_USART_SERIAL_SETUP *setup, uint32_t src
 static bool FLEXCOM5_USART_TxPullByte(uint8_t* pWrByte)
 {
     bool isSuccess = false;
+	uint32_t wrOutIndex = flexcom5UsartObj.wrOutIndex;
+	uint32_t wrInIndex = flexcom5UsartObj.wrInIndex;
 
-    if (flexcom5UsartObj.wrOutIndex != flexcom5UsartObj.wrInIndex)
+    if (wrOutIndex != wrInIndex)
     {
         *pWrByte = FLEXCOM5_USART_WriteBuffer[flexcom5UsartObj.wrOutIndex++];
 
@@ -277,14 +281,18 @@ static void FLEXCOM5_USART_WriteNotificationSend(void)
 static size_t FLEXCOM5_USART_WritePendingBytesGet(void)
 {
     size_t nPendingTxBytes;
+	
+	/* Take a snapshot of indices to avoid creation of critical section */
+	uint32_t wrOutIndex = flexcom5UsartObj.wrOutIndex;
+	uint32_t wrInIndex = flexcom5UsartObj.wrInIndex;
 
-    if ( flexcom5UsartObj.wrInIndex >=  flexcom5UsartObj.wrOutIndex)
+    if ( wrInIndex >=  wrOutIndex)
     {
-        nPendingTxBytes =  flexcom5UsartObj.wrInIndex -  flexcom5UsartObj.wrOutIndex;
+        nPendingTxBytes =  wrInIndex -  wrOutIndex;
     }
     else
     {
-        nPendingTxBytes =  (FLEXCOM5_USART_WRITE_BUFFER_SIZE -  flexcom5UsartObj.wrOutIndex) + flexcom5UsartObj.wrInIndex;
+        nPendingTxBytes =  (FLEXCOM5_USART_WRITE_BUFFER_SIZE -  wrOutIndex) + wrInIndex;
     }
 
     return nPendingTxBytes;
@@ -292,17 +300,9 @@ static size_t FLEXCOM5_USART_WritePendingBytesGet(void)
 
 size_t FLEXCOM5_USART_WriteCountGet(void)
 {
-    size_t nPendingTxBytes;
-
-    FLEXCOM5_USART_TX_INT_DISABLE();
+    size_t nPendingTxBytes;    
 
     nPendingTxBytes = FLEXCOM5_USART_WritePendingBytesGet();
-
-    /* Enable transmit interrupt only if any data is pending for transmission */
-    if (FLEXCOM5_USART_WritePendingBytesGet() > 0)
-    {
-        FLEXCOM5_USART_TX_INT_ENABLE();
-    }
 
     return nPendingTxBytes;
 }
@@ -449,12 +449,17 @@ static void FLEXCOM5_USART_ReadNotificationSend(void)
 size_t FLEXCOM5_USART_Read(uint8_t* pRdBuffer, const size_t size)
 {
     size_t nBytesRead = 0;
+	uint32_t rdOutIndex;
+	uint32_t rdInIndex;
 
     while (nBytesRead < size)
     {
         FLEXCOM5_USART_RX_INT_DISABLE();
+		
+		rdOutIndex = flexcom5UsartObj.rdOutIndex;
+		rdInIndex = flexcom5UsartObj.rdInIndex;
 
-        if (flexcom5UsartObj.rdOutIndex != flexcom5UsartObj.rdInIndex)
+        if (rdOutIndex != rdInIndex)
         {
             pRdBuffer[nBytesRead++] = FLEXCOM5_USART_ReadBuffer[flexcom5UsartObj.rdOutIndex++];
 
@@ -477,19 +482,21 @@ size_t FLEXCOM5_USART_Read(uint8_t* pRdBuffer, const size_t size)
 size_t FLEXCOM5_USART_ReadCountGet(void)
 {
     size_t nUnreadBytesAvailable;
+	uint32_t rdOutIndex;
+	uint32_t rdInIndex;
+	
+	/* Take a snapshot of indices to avoid creation of critical section */
+	rdOutIndex = flexcom5UsartObj.rdOutIndex;
+	rdInIndex = flexcom5UsartObj.rdInIndex;
 
-    FLEXCOM5_USART_RX_INT_DISABLE();
-
-    if ( flexcom5UsartObj.rdInIndex >=  flexcom5UsartObj.rdOutIndex)
+    if ( rdInIndex >=  rdOutIndex)
     {
-        nUnreadBytesAvailable =  flexcom5UsartObj.rdInIndex -  flexcom5UsartObj.rdOutIndex;
+        nUnreadBytesAvailable =  rdInIndex -  rdOutIndex;
     }
     else
     {
-        nUnreadBytesAvailable =  (FLEXCOM5_USART_READ_BUFFER_SIZE -  flexcom5UsartObj.rdOutIndex) + flexcom5UsartObj.rdInIndex;
+        nUnreadBytesAvailable =  (FLEXCOM5_USART_READ_BUFFER_SIZE -  rdOutIndex) + rdInIndex;
     }
-
-    FLEXCOM5_USART_RX_INT_ENABLE();
 
     return nUnreadBytesAvailable;
 }
