@@ -79,12 +79,14 @@ void DBGU_Initialize( void )
 
     /* Initialize instance object */
     dbguObj.rdCallback = NULL;
-    dbguObj.rdInIndex = dbguObj.rdOutIndex = 0;
+    dbguObj.rdInIndex = 0;
+    dbguObj.rdOutIndex = 0;
     dbguObj.isRdNotificationEnabled = false;
     dbguObj.isRdNotifyPersistently = false;
     dbguObj.rdThreshold = 0;
     dbguObj.wrCallback = NULL;
-    dbguObj.wrInIndex = dbguObj.wrOutIndex = 0;
+    dbguObj.wrInIndex = 0;
+    dbguObj.wrOutIndex = 0;
     dbguObj.isWrNotificationEnabled = false;
     dbguObj.isWrNotifyPersistently = false;
     dbguObj.wrThreshold = 0;
@@ -237,12 +239,17 @@ static void DBGU_ReadNotificationSend(void)
 size_t DBGU_Read(uint8_t* pRdBuffer, const size_t size)
 {
     size_t nBytesRead = 0;
+    uint32_t rdOutIndex;
+    uint32_t rdInIndex;
 
     while (nBytesRead < size)
     {
         DBGU_RX_INT_DISABLE();
 
-        if (dbguObj.rdOutIndex != dbguObj.rdInIndex)
+        rdOutIndex = dbguObj.rdOutIndex;
+        rdInIndex = dbguObj.rdInIndex;
+
+        if (rdOutIndex != rdInIndex)
         {
             pRdBuffer[nBytesRead++] = DBGU_ReadBuffer[dbguObj.rdOutIndex++];
 
@@ -265,19 +272,21 @@ size_t DBGU_Read(uint8_t* pRdBuffer, const size_t size)
 size_t DBGU_ReadCountGet(void)
 {
     size_t nUnreadBytesAvailable;
+    uint32_t rdInIndex;
+    uint32_t rdOutIndex;
 
-    DBGU_RX_INT_DISABLE();
+    /* Take  snapshot of indices to avoid creation of critical section */
+    rdInIndex = dbguObj.rdInIndex;
+    rdOutIndex = dbguObj.rdOutIndex;
 
-    if ( dbguObj.rdInIndex >=  dbguObj.rdOutIndex)
+    if ( rdInIndex >=  rdOutIndex)
     {
-        nUnreadBytesAvailable =  dbguObj.rdInIndex -  dbguObj.rdOutIndex;
+        nUnreadBytesAvailable =  rdInIndex - rdOutIndex;
     }
     else
     {
-        nUnreadBytesAvailable =  (DBGU_READ_BUFFER_SIZE -  dbguObj.rdOutIndex) + dbguObj.rdInIndex;
+        nUnreadBytesAvailable =  (DBGU_READ_BUFFER_SIZE -  rdOutIndex) + rdInIndex;
     }
-
-    DBGU_RX_INT_ENABLE();
 
     return nUnreadBytesAvailable;
 }
@@ -322,8 +331,10 @@ void DBGU_ReadCallbackRegister( DBGU_RING_BUFFER_CALLBACK callback, uintptr_t co
 static bool DBGU_TxPullByte(uint8_t* pWrByte)
 {
     bool isSuccess = false;
+    uint32_t wrOutIndex = dbguObj.wrOutIndex;
+    uint32_t wrInIndex = dbguObj.wrInIndex;
 
-    if (dbguObj.wrOutIndex != dbguObj.wrInIndex)
+    if (wrOutIndex != wrInIndex)
     {
         *pWrByte = DBGU_WriteBuffer[dbguObj.wrOutIndex++];
 
@@ -395,13 +406,17 @@ static size_t DBGU_WritePendingBytesGet(void)
 {
     size_t nPendingTxBytes;
 
-    if ( dbguObj.wrInIndex >=  dbguObj.wrOutIndex)
+    /* Take a snapshot of indices to avoid creation of critical section */
+    uint32_t wrOutIndex = dbguObj.wrOutIndex;
+    uint32_t wrInIndex = dbguObj.wrInIndex;
+
+    if ( wrInIndex >=  wrOutIndex)
     {
-        nPendingTxBytes =  dbguObj.wrInIndex -  dbguObj.wrOutIndex;
+        nPendingTxBytes =  wrInIndex -  wrOutIndex;
     }
     else
     {
-        nPendingTxBytes =  (DBGU_WRITE_BUFFER_SIZE -  dbguObj.wrOutIndex) + dbguObj.wrInIndex;
+        nPendingTxBytes =  (DBGU_WRITE_BUFFER_SIZE -  wrOutIndex) + wrInIndex;
     }
 
     return nPendingTxBytes;
@@ -411,15 +426,7 @@ size_t DBGU_WriteCountGet(void)
 {
     size_t nPendingTxBytes;
 
-    DBGU_TX_INT_DISABLE();
-
     nPendingTxBytes = DBGU_WritePendingBytesGet();
-
-    /* Enable transmit interrupt only if any data is pending for transmission */
-    if (DBGU_WritePendingBytesGet() > 0)
-    {
-        DBGU_TX_INT_ENABLE();
-    }
 
     return nPendingTxBytes;
 }
