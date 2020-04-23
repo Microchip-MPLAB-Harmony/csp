@@ -4,10 +4,10 @@
 
 
 project: flexcom_usart_ring_buffer_interrupt
-creation_date: 2020-04-13T23:36:20.032+05:30[Asia/Calcutta]	# ISO 8601 format: https://www.w3.org/TR/NOTE-datetime
+creation_date: 2020-04-23T13:02:12.318+05:30[Asia/Calcutta]	# ISO 8601 format: https://www.w3.org/TR/NOTE-datetime
 operating_system: Windows 10
 mhc_mode: IDE				# [IDE|Standalone|Headless]
-mplabx_version: --Please Update your plugin--		# if MPLAB X plugin only
+mplabx_version: v5.40		# if MPLAB X plugin only
 plugin_version: v3.5.0		# if MPLAB X plugin only
 
 modules:
@@ -23,7 +23,6 @@ modules:
     - {name: "mhc", version: ""}
     - {name: "micrium_ucos3", version: ""}
     - {name: "mplabx_plugin", version: ""}
-    - {name: "net", version: ""}
     - {name: "thirdparty_expresslogic", version: "v3.1.0"}
     - {name: "thirdparty_micrium", version: "v3.1.0"}
 
