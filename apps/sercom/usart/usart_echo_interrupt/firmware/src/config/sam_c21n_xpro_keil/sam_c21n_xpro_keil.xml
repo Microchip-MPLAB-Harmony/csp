@@ -219,6 +219,12 @@
             <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">true</Value>
             </Boolean>
+            <String dnOrder="1" id="name">
+              <Value dnOrder="0">sam_c21n_xpro_keil.sct</Value>
+            </String>
+            <String dnOrder="2" id="source">
+              <Value dnOrder="0">arm/templates/keil/cortex_m/startup/scatter_file.sct</Value>
+            </String>
           </Attributes>
         </File>
         <String dnOrder="37" id="MCLK_APBC_INITIAL_VALUE">
