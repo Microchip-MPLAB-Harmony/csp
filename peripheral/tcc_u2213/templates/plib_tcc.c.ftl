@@ -343,7 +343,7 @@ void ${TCC_INSTANCE_NAME}_PWMStop (void)
 void ${TCC_INSTANCE_NAME}_PWM24bitPeriodSet (uint32_t period)
 {
     ${TCC_INSTANCE_NAME}_REGS->TCC_${TCC_PBUF_REG_NAME} = period & 0xFFFFFF;
-    while ((TCC0_REGS->TCC_SYNCBUSY & (TCC_SYNCBUSY_PER_Msk)) == TCC_SYNCBUSY_PER_Msk)
+    while ((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & (TCC_SYNCBUSY_PER_Msk)) == TCC_SYNCBUSY_PER_Msk)
     {
         /* Wait for sync */
     }
@@ -352,7 +352,7 @@ void ${TCC_INSTANCE_NAME}_PWM24bitPeriodSet (uint32_t period)
 void ${TCC_INSTANCE_NAME}_PWM16bitPeriodSet (uint16_t period)
 {
     ${TCC_INSTANCE_NAME}_REGS->TCC_${TCC_PBUF_REG_NAME} = period;
-    while ((TCC0_REGS->TCC_SYNCBUSY & (TCC_SYNCBUSY_PER_Msk)) == TCC_SYNCBUSY_PER_Msk)
+    while ((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & (TCC_SYNCBUSY_PER_Msk)) == TCC_SYNCBUSY_PER_Msk)
     {
         /* Wait for sync */
     }
@@ -393,7 +393,7 @@ void ${TCC_INSTANCE_NAME}_PWMDeadTimeSet (uint8_t deadtime_high, uint8_t deadtim
 void ${TCC_INSTANCE_NAME}_PWMPatternSet(uint8_t pattern_enable, uint8_t pattern_output)
 {
     ${TCC_INSTANCE_NAME}_REGS->TCC_${TCC_PATBUF_REG_NAME} = (uint16_t)(pattern_enable | (pattern_output << 8));
-    while ((TCC0_REGS->TCC_SYNCBUSY & (TCC_SYNCBUSY_PATT_Msk)) == TCC_SYNCBUSY_PATT_Msk)
+    while ((${TCC_INSTANCE_NAME}_REGS->TCC_SYNCBUSY & (TCC_SYNCBUSY_PATT_Msk)) == TCC_SYNCBUSY_PATT_Msk)
     {
         /* Wait for sync */
     }
