@@ -1,6 +1,6 @@
 {
     "linker": {
-        "script": ""
+        "script": "..\\src\\config\\sam_e54_xpro_iar\\flash.icf"
     }, 
     "assembler": {
         "macros": [], 
@@ -17,8 +17,7 @@
             "..\\src\\config\\sam_e54_xpro_iar", 
             "..\\src\\packs\\ATSAME54P20A_DFP", 
             "..\\src\\packs\\CMSIS\\CMSIS\\Core\\Include", 
-            "..\\src\\packs\\CMSIS", 
-            "..\\src\\arm"
+            "..\\src\\packs\\CMSIS"
         ]
     }
 }
