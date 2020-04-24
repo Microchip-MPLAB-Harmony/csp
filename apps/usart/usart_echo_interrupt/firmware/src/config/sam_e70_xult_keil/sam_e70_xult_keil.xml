@@ -94,6 +94,12 @@
             <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">true</Value>
             </Boolean>
+            <String dnOrder="1" id="name">
+              <Value dnOrder="0">sam_e70_xult_keil.sct</Value>
+            </String>
+            <String dnOrder="2" id="source">
+              <Value dnOrder="0">arm/templates/keil/cortex_m/startup/scatter_file.sct</Value>
+            </String>
           </Attributes>
         </File>
         <Boolean dnOrder="12" id="NVIC_14_0_ENABLE">
@@ -3771,7 +3777,8 @@
     </UniqueComponent>
   </Components>
   <UserData>
-    <ComponentGraph dnOrder="0" id="__ROOTVIEW">
+    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="0"/>
+    <ComponentGraph dnOrder="1" id="__ROOTVIEW">
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="cmsis" x="120" y="20"/>
         <ElementPosition dnOrder="1" id="core" x="20" y="20"/>
@@ -3780,6 +3787,5 @@
         <ElementPosition dnOrder="4" id="usart1" x="30" y="60"/>
       </ElementPositions>
     </ComponentGraph>
-    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="1"/>
   </UserData>
 </Configuration>
