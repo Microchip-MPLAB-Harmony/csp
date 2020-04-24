@@ -65,9 +65,9 @@
 */
 typedef enum
 {
-    HEMC_HEMC_CH_HSMC = 0,   /* HECC Channel for HSMC memories */
-    HEMC_HEMC_CH_HSDRAMC = 1,  /* HECC Channel for HSDRAMC memories */
-}HEMC_HEMC_CHANNEL;
+    HEMC_HEMC_CH_HSMC = 0,    /* HECC Channel for HSMC memories */
+    HEMC_HEMC_CH_HSDRAMC = 1  /* HECC Channel for HSDRAMC memories */
+} HEMC_HEMC_CHANNEL;
 
 // *****************************************************************************
 /* HEMC HECC status
@@ -89,7 +89,7 @@ typedef enum
     HEMC_HECC_STATUS_TYPE = HEMC_HECC_SR_TYPE_Msk,
     /* Force the compiler to reserve 32-bit memory for enum */
     HEMC_HECC_STATUS_INVALID = 0xFFFFFFFF
-}HEMC_HECC_STATUS;
+} HEMC_HECC_STATUS;
 
 // *****************************************************************************
 
@@ -143,7 +143,7 @@ void HEMC_Initialize( void );
 
 HEMC_HECC_STATUS HEMC_HeccGetStatus(void);
 
-uint32_t HEMC_HeccGetFailAddress(void);
+uint32_t* HEMC_HeccGetFailAddress(void);
 
 void HEMC_HeccResetCounters(void);
 

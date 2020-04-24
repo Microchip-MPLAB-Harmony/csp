@@ -21,8 +21,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_rh71_ek/</LogicalPath>
           <PhysicalPath dnOrder="4">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">5E3E3AB86362E0C1C77A0A4920D5C7AF</GeneratedChecksum>
-          <UserChecksum dnOrder="6">5E3E3AB86362E0C1C77A0A4920D5C7AF</UserChecksum>
+          <GeneratedChecksum dnOrder="5">E49657667400CA4F1D94B5BC0A9E03F5</GeneratedChecksum>
+          <UserChecksum dnOrder="6">E49657667400CA4F1D94B5BC0A9E03F5</UserChecksum>
         </File>
         <File dnOrder="2">
           <Type dnOrder="0">SOURCE</Type>
@@ -75,8 +75,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_rh71_ek/peripheral/hemc/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/hemc/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">3572C01B5F33D876B1567995E402597F</GeneratedChecksum>
-          <UserChecksum dnOrder="6">3572C01B5F33D876B1567995E402597F</UserChecksum>
+          <GeneratedChecksum dnOrder="5">397E418741FA4918035F7E6259DF983D</GeneratedChecksum>
+          <UserChecksum dnOrder="6">397E418741FA4918035F7E6259DF983D</UserChecksum>
         </File>
         <File dnOrder="8">
           <Type dnOrder="0">SOURCE</Type>
@@ -129,8 +129,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_rh71_ek/stdio/</LogicalPath>
           <PhysicalPath dnOrder="4">/stdio/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">04855DBA4027FB60AEEE23847B094A81</GeneratedChecksum>
-          <UserChecksum dnOrder="6">04855DBA4027FB60AEEE23847B094A81</UserChecksum>
+          <GeneratedChecksum dnOrder="5">5D6C14C049BF0E7C8DD2E4FB4D017D7A</GeneratedChecksum>
+          <UserChecksum dnOrder="6">5D6C14C049BF0E7C8DD2E4FB4D017D7A</UserChecksum>
         </File>
         <File dnOrder="14">
           <Type dnOrder="0">HEADER</Type>
@@ -399,8 +399,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_rh71_ek/peripheral/flexcom/usart/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/flexcom/usart/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">8811D915FEDC20108F5597D10E2A18C9</GeneratedChecksum>
-          <UserChecksum dnOrder="6">8811D915FEDC20108F5597D10E2A18C9</UserChecksum>
+          <GeneratedChecksum dnOrder="5">F35B34B1D7286D8A5AF72DCA9D3B1DE5</GeneratedChecksum>
+          <UserChecksum dnOrder="6">F35B34B1D7286D8A5AF72DCA9D3B1DE5</UserChecksum>
         </File>
         <File dnOrder="44">
           <Type dnOrder="0">HEADER</Type>
@@ -408,8 +408,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_rh71_ek/peripheral/hemc/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/hemc/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">4E545AD1E4B963D281F9B74B214A2D5D</GeneratedChecksum>
-          <UserChecksum dnOrder="6">4E545AD1E4B963D281F9B74B214A2D5D</UserChecksum>
+          <GeneratedChecksum dnOrder="5">5CB587AD586F889400A99F2CBC69F914</GeneratedChecksum>
+          <UserChecksum dnOrder="6">5CB587AD586F889400A99F2CBC69F914</UserChecksum>
         </File>
         <File dnOrder="45">
           <Type dnOrder="0">HEADER</Type>
@@ -579,8 +579,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_rh71_ek/</LogicalPath>
           <PhysicalPath dnOrder="4">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">796F780A55FBA19D8CEE28F968682FA3</GeneratedChecksum>
-          <UserChecksum dnOrder="6">796F780A55FBA19D8CEE28F968682FA3</UserChecksum>
+          <GeneratedChecksum dnOrder="5">282334C2CA236D258519EAD64CF80BC1</GeneratedChecksum>
+          <UserChecksum dnOrder="6">282334C2CA236D258519EAD64CF80BC1</UserChecksum>
         </File>
         <File dnOrder="64">
           <Type dnOrder="0">HEADER</Type>
@@ -611,7 +611,7 @@
         </File>
       </Files>
       <Settings dnOrder="1">
-        <Setting append="true" category="C32" delimiter=";" dnOrder="0" key="extra-include-directories" security="NON_SECURE" value="../src;../src/config/sam_rh71_ek;../src/packs/ATSAMRH71F20C_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/arm"/>
+        <Setting append="true" category="C32" delimiter=";" dnOrder="0" key="extra-include-directories" security="NON_SECURE" value="../src;../src/config/sam_rh71_ek;../src/packs/ATSAMRH71F20C_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/"/>
         <Setting category="C32-LD" dnOrder="1" key="heap-size" security="NON_SECURE" value="512"/>
         <Setting category="C32-LD" dnOrder="2" key="no-device-startup-code" security="NON_SECURE" value="true"/>
         <Setting append="true" category="C32-LD" delimiter=";" dnOrder="3" key="preprocessor-macros" security="NON_SECURE" value=""/>

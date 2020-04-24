@@ -78,7 +78,7 @@ void HSDRAMC_Initialize( void )
 
     HSDRAMC_REGS->HSDRAMC_SDR = HSDRAMC_SDR_TRAS(5) |  HSDRAMC_SDR_TRP(2) |  HSDRAMC_SDR_TRC_TRFC(6) \
                                                 | HSDRAMC_SDR_TRCD(2) | HSDRAMC_SDR_TWR(2) | HSDRAMC_SDR_TXSR(7);
-    HSDRAMC_REGS->HSDRAMC_CFR1= HSDRAMC_CFR1_TMRD(2);
+    HSDRAMC_REGS->HSDRAMC_CFR1= HSDRAMC_CFR1_TMRD(2) | HSDRAMC_CFR1_UNAL_Msk;
 
     /* Step 2:
      * A pause of at least 200 us must be observed before a signal toggle */
@@ -193,12 +193,12 @@ void HEMC_Initialize( void )
 */
 HEMC_HECC_STATUS HEMC_HeccGetStatus(void)
 {
-    return HEMC_REGS->HEMC_HECC_SR;
+    return (HEMC_HECC_STATUS)(HEMC_REGS->HEMC_HECC_SR);
 }
 
 // *****************************************************************************
 /* Function:
-    void HEMC_HeccGetFailAddress(void)
+    uint32_t* HEMC_HeccGetFailAddress(void)
 
    Summary:
     Get the last fail address were ECC error occurs in a HEMC memory.
@@ -210,11 +210,11 @@ HEMC_HECC_STATUS HEMC_HeccGetStatus(void)
     None.
 
    Returns:
-    Fail address were fixable or unfixable error occured in a HEMC memory.
+    Pointer of fail address were fixable or unfixable error occured in a HEMC memory.
 */
-uint32_t HEMC_HeccGetFailAddress(void)
+uint32_t* HEMC_HeccGetFailAddress(void)
 {
-    return HEMC_REGS->HEMC_HECC_FAILAR;
+    return (uint32_t*)(HEMC_REGS->HEMC_HECC_FAILAR);
 }
 
 // *****************************************************************************
