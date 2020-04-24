@@ -4,7 +4,7 @@
 
 
 project: usart_echo_interrupt
-creation_date: 2020-04-08T21:35:07.746+05:30[Asia/Calcutta]	# ISO 8601 format: https://www.w3.org/TR/NOTE-datetime
+creation_date: 2020-04-24T20:59:40.719+05:30[Asia/Calcutta]	# ISO 8601 format: https://www.w3.org/TR/NOTE-datetime
 operating_system: Windows 10
 mhc_mode: Standalone				# [IDE|Standalone|Headless]
 mplabx_version: -		# if MPLAB X plugin only
@@ -19,4 +19,5 @@ modules:
     - {name: "doc_o_matic_h3", version: ""}
     - {name: "h3_demo_regenerator", version: ""}
     - {name: "mhc", version: ""}
+    - {name: "net", version: ""}
 
