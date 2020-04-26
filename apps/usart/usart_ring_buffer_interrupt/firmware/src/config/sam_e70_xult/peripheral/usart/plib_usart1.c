@@ -79,12 +79,14 @@ void USART1_Initialize( void )
 
     /* Initialize instance object */
     usart1Obj.rdCallback = NULL;
-    usart1Obj.rdInIndex = usart1Obj.rdOutIndex = 0;
+    usart1Obj.rdInIndex = 0;
+	usart1Obj.rdOutIndex = 0;
     usart1Obj.isRdNotificationEnabled = false;
     usart1Obj.isRdNotifyPersistently = false;
     usart1Obj.rdThreshold = 0;
     usart1Obj.wrCallback = NULL;
-    usart1Obj.wrInIndex = usart1Obj.wrOutIndex = 0;
+    usart1Obj.wrInIndex = 0;
+	usart1Obj.wrOutIndex = 0;
     usart1Obj.isWrNotificationEnabled = false;
     usart1Obj.isWrNotifyPersistently = false;
     usart1Obj.wrThreshold = 0;
@@ -251,12 +253,17 @@ static void USART1_ReadNotificationSend(void)
 size_t USART1_Read(uint8_t* pRdBuffer, const size_t size)
 {
     size_t nBytesRead = 0;
+	uint32_t rdOutIndex;
+	uint32_t rdInIndex;
 
     while (nBytesRead < size)
     {
         USART1_RX_INT_DISABLE();
+		
+		rdOutIndex = usart1Obj.rdOutIndex;
+		rdInIndex = usart1Obj.rdInIndex;
 
-        if (usart1Obj.rdOutIndex != usart1Obj.rdInIndex)
+        if (rdOutIndex != rdInIndex)
         {
             pRdBuffer[nBytesRead++] = USART1_ReadBuffer[usart1Obj.rdOutIndex++];
 
@@ -278,20 +285,22 @@ size_t USART1_Read(uint8_t* pRdBuffer, const size_t size)
 
 size_t USART1_ReadCountGet(void)
 {
-    size_t nUnreadBytesAvailable;
+    size_t nUnreadBytesAvailable;	
+	uint32_t rdOutIndex;
+	uint32_t rdInIndex;    
+	
+	/* Take a snapshot of indices to avoid creation of critical section */
+	rdOutIndex = usart1Obj.rdOutIndex;
+	rdInIndex = usart1Obj.rdInIndex;
 
-    USART1_RX_INT_DISABLE();
-
-    if ( usart1Obj.rdInIndex >=  usart1Obj.rdOutIndex)
+    if ( rdInIndex >=  rdOutIndex)
     {
-        nUnreadBytesAvailable =  usart1Obj.rdInIndex -  usart1Obj.rdOutIndex;
+        nUnreadBytesAvailable =  rdInIndex - rdOutIndex;
     }
     else
     {
-        nUnreadBytesAvailable =  (USART1_READ_BUFFER_SIZE -  usart1Obj.rdOutIndex) + usart1Obj.rdInIndex;
-    }
-
-    USART1_RX_INT_ENABLE();
+        nUnreadBytesAvailable =  (USART1_READ_BUFFER_SIZE -  rdOutIndex) + rdInIndex;
+    }    
 
     return nUnreadBytesAvailable;
 }
@@ -336,8 +345,10 @@ void USART1_ReadCallbackRegister( USART_RING_BUFFER_CALLBACK callback, uintptr_t
 static bool USART1_TxPullByte(uint8_t* pWrByte)
 {
     bool isSuccess = false;
+	uint32_t wrOutIndex = usart1Obj.wrOutIndex;
+	uint32_t wrInIndex = usart1Obj.wrInIndex;
 
-    if (usart1Obj.wrOutIndex != usart1Obj.wrInIndex)
+    if (wrOutIndex != wrInIndex)
     {
         *pWrByte = USART1_WriteBuffer[usart1Obj.wrOutIndex++];
 
@@ -408,14 +419,18 @@ static void USART1_WriteNotificationSend(void)
 static size_t USART1_WritePendingBytesGet(void)
 {
     size_t nPendingTxBytes;
+	
+	/* Take a snapshot of indices to avoid creation of critical section */
+	uint32_t wrOutIndex = usart1Obj.wrOutIndex;
+	uint32_t wrInIndex = usart1Obj.wrInIndex;
 
-    if ( usart1Obj.wrInIndex >=  usart1Obj.wrOutIndex)
+    if ( wrInIndex >= wrOutIndex)
     {
-        nPendingTxBytes =  usart1Obj.wrInIndex -  usart1Obj.wrOutIndex;
+        nPendingTxBytes =  wrInIndex -  wrOutIndex;
     }
     else
     {
-        nPendingTxBytes =  (USART1_WRITE_BUFFER_SIZE -  usart1Obj.wrOutIndex) + usart1Obj.wrInIndex;
+        nPendingTxBytes =  (USART1_WRITE_BUFFER_SIZE -  wrOutIndex) + wrInIndex;
     }
 
     return nPendingTxBytes;
@@ -425,15 +440,7 @@ size_t USART1_WriteCountGet(void)
 {
     size_t nPendingTxBytes;
 
-    USART1_TX_INT_DISABLE();
-
-    nPendingTxBytes = USART1_WritePendingBytesGet();
-
-    /* Enable transmit interrupt only if any data is pending for transmission */
-    if (USART1_WritePendingBytesGet() > 0)
-    {
-        USART1_TX_INT_ENABLE();
-    }
+    nPendingTxBytes = USART1_WritePendingBytesGet();    
 
     return nPendingTxBytes;
 }
