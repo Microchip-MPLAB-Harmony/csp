@@ -144,14 +144,14 @@
         <targetDevice>ATSAMHA1G16AB</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>Simulator</platformTool>
+        <platformTool>EdbgTool</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>2.30</languageToolchainVersion>
+        <languageToolchainVersion>2.40</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="SAMHA1_DFP" vendor="Microchip" version="2.0.42"/>
         <pack name="CMSIS" vendor="ARM" version="5.4.0"/>
+        <pack name="SAMHA1_DFP" vendor="Microchip" version="2.0.42"/>
       </packs>
       <compileType>
         <linkerTool>
