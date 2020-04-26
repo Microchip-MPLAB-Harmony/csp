@@ -93,8 +93,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_v71_xult/peripheral/usart/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/usart/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">04472ECCB32DB2526FF75C0CE37B9FA1</GeneratedChecksum>
-          <UserChecksum dnOrder="6">04472ECCB32DB2526FF75C0CE37B9FA1</UserChecksum>
+          <GeneratedChecksum dnOrder="5">281C7847641936BE3CB0D0866EF5A7AD</GeneratedChecksum>
+          <UserChecksum dnOrder="6">281C7847641936BE3CB0D0866EF5A7AD</UserChecksum>
         </File>
         <File dnOrder="10">
           <Type dnOrder="0">SOURCE</Type>
@@ -653,7 +653,7 @@
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
       <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
-      <Setting dnOrder="5" key="PackageFilter" value="bootloader;bsp;core;cryptoauthlib;csp;micrium_ucos3;net;touch;usb;"/>
+      <Setting dnOrder="5" key="PackageFilter" value="aerospace;aws_cloud;bootloader;bsp;bt;core;crypto;cryptoauthlib;cryptoauthlib_apps;csp;ethercat;expresslogic_threadx;gfx;gfx_apps;micrium_ucos3;motor_control;net;touch;usb;wireless;"/>
     </Settings>
   </Configurator>
 </Configuration>
