@@ -9,154 +9,171 @@
         <File dnOrder="0">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">exceptions.c</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_125_sk/</LogicalPath>
-          <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">3477C6F788508451FADB8F17D7E78273</GeneratedChecksum>
-          <UserChecksum dnOrder="5">3477C6F788508451FADB8F17D7E78273</UserChecksum>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/pic32mx_125_sk/</LogicalPath>
+          <PhysicalPath dnOrder="4">/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">3477C6F788508451FADB8F17D7E78273</GeneratedChecksum>
+          <UserChecksum dnOrder="6">3477C6F788508451FADB8F17D7E78273</UserChecksum>
         </File>
         <File dnOrder="1">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">initialization.c</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_125_sk/</LogicalPath>
-          <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">DDFD117271209E711E23E3C50611CBD7</GeneratedChecksum>
-          <UserChecksum dnOrder="5">DDFD117271209E711E23E3C50611CBD7</UserChecksum>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/pic32mx_125_sk/</LogicalPath>
+          <PhysicalPath dnOrder="4">/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">D09CA1F0BB7797E4E5E33E8959C82E29</GeneratedChecksum>
+          <UserChecksum dnOrder="6">D09CA1F0BB7797E4E5E33E8959C82E29</UserChecksum>
         </File>
         <File dnOrder="2">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">interrupts.c</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_125_sk/</LogicalPath>
-          <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">AC03E3CA7436F90D9419A0002C401BC6</GeneratedChecksum>
-          <UserChecksum dnOrder="5">AC03E3CA7436F90D9419A0002C401BC6</UserChecksum>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/pic32mx_125_sk/</LogicalPath>
+          <PhysicalPath dnOrder="4">/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">AC03E3CA7436F90D9419A0002C401BC6</GeneratedChecksum>
+          <UserChecksum dnOrder="6">AC03E3CA7436F90D9419A0002C401BC6</UserChecksum>
         </File>
         <File dnOrder="3">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">main.c</Name>
-          <LogicalPath dnOrder="2"/>
-          <PhysicalPath dnOrder="3">/../../</PhysicalPath>
-          <GeneratedChecksum dnOrder="4"/>
-          <UserChecksum dnOrder="5"/>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3"/>
+          <PhysicalPath dnOrder="4">/../../</PhysicalPath>
+          <GeneratedChecksum dnOrder="5"/>
+          <UserChecksum dnOrder="6"/>
         </File>
         <File dnOrder="4">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_clk.c</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_125_sk/peripheral/clk/</LogicalPath>
-          <PhysicalPath dnOrder="3">/peripheral/clk/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">5F1B9C794E9A714CF8A6E38E6597336F</GeneratedChecksum>
-          <UserChecksum dnOrder="5">5F1B9C794E9A714CF8A6E38E6597336F</UserChecksum>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/pic32mx_125_sk/peripheral/clk/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/clk/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">AE12DEDAE5205CF62A364E8ECC7E4AAB</GeneratedChecksum>
+          <UserChecksum dnOrder="6">AE12DEDAE5205CF62A364E8ECC7E4AAB</UserChecksum>
         </File>
         <File dnOrder="5">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_evic.c</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_125_sk/peripheral/evic/</LogicalPath>
-          <PhysicalPath dnOrder="3">/peripheral/evic/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">2E9B722345B0A9D151AE14C3C5CE6D3B</GeneratedChecksum>
-          <UserChecksum dnOrder="5">2E9B722345B0A9D151AE14C3C5CE6D3B</UserChecksum>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/pic32mx_125_sk/peripheral/evic/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/evic/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">2E9B722345B0A9D151AE14C3C5CE6D3B</GeneratedChecksum>
+          <UserChecksum dnOrder="6">2E9B722345B0A9D151AE14C3C5CE6D3B</UserChecksum>
         </File>
         <File dnOrder="6">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_gpio.c</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_125_sk/peripheral/gpio/</LogicalPath>
-          <PhysicalPath dnOrder="3">/peripheral/gpio/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">70BF9699D0DCED7DEED828A59C79B95C</GeneratedChecksum>
-          <UserChecksum dnOrder="5">70BF9699D0DCED7DEED828A59C79B95C</UserChecksum>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/pic32mx_125_sk/peripheral/gpio/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/gpio/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">70BF9699D0DCED7DEED828A59C79B95C</GeneratedChecksum>
+          <UserChecksum dnOrder="6">70BF9699D0DCED7DEED828A59C79B95C</UserChecksum>
         </File>
         <File dnOrder="7">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">plib_tmr2.c</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_125_sk/peripheral/tmr/</LogicalPath>
-          <PhysicalPath dnOrder="3">/peripheral/tmr/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">F386802613582B4CE4D253F06B6E298A</GeneratedChecksum>
-          <UserChecksum dnOrder="5">F386802613582B4CE4D253F06B6E298A</UserChecksum>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/pic32mx_125_sk/peripheral/tmr/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/tmr/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">7EF47F49A6E1151CC1A8A92527DDD3E2</GeneratedChecksum>
+          <UserChecksum dnOrder="6">7EF47F49A6E1151CC1A8A92527DDD3E2</UserChecksum>
         </File>
         <File dnOrder="8">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">xc32_monitor.c</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_125_sk/stdio/</LogicalPath>
-          <PhysicalPath dnOrder="3">/stdio/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">0CDCE9B6891797FCD2AEA243F841353F</GeneratedChecksum>
-          <UserChecksum dnOrder="5">0CDCE9B6891797FCD2AEA243F841353F</UserChecksum>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/pic32mx_125_sk/stdio/</LogicalPath>
+          <PhysicalPath dnOrder="4">/stdio/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">A9F55E7CB78F22D9000CA03DC635973C</GeneratedChecksum>
+          <UserChecksum dnOrder="6">A9F55E7CB78F22D9000CA03DC635973C</UserChecksum>
         </File>
         <File dnOrder="9">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">definitions.h</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_125_sk/</LogicalPath>
-          <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">0A2CB7652AEB6CFA321837326A048B78</GeneratedChecksum>
-          <UserChecksum dnOrder="5">0A2CB7652AEB6CFA321837326A048B78</UserChecksum>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/pic32mx_125_sk/</LogicalPath>
+          <PhysicalPath dnOrder="4">/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">0A2CB7652AEB6CFA321837326A048B78</GeneratedChecksum>
+          <UserChecksum dnOrder="6">0A2CB7652AEB6CFA321837326A048B78</UserChecksum>
         </File>
         <File dnOrder="10">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">device.h</Name>
-          <LogicalPath dnOrder="2">packs/PIC32MX570F512L_DFP/</LogicalPath>
-          <PhysicalPath dnOrder="3">/../../packs/PIC32MX570F512L_DFP/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">5D5C52527AB1435153DB9B50ADE6B79D</GeneratedChecksum>
-          <UserChecksum dnOrder="5">5D5C52527AB1435153DB9B50ADE6B79D</UserChecksum>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">packs/PIC32MX570F512L_DFP/</LogicalPath>
+          <PhysicalPath dnOrder="4">/../../packs/PIC32MX570F512L_DFP/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">5D5C52527AB1435153DB9B50ADE6B79D</GeneratedChecksum>
+          <UserChecksum dnOrder="6">5D5C52527AB1435153DB9B50ADE6B79D</UserChecksum>
         </File>
         <File dnOrder="11">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_clk.h</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_125_sk/peripheral/clk/</LogicalPath>
-          <PhysicalPath dnOrder="3">/peripheral/clk/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">7066CC390335CF75126E2A50C46E3BDD</GeneratedChecksum>
-          <UserChecksum dnOrder="5">7066CC390335CF75126E2A50C46E3BDD</UserChecksum>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/pic32mx_125_sk/peripheral/clk/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/clk/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">7066CC390335CF75126E2A50C46E3BDD</GeneratedChecksum>
+          <UserChecksum dnOrder="6">7066CC390335CF75126E2A50C46E3BDD</UserChecksum>
         </File>
         <File dnOrder="12">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_evic.h</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_125_sk/peripheral/evic/</LogicalPath>
-          <PhysicalPath dnOrder="3">/peripheral/evic/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">175901F8C8A6AACC348866C997B4653D</GeneratedChecksum>
-          <UserChecksum dnOrder="5">175901F8C8A6AACC348866C997B4653D</UserChecksum>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/pic32mx_125_sk/peripheral/evic/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/evic/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">175901F8C8A6AACC348866C997B4653D</GeneratedChecksum>
+          <UserChecksum dnOrder="6">175901F8C8A6AACC348866C997B4653D</UserChecksum>
         </File>
         <File dnOrder="13">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_gpio.h</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_125_sk/peripheral/gpio/</LogicalPath>
-          <PhysicalPath dnOrder="3">/peripheral/gpio/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">35319F7842765C28BE4BCF60607EC9FF</GeneratedChecksum>
-          <UserChecksum dnOrder="5">35319F7842765C28BE4BCF60607EC9FF</UserChecksum>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/pic32mx_125_sk/peripheral/gpio/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/gpio/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">35319F7842765C28BE4BCF60607EC9FF</GeneratedChecksum>
+          <UserChecksum dnOrder="6">35319F7842765C28BE4BCF60607EC9FF</UserChecksum>
         </File>
         <File dnOrder="14">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_tmr2.h</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_125_sk/peripheral/tmr/</LogicalPath>
-          <PhysicalPath dnOrder="3">/peripheral/tmr/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">951CB6B720EFCD3044875413BC7D7773</GeneratedChecksum>
-          <UserChecksum dnOrder="5">951CB6B720EFCD3044875413BC7D7773</UserChecksum>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/pic32mx_125_sk/peripheral/tmr/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/tmr/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">951CB6B720EFCD3044875413BC7D7773</GeneratedChecksum>
+          <UserChecksum dnOrder="6">951CB6B720EFCD3044875413BC7D7773</UserChecksum>
         </File>
         <File dnOrder="15">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_tmr_common.h</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_125_sk/peripheral/tmr/</LogicalPath>
-          <PhysicalPath dnOrder="3">/peripheral/tmr/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">D948F2CE092CAB556EF299D3CCD83A55</GeneratedChecksum>
-          <UserChecksum dnOrder="5">D948F2CE092CAB556EF299D3CCD83A55</UserChecksum>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/pic32mx_125_sk/peripheral/tmr/</LogicalPath>
+          <PhysicalPath dnOrder="4">/peripheral/tmr/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">D948F2CE092CAB556EF299D3CCD83A55</GeneratedChecksum>
+          <UserChecksum dnOrder="6">D948F2CE092CAB556EF299D3CCD83A55</UserChecksum>
         </File>
         <File dnOrder="16">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">toolchain_specifics.h</Name>
-          <LogicalPath dnOrder="2">config/pic32mx_125_sk/</LogicalPath>
-          <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">5F0B87C955FBF569CBD67F4861B6B7AD</GeneratedChecksum>
-          <UserChecksum dnOrder="5">5F0B87C955FBF569CBD67F4861B6B7AD</UserChecksum>
+          <Security dnOrder="2">NON_SECURE</Security>
+          <LogicalPath dnOrder="3">config/pic32mx_125_sk/</LogicalPath>
+          <PhysicalPath dnOrder="4">/</PhysicalPath>
+          <GeneratedChecksum dnOrder="5">9A7344615980CB9443B6436E41E2155A</GeneratedChecksum>
+          <UserChecksum dnOrder="6">9A7344615980CB9443B6436E41E2155A</UserChecksum>
         </File>
       </Files>
       <Settings dnOrder="1">
-        <Setting append="true" category="C32" delimiter=";" dnOrder="0" key="extra-include-directories" value="../src;../src/config/pic32mx_125_sk;../src/packs/PIC32MX570F512L_DFP;;../src/mips"/>
-        <Setting category="C32-LD" dnOrder="1" key="heap-size" value="0"/>
-        <Setting category="C32-LD" dnOrder="2" key="no-device-startup-code" value="true"/>
-        <Setting category="C32-LD" dnOrder="3" key="preprocessor-macros" value=""/>
+        <Setting append="true" category="C32" delimiter=";" dnOrder="0" key="extra-include-directories" security="NON_SECURE" value="../src;../src/config/pic32mx_125_sk;../src/packs/PIC32MX570F512L_DFP;"/>
+        <Setting category="C32-LD" dnOrder="1" key="heap-size" security="NON_SECURE" value="512"/>
+        <Setting category="C32-LD" dnOrder="2" key="no-device-startup-code" security="NON_SECURE" value="true"/>
+        <Setting append="true" category="C32-LD" delimiter=";" dnOrder="3" key="preprocessor-macros" security="NON_SECURE" value=""/>
       </Settings>
     </Manifest>
     <Settings dnOrder="4">
-      <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.4.0"/>
-      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MX_DFP\1.0.49\atdf\PIC32MX570F512L.atdf"/>
+      <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.6.0"/>
+      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MX_DFP\1.2.228\atdf\PIC32MX570F512L.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
       <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
-      <Setting dnOrder="5" key="PackageFilter" value="csp;"/>
+      <Setting dnOrder="5" key="PackageFilter" value="aerospace;aws_cloud;bootloader;bsp;bt;core;crypto;cryptoauthlib;cryptoauthlib_apps;csp;ethercat;expresslogic_threadx;gfx;gfx_apps;micrium_ucos3;motor_control;net;touch;usb;wireless;"/>
     </Settings>
   </Configurator>
 </Configuration>
