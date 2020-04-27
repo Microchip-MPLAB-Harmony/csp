@@ -75,8 +75,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/pic32mx470_curiosity/peripheral/uart/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/uart/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">B9C8291B799444FBC16DD9667B51EFEC</GeneratedChecksum>
-          <UserChecksum dnOrder="6">B9C8291B799444FBC16DD9667B51EFEC</UserChecksum>
+          <GeneratedChecksum dnOrder="5">7CD79CE96051EC0FA6356F1634F9B781</GeneratedChecksum>
+          <UserChecksum dnOrder="6">7CD79CE96051EC0FA6356F1634F9B781</UserChecksum>
         </File>
         <File dnOrder="8">
           <Type dnOrder="0">SOURCE</Type>
