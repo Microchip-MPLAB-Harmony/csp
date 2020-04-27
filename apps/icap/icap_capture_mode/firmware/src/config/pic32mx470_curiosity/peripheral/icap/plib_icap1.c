@@ -85,14 +85,14 @@ uint16_t ICAP1_CaptureBufferRead (void)
 
 bool ICAP1_CaptureStatusGet (void)
 {
-    bool status;
+    bool status = false;
     status = ((IC1CON >> ICAP_STATUS_BUFNOTEMPTY) & 0x1);
     return status;
 }
 
 bool ICAP1_ErrorStatusGet (void)
 {
-    bool status;
+    bool status = false;
     status = ((IC1CON >> ICAP_STATUS_OVERFLOW) & 0x1);
     return status;
 }
