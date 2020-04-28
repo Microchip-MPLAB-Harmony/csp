@@ -51,7 +51,7 @@ HEAP_SIZE      = 512;
 /* Section Definitions */
 SECTIONS
 {
-	.text 0x26F00000 :
+	.text 0x26f00000 :
 	{
 		. = ALIGN(4);
 		_sfixed = .;

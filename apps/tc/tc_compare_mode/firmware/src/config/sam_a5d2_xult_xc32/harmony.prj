@@ -102,8 +102,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_a5d2_xult_xc32/peripheral/tc/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/tc/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">4CFB2C6462FB6F3C40598FDB30EA8219</GeneratedChecksum>
-          <UserChecksum dnOrder="6">4CFB2C6462FB6F3C40598FDB30EA8219</UserChecksum>
+          <GeneratedChecksum dnOrder="5">45D54C49A450B3DAD99BE871B123AA3A</GeneratedChecksum>
+          <UserChecksum dnOrder="6">45D54C49A450B3DAD99BE871B123AA3A</UserChecksum>
         </File>
         <File dnOrder="11">
           <Type dnOrder="0">SOURCE</Type>
@@ -714,8 +714,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_a5d2_xult_xc32/</LogicalPath>
           <PhysicalPath dnOrder="4">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">9974A4D7107231BC0E3BE4F74DDB132C</GeneratedChecksum>
-          <UserChecksum dnOrder="6">9974A4D7107231BC0E3BE4F74DDB132C</UserChecksum>
+          <GeneratedChecksum dnOrder="5">337F9F8D362470B14985747104457E21</GeneratedChecksum>
+          <UserChecksum dnOrder="6">337F9F8D362470B14985747104457E21</UserChecksum>
         </File>
       </Files>
       <Settings dnOrder="1">
@@ -724,16 +724,16 @@
         <Setting append="true" category="C32" delimiter=";" dnOrder="2" key="preprocessor-macros" security="NON_SECURE" value="__FPU_PRESENT=1"/>
         <Setting category="C32-LD" dnOrder="3" key="heap-size" security="NON_SECURE" value="512"/>
         <Setting category="C32-LD" dnOrder="4" key="no-device-startup-code" security="NON_SECURE" value="true"/>
-        <Setting append="true" category="C32-LD" delimiter=";" dnOrder="5" key="preprocessor-macros" security="NON_SECURE" value="ROM_ORIGIN=0x0x26F00000;ROM_LENGTH=-0x26f00000"/>
+        <Setting append="true" category="C32-LD" delimiter=";" dnOrder="5" key="preprocessor-macros" security="NON_SECURE" value="ROM_ORIGIN=0x0x26f00000;ROM_LENGTH=-0x26f00000"/>
       </Settings>
     </Manifest>
     <Settings dnOrder="4">
-      <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.5.1"/>
-      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAMA5D2_DFP\0.1.18\atdf\ATSAMA5D27.atdf"/>
+      <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.6.0"/>
+      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAMA5D2_DFP\1.2.30\atdf\ATSAMA5D27.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
       <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
-      <Setting dnOrder="5" key="PackageFilter" value="csp;"/>
+      <Setting dnOrder="5" key="PackageFilter" value="bsp;core;csp;expresslogic_threadx;micrium_ucos3;"/>
     </Settings>
   </Configurator>
 </Configuration>

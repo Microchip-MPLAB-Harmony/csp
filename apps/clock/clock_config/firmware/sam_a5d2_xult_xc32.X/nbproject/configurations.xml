@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configurationDescriptor version="65">
   <logicalFolder name="root" displayName="root" projectFiles="true">
-    <logicalFolder name="f1" displayName="Header Files" projectFiles="true">
+    <logicalFolder name="HeaderFiles"
+                   displayName="Header Files"
+                   projectFiles="true">
       <logicalFolder name="f1" displayName="config" projectFiles="true">
         <logicalFolder name="f1" displayName="sam_a5d2_xult_xc32" projectFiles="true">
           <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
@@ -52,7 +54,6 @@
             <itemPath>../src/packs/ATSAMA5D27_DFP/component/mpddrc.h</itemPath>
             <itemPath>../src/packs/ATSAMA5D27_DFP/component/pdmic.h</itemPath>
             <itemPath>../src/packs/ATSAMA5D27_DFP/component/pio.h</itemPath>
-            <itemPath>../src/packs/ATSAMA5D27_DFP/component/pio_ctrl.h</itemPath>
             <itemPath>../src/packs/ATSAMA5D27_DFP/component/pit.h</itemPath>
             <itemPath>../src/packs/ATSAMA5D27_DFP/component/pmc.h</itemPath>
             <itemPath>../src/packs/ATSAMA5D27_DFP/component/ptc.h</itemPath>
@@ -103,17 +104,23 @@
         </logicalFolder>
       </logicalFolder>
     </logicalFolder>
-    <logicalFolder name="f4" displayName="Important Files" projectFiles="true">
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="true">
       <itemPath>Makefile</itemPath>
     </logicalFolder>
-    <logicalFolder name="f2" displayName="Linker Files" projectFiles="true">
+    <logicalFolder name="LinkerScript"
+                   displayName="Linker Files"
+                   projectFiles="true">
       <logicalFolder name="f1" displayName="config" projectFiles="true">
         <logicalFolder name="f1" displayName="sam_a5d2_xult_xc32" projectFiles="true">
           <itemPath>../src/config/sam_a5d2_xult_xc32/ddr.ld</itemPath>
         </logicalFolder>
       </logicalFolder>
     </logicalFolder>
-    <logicalFolder name="f3" displayName="Source Files" projectFiles="true">
+    <logicalFolder name="SourceFiles"
+                   displayName="Source Files"
+                   projectFiles="true">
       <logicalFolder name="f1" displayName="config" projectFiles="true">
         <logicalFolder name="f1" displayName="sam_a5d2_xult_xc32" projectFiles="true">
           <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
@@ -159,14 +166,14 @@
         <targetDevice>ATSAMA5D27</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>samice</platformTool>
+        <platformTool>noID</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>2.20</languageToolchainVersion>
+        <languageToolchainVersion>2.40</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="SAMA5D2_DFP" vendor="Microchip" version="1.1.11"/>
-        <pack name="CMSIS" vendor="ARM" version="5.0.1"/>
+        <pack name="SAMA5D2_DFP" vendor="Microchip" version="1.2.20"/>
+        <pack name="CMSIS" vendor="ARM" version="5.4.0"/>
       </packs>
       <compileType>
         <linkerTool>
@@ -219,14 +226,13 @@
       <C32>
         <property key="additional-warnings" value="true"/>
         <property key="addresss-attribute-use" value="false"/>
-        <property key="appendMe" value="-marm -cpu=cortex-a5 -mfpu=neon-vfpv4"/>
         <property key="enable-app-io" value="false"/>
         <property key="enable-omit-frame-pointer" value="false"/>
         <property key="enable-symbols" value="true"/>
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories"
-                  value="../src;../src/config/sam_a5d2_xult_xc32;../src/packs/ATSAMA5D27_DFP;../src/packs/CMSIS/CMSIS/Core_A/Include;../src/packs/CMSIS/;../src/arm"/>
+                  value="../src;../src/config/sam_a5d2_xult_xc32;../src/packs/ATSAMA5D27_DFP;../src/packs/CMSIS/CMSIS/Core_A/Include;../src/packs/CMSIS/"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
@@ -310,7 +316,6 @@
         <property key="symbol-stripping" value=""/>
         <property key="trace-symbols" value=""/>
         <property key="warn-section-align" value="false"/>
-        <appendMe value="-T../../firmware/src/config/sam_a5d2_xult_xc32/ddr.ld"/>
       </C32-LD>
       <C32CPP>
         <property key="additional-warnings" value="false"/>
@@ -348,6 +353,7 @@
         <property key="mdtcm" value=""/>
         <property key="mitcm" value=""/>
         <property key="mstacktcm" value="false"/>
+        <property key="omit-pack-options" value="1"/>
         <property key="relaxed-math" value="false"/>
         <property key="save-temps" value="false"/>
         <property key="wpo-lto" value="false"/>
@@ -840,9 +846,9 @@
       </Simulator>
       <samice>
         <property key="AutoSelectMemRanges" value="auto"/>
-        <property key="jtagcommunication.autoselectspeed" value="false"/>
-        <property key="jtagcommunication.method" value="swd"/>
-        <property key="jtagcommunication.speed" value="4000"/>
+        <property key="communication.autoselectspeed" value="true"/>
+        <property key="communication.interface" value="swd"/>
+        <property key="communication.speed" value="4"/>
         <property key="memories.bootflash" value="true"/>
         <property key="memories.configurationmemory" value="true"/>
         <property key="memories.eeprom" value="true"/>
