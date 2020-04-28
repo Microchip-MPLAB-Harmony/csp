@@ -112,6 +112,10 @@ void PWM_SyncUpdateEnable (void);
 
 void PWM_FaultStatusClear(PWM_FAULT_ID fault_id);
 
+void PWM_ChannelOverrideEnable(PWM_CHANNEL_NUM channel);
+
+void PWM_ChannelOverrideDisable(PWM_CHANNEL_NUM channel);
+
 void PWM_CallbackRegister(PWM_CALLBACK callback, uintptr_t context);
 
 #endif //PLIB_PWM_H
