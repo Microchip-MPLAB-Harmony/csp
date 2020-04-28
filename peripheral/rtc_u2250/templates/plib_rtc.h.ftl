@@ -197,7 +197,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void);
 <#if RTC_MODULE_SELECTION = "MODE0">
     <#if RTC_MODE0_INTERRUPT = false>
         <#lt>bool ${RTC_INSTANCE_NAME}_Timer32CounterHasOverflowed ( void );
-        <#if RTC_MODE0_NUM_COMP == 0>
+        <#if RTC_MODE0_NUM_COMP == 1>
         <#lt>bool ${RTC_INSTANCE_NAME}_Timer32CompareHasMatched( void );
         <#else>
         <#list 0..(RTC_MODE0_NUM_COMP - 1) as i>
