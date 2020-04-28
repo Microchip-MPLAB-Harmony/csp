@@ -1,6 +1,6 @@
 /** Program GPNVM fuse for TCM configuration */
 <#if TCM_ECC_ENABLE>
-__STATIC_INLINE void TCM_EccInitialize()
+__STATIC_INLINE void TCM_EccInitialize(void)
 {
     uint64_t i = 0;
     uint64_t *pItcm = (uint64_t*) ITCM_ADDR;

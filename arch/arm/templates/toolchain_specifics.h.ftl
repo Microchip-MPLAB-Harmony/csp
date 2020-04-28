@@ -28,7 +28,7 @@
 
     <#lt>#ifndef __NOP
     <#lt>#define __NOP __arm926_nop
-    <#lt>static inline void __arm926_nop()
+    <#lt>static inline void __arm926_nop(void)
     <#lt>{
     <#lt>    asm("nop");
     <#lt>}

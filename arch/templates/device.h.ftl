@@ -45,7 +45,17 @@
 #include <xc.h>
 #include <sys/attribs.h>
 <#else>
+<#if core.COMPILER_CHOICE == "XC32">
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wnested-externs"
+#pragma GCC diagnostic ignored "-Wsign-conversion"
+#pragma GCC diagnostic ignored "-Wattributes"
+#pragma GCC diagnostic ignored "-Wundef"
+</#if>
 #include "${__PROCESSOR?lower_case}.h"
+<#if core.COMPILER_CHOICE == "XC32">
+#pragma GCC diagnostic pop
+</#if>
 #include "device_cache.h"
 </#if>
 <#if DFP_COMPAT_FILE?has_content>

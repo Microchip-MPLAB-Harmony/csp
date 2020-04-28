@@ -20,24 +20,23 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
  *******************************************************************************/
-
-void __attribute((weak)) undefined_instruction_irq_handler (void)
+void __attribute((weak, noreturn)) undefined_instruction_irq_handler (void)
 {
 	while(1);
 }
 
 
-void __attribute((weak)) software_interrupt_irq_handler(void)
+void __attribute((weak, noreturn)) software_interrupt_irq_handler(void)
 {
 	while(1);
 }
 
-void __attribute((weak)) data_abort_irq_handler(void)
+void __attribute((weak, noreturn)) data_abort_irq_handler(void)
 {
 	while(1);
 }
 
-void __attribute((weak)) prefetch_abort_irq_handler(void)
+void __attribute((weak, noreturn)) prefetch_abort_irq_handler(void)
 {
 	while(1);
 }

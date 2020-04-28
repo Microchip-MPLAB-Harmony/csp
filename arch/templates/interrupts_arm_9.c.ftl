@@ -1,6 +1,6 @@
 /* Brief default interrupt handler for unused IRQs */
 <#lt><#if "XC32" == COMPILER_CHOICE>
-    <#lt>void __attribute__((optimize("-O1"),section(".text.DefaultInterruptHandler"),long_call))DefaultInterruptHandler( void )
+    <#lt>void __attribute__((optimize("-O1"),section(".text.DefaultInterruptHandler"),long_call, noreturn))DefaultInterruptHandler( void )
     <#lt>{
         <#lt>#if defined(__DEBUG) || defined(__DEBUG_D)
         <#lt>    asm("BKPT");

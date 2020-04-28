@@ -1,8 +1,10 @@
 <#if COMPILER_CHOICE == "XC32">
 extern uint32_t _stack;
 
+void Dummy_Handler(void);
+
 /* Brief default interrupt handler for unused IRQs.*/
-void __attribute__((optimize("-O1"),section(".text.Dummy_Handler"),long_call))Dummy_Handler(void)
+void __attribute__((optimize("-O1"),section(".text.Dummy_Handler"),long_call, noreturn))Dummy_Handler(void)
 {
 <#if CoreArchitecture != "CORTEX-M0PLUS">
 #if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
