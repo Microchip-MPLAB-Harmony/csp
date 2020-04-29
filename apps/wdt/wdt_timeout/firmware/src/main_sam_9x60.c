@@ -77,7 +77,7 @@ typedef enum {
     MsgSentinel,                        // must be last
 } MsgId;
 
-char * message[ MsgSentinel ] = {
+const char * message[ MsgSentinel ] = {
     "",                                                                         // MsgNone
     "\r\n-------------------------------------------------------------\r\n",    // MsgBannerBreak
     "                          WDT DEMO",                                       // MsgBannerTitle
