@@ -65,15 +65,6 @@ bool             RSTC${INSTANCE?string}_NRSTPinRead(       void );
 <#if RSTC_MR_EXTERNAL_RESET_ACTION == "INTERRUPT">
 void             RSTC${INSTANCE?string}_CallbackRegister(  RSTC_CALLBACK callback, uintptr_t context );
 </#if>
-// *****************************************************************************
-// *****************************************************************************
-// Section: Local: **** Do Not Use ****
-// *****************************************************************************
-// *****************************************************************************
-<#if RSTC_MR_EXTERNAL_RESET_ACTION == "INTERRUPT">
-void             RSTC${INSTANCE?string}_InterruptHandler(  void );
-</#if>
-
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
     }
