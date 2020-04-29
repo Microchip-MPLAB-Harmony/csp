@@ -75,7 +75,7 @@ typedef enum {
 } MsgId;
 
 char msgVariableBuffer[ 80 ];
-char * message[ MsgSentinel ] = {
+const char * message[ MsgSentinel ] = {
     "",                                                                         // MsgNone
     "\r\n-------------------------------------------------------------\r\n",    // MsgBannerBreak
     "                          RTC DEMO",                                       // MsgBannerTitle
@@ -89,7 +89,7 @@ char * message[ MsgSentinel ] = {
     msgVariableBuffer,                                                          // MsgInVariableBuffer
 };
 
-char * dayOfWeek[] = { 
+const char * dayOfWeek[] = { 
     "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" 
 };
 
