@@ -1187,9 +1187,9 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
 {
     uint8_t length = 0;
     uint8_t rxgi = 0;
+    uint8_t bufferIndex = 0;
 <#if RXBUF_USE>
     can_rxbe_registers_t *rxbeFifo = NULL;
-    uint8_t bufferIndex = 0;
 </#if>
 <#if RXF0_USE>
     can_rxf0e_registers_t *rxf0eFifo = NULL;
@@ -1423,7 +1423,7 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
     {
         ${CAN_INSTANCE_NAME}_REGS->CAN_IR = CAN_IR_TC_Msk;
         ${CAN_INSTANCE_NAME}_REGS->CAN_IE &= (~CAN_IE_TCE_Msk);
-        for (uint8_t bufferIndex = 0; bufferIndex < (${CAN_INSTANCE_NAME}_TX_FIFO_BUFFER_SIZE/${CAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE); bufferIndex++)
+        for (bufferIndex = 0; bufferIndex < (${CAN_INSTANCE_NAME}_TX_FIFO_BUFFER_SIZE/${CAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE); bufferIndex++)
         {
             if ((${CAN_INSTANCE_NAME}_REGS->CAN_TXBTO & (1 << (bufferIndex & 0x1F))) &&
                 (${CAN_INSTANCE_NAME}_REGS->CAN_TXBTIE & (1 << (bufferIndex & 0x1F))))
