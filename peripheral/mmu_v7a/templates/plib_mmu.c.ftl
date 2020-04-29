@@ -91,10 +91,10 @@ __ALIGNED(16384) static uint32_t tlb[4096];
     Configure MMU by setting TTRB0 address.
 
 */
-static void mmu_configure(void *tlb)
+static void mmu_configure(void *p_tlb)
 {
     /* Translation Table Base Register 0 */
-    __set_TTBR0((uint32_t)tlb);
+    __set_TTBR0((uint32_t)p_tlb);
 
     /* Domain Access Register */
     /* only domain 15: access are not checked */
