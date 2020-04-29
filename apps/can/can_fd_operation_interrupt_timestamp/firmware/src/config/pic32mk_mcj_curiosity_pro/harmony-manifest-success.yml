@@ -4,7 +4,7 @@
 
 
 project: can_fd_operation_interrupt_timestamp
-creation_date: 2020-04-09T19:48:43.781+05:30[Asia/Calcutta]	# ISO 8601 format: https://www.w3.org/TR/NOTE-datetime
+creation_date: 2020-04-29T09:36:29.085+05:30[Asia/Calcutta]	# ISO 8601 format: https://www.w3.org/TR/NOTE-datetime
 operating_system: Windows 10
 mhc_mode: Headless				# [IDE|Standalone|Headless]
 mplabx_version: -		# if MPLAB X plugin only
@@ -12,7 +12,7 @@ plugin_version: -		# if MPLAB X plugin only
 
 modules:
     - {name: "bsp", version: ""}
-    - {name: "CMSIS-FreeRTOS", version: "v10.2.0"}
+    - {name: "CMSIS-FreeRTOS", version: ""}
     - {name: "core", version: ""}
     - {name: "csp", version: ""}
     - {name: "dev_packs", version: ""}
@@ -23,7 +23,6 @@ modules:
     - {name: "mhc", version: ""}
     - {name: "micrium_ucos3", version: ""}
     - {name: "mplabx_plugin", version: ""}
-    - {name: "net", version: ""}
     - {name: "thirdparty_expresslogic", version: "v3.1.0"}
     - {name: "thirdparty_micrium", version: "v3.1.0"}
 
