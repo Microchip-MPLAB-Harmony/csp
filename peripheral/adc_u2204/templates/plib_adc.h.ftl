@@ -100,8 +100,6 @@ void ${ADC_INSTANCE_NAME}_ConversionStart( void );
 
 uint16_t ${ADC_INSTANCE_NAME}_ConversionResultGet( void );
 
-bool ${ADC_INSTANCE_NAME}_ConversionStatusGet( void );
-
 void ${ADC_INSTANCE_NAME}_ComparisonWindowSet(uint16_t low_threshold, uint16_t high_threshold);
 
 void ${ADC_INSTANCE_NAME}_WindowModeSet(ADC_WINMODE mode);
