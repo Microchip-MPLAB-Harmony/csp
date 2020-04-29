@@ -155,8 +155,6 @@ uint32_t ${SUPC_INSTANCE_NAME}_GPBRRead( GPBR_REGS_INDEX reg );
 
 void ${SUPC_INSTANCE_NAME}_GPBRWrite( GPBR_REGS_INDEX reg, uint32_t data );
 
-extern void CLOCK_Initialize( void );
-
 <#if SUPC_SMMR_SMIEN>
 void ${SUPC_INSTANCE_NAME}_CallbackRegister( SUPC_CALLBACK callback, uintptr_t context );
 </#if>
