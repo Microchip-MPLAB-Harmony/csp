@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Periodic Interval Timer (${PIT64B_INSTANCE_NAME}) 
+  Periodic Interval Timer (${PIT64B_INSTANCE_NAME})
 
   Company:
     Microchip Technology Inc.
@@ -99,8 +99,15 @@ void ${PIT64B_INSTANCE_NAME}_TimerStop(void)
 
 void ${PIT64B_INSTANCE_NAME}_TimerPeriodSet(uint64_t period)
 {
+<#if core.COMPILER_CHOICE == "XC32">
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wlong-long"
+</#if>
     ${PIT64B_INSTANCE_NAME}_REGS->PIT64B_MSBPR = (period & 0xFFFFFFFF00000000)>>32;
     ${PIT64B_INSTANCE_NAME}_REGS->PIT64B_LSBPR = (period & 0xFFFFFFFF);
+<#if core.COMPILER_CHOICE == "XC32">
+#pragma GCC diagnostic pop
+</#if>
     <#if SMOD && ENABLE_INTERRUPT>
     ${PIT64B_INSTANCE_NAME?lower_case}.running = 1;
     </#if>
