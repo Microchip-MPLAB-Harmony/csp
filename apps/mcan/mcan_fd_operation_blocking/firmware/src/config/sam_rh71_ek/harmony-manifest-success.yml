@@ -4,15 +4,15 @@
 
 
 project: mcan_fd_operation_blocking
-creation_date: 2020-04-09T21:34:44.257+05:30[Asia/Calcutta]	# ISO 8601 format: https://www.w3.org/TR/NOTE-datetime
+creation_date: 2020-04-29T09:35:58.044+05:30[Asia/Calcutta]	# ISO 8601 format: https://www.w3.org/TR/NOTE-datetime
 operating_system: Windows 10
-mhc_mode: IDE				# [IDE|Standalone|Headless]
-mplabx_version: --Please Update your plugin--		# if MPLAB X plugin only
-plugin_version: v3.5.0		# if MPLAB X plugin only
+mhc_mode: Headless				# [IDE|Standalone|Headless]
+mplabx_version: -		# if MPLAB X plugin only
+plugin_version: -		# if MPLAB X plugin only
 
 modules:
     - {name: "bsp", version: ""}
-    - {name: "CMSIS-FreeRTOS", version: "v10.2.0"}
+    - {name: "CMSIS-FreeRTOS", version: ""}
     - {name: "core", version: ""}
     - {name: "csp", version: ""}
     - {name: "dev_packs", version: ""}
@@ -23,7 +23,6 @@ modules:
     - {name: "mhc", version: ""}
     - {name: "micrium_ucos3", version: ""}
     - {name: "mplabx_plugin", version: ""}
-    - {name: "net", version: ""}
     - {name: "thirdparty_expresslogic", version: "v3.1.0"}
     - {name: "thirdparty_micrium", version: "v3.1.0"}
 
