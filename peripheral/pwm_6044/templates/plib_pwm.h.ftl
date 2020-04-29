@@ -105,8 +105,6 @@ uint32_t ${PWM_INSTANCE_NAME}_ChannelPeriodGet (PWM_CHANNEL_NUM channel);
 
 void ${PWM_INSTANCE_NAME}_ChannelDutySet (PWM_CHANNEL_NUM channel, uint32_t duty);
 
-uint32_t ${PWM_INSTANCE_NAME}_ChannelPeriodGet (PWM_CHANNEL_NUM channel);
-
 void ${PWM_INSTANCE_NAME}_ChannelCounterEventEnable (PWM_CHANNEL_MASK channelMask);
 
 void ${PWM_INSTANCE_NAME}_ChannelCounterEventDisable (PWM_CHANNEL_MASK  channelMask);
