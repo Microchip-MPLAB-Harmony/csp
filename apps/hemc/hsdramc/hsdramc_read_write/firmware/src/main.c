@@ -59,7 +59,6 @@
 // *****************************************************************************
 // *****************************************************************************
 
-bool result = true;
 #define BUFFER_SIZE         ((256 * 1024) / 4)   // 256 KB
 #define WRITE_READ_SIZE     256
 
@@ -80,9 +79,9 @@ int main ( void )
     for (int i = 0; i < 8; i++)
     {
         printf("\n\r Writing \t%d \tto %d KB data to SDRAM.", (i * WRITE_READ_SIZE), ((i + 1) * WRITE_READ_SIZE));
-        for (uint32_t i = 0; i < BUFFER_SIZE; i++)
+        for (uint32_t j = 0; j < BUFFER_SIZE; j++)
         {
-           *addr = ((i << 16) + i);
+           *addr = ((j << 16) + j);
            addr++;
         }
     }
@@ -95,16 +94,16 @@ int main ( void )
     for (int i = 0; i < 8; i++)
     {
         printf("\n\r Reading \t%d \tto %d KB data from SDRAM.", (i * WRITE_READ_SIZE), ((i + 1) * WRITE_READ_SIZE));
-        for (uint32_t i = 0; i < BUFFER_SIZE; i++)
+        for (uint32_t j = 0; j < BUFFER_SIZE; j++)
         {
-           readBuf[i] = *addr;
+           readBuf[j] = *addr;
            addr++;
         }
 
         printf("\n\r Comparing \t%d \tto %d KB data.", (i * WRITE_READ_SIZE), ((i + 1) * WRITE_READ_SIZE));
-        for (uint32_t i = 0; i < BUFFER_SIZE; i++)
+        for (uint32_t k = 0; k < BUFFER_SIZE; k++)
         {
-           if (readBuf[i] != (i << 16) + i)
+           if (readBuf[k] != (k << 16) + k)
            {
                result = false;
                break;
