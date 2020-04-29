@@ -57,8 +57,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_l21_xpro/peripheral/clock/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/clock/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">8DFC61DA06569ED8A1A981A3EFCC00BE</GeneratedChecksum>
-          <UserChecksum dnOrder="6">8DFC61DA06569ED8A1A981A3EFCC00BE</UserChecksum>
+          <GeneratedChecksum dnOrder="5">97C1C4ED6FCBA9E227923C4797C9350F</GeneratedChecksum>
+          <UserChecksum dnOrder="6">97C1C4ED6FCBA9E227923C4797C9350F</UserChecksum>
         </File>
         <File dnOrder="6">
           <Type dnOrder="0">SOURCE</Type>
@@ -645,12 +645,12 @@
       </Settings>
     </Manifest>
     <Settings dnOrder="4">
-      <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.4.0"/>
-      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAML21_DFP\3.0.26\saml21b\atdf\ATSAML21J18B.atdf"/>
+      <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.6.0"/>
+      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAML21_DFP\3.2.63\saml21b\atdf\ATSAML21J18B.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
       <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
-      <Setting dnOrder="5" key="PackageFilter" value="csp;"/>
+      <Setting dnOrder="5" key="PackageFilter" value="bsp;core;csp;gfx;motor_control;validation;x2c;"/>
     </Settings>
   </Configurator>
 </Configuration>

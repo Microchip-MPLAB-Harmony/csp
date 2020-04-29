@@ -96,6 +96,17 @@ static void GCLK0_Initialize(void)
     }
 }
 
+
+static void GCLK1_Initialize(void)
+{
+    GCLK_REGS->GCLK_GENCTRL[1] = GCLK_GENCTRL_DIV(4) | GCLK_GENCTRL_SRC(7) | GCLK_GENCTRL_GENEN_Msk;
+
+    while((GCLK_REGS->GCLK_SYNCBUSY & GCLK_SYNCBUSY_GENCTRL1_Msk) == GCLK_SYNCBUSY_GENCTRL1_Msk)
+    {
+        /* wait for the Generator 1 synchronization */
+    }
+}
+
 void CLOCK_Initialize (void)
 {
     /* Function to Initialize the Oscillators */
@@ -112,6 +123,7 @@ void CLOCK_Initialize (void)
 
     DFLL_Initialize();
     GCLK0_Initialize();
+    GCLK1_Initialize();
 
 
 	/* Selection of the Generator and write Lock for EVSYS_0 */
@@ -129,7 +141,7 @@ void CLOCK_Initialize (void)
         /* Wait for synchronization */
     }
 	/* Selection of the Generator and write Lock for DAC */
-    GCLK_REGS->GCLK_PCHCTRL[32] = GCLK_PCHCTRL_GEN(0x0)  | GCLK_PCHCTRL_CHEN_Msk;
+    GCLK_REGS->GCLK_PCHCTRL[32] = GCLK_PCHCTRL_GEN(0x1)  | GCLK_PCHCTRL_CHEN_Msk;
 
     while ((GCLK_REGS->GCLK_PCHCTRL[32] & GCLK_PCHCTRL_CHEN_Msk) != GCLK_PCHCTRL_CHEN_Msk)
     {
