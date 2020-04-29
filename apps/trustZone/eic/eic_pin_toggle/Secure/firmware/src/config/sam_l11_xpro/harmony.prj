@@ -30,8 +30,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_l11_xpro/</LogicalPath>
           <PhysicalPath dnOrder="4">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">B1655C306B4EAE84B3CFE1DC790EF9BE</GeneratedChecksum>
-          <UserChecksum dnOrder="6">B1655C306B4EAE84B3CFE1DC790EF9BE</UserChecksum>
+          <GeneratedChecksum dnOrder="5">0677B2A1B3FE56877F410E7D14AF01F1</GeneratedChecksum>
+          <UserChecksum dnOrder="6">0677B2A1B3FE56877F410E7D14AF01F1</UserChecksum>
         </File>
         <File dnOrder="3">
           <Type dnOrder="0">SOURCE</Type>
@@ -48,8 +48,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_l11_xpro/</LogicalPath>
           <PhysicalPath dnOrder="4">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">A67F8E26BC2DE0878C92A023FA68E318</GeneratedChecksum>
-          <UserChecksum dnOrder="6">A67F8E26BC2DE0878C92A023FA68E318</UserChecksum>
+          <GeneratedChecksum dnOrder="5">6084ABA626AA1744B34FCE768F270283</GeneratedChecksum>
+          <UserChecksum dnOrder="6">6084ABA626AA1744B34FCE768F270283</UserChecksum>
         </File>
         <File dnOrder="5">
           <Type dnOrder="0">SOURCE</Type>
@@ -282,8 +282,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">packs/ATSAML11E16A_DFP/</LogicalPath>
           <PhysicalPath dnOrder="4">/../../packs/ATSAML11E16A_DFP/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">199F6CFF0943DA7C2EC69100CF968E52</GeneratedChecksum>
-          <UserChecksum dnOrder="6">199F6CFF0943DA7C2EC69100CF968E52</UserChecksum>
+          <GeneratedChecksum dnOrder="5">258E784AFD0D09B49F46197B99937FBF</GeneratedChecksum>
+          <UserChecksum dnOrder="6">258E784AFD0D09B49F46197B99937FBF</UserChecksum>
         </File>
         <File dnOrder="31">
           <Type dnOrder="0">HEADER</Type>
@@ -291,8 +291,8 @@
           <Security dnOrder="2">SECURE</Security>
           <LogicalPath dnOrder="3">packs/ATSAML11E16A_DFP/</LogicalPath>
           <PhysicalPath dnOrder="4">/../../packs/ATSAML11E16A_DFP/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">199F6CFF0943DA7C2EC69100CF968E52</GeneratedChecksum>
-          <UserChecksum dnOrder="6">199F6CFF0943DA7C2EC69100CF968E52</UserChecksum>
+          <GeneratedChecksum dnOrder="5">258E784AFD0D09B49F46197B99937FBF</GeneratedChecksum>
+          <UserChecksum dnOrder="6">258E784AFD0D09B49F46197B99937FBF</UserChecksum>
         </File>
         <File dnOrder="32">
           <Type dnOrder="0">HEADER</Type>
@@ -1047,8 +1047,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_l11_xpro/</LogicalPath>
           <PhysicalPath dnOrder="4">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">121C643DD06A3ACE7D56658E0AF041A3</GeneratedChecksum>
-          <UserChecksum dnOrder="6">121C643DD06A3ACE7D56658E0AF041A3</UserChecksum>
+          <GeneratedChecksum dnOrder="5">5D5CDFD3AB0E678AACDD28A3276C8099</GeneratedChecksum>
+          <UserChecksum dnOrder="6">5D5CDFD3AB0E678AACDD28A3276C8099</UserChecksum>
         </File>
         <File dnOrder="116">
           <Type dnOrder="0">HEADER</Type>
@@ -1056,8 +1056,8 @@
           <Security dnOrder="2">SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_l11_xpro/</LogicalPath>
           <PhysicalPath dnOrder="4">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">121C643DD06A3ACE7D56658E0AF041A3</GeneratedChecksum>
-          <UserChecksum dnOrder="6">121C643DD06A3ACE7D56658E0AF041A3</UserChecksum>
+          <GeneratedChecksum dnOrder="5">5D5CDFD3AB0E678AACDD28A3276C8099</GeneratedChecksum>
+          <UserChecksum dnOrder="6">5D5CDFD3AB0E678AACDD28A3276C8099</UserChecksum>
         </File>
         <File dnOrder="117">
           <Type dnOrder="0">HEADER</Type>
@@ -1152,27 +1152,28 @@
       </Files>
       <Settings dnOrder="1">
         <Setting append="true" category="C32" delimiter=";" dnOrder="0" key="appendMe" security="SECURE" value="-mcmse"/>
-        <Setting append="true" category="C32" delimiter=";" dnOrder="1" key="extra-include-directories" security="NON_SECURE" value="../src;../src/config/sam_l11_xpro;../src/packs/ATSAML11E16A_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/arm"/>
-        <Setting append="true" category="C32-LD" delimiter=";" dnOrder="2" key="appendMe" security="SECURE" value="--out-implib=sam_l11_xpro_Secure_sg_veneer.lib ,--cmse-implib"/>
-        <Setting append="true" category="C32-LD" delimiter=";" dnOrder="3" key="appendMe" security="NON_SECURE" value="-l:sam_l11_xpro_Secure_sg_veneer.lib"/>
-        <Setting append="true" category="C32-LD" delimiter=";" dnOrder="4" key="extra-lib-directories" security="NON_SECURE" value="../../../Secure/firmware/sam_l11_xpro_Secure.X"/>
-        <Setting category="C32-LD" dnOrder="5" key="heap-size" security="NON_SECURE" value="512"/>
-        <Setting category="C32-LD" dnOrder="6" key="no-device-startup-code" security="NON_SECURE" value="true"/>
-        <Setting append="true" category="C32-LD" delimiter=";" dnOrder="7" key="preprocessor-macros" security="NON_SECURE" value=""/>
-        <Setting append="true" category="C32-LD" delimiter=";" dnOrder="8" key="preprocessor-macros" security="SECURE" value="ANSC=0x400"/>
-        <Setting append="true" category="C32-LD" delimiter=";" dnOrder="9" key="preprocessor-macros" security="SECURE" value="AS=0x8000"/>
-        <Setting append="true" category="C32-LD" delimiter=";" dnOrder="10" key="preprocessor-macros" security="SECURE" value="BOOTPROT=0x0"/>
-        <Setting append="true" category="C32-LD" delimiter=";" dnOrder="11" key="preprocessor-macros" security="SECURE" value="RS=0x2000"/>
-        <Setting append="true" category="C32-LD" delimiter=";" dnOrder="12" key="preprocessor-macros" security="SECURE" value="SECURE"/>
+        <Setting append="true" category="C32" delimiter=";" dnOrder="1" key="extra-include-directories" security="NON_SECURE" value="../src;../src/config/sam_l11_xpro;../src/packs/ATSAML11E16A_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/"/>
+        <Setting append="true" category="C32" delimiter=";" dnOrder="2" key="extra-include-directories" security="SECURE" value="../src;../src/config/sam_l11_xpro;../src/packs/ATSAML11E16A_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/arm"/>
+        <Setting append="true" category="C32-LD" delimiter=";" dnOrder="3" key="appendMe" security="SECURE" value="--out-implib=sam_l11_xpro_Secure_sg_veneer.lib ,--cmse-implib"/>
+        <Setting append="true" category="C32-LD" delimiter=";" dnOrder="4" key="appendMe" security="NON_SECURE" value="-l:sam_l11_xpro_Secure_sg_veneer.lib"/>
+        <Setting append="true" category="C32-LD" delimiter=";" dnOrder="5" key="extra-lib-directories" security="NON_SECURE" value="../../../Secure/firmware/sam_l11_xpro_Secure.X"/>
+        <Setting category="C32-LD" dnOrder="6" key="heap-size" security="NON_SECURE" value="512"/>
+        <Setting category="C32-LD" dnOrder="7" key="no-device-startup-code" security="NON_SECURE" value="true"/>
+        <Setting append="true" category="C32-LD" delimiter=";" dnOrder="8" key="preprocessor-macros" security="NON_SECURE" value=""/>
+        <Setting append="true" category="C32-LD" delimiter=";" dnOrder="9" key="preprocessor-macros" security="SECURE" value="ANSC=0x400"/>
+        <Setting append="true" category="C32-LD" delimiter=";" dnOrder="10" key="preprocessor-macros" security="SECURE" value="AS=0x8000"/>
+        <Setting append="true" category="C32-LD" delimiter=";" dnOrder="11" key="preprocessor-macros" security="SECURE" value="BOOTPROT=0x0"/>
+        <Setting append="true" category="C32-LD" delimiter=";" dnOrder="12" key="preprocessor-macros" security="SECURE" value="RS=0x2000"/>
+        <Setting append="true" category="C32-LD" delimiter=";" dnOrder="13" key="preprocessor-macros" security="SECURE" value="SECURE"/>
       </Settings>
     </Manifest>
     <Settings dnOrder="4">
       <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.6.0"/>
-      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAML11_DFP\3.1.75\atdf\ATSAML11E16A.atdf"/>
+      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAML11_DFP\3.2.81\atdf\ATSAML11E16A.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
       <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
-      <Setting dnOrder="5" key="PackageFilter" value="bsp;core;csp;expresslogic_threadx;mbed_os;micrium_ucos3;"/>
+      <Setting dnOrder="5" key="PackageFilter" value="aerospace;aws_cloud;bootloader;bsp;bt;core;crypto;cryptoauthlib;cryptoauthlib_apps;csp;ethercat;expresslogic_threadx;gfx;gfx_apps;micrium_ucos3;motor_control;net;touch;usb;wireless;"/>
       <Setting dnOrder="6" key="TRUSTZONE" value="true"/>
     </Settings>
   </Configurator>

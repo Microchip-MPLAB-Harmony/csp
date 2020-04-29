@@ -77,7 +77,7 @@ void SVCall_Handler             ( void ) __attribute__((weak, alias("Dummy_Handl
 void PendSV_Handler             ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void SysTick_Handler            ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void RTC_InterruptHandler       ( void ) __attribute__((weak, alias("Dummy_Handler")));
-void EIC_0_InterruptHandler     ( void ) __attribute__((weak, alias("Dummy_Handler")));
+void EIC_EXTINT_0_InterruptHandler ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void EVSYS_0_Handler            ( void ) __attribute__((weak, alias("Dummy_Handler")));
 
 
@@ -99,7 +99,7 @@ const DeviceVectors exception_table=
     .pfnPendSV_Handler             = ( void * ) PendSV_Handler,
     .pfnSysTick_Handler            = ( void * ) SysTick_Handler,
     .pfnRTC_Handler                = ( void * ) RTC_InterruptHandler,
-    .pfnEIC_EXTINT_0_Handler       = ( void * ) EIC_0_InterruptHandler,
+    .pfnEIC_EXTINT_0_Handler       = ( void * ) EIC_EXTINT_0_InterruptHandler,
     .pfnEVSYS_0_Handler            = ( void * ) EVSYS_0_Handler,
 
 
