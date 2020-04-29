@@ -117,7 +117,7 @@ void ${RTT_INSTANCE_NAME}_PrescalarUpdate(uint16_t prescale)
     <#lt>	{
     <#lt>		${RTT_INSTANCE_NAME}_REGS->RTT_MR|= RTT_MR_ALMIEN_Msk;
     <#lt>	}
-    <#lt>	
+    <#lt>
     <#lt>}
     <#lt>
     <#lt>void ${RTT_INSTANCE_NAME}_EnableInterrupt (RTT_INTERRUPT_TYPE type)
@@ -134,13 +134,13 @@ void ${RTT_INSTANCE_NAME}_PrescalarUpdate(uint16_t prescale)
     <#lt>{
     <#lt>	rtt.callback = callback;
     <#lt>	rtt.context = context;
-    <#lt>} 
+    <#lt>}
 </#if>
- 
+
 uint32_t ${RTT_INSTANCE_NAME}_TimerValueGet(void)
 {
     uint32_t rtt_val = ${RTT_INSTANCE_NAME}_REGS->RTT_VR;
-    while (rtt_val != ${RTT_INSTANCE_NAME}_REGS->RTT_VR) 
+    while (rtt_val != ${RTT_INSTANCE_NAME}_REGS->RTT_VR)
     {
         rtt_val = ${RTT_INSTANCE_NAME}_REGS->RTT_VR;
     }
@@ -150,9 +150,9 @@ uint32_t ${RTT_INSTANCE_NAME}_TimerValueGet(void)
 uint32_t ${RTT_INSTANCE_NAME}_FrequencyGet(void)
 {
     uint32_t flag = 0;
-    
+
     flag =  (${RTT_INSTANCE_NAME}_REGS->RTT_MR) & (RTT_MR_RTC1HZ_Msk);
-    
+
     if (flag)
     {
         return 1;
@@ -166,13 +166,13 @@ uint32_t ${RTT_INSTANCE_NAME}_FrequencyGet(void)
         }
         else
         {
-            return (32768 / flag); 
+            return (32768 / flag);
         }
     }
 }
 <#if rttINCIEN == true || rttALMIEN == true>
 
-    <#lt>void ${RTT_INSTANCE_NAME}_InterruptHandler()
+    <#lt>void ${RTT_INSTANCE_NAME}_InterruptHandler(void)
     <#lt>{
     <#lt>	uint32_t status = ${RTT_INSTANCE_NAME}_REGS->RTT_SR;
     <#lt>	uint32_t flags = ${RTT_INSTANCE_NAME}_REGS->RTT_MR;
@@ -198,6 +198,6 @@ uint32_t ${RTT_INSTANCE_NAME}_FrequencyGet(void)
     <#lt>			}
     <#lt>		}
     <#lt>		${RTT_INSTANCE_NAME}_REGS->RTT_MR|= (RTT_MR_ALMIEN_Msk);
-    <#lt>	}	
+    <#lt>	}
     <#lt>}
 </#if>
