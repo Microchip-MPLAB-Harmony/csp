@@ -232,19 +232,19 @@ typedef enum
 {
 <#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
   <#list 0..PORT_PIN_COUNT as k>
-      <#assign PORT_PIN_INDEX = "PORT_PIN_INDEX_" + k>
-      <#assign PORT_PIN_PAD = "PORT_PIN_PAD_" + k>
       <#assign pinIndex = k + 1>
       <#assign pinisSecure = "PIN_" + pinIndex + "_IS_NON_SECURE">
-        <#if (.vars[pinisSecure]?has_content) && (.vars[pinisSecure]) == "SECURE">
-          <#if .vars[PORT_PIN_PAD]?has_content>
-              <#if (.vars[PORT_PIN_PAD] != "None")>
-                  <#lt>    /* ${.vars[PORT_PIN_PAD]} pin */
-                  <#lt>    PORT_PIN_${.vars[PORT_PIN_PAD]} = ${.vars[PORT_PIN_INDEX]},
+      <#assign PORT_PIN  = "PIN_" + pinIndex + "_PORT_PIN">
+      <#assign PORT_GROUP = "PIN_" + pinIndex + "_PORT_GROUP">
+      <#if (.vars[pinisSecure]?has_content) && (.vars[pinisSecure]) == "SECURE">
+          <#if .vars[PORT_PIN]?has_content>
+              <#if .vars[PORT_GROUP]?has_content>
+                  <#lt>    /* P${.vars[PORT_GROUP]}${.vars[PORT_PIN]?string["00"]} pin */
+                  <#lt>    PORT_PIN_P${.vars[PORT_GROUP]}${.vars[PORT_PIN]?string["00"]} = ${.vars[PORT_PIN]},
 
               </#if>
           </#if>
-        </#if>
+      </#if>
   </#list>
 <#else>
   <#list 0..PORT_PIN_COUNT as k>
