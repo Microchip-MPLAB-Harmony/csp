@@ -142,7 +142,7 @@ BspSecureHeaderIncludeList   = coreComponent.createListSymbol( "LIST_BSP_MACRO_S
 BspSecureInitList            = coreComponent.createListSymbol( "LIST_BSP_SECURE_INITIALIZATION",    None )
 
 secdefHeaderFile = coreComponent.createFileSymbol("SECURE_DEFINITIONS_H", None)
-secdefHeaderFile.setSourcePath("templates/trustzone/definitions_secure.h.ftl")
+secdefHeaderFile.setSourcePath("templates/trustZone/definitions_secure.h.ftl")
 secdefHeaderFile.setOutputName("definitions.h")
 secdefHeaderFile.setMarkup(True)
 secdefHeaderFile.setOverwrite(True)
@@ -153,7 +153,7 @@ secdefHeaderFile.setSecurity("SECURE")
 
 ## cache macros
 secdeviceCacheHeaderFile = coreComponent.createFileSymbol("SECURE_DEVICE_CACHE_H", None)
-secdeviceCacheHeaderFile.setSourcePath( "/templates/cache_cortex_m.h.ftl")
+secdeviceCacheHeaderFile.setSourcePath( "templates/cache_cortex_m.h.ftl")
 secdeviceCacheHeaderFile.setOutputName("device_cache.h")
 secdeviceCacheHeaderFile.setMarkup(True)
 secdeviceCacheHeaderFile.setOverwrite(True)
