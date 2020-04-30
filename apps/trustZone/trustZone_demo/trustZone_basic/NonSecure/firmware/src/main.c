@@ -99,7 +99,7 @@ int main ( void )
                 result = secure_add((uint16_t)x, (uint16_t)y);
 
                 printf("\n\rThe first 16 bit unsigned number is:- %lu\t", x);
-                printf("\n\rThe first 16 bit unsigned number is:- %lu\t", y);
+                printf("\n\rThe second 16 bit unsigned number is:- %lu\t", y);
                 printf("\n\rThe result is:- \t%lu", result);
 
                 display_menu();
@@ -114,7 +114,7 @@ int main ( void )
                 result = secure_multiply((uint16_t)x, (uint16_t)y);
                 
                 printf("\n\rThe first 16 bit unsigned number is:- %lu\t", x);
-                printf("\n\rThe first 16 bit unsigned number is:- %lu\t", y);
+                printf("\n\rThe second 16 bit unsigned number is:- %lu\t", y);
                 printf("\n\rThe result is:- \t%lu", result);
                 display_menu();
                 break;
