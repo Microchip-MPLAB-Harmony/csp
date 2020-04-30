@@ -321,6 +321,13 @@ xc32LinkerMacro.setValue("BOOTPROT=" + str(hex(Database.getSymbolValue("core", f
 xc32LinkerMacro.setAppend(True, ";")
 xc32LinkerMacro.setDependencies(calculateBootProtSize, [fuseMapSymbol["IDAU_BOOTPROT"]])
 
+# set Linker Macros required for XC32
+xc32LinkerMacro = coreComponent.createSettingSymbol("XC32_LINKER_MACRO_NON_SECURE", None)
+xc32LinkerMacro.setCategory("C32-LD")
+xc32LinkerMacro.setKey("preprocessor-macros")
+xc32LinkerMacro.setValue("NONSECURE")
+xc32LinkerMacro.setAppend(True, ";")
+
 defSym = coreComponent.createSettingSymbol("SEC_XC32_INCLUDE_DIRS", None)
 defSym.setCategory("C32")
 defSym.setKey("extra-include-directories")
