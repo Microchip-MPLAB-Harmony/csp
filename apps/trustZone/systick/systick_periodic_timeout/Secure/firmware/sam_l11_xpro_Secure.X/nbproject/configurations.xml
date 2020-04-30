@@ -161,7 +161,7 @@
         <targetDevice>ATSAML11E16A</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>EdbgTool</platformTool>
+        <platformTool>noID</platformTool>
         <languageToolchain>XC32</languageToolchain>
         <languageToolchainVersion>2.40</languageToolchainVersion>
         <platform>3</platform>
@@ -170,6 +170,8 @@
         <pack name="CMSIS" vendor="ARM" version="5.4.0"/>
         <pack name="SAML11_DFP" vendor="Microchip" version="3.1.75"/>
       </packs>
+      <ScriptingSettings>
+      </ScriptingSettings>
       <compileType>
         <linkerTool>
           <linkerLibItems>
@@ -236,7 +238,7 @@
         <property key="place-data-into-section" value="true"/>
         <property key="post-instruction-scheduling" value="default"/>
         <property key="pre-instruction-scheduling" value="default"/>
-        <property key="preprocessor-macros" value=""/>
+        <property key="preprocessor-macros" value="__ARM_FEATURE_CMSE=3"/>
         <property key="strict-ansi" value="false"/>
         <property key="support-ansi" value="false"/>
         <property key="toplevel-reordering" value=""/>
@@ -380,8 +382,6 @@
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="0-ffff"/>
         <property key="poweroptions.powerenable" value="false"/>
-        <property key="programmerToGoFilePath"
-                  value="E:/H3/csp/apps/trustZone/systick/systick_periodic_timeout/Secure/firmware/sam_l11_xpro_Secure.X/debug/sam_l11_xpro/sam_l11_xpro_Secure_ptg"/>
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.preservedataflash" value="false"/>
         <property key="programoptions.preservedataflash.ranges"
@@ -397,8 +397,6 @@
         <property key="toolpack.updateoptions.packversion"
                   value="Press to select which tool pack to use"/>
         <property key="voltagevalue" value=""/>
-        <property key="x.erase.key" value="0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF"/>
-        <property key="x.erase.type" value="ChipEraseAll"/>
       </EdbgTool>
       <PICkit3PlatformTool>
         <property key="ADC 1" value="true"/>
