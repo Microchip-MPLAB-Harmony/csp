@@ -138,11 +138,11 @@ typedef enum
     /* PA07 pin */
     PORT_PIN_PA07 = 7,
 
-    /* PA11 pin */
-    PORT_PIN_PA11 = 11,
+    /* PA09 pin */
+    PORT_PIN_PA09 = 9,
 
-    /* PA24 pin */
-    PORT_PIN_PA24 = 24,
+    /* PA27 pin */
+    PORT_PIN_PA27 = 27,
 
     /* This element should not be used in any of the PORT APIs.
      * It will be used by other modules or application to denote that none of

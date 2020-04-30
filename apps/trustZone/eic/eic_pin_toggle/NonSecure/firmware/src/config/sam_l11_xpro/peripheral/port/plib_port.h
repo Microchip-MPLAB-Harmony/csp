@@ -135,11 +135,11 @@ typedef enum
 
 typedef enum
 {
-    /* PA10 pin */
-    PORT_PIN_PA10 = 10,
+    /* PA08 pin */
+    PORT_PIN_PA08 = 8,
 
-    /* PA11 pin */
-    PORT_PIN_PA11 = 11,
+    /* PA09 pin */
+    PORT_PIN_PA09 = 9,
 
     /* PA17 pin */
     PORT_PIN_PA17 = 17,

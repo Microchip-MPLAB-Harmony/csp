@@ -849,8 +849,8 @@
           <Security dnOrder="2">SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_l11_xpro/peripheral/port/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/port/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">543FAEE057300A061C6AA837C73565D3</GeneratedChecksum>
-          <UserChecksum dnOrder="6">543FAEE057300A061C6AA837C73565D3</UserChecksum>
+          <GeneratedChecksum dnOrder="5">2B486E98878EAE3CB35A8ADD60CCC489</GeneratedChecksum>
+          <UserChecksum dnOrder="6">2B486E98878EAE3CB35A8ADD60CCC489</UserChecksum>
         </File>
         <File dnOrder="94">
           <Type dnOrder="0">HEADER</Type>
@@ -858,8 +858,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_l11_xpro/peripheral/port/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/port/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">D31E9C87EB81050F9F7CEF288B3C0E44</GeneratedChecksum>
-          <UserChecksum dnOrder="6">D31E9C87EB81050F9F7CEF288B3C0E44</UserChecksum>
+          <GeneratedChecksum dnOrder="5">12DC5948463C7BA909E6F9A45F17A902</GeneratedChecksum>
+          <UserChecksum dnOrder="6">12DC5948463C7BA909E6F9A45F17A902</UserChecksum>
         </File>
         <File dnOrder="95">
           <Type dnOrder="0">HEADER</Type>
@@ -1163,17 +1163,18 @@
         <Setting append="true" category="C32-LD" delimiter=";" dnOrder="9" key="preprocessor-macros" security="SECURE" value="ANSC=0x400"/>
         <Setting append="true" category="C32-LD" delimiter=";" dnOrder="10" key="preprocessor-macros" security="SECURE" value="AS=0x8000"/>
         <Setting append="true" category="C32-LD" delimiter=";" dnOrder="11" key="preprocessor-macros" security="SECURE" value="BOOTPROT=0x0"/>
-        <Setting append="true" category="C32-LD" delimiter=";" dnOrder="12" key="preprocessor-macros" security="SECURE" value="RS=0x2000"/>
-        <Setting append="true" category="C32-LD" delimiter=";" dnOrder="13" key="preprocessor-macros" security="SECURE" value="SECURE"/>
+        <Setting append="true" category="C32-LD" delimiter=";" dnOrder="12" key="preprocessor-macros" security="NON_SECURE" value="NONSECURE"/>
+        <Setting append="true" category="C32-LD" delimiter=";" dnOrder="13" key="preprocessor-macros" security="SECURE" value="RS=0x2000"/>
+        <Setting append="true" category="C32-LD" delimiter=";" dnOrder="14" key="preprocessor-macros" security="SECURE" value="SECURE"/>
       </Settings>
     </Manifest>
     <Settings dnOrder="4">
       <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.6.0"/>
-      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAML11_DFP\3.2.81\atdf\ATSAML11E16A.atdf"/>
+      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAML11_DFP\3.2.86\atdf\ATSAML11E16A.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
       <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
-      <Setting dnOrder="5" key="PackageFilter" value="aerospace;aws_cloud;bootloader;bsp;bt;core;crypto;cryptoauthlib;cryptoauthlib_apps;csp;ethercat;expresslogic_threadx;gfx;gfx_apps;micrium_ucos3;motor_control;net;touch;usb;wireless;"/>
+      <Setting dnOrder="5" key="PackageFilter" value="bsp;core;csp;expresslogic_threadx;micrium_ucos3;"/>
       <Setting dnOrder="6" key="TRUSTZONE" value="true"/>
     </Settings>
   </Configurator>

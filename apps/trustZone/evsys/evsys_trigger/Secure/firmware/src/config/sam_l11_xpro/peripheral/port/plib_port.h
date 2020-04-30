@@ -149,11 +149,11 @@ typedef enum
     /* PA08 pin */
     PORT_PIN_PA08 = 8,
 
-    /* PA09 pin */
-    PORT_PIN_PA09 = 9,
-
     /* PA10 pin */
     PORT_PIN_PA10 = 10,
+
+    /* PA11 pin */
+    PORT_PIN_PA11 = 11,
 
     /* PA14 pin */
     PORT_PIN_PA14 = 14,
@@ -179,11 +179,11 @@ typedef enum
     /* PA23 pin */
     PORT_PIN_PA23 = 23,
 
+    /* PA24 pin */
+    PORT_PIN_PA24 = 24,
+
     /* PA25 pin */
     PORT_PIN_PA25 = 25,
-
-    /* PA27 pin */
-    PORT_PIN_PA27 = 27,
 
     /* PA30 pin */
     PORT_PIN_PA30 = 30,

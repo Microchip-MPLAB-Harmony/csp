@@ -176,6 +176,8 @@
         <pack name="CMSIS" vendor="ARM" version="5.4.0"/>
         <pack name="SAML11_DFP" vendor="Microchip" version="3.1.75"/>
       </packs>
+      <ScriptingSettings>
+      </ScriptingSettings>
       <compileType>
         <linkerTool>
           <linkerLibItems>
@@ -242,7 +244,7 @@
         <property key="place-data-into-section" value="true"/>
         <property key="post-instruction-scheduling" value="default"/>
         <property key="pre-instruction-scheduling" value="default"/>
-        <property key="preprocessor-macros" value=""/>
+        <property key="preprocessor-macros" value="__ARM_FEATURE_CMSE=3"/>
         <property key="strict-ansi" value="false"/>
         <property key="support-ansi" value="false"/>
         <property key="toplevel-reordering" value=""/>
@@ -446,19 +448,13 @@
         <property key="periphComp6.gte" value="gt"/>
         <property key="reset.scl" value="false"/>
         <property key="reset.type" value="MCLR"/>
-        <property key="tracecontrol.include.timestamp" value="summarydataenabled"/>
-        <property key="tracecontrol.select" value="0"/>
-        <property key="tracecontrol.stallontracebufferfull" value="false"/>
-        <property key="tracecontrol.timestamp" value="0"/>
-        <property key="tracecontrol.tracebufmax" value="546000"/>
-        <property key="tracecontrol.tracefile" value="defmplabxtrace.log"/>
-        <property key="tracecontrol.traceresetonrun" value="false"/>
+        <property key="toolpack.updateoptions"
+                  value="toolpack.updateoptions.uselatestoolpack"/>
+        <property key="toolpack.updateoptions.packversion"
+                  value="Press to select which tool pack to use"/>
         <property key="uart0io.output" value="window"/>
         <property key="uart0io.outputfile" value=""/>
         <property key="uart0io.uartioenabled" value="false"/>
-        <property key="uart10io.output" value="window"/>
-        <property key="uart10io.outputfile" value=""/>
-        <property key="uart10io.uartioenabled" value="false"/>
         <property key="uart1io.output" value="window"/>
         <property key="uart1io.outputfile" value=""/>
         <property key="uart1io.uartioenabled" value="false"/>
@@ -477,15 +473,48 @@
         <property key="uart6io.output" value="window"/>
         <property key="uart6io.outputfile" value=""/>
         <property key="uart6io.uartioenabled" value="false"/>
-        <property key="uart7io.output" value="window"/>
-        <property key="uart7io.outputfile" value=""/>
-        <property key="uart7io.uartioenabled" value="false"/>
-        <property key="uart8io.output" value="window"/>
-        <property key="uart8io.outputfile" value=""/>
-        <property key="uart8io.uartioenabled" value="false"/>
-        <property key="uart9io.output" value="window"/>
-        <property key="uart9io.outputfile" value=""/>
-        <property key="uart9io.uartioenabled" value="false"/>
+        <property key="usart0io.output" value="window"/>
+        <property key="usart0io.outputfile" value=""/>
+        <property key="usart0io.uartioenabled" value="false"/>
+        <property key="usart1io.output" value="window"/>
+        <property key="usart1io.outputfile" value=""/>
+        <property key="usart1io.uartioenabled" value="false"/>
+        <property key="usart2io.output" value="window"/>
+        <property key="usart2io.outputfile" value=""/>
+        <property key="usart2io.uartioenabled" value="false"/>
+        <property key="usart3io.output" value="window"/>
+        <property key="usart3io.outputfile" value=""/>
+        <property key="usart3io.uartioenabled" value="false"/>
+        <property key="usart4io.output" value="window"/>
+        <property key="usart4io.outputfile" value=""/>
+        <property key="usart4io.uartioenabled" value="false"/>
+        <property key="usartc0io.output" value="window"/>
+        <property key="usartc0io.outputfile" value=""/>
+        <property key="usartc0io.uartioenabled" value="false"/>
+        <property key="usartc1io.output" value="window"/>
+        <property key="usartc1io.outputfile" value=""/>
+        <property key="usartc1io.uartioenabled" value="false"/>
+        <property key="usartd0io.output" value="window"/>
+        <property key="usartd0io.outputfile" value=""/>
+        <property key="usartd0io.uartioenabled" value="false"/>
+        <property key="usartd1io.output" value="window"/>
+        <property key="usartd1io.outputfile" value=""/>
+        <property key="usartd1io.uartioenabled" value="false"/>
+        <property key="usarte0io.output" value="window"/>
+        <property key="usarte0io.outputfile" value=""/>
+        <property key="usarte0io.uartioenabled" value="false"/>
+        <property key="usarte1io.output" value="window"/>
+        <property key="usarte1io.outputfile" value=""/>
+        <property key="usarte1io.uartioenabled" value="false"/>
+        <property key="usarte2io.output" value="window"/>
+        <property key="usarte2io.outputfile" value=""/>
+        <property key="usarte2io.uartioenabled" value="false"/>
+        <property key="usartf0io.output" value="window"/>
+        <property key="usartf0io.outputfile" value=""/>
+        <property key="usartf0io.uartioenabled" value="false"/>
+        <property key="usartf1io.output" value="window"/>
+        <property key="usartf1io.outputfile" value=""/>
+        <property key="usartf1io.uartioenabled" value="false"/>
         <property key="warningmessagebreakoptions.W0001_CORE_BITREV_MODULO_EN"
                   value="report"/>
         <property key="warningmessagebreakoptions.W0002_CORE_SECURE_MEMORYACCESS"
