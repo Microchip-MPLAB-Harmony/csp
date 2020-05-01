@@ -94,27 +94,27 @@ static volatile APP_TRANSFER_STATUS transferStatus;
 
 static void APP_I2CCallback(uintptr_t context )
 {
-    APP_TRANSFER_STATUS* transferStatus = (APP_TRANSFER_STATUS*)context;
+    APP_TRANSFER_STATUS* pTransferStatus = (APP_TRANSFER_STATUS*)context;
 
     if(I2C2_ErrorGet() == I2C_ERROR_NONE)
     {
-        if (transferStatus)
+        if (pTransferStatus)
         {
-            *transferStatus = APP_TRANSFER_STATUS_SUCCESS;
+            *pTransferStatus = APP_TRANSFER_STATUS_SUCCESS;
         }
     }
     else
     {
-        if (transferStatus)
+        if (pTransferStatus)
         {
-            *transferStatus = APP_TRANSFER_STATUS_ERROR;
+            *pTransferStatus = APP_TRANSFER_STATUS_ERROR;
         }
     }
 }
 
 static uint16_t APP_CalculateTemperature(uint16_t rawTemperature)
 {
-    uint16_t temperature;
+    uint16_t calcTemperature;
     uint8_t upperByte = (uint8_t)rawTemperature;
     uint8_t lowerByte = ((uint8_t*)&rawTemperature)[1];
         
@@ -122,14 +122,14 @@ static uint16_t APP_CalculateTemperature(uint16_t rawTemperature)
     if ((upperByte & 0x10) == 0x10)     // Ta < 0 degC
     {
         upperByte = upperByte & 0x0F;       // Clear sign bit
-        temperature = 256 - ((upperByte * 16) + lowerByte/16);
+        calcTemperature = 256 - ((upperByte * 16) + lowerByte/16);
     }
     else
     {
-        temperature = ((upperByte * 16) + lowerByte/16);
+        calcTemperature = ((upperByte * 16) + lowerByte/16);
     }
     
-    return temperature;
+    return calcTemperature;
     
 }
 
