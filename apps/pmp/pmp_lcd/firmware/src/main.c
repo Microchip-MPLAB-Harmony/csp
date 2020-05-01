@@ -110,7 +110,7 @@ static void LCD_Write( int reg, char c )
     CORETIMER_DelayMs(100);
 }
 
-static void writeString( char *string )
+static void writeString( const char *string )
 {
     while(*string)
     {
