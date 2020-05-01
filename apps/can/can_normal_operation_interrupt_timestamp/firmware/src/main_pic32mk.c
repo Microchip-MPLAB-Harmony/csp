@@ -62,6 +62,9 @@ typedef enum
     APP_STATE_CAN_XFER_ERROR
 } APP_STATES;
 
+/* set format attribute for the vararg function */
+void PrintFormattedData (const char * format, ...) __attribute__ ((format (printf, 1, 2)));
+
 /* Variable to save application state */
 static APP_STATES state = APP_STATE_CAN_USER_INPUT;
 /* Variable to save Tx/Rx transfer status and context */
