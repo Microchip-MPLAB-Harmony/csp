@@ -220,7 +220,6 @@ void APP_Initialize ( void );
 
 void APP_Tasks ( void );
 
-void SYS_Initialize ( void* data );
 // *****************************************************************************
 // *****************************************************************************
 // Section: extern declarations
