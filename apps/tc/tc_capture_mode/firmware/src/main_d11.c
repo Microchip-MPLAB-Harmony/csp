@@ -78,9 +78,6 @@ int main ( void )
 {
 uint16_t period,on_time;
 uint16_t cmp_period=0, cmp_val=0;
-char buff[512];
-
-    setvbuf(stdout, buff, _IONBF, 512);
 
     /* Initialize all modules */
     SYS_Initialize ( NULL );

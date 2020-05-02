@@ -85,8 +85,6 @@ void ac_callBack(uint8_t int_flag, uintptr_t ac_context)
 
 int main ( void )
 {
-    char buff[512];
-    setvbuf(stdout, buff, _IONBF, 512);    
     /* Initialize all modules */
     SYS_Initialize ( NULL );
     RTC_Timer32Start();

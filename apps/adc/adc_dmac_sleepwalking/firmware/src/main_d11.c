@@ -88,8 +88,6 @@ void DmacCh0Cb(DMAC_TRANSFER_EVENT returned_evnt, uintptr_t MyDmacContext)
 
 int main ( void )
 {
-    char buff[512];
-    setvbuf(stdout, buff, _IONBF, 512);
     
     uint16_t sample;
     

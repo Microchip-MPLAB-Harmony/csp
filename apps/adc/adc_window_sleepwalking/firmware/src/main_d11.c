@@ -71,8 +71,6 @@ void adc0_cb(ADC_STATUS adc_app_status, uintptr_t context )
 
 int main ( void )
 {
-    char buff[512];
-    setvbuf(stdout, buff, _IONBF, 512);
     /* Initialize all modules */
     SYS_Initialize ( NULL );
     RTC_Timer32Start();

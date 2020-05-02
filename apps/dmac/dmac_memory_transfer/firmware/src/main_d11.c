@@ -91,9 +91,6 @@ void APP_Callback(DMAC_TRANSFER_EVENT status, uintptr_t context)
 
 int main ( void )
 {
-    char buff[512];
-    setvbuf(stdout, buff, _IONBF, 512);
-    
     uint32_t i = 0;
     uint32_t channelSettings = 0;
 
