@@ -82,6 +82,7 @@ int main ( void )
     uint32_t    *addr;
     uint8_t     * charPtr;
 
+    setbuf(stdout, NULL);
     /* Step: 1. Initialize all modules */
     SYS_Initialize ( NULL );
     XDMAC_ChannelCallbackRegister(XDMAC_CHANNEL_0, APP_Callback, 0);

@@ -74,10 +74,16 @@ uint8_t cmd = 0;
 // Section: Application Callback Functions
 // *****************************************************************************
 // *****************************************************************************
-
 void timeout (uintptr_t context)
 {
     LED_Toggle();    
+}
+
+void configure_alarm()
+{
+    RTT_Disable();
+    RTT_AlarmValueSet(10);
+    RTT_Enable();
 }
 
 void display_menu (void)
@@ -87,7 +93,7 @@ void display_menu (void)
     printf("\n\rb) Wait Mode");
     printf("\n\rc) Backup Mode");   
     
-    printf("\n\rEnter your choice  ");    
+    printf("\n\rEnter your choice ");    
     scanf("%c", &cmd);
 }
 
@@ -103,8 +109,6 @@ int main ( void )
     /* Initialize all modules */
     SYS_Initialize ( NULL );
 
-    PIO_PinInterruptEnable(PIO_PIN_PA2);
-    
     printf("\n\n\r----------------------------------------------");
     printf("\n\r                 LOW power demo"               );
     printf("\n\r----------------------------------------------"); 
@@ -119,35 +123,38 @@ int main ( void )
         {
             case SLEEP_MODE:
             {
+                printf("\n\n\rConfiguring RTT Alarm for wake up.......");
+                configure_alarm();
                 SYSTICK_TimerStop();
                 printf("\n\rEntering SLEEP Mode");
-                printf("\n\rPress SW0 to wakeup the device"); 
                 while(FLEXCOM7_USART_TransmitComplete()==false)
                 LED_OFF();
                 SUPC_SleepModeEnter();
-                printf("\n\rSW0 Pressed exiting Sleep mode......");
+                printf("\n\rRTT ALARM triggered waking up device from Sleep mode");
                 SYSTICK_TimerStart();
                 display_menu();
                 break;
             }
             case WAIT_MODE:
             {
+                printf("\n\n\rConfiguring RTT Alarm for wake up.......");
+                configure_alarm();
                 SYSTICK_TimerStop();
                 printf("\n\rEntering WAIT Mode");
-                printf("\n\rPress SW0 to wakeup the device");
                 while(FLEXCOM7_USART_TransmitComplete()==false)
                 LED_OFF();
-                SUPC_WaitModeEnter (PMC_FSMR_FLPM_FLASH_DEEP_POWERDOWN, WAITMODE_WKUP_WKUP2);
-                printf("\n\rSW0 Pressed exiting Wait mode......");
+                SUPC_WaitModeEnter (PMC_FSMR_FLPM_FLASH_DEEP_POWERDOWN, WAITMODE_WKUP_RTT);
+                printf("\n\rRTT ALARM triggered waking up device from Wait mode");
                 SYSTICK_TimerStart();
                 display_menu();
                 break;
             }
             case BACKUP_MODE:
             {
+                printf("\n\n\rConfiguring RTT Alarm for wake up.......");
+                configure_alarm();
                 SYSTICK_TimerStop();
-                printf("\n\rEntering Backup Mode \n");
-                printf("\n\rPress SW0 to wakeup the device");
+                printf("\n\rEntering Backup Mode");
                 while(FLEXCOM7_USART_TransmitComplete()==false)
                 LED_OFF();
                 SUPC_BackupModeEnter();

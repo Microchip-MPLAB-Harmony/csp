@@ -105,6 +105,7 @@ void display_menu (void)
 
 int main ( void )
 {
+    setbuf(stdout, NULL);
     /* Initialize all modules */
     SYS_Initialize ( NULL );
 
@@ -126,6 +127,7 @@ int main ( void )
                 configure_alarm();
                 SYSTICK_TimerStop();
                 printf("\n\rEntering SLEEP Mode");
+                while(USART1_TransmitComplete()==false)
                 LED_OFF();
                 SUPC_SleepModeEnter();
                 printf("\n\rRTT ALARM triggered waking up device from Sleep mode");
@@ -138,7 +140,8 @@ int main ( void )
                 printf("\n\n\rConfiguring RTT Alarm for wake up.......");
                 configure_alarm();
                 SYSTICK_TimerStop();
-                printf("\n\rEntering WAIT Mode ");
+                printf("\n\rEntering WAIT Mode");
+                while(USART1_TransmitComplete()==false)
                 LED_OFF();
                 SUPC_WaitModeEnter (PMC_FSMR_FLPM_FLASH_DEEP_POWERDOWN, WAITMODE_WKUP_RTT);
                 printf("\n\rRTT ALARM triggered waking up device from Wait mode");
@@ -151,7 +154,8 @@ int main ( void )
                 printf("\n\n\rConfiguring RTT Alarm for wake up.......");
                 configure_alarm();
                 SYSTICK_TimerStop();
-                printf("\n\rEntering Backup Mode \n");
+                printf("\n\rEntering Backup Mode");
+                while(USART1_TransmitComplete()==false)
                 LED_OFF();
                 SUPC_BackupModeEnter();
                 break;

@@ -153,7 +153,7 @@
           <itemPath>../src/config/sam_g55_xpro/libc_syscalls.c</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <itemPath>../src/main.c</itemPath>
+      <itemPath>../src/main_g55.c</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
