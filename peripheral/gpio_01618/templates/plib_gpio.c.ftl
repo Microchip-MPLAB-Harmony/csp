@@ -440,7 +440,7 @@ bool GPIO_PinInterruptCallbackRegister(
 
 // *****************************************************************************
 /* Function:
-    void CHANGE_NOTICE_${.vars[channel]}_InterruptHandler()
+    void CHANGE_NOTICE_${.vars[channel]}_InterruptHandler(void)
 
   Summary:
     Interrupt Handler for change notice interrupt for channel ${.vars[channel]}.
@@ -448,7 +448,7 @@ bool GPIO_PinInterruptCallbackRegister(
   Remarks:
 	It is an internal function, user should not call it directly.
 */
-void CHANGE_NOTICE_${.vars[channel]}_InterruptHandler()
+void CHANGE_NOTICE_${.vars[channel]}_InterruptHandler(void)
 {
     uint8_t i;
     uint32_t status;
@@ -474,7 +474,7 @@ void CHANGE_NOTICE_${.vars[channel]}_InterruptHandler()
 
 <#if TOTAL_NUM_OF_INT_USED gt 0>
 /* Function:
-    void CHANGE_NOTICE_InterruptHandler()
+    void CHANGE_NOTICE_InterruptHandler(void)
 
   Summary:
     Interrupt Handler for change notice interrupt.
@@ -482,7 +482,7 @@ void CHANGE_NOTICE_${.vars[channel]}_InterruptHandler()
   Remarks:
 	It is an internal function called from ISR, user should not call it directly.
 */
-void CHANGE_NOTICE_InterruptHandler()
+void CHANGE_NOTICE_InterruptHandler(void)
 {
 <#list 0..GPIO_CHANNEL_TOTAL-1 as i>
     <#assign channel = "GPIO_CHANNEL_" + i + "_NAME">
