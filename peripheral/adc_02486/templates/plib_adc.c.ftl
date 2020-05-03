@@ -53,7 +53,7 @@
     <#lt>ADC_CALLBACK_OBJECT ${ADC_INSTANCE_NAME}_CallbackObj;
 </#if>
 
-void ${ADC_INSTANCE_NAME}_Initialize()
+void ${ADC_INSTANCE_NAME}_Initialize(void)
 {
     AD1CON1CLR = _AD1CON1_ON_MASK;
 
@@ -88,12 +88,12 @@ void ${ADC_INSTANCE_NAME}_Initialize()
     AD1CON1SET = _AD1CON1_ON_MASK;
 }
 
-void ${ADC_INSTANCE_NAME}_Enable()
+void ${ADC_INSTANCE_NAME}_Enable(void)
 {
     AD1CON1SET = _AD1CON1_ON_MASK;
 }
 
-void ${ADC_INSTANCE_NAME}_Disable()
+void ${ADC_INSTANCE_NAME}_Disable(void)
 {
     AD1CON1CLR = _AD1CON1_ON_MASK;
 }
@@ -104,7 +104,7 @@ void ${ADC_INSTANCE_NAME}_SamplingStart(void)
     AD1CON1SET = _AD1CON1_SAMP_MASK;
 }
 
-void ${ADC_INSTANCE_NAME}_ConversionStart()
+void ${ADC_INSTANCE_NAME}_ConversionStart(void)
 {
     AD1CON1CLR = _AD1CON1_SAMP_MASK;
 }
@@ -134,7 +134,7 @@ void ${ADC_INSTANCE_NAME}_InputScanSelect(${ADC_INSTANCE_NAME}_INPUTS_SCAN scanI
 }
 
 /*Check if conversion result is available */
-bool ${ADC_INSTANCE_NAME}_ResultIsReady()
+bool ${ADC_INSTANCE_NAME}_ResultIsReady(void)
 {
     return AD1CON1bits.DONE;
 }

@@ -148,8 +148,8 @@ typedef enum
 
 void ${ADC_INSTANCE_NAME}_Initialize (void);
 
-void ${ADC_INSTANCE_NAME}_Enable();
-void ${ADC_INSTANCE_NAME}_Disable();
+void ${ADC_INSTANCE_NAME}_Enable(void);
+void ${ADC_INSTANCE_NAME}_Disable(void);
 
 void ${ADC_INSTANCE_NAME}_SamplingStart(void);
 void ${ADC_INSTANCE_NAME}_ConversionStart(void);
@@ -157,7 +157,7 @@ void ${ADC_INSTANCE_NAME}_ConversionStart(void);
 void ${ADC_INSTANCE_NAME}_InputSelect(${ADC_INSTANCE_NAME}_MUX muxType, ${ADC_INSTANCE_NAME}_INPUT_POSITIVE positiveInput, ${ADC_INSTANCE_NAME}_INPUT_NEGATIVE negativeInput );
 void ${ADC_INSTANCE_NAME}_InputScanSelect(${ADC_INSTANCE_NAME}_INPUTS_SCAN scanInputs);
 
-bool ${ADC_INSTANCE_NAME}_ResultIsReady();
+bool ${ADC_INSTANCE_NAME}_ResultIsReady(void);
 uint32_t ${ADC_INSTANCE_NAME}_ResultGet(ADC_RESULT_BUFFER bufferNumber);
 
 <#if ADC_INTERRUPT == true>
