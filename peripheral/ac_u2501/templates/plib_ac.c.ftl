@@ -43,6 +43,7 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 // DOM-IGNORE-END
+#include "device.h"
 #include "plib_${AC_INSTANCE_NAME?lower_case}.h"
 <#assign AC_WINCTRL_VAL = "">
 <#assign AC_EVCTRL_VAL = "">
@@ -150,7 +151,7 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
     {
         /* Wait for Synchronization */
     }
-    
+
     /*Load Calibration Value*/
     uint8_t calibVal = (uint8_t)((*(uint32_t*)0x00800080) & 0x3);
     calibVal = (((calibVal) == 0x3) ? 0x3 : (calibVal));
