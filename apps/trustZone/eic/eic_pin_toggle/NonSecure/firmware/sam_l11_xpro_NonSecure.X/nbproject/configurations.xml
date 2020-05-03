@@ -138,7 +138,7 @@
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="SAML11_DFP" vendor="Microchip" version="3.2.86"/>
+        <pack name="SAML11_DFP" vendor="Microchip" version="3.1.75"/>
         <pack name="CMSIS" vendor="ARM" version="5.4.0"/>
       </packs>
       <ScriptingSettings>
@@ -368,6 +368,8 @@
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="0-ffff"/>
         <property key="poweroptions.powerenable" value="false"/>
+        <property key="programmerToGoFilePath"
+                  value="D:/H3/csp/apps/trustZone/eic/eic_pin_toggle/NonSecure/firmware/sam_l11_xpro_NonSecure.X/debug/sam_l11_xpro/sam_l11_xpro_NonSecure_ptg"/>
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.preservedataflash" value="false"/>
         <property key="programoptions.preservedataflash.ranges"
