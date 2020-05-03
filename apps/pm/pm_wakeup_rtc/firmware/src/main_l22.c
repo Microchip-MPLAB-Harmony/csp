@@ -73,7 +73,7 @@ void timeout (uintptr_t context)
     LED_Toggle();    
 }
 
-void configure_alarm()
+void configure_alarm(void)
 {
     RTC_Timer32Stop();
     RTC_Timer32CounterSet(0);
