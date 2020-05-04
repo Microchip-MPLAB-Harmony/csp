@@ -87,7 +87,7 @@ bool ${QSPI_INSTANCE_NAME}_TransferSetup (QSPI_TRANSFER_SETUP * setup, uint32_t 
 
 void ${QSPI_INSTANCE_NAME}_CallbackRegister (QSPI_CALLBACK callback, uintptr_t context);
 
-bool ${QSPI_INSTANCE_NAME}_IsBusy();
+bool ${QSPI_INSTANCE_NAME}_IsBusy(void);
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility

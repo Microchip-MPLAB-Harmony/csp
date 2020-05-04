@@ -13,7 +13,7 @@
   Description
 
   Remarks:
-    
+
 *******************************************************************************/
 
 // DOM-IGNORE-BEGIN
@@ -63,7 +63,7 @@ void ${QSPI_INSTANCE_NAME}_Initialize(void)
     /* LLB    = ${QSPI_LLBBITS} */
     <#else>
     /* NBBITS = 0x0 */
-    /* LLB    = 0 */    
+    /* LLB    = 0 */
     </#if>
     /* CSMODE = 0x0 */
     /* WDRBT  = 0 */
@@ -221,7 +221,7 @@ void ${QSPI_INSTANCE_NAME}_CallbackRegister (QSPI_CALLBACK callback, uintptr_t c
     qspiObj.context = context;
 }
 
-bool ${QSPI_INSTANCE_NAME}_IsBusy()
+bool ${QSPI_INSTANCE_NAME}_IsBusy(void)
 {
     return ((qspiObj.transferIsBusy) || ((${QSPI_INSTANCE_NAME}_REGS->QSPI_SR & QSPI_SR_TXEMPTY_Msk ) == 0));
 }
