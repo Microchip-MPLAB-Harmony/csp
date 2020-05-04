@@ -85,7 +85,7 @@ bool ${EFC_INSTANCE_NAME}_PageWrite( uint32_t *data, uint32_t address )
     /*Calculate the Page number to be passed for FARG register*/
     page_number = (address - ${MEM_SEGMENT_NAME}_ADDR) / ${MEM_SEGMENT_NAME}_PAGE_SIZE;
 
-    for (int i = 0; i < ${MEM_SEGMENT_NAME}_PAGE_SIZE; i += 4)
+    for (uint32_t i = 0; i < ${MEM_SEGMENT_NAME}_PAGE_SIZE; i += 4)
     {
     *((uint32_t *)( ${MEM_SEGMENT_NAME}_ADDR + ( page_number * ${MEM_SEGMENT_NAME}_PAGE_SIZE ) + i )) =    *(( data++ ));
     }
@@ -112,7 +112,7 @@ bool ${EFC_INSTANCE_NAME}_QuadWordWrite( uint32_t *data, uint32_t address )
     /*Calculate the Page number to be passed for FARG register*/
     page_number = (address - ${MEM_SEGMENT_NAME}_ADDR) / ${MEM_SEGMENT_NAME}_PAGE_SIZE;
 
-    for (int i = 0; i < 16; i += 4)
+    for (uint32_t i = 0; i < 16; i += 4)
     {
     *((uint32_t *)(( address ) + i )) =    *((uint32_t *)( data++ ));
     }
