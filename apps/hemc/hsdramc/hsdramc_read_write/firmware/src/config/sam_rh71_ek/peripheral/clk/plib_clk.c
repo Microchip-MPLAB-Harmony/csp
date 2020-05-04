@@ -109,7 +109,7 @@ static void CLK_PeripheralClockInitialize(void)
 /*********************************************************************************
 Clock Initialize
 *********************************************************************************/
-void CLK_Initialize( void )
+void CLOCK_Initialize( void )
 {
     SCB_DisableDCache();
     SCB_DisableICache();

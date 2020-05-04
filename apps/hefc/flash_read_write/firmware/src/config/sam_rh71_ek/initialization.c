@@ -107,7 +107,7 @@ void SYS_Initialize ( void* data )
 
     HEFC_Initialize();
   
-    CLK_Initialize();
+    CLOCK_Initialize();
 
 	PIO_Initialize();
 
