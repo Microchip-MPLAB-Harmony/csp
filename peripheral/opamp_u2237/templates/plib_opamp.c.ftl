@@ -43,6 +43,7 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 // DOM-IGNORE-END
+#include "device.h"
 #include "plib_${OPAMP_INSTANCE_NAME?lower_case}.h"
 
 // *****************************************************************************
@@ -83,7 +84,7 @@ void ${OPAMP_INSTANCE_NAME}_Initialize(void)
                                   ${.vars[OPAMP_OPAMPCTRL_RES2VCC]?then(' | OPAMP_OPAMPCTRL${i}_RES2VCC_Msk','')}
                                   ${.vars[OPAMP_OPAMPCTRL_ENABLE]?then(' | OPAMP_OPAMPCTRL${i}_ENABLE_Msk','')}
                                   ;</@compress>
-    
+
     </#if>
     </#list>
     <#if RESCTRL_RES1MUX??>
