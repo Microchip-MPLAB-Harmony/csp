@@ -79,7 +79,7 @@ void timeout (uintptr_t context)
     LED_Toggle();    
 }
 
-void configure_alarm()
+void configure_alarm(void)
 {
     RTT_Disable();
     RTT_AlarmValueSet(10);
