@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Using the Library</title>
+<title>Hardware Setup</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04870.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05374.html" target="topic">Peripheral Libraries</a> &gt; <a href="00978.html" target="topic">CAN Peripheral Library Help</a> &gt; <a href="00983.html" target="topic">Using the Library</a></div>
+<a href="05431.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00894.html" target="topic">Applications Help</a> &gt; <a href="00973.html" target="topic">CAN Applications</a> &gt; <a href="00970.html" target="topic">can_normal_operation_blocking</a> &gt; <a href="00983.html" target="topic">Hardware Setup</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05431.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00974.html" target="topic">Previous</a> | <a href="00978.html" target="topic">Up</a> | <a href="00979.html" target="topic">Next</a></div>
+<a href="00984.html" target="topic">Previous</a> | <a href="00970.html" target="topic">Up</a> | <a href="00985.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CAN u2003 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CAN can_normal_operation_blocking Hardware Setup Topic Title: Hardware Setup)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Using the Library</div>
+Hardware Setup</div>
 </div>
 </div>
 
@@ -48,191 +48,293 @@ Using the Library</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
-<p class="Element10">
-The CAN library supports the Normal and CAN-FD modes. The CAN Normal or CAN-FD mode can transfer message in a polling or an interrupt mode.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong>CAN Message RAM Configuration</strong>&nbsp;</p>
-<p class="Element10">
-Allocate CAN Message RAM Configuration in contiguous non-cacheable buffer as uint8_t Mcan0MessageRAM[CAN0_MESSAGE_RAM_CONFIG_SIZE] __attribute__((aligned (32))), here additional attribute such as __attribute__((__section__(&quot;.region_nocache&quot;))) or __attribute__((space(data), section (&quot;.ram_nocache&quot;))) should be added if cache is enabled and non-cacheable section should be created in linker script.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong>CAN normal operation with polling</strong>&nbsp;</p>
-<p class="Element10">
-The following example shows the CAN normal mode operation with polling implementation.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-int main(void)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-/* Set Message RAM Configuration */&nbsp;</p>
-<p class="Element10">
-CAN0_MessageRAMConfigSet(Mcan0MessageRAM);&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-while (1)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-/* Check if there is a receive FIFO 0 New Message */&nbsp;</p>
-<p class="Element10">
-if (CAN0_InterruptGet(CAN_INTERRUPT_RF0N_MASK))&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-CAN0_InterruptClear(CAN_INTERRUPT_RF0N_MASK);&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-/* Receive FIFO 0 New Message */&nbsp;</p>
-<p class="Element10">
-CAN0_MessageReceive(&amp;messageID, &amp;messageLength, message, 0, CAN_MSG_ATTR_RX_FIFO0);&nbsp;</p>
+
+<ol class="Element630">
+<li value="1" class="Element600"><strong>Project sam_c21n_xpro.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/atsamc21n-xpro');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM C21N Xplained Pro Evaluation Kit</a><strong> </strong>- 2 boards</li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+<li class="Element602">Connect SAM C21N Xplained Pro Evaluation Kit to another SAM C21N Xplained Pro Evaluation Kit as per the pin connections shown below</li>
+</ul></li>
+</ul></li>
+</ol><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="50%">
+<div class="Element66">
+SAMC21N XPRO - 1&nbsp;</div></td><td class="Element65" valign="top" width="50%">
+<div class="Element66">
+SAMC21N XPRO - 2&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="50%">
+<div class="Element68">
+CANH1, PIN 1&nbsp;</div></td><td class="Element67" valign="top" width="50%">
+<div class="Element68">
+CANH1, PIN 1&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="50%">
+<div class="Element68">
+CANL1, PIN 2&nbsp;</div></td><td class="Element67" valign="top" width="50%">
+<div class="Element68">
+CANL1, PIN 2&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="50%">
+<div class="Element68">
+GND, EXT1 PIN19&nbsp;</div></td><td class="Element67" valign="top" width="50%">
+<div class="Element68">
+GND, EXT1 PIN19&nbsp;</div></td></tr></table></div></div>
 <p class="Element10">
 &nbsp;</p>
-<p class="Element10">
-/* Transmit back received Message */&nbsp;</p>
-<p class="Element10">
-CAN0_MessageTransmit(messageID, messageLength, message, CAN_MODE_NORMAL, CAN_MSG_ATTR_TX_FIFO_DATA_FRAME);&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong>CAN normal operation with interrupt</strong>&nbsp;</p>
-<p class="Element10">
-The following example shows the CAN normal mode operation with interrupt implementation.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-void APP_CAN_Callback(uintptr_t context)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-/* Check CAN Status */&nbsp;</p>
-<p class="Element10">
-status = CAN0_ErrorGet();&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-if (((status &amp; CAN_PSR_LEC_Msk) == CAN_ERROR_NONE) || ((status &amp; CAN_PSR_LEC_Msk) == CAN_PSR_LEC_NO_CHANGE))&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-switch ((APP_STATES)context)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-case APP_STATE_CAN_RECEIVE:&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-state = APP_STATE_CAN_TRANSMIT;&nbsp;</p>
-<p class="Element10">
-break;&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-default:&nbsp;</p>
-<p class="Element10">
-break;&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
+
+<ol class="Element630">
+<li value="2" class="Element600"><strong>Project sam_e54_xpro.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/atsame54-xpro');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM E54 Xplained Pro Evaluation Kit</a><strong> </strong>- 2 boards</li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+<li class="Element602">Connect SAM E54 Xplained Pro Evaluation Kit to another SAM E54 Xplained Pro Evaluation Kit as per the pin connections shown below</li>
+</ul></li>
+</ul></li>
+</ol><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="50%">
+<div class="Element66">
+SAME54 XPRO - 1&nbsp;</div></td><td class="Element65" valign="top" width="50%">
+<div class="Element66">
+SAME54 XPRO - 2&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="50%">
+<div class="Element68">
+CANH, PIN 1&nbsp;</div></td><td class="Element67" valign="top" width="50%">
+<div class="Element68">
+CANH, PIN 1&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="50%">
+<div class="Element68">
+CANL, PIN 2&nbsp;</div></td><td class="Element67" valign="top" width="50%">
+<div class="Element68">
+CANL, PIN 2&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="50%">
+<div class="Element68">
+GND, EXT1 PIN19&nbsp;</div></td><td class="Element67" valign="top" width="50%">
+<div class="Element68">
+GND, EXT1 PIN19&nbsp;</div></td></tr></table></div></div>
 <p class="Element10">
 &nbsp;</p>
-<p class="Element10">
-int main(void)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-/* Set Message RAM Configuration */&nbsp;</p>
-<p class="Element10">
-CAN0_MessageRAMConfigSet(Mcan0MessageRAM);&nbsp;</p>
+
+<ol class="Element630">
+<li value="3" class="Element600"><strong>Project pic32mk_gp_db.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/dm320106');"><img src="indicator_external_link.gif" border="0" alt="" title="">PIC32MK General Purpose (GP) Development Board</a></li>
+<li class="Element602"><a href="#" onclick="openExternalLink('http://www.microchip.com/Developmenttools/ProductDetails/APGDT002');"><img src="indicator_external_link.gif" border="0" alt="" title="">Microchip Can Bus Analyzer</a></li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">Install Microchip CAN Bus Analyzer software on PC</li>
+<li class="Element602">Connect Microchip CAN Bus Analyzer to J18 connector on PIC32MK GP Development Board using male to female DB9 serial cable</li>
+<li class="Element602">Connect Microchip CAN Bus Analyzer to PC using USB Male-A to Male Mini-B cable</li>
+<li class="Element602">Short (close) J20 Jumper on PIC32MK GP Development Board</li>
+<li class="Element602">Connect the Debug USB port (J12) on the board to the computer using a micro USB cable</li>
+<li class="Element602">Connect the USB to UART port (J25) on the board to the computer using a micro USB cable</li>
+</ul></li>
+</ul></li>
+</ol><p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="4" class="Element600"><strong>Project pic32mx_125_sk.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/Developmenttools/ProductDetails/dm320100');"><img src="indicator_external_link.gif" border="0" alt="" title="">PIC32MX 1/2/5 Starter Kit</a></li>
+<li class="Element602"><a href="#" onclick="openExternalLink('http://www.microchip.com/Developmenttools/ProductDetails/APGDT002');"><img src="indicator_external_link.gif" border="0" alt="" title="">Microchip Can Bus Analyzer</a></li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">Install Microchip CAN Bus Analyzer software on PC</li>
+<li class="Element602">Connect Microchip CAN Bus Analyzer to J6 connector on PIC32MX1/2/5 Starter Kit Board using male to female DB9 serial cable</li>
+<li class="Element602">Connect Microchip CAN Bus Analyzer to PC using USB Male-A to Male Mini-B cable</li>
+<li class="Element602">Connect mini USB cable to the 'Debug USB' connector(J3) on the board to the computer.</li>
+</ul></li>
+</ul></li>
+</ol><p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="5" class="Element600"><strong>Project pic32mx_eth_sk2.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602"><a href="#" onclick="openExternalLink('http://www.microchip.com/DevelopmentTools/ProductDetails/PartNO/DM320004');"><img src="indicator_external_link.gif" border="0" alt="" title="">PIC32MX Ethernet Starter Kit II</a></li>
+<li class="Element602"><a href="#" onclick="openExternalLink('http://www.microchip.com/DevelopmentTools/ProductDetails/PartNO/DM320002');"><img src="indicator_external_link.gif" border="0" alt="" title="">Starter Kit I/O Expansion Board</a></li>
+<li class="Element602"><a href="#" onclick="openExternalLink('http://www.microchip.com/DevelopmentTools/ProductDetails/PartNO/AC164130-2');"><img src="indicator_external_link.gif" border="0" alt="" title="">CAN/LIN PICtail (Plus) Daughter Board</a></li>
+<li class="Element602"><a href="#" onclick="openExternalLink('http://www.microchip.com/Developmenttools/ProductDetails/APGDT002');"><img src="indicator_external_link.gif" border="0" alt="" title="">Microchip Can Bus Analyzer</a></li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">Install Microchip CAN Bus Analyzer software on PC</li>
+<li class="Element602">Connect J1 connector on PIC32MX Ethernet Starter Kit II to J1 connector on Starter Kit I/O Expansion Board</li>
+<li class="Element602">Connect J4 connector on Starter Kit I/O Expansion Board to J7 connector on CAN/LIN PICtail (Plus) Daughter Board</li>
+<li class="Element602">Connect Microchip CAN Bus Analyzer to P1 connector on CAN/LIN PICtail (Plus) Daughter Board using female to female DB9 serial cable</li>
+<li class="Element602">Short (close) Jumper J5 on PIC32MX Ethernet Starter Kit II</li>
+<li class="Element602">Connect Microchip CAN Bus Analyzer to PC using USB Male-A to Male Mini-B cable</li>
+<li class="Element602">Connect mini USB cable to the 'Debug USB' connector(J7) on the board to the computer.</li>
+</ul></li>
+</ul></li>
+</ol><p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="6" class="Element600"><strong>Project pic32mz_ef_sk.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602"><a href="#" onclick="openExternalLink('http://www.microchip.com/DevelopmentTools/ProductDetails/dm320007');"><img src="indicator_external_link.gif" border="0" alt="" title="">PIC32MZ Embedded Connectivity with FPU (EF) Starter Kit</a></li>
+<li class="Element602"><a href="#" onclick="openExternalLink('http://www.microchip.com/DevelopmentTools/ProductDetails/ac320006');"><img src="indicator_external_link.gif" border="0" alt="" title="">PIC32MZ Starter Kit Adapter Board</a></li>
+<li class="Element602"><a href="#" onclick="openExternalLink('http://www.microchip.com/DevelopmentTools/ProductDetails/PartNO/DM320002');"><img src="indicator_external_link.gif" border="0" alt="" title="">Starter Kit I/O Expansion Board</a></li>
+<li class="Element602"><a href="#" onclick="openExternalLink('http://www.microchip.com/DevelopmentTools/ProductDetails/PartNO/AC164130-2');"><img src="indicator_external_link.gif" border="0" alt="" title="">CAN/LIN PICtail (Plus) Daughter Board</a></li>
+<li class="Element602"><a href="#" onclick="openExternalLink('http://www.microchip.com/Developmenttools/ProductDetails/APGDT002');"><img src="indicator_external_link.gif" border="0" alt="" title="">Microchip Can Bus Analyzer</a></li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">Install Microchip CAN Bus Analyzer software on PC</li>
+<li class="Element602">Connect J1 connector on PIC32MZ Embedded Connectivity with FPU (EF) Starter Kit to J1 connector on PIC32MZ Starter Kit Adapter Board</li>
+<li class="Element602">Short (close) Pin1 to Pin2 of JP1 on PIC32MZ Starter Kit Adapter Board</li>
+<li class="Element602">Short (close) Pin1 to Pin2 of JP3 on PIC32MZ Starter Kit Adapter Board</li>
+<li class="Element602">Connect J2 connector on PIC32MZ Starter Kit Adapter Board to J1 connector on Starter Kit I/O Expansion Board</li>
+<li class="Element602">Connect J4 connector on Starter Kit I/O Expansion Board to J7 connector on CAN/LIN PICtail (Plus) Daughter Board</li>
+<li class="Element602">Connect Microchip CAN Bus Analyzer to P1 connector on CAN/LIN PICtail (Plus) Daughter Board using female to female DB9 serial cable</li>
+<li class="Element602">Connect Microchip CAN Bus Analyzer to PC using USB Male-A to Male Mini-B cable</li>
+<li class="Element602">Connect the Debug USB port on the board to the computer using a mini USB cable</li>
+<li class="Element602">Connect the USB to UART port on the board to the computer using a mini USB cable</li>
+</ul></li>
+</ul></li>
+</ol><p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="7" class="Element600"><strong>Project pic32mz_w1_curiosity.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602">PIC32MZ W1 Curiosity Board</li>
+<li class="Element602"><a href="#" onclick="openExternalLink('https://www.mikroe.com/ata6563-click');"><img src="indicator_external_link.gif" border="0" alt="" title="">ATA6563 click Board</a></li>
+<li class="Element602"><a href="#" onclick="openExternalLink('https://www.mikroe.com/usb-uart-click');"><img src="indicator_external_link.gif" border="0" alt="" title="">USB UART click board</a></li>
+<li class="Element602"><a href="#" onclick="openExternalLink('http://www.microchip.com/Developmenttools/ProductDetails/APGDT002');"><img src="indicator_external_link.gif" border="0" alt="" title="">Microchip Can Bus Analyzer</a></li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">Install Microchip CAN Bus Analyzer software on PC</li>
+<li class="Element602">Connect Microchip CAN Bus Analyzer to ATA6563 click board using female to female DB9 serial cable</li>
+<li class="Element602">Connect ATA6563 click board to the PIC32MZ W1 Curiosity Board as per the <strong>Pin connections</strong> shown below</li>
+<li class="Element602">Connect Microchip CAN Bus Analyzer to PC using USB Male-A to Male Mini-B cable</li>
+<li class="Element602">Connect the USB to TTL serial (USB UART click board) to U1TX pin (pin 23) and U1RX pin (pin 13) of J207 header</li>
+<li class="Element602">Connect the Debug USB port on the board to the computer using a mini USB cable</li>
+<li class="Element602">Connect mini USB cable to USB UART click board to the computer. This will enumerate the USB to UART port.</li>
+<li class="Element602"><strong>Pin connections</strong></li>
+</ul></li>
+</ul></li>
+</ol><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="68%">
+<div class="Element66">
+PIC32MZ W1 Curiosity Board&nbsp;</div></td><td class="Element65" valign="top" width="32%">
+<div class="Element66">
+ATA6563 click board&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="68%">
+<div class="Element68">
+PWM(RPB12), mikroBUS Connector&nbsp;</div></td><td class="Element67" valign="top" width="32%">
+<div class="Element68">
+RX (PIN 14)&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="68%">
+<div class="Element68">
+AN(RPA14), mikroBUS Connector&nbsp;</div></td><td class="Element67" valign="top" width="32%">
+<div class="Element68">
+TX (PIN 13)&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="68%">
+<div class="Element68">
++3.3V, mikroBUS Connector&nbsp;</div></td><td class="Element67" valign="top" width="32%">
+<div class="Element68">
+3V3 (PIN 7)&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="68%">
+<div class="Element68">
++5V, mikroBUS Connector&nbsp;</div></td><td class="Element67" valign="top" width="32%">
+<div class="Element68">
+5V (PIN 10)&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="68%">
+<div class="Element68">
+GND, mikroBUS Connector&nbsp;</div></td><td class="Element67" valign="top" width="32%">
+<div class="Element68">
+GND (PIN 9)&nbsp;</div></td></tr></table></div></div>
 <p class="Element10">
 &nbsp;</p>
-<p class="Element10">
-while(1)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-/* Check the application's current state. */&nbsp;</p>
-<p class="Element10">
-switch (state)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-case APP_STATE_CAN_RECEIVE:&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-CAN0_RxCallbackRegister( APP_CAN_Callback, (uintptr_t)APP_STATE_CAN_RECEIVE, CAN_MSG_ATTR_RX_FIFO0 );&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-state = APP_STATE_CAN_IDLE;&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-/* Receive FIFO 0 New Message */&nbsp;</p>
-<p class="Element10">
-CAN0_MessageReceive(&amp;messageID, &amp;messageLength, message, CAN_MSG_ATTR_RX_FIFO0);&nbsp;</p>
-<p class="Element10">
-break;&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-case APP_STATE_CAN_TRANSMIT:&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-CAN0_TxCallbackRegister( APP_CAN_Callback, (uintptr_t)APP_STATE_CAN_TRANSMIT );&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-state = APP_STATE_CAN_IDLE;&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-/* Transmit back received Message */&nbsp;</p>
-<p class="Element10">
-CAN0_MessageTransmit(messageID, messageLength, message, CAN_MODE_NORMAL, CAN_MSG_ATTR_TX_FIFO_DATA_FRAME);&nbsp;</p>
-<p class="Element10">
-break;&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-case APP_STATE_CAN_IDLE:&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-/* Application can do other task here */&nbsp;</p>
-<p class="Element10">
-break;&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-default:&nbsp;</p>
-<p class="Element10">
-break;</p></div>
+
+<ol class="Element630">
+<li value="8" class="Element600"><strong>Project sam_9x60_ek.IAR OR sam_9x60_ek_xc32.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602">SAM 9X60 Evaluation Kit board - 2 boards</li>
+<li class="Element602">SD Card with FAT32 file system - 2 quantity</li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">Setup the SD card for each SAM 9X60 Evaluation Kit board as below
+<ul class="Element633">
+<li class="Element603">Download harmony MPU bootstrap loader from this <a href="#" onclick="openExternalLink('http://github.com/Microchip-MPLAB-Harmony/at91bootstrap/blob/sam9x60ek/boot.bin');"><img src="indicator_external_link.gif" border="0" alt="" title="">location</a></li>
+<li class="Element603">Copy the downloaded boot loader binary( boot.bin) and generated application binary (harmony.bin)into each SD card</li>
+<li class="Element603">Insert the SD card into the SDMMC connector J5=4 on the each SAM 9X60 Evaluation Kit board</li>
+</ul></li>
+<li class="Element602">Connect SAM 9X60 Evaluation Kit to another SAM 9X60 Evaluation Kit as per the <strong>Pin connections</strong> shown below</li>
+<li class="Element602">Connect the USB port J22 on board to the computer using a micro USB cable (to enable debug com port)</li>
+<li class="Element602">Connect the USB port J7 on board to the computer using a micro USB cable (to power the board)</li>
+<li class="Element602">Note: Reset push button on SAM9X60 EK is labeled as SW3</li>
+<li class="Element602"><strong>Pin connections</strong></li>
+</ul></li>
+</ul></li>
+</ol><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="50%">
+<div class="Element66">
+SAM9X60 EK - 1&nbsp;</div></td><td class="Element65" valign="top" width="50%">
+<div class="Element66">
+SAM9X60 EK - 2&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="50%">
+<div class="Element68">
+CANH, PIN 4 of J6&nbsp;</div></td><td class="Element67" valign="top" width="50%">
+<div class="Element68">
+CANH, PIN 4 of J6&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="50%">
+<div class="Element68">
+CANL, PIN 5 of J6&nbsp;</div></td><td class="Element67" valign="top" width="50%">
+<div class="Element68">
+CANL, PIN 5 of J6&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="50%">
+<div class="Element68">
+GND, PIN3 of J6&nbsp;</div></td><td class="Element67" valign="top" width="50%">
+<div class="Element68">
+GND, PIN3 of J6&nbsp;</div></td></tr></table></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04870.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05374.html" target="topic">Peripheral Libraries</a> &gt; <a href="00978.html" target="topic">CAN Peripheral Library Help</a> &gt; <a href="00983.html" target="topic">Using the Library</a></div>
+<a href="05431.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00894.html" target="topic">Applications Help</a> &gt; <a href="00973.html" target="topic">CAN Applications</a> &gt; <a href="00970.html" target="topic">can_normal_operation_blocking</a> &gt; <a href="00983.html" target="topic">Hardware Setup</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -240,13 +342,13 @@ break;</p></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05431.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00974.html" target="topic">Previous</a> | <a href="00978.html" target="topic">Up</a> | <a href="00979.html" target="topic">Next</a></div>
+<a href="00984.html" target="topic">Previous</a> | <a href="00970.html" target="topic">Up</a> | <a href="00985.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CAN u2003 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CAN can_normal_operation_blocking Hardware Setup Topic Title: Hardware Setup)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

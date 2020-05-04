@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>SERCOMx_I2C_LastByteAckStatusGet Function</title>
+<title>MPLAB Harmony Configurations</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04870.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05374.html" target="topic">Peripheral Libraries</a> &gt; <a href="06900.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="06878.html" target="topic">I2C</a> &gt; <a href="06889.html" target="topic">Slave</a> &gt; <a href="06894.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="06990.html" target="topic">SERCOMx_I2C_LastByteAckStatusGet Function</a></div>
+<a href="05431.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00894.html" target="topic">Applications Help</a> &gt; <a href="06906.html" target="topic">SERCOM Applications</a> &gt; <a href="06980.html" target="topic">SERCOM USART Applications</a> &gt; <a href="06981.html" target="topic">usart_echo_blocking</a> &gt; <a href="06990.html" target="topic">MPLAB Harmony Configurations</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05431.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06992.html" target="topic">Previous</a> | <a href="06894.html" target="topic">Up</a> | <a href="06988.html" target="topic">Next</a></div>
+<a href="06988.html" target="topic">Previous</a> | <a href="06981.html" target="topic">Up</a> | <a href="06989.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_i2c_slave::SERCOMx_I2C_LastByteAckStatusGet Topic Title: SERCOMx_I2C_LastByteAckStatusGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SERCOM USART usart_echo_blocking MPLAB Harmony Configurations Topic Title: MPLAB Harmony Configurations)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-SERCOMx_I2C_LastByteAckStatusGet Function</div>
+MPLAB Harmony Configurations</div>
 </div>
 </div>
 
@@ -49,96 +49,14 @@ SERCOMx_I2C_LastByteAckStatusGet Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function returns the ACK status of the last byte written to the I2C master.</p></div>
-</div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><a href="06952.html" target="topic">SERCOM_I2C_SLAVE_ACK_STATUS</a> <strong><span style="color: #000000">SERCOMx_I2C_LastByteAckStatusGet</span></strong>();</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-<a href="06986.html" target="topic">SERCOMx_I2C_Initialize</a> must have been called for the associated SERCOM I2C instance.</p></div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-SERCOM_I2C_SLAVE_ACK_STATUS_RECEIVED_ACK - I2C master acknowledged the last byte SERCOM_I2C_SLAVE_ACK_STATUS_RECEIVED_NAK - I2C master sent NAK</p></div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-Since this API indicates the status of the last byte sent to the I2C master; for sending the first byte to the I2C master, the application must not call this API. Instead, the application should always send the first byte to I2C master's read request. The application would use this API when the SERCOM I2C slave PLIB is used in polled mode (interrupt is disabled).</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-The below code snippet shows the use of the SERCOMx_I2C_LastByteAckStatusGet() API when SERCOM I2C slave PLIB is used in polled mode (interrupt is disabled).&nbsp;</p>
-<p class="Element10">
-&nbsp;</p><div class="Element13"><div class="Element12"><pre class="Element12">    <a href="06972.html" target="topic">SERCOM_I2C_SLAVE_TRANSFER_DIR</a> transferDir;
-    <strong><span style="color: #000080">bool</span></strong> isFirstByteSent = <strong><span style="color: #000080">false</span></strong>;
-    
-    <a href="06967.html" target="topic">SERCOM_I2C_SLAVE_INTFLAG</a> intFlags = SERCOM1_I2C_InterruptFlagsGet();
-            
-    <strong><span style="color: #000080">if</span></strong> (intFlags &amp; SERCOM_I2C_SLAVE_INTFLAG_AMATCH)
-    {
-        isFirstByteSent = <strong><span style="color: #000080">false</span></strong>;
-        
-        <i><span style="color: #008000">// Read and save the transfer direction in a global variable.</span></i>
-        transferDir = SERCOM5_I2C_TransferDirGet();
-
-        <i><span style="color: #008000">// Send ACK succeeded by reception of next byte</span></i>
-        SERCOM1_I2C_SendCommand(SERCOM_I2C_SLAVE_COMMAND_SEND_ACK);
-    }
-    <strong><span style="color: #000080">else</span></strong> <strong><span style="color: #000080">if</span></strong> (intFlags &amp; SERCOM_I2C_SLAVE_INTFLAG_DRDY)
-    {
-        <strong><span style="color: #000080">if</span></strong> (transferDir == SERCOM_I2C_SLAVE_TRANSFER_DIR_READ)
-        {
-            <i><span style="color: #008000">// I2C master is reading data from I2C slave. Check if the previous data</span></i>
-            <i><span style="color: #008000">// is acknowledged by the I2C master.</span></i>
-            
-            <strong><span style="color: #000080">if</span></strong> (isFirstByteSent == <strong><span style="color: #000080">false</span></strong>)
-            {                   
-                SERCOM1_I2C_WriteByte(txData);
-                isFirstByteSent = <strong><span style="color: #000080">true</span></strong>;
-            }
-            <strong><span style="color: #000080">else</span></strong>
-            {
-                <strong><span style="color: #000080">if</span></strong> (SERCOM1_I2C_LastByteAckStatusGet() == SERCOM_I2C_SLAVE_ACK_STATUS_RECEIVED_ACK)
-                {
-                    <i><span style="color: #008000">// Last byte was acknowledged by the I2C master; send another byte.</span></i>
-                    
-                    SERCOM1_I2C_WriteByte(txData);
-                    
-                    <i><span style="color: #008000">//Execute a byte read operation followed by ACK/NACK reception</span></i>
-                    SERCOM1_I2C_SendCommand(SERCOM_I2C_SLAVE_COMMAND_RECEIVE_ACK_NAK);
-                }
-                <strong><span style="color: #000080">else</span></strong>
-                {
-                    <i><span style="color: #008000">// Last byte was NAK'd by the I2C master; wait for start condition.</span></i>
-                    
-                    <i><span style="color: #008000">//Wait for any start (S/Sr) condition</span></i>
-                    SERCOM1_I2C_SendCommand(SERCOM_I2C_SLAVE_COMMAND_WAIT_FOR_START);           
-                }
-            }
-        }
-    }
-    </pre></div></div>
-</div>
+Refer to the MHC project graph for the components used and the respective configuration options.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04870.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05374.html" target="topic">Peripheral Libraries</a> &gt; <a href="06900.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="06878.html" target="topic">I2C</a> &gt; <a href="06889.html" target="topic">Slave</a> &gt; <a href="06894.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="06990.html" target="topic">SERCOMx_I2C_LastByteAckStatusGet Function</a></div>
+<a href="05431.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00894.html" target="topic">Applications Help</a> &gt; <a href="06906.html" target="topic">SERCOM Applications</a> &gt; <a href="06980.html" target="topic">SERCOM USART Applications</a> &gt; <a href="06981.html" target="topic">usart_echo_blocking</a> &gt; <a href="06990.html" target="topic">MPLAB Harmony Configurations</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -146,13 +64,13 @@ The below code snippet shows the use of the SERCOMx_I2C_LastByteAckStatusGet() A
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05431.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06992.html" target="topic">Previous</a> | <a href="06894.html" target="topic">Up</a> | <a href="06988.html" target="topic">Next</a></div>
+<a href="06988.html" target="topic">Previous</a> | <a href="06981.html" target="topic">Up</a> | <a href="06989.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_i2c_slave::SERCOMx_I2C_LastByteAckStatusGet Topic Title: SERCOMx_I2C_LastByteAckStatusGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SERCOM USART usart_echo_blocking MPLAB Harmony Configurations Topic Title: MPLAB Harmony Configurations)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

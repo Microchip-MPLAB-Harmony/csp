@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>qspi_register_xfer_t Structure</title>
+<title>Introduction</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04870.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05374.html" target="topic">Peripheral Libraries</a> &gt; <a href="05780.html" target="topic">QSPI Peripheral Library Help</a> &gt; <a href="05781.html" target="topic">Library Interface</a> &gt; c) Data Types and Constants &gt; <a href="05837.html" target="topic">qspi_register_xfer_t Structure</a></div>
+<a href="05431.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04925.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05430.html" target="topic">Peripheral Libraries</a> &gt; <a href="05838.html" target="topic">QSPI Peripheral Library Help</a> &gt; <a href="05837.html" target="topic">Introduction</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05431.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05806.html" target="topic">Previous</a> | <a href="05781.html" target="topic">Up</a> | <a href="05821.html" target="topic">Next</a></div>
+<a href="05838.html" target="topic">Previous</a> | <a href="05838.html" target="topic">Up</a> | <a href="05834.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: qspi_register_xfer_t Topic Title: qspi_register_xfer_t Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: QSPI 11171 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-qspi_register_xfer_t Structure</div>
+Introduction</div>
 </div>
 </div>
 
@@ -49,60 +49,18 @@ qspi_register_xfer_t Structure</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-QSPI Register Transfer structure&nbsp;</p>
+The Quad SPI Interface (QSPI) is a synchronous serial data link that provides communication with external devices in Master mode. It is similar to SPI protocol except that it has additional data lines.&nbsp;</p>
 <p class="Element10">
-This data type should be used to send the QSPI instruction code register and instruction frame register information for reading/writing QSPI slave registers.</p></div>
-</div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
-  uint8_t <strong><span style="color: #000000">instruction</span></strong>;
-  <a href="05813.html" target="topic">QSPI_LANE_WIDTH</a> <strong><span style="color: #000000">width</span></strong>;
-  uint8_t <strong><span style="color: #000000">dummy_cycles</span></strong>;
-} qspi_register_xfer_t;</pre></div></div>
-<a name="4D656D62657273"></a><div class="Element14">
-Members</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element272">
-<div class="TableDiv">
-<table cellspacing="0" class="Table3">
-<tr>
-<td class="Element260" valign="top" width="35%">
-<div class="Element261">
-Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
-<div class="Element265">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-uint8_t instruction;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-QSPI instruction code&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-QSPI_LANE_WIDTH width;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-QSPI instruction Frame register informations&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-uint8_t dummy_cycles;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-For Read Register&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
+The QSPI can be used in normal SPI mode or in Serial Memory mode to connect to external Flash memories. The normal SPI has four communication lines: Chip Select, Clock, MOSI, and MISO. For QSPI, additional data lines are available. The command/data/address are sent through single, quad or dual IO based on the mode selected. As data is sent over multiple lines, it helps in increasing bandwidth compared to a standard SPI transfer. With the support of the Quad SPI protocol, the QSPI allows the system to use high-performance serial Flash memories which are small and inexpensive, in place of larger and more expensive parallel Flash memories.&nbsp;</p>
 <p class="Element10">
-None.</p></div>
+The QSPI allows the system to execute code directly from a serial Flash memory (XIP) without code shadowing to RAM. The serial Flash memory mapping is seen in the system as other memories such as SRAM, and FLASH memory.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04870.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05374.html" target="topic">Peripheral Libraries</a> &gt; <a href="05780.html" target="topic">QSPI Peripheral Library Help</a> &gt; <a href="05781.html" target="topic">Library Interface</a> &gt; c) Data Types and Constants &gt; <a href="05837.html" target="topic">qspi_register_xfer_t Structure</a></div>
+<a href="05431.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04925.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05430.html" target="topic">Peripheral Libraries</a> &gt; <a href="05838.html" target="topic">QSPI Peripheral Library Help</a> &gt; <a href="05837.html" target="topic">Introduction</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -110,13 +68,13 @@ None.</p></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05431.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05806.html" target="topic">Previous</a> | <a href="05781.html" target="topic">Up</a> | <a href="05821.html" target="topic">Next</a></div>
+<a href="05838.html" target="topic">Previous</a> | <a href="05838.html" target="topic">Up</a> | <a href="05834.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: qspi_register_xfer_t Topic Title: qspi_register_xfer_t Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: QSPI 11171 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

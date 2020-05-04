@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Building the Application</title>
+<title>AFECx_ChannelResultGet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="00876.html" target="topic">Cache Applications</a> &gt; <a href="00875.html" target="topic">cache_maintenance</a> &gt; <a href="00877.html" target="topic">Building the Application</a></div>
+<a href="05431.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04925.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05430.html" target="topic">Peripheral Libraries</a> &gt; <a href="00805.html" target="topic">AFEC Peripheral Library Help</a> &gt; <a href="00806.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="00877.html" target="topic">AFECx_ChannelResultGet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05431.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00875.html" target="topic">Previous</a> | <a href="00875.html" target="topic">Up</a> | <a href="00879.html" target="topic">Next</a></div>
+<a href="00876.html" target="topic">Previous</a> | <a href="00806.html" target="topic">Up</a> | <a href="00880.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: Cache cache_maintenance Building the Application Topic Title: Building the Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: AFECx_ChannelResultGet@AFEC_CHANNEL_NUM Topic Title: AFECx_ChannelResultGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Building the Application</div>
+AFECx_ChannelResultGet Function</div>
 </div>
 </div>
 
@@ -49,83 +49,68 @@ Building the Application</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The parent folder for all the MPLAB X IDE projects for this application is given below: </p><div class="Element63">
+This function reads the conversion result of the channel</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100">uint16_t <strong><span style="color: #000000">AFECx_ChannelResultGet</span></strong>(
+    <a href="00848.html" target="topic">AFEC_CHANNEL_NUM</a> <strong><span style="color: #000000">channel</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+<a href="00885.html" target="topic">AFECx_Initialize</a>() must have been called first for the associated instance. And conversion must have been started.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
 <div class="TableDiv">
-<table cellspacing="0" class="Table1">
+<table cellspacing="0" class="Table2">
 <tr>
-<td class="Element65" valign="top" width="26%">
-<div class="Element66">
-Application Path&nbsp;</div></td><td class="Element65" valign="top" width="74%">
-<div class="Element66">
-csp\apps\cache\cache_maintenance\firmware&nbsp;</div></td></tr></table></div></div>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-Below table shows the list of project names to be used with different development boards. Open the project in their respective IDEs.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong>MPLAB X IDE Projects</strong> &nbsp;</p><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element65" valign="top" width="28%">
-<div class="Element66">
-Project Name&nbsp;</div></td><td class="Element65" valign="top" width="72%">
-<div class="Element66">
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="28%">
-<div class="Element68">
-pic32mz_dag_sk.X&nbsp;</div></td><td class="Element67" valign="top" width="72%">
-<div class="Element68">
-PIC32MZ Embedded Graphics with Stacked DRAM (DA) Starter Kit&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="28%">
-<div class="Element68">
-pic32mz_das_sk.X&nbsp;</div></td><td class="Element67" valign="top" width="72%">
-<div class="Element68">
-PIC32MZ Embedded Graphics with Stacked DRAM (DA) Starter Kit (Crypto)&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="28%">
-<div class="Element68">
-pic32mz_ef_sk.X&nbsp;</div></td><td class="Element67" valign="top" width="72%">
-<div class="Element68">
-PIC32MZ Embedded Connectivity with FPU (EF) Starter Kit&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="28%">
-<div class="Element68">
-sam_e70_xult.X&nbsp;</div></td><td class="Element67" valign="top" width="72%">
-<div class="Element68">
-SAM E70 Xplained Ultra board&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="28%">
-<div class="Element68">
-sam_rh71_ek.X&nbsp;</div></td><td class="Element67" valign="top" width="72%">
-<div class="Element68">
-SAM RH71 Evaluation Kit&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="28%">
-<div class="Element68">
-sam_v71_xult.X&nbsp;</div></td><td class="Element67" valign="top" width="72%">
-<div class="Element68">
-SAM V71 Xplained Ultra board&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="28%">
-<div class="Element68">
-sam_a5d2_xult_xc32.X&nbsp;</div></td><td class="Element67" valign="top" width="72%">
-<div class="Element68">
-SAMA5D2 Xplained Ultra evaluation kit&nbsp;</div></td></tr></table></div></div>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+channel&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+channel number&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-&nbsp;</p>
+uint16_t - conversion result</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-<strong>IAR Embedded Workbench Projects</strong> </p><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element65" valign="top" width="25%">
-<div class="Element66">
-Project Name&nbsp;</div></td><td class="Element65" valign="top" width="75%">
-<div class="Element66">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="25%">
-<div class="Element68">
-sam_a5d2_xult.IAR&nbsp;</div></td><td class="Element67" valign="top" width="75%">
-<div class="Element68">
-SAMA5D2 Xplained Ultra evaluation kit&nbsp;</div></td></tr></table></div></div>
+This function can be called from interrupt or by polling the status when result is available. User should decode the result based on result sign mode (signed or unsigned result) and result resolution (12, 13, 14, 15 or 16 bit result) configuration.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">    uint16_t result;
+    <strong><span style="color: #000080">bool</span></strong> status;
+    AFEC0_Initialize();
+    AFEC0_ChannelsEnable(AFEC_CH0);
+    AFEC0_ConversionStart();
+    status = AFEC0_ChannelResultIsReady(AFEC_CH0);
+    <strong><span style="color: #000080">if</span></strong> (status)
+    {
+        result = AFEC0_ChannelResultGet(AFEC_CH0);
+    }</pre></div></div>
 </div>
 </div>
 </div>
@@ -133,7 +118,7 @@ SAMA5D2 Xplained Ultra evaluation kit&nbsp;</div></td></tr></table></div></div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="00876.html" target="topic">Cache Applications</a> &gt; <a href="00875.html" target="topic">cache_maintenance</a> &gt; <a href="00877.html" target="topic">Building the Application</a></div>
+<a href="05431.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04925.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05430.html" target="topic">Peripheral Libraries</a> &gt; <a href="00805.html" target="topic">AFEC Peripheral Library Help</a> &gt; <a href="00806.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="00877.html" target="topic">AFECx_ChannelResultGet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -141,13 +126,13 @@ SAMA5D2 Xplained Ultra evaluation kit&nbsp;</div></td></tr></table></div></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05431.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00875.html" target="topic">Previous</a> | <a href="00875.html" target="topic">Up</a> | <a href="00879.html" target="topic">Next</a></div>
+<a href="00876.html" target="topic">Previous</a> | <a href="00806.html" target="topic">Up</a> | <a href="00880.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: Cache cache_maintenance Building the Application Topic Title: Building the Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: AFECx_ChannelResultGet@AFEC_CHANNEL_NUM Topic Title: AFECx_ChannelResultGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

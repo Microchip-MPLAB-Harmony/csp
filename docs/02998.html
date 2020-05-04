@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>FLEXCOMx_SPI_IsBusy Function</title>
+<title>FLEXCOMx_USART_WriteIsBusy Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04870.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05374.html" target="topic">Peripheral Libraries</a> &gt; <a href="02804.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02805.html" target="topic">SPI</a> &gt; <a href="02810.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="02998.html" target="topic">FLEXCOMx_SPI_IsBusy Function</a></div>
+<a href="05431.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04925.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05430.html" target="topic">Peripheral Libraries</a> &gt; <a href="02796.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02807.html" target="topic">USART</a> &gt; <a href="02812.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="02998.html" target="topic">FLEXCOMx_USART_WriteIsBusy Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05431.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03002.html" target="topic">Previous</a> | <a href="02810.html" target="topic">Up</a> | <a href="02971.html" target="topic">Next</a></div>
+<a href="02997.html" target="topic">Previous</a> | <a href="02812.html" target="topic">Up</a> | <a href="02952.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: flexcom_11277_spi::FLEXCOMx_SPI_IsBusy Topic Title: FLEXCOMx_SPI_IsBusy Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: flexcom_11268_usart::FLEXCOMx_USART_WriteIsBusy Topic Title: FLEXCOMx_USART_WriteIsBusy Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-FLEXCOMx_SPI_IsBusy Function</div>
+FLEXCOMx_USART_WriteIsBusy Function</div>
 </div>
 </div>
 
@@ -49,40 +49,43 @@ FLEXCOMx_SPI_IsBusy Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function returns transfer status of last successful Write, Read or WriteRead request on FLEXCOMx SPI module in interrupt mode.</p></div>
+This function returns the write request status associated with the given FLEXCOM USART peripheral instance.&nbsp;</p>
+<p class="Element10">
+This function is available only in interrupt or non-blocking mode of operation.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">FLEXCOMx_SPI_IsBusy</span></strong>();</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">FLEXCOMx_USART_WriteIsBusy</span></strong>();</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+<a href="02985.html" target="topic">FLEXCOMx_USART_Initialize</a> must have been called for the associated FLEXCOM USART instance.</p></div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-true - Transfer is still in progress false - Transfer is completed</p></div>
+Status of Write request. True - USART is busy in processing the previous write request. False - USART is free and ready to accept the new write request.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This API is available only for interrupt mode as blocking mode transfer APIs will always return only after completing the transfer.</p></div>
+None.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">    <strong><span style="color: #000080">if</span></strong> (FLEXCOMx_SPI_IsBusy() == <strong><span style="color: #000080">false</span></strong>)
-    {
-        <i><span style="color: #008000">//Data Transfer is complete, do something else.</span></i>
-    }</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">if</span></strong>(<strong><span style="color: #000080">true</span></strong> == FLEXCOMx_USART_WriteIsBusy())
+{
+    <i><span style="color: #008000">//FLEXCOM USART is currently processing the previous write request.</span></i>
+    <i><span style="color: #008000">//Wait to submit new request.</span></i>
+}</pre></div></div>
 </div>
 </div>
 </div>
@@ -90,7 +93,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04870.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05374.html" target="topic">Peripheral Libraries</a> &gt; <a href="02804.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02805.html" target="topic">SPI</a> &gt; <a href="02810.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="02998.html" target="topic">FLEXCOMx_SPI_IsBusy Function</a></div>
+<a href="05431.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04925.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05430.html" target="topic">Peripheral Libraries</a> &gt; <a href="02796.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02807.html" target="topic">USART</a> &gt; <a href="02812.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="02998.html" target="topic">FLEXCOMx_USART_WriteIsBusy Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -98,13 +101,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05431.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03002.html" target="topic">Previous</a> | <a href="02810.html" target="topic">Up</a> | <a href="02971.html" target="topic">Next</a></div>
+<a href="02997.html" target="topic">Previous</a> | <a href="02812.html" target="topic">Up</a> | <a href="02952.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: flexcom_11277_spi::FLEXCOMx_SPI_IsBusy Topic Title: FLEXCOMx_SPI_IsBusy Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: flexcom_11268_usart::FLEXCOMx_USART_WriteIsBusy Topic Title: FLEXCOMx_USART_WriteIsBusy Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

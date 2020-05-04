@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>OTPC_InvalidatePacket Function</title>
+<title>OCMPx_FaultStatusGet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04870.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05374.html" target="topic">Peripheral Libraries</a> &gt; <a href="04602.html" target="topic">OTPC Peripheral Library Help</a> &gt; <a href="04603.html" target="topic">Library Interface</a> &gt; b) Transaction Functions &gt; <a href="04637.html" target="topic">OTPC_InvalidatePacket Function</a></div>
+<a href="05431.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04925.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05430.html" target="topic">Peripheral Libraries</a> &gt; <a href="04613.html" target="topic">OCMP Peripheral Library Help</a> &gt; <a href="04614.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="04637.html" target="topic">OCMPx_FaultStatusGet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05431.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04635.html" target="topic">Previous</a> | <a href="04603.html" target="topic">Up</a> | <a href="04638.html" target="topic">Next</a></div>
+<a href="04636.html" target="topic">Previous</a> | <a href="04614.html" target="topic">Up</a> | <a href="04626.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: otpc_44104::OTPC_InvalidatePacket@uint16_t Topic Title: OTPC_InvalidatePacket Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ocmp_00749::OCMPx_FaultStatusGet Topic Title: OCMPx_FaultStatusGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-OTPC_InvalidatePacket Function</div>
+OCMPx_FaultStatusGet Function</div>
 </div>
 </div>
 
@@ -49,40 +49,40 @@ OTPC_InvalidatePacket Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Invalidate a packet with a given address.</p></div>
+Returns the current state of the fault condition. When fault is detected, the PWM outputs are shut down asynchronously.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><a href="04613.html" target="topic">otpc_error_code_t</a> <strong><span style="color: #000000">OTPC_InvalidatePacket</span></strong>(
-    uint16_t <strong><span style="color: #000000">headerAddress</span></strong>
-);</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">OCMPx_FaultStatusGet</span></strong>();</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="04636.html" target="topic">OTPC_Initialize</a>() function must have been called first and a valid packet should exist at the address.</p></div>
+<a href="04638.html" target="topic">OCMPx_Initialize</a>() function must have been called first.</p></div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-OTPC error code</p></div>
+status of the fault pin.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None</p></div>
+This function is applicable only for output compare mode (OCM) = 7 which is PWM mode with fault enabled</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12"><a href="04636.html" target="topic">OTPC_Initialize</a>();
-OTPC_InvalidatePacket(headerAddress);</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">bool</span></strong> status;
+OCMP1_Initialize();
+OCMP1_Enable();
+status = OCMP1_FaultStatusGet();</pre></div></div>
 </div>
 </div>
 </div>
@@ -90,7 +90,7 @@ OTPC_InvalidatePacket(headerAddress);</pre></div></div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04870.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05374.html" target="topic">Peripheral Libraries</a> &gt; <a href="04602.html" target="topic">OTPC Peripheral Library Help</a> &gt; <a href="04603.html" target="topic">Library Interface</a> &gt; b) Transaction Functions &gt; <a href="04637.html" target="topic">OTPC_InvalidatePacket Function</a></div>
+<a href="05431.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04925.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05430.html" target="topic">Peripheral Libraries</a> &gt; <a href="04613.html" target="topic">OCMP Peripheral Library Help</a> &gt; <a href="04614.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="04637.html" target="topic">OCMPx_FaultStatusGet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -98,13 +98,13 @@ OTPC_InvalidatePacket(headerAddress);</pre></div></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05431.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04635.html" target="topic">Previous</a> | <a href="04603.html" target="topic">Up</a> | <a href="04638.html" target="topic">Next</a></div>
+<a href="04636.html" target="topic">Previous</a> | <a href="04614.html" target="topic">Up</a> | <a href="04626.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: otpc_44104::OTPC_InvalidatePacket@uint16_t Topic Title: OTPC_InvalidatePacket Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ocmp_00749::OCMPx_FaultStatusGet Topic Title: OCMPx_FaultStatusGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

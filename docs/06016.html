@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Introduction</title>
+<title>Using the Library</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04870.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05374.html" target="topic">Peripheral Libraries</a> &gt; <a href="06017.html" target="topic">RSTC Peripheral Library Help</a> &gt; <a href="06016.html" target="topic">Introduction</a></div>
+<a href="05431.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04925.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05430.html" target="topic">Peripheral Libraries</a> &gt; <a href="06011.html" target="topic">RNG Peripheral Library Help</a> &gt; <a href="06016.html" target="topic">Using the Library</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05431.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06017.html" target="topic">Previous</a> | <a href="06017.html" target="topic">Up</a> | <a href="06013.html" target="topic">Next</a></div>
+<a href="06008.html" target="topic">Previous</a> | <a href="06011.html" target="topic">Up</a> | <a href="06012.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RSTC 44161 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rng 00350 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Introduction</div>
+Using the Library</div>
 </div>
 </div>
 
@@ -48,24 +48,13 @@ Introduction</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
-<p class="Element10" style="text-align: justify;">
-The Reset Controller (RSTC), driven by power-on reset (POR) cells, software, external reset pin and peripheral events, handles all the resets of the system without any external components. It reports which reset occurred last. The RSTC also drives simultaneously the external reset and the peripheral and processor resets.</p><p class="Element10">
-&nbsp;</p>
-
+<p class="Element10">
+RNG Peripheral library provides API's that can be used to perform below functionalities on the RNG peripheral.</p>
 <ul class="Element630">
-<li class="Element600">Driven by Embedded Power-on Reset, Software, External Reset Pin and Peripheral Events</li>
-<li class="Element600">Management of All System Resets, Including
-<ul class="Element631">
-<li class="Element601">External Devices through an I/O Multiplexed Output Reset Pin</li>
-<li class="Element601">Processor</li>
-<li class="Element601">Peripheral Set</li>
-</ul></li>
-<li class="Element600">Reset Source Status
-<ul class="Element631">
-<li class="Element601">Status of the Last Reset</li>
-<li class="Element601">Either VDDCORE, VDDIN33 and VDDBU POR Reset, Software Reset, User Reset, Watchdog Reset, 32.768 kHz Crystal Oscillator Failure Detection Reset, CPU Clock Failure Detection</li>
-</ul></li>
-<li class="Element600">External Reset Signal Control and Shaping</li>
+<li class="Element600">Initialize the RNG</li>
+<li class="Element600">Enable/Disable the TRNG and PRNG blocks inside the RNG peripheral</li>
+<li class="Element600">Read/Write the seed, polynomial and the generated random number.</li>
+<li class="Element600">To check whether the number of valid bits in RNGSEEDx reached the required bit length for PRNG seed.</li>
 </ul></div>
 </div>
 </div>
@@ -73,7 +62,7 @@ The Reset Controller (RSTC), driven by power-on reset (POR) cells, software, ext
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04870.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05374.html" target="topic">Peripheral Libraries</a> &gt; <a href="06017.html" target="topic">RSTC Peripheral Library Help</a> &gt; <a href="06016.html" target="topic">Introduction</a></div>
+<a href="05431.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04925.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05430.html" target="topic">Peripheral Libraries</a> &gt; <a href="06011.html" target="topic">RNG Peripheral Library Help</a> &gt; <a href="06016.html" target="topic">Using the Library</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -81,13 +70,13 @@ The Reset Controller (RSTC), driven by power-on reset (POR) cells, software, ext
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05431.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06017.html" target="topic">Previous</a> | <a href="06017.html" target="topic">Up</a> | <a href="06013.html" target="topic">Next</a></div>
+<a href="06008.html" target="topic">Previous</a> | <a href="06011.html" target="topic">Up</a> | <a href="06012.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RSTC 44161 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rng 00350 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

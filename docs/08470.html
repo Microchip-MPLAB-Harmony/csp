@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="08450.html" target="topic">WDT Applications</a> &gt; <a href="08451.html" target="topic">wdt_timeout</a> &gt; <a href="08470.html" target="topic">Building The Application</a></div>
+<a href="05431.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00894.html" target="topic">Applications Help</a> &gt; <a href="08463.html" target="topic">USART Applications</a> &gt; <a href="08465.html" target="topic">usart_echo_interrupt</a> &gt; <a href="08470.html" target="topic">Building The Application</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,13 +26,13 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05431.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="08451.html" target="topic">Previous</a> | <a href="08451.html" target="topic">Up</a> | <a href="08472.html" target="topic">Next</a></div>
+<a href="08465.html" target="topic">Previous</a> | <a href="08465.html" target="topic">Up</a> | <a href="08472.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: WDT wdt_timeout Building The Application Topic Title: Building The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: USART usart_echo_interrupt Building The Application Topic Title: Building The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
 Building The Application</div>
 </div>
@@ -49,15 +49,17 @@ Building The Application</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
+<strong>Building the application:</strong>&nbsp;</p>
+<p class="Element10">
 The parent folder for all the projects for this application is given below: </p><div class="Element63">
 <div class="TableDiv">
 <table cellspacing="0" class="Table1">
 <tr>
-<td class="Element65" valign="top" width="30%">
+<td class="Element65" valign="top" width="25%">
 <div class="Element66">
-Application Path&nbsp;</div></td><td class="Element65" valign="top" width="70%">
+Application Path&nbsp;</div></td><td class="Element65" valign="top" width="75%">
 <div class="Element66">
-csp\apps\wdt\wdt_timeout\firmware&nbsp;</div></td></tr></table></div></div>
+csp\apps\usart\usart_echo_interrupt\firmware&nbsp;</div></td></tr></table></div></div>
 <p class="Element10">
 &nbsp;</p>
 <p class="Element10">
@@ -65,152 +67,59 @@ Below table shows the list of project names to be used with different developmen
 <p class="Element10">
 &nbsp;</p>
 <p class="Element10">
-<strong>MPLAB X IDE Projects</strong> &nbsp;</p><div class="Element63">
+<strong> MPLAB X IDE Projects </strong> &nbsp;</p><div class="Element63">
 <div class="TableDiv">
 <table cellspacing="0" class="Table1">
 <tr>
-<td class="Element65" valign="top" width="25%">
+<td class="Element65" valign="top" width="37%">
 <div class="Element66">
-Project Name&nbsp;</div></td><td class="Element65" valign="top" width="75%">
+Project Name&nbsp;</div></td><td class="Element65" valign="top" width="63%">
 <div class="Element66">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="25%">
+<td class="Element67" valign="top" width="37%">
 <div class="Element68">
-pic32mk_gp_db.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
-<div class="Element68">
-PIC32MK General Purpose (GP) Development Board&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="25%">
-<div class="Element68">
-pic32mx470_curiosity.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
-<div class="Element68">
-PIC32MX Curiosity Development Board&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="25%">
-<div class="Element68">
-pic32mz_dag_sk.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
-<div class="Element68">
-PIC32MZ Embedded Graphics with Stacked DRAM (DA) Starter Kit&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="25%">
-<div class="Element68">
-pic32mz_das_sk.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
-<div class="Element68">
-PIC32MZ Embedded Graphics with Stacked DRAM (DA) Starter Kit (Crypto)&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="25%">
-<div class="Element68">
-pic32mz_ef_sk.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
-<div class="Element68">
-PIC32MZ Embedded Connectivity with FPU (EF) Starter Kit&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="25%">
-<div class="Element68">
-sam_c21n_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
-<div class="Element68">
-SAM C21N Xplained pro Evaluation Kit&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="25%">
-<div class="Element68">
-sam_d11_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
-<div class="Element68">
-SAM D11 Xplained Pro Evaluation Kit&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="25%">
-<div class="Element68">
-sam_d20_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
-<div class="Element68">
-SAM D20 Xplained pro Evaluation Kit&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="25%">
-<div class="Element68">
-sam_d21_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
-<div class="Element68">
-SAM D21 Xplained pro Evaluation Kit&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="25%">
-<div class="Element68">
-sam_da1_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
-<div class="Element68">
-SAM DA1 Xplained pro Evaluation Kit&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="25%">
-<div class="Element68">
-sam_e54_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
-<div class="Element68">
-SAM E54 Xplained Pro Evaluation Kit&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="25%">
-<div class="Element68">
-sam_e70_xult.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+sam_e70_xult.X&nbsp;</div></td><td class="Element67" valign="top" width="63%">
 <div class="Element68">
 SAM E70 Xplained Ultra board&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="25%">
+<td class="Element67" valign="top" width="37%">
 <div class="Element68">
-sam_g55_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+sam_v71_xult.X&nbsp;</div></td><td class="Element67" valign="top" width="63%">
 <div class="Element68">
-SAM G55 Xplained Pro Evaluation Kit&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="25%">
-<div class="Element68">
-sam_ha1_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
-<div class="Element68">
-SAM HA1G16A Xplained Pro&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="25%">
-<div class="Element68">
-sam_l10_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
-<div class="Element68">
-SAM L10 Xplained Pro Evaluation Kit&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="25%">
-<div class="Element68">
-sam_l21_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
-<div class="Element68">
-SAM L21 Xplained Pro Evaluation Kit&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="25%">
-<div class="Element68">
-sam_l22_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
-<div class="Element68">
-SAM L22 Xplained Pro Evaluation Kit&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="25%">
-<div class="Element68">
-sam_v71_xult.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
-<div class="Element68">
-SAM V71 Xplained Ultra board&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="25%">
-<div class="Element68">
-pic32mk_mcj_curiiosity_pro.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
-<div class="Element68">
-PIC32MK MCJ Curiosity Pro Board&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="25%">
-<div class="Element68">
-pic32mk_mcm_curiiosity_pro.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
-<div class="Element68">
-PIC32MK MCM Curiosity Pro Board&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="25%">
-<div class="Element68">
-sam_a5d2_xult_xc32.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
-<div class="Element68">
-SAMA5D2 Xplained Ultra evaluation kit&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="25%">
-<div class="Element68">
-pic32mz_w1_curiosity.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
-<div class="Element68">
-PIC32MZ W1 Curiosity Board&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="25%">
-<div class="Element68">
-sam_9x60_ek_xc32.X&nbsp;</div></td><td class="Element67" valign="top" width="75%">
-<div class="Element68">
-SAM9X60 evaluation kit&nbsp;</div></td></tr></table></div></div>
+SAM V71 Xplained Ultra board&nbsp;</div></td></tr></table></div></div>
 <p class="Element10">
 &nbsp;</p>
 <p class="Element10">
-<strong>IAR Embedded Workbench Projects</strong> </p><div class="Element63">
+<strong> IAR Embedded Workbench Projects </strong> </p><div class="Element63">
 <div class="TableDiv">
 <table cellspacing="0" class="Table1">
 <tr>
-<td class="Element65" valign="top" width="25%">
+<td class="Element65" valign="top" width="44%">
 <div class="Element66">
-Project Name&nbsp;</div></td><td class="Element65" valign="top" width="75%">
+Project Name&nbsp;</div></td><td class="Element65" valign="top" width="56%">
 <div class="Element66">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="25%">
+<td class="Element67" valign="top" width="44%">
 <div class="Element68">
-sam_a5d2_xult.IAR&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+sam_e70_xult_iar.IAR&nbsp;</div></td><td class="Element67" valign="top" width="56%">
 <div class="Element68">
-SAMA5D2 Xplained Ultra evaluation kit&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="25%">
+SAM E70 Xplained Ultra board&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<strong> Keil uVision Projects </strong> </p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element65" valign="top" width="46%">
+<div class="Element66">
+Project Name&nbsp;</div></td><td class="Element65" valign="top" width="54%">
+<div class="Element66">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="46%">
 <div class="Element68">
-sam_9x60_ek.IAR&nbsp;</div></td><td class="Element67" valign="top" width="75%">
+sam_e70_xult_keil.KEIL&nbsp;</div></td><td class="Element67" valign="top" width="54%">
 <div class="Element68">
-SAM9X60 evaluation kit&nbsp;</div></td></tr></table></div></div>
+SAM E70 Xplained Ultra board&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -218,7 +127,7 @@ SAM9X60 evaluation kit&nbsp;</div></td></tr></table></div></div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="08450.html" target="topic">WDT Applications</a> &gt; <a href="08451.html" target="topic">wdt_timeout</a> &gt; <a href="08470.html" target="topic">Building The Application</a></div>
+<a href="05431.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00894.html" target="topic">Applications Help</a> &gt; <a href="08463.html" target="topic">USART Applications</a> &gt; <a href="08465.html" target="topic">usart_echo_interrupt</a> &gt; <a href="08470.html" target="topic">Building The Application</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -226,13 +135,13 @@ SAM9X60 evaluation kit&nbsp;</div></td></tr></table></div></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05431.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="08451.html" target="topic">Previous</a> | <a href="08451.html" target="topic">Up</a> | <a href="08472.html" target="topic">Next</a></div>
+<a href="08465.html" target="topic">Previous</a> | <a href="08465.html" target="topic">Up</a> | <a href="08472.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: WDT wdt_timeout Building The Application Topic Title: Building The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: USART usart_echo_interrupt Building The Application Topic Title: Building The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

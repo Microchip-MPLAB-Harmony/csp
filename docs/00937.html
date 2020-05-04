@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Using the Library</title>
+<title>CACHE_InstructionCacheSizeGet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04870.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05374.html" target="topic">Peripheral Libraries</a> &gt; <a href="00932.html" target="topic">CAN Peripheral Library Help</a> &gt; <a href="00937.html" target="topic">Using the Library</a></div>
+<a href="05431.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04925.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05430.html" target="topic">Peripheral Libraries</a> &gt; <a href="00908.html" target="topic">Cache Peripheral Library Help</a> &gt; <a href="00909.html" target="topic">Library Interface</a> &gt; c) Instruction Cache Operations &gt; <a href="00937.html" target="topic">CACHE_InstructionCacheSizeGet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05431.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00928.html" target="topic">Previous</a> | <a href="00932.html" target="topic">Up</a> | <a href="00933.html" target="topic">Next</a></div>
+<a href="00936.html" target="topic">Previous</a> | <a href="00909.html" target="topic">Up</a> | <a href="00912.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CAN 03247 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CACHE_InstructionCacheSizeGet Topic Title: CACHE_InstructionCacheSizeGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Using the Library</div>
+CACHE_InstructionCacheSizeGet Function</div>
 </div>
 </div>
 
@@ -49,562 +49,39 @@ Using the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The CAN library supports the CAN FD and CAN Classic (Normal) mode. The CAN FD and CAN Classic (Normal) mode can transfer message in a polling or an interrupt mode.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong>CAN FD operation with polling</strong>&nbsp;</p>
-<p class="Element10">
-The following example shows the CAN FD mode operation with polling implementation.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-void print_menu(void)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-printf(&quot;Menu :\r\n&quot;&nbsp;</p>
-<p class="Element10">
-&quot; -- Select the action:\r\n&quot;&nbsp;</p>
-<p class="Element10">
-&quot; 1: Send FD standard message with ID: 0x45A and 64 byte data 0 to 63. \r\n&quot;&nbsp;</p>
-<p class="Element10">
-&quot; 2: Send normal standard message with ID: 0x469 and 8 byte data 0 to 7. \r\n&quot;&nbsp;</p>
-<p class="Element10">
-&quot; 3: To receive CAN FD or Normal message \r\n&quot;&nbsp;</p>
-<p class="Element10">
-&quot; m: Display menu \r\n\r\n&quot;);&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-int main ( void )&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-uint32_t messageID = 0;&nbsp;</p>
-<p class="Element10">
-uint32_t rx_messageID = 0;&nbsp;</p>
-<p class="Element10">
-uint32_t status = 0;&nbsp;</p>
-<p class="Element10">
-uint8_t messageLength = 0;&nbsp;</p>
-<p class="Element10">
-uint8_t rx_messageLength = 0;&nbsp;</p>
-<p class="Element10">
-uint8_t count = 0;&nbsp;</p>
-<p class="Element10">
-uint8_t user_input = 0;&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-/* Initialize all modules */&nbsp;</p>
-<p class="Element10">
-SYS_Initialize ( NULL );&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-printf(&quot; ------------------------------ \r\n&quot;);&nbsp;</p>
-<p class="Element10">
-printf(&quot; CAN FD Demo \r\n&quot;);&nbsp;</p>
-<p class="Element10">
-printf(&quot; ------------------------------ \r\n&quot;);&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-print_menu();&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-/* Prepare the message to send*/&nbsp;</p>
-<p class="Element10">
-for (count = 0; count &lt; 64; count++)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-message[count] = count;&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-while ( true )&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-/* Maintain state machines of all polled Harmony modules. */&nbsp;</p>
-<p class="Element10">
-/* Check if there is a received character */&nbsp;</p>
-<p class="Element10">
-if(UART2_ReceiverIsReady() == true)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-if(UART2_ErrorGet() == UART_ERROR_NONE)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-UART2_Read((void *)&amp;user_input, 1);&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-switch (user_input)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-case '1':&nbsp;</p>
-<p class="Element10">
-printf(&quot; Transmitting CAN FD Message:&quot;);&nbsp;</p>
-<p class="Element10">
-messageID = 0x45A;&nbsp;</p>
-<p class="Element10">
-messageLength = 64;&nbsp;</p>
-<p class="Element10">
-if (CAN1_MessageTransmit(messageID, messageLength, message, 1, CAN_MODE_FD_WITH_BRS, CAN_MSG_TX_DATA_FRAME) == true)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-printf(&quot;Success \r\n&quot;);&nbsp;</p>
-<p class="Element10">
-LED_Toggle();&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-else&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-printf(&quot;Failed \r\n&quot;);&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-break;&nbsp;</p>
-<p class="Element10">
-case '2':&nbsp;</p>
-<p class="Element10">
-printf(&quot; Transmitting CAN Normal Message:&quot;);&nbsp;</p>
-<p class="Element10">
-messageID = 0x469;&nbsp;</p>
-<p class="Element10">
-messageLength = 8;&nbsp;</p>
-<p class="Element10">
-if (CAN1_MessageTransmit(messageID, messageLength, message, 1, CAN_MODE_NORMAL, CAN_MSG_TX_DATA_FRAME) == true)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-printf(&quot;Success \r\n&quot;);&nbsp;</p>
-<p class="Element10">
-LED_Toggle();&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-else&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-printf(&quot;Failed \r\n&quot;);&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-break;&nbsp;</p>
-<p class="Element10">
-case '3':&nbsp;</p>
-<p class="Element10">
-printf(&quot; Waiting for message: \r\n&quot;);&nbsp;</p>
-<p class="Element10">
-while (true)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-if (CAN1_InterruptGet(2, CAN_FIFO_INTERRUPT_TFNRFNIF_MASK))&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-/* Check CAN Status */&nbsp;</p>
-<p class="Element10">
-status = CAN1_ErrorGet();&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-if (status == CAN_ERROR_NONE)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-memset(rx_message, 0x00, sizeof(rx_message));&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-/* Receive New Message */&nbsp;</p>
-<p class="Element10">
-if (CAN1_MessageReceive(&amp;rx_messageID, &amp;rx_messageLength, rx_message, 0, 2) == true)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-printf(&quot; New Message Received \r\n&quot;);&nbsp;</p>
-<p class="Element10">
-status = CAN1_ErrorGet();&nbsp;</p>
-<p class="Element10">
-if (status == CAN_ERROR_NONE)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-/* Print message to Console */&nbsp;</p>
-<p class="Element10">
-uint8_t length = rx_messageLength;&nbsp;</p>
-<p class="Element10">
-printf(&quot; Message - ID : 0x%x Length : 0x%x &quot;, (unsigned int) rx_messageID,(unsigned int) rx_messageLength);&nbsp;</p>
-<p class="Element10">
-printf(&quot;Message : &quot;);&nbsp;</p>
-<p class="Element10">
-while(length)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-printf(&quot;0x%x &quot;, rx_message[rx_messageLength - length--]);&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-printf(&quot;\r\n&quot;);&nbsp;</p>
-<p class="Element10">
-LED_Toggle();&nbsp;</p>
-<p class="Element10">
-break;&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-else&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-printf(&quot;Error in received message&quot;);&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-else&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-printf(&quot;Message Reception Failed \r&quot;);&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-else&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-printf(&quot;Error in last received message&quot;);&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-break;&nbsp;</p>
-<p class="Element10">
-default:&nbsp;</p>
-<p class="Element10">
-printf(&quot; Invalid Input \r\n&quot;);&nbsp;</p>
-<p class="Element10">
-break;&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-print_menu();&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-/* Execution should not come here during normal operation */&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-return ( EXIT_FAILURE );&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong>CAN FD operation with interrupt</strong>&nbsp;</p>
-<p class="Element10">
-The following example shows the CAN FD mode operation with interrupt implementation.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-/* Application's state machine enum */&nbsp;</p>
-<p class="Element10">
-typedef enum&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-APP_STATE_CAN_RECEIVE,&nbsp;</p>
-<p class="Element10">
-APP_STATE_CAN_TRANSMIT,&nbsp;</p>
-<p class="Element10">
-APP_STATE_CAN_IDLE,&nbsp;</p>
-<p class="Element10">
-APP_STATE_CAN_USER_INPUT,&nbsp;</p>
-<p class="Element10">
-APP_STATE_CAN_XFER_SUCCESSFUL,&nbsp;</p>
-<p class="Element10">
-APP_STATE_CAN_XFER_ERROR&nbsp;</p>
-<p class="Element10">
-} APP_STATES;&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-/* Variable to save application state */&nbsp;</p>
-<p class="Element10">
-static APP_STATES state = APP_STATE_CAN_USER_INPUT;&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-void APP_CAN_Callback(uintptr_t context)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-xferContext = context;&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-/* Check CAN Status */&nbsp;</p>
-<p class="Element10">
-status = CAN1_ErrorGet();&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-if ((status &amp; (CAN_ERROR_TX_RX_WARNING_STATE | CAN_ERROR_RX_WARNING_STATE |&nbsp;</p>
-<p class="Element10">
-CAN_ERROR_TX_WARNING_STATE | CAN_ERROR_RX_BUS_PASSIVE_STATE |&nbsp;</p>
-<p class="Element10">
-CAN_ERROR_TX_BUS_PASSIVE_STATE | CAN_ERROR_TX_BUS_OFF_STATE)) == CAN_ERROR_NONE)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-switch ((APP_STATES)context)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-case APP_STATE_CAN_RECEIVE:&nbsp;</p>
-<p class="Element10">
-case APP_STATE_CAN_TRANSMIT:&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-state = APP_STATE_CAN_XFER_SUCCESSFUL;&nbsp;</p>
-<p class="Element10">
-break;&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-default:&nbsp;</p>
-<p class="Element10">
-break;&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-else&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-state = APP_STATE_CAN_XFER_ERROR;&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-int main ( void )&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-uint8_t count = 0;&nbsp;</p>
-<p class="Element10">
-bool user_input = 0;&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-/* Initialize all modules */&nbsp;</p>
-<p class="Element10">
-SYS_Initialize ( NULL );&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-/* Prepare the message to send*/&nbsp;</p>
-<p class="Element10">
-messageID = 0x45A;&nbsp;</p>
-<p class="Element10">
-messageLength = 64;&nbsp;</p>
-<p class="Element10">
-for (count = 0; count &lt; 64; count++)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-message[count] = count;&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-while ( true )&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-if (state == APP_STATE_CAN_USER_INPUT)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-if(SWITCH_Get() == SWITCH_PRESSED_STATE)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-while(SWITCH_Get() == SWITCH_PRESSED_STATE);&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-switch (user_input)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-case 0:&nbsp;</p>
-<p class="Element10">
-CAN1_CallbackRegister( APP_CAN_Callback, (uintptr_t)APP_STATE_CAN_TRANSMIT, 1 );&nbsp;</p>
-<p class="Element10">
-state = APP_STATE_CAN_IDLE;&nbsp;</p>
-<p class="Element10">
-CAN1_MessageTransmit(messageID, messageLength, message, 1, CAN_MODE_FD_WITH_BRS, CAN_MSG_TX_DATA_FRAME);&nbsp;</p>
-<p class="Element10">
-break;&nbsp;</p>
-<p class="Element10">
-case 1:&nbsp;</p>
-<p class="Element10">
-CAN1_CallbackRegister( APP_CAN_Callback, (uintptr_t)APP_STATE_CAN_RECEIVE, 2 );&nbsp;</p>
-<p class="Element10">
-state = APP_STATE_CAN_IDLE;&nbsp;</p>
-<p class="Element10">
-memset(rx_message, 0x00, sizeof(rx_message));&nbsp;</p>
-<p class="Element10">
-/* Receive New Message */&nbsp;</p>
-<p class="Element10">
-CAN1_MessageReceive(&amp;rx_messageID, &amp;rx_messageLength, rx_message, 0, 2);&nbsp;</p>
-<p class="Element10">
-break;&nbsp;</p>
-<p class="Element10">
-default:&nbsp;</p>
-<p class="Element10">
-break;&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-else&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-continue;&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-/* Check the application's current state. */&nbsp;</p>
-<p class="Element10">
-switch (state)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-case APP_STATE_CAN_IDLE:&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-/* Application can do other task here */&nbsp;</p>
-<p class="Element10">
-break;&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-case APP_STATE_CAN_XFER_SUCCESSFUL:&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-if ((APP_STATES)xferContext == APP_STATE_CAN_RECEIVE)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-else if ((APP_STATES)xferContext == APP_STATE_CAN_TRANSMIT)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-LED_Toggle();&nbsp;</p>
-<p class="Element10">
-state = APP_STATE_CAN_USER_INPUT;&nbsp;</p>
-<p class="Element10">
-break;&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-case APP_STATE_CAN_XFER_ERROR:&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-if ((APP_STATES)xferContext == APP_STATE_CAN_RECEIVE)&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-else&nbsp;</p>
-<p class="Element10">
-{&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-state = APP_STATE_CAN_USER_INPUT;&nbsp;</p>
-<p class="Element10">
-break;&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-default:&nbsp;</p>
-<p class="Element10">
-break;&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-}&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-/* Execution should not come here during normal operation */&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-return ( EXIT_FAILURE );</p></div>
+Returns the total number of bytes in the instruction cache.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100">size_t <strong><span style="color: #000000">CACHE_InstructionCacheSizeGet</span></strong>();</pre></div></div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+size_t - number of ways in the data cache.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">size_t instructionCacheGetSize;
+instructionCacheGetSize = CACHE_InstructionCacheSizeGet();</pre></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04870.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05374.html" target="topic">Peripheral Libraries</a> &gt; <a href="00932.html" target="topic">CAN Peripheral Library Help</a> &gt; <a href="00937.html" target="topic">Using the Library</a></div>
+<a href="05431.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04925.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05430.html" target="topic">Peripheral Libraries</a> &gt; <a href="00908.html" target="topic">Cache Peripheral Library Help</a> &gt; <a href="00909.html" target="topic">Library Interface</a> &gt; c) Instruction Cache Operations &gt; <a href="00937.html" target="topic">CACHE_InstructionCacheSizeGet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -612,13 +89,13 @@ return ( EXIT_FAILURE );</p></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05431.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00928.html" target="topic">Previous</a> | <a href="00932.html" target="topic">Up</a> | <a href="00933.html" target="topic">Next</a></div>
+<a href="00936.html" target="topic">Previous</a> | <a href="00909.html" target="topic">Up</a> | <a href="00912.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CAN 03247 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CACHE_InstructionCacheSizeGet Topic Title: CACHE_InstructionCacheSizeGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

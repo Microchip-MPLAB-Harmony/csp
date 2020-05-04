@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Running The Application</title>
+<title>Introduction</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="00953.html" target="topic">CAN Applications</a> &gt; <a href="00949.html" target="topic">can_fd_operation_interrupt_timestamp</a> &gt; <a href="00961.html" target="topic">Running The Application</a></div>
+<a href="05431.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04925.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05430.html" target="topic">Peripheral Libraries</a> &gt; <a href="00962.html" target="topic">CAN Peripheral Library Help</a> &gt; <a href="00961.html" target="topic">Introduction</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05431.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00959.html" target="topic">Previous</a> | <a href="00949.html" target="topic">Up</a> | <a href="00950.html" target="topic">Next</a></div>
+<a href="00962.html" target="topic">Previous</a> | <a href="00962.html" target="topic">Up</a> | <a href="00958.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CAN can_fd_operation_interrupt_timestamp Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CAN 6019 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Running The Application</div>
+Introduction</div>
 </div>
 </div>
 
@@ -48,121 +48,25 @@ Running The Application</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
-<p class="Element10">
-<strong><u>MCU Devices</u></strong></p>
-<ol class="Element630">
-<li value="1" class="Element600">Build and Program the application on both boards using the MPLAB X IDE.</li>
-<li value="2" class="Element600">Open the Terminal application (Ex.:Tera term) on the computer for each board</li>
-<li value="3" class="Element600">Connect to the DEBUG UART Virtual COM port and configure the serial settings for each board as follows:
-<ul class="Element631">
-<li class="Element601">Baud : 115200</li>
-<li class="Element601">Data : 8 Bit</li>
-<li class="Element601">Parity : None</li>
-<li class="Element601">Stop : 1 Bit</li>
-<li class="Element601">Flow Control : None</li>
-</ul></li>
-<li value="4" class="Element600">Execute the steps and observe the output as described in the following table</li>
-</ol><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element65" valign="top" width="2%">
-<div class="Element66">
-Project Name&nbsp;</div></td><td class="Element65" valign="top" width="98%">
-<div class="Element66">
-Output&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="2%">
-<div class="Element68">
-sam_c21n_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="98%">
-<div class="Element68">
-</p>
-<ul class="Element630">
-<li class="Element600">Press '0' to receive message from CAN Bus on terminal window of SAM C21N XPRO - 2 board.</li>
-<li class="Element600">Press '2' to transmit message to CAN Bus on terminal window of SAM C21N XPRO - 1 board.</li>
-<li class="Element600">Transmitted message description with success will be displayed in the terminal window of SAM C21N XPRO - 1 board. CAN message will be displayed in the terminal window of SAM C21N XPRO - 2 board.</li>
-<li class="Element600">Repeat above steps with following input value and observe the output on each terminal.
-<ul class="Element631">
-<li class="Element601">Press '1' on SAM C21N XPRO - 2 board and Press '3' on SAM C21N XPRO - 1 board</li>
-<li class="Element601">Press '4' on SAM C21N XPRO - 2 board and Press '6' on SAM C21N XPRO - 1 board</li>
-<li class="Element601">Press '5' on SAM C21N XPRO - 2 board and Press '7' on SAM C21N XPRO - 1 board</li>
-<li class="Element601">Press '1' on SAM C21N XPRO - 2 board and Press 'a' on SAM C21N XPRO - 1 board</li>
-</ul></li>
-</ul><p class="Element68">
-&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="2%">
-<div class="Element68">
-sam_e54_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="98%">
-<div class="Element68">
-</p>
-<ul class="Element630">
-<li class="Element600">Press '0' to receive message from CAN Bus on terminal window of SAM E54 XPRO - 2 board.</li>
-<li class="Element600">Press '2' to transmit message to CAN Bus on terminal window of SAM E54 XPRO - 1 board.</li>
-<li class="Element600">Transmitted message description with success will be displayed in the terminal window of SAM E54 XPRO - 1 board. CAN message will be displayed in the terminal window of SAM E54 XPRO - 2 board.</li>
-<li class="Element600">Repeat above steps with following input value and observe the output on each terminal.
-<ul class="Element631">
-<li class="Element601">Press '1' on SAM E54 XPRO - 2 board and Press '3' on SAM E54 XPRO - 1 board</li>
-<li class="Element601">Press '4' on SAM E54 XPRO - 2 board and Press '6' on SAM E54 XPRO - 1 board</li>
-<li class="Element601">Press '5' on SAM E54 XPRO - 2 board and Press '7' on SAM E54 XPRO - 1 board</li>
-<li class="Element601">Press '1' on SAM E54 XPRO - 2 board and Press 'a' on SAM E54 XPRO - 1 board</li>
-</ul></li>
-</ul><p class="Element68">
-&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="2%">
-<div class="Element68">
-pic32mk_mcj_curiosity_pro.X&nbsp;</div></td><td class="Element67" valign="top" width="98%">
-<div class="Element68">
-</p>
-<ul class="Element630">
-<li class="Element600">Press '3' to receive message from CAN Bus on terminal window of PIC32MK MCJ CURIOSITY PRO - 2 board.</li>
-<li class="Element600">Press '1' to transmit message to CAN Bus on terminal window of PIC32MK MCJ CURIOSITY PRO - 1 board.</li>
-<li class="Element600">Transmitted message description with success will be displayed in the terminal window of PIC32MK MCJ CURIOSITY PRO - 1 board. CAN message will be displayed in the terminal window of PIC32MK MCJ CURIOSITY PRO - 2 board.</li>
-<li class="Element600">Repeat above steps with following input value and observe the output on each terminal.
-<ul class="Element631">
-<li class="Element601">Press '3' on PIC32MK MCJ CURIOSITY PRO - 2 board and Press '2' on PIC32MK MCJ CURIOSITY PRO - 1 board</li>
-<li class="Element601">Press '3' on PIC32MK MCJ CURIOSITY PRO - 1 board and Press '1' on PIC32MK MCJ CURIOSITY PRO - 2 board</li>
-<li class="Element601">Press '3' on PIC32MK MCJ CURIOSITY PRO - 1 board and Press '2' on PIC32MK MCJ CURIOSITY PRO - 2 board</li>
-</ul></li>
-<li class="Element600">LED2 toggles at each message transmission or reception</li>
-</ul><p class="Element68">
-&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="2%">
-<div class="Element68">
-pic32mk_mcm_curiosity_pro.X&nbsp;</div></td><td class="Element67" valign="top" width="98%">
-<div class="Element68">
-</p>
-<ul class="Element630">
-<li class="Element600">Press '3' to receive message from CAN Bus on terminal window of PIC32MK MCM CURIOSITY PRO - 2 board.</li>
-<li class="Element600">Press '1' to transmit message to CAN Bus on terminal window of PIC32MK MCM CURIOSITY PRO - 1 board.</li>
-<li class="Element600">Transmitted message description with success will be displayed in the terminal window of PIC32MK MCM CURIOSITY PRO - 1 board. CAN message will be displayed in the terminal window of PIC32MK MCM CURIOSITY PRO - 2 board.</li>
-<li class="Element600">Repeat above steps with following input value and observe the output on each terminal.
-<ul class="Element631">
-<li class="Element601">Press '3' on PIC32MK MCM CURIOSITY PRO - 2 board and Press '2' on PIC32MK MCM CURIOSITY PRO - 1 board</li>
-<li class="Element601">Press '3' on PIC32MK MCM CURIOSITY PRO - 1 board and Press '1' on PIC32MK MCM CURIOSITY PRO - 2 board</li>
-<li class="Element601">Press '3' on PIC32MK MCM CURIOSITY PRO - 1 board and Press '2' on PIC32MK MCM CURIOSITY PRO - 2 board</li>
-</ul></li>
-<li class="Element600">LED1 toggles at each message transmission or reception</li>
-</ul><p class="Element68">
-&nbsp;</div></td></tr></table></div></div>
-
-<ol class="Element630">
-<li value="5" class="Element600">Following will be terminal session’s output.</li>
-</ol><p class="Element10">
-For sam_c21n_xpro.X and sam_e54_xpro.X output as follow:&nbsp;</p>
-<p class="Element10">
-<img src="can_c21_e54_int.jpg" border="0" alt="" title="">&nbsp;</p>
-<p class="Element10">
+<p class="Element10" style="text-align: justify;">
+The CAN controller provides all the features required to implement the serial communication protocol CAN, the CAN specification as referred to by ISO/11898A (2.0 Part A and 2.0 Part B) for high speeds and ISO/11519-2 for low speeds. The CAN Controller is able to handle all types of frames (Data, Remote, Error and Overload) and achieves a bitrate of 1 Mbit/s.&nbsp;</p>
+<p class="Element10" style="text-align: justify;">
+CAN controller accesses are made through configuration registers. 8 independent message objects (mailboxes) are implemented.&nbsp;</p>
+<p class="Element10" style="text-align: justify;">
+Any mailbox can be programmed as a reception buffer block (even non-consecutive buffers). For the reception of defined messages, one or several message objects can be masked without participating in the buffer feature. An interrupt is generated when the buffer is full. According to the mailbox configuration, the first message received can be locked in the CAN controller registers until the application acknowledges it, or this message can be discarded by new received messages.&nbsp;</p>
+<p class="Element10" style="text-align: justify;">
+Any mailbox can be programmed for transmission. Several transmission mailboxes can be enabled in the same time.&nbsp;</p>
+<p class="Element10" style="text-align: justify;">
 &nbsp;</p>
-<p class="Element10">
-For pic32mk_mcj_curiosity_pro.X and pic32mk_mcm_curiosity_pro.X output as follow:&nbsp;</p>
-<p class="Element10">
-<img src="can_fd_pic32_1.jpg" border="0" alt="" title=""><img src="can_fd_pic32_2.jpg" border="0" alt="" title="">&nbsp;</p></div>
+<p class="Element10" style="text-align: justify;">
+&nbsp;</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="00953.html" target="topic">CAN Applications</a> &gt; <a href="00949.html" target="topic">can_fd_operation_interrupt_timestamp</a> &gt; <a href="00961.html" target="topic">Running The Application</a></div>
+<a href="05431.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04925.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05430.html" target="topic">Peripheral Libraries</a> &gt; <a href="00962.html" target="topic">CAN Peripheral Library Help</a> &gt; <a href="00961.html" target="topic">Introduction</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -170,13 +74,13 @@ For pic32mk_mcj_curiosity_pro.X and pic32mk_mcm_curiosity_pro.X output as follow
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05431.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00959.html" target="topic">Previous</a> | <a href="00949.html" target="topic">Up</a> | <a href="00950.html" target="topic">Next</a></div>
+<a href="00962.html" target="topic">Previous</a> | <a href="00962.html" target="topic">Up</a> | <a href="00958.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CAN can_fd_operation_interrupt_timestamp Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CAN 6019 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

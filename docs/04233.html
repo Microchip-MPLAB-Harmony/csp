@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>MPLAB Harmony Configuration</title>
+<title>Using the Library</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="04224.html" target="topic">MPU Applications</a> &gt; <a href="04225.html" target="topic">mpu_coherent_region</a> &gt; <a href="04233.html" target="topic">MPLAB Harmony Configuration</a></div>
+<a href="05431.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04925.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05430.html" target="topic">Peripheral Libraries</a> &gt; <a href="04229.html" target="topic">MEM2MEM Peripheral Library Help</a> &gt; <a href="04233.html" target="topic">Using the Library</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05431.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04231.html" target="topic">Previous</a> | <a href="04225.html" target="topic">Up</a> | <a href="04232.html" target="topic">Next</a></div>
+<a href="04226.html" target="topic">Previous</a> | <a href="04229.html" target="topic">Up</a> | <a href="04230.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MPU mpu_coherent_region MPLAB Harmony Configuration Topic Title: MPLAB Harmony Configuration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MEM2MEM 11211 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-MPLAB Harmony Configuration</div>
+Using the Library</div>
 </div>
 </div>
 
@@ -49,14 +49,36 @@ MPLAB Harmony Configuration</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Refer to the MHC project graph for the components used and the respective configuration options.</p></div>
+This library used PDC to transfer data from memory to memory without CPU intervention.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p><div class="Element13"><div class="Element12"><pre class="Element12"> <i><span style="color: #008000">// Transfer 10 bytes of data from one buffer to another using MEM2MEM</span></i>
+ MY_APP_OBJ myAppObj;
+ uint8_t buf[10] = {0,1,2,3,4,5,6,7,8,9};
+ uint8_t buf2[10] = {};
+ <strong><span style="color: #000080">void</span></strong> *srcAddr = (uint8_t *) buf;
+ <strong><span style="color: #000080">void</span></strong> *destAddr = (uin8_t*) buf2;
+ size_t size = 10;
+
+ <i><span style="color: #008000">// User registers an event handler with PLIB. This is done once.</span></i>
+ MEM2MEM_ChannelCallbackRegister(APP_MEM2MEMTransferEventHandler,
+ (uintptr_t)&amp;myAppObj);
+
+ <strong><span style="color: #000080">if</span></strong>(MEM2MEM_ChannelTransfer(srcAddr, destAddr, size,MEM2MEM_TRANSFER_WIDTH_BYTE) == <strong><span style="color: #000080">true</span></strong>)
+ {
+ <i><span style="color: #008000">// do something</span></i>
+ }
+ <strong><span style="color: #000080">else</span></strong>
+ {
+ <i><span style="color: #008000">// try again?</span></i>
+ }</pre></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="04224.html" target="topic">MPU Applications</a> &gt; <a href="04225.html" target="topic">mpu_coherent_region</a> &gt; <a href="04233.html" target="topic">MPLAB Harmony Configuration</a></div>
+<a href="05431.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04925.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05430.html" target="topic">Peripheral Libraries</a> &gt; <a href="04229.html" target="topic">MEM2MEM Peripheral Library Help</a> &gt; <a href="04233.html" target="topic">Using the Library</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -64,13 +86,13 @@ Refer to the MHC project graph for the components used and the respective config
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05431.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04231.html" target="topic">Previous</a> | <a href="04225.html" target="topic">Up</a> | <a href="04232.html" target="topic">Next</a></div>
+<a href="04226.html" target="topic">Previous</a> | <a href="04229.html" target="topic">Up</a> | <a href="04230.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MPU mpu_coherent_region MPLAB Harmony Configuration Topic Title: MPLAB Harmony Configuration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MEM2MEM 11211 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Running The Application</title>
+<title>PWMx_CompareValueSet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="05784.html" target="topic">QSPI Applications</a> &gt; <a href="05785.html" target="topic">qspi_read_write</a> &gt; <a href="05790.html" target="topic">Running The Application</a></div>
+<a href="05431.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04925.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05430.html" target="topic">Peripheral Libraries</a> &gt; <a href="05703.html" target="topic">PWM Peripheral Library Help</a> &gt; <a href="05704.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="05790.html" target="topic">PWMx_CompareValueSet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05431.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05788.html" target="topic">Previous</a> | <a href="05785.html" target="topic">Up</a> | <a href="05786.html" target="topic">Next</a></div>
+<a href="05789.html" target="topic">Previous</a> | <a href="05704.html" target="topic">Up</a> | <a href="05791.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: QSPI qspi_read_write Running Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pwm_6343::PWMx_CompareValueSet@PWM_COMPARE@uint16_t Topic Title: PWMx_CompareValueSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Running The Application</div>
+PWMx_CompareValueSet Function</div>
 </div>
 </div>
 
@@ -49,72 +49,67 @@ Running The Application</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<strong><u>MCU Devices</u></strong>&nbsp;</p>
-
-<ol class="Element630">
-<li value="1" class="Element600">Build and program the application using the MPLAB X IDE.</li>
-<li value="2" class="Element600">The LED indicates the success or failure:
-<ul class="Element631">
-<li class="Element601"><span style="color: #000000">The LED is toggled when the value read from the QSPI Serial Flash memory matched with the written value</span></li>
-<li class="Element601"><span style="color: #000000">The LED is turned ON when the value read from the QSPI Serial Flash did not match with the written value</span></li>
-</ul></li>
-</ol><p class="Element10">
-&nbsp;</p>
+This function writes compare value in a double buffer register. Update to the actual compare value register happens at the PWM period border when compare period counter expires.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">PWMx_CompareValueSet</span></strong>(
+    <a href="05760.html" target="topic">PWM_COMPARE</a> <strong><span style="color: #000000">cmp_unit</span></strong>, 
+    uint16_t <strong><span style="color: #000000">cmp_value</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-The following table provides the LED name. </p><div class="Element63">
+<a href="05792.html" target="topic">PWMx_Initialize</a>() function must have been called first for the associated instance. And associated channel must be running.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
 <div class="TableDiv">
-<table cellspacing="0" class="Table1">
+<table cellspacing="0" class="Table2">
 <tr>
-<td class="Element65" valign="top" width="68%">
-<div class="Element66">
-Kit Name&nbsp;</div></td><td class="Element65" valign="top" width="32%">
-<div class="Element66">
-LED Name&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="68%">
-<div class="Element68">
-SAM E70 Xplained Ultra Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="32%">
-<div class="Element68">
-<span style="color: #000000">LED1</span>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="68%">
-<div class="Element68">
-SAM E54 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="32%">
-<div class="Element68">
-LED0&nbsp;</div></td></tr></table></div></div>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+cmp_unit&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+compare unit number&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+cmp_value&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+compare value which is compared with channel 0 counter&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-&nbsp;</p>
+None</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-<strong><u>MPU Devices</u></strong>&nbsp;</p>
-
-<ol class="Element630">
-<li value="3" class="Element600">Build the IAR or MPLAB X project using IAR Embedded Workbench or MPLAB X IDE respectively</li>
-<li value="4" class="Element600">Use the output binary file (harmony.bin) to setup the board as detailed in <a href="05788.html" target="topic">hardware setup</a></li>
-<li value="5" class="Element600">Reset the board to run the application</li>
-<li value="6" class="Element600">The LED indicates the success or failure:
-<ul class="Element631">
-<li class="Element601"><span style="color: #000000">The LED is toggled when the value read from the QSPI Serial Flash memory matched with the written value</span></li>
-<li class="Element601"><span style="color: #000000">The LED is turned ON when the value read from the QSPI Serial Flash did not match with the written value</span></li>
-</ul></li>
-</ol><p class="Element10">
-&nbsp;</p>
-<div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element65" valign="top" width="47%">
-<div class="Element66">
-Kit Name&nbsp;</div></td><td class="Element65" valign="top" width="53%">
-<div class="Element66">
-LED Name&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="47%">
-<div class="Element68">
-SAMA5D2 Xplained Ultra evaluation kit&nbsp;</div></td><td class="Element67" valign="top" width="53%">
-<div class="Element68">
-<span style="color: #000000">RGB_LED(Blue)</span>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="47%">
-<div class="Element68">
-SAM9X60 evaluation kit&nbsp;</div></td><td class="Element67" valign="top" width="53%">
-<div class="Element68">
-<span style="color: #000000">RGB_LED(Blue)</span>&nbsp;</div></td></tr></table></div></div>
+When compare value matches the counter of PWM channel 0, interrupt is generated and also pulse is generated on PWM event line which can be used to synchronize ADC conversion.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">    PWM0_Initialize();
+    PWM0_ChannelsStart(PWM_CHANNEL_0_MASK);
+    PWM0_CompareValueSet(PWM_COMPARE_0, 0x25);</pre></div></div>
 </div>
 </div>
 </div>
@@ -122,7 +117,7 @@ SAM9X60 evaluation kit&nbsp;</div></td><td class="Element67" valign="top" width=
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00874.html" target="topic">Applications Help</a> &gt; <a href="05784.html" target="topic">QSPI Applications</a> &gt; <a href="05785.html" target="topic">qspi_read_write</a> &gt; <a href="05790.html" target="topic">Running The Application</a></div>
+<a href="05431.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04925.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05430.html" target="topic">Peripheral Libraries</a> &gt; <a href="05703.html" target="topic">PWM Peripheral Library Help</a> &gt; <a href="05704.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="05790.html" target="topic">PWMx_CompareValueSet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -130,13 +125,13 @@ SAM9X60 evaluation kit&nbsp;</div></td><td class="Element67" valign="top" width=
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05431.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05788.html" target="topic">Previous</a> | <a href="05785.html" target="topic">Up</a> | <a href="05786.html" target="topic">Next</a></div>
+<a href="05789.html" target="topic">Previous</a> | <a href="05704.html" target="topic">Up</a> | <a href="05791.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: QSPI qspi_read_write Running Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pwm_6343::PWMx_CompareValueSet@PWM_COMPARE@uint16_t Topic Title: PWMx_CompareValueSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04870.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05374.html" target="topic">Peripheral Libraries</a> &gt; <a href="02036.html" target="topic">EFC Peripheral Library Help</a> &gt; <a href="02037.html" target="topic">Library Interface</a></div>
+<a href="05431.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04925.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05430.html" target="topic">Peripheral Libraries</a> &gt; <a href="02036.html" target="topic">EEPROM Peripheral Library Help</a> &gt; <a href="02037.html" target="topic">Library Interface</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,13 +26,13 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05431.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02041.html" target="topic">Previous</a> | <a href="02036.html" target="topic">Up</a> | <a href="02049.html" target="topic">Next</a></div>
+<a href="02040.html" target="topic">Previous</a> | <a href="02036.html" target="topic">Up</a> | <a href="02052.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: EFC 6450 Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: EEPROM 02514 Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
 Library Interface</div>
 </div>
@@ -46,8 +46,8 @@ Library Interface</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="61292053657475702046756E6374696F6E73"></a><div class="Element14">
-a) Setup Functions</div>
+<a name="612920496E697469616C697A6174696F6E2046756E6374696F6E"></a><div class="Element14">
+a) Initialization Function</div>
 <div class="Element11">
 <div class="Element10">
 <div class="Element212">
@@ -65,9 +65,9 @@ Description&nbsp;</div></td></tr><tr>
 <div class="Element203">
 <img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="02049.html" target="topic">EFC_CallbackRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02052.html" target="topic">EEPROM_Initialize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Sets the pointer to the function (and it's context) to be called when the operation is complete.&nbsp;</div></td></tr></table></div></div>
+Initializes data EEPROM Memory.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="6229205472616E73616374696F6E2046756E6374696F6E73"></a><div class="Element14">
@@ -89,44 +89,30 @@ Description&nbsp;</div></td></tr><tr>
 <div class="Element203">
 <img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="02061.html" target="topic">EFC_RegionLock</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02047.html" target="topic">EEPROM_BulkErase</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Locks a Flash region.&nbsp;</div></td></tr><tr>
+Erases complete EEPROM.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
 <img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="02062.html" target="topic">EFC_RegionUnlock</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02055.html" target="topic">EEPROM_WordRead</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Unlocks a Flash region.&nbsp;</div></td></tr><tr>
+Reads one word from a given address in data EEPROM.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
 <img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="02063.html" target="topic">EFC_SectorErase</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02056.html" target="topic">EEPROM_WordWrite</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Erases a Sector in the FLASH.&nbsp;</div></td></tr><tr>
+Writes one word to data EEPROM.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
 <img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="02058.html" target="topic">EFC_PageWrite</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02054.html" target="topic">EEPROM_PageErase</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Writes data of size equivalent to page size to a given FLASH address.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02059.html" target="topic">EFC_QuadWordWrite</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Writes a 128-bit data to a given address in FLASH memory.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02060.html" target="topic">EFC_Read</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Reads length number of bytes from a given address in FLASH memory.&nbsp;</div></td></tr></table></div></div>
+Erases one word in data EEPROM.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="6329205374617475732046756E6374696F6E73"></a><div class="Element14">
@@ -148,16 +134,16 @@ Description&nbsp;</div></td></tr><tr>
 <div class="Element203">
 <img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="02057.html" target="topic">EFC_IsBusy</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02051.html" target="topic">EEPROM_ErrorGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Returns the current status of EFC controller.&nbsp;</div></td></tr><tr>
+Gets the data EEPROM error.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
 <img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="02056.html" target="topic">EFC_ErrorGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02053.html" target="topic">EEPROM_IsBusy</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Returns the error encountered by EFC controller.&nbsp;</div></td></tr></table></div></div>
+Checks whether data EEPROM is busy or not.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="6429204461746120547970657320616E6420436F6E7374616E7473"></a><div class="Element14">
@@ -179,16 +165,9 @@ Description&nbsp;</div></td></tr><tr>
 <div class="Element203">
 <img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="02048.html" target="topic">EFC_CALLBACK</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02048.html" target="topic">EEPROM_ERROR</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Defines the data type and function signature for the EFC peripheral callback function.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02050.html" target="topic">EFC_ERROR</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Defines the data type for the EFC Error.&nbsp;</div></td></tr></table></div></div>
+&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -196,7 +175,7 @@ Defines the data type for the EFC Error.&nbsp;</div></td></tr></table></div></di
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05375.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04870.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05374.html" target="topic">Peripheral Libraries</a> &gt; <a href="02036.html" target="topic">EFC Peripheral Library Help</a> &gt; <a href="02037.html" target="topic">Library Interface</a></div>
+<a href="05431.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04925.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05430.html" target="topic">Peripheral Libraries</a> &gt; <a href="02036.html" target="topic">EEPROM Peripheral Library Help</a> &gt; <a href="02037.html" target="topic">Library Interface</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -204,13 +183,13 @@ Defines the data type for the EFC Error.&nbsp;</div></td></tr></table></div></di
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05375.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05431.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02041.html" target="topic">Previous</a> | <a href="02036.html" target="topic">Up</a> | <a href="02049.html" target="topic">Next</a></div>
+<a href="02040.html" target="topic">Previous</a> | <a href="02036.html" target="topic">Up</a> | <a href="02052.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: EFC 6450 Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: EEPROM 02514 Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->
