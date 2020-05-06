@@ -1453,13 +1453,18 @@ for index in range(0, len(ahbNode.getChildren())):
 #AHB Bridge Clock Initial Settings
 mclk_AHB_Clock_Value = coreComponent.createStringSymbol("MCLK_AHB_INITIAL_VALUE",mclkSym_Menu)
 mclk_AHB_Clock_Value.setDefaultValue(str(ahbInit))
+mclk_AHB_Clock_Value.setVisible(False)
+
+#AHB Bridge Clock settings
+mclk_AHB_Clock_Value = coreComponent.createStringSymbol("MCLK_AHB_VALUE",mclkSym_Menu)
+mclk_AHB_Clock_Value.setDefaultValue(str(ahbInit))
 mclk_AHB_Clock_Value.setDependencies(ahbValue, gclkDependencyList)
 mclk_AHB_Clock_Value.setReadOnly(True)
 ahbMaskNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="MCLK"]/register-group@[name="MCLK"]/register@[name="AHBMASK"]')
 ahbMaskValues = ahbMaskNode.getChildren()
 for index in range(0, len(ahbMaskValues)):
     mclkDic["AHB_" + str(int(ahbMaskValues[index].getAttribute("mask"),16))] = ahbMaskValues[index].getAttribute("name").split("_")[0]
-    if ahbMaskValues[index].getAttribute("name").startswith("HPB"):
+    if (ahbMaskValues[index].getAttribute("name").startswith("HPB")) or (ahbMaskValues[index].getAttribute("name").startswith("APB")):
         numAPB = numAPB + 1
 
 bridges = ["APBA", "APBB", "APBC", "APBD"]

@@ -310,9 +310,9 @@ ${CLK_INIT_LIST}
     </#if>
 </#list>
 
-	<#if MCLK_AHB_INITIAL_VALUE != "0x3cff">
+	<#if MCLK_AHB_INITIAL_VALUE != MCLK_AHB_VALUE>
     /* Configure the AHB Bridge Clocks */
-    MCLK_REGS->MCLK_AHBMASK = ${MCLK_AHB_INITIAL_VALUE};
+    MCLK_REGS->MCLK_AHBMASK = ${MCLK_AHB_VALUE};
 
     </#if>
     <#if MCLK_APBA_INITIAL_VALUE != "0xfff">
