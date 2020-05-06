@@ -68,4 +68,8 @@ void ${CMCC_INSTANCE_NAME}_DisableICache (void );
 
 void ${CMCC_INSTANCE_NAME}_InvalidateAll (void );
 
+#ifdef __cplusplus  // Provide C++ Compatibility
+    }
+#endif
+
 #endif
