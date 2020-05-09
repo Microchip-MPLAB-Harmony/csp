@@ -177,7 +177,7 @@
         <targetDevice>ATSAMA5D27</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>samice</platformTool>
+        <platformTool>jlink</platformTool>
         <languageToolchain>XC32</languageToolchain>
         <languageToolchainVersion>2.40</languageToolchainVersion>
         <platform>3</platform>
@@ -898,6 +898,12 @@
       </Simulator>
       <jlink>
         <property key="AutoSelectMemRanges" value="auto"/>
+        <property key="boot.entry_adr" value=""/>
+        <property key="boot.load_adr" value=""/>
+        <property key="boot.path"
+                  value="${ProjectDir}\..\at91bootstrap_sam_a5d2_xult.X\binaries\at91bootstrap.elf"/>
+        <property key="boot.prj" value=""/>
+        <property key="boot.use" value="true"/>
         <property key="communication.autoselectspeed" value="true"/>
         <property key="communication.interface" value="swd"/>
         <property key="communication.speed" value="4"/>

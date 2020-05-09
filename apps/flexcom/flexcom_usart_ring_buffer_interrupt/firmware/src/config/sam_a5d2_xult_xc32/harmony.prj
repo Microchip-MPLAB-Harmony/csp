@@ -4,7 +4,8 @@
     <Name dnOrder="0" value="sam_a5d2_xult_xc32"/>
     <Processor dnOrder="1" value="ATSAMA5D27"/>
     <Harmony dnOrder="2" path="../../../.."/>
-    <Manifest dnOrder="3">
+    <Project_Name dnOrder="3" value="flexcom_usart_ring_buffer_interrupt_sam_a5d2_xult_xc32"/>
+    <Manifest dnOrder="4">
       <Files dnOrder="0">
         <File dnOrder="0">
           <Type dnOrder="0">SOURCE</Type>
@@ -39,8 +40,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_a5d2_xult_xc32/</LogicalPath>
           <PhysicalPath dnOrder="4">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">CE03F6F3AA694E00B39703F042EB07F9</GeneratedChecksum>
-          <UserChecksum dnOrder="6">CE03F6F3AA694E00B39703F042EB07F9</UserChecksum>
+          <GeneratedChecksum dnOrder="5">8177201EFD2F84DFFB6E94C59275DC01</GeneratedChecksum>
+          <UserChecksum dnOrder="6">8177201EFD2F84DFFB6E94C59275DC01</UserChecksum>
         </File>
         <File dnOrder="4">
           <Type dnOrder="0">SOURCE</Type>
@@ -727,13 +728,13 @@
         <Setting append="true" category="C32-LD" delimiter=";" dnOrder="5" key="preprocessor-macros" security="NON_SECURE" value="ROM_ORIGIN=0x0x26f00000;ROM_LENGTH=-0x26f00000"/>
       </Settings>
     </Manifest>
-    <Settings dnOrder="4">
+    <Settings dnOrder="5">
       <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.6.0"/>
-      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAMA5D2_DFP\1.2.30\atdf\ATSAMA5D27.atdf"/>
+      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAMA5D2_DFP\1.3.35\atdf\ATSAMA5D27.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
       <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
-      <Setting dnOrder="5" key="PackageFilter" value="bsp;core;csp;expresslogic_threadx;micrium_ucos3;"/>
+      <Setting dnOrder="5" key="PackageFilter" value="bsp;core;csp;expresslogic_threadx;micrium_ucos3;usb;"/>
       <Setting dnOrder="6" key="TRUSTZONE" value="false"/>
     </Settings>
   </Configurator>

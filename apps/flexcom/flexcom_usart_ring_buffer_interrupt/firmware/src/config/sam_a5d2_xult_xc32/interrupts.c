@@ -69,9 +69,6 @@ void __attribute__((optimize("-O1"),section(".text.DefaultInterruptHandler"),lon
 uint32_t spuriousEventCount = 0;
 void __attribute__((optimize("-O1"),section(".text.DefaultInterruptHandlerForSpurious"),long_call))DefaultInterruptHandlerForSpurious( void )
 {
-#if defined(__DEBUG) || defined(__DEBUG_D)
-    asm("BKPT");
-#endif
     ++spuriousEventCount;
 }
 /*  Weak definitions for default handlers.  Users may override these with
