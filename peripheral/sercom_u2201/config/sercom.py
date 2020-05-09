@@ -215,32 +215,31 @@ def updateSERCOMInterruptData(symbol, event):
     status = False
     interruptEnable = False
 
-    if event["id"] == "SERCOM_MODE" or "INTERRUPT_MODE" in event["id"]:
-        if sercomSym_OperationMode.getSelectedKey() == "SPIS":
-            # To be implemented
-            pass
-        elif sercomSym_OperationMode.getSelectedKey() == "USART_EXT":
-            # To be implemented
-            pass
-        elif (sercomSym_OperationMode.getSelectedKey() == "USART_INT"):
-            sercomMode = "USART"
-            if (Database.getSymbolValue(sercomInstanceName.getValue().lower(), "USART_INTERRUPT_MODE") == True):
-                interruptEnable = True
-        elif (sercomSym_OperationMode.getSelectedKey() == "SPIM"):
-            sercomMode = "SPI"
-            if (Database.getSymbolValue(sercomInstanceName.getValue().lower(), "SPI_INTERRUPT_MODE") == True):
-                interruptEnable = True
-        elif (sercomSym_OperationMode.getSelectedKey() == "I2CM"):
-            sercomMode = "I2C"
-            if (Database.getSymbolValue(sercomInstanceName.getValue().lower(), "I2C_INTERRUPT_MODE") == True):
-                interruptEnable = True
-        elif (sercomSym_OperationMode.getSelectedKey() == "I2CS"):
-            sercomMode = "I2C"
-            if (Database.getSymbolValue(sercomInstanceName.getValue().lower(), "I2CS_INTERRUPT_MODE") == True):
-                interruptEnable = True
+    if sercomSym_OperationMode.getSelectedKey() == "SPIS":
+        # To be implemented
+        pass
+    elif sercomSym_OperationMode.getSelectedKey() == "USART_EXT":
+        # To be implemented
+        pass
+    elif (sercomSym_OperationMode.getSelectedKey() == "USART_INT"):
+        sercomMode = "USART"
+        if (Database.getSymbolValue(sercomInstanceName.getValue().lower(), "USART_INTERRUPT_MODE") == True):
+            interruptEnable = True
+    elif (sercomSym_OperationMode.getSelectedKey() == "SPIM"):
+        sercomMode = "SPI"
+        if (Database.getSymbolValue(sercomInstanceName.getValue().lower(), "SPI_INTERRUPT_MODE") == True):
+            interruptEnable = True
+    elif (sercomSym_OperationMode.getSelectedKey() == "I2CM"):
+        sercomMode = "I2C"
+        if (Database.getSymbolValue(sercomInstanceName.getValue().lower(), "I2C_INTERRUPT_MODE") == True):
+            interruptEnable = True
+    elif (sercomSym_OperationMode.getSelectedKey() == "I2CS"):
+        sercomMode = "I2C"
+        if (Database.getSymbolValue(sercomInstanceName.getValue().lower(), "I2CS_INTERRUPT_MODE") == True):
+            interruptEnable = True
 
-        if (sercomMode != ""):
-            setSERCOMInterruptData(interruptEnable, sercomMode)
+    if (sercomMode != "") and (event["id"] == "SERCOM_MODE" or "INTERRUPT_MODE" in event["id"]):
+        setSERCOMInterruptData(interruptEnable, sercomMode)
 
     for id in InterruptVectorUpdate:
         id = id.replace("core.", "")
@@ -248,7 +247,7 @@ def updateSERCOMInterruptData(symbol, event):
             status = True
             break
 
-    if ((sercomMode != "") and (status == True)):
+    if ((status == True) and (interruptEnable == True)):
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
