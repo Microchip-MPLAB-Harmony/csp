@@ -39,8 +39,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_a5d2_xult_xc32/</LogicalPath>
           <PhysicalPath dnOrder="4">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">403CB92732B4889856AAFA942AEA537E</GeneratedChecksum>
-          <UserChecksum dnOrder="6">403CB92732B4889856AAFA942AEA537E</UserChecksum>
+          <GeneratedChecksum dnOrder="5">1E8D8D6BB7CDE2D08681EA8AA552747D</GeneratedChecksum>
+          <UserChecksum dnOrder="6">1E8D8D6BB7CDE2D08681EA8AA552747D</UserChecksum>
         </File>
         <File dnOrder="4">
           <Type dnOrder="0">SOURCE</Type>
@@ -93,8 +93,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_a5d2_xult_xc32/peripheral/pio/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/pio/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">79D274CEBAF52B217D998F69D6CBAF56</GeneratedChecksum>
-          <UserChecksum dnOrder="6">79D274CEBAF52B217D998F69D6CBAF56</UserChecksum>
+          <GeneratedChecksum dnOrder="5">879B99539E914752FA64B4FBF4995B62</GeneratedChecksum>
+          <UserChecksum dnOrder="6">879B99539E914752FA64B4FBF4995B62</UserChecksum>
         </File>
         <File dnOrder="10">
           <Type dnOrder="0">SOURCE</Type>
@@ -756,11 +756,11 @@
     </Manifest>
     <Settings dnOrder="4">
       <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.6.0"/>
-      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAMA5D2_DFP\1.2.30\atdf\ATSAMA5D27.atdf"/>
+      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAMA5D2_DFP\1.3.35\atdf\ATSAMA5D27.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
-      <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
-      <Setting dnOrder="5" key="PackageFilter" value="bsp;core;csp;expresslogic_threadx;micrium_ucos3;"/>
+      <Setting dnOrder="4" key="MERGE_STRATEGY" value="OVERWRITE"/>
+      <Setting dnOrder="5" key="PackageFilter" value="bsp;core;csp;net;usb;"/>
     </Settings>
   </Configurator>
 </Configuration>
