@@ -12,9 +12,6 @@
     <#lt>uint32_t spuriousEventCount = 0;
     <#lt>void __attribute__((optimize("-O1"),section(".text.DefaultInterruptHandlerForSpurious"),long_call))DefaultInterruptHandlerForSpurious( void )
     <#lt>{
-        <#lt>#if defined(__DEBUG) || defined(__DEBUG_D)
-        <#lt>    asm("BKPT");
-        <#lt>#endif
     <#lt>    ++spuriousEventCount;
     <#lt>}
     <#lt>
