@@ -154,6 +154,7 @@
                    displayName="Important Files"
                    projectFiles="false">
       <itemPath>Makefile</itemPath>
+      <itemPath>../src/config/sam_a5d2_xult_xc32/harmony.prj</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
