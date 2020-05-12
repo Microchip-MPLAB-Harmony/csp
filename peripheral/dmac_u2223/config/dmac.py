@@ -400,6 +400,13 @@ dmacHighestCh.setVisible(False)
 dmacChannelLinkedList = coreComponent.createBooleanSymbol("DMAC_LL_ENABLE", dmacMenu)
 dmacChannelLinkedList.setLabel("Use Linked List Mode ?")
 
+priorityRegisterName = coreComponent.createStringSymbol("PRIORITY_REGISTER_NAME", None)
+priorityRegisterName.setVisible(False)
+if ATDF.getNode('/avr-tools-device-file/modules/module@[name="DMAC"]/register-group@[name="DMAC"]/register@[name="PRICTRL"]') is not None:
+    priorityRegisterName.setDefaultValue("PRICTRL")
+else:
+    priorityRegisterName.setDefaultValue("PRICTRL0")
+
 # Priority Control 0 Register
 for dmacCount in range(0, 4):
 
