@@ -176,7 +176,7 @@ static void DFLL_Initialize( void )
     SYSCTRL_REGS->SYSCTRL_DFLLVAL = SYSCTRL_DFLLVAL_COARSE(calibCoarse) | SYSCTRL_DFLLVAL_FINE(calibFine);
 
     <#if CONFIG_CLOCK_DFLL_OPMODE == "1">
-    <#if CONFIG_CLOCK_DFLL_USB == false>
+    <#if CONFIG_CLOCK_DFLL_USB?has_content && CONFIG_CLOCK_DFLL_USB == false>
     GCLK_REGS->GCLK_CLKCTRL = GCLK_CLKCTRL_GEN(${GCLK_ID_0_GENSEL})${GCLK_ID_0_WRITELOCK?then(' | GCLK_CLKCTRL_WRTLOCK_Msk', ' ')} | GCLK_CLKCTRL_CLKEN_Msk | GCLK_CLKCTRL_ID(${GCLK_ID_0_INDEX});
     </#if>
     SYSCTRL_REGS->SYSCTRL_DFLLMUL = SYSCTRL_DFLLMUL_MUL(${CONFIG_CLOCK_DFLL_MUL}) | SYSCTRL_DFLLMUL_FSTEP(${CONFIG_CLOCK_DFLL_FINE}) | SYSCTRL_DFLLMUL_CSTEP(${CONFIG_CLOCK_DFLL_COARSE});
@@ -198,7 +198,7 @@ static void DFLL_Initialize( void )
     <#lt>                               ${CONFIG_CLOCK_DFLL_STABLE?then('| SYSCTRL_DFLLCTRL_STABLE_Msk ', ' ')}
     <#lt>                               ;</@compress>
 
-    <#if CONFIG_CLOCK_DFLL_OPMODE == "1" && CONFIG_CLOCK_DFLL_USB == false>
+    <#if CONFIG_CLOCK_DFLL_OPMODE == "1" && CONFIG_CLOCK_DFLL_USB?has_content && CONFIG_CLOCK_DFLL_USB == false>
     while((SYSCTRL_REGS->SYSCTRL_PCLKSR & SYSCTRL_PCLKSR_DFLLLCKF_Msk) != SYSCTRL_PCLKSR_DFLLLCKF_Msk)
     {
         /* Waiting for DFLL to fully lock to meet clock accuracy */
