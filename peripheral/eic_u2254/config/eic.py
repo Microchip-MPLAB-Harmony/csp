@@ -294,6 +294,8 @@ def instantiateComponent(eicComponent):
         CONFIG_SENSE_SelectionSymbol.setLabel("External Interrupt" + str(extIntIndex) + " Edge Selection")
 
         eicConfigSenseNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"EIC_CONFIG__SENSE0\"]")
+        if eicConfigSenseNode == None:
+           eicConfigSenseNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"EIC_CONFIG__SENSE\"]") 
 
         for index in range(len(eicConfigSenseNode.getChildren())):
             eicConfigSenseKeyName = eicConfigSenseNode.getChildren()[index].getAttribute("name")
@@ -491,7 +493,10 @@ def instantiateComponent(eicComponent):
     eicHeader1File.setMarkup(True)
 
     eicSource1File = eicComponent.createFileSymbol("EIC_SOURCE", None)
-    eicSource1File.setSourcePath("../peripheral/eic_u2254/templates/plib_eic.c.ftl")
+    if ATDF.getNode('/avr-tools-device-file/modules/module@[name=\"EIC\"]/register-group@[name="EIC"]/register@[name=\"CONFIG0\"]') is not None:
+        eicSource1File.setSourcePath("../peripheral/eic_u2254/templates/plib_eic_v2.c.ftl")
+    else:
+        eicSource1File.setSourcePath("../peripheral/eic_u2254/templates/plib_eic.c.ftl")
     eicSource1File.setOutputName("plib_"+eicInstanceName.getValue().lower()+".c")
     eicSource1File.setDestPath("/peripheral/eic/")
     eicSource1File.setProjectPath("config/" + configName + "/peripheral/eic/")
