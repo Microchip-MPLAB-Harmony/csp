@@ -441,24 +441,38 @@ def set_refocon_value(clknum):
             contributor = rodivmask & (mydict['symbol'].getValue() << rodivmasklsb)
             payload = payload | contributor
 
-    return str(hex(payload))
+    return (str(hex(payload)))
+
+global RSLP_MASK
+RSLP_MASK = 0x00000800
+global SIDL_MASK
+SIDL_MASK = 0x00002000
 
 def refocon_update(symbol, event):
-    '''
-    This is the callback for REFOCON_VALUEx symbolID.
-    It is called when the user changes either of the following:
-        CONFIG_SYS_CLK_REFCLK_SOURCEx
-        CONFIG_SYS_CLK_RODIVx
-    '''
+    #This is the callback for REFOCON_VALUEx symbolID.
+    
     global refconval
+    global rslpSymbolList
+    global sidlSymbolList
 
     # find out which clock we care about by looking at the id.  The last char in the id is clock number
     clk = int(event["id"][-1]) - 1 # "-1" is since indexing starts at 1 (and list indexing starts at 0)
-    symObj = event["symbol"]
     index = int(event["id"][-1])  # the last char of the event ID is the index needed to be used
+    
+    newValueWithoutRSLP_SIDL = int(set_refocon_value(index), 16)
+
+    if rslpSymbolList[clk].getValue() == False:
+        newValue = newValueWithoutRSLP_SIDL & (~RSLP_MASK)
+    else: 
+        newValue = newValueWithoutRSLP_SIDL | RSLP_MASK
+
+    if sidlSymbolList[clk].getValue() == False:
+        newValue = newValue & (~SIDL_MASK)
+    else: 
+        newValue = newValue | SIDL_MASK
 
     # finally, set the symbol value to the newly-calculated value
-    refconval[clk].setValue(set_refocon_value(index), 2)
+    refconval[clk].setValue(str(hex(newValue)))
 
 def set_pbdiv_value(clknum):
     '''
@@ -1474,6 +1488,8 @@ if __name__ == "__main__":
     global refotrimval
     global symbolrefotrimval
     global rotrimSymbolList
+    global rslpSymbolList
+    global sidlSymbolList
     global symbolRotrimUserVal
     global roselMap
     pbclkEnNameList = []
@@ -1483,6 +1499,8 @@ if __name__ == "__main__":
     roselSymbolList = []
     rodivSymbolList = []
     rotrimSymbolList = []
+    rslpSymbolList = []
+    sidlSymbolList = []
     refconval = []
     symbolRoselValueList = []
     symbolRodivValueList = []
@@ -1544,6 +1562,8 @@ if __name__ == "__main__":
         roselSymbolList.append([])
         rodivSymbolList.append([])
         rotrimSymbolList.append([])
+        rslpSymbolList.append([])
+        sidlSymbolList.append([])
 
         enSymId = "CONFIG_SYS_CLK_REFCLK"+clk+"_ENABLE"
         enSymbolList[listIndex] = coreComponent.createBooleanSymbol(enSymId, CLK_CFG_SETTINGS)
@@ -1604,13 +1624,33 @@ if __name__ == "__main__":
         rotrimSymbolList[listIndex].setVisible(False)
         symbolRotrimUserVal.append({'symbol':rotrimSymbolList[listIndex],'index':clk})
 
+        #RSLP
+        rslpSymId = "CONFIG_SYS_CLK_REFCLK_RSLP" + clk
+        rslpSymbolList[listIndex] = coreComponent.createBooleanSymbol(rslpSymId, enSymbolList[listIndex])
+        rslpSymbolList[listIndex].setDependencies(enableMenu, [enSymId])
+        rslpSymbolList[listIndex].setLabel("Reference Clock "+clk+" Run in Sleep Mode")
+        rslpSymbolList[listIndex].setDescription("Sets whether to run the reference clock 1 output in sleep mode or not")
+        rslpSymbolList[listIndex].setReadOnly(False)
+        rslpSymbolList[listIndex].setDefaultValue(False)
+        rslpSymbolList[listIndex].setVisible(False)
+
+        #SIDL
+        sidlSymId = "CONFIG_SYS_CLK_REFCLK_SIDL" + clk
+        sidlSymbolList[listIndex] = coreComponent.createBooleanSymbol(sidlSymId, enSymbolList[listIndex])
+        sidlSymbolList[listIndex].setDependencies(enableMenu, [enSymId])
+        sidlSymbolList[listIndex].setLabel("Reference Clock "+clk+" Run in Idle Mode")
+        sidlSymbolList[listIndex].setDescription("Sets whether to run the reference clock 1 output in idle mode or not")
+        sidlSymbolList[listIndex].setReadOnly(False)
+        sidlSymbolList[listIndex].setDefaultValue(False)
+        sidlSymbolList[listIndex].setVisible(False)
+
         # python-computed REFOxCON register setting to use in ftl file
         refconval.append([])
         refconval[listIndex] = coreComponent.createStringSymbol("REFOCON"+clk+"_VALUE", None)
         refconval[listIndex].setVisible(False)
         refconval[listIndex].setDefaultValue(set_refocon_value(clk))
         # change based on CONFIG_SYS_CLK_REFCLK_ROSELx or CONFIG_SYS_CLK_RODIVx changes
-        refconval[listIndex].setDependencies(refocon_update, [srcSymId, rodivSymId])
+        refconval[listIndex].setDependencies(refocon_update, [srcSymId, rodivSymId, sidlSymId, rslpSymId])
 
         # python-computed REFOxTRIM register setting to use in ftl file
         refotrimval.append([])

@@ -159,11 +159,15 @@ void CLK_Initialize( void )
     <#assign REFCONVAL = "REFOCON"+i+"_VALUE">
     <#assign REFOTRIMVAL = "REFO"+i+"TRIM_VALUE">
     <#assign REFOCONRODIV = "CONFIG_SYS_CLK_RODIV"+i>
+    <#assign REFOCONRSLP = "CONFIG_SYS_CLK_REFCLK_RSLP" +i>
+    <#assign REFOCONSIDL = "CONFIG_SYS_CLK_REFCLK_SIDL" +i>
 <#if .vars[ENBL] = true>
     /* Set up Reference Clock ${i} */
         <#lt>    /* REFO${i}CON register */
         <#lt>    /* ROSEL =  ${.vars[ROSELVAL]} */
         <#lt>    /* DIVSWEN = 1 */
+        <#lt>    /* RSLP = ${.vars[REFOCONRSLP]?c} */ 
+        <#lt>    /* SIDL = ${.vars[REFOCONSIDL]?c} */ 
         <#lt>    /* RODIV = ${.vars[REFOCONRODIV]} */
         <#lt>    CRU_REGS->CRU_${.vars[REFCONREG]} = ${.vars[REFCONVAL]};
 
