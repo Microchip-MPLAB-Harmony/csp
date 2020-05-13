@@ -55,8 +55,8 @@
 #define LED_OFF                     LED_Set
 #define LED_TOGGLE                  LED_Toggle
 
-uint32_t nvm_user_start_address = (NVMCTRL_FLASH_START_ADDRESS+0x20000);
-uint32_t nvm_rwwee_user_start_address = NVMCTRL_RWWEEPROM_START_ADDRESS;
+const uint8_t nvm_user_start_address[NVMCTRL_FLASH_ROWSIZE] __attribute__((address(NVMCTRL_FLASH_START_ADDRESS+0x20000)))= {0};
+const uint8_t nvm_rwwee_user_start_address[NVMCTRL_RWWEEPROM_ROWSIZE] __attribute__((address(NVMCTRL_RWWEEPROM_START_ADDRESS)))= {0};
 
 // *****************************************************************************
 // *****************************************************************************
