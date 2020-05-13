@@ -4,26 +4,27 @@
 
 
 project: adchs_polled
-creation_date: 2020-04-20T20:36:52.072+05:30[Asia/Calcutta]	# ISO 8601 format: https://www.w3.org/TR/NOTE-datetime
+creation_date: 2020-05-13T17:24:48.497+05:30[Asia/Calcutta]	# ISO 8601 format: https://www.w3.org/TR/NOTE-datetime
 operating_system: Windows 10
-mhc_mode: Headless				# [IDE|Standalone|Headless]
-mplabx_version: -		# if MPLAB X plugin only
-plugin_version: -		# if MPLAB X plugin only
+mhc_mode: IDE				# [IDE|Standalone|Headless]
+mplabx_version: v5.40		# if MPLAB X plugin only
+plugin_version: v3.5.0		# if MPLAB X plugin only
 
 modules:
-    - {name: "apps", version: ""}
-    - {name: "bsp", version: ""}
-    - {name: "core", version: ""}
-    - {name: "crypto", version: ""}
-    - {name: "csp", version: ""}
-    - {name: "dev_packs", version: ""}
-    - {name: "doc_o_matic_h3", version: ""}
-    - {name: "gfx", version: ""}
-    - {name: "h3_apps_regenerator", version: ""}
-    - {name: "mhc", version: ""}
-    - {name: "motor_control", version: ""}
-    - {name: "mplabx_plugin", version: "v3.4.1"}
-    - {name: "packs", version: ""}
-    - {name: "validation", version: ""}
-    - {name: "x2c", version: ""}
+    - {name: "bsp", version: "unknown"}
+    - {name: "CMSIS-FreeRTOS", version: "unknown"}
+    - {name: "core", version: "unknown"}
+    - {name: "csp", version: "unknown"}
+    - {name: "dev_packs", version: "unknown"}
+    - {name: "doc_o_matic_h3", version: "unknown"}
+    - {name: "expresslogic_threadx", version: "unknown"}
+    - {name: "h3_apps_regenerator", version: "unknown"}
+    - {name: "h3_demo_regenerator", version: "unknown"}
+    - {name: "mhc", version: "unknown"}
+    - {name: "micrium_ucos3", version: "unknown"}
+    - {name: "microchip-mplab-harmony.github.io.wiki", version: "unknown"}
+    - {name: "mplabx_plugin", version: "v3.4.0-tc.1"}
+    - {name: "thirdparty_expresslogic", version: "v3.1.0"}
+    - {name: "thirdparty_micrium", version: "v3.1.0"}
+    - {name: "usb", version: "v3.5.0"}
 

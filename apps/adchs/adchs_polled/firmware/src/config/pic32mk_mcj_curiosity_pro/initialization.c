@@ -173,6 +173,7 @@ void SYS_Initialize ( void* data )
 
 	GPIO_Initialize();
 
+    CORETIMER_Initialize();
     ADCHS_Initialize();
 
 	UART1_Initialize();

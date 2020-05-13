@@ -9,24 +9,27 @@
                        displayName="pic32mk_mcj_curiosity_pro"
                        projectFiles="true">
           <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
-            <logicalFolder name="f1" displayName="adchs" projectFiles="true">
+            <logicalFolder name="f2" displayName="adchs" projectFiles="true">
               <itemPath>../src/config/pic32mk_mcj_curiosity_pro/peripheral/adchs/plib_adchs.h</itemPath>
               <itemPath>../src/config/pic32mk_mcj_curiosity_pro/peripheral/adchs/plib_adchs_common.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f4" displayName="clk" projectFiles="true">
+            <logicalFolder name="f5" displayName="clk" projectFiles="true">
               <itemPath>../src/config/pic32mk_mcj_curiosity_pro/peripheral/clk/plib_clk.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f6" displayName="evic" projectFiles="true">
+            <logicalFolder name="f1" displayName="coretimer" projectFiles="true">
+              <itemPath>../src/config/pic32mk_mcj_curiosity_pro/peripheral/coretimer/plib_coretimer.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f7" displayName="evic" projectFiles="true">
               <itemPath>../src/config/pic32mk_mcj_curiosity_pro/peripheral/evic/plib_evic.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f5" displayName="gpio" projectFiles="true">
+            <logicalFolder name="f6" displayName="gpio" projectFiles="true">
               <itemPath>../src/config/pic32mk_mcj_curiosity_pro/peripheral/gpio/plib_gpio.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f3" displayName="tmr" projectFiles="true">
+            <logicalFolder name="f4" displayName="tmr" projectFiles="true">
               <itemPath>../src/config/pic32mk_mcj_curiosity_pro/peripheral/tmr/plib_tmr_common.h</itemPath>
               <itemPath>../src/config/pic32mk_mcj_curiosity_pro/peripheral/tmr/plib_tmr3.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f2" displayName="uart" projectFiles="true">
+            <logicalFolder name="f3" displayName="uart" projectFiles="true">
               <itemPath>../src/config/pic32mk_mcj_curiosity_pro/peripheral/uart/plib_uart_common.h</itemPath>
               <itemPath>../src/config/pic32mk_mcj_curiosity_pro/peripheral/uart/plib_uart1.h</itemPath>
             </logicalFolder>
@@ -47,6 +50,8 @@
                    displayName="Important Files"
                    projectFiles="true">
       <itemPath>Makefile</itemPath>
+      <itemPath>../src/config/pic32mk_mcj_curiosity_pro/harmony.prj</itemPath>
+      <itemPath>../src/config/pic32mk_mcj_curiosity_pro/pic32mk_mcj_curiosity_pro.xml</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -60,22 +65,25 @@
                        displayName="pic32mk_mcj_curiosity_pro"
                        projectFiles="true">
           <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
-            <logicalFolder name="f1" displayName="adchs" projectFiles="true">
+            <logicalFolder name="f2" displayName="adchs" projectFiles="true">
               <itemPath>../src/config/pic32mk_mcj_curiosity_pro/peripheral/adchs/plib_adchs.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f4" displayName="clk" projectFiles="true">
+            <logicalFolder name="f5" displayName="clk" projectFiles="true">
               <itemPath>../src/config/pic32mk_mcj_curiosity_pro/peripheral/clk/plib_clk.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f6" displayName="evic" projectFiles="true">
+            <logicalFolder name="f1" displayName="coretimer" projectFiles="true">
+              <itemPath>../src/config/pic32mk_mcj_curiosity_pro/peripheral/coretimer/plib_coretimer.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f7" displayName="evic" projectFiles="true">
               <itemPath>../src/config/pic32mk_mcj_curiosity_pro/peripheral/evic/plib_evic.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f5" displayName="gpio" projectFiles="true">
+            <logicalFolder name="f6" displayName="gpio" projectFiles="true">
               <itemPath>../src/config/pic32mk_mcj_curiosity_pro/peripheral/gpio/plib_gpio.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f3" displayName="tmr" projectFiles="true">
+            <logicalFolder name="f4" displayName="tmr" projectFiles="true">
               <itemPath>../src/config/pic32mk_mcj_curiosity_pro/peripheral/tmr/plib_tmr3.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f2" displayName="uart" projectFiles="true">
+            <logicalFolder name="f3" displayName="uart" projectFiles="true">
               <itemPath>../src/config/pic32mk_mcj_curiosity_pro/peripheral/uart/plib_uart1.c</itemPath>
             </logicalFolder>
           </logicalFolder>
@@ -87,7 +95,7 @@
           <itemPath>../src/config/pic32mk_mcj_curiosity_pro/exceptions.c</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <itemPath>../src/main.c</itemPath>
+      <itemPath>../src/main_pic32mk_mcj.c</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
@@ -107,8 +115,10 @@
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="PIC32MK-MC_DFP" vendor="Microchip" version="1.3.91"/>
+        <pack name="PIC32MK-MC_DFP" vendor="Microchip" version="1.4.94"/>
       </packs>
+      <ScriptingSettings>
+      </ScriptingSettings>
       <compileType>
         <linkerTool>
           <linkerLibItems>
@@ -142,7 +152,7 @@
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories"
-                  value="../src;../src/config/pic32mk_mcj_curiosity_pro;../src/packs/PIC32MK0512MCJ064_DFP"/>
+                  value="../src;../src/config/pic32mk_mcj_curiosity_pro;../src/packs/PIC32MK0512MCJ064_DFP;"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
