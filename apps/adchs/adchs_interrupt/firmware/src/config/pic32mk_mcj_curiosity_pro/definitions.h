@@ -49,6 +49,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include "peripheral/coretimer/plib_coretimer.h"
 #include "peripheral/adchs/plib_adchs.h"
 #include "peripheral/uart/plib_uart1.h"
 #include "peripheral/tmr/plib_tmr3.h"
