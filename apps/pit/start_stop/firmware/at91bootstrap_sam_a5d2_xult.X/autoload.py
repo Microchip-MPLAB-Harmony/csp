@@ -22,6 +22,9 @@ def mplab_configure_Kconfig(confName):
     global app
     global project_dir
 
+    if os.getcwd() != project_dir:
+        os.chdir(project_dir)
+
     # log.info("mplab_configure_Kconfig: " + confName)
     dot_config_file = os.path.join(project_dir, confName + ".config")
     if not os.path.isfile(dot_config_file):
