@@ -4,7 +4,8 @@
     <Name dnOrder="0" value="pic32mk_mcj_curiosity_pro"/>
     <Processor dnOrder="1" value="PIC32MK0512MCJ064"/>
     <Harmony dnOrder="2" path="../../../.."/>
-    <Manifest dnOrder="3">
+    <Folder_Name dnOrder="3" value=""/>
+    <Manifest dnOrder="4">
       <Files dnOrder="0">
         <File dnOrder="0">
           <Type dnOrder="0">SOURCE</Type>
@@ -48,8 +49,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/pic32mk_mcj_curiosity_pro/peripheral/can/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/can/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">B116F2535C2EA3E45A04734DE6B427B8</GeneratedChecksum>
-          <UserChecksum dnOrder="6">B116F2535C2EA3E45A04734DE6B427B8</UserChecksum>
+          <GeneratedChecksum dnOrder="5">8584F40DBD06BF2BB06A5E8D5178DC96</GeneratedChecksum>
+          <UserChecksum dnOrder="6">8584F40DBD06BF2BB06A5E8D5178DC96</UserChecksum>
         </File>
         <File dnOrder="5">
           <Type dnOrder="0">SOURCE</Type>
@@ -120,8 +121,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/pic32mk_mcj_curiosity_pro/peripheral/can/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/can/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">B67B216BBD7622746417F7D4BE1475AF</GeneratedChecksum>
-          <UserChecksum dnOrder="6">B67B216BBD7622746417F7D4BE1475AF</UserChecksum>
+          <GeneratedChecksum dnOrder="5">9E86C3DCFD654EBF090F882EAB3211FB</GeneratedChecksum>
+          <UserChecksum dnOrder="6">9E86C3DCFD654EBF090F882EAB3211FB</UserChecksum>
         </File>
         <File dnOrder="13">
           <Type dnOrder="0">HEADER</Type>
@@ -194,13 +195,13 @@
         <Setting append="true" category="C32-LD" delimiter=";" dnOrder="3" key="preprocessor-macros" security="NON_SECURE" value=""/>
       </Settings>
     </Manifest>
-    <Settings dnOrder="4">
+    <Settings dnOrder="5">
       <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.6.0"/>
-      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MK-MC_DFP\1.2.84\atdf\PIC32MK0512MCJ064.atdf"/>
+      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MK-MC_DFP\1.4.94\atdf\PIC32MK0512MCJ064.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
       <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
-      <Setting dnOrder="5" key="PackageFilter" value="bsp;core;csp;expresslogic_threadx;micrium_ucos3;"/>
+      <Setting dnOrder="5" key="PackageFilter" value="bsp;core;csp;expresslogic_threadx;micrium_ucos3;usb;"/>
     </Settings>
   </Configurator>
 </Configuration>
