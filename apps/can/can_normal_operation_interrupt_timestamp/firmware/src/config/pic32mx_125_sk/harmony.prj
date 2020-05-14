@@ -4,7 +4,8 @@
     <Name dnOrder="0" value="pic32mx_125_sk"/>
     <Processor dnOrder="1" value="PIC32MX570F512L"/>
     <Harmony dnOrder="2" path="../../../.."/>
-    <Manifest dnOrder="3">
+    <Folder_Name dnOrder="3" value=""/>
+    <Manifest dnOrder="4">
       <Files dnOrder="0">
         <File dnOrder="0">
           <Type dnOrder="0">SOURCE</Type>
@@ -48,8 +49,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/pic32mx_125_sk/peripheral/can/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/can/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">75DB1B3F19DAB7DD6F86406C6346740F</GeneratedChecksum>
-          <UserChecksum dnOrder="6">75DB1B3F19DAB7DD6F86406C6346740F</UserChecksum>
+          <GeneratedChecksum dnOrder="5">2606EAEFE95923F5287923CBBAA490B3</GeneratedChecksum>
+          <UserChecksum dnOrder="6">2606EAEFE95923F5287923CBBAA490B3</UserChecksum>
         </File>
         <File dnOrder="5">
           <Type dnOrder="0">SOURCE</Type>
@@ -111,8 +112,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/pic32mx_125_sk/peripheral/can/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/can/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">1F3AF8B8622B256224CB2A11EC6711BF</GeneratedChecksum>
-          <UserChecksum dnOrder="6">1F3AF8B8622B256224CB2A11EC6711BF</UserChecksum>
+          <GeneratedChecksum dnOrder="5">DBEAE2255E15E7D4FB65D669EFCA5870</GeneratedChecksum>
+          <UserChecksum dnOrder="6">DBEAE2255E15E7D4FB65D669EFCA5870</UserChecksum>
         </File>
         <File dnOrder="12">
           <Type dnOrder="0">HEADER</Type>
@@ -167,13 +168,13 @@
         <Setting append="true" category="C32-LD" delimiter=";" dnOrder="3" key="preprocessor-macros" security="NON_SECURE" value=""/>
       </Settings>
     </Manifest>
-    <Settings dnOrder="4">
+    <Settings dnOrder="5">
       <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.6.0"/>
-      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MX_DFP\1.1.215\atdf\PIC32MX570F512L.atdf"/>
+      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MX_DFP\1.3.231\atdf\PIC32MX570F512L.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
       <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
-      <Setting dnOrder="5" key="PackageFilter" value="bsp;core;csp;expresslogic_threadx;net;"/>
+      <Setting dnOrder="5" key="PackageFilter" value="bsp;core;csp;expresslogic_threadx;micrium_ucos3;usb;"/>
     </Settings>
   </Configurator>
 </Configuration>
