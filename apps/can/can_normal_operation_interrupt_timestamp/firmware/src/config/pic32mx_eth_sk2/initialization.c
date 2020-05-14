@@ -82,7 +82,7 @@
 #pragma config UPLLIDIV =   DIV_2
 
 /*** DEVCFG3 ***/
-#pragma config FSRSSEL =    PRIORITY_0
+#pragma config FSRSSEL =    PRIORITY_7
 #pragma config FVBUSONIO =  ON
 #pragma config USERID =     0xffff
 #pragma config FUSBIDIO =   ON
