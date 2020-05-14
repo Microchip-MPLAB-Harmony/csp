@@ -1,13 +1,13 @@
 ifdef NIX_SHELL
-MKDIR:=mkdir
 DATE:=date
 DEV_NULL:=/dev/null
+MKDIR:=mkdir
 else
-GNU_MKDIR?="mkdir"
-MKDIR:=$(GNU_MKDIR)
 GNU_DATE?="date"
 DATE:=$(GNU_DATE)
 DEV_NULL:=nul
+GNU_MKDIR?="mkdir"
+MKDIR:=$(GNU_MKDIR)
 endif
 
 ifndef HOSTAR
