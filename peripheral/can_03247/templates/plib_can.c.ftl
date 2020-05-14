@@ -140,6 +140,7 @@
 static CAN_OBJ ${CAN_INSTANCE_NAME?lower_case}Obj;
 static CAN_RX_MSG ${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_NUM_OF_FIFO][CAN_FIFO_MESSAGE_BUFFER_MAX];
 static CAN_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}CallbackObj[CAN_NUM_OF_FIFO + 1];
+static CAN_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}ErrorCallbackObj;
 </#if>
 static uint8_t __attribute__((coherent, aligned(16))) can_message_buffer[CAN_MESSAGE_RAM_CONFIG_SIZE];
 static const uint8_t dlcToLength[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 12, 16, 20, 24, 32, 48, 64};
@@ -1022,6 +1023,38 @@ void ${CAN_INSTANCE_NAME}_CallbackRegister(CAN_CALLBACK callback, uintptr_t cont
 
 // *****************************************************************************
 /* Function:
+    void ${CAN_INSTANCE_NAME}_ErrorCallbackRegister(CAN_CALLBACK callback, uintptr_t contextHandle)
+
+   Summary:
+    Sets the pointer to the function (and it's context) to be called when the
+    given CAN's transfer events occur.
+
+   Precondition:
+    ${CAN_INSTANCE_NAME}_Initialize must have been called for the associated CAN instance.
+
+   Parameters:
+    callback - A pointer to a function with a calling signature defined
+    by the CAN_CALLBACK data type.
+
+    context - A value (usually a pointer) passed (unused) into the function
+    identified by the callback parameter.
+
+   Returns:
+    None.
+*/
+void ${CAN_INSTANCE_NAME}_ErrorCallbackRegister(CAN_CALLBACK callback, uintptr_t contextHandle)
+{
+    if (callback == NULL)
+    {
+        return;
+    }
+
+    ${CAN_INSTANCE_NAME?lower_case}ErrorCallbackObj.callback = callback;
+    ${CAN_INSTANCE_NAME?lower_case}ErrorCallbackObj.context = contextHandle;
+}
+
+// *****************************************************************************
+/* Function:
     void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
 
    Summary:
@@ -1074,14 +1107,10 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
                                                           (errorStatus & _CFD${CAN_INSTANCE_NUM}TREC_TXBP_MASK) |
                                                           (errorStatus & _CFD${CAN_INSTANCE_NUM}TREC_TXBO_MASK));
 
-        fifoNum = (uint8_t)CFD${CAN_INSTANCE_NUM}VEC & _CFD${CAN_INSTANCE_NUM}VEC_ICODE_MASK;
-        if (fifoNum <= CAN_NUM_OF_FIFO)
+        /* Client must call ${CAN_INSTANCE_NAME}_ErrorGet and ${CAN_INSTANCE_NAME}_ErrorCountGet functions to get errors */
+        if (${CAN_INSTANCE_NAME?lower_case}ErrorCallbackObj.callback != NULL)
         {
-            /* Client must call ${CAN_INSTANCE_NAME}_ErrorGet function to get errors */
-            if (${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoNum].callback != NULL)
-            {
-                ${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoNum].callback(${CAN_INSTANCE_NAME?lower_case}CallbackObj[fifoNum].context);
-            }
+            ${CAN_INSTANCE_NAME?lower_case}ErrorCallbackObj.callback(${CAN_INSTANCE_NAME?lower_case}ErrorCallbackObj.context);
         }
     }
     else

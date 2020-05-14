@@ -90,6 +90,7 @@ bool ${CAN_INSTANCE_NAME}_TxFIFOQueueIsFull(uint8_t fifoQueueNum);
 bool ${CAN_INSTANCE_NAME}_AutoRTRResponseSet(uint32_t id, uint8_t length, uint8_t* data, uint8_t fifoNum);
 <#if CAN_INTERRUPT_MODE == true>
 void ${CAN_INSTANCE_NAME}_CallbackRegister(CAN_CALLBACK callback, uintptr_t contextHandle, uint8_t fifoQueueNum);
+void ${CAN_INSTANCE_NAME}_ErrorCallbackRegister(CAN_CALLBACK callback, uintptr_t contextHandle);
 </#if>
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
