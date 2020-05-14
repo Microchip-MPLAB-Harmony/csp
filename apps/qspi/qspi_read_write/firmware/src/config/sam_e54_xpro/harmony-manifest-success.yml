@@ -4,51 +4,13 @@
 
 
 project: qspi_read_write
-creation_date: 2020-05-07T14:10:54.321+05:30[Asia/Calcutta]	# ISO 8601 format: https://www.w3.org/TR/NOTE-datetime
+creation_date: 2020-05-14T08:20:08.940+05:30[Asia/Calcutta]    # ISO 8601 format: https://www.w3.org/TR/NOTE-datetime
 operating_system: Windows 10
-mhc_mode: IDE				# [IDE|Standalone|Headless]
-mplabx_version: v5.40		# if MPLAB X plugin only
-plugin_version: v3.5.0		# if MPLAB X plugin only
+mhc_mode: Headless              # [IDE|Standalone|Headless]
+mplabx_version:         # if MPLAB X plugin only
+plugin_version:         # if MPLAB X plugin only
 
 modules:
-    - {name: "aerospace", version: "v3.0.0"}
-    - {name: "amazon-freertos", version: "unknown"}
-    - {name: "audio", version: "unknown"}
-    - {name: "aws_cloud", version: "unknown"}
-    - {name: "bootloader", version: "unknown"}
-    - {name: "bsp", version: "unknown"}
-    - {name: "bt", version: "v3.4.0"}
-    - {name: "catalog", version: "unknown"}
-    - {name: "CMSIS-FreeRTOS", version: "unknown"}
-    - {name: "contentmanager", version: "v1.3.1"}
-    - {name: "core", version: "unknown"}
-    - {name: "crypto", version: "v3.5.0"}
-    - {name: "cryptoauthlib", version: "v3.1.0"}
-    - {name: "cryptoauthlib_apps", version: "v3.1.0"}
-    - {name: "csp", version: "unknown"}
-    - {name: "dev_packs", version: "v3.7.0-rc.2"}
-    - {name: "doc_o_matic_h3", version: "unknown"}
-    - {name: "ethercat", version: "unknown"}
-    - {name: "expresslogic_threadx", version: "unknown"}
-    - {name: "gfx", version: "unknown"}
-    - {name: "gfx_apps", version: "unknown"}
-    - {name: "h3_apps_regenerator", version: "unknown"}
-    - {name: "h3_dft_setup", version: "unknown"}
-    - {name: "helix_mp3", version: "v1.0.0"}
-    - {name: "mhc", version: "v3.4.0-rc.1"}
-    - {name: "micrium_ucos3", version: "unknown"}
-    - {name: "microchip-mplab-harmony.github.io.wiki", version: "unknown"}
-    - {name: "motor_control", version: "v3.4.1"}
-    - {name: "mplabx_plugin", version: "v3.4.0-tc.1"}
-    - {name: "net", version: "unknown"}
-    - {name: "packs", version: "unknown"}
-    - {name: "thirdparty_expresslogic", version: "unknown"}
-    - {name: "thirdparty_micrium", version: "unknown"}
-    - {name: "touch", version: "v3.5.0"}
-    - {name: "usb", version: "v3.5.0"}
-    - {name: "wireless", version: "v3.1.1"}
-    - {name: "wolfMQTT", version: "v1.2.0"}
-    - {name: "wolfssh", version: "v1.4.0"}
-    - {name: "wolfssl", version: "v4.3.0"}
-    - {name: "zlib", version: "v1.2.11"}
-
+    - {name: "csp", version: "v3.7.0"}
+    - {name: "dev_packs", version: "v3.7.0"}
+    - {name: "mhc", version: "v3.4.0"}

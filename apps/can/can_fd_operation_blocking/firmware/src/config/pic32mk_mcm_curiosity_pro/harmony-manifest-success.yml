@@ -4,25 +4,13 @@
 
 
 project: can_fd_operation_blocking
-creation_date: 2020-04-20T21:17:04.361+05:30[Asia/Calcutta]	# ISO 8601 format: https://www.w3.org/TR/NOTE-datetime
+creation_date: 2020-05-14T08:19:54.956+05:30[Asia/Calcutta]    # ISO 8601 format: https://www.w3.org/TR/NOTE-datetime
 operating_system: Windows 10
-mhc_mode: Headless				# [IDE|Standalone|Headless]
-mplabx_version: -		# if MPLAB X plugin only
-plugin_version: -		# if MPLAB X plugin only
+mhc_mode: Headless              # [IDE|Standalone|Headless]
+mplabx_version:         # if MPLAB X plugin only
+plugin_version:         # if MPLAB X plugin only
 
 modules:
-    - {name: "bsp", version: ""}
-    - {name: "CMSIS-FreeRTOS", version: ""}
-    - {name: "core", version: ""}
-    - {name: "csp", version: ""}
-    - {name: "dev_packs", version: ""}
-    - {name: "doc_o_matic_h3", version: ""}
-    - {name: "expresslogic_threadx", version: ""}
-    - {name: "h3_apps_regenerator", version: ""}
-    - {name: "h3_demo_regenerator", version: ""}
-    - {name: "mhc", version: ""}
-    - {name: "micrium_ucos3", version: ""}
-    - {name: "mplabx_plugin", version: ""}
-    - {name: "thirdparty_expresslogic", version: "v3.1.0"}
-    - {name: "thirdparty_micrium", version: "v3.1.0"}
-
+    - {name: "csp", version: "v3.7.0"}
+    - {name: "dev_packs", version: "v3.7.0"}
+    - {name: "mhc", version: "v3.4.0"}

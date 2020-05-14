@@ -4,23 +4,13 @@
 
 
 project: sqi_read_write
-creation_date: 2020-04-20T22:41:08.632+05:30[Asia/Calcutta]	# ISO 8601 format: https://www.w3.org/TR/NOTE-datetime
+creation_date: 2020-05-14T08:20:17.047+05:30[Asia/Calcutta]    # ISO 8601 format: https://www.w3.org/TR/NOTE-datetime
 operating_system: Windows 10
-mhc_mode: Headless				# [IDE|Standalone|Headless]
-mplabx_version: -		# if MPLAB X plugin only
-plugin_version: -		# if MPLAB X plugin only
+mhc_mode: Headless              # [IDE|Standalone|Headless]
+mplabx_version:         # if MPLAB X plugin only
+plugin_version:         # if MPLAB X plugin only
 
 modules:
-    - {name: "arpan_work", version: ""}
-    - {name: "bsp", version: ""}
-    - {name: "CMSIS-FreeRTOS", version: ""}
-    - {name: "contentmanager", version: "v1.2.0"}
-    - {name: "core", version: ""}
-    - {name: "csp", version: ""}
-    - {name: "dev_packs", version: ""}
-    - {name: "doc_o_matic_h3", version: ""}
-    - {name: "h3_apps_regenerator", version: ""}
-    - {name: "mhc", version: ""}
-    - {name: "microchip-mplab-harmony.github.io.wiki", version: ""}
-    - {name: "packs", version: ""}
-
+    - {name: "csp", version: "v3.7.0"}
+    - {name: "dev_packs", version: "v3.7.0"}
+    - {name: "mhc", version: "v3.4.0"}

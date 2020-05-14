@@ -4,26 +4,13 @@
 
 
 project: manchester_encoder
-creation_date: 2020-04-21T10:17:57.656+05:30[Asia/Calcutta]	# ISO 8601 format: https://www.w3.org/TR/NOTE-datetime
+creation_date: 2020-05-14T08:19:55.912+05:30[Asia/Calcutta]    # ISO 8601 format: https://www.w3.org/TR/NOTE-datetime
 operating_system: Windows 10
-mhc_mode: Headless				# [IDE|Standalone|Headless]
-mplabx_version: -		# if MPLAB X plugin only
-plugin_version: -		# if MPLAB X plugin only
+mhc_mode: Headless              # [IDE|Standalone|Headless]
+mplabx_version:         # if MPLAB X plugin only
+plugin_version:         # if MPLAB X plugin only
 
 modules:
-    - {name: "apps", version: ""}
-    - {name: "bsp", version: ""}
-    - {name: "core", version: ""}
-    - {name: "crypto", version: ""}
-    - {name: "csp", version: ""}
-    - {name: "dev_packs", version: ""}
-    - {name: "doc_o_matic_h3", version: ""}
-    - {name: "gfx", version: ""}
-    - {name: "h3_apps_regenerator", version: ""}
-    - {name: "mhc", version: ""}
-    - {name: "motor_control", version: ""}
-    - {name: "mplabx_plugin", version: ""}
-    - {name: "packs", version: ""}
-    - {name: "validation", version: ""}
-    - {name: "x2c", version: ""}
-
+    - {name: "csp", version: "v3.7.0"}
+    - {name: "dev_packs", version: "v3.7.0"}
+    - {name: "mhc", version: "v3.4.0"}
