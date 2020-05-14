@@ -41,6 +41,8 @@
                    displayName="Important Files"
                    projectFiles="true">
       <itemPath>Makefile</itemPath>
+      <itemPath>../src/config/pic32mz_w1_curiosity/harmony.prj</itemPath>
+      <itemPath>../src/config/pic32mz_w1_curiosity/pic32mz_w1_curiosity.xml</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -97,7 +99,7 @@
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="PIC32MZ-W_DFP" vendor="Microchip" version="1.2.164"/>
+        <pack name="PIC32MZ-W_DFP" vendor="Microchip" version="1.3.167"/>
       </packs>
       <ScriptingSettings>
       </ScriptingSettings>
@@ -134,7 +136,7 @@
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories"
-                  value="../src;../src/config/pic32mz_w1_curiosity;../src/packs/PIC32MZ1025W104132_DFP"/>
+                  value="../src;../src/config/pic32mz_w1_curiosity;../src/packs/PIC32MZ1025W104132_DFP;"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
