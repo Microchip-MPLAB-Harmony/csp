@@ -7,6 +7,7 @@ config/at91bootstrap-config/
 .auto.deps
 .prepared
 build
+debug
 result
 binaries
 *~
