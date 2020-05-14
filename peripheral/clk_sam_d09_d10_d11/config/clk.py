@@ -455,10 +455,12 @@ dfllRunstdy = coreComponent.createBooleanSymbol("CONFIG_CLOCK_DFLL_RUNSTDY", dfl
 dfllRunstdy.setLabel("Run DFLL in Standby Sleep Mode")
 dfllRunstdy.setDescription("DFLL to run in standby mode or not")
 
-if ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"USB\"]") is not None:
-    dfllUsb = coreComponent.createBooleanSymbol("CONFIG_CLOCK_DFLL_USB", dfll_Menu)
-    dfllUsb.setLabel("USB Clock Recovery Mode")
-    dfllUsb.setDescription("Enable or Disable USB Clock Recovery Mode")
+dfllUsb = coreComponent.createBooleanSymbol("CONFIG_CLOCK_DFLL_USB", dfll_Menu)
+dfllUsb.setLabel("USB Clock Recovery Mode")
+dfllUsb.setDescription("Enable or Disable USB Clock Recovery Mode")
+dfllUsb.setDefaultValue(False)
+if ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"USB\"]") is None:
+    dfllUsb.setVisible(False)
 
 dfllWaitLock = coreComponent.createBooleanSymbol("CONFIG_CLOCK_DFLL_WAIT_LOCK", dfll_Menu)
 dfllWaitLock.setLabel("Wait for DFLL lock")
