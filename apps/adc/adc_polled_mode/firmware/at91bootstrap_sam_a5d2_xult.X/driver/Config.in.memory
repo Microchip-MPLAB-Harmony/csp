@@ -122,11 +122,9 @@ config	SDRAM_16BIT
 	bool "Use 16 bit SDRAM"
 	depends on ALLOW_SDRAM_16BIT
 
-	  
 config	PSRAM
 	bool "Enable PSRAM on EBI1"
 	depends on ALLOW_PSRAM
-
 
 choice
 	prompt "Flash Memory Technology"
