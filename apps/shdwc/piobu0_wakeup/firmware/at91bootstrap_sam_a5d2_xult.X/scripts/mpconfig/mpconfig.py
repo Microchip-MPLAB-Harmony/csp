@@ -224,11 +224,11 @@ class TristateCheckBox(JCheckBox):
 
     def __init__(self, eventHandler = None):
         """Creates a TristateCheckBox object
-        
+
         Arguments
         ---------
             eventHandler : ActionListener
-                If supplied, the event handler will be called when 
+                If supplied, the event handler will be called when
                 the tristate checkbox state changes.
         """
         JCheckBox.__init__(self)
@@ -668,7 +668,7 @@ class MPConfig(TreeSelectionListener):
     checkbox, tree view and information text view."""
     def __init__(self, kconfig_file = "Kconfig", config_file=".config", systemLogger = None):
         """[summary]
-        
+
         Parameters
         ----------
             kconfig_file : string (default: "Kconfig")
