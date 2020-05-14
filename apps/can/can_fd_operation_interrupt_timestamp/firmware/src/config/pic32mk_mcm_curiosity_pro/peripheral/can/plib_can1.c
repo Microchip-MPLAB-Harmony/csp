@@ -92,6 +92,7 @@
 static CAN_OBJ can1Obj;
 static CAN_RX_MSG can1RxMsg[CAN_NUM_OF_FIFO][CAN_FIFO_MESSAGE_BUFFER_MAX];
 static CAN_CALLBACK_OBJ can1CallbackObj[CAN_NUM_OF_FIFO + 1];
+static CAN_CALLBACK_OBJ can1ErrorCallbackObj;
 static uint8_t __attribute__((coherent, aligned(16))) can_message_buffer[CAN_MESSAGE_RAM_CONFIG_SIZE];
 static const uint8_t dlcToLength[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 12, 16, 20, 24, 32, 48, 64};
 
@@ -817,6 +818,38 @@ void CAN1_CallbackRegister(CAN_CALLBACK callback, uintptr_t contextHandle, uint8
 
 // *****************************************************************************
 /* Function:
+    void CAN1_ErrorCallbackRegister(CAN_CALLBACK callback, uintptr_t contextHandle)
+
+   Summary:
+    Sets the pointer to the function (and it's context) to be called when the
+    given CAN's transfer events occur.
+
+   Precondition:
+    CAN1_Initialize must have been called for the associated CAN instance.
+
+   Parameters:
+    callback - A pointer to a function with a calling signature defined
+    by the CAN_CALLBACK data type.
+
+    context - A value (usually a pointer) passed (unused) into the function
+    identified by the callback parameter.
+
+   Returns:
+    None.
+*/
+void CAN1_ErrorCallbackRegister(CAN_CALLBACK callback, uintptr_t contextHandle)
+{
+    if (callback == NULL)
+    {
+        return;
+    }
+
+    can1ErrorCallbackObj.callback = callback;
+    can1ErrorCallbackObj.context = contextHandle;
+}
+
+// *****************************************************************************
+/* Function:
     void CAN1_InterruptHandler(void)
 
    Summary:
@@ -867,14 +900,10 @@ void CAN1_InterruptHandler(void)
                                                           (errorStatus & _CFD1TREC_TXBP_MASK) |
                                                           (errorStatus & _CFD1TREC_TXBO_MASK));
 
-        fifoNum = (uint8_t)CFD1VEC & _CFD1VEC_ICODE_MASK;
-        if (fifoNum <= CAN_NUM_OF_FIFO)
+        /* Client must call CAN1_ErrorGet and CAN1_ErrorCountGet functions to get errors */
+        if (can1ErrorCallbackObj.callback != NULL)
         {
-            /* Client must call CAN1_ErrorGet function to get errors */
-            if (can1CallbackObj[fifoNum].callback != NULL)
-            {
-                can1CallbackObj[fifoNum].callback(can1CallbackObj[fifoNum].context);
-            }
+            can1ErrorCallbackObj.callback(can1ErrorCallbackObj.context);
         }
     }
     else
