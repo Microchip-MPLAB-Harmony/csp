@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>FLEXCOM_SPI_CALLBACK Type</title>
+<title>Running The Application</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05431.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04925.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05430.html" target="topic">Peripheral Libraries</a> &gt; <a href="02796.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02797.html" target="topic">SPI</a> &gt; <a href="02802.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="02896.html" target="topic">FLEXCOM_SPI_CALLBACK Type</a></div>
+<a href="05475.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00894.html" target="topic">Applications Help</a> &gt; <a href="02856.html" target="topic">FLEXCOM Applications</a> &gt; <a href="02892.html" target="topic">flexcom_usart_ring_buffer_interrupt</a> &gt; <a href="02896.html" target="topic">Running The Application</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05431.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05475.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02923.html" target="topic">Previous</a> | <a href="02802.html" target="topic">Up</a> | <a href="02897.html" target="topic">Next</a></div>
+<a href="02894.html" target="topic">Previous</a> | <a href="02892.html" target="topic">Up</a> | <a href="03148.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: flexcom_11268_spi::FLEXCOM_SPI_CALLBACK Topic Title: FLEXCOM_SPI_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: FLEXCOM flexcom_usart_ring_buffer_interrupt Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-FLEXCOM_SPI_CALLBACK Type</div>
+Running The Application</div>
 </div>
 </div>
 
@@ -49,71 +49,66 @@ FLEXCOM_SPI_CALLBACK Type</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-FLEXCOM SPI Callback Function Pointer&nbsp;</p>
+<strong><u>MCU Devices</u></strong></p>
+<ol class="Element630">
+<li value="1" class="Element600">Open the Terminal application (Ex.:Tera term) on the computer.</li>
+<li value="2" class="Element600">Configure the serial port settings as follows:
+<ul class="Element631">
+<li class="Element601">Baud : 115200</li>
+<li class="Element601">Data : 8 Bits</li>
+<li class="Element601">Parity : None</li>
+<li class="Element601">Stop : 1 Bit</li>
+<li class="Element601">Flow Control : None</li>
+</ul></li>
+<li value="3" class="Element600">Build and Program the application using the MPLAB X IDE.</li>
+<li value="4" class="Element600">See the following message in the console. The console displays the initial transmit and receive buffer sizes. It then adds 10 characters - &quot;0123456789&quot; to the transmit buffer and displays the available free space in the transmit buffer after the 10 characters have been added. After this, the message asks the user to enter 10 characters. After all the 10 characters are received, it will echo it back on the terminal.</li>
+</ol><p class="Element10">
+(Note: For this example, the &quot;Free Space in Transmit Buffer = xx&quot;, where xx can be anything between 117 to 127, depending on the USART baud rate and the CPU execution speed). </p><p class="Element10" style="text-align: center;">
+<img src="flexcom_usart_ring_buffer_interrupt_output_1.png" border="0" alt="" title=""></p>
+<ol class="Element630">
+<li value="5" class="Element600">Type 10 characters in the terminal. It will echo back the received bytes and then print a message indicating that the receive notification is turned on.</li>
+</ol><p class="Element10" style="text-align: center;">
+<img src="flexcom_usart_ring_buffer_interrupt_output_2.png" border="0" alt="" title=""></p>
+<ol class="Element630">
+<li value="6" class="Element600">Again type 10 characters in the terminal. After every 10 characters are received, it will echo it back on the terminal.</li>
+</ol><p class="Element10" style="text-align: center;">
+<img src="flexcom_usart_ring_buffer_interrupt_output_3.png" border="0" alt="" title=""></p><p class="Element10">
+&nbsp;</p>
 <p class="Element10">
-This data type defines the required function signature for the SPI callback function. Application must register a pointer to a callback function whose function signature (parameter and return value types) match the types specified by this function pointer in order to receive callback from the PLIB.&nbsp;</p>
-<p class="Element10">
-The parameters and return values are described here and a partial example implementation is provided.</p></div>
-</div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000">FLEXCOM_SPI_CALLBACK</span></strong>)(uintptr_t context);</pre></div></div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
-<div class="TableDiv">
-<table cellspacing="0" class="Table2">
-<tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Value identifying the context of the application that registered the callback function&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None.</p></div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-The context parameter contains the a handle to the client context, provided at the time the callback function was registered using the <a href="02921.html" target="topic">FLEXCOMx_SPI_CallbackRegister</a> function. This context handle value is passed back to the client as the &quot;context&quot; parameter. It can be any value (such as a pointer to the client's data) necessary to identify the client context or instance of the client that made the data transfer request.&nbsp;</p>
-<p class="Element10">
-The callback function executes in the PLIB's interrupt context. It is recommended of the application to not perform process intensive or blocking operations with in this function.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12"><a href="02921.html" target="topic">FLEXCOMx_SPI_CallbackRegister</a>(&amp;APP_SPITransferHandler, NULL);
-<strong><span style="color: #000080">void</span></strong> APP_SPITransferHandler(uintptr_t context)
-{
-    <strong><span style="color: #000080">if</span></strong>(FLEXCOMx_SPI_ErrorGet() == FLEXCOM_SPI_ERROR_NONE)
-    {
-        Transfer was completed without error, <strong><span style="color: #000080">do</span></strong> something <strong><span style="color: #000080">else</span></strong> now.
-    }
-}</pre></div></div>
-</div>
+<strong><u>MPU Devices</u></strong></p>
+<ol class="Element630">
+<li value="1" class="Element600">Open the Terminal application (Ex.:Tera term) on the computer.</li>
+<li value="2" class="Element600">Connect to the USB-UART Click board's Virtual COM port and configure the serial settings as follows:
+<ul class="Element631">
+<li class="Element601">Baud : 115200</li>
+<li class="Element601">Data : 8 Bits</li>
+<li class="Element601">Parity : None</li>
+<li class="Element601">Stop : 1 Bit</li>
+<li class="Element601">Flow Control : None</li>
+</ul></li>
+<li value="3" class="Element600">Build the MPLAB X project using MPLAB X IDE</li>
+<li value="4" class="Element600">Use the output binary file (harmony.bin) to setup the board as detailed in the <a href="02894.html" target="topic">hardware setup</a></li>
+<li value="5" class="Element600">Once COM port connection is established then observe the following message in the console. The console displays the initial transmit and receive buffer sizes. It then adds 10 characters - &quot;0123456789&quot; to the transmit buffer and displays the available free space in the transmit buffer after the 10 characters have been added. After this, the message asks the user to enter 10 characters. After all the 10 characters are received, it will echo it back on the terminal.</li>
+</ol><p class="Element10">
+(Note: For this example, the &quot;Free Space in Transmit Buffer = xx&quot;, where xx can be anything between 117 to 127, depending on the USART baud rate and the CPU execution speed). </p><p class="Element10" style="text-align: center;">
+<img src="flexcom_usart_ring_buffer_interrupt_output_1.png" border="0" alt="" title=""></p><p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="6" class="Element600">Type 10 characters in the terminal. It will echo back the received bytes and then print a message indicating that the receive notification is turned on.</li>
+</ol><p class="Element10" style="text-align: center;">
+<img src="flexcom_usart_ring_buffer_interrupt_output_2.png" border="0" alt="" title=""></p>
+<ol class="Element630">
+<li value="7" class="Element600">Again type 10 characters in the terminal. After every 10 characters are received, it will echo it back on the terminal.</li>
+</ol><p class="Element10" style="text-align: center;">
+<img src="flexcom_usart_ring_buffer_interrupt_output_3.png" border="0" alt="" title=""></p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05431.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04925.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05430.html" target="topic">Peripheral Libraries</a> &gt; <a href="02796.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02797.html" target="topic">SPI</a> &gt; <a href="02802.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="02896.html" target="topic">FLEXCOM_SPI_CALLBACK Type</a></div>
+<a href="05475.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00894.html" target="topic">Applications Help</a> &gt; <a href="02856.html" target="topic">FLEXCOM Applications</a> &gt; <a href="02892.html" target="topic">flexcom_usart_ring_buffer_interrupt</a> &gt; <a href="02896.html" target="topic">Running The Application</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -121,13 +116,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05431.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05475.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02923.html" target="topic">Previous</a> | <a href="02802.html" target="topic">Up</a> | <a href="02897.html" target="topic">Next</a></div>
+<a href="02894.html" target="topic">Previous</a> | <a href="02892.html" target="topic">Up</a> | <a href="03148.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: flexcom_11268_spi::FLEXCOM_SPI_CALLBACK Topic Title: FLEXCOM_SPI_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: FLEXCOM flexcom_usart_ring_buffer_interrupt Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

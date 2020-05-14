@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Running The Application</title>
+<title>RSWDT Peripheral Library Help</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05431.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00894.html" target="topic">Applications Help</a> &gt; <a href="06203.html" target="topic">RTC Applications</a> &gt; <a href="06206.html" target="topic">rtc_tamper_detect</a> &gt; <a href="06218.html" target="topic">Running The Application</a></div>
+<a href="05475.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04969.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05474.html" target="topic">Peripheral Libraries</a> &gt; <a href="06218.html" target="topic">RSWDT Peripheral Library Help</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05431.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05475.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06216.html" target="topic">Previous</a> | <a href="06206.html" target="topic">Up</a> | <a href="06511.html" target="topic">Next</a></div>
+<a href="06172.html" target="topic">Previous</a> | <a href="05474.html" target="topic">Up</a> | <a href="06217.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RTC rtc_tamper_detect Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RSWDT 11110 Library Topic Title: RSWDT Peripheral Library Help)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Running The Application</div>
+RSWDT Peripheral Library Help</div>
 </div>
 </div>
 
@@ -49,127 +49,49 @@ Running The Application</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<strong><u>Running project with MPLAB X IDE</u></strong>&nbsp;</p>
-
-<ol class="Element630">
-<li value="1" class="Element600">Open the Terminal application (Ex.:Tera term) on the computer.</li>
-<li value="2" class="Element600">Connect to the EDBG Virtual COM port and configure the serial settings as follows:
-<ul class="Element631">
-<li class="Element601">Baud : 115200</li>
-<li class="Element601">Data : 8 Bits</li>
-<li class="Element601">Parity : None</li>
-<li class="Element601">Stop : 1 Bit</li>
-<li class="Element601">Flow Control : None</li>
-</ul></li>
-<li value="3" class="Element600">Build and program the application using the MPLAB X IDE.</li>
-<li value="4" class="Element600">System time is displayed in terminal session as RTC is configured in calendar mode. Console will display the output as follows:</li>
-</ol><div class="Element63">
+This section provides an interface to use the Reinforced Safety Watchdog Timer (<span style="color: #000000">RSWDT) peripheral.</span></p></div>
+</div>
+<a name="546F70696373"></a><div class="Element14">
+Topics</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
 <div class="TableDiv">
-<table cellspacing="0" class="Table1">
+<table cellspacing="0" class="Table0">
 <tr>
-<td class="Element65" valign="top" width="30%">
-<div class="Element66">
-Board&nbsp;</div></td><td class="Element65" valign="top" width="70%">
-<div class="Element66">
-Console output&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="30%">
-<div class="Element68">
-SAM E54 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="70%">
-<div class="Element68">
-<img src="rtc_tamper_initial_l22.png" border="0" alt="" title="">&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="30%">
-<div class="Element68">
-SAM L10 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="70%">
-<div class="Element68">
-<img src="rtc_tamper_initial_l10.png" border="0" alt="" title="">&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="30%">
-<div class="Element68">
-SAM L22 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="70%">
-<div class="Element68">
-<img src="rtc_tamper_initial_l22.png" border="0" alt="" title="">&nbsp;</div></td></tr></table></div></div>
-<p class="Element10">
-<i>NOTE: System time value shown in the screen capture are for illustration purpose only. it will be updated every second while running the application.</i>&nbsp;</p>
-
-<ol class="Element630">
-<li value="5" class="Element600">To generate tamper event, make the connection as follows:</li>
-</ol><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element65" valign="top" width="29%">
-<div class="Element66">
-Board&nbsp;</div></td><td class="Element65" valign="top" width="4%">
-<div class="Element66">
-Pad&nbsp;</div></td><td class="Element65" valign="top" width="67%">
-<div class="Element66">
-Connection details&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="29%">
-<div class="Element68">
-SAM E54 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="4%">
-<div class="Element68">
-PB00&nbsp;</div></td><td class="Element67" valign="top" width="67%">
-<div class="Element68">
-EXT 2, Pin 3 to GND to generate a falling edge on RTC_IN0 (tamper event)&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="29%">
-<div class="Element68">
-SAM L10 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="4%">
-<div class="Element68">
-PA08&nbsp;</div></td><td class="Element67" valign="top" width="67%">
-<div class="Element68">
-EXT 1, Pin 14 to Vcc and remove the connection to generate falling edge on RTC_IN0 (tamper event)&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="29%">
-<div class="Element68">
-SAM L22 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="4%">
-<div class="Element68">
-PB00&nbsp;</div></td><td class="Element67" valign="top" width="67%">
-<div class="Element68">
-EXT 1, Pin 16 to GND to generate a falling edge on RTC_IN0 (tamper event)&nbsp;</div></td></tr></table></div></div>
-<p class="Element10">
-<i>NOTE: Using wires/jumpers may cause multiple detection because of connectivity glitch while shorting</i>&nbsp;</p>
-
-<ol class="Element630">
-<li value="6" class="Element600">Upon detection of the tamper event, LED will be toggled and the console output will be updated. The details of LED and console output for different boards are as follows:</li>
-</ol><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element65" valign="top" width="35%">
-<div class="Element66">
-Board&nbsp;</div></td><td class="Element65" valign="top" width="10%">
-<div class="Element66">
-LED&nbsp;</div></td><td class="Element65" valign="top" width="55%">
-<div class="Element66">
-Console Output&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="35%">
-<div class="Element68">
-SAM E54 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="10%">
-<div class="Element68">
-LED0&nbsp;</div></td><td class="Element67" valign="top" width="55%">
-<div class="Element68">
-<img src="rtc_tamper_final_l22.png" border="0" alt="" title="">&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="35%">
-<div class="Element68">
-SAM L10 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="10%">
-<div class="Element68">
-LED0&nbsp;</div></td><td class="Element67" valign="top" width="55%">
-<div class="Element68">
-<img src="rtc_tamper_final_l10.png" border="0" alt="" title="">&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="35%">
-<div class="Element68">
-SAM L22 Xplained Pro Evaluation Kit&nbsp;</div></td><td class="Element67" valign="top" width="10%">
-<div class="Element68">
-LED0&nbsp;</div></td><td class="Element67" valign="top" width="55%">
-<div class="Element68">
-<img src="rtc_tamper_final_l22.png" border="0" alt="" title="">&nbsp;</div></td></tr></table></div></div>
-<p class="Element10">
-<i>NOTE: Time values shown in the screen captures above are for illustration purpose only. They will vary based on the time of the occurrence of the tamper event.</i></p></div>
+<td class="Element200" valign="top" width="35%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="06217.html" target="topic">Introduction</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides a brief overview of the RSWDT<span style="color: #000000"> peripheral.</span>&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="06214.html" target="topic">Configuring the Library</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section explains how to configure the peripheral library using the MHC.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="06221.html" target="topic">Using the Library</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section explains how to use the peripheral library.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="06219.html" target="topic">Library Interface</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section describes the Application Programming Interface (API) functions of the Peripheral Library.<br>Refer to each section for a detailed description.&nbsp;</div></td></tr></table></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05431.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00894.html" target="topic">Applications Help</a> &gt; <a href="06203.html" target="topic">RTC Applications</a> &gt; <a href="06206.html" target="topic">rtc_tamper_detect</a> &gt; <a href="06218.html" target="topic">Running The Application</a></div>
+<a href="05475.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04969.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05474.html" target="topic">Peripheral Libraries</a> &gt; <a href="06218.html" target="topic">RSWDT Peripheral Library Help</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -177,13 +99,13 @@ LED0&nbsp;</div></td><td class="Element67" valign="top" width="55%">
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05431.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05475.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06216.html" target="topic">Previous</a> | <a href="06206.html" target="topic">Up</a> | <a href="06511.html" target="topic">Next</a></div>
+<a href="06172.html" target="topic">Previous</a> | <a href="05474.html" target="topic">Up</a> | <a href="06217.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RTC rtc_tamper_detect Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: RSWDT 11110 Library Topic Title: RSWDT Peripheral Library Help)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

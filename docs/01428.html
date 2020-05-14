@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Running The Application</title>
+<title>Hardware Setup</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05431.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00894.html" target="topic">Applications Help</a> &gt; <a href="01423.html" target="topic">Clock Applications</a> &gt; <a href="01422.html" target="topic">clock_config</a> &gt; <a href="01428.html" target="topic">Running The Application</a></div>
+<a href="05475.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00894.html" target="topic">Applications Help</a> &gt; <a href="01425.html" target="topic">Clock Applications</a> &gt; <a href="01424.html" target="topic">clock_config</a> &gt; <a href="01428.html" target="topic">Hardware Setup</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05431.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05475.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01426.html" target="topic">Previous</a> | <a href="01422.html" target="topic">Up</a> | <a href="01424.html" target="topic">Next</a></div>
+<a href="01429.html" target="topic">Previous</a> | <a href="01424.html" target="topic">Up</a> | <a href="01430.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: Clock clock_config Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: Clock clock_config Hardware Setup Topic Title: Hardware Setup)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Running The Application</div>
+Hardware Setup</div>
 </div>
 </div>
 
@@ -48,162 +48,397 @@ Running The Application</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
-<p class="Element10">
-<strong><u>MCU Devices</u></strong></p>
+
 <ol class="Element630">
-<li value="1" class="Element600">Build and Program the application using the MPLAB X IDE.</li>
-<li value="2" class="Element600">Observe the Output as described in the following table:</li>
-</ol><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element65" valign="top" width="23%">
-<div class="Element66">
-Project Name&nbsp;</div></td><td class="Element65" valign="top" width="77%">
-<div class="Element66">
-Output&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="23%">
-<div class="Element68">
-pic32mk_gp_db.X&nbsp;</div></td><td class="Element67" valign="top" width="77%">
-<div class="Element68">
-Observe the clock of 4 MHz on pin RPA0 (Pin #4 on the J29 on the PIC32MK General Purpose (GP) Development Board). LED0 should start blinking.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="23%">
-<div class="Element68">
-pic32mk_mcm_curiosity_pro.X&nbsp;</div></td><td class="Element67" valign="top" width="77%">
-<div class="Element68">
-Observe the clock of 4 MHz on pin RPC1 (Pin number #33). You can find this pin extension on J301. LED1 should start blinking.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="23%">
-<div class="Element68">
-pic32mk_mcj_curiosity_pro.X&nbsp;</div></td><td class="Element67" valign="top" width="77%">
-<div class="Element68">
-Observe the clock of 4 MHz on pin RPB11 (Pin #8 on J503/EXT3 of the PIC32MK MCJ Curiosity Board). LED2 should start blinking.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="23%">
-<div class="Element68">
-pic32mx470_curiosity.X&nbsp;</div></td><td class="Element67" valign="top" width="77%">
-<div class="Element68">
-Observe the clock of 4 MHz on pin RPB8 (Pin #14 on the J14 on the PIC32MX Curiosity Development Board. LED1 should start blinking.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="23%">
-<div class="Element68">
-pic32mx_xlp_sk.X&nbsp;</div></td><td class="Element67" valign="top" width="77%">
-<div class="Element68">
-Observe the clock of 4 MHz on pin RPC6 (Pin #3 on the J2 on the PIC32MX XLP Starter Kit. LED1(RED) should start blinking.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="23%">
-<div class="Element68">
-pic32mz_ef_sk.X&nbsp;</div></td><td class="Element67" valign="top" width="77%">
-<div class="Element68">
-Observe the clock of 4 MHz on pin PA14 (Pin #7 on the J12 on the PIC32MZ Embedded Connectivity with FPU (EF) Starter Kit). LED1 should start blinking.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="23%">
-<div class="Element68">
-sam_c21n_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="77%">
-<div class="Element68">
-Observe the clock of 4 MHz on pin PB23 (Pin #8 on the EXT3 on the SAM C21N Xplained Pro Evaluation Kit). LED0 should start blinking.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="23%">
-<div class="Element68">
-sam_d11_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="77%">
-<div class="Element68">
-Observe the clock of ~4 MHz on pin PA09 (Pin #17 on the EXT1 header on the SAM D11 Xplained Pro Evaluation Kit. LED0 should start blinking.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="23%">
-<div class="Element68">
-sam_d20_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="77%">
-<div class="Element68">
-Observe the clock of 4 MHz on pin PB15 (Pin #10 on the EXT2 header on the SAM D20 Xplained Pro Evaluation Kit. LED0 should start blinking.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="23%">
-<div class="Element68">
-sam_d21_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="77%">
-<div class="Element68">
-Observe the clock of 4 MHz on pin PB15 (Pin #10 on the EXT2 header on the SAM D21 Xplained Pro Evaluation Kit). LED0 should start blinking.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="23%">
-<div class="Element68">
-sam_da1_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="77%">
-<div class="Element68">
-Observe the clock of 4 MHz on pin PB15 (Pin #10 on the EXT2 header on the SAM D21 Xplained Pro Evaluation Kit). LED0 should start blinking.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="23%">
-<div class="Element68">
-sam_e54_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="77%">
-<div class="Element68">
-Observe the clock of 5 MHz on pin PB15 (Pin #8 on the EXT2 header on the SAM E54 Xplained Pro Evaluation Kit). LED0 should start blinking.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="23%">
-<div class="Element68">
-sam_e70_xult.X&nbsp;</div></td><td class="Element67" valign="top" width="77%">
-<div class="Element68">
-Observe the clock of 5 MHz on pin PA03 (J505 header on the SAM E70 Xplained Ultra Evaluation Kit). LED1 should start blinking.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="23%">
-<div class="Element68">
-sam_g55_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="77%">
-<div class="Element68">
-Observe the clock of 2 MHz on pin PA17 (Pin #3 on the EXT1 header on the SAM G55 Xplained Pro Evaluation Kit). LED0 should start blinking.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="23%">
-<div class="Element68">
-sam_ha1_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="77%">
-<div class="Element68">
-Observe the clock of 4 MHz on pin PA16 (Pin #10 on the EXT1 header on the SAM HA1G16A Xplained Pro). LED0 should start blinking.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="23%">
-<div class="Element68">
-sam_l10_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="77%">
-<div class="Element68">
-Observe the clock of 4 MHz on pin PA16 (Pin #11 on the EXT1 header on the SAM L10 Xplained Pro Evaluation Kit). LED0 should start blinking.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="23%">
-<div class="Element68">
-sam_l21_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="77%">
-<div class="Element68">
-Observe the clock of 4 MHz on pin PB15 (Pin #10 on the EXT2 header on the SAM L21 Xplained Pro Evaluation Kit). LED0 should start blinking.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="23%">
-<div class="Element68">
-sam_l22_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="77%">
-<div class="Element68">
-Observe the clock of 1 MHz on pin PA15 (Pin #13 on the EXT3 header on the SAM L22 Xplained Pro Evaluation Kit). LED0 should start blinking.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="23%">
-<div class="Element68">
-sam_rh71_ek.X&nbsp;</div></td><td class="Element67" valign="top" width="77%">
-<div class="Element68">
-Observe the clock of 2 MHz on pin PA11 (Pin #5 on the J24 header on the SAM RH71 Evaluation Kit). LED0 should start blinking.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="23%">
-<div class="Element68">
-sam_v71_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="77%">
-<div class="Element68">
-Observe the clock of 5 MHz on pin PA03 (Pin #11 on the EXT1 header on the SAM V71 Xplained Ultra Evaluation Kit). LED0 should start blinking.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="23%">
-<div class="Element68">
-pic32mz_w1_curiosity.X&nbsp;</div></td><td class="Element67" valign="top" width="77%">
-<div class="Element68">
-Observe the clock of 4MHz on pin #12 (PA4) of XPRO Header (J203)&nbsp;</div></td></tr></table></div></div>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong><u>MPU Devices</u></strong></p>
-<ol class="Element630">
-<li value="1" class="Element600">Build the IAR or MPLAB X project using IAR Embedded Workbench or MPLAB X IDE respectively</li>
-<li value="2" class="Element600">Use the output binary file (harmony.bin) to setup the board as detailed in <a href="01426.html" target="topic">hardware setup</a></li>
-<li value="3" class="Element600">Reset the board to run the application</li>
+<li value="1" class="Element600"><strong>Project pic32mk_gp_db.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/dm320106');"><img src="indicator_external_link.gif" border="0" alt="" title="">PIC32MK General Purpose (GP) Development Board</a></li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">Connect an oscilloscope to monitor the PORT pin RPA0 (Pin number #4 on the J29 on the PIC32MK General Purpose (GP) Development Board)</li>
+<li class="Element602">Connect the Debug USB port (J12) on the board to the computer using a micro USB cable</li>
+</ul></li>
+</ul></li>
 </ol><p class="Element10">
 &nbsp;</p>
-<div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element65" valign="top" width="29%">
-<div class="Element66">
-Project Name&nbsp;</div></td><td class="Element65" valign="top" width="71%">
-<div class="Element66">
-Output&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="29%">
-<div class="Element68">
-sam_a5d2_xult.IAR OR sam_a5d2_xult_xc32.X&nbsp;</div></td><td class="Element67" valign="top" width="71%">
-<div class="Element68">
-Observe the clock of 4.15 MHz on pin PD19 (Pin #2 on the J8 Connector on SAMA5D2 Xplained Ultra Evaluation Kit).&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="29%">
-<div class="Element68">
-sam_9x60_ek.IAR<br>sam_9x60_ek_xc32.X&nbsp;</div></td><td class="Element67" valign="top" width="71%">
-<div class="Element68">
-Observe the clock of 5 MHz on pin PC31 (Pin #29 on the J16 Connector on SAM9X60 evaluation kit).&nbsp;</div></td></tr></table></div></div>
-</div>
+
+<ol class="Element630">
+<li value="2" class="Element600"><strong>Project pic32mk_mcm_curiosity_pro.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602">PIC32MK MCM Curiosity Pro</li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">Connect an oscilloscope to monitor the PORT pin RPC1 (Pin number #33). You can find this pin extension on J301</li>
+<li class="Element602">Connect the Debug USB port (J500) on the board to the computer using a micro USB cable</li>
+</ul></li>
+</ul></li>
+</ol><p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="3" class="Element600"><strong>Project pic32mk_mcj_curiosity_pro.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602">PIC32MK MCJ Curiosity Pro</li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">Connect an oscilloscope to monitor the PORT pin RPB11 (Pin #8 on J503/EXT3 of the PIC32MK MCJ Curiosity Board).</li>
+<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+</ul></li>
+</ul></li>
+</ol><p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="4" class="Element600"><strong>Project pic32mx470_curiosity.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/Developmenttools/ProductDetails/dm320103');"><img src="indicator_external_link.gif" border="0" alt="" title="">PIC32MX470 Curiosity Development Board</a></li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">Connect an oscilloscope to monitor the PORT pin RPB8 (Pin number #14 on the J14 on the PIC32MX Curiosity Development Board)</li>
+<li class="Element602">Connect mini USB cable to the 'Debug USB' connector(J3) on the board to the computer.</li>
+</ul></li>
+</ul></li>
+</ol><p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="5" class="Element600"><strong>Project pic32mx_xlp_sk.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/DevelopmentTools/ProductDetails/DM320105');"><img src="indicator_external_link.gif" border="0" alt="" title="">PIC32MX XLP Starter Kit</a></li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">Connect an oscilloscope to monitor the PORT pin RPC6 (Pin number #3 on the J2 on the PIC32MX XLP Starter Kit)</li>
+<li class="Element602">Connect micro USB cable to the 'Debug USB' connector(J9) on the board to the computer.</li>
+</ul></li>
+</ul></li>
+</ol><p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="6" class="Element600"><strong>Project pic32mz_ef_sk.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/DevelopmentTools/ProductDetails/dm320007');"><img src="indicator_external_link.gif" border="0" alt="" title="">PIC32MZ Embedded Connectivity with FPU (EF) Starter Kit</a></li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">Connect an oscilloscope to monitor the PORT pin PA14 (Pin number #7 on the J12 on the PIC32MZ Embedded Connectivity with FPU (EF) Starter Kit)</li>
+<li class="Element602">Connect the Debug USB port on the board to the computer using a mini USB cable</li>
+</ul></li>
+</ul></li>
+</ol><p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="7" class="Element600"><strong>Project sam_c21n_xpro.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/atsamc21n-xpro');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM C21N Xplained Pro Evaluation Kit</a></li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">Connect an oscilloscope to monitor the PORT pin PB23 (Pin number #8 on the EXT3 on the SAM C21n Xplained Pro Evaluation Kit)</li>
+<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+</ul></li>
+</ul></li>
+</ol><p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="8" class="Element600"><strong>Project sam_d11_xpro.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/atsamd11-xpro');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM D11 Xplained Pro Evaluation Kit</a></li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">Connect an oscilloscope to monitor the PORT pin PA09 (Pin 17 on the EXT1 on the SAM D11 Xplained Pro Evaluation Kit)</li>
+<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+</ul></li>
+</ul></li>
+</ol><p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="9" class="Element600"> <strong> Project sam_d20_xpro.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/ATSAMD20-XPRO');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM D20 Xplained Pro Evaluation Kit.</a></li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">Connect an oscilloscope to monitor the PORT pin PB15 (Pin 10 of the EXT2 header on the SAM D20 Xplained Pro Evaluation Kit)</li>
+<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+</ul></li>
+</ul></li>
+</ol><p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="10" class="Element600"><strong>Project sam_d21_xpro.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/atsamd21-xpro');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM D21 Xplained Pro Evaluation Kit</a></li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">Connect an oscilloscope to monitor the PORT pin PB15 (Pin 10 of the EXT2 header on the SAM D21 Xplained Pro Evaluation Kit)</li>
+<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+</ul></li>
+</ul></li>
+</ol><p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="11" class="Element600"><strong>Project sam_da1_xpro.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/DevelopmentTools/ProductDetails/PartNO/ATSAMDA1-XPRO');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM DA1 Xplained Pro Evaluation Kit</a></li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">Connect an oscilloscope to monitor the PORT pin PB15 (Pin 10 of the EXT2 header on the SAM D21 Xplained Pro Evaluation Kit)</li>
+<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+</ul></li>
+</ul></li>
+</ol><p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="12" class="Element600"><strong>Project sam_e54_xpro.X</strong></li>
+</ol>
+<ul class="Element630">
+<li class="Element600"><strong>Hardware Used</strong>
+<ul class="Element631">
+<li class="Element601"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/atsame54-xpro');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM E54 Xplained Pro Evaluation Kit</a></li>
+</ul></li>
+<li class="Element600"><strong>Hardware Setup</strong>
+<ul class="Element631">
+<li class="Element601">Connect an oscilloscope to monitor the PORT pin PB15 (Pin 8 of the EXT2 header on the SAM E54 Xplained Pro Evaluation Kit)</li>
+<li class="Element601">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+</ul></li>
+</ul><p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="13" class="Element600"><strong>Project sam_e70_xult.X</strong></li>
+</ol>
+<ul class="Element630">
+<li class="Element600"><strong>Hardware Used</strong>
+<ul class="Element631">
+<li class="Element601"><a href="#" onclick="openExternalLink('http://www.microchip.com/DevelopmentTools/ProductDetails/PartNO/DM320113');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM E70 Xplained Ultra Evaluation Kit</a></li>
+</ul></li>
+<li class="Element600"><strong>Hardware Setup</strong>
+<ul class="Element631">
+<li class="Element601">Connect an oscilloscope to monitor the PORT pin PA03 (J505 header on the SAM E70 Xplained Ultra Evaluation Kit)</li>
+<li class="Element601">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+</ul></li>
+</ul><p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="14" class="Element600"><strong>Project sam_g55_xpro.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602"><a href="#" onclick="openExternalLink('http://www.microchip.com/DevelopmentTools/ProductDetails/atsamg55-xpro');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM G55 Xplained Pro Evaluation Kit</a></li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">Connect an oscilloscope to monitor the PORT pin PA17 (EXT1 header on the SAM G55 Xplained Pro Evaluation Kit)</li>
+<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+</ul></li>
+</ul></li>
+</ol><p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="15" class="Element600"><strong>Project sam_ha1_xpro.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/DevelopmentTools/ProductDetails/PartNO/ATSAMHA1G16A-XPRO');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM HA1G16A Xplained Pro</a></li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">Connect an oscilloscope to monitor the PORT pin PA16 (Pin 10 of the EXT1 header on the SAM HA1G16A Xplained Pro)</li>
+<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+</ul></li>
+</ul></li>
+</ol><p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<strong>Note</strong>: ATSAMHA1G16A device in SAM HA1G16A Xplained Pro board is not recommended for new design, hence replace the device with ATSAMHA1G16AB device. Connect the supported external debugger to Cortex Debug Port&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<ol class="Element630">
+<li value="16" class="Element600"><strong>Project sam_l10_xpro.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/DevelopmentTools/ProductDetails/dm320204');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM L10 Xplained Pro Evaluation Kit</a></li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">Connect an oscilloscope to monitor the PORT pin PA16 (EXT1 header on the SAM L10 Xplained Pro Evaluation Kit)</li>
+<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+</ul></li>
+</ul></li>
+</ol><p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="17" class="Element600"><strong>Project sam_l21_xpro.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/ATSAML21-XPRO-B');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM L21 Xplained Pro Evaluation Kit</a></li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">Connect an oscilloscope to monitor the PORT pin PB15 (Pin 10 of the EXT2 header on the SAM L21 Xplained Pro Evaluation Kit)</li>
+<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+</ul></li>
+</ul></li>
+</ol><p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="18" class="Element600"><strong>Project sam_l22_xpro.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/ATSAML22-XPRO-B');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM L22 Xplained Pro Evaluation Kit</a></li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">Connect an oscilloscope to monitor the PORT pin PA15 (Pin 13 of the EXT3 header on the SAM L22 Xplained Pro Evaluation Kit)</li>
+<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+</ul></li>
+</ul></li>
+</ol><p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="19" class="Element600"><strong>Project sam_rh71_ek.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602">SAM RH71 Evaluation Kit</li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">Connect the debugger probe to J33</li>
+</ul></li>
+</ul></li>
+</ol><p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="20" class="Element600"><strong>Project sam_v71_xult.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/atsamv71-xult');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM V71 Xplained Ultra Evaluation Kit</a></li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">Connect an oscilloscope to monitor the PORT pin PA03 (Pin 11 of EXT1 header on the SAM V71 Xplained Ultra Evaluation Kit)</li>
+<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+</ul></li>
+</ul></li>
+</ol><p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="21" class="Element600"><strong>Project sam_a5d2_xult.IAR OR sam_a5d2_xult_xc32.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602"><a href="#" onclick="openExternalLink('http://www.microchip.com/DevelopmentTools/ProductDetails/ATSAMA5D2C-XULT');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM A5D2 Xplained Ultra board</a></li>
+<li class="Element602">SD Card with FAT32 file system</li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">Setup the SD card
+<ul class="Element633">
+<li class="Element603">Download harmony MPU bootstrap loader from this <a href="#" onclick="openExternalLink('http://github.com/Microchip-MPLAB-Harmony/at91bootstrap/blob/master/boot.bin');"><img src="indicator_external_link.gif" border="0" alt="" title="">location</a></li>
+<li class="Element603">Copy the downloaded boot loader binary( boot.bin) and generated application binary (harmony.bin)into the SD card</li>
+<li class="Element603">Insert the SD card into the SDMMC1 slot on the board</li>
+</ul></li>
+<li class="Element602">Connect an oscilloscope to monitor the PORT pin PD19 (Pin #2 on the J8 Connector on the SAM A5D2 Xplained Ultra Evaluation Kit)</li>
+<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+</ul></li>
+</ul></li>
+</ol><p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="22" class="Element600"><strong>Project sam_9x60_ek.IAR OR sam_9x60_ek_xc32.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602">SAM 9X60 Evaluation Kit (Rev.B)</li>
+<li class="Element602">SD Card with FAT32 file system</li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">Setup the SD card
+<ul class="Element633">
+<li class="Element603">Download harmony MPU bootstrap loader from this <a href="#" onclick="openExternalLink('http://github.com/Microchip-MPLAB-Harmony/at91bootstrap/blob/sam9x60ek/boot.bin');"><img src="indicator_external_link.gif" border="0" alt="" title="">location</a></li>
+<li class="Element603">Copy the downloaded boot loader binary( boot.bin) and generated application binary (harmony.bin)into the SD card</li>
+<li class="Element603">Insert the SD card into the SDMMC connector J4 on the board</li>
+</ul></li>
+<li class="Element602">Connect an oscilloscope to monitor the PORT pin PC31 (Pin #29 on the J16 Connector on the SAM 9X60 Evaluation Kit)</li>
+<li class="Element602">Connect the USB port J22 on board to the computer using a micro USB cable (to enable debug com port)</li>
+<li class="Element602">Connect the USB port J7 on board to the computer using a micro USB cable (to power the board)</li>
+<li class="Element602">Note: Reset push button on SAM9X60 EK is labeled as SW3</li>
+</ul></li>
+</ul></li>
+</ol><p class="Element10">
+&nbsp;</p>
+
+<ol class="Element630">
+<li value="23" class="Element600"><strong>Project pic32mz_w1_curiosity.X</strong>
+<ul class="Element631">
+<li class="Element601"><strong>Hardware Used</strong>
+<ul class="Element632">
+<li class="Element602">PIC32MZ W1 Curiosity Board</li>
+</ul></li>
+<li class="Element601"><strong>Hardware Setup</strong>
+<ul class="Element632">
+<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
+</ul></li>
+</ul></li>
+</ol></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05431.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00894.html" target="topic">Applications Help</a> &gt; <a href="01423.html" target="topic">Clock Applications</a> &gt; <a href="01422.html" target="topic">clock_config</a> &gt; <a href="01428.html" target="topic">Running The Application</a></div>
+<a href="05475.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00894.html" target="topic">Applications Help</a> &gt; <a href="01425.html" target="topic">Clock Applications</a> &gt; <a href="01424.html" target="topic">clock_config</a> &gt; <a href="01428.html" target="topic">Hardware Setup</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -211,13 +446,13 @@ Observe the clock of 5 MHz on pin PC31 (Pin #29 on the J16 Connector on SAM9X60 
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05431.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05475.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01426.html" target="topic">Previous</a> | <a href="01422.html" target="topic">Up</a> | <a href="01424.html" target="topic">Next</a></div>
+<a href="01429.html" target="topic">Previous</a> | <a href="01424.html" target="topic">Up</a> | <a href="01430.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: Clock clock_config Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: Clock clock_config Hardware Setup Topic Title: Hardware Setup)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

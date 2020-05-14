@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Hardware Setup</title>
+<title>SDMMCx_ClockDisable Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05431.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00894.html" target="topic">Applications Help</a> &gt; <a href="06906.html" target="topic">SERCOM Applications</a> &gt; <a href="06907.html" target="topic">SERCOM I2C Applications</a> &gt; <a href="06919.html" target="topic">SERCOM I2C Slave Applications</a> &gt; <a href="06909.html" target="topic">i2c_eeprom_emulation</a> &gt; <a href="06915.html" target="topic">Hardware Setup</a></div>
+<a href="05475.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04969.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05474.html" target="topic">Peripheral Libraries</a> &gt; <a href="06853.html" target="topic">SDMMC Peripheral Library Help</a> &gt; <a href="06854.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="06915.html" target="topic">SDMMCx_ClockDisable Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05431.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05475.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06916.html" target="topic">Previous</a> | <a href="06909.html" target="topic">Up</a> | <a href="06917.html" target="topic">Next</a></div>
+<a href="06914.html" target="topic">Previous</a> | <a href="06854.html" target="topic">Up</a> | <a href="06916.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SERCOM I2C i2c_eeprom_emulation Hardware Setup Topic Title: Hardware Setup)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sdmmc_44002::SDMMCx_ClockDisable Topic Title: SDMMCx_ClockDisable Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Hardware Setup</div>
+SDMMCx_ClockDisable Function</div>
 </div>
 </div>
 
@@ -49,160 +49,45 @@ Hardware Setup</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The hardware setup requires two boards, one acting as the I2C Master and the other as the I2C slave.</p>
-<ul class="Element630">
-<li class="Element600">Go to the <strong>apps/sercom/i2c/master/i2c_eeprom/firmware</strong> and program the evaluation kit being used as the I2C master with the <strong>i2c_eeprom</strong> application.</li>
-<li class="Element600">Next, program the evaluation kit being used as the I2C slave with the <strong>i2c_eeprom_emulation </strong>application.</li>
-<li class="Element600">Follow the below steps to connect I2C lines of the I2C master and I2C slave boards.</li>
-</ul><p class="Element10">
-&nbsp;</p>
+Disables SDMMC clock.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">SDMMCx_ClockDisable</span></strong>();</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-<strong>Note: </strong>The I2C master demo -<strong> i2c_eeprom</strong> on the SAM E54 Xplained Pro uses the on-board EEPROM having only 256 bytes of memory and hence sends only 1 byte of memory address. The <strong>i2_eeprom_emulation</strong> slave application however emulates an EEPROM having 512 bytes and hence expects two bytes of memory address. As a result, the existing I2C master demo application - <strong>i2c_eeprom</strong> for SAM E54 Xplained Pro cannot be used as is with this I2C slave application.&nbsp;</p>
+<a href="06924.html" target="topic">SDMMCx_Initialize</a>() must have been called first for the associated instance.</p></div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-&nbsp;</p>
-<ol class="Element630">
-<li value="1" class="Element600"><strong>Project sam_c21n_xpro.X</strong>
-<ul class="Element631">
-<li class="Element601"><strong>Hardware Used</strong>
-<ul class="Element632">
-<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/atsamc21n-xpro');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM C21N Xplained Pro Evaluation Kit</a></li>
-</ul></li>
-<li class="Element601"><strong>Hardware Setup</strong>
-<ul class="Element632">
-<li class="Element602">On EXT1 header of the <a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/atsamc21n-xpro');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM C21N Xplained Pro Evaluation Kit</a>, connect I2C SDA line on Pin 11 (PB16) and I2C SCL line on Pin 12 (PB17) with the corresponding SDA and SCL lines of the I2C master</li>
-<li class="Element602">Connect a ground wire from Pin 2 of EXT1 on <a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/atsamc21n-xpro');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM C21N Xplained Pro Evaluation Kit</a> to the ground of the I2C master</li>
-<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
-</ul></li>
-</ul></li>
-</ol><p class="Element10">
-&nbsp;</p>
-
-<ol class="Element630">
-<li value="2" class="Element600"><strong>Project sam_d11_xpro.X</strong>
-<ul class="Element631">
-<li class="Element601"><strong>Hardware Used</strong>
-<ul class="Element632">
-<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/atsamd11-xpro');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM D11 Xplained Pro Evaluation Kit</a></li>
-</ul></li>
-<li class="Element601"><strong>Hardware Setup</strong>
-<ul class="Element632">
-<li class="Element602">On EXT1 header of the <a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/atsamd11-xpro');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM D11 Xplained Pro Evaluation Kit</a>, connect I2C SDA line on Pin 11 (PA22) and I2C SCL line on Pin 12 (PA23) with the corresponding SDA and SCL lines of the I2C master</li>
-<li class="Element602">Connect a ground wire from Pin 2 of EXT1 on <a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/atsamd11-xpro');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM D11 Xplained Pro Evaluation Kit</a> to the ground of the I2C master</li>
-<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
-</ul></li>
-</ul></li>
-</ol><p class="Element10">
-&nbsp;</p>
-
-<ol class="Element630">
-<li value="3" class="Element600"><strong>Project sam_d20_xpro.X</strong>
-<ul class="Element631">
-<li class="Element601"><strong>Hardware Used</strong>
-<ul class="Element632">
-<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/ATSAMD20-XPRO');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM D20 Xplained Pro Evaluation Kit</a></li>
-</ul></li>
-<li class="Element601"><strong>Hardware Setup</strong>
-<ul class="Element632">
-<li class="Element602">On EXT1 header of the <a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/ATSAMD20-XPRO');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM D20 Xplained Pro Evaluation Kit</a>, connect I2C SDA line on Pin 11 (PA08) and I2C SCL line on Pin 12 (PA09) with the corresponding SDA and SCL lines of the I2C master</li>
-<li class="Element602">Connect a ground wire from Pin 2 of EXT1 on <a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/ATSAMD20-XPRO');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM D20 Xplained Pro Evaluation Kit</a> to the ground of the I2C master</li>
-<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
-</ul></li>
-</ul></li>
-</ol><p class="Element10">
-&nbsp;</p>
+None.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-&nbsp;</p>
-
-<ol class="Element630">
-<li value="4" class="Element600"><strong>Project sam_d21_xpro.X</strong>
-<ul class="Element631">
-<li class="Element601"><strong>Hardware Used</strong>
-<ul class="Element632">
-<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/atsamd21-xpro');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM D21 Xplained Pro Evaluation Kit</a></li>
-</ul></li>
-<li class="Element601"><strong>Hardware Setup</strong>
-<ul class="Element632">
-<li class="Element602">On EXT1 header of the <a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/atsamd21-xpro');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM D21 Xplained Pro Evaluation Kit</a>, connect I2C SDA line on Pin 11 (PA08) and I2C SCL line on Pin 12 (PA09) with the corresponding SDA and SCL lines of the I2C master</li>
-<li class="Element602">Connect a ground wire from Pin 2 of EXT1 on <a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/atsamd21-xpro');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM D21 Xplained Pro Evaluation Kit</a> to the ground of the I2C master</li>
-<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
-</ul></li>
-</ul></li>
-</ol><p class="Element10">
-&nbsp;</p>
-
-<ol class="Element630">
-<li value="5" class="Element600"><strong>Project sam_da1_xpro.X</strong>
-<ul class="Element631">
-<li class="Element601"><strong>Hardware Used</strong>
-<ul class="Element632">
-<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/DevelopmentTools/ProductDetails/PartNO/ATSAMDA1-XPRO');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM DA1 Xplained Pro Evaluation Kit</a></li>
-</ul></li>
-<li class="Element601"><strong>Hardware Setup</strong>
-<ul class="Element632">
-<li class="Element602">On EXT1 header of the <a href="#" onclick="openExternalLink('https://www.microchip.com/DevelopmentTools/ProductDetails/PartNO/ATSAMDA1-XPRO');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM DA1 Xplained Pro Evaluation Kit</a>, connect I2C SDA line on Pin 11 (PA08) and I2C SCL line on Pin 12 (PA09) with the corresponding SDA and SCL lines of the I2C master</li>
-<li class="Element602">Connect a ground wire from Pin 2 of EXT1 on <a href="#" onclick="openExternalLink('https://www.microchip.com/DevelopmentTools/ProductDetails/PartNO/ATSAMDA1-XPRO');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM DA1 Xplained Pro Evaluation Kit</a> to the ground of the I2C master</li>
-<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
-</ul></li>
-</ul></li>
-</ol><p class="Element10">
-&nbsp;</p>
-
-<ol class="Element630">
-<li value="6" class="Element600"><strong>Project sam_e54_xpro.X</strong>
-<ul class="Element631">
-<li class="Element601"><strong>Hardware Used</strong>
-<ul class="Element632">
-<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/atsame54-xpro');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM E54 Xplained Pro Evaluation Kit</a></li>
-</ul></li>
-<li class="Element601"><strong>Hardware Setup</strong>
-<ul class="Element632">
-<li class="Element602">On EXT1 header of the <a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/atsame54-xpro');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM E54 Xplained Pro Evaluation Kit</a>, connect I2C SDA line on Pin 11 (PA22) and I2C SCL line on Pin 12 (PA23) with the corresponding SDA and SCL lines of the I2C master</li>
-<li class="Element602">Connect a ground wire from Pin 2 of EXT1 on <a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/atsame54-xpro');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM E54 Xplained Pro Evaluation Kit</a> to the ground of the I2C master</li>
-<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
-</ul></li>
-</ul></li>
-</ol><p class="Element10">
-&nbsp;</p>
-
-<ol class="Element630">
-<li value="7" class="Element600"><strong>Project sam_l10_xpro.X</strong>
-<ul class="Element631">
-<li class="Element601"><strong>Hardware Used</strong>
-<ul class="Element632">
-<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/DevelopmentTools/ProductDetails/dm320204');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM L10 Xplained Pro Evaluation Kit</a></li>
-</ul></li>
-<li class="Element601"><strong>Hardware Setup</strong>
-<ul class="Element632">
-<li class="Element602">On EXT1 header of the <a href="#" onclick="openExternalLink('https://www.microchip.com/DevelopmentTools/ProductDetails/dm320204');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM L10 Xplained Pro Evaluation Kit</a>, connect I2C SDA line on Pin 11 (PA16) and I2C SCL line on Pin 12 (PA17) with the corresponding SDA and SCL lines of the I2C master</li>
-<li class="Element602">Connect a ground wire from Pin 2 of EXT1 on <a href="#" onclick="openExternalLink('https://www.microchip.com/DevelopmentTools/ProductDetails/dm320204');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM L10 Xplained Pro Evaluation Kit</a> to the ground of the I2C master</li>
-<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
-</ul></li>
-</ul></li>
-</ol><p class="Element10">
-&nbsp;</p>
-
-<ol class="Element630">
-<li value="8" class="Element600"><strong>Project sam_l21_xpro.X</strong>
-<ul class="Element631">
-<li class="Element601"><strong>Hardware Used</strong>
-<ul class="Element632">
-<li class="Element602"><a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/ATSAML21-XPRO-B');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM L21 Xplained Pro Evaluation Kit</a></li>
-</ul></li>
-<li class="Element601"><strong>Hardware Setup</strong>
-<ul class="Element632">
-<li class="Element602">On EXT1 header of the <a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/ATSAML21-XPRO-B');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM L21 Xplained Pro Evaluation Kit</a>, connect I2C SDA line on Pin 11 (PA08) and I2C SCL line on Pin 12 (PA09) with the corresponding SDA and SCL lines of the I2C master</li>
-<li class="Element602">Connect a ground wire from Pin 2 of EXT1 on <a href="#" onclick="openExternalLink('https://www.microchip.com/developmenttools/ProductDetails/ATSAML21-XPRO-B');"><img src="indicator_external_link.gif" border="0" alt="" title="">SAM L21 Xplained Pro Evaluation Kit</a> to the ground of the I2C master</li>
-<li class="Element602">Connect the Debug USB port on the board to the computer using a micro USB cable</li>
-</ul></li>
-</ul></li>
-</ol></div>
+None.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">SDMMC1_ClockDisable();</pre></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05431.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00894.html" target="topic">Applications Help</a> &gt; <a href="06906.html" target="topic">SERCOM Applications</a> &gt; <a href="06907.html" target="topic">SERCOM I2C Applications</a> &gt; <a href="06919.html" target="topic">SERCOM I2C Slave Applications</a> &gt; <a href="06909.html" target="topic">i2c_eeprom_emulation</a> &gt; <a href="06915.html" target="topic">Hardware Setup</a></div>
+<a href="05475.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04969.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05474.html" target="topic">Peripheral Libraries</a> &gt; <a href="06853.html" target="topic">SDMMC Peripheral Library Help</a> &gt; <a href="06854.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="06915.html" target="topic">SDMMCx_ClockDisable Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -210,13 +95,13 @@ The hardware setup requires two boards, one acting as the I2C Master and the oth
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05431.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05475.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06916.html" target="topic">Previous</a> | <a href="06909.html" target="topic">Up</a> | <a href="06917.html" target="topic">Next</a></div>
+<a href="06914.html" target="topic">Previous</a> | <a href="06854.html" target="topic">Up</a> | <a href="06916.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SERCOM I2C i2c_eeprom_emulation Hardware Setup Topic Title: Hardware Setup)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sdmmc_44002::SDMMCx_ClockDisable Topic Title: SDMMCx_ClockDisable Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

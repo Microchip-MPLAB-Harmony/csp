@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>HSMCI_CallbackRegister Function</title>
+<title>HEMC_CALLBACK Type</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05431.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04925.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05430.html" target="topic">Peripheral Libraries</a> &gt; <a href="03706.html" target="topic">HSMCI Peripheral Library Help</a> &gt; <a href="03707.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="03719.html" target="topic">HSMCI_CallbackRegister Function</a></div>
+<a href="05475.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04969.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05474.html" target="topic">Peripheral Libraries</a> &gt; <a href="03706.html" target="topic">HEMC Peripheral Library Help</a> &gt; <a href="03707.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="03719.html" target="topic">HEMC_CALLBACK Type</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05431.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05475.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03717.html" target="topic">Previous</a> | <a href="03707.html" target="topic">Up</a> | <a href="03723.html" target="topic">Next</a></div>
+<a href="03744.html" target="topic">Previous</a> | <a href="03707.html" target="topic">Up</a> | <a href="03721.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: HSMCI_CallbackRegister@HSMCI_CALLBACK@uintptr_t Topic Title: HSMCI_CallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: hemc_44121::HEMC_CALLBACK Topic Title: HEMC_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-HSMCI_CallbackRegister Function</div>
+HEMC_CALLBACK Type</div>
 </div>
 </div>
 
@@ -49,23 +49,15 @@ HSMCI_CallbackRegister Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function allows a client to set an event handler. The client may want to receive transfer related events in cases when it submits a HSMCI PLIB transfer request. The event handler should be set before the client intends to perform operations that could generate events.&nbsp;</p>
+HEMC Callback&nbsp;</p>
 <p class="Element10">
-This function accepts a contextHandle parameter. This parameter could be set by the client to contain (or point to) any client specific data object that should be associated with this HSMCI PLIB. The contextHandle parameter is not modified by the PLIB and is passed as is in the client event handler.</p></div>
+This data type defines the required function signature for the HEMC callback function. Application must register a pointer to a callback function whose function signature (parameter and return value types) match the types specified by this function pointer in order to receive callback from the PLIB.&nbsp;</p>
+<p class="Element10">
+The parameters and return values are described here and a partial example implementation is provided.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">HSMCI_CallbackRegister</span></strong>(
-    <a href="03718.html" target="topic">HSMCI_CALLBACK</a> <strong><span style="color: #000000">callback</span></strong>, 
-    uintptr_t <strong><span style="color: #000000">contextHandle</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-<a href="03759.html" target="topic">HSMCI_Initialize</a>() must have been called first.</p></div>
-</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000">HEMC_CALLBACK</span></strong>)(uintptr_t contextHandle);</pre></div></div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
 <div class="Element11">
@@ -81,9 +73,9 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-callback&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+contextHandle&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Pointer to the event handler function. contextHandle -Value identifying the context of the application/driver/middleware that registered the event handling function.&nbsp;</div></td></tr></table></div></div>
+Value identifying the context of the application that registered the callback function&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -98,35 +90,20 @@ Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+The context parameter contains the a handle to the client context, provided at the time the callback function was registered using the CallbackRegister function. This context handle value is passed back to the client as the &quot;context&quot; parameter. It can be any value (such as a pointer to the client's data) necessary to identify the client context or instance of the client that made the data transfer request.&nbsp;</p>
+<p class="Element10">
+The callback function executes in the PLIB's interrupt context. It is recommended of the application to not perform process intensive or blocking operations with in this function.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">MY_APP_OBJ myAppObj;
-
-<strong><span style="color: #000080">static</span></strong> <strong><span style="color: #000080">void</span></strong> HSMCI_TransferEventHandler(
-    <a href="03774.html" target="topic">HSMCI_XFER_STATUS</a> xferStatus,
-    uintptr_t contextHandle
-)
+<div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">void</span></strong> APP_HEMC_FixHandler(uintptr_t context)
 {
-    MY_APP_OBJ* myAppObj = (MY_APP_OBJ*)contextHandle;
-
-    <strong><span style="color: #000080">if</span></strong> (xferStatus &amp; HSMCI_XFER_STATUS_CMD_COMPLETED)
-    {
-        <i><span style="color: #008000">// Command transfer complete, read the command error status.</span></i>
-        cmd_error = <a href="03735.html" target="topic">HSMCI_CommandErrorGet</a>();
-    }
-    <strong><span style="color: #000080">if</span></strong> (xferStatus &amp; HSMCI_XFER_STATUS_DATA_COMPLETED)
-    {
-        <i><span style="color: #008000">// Data transfer complete, read the data error status.</span></i>
-        data_error = <a href="03744.html" target="topic">HSMCI_DataErrorGet</a>();
-    }
+    <i><span style="color: #008000">//Fixable error has occurred</span></i>
 }
 
-<i><span style="color: #008000">// User registers an event handler with the HSMCI PLIB. This is usually done once.</span></i>
-HSMCI_CallbackRegister(HSMCI_TransferEventHandler, (uintptr_t)&amp;myAppObj);</pre></div></div>
+<a href="03720.html" target="topic">HEMC_FixCallbackRegister</a>(&amp;APP_HEMC_FixHandler, (uintptr_t)NULL);</pre></div></div>
 </div>
 </div>
 </div>
@@ -134,7 +111,7 @@ HSMCI_CallbackRegister(HSMCI_TransferEventHandler, (uintptr_t)&amp;myAppObj);</p
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05431.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04925.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05430.html" target="topic">Peripheral Libraries</a> &gt; <a href="03706.html" target="topic">HSMCI Peripheral Library Help</a> &gt; <a href="03707.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="03719.html" target="topic">HSMCI_CallbackRegister Function</a></div>
+<a href="05475.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04969.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05474.html" target="topic">Peripheral Libraries</a> &gt; <a href="03706.html" target="topic">HEMC Peripheral Library Help</a> &gt; <a href="03707.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="03719.html" target="topic">HEMC_CALLBACK Type</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -142,13 +119,13 @@ HSMCI_CallbackRegister(HSMCI_TransferEventHandler, (uintptr_t)&amp;myAppObj);</p
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05431.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05475.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03717.html" target="topic">Previous</a> | <a href="03707.html" target="topic">Up</a> | <a href="03723.html" target="topic">Next</a></div>
+<a href="03744.html" target="topic">Previous</a> | <a href="03707.html" target="topic">Up</a> | <a href="03721.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: HSMCI_CallbackRegister@HSMCI_CALLBACK@uintptr_t Topic Title: HSMCI_CallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: hemc_44121::HEMC_CALLBACK Topic Title: HEMC_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->
