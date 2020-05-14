@@ -10,8 +10,6 @@
 # o  print "Entering directory ...";
 MAKEFLAGS += -rR --no-print-directory
 
-TOPDIR:=$(realpath $(dir $(lastword $(MAKEFILE_LIST))))
-
 CONFIG_CONFIG_IN=Kconfig
 CONFIG_DEFCONFIG=.defconfig
 CONFIG=config
@@ -31,7 +29,6 @@ ifeq ($(CONFIG_SHELL),)
 $(error GNU Bash is needed to build Kconfig host tools!)
 endif
 endif
-export NIX_SHELL
 
 BINDIR:=binaries
 SYMLINK ?= at91bootstrap.bin
@@ -39,7 +36,7 @@ SYMLINK_BOOT ?= boot.bin
 SYMLINK_ELF ?= at91bootstrap.elf
 SYMLINK_ELF_STRIPPED ?= at91bootstrap-stripped.elf
 
-include host-utilities/host.mk
+include	host-utilities/host.mk
 
 ifeq ($(origin BUILD_DATE), undefined)
 # Automatically escape '%' symbols when recipes are implemented as batch files
@@ -52,8 +49,8 @@ else
 	BUILD_DATE := $(shell $(DATE) "$(DATE_FMT)")
 endif
 endif
-VERSION := 3.9.1
-REVISION :=
+VERSION := 3.9.2
+REVISION := rc1
 ifdef NIX_SHELL
 SCMINFO := $(shell (host-utilities/setlocalversion))
 endif
@@ -121,18 +118,10 @@ $(CONFIG): $(CONFIG)/conf
 		KCONFIG_AUTOHEADER=$(CONFIG)/at91bootstrap-config/autoconf.h \
 		$(CONFIG)/conf $(CONFIG_CONFIG_IN)
 
-ifdef NIX_SHELL
 oldconfig: $(CONFIG)/conf
 	@KCONFIG_AUTOCONFIG=$(CONFIG)/at91bootstrap-config/auto.conf \
 		KCONFIG_AUTOHEADER=$(CONFIG)/at91bootstrap-config/autoconf.h \
 		$(CONFIG)/conf --oldconfig $(CONFIG_CONFIG_IN)
-else
-oldconfig:
-	@if not exist $(CONFIG)\at91bootstrap-config mkdir $(CONFIG)\at91bootstrap-config
-	@set KCONFIG_AUTOCONFIG=$(CONFIG)\at91bootstrap-config\auto.conf
-	@set KCONFIG_AUTOHEADER=$(CONFIG)\at91bootstrap-config\autoconf.h
-	@$(shell $(CONFIG)/conf --oldconfig $(CONFIG_CONFIG_IN))
-endif
 
 defconfig: $(CONFIG)/conf
 	@KCONFIG_AUTOCONFIG=$(CONFIG)/at91bootstrap-config/auto.conf \
@@ -273,7 +262,7 @@ CPPFLAGS=$(NOSTDINC_FLAGS) -ffunction-sections -g -Os -Wall \
 	-mno-unaligned-access \
 	-fno-stack-protector -fno-common -fno-builtin -fno-jump-tables -fno-pie \
 	-I$(INCL) -Icontrib/include -Iinclude -Ifs/include \
-	-Iconfig/at91bootstrap-config \
+	-I$(CONFIG)/at91bootstrap-config \
 	-DAT91BOOTSTRAP_VERSION=\"$(VERSION)$(REV)$(SCMINFO)\" -DCOMPILE_TIME="\"$(BUILD_DATE)\""
 
 ASFLAGS=-g -Os -Wall -I$(INCL) -Iinclude -Icontrib/include
@@ -361,17 +350,17 @@ $(AT91BOOTSTRAP): $(OBJS) | $(BINDIR)
 	@echo "  LD        "$(BOOT_NAME).elf
 	$(Q)"$(LD)" $(LDFLAGS) -n -o $(BINDIR)/$(BOOT_NAME).elf $(OBJS)
 	@"$(OBJCOPY)" --strip-all $(REMOVE_SECTIONS) $(BINDIR)/$(BOOT_NAME).elf -O binary $@
+# TODO: Compile a stripped ELF i.e. without the '-g' compiler option
 ifdef NIX_SHELL
 	@ln -sf $(BOOT_NAME).elf ${BINDIR}/${SYMLINK_ELF}
 	@ln -sf $(BOOT_NAME).elf ${BINDIR}/${SYMLINK_ELF_STRIPPED}
 	@ln -sf $(BOOT_NAME).bin ${BINDIR}/${SYMLINK}
 	@ln -sf $(BOOT_NAME).bin ${BINDIR}/${SYMLINK_BOOT}
 else
-#	Temborarily make the debug elf the same as the non-debug elf. In theory the non-debug elf should be compiled without -g flag
-	@cp -p ${BINDIR}/$(BOOT_NAME).elf ${BINDIR}/${SYMLINK_ELF}
-	@cp -p ${BINDIR}/$(BOOT_NAME).elf ${BINDIR}/${SYMLINK_ELF_STRIPPED}
-	@cp -p ${BINDIR}/$(BOOT_NAME).bin ${BINDIR}/${SYMLINK}
-	@cp -p ${BINDIR}/$(BOOT_NAME).bin ${BINDIR}/${SYMLINK_BOOT}
+	@cp -l ${BINDIR}/$(BOOT_NAME).elf ${BINDIR}/${SYMLINK_ELF}
+	@cp -l ${BINDIR}/$(BOOT_NAME).elf ${BINDIR}/${SYMLINK_ELF_STRIPPED}
+	@cp -l ${BINDIR}/$(BOOT_NAME).bin ${BINDIR}/${SYMLINK}
+	@cp -l ${BINDIR}/$(BOOT_NAME).bin ${BINDIR}/${SYMLINK_BOOT}
 endif
 
 %.o : %.c .config
@@ -380,7 +369,7 @@ endif
 
 %.o : %.S .config
 	@echo "  AS        "$<
-	@"$(AS)" $(ASFLAGS)  -c -o $@ $<
+	@"$(AS)" $(ASFLAGS) -c -o $@ $<
 
 $(AT91BOOTSTRAP).pmecc: $(BINDIR)/pmecc.tmp $(AT91BOOTSTRAP)
 	$(Q)cat $(BINDIR)/pmecc.tmp $(AT91BOOTSTRAP) > $@
@@ -494,11 +483,12 @@ distclean: clean config-clean
 	$(Q)rm -fr .config .config.cmd .config.old
 	$(Q)rm -fr .auto.deps
 	$(Q)rm -f .installed
-	$(Q)rm -f ..*.tmp
+	$(Q)rm -fr ..make.deps.tmp ..config.tmp
 	$(Q)rm -f $(BINDIR)/pmecc.tmp
 	$(Q)rm -f .configured
 	$(Q)rm -f .prepared
 	$(Q)rm -f $(subst $$,\$$,$(call rwildcard,scripts,*$$py.class))
+	$(Q)rm -fr debug
 	$(Q)rm -f default.config
 	$(Q)rm -f default.config.old
 	$(Q)rm -f nbproject/Makefile-default.mk
@@ -507,7 +497,7 @@ distclean: clean config-clean
 	$(Q)rm -f nbproject/Makefile-local-default.mk
 	$(Q)rm -f nbproject/Makefile-variables.mk
 	$(Q)rm -f nbproject/Package-default.bash
-	$(Q)rm -rf nbproject/private
+	$(Q)rm -fr nbproject/private
 
 mplabclean: clean
 	@echo "  CLEAN        "binary files!
