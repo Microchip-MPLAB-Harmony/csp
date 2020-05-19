@@ -3,13 +3,27 @@
 
 # Microchip MPLAB® Harmony 3 Release Notes
 
+## CSP Release v3.7.1
+
+### New Features
+- N/A
+
+### Bug fixes
+- Fixed UART ring buffer transmit interrupt related issue.
+
+### Known Issues
+- Same as v3.7.0
+
+### Development Tools
+- Same as v3.7.0
+
 ## CSP Release v3.7.0
 
 ### New Features
 
 - **New part support** - This release introduces support for the following devices
   - [SAM L11](https://www.microchip.com/design-centers/32-bit/sam-32-bit-mcus/sam-l-mcus/sam-l10-and-l11-microcontroller-family),
-  - [SAM RH71 Revison C](https://www.microchip.com/wwwproducts/en/SAMRH71),
+  - [SAM RH71 Revision C](https://www.microchip.com/wwwproducts/en/SAMRH71),
   - [SAM D20 Revision B](https://www.microchip.com/design-centers/32-bit/sam-32-bit-mcus/sam-d-mcus)
 
 - **New Features and Enhancements**
