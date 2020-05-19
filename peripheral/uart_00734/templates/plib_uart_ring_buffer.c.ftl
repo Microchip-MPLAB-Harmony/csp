@@ -125,14 +125,14 @@ void ${UART_INSTANCE_NAME}_Initialize( void )
     /* Initialize instance object */
     ${UART_INSTANCE_NAME?lower_case}Obj.rdCallback = NULL;
     ${UART_INSTANCE_NAME?lower_case}Obj.rdInIndex = 0;
-	${UART_INSTANCE_NAME?lower_case}Obj.rdOutIndex = 0;
+    ${UART_INSTANCE_NAME?lower_case}Obj.rdOutIndex = 0;
     ${UART_INSTANCE_NAME?lower_case}Obj.isRdNotificationEnabled = false;
     ${UART_INSTANCE_NAME?lower_case}Obj.isRdNotifyPersistently = false;
     ${UART_INSTANCE_NAME?lower_case}Obj.rdThreshold = 0;
 
     ${UART_INSTANCE_NAME?lower_case}Obj.wrCallback = NULL;
     ${UART_INSTANCE_NAME?lower_case}Obj.wrInIndex = 0;
-	${UART_INSTANCE_NAME?lower_case}Obj.wrOutIndex = 0;
+    ${UART_INSTANCE_NAME?lower_case}Obj.wrOutIndex = 0;
     ${UART_INSTANCE_NAME?lower_case}Obj.isWrNotificationEnabled = false;
     ${UART_INSTANCE_NAME?lower_case}Obj.isWrNotifyPersistently = false;
     ${UART_INSTANCE_NAME?lower_case}Obj.wrThreshold = 0;
@@ -296,15 +296,15 @@ static void ${UART_INSTANCE_NAME}_ReadNotificationSend(void)
 size_t ${UART_INSTANCE_NAME}_Read(uint8_t* pRdBuffer, const size_t size)
 {
     size_t nBytesRead = 0;
-	uint32_t rdOutIndex;
-	uint32_t rdInIndex;
+    uint32_t rdOutIndex;
+    uint32_t rdInIndex;
 
     while (nBytesRead < size)
     {
         ${UART_INSTANCE_NAME}_RX_INT_DISABLE();
-		
-		rdOutIndex = ${UART_INSTANCE_NAME?lower_case}Obj.rdOutIndex;
-		rdInIndex = ${UART_INSTANCE_NAME?lower_case}Obj.rdInIndex;
+
+        rdOutIndex = ${UART_INSTANCE_NAME?lower_case}Obj.rdOutIndex;
+        rdInIndex = ${UART_INSTANCE_NAME?lower_case}Obj.rdInIndex;
 
         if (rdOutIndex != rdInIndex)
         {
@@ -329,12 +329,12 @@ size_t ${UART_INSTANCE_NAME}_Read(uint8_t* pRdBuffer, const size_t size)
 size_t ${UART_INSTANCE_NAME}_ReadCountGet(void)
 {
     size_t nUnreadBytesAvailable;
-	uint32_t rdInIndex;
-	uint32_t rdOutIndex;
-	
-	/* Take a snapshot of indices to avoid processing in critical section */
-	rdInIndex = ${UART_INSTANCE_NAME?lower_case}Obj.rdInIndex;
-	rdOutIndex = ${UART_INSTANCE_NAME?lower_case}Obj.rdOutIndex;	
+    uint32_t rdInIndex;
+    uint32_t rdOutIndex;
+
+    /* Take a snapshot of indices to avoid processing in critical section */
+    rdInIndex = ${UART_INSTANCE_NAME?lower_case}Obj.rdInIndex;
+    rdOutIndex = ${UART_INSTANCE_NAME?lower_case}Obj.rdOutIndex;
 
     if ( rdInIndex >=  rdOutIndex)
     {
@@ -388,8 +388,8 @@ void ${UART_INSTANCE_NAME}_ReadCallbackRegister( UART_RING_BUFFER_CALLBACK callb
 static bool ${UART_INSTANCE_NAME}_TxPullByte(uint8_t* pWrByte)
 {
     bool isSuccess = false;
-	uint32_t wrOutIndex = ${UART_INSTANCE_NAME?lower_case}Obj.wrOutIndex;
-	uint32_t wrInIndex = ${UART_INSTANCE_NAME?lower_case}Obj.wrInIndex;
+    uint32_t wrOutIndex = ${UART_INSTANCE_NAME?lower_case}Obj.wrOutIndex;
+    uint32_t wrInIndex = ${UART_INSTANCE_NAME?lower_case}Obj.wrInIndex;
 
     if (wrOutIndex != wrInIndex)
     {
@@ -462,10 +462,10 @@ static void ${UART_INSTANCE_NAME}_WriteNotificationSend(void)
 static size_t ${UART_INSTANCE_NAME}_WritePendingBytesGet(void)
 {
     size_t nPendingTxBytes;
-	
-	/* Take a snapshot of indices to avoid processing in critical section */
-	uint32_t wrOutIndex = ${UART_INSTANCE_NAME?lower_case}Obj.wrOutIndex;
-	uint32_t wrInIndex = ${UART_INSTANCE_NAME?lower_case}Obj.wrInIndex;
+
+    /* Take a snapshot of indices to avoid processing in critical section */
+    uint32_t wrOutIndex = ${UART_INSTANCE_NAME?lower_case}Obj.wrOutIndex;
+    uint32_t wrInIndex = ${UART_INSTANCE_NAME?lower_case}Obj.wrInIndex;
 
     if ( wrInIndex >=  wrOutIndex)
     {
@@ -483,7 +483,7 @@ size_t ${UART_INSTANCE_NAME}_WriteCountGet(void)
 {
     size_t nPendingTxBytes;
 
-    nPendingTxBytes = ${UART_INSTANCE_NAME}_WritePendingBytesGet();    
+    nPendingTxBytes = ${UART_INSTANCE_NAME}_WritePendingBytesGet();
 
     return nPendingTxBytes;
 }
@@ -618,25 +618,34 @@ void ${UART_INSTANCE_NAME}_TX_InterruptHandler (void)
 {
     uint8_t wrByte;
 
-    /* Clear ${UART_INSTANCE_NAME}TX Interrupt flag */
-    ${UART_TX_IFS_REG}CLR = _${UART_TX_IFS_REG}_U${UART_INSTANCE_NUM}TXIF_MASK;
-
-    /* Keep writing to the TX FIFO as long as there is space */
-    while(!(U${UART_INSTANCE_NUM}STA & _U${UART_INSTANCE_NUM}STA_UTXBF_MASK))
+    /* Check if any data is pending for transmission */
+    if (${UART_INSTANCE_NAME}_WritePendingBytesGet() > 0)
     {
-        if (${UART_INSTANCE_NAME}_TxPullByte(&wrByte) == true)
-        {
-            U${UART_INSTANCE_NUM}TXREG = wrByte;
+        /* Clear ${UART_INSTANCE_NAME}TX Interrupt flag */
+        ${UART_TX_IFS_REG}CLR = _${UART_TX_IFS_REG}_U${UART_INSTANCE_NUM}TXIF_MASK;
 
-            /* Send notification */
-            ${UART_INSTANCE_NAME}_WriteNotificationSend();
-        }
-        else
+        /* Keep writing to the TX FIFO as long as there is space */
+        while(!(U${UART_INSTANCE_NUM}STA & _U${UART_INSTANCE_NUM}STA_UTXBF_MASK))
         {
-            /* Nothing to transmit. Disable the data register empty interrupt. */
-            ${UART_INSTANCE_NAME}_TX_INT_DISABLE();
-            break;
+            if (${UART_INSTANCE_NAME}_TxPullByte(&wrByte) == true)
+            {
+                U${UART_INSTANCE_NUM}TXREG = wrByte;
+
+                /* Send notification */
+                ${UART_INSTANCE_NAME}_WriteNotificationSend();
+            }
+            else
+            {
+                /* Nothing to transmit. Disable the data register empty interrupt. */
+                ${UART_INSTANCE_NAME}_TX_INT_DISABLE();
+                break;
+            }
         }
+    }
+    else
+    {
+        /* Nothing to transmit. Disable the data register empty interrupt. */
+        ${UART_INSTANCE_NAME}_TX_INT_DISABLE();
     }
 }
 
