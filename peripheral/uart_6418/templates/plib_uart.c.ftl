@@ -463,6 +463,28 @@ size_t ${UART_INSTANCE_NAME}_ReadCountGet( void )
     </#if>
 }
 
+bool ${UART_INSTANCE_NAME}_ReadAbort(void)
+{
+    if (${UART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus == true)
+    {
+        <#if useUARTRxDMA == true>
+        ${UART_INSTANCE_NAME}_REGS->UART_RCR = (uint32_t)0;
+        ${UART_INSTANCE_NAME}_REGS->UART_PTCR = UART_PTCR_RXTDIS_Msk;
+        ${UART_INSTANCE_NAME}_REGS->UART_IDR = (UART_IDR_ENDRX_Msk | UART_IDR_FRAME_Msk | UART_IDR_PARE_Msk | UART_IDR_OVRE_Msk);
+        <#else>
+        /* Disable Read, Overrun, Parity and Framing error interrupts */
+        ${UART_INSTANCE_NAME}_REGS->UART_IDR = (UART_IDR_RXRDY_Msk | UART_IDR_FRAME_Msk | UART_IDR_PARE_Msk | UART_IDR_OVRE_Msk);
+        </#if>
+
+        ${UART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus = false;
+
+        /* If required application should read the num bytes processed prior to calling the read abort API */
+        ${UART_INSTANCE_NAME?lower_case}Obj.rxSize = ${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize = 0;
+    }
+
+    return true;
+}
+
 </#if>
 <#if USART_INTERRUPT_MODE == false>
 int ${UART_INSTANCE_NAME}_ReadByte(void)
