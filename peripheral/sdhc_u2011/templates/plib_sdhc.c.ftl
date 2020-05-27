@@ -72,24 +72,28 @@ static void ${SDHC_INSTANCE_NAME}_TransferModeSet ( uint32_t opcode )
 
     switch(opcode)
     {
-        case 51:
-        case 6:
-        case 17:
+<#if !SDCARD_EMMCEN>
+        case SDHC_CMD_READ_SCR:
+        case SDHC_CMD_SET_BUS_WIDTH:
+<#else>
+        case SDHC_CMD_SEND_EXT_CSD:
+</#if>
+        case SDHC_CMD_READ_SINGLE_BLOCK:
             /* Read single block of data from the device. */
             transferMode = (SDHC_TMR_DMAEN_ENABLE | SDHC_TMR_DTDSEL_Msk);
             break;
 
-        case 18:
+        case SDHC_CMD_READ_MULTI_BLOCK:
             /* Read multiple blocks of data from the device. */
             transferMode = (SDHC_TMR_DMAEN_ENABLE | SDHC_TMR_DTDSEL_Msk | SDHC_TMR_MSBSEL_Msk | SDHC_TMR_BCEN_Msk);
             break;
 
-        case 24:
+        case SDHC_CMD_WRITE_SINGLE_BLOCK:
             /* Write single block of data to the device. */
             transferMode = SDHC_TMR_DMAEN_ENABLE;
             break;
 
-        case 25:
+        case SDHC_CMD_WRITE_MULTI_BLOCK:
             /* Write multiple blocks of data to the device. */
             transferMode = (SDHC_TMR_DMAEN_ENABLE | SDHC_TMR_MSBSEL_Msk | SDHC_TMR_BCEN_Msk);
             break;
@@ -111,6 +115,7 @@ void ${SDHC_INSTANCE_NAME}_InterruptHandler(void)
     eistr = ${SDHC_INSTANCE_NAME}_REGS->SDHC_EISTR;
     /* Save the error in a global variable for later use */
     ${SDHC_INSTANCE_NAME?lower_case}Obj.errorStatus |= eistr;
+    <#if SDCARD_EMMCEN == false && SDCARD_SDCDEN == true>
 
     if (nistr & SDHC_NISTR_CINS_Msk)
     {
@@ -120,6 +125,7 @@ void ${SDHC_INSTANCE_NAME}_InterruptHandler(void)
     {
         xferStatus |= SDHC_XFER_STATUS_CARD_REMOVED;
     }
+    </#if>
 
     if (${SDHC_INSTANCE_NAME?lower_case}Obj.isCmdInProgress == true)
     {
@@ -231,16 +237,20 @@ bool ${SDHC_INSTANCE_NAME}_IsDatLineBusy ( void )
 {
     return (((${SDHC_INSTANCE_NAME}_REGS->SDHC_PSR & SDHC_PSR_CMDINHD_Msk) == SDHC_PSR_CMDINHD_Msk)? true : false);
 }
+<#if SDCARD_EMMCEN == false && SDCARD_SDWPEN == true>
 
 bool ${SDHC_INSTANCE_NAME}_IsWriteProtected ( void )
 {
     return (${SDHC_INSTANCE_NAME}_REGS->SDHC_PSR & SDHC_PSR_WRPPL_Msk) ? false : true;
 }
+</#if>
+<#if SDCARD_EMMCEN == false && SDCARD_SDCDEN == true>
 
 bool ${SDHC_INSTANCE_NAME}_IsCardAttached ( void )
 {
     return ((${SDHC_INSTANCE_NAME}_REGS->SDHC_PSR & SDHC_PSR_CARDINS_Msk) == SDHC_PSR_CARDINS_Msk)? true : false;
 }
+</#if>
 
 void ${SDHC_INSTANCE_NAME}_BlockSizeSet ( uint16_t blockSize )
 {
@@ -326,6 +336,9 @@ void ${SDHC_INSTANCE_NAME}_DmaSetup (
 
     /* The last descriptor line must indicate the end of the descriptor list */
     ${SDHC_INSTANCE_NAME?lower_case}DmaDescrTable[i-1].attribute |= (SDHC_DESC_TABLE_ATTR_END);
+
+    /* Clean the cache associated with the modified descriptors */
+    DCACHE_CLEAN_BY_ADDR((uint32_t*)(${SDHC_INSTANCE_NAME?lower_case}DmaDescrTable), (i * sizeof(SDHC_ADMA_DESCR)));
 
     /* Set the starting address of the descriptor table */
     ${SDHC_INSTANCE_NAME}_REGS->SDHC_ASAR[0] = (uint32_t)(&${SDHC_INSTANCE_NAME?lower_case}DmaDescrTable[0]);
@@ -470,8 +483,10 @@ void ${SDHC_INSTANCE_NAME}_CommandSend (
     ${SDHC_INSTANCE_NAME?lower_case}Obj.isDataInProgress = false;
     ${SDHC_INSTANCE_NAME?lower_case}Obj.errorStatus = 0;
 
+<#if SDCARD_EMMCEN == false && SDCARD_SDCDEN == true>
     /* Keep the card insertion and removal interrupts enabled */
     normalIntSigEnable = (SDHC_NISIER_CINS_Msk | SDHC_NISIER_CREM_Msk);
+</#if>
 
     switch (respType)
     {
@@ -535,6 +550,10 @@ void ${SDHC_INSTANCE_NAME}_CommandSend (
     ${SDHC_INSTANCE_NAME}_REGS->SDHC_CR = cmd;
 }
 
+<#compress>
+<#-- Enable FCD if the mode of operation is EMMC or if CD capability exists but is not enabled  -->
+<#assign USE_FCD = SDCARD_EMMCEN || (SDCARD_SDCD_SUPPORT && !SDCARD_SDCDEN)>
+</#compress>
 void ${SDHC_INSTANCE_NAME}_ModuleInit( void )
 {
     /* Reset module*/
@@ -559,6 +578,11 @@ void ${SDHC_INSTANCE_NAME}_ModuleInit( void )
     /* Enable ADMA2 (Check CA0R capability register first) */
     ${SDHC_INSTANCE_NAME}_REGS->SDHC_HC1R |= SDHC_HC1R_DMASEL(2);
 </#if>
+<#if USE_FCD>
+
+    /* Enable force card detect */
+    ${SDHC_INSTANCE_NAME}_REGS->SDHC_MC1R = SDHC_MC1R_FCD_Msk;
+</#if>
 
     /* SD Bus Voltage Select = 3.3V, SD Bus Power = On */
     ${SDHC_INSTANCE_NAME}_REGS->SDHC_PCR = (SDHC_PCR_SDBVSEL_3V3 | SDHC_PCR_SDBPWR_ON);
@@ -568,9 +592,11 @@ void ${SDHC_INSTANCE_NAME}_ModuleInit( void )
 
     /* Clear the high speed bit and set the data width to 1-bit mode */
     ${SDHC_INSTANCE_NAME}_REGS->SDHC_HC1R &= ~(SDHC_HC1R_HSEN_Msk | SDHC_HC1R_DW_Msk);
+<#if SDCARD_EMMCEN == false && SDCARD_SDCDEN == true>
 
     /* Enable card inserted and card removed interrupt signals */
     ${SDHC_INSTANCE_NAME}_REGS->SDHC_NISIER = (SDHC_NISIER_CINS_Msk | SDHC_NISIER_CREM_Msk);
+</#if>
 }
 
 void ${SDHC_INSTANCE_NAME}_Initialize( void )

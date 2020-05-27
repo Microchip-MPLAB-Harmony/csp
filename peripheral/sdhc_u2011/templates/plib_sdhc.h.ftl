@@ -66,10 +66,14 @@ void ${SDHC_INSTANCE_NAME}_BlockCountSet( uint16_t numBlocks );
 bool ${SDHC_INSTANCE_NAME}_IsCmdLineBusy ( void );
 
 bool ${SDHC_INSTANCE_NAME}_IsDatLineBusy ( void );
+<#if SDCARD_EMMCEN == false && SDCARD_SDWPEN == true>
 
 bool ${SDHC_INSTANCE_NAME}_IsWriteProtected ( void );
+</#if>
+<#if SDCARD_EMMCEN == false && SDCARD_SDCDEN == true>
 
 bool ${SDHC_INSTANCE_NAME}_IsCardAttached ( void );
+</#if>
 
 bool ${SDHC_INSTANCE_NAME}_ClockSet ( uint32_t clock);
 
@@ -92,9 +96,9 @@ void ${SDHC_INSTANCE_NAME}_Initialize( void );
 void ${SDHC_INSTANCE_NAME}_CallbackRegister(SDHC_CALLBACK callback, uintptr_t contextHandle);
 
 void ${SDHC_INSTANCE_NAME}_CommandSend (
-    uint8_t opCode, 
+    uint8_t opCode,
     uint32_t argument,
-    uint8_t respType, 
+    uint8_t respType,
     SDHC_DataTransferFlags transferFlags
 );
 
