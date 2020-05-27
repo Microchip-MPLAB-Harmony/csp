@@ -401,6 +401,25 @@ size_t ${UART_INSTANCE_NAME}_ReadCountGet( void )
     return ${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize;
 }
 
+bool ${UART_INSTANCE_NAME}_ReadAbort(void)
+{
+    if (${UART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus == true)
+    {        
+        /* Disable the fault interrupt */
+		${UART_FAULT_IEC_REG}CLR = _${UART_FAULT_IEC_REG}_U${UART_INSTANCE_NUM}EIE_MASK;
+		
+		/* Disable the receive interrupt */
+		${UART_RX_IEC_REG}CLR = _${UART_RX_IEC_REG}_U${UART_INSTANCE_NUM}RXIE_MASK;
+        
+        ${UART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus = false;                                
+        
+		/* If required application should read the num bytes processed prior to calling the read abort API */
+        ${UART_INSTANCE_NAME?lower_case}Obj.rxSize = ${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize = 0;
+    }
+    
+    return true;
+}
+
 void ${UART_INSTANCE_NAME}_WriteCallbackRegister( UART_CALLBACK callback, uintptr_t context )
 {
     ${UART_INSTANCE_NAME?lower_case}Obj.txCallback = callback;
@@ -460,8 +479,11 @@ void ${UART_INSTANCE_NAME}_RX_InterruptHandler (void)
         {
             ${UART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus = false;
 
-            /* Disable the receive interrupt */
-            ${UART_RX_IEC_REG}CLR = _${UART_RX_IEC_REG}_U${UART_INSTANCE_NUM}RXIE_MASK;
+            /* Disable the fault interrupt */
+			${UART_FAULT_IEC_REG}CLR = _${UART_FAULT_IEC_REG}_U${UART_INSTANCE_NUM}EIE_MASK;
+			
+			/* Disable the receive interrupt */
+			${UART_RX_IEC_REG}CLR = _${UART_RX_IEC_REG}_U${UART_INSTANCE_NUM}RXIE_MASK;
 
             if(${UART_INSTANCE_NAME?lower_case}Obj.rxCallback != NULL)
             {
