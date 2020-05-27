@@ -81,6 +81,8 @@ bool ${UART_INSTANCE_NAME}_ReadIsBusy( void );
 
 size_t ${UART_INSTANCE_NAME}_ReadCountGet( void );
 
+bool ${UART_INSTANCE_NAME}_ReadAbort(void);
+
 bool ${UART_INSTANCE_NAME}_WriteIsBusy( void );
 
 size_t ${UART_INSTANCE_NAME}_WriteCountGet( void );
