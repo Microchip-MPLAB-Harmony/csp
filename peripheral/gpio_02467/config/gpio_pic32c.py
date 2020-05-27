@@ -71,6 +71,56 @@ def InterruptStatusWarning(symbol, event):
 def PPSOptionsVisibilityControl(symbol, event):
     symbol.setVisible(event["value"] )
 
+def ppsInputPinValueUpdate(symbol, event):
+    import xml.etree.ElementTree as ET
+
+    global ppsXmlPath
+    tree = ET.parse(ppsXmlPath)
+    root = tree.getroot()
+
+    if "SYS_PORT_PPS_INPUT_FUNCTION_" in event["id"]:
+        pinName = symbol.getKey(symbol.getValue())
+        functionName = event["symbol"].getKey(event["value"])
+
+        for myGroups in root.findall('groups'):
+            for myGroup in myGroups.findall('group'):
+                for myPin in myGroup.findall('pin'):
+                    if ("value" in myPin.attrib.keys()) and (pinName == myPin.get("name")): # means its group for input pins and pin name matched
+                        pinValue = myPin.get("value") # save the pin value
+                        for myFunction in myGroup.findall('function'): # Since pin name is found, now search the function within the same group
+                            if functionName == myFunction.get("name"):
+                                functionValue = myFunction.get("register-name") # if function is found, save it
+                                symbol.setKeyValue(pinName, pinValue) # update the pin value
+                                event["symbol"].setKeyValue(functionName, functionValue) # update the function value
+                                return
+    elif "USE_PPS_INPUT_" in event["id"]:
+        symbol.setVisible(event["value"] )
+
+def ppsOutputPinValueUpdate(symbol, event):
+    import xml.etree.ElementTree as ET
+
+    global ppsXmlPath
+    tree = ET.parse(ppsXmlPath)
+    root = tree.getroot()
+
+    if ("SYS_PORT_PPS_OUTPUT_FUNCTION_" in event["id"]):
+        pinName = symbol.getKey(symbol.getValue())
+        functionName = event["symbol"].getKey(event["value"])
+
+        for myGroups in root.findall('groups'):
+            for myGroup in myGroups.findall('group'):
+                for myPin in myGroup.findall('pin'):
+                    if ("register-name" in myPin.attrib.keys()) and (pinName == myPin.get("name")): # means its group for output pins and pin name matched
+                        pinValue = myPin.get("register-name") # save the pin value
+                        for myFunction in myGroup.findall('function'): # Since pin name is found, now search the function within the same group
+                            if functionName == myFunction.get("name"):
+                                functionValue = myFunction.get("value") # if function is found, save it
+                                symbol.setKeyValue(pinName, pinValue) # update the function value
+                                event["symbol"].setKeyValue(functionName, functionValue) # update the pin value
+                                return
+    elif "USE_PPS_OUTPUT_" in event["id"]:
+        symbol.setVisible(event["value"] )
+
 # Dependency Function to pass interrupt related info to Interrupt Manager.
 # This function will be entered only by internal change happening to PORT channel interrupt, never by manual
 # change because channel interrupt is not user configurable directly.
@@ -499,10 +549,12 @@ ppsOutputFunction = []
 ppsOutputPin = []
 ppsInputPinMap = {}
 ppsOutputFunctionMap = {}
+global PORTS_REMAP_OUTPUT_PIN
 PORTS_REMAP_OUTPUT_PIN = {}
 PORTS_REMAP_INPUT_FUNCTION= {}
 
 # parse XML and populate PPS lists and dictionaries
+global ppsXmlPath
 ppsXmlName = deviceXmlRoot.get("families")
 ppsXmlPath = os.path.join(currentPath, "../plugin/pin_xml/families/" + ppsXmlName + ".xml")
 ppsXmlPath = os.path.normpath(ppsXmlPath)
@@ -555,7 +607,7 @@ for pinNumber in range(0, PPSPinCount):
     ppsInputPin[pinNumber].setVisible(False)
     for key, value in ppsInputPinMap.items():
         ppsInputPin[pinNumber].addKey(key, value, key)
-    ppsInputPin[pinNumber].setDependencies(PPSOptionsVisibilityControl, ["USE_PPS_INPUT_" + str(pinNumber)])
+    ppsInputPin[pinNumber].setDependencies(ppsInputPinValueUpdate, ["SYS_PORT_PPS_INPUT_FUNCTION_" + str(pinNumber), "USE_PPS_INPUT_" + str(pinNumber)])
     
 
     #PPS Output pin Configuration
@@ -588,7 +640,7 @@ for pinNumber in range(0, PPSPinCount):
     ppsOutputPin[pinNumber].setVisible(False)
     for key, value in PORTS_REMAP_OUTPUT_PIN.items():
         ppsOutputPin[pinNumber].addKey(key, value, value)
-    ppsOutputPin[pinNumber].setDependencies(PPSOptionsVisibilityControl, ["USE_PPS_OUTPUT_" + str(pinNumber)])
+    ppsOutputPin[pinNumber].setDependencies(ppsOutputPinValueUpdate, ["SYS_PORT_PPS_OUTPUT_FUNCTION_" + str(pinNumber),"USE_PPS_OUTPUT_" + str(pinNumber)])
 
 ###################################################################################################
 ################################# PORT Configuration related code #################################

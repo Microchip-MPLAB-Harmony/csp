@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- This is an auto-generated pin data file created: 01:06:30 04/17/20 -->
+<!-- This is an auto-generated pin data file created: 21:34:41 05/27/20 -->
 <pinfile family="CX_BZ">
    <packages>
      <package diagram="MX_48_QFN" id="1" name="VQFN" />
@@ -59,7 +59,6 @@
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="9" />
-      <function name="PGC2" />
       <function name="SERCOM0_PAD1" />
       <function name="AC_CMP1_ALT" />
       <function name="RPA6" />
@@ -69,6 +68,7 @@
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="10" />
+      <function name="TRCLK" />
       <function name="SERCOM1_PAD0" />
       <function name="RPA7" />
     </pin>
@@ -77,7 +77,6 @@
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="11" />
-      <function name="PGD2" />
       <function name="SERCOM1_PAD1" />
       <function name="RPA8" />
     </pin>
@@ -121,7 +120,6 @@
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="16" />
-      <function name="COEXCTRL0" />
       <function name="SERCOM2_PAD0" />
       <function name="RPA13" />
     </pin>
@@ -130,7 +128,6 @@
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="17" />
-      <function name="COEXCTRL1" />
       <function name="SERCOM2_PAD1" />
       <function name="RPA14" />
     </pin>
@@ -140,7 +137,7 @@
     <pin name="BUCK_CLDO">
        <number package="1" pin="19" />
     </pin>
-    <pin name="EXTRA_48K">
+    <pin name="EXT48K">
        <number package="1" pin="20" />
     </pin>
     <pin name="BUCK_BB">
@@ -172,7 +169,6 @@
     </pin>
     <pin name="RB0">
        <number package="1" pin="30" />
-      <function name="COEXCTRL2" />
       <function name="AN4" />
       <function name="AC_AIN2" />
       <function name="RPB0" />
@@ -197,7 +193,6 @@
     </pin>
     <pin name="RB4">
        <number package="1" pin="34" />
-      <function name="PGC1" />
       <function name="TCK" />
       <function name="TRD3" />
       <function name="AN0" />
@@ -206,7 +201,6 @@
     </pin>
     <pin name="RB5">
        <number package="1" pin="35" />
-      <function name="PGC4" />
       <function name="TDI" />
       <function name="TRD0" />
       <function name="AN1" />
@@ -217,7 +211,6 @@
     </pin>
     <pin name="RB6">
        <number package="1" pin="37" />
-      <function name="PGD1" />
       <function name="TMS" />
       <function name="TRD1" />
       <function name="AN2" />
@@ -226,7 +219,7 @@
     </pin>
     <pin name="RB7">
        <number package="1" pin="38" />
-      <function name="PGD4" />
+      <function name="CM4_SWO" />
       <function name="TDO" />
       <function name="TRD2" />
       <function name="AN3" />
@@ -241,6 +234,7 @@
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="40" />
+      <function name="CM4_SWDIO" />
       <function name="RPB9" />
     </pin>
     <pin name="RB8">
@@ -248,6 +242,7 @@
          <modifier value="5V" />
       </modifiers>
       <number package="1" pin="41" />
+      <function name="CM4_SWCLK" />
       <function name="RPB8" />
     </pin>
     <pin name="RA4">

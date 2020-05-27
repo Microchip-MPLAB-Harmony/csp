@@ -716,7 +716,7 @@
 			<function name="TDI"/>
 			<function name="TDO"/>
 		</module>
-		<module name="Trace">
+		<module name="TPIU">
 			<constraint type="enable">
 				<pair key="SYS_DEVCON_USE_TRACE" value="y"/>
 			</constraint>
@@ -726,51 +726,10 @@
 			<function name="TRD2"/>
 			<function name="TRD3"/>
 		</module>
-		<module name="Debug">
-			<function name="PGED1">
-			    <constraint type="debug">
-			    	<pair key="ICESEL" value="ICS_PGx1"/>
-			    </constraint>
-			</function>
-			<function name="PGEC1">
-			    <constraint type="debug">
-			    	<pair key="ICESEL" value="ICS_PGx1"/>
-			    </constraint>
-			</function>
-			<function name="PGED2">
-			    <constraint type="debug">
-			    	<pair key="ICESEL" value="ICS_PGx2"/>
-			    </constraint>
-			</function>
-			<function name="PGEC2">
-			    <constraint type="debug">
-			    	<pair key="ICESEL" value="ICS_PGx2"/>
-			    </constraint>
-			</function>
-			<function name="PGED4">
-			    <constraint type="debug">
-			    	<pair key="ICESEL" value="ICS_PGx4"/>
-			    </constraint>
-			</function>
-			<function name="PGEC4">
-			    <constraint type="debug">
-			    	<pair key="ICESEL" value="ICS_PGx4"/>
-			    </constraint>
-			</function>
-			<function name="PGC0"/>
-			<function name="PGD0"/>
-
-			<function name="PGC1"/>
-			<function name="PGD1"/>
-
-			<function name="PGC2"/>
-			<function name="PGD2"/>
-
-			<function name="PGC3"/>
-			<function name="PGD3"/>
-
-			<function name="PGC4"/>
-			<function name="PGD4"/>
+		<module name="ICE">
+			<function name="CM4_SWCLK"/>
+			<function name="CM4_SWO"/>
+			<function name="CM4_SWDIO"/>			
 		</module>
 
 		<module name="BSP" desc="Board Support Package">
