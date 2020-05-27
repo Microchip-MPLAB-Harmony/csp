@@ -93,6 +93,8 @@ size_t ${USART_INSTANCE_NAME}_WriteCountGet( void );
 
 size_t ${USART_INSTANCE_NAME}_ReadCountGet( void );
 
+bool ${USART_INSTANCE_NAME}_ReadAbort(void);
+
 void ${USART_INSTANCE_NAME}_WriteCallbackRegister( USART_CALLBACK callback, uintptr_t context );
 
 void ${USART_INSTANCE_NAME}_ReadCallbackRegister( USART_CALLBACK callback, uintptr_t context );

@@ -505,6 +505,22 @@ bool ${USART_INSTANCE_NAME}_ReadIsBusy( void )
     return ${USART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus;
 }
 
+bool ${USART_INSTANCE_NAME}_ReadAbort(void)
+{
+    if (${USART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus == true)
+    {        
+        /* Disable Read, Overrun, Parity and Framing error interrupts */
+        ${USART_INSTANCE_NAME}_REGS->US_IDR = (US_IDR_USART_RXRDY_Msk | US_IDR_USART_FRAME_Msk | US_IDR_USART_PARE_Msk | US_IDR_USART_OVRE_Msk);	
+        
+        ${USART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus = false;                
+        
+        /* If required application should read the num bytes processed prior to calling the read abort API */        
+        ${USART_INSTANCE_NAME?lower_case}Obj.rxSize = ${USART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize = 0;
+    }
+    
+    return true;
+}
+
 size_t ${USART_INSTANCE_NAME}_WriteCountGet( void )
 {
     <#if useUSARTTxDMA == true>
