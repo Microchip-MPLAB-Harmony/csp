@@ -316,7 +316,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_SerialSetup( FLEXCOM_USART_SERIAL_SETUP *set
             /* The input clock source - srcClkFreq, is too low to generate the desired baud */
             return status;
         }
-        
+
         if (brgVal > 65535)
         {
             /* The requested baud is so low that the ratio of srcClkFreq to baud exceeds the 16-bit register value of CD register */
@@ -495,6 +495,29 @@ size_t ${FLEXCOM_INSTANCE_NAME}_USART_ReadCountGet( void )
     <#else>
     return ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxProcessedSize;
     </#if>
+}
+
+bool ${FLEXCOM_INSTANCE_NAME}_USART_ReadAbort(void)
+{
+    if (${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxBusyStatus == true)
+    {
+        <#if USE_USART_RX_DMA?? && USE_USART_RX_DMA == true>
+        /* Disable PDA channel transfer */
+        USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_RCR = (uint32_t) 0;
+        USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_PTCR = US_PTCR_RXTDIS_Msk;
+        USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_IDR = US_IDR_ENDRX_Msk;
+        <#else>
+        /* Disable Read, Overrun, Parity and Framing error interrupts */
+        USART${FLEXCOM_INSTANCE_NUMBER}_REGS->US_IDR = (US_IDR_RXRDY_Msk | US_IDR_FRAME_Msk | US_IDR_PARE_Msk | US_IDR_OVRE_Msk);
+        </#if>
+
+        ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxBusyStatus = false;
+
+        /* If required application should read the num bytes processed prior to calling the read abort API */
+        ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxSize = ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxProcessedSize = 0;
+    }
+
+    return true;
 }
 
 </#if>
