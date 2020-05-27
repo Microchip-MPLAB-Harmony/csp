@@ -415,6 +415,7 @@ void ${SERCOM_INSTANCE_NAME}_USART_WriteCallbackRegister( SERCOM_USART_CALLBACK 
 
     ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txContext = context;
 }
+
 <#else>
 bool ${SERCOM_INSTANCE_NAME}_USART_TransmitterIsReady( void )
 {
@@ -524,6 +525,27 @@ size_t ${SERCOM_INSTANCE_NAME}_USART_ReadCountGet( void )
     return ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize;
 }
 
+bool ${SERCOM_INSTANCE_NAME}_USART_ReadAbort(void)
+{
+    if (${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBusyStatus == true)
+    {        
+        /* Disable the receive interrupt */				
+		${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTENCLR = SERCOM_USART_INT_INTENCLR_RXC_Msk;
+						
+		<#if USART_INTENSET_ERROR = true>
+		/* Disable error interrupt */
+		${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTENCLR = SERCOM_USART_INT_INTENCLR_ERROR_Msk;
+		</#if>
+        
+        ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBusyStatus = false;  		
+        
+		/* If required application should read the num bytes processed prior to calling the read abort API */
+        ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxSize = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize = 0;
+    }	
+	
+	return true;	
+}
+
 void ${SERCOM_INSTANCE_NAME}_USART_ReadCallbackRegister( SERCOM_USART_CALLBACK callback, uintptr_t context )
 {
     ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxCallback = callback;
@@ -595,6 +617,10 @@ void static ${SERCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
                 ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBusyStatus = false;
                 ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxSize = 0;
                 ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTENCLR = SERCOM_USART_INT_INTENCLR_RXC_Msk;
+				
+				<#if USART_INTENSET_ERROR = true>
+				${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTENCLR = SERCOM_USART_INT_INTENCLR_ERROR_Msk;
+				</#if>
 
                 if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxCallback != NULL)
                 {

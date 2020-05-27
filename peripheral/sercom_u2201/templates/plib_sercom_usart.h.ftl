@@ -101,6 +101,8 @@ bool ${SERCOM_INSTANCE_NAME}_USART_ReadIsBusy( void );
 
 size_t ${SERCOM_INSTANCE_NAME}_USART_ReadCountGet( void );
 
+bool ${SERCOM_INSTANCE_NAME}_USART_ReadAbort(void);
+
 void ${SERCOM_INSTANCE_NAME}_USART_ReadCallbackRegister( SERCOM_USART_CALLBACK callback, uintptr_t context );
 <#else>
 bool ${SERCOM_INSTANCE_NAME}_USART_ReceiverIsReady( void );
