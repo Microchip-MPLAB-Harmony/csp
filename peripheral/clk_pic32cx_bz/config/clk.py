@@ -777,8 +777,11 @@ def spll2DefaultFreq():
         freq = int(Database.getSymbolValue("core", "CONFIG_SYS_CLK_CONFIG_FRC"))
 
     dividor_index = Database.getSymbolValue("core", "SPLLCON_SPLLPOSTDIV2_VALUE")
-    dividor = int(spllcon_spllpostdiv2_val.getKeyValue(dividor_index)[2:])
-    spll2 = freq/dividor
+    dividor = int(spllcon_spllpostdiv2_val.getKeyValue(dividor_index)[2:], 16)
+    if dividor == 0:
+        spll2 = 0
+    else:
+        spll2 = freq/dividor
 
     return spll2
 
@@ -931,6 +934,20 @@ def calculated_clock_frequencies(clk_comp, clk_menu):
     spll2_clk_freq.setReadOnly(True)
     spll2_clk_freq.setDependencies(spll2ClockFreqCalc,["POSC_OUT_FREQ","SPLL3_RFPLL_FREQ","SPLLCON_SPLLPOSTDIV2_VALUE", "SPLLCON_SPLL_BYP_VALUE"])
 
+    # internal symbol for java to show error
+    spll2_clk_max_freq = clk_comp.createIntegerSymbol("SPLL2_FREQ_MAX", sym_calc_freq_menu)
+    spll2_clk_max_freq.setLabel("SPLL2 Clock (for ADC Charge Pump) Max Frequency (Hz)")
+    spll2_clk_max_freq.setDefaultValue(24000000)
+    spll2_clk_max_freq.setReadOnly(True)
+    spll2_clk_max_freq.setVisible(False)
+
+     # internal symbol for java to show error
+    spll2_clk_min_freq = clk_comp.createIntegerSymbol("SPLL2_FREQ_MIN", sym_calc_freq_menu)
+    spll2_clk_min_freq.setLabel("SPLL2 Clock (for ADC Charge Pump) Min Frequency (Hz)")
+    spll2_clk_min_freq.setDefaultValue(8000000)
+    spll2_clk_min_freq.setReadOnly(True)
+    spll2_clk_min_freq.setVisible(False)
+	
     lpclk_clk_freq = clk_comp.createIntegerSymbol("LPCLK_FREQ", sym_calc_freq_menu)
     lpclk_clk_freq.setLabel("Low Power Clock (LPCLK) Frequency (Hz)")
     lpclk_clk_freq.setDefaultValue(32000)
@@ -955,6 +972,13 @@ def calculated_clock_frequencies(clk_comp, clk_menu):
                 symbolPbFreqList[index].setDefaultValue(param.getAttribute("value"))
         symbolPbFreqList[index].setReadOnly(True)
         index += 1
+
+     # internal symbol for java to show error
+    pbclk3_clk_max_freq = clk_comp.createIntegerSymbol("PBCLK3_FREQ_MAX", sym_calc_freq_menu)
+    pbclk3_clk_max_freq.setLabel("PBCLK3 Max Frequency (Hz)")
+    pbclk3_clk_max_freq.setDefaultValue(6400000)
+    pbclk3_clk_max_freq.setReadOnly(True)
+    pbclk3_clk_max_freq.setVisible(False)
 
     # Reference Clock frequencies
     index = 0
@@ -981,6 +1005,12 @@ def calculated_clock_frequencies(clk_comp, clk_menu):
     dswdt_clk_freq.setDefaultValue(dswdtClockDefaultFreq())
     dswdt_clk_freq.setReadOnly(True)
     dswdt_clk_freq.setDependencies(dswdtClockFreqCalc,["CONFIG_DSWDTOSC","LPCLK_FREQ", "CONFIG_VBKP_32KCSEL"])
+
+    sercomSlowClockFrequency= clk_comp.createIntegerSymbol("SERCOM_SLOW_CLOCK_FREQUENCY", sym_calc_freq_menu)
+    sercomSlowClockFrequency.setLabel("SERCOM Slow Clock Frequency")
+    sercomSlowClockFrequency.setDefaultValue(Database.getSymbolValue("core", "LPCLK_FREQ"))
+    sercomSlowClockFrequency.setReadOnly(True)
+    sercomSlowClockFrequency.setDependencies(item_update, ["LPCLK_FREQ"])
 
 def find_lsb_position(field):
     # Take a field, and return the least significant bit position.  Range: 0-31
@@ -1258,6 +1288,10 @@ if __name__ == "__main__":
     SYM_CLK_MENU.setLabel("Clock Menu")
     SYM_CLK_MENU.setDescription("Configuration for Clock System Service")
 
+    # Menu items listed here
+    CLK_MENU_COMMENT = coreComponent.createCommentSymbol("clkSettingsComment", SYM_CLK_MENU)
+    CLK_MENU_COMMENT.setLabel("**** All settings listed here should be ideally configured using the Clock Configurator ****")
+
     CLK_MANAGER_SELECT = coreComponent.createStringSymbol("CLK_MANAGER_PLUGIN", SYM_CLK_MENU)
     CLK_MANAGER_SELECT.setVisible(False)
     CLK_MANAGER_SELECT.setDefaultValue("clk_pic32cx_bz:MZClockModel")
@@ -1446,10 +1480,6 @@ if __name__ == "__main__":
     symbolLen.setVisible(False)
     symbolLen.setDefaultValue(len(refOscList))
     # end of generation of ftl file-related symbols (values derived from atdf file)
-
-    # Menu items listed here
-    CLK_MENU_COMMENT = coreComponent.createCommentSymbol("clkSettingsComment", SYM_CLK_MENU)
-    CLK_MENU_COMMENT.setLabel("**** All settings listed here can be configured using the Clock Configurator ****")
 
     # Hiding temperature range selection feature for now - no such specification mentioned
     TEMP_RANGE = coreComponent.createKeyValueSetSymbol("CONFIG_TEMPERATURE_RANGE", CLK_CFG_SETTINGS)
