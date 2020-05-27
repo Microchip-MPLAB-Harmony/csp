@@ -1764,18 +1764,14 @@ if __name__ == "__main__":
         gclkSym_PCHCTRL_GEN.setLabel("Generator Selection")
         Gclk_Channel_CFGPCLKGEN_list.append(key + "_GENSEL")
 
-        gclkSymPCHCTRLGenNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CFG\"]/value-group@[name=\"CFG_CFGPCLKGEN1__EICCSEL\"]")
+        gclkSymPCHCTRLGenNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CFG\"]/value-group@[name=\"PCLKGENSEL\"]")
         gclkSymPCHCTRLGenNodeValues = []
         gclkSymPCHCTRLGenNodeValues = gclkSymPCHCTRLGenNode.getChildren()
 
-        gclkSymPCHCTRLGenDefaultValue = 1
+        gclkSymPCHCTRLGenDefaultValue = 0
 
         for i in range(0, len(gclkSymPCHCTRLGenNodeValues)):
             gclkSymPCHCTRLGenKeyName = gclkSymPCHCTRLGenNodeValues[i].getAttribute("name")
-
-            if (gclkSymPCHCTRLGenKeyName == "REFO1"):
-                gclkSymPCHCTRLGenDefaultValue = i
-
             gclkSymPCHCTRLGenKeyDescription = gclkSymPCHCTRLGenNodeValues[i].getAttribute("caption")
             ggclkSymPCHCTRLGenKeyValue = gclkSymPCHCTRLGenNodeValues[i].getAttribute("value")
             gclkSym_PCHCTRL_GEN.addKey(gclkSymPCHCTRLGenKeyName, ggclkSymPCHCTRLGenKeyValue , gclkSymPCHCTRLGenKeyDescription)
@@ -1797,7 +1793,7 @@ if __name__ == "__main__":
         gclkSym_CFGPCLKGENx_REG.setLabel("Peripheral Clock Generetor Register" + str(i))
         gclkSym_CFGPCLKGENx_REG.setReadOnly(True)
         gclkSym_CFGPCLKGENx_REG.setVisible(False)
-        gclkSym_CFGPCLKGENx_REG.setDefaultValue(0x11111111)
+        gclkSym_CFGPCLKGENx_REG.setDefaultValue(0x00000000)
 
     gclkSym_CFGPCLKGENx_REG.setDependencies(setCFGPCLKGENx_Reg, Gclk_Channel_CFGPCLKGEN_list)
 
