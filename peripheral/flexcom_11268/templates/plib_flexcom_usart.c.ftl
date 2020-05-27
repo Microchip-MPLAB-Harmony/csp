@@ -439,6 +439,22 @@ size_t ${FLEXCOM_INSTANCE_NAME}_USART_ReadCountGet( void )
     return ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxProcessedSize;
 }
 
+bool ${FLEXCOM_INSTANCE_NAME}_USART_ReadAbort(void)
+{
+    if (${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxBusyStatus == true)
+    {        		
+		/* Disable Read, Overrun, Parity and Framing error interrupts */
+		${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IDR = (FLEX_US_IDR_RXRDY_Msk | FLEX_US_IDR_FRAME_Msk | FLEX_US_IDR_PARE_Msk | FLEX_US_IDR_OVRE_Msk);
+		
+		${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxBusyStatus = false;
+
+		/* If required application should read the num bytes processed prior to calling the read abort API */
+        ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxSize = ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxProcessedSize = 0;
+    }
+    
+    return true;
+}
+
 </#if>
 <#if USART_INTERRUPT_MODE == false>
 uint8_t ${FLEXCOM_INSTANCE_NAME}_USART_ReadByte(void)
