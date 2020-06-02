@@ -185,12 +185,18 @@ void ${PM_INSTANCE_NAME}_Initialize( void )
 
 void ${PM_INSTANCE_NAME}_IdleModeEnter( void )
 {
+    <#if PM_IDLE_OPTION ? has_content>
+    ${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG = PM_SLEEPCFG_SLEEPMODE(${PM_IDLE_OPTION});
+
+    /* Ensure that SLEEPMODE bits are configured with the given value */
+    while ((${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG & PM_SLEEPCFG_SLEEPMODE_Msk) != PM_SLEEPCFG_SLEEPMODE(${PM_IDLE_OPTION}));
+    <#else>
     /* Configure Idle Sleep mode */
     ${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG = PM_SLEEPCFG_SLEEPMODE_IDLE_Val;
 
     /* Ensure that SLEEPMODE bits are configured with the given value */
     while (!(${PM_INSTANCE_NAME}_REGS->PM_SLEEPCFG & PM_SLEEPCFG_SLEEPMODE_IDLE_Val));
-
+    </#if>
     /* Wait for interrupt instruction execution */
     __WFI();
 }

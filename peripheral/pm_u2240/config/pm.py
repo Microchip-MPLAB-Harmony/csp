@@ -260,6 +260,32 @@ def instantiateComponent(pmComponent):
         pmSym_PWCFG.setOutputMode("Value")
         pmSym_PWCFG.setDisplayMode("Description")       
 
+    #Get different modes for Idle Sleep
+    pmIdleSleepOptions = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PM\"]/value-group@[name=\"PM_SLEEPCFG__SLEEPMODE\"]")
+    
+    pmIdleSleepOptionValues = []
+    pmIdleSleepOptionValues = pmIdleSleepOptions.getChildren()
+
+    IdleModeCount = 0
+    for id in range(0,len(pmIdleSleepOptionValues)):
+        if "IDLE" in pmIdleSleepOptionValues[id].getAttribute("name"):
+            IdleModeCount += 1 
+
+    if IdleModeCount > 1:
+        #Idle configuration
+        pmSym_PM_IDLE = pmComponent.createKeyValueSetSymbol("PM_IDLE_OPTION", None)
+        pmSym_PM_IDLE.setLabel("Idle Mode Configuration")
+        pmSym_PM_IDLE.setOutputMode("Value")
+        pmSym_PM_IDLE.setDisplayMode("Description")
+
+        for id in range(0,len(pmIdleSleepOptionValues)):
+            pmSym_PM_IDLE_Key_Key = pmIdleSleepOptionValues[id].getAttribute("name")
+            if "IDLE" in pmSym_PM_IDLE_Key_Key:
+                pmSym_PM_IDLE_Key_Value = pmIdleSleepOptionValues[id].getAttribute("value")
+                pmSym_PM_IDLE_Key_Description = pmIdleSleepOptionValues[id].getAttribute("caption")
+                pmSym_PM_IDLE.addKey(pmSym_PM_IDLE_Key_Key, pmSym_PM_IDLE_Key_Value, pmSym_PM_IDLE_Key_Description)
+        pmSym_PM_IDLE.setDefaultValue(0)
+
     # Clock Warning status
     pmSym_ClkEnComment = pmComponent.createCommentSymbol("PM_CLOCK_ENABLE_COMMENT", None)
     pmSym_ClkEnComment.setLabel("Warning!!! PM Peripheral Clock is Disabled in Clock Manager")
