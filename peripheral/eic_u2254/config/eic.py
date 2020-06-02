@@ -381,7 +381,8 @@ def instantiateComponent(eicComponent):
         DEBOUNCER_NO_STATES_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_DEBOUNCER_NO_STATES_0" , eicDebounceMenu)
         DEBOUNCER_NO_STATES_SelectionSymbol.setLabel("Valid Pin States for EXTINT[7:0]")
 
-        eicStatesxNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"EIC_DPRESCALER__STATES0\"]")
+        eicStates0Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/register-group@[name=\"EIC\"]/register@[name=\"DPRESCALER\"]/bitfield@[name=\"STATES0\"]")
+        eicStatesxNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"" + eicStates0Node.getAttribute("values") + "\"]")
 
         for index in range(len(eicStatesxNode.getChildren())):
             eicStatesxKeyName = eicStatesxNode.getChildren()[index].getAttribute("name")
@@ -397,7 +398,8 @@ def instantiateComponent(eicComponent):
         DEBOUNCER_PRESCALER_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_DEBOUNCER_PRESCALER_0" , eicDebounceMenu)
         DEBOUNCER_PRESCALER_SelectionSymbol.setLabel("Debouncer Prescaler for EXTINT[7:0]")
 
-        eicPrescalerNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"EIC_DPRESCALER__PRESCALER0\"]")
+        eicPrescaler0Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/register-group@[name=\"EIC\"]/register@[name=\"DPRESCALER\"]/bitfield@[name=\"PRESCALER0\"]")
+        eicPrescalerNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"" + eicPrescaler0Node.getAttribute("values") + "\"]")
 
         for index in range(len(eicPrescalerNode.getChildren())):
             eicPrescalerKeyName = eicPrescalerNode.getChildren()[index].getAttribute("name")
@@ -413,7 +415,9 @@ def instantiateComponent(eicComponent):
         DEBOUNCER_NO_STATES_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_DEBOUNCER_NO_STATES_1" , eicDebounceMenu)
         DEBOUNCER_NO_STATES_SelectionSymbol.setLabel("Valid Pin States Duration for EXTINT[15:8]")
 
-        eicStatesxNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"EIC_DPRESCALER__STATES1\"]")
+        eicStates0Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/register-group@[name=\"EIC\"]/register@[name=\"DPRESCALER\"]/bitfield@[name=\"STATES1\"]")
+        eicStatesxNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"" + eicStates0Node.getAttribute("values") + "\"]")
+
         for index in range(len(eicStatesxNode.getChildren())):
             eicStatesxKeyName = eicStatesxNode.getChildren()[index].getAttribute("name")
             eicStatesxKeyDescription = eicStatesxNode.getChildren()[index].getAttribute("caption")
@@ -428,7 +432,8 @@ def instantiateComponent(eicComponent):
         DEBOUNCER_PRESCALER_SelectionSymbol = eicComponent.createKeyValueSetSymbol("EIC_DEBOUNCER_PRESCALER_1" , eicDebounceMenu)
         DEBOUNCER_PRESCALER_SelectionSymbol.setLabel("Debouncer Prescaler for EXTINT[15:8]")
 
-        eicPrescalerNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"EIC_DPRESCALER__PRESCALER1\"]")
+        eicPrescaler0Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/register-group@[name=\"EIC\"]/register@[name=\"DPRESCALER\"]/bitfield@[name=\"PRESCALER1\"]")
+        eicPrescalerNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EIC\"]/value-group@[name=\"" + eicPrescaler0Node.getAttribute("values") + "\"]")
 
         for index in range(len(eicPrescalerNode.getChildren())):
             eicPrescalerKeyName = eicPrescalerNode.getChildren()[index].getAttribute("name")
