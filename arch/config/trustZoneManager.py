@@ -95,14 +95,8 @@ for key in memoryFuseMaxValue.keys():
     asSizeSymbol.setLabel(memoryFuseMaxValue[key][2] + " size")
     for val in range(0, (memoryFuseMaxValue[key][0] + 1)):
         size = val * memoryGranularity[key]
-
-        if size / 1024 == 0:
-            sizeString = str(size) + " Bytes"
-        elif size / 1024 > 0 and size / (1024 * 1024) == 0:
-            sizeString = str(float(size)/1024) + " KB"
-        else:
-            sizeString = str(float(size)/(1024 * 1024)) + " MB"
-        asSizeSymbol.addKey(sizeString, str(hex(int(size))), sizeString)
+        sizeString = str(size) + " Bytes"
+        asSizeSymbol.addKey(sizeString, str(hex(int(size))), '{:,}'.format(size) + " Bytes")
     asSizeSymbol.setDefaultValue(memoryFuseMaxValue[key][1])
     asSizeSymbol.setOutputMode("Key")
     asSizeSymbol.setDisplayMode("Description")
