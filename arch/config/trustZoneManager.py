@@ -36,7 +36,8 @@ alwaysSecurePeripheralList = ["GCLK", "OSCCTRL", "OSC32KCTRL", "MCLK", "IDAU", "
 dummyList = coreComponent.createListSymbol( "NULL_LIST",       None )
 peripheralList = coreComponent.createListEntrySymbol("TRUSTZONE_PERIPHERAL_LIST", None)
 peripheralList.setVisible(False)
-for key in fuseMapSymbol.keys():
+#Sort peripheral list in alphabetical order
+for key, value in sorted(fuseMapSymbol.items(), key = lambda arg:arg[0].split("_")[1] if '_' in arg[0] else arg[0]):
     if key.startswith("NONSEC") and key.split("_")[1] not in alwaysSecurePeripheralList:
         peripheralIsNonSecure = coreComponent.createBooleanSymbol(key.split("_")[1] + "_IS_NON_SECURE", trustZoneMenu)
         peripheralIsNonSecure.setLabel(key.split("_")[1] + " is Non-Secure")
