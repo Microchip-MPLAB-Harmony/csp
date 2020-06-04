@@ -63,6 +63,9 @@ extern "C" {
 #endif
 // DOM-IGNORE-END
 
+/* Non-secure start address */
+#define TZ_START_NS 0x${NON_SEC_START_ADDRESS}
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: System Functions
