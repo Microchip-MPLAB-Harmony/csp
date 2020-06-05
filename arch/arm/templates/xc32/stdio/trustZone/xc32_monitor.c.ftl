@@ -39,7 +39,7 @@
 *******************************************************************************/
 
 <#if stdio_s??>
-    <#if stdio_s.SECURE_SECURE_DEBUG_PERIPHERAL?has_content>
+    <#if stdio_s.SECURE_DEBUG_PERIPHERAL?has_content>
         <#lt>#include "definitions.h"
     </#if>
 </#if>
