@@ -1261,6 +1261,7 @@ def instantiateComponent(adchsComponent):
     adchsSym_ADCCON2__SAMC.setDefaultValue(1)
     adchsSym_ADCCON2__SAMC.setMin(0)
     adchsSym_ADCCON2__SAMC.setMax(1023)
+    adchsSym_ADCCON2__SAMC.setDefaultValue(2)
     adchsSym_ADCCON2__SAMC.setDependencies(adchsVisibilityOnEvent, ["ADCHS_"+str(channelID)+"_ENABLE"])
 
     # result resolution
