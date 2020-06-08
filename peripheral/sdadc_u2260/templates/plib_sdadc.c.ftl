@@ -216,6 +216,24 @@ void ${SDADC_INSTANCE_NAME}_Initialize( void )
     }
 }
 
+void ${SDADC_INSTANCE_NAME}_Enable( void )
+{
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_CTRLA |= SDADC_CTRLA_ENABLE_Msk;
+    while((${SDADC_INSTANCE_NAME}_REGS->SDADC_SYNCBUSY & SDADC_SYNCBUSY_ENABLE_Msk) == SDADC_SYNCBUSY_ENABLE_Msk)
+    {
+        /* Wait for synchronization */
+    }    
+}
+
+void ${SDADC_INSTANCE_NAME}_Disable( void )
+{
+    ${SDADC_INSTANCE_NAME}_REGS->SDADC_CTRLA &= ~SDADC_CTRLA_ENABLE_Msk;
+    while((${SDADC_INSTANCE_NAME}_REGS->SDADC_SYNCBUSY & SDADC_SYNCBUSY_ENABLE_Msk) == SDADC_SYNCBUSY_ENABLE_Msk)
+    {
+        /* Wait for synchronization */
+    }    
+}
+
 <#if SDADC_TRIGGER == "1"> <#-- SW trigger -->
 void ${SDADC_INSTANCE_NAME}_ConversionStart( void )
 {

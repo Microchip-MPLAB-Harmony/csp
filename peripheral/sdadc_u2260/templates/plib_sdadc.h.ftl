@@ -91,6 +91,10 @@ extern "C" {
 
 void ${SDADC_INSTANCE_NAME}_Initialize( void );
 
+void ${SDADC_INSTANCE_NAME}_Enable( void );
+
+void ${SDADC_INSTANCE_NAME}_Disable( void );
+
 <#if SDADC_TRIGGER == "1"> <#-- SW trigger -->
 void ${SDADC_INSTANCE_NAME}_ConversionStart( void );
 </#if>
