@@ -126,7 +126,7 @@ def evsysIntset(interrupt, val):
 
     if channel > len(InterruptVector) - 1:
         channel = len(InterruptVector) - 1
-        
+
     Database.setSymbolValue("core", InterruptVector[channel], result, 2)
     Database.setSymbolValue("core", InterruptHandlerLock[channel], result, 2)
     if result:
@@ -167,6 +167,29 @@ def evsysNonSecCalculation(symbol, event):
     if channel < numsyncChannels:
         Database.setSymbolValue("core", InterruptVectorSecurity[channel], nonSecure)
 
+def evsysUserNonSecCalculation(symbol, event):
+    user = int(event["id"].split("_")[3])
+    if user > 31:
+        if(event["value"] == 1):
+            Database.setSymbolValue(event["namespace"], "EVSYS_NONSEC_USER1",
+            ((Database.getSymbolValue(event["namespace"], "EVSYS_NONSEC_USER1") | (0x1 << (user - 32)))))
+        else:
+            Database.setSymbolValue(event["namespace"], "EVSYS_NONSEC_USER1",
+            ((Database.getSymbolValue(event["namespace"], "EVSYS_NONSEC_USER1") & (~(0x1 << (user - 32))))))
+    else:
+        if(event["value"] == 1):
+            Database.setSymbolValue(event["namespace"], "EVSYS_NONSEC_USER0",
+            ((Database.getSymbolValue(event["namespace"], "EVSYS_NONSEC_USER0") | (0x1 << user))))
+        else:
+            Database.setSymbolValue(event["namespace"], "EVSYS_NONSEC_USER0",
+            ((Database.getSymbolValue(event["namespace"], "EVSYS_NONSEC_USER0") & (~(0x1 << user)))))
+
+def evsysUserNonSecVisible(symbol, event):
+    if event["value"] != 0:
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+
 def fileGenLogic(symbol, event):
     global EVSYSfilesArray
     if int(Database.getSymbolValue(event["namespace"], "EVSYS_NONSEC")) > 0 and Database.getSymbolValue(event["namespace"], "INTERRUPT_ACTIVE"):
@@ -194,6 +217,7 @@ def instantiateComponent(evsysComponent):
     global channelUserMap
     channelUserMap={}
     evsysnonSecList = []
+    evsysUserNonSecList = []
     global evsysGenerator
     evsysGenerator=[]
     channelUserDependency=[]
@@ -294,7 +318,7 @@ def instantiateComponent(evsysComponent):
         evsysChannelMenu.setDependencies(
             channelMenu, ["EVSYS_CHANNEL_" + str(id)])
 
-        if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":        
+        if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
             evsysSecurity = evsysComponent.createKeyValueSetSymbol("EVSYS_NONSEC_" + str(id), evsysChannelMenu)
             evsysSecurity.setLabel("Security mode")
             evsysSecurity.addKey("SECURE", "0", "False")
@@ -398,7 +422,7 @@ def instantiateComponent(evsysComponent):
         nonSecReg = evsysComponent.createHexSymbol("EVSYS_NONSEC" , None)
         nonSecReg.setDefaultValue(0)
         nonSecReg.setVisible(False)
-        nonSecReg.setDependencies(evsysNonSecCalculation, evsysnonSecList) 
+        nonSecReg.setDependencies(evsysNonSecCalculation, evsysnonSecList)
 
     for id in user.keys():
         evsysUserChannel=evsysComponent.createKeyValueSetSymbol(
@@ -409,12 +433,39 @@ def instantiateComponent(evsysComponent):
             evsysUserChannel.addKey(
                 "CHANNEL_" + str(i), str(hex(i + 1)), "Use Channel" + str(id))
         evsysUserChannel.setOutputMode("Value")
+        if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+            evsysUserSecurity = evsysComponent.createKeyValueSetSymbol("EVSYS_USER_NONSEC_" + str(id), evsysUserChannel)
+            evsysUserSecurity.setLabel("Security mode")
+            evsysUserSecurity.addKey("SECURE", "0", "False")
+            evsysUserSecurity.addKey("NON-SECURE", "1", "True")
+            evsysUserSecurity.setOutputMode("Key")
+            evsysUserSecurity.setDisplayMode("Key")
+            evsysUserSecurity.setVisible(False)
+            evsysUserSecurity.setDefaultValue(0)
+            evsysUserSecurity.setDependencies(evsysUserNonSecVisible, ["EVSYS_USER_" + str(id)])
+            evsysUserNonSecList.append("EVSYS_USER_NONSEC_" + str(id))
+
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        nonSecUser0Reg = evsysComponent.createHexSymbol("EVSYS_NONSEC_USER0" , None)
+        nonSecUser0Reg.setDefaultValue(0)
+        nonSecUser0Reg.setVisible(False)
+        nonSecUser0Reg.setDependencies(evsysUserNonSecCalculation, evsysUserNonSecList)
+        if (evsysUserNum.getValue() > 31):
+            nonSecUser1Reg = evsysComponent.createHexSymbol("EVSYS_NONSEC_USER1" , None)
+            nonSecUser1Reg.setDefaultValue(0)
+            nonSecUser1Reg.setVisible(False)
+            nonSecUser1Reg.setDependencies(evsysUserNonSecCalculation, evsysUserNonSecList)
+
+        evsysUserNonSecRegNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="EVSYS"]/register-group@[name="EVSYS"]/register@[name="NONSECUSER0"]')
+        evsysUserNonSecReg = evsysComponent.createBooleanSymbol("EVSYS_NONSEC_USER_REG", None)
+        evsysUserNonSecReg.setDefaultValue((evsysUserNonSecRegNode != None))
+        evsysUserNonSecReg.setVisible(False)
 
     ############################################################################
     #### Dependency ####
     ############################################################################
     evsysNumIntLines = 0
-    
+
     vectorNode=ATDF.getNode(
         "/avr-tools-device-file/devices/device/interrupts")
     vectorValues=vectorNode.getChildren()
@@ -450,11 +501,11 @@ def instantiateComponent(evsysComponent):
     evsysInterruptMode = evsysComponent.createBooleanSymbol("INTERRUPT_ACTIVE", None)
     evsysInterruptMode.setDefaultValue(False)
     evsysInterruptMode.setVisible(False)
-    
+
     if numsyncChannels > len(InterruptVector):
         evsysIntOther = evsysComponent.createBooleanSymbol("EVSYS_INTERRUPT_MODE_OTHER", evsysSym_Menu)
         evsysIntOther.setVisible(False)
-         
+
         evsysIntEnableForMaxChannel = evsysComponent.createIntegerSymbol("EVSYS_INTERRUPT_MAX_CHANNEL", evsysSym_Menu)
         evsysIntEnableForMaxChannel.setVisible(False)
         evsysIntEnableForMaxChannel.setDefaultValue(0)

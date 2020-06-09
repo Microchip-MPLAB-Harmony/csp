@@ -79,6 +79,25 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
     </#if>
     </#if>
 </#list>
+<#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
+    <#if EVSYS_NONSEC_USER0 != '0'>
+
+    <#if EVSYS_NONSEC_USER_REG == true>
+    ${EVSYS_REG_NAME}_REGS->EVSYS_NONSECUSER0 = 0x${EVSYS_NONSEC_USER0};
+    <#else>
+    ${EVSYS_REG_NAME}_REGS->EVSYS_NONSECUSER[0] = 0x${EVSYS_NONSEC_USER0};
+    </#if>
+    </#if>
+<#if TOTAL_USER gt 31>
+    <#if EVSYS_NONSEC_USER1 != '0'>
+    <#if EVSYS_NONSEC_USER_REG == true>
+    ${EVSYS_REG_NAME}_REGS->EVSYS_NONSECUSER1 = 0x${EVSYS_NONSEC_USER1};
+    <#else>
+    ${EVSYS_REG_NAME}_REGS->EVSYS_NONSECUSER[1] = 0x${EVSYS_NONSEC_USER1};
+    </#if>
+    </#if>
+</#if>
+</#if>
 
 <#list 0..TOTAL_CHANNEL as i>
     <#assign CHANNEL_ENABLE = "EVSYS_CHANNEL_" + i >
