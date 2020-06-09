@@ -298,6 +298,7 @@ xc32LinkerMacro = coreComponent.createSettingSymbol("XC32_LINKER_MACRO_AS_SIZE_N
 xc32LinkerMacro.setCategory("C32-LD")
 xc32LinkerMacro.setKey("preprocessor-macros")
 xc32LinkerMacro.setValue("AS=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_AS"]) * int(memoryGranularity["IDAU_AS"]))).replace("L", ""))
+xc32LinkerMacro.setAppend(True, ";")
 xc32LinkerMacro.setDependencies(calculateASSize, [fuseMapSymbol["IDAU_AS"]])
 
 # set Linker Macros required for XC32
@@ -366,6 +367,7 @@ xc32NoDeviceStartupCodeSym.setCategory("C32-LD")
 xc32NoDeviceStartupCodeSym.setKey("no-device-startup-code")
 xc32NoDeviceStartupCodeSym.setValue("true")
 xc32NoDeviceStartupCodeSym.setSecurity("SECURE")
+xc32NoDeviceStartupCodeSym.setAppend(True, ";")
 
 ## toolchain specifics
 toolChainSpecifics = coreComponent.createFileSymbol( "SEC_TOOLCHAIN_SPECIFICS_H", None )
