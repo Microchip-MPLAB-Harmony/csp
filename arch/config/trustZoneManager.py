@@ -345,7 +345,7 @@ xc32CMSECompilerFlag.setSecurity("SECURE")
 xc32CMSELinkerFlag =  coreComponent.createSettingSymbol("SEC_XC32_LINKER_CMSE_FLAG", None)
 xc32CMSELinkerFlag.setCategory("C32-LD")
 xc32CMSELinkerFlag.setKey("appendMe")
-xc32CMSELinkerFlag.setValue( "--out-implib=" + str(Variables.get("__SECURE_PROJECT_FOLDER_NAME")).replace('.X', '') + "_sg_veneer.lib" + " ,--cmse-implib")
+xc32CMSELinkerFlag.setValue( "--out-implib=" + "../../../NonSecure/firmware/" + str(Variables.get("__NON_SECURE_PROJECT_FOLDER_NAME")) + "/" + str(Variables.get("__SECURE_PROJECT_FOLDER_NAME")).replace('.X', '') + "_sg_veneer.lib" + " ,--cmse-implib")
 xc32CMSELinkerFlag.setAppend(True, ";")
 xc32CMSELinkerFlag.setSecurity("SECURE")
 
