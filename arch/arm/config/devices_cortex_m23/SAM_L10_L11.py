@@ -161,6 +161,8 @@ fuse.setDefaultValue(numfuses)
 fuse.setVisible(False)
 
 if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+    systemResourcesList = ["GCLK", "OSC32KCTRL", "OSCCTRL", "MCLK", "IDAU"]
+    mixSecurePeripheralList = ["EIC", "EVSYS", "NVMCTRL", "PAC", "PORT"]
     # Setup TrustZone Manager
     execfile(Variables.get("__CORE_DIR") + "/config/trustZoneManager.py")
 

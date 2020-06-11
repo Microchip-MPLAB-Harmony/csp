@@ -30,19 +30,31 @@ memoryGranularity = {}
 
 trustZoneMenu = coreComponent.createMenuSymbol("TRUSTZONE_MENU", devCfgMenu)
 trustZoneMenu.setLabel("TrustZone Manager")
-
-alwaysSecurePeripheralList = ["GCLK", "OSCCTRL", "OSC32KCTRL", "MCLK", "IDAU", "NVMCTRL", "PAC"]
+trustZonePeripheralMenu = coreComponent.createMenuSymbol("TZ_PERIPHERAL_MENU", trustZoneMenu)
+trustZonePeripheralMenu.setLabel("Peripherals")
+trustZoneMixSecurePeripheralMenu = coreComponent.createMenuSymbol("TZ_MIX_SECURE_PERIPHERAL_MENU", trustZoneMenu)
+trustZoneMixSecurePeripheralMenu.setLabel("Mix-Secure Peripherals")
+trustZoneSystemResourcesMenu = coreComponent.createMenuSymbol("TZ_SYSTEM_RESOURCES_MENU", trustZoneMenu)
+trustZoneSystemResourcesMenu.setLabel("System Resources")
 
 dummyList = coreComponent.createListSymbol( "NULL_LIST",       None )
 peripheralList = coreComponent.createListEntrySymbol("TRUSTZONE_PERIPHERAL_LIST", None)
 peripheralList.setVisible(False)
 #Sort peripheral list in alphabetical order
 for key, value in sorted(fuseMapSymbol.items(), key = lambda arg:arg[0].split("_")[1] if '_' in arg[0] else arg[0]):
-    if key.startswith("NONSEC") and key.split("_")[1] not in alwaysSecurePeripheralList:
-        peripheralIsNonSecure = coreComponent.createBooleanSymbol(key.split("_")[1] + "_IS_NON_SECURE", trustZoneMenu)
+    trustZonePeripheralSubmenu = trustZonePeripheralMenu
+    if key.startswith("NONSEC") and key.split("_")[1] in mixSecurePeripheralList:
+        trustZonePeripheralSubmenu = trustZoneMixSecurePeripheralMenu
+    elif key.startswith("NONSEC") and key.split("_")[1] in systemResourcesList:
+        trustZonePeripheralSubmenu = trustZoneSystemResourcesMenu
+    if key.startswith("NONSEC") and key.split("_")[1]:
+        peripheralIsNonSecure = coreComponent.createBooleanSymbol(key.split("_")[1] + "_IS_NON_SECURE", trustZonePeripheralSubmenu)
         peripheralIsNonSecure.setLabel(key.split("_")[1] + " is Non-Secure")
         peripheralList.addValue(key.split("_")[1])
         fusedependencyList.append(key.split("_")[1] + "_IS_NON_SECURE")
+        if ((key.startswith("NONSEC") and key.split("_")[1] in mixSecurePeripheralList) or
+            (key.startswith("NONSEC") and key.split("_")[1] in systemResourcesList)):
+            peripheralIsNonSecure.setReadOnly(True)
 peripheralList.setTarget("core.NULL_LIST")
 
 fuseUpdateCallback = coreComponent.createBooleanSymbol("DUMMY_SYMBOL_CALLBACK", None)
