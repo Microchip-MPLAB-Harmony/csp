@@ -59,9 +59,15 @@ def getI2CBaudValue():
     if f_gclk >= (2 * f_scl):
         desiredI2CBaudRate = True
         i2cmSym_BaudError_Comment.setVisible(False)
-
+               
+        if (mode == 2):            
+            # For HS mode, the master code is transmitted at 400 kHz. After calculating HS mode baud, force f_scl to 400kHz 
+            # calculate the baud for master code transmission
+            hs_baudValue = int(round(((f_gclk / f_scl) - 2)))
+            f_scl = 400000
+            
         baudValue = int(round(((f_gclk / f_scl) * (1 - float("{0:.15f}".format(float(trise * f_scl) / 1000000000)))) - 10))
-
+            
         if (mode == 0):
             if baudValue >= (0xFF * 2):
                 calculated_f_scl = getCalculatedI2CClockSpeed(f_gclk, trise, (0xFF * 2))
@@ -71,7 +77,7 @@ def getI2CBaudValue():
                 baud = 1
             else:
                 baud = baudValue/2
-        else:
+        elif (mode == 1):
             if baudValue >= 382:
                 calculated_f_scl = getCalculatedI2CClockSpeed(f_gclk, trise, 382)
                 baud = (255 << 8) | 127
@@ -81,6 +87,26 @@ def getI2CBaudValue():
             else:
                 baud = ((baudValue * 2)/3) << 8
                 baud |= (baudValue/3)
+        else:
+            if baudValue >= (0xFF * 2):
+                calculated_f_scl = getCalculatedI2CClockSpeed(f_gclk, trise, (0xFF * 2))
+                baud = 0xFF
+            elif baudValue <= 1:
+                calculated_f_scl = getCalculatedI2CClockSpeed(f_gclk, trise, 2)
+                baud = 1
+            else:
+                baud = baudValue/2
+                
+            if hs_baudValue >= 382:
+                calculated_f_scl = getCalculatedI2CClockSpeed(f_gclk, trise, 382)
+                baud |= ((255 << 8) | 127) << 16
+            elif hs_baudValue <= 3:
+                calculated_f_scl = getCalculatedI2CClockSpeed(f_gclk, trise, 3)
+                baud |= ((2 << 8) | 1) << 16
+            else:                
+                baud |= ((hs_baudValue * 2)/3) << 24
+                baud |= (hs_baudValue/3) << 16
+            
         if desiredI2CBaudRate == False:
             i2cmSym_BaudError_Comment.setLabel("**** Achievable I2C Clock Frequency = " + str(calculated_f_scl) + "Hz")
             i2cmSym_BaudError_Comment.setVisible(sercomSym_OperationMode.getSelectedKey() == "I2CM")
@@ -110,6 +136,21 @@ def updateI2CBaudValueProperty(symbol, event):
 
     symbol.setValue(getI2CBaudValue(), 1)
 
+def updateI2CClockStretchConfigValue(symbol, event):
+    
+    # Enable SCLSM to 1 if High Speed mode is enabled
+    if event["symbol"].getValue() == 0x02:
+        symbol.setValue(1)
+    else:
+        symbol.setValue(0)
+        
+def updateI2CMasterCodeVisiblity(symbol, event):
+            
+    if event["symbol"].getValue() == 0x02:
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+        
 ###################################################################################################
 ######################################## I2C MASTER ###############################################
 ###################################################################################################
@@ -143,7 +184,7 @@ if speedSupported == True:
     i2cmTransferSpeedNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SERCOM"]/value-group@[name="SERCOM_I2CM_CTRLA__SPEED"]')
     i2cmTransferSpeedNodeValues = i2cmTransferSpeedNode.getChildren()
 
-    for index in range((len(i2cmTransferSpeedNodeValues) - 1)):
+    for index in range((len(i2cmTransferSpeedNodeValues))):
         i2cmTransferSpeedKeyName = i2cmTransferSpeedNodeValues[index].getAttribute("name")
         i2cmTransferSpeedKeyValue = i2cmTransferSpeedNodeValues[index].getAttribute("value")
         i2cmTransferSpeedKeyDescription = i2cmTransferSpeedNodeValues[index].getAttribute("caption")
@@ -152,7 +193,32 @@ if speedSupported == True:
     i2cmSym_mode.setDefaultValue(0)
     i2cmSym_mode.setOutputMode("Key")
     i2cmSym_mode.setDisplayMode("Key")
-    i2cmSym_mode.setDependencies(updateI2CMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
+    i2cmSym_mode.setDependencies(updateI2CMasterConfigurationVisibleProperty, ["SERCOM_MODE"])        
+    
+    i2cmSym_HSMasterCode = sercomComponent.createIntegerSymbol("I2C_MASTER_CODE", sercomSym_OperationMode)
+    i2cmSym_HSMasterCode.setLabel("Master Code (0-7)")
+    i2cmSym_HSMasterCode.setVisible(False)
+    i2cmSym_HSMasterCode.setMin(0)
+    i2cmSym_HSMasterCode.setMax(7)
+    i2cmSym_HSMasterCode.setDefaultValue(1)
+    i2cmSym_HSMasterCode.setDependencies(updateI2CMasterCodeVisiblity, ["I2CM_MODE"])
+
+global sclsmSupported
+sclsmSupported = False
+
+# Check if different SCL clock stretching modes are supported
+for index in range(len(ctrlaValue)):
+    bitFieldName = str(ctrlaValue[index].getAttribute("name"))
+    if bitFieldName == "SCLSM":
+        sclsmSupported = True
+        break
+        
+if sclsmSupported == True:      
+    i2cmSym_CTRLA_SCLSM = sercomComponent.createIntegerSymbol("I2C_SCLSM", sercomSym_OperationMode)
+    i2cmSym_CTRLA_SCLSM.setLabel("Clock Stretch Mode")
+    i2cmSym_CTRLA_SCLSM.setVisible(False)
+    i2cmSym_CTRLA_SCLSM.setDefaultValue(0)
+    i2cmSym_CTRLA_SCLSM.setDependencies(updateI2CClockStretchConfigValue, ["I2CM_MODE"])
 
 # Run In Standby
 i2cmSym_CTRLA_RUNSTDBY = sercomComponent.createBooleanSymbol("I2C_RUNSTDBY", sercomSym_OperationMode)
@@ -184,7 +250,7 @@ i2cmSym_BAUD = sercomComponent.createIntegerSymbol("I2C_CLOCK_SPEED", sercomSym_
 i2cmSym_BAUD.setLabel("I2C Speed in KHz")
 i2cmSym_BAUD.setMin(1)
 if speedSupported == True:
-    i2cmSym_BAUD.setMax(1000)
+    i2cmSym_BAUD.setMax(3400)
 else:
     i2cmSym_BAUD.setMax(400)
 i2cmSym_BAUD.setDefaultValue(100)
@@ -230,9 +296,12 @@ for index in range(len(addrValue)):
         break
 
 #I2C 10-bit Address support
-i2cSym_TENBITEN = sercomComponent.createBooleanSymbol("I2C_ADDR_TENBITEN", sercomSym_OperationMode)
-i2cSym_TENBITEN.setDefaultValue(tenBitAddrSupported)
-i2cSym_TENBITEN.setVisible(False)
+if tenBitAddrSupported == True:
+    i2cSym_TENBITEN = sercomComponent.createBooleanSymbol("I2C_ADDR_TENBITEN", sercomSym_OperationMode)
+    i2cSym_TENBITEN.setLabel("Enable 10-bit Addressing")
+    i2cSym_TENBITEN.setDefaultValue(False)
+    i2cSym_TENBITEN.setVisible(False)
+    i2cSym_TENBITEN.setDependencies(updateI2CMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
 
 #Use setValue instead of setDefaultValue to store symbol value in default.xml
 i2cmSym_BAUDREGVALUE.setValue(getI2CBaudValue(), 1)

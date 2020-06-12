@@ -62,12 +62,10 @@
 /* ${SERCOM_INSTANCE_NAME} I2C baud value */
 #define ${SERCOM_INSTANCE_NAME}_I2CM_BAUD_VALUE         (0x${I2CM_BAUD?upper_case}U)
 
-<#if I2C_ADDR_TENBITEN = true>
+<#if (I2C_ADDR_TENBITEN?? && I2C_ADDR_TENBITEN = true)>
 #define RIGHT_ALIGNED (8U)
-
-#define TEN_BIT_ADDR_MASK (0x78U)
-
 </#if>
+
 static SERCOM_I2C_OBJ ${SERCOM_INSTANCE_NAME?lower_case}I2CObj;
 
 // *****************************************************************************
@@ -76,21 +74,6 @@ static SERCOM_I2C_OBJ ${SERCOM_INSTANCE_NAME?lower_case}I2CObj;
 // *****************************************************************************
 // *****************************************************************************
 // *****************************************************************************
-
-// *****************************************************************************
-/* Function:
-    void ${SERCOM_INSTANCE_NAME}_I2C_Initialize(void)
-
-  Summary:
-    Initializes the instance of the SERCOM peripheral operating in I2C mode.
-
-  Description:
-    This function initializes the given instance of the SERCOM I2C peripheral as
-    configured by the user from the MHC.
-
-  Remarks:
-    Refer plib_${SERCOM_INSTANCE_NAME?lower_case}_i2c.h for more information.
-*/
 
 void ${SERCOM_INSTANCE_NAME}_I2C_Initialize(void)
 {
@@ -115,14 +98,16 @@ void ${SERCOM_INSTANCE_NAME}_I2C_Initialize(void)
     </#if>
 
     /* Baud rate - Master Baud Rate*/
-    ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_BAUD = (SERCOM_I2CM_BAUD_BAUDLOW(${SERCOM_INSTANCE_NAME}_I2CM_BAUD_VALUE >> 8) | SERCOM_I2CM_BAUD_BAUD(${SERCOM_INSTANCE_NAME}_I2CM_BAUD_VALUE));
+    ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_BAUD = ${SERCOM_INSTANCE_NAME}_I2CM_BAUD_VALUE;
 
     /* Set Operation Mode (Master), SDA Hold time, run in stand by and i2c master enable */
-    <@compress single_line=true>${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_CTRLA = SERCOM_I2CM_CTRLA_MODE_I2C_MASTER |
-                                                                                  SERCOM_I2CM_CTRLA_SDAHOLD_${I2C_SDAHOLD_TIME} |
-                                                                                  <#if I2CM_MODE??>SERCOM_I2CM_CTRLA_SPEED_${I2CM_MODE} |</#if>
-                                                                                  SERCOM_I2CM_CTRLA_ENABLE_Msk
-                                                                                  ${I2C_RUNSTDBY?then(' | SERCOM_I2CM_CTRLA_RUNSTDBY_Msk','')};</@compress>
+    <@compress single_line=true>${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_CTRLA =
+    SERCOM_I2CM_CTRLA_MODE_I2C_MASTER
+    | SERCOM_I2CM_CTRLA_SDAHOLD_${I2C_SDAHOLD_TIME}
+    <#if I2CM_MODE??> | SERCOM_I2CM_CTRLA_SPEED_${I2CM_MODE}  </#if>
+    <#if I2C_SCLSM??> | SERCOM_I2CM_CTRLA_SCLSM(${I2C_SCLSM}) </#if>
+    | SERCOM_I2CM_CTRLA_ENABLE_Msk
+    ${I2C_RUNSTDBY?then(' | SERCOM_I2CM_CTRLA_RUNSTDBY_Msk','')};</@compress>
 
     /* Wait for synchronization */
     <#if SERCOM_SYNCBUSY = false>
@@ -144,30 +129,17 @@ void ${SERCOM_INSTANCE_NAME}_I2C_Initialize(void)
     /* Initialize the ${SERCOM_INSTANCE_NAME} PLib Object */
     ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.error = SERCOM_I2C_ERROR_NONE;
     ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_STATE_IDLE;
+<#if (I2CM_MODE?? && I2CM_MODE = "HIGH_SPEED_MODE")>
+    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.masterCode = (0x08 | ${I2C_MASTER_CODE});
+</#if>
 
     /* Enable all Interrupts */
     ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_INTENSET = SERCOM_I2CM_INTENSET_Msk;
 }
 
-bool ${SERCOM_INSTANCE_NAME}_I2C_TransferSetup(SERCOM_I2C_TRANSFER_SETUP* setup, uint32_t srcClkFreq )
+static bool ${SERCOM_INSTANCE_NAME}_I2C_CalculateBaudValue(uint32_t srcClkFreq, uint32_t i2cClkSpeed, uint32_t* baudVal)
 {
     uint32_t baudValue;
-    uint32_t i2cClkSpeed;
-<#if I2CM_MODE??>		
-    uint32_t i2cSpeedMode = 0;
-</#if>	
-
-    if (setup == NULL)
-    {
-        return false;
-    }
-
-    i2cClkSpeed = setup->clkSpeed;
-
-    if( srcClkFreq == 0)
-    {
-        srcClkFreq = ${I2C_PLIB_CLOCK_FREQUENCY?eval}UL;
-    }
 
     /* Reference clock frequency must be atleast two times the baud rate */
     if (srcClkFreq < (2*i2cClkSpeed))
@@ -175,11 +147,32 @@ bool ${SERCOM_INSTANCE_NAME}_I2C_TransferSetup(SERCOM_I2C_TRANSFER_SETUP* setup,
         return false;
     }
 
-    baudValue = (uint32_t) (((((float)srcClkFreq)/i2cClkSpeed) - ((((float)srcClkFreq) * (${I2CM_TRISE}/1000000000.0)) + 10)));
-
+<#if I2CM_MODE??>
+<#if I2CM_MODE = "HIGH_SPEED_MODE">
+    if (i2cClkSpeed > 1000000)
+    {
+        /* HS mode baud calculation */
+        baudValue = (uint32_t) (((float)srcClkFreq/i2cClkSpeed) - 2);
+    }
+    else
+    {
+        /* Standard, FM and FM+ baud calculation */
+        baudValue = (uint32_t) (((((float)srcClkFreq)/i2cClkSpeed) - ((((float)srcClkFreq) * (${I2CM_TRISE}/1000000000.0)) + 10)));
+    }
+<#else>
+    if (i2cClkSpeed <= 1000000)
+    {
+        /* Standard, FM and FM+ baud calculation */
+        baudValue = (uint32_t) (((((float)srcClkFreq)/i2cClkSpeed) - ((((float)srcClkFreq) * (${I2CM_TRISE}/1000000000.0)) + 10)));
+    }
+    else
+    {
+        return false;
+    }
+</#if>
     if (i2cClkSpeed <= 400000)
     {
-        /* For I2C clock speed upto 400 KHz, the value of BAUD<7:0> determines both SCL_L and SCL_H with SCL_L = SCL_H */
+        /* For I2C clock speed upto 400 kHz, the value of BAUD<7:0> determines both SCL_L and SCL_H with SCL_L = SCL_H */
         if (baudValue > (0xFF * 2))
         {
             /* Set baud rate to the minimum possible value */
@@ -195,7 +188,6 @@ bool ${SERCOM_INSTANCE_NAME}_I2C_TransferSetup(SERCOM_I2C_TRANSFER_SETUP* setup,
             baudValue /= 2;
         }
     }
-<#if I2CM_MODE??>	
     else
     {
         /* To maintain the ratio of SCL_L:SCL_H to 2:1, the max value of BAUD_LOW<15:8>:BAUD<7:0> can be 0xFF:0x7F. Hence BAUD_LOW + BAUD can not exceed 255+127 = 382 */
@@ -214,14 +206,110 @@ bool ${SERCOM_INSTANCE_NAME}_I2C_TransferSetup(SERCOM_I2C_TRANSFER_SETUP* setup,
             /* For Fm+ mode, I2C SCL_L:SCL_H to 2:1 */
             baudValue  = ((((baudValue * 2)/3) << 8) | (baudValue/3));
         }
+    }
+<#else>
+    if (i2cClkSpeed <= 400000)
+    {
+        /* Standard, FM and FM+ baud calculation */
+        baudValue = (uint32_t) (((((float)srcClkFreq)/i2cClkSpeed) - ((((float)srcClkFreq) * (${I2CM_TRISE}/1000000000.0)) + 10)));
+
+        /* For I2C clock speed upto 400 KHz, the value of BAUD<7:0> determines both SCL_L and SCL_H with SCL_L = SCL_H */
+        if (baudValue > (0xFF * 2))
+        {
+            /* Set baud rate to the minimum possible value */
+            baudValue = 0xFF;
+        }
+        else if (baudValue <= 1)
+        {
+            /* Baud value cannot be 0. Set baud rate to maximum possible value */
+            baudValue = 1;
+        }
+        else
+        {
+            baudValue /= 2;
+        }
+    }
+    else
+    {
+        return false;
+    }
+</#if>
+    *baudVal = baudValue;
+    return true;
+}
+
+bool ${SERCOM_INSTANCE_NAME}_I2C_TransferSetup(SERCOM_I2C_TRANSFER_SETUP* setup, uint32_t srcClkFreq )
+{
+    uint32_t baudValue;
+    uint32_t i2cClkSpeed;
+<#if I2CM_MODE??>
+    uint32_t i2cSpeedMode = 0;
+<#if I2CM_MODE = "HIGH_SPEED_MODE">
+    uint32_t hsbaudValue;
+</#if>
+</#if>
+
+    if (setup == NULL)
+    {
+        return false;
+    }
+
+    i2cClkSpeed = setup->clkSpeed;
+
+    if( srcClkFreq == 0)
+    {
+        srcClkFreq = ${I2C_PLIB_CLOCK_FREQUENCY?eval}UL;
+    }
+
+<#if I2CM_MODE?? && I2CM_MODE = "HIGH_SPEED_MODE">
+    if (i2cClkSpeed > 1000000)
+    {
+        /* HS mode requires baud values for both 400kHz and HS frequency. First calculate baud for 400kHz */
+        if (${SERCOM_INSTANCE_NAME}_I2C_CalculateBaudValue(srcClkFreq, 400000, &baudValue) == false)
+        {
+            return false;
+        }
+    }
+    else
+    {
+        if (${SERCOM_INSTANCE_NAME}_I2C_CalculateBaudValue(srcClkFreq, i2cClkSpeed, &baudValue) == false)
+        {
+            return false;
+        }
+    }
+<#else>
+    if (${SERCOM_INSTANCE_NAME}_I2C_CalculateBaudValue(srcClkFreq, i2cClkSpeed, &baudValue) == false)
+    {
+        return false;
+    }
+</#if>
+
+<#if I2CM_MODE??>
+<#if I2CM_MODE = "HIGH_SPEED_MODE">
+    if (i2cClkSpeed > 1000000)
+    {
+        /* Now calculate HS baud value */
+        if (${SERCOM_INSTANCE_NAME}_I2C_CalculateBaudValue(srcClkFreq, i2cClkSpeed, &hsbaudValue) == false)
+        {
+            return false;
+        }
+        else
+        {
+            baudValue |= (hsbaudValue << 16);
+            i2cSpeedMode = 2;
+        }
+    }
+    else if (i2cClkSpeed > 400000)
+    {
         i2cSpeedMode = 1;
     }
 <#else>
-    else
-	{
-		return false;
-	}
-</#if>	
+    if (i2cClkSpeed > 400000)
+    {
+        i2cSpeedMode = 1;
+    }
+</#if>
+</#if>
 
     /* Disable the I2C before changing the I2C clock speed */
     ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_CTRLA &= ~SERCOM_I2CM_CTRLA_ENABLE_Msk;
@@ -234,9 +322,9 @@ bool ${SERCOM_INSTANCE_NAME}_I2C_TransferSetup(SERCOM_I2C_TRANSFER_SETUP* setup,
     </#if>
 
     /* Baud rate - Master Baud Rate*/
-    ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_BAUD = (SERCOM_I2CM_BAUD_BAUDLOW(baudValue >> 8) | SERCOM_I2CM_BAUD_BAUD(baudValue));
+    ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_BAUD = baudValue;
 
-<#if I2CM_MODE??>	
+<#if I2CM_MODE??>
     ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_CTRLA  = ((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_CTRLA & ~SERCOM_I2CM_CTRLA_SPEED_Msk) | (SERCOM_I2CM_CTRLA_SPEED(i2cSpeedMode)));
 </#if>
 
@@ -263,76 +351,6 @@ bool ${SERCOM_INSTANCE_NAME}_I2C_TransferSetup(SERCOM_I2C_TRANSFER_SETUP* setup,
     return true;
 }
 
-// *****************************************************************************
-/* Function:
-    void ${SERCOM_INSTANCE_NAME}_I2C_InitiateRead(uint16_t address)
-
-  Summary:
-    Intiates I2C Read
-
-  Description:
-
-  Remarks:
-    Refer plib_${SERCOM_INSTANCE_NAME?lower_case}_i2c.h for more information.
-*/
-
-static void ${SERCOM_INSTANCE_NAME}_I2C_InitiateRead(uint16_t address)
-{
-    <#if I2C_ADDR_TENBITEN = false>
-    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_STATE_TRANSFER_READ;
-
-    ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = (address << 1) | I2C_TRANSFER_READ;
-    <#else>
-    if(address > 0x007F)
-    {
-       ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_STATE_ADDR_SEND;
-
-       /*
-        * Write ADDR.ADDR[10:1] with the 10-bit address.
-        * Set direction bit (ADDR.ADDR[0]) equal to 0.
-        * Set ADDR.TENBITEN equals to 1.
-        */
-       ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = (address << 1) | I2C_TRANSFER_WRITE | SERCOM_I2CM_ADDR_TENBITEN_Msk;
-    }
-    else
-    {
-       ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_STATE_TRANSFER_READ;
-
-       ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = (address << 1) | I2C_TRANSFER_READ;
-    }
-    </#if>
-
-    /* Wait for synchronization */
-    <#if SERCOM_SYNCBUSY = false>
-    while((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_SYNCBUSY_Msk) & SERCOM_I2CM_STATUS_SYNCBUSY_Msk);
-    <#else>
-    while(${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_SYNCBUSY);
-    </#if>
-}
-
-// *****************************************************************************
-/* Function:
-    void ${SERCOM_INSTANCE_NAME}_I2C_CallbackRegister(SERCOM_I2C_CALLBACK callback,
-                                                              uintptr_t context)
-
-   Summary:
-    Sets the pointer to the function (and it's context) to be called when the
-    given SERCOM I2C's transfer events occur.
-
-   Precondition:
-    SERCOMx_I2C_Initialize must have been called for the associated SERCOM instance.
-
-   Parameters:
-    callback - A pointer to a function with a calling signature defined
-    by the SERCOM_I2C_CALLBACK data type.
-
-    context - A value (usually a pointer) passed (unused) into the function
-    identified by the callback parameter.
-
-   Returns:
-    None.
-*/
-
 void ${SERCOM_INSTANCE_NAME}_I2C_CallbackRegister(SERCOM_I2C_CALLBACK callback, uintptr_t contextHandle)
 {
     ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.callback = callback;
@@ -340,25 +358,270 @@ void ${SERCOM_INSTANCE_NAME}_I2C_CallbackRegister(SERCOM_I2C_CALLBACK callback, 
     ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.context  = contextHandle;
 }
 
-/// *****************************************************************************
-/* Function:
-    void ${SERCOM_INSTANCE_NAME}_2C_InitiateTransfer(uint16_t address, bool type)
+<#if (I2CM_MODE?? && I2CM_MODE = "HIGH_SPEED_MODE")>
+<#if (I2C_ADDR_TENBITEN?? && I2C_ADDR_TENBITEN = true)>
 
-  Summary:
-    Send the 7-bit or 10-bit slave address.
+static void ${SERCOM_INSTANCE_NAME}_I2C_SendAddress(uint16_t address, bool dir)
+{
+    bool isTenBitAddress = false;
+    bool isHighSpeed = false;
+    bool transferDir = dir;
 
-  Precondition:
-    SERCOMx_I2C_Initialize must have been called for the associated SERCOM instance.
+    /* Check for 10-bit address */
+    if(address > 0x007F)
+    {
+        if ((${SERCOM_INSTANCE_NAME?lower_case}I2CObj.isHighSpeed == true) && (${SERCOM_INSTANCE_NAME?lower_case}I2CObj.txMasterCode == true))
+        {
+            /* write: <0000-1nnn> <Sr> <1111-10xxW> <xxxx-xxxx> <write-data> <P>
+               read: <0000-1nnn> <Sr> <1111-10xxW> <xxxx-xxxx> <Sr> <1111-10xxR> <read-data> <P>
+            */
 
-   Parameters:
-     address - 7-bit / 10-bit slave address.
-     type - Read / Write
+            /* Next state will be to transmit slave address with HS mode enabled */
+            ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_STATE_TRANSFER_ADDR_HS;
+        }
+        else
+        {
+            isTenBitAddress = true;
+            transferDir = I2C_TRANSFER_WRITE;
 
-  Remarks:
-    None.
-*/
+            if(dir == I2C_TRANSFER_READ)
+            {
+                /* <Sr> <1111-10xxW> <xxxx-xxxx> <Sr> <1111-10xxR> <read-data> <P> */
 
-static void ${SERCOM_INSTANCE_NAME}_I2C_InitiateTransfer(uint16_t address, bool type)
+                /* Next state will be to send slave address followed by Sr */
+                ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_STATE_ADDR_SEND;
+
+                if (${SERCOM_INSTANCE_NAME?lower_case}I2CObj.isHighSpeed == true)
+                {
+                    /* We are in HS mode and Master code is already transmitted out */
+                    isHighSpeed = true;
+                }
+            }
+            else
+            {
+                /* <Sr> <1111-10xxW> <xxxx-xxxx> <write-data> <P>  */
+
+                ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_STATE_TRANSFER_WRITE;
+
+                if (${SERCOM_INSTANCE_NAME?lower_case}I2CObj.isHighSpeed == true)
+                {
+                    /* We are in HS mode and Master code is already transmitted out */
+                    isHighSpeed = true;
+                }
+            }
+        }
+    }
+    else
+    {
+        if ((${SERCOM_INSTANCE_NAME?lower_case}I2CObj.isHighSpeed == true) && (${SERCOM_INSTANCE_NAME?lower_case}I2CObj.txMasterCode == true))
+        {
+            /* write: <0000-1nnn> <Sr> <xxxx-xxxW> <write-data> <P>
+               read: <0000-1nnn> <Sr> <xxxx-xxxR> <read-data> <P>
+            */
+
+            /* Next state will be to transmit slave address with HS mode enabled */
+            ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_STATE_TRANSFER_ADDR_HS;
+        }
+        else
+        {
+            if(dir == I2C_TRANSFER_READ)
+            {
+                /* <xxxx-xxxR> <read-data> <P> */
+
+                /* Next state will be to read data */
+                ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_STATE_TRANSFER_READ;
+
+                if (${SERCOM_INSTANCE_NAME?lower_case}I2CObj.isHighSpeed == true)
+                {
+                    /* We are in HS mode and Master code is already transmitted out */
+                    isHighSpeed = true;
+                }
+            }
+            else
+            {
+                /* <xxxx-xxxW> <write-data> <P> */
+
+                /* Next state will be to write data */
+                ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_STATE_TRANSFER_WRITE;
+
+                if (${SERCOM_INSTANCE_NAME?lower_case}I2CObj.isHighSpeed == true)
+                {
+                    /* We are in HS mode and Master code is already transmitted out */
+                    isHighSpeed = true;
+                }
+            }
+        }
+    }
+
+    if (${SERCOM_INSTANCE_NAME?lower_case}I2CObj.txMasterCode == true)
+    {
+        /* Transmit masterCode */
+        ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.masterCode;
+    }
+    else
+    {
+        ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = SERCOM_I2CM_ADDR_TENBITEN(isTenBitAddress == true? 1: 0) | SERCOM_I2CM_ADDR_HS(isHighSpeed == true? 1: 0) | (address << 1) | transferDir;
+    }
+
+    /* Wait for synchronization */
+    <#if SERCOM_SYNCBUSY = false>
+    while((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_SYNCBUSY_Msk) & SERCOM_I2CM_STATUS_SYNCBUSY_Msk);
+    <#else>
+    while(${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_SYNCBUSY);
+    </#if>
+}
+<#else>
+
+static void ${SERCOM_INSTANCE_NAME}_I2C_SendAddress(uint16_t address, bool dir)
+{
+    bool isHighSpeed = false;
+    bool transferDir = dir;
+
+    if ((${SERCOM_INSTANCE_NAME?lower_case}I2CObj.isHighSpeed == true) && (${SERCOM_INSTANCE_NAME?lower_case}I2CObj.txMasterCode == true))
+    {
+        /* write: <0000-1nnn> <Sr> <xxxx-xxxW> <write-data> <P>
+           read: <0000-1nnn> <Sr> <xxxx-xxxR> <read-data> <P>
+        */
+
+        /* Next state will be to transmit slave address with HS mode enabled */
+        ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_STATE_TRANSFER_ADDR_HS;
+    }
+    else
+    {
+        if(dir == I2C_TRANSFER_READ)
+        {
+            /* <xxxx-xxxR> <read-data> <P> */
+
+            /* Next state will be to read data */
+            ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_STATE_TRANSFER_READ;
+
+            if (${SERCOM_INSTANCE_NAME?lower_case}I2CObj.isHighSpeed == true)
+            {
+                /* We are in HS mode and Master code is already transmitted out */
+                isHighSpeed = true;
+            }
+        }
+        else
+        {
+            /* <xxxx-xxxW> <write-data> <P> */
+
+            /* Next state will be to write data */
+            ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_STATE_TRANSFER_WRITE;
+
+            if (${SERCOM_INSTANCE_NAME?lower_case}I2CObj.isHighSpeed == true)
+            {
+                /* We are in HS mode and Master code is already transmitted out */
+                isHighSpeed = true;
+            }
+        }
+    }
+
+    if (${SERCOM_INSTANCE_NAME?lower_case}I2CObj.txMasterCode == true)
+    {
+        /* Transmit masterCode */
+        ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.masterCode;
+    }
+    else
+    {
+        ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = SERCOM_I2CM_ADDR_HS(isHighSpeed == true? 1: 0) | (address << 1) | transferDir;
+    }
+
+    /* Wait for synchronization */
+    <#if SERCOM_SYNCBUSY = false>
+    while((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_SYNCBUSY_Msk) & SERCOM_I2CM_STATUS_SYNCBUSY_Msk);
+    <#else>
+    while(${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_SYNCBUSY);
+    </#if>
+}
+</#if>
+<#else>
+<#if (I2C_ADDR_TENBITEN?? && I2C_ADDR_TENBITEN = true)>
+
+static void ${SERCOM_INSTANCE_NAME}_I2C_SendAddress(uint16_t address, bool dir)
+{
+    bool isTenBitAddress = false;
+    bool transferDir = dir;
+
+    /* Check for 10-bit address */
+    if(address > 0x007F)
+    {
+        isTenBitAddress = true;
+        transferDir = I2C_TRANSFER_WRITE;
+
+        if(dir == I2C_TRANSFER_READ)
+        {
+            /* <Sr> <1111-10xxW> <xxxx-xxxx> <Sr> <1111-10xxR> <read-data> <P> */
+
+            /* Next state will be to send slave address followed by Sr */
+            ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_STATE_ADDR_SEND;
+        }
+        else
+        {
+            /* <Sr> <1111-10xxW> <xxxx-xxxx> <write-data> <P>  */
+
+            ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_STATE_TRANSFER_WRITE;
+        }
+    }
+    else
+    {
+        if(dir == I2C_TRANSFER_READ)
+        {
+            /* <xxxx-xxxR> <read-data> <P> */
+
+            /* Next state will be to read data */
+            ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_STATE_TRANSFER_READ;
+        }
+        else
+        {
+            /* <xxxx-xxxW> <write-data> <P> */
+
+            /* Next state will be to write data */
+            ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_STATE_TRANSFER_WRITE;
+        }
+    }
+
+    ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = SERCOM_I2CM_ADDR_TENBITEN(isTenBitAddress == true? 1: 0) | (address << 1) | transferDir;
+
+    /* Wait for synchronization */
+    <#if SERCOM_SYNCBUSY = false>
+    while((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_SYNCBUSY_Msk) & SERCOM_I2CM_STATUS_SYNCBUSY_Msk);
+    <#else>
+    while(${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_SYNCBUSY);
+    </#if>
+}
+<#else>
+
+static void ${SERCOM_INSTANCE_NAME}_I2C_SendAddress(uint16_t address, bool dir)
+{
+    if(dir == I2C_TRANSFER_READ)
+    {
+        /* <xxxx-xxxR> <read-data> <P> */
+
+        /* Next state will be to read data */
+        ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_STATE_TRANSFER_READ;
+    }
+    else
+    {
+        /* <xxxx-xxxW> <write-data> <P> */
+
+        /* Next state will be to write data */
+        ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_STATE_TRANSFER_WRITE;
+    }
+
+
+    ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = (address << 1) | dir;
+
+    /* Wait for synchronization */
+    <#if SERCOM_SYNCBUSY = false>
+    while((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_SYNCBUSY_Msk) & SERCOM_I2CM_STATUS_SYNCBUSY_Msk);
+    <#else>
+    while(${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_SYNCBUSY);
+    </#if>
+}
+</#if>
+</#if>
+
+static void ${SERCOM_INSTANCE_NAME}_I2C_InitiateTransfer(uint16_t address, bool dir)
 {
     ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.writeCount = 0;
     ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readCount = 0;
@@ -366,71 +629,20 @@ static void ${SERCOM_INSTANCE_NAME}_I2C_InitiateTransfer(uint16_t address, bool 
     /* Clear all flags */
     ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_INTFLAG = SERCOM_I2CM_INTFLAG_Msk;
 
-    /* Smart mode enabled - ACK is set to send while receiving the data */
+    <#if I2C_SCLSM?? && I2C_SCLSM = 1>
+    if(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readSize == 1)
+    {
+        /* Only 1 byte to read. Since SCLSM = 1, setup to send NAK */
+        ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_CTRLB |= SERCOM_I2CM_CTRLB_ACKACT_Msk ;
+    }
+    else
+    {
+        /* Smart mode enabled, with SCLSM = 1, - ACK is set to send while receiving the data */
+        ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_CTRLB &= ~SERCOM_I2CM_CTRLB_ACKACT_Msk;
+    }
+    <#else>
+    /* Smart mode enabled with SCLSM = 0, - ACK is set to send while receiving the data */
     ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_CTRLB &= ~SERCOM_I2CM_CTRLB_ACKACT_Msk;
-
-    /* Wait for synchronization */
-    <#if SERCOM_SYNCBUSY = false>
-    while((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_SYNCBUSY_Msk) & SERCOM_I2CM_STATUS_SYNCBUSY_Msk);
-    <#else>
-    while(${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_SYNCBUSY);
-    </#if>
-
-    /* Reset Error Information */
-    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.error = SERCOM_I2C_ERROR_NONE;
-
-    <#if I2C_ADDR_TENBITEN = false>
-    if(type)
-    {
-        ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_STATE_TRANSFER_READ;
-
-        /* Write 7bit address with direction (ADDR.ADDR[0]) equal to 1*/
-        ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = (address << 1) | I2C_TRANSFER_READ;
-    }
-    else
-    {
-        ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_STATE_TRANSFER_WRITE;
-
-        /* Write 7bit address with direction (ADDR.ADDR[0]) equal to 0*/
-        ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = (address << 1) | I2C_TRANSFER_WRITE;
-    }
-    <#else>
-    /* Check for 10-bit address */
-    if(address > 0x007F)
-    {
-        if(type)
-        {
-            ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_STATE_ADDR_SEND;
-        }
-        else
-        {
-            ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_STATE_TRANSFER_WRITE;
-        }
-
-        /*
-         * Write ADDR.ADDR[10:1] with the 10-bit address.
-         * Set direction bit (ADDR.ADDR[0]) equal to 0.
-         * Set ADDR.TENBITEN equals to 1.
-         */
-        ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = (address << 1) | I2C_TRANSFER_WRITE | SERCOM_I2CM_ADDR_TENBITEN_Msk;
-    }
-    else
-    {
-        if(type)
-        {
-            ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_STATE_TRANSFER_READ;
-
-            /* Write 7bit address with direction (ADDR.ADDR[0]) equal to 1*/
-            ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = (address << 1) | I2C_TRANSFER_READ;
-        }
-        else
-        {
-            ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_STATE_TRANSFER_WRITE;
-
-            /* Write 7bit address with direction (ADDR.ADDR[0]) equal to 0*/
-            ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = (address << 1) | I2C_TRANSFER_WRITE;
-        }
-    }
     </#if>
 
     /* Wait for synchronization */
@@ -439,31 +651,19 @@ static void ${SERCOM_INSTANCE_NAME}_I2C_InitiateTransfer(uint16_t address, bool 
     <#else>
     while(${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_SYNCBUSY);
     </#if>
+
+    ${SERCOM_INSTANCE_NAME}_I2C_SendAddress(address, dir);
 }
 
-// *****************************************************************************
-/* Function:
-    bool ${SERCOM_INSTANCE_NAME}_I2C_Read(uint16_t address, uint8_t *pdata,
-                                                                 uint32_t length)
-
-   Summary:
-    Reads data from the slave.
-
-   Precondition:
-    SERCOMx_I2C_Initialize must have been called for the associated SERCOM instance.
-
-   Parameters:
-    address - 7-bit / 10-bit slave address.
-    pdata   - pointer to destination data buffer
-    length  - length of data buffer in number of bytes.
-
-   Returns:
-    Request status.
-    True - Request was successful.
-    False - Request has failed.
-*/
-
-bool ${SERCOM_INSTANCE_NAME}_I2C_Read(uint16_t address, uint8_t *pdata, uint32_t length)
+static bool ${SERCOM_INSTANCE_NAME}_I2C_XferSetup(
+    uint16_t address,
+    uint8_t* wrData,
+    uint32_t wrLength,
+    uint8_t* rdData,
+    uint32_t rdLength,
+    bool dir,
+    bool isHighSpeed
+)
 {
     /* Check for ongoing transfer */
     if(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state != SERCOM_I2C_STATE_IDLE)
@@ -471,121 +671,62 @@ bool ${SERCOM_INSTANCE_NAME}_I2C_Read(uint16_t address, uint8_t *pdata, uint32_t
         return false;
     }
 
-    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.address = address;
-    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readBuffer = pdata;
-    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readSize = length;
-    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.writeBuffer = NULL;
-    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.writeSize = 0;
-    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.error = SERCOM_I2C_ERROR_NONE;
+    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.address        = address;
+    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readBuffer     = rdData;
+    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readSize       = rdLength;
+    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.writeBuffer    = wrData;
+    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.writeSize      = wrLength;
+    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.transferDir    = dir;
+    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.isHighSpeed    = isHighSpeed;
+    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.error          = SERCOM_I2C_ERROR_NONE;
 
-    ${SERCOM_INSTANCE_NAME}_I2C_InitiateTransfer(address, true);
-
-    return true;
-}
-
-// *****************************************************************************
-/* Function:
-    bool ${SERCOM_INSTANCE_NAME}_I2C_Write(uint16_t address, uint8_t *pdata,
-                                                                 uint32_t length)
-
-   Summary:
-    Writes data onto the slave.
-
-   Precondition:
-    SERCOMx_I2C_Initialize must have been called for the associated SERCOM instance.
-
-   Parameters:
-    address - 7-bit / 10-bit slave address.
-    pdata   - pointer to source data buffer
-    length  - length of data buffer in number of bytes.
-
-   Returns:
-    Request status.
-    True - Request was successful.
-    False - Request has failed.
-*/
-
-bool ${SERCOM_INSTANCE_NAME}_I2C_Write(uint16_t address, uint8_t *pdata, uint32_t length)
-{
-    /* Check for ongoing transfer */
-    if(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state != SERCOM_I2C_STATE_IDLE)
+<#if (I2CM_MODE?? && I2CM_MODE = "HIGH_SPEED_MODE")>
+    if (isHighSpeed == true)
     {
-        return false;
+        ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.txMasterCode = true;
     }
-
-    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.address = address;
-    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readBuffer = NULL;
-    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readSize = 0;
-    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.writeBuffer = pdata;
-    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.writeSize = length;
-    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.error = SERCOM_I2C_ERROR_NONE;
-
-    ${SERCOM_INSTANCE_NAME}_I2C_InitiateTransfer(address, false);
-
-    return true;
-}
-
-// *****************************************************************************
-/* Function:
-    bool ${SERCOM_INSTANCE_NAME}_I2C_WriteRead(uint16_t address, uint8_t *wdata,
-                               uint32_t wlength, uint8_t *rdata, uint32_t rlength)
-
-   Summary:
-    Write and Read data from Slave.
-
-   Precondition:
-    SERCOMx_I2C_Initialize must have been called for the associated SERCOM instance.
-
-   Parameters:
-    address - 7-bit / 10-bit slave address.
-    wdata   - pointer to write data buffer
-    wlength - write data length in bytes.
-    rdata   - pointer to read data buffer.
-    rlength - read data length in bytes.
-
-   Returns:
-    Request status.
-    True - Request was successful.
-    False - Request has failed.
-*/
-
-bool ${SERCOM_INSTANCE_NAME}_I2C_WriteRead(uint16_t address, uint8_t *wdata, uint32_t wlength, uint8_t *rdata, uint32_t rlength)
-{
-    /* Check for ongoing transfer */
-    if(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state != SERCOM_I2C_STATE_IDLE)
+    else
     {
-        return false;
+        ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.txMasterCode = false;
     }
+</#if>
 
-    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.address = address;
-    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readBuffer = rdata;
-    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readSize = rlength;
-    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.writeBuffer = wdata;
-    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.writeSize = wlength;
-    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.error = SERCOM_I2C_ERROR_NONE;
-
-    ${SERCOM_INSTANCE_NAME}_I2C_InitiateTransfer(address, false);
+    ${SERCOM_INSTANCE_NAME}_I2C_InitiateTransfer(address, dir);
 
     return true;
 }
 
-// *****************************************************************************
-/* Function:
-    bool ${SERCOM_INSTANCE_NAME}_I2C_IsBusy(void)
+bool ${SERCOM_INSTANCE_NAME}_I2C_Read(uint16_t address, uint8_t* rdData, uint32_t rdLength)
+{
+    return ${SERCOM_INSTANCE_NAME}_I2C_XferSetup(address, NULL, 0, rdData, rdLength, I2C_TRANSFER_READ, false);
+}
 
-   Summary:
-    Returns the Peripheral busy status.
+bool ${SERCOM_INSTANCE_NAME}_I2C_Write(uint16_t address, uint8_t* wrData, uint32_t wrLength)
+{
+    return ${SERCOM_INSTANCE_NAME}_I2C_XferSetup(address, wrData, wrLength, NULL, 0, I2C_TRANSFER_WRITE, false);
+}
 
-   Precondition:
-    SERCOMx_I2C_Initialize must have been called for the associated SERCOM instance.
+bool ${SERCOM_INSTANCE_NAME}_I2C_WriteRead(uint16_t address, uint8_t* wrData, uint32_t wrLength, uint8_t* rdData, uint32_t rdLength)
+{
+    return ${SERCOM_INSTANCE_NAME}_I2C_XferSetup(address, wrData, wrLength, rdData, rdLength, I2C_TRANSFER_WRITE, false);
+}
 
-   Parameters:
-    None.
+<#if (I2CM_MODE?? && I2CM_MODE = "HIGH_SPEED_MODE")>
+bool ${SERCOM_INSTANCE_NAME}_I2C_Read_HighSpeed(uint16_t address, uint8_t* rdData, uint32_t rdLength)
+{
+    return ${SERCOM_INSTANCE_NAME}_I2C_XferSetup(address, NULL, 0, rdData, rdLength, I2C_TRANSFER_READ, true);
+}
 
-   Returns:
-    true - Busy.
-    false - Not busy.
-*/
+bool ${SERCOM_INSTANCE_NAME}_I2C_Write_HighSpeed(uint16_t address, uint8_t* wrData, uint32_t wrLength)
+{
+    return ${SERCOM_INSTANCE_NAME}_I2C_XferSetup(address, wrData, wrLength, NULL, 0, I2C_TRANSFER_WRITE, true);
+}
+
+bool ${SERCOM_INSTANCE_NAME}_I2C_WriteRead_HighSpeed(uint16_t address, uint8_t* wrData, uint32_t wrLength, uint8_t* rdData, uint32_t rdLength)
+{
+    return ${SERCOM_INSTANCE_NAME}_I2C_XferSetup(address, wrData, wrLength, rdData, rdLength, I2C_TRANSFER_WRITE, true);
+}
+</#if>
 
 bool ${SERCOM_INSTANCE_NAME}_I2C_IsBusy(void)
 {
@@ -599,53 +740,10 @@ bool ${SERCOM_INSTANCE_NAME}_I2C_IsBusy(void)
     }
 }
 
-// *****************************************************************************
-/* Function:
-    SERCOM_I2C_ERROR ${SERCOM_INSTANCE_NAME}_I2C_ErrorGet(void)
-
-   Summary:
-    Returns the error during transfer.
-
-   Precondition:
-    SERCOMx_I2C_Initialize must have been called for the associated SERCOM instance.
-
-   Parameters:
-    None.
-
-   Returns:
-    Error during transfer.
-*/
-
 SERCOM_I2C_ERROR ${SERCOM_INSTANCE_NAME}_I2C_ErrorGet(void)
 {
     return ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.error;
 }
-
-// *****************************************************************************
-/* Function:
-    void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
-
-  Summary:
-    ${SERCOM_INSTANCE_NAME} I2C Peripheral Interrupt Handler.
-
-  Description:
-    This function is ${SERCOM_INSTANCE_NAME} I2C Peripheral Interrupt Handler and will
-    called on every ${SERCOM_INSTANCE_NAME} I2C interrupt.
-
-   Precondition:
-    None.
-
-   Parameters:
-    None.
-
-   Returns:
-    None.
-
-   Remarks:
-    The function is called as peripheral instance's interrupt handler if the
-    instance interrupt is enabled. If peripheral instance's interrupt is not
-    enabled user need to call it from the main while loop of the application.
-*/
 
 void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
 {
@@ -668,18 +766,26 @@ void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
             ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_STATE_ERROR;
             ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.error = SERCOM_I2C_ERROR_BUS;
         }
-        /* Checks slave acknowledge for address or data*/
+        /* Checks slave acknowledge for address or data */
+        <#if (I2CM_MODE?? && I2CM_MODE = "HIGH_SPEED_MODE")>
+        else if( (${SERCOM_INSTANCE_NAME?lower_case}I2CObj.txMasterCode == false) && ((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_RXNACK_Msk) == SERCOM_I2CM_STATUS_RXNACK_Msk))
+        {
+            ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_STATE_ERROR;
+            ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.error = SERCOM_I2C_ERROR_NAK;
+        }
+        <#else>
         else if((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_RXNACK_Msk) == SERCOM_I2CM_STATUS_RXNACK_Msk)
         {
             ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_STATE_ERROR;
             ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.error = SERCOM_I2C_ERROR_NAK;
         }
+        </#if>
         else
         {
             switch(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state)
             {
                 case SERCOM_I2C_REINITIATE_TRANSFER:
-                {
+
                     if (${SERCOM_INSTANCE_NAME?lower_case}I2CObj.writeSize != 0)
                     {
                         /* Initiate Write transfer */
@@ -692,20 +798,25 @@ void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
                     }
 
                     break;
-                }
+
 
                 case SERCOM_I2C_STATE_IDLE:
-                {
+
                     break;
-                }
-                <#if I2C_ADDR_TENBITEN = true>
+
+                <#if (I2C_ADDR_TENBITEN?? && I2C_ADDR_TENBITEN = true)>
                 case SERCOM_I2C_STATE_ADDR_SEND:
-                {
+
                     /*
+                     * Send slave address for a read operation with 10-bit addressing enabled
                      * Write ADDR[7:0] register to "11110 address[9:8] 1"
                      * ADDR.TENBITEN must be cleared
                      */
-                    ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = (((${SERCOM_INSTANCE_NAME?lower_case}I2CObj.address >> RIGHT_ALIGNED) | TEN_BIT_ADDR_MASK) << 1) | I2C_TRANSFER_READ;
+                    <#if (I2CM_MODE?? && I2CM_MODE = "HIGH_SPEED_MODE")>
+                    ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = SERCOM_I2CM_ADDR_HS(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.isHighSpeed == true? 1: 0) | ((${SERCOM_INSTANCE_NAME?lower_case}I2CObj.address >> RIGHT_ALIGNED) << 1) | I2C_TRANSFER_READ;
+                    <#else>
+                    ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR =  ((${SERCOM_INSTANCE_NAME?lower_case}I2CObj.address >> RIGHT_ALIGNED) << 1) | I2C_TRANSFER_READ;
+                    </#if>
 
                     /* Wait for synchronization */
                     <#if SERCOM_SYNCBUSY = false>
@@ -717,15 +828,89 @@ void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
                     ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_STATE_TRANSFER_READ;
 
                     break;
-                }
                 </#if>
+
+                <#if (I2CM_MODE?? && I2CM_MODE = "HIGH_SPEED_MODE")>
+                case SERCOM_I2C_STATE_TRANSFER_ADDR_HS:
+
+                    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.txMasterCode = false;
+
+                    /* At this point, master code is already transmitted out. Now send the slave address (7 or 10-bit) */
+                    ${SERCOM_INSTANCE_NAME}_I2C_SendAddress(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.address, ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.transferDir);
+
+                    break;
+                </#if>
+
                 case SERCOM_I2C_STATE_TRANSFER_WRITE:
-                {
+
                     if (${SERCOM_INSTANCE_NAME?lower_case}I2CObj.writeCount == (${SERCOM_INSTANCE_NAME?lower_case}I2CObj.writeSize))
                     {
                         if(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readSize != 0)
                         {
-                            ${SERCOM_INSTANCE_NAME}_I2C_InitiateRead(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.address);
+                            <#if I2C_SCLSM?? && I2C_SCLSM = 1>
+                            if(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readSize == 1)
+                            {
+                                /* Only 1 byte to read. Since SCLSM = 1, setup to send NAK */
+                                ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_CTRLB |= SERCOM_I2CM_CTRLB_ACKACT_Msk ;
+
+                                /* Wait for synchronization */
+                                <#if SERCOM_SYNCBUSY = false>
+                                while((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_SYNCBUSY_Msk) & SERCOM_I2CM_STATUS_SYNCBUSY_Msk);
+                                <#else>
+                                while(${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_SYNCBUSY);
+                                </#if>
+                            }
+                            </#if>
+
+                            <#if (I2CM_MODE?? && I2CM_MODE = "HIGH_SPEED_MODE")>
+                            <#if (I2C_ADDR_TENBITEN?? && I2C_ADDR_TENBITEN = true)>
+                            if(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.address > 0x007F)
+                            {
+                                /*
+                                 * Write ADDR[7:0] register to "11110 address[9:8] 1"
+                                 * ADDR.TENBITEN must be cleared
+                                 */
+                                ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = SERCOM_I2CM_ADDR_HS(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.isHighSpeed == true? 1: 0) | ((${SERCOM_INSTANCE_NAME?lower_case}I2CObj.address >> RIGHT_ALIGNED) << 1) | I2C_TRANSFER_READ;
+                            }
+                            else
+                            {
+                                /* Write 7bit address with direction (ADDR.ADDR[0]) equal to 1*/
+                                ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = SERCOM_I2CM_ADDR_HS(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.isHighSpeed == true? 1: 0) | (${SERCOM_INSTANCE_NAME?lower_case}I2CObj.address << 1) | I2C_TRANSFER_READ;
+                            }
+                            <#else>
+                            /* Write 7bit address with direction (ADDR.ADDR[0]) equal to 1*/
+                             ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR = SERCOM_I2CM_ADDR_HS(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.isHighSpeed == true? 1: 0) | (${SERCOM_INSTANCE_NAME?lower_case}I2CObj.address << 1) | I2C_TRANSFER_READ;
+                            </#if>
+                            <#else>
+                            <#if (I2C_ADDR_TENBITEN?? && I2C_ADDR_TENBITEN = true)>
+                            if(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.address > 0x007F)
+                            {
+                                /*
+                                 * Write ADDR[7:0] register to "11110 address[9:8] 1"
+                                 * ADDR.TENBITEN must be cleared
+                                 */
+                                ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR =  ((${SERCOM_INSTANCE_NAME?lower_case}I2CObj.address >> RIGHT_ALIGNED) << 1) | I2C_TRANSFER_READ;
+                            }
+                            else
+                            {
+                                /* Write 7bit address with direction (ADDR.ADDR[0]) equal to 1*/
+                                ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR =  (${SERCOM_INSTANCE_NAME?lower_case}I2CObj.address << 1) | I2C_TRANSFER_READ;
+                            }
+                            <#else>
+                            /* Write 7bit address with direction (ADDR.ADDR[0]) equal to 1*/
+                            ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_ADDR =  (${SERCOM_INSTANCE_NAME?lower_case}I2CObj.address << 1) | I2C_TRANSFER_READ;
+                            </#if>
+                            </#if>
+
+                            /* Wait for synchronization */
+                            <#if SERCOM_SYNCBUSY = false>
+                            while((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_SYNCBUSY_Msk) & SERCOM_I2CM_STATUS_SYNCBUSY_Msk);
+                            <#else>
+                            while(${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_SYNCBUSY);
+                            </#if>
+
+                            ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_STATE_TRANSFER_READ;
+
                         }
                         else
                         {
@@ -748,9 +933,39 @@ void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
                     }
 
                     break;
-                }
+
                 case SERCOM_I2C_STATE_TRANSFER_READ:
-                {
+                    <#if I2C_SCLSM?? && I2C_SCLSM = 1>
+
+                    if((${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readCount + 1) == (${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readSize - 1))
+                    {
+                        /* For the next byte, send NAK to the slave */
+                        ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_CTRLB |= SERCOM_I2CM_CTRLB_ACKACT_Msk ;
+
+                        /* Wait for synchronization */
+                        while(${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_SYNCBUSY);
+                    }
+                    if ((${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readCount + 1) == ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readSize)
+                    {
+                        /* All bytes are received, send Stop bit */
+                        ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_CTRLB |= SERCOM_I2CM_CTRLB_CMD(3);
+
+                        /* Wait for synchronization */
+                        <#if SERCOM_SYNCBUSY = false>
+                        while((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_SYNCBUSY_Msk) & SERCOM_I2CM_STATUS_SYNCBUSY_Msk);
+                        <#else>
+                        while(${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_SYNCBUSY);
+                        </#if>
+
+
+                        ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_STATE_TRANSFER_DONE;
+                    }
+
+                    /* Read the received data */
+                    ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readBuffer[${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readCount++] = ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_DATA;
+
+                    <#else>
+
                     if(${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readCount == (${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readSize - 1))
                     {
                         /* Set NACK and send stop condition to the slave from master */
@@ -769,12 +984,13 @@ void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
                     /* Read the received data */
                     ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readBuffer[${SERCOM_INSTANCE_NAME?lower_case}I2CObj.readCount++] = ${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_DATA;
 
+                    </#if>
+
                     break;
-                }
+
                 default:
-                {
+
                     break;
-                }
             }
         }
 

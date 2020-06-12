@@ -57,7 +57,25 @@ def updateI2CSlaveConfigurationVisibleProperty(symbol, event):
 
     symbol.setVisible(sercomSym_OperationMode.getSelectedKey() == "I2CS")
 
+def updateI2CClockStretchConfigValue(symbol, event):
+    
+    # Enable SCLSM to 1 if High Speed mode is enabled
+    if event["symbol"].getValue() == True:
+        symbol.setValue(1)
+    else:
+        symbol.setValue(0)
 
+def updateSmartModeVisibility(symbol, event):
+    
+    if event["id"] == "I2CS_HIGH_SPEED_MODE": 
+        if event["value"] == True:
+            symbol.setReadOnly(True)
+            symbol.setValue(True)
+        else:
+            symbol.setReadOnly(False)
+            
+    symbol.setVisible(sercomSym_OperationMode.getSelectedKey() == "I2CS")
+    
 ###################################################################################################
 ######################################## I2C MASTER ###############################################
 ###################################################################################################
@@ -72,13 +90,49 @@ i2csSym_Interrupt_Mode.setDefaultValue(True)
 i2csSym_Interrupt_Mode.setVisible(False)
 i2csSym_Interrupt_Mode.setDependencies(updateI2CSlaveConfigurationVisibleProperty, ["SERCOM_MODE"])
 
+global speedSupported
+speedSupported = False
+
+ctrlaNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SERCOM"]/register-group@[name="SERCOM"]/register@[modes="I2CM",name="CTRLA"]')
+ctrlaValue = ctrlaNode.getChildren()
+
+for index in range(len(ctrlaValue)):
+    bitFieldName = str(ctrlaValue[index].getAttribute("name"))
+    if bitFieldName == "SPEED":
+        speedSupported = True
+        break
+
+if speedSupported == True:
+    # Enable I2C Transfer High Speed Mode Option
+    i2csSym_mode = sercomComponent.createBooleanSymbol("I2CS_HIGH_SPEED_MODE", sercomSym_OperationMode)
+    i2csSym_mode.setLabel("Enable High Speed Mode")
+    i2csSym_mode.setDefaultValue(False)
+    i2csSym_mode.setVisible(False)
+    i2csSym_mode.setDependencies(updateI2CSlaveConfigurationVisibleProperty, ["SERCOM_MODE"])
+    
 # I2C Smart Mode Enable
 i2csSym_CTRLB_SMEN = sercomComponent.createBooleanSymbol("I2CS_SMEN", sercomSym_OperationMode)
 i2csSym_CTRLB_SMEN.setLabel("Enable Smart Mode")
 i2csSym_CTRLB_SMEN.setDefaultValue(False)
 i2csSym_CTRLB_SMEN.setVisible(False)
-i2csSym_CTRLB_SMEN.setDependencies(updateI2CSlaveConfigurationVisibleProperty, ["SERCOM_MODE"])
+i2csSym_CTRLB_SMEN.setDependencies(updateSmartModeVisibility, ["SERCOM_MODE", "I2CS_HIGH_SPEED_MODE"])    
+    
+global sclsmSupported
+sclsmSupported = False
 
+# Check if different SCL clock stretching modes are supported
+for index in range(len(ctrlaValue)):
+    bitFieldName = str(ctrlaValue[index].getAttribute("name"))
+    if bitFieldName == "SCLSM":
+        sclsmSupported = True
+        break
+        
+if sclsmSupported == True:      
+    i2csSym_CTRLA_SCLSM = sercomComponent.createIntegerSymbol("I2CS_SCLSM", sercomSym_OperationMode)
+    i2csSym_CTRLA_SCLSM.setLabel("Clock Stretch Mode")
+    i2csSym_CTRLA_SCLSM.setVisible(False)
+    i2csSym_CTRLA_SCLSM.setDefaultValue(0)
+    i2csSym_CTRLA_SCLSM.setDependencies(updateI2CClockStretchConfigValue, ["I2CS_HIGH_SPEED_MODE"])    
 #-----------------------------------------------------------------------------------
 # SDA Hold Time
 i2csSym_CTRLA_SDAHOLD = sercomComponent.createKeyValueSetSymbol("I2CS_SDAHOLD_TIME", sercomSym_OperationMode)

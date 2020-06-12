@@ -120,13 +120,13 @@ typedef enum
 {
     SERCOM_I2C_SLAVE_TRANSFER_EVENT_NONE = 0,
     SERCOM_I2C_SLAVE_TRANSFER_EVENT_ADDR_MATCH,
-	
-	/* Data sent by I2C Master is available */
+
+    /* Data sent by I2C Master is available */
     SERCOM_I2C_SLAVE_TRANSFER_EVENT_RX_READY,
-	
-	/* I2C slave can respond to data read request from I2C Master */
+
+    /* I2C slave can respond to data read request from I2C Master */
     SERCOM_I2C_SLAVE_TRANSFER_EVENT_TX_READY,
-	
+
     SERCOM_I2C_SLAVE_TRANSFER_EVENT_STOP_BIT_RECEIVED,
     <#if I2CS_INTENSET_ERROR = true>
     SERCOM_I2C_SLAVE_TRANSFER_EVENT_ERROR,
