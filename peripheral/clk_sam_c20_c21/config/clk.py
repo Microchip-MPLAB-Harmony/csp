@@ -1422,14 +1422,14 @@ def apbValue(symbol,event):
                 bridge = key.split("_")[0]
 
                 bitmask = int(key.split("_")[1])
-                apbVal = int(Database.getSymbolValue("core", "MCLK_" + bridge + "_INITIAL_VALUE"),16)
+                apbVal = int(Database.getSymbolValue("core", "MCLK_" + bridge + "_VALUE"),16)
                 if enable == True:
                     apbVal =  apbVal | bitmask
-                    Database.setSymbolValue("core", "MCLK_" + bridge + "_INITIAL_VALUE", hex(apbVal),2)
+                    Database.setSymbolValue("core", "MCLK_" + bridge + "_VALUE", hex(apbVal),2)
                     break
                 else:
                     apbVal =  apbVal & ~(bitmask)
-                    Database.setSymbolValue("core", "MCLK_" + bridge + "_INITIAL_VALUE", hex(apbVal),2)
+                    Database.setSymbolValue("core", "MCLK_" + bridge + "_VALUE", hex(apbVal),2)
                     break
 
 
@@ -1451,9 +1451,9 @@ for index in range(0, len(ahbNode.getChildren())):
         ahbInit = hex(int(ahbNode.getChildren()[index].getAttribute("initval"),16))
 
 #AHB Bridge Clock Initial Settings
-mclk_AHB_Clock_Value = coreComponent.createStringSymbol("MCLK_AHB_INITIAL_VALUE",mclkSym_Menu)
-mclk_AHB_Clock_Value.setDefaultValue(str(ahbInit))
-mclk_AHB_Clock_Value.setVisible(False)
+mclk_AHB_Initial_Value = coreComponent.createStringSymbol("MCLK_AHB_INITIAL_VALUE",mclkSym_Menu)
+mclk_AHB_Initial_Value.setDefaultValue(str(ahbInit))
+mclk_AHB_Initial_Value.setVisible(False)
 
 #AHB Bridge Clock settings
 mclk_AHB_Clock_Value = coreComponent.createStringSymbol("MCLK_AHB_VALUE",mclkSym_Menu)
@@ -1487,9 +1487,15 @@ for index in range(0, numAPB):
             apbInit[bridgeName] = hex(int(apbInitNode.getChildren()[index].getAttribute("initval"),16))
 
     #APB Bridge Clock Initial Settings
-    mclk_Clock_Value = coreComponent.createStringSymbol("MCLK_" + bridgeName +"_INITIAL_VALUE",mclkSym_Menu)
+    mclk_Clock_Initial_Value = coreComponent.createStringSymbol("MCLK_" + bridgeName +"_INITIAL_VALUE",mclkSym_Menu)
+    mclk_Clock_Initial_Value.setDefaultValue(str(apbInit[bridgeName]))
+    mclk_Clock_Initial_Value.setVisible(False)
+
+    #APB Bridge Clock Settings
+    mclk_Clock_Value = coreComponent.createStringSymbol("MCLK_" + bridgeName +"_VALUE",mclkSym_Menu)
     mclk_Clock_Value.setDefaultValue(str(apbInit[bridgeName]))
     mclk_Clock_Value.setReadOnly(True)
+
 mclk_Clock_Value.setDependencies(apbValue, gclkDependencyList)
 
 #MCLK CPU Division

@@ -310,33 +310,32 @@ ${CLK_INIT_LIST}
     </#if>
 </#list>
 
-	<#if MCLK_AHB_INITIAL_VALUE != MCLK_AHB_VALUE>
+	<#if MCLK_AHB_VALUE != MCLK_AHB_INITIAL_VALUE>
     /* Configure the AHB Bridge Clocks */
     MCLK_REGS->MCLK_AHBMASK = ${MCLK_AHB_VALUE};
-
     </#if>
-    <#if MCLK_APBA_INITIAL_VALUE != "0xfff">
+
+    <#if MCLK_APBA_VALUE != MCLK_APBA_INITIAL_VALUE>
     /* Configure the APBA Bridge Clocks */
-    MCLK_REGS->MCLK_APBAMASK = ${MCLK_APBA_INITIAL_VALUE};
-
+    MCLK_REGS->MCLK_APBAMASK = ${MCLK_APBA_VALUE};
     </#if>
-    <#if MCLK_APBB_INITIAL_VALUE != "0x7">
+
+    <#if MCLK_APBB_VALUE != MCLK_APBB_INITIAL_VALUE>
     /* Configure the APBB Bridge Clocks */
-    MCLK_REGS->MCLK_APBBMASK = ${MCLK_APBB_INITIAL_VALUE};
-
+    MCLK_REGS->MCLK_APBBMASK = ${MCLK_APBB_VALUE};
     </#if>
-    <#if MCLK_APBC_INITIAL_VALUE != "0x0">
+
     <#if MCLK_APBC_INITIAL_VALUE??>
+    <#if MCLK_APBC_VALUE != MCLK_APBC_INITIAL_VALUE>
     /* Configure the APBC Bridge Clocks */
-    MCLK_REGS->MCLK_APBCMASK = ${MCLK_APBC_INITIAL_VALUE};
+    MCLK_REGS->MCLK_APBCMASK = ${MCLK_APBC_VALUE};
+    </#if>
+    </#if>
 
-    </#if>
-    </#if>
     <#if MCLK_APBD_INITIAL_VALUE??>
-    <#if MCLK_APBD_INITIAL_VALUE != "0x0">
+    <#if MCLK_APBD_VALUE != MCLK_APBD_INITIAL_VALUE>
     /* Configure the APBD Bridge Clocks */
-    MCLK_REGS->MCLK_APBDMASK = ${MCLK_APBD_INITIAL_VALUE};
-
+    MCLK_REGS->MCLK_APBDMASK = ${MCLK_APBD_VALUE};
     </#if>
     </#if>
 
