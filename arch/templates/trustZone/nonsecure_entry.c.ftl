@@ -1,20 +1,21 @@
 /*******************************************************************************
- Debug Console Source file 
+ Non-secure entry source file for secure project
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    secure.c
+    nonsecure_entry.c
 
   Summary:
-    secure function source file
+    Implements hooks for Non-secure application
 
   Description:
-    None
+    This file is used to call specific API's in the secure world from the Non-Secure world.
 
-*******************************************************************************/
+ *******************************************************************************/
 
+// DOM-IGNORE-BEGIN
 /*******************************************************************************
 * Copyright (C) 2020 Microchip Technology Inc. and its subsidiaries.
 *
@@ -36,13 +37,11 @@
 * FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
-*******************************************************************************/
+ *******************************************************************************/
+// DOM-IGNORE-END
 
-#include "secure.h"    /* Header file with secure interface API */
-#include "definitions.h"
-
-int add(int x, int y)
+/* Non-secure callable (entry) function */
+int __attribute__((cmse_nonsecure_entry)) secure_add(int x, int y)
 {
-	return (x + y);
+    return (x + y);
 }
-
