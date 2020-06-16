@@ -404,6 +404,11 @@ def instantiateComponent( coreComponent ):
     xc32HeapSize.setLabel("Heap Size (bytes)")
     xc32HeapSize.setDefaultValue( 512 )
 
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        xc32SecureHeapSize = coreComponent.createIntegerSymbol("XC32_SECURE_HEAP_SIZE", xc32LdGeneralMenu)
+        xc32SecureHeapSize.setLabel("Secure Heap Size (bytes)")
+        xc32SecureHeapSize.setDefaultValue( 512 )
+
     if isCortexA == True:
         xc32UsrStackSize = coreComponent.createIntegerSymbol("XC32_USR_STACK_SIZE", xc32LdGeneralMenu)
         xc32UsrStackSize.setLabel( "User/System Stack Size (bytes)" )
@@ -438,6 +443,8 @@ def instantiateComponent( coreComponent ):
 
     xc32LdSymbolsMacrosMenu = coreComponent.createMenuSymbol("CoreXC32_SYMBOLS_MACROS", xc32LdMenu)
     xc32LdSymbolsMacrosMenu.setLabel("Symbols & Macros")
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        xc32LdSymbolsMacrosMenu.setVisible(False)
 
     xc32LdAppStartAddress = coreComponent.createStringSymbol("APP_START_ADDRESS", xc32LdSymbolsMacrosMenu)
     xc32LdAppStartAddress.setLabel("Application Start Address (Hex)")
@@ -741,6 +748,14 @@ def instantiateComponent( coreComponent ):
     xc32HeapSizeSym.setKey("heap-size")
     xc32HeapSizeSym.setValue(str(xc32HeapSize.getValue()))
     xc32HeapSizeSym.setDependencies(heapSizeCallBack, ["XC32_HEAP_SIZE"])
+
+    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+        xc32SecureHeapSizeSym = coreComponent.createSettingSymbol("XC32_SECURE_HEAP", None)
+        xc32SecureHeapSizeSym.setCategory("C32-LD")
+        xc32SecureHeapSizeSym.setKey("heap-size")
+        xc32SecureHeapSizeSym.setValue(str(xc32SecureHeapSize.getValue()))
+        xc32SecureHeapSizeSym.setDependencies(heapSizeCallBack, ["XC32_SECURE_HEAP_SIZE"])
+        xc32SecureHeapSizeSym.setSecurity("SECURE")
 
     # set include path and monitor file
     corePath = ""
