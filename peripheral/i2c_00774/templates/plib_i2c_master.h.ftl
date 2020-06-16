@@ -6,10 +6,10 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_${I2C_INSTANCE_NAME?lower_case}_i2c.h
+    plib_${I2C_INSTANCE_NAME?lower_case}_master.h
 
   Summary:
-    I2C PLIB Header file
+    I2C PLIB Master Mode Header file
 
   Description:
     This file defines the interface to the I2C peripheral library. This
@@ -41,8 +41,8 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_${I2C_INSTANCE_NAME}_H
-#define PLIB_${I2C_INSTANCE_NAME}_H
+#ifndef PLIB_${I2C_INSTANCE_NAME}_MASTER_H
+#define PLIB_${I2C_INSTANCE_NAME}_MASTER_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -52,7 +52,7 @@
 /* This section lists the other files that are included in this file.
 */
 
-#include "plib_i2c_master.h"
+#include "plib_i2c_master_common.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
@@ -581,7 +581,7 @@ bool ${I2C_INSTANCE_NAME}_TransferSetup(I2C_TRANSFER_SETUP* setup, uint32_t srcC
 #endif
 // DOM-IGNORE-END
 
-#endif /* PLIB_${I2C_INSTANCE_NAME}_H */
+#endif /* PLIB_${I2C_INSTANCE_NAME}_MASTER_H */
 
 
 

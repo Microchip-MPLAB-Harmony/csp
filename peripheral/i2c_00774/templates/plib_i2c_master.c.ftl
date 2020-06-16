@@ -6,10 +6,10 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_${I2C_INSTANCE_NAME?lower_case}.c
+    plib_${I2C_INSTANCE_NAME?lower_case}_master.c
 
   Summary:
-    I2C PLIB Implementation file
+    I2C PLIB Master Mode Implementation file
 
   Description:
     This file defines the interface to the I2C peripheral library.
@@ -49,7 +49,7 @@
 // *****************************************************************************
 
 #include "device.h"
-#include "plib_${I2C_INSTANCE_NAME?lower_case}.h"
+#include "plib_${I2C_INSTANCE_NAME?lower_case}_master.h"
 
 // *****************************************************************************
 // *****************************************************************************
