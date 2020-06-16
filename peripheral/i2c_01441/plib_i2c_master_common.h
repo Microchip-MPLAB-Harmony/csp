@@ -6,10 +6,10 @@
     Microchip Technology Inc.
 
   File Name
-    plib_i2c_master.h
+    plib_i2c_master_common.h
 
   Summary
-    I2C peripheral library interface.
+    I2C peripheral library master mode common interface.
 
   Description
     This file defines the interface to the I2C peripheral library. This
@@ -45,8 +45,8 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_I2C_MASTER_H
-#define PLIB_I2C_MASTER_H
+#ifndef PLIB_I2C_MASTER_COMMON_H
+#define PLIB_I2C_MASTER_COMMON_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -230,7 +230,7 @@ typedef struct
 #endif
 // DOM-IGNORE-END
 
-#endif /* PLIB_I2C_MASTER_H */
+#endif /* PLIB_I2C_MASTER_COMMON_H */
 
 
 

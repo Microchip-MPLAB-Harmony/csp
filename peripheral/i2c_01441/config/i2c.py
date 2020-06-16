@@ -27,11 +27,29 @@
 
 global interruptsChildren
 
+modelist = ["Master", "Slave"]
+
 interruptsChildren = ATDF.getNode('/avr-tools-device-file/devices/device/interrupts').getChildren()
 
 ###################################################################################################
 ######################################### Functions ###############################################
 ###################################################################################################
+def handleMessage(messageID, args):
+    global i2cSym_OperatingMode
+    result_dict = {}
+
+    if (messageID == "I2C_MODE_SET_MASTER"):
+        i2cSym_OperatingMode.setReadOnly(True)
+        i2cSym_OperatingMode.setValue(modelist[0])    
+    elif (messageID == "I2C_MODE_SET_SLAVE"):
+        i2cSym_OperatingMode.setReadOnly(True)
+        i2cSym_OperatingMode.setValue(modelist[1])    
+    elif (messageID == "I2C_MODE_LOCK"):
+        i2cSym_OperatingMode.setReadOnly(True)
+    elif (messageID == "I2C_MODE_UNLOCK"):        
+        i2cSym_OperatingMode.setReadOnly(False)     
+        
+    return result_dict
 
 def getIRQnumber(string):
 
@@ -59,39 +77,9 @@ def _get_statReg_parms(vectorNumber):
     regName = "IFS" + str(index)
     return regName
 
-def setI2CInterruptData(status):
-
-    for id in InterruptVector:
-        Database.setSymbolValue("core", id, status, 1)
-
-    for id in InterruptHandlerLock:
-        Database.setSymbolValue("core", id, status, 1)
-
-    for id in InterruptHandler:
-        interruptName = id.split("_INTERRUPT_HANDLER")[0]
-        if status == True:
-            Database.setSymbolValue("core", id, interruptName + "_InterruptHandler", 1)
-        else:
-            Database.setSymbolValue("core", id, interruptName + "_Handler", 1)
-
 ###################################################################################################
 ########################################## Callbacks  #############################################
 ###################################################################################################
-
-def updateI2CInterruptData(symbol, event):
-
-    status = False
-
-    for id in InterruptVectorUpdate:
-        id = id.replace("core.", "")
-        if Database.getSymbolValue("core", id) == True:
-            status = True
-            break
-
-    if status == True:
-        symbol.setVisible(True)
-    else:
-        symbol.setVisible(False)
 
 # Calculates BRG value
 def baudRateCalc(clk, baud):
@@ -128,6 +116,79 @@ def updateI2CClockWarningStatus(symbol, event):
 
     symbol.setVisible(not event["value"])
 
+def masterModeVisibility(symbol, event):
+    global i2cSym_OperatingMode
+
+    if i2cSym_OperatingMode.getValue() == "Master":
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+
+def slaveModeVisibility(symbol, event):
+    global i2cSym_OperatingMode
+    global i2csSym_A10M
+
+    if event["id"] == "I2CS_A10M_SUPPORT":
+        if i2csSym_A10M.getValue() == True:
+            symbol.setLabel("I2C Slave Address (10-bit)")
+        else:
+            symbol.setLabel("I2C Slave Address (7-bit)")
+
+    elif event["id"] == "I2C_OPERATING_MODE":
+        if i2cSym_OperatingMode.getValue() == "Slave":
+            symbol.setVisible(True)
+        else:
+            symbol.setVisible(False)
+
+def masterFilesGeneration(symbol, event):
+    symbol.setEnabled(i2cSym_OperatingMode.getValue() == "Master")
+
+def slaveFilesGeneration(symbol, event):
+    symbol.setEnabled(i2cSym_OperatingMode.getValue() == "Slave")
+
+def setI2CInterruptData(interruptDict, isEnabled):
+    Database.setSymbolValue("core", interruptDict["InterruptVector"], isEnabled, 1)
+    Database.setSymbolValue("core", interruptDict["InterruptHandlerLock"], isEnabled, 1)
+    interruptName = interruptDict["InterruptHandler"].split("_INTERRUPT_HANDLER")[0]
+    if isEnabled == True:
+        Database.setSymbolValue("core", interruptDict["InterruptHandler"], interruptName + "_InterruptHandler", 1)
+    else:
+        Database.setSymbolValue("core", interruptDict["InterruptHandler"], interruptName + "_Handler", 1)
+
+def interruptSetupChangeHandler(symbol, event):
+    interruptSetup(i2cSym_OperatingMode.getValue(), False)
+    
+def interruptSetup(mode, isUpdate):
+    global InterruptList
+    global i2cSymIntEnableComment
+    IntEnComment = False
+
+    for interruptDict in InterruptList:
+        if (interruptDict["type"] == "Bus"):
+            isEnabled = True
+        elif (interruptDict["type"] == mode):
+            isEnabled = True
+        else:
+            isEnabled = False
+            
+        if (isUpdate == True):
+            setI2CInterruptData(interruptDict, isEnabled)
+
+        # Check if interrupt got enabled or not. If not, enable the comment to indicate interrupt is not enabled
+        if isEnabled == True and IntEnComment == False:
+            if Database.getSymbolValue("core", interruptDict["InterruptUpdate"] ) == True:
+                IntEnComment = True
+
+    if IntEnComment == True:
+        i2cSymIntEnableComment.setVisible(True)
+    else:
+        i2cSymIntEnableComment.setVisible(False)
+
+def interruptSetupOnModeChange(symbol, event):
+    interruptSetup(event["value"], True)
+
+
+
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
@@ -135,22 +196,36 @@ def updateI2CClockWarningStatus(symbol, event):
 def instantiateComponent(i2cComponent):
 
     global i2cInstanceName
-    global InterruptVector
-    global InterruptHandlerLock
-    global InterruptHandler
-    global InterruptVectorUpdate
     global i2cSym_BAUD
     global i2cSymMaxBRG
     global i2cSym_BaudError_Comment
+    global i2cSym_OperatingMode
+    global i2csSym_A10M
+    global masterIntDict
+    global slaveIntDict
+    global busIntDict
+    global i2cSymIntEnableComment
+    global InterruptList
 
-    InterruptVector = []
-    InterruptHandler = []
-    InterruptHandlerLock = []
-    InterruptVectorUpdate = []
+    masterIntDict = {}
+    slaveIntDict = {}
+    busIntDict = {}
+    InterruptList = []
 
     i2cInstanceName = i2cComponent.createStringSymbol("I2C_INSTANCE_NAME", None)
     i2cInstanceName.setVisible(False)
     i2cInstanceName.setDefaultValue(i2cComponent.getID().upper())
+
+    i2cInstanceNum = i2cComponent.createStringSymbol("I2C_INSTANCE_NUM", None)
+    i2cInstanceNum.setVisible(False)
+    componentName = str(i2cComponent.getID())
+    instanceNum = componentName[3]
+    i2cInstanceNum.setDefaultValue(instanceNum)
+
+    i2cSym_OperatingMode = i2cComponent.createComboSymbol("I2C_OPERATING_MODE", None, modelist)
+    i2cSym_OperatingMode.setLabel("Operating Mode")
+    i2cSym_OperatingMode.setDefaultValue("Master")
+    i2cSym_OperatingMode.setDependencies(interruptSetupOnModeChange, ["I2C_OPERATING_MODE"])
 
     #Clock enable
     Database.setSymbolValue("core", i2cInstanceName.getValue() + "_CLOCK_ENABLE", True, 1)
@@ -163,6 +238,21 @@ def instantiateComponent(i2cComponent):
     i2cSym_ClkValue.setVisible(False)
     i2cSym_ClkValue.setDefaultValue(int(Database.getSymbolValue("core", i2cInstanceName.getValue() + "_CLOCK_FREQUENCY")))
     i2cSym_ClkValue.setDependencies(i2cSourceFreq, ["core." + i2cInstanceName.getValue() + "_CLOCK_FREQUENCY"])
+
+    # 10-bit addressing
+    i2csSym_A10M = i2cComponent.createBooleanSymbol("I2CS_A10M_SUPPORT", None)
+    i2csSym_A10M.setLabel("Enable 10-bit Addressing")
+    i2csSym_A10M.setVisible(False)
+    i2csSym_A10M.setDefaultValue(False)
+    i2csSym_A10M.setDependencies(slaveModeVisibility, ["I2C_OPERATING_MODE"])
+
+    #Slave Address
+    i2csSym_ADDR = i2cComponent.createHexSymbol("I2C_SLAVE_ADDDRESS", None)
+    i2csSym_ADDR.setLabel("I2C Slave Address (7-bit)")
+    i2csSym_ADDR.setMax(1023)
+    i2csSym_ADDR.setVisible(False)
+    i2csSym_ADDR.setDefaultValue(0x54)
+    i2csSym_ADDR.setDependencies(slaveModeVisibility, ["I2C_OPERATING_MODE", "I2CS_A10M_SUPPORT"])
 
     #DISSLW: Slew Rate Control Disable bit
     i2cSym_SlewRateControl = i2cComponent.createBooleanSymbol("I2C_DISSLW", None)
@@ -182,6 +272,7 @@ def instantiateComponent(i2cComponent):
     i2cSym_BAUD.setDefaultValue(50000)
     i2cSym_BAUD.setMin(1)
     i2cSym_BAUD.setMax(1000000)
+    i2cSym_BAUD.setDependencies(masterModeVisibility, ["I2C_OPERATING_MODE"])
 
     #I2C Baud Rate not supported comment
     i2cSym_BaudError_Comment = i2cComponent.createCommentSymbol("I2C_BAUD_ERROR_COMMENT", None)
@@ -195,13 +286,7 @@ def instantiateComponent(i2cComponent):
     i2cSymMaxBRG = i2cComponent.createIntegerSymbol("I2C_MAX_BRG", None)
     i2cSymMaxBRG.setDefaultValue(i2cMaxBRG)
     i2cSymMaxBRG.setVisible(False)
-
-    #I2C Forced Write API Inclusion
-    i2cSym_ForcedWrite = i2cComponent.createBooleanSymbol("I2C_INCLUDE_FORCED_WRITE_API", None)
-    i2cSym_ForcedWrite.setLabel("Include Force Write I2C Function" + "\r\n" + "(Master Mode Only - Ignore NACK from Slave)")
-    i2cSym_ForcedWrite.setDefaultValue(False)
-    i2cSym_ForcedWrite.setVisible(True)
-
+    
     ## Baud Rate Frequency dependency
     i2cSym_BRGValue = i2cComponent.createIntegerSymbol("BRG_VALUE", None)
     i2cSym_BRGValue.setVisible(False)
@@ -209,16 +294,44 @@ def instantiateComponent(i2cComponent):
 
     #Use setValue instead of setDefaultValue to store symbol value in default.xml
     i2cSym_BRGValue.setValue(baudRateCalc(i2cSym_ClkValue.getValue(), i2cSym_BAUD.getValue()) , 1)
+    
+    # SDAHT (SDA Hold Time Bit)
+    i2cxCON = i2cInstanceName.getValue() + "CON"
+    
+    i2cxCON_SDAHT = ATDF.getNode('/avr-tools-device-file/modules/module@[name="I2C"]/register-group@[name="I2C"]/register@[name="' + i2cxCON + '"]/bitfield@[name="SDAHT"]')
 
-    ## Master Interrupt Setup
+    if i2cxCON_SDAHT != None:
+        i2cxCON_SDAHT_ValueGroup = ATDF.getNode('/avr-tools-device-file/modules/module@[name="I2C"]/value-group@[name="' + i2cxCON_SDAHT.getAttribute("values") + '"]')
+
+        i2cCON_SDAHT_Support = i2cComponent.createKeyValueSetSymbol("I2CS_SDAHT_SUPPORT", None)
+        i2cCON_SDAHT_Support.setLabel("SDA Hold Time")
+        i2cCON_SDAHT_Support.addKey(i2cxCON_SDAHT_ValueGroup.getChildren()[0].getAttribute("value"), "0" , i2cxCON_SDAHT_ValueGroup.getChildren()[0].getAttribute("caption"))
+        i2cCON_SDAHT_Support.addKey(i2cxCON_SDAHT_ValueGroup.getChildren()[1].getAttribute("value"), "1" , i2cxCON_SDAHT_ValueGroup.getChildren()[1].getAttribute("caption"))
+        i2cCON_SDAHT_Support.setOutputMode("Key")
+        i2cCON_SDAHT_Support.setDisplayMode("Description")
+        i2cCON_SDAHT_Support.setDefaultValue(1)
+        i2cCON_SDAHT_Support.setVisible(True)
+
+    #I2C Forced Write API Inclusion
+    i2cSym_ForcedWrite = i2cComponent.createBooleanSymbol("I2C_INCLUDE_FORCED_WRITE_API", None)
+    i2cSym_ForcedWrite.setLabel("Include Force Write I2C Function" + "\r\n" + "(Master Mode Only - Ignore NACK from Slave)")
+    i2cSym_ForcedWrite.setDefaultValue(False)
+    i2cSym_ForcedWrite.setVisible(True)
+    i2cSym_ForcedWrite.setDependencies(masterModeVisibility, ["I2C_OPERATING_MODE"])
+
+    ## Master Interrupt Setup (List index 0)
     i2cMasterInt = i2cInstanceName.getValue() + "_MASTER"
-    InterruptVector.append(i2cMasterInt + "_INTERRUPT_ENABLE")
-    InterruptHandler.append(i2cMasterInt + "_INTERRUPT_HANDLER")
-    InterruptHandlerLock.append(i2cMasterInt + "_INTERRUPT_HANDLER_LOCK")
-    InterruptVectorUpdate.append("core." + i2cMasterInt + "_INTERRUPT_ENABLE_UPDATE")
+
+    masterIntDict["type"] = modelist[0]
+    masterIntDict["InterruptVector"] = i2cMasterInt + "_INTERRUPT_ENABLE"
+    masterIntDict["InterruptHandler"] = i2cMasterInt + "_INTERRUPT_HANDLER"
+    masterIntDict["InterruptHandlerLock"] = i2cMasterInt + "_INTERRUPT_HANDLER_LOCK"
+    masterIntDict["InterruptUpdate"] = i2cMasterInt + "_INTERRUPT_ENABLE_UPDATE"
+    InterruptList.append(masterIntDict)
 
     MasterVectorNum = int(getIRQnumber(i2cMasterInt))
     enblRegName = _get_enblReg_parms(MasterVectorNum)
+
     statRegName = _get_statReg_parms(MasterVectorNum)
 
     #IEC REG
@@ -231,8 +344,16 @@ def instantiateComponent(i2cComponent):
     i2cMasterIntIFS.setDefaultValue(statRegName)
     i2cMasterIntIFS.setVisible(False)
 
-    ## Slave Interrupt Setup
+    ## Slave Interrupt Setup (List index 1)
     i2cSlaveInt = i2cInstanceName.getValue() + "_SLAVE"
+
+    slaveIntDict["type"] = modelist[1]
+    slaveIntDict["InterruptVector"] = i2cSlaveInt + "_INTERRUPT_ENABLE"
+    slaveIntDict["InterruptHandler"] = i2cSlaveInt + "_INTERRUPT_HANDLER"
+    slaveIntDict["InterruptHandlerLock"] = i2cSlaveInt + "_INTERRUPT_HANDLER_LOCK"
+    slaveIntDict["InterruptUpdate"] = i2cSlaveInt + "_INTERRUPT_ENABLE_UPDATE"
+    InterruptList.append(slaveIntDict)
+
     SlaveVectorNum = int(getIRQnumber(i2cSlaveInt))
     enblRegName = _get_enblReg_parms(SlaveVectorNum)
     statRegName = _get_statReg_parms(SlaveVectorNum)
@@ -247,12 +368,15 @@ def instantiateComponent(i2cComponent):
     i2cSlaveIntIFS.setDefaultValue(statRegName)
     i2cSlaveIntIFS.setVisible(False)
 
-    ## Bus Error Interrupt Setup
+    ## Bus Error Interrupt Setup (List index 2)
     i2cBusInt = i2cInstanceName.getValue() + "_BUS"
-    InterruptVector.append(i2cBusInt + "_INTERRUPT_ENABLE")
-    InterruptHandler.append(i2cBusInt + "_INTERRUPT_HANDLER")
-    InterruptHandlerLock.append(i2cBusInt + "_INTERRUPT_HANDLER_LOCK")
-    InterruptVectorUpdate.append("core." + i2cBusInt + "_INTERRUPT_ENABLE_UPDATE")
+
+    busIntDict["type"] = "Bus"
+    busIntDict["InterruptVector"] = i2cBusInt + "_INTERRUPT_ENABLE"
+    busIntDict["InterruptHandler"] = i2cBusInt + "_INTERRUPT_HANDLER"
+    busIntDict["InterruptHandlerLock"] = i2cBusInt + "_INTERRUPT_HANDLER_LOCK"
+    busIntDict["InterruptUpdate"] = i2cBusInt + "_INTERRUPT_ENABLE_UPDATE"
+    InterruptList.append(busIntDict)
 
     BusVectorNum = int(getIRQnumber(i2cBusInt))
     enblRegName = _get_enblReg_parms(BusVectorNum)
@@ -266,26 +390,48 @@ def instantiateComponent(i2cComponent):
     #IFS REG
     i2cBusIntIFS = i2cComponent.createStringSymbol("I2C_BUS_IFS_REG", None)
     i2cBusIntIFS.setDefaultValue(statRegName)
-    i2cBusIntIFS.setVisible(False)
+    i2cBusIntIFS.setVisible(False)        
+    
+    # Check if the following bit fields exist:
+    i2cxCON = i2cInstanceName.getValue() + "CON"
 
-    # Clock Warning status
+    # AHEN (Address Hold Enable Bit)
+    i2cxCON_AHEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="I2C"]/register-group@[name="I2C"]/register@[name="' + i2cxCON + '"]/bitfield@[name="AHEN"]')
+
+    # DHEN (Data Hold Enable Bit)
+    i2cxCON_DHEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="I2C"]/register-group@[name="I2C"]/register@[name="' + i2cxCON + '"]/bitfield@[name="DHEN"]')
+
+    if i2cxCON_AHEN != None and i2cxCON_DHEN != None:
+        i2cCON_AHEN_DHEN_Support = i2cComponent.createBooleanSymbol("I2CS_AHEN_DHEN_SUPPORT", None)
+        i2cCON_AHEN_DHEN_Support.setLabel("Enable Address and Data Hold")
+        i2cCON_AHEN_DHEN_Support.setVisible(i2cSym_OperatingMode.getValue() == "Slave")
+        i2cCON_AHEN_DHEN_Support.setDefaultValue(True)
+        i2cCON_AHEN_DHEN_Support.setDependencies(slaveModeVisibility, ["I2C_OPERATING_MODE"])
+
+    # PCIE (Stop Bit Interrupt Enable Bit)
+    i2cxCON_PCIE = ATDF.getNode('/avr-tools-device-file/modules/module@[name="I2C"]/register-group@[name="I2C"]/register@[name="' + i2cxCON + '"]/bitfield@[name="PCIE"]')
+
+    if i2cxCON_PCIE != None:
+        i2cCON_PCIE_Support = i2cComponent.createBooleanSymbol("I2CS_PCIE_SUPPORT", None)
+        i2cCON_PCIE_Support.setLabel("Enable Stop Condition Interrupt")
+        i2cCON_PCIE_Support.setVisible(False)
+        i2cCON_PCIE_Support.setDefaultValue(True)      
+
+    # Interrupt Warning
+    i2cSymIntEnableComment = i2cComponent.createCommentSymbol("I2C_INTRRUPT_ENABLE_COMMENT", None)
+    i2cSymIntEnableComment.setLabel("Warning!!! " + i2cInstanceName.getValue() + " Interrupt is Disabled in Interrupt Manager")
+    i2cSymIntEnableComment.setVisible(False)    
+    i2cSymIntEnableComment.setDependencies(interruptSetupChangeHandler, ["core." + i2cInstanceName.getValue() + "_MASTER" + "_INTERRUPT_ENABLE_UPDATE", "core." + i2cInstanceName.getValue() + "_SLAVE" + "_INTERRUPT_ENABLE_UPDATE", "core." + i2cInstanceName.getValue() + "_BUS" + "_INTERRUPT_ENABLE_UPDATE"] )
+    
+         
+    # Clock Warning
     i2cSym_ClkEnComment = i2cComponent.createCommentSymbol("I2C_CLOCK_ENABLE_COMMENT", None)
     i2cSym_ClkEnComment.setLabel("Warning!!! " + i2cInstanceName.getValue() + " Peripheral Clock is Disabled in Clock Manager")
     i2cSym_ClkEnComment.setVisible(False)
     i2cSym_ClkEnComment.setDependencies(updateI2CClockWarningStatus, ["core." + i2cInstanceName.getValue() + "_CLOCK_ENABLE"])
 
-
-    ############################################################################
-    #### Dependency ####
-    ############################################################################
-
-    ## EVIC Interrupt Dynamic settings
-    setI2CInterruptData(True)
-
-    i2cSymIntEnComment = i2cComponent.createCommentSymbol("I2C_INTRRUPT_ENABLE_COMMENT", None)
-    i2cSymIntEnComment.setLabel("Warning!!! " + i2cInstanceName.getValue() + " Interrupt is Disabled in Interrupt Manager")
-    i2cSymIntEnComment.setVisible(False)
-    i2cSymIntEnComment.setDependencies(updateI2CInterruptData, InterruptVectorUpdate)
+    # Enable interrupts in EVIC
+    interruptSetup(i2cSym_OperatingMode.getValue(), True)        
 
     ###################################################################################################
     ####################################### Driver Symbols ############################################
@@ -302,28 +448,63 @@ def instantiateComponent(i2cComponent):
 
     configName = Variables.get("__CONFIGURATION_NAME")
 
-    i2cHeaderFile = i2cComponent.createFileSymbol("I2C_HEADER", None)
-    i2cHeaderFile.setSourcePath("../peripheral/i2c_01441/templates/plib_i2c.h.ftl")
-    i2cHeaderFile.setOutputName("plib_" + i2cInstanceName.getValue().lower() + ".h")
-    i2cHeaderFile.setDestPath("peripheral/i2c/")
-    i2cHeaderFile.setProjectPath("config/" + configName +"/peripheral/i2c/")
-    i2cHeaderFile.setType("HEADER")
-    i2cHeaderFile.setMarkup(True)
+    i2cMasterHeaderFile = i2cComponent.createFileSymbol("I2C_MASTER_HEADER", None)
+    i2cMasterHeaderFile.setSourcePath("../peripheral/i2c_01441/templates/plib_i2c_master.h.ftl")
+    i2cMasterHeaderFile.setOutputName("plib_" + i2cInstanceName.getValue().lower() + "_master.h")
+    i2cMasterHeaderFile.setDestPath("peripheral/i2c/master")
+    i2cMasterHeaderFile.setProjectPath("config/" + configName + "/peripheral/i2c/master")
+    i2cMasterHeaderFile.setType("HEADER")
+    i2cMasterHeaderFile.setMarkup(True)
+    i2cMasterHeaderFile.setEnabled(True)
+    i2cMasterHeaderFile.setDependencies(masterFilesGeneration, ["I2C_OPERATING_MODE"])
 
-    i2cGlobalHeaderFile = i2cComponent.createFileSymbol("I2C_GLOBALHEADER", None)
-    i2cGlobalHeaderFile.setSourcePath("../peripheral/i2c_01441/plib_i2c_master.h")
-    i2cGlobalHeaderFile.setOutputName("plib_i2c_master.h")
-    i2cGlobalHeaderFile.setDestPath("peripheral/i2c/")
-    i2cGlobalHeaderFile.setProjectPath("config/" + configName +"/peripheral/i2c/")
-    i2cGlobalHeaderFile.setType("HEADER")
+    i2cMasterCommonHeaderFile = i2cComponent.createFileSymbol("I2C_MASTER_COMMON_HEADER", None)
+    i2cMasterCommonHeaderFile.setSourcePath("../peripheral/i2c_01441/plib_i2c_master_common.h")
+    i2cMasterCommonHeaderFile.setOutputName("plib_i2c_master_common.h")
+    i2cMasterCommonHeaderFile.setDestPath("peripheral/i2c/master")
+    i2cMasterCommonHeaderFile.setProjectPath("config/" + configName + "/peripheral/i2c/master")
+    i2cMasterCommonHeaderFile.setType("HEADER")
+    i2cMasterCommonHeaderFile.setEnabled(True)
+    i2cMasterCommonHeaderFile.setDependencies(masterFilesGeneration, ["I2C_OPERATING_MODE"])
 
-    i2cSource1File = i2cComponent.createFileSymbol("I2C_SOURCE", None)
-    i2cSource1File.setSourcePath("../peripheral/i2c_01441/templates/plib_i2c.c.ftl")
-    i2cSource1File.setOutputName("plib_" + i2cInstanceName.getValue().lower() + ".c")
-    i2cSource1File.setDestPath("peripheral/i2c/")
-    i2cSource1File.setProjectPath("config/" + configName +"/peripheral/i2c/")
-    i2cSource1File.setType("SOURCE")
-    i2cSource1File.setMarkup(True)
+    i2cMasterSourceFile = i2cComponent.createFileSymbol("I2C_MASTER_SOURCE", None)
+    i2cMasterSourceFile.setSourcePath("../peripheral/i2c_01441/templates/plib_i2c_master.c.ftl")
+    i2cMasterSourceFile.setOutputName("plib_" + i2cInstanceName.getValue().lower() + "_master.c")
+    i2cMasterSourceFile.setDestPath("peripheral/i2c/master")
+    i2cMasterSourceFile.setProjectPath("config/" + configName +"/peripheral/i2c/master")
+    i2cMasterSourceFile.setType("SOURCE")
+    i2cMasterSourceFile.setMarkup(True)
+    i2cMasterSourceFile.setEnabled(True)
+    i2cMasterSourceFile.setDependencies(masterFilesGeneration, ["I2C_OPERATING_MODE"])
+
+    i2cSlaveHeaderFile = i2cComponent.createFileSymbol("I2C_SLAVE_HEADER", None)
+    i2cSlaveHeaderFile.setSourcePath("../peripheral/i2c_01441/templates/plib_i2c_slave.h.ftl")
+    i2cSlaveHeaderFile.setOutputName("plib_" + i2cInstanceName.getValue().lower() + "_slave.h")
+    i2cSlaveHeaderFile.setDestPath("peripheral/i2c/slave")
+    i2cSlaveHeaderFile.setProjectPath("config/" + configName + "/peripheral/i2c/slave")
+    i2cSlaveHeaderFile.setType("HEADER")
+    i2cSlaveHeaderFile.setMarkup(True)
+    i2cSlaveHeaderFile.setEnabled(False)
+    i2cSlaveHeaderFile.setDependencies(slaveFilesGeneration, ["I2C_OPERATING_MODE"])
+
+    i2cSlaveCommonHeaderFile = i2cComponent.createFileSymbol("I2C_SLAVE_COMMON_HEADER", None)
+    i2cSlaveCommonHeaderFile.setSourcePath("../peripheral/i2c_01441/plib_i2c_slave_common.h")
+    i2cSlaveCommonHeaderFile.setOutputName("plib_i2c_slave_common.h")
+    i2cSlaveCommonHeaderFile.setDestPath("peripheral/i2c/slave")
+    i2cSlaveCommonHeaderFile.setProjectPath("config/" + configName + "/peripheral/i2c/slave")
+    i2cSlaveCommonHeaderFile.setType("HEADER")
+    i2cSlaveCommonHeaderFile.setEnabled(False)
+    i2cSlaveCommonHeaderFile.setDependencies(slaveFilesGeneration, ["I2C_OPERATING_MODE"])
+
+    i2cSlaveSourceFile = i2cComponent.createFileSymbol("I2C_SLAVE_SOURCE", None)
+    i2cSlaveSourceFile.setSourcePath("../peripheral/i2c_01441/templates/plib_i2c_slave.c.ftl")
+    i2cSlaveSourceFile.setOutputName("plib_" + i2cInstanceName.getValue().lower() + "_slave.c")
+    i2cSlaveSourceFile.setDestPath("peripheral/i2c/slave")
+    i2cSlaveSourceFile.setProjectPath("config/" + configName +"/peripheral/i2c/slave")
+    i2cSlaveSourceFile.setType("SOURCE")
+    i2cSlaveSourceFile.setMarkup(True)
+    i2cSlaveSourceFile.setEnabled(False)
+    i2cSlaveSourceFile.setDependencies(slaveFilesGeneration, ["I2C_OPERATING_MODE"])
 
     i2cSystemInitFile = i2cComponent.createFileSymbol("I2C_INIT", None)
     i2cSystemInitFile.setType("STRING")
