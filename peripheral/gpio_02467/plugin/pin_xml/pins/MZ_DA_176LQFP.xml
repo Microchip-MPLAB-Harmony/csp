@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- This is an auto-generated pin data file created: 21:12:34 02/11/19 -->
+<!-- This is an auto-generated pin data file created: 00:16:29 07/17/20 -->
 <pinfile family="MZ_DA">
    <packages>
      <package diagram="MZ_176_LQFP" id="1" name="176LQFP" />
@@ -963,11 +963,13 @@
       <function name="SOSCO" />
       <function name="RPC14" />
       <function name="T1CK" />
+      <fixed-direction name="In" />
     </pin>
     <pin name="RC13">
        <number package="1" pin="162" />
       <function name="SOSCI" />
       <function name="RPC13" />
+      <fixed-direction name="In" />
     </pin>
     <pin name="RC15">
        <number package="1" pin="163" />

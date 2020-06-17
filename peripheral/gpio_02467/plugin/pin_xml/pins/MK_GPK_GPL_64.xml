@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- This is an auto-generated pin data file created: 14:55:56 08/19/19 -->
+<!-- This is an auto-generated pin data file created: 00:16:29 07/17/20 -->
 <pinfile family="MK_GPK_GPL">
    <packages>
      <package diagram="MX_64_QFN" id="1" name="QFN" />
@@ -361,6 +361,7 @@
       <number package="2" pin="47" />
       <function name="SOSCI" />
       <function name="RPC13" />
+      <fixed-direction name="In" />
     </pin>
     <pin name="RB8">
        <number package="1" pin="48" />
@@ -368,6 +369,7 @@
       <function name="SOSCO" />
       <function name="T1CK" />
       <function name="RPB8" />
+      <fixed-direction name="In" />
     </pin>
     <pin name="RB9">
        <number package="1" pin="49" />

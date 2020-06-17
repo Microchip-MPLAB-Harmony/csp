@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- This is an auto-generated pin data file created: 10:36:19 04/05/19 -->
+<!-- This is an auto-generated pin data file created: 00:16:29 07/17/20 -->
 <pinfile family="MX_1XX_2XX_XLP">
    <packages>
      <package diagram="MX_28_SOIC_SPDIP_SSOP" id="1" name="SOIC" />
@@ -98,6 +98,7 @@
       <number package="2" pin="8" />
       <function name="SOSCI" />
       <function name="RPB4" />
+      <fixed-direction name="In" />
     </pin>
     <pin name="RA4">
        <number package="1" pin="12" />
@@ -106,6 +107,7 @@
       <function name="RPA4" />
       <function name="T1CK" />
       <function name="CTED9" />
+      <fixed-direction name="In" />
     </pin>
     <pin name="VDD">
        <number package="1" pin="13" />

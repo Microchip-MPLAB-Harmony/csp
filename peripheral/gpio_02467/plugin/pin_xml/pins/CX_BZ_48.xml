@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- This is an auto-generated pin data file created: 21:34:41 05/27/20 -->
+<!-- This is an auto-generated pin data file created: 00:16:28 07/17/20 -->
 <pinfile family="CX_BZ">
    <packages>
      <package diagram="MX_48_QFN" id="1" name="VQFN" />
@@ -273,10 +273,12 @@
     <pin name="RA11">
        <number package="1" pin="45" />
       <function name="SOSCI" />
+      <fixed-direction name="In" />
     </pin>
     <pin name="RA12">
        <number package="1" pin="46" />
       <function name="SOSCO" />
+      <fixed-direction name="In" />
     </pin>
     <pin name="RA3">
        <modifiers>
