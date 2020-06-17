@@ -100,6 +100,8 @@ void ${SERCOM_INSTANCE_NAME}_SPI_Initialize(void)
     /* Instantiate the ${SERCOM_INSTANCE_NAME} SPI object */
     ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.callback = NULL ;
     ${SERCOM_INSTANCE_NAME?lower_case}SPIObj.transferIsBusy = false ;
+	${SERCOM_INSTANCE_NAME?lower_case}SPIObj.txSize = 0;
+	${SERCOM_INSTANCE_NAME?lower_case}SPIObj.rxSize = 0;
 </#if>
 
     /* Selection of the Character Size and Receiver Enable */
@@ -281,7 +283,15 @@ void ${SERCOM_INSTANCE_NAME}_SPI_CallbackRegister(SERCOM_SPI_CALLBACK callBack, 
 
 bool ${SERCOM_INSTANCE_NAME}_SPI_IsBusy(void)
 {
-    return ((${SERCOM_INSTANCE_NAME?lower_case}SPIObj.transferIsBusy == true) || ((${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTFLAG & SERCOM_SPIM_INTFLAG_TXC_Msk) == 0));
+	if ((${SERCOM_INSTANCE_NAME?lower_case}SPIObj.txSize == 0) && (${SERCOM_INSTANCE_NAME?lower_case}SPIObj.rxSize == 0))
+	{
+		/* This means no transfer has been requested yet; hence SPI is not busy. */
+		return false;
+	}
+	else
+	{
+		return ((${SERCOM_INSTANCE_NAME?lower_case}SPIObj.transferIsBusy == true) || ((${SERCOM_INSTANCE_NAME}_REGS->SPIM.SERCOM_INTFLAG & SERCOM_SPIM_INTFLAG_TXC_Msk) == 0));
+	}
 }
 </#if>
 
