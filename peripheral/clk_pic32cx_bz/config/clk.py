@@ -219,6 +219,16 @@ def _get_bitfield_info(atdfStartPlace, outputList, valuesField):
 def enableMenu(menu, event):
     menu.setVisible(event["value"])
 
+def updateRODIVmin (symbol, event):
+    if "_ENABLE" in event["id"]:
+        symbol.setVisible(event["value"])
+    elif "CONFIG_SYS_CLK_REFCLK_SOURCE" in event["id"]:
+        if event["value"] == "SPLL3":
+            symbol.setMin(1)
+        else:
+            symbol.setMin(0)
+
+
 def updateRefFreq(menu, event):
     if event["value"] == True:
         # get default value from atdf file and set it
@@ -1120,7 +1130,7 @@ def scan_atdf_for_spllcon_fields(component, parentMenu, regNode):
     global spllcon_symbols
     spllcon_symbols = [
                         {'name':'SPLLPWDN', 'symmaskname':'spllcon_spllpwdn_mask', 'symvaluename':'spllcon_spllpwdn_val', 'keyvalbuf':'spllpwdn', 'visible':'False'},
-                        {'name':'SPLLPOSTDIV1', 'symmaskname':'spllcon_spllpostdiv1_mask', 'symvaluename':'spllcon_spllpostdiv1_val', 'keyvalbuf':'spllpostdiv1', 'visible':'True', 'min':'0', 'max':'255'},
+                        {'name':'SPLLPOSTDIV1', 'symmaskname':'spllcon_spllpostdiv1_mask', 'symvaluename':'spllcon_spllpostdiv1_val', 'keyvalbuf':'spllpostdiv1', 'visible':'True', 'min':'1', 'max':'255'},
                         {'name':'SPLL_BYP', 'symmaskname':'spllcon_spllbyp_mask', 'symvaluename':'spllcon_spllbyp_val', 'keyvalbuf':'spllbyp', 'visible':'True'},
                         {'name':'SPLLPOSTDIV2', 'symmaskname':'spllcon_spllpostdiv2_mask', 'symvaluename':'spllcon_spllpostdiv2_val', 'keyvalbuf':'spllpostdiv2', 'visible':'True', 'min':'1', 'max':'15'}, 
                         {'name':'SPLLFLOCK', 'symmaskname':'spllcon_spllflock_mask', 'symvaluename':'spllcon_spllflock_val', 'keyvalbuf':'spllflock', 'visible':'False'},
@@ -1635,7 +1645,7 @@ if __name__ == "__main__":
         rodivSymId = "CONFIG_SYS_CLK_RODIV"+clk
         rodivSymbolList[listIndex] = coreComponent.createIntegerSymbol(rodivSymId, enSymbolList[listIndex])
         rodivSymbolList[listIndex].setLabel("Select Reference Clock Output Divider RODIV")
-        rodivSymbolList[listIndex].setDependencies(enableMenu, [enSymId])
+        rodivSymbolList[listIndex].setDependencies(updateRODIVmin, [enSymId, srcSymId])
         rodivSymbolList[listIndex].setMin(minValue)
         rodivSymbolList[listIndex].setMax(maxValue)
         rodivSymbolList[listIndex].setDefaultValue(0)
