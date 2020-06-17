@@ -84,6 +84,14 @@
 
 void CLK_Initialize( void )
 {
+    // wait for xtal_ready      
+    while((BTZBSYS_REGS->BTZBSYS_SUBSYS_STATUS_REG1 & 0x01) != 0x01);
+
+    // set PLL_enable
+    BLE_REGS->BLE_DPLL_RG2 &= 0xFFFFFFFD;
+
+    // wait for PLL Lock
+    while((BTZBSYS_REGS->BTZBSYS_SUBSYS_STATUS_REG1 & 0x03) != 0x03);
 
     /* Unlock system for clock configuration */
     CFG_REGS->CFG_SYSKEY = 0x00000000;
@@ -210,4 +218,10 @@ void CLK_Initialize( void )
 
     /* Lock system since done with clock configuration */
     CFG_REGS->CFG_SYSKEY = 0x33333333;
+
+    // Change src_clk source to PLL CLK
+    BTZBSYS_REGS->BTZBSYS_SUBSYS_CNTRL_REG1 |= 0x00000010;
+
+    // set bt_en_main_clk[20], bt_pdc_ov[16], zb_en_main_clk[4]
+    BTZBSYS_REGS->BTZBSYS_SUBSYS_CNTRL_REG0 = 0x01100010;
 }
