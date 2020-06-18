@@ -40,7 +40,7 @@ peripherals = {
                 "I2C_00774"     : ["I2C"],
                 "UART_02478"    : ["UART"],
                 "UART_6418"     : ["UART"],
-                "USART_6089"    : ["UART"],
+                "USART_6089"    : ["UART", "SPI"],
                 "USART_11278"   : ["UART"],
                 "QSPI_U2008"    : ["SQI","SPI"],
                 "SQI_00206"     : ["SQI"],
