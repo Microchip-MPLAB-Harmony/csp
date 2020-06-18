@@ -104,30 +104,37 @@ def getCorePeripheralsInterruptDataStructure():
     return corePeripherals
 
 global SYM_ECCCON
-def calcWaitStates(symbol, event):
+global getWaitStates
+
+def getWaitStates():
 
     sysclk = int(Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY"))
     ecc = int(SYM_ECCCON.getValue())
     ws=2
 
     if(ecc < 2):
-        if (sysclk <= 200000000):
-            ws=2
-        if (sysclk <= 120000000):
-            ws=1
         if(sysclk <= 60000000):
             ws=0
-
-    else:
-        if (sysclk <= 200000000):
-            ws=2
-        if (sysclk <= 140000000):
+        elif (sysclk <= 120000000):
             ws=1
+        elif (sysclk <= 184000000):
+            ws=2
+        elif (sysclk <= 200000000):
+            ws=3
+    else:
         if(sysclk <= 74000000):
             ws=0
+        elif (sysclk <= 140000000):
+            ws=1
+        elif (sysclk <= 184000000):
+            ws=2
+        elif (sysclk <= 200000000):
+            ws=3
 
-    symbol.setValue(ws,2)
+    return ws
 
+def calcWaitStates(symbol, event):
+    symbol.setValue(getWaitStates(), 2)
 
 print("Loading System Services for " + Variables.get("__PROCESSOR"))
 
@@ -224,7 +231,7 @@ SYM_REFEN.setDefaultValue(3)
 
 SYM_PFMWS = coreComponent.createIntegerSymbol("CONFIG_PRECON_PFMWS", prefetchMenu)
 SYM_PFMWS.setReadOnly(False)
-SYM_PFMWS.setDefaultValue(2)
+SYM_PFMWS.setDefaultValue(getWaitStates())
 SYM_PFMWS.setLabel("Program Flash memory wait states")
 SYM_PFMWS.setDependencies(calcWaitStates,["CPU_CLOCK_FREQUENCY", "CONFIG_CFGCON_ECCCON"])
 
