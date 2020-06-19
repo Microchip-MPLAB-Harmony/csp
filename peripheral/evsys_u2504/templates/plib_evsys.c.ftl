@@ -47,19 +47,38 @@
 
 <#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
 <#if INTERRUPT_ACTIVE>
-<#list 0..NUM_SYNC_CHANNELS as i>
-    <#assign EVSYS_NONSEC_VAL = "EVSYS_NONSEC_" + i >
-    <#if .vars[EVSYS_NONSEC_VAL]?has_content>
-    <#if .vars[EVSYS_NONSEC_VAL] == "SECURE">
-    <#lt>EVSYS_OBJECT evsys[${NUM_SYNC_CHANNELS}];
-    <#break>
+<#assign CONFIGURED_SYNC_CHANNEL = 0>
+    <#list 0..NUM_SYNC_CHANNELS as i>
+        <#assign EVSYS_CHANNEL_ENABLE = "EVSYS_CHANNEL_" + i >
+        <#if .vars[EVSYS_CHANNEL_ENABLE]?has_content>
+            <#if .vars[EVSYS_CHANNEL_ENABLE] == true>
+                <#assign EVSYS_NONSEC_VAL = "EVSYS_NONSEC_" + i >
+                <#if .vars[EVSYS_NONSEC_VAL]?has_content>
+                    <#if .vars[EVSYS_NONSEC_VAL] == "SECURE">
+                        <#assign CONFIGURED_SYNC_CHANNEL = i + 1>
+                    </#if>
+                </#if>
+            </#if>
+        </#if>
+    </#list>
+    <#if CONFIGURED_SYNC_CHANNEL != 0>
+        <#lt>EVSYS_OBJECT evsys[${CONFIGURED_SYNC_CHANNEL}];
     </#if>
-    </#if>
-</#list>
 </#if>
 <#else>
 <#if INTERRUPT_ACTIVE>
-    <#lt>EVSYS_OBJECT evsys[${NUM_SYNC_CHANNELS}];
+<#assign CONFIGURED_SYNC_CHANNEL = 0>
+    <#list 0..NUM_SYNC_CHANNELS as i>
+        <#assign EVSYS_CHANNEL_ENABLE = "EVSYS_CHANNEL_" + i >
+        <#if .vars[EVSYS_CHANNEL_ENABLE]?has_content>
+            <#if .vars[EVSYS_CHANNEL_ENABLE] == true>
+                <#assign CONFIGURED_SYNC_CHANNEL = i + 1>
+            </#if>
+        </#if>
+    </#list>
+    <#if CONFIGURED_SYNC_CHANNEL != 0>
+        <#lt>EVSYS_OBJECT evsys[${CONFIGURED_SYNC_CHANNEL}];
+    </#if>
 </#if>
 </#if>
 
