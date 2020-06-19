@@ -22,7 +22,7 @@
 			<function name="FLT1" direction="in"/>
             <function name="REFCLKI" direction="in"/>
             <function name="FLT2" direction="in"/>
-            <function name="CLCIN3" direction="in"/>
+            <function name="CLCINC" direction="in"/>
             <function name="U1TX" direction="out" value="1"/>
             <function name="U2RTS" direction="out" value="2"/>
             <function name="SDO1" direction="out" value="3"/>
@@ -57,7 +57,7 @@
             <function name="INDX2" direction="in"/>
             <function name="QEB3" direction="in"/>
 	        <function name="FLT2" direction="in"/>
-	        <function name="CLCIN1" direction="in"/>
+	        <function name="CLCINA" direction="in"/>
             <function name="SDO1" direction="out" value="3"/>
             <function name="SDO2" direction="out" value="4"/>
             <function name="OC2" direction="out" value="5"/>
@@ -92,7 +92,7 @@
             <function name="INDX3" direction="in"/>
             <function name="C1RX" direction="in"/>
             <function name="OCFB" direction="in"/>
-            <function name="CLCIN4" direction="in"/>
+            <function name="CLCIND" direction="in"/>
             <function name="SS1 (out)" direction="out" value="3"/>
             <function name="SCK2 (out)" direction="out" value="4"/>
             <function name="OC4" direction="out" value="5"/>
@@ -122,7 +122,7 @@
             <function name="QEA2" direction="in"/>
             <function name="HOME3" direction="in"/>
             <function name="OCFA" direction="in"/>
-            <function name="CLCIN2" direction="in"/>
+            <function name="CLCINB" direction="in"/>
             <function name="U1RTS" direction="out" value="1"/>
             <function name="U2TX" direction="out" value="2"/>
             <function name="SS2 (out)" direction="out" value="4"/>
@@ -145,7 +145,7 @@
             <function name="INDX2" direction="in"/>
             <function name="QEB3" direction="in"/>
 	        <function name="FLT2" direction="in"/>
-	        <function name="CLCIN1" direction="in"/>
+	        <function name="CLCINA" direction="in"/>
         </group>
         <group id="6">
             <pin name="RPC13" value="9"/>
@@ -164,7 +164,7 @@
             <function name="INDX3" direction="in"/>
             <function name="C1RX" direction="in"/>
             <function name="OCFB" direction="in"/>
-            <function name="CLCIN4" direction="in"/>
+            <function name="CLCIND" direction="in"/>
         </group>
     </groups>
     <modules>
@@ -2056,20 +2056,22 @@
         <module name="CDAC3">
             <function name="DAC3" analog="true"/>
         </module>
+        <module name="CLC" desc="CLC">
+            <function name="CLCINA"/>
+            <function name="CLCINB"/>
+            <function name="CLCINC"/>
+            <function name="CLCIND"/>
+        </module>
         <module name="CLC1" desc="CLC 1">
-            <function name="CLCIN1"/>
             <function name="CLCO1"/>
         </module>
         <module name="CLC2" desc="CLC 2">
-            <function name="CLCIN2"/>
             <function name="CLCO2"/>
         </module>
         <module name="CLC3" desc="CLC 3">
-            <function name="CLCIN3"/>
             <function name="CLCO3"/>
         </module>
         <module name="CLC4" desc="CLC 4">
-            <function name="CLCIN4"/>
             <function name="CLCO4"/>
         </module>
         <module name="PWM">
