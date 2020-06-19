@@ -140,14 +140,14 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
             <#if .vars[EVSYS_NONSEC]?has_content>
                 <#if .vars[EVSYS_NONSEC] == "SECURE">
 
-                    <#lt>void ${EVSYS_INSTANCE_NAME}_InterruptEnable(EVSYS_CHANNEL channel, EVSYS_INT_MASK interrupt)
+                    <#lt>void ${EVSYS_INSTANCE_NAME}_InterruptEnable(EVSYS_CHANNEL channel, EVSYS_INT_MASK interruptMask)
                     <#lt>{
-                    <#lt>   ${EVSYS_REG_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTENSET = interrupt;
+                    <#lt>   ${EVSYS_REG_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTENSET = interruptMask;
                     <#lt>}
 
-                    <#lt>void ${EVSYS_INSTANCE_NAME}_InterruptDisable(EVSYS_CHANNEL channel, EVSYS_INT_MASK interrupt)
+                    <#lt>void ${EVSYS_INSTANCE_NAME}_InterruptDisable(EVSYS_CHANNEL channel, EVSYS_INT_MASK interruptMask)
                     <#lt>{
-                    <#lt>   ${EVSYS_REG_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTENCLR = interrupt;
+                    <#lt>   ${EVSYS_REG_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTENCLR = interruptMask;
                     <#lt>}
 
                     <#lt>void ${EVSYS_INSTANCE_NAME}_CallbackRegister(EVSYS_CHANNEL channel, EVSYS_CALLBACK callback, uintptr_t context )
@@ -161,14 +161,14 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
         </#list>
 
     <#else>
-        <#lt>void ${EVSYS_INSTANCE_NAME}_InterruptEnable(EVSYS_CHANNEL channel, EVSYS_INT_MASK interrupt)
+        <#lt>void ${EVSYS_INSTANCE_NAME}_InterruptEnable(EVSYS_CHANNEL channel, EVSYS_INT_MASK interruptMask)
         <#lt>{
-        <#lt>   ${EVSYS_REG_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTENSET = interrupt;
+        <#lt>   ${EVSYS_REG_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTENSET = interruptMask;
         <#lt>}
 
-        <#lt>void ${EVSYS_INSTANCE_NAME}_InterruptDisable(EVSYS_CHANNEL channel, EVSYS_INT_MASK interrupt)
+        <#lt>void ${EVSYS_INSTANCE_NAME}_InterruptDisable(EVSYS_CHANNEL channel, EVSYS_INT_MASK interruptMask)
         <#lt>{
-        <#lt>   ${EVSYS_REG_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTENCLR = interrupt;
+        <#lt>   ${EVSYS_REG_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTENCLR = interruptMask;
         <#lt>}
 
         <#lt>void ${EVSYS_INSTANCE_NAME}_CallbackRegister(EVSYS_CHANNEL channel, EVSYS_CALLBACK callback, uintptr_t context )

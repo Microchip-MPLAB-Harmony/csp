@@ -46,65 +46,62 @@
 
 <#if INTERRUPT_ACTIVE>
 <#list 0..NUM_SYNC_CHANNELS as i>
-	<#assign EVSYS_NONSEC = "EVSYS_NONSEC_" + i >
-	<#if .vars[EVSYS_NONSEC]?has_content>
-	<#if .vars[EVSYS_NONSEC] == "NON-SECURE">
-	<#lt>EVSYS_OBJECT evsys[${NUM_SYNC_CHANNELS}];
-	<#break>
-	</#if>
-	</#if>
+    <#assign EVSYS_NONSEC = "EVSYS_NONSEC_" + i >
+    <#if .vars[EVSYS_NONSEC]?has_content>
+    <#if .vars[EVSYS_NONSEC] == "NON-SECURE">
+    <#lt>EVSYS_OBJECT evsys[${NUM_SYNC_CHANNELS}];
+    <#break>
+    </#if>
+    </#if>
 </#list>
 </#if>
 
 <#if INTERRUPT_ACTIVE>
 <#list 0..NUM_SYNC_CHANNELS as i>
-	<#assign EVSYS_NONSEC = "EVSYS_NONSEC_" + i >
-	<#if .vars[EVSYS_NONSEC]?has_content>
-	<#if .vars[EVSYS_NONSEC] == "NON-SECURE">
+    <#assign EVSYS_NONSEC = "EVSYS_NONSEC_" + i >
+    <#if .vars[EVSYS_NONSEC]?has_content>
+    <#if .vars[EVSYS_NONSEC] == "NON-SECURE">
 
-	<#lt>void ${EVSYS_INSTANCE_NAME}_InterruptEnable(EVSYS_CHANNEL channel, EVSYS_INT_MASK interrupt)
-	<#lt>{
-	<#lt>	${EVSYS_REG_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTENSET = interrupt;
-	<#lt>}
+    <#lt>void ${EVSYS_INSTANCE_NAME}_InterruptEnable(EVSYS_CHANNEL channel, EVSYS_INT_MASK interruptMask)
+    <#lt>{
+    <#lt>   ${EVSYS_REG_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTENSET = interruptMask;
+    <#lt>}
 
-	<#lt>void ${EVSYS_INSTANCE_NAME}_InterruptDisable(EVSYS_CHANNEL channel, EVSYS_INT_MASK interrupt)
-	<#lt>{
-	<#lt>	${EVSYS_REG_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTENCLR = interrupt;
-	<#lt>}
+    <#lt>void ${EVSYS_INSTANCE_NAME}_InterruptDisable(EVSYS_CHANNEL channel, EVSYS_INT_MASK interruptMask)
+    <#lt>{
+    <#lt>   ${EVSYS_REG_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTENCLR = interruptMask;
+    <#lt>}
 
-	<#lt>void ${EVSYS_INSTANCE_NAME}_CallbackRegister(EVSYS_CHANNEL channel, EVSYS_CALLBACK callback, uintptr_t context )
-	<#lt>{
-	<#lt>	evsys[channel].callback = callback;
-	<#lt>	evsys[channel].context = context;
-	<#lt>}
-	<#break>
-	</#if>
-	</#if>
+    <#lt>void ${EVSYS_INSTANCE_NAME}_CallbackRegister(EVSYS_CHANNEL channel, EVSYS_CALLBACK callback, uintptr_t context )
+    <#lt>{
+    <#lt>   evsys[channel].callback = callback;
+    <#lt>   evsys[channel].context = context;
+    <#lt>}
+    <#break>
+    </#if>
+    </#if>
 </#list>
 </#if>
 <#list 0..NUM_SYNC_CHANNELS as x>
 <#assign INTERRUPT_MODE = "EVSYS_INTERRUPT_MODE" + x>
-<#if .vars[INTERRUPT_MODE]??>
-<#if .vars[INTERRUPT_MODE]>
-<#list 0..NUM_SYNC_CHANNELS as i>
-	<#assign EVSYS_NONSEC = "EVSYS_NONSEC_" + i >
-	<#if .vars[EVSYS_NONSEC]?has_content>
-	<#if .vars[EVSYS_NONSEC] == "NON-SECURE">
-	<#lt>void ${EVSYS_INSTANCE_NAME}_${x}_InterruptHandler( void )
-	<#lt>{
-	<#lt>	volatile uint32_t status = ${EVSYS_REG_NAME}_REGS->CHANNEL[${x}].EVSYS_CHINTFLAG;
-	<#lt>	${EVSYS_REG_NAME}_REGS->CHANNEL[${x}].EVSYS_CHINTFLAG = EVSYS_CHINTFLAG_Msk;
-	<#lt>	if(evsys[${x}].callback != NULL)
-    <#lt>   {
-    <#lt>   	evsys[${x}].callback(status, evsys[${x}].context);
-    <#lt>   }
-	<#lt>}
-	<#break>
-	</#if>
-	</#if>
-</#list>
-</#if>
-</#if>
+    <#if .vars[INTERRUPT_MODE]??>
+        <#if .vars[INTERRUPT_MODE]>
+        <#assign EVSYS_NONSEC = "EVSYS_NONSEC_" + x >
+            <#if .vars[EVSYS_NONSEC]?has_content>
+                <#if .vars[EVSYS_NONSEC] == "NON-SECURE">
+                    <#lt>void ${EVSYS_INSTANCE_NAME}_${x}_InterruptHandler( void )
+                    <#lt>{
+                    <#lt>   volatile uint32_t status = ${EVSYS_REG_NAME}_REGS->CHANNEL[${x}].EVSYS_CHINTFLAG;
+                    <#lt>   ${EVSYS_REG_NAME}_REGS->CHANNEL[${x}].EVSYS_CHINTFLAG = EVSYS_CHINTFLAG_Msk;
+                    <#lt>   if(evsys[${x}].callback != NULL)
+                    <#lt>   {
+                    <#lt>       evsys[${x}].callback(status, evsys[${x}].context);
+                    <#lt>   }
+                    <#lt>}
+                </#if>
+            </#if>
+        </#if>
+    </#if>
 </#list>
 
 <#if EVSYS_INTERRUPT_MODE_OTHER??>
@@ -115,7 +112,7 @@ void ${EVSYS_INSTANCE_NAME}_OTHER_InterruptHandler( void )
     volatile uint32_t status = ${EVSYS_REG_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTFLAG;
     if(evsys[channel].callback != NULL)
     {
-    	evsys[channel].callback(status, evsys[channel].context);
+        evsys[channel].callback(status, evsys[channel].context);
     }
     ${EVSYS_REG_NAME}_REGS->CHANNEL[channel].EVSYS_CHINTFLAG = EVSYS_CHINTFLAG_Msk;
 }
