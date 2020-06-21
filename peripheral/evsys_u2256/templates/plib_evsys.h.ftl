@@ -57,19 +57,19 @@
 // *****************************************************************************
 
 <#if EVSYS_INTERRUPT_MODE == true>
-	<#lt>typedef void (*EVSYS_CALLBACK)(uint32_t int_cause, uintptr_t context);
+    <#lt>typedef void (*EVSYS_CALLBACK)(uint32_t int_cause, uintptr_t context);
 </#if>
 
 <#if EVSYS_INTERRUPT_MODE == true>
-	<#lt>typedef enum
-	<#lt>{
-	<#lt>	EVSYS_INT_OVERRUN = EVSYS_INTENSET_OVR0_Msk,
-	<#lt>	EVSYS_INT_EVENT_DETECT = EVSYS_INTENSET_EVD0_Msk,
-	<#lt>} EVSYS_INT_MASK;
+    <#lt>typedef enum
+    <#lt>{
+    <#lt>   EVSYS_INT_OVERRUN = EVSYS_INTENSET_OVR0_Msk,
+    <#lt>   EVSYS_INT_EVENT_DETECT = EVSYS_INTENSET_EVD0_Msk,
+    <#lt>} EVSYS_INT_MASK;
 <#assign TOTAL_CHANNEL = EVSYS_CHANNEL_NUMBER?number >
 
     <#lt>typedef enum
-	<#lt>{
+    <#lt>{
         <#list 0..TOTAL_CHANNEL as i>
             <#assign CHANNEL_ENABLE    = "EVSYS_CHANNEL_"  + i>
             <#if .vars[CHANNEL_ENABLE]?has_content>
@@ -79,20 +79,20 @@
             </#if>
             </#if>
         </#list>
-	<#lt>} EVSYS_CHANNEL;
+    <#lt>} EVSYS_CHANNEL;
 
-	<#lt>typedef struct
-	<#lt>{
-	<#lt>	EVSYS_CALLBACK          callback;
-	<#lt>	uintptr_t               context;
-	<#lt>} EVSYS_OBJECT ;
+    <#lt>typedef struct
+    <#lt>{
+    <#lt>   EVSYS_CALLBACK          callback;
+    <#lt>   uintptr_t               context;
+    <#lt>} EVSYS_OBJECT ;
 </#if>
 /***************************** EVSYS API *******************************/
 void ${EVSYS_INSTANCE_NAME}_Initialize( void );
 <#if EVSYS_INTERRUPT_MODE == true>
-	<#lt>void ${EVSYS_INSTANCE_NAME}_CallbackRegister( EVSYS_CHANNEL channel, EVSYS_CALLBACK callback, uintptr_t context );
-	<#lt>void ${EVSYS_INSTANCE_NAME}_InterruptDisable( EVSYS_CHANNEL channel, EVSYS_INT_MASK interrupt );
-	<#lt>void ${EVSYS_INSTANCE_NAME}_InterruptEnable( EVSYS_CHANNEL channel,EVSYS_INT_MASK interrupt );
+    <#lt>void ${EVSYS_INSTANCE_NAME}_CallbackRegister( EVSYS_CHANNEL channel, EVSYS_CALLBACK callback, uintptr_t context );
+    <#lt>void ${EVSYS_INSTANCE_NAME}_InterruptDisable( EVSYS_CHANNEL channel, EVSYS_INT_MASK interruptMask );
+    <#lt>void ${EVSYS_INSTANCE_NAME}_InterruptEnable( EVSYS_CHANNEL channel,EVSYS_INT_MASK interruptMask );
 </#if>
 
 #ifdef __cplusplus // Provide C++ Compatibility
