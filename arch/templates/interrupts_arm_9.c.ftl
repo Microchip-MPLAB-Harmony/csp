@@ -9,13 +9,10 @@
     <#lt>    }
     <#lt>}
     <#lt>
+    <#lt>uint32_t spuriousEventCount = 0;
     <#lt>void __attribute__((optimize("-O1"),section(".text.DefaultInterruptHandlerForSpurious"),long_call))DefaultInterruptHandlerForSpurious( void )
     <#lt>{
-        <#lt>#if defined(__DEBUG) || defined(__DEBUG_D)
-        <#lt>    asm("BKPT");
-        <#lt>#endif
-    <#lt>    while( 1 ){
-    <#lt>    }
+    <#lt>   ++spuriousEventCount;
     <#lt>}
     <#lt>
 <#lt><#elseif "IAR" == COMPILER_CHOICE>
