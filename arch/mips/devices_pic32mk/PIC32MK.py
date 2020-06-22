@@ -108,16 +108,27 @@ def getCorePeripheralsInterruptDataStructure():
 global getWaitStates
 
 def getWaitStates():
-
     sysclk = int(Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY"))
-    ws = 3
 
-    if sysclk <= 120000000:
-        ws = 3
-    if sysclk <= 80000000:
-        ws = 2
-    if sysclk <= 60000000:
-        ws = 1
+    if Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001402":
+        if sysclk <= 60000000:
+            ws = 1
+        elif sysclk <= 80000000:
+            ws = 2
+        else:
+            ws = 3
+    else:
+        ecc = Database.getSymbolValue("core", "CONFIG_FECCCON")
+        if ecc in ["ECC_ENABLE","DECC_ENABLE"]:
+            if sysclk <= 96000000:
+                ws = 1
+            else:
+                ws = 2
+        else:
+            if sysclk <= 116000000:
+                ws = 1
+            else:
+                ws = 2
 
     return ws
 
@@ -229,7 +240,7 @@ SYM_PFMWS = coreComponent.createIntegerSymbol("CONFIG_CHECON_PFMWS", prefetchMen
 SYM_PFMWS.setLabel("Program Flash memory Wait states")
 SYM_PFMWS.setDefaultValue(getWaitStates())
 SYM_PFMWS.setReadOnly(False)
-SYM_PFMWS.setDependencies(calcWaitStates, ["CPU_CLOCK_FREQUENCY"])
+SYM_PFMWS.setDependencies(calcWaitStates, ["CPU_CLOCK_FREQUENCY", "CONFIG_FECCCON"])
 
 # load device specific pin manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/gpio_02467/config/gpio.py")
