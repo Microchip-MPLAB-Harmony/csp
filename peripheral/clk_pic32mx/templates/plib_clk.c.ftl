@@ -96,19 +96,12 @@ void CLK_Initialize( void )
      ((USB_PART = true) && (CONFIG_SYS_CLK_UFRCEN == "ON")) ||
      ((CONFIG_SYS_CLK_REFCLK_ENABLE?has_content) && (CONFIG_SYS_CLK_REFCLK_ENABLE == true)) ||
      ((DEVICE_FAMILY == "DS60001404") && (UPLLCON_VALUE != UPLLCON_DEFAULT_VALUE))>
-    bool int_flag = false;
-
-    int_flag = (bool)__builtin_disable_interrupts();
 
     /* unlock system for clock configuration */
     SYSKEY = 0x00000000;
     SYSKEY = 0xAA996655;
     SYSKEY = 0x556699AA;
 
-    if (int_flag)
-    {
-        __builtin_mtc0(12, 0,(__builtin_mfc0(12, 0) | 0x0001)); /* enable interrupts */
-    }
     <#if CONFIG_SYS_CLK_FRCDIV != FRCDIV_DEFAULT>
     OSCCONbits.FRCDIV = ${CONFIG_SYS_CLK_FRCDIV};
 
@@ -149,18 +142,12 @@ void CLK_Initialize( void )
 </#if>
 
     /* Lock system since done with clock configuration */
-    int_flag = (bool)__builtin_disable_interrupts();
-
     SYSKEY = 0x33333333;
-
-    if (int_flag) /* if interrupts originally were enabled, re-enable them */
-    {
-        __builtin_mtc0(12, 0,(__builtin_mfc0(12, 0) | 0x0001));
-    }
 <#else>
     /* Default clock setting is used, hence no code is generated */
     /* Code for fuse settings can be found in "initialization.c" */
 </#if>
+
 <#if PMD_COUNT?has_content>
     /* Peripheral Module Disable Configuration */
 <#list 1..PMD_COUNT + 1 as i>

@@ -198,14 +198,12 @@ void GPIO_Initialize ( void )
 
 <#if USE_PPS_INPUT_0 == true || USE_PPS_OUTPUT_0 == true>
     /* Lock back the system after PPS configuration */
-    SYSKEY = 0x00000000;
-    SYSKEY = 0xAA996655;
-    SYSKEY = 0x556699AA;
     <#if CoreSeries != 'PIC32MZW'>
       <#lt>    CFGCONbits.IOLOCK = 1;
     <#else>
       <#lt>    CFGCON0bits.IOLOCK = 1;
     </#if>
+    SYSKEY = 0x00000000;
 </#if>
 
 <#if TOTAL_NUM_OF_INT_USED gt 0>

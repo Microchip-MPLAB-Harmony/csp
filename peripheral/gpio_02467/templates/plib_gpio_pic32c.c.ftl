@@ -190,11 +190,8 @@ void GPIO_Initialize ( void )
 
 <#if USE_PPS_INPUT_0 == true || USE_PPS_OUTPUT_0 == true>
     /* Lock back the system after PPS configuration */
-    CFG_REGS->CFG_SYSKEY = 0x00000000;
-    CFG_REGS->CFG_SYSKEY = 0xAA996655;
-    CFG_REGS->CFG_SYSKEY = 0x556699AA;
-    
     CFG_REGS->CFG_CFGCON0SET = CFG_CFGCON0_IOLOCK_Msk;
+    CFG_REGS->CFG_SYSKEY = 0x00000000;
 </#if>
 
 <#if TOTAL_NUM_OF_INT_USED gt 0>
