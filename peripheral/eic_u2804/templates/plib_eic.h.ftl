@@ -185,4 +185,9 @@ void ${EIC_INSTANCE_NAME}_NMICallbackRegister(EIC_NMI_CALLBACK callback, uintptr
 void ${EIC_INSTANCE_NAME}_NMICallbackRegister(EIC_NMI_CALLBACK callback, uintptr_t context);
 </#if>
 </#if>
+
+#ifdef __cplusplus // Provide C++ Compatibility
+}
+#endif
+
 #endif /* PLIB_${EIC_INSTANCE_NAME}_H */

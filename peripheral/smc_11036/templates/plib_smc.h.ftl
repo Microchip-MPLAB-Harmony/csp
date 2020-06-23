@@ -75,6 +75,10 @@
 
 void ${SMC_INSTANCE_NAME}_Initialize( void );
 
+#ifdef __cplusplus // Provide C++ Compatibility
+}
+#endif
+
 #endif // _PLIB_${SMC_INSTANCE_NAME}_H
 
 /*******************************************************************************

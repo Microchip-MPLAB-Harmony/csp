@@ -117,6 +117,10 @@ void ${PWM_INSTANCE_NAME}_CallbackRegister(PWM_CALLBACK callback, uintptr_t cont
 bool ${PWM_INSTANCE_NAME}_ChannelCounterEventStatusGet (PWM_CHANNEL_NUM channel);
 </#if>
 
+#ifdef __cplusplus // Provide C++ Compatibility
+}
+#endif
+
 #endif //PLIB_${PWM_INSTANCE_NAME}_H
 
 /**

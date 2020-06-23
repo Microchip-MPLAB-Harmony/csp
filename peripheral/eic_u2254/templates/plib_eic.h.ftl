@@ -424,4 +424,8 @@ void ${EIC_INSTANCE_NAME}_CallbackRegister(EIC_PIN pin, EIC_CALLBACK callback, u
 void ${EIC_INSTANCE_NAME}_NMICallbackRegister(EIC_NMI_CALLBACK callback, uintptr_t context);
 
 </#if>
+
+#ifdef __cplusplus // Provide C++ Compatibility
+}
+#endif
 #endif /* PLIB_${EIC_INSTANCE_NAME}_H */

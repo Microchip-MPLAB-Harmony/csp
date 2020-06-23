@@ -98,4 +98,8 @@ void ${AC_INSTANCE_NAME}_CallbackRegister (AC_CALLBACK callback, uintptr_t conte
 
 void ${AC_INSTANCE_NAME}_SetVddScalar( AC_CHANNEL channel_id , uint8_t vdd_scalar);
 
+#ifdef __cplusplus // Provide C++ Compatibility
+}
+#endif
+
 #endif /* PLIB_${AC_INSTANCE_NAME}_H */

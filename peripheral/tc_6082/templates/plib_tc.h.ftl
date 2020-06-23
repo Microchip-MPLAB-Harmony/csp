@@ -256,8 +256,10 @@ TC_COMPARE_STATUS ${TC_INSTANCE_NAME}_CH${CH_NUM}_CompareStatusGet(void);
 </#if>
 </#list>
 
+#ifdef __cplusplus // Provide C++ Compatibility
+}
+#endif
+
 #endif //PLIB_${TC_INSTANCE_NAME}_H
 
-/**
- End of File
-*/
+/* End of File */

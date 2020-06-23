@@ -155,4 +155,9 @@ void ${EIC_INSTANCE_NAME}_CallbackRegister(EIC_PIN pin, EIC_CALLBACK callback, u
 <#if (NMI_IS_NON_SECURE == "NON-SECURE") && (NMI_CTRL == true)>
 void ${EIC_INSTANCE_NAME}_NMICallbackRegister(EIC_NMI_CALLBACK callback, uintptr_t context);
 </#if>
+
+#ifdef __cplusplus // Provide C++ Compatibility
+}
+#endif
+
 #endif /* PLIB_${EIC_INSTANCE_NAME}_H */
