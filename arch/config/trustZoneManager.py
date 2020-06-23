@@ -19,6 +19,18 @@ def nonSecStartAddressCalculate(symbol, value):
 
     symbol.setValue( (asSize * memoryGranularity["IDAU_AS"] ) + (bootProtSize * memoryGranularity["IDAU_BOOTPROT"]))
 
+def secStartAddressCalculate(symbol, value):
+    global memoryGranularity
+    bootProtSize = int(Database.getSymbolValue("core", "IDAU_BOOTPROT_SIZE"))
+
+    symbol.setValue(bootProtSize * memoryGranularity["IDAU_BOOTPROT"])
+
+def updateGenSecureBootsymbol(symbol, event):
+    if event["value"] == 0:
+        symbol.setVisible(False)
+    else:
+        symbol.setVisible(True)
+
 global fuseMapSymbol
 global fusedependencyList
 fusedependencyList = []
@@ -113,6 +125,12 @@ for key in memoryFuseMaxValue.keys():
     asSizeSymbol.setOutputMode("Key")
     asSizeSymbol.setDisplayMode("Description")
     memoryfusedependencyList.append(str(key) + "_SIZE")
+    if key == "IDAU_BOOTPROT":
+        generateSecureBootMainFile = coreComponent.createBooleanSymbol("GENERATE_SECURE_BOOT_MAIN_FILE", asSizeSymbol)
+        generateSecureBootMainFile.setLabel("Generate Secure Boot Main Source File")
+        generateSecureBootMainFile.setDefaultValue(False)
+        generateSecureBootMainFile.setVisible(False)
+        generateSecureBootMainFile.setDependencies(updateGenSecureBootsymbol, [str(key) + "_SIZE"])
 
     asGranularitySymbol =  coreComponent.createIntegerSymbol( str(key) + "_GRANULARITY", memoryMenu)
     asGranularitySymbol.setVisible(False)
@@ -131,6 +149,11 @@ nonSecStartAddress.setVisible(False)
 nonSecStartAddress.setDefaultValue((int(Database.getSymbolValue("core", "IDAU_AS_SIZE")) * memoryGranularity["IDAU_AS"])
                                  + (int(Database.getSymbolValue("core", "IDAU_BOOTPROT_SIZE")) * memoryGranularity["IDAU_BOOTPROT"]))
 nonSecStartAddress.setDependencies(nonSecStartAddressCalculate, ["IDAU_AS_SIZE", "IDAU_BOOTPROT_SIZE"])
+
+secStartAddress = coreComponent.createHexSymbol("SEC_START_ADDRESS", None)
+secStartAddress.setVisible(False)
+secStartAddress.setDefaultValue(int(Database.getSymbolValue("core", "IDAU_BOOTPROT_SIZE")) * memoryGranularity["IDAU_BOOTPROT"])
+secStartAddress.setDependencies(secStartAddressCalculate, ["IDAU_BOOTPROT_SIZE"])
 
 secSystemDefinitionsHeadersList =      coreComponent.createListSymbol( "LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES",       None )
 secsystemIntVectorsMultipleHandlesList =   coreComponent.createListSymbol( "LIST_SYSTEM_INTERRUPT_SECURE_MULTIPLE_HANDLERS",  None )
@@ -228,6 +251,8 @@ def calculateRSSize(symbol, event):
     symbol.setValue("RS=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_RS"]) * int(memoryGranularity["IDAU_RS"]))).replace("L", ""))
 def calculateBootProtSize(symbol, event):
     symbol.setValue("BOOTPROT=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_BOOTPROT"]) * int(memoryGranularity["IDAU_BOOTPROT"]))).replace("L", ""))
+def calculateBNSCSize(symbol, event):
+    symbol.setValue("BNSC=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_BNSC"]) * int(memoryGranularity["IDAU_BNSC"]))).replace("L", ""))
 
 # for Secure Project
 # set Linker Macros required for XC32
@@ -272,6 +297,15 @@ xc32LinkerMacro.setKey("preprocessor-macros")
 xc32LinkerMacro.setValue("BOOTPROT=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_BOOTPROT"]) * int(memoryGranularity["IDAU_BOOTPROT"]))).replace("L", ""))
 xc32LinkerMacro.setAppend(True, ";")
 xc32LinkerMacro.setDependencies(calculateBootProtSize, [fuseMapSymbol["IDAU_BOOTPROT"]])
+xc32LinkerMacro.setSecurity("SECURE")
+
+# set Linker Macros required for XC32
+xc32LinkerMacro = coreComponent.createSettingSymbol("XC32_LINKER_MACRO_BNSC_SIZE", None)
+xc32LinkerMacro.setCategory("C32-LD")
+xc32LinkerMacro.setKey("preprocessor-macros")
+xc32LinkerMacro.setValue("BNSC=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_BNSC"]) * int(memoryGranularity["IDAU_BNSC"]))).replace("L", ""))
+xc32LinkerMacro.setAppend(True, ";")
+xc32LinkerMacro.setDependencies(calculateBNSCSize, [fuseMapSymbol["IDAU_BNSC"]])
 xc32LinkerMacro.setSecurity("SECURE")
 
 #For Non Secure

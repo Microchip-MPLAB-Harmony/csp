@@ -65,6 +65,10 @@ extern "C" {
 
 /* Non-secure start address */
 #define TZ_START_NS 0x${NON_SEC_START_ADDRESS}
+<#if GENERATE_SECURE_BOOT_MAIN_FILE?? && GENERATE_SECURE_BOOT_MAIN_FILE == true>
+/* Secure start address */
+#define TZ_START_S 0x${SEC_START_ADDRESS}
+</#if>
 
 // *****************************************************************************
 // *****************************************************************************

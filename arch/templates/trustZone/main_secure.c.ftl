@@ -29,6 +29,10 @@
 
 /* typedef for non-secure callback functions */
 typedef void (*funcptr_void) (void) __attribute__((cmse_nonsecure_call));
+<#if GENERATE_SECURE_BOOT_MAIN_FILE?? && GENERATE_SECURE_BOOT_MAIN_FILE == true>
+/* typedef for secure callback functions */
+typedef void (*secureFuncptr_void) (void);
+</#if>
 
 // *****************************************************************************
 // *****************************************************************************
@@ -39,12 +43,30 @@ typedef void (*funcptr_void) (void) __attribute__((cmse_nonsecure_call));
 int main ( void )
 {
     uint32_t msp_ns = *((uint32_t *)(TZ_START_NS));
+<#if GENERATE_SECURE_BOOT_MAIN_FILE?? && GENERATE_SECURE_BOOT_MAIN_FILE == true>
+    uint32_t msp_s = *((uint32_t *)(TZ_START_S));
+</#if>
     volatile funcptr_void NonSecure_ResetHandler;
+<#if GENERATE_SECURE_BOOT_MAIN_FILE?? && GENERATE_SECURE_BOOT_MAIN_FILE == true>
+    volatile secureFuncptr_void Secure_ResetHandler;
+</#if>
 
     /* Initialize all modules */
     SYS_Initialize ( NULL );
 
-    if (msp_ns != 0xFFFFFFFF)
+<#if GENERATE_SECURE_BOOT_MAIN_FILE?? && GENERATE_SECURE_BOOT_MAIN_FILE == true>
+    if (msp_s != 0xFFFFFFFF)
+    {
+        /* Set secure main stack (MSP) */
+        __set_MSP(msp_s);
+
+        /* Get secure reset handler */
+        Secure_ResetHandler = (secureFuncptr_void)(*((uint32_t *)((TZ_START_S) + 4U)));
+
+        /* Start secure state software application */
+        Secure_ResetHandler();
+    }
+    else <#else>    </#if>if (msp_ns != 0xFFFFFFFF)
     {
         /* Set non-secure main stack (MSP_NS) */
         __TZ_set_MSP_NS(msp_ns);
