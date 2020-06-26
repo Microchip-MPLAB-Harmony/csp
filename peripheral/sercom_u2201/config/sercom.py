@@ -332,13 +332,51 @@ def instantiateComponent(sercomComponent):
     #Clock enable
     Database.setSymbolValue("core", sercomInstanceName.getValue() + "_CORE_CLOCK_ENABLE", True, 2)
 
+    #SERCOM USART mode
+    sercomDisableUSART = 0
+    sercomSym_Parameters = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"SERCOM\"]/instance@[name=\"" + sercomInstanceName.getValue() + "\"]/parameters")
+    for id in range(len(sercomSym_Parameters.getChildren())):
+        if sercomSym_Parameters.getChildren()[id].getAttribute("name") == "USART" and sercomSym_Parameters.getChildren()[id].getAttribute("value") == "0":
+            sercomDisableUSART = 1
+
+    #SERCOM SPI mode
+    sercomDisableSPI = 0
+    for id in range(len(sercomSym_Parameters.getChildren())):
+        if sercomSym_Parameters.getChildren()[id].getAttribute("name") == "SPI" and sercomSym_Parameters.getChildren()[id].getAttribute("value") == "0":
+            sercomDisableSPI = 1
+
+    #SERCOM I2CM and I2CS modes
+    sercomDisableI2CM = 0
+    sercomDisableI2CS = 0
+    for id in range(len(sercomSym_Parameters.getChildren())):
+        if sercomSym_Parameters.getChildren()[id].getAttribute("name") == "TWIM" and sercomSym_Parameters.getChildren()[id].getAttribute("value") == "0":
+            sercomDisableI2CM = 1
+        if sercomSym_Parameters.getChildren()[id].getAttribute("name") == "TWIS" and sercomSym_Parameters.getChildren()[id].getAttribute("value") == "0":
+            sercomDisableI2CS = 1
+
     #SERCOM operation mode Menu - Serial Communication Interfaces
     sercomSym_OperationMode = sercomComponent.createKeyValueSetSymbol("SERCOM_MODE", None)
     sercomSym_OperationMode.setLabel("Select SERCOM Operation Mode")
-    sercomSym_OperationMode.addKey("USART_INT", "1", "USART with internal Clock")
-    sercomSym_OperationMode.addKey("SPIM", "3", "SPI Master")
-    sercomSym_OperationMode.addKey("I2CM", "5", "I2C Master")
-    sercomSym_OperationMode.addKey("I2CS", "4", "I2C Slave")
+    if sercomDisableUSART != 1:
+        sercomSym_OperationMode.addKey("USART_INT", "1", "USART with internal Clock")
+    else:
+        sercomComponent.setCapabilityEnabled(sercomInstanceName.getValue() + "_UART", False)
+        uartCapabilityId = ""
+    if sercomDisableSPI != 1:
+        sercomSym_OperationMode.addKey("SPIM", "3", "SPI Master")
+    else:
+        sercomComponent.setCapabilityEnabled(sercomInstanceName.getValue() + "_SPI", False)
+        spiCapabilityId = ""
+    if sercomDisableI2CM != 1:
+        sercomSym_OperationMode.addKey("I2CM", "5", "I2C Master")
+    else:
+        sercomComponent.setCapabilityEnabled(sercomInstanceName.getValue() + "_I2C", False)
+        i2cCapabilityId = ""
+    if sercomDisableI2CS != 1:
+        sercomSym_OperationMode.addKey("I2CS", "4", "I2C Slave")
+    else:
+        sercomComponent.setCapabilityEnabled(sercomInstanceName.getValue() + "_I2C", False)
+        i2cCapabilityId = ""
     sercomSym_OperationMode.setDefaultValue(0)
     sercomSym_OperationMode.setOutputMode("Key")
     sercomSym_OperationMode.setDisplayMode("Description")
