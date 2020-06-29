@@ -5,10 +5,10 @@
     Microchip Technology Inc.
 
   File Name
-    plib_${SERCOM_INSTANCE_NAME?lower_case}_spi.h
+    plib_${SERCOM_INSTANCE_NAME?lower_case}_spi_master.h
 
   Summary
-   ${SERCOM_INSTANCE_NAME}_SPI PLIB Header File.
+   ${SERCOM_INSTANCE_NAME}_SPI Master PLIB Header File.
 
   Description
     This file defines the interface to the SERCOM SPI peripheral library.
@@ -45,8 +45,8 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_${SERCOM_INSTANCE_NAME}_SPI_H // Guards against multiple inclusion
-#define PLIB_${SERCOM_INSTANCE_NAME}_SPI_H
+#ifndef PLIB_${SERCOM_INSTANCE_NAME}_SPI_MASTER_H // Guards against multiple inclusion
+#define PLIB_${SERCOM_INSTANCE_NAME}_SPI_MASTER_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -56,7 +56,7 @@
 /* This section lists the other files that are included in this file.
 */
 
-#include "plib_sercom_spi_common.h"
+#include "plib_sercom_spi_master_common.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
@@ -590,4 +590,4 @@ bool ${SERCOM_INSTANCE_NAME}_SPI_IsBusy (void);
 }
 #endif
 
-#endif /* PLIB_${SERCOM_INSTANCE_NAME}_SPI_H */
+#endif /* PLIB_${SERCOM_INSTANCE_NAME}_SPI_MASTER_H */

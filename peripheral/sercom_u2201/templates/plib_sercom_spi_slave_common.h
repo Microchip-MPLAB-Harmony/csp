@@ -5,13 +5,13 @@
     Microchip Technology Inc.
 
   File Name
-    plib_sercom_spi.h
+    plib_sercom_spi_slave_common.h
 
   Summary
-   SERCOM_SPI PLIB Local Header File.
+   SERCOM SPI Slave common definitions file
 
   Description
-    This file defines the interface to the SERCOM SPI peripheral library.
+    This file defines the definitions for the SERCOM SPI slave interface.
     This library provides access to and control of the associated
     peripheral instance.
 
@@ -22,7 +22,7 @@
 
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2020 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -45,8 +45,8 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_SERCOM_SPI_COMMON_H  // Guards against multiple inclusion
-#define PLIB_SERCOM_SPI_COMMON_H
+#ifndef PLIB_SERCOM_SPI_SLAVE_COMMON_H  // Guards against multiple inclusion
+#define PLIB_SERCOM_SPI_SLAVE_COMMON_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -72,117 +72,28 @@
 // Section: Data Types
 // *****************************************************************************
 // *****************************************************************************
-
 // *****************************************************************************
-/* SPI Clock Phase
+/* SPI Slave Errors
 
   Summary:
-    Identifies SPI Clock Phase Options
+    Defines the data type for the SPI Slave mode errors
 
   Description:
-    This enumeration identifies possible SPI Clock Phase Options.
+    This may be used to check the type of error occurred
 
   Remarks:
-    None.
+    None
 */
 
 typedef enum
 {
-    /* Input data is sampled on clock trailing edge and changed on
-       leading edge */
-    SPI_CLOCK_PHASE_TRAILING_EDGE = SERCOM_SPIM_CTRLA_CPHA_TRAILING_EDGE,
+    /* Error status when no error has occurred */
+    SPI_SLAVE_ERROR_NONE,
 
-    /* Input data is sampled on clock leading edge and changed on
-       trailing edge */
-    SPI_CLOCK_PHASE_LEADING_EDGE = SERCOM_SPIM_CTRLA_CPHA_LEADING_EDGE,
+    /* Buffer overflow error has occured */
+    SPI_SLAVE_ERROR_BUFOVF = SERCOM_SPIS_STATUS_BUFOVF_Msk,
 
-    /* Force the compiler to reserve 32-bit space for each enum value */
-    SPI_CLOCK_PHASE_INVALID = 0xFFFFFFFF
-
-} SPI_CLOCK_PHASE;
-
-// *****************************************************************************
-/* SPI Clock Polarity
-
-  Summary:
-    Identifies SPI Clock Polarity Options
-
-  Description:
-    This enumeration identifies possible SPI Clock Polarity Options.
-
-  Remarks:
-    None.
-*/
-
-typedef enum
-{
-    /* The inactive state value of clock is logic level zero */
-    SPI_CLOCK_POLARITY_IDLE_LOW = SERCOM_SPIM_CTRLA_CPOL_IDLE_LOW,
-
-    /* The inactive state value of clock is logic level one */
-    SPI_CLOCK_POLARITY_IDLE_HIGH = SERCOM_SPIM_CTRLA_CPOL_IDLE_HIGH,
-
-    /* Force the compiler to reserve 32-bit space for each enum value */
-    SPI_CLOCK_POLARITY_INVALID = 0xFFFFFFFF
-
-} SPI_CLOCK_POLARITY;
-
-// *****************************************************************************
-/* SPI Data Bits
-
-  Summary:
-    Identifies SPI bits per transfer
-
-  Description:
-    This enumeration identifies number of bits per SPI transfer.
-
-  Remarks:
-    For 9 bit mode, data should be right aligned in the 16 bit
-    memory location.
-*/
-
-typedef enum
-{
-    /* 8 bits per transfer */
-    SPI_DATA_BITS_8 = SERCOM_SPIM_CTRLB_CHSIZE_8_BIT,
-
-    /* 9 bits per transfer */
-    SPI_DATA_BITS_9 = SERCOM_SPIM_CTRLB_CHSIZE_9_BIT,
-
-    /* Force the compiler to reserve 32-bit space for each enum value */
-    SPI_DATA_BITS_INVALID = 0xFFFFFFFF
-
-} SPI_DATA_BITS;
-
-// *****************************************************************************
-/* SPI Transfer Setup Parameters
-
-  Summary:
-    Identifies the setup parameters which can be changed dynamically.
-
-  Description
-    This structure identifies the possible setup parameters for SPI
-    which can be changed dynamically if needed.
-
-  Remarks:
-    None.
-*/
-
-typedef struct
-{
-    /* Baud Rate or clock frequency */
-    uint32_t            clockFrequency;
-
-    /* Clock Phase */
-    SPI_CLOCK_PHASE     clockPhase;
-
-    /* Clock Polarity */
-    SPI_CLOCK_POLARITY  clockPolarity;
-
-    /* Number of bits per transfer */
-    SPI_DATA_BITS       dataBits;
-
-} SPI_TRANSFER_SETUP;
+} SPI_SLAVE_ERROR;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -191,14 +102,14 @@ typedef struct
 // *****************************************************************************
 
 // *****************************************************************************
-/* SPI CallBack Function Pointer
+/* SPI Slave Mode CallBack Function Pointer
 
   Summary:
-    Pointer to a SPI Call back function.
+    Pointer to a SPI Call back function when SPI is configued in slave mode.
 
   Description:
     This data type defines the required function signature for the
-    SPI event handling callback function. Application must register
+    SPI slave event handling callback function. Application must register
     a pointer to an event handling function whose function signature (parameter
     and return value types) match the types specified by this function pointer
     in order to receive event calls back from the PLIB.
@@ -216,12 +127,13 @@ typedef struct
   Example:
     <code>
     <code>
-        SPI1_CallbackRegister(&APP_SPICallBack, NULL);
+        SERCOM1_SPI_CallbackRegister(&APP_SPICallBack, NULL);
+
         void APP_SPICallBack(uintptr_t contextHandle)
         {
-            if( SPI_ERROR_NONE == SPI1_ErrorGet())
+            if( SERCOM1_SPI_ErrorGet() == SPI_SLAVE_ERROR_NONE )
             {
-                Exchange was completed without error, do something else now.
+                //Exchange was completed without error
             }
         }
     </code>
@@ -240,7 +152,7 @@ typedef struct
     operations with in this function.
 */
 
-typedef void (*SERCOM_SPI_CALLBACK)(uintptr_t context);
+typedef void (*SERCOM_SPI_SLAVE_CALLBACK)(uintptr_t context);
 
 // *****************************************************************************
 // *****************************************************************************
@@ -264,36 +176,27 @@ typedef void (*SERCOM_SPI_CALLBACK)(uintptr_t context);
 
 typedef struct
 {
-    /* Pointer to the transmitter buffer */
-    void *                   txBuffer;
-
-    /* Pointer to the received buffer */
-    void *                   rxBuffer;
-
-    size_t                   txSize;
-
-    size_t                   rxSize;
-
-    size_t                   dummySize;
-
-    /* Size of the receive processed exchange size */
-    size_t                   rxCount;
-
-    /* Size of the transmit processed exchange size */
-    size_t                   txCount;
-
     /* Exchange busy status of the SPI */
-    bool                     transferIsBusy;
+    bool                            transferIsBusy;
 
     /* SPI Event handler */
-    SERCOM_SPI_CALLBACK      callback;
+    SERCOM_SPI_SLAVE_CALLBACK       callback;
 
     /* Context */
-    uintptr_t                context;
+    uintptr_t                       context;
 
-    uint32_t                 status;
+    SPI_SLAVE_ERROR                 errorStatus;
 
-} SPI_OBJECT;
+    /* Number of bytes to write in the transmit buffer */
+    uint32_t                        nWrBytes;
+
+    /* Index to the number of bytes already written out from the transmit buffer */
+    volatile uint32_t               wrOutIndex;
+
+    /* Index into the receive buffer where the next received byte will be copied */
+    volatile uint32_t               rdInIndex;
+
+} SPI_SLAVE_OBJECT;
 
 #ifdef __cplusplus // Provide C++ Compatibility
 
@@ -301,4 +204,4 @@ typedef struct
 
 #endif
 
-#endif //PLIB_SERCOM_SPI_COMMON_H
+#endif //PLIB_SERCOM_SPI_SLAVE_COMMON_H

@@ -167,6 +167,9 @@ def updateSERCOMCodeGenerationProperty(symbol, event):
     component.getSymbolByID("SERCOM_I2CS_SOURCE").setEnabled(False)
     component.getSymbolByID("SERCOM_I2CS_HEADER").setEnabled(False)
     component.getSymbolByID("SERCOM_I2CS_SLAVE_HEADER").setEnabled(False)
+    component.getSymbolByID("SERCOM_SPIS_SOURCE").setEnabled(False)
+    component.getSymbolByID("SERCOM_SPIS_HEADER").setEnabled(False)
+    component.getSymbolByID("SERCOM_SPIS_COMMON_HEADER").setEnabled(False)
 
     if symObj.getSelectedKey() == "USART_INT":
         component.getSymbolByID("SERCOM_USART_HEADER").setEnabled(True)
@@ -176,6 +179,10 @@ def updateSERCOMCodeGenerationProperty(symbol, event):
         component.getSymbolByID("SERCOM_SPIM_SOURCE").setEnabled(True)
         component.getSymbolByID("SERCOM_SPIM_HEADER").setEnabled(True)
         component.getSymbolByID("SERCOM_SPIM_COMMON_HEADER").setEnabled(True)
+    elif symObj.getSelectedKey() == "SPIS":
+        component.getSymbolByID("SERCOM_SPIS_SOURCE").setEnabled(True)
+        component.getSymbolByID("SERCOM_SPIS_HEADER").setEnabled(True)
+        component.getSymbolByID("SERCOM_SPIS_COMMON_HEADER").setEnabled(True)
     elif symObj.getSelectedKey() == "I2CM":
         component.getSymbolByID("SERCOM_I2CM_SOURCE").setEnabled(True)
         component.getSymbolByID("SERCOM_I2CM_HEADER").setEnabled(True)
@@ -184,10 +191,6 @@ def updateSERCOMCodeGenerationProperty(symbol, event):
         component.getSymbolByID("SERCOM_I2CS_SOURCE").setEnabled(True)
         component.getSymbolByID("SERCOM_I2CS_HEADER").setEnabled(True)
         component.getSymbolByID("SERCOM_I2CS_SLAVE_HEADER").setEnabled(True)
-        pass
-    elif symObj.getSelectedKey() == "SPIS":
-        # To be implemented
-        pass
     elif symObj.getSelectedKey() == "USART_EXT":
         # To be implemented
         pass
@@ -215,10 +218,7 @@ def updateSERCOMInterruptData(symbol, event):
     status = False
     interruptEnable = False
 
-    if sercomSym_OperationMode.getSelectedKey() == "SPIS":
-        # To be implemented
-        pass
-    elif sercomSym_OperationMode.getSelectedKey() == "USART_EXT":
+    if sercomSym_OperationMode.getSelectedKey() == "USART_EXT":
         # To be implemented
         pass
     elif (sercomSym_OperationMode.getSelectedKey() == "USART_INT"):
@@ -228,6 +228,10 @@ def updateSERCOMInterruptData(symbol, event):
     elif (sercomSym_OperationMode.getSelectedKey() == "SPIM"):
         sercomMode = "SPI"
         if (Database.getSymbolValue(sercomInstanceName.getValue().lower(), "SPI_INTERRUPT_MODE") == True):
+            interruptEnable = True
+    elif (sercomSym_OperationMode.getSelectedKey() == "SPIS"):
+        sercomMode = "SPI"
+        if (Database.getSymbolValue(sercomInstanceName.getValue().lower(), "SPIS_INTERRUPT_MODE") == True):
             interruptEnable = True
     elif (sercomSym_OperationMode.getSelectedKey() == "I2CM"):
         sercomMode = "I2C"
@@ -357,13 +361,14 @@ def instantiateComponent(sercomComponent):
     #SERCOM operation mode Menu - Serial Communication Interfaces
     sercomSym_OperationMode = sercomComponent.createKeyValueSetSymbol("SERCOM_MODE", None)
     sercomSym_OperationMode.setLabel("Select SERCOM Operation Mode")
+
     if sercomDisableUSART != 1:
         sercomSym_OperationMode.addKey("USART_INT", "1", "USART with internal Clock")
     else:
         sercomComponent.setCapabilityEnabled(sercomInstanceName.getValue() + "_UART", False)
         uartCapabilityId = ""
     if sercomDisableSPI != 1:
-        sercomSym_OperationMode.addKey("SPIM", "3", "SPI Master")
+        sercomSym_OperationMode.addKey("SPIM", "3", "SPI Master")        
     else:
         sercomComponent.setCapabilityEnabled(sercomInstanceName.getValue() + "_SPI", False)
         spiCapabilityId = ""
@@ -376,7 +381,10 @@ def instantiateComponent(sercomComponent):
         sercomSym_OperationMode.addKey("I2CS", "4", "I2C Slave")
     else:
         sercomComponent.setCapabilityEnabled(sercomInstanceName.getValue() + "_I2C", False)
-        i2cCapabilityId = ""
+        i2cCapabilityId = ""        
+    if sercomDisableSPI != 1:
+        sercomSym_OperationMode.addKey("SPIS", "2", "SPI Slave")    
+
     sercomSym_OperationMode.setDefaultValue(0)
     sercomSym_OperationMode.setOutputMode("Key")
     sercomSym_OperationMode.setDisplayMode("Description")
@@ -411,6 +419,7 @@ def instantiateComponent(sercomComponent):
 
     execfile(Variables.get("__CORE_DIR") + "/../peripheral/sercom_u2201/config/sercom_usart.py")
     execfile(Variables.get("__CORE_DIR") + "/../peripheral/sercom_u2201/config/sercom_spi_master.py")
+    execfile(Variables.get("__CORE_DIR") + "/../peripheral/sercom_u2201/config/sercom_spi_slave.py")
     execfile(Variables.get("__CORE_DIR") + "/../peripheral/sercom_u2201/config/sercom_i2c_master.py")
     execfile(Variables.get("__CORE_DIR") + "/../peripheral/sercom_u2201/config/sercom_i2c_slave.py")
 
@@ -444,7 +453,7 @@ def instantiateComponent(sercomComponent):
     sercomSym_IntEnComment = sercomComponent.createCommentSymbol("SERCOM_INTERRUPT_ENABLE_COMMENT", None)
     sercomSym_IntEnComment.setVisible(False)
     sercomSym_IntEnComment.setLabel("Warning!!! " + sercomInstanceName.getValue() + " Interrupt is Disabled in Interrupt Manager")
-    sercomSym_IntEnComment.setDependencies(updateSERCOMInterruptData, ["SERCOM_MODE", "USART_INTERRUPT_MODE", "SPI_INTERRUPT_MODE", "I2CS_INTERRUPT_MODE", "I2C_INTERRUPT_MODE"] + InterruptVectorUpdate)
+    sercomSym_IntEnComment.setDependencies(updateSERCOMInterruptData, ["SERCOM_MODE", "USART_INTERRUPT_MODE", "SPI_INTERRUPT_MODE", "SPIS_INTERRUPT_MODE", "I2CS_INTERRUPT_MODE", "I2C_INTERRUPT_MODE"] + InterruptVectorUpdate)
 
     # Clock Warning status
     sercomSym_ClkEnComment = sercomComponent.createCommentSymbol("SERCOM_CLOCK_ENABLE_COMMENT", None)
@@ -489,31 +498,58 @@ def instantiateComponent(sercomComponent):
 
 
     spiSym_HeaderFile = sercomComponent.createFileSymbol("SERCOM_SPIM_HEADER", None)
-    spiSym_HeaderFile.setSourcePath("../peripheral/sercom_u2201/templates/plib_sercom_spi.h.ftl")
-    spiSym_HeaderFile.setOutputName("plib_" + sercomInstanceName.getValue().lower() + "_spi.h")
-    spiSym_HeaderFile.setDestPath("/peripheral/sercom/spim/")
-    spiSym_HeaderFile.setProjectPath("config/" + configName + "/peripheral/sercom/spim/")
+    spiSym_HeaderFile.setSourcePath("../peripheral/sercom_u2201/templates/plib_sercom_spi_master.h.ftl")
+    spiSym_HeaderFile.setOutputName("plib_" + sercomInstanceName.getValue().lower() + "_spi_master.h")
+    spiSym_HeaderFile.setDestPath("/peripheral/sercom/spi_master/")
+    spiSym_HeaderFile.setProjectPath("config/" + configName + "/peripheral/sercom/spi_master/")
     spiSym_HeaderFile.setType("HEADER")
     spiSym_HeaderFile.setMarkup(True)
     spiSym_HeaderFile.setEnabled(sercomSym_OperationMode.getSelectedKey() == "SPIM")
 
     spiSym_Header1File = sercomComponent.createFileSymbol("SERCOM_SPIM_COMMON_HEADER", None)
-    spiSym_Header1File.setSourcePath("../peripheral/sercom_u2201/templates/plib_sercom_spi_common.h")
-    spiSym_Header1File.setOutputName("plib_sercom_spi_common.h")
-    spiSym_Header1File.setDestPath("/peripheral/sercom/spim/")
-    spiSym_Header1File.setProjectPath("config/" + configName + "/peripheral/sercom/spim/")
+    spiSym_Header1File.setSourcePath("../peripheral/sercom_u2201/templates/plib_sercom_spi_master_common.h")
+    spiSym_Header1File.setOutputName("plib_sercom_spi_master_common.h")
+    spiSym_Header1File.setDestPath("/peripheral/sercom/spi_master/")
+    spiSym_Header1File.setProjectPath("config/" + configName + "/peripheral/sercom/spi_master/")
     spiSym_Header1File.setType("HEADER")
     spiSym_Header1File.setMarkup(True)
     spiSym_Header1File.setEnabled(sercomSym_OperationMode.getSelectedKey() == "SPIM")
 
     spiSym_SourceFile = sercomComponent.createFileSymbol("SERCOM_SPIM_SOURCE", None)
-    spiSym_SourceFile.setSourcePath("../peripheral/sercom_u2201/templates/plib_sercom_spi.c.ftl")
-    spiSym_SourceFile.setOutputName("plib_" + sercomInstanceName.getValue().lower() + "_spi.c")
-    spiSym_SourceFile.setDestPath("/peripheral/sercom/spim/")
-    spiSym_SourceFile.setProjectPath("config/" + configName + "/peripheral/sercom/spim/")
+    spiSym_SourceFile.setSourcePath("../peripheral/sercom_u2201/templates/plib_sercom_spi_master.c.ftl")
+    spiSym_SourceFile.setOutputName("plib_" + sercomInstanceName.getValue().lower() + "_spi_master.c")
+    spiSym_SourceFile.setDestPath("/peripheral/sercom/spi_master/")
+    spiSym_SourceFile.setProjectPath("config/" + configName + "/peripheral/sercom/spi_master/")
     spiSym_SourceFile.setType("SOURCE")
     spiSym_SourceFile.setMarkup(True)
     spiSym_SourceFile.setEnabled(sercomSym_OperationMode.getSelectedKey() == "SPIM")
+
+    spiSlaveSym_HeaderFile = sercomComponent.createFileSymbol("SERCOM_SPIS_HEADER", None)
+    spiSlaveSym_HeaderFile.setSourcePath("../peripheral/sercom_u2201/templates/plib_sercom_spi_slave.h.ftl")
+    spiSlaveSym_HeaderFile.setOutputName("plib_" + sercomInstanceName.getValue().lower() + "_spi_slave.h")
+    spiSlaveSym_HeaderFile.setDestPath("/peripheral/sercom/spi_slave/")
+    spiSlaveSym_HeaderFile.setProjectPath("config/" + configName + "/peripheral/sercom/spi_slave/")
+    spiSlaveSym_HeaderFile.setType("HEADER")
+    spiSlaveSym_HeaderFile.setMarkup(True)
+    spiSlaveSym_HeaderFile.setEnabled(sercomSym_OperationMode.getSelectedKey() == "SPIS")
+
+    spiSlaveSym_Header1File = sercomComponent.createFileSymbol("SERCOM_SPIS_COMMON_HEADER", None)
+    spiSlaveSym_Header1File.setSourcePath("../peripheral/sercom_u2201/templates/plib_sercom_spi_slave_common.h")
+    spiSlaveSym_Header1File.setOutputName("plib_sercom_spi_slave_common.h")
+    spiSlaveSym_Header1File.setDestPath("/peripheral/sercom/spi_slave/")
+    spiSlaveSym_Header1File.setProjectPath("config/" + configName + "/peripheral/sercom/spi_slave/")
+    spiSlaveSym_Header1File.setType("HEADER")
+    spiSlaveSym_Header1File.setMarkup(True)
+    spiSlaveSym_Header1File.setEnabled(sercomSym_OperationMode.getSelectedKey() == "SPIS")
+
+    spiSlaveSym_SourceFile = sercomComponent.createFileSymbol("SERCOM_SPIS_SOURCE", None)
+    spiSlaveSym_SourceFile.setSourcePath("../peripheral/sercom_u2201/templates/plib_sercom_spi_slave.c.ftl")
+    spiSlaveSym_SourceFile.setOutputName("plib_" + sercomInstanceName.getValue().lower() + "_spi_slave.c")
+    spiSlaveSym_SourceFile.setDestPath("/peripheral/sercom/spi_slave/")
+    spiSlaveSym_SourceFile.setProjectPath("config/" + configName + "/peripheral/sercom/spi_slave/")
+    spiSlaveSym_SourceFile.setType("SOURCE")
+    spiSlaveSym_SourceFile.setMarkup(True)
+    spiSlaveSym_SourceFile.setEnabled(sercomSym_OperationMode.getSelectedKey() == "SPIS")
 
     i2cmMasterHeaderFile = sercomComponent.createFileSymbol("SERCOM_I2CM_MASTER_HEADER", None)
     i2cmMasterHeaderFile.setSourcePath("../peripheral/sercom_u2201/templates/plib_sercom_i2c_master_common.h")

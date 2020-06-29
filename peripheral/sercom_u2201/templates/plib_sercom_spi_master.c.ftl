@@ -5,10 +5,10 @@
     Microchip Technology Inc.
 
   File Name
-    plib_${SERCOM_INSTANCE_NAME?lower_case}_spi.c
+    plib_${SERCOM_INSTANCE_NAME?lower_case}_spi_master.c
 
   Summary
-    ${SERCOM_INSTANCE_NAME}_SPI PLIB Implementation File.
+    ${SERCOM_INSTANCE_NAME}_SPI Master PLIB Implementation File.
 
   Description
     This file defines the interface to the SERCOM SPI peripheral library.
@@ -45,7 +45,7 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#include "plib_${SERCOM_INSTANCE_NAME?lower_case}_spi.h"
+#include "plib_${SERCOM_INSTANCE_NAME?lower_case}_spi_master.h"
 
 // *****************************************************************************
 // *****************************************************************************
