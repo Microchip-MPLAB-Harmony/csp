@@ -77,9 +77,11 @@ extern "C" {
 
 typedef enum
 {
+<#if ADCHS_NUM_CLASS1_SIGNALS != 0>
 <#list 0..((ADCHS_NUM_CLASS1_SIGNALS) - 1) as i>
     ADCHS_MODULE${i}_MASK = (1U << ${i}U),
 </#list>
+</#if>
     ADCHS_MODULE7_MASK = (1U << 7U)
 }ADCHS_MODULE_MASK;
 
@@ -94,12 +96,12 @@ typedef enum
 </#list>
 }ADCHS_CHANNEL_NUM;
 
-
 // *****************************************************************************
 
 typedef void (*ADCHS_CALLBACK)(ADCHS_CHANNEL_NUM channel, uintptr_t context);
 
 typedef void (*ADCHS_EOS_CALLBACK)(uintptr_t context);
+
 // *****************************************************************************
 
 typedef struct

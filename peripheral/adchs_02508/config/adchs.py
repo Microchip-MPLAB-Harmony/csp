@@ -360,10 +360,34 @@ global ADC_Max_Class_1
 global ADC_Max_Signals
 global ADC_Max_Class_1and2
 global adchsSym_ADCTIME
+global ADC_EVSYSTrigEnd
+global ADC_EVSYSTrigStart
+global InterruptVector
+InterruptVector = []
+global InterruptHandler
+InterruptHandler = []
+global InterruptHandlerLock
+InterruptHandlerLock = []
+global InterruptVectorUpdate
+InterruptVectorUpdate = []
 
 def updateADCHSClockWarningStatus(symbol, event):
-
     symbol.setVisible(not event["value"])
+
+def adchsEvsys(symbol, event):
+    global adcEvsys_deplist
+    component = symbol.getComponent()
+    for trig in range (ADC_EVSYSTrigStart, ADC_EVSYSTrigEnd+1):
+        key = "ADC_TRIG_" + str(trig)
+        if (Database.getSymbolValue("evsys", "USER_" + key + "_READY") != False):
+            Database.setSymbolValue("evsys", "USER_" + key + "_READY", False)
+    for channelID in range (0, len(adcEvsys_deplist)):
+        val = component.getSymbolValue(adcEvsys_deplist[channelID])
+        if (adcEvsys_deplist[channelID] == "ADCCON1__STRGSRC"):
+            val =  int(adchsSym_ADCCON1__STRGSRC.getSelectedValue())
+        if ( val >= ADC_EVSYSTrigStart) and (val <= ADC_EVSYSTrigEnd):
+            key = "ADC_TRIG_" + str(val)
+            Database.setSymbolValue("evsys", "USER_" + key + "_READY", True)
 
 # Meant to be used as a dependancy callback so that a sub element of a boolean
 # symbol can become visible when the boolean becomes true.
@@ -629,6 +653,22 @@ def adchsEOSInterrupt(symbol, event):
     else:
         Database.setSymbolValue("core", InterruptHandler, interruptName + "_Handler", 1)
 
+def adchsNVICInterrupt(symbol, event):
+    interrupt_mode = False
+    channelInterrupt = False
+    component = symbol.getComponent()
+    for channelID in range(0, len(adcinterruptmode_deplist)):
+        if (component.getSymbolValue(adcinterruptmode_deplist[channelID])):
+            interrupt_mode = True
+            if ("AGIEN" in adcinterruptmode_deplist[channelID]):
+                channelInterrupt = True
+    symbol.setValue(channelInterrupt, 2)
+    Database.setSymbolValue("core", InterruptVector[0], interrupt_mode)
+    Database.setSymbolValue("core", InterruptHandlerLock[0], interrupt_mode)
+    if (interrupt_mode == True):
+        Database.setSymbolValue("core", InterruptHandler[0], "ADCHS_InterruptHandler")
+    else:
+        Database.setSymbolValue("core", InterruptHandler[0], "ADCHS_Handler")
 
 def getTCLKValue():
     clk_freq = Database.getSymbolValue("core", "ADCHS_CLOCK_FREQUENCY")
@@ -731,8 +771,6 @@ def resetChannels():
     Database.setSymbolValue(component, "ADCHS_"+str(lastADCChVdc)+"_ENABLE", False)
 
     Database.setSymbolValue(component, "ADCGIRQEN"+str((lastAdcChU/4) + 1)+"__AGIEN"+str(lastAdcChU), False)
-
-
 
 def handleMessage(messageID, args):
     global adchsSym_ADCTRGMODE__SHxALT
@@ -864,6 +902,14 @@ def instantiateComponent(adchsComponent):
     global adcinterruptmode_deplist
     global adchsSym_ADCCON1__STRGSRC
     global adchsSym_ADCTRG__TRGSRC
+    global adcEvsys_deplist
+    global ADC_EVSYSTrigStart
+    global ADC_EVSYSTrigEnd
+    global ADC_MIPS_Interrupt
+    global InterruptVector
+    global InterruptHandler
+    global InterruptHandlerLock
+    global InterruptVectorUpdate    
 
     MAX_AVAILABLE_SIGNALS = 64
 
@@ -946,14 +992,53 @@ def instantiateComponent(adchsComponent):
             ADC_Max_DedicatedChannels += 1
     ADC_Max_Class_1 = ADC_Max_DedicatedChannels
 
-    # Each Analog channel on the part must have a Data Register.  Each existing
+    #For PIC32C devices: ATDF lists signals and available pins.
+    # If ADCHS signal pin is present in the pinouts, indicate that there is an Analog pin for the signal.
+    signal_node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"ADCHS\"]/instance@[name=\""+adchsInstanceName.getValue()+"\"]/signals")
+    if (signal_node != None and signal_node.getChildren() != None):
+        # First find the available pins on the selected package 
+        packageName = str(Database.getSymbolValue("core", "COMPONENT_PACKAGE"))
+        availablePins = []      # array to save available pins
+        pinout = ""
+
+        val = ATDF.getNode("/avr-tools-device-file/variants")
+        children = val.getChildren()
+        for index in range(0, len(children)):
+            if packageName in children[index].getAttribute("package"):
+                pinout = children[index].getAttribute("pinout")
+
+        val = ATDF.getNode("/avr-tools-device-file/pinouts/pinout")
+        children = val.getChildren()
+        for pad in range(0, len(children)):
+            availablePins.append(children[pad].getAttribute("pad"))
+
+        #Find ADC input pins from ADCHS signals
+        adc = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"ADCHS\"]/instance@[name=\""+adchsInstanceName.getValue()+"\"]/signals")
+        adc_signals = adc.getChildren()
+        for pad in range(0, len(adc_signals)):
+            group = adc_signals[pad].getAttribute("group")
+            if (("AIN" in group) and ("index" in adc_signals[pad].getAttributeList())):
+                padSignal = adc_signals[pad].getAttribute("pad")
+                if padSignal in availablePins:
+                    ADC_Input_Signals_List[int(adc_signals[pad].getAttribute("index"))] = True
+
+        #Find internal ADC signals from ADCHS parameters
+        adc = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"ADCHS\"]/instance@[name=\""+adchsInstanceName.getValue()+"\"]/parameters")
+        if (adc != None):
+            adc_parameters = adc.getChildren()
+            for pad in range(0, len(adc_parameters)):
+                if ("AIN" in adc_parameters[pad].getAttribute("name")):
+                    ADC_Input_Signals_List[int(adc_parameters[pad].getAttribute("value"))] = True
+
+    # For PIC32M devices: Each Analog channel on the part must have a Data Register.  Each existing
     # Data register should indicate that there is an Analog pin for that signal.
     SignalNumber = 0
     for SignalNumber in range (0, MAX_AVAILABLE_SIGNALS):
         labelPath = adchsATDFRegisterPath(Module, "ADCDATA" + str(SignalNumber))
         labelNode = ATDF.getNode(labelPath)
         if labelNode is not None:
-            ADC_Input_Signals_List[SignalNumber] = True
+            if (signal_node == None):
+                ADC_Input_Signals_List[SignalNumber] = True
             ADC_Max_Signals = SignalNumber + 1
 
     # The dedicated channels use class 1 signals.  All Class 1 AND class 2
@@ -961,10 +1046,10 @@ def instantiateComponent(adchsComponent):
     for RegisterNumber in range(0, 7):
         RegisterName = "ADCTRG" + str(RegisterNumber+1)
         labelPath = adchsATDFRegisterPath(Module, RegisterName)
-        # Log.writeInfoMessage("Looking for Register" + labelPath)
+        #Log.writeInfoMessage("Looking for Register" + labelPath)
         labelNode = ATDF.getNode(labelPath)
         if labelNode is not None:
-            for SignalNumber in range(0, 4):
+             for SignalNumber in range(0, 4):
                 signalID = (RegisterNumber * 4) + SignalNumber
                 SignalName = "TRGSRC" + str(signalID)
                 labelPath = adchsATDFRegisterBitfieldPath(Module, RegisterName,
@@ -974,73 +1059,94 @@ def instantiateComponent(adchsComponent):
                     ADC_Max_Class_1and2 += 1
     ADC_Max_Class_2 = ADC_Max_Class_1and2 - ADC_Max_Class_1
 
-    #Calculate the proper ADC_EOS interrupt registers using IRQ#
-    irqString = "ADC_EOS"
-    Irq_index = int(getIRQnumber(irqString))
-    statRegName = _get_statReg_parms(Irq_index)
-    enblRegIndex = _get_enblReg_parms(Irq_index)
+    ADC_EVSYSTrigEnd = 0
+    ADC_EVSYSTrigStart = 0
+    triggerList = []
+    node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADCHS\"]/value-group@[name=\"ADCCON1__STRGSRC\"]")
+    trigger = node.getChildren()
+    for index in range (0, len(trigger)):
+        if "ADC_TRIG" in trigger[index].getAttribute("caption"):
+            triggerList.append(int(filter(str.isdigit, str(trigger[index].getAttribute("caption")))))
+    ADC_EVSYSTrigStart = min(triggerList)
+    ADC_EVSYSTrigEnd = max(triggerList)
 
-    #IEC REG
-    adchsSym_EOS_IEC = adchsComponent.createStringSymbol("ADCHS_EOS_IEC_REG", None)
-    adchsSym_EOS_IEC.setDefaultValue("IEC"+str(enblRegIndex))
-    adchsSym_EOS_IEC.setVisible(False)
+    ADC_MIPS_Interrupt = False
+    node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"INT\"]")
+    if node != None:    #if MIPS Interrupt unit is present
+        ADC_MIPS_Interrupt = True
 
-    #IFS REG
-    adchsSym_EOS_IFS = adchsComponent.createStringSymbol("ADCHS_EOS_IFS_REG", None)
-    adchsSym_EOS_IFS.setDefaultValue("IFS"+str(enblRegIndex))
-    adchsSym_EOS_IFS.setVisible(False)
+        #Calculate the proper ADC_EOS interrupt registers using IRQ#
+        irqString = "ADC_EOS"
+        Irq_index = int(getIRQnumber(irqString))
+        statRegName = _get_statReg_parms(Irq_index)
+        enblRegIndex = _get_enblReg_parms(Irq_index)
 
-    #Calculate the proper interrupt registers using IRQ#
-    irqString = "ADC_DATA0"
-    Irq_index = int(getIRQnumber(irqString))
-    statRegName = _get_statReg_parms(Irq_index)
-    enblRegIndex = _get_enblReg_parms(Irq_index)
-
-    adchsSym_IRQ = adchsComponent.createIntegerSymbol("ADCHS_IFS_START_INDEX", None)
-    adchsSym_IRQ.setVisible(False)
-    adchsSym_IRQ.setDefaultValue(enblRegIndex)
-
-    ADC_MAX_EIC_REG = 1
-
-    #IEC REG
-    adchsSym_IEC0 = adchsComponent.createStringSymbol("ADCHS_IEC0_REG", None)
-    adchsSym_IEC0.setDefaultValue("IEC"+str(enblRegIndex))
-    adchsSym_IEC0.setVisible(False)
-
-##### Assumption is all the data result interrupt vectors are sequential
-    num_intrpt_in_first_iec = int(32 - (Irq_index % 32))
-    adchsSym_IFS0_INDEX = adchsComponent.createIntegerSymbol("ADCHS_IFS0_NUM_IRQ", None)
-    adchsSym_IFS0_INDEX.setVisible(False)
-    adchsSym_IFS0_INDEX.setDefaultValue( num_intrpt_in_first_iec)
-
-    if ((ADC_Max_Signals - (num_intrpt_in_first_iec))) >= 1:
         #IEC REG
-        adchsSym_IEC1 = adchsComponent.createStringSymbol("ADCHS_IEC1_REG", None)
-        adchsSym_IEC1.setDefaultValue("IEC"+str(enblRegIndex+1))
-        adchsSym_IEC1.setVisible(False)
-        ADC_MAX_EIC_REG = ADC_MAX_EIC_REG + 1
+        adchsSym_EOS_IEC = adchsComponent.createStringSymbol("ADCHS_EOS_IEC_REG", None)
+        adchsSym_EOS_IEC.setDefaultValue("IEC"+str(enblRegIndex))
+        adchsSym_EOS_IEC.setVisible(False)
 
-        adchsSym_IFS1_INDEX = adchsComponent.createIntegerSymbol("ADCHS_IFS1_NUM_IRQ", None)
-        adchsSym_IFS1_INDEX.setVisible(False)
-        adchsSym_IFS1_INDEX.setDefaultValue(32 + (num_intrpt_in_first_iec))
+        #IFS REG
+        adchsSym_EOS_IFS = adchsComponent.createStringSymbol("ADCHS_EOS_IFS_REG", None)
+        adchsSym_EOS_IFS.setDefaultValue("IFS"+str(enblRegIndex))
+        adchsSym_EOS_IFS.setVisible(False)
 
-    if ((ADC_Max_Signals - (num_intrpt_in_first_iec + 32))) >= 1 :
+        #Calculate the proper interrupt registers using IRQ#
+        irqString = "ADC_DATA0"
+        Irq_index = int(getIRQnumber(irqString))
+        statRegName = _get_statReg_parms(Irq_index)
+        enblRegIndex = _get_enblReg_parms(Irq_index)
+
+        adchsSym_IRQ = adchsComponent.createIntegerSymbol("ADCHS_IFS_START_INDEX", None)
+        adchsSym_IRQ.setVisible(False)
+        adchsSym_IRQ.setDefaultValue(enblRegIndex)
+
+        ADC_MAX_EIC_REG = 1
+
         #IEC REG
-        adchsSym_IEC2 = adchsComponent.createStringSymbol("ADCHS_IEC2_REG", None)
-        adchsSym_IEC2.setDefaultValue("IEC"+str(enblRegIndex+2))
-        adchsSym_IEC2.setVisible(False)
-        ADC_MAX_EIC_REG = ADC_MAX_EIC_REG + 1
+        adchsSym_IEC0 = adchsComponent.createStringSymbol("ADCHS_IEC0_REG", None)
+        adchsSym_IEC0.setDefaultValue("IEC"+str(enblRegIndex))
+        adchsSym_IEC0.setVisible(False)
+
+    ##### Assumption is all the data result interrupt vectors are sequential
+        num_intrpt_in_first_iec = int(32 - (Irq_index % 32))
+        adchsSym_IFS0_INDEX = adchsComponent.createIntegerSymbol("ADCHS_IFS0_NUM_IRQ", None)
+        adchsSym_IFS0_INDEX.setVisible(False)
+        adchsSym_IFS0_INDEX.setDefaultValue( num_intrpt_in_first_iec)
+
+        if ((ADC_Max_Signals - (num_intrpt_in_first_iec))) >= 1:
+            #IEC REG
+            adchsSym_IEC1 = adchsComponent.createStringSymbol("ADCHS_IEC1_REG", None)
+            adchsSym_IEC1.setDefaultValue("IEC"+str(enblRegIndex+1))
+            adchsSym_IEC1.setVisible(False)
+            ADC_MAX_EIC_REG = ADC_MAX_EIC_REG + 1
+
+            adchsSym_IFS1_INDEX = adchsComponent.createIntegerSymbol("ADCHS_IFS1_NUM_IRQ", None)
+            adchsSym_IFS1_INDEX.setVisible(False)
+            adchsSym_IFS1_INDEX.setDefaultValue(32 + (num_intrpt_in_first_iec))
+
+        if ((ADC_Max_Signals - (num_intrpt_in_first_iec + 32))) >= 1 :
+            #IEC REG
+            adchsSym_IEC2 = adchsComponent.createStringSymbol("ADCHS_IEC2_REG", None)
+            adchsSym_IEC2.setDefaultValue("IEC"+str(enblRegIndex+2))
+            adchsSym_IEC2.setVisible(False)
+            ADC_MAX_EIC_REG = ADC_MAX_EIC_REG + 1
 
 ############################## Dependency Lists ##################################
     adctrgmode_deplist = []
     adctrgsns_deplist = []
-    adctrg_deplist = [[] for i in range (ADC_Max_Class_1and2 / 4)]
+    if ADC_Max_Class_1 != 0:
+        adctrg_deplist = [[] for i in range ((ADC_Max_Class_1and2 / 4))]
+    else:
+        adctrg_deplist = [[] for i in range ((ADC_Max_Class_1and2 / 4)+1)]
     adctime_deplist = [[] for i in range (ADC_Max_Class_1)]
     adcgirqen_deplist = [[] for i in range (2)]
     adccss_deplist = [[] for i in range (2)]
-    adciec_depList = [[] for i in range (ADC_MAX_EIC_REG)]
+    if ADC_MIPS_Interrupt == True:
+        adciec_depList = [[] for i in range (ADC_MAX_EIC_REG)]
     adcinterruptmode_deplist = []
     adcimcon_deplist = [[] for i in range (int(math.ceil(ADC_Max_Signals / 16.0)))]
+    adcEvsys_deplist = []
 ############################## Dependency Lists End ##################################
 
 ################################################################################
@@ -1069,7 +1175,19 @@ def instantiateComponent(adchsComponent):
     adchsSym_NUM_CLASS2_SIGNALS.setDefaultValue(ADC_Max_Class_2)
     adchsSym_NUM_CLASS2_SIGNALS.setVisible(False)
 
-    adchsSym_ADCCON3__ADCSEL = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON3", "ADCSEL", adchsMenu, True)
+    adchsSym_MIPS_INTERRUPT = adchsComponent.createBooleanSymbol("ADCHS_MIPS_INT_PRESENT", adchsMenu)
+    adchsSym_MIPS_INTERRUPT.setDefaultValue(ADC_MIPS_Interrupt)
+    adchsSym_MIPS_INTERRUPT.setVisible(False)
+
+    adchsSym_EARLY_INTERRUPT = adchsComponent.createBooleanSymbol("ADCHS_EARLY_INTERRUPT", adchsMenu)
+    node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADCHS\"]/register-group/register@[name=\"ADCEIEN1\"]")
+    if (node != None):
+        adchsSym_EARLY_INTERRUPT.setDefaultValue(True)
+    else:
+        adchsSym_EARLY_INTERRUPT.setDefaultValue(False)
+    adchsSym_EARLY_INTERRUPT.setVisible(False)
+
+    adchsSym_ADCCON3__ADCSEL = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON3", "ADCSEL", adchsMenu, True)    
 
     adchsSym_TCLK = adchsComponent.createFloatSymbol("ADCHS_TCLK", adchsMenu)
     adchsSym_TCLK.setLabel("ADCHS Clock (Tclk) (nano sec)")
@@ -1113,8 +1231,9 @@ def instantiateComponent(adchsComponent):
     adchsCHConfMenu = adchsComponent.createMenuSymbol("ADCHS_CH_CONF", None)
     adchsCHConfMenu.setLabel("Module Configuration")
 
-    adchsDedicatedADCMenu = adchsComponent.createMenuSymbol("ADCHS_DEDICATED_ADC_CONF", adchsCHConfMenu)
-    adchsDedicatedADCMenu.setLabel("Dedicated ADC Modules")
+    if (ADC_Max_Class_1 != 0):
+        adchsDedicatedADCMenu = adchsComponent.createMenuSymbol("ADCHS_DEDICATED_ADC_CONF", adchsCHConfMenu)
+        adchsDedicatedADCMenu.setLabel("Dedicated ADC Modules")
 
     for channelID in range(0, ADC_Max_Class_1):
         #Channel enable
@@ -1251,6 +1370,7 @@ def instantiateComponent(adchsComponent):
 
     adcSym_TADC7 = adchsComponent.createFloatSymbol("ADCHS_TADC" + str(channelID), adchsSym_CH_ENABLE7)
     adcSym_TADC7.setLabel("ADC" + str(channelID) + " Clock (Tadc) (nano sec)")
+    adcSym_TADC7.setVisible(False)
     adcSym_TADC7.setReadOnly(True)
     adcSym_TADC7.setDefaultValue(adchsSym_CLOCK.getValue())
     adcSym_TADC7.setDependencies(adchsSharedTADCCalc, ["ADCHS_TQ", "ADCCON2__ADCDIV", "ADCHS_"+str(channelID)+"_ENABLE"])
@@ -1268,11 +1388,13 @@ def instantiateComponent(adchsComponent):
     global adchsSym_ADCCON1__SELRES
     adchsSym_ADCCON1__SELRES = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module,
         "ADCCON1", "SELRES", adchsSym_CH_ENABLE7, False)
+    adchsSym_ADCCON1__SELRES.setDefaultValue(3)
     adchsSym_ADCCON1__SELRES.setDependencies(adchsVisibilityOnEvent, ["ADCHS_"+str(channelID)+"_ENABLE"])
 
     conv_rate = (1000.0 / ((2 + 13) * adchsSym_CLOCK.getValue() ))
     adcSym_CONV_RATE7 = adchsComponent.createFloatSymbol("ADCHS_CONV_RATE"+str(channelID), adchsSym_CH_ENABLE7)
     adcSym_CONV_RATE7.setLabel("ADC"+str(channelID)+" Conversion Rate (ksps)")
+    adcSym_CONV_RATE7.setVisible(False)
     adcSym_CONV_RATE7.setReadOnly(True)
     adcSym_CONV_RATE7.setDependencies(adchsSharedConvRateCalc, ["ADCHS_TADC"+str(channelID), \
         "ADCCON2__SAMC", "ADCCON1__SELRES", "ADCHS_"+str(channelID)+"_ENABLE"])
@@ -1295,6 +1417,7 @@ def instantiateComponent(adchsComponent):
                 adchsSym_ADCTRG__TRGSRC[channelID].setLabel("Select Trigger Source")
                 adchsSym_ADCTRG__TRGSRC[channelID].setDependencies(adchsVisibilityOnEvent, ["ADCHS_7_ENABLE"])
                 adctrg_deplist[int((channelID/4))].append(RegisterName + "__" + BitFieldBaseName_TRGSRC + str(channelID))
+                adcEvsys_deplist.append(RegisterName + "__" + BitFieldBaseName_TRGSRC + str(channelID))
 
             RegisterBaseName_ADCCSS = "ADCCSS"
             BitFieldBaseName_CSS = "CSS"
@@ -1308,6 +1431,7 @@ def instantiateComponent(adchsComponent):
                 adchsSym_ADCCSS__CSS[channelID].setDependencies(adchsVisibilityOnEvent, ["ADCHS_7_ENABLE"])
                 adccss_deplist[int(channelID/32)].append(RegisterName + "__" + BitFieldBaseName_CSS + str(channelID))
 
+
     adchsSym_class3 = adchsComponent.createCommentSymbol("ADCHS_CLASS3_INPUTS", adchsSym_CH_ENABLE7)
     adchsSym_class3.setLabel("CLASS 3 Inputs")
     adchsSym_class3.setVisible(False)
@@ -1317,6 +1441,7 @@ def instantiateComponent(adchsComponent):
     adchsSym_ADCCON1__STRGSRC = adchsAddKeyValueSetFromATDFInitValue(adchsComponent, Module, "ADCCON1", "STRGSRC", adchsSym_class3, False)
     adchsSym_ADCCON1__STRGSRC.setLabel("Select Trigger Source")
     adchsSym_ADCCON1__STRGSRC.setDependencies(adchsVisibilityOnEvent, ["ADCHS_7_ENABLE"])
+    adcEvsys_deplist.append("ADCCON1__STRGSRC")
 
     #End of scan interrupt
     adchsSym_ADCCON2__EOSIEN = adchsAddBooleanFromATDF1ValueValueGroup(
@@ -1352,8 +1477,9 @@ def instantiateComponent(adchsComponent):
     BitFieldBaseName_EIEN = "EIEN"
     adchsSym_ADCEIEN__EIEN = [None] * MAX_AVAILABLE_SIGNALS
 
-    adchsClass1SignalMenu = adchsComponent.createMenuSymbol("ADCHS_CLASS1_SIGNALS_CONF", adchsSignalConditionMenu)
-    adchsClass1SignalMenu.setLabel("Class 1 Signals")
+    if (ADC_Max_Class_1 != 0):
+        adchsClass1SignalMenu = adchsComponent.createMenuSymbol("ADCHS_CLASS1_SIGNALS_CONF", adchsSignalConditionMenu)
+        adchsClass1SignalMenu.setLabel("Class 1 Signals")
 
     adchsClass2SignalMenu = adchsComponent.createMenuSymbol("ADCHS_CLASS2_SIGNALS_CONF", adchsSignalConditionMenu)
     adchsClass2SignalMenu.setLabel("Class 2 Signals")
@@ -1403,12 +1529,14 @@ def instantiateComponent(adchsComponent):
                     ["AN"+str(signalID)])
                 adcinterruptmode_deplist.append(RegisterName + "__" + BitFieldBaseName_AGIEN + str(signalID))
                 adcgirqen_deplist[int(signalID/32)].append(RegisterName + "__" + BitFieldBaseName_AGIEN + str(signalID))
-                if (signalID < (num_intrpt_in_first_iec)):
-                    adciec_depList[0].append(RegisterName + "__" + BitFieldBaseName_AGIEN + str(signalID))
-                elif ((signalID >= (num_intrpt_in_first_iec)) and (signalID < (32 + (num_intrpt_in_first_iec)))):
-                    adciec_depList[1].append(RegisterName + "__" + BitFieldBaseName_AGIEN + str(signalID))
-                else:
-                    adciec_depList[2].append(RegisterName + "__" + BitFieldBaseName_AGIEN + str(signalID))
+
+                if ADC_MIPS_Interrupt == True:
+                    if (signalID < (num_intrpt_in_first_iec)):
+                        adciec_depList[0].append(RegisterName + "__" + BitFieldBaseName_AGIEN + str(signalID))
+                    elif ((signalID >= (num_intrpt_in_first_iec)) and (signalID < (32 + (num_intrpt_in_first_iec)))):
+                        adciec_depList[1].append(RegisterName + "__" + BitFieldBaseName_AGIEN + str(signalID))
+                    else:
+                        adciec_depList[2].append(RegisterName + "__" + BitFieldBaseName_AGIEN + str(signalID))
 
 ###################################################################################################
 ########################### Register Values Calculation   #################################
@@ -1520,32 +1648,60 @@ def instantiateComponent(adchsComponent):
     adchsSym_ADCCSS2.setDependencies(adchsCalcADCCSS2, adccss_deplist[1])
 
 ###################################################################################################
+########################### Events   #################################
+###################################################################################################
+    events = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"EVSYS\"]")
+    if (events != None):
+        adchsSym_Evsys = adchsComponent.createStringSymbol("ADCHS_EVSYS", None)
+        adchsSym_Evsys.setVisible(False)
+        adchsSym_Evsys.setDependencies(adchsEvsys, adcEvsys_deplist)
+
+###################################################################################################
 ########################### Interrupts   #################################
 ###################################################################################################
-    adchsSym_IEC0 = adchsComponent.createHexSymbol("ADCHS_IEC0", None)
-    adchsSym_IEC0.setLabel("IEC0 Register")
-    adchsSym_IEC0.setVisible(False)
-    adchsSym_IEC0.setDependencies(adchsCalcIEC0, adciec_depList[0])
+    if ADC_MIPS_Interrupt == True:
+        adchsSym_IEC0 = adchsComponent.createHexSymbol("ADCHS_IEC0", None)
+        adchsSym_IEC0.setLabel("IEC0 Register")
+        adchsSym_IEC0.setVisible(False)
+        adchsSym_IEC0.setDependencies(adchsCalcIEC0, adciec_depList[0])
 
-    if (ADC_MAX_EIC_REG > 1):
-        adchsSym_IEC1 = adchsComponent.createHexSymbol("ADCHS_IEC1", None)
-        adchsSym_IEC1.setLabel("IEC1 Register")
-        adchsSym_IEC1.setVisible(False)
-        adchsSym_IEC1.setDependencies(adchsCalcIEC1, adciec_depList[1])
+        if (ADC_MAX_EIC_REG > 1):
+            adchsSym_IEC1 = adchsComponent.createHexSymbol("ADCHS_IEC1", None)
+            adchsSym_IEC1.setLabel("IEC1 Register")
+            adchsSym_IEC1.setVisible(False)
+            adchsSym_IEC1.setDependencies(adchsCalcIEC1, adciec_depList[1])
 
-    if(ADC_MAX_EIC_REG > 2):
-        adchsSym_IEC2 = adchsComponent.createHexSymbol("ADCHS_IEC2", None)
-        adchsSym_IEC2.setLabel("IEC2 Register")
-        adchsSym_IEC2.setVisible(False)
-        adchsSym_IEC2.setDependencies(adchsCalcIEC2, adciec_depList[2])
+        if(ADC_MAX_EIC_REG > 2):
+            adchsSym_IEC2 = adchsComponent.createHexSymbol("ADCHS_IEC2", None)
+            adchsSym_IEC2.setLabel("IEC2 Register")
+            adchsSym_IEC2.setVisible(False)
+            adchsSym_IEC2.setDependencies(adchsCalcIEC2, adciec_depList[2])
 
-    adchsSym_InterruptMode = adchsComponent.createBooleanSymbol("ADCHS_INTERRUPT", None)
-    adchsSym_InterruptMode.setVisible(False)
-    adchsSym_InterruptMode.setDependencies(adchsInterruptMode, adcinterruptmode_deplist)
+        adchsSym_InterruptMode = adchsComponent.createBooleanSymbol("ADCHS_INTERRUPT", None)
+        adchsSym_InterruptMode.setVisible(False)
+        adchsSym_InterruptMode.setDependencies(adchsInterruptMode, adcinterruptmode_deplist)   
 
-    adchsSym_EOSInterrupt = adchsComponent.createStringSymbol("ADCHS_EOS_INTERRUPT", None)
-    adchsSym_EOSInterrupt.setVisible(False)
-    adchsSym_EOSInterrupt.setDependencies(adchsEOSInterrupt, ["ADCCON2__EOSIEN"])
+        adchsSym_EOSInterrupt = adchsComponent.createStringSymbol("ADCHS_EOS_INTERRUPT", None)
+        adchsSym_EOSInterrupt.setVisible(False)
+        adchsSym_EOSInterrupt.setDependencies(adchsEOSInterrupt, ["ADCCON2__EOSIEN"])                 
+
+    else:
+        vectorNode=ATDF.getNode("/avr-tools-device-file/devices/device/interrupts")
+        vectorValues = vectorNode.getChildren()
+        for id in range(0, len(vectorNode.getChildren())):
+            if vectorValues[id].getAttribute("module-instance") == adchsInstanceName.getValue():
+                name = vectorValues[id].getAttribute("name")
+                InterruptVector.append(name + "_INTERRUPT_ENABLE")
+                InterruptHandler.append(name + "_INTERRUPT_HANDLER")
+                InterruptHandlerLock.append(name + "_INTERRUPT_HANDLER_LOCK")
+                InterruptVectorUpdate.append("core." + name + "_INTERRUPT_ENABLE_UPDATE")
+        
+        adcinterruptmode_deplist.append("ADCCON2__EOSIEN")
+
+        adchsSym_UpdateInterrupt = adchsComponent.createBooleanSymbol("ADCHS_INTERRUPT", None)
+        adchsSym_UpdateInterrupt.setVisible(False)
+        adchsSym_UpdateInterrupt.setDependencies(adchsNVICInterrupt, adcinterruptmode_deplist)
+
 
     # Clock Warning status
     adchsSym_ClkEnComment = adchsComponent.createCommentSymbol("ADCHS_CLOCK_ENABLE_COMMENT", None)
@@ -1578,7 +1734,10 @@ def instantiateComponent(adchsComponent):
     adchsGlobalHeaderFile.setMarkup(True)
 
     adchsSource1File = adchsComponent.createFileSymbol("ADCHS_SOURCE", None)
-    adchsSource1File.setSourcePath("../peripheral/adchs_02508/templates/plib_adchs.c.ftl")
+    if "PIC32M" in Variables.get("__PROCESSOR"):
+        adchsSource1File.setSourcePath("../peripheral/adchs_02508/templates/plib_adchs.c.ftl")
+    else:
+        adchsSource1File.setSourcePath("../peripheral/adchs_02508/templates/plib_adchs_pic32c.c.ftl")
     adchsSource1File.setOutputName("plib_"+Module.lower()+".c")
     adchsSource1File.setDestPath("peripheral/adchs/")
     adchsSource1File.setProjectPath("config/" + configName +"/peripheral/adchs/")

@@ -63,7 +63,7 @@
 void ${ADCHS_INSTANCE_NAME}_Initialize()
 {
     ADCCON1bits.ON = 0;
-
+<#if ADCHS_NUM_CHANNELS != 0>
 <#list 0..((ADCHS_NUM_CLASS1_SIGNALS) - 1) as i>
     <#assign ADCHS_CH_ENABLE = "ADCHS_"+ i + "_ENABLE">
     <#assign ADCHS_TIME = "ADCHS_ADCTIME" + i>
@@ -76,6 +76,7 @@ void ${ADCHS_INSTANCE_NAME}_Initialize()
 
     </#if>
 </#list>
+</#if>
 
 <#if ADCHS_7_ENABLE == true>
     <#if (__PROCESSOR?contains("PIC32MZ") && __PROCESSOR?contains("W"))>
@@ -138,6 +139,7 @@ void ${ADCHS_INSTANCE_NAME}_Initialize()
     while(!ADCCON2bits.BGVRRDY); // Wait until the reference voltage is ready
     while(ADCCON2bits.REFFLT); // Wait if there is a fault with the reference voltage
 
+<#if ADCHS_NUM_CLASS1_SIGNALS != 0>
 <#list 0..((ADCHS_NUM_CLASS1_SIGNALS) - 1) as i>
     <#assign ADCHS_CH_ENABLE = "ADCHS_"+ i + "_ENABLE">
     <#if .vars[ADCHS_CH_ENABLE] == true>
@@ -148,6 +150,7 @@ void ${ADCHS_INSTANCE_NAME}_Initialize()
 
     </#if>
 </#list>
+</#if>
 <#if ADCHS_7_ENABLE == true>
     /* ADC 7 */
     ADCANCONbits.ANEN7 = 1;      // Enable the clock to analog bias
@@ -239,6 +242,11 @@ void ADCHS_GlobalLevelConversionStart(void)
     ADCCON3bits.GLSWTRG = 1;
 }
 
+void ADCHS_GlobalLevelConversionStop(void)
+{
+    ADCCON3bits.GLSWTRG = 0;
+}
+
 void ADCHS_ChannelConversionStart(ADCHS_CHANNEL_NUM channel)
 {
     ADCCON3bits.ADINSEL = channel;
@@ -304,6 +312,13 @@ void ADC_EOS_InterruptHandler(void)
       ${ADCHS_INSTANCE_NAME}_EOSCallbackObj.callback_fn(${ADCHS_INSTANCE_NAME}_EOSCallbackObj.context);
     }
     (void) status;
+}
+
+<#else>
+bool ${ADCHS_INSTANCE_NAME}_EOSStatusGet(void)
+{
+    return (bool)((${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCCON2 & ADCHS_ADCCON2_EOSRDY_Msk) 
+                    >> ADCHS_ADCCON2_EOSRDY_Pos);
 }
 </#if>
 

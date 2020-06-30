@@ -74,19 +74,6 @@ extern "C" {
 /*  The following data type definitions are used by the functions in this
     interface and should be considered part it.
 */
-<#compress>
-<#list 0..(ADCHS_NUM_CHANNELS - 1) as i>
-    <#assign ADCHS_CH_ENABLE = "ADCHS_"+i+"_ENABLE">
-    <#assign ADCHS_CH_NAME = "ADCHS_"+i+"_NAME">
-    <#assign CH_NUM = i>
-    <#if .vars[ADCHS_CH_ENABLE] == true>
-
-        #define ${.vars[ADCHS_CH_NAME]} (${CH_NUM}U)
-    </#if> <#-- CH ENABLE -->
-
-</#list>
-</#compress>
-
 
 
 // *****************************************************************************
@@ -103,14 +90,17 @@ void ${ADCHS_INSTANCE_NAME}_Initialize (void);
 void ${ADCHS_INSTANCE_NAME}_ModulesEnable (ADCHS_MODULE_MASK modulesMask);
 void ${ADCHS_INSTANCE_NAME}_ModulesDisable (ADCHS_MODULE_MASK modulesMask);
 
-void ADCHS_GlobalEdgeConversionStart(void);
-void ADCHS_GlobalLevelConversionStart(void);
-void ADCHS_ChannelConversionStart(ADCHS_CHANNEL_NUM channel);
+void ${ADCHS_INSTANCE_NAME}_GlobalEdgeConversionStart(void);
+void ${ADCHS_INSTANCE_NAME}_GlobalLevelConversionStart(void);
+void ${ADCHS_INSTANCE_NAME}_GlobalLevelConversionStop(void);
+void ${ADCHS_INSTANCE_NAME}_ChannelConversionStart(ADCHS_CHANNEL_NUM channel);
 
 void ${ADCHS_INSTANCE_NAME}_ChannelResultInterruptEnable (ADCHS_CHANNEL_NUM channel);
 void ${ADCHS_INSTANCE_NAME}_ChannelResultInterruptDisable (ADCHS_CHANNEL_NUM channel);
+<#if ADCHS_EARLY_INTERRUPT == true>
 void ${ADCHS_INSTANCE_NAME}_ChannelEarlyInterruptEnable (ADCHS_CHANNEL_NUM channel);
 void ${ADCHS_INSTANCE_NAME}_ChannelEarlyInterruptDisable (ADCHS_CHANNEL_NUM channel);
+</#if>
 
 bool ${ADCHS_INSTANCE_NAME}_ChannelResultIsReady(ADCHS_CHANNEL_NUM channel);
 uint16_t ${ADCHS_INSTANCE_NAME}_ChannelResultGet(ADCHS_CHANNEL_NUM channel);
@@ -121,6 +111,8 @@ uint16_t ${ADCHS_INSTANCE_NAME}_ChannelResultGet(ADCHS_CHANNEL_NUM channel);
 
 <#if ADCCON2__EOSIEN == true>
     <#lt>void ${ADCHS_INSTANCE_NAME}_EOSCallbackRegister(ADCHS_EOS_CALLBACK callback, uintptr_t context);
+<#else>
+    <#lt>bool ${ADCHS_INSTANCE_NAME}_EOSStatusGet(void);
 </#if>
 
 // *****************************************************************************
