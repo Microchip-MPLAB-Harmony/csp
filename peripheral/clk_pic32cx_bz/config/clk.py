@@ -888,12 +888,24 @@ def qspiClockFreqCalc(symbol, event):
         symbol.setValue(0)
 
 # ADCHS Freq
-global adchsClockFreqCalc
 def adchsClockFreqCalc(symbol, event):
+    freq = 0
+    #Enable SPLL2 for charge pump
+    Database.setSymbolValue("core", "SPLLCON_SPLLPOSTDIV2_VALUE", 1)
+    adchsClkSrc = Database.getSymbolValue("adchs", "ADCCON3__ADCSEL")
+
     if Database.getSymbolValue("core", "ADCHS_CLOCK_ENABLE"):
-        symbol.setValue(Database.getSymbolValue("core", "SPLL2_FREQ"))
-    else:
-        symbol.setValue(0)
+        if adchsClkSrc != None and adchsClkSrc != 1:
+            if "REFCLK" in adchs_clock_map[adchsClkSrc]:
+                Database.setSymbolValue("core", "CONFIG_SYS_CLK_REFCLK3_ENABLE", True)
+            freq = int(Database.getSymbolValue("core", adchs_clock_map[adchsClkSrc]))
+
+        if adchsClkSrc == 1:
+            # calculate FRC frequency
+            freqDiv = ''.join([i for i in Database.getSymbolValue("core", adchs_clock_map[adchsClkSrc]) if i.isdigit()])
+            freq = 8000000 / int(freqDiv)
+
+    symbol.setValue(freq, 1)
 
 def calculated_clock_frequencies(clk_comp, clk_menu):
     """
@@ -1906,11 +1918,21 @@ if __name__ == "__main__":
     qspiClockFrequency.setReadOnly(True)
     qspiClockFrequency.setDependencies(qspiClockFreqCalc, ["QSPI_CLOCK_ENABLE", "CONFIG_SYS_CLK_PBCLK2_FREQ"])
 
-    adchsClockFrequency= coreComponent.createIntegerSymbol("ADCHS_CLOCK_FREQUENCY", component.getSymbolByID("ADCHS_CLOCK_ENABLE"))
+    #ADCHS Clock source
+    global adchs_clock_map
+    adchs_clock_map = {}
+
+    adchs_clock_map[0] = "CONFIG_SYS_CLK_PBCLK1_FREQ"
+    adchs_clock_map[1] = "OSCCON_FRCDIV_VALUE"
+    adchs_clock_map[2] = "CONFIG_SYS_CLK_REFCLK3_FREQ"
+    adchs_clock_map[3] = "SYS_CLK_FREQ"
+
+    adchsClockFrequency = coreComponent.createIntegerSymbol("ADCHS_CLOCK_FREQUENCY", component.getSymbolByID("ADCHS_CLOCK_ENABLE"))
     adchsClockFrequency.setLabel("ADCHS Clock Frequency")
     adchsClockFrequency.setDefaultValue(0)
     adchsClockFrequency.setReadOnly(True)
-    adchsClockFrequency.setDependencies(adchsClockFreqCalc, ["ADCHS_CLOCK_ENABLE", "SPLL2_FREQ"])
+    adchsClockFrequency.setDependencies(adchsClockFreqCalc, ["ADCHS_CLOCK_ENABLE", "adchs.ADCCON3__ADCSEL", "CONFIG_SYS_CLK_PBCLK1_FREQ",
+                                            "SYS_CLK_FREQ", "CONFIG_SYS_CLK_REFCLK3_FREQ", "OSCCON_FRCDIV_VALUE"])
 
     #############################################################################################
     # PMD
