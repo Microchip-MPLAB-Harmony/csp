@@ -74,38 +74,29 @@
     if an exception has occured.
 */
 
-/* Code identifying the cause of the exception (CP0 Cause register). */
-static unsigned int _excep_code;
-
 /* Address of instruction that caused the exception. */
 static unsigned int _excep_addr;
 
-/* Pointer to the string describing the cause of the exception. */
-static char *_cause_str;
+/* Enum identifying the cause */
+typedef enum {
+    EXCEP_IRQ      =  0, // interrupt
+    EXCEP_AdEL     =  4, // address error exception (load or ifetch)
+    EXCEP_AdES     =  5, // address error exception (store)
+    EXCEP_IBE      =  6, // bus error (ifetch)
+    EXCEP_DBE      =  7, // bus error (load/store)
+    EXCEP_Sys      =  8, // syscall
+    EXCEP_Bp       =  9, // breakpoint
+    EXCEP_RI       = 10, // reserved instruction
+    EXCEP_CpU      = 11, // coprocessor unusable
+    EXCEP_Overflow = 12, // arithmetic overflow
+    EXCEP_Trap     = 13, // trap (possible divide by zero)
+    EXCEP_IS1      = 16, // implementation specfic 1
+    EXCEP_CEU      = 17, // CorExtend Unuseable
+    EXCEP_C2E      = 18, // coprocessor 2
+} excep_code;
 
-/* Array identifying the cause (indexed by _exception_code). */
-static char *cause[] =
-{
-    "Interrupt",
-    "Undefined",
-    "Undefined",
-    "Undefined",
-    "Load/fetch address error",
-    "Store address error",
-    "Instruction bus error",
-    "Data bus error",
-    "Syscall",
-    "Breakpoint",
-    "Reserved instruction",
-    "Coprocessor unusable",
-    "Arithmetic overflow",
-    "Trap",
-    "Reserved",
-    "Reserved",
-    "Reserved",
-    "Reserved",
-    "Reserved"
-};
+/* Code identifying the cause of the exception (CP0 Cause register). */
+static excep_code _excep_code;
 
 // </editor-fold>
 
@@ -113,11 +104,9 @@ static char *cause[] =
   Function:
     void _general_exception_handler ( void )
 
-  Summary:
-    Overrides the XC32 _weak_ _generic_exception_handler.
-
   Description:
-    This function overrides the XC32 default _weak_ _generic_exception_handler.
+    A general exception is any non-interrupt exception which occurs during program
+    execution outside of bootstrap code.
 
   Remarks:
     Refer to the XC32 User's Guide for additional information.
@@ -125,13 +114,10 @@ static char *cause[] =
 
 void _general_exception_handler ( void )
 {
-    /* Mask off Mask of the ExcCode Field from the Cause Register
+    /* Mask off the ExcCode Field from the Cause Register
     Refer to the MIPs Software User's manual */
     _excep_code = (_CP0_GET_CAUSE() & 0x0000007C) >> 2;
     _excep_addr = _CP0_GET_EPC();
-
-    _cause_str  = cause[_excep_code];
-    printf("\n\rGeneral Exception %s (cause=%d, addr=%x).\n\r", _cause_str, _excep_code, _excep_addr);
 
     while (1)
     {
@@ -141,6 +127,92 @@ void _general_exception_handler ( void )
     }
 }
 
+/*******************************************************************************
+  Function:
+    void _bootstrap_exception_handler ( void )
+
+  Description:
+    A bootstrap exception is any exception which occurs while bootstrap code is
+    running (STATUS.BEV bit is 1).
+
+  Remarks:
+    Refer to the XC32 User's Guide for additional information.
+ */
+
+void _bootstrap_exception_handler(void)
+{
+    /* Mask off the ExcCode Field from the Cause Register
+    Refer to the MIPs Software User's manual */
+    _excep_code = (_CP0_GET_CAUSE() & 0x0000007C) >> 2;
+    _excep_addr = _CP0_GET_EPC();
+
+    while (1)
+    {
+        #if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
+            __builtin_software_breakpoint();
+        #endif
+    }
+}
+<#if __PROCESSOR?contains("PIC32MZ")>
+/*******************************************************************************
+  Function:
+    void _cache_err_exception_handler ( void )
+
+  Description:
+    A cache-error exception occurs when an instruction or data reference detects
+    a cache tag or data error. This exception is not maskable. To avoid
+    disturbing the error in the cache array the exception vector is to an
+    unmapped, uncached address. This exception is precise.
+
+  Remarks:
+    Refer to the XC32 User's Guide for additional information.
+ */
+
+void _cache_err_exception_handler(void)
+{
+    /* Mask off the ExcCode Field from the Cause Register
+    Refer to the MIPs Software User's manual */
+    _excep_code = (_CP0_GET_CAUSE() & 0x0000007C) >> 2;
+    _excep_addr = _CP0_GET_EPC();
+
+    while (1)
+    {
+        #if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
+            __builtin_software_breakpoint();
+        #endif
+    }
+}
+
+/*******************************************************************************
+  Function:
+    void _simple_tlb_refill_exception_handler ( void )
+
+  Description:
+    During an instruction fetch or data access, a TLB refill exception occurs
+    when no TLB entry matches a reference to a mapped address space and the EXL
+    bit is 0 in the Status register. Note that this is distinct from the case
+    in which an entry matches, but has the valid bit off. In that case, a TLB
+    Invalid exception occurs.
+
+  Remarks:
+    Refer to the XC32 User's Guide for additional information.
+ */
+
+void _simple_tlb_refill_exception_handler(void)
+{
+    /* Mask off the ExcCode Field from the Cause Register
+    Refer to the MIPs Software User's manual */
+    _excep_code = (_CP0_GET_CAUSE() & 0x0000007C) >> 2;
+    _excep_addr = _CP0_GET_EPC();
+
+    while (1)
+    {
+        #if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
+            __builtin_software_breakpoint();
+        #endif
+    }
+}
+</#if>
 /*******************************************************************************
  End of File
 */
