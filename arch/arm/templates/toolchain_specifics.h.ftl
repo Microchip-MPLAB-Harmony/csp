@@ -111,6 +111,25 @@
     <#lt>#include <stdint.h>
     <#lt>#define __inline__                      inline
 
+    <#lt>#ifndef _SSIZE_T_DECLARED
+    <#lt>#ifdef __SIZE_T_TYPE__
+    <#lt>/* If __SIZE_T_TYPE__ is defined (IAR) we define ssize_t based on size_t.
+    <#lt>We simply change "unsigned" to "signed" for this single definition
+    <#lt>to make sure ssize_t and size_t only differ by their signedness. */
+    <#lt>#define unsigned signed
+    <#lt>typedef __SIZE_T_TYPE__ _ssize_t;
+    <#lt>#undef unsigned
+    <#lt>#else
+    <#lt>#if defined(__INT_MAX__) && __INT_MAX__ == 2147483647
+    <#lt>typedef int _ssize_t;
+    <#lt>#else
+    <#lt>typedef long _ssize_t;
+    <#lt>#endif
+    <#lt>#endif
+    <#lt>typedef _ssize_t ssize_t;
+    <#lt>#define	_SSIZE_T_DECLARED
+    <#lt>#endif
+
     <#if CACHE_ALIGN?? >
         <#lt>#define CACHE_LINE_SIZE                 (${CACHE_ALIGN}u)
         <#lt>#define CACHE_ALIGN                     __ALIGNED(CACHE_LINE_SIZE)
@@ -119,12 +138,6 @@
         <#lt>#define CACHE_ALIGN
     </#if>
 
-    <#lt>// ************************************************************************
-    <#lt>// H3_IAR_SYS_TYPES
-
-    <#lt>#define ssize_t                         long
-
-    <#lt>// ************************************************************************
     <#lt>// Usually defined in errno.h, include extended E codes not provided in IAR errno.h
     <#lt>// H3_IAR_ERRNO
     <#lt>extern __attribute__((section(".bss.errno"))) int errno;
@@ -222,6 +235,26 @@
     <#if CoreArchitecture?contains("ARM926") == false >
         <#lt>#include "cmsis_compiler.h"
     </#if>
+
+    <#lt>#ifndef _SSIZE_T_DECLARED
+    <#lt>#ifdef __SIZE_TYPE__
+    <#lt>/* If __SIZE_TYPE__ is defined (armclang) we define ssize_t based on size_t.
+    <#lt>We simply change "unsigned" to "signed" for this single definition
+    <#lt>to make sure ssize_t and size_t only differ by their signedness. */
+    <#lt>#define unsigned signed
+    <#lt>typedef __SIZE_TYPE__ _ssize_t;
+    <#lt>#undef unsigned
+    <#lt>#else
+    <#lt>#if defined(__INT_MAX__) && __INT_MAX__ == 2147483647
+    <#lt>typedef int _ssize_t;
+    <#lt>#else
+    <#lt>typedef long _ssize_t;
+    <#lt>#endif
+    <#lt>#endif
+    <#lt>typedef _ssize_t ssize_t;
+    <#lt>#define	_SSIZE_T_DECLARED
+    <#lt>#endif
+
     <#lt>#define NO_INIT        __attribute__((section(".no_init")))
     <#lt>#define SECTION(a)     __attribute__((__section__(a)))
 
