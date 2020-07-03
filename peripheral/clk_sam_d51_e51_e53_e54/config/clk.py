@@ -1871,7 +1871,7 @@ clkSym_WDT_CLK_FREQ = coreComponent.createIntegerSymbol(
     "WDT_CLOCK_FREQUENCY", calculatedFreq_Menu)
 clkSym_WDT_CLK_FREQ.setLabel("WDT Clock Frequency")
 clkSym_WDT_CLK_FREQ.setReadOnly(True)
-clkSym_WDT_CLK_FREQ.setDefaultValue(32768)
+clkSym_WDT_CLK_FREQ.setDefaultValue(1024)
 
 clkSym_RTC_CLK_FREQ = coreComponent.createIntegerSymbol(
     "RTC_CLOCK_FREQUENCY", calculatedFreq_Menu)
