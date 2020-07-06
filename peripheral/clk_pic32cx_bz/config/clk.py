@@ -228,17 +228,22 @@ def updateRODIVmin (symbol, event):
         else:
             symbol.setMin(0)
 
+# get default value from atdf file
+global refclkDefaultFreq
+def refclkDefaultFreq(refClockNumber):
+    defFreq = "0"
+    targetName = "__REFCLK" + refClockNumber + "_DEF_FREQ"
+    params = ATDF.getNode('/avr-tools-device-file/devices/device/parameters')
+    paramsChildren = params.getChildren()
+    for param in paramsChildren:  # find parameter we are interested in now
+        if(param.getAttribute("name") == targetName):
+            defFreq = param.getAttribute("value")
+    return defFreq
 
 def updateRefFreq(menu, event):
     if event["value"] == True:
-        # get default value from atdf file and set it
         ii = event["id"].split("_")[3][-1]
-        targetName = "__REFCLK" + ii + "_DEF_FREQ"
-        params = ATDF.getNode('/avr-tools-device-file/devices/device/parameters')
-        paramsChildren = params.getChildren()
-        for param in paramsChildren:  # find parameter we are interested in now
-            if(param.getAttribute("name") == targetName):
-                menu.setValue(param.getAttribute("value"),2)
+        menu.setValue(refclkDefaultFreq(ii))
     else:
         menu.setValue("0",2)
 
@@ -642,6 +647,12 @@ def setGclkFreq(symbol, event):
             if periSource == generator:
                 symbol.setValue(int(event["value"]))
 
+def updateGENSEL(symbol, event):
+    if event["value"] == True: # if peripheral is enabled, set REFCLK1 as its clock source by default
+        symbol.setValue(1)
+    else: # if peripheral is disabled, set no clock as its clock source by default
+        symbol.setValue(0)
+
 global setCFGPCLKGENx_Reg
 def setCFGPCLKGENx_Reg (symbol, event):
     clockNumber = int(event["id"].split("_")[2])
@@ -998,7 +1009,10 @@ def calculated_clock_frequencies(clk_comp, clk_menu):
         symbolRefoscFreqList[index] = clk_comp.createStringSymbol(targetName, sym_calc_freq_menu)
         symbolRefoscFreqList[index].setLabel("Reference Clock #"+ii+" Frequency (Hz)")
         symbolRefoscFreqList[index].setVisible(True)
-        symbolRefoscFreqList[index].setDefaultValue("0")
+        if ii == "1":   # REFCLK1 is ON by default, so its default freq is also taken from ATDF
+            symbolRefoscFreqList[index].setDefaultValue(refclkDefaultFreq(ii))
+        else:
+            symbolRefoscFreqList[index].setDefaultValue("0")
         symbolRefoscFreqList[index].setReadOnly(True)
         targetName = "CONFIG_SYS_CLK_REFCLK"+ii+"_ENABLE"
         symbolRefoscFreqList[index].setDependencies(updateRefFreq, [targetName])
@@ -1609,7 +1623,10 @@ if __name__ == "__main__":
         enSymbolList[listIndex] = coreComponent.createBooleanSymbol(enSymId, CLK_CFG_SETTINGS)
         enSymbolList[listIndex].setLabel("Enable Reference Clock "+clk)
         enSymbolList[listIndex].setDescription("Sets whether to have reference clock enabled")
-        enSymbolList[listIndex].setDefaultValue(False)
+        if clk == "1": # enable refclk1 by default as this clock will be used by peripherals by default
+            enSymbolList[listIndex].setDefaultValue(True)
+        else:
+            enSymbolList[listIndex].setDefaultValue(False)
         sym_peripheral_clock_enable.append(enSymId) # needed for PMD manipulation
 
         # output enable of ref clk
@@ -1802,6 +1819,7 @@ if __name__ == "__main__":
         #Peripheral Channel Generator Selection
         gclkSym_PCHCTRL_GEN = coreComponent.createKeyValueSetSymbol(key + "_GENSEL", clkSymPeripheral)
         gclkSym_PCHCTRL_GEN.setLabel("Generator Selection")
+        gclkSym_PCHCTRL_GEN.setDependencies(updateGENSEL, [key + "_CHEN"])
         Gclk_Channel_CFGPCLKGEN_list.append(key + "_GENSEL")
 
         gclkSymPCHCTRLGenNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"CFG\"]/value-group@[name=\"PCLKGENSEL\"]")
