@@ -147,16 +147,23 @@ def instantiateComponent(sdhcComponent):
 
     sdhcEMMCSupport = sdhcComponent.createBooleanSymbol("SDCARD_EMMC_SUPPORT", None)
     sdhcEMMCSupport.setLabel("SDHC EMMC Support")
-    sdhcEMMCSupport.setDefaultValue(False)
+    sdhcEMMCSupport.setDefaultValue(True)
     sdhcEMMCSupport.setVisible(False)
 
     sdhcCD = sdhcComponent.createBooleanSymbol("SDCARD_SDCDEN", None)
     sdhcCD.setLabel("Use SD Card Detect (SDCD#) Pin")
+    sdhcCD.setDefaultValue(False)
     sdhcCD.setVisible(False)
 
     sdhcWP = sdhcComponent.createBooleanSymbol("SDCARD_SDWPEN", None)
     sdhcWP.setLabel("Use SD Write Protect (SDWP#) Pin")
+    sdhcWP.setDefaultValue(False)
     sdhcWP.setVisible(False)
+
+    sdhcUseEMMC = sdhcComponent.createBooleanSymbol("SDCARD_EMMCEN", None)
+    sdhcUseEMMC.setReadOnly(True)
+    sdhcUseEMMC.setVisible(False)
+    sdhcUseEMMC.setDefaultValue(False)
 
     sdhcDescLines = sdhcComponent.createIntegerSymbol("SDHC_NUM_DESCRIPTOR_LINES", None)
     sdhcDescLines.setLabel("Number of ADMA2 Descriptor Lines")

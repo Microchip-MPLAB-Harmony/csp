@@ -66,18 +66,19 @@ void ${SDHC_INSTANCE_NAME}_BlockCountSet( uint16_t numBlocks );
 bool ${SDHC_INSTANCE_NAME}_IsCmdLineBusy ( void );
 
 bool ${SDHC_INSTANCE_NAME}_IsDatLineBusy ( void );
+<#if SDCARD_EMMCEN == false>
 
 bool ${SDHC_INSTANCE_NAME}_IsWriteProtected ( void );
-
-void ${SDHC_INSTANCE_NAME}_CardDetectEnable( void );
-
-void ${SDHC_INSTANCE_NAME}_CardDetectDisable( void );
 
 void ${SDHC_INSTANCE_NAME}_WriteProtectEnable( void );
 
 void ${SDHC_INSTANCE_NAME}_WriteProtectDisable( void );
-
 bool ${SDHC_INSTANCE_NAME}_IsCardAttached ( void );
+
+void ${SDHC_INSTANCE_NAME}_CardDetectEnable( void );
+
+void ${SDHC_INSTANCE_NAME}_CardDetectDisable( void );
+</#if>
 
 bool ${SDHC_INSTANCE_NAME}_ClockSet ( uint32_t clock);
 

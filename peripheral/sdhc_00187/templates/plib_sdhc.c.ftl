@@ -91,24 +91,28 @@ static uint16_t ${SDHC_INSTANCE_NAME}_TransferModeSet ( uint32_t opcode )
 
     switch(opcode)
     {
-        case 51:
-        case 6:
-        case 17:
+<#if !SDCARD_EMMCEN>
+        case SDHC_CMD_READ_SCR:
+        case SDHC_CMD_SET_BUS_WIDTH:
+<#else>
+        case SDHC_CMD_SEND_EXT_CSD:
+</#if>
+        case SDHC_CMD_READ_SINGLE_BLOCK:
             /* Read single block of data from the device. */
             transfer_mode_reg = (_SDHCMODE_DMAEN_MASK | _SDHCMODE_DTXDSEL_MASK);
             break;
 
-        case 18:
+        case SDHC_CMD_READ_MULTI_BLOCK:
             /* Read multiple blocks of data from the device. */
             transfer_mode_reg = (_SDHCMODE_DMAEN_MASK | _SDHCMODE_DTXDSEL_MASK | _SDHCMODE_BSEL_MASK | _SDHCMODE_BCEN_MASK);
             break;
 
-        case 24:
+        case SDHC_CMD_WRITE_SINGLE_BLOCK:
             /* Write single block of data to the device. */
             transfer_mode_reg = _SDHCMODE_DMAEN_MASK;
             break;
 
-        case 25:
+        case SDHC_CMD_WRITE_MULTI_BLOCK:
             /* Write multiple blocks of data to the device. */
             transfer_mode_reg = (_SDHCMODE_DMAEN_MASK | _SDHCMODE_BSEL_MASK | _SDHCMODE_BCEN_MASK);
             break;
@@ -134,6 +138,7 @@ void ${SDHC_INSTANCE_NAME}_InterruptHandler(void)
 
     /* Save the error in a global variable for later use */
     ${SDHC_INSTANCE_NAME?lower_case}Obj.errorStatus |= eistr;
+    <#if SDCARD_EMMCEN == false>
 
     if (nistr & _SDHCINTSTAT_CARDIIF_MASK)
     {
@@ -143,6 +148,7 @@ void ${SDHC_INSTANCE_NAME}_InterruptHandler(void)
     {
         xferStatus |= SDHC_XFER_STATUS_CARD_REMOVED;
     }
+    </#if>
 
     if (${SDHC_INSTANCE_NAME?lower_case}Obj.isCmdInProgress == true)
     {
@@ -193,26 +199,6 @@ void ${SDHC_INSTANCE_NAME}_InterruptHandler(void)
     {
         ${SDHC_INSTANCE_NAME?lower_case}Obj.callback(xferStatus, ${SDHC_INSTANCE_NAME?lower_case}Obj.context);
     }
-}
-
-void ${SDHC_INSTANCE_NAME}_CardDetectEnable(void)
-{
-    CFGCON2bits.SDCDEN = 0x1;
-}
-
-void ${SDHC_INSTANCE_NAME}_CardDetectDisable(void)
-{
-    CFGCON2bits.SDCDEN = 0x0;
-}
-
-void ${SDHC_INSTANCE_NAME}_WriteProtectEnable(void)
-{
-    CFGCON2bits.SDWPEN = 0x1;
-}
-
-void ${SDHC_INSTANCE_NAME}_WriteProtectDisable(void)
-{
-    CFGCON2bits.SDWPEN = 0x0;
 }
 
 void ${SDHC_INSTANCE_NAME}_ErrorReset ( SDHC_RESET_TYPE resetType )
@@ -279,6 +265,18 @@ bool ${SDHC_INSTANCE_NAME}_IsDatLineBusy ( void )
 {
     return (((${SDHC_INSTANCE_NAME}STAT1 & _SDHCSTAT1_CINHDAT_MASK) == _SDHCSTAT1_CINHDAT_MASK)? true : false);
 }
+<#if SDCARD_EMMCEN == false>
+
+void ${SDHC_INSTANCE_NAME}_WriteProtectEnable(void)
+{
+    CFGCON2bits.SDWPEN = 0x1;
+}
+
+void ${SDHC_INSTANCE_NAME}_WriteProtectDisable(void)
+{
+    CFGCON2bits.SDWPEN = 0x0;
+}
+
 
 bool ${SDHC_INSTANCE_NAME}_IsWriteProtected ( void )
 {
@@ -293,10 +291,21 @@ bool ${SDHC_INSTANCE_NAME}_IsWriteProtected ( void )
     }
 }
 
+void ${SDHC_INSTANCE_NAME}_CardDetectEnable(void)
+{
+    CFGCON2bits.SDCDEN = 0x1;
+}
+
+void ${SDHC_INSTANCE_NAME}_CardDetectDisable(void)
+{
+    CFGCON2bits.SDCDEN = 0x0;
+}
+
 bool ${SDHC_INSTANCE_NAME}_IsCardAttached ( void )
 {
     return ((${SDHC_INSTANCE_NAME}STAT1 & _SDHCSTAT1_CARDINS_MASK) == _SDHCSTAT1_CARDINS_MASK)? true : false;
 }
+</#if>
 
 void ${SDHC_INSTANCE_NAME}_BlockSizeSet ( uint16_t blockSize )
 {
@@ -304,7 +313,7 @@ void ${SDHC_INSTANCE_NAME}_BlockSizeSet ( uint16_t blockSize )
     {
         blockSize = ${SDHC_INSTANCE_NAME}_MAX_BLOCK_SIZE;
     }
-    
+
     ${SDHC_INSTANCE_NAME}BLKCON = ((${SDHC_INSTANCE_NAME}BLKCON & ~_SDHCBLKCON_BSIZE_MASK) | (blockSize));
 }
 
@@ -317,7 +326,7 @@ void ${SDHC_INSTANCE_NAME}_ClockEnable ( void )
 {
     /* Enable internal clock */
     ${SDHC_INSTANCE_NAME}CON2 |= _SDHCCON2_ICLKEN_MASK;
-    
+
     /* Wait for the internal clock to stabilize */
     ${SDHC_INSTANCE_NAME}_Delay(1000);
 
@@ -470,8 +479,10 @@ void ${SDHC_INSTANCE_NAME}_CommandSend (
     ${SDHC_INSTANCE_NAME?lower_case}Obj.isDataInProgress = false;
     ${SDHC_INSTANCE_NAME?lower_case}Obj.errorStatus = 0;
 
+<#if SDCARD_EMMCEN == false>
     /* Keep the card insertion and removal interrupts enabled */
     normal_int_sig_enable_reg = (_SDHCINTSEN_CARDIISE_MASK | _SDHCINTSEN_CARDRISE_MASK);
+</#if>
 
     switch (respType)
     {
@@ -531,7 +542,7 @@ void ${SDHC_INSTANCE_NAME}_CommandSend (
 
 void ${SDHC_INSTANCE_NAME}_ModuleInit( void )
 {
-<#if SDCARD_SDWPEN == true>
+<#if SDCARD_EMMCEN == false && SDCARD_SDWPEN == true>
     /* Enable SDWPEN# pin */
     CFGCON2bits.SDWPEN = 0x1;
 <#else>
@@ -558,7 +569,7 @@ void ${SDHC_INSTANCE_NAME}_ModuleInit( void )
     /* Enable ADMA2 (Check CA0R capability register first) */
     ${SDHC_INSTANCE_NAME}CON1 = ((${SDHC_INSTANCE_NAME}CON1 & ~_SDHCCON1_DMASEL_MASK) | (0x02 << _SDHCCON1_DMASEL_POSITION));
 
-<#if SDCARD_SDCDEN == true>
+<#if SDCARD_EMMCEN == false && SDCARD_SDCDEN == true>
     /* Enable the card detect line SDCD */
     CFGCON2bits.SDCDEN = 0x1;
 
@@ -584,10 +595,11 @@ void ${SDHC_INSTANCE_NAME}_ModuleInit( void )
 
     /* Clear the high speed bit and set the data width to 1-bit mode */
     ${SDHC_INSTANCE_NAME}CON1 &= ~(_SDHCCON1_HSEN_MASK | _SDHCCON1_DTXWIDTH_MASK);
+<#if SDCARD_EMMCEN == false>
 
     /* Enable card inserted and card removed interrupt signals */
     ${SDHC_INSTANCE_NAME}INTSEN = (_SDHCINTSEN_CARDIISE_MASK | _SDHCINTSEN_CARDRISE_MASK);
-
+</#if>
     /* Enable SDHC interrupt */
     ${SDHC_IEC_REG}SET = ${SDHC_IEC_REG_MASK};
 }

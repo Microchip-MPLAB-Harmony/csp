@@ -85,6 +85,92 @@ typedef enum
 
 } SDHC_SPEED_MODE;
 
+typedef enum
+{
+    /* Command code to reset the SD card */
+    SDHC_CMD_GO_IDLE_STATE = 0,
+
+    /* Command code to initialize the SD card */
+    SDHC_CMD_SEND_OP_COND  = 1,
+
+    /* Broadcast command code to get all card IDs */
+    SDHC_CMD_ALL_SEND_CID  = 2,
+
+    /* Command card to respond with its RCA, tells it to go to standby state */
+    SDHC_CMD_SEND_RCA  = 3,
+
+    /* ACMD6 sets the card's bus width between 1-bit and 4-bit, only available when the card is unlocked */
+    SDHC_CMD_SET_BUS_WIDTH  = 6,
+
+    /* Command to switch functions in ext csd register in emmc */
+    SDHC_CMD_SWITCH      = 6,
+
+    /* Select/Deselect card message, sends the card to transfer state */
+    SDHC_CMD_SELECT_DESELECT_CARD = 7,
+
+    /* This macro defined the command code to check for sector addressing */
+    SDHC_CMD_SEND_IF_COND  = 8,
+
+    /* for MMC CMD8 is used to fetch ext csd */
+    SDHC_CMD_SEND_EXT_CSD = 8,
+
+    /* Command code to get the Card Specific Data */
+    SDHC_CMD_SEND_CSD      = 9,
+
+    /* Command code to get the Card Information */
+    SDHC_CMD_SEND_CID      = 10,
+
+    /* Command code to stop transmission during a multi-block read */
+    SDHC_CMD_STOP_TRANSMISSION = 12,
+
+    /* Command code to get the card status information */
+    SDHC_CMD_SEND_STATUS       = 13,
+
+    /* Command code to set the block length of the card */
+    SDHC_CMD_SET_BLOCKLEN      = 16,
+
+    /* Command code to read one block from the card */
+    SDHC_CMD_READ_SINGLE_BLOCK  = 17,
+
+    /* Command code to read multiple blocks from the card */
+    SDHC_CMD_READ_MULTI_BLOCK   = 18,
+
+    /* Command code to tell the media how many blocks to pre-erase */
+    SDHC_CMD_SET_WR_BLK_ERASE_COUNT =  23,
+
+    /* Command code to write one block to the card */
+    SDHC_CMD_WRITE_SINGLE_BLOCK  = 24,
+
+    /* Command code to write multiple blocks to the card */
+    SDHC_CMD_WRITE_MULTI_BLOCK   = 25,
+
+    /* Command code to set the address of the start of an erase operation */
+    SDHC_CMD_TAG_SECTOR_START    = 32,
+
+    /* Command code to set the address of the end of an erase operation */
+    SDHC_CMD_TAG_SECTOR_END      = 33,
+
+    /* Command code to erase all previously selected blocks */
+    SDHC_CMD_ERASE              =  38,
+
+    /* Command code to initialize an SD card and provide the CSD register value */
+    SDHC_CMD_SD_SEND_OP_COND     = 41,
+
+    /* Command code to get the SCR register information from the card */
+    SDHC_CMD_READ_SCR            = 51,
+
+    /* Command code to begin application specific command inputs */
+    SDHC_CMD_APP_CMD             = 55,
+
+    /* Command code to get the OCR register information from the card */
+    SDHC_CMD_READ_OCR            = 58,
+
+    /* Command code to disable CRC checking */
+    SDHC_CMD_CRC_ON_OFF          = 59,
+
+} SDHC_SD_COMMAND;
+
+
 typedef enum SDHC_CMD_RESP_TYPE
 {
     SDHC_CMD_RESP_NONE,   /*!< no response type */
