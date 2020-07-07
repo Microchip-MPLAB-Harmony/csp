@@ -31,6 +31,12 @@ def updateGenSecureBootsymbol(symbol, event):
     else:
         symbol.setVisible(True)
 
+def updateSecureEnabledState(symbol, event):
+    symbol.setEnabled(not event["value"])
+
+def updateSecureBootloaderEnabledState(symbol, event):
+    symbol.setEnabled(event["value"])
+
 global fuseMapSymbol
 global fusedependencyList
 fusedependencyList = []
@@ -244,30 +250,40 @@ nonsecureEntryHeaderFile.setProjectPath("trustZone/")
 nonsecureEntryHeaderFile.setType("HEADER")
 
 def calculateASSize(symbol, event):
-    symbol.setValue("AS=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_AS"]) * int(memoryGranularity["IDAU_AS"]))).replace("L", ""))
+    symbol.setValue("AS=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_AS"]) * int(memoryGranularity["IDAU_AS"]))).replace("L", "") +
+                    ";AS_SIZE=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_AS"]) * int(memoryGranularity["IDAU_AS"]))).replace("L", ""))
 def calculateANSCSize(symbol, event):
-    symbol.setValue("ANSC=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_ANSC"]) * int(memoryGranularity["IDAU_ANSC"]))).replace("L", ""))
+    symbol.setValue("ANSC=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_ANSC"]) * int(memoryGranularity["IDAU_ANSC"]))).replace("L", "") +
+                    ";ANSC_SIZE=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_ANSC"]) * int(memoryGranularity["IDAU_ANSC"]))).replace("L", ""))
 def calculateRSSize(symbol, event):
-    symbol.setValue("RS=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_RS"]) * int(memoryGranularity["IDAU_RS"]))).replace("L", ""))
+    symbol.setValue("RS=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_RS"]) * int(memoryGranularity["IDAU_RS"]))).replace("L", "") +
+                    ";RS_SIZE=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_RS"]) * int(memoryGranularity["IDAU_RS"]))).replace("L", ""))
 def calculateBootProtSize(symbol, event):
-    symbol.setValue("BOOTPROT=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_BOOTPROT"]) * int(memoryGranularity["IDAU_BOOTPROT"]))).replace("L", ""))
+    symbol.setValue("BOOTPROT=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_BOOTPROT"]) * int(memoryGranularity["IDAU_BOOTPROT"]))).replace("L", "") +
+                    ";BOOTPROT_SIZE=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_BOOTPROT"]) * int(memoryGranularity["IDAU_BOOTPROT"]))).replace("L", ""))
 def calculateBNSCSize(symbol, event):
-    symbol.setValue("BNSC=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_BNSC"]) * int(memoryGranularity["IDAU_BNSC"]))).replace("L", ""))
+    symbol.setValue("BNSC=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_BNSC"]) * int(memoryGranularity["IDAU_BNSC"]))).replace("L", "") +
+                    ";BNSC_SIZE=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_BNSC"]) * int(memoryGranularity["IDAU_BNSC"]))).replace("L", ""))
+def calculateBSSize(symbol, event):
+    symbol.setValue("BS=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_BS"]) * int(memoryGranularity["IDAU_BS"]))).replace("L", "") +
+                    ";BS_SIZE=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_BS"]) * int(memoryGranularity["IDAU_BS"]))).replace("L", ""))
 
 # for Secure Project
 # set Linker Macros required for XC32
-xc32LinkerMacro = coreComponent.createSettingSymbol("XC32_LINKER_MACRO", None)
-xc32LinkerMacro.setCategory("C32-LD")
-xc32LinkerMacro.setKey("preprocessor-macros")
-xc32LinkerMacro.setValue("SECURE")
-xc32LinkerMacro.setAppend(True, ";")
-xc32LinkerMacro.setSecurity("SECURE")
+xc32LinkerMacroSecure = coreComponent.createSettingSymbol("XC32_LINKER_MACRO", None)
+xc32LinkerMacroSecure.setCategory("C32-LD")
+xc32LinkerMacroSecure.setKey("preprocessor-macros")
+xc32LinkerMacroSecure.setValue("SECURE")
+xc32LinkerMacroSecure.setAppend(True, ";")
+xc32LinkerMacroSecure.setSecurity("SECURE")
+xc32LinkerMacroSecure.setDependencies(updateSecureEnabledState, ["GENERATE_SECURE_BOOT_MAIN_FILE"])
 
 # set Linker Macros required for XC32
 xc32LinkerMacro = coreComponent.createSettingSymbol("XC32_LINKER_MACRO_AS_SIZE", None)
 xc32LinkerMacro.setCategory("C32-LD")
 xc32LinkerMacro.setKey("preprocessor-macros")
-xc32LinkerMacro.setValue("AS=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_AS"]) * int(memoryGranularity["IDAU_AS"]))).replace("L", ""))
+xc32LinkerMacro.setValue("AS=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_AS"]) * int(memoryGranularity["IDAU_AS"]))).replace("L", "") +
+                         ";AS_SIZE=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_AS"]) * int(memoryGranularity["IDAU_AS"]))).replace("L", ""))
 xc32LinkerMacro.setAppend(True, ";")
 xc32LinkerMacro.setDependencies(calculateASSize, [fuseMapSymbol["IDAU_AS"]])
 xc32LinkerMacro.setSecurity("SECURE")
@@ -276,7 +292,8 @@ xc32LinkerMacro.setSecurity("SECURE")
 xc32LinkerMacro = coreComponent.createSettingSymbol("XC32_LINKER_MACRO_ANSC_SIZE", None)
 xc32LinkerMacro.setCategory("C32-LD")
 xc32LinkerMacro.setKey("preprocessor-macros")
-xc32LinkerMacro.setValue("ANSC=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_ANSC"]) * int(memoryGranularity["IDAU_ANSC"]))).replace("L", ""))
+xc32LinkerMacro.setValue("ANSC=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_ANSC"]) * int(memoryGranularity["IDAU_ANSC"]))).replace("L", "") +
+                         ";ANSC_SIZE=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_ANSC"]) * int(memoryGranularity["IDAU_ANSC"]))).replace("L", ""))
 xc32LinkerMacro.setAppend(True, ";")
 xc32LinkerMacro.setDependencies(calculateANSCSize, [fuseMapSymbol["IDAU_ANSC"]])
 xc32LinkerMacro.setSecurity("SECURE")
@@ -285,7 +302,8 @@ xc32LinkerMacro.setSecurity("SECURE")
 xc32LinkerMacro = coreComponent.createSettingSymbol("XC32_LINKER_MACRO_RS_SIZE", None)
 xc32LinkerMacro.setCategory("C32-LD")
 xc32LinkerMacro.setKey("preprocessor-macros")
-xc32LinkerMacro.setValue("RS=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_RS"]) * int(memoryGranularity["IDAU_RS"]))).replace("L", ""))
+xc32LinkerMacro.setValue("RS=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_RS"]) * int(memoryGranularity["IDAU_RS"]))).replace("L", "") +
+                         ";RS_SIZE=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_RS"]) * int(memoryGranularity["IDAU_RS"]))).replace("L", ""))
 xc32LinkerMacro.setAppend(True, ";")
 xc32LinkerMacro.setDependencies(calculateRSSize, [fuseMapSymbol["IDAU_RS"]])
 xc32LinkerMacro.setSecurity("SECURE")
@@ -294,7 +312,8 @@ xc32LinkerMacro.setSecurity("SECURE")
 xc32LinkerMacro = coreComponent.createSettingSymbol("XC32_LINKER_MACRO_BOOTPROT_SIZE", None)
 xc32LinkerMacro.setCategory("C32-LD")
 xc32LinkerMacro.setKey("preprocessor-macros")
-xc32LinkerMacro.setValue("BOOTPROT=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_BOOTPROT"]) * int(memoryGranularity["IDAU_BOOTPROT"]))).replace("L", ""))
+xc32LinkerMacro.setValue("BOOTPROT=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_BOOTPROT"]) * int(memoryGranularity["IDAU_BOOTPROT"]))).replace("L", "") +
+                         ";BOOTPROT_SIZE=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_BOOTPROT"]) * int(memoryGranularity["IDAU_BOOTPROT"]))).replace("L", ""))
 xc32LinkerMacro.setAppend(True, ";")
 xc32LinkerMacro.setDependencies(calculateBootProtSize, [fuseMapSymbol["IDAU_BOOTPROT"]])
 xc32LinkerMacro.setSecurity("SECURE")
@@ -303,17 +322,42 @@ xc32LinkerMacro.setSecurity("SECURE")
 xc32LinkerMacro = coreComponent.createSettingSymbol("XC32_LINKER_MACRO_BNSC_SIZE", None)
 xc32LinkerMacro.setCategory("C32-LD")
 xc32LinkerMacro.setKey("preprocessor-macros")
-xc32LinkerMacro.setValue("BNSC=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_BNSC"]) * int(memoryGranularity["IDAU_BNSC"]))).replace("L", ""))
+xc32LinkerMacro.setValue("BNSC=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_BNSC"]) * int(memoryGranularity["IDAU_BNSC"]))).replace("L", "") +
+                         ";BNSC_SIZE=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_BNSC"]) * int(memoryGranularity["IDAU_BNSC"]))).replace("L", ""))
 xc32LinkerMacro.setAppend(True, ";")
 xc32LinkerMacro.setDependencies(calculateBNSCSize, [fuseMapSymbol["IDAU_BNSC"]])
 xc32LinkerMacro.setSecurity("SECURE")
+
+# set Linker Macros required for BS (Boot Secure) Size
+for key in memoryFuseMaxValue.keys():
+    if key == "IDAU_BS":
+        xc32LinkerMacroSecureBootSize = coreComponent.createSettingSymbol("XC32_LINKER_MACRO_SECURE_BS", None)
+        xc32LinkerMacroSecureBootSize.setCategory("C32-LD")
+        xc32LinkerMacroSecureBootSize.setKey("preprocessor-macros")
+        xc32LinkerMacroSecureBootSize.setValue("BS=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_BS"]) * int(memoryGranularity["IDAU_BS"]))).replace("L", "") +
+                                               ";BS_SIZE=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_BS"]) * int(memoryGranularity["IDAU_BS"]))).replace("L", ""))
+        xc32LinkerMacroSecureBootSize.setAppend(True, ";")
+        xc32LinkerMacroSecureBootSize.setDependencies(calculateBSSize, [fuseMapSymbol["IDAU_BS"]])
+        xc32LinkerMacroSecureBootSize.setSecurity("SECURE")
+        break
+
+# set Linker Macros required for SECURE_BOOTLOADER
+xc32LinkerMacroSecureBootloader = coreComponent.createSettingSymbol("XC32_LINKER_MACRO_SECURE_BOOTLOADER", None)
+xc32LinkerMacroSecureBootloader.setCategory("C32-LD")
+xc32LinkerMacroSecureBootloader.setKey("preprocessor-macros")
+xc32LinkerMacroSecureBootloader.setValue("SECURE_BOOTLOADER")
+xc32LinkerMacroSecureBootloader.setAppend(True, ";")
+xc32LinkerMacroSecureBootloader.setEnabled(False)
+xc32LinkerMacroSecureBootloader.setDependencies(updateSecureBootloaderEnabledState, ["GENERATE_SECURE_BOOT_MAIN_FILE"])
+xc32LinkerMacroSecureBootloader.setSecurity("SECURE")
 
 #For Non Secure
 # set Linker Macros required for XC32
 xc32LinkerMacro = coreComponent.createSettingSymbol("XC32_LINKER_MACRO_AS_SIZE_NON_SECURE", None)
 xc32LinkerMacro.setCategory("C32-LD")
 xc32LinkerMacro.setKey("preprocessor-macros")
-xc32LinkerMacro.setValue("AS=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_AS"]) * int(memoryGranularity["IDAU_AS"]))).replace("L", ""))
+xc32LinkerMacro.setValue("AS=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_AS"]) * int(memoryGranularity["IDAU_AS"]))).replace("L", "") +
+                         ";AS_SIZE=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_AS"]) * int(memoryGranularity["IDAU_AS"]))).replace("L", ""))
 xc32LinkerMacro.setAppend(True, ";")
 xc32LinkerMacro.setDependencies(calculateASSize, [fuseMapSymbol["IDAU_AS"]])
 
@@ -321,7 +365,8 @@ xc32LinkerMacro.setDependencies(calculateASSize, [fuseMapSymbol["IDAU_AS"]])
 xc32LinkerMacro = coreComponent.createSettingSymbol("XC32_LINKER_MACRO_RS_SIZE_NON_SECURE", None)
 xc32LinkerMacro.setCategory("C32-LD")
 xc32LinkerMacro.setKey("preprocessor-macros")
-xc32LinkerMacro.setValue("RS=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_RS"]) * int(memoryGranularity["IDAU_RS"]))).replace("L", ""))
+xc32LinkerMacro.setValue("RS=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_RS"]) * int(memoryGranularity["IDAU_RS"]))).replace("L", "") +
+                         ";RS_SIZE=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_RS"]) * int(memoryGranularity["IDAU_RS"]))).replace("L", ""))
 xc32LinkerMacro.setAppend(True, ";")
 xc32LinkerMacro.setDependencies(calculateRSSize, [fuseMapSymbol["IDAU_RS"]])
 
@@ -329,7 +374,8 @@ xc32LinkerMacro.setDependencies(calculateRSSize, [fuseMapSymbol["IDAU_RS"]])
 xc32LinkerMacro = coreComponent.createSettingSymbol("XC32_LINKER_MACRO_BOOTPROT_SIZE_NON_SECURE", None)
 xc32LinkerMacro.setCategory("C32-LD")
 xc32LinkerMacro.setKey("preprocessor-macros")
-xc32LinkerMacro.setValue("BOOTPROT=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_BOOTPROT"]) * int(memoryGranularity["IDAU_BOOTPROT"]))).replace("L", ""))
+xc32LinkerMacro.setValue("BOOTPROT=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_BOOTPROT"]) * int(memoryGranularity["IDAU_BOOTPROT"]))).replace("L", "") +
+                         ";BOOTPROT_SIZE=" + str(hex(Database.getSymbolValue("core", fuseMapSymbol["IDAU_BOOTPROT"]) * int(memoryGranularity["IDAU_BOOTPROT"]))).replace("L", ""))
 xc32LinkerMacro.setAppend(True, ";")
 xc32LinkerMacro.setDependencies(calculateBootProtSize, [fuseMapSymbol["IDAU_BOOTPROT"]])
 
