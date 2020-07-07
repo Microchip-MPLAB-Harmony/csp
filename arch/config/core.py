@@ -58,6 +58,7 @@ def setFlashParams(symbol, event):
 # Callback for all the messages sent to core component
 def handleMessage(messageID, args):
     global nvmWaitStates
+    global compilers
     symbolDict = {}
 
     if messageID == "PIN_LIST":              # Indicates core to return available pins for device
@@ -71,6 +72,17 @@ def handleMessage(messageID, args):
 
     elif (messageID == "DMA_CHANNEL_DISABLE"):
         Database.setSymbolValue("core", args["dma_channel"], False)
+
+    elif (messageID == "HEAP_SIZE"):
+        if ((compilers[Database.getSymbolValue("core", "COMPILER_CHOICE")] == "XC32") and
+            (args["heap_size"] > Database.getSymbolValue("core", "XC32_HEAP_SIZE"))):
+            Database.setSymbolValue("core", "XC32_HEAP_SIZE", args["heap_size"])
+        elif ((compilers[Database.getSymbolValue("core", "COMPILER_CHOICE")] == "IAR") and
+              (args["heap_size"] > Database.getSymbolValue("core", "IAR_HEAP_SIZE"))):
+            Database.setSymbolValue("core", "IAR_HEAP_SIZE", args["heap_size"])
+        elif ((compilers[Database.getSymbolValue("core", "COMPILER_CHOICE")] == "KEIL") and
+              (args["heap_size"] > Database.getSymbolValue("core", "KEIL_HEAP_SIZE"))):
+            Database.setSymbolValue("core", "KEIL_HEAP_SIZE", args["heap_size"])
 
     return symbolDict
 
