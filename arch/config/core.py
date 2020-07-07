@@ -451,6 +451,14 @@ def instantiateComponent( coreComponent ):
         xc32UndStackSize.setLabel("Undefined Stack Size (bytes)")
         xc32UndStackSize.setDefaultValue(64)
         xc32UndStackSize.setVisible( xc32AllStacks )
+    elif isMips == True:
+        xc32ISAMode = coreComponent.createBooleanSymbol("XC32_ISA_MODE", xc32Menu)
+        if "PIC32MX" in processor: #MIPS16 mode
+            xc32ISAMode.setLabel("Generate MIPS16 16-bit Code")
+        else: #microMIPS mode
+            xc32ISAMode.setLabel("Generate microMIPS Compressed Code")
+        xc32ISAMode.setDefaultValue(False)
+        
 
 
     xc32LdSymbolsMacrosMenu = coreComponent.createMenuSymbol("CoreXC32_SYMBOLS_MACROS", xc32LdMenu)
@@ -752,6 +760,16 @@ def instantiateComponent( coreComponent ):
             linkerFile.setEnabled(True)
         else:
             linkerFile.setEnabled(False)
+    elif "MIPS" in coreArch.getValue():
+        # set XC32 ISA mode
+        xc32ISAModeSettingSym = coreComponent.createSettingSymbol("XC32_ISA_MODE_SETTING", None)
+        xc32ISAModeSettingSym.setCategory("C32")
+        if "PIC32MX" in processor: #MIPS16 mode
+            xc32ISAModeSettingSym.setKey("generate-16-bit-code")
+        else: #microMIPS mode
+            xc32ISAModeSettingSym.setKey("generate-micro-compressed-code")
+        xc32ISAModeSettingSym.setValue("false")
+        xc32ISAModeSettingSym.setDependencies(ISA_modeCallBack, ["XC32_ISA_MODE"])
 
 
     # set XC32 heap size
@@ -819,6 +837,12 @@ def instantiateComponent( coreComponent ):
 
 def heapSizeCallBack(symbol, event):
     symbol.setValue(str(event["value"]))
+
+def ISA_modeCallBack(symbol, event):
+    if event["value"]:
+       symbol.setValue("true")
+    else:
+        symbol.setValue("false")
 
 def updatePath(symbol, compilerSelected):
     import re
