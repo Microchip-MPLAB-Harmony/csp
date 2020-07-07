@@ -247,7 +247,7 @@ typedef enum
       </#if>
   </#list>
 <#else>
-  <#list 0..PORT_PIN_COUNT as k>
+  <#list 0..PORT_PIN_MAX_INDEX as k>
       <#assign PORT_PIN_INDEX = "PORT_PIN_INDEX_" + k>
       <#assign PORT_PIN_PAD = "PORT_PIN_PAD_" + k>
           <#if .vars[PORT_PIN_PAD]?has_content>

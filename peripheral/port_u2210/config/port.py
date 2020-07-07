@@ -381,25 +381,36 @@ else:
 
 internalPincount = pincount + len(pin_map_internal.keys())
 
+portSym_PinMaxIndex = coreComponent.createIntegerSymbol("PORT_PIN_MAX_INDEX", None)
+portSym_PinMaxIndex.setVisible(False)
+max_index = 0
+
 for pinNumber in range(1, internalPincount + 1):
 
-    portSignalNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"PORT\"]/instance@[name=\"PORT\"]/signals/signal@[index=\""+ str(pinNumber - 1) +"\"]")
+    if pinNumber < pincount + 1:
+        pinPad = str(pin_map.get(pin_position[pinNumber-1]))
+    else:
+        pinPad = str(pin_map_internal.get(pin_position_internal[pinNumber - pincount - 1]))
+
+    portSignalNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"PORT\"]/instance@[name=\"PORT\"]/signals/signal@[pad=\""+ pinPad +"\"]")
 
     if portSignalNode != None:
 
         signalIndex = int(portSignalNode.getAttribute("index"))
-        siganlPad = str(portSignalNode.getAttribute("pad"))
+        signalPad = str(portSignalNode.getAttribute("pad"))
 
-        if signalIndex != None and siganlPad != None:
+        if signalIndex != None and signalPad != None:
             portSym_PinPad = coreComponent.createStringSymbol("PORT_PIN_PAD_" + str(signalIndex), None)
             portSym_PinPad.setVisible(False)
-            portSym_PinPad.setDefaultValue(siganlPad)
+            portSym_PinPad.setDefaultValue(signalPad)
 
             portSym_PinIndex = coreComponent.createIntegerSymbol("PORT_PIN_INDEX_" + str(signalIndex), None)
             portSym_PinIndex.setVisible(False)
             portSym_PinIndex.setDefaultValue(signalIndex)
+            if signalIndex > max_index:
+                max_index = signalIndex
 
-            availablePinDictionary[str(signalIndex)] = siganlPad
+            availablePinDictionary[str(signalIndex)] = signalPad
 
     if pinNumber < pincount + 1:
         pin.append(pinNumber)
@@ -515,6 +526,7 @@ for pinNumber in range(1, internalPincount + 1):
         pinSecurity.setDefaultValue(0)
         pinSecurity.setDependencies(update_port_nonsec_mask, ["PIN_" + str(pinNumber) + "_IS_NON_SECURE"])
 
+portSym_PinMaxIndex.setDefaultValue(max_index)
 
 ###################################################################################################
 ################################# PORT Configuration related code #################################
