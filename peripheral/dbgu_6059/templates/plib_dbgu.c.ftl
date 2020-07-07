@@ -362,6 +362,23 @@ bool ${DBGU_INSTANCE_NAME}_Write(void *buffer, const size_t size)
 }
 
 <#if USART_INTERRUPT_MODE == true>
+bool ${DBGU_INSTANCE_NAME}_ReadAbort(void)
+{
+    if (${DBGU_INSTANCE_NAME?lower_case}Obj.rxBusyStatus == true)
+    {        
+        /* Disable Read, Overrun, Parity and Framing error interrupts */
+        ${DBGU_INSTANCE_NAME}_REGS->DBGU_IDR = (DBGU_IDR_RXRDY_Msk | DBGU_IDR_FRAME_Msk | DBGU_IDR_PARE_Msk | DBGU_IDR_OVRE_Msk);
+        
+        ${DBGU_INSTANCE_NAME?lower_case}Obj.rxBusyStatus = false;                                
+        
+		/* If required application should read the num bytes processed prior to calling the read abort API */
+        ${DBGU_INSTANCE_NAME?lower_case}Obj.rxSize = 0;
+		${DBGU_INSTANCE_NAME?lower_case}Obj.rxProcessedSize = 0;
+    }
+    
+    return true;
+}
+
 void ${DBGU_INSTANCE_NAME}_WriteCallbackRegister(DBGU_CALLBACK callback, uintptr_t context)
 {
     ${DBGU_INSTANCE_NAME?lower_case}Obj.txCallback = callback;

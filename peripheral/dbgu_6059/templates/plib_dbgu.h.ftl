@@ -93,6 +93,8 @@ void ${DBGU_INSTANCE_NAME}_WriteCallbackRegister(DBGU_CALLBACK callback, uintptr
 
 void ${DBGU_INSTANCE_NAME}_ReadCallbackRegister(DBGU_CALLBACK callback, uintptr_t context);
 
+bool ${DBGU_INSTANCE_NAME}_ReadAbort(void);
+
 </#if>
 
 // DOM-IGNORE-BEGIN
