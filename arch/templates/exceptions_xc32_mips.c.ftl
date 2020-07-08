@@ -112,7 +112,7 @@ static excep_code _excep_code;
     Refer to the XC32 User's Guide for additional information.
  */
 
-void _general_exception_handler ( void )
+void __attribute__((noreturn)) _general_exception_handler ( void )
 {
     /* Mask off the ExcCode Field from the Cause Register
     Refer to the MIPs Software User's manual */
@@ -139,7 +139,7 @@ void _general_exception_handler ( void )
     Refer to the XC32 User's Guide for additional information.
  */
 
-void _bootstrap_exception_handler(void)
+void __attribute__((noreturn)) _bootstrap_exception_handler(void)
 {
     /* Mask off the ExcCode Field from the Cause Register
     Refer to the MIPs Software User's manual */
@@ -168,7 +168,7 @@ void _bootstrap_exception_handler(void)
     Refer to the XC32 User's Guide for additional information.
  */
 
-void _cache_err_exception_handler(void)
+void __attribute__((noreturn)) _cache_err_exception_handler(void)
 {
     /* Mask off the ExcCode Field from the Cause Register
     Refer to the MIPs Software User's manual */
@@ -198,7 +198,7 @@ void _cache_err_exception_handler(void)
     Refer to the XC32 User's Guide for additional information.
  */
 
-void _simple_tlb_refill_exception_handler(void)
+void __attribute__((noreturn)) _simple_tlb_refill_exception_handler(void)
 {
     /* Mask off the ExcCode Field from the Cause Register
     Refer to the MIPs Software User's manual */
