@@ -76,15 +76,97 @@ def fileUpdate(symbol, event):
             Database.setSymbolValue("core", InterruptVectorSecurity, True)
 
 def handleMessage(messageID, args):
+    global sercomSym_OperationMode
     global usartSym_RingBuffer_Enable
+    global usartSym_Interrupt_Mode
+    global spiSym_Interrupt_Mode
+    global spisSym_Interrupt_Mode
+    global i2csSym_Interrupt_Mode
+    global mssenSupported
+    global spiSym_CTRLB_MSSEN
+    global i2csSym_CTRLB_SMEN
     result_dict = {}
 
-    if (messageID == "ENABLE_UART_RING_BUFFER_MODE"):
-        usartSym_RingBuffer_Enable.setReadOnly(True)
-        usartSym_RingBuffer_Enable.setValue(True)
-    if (messageID == "DISABLE_UART_RING_BUFFER_MODE"):
-        usartSym_RingBuffer_Enable.setReadOnly(False)
-        usartSym_RingBuffer_Enable.setValue(False)
+    if (messageID == "I2C_MASTER_MODE"):
+        if args.get("isReadOnly") != None:
+            sercomSym_OperationMode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None and args["isEnabled"] == True:
+            sercomSym_OperationMode.setSelectedKey("I2CM", 2)
+
+    elif (messageID == "I2C_SLAVE_MODE"):
+        if args.get("isReadOnly") != None:
+            sercomSym_OperationMode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None and args["isEnabled"] == True:
+            sercomSym_OperationMode.setSelectedKey("I2CS", 2)
+
+    elif (messageID == "I2C_SLAVE_SMART_MODE"):
+        if args.get("isReadOnly") != None:
+            i2csSym_CTRLB_SMEN.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None:
+            i2csSym_CTRLB_SMEN.setValue(args["isEnabled"])
+        if args.get("isVisible") != None:
+            i2csSym_CTRLB_SMEN.setVisible(args["isVisible"])
+
+    elif (messageID == "I2C_SLAVE_INTERRUPT_MODE"):
+        if args.get("isReadOnly") != None:
+            i2csSym_Interrupt_Mode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None:
+            i2csSym_Interrupt_Mode.setValue(args["isEnabled"])
+        if args.get("isVisible") != None:
+            i2csSym_Interrupt_Mode.setVisible(args["isVisible"])
+
+    elif (messageID == "SPI_MASTER_MODE"):
+        if args.get("isReadOnly") != None:
+            sercomSym_OperationMode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None and args["isEnabled"] == True:
+            sercomSym_OperationMode.setSelectedKey("SPIM", 2)
+
+    elif (messageID == "SPI_SLAVE_MODE"):
+        if args.get("isReadOnly") != None:
+            sercomSym_OperationMode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None and args["isEnabled"] == True:
+            sercomSym_OperationMode.setSelectedKey("SPIS", 2)
+
+    elif (messageID == "UART_INTERRUPT_MODE"):
+        if args.get("isReadOnly") != None:
+            usartSym_Interrupt_Mode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None:
+            usartSym_Interrupt_Mode.setValue(args["isEnabled"])
+        if args.get("isVisible") != None:
+            usartSym_Interrupt_Mode.setVisible(args["isVisible"])
+
+    elif (messageID == "SPI_MASTER_INTERRUPT_MODE"):
+        if args.get("isReadOnly") != None:
+            spiSym_Interrupt_Mode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None :
+            spiSym_Interrupt_Mode.setValue(args["isEnabled"])
+        if args.get("isVisible") != None:
+            spiSym_Interrupt_Mode.setVisible(args["isVisible"])
+
+    elif (messageID == "SPI_SLAVE_INTERRUPT_MODE"):
+        if args.get("isReadOnly") != None:
+            spisSym_Interrupt_Mode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None :
+            spisSym_Interrupt_Mode.setValue(args["isEnabled"])
+        if args.get("isVisible") != None:
+            spisSym_Interrupt_Mode.setVisible(args["isVisible"])
+
+    elif (messageID == "UART_RING_BUFFER_MODE"):
+        if args.get("isReadOnly") != None:
+            usartSym_RingBuffer_Enable.setReadOnly(args["isReadOnly"])
+        if args.get("isVisible") != None:
+            usartSym_RingBuffer_Enable.setVisible(args["isVisible"])
+        if args.get("isEnabled") != None:
+            usartSym_RingBuffer_Enable.setValue(args["isEnabled"])
+
+    elif (messageID == "SPI_MASTER_HARDWARE_CS"):
+        if mssenSupported == True:
+            if args.get("isReadOnly") != None:
+                spiSym_CTRLB_MSSEN.setReadOnly(args["isReadOnly"])
+            if args.get("isEnabled") != None:
+                spiSym_CTRLB_MSSEN.setValue(args["isEnabled"])
+            if args.get("isVisible") != None:
+                spiSym_CTRLB_MSSEN.setVisible(args["isVisible"])
 
     return result_dict
 
@@ -114,16 +196,14 @@ def onAttachmentConnected(source, target):
         localComponent.setCapabilityEnabled(uartCapabilityId, False)
         localComponent.setCapabilityEnabled(spiCapabilityId, False)
         localComponent.setCapabilityEnabled(i2cCapabilityId, True)
-        if remoteID == "i2c_bootloader":
-            sercomSym_OperationMode.setSelectedKey("I2CS", 2)
-            i2csSym_Interrupt_Mode.setValue(False)
-            i2csSym_Interrupt_Mode.setReadOnly(True)
-            i2csSym_CTRLB_SMEN.setValue(False)
-            i2csSym_CTRLB_SMEN.setReadOnly(True)
-        else:
-            sercomSym_OperationMode.setSelectedKey("I2CM", 2)
+        sercomSym_OperationMode.setSelectedKey("I2CM", 2)
 
     sercomSym_OperationMode.setReadOnly(True)
+
+    # This message should indicate to the dependent component that PLIB has finished its initialization and
+    # is ready to accept configuration parameters from the dependent component
+    argDict = {"localComponentID" : localComponent.getID()}
+    argDict = Database.sendMessage(remoteID, "REQUEST_CONFIG_PARAMS", argDict)
 
 def onAttachmentDisconnected(source, target):
 
@@ -140,12 +220,6 @@ def onAttachmentDisconnected(source, target):
     localComponent.setCapabilityEnabled(uartCapabilityId, True)
     localComponent.setCapabilityEnabled(spiCapabilityId, True)
     localComponent.setCapabilityEnabled(i2cCapabilityId, True)
-
-    if remoteID == "i2c_bootloader" and connectID == i2cCapabilityId:
-        i2csSym_Interrupt_Mode.setValue(i2csSym_Interrupt_Mode.getDefaultValue())
-        i2csSym_Interrupt_Mode.setReadOnly(False)
-        i2csSym_CTRLB_SMEN.setValue(i2csSym_CTRLB_SMEN.getDefaultValue())
-        i2csSym_CTRLB_SMEN.setReadOnly(False)
 
     sercomSym_OperationMode.setReadOnly(False)
 
@@ -368,7 +442,7 @@ def instantiateComponent(sercomComponent):
         sercomComponent.setCapabilityEnabled(sercomInstanceName.getValue() + "_UART", False)
         uartCapabilityId = ""
     if sercomDisableSPI != 1:
-        sercomSym_OperationMode.addKey("SPIM", "3", "SPI Master")        
+        sercomSym_OperationMode.addKey("SPIM", "3", "SPI Master")
     else:
         sercomComponent.setCapabilityEnabled(sercomInstanceName.getValue() + "_SPI", False)
         spiCapabilityId = ""
@@ -381,9 +455,9 @@ def instantiateComponent(sercomComponent):
         sercomSym_OperationMode.addKey("I2CS", "4", "I2C Slave")
     else:
         sercomComponent.setCapabilityEnabled(sercomInstanceName.getValue() + "_I2C", False)
-        i2cCapabilityId = ""        
+        i2cCapabilityId = ""
     if sercomDisableSPI != 1:
-        sercomSym_OperationMode.addKey("SPIS", "2", "SPI Slave")    
+        sercomSym_OperationMode.addKey("SPIS", "2", "SPI Slave")
 
     sercomSym_OperationMode.setDefaultValue(0)
     sercomSym_OperationMode.setOutputMode("Key")

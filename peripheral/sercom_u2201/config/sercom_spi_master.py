@@ -234,6 +234,7 @@ spiSym_CTRLA_ClockPolarity.setOutputMode("Key")
 spiSym_CTRLA_ClockPolarity.setDisplayMode("Description")
 spiSym_CTRLA_ClockPolarity.setDependencies(updateSPIMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
 
+global mssenSupported
 mssenSupported = False
 
 ctrlbNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SERCOM"]/register-group@[name="SERCOM"]/register@[modes="SPIM",name="CTRLB"]')
@@ -246,6 +247,7 @@ for index in range(len(ctrlbValue)):
         break
 
 if mssenSupported == True:
+    global spiSym_CTRLB_MSSEN
     #SPI Hardware Slave Select control
     spiSym_CTRLB_MSSEN = sercomComponent.createBooleanSymbol("SPI_MSSEN", sercomSym_OperationMode)
     spiSym_CTRLB_MSSEN.setLabel("Enable SPI Master Hardware Slave Select")

@@ -98,15 +98,18 @@ def updateRingBufferSizeVisibleProperty(symbol, event):
             symbol.setVisible(usartSym_RingBuffer_Enable.getValue())
         else:
             symbol.setVisible(False)
-    # If Interrupt is enabled, make ring buffer option visible. Additionally, make interrupt option read-only if ring buffer is enabled.
-    # Remove read-only on interrupt if ring buffer is disabled.
+    # If Interrupt is enabled, make ring buffer option visible
+    # Further, if Interrupt is disabled, disable the ring buffer mode
     elif symbol.getID() == "USART_RING_BUFFER_ENABLE":
         if (sercomSym_OperationMode.getSelectedKey() == "USART_INT"):
-            usartSym_Interrupt_Mode.setReadOnly(symbol.getValue())
             symbol.setVisible(usartSym_Interrupt_Mode.getValue())
         else:
             symbol.setVisible(False)
-            usartSym_Interrupt_Mode.setReadOnly(False)
+        if (usartSym_Interrupt_Mode.getValue() == False):
+            readOnlyState = symbol.getReadOnly()
+            symbol.setReadOnly(True)
+            symbol.setValue(False)
+            symbol.setReadOnly(readOnlyState)
 
 def updateUSARTConfigurationVisibleProperty(symbol, event):
 
@@ -174,7 +177,7 @@ usartSym_CTRLB_TXEN.setDependencies(updateUSARTConfigurationVisibleProperty, ["S
 usartSym_RingBuffer_Enable = sercomComponent.createBooleanSymbol("USART_RING_BUFFER_ENABLE", sercomSym_OperationMode)
 usartSym_RingBuffer_Enable.setLabel("Enable Ring Buffer ?")
 usartSym_RingBuffer_Enable.setDefaultValue(False)
-usartSym_RingBuffer_Enable.setDependencies(updateRingBufferSizeVisibleProperty, ["SERCOM_MODE", "USART_INTERRUPT_MODE", "USART_RING_BUFFER_ENABLE"])
+usartSym_RingBuffer_Enable.setDependencies(updateRingBufferSizeVisibleProperty, ["SERCOM_MODE", "USART_INTERRUPT_MODE"])
 
 usartSym_TXRingBuffer_Size = sercomComponent.createIntegerSymbol("USART_TX_RING_BUFFER_SIZE", usartSym_RingBuffer_Enable)
 usartSym_TXRingBuffer_Size.setLabel("TX Ring Buffer Size")
