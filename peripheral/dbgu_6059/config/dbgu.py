@@ -40,14 +40,23 @@ global dbguInstanceName
 ################################################################################
 def handleMessage(messageID, args):
     global dbguSym_RingBuffer_Enable
+    global dbguInterrupt
     result_dict = {}
 
-    if (messageID == "ENABLE_UART_RING_BUFFER_MODE"):
-        dbguSym_RingBuffer_Enable.setReadOnly(True)
-        dbguSym_RingBuffer_Enable.setValue(True)
-    if (messageID == "DISABLE_UART_RING_BUFFER_MODE"):
-        dbguSym_RingBuffer_Enable.setReadOnly(False)
-        dbguSym_RingBuffer_Enable.setValue(False)
+    if (messageID == "UART_RING_BUFFER_MODE"):
+        if args.get("isReadOnly") != None:
+            dbguSym_RingBuffer_Enable.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None:
+            dbguSym_RingBuffer_Enable.setValue(args["isEnabled"])
+        if args.get("isVisible") != None:
+            dbguSym_RingBuffer_Enable.setVisible(args["isVisible"])
+    elif (messageID == "UART_INTERRUPT_MODE"):
+        if args.get("isReadOnly") != None:
+            dbguInterrupt.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None:
+            dbguInterrupt.setValue(args["isEnabled"])
+        if args.get("isVisible") != None:
+            dbguInterrupt.setVisible(args["isVisible"])
 
     return result_dict
 
@@ -97,11 +106,15 @@ def updateSymbolVisibility(symbol, event):
     # Enable TX ring buffer size option if Ring buffer is enabled.
     elif symbol.getID() == "DBGU_TX_RING_BUFFER_SIZE":
         symbol.setVisible(dbguSym_RingBuffer_Enable.getValue())
-    # If Interrupt is enabled, make ring buffer option visible. Additionally, make interrupt option read-only if ring buffer is enabled.
-    # Remove read-only on interrupt if ring buffer is disabled.
+    # If Interrupt is enabled, make ring buffer option visible
+    # Further, if Interrupt is disabled, disable the ring buffer mode
     elif symbol.getID() == "DBGU_RING_BUFFER_ENABLE":
-        dbguInterrupt.setReadOnly(symbol.getValue())
         symbol.setVisible(dbguInterrupt.getValue())
+        if (dbguInterrupt.getValue() == False):
+            readOnlyState = symbol.getReadOnly()
+            symbol.setReadOnly(True)
+            symbol.setValue(False)
+            symbol.setReadOnly(readOnlyState)
 
 def DBGUFileGeneration(symbol, event):
     componentID = symbol.getID()
@@ -120,6 +133,15 @@ def DBGUFileGeneration(symbol, event):
             filepath = "../peripheral/dbgu_6059/templates/plib_dbgu.c.ftl"
 
     symbol.setSourcePath(filepath)
+
+def onCapabilityConnected(event):
+    localComponent = event["localComponent"]
+    remoteComponent = event["remoteComponent"]
+
+    # This message should indicate to the dependent component that PLIB has finished its initialization and
+    # is ready to accept configuration parameters from the dependent component
+    argDict = {"localComponentID" : localComponent.getID()}
+    argDict = Database.sendMessage(remoteComponent.getID(), "REQUEST_CONFIG_PARAMS", argDict)
 
 ################################################################################
 #### Component ####
@@ -148,7 +170,7 @@ def instantiateComponent(dbguComponent):
     dbguSym_RingBuffer_Enable.setLabel("Enable Ring Buffer ?")
     dbguSym_RingBuffer_Enable.setDefaultValue(False)
     dbguSym_RingBuffer_Enable.setVisible(Database.getSymbolValue(dbguInstanceName.getValue().lower(), "USART_INTERRUPT_MODE"))
-    dbguSym_RingBuffer_Enable.setDependencies(updateSymbolVisibility, ["DBGU_RING_BUFFER_ENABLE", "USART_INTERRUPT_MODE"])
+    dbguSym_RingBuffer_Enable.setDependencies(updateSymbolVisibility, ["USART_INTERRUPT_MODE"])
 
     dbguSym_TXRingBuffer_Size = dbguComponent.createIntegerSymbol("DBGU_TX_RING_BUFFER_SIZE", dbguSym_RingBuffer_Enable)
     dbguSym_TXRingBuffer_Size.setLabel("TX Ring Buffer Size")
