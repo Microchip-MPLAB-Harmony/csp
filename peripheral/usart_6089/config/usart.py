@@ -37,14 +37,55 @@ global interruptHandlerLock
 
 def handleMessage(messageID, args):
     global usartSym_RingBuffer_Enable
+    global usartInterrupt
+    global usartSym_Mode
+    global usartSPISym_Interrupt
+    global usartSPISym_CS
     result_dict = {}
 
-    if (messageID == "ENABLE_UART_RING_BUFFER_MODE"):
-        usartSym_RingBuffer_Enable.setReadOnly(True)
-        usartSym_RingBuffer_Enable.setValue(True)
-    if (messageID == "DISABLE_UART_RING_BUFFER_MODE"):
-        usartSym_RingBuffer_Enable.setReadOnly(False)
-        usartSym_RingBuffer_Enable.setValue(False)
+    if (messageID == "UART_RING_BUFFER_MODE"):
+        if args.get("isReadOnly") != None:
+            usartSym_RingBuffer_Enable.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None:
+            usartSym_RingBuffer_Enable.setValue(args["isEnabled"])
+        if args.get("isVisible") != None:
+            usartSym_RingBuffer_Enable.setVisible(args["isVisible"])
+
+    elif (messageID == "UART_INTERRUPT_MODE"):
+        if args.get("isReadOnly") != None:
+            usartInterrupt.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None:
+            usartInterrupt.setValue(args["isEnabled"])
+        if args.get("isVisible") != None:
+            usartInterrupt.setVisible(args["isVisible"])
+
+    elif (messageID == "SPI_MASTER_MODE"):
+        if args.get("isReadOnly") != None and args["isReadOnly"] == True:
+            usartSym_Mode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None and args["isEnabled"] == True:
+            usartSym_Mode.setSelectedKey("SPI_MASTER")
+
+    #elif (messageID == "SPI_SLAVE_MODE"):
+        # To be implemented
+
+    elif (messageID == "SPI_MASTER_INTERRUPT_MODE"):
+        if args.get("isReadOnly") != None:
+            usartSPISym_Interrupt.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None :
+            usartSPISym_Interrupt.setValue(args["isEnabled"])
+        if args.get("isVisible") != None:
+            usartSPISym_Interrupt.setVisible(args["isVisible"])
+
+    elif (messageID == "SPI_MASTER_HARDWARE_CS"):
+        if args.get("isReadOnly") != None:
+            usartSPISym_CS.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None:
+            if args["isEnabled"] == False:
+                usartSPISym_CS.setValue(1)
+            else:
+                usartSPISym_CS.setValue(0)
+        if args.get("isVisible") != None:
+            usartSPISym_CS.setVisible(args["isVisible"])
 
     return result_dict
 
@@ -145,6 +186,11 @@ def updateRingBufferSymbolVisibility(symbol, event):
             symbol.setVisible(usartSym_RingBuffer_Enable.getValue())
         elif symbol.getID() == "USART_RING_BUFFER_ENABLE":
             symbol.setVisible(usartInterrupt.getValue() == True)
+            if (usartInterrupt.getValue() == False):
+                readOnlyState = symbol.getReadOnly()
+                symbol.setReadOnly(True)
+                symbol.setValue(False)
+                symbol.setReadOnly(readOnlyState)
             if (peripheral_rxdma != None and peripheral_txdma != None):
                 peripheral_rxdma.setReadOnly(symbol.getValue() == True)
                 peripheral_txdma.setReadOnly(symbol.getValue() == True)
@@ -247,6 +293,9 @@ def instantiateComponent(usartComponent):
     global usartInterrupt
     global uartCapabilityId
     global spiCapabilityId
+    global usartSPISym_Interrupt
+    global usartSPISym_CS
+    global usartSym_Mode
 
     usartInstanceName = usartComponent.createStringSymbol("USART_INSTANCE_NAME", None)
     usartInstanceName.setVisible(False)
@@ -310,7 +359,7 @@ def instantiateComponent(usartComponent):
     usartSym_RingBuffer_Enable.setLabel("Enable Ring Buffer ?")
     usartSym_RingBuffer_Enable.setDefaultValue(False)
     usartSym_RingBuffer_Enable.setVisible((usartSym_Mode.getValue() == 0) and (usartInterrupt.getValue() == True))
-    usartSym_RingBuffer_Enable.setDependencies(updateRingBufferSymbolVisibility, ["USART_RING_BUFFER_ENABLE", "USART_INTERRUPT_MODE", "USART_MODE"])
+    usartSym_RingBuffer_Enable.setDependencies(updateRingBufferSymbolVisibility, ["USART_INTERRUPT_MODE", "USART_MODE"])
 
     usartSym_TXRingBuffer_Size = usartComponent.createIntegerSymbol("USART_TX_RING_BUFFER_SIZE", usartSym_RingBuffer_Enable)
     usartSym_TXRingBuffer_Size.setLabel("TX Ring Buffer Size")
@@ -719,6 +768,11 @@ def onAttachmentConnected(source, target):
         localComponent.getSymbolByID("USART_MODE").setSelectedKey("SPI_MASTER", 2)
 
     localComponent.getSymbolByID("USART_MODE").setReadOnly(True)
+
+    # This message should indicate to the dependent component that PLIB has finished its initialization and
+    # is ready to accept configuration parameters from the dependent component
+    argDict = {"localComponentID" : localComponent.getID()}
+    argDict = Database.sendMessage(remoteID, "REQUEST_CONFIG_PARAMS", argDict)
 
 def onAttachmentDisconnected(source, target):
 
