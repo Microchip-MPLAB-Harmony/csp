@@ -24,6 +24,28 @@
 ################################################################################
 #### Register Information ####
 ################################################################################
+def handleMessage(messageID, args):
+    global uartSym_RingBuffer_Enable
+    global uartSymInterruptMode
+    result_dict = {}
+
+    if (messageID == "UART_RING_BUFFER_MODE"):
+        if args.get("isReadOnly") != None:
+            uartSym_RingBuffer_Enable.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None:
+            uartSym_RingBuffer_Enable.setValue(args["isEnabled"])
+        if args.get("isVisible") != None:
+            uartSym_RingBuffer_Enable.setVisible(args["isVisible"])
+    elif (messageID == "UART_INTERRUPT_MODE"):
+        if args.get("isReadOnly") != None:
+            uartSymInterruptMode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None:
+            uartSymInterruptMode.setValue(args["isEnabled"])
+        if args.get("isVisible") != None:
+            uartSymInterruptMode.setVisible(args["isVisible"])
+
+    return result_dict
+
 ##UXMODE
 uartValGrp_U1MODE_STSEL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/value-group@[name="U1MODE__STSEL"]')
 uartBitField_U1MODE_STSEL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="UART"]/register-group@[name="UART"]/register@[name="U1MODE"]/bitfield@[name="STSEL"]')
@@ -71,19 +93,6 @@ interruptsChildren = ATDF.getNode('/avr-tools-device-file/devices/device/interru
 ################################################################################
 #### Business Logic ####
 ################################################################################
-
-def handleMessage(messageID, args):
-    global uartSym_RingBuffer_Enable
-    result_dict = {}
-
-    if (messageID == "ENABLE_UART_RING_BUFFER_MODE"):
-        uartSym_RingBuffer_Enable.setReadOnly(True)
-        uartSym_RingBuffer_Enable.setValue(True)
-    if (messageID == "DISABLE_UART_RING_BUFFER_MODE"):
-        uartSym_RingBuffer_Enable.setReadOnly(False)
-        uartSym_RingBuffer_Enable.setValue(False)
-
-    return result_dict
 
 
 def setUARTInterruptData(status):
@@ -304,11 +313,15 @@ def updateSymbolVisibility(symbol, event):
     # Enable TX ring buffer size option if Ring buffer is enabled.
     elif symbol.getID() == "UART_TX_RING_BUFFER_SIZE":
         symbol.setVisible(uartSym_RingBuffer_Enable.getValue())
-    # If Interrupt is enabled, make ring buffer option visible. Additionally, make interrupt option read-only if ring buffer is enabled.
-    # Remove read-only on interrupt if ring buffer is disabled.
+    # If Interrupt is enabled, make ring buffer option visible
+    # Further, if Interrupt is disabled, disable the ring buffer mode
     elif symbol.getID() == "UART_RING_BUFFER_ENABLE":
-        uartSymInterruptMode.setReadOnly(symbol.getValue())
         symbol.setVisible(uartSymInterruptMode.getValue())
+        if (uartSymInterruptMode.getValue() == False):
+            readOnlyState = symbol.getReadOnly()
+            symbol.setReadOnly(True)
+            symbol.setValue(False)
+            symbol.setReadOnly(readOnlyState)
 
 def UARTFileGeneration(symbol, event):
     componentID = symbol.getID()
@@ -327,6 +340,15 @@ def UARTFileGeneration(symbol, event):
             filepath = "../peripheral/uart_00734/templates/plib_uart.c.ftl"
 
     symbol.setSourcePath(filepath)
+
+def onCapabilityConnected(event):
+    localComponent = event["localComponent"]
+    remoteComponent = event["remoteComponent"]
+
+    # This message should indicate to the dependent component that PLIB has finished its initialization and
+    # is ready to accept configuration parameters from the dependent component
+    argDict = {"localComponentID" : localComponent.getID()}
+    argDict = Database.sendMessage(remoteComponent.getID(), "REQUEST_CONFIG_PARAMS", argDict)
 
 ################################################################################
 #### Component ####
@@ -373,7 +395,7 @@ def instantiateComponent(uartComponent):
     uartSym_RingBuffer_Enable.setLabel("Enable Ring Buffer ?")
     uartSym_RingBuffer_Enable.setDefaultValue(False)
     uartSym_RingBuffer_Enable.setVisible(Database.getSymbolValue(uartInstanceName.getValue().lower(), "USART_INTERRUPT_MODE"))
-    uartSym_RingBuffer_Enable.setDependencies(updateSymbolVisibility, ["UART_RING_BUFFER_ENABLE", "USART_INTERRUPT_MODE"])
+    uartSym_RingBuffer_Enable.setDependencies(updateSymbolVisibility, ["USART_INTERRUPT_MODE"])
 
     uartSym_TXRingBuffer_Size = uartComponent.createIntegerSymbol("UART_TX_RING_BUFFER_SIZE", uartSym_RingBuffer_Enable)
     uartSym_TXRingBuffer_Size.setLabel("TX Ring Buffer Size")
