@@ -99,23 +99,6 @@ def DummyData_ValueUpdate(symbol, event):
     else:
         symbol.setVisible(False)
 
-def SpiControlDriverDependancyStatus(symbol, event):
-
-    interruptMode = Database.getSymbolValue(deviceNamespace, "SPI_INTERRUPT_MODE")
-    driverControl = Database.getSymbolValue(deviceNamespace, "SPI_DRIVER_CONTROLLED")
-    component = symbol.getComponent()
-
-    if(interruptMode == False and driverControl == True):
-        symbol.setVisible(True)
-        component.getSymbolByID("FLEXCOM_SPI_MR_PCS").setSelectedKey("GPIO",1)
-    elif(interruptMode == True and driverControl == True):
-        symbol.setVisible(False)
-        component.getSymbolByID("SPI_INTERRUPT_MODE").setReadOnly(True)
-        component.getSymbolByID("FLEXCOM_SPI_MR_PCS").setSelectedKey("GPIO",1)
-    else:
-        symbol.setVisible(False)
-        component.getSymbolByID("SPI_INTERRUPT_MODE").setReadOnly(False)
-
 def symbolVisible(symbol, event):
 
     if event["value"] == 0x2:
@@ -138,6 +121,7 @@ def sourceClkUpdate(symbol, event):
 ############################################# FLEXCOM SPI #########################################
 ###################################################################################################
 
+global flexcomSym_SPI_InterruptMode
 flexcomSym_SPI_InterruptMode = flexcomComponent.createBooleanSymbol("SPI_INTERRUPT_MODE", flexcomSym_OperatingMode)
 flexcomSym_SPI_InterruptMode.setLabel("Interrupt Mode (Non-blocking Transfer)")
 flexcomSym_SPI_InterruptMode.setDefaultValue(True)
@@ -174,6 +158,7 @@ flexcomSym_SPI_MR_BRSRCCLK.setDefaultValue(0)
 flexcomSym_SPI_MR_BRSRCCLK.setVisible(False)
 flexcomSym_SPI_MR_BRSRCCLK.setDependencies(symbolVisible, ["FLEXCOM_MODE"])
 
+global flexcomSym_SPI_MR_PCS
 flexcomSym_SPI_MR_PCS = flexcomComponent.createKeyValueSetSymbol("FLEXCOM_SPI_MR_PCS", flexcomSym_OperatingMode)
 flexcomSym_SPI_MR_PCS.setLabel("Peripheral Chip Select")
 flexcomSym_SPI_MR_PCS.setOutputMode("Key")
@@ -274,7 +259,6 @@ global flexcomSym_SPI_InterruptDriverModeComment
 flexcomSym_SPI_InterruptDriverModeComment = flexcomComponent.createCommentSymbol("SPI_INT_DRIVER_COMMENT", flexcomSym_OperatingMode)
 flexcomSym_SPI_InterruptDriverModeComment.setVisible(False)
 flexcomSym_SPI_InterruptDriverModeComment.setLabel("Warning!!! " + flexcomInstanceName.getValue() + "SPI PLIB to be used with driver, must be configured in interrupt mode")
-flexcomSym_SPI_InterruptDriverModeComment.setDependencies(SpiControlDriverDependancyStatus, ["SPI_INTERRUPT_MODE", "SPI_DRIVER_CONTROLLED"])
 
 ###################################################################################################
 ####################################### Driver Symbols ############################################

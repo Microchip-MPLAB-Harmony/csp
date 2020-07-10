@@ -26,46 +26,39 @@
 ################################################################################
 
 def updateRingBufferSizeVisibleProperty(symbol, event):
-    global flexcomSym_RingBuffer_Enable    
+    global flexcomSym_RingBuffer_Enable
     global flexcomSym_UsartInterrupt
     global flecomRxdmaEnable
     global flecomTxdmaEnable
-    
+
     flexcom_mode = flexcomSym_OperatingMode.getSelectedKey()
 
     # Enable RX ring buffer size option if Ring buffer is enabled.
-    if symbol.getID() == "USART_RX_RING_BUFFER_SIZE":        
+    if symbol.getID() == "USART_RX_RING_BUFFER_SIZE":
         if (flexcom_mode == "USART"):
-            symbol.setVisible(flexcomSym_RingBuffer_Enable.getValue())        
+            symbol.setVisible(flexcomSym_RingBuffer_Enable.getValue())
         else:
             symbol.setVisible(False)
     # Enable TX ring buffer size option if Ring buffer is enabled.
-    elif symbol.getID() == "USART_TX_RING_BUFFER_SIZE":        
+    elif symbol.getID() == "USART_TX_RING_BUFFER_SIZE":
         if (flexcom_mode == "USART"):
-            symbol.setVisible(flexcomSym_RingBuffer_Enable.getValue())        
+            symbol.setVisible(flexcomSym_RingBuffer_Enable.getValue())
         else:
             symbol.setVisible(False)
-    # If Interrupt is enabled, make ring buffer option visible. 
-    # Additionally, make interrupt option read-only if ring buffer is enabled.
-    # Remove read-only on interrupt if ring buffer is disabled.
-    # Hide RX and TX DMA options if ring buffer is enabled. Visible if ring buffer is disabled.
-    # Clear RX and TX DMA values if ring buffer is enabled.
-    elif symbol.getID() == "USART_RING_BUFFER_ENABLE":     
+    # If Interrupt is enabled, make ring buffer option visible
+    # Further, if Interrupt is disabled, disable the ring buffer mode    
+    elif symbol.getID() == "USART_RING_BUFFER_ENABLE":
         if (flexcom_mode == "USART"):
-            flexcomSym_UsartInterrupt.setReadOnly(symbol.getValue())                          
+            #flexcomSym_UsartInterrupt.setReadOnly(symbol.getValue())
             symbol.setVisible(flexcomSym_UsartInterrupt.getValue())
-            flecomRxdmaEnable.setVisible(not symbol.getValue())            
-            flecomTxdmaEnable.setVisible(not symbol.getValue())
-            if (symbol.getValue() == True):
-                flecomRxdmaEnable.setReadOnly(True)
-                flecomRxdmaEnable.setValue(False)
-                flecomRxdmaEnable.setReadOnly(False)            
-                flecomTxdmaEnable.setReadOnly(True)
-                flecomTxdmaEnable.setValue(False)
-                flecomTxdmaEnable.setReadOnly(False)
+            if (flexcomSym_UsartInterrupt.getValue() == False):
+                readOnlyState = symbol.getReadOnly()
+                symbol.setReadOnly(True)
+                symbol.setValue(False)
+                symbol.setReadOnly(readOnlyState)            
         else:
             symbol.setVisible(False)
-       
+
 # FLEXCOM USART clock source
 clock_source = {"Ext_clk_src_Freq" : 1000000}
 global baudRateCalc
@@ -145,7 +138,7 @@ def symbolVisible(symbol, event):
 
 def updateDMASymbolVisiblity(symbol, event):
 
-    if Database.getSymbolValue(deviceNamespace, "FLEXCOM_MODE") == 0x1 and Database.getSymbolValue(deviceNamespace, "USART_INTERRUPT_MODE"):
+    if Database.getSymbolValue(deviceNamespace, "FLEXCOM_MODE") == 0x1 and Database.getSymbolValue(deviceNamespace, "USART_INTERRUPT_MODE") and Database.getSymbolValue(deviceNamespace, "USART_RING_BUFFER_ENABLE") == False:
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
@@ -169,7 +162,7 @@ flexcomSym_RingBuffer_Enable = flexcomComponent.createBooleanSymbol("USART_RING_
 flexcomSym_RingBuffer_Enable.setLabel("Enable Ring Buffer ?")
 flexcomSym_RingBuffer_Enable.setDefaultValue(False)
 flexcomSym_RingBuffer_Enable.setVisible(False)
-flexcomSym_RingBuffer_Enable.setDependencies(updateRingBufferSizeVisibleProperty, ["FLEXCOM_MODE", "USART_INTERRUPT_MODE", "USART_RING_BUFFER_ENABLE"])
+flexcomSym_RingBuffer_Enable.setDependencies(updateRingBufferSizeVisibleProperty, ["FLEXCOM_MODE", "USART_INTERRUPT_MODE"])
 
 flexcomSym_TXRingBuffer_Size = flexcomComponent.createIntegerSymbol("USART_TX_RING_BUFFER_SIZE", flexcomSym_RingBuffer_Enable)
 flexcomSym_TXRingBuffer_Size.setLabel("TX Ring Buffer Size")
@@ -190,12 +183,12 @@ flexcomSym_RXRingBuffer_Size.setDependencies(updateRingBufferSizeVisibleProperty
 flecomRxdmaEnable = flexcomComponent.createBooleanSymbol("USE_USART_RX_DMA", flexcomSym_OperatingMode)
 flecomRxdmaEnable.setLabel("Enable DMA for Receive")
 flecomRxdmaEnable.setVisible(False)
-flecomRxdmaEnable.setDependencies(updateDMASymbolVisiblity, ["FLEXCOM_MODE", "USART_INTERRUPT_MODE"])
+flecomRxdmaEnable.setDependencies(updateDMASymbolVisiblity, ["FLEXCOM_MODE", "USART_INTERRUPT_MODE", "USART_RING_BUFFER_ENABLE"])
 
 flecomTxdmaEnable = flexcomComponent.createBooleanSymbol("USE_USART_TX_DMA", flexcomSym_OperatingMode)
 flecomTxdmaEnable.setLabel("Enable DMA for Transmit")
 flecomTxdmaEnable.setVisible(False)
-flecomTxdmaEnable.setDependencies(updateDMASymbolVisiblity, ["FLEXCOM_MODE", "USART_INTERRUPT_MODE"])
+flecomTxdmaEnable.setDependencies(updateDMASymbolVisiblity, ["FLEXCOM_MODE", "USART_INTERRUPT_MODE", "USART_RING_BUFFER_ENABLE"])
 
 flexcomSym_UsartClkSrc = flexcomComponent.createKeyValueSetSymbol("FLEXCOM_USART_MR_USCLKS", flexcomSym_OperatingMode)
 flexcomSym_UsartClkSrc.setLabel("Select Clock Source")

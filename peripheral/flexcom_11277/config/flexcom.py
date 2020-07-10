@@ -20,20 +20,70 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
-global flexcomSym_RingBuffer_Enable    
+global flexcomSym_RingBuffer_Enable
 ################################################################################
 #### Business Logic ####
 ################################################################################
 def handleMessage(messageID, args):
     global flexcomSym_RingBuffer_Enable
+    global flexcomSym_UsartInterrupt
+    global flexcomSym_SPI_InterruptMode
+    global flexcomSym_OperatingMode
+    global flexcomSym_SPI_MR_PCS
     result_dict = {}
 
-    if (messageID == "ENABLE_UART_RING_BUFFER_MODE"):
-        flexcomSym_RingBuffer_Enable.setReadOnly(True)
-        flexcomSym_RingBuffer_Enable.setValue(True)
-    if (messageID == "DISABLE_UART_RING_BUFFER_MODE"):
-        flexcomSym_RingBuffer_Enable.setReadOnly(False)
-        flexcomSym_RingBuffer_Enable.setValue(False)
+    if (messageID == "I2C_MASTER_MODE"):
+        if args.get("isReadOnly") != None:
+            flexcomSym_OperatingMode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None and args["isEnabled"] == True:
+            flexcomSym_OperatingMode.setSelectedKey("TWI")
+
+    # elif (messageID == "I2C_SLAVE_MODE"):
+        # To be implemented
+
+    elif (messageID == "SPI_MASTER_MODE"):
+        if args.get("isReadOnly") != None:
+            flexcomSym_OperatingMode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None and args["isEnabled"] == True:
+            flexcomSym_OperatingMode.setSelectedKey("SPI")
+
+    # elif (messageID == "SPI_SLAVE_MODE"):
+        # To be implemented
+
+    elif (messageID == "UART_INTERRUPT_MODE"):
+        if args.get("isReadOnly") != None:
+            flexcomSym_UsartInterrupt.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None:
+            flexcomSym_UsartInterrupt.setValue(args["isEnabled"])
+        if args.get("isVisible") != None:
+            flexcomSym_UsartInterrupt.setVisible(args["isVisible"])
+
+    elif (messageID == "SPI_MASTER_INTERRUPT_MODE"):
+        if args.get("isReadOnly") != None:
+            flexcomSym_SPI_InterruptMode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None :
+            flexcomSym_SPI_InterruptMode.setValue(args["isEnabled"])
+        if args.get("isVisible") != None:
+            flexcomSym_SPI_InterruptMode.setVisible(args["isVisible"])
+
+    # elif (messageID == "SPI_SLAVE_INTERRUPT_MODE"):
+        # To be implemented
+
+    elif (messageID == "UART_RING_BUFFER_MODE"):
+        if args.get("isReadOnly") != None:
+            flexcomSym_RingBuffer_Enable.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None:
+            flexcomSym_RingBuffer_Enable.setValue(args["isEnabled"])
+        if args.get("isVisible") != None:
+            flexcomSym_RingBuffer_Enable.setVisible(args["isVisible"])
+
+    elif (messageID == "SPI_MASTER_HARDWARE_CS"):
+        if args.get("isReadOnly") != None:
+            flexcomSym_SPI_MR_PCS.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None and args["isEnabled"] == False:
+            flexcomSym_SPI_MR_PCS.setSelectedKey("GPIO")
+        if args.get("isVisible") != None:
+            flexcomSym_SPI_MR_PCS.setVisible(args["isVisible"])
 
     return result_dict
 
@@ -66,6 +116,7 @@ def dependencyStatus(symbol, event):
 def onCapabilityConnected(event):
     capability = event["capabilityID"]
     flexcomComponent = event["localComponent"]
+    remoteComponent = event["remoteComponent"]
 
     if capability == uartCapabilityId:
         flexcomComponent.setCapabilityEnabled(uartCapabilityId, True)
@@ -85,6 +136,11 @@ def onCapabilityConnected(event):
 
     flexcomSym_OperatingMode.setReadOnly(True)
 
+    # This message should indicate to the dependent component that PLIB has finished its initialization and
+    # is ready to accept configuration parameters from the dependent component
+    argDict = {"localComponentID" : flexcomComponent.getID()}
+    argDict = Database.sendMessage(remoteComponent.getID(), "REQUEST_CONFIG_PARAMS", argDict)
+
 def onCapabilityDisconnected(event):
     capability = event["capabilityID"]
     flexcomComponent = event["localComponent"]
@@ -93,10 +149,12 @@ def onCapabilityDisconnected(event):
     flexcomComponent.setCapabilityEnabled(spiCapabilityId, True)
     flexcomComponent.setCapabilityEnabled(i2cCapabilityId, True)
 
+    flexcomSym_OperatingMode.setSelectedKey("NO_COM", 2)
+
     flexcomSym_OperatingMode.setReadOnly(False)
 
 def setFLEXCOMCodeGenerationProperty(symbol, event):
-    global flexcomSym_RingBuffer_Enable   
+    global flexcomSym_RingBuffer_Enable
 
     usartRingBufferMode = ""
     ####################################### Code Generation  ##########################################
@@ -148,22 +206,23 @@ def setFLEXCOMCodeGenerationProperty(symbol, event):
         flexcomSourceFile.setEnabled(False)
 
     component = symbol.getComponent()
-    if event["value"] == 0x1:
-        component.setCapabilityEnabled(uartCapabilityId, True)
-        component.setCapabilityEnabled(spiCapabilityId, False)
-        component.setCapabilityEnabled(i2cCapabilityId, False)
-    elif event["value"] == 0x2:
-        component.setCapabilityEnabled(uartCapabilityId, False)
-        component.setCapabilityEnabled(spiCapabilityId, True)
-        component.setCapabilityEnabled(i2cCapabilityId, False)
-    elif event["value"] == 0x3:
-        component.setCapabilityEnabled(uartCapabilityId, False)
-        component.setCapabilityEnabled(spiCapabilityId, False)
-        component.setCapabilityEnabled(i2cCapabilityId, True)
-    else:
-        component.setCapabilityEnabled(uartCapabilityId, True)
-        component.setCapabilityEnabled(spiCapabilityId, True)
-        component.setCapabilityEnabled(i2cCapabilityId, True)
+    if event["id"] == "FLEXCOM_MODE":
+        if event["value"] == 0x1:
+            component.setCapabilityEnabled(uartCapabilityId, True)
+            component.setCapabilityEnabled(spiCapabilityId, False)
+            component.setCapabilityEnabled(i2cCapabilityId, False)
+        elif event["value"] == 0x2:
+            component.setCapabilityEnabled(uartCapabilityId, False)
+            component.setCapabilityEnabled(spiCapabilityId, True)
+            component.setCapabilityEnabled(i2cCapabilityId, False)
+        elif event["value"] == 0x3:
+            component.setCapabilityEnabled(uartCapabilityId, False)
+            component.setCapabilityEnabled(spiCapabilityId, False)
+            component.setCapabilityEnabled(i2cCapabilityId, True)
+        else:
+            component.setCapabilityEnabled(uartCapabilityId, True)
+            component.setCapabilityEnabled(spiCapabilityId, True)
+            component.setCapabilityEnabled(i2cCapabilityId, True)
 
 def updateFLEXCOMTxDataRegister(symbol, event):
 
