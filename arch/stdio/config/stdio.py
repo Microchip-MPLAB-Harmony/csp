@@ -26,7 +26,23 @@
 ########################################## Callbacks  #############################################
 ###################################################################################################
 
+def handleMessage(messageID, args):
+
+    result_dict = {}
+
+    if (messageID == "REQUEST_CONFIG_PARAMS"):
+        if args.get("localComponentID") != None:
+
+            result_dict = Database.clearSymbolValue(args["localComponentID"], "UART_INTERRUPT_MODE")
+
+            result_dict = Database.sendMessage(args["localComponentID"], "UART_INTERRUPT_MODE", {"isEnabled":False, "isReadOnly":True})
+
+            result_dict = Database.sendMessage(args["localComponentID"], "UART_RING_BUFFER_MODE", {"isEnabled":False, "isReadOnly":True})
+
+    return result_dict
+
 def onAttachmentConnected(source, target):
+    global debugID
 
     localComponent = source["component"]
     remoteComponent = target["component"]
@@ -34,10 +50,10 @@ def onAttachmentConnected(source, target):
     connectID = source["id"]
     targetID = target["id"]
 
-    remoteComponent.setSymbolValue("USART_INTERRUPT_MODE", False)
-    localComponent.setSymbolValue("DEBUG_PERIPHERAL", remoteID)
+    debugID.setValue(remoteID, 2)
 
 def onAttachmentDisconnected(source, target):
+    global debugID
 
     localComponent = source["component"]
     remoteComponent = target["component"]
@@ -45,8 +61,12 @@ def onAttachmentDisconnected(source, target):
     connectID = source["id"]
     targetID = target["id"]
 
-    remoteComponent.clearSymbolValue("USART_INTERRUPT_MODE")
-    localComponent.clearSymbolValue("DEBUG_PERIPHERAL")
+    debugID.clearValue()
+
+    dummyDict = {}
+    dummyDict = Database.sendMessage(remoteID, "UART_INTERRUPT_MODE", {"isReadOnly":False})
+
+    dummyDict = Database.sendMessage(remoteID, "UART_RING_BUFFER_MODE", {"isReadOnly":False})
 
 def setBuffSymVisibility(symbol, event):
     symbol.setVisible(event["value"] == 0)
@@ -56,6 +76,8 @@ def setBuffSymVisibility(symbol, event):
 ###################################################################################################
 
 def instantiateComponent(stdioComponent):
+
+    global debugID
 
     debugID = stdioComponent.createStringSymbol("DEBUG_PERIPHERAL", None)
     debugID.setVisible(False)
