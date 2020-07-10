@@ -37,14 +37,23 @@ global interruptHandlerLock
 
 def handleMessage(messageID, args):
     global uartSym_RingBuffer_Enable
+    global uartInterrupt
     result_dict = {}
 
-    if (messageID == "ENABLE_UART_RING_BUFFER_MODE"):
-        uartSym_RingBuffer_Enable.setReadOnly(True)
-        uartSym_RingBuffer_Enable.setValue(True)
-    if (messageID == "DISABLE_UART_RING_BUFFER_MODE"):
-        uartSym_RingBuffer_Enable.setReadOnly(False)
-        uartSym_RingBuffer_Enable.setValue(False)
+    if (messageID == "UART_RING_BUFFER_MODE"):
+        if args.get("isReadOnly") != None:
+            uartSym_RingBuffer_Enable.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None:
+            uartSym_RingBuffer_Enable.setValue(args["isEnabled"])
+        if args.get("isVisible") != None:
+            uartSym_RingBuffer_Enable.setVisible(args["isVisible"])
+    elif (messageID == "UART_INTERRUPT_MODE"):
+        if args.get("isReadOnly") != None:
+            uartInterrupt.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None:
+            uartInterrupt.setValue(args["isEnabled"])
+        if args.get("isVisible") != None:
+            uartInterrupt.setVisible(args["isVisible"])
 
     return result_dict
 
@@ -102,10 +111,24 @@ def updateUARTDMAConfigurationVisbleProperty(symbol, event):
     symbol.setVisible(event["value"])
 
 def updateSymbolVisibility(symbol, event):
-    global uartSymInterruptMode
+    global uartInterrupt
+    global uartSym_RingBuffer_Enable
 
-    if event["id"] == "USART_INTERRUPT_MODE" or event["id"] == "UART_RING_BUFFER_ENABLE":
-        symbol.setVisible(event["value"])
+    # Enable RX ring buffer size option if Ring buffer is enabled.
+    if symbol.getID() == "UART_RX_RING_BUFFER_SIZE":
+        symbol.setVisible(uartSym_RingBuffer_Enable.getValue())
+    # Enable TX ring buffer size option if Ring buffer is enabled.
+    elif symbol.getID() == "UART_TX_RING_BUFFER_SIZE":
+        symbol.setVisible(uartSym_RingBuffer_Enable.getValue())
+    # If Interrupt is enabled, make ring buffer option visible
+    # Further, if Interrupt is disabled, disable the ring buffer mode
+    elif symbol.getID() == "UART_RING_BUFFER_ENABLE":
+        symbol.setVisible(uartInterrupt.getValue())
+        if (uartInterrupt.getValue() == False):
+            readOnlyState = symbol.getReadOnly()
+            symbol.setReadOnly(True)
+            symbol.setValue(False)
+            symbol.setReadOnly(readOnlyState)
 
 def UARTFileGeneration(symbol, event):
     componentID = symbol.getID()
@@ -125,6 +148,14 @@ def UARTFileGeneration(symbol, event):
 
     symbol.setSourcePath(filepath)
 
+def onCapabilityConnected(event):
+    localComponent = event["localComponent"]
+    remoteComponent = event["remoteComponent"]
+
+    # This message should indicate to the dependent component that PLIB has finished its initialization and
+    # is ready to accept configuration parameters from the dependent component
+    argDict = {"localComponentID" : localComponent.getID()}
+    argDict = Database.sendMessage(remoteComponent.getID(), "REQUEST_CONFIG_PARAMS", argDict)
 ################################################################################
 #### Component ####
 ################################################################################
@@ -137,6 +168,7 @@ def instantiateComponent(uartComponent):
     global uartInstanceName
     global uartClockInvalidSym
     global uartSym_RingBuffer_Enable
+    global uartInterrupt
 
     uartInstanceName = uartComponent.createStringSymbol("UART_INSTANCE_NAME", None)
     uartInstanceName.setVisible(False)
