@@ -32,7 +32,7 @@ def setDspLibParameters(dspLibSym, compilerID):
     suffixList   = ["_math.a", "_math.a", "_math.lib"]
     cmsisRelPath = os.path.relpath(Variables.get("__CMSIS_PACK_DIR"), Module.getPath())
     libFileName = prefixList[compilerID] + libCoreName + suffixList[compilerID]
-   
+
     sourcePath = os.path.join(cmsisRelPath, "CMSIS", "DSP", "Lib",compilerList[compilerID], libFileName)
     dspLibSym.setSourcePath(sourcePath)
     dspLibSym.setOutputName(libFileName)
@@ -44,11 +44,6 @@ def dspLibCallback(symbol, event):
     else:
         setDspLibParameters(symbol, event["value"])
 
-def nnEnableCallback(symbol, event):
-    if event["value"]:
-        symbol.setValue(True)
-    else:
-        symbol.clearValue()
 
 def instantiateComponent(cmsisComponent):
 
@@ -61,14 +56,14 @@ def instantiateComponent(cmsisComponent):
     archNode = ATDF.getNode('/avr-tools-device-file/devices')
     cortexType = archNode.getChildren()[0].getAttribute("architecture").split("CORTEX-")[1].lower()
 
-    #Enables cmsis-core. This option is enabled and readonly symbol since 
-    # harmony projects relies on cmsis-core 
+    #Enables cmsis-core. This option is enabled and readonly symbol since
+    # harmony projects relies on cmsis-core
     cmsisCoreEnableSym = cmsisComponent.createBooleanSymbol("CMSIS_CORE_ENABLE", None)
     cmsisCoreEnableSym.setReadOnly(True)
     cmsisCoreEnableSym.setDefaultValue(True)
     cmsisCoreEnableSym.setLabel("Enable CMSIS Core")
     cmsisCoreEnableSym.setDescription("Copies cmsis-core files into the project and adds it into project path")
-    
+
     #If it is a cortex M device
     if cortexType.startswith("m"):
         v8Cores = ["m23", "m33"]
@@ -78,7 +73,7 @@ def instantiateComponent(cmsisComponent):
 ############################### CMSIS Core #####################################
 ################################################################################
         # add core header files
-        coreHeaderFileNames = [ "cmsis_version.h", 
+        coreHeaderFileNames = [ "cmsis_version.h",
                                 "cmsis_compiler.h",
                                 "cmsis_iccarm.h",
                                 "cmsis_gcc.h",
@@ -94,7 +89,7 @@ def instantiateComponent(cmsisComponent):
             coreHeaderFileNames.append("tz_context.h")
 
         for headerFileName in coreHeaderFileNames:
-            szSymbol = "{}_H".format(headerFileName[:-2].upper())
+            szSymbol = headerFileName.replace(".", "_").upper()
             headerFile = cmsisComponent.createFileSymbol(szSymbol, None)
             headerFile.setRelative(False)
             headerFile.setSourcePath(Variables.get("__CMSIS_PACK_DIR") + "/CMSIS/Core/Include/" + headerFileName)
@@ -126,16 +121,15 @@ def instantiateComponent(cmsisComponent):
 ############################### CMSIS DSP ######################################
 ################################################################################
 
-        #Enables cmsis-dsp  
+        #Enables cmsis-dsp
         cmsisDSPEnableSym = cmsisComponent.createBooleanSymbol("CMSIS_DSP_ENABLE", None)
         cmsisDSPEnableSym.setLabel("Enable CMSIS DSP")
         cmsisDSPEnableSym.setDescription("Copies cmsis-dsp files into the project and adds it into project path")
-        cmsisDSPEnableSym.setDependencies(nnEnableCallback, ["CMSIS_NN_ENABLE"])
 
-        # add dsp header files  
+        # add dsp header files
         cmsisDSPIncludePath = os.path.join(Variables.get("__CMSIS_PACK_DIR"), "CMSIS", "DSP", "Include")
         for headerFileName in os.listdir(cmsisDSPIncludePath):
-            szSymbol = "{}_H".format(headerFileName[:-2].upper())
+            szSymbol = headerFileName.replace(".", "_").upper()
             headerFile = cmsisComponent.createFileSymbol(szSymbol, None)
             headerFile.setRelative(False)
             headerFile.setSourcePath(Variables.get("__CMSIS_PACK_DIR") + "/CMSIS/DSP/Include/" + headerFileName)
@@ -162,7 +156,7 @@ def instantiateComponent(cmsisComponent):
                 headerFile.setSecurity("SECURE")
                 headerFile.setEnabled(cmsisDSPEnableSym.getValue())
                 headerFile.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"]), ["CMSIS_DSP_ENABLE"])
-        
+
         #CMSIS DSP include path setting symbol
         cmsisDSPIncludeSetting = cmsisComponent.createSettingSymbol("CMSIS_DSP_INCLUDE_DIRS", None)
         cmsisDSPIncludeSetting.setCategory("C32")
@@ -182,7 +176,7 @@ def instantiateComponent(cmsisComponent):
             cmsisDSPIncludeSetting.setEnabled(cmsisDSPEnableSym.getValue())
             cmsisDSPIncludeSetting.setSecurity("SECURE")
             cmsisDSPIncludeSetting.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"]), ["CMSIS_DSP_ENABLE"])
-        
+
         # Construct the library name
         if cortexType in v8Cores:
             libCoreName = "ARMv8M{}l".format("BL" if cortexType in ["m23"] else "ML")
@@ -195,17 +189,18 @@ def instantiateComponent(cmsisComponent):
             if cortexType in v7VFPCores:
                 fpuNode = ATDF.getNode('/avr-tools-device-file/devices/device/parameters/param@[name=\"__FPU_PRESENT\"]')
                 dpNode = ATDF.getNode('/avr-tools-device-file/devices/device/parameters/param@[name=\"__FPU_DP\"]')
-                
+
                 if fpuNode and fpuNode.getAttribute("value") == "1":
                     libCoreName += "f"
 
                     # m7 VFPs can be of single or double precision
-                    if cortexType == "m7" and dpNode and dpNode.getAttribute("value") == "1":
-                        libCoreName += "dp" 
-                    else:
-                        libCoreName += "sp"
+                    if cortexType == "m7":
+                        if dpNode and dpNode.getAttribute("value") == "1":
+                            libCoreName += "dp"
+                        else:
+                            libCoreName += "sp"
 
-        # core component which contains the symbol "COMPILER_CHOICE" is not yet 
+        # core component which contains the symbol "COMPILER_CHOICE" is not yet
         # created, so initialize with default compiler
         libraryFileSym = cmsisComponent.createLibrarySymbol("CMSIS_DSP_LIB_" + libCoreName, None)
         setDspLibParameters(libraryFileSym,0)
@@ -224,7 +219,7 @@ def instantiateComponent(cmsisComponent):
 ################################################################################
 ############################### CMSIS NN #######################################
 ################################################################################
-        #Enables cmsis-nn  
+        #Enables cmsis-nn
         cmsisNNEnableSym = cmsisComponent.createBooleanSymbol("CMSIS_NN_ENABLE", None)
         cmsisNNEnableSym.setLabel("Enable CMSIS NN")
         cmsisNNEnableSym.setDescription("Copies cmsis Neural Network (NN) files into the project and adds it into project path")
@@ -232,7 +227,7 @@ def instantiateComponent(cmsisComponent):
         #Create Include file symbols
         cmsisNNIncludePath = os.path.join(Variables.get("__CMSIS_PACK_DIR"), "CMSIS", "NN", "Include")
         for headerFileName in  os.listdir(cmsisNNIncludePath):
-            szSymbol = "{}_H".format(headerFileName[:-2].upper())
+            szSymbol = headerFileName.replace(".", "_").upper()
             headerFile = cmsisComponent.createFileSymbol(szSymbol, None)
             headerFile.setRelative(False)
             headerFile.setSourcePath(cmsisNNIncludePath + os.sep + headerFileName)
