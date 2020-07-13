@@ -24,6 +24,12 @@
 #ifndef TOOLCHAIN_SPECIFICS_H
 #define TOOLCHAIN_SPECIFICS_H
 
+#ifdef __cplusplus  // Provide C++ Compatibility
+
+extern "C" {
+
+#endif
+
 <#if CoreArchitecture?contains("ARM926")>
 
     <#lt>#ifndef __NOP
@@ -267,6 +273,9 @@
     </#if>
 </#if>
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif // end of header
 
