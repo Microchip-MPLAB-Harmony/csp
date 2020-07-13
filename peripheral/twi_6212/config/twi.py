@@ -25,6 +25,26 @@
 #### Business Logic ####
 ################################################################################
 global getTwiClockDividerValue
+
+#Operation Mode
+twiOpModeValues = ["MASTER"]
+
+def handleMessage(messageID, args):
+    global twiOpMode
+
+    result_dict = {}
+
+    if (messageID == "I2C_MASTER_MODE"):
+        if args.get("isReadOnly") != None and args["isReadOnly"] == True:
+            twiOpMode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None and args["isEnabled"] == True:
+            twiOpMode.setValue("MASTER")
+
+    #elif (messageID == "I2C_SLAVE_MODE"):
+        # To be implemented
+
+    return result_dict
+
 def getTwiClockDividerValue(twiClkSpeed):
     ckdiv = 0
     clockDividerMaxValue = 255
@@ -61,12 +81,22 @@ def setTwiClockSourceFreq(symbol, event):
 def symbolVisible(symbol, event):
     symbol.setVisible((event["value"] == False))
 
+def onCapabilityConnected(event):
+    localComponent = event["localComponent"]
+    remoteComponent = event["remoteComponent"]
+
+    # This message should indicate to the dependent component that PLIB has finished its initialization and
+    # is ready to accept configuration parameters from the dependent component
+    argDict = {"localComponentID" : localComponent.getID()}
+    argDict = Database.sendMessage(remoteComponent.getID(), "REQUEST_CONFIG_PARAMS", argDict)
+
 ###################################################################################################
 ############################################# TWI #################################################
 ###################################################################################################
 def instantiateComponent(twiComponent):
     global twiInstanceName
     global twiClockInvalidSymbol
+    global twiOpMode
 
     twiInstanceName = twiComponent.createStringSymbol("TWI_INSTANCE_NAME", None)
     twiInstanceName.setVisible(False)
@@ -74,8 +104,7 @@ def instantiateComponent(twiComponent):
 
     Log.writeInfoMessage("Running " + twiInstanceName.getValue())
 
-    #Operation Mode
-    twiOpModeValues = ["MASTER"]
+
     twiOpMode = twiComponent.createComboSymbol("TWI_OPMODE", None, twiOpModeValues)
     twiOpMode.setLabel("TWI Operation Mode")
     twiOpMode.setDefaultValue("MASTER")
