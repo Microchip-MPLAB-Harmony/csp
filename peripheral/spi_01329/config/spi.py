@@ -20,6 +20,44 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
+def handleMessage(messageID, args):
+    global spiSym_SPICON_MSTEN
+    global spiSym_SPICON_MSSEN
+    global spiSymInterruptMode
+    result_dict = {}
+
+    if (messageID == "SPI_MASTER_MODE"):
+        if args.get("isReadOnly") != None and args["isReadOnly"] == True:
+            spiSym_SPICON_MSTEN.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None and args["isEnabled"] == True:
+            spiSym_SPICON_MSTEN.setSelectedKey("Master mode")
+
+    #elif (messageID == "SPI_SLAVE_MODE"):
+        # To be implemented
+
+    elif (messageID == "SPI_MASTER_INTERRUPT_MODE"):
+        if args.get("isReadOnly") != None:
+            spiSymInterruptMode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None :
+            spiSymInterruptMode.setValue(args["isEnabled"])
+        if args.get("isVisible") != None:
+            spiSymInterruptMode.setVisible(args["isVisible"])
+
+    elif (messageID == "SPI_MASTER_HARDWARE_CS"):
+        if args.get("isReadOnly") != None:
+            spiSym_SPICON_MSSEN.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None:
+            if args["isEnabled"] == False:
+                spiSym_SPICON_MSSEN.setValue(1)
+            else:
+                spiSym_SPICON_MSSEN.setValue(0)
+        if args.get("isVisible") != None:
+            spiSym_SPICON_MSSEN.setVisible(args["isVisible"])
+
+    #elif (messageID == "SPI_SLAVE_INTERRUPT_MODE"):
+        # To be implemented
+
+    return result_dict
 
 ################################################################################
 #### Global Variables ####
@@ -252,6 +290,15 @@ def updateSPIClockWarningStatus(symbol, event):
 
     symbol.setVisible(not event["value"])
 
+def onCapabilityConnected(event):
+    localComponent = event["localComponent"]
+    remoteComponent = event["remoteComponent"]
+
+    # This message should indicate to the dependent component that PLIB has finished its initialization and
+    # is ready to accept configuration parameters from the dependent component
+    argDict = {"localComponentID" : localComponent.getID()}
+    argDict = Database.sendMessage(remoteComponent.getID(), "REQUEST_CONFIG_PARAMS", argDict)
+
 def instantiateComponent(spiComponent):
 
     global spiInstanceName
@@ -263,6 +310,8 @@ def instantiateComponent(spiComponent):
     global spiSymMaxBRG
     global mode_names
     global spiSym_BaudError_Comment
+    global spiSym_SPICON_MSTEN
+    global spiSym_SPICON_MSSEN
 
     InterruptVector = []
     InterruptHandler = []
@@ -306,7 +355,7 @@ def instantiateComponent(spiComponent):
     spiBitField_SPIxCON_MCLKSEL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/register-group@[name="SPI"]/register@[name="' + spiInstanceName.getValue() + 'CON"]/bitfield@[name="MCLKSEL"]')
 
     spiValGrp_SPIxCON_SMP = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/value-group@[name="' + spiInstanceName.getValue() + 'CON__SMP"]')
-    
+
     #Clock enable
     Database.setSymbolValue("core", spiInstanceName.getValue() + "_CLOCK_ENABLE", True, 1)
 
