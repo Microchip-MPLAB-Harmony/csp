@@ -22,44 +22,64 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
 
-global debugID
-
 ###################################################################################################
 ########################################## Callbacks  #############################################
 ###################################################################################################
 
 def onAttachmentConnected(source, target):
 
-    global debugID
-
     localComponent = source["component"]
     remoteComponent = target["component"]
     remoteID = remoteComponent.getID()
     connectID = source["id"]
     targetID = target["id"]
 
-    remoteComponent.setSymbolValue("USART_INTERRUPT_MODE", False, 2)
-    debugID.setValue(remoteID, 2)
+    remoteComponent.setSymbolValue("USART_INTERRUPT_MODE", False)
+    localComponent.setSymbolValue("SECURE_DEBUG_PERIPHERAL", remoteID)
 
 def onAttachmentDisconnected(source, target):
 
-    global debugID
-
     localComponent = source["component"]
     remoteComponent = target["component"]
     remoteID = remoteComponent.getID()
     connectID = source["id"]
     targetID = target["id"]
 
-    debugID.clearValue()
+    remoteComponent.clearSymbolValue("USART_INTERRUPT_MODE")
+    localComponent.clearSymbolValue("SECURE_DEBUG_PERIPHERAL")
+
+def setBuffSymVisibility(symbol, event):
+    symbol.setVisible(event["value"] == 0)
 
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
 
-def instantiateComponent(debugComponent):
+def instantiateComponent(stdioComponent):
 
-    global debugID
-
-    debugID = debugComponent.createStringSymbol("SECURE_DEBUG_PERIPHERAL", None)
+    debugID = stdioComponent.createStringSymbol("SECURE_DEBUG_PERIPHERAL", None)
     debugID.setVisible(False)
+
+    stdinBuffMode = stdioComponent.createBooleanSymbol("SECURE_STDIN_BUFF_MODE", None)
+    stdinBuffMode.setLabel("Use STDIN in buffered mode")
+    stdinBuffMode.setDescription("Use stdin stream in buffered mode. Valid only for XC32 toolchain")
+    stdinBuffMode.setVisible(Database.getSymbolValue("core", "COMPILER_CHOICE") == 0)
+    stdinBuffMode.setDependencies(setBuffSymVisibility,["core.COMPILER_CHOICE"])
+
+    stdoutBuffMode = stdioComponent.createBooleanSymbol("SECURE_STDOUT_BUFF_MODE", None)
+    stdoutBuffMode.setLabel("Use STDOUT in buffered mode")
+    stdoutBuffMode.setDescription("Use stdout in buffered mode")
+    stdoutBuffMode.setVisible(Database.getSymbolValue("core", "COMPILER_CHOICE") == 0)
+    stdoutBuffMode.setDependencies(setBuffSymVisibility,["core.COMPILER_CHOICE"])
+
+    stdioInitializeFile = stdioComponent.createFileSymbol("SECURE_STDIO_INITIALIZE_DEF", None)
+    stdioInitializeFile.setType("STRING")
+    stdioInitializeFile.setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_INITIALIZER_STATIC_FUNCTIONS")
+    stdioInitializeFile.setSourcePath("stdio/templates/system/trustzone/secure_stdio_buffer_init.c.ftl")
+    stdioInitializeFile.setMarkup(True)
+
+    stdioSysInitFile = stdioComponent.createFileSymbol("SECURE_STDIO_INITIALIZE_CALL", None)
+    stdioSysInitFile.setType("STRING")
+    stdioSysInitFile.setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_START")
+    stdioSysInitFile.setSourcePath("stdio/templates/system/trustzone/secure_initialize.c.ftl")
+    stdioSysInitFile.setMarkup(True)
