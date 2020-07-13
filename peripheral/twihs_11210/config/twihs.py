@@ -24,6 +24,25 @@
 
 global twihsInstanceName
 
+#operation mode
+opModeValues = ["MASTER", "SLAVE"]
+
+def handleMessage(messageID, args):
+    global twihsOpMode
+
+    result_dict = {}
+
+    if (messageID == "I2C_MASTER_MODE"):
+        if args.get("isReadOnly") != None and args["isReadOnly"] == True:
+            twihsOpMode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None and args["isEnabled"] == True:
+            twihsOpMode.setValue("MASTER")
+
+    #elif (messageID == "I2C_SLAVE_MODE"):
+        # To be implemented
+
+    return result_dict
+
 def getMasterClockFreq():
 
     return int(Database.getSymbolValue(twihsInstanceName.getValue().lower(), "TWIHS_CLK_SRC_FREQ"))
@@ -100,6 +119,15 @@ def setClockSourceFreq(symbol, event):
 
     symbol.setValue(event["value"], 2)
 
+def onCapabilityConnected(event):
+    localComponent = event["localComponent"]
+    remoteComponent = event["remoteComponent"]
+
+    # This message should indicate to the dependent component that PLIB has finished its initialization and
+    # is ready to accept configuration parameters from the dependent component
+    argDict = {"localComponentID" : localComponent.getID()}
+    argDict = Database.sendMessage(remoteComponent.getID(), "REQUEST_CONFIG_PARAMS", argDict)
+
 ################################################################################
 #### Component ####
 ################################################################################
@@ -108,6 +136,7 @@ def instantiateComponent(twihsComponent):
 
     global twihsInstanceName
     global twihsSymClockInvalid
+    global twihsOpMode
 
     twihsInstanceName = twihsComponent.createStringSymbol("TWIHS_INSTANCE_NAME", None)
     twihsInstanceName.setVisible(False)
@@ -118,9 +147,6 @@ def instantiateComponent(twihsComponent):
     twihsSym_CR_THRCLR = twihsComponent.createBooleanSymbol("TWIHS_CR_THRCLR", None)
     twihsSym_CR_THRCLR.setVisible(False)
     twihsSym_CR_THRCLR.setDefaultValue(twihsBitField_CR_THRCLR != None)
-
-    #operation mode
-    opModeValues = ["MASTER", "SLAVE"]
 
     twihsOpMode = twihsComponent.createComboSymbol("TWIHS_OPMODE", None, opModeValues)
     twihsOpMode.setLabel("TWIHS Operation Mode")
