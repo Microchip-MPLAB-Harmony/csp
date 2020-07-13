@@ -47,7 +47,9 @@
 <#else>
 <#if core.COMPILER_CHOICE == "XC32">
 #pragma GCC diagnostic push
+#ifndef __cplusplus
 #pragma GCC diagnostic ignored "-Wnested-externs"
+#endif
 #pragma GCC diagnostic ignored "-Wsign-conversion"
 #pragma GCC diagnostic ignored "-Wattributes"
 #pragma GCC diagnostic ignored "-Wundef"
