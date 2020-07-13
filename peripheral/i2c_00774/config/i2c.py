@@ -20,10 +20,30 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
+modelist = ["Master", "Slave"]
 
+def handleMessage(messageID, args):
+    global i2cSym_OperatingMode
+
+    result_dict = {}
+
+    if (messageID == "I2C_MASTER_MODE"):
+        if args.get("isReadOnly") != None:
+            i2cSym_OperatingMode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None and args["isEnabled"] == True:
+            i2cSym_OperatingMode.setValue(modelist[0])
+
+    elif (messageID == "I2C_SLAVE_MODE"):
+        if args.get("isReadOnly") != None:
+            i2cSym_OperatingMode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None and args["isEnabled"] == True:
+            i2cSym_OperatingMode.setValue(modelist[1])
+
+    return result_dict
 ###################################################################################################
 #################################### Global Variables #############################################
 ###################################################################################################
+
 
 global interruptsChildren
 
@@ -33,24 +53,7 @@ interruptsChildren = ATDF.getNode('/avr-tools-device-file/devices/device/interru
 ######################################### Functions ###############################################
 ###################################################################################################
 
-modelist = ["Master", "Slave"]
 
-def handleMessage(messageID, args):
-    global i2cSym_OperatingMode
-    result_dict = {}
-
-    if (messageID == "I2C_MODE_SET_MASTER"):
-        i2cSym_OperatingMode.setReadOnly(True)
-        i2cSym_OperatingMode.setValue(modelist[0])    
-    elif (messageID == "I2C_MODE_SET_SLAVE"):
-        i2cSym_OperatingMode.setReadOnly(True)
-        i2cSym_OperatingMode.setValue(modelist[1])    
-    elif (messageID == "I2C_MODE_LOCK"):
-        i2cSym_OperatingMode.setReadOnly(True)
-    elif (messageID == "I2C_MODE_UNLOCK"):        
-        i2cSym_OperatingMode.setReadOnly(False)     
-        
-    return result_dict
 
 def getIRQIndex(string):
 
@@ -110,7 +113,7 @@ def setI2CInterruptData(status):
         else:
             Database.setSymbolValue("core", id, interruptName + "_Handler", 1)
 
-    
+
 ###################################################################################################
 ########################################## Callbacks  #############################################
 ###################################################################################################
@@ -179,23 +182,31 @@ def slaveModeVisibility(symbol, event):
     global i2csSym_A10M
 
     if event["id"] == "I2CS_A10M_SUPPORT":
-        if i2csSym_A10M.getValue() == True:        
+        if i2csSym_A10M.getValue() == True:
             symbol.setLabel("I2C Slave Address (10-bit)")
         else:
             symbol.setLabel("I2C Slave Address (7-bit)")
-            
-    elif event["id"] == "I2C_OPERATING_MODE":    
+
+    elif event["id"] == "I2C_OPERATING_MODE":
         if i2cSym_OperatingMode.getValue() == "Slave":
             symbol.setVisible(True)
         else:
-            symbol.setVisible(False)                        
-        
-def masterFilesGeneration(symbol, event):        
-    symbol.setEnabled(i2cSym_OperatingMode.getValue() == "Master") 
+            symbol.setVisible(False)
 
-def slaveFilesGeneration(symbol, event):        
-    symbol.setEnabled(i2cSym_OperatingMode.getValue() == "Slave")     
-        
+def masterFilesGeneration(symbol, event):
+    symbol.setEnabled(i2cSym_OperatingMode.getValue() == "Master")
+
+def slaveFilesGeneration(symbol, event):
+    symbol.setEnabled(i2cSym_OperatingMode.getValue() == "Slave")
+
+def onCapabilityConnected(event):
+    localComponent = event["localComponent"]
+    remoteComponent = event["remoteComponent"]
+
+    # This message should indicate to the dependent component that PLIB has finished its initialization and
+    # is ready to accept configuration parameters from the dependent component
+    argDict = {"localComponentID" : localComponent.getID()}
+    argDict = Database.sendMessage(remoteComponent.getID(), "REQUEST_CONFIG_PARAMS", argDict)
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
@@ -241,14 +252,14 @@ def instantiateComponent(i2cComponent):
     i2cSym_ClkValue.setReadOnly(True)
     i2cSym_ClkValue.setDefaultValue(int(Database.getSymbolValue("core", i2cInstanceName.getValue() + "_CLOCK_FREQUENCY")))
     i2cSym_ClkValue.setDependencies(i2cSourceFreq, ["core." + i2cInstanceName.getValue() + "_CLOCK_FREQUENCY"])
-    
+
     # 10-bit addressing
     i2csSym_A10M = i2cComponent.createBooleanSymbol("I2CS_A10M_SUPPORT", None)
     i2csSym_A10M.setLabel("Enable 10-bit Addressing")
     i2csSym_A10M.setVisible(False)
     i2csSym_A10M.setDefaultValue(False)
     i2csSym_A10M.setDependencies(slaveModeVisibility, ["I2C_OPERATING_MODE"])
-    
+
     #Slave Address
     i2csSym_ADDR = i2cComponent.createHexSymbol("I2C_SLAVE_ADDDRESS", None)
     i2csSym_ADDR.setLabel("I2C Slave Address (7-bit)")
@@ -289,7 +300,7 @@ def instantiateComponent(i2cComponent):
 
     i2cSymMaxBRG = i2cComponent.createIntegerSymbol("I2C_MAX_BRG", None)
     i2cSymMaxBRG.setDefaultValue(i2cMaxBRG)
-    i2cSymMaxBRG.setVisible(False)    
+    i2cSymMaxBRG.setVisible(False)
 
     ## Baud Rate Frequency dependency
     i2cSym_BRGValue = i2cComponent.createIntegerSymbol("BRG_VALUE", None)
@@ -298,10 +309,10 @@ def instantiateComponent(i2cComponent):
 
     #Use setValue instead of setDefaultValue to store symbol value in default.xml
     i2cSym_BRGValue.setValue(baudRateCalc(i2cSym_ClkValue.getValue(), i2cSym_BAUD.getValue()) , 1)
-    
-    # SDAHT (SDA Hold Time Bit)    
-    i2cxCON = i2cInstanceName.getValue() + "CON"    
-    i2cxCON_SDAHT = ATDF.getNode('/avr-tools-device-file/modules/module@[name="I2C"]/register-group@[name="I2C"]/register@[name="' + i2cxCON + '"]/bitfield@[name="SDAHT"]') 
+
+    # SDAHT (SDA Hold Time Bit)
+    i2cxCON = i2cInstanceName.getValue() + "CON"
+    i2cxCON_SDAHT = ATDF.getNode('/avr-tools-device-file/modules/module@[name="I2C"]/register-group@[name="I2C"]/register@[name="' + i2cxCON + '"]/bitfield@[name="SDAHT"]')
 
     if i2cxCON_SDAHT != None:
         i2cxCON_SDAHT_ValueGroup = ATDF.getNode('/avr-tools-device-file/modules/module@[name="I2C"]/value-group@[name="' + i2cxCON_SDAHT.getAttribute("values") + '"]')
@@ -314,7 +325,7 @@ def instantiateComponent(i2cComponent):
         i2cCON_SDAHT_Support.setDisplayMode("Description")
         i2cCON_SDAHT_Support.setDefaultValue(1)
         i2cCON_SDAHT_Support.setVisible(True)
-        
+
     #I2C Forced Write API Inclusion
     i2cSym_ForcedWriteAPIGen = i2cComponent.createBooleanSymbol("I2C_INCLUDE_FORCED_WRITE_API", None)
     i2cSym_ForcedWriteAPIGen.setLabel("Include Force Write I2C Function (Master Mode Only - Ignore NACK from Slave)")
@@ -383,33 +394,33 @@ def instantiateComponent(i2cComponent):
     i2cBusIntIFS = i2cComponent.createStringSymbol("I2C_BUS_IFS_REG", None)
     i2cBusIntIFS.setDefaultValue(statRegName)
     i2cBusIntIFS.setVisible(False)
-    
+
     # Check if the following bit fields exist:
     i2cxCON = i2cInstanceName.getValue() + "CON"
-    
+
     # AHEN (Address Hold Enable Bit)
     i2cxCON_AHEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="I2C"]/register-group@[name="I2C"]/register@[name="' + i2cxCON + '"]/bitfield@[name="AHEN"]')
-    
+
     # DHEN (Data Hold Enable Bit)
     i2cxCON_DHEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="I2C"]/register-group@[name="I2C"]/register@[name="' + i2cxCON + '"]/bitfield@[name="DHEN"]')
-    
+
     if i2cxCON_AHEN != None and i2cxCON_DHEN != None:
         i2cCON_AHEN_DHEN_Support = i2cComponent.createBooleanSymbol("I2CS_AHEN_DHEN_SUPPORT", None)
         i2cCON_AHEN_DHEN_Support.setLabel("Enable Address and Data Hold")
         i2cCON_AHEN_DHEN_Support.setVisible(i2cSym_OperatingMode.getValue() == "Slave")
-        i2cCON_AHEN_DHEN_Support.setDefaultValue(True) 
-        i2cCON_AHEN_DHEN_Support.setDependencies(slaveModeVisibility, ["I2C_OPERATING_MODE"])        
-                  
+        i2cCON_AHEN_DHEN_Support.setDefaultValue(True)
+        i2cCON_AHEN_DHEN_Support.setDependencies(slaveModeVisibility, ["I2C_OPERATING_MODE"])
+
     # PCIE (Stop Bit Interrupt Enable Bit)
     i2cxCON_PCIE = ATDF.getNode('/avr-tools-device-file/modules/module@[name="I2C"]/register-group@[name="I2C"]/register@[name="' + i2cxCON + '"]/bitfield@[name="PCIE"]')
-    
+
     if i2cxCON_PCIE != None:
         i2cCON_PCIE_Support = i2cComponent.createBooleanSymbol("I2CS_PCIE_SUPPORT", None)
         i2cCON_PCIE_Support.setLabel("Enable Stop Condition Interrupt")
         i2cCON_PCIE_Support.setVisible(False)
-        i2cCON_PCIE_Support.setDefaultValue(True)        
-    
-    
+        i2cCON_PCIE_Support.setDefaultValue(True)
+
+
 
     ############################################################################
     #### Dependency ####
@@ -451,7 +462,7 @@ def instantiateComponent(i2cComponent):
     i2cMasterHeaderFile.setProjectPath("config/" + configName + "/peripheral/i2c/master")
     i2cMasterHeaderFile.setType("HEADER")
     i2cMasterHeaderFile.setMarkup(True)
-    i2cMasterHeaderFile.setEnabled(True) 
+    i2cMasterHeaderFile.setEnabled(True)
     i2cMasterHeaderFile.setDependencies(masterFilesGeneration, ["I2C_OPERATING_MODE"])
 
     i2cMasterCommonHeaderFile = i2cComponent.createFileSymbol("I2C_MASTER_COMMON_HEADER", None)
@@ -460,7 +471,7 @@ def instantiateComponent(i2cComponent):
     i2cMasterCommonHeaderFile.setDestPath("peripheral/i2c/master")
     i2cMasterCommonHeaderFile.setProjectPath("config/" + configName + "/peripheral/i2c/master")
     i2cMasterCommonHeaderFile.setType("HEADER")
-    i2cMasterCommonHeaderFile.setEnabled(True) 
+    i2cMasterCommonHeaderFile.setEnabled(True)
     i2cMasterCommonHeaderFile.setDependencies(masterFilesGeneration, ["I2C_OPERATING_MODE"])
 
     i2cMasterSourceFile = i2cComponent.createFileSymbol("I2C_MASTER_SOURCE", None)
@@ -470,9 +481,9 @@ def instantiateComponent(i2cComponent):
     i2cMasterSourceFile.setProjectPath("config/" + configName +"/peripheral/i2c/master")
     i2cMasterSourceFile.setType("SOURCE")
     i2cMasterSourceFile.setMarkup(True)
-    i2cMasterSourceFile.setEnabled(True) 
+    i2cMasterSourceFile.setEnabled(True)
     i2cMasterSourceFile.setDependencies(masterFilesGeneration, ["I2C_OPERATING_MODE"])
-    
+
     i2cSlaveHeaderFile = i2cComponent.createFileSymbol("I2C_SLAVE_HEADER", None)
     i2cSlaveHeaderFile.setSourcePath("../peripheral/i2c_00774/templates/plib_i2c_slave.h.ftl")
     i2cSlaveHeaderFile.setOutputName("plib_" + i2cInstanceName.getValue().lower() + "_slave.h")
@@ -480,7 +491,7 @@ def instantiateComponent(i2cComponent):
     i2cSlaveHeaderFile.setProjectPath("config/" + configName + "/peripheral/i2c/slave")
     i2cSlaveHeaderFile.setType("HEADER")
     i2cSlaveHeaderFile.setMarkup(True)
-    i2cSlaveHeaderFile.setEnabled(False) 
+    i2cSlaveHeaderFile.setEnabled(False)
     i2cSlaveHeaderFile.setDependencies(slaveFilesGeneration, ["I2C_OPERATING_MODE"])
 
     i2cSlaveCommonHeaderFile = i2cComponent.createFileSymbol("I2C_SLAVE_COMMON_HEADER", None)
@@ -488,8 +499,8 @@ def instantiateComponent(i2cComponent):
     i2cSlaveCommonHeaderFile.setOutputName("plib_i2c_slave_common.h")
     i2cSlaveCommonHeaderFile.setDestPath("peripheral/i2c/slave")
     i2cSlaveCommonHeaderFile.setProjectPath("config/" + configName + "/peripheral/i2c/slave")
-    i2cSlaveCommonHeaderFile.setType("HEADER")  
-    i2cSlaveCommonHeaderFile.setEnabled(False)     
+    i2cSlaveCommonHeaderFile.setType("HEADER")
+    i2cSlaveCommonHeaderFile.setEnabled(False)
     i2cSlaveCommonHeaderFile.setDependencies(slaveFilesGeneration, ["I2C_OPERATING_MODE"])
 
     i2cSlaveSourceFile = i2cComponent.createFileSymbol("I2C_SLAVE_SOURCE", None)
@@ -499,7 +510,7 @@ def instantiateComponent(i2cComponent):
     i2cSlaveSourceFile.setProjectPath("config/" + configName +"/peripheral/i2c/slave")
     i2cSlaveSourceFile.setType("SOURCE")
     i2cSlaveSourceFile.setMarkup(True)
-    i2cSlaveSourceFile.setEnabled(False)     
+    i2cSlaveSourceFile.setEnabled(False)
     i2cSlaveSourceFile.setDependencies(slaveFilesGeneration, ["I2C_OPERATING_MODE"])
 
     i2cSystemInitFile = i2cComponent.createFileSymbol("I2C_INIT", None)
