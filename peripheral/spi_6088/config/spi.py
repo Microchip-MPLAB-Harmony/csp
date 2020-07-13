@@ -21,6 +21,41 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
+def handleMessage(messageID, args):
+    global spiSym_MR_MSTR
+    global spiInterrupt
+    global spiSym_MR_PCS
+    result_dict = {}
+
+    if (messageID == "SPI_MASTER_MODE"):
+        if args.get("isReadOnly") != None and args["isReadOnly"] == True:
+            spiSym_MR_MSTR.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None and args["isEnabled"] == True:
+            spiSym_MR_MSTR.setSelectedKey("Master")
+
+    #elif (messageID == "SPI_SLAVE_MODE"):
+        # To be implemented
+
+    elif (messageID == "SPI_MASTER_INTERRUPT_MODE"):
+        if args.get("isReadOnly") != None:
+            spiInterrupt.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None :
+            spiInterrupt.setValue(args["isEnabled"])
+        if args.get("isVisible") != None:
+            spiInterrupt.setVisible(args["isVisible"])
+
+    elif (messageID == "SPI_MASTER_HARDWARE_CS"):
+        if args.get("isReadOnly") != None:
+            spiSym_MR_PCS.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None and args["isEnabled"] == False:
+            spiSym_MR_PCS.setSelectedKey("GPIO",1)
+        if args.get("isVisible") != None:
+            spiSym_MR_PCS.setVisible(args["isVisible"])
+
+    #elif (messageID == "SPI_SLAVE_INTERRUPT_MODE"):
+        # To be implemented
+
+    return result_dict
 
 global dummyDataDict
 dummyDataDict = {
@@ -114,24 +149,6 @@ def setupSpiIntSymbolAndIntHandler(spiInterrupt, event):
             Database.setSymbolValue("core", spiSyminterruptHandler, spiInstanceName.getValue() + "_Handler", 1)
             Database.setSymbolValue("core", spiSyminterruptHandlerLock, False, 1)
 
-    # control warning message
-    if (spiInterrupt.getValue() == True and Database.getSymbolValue("core", spiSyminterruptVectorUpdate) == True):
-        spiSymIntEnComment.setVisible(True)
-    else:
-        spiSymIntEnComment.setVisible(False)
-
-    #control driver dependency
-    if(spiInterrupt.getValue() == False and spiDriverControlled.getValue() == True):
-        spiInterruptDriverModeComment.setVisible(True)
-        spiSym_MR_PCS.setSelectedKey("GPIO",1)
-    elif(spiInterrupt.getValue() == True and spiDriverControlled.getValue() == True):
-        spiInterruptDriverModeComment.setVisible(False)
-        spiInterrupt.setReadOnly(True)
-        spiSym_MR_PCS.setSelectedKey("GPIO",1)
-    else:
-        spiInterruptDriverModeComment.setVisible(False)
-        spiInterrupt.setReadOnly(False)
-
 def getMasterClockFreq():
 
     clkSymMasterClockFreq = Database.getSymbolValue(spiInstanceName.getValue().lower(), "SPI_MASTER_CLOCK")
@@ -173,6 +190,15 @@ def DummyData_ValueUpdate(spiSymDummyData, event):
     spiSymDummyData.setValue(dummyDataDict[event["symbol"].getKey(event["value"])], 1)
     spiSymDummyData.setMax(dummyDataDict[event["symbol"].getKey(event["value"])])
 
+def onCapabilityConnected(event):
+    localComponent = event["localComponent"]
+    remoteComponent = event["remoteComponent"]
+
+    # This message should indicate to the dependent component that PLIB has finished its initialization and
+    # is ready to accept configuration parameters from the dependent component
+    argDict = {"localComponentID" : localComponent.getID()}
+    argDict = Database.sendMessage(remoteComponent.getID(), "REQUEST_CONFIG_PARAMS", argDict)
+
 def instantiateComponent(spiComponent):
 
     global spiInstanceName
@@ -181,6 +207,7 @@ def instantiateComponent(spiComponent):
     global spiSyminterruptHandlerLock
     global spiSyminterruptVectorUpdate
     global InternalinterruptVectorChange
+    global spiSym_MR_MSTR
 
     InternalinterruptVectorChange = False
 
@@ -210,7 +237,7 @@ def instantiateComponent(spiComponent):
     Database.setSymbolValue("core", spiSyminterruptVector, True, 1)
     Database.setSymbolValue("core", spiSyminterruptHandler, spiInstanceName.getValue() + "_InterruptHandler", 1)
     Database.setSymbolValue("core", spiSyminterruptHandlerLock, True, 1)
-    spiInterrupt.setDependencies(setupSpiIntSymbolAndIntHandler, ["SPI_INTERRUPT_MODE", "SPI_DRIVER_CONTROLLED"])
+    spiInterrupt.setDependencies(setupSpiIntSymbolAndIntHandler, ["SPI_INTERRUPT_MODE"])
 
     spiRegisterGroup = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SPI\"]/register-group@[name=\"SPI\"]")
     spiRegisterList = spiRegisterGroup.getChildren()
