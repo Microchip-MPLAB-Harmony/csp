@@ -20,37 +20,37 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
+modelist = ["Master", "Slave"]
 
+def handleMessage(messageID, args):
+    global i2cSym_OperatingMode
+
+    result_dict = {}
+
+    if (messageID == "I2C_MASTER_MODE"):
+        if args.get("isReadOnly") != None:
+            i2cSym_OperatingMode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None and args["isEnabled"] == True:
+            i2cSym_OperatingMode.setValue(modelist[0])
+
+    elif (messageID == "I2C_SLAVE_MODE"):
+        if args.get("isReadOnly") != None:
+            i2cSym_OperatingMode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None and args["isEnabled"] == True:
+            i2cSym_OperatingMode.setValue(modelist[1])
+
+    return result_dict
 ###################################################################################################
 #################################### Global Variables #############################################
 ###################################################################################################
 
 global interruptsChildren
 
-modelist = ["Master", "Slave"]
-
 interruptsChildren = ATDF.getNode('/avr-tools-device-file/devices/device/interrupts').getChildren()
 
 ###################################################################################################
 ######################################### Functions ###############################################
 ###################################################################################################
-def handleMessage(messageID, args):
-    global i2cSym_OperatingMode
-    result_dict = {}
-
-    if (messageID == "I2C_MODE_SET_MASTER"):
-        i2cSym_OperatingMode.setReadOnly(True)
-        i2cSym_OperatingMode.setValue(modelist[0])    
-    elif (messageID == "I2C_MODE_SET_SLAVE"):
-        i2cSym_OperatingMode.setReadOnly(True)
-        i2cSym_OperatingMode.setValue(modelist[1])    
-    elif (messageID == "I2C_MODE_LOCK"):
-        i2cSym_OperatingMode.setReadOnly(True)
-    elif (messageID == "I2C_MODE_UNLOCK"):        
-        i2cSym_OperatingMode.setReadOnly(False)     
-        
-    return result_dict
-
 def getIRQnumber(string):
 
     for param in interruptsChildren:
@@ -157,7 +157,7 @@ def setI2CInterruptData(interruptDict, isEnabled):
 
 def interruptSetupChangeHandler(symbol, event):
     interruptSetup(i2cSym_OperatingMode.getValue(), False)
-    
+
 def interruptSetup(mode, isUpdate):
     global InterruptList
     global i2cSymIntEnableComment
@@ -170,7 +170,7 @@ def interruptSetup(mode, isUpdate):
             isEnabled = True
         else:
             isEnabled = False
-            
+
         if (isUpdate == True):
             setI2CInterruptData(interruptDict, isEnabled)
 
@@ -187,7 +187,14 @@ def interruptSetup(mode, isUpdate):
 def interruptSetupOnModeChange(symbol, event):
     interruptSetup(event["value"], True)
 
+def onCapabilityConnected(event):
+    localComponent = event["localComponent"]
+    remoteComponent = event["remoteComponent"]
 
+    # This message should indicate to the dependent component that PLIB has finished its initialization and
+    # is ready to accept configuration parameters from the dependent component
+    argDict = {"localComponentID" : localComponent.getID()}
+    argDict = Database.sendMessage(remoteComponent.getID(), "REQUEST_CONFIG_PARAMS", argDict)
 
 ###################################################################################################
 ########################################## Component  #############################################
@@ -286,7 +293,7 @@ def instantiateComponent(i2cComponent):
     i2cSymMaxBRG = i2cComponent.createIntegerSymbol("I2C_MAX_BRG", None)
     i2cSymMaxBRG.setDefaultValue(i2cMaxBRG)
     i2cSymMaxBRG.setVisible(False)
-    
+
     ## Baud Rate Frequency dependency
     i2cSym_BRGValue = i2cComponent.createIntegerSymbol("BRG_VALUE", None)
     i2cSym_BRGValue.setVisible(False)
@@ -294,10 +301,10 @@ def instantiateComponent(i2cComponent):
 
     #Use setValue instead of setDefaultValue to store symbol value in default.xml
     i2cSym_BRGValue.setValue(baudRateCalc(i2cSym_ClkValue.getValue(), i2cSym_BAUD.getValue()) , 1)
-    
+
     # SDAHT (SDA Hold Time Bit)
     i2cxCON = i2cInstanceName.getValue() + "CON"
-    
+
     i2cxCON_SDAHT = ATDF.getNode('/avr-tools-device-file/modules/module@[name="I2C"]/register-group@[name="I2C"]/register@[name="' + i2cxCON + '"]/bitfield@[name="SDAHT"]')
 
     if i2cxCON_SDAHT != None:
@@ -390,8 +397,8 @@ def instantiateComponent(i2cComponent):
     #IFS REG
     i2cBusIntIFS = i2cComponent.createStringSymbol("I2C_BUS_IFS_REG", None)
     i2cBusIntIFS.setDefaultValue(statRegName)
-    i2cBusIntIFS.setVisible(False)        
-    
+    i2cBusIntIFS.setVisible(False)
+
     # Check if the following bit fields exist:
     i2cxCON = i2cInstanceName.getValue() + "CON"
 
@@ -415,15 +422,15 @@ def instantiateComponent(i2cComponent):
         i2cCON_PCIE_Support = i2cComponent.createBooleanSymbol("I2CS_PCIE_SUPPORT", None)
         i2cCON_PCIE_Support.setLabel("Enable Stop Condition Interrupt")
         i2cCON_PCIE_Support.setVisible(False)
-        i2cCON_PCIE_Support.setDefaultValue(True)      
+        i2cCON_PCIE_Support.setDefaultValue(True)
 
     # Interrupt Warning
     i2cSymIntEnableComment = i2cComponent.createCommentSymbol("I2C_INTRRUPT_ENABLE_COMMENT", None)
     i2cSymIntEnableComment.setLabel("Warning!!! " + i2cInstanceName.getValue() + " Interrupt is Disabled in Interrupt Manager")
-    i2cSymIntEnableComment.setVisible(False)    
+    i2cSymIntEnableComment.setVisible(False)
     i2cSymIntEnableComment.setDependencies(interruptSetupChangeHandler, ["core." + i2cInstanceName.getValue() + "_MASTER" + "_INTERRUPT_ENABLE_UPDATE", "core." + i2cInstanceName.getValue() + "_SLAVE" + "_INTERRUPT_ENABLE_UPDATE", "core." + i2cInstanceName.getValue() + "_BUS" + "_INTERRUPT_ENABLE_UPDATE"] )
-    
-         
+
+
     # Clock Warning
     i2cSym_ClkEnComment = i2cComponent.createCommentSymbol("I2C_CLOCK_ENABLE_COMMENT", None)
     i2cSym_ClkEnComment.setLabel("Warning!!! " + i2cInstanceName.getValue() + " Peripheral Clock is Disabled in Clock Manager")
@@ -431,7 +438,7 @@ def instantiateComponent(i2cComponent):
     i2cSym_ClkEnComment.setDependencies(updateI2CClockWarningStatus, ["core." + i2cInstanceName.getValue() + "_CLOCK_ENABLE"])
 
     # Enable interrupts in EVIC
-    interruptSetup(i2cSym_OperatingMode.getValue(), True)        
+    interruptSetup(i2cSym_OperatingMode.getValue(), True)
 
     ###################################################################################################
     ####################################### Driver Symbols ############################################
