@@ -188,23 +188,47 @@ def getVectorIndex(string):
 def baudRateCalc(clk, baud):
 
     global uartSym_U1MODE_BRGH
+    brgh0 = False
+    brgh1 = False
 
-    brgValLow = ((clk / baud) >> 4) - 1
-    brgValHigh = ((clk / baud) >> 2) - 1
+    if clk == 0:
+        return -1
 
-    # Check if the baud value can be set with low baud settings
-    if((brgValLow >= 0) and (brgValLow <= 65535)) :
-        brgValue = (((clk >> 4) + (baud >> 1)) / baud) - 1
-        uartSym_U1MODE_BRGH.setValue(1, 2)
-        return brgValue
-    elif((brgValHigh >= 0) and (brgValHigh <= 65535)) :
-        brgValue =  (((clk >> 2) + (baud >> 1)) / baud ) - 1
-        uartSym_U1MODE_BRGH.setValue(0, 2)
-        return brgValue
-    elif brgValLow > 65535:
-        return brgValLow
+    UxBRG_BRGH0 = (((clk >> 4) + (baud >> 1)) / baud) - 1
+    UxBRG_BRGH1 = (((clk >> 2) + (baud >> 1)) / baud) - 1
+
+    if ((UxBRG_BRGH0 >= 0) and (UxBRG_BRGH0 <= 65535)):
+        brgh0 = True
+    if ((UxBRG_BRGH1 >= 0) and (UxBRG_BRGH1 <= 65535)):
+        brgh1 = True
+
+    # Baud rate is possible with both BRGH = 0 and BRGH = 1. Decide which one to use based on error.
+    if brgh0 == True and brgh1 == True:
+        actualBaud_BRGH0 = (clk/(16*(UxBRG_BRGH0 + 1)))
+        actualBaud_BRGH1 = (clk/(4*(UxBRG_BRGH1 + 1)))
+
+        error_BRGH0 = abs((baud - actualBaud_BRGH0))
+        error_BRGH1 = abs((baud - actualBaud_BRGH1))
+
+        # If error with BRGH0 is less or same as with BRGH1, use BRGH0
+        if (error_BRGH0 <= error_BRGH1):
+            uartSym_U1MODE_BRGH.setValue(1, 2)
+            return UxBRG_BRGH0
+        # If error with BRGH1 is less, use BRGH0
+        else:
+            uartSym_U1MODE_BRGH.setValue(0, 2)
+            return UxBRG_BRGH1
     else:
-        return brgValLow
+        if brgh0 == True:
+            uartSym_U1MODE_BRGH.setValue(1, 2)
+            return UxBRG_BRGH0
+        elif brgh1 == True:
+            uartSym_U1MODE_BRGH.setValue(0, 2)
+            return UxBRG_BRGH1
+        elif UxBRG_BRGH0 > 65535:
+            return UxBRG_BRGH0
+        elif UxBRG_BRGH1 < 0:
+            return UxBRG_BRGH1
 
 def baudRateTrigger(symbol, event):
 
