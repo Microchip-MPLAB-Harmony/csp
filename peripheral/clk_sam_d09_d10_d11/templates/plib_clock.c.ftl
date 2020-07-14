@@ -63,11 +63,12 @@ static void SYSCTRL_Initialize( void )
                                                              ${CONFIG_CLOCK_XOSC_RUNSTDBY?then('| SYSCTRL_XOSC_RUNSTDBY_Msk',' ')}
                                                              ${(CONFIG_CLOCK_XOSC_ONDEMAND == "ENABLE")?then('| SYSCTRL_XOSC_ONDEMAND_Msk',' ')}
                                                              ${(XOSC_OSCILLATOR_MODE == "1")?then('| SYSCTRL_XOSC_XTALEN_Msk',' ')} | SYSCTRL_XOSC_ENABLE_Msk;</@compress>
-
+    <#if CONFIG_CLOCK_XOSC_ONDEMAND != "ENABLE">
     while((SYSCTRL_REGS->SYSCTRL_PCLKSR & SYSCTRL_PCLKSR_XOSCRDY_Msk) != SYSCTRL_PCLKSR_XOSCRDY_Msk)
     {
         /* Waiting for the XOSC Ready state */
     }
+    </#if>
 
     <#if XOSC_AMPGC == true>
     /* Setting the Automatic Gain Control */
@@ -80,11 +81,12 @@ static void SYSCTRL_Initialize( void )
     <@compress single_line=true>SYSCTRL_REGS->SYSCTRL_OSC8M = (SYSCTRL_REGS->SYSCTRL_OSC8M & (SYSCTRL_OSC8M_CALIB_Msk | SYSCTRL_OSC8M_FRANGE_Msk)) | SYSCTRL_OSC8M_ENABLE_Msk | SYSCTRL_OSC8M_PRESC(${CONFIG_CLOCK_OSC8M_PRES})
                                                              ${CONFIG_CLOCK_OSC8M_RUNSTDY?then('| SYSCTRL_OSC8M_RUNSTDBY_Msk',' ')}
                                                              ${(CONFIG_CLOCK_OSC8M_ONDEMAND == "ENABLE")?then('| SYSCTRL_OSC8M_ONDEMAND_Msk',' ')};</@compress>
-
+    <#if CONFIG_CLOCK_OSC8M_ONDEMAND != "ENABLE">
     while((SYSCTRL_REGS->SYSCTRL_PCLKSR & SYSCTRL_PCLKSR_OSC8MRDY_Msk) != SYSCTRL_PCLKSR_OSC8MRDY_Msk)
     {
         /* Waiting for the OSC8M Ready state */
     }
+    </#if>
 
 </#if>
 <#if CONF_CLOCK_XOSC32K_ENABLE == true>
@@ -96,12 +98,13 @@ static void SYSCTRL_Initialize( void )
                                                                ${XOSC32K_EN32K?then('| SYSCTRL_XOSC32K_EN32K_Msk',' ')}
                                                                ${(XOSC32K_ONDEMAND == "ENABLE")?then('| SYSCTRL_XOSC32K_ONDEMAND_Msk',' ')}
                                                                ${(XOSC32K_OSCILLATOR_MODE == "1")?then('| SYSCTRL_XOSC32K_XTALEN_Msk',' ')};</@compress>
-
+    <#if XOSC32K_ONDEMAND != "ENABLE">
     while(!((SYSCTRL_REGS->SYSCTRL_PCLKSR & SYSCTRL_PCLKSR_XOSC32KRDY_Msk) == SYSCTRL_PCLKSR_XOSC32KRDY_Msk))
     {
         /* Waiting for the XOSC32K Ready state */
     }
 
+    </#if>
 </#if>
 <#if CONF_CLOCK_OSC32K_ENABLE == true>
     /****************** OSC32K Initialization  ******************************/
@@ -113,11 +116,13 @@ static void SYSCTRL_Initialize( void )
                                                               ${OSC32K_RUNSTDBY?then('| SYSCTRL_OSC32K_RUNSTDBY_Msk',' ')}
                                                               ${OSC32K_EN32K?then('| SYSCTRL_OSC32K_EN32K_Msk',' ')}
                                                               ${(OSC32K_ONDEMAND == "ENABLE")?then('| SYSCTRL_OSC32K_ONDEMAND_Msk',' ')};</@compress>
-
+    <#if OSC32K_ONDEMAND != "ENABLE">
     while(!((SYSCTRL_REGS->SYSCTRL_PCLKSR & SYSCTRL_PCLKSR_OSC32KRDY_Msk) == SYSCTRL_PCLKSR_OSC32KRDY_Msk))
     {
         /* Waiting for the OSC32K Ready state */
     }
+
+    </#if>
 <#else>
     SYSCTRL_REGS->SYSCTRL_OSC32K = 0x0;
 </#if>
@@ -147,12 +152,14 @@ static void FDPLL_Initialize( void )
 
     /* Selection of the DPLL Enable */
     SYSCTRL_REGS->SYSCTRL_DPLLCTRLA = SYSCTRL_DPLLCTRLA_ENABLE_Msk ${(CONFIG_CLOCK_DPLL_ONDEMAND == "1")?then('| SYSCTRL_DPLLCTRLA_ONDEMAND_Msk',' ')} ${CONFIG_CLOCK_DPLL_RUNSTDY?then('| SYSCTRL_DPLLCTRLA_RUNSTDBY_Msk','')};
-
+    <#if CONFIG_CLOCK_DPLL_ONDEMAND != "1">
+    
     while((SYSCTRL_REGS->SYSCTRL_DPLLSTATUS & (SYSCTRL_DPLLSTATUS_LOCK_Msk | SYSCTRL_DPLLSTATUS_CLKRDY_Msk)) !=
                 (SYSCTRL_DPLLSTATUS_LOCK_Msk | SYSCTRL_DPLLSTATUS_CLKRDY_Msk))
     {
         /* Waiting for the Ready state */
     }
+    </#if>
 }
 </#if>
 
@@ -185,9 +192,9 @@ static void DFLL_Initialize( void )
 
     /* Configure DFLL */
     <@compress single_line=true>SYSCTRL_REGS->SYSCTRL_DFLLCTRL = SYSCTRL_DFLLCTRL_ENABLE_Msk ${(CONFIG_CLOCK_DFLL_OPMODE == "1")?then('| SYSCTRL_DFLLCTRL_MODE_Msk ', ' ')}
-    <#lt>                               ${(CONFIG_CLOCK_DFLL_ONDEMAND == "ENABLE")?then("| SYSCTRL_DFLLCTRL_ONDEMAND_Msk ", "")}
+    <#lt>                               ${(CONFIG_CLOCK_DFLL_ONDEMAND == "1")?then("| SYSCTRL_DFLLCTRL_ONDEMAND_Msk ", "")}
     <#lt>                               ${CONFIG_CLOCK_DFLL_RUNSTDY?then('| SYSCTRL_DFLLCTRL_RUNSTDBY_Msk ', ' ')}
-        <#lt>                               ${CONFIG_CLOCK_DFLL_USB?then('| SYSCTRL_DFLLCTRL_USBCRM_Msk ', ' ')}
+    <#lt>                               ${CONFIG_CLOCK_DFLL_USB?then('| SYSCTRL_DFLLCTRL_USBCRM_Msk ', ' ')}
     <#lt>                               ${CONFIG_CLOCK_DFLL_WAIT_LOCK?then('| SYSCTRL_DFLLCTRL_WAITLOCK_Msk ', ' ')}
     <#lt>                               ${CONFIG_CLOCK_DFLL_BYPASS_COARSE?then('| SYSCTRL_DFLLCTRL_BPLCKC_Msk ', ' ')}
     <#lt>                               ${CONFIG_CLOCK_DFLL_QUICK_LOCK?then('| SYSCTRL_DFLLCTRL_QLDIS_Msk ', ' ')}
@@ -201,7 +208,7 @@ static void DFLL_Initialize( void )
     {
         /* Waiting for DFLL to fully lock to meet clock accuracy */
     }
-    <#else>
+    <#elseif CONFIG_CLOCK_DFLL_ONDEMAND != "1">
     while((SYSCTRL_REGS->SYSCTRL_PCLKSR & SYSCTRL_PCLKSR_DFLLRDY_Msk) != SYSCTRL_PCLKSR_DFLLRDY_Msk)
     {
         /* Waiting for DFLL to be ready */
@@ -225,7 +232,7 @@ static void DFLL_Initialize( void )
 static void GCLK${i}_Initialize( void )
 {
     <#if (i==0)>
-    
+
 <#if (CONF_CPU_CLOCK_DIVIDER != "0")>
     /* selection of the CPU clock Division */
     PM_REGS->PM_CPUSEL = PM_CPUSEL_CPUDIV(${CONF_CPU_CLOCK_DIVIDER});
