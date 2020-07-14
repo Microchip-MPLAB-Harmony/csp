@@ -65,11 +65,12 @@ static void OSCCTRL_Initialize(void)
                                                              ${.vars[cfdEnable]?then('| OSCCTRL_XOSCCTRL_CFDEN_Msk | OSCCTRL_XOSCCTRL_CFDPRESC(${.vars[cfdPrescalar]})',' ')}
                                                              ${.vars[enalc]?then('| OSCCTRL_XOSCCTRL_ENALC_Msk',' ')} ${.vars[lowBufgain]?then('| OSCCTRL_XOSCCTRL_LOWBUFGAIN_Msk',' ')}
                                                              ${(.vars[mode] == "1")?then('| OSCCTRL_XOSCCTRL_XTALEN_Msk',' ')} | OSCCTRL_XOSCCTRL_ENABLE_Msk;</@compress>
-
+    <#if .vars[onDemand] != "ENABLE">
     while((OSCCTRL_REGS->OSCCTRL_STATUS & OSCCTRL_STATUS_XOSCRDY${x}_Msk) != OSCCTRL_STATUS_XOSCRDY${x}_Msk)
     {
         /* Waiting for the XOSC Ready state */
     }
+    </#if>
 </#if>
 </#list>
 }
@@ -91,11 +92,12 @@ static void OSC32KCTRL_Initialize(void)
     /* Enable clock failure detection */
     OSC32KCTRL_REGS->OSC32KCTRL_CFDCTRL = OSC32KCTRL_CFDCTRL_CFDEN_Msk  ${XOSC32K_CFDPRESC?then('| OSC32KCTRL_CFDCTRL_CFDPRESC_Msk','')} ${XOSC32K_SWBACK?then('| OSC32KCTRL_CFDCTRL_SWBACK_Msk','')};
     </#if>
-
+    <#if XOSC32K_ONDEMAND != "ENABLE">
     while(!((OSC32KCTRL_REGS->OSC32KCTRL_STATUS & OSC32KCTRL_STATUS_XOSC32KRDY_Msk) == OSC32KCTRL_STATUS_XOSC32KRDY_Msk))
     {
         /* Waiting for the XOSC32K Ready state */
     }
+    </#if>
 </#if>
 
     OSC32KCTRL_REGS->OSC32KCTRL_RTCCTRL = OSC32KCTRL_RTCCTRL_RTCSEL(${CONFIG_CLOCK_RTC_SRC});
@@ -139,12 +141,14 @@ static void FDPLL0_Initialize(void)
     {
         /* Waiting for the DPLL enable synchronization */
     }
+    <#if CONFIG_CLOCK_DPLL0_ONDEMAND != "1">
 
     while((OSCCTRL_REGS->DPLL[0].OSCCTRL_DPLLSTATUS & (OSCCTRL_DPLLSTATUS_LOCK_Msk | OSCCTRL_DPLLSTATUS_CLKRDY_Msk)) !=
                 (OSCCTRL_DPLLSTATUS_LOCK_Msk | OSCCTRL_DPLLSTATUS_CLKRDY_Msk))
     {
         /* Waiting for the Ready state */
     }
+    </#if>
 }
 </#if>
 
@@ -186,12 +190,14 @@ static void FDPLL1_Initialize(void)
     {
         /* Waiting for the DPLL enable synchronization */
     }
+    <#if CONFIG_CLOCK_DPLL1_ONDEMAND != "1">
 
     while((OSCCTRL_REGS->DPLL[1].OSCCTRL_DPLLSTATUS & (OSCCTRL_DPLLSTATUS_LOCK_Msk | OSCCTRL_DPLLSTATUS_CLKRDY_Msk)) !=
                 (OSCCTRL_DPLLSTATUS_LOCK_Msk | OSCCTRL_DPLLSTATUS_CLKRDY_Msk))
     {
         /* Waiting for the Ready state */
     }
+    </#if>
 }
 </#if>
 
@@ -231,7 +237,7 @@ static void DFLL_Initialize(void)
     }
 
     <@compress single_line=true>OSCCTRL_REGS->OSCCTRL_DFLLCTRLA = OSCCTRL_DFLLCTRLA_ENABLE_Msk
-    <#lt>                               ${(CONFIG_CLOCK_DFLL_ONDEMAND == "ENABLE")?then("| OSCCTRL_DFLLCTRLA_ONDEMAND_Msk ", "")}
+    <#lt>                               ${(CONFIG_CLOCK_DFLL_ONDEMAND == "1")?then("| OSCCTRL_DFLLCTRLA_ONDEMAND_Msk ", "")}
     <#lt>                               ${CONFIG_CLOCK_DFLL_RUNSTDY?then('| OSCCTRL_DFLLCTRLA_RUNSTDBY_Msk ', ' ')}
     <#lt>                               ;</@compress>
 
@@ -239,11 +245,13 @@ static void DFLL_Initialize(void)
     {
         /* Waiting for the DFLL enable synchronization */
     }
+    <#if CONFIG_CLOCK_DFLL_ONDEMAND != "1">
 
     while((OSCCTRL_REGS->OSCCTRL_STATUS & OSCCTRL_STATUS_DFLLRDY_Msk) != OSCCTRL_STATUS_DFLLRDY_Msk)
     {
         /* Waiting for the DFLL Ready state */
     }
+    </#if>
 <#else>
     <#if (CONFIG_CLOCK_DFLL_ONDEMAND == "0") || CONFIG_CLOCK_DFLL_RUNSTDY>
     <#lt>    <@compress single_line=true>OSCCTRL_REGS->OSCCTRL_DFLLCTRLA = OSCCTRL_DFLLCTRLA_ENABLE_Msk
@@ -270,7 +278,7 @@ static void DFLL_Initialize(void)
 static void GCLK${i}_Initialize(void)
 {
     <#if (i==0)>
-    
+
 <#if CONF_CPU_CLOCK_DIVIDER != "1">
     /* selection of the CPU clock Division */
     MCLK_REGS->MCLK_CPUDIV = MCLK_CPUDIV_DIV(${CONF_CPU_CLOCK_DIVIDER});
