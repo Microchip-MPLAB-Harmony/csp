@@ -1067,8 +1067,9 @@ def instantiateComponent(adchsComponent):
     for index in range (0, len(trigger)):
         if "ADC_TRIG" in trigger[index].getAttribute("caption"):
             triggerList.append(int(filter(str.isdigit, str(trigger[index].getAttribute("caption")))))
-    ADC_EVSYSTrigStart = min(triggerList)
-    ADC_EVSYSTrigEnd = max(triggerList)
+    if len(triggerList) != 0:
+        ADC_EVSYSTrigStart = min(triggerList)
+        ADC_EVSYSTrigEnd = max(triggerList)
 
     ADC_MIPS_Interrupt = False
     node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"INT\"]")

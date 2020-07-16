@@ -317,8 +317,7 @@ void ADC_EOS_InterruptHandler(void)
 <#else>
 bool ${ADCHS_INSTANCE_NAME}_EOSStatusGet(void)
 {
-    return (bool)((${ADCHS_INSTANCE_NAME}_REGS->ADCHS_ADCCON2 & ADCHS_ADCCON2_EOSRDY_Msk) 
-                    >> ADCHS_ADCCON2_EOSRDY_Pos);
+    return (bool)(ADCCON2bits.EOSRDY);
 }
 </#if>
 
