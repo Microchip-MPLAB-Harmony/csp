@@ -275,6 +275,12 @@ def u1ModecombineValues(symbol, event):
         uart1modeValue = uart1modeValue & (~int(maskvalue, 0))
         uart1modeValue = uart1modeValue | (brghValue << 3)
 
+    if event["id"] == "UART_UEN_SELECT":
+        uenValue = int(event["symbol"].getKeyValue(event["value"]))
+        maskvalue = uartBitField_U1MODE_UEN.getAttribute("mask")
+        uart1modeValue = uart1modeValue & (~int(maskvalue, 0))
+        uart1modeValue = uart1modeValue | (uenValue << 8)
+
     symbol.setValue(uart1modeValue, 2)
 
 def uartBRGHModeInfo(symbol, event):
@@ -507,10 +513,40 @@ def instantiateComponent(uartComponent):
         uartSym_U1MODE_BRGH.addKey( ii['key'],ii['value'], ii['desc'] )
     uartSym_U1MODE_BRGH.setVisible(False)
 
+    ##UEN Selection Bit
+    if uartBitField_U1MODE_UEN != None:
+        uensel_caption = {
+        "0" : "UxTX and UxRX pins are enabled and used; UxCTS and UxRTS/UxBCLK pins are controlled by corresponding bits in the PORTx register",
+        "1" : "UxTX, UxRX and UxRTS pins are enabled and used; UxCTS pin is controlled by corresponding bits in the PORTx register",
+        "2" : "UxTX, UxRX, UxCTS and UxRTS pins are enabled and used",
+        "3" : "UxTX, UxRX and UxBCLK pins are enabled and used; UxCTS pin is controlled by corresponding bits in the PORTx register"
+        }
+        uensel_names = []
+        _get_bitfield_names(uartValGrp_U1MODE_UEN, uensel_names)
+        uartSym_U1MODE_UENEL = uartComponent.createKeyValueSetSymbol("UART_UEN_SELECT", None)
+        uartSym_U1MODE_UENEL.setLabel(uartBitField_U1MODE_UEN.getAttribute("caption"))
+        uartSym_U1MODE_UENEL.setOutputMode( "Value" )
+        uartSym_U1MODE_UENEL.setDisplayMode( "Description" )
+
+        # Overwrite the key and description read from ATDF with the one from uensel_caption
+        index = 0
+        for ii in uensel_names:
+            for jj in uensel_caption:
+                if ii['value'] == jj:
+                    ii['key'] = uensel_caption[jj]
+                    ii['desc'] = uensel_caption[jj]
+                    if ii['value'] == "0":
+                        uartSym_U1MODE_UENEL.setDefaultValue(index)
+            index += 1
+
+        for ii in uensel_names:
+            uartSym_U1MODE_UENEL.addKey( ii['key'],ii['value'], ii['desc'] )
+
+
     uartSym_U1MODE = uartComponent.createHexSymbol("UMODE_VALUE", None)
     uartSym_U1MODE.setDefaultValue((int(uartSym_U1MODE_BRGH.getSelectedValue()) << 3) | (int(uartSym_U1MODE_PDSEL.getSelectedValue()) << 1) | (int(uartSym_U1MODE_STSEL.getSelectedValue()) << 0))
     uartSym_U1MODE.setVisible(False)
-    uartSym_U1MODE.setDependencies(u1ModecombineValues,["UART_STOPBIT_SELECT", "UART_PDBIT_SELECT", "UART_BRGH"])
+    uartSym_U1MODE.setDependencies(u1ModecombineValues,["UART_STOPBIT_SELECT", "UART_PDBIT_SELECT", "UART_BRGH", "UART_UEN_SELECT"])
 
     ## UART Clock Frequency
     uartClkValue = uartComponent.createIntegerSymbol("UART_CLOCK_FREQ", None)

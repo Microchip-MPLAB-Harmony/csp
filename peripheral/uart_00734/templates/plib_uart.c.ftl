@@ -98,6 +98,7 @@ void ${UART_INSTANCE_NAME}_Initialize( void )
     /* Set up UxMODE bits */
     /* STSEL  = ${UART_STOPBIT_SELECT} */
     /* PDSEL = ${UART_PDBIT_SELECT} */
+	/* UEN = ${UART_UEN_SELECT} */
 
     U${UART_INSTANCE_NUM}MODE = 0x${UMODE_VALUE};
 
