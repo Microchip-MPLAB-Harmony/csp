@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- This is an auto-generated pin data file created: 20:29:30 03/19/19 -->
+<!-- This is an auto-generated pin data file created: 03:25:17 07/17/20 -->
 <pinfile family="MX_330_350_370_L">
    <packages>
      <package diagram="JEDEC_MS_026D_BED_LQFP100" id="1" name="TQFP" />
@@ -398,6 +398,7 @@
       <function name="RPF6" />
       <function name="SCK1" />
       <function name="INT0" />
+      <fixed-change-notice name="Disable" />
     </pin>
     <pin name="RG3">
        <modifiers>

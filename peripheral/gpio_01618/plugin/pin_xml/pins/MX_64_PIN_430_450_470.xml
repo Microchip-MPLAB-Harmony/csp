@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- This is an auto-generated pin data file created: 20:29:30 03/19/19 -->
+<!-- This is an auto-generated pin data file created: 03:25:19 07/17/20 -->
 <pinfile family="MX_430_450_470_H">
    <packages>
      <package diagram="MX_64_QFN" id="1" name="QFN" />

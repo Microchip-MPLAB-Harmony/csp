@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- This is an auto-generated pin data file created: 15:13:05 04/07/19 -->
+<!-- This is an auto-generated pin data file created: 03:25:17 07/17/20 -->
 <pinfile family="MX_1XX_2XX">
    <packages>
      <package diagram="MX_28_SOIC_SPDIP_SSOP" id="1" name="SOIC" />

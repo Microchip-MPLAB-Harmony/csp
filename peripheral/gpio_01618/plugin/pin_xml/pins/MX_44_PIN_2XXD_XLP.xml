@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- This is an auto-generated pin data file created: 00:16:29 07/17/20 -->
+<!-- This is an auto-generated pin data file created: 03:25:17 07/17/20 -->
 <pinfile family="MX_1XX_2XX_XLP">
    <packages>
      <package diagram="MX_44_TQFP" id="1" name="TQFP" />
@@ -265,6 +265,8 @@
       <function name="RPB4" />
       <function name="CTED11" />
       <fixed-direction name="In" />
+      <fixed-pull-up name="Disable" />
+      <fixed-pull-down name="Disable" />
     </pin>
     <pin name="RA4">
        <number package="1" pin="34" />
@@ -274,6 +276,8 @@
       <function name="T1CK" />
       <function name="CTED9" />
       <fixed-direction name="In" />
+      <fixed-pull-up name="Disable" />
+      <fixed-pull-down name="Disable" />
     </pin>
     <pin name="RA9">
        <modifiers>
