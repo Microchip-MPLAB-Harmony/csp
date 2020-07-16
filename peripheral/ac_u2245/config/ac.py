@@ -52,7 +52,9 @@ def fileUpdate(symbol, event):
 
 #Control VDD Scaler value visibility
 def setacScalerVisibility(MySymbol, event):
-    if event["value"] == 5:
+    global acSym_COMPCTRL_MUXNEG
+    id = int(filter(str.isdigit, str(MySymbol.getID())))
+    if ("VSCALE" in acSym_COMPCTRL_MUXNEG[id].getSelectedKey()):
         MySymbol.setVisible(True)
     else:
         MySymbol.setVisible(False)
@@ -110,6 +112,8 @@ def instantiateComponent(acComponent):
     global InterruptHandler
     global InterruptHandlerLock
     global InterruptVectorSecurity
+    global acSym_COMPCTRL_MUXNEG
+    acSym_COMPCTRL_MUXNEG = []
     
     acInstanceName = acComponent.createStringSymbol("AC_INSTANCE_NAME", None)
     acInstanceName.setVisible(False)
@@ -181,10 +185,10 @@ def instantiateComponent(acComponent):
         acSym_COMPCTRL_MUXPOS.setDependencies(setacSymbolVisibility,["ANALOG_COMPARATOR_ENABLE_" + str(comparatorID)])
 
         #MUXNEG
-        global acSym_COMPCTRL_MUXNEG
-        acSym_COMPCTRL_MUXNEG = acComponent.createKeyValueSetSymbol("AC" + str(comparatorID) + "_MUX_NEG", acSym_Enable[comparatorID])
-        acSym_COMPCTRL_MUXNEG.setLabel("Negative Input Mux Selection")
-        acSym_COMPCTRL_MUXNEG.setVisible(False)
+        acSym_COMPCTRL_MUXNEG.append(comparatorID)
+        acSym_COMPCTRL_MUXNEG[comparatorID] = acComponent.createKeyValueSetSymbol("AC" + str(comparatorID) + "_MUX_NEG", acSym_Enable[comparatorID])
+        acSym_COMPCTRL_MUXNEG[comparatorID].setLabel("Negative Input Mux Selection")
+        acSym_COMPCTRL_MUXNEG[comparatorID].setVisible(False)
 
         acSym_COMPCTRL_MUXNEG_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AC\"]/value-group@[name=\"AC_COMPCTRL__MUXNEG\"]")
         acSym_COMPCTRL_MUXNEG_Node_Values = []
@@ -200,13 +204,13 @@ def instantiateComponent(acComponent):
 
             acSym_COMPCTRL_MUXNEG_Key_Description = acSym_COMPCTRL_MUXNEG_Node_Values[id].getAttribute("caption")
             acSym_COMPCTRL_MUXNEG_Key_Value = acSym_COMPCTRL_MUXNEG_Node_Values[id].getAttribute("value")
-            acSym_COMPCTRL_MUXNEG.addKey(acSym_COMPCTRL_MUXNEG_Key_Name, acSym_COMPCTRL_MUXNEG_Key_Value, acSym_COMPCTRL_MUXNEG_Key_Description)
+            acSym_COMPCTRL_MUXNEG[comparatorID].addKey(acSym_COMPCTRL_MUXNEG_Key_Name, acSym_COMPCTRL_MUXNEG_Key_Value, acSym_COMPCTRL_MUXNEG_Key_Description)
         
         
-        acSym_COMPCTRL_MUXNEG.setDefaultValue(acSym_COMPCTRL_MUXNEG_Default_Val)
-        acSym_COMPCTRL_MUXNEG.setOutputMode("Key")
-        acSym_COMPCTRL_MUXNEG.setDisplayMode("Description")
-        acSym_COMPCTRL_MUXNEG.setDependencies(setacSymbolVisibility,["ANALOG_COMPARATOR_ENABLE_" + str(comparatorID)])
+        acSym_COMPCTRL_MUXNEG[comparatorID].setDefaultValue(acSym_COMPCTRL_MUXNEG_Default_Val)
+        acSym_COMPCTRL_MUXNEG[comparatorID].setOutputMode("Key")
+        acSym_COMPCTRL_MUXNEG[comparatorID].setDisplayMode("Description")
+        acSym_COMPCTRL_MUXNEG[comparatorID].setDependencies(setacSymbolVisibility,["ANALOG_COMPARATOR_ENABLE_" + str(comparatorID)])
         
         #Scaling factor for VDD scaler
         acSym_SCALERn.append(comparatorID)
