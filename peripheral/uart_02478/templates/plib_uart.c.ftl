@@ -107,6 +107,7 @@ void ${UART_INSTANCE_NAME}_Initialize( void )
     /* RUNOVF = ${UART_RUNOVF} */
     /* CLKSEL = ${UART_CLKSEL} */
     /* SLPEN = ${UART_SLPEN} */
+	/* UEN = ${UART_UEN_SELECT} */
     U${UART_INSTANCE_NUM}MODE = 0x${UMODE_VALUE};
 
 <#if USART_INTERRUPT_MODE == true>
