@@ -943,6 +943,13 @@ def instantiateComponent(rtcComponent):
     rtcSymMode0_PERIN.setVisible(False)
     rtcSymMode0_PERIN.setDependencies(rtcMode0Evctrl, rtcMode0EvctrlDep)
 
+    rtcSymMode0_CompareRegName = rtcComponent.createStringSymbol("RTC_MODE0_COMPARE_REGISTER_NAME", None)
+    rtcSymMode0_CompareRegName.setVisible(False)
+    if ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTC"]/register-group@[name="RTC"]/register@[modes="MODE0",name="COMP0"]') is not None:
+        rtcSymMode0_CompareRegName.setDefaultValue("COMP0")
+    else:
+        rtcSymMode0_CompareRegName.setDefaultValue("COMP")
+
 # ********************************* MODE1 ************************************#
 
     rtcSymMode1Menu = rtcComponent.createMenuSymbol(
@@ -1200,6 +1207,20 @@ def instantiateComponent(rtcComponent):
     rtcSymMode2_PERIN.setDefaultValue(0)
     rtcSymMode2_PERIN.setVisible(False)
     rtcSymMode2_PERIN.setDependencies(rtcMode2Evctrl, rtcMode2EvctrlDep)
+
+    rtcSymMode2_AlarmRegName = rtcComponent.createStringSymbol("RTC_MODE2_ALARM_REGISTER_NAME", None)
+    rtcSymMode2_AlarmRegName.setVisible(False)
+    if ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTC"]/register-group@[name="RTC"]/register@[modes="MODE2",name="ALARM0"]') is not None:
+        rtcSymMode2_AlarmRegName.setDefaultValue("ALARM0")
+    else:
+        rtcSymMode2_AlarmRegName.setDefaultValue("ALARM")
+
+    rtcSymMode2_MaskRegName = rtcComponent.createStringSymbol("RTC_MODE2_MASK_REGISTER_NAME", None)
+    rtcSymMode2_MaskRegName.setVisible(False)
+    if ATDF.getNode('/avr-tools-device-file/modules/module@[name="RTC"]/register-group@[name="RTC"]/register@[modes="MODE2",name="MASK0"]') is not None:
+        rtcSymMode2_MaskRegName.setDefaultValue("MASK0")
+    else:
+        rtcSymMode2_MaskRegName.setDefaultValue("MASK")
 
     ############################################################################
     # Dependency ####

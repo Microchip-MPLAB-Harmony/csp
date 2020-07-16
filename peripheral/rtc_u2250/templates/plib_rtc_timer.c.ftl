@@ -104,7 +104,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
                                                                 </#if>;</@compress>
 
         <#if RTC_MODE0_NUM_COMP == 1>
-        <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_COMP = 0x${RTC_MODE0_TIMER_COMPARE};
+        <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_${RTC_MODE0_COMPARE_REGISTER_NAME} = 0x${RTC_MODE0_TIMER_COMPARE};
 
         <#else>
         <#list 0..(RTC_MODE0_NUM_COMP - 1) as i>
@@ -368,7 +368,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     <#if RTC_MODE0_NUM_COMP == 1>
         <#lt>void ${RTC_INSTANCE_NAME}_Timer32CompareSet ( uint32_t compareValue )
         <#lt>{
-        <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_COMP = compareValue;
+        <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_${RTC_MODE0_COMPARE_REGISTER_NAME} = compareValue;
 
         <#lt>    while((${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_SYNCBUSY & RTC_MODE0_SYNCBUSY_COMP0_Msk) == RTC_MODE0_SYNCBUSY_COMP0_Msk)
         <#lt>    {
