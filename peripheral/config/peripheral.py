@@ -29,6 +29,7 @@ peripherals = {
                 "NVMCTRL_U2409" : ["MEMORY"],
                 "NVMCTRL_U2207" : ["MEMORY"],
                 "NVMCTRL_U2802" : ["MEMORY"],
+                "NVMCTRL_03929" : ["MEMORY"],
                 "FLEXCOM_11268" : ["UART", "SPI", "I2C"],
                 "FLEXCOM_11277" : ["UART", "SPI", "I2C"],
                 "SERCOM_U2201"  : ["UART", "SPI", "I2C"],
