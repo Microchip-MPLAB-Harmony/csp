@@ -309,33 +309,34 @@ ${CLK_INIT_LIST}
     </#if>
     </#if>
 </#list>
-
-	<#if MCLK_AHB_VALUE != MCLK_AHB_INITIAL_VALUE>
+    <#-- Here symbol names might be little confusing. Symbol name having word "RESET" is
+        actually Reset value from ATDF, whereas symbol name having word "INITIAL" will actually have dynamic value-->
+	<#if MCLK_AHB_INITIAL_VALUE != MCLK_AHB_RESET_VALUE>
     /* Configure the AHB Bridge Clocks */
-    MCLK_REGS->MCLK_AHBMASK = ${MCLK_AHB_VALUE};
+    MCLK_REGS->MCLK_AHBMASK = ${MCLK_AHB_INITIAL_VALUE};
     </#if>
 
-    <#if MCLK_APBA_VALUE != MCLK_APBA_INITIAL_VALUE>
+    <#if MCLK_APBA_INITIAL_VALUE != MCLK_APBA_RESET_VALUE>
     /* Configure the APBA Bridge Clocks */
-    MCLK_REGS->MCLK_APBAMASK = ${MCLK_APBA_VALUE};
+    MCLK_REGS->MCLK_APBAMASK = ${MCLK_APBA_INITIAL_VALUE};
     </#if>
 
-    <#if MCLK_APBB_VALUE != MCLK_APBB_INITIAL_VALUE>
+    <#if MCLK_APBB_INITIAL_VALUE != MCLK_APBB_RESET_VALUE>
     /* Configure the APBB Bridge Clocks */
-    MCLK_REGS->MCLK_APBBMASK = ${MCLK_APBB_VALUE};
+    MCLK_REGS->MCLK_APBBMASK = ${MCLK_APBB_INITIAL_VALUE};
     </#if>
 
-    <#if MCLK_APBC_INITIAL_VALUE??>
-    <#if MCLK_APBC_VALUE != MCLK_APBC_INITIAL_VALUE>
+    <#if MCLK_APBC_INITIAL_VALUE?? && MCLK_APBC_RESET_VALUE??>
+    <#if MCLK_APBC_INITIAL_VALUE != MCLK_APBC_RESET_VALUE>
     /* Configure the APBC Bridge Clocks */
-    MCLK_REGS->MCLK_APBCMASK = ${MCLK_APBC_VALUE};
+    MCLK_REGS->MCLK_APBCMASK = ${MCLK_APBC_INITIAL_VALUE};
     </#if>
     </#if>
 
-    <#if MCLK_APBD_INITIAL_VALUE??>
-    <#if MCLK_APBD_VALUE != MCLK_APBD_INITIAL_VALUE>
+    <#if MCLK_APBD_INITIAL_VALUE?? && MCLK_APBD_RESET_VALUE??>
+    <#if MCLK_APBD_INITIAL_VALUE != MCLK_APBD_RESET_VALUE>
     /* Configure the APBD Bridge Clocks */
-    MCLK_REGS->MCLK_APBDMASK = ${MCLK_APBD_VALUE};
+    MCLK_REGS->MCLK_APBDMASK = ${MCLK_APBD_INITIAL_VALUE};
     </#if>
     </#if>
 
