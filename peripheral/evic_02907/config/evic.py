@@ -200,6 +200,22 @@ def updateEVICVectorSettings(symbol, event):
 
     evicSystemIntASMFile.setEnabled((event["value"] == "FreeRTOS"))
 
+def externalInterruptControl(symbol, event):
+    i = []
+    # splitting of ID below is dependent on ID name, if ID name is changed, below code may need a change as well
+    # Split the id name by "_" and put all the split names in the list "i"
+    i = symbol.getID().split("_")
+    j = event["id"].split("_")
+
+    symbol.setValue(event["value"])
+
+    Database.setSymbolValue("core", "EVIC_" + j[1] + "_HANDLER_LOCK", event["value"], 1)
+
+    if event["value"] == True:
+        Database.setSymbolValue("core", "EVIC_" + j[1] + "_INTERRUPT_HANDLER", "EXTERNAL_" + i[1] + "_InterruptHandler", 1)
+    else :
+        Database.setSymbolValue("core","EVIC_" + j[1] + "_INTERRUPT_HANDLER", "EXTERNAL_" + i[1] + "_Handler", 1)
+
 ################################################################################
 #### Component ####
 ################################################################################
@@ -304,6 +320,11 @@ for vectorDict in evicVectorDataStructure:
         evicVectorNumber.setDefaultValue(vIndex)
         evicVectorNumber.setVisible(False)
 
+        if "EXTERNAL_" == vName[:-1]:
+            evicExtIntPolarity = coreComponent.createComboSymbol("EVIC_" + str(vIndex) + "_EXT_INT_EDGE_POLARITY", evicVectorEnable, ["Rising Edge", "Falling Edge"])
+            evicExtIntPolarity.setLabel("Edge Polarity")
+            evicExtIntPolarity.setDefaultValue("Falling Edge") 
+
         evicVectorPriority = coreComponent.createComboSymbol("EVIC_" + str(vIndex) + "_PRIORITY", evicVectorEnable, evicPriorityGroup)
         evicVectorPriority.setLabel("Priority")
         evicVectorPriority.setDefaultValue(min(evicPriorityGroup))     #Setting default priority to 1
@@ -329,6 +350,11 @@ for vectorDict in evicVectorDataStructure:
         evicVectorEnableUpdate = coreComponent.createBooleanSymbol(vName + "_INTERRUPT_ENABLE_UPDATE", evicVectorEnable)
         evicVectorEnableUpdate.setVisible(False)
         evicVectorEnableUpdate.setDependencies(updateEVICVectorEnableUpdateValue, ["EVIC_" + str(vIndex) + "_ENABLE"])
+
+        if "EXTERNAL_" == vName[:-1]:
+            externalIntUpdate = coreComponent.createBooleanSymbol(vName + "_EXTERNAL_INTERRUPT_UPDATE", evicVectorEnable)
+            externalIntUpdate.setVisible(False)
+            externalIntUpdate.setDependencies(externalInterruptControl, ["EVIC_" + str(vIndex) + "_ENABLE"])
 
         #Only created for vector used by RTOS
         if vName in evicVectorSettings:
