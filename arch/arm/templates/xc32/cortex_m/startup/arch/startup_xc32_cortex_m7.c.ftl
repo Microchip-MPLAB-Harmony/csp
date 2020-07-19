@@ -41,27 +41,3 @@ uint32_t prim;
     }
 }
 #endif /* (__ARM_FP==14) || (__ARM_FP==4) */
-
-<#if TCM_ECC_ENABLE??>
-<#if TCM_ECC_ENABLE>
-__STATIC_INLINE void FPU_MemToFpu(unsigned int address)
-{
-    asm volatile (
-         "MOV      r8, %[addr]\n"
-         "PLD      [r8, #0xC0]\n"
-         "VLDM     r8!,{d0-d15}\n"
-           : : [addr] "l" (address) : "r8"
-    );
-}
-
-__STATIC_INLINE void FPU_FpuToMem(unsigned int address)
-{
-    asm volatile (
-         "MOV      r8, %[addr]\n"
-         "VSTM     r8!,{d0-d15}\n"
-           : : [addr] "l" (address) : "r8"
-    );
-}
-</#if>
-</#if>
-

@@ -79,7 +79,21 @@ extern void __attribute__((weak,long_call)) __xc32_on_bootstrap(void);
  */
 void __attribute__((optimize("-O1"), section(".text.Reset_Handler"), long_call, noreturn)) Reset_Handler(void)
 {
+#ifdef SCB_VTOR_TBLOFF_Msk
     uint32_t *pSrc;
+#endif
+
+#if defined (__REINIT_STACK_POINTER)
+    /* Initialize SP from linker-defined _stack symbol. */
+    __asm__ volatile ("ldr sp, =_stack" : : : "sp");
+
+#ifdef SCB_VTOR_TBLOFF_Msk
+    /* Buy stack for locals */
+    __asm__ volatile ("sub sp, sp, #8" : : : "sp");
+#endif
+    __asm__ volatile ("add r7, sp, #0" : : : "r7");
+#endif
+
 
     /* Call the optional application-provided _on_reset() function. */
     if (_on_reset)
@@ -98,24 +112,16 @@ void __attribute__((optimize("-O1"), section(".text.Reset_Handler"), long_call, 
 #endif
 </#if>
 
-<#if TCM_ENABLE??>
-<#if !(TCM_FIXED_SIZE??)>
-	TCM_Configure(${DEVICE_TCM_SIZE});
+<#if ECC_SUPPORTED??>
+    TCM_EccInitialize();
+    FlexRAM_EccInitialize();
 </#if>
 
-<#if TCM_ECC_ENABLE??>
-    <#if TCM_ECC_ENABLE>
-    TCM_EccInitialize();
-    <#else>
-    <#if TCM_ENABLE>
-    /* Enable TCM   */
-    TCM_Enable();
-    <#else>
-    /* Disable TCM  */
-    TCM_Disable();
-    </#if>
-    </#if>
-<#else>
+<#if TCM_ENABLE??>
+<#if !(TCM_FIXED_SIZE??)>
+    TCM_Configure(${DEVICE_TCM_SIZE});
+</#if>
+
 <#if TCM_ENABLE>
     /* Enable TCM   */
     TCM_Enable();
@@ -124,11 +130,7 @@ void __attribute__((optimize("-O1"), section(".text.Reset_Handler"), long_call, 
     TCM_Disable();
 </#if>
 </#if>
-</#if>
 
-<#if FLEXRAM_ECC_SUPPORTED??>
-    FlexRAM_EccInitialize();
-</#if>
     /* Initialize data after TCM is enabled.
      * Data initialization from the XC32 .dinit template */
     __pic32c_data_initialization();
@@ -184,11 +186,10 @@ void __attribute__((optimize("-O1"), section(".text.Reset_Handler"), long_call, 
 
     /* Branch to application's main function */
     main();
-<#if CoreArchitecture != "CORTEX-M0PLUS">
+
 #if (defined(__DEBUG) || defined(__DEBUG_D)) && defined(__XC32)
     __builtin_software_breakpoint();
 #endif
-</#if>
     /* Infinite loop */
     while (1) {}
 }
