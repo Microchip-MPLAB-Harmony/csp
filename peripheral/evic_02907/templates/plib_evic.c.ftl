@@ -106,6 +106,11 @@ void EVIC_Initialize( void )
     /* Configure External Interrupt Edge Polarity */
     INTCONSET = ${externalInterruptPolarity};
 </#if>
+<#if EVIC_PRISS_VALUE??>
+
+    /* Configure Shadow Register Set */
+    PRISS = ${EVIC_PRISS_VALUE};
+</#if>
 }
 
 void EVIC_SourceEnable( INT_SOURCE source )
