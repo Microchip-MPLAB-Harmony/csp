@@ -209,6 +209,17 @@ def externalInterruptControl(symbol, event):
         Database.setSymbolValue("core", "EVIC_" + j[1] + "_INTERRUPT_HANDLER", "EXTERNAL_" + i[1] + "_InterruptHandler", 1)
     else :
         Database.setSymbolValue("core","EVIC_" + j[1] + "_INTERRUPT_HANDLER", "EXTERNAL_" + i[1] + "_Handler", 1)
+
+def updateInterruptPriorityforSRS(symbol, event):
+    symbol.setValue(int(event["value"][-1]))
+
+def updateInterruptAttribute(symbol, event):
+    for i in range(1,8):
+        Database.setSymbolValue("core", "EVIC_PRIORITY_" + str(i) + "ATTRIBUTE", "SOFT", 1)
+
+    if event["value"] != 0:
+        Database.setSymbolValue("core", "EVIC_PRIORITY_" + str(event["value"]) + "ATTRIBUTE", "SRS", 1)
+		
 ################################################################################
 #### Component ####
 ################################################################################
@@ -227,6 +238,36 @@ deviceSeries = deviceSeriesNode.getAttribute("series")
 evicMenu = coreComponent.createMenuSymbol("EVIC_MENU", None)
 evicMenu.setLabel(deviceSeries + " Interrupts")
 evicMenu.setDescription("Configuration for " + deviceSeries + " Interrupts")
+
+############################################# Shadow Register Setting Start ############################################## 
+node = ATDF.getNode('/avr-tools-device-file/devices/device/parameters/param@[name="__INT_NUM_SHADOW_SETS"]')
+numOfShadowSet = int(node.getAttribute("value"))
+
+if numOfShadowSet == 1: # For PIC32MX5XX/6XX/7XX series
+    evicShadowRegMenu = coreComponent.createMenuSymbol("EVIC_SHADOW_REG_MENU", evicMenu)
+    evicShadowRegMenu.setLabel("Shadow Register Set Configuration")
+
+    SRS_MENU_COMMENT = coreComponent.createCommentSymbol("EVIC_SRS_COMMENT", evicShadowRegMenu)
+    SRS_MENU_COMMENT.setLabel("**** Configure Shadow Register Set in DEVCFG3 Fuse Settings ****")
+    SRS_MENU_COMMENT.setVisible(True)
+
+    evicNumOfShadowSet = coreComponent.createIntegerSymbol("EVIC_PRIORITY_FOR_SHADOW_SET", evicShadowRegMenu)
+    evicNumOfShadowSet.setLabel("Shadow Set used by Interrupt with a priority level of")
+    evicNumOfShadowSet.setDefaultValue(7)
+    evicNumOfShadowSet.setReadOnly(True)
+    evicNumOfShadowSet.setDependencies(updateInterruptPriorityforSRS, ["CONFIG_FSRSSEL"])
+
+    for i in range (1,8):
+        evicPriorityISR_Attribute = coreComponent.createComboSymbol("EVIC_PRIORITY_" + str(i) + "ATTRIBUTE", evicShadowRegMenu, ["SOFT", "SRS", "AUTO"])
+        evicPriorityISR_Attribute.setLabel("Interrupt with a priority level of " + str(i) + " uses ISR Attribute")
+        evicPriorityISR_Attribute.setVisible(False)
+        if i == 7:
+            evicPriorityISR_Attribute.setDefaultValue("SRS")
+        else:
+            evicPriorityISR_Attribute.setDefaultValue("SOFT")
+
+    evicPriorityISR_Attribute.setDependencies(updateInterruptAttribute, ["EVIC_PRIORITY_FOR_SHADOW_SET"])
+############################################# Shadow Register Setting End ############################################## 
 
 evicVectorMax = coreComponent.createIntegerSymbol("EVIC_VECTOR_MAX", evicMenu)
 evicVectorMax.setDefaultValue(vecHighestID)
