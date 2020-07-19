@@ -62,6 +62,14 @@
 #endif
 // DOM-IGNORE-END
 
+<#assign NumOfEnabledExtInt = 0>
+
+<#list 0..4 as i>
+    <#assign EXT_INT_PIN = "EXTERNAL_" + i + "_EXTERNAL_INTERRUPT_UPDATE">
+    <#if .vars[EXT_INT_PIN]?has_content && .vars[EXT_INT_PIN] == true>
+        <#assign NumOfEnabledExtInt = NumOfEnabledExtInt + 1>
+    </#if>
+</#list>
 // *****************************************************************************
 // *****************************************************************************
 // Section: Data Types
@@ -103,6 +111,20 @@ typedef enum
 </#if>
 } INT_SOURCE;
 
+<#if 0 < NumOfEnabledExtInt>
+typedef enum
+{
+<#list 0..4 as i>
+    <#assign EXT_INT_PIN = "EXTERNAL_" + i + "_EXTERNAL_INTERRUPT_UPDATE">
+    <#if .vars[EXT_INT_PIN]?has_content && .vars[EXT_INT_PIN] == true>
+        <#lt>    EXTERNAL_INT_${i} = _IEC0_INT${i}IE_MASK,
+    </#if>
+</#list>
+}EXTERNAL_INT_PIN;
+
+typedef  void (*EXTERNAL_INT_PIN_CALLBACK) (EXTERNAL_INT_PIN pin, uintptr_t context);
+</#if>
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Interface Routines
@@ -123,11 +145,31 @@ void EVIC_SourceStatusSet( INT_SOURCE source );
 
 void EVIC_SourceStatusClear( INT_SOURCE source );
 
+<#if 0 < NumOfEnabledExtInt>
+bool EVIC_ExternalInterruptCallbackRegister(
+        EXTERNAL_INT_PIN extIntPin,
+        const EXTERNAL_INT_PIN_CALLBACK callback,
+        uintptr_t context
+    );
+
+void EVIC_ExternalInterruptEnable( EXTERNAL_INT_PIN extIntPin );
+
+void EVIC_ExternalInterruptDisable( EXTERNAL_INT_PIN extIntPin );
+
+typedef struct {
+
+    /* Callback for event on target pin*/
+    EXTERNAL_INT_PIN_CALLBACK        callback;
+
+    /* Callback Context */
+    uintptr_t               context;
+    
+} EXT_INT_PIN_CALLBACK_OBJ;
+</#if>
+
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
-
     }
-
 #endif
 // DOM-IGNORE-END
 
