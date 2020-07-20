@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>ADCHSx_ChannelResultGet Function</title>
+<title>AFECx_ChannelOffsetSet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05475.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04969.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05474.html" target="topic">Peripheral Libraries</a> &gt; <a href="00720.html" target="topic">ADCHS Peripheral Library Help</a> &gt; <a href="00721.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="00791.html" target="topic">ADCHSx_ChannelResultGet Function</a></div>
+<a href="05049.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04581.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05048.html" target="topic">Peripheral Libraries</a> &gt; <a href="00736.html" target="topic">AFEC Peripheral Library Help</a> &gt; <a href="00737.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="00791.html" target="topic">AFECx_ChannelOffsetSet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05475.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05049.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00790.html" target="topic">Previous</a> | <a href="00721.html" target="topic">Up</a> | <a href="00792.html" target="topic">Next</a></div>
+<a href="00790.html" target="topic">Previous</a> | <a href="00737.html" target="topic">Up</a> | <a href="00792.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ADCHSx_ChannelResultGet@ADCHS_CHANNEL_NUM Topic Title: ADCHSx_ChannelResultGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: AFECx_ChannelOffsetSet@AFEC_CHANNEL_NUM@uint16_t Topic Title: AFECx_ChannelOffsetSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-ADCHSx_ChannelResultGet Function</div>
+AFECx_ChannelOffsetSet Function</div>
 </div>
 </div>
 
@@ -49,19 +49,20 @@ ADCHSx_ChannelResultGet Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function reads the conversion result of the channel</p></div>
+This function writes the offset value for the channel. This offset value is added to the value of sample to get the full range output (0 to Vref). Normally, this value should be set to Vref/2 in 10-bit format.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100">uint16_t <strong><span style="color: #000000">ADCHSx_ChannelResultGet</span></strong>(
-    <a href="00730.html" target="topic">ADCHS_CHANNEL_NUM</a> <strong><span style="color: #000000">channel</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">AFECx_ChannelOffsetSet</span></strong>(
+    <a href="00763.html" target="topic">AFEC_CHANNEL_NUM</a> <strong><span style="color: #000000">channel</span></strong>, 
+    uint16_t <strong><span style="color: #000000">offset</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="00798.html" target="topic">ADCHSx_Initialize</a>() must have been called first for the associated instance. And conversion must have been started.</p></div>
+<a href="00800.html" target="topic">AFECx_Initialize</a>() must have been called first for the associated instance.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -80,7 +81,12 @@ Description&nbsp;</div></td></tr><tr>
 <div class="Element303">
 channel&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-channel number&nbsp;</div></td></tr></table></div></div>
+channel number&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+offset&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+10-bit offset generated by internal DAC&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -88,29 +94,21 @@ Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-uint16_t - conversion result</p></div>
+None.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function can be called from interrupt or by polling the status when result is available. User should decode the result based on result sign mode (signed or unsigned result) and result resolution (12, 13, 14, 15 or 16 bit result) configuration.</p></div>
+Offset should be set at the initialization. If this function is called when conversion is on-going, offset will be applied from the next conversion. Offset is added to the sample value and thus offset limits the input voltage range. Offset less than Vref/2 will result in ADC saturation for input voltage greater than Vref/2.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">    uint16_t result;
-    <strong><span style="color: #000080">bool</span></strong> status;
-    ADCHS_Initialize();
-    ADCHS_ChannelsEnable(ADCHS_CH0);
-    ADCHS_ConversionStart();
-    status = ADCHS_ChannelResultIsReady(ADCHS_CH0);
-    <strong><span style="color: #000080">if</span></strong> (status)
-    {
-        result = ADCHS_ChannelResultGet(ADCHS_CH0);
-    }</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">    AFEC0_Initialize();
+    AFEC0_ChannelOffsetSet(AFEC_CH0, 512U);</pre></div></div>
 </div>
 </div>
 </div>
@@ -118,7 +116,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05475.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04969.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05474.html" target="topic">Peripheral Libraries</a> &gt; <a href="00720.html" target="topic">ADCHS Peripheral Library Help</a> &gt; <a href="00721.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="00791.html" target="topic">ADCHSx_ChannelResultGet Function</a></div>
+<a href="05049.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04581.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05048.html" target="topic">Peripheral Libraries</a> &gt; <a href="00736.html" target="topic">AFEC Peripheral Library Help</a> &gt; <a href="00737.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="00791.html" target="topic">AFECx_ChannelOffsetSet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -126,13 +124,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05475.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05049.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00790.html" target="topic">Previous</a> | <a href="00721.html" target="topic">Up</a> | <a href="00792.html" target="topic">Next</a></div>
+<a href="00790.html" target="topic">Previous</a> | <a href="00737.html" target="topic">Up</a> | <a href="00792.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ADCHSx_ChannelResultGet@ADCHS_CHANNEL_NUM Topic Title: ADCHSx_ChannelResultGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: AFECx_ChannelOffsetSet@AFEC_CHANNEL_NUM@uint16_t Topic Title: AFECx_ChannelOffsetSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

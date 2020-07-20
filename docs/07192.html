@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>SERCOMx_USART_WriteBufferSizeGet Function</title>
+<title>TCx_CHy_CaptureBGet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05475.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04969.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05474.html" target="topic">Peripheral Libraries</a> &gt; <a href="07007.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="07018.html" target="topic">USART</a> &gt; <a href="07022.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="07192.html" target="topic">SERCOMx_USART_WriteBufferSizeGet Function</a></div>
+<a href="05049.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04581.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05048.html" target="topic">Peripheral Libraries</a> &gt; <a href="07018.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="06997.html" target="topic">Capture</a> &gt; <a href="07000.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="07192.html" target="topic">TCx_CHy_CaptureBGet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05475.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05049.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="07185.html" target="topic">Previous</a> | <a href="07022.html" target="topic">Up</a> | <a href="07187.html" target="topic">Next</a></div>
+<a href="07191.html" target="topic">Previous</a> | <a href="07000.html" target="topic">Up</a> | <a href="07196.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_usart_ring_buffer::SERCOMx_USART_WriteBufferSizeGet Topic Title: SERCOMx_USART_WriteBufferSizeGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tc_6082::TCx_CHy_CaptureBGet Topic Title: TCx_CHy_CaptureBGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-SERCOMx_USART_WriteBufferSizeGet Function</div>
+TCx_CHy_CaptureBGet Function</div>
 </div>
 </div>
 
@@ -49,44 +49,43 @@ SERCOMx_USART_WriteBufferSizeGet Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function returns the size of the transmit ring buffer, which is same as the size of the transmit ring buffer configured in MHC.</p></div>
+This function provides the Capture-B value that was stored when the selected event occurred on the input signal. The caller should call the TCx_CHy_CaptureBEventOccured function to identify if the Capture-B value has been updated by the selected signal event.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100">size_t <strong><span style="color: #000000">SERCOMx_USART_WriteBufferSizeGet</span></strong>();</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100">uint16_t <strong><span style="color: #000000">TCx_CHy_CaptureBGet</span></strong>();</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-SERCOMx_USART_Initialize must have been called for the associated SERCOM_USART instance.</p></div>
+<a href="07212.html" target="topic">TCx_CHy_TimerInitialize</a> function must have been called first for the given channel to configure channel in capture mode.</p></div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The API returns the size of the transmit ring buffer</p></div>
+Most recent Capture-B value.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This API is only available when SERCOM_USART ring buffer mode is enabled in MHC.</p></div>
+This function is applicable only for capture mode.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">
-size_t txBufferSize;
+<div class="Element13"><div class="Element12"><pre class="Element12">uint16_t capture;
 
-txBufferSize = SERCOM1_USART_WriteBufferSizeGet();
 
-<i><span style="color: #008000">// Set a threshold to get notification when the transmit ring buffer is empty</span></i>
-SERCOM1_USART_WriteThresholdSet(txBufferSize);   
-</pre></div></div>
+<strong><span style="color: #000080">if</span></strong> (TC0_CH1_CaptureBEventOccured() == <strong><span style="color: #000080">true</span></strong>)
+{
+    capture = TC0_CH1_CaptureBGet();
+}</pre></div></div>
 </div>
 </div>
 </div>
@@ -94,7 +93,7 @@ SERCOM1_USART_WriteThresholdSet(txBufferSize);
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05475.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04969.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05474.html" target="topic">Peripheral Libraries</a> &gt; <a href="07007.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="07018.html" target="topic">USART</a> &gt; <a href="07022.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="07192.html" target="topic">SERCOMx_USART_WriteBufferSizeGet Function</a></div>
+<a href="05049.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04581.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05048.html" target="topic">Peripheral Libraries</a> &gt; <a href="07018.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="06997.html" target="topic">Capture</a> &gt; <a href="07000.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="07192.html" target="topic">TCx_CHy_CaptureBGet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -102,13 +101,13 @@ SERCOM1_USART_WriteThresholdSet(txBufferSize);
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05475.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05049.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="07185.html" target="topic">Previous</a> | <a href="07022.html" target="topic">Up</a> | <a href="07187.html" target="topic">Next</a></div>
+<a href="07191.html" target="topic">Previous</a> | <a href="07000.html" target="topic">Up</a> | <a href="07196.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_usart_ring_buffer::SERCOMx_USART_WriteBufferSizeGet Topic Title: SERCOMx_USART_WriteBufferSizeGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tc_6082::TCx_CHy_CaptureBGet Topic Title: TCx_CHy_CaptureBGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

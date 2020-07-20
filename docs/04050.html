@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>LCDCx_SetVSYNCPulseStart Function</title>
+<title>NVM_CALLBACK Type</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05475.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04969.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05474.html" target="topic">Peripheral Libraries</a> &gt; <a href="03928.html" target="topic">LCDC Peripheral Library Help</a> &gt; <a href="03929.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="04050.html" target="topic">LCDCx_SetVSYNCPulseStart Function</a></div>
+<a href="05049.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04581.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05048.html" target="topic">Peripheral Libraries</a> &gt; <a href="03999.html" target="topic">NVM Peripheral Library Help</a> &gt; <a href="04000.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="04050.html" target="topic">NVM_CALLBACK Type</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05475.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05049.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04049.html" target="topic">Previous</a> | <a href="03929.html" target="topic">Up</a> | <a href="04051.html" target="topic">Next</a></div>
+<a href="04056.html" target="topic">Previous</a> | <a href="04000.html" target="topic">Up</a> | <a href="04052.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: LCDCx_SetVSYNCPulseStart@LCDCx_VSYNC_SYNC_EDGE Topic Title: LCDCx_SetVSYNCPulseStart Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nvm_02629::NVM_CALLBACK Topic Title: NVM_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-LCDCx_SetVSYNCPulseStart Function</div>
+NVM_CALLBACK Type</div>
 </div>
 </div>
 
@@ -49,20 +49,13 @@ LCDCx_SetVSYNCPulseStart Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None</p></div>
+Callback Function Pointer&nbsp;</p>
+<p class="Element10">
+This data type defines the function signature for the NVM peripheral callback function. The NVM peripheral library will call back the client's function with this signature when an on-going erase or write operation has completed and the NVM is ready to accept a new operation request. A function of this should be registered by calling the <a href="04051.html" target="topic">NVM_CallbackRegister</a> function.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">LCDCx_SetVSYNCPulseStart</span></strong>(
-    <a href="04060.html" target="topic">LCDCx_VSYNC_SYNC_EDGE</a> <strong><span style="color: #000000">edge</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None.</p></div>
-</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000">NVM_CALLBACK</span></strong>)(uintptr_t context);</pre></div></div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
 <div class="Element11">
@@ -78,9 +71,9 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-edge&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-first or second HSYNC edge&nbsp;</div></td></tr></table></div></div>
+Allows the caller to provide a context value (usually a pointer to the callers context for multi-instance clients).&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -88,21 +81,54 @@ Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None</p></div>
+None.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None</p></div>
+The callback feature is only available when the library was generated with interrupt option (in MHC) enabled.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">
+<strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong>
+{
+    <strong><span style="color: #000080">bool</span></strong> operationComplete;
+
+} APP_DATA;
+
+<i><span style="color: #008000">// Callback is called when an operation completes.</span></i>
+<strong><span style="color: #000080">void</span></strong> APP_NVMCallback(uintptr_t context)
+{
+    APP_DATA * appdata = (APP_DATA *)context;
+    appData-&gt;operationComplete = <strong><span style="color: #000080">true</span></strong>;
+}
+
+<i><span style="color: #008000">// Function calls in main thread.</span></i>
+APP_DATA  myAppData;
+myAppData.operationComplete = <strong><span style="color: #000080">false</span></strong>;
+
+<i><span style="color: #008000">// Register the callback</span></i>
+<a href="04051.html" target="topic">NVM_CallbackRegister</a>(APP_NVMCallback, &amp;myAppData);
+
+<i><span style="color: #008000">// Perform some operation.</span></i>
+<a href="04058.html" target="topic">NVM_PageErase</a>(0x9D100000);
+
+<i><span style="color: #008000">// Now wait for the operation to complete.</span></i>
+<strong><span style="color: #000080">while</span></strong>(!myAppData.operationComplete);
+</pre></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05475.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04969.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05474.html" target="topic">Peripheral Libraries</a> &gt; <a href="03928.html" target="topic">LCDC Peripheral Library Help</a> &gt; <a href="03929.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="04050.html" target="topic">LCDCx_SetVSYNCPulseStart Function</a></div>
+<a href="05049.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04581.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05048.html" target="topic">Peripheral Libraries</a> &gt; <a href="03999.html" target="topic">NVM Peripheral Library Help</a> &gt; <a href="04000.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="04050.html" target="topic">NVM_CALLBACK Type</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -110,13 +136,13 @@ None</p></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05475.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05049.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04049.html" target="topic">Previous</a> | <a href="03929.html" target="topic">Up</a> | <a href="04051.html" target="topic">Next</a></div>
+<a href="04056.html" target="topic">Previous</a> | <a href="04000.html" target="topic">Up</a> | <a href="04052.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: LCDCx_SetVSYNCPulseStart@LCDCx_VSYNC_SYNC_EDGE Topic Title: LCDCx_SetVSYNCPulseStart Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nvm_02629::NVM_CALLBACK Topic Title: NVM_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

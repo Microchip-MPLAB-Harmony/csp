@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Running The Application</title>
+<title>ADCHS_EOS_CALLBACK_OBJECT Structure</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05475.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00894.html" target="topic">Applications Help</a> &gt; <a href="00715.html" target="topic">ADCHS Applications</a> &gt; <a href="00713.html" target="topic">adchs_interrupt</a> &gt; <a href="00708.html" target="topic">Running The Application</a></div>
+<a href="05049.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04581.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05048.html" target="topic">Peripheral Libraries</a> &gt; <a href="00651.html" target="topic">ADCHS Peripheral Library Help</a> &gt; <a href="00652.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="00708.html" target="topic">ADCHS_EOS_CALLBACK_OBJECT Structure</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05475.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05049.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00706.html" target="topic">Previous</a> | <a href="00713.html" target="topic">Up</a> | <a href="00826.html" target="topic">Next</a></div>
+<a href="00707.html" target="topic">Previous</a> | <a href="00652.html" target="topic">Up</a> | <a href="00736.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ADCHS adchs_interrupt Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ADCHS_EOS_CALLBACK_OBJECT Topic Title: ADCHS_EOS_CALLBACK_OBJECT Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Running The Application</div>
+ADCHS_EOS_CALLBACK_OBJECT Structure</div>
 </div>
 </div>
 
@@ -48,74 +48,30 @@ Running The Application</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
-
-<ol class="Element630">
-<li value="1" class="Element600">Open the Terminal application (Ex.:Tera term) on the computer.</li>
-<li value="2" class="Element600">Connect to the &quot;USB to UART&quot; COM port and configure the serial settings as follows:
-<ul class="Element631">
-<li class="Element601">Baud : 115200</li>
-<li class="Element601">Data : 8 Bits</li>
-<li class="Element601">Parity : None</li>
-<li class="Element601">Stop : 1 Bit</li>
-<li class="Element601">Flow Control : None</li>
-</ul></li>
-<li value="3" class="Element600">Build and Program the application using the MPLAB X IDE.</li>
-<li value="4" class="Element600">Console displays the converted digital value.</li>
-</ol><p class="Element10">
-&nbsp;</p>
 <p class="Element10">
-<img src="adchs_polled_output.png" border="0" alt="" title=""> </p><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element65" valign="top" width="24%">
-<div class="Element66">
-Project Name&nbsp;</div></td><td class="Element65" valign="top" width="76%">
-<div class="Element66">
-Output&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="24%">
-<div class="Element68">
-pic32mz_dag_sk.X&nbsp;</div></td><td class="Element67" valign="top" width="76%">
-<div class="Element68">
-Success: Console displays the ADC count and the ADC input voltage.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="24%">
-<div class="Element68">
-pic32mz_das_sk.X&nbsp;</div></td><td class="Element67" valign="top" width="76%">
-<div class="Element68">
-Success: Console displays the ADC count and the ADC input voltage.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="24%">
-<div class="Element68">
-pic32mz_ef_sk.X&nbsp;</div></td><td class="Element67" valign="top" width="76%">
-<div class="Element68">
-Success: Console displays the ADC count and the ADC input voltage.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="24%">
-<div class="Element68">
-pic32mk_gp_db.X&nbsp;</div></td><td class="Element67" valign="top" width="76%">
-<div class="Element68">
-Success: Console displays the ADC count and the ADC input voltage.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="24%">
-<div class="Element68">
-pic32mk_mcm_curiosity_pro.X&nbsp;</div></td><td class="Element67" valign="top" width="76%">
-<div class="Element68">
-Success: Console displays the ADC count and the ADC input voltage.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="24%">
-<div class="Element68">
-pic32mk_mcj_curiosity_pro.X&nbsp;</div></td><td class="Element67" valign="top" width="76%">
-<div class="Element68">
-Success: Console displays the ADC count and the ADC input voltage.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="24%">
-<div class="Element68">
-pic32mz_w1_curiosity.X&nbsp;</div></td><td class="Element67" valign="top" width="76%">
-<div class="Element68">
-Success: Console displays the ADC count and the ADC input voltage.&nbsp;</div></td></tr></table></div></div>
+Callback structure&nbsp;</p>
+<p class="Element10">
+This stores the callback function pointer and context</p></div>
 </div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
+  <a href="00707.html" target="topic">ADCHS_EOS_CALLBACK</a> <strong><span style="color: #000000">callback_fn</span></strong>;
+  uintptr_t <strong><span style="color: #000000">context</span></strong>;
+} ADCHS_EOS_CALLBACK_OBJECT;</pre></div></div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05475.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00894.html" target="topic">Applications Help</a> &gt; <a href="00715.html" target="topic">ADCHS Applications</a> &gt; <a href="00713.html" target="topic">adchs_interrupt</a> &gt; <a href="00708.html" target="topic">Running The Application</a></div>
+<a href="05049.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04581.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05048.html" target="topic">Peripheral Libraries</a> &gt; <a href="00651.html" target="topic">ADCHS Peripheral Library Help</a> &gt; <a href="00652.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="00708.html" target="topic">ADCHS_EOS_CALLBACK_OBJECT Structure</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -123,13 +79,13 @@ Success: Console displays the ADC count and the ADC input voltage.&nbsp;</div></
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05475.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05049.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00706.html" target="topic">Previous</a> | <a href="00713.html" target="topic">Up</a> | <a href="00826.html" target="topic">Next</a></div>
+<a href="00707.html" target="topic">Previous</a> | <a href="00652.html" target="topic">Up</a> | <a href="00736.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ADCHS adchs_interrupt Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ADCHS_EOS_CALLBACK_OBJECT Topic Title: ADCHS_EOS_CALLBACK_OBJECT Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

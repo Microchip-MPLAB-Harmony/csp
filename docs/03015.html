@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>FLEXCOMx_USART_Write Function</title>
+<title>GPIO_PinClear Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05475.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04969.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05474.html" target="topic">Peripheral Libraries</a> &gt; <a href="02798.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02809.html" target="topic">USART</a> &gt; <a href="02814.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="03015.html" target="topic">FLEXCOMx_USART_Write Function</a></div>
+<a href="05049.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04581.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05048.html" target="topic">Peripheral Libraries</a> &gt; <a href="02871.html" target="topic">GPIO Peripheral Library Help</a> &gt; <a href="02872.html" target="topic">Library Interface</a> &gt; b) Pin Functions &gt; <a href="03015.html" target="topic">GPIO_PinClear Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05475.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05049.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03008.html" target="topic">Previous</a> | <a href="02814.html" target="topic">Up</a> | <a href="02986.html" target="topic">Next</a></div>
+<a href="03020.html" target="topic">Previous</a> | <a href="02872.html" target="topic">Up</a> | <a href="03023.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: flexcom_11268_usart_ring_buffer::FLEXCOMx_USART_Write@uint8_t*@size_t Topic Title: FLEXCOMx_USART_Write Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: gpio_01166::GPIO_PinClear@GPIO_PIN Topic Title: GPIO_PinClear Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-FLEXCOMx_USART_Write Function</div>
+GPIO_PinClear Function</div>
 </div>
 </div>
 
@@ -49,22 +49,19 @@ FLEXCOMx_USART_Write Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function submits a write buffer to the FLEXCOM_USART peripheral to transfer. The data to be transmitted is deep copied into the FLEXCOM_USART peripheral's transmit ring buffer. The size of this buffer is configurable in MHC. Since, the data is deep copied into the transmit buffer, it allows the use of local variables/buffers.&nbsp;</p>
-<p class="Element10">
-This function call is always non-blocking. Call to this function copies the application's transmit buffer into the internal transmit ring buffer and returns immediately. If notifications are enabled and a callback is registered, a callback is given when the threshold condition is met.</p></div>
+This function drives '0' on the selected I/O line/pin.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100">size_t <strong><span style="color: #000000">FLEXCOMx_USART_Write</span></strong>(
-    uint8_t* <strong><span style="color: #000000">pWrBuffer</span></strong>, 
-    <strong><span style="color: #000080">const</span></strong> size_t <strong><span style="color: #000000">size</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">GPIO_PinClear</span></strong>(
+    <a href="02914.html" target="topic">GPIO_PIN</a> <strong><span style="color: #000000">pin</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-FLEXCOMx_USART_Initialize must have been called for the associated FLEXCOM_USART instance.</p></div>
+None.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -81,14 +78,9 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-pWrBuffer&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+pin&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Pointer to the user buffer.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-size&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Number of bytes to be transferred.&nbsp;</div></td></tr></table></div></div>
+One of the IO pins from the enum <a href="02914.html" target="topic">GPIO_PIN</a>&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -96,35 +88,20 @@ Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The API returns the number of bytes actually copied. Depending on the space available in the transmit buffer, the number of bytes copied may be less than or equal to the requested size. Application must retry by calling this API again if the return value is less than the number of bytes requested. Application can also use the <a href="03019.html" target="topic">FLEXCOMx_USART_WriteFreeBufferCountGet</a> API to determine the free space available in the transmit buffer before calling this API. Application can also choose to register for event notification to get notified when there is sufficient free space (using the <a href="03021.html" target="topic">FLEXCOMx_USART_WriteThresholdSet</a> API) in the transmit buffer.</p></div>
+None.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This API is only available when FLEXCOM_USART ring buffer mode is enabled in MHC.</p></div>
+None.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">
-size_t nBytesCopied;
-uint8_t txBuffer[50];
-uint32_t nBytes;
-
-<i><span style="color: #008000">// Check if there is any free space is available in the transmit buffer</span></i>
-<strong><span style="color: #000080">if</span></strong> (FLEXCOM1_USART_WriteFreeBufferCountGet() &gt; 0)
-{
-    nBytesCopied = FLEXCOM1_USART_Write((uint8_t*)txBuffer, nBytes);  
-    
-    <strong><span style="color: #000080">if</span></strong> (nBytesCopied != nBytes)
-    {
-        <i><span style="color: #008000">//The transmit buffer is full. Try after some time.  </span></i>
-    }
-}       
-</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">    GPIO_PinClear(GPIO_PIN_RB3);</pre></div></div>
 </div>
 </div>
 </div>
@@ -132,7 +109,7 @@ uint32_t nBytes;
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05475.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04969.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05474.html" target="topic">Peripheral Libraries</a> &gt; <a href="02798.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02809.html" target="topic">USART</a> &gt; <a href="02814.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="03015.html" target="topic">FLEXCOMx_USART_Write Function</a></div>
+<a href="05049.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04581.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05048.html" target="topic">Peripheral Libraries</a> &gt; <a href="02871.html" target="topic">GPIO Peripheral Library Help</a> &gt; <a href="02872.html" target="topic">Library Interface</a> &gt; b) Pin Functions &gt; <a href="03015.html" target="topic">GPIO_PinClear Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -140,13 +117,13 @@ uint32_t nBytes;
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05475.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05049.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03008.html" target="topic">Previous</a> | <a href="02814.html" target="topic">Up</a> | <a href="02986.html" target="topic">Next</a></div>
+<a href="03020.html" target="topic">Previous</a> | <a href="02872.html" target="topic">Up</a> | <a href="03023.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: flexcom_11268_usart_ring_buffer::FLEXCOMx_USART_Write@uint8_t*@size_t Topic Title: FLEXCOMx_USART_Write Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: gpio_01166::GPIO_PinClear@GPIO_PIN Topic Title: GPIO_PinClear Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

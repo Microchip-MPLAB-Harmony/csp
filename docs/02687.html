@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>EVSYS_INT_MASK Enumeration</title>
+<title>FLEXCOMx_USART_Read Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05475.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04969.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05474.html" target="topic">Peripheral Libraries</a> &gt; <a href="02660.html" target="topic">EVSYS Peripheral Library Help</a> &gt; <a href="02661.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="02687.html" target="topic">EVSYS_INT_MASK Enumeration</a></div>
+<a href="05049.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04581.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05048.html" target="topic">Peripheral Libraries</a> &gt; <a href="02543.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02554.html" target="topic">USART</a> &gt; <a href="02559.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="02687.html" target="topic">FLEXCOMx_USART_Read Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05475.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05049.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02684.html" target="topic">Previous</a> | <a href="02661.html" target="topic">Up</a> | <a href="02678.html" target="topic">Next</a></div>
+<a href="02720.html" target="topic">Previous</a> | <a href="02559.html" target="topic">Up</a> | <a href="02688.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: evsys_u2208::EVSYS_INT_MASK Topic Title: EVSYS_INT_MASK Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: flexcom_11268_usart::FLEXCOMx_USART_Read@void *@size_t Topic Title: FLEXCOMx_USART_Read Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-EVSYS_INT_MASK Enumeration</div>
+FLEXCOMx_USART_Read Function</div>
 </div>
 </div>
 
@@ -49,51 +49,87 @@ EVSYS_INT_MASK Enumeration</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-EVSYS Interrupt Mask&nbsp;</p>
+This function submits a read buffer to the FLEXCOM USART peripheral to process. The behavior of this function call will vary based on the mode selected within MCC.&nbsp;</p>
 <p class="Element10">
-This enumeration identifies the possible interrupt source that the EVSYS module can generate. The EVSYS callback will receive a value of this type.</p></div>
+If the peripheral is configured for the interrupt mode, this function call is always non-blocking. Call to this function submits the buffer and the size to the peripheral library and returns immediately. User can check the transfer status through callback mechanism.&nbsp;</p>
+<p class="Element10">
+If the peripheral is configured for the non-interrupt mode, this function call returns only after requested size is processed.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
-  <strong><span style="color: #000000">EVSYS_INT_OVERRUN0</span></strong> = EVSYS_INTENSET_OVR0,
-  <strong><span style="color: #000000">EVSYS_INT_OVERRUN1</span></strong> = EVSYS_INTENSET_OVR1,
-  <strong><span style="color: #000000">EVSYS_INT_OVERRUN2</span></strong> = EVSYS_INTENSET_OVR2,
-  <strong><span style="color: #000000">EVSYS_INT_OVERRUN3</span></strong> = EVSYS_INTENSET_OVR3,
-  <strong><span style="color: #000000">EVSYS_INT_OVERRUN4</span></strong> = EVSYS_INTENSET_OVR4,
-  <strong><span style="color: #000000">EVSYS_INT_OVERRUN5</span></strong> = EVSYS_INTENSET_OVR5,
-  <strong><span style="color: #000000">EVSYS_INT_OVERRUN6</span></strong> = EVSYS_INTENSET_OVR6,
-  <strong><span style="color: #000000">EVSYS_INT_OVERRUN7</span></strong> = EVSYS_INTENSET_OVR7,
-  <strong><span style="color: #000000">EVSYS_INT_OVERRUN8</span></strong> = EVSYS_INTENSET_OVR8,
-  <strong><span style="color: #000000">EVSYS_INT_OVERRUN9</span></strong> = EVSYS_INTENSET_OVR9,
-  <strong><span style="color: #000000">EVSYS_INT_OVERRUN10</span></strong> = EVSYS_INTENSET_OVR10,
-  <strong><span style="color: #000000">EVSYS_INT_OVERRUN11</span></strong> = EVSYS_INTENSET_OVR11,
-  <strong><span style="color: #000000">EVSYS_INT_EVENT0</span></strong> = EVSYS_INTENSET_EVD0,
-  <strong><span style="color: #000000">EVSYS_INT_EVENT1</span></strong> = EVSYS_INTENSET_EVD1,
-  <strong><span style="color: #000000">EVSYS_INT_EVENT2</span></strong> = EVSYS_INTENSET_EVD2,
-  <strong><span style="color: #000000">EVSYS_INT_EVENT3</span></strong> = EVSYS_INTENSET_EVD3,
-  <strong><span style="color: #000000">EVSYS_INT_EVENT4</span></strong> = EVSYS_INTENSET_EVD4,
-  <strong><span style="color: #000000">EVSYS_INT_EVENT5</span></strong> = EVSYS_INTENSET_EVD5,
-  <strong><span style="color: #000000">EVSYS_INT_EVENT6</span></strong> = EVSYS_INTENSET_EVD6,
-  <strong><span style="color: #000000">EVSYS_INT_EVENT7</span></strong> = EVSYS_INTENSET_EVD7,
-  <strong><span style="color: #000000">EVSYS_INT_EVENT8</span></strong> = EVSYS_INTENSET_EVD8,
-  <strong><span style="color: #000000">EVSYS_INT_EVENT9</span></strong> = EVSYS_INTENSET_EVD9,
-  <strong><span style="color: #000000">EVSYS_INT_EVENT10</span></strong> = EVSYS_INTENSET_EVD10,
-  <strong><span style="color: #000000">EVSYS_INT_EVENT11</span></strong> = EVSYS_INTENSET_EVD11
-} EVSYS_INT_MASK;</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">FLEXCOMx_USART_Read</span></strong>(
+    <strong><span style="color: #000080">void</span></strong> * <strong><span style="color: #000000">buffer</span></strong>, 
+    <strong><span style="color: #000080">const</span></strong> size_t <strong><span style="color: #000000">size</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+<a href="02686.html" target="topic">FLEXCOMx_USART_Initialize</a> must have been called for the associated FLEXCOM USART instance.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+buffer&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Pointer to the user buffer.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+size&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Number of bytes to be transferred.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Read request status. True - Read request was successful. False - Read request has failed.</p></div>
+</div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+This API is available when USART ring buffer mode is disabled in MHC.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12"><i><span style="color: #008000">//Example to use in non-interrupt</span></i>
+<strong><span style="color: #000080">char</span></strong> rxData[COUNT] = {}; <i><span style="color: #008000">//COUNT is expected size</span></i>
+
+<strong><span style="color: #000080">if</span></strong>(<strong><span style="color: #000080">false</span></strong> != FLEXCOM1_USART_Read(&amp;rxData, COUNT))
+{
+    <i><span style="color: #008000">//The transfer is completed</span></i>
+}
+<strong><span style="color: #000080">else</span></strong>
+{
+    <i><span style="color: #008000">//Read Failed</span></i>
+}</pre></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05475.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04969.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05474.html" target="topic">Peripheral Libraries</a> &gt; <a href="02660.html" target="topic">EVSYS Peripheral Library Help</a> &gt; <a href="02661.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="02687.html" target="topic">EVSYS_INT_MASK Enumeration</a></div>
+<a href="05049.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04581.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05048.html" target="topic">Peripheral Libraries</a> &gt; <a href="02543.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02554.html" target="topic">USART</a> &gt; <a href="02559.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="02687.html" target="topic">FLEXCOMx_USART_Read Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -101,13 +137,13 @@ None.</p></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05475.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05049.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02684.html" target="topic">Previous</a> | <a href="02661.html" target="topic">Up</a> | <a href="02678.html" target="topic">Next</a></div>
+<a href="02720.html" target="topic">Previous</a> | <a href="02559.html" target="topic">Up</a> | <a href="02688.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: evsys_u2208::EVSYS_INT_MASK Topic Title: EVSYS_INT_MASK Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: flexcom_11268_usart::FLEXCOMx_USART_Read@void *@size_t Topic Title: FLEXCOMx_USART_Read Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>FLEXCOMx_USART_WriteCallbackRegister Function</title>
+<title>GPIO_PinInterruptCallbackRegister Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05475.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04969.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05474.html" target="topic">Peripheral Libraries</a> &gt; <a href="02798.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02809.html" target="topic">USART</a> &gt; <a href="02814.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="03017.html" target="topic">FLEXCOMx_USART_WriteCallbackRegister Function</a></div>
+<a href="05049.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04581.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05048.html" target="topic">Peripheral Libraries</a> &gt; <a href="02871.html" target="topic">GPIO Peripheral Library Help</a> &gt; <a href="02872.html" target="topic">Library Interface</a> &gt; b) Pin Functions &gt; <a href="03017.html" target="topic">GPIO_PinInterruptCallbackRegister Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05475.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05049.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03010.html" target="topic">Previous</a> | <a href="02814.html" target="topic">Up</a> | <a href="03013.html" target="topic">Next</a></div>
+<a href="02913.html" target="topic">Previous</a> | <a href="02872.html" target="topic">Up</a> | <a href="03018.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: flexcom_11268_usart_ring_buffer::FLEXCOMx_USART_WriteCallbackRegister@FLEXCOM_USART_RING_BUFFER_CALLBACK@uintptr_t Topic Title: FLEXCOMx_USART_WriteCallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: gpio_01166::GPIO_PinInterruptCallbackRegister@CN_PIN@GPIO_PIN_CALLBACK@uintptr_t Topic Title: GPIO_PinInterruptCallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-FLEXCOMx_USART_WriteCallbackRegister Function</div>
+GPIO_PinInterruptCallbackRegister Function</div>
 </div>
 </div>
 
@@ -49,12 +49,17 @@ FLEXCOMx_USART_WriteCallbackRegister Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function sets the pointer to a client function to be called &quot;back&quot; when the given FLEXCOM_USART's write events occur. It also passes a context value (usually a pointer to a context structure) that is passed into the function when it is called.</p></div>
+This function allows application to register an event handling function for the PLIB to call back when I/O interrupt occurs on the selected pin.&nbsp;</p>
+<p class="Element10">
+At any point if application wants to stop the callback, it can call this function with &quot;callback&quot; value as NULL.&nbsp;</p>
+<p class="Element10">
+If a pin is not configured for interrupt in Pin Manager and yet its callback registration is attempted using this API, then registration doesn't happen and API returns false indicating the same.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">FLEXCOMx_USART_WriteCallbackRegister</span></strong>(
-    <a href="03007.html" target="topic">FLEXCOM_USART_RING_BUFFER_CALLBACK</a> <strong><span style="color: #000000">callback</span></strong>, 
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">GPIO_PinInterruptCallbackRegister</span></strong>(
+    <a href="02890.html" target="topic">CN_PIN</a> <strong><span style="color: #000000">cnPin</span></strong>, 
+    <strong><span style="color: #000080">const</span></strong> <a href="03014.html" target="topic">GPIO_PIN_CALLBACK</a> <strong><span style="color: #000000">callBack</span></strong>, 
     uintptr_t <strong><span style="color: #000000">context</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
@@ -62,7 +67,7 @@ Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-FLEXCOMx_USART_Initialize must have been called for the associated FLEXCOM_USART instance.</p></div>
+Corresponding pin must be configured in interrupt mode in MHC Pin Manager.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -79,14 +84,19 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-callback&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+pin&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-A pointer to a function with a calling signature defined by the <a href="03007.html" target="topic">FLEXCOM_USART_RING_BUFFER_CALLBACK</a> data type.<br>&nbsp;</div></td></tr><tr>
+One of the Change Notice pins from the enum <a href="02890.html" target="topic">CN_PIN</a>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+eventHandler&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Pointer to the event handler function implemented by the user&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
 context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-A value (usually a pointer) passed (unused) into the function identified by the callback parameter.&nbsp;</div></td></tr></table></div></div>
+The value of parameter will be passed back to the application unchanged, when the eventHandler function is called. It can be used to identify any application specific value.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -94,33 +104,27 @@ Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None</p></div>
+Callback registration status:</p>
+<ul class="Element630">
+<li class="Element600">true: Callback was successfully registered</li>
+<li class="Element600">false: Callback was not registered</li>
+</ul></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This API is only available when FLEXCOM_USART ring buffer mode is enabled in MHC.&nbsp;</p>
-<p class="Element10">
-To disable the callback function, pass a NULL for the callback parameter. See the <a href="03007.html" target="topic">FLEXCOM_USART_RING_BUFFER_CALLBACK</a> type definition for additional information.</p></div>
+None.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">
-<strong><span style="color: #000080">bool</span></strong> txThresholdEventReceived = <strong><span style="color: #000080">false</span></strong>;
-
-<strong><span style="color: #000080">void</span></strong> usartWriteEventHandler(<a href="03002.html" target="topic">FLEXCOM_USART_EVENT</a> event, uintptr_t context )
-{
-    <strong><span style="color: #000080">if</span></strong> (event == FLEXCOM_USART_EVENT_WRITE_THRESHOLD_REACHED)
+<div class="Element13"><div class="Element12"><pre class="Element12">    <strong><span style="color: #000080">if</span></strong>(GPIO_PinInterruptCallbackRegister(CN8_PIN, &amp;APP_PinHandler, NULL))
     {
-        txThresholdEventReceived = <strong><span style="color: #000080">true</span></strong>;
-    }
-}
-
-FLEXCOM1_USART_WriteCallbackRegister(usartWriteEventHandler, (uintptr_t)NULL);</pre></div></div>
+        <i><span style="color: #008000">// callback got registered</span></i>
+    }</pre></div></div>
 </div>
 </div>
 </div>
@@ -128,7 +132,7 @@ FLEXCOM1_USART_WriteCallbackRegister(usartWriteEventHandler, (uintptr_t)NULL);</
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05475.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04969.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05474.html" target="topic">Peripheral Libraries</a> &gt; <a href="02798.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02809.html" target="topic">USART</a> &gt; <a href="02814.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="03017.html" target="topic">FLEXCOMx_USART_WriteCallbackRegister Function</a></div>
+<a href="05049.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04581.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05048.html" target="topic">Peripheral Libraries</a> &gt; <a href="02871.html" target="topic">GPIO Peripheral Library Help</a> &gt; <a href="02872.html" target="topic">Library Interface</a> &gt; b) Pin Functions &gt; <a href="03017.html" target="topic">GPIO_PinInterruptCallbackRegister Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -136,13 +140,13 @@ FLEXCOM1_USART_WriteCallbackRegister(usartWriteEventHandler, (uintptr_t)NULL);</
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05475.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05049.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03010.html" target="topic">Previous</a> | <a href="02814.html" target="topic">Up</a> | <a href="03013.html" target="topic">Next</a></div>
+<a href="02913.html" target="topic">Previous</a> | <a href="02872.html" target="topic">Up</a> | <a href="03018.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: flexcom_11268_usart_ring_buffer::FLEXCOMx_USART_WriteCallbackRegister@FLEXCOM_USART_RING_BUFFER_CALLBACK@uintptr_t Topic Title: FLEXCOMx_USART_WriteCallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: gpio_01166::GPIO_PinInterruptCallbackRegister@CN_PIN@GPIO_PIN_CALLBACK@uintptr_t Topic Title: GPIO_PinInterruptCallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

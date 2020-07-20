@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>PIO_PIN Enumeration</title>
+<title>PMP_AddressPortEnable Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05475.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04969.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05474.html" target="topic">Peripheral Libraries</a> &gt; <a href="04983.html" target="topic">PIO Peripheral Library Help</a> &gt; <a href="04984.html" target="topic">Library Interface</a> &gt; <a href="04980.html" target="topic">d) Data Types and Constants</a> &gt; <a href="05147.html" target="topic">PIO_PIN Enumeration</a></div>
+<a href="05049.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04581.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05048.html" target="topic">Peripheral Libraries</a> &gt; <a href="05138.html" target="topic">PMP Peripheral Library Help</a> &gt; <a href="05139.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="05147.html" target="topic">PMP_AddressPortEnable Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05475.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05049.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="05373.html" target="topic">Previous</a> | <a href="04980.html" target="topic">Up</a> | <a href="05385.html" target="topic">Next</a></div>
+<a href="05146.html" target="topic">Previous</a> | <a href="05139.html" target="topic">Up</a> | <a href="05148.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pio_11264::PIO_PIN Topic Title: PIO_PIN Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pmp_00751::PMP_AddressPortEnable@uint32_t Topic Title: PMP_AddressPortEnable Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-PIO_PIN Enumeration</div>
+PMP_AddressPortEnable Function</div>
 </div>
 </div>
 
@@ -49,274 +49,68 @@ PIO_PIN Enumeration</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-PIO Port Pins&nbsp;</p>
-<p class="Element10">
-This enumeration identifies the available PIO port pins.</p></div>
+This function enables the port lines specified as PMP address lines.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
-  <strong><span style="color: #000000">PIO_PIN_PA0</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PA1</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PA2</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PA3</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PA4</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PA5</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PA6</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PA7</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PA8</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PA9</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PA10</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PA11</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PA12</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PA13</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PA14</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PA15</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PA16</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PA17</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PA18</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PA19</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PA20</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PA21</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PA22</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PA23</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PA24</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PA25</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PA26</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PA27</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PA28</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PA29</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PA30</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PA31</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PB0</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PB1</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PB2</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PB3</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PB4</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PB5</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PB6</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PB7</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PB8</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PB9</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PB10</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PB11</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PB12</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PB13</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PB14</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PB15</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PB16</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PB17</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PB18</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PB19</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PB20</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PB21</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PB22</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PB23</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PB24</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PB25</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PB26</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PB27</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PB28</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PB29</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PB30</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PB31</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PC0</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PC1</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PC2</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PC3</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PC4</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PC5</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PC6</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PC7</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PC8</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PC9</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PC10</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PC11</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PC12</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PC13</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PC14</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PC15</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PC16</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PC17</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PC18</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PC19</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PC20</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PC21</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PC22</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PC23</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PC24</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PC25</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PC26</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PC27</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PC28</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PC29</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PC30</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PC31</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PD0</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PD1</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PD2</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PD3</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PD4</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PD5</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PD6</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PD7</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PD8</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PD9</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PD10</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PD11</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PD12</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PD13</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PD14</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PD15</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PD16</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PD17</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PD18</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PD19</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PD20</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PD21</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PD22</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PD23</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PD24</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PD25</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PD26</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PD27</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PD28</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PD29</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PD30</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PD31</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PE0</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PE1</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PE2</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PE3</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PE4</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PE5</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PE6</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PE7</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PE8</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PE9</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PE10</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PE11</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PE12</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PE13</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PE14</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PE15</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PE16</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PE17</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PE18</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PE19</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PE20</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PE21</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PE22</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PE23</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PE24</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PE25</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PE26</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PE27</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PE28</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PE29</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PE30</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PE31</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PF0</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PF1</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PF2</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PF3</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PF4</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PF5</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PF6</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PF7</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PF8</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PF9</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PF10</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PF11</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PF12</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PF13</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PF14</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PF15</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PF16</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PF17</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PF18</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PF19</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PF20</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PF21</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PF22</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PF23</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PF24</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PF25</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PF26</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PF27</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PF28</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PF29</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PF30</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PF31</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PG0</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PG1</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PG2</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PG3</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PG4</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PG5</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PG6</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PG7</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PG8</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PG9</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PG10</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PG11</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PG12</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PG13</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PG14</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PG15</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PG16</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PG17</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PG18</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PG19</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PG20</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PG21</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PG22</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PG23</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PG24</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PG25</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PG26</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PG27</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PG28</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PG29</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PG30</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_PG31</span></strong>,
-  <strong><span style="color: #000000">PIO_PIN_NONE</span></strong>
-} PIO_PIN;</pre></div></div>
-<a name="4D656D62657273"></a><div class="Element14">
-Members</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">PMP_AddressPortEnable</span></strong>(
+    uint32_t <strong><span style="color: #000000">portfunctions</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element272">
-<div class="TableDiv">
-<table cellspacing="0" class="Table3">
-<tr>
-<td class="Element260" valign="top" width="35%">
-<div class="Element261">
-Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
-<div class="Element265">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-PIO_PIN_NONE&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-This element should not be used in any of the PIO APIs. It will be used by other modules or application to denote that none of the PIO Pin is used&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+PMP should have been initialized by calling <a href="05149.html" target="topic">PMP_Initialize</a>.</p></div>
 </div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+portfunctions&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+One of the possible values&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The caller should not rely on the specific numbers assigned to any of these values as they may change from one processor to the next.&nbsp;</p>
-<p class="Element10">
-Not all pins are available on all devices. Refer to the specific device data sheet to determine which pins are supported.</p></div>
+None.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12"><a href="05149.html" target="topic">PMP_Initialize</a>();
+PMP_AddressPortEnable(0x1);</pre></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05475.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04969.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05474.html" target="topic">Peripheral Libraries</a> &gt; <a href="04983.html" target="topic">PIO Peripheral Library Help</a> &gt; <a href="04984.html" target="topic">Library Interface</a> &gt; <a href="04980.html" target="topic">d) Data Types and Constants</a> &gt; <a href="05147.html" target="topic">PIO_PIN Enumeration</a></div>
+<a href="05049.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04581.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05048.html" target="topic">Peripheral Libraries</a> &gt; <a href="05138.html" target="topic">PMP Peripheral Library Help</a> &gt; <a href="05139.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="05147.html" target="topic">PMP_AddressPortEnable Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -324,13 +118,13 @@ Not all pins are available on all devices. Refer to the specific device data she
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05475.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05049.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="05373.html" target="topic">Previous</a> | <a href="04980.html" target="topic">Up</a> | <a href="05385.html" target="topic">Next</a></div>
+<a href="05146.html" target="topic">Previous</a> | <a href="05139.html" target="topic">Up</a> | <a href="05148.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pio_11264::PIO_PIN Topic Title: PIO_PIN Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pmp_00751::PMP_AddressPortEnable@uint32_t Topic Title: PMP_AddressPortEnable Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Introduction</title>
+<title>Configuring the Library</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05475.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04969.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05474.html" target="topic">Peripheral Libraries</a> &gt; <a href="07647.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="07626.html" target="topic">Capture</a> &gt; <a href="07628.html" target="topic">Introduction</a></div>
+<a href="05049.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04581.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05048.html" target="topic">Peripheral Libraries</a> &gt; <a href="07632.html" target="topic">UART Peripheral Library Help</a> &gt; <a href="07628.html" target="topic">Configuring the Library</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05475.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05049.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="07626.html" target="topic">Previous</a> | <a href="07626.html" target="topic">Up</a> | <a href="07627.html" target="topic">Next</a></div>
+<a href="07631.html" target="topic">Previous</a> | <a href="07632.html" target="topic">Up</a> | <a href="07637.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC 44162 Capture Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: UART 6418 Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Introduction</div>
+Configuring the Library</div>
 </div>
 </div>
 
@@ -49,14 +49,29 @@ Introduction</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The TC channel in capture mode is used to measure pulse time, frequency, period and duty cycle.</p></div>
+Configure the peripheral library using the MHC.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+The UART library supports the byte and buffer model to transfer data. The buffer model can transfer a block of data in a blocking and a non-blocking manner.</p>
+<ul class="Element630">
+<li class="Element600">To transfer a block of data in a non-blocking manner, the peripheral interrupt is used to manage the transfer and therefore the &quot;Interrupt Mode&quot; option should be <strong>enabled</strong> in the MHC</li>
+<li class="Element600">To use the byte model or to transfer a block of data in a blocking manner, the CPU polls the peripheral register and therefore the &quot;Interrupt Mode&quot; option should be <strong>disabled</strong> in the MHC</li>
+</ul><p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<u>UART Ring Buffer Mode:</u>&nbsp;</p>
+<p class="Element10">
+The UART library also supports ring buffer mode. This mode is available when the peripheral interrupt is enabled and allows data transfer in non-blocking manner. The transmit and receive ring buffer size is configurable in MHC. In ring buffer mode, the receiver is always enabled, and the received data is saved in the receive ring buffer. The application can use the API calls to read the data out from the ring buffer. APIs are provided to query the number of (unread) bytes available in the receive buffer, free space in the receive buffer and size of the receive buffer. Similarly, during transmission, the application data is deep copied into the transmit ring buffer thereby allowing the use of local buffers for data transmission. APIs are provided to query the free space in the transmit buffer, number of bytes pending transmission and the size of the transmit buffer.&nbsp;</p>
+<p class="Element10">
+Additionally, application can enable notifications to get notified when <i>n</i> bytes are available in the receive buffer or when <i>n</i> bytes of free space is available in the transmit buffer. The APIs allow application to set the threshold levels for notification in both receive and transmit buffers. Further, application can also choose to enable persistent notifications whereby the application is notified until the threshold condition is met.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05475.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04969.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05474.html" target="topic">Peripheral Libraries</a> &gt; <a href="07647.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="07626.html" target="topic">Capture</a> &gt; <a href="07628.html" target="topic">Introduction</a></div>
+<a href="05049.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04581.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05048.html" target="topic">Peripheral Libraries</a> &gt; <a href="07632.html" target="topic">UART Peripheral Library Help</a> &gt; <a href="07628.html" target="topic">Configuring the Library</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -64,13 +79,13 @@ The TC channel in capture mode is used to measure pulse time, frequency, period 
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05475.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05049.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="07626.html" target="topic">Previous</a> | <a href="07626.html" target="topic">Up</a> | <a href="07627.html" target="topic">Next</a></div>
+<a href="07631.html" target="topic">Previous</a> | <a href="07632.html" target="topic">Up</a> | <a href="07637.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC 44162 Capture Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: UART 6418 Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

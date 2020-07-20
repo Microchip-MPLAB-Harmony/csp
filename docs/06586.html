@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>RTCC_CallbackRegister Function</title>
+<title>SERCOMx_USART_WriteThresholdSet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05475.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04969.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05474.html" target="topic">Peripheral Libraries</a> &gt; <a href="06549.html" target="topic">RTCC Peripheral Library Help</a> &gt; <a href="06550.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="06586.html" target="topic">RTCC_CallbackRegister Function</a></div>
+<a href="05049.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04581.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05048.html" target="topic">Peripheral Libraries</a> &gt; <a href="06412.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="06423.html" target="topic">USART</a> &gt; <a href="06427.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="06586.html" target="topic">SERCOMx_USART_WriteThresholdSet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05475.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05049.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06585.html" target="topic">Previous</a> | <a href="06550.html" target="topic">Up</a> | <a href="06588.html" target="topic">Next</a></div>
+<a href="06579.html" target="topic">Previous</a> | <a href="06427.html" target="topic">Up</a> | <a href="06526.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtcc_01261::RTCC_CallbackRegister@RTC_CALLBACK@uintptr_t Topic Title: RTCC_CallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_usart_ring_buffer::SERCOMx_USART_WriteThresholdSet@uint32_t Topic Title: SERCOMx_USART_WriteThresholdSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-RTCC_CallbackRegister Function</div>
+SERCOMx_USART_WriteThresholdSet Function</div>
 </div>
 </div>
 
@@ -49,20 +49,19 @@ RTCC_CallbackRegister Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function registers the callback function to be called from interrupt.</p></div>
+This API allows the application to set a threshold level on the number of free space available in the transmit buffer. Once the threshold is reached a notification is given to the application if it is enabled.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">RTCC_CallbackRegister</span></strong>(
-    <a href="06582.html" target="topic">RTC_CALLBACK</a> <strong><span style="color: #000000">callback</span></strong>, 
-    uintptr_t <strong><span style="color: #000000">context</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">SERCOMx_USART_WriteThresholdSet</span></strong>(
+    uint32_t <strong><span style="color: #000000">nBytesThreshold</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="06587.html" target="topic">RTCC_Initialize</a> must have been called.</p></div>
+SERCOMx_USART_Initialize must have been called for the associated SERCOM_USART instance.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -79,14 +78,9 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-callback&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+nBytesThreshold&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Function of type <a href="06582.html" target="topic">RTC_CALLBACK</a>. This will be called from the interrupt service routine for RTCC.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Allows the caller to provide a context value (usually a pointer to the callers context for multi-instance clients).&nbsp;</div></td></tr></table></div></div>
+Threshold value for free space in the transmit buffer after which a notification must be given&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -94,26 +88,49 @@ Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+None</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The callback function will be executed in an interrupt context. Avoid calling blocking functions, performing computationally intensive operations or interrupt unsafe functions from the callback function.</p></div>
+This API is only available when SERCOM_USART ring buffer mode is enabled in MHC.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
 <div class="Element13"><div class="Element12"><pre class="Element12">
-<strong><span style="color: #000080">void</span></strong> RTC_Callback( uintptr_t context)
-{
-    <i><span style="color: #008000">// Code to be executed in the RTCC callback</span></i>
-}
+uint8_t txBuffer[10];   
 
-RTCC_CallbackRegister(RTC_Callback, (uintptr_t) NULL);</pre></div></div>
+<strong><span style="color: #000080">volatile</span></strong> <strong><span style="color: #000080">bool</span></strong> txThresholdEventReceived = <strong><span style="color: #000080">false</span></strong>;
+
+<strong><span style="color: #000080">void</span></strong> usartWriteEventHandler(<a href="06567.html" target="topic">SERCOM_USART_EVENT</a> event, uintptr_t context )
+{
+    txThresholdEventReceived = <strong><span style="color: #000080">true</span></strong>;
+}       
+
+<i><span style="color: #008000">//----------------------------------------------------------//</span></i>
+
+<i><span style="color: #008000">// Register a callback for write events</span></i>
+SERCOM1_USART_WriteCallbackRegister(usartWriteEventHandler, (uintptr_t) NULL);
+
+<i><span style="color: #008000">// Set TX threshold - 10 or more bytes of free space in the transmit buffer</span></i>
+SERCOM1_USART_WriteThresholdSet(10);   
+
+<i><span style="color: #008000">// Enable notifications. Disable persistent notifications.</span></i>
+SERCOM1_USART_WriteNotificationEnable(<strong><span style="color: #000080">true</span></strong>, <strong><span style="color: #000080">false</span></strong>);
+
+<i><span style="color: #008000">// First time transmit 5 bytes</span></i>
+SERCOM1_USART_Write((uint8_t*)txBuffer, 5);
+
+<strong><span style="color: #000080">if</span></strong> (txThresholdEventReceived == <strong><span style="color: #000080">true</span></strong>)
+{
+    <i><span style="color: #008000">// Transmit buffer has space for 10 or more characters</span></i>
+    SERCOM1_USART_Write((uint8_t*)txBuffer, 10);
+}
+</pre></div></div>
 </div>
 </div>
 </div>
@@ -121,7 +138,7 @@ RTCC_CallbackRegister(RTC_Callback, (uintptr_t) NULL);</pre></div></div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05475.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04969.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05474.html" target="topic">Peripheral Libraries</a> &gt; <a href="06549.html" target="topic">RTCC Peripheral Library Help</a> &gt; <a href="06550.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="06586.html" target="topic">RTCC_CallbackRegister Function</a></div>
+<a href="05049.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04581.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05048.html" target="topic">Peripheral Libraries</a> &gt; <a href="06412.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="06423.html" target="topic">USART</a> &gt; <a href="06427.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="06586.html" target="topic">SERCOMx_USART_WriteThresholdSet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -129,13 +146,13 @@ RTCC_CallbackRegister(RTC_Callback, (uintptr_t) NULL);</pre></div></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05475.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05049.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06585.html" target="topic">Previous</a> | <a href="06550.html" target="topic">Up</a> | <a href="06588.html" target="topic">Next</a></div>
+<a href="06579.html" target="topic">Previous</a> | <a href="06427.html" target="topic">Up</a> | <a href="06526.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: rtcc_01261::RTCC_CallbackRegister@RTC_CALLBACK@uintptr_t Topic Title: RTCC_CallbackRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_usart_ring_buffer::SERCOMx_USART_WriteThresholdSet@uint32_t Topic Title: SERCOMx_USART_WriteThresholdSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

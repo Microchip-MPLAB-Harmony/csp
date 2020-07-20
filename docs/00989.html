@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Running The Application</title>
+<title>CANx_MessageAcceptanceFilterMaskSet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05475.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00894.html" target="topic">Applications Help</a> &gt; <a href="00973.html" target="topic">CAN Applications</a> &gt; <a href="00971.html" target="topic">can_normal_operation_interrupt</a> &gt; <a href="00989.html" target="topic">Running The Application</a></div>
+<a href="05049.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04581.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05048.html" target="topic">Peripheral Libraries</a> &gt; <a href="00860.html" target="topic">CAN Peripheral Library Help</a> &gt; <a href="00861.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="00989.html" target="topic">CANx_MessageAcceptanceFilterMaskSet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05475.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05049.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00987.html" target="topic">Previous</a> | <a href="00971.html" target="topic">Up</a> | <a href="00972.html" target="topic">Next</a></div>
+<a href="00987.html" target="topic">Previous</a> | <a href="00861.html" target="topic">Up</a> | <a href="00988.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CAN can_normal_operation_interrupt Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: can_03247::CANx_MessageAcceptanceFilterMaskSet@uint8_t@uint32_t Topic Title: CANx_MessageAcceptanceFilterMaskSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Running The Application</div>
+CANx_MessageAcceptanceFilterMaskSet Function</div>
 </div>
 </div>
 
@@ -49,53 +49,73 @@ Running The Application</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<strong><u>MPU Devices</u></strong></p>
-<ol class="Element630">
-<li value="1" class="Element600">Open the Terminal application (Ex.:Tera term) on the computer for each SAM 9X60 Evaluation Kit board.</li>
-<li value="2" class="Element600">Connect to the USB to DBGU COM port and configure the serial settings for each SAM 9X60 Evaluation Kit board as follows:
-<ul class="Element631">
-<li class="Element601">Baud : 115200</li>
-<li class="Element601">Data : 8 Bits</li>
-<li class="Element601">Parity : None</li>
-<li class="Element601">Stop : 1 Bit</li>
-<li class="Element601">Flow Control : None</li>
-</ul></li>
-<li value="3" class="Element600">Build the IAR or MPLAB X project using IAR Embedded Workbench or MPLAB X IDE respectively</li>
-<li value="4" class="Element600">Use the output binary file (harmony.bin) to setup the board as detailed in <a href="00987.html" target="topic">hardware setup</a> for each SAM 9X60 Evaluation Kit board</li>
-<li value="5" class="Element600">Execute the steps and observe the output as described in the following table</li>
-</ol><div class="Element63">
+This routine sets Message acceptance filter mask configuration.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">CANx_MessageAcceptanceFilterMaskSet</span></strong>(
+    uint8_t <strong><span style="color: #000000">acceptanceFilterMaskNum</span></strong>, 
+    uint32_t <strong><span style="color: #000000">id</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+<a href="00984.html" target="topic">CANx_Initialize</a> must have been called for the associated CAN instance.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
 <div class="TableDiv">
-<table cellspacing="0" class="Table1">
+<table cellspacing="0" class="Table2">
 <tr>
-<td class="Element65" valign="top" width="10%">
-<div class="Element66">
-Project Name&nbsp;</div></td><td class="Element65" valign="top" width="90%">
-<div class="Element66">
-Output&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="10%">
-<div class="Element68">
-sam_9x60_ek.IAR OR sam_9x60_ek_xc32.X&nbsp;</div></td><td class="Element67" valign="top" width="90%">
-<div class="Element68">
-</p>
-<ul class="Element630">
-<li class="Element600">Press '2' to receive message from CAN Bus on terminal window of SAM 9X60 EK - 2 board.</li>
-<li class="Element600">Press '1' to transmit message to CAN Bus on terminal window of SAM 9X60 EK - 1 board.</li>
-<li class="Element600">Transmitting Message:Success will be displayed in the terminal window of SAM 9X60 EK - 1 board. CAN message will be displayed in the terminal window of SAM 9X60 EK - 2 board.</li>
-<li class="Element600">RGB_LED (Green) toggles at each message transmission or reception</li>
-</ul><p class="Element68">
-&nbsp;</div></td></tr></table></div></div>
-
-<ol class="Element630">
-<li value="6" class="Element600">Following will be terminal session’s output.</li>
-</ol><p class="Element10">
-<img src="can_normal_operation_interrupt_output.png" border="0" alt="" title=""></p></div>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+acceptanceFilterMaskNum&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Acceptance Filter Mask number&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+id&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+11-bit or 29-bit identifier&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">CAN1_MessageAcceptanceFilterMaskSet(0, 0x435);</pre></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05475.html" target="topic">Peripheral Library Overview</a> &gt; <a href="00894.html" target="topic">Applications Help</a> &gt; <a href="00973.html" target="topic">CAN Applications</a> &gt; <a href="00971.html" target="topic">can_normal_operation_interrupt</a> &gt; <a href="00989.html" target="topic">Running The Application</a></div>
+<a href="05049.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04581.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05048.html" target="topic">Peripheral Libraries</a> &gt; <a href="00860.html" target="topic">CAN Peripheral Library Help</a> &gt; <a href="00861.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="00989.html" target="topic">CANx_MessageAcceptanceFilterMaskSet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -103,13 +123,13 @@ sam_9x60_ek.IAR OR sam_9x60_ek_xc32.X&nbsp;</div></td><td class="Element67" vali
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05475.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05049.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00987.html" target="topic">Previous</a> | <a href="00971.html" target="topic">Up</a> | <a href="00972.html" target="topic">Next</a></div>
+<a href="00987.html" target="topic">Previous</a> | <a href="00861.html" target="topic">Up</a> | <a href="00988.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: CAN can_normal_operation_interrupt Running The Application Topic Title: Running The Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: can_03247::CANx_MessageAcceptanceFilterMaskSet@uint8_t@uint32_t Topic Title: CANx_MessageAcceptanceFilterMaskSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>ICAP_CALLBACK Type</title>
+<title>MEM2MEM_ChannelTransfer Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05475.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04969.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05474.html" target="topic">Peripheral Libraries</a> &gt; <a href="03893.html" target="topic">ICAP Peripheral Library Help</a> &gt; <a href="03894.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="03906.html" target="topic">ICAP_CALLBACK Type</a></div>
+<a href="05049.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04581.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05048.html" target="topic">Peripheral Libraries</a> &gt; <a href="03898.html" target="topic">MEM2MEM Peripheral Library Help</a> &gt; <a href="03899.html" target="topic">Library Interface</a> &gt; b) Transaction Functions &gt; <a href="03906.html" target="topic">MEM2MEM_ChannelTransfer Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05475.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05049.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03912.html" target="topic">Previous</a> | <a href="03894.html" target="topic">Up</a> | <a href="03907.html" target="topic">Next</a></div>
+<a href="03905.html" target="topic">Previous</a> | <a href="03899.html" target="topic">Up</a> | <a href="03904.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: icap_00740::ICAP_CALLBACK Topic Title: ICAP_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: mem2mem_11211::MEM2MEM_ChannelTransfer@void *@void *@size_t@MEM2MEM_TRANSFER_WIDTH Topic Title: MEM2MEM_ChannelTransfer Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-ICAP_CALLBACK Type</div>
+MEM2MEM_ChannelTransfer Function</div>
 </div>
 </div>
 
@@ -49,19 +49,28 @@ ICAP_CALLBACK Type</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Callback Function Pointer for Capture mode&nbsp;</p>
+This function schedules a DMA transfer and starts the transfer.&nbsp;</p>
 <p class="Element10">
-This data type defines the function pointer and function signature for the ICAPx callback function. The library will call back the client's function with this signature from the interrupt routine.</p></div>
+The srcAddr parameter specifies the source address from where data will be transferred. Once the transfer is registered the module will transfer blockSize of data from the source address in twidth chunks.&nbsp;</p>
+<p class="Element10">
+If the requesting client registered a callback function before calling the channel transfer function, this function will be called when the transfer completes. The callback function will be called with a MEM2MEM_TRANSFER_COMPLETE event if the transfer was processed successfully and a MEM2MEM_TRANSFER_ERROR event if the transfer was not processed successfully.&nbsp;</p>
+<p class="Element10">
+When already a transfer is in progress, this API will return false indicating that transfer request is not accepted.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000">ICAP_CALLBACK</span></strong>)(uintptr_t context);</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">MEM2MEM_ChannelTransfer</span></strong>(
+    <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">void</span></strong> * <strong><span style="color: #000000">srcAddr</span></strong>, 
+    <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">void</span></strong> * <strong><span style="color: #000000">destAddr</span></strong>, 
+    size_t <strong><span style="color: #000000">blockSize</span></strong>, 
+    <a href="03910.html" target="topic">MEM2MEM_TRANSFER_WIDTH</a> <strong><span style="color: #000000">twidth</span></strong>
+);</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="03917.html" target="topic">ICAPx_Initialize</a> must have been called for the given ICAP instance and <a href="03915.html" target="topic">ICAPx_Error_CallbackRegister</a>/<a href="03910.html" target="topic">ICAPx_CallbackRegister</a> must have been called to register the function to be called.</p></div>
+None.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -78,17 +87,35 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+srcAddr&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Allows the caller to provide a context value (usually a pointer to the callers context for multi-instance clients).&nbsp;</div></td></tr></table></div></div>
+Source address of the MEM2MEM transfer<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+destAddr&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Destination address of the MEM2MEM transfer<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+blockSize&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Size of the transfer block in bytes.<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+twidth&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+chank size for the transfer&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-None.</p></div>
+
+<ul class="Element630">
+<li class="Element600">True - If transfer request is accepted.</li>
+<li class="Element600">False - If previous transfer is in progress and the request is rejected.</li>
+</ul></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
@@ -101,9 +128,26 @@ None.</p></div>
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">void</span></strong> ICAP_CallbackFn (uintptr_t context );
+<div class="Element13"><div class="Element12"><pre class="Element12"><i><span style="color: #008000">// Transfer 10 bytes of data from one buffer to another using MEM2MEM</span></i>
+MY_APP_OBJ myAppObj;
+uint8_t buf[10] = {0,1,2,3,4,5,6,7,8,9};
+uint8_t buf_sdram[10] = {};
+<strong><span style="color: #000080">void</span></strong> *srcAddr = (uint8_t *) buf;
+<strong><span style="color: #000080">void</span></strong> *destAddr = (uin8_t*) buf2;
+size_t size = 10;
 
-ICAP1_CallbackRegister(ICAP_CallbackFn, NULL);</pre></div></div>
+<i><span style="color: #008000">// User registers an event handler with PLIB. This is done once.</span></i>
+<a href="03905.html" target="topic">MEM2MEM_ChannelCallbackRegister</a>(APP_MEM2MEMTransferEventHandler,
+    (uintptr_t)&amp;myAppObj);
+
+<strong><span style="color: #000080">if</span></strong>(MEM2MEM_ChannelTransfer(srcAddr, destAddr, size, MEM2MEM_TRANSFER_WIDTH_BYTE) == <strong><span style="color: #000080">true</span></strong>)
+{
+    <i><span style="color: #008000">// do something</span></i>
+}
+<strong><span style="color: #000080">else</span></strong>
+{
+    <i><span style="color: #008000">// try again?</span></i>
+}</pre></div></div>
 </div>
 </div>
 </div>
@@ -111,7 +155,7 @@ ICAP1_CallbackRegister(ICAP_CallbackFn, NULL);</pre></div></div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05475.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04969.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05474.html" target="topic">Peripheral Libraries</a> &gt; <a href="03893.html" target="topic">ICAP Peripheral Library Help</a> &gt; <a href="03894.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="03906.html" target="topic">ICAP_CALLBACK Type</a></div>
+<a href="05049.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04581.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05048.html" target="topic">Peripheral Libraries</a> &gt; <a href="03898.html" target="topic">MEM2MEM Peripheral Library Help</a> &gt; <a href="03899.html" target="topic">Library Interface</a> &gt; b) Transaction Functions &gt; <a href="03906.html" target="topic">MEM2MEM_ChannelTransfer Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -119,13 +163,13 @@ ICAP1_CallbackRegister(ICAP_CallbackFn, NULL);</pre></div></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05475.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05049.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03912.html" target="topic">Previous</a> | <a href="03894.html" target="topic">Up</a> | <a href="03907.html" target="topic">Next</a></div>
+<a href="03905.html" target="topic">Previous</a> | <a href="03899.html" target="topic">Up</a> | <a href="03904.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: icap_00740::ICAP_CALLBACK Topic Title: ICAP_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: mem2mem_11211::MEM2MEM_ChannelTransfer@void *@void *@size_t@MEM2MEM_TRANSFER_WIDTH Topic Title: MEM2MEM_ChannelTransfer Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

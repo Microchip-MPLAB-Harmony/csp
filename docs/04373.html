@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05475.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04969.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05474.html" target="topic">Peripheral Libraries</a> &gt; <a href="04368.html" target="topic">NVM Peripheral Library Help</a> &gt; <a href="04373.html" target="topic">Using the Library</a></div>
+<a href="05049.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04581.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05048.html" target="topic">Peripheral Libraries</a> &gt; <a href="04368.html" target="topic">PAC Peripheral Library Help</a> &gt; <a href="04373.html" target="topic">Using the Library</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,13 +26,13 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05475.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05049.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04365.html" target="topic">Previous</a> | <a href="04368.html" target="topic">Up</a> | <a href="04369.html" target="topic">Next</a></div>
+<a href="04364.html" target="topic">Previous</a> | <a href="04368.html" target="topic">Up</a> | <a href="04369.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NVM 00761 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PAC U2120 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
 Using the Library</div>
 </div>
@@ -49,26 +49,24 @@ Using the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The main Flash memory can not be read while it is being erased or written, the CPU is stalled during the entire operation. All functions that modify the main Flash can be run from RAM memory to avoid CPU stall while main Flash is being erased or written.&nbsp;</p>
-<p class="Element10">
-The Program flash memory is divided into two Virtual regions pointing to the same physical memory location. Client can use any address from these virtual regions to perform erase/write/read operation</p>
+The Peripheral Access Controller (PAC) provides interface to protect write access to a peripheral's registers to minimize risk of unintended configuration changes as a result of run-away code. The Following operations are provided to manage the peripheral access.</p>
 <ul class="Element630">
-<li class="Element600">KSEG0 is cacheable region</li>
-<li class="Element600">KSEG1 is non-cacheable region</li>
+<li class="Element600">Clear Protection: This operation will remove the write access protection for the selected peripheral to enable write access</li>
+<li class="Element600">Set Protection: This operation will set the write access protection for the selected peripheral to disable write access.</li>
+<li class="Element600">Set and Lock Protection: This operation will set the write access protection for the selected peripheral to disable write access and locks the access rights of the selected peripheral registers. The write access protection will only be cleared by a hardware reset.</li>
 </ul><p class="Element10">
 &nbsp;</p>
 <p class="Element10">
-The program Flash array is built up of a series of rows to form a page. A page of Flash is the smallest unit of memory that can be erased at a single time. The program Flash array can be programmed in one of two ways:</p>
-<ul class="Element630">
-<li class="Element600">Row programming, with 128 instruction words at a time</li>
-<li class="Element600">Word programming, with 1 instruction word at a time</li>
-</ul><p class="Element10">
+In an application where write protection is also modified in main and interrupt context, the interrupts must be disabled so that the interrupt can not happen while the main application manipulate the write protection status.&nbsp;</p>
+<p class="Element10">
 &nbsp;</p>
 <p class="Element10">
-NVM APIs are implemented to be non-blocking, the API will return immediately if not stalled by Flash operation. The user application can either poll the status or get callback once the flash operation is completed.</p>
+The registered callback function will be called when Peripheral Access Error occurs due to the following:</p>
 <ul class="Element630">
-<li class="Element600">With polling, the application will need to continuously check if the flash operation is completed</li>
-<li class="Element600">With callback, the registered callback function will be called once the flash operation is completed. This means the application do not have to poll continuously. The interrupt must be enabled in MHC for callback method</li>
+<li class="Element600">If a peripheral is write protected and if a write access is attempted, data will not be written and peripheral returns an access error.</li>
+<li class="Element600">Attempting to set protection for the peripheral that is already set or attempting to clear protection for the peripheral that is already cleared. This is a safety feature to ensure correct program execution sequence to clear and set the protection.</li>
+<li class="Element600">Access to an unimplemented register within the module.</li>
+<li class="Element600">For write-synchronized registers an error will be reported if the register is written while a synchronization is ongoing.</li>
 </ul></div>
 </div>
 </div>
@@ -76,7 +74,7 @@ NVM APIs are implemented to be non-blocking, the API will return immediately if 
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05475.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04969.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05474.html" target="topic">Peripheral Libraries</a> &gt; <a href="04368.html" target="topic">NVM Peripheral Library Help</a> &gt; <a href="04373.html" target="topic">Using the Library</a></div>
+<a href="05049.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04581.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05048.html" target="topic">Peripheral Libraries</a> &gt; <a href="04368.html" target="topic">PAC Peripheral Library Help</a> &gt; <a href="04373.html" target="topic">Using the Library</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -84,13 +82,13 @@ NVM APIs are implemented to be non-blocking, the API will return immediately if 
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05475.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05049.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04365.html" target="topic">Previous</a> | <a href="04368.html" target="topic">Up</a> | <a href="04369.html" target="topic">Next</a></div>
+<a href="04364.html" target="topic">Previous</a> | <a href="04368.html" target="topic">Up</a> | <a href="04369.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NVM 00761 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PAC U2120 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->
