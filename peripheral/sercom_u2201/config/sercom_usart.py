@@ -31,6 +31,7 @@ global getUSARTBaudValue
 def getUSARTBaudValue():
 
     global desiredUSARTBaudRate
+    global usartSym_CTRLA_FORM
 
     baudValue = 0
     sampleCount = 0
@@ -39,6 +40,8 @@ def getUSARTBaudValue():
 
     refClkFreq = int(Database.getSymbolValue("core", sercomClkFrequencyId))
     baudRate = int(Database.getSymbolValue(sercomInstanceName.getValue().lower(), "USART_BAUD_RATE"))
+
+    frameFormat = usartSym_CTRLA_FORM.getSelectedKey()
 
     if refClkFreq != 0:
         if sampleRateSupported == False:
@@ -49,21 +52,40 @@ def getUSARTBaudValue():
                 desiredUSARTBaudRate = False
         else:
             # Check if baudrate is outside of valid range
-            if refClkFreq >= (16 * baudRate):
-                sampleRate = 0
-                sampleCount = 16
-            elif refClkFreq >= (8 * baudRate):
-                sampleRate = 2
-                sampleCount = 8
-            elif refClkFreq >= (3 * baudRate):
-                sampleRate = 4
-                sampleCount = 3
+            if frameFormat == "USART_FRAME_LIN_MASTER_MODE" or frameFormat == "USART_FRAME_AUTO_BAUD_NO_PARITY" or frameFormat == "USART_FRAME_AUTO_BAUD_WITH_PARITY":
+                if refClkFreq >= (16 * baudRate):
+                    sampleRate = 1
+                    sampleCount = 16
+                else:
+                    desiredUSARTBaudRate = False
             else:
-                desiredUSARTBaudRate = False
+                if refClkFreq >= (16 * baudRate):
+                    sampleRate = 0
+                    sampleCount = 16
+                elif refClkFreq >= (8 * baudRate):
+                    sampleRate = 2
+                    sampleCount = 8
+                elif refClkFreq >= (3 * baudRate):
+                    sampleRate = 4
+                    sampleCount = 3
+                else:
+                    desiredUSARTBaudRate = False
 
         if desiredUSARTBaudRate == True:
+
             usartSym_BaudError_Comment.setVisible(False)
-            baudValue = int(65536 * (1 - float("{0:.15f}".format(float(sampleCount * baudRate) / refClkFreq))))
+
+            if frameFormat == "USART_FRAME_LIN_MASTER_MODE" or frameFormat == "USART_FRAME_AUTO_BAUD_NO_PARITY" or frameFormat == "USART_FRAME_AUTO_BAUD_WITH_PARITY":
+                baudValue = float(refClkFreq)/(float(sampleCount) * baudRate)
+                fp = int((float(baudValue) - int(baudValue)) * 8.0)
+                baudValue = int(baudValue)
+                if (baudValue == 0) or (baudValue >= 8192):
+                    desiredUSARTBaudRate = False
+                    usartSym_BaudError_Comment.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
+                else:
+                    baudValue |= (fp << 13)
+            else:
+                baudValue = int(65536 * (1 - float("{0:.15f}".format(float(sampleCount * baudRate) / refClkFreq))))
 
             if sampleRateSupported == True:
                 usartSym_CTRLA_SAMPR.setValue(sampleRate, 1)
@@ -126,14 +148,46 @@ def updateUSARTBaudValueProperty(symbol, event):
 
 def updateUSARTRS485GuardTimeValueProperty(symbol, event):
 
-    symbol.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT" and usartSym_CTRLA_TXPO.getSelectedValue() == "0x3")
+    usart_frame_format = event['source'].getSymbolByID("USART_FORM").getSelectedKey()
+
+    symbol.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT" and usartSym_CTRLA_TXPO.getSelectedValue() == "0x3" and (usart_frame_format == "USART_FRAME_NO_PARITY" or usart_frame_format == "USART_FRAME_WITH_PARITY"))
 
 def updateUSARTFORMValueProperty(symbol, event):
 
-    if event["symbol"].getSelectedKey() == "NONE":
-        symbol.setValue(0)
-    else:
-        symbol.setValue(1)
+    symbol.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
+
+    if event["id"] == "USART_PARITY_MODE":
+
+        if event["symbol"].getSelectedKey() == "NONE":
+            if symbol.getValue() == 1:
+                symbol.setReadOnly(True)
+                symbol.setValue(0)
+                symbol.setReadOnly(False)
+        else:
+            if symbol.getValue() == 0:
+                symbol.setReadOnly(True)
+                symbol.setValue(1)
+                symbol.setReadOnly(False)
+
+    if event["id"] == "USART_FORM":
+            usart_form = event['source'].getSymbolByID("USART_FORM").getSelectedKey()
+            usart_interrupt_mode = event['source'].getSymbolByID("USART_INTERRUPT_MODE")
+            usart_ring_buffer_mode = event['source'].getSymbolByID("USART_RING_BUFFER_ENABLE")
+            if usart_form == "USART_FRAME_AUTO_BAUD_NO_PARITY":
+                usart_interrupt_mode.setReadOnly(True)
+                usart_interrupt_mode.setValue(True)
+                usart_ring_buffer_mode.setReadOnly(True)
+                usart_ring_buffer_mode.setValue(True)
+            else:
+                usart_interrupt_mode.setReadOnly(False)
+                usart_ring_buffer_mode.setReadOnly(False)
+
+
+
+
+def updateLinMasterModeOptionsVisibility(symbol, event):
+
+    symbol.setVisible(event["symbol"].getSelectedKey() == "USART_FRAME_LIN_MASTER_MODE")
 
 ###################################################################################################
 ############################################ USART ################################################
@@ -149,6 +203,7 @@ global sampleRateSupported
 global usartSym_RingBuffer_Enable
 global usartSym_CTRLB_RXEN
 global usartSym_CTRLB_TXEN
+global usartSym_CTRLA_FORM
 
 sampleRateSupported = False
 isFlowControlSupported = False
@@ -194,6 +249,79 @@ usartSym_RXRingBuffer_Size.setMax(65535)
 usartSym_RXRingBuffer_Size.setDefaultValue(128)
 usartSym_RXRingBuffer_Size.setVisible(False)
 usartSym_RXRingBuffer_Size.setDependencies(updateRingBufferSizeVisibleProperty, ["SERCOM_MODE", "USART_RING_BUFFER_ENABLE", "USART_RX_ENABLE"])
+
+#USART Frame Format
+isLINMasterModeSupported = False
+usartSym_CTRLA_FORM = sercomComponent.createKeyValueSetSymbol("USART_FORM", sercomSym_OperationMode)
+usartSym_CTRLA_FORM.setLabel("Frame Format")
+
+usartSym_CTRLA_FORM_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_USART_CTRLA__FORM\"]")
+usartSym_CTRLA_FORM_Values = usartSym_CTRLA_FORM_Node.getChildren()
+
+for index in range(len(usartSym_CTRLA_FORM_Values)):
+    form_value = usartSym_CTRLA_FORM_Values[index].getAttribute("value")
+    if form_value == "0x2":
+        isLINMasterModeSupported = True
+    if form_value <= "0x4":
+        usartSym_CTRLA_FORM_Key_Name = usartSym_CTRLA_FORM_Values[index].getAttribute("name")
+        usartSym_CTRLA_FORM_Key_Description = usartSym_CTRLA_FORM_Values[index].getAttribute("caption")
+        usartSym_CTRLA_FORM_Key_Value = usartSym_CTRLA_FORM_Values[index].getAttribute("value")
+        usartSym_CTRLA_FORM.addKey(usartSym_CTRLA_FORM_Key_Name, usartSym_CTRLA_FORM_Key_Value, usartSym_CTRLA_FORM_Key_Description)
+
+usartSym_CTRLA_FORM.setDefaultValue(0)
+usartSym_CTRLA_FORM.setOutputMode("Value")
+usartSym_CTRLA_FORM.setDisplayMode("Description")
+usartSym_CTRLA_FORM.setDependencies(updateUSARTFORMValueProperty, ["USART_PARITY_MODE", "SERCOM_MODE", "USART_FORM"])
+
+#USART LIN Master Mode Support
+usartSym_LIN_MasterSupport = sercomComponent.createBooleanSymbol("USART_LIN_MASTER_SUPPORTED", sercomSym_OperationMode)
+usartSym_LIN_MasterSupport.setValue(isLINMasterModeSupported)
+usartSym_LIN_MasterSupport.setVisible(False)
+
+
+# BREAK Length - Applicable when LIN Master mode is selected
+usartSym_CTRLC_BRKLEN_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_USART_CTRLC__BRKLEN\"]")
+
+if usartSym_CTRLC_BRKLEN_Node != None:
+    usartSym_CTRLC_BRKLEN = sercomComponent.createKeyValueSetSymbol("USART_LIN_MASTER_BREAK_LEN", sercomSym_OperationMode)
+    usartSym_CTRLC_BRKLEN.setLabel("LIN Master Break Length")
+    usartSym_CTRLC_BRKLEN_Values = usartSym_CTRLC_BRKLEN_Node.getChildren()
+
+    for index in range(len(usartSym_CTRLC_BRKLEN_Values)):
+        form_value = usartSym_CTRLC_BRKLEN_Values[index].getAttribute("value")
+        if form_value <= "0x5":
+            usartSym_CTRLC_BRKLEN_Key_Name = usartSym_CTRLC_BRKLEN_Values[index].getAttribute("name")
+            usartSym_CTRLC_BRKLEN_Key_Description = usartSym_CTRLC_BRKLEN_Values[index].getAttribute("caption")
+            usartSym_CTRLC_BRKLEN_Key_Value = usartSym_CTRLC_BRKLEN_Values[index].getAttribute("value")
+            usartSym_CTRLC_BRKLEN.addKey(usartSym_CTRLC_BRKLEN_Key_Name, usartSym_CTRLC_BRKLEN_Key_Value, usartSym_CTRLC_BRKLEN_Key_Description)
+
+    usartSym_CTRLC_BRKLEN.setDefaultValue(0)
+    usartSym_CTRLC_BRKLEN.setOutputMode("Value")
+    usartSym_CTRLC_BRKLEN.setDisplayMode("Description")
+    usartSym_CTRLC_BRKLEN.setVisible(False)
+    usartSym_CTRLC_BRKLEN.setDependencies(updateLinMasterModeOptionsVisibility, ["USART_FORM"])
+
+# Hardware Delay - Applicable when LIN Master mode is selected
+usartSym_CTRLC_HDRDLY_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_USART_CTRLC__HDRDLY\"]")
+
+if usartSym_CTRLC_HDRDLY_Node != None:
+    usartSym_CTRLC_HDRDLY = sercomComponent.createKeyValueSetSymbol("USART_LIN_MASTER_HDRDLY", sercomSym_OperationMode)
+    usartSym_CTRLC_HDRDLY.setLabel("LIN Master Hardware Delay")
+    usartSym_CTRLC_HDRDLY_Values = usartSym_CTRLC_HDRDLY_Node.getChildren()
+
+    for index in range(len(usartSym_CTRLC_HDRDLY_Values)):
+        form_value = usartSym_CTRLC_HDRDLY_Values[index].getAttribute("value")
+        if form_value <= "0x5":
+            usartSym_CTRLC_HDRDLY_Key_Name = usartSym_CTRLC_HDRDLY_Values[index].getAttribute("name")
+            usartSym_CTRLC_HDRDLY_Key_Description = usartSym_CTRLC_HDRDLY_Values[index].getAttribute("caption")
+            usartSym_CTRLC_HDRDLY_Key_Value = usartSym_CTRLC_HDRDLY_Values[index].getAttribute("value")
+            usartSym_CTRLC_HDRDLY.addKey(usartSym_CTRLC_HDRDLY_Key_Name, usartSym_CTRLC_HDRDLY_Key_Value, usartSym_CTRLC_HDRDLY_Key_Description)
+
+    usartSym_CTRLC_HDRDLY.setDefaultValue(0)
+    usartSym_CTRLC_HDRDLY.setOutputMode("Value")
+    usartSym_CTRLC_HDRDLY.setDisplayMode("Description")
+    usartSym_CTRLC_HDRDLY.setVisible(False)
+    usartSym_CTRLC_HDRDLY.setDependencies(updateLinMasterModeOptionsVisibility, ["USART_FORM"])
 
 #Run in StandBy
 usartSym_CTRLA_RUNSTDBY = sercomComponent.createBooleanSymbol("USART_RUNSTDBY", sercomSym_OperationMode)
@@ -249,7 +377,7 @@ if isRS485Supported == True:
     usartSym_CTRLC_GTIME.setMin(0)
     usartSym_CTRLC_GTIME.setMax(7)
     usartSym_CTRLC_GTIME.setVisible(False)
-    usartSym_CTRLC_GTIME.setDependencies(updateUSARTRS485GuardTimeValueProperty, ["SERCOM_MODE", "USART_TXPO"])
+    usartSym_CTRLC_GTIME.setDependencies(updateUSARTRS485GuardTimeValueProperty, ["SERCOM_MODE", "USART_TXPO" , "USART_FORM"])
 
 #PMODE : USART PARITY MODE
 usartSym_CTRLB_PMODE = sercomComponent.createKeyValueSetSymbol("USART_PARITY_MODE", sercomSym_OperationMode)
@@ -298,25 +426,6 @@ usartSym_CTRLB_SBMODE.setOutputMode("Key")
 usartSym_CTRLB_SBMODE.setDisplayMode("Description")
 usartSym_CTRLB_SBMODE.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
 
-#USART Frame Format
-usartSym_CTRLA_FORM = sercomComponent.createKeyValueSetSymbol("USART_FORM", sercomSym_OperationMode)
-usartSym_CTRLA_FORM.setLabel("Frame Format")
-
-usartSym_CTRLA_FORM_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_USART_CTRLA__FORM\"]")
-usartSym_CTRLA_FORM_Values = usartSym_CTRLA_FORM_Node.getChildren()
-
-for index in range(len(usartSym_CTRLA_FORM_Values)):
-    usartSym_CTRLA_FORM_Key_Name = usartSym_CTRLA_FORM_Values[index].getAttribute("name")
-    usartSym_CTRLA_FORM_Key_Description = usartSym_CTRLA_FORM_Values[index].getAttribute("caption")
-    usartSym_CTRLA_FORM_Key_Value = usartSym_CTRLA_FORM_Values[index].getAttribute("value")
-    usartSym_CTRLA_FORM.addKey(usartSym_CTRLA_FORM_Key_Name, usartSym_CTRLA_FORM_Key_Value, usartSym_CTRLA_FORM_Key_Description)
-
-usartSym_CTRLA_FORM.setDefaultValue(0)
-usartSym_CTRLA_FORM.setOutputMode("Value")
-usartSym_CTRLA_FORM.setDisplayMode("Description")
-usartSym_CTRLA_FORM.setVisible(False)
-usartSym_CTRLA_FORM.setDependencies(updateUSARTFORMValueProperty, ["USART_PARITY_MODE"])
-
 sampleRateNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SERCOM"]/register-group@[name="SERCOM"]/register@[modes="USART_INT",name="CTRLA"]')
 sampleRateValue = sampleRateNode.getChildren()
 
@@ -350,7 +459,7 @@ usartSym_BAUD_RATE.setDependencies(updateUSARTConfigurationVisibleProperty, ["SE
 usartSym_BAUD_VALUE = sercomComponent.createIntegerSymbol("USART_BAUD_VALUE", sercomSym_OperationMode)
 usartSym_BAUD_VALUE.setLabel("Baud Rate Value")
 usartSym_BAUD_VALUE.setVisible(False)
-usartSym_BAUD_VALUE.setDependencies(updateUSARTBaudValueProperty, ["USART_BAUD_RATE", "core." + sercomClkFrequencyId])
+usartSym_BAUD_VALUE.setDependencies(updateUSARTBaudValueProperty, ["USART_BAUD_RATE", "core." + sercomClkFrequencyId, "USART_FORM"])
 
 #USART Baud Rate not supported comment
 usartSym_BaudError_Comment = sercomComponent.createCommentSymbol("USART_BAUD_ERROR_COMMENT", sercomSym_OperationMode)
@@ -384,6 +493,8 @@ usartSym_RS485.setDefaultValue(isRS485Supported)
 
 #Use setValue instead of setDefaultValue to store symbol value in default.xml
 usartSym_BAUD_VALUE.setValue(getUSARTBaudValue(), 1)
+
+
 
 ###################################################################################################
 ####################################### Driver Symbols ############################################

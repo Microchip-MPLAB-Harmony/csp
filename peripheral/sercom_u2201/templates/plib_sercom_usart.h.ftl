@@ -56,7 +56,7 @@
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
 
-	extern "C" {
+    extern "C" {
 
 #endif
 // DOM-IGNORE-END
@@ -73,6 +73,10 @@ bool ${SERCOM_INSTANCE_NAME}_USART_SerialSetup( USART_SERIAL_SETUP * serialSetup
 
 <#if USART_TX_ENABLE = true>
 bool ${SERCOM_INSTANCE_NAME}_USART_Write( void *buffer, const size_t size );
+
+<#if USART_FORM == "0x2">
+bool ${SERCOM_INSTANCE_NAME}_USART_LIN_CommandSet(USART_LIN_MASTER_CMD cmd);
+</#if>
 
 <#if USART_INTERRUPT_MODE = true>
 bool ${SERCOM_INSTANCE_NAME}_USART_WriteIsBusy( void );

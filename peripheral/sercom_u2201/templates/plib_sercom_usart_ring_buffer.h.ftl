@@ -89,6 +89,11 @@ bool ${SERCOM_INSTANCE_NAME}_USART_WriteNotificationEnable(bool isEnabled, bool 
 void ${SERCOM_INSTANCE_NAME}_USART_WriteThresholdSet(uint32_t nBytesThreshold);
 
 void ${SERCOM_INSTANCE_NAME}_USART_WriteCallbackRegister( SERCOM_USART_RING_BUFFER_CALLBACK callback, uintptr_t context);
+
+<#if USART_FORM == "0x2">
+bool ${SERCOM_INSTANCE_NAME}_USART_LIN_CommandSet(USART_LIN_MASTER_CMD cmd);
+</#if>
+
 </#if>
 
 <#if USART_RX_ENABLE = true>

@@ -552,7 +552,7 @@ def instantiateComponent(sercomComponent):
     usartHeaderFile.setDependencies(USARTFileGeneration, ["USART_RING_BUFFER_ENABLE"])
 
     usartCommonHeaderFile = sercomComponent.createFileSymbol("SERCOM_USART_COMMON_HEADER", None)
-    usartCommonHeaderFile.setSourcePath("../peripheral/sercom_u2201/templates/plib_sercom_usart_common.h")
+    usartCommonHeaderFile.setSourcePath("../peripheral/sercom_u2201/templates/plib_sercom_usart_common.h.ftl")
     usartCommonHeaderFile.setOutputName("plib_sercom_usart_common.h")
     usartCommonHeaderFile.setDestPath("/peripheral/sercom/usart/")
     usartCommonHeaderFile.setProjectPath("config/" + configName + "/peripheral/sercom/usart/")
