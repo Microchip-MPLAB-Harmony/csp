@@ -51,8 +51,14 @@ void ${NMIC_INSTANCE_NAME}_Initialize( void )
 	<#assign NMIC_FZ = "NMIC_SRC_FZ_" + i>
 	<#if .vars[NMIC_ENABLE]?has_content>
 	<#if (.vars[NMIC_ENABLE] != false)>
+	<#if i == 0>
 	<#lt>	NMIC_REGS->NMIC_SCFGxR${i} = NMIC_SCFGxR${i}_EN_Msk ${(.vars[NMIC_LVL] == '1')?then('| NMIC_SCFGxR${i}_LVL_Msk', '')} ${.vars[NMIC_FZ]?then('| NMIC_SCFGxR${i}_FRZ_Msk', '')}\
 							 ${(.vars[NMIC_POL] == '1')?then('| NMIC_SCFGxR${i}_POL_Msk', '')} ${.vars[NMIC_GF_EN]?then('| NMIC_SCFGxR${i}_GFEN_Msk | NMIC_SCFGxR${i}_GFSEL(${.vars[NMIC_GFSEL]})', '')};
+	<#elseif i == 4>
+	<#lt>	NMIC_REGS->NMIC_SCFGxR${i} = NMIC_SCFGxR${i}_EN_Msk | (NMIC_REGS->NMIC_SCFGxR${i} & (~NMIC_SCFGxR${i}_POL_Msk));
+	<#else>
+	<#lt>	NMIC_REGS->NMIC_SCFGxR${i} |= NMIC_SCFGxR${i}_EN_Msk;
+	</#if>
 	</#if>
 	</#if>
 </#list>

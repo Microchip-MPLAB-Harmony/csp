@@ -74,6 +74,7 @@ def instantiateComponent(nmicComponent):
         nmicConfigurationLVL.setDisplayMode("Description")
         nmicConfigurationLVL.addKey("EDG", str(0), "Source interrupt status is set on valid edge")
         nmicConfigurationLVL.addKey("LVL", str(1), "Source interrupt status is set on valid level")
+        nmicConfigurationLVL.setVisible(id == 0)
 
         nmicConfigurationPOL = nmicComponent.createKeyValueSetSymbol(("NMIC_SRC_" + str(id) + "_POL"), nmicConfigurationMenu)
         nmicConfigurationPOL.setLabel("Polarity selection")
@@ -81,10 +82,12 @@ def instantiateComponent(nmicComponent):
         nmicConfigurationPOL.setDisplayMode("Description")
         nmicConfigurationPOL.addKey("LOW", str(0), "Falling edge / Low Level")
         nmicConfigurationPOL.addKey("HIGH", str(1), "Raising edge / High level")
+        nmicConfigurationPOL.setVisible(id == 0)
 
         nmicGFEnable = nmicComponent.createBooleanSymbol("NMIC_SRC_GF_EN_" + str(id), nmicConfigurationMenu)
         nmicGFEnable.setLabel("Enable Glitch Filter")
         nmicGFEnable.setDefaultValue(False)
+        nmicGFEnable.setVisible(id == 0)
 
         nmicGFSEL = nmicComponent.createIntegerSymbol("NMIC_SRC_GFSEL_" + str(id), nmicConfigurationMenu)
         nmicGFSEL.setLabel("Glitch Filter Selector")
@@ -102,6 +105,7 @@ def instantiateComponent(nmicComponent):
         nmicFZEnable = nmicComponent.createBooleanSymbol("NMIC_SRC_FZ_" + str(id), nmicConfigurationMenu)
         nmicFZEnable.setLabel("Freeze Configuration")
         nmicFZEnable.setDefaultValue(False)
+        nmicFZEnable.setVisible(id == 0)
 
     configName = Variables.get("__CONFIGURATION_NAME")
     # Generate Output Header
@@ -139,7 +143,10 @@ def instantiateComponent(nmicComponent):
 def menuDisplay(symbol, event):
     global nmicInterruptEnabled
     count = nmicInterruptEnabled.getValue()
-    symbol.setVisible(event["value"])
+    if event["id"] == "NMIC_SRC_EN_0":
+        symbol.setVisible(event["value"])
+    else:
+        symbol.setVisible(False)
     if event["value"] == True:
         count |= 1 << (int(str(symbol.getID()).split("NMIC_MENU_")[1]))
     else:
