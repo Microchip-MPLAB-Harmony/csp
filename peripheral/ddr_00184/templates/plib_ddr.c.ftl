@@ -66,6 +66,15 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #define round_up(x,y) (((x) + (y) - 1) / (y))
 #endif
 
+//----------------------------------------------------------------------------//
+//                          DDR2 SCL Configuration
+//----------------------------------------------------------------------------//
+/* SCL START */
+#define SCL_START_PH_DLY          0x30000000
+#define SCL_START_DLY             0x10000000
+#define SCL_DONE                  0x10000000
+#define SCL_LUBPASS               3
+
 static void DDR_Init(void)
 {
     uint32_t tmp;
@@ -338,10 +347,22 @@ static void DDR_PHY_Init(void)
 
 static void DDR_PHY_Calib(void)
 {
-	DDRSCLSTARTbits.SCLEN = 1;
-	DDRSCLSTARTbits.SCLSTART = 1;
+    /* SCL Start */
+    DDRSCLSTART = SCL_START_PH_DLY;  //START SCL DELAY and phase calibration
+    for (;;)
+    {
+        while ((DDRSCLSTART & SCL_DONE) != 0); //Wait for the Calibration to finish
 
-	while (!((DDRSCLSTARTbits.SCLLBPASS & DDRSCLSTARTbits.SCLUBPASS) == 0x01));
+        DDRSCLSTART = SCL_START_DLY;
+        while ((DDRSCLSTART & SCL_DONE) != 0); //Wait for the Calibration to finish
+
+        if ((DDRSCLSTART & SCL_LUBPASS) != SCL_LUBPASS) //If Calibration fails, retry
+        {
+            DDRPHYCLKDLY = 0x10;
+            DDRSCLSTART = SCL_START_PH_DLY;
+        } else
+            break;   //If Calibration passes, continue with the rest of the program
+    }
 }
 
 void DDR_Initialize(void)
