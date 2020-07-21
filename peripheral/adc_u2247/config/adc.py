@@ -303,6 +303,20 @@ def instantiateComponent(adcComponent):
             adcSym_CALIB.setVisible(False)
             adcSym_CALIB.setDefaultValue(True)
 
+            # NVM register
+            adcSym_calib_reg = adcComponent.createStringSymbol("ADC_NVM_CALIB_REG", None)
+            adcSym_calib_reg.setVisible(True)
+            reg = ""
+            node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"FUSES\"]/register-group@[name=\"OTP5_FUSES\"]")
+            if node != None:
+                reg = "OTP5_ADDR"
+            else:
+                node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"FUSES\"]/register-group@[name=\"SW_CALIB_FUSES\"]")
+                if node != None:
+                    reg = "SW_CALIB_ADDR"
+            adcSym_calib_reg.setDefaultValue(reg)
+            
+
     # prescaler configuration
     global adcSym_CTRLB_PRESCALER
     adcSym_CTRLB_PRESCALER = adcComponent.createKeyValueSetSymbol("ADC_CTRLB_PRESCALER", None)

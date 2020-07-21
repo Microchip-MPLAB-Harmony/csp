@@ -219,8 +219,8 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
 <#if ADC_LOAD_CALIB? has_content>
     <#if ADC_LOAD_CALIB == true >
     <#lt>    /* Write linearity calibration in BIASREFBUF and bias calibration in BIASCOMP */
-    <#lt>    ${ADC_INSTANCE_NAME}_REGS->ADC_CALIB = (uint32_t)(ADC_CALIB_BIASREFBUF(((*(uint64_t*)OTP5_ADDR) & ${ADC_INSTANCE_NAME}_LINEARITY_Msk))) \
-    <#lt>        | ADC_CALIB_BIASCOMP((((*(uint64_t*)OTP5_ADDR) & ${ADC_INSTANCE_NAME}_BIASCAL_Msk) >> ${ADC_INSTANCE_NAME}_BIASCAL_POS));
+    <#lt>    ${ADC_INSTANCE_NAME}_REGS->ADC_CALIB = (uint32_t)(ADC_CALIB_BIASREFBUF(((*(uint64_t*)${ADC_NVM_CALIB_REG}) & ${ADC_INSTANCE_NAME}_LINEARITY_Msk))) \
+    <#lt>        | ADC_CALIB_BIASCOMP((((*(uint64_t*)${ADC_NVM_CALIB_REG}) & ${ADC_INSTANCE_NAME}_BIASCAL_Msk) >> ${ADC_INSTANCE_NAME}_BIASCAL_POS));
     </#if>
 </#if>
 
