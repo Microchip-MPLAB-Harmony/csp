@@ -79,14 +79,22 @@ def instantiateComponent(rstcComponent):
     rstcInstanceName.setDefaultValue(rstcComponent.getID().upper())
     print("Running " + rstcInstanceName.getValue())
 
+    rstcSym_MR_URSTEN = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"RSTC\"]/register-group/register@[name=\"RSTC_MR\"]/bitfield@[name=\"URSTEN\"]")
+    rstcSym_MR_URSTIEN = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"RSTC\"]/register-group/register@[name=\"RSTC_MR\"]/bitfield@[name=\"URSTIEN\"]")
     rstcSym_MR_UserReset = rstcComponent.createKeyValueSetSymbol("RSTC_MR_URSTEN", None)
     rstcSym_MR_UserReset.setLabel("External Reset (NRST) Pin Usage")
     rstcSym_MR_UserReset.addKey("RESET", "0", "Generate Reset")
-    rstcSym_MR_UserReset.addKey("INTERRUPT", "1", "Generate Interrupt")
-    rstcSym_MR_UserReset.addKey("GPIO", "2", "Use as a GPIO")
+    if rstcSym_MR_URSTIEN != None:
+        rstcSym_MR_UserReset.addKey("INTERRUPT", "1", "Generate Interrupt")
+    if rstcSym_MR_URSTEN != None:
+        rstcSym_MR_UserReset.addKey("GPIO", "2", "Use as a GPIO")
     rstcSym_MR_UserReset.setOutputMode("Key")
     rstcSym_MR_UserReset.setDisplayMode("Description")
     rstcSym_MR_UserReset.setSelectedKey("RESET", 1)
+
+    rstcSym_MR_URSTEN_Present = rstcComponent.createBooleanSymbol("RSTC_MR_URSTEN_PRESENT", None)
+    rstcSym_MR_URSTEN_Present.setDefaultValue(rstcSym_MR_URSTEN != None)
+    rstcSym_MR_URSTEN_Present.setVisible(False)
 
     rstcCrNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"RSTC\"]/register-group/register@[name=\"RSTC_MR\"]/bitfield@[name=\"SCKSW\"]")
     if rstcCrNode != None:

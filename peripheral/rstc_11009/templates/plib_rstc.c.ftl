@@ -1,5 +1,5 @@
 /*******************************************************************************
-  Reset Controller (RSTC) Peripheral Library(PLIB) Source file 
+  Reset Controller (RSTC) Peripheral Library(PLIB) Source file
 
   Company:
     Microchip Technology Inc.
@@ -49,22 +49,28 @@
 
 void ${RSTC_INSTANCE_NAME}_Initialize (void)
 {
+<#if RSTC_MR_URSTEN_PRESENT == true>
     ${RSTC_INSTANCE_NAME}_REGS->RSTC_MR = (<#rt>
 <#t><#if RSTC_MR_URSTEN == "RESET">RSTC_MR_URSTEN_Msk<#else>RSTC_MR_URSTIEN_Msk</#if>
 <#t><#if RSTC_MR_ERSTL??> | RSTC_MR_ERSTL(${RSTC_MR_ERSTL})</#if>
 <#t><#if ENABLE_32K_FAIL_DETECT?? && ENABLE_32K_FAIL_DETECT> | RSTC_MR_SCKSW_Msk</#if>
 <#t><#if RSTC_MR_CPUFEN?? && RSTC_MR_CPUFEN> | RSTC_MR_CPUFEN_Msk</#if>
 <#rt> | RSTC_MR_KEY_PASSWD);
+<#elseif (ENABLE_32K_FAIL_DETECT?? && ENABLE_32K_FAIL_DETECT) || (RSTC_MR_CPUFEN?? && RSTC_MR_CPUFEN)>
+    ${RSTC_INSTANCE_NAME}_REGS->RSTC_MR = (<#if ENABLE_32K_FAIL_DETECT?? && ENABLE_32K_FAIL_DETECT>RSTC_MR_SCKSW_Msk</#if><#rt>
+<#t><#if RSTC_MR_CPUFEN?? && RSTC_MR_CPUFEN><#if (ENABLE_32K_FAIL_DETECT?? && ENABLE_32K_FAIL_DETECT)> | </#if>RSTC_MR_CPUFEN_Msk</#if>
+<#rt> | RSTC_MR_KEY_PASSWD);
+</#if>
 
 }
 
 void ${RSTC_INSTANCE_NAME}_Reset (RSTC_RESET_TYPE type)
 {
-	/* Issue reset command 				*/
-    ${RSTC_INSTANCE_NAME}_REGS->RSTC_CR = RSTC_CR_KEY_PASSWD | type; 
-	
+    /* Issue reset command              */
+    ${RSTC_INSTANCE_NAME}_REGS->RSTC_CR = RSTC_CR_KEY_PASSWD | type;
+
     /*Wait for processing reset command */
-    while (${RSTC_INSTANCE_NAME}_REGS->RSTC_SR& (uint32_t) RSTC_SR_SRCMP_Msk);  
+    while (${RSTC_INSTANCE_NAME}_REGS->RSTC_SR& (uint32_t) RSTC_SR_SRCMP_Msk);
 }
 
 RSTC_RESET_CAUSE ${RSTC_INSTANCE_NAME}_ResetCauseGet (void)
@@ -90,13 +96,13 @@ void ${RSTC_INSTANCE_NAME}_CallbackRegister (RSTC_CALLBACK callback, uintptr_t c
 
 void ${RSTC_INSTANCE_NAME}_InterruptHandler( void )
 {
-	// Clear the interrupt flag
-	${RSTC_INSTANCE_NAME}_REGS->RSTC_SR;
+    // Clear the interrupt flag
+    ${RSTC_INSTANCE_NAME}_REGS->RSTC_SR;
 
-	// Callback user function
-	if(rstcObj.callback != NULL)
-	{
-        rstcObj.callback(rstcObj.context);		
-	}
+    // Callback user function
+    if(rstcObj.callback != NULL)
+    {
+        rstcObj.callback(rstcObj.context);
+    }
 }
 </#if>
