@@ -72,10 +72,10 @@ Dictionary is based off of values in ATDF file for keynames, instead of their ca
 whereas the captions may vary between families that use this SPI PLIB.
 '''
 dummyDataDict = {
-                    "3" : 0xFFFFFFFF,
-                    "2" : 0xFFFFFFFF,
-                    "1" : 0xFFFF,
-                    "0" : 0xFF,
+                    "0" : 0xFFFFFFFF,
+                    "1" : 0xFFFFFFFF,
+                    "2" : 0xFFFF,
+                    "3" : 0xFF,
                 }
 
 ################################################################################
@@ -150,7 +150,7 @@ def _get_bitfield_names(node, outputList):
             ##  Get rid of leading '0x', and convert to int if was hex
             value = bitfield.getAttribute("value")
 
-            if value[:2] == "0x":
+            if(value[:2] == "0x"):
                 temp = value[2:]
                 tempint = int(temp, 16)
             else:
@@ -219,7 +219,7 @@ def calculateBRGValue(clkfreq, baudRate):
     t_brg = 0
 
     if clkfreq != 0 and baudRate != 0:
-        t_brg = ((int(clkfreq / baudRate) / 2) - 1)
+        t_brg = ((int(clkfreq/baudRate) / 2) - 1)
         baudHigh = int (clkfreq / (2 * (t_brg + 1)))
         baudLow = int (clkfreq / (2 * (t_brg + 2)))
         errorHigh = baudHigh - baudRate
@@ -241,7 +241,6 @@ def calculateBRGValue(clkfreq, baudRate):
     return int(t_brg)
 
 def SPIBRG_ValueUpdate(symbol, event):
-
     clkFreq = int(Database.getSymbolValue("core", spiInstanceName.getValue() + "_CLOCK_FREQUENCY"))
     BaudRate = int (Database.getSymbolValue(spiInstanceName.getValue().lower(), "SPI_BAUD_RATE"))
 
@@ -254,7 +253,6 @@ def SPIBRG_ValueUpdate(symbol, event):
     symbol.setValue(t_brg, 1)
 
 global _find_key
-
 def _find_key(value, keypairs):
     '''
     Helper function that finds the keyname for the given value.
@@ -262,7 +260,7 @@ def _find_key(value, keypairs):
           keypairs - the dictionary to be searched over
     '''
     for ii in mode_names:
-        if ii["key"] == str(value):
+        if(ii["key"] == str(value)):
             return ii["value"]
 
 
@@ -270,21 +268,8 @@ def _find_key(value, keypairs):
     return ""
 
 def DummyData_ValueUpdate(symbol, event):
-    '''
-    Updater function based on key/value pairs from the SPIxCON__MODE32 bitfield.
-    This sets the symbol's current value / maximum value based on the user's selection of
-    the SPIxCON__MODE32 value.
-
-    We cannot simply use event["value"] to get the right value.  The values returned by doing that
-    are based on the order the bitfield values occur within the SPIxCON__MODE32 area.  What is needed
-    is the actual value in the ATDF file for the entry the user chose:
-           <value caption=... value="0x3" />
-    In above example, the line may be the 1st line present in this grouping.  In that case, event["value"] returns 0,
-    which is not what we want.
-    '''
-    value = _find_key(event["symbol"].getKey(event["value"]), mode_names)  # returns the actual value field for what is being looked for
-    symbol.setValue(dummyDataDict[value], 1)
-    symbol.setMax(dummyDataDict[value])
+    symbol.setValue(dummyDataDict[str(event["value"])], 1)
+    symbol.setMax(dummyDataDict[str(event["value"])])
 
 def updateSPIClockWarningStatus(symbol, event):
 
@@ -301,6 +286,7 @@ def onCapabilityConnected(event):
 
 def instantiateComponent(spiComponent):
 
+    global spiSym_BaudError_Comment
     global spiInstanceName
     global InterruptVector
     global InterruptHandlerLock
@@ -309,7 +295,6 @@ def instantiateComponent(spiComponent):
     global spiSymInterruptMode
     global spiSymMaxBRG
     global mode_names
-    global spiSym_BaudError_Comment
     global spiSym_SPICON_MSTEN
     global spiSym_SPICON_MSSEN
 
@@ -321,6 +306,7 @@ def instantiateComponent(spiComponent):
     spiInstanceName = spiComponent.createStringSymbol("SPI_INSTANCE_NAME", None)
     spiInstanceName.setVisible(False)
     spiInstanceName.setDefaultValue(spiComponent.getID().upper())
+    Log.writeInfoMessage("Running " + spiInstanceName.getValue())
 
     spiInstanceNum = spiComponent.createStringSymbol("SPI_INSTANCE_NUM", None)
     spiInstanceNum.setVisible(False)
@@ -458,6 +444,7 @@ def instantiateComponent(spiComponent):
     enblRegName, enblBitPosn, enblMask = _get_enblReg_parms(spiTxVectorNum)
     statRegName, statBitPosn, statMask = _get_statReg_parms(spiTxVectorNum)
 
+
     ## IEC REG
     spiTXIEC = spiComponent.createStringSymbol("SPI_TX_IEC_REG", None)
     spiTXIEC.setDefaultValue(enblRegName)
@@ -534,16 +521,16 @@ def instantiateComponent(spiComponent):
         spiSym_SPICON_MSSEN.addKey( ii['key'],ii['value'], ii['desc'] )
 
     ## SPI data width(Mode)
-    mode_names = []
-    _get_bitfield_names(spiValGrp_SPIxCON_MODE, mode_names)
-    spiSym_SPICON_MODE = spiComponent.createKeyValueSetSymbol("SPI_SPICON_MODE", None)
-    spiSym_SPICON_MODE.setLabel(spiBitField_SPIxCON_MODE.getAttribute("caption"))
+    spiSym_SPICON_MODE = spiComponent.createKeyValueSetSymbol( "SPI_SPICON_MODE",None)
+    spiSym_SPICON_MODE.setLabel("Data Width")
     spiSym_SPICON_MODE.setDefaultValue(3)
     spiSym_SPICON_MODE.setOutputMode( "Value" )
     spiSym_SPICON_MODE.setDisplayMode( "Description" )
-    for ii in mode_names:
-        spiSym_SPICON_MODE.addKey( ii['key'],ii['value'], ii['desc'] )
-
+    spiSym_SPICON_MODE.addKey( "32-bit ", "3", "32-bit")
+    spiSym_SPICON_MODE.addKey( "32-bit", "2", "32-bit")
+    spiSym_SPICON_MODE.addKey( "16-bit", "1", "16-bit")
+    spiSym_SPICON_MODE.addKey( "8-bit", "0", "8-bit")
+	
     ## SPI Master clock
     msclk_names = []
     _get_bitfield_names(spiValGrp_SPIxCON_MCLKSEL, msclk_names)
