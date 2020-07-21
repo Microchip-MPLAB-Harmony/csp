@@ -757,7 +757,7 @@ def instantiateComponent(hemcComponent):
         hsmcSym_MODE_DBW.setSelectedKey("HSMC_MODE_DBW_32_BIT", 2)
 
         hsmcSym_MODE_EXNW = hemcComponent.createKeyValueSetSymbol("HSMC_NWAIT_MODE_CS" + str(hsmcChipSelNum), hsmcSym_MODE_CS_REGISTER)
-        hsmcSym_MODE_EXNW.setOutputMode("Key")
+        hsmcSym_MODE_EXNW.setOutputMode("Value")
         hsmcSym_MODE_EXNW.setDisplayMode("Description")
         hsmcSym_MODE_EXNW.setLabel("External Wait Signal (NWAIT)")
         hsmcSym_MODE_EXNW.addKey("HSMC_MODE_EXNW_MODE_DISABLED", "0", "Disable")
