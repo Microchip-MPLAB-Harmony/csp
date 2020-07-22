@@ -27,8 +27,10 @@
 
 cmpValGrp_CMx_CON_CCH = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CMP"]/value-group@[name="CM1CON__CCH"]')
 cmpValGrp_CMx_CON_CREF = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CMP"]/value-group@[name="CM1CON__CREF"]')
+cmpValGrp_CMx_CON_CPOL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CMP"]/value-group@[name="CM1CON__CPOL"]')
 cmpValGrp_CMx_CON_EVPOL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CMP"]/value-group@[name="CM1CON__EVPOL"]')
 cmpValGrp_CMx_CON_HYSSEL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CMP"]/value-group@[name="CM1CON__HYSSEL"]')
+cmpValGrp_CMx_CON_HYSPOL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CMP"]/value-group@[name="CM1CON__HYSPOL"]')
 cmpValGrp_CMx_CON_CFSEL = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CMP"]/value-group@[name="CM1CON__CFSEL"]')
 cmpValGrp_CMx_CON_CFDIV = ATDF.getNode('/avr-tools-device-file/modules/module@[name="CMP"]/value-group@[name="CM1CON__CFDIV"]')
 
@@ -421,10 +423,13 @@ def instantiateComponent(cmpComponent):
     for id in range(0, 5):
         # generate list of all bitfields present in CMxCON register - varies from family to family, and within certain families as well
         CMxCON_list = []
-        _survey_bitfields("CM"+str(id+1)+"CON", CMxCON_list)  # CMxCON_list is used below, to prevent accessing (absent) elements in the atdf file
+        _survey_bitfields("CM"+str(id+1)+"CON", CMxCON_list)  # CMxCON_list is used below, to prevent accessing (absent) elements in the atdf file   
         cmpSym_CMx_CON_STRING.append(id)
         cmpSym_CMx_CON_STRING[id] = cmpComponent.createCommentSymbol("cmp_x_STRING_" + str(id + 1), None)
-        cmpSym_CMx_CON_STRING[id].setLabel("Comparator " + str(id + 1))
+        if(("OPAON" in CMxCON_list) or (("AMPMOD" in CMxCON_list) and (id != 3))):
+            cmpSym_CMx_CON_STRING[id].setLabel("Op amp / Comparator " + str(id + 1))
+        else:
+            cmpSym_CMx_CON_STRING[id].setLabel("Comparator " + str(id + 1))
 
         #Clock enable
         Database.setSymbolValue("core", "CMP" + str(id + 1) + "_CLOCK_ENABLE", True, 1)
@@ -497,8 +502,8 @@ def instantiateComponent(cmpComponent):
         cmpSym_CMx_CON_OPLPWR.append(id)
         cmpSym_CMx_CON_OPLPWR_present.append(id)
         cmpSym_CMx_CON_OPLPWR[id] =  cmpComponent.createBooleanSymbol("CMP_"+str(id+1)+"_CON_OPLPWR", cmpSym_CMx_CON_STRING[id])
-        if("OPLPWR" in CMxCON_list):
-            cmpSym_CMx_CON_OPLPWR[id].setLabel(cmpBitFld_CMx_CON_OPLPWR.getAttribute("caption"))
+        if(("OPLPWR" in CMxCON_list) and ("OPAON" in CMxCON_list)):
+            cmpSym_CMx_CON_OPLPWR[id].setLabel("Op Amp Low Power Mode Enable bit")
             cmpSym_CMx_CON_OPLPWR_present[id] = cmpComponent.createBooleanSymbol("CMP_"+str(id+1)+"_CON_OPLPWR_PRESENT", cmpSym_CMx_CON_STRING[id])
             cmpSym_CMx_CON_OPLPWR_present[id].setVisible(False)
         else:
@@ -506,9 +511,15 @@ def instantiateComponent(cmpComponent):
         cmpSym_CMx_CON_OPLPWR[id].setDefaultValue(False)
 
         #Comparator output invert
+        cmp_x_CPOL_names = []
+        _get_bitfield_names(cmpValGrp_CMx_CON_CPOL, cmp_x_CPOL_names)
         cmpSym_CMx_CON_CPOL.append(id)
-        cmpSym_CMx_CON_CPOL[id] = cmpComponent.createBooleanSymbol("CMP_" +  str(id + 1) + "_CON_CPOL", cmpSym_CMx_CON_STRING[id])
+        cmpSym_CMx_CON_CPOL[id] = cmpComponent.createKeyValueSetSymbol("CMP_" +  str(id + 1) + "_CON_CPOL", cmpSym_CMx_CON_STRING[id])
         cmpSym_CMx_CON_CPOL[id].setLabel(cmpBitFld_CMx_CON_CPOL.getAttribute("caption"))
+        cmpSym_CMx_CON_CPOL[id].setOutputMode("Value")
+        cmpSym_CMx_CON_CPOL[id].setDisplayMode("Description")
+        for ii in cmp_x_CPOL_names:
+            cmpSym_CMx_CON_CPOL[id].addKey( ii['desc'], ii['value'], ii['key'] )
 
         #Comparator output on pin
         cmpSym_CMx_CON_COE.append(id)
@@ -533,7 +544,7 @@ def instantiateComponent(cmpComponent):
         cmpSym_CMx_CON_ENPGA_present.append(id)
         cmpSym_CMx_CON_ENPGA[id] =  cmpComponent.createBooleanSymbol("CMP_"+str(id+1)+"_CON_ENPGA", cmpSym_CMx_CON_STRING[id])
         if("ENPGA" in CMxCON_list):
-            cmpSym_CMx_CON_ENPGA[id].setLabel(cmpBitFld_CMx_CON_ENPGA.getAttribute("caption"))
+            cmpSym_CMx_CON_ENPGA[id].setLabel("Opamp 1X Gain Mode Enable bit")
             cmpSym_CMx_CON_ENPGA_present[id] = cmpComponent.createBooleanSymbol("CMP_"+str(id+1)+"_CON_ENPGA_PRESENT", cmpSym_CMx_CON_STRING[id])
             cmpSym_CMx_CON_ENPGA_present[id].setVisible(False)
         else:
@@ -541,11 +552,17 @@ def instantiateComponent(cmpComponent):
         cmpSym_CMx_CON_ENPGA[id].setDefaultValue(False)
 
         #Op amp Hysteresis Polarity Selection - bitfield not present in all devices
+        cmp_x_HYSPOL_names = []
         cmpSym_CMx_CON_HYSPOL.append(id)
         cmpSym_CMx_CON_HYSPOL_present.append(id)
-        cmpSym_CMx_CON_HYSPOL[id] =  cmpComponent.createBooleanSymbol("CMP_"+str(id+1)+"_CON_HYSPOL", cmpSym_CMx_CON_STRING[id])
+        cmpSym_CMx_CON_HYSPOL[id] =  cmpComponent.createKeyValueSetSymbol("CMP_"+str(id+1)+"_CON_HYSPOL", cmpSym_CMx_CON_STRING[id])
         if("HYSPOL" in CMxCON_list):
+            _get_bitfield_names(cmpValGrp_CMx_CON_HYSPOL, cmp_x_HYSPOL_names)
             cmpSym_CMx_CON_HYSPOL[id].setLabel(cmpBitFld_CMx_CON_HYSPOL.getAttribute("caption"))
+            cmpSym_CMx_CON_HYSPOL[id].setOutputMode("Value")
+            cmpSym_CMx_CON_HYSPOL[id].setDisplayMode("Description")
+            for ii in cmp_x_HYSPOL_names:
+                cmpSym_CMx_CON_HYSPOL[id].addKey( ii['desc'], ii['value'], ii['key'] )            
             cmpSym_CMx_CON_HYSPOL_present[id] = cmpComponent.createBooleanSymbol("CMP_"+str(id+1)+"_CON_HYSPOL_PRESENT", cmpSym_CMx_CON_STRING[id])
             cmpSym_CMx_CON_HYSPOL_present[id].setVisible(False)
         else:

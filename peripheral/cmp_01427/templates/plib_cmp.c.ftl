@@ -92,7 +92,7 @@ void ${CMP_INSTANCE_NAME}_Initialize (void)
     </#if>
     <#assign CMP_CMxCON_HYSPOL_PRESENT = "CMP_" + i + "_CON_HYSPOL_PRESENT">
     <#if .vars[CMP_CMxCON_HYSPOL_PRESENT]? has_content>
-    /*  HYSPOL  = ${.vars[CMP_CMxCON_HYSPOL]?then('true', 'false')}  */
+    /*  HYSPOL  = ${.vars[CMP_CMxCON_HYSPOL]}  */
     </#if>
     <#assign CMP_CMxCON_HYSSEL_PRESENT = "CMP_" + i + "_CON_HYSSEL_PRESENT">
     <#if .vars[CMP_CMxCON_HYSSEL_PRESENT]? has_content>
@@ -110,7 +110,7 @@ void ${CMP_INSTANCE_NAME}_Initialize (void)
     <#if .vars[CMP_CMxCON_CFDIV_PRESENT]? has_content>
     /*  CFDIV   = ${.vars[CMP_CMxCON_CFDIV]}  */
     </#if>
-    /*  CPOL    = ${.vars[CMP_CMxCON_CPOL]?then('true', 'false')}    */
+    /*  CPOL    = ${.vars[CMP_CMxCON_CPOL]}    */
     /*  COE     = ${.vars[CMP_CMxCON_COE]?then('true', 'false')}     */
     <#if .vars[CMP_CMxCON_EVPOL] != "0">
     ${.vars[CMP_IEC_REG]}SET = _${.vars[CMP_IEC_REG]}_${CMP_INSTANCE_NAME}${i}IE_MASK;
