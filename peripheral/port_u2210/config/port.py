@@ -88,7 +88,7 @@ def packageChange(symbol, pinout):
                     pin[index - 1].setVisible(True)
                 pin[index - 1].setLabel("Pin " + str(pin_position[index - 1]))
                 pinGroupNum[index-1].setValue(portGroupName.index(str(pin_map.get(pin_position[index-1]))[1]), 2)
-                if pin_map.get(pin_position[index-1]).startswith("P"):
+                if (pin_map.get(pin_position[index-1]).startswith("P")) and (pin_map.get(pin_position[index-1])[-1].isdigit()):
                     Database.setSymbolValue("core", "PIN_" + str(index) + "_PORT_PIN", int(re.findall('\d+', pin_map.get(pin_position[index - 1]))[0]), 2)
                     Database.setSymbolValue("core", "PIN_" + str(index) + "_PORT_GROUP", pin_map.get(pin_position[index - 1])[1], 2)
                 else:
@@ -438,12 +438,12 @@ for pinNumber in range(1, internalPincount + 1):
     pinGroupNum[pinNumber-1].setVisible(False)
 
     if pinNumber < pincount + 1:
-        if pin_map.get(pin_position[pinNumber-1]).startswith("P"):
+        if (pin_map.get(pin_position[pinNumber-1]).startswith("P")) and (pin_map.get(pin_position[pinNumber-1])[-1].isdigit()):
             pinBitPosition[pinNumber-1].setDefaultValue(int(re.findall('\d+', pin_map.get(pin_position[pinNumber-1]))[0]))
             pinGroup[pinNumber-1].setDefaultValue(pin_map.get(pin_position[pinNumber-1])[1])
             pinGroupNum[pinNumber-1].setDefaultValue(portGroupName.index(str(pin_map.get(pin_position[pinNumber-1]))[1]))
     else:
-        if pin_map_internal.get(pin_position_internal[pinNumber - pincount - 1]).startswith("P"):
+        if (pin_map_internal.get(pin_position_internal[pinNumber - pincount - 1]).startswith("P")) and (pin_map_internal.get(pin_position_internal[pinNumber - pincount - 1])[-1].isdigit()):
             pinBitPosition[pinNumber-1].setDefaultValue(int(re.findall('\d+', pin_map_internal.get(pin_position_internal[pinNumber - pincount - 1]))[0]))
             pinGroup[pinNumber-1].setDefaultValue(pin_map_internal.get(pin_position_internal[pinNumber - pincount - 1])[1])
             pinGroupNum[pinNumber-1].setDefaultValue(portGroupName.index(str(pin_map_internal.get(pin_position_internal[pinNumber - pincount - 1]))[1]))
