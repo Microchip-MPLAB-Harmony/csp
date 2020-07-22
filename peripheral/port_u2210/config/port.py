@@ -28,7 +28,7 @@ import re
 global sort_alphanumeric
 global peripheralFunctionality
 
-peripheralFunctionality = ["GPIO", "Alternate", "LED_AH", "LED_AL", "SWITCH_AH", "SWITCH_AL"]
+peripheralFunctionality = ["GPIO", "Alternate", "LED_AH", "LED_AL", "SWITCH_AH", "SWITCH_AL", "VBUS_AH", "VBUS_AL"]
 
 global availablePinDictionary
 availablePinDictionary = {}
