@@ -230,7 +230,7 @@ bool ${ADCHS_INSTANCE_NAME}_EOSStatusGet(void)
 </#if>
 
 <#if ADCHS_INTERRUPT == true || ADCCON2__EOSIEN == true>
-void ADCCTRL_InterruptHandler( void )
+void ADCHS_InterruptHandler( void )
 {
     <#if ADCHS_INTERRUPT == true>
     uint8_t i;

@@ -673,12 +673,17 @@ def adchsNVICInterrupt(symbol, event):
 def getTCLKValue():
     clk_freq = Database.getSymbolValue("core", "ADCHS_CLOCK_FREQUENCY")
     if (clk_freq == 0):
-        clk_freq = 1
-    return float((1.0/clk_freq) * 1000000000)
+        #clk_freq = 1
+        return 0
+    else:
+        return float((1.0/clk_freq) * 1000000000)
 
 def adchsClockCalc(symbol, event):
     component = symbol.getComponent()
-    symbol.setValue(getTCLKValue() * component.getSymbolValue("ADCCON3__CONCLKDIV"), 2)
+    if getTCLKValue() == 0:
+        symbol.setValue(0.00)
+    else:
+        symbol.setValue(getTCLKValue() * component.getSymbolValue("ADCCON3__CONCLKDIV"), 2)
 
 def adchsTCLKCalc(symbol, event):
     symbol.setValue((getTCLKValue()), 2)
@@ -714,7 +719,10 @@ def adchsConvRateCalc(symbol, event):
     samc = component.getSymbolValue("ADC"+str(channelID)+"TIME__SAMC")
     resolution = component.getSymbolValue("ADC"+str(channelID)+"TIME__SELRES")
     resolution = (resolution * 2) + 7
-    symbol.setValue((1000000.0 / ((2 + samc + resolution) * tadc )), 2)
+    if tadc <= 0.0:
+        symbol.setValue(0)
+    else:
+        symbol.setValue((1000000.0 / ((2 + samc + resolution) * tadc )), 2)
     ch_enable = component.getSymbolValue("ADCHS_"+str(channelID)+"_ENABLE")
     symbol.setVisible(ch_enable)
 
@@ -725,7 +733,10 @@ def adchsSharedConvRateCalc(symbol, event):
     samc = component.getSymbolValue("ADCCON2__SAMC")
     resolution = component.getSymbolValue("ADCCON1__SELRES")
     resolution = (resolution * 2) + 7
-    symbol.setValue((1000000.0 / ((2 + samc + resolution) * tadc )), 2)
+    if tadc <= 0.0:
+        symbol.setValue(0)
+    else:
+        symbol.setValue((1000000.0 / ((2 + samc + resolution) * tadc )), 2)
     ch_enable = component.getSymbolValue("ADCHS_"+str(channelID)+"_ENABLE")
     symbol.setVisible(ch_enable)
 
@@ -1205,6 +1216,7 @@ def instantiateComponent(adchsComponent):
     adchsSym_CLOCK = adchsComponent.createFloatSymbol("ADCHS_TQ", adchsMenu)
     adchsSym_CLOCK.setLabel("ADCHS Control clock (Tq) (nano sec)")
     adchsSym_CLOCK.setDefaultValue((getTCLKValue() * adchsSym_ADCCON3__CONCLKDIV.getValue()))
+    adchsSym_CLOCK.setMin(0.0)
     adchsSym_CLOCK.setDependencies(adchsClockCalc, ["core.ADCHS_CLOCK_FREQUENCY", "ADCCON3__CONCLKDIV"])
     adchsSym_CLOCK.setReadOnly(True)
 
@@ -1280,7 +1292,7 @@ def instantiateComponent(adchsComponent):
             adchsSym_CH_ENABLE[channelID], False)
         adchsSym_ADCTIME__ADCDIV[channelID].setDependencies(adchsVisibilityOnEvent,
             ["ADCHS_"+str(channelID)+"_ENABLE"])
-        adchsSym_ADCTIME__ADCDIV[channelID].setMin(0)
+        adchsSym_ADCTIME__ADCDIV[channelID].setMin(1)
         adchsSym_ADCTIME__ADCDIV[channelID].setMax(127)
         adctime_deplist[channelID].append(RegisterName + "__" + BitFieldBaseName_ADCDIV)
 
@@ -1289,6 +1301,7 @@ def instantiateComponent(adchsComponent):
         adcSym_TADC[channelID].setLabel("ADC" + str(channelID) + " Clock (Tadc) (nano sec)")
         adcSym_TADC[channelID].setReadOnly(True)
         adcSym_TADC[channelID].setDefaultValue(adchsSym_CLOCK.getValue())
+        adcSym_TADC[channelID].setMin(0.0)
         adcSym_TADC[channelID].setDependencies(adchsTADCCalc, ["ADCHS_TQ", "ADC"+str(channelID)+"TIME__ADCDIV", "ADCHS_"+str(channelID)+"_ENABLE"])
 
         #sample time
@@ -1365,7 +1378,7 @@ def instantiateComponent(adchsComponent):
     #clock divider
     adchsSym_ADCCON2__ADCDIV = adchsAddLongFromATDFBitfieldCaption(adchsComponent,
         Module, "ADCCON2", "ADCDIV", adchsSym_CH_ENABLE7, False)
-    adchsSym_ADCCON2__ADCDIV.setMin(0)
+    adchsSym_ADCCON2__ADCDIV.setMin(1)
     adchsSym_ADCCON2__ADCDIV.setMax(127)
     adchsSym_ADCCON2__ADCDIV.setDependencies(adchsVisibilityOnEvent, ["ADCHS_"+str(channelID)+"_ENABLE"])
 
@@ -1373,6 +1386,7 @@ def instantiateComponent(adchsComponent):
     adcSym_TADC7.setLabel("ADC" + str(channelID) + " Clock (Tadc) (nano sec)")
     adcSym_TADC7.setVisible(False)
     adcSym_TADC7.setReadOnly(True)
+    adcSym_TADC7.setMin(0.0)
     adcSym_TADC7.setDefaultValue(adchsSym_CLOCK.getValue())
     adcSym_TADC7.setDependencies(adchsSharedTADCCalc, ["ADCHS_TQ", "ADCCON2__ADCDIV", "ADCHS_"+str(channelID)+"_ENABLE"])
 
