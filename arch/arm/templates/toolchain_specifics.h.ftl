@@ -25,9 +25,7 @@
 #define TOOLCHAIN_SPECIFICS_H
 
 #ifdef __cplusplus  // Provide C++ Compatibility
-
 extern "C" {
-
 #endif
 
 <#if CoreArchitecture?contains("ARM926")>
@@ -90,19 +88,29 @@ extern "C" {
     <#lt>#define __WEAK __attribute__((weak))
     <#lt>#endif // __WEAK
 </#if>
-
 <#if "XC32" == COMPILER_CHOICE>
     <#if CoreArchitecture?contains("ARM926") == false >
+        <#lt>#pragma GCC diagnostic push
+        <#lt>#ifndef __cplusplus
+        <#lt>   #pragma GCC diagnostic ignored "-Wnested-externs"
+        <#lt>#endif
+        <#lt>#pragma GCC diagnostic ignored "-Wsign-conversion"
+        <#lt>#pragma GCC diagnostic ignored "-Wattributes"
+        <#lt>#pragma GCC diagnostic ignored "-Wundef"
         <#lt>#include "cmsis_compiler.h"
+        <#lt>#pragma GCC diagnostic pop
+
     </#if>
     <#lt>#include <sys/types.h>
+
     <#lt>#define NO_INIT        __attribute__((section(".no_init")))
     <#lt>#define SECTION(a)     __attribute__((__section__(a)))
-
     <#if CACHE_ALIGN?? >
+
         <#lt>#define CACHE_LINE_SIZE    (${CACHE_ALIGN}u)
         <#lt>#define CACHE_ALIGN        __ALIGNED(CACHE_LINE_SIZE)
     <#else>
+
         <#lt>#define CACHE_LINE_SIZE    (4u)
         <#lt>#define CACHE_ALIGN
     </#if>
@@ -115,11 +123,12 @@ extern "C" {
     <#if CoreArchitecture?contains("ARM926") == false >
         <#lt>#include "cmsis_compiler.h"
     </#if>
+    <#lt>#include <stdint.h>
+
     <#lt>#define COMPILER_PRAGMA(arg)            _Pragma(#arg)
     <#lt>#define SECTION(a)                      COMPILER_PRAGMA(location = a)
     <#lt>#define NO_INIT                         __no_init
 
-    <#lt>#include <stdint.h>
     <#lt>#define __inline__                      inline
 
     <#lt>#ifndef _SSIZE_T_DECLARED
@@ -140,11 +149,12 @@ extern "C" {
     <#lt>typedef _ssize_t ssize_t;
     <#lt>#define	_SSIZE_T_DECLARED
     <#lt>#endif
-
     <#if CACHE_ALIGN?? >
+
         <#lt>#define CACHE_LINE_SIZE                 (${CACHE_ALIGN}u)
         <#lt>#define CACHE_ALIGN                     __ALIGNED(CACHE_LINE_SIZE)
     <#else>
+
         <#lt>#define CACHE_LINE_SIZE                 (4u)
         <#lt>#define CACHE_ALIGN
     </#if>
