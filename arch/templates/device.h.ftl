@@ -55,13 +55,14 @@
 #pragma GCC diagnostic ignored "-Wundef"
 </#if>
 #include "${__PROCESSOR?lower_case}.h"
+<#if DFP_COMPAT_FILE?has_content>
+#include "${DFP_COMPAT_FILE}"
+</#if>
+#include "toolchain_specifics.h"
 <#if core.COMPILER_CHOICE == "XC32">
 #pragma GCC diagnostic pop
 </#if>
 #include "device_cache.h"
 </#if>
-<#if DFP_COMPAT_FILE?has_content>
-#include "${DFP_COMPAT_FILE}"
-</#if>
-#include "toolchain_specifics.h"
+
 

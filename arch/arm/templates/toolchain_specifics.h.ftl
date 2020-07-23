@@ -106,6 +106,11 @@ extern "C" {
         <#lt>#define CACHE_LINE_SIZE    (4u)
         <#lt>#define CACHE_ALIGN
     </#if>
+
+    <#lt>#ifndef FORMAT_ATTRIBUTE
+    <#lt>   #define FORMAT_ATTRIBUTE(archetype, string_index, first_to_check)  __attribute__ ((format (archetype, string_index, first_to_check)))
+    <#lt>#endif
+
 <#elseif "IAR" == COMPILER_CHOICE>
     <#if CoreArchitecture?contains("ARM926") == false >
         <#lt>#include "cmsis_compiler.h"
@@ -143,6 +148,10 @@ extern "C" {
         <#lt>#define CACHE_LINE_SIZE                 (4u)
         <#lt>#define CACHE_ALIGN
     </#if>
+
+    <#lt>#ifndef FORMAT_ATTRIBUTE
+    <#lt>   #define FORMAT_ATTRIBUTE(archetype, string_index, first_to_check)
+    <#lt>#endif
 
     <#lt>// Usually defined in errno.h, include extended E codes not provided in IAR errno.h
     <#lt>// H3_IAR_ERRNO
@@ -271,6 +280,10 @@ extern "C" {
         <#lt>#define CACHE_LINE_SIZE    (4u)
         <#lt>#define CACHE_ALIGN
     </#if>
+
+    <#lt>#ifndef FORMAT_ATTRIBUTE
+    <#lt>   #define FORMAT_ATTRIBUTE(archetype, string_index, first_to_check)  __attribute__ ((format (archetype, string_index, first_to_check)))
+    <#lt>#endif
 </#if>
 
 #ifdef __cplusplus
