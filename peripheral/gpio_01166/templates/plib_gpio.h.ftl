@@ -92,23 +92,23 @@
         <#assign pinChannel = "BSP_PIN_" + i + "_PORT_CHANNEL">
         <#assign interruptType = "BSP_PIN_" + i + "_CN">
         <#if .vars[functype]?has_content>
-            <#if .vars[functype] == "GPIO">
-                <#if .vars[funcname]?has_content>
-                    <#if .vars[pinPort]?has_content>
-                        <#if .vars[pinChannel]?has_content>
-                            <#lt>/*** Macros for ${.vars[funcname]} pin ***/
+            <#if .vars[funcname]?has_content>
+                <#if .vars[pinPort]?has_content>
+                    <#if .vars[pinChannel]?has_content>
+                        <#lt>/*** Macros for ${.vars[funcname]} pin ***/
+                        <#if .vars[functype] == "GPIO">
                             <#lt>#define ${.vars[funcname]}_Set()               (LAT${.vars[pinChannel]}SET = (1<<${.vars[pinPort]}))
                             <#lt>#define ${.vars[funcname]}_Clear()             (LAT${.vars[pinChannel]}CLR = (1<<${.vars[pinPort]}))
                             <#lt>#define ${.vars[funcname]}_Toggle()            (LAT${.vars[pinChannel]}INV= (1<<${.vars[pinPort]}))
-                            <#lt>#define ${.vars[funcname]}_Get()               ((PORT${.vars[pinChannel]} >> ${.vars[pinPort]}) & 0x1)
                             <#lt>#define ${.vars[funcname]}_OutputEnable()      (TRIS${.vars[pinChannel]}CLR = (1<<${.vars[pinPort]}))
                             <#lt>#define ${.vars[funcname]}_InputEnable()       (TRIS${.vars[pinChannel]}SET = (1<<${.vars[pinPort]}))
-                            <#if .vars[interruptType]?has_content>
-                                <#lt>#define ${.vars[funcname]}_InterruptEnable()   (CNEN${.vars[pinChannel]}SET = (1<<${.vars[pinPort]}))
-                                <#lt>#define ${.vars[funcname]}_InterruptDisable()  (CNEN${.vars[pinChannel]}CLR = (1<<${.vars[pinPort]}))
-                            </#if>
-                            <#lt>#define ${.vars[funcname]}_PIN                  GPIO_PIN_R${.vars[pinChannel]}${.vars[pinPort]}
                         </#if>
+                        <#if .vars[interruptType]?has_content>
+                            <#lt>#define ${.vars[funcname]}_InterruptEnable()   (CNEN${.vars[pinChannel]}SET = (1<<${.vars[pinPort]}))
+                            <#lt>#define ${.vars[funcname]}_InterruptDisable()  (CNEN${.vars[pinChannel]}CLR = (1<<${.vars[pinPort]}))
+                        </#if>
+                        <#lt>#define ${.vars[funcname]}_Get()               ((PORT${.vars[pinChannel]} >> ${.vars[pinPort]}) & 0x1)
+                        <#lt>#define ${.vars[funcname]}_PIN                  GPIO_PIN_R${.vars[pinChannel]}${.vars[pinPort]}
                     </#if>
                 </#if>
             </#if>
