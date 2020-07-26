@@ -150,11 +150,15 @@ def handleMessage(messageID, args):
         sysTimeComponentId.setValue(args["ID"])
         modeDict = {"plib_mode": "PERIOD_AND_COMPARE_MODES"}
         sysTimePLIBConfig = Database.sendMessage(sysTimeComponentId.getValue(), "SYS_TIME_PLIB_CAPABILITY", modeDict)
-        print sysTimePLIBConfig
         sysTimePlibMode.setValue(sysTimePLIBConfig["plib_mode"])
         if sysTimePLIBConfig["plib_mode"] == "SYS_TIME_PLIB_MODE_PERIOD":
             sysTimeTickRateMs.setValue(sysTimePLIBConfig["sys_time_tick_ms"])
-        rtcModeSelection_Sym.setSelectedKey("MODE0", 1)
+
+        if(rtcModeSelection_Sym.getSelectedKey() == "MODE2"):
+            rtcModeSelection_Sym.setReadOnly(True)
+            rtcModeSelection_Sym.setSelectedKey("MODE0", 1)
+            rtcModeSelection_Sym.setReadOnly(False)
+
         setSysTimeConfiguration(rtcModeSelection_Sym.getSelectedKey(), sysTimePlibMode.getValue())
 
     if ((messageID == "SYS_TIME_PLIB_MODE_COMPARE") or (messageID == "SYS_TIME_PLIB_MODE_PERIOD")):
@@ -541,6 +545,9 @@ def instantiateComponent(rtcComponent):
     #Frequency Correction
     rtcSymMode0_FREQCORR = rtcComponent.createBooleanSymbol("RTC_FREQCORR",rtcSym_Menu)
     rtcSymMode0_FREQCORR.setLabel("Generate Frequency Correction API")
+
+    rtcCount_ReadContinuously = rtcComponent.createBooleanSymbol("RTC_COUNT_CLOCK_RCONT",rtcSym_Menu)
+    rtcCount_ReadContinuously.setLabel("Continuous Synchronization for RTC Count/Clock Register")
 
     #Sub Menu - RTC Modes: RTC_MODE0, RTC_MODE1, RTC_MODE2
     rtcModeSelection_Sym = rtcComponent.createKeyValueSetSymbol("RTC_MODULE_SELECTION", rtcSym_Menu)
