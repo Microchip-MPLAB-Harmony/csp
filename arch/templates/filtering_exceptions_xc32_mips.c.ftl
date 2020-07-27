@@ -128,7 +128,7 @@ static uintptr_t _ReturnAddress;     // Return Address (ra)
     Refer to the XC32 User's Guide for additional information.
  */
 
-void __attribute__((nomips16, noreturn)) _general_exception_handler (XCPT_FRAME* const pXFrame)
+void __attribute__((nomips16)) _general_exception_handler (XCPT_FRAME* const pXFrame)
 {
     register uint32_t _localStackPointerValue asm("sp");
 
