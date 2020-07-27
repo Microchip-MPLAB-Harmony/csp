@@ -110,7 +110,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
         <#list 0..(RTC_MODE0_NUM_COMP - 1) as i>
         <#assign compareReg = "RTC_MODE0_TIMER_COMPARE" + i>
         <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_COMP[${i}] = 0x${.vars[compareReg]};
-        
+
         <#lt>    while((${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_SYNCBUSY & RTC_MODE0_SYNCBUSY_COMP${i}_Msk) == RTC_MODE0_SYNCBUSY_COMP${i}_Msk)
         <#lt>    {
         <#lt>        /* Wait for Synchronization after writing Compare Value */
@@ -394,8 +394,11 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     <#lt>    {
     <#lt>        /* Wait for Synchronization before reading value from Count Register */
     <#lt>    }
-
-    <#lt>    return(${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_COUNT + 4);
+    <#if SYS_TIME_COMPONENT_ID == "sys_time">
+        <#lt>   return(${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_COUNT + 4);
+    <#else>
+        <#lt>   return(${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_COUNT);
+    </#if>
     <#lt>}
 
     <#lt>uint32_t ${RTC_INSTANCE_NAME}_Timer32PeriodGet ( void )
@@ -472,7 +475,11 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     <#lt>    {
     <#lt>        /* Wait for Synchronization after reading value from Count Register */
     <#lt>    }
-    <#lt>    return (${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_COUNT);
+    <#if SYS_TIME_COMPONENT_ID == "sys_time">
+        <#lt>   return(${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_COUNT + 4);
+    <#else>
+        <#lt>   return(${RTC_INSTANCE_NAME}_REGS->MODE1.RTC_COUNT);
+    </#if>
     <#lt>}
 
     <#lt>uint16_t ${RTC_INSTANCE_NAME}_Timer16PeriodGet ( void )
@@ -570,7 +577,7 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     <#if RTC_MODULE_SELECTION = "MODE0">
         <#lt>    ${RTC_INSTANCE_NAME?lower_case}Obj.timer32intCause = (RTC_TIMER32_INT_MASK) ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_INTFLAG;
         <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE0.RTC_INTFLAG = RTC_MODE0_INTFLAG_Msk;
-        
+
         <#lt>    /* Invoke registered Callback function */
         <#lt>    if(${RTC_INSTANCE_NAME?lower_case}Obj.timer32BitCallback != NULL)
         <#lt>    {
