@@ -272,6 +272,15 @@ uint32_t ${TC_INSTANCE_NAME}_CaptureFrequencyGet( void )
     return (uint32_t)(${TC_FREQUENCY}UL);
 }
 
+void ${TC_INSTANCE_NAME}_CaptureCommandSet(TC_COMMAND command)
+{
+    ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET = command << TC_CTRLBSET_CMD_Pos;
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY))
+    {
+        /* Wait for Write Synchronization */
+    }    
+}
+
 <#if TC_CTRLA_MODE = "COUNT8">
 
 uint8_t ${TC_INSTANCE_NAME}_Capture8bitChannel0Get( void )

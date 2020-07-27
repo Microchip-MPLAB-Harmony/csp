@@ -146,7 +146,7 @@ void ${TC_INSTANCE_NAME}_TimerCallbackRegister( TC_TIMER_CALLBACK callback, uint
 bool ${TC_INSTANCE_NAME}_TimerPeriodHasExpired( void );
 </#if>
 
-
+void ${TC_INSTANCE_NAME}_TimerCommandSet(TC_COMMAND command);
 
 
 // DOM-IGNORE-BEGIN

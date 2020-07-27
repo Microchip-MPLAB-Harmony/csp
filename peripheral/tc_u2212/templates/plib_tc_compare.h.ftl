@@ -147,6 +147,8 @@ void ${TC_INSTANCE_NAME}_CompareCallbackRegister( TC_COMPARE_CALLBACK callback, 
 TC_COMPARE_STATUS ${TC_INSTANCE_NAME}_CompareStatusGet( void );
 </#if>
 
+void ${TC_INSTANCE_NAME}_CompareCommandSet(TC_COMMAND command);
+
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

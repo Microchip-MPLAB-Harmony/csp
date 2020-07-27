@@ -146,6 +146,8 @@ void ${TC_INSTANCE_NAME}_CaptureCallbackRegister(TC_CAPTURE_CALLBACK callback, u
 TC_CAPTURE_STATUS ${TC_INSTANCE_NAME}_CaptureStatusGet( void );
 </#if>
 
+void ${TC_INSTANCE_NAME}_CaptureCommandSet(TC_COMMAND command);
+
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
