@@ -56,6 +56,10 @@
 // Global Data
 // *****************************************************************************
 // *****************************************************************************
+<#assign CAN_PROPAG = PROPAG - 1>
+<#assign CAN_PHASE1 = PHASE1 - 1>
+<#assign CAN_PHASE2 = PHASE2 - 1>
+<#assign CAN_SJW    = SJW - 1>
 /* Number of configured FIFO */
 #define CAN_NUM_OF_FIFO             ${NUMBER_OF_FIFO}
 /* Maximum number of CAN Message buffers in each FIFO */
@@ -124,10 +128,10 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
 
     /* Set the Bitrate to ${NOMINAL_BITRATE} Kbps */
     C${CAN_INSTANCE_NUM}CFG = ((${BRP} << _C${CAN_INSTANCE_NUM}CFG_BRP_POSITION) & _C${CAN_INSTANCE_NUM}CFG_BRP_MASK)
-                            | ((${SJW} << _C${CAN_INSTANCE_NUM}CFG_SJW_POSITION) & _C${CAN_INSTANCE_NUM}CFG_SJW_MASK)
-                            | ((${PHASE2} << _C${CAN_INSTANCE_NUM}CFG_SEG2PH_POSITION) & _C${CAN_INSTANCE_NUM}CFG_SEG2PH_MASK)
-                            | ((${PHASE1} << _C${CAN_INSTANCE_NUM}CFG_SEG1PH_POSITION) & _C${CAN_INSTANCE_NUM}CFG_SEG1PH_MASK)
-                            | ((${PROPAG} << _C${CAN_INSTANCE_NUM}CFG_PRSEG_POSITION) & _C${CAN_INSTANCE_NUM}CFG_PRSEG_MASK)
+                            | ((${CAN_SJW} << _C${CAN_INSTANCE_NUM}CFG_SJW_POSITION) & _C${CAN_INSTANCE_NUM}CFG_SJW_MASK)
+                            | ((${CAN_PHASE2} << _C${CAN_INSTANCE_NUM}CFG_SEG2PH_POSITION) & _C${CAN_INSTANCE_NUM}CFG_SEG2PH_MASK)
+                            | ((${CAN_PHASE1} << _C${CAN_INSTANCE_NUM}CFG_SEG1PH_POSITION) & _C${CAN_INSTANCE_NUM}CFG_SEG1PH_MASK)
+                            | ((${CAN_PROPAG} << _C${CAN_INSTANCE_NUM}CFG_PRSEG_POSITION) & _C${CAN_INSTANCE_NUM}CFG_PRSEG_MASK)
                             | _C${CAN_INSTANCE_NUM}CFG_SEG2PHTS_MASK<#if CAN_CFG_SAM == "0x1"> | _C${CAN_INSTANCE_NUM}CFG_SAM_MASK</#if>;
 
     /* Set FIFO base address for all message buffers */

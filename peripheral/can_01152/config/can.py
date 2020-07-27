@@ -248,6 +248,62 @@ def updateCanInterruptData(symbol, event):
 def canCoreClockFreq(symbol, event):
     symbol.setValue(int(Database.getSymbolValue("core", canInstanceName.getValue() + "_CLOCK_FREQUENCY")))
 
+def autoBitTimingCalculation(bitTiming, lowTq, highTq):
+    clk = Database.getSymbolValue("core", canInstanceName.getValue() + "_CLOCK_FREQUENCY")
+    bitrate = Database.getSymbolValue(canInstanceName.getValue().lower(), "NOMINAL_BITRATE")
+
+    minErrPropag = propagSegment.getMax()
+    minErrPhase1 = phase1Segment.getMax()
+    minErrPhase2 = phase2Segment.getMax()
+    minErrCalculatedNominalBitrate = 0.0
+    minErrCalculatedTimeQuanta = lowTq
+    minErrTqPeriod = 0.0
+    minErrorRate = 100.0
+    errorRate = 100.0
+    minErrPrescaler = 0
+    for propag in range(propagSegment.getMax(), propagSegment.getMin() - 1, -1):
+        for phase1 in range(phase1Segment.getMax(), phase1Segment.getMin() - 1, -1):
+            for phase2 in range(phase2Segment.getMax(), phase2Segment.getMin() - 1, -1):
+                calculatedTimeQuanta = 1 + propag + phase1 + phase2
+                if ((propag + phase1) >= phase2):
+                    if ((lowTq <= calculatedTimeQuanta) and (calculatedTimeQuanta <= highTq)):
+                        prescaler = int(clk /((bitrate * 1000) * (calculatedTimeQuanta * 2))) - 1;
+                        if prescaler >= brpPrescaler.getMin():
+                            if (prescaler > brpPrescaler.getMax()):
+                                prescaler = brpPrescaler.getMax()
+
+                            tqPeriod = float((2.0 * (prescaler + 1) / clk))
+                            calculatedNominalBitrate = 1.0 / (float(tqPeriod) * calculatedTimeQuanta)
+                            errorRate = ((float(calculatedNominalBitrate) - (bitrate * 1000)) / (bitrate * 1000)) * 100.0
+                            if (abs(errorRate) < abs(minErrorRate)):
+                                minErrorRate = errorRate
+                                minErrPrescaler = prescaler
+                                minErrPropag = propag
+                                minErrPhase1 = phase1
+                                minErrPhase2 = phase2
+                                minErrCalculatedNominalBitrate = calculatedNominalBitrate
+                                minErrCalculatedTimeQuanta = calculatedTimeQuanta
+                                minErrTqPeriod = tqPeriod
+                            if errorRate == 0:
+                                break
+            if errorRate == 0:
+                break
+        if errorRate == 0:
+            break
+
+    if (minErrPhase2 > 4):
+        sjw = 4
+    else:
+        sjw = minErrPhase2
+
+    canNominalSamplePoint.setReadOnly(True)
+    canNominalSamplePoint.setValue((float(1 + minErrPropag + minErrPhase1)/minErrCalculatedTimeQuanta) * 100.0)
+    brpPrescaler.setReadOnly(True)
+    brpPrescaler.setValue(minErrPrescaler)
+    propagSegmentTime.setReadOnly(True)
+    propagSegmentTime.setValue(int(minErrPropag * (minErrTqPeriod * 1000000000.0)))
+    return "{:.3f}".format(minErrorRate), (int(minErrCalculatedNominalBitrate) / 1000), "{:.3f}".format(minErrTqPeriod * 1000000000.0), minErrCalculatedTimeQuanta, minErrPropag, minErrPhase1, minErrPhase2, sjw
+
 def bitTimingCalculation(bitTiming, lowTq, highTq):
     clk = Database.getSymbolValue("core", canInstanceName.getValue() + "_CLOCK_FREQUENCY")
 
@@ -281,14 +337,74 @@ def bitTimingCalculation(bitTiming, lowTq, highTq):
     else:
         sjw = phase2
 
-    return propag, phase1, phase2, sjw
+    # Calculated Nominal Bitrate
+    if (propag + 1) < propagSegment.getMin():
+        calculatedPropag = propagSegment.getMin()
+    elif (propag + 1) > propagSegment.getMax():
+        calculatedPropag = propagSegment.getMax()
+    else:
+        calculatedPropag = propag + 1
+
+    if (phase1 + 1) < phase1Segment.getMin():
+        calculatedPhase1 = phase1Segment.getMin()
+    elif (phase1 + 1) > phase1Segment.getMax():
+        calculatedPhase1 = phase1Segment.getMax()
+    else:
+        calculatedPhase1 = phase1 + 1
+
+    if (phase2 + 1) < phase2Segment.getMin():
+        calculatedPhase2 = phase2Segment.getMin()
+    elif (phase2 + 1) > phase2Segment.getMax():
+        calculatedPhase2 = phase2Segment.getMax()
+    else:
+        calculatedPhase2 = phase2 + 1
+
+    calculatedTimeQuanta = 1 + calculatedPropag + calculatedPhase1 + calculatedPhase2
+    calculatedNominalBitrate = clk / (calculatedTimeQuanta * (2 * (prescaler + 1)))
+
+    tqPeriod = 0.0
+    if calculatedNominalBitrate != 0:
+        # Calculated Time Quanta (TQ) Period in sec
+        tqPeriod = 1.0 / (calculatedNominalBitrate * calculatedTimeQuanta)
+
+    # Calculated Error %
+    errorRate = ((float(calculatedNominalBitrate) - (bitrate * 1000)) / (bitrate * 1000)) * 100.0
+
+    return "{:.3f}".format(errorRate), (calculatedNominalBitrate / 1000), "{:.3f}".format(tqPeriod * 1000000000.0), calculatedTimeQuanta, (propag + 1), (phase1 + 1), (phase2 + 1), (sjw + 1)
 
 def nominalBitTimingCalculation(symbol, event):
-    propag, phase1, phase2, sjw = bitTimingCalculation("Nominal", 8, 25)
+    if Database.getSymbolValue(canInstanceName.getValue().lower(), "AUTO_NOMINAL_BIT_TIMING_CALCULATION") == True:
+        if event["id"] == "BRP" or event["id"] == "NOMINAL_SAMPLE_POINT" or event["id"] == "PROPAG_TIME":
+            return
+        else:
+            errorRate, calculatedNominalBitrate, tqPeriod, timeQuanta, propag, phase1, phase2, sjw = autoBitTimingCalculation("Nominal", 8, 25)
+    else:
+        errorRate, calculatedNominalBitrate, tqPeriod, timeQuanta, propag, phase1, phase2, sjw = bitTimingCalculation("Nominal", 8, 25)
+    Database.setSymbolValue(canInstanceName.getValue().lower(), "TOTAL_TIME_QUANTA", timeQuanta)
     Database.setSymbolValue(canInstanceName.getValue().lower(), "PROPAG", propag)
     Database.setSymbolValue(canInstanceName.getValue().lower(), "PHASE1", phase1)
     Database.setSymbolValue(canInstanceName.getValue().lower(), "PHASE2", phase2)
     Database.setSymbolValue(canInstanceName.getValue().lower(), "SJW", sjw)
+    Database.setSymbolValue(canInstanceName.getValue().lower(), "CALCULATED_NOMINAL_BITRATE", calculatedNominalBitrate)
+    symbol.getComponent().getSymbolByID("TIME_QUANTA_PERIOD").setValue(str(tqPeriod))
+    symbol.getComponent().getSymbolByID("CALCULATED_ERRORRATE").setValue(str(errorRate))
+    if abs(float(errorRate)) > 1:
+        canErrorRateCommentSym.setLabel("Warning!!! Error " + str(errorRate) + "%")
+        canErrorRateCommentSym.setVisible(True)
+    else:
+        canErrorRateCommentSym.setVisible(False)
+
+def updateNominalBitTimingSymbols(symbol, event):
+    if (event["value"]):
+        symbol.getComponent().getSymbolByID("BRP").setReadOnly(True)
+        symbol.getComponent().getSymbolByID("NOMINAL_SAMPLE_POINT").setReadOnly(True)
+        symbol.getComponent().getSymbolByID("PROPAG_TIME").setReadOnly(True)
+        canTimeQuantaInvalidSym.setVisible(False)
+        canCoreClockInvalidSym.setVisible(False)
+    else:
+        symbol.getComponent().getSymbolByID("BRP").setReadOnly(False)
+        symbol.getComponent().getSymbolByID("NOMINAL_SAMPLE_POINT").setReadOnly(False)
+        symbol.getComponent().getSymbolByID("PROPAG_TIME").setReadOnly(False)
 
 def hideMenu(menu, event):
     menu.setVisible(event["value"])
@@ -303,6 +419,13 @@ def instantiateComponent(canComponent):
     global canCoreClockInvalidSym
     global canTimeQuantaInvalidSym
     global canInterruptMode
+    global canNominalSamplePoint
+    global brpPrescaler
+    global propagSegmentTime
+    global canErrorRateCommentSym
+    global propagSegment
+    global phase1Segment
+    global phase2Segment
 
     canInstanceName = canComponent.createStringSymbol("CAN_INSTANCE_NAME", None)
     canInstanceName.setVisible(False)
@@ -381,12 +504,17 @@ def instantiateComponent(canComponent):
     canNominalBitTimingMenu.setLabel("Nominal Bit Timing")
     canNominalBitTimingMenu.setDescription("Nominal Bit Timing for CAN Message Frame")
 
+    canAutomaticNominalBitTimingCalculation = canComponent.createBooleanSymbol("AUTO_NOMINAL_BIT_TIMING_CALCULATION", canNominalBitTimingMenu)
+    canAutomaticNominalBitTimingCalculation.setLabel("Automatic Nominal Bit Timing Calculation")
+    canAutomaticNominalBitTimingCalculation.setDefaultValue(False)
+    canAutomaticNominalBitTimingCalculation.setDependencies(updateNominalBitTimingSymbols, ["AUTO_NOMINAL_BIT_TIMING_CALCULATION"])
+
     canNominalBitrate = canComponent.createIntegerSymbol("NOMINAL_BITRATE", canNominalBitTimingMenu)
     canNominalBitrate.setLabel("Bit Rate (Kbps)")
     canNominalBitrate.setMin(1)
     canNominalBitrate.setMax(1000)
     canNominalBitrate.setDefaultValue(500)
-    canNominalBitrate.setDependencies(nominalBitTimingCalculation, ["NOMINAL_BITRATE", "core." + canInstanceName.getValue() + "_CLOCK_FREQUENCY"])
+    canNominalBitrate.setDependencies(nominalBitTimingCalculation, ["NOMINAL_BITRATE", "AUTO_NOMINAL_BIT_TIMING_CALCULATION", "core." + canInstanceName.getValue() + "_CLOCK_FREQUENCY"])
 
     canNominalSamplePoint = canComponent.createFloatSymbol("NOMINAL_SAMPLE_POINT", canNominalBitTimingMenu)
     canNominalSamplePoint.setLabel("Sample Point %")
@@ -394,6 +522,7 @@ def instantiateComponent(canComponent):
     canNominalSamplePoint.setMax(100.0)
     canNominalSamplePoint.setDefaultValue(75.0)
     canNominalSamplePoint.setDependencies(nominalBitTimingCalculation, ["NOMINAL_SAMPLE_POINT"])
+    canNominalSamplePoint.setReadOnly(Database.getSymbolValue(canInstanceName.getValue().lower(), "AUTO_NOMINAL_BIT_TIMING_CALCULATION") == True)
 
     brpPrescaler = canComponent.createIntegerSymbol("BRP", canNominalBitTimingMenu)
     brpPrescaler.setLabel("Baudrate Prescaler")
@@ -401,42 +530,77 @@ def instantiateComponent(canComponent):
     brpPrescaler.setMax(63)
     brpPrescaler.setDefaultValue(4)
     brpPrescaler.setDependencies(nominalBitTimingCalculation, ["BRP"])
+    brpPrescaler.setReadOnly(Database.getSymbolValue(canInstanceName.getValue().lower(), "AUTO_NOMINAL_BIT_TIMING_CALCULATION") == True)
 
     propagSegmentTime = canComponent.createIntegerSymbol("PROPAG_TIME", canNominalBitTimingMenu)
     propagSegmentTime.setLabel("Propagation Segment Time (ns)")
     propagSegmentTime.setMin(1)
     propagSegmentTime.setDefaultValue(300)
     propagSegmentTime.setDependencies(nominalBitTimingCalculation, ["PROPAG_TIME"])
+    propagSegmentTime.setReadOnly(Database.getSymbolValue(canInstanceName.getValue().lower(), "AUTO_NOMINAL_BIT_TIMING_CALCULATION") == True)
 
-    propag, phase1, phase2, sjw = bitTimingCalculation("Nominal", 8, 25)
+    totalTimeQuanta = canComponent.createIntegerSymbol("TOTAL_TIME_QUANTA", canNominalBitTimingMenu)
+    totalTimeQuanta.setLabel("Total Time Quanta (TQ)")
+    totalTimeQuanta.setReadOnly(True)
 
-    propagSegment = canComponent.createIntegerSymbol("PROPAG", canNominalBitTimingMenu)
-    propagSegment.setLabel("Propagation Segment")
-    propagSegment.setMin(0)
-    propagSegment.setMax(7)
-    propagSegment.setDefaultValue(propag)
+    syncSegment = canComponent.createIntegerSymbol("SYNC", totalTimeQuanta)
+    syncSegment.setLabel("Sync Segment (TQ)")
+    syncSegment.setDefaultValue(1)
+    syncSegment.setReadOnly(True)
+
+    propagSegment = canComponent.createIntegerSymbol("PROPAG", totalTimeQuanta)
+    propagSegment.setLabel("Propagation Segment (TQ)")
+    propagSegment.setMin(1)
+    propagSegment.setMax(8)
     propagSegment.setReadOnly(True)
 
-    phase1Segment = canComponent.createIntegerSymbol("PHASE1", canNominalBitTimingMenu)
-    phase1Segment.setLabel("Phase 1 Segment")
-    phase1Segment.setMin(0)
-    phase1Segment.setMax(7)
-    phase1Segment.setDefaultValue(phase1)
+    phase1Segment = canComponent.createIntegerSymbol("PHASE1", totalTimeQuanta)
+    phase1Segment.setLabel("Phase 1 Segment (TQ)")
+    phase1Segment.setMin(1)
+    phase1Segment.setMax(8)
     phase1Segment.setReadOnly(True)
 
-    phase2Segment = canComponent.createIntegerSymbol("PHASE2", canNominalBitTimingMenu)
-    phase2Segment.setLabel("Phase 2 Segment")
-    phase2Segment.setMin(0)
-    phase2Segment.setMax(7)
-    phase2Segment.setDefaultValue(phase2)
+    phase2Segment = canComponent.createIntegerSymbol("PHASE2", totalTimeQuanta)
+    phase2Segment.setLabel("Phase 2 Segment (TQ)")
+    phase2Segment.setMin(1)
+    phase2Segment.setMax(8)
     phase2Segment.setReadOnly(True)
 
+    if Database.getSymbolValue(canInstanceName.getValue().lower(), "AUTO_NOMINAL_BIT_TIMING_CALCULATION") == True:
+        errorRate, calculatedNominalBitrate, tqPeriod, timeQuanta, propag, phase1, phase2, sjw = autoBitTimingCalculation("Nominal", 8, 25)
+    else:
+        errorRate, calculatedNominalBitrate, tqPeriod, timeQuanta, propag, phase1, phase2, sjw = bitTimingCalculation("Nominal", 8, 25)
+
+    totalTimeQuanta.setDefaultValue(timeQuanta)
+    propagSegment.setDefaultValue(propag)
+    phase1Segment.setDefaultValue(phase1)
+    phase2Segment.setDefaultValue(phase2)
+
     syncJumpWidth = canComponent.createIntegerSymbol("SJW", canNominalBitTimingMenu)
-    syncJumpWidth.setLabel("Synchronization Jump Width")
-    syncJumpWidth.setMin(0)
-    syncJumpWidth.setMax(3)
+    syncJumpWidth.setLabel("Synchronization Jump Width (TQ)")
+    syncJumpWidth.setMin(1)
+    syncJumpWidth.setMax(4)
     syncJumpWidth.setDefaultValue(sjw)
     syncJumpWidth.setReadOnly(True)
+
+    canTimeQuantaPeriod = canComponent.createStringSymbol("TIME_QUANTA_PERIOD", canNominalBitTimingMenu)
+    canTimeQuantaPeriod.setLabel("Time Quanta (ns)")
+    canTimeQuantaPeriod.setDefaultValue(str(tqPeriod))
+    canTimeQuantaPeriod.setReadOnly(True)
+
+    canCalculatedNominalBitrate = canComponent.createIntegerSymbol("CALCULATED_NOMINAL_BITRATE", canNominalBitTimingMenu)
+    canCalculatedNominalBitrate.setLabel("Calculated Bit Rate (Kbps)")
+    canCalculatedNominalBitrate.setDefaultValue(calculatedNominalBitrate)
+    canCalculatedNominalBitrate.setReadOnly(True)
+
+    canCalculatedError = canComponent.createStringSymbol("CALCULATED_ERRORRATE", canNominalBitTimingMenu)
+    canCalculatedError.setLabel("Error %")
+    canCalculatedError.setDefaultValue(str(errorRate))
+    canCalculatedError.setReadOnly(True)
+
+    canErrorRateCommentSym = canComponent.createCommentSymbol("CAN_ERRORRATE_COMMENT", canCalculatedError)
+    canErrorRateCommentSym.setLabel("Warning!!! Error " + canCalculatedError.getValue() + "%")
+    canErrorRateCommentSym.setVisible(abs(float(errorRate)) > 1)
 
     canConfigSAM = canComponent.createKeyValueSetSymbol("CAN_CFG_SAM", canNominalBitTimingMenu)
     canConfigSAM.setLabel("Sample of the CAN Bus Line bit")
