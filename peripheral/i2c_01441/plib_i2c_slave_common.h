@@ -100,21 +100,21 @@ typedef enum
 typedef enum
 {
     I2C_SLAVE_TRANSFER_EVENT_NONE = 0,
-            
-	/* Address match event */
-    I2C_SLAVE_TRANSFER_EVENT_ADDR_MATCH,
-	
-	/* Data sent by I2C Master is available */
-    I2C_SLAVE_TRANSFER_EVENT_RX_READY,
-	
-	/* I2C slave can respond to data read request from I2C Master */
-    I2C_SLAVE_TRANSFER_EVENT_TX_READY,    
 
-	/* I2C stop bit received */
-	I2C_SLAVE_TRANSFER_EVENT_STOP_BIT_RECEIVED,
-	    
-    I2C_SLAVE_TRANSFER_EVENT_ERROR,    
-            
+    /* Address match event */
+    I2C_SLAVE_TRANSFER_EVENT_ADDR_MATCH,
+
+    /* Data sent by I2C Master is available */
+    I2C_SLAVE_TRANSFER_EVENT_RX_READY,
+
+    /* I2C slave can respond to data read request from I2C Master */
+    I2C_SLAVE_TRANSFER_EVENT_TX_READY,
+
+    /* I2C stop bit received */
+    I2C_SLAVE_TRANSFER_EVENT_STOP_BIT_RECEIVED,
+
+    I2C_SLAVE_TRANSFER_EVENT_ERROR,
+
 }I2C_SLAVE_TRANSFER_EVENT;
 
 
@@ -147,10 +147,11 @@ typedef bool (*I2C_SLAVE_CALLBACK) (I2C_SLAVE_TRANSFER_EVENT event, uintptr_t co
 */
 
 typedef struct
-{       
+{
     I2C_SLAVE_ERROR         error;
     I2C_SLAVE_CALLBACK      callback;
     uintptr_t               context;
+    uint8_t                 lastByteWritten;
 } I2C_SLAVE_OBJ;
 
 // DOM-IGNORE-BEGIN

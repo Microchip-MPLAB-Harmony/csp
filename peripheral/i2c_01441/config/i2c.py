@@ -22,6 +22,8 @@
 *****************************************************************************"""
 modelist = ["Master", "Slave"]
 
+I2CS_RISE_SETUP_TIME = [(250, 1000), (100, 300), (50,120)]
+
 def handleMessage(messageID, args):
     global i2cSym_OperatingMode
 
@@ -196,6 +198,26 @@ def onCapabilityConnected(event):
     argDict = {"localComponentID" : localComponent.getID()}
     argDict = Database.sendMessage(remoteComponent.getID(), "REQUEST_CONFIG_PARAMS", argDict)
 
+def coreFreqUpdate(symbol, event):
+    coreTimerFreq = int(Database.getSymbolValue("core", "SYS_CLK_FREQ"))/2
+    symbol.setValue(coreTimerFreq)
+
+def calcSetupAndRiseTimeCnt(coreTimerFreq, setupRiseTime):
+    #Core timer counts required for 1 nano seconds
+    coreTimerCountNs = float(coreTimerFreq)/1000000000
+
+    return int(float(coreTimerCountNs) * setupRiseTime)
+
+def updateSetupAndRiseTime(symbol, event):
+    setupRiseTimeIndex = int(event['source'].getSymbolByID("I2CS_SETUP_RISE_TIME").getValue())
+    coreTimerFreq = event['source'].getSymbolByID("I2CS_CORE_TIMER_FREQUENCY").getValue()
+
+    setupRiseTime = I2CS_RISE_SETUP_TIME[setupRiseTimeIndex]
+
+    if symbol.getID() == "I2CS_RISE_TIME_CORE_TIMER_CNTS":
+        symbol.setValue(int(calcSetupAndRiseTimeCnt(coreTimerFreq, setupRiseTime[1])))
+    else:
+        symbol.setValue(int(calcSetupAndRiseTimeCnt(coreTimerFreq, setupRiseTime[0])))
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
@@ -423,6 +445,37 @@ def instantiateComponent(i2cComponent):
         i2cCON_PCIE_Support.setLabel("Enable Stop Condition Interrupt")
         i2cCON_PCIE_Support.setVisible(False)
         i2cCON_PCIE_Support.setDefaultValue(True)
+
+    SysClkFreq=Database.getSymbolValue("core", "SYS_CLK_FREQ")
+    timerFrequency=int(SysClkFreq)/2
+
+    i2cSymCoretimerFrequency = i2cComponent.createIntegerSymbol("I2CS_CORE_TIMER_FREQUENCY", None)
+    i2cSymCoretimerFrequency.setVisible(False)
+    i2cSymCoretimerFrequency.setDefaultValue(timerFrequency)
+    i2cSymCoretimerFrequency.setDependencies(coreFreqUpdate, ["core.SYS_CLK_FREQ"])
+
+    i2cSymSetupAndRiseTime = i2cComponent.createKeyValueSetSymbol("I2CS_SETUP_RISE_TIME", None)
+    i2cSymSetupAndRiseTime.setLabel("Setup and Rise Time")
+    i2cSymSetupAndRiseTime.addKey("0", "0" , "100 kHz - Setup time 250ns, Rise time 1000ns")
+    i2cSymSetupAndRiseTime.addKey("1", "1" , "400 kHz - Setup time 100ns, Rise time 300ns")
+    i2cSymSetupAndRiseTime.addKey("2", "2" , "1000 kHz - Setup time 50ns, Rise time 120ns")
+    i2cSymSetupAndRiseTime.setOutputMode("Key")
+    i2cSymSetupAndRiseTime.setDisplayMode("Description")
+    i2cSymSetupAndRiseTime.setDefaultValue(1)
+    i2cSymSetupAndRiseTime.setVisible(i2cSym_OperatingMode.getValue() == "Slave")
+    i2cSymSetupAndRiseTime.setDependencies(slaveModeVisibility, ["I2C_OPERATING_MODE"])
+
+    setupRiseTime = I2CS_RISE_SETUP_TIME[int(i2cSymSetupAndRiseTime.getValue())]
+
+    i2cSymSetupTimeCoreTimerCnts = i2cComponent.createIntegerSymbol("I2CS_SETUP_TIME_CORE_TIMER_CNTS", None)
+    i2cSymSetupTimeCoreTimerCnts.setVisible(False)
+    i2cSymSetupTimeCoreTimerCnts.setValue(calcSetupAndRiseTimeCnt(i2cSymCoretimerFrequency.getValue(), setupRiseTime[0]))
+    i2cSymSetupTimeCoreTimerCnts.setDependencies(updateSetupAndRiseTime, ["I2CS_SETUP_RISE_TIME", "I2CS_CORE_TIMER_FREQUENCY"])
+
+    i2cSymRiseTimeCoreTimerCnts = i2cComponent.createIntegerSymbol("I2CS_RISE_TIME_CORE_TIMER_CNTS", None)
+    i2cSymRiseTimeCoreTimerCnts.setVisible(False)
+    i2cSymRiseTimeCoreTimerCnts.setValue(calcSetupAndRiseTimeCnt(i2cSymCoretimerFrequency.getValue(), setupRiseTime[1]))
+    i2cSymRiseTimeCoreTimerCnts.setDependencies(updateSetupAndRiseTime, ["I2CS_SETUP_RISE_TIME", "I2CS_CORE_TIMER_FREQUENCY"])
 
     # Interrupt Warning
     i2cSymIntEnableComment = i2cComponent.createCommentSymbol("I2C_INTRRUPT_ENABLE_COMMENT", None)
