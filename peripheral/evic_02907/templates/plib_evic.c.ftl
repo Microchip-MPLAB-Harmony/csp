@@ -109,7 +109,7 @@ void EVIC_Initialize( void )
 <#if EVIC_PRISS_VALUE??>
 
     /* Configure Shadow Register Set */
-    PRISS = ${EVIC_PRISS_VALUE};
+    PRISS = 0x${EVIC_PRISS_VALUE};
 </#if>
 }
 
