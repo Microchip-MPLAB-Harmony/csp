@@ -229,6 +229,64 @@ def InterruptStatusWarning(symbol, event):
 def mcanCoreClockFreq(symbol, event):
     symbol.setValue(int(Database.getSymbolValue("core", mcanInstanceName.getValue() + "_CLOCK_FREQUENCY")), 2)
 
+def autoBitTimingCalculation(bitTiming, lowTq, highTq):
+    clk = Database.getSymbolValue("core", mcanInstanceName.getValue() + "_CLOCK_FREQUENCY")
+    if (bitTiming == "Data"):
+        bitrate = Database.getSymbolValue(mcanInstanceName.getValue().lower(), "DATA_BITRATE")
+        brpPrescaler = DBTPprescale
+        mcanTseg1 = DBTPBeforeSP
+        mcanTseg2 = DBTPAfterSP
+        mcanSamplePoint = mcanDataSamplePoint
+    else:
+        bitrate = Database.getSymbolValue(mcanInstanceName.getValue().lower(), "NOMINAL_BITRATE")
+        brpPrescaler = NBTPprescale
+        mcanTseg1 = NBTPBeforeSP
+        mcanTseg2 = NBTPAfterSP
+        mcanSamplePoint = mcanNominalSamplePoint
+
+    minErrTseg1 = mcanTseg1.getMax()
+    minErrTseg2 = mcanTseg2.getMax()
+    minErrCalculatedBitrate = 0.0
+    minErrCalculatedTimeQuanta = lowTq
+    minErrTqPeriod = 0.0
+    minErrorRate = 100.0
+    errorRate = 100.0
+    minErrPrescaler = 0
+    for tseg1 in range(mcanTseg1.getMax(), mcanTseg1.getMin() - 1, -1):
+        for tseg2 in range(mcanTseg2.getMax(), mcanTseg2.getMin() - 1, -1):
+            calculatedTimeQuanta = 1 + tseg1 + tseg2
+            if (tseg1 >= tseg2):
+                if ((lowTq <= calculatedTimeQuanta) and (calculatedTimeQuanta <= highTq)):
+                    prescaler = int(clk /((bitrate * 1000) * calculatedTimeQuanta)) - 1
+                    if prescaler >= brpPrescaler.getMin():
+                        if (prescaler > brpPrescaler.getMax()):
+                            prescaler = brpPrescaler.getMax()
+
+                        tqPeriod = float(prescaler + 1) / clk
+                        calculatedBitrate = 1.0 / (float(tqPeriod) * calculatedTimeQuanta)
+                        errorRate = ((float(calculatedBitrate) - (bitrate * 1000)) / (bitrate * 1000)) * 100.0
+                        if (abs(errorRate) < abs(minErrorRate)):
+                            minErrorRate = errorRate
+                            minErrPrescaler = prescaler
+                            minErrTseg1 = tseg1
+                            minErrTseg2 = tseg2
+                            minErrCalculatedBitrate = calculatedBitrate
+                            minErrCalculatedTimeQuanta = calculatedTimeQuanta
+                            minErrTqPeriod = tqPeriod
+                        if errorRate == 0:
+                            break
+        if errorRate == 0:
+            break
+
+    sjw = minErrTseg2
+    if (bitTiming == "Data") and (sjw > 8):
+        sjw = 8
+    mcanSamplePoint.setReadOnly(True)
+    mcanSamplePoint.setValue((float(1 + minErrTseg1)/minErrCalculatedTimeQuanta) * 100.0)
+    brpPrescaler.setReadOnly(True)
+    brpPrescaler.setValue(minErrPrescaler)
+    return "{:.3f}".format(minErrorRate), (int(minErrCalculatedBitrate) / 1000), "{:.3f}".format(minErrTqPeriod * 1000000000.0), minErrCalculatedTimeQuanta, minErrTseg1, minErrTseg2, sjw
+
 def bitTimingCalculation(bitTiming, lowTq, highTq):
     clk = Database.getSymbolValue("core", mcanInstanceName.getValue() + "_CLOCK_FREQUENCY")
 
@@ -259,19 +317,106 @@ def bitTimingCalculation(bitTiming, lowTq, highTq):
     tseg1 = int((numOfTimeQuanta * samplePoint) / 100.0)
     tseg2 = numOfTimeQuanta - tseg1 - 1
     tseg1 -= 2
+    sjw = tseg2
 
-    return tseg1, tseg2
+    if (bitTiming == "Data"):
+        mcanTseg1 = DBTPBeforeSP
+        mcanTseg2 = DBTPAfterSP
+        if (sjw + 1) > 8:
+            sjw = 7
+    else:
+        mcanTseg1 = NBTPBeforeSP
+        mcanTseg2 = NBTPAfterSP
+
+    if (tseg1 + 1) < mcanTseg1.getMin():
+        calculatedTseg1 = mcanTseg1.getMin()
+    elif (tseg1 + 1) > mcanTseg1.getMax():
+        calculatedTseg1 = mcanTseg1.getMax()
+    else:
+        calculatedTseg1 = tseg1 + 1
+
+    if (tseg2 + 1) < mcanTseg2.getMin():
+        calculatedTseg2 = mcanTseg2.getMin()
+    elif (tseg2 + 1) > mcanTseg2.getMax():
+        calculatedTseg2 = mcanTseg2.getMax()
+    else:
+        calculatedTseg2 = tseg2 + 1
+
+    calculatedTimeQuanta = 1 + calculatedTseg1 + calculatedTseg2
+    calculatedBitrate = clk / (calculatedTimeQuanta * (prescaler + 1))
+
+    tqPeriod = 0.0
+    if calculatedBitrate != 0:
+        # Calculated Time Quanta (TQ) Period in sec
+        tqPeriod = 1.0 / (calculatedBitrate * calculatedTimeQuanta)
+
+    # Calculated Error %
+    errorRate = ((float(calculatedBitrate) - (bitrate * 1000)) / (bitrate * 1000)) * 100.0
+
+    return "{:.3f}".format(errorRate), (int(calculatedBitrate) / 1000), "{:.3f}".format(tqPeriod * 1000000000.0), calculatedTimeQuanta, (tseg1 + 1), (tseg2 + 1), (sjw + 1)
 
 def dataBitTimingCalculation(symbol, event):
     if (Database.getSymbolValue(mcanInstanceName.getValue().lower(), "MCAN_OPMODE") == "CAN FD"):
-        tseg1, tseg2 = bitTimingCalculation("Data", 4, 49)
-        Database.setSymbolValue(mcanInstanceName.getValue().lower(), "DBTP_DTSEG1", tseg1, 2)
-        Database.setSymbolValue(mcanInstanceName.getValue().lower(), "DBTP_DTSEG2", tseg2, 2)
+        if Database.getSymbolValue(mcanInstanceName.getValue().lower(), "AUTO_DATA_BIT_TIMING_CALCULATION") == True:
+            if event["id"] == "DBTP_DBRP" or event["id"] == "DATA_SAMPLE_POINT":
+                return
+            else:
+                errorRate, calculatedDataBitrate, tqPeriod, timeQuanta, tseg1, tseg2, sjw = autoBitTimingCalculation("Data", 4, 49)
+        else:
+            errorRate, calculatedDataBitrate, tqPeriod, timeQuanta, tseg1, tseg2, sjw = bitTimingCalculation("Data", 4, 49)
+        Database.setSymbolValue(mcanInstanceName.getValue().lower(), "DBTP_TOTAL_TIME_QUANTA", timeQuanta)
+        Database.setSymbolValue(mcanInstanceName.getValue().lower(), "DBTP_DTSEG1", tseg1)
+        Database.setSymbolValue(mcanInstanceName.getValue().lower(), "DBTP_DTSEG2", tseg2)
+        Database.setSymbolValue(mcanInstanceName.getValue().lower(), "DBTP_DSJW", sjw)
+        Database.setSymbolValue(mcanInstanceName.getValue().lower(), "CALCULATED_DATA_BITRATE", calculatedDataBitrate)
+        symbol.getComponent().getSymbolByID("DATA_TIME_QUANTA_PERIOD").setValue(str(tqPeriod))
+        symbol.getComponent().getSymbolByID("CALCULATED_DATA_ERRORRATE").setValue(str(errorRate))
+        if abs(float(errorRate)) > 1:
+            mcanDataErrorRateCommentSym.setLabel("Warning!!! Error " + str(errorRate) + "%")
+            mcanDataErrorRateCommentSym.setVisible(True)
+        else:
+            mcanDataErrorRateCommentSym.setVisible(False)
 
 def nominalBitTimingCalculation(symbol, event):
-    tseg1, tseg2 = bitTimingCalculation("Nominal", 4, 385)
-    Database.setSymbolValue(mcanInstanceName.getValue().lower(), "NBTP_NTSEG1", tseg1, 2)
-    Database.setSymbolValue(mcanInstanceName.getValue().lower(), "NBTP_NTSEG2", tseg2, 2)
+    if Database.getSymbolValue(mcanInstanceName.getValue().lower(), "AUTO_NOMINAL_BIT_TIMING_CALCULATION") == True:
+        if event["id"] == "NBTP_NBRP" or event["id"] == "NOMINAL_SAMPLE_POINT":
+            return
+        else:
+            errorRate, calculatedNominalBitrate, tqPeriod, timeQuanta, tseg1, tseg2, sjw = autoBitTimingCalculation("Nominal", 4, 385)
+    else:
+        errorRate, calculatedNominalBitrate, tqPeriod, timeQuanta, tseg1, tseg2, sjw = bitTimingCalculation("Nominal", 4, 385)
+    Database.setSymbolValue(mcanInstanceName.getValue().lower(), "NBTP_TOTAL_TIME_QUANTA", timeQuanta)
+    Database.setSymbolValue(mcanInstanceName.getValue().lower(), "NBTP_NTSEG1", tseg1)
+    Database.setSymbolValue(mcanInstanceName.getValue().lower(), "NBTP_NTSEG2", tseg2)
+    Database.setSymbolValue(mcanInstanceName.getValue().lower(), "NBTP_NSJW", sjw)
+    Database.setSymbolValue(mcanInstanceName.getValue().lower(), "CALCULATED_NOMINAL_BITRATE", calculatedNominalBitrate)
+    symbol.getComponent().getSymbolByID("NOMINAL_TIME_QUANTA_PERIOD").setValue(str(tqPeriod))
+    symbol.getComponent().getSymbolByID("CALCULATED_NOMINAL_ERRORRATE").setValue(str(errorRate))
+    if abs(float(errorRate)) > 1:
+        mcanNominalErrorRateCommentSym.setLabel("Warning!!! Error " + str(errorRate) + "%")
+        mcanNominalErrorRateCommentSym.setVisible(True)
+    else:
+        mcanNominalErrorRateCommentSym.setVisible(False)
+
+def updateNominalBitTimingSymbols(symbol, event):
+    if (event["value"]):
+        symbol.getComponent().getSymbolByID("NBTP_NBRP").setReadOnly(True)
+        symbol.getComponent().getSymbolByID("NOMINAL_SAMPLE_POINT").setReadOnly(True)
+        mcanTimeQuantaInvalidSym.setVisible(False)
+        mcanCoreClockInvalidSym.setVisible(False)
+    else:
+        symbol.getComponent().getSymbolByID("NBTP_NBRP").setReadOnly(False)
+        symbol.getComponent().getSymbolByID("NOMINAL_SAMPLE_POINT").setReadOnly(False)
+
+def updateDataBitTimingSymbols(symbol, event):
+    if (event["value"]):
+        symbol.getComponent().getSymbolByID("DBTP_DBRP").setReadOnly(True)
+        symbol.getComponent().getSymbolByID("DATA_SAMPLE_POINT").setReadOnly(True)
+        mcanTimeQuantaInvalidSym.setVisible(False)
+        mcanCoreClockInvalidSym.setVisible(False)
+    else:
+        symbol.getComponent().getSymbolByID("DBTP_DBRP").setReadOnly(False)
+        symbol.getComponent().getSymbolByID("DATA_SAMPLE_POINT").setReadOnly(False)
 
 def instantiateComponent(mcanComponent):
     global mcanInstanceName
@@ -281,6 +426,16 @@ def instantiateComponent(mcanComponent):
     global interruptVectorUpdate
     global mcanCoreClockInvalidSym
     global mcanTimeQuantaInvalidSym
+    global NBTPprescale
+    global mcanNominalSamplePoint
+    global mcanNominalErrorRateCommentSym
+    global NBTPBeforeSP
+    global NBTPAfterSP
+    global mcanDataSamplePoint
+    global DBTPprescale
+    global mcanDataErrorRateCommentSym
+    global DBTPBeforeSP
+    global DBTPAfterSP
 
     mcanInstanceName = mcanComponent.createStringSymbol("MCAN_INSTANCE_NAME", None)
     mcanInstanceName.setVisible(False)
@@ -392,12 +547,17 @@ def instantiateComponent(mcanComponent):
     mcanNominalBitTimingMenu.setLabel("Nominal Bit Timing")
     mcanNominalBitTimingMenu.setDescription("This timing must be less or equal to the CAN-FD Data Bit Timing if used")
 
+    mcanAutomaticNominalBitTimingCalculation = mcanComponent.createBooleanSymbol("AUTO_NOMINAL_BIT_TIMING_CALCULATION", mcanNominalBitTimingMenu)
+    mcanAutomaticNominalBitTimingCalculation.setLabel("Automatic Nominal Bit Timing Calculation")
+    mcanAutomaticNominalBitTimingCalculation.setDefaultValue(False)
+    mcanAutomaticNominalBitTimingCalculation.setDependencies(updateNominalBitTimingSymbols, ["AUTO_NOMINAL_BIT_TIMING_CALCULATION"])
+
     mcanNominalBitrate = mcanComponent.createIntegerSymbol("NOMINAL_BITRATE", mcanNominalBitTimingMenu)
     mcanNominalBitrate.setLabel("Bit Rate (Kbps)")
     mcanNominalBitrate.setMin(1)
     mcanNominalBitrate.setMax(1000)
     mcanNominalBitrate.setDefaultValue(500)
-    mcanNominalBitrate.setDependencies(nominalBitTimingCalculation, ["NOMINAL_BITRATE", "core." + mcanInstanceName.getValue() + "_CLOCK_FREQUENCY"])
+    mcanNominalBitrate.setDependencies(nominalBitTimingCalculation, ["NOMINAL_BITRATE", "AUTO_NOMINAL_BIT_TIMING_CALCULATION", "core." + mcanInstanceName.getValue() + "_CLOCK_FREQUENCY"])
 
     mcanNominalSamplePoint = mcanComponent.createFloatSymbol("NOMINAL_SAMPLE_POINT", mcanNominalBitTimingMenu)
     mcanNominalSamplePoint.setLabel("Sample Point %")
@@ -405,12 +565,7 @@ def instantiateComponent(mcanComponent):
     mcanNominalSamplePoint.setMax(100.0)
     mcanNominalSamplePoint.setDefaultValue(75.0)
     mcanNominalSamplePoint.setDependencies(nominalBitTimingCalculation, ["NOMINAL_SAMPLE_POINT"])
-
-    NBTPsyncJump = mcanComponent.createIntegerSymbol("NBTP_NSJW", mcanNominalBitTimingMenu)
-    NBTPsyncJump.setLabel("Synchronization Jump Width")
-    NBTPsyncJump.setMin(0)
-    NBTPsyncJump.setMax(127)
-    NBTPsyncJump.setDefaultValue(3)
+    mcanNominalSamplePoint.setReadOnly(Database.getSymbolValue(mcanInstanceName.getValue().lower(), "AUTO_NOMINAL_BIT_TIMING_CALCULATION") == True)
 
     NBTPprescale = mcanComponent.createIntegerSymbol("NBTP_NBRP", mcanNominalBitTimingMenu)
     NBTPprescale.setLabel("Bit Rate Prescaler")
@@ -418,22 +573,62 @@ def instantiateComponent(mcanComponent):
     NBTPprescale.setMax(511)
     NBTPprescale.setDefaultValue(0)
     NBTPprescale.setDependencies(nominalBitTimingCalculation, ["NBTP_NBRP"])
+    NBTPprescale.setReadOnly(Database.getSymbolValue(mcanInstanceName.getValue().lower(), "AUTO_NOMINAL_BIT_TIMING_CALCULATION") == True)
 
-    tseg1, tseg2 = bitTimingCalculation("Nominal", 4, 385)
+    mcanNominalTotalTimeQuanta = mcanComponent.createIntegerSymbol("NBTP_TOTAL_TIME_QUANTA", mcanNominalBitTimingMenu)
+    mcanNominalTotalTimeQuanta.setLabel("Total Time Quanta (TQ)")
+    mcanNominalTotalTimeQuanta.setReadOnly(True)
 
-    NBTPBeforeSP = mcanComponent.createIntegerSymbol("NBTP_NTSEG1", mcanNominalBitTimingMenu)
-    NBTPBeforeSP.setLabel("Time Segment Before Sample Point")
-    NBTPBeforeSP.setMin(1)
-    NBTPBeforeSP.setMax(255)
-    NBTPBeforeSP.setDefaultValue(tseg1)
+    mcanNominalSyncSegment = mcanComponent.createIntegerSymbol("NBTP_SYNC", mcanNominalTotalTimeQuanta)
+    mcanNominalSyncSegment.setLabel("Sync Segment (TQ)")
+    mcanNominalSyncSegment.setDefaultValue(1)
+    mcanNominalSyncSegment.setReadOnly(True)
+
+    NBTPBeforeSP = mcanComponent.createIntegerSymbol("NBTP_NTSEG1", mcanNominalTotalTimeQuanta)
+    NBTPBeforeSP.setLabel("Time Segment Before Sample Point (TQ)")
+    NBTPBeforeSP.setMin(2)
+    NBTPBeforeSP.setMax(256)
     NBTPBeforeSP.setReadOnly(True)
 
-    NBTPAfterSP = mcanComponent.createIntegerSymbol("NBTP_NTSEG2", mcanNominalBitTimingMenu)
-    NBTPAfterSP.setLabel("Time Segment After Sample Point")
-    NBTPAfterSP.setMin(0)
-    NBTPAfterSP.setMax(127)
-    NBTPAfterSP.setDefaultValue(tseg2)
+    NBTPAfterSP = mcanComponent.createIntegerSymbol("NBTP_NTSEG2", mcanNominalTotalTimeQuanta)
+    NBTPAfterSP.setLabel("Time Segment After Sample Point (TQ)")
+    NBTPAfterSP.setMin(1)
+    NBTPAfterSP.setMax(128)
     NBTPAfterSP.setReadOnly(True)
+
+    if Database.getSymbolValue(mcanInstanceName.getValue().lower(), "AUTO_NOMINAL_BIT_TIMING_CALCULATION") == True:
+        errorRate, calculatedNominalBitrate, tqPeriod, timeQuanta, tseg1, tseg2, sjw = autoBitTimingCalculation("Nominal", 4, 385)
+    else:
+        errorRate, calculatedNominalBitrate, tqPeriod, timeQuanta, tseg1, tseg2, sjw = bitTimingCalculation("Nominal", 4, 385)
+
+    mcanNominalTotalTimeQuanta.setDefaultValue(timeQuanta)
+    NBTPBeforeSP.setDefaultValue(tseg1)
+    NBTPAfterSP.setDefaultValue(tseg2)
+
+    NBTPsyncJump = mcanComponent.createIntegerSymbol("NBTP_NSJW", mcanNominalBitTimingMenu)
+    NBTPsyncJump.setLabel("Synchronization Jump Width (TQ)")
+    NBTPsyncJump.setMin(1)
+    NBTPsyncJump.setMax(128)
+    NBTPsyncJump.setDefaultValue(sjw)
+
+    mcanNominalTimeQuantaPeriod = mcanComponent.createStringSymbol("NOMINAL_TIME_QUANTA_PERIOD", mcanNominalBitTimingMenu)
+    mcanNominalTimeQuantaPeriod.setLabel("Time Quanta (ns)")
+    mcanNominalTimeQuantaPeriod.setDefaultValue(str(tqPeriod))
+    mcanNominalTimeQuantaPeriod.setReadOnly(True)
+
+    mcanCalculatedNominalBitrate = mcanComponent.createIntegerSymbol("CALCULATED_NOMINAL_BITRATE", mcanNominalBitTimingMenu)
+    mcanCalculatedNominalBitrate.setLabel("Calculated Bit Rate (Kbps)")
+    mcanCalculatedNominalBitrate.setDefaultValue(calculatedNominalBitrate)
+    mcanCalculatedNominalBitrate.setReadOnly(True)
+
+    mcanNominalCalculatedError = mcanComponent.createStringSymbol("CALCULATED_NOMINAL_ERRORRATE", mcanNominalBitTimingMenu)
+    mcanNominalCalculatedError.setLabel("Error %")
+    mcanNominalCalculatedError.setDefaultValue(str(errorRate))
+    mcanNominalCalculatedError.setReadOnly(True)
+
+    mcanNominalErrorRateCommentSym = mcanComponent.createCommentSymbol("MCAN_NOMINAL_ERRORRATE_COMMENT", mcanNominalCalculatedError)
+    mcanNominalErrorRateCommentSym.setLabel("Warning!!! Error " + mcanNominalCalculatedError.getValue() + "%")
+    mcanNominalErrorRateCommentSym.setVisible(abs(float(errorRate)) > 1)
 
     # MCAN Data Bit Timing Calculation
     mcanDataBitTimingMenu = mcanComponent.createMenuSymbol("DATA_BIT_TIMING_CALCULATION", mcanBitTimingCalculationMenu)
@@ -442,11 +637,16 @@ def instantiateComponent(mcanComponent):
     mcanDataBitTimingMenu.setVisible(False)
     mcanDataBitTimingMenu.setDependencies(showWhenFD, ["MCAN_OPMODE"])
 
+    mcanAutomaticDataBitTimingCalculation = mcanComponent.createBooleanSymbol("AUTO_DATA_BIT_TIMING_CALCULATION", mcanDataBitTimingMenu)
+    mcanAutomaticDataBitTimingCalculation.setLabel("Automatic Data Bit Timing Calculation")
+    mcanAutomaticDataBitTimingCalculation.setDefaultValue(False)
+    mcanAutomaticDataBitTimingCalculation.setDependencies(updateDataBitTimingSymbols, ["AUTO_DATA_BIT_TIMING_CALCULATION"])
+
     mcanDataBitrate = mcanComponent.createIntegerSymbol("DATA_BITRATE", mcanDataBitTimingMenu)
     mcanDataBitrate.setLabel("Bit Rate (Kbps)")
     mcanDataBitrate.setMin(1)
     mcanDataBitrate.setDefaultValue(500)
-    mcanDataBitrate.setDependencies(dataBitTimingCalculation, ["DATA_BITRATE", "MCAN_OPMODE", "core." + mcanInstanceName.getValue() + "_CLOCK_FREQUENCY"])
+    mcanDataBitrate.setDependencies(dataBitTimingCalculation, ["DATA_BITRATE", "AUTO_DATA_BIT_TIMING_CALCULATION", "MCAN_OPMODE", "core." + mcanInstanceName.getValue() + "_CLOCK_FREQUENCY"])
 
     mcanDataSamplePoint = mcanComponent.createFloatSymbol("DATA_SAMPLE_POINT", mcanDataBitTimingMenu)
     mcanDataSamplePoint.setLabel("Sample Point %")
@@ -454,12 +654,7 @@ def instantiateComponent(mcanComponent):
     mcanDataSamplePoint.setMax(100.0)
     mcanDataSamplePoint.setDefaultValue(75.0)
     mcanDataSamplePoint.setDependencies(dataBitTimingCalculation, ["DATA_SAMPLE_POINT"])
-
-    DBTPsyncJump = mcanComponent.createIntegerSymbol("DBTP_DSJW", mcanDataBitTimingMenu)
-    DBTPsyncJump.setLabel("Synchronization Jump Width")
-    DBTPsyncJump.setMin(0)
-    DBTPsyncJump.setDefaultValue(3)
-    DBTPsyncJump.setMax(7)
+    mcanDataSamplePoint.setReadOnly(Database.getSymbolValue(mcanInstanceName.getValue().lower(), "AUTO_DATA_BIT_TIMING_CALCULATION") == True)
 
     DBTPprescale = mcanComponent.createIntegerSymbol("DBTP_DBRP", mcanDataBitTimingMenu)
     DBTPprescale.setLabel("Bit Rate Prescaler")
@@ -467,20 +662,62 @@ def instantiateComponent(mcanComponent):
     DBTPprescale.setMax(31)
     DBTPprescale.setDefaultValue(0)
     DBTPprescale.setDependencies(dataBitTimingCalculation, ["DBTP_DBRP"])
+    DBTPprescale.setReadOnly(Database.getSymbolValue(mcanInstanceName.getValue().lower(), "AUTO_DATA_BIT_TIMING_CALCULATION") == True)
 
-    DBTPBeforeSP = mcanComponent.createIntegerSymbol("DBTP_DTSEG1", mcanDataBitTimingMenu)
-    DBTPBeforeSP.setLabel("Time Segment Before Sample Point")
-    DBTPBeforeSP.setMin(1)
-    DBTPBeforeSP.setMax(31)
-    DBTPBeforeSP.setDefaultValue(10)
+    mcanDataTotalTimeQuanta = mcanComponent.createIntegerSymbol("DBTP_TOTAL_TIME_QUANTA", mcanDataBitTimingMenu)
+    mcanDataTotalTimeQuanta.setLabel("Total Time Quanta (TQ)")
+    mcanDataTotalTimeQuanta.setReadOnly(True)
+
+    mcanDataSyncSegment = mcanComponent.createIntegerSymbol("DBTP_SYNC", mcanDataTotalTimeQuanta)
+    mcanDataSyncSegment.setLabel("Sync Segment (TQ)")
+    mcanDataSyncSegment.setDefaultValue(1)
+    mcanDataSyncSegment.setReadOnly(True)
+
+    DBTPBeforeSP = mcanComponent.createIntegerSymbol("DBTP_DTSEG1", mcanDataTotalTimeQuanta)
+    DBTPBeforeSP.setLabel("Time Segment Before Sample Point (TQ)")
+    DBTPBeforeSP.setMin(2)
+    DBTPBeforeSP.setMax(32)
     DBTPBeforeSP.setReadOnly(True)
 
-    DBTPAfterSP = mcanComponent.createIntegerSymbol("DBTP_DTSEG2", mcanDataBitTimingMenu)
-    DBTPAfterSP.setLabel("Time Segment After Sample Point")
-    DBTPAfterSP.setMin(0)
-    DBTPAfterSP.setDefaultValue(3)
-    DBTPAfterSP.setMax(15)
+    DBTPAfterSP = mcanComponent.createIntegerSymbol("DBTP_DTSEG2", mcanDataTotalTimeQuanta)
+    DBTPAfterSP.setLabel("Time Segment After Sample Point (TQ)")
+    DBTPAfterSP.setMin(1)
+    DBTPAfterSP.setMax(16)
     DBTPAfterSP.setReadOnly(True)
+
+    if Database.getSymbolValue(mcanInstanceName.getValue().lower(), "AUTO_DATA_BIT_TIMING_CALCULATION") == True:
+        errorRate, calculatedDataBitrate, tqPeriod, timeQuanta, tseg1, tseg2, sjw = autoBitTimingCalculation("Data", 4, 49)
+    else:
+        errorRate, calculatedDataBitrate, tqPeriod, timeQuanta, tseg1, tseg2, sjw = bitTimingCalculation("Data", 4, 49)
+
+    mcanDataTotalTimeQuanta.setDefaultValue(timeQuanta)
+    DBTPBeforeSP.setDefaultValue(tseg1)
+    DBTPAfterSP.setDefaultValue(tseg2)
+
+    DBTPsyncJump = mcanComponent.createIntegerSymbol("DBTP_DSJW", mcanDataBitTimingMenu)
+    DBTPsyncJump.setLabel("Synchronization Jump Width (TQ)")
+    DBTPsyncJump.setMin(1)
+    DBTPsyncJump.setDefaultValue(sjw)
+    DBTPsyncJump.setMax(8)
+
+    mcanDataTimeQuantaPeriod = mcanComponent.createStringSymbol("DATA_TIME_QUANTA_PERIOD", mcanDataBitTimingMenu)
+    mcanDataTimeQuantaPeriod.setLabel("Time Quanta (ns)")
+    mcanDataTimeQuantaPeriod.setDefaultValue(str(tqPeriod))
+    mcanDataTimeQuantaPeriod.setReadOnly(True)
+
+    mcanCalculatedDataBitrate = mcanComponent.createIntegerSymbol("CALCULATED_DATA_BITRATE", mcanDataBitTimingMenu)
+    mcanCalculatedDataBitrate.setLabel("Calculated Bit Rate (Kbps)")
+    mcanCalculatedDataBitrate.setDefaultValue(calculatedDataBitrate)
+    mcanCalculatedDataBitrate.setReadOnly(True)
+
+    mcanDataCalculatedError = mcanComponent.createStringSymbol("CALCULATED_DATA_ERRORRATE", mcanDataBitTimingMenu)
+    mcanDataCalculatedError.setLabel("Error %")
+    mcanDataCalculatedError.setDefaultValue(str(errorRate))
+    mcanDataCalculatedError.setReadOnly(True)
+
+    mcanDataErrorRateCommentSym = mcanComponent.createCommentSymbol("MCAN_DATA_ERRORRATE_COMMENT", mcanDataCalculatedError)
+    mcanDataErrorRateCommentSym.setLabel("Warning!!! Error " + mcanDataCalculatedError.getValue() + "%")
+    mcanDataErrorRateCommentSym.setVisible(abs(float(errorRate)) > 1)
 
     # ----- Rx FIFO 0 -----
     mcanRXF0 = mcanComponent.createBooleanSymbol("RXF0_USE", None)
