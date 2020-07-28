@@ -46,12 +46,15 @@ def dspLibCallback(symbol, event):
 
 
 def instantiateComponent(cmsisComponent):
-
-    cmsisInformation = cmsisComponent.createCommentSymbol("cmsisInformation", None)
     import xml.etree.ElementTree as ET
-    cmsisDescriptionFile = open(Variables.get("__CMSIS_PACK_DIR") + "/ARM.CMSIS.pdsc", "r")
-    cmsisDescription = ET.fromstring(cmsisDescriptionFile.read())
-    cmsisInformation.setLabel("Release Information: " + str(cmsisDescription.iter("release").next().attrib))
+    pdscPath = os.path.join(Variables.get("__CMSIS_PACK_DIR"), "ARM.CMSIS.pdsc")
+    cmsisReleaseInfo = ET.parse(pdscPath).getroot().find("releases/release")
+
+    cmsisVersion = cmsisComponent.createCommentSymbol("CMSIS_VERSION", None)
+    cmsisVersion.setLabel("Release version: {0}".format(cmsisReleaseInfo.get("version")))
+
+    cmsisReleaseDate = cmsisComponent.createCommentSymbol("CMSIS_RELEASE_DATE", None)
+    cmsisReleaseDate.setLabel("Release date: {0}".format(cmsisReleaseInfo.get("date")))
 
     archNode = ATDF.getNode('/avr-tools-device-file/devices')
     cortexType = archNode.getChildren()[0].getAttribute("architecture").split("CORTEX-")[1].lower()
@@ -81,7 +84,8 @@ def instantiateComponent(cmsisComponent):
                                 "cmsis_armclang.h",
                                 "cmsis_armclang_ltm.h",
                                 "core_c" + cortexType + ".h",
-                                "mpu_armv" + ("8" if cortexType in v8Cores else "7") + ".h"  #v8 cores uses MPUv8
+                                "mpu_armv" + ("8" if cortexType in v8Cores else "7") + ".h",  #v8 cores uses MPUv8
+                                "cachel1_armv7.h" #v3.7.0 supports  enhanced cache functions for ARM-v7M
                               ]
 
         #v8 cores support trustZone
@@ -277,24 +281,12 @@ def instantiateComponent(cmsisComponent):
 
         #Create source file symbols
         cmsisNNSourcePath = os.path.join(Variables.get("__CMSIS_PACK_DIR"), "CMSIS", "NN", "Source")
+        supportedExtension = ["c", "h", "s"]
         for root,_,files in os.walk(cmsisNNSourcePath):
             for sourceFileName in files:
-                szSymbol = sourceFileName.replace(".", "_").upper()
-                sourceFile = cmsisComponent.createFileSymbol(szSymbol, None)
-                sourceFile.setRelative(False)
-                sourceFile.setSourcePath(os.path.join(root, sourceFileName))
-                sourceFile.setOutputName(sourceFileName)
-                sourceFile.setMarkup(False)
-                sourceFile.setOverwrite(True)
-                sourceFile.setDestPath(os.path.normpath("../../packs/CMSIS/CMSIS/NN/Source/" + os.path.basename(root)))
-                sourceFile.setProjectPath(os.path.normpath("packs/CMSIS/CMSIS/NN/Source/" + os.path.basename(root)))
-                sourceFile.setType("SOURCE")
-                sourceFile.setEnabled(cmsisNNEnableSym.getValue())
-                sourceFile.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"]), ["CMSIS_NN_ENABLE"])
-
-                if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
-                    #for Secure
-                    sourceFile = cmsisComponent.createFileSymbol("SEC_" + szSymbol, None)
+                if sourceFileName.split(".")[1].lower() in supportedExtension:
+                    szSymbol = sourceFileName.replace(".", "_").upper()
+                    sourceFile = cmsisComponent.createFileSymbol(szSymbol, None)
                     sourceFile.setRelative(False)
                     sourceFile.setSourcePath(os.path.join(root, sourceFileName))
                     sourceFile.setOutputName(sourceFileName)
@@ -303,9 +295,23 @@ def instantiateComponent(cmsisComponent):
                     sourceFile.setDestPath(os.path.normpath("../../packs/CMSIS/CMSIS/NN/Source/" + os.path.basename(root)))
                     sourceFile.setProjectPath(os.path.normpath("packs/CMSIS/CMSIS/NN/Source/" + os.path.basename(root)))
                     sourceFile.setType("SOURCE")
-                    sourceFile.setSecurity("SECURE")
                     sourceFile.setEnabled(cmsisNNEnableSym.getValue())
                     sourceFile.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"]), ["CMSIS_NN_ENABLE"])
+
+                    if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+                        #for Secure
+                        sourceFile = cmsisComponent.createFileSymbol("SEC_" + szSymbol, None)
+                        sourceFile.setRelative(False)
+                        sourceFile.setSourcePath(os.path.join(root, sourceFileName))
+                        sourceFile.setOutputName(sourceFileName)
+                        sourceFile.setMarkup(False)
+                        sourceFile.setOverwrite(True)
+                        sourceFile.setDestPath(os.path.normpath("../../packs/CMSIS/CMSIS/NN/Source/" + os.path.basename(root)))
+                        sourceFile.setProjectPath(os.path.normpath("packs/CMSIS/CMSIS/NN/Source/" + os.path.basename(root)))
+                        sourceFile.setType("SOURCE")
+                        sourceFile.setSecurity("SECURE")
+                        sourceFile.setEnabled(cmsisNNEnableSym.getValue())
+                        sourceFile.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"]), ["CMSIS_NN_ENABLE"])
 
     #If this is a cortex A device
     elif cortexType.startswith("a"):
