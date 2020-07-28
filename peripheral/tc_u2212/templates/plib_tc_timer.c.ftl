@@ -186,7 +186,7 @@ uint32_t ${TC_INSTANCE_NAME}_TimerFrequencyGet( void )
 void ${TC_INSTANCE_NAME}_TimerCommandSet(TC_COMMAND command)
 {
     ${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_CTRLBSET = command << TC_CTRLBSET_CMD_Pos;
-    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_SYNCBUSY))
+    while((${TC_INSTANCE_NAME}_REGS->${TC_CTRLA_MODE}.TC_STATUS & TC_STATUS_SYNCBUSY_Msk))
     {
         /* Wait for Write Synchronization */
     }    
