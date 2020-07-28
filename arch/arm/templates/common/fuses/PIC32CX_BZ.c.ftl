@@ -277,3 +277,16 @@
 <#if CONFIG_RTCNTM_CSEL?has_content>
 #pragma config RTCNTM_CSEL =      ${CONFIG_RTCNTM_CSEL}
 </#if>
+
+/*** FBCFG0 ***/
+<#if CONFIG_BINFOVALID?has_content>
+#pragma config BINFOVALID =      ${CONFIG_BINFOVALID}
+</#if>
+<#if CONFIG_PCSCMODE?has_content>
+#pragma config PCSCMODE =      ${CONFIG_PCSCMODE}
+</#if>
+
+/*** FCPN0 ***/
+<#if CONFIG_CP?has_content>
+#pragma config CP =      ${CONFIG_CP}
+</#if>
