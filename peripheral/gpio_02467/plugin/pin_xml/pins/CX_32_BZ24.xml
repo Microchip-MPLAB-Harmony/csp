@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
-<!-- This is an auto-generated pin data file created: 03:25:17 07/17/20 -->
+<!-- This is an auto-generated pin data file created: 22:27:03 07/31/20 -->
 <pinfile family="CX_BZ">
    <packages>
-     <package diagram="CX_32_QFN" id="1" name="VQFN" />
+     <package diagram="CX_32_QFN" id="1" name="QFN32" />
   </packages>
   <pins>
      <pin name="VPMU_VDD">
