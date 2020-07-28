@@ -57,6 +57,10 @@
 // *****************************************************************************
 // *****************************************************************************
 
+<#assign CAN_PROPAG = PROPAG - 1>
+<#assign CAN_PHASE1 = PHASE1 - 1>
+<#assign CAN_PHASE2 = PHASE2 - 1>
+<#assign CAN_SJW    = SJW - 1>
 #define BYTE_MASK 0xFF
 <#if INTERRUPT_MODE == true>
 static CAN_OBJ ${CAN_INSTANCE_NAME?lower_case}Obj;
@@ -89,9 +93,9 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
     ${CAN_INSTANCE_NAME}_REGS->CAN_MR &= ~CAN_MR_CANEN_Msk;
 
     /* Set CAN Baudrate */
-    ${CAN_INSTANCE_NAME}_REGS->CAN_BR  = CAN_BR_PHASE2(${PHASE2}) | CAN_BR_PHASE1(${PHASE1}) |
-                                         CAN_BR_PROPAG(${PROPAG}) | CAN_BR_BRP(${BRP}) |
-                                         CAN_BR_SJW(${SJW})<#if CAN_CFG_SMP == "1"> | CAN_BR_SMP_Msk</#if>;
+    ${CAN_INSTANCE_NAME}_REGS->CAN_BR  = CAN_BR_PHASE2(${CAN_PHASE2}) | CAN_BR_PHASE1(${CAN_PHASE1}) |
+                                         CAN_BR_PROPAG(${CAN_PROPAG}) | CAN_BR_BRP(${BRP}) |
+                                         CAN_BR_SJW(${CAN_SJW})<#if CAN_CFG_SMP == "1"> | CAN_BR_SMP_Msk</#if>;
 
     /* Configure Mailbox */
     <#list 0..(NUMBER_OF_MAILBOX-1) as mailbox>
