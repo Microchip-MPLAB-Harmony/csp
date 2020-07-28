@@ -57,6 +57,12 @@
 // Global Data
 // *****************************************************************************
 // *****************************************************************************
+<#assign CAN_NBTP_NTSEG1  = NBTP_NTSEG1 - 1>
+<#assign CAN_NBTP_NTSEG2  = NBTP_NTSEG2 - 1>
+<#assign CAN_NBTP_NSJW    = NBTP_NSJW - 1>
+<#assign CAN_DBTP_DTSEG1  = DBTP_DTSEG1 - 1>
+<#assign CAN_DBTP_DTSEG2  = DBTP_DTSEG2 - 1>
+<#assign CAN_DBTP_DSJW    = DBTP_DSJW - 1>
 #define CAN_STD_ID_Msk        0x7FF
 <#if INTERRUPT_MODE == true>
 #define CAN_CALLBACK_TX_INDEX 3
@@ -189,11 +195,11 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
 
 <#if CAN_OPMODE == "CAN FD">
     /* Set Data Bit Timing and Prescaler Register */
-    ${CAN_INSTANCE_NAME}_REGS->CAN_DBTP = CAN_DBTP_DTSEG2(${DBTP_DTSEG2}) | CAN_DBTP_DTSEG1(${DBTP_DTSEG1}) | CAN_DBTP_DBRP(${DBTP_DBRP}) | CAN_DBTP_DSJW(${DBTP_DSJW});
+    ${CAN_INSTANCE_NAME}_REGS->CAN_DBTP = CAN_DBTP_DTSEG2(${CAN_DBTP_DTSEG2}) | CAN_DBTP_DTSEG1(${CAN_DBTP_DTSEG1}) | CAN_DBTP_DBRP(${DBTP_DBRP}) | CAN_DBTP_DSJW(${CAN_DBTP_DSJW});
 
 </#if>
     /* Set Nominal Bit timing and Prescaler Register */
-    ${CAN_INSTANCE_NAME}_REGS->CAN_NBTP  = CAN_NBTP_NTSEG2(${NBTP_NTSEG2}) | CAN_NBTP_NTSEG1(${NBTP_NTSEG1}) | CAN_NBTP_NBRP(${NBTP_NBRP}) | CAN_NBTP_NSJW(${NBTP_NSJW});
+    ${CAN_INSTANCE_NAME}_REGS->CAN_NBTP  = CAN_NBTP_NTSEG2(${CAN_NBTP_NTSEG2}) | CAN_NBTP_NTSEG1(${CAN_NBTP_NTSEG1}) | CAN_NBTP_NBRP(${NBTP_NBRP}) | CAN_NBTP_NSJW(${CAN_NBTP_NSJW});
 
 <#if RXF0_USE || RXF1_USE || RXBUF_USE>
   <#if CAN_OPMODE == "CAN FD">
