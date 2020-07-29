@@ -55,6 +55,16 @@ threadXVectors.setVisible(False)
 threadXVectors.setReadOnly(True)
 threadXVectors.setDefaultValue(False)
 
+#Low memory footprint device, set load address to DRAM base + 1MB
+sipVariant =  Variables.get("__PROCESSOR").split("SAM9X60")[1]
+if sipVariant:
+    if sipVariant == "D6K":
+        xc32LdAppStartAddress.setValue("0x20100000")
+    else:
+        xc32LdAppStartAddress.setValue("0x21000000")
+else:
+    xc32LdAppStartAddress.setValue("0x23f00000")
+
 # load MMU
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/mmu_sam_9x60/config/mmu.py")
 
@@ -162,4 +172,4 @@ linkerFile.setType("LINKER")
 linkerFile.setEnabled(compiler_choice.getSelectedKey() == "IAR")
 linkerFile.setDependencies(lambda symbol, event: symbol.setEnabled(event["symbol"].getSelectedKey() == "IAR"), ["COMPILER_CHOICE"])
 
-Database.setSymbolValue("core", "APP_START_ADDRESS", "0x23f00000")
+
