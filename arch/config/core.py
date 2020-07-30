@@ -458,7 +458,7 @@ def instantiateComponent( coreComponent ):
         else: #microMIPS mode
             xc32ISAMode.setLabel("Generate microMIPS Compressed Code")
         xc32ISAMode.setDefaultValue(False)
-        
+
 
 
     xc32LdSymbolsMacrosMenu = coreComponent.createMenuSymbol("CoreXC32_SYMBOLS_MACROS", xc32LdMenu)
@@ -771,6 +771,16 @@ def instantiateComponent( coreComponent ):
         xc32ISAModeSettingSym.setValue("false")
         xc32ISAModeSettingSym.setDependencies(ISA_modeCallBack, ["XC32_ISA_MODE"])
 
+        # set XC32 ISA mode
+        xc32cppISAModeSettingSym = coreComponent.createSettingSymbol("XC32CPP_ISA_MODE_SETTING", None)
+        xc32cppISAModeSettingSym.setCategory("C32CPP")
+        if "PIC32MX" in processor: #MIPS16 mode
+            xc32cppISAModeSettingSym.setKey("generate-16-bit-code")
+        else: #microMIPS mode
+            xc32cppISAModeSettingSym.setKey("generate-micro-compressed-code")
+        xc32cppISAModeSettingSym.setValue("false")
+        xc32cppISAModeSettingSym.setDependencies(ISA_modeCallBack, ["XC32_ISA_MODE"])
+
 
     # set XC32 heap size
     xc32HeapSizeSym = coreComponent.createSettingSymbol("XC32_HEAP", None)
@@ -812,6 +822,12 @@ def instantiateComponent( coreComponent ):
                         + ";../src/packs/CMSIS/"
                         )
     defSym.setAppend(True, ";")
+
+    defXc32cppSym = coreComponent.createSettingSymbol("XC32CPP_INCLUDE_DIRS", None)
+    defXc32cppSym.setCategory("C32CPP")
+    defXc32cppSym.setKey("extra-include-directories")
+    defXc32cppSym.setValue(defSym.getValue())
+    defXc32cppSym.setAppend(True, ";")
 
     # set XC32 option to not use the device startup code
     xc32NoDeviceStartupCodeSym = coreComponent.createSettingSymbol("XC32_NO_DEVICE_STARTUP_CODE", None)

@@ -170,6 +170,14 @@ def instantiateComponent(cmsisComponent):
         cmsisDSPIncludeSetting.setEnabled(cmsisDSPEnableSym.getValue())
         cmsisDSPIncludeSetting.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"]), ["CMSIS_DSP_ENABLE"])
 
+        cmsisDSPXc32cppIncludeSetting = cmsisComponent.createSettingSymbol("CMSIS_DSP_XC32CPP_INCLUDE_DIRS", None)
+        cmsisDSPXc32cppIncludeSetting.setCategory("C32CPP")
+        cmsisDSPXc32cppIncludeSetting.setKey("extra-include-directories")
+        cmsisDSPXc32cppIncludeSetting.setValue(cmsisDSPIncludeSetting.getValue())
+        cmsisDSPXc32cppIncludeSetting.setAppend(True, ";")
+        cmsisDSPXc32cppIncludeSetting.setEnabled(cmsisDSPEnableSym.getValue())
+        cmsisDSPXc32cppIncludeSetting.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"]), ["CMSIS_DSP_ENABLE"])
+
         if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
             #CMSIS DSP include path setting symbol for Secure
             cmsisDSPIncludeSetting = cmsisComponent.createSettingSymbol("SEC_CMSIS_DSP_INCLUDE_DIRS", None)
@@ -180,6 +188,15 @@ def instantiateComponent(cmsisComponent):
             cmsisDSPIncludeSetting.setEnabled(cmsisDSPEnableSym.getValue())
             cmsisDSPIncludeSetting.setSecurity("SECURE")
             cmsisDSPIncludeSetting.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"]), ["CMSIS_DSP_ENABLE"])
+
+            cmsisDSPXc32cppIncludeSetting = cmsisComponent.createSettingSymbol("SEC_CMSIS_DSP_XC32CPP_INCLUDE_DIRS", None)
+            cmsisDSPXc32cppIncludeSetting.setCategory("C32CPP")
+            cmsisDSPXc32cppIncludeSetting.setKey("extra-include-directories")
+            cmsisDSPXc32cppIncludeSetting.setValue(cmsisDSPIncludeSetting.getValue())
+            cmsisDSPXc32cppIncludeSetting.setAppend(True, ";")
+            cmsisDSPXc32cppIncludeSetting.setEnabled(cmsisDSPEnableSym.getValue())
+            cmsisDSPXc32cppIncludeSetting.setSecurity("SECURE")
+            cmsisDSPXc32cppIncludeSetting.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"]), ["CMSIS_DSP_ENABLE"])
 
         # Construct the library name
         if cortexType in v8Cores:
@@ -268,6 +285,14 @@ def instantiateComponent(cmsisComponent):
         cmsisNNIncludeSetting.setEnabled(cmsisNNEnableSym.getValue())
         cmsisNNIncludeSetting.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"]), ["CMSIS_NN_ENABLE"])
 
+        cmsisNNXc32cppIncludeSetting = cmsisComponent.createSettingSymbol("CMSIS_NN_XC32CPP_INCLUDE_DIRS", None)
+        cmsisNNXc32cppIncludeSetting.setCategory("C32CPP")
+        cmsisNNXc32cppIncludeSetting.setKey("extra-include-directories")
+        cmsisNNXc32cppIncludeSetting.setValue(cmsisNNIncludeSetting.getValue())
+        cmsisNNXc32cppIncludeSetting.setAppend(True, ";")
+        cmsisNNXc32cppIncludeSetting.setEnabled(cmsisNNEnableSym.getValue())
+        cmsisNNXc32cppIncludeSetting.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"]), ["CMSIS_NN_ENABLE"])
+
         if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
             #CMSIS NN include path setting symbol for Secure
             cmsisNNIncludeSetting = cmsisComponent.createSettingSymbol("SEC_CMSIS_NN_INCLUDE_DIRS", None)
@@ -278,6 +303,15 @@ def instantiateComponent(cmsisComponent):
             cmsisNNIncludeSetting.setEnabled(cmsisNNEnableSym.getValue())
             cmsisNNIncludeSetting.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"]), ["CMSIS_NN_ENABLE"])
             cmsisNNIncludeSetting.setSecurity("SECURE")
+
+            cmsisNNXc32cppIncludeSetting = cmsisComponent.createSettingSymbol("SEC_CMSIS_NN_XC32CPP_INCLUDE_DIRS", None)
+            cmsisNNXc32cppIncludeSetting.setCategory("C32CPP")
+            cmsisNNXc32cppIncludeSetting.setKey("extra-include-directories")
+            cmsisNNXc32cppIncludeSetting.setValue(cmsisNNIncludeSetting.getValue())
+            cmsisNNXc32cppIncludeSetting.setAppend(True, ";")
+            cmsisNNXc32cppIncludeSetting.setEnabled(cmsisNNEnableSym.getValue())
+            cmsisNNXc32cppIncludeSetting.setDependencies(lambda symbol, event: symbol.setEnabled(event["value"]), ["CMSIS_NN_ENABLE"])
+            cmsisNNXc32cppIncludeSetting.setSecurity("SECURE")
 
         #Create source file symbols
         cmsisNNSourcePath = os.path.join(Variables.get("__CMSIS_PACK_DIR"), "CMSIS", "NN", "Source")

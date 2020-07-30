@@ -398,12 +398,26 @@ defSym.setValue( "../src;../src/config/" + configName
 defSym.setAppend(True, ";")
 defSym.setSecurity("SECURE")
 
+defXc32cppSym = coreComponent.createSettingSymbol("SEC_XC32CPP_INCLUDE_DIRS", None)
+defXc32cppSym.setCategory("C32CPP")
+defXc32cppSym.setKey("extra-include-directories")
+defXc32cppSym.setValue(defSym.getValue())
+defXc32cppSym.setAppend(True, ";")
+defXc32cppSym.setSecurity("SECURE")
+
 xc32CMSECompilerFlag =  coreComponent.createSettingSymbol("SEC_XC32_CMSE_FLAG", None)
 xc32CMSECompilerFlag.setCategory("C32")
 xc32CMSECompilerFlag.setKey("appendMe")
 xc32CMSECompilerFlag.setValue("-mcmse")
 xc32CMSECompilerFlag.setAppend(True, " ")
 xc32CMSECompilerFlag.setSecurity("SECURE")
+
+xc32cppCMSECompilerFlag = coreComponent.createSettingSymbol("SEC_XC32CPP_CMSE_FLAG", None)
+xc32cppCMSECompilerFlag.setCategory("C32CPP")
+xc32cppCMSECompilerFlag.setKey("appendMe")
+xc32cppCMSECompilerFlag.setValue(xc32CMSECompilerFlag.getValue())
+xc32cppCMSECompilerFlag.setAppend(True, " ")
+xc32cppCMSECompilerFlag.setSecurity("SECURE")
 
 xc32CMSELinkerFlag =  coreComponent.createSettingSymbol("SEC_XC32_LINKER_CMSE_FLAG", None)
 xc32CMSELinkerFlag.setCategory("C32-LD")
