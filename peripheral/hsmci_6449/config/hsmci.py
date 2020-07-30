@@ -104,7 +104,7 @@ def instantiateComponent(hsmciComponent):
 
     hsmciEMMCSupport = hsmciComponent.createBooleanSymbol("SDCARD_EMMC_SUPPORT", None)
     hsmciEMMCSupport.setLabel("HSMCI EMMC Support")
-    hsmciEMMCSupport.setDefaultValue(False)
+    hsmciEMMCSupport.setDefaultValue(True)
     hsmciEMMCSupport.setVisible(False)
 
 

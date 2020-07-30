@@ -67,7 +67,7 @@ bool ${HSMCI_INSTANCE_NAME}_IsCmdLineBusy (void);
 
 bool ${HSMCI_INSTANCE_NAME}_IsDatLineBusy (void);
 
-void ${HSMCI_INSTANCE_NAME}_ClockSet ( uint32_t clock );
+bool ${HSMCI_INSTANCE_NAME}_ClockSet ( uint32_t clock );
 
 uint16_t ${HSMCI_INSTANCE_NAME}_CommandErrorGet(void);
 
@@ -81,10 +81,10 @@ void ${HSMCI_INSTANCE_NAME}_ModuleInit( void );
 
 void ${HSMCI_INSTANCE_NAME}_CallbackRegister(HSMCI_CALLBACK callback, uintptr_t contextHandle);
 
-void ${HSMCI_INSTANCE_NAME}_CommandSend ( 
-    uint8_t opCode, 
+void ${HSMCI_INSTANCE_NAME}_CommandSend (
+    uint8_t opCode,
     uint32_t argument,
-    uint8_t respType, 
+    uint8_t respType,
     HSMCI_DataTransferFlags transferFlags
 );
 

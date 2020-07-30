@@ -270,7 +270,7 @@ void ${HSMCI_INSTANCE_NAME}_BlockCountSet ( uint16_t numBlocks )
     ${HSMCI_INSTANCE_NAME}_REGS->HSMCI_BLKR |= (numBlocks << HSMCI_BLKR_BCNT_Pos);
 }
 
-void ${HSMCI_INSTANCE_NAME}_ClockSet ( uint32_t clock )
+bool ${HSMCI_INSTANCE_NAME}_ClockSet ( uint32_t clock )
 {
     uint32_t mck = ${HSMCI_CLK};
     uint32_t clkdiv = 0;
@@ -301,6 +301,8 @@ void ${HSMCI_INSTANCE_NAME}_ClockSet ( uint32_t clock )
 
     ${HSMCI_INSTANCE_NAME}_REGS->HSMCI_MR &= ~HSMCI_MR_CLKDIV_Msk;
     ${HSMCI_INSTANCE_NAME}_REGS->HSMCI_MR |= HSMCI_MR_CLKDIV(clkdiv);
+
+    return true;
 }
 
 void ${HSMCI_INSTANCE_NAME}_ResponseRead (
@@ -383,8 +385,22 @@ void ${HSMCI_INSTANCE_NAME}_CommandSend (
 
         case HSMCI_CMD_RESP_R1B:
             cmd_reg |= (HSMCI_CMDR_RSPTYP_R1B | HSMCI_CMDR_MAXLAT_Msk);
-            ier_reg |= (HSMCI_IER_RCRCE_Msk | HSMCI_IER_RINDE_Msk | \
+
+            /* Sleep mode command (CMD5) on eMMC has a response timeout of S_A_timeout
+             * defined in EXT_CSD register. This timeout may exceed the 64 cycle timeout
+             * set through the MAXLAT register.
+            */
+            if (opCode != 0x05)
+            {
+                ier_reg |= (HSMCI_IER_RCRCE_Msk | HSMCI_IER_RINDE_Msk | \
                     HSMCI_IER_RTOE_Msk | HSMCI_IER_RENDE_Msk | HSMCI_IER_RDIRE_Msk);
+            }
+            else
+            {
+                ier_reg |= (HSMCI_IER_RCRCE_Msk | HSMCI_IER_RINDE_Msk | \
+                    HSMCI_IER_RENDE_Msk | HSMCI_IER_RDIRE_Msk);
+            }
+
             break;
 
         case HSMCI_CMD_RESP_R2:
