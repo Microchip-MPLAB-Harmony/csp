@@ -106,73 +106,76 @@ def sort_alphanumeric(l):
     return sorted(l, key = alphanum_key)
 
 def setupPortPINCFG(usePortLocalPINCFG, event):
+    component = event["source"]
+    groupName = component.getSymbolValue("PIN_" + str(event["id"].split("_")[1]) + "_PORT_GROUP")
+    #This is a port pin (belongs to a port group)
+    if groupName:
+        bitPosition = component.getSymbolValue( "PIN_" + str(event["id"].split("_")[1]) + "_PORT_PIN")
+        pullEnable = component.getSymbolValue( "PIN_" + str(event["id"].split("_")[1]) + "_PULLEN")
+        inputEnable = component.getSymbolValue( "PIN_" + str(event["id"].split("_")[1]) + "_INEN")
+        driveStrength = component.getSymbolValue( "PIN_" + str(event["id"].split("_")[1]) + "_DRVSTR")
+        peripheralFunc = component.getSymbolValue( "PIN_" + str(event["id"].split("_")[1]) +"_PERIPHERAL_FUNCTION")
 
-    pullEnable = Database.getSymbolValue(event["namespace"], "PIN_" + str(event["id"].split("_")[1]) + "_PULLEN")
-    inputEnable = Database.getSymbolValue(event["namespace"], "PIN_" + str(event["id"].split("_")[1]) + "_INEN")
-    driveStrength = Database.getSymbolValue(event["namespace"], "PIN_" + str(event["id"].split("_")[1]) + "_DRVSTR")
-    peripheralFunc = Database.getSymbolValue(event["namespace"], "PIN_" + str(event["id"].split("_")[1]) +"_PERIPHERAL_FUNCTION")
-    bitPosition = Database.getSymbolValue(event["namespace"], "PIN_" + str(event["id"].split("_")[1]) + "_PORT_PIN")
-    groupName = Database.getSymbolValue(event["namespace"], "PIN_" + str(event["id"].split("_")[1]) + "_PORT_GROUP")
+        if groupName != "None":
 
-    if groupName != "None":
+            cfgValue = 0
 
-        cfgValue = 0
+            if pullEnable:
+                cfgValue |= (1 << 2)
+            if pullEnable == "False":
+                cfgValue &= ~ (1 << 2)
+            if inputEnable:
+                cfgValue |= (1 << 1)
+            if inputEnable == "False":
+                cfgValue &= ~ (1 << 1)
+            if driveStrength == 0:
+                cfgValue &= ~(1 << 6)
+            elif driveStrength == 1:
+                cfgValue |= (1 << 6)
+            if peripheralFunc not in peripheralFunctionality and peripheralFunc != "":
+                cfgValue |= (1 << 0)
+            else :
+                cfgValue &= ~ (1 << 0)
 
-        if pullEnable:
-            cfgValue |= (1 << 2)
-        if pullEnable == "False":
-            cfgValue &= ~ (1 << 2)
-        if inputEnable:
-            cfgValue |= (1 << 1)
-        if inputEnable == "False":
-            cfgValue &= ~ (1 << 1)
-        if driveStrength == 0:
-            cfgValue &= ~(1 << 6)
-        elif driveStrength == 1:
-            cfgValue |= (1 << 6)
-        if peripheralFunc not in peripheralFunctionality and peripheralFunc != "":
-            cfgValue |= (1 << 0)
-        else :
-            cfgValue &= ~ (1 << 0)
-
-        Database.setSymbolValue( event["namespace"],"PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PINCFG" + str(bitPosition), str(hex(cfgValue)), 1)
+            component.setSymbolValue("PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PINCFG" + str(bitPosition), str(hex(cfgValue)))
 
 def setupPortDir(usePortLocalDir, event):
+    component = event["source"]
+    groupName = component.getSymbolValue("PIN_" + str(event["id"].split("_")[1]) + "_PORT_GROUP")
+    #This is a port pin (belongs to a port group)
+    if groupName:
+        bitPosition = component.getSymbolValue( "PIN_" + str(event["id"].split("_")[1]) + "_PORT_PIN")
+        preVal = component.getSymbolValue("PORT_GROUP_" + str(portGroupName.index(groupName)) + "_DIR")
+        dirValue = 0
 
-    bitPosition = Database.getSymbolValue(event["namespace"], "PIN_" + str(event["id"].split("_")[1]) + "_PORT_PIN")
-    groupName = Database.getSymbolValue(event["namespace"], "PIN_" + str(event["id"].split("_")[1]) + "_PORT_GROUP")
+        if preVal != None:
+            dirValue = int(preVal.split("L")[0],0)
 
-    preVal = Database.getSymbolValue(event["namespace"], "PORT_GROUP_" + str(portGroupName.index(groupName)) + "_DIR")
+        if event["value"] == "Out":
+            dirValue |= 1 << bitPosition
+        else:
+            dirValue &= ~ (1 << bitPosition)
 
-    dirValue = 0
-
-    if preVal != None:
-        dirValue = int(preVal.split("L")[0],0)
-
-    if event["value"] == "Out":
-        dirValue |= 1 << bitPosition
-    else:
-        dirValue &= ~ (1 << bitPosition)
-
-    Database.setSymbolValue( event["namespace"],"PORT_GROUP_" + str(portGroupName.index(groupName)) + "_DIR", str((hex(dirValue).rstrip("L"))), 1)
+        component.setSymbolValue("PORT_GROUP_" + str(portGroupName.index(groupName)) + "_DIR", str((hex(dirValue).rstrip("L"))))
 
 def setupPortLat(usePortLocalLatch, event):
+    component = event["source"]
+    groupName = component.getSymbolValue("PIN_" + str(event["id"].split("_")[1]) + "_PORT_GROUP")
+    #This is a port pin (belongs to a port group)
+    if groupName:
+        bitPosition = component.getSymbolValue( "PIN_" + str(event["id"].split("_")[1]) + "_PORT_PIN")
+        preVal = component.getSymbolValue("PORT_GROUP_" + str(portGroupName.index(groupName)) + "_OUT")
+        outValue = 0
 
-    bitPosition = Database.getSymbolValue(event["namespace"], "PIN_" + str(event["id"].split("_")[1]) + "_PORT_PIN")
-    groupName = Database.getSymbolValue(event["namespace"], "PIN_" + str(event["id"].split("_")[1]) + "_PORT_GROUP")
+        if preVal != None:
+            outValue = int(preVal.split("L")[0],0)
 
-    preVal = Database.getSymbolValue(event["namespace"], "PORT_GROUP_" + str(portGroupName.index(groupName)) + "_OUT")
-    outValue = 0
+        if event["value"] == "High":
+            outValue |= 1 << bitPosition
+        else:
+            outValue &= ~(1 << bitPosition)
 
-    if preVal != None:
-        outValue = int(preVal.split("L")[0],0)
-
-    if event["value"] == "High":
-        outValue |= 1 << bitPosition
-    else:
-        outValue &= ~(1 << bitPosition)
-
-    Database.setSymbolValue( event["namespace"],"PORT_GROUP_" + str(portGroupName.index(groupName)) + "_OUT", str((hex(outValue).rstrip("L"))), 1)
+        component.setSymbolValue("PORT_GROUP_" + str(portGroupName.index(groupName)) + "_OUT", str((hex(outValue).rstrip("L"))))
 
 def evsysControl(symbol, event):
     global group
@@ -203,54 +206,57 @@ def setupPortPinMux(portSym_PORT_PMUX_local, event):
     global prevID
     global prevVal
     global portPackage
-    bitPosition = Database.getSymbolValue(event["namespace"], "PIN_" + str(event["id"].split("_")[1]) + "_PORT_PIN")
-    groupName = Database.getSymbolValue(event["namespace"], "PIN_" + str(event["id"].split("_")[1]) + "_PORT_GROUP")
-    peripheralFuncVal = 0
-    if event["value"] not in peripheralFunctionality and event["value"] != "":
+    component = event["source"]
+    groupName = component.getSymbolValue("PIN_" + str(event["id"].split("_")[1]) + "_PORT_GROUP")
+    #This is a port pin (belongs to a port group)
+    if groupName:
+        bitPosition = component.getSymbolValue( "PIN_" + str(event["id"].split("_")[1]) + "_PORT_PIN")
+        peripheralFuncVal = 0
+        if event["value"] not in peripheralFunctionality and event["value"] != "":
 
-        prePinMuxVal = Database.getSymbolValue(event["namespace"], "PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2))
-        intPrePinMuxVal = int(prePinMuxVal,0)
+            prePinMuxVal = component.getSymbolValue("PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2))
+            intPrePinMuxVal = int(prePinMuxVal,0)
 
-        if ((bitPosition%2) == 0):
-            peripheralFuncVal = portPeripheralFunc.index(event["value"]) | ( int(prePinMuxVal,0) & int("0xf0",0) )
+            if ((bitPosition%2) == 0):
+                peripheralFuncVal = portPeripheralFunc.index(event["value"]) | ( int(prePinMuxVal,0) & int("0xf0",0) )
+            else :
+                peripheralFuncVal = (portPeripheralFunc.index(event["value"]) << 4) | ( int(prePinMuxVal,0) & int("0x0f",0) )
+
+            component.getSymbolValue("PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2), str(hex(peripheralFuncVal)), 1)
         else :
-            peripheralFuncVal = (portPeripheralFunc.index(event["value"]) << 4) | ( int(prePinMuxVal,0) & int("0x0f",0) )
+            pinMuxVal = component.getSymbolValue("PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2))
+            intPinMuxVal = int(pinMuxVal,0)
 
-        Database.setSymbolValue( event["namespace"],"PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2), str(hex(peripheralFuncVal)), 1)
-    else :
-        pinMuxVal = Database.getSymbolValue(event["namespace"], "PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2))
-        intPinMuxVal = int(pinMuxVal,0)
+            if ((bitPosition%2) == 0):
+                intPrePinMuxVal &= int("0xf0",0)
+            else :
+                intPrePinMuxVal &= int("0x0f",0)
 
-        if ((bitPosition%2) == 0):
-            intPrePinMuxVal &= int("0xf0",0)
-        else :
-            intPrePinMuxVal &= int("0x0f",0)
+            component.setSymbolValue("PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2), str(hex(intPrePinMuxVal)))
 
-        Database.setSymbolValue( event["namespace"],"PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2), str(hex(intPrePinMuxVal)), 1)
+            if event["id"] != prevID:
+                if intPinMuxVal == 0:
+                        intPinMuxVal = int("0x00",0)
+                else:
+                    if ((bitPosition%2) == 0):
+                        intPinMuxVal &= int("0xf0",0)
+                    else :
+                        intPinMuxVal &= int("0x0f",0)
 
-        if event["id"] != prevID:
-            if intPinMuxVal == 0:
-                    intPinMuxVal = int("0x00",0)
+            component.setSymbolValue("PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2), str(hex(intPinMuxVal)))
+
+            if event["id"] == prevID and event["value"] != prevVal:
+                component.setSymbolValue("PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2), str(hex(intPrePinMuxVal)))
+
+            portPositionNodePin = ATDF.getNode("/avr-tools-device-file/pinouts/pinout@[name=\"" + str(package.get(portPackage.getValue())) + "\"]/pin@[position=\""+ str(event["id"].split("_")[1]) +"\"]")
+            position = str(event["id"].split("_")[1])
+            bitposition = component.getSymbolValue("PIN_" + position + "_PORT_PIN")
+            if bitPosition < 10:
+                bitPositionstr = "0" + str(bitposition)
             else:
-                if ((bitPosition%2) == 0):
-                    intPinMuxVal &= int("0xf0",0)
-                else :
-                    intPinMuxVal &= int("0x0f",0)
-
-        Database.setSymbolValue( event["namespace"],"PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2), str(hex(intPinMuxVal)), 1)
-
-        if event["id"] == prevID and event["value"] != prevVal:
-            Database.setSymbolValue( event["namespace"],"PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2), str(hex(intPrePinMuxVal)), 1)
-
-        portPositionNodePin = ATDF.getNode("/avr-tools-device-file/pinouts/pinout@[name=\"" + str(package.get(portPackage.getValue())) + "\"]/pin@[position=\""+ str(event["id"].split("_")[1]) +"\"]")
-        position = str(event["id"].split("_")[1])
-        bitposition = Database.getSymbolValue("core", "PIN_" + position + "_PORT_PIN")
-        if bitPosition < 10:
-            bitPositionstr = "0" + str(bitposition)
-        else:
-            bitPositionstr = str(bitposition)
-        padName = "P" + groupName + bitPositionstr
-        Database.setSymbolValue( event["namespace"],"PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PAD_" + str(bitPosition) , padName, 1)
+                bitPositionstr = str(bitposition)
+            padName = "P" + groupName + bitPositionstr
+            component.setSymbolValue("PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PAD_" + str(bitPosition) , padName)
 
     prevID = event["id"]
     prevVal = event["value"]
