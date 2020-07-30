@@ -208,12 +208,6 @@ if compiler_choice.getSelectedKey() == "XC32":
     sym.setValue("__FPU_PRESENT=1")
     sym.setAppend(True, ";")
 
-    sym = coreComponent.createSettingSymbol(None, None)
-    sym.setCategory("C32")
-    sym.setKey("appendMe")
-    sym.setValue("-marm -cpu=cortex-a5 -mfpu=neon-vfpv4")
-    sym.setAppend(True, ";")
-
 elif compiler_choice.getSelectedKey() == "IAR":
     armSysStartSourceFile = coreComponent.createFileSymbol("STARTUP_C", None)
     armSysStartSourceFile.setSourcePath("arm/templates/iar/cortex_a/SAMA5D2/sam_a5_cstartup.s.ftl")
