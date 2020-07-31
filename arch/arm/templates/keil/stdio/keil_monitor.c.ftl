@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name:
-    debug_console.c
+    keil_monitor.c
 
   Summary:
     RSTC Source File

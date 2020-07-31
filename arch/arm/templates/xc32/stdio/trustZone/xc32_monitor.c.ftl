@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name:
-    debug_console.c
+    xc32_monitor.c
 
   Summary:
     debug console Source File
