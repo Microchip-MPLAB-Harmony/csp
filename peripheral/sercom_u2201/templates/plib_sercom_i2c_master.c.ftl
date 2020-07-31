@@ -752,11 +752,9 @@ void ${SERCOM_INSTANCE_NAME}_I2C_InterruptHandler(void)
         /* Checks if the arbitration lost in multi-master scenario */
         if((${SERCOM_INSTANCE_NAME}_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_ARBLOST_Msk) == SERCOM_I2CM_STATUS_ARBLOST_Msk)
         {
-            /*
-             * Re-initiate the transfer if arbitration is lost
-             * in between of the transfer
-             */
-            ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_REINITIATE_TRANSFER;
+            /* Set Error status */
+            ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.state = SERCOM_I2C_STATE_ERROR;
+            ${SERCOM_INSTANCE_NAME?lower_case}I2CObj.error = SERCOM_I2C_ERROR_BUS;
 
         }
         /* Check for Bus Error during transmission */
