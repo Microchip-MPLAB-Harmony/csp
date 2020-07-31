@@ -222,7 +222,7 @@ def setupPortPinMux(portSym_PORT_PMUX_local, event):
             else :
                 peripheralFuncVal = (portPeripheralFunc.index(event["value"]) << 4) | ( int(prePinMuxVal,0) & int("0x0f",0) )
 
-            component.getSymbolValue("PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2), str(hex(peripheralFuncVal)), 1)
+            component.setSymbolValue("PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2), str(hex(peripheralFuncVal)), 1)
         else :
             pinMuxVal = component.getSymbolValue("PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2))
             intPinMuxVal = int(pinMuxVal,0)
