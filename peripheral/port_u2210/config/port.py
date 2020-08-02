@@ -249,14 +249,13 @@ def setupPortPinMux(portSym_PORT_PMUX_local, event):
                 component.setSymbolValue("PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2), str(hex(intPrePinMuxVal)))
 
             portPositionNodePin = ATDF.getNode("/avr-tools-device-file/pinouts/pinout@[name=\"" + str(package.get(portPackage.getValue())) + "\"]/pin@[position=\""+ str(event["id"].split("_")[1]) +"\"]")
-            position = str(event["id"].split("_")[1])
-            bitposition = component.getSymbolValue("PIN_" + position + "_PORT_PIN")
-            if bitPosition < 10:
-                bitPositionstr = "0" + str(bitposition)
-            else:
-                bitPositionstr = str(bitposition)
-            padName = "P" + groupName + bitPositionstr
-            component.setSymbolValue("PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PAD_" + str(bitPosition) , padName)
+        
+        if bitPosition < 10:
+            bitPositionstr = "0" + str(bitPosition)
+        else:
+            bitPositionstr = str(bitPosition)
+        padName = "P" + groupName + bitPositionstr
+        component.setSymbolValue("PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PAD_" + str(bitPosition) , padName)
 
     prevID = event["id"]
     prevVal = event["value"]
