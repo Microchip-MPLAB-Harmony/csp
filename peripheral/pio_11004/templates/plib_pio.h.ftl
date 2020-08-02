@@ -98,10 +98,6 @@
 
 </#compress>
 <#-- Generate Pin Macros for all the GPIO Pins -->
-    <#assign GPIO_Name_List = []>
-    <#assign GPIO_PortPin_List = []>
-    <#assign GPIO_PortChannel_List = []>
-    <#assign GPIO_Interrupt_List = []>
     <#list 1..PIO_PIN_TOTAL as i>
         <#assign functype = "PIN_" + i + "_FUNCTION_TYPE">
         <#assign funcname = "PIN_" + i + "_FUNCTION_NAME">
@@ -109,24 +105,23 @@
         <#assign pinchannel = "PIN_" + i + "_PIO_CHANNEL">
         <#assign interruptType = "PIN_" + i + "_PIO_INTERRUPT">
         <#if .vars[functype]?has_content>
-            <#if .vars[functype] == "GPIO">
-                <#if .vars[funcname]?has_content>
-                    <#if .vars[pinport]?has_content>
-                        <#if .vars[pinchannel]?has_content>
-
-                            <#lt>/*** Macros for ${.vars[funcname]} pin ***/
+            <#if .vars[funcname]?has_content>
+                <#if .vars[pinport]?has_content>
+                    <#if .vars[pinchannel]?has_content>
+                        <#lt>/*** Macros for ${.vars[funcname]} pin ***/
+                        <#if .vars[functype] == "GPIO">
                             <#lt>#define ${.vars[funcname]}_Set()               (PIO${.vars[pinchannel]}_REGS->PIO_SODR = (1<<${.vars[pinport]}))
                             <#lt>#define ${.vars[funcname]}_Clear()             (PIO${.vars[pinchannel]}_REGS->PIO_CODR = (1<<${.vars[pinport]}))
                             <#lt>#define ${.vars[funcname]}_Toggle()            (PIO${.vars[pinchannel]}_REGS->PIO_ODSR ^= (1<<${.vars[pinport]}))
-                            <#lt>#define ${.vars[funcname]}_Get()               ((PIO${.vars[pinchannel]}_REGS->PIO_PDSR >> ${.vars[pinport]}) & 0x1)
                             <#lt>#define ${.vars[funcname]}_OutputEnable()      (PIO${.vars[pinchannel]}_REGS->PIO_OER = (1<<${.vars[pinport]}))
                             <#lt>#define ${.vars[funcname]}_InputEnable()       (PIO${.vars[pinchannel]}_REGS->PIO_ODR = (1<<${.vars[pinport]}))
-                            <#if .vars[interruptType]?has_content>
-                                <#lt>#define ${.vars[funcname]}_InterruptEnable()   (PIO${.vars[pinchannel]}_REGS->PIO_IER = (1<<${.vars[pinport]}))
-                                <#lt>#define ${.vars[funcname]}_InterruptDisable()  (PIO${.vars[pinchannel]}_REGS->PIO_IDR = (1<<${.vars[pinport]}))
-                            </#if>
-                            <#lt>#define ${.vars[funcname]}_PIN                  PIO_PIN_P${.vars[pinchannel]}${.vars[pinport]}
                         </#if>
+                        <#if .vars[interruptType]?has_content>
+                            <#lt>#define ${.vars[funcname]}_InterruptEnable()   (PIO${.vars[pinchannel]}_REGS->PIO_IER = (1<<${.vars[pinport]}))
+                            <#lt>#define ${.vars[funcname]}_InterruptDisable()  (PIO${.vars[pinchannel]}_REGS->PIO_IDR = (1<<${.vars[pinport]}))
+                        </#if>
+                        <#lt>#define ${.vars[funcname]}_Get()               ((PIO${.vars[pinchannel]}_REGS->PIO_PDSR >> ${.vars[pinport]}) & 0x1)
+                        <#lt>#define ${.vars[funcname]}_PIN                  PIO_PIN_P${.vars[pinchannel]}${.vars[pinport]}
                     </#if>
                 </#if>
             </#if>
