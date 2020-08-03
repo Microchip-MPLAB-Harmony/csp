@@ -110,7 +110,7 @@ void ${UART_INSTANCE_NAME}_Initialize( void )
     U${UART_INSTANCE_NUM}MODE = 0x${UMODE_VALUE};
 
     /* Enable ${UART_INSTANCE_NAME} Receiver and Transmitter */
-    U${UART_INSTANCE_NUM}STASET = (_U${UART_INSTANCE_NUM}STA_UTXEN_MASK | _U${UART_INSTANCE_NUM}STA_URXEN_MASK);
+    U${UART_INSTANCE_NUM}STASET = (_U${UART_INSTANCE_NUM}STA_UTXEN_MASK | _U${UART_INSTANCE_NUM}STA_URXEN_MASK | _U${UART_INSTANCE_NUM}STA_UTXISEL1_MASK);
 
     /* BAUD Rate register Setup */
     U${UART_INSTANCE_NUM}BRG = ${BRG_VALUE};
@@ -600,9 +600,6 @@ static void ${UART_INSTANCE_NAME}_RX_InterruptHandler (void)
 void ${UART_INSTANCE_NAME}_RX_InterruptHandler (void)
 </#if>
 {
-    /* Clear ${UART_INSTANCE_NAME} RX Interrupt flag */
-    ${UART_RX_IFS_REG}CLR = _${UART_RX_IFS_REG}_U${UART_INSTANCE_NUM}RXIF_MASK;
-
     /* Keep reading until there is a character availabe in the RX FIFO */
     while((U${UART_INSTANCE_NUM}STA & _U${UART_INSTANCE_NUM}STA_URXDA_MASK) == _U${UART_INSTANCE_NUM}STA_URXDA_MASK)
     {
@@ -615,6 +612,9 @@ void ${UART_INSTANCE_NAME}_RX_InterruptHandler (void)
             /* UART RX buffer is full */
         }
     }
+
+    /* Clear ${UART_INSTANCE_NAME} RX Interrupt flag */
+    ${UART_RX_IFS_REG}CLR = _${UART_RX_IFS_REG}_U${UART_INSTANCE_NUM}RXIF_MASK;
 }
 
 <#if UART_INTERRUPT_COUNT == 1>
@@ -628,9 +628,6 @@ void ${UART_INSTANCE_NAME}_TX_InterruptHandler (void)
     /* Check if any data is pending for transmission */
     if (${UART_INSTANCE_NAME}_WritePendingBytesGet() > 0)
     {
-        /* Clear ${UART_INSTANCE_NAME}TX Interrupt flag */
-        ${UART_TX_IFS_REG}CLR = _${UART_TX_IFS_REG}_U${UART_INSTANCE_NUM}TXIF_MASK;
-
         /* Keep writing to the TX FIFO as long as there is space */
         while(!(U${UART_INSTANCE_NUM}STA & _U${UART_INSTANCE_NUM}STA_UTXBF_MASK))
         {
@@ -648,6 +645,9 @@ void ${UART_INSTANCE_NAME}_TX_InterruptHandler (void)
                 break;
             }
         }
+
+        /* Clear ${UART_INSTANCE_NAME}TX Interrupt flag */
+        ${UART_TX_IFS_REG}CLR = _${UART_TX_IFS_REG}_U${UART_INSTANCE_NUM}TXIF_MASK;
     }
     else
     {
