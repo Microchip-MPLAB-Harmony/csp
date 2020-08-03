@@ -107,12 +107,12 @@ void ${UART_INSTANCE_NAME}_Initialize( void )
     /* RUNOVF = ${UART_RUNOVF} */
     /* CLKSEL = ${UART_CLKSEL} */
     /* SLPEN = ${UART_SLPEN} */
-	/* UEN = ${UART_UEN_SELECT} */
+    /* UEN = ${UART_UEN_SELECT} */
     U${UART_INSTANCE_NUM}MODE = 0x${UMODE_VALUE};
 
 <#if USART_INTERRUPT_MODE == true>
     /* Enable ${UART_INSTANCE_NAME} Receiver, Transmitter and TX Interrupt selection */
-    U${UART_INSTANCE_NUM}STASET = (_U${UART_INSTANCE_NUM}STA_UTXEN_MASK | _U${UART_INSTANCE_NUM}STA_URXEN_MASK | _U${UART_INSTANCE_NUM}STA_UTXISEL0_MASK);
+    U${UART_INSTANCE_NUM}STASET = (_U${UART_INSTANCE_NUM}STA_UTXEN_MASK | _U${UART_INSTANCE_NUM}STA_URXEN_MASK | _U${UART_INSTANCE_NUM}STA_UTXISEL1_MASK);
 <#else>
     /* Enable ${UART_INSTANCE_NAME} Receiver and Transmitter */
     U${UART_INSTANCE_NUM}STASET = (_U${UART_INSTANCE_NUM}STA_UTXEN_MASK | _U${UART_INSTANCE_NUM}STA_URXEN_MASK);
@@ -333,11 +333,10 @@ bool ${UART_INSTANCE_NAME}_Write( void* buffer, const size_t size )
             ${UART_INSTANCE_NAME?lower_case}Obj.txBusyStatus = true;
             status = true;
 
-            /* Initiate the transfer by sending first byte */
-            if(!(U${UART_INSTANCE_NUM}STA & _U${UART_INSTANCE_NUM}STA_UTXBF_MASK))
+            /* Initiate the transfer by writing as many bytes as we can */
+            while((!(U${UART_INSTANCE_NUM}STA & _U${UART_INSTANCE_NUM}STA_UTXBF_MASK)) && (${UART_INSTANCE_NAME?lower_case}Obj.txSize > ${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize) )
             {
-                U${UART_INSTANCE_NUM}TXREG = *lBuffer;
-                ${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize++;
+                U${UART_INSTANCE_NUM}TXREG = ${UART_INSTANCE_NAME?lower_case}Obj.txBuffer[${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize++];
             }
 
             ${UART_TX_IEC_REG}SET = _${UART_TX_IEC_REG}_U${UART_INSTANCE_NUM}TXIE_MASK;
@@ -404,19 +403,19 @@ size_t ${UART_INSTANCE_NAME}_ReadCountGet( void )
 bool ${UART_INSTANCE_NAME}_ReadAbort(void)
 {
     if (${UART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus == true)
-    {        
+    {
         /* Disable the fault interrupt */
-		${UART_FAULT_IEC_REG}CLR = _${UART_FAULT_IEC_REG}_U${UART_INSTANCE_NUM}EIE_MASK;
-		
-		/* Disable the receive interrupt */
-		${UART_RX_IEC_REG}CLR = _${UART_RX_IEC_REG}_U${UART_INSTANCE_NUM}RXIE_MASK;
-        
-        ${UART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus = false;                                
-        
-		/* If required application should read the num bytes processed prior to calling the read abort API */
+        ${UART_FAULT_IEC_REG}CLR = _${UART_FAULT_IEC_REG}_U${UART_INSTANCE_NUM}EIE_MASK;
+
+        /* Disable the receive interrupt */
+        ${UART_RX_IEC_REG}CLR = _${UART_RX_IEC_REG}_U${UART_INSTANCE_NUM}RXIE_MASK;
+
+        ${UART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus = false;
+
+        /* If required application should read the num bytes processed prior to calling the read abort API */
         ${UART_INSTANCE_NAME?lower_case}Obj.rxSize = ${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize = 0;
     }
-    
+
     return true;
 }
 
@@ -466,6 +465,7 @@ void ${UART_INSTANCE_NAME}_RX_InterruptHandler (void)
 {
     if(${UART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus == true)
     {
+<#if (core.DEVICE_FAMILY?? && core.DEVICE_FAMILY == "DS60001402") || (__PROCESSOR?contains("PIC32MZ") && __PROCESSOR?contains("W"))>
         /* Clear ${UART_INSTANCE_NAME} RX Interrupt flag */
         ${UART_RX_IFS_REG}CLR = _${UART_RX_IFS_REG}_U${UART_INSTANCE_NUM}RXIF_MASK;
 
@@ -473,6 +473,16 @@ void ${UART_INSTANCE_NAME}_RX_InterruptHandler (void)
         {
             ${UART_INSTANCE_NAME?lower_case}Obj.rxBuffer[${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize++] = (uint8_t )(U${UART_INSTANCE_NUM}RXREG);
         }
+<#else>
+        while((_U${UART_INSTANCE_NUM}STA_URXDA_MASK == (U${UART_INSTANCE_NUM}STA & _U${UART_INSTANCE_NUM}STA_URXDA_MASK)) && (${UART_INSTANCE_NAME?lower_case}Obj.rxSize > ${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize) )
+        {
+            ${UART_INSTANCE_NAME?lower_case}Obj.rxBuffer[${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize++] = (uint8_t )(U${UART_INSTANCE_NUM}RXREG);
+        }
+
+        /* Clear ${UART_INSTANCE_NAME} RX Interrupt flag */
+        ${UART_RX_IFS_REG}CLR = _${UART_RX_IFS_REG}_U${UART_INSTANCE_NUM}RXIF_MASK;
+</#if>
+
 
         /* Check if the buffer is done */
         if(${UART_INSTANCE_NAME?lower_case}Obj.rxProcessedSize >= ${UART_INSTANCE_NAME?lower_case}Obj.rxSize)
@@ -480,10 +490,10 @@ void ${UART_INSTANCE_NAME}_RX_InterruptHandler (void)
             ${UART_INSTANCE_NAME?lower_case}Obj.rxBusyStatus = false;
 
             /* Disable the fault interrupt */
-			${UART_FAULT_IEC_REG}CLR = _${UART_FAULT_IEC_REG}_U${UART_INSTANCE_NUM}EIE_MASK;
-			
-			/* Disable the receive interrupt */
-			${UART_RX_IEC_REG}CLR = _${UART_RX_IEC_REG}_U${UART_INSTANCE_NUM}RXIE_MASK;
+            ${UART_FAULT_IEC_REG}CLR = _${UART_FAULT_IEC_REG}_U${UART_INSTANCE_NUM}EIE_MASK;
+
+            /* Disable the receive interrupt */
+            ${UART_RX_IEC_REG}CLR = _${UART_RX_IEC_REG}_U${UART_INSTANCE_NUM}RXIE_MASK;
 
             if(${UART_INSTANCE_NAME?lower_case}Obj.rxCallback != NULL)
             {
@@ -506,6 +516,7 @@ void ${UART_INSTANCE_NAME}_TX_InterruptHandler (void)
 {
     if(${UART_INSTANCE_NAME?lower_case}Obj.txBusyStatus == true)
     {
+<#if (core.DEVICE_FAMILY?? && core.DEVICE_FAMILY == "DS60001402") || (__PROCESSOR?contains("PIC32MZ") && __PROCESSOR?contains("W"))>
         /* Clear ${UART_INSTANCE_NAME}TX Interrupt flag */
         ${UART_TX_IFS_REG}CLR = _${UART_TX_IFS_REG}_U${UART_INSTANCE_NUM}TXIF_MASK;
 
@@ -513,6 +524,16 @@ void ${UART_INSTANCE_NAME}_TX_InterruptHandler (void)
         {
             U${UART_INSTANCE_NUM}TXREG = ${UART_INSTANCE_NAME?lower_case}Obj.txBuffer[${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize++];
         }
+
+<#else>
+        while((!(U${UART_INSTANCE_NUM}STA & _U${UART_INSTANCE_NUM}STA_UTXBF_MASK)) && (${UART_INSTANCE_NAME?lower_case}Obj.txSize > ${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize) )
+        {
+            U${UART_INSTANCE_NUM}TXREG = ${UART_INSTANCE_NAME?lower_case}Obj.txBuffer[${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize++];
+        }
+
+        /* Clear ${UART_INSTANCE_NAME}TX Interrupt flag */
+        ${UART_TX_IFS_REG}CLR = _${UART_TX_IFS_REG}_U${UART_INSTANCE_NUM}TXIF_MASK;
+</#if>
 
         /* Check if the buffer is done */
         if(${UART_INSTANCE_NAME?lower_case}Obj.txProcessedSize >= ${UART_INSTANCE_NAME?lower_case}Obj.txSize)
