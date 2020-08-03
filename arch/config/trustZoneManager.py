@@ -73,6 +73,10 @@ for key, value in sorted(fuseMapSymbol.items(), key = lambda arg:arg[0].split("_
         if ((key.startswith("NONSEC") and key.split("_")[1] in mixSecurePeripheralList) or
             (key.startswith("NONSEC") and key.split("_")[1] in systemResourcesList)):
             peripheralIsNonSecure.setReadOnly(True)
+        if key.startswith("NONSEC") and key.split("_")[1] == "DSU":
+            peripheralIsNonSecure.setDefaultValue(True)
+            peripheralIsNonSecure.setReadOnly(True)
+            Database.setSymbolValue("core", fuseMapSymbol[key], 1)
 peripheralList.setTarget("core.NULL_LIST")
 
 fuseUpdateCallback = coreComponent.createBooleanSymbol("DUMMY_SYMBOL_CALLBACK", None)
