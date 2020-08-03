@@ -129,6 +129,8 @@ for key in memoryFuseMaxValue.keys():
     asSizeSymbol.setLabel(memoryFuseMaxValue[key][2] + " size")
     for val in range(0, (memoryFuseMaxValue[key][0] + 1)):
         size = val * memoryGranularity[key]
+        if key == "IDAU_DS" and size > maxDataflashSize.getValue():
+            break
         sizeString = str(size) + " Bytes"
         asSizeSymbol.addKey(sizeString, str(hex(int(size))), '{:,}'.format(size) + " Bytes")
     asSizeSymbol.setDefaultValue(memoryFuseMaxValue[key][1])
