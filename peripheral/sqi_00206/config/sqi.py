@@ -22,6 +22,28 @@
 *****************************************************************************"""
 
 global sqiInstanceName
+global sqiLaneMode
+global sqiFlashStatusCheck
+
+laneMode = ["SINGLE", "QUAD"]
+
+def handleMessage(messageID, args):
+    global sqiLaneMode
+    global sqiFlashStatusCheck
+
+    result_dict = {}
+
+    if (messageID == "SET_SQI_LANE_MODE"):
+        if (args.get("isReadOnly") != None):
+            sqiLaneMode.setReadOnly(args["isReadOnly"])
+        if (args.get("laneMode") != None):
+            sqiLaneMode.setValue(args["laneMode"])
+
+    if (messageID == "SET_SQI_FLASH_STATUS_CHECK"):
+        if (args.get("isReadOnly") != None):
+            sqiFlashStatusCheck.setReadOnly(args["isReadOnly"])
+
+    return result_dict
 
 def calculateSqiClkFreq(sqiClkDiv, refclk2_freq):
     sqiClkFreq = refclk2_freq
@@ -45,6 +67,12 @@ def setClkDivComment(symbol, event):
 
 def setClockPhase(symbol, event):
     symbol.setValue(event["value"], 1)
+
+def setLaneMode(symbol, event):
+    if (event["id"] == "SQI_FLASH_STATUS_CHECK"):
+        symbol.setVisible(event["value"])
+    elif (event["id"] == "SQI_LANE_MODE"):
+        symbol.setValue(event["value"])
 
 def setFlashStatusCheck(symbol, event):
     symbol.setVisible(event["value"])
@@ -113,6 +141,8 @@ def instantiateComponent(sqiComponent):
     global sqiInterruptHandler
     global sqiInterruptVectorUpdate
     global sqiInterruptEnable
+    global sqiLaneMode
+    global sqiFlashStatusCheck
 
     sqiInstanceName = sqiComponent.createStringSymbol("SQI_INSTANCE_NAME", None)
     sqiInstanceName.setVisible(False)
@@ -125,6 +155,10 @@ def instantiateComponent(sqiComponent):
 
     sqiMenu = sqiComponent.createMenuSymbol("SQI", None)
     sqiMenu.setLabel("Hardware Settings ")
+
+    sqiLaneMode = sqiComponent.createComboSymbol("SQI_LANE_MODE", sqiMenu, laneMode)
+    sqiLaneMode.setLabel("SQI Lane Mode")
+    sqiLaneMode.setDefaultValue("QUAD")
 
     sqiCSEN = sqiComponent.createKeyValueSetSymbol("SQI_CSEN", sqiMenu)
     sqiCSEN.setLabel("Chip Select Output Enable Bits")
@@ -254,11 +288,12 @@ def instantiateComponent(sqiComponent):
     sqiStatBytes.setVisible(sqiFlashStatusCheck.getValue())
     sqiStatBytes.setDependencies(setFlashStatusCheck, ["SQI_FLASH_STATUS_CHECK"])
 
-    sqiStatType = sqiComponent.createComboSymbol("SQI_STATTYPE", sqiFlashStatusCheck, ["SINGLE", "DUAL", "QUAD"])
+    sqiStatType = sqiComponent.createComboSymbol("SQI_STATTYPE", sqiFlashStatusCheck, laneMode)
     sqiStatType.setLabel("Status Command/Read Lane Mode")
-    sqiStatType.setDefaultValue("QUAD")
+    sqiStatType.setDefaultValue(sqiLaneMode.getValue())
     sqiStatType.setVisible(sqiFlashStatusCheck.getValue())
-    sqiStatType.setDependencies(setFlashStatusCheck, ["SQI_FLASH_STATUS_CHECK"])
+    sqiStatType.setReadOnly(True)
+    sqiStatType.setDependencies(setLaneMode, ["SQI_FLASH_STATUS_CHECK", "SQI_LANE_MODE"])
 
     sqiStatPos = sqiComponent.createKeyValueSetSymbol("SQI_STATPOS", sqiFlashStatusCheck)
     sqiStatPos.setLabel("Status Register Busy Bit Position")
