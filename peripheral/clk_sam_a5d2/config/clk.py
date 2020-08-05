@@ -515,7 +515,10 @@ def update_uart_clock_frequency(symbol, event):
     clock_source = Database.getSymbolValue(uart_instance.lower(), "UART_CLK_SRC")
     # peripheral clock
     if clock_source == 0:
-        symbol.setValue(Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY"), 2)
+        if Database.getSymbolValue("core", uart_instance + "_CLOCK_ENABLE"):
+            symbol.setValue(Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY"))
+        else:
+            symbol.setValue(0)
     #Generic clock
     elif clock_source == 1:
         symbol.setValue(Database.getSymbolValue("core", uart_instance + "_GENERIC_CLOCK_FREQUENCY"), 2)
@@ -1457,7 +1460,8 @@ def create_uart_clock_frequency_symbol(instance_name, clock_comp, clk_menu):
     uart_clock_freq_sym.setDefaultValue(Database.getSymbolValue("core", "PCLOCK_LS_CLOCK_FREQUENCY"))
     uart_clock_freq_sym.setDependencies(update_uart_clock_frequency, ["PCLOCK_LS_CLOCK_FREQUENCY",
                                                                       instance_name + "_GENERIC_CLOCK_FREQUENCY",
-                                                                      instance_name.lower() + ".UART_CLK_SRC"])
+                                                                      instance_name.lower() + ".UART_CLK_SRC",
+                                                                      instance_name + "_CLOCK_ENABLE"])
 
 
 global create_flexcom_clock_frequency_symbol
