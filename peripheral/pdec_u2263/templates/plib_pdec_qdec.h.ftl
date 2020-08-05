@@ -98,7 +98,7 @@ void ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}Start( void );
 
 void ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}Stop( void );
 
-int16_t ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}PositionGet( void );
+uint16_t ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}PositionGet( void );
 
 uint16_t ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}RevolutionsGet( void );
 

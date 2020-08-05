@@ -85,6 +85,9 @@ def pdecRevolutionCalc(symbol, event):
 def pdecMaskCalculate(symbol, event):
     symbol.setValue(pow(2, event["value"]) - 1)
 
+def pdecRevMaskCalculate(symbol, event):
+    symbol.setValue(pow(2, 16) - pow(2, event["value"]))
+
 def pdecOptionVisible(symbol, event):
     if(event["id"] == "PDEC_CTRLA_ANGULAR"):
         symbol.setMax(pow(2, event["value"]) - 1)
@@ -589,8 +592,8 @@ def instantiateComponent(pdecComponent):
 
     pdecSym_CTRLA_REVOLUTION_MASK = pdecComponent.createHexSymbol("PDEC_CTRLA_REVOLUTION_MASK", pdecSym_QDEC_MENU)
     pdecSym_CTRLA_REVOLUTION_MASK.setVisible(False)
-    pdecSym_CTRLA_REVOLUTION_MASK.setDefaultValue(pow(2, pdecSym_CTRLA_REVOLUTION.getValue()) - 1)
-    pdecSym_CTRLA_REVOLUTION_MASK.setDependencies(pdecMaskCalculate, ["PDEC_CTRLA_REVOLUTION"])
+    pdecSym_CTRLA_REVOLUTION_MASK.setDefaultValue(pow(2, 16) - pow(2, pdecSym_CTRLA_ANGULAR.getValue()))
+    pdecSym_CTRLA_REVOLUTION_MASK.setDependencies(pdecRevMaskCalculate, ["PDEC_CTRLA_ANGULAR"])
 
     pdecSym_CTRLA_PEREN = pdecComponent.createBooleanSymbol("PDEC_CTRLA_PEREN", pdecSym_QDEC_MENU)
     pdecSym_CTRLA_PEREN.setLabel("Enable Period Control")

@@ -149,7 +149,7 @@ void ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}Stop( void )
 }
 
 /* Read the position */
-int16_t ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}PositionGet( void )
+uint16_t ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}PositionGet( void )
 {
     ${PDEC_INSTANCE_NAME}_REGS->PDEC_CTRLBSET = PDEC_CTRLBSET_CMD_READSYNC;
     while(${PDEC_INSTANCE_NAME}_REGS->PDEC_SYNCBUSY)
@@ -160,7 +160,7 @@ int16_t ${PDEC_INSTANCE_NAME}_${PDEC_CTRLA_MODE}PositionGet( void )
     {
         /* Wait for CMD to become zero */
     }
-    return (int16_t)${PDEC_INSTANCE_NAME}_REGS->PDEC_COUNT;
+    return (uint16_t)${PDEC_INSTANCE_NAME}_REGS->PDEC_COUNT;
 }
 
 /* Read the number of revolutions */
