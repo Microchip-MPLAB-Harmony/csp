@@ -81,6 +81,13 @@ def dependencyStatus(symbol, event):
     if (Database.getSymbolValue(uartInstanceName.getValue().lower(), "USART_INTERRUPT_MODE") == True):
         symbol.setVisible(event["value"])
 
+def clockWarningVisible(symbol, event):
+
+    if event["value"] == 0:
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+
 # Calculates BRG value
 def baudRateCalc(clk, baud):
 
@@ -377,7 +384,7 @@ def instantiateComponent(uartComponent):
     uartSymClkEnComment = uartComponent.createCommentSymbol("UART_CLK_ENABLE_COMMENT", None)
     uartSymClkEnComment.setVisible(False)
     uartSymClkEnComment.setLabel("Warning!!! UART Peripheral Clock is Disabled in Clock Manager")
-    uartSymClkEnComment.setDependencies(dependencyStatus, ["core." + uartInstanceName.getValue() + "_CLOCK_ENABLE"])
+    uartSymClkEnComment.setDependencies(clockWarningVisible, ["core." + uartInstanceName.getValue() + "_CLOCK_FREQUENCY"])
 
     uartSymIntEnComment = uartComponent.createCommentSymbol("UART_NVIC_ENABLE_COMMENT", None)
     uartSymIntEnComment.setVisible(False)
