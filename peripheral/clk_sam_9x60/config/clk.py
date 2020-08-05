@@ -278,7 +278,7 @@ def update_sdmmc_clock_frequency(symbol, event):
 
 def update_clk_generators(symbol, event):
     ''' Allow users to edit the generator clock symbols only when the generator
-        clock code generation is enabled 
+        clock code generation is enabled
     '''
     gen_clk_sym_name_list = symbol.getValues()
     for gen_clk_sym_name in reversed(gen_clk_sym_name_list):
@@ -308,7 +308,10 @@ def generic_gclk_update_freq(symbol, event):
     periph_css = Database.getSymbolValue(instance_name.lower(), gclk_dependency_map[instance_name])
 
     if periph_css == None or periph_css == 0:
-        symbol.setValue(mck.getValue(), 0)
+        if Database.getSymbolValue("core", instance_name + "_CLOCK_ENABLE"):
+            symbol.setValue(mck.getValue())
+        else:
+            symbol.setValue(0)
     else:
         symbol.setValue(gclk.getValue(), 0)
 
@@ -323,7 +326,7 @@ gclk_update_map = {
     "DBGU" : generic_gclk_update_freq
 }
 
-#List symbol to hold the names of the symbol which needs to be activated if the 
+#List symbol to hold the names of the symbol which needs to be activated if the
 # code generation for the clock generators are enabled
 generator_symbols_list = coreComponent.createListEntrySymbol("CLK_GENERATOR_SYM_LIST", None)
 
@@ -847,7 +850,7 @@ for module_node in peripherals_node.getChildren():
             else:
                 pcr_freq.setDependencies(gclk_update_map[module_node.getAttribute("name")],
                                          ['MCK_FREQUENCY', instance_name + '_GCLK_FREQUENCY',
-                                          instance_name.lower() + "." + gclk_dependency_map[instance_name]])
+                                          instance_name.lower() + "." + gclk_dependency_map[instance_name], instance_name + "_CLOCK_ENABLE"])
 
 
 #Memory controllers all share one clock id 49
