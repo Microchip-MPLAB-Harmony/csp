@@ -5,10 +5,10 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_spi_common.h
+    plib_spi_master_common.h
 
   Summary:
-    SPI PLIB Common Header File
+    SPI PLIB Master Common Header File
 
   Description:
     This file has prototype of all the interfaces which are common for all the
@@ -39,8 +39,8 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
-#ifndef PLIB_SPI_COMMON_H
-#define PLIB_SPI_COMMON_H
+#ifndef PLIB_SPI_MASTER_COMMON_H
+#define PLIB_SPI_MASTER_COMMON_H
 
 #include <stdint.h>
 #include <stddef.h>
@@ -126,4 +126,4 @@ typedef struct
 
 #endif
 
-#endif // PLIB_SPI_COMMON_H
+#endif // PLIB_SPI_MASTER_COMMON_H

@@ -5,10 +5,10 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_${SPI_INSTANCE_NAME?lower_case}.c
+    plib_${SPI_INSTANCE_NAME?lower_case}_master.c
 
   Summary:
-    ${SPI_INSTANCE_NAME} Source File
+    ${SPI_INSTANCE_NAME} Master Source File
 
   Description:
     This file has implementation of all the interfaces provided for particular
@@ -39,7 +39,7 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
-#include "plib_${SPI_INSTANCE_NAME?lower_case}.h"
+#include "plib_${SPI_INSTANCE_NAME?lower_case}_master.h"
 
 // *****************************************************************************
 // *****************************************************************************

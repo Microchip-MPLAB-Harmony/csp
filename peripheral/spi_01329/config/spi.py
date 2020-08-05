@@ -20,6 +20,15 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
+
+global sort_alphanumeric
+
+def sort_alphanumeric(l):
+    import re
+    convert = lambda text: int(text) if text.isdigit() else text.lower()
+    alphanum_key = lambda key: [ convert(c) for c in re.split('([0-9]+)', key) ]
+    return sorted(l, key = alphanum_key)
+
 def handleMessage(messageID, args):
     global spiSym_SPICON_MSTEN
     global spiSym_SPICON_MSSEN
@@ -214,6 +223,27 @@ def showMasterDependencies(symbol, event):
     else:
         symbol.setVisible(False)
 
+def showSlaveDependencies(symbol, event):
+    if event["symbol"].getKey(event["value"]) == "Slave mode":
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+
+def spiMasterModeFileGeneration(symbol, event):
+    symbol.setEnabled(event["symbol"].getKey(event["value"]) == "Master mode")
+
+def spiSlaveModeFileGeneration(symbol, event):
+    symbol.setEnabled(event["symbol"].getKey(event["value"]) == "Slave mode")
+
+def updateSPISlaveBusyPinVisibility(symbol, event):
+
+    spiMode = event["source"].getSymbolByID("SPI_MSTR_MODE_EN").getKey(event["value"])
+    busyPinEnabled = event["source"].getSymbolByID("SPIS_USE_BUSY_PIN").getValue() == True
+    symbol.setVisible(spiMode == "Slave mode" and busyPinEnabled == True)
+
+def updateIntReadOnlyAttr(symbol, event):
+    symbol.setReadOnly(event["symbol"].getKey(event["value"]) == "Slave mode")
+
 def calculateBRGValue(clkfreq, baudRate):
 
     t_brg = 0
@@ -342,12 +372,15 @@ def instantiateComponent(spiComponent):
 
     spiValGrp_SPIxCON_SMP = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/value-group@[name="' + spiInstanceName.getValue() + 'CON__SMP"]')
 
+    spiValGrp_SPIxCON2_SPIROVEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/value-group@[name="' + spiInstanceName.getValue() + 'CON2__SPIROVEN"]')
+
     #Clock enable
     Database.setSymbolValue("core", spiInstanceName.getValue() + "_CLOCK_ENABLE", True, 1)
 
     spiSymInterruptMode = spiComponent.createBooleanSymbol("SPI_INTERRUPT_MODE", None)
     spiSymInterruptMode.setLabel("Enable Interrrupts ?")
     spiSymInterruptMode.setDefaultValue(True)
+    spiSymInterruptMode.setDependencies(updateIntReadOnlyAttr, ["SPI_MSTR_MODE_EN"])
 
     spiIrq = "SPI_" + spiInstanceNum.getValue()
     spiVectorNum = getVectorIndex(spiIrq)
@@ -471,7 +504,7 @@ def instantiateComponent(spiComponent):
     spiSym_SPICON_MSTEN = spiComponent.createKeyValueSetSymbol("SPI_MSTR_MODE_EN", None)
     spiSym_SPICON_MSTEN.setLabel(spiBitField_SPIxCON_MSTEN.getAttribute("caption"))
     spiSym_SPICON_MSTEN.setDefaultValue(0)
-    spiSym_SPICON_MSTEN.setReadOnly(True)
+    spiSym_SPICON_MSTEN.setReadOnly(False)
     spiSym_SPICON_MSTEN.setOutputMode( "Value" )
     spiSym_SPICON_MSTEN.setDisplayMode( "Description" )
     for ii in msten_names:
@@ -508,6 +541,7 @@ def instantiateComponent(spiComponent):
     spiSym_SPICON_SMP.setDisplayMode( "Description" )
     for ii in smp_names:
         spiSym_SPICON_SMP.addKey( ii['key'],ii['value'], ii['desc'] )
+    spiSym_SPICON_SMP.setDependencies(showMasterDependencies, ["SPI_MSTR_MODE_EN"])
 
     ## Slave slect pin enable bit
     ssen_names = []
@@ -519,6 +553,7 @@ def instantiateComponent(spiComponent):
     spiSym_SPICON_MSSEN.setDisplayMode( "Description" )
     for ii in ssen_names:
         spiSym_SPICON_MSSEN.addKey( ii['key'],ii['value'], ii['desc'] )
+    spiSym_SPICON_MSSEN.setDependencies(showMasterDependencies, ["SPI_MSTR_MODE_EN"])
 
     ## SPI data width(Mode)
     spiSym_SPICON_MODE = spiComponent.createKeyValueSetSymbol( "SPI_SPICON_MODE",None)
@@ -530,7 +565,7 @@ def instantiateComponent(spiComponent):
     spiSym_SPICON_MODE.addKey( "32-bit", "2", "32-bit")
     spiSym_SPICON_MODE.addKey( "16-bit", "1", "16-bit")
     spiSym_SPICON_MODE.addKey( "8-bit", "0", "8-bit")
-	
+
     ## SPI Master clock
     msclk_names = []
     _get_bitfield_names(spiValGrp_SPIxCON_MCLKSEL, msclk_names)
@@ -542,6 +577,7 @@ def instantiateComponent(spiComponent):
     spiSym_SPIxCON_MCLKSEL.setDisplayMode( "Description" )
     for ii in msclk_names:
         spiSym_SPIxCON_MCLKSEL.addKey( ii['key'],ii['value'], ii['desc'] )
+    spiSym_SPIxCON_MCLKSEL.setDependencies(showMasterDependencies, ["SPI_MSTR_MODE_EN"])
 
     spiSym_Baud_Rate = spiComponent.createIntegerSymbol("SPI_BAUD_RATE", None)
     spiSym_Baud_Rate.setLabel("Baud Rate in Hz")
@@ -585,6 +621,98 @@ def instantiateComponent(spiComponent):
     spiSymClockModeComment.setLabel("***SPI Mode 0 Selected***")
     spiSymClockModeComment.setDependencies(ClockModeInfo, ["SPI_SPICON_CLK_POL", "SPI_SPICON_CLK_PH"])
 
+    # SPIS_TX_BUFFER_SIZE
+    spisSym_TXBuffer_Size = spiComponent.createIntegerSymbol("SPIS_TX_BUFFER_SIZE", None)
+    spisSym_TXBuffer_Size.setLabel("TX Buffer Size (in bytes)")
+    spisSym_TXBuffer_Size.setMin(0)
+    spisSym_TXBuffer_Size.setMax(65535)
+    spisSym_TXBuffer_Size.setDefaultValue(256)
+    spisSym_TXBuffer_Size.setVisible(False)
+    spisSym_TXBuffer_Size.setDependencies(showSlaveDependencies, ["SPI_MSTR_MODE_EN"])
+
+    # SPIS_RX_BUFFER_SIZE
+    spisSym_RXBuffer_Size = spiComponent.createIntegerSymbol("SPIS_RX_BUFFER_SIZE", None)
+    spisSym_RXBuffer_Size.setLabel("RX Buffer Size (in bytes)")
+    spisSym_RXBuffer_Size.setMin(0)
+    spisSym_RXBuffer_Size.setMax(65535)
+    spisSym_RXBuffer_Size.setDefaultValue(256)
+    spisSym_RXBuffer_Size.setVisible(False)
+    spisSym_RXBuffer_Size.setDependencies(showSlaveDependencies, ["SPI_MSTR_MODE_EN"])
+
+    # SPIS_CS_PIN
+    spisSymCSPin = spiComponent.createKeyValueSetSymbol("SPIS_CS_PIN", None)
+    spisSymCSPin.setVisible(False)
+    spisSymCSPin.setLabel("Chip Select Pin")
+    spisSymCSPin.setOutputMode("Key")
+    spisSymCSPin.setDisplayMode("Description")
+    spisSymCSPin.setDependencies(showSlaveDependencies, ["SPI_MSTR_MODE_EN"])
+
+    # SPIS_CS_PIN_LOGIC_LEVEL
+    spisSymCSPinLogicLevel = spiComponent.createKeyValueSetSymbol("SPIS_CS_PIN_LOGIC_LEVEL", spisSymCSPin)
+    spisSymCSPinLogicLevel.setLabel("Chip Select Pin Logic Level")
+    spisSymCSPinLogicLevel.setVisible(False)
+    spisSymCSPinLogicLevel.addKey("ACTIVE_LOW", "0", "Active Low")
+    spisSymCSPinLogicLevel.addKey("ACTIVE_HIGH", "1", "Active High")
+    spisSymCSPinLogicLevel.setDefaultValue(0)
+    spisSymCSPinLogicLevel.setOutputMode("Key")
+    spisSymCSPinLogicLevel.setDisplayMode("Description")
+    spisSymCSPinLogicLevel.setVisible(False)
+    spisSymCSPinLogicLevel.setDependencies(showSlaveDependencies, ["SPI_MSTR_MODE_EN"])
+
+    # SPIS_CS_PIN_CONFIG_COMMENT
+    spisSymBusyPinConfigComment = spiComponent.createCommentSymbol("SPIS_CS_PIN_CONFIG_COMMENT", spisSymCSPin)
+    spisSymBusyPinConfigComment.setVisible(False)
+    spisSymBusyPinConfigComment.setLabel("***Configure CS pin as GPIO input and enable Change Notification in Pin Manager***")
+    spisSymBusyPinConfigComment.setDependencies(showSlaveDependencies, ["SPI_MSTR_MODE_EN"])
+
+    # SPIS_USE_BUSY_PIN
+    spisSymUseBusyPin = spiComponent.createBooleanSymbol("SPIS_USE_BUSY_PIN", None)
+    spisSymUseBusyPin.setLabel("Use GPIO pin as Busy signal?")
+    spisSymUseBusyPin.setDefaultValue(True)
+    spisSymUseBusyPin.setVisible(False)
+    spisSymUseBusyPin.setDependencies(showSlaveDependencies, ["SPI_MSTR_MODE_EN"])
+
+    # SPIS_BUSY_PIN
+    spisSymBusyPin = spiComponent.createKeyValueSetSymbol("SPIS_BUSY_PIN", spisSymUseBusyPin)
+    spisSymBusyPin.setVisible(False)
+    spisSymBusyPin.setLabel("Slave Busy Pin")
+    spisSymBusyPin.setOutputMode("Key")
+    spisSymBusyPin.setDisplayMode("Description")
+    spisSymBusyPin.setDependencies(updateSPISlaveBusyPinVisibility, ["SPI_MSTR_MODE_EN", "SPIS_USE_BUSY_PIN"])
+
+    availablePinDictionary = {}
+
+    # Send message to core to get available pins
+    availablePinDictionary = Database.sendMessage("core", "PIN_LIST", availablePinDictionary)
+
+    for pad in sort_alphanumeric(availablePinDictionary.values()):
+        key = pad
+        value = list(availablePinDictionary.keys())[list(availablePinDictionary.values()).index(pad)]
+        description = pad
+        spisSymBusyPin.addKey(key, value, description)
+        spisSymCSPin.addKey(key, value, description)
+
+    # SPIS_BUSY_PIN_LOGIC_LEVEL
+    spisSymBusyPinLogicLevel = spiComponent.createKeyValueSetSymbol("SPIS_BUSY_PIN_LOGIC_LEVEL", spisSymUseBusyPin)
+    spisSymBusyPinLogicLevel.setLabel("Slave Busy Pin Logic Level")
+    spisSymBusyPinLogicLevel.setVisible(False)
+    spisSymBusyPinLogicLevel.addKey("ACTIVE_LOW", "0", "Active Low")
+    spisSymBusyPinLogicLevel.addKey("ACTIVE_HIGH", "1", "Active High")
+    spisSymBusyPinLogicLevel.setDefaultValue(1)
+    spisSymBusyPinLogicLevel.setOutputMode("Key")
+    spisSymBusyPinLogicLevel.setDisplayMode("Description")
+    spisSymBusyPinLogicLevel.setDependencies(updateSPISlaveBusyPinVisibility, ["SPI_MSTR_MODE_EN", "SPIS_USE_BUSY_PIN"])
+
+    # SPIS_SLAVE_BUSY_PIN_CONFIG_COMMENT
+    spisSymBusyPinConfigComment = spiComponent.createCommentSymbol("SPIS_SLAVE_BUSY_PIN_CONFIG_COMMENT", spisSymUseBusyPin)
+    spisSymBusyPinConfigComment.setVisible(False)
+    spisSymBusyPinConfigComment.setLabel("***Configure Busy pin as GPIO Output in Pin Manager***")
+    spisSymBusyPinConfigComment.setDependencies(updateSPISlaveBusyPinVisibility, ["SPI_MSTR_MODE_EN", "SPIS_USE_BUSY_PIN"])
+
+    if spiValGrp_SPIxCON2_SPIROVEN != None:
+        spiCON2RegAvailable = spiComponent.createBooleanSymbol("SPI_CON2_SPIROVEN", None)
+        spiCON2RegAvailable.setDefaultValue(True)
+        spiCON2RegAvailable.setVisible(False)
     ############################################################################
     #### Dependency ####
     ############################################################################
@@ -662,31 +790,71 @@ def instantiateComponent(spiComponent):
 
     configName = Variables.get("__CONFIGURATION_NAME")
 
-    spiHeaderFile = spiComponent.createFileSymbol("SPI_COMMON_HEADER", None)
-    spiHeaderFile.setSourcePath("../peripheral/spi_01329/templates/plib_spi_common.h")
-    spiHeaderFile.setOutputName("plib_spi_common.h")
-    spiHeaderFile.setDestPath("peripheral/spi/")
-    spiHeaderFile.setProjectPath("config/" + configName + "/peripheral/spi/")
-    spiHeaderFile.setType("HEADER")
-    spiHeaderFile.setMarkup(False)
-    spiHeaderFile.setOverwrite(True)
+    # SPI Master mode files
+    spimCommonHeaderFile = spiComponent.createFileSymbol("SPI_COMMON_HEADER", None)
+    spimCommonHeaderFile.setSourcePath("../peripheral/spi_01329/templates/plib_spi_master_common.h")
+    spimCommonHeaderFile.setOutputName("plib_spi_master_common.h")
+    spimCommonHeaderFile.setDestPath("peripheral/spi/spi_master")
+    spimCommonHeaderFile.setProjectPath("config/" + configName + "/peripheral/spi/spi_master")
+    spimCommonHeaderFile.setType("HEADER")
+    spimCommonHeaderFile.setMarkup(False)
+    spimCommonHeaderFile.setOverwrite(True)
+    spimCommonHeaderFile.setEnabled(spiSym_SPICON_MSTEN.getSelectedKey() == "Master mode")
+    spimCommonHeaderFile.setDependencies(spiMasterModeFileGeneration, ["SPI_MSTR_MODE_EN"])
 
-    spiHeader1File = spiComponent.createFileSymbol("SPI_HEADER", None)
-    spiHeader1File.setSourcePath("../peripheral/spi_01329/templates/plib_spi.h.ftl")
-    spiHeader1File.setOutputName("plib_" + spiInstanceName.getValue().lower() + ".h")
-    spiHeader1File.setDestPath("/peripheral/spi/")
-    spiHeader1File.setProjectPath("config/" + configName +"/peripheral/spi/")
-    spiHeader1File.setType("HEADER")
-    spiHeader1File.setMarkup(True)
+    spimHeaderFile = spiComponent.createFileSymbol("SPI_HEADER", None)
+    spimHeaderFile.setSourcePath("../peripheral/spi_01329/templates/plib_spi_master.h.ftl")
+    spimHeaderFile.setOutputName("plib_" + spiInstanceName.getValue().lower() + "_master.h")
+    spimHeaderFile.setDestPath("/peripheral/spi/spi_master")
+    spimHeaderFile.setProjectPath("config/" + configName +"/peripheral/spi/spi_master")
+    spimHeaderFile.setType("HEADER")
+    spimHeaderFile.setMarkup(True)
+    spimHeaderFile.setEnabled(spiSym_SPICON_MSTEN.getSelectedKey() == "Master mode")
+    spimHeaderFile.setDependencies(spiMasterModeFileGeneration, ["SPI_MSTR_MODE_EN"])
 
-    spiSource1File = spiComponent.createFileSymbol("SPI_SOURCE", None)
-    spiSource1File.setSourcePath("../peripheral/spi_01329/templates/plib_spi.c.ftl")
-    spiSource1File.setOutputName("plib_" + spiInstanceName.getValue().lower() + ".c")
-    spiSource1File.setDestPath("/peripheral/spi/")
-    spiSource1File.setProjectPath("config/" + configName +"/peripheral/spi/")
-    spiSource1File.setType("SOURCE")
-    spiSource1File.setMarkup(True)
+    spimSourceFile = spiComponent.createFileSymbol("SPI_SOURCE", None)
+    spimSourceFile.setSourcePath("../peripheral/spi_01329/templates/plib_spi_master.c.ftl")
+    spimSourceFile.setOutputName("plib_" + spiInstanceName.getValue().lower() + "_master.c")
+    spimSourceFile.setDestPath("/peripheral/spi/spi_master")
+    spimSourceFile.setProjectPath("config/" + configName +"/peripheral/spi/spi_master")
+    spimSourceFile.setType("SOURCE")
+    spimSourceFile.setMarkup(True)
+    spimSourceFile.setEnabled(spiSym_SPICON_MSTEN.getSelectedKey() == "Master mode")
+    spimSourceFile.setDependencies(spiMasterModeFileGeneration, ["SPI_MSTR_MODE_EN"])
 
+    # SPI slave mode files
+    spisCommonHeaderFile = spiComponent.createFileSymbol("SPIS_COMMON_HEADER", None)
+    spisCommonHeaderFile.setSourcePath("../peripheral/spi_01329/templates/plib_spi_slave_common.h")
+    spisCommonHeaderFile.setOutputName("plib_spi_slave_common.h")
+    spisCommonHeaderFile.setDestPath("peripheral/spi/spi_slave")
+    spisCommonHeaderFile.setProjectPath("config/" + configName + "/peripheral/spi/spi_slave")
+    spisCommonHeaderFile.setType("HEADER")
+    spisCommonHeaderFile.setMarkup(False)
+    spisCommonHeaderFile.setOverwrite(True)
+    spisCommonHeaderFile.setEnabled(spiSym_SPICON_MSTEN.getSelectedKey() == "Slave mode")
+    spisCommonHeaderFile.setDependencies(spiSlaveModeFileGeneration, ["SPI_MSTR_MODE_EN"])
+
+    spisHeaderFile = spiComponent.createFileSymbol("SPIS_HEADER", None)
+    spisHeaderFile.setSourcePath("../peripheral/spi_01329/templates/plib_spi_slave.h.ftl")
+    spisHeaderFile.setOutputName("plib_" + spiInstanceName.getValue().lower() + "_slave.h")
+    spisHeaderFile.setDestPath("/peripheral/spi/spi_slave")
+    spisHeaderFile.setProjectPath("config/" + configName +"/peripheral/spi/spi_slave")
+    spisHeaderFile.setType("HEADER")
+    spisHeaderFile.setMarkup(True)
+    spisHeaderFile.setEnabled(spiSym_SPICON_MSTEN.getSelectedKey() == "Slave mode")
+    spisHeaderFile.setDependencies(spiSlaveModeFileGeneration, ["SPI_MSTR_MODE_EN"])
+
+    spisSourceFile = spiComponent.createFileSymbol("SPIS_SOURCE", None)
+    spisSourceFile.setSourcePath("../peripheral/spi_01329/templates/plib_spi_slave.c.ftl")
+    spisSourceFile.setOutputName("plib_" + spiInstanceName.getValue().lower() + "_slave.c")
+    spisSourceFile.setDestPath("/peripheral/spi/spi_slave")
+    spisSourceFile.setProjectPath("config/" + configName +"/peripheral/spi/spi_slave")
+    spisSourceFile.setType("SOURCE")
+    spisSourceFile.setMarkup(True)
+    spisSourceFile.setEnabled(spiSym_SPICON_MSTEN.getSelectedKey() == "Slave mode")
+    spisSourceFile.setDependencies(spiSlaveModeFileGeneration, ["SPI_MSTR_MODE_EN"])
+
+    # Common files
     spiSystemInitFile = spiComponent.createFileSymbol("SPI_INIT", None)
     spiSystemInitFile.setType("STRING")
     spiSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS")
