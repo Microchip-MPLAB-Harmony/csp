@@ -214,12 +214,28 @@ def updateInterruptPriorityforSRS(symbol, event):
     symbol.setValue(int(event["value"][-1]))
 
 def updateInterruptAttribute(symbol, event):
-    for i in range(1,8):
-        Database.setSymbolValue("core", "EVIC_PRIORITY_" + str(i) + "ATTRIBUTE", "SOFT", 1)
 
-    if event["value"] != 0:
-        Database.setSymbolValue("core", "EVIC_PRIORITY_" + str(event["value"]) + "ATTRIBUTE", "SRS", 1)
+    if event["id"] == "EVIC_SRS_ENABLE":
+        if event["value"] == False:
+            for i in range(1,8):
+                Database.setSymbolValue("core", "EVIC_PRIORITY_" + str(i) + "ATTRIBUTE", "AUTO", 1)
+        else:
+            for i in range(1,8):
+                Database.setSymbolValue("core", "EVIC_PRIORITY_" + str(i) + "ATTRIBUTE", "SOFT", 1)
+
+            currentPriority = Database.getSymbolValue("core", "EVIC_PRIORITY_FOR_SHADOW_SET")
+            if currentPriority != 0:
+                Database.setSymbolValue("core", "EVIC_PRIORITY_" + str(currentPriority) + "ATTRIBUTE", "SRS", 1)
+    else:
+        for i in range(1,8):
+            Database.setSymbolValue("core", "EVIC_PRIORITY_" + str(i) + "ATTRIBUTE", "SOFT", 1)
+
+        if event["value"] != 0:
+            Database.setSymbolValue("core", "EVIC_PRIORITY_" + str(event["value"]) + "ATTRIBUTE", "SRS", 1)
 		
+def updateShadowEnable(symbol, event):
+    symbol.setValue(event["value"] == "BareMetal")
+
 ################################################################################
 #### Component ####
 ################################################################################
@@ -247,6 +263,11 @@ if numOfShadowSet == 1: # For PIC32MX5XX/6XX/7XX series
     evicShadowRegMenu = coreComponent.createMenuSymbol("EVIC_SHADOW_REG_MENU", evicMenu)
     evicShadowRegMenu.setLabel("Shadow Register Set Configuration")
 
+    SRS_FeatureEnable = coreComponent.createBooleanSymbol("EVIC_SRS_ENABLE", evicShadowRegMenu)
+    SRS_FeatureEnable.setLabel("Enable Shadow Register Set Feature")
+    SRS_FeatureEnable.setDefaultValue(True)
+    SRS_FeatureEnable.setDependencies(updateShadowEnable, ["HarmonyCore.SELECT_RTOS"])
+
     SRS_MENU_COMMENT = coreComponent.createCommentSymbol("EVIC_SRS_COMMENT", evicShadowRegMenu)
     SRS_MENU_COMMENT.setLabel("**** Configure Shadow Register Set in DEVCFG3 Fuse Settings ****")
     SRS_MENU_COMMENT.setVisible(True)
@@ -266,7 +287,7 @@ if numOfShadowSet == 1: # For PIC32MX5XX/6XX/7XX series
         else:
             evicPriorityISR_Attribute.setDefaultValue("SOFT")
 
-    evicPriorityISR_Attribute.setDependencies(updateInterruptAttribute, ["EVIC_PRIORITY_FOR_SHADOW_SET"])
+    evicPriorityISR_Attribute.setDependencies(updateInterruptAttribute, ["EVIC_PRIORITY_FOR_SHADOW_SET", "EVIC_SRS_ENABLE"])
 ############################################# Shadow Register Setting End ############################################## 
 
 evicVectorMax = coreComponent.createIntegerSymbol("EVIC_VECTOR_MAX", evicMenu)
