@@ -111,7 +111,10 @@ def dependencyStatus(symbol, event):
 
 def clockWarningCb(symbol, event):
 
-    symbol.setVisible(not event["value"])
+    if event["value"] == 0:
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
 
 # Calculates BRG value
 def baudRateCalc(clk, baud, overSamp):
@@ -696,7 +699,7 @@ def instantiateComponent(usartComponent):
     usartSymClkEnComment = usartComponent.createCommentSymbol("USART_CLK_ENABLE_COMMENT", None)
     usartSymClkEnComment.setVisible(False)
     usartSymClkEnComment.setLabel("Warning!!! USART Peripheral Clock is Disabled in Clock Manager")
-    usartSymClkEnComment.setDependencies(clockWarningCb, ["core." + usartInstanceName.getValue() + "_CLOCK_ENABLE"])
+    usartSymClkEnComment.setDependencies(clockWarningCb, ["core." + usartInstanceName.getValue() + "_CLOCK_FREQUENCY"])
 
     usartSymIntEnComment = usartComponent.createCommentSymbol("USART_NVIC_ENABLE_COMMENT", None)
     usartSymIntEnComment.setVisible(False)
