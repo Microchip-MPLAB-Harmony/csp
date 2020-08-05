@@ -78,7 +78,10 @@ def dependencyStatus(symbol, event):
         symbol.setVisible(event["value"])
 
 def clockWarningVisible(symbol, event):
-    symbol.setVisible(not event["value"])
+    if event["value"] == 0:
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
 
 # Calculates BRG value
 def baudRateCalc(clk, baud):
@@ -333,7 +336,7 @@ def instantiateComponent(dbguComponent):
     dbguSymClkEnComment = dbguComponent.createCommentSymbol("DBGU_CLK_ENABLE_COMMENT", None)
     dbguSymClkEnComment.setVisible(False)
     dbguSymClkEnComment.setLabel("Warning!!! DBGU Peripheral Clock is Disabled in Clock Manager")
-    dbguSymClkEnComment.setDependencies(clockWarningVisible, ["core." + dbguInstanceName.getValue() + "_CLOCK_ENABLE"])
+    dbguSymClkEnComment.setDependencies(clockWarningVisible, ["core." + dbguInstanceName.getValue() + "_CLOCK_FREQUENCY"])
 
     dbguSymIntEnComment = dbguComponent.createCommentSymbol("DBGU_INTERRUPT_ENABLE_COMMENT", None)
     dbguSymIntEnComment.setVisible(False)
