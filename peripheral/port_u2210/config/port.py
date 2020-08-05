@@ -202,7 +202,7 @@ def evsysControl(symbol, event):
     symbol.setValue(str(hex(evctrl)),2)
 
 def setupPortPinMux(portSym_PORT_PMUX_local, event):
-    global intPrePinMuxVal
+
     global prevID
     global prevVal
     global portPackage
@@ -213,43 +213,26 @@ def setupPortPinMux(portSym_PORT_PMUX_local, event):
         bitPosition = component.getSymbolValue( "PIN_" + str(event["id"].split("_")[1]) + "_PORT_PIN")
         peripheralFuncVal = 0
         if event["value"] not in peripheralFunctionality and event["value"] != "":
-
             prePinMuxVal = component.getSymbolValue("PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2))
             intPrePinMuxVal = int(prePinMuxVal,0)
 
             if ((bitPosition%2) == 0):
-                peripheralFuncVal = portPeripheralFunc.index(event["value"]) | ( int(prePinMuxVal,0) & int("0xf0",0) )
+                peripheralFuncVal = portPeripheralFunc.index(event["value"]) | ( intPrePinMuxVal & 0xf0 )
             else :
-                peripheralFuncVal = (portPeripheralFunc.index(event["value"]) << 4) | ( int(prePinMuxVal,0) & int("0x0f",0) )
+                peripheralFuncVal = (portPeripheralFunc.index(event["value"]) << 4) | ( intPrePinMuxVal & 0x0f )
 
             component.setSymbolValue("PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2), str(hex(peripheralFuncVal)), 1)
         else :
             pinMuxVal = component.getSymbolValue("PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2))
-            intPinMuxVal = int(pinMuxVal,0)
+            intPrePinMuxVal = int(pinMuxVal,0)
 
             if ((bitPosition%2) == 0):
-                intPrePinMuxVal &= int("0xf0",0)
+                intPrePinMuxVal &= 0xf0
             else :
-                intPrePinMuxVal &= int("0x0f",0)
+                intPrePinMuxVal &= 0x0f
 
             component.setSymbolValue("PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2), str(hex(intPrePinMuxVal)))
 
-            if event["id"] != prevID:
-                if intPinMuxVal == 0:
-                        intPinMuxVal = int("0x00",0)
-                else:
-                    if ((bitPosition%2) == 0):
-                        intPinMuxVal &= int("0xf0",0)
-                    else :
-                        intPinMuxVal &= int("0x0f",0)
-
-            component.setSymbolValue("PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2), str(hex(intPinMuxVal)))
-
-            if event["id"] == prevID and event["value"] != prevVal:
-                component.setSymbolValue("PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PMUX" + str(bitPosition/2), str(hex(intPrePinMuxVal)))
-
-            portPositionNodePin = ATDF.getNode("/avr-tools-device-file/pinouts/pinout@[name=\"" + str(package.get(portPackage.getValue())) + "\"]/pin@[position=\""+ str(event["id"].split("_")[1]) +"\"]")
-        
         if bitPosition < 10:
             bitPositionstr = "0" + str(bitPosition)
         else:
@@ -257,8 +240,6 @@ def setupPortPinMux(portSym_PORT_PMUX_local, event):
         padName = "P" + groupName + bitPositionstr
         component.setSymbolValue("PORT_GROUP_" + str(portGroupName.index(groupName)) + "_PAD_" + str(bitPosition) , padName)
 
-    prevID = event["id"]
-    prevVal = event["value"]
 
 def update_port_nonsec_mask(symbol, event):
     pinNum = event["id"].split("_IS_NON_SECURE")[0].split("PIN_")[1]
@@ -560,9 +541,6 @@ portPeripheralFunc = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"
 
 global group
 group = [0 for i in range(int(portModuleGC.getAttribute("count")))]
-
-global intPrePinMuxVal
-intPrePinMuxVal = 0x00
 
 global portPin
 portPin = []
