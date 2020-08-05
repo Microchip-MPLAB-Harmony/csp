@@ -200,6 +200,8 @@ def usartFreq(symbol, event):
             symbol.setValue(int(Database.getSymbolValue("core", "MASTER_CLOCK_FREQUENCY")) / 8, 1)
         else:
             symbol.setValue(int(Database.getSymbolValue("core", "SLCK_CLOCK_FREQUENCY")), 1)
+    else:
+        symbol.setValue(0)
 
 def i2sFreq(symbol, event):
 
