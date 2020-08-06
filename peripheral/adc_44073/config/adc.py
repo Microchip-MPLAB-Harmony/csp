@@ -334,8 +334,7 @@ def instantiateComponent(adcComponent):
 
     #Conversion time
     adcSym_CONV_TIME = adcComponent.createCommentSymbol("ADC_CONV_TIME", adcMenu)
-    defaultConvTime = ((2 * (adcSym_MR_PRESCAL.getValue() + 1)) * 21.0 * 1000000.0 * 1) / adcGetPeripheralClock()
-    adcSym_CONV_TIME.setLabel("**** Conversion Time is " + str(defaultConvTime) + " us ****")
+    adcSym_CONV_TIME.setLabel("**** Conversion Time is 0 us ****")
     adcSym_CONV_TIME.setDependencies(adcCalcConversionTime, ["ADC_MR_PRESCAL", "ADC_EMR_OSR_VALUE", "core." + adcInstanceName.getValue() + "_CLOCK_FREQUENCY"])
 
     #Result sign
@@ -386,7 +385,7 @@ def instantiateComponent(adcComponent):
     adcSym_TRIGGER_TIME.setLabel("Trigger Period (ms)")
     adcSym_TRIGGER_TIME.setDefaultValue(2)
     adcSym_TRIGGER_TIME.setMin(1)
-    adcSym_TRIGGER_TIME.setMax(int((65536 * 1000.0) / adcSym_Clock.getValue()))
+    adcSym_TRIGGER_TIME.setMax(int((65536 * 1000.0)))
     adcSym_TRIGGER_TIME.setVisible(False)
     adcSym_TRIGGER_TIME.setDependencies(adcTriggerTimeVisible, ["ADC_TRGR_MODE"])
 
