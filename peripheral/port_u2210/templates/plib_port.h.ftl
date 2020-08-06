@@ -64,7 +64,7 @@
 // Section: Data types and constants
 // *****************************************************************************
 // *****************************************************************************
-
+<#-- Generate Pin Macros for Port pins with Custom name -->
 <#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
     <#list 1..PORT_PIN_COUNT as i>
         <#assign functype = "PIN_" + i + "_FUNCTION_TYPE">
@@ -79,22 +79,24 @@
                 <#if .vars[funcname]?has_content>
                     <#if .vars[pinport]?has_content>
                         <#if .vars[pingroup]?has_content>
-                            
-                            <#lt>/*** Macros for ${.vars[funcname]} pin ***/                        
-                            <#if .vars[functype] == "GPIO">
-                                <#lt>#define ${.vars[funcname]}_Set()               (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_OUTSET = 1 << ${.vars[pinport]})
-                                <#lt>#define ${.vars[funcname]}_Clear()             (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_OUTCLR = 1 << ${.vars[pinport]})
-                                <#lt>#define ${.vars[funcname]}_Toggle()            (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_OUTTGL = 1 << ${.vars[pinport]})
-                                <#lt>#define ${.vars[funcname]}_OutputEnable()      (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_DIRSET = 1 << ${.vars[pinport]})
-                                <#lt>#define ${.vars[funcname]}_InputEnable()       (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_DIRCLR = 1 << ${.vars[pinport]})
+                            <#if !(.vars[functype]?starts_with("SWITCH_") | .vars[functype]?starts_with("LED_") | .vars[functype]?starts_with("VBUS_"))>
+
+                                <#lt>/*** Macros for ${.vars[funcname]} pin ***/
+                                <#if .vars[functype] == "GPIO">
+                                    <#lt>#define ${.vars[funcname]}_Set()               (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_OUTSET = 1 << ${.vars[pinport]})
+                                    <#lt>#define ${.vars[funcname]}_Clear()             (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_OUTCLR = 1 << ${.vars[pinport]})
+                                    <#lt>#define ${.vars[funcname]}_Toggle()            (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_OUTTGL = 1 << ${.vars[pinport]})
+                                    <#lt>#define ${.vars[funcname]}_OutputEnable()      (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_DIRSET = 1 << ${.vars[pinport]})
+                                    <#lt>#define ${.vars[funcname]}_InputEnable()       (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_DIRCLR = 1 << ${.vars[pinport]})
+                                </#if>
+                                <#lt>#define ${.vars[funcname]}_Get()               (((${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_IN >> ${.vars[pinport]})) & 0x01)
+                                <#lt>#define ${.vars[funcname]}_PIN                  PORT_PIN_${.vars[PORT_PIN_PAD]}
                             </#if>
-                            <#lt>#define ${.vars[funcname]}_Get()               (((${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_IN >> ${.vars[pinport]})) & 0x01)
-                            <#lt>#define ${.vars[funcname]}_PIN                  PORT_PIN_${.vars[PORT_PIN_PAD]}
                         </#if>
                     </#if>
                 </#if>
             </#if>
-        </#if>    
+        </#if>
     </#list>
 <#else>
     <#list 1..PORT_PIN_COUNT as i>
@@ -109,23 +111,25 @@
             <#if .vars[funcname]?has_content>
                 <#if .vars[pinport]?has_content>
                     <#if .vars[pingroup]?has_content>
-                        
-                        <#lt>/*** Macros for ${.vars[funcname]} pin ***/
-                        <#if .vars[functype] == "GPIO">
-                            <#lt>#define ${.vars[funcname]}_Set()               (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_OUTSET = 1 << ${.vars[pinport]})
-                            <#lt>#define ${.vars[funcname]}_Clear()             (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_OUTCLR = 1 << ${.vars[pinport]})
-                            <#lt>#define ${.vars[funcname]}_Toggle()            (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_OUTTGL = 1 << ${.vars[pinport]})
-                            <#lt>#define ${.vars[funcname]}_OutputEnable()      (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_DIRSET = 1 << ${.vars[pinport]})
-                            <#lt>#define ${.vars[funcname]}_InputEnable()       (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_DIRCLR = 1 << ${.vars[pinport]})
+                        <#if !(.vars[functype]?starts_with("SWITCH_") | .vars[functype]?starts_with("LED_") | .vars[functype]?starts_with("VBUS_"))>
+
+                            <#lt>/*** Macros for ${.vars[funcname]} pin ***/
+                            <#if .vars[functype] == "GPIO">
+                                <#lt>#define ${.vars[funcname]}_Set()               (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_OUTSET = 1 << ${.vars[pinport]})
+                                <#lt>#define ${.vars[funcname]}_Clear()             (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_OUTCLR = 1 << ${.vars[pinport]})
+                                <#lt>#define ${.vars[funcname]}_Toggle()            (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_OUTTGL = 1 << ${.vars[pinport]})
+                                <#lt>#define ${.vars[funcname]}_OutputEnable()      (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_DIRSET = 1 << ${.vars[pinport]})
+                                <#lt>#define ${.vars[funcname]}_InputEnable()       (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_DIRCLR = 1 << ${.vars[pinport]})
+                            </#if>
+                            <#lt>#define ${.vars[funcname]}_Get()               (((${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_IN >> ${.vars[pinport]})) & 0x01)
+                            <#lt>#define ${.vars[funcname]}_PIN                  PORT_PIN_${.vars[PORT_PIN_PAD]}
                         </#if>
-                        <#lt>#define ${.vars[funcname]}_Get()               (((${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_IN >> ${.vars[pinport]})) & 0x01)
-                        <#lt>#define ${.vars[funcname]}_PIN                  PORT_PIN_${.vars[PORT_PIN_PAD]}
                     </#if>
                 </#if>
             </#if>
-        </#if>   
+        </#if>
     </#list>
-</#if>    
+</#if>
 // *****************************************************************************
 /* PORT Group
 
