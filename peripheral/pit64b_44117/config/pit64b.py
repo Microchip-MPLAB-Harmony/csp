@@ -56,6 +56,8 @@ def instantiateComponent(pit64Component):
     instanceName.setVisible(False)
     instanceName.setDefaultValue(pit64Component.getID().upper())
 
+    Database.setSymbolValue("core", instanceName.getValue() + "_CLOCK_ENABLE", True)
+
     cont_node = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PIT64B"]/register-group@[name="PIT64B"]/register@[name="PIT64B_MR"]/bitfield@[name="CONT"]')
     cont = pit64Component.createBooleanSymbol("CONT", None)
     cont.setLabel(cont_node.getAttribute("name"))
@@ -127,8 +129,6 @@ def instantiateComponent(pit64Component):
     period_int.setDependencies(update_ints, ['PERIOD_INT', 'OVRE_INT', 'SECE_INT'])
     ovre_int.setDependencies(update_ints, ['PERIOD_INT', 'OVRE_INT', 'SECE_INT'])
     sece_int.setDependencies(update_ints, ['PERIOD_INT', 'OVRE_INT', 'SECE_INT'])
-
-    Database.setSymbolValue("core", instanceName.getValue() + "_CLOCK_ENABLE", True, 0)
 
     configName = Variables.get("__CONFIGURATION_NAME")
 
