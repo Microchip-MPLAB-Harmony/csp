@@ -134,6 +134,7 @@
 <@mhc_process_pin/>
 </#compress>
 
+<#-- Generate Pin Macros for Port pins with Custom name -->
 <#list 1..PIO_PIN_TOTAL as i>
     <#assign functype = "PIN_" + i + "_FUNCTION_TYPE">
     <#assign funcname = "PIN_" + i + "_FUNCTION_NAME">
@@ -144,30 +145,32 @@
         <#if .vars[funcname]?has_content>
             <#if .vars[pinport]?has_content>
                 <#if .vars[pinchannel]?has_content>
+                    <#if !(.vars[functype]?starts_with("SWITCH_") | .vars[functype]?starts_with("LED_") | .vars[functype]?starts_with("VBUS_"))>
 
-                    <#lt>/*** Macros for ${.vars[funcname]} pin ***/
-                    <#if .vars[functype] == "GPIO">
-                        <#lt>#define ${.vars[funcname]}_Set()               (PIO${.vars[pinchannel]}_REGS->PIO_SODR = (1<<${.vars[pinport]}))
-                        <#lt>#define ${.vars[funcname]}_Clear()             (PIO${.vars[pinchannel]}_REGS->PIO_CODR = (1<<${.vars[pinport]}))
-                        <#lt>#define ${.vars[funcname]}_Toggle()            do {\
-                        <#lt>                                            PIO${.vars[pinchannel]}_REGS->PIO_MSKR = (1<<${.vars[pinport]}); \
-                        <#lt>                                            PIO${.vars[pinchannel]}_REGS->PIO_ODSR ^= (1<<${.vars[pinport]});\
-                        <#lt>                                        } while (0)
-                        <#lt>#define ${.vars[funcname]}_OutputEnable()      do {\
-                        <#lt>                                            PIO${.vars[pinchannel]}_REGS->PIO_MSKR = (1<<${.vars[pinport]}); \
-                        <#lt>										     PIO${.vars[pinchannel]}_REGS->PIO_CFGR |=(1 << PIO_CFGR_DIR_Pos);\
-                        <#lt>                                        }while(0)
-                        <#lt>#define ${.vars[funcname]}_InputEnable()       do { \
-                        <#lt>                                            PIO${.vars[pinchannel]}_REGS->PIO_MSKR = (1<<${.vars[pinport]}); \
-                        <#lt>										     PIO${.vars[pinchannel]}_REGS->PIO_CFGR &= ~(1 << PIO_CFGR_DIR_Pos);\
-                        <#lt>                                        } while (0)
+                        <#lt>/*** Macros for ${.vars[funcname]} pin ***/
+                        <#if .vars[functype] == "GPIO">
+                            <#lt>#define ${.vars[funcname]}_Set()               (PIO${.vars[pinchannel]}_REGS->PIO_SODR = (1<<${.vars[pinport]}))
+                            <#lt>#define ${.vars[funcname]}_Clear()             (PIO${.vars[pinchannel]}_REGS->PIO_CODR = (1<<${.vars[pinport]}))
+                            <#lt>#define ${.vars[funcname]}_Toggle()            do {\
+                            <#lt>                                            PIO${.vars[pinchannel]}_REGS->PIO_MSKR = (1<<${.vars[pinport]}); \
+                            <#lt>                                            PIO${.vars[pinchannel]}_REGS->PIO_ODSR ^= (1<<${.vars[pinport]});\
+                            <#lt>                                        } while (0)
+                            <#lt>#define ${.vars[funcname]}_OutputEnable()      do {\
+                            <#lt>                                            PIO${.vars[pinchannel]}_REGS->PIO_MSKR = (1<<${.vars[pinport]}); \
+                            <#lt>                                            PIO${.vars[pinchannel]}_REGS->PIO_CFGR |=(1 << PIO_CFGR_DIR_Pos);\
+                            <#lt>                                        }while(0)
+                            <#lt>#define ${.vars[funcname]}_InputEnable()       do { \
+                            <#lt>                                            PIO${.vars[pinchannel]}_REGS->PIO_MSKR = (1<<${.vars[pinport]}); \
+                            <#lt>                                            PIO${.vars[pinchannel]}_REGS->PIO_CFGR &= ~(1 << PIO_CFGR_DIR_Pos);\
+                            <#lt>                                        } while (0)
+                        </#if>
+                        <#lt>#define ${.vars[funcname]}_Get()               ((PIO${.vars[pinchannel]}_REGS->PIO_PDSR >> ${.vars[pinport]}) & 0x1)
+                        <#lt>#define ${.vars[funcname]}_PIN                  PIO_PIN_P${.vars[pinchannel]}${.vars[pinport]}
+                        <#if .vars[interruptType]?has_content>
+                            <#lt>#define ${.vars[funcname]}_InterruptEnable()   (PIO${.vars[pinchannel]}_REGS->PIO_IER = (1<<${.vars[pinport]}))
+                            <#lt>#define ${.vars[funcname]}_InterruptDisable()  (PIO${.vars[pinchannel]}_REGS->PIO_IDR = (1<<${.vars[pinport]}))
+                        </#if>
                     </#if>
-                    <#if .vars[interruptType]?has_content>
-                        <#lt>#define ${.vars[funcname]}_InterruptEnable()   (PIO${.vars[pinchannel]}_REGS->PIO_IER = (1<<${.vars[pinport]}))
-                        <#lt>#define ${.vars[funcname]}_InterruptDisable()  (PIO${.vars[pinchannel]}_REGS->PIO_IDR = (1<<${.vars[pinport]}))
-                    </#if>
-                    <#lt>#define ${.vars[funcname]}_Get()               ((PIO${.vars[pinchannel]}_REGS->PIO_PDSR >> ${.vars[pinport]}) & 0x1)
-                    <#lt>#define ${.vars[funcname]}_PIN                  PIO_PIN_P${.vars[pinchannel]}${.vars[pinport]}
                 </#if>
             </#if>
         </#if>
@@ -1191,7 +1194,7 @@ static inline void PIO_PinInterruptDisable(PIO_PIN pin)
 
     If a pin is not configured for interrupt in Pin Manager and yet its callback
     registration is attempted using this API, then registration doesn't happen
-    and API returns false indicating the same.    
+    and API returns false indicating the same.
 
   Precondition:
     The PIO_Initialize function must have been called.
