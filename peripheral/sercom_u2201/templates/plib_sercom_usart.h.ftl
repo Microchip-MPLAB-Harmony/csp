@@ -72,6 +72,10 @@ void ${SERCOM_INSTANCE_NAME}_USART_Initialize( void );
 bool ${SERCOM_INSTANCE_NAME}_USART_SerialSetup( USART_SERIAL_SETUP * serialSetup, uint32_t clkFrequency );
 
 <#if USART_TX_ENABLE = true>
+void ${SERCOM_INSTANCE_NAME}_USART_TransmitterEnable( void );
+
+void ${SERCOM_INSTANCE_NAME}_USART_TransmitterDisable( void );
+
 bool ${SERCOM_INSTANCE_NAME}_USART_Write( void *buffer, const size_t size );
 
 <#if USART_FORM == "0x2">
@@ -94,6 +98,11 @@ void ${SERCOM_INSTANCE_NAME}_USART_WriteByte( int data );
 </#if>
 
 <#if USART_RX_ENABLE = true>
+
+void ${SERCOM_INSTANCE_NAME}_USART_ReceiverEnable( void );
+
+void ${SERCOM_INSTANCE_NAME}_USART_ReceiverDisable( void );
+
 bool ${SERCOM_INSTANCE_NAME}_USART_Read( void *buffer, const size_t size );
 
 <#if USART_INTERRUPT_MODE = true>
