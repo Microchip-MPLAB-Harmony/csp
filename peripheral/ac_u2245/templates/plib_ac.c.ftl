@@ -182,7 +182,7 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
     {
         /* Wait for Synchronization */
     }
-     /* Disable the module and configure COMPCTRL */
+     
     <#list 0..4 as i>
     <#assign ANALOG_COMPARATOR_ENABLE = "ANALOG_COMPARATOR_ENABLE_" + i>
     <#assign AC_COMPCTRL_SINGLE_MODE = "AC_COMPCTRL_" + i +"SINGLE_MODE">
@@ -192,6 +192,7 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
     <#assign AC_COMPCTRL_INTSEL = "AC" + i + "_ISEL">
     <#assign AC_COMPCTRL_HYSTEN = "AC" + i + "_HYSTEN">
     <#assign AC_COMPCTRL_HYS_CHECK = "AC" + i + "_HYST_LVL_PRESENT">
+    <#assign AC_COMPCTRL_FLEN = "AC" + i + "_FLEN_VAL">
 <#if "AC_COMPCTRL_HYS_CHECK" ?has_content >
     <#assign AC_COMPCTRL_HYS_LVL = "AC" + i + "_HYS_LVL">
 </#if>
@@ -200,6 +201,9 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
     <#assign AC_SCALERn = "AC_SCALER_N_" + i>
         <#if .vars[ANALOG_COMPARATOR_ENABLE]?has_content>
             <#if (.vars[ANALOG_COMPARATOR_ENABLE] != false)>
+
+    /******************** Comparator ${i} configurations ********************/
+    /* Disable the module and configure COMPCTRL */
     while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY & AC_SYNCBUSY_COMPCTRL${i}_Msk) == AC_SYNCBUSY_COMPCTRL${i}_Msk)
     {
         /* Wait for Synchronization */
@@ -215,6 +219,7 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
                                   | AC_COMPCTRL_INTSEL_${.vars[AC_COMPCTRL_INTSEL]}
                                   | AC_COMPCTRL_OUT_${.vars[AC_COMPCTRL_OUTPUT_TYPE]}
                                   | AC_COMPCTRL_SPEED(${.vars[AC_COMPCTRL_SPEED]})
+                                  | AC_COMPCTRL_FLEN_${.vars[AC_COMPCTRL_FLEN]}
                                   ${.vars[AC_COMPCTRL_SINGLE_MODE]?then(' | AC_COMPCTRL_SINGLE_Msk','')}
                                   ${.vars[AC_COMPCTRL_HYSTEN]?then(' | AC_COMPCTRL_HYSTEN_Msk','')}
                                   ${.vars[AC_COMPCTRL_HYS_CHECK]?then(' | AC_COMPCTRL_HYST(${.vars[AC_COMPCTRL_HYS_LVL]})','')}
@@ -276,6 +281,27 @@ void ${AC_INSTANCE_NAME}_SwapInputs( AC_CHANNEL channel_id )
     /* Swap inputs of the given comparator */
     ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] = AC_COMPCTRL_SWAP_Msk;
     ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] |= AC_COMPCTRL_ENABLE_Msk;
+}
+
+void ${AC_INSTANCE_NAME}_ChannelSelect( AC_CHANNEL channel_id , AC_POSINPUT positiveInput, AC_NEGINPUT negativeInput)
+{
+    /* Disable comparator before swapping */
+    ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] &= ~AC_COMPCTRL_ENABLE_Msk;
+    /* Check Synchronization to ensure that the comparator is disabled */
+    while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY & AC_SYNCBUSY_Msk) == AC_SYNCBUSY_Msk)
+    {
+        /* Wait for Synchronization */
+    }
+    ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] &= ~(AC_COMPCTRL_MUXPOS_Msk | AC_COMPCTRL_MUXNEG_Msk);
+    ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] |= (positiveInput | negativeInput);
+
+    /* Enable comparator channel */
+    ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] |= AC_COMPCTRL_ENABLE_Msk;
+    while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY & AC_SYNCBUSY_Msk) == AC_SYNCBUSY_Msk)
+    {
+        /* Wait for Synchronization */
+    }   
+
 }
 
 bool ${AC_INSTANCE_NAME}_StatusGet (AC_CHANNEL channel)

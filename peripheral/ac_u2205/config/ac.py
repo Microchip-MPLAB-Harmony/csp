@@ -116,6 +116,20 @@ def instantiateComponent(acComponent):
     acSym_NUM_CHANNELS = acComponent.createIntegerSymbol("AC_NUM_COMPARATORS", None)
     acSym_NUM_CHANNELS.setDefaultValue(int(numOfComparators))
     acSym_NUM_CHANNELS.setVisible(False)
+
+    acSym_COMPCTRL_MUXPOS_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AC\"]/value-group@[name=\"AC_COMPCTRL__MUXPOS\"]")
+    acSym_COMPCTRL_MUXPOS_Node_Values = acSym_COMPCTRL_MUXPOS_Node.getChildren()   
+    for id in range(len(acSym_COMPCTRL_MUXPOS_Node_Values)):
+        acSym_MUXPOS_ENUM = acComponent.createStringSymbol("AC_MUXPOS_ENUM_"+str(id), None)
+        acSym_MUXPOS_ENUM.setDefaultValue(acSym_COMPCTRL_MUXPOS_Node_Values[id].getAttribute("name"))
+        acSym_MUXPOS_ENUM.setVisible(False)
+
+    acSym_COMPCTRL_MUXNEG_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AC\"]/value-group@[name=\"AC_COMPCTRL__MUXNEG\"]")
+    acSym_COMPCTRL_MUXNEG_Node_Values = acSym_COMPCTRL_MUXNEG_Node.getChildren()   
+    for id in range(len(acSym_COMPCTRL_MUXNEG_Node_Values)):
+        acSym_MUXNEG_ENUM = acComponent.createStringSymbol("AC_MUXNEG_ENUM_"+str(id), None)
+        acSym_MUXNEG_ENUM.setDefaultValue(acSym_COMPCTRL_MUXNEG_Node_Values[id].getAttribute("name"))
+        acSym_MUXNEG_ENUM.setVisible(False) 
     
     #Enable Low Power mux
     acLPMux_Enable = acComponent.createBooleanSymbol("AC_LPMUX_ENABLE", None)
@@ -305,6 +319,30 @@ def instantiateComponent(acComponent):
         acSym_COMPCTRL_SPEED.setOutputMode("Value")
         acSym_COMPCTRL_SPEED.setDisplayMode("Description")
         acSym_COMPCTRL_SPEED.setDependencies(setacSymbolVisibility,["ANALOG_COMPARATOR_ENABLE_" + str(comparatorID)])
+
+        #Filter Length selection
+        acSym_COMPCTRL_FLEN = acComponent.createKeyValueSetSymbol("AC" + str(comparatorID) + "_FLEN_VAL", acSym_AdvConf)
+        acSym_COMPCTRL_FLEN.setLabel("Filter Length Selection")
+        acSym_COMPCTRL_FLEN.setDescription("Filtering must be disabled if continuous measurements will be done during sleep modes")
+        acSym_COMPCTRL_FLEN_node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AC\"]/value-group@[name=\"AC_COMPCTRL__FLEN\"]")
+        acSym_COMPCTRL_FLEN_Values = []
+        acSym_COMPCTRL_FLEN_Values = acSym_COMPCTRL_FLEN_node.getChildren()
+
+        acSym_COMPCTRL_FLEN_Default_Val = 0
+
+        for id in range(len(acSym_COMPCTRL_FLEN_Values)):
+            acSym_COMPCTRL_FLEN_Key_Name = acSym_COMPCTRL_FLEN_Values[id].getAttribute("name")
+
+            if(acSym_COMPCTRL_FLEN_Key_Name == "OFF"):
+                acSym_COMPCTRL_FLEN_Default_Val = id
+
+            acSym_COMPCTRL_FLEN_Key_Description = acSym_COMPCTRL_FLEN_Values[id].getAttribute("caption")
+            acSym_COMPCTRL_FLEN_Key_Value = acSym_COMPCTRL_FLEN_Values[id].getAttribute("value")
+            acSym_COMPCTRL_FLEN.addKey(acSym_COMPCTRL_FLEN_Key_Name, acSym_COMPCTRL_FLEN_Key_Value, acSym_COMPCTRL_FLEN_Key_Description)
+
+        acSym_COMPCTRL_FLEN.setDefaultValue(acSym_COMPCTRL_FLEN_Default_Val)
+        acSym_COMPCTRL_FLEN.setOutputMode("Key")
+        acSym_COMPCTRL_FLEN.setDisplayMode("Description")
 
         #Event Input Enable
         acSym_EVCTRL_COMPEI = acComponent.createBooleanSymbol("AC_EVCTRL_COMPEI" + str(comparatorID), acSym_AdvConf)

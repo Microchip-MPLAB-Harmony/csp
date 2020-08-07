@@ -54,7 +54,8 @@ def fileUpdate(symbol, event):
 def setacScalerVisibility(MySymbol, event):
     global acSym_COMPCTRL_MUXNEG
     id = int(filter(str.isdigit, str(MySymbol.getID())))
-    if ("VSCALE" in acSym_COMPCTRL_MUXNEG[id].getSelectedKey()):
+    if ("VSCALE" in acSym_COMPCTRL_MUXNEG[id].getSelectedKey() or
+            "VSCALE" in acSym_COMPCTRL_MUXPOS[id].getSelectedKey()):
         MySymbol.setVisible(True)
     else:
         MySymbol.setVisible(False)
@@ -114,6 +115,8 @@ def instantiateComponent(acComponent):
     global InterruptVectorSecurity
     global acSym_COMPCTRL_MUXNEG
     acSym_COMPCTRL_MUXNEG = []
+    global acSym_COMPCTRL_MUXPOS
+    acSym_COMPCTRL_MUXPOS = []    
     
     acInstanceName = acComponent.createStringSymbol("AC_INSTANCE_NAME", None)
     acInstanceName.setVisible(False)
@@ -136,6 +139,20 @@ def instantiateComponent(acComponent):
     acSym_NUM_CHANNELS = acComponent.createIntegerSymbol("AC_NUM_COMPARATORS", None)
     acSym_NUM_CHANNELS.setDefaultValue(int(numOfComparators))
     acSym_NUM_CHANNELS.setVisible(False)
+
+    acSym_COMPCTRL_MUXPOS_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AC\"]/value-group@[name=\"AC_COMPCTRL__MUXPOS\"]")
+    acSym_COMPCTRL_MUXPOS_Node_Values = acSym_COMPCTRL_MUXPOS_Node.getChildren()   
+    for id in range(len(acSym_COMPCTRL_MUXPOS_Node_Values)):
+        acSym_MUXPOS_ENUM = acComponent.createStringSymbol("AC_MUXPOS_ENUM_"+str(id), None)
+        acSym_MUXPOS_ENUM.setDefaultValue(acSym_COMPCTRL_MUXPOS_Node_Values[id].getAttribute("name"))
+        acSym_MUXPOS_ENUM.setVisible(False)
+
+    acSym_COMPCTRL_MUXNEG_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AC\"]/value-group@[name=\"AC_COMPCTRL__MUXNEG\"]")
+    acSym_COMPCTRL_MUXNEG_Node_Values = acSym_COMPCTRL_MUXNEG_Node.getChildren()   
+    for id in range(len(acSym_COMPCTRL_MUXNEG_Node_Values)):
+        acSym_MUXNEG_ENUM = acComponent.createStringSymbol("AC_MUXNEG_ENUM_"+str(id), None)
+        acSym_MUXNEG_ENUM.setDefaultValue(acSym_COMPCTRL_MUXNEG_Node_Values[id].getAttribute("name"))
+        acSym_MUXNEG_ENUM.setVisible(False)        
     
     #Populate menu for all comparators in the AC peripheral
     for comparatorID in range(0, int(numOfComparators)):
@@ -159,9 +176,10 @@ def instantiateComponent(acComponent):
         acSym_COMPCTRL_SINGLE.setDependencies(setacSymbolVisibility,["ANALOG_COMPARATOR_ENABLE_" + str(comparatorID)])
 
         #MUXPOS
-        acSym_COMPCTRL_MUXPOS = acComponent.createKeyValueSetSymbol("AC" + str(comparatorID) + "_MUX_POS", acSym_Enable[comparatorID])
-        acSym_COMPCTRL_MUXPOS.setLabel("Positive Input Mux Selection")
-        acSym_COMPCTRL_MUXPOS.setVisible(False)
+        acSym_COMPCTRL_MUXPOS.append(comparatorID)
+        acSym_COMPCTRL_MUXPOS[comparatorID] = acComponent.createKeyValueSetSymbol("AC" + str(comparatorID) + "_MUX_POS", acSym_Enable[comparatorID])
+        acSym_COMPCTRL_MUXPOS[comparatorID].setLabel("Positive Input Mux Selection")
+        acSym_COMPCTRL_MUXPOS[comparatorID].setVisible(False)
 
         acSym_COMPCTRL_MUXPOS_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AC\"]/value-group@[name=\"AC_COMPCTRL__MUXPOS\"]")
         acSym_COMPCTRL_MUXPOS_Node_Values = []
@@ -171,18 +189,16 @@ def instantiateComponent(acComponent):
 
         for id in range(len(acSym_COMPCTRL_MUXPOS_Node_Values)):
             acSym_COMPCTRL_MUXPOS_Key_Name = acSym_COMPCTRL_MUXPOS_Node_Values[id].getAttribute("name")
-
             if(acSym_COMPCTRL_MUXPOS_Key_Name == "PIN0"):
                 acSym_COMPCTRL_MUXPOS_Default_Val = id
-
             acSym_COMPCTRL_MUXPOS_Key_Description = acSym_COMPCTRL_MUXPOS_Node_Values[id].getAttribute("caption")
             acSym_COMPCTRL_MUXPOS_Key_Value = acSym_COMPCTRL_MUXPOS_Node_Values[id].getAttribute("value")
-            acSym_COMPCTRL_MUXPOS.addKey(acSym_COMPCTRL_MUXPOS_Key_Name, acSym_COMPCTRL_MUXPOS_Key_Value, acSym_COMPCTRL_MUXPOS_Key_Description)
+            acSym_COMPCTRL_MUXPOS[comparatorID].addKey(acSym_COMPCTRL_MUXPOS_Key_Name, acSym_COMPCTRL_MUXPOS_Key_Value, acSym_COMPCTRL_MUXPOS_Key_Description)
 
-        acSym_COMPCTRL_MUXPOS.setDefaultValue(acSym_COMPCTRL_MUXPOS_Default_Val)
-        acSym_COMPCTRL_MUXPOS.setOutputMode("Key")
-        acSym_COMPCTRL_MUXPOS.setDisplayMode("Description")
-        acSym_COMPCTRL_MUXPOS.setDependencies(setacSymbolVisibility,["ANALOG_COMPARATOR_ENABLE_" + str(comparatorID)])
+        acSym_COMPCTRL_MUXPOS[comparatorID].setDefaultValue(acSym_COMPCTRL_MUXPOS_Default_Val)
+        acSym_COMPCTRL_MUXPOS[comparatorID].setOutputMode("Key")
+        acSym_COMPCTRL_MUXPOS[comparatorID].setDisplayMode("Description")
+        acSym_COMPCTRL_MUXPOS[comparatorID].setDependencies(setacSymbolVisibility,["ANALOG_COMPARATOR_ENABLE_" + str(comparatorID)])
 
         #MUXNEG
         acSym_COMPCTRL_MUXNEG.append(comparatorID)
@@ -198,14 +214,11 @@ def instantiateComponent(acComponent):
 
         for id in range(len(acSym_COMPCTRL_MUXNEG_Node_Values)):
             acSym_COMPCTRL_MUXNEG_Key_Name = acSym_COMPCTRL_MUXNEG_Node_Values[id].getAttribute("name")
-
             if(acSym_COMPCTRL_MUXNEG_Key_Name == "GND"):
                 acSym_COMPCTRL_MUXNEG_Default_Val = id
-
             acSym_COMPCTRL_MUXNEG_Key_Description = acSym_COMPCTRL_MUXNEG_Node_Values[id].getAttribute("caption")
             acSym_COMPCTRL_MUXNEG_Key_Value = acSym_COMPCTRL_MUXNEG_Node_Values[id].getAttribute("value")
-            acSym_COMPCTRL_MUXNEG[comparatorID].addKey(acSym_COMPCTRL_MUXNEG_Key_Name, acSym_COMPCTRL_MUXNEG_Key_Value, acSym_COMPCTRL_MUXNEG_Key_Description)
-        
+            acSym_COMPCTRL_MUXNEG[comparatorID].addKey(acSym_COMPCTRL_MUXNEG_Key_Name, acSym_COMPCTRL_MUXNEG_Key_Value, acSym_COMPCTRL_MUXNEG_Key_Description)    
         
         acSym_COMPCTRL_MUXNEG[comparatorID].setDefaultValue(acSym_COMPCTRL_MUXNEG_Default_Val)
         acSym_COMPCTRL_MUXNEG[comparatorID].setOutputMode("Key")
@@ -221,7 +234,7 @@ def instantiateComponent(acComponent):
         acSym_SCALERn[comparatorID].setDefaultValue(0)
         acSym_SCALERn[comparatorID].setVisible(False)
         #This should be enabled only when mux neg value is VDDSCALER
-        acSym_SCALERn[comparatorID].setDependencies(setacScalerVisibility, ["AC" + str(comparatorID) + "_MUX_NEG"])
+        acSym_SCALERn[comparatorID].setDependencies(setacScalerVisibility, ["AC" + str(comparatorID) + "_MUX_NEG", "AC" + str(comparatorID) + "_MUX_POS"])
 
         #Output Mode
         acSym_COMPCTRL_OUT = acComponent.createKeyValueSetSymbol("AC" + str(comparatorID) + "_OUTPUT_TYPE", acSym_Enable[comparatorID])
@@ -359,6 +372,30 @@ def instantiateComponent(acComponent):
         acSym_COMPCTRL_SPEED.setOutputMode("Value")
         acSym_COMPCTRL_SPEED.setDisplayMode("Description")
         acSym_COMPCTRL_SPEED.setDependencies(setacSymbolVisibility,["ANALOG_COMPARATOR_ENABLE_" + str(comparatorID)])
+
+        #Filter Length selection
+        acSym_COMPCTRL_FLEN = acComponent.createKeyValueSetSymbol("AC" + str(comparatorID) + "_FLEN_VAL", acSym_AdvConf)
+        acSym_COMPCTRL_FLEN.setLabel("Filter Length Selection")
+        acSym_COMPCTRL_FLEN.setDescription("Filtering must be disabled if continuous measurements will be done during sleep modes")
+        acSym_COMPCTRL_FLEN_node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AC\"]/value-group@[name=\"AC_COMPCTRL__FLEN\"]")
+        acSym_COMPCTRL_FLEN_Values = []
+        acSym_COMPCTRL_FLEN_Values = acSym_COMPCTRL_FLEN_node.getChildren()
+
+        acSym_COMPCTRL_FLEN_Default_Val = 0
+
+        for id in range(len(acSym_COMPCTRL_FLEN_Values)):
+            acSym_COMPCTRL_FLEN_Key_Name = acSym_COMPCTRL_FLEN_Values[id].getAttribute("name")
+
+            if(acSym_COMPCTRL_FLEN_Key_Name == "OFF"):
+                acSym_COMPCTRL_FLEN_Default_Val = id
+
+            acSym_COMPCTRL_FLEN_Key_Description = acSym_COMPCTRL_FLEN_Values[id].getAttribute("caption")
+            acSym_COMPCTRL_FLEN_Key_Value = acSym_COMPCTRL_FLEN_Values[id].getAttribute("value")
+            acSym_COMPCTRL_FLEN.addKey(acSym_COMPCTRL_FLEN_Key_Name, acSym_COMPCTRL_FLEN_Key_Value, acSym_COMPCTRL_FLEN_Key_Description)
+
+        acSym_COMPCTRL_FLEN.setDefaultValue(acSym_COMPCTRL_FLEN_Default_Val)
+        acSym_COMPCTRL_FLEN.setOutputMode("Key")
+        acSym_COMPCTRL_FLEN.setDisplayMode("Description")
 
         #Event Input Enable
         acSym_EVCTRL_COMPEI = acComponent.createBooleanSymbol("AC_EVCTRL_COMPEI" + str(comparatorID), acSym_AdvConf)

@@ -69,6 +69,27 @@ typedef enum
 </#list>
 }AC_CHANNEL;
 
+typedef enum
+{
+<#list 0..(7) as i>
+<#assign AC_MUXPOS = "AC_MUXPOS_ENUM_"+ i>
+<#if .vars[AC_MUXPOS]?has_content>
+    AC_POSINPUT_${.vars[AC_MUXPOS]} = AC_COMPCTRL_MUXPOS_${.vars[AC_MUXPOS]},
+</#if>
+</#list>
+}AC_POSINPUT;
+
+
+typedef enum
+{
+<#list 0..(7) as i>
+<#assign AC_MUXNEG = "AC_MUXNEG_ENUM_"+ i>
+<#if .vars[AC_MUXNEG]?has_content>
+    AC_NEGINPUT_${.vars[AC_MUXNEG]} = AC_COMPCTRL_MUXNEG_${.vars[AC_MUXNEG]},
+</#if>
+</#list>
+}AC_NEGINPUT;
+
 typedef void (*${AC_INSTANCE_NAME}_CALLBACK) (uint8_t int_flags, uintptr_t context);
 
 typedef struct
@@ -96,6 +117,8 @@ bool ${AC_INSTANCE_NAME}_StatusGet (AC_CHANNEL channel);
 void ${AC_INSTANCE_NAME}_CallbackRegister (AC_CALLBACK callback, uintptr_t context);
 
 void ${AC_INSTANCE_NAME}_SetVddScalar( AC_CHANNEL channel_id , uint8_t vdd_scalar);
+
+void ${AC_INSTANCE_NAME}_ChannelSelect( AC_CHANNEL channel_id , AC_POSINPUT positiveInput, AC_NEGINPUT negativeInput);
 
 #ifdef __cplusplus // Provide C++ Compatibility
 }

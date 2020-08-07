@@ -116,6 +116,20 @@ def instantiateComponent(acComponent):
     acSym_NUM_CHANNELS = acComponent.createIntegerSymbol("AC_NUM_COMPARATORS", None)
     acSym_NUM_CHANNELS.setDefaultValue(int(numOfComparators))
     acSym_NUM_CHANNELS.setVisible(False)
+
+    acSym_COMPCTRL_MUXPOS_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AC\"]/value-group@[name=\"AC_COMPCTRL__MUXPOS\"]")
+    acSym_COMPCTRL_MUXPOS_Node_Values = acSym_COMPCTRL_MUXPOS_Node.getChildren()   
+    for id in range(len(acSym_COMPCTRL_MUXPOS_Node_Values)):
+        acSym_MUXPOS_ENUM = acComponent.createStringSymbol("AC_MUXPOS_ENUM_"+str(id), None)
+        acSym_MUXPOS_ENUM.setDefaultValue(acSym_COMPCTRL_MUXPOS_Node_Values[id].getAttribute("name"))
+        acSym_MUXPOS_ENUM.setVisible(False)
+
+    acSym_COMPCTRL_MUXNEG_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"AC\"]/value-group@[name=\"AC_COMPCTRL__MUXNEG\"]")
+    acSym_COMPCTRL_MUXNEG_Node_Values = acSym_COMPCTRL_MUXNEG_Node.getChildren()   
+    for id in range(len(acSym_COMPCTRL_MUXNEG_Node_Values)):
+        acSym_MUXNEG_ENUM = acComponent.createStringSymbol("AC_MUXNEG_ENUM_"+str(id), None)
+        acSym_MUXNEG_ENUM.setDefaultValue(acSym_COMPCTRL_MUXNEG_Node_Values[id].getAttribute("name"))
+        acSym_MUXNEG_ENUM.setVisible(False)     
     
     #Populate menu for all comparators in the AC peripheral
     for comparatorID in range(0, int(numOfComparators)):
@@ -322,7 +336,7 @@ def instantiateComponent(acComponent):
             acSym_COMPCTRL_FLEN.addKey(acSym_COMPCTRL_FLEN_Key_Name, acSym_COMPCTRL_FLEN_Key_Value, acSym_COMPCTRL_FLEN_Key_Description)
 
         acSym_COMPCTRL_FLEN.setDefaultValue(acSym_COMPCTRL_FLEN_Default_Val)
-        acSym_COMPCTRL_FLEN.setOutputMode("Value")
+        acSym_COMPCTRL_FLEN.setOutputMode("Key")
         acSym_COMPCTRL_FLEN.setDisplayMode("Description")
         
         #Event Input Enable
