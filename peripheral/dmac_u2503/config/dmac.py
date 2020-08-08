@@ -254,6 +254,10 @@ def dmacChannelAllocLogic(symbol, event):
             dmaChannelPerID = str(Database.getSymbolValue("core", "DMAC_CHCTRLA_TRIGSRC_CH_" + str(i)))
 
             if dmaChannelPerID == perID:
+                Database.setSymbolValue("core", "DMAC_ENABLE_CH_" + str(i), True, 2)
+                Database.setSymbolValue("core", "DMAC_CHCTRLA_TRIGSRC_CH_" + str(i), perID, 2)
+                Database.setSymbolValue("core", "DMAC_CHCTRLA_TRIGSRC_CH_" + str(i) + "_PERID_LOCK", True, 2)
+                Database.setSymbolValue("core", "DMA_CH_FOR_" + perID, i, 2)
                 channelAllocated = True
                 break
 
