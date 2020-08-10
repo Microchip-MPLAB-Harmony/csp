@@ -10,7 +10,7 @@
   Description:
     This interface helps configure the PMU in MLDO only mode and also trim
     the voltages in this mode to the operating range.
-    
+
  *******************************************************************************/
 
 //DOM-IGNORE-BEGIN
@@ -37,8 +37,9 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
  *******************************************************************************/
 //DOM-IGNORE-END
-#include "definitions.h"                // SYS function prototypes
 
+#include "device.h"
+#include "definitions.h"
 
 /*Bits [15-6] in the SPI Status register have Read data */
 #define PMU_SPI_READ_MASK 0xFFFF0000
@@ -62,7 +63,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #define VREG4_BITS 0x1F000000
 #define CORE_TIMER_FREQ 100000000
 
-//Flash Area housing the PMU calibration values 
+//Flash Area housing the PMU calibration values
 unsigned int *otp_buckcfg1_data = (unsigned int *)0xBFC56FE8;
 unsigned int *otp_buckcfg2_data = (unsigned int *) 0xBFC56FEC;
 unsigned int *otp_mldocfg1_data = (unsigned int *) 0xBFC56FF4;
@@ -89,7 +90,7 @@ static unsigned int SYS_PMU_SPI_READ(unsigned int spi_addr)
     reg_val = (1 << SPI_CMD_OFFSET) | (spi_addr << SPI_ADDR_OFFSET) ;
     *spi_cntrl_reg = reg_val;
     DelayMs(20);
-   
+
     while (1)
     {
         status = *spi_status_reg;
@@ -114,15 +115,15 @@ static void SYS_PMU_SPI_WRITE(unsigned int spi_addr, unsigned int reg_val)
         status = *spi_status_reg;
         if (status & PMU_STATUS_SPIRDY)
             break;
-    }  
+    }
     DelayMs(20);
 }
 
 /*This function will configure the PMU with
- *the tune bits from Flash. 
- * 
+ *the tune bits from Flash.
+ *
  * Flash area to read from
- * 0xBFC56FE0	BLANK 
+ * 0xBFC56FE0	BLANK
  * 0xBFC56FE4	BLANK
  * 0xBFC56FE8	BUCKCFG1 (vo_tune in bits [13:10] other bits written low
  * 0xBFC56FEC	BUCKCFG2 (default buk_curve value written to bits [6:4], other bits written low.
@@ -130,7 +131,7 @@ static void SYS_PMU_SPI_WRITE(unsigned int spi_addr, unsigned int reg_val)
  * 0xBFC56FF4	MLDOCFG1 (currently BLANK until we receive MLDO trim pattern and implement calibration on ATE)
  * 0xBFC56FF8	MLDOCFG2 (currently BLANK until we receive MLDO trim pattern and implement calibration on ATE)
  * 0xBFC56FFC	TREG3 (VREG4,3,2,1) values
- *  
+ *
  * Below are the configurations done here
  * Configure buk_Vo_tune<13:10> in BUCKCFG1, ADDR=0x14 register
  * Configure mldo_vtun<9:6> in the MLDOCFG1, ADDR=0x17 register
@@ -145,7 +146,7 @@ void SYS_PMU_MLDO_TRIM(void)
     unsigned int nvm_flash_data;
     unsigned int mldocfg1, mldocfg2, buckcfg1;
     unsigned int vreg1, vreg2, vreg3, vreg4;
-    
+
     //PMU_MLDO_Cfg()
     {
         //Read MLDOCFG1 Value
@@ -161,27 +162,27 @@ void SYS_PMU_MLDO_TRIM(void)
             {
                  mldocfg1 |= MLDO_ISENSE_CONFIG;
             }
-        }        
+        }
         SYS_PMU_SPI_WRITE(MLDOCFG1_ADDR, mldocfg1);
         /* make sure mldo_cfg2 register is zero, nothing is enabled. */
         mldocfg2 = 0;
         SYS_PMU_SPI_WRITE(MLDOCFG2_ADDR, mldocfg2);
     }
-    
+
     //PMU_MLDO_Enable()
     {
         mldocfg2 = SYS_PMU_SPI_READ(MLDOCFG2_ADDR);
         mldocfg2 |= MLDO_ENABLE;
         SYS_PMU_SPI_WRITE(MLDOCFG2_ADDR, mldocfg2);
     }
-    
+
     //PMU_MLDO_Set_ParallelBypass()
     {
         buckcfg1 = SYS_PMU_SPI_READ(BUCKCFG1_ADDR);
         buckcfg1 |= BUCK_PBYPASS_ENABLE;
         SYS_PMU_SPI_WRITE(BUCKCFG1_ADDR, buckcfg1);
     }
-    
+
     {
         nvm_flash_data = *otp_treg3_data;
         if((nvm_flash_data == 0xFFFFFFFF) || (nvm_flash_data == 0x00000000))
@@ -192,10 +193,10 @@ void SYS_PMU_MLDO_TRIM(void)
         vreg3 = (nvm_flash_data & VREG2_BITS) >> 8;
         vreg2 = (nvm_flash_data & VREG3_BITS) >> 16;
         vreg1 = (nvm_flash_data & VREG4_BITS) >> 24;
-        
+
         PMUOVERCTRLbits.OBUCKEN = 0;	//Disable Buck mode
         PMUOVERCTRLbits.OMLDOEN = 1;	//Enable MLDO mode
-        
+
 		/* Configure Output Voltage Control Bits */
         PMUOVERCTRLbits.VREG4OCTRL = vreg4;
         PMUOVERCTRLbits.VREG3OCTRL = vreg3;
