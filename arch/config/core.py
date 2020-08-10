@@ -475,7 +475,7 @@ def instantiateComponent( coreComponent ):
     xc32LdPreprocessroMacroSym.setCategory("C32-LD")
     xc32LdPreprocessroMacroSym.setKey("preprocessor-macros")
     xc32LdPreprocessroMacroSym.setValue(getFlashParams(xc32LdAppStartAddress.getValue()))
-    xc32LdPreprocessroMacroSym.setAppend(True, ";")
+    xc32LdPreprocessroMacroSym.setAppend(True, ";=")
     xc32LdPreprocessroMacroSym.setDependencies(setFlashParams, ["APP_START_ADDRESS"])
 
     ## iar Tool Config
