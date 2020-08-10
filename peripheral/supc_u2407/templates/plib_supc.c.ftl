@@ -190,8 +190,15 @@ SUPC_BOD33_CALLBACK_OBJ ${SUPC_INSTANCE_NAME?lower_case}CallbackObject;
 void ${SUPC_INSTANCE_NAME}_Initialize( void )
 {
 <#if SUPC_BOD33_VAL?has_content>
+    uint32_t bodEnable = ${SUPC_INSTANCE_NAME}_REGS->SUPC_BOD33 & SUPC_BOD33_ENABLE_Msk;
+
     /* Configure BOD33. Mask the values loaded from NVM during reset. */
+    ${SUPC_INSTANCE_NAME}_REGS->SUPC_BOD33 &= ~SUPC_BOD33_ENABLE_Msk;
     ${SUPC_INSTANCE_NAME}_REGS->SUPC_BOD33 = (${SUPC_INSTANCE_NAME}_REGS->SUPC_BOD33 & (${SUPC_BOD33_FACTORY_DATA_MASK})) | ${SUPC_BOD33_VAL};
+    if (bodEnable)
+    {
+        ${SUPC_INSTANCE_NAME}_REGS->SUPC_BOD33 |= SUPC_BOD33_ENABLE_Msk;
+    }
 
 </#if>
 <#if SUPC_VREF_VAL?has_content>
