@@ -160,9 +160,9 @@
 <#if SUPC_VREG_SEL??>
     <#if SUPC_VREG_SEL == true >
         <#if SUPC_VREG_VAL != "">
-        <#assign SUPC_VREG_VAL = SUPC_VREG_VAL + " | SUPC_VREG_SEL_Msk">
+        <#assign SUPC_VREG_VAL = SUPC_VREG_VAL + " | SUPC_VREG_SEL_BUCK">
         <#else>
-        <#assign SUPC_VREG_VAL = " SUPC_VREG_SEL_Msk">
+        <#assign SUPC_VREG_VAL = " SUPC_VREG_SEL_BUCK">
         </#if>
     </#if>
 </#if>
@@ -266,8 +266,15 @@
 void ${SUPC_INSTANCE_NAME}_Initialize( void )
 {
 <#if SUPC_BOD_VAL?has_content>
+    uint32_t bodEnable = ${SUPC_INSTANCE_NAME}_REGS->${SUPC_BOD_REGNAME} & SUPC_${SUPC_BOD_NAME}_ENABLE_Msk;
+
     /* Configure ${SUPC_BOD_NAME}. Mask the values loaded from NVM during reset. */
+    ${SUPC_INSTANCE_NAME}_REGS->${SUPC_BOD_REGNAME} &= ~SUPC_${SUPC_BOD_NAME}_ENABLE_Msk;
     ${SUPC_INSTANCE_NAME}_REGS->${SUPC_BOD_REGNAME} = (${SUPC_INSTANCE_NAME}_REGS->${SUPC_BOD_REGNAME} & (${SUPC_BOD_FACTORY_DATA_MASK})) | ${SUPC_BOD_VAL};
+    if (bodEnable)
+    {
+        ${SUPC_INSTANCE_NAME}_REGS->${SUPC_BOD_REGNAME} |= SUPC_${SUPC_BOD_NAME}_ENABLE_Msk;
+    }
 
 </#if>
 <#if SUPC_VREG_VAL?has_content>
@@ -347,7 +354,7 @@ void ${SUPC_INSTANCE_NAME}_InterruptHandler( void )
     {
         ${SUPC_INSTANCE_NAME}_REGS->SUPC_INTFLAG = SUPC_INTFLAG_${SUPC_BOD_NAME}DET_Msk;
 
-		if (${SUPC_INSTANCE_NAME?lower_case}CallbackObject.callback != NULL)
+        if (${SUPC_INSTANCE_NAME?lower_case}CallbackObject.callback != NULL)
         {
             ${SUPC_INSTANCE_NAME?lower_case}CallbackObject.callback(${SUPC_INSTANCE_NAME?lower_case}CallbackObject.context);
         }
