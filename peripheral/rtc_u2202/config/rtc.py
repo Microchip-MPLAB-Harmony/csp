@@ -360,7 +360,7 @@ def onAttachmentDisconnected(source, target):
         localComponent.getSymbolByID("RTC_MODE1_TIMER_COUNTER_PERIOD").setValue(long(0))
         localComponent.getSymbolByID("SYS_TIME_CALENDAR_MODE_NOT_SUPPORTED_COMMENT").setVisible(False)
 
-def sysTime_modeSelection(symbol, event):
+def sysTime_updateOnModeChange(rtcMode):
     global timerStartApiName_Sym
     global timeStopApiName_Sym
     global compareSetApiName_Sym
@@ -373,9 +373,6 @@ def sysTime_modeSelection(symbol, event):
     global timerPeriodMax_Sym
     global rtcInstanceName
     global sysTimePlibMode
-
-    symObj = event["symbol"]
-    rtcMode = symObj.getSelectedKey()
 
     irqEnumName = "RTC_IRQn"
 
@@ -413,6 +410,12 @@ def sysTime_modeSelection(symbol, event):
         frequencyGetApiName_Sym.setValue(frequencyGetApiName,2)
         callbackApiName_Sym.setValue(callbackApiName,2)
         irqEnumName_Sym.setValue(irqEnumName,2)
+
+def sysTime_modeSelection(symbol, event):
+    symObj = event["symbol"]
+    rtcMode = symObj.getSelectedKey()
+    sysTime_updateOnModeChange(rtcMode)
+
 
 ################################################################################
 ########                   RTC DATABASE COMPONENTS                      ########
@@ -855,6 +858,8 @@ def instantiateComponent(rtcComponent):
     evsysTrig = rtcComponent.createBooleanSymbol("EVSYS", None)
     evsysTrig.setVisible(False)
     evsysTrig.setDependencies(evsysSetup, evsysDep)
+
+    sysTime_updateOnModeChange(rtcModeSelection_Sym.getSelectedKey())
 
 ################################ Code Generation ###############################
 
