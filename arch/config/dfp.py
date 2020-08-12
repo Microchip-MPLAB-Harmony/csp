@@ -89,10 +89,11 @@ def instantiateComponent(dfpComponent):
         deviceCompatHeaderFile.setMarkup(True)
         deviceCompatHeaderFile.setSourcePath("compat/templates/" + compatFile)
         deviceCompatHeaderFile.setOutputName(compatFileNameSym.getValue())
-        deviceCompatHeaderFile.setDestPath("../../packs/" + processorName + "_DFP/")
-        deviceCompatHeaderFile.setProjectPath("packs/" + processorName + "_DFP/")
+        deviceCompatHeaderFile.setDestPath("")
+        deviceCompatHeaderFile.setProjectPath("config/" + configName + "/")
         deviceCompatHeaderFile.setType("HEADER")
         deviceCompatHeaderFile.setOverwrite(True)
+        deviceCompatHeaderFile.setEnabled(False)
 
 
     if( "PIC32M" not in processorName):

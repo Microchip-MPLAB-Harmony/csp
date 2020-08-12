@@ -60,8 +60,5 @@
 </#if>
 #include "device_cache.h"
 </#if>
-<#if DFP_COMPAT_FILE?has_content>
-#include "${DFP_COMPAT_FILE}"
-</#if>
 #include "toolchain_specifics.h"
 
