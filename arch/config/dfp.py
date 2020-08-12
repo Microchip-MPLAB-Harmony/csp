@@ -28,6 +28,8 @@ def instantiateComponent(dfpComponent):
     from os import listdir
     import xml.etree.ElementTree as ET
 
+    configName =    Variables.get( "__CONFIGURATION_NAME" )
+
     MCC_HEADERS_SUBPATH = "/include"
 
     dfpDevice = dfpComponent.createCommentSymbol("dfpDevice", None)
@@ -77,8 +79,8 @@ def instantiateComponent(dfpComponent):
     deviceHeaderFile.setMarkup(True)
     deviceHeaderFile.setSourcePath("templates/device.h.ftl")
     deviceHeaderFile.setOutputName("device.h")
-    deviceHeaderFile.setDestPath("../../packs/" + processorName + "_DFP/")
-    deviceHeaderFile.setProjectPath("packs/" + processorName + "_DFP/")
+    deviceHeaderFile.setDestPath("")
+    deviceHeaderFile.setProjectPath("config/" + configName + "/")
     deviceHeaderFile.setType("HEADER")
     deviceHeaderFile.setOverwrite(True)
 
@@ -134,8 +136,8 @@ def instantiateComponent(dfpComponent):
         secDeviceHeaderFile.setMarkup(True)
         secDeviceHeaderFile.setSourcePath("templates/device.h.ftl")
         secDeviceHeaderFile.setOutputName("device.h")
-        secDeviceHeaderFile.setDestPath("../../packs/" + processorName + "_DFP/")
-        secDeviceHeaderFile.setProjectPath("packs/" + processorName + "_DFP/")
+        deviceHeaderFile.setDestPath("")
+        deviceHeaderFile.setProjectPath("config/" + configName + "/")
         secDeviceHeaderFile.setType("HEADER")
         secDeviceHeaderFile.setOverwrite(True)
         secDeviceHeaderFile.setSecurity("SECURE")
