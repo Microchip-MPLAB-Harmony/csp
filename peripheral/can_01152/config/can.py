@@ -671,7 +671,12 @@ def instantiateComponent(canComponent):
     canAcceptanceMaskNumber.setLabel("Number of Acceptance Filter Mask")
     canAcceptanceMaskNumber.setDefaultValue(1)
     canAcceptanceMaskNumber.setMin(1)
-    canAcceptanceMaskNumber.setMax(4)
+    maxAcceptanceMaskNum = 0
+    canAcceptanceMaskReg = "C" + canInstanceNum.getValue() + "RXM"
+    for index in range(len(canRegs_Values)):
+        if canAcceptanceMaskReg in canRegs_Values[index].getAttribute("name"):
+            maxAcceptanceMaskNum += 1
+    canAcceptanceMaskNumber.setMax(maxAcceptanceMaskNum)
 
     #Create all filters in a disabled state
     for mask in range (canAcceptanceMaskNumber.getMax()):
