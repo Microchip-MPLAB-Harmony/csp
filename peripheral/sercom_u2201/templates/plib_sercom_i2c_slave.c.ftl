@@ -94,15 +94,16 @@ void ${SERCOM_INSTANCE_NAME}_I2C_Initialize(void)
     </#if>
 
      /* Set Operation Mode to I2C Slave */
-    <@compress single_line=true>${SERCOM_INSTANCE_NAME}_REGS->I2CS.SERCOM_CTRLA = SERCOM_I2CS_CTRLA_MODE_I2C_SLAVE |
-                                                                                  SERCOM_I2CS_CTRLA_SDAHOLD_${I2CS_SDAHOLD_TIME}
-                                                                                  ${I2CS_RUNSTDBY?then(' | SERCOM_I2CS_CTRLA_RUNSTDBY_Msk', '')}
-                                                                                  <#if I2CS_LOWTOUT_SUPPORT??>${I2CS_LOWTOUT_SUPPORT?then(' | SERCOM_I2CS_CTRLA_LOWTOUTEN_Msk', '')}</#if>
-                                                                                  <#if I2CS_SCLSM??> | SERCOM_I2CM_CTRLA_SCLSM(${I2CS_SCLSM})
-                                                                                  </#if>
-                                                                                  <#if I2CS_HIGH_SPEED_MODE??>${I2CS_HIGH_SPEED_MODE?then(' | SERCOM_I2CS_CTRLA_SPEED(SERCOM_I2CS_CTRLA_SPEED_HIGH_SPEED_MODE_Val)', '')}</#if>
-                                                                                  <#if I2CS_SEXTTOEN_SUPPORT??>${I2CS_SEXTTOEN_SUPPORT?then(' | SERCOM_I2CS_CTRLA_SEXTTOEN_Msk', '')}</#if>;
-                                                                                  </@compress>
+    <@compress single_line=true>${SERCOM_INSTANCE_NAME}_REGS->I2CS.SERCOM_CTRLA =
+    SERCOM_I2CS_CTRLA_MODE_I2C_SLAVE |
+    SERCOM_I2CS_CTRLA_SDAHOLD_${I2CS_SDAHOLD_TIME}
+    ${I2CS_RUNSTDBY?then(' | SERCOM_I2CS_CTRLA_RUNSTDBY_Msk', '')}
+    <#if I2CS_LOWTOUT_SUPPORT??>${I2CS_LOWTOUT_SUPPORT?then(' | SERCOM_I2CS_CTRLA_LOWTOUTEN_Msk', '')}</#if>
+    <#if I2CS_SCLSM??> | SERCOM_I2CS_CTRLA_SCLSM(${I2CS_SCLSM})
+    </#if>
+    <#if I2CS_MODE??> | SERCOM_I2CS_CTRLA_SPEED_${I2CS_MODE}  </#if>
+    <#if I2CS_SEXTTOEN_SUPPORT??>${I2CS_SEXTTOEN_SUPPORT?then(' | SERCOM_I2CS_CTRLA_SEXTTOEN_Msk', '')}</#if>;
+    </@compress>
 
     /* Wait for synchronization */
     <#if SERCOM_SYNCBUSY = false>
@@ -121,7 +122,7 @@ void ${SERCOM_INSTANCE_NAME}_I2C_Initialize(void)
 
     <#if I2CS_SMEN == true>
     /* Enable Smart Mode */
-    ${SERCOM_INSTANCE_NAME}_REGS->I2CS.SERCOM_CTRLB |= SERCOM_I2CM_CTRLB_SMEN_Msk;
+    ${SERCOM_INSTANCE_NAME}_REGS->I2CS.SERCOM_CTRLB |= SERCOM_I2CS_CTRLB_SMEN_Msk;
 
     /* Wait for synchronization */
     <#if SERCOM_SYNCBUSY = false>
