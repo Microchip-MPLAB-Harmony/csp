@@ -47,7 +47,7 @@ global memoryGranularity
 memoryGranularity = {}
 
 trustZoneMenu = coreComponent.createMenuSymbol("TRUSTZONE_MENU", devCfgMenu)
-trustZoneMenu.setLabel("TrustZone Manager")
+trustZoneMenu.setLabel("TrustZone-M Manager")
 trustZonePeripheralMenu = coreComponent.createMenuSymbol("TZ_PERIPHERAL_MENU", trustZoneMenu)
 trustZonePeripheralMenu.setLabel("Peripherals")
 trustZoneMixSecurePeripheralMenu = coreComponent.createMenuSymbol("TZ_MIX_SECURE_PERIPHERAL_MENU", trustZoneMenu)
@@ -84,7 +84,7 @@ fuseUpdateCallback.setVisible(False)
 fuseUpdateCallback.setDependencies(setUpFuse, fusedependencyList)
 
 memoryMenu = coreComponent.createMenuSymbol("MEMORY_MENU", devCfgMenu)
-memoryMenu.setLabel("Memory configurator")
+memoryMenu.setLabel("Memory Configuration")
 
 idauNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"IDAU\"]/instance@[name=\"IDAU\"]/parameters")
 for parameter in idauNode.getChildren():
