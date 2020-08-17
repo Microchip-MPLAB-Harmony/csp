@@ -123,14 +123,12 @@ static uintptr_t _ReturnAddress;     // Return Address (ra)
 
 void __attribute__((nomips16, noreturn)) _general_exception_handler (XCPT_FRAME* const pXFrame)
 {
-    register uint32_t _localStackPointerValue asm("sp");
-
     _excep_addr = pXFrame->epc;
     _excep_code = pXFrame->cause;   // capture exception type
     _excep_code = (_excep_code & 0x0000007C) >> 2;
 
     _CP0_StatusValue   = _CP0_GET_STATUS();
-    _StackPointerValue = _localStackPointerValue;
+    asm volatile("sw $sp,%0" : "=m" (_StackPointerValue));
     _BadVirtualAddress = _CP0_GET_BADVADDR();
     _ReturnAddress     = pXFrame->ra;
 
