@@ -125,21 +125,6 @@ def genMainSourceFile(symbol, event):
         symbol.setEnabled(False)
 
 
-def updateCortexMLinkerScript(symbol, event):
-    compilerChoice = event["source"].getSymbolByID("COMPILER_CHOICE")
-    configName = Variables.get( "__CONFIGURATION_NAME" )
-    coreArch = event["source"].getSymbolByID("CoreArchitecture")
-    if compilerChoice.getSelectedKey() == "KEIL":
-        symbol.setSourcePath("arm/templates/keil/cortex_m/startup/scatter_file.sct")
-        symbol.setOutputName(configName + ".sct")
-        symbol.setEnabled(True)
-    elif compilerChoice.getSelectedKey() == "IAR"and coreArch.getValue() not in ["CORTEX-M23"]:
-        symbol.setSourcePath("arm/templates/iar/cortex_m/startup/iar_config_file.icf.ftl")
-        symbol.setOutputName("flash.icf")
-        symbol.setEnabled(True)
-    else:
-        symbol.setEnabled(False)
-
 def genSysSourceFile(symbol, event):
     global processor
     coreSysFileEnabled = Database.getSymbolValue("core", "CoreSysFiles")
@@ -189,6 +174,60 @@ def genSysIntASMSourceFile(symbol, event):
 
 def deviceCacheEnable (symbol, event):
     symbol.setEnabled(event["value"])
+
+def AddLinkerFileToProject(symbol, event):
+    compiler = event["symbol"].getSelectedKey()
+    arch = event["source"].getSymbolValue("CoreArchitecture")
+    #No linker file when using Cortex-M23 with IAR
+    if arch == "CORTEX-M23" and compiler == "IAR":
+        symbol.setValue(False)
+    else:
+        symbol.clearValue()
+    symbol.setReadOnly(not((compiler == "XC32") and ("CORTEX-M" in arch or "MIPS" in arch)))
+
+
+global setLinkerScriptParams
+def setLinkerScriptParams(symbol, arch, compiler, addLinkerFile):
+    if compiler == "KEIL":
+        configName =  Variables.get( "__CONFIGURATION_NAME" )
+        symbol.setRelative(True)
+        symbol.setMarkup(True)
+        symbol.setSourcePath("arm/templates/keil/cortex_m/startup/scatter_file.sct")
+        symbol.setOutputName(configName + ".sct")
+    elif compiler == "IAR":
+        symbol.setRelative(True)
+        symbol.setMarkup(True)
+        symbol.setSourcePath("arm/templates/iar/cortex_m/startup/iar_config_file.icf.ftl")
+        symbol.setOutputName("flash.icf")
+    elif compiler == "XC32":
+        processor  =  Variables.get( "__PROCESSOR" )
+        dfpPath    =  Variables.get("__DFP_PACK_DIR")
+        symbol.setRelative(False)
+        symbol.setMarkup(False)
+        if "MIPS" in arch:
+            processor = processor.split("PIC")[1]
+            symbol.setSourcePath("{0}/xc32/{1}/p{1}.ld".format(dfpPath, processor))
+            symbol.setOutputName("p{0}.ld".format(processor))
+        else:
+            symbol.setSourcePath("{0}/xc32/{1}/{1}.ld".format(dfpPath, processor))
+            symbol.setOutputName("{0}.ld".format(processor))
+
+    #Linker file will not be added to the project if
+    #1) Compiler is IAR and the MCU arch is cortex-m23
+    #2) Compiler is XC32 and option is disabled by the user
+    if ((compiler == "IAR" and arch in ["CORTEX-M23"]) or
+        (compiler == "XC32" and addLinkerFile == False)):
+        symbol.setEnabled(False)
+    else:
+        symbol.setEnabled(True)
+
+
+def updateLinkerScriptParams(symbol, event):
+    compiler = event["source"].getSymbolByID("COMPILER_CHOICE").getSelectedKey()
+    arch = event["source"].getSymbolValue("CoreArchitecture")
+    addLinkerFile = event["source"].getSymbolValue("ADD_LINKER_FILE")
+    setLinkerScriptParams(symbol, arch, compiler, addLinkerFile)
+
 
 def instantiateComponent( coreComponent ):
     global compilers
@@ -396,6 +435,19 @@ def instantiateComponent( coreComponent ):
 
     compilerChoice.setReadOnly(not multiCompilerSupport)
 
+    addLinkerFile = coreComponent.createBooleanSymbol("ADD_LINKER_FILE", toolChainMenu)
+    addLinkerFile.setLabel("Add linker file to project")
+    addLinkerFile.setDescription("Copies linker file into the project "
+    "configuration folder and uses it for linking the project. Uncheck this "
+    "option, if a custom linker script is used.")
+    addLinkerFile.setDefaultValue(True)
+
+    #We only allow disabling custom linker script when using XC32 compiler with non-MPU masks
+    addLinkerFile.setReadOnly( not((compilerChoice.getSelectedKey() == "XC32") and
+                                     ("CORTEX-M" in coreArch.getValue() or "MIPS" in coreArch.getValue())))
+
+    addLinkerFile.setDependencies(AddLinkerFileToProject, ["COMPILER_CHOICE"])
+
     ## Dummy Symbol to trigger compilerUpdate callback on compiler choice change
     compilerUpdateSym = coreComponent.createBooleanSymbol("COMPILER_UPDATE", toolChainMenu)
     compilerUpdateSym.setVisible(False)
@@ -405,6 +457,7 @@ def instantiateComponent( coreComponent ):
     xc32Menu = coreComponent.createMenuSymbol("CoreXC32Menu", toolChainMenu)
     xc32Menu.setLabel("XC32 Global Options")
     xc32Menu.setVisible( xc32Available & xc32Visibility )
+
 
     xc32LdMenu = coreComponent.createMenuSymbol("CoreXC32_LD", xc32Menu)
     xc32LdMenu.setLabel("Linker")
@@ -742,25 +795,28 @@ def instantiateComponent( coreComponent ):
         exceptionAsmSourceFile.setEnabled(False)
         exceptionAsmSourceFile.setDependencies( genExceptionAsmSourceFile, ["CoreSysFiles", "CoreSysExceptionFile", "ADVANCED_EXCEPTION"])
 
-    if "CORTEX-M" in coreArch.getValue():
+
+    if "CORTEX-M" in coreArch.getValue() or "MIPS" in coreArch.getValue():
         linkerFile = coreComponent.createFileSymbol("LINKER_SCRIPT", None)
-        linkerFile.setMarkup(True)
         linkerFile.setOverwrite(True)
         linkerFile.setType("LINKER")
         linkerFile.setProjectPath("config/" + configName + "/")
         linkerFile.setDestPath("")
-        linkerFile.setDependencies(updateCortexMLinkerScript, ["COMPILER_CHOICE"])
-        if compilerChoice.getSelectedKey() == "KEIL":
-            linkerFile.setSourcePath("arm/templates/keil/cortex_m/startup/scatter_file.sct")
-            linkerFile.setOutputName(configName + ".sct")
-            linkerFile.setEnabled(True)
-        elif compilerChoice.getSelectedKey() == "IAR" and coreArch.getValue() not in ["CORTEX-M23"]:
-            linkerFile.setSourcePath("arm/templates/iar/cortex_m/startup/iar_config_file.icf.ftl")
-            linkerFile.setOutputName("flash.icf")
-            linkerFile.setEnabled(True)
-        else:
-            linkerFile.setEnabled(False)
-    elif "MIPS" in coreArch.getValue():
+        setLinkerScriptParams(linkerFile, coreArch.getValue(), compilerChoice.getValue(), addLinkerFile.getValue())
+        linkerFile.setDependencies(updateLinkerScriptParams, ["COMPILER_CHOICE", "ADD_LINKER_FILE"])
+
+        if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+            linkerFile = coreComponent.createFileSymbol("SECURE_LINKER_SCRIPT", None)
+            linkerFile.setOverwrite(True)
+            linkerFile.setType("LINKER")
+            linkerFile.setProjectPath("config/" + configName + "/")
+            linkerFile.setDestPath("")
+            linkerFile.setSecurity("SECURE")
+            setLinkerScriptParams(linkerFile, coreArch.getValue(), compilerChoice.getValue(), addLinkerFile.getValue())
+            linkerFile.setDependencies(updateLinkerScriptParams, ["COMPILER_CHOICE", "ADD_LINKER_FILE"])
+
+
+    if "MIPS" in coreArch.getValue():
         # set XC32 ISA mode
         xc32ISAModeSettingSym = coreComponent.createSettingSymbol("XC32_ISA_MODE_SETTING", None)
         xc32ISAModeSettingSym.setCategory("C32")
