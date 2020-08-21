@@ -420,7 +420,35 @@ if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_E
     secnvicSystemIntTableFile.setOutputName("core.LIST_SYSTEM_INTERRUPT_SECURE_HANDLERS")
     secnvicSystemIntTableFile.setSourcePath("../peripheral/nvic/templates/system/trustZone/interrupts_vector_table_secure.h.ftl")
     secnvicSystemIntTableFile.setMarkup(True)
-    
+
+    nonSecNvicHeaderFile = coreComponent.createFileSymbol("NONSEC_NVIC_HEADER", None)
+    nonSecNvicHeaderFile.setType("HEADER")
+    nonSecNvicHeaderFile.setSourcePath("../peripheral/nvic/templates/plib_nvic.h.ftl")
+    nonSecNvicHeaderFile.setOutputName("plib_nvic.h")
+    nonSecNvicHeaderFile.setDestPath("/peripheral/nvic/")
+    nonSecNvicHeaderFile.setProjectPath("config/" + configName + "/peripheral/nvic/")
+    nonSecNvicHeaderFile.setMarkup(True)
+
+    nonSecNvicSourceFile = coreComponent.createFileSymbol("NONSEC_NVIC_SOURCE", None)
+    nonSecNvicSourceFile.setType("SOURCE")
+    nonSecNvicSourceFile.setSourcePath("../peripheral/nvic/templates/trustZone/plib_nvic.c.ftl")
+    nonSecNvicSourceFile.setOutputName("plib_nvic.c")
+    nonSecNvicSourceFile.setDestPath("/peripheral/nvic/")
+    nonSecNvicSourceFile.setProjectPath("config/" + configName + "/peripheral/nvic/")
+    nonSecNvicSourceFile.setMarkup(True)
+
+    nonSecNvicSystemInitFile = coreComponent.createFileSymbol("NONSEC_NVIC_INIT", None)
+    nonSecNvicSystemInitFile.setType("STRING")
+    nonSecNvicSystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_INTERRUPTS")
+    nonSecNvicSystemInitFile.setSourcePath("../peripheral/nvic/templates/system/initialization.c.ftl")
+    nonSecNvicSystemInitFile.setMarkup(True)
+
+    nonSecNvicSystemDefFile = coreComponent.createFileSymbol("NINSEC_NVIC_DEF", None)
+    nonSecNvicSystemDefFile.setType("STRING")
+    nonSecNvicSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+    nonSecNvicSystemDefFile.setSourcePath("../peripheral/nvic/templates/system/definitions.h.ftl")
+    nonSecNvicSystemDefFile.setMarkup(True)
+
     nvicHeaderFile.setSecurity("SECURE")
     nvicSourceFile.setSecurity("SECURE")
     nvicSystemInitFile.setOutputName("core.LIST_SYSTEM_SECURE_INIT_INTERRUPTS")
