@@ -802,7 +802,7 @@ def instantiateComponent( coreComponent ):
         linkerFile.setType("LINKER")
         linkerFile.setProjectPath("config/" + configName + "/")
         linkerFile.setDestPath("")
-        setLinkerScriptParams(linkerFile, coreArch.getValue(), compilerChoice.getValue(), addLinkerFile.getValue())
+        setLinkerScriptParams(linkerFile, coreArch.getValue(), compilerChoice.getSelectedKey(), addLinkerFile.getValue())
         linkerFile.setDependencies(updateLinkerScriptParams, ["COMPILER_CHOICE", "ADD_LINKER_FILE"])
 
         if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
@@ -812,7 +812,7 @@ def instantiateComponent( coreComponent ):
             linkerFile.setProjectPath("config/" + configName + "/")
             linkerFile.setDestPath("")
             linkerFile.setSecurity("SECURE")
-            setLinkerScriptParams(linkerFile, coreArch.getValue(), compilerChoice.getValue(), addLinkerFile.getValue())
+            setLinkerScriptParams(linkerFile, coreArch.getValue(), compilerChoice.getSelectedKey(), addLinkerFile.getValue())
             linkerFile.setDependencies(updateLinkerScriptParams, ["COMPILER_CHOICE", "ADD_LINKER_FILE"])
 
 
