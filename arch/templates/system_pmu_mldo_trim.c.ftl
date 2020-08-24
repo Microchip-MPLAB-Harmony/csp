@@ -156,12 +156,16 @@ void SYS_PMU_MLDO_TRIM(void)
             mldocfg1 = *otp_mldocfg1_data;
             if((mldocfg1 == 0xFFFFFFFF) || (mldocfg1 == 0x00000000))
             {
-                mldocfg1 = MLDOCFG1_DEFUALT_VAL | MLDO_ISENSE_CONFIG;;
+                mldocfg1 = MLDOCFG1_DEFUALT_VAL | MLDO_ISENSE_CONFIG;
             }
             else
             {
                  mldocfg1 |= MLDO_ISENSE_CONFIG;
             }
+        }
+		else
+        {
+            mldocfg1 = *otp_mldocfg1_data | MLDO_ISENSE_CONFIG;
         }
         SYS_PMU_SPI_WRITE(MLDOCFG1_ADDR, mldocfg1);
         /* make sure mldo_cfg2 register is zero, nothing is enabled. */
