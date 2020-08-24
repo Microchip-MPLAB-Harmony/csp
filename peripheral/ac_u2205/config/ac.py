@@ -75,7 +75,20 @@ def updateACClockWarningStatus(symbol, event):
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
-        
+
+
+def acEvesysConfigure(symbol, event):
+    if("AC_EVCTRL_COMPEO" in event["id"]):
+        instance = filter(str.isdigit,str(event["id"]))
+        Database.setSymbolValue("evsys", "GENERATOR_AC_COMP_"+str(instance) + "_ACTIVE", event["value"], 2)
+
+    if("AC_EVCTRL_WINEO" in event["id"]):
+        instance = filter(str.isdigit,str(event["id"]))
+        Database.setSymbolValue("evsys", "GENERATOR_AC_WIN_"+str(instance) + "_ACTIVE", event["value"], 2)
+
+    if ("AC_EVCTRL_COMPEI" in event["id"]):
+        instance = filter(str.isdigit,str(event["id"]))
+        Database.setSymbolValue("evsys", "USER_AC_SOC_"+str(instance) + "_READY", event["value"], 2)
 #######################################################################################################################################
 #####################################        Callback Funtions ---- END      ##########################################################
 #######################################################################################################################################
@@ -92,6 +105,7 @@ def instantiateComponent(acComponent):
     global InterruptVector
     global InterruptHandler
     global InterruptHandlerLock
+    evsysDep = []
     
     acInstanceName = acComponent.createStringSymbol("AC_INSTANCE_NAME", None)
     acInstanceName.setVisible(False)
@@ -350,6 +364,7 @@ def instantiateComponent(acComponent):
         acSym_EVCTRL_COMPEI.setDefaultValue(False)
         acSym_EVCTRL_COMPEI.setVisible(False)
         acSym_EVCTRL_COMPEI.setDependencies(setacSymbolVisibility,["ANALOG_COMPARATOR_ENABLE_" + str(comparatorID)])
+        evsysDep.append("AC_EVCTRL_COMPEI" + str(comparatorID))
         
         #Event Output Enable
         acSym_EVCTRL_COMPEO = acComponent.createBooleanSymbol("AC_EVCTRL_COMPEO" + str(comparatorID), acSym_AdvConf)
@@ -357,6 +372,7 @@ def instantiateComponent(acComponent):
         acSym_EVCTRL_COMPEO.setDefaultValue(False)
         acSym_EVCTRL_COMPEO.setVisible(False)
         acSym_EVCTRL_COMPEO.setDependencies(setacSymbolVisibility,["ANALOG_COMPARATOR_ENABLE_" + str(comparatorID)])
+        evsysDep.append("AC_EVCTRL_COMPEO" + str(comparatorID))
     
     #Menu item for window configurations
     acSym_WindowConf = acComponent.createMenuSymbol("WINDOW_CONFIGURATION", None)
@@ -400,6 +416,7 @@ def instantiateComponent(acComponent):
     acSym_WINCTRL_EVENT_OUT0 = acComponent.createBooleanSymbol("AC_EVCTRL_WINEO0", acSym_WINCTRL0)
     acSym_WINCTRL_EVENT_OUT0.setLabel("Enable Window 0 Event Output")
     acSym_WINCTRL_EVENT_OUT0.setDefaultValue(False)
+    evsysDep.append("AC_EVCTRL_WINEO0")
     
     ############################################################################
     #### Dependency ####
@@ -427,6 +444,9 @@ def instantiateComponent(acComponent):
     acSym_ClkEnComment.setLabel("Warning!!! " +acInstanceName.getValue()+" Clock is Disabled in Clock Manager")
     acSym_ClkEnComment.setDependencies(updateACClockWarningStatus, ["core." + acInstanceName.getValue() + "_CLOCK_ENABLE"])
     
+    acSym_EVESYS_CONFIGURE = acComponent.createIntegerSymbol("AC_EVESYS_CONFIGURE", None)
+    acSym_EVESYS_CONFIGURE.setVisible(False)
+    acSym_EVESYS_CONFIGURE.setDependencies(acEvesysConfigure, evsysDep)      
     ###################################################################################################
     ####################################### Code Generation  ##########################################
     ###################################################################################################
