@@ -51,6 +51,8 @@ def getMaxValue(bit):
 
 def updatePeriod(symbol, event):
     mode = tcSym_CTRLA_MODE.getValue()
+    max = getMaxValue(tcSym_CTRLA_MODE.getValue())
+    symbol.setMax(max)
     wave = tcSym_Compare_WAVE_WAVEGEN.getValue()
     if mode == 1:  #8-bit
         if  wave == 0 or wave == 2: #normal
@@ -219,9 +221,9 @@ tcSym_Compare_CTRLBSET_DIR.setDisplayMode("Description")
 global tcSym_ComparePeriod
 tcSym_ComparePeriod = tcComponent.createLongSymbol("TC_COMPARE_PERIOD", tcSym_CompareMenu)
 tcSym_ComparePeriod.setLabel("Period Value")
-tcSym_ComparePeriod.setDefaultValue(48)
+tcSym_ComparePeriod.setDefaultValue(65535)
 tcSym_ComparePeriod.setMin(0)
-tcSym_ComparePeriod.setMax(255)
+tcSym_ComparePeriod.setMax(65535)
 tcSym_ComparePeriod.setVisible(False)
 tcSym_ComparePeriod.setDependencies(updatePeriod, ["TC_CTRLA_MODE", "TC_COMPARE_CTRLA_WAVEGEN"])
 
