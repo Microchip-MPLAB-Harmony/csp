@@ -1607,7 +1607,10 @@ if __name__ == "__main__":
         bitfield = 'PBDIV'
         for ii in children:
             if(ii.getAttribute('name') == regname):
-                symbolDivName.setDefaultValue( _get_default_value(ii, bitfield, 'None'))
+                if pbus != "3":
+                    symbolDivName.setDefaultValue( _get_default_value(ii, bitfield, 'None'))
+                else:
+                    symbolDivName.setDefaultValue(10)
         symbolDivName.setVisible(True)
         symbolPbdivList.append({"symbol":symbolDivName, "index":pbus})
 
