@@ -522,6 +522,8 @@ def instantiateComponent(sercomComponent):
     # Initial settings for Interrupt
     if (sercomSym_OperationMode.getSelectedKey() == "USART_INT") and (Database.getSymbolValue(sercomInstanceName.getValue().lower(), "USART_INTERRUPT_MODE") == True):
         setSERCOMInterruptData(True, "USART")
+    elif (sercomSym_OperationMode.getSelectedKey() == "I2CM") and (Database.getSymbolValue(sercomInstanceName.getValue().lower(), "I2C_INTERRUPT_MODE") == True):
+        setSERCOMInterruptData(True, "I2C")
 
     # Interrupt Warning status
     sercomSym_IntEnComment = sercomComponent.createCommentSymbol("SERCOM_INTERRUPT_ENABLE_COMMENT", None)

@@ -214,24 +214,28 @@ isErrorInterruptSupported = False
 usartSym_Interrupt_Mode = sercomComponent.createBooleanSymbol("USART_INTERRUPT_MODE", sercomSym_OperationMode)
 usartSym_Interrupt_Mode.setLabel("Enable Interrupts ?")
 usartSym_Interrupt_Mode.setDefaultValue(True)
+usartSym_Interrupt_Mode.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
 usartSym_Interrupt_Mode.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
 
 #Receive Enable
 usartSym_CTRLB_RXEN = sercomComponent.createBooleanSymbol("USART_RX_ENABLE", sercomSym_OperationMode)
 usartSym_CTRLB_RXEN.setLabel("Receive Enable")
 usartSym_CTRLB_RXEN.setDefaultValue(True)
+usartSym_CTRLB_RXEN.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
 usartSym_CTRLB_RXEN.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
 
 #Transmit Enable
 usartSym_CTRLB_TXEN = sercomComponent.createBooleanSymbol("USART_TX_ENABLE", sercomSym_OperationMode)
 usartSym_CTRLB_TXEN.setLabel("Transmit Enable")
 usartSym_CTRLB_TXEN.setDefaultValue(True)
+usartSym_CTRLB_TXEN.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
 usartSym_CTRLB_TXEN.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
 
 #Enable Ring buffer?
 usartSym_RingBuffer_Enable = sercomComponent.createBooleanSymbol("USART_RING_BUFFER_ENABLE", sercomSym_OperationMode)
 usartSym_RingBuffer_Enable.setLabel("Enable Ring Buffer ?")
 usartSym_RingBuffer_Enable.setDefaultValue(False)
+usartSym_RingBuffer_Enable.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
 usartSym_RingBuffer_Enable.setDependencies(updateRingBufferSizeVisibleProperty, ["SERCOM_MODE", "USART_INTERRUPT_MODE"])
 
 usartSym_TXRingBuffer_Size = sercomComponent.createIntegerSymbol("USART_TX_RING_BUFFER_SIZE", usartSym_RingBuffer_Enable)
@@ -271,6 +275,7 @@ for index in range(len(usartSym_CTRLA_FORM_Values)):
 usartSym_CTRLA_FORM.setDefaultValue(0)
 usartSym_CTRLA_FORM.setOutputMode("Value")
 usartSym_CTRLA_FORM.setDisplayMode("Description")
+usartSym_CTRLA_FORM.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
 usartSym_CTRLA_FORM.setDependencies(updateUSARTFORMValueProperty, ["USART_PARITY_MODE", "SERCOM_MODE", "USART_FORM"])
 
 #USART LIN Master Mode Support
@@ -326,6 +331,7 @@ if usartSym_CTRLC_HDRDLY_Node != None:
 #Run in StandBy
 usartSym_CTRLA_RUNSTDBY = sercomComponent.createBooleanSymbol("USART_RUNSTDBY", sercomSym_OperationMode)
 usartSym_CTRLA_RUNSTDBY.setLabel("Enable Run in Standby")
+usartSym_CTRLA_RUNSTDBY.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
 usartSym_CTRLA_RUNSTDBY.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
 
 #RXPO - Receive Pin Out
@@ -344,6 +350,7 @@ for index in range(len(usartSym_CTRLA_RXPO_Values)):
 usartSym_CTRLA_RXPO.setDefaultValue(0)
 usartSym_CTRLA_RXPO.setOutputMode("Value")
 usartSym_CTRLA_RXPO.setDisplayMode("Description")
+usartSym_CTRLA_RXPO.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
 usartSym_CTRLA_RXPO.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
 
 #TXPO - Transmit Pin Out
@@ -367,6 +374,7 @@ for index in range(len(usartSym_CTRLA_TXPO_Values)):
 usartSym_CTRLA_TXPO.setDefaultValue(0)
 usartSym_CTRLA_TXPO.setOutputMode("Value")
 usartSym_CTRLA_TXPO.setDisplayMode("Description")
+usartSym_CTRLA_TXPO.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
 usartSym_CTRLA_TXPO.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
 
 if isRS485Supported == True:
@@ -388,6 +396,7 @@ usartSym_CTRLB_PMODE.addKey("NONE", "0x2", "No Parity")
 usartSym_CTRLB_PMODE.setDefaultValue(2)
 usartSym_CTRLB_PMODE.setOutputMode("Key")
 usartSym_CTRLB_PMODE.setDisplayMode("Description")
+usartSym_CTRLB_PMODE.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
 usartSym_CTRLB_PMODE.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
 
 #Character Size
@@ -406,6 +415,7 @@ for index in range(len(usartSym_CTRLA_CHSIZE_Values)):
 usartSym_CTRLB_CHSIZE.setDefaultValue(0)
 usartSym_CTRLB_CHSIZE.setOutputMode("Key")
 usartSym_CTRLB_CHSIZE.setDisplayMode("Description")
+usartSym_CTRLB_CHSIZE.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
 usartSym_CTRLB_CHSIZE.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
 
 #Stop Bit
@@ -424,6 +434,7 @@ for index in range(len(usartSym_CTRLA_SBMODE_Values)):
 usartSym_CTRLB_SBMODE.setDefaultValue(0)
 usartSym_CTRLB_SBMODE.setOutputMode("Key")
 usartSym_CTRLB_SBMODE.setDisplayMode("Description")
+usartSym_CTRLB_SBMODE.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
 usartSym_CTRLB_SBMODE.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
 
 sampleRateNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SERCOM"]/register-group@[name="SERCOM"]/register@[modes="USART_INT",name="CTRLA"]')
@@ -453,6 +464,7 @@ usartSym_BAUD_RATE = sercomComponent.createIntegerSymbol("USART_BAUD_RATE", serc
 usartSym_BAUD_RATE.setLabel("Baud Rate in Hz")
 usartSym_BAUD_RATE.setDefaultValue(115200)
 usartSym_BAUD_RATE.setMin(1)
+usartSym_BAUD_RATE.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
 usartSym_BAUD_RATE.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
 
 #USART Baud Value

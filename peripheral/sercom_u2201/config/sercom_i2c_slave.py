@@ -68,7 +68,7 @@ def updateI2CClockStretchConfigValue(symbol, event):
 def updateSmartModeVisibility(symbol, event):
 
     if event["id"] == "I2CS_MODE":
-        if event["symbol"].getSelectedKey() == "HIGH_SPEED_MODE":
+        if event["symbol"].getValue() == 0x02:
             symbol.setReadOnly(True)
             symbol.setValue(True)
         else:

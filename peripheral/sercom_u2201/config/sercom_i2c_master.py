@@ -178,8 +178,7 @@ for index in range(len(ctrlaValue)):
 if speedSupported == True:
     # I2C Transfer Speed Mode
     i2cmSym_mode = sercomComponent.createKeyValueSetSymbol("I2CM_MODE", sercomSym_OperationMode)
-    i2cmSym_mode.setLabel("Transfer Speed Mode")
-    i2cmSym_mode.setVisible(False)
+    i2cmSym_mode.setLabel("Transfer Speed Mode")    
 
     i2cmTransferSpeedNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SERCOM"]/value-group@[name="SERCOM_I2CM_CTRLA__SPEED"]')
     i2cmTransferSpeedNodeValues = i2cmTransferSpeedNode.getChildren()
@@ -193,6 +192,7 @@ if speedSupported == True:
     i2cmSym_mode.setDefaultValue(0)
     i2cmSym_mode.setOutputMode("Key")
     i2cmSym_mode.setDisplayMode("Key")
+    i2cmSym_mode.setVisible(sercomSym_OperationMode.getSelectedKey() == "I2CM")
     i2cmSym_mode.setDependencies(updateI2CMasterConfigurationVisibleProperty, ["SERCOM_MODE"])        
     
     i2cmSym_HSMasterCode = sercomComponent.createIntegerSymbol("I2C_MASTER_CODE", sercomSym_OperationMode)
@@ -223,13 +223,12 @@ if sclsmSupported == True:
 # Run In Standby
 i2cmSym_CTRLA_RUNSTDBY = sercomComponent.createBooleanSymbol("I2C_RUNSTDBY", sercomSym_OperationMode)
 i2cmSym_CTRLA_RUNSTDBY.setLabel("Enable operation in Standby mode")
-i2cmSym_CTRLA_RUNSTDBY.setVisible(False)
+i2cmSym_CTRLA_RUNSTDBY.setVisible(sercomSym_OperationMode.getSelectedKey() == "I2CM")
 i2cmSym_CTRLA_RUNSTDBY.setDependencies(updateI2CMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
 
 # SDA Hold Time
 i2cmSym_CTRLA_SDAHOLD = sercomComponent.createKeyValueSetSymbol("I2C_SDAHOLD_TIME", sercomSym_OperationMode)
 i2cmSym_CTRLA_SDAHOLD.setLabel("SDA Hold Time")
-i2cmSym_CTRLA_SDAHOLD.setVisible(False)
 
 i2cmSDAHoldTimeReferenceNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SERCOM\"]/value-group@[name=\"SERCOM_I2CM_CTRLA__SDAHOLD\"]")
 i2cmSDAHoldTimeReferenceValues = i2cmSDAHoldTimeReferenceNode.getChildren()
@@ -243,6 +242,7 @@ for index in range(len(i2cmSDAHoldTimeReferenceValues)):
 i2cmSym_CTRLA_SDAHOLD.setDefaultValue(1)
 i2cmSym_CTRLA_SDAHOLD.setOutputMode("Key")
 i2cmSym_CTRLA_SDAHOLD.setDisplayMode("Description")
+i2cmSym_CTRLA_SDAHOLD.setVisible(sercomSym_OperationMode.getSelectedKey() == "I2CM")
 i2cmSym_CTRLA_SDAHOLD.setDependencies(updateI2CMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
 
 # Operating speed
@@ -254,7 +254,7 @@ if speedSupported == True:
 else:
     i2cmSym_BAUD.setMax(400)
 i2cmSym_BAUD.setDefaultValue(100)
-i2cmSym_BAUD.setVisible(False)
+i2cmSym_BAUD.setVisible(sercomSym_OperationMode.getSelectedKey() == "I2CM")
 i2cmSym_BAUD.setDependencies(updateI2CMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
 
 # I2C BAUD register value
@@ -263,7 +263,7 @@ i2cmSym_TRISEVALUE.setLabel("I2C Trise in nano seconds")
 i2cmSym_TRISEVALUE.setMin(1)
 i2cmSym_TRISEVALUE.setMax(1000)
 i2cmSym_TRISEVALUE.setDefaultValue(100)
-i2cmSym_TRISEVALUE.setVisible(False)
+i2cmSym_TRISEVALUE.setVisible(sercomSym_OperationMode.getSelectedKey() == "I2CM")
 i2cmSym_TRISEVALUE.setDependencies(updateI2CMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
 
 # I2C BAUD register value
@@ -300,7 +300,7 @@ if tenBitAddrSupported == True:
     i2cSym_TENBITEN = sercomComponent.createBooleanSymbol("I2C_ADDR_TENBITEN", sercomSym_OperationMode)
     i2cSym_TENBITEN.setLabel("Enable 10-bit Addressing")
     i2cSym_TENBITEN.setDefaultValue(False)
-    i2cSym_TENBITEN.setVisible(False)
+    i2cSym_TENBITEN.setVisible(sercomSym_OperationMode.getSelectedKey() == "I2CM")
     i2cSym_TENBITEN.setDependencies(updateI2CMasterConfigurationVisibleProperty, ["SERCOM_MODE"])
 
 #Use setValue instead of setDefaultValue to store symbol value in default.xml
