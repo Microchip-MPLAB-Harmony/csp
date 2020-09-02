@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>WAITMODE_WKUP_SOURCE Enumeration</title>
+<title>Using the Library</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05049.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04581.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05048.html" target="topic">Peripheral Libraries</a> &gt; <a href="06821.html" target="topic">SUPC Peripheral Library Help</a> &gt; <a href="06822.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="06889.html" target="topic">WAITMODE_WKUP_SOURCE Enumeration</a></div>
+<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="06854.html" target="topic">SPI Peripheral Library Help</a> &gt; <a href="06858.html" target="topic">Slave</a> &gt; <a href="06889.html" target="topic">Using the Library</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05049.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06886.html" target="topic">Previous</a> | <a href="06822.html" target="topic">Up</a> | <a href="06838.html" target="topic">Next</a></div>
+<a href="06881.html" target="topic">Previous</a> | <a href="06858.html" target="topic">Up</a> | <a href="06885.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: supc_6452::WAITMODE_WKUP_SOURCE Topic Title: WAITMODE_WKUP_SOURCE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SPI Slave 01329 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-WAITMODE_WKUP_SOURCE Enumeration</div>
+Using the Library</div>
 </div>
 </div>
 
@@ -49,156 +49,208 @@ WAITMODE_WKUP_SOURCE Enumeration</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Wakeup Input Source&nbsp;</p>
+The SPI slave PLIB is supported only in interrupt mode. The PLIB maintains internal buffers for saving the data received from the SPI master in RX buffer and the data to be transmitted out by the application is copied into TX buffer. The size of the transmit and receive buffers is configurable in MHC. Application must register a callback with the PLIB to receive event notifications. A callback is given when the chip select is de-asserted by the SPI master. The application must read out the received data in the callback, thereby clearing the PLIB's internal RX buffer.&nbsp;</p>
 <p class="Element10">
-This enumeration identifies possible wakeup input source for exit from Wait mode.</p></div>
-</div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
-  <strong><span style="color: #000000">WAITMODE_WKUP_WKUP0</span></strong>,
-  <strong><span style="color: #000000">WAITMODE_WKUP_WKUP1</span></strong>,
-  <strong><span style="color: #000000">WAITMODE_WKUP_WKUP2</span></strong>,
-  <strong><span style="color: #000000">WAITMODE_WKUP_WKUP3</span></strong>,
-  <strong><span style="color: #000000">WAITMODE_WKUP_WKUP4</span></strong>,
-  <strong><span style="color: #000000">WAITMODE_WKUP_WKUP5</span></strong>,
-  <strong><span style="color: #000000">WAITMODE_WKUP_WKUP6</span></strong>,
-  <strong><span style="color: #000000">WAITMODE_WKUP_WKUP7</span></strong>,
-  <strong><span style="color: #000000">WAITMODE_WKUP_WKUP8</span></strong>,
-  <strong><span style="color: #000000">WAITMODE_WKUP_WKUP9</span></strong>,
-  <strong><span style="color: #000000">WAITMODE_WKUP_WKUP10</span></strong>,
-  <strong><span style="color: #000000">WAITMODE_WKUP_WKUP11</span></strong>,
-  <strong><span style="color: #000000">WAITMODE_WKUP_WKUP12</span></strong>,
-  <strong><span style="color: #000000">WAITMODE_WKUP_WKUP13</span></strong>,
-  <strong><span style="color: #000000">WAITMODE_WKUP_GMAC</span></strong>,
-  <strong><span style="color: #000000">WAITMODE_WKUP_DEBUG</span></strong>,
-  <strong><span style="color: #000000">WAITMODE_WKUP_RTT</span></strong>,
-  <strong><span style="color: #000000">WAITMODE_WKUP_RTC</span></strong>,
-  <strong><span style="color: #000000">WAITMODE_WKUP_USB</span></strong>
-} WAITMODE_WKUP_SOURCE;</pre></div></div>
-<a name="4D656D62657273"></a><div class="Element14">
-Members</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element272">
-<div class="TableDiv">
-<table cellspacing="0" class="Table3">
-<tr>
-<td class="Element260" valign="top" width="35%">
-<div class="Element261">
-Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
-<div class="Element265">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-WAITMODE_WKUP_WKUP0&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Wakeup 0 pin configured for Fast Startup Input 0&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-WAITMODE_WKUP_WKUP1&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Wakeup 1 pin configured for Fast Startup Input 1&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-WAITMODE_WKUP_WKUP2&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Wakeup 2 pin configured for Fast Startup Input 2&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-WAITMODE_WKUP_WKUP3&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Wakeup 3 pin configured for Fast Startup Input 3&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-WAITMODE_WKUP_WKUP4&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Wakeup 4 pin configured for Fast Startup Input 4&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-WAITMODE_WKUP_WKUP5&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Wakeup 5 pin configured for Fast Startup Input 5&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-WAITMODE_WKUP_WKUP6&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Wakeup 6 pin configured for Fast Startup Input 6&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-WAITMODE_WKUP_WKUP7&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Wakeup 7 pin configured for Fast Startup Input 7&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-WAITMODE_WKUP_WKUP8&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Wakeup 8 pin configured for Fast Startup Input 8&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-WAITMODE_WKUP_WKUP9&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Wakeup 9 pin configured for Fast Startup Input 9&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-WAITMODE_WKUP_WKUP10&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Wakeup 10 pin configured for Fast Startup Input 10&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-WAITMODE_WKUP_WKUP11&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Wakeup 11 pin configured for Fast Startup Input 11&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-WAITMODE_WKUP_WKUP12&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Wakeup 12 pin configured for Fast Startup Input 12&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-WAITMODE_WKUP_WKUP13&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Wakeup 13 pin configured for Fast Startup Input 13&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-WAITMODE_WKUP_GMAC&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Wakeup source configured for GMAC&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-WAITMODE_WKUP_DEBUG&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Wakeup source configured for debug request&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-WAITMODE_WKUP_RTT&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Wakeup source configured for RTT alarm&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-WAITMODE_WKUP_RTC&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Wakeup source configured for RTC alarm&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-WAITMODE_WKUP_USB&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Wakeup source configured for USB alarm&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
+&nbsp;</p>
 <p class="Element10">
-None.</p></div>
+The PLIB optionally supports busy signalling from SPI slave to SPI master. This option can be enabled to provide an indication to the SPI master on when the SPI slave will be ready to respond. If the busy signalling is not enabled, the SPI master must wait for sufficient duration to allow the SPI slave to become ready with the response.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+In a typical implementation, to read data from SPI slave, the SPI master asserts the chip select line and then sends a SPI packet informing the slave about the memory address to read from and the number of bytes to read and then de-asserts the chip select line. The SPI master must then wait for the SPI slave to frame the response by waiting on the busy line. Once the SPI slave drives the busy signal to ready state, the SPI master can start reading the actual data by asserting the chip select line and sending dummy write for the number of bytes to read. Finally, after the intended bytes are read, the chip select must be de-asserted by the SPI master.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+The below code shows an example of EEPROM emulation implemented on SPI slave.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p><div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong>
+{
+    APP_STATE_INITIALIZE,
+    APP_STATE_READ,
+    APP_STATE_WRITE,
+    APP_STATE_IDLE,
+
+} APP_STATES;
+
+<i><span style="color: #008000">/* Commands */</span></i>
+<strong><span style="color: #000080">#define</span></strong> APP_CMD_WRITE                       0x02
+<strong><span style="color: #000080">#define</span></strong> APP_CMD_READ                        0x03
+
+<strong><span style="color: #000080">#define</span></strong> APP_MEM_BUFFER_SIZE                 512
+<strong><span style="color: #000080">#define</span></strong> APP_RX_BUFFER_SIZE                  256
+<strong><span style="color: #000080">#define</span></strong> APP_TX_BUFFER_SIZE                  256
+
+<strong><span style="color: #000080">#define</span></strong> LED_On()                            LED_Clear()
+<strong><span style="color: #000080">#define</span></strong> LED_Off()                           LED_Set()
+
+<strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong>
+{
+    uint8_t busy        :1;
+    uint8_t reserved    :7;
+}STATUS;
+
+<strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong>
+{
+    <strong><span style="color: #000080">volatile</span></strong> APP_STATES          state;
+    <strong><span style="color: #000080">volatile</span></strong> STATUS              status;
+    <strong><span style="color: #000080">volatile</span></strong> uint8_t             nBytesRead;
+    <strong><span style="color: #000080">volatile</span></strong> uint8_t             nBytesToWrite;
+    <strong><span style="color: #000080">volatile</span></strong> uint8_t             nBytesReadRequest;
+    <strong><span style="color: #000080">volatile</span></strong> uint16_t            memAddr;
+}APP_DATA;
+
+APP_DATA appData;
+
+uint8_t APP_MemoryBuffer[APP_MEM_BUFFER_SIZE] =
+{
+    0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x0a,0x0b,0x0c,0x0d,0x0e,0x0f,
+    0x10,0x11,0x12,0x13,0x14,0x15,0x16,0x17,0x18,0x19,0x1a,0x1b,0x1c,0x1d,0x1e,0x1f,
+    0x20,0x21,0x22,0x23,0x24,0x25,0x26,0x27,0x28,0x29,0x2a,0x2b,0x2c,0x2d,0x2e,0x2f,
+    0x30,0x31,0x32,0x33,0x34,0x35,0x36,0x37,0x38,0x39,0x3a,0x3b,0x3c,0x3d,0x3e,0x3f,
+    0x40,0x41,0x42,0x43,0x44,0x45,0x46,0x47,0x48,0x49,0x4a,0x4b,0x4c,0x4d,0x4e,0x4f,
+    0x50,0x51,0x52,0x53,0x54,0x55,0x56,0x57,0x58,0x59,0x5a,0x5b,0x5c,0x5d,0x5e,0x5f,
+    0x60,0x61,0x62,0x63,0x64,0x65,0x66,0x67,0x68,0x69,0x6a,0x6b,0x6c,0x6d,0x6e,0x6f,
+    0x70,0x71,0x72,0x73,0x74,0x75,0x76,0x77,0x78,0x79,0x7a,0x7b,0x7c,0x7d,0x7e,0x7f,
+    0x80,0x81,0x82,0x83,0x84,0x85,0x86,0x87,0x88,0x89,0x8a,0x8b,0x8c,0x8d,0x8e,0x8f,
+    0x90,0x91,0x92,0x93,0x94,0x95,0x96,0x97,0x98,0x99,0x9a,0x9b,0x9c,0x9d,0x9e,0x9f,
+    0xa0,0xa1,0xa2,0xa3,0xa4,0xa5,0xa6,0xa7,0xa8,0xa9,0xaa,0xab,0xac,0xad,0xae,0xaf,
+    0xb0,0xb1,0xb2,0xb3,0xb4,0xb5,0xb6,0xb7,0xb8,0xb9,0xba,0xbb,0xbc,0xbd,0xbe,0xbf,
+    0xc0,0xc1,0xc2,0xc3,0xc4,0xc5,0xc6,0xc7,0xc8,0xc9,0xca,0xcb,0xcc,0xcd,0xce,0xcf,
+    0xd0,0xd1,0xd2,0xd3,0xd4,0xd5,0xd6,0xd7,0xd8,0xd9,0xda,0xdb,0xdc,0xdd,0xde,0xdf,
+    0xe0,0xe1,0xe2,0xe3,0xe4,0xe5,0xe6,0xe7,0xe8,0xe9,0xea,0xeb,0xec,0xed,0xee,0xef,
+    0xf0,0xf1,0xf2,0xf3,0xf4,0xf5,0xf6,0xf7,0xf8,0xf9,0xfa,0xfb,0xfc,0xfd,0xfe,0xff,
+
+    0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x0a,0x0b,0x0c,0x0d,0x0e,0x0f,
+    0x10,0x11,0x12,0x13,0x14,0x15,0x16,0x17,0x18,0x19,0x1a,0x1b,0x1c,0x1d,0x1e,0x1f,
+    0x20,0x21,0x22,0x23,0x24,0x25,0x26,0x27,0x28,0x29,0x2a,0x2b,0x2c,0x2d,0x2e,0x2f,
+    0x30,0x31,0x32,0x33,0x34,0x35,0x36,0x37,0x38,0x39,0x3a,0x3b,0x3c,0x3d,0x3e,0x3f,
+    0x40,0x41,0x42,0x43,0x44,0x45,0x46,0x47,0x48,0x49,0x4a,0x4b,0x4c,0x4d,0x4e,0x4f,
+    0x50,0x51,0x52,0x53,0x54,0x55,0x56,0x57,0x58,0x59,0x5a,0x5b,0x5c,0x5d,0x5e,0x5f,
+    0x60,0x61,0x62,0x63,0x64,0x65,0x66,0x67,0x68,0x69,0x6a,0x6b,0x6c,0x6d,0x6e,0x6f,
+    0x70,0x71,0x72,0x73,0x74,0x75,0x76,0x77,0x78,0x79,0x7a,0x7b,0x7c,0x7d,0x7e,0x7f,
+    0x80,0x81,0x82,0x83,0x84,0x85,0x86,0x87,0x88,0x89,0x8a,0x8b,0x8c,0x8d,0x8e,0x8f,
+    0x90,0x91,0x92,0x93,0x94,0x95,0x96,0x97,0x98,0x99,0x9a,0x9b,0x9c,0x9d,0x9e,0x9f,
+    0xa0,0xa1,0xa2,0xa3,0xa4,0xa5,0xa6,0xa7,0xa8,0xa9,0xaa,0xab,0xac,0xad,0xae,0xaf,
+    0xb0,0xb1,0xb2,0xb3,0xb4,0xb5,0xb6,0xb7,0xb8,0xb9,0xba,0xbb,0xbc,0xbd,0xbe,0xbf,
+    0xc0,0xc1,0xc2,0xc3,0xc4,0xc5,0xc6,0xc7,0xc8,0xc9,0xca,0xcb,0xcc,0xcd,0xce,0xcf,
+    0xd0,0xd1,0xd2,0xd3,0xd4,0xd5,0xd6,0xd7,0xd8,0xd9,0xda,0xdb,0xdc,0xdd,0xde,0xdf,
+    0xe0,0xe1,0xe2,0xe3,0xe4,0xe5,0xe6,0xe7,0xe8,0xe9,0xea,0xeb,0xec,0xed,0xee,0xef,
+    0xf0,0xf1,0xf2,0xf3,0xf4,0xf5,0xf6,0xf7,0xf8,0xf9,0xfa,0xfb,0xfc,0xfd,0xfe,0xff
+};
+
+uint8_t APP_RxData[APP_RX_BUFFER_SIZE];
+uint8_t APP_TxData[APP_TX_BUFFER_SIZE];
+
+<strong><span style="color: #000080">void</span></strong> delay(uint32_t count)
+{
+    uint32_t i;
+
+    <i><span style="color: #008000">// 1 loop roughly provides 1us delay at 32MHz CPU frequency</span></i>
+    <strong><span style="color: #000080">for</span></strong> (i = 0; i &lt; count; i++)
+    {
+        <strong><span style="color: #000080">asm</span></strong>(&quot;NOP&quot;);<strong><span style="color: #000080">asm</span></strong>(&quot;NOP&quot;);<strong><span style="color: #000080">asm</span></strong>(&quot;NOP&quot;);<strong><span style="color: #000080">asm</span></strong>(&quot;NOP&quot;);<strong><span style="color: #000080">asm</span></strong>(&quot;NOP&quot;);<strong><span style="color: #000080">asm</span></strong>(&quot;NOP&quot;);
+        <strong><span style="color: #000080">asm</span></strong>(&quot;NOP&quot;);<strong><span style="color: #000080">asm</span></strong>(&quot;NOP&quot;);<strong><span style="color: #000080">asm</span></strong>(&quot;NOP&quot;);<strong><span style="color: #000080">asm</span></strong>(&quot;NOP&quot;);<strong><span style="color: #000080">asm</span></strong>(&quot;NOP&quot;);<strong><span style="color: #000080">asm</span></strong>(&quot;NOP&quot;);
+        <strong><span style="color: #000080">asm</span></strong>(&quot;NOP&quot;);<strong><span style="color: #000080">asm</span></strong>(&quot;NOP&quot;);<strong><span style="color: #000080">asm</span></strong>(&quot;NOP&quot;);<strong><span style="color: #000080">asm</span></strong>(&quot;NOP&quot;);<strong><span style="color: #000080">asm</span></strong>(&quot;NOP&quot;);<strong><span style="color: #000080">asm</span></strong>(&quot;NOP&quot;);
+        <strong><span style="color: #000080">asm</span></strong>(&quot;NOP&quot;);<strong><span style="color: #000080">asm</span></strong>(&quot;NOP&quot;);<strong><span style="color: #000080">asm</span></strong>(&quot;NOP&quot;);<strong><span style="color: #000080">asm</span></strong>(&quot;NOP&quot;);<strong><span style="color: #000080">asm</span></strong>(&quot;NOP&quot;);<strong><span style="color: #000080">asm</span></strong>(&quot;NOP&quot;);
+    }
+}
+
+<strong><span style="color: #000080">void</span></strong> SPIEventHandler(uintptr_t context )
+{
+    <strong><span style="color: #000080">if</span></strong> (SPI1_ErrorGet() == SPI_SLAVE_ERROR_NONE)
+    {
+        appData.nBytesRead = SPI1_Read(APP_RxData, SPI1_ReadCountGet());
+
+        <strong><span style="color: #000080">switch</span></strong>(APP_RxData[0])
+        {
+            <strong><span style="color: #000080">case</span></strong> APP_CMD_WRITE:
+                <strong><span style="color: #000080">if</span></strong> (appData.status.busy == 0)
+                {
+                    appData.status.busy = 1;
+                    appData.memAddr = ((APP_RxData[1] &lt;&lt; 8) | (APP_RxData[2]));
+                    appData.nBytesToWrite = (appData.nBytesRead - 3);
+                    appData.state = APP_STATE_WRITE;
+                }
+                <strong><span style="color: #000080">break</span></strong>;
+
+            <strong><span style="color: #000080">case</span></strong> APP_CMD_READ:
+
+                appData.memAddr = ((APP_RxData[1] &lt;&lt; 8) | (APP_RxData[2]));
+                appData.nBytesReadRequest = APP_RxData[3];
+
+                <strong><span style="color: #000080">if</span></strong> ((appData.memAddr + appData.nBytesReadRequest) &lt;= APP_TX_BUFFER_SIZE)
+                {
+                    memcpy(APP_TxData, &amp;APP_MemoryBuffer[appData.memAddr], appData.nBytesReadRequest);
+                    SPI1_Write(APP_TxData, appData.nBytesReadRequest);
+                }
+                <strong><span style="color: #000080">break</span></strong>;
+        }
+
+        <strong><span style="color: #000080">if</span></strong> (appData.status.busy == 0)
+        {
+            <i><span style="color: #008000">/* Indicate to SPI Master that slave is ready for data transfer */</span></i>
+            SPI1_Ready();
+        }
+    }
+}
+
+<strong><span style="color: #000080">int</span></strong> main ( <strong><span style="color: #000080">void</span></strong> )
+{
+    <i><span style="color: #008000">/* Initialize all modules */</span></i>
+    SYS_Initialize ( NULL );
+
+    appData.state = APP_STATE_INITIALIZE;
+
+    <strong><span style="color: #000080">while</span></strong>(1)
+    {
+        <i><span style="color: #008000">/* Check the application's current state. */</span></i>
+        <strong><span style="color: #000080">switch</span></strong> (appData.state)
+        {
+            <strong><span style="color: #000080">case</span></strong> APP_STATE_INITIALIZE:
+
+                SPI1_CallbackRegister(SPIEventHandler, (uintptr_t) 0);
+
+                <i><span style="color: #008000">/* Wait for instructions from SPI master */</span></i>
+                appData.state = APP_STATE_IDLE;
+
+                <strong><span style="color: #000080">break</span></strong>;
+
+            <strong><span style="color: #000080">case</span></strong> APP_STATE_WRITE:
+
+                <i><span style="color: #008000">/* Adding delay to simulate busy condition */</span></i>
+                delay(1000);
+
+                <i><span style="color: #008000">/* Copy received data into Application memory buffer */</span></i>
+                <strong><span style="color: #000080">if</span></strong> ((appData.memAddr + appData.nBytesToWrite) &lt;= APP_MEM_BUFFER_SIZE)
+                {
+                    memcpy(&amp;APP_MemoryBuffer[appData.memAddr], &amp;APP_RxData[3], appData.nBytesToWrite);
+                }
+
+                appData.status.busy = 0;
+
+                <i><span style="color: #008000">/* Indicate to SPI Master that slave is ready for data transfer */</span></i>
+                SPI1_Ready();
+
+                appData.state = APP_STATE_IDLE;
+
+                <strong><span style="color: #000080">break</span></strong>;
+
+            <strong><span style="color: #000080">case</span></strong> APP_STATE_IDLE:
+                <strong><span style="color: #000080">break</span></strong>;
+
+            <strong><span style="color: #000080">default</span></strong>:
+                <strong><span style="color: #000080">break</span></strong>;
+        }
+    }
+}</pre></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05049.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04581.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05048.html" target="topic">Peripheral Libraries</a> &gt; <a href="06821.html" target="topic">SUPC Peripheral Library Help</a> &gt; <a href="06822.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="06889.html" target="topic">WAITMODE_WKUP_SOURCE Enumeration</a></div>
+<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="06854.html" target="topic">SPI Peripheral Library Help</a> &gt; <a href="06858.html" target="topic">Slave</a> &gt; <a href="06889.html" target="topic">Using the Library</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -206,13 +258,13 @@ None.</p></div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05049.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06886.html" target="topic">Previous</a> | <a href="06822.html" target="topic">Up</a> | <a href="06838.html" target="topic">Next</a></div>
+<a href="06881.html" target="topic">Previous</a> | <a href="06858.html" target="topic">Up</a> | <a href="06885.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: supc_6452::WAITMODE_WKUP_SOURCE Topic Title: WAITMODE_WKUP_SOURCE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SPI Slave 01329 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

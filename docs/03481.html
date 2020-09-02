@@ -1,0 +1,161 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Using the Library</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '03481.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="03476.html" target="topic">HEMC Peripheral Library Help</a> &gt; <a href="03481.html" target="topic">Using the Library</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+Microchip 32-bit Chip Support Package</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="03472.html" target="topic">Previous</a> | <a href="03476.html" target="topic">Up</a> | <a href="03477.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: HEMC 44121 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+Using the Library</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The HEMC controller is initialized as configured in the MHC as part of System Initialization.&nbsp;</p>
+<p class="Element10">
+If interrupts are used, the callback function should be set for expected interrupts types:&nbsp;</p>
+<p class="Element10">
+&nbsp;</p><div class="Element13"><div class="Element12"><pre class="Element12">    <i><span style="color: #008000">/* Register Fixable errors Callback */</span></i>
+    HEMC_FixCallbackRegister(HEMC_FixCallback_Function, (uintptr_t)NULL);
+    <i><span style="color: #008000">/* Register UnFixable errors Callback */</span></i>
+    HEMC_NoFixCallbackRegister(HEMC_NoFixCallback_Function, (uintptr_t)NULL);</pre></div></div>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+When an ECC error is detected and an interrupt occurs, the fail address must be read before the status in order to avoid multiple interrupts:&nbsp;</p>
+<p class="Element10">
+&nbsp;</p><div class="Element13"><div class="Element12"><pre class="Element12">    <i><span style="color: #008000">/* Read the fault address before clearing the interrupt*/</span></i>
+    uint32_t* fault_pointer = (uint32_t*)HEMC_HeccGetFailAddress();
+
+    <i><span style="color: #008000">/* Only for Fixable error handler : Read corrected data on the Fly */</span></i>
+    uint32_t fault_data = *fault_pointer;
+
+    <i><span style="color: #008000">/* Read HEMC HECC Status */</span></i>
+    HEMC_HECC_STATUS value = HEMC_HeccGetStatus();</pre></div></div>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+The faulty address may then be fixed by the application if applicable.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<strong><u>Error injection test mode</u></strong>&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<strong>ECC Check bit read</strong>&nbsp;</p>
+<p class="Element10">
+The ECC check bit value can be get when the read test mode is activated. Once this mode is activated, the check bit value for each read of data on HSMC or HSDRAMC memories is stored in corresponding registers. It is possible to get the last check bit value using the function HEMC_TestModeGetCbValue.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p><div class="Element13"><div class="Element12"><pre class="Element12">    <i><span style="color: #008000">/* Enable HEMC HECC Test mode Read in HSDRAMC memory */</span></i>
+    HEMC_TestModeReadEnable(HEMC_HEMC_CH_HSDRAMC);
+    __DSB();
+    __ISB();
+
+    <i><span style="color: #008000">/* Read data in external memory */</span></i>
+    data = buffer;
+    __DSB();
+    __ISB();
+
+    <i><span style="color: #008000">/* Get the Check Bit for last data read in HSDRAMC memory */</span></i>
+    tcb = HEMC_TestModeGetCbValue(HEMC_HEMC_CH_HSDRAMC);
+    __DSB();
+    __ISB();
+
+    <i><span style="color: #008000">/* Disable HEMC HECC Test mode Read in HSDRAMC memory */</span></i>
+    HEMC_TestModeReadDisable(HEMC_HEMC_CH_HSDRAMC);</pre></div></div>
+<p class="Element10">
+<i>Note</i>: It is recommended to use memory barriers on Cortex-M core-based products where instructions can be executed out of programmed order, or to ensure that all memory transfers or instructions are completed before any new instruction is executed. In our application, we must ensure that register modification and memory transfers are completed before executing the next step.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<strong>ECC Check bit write</strong>&nbsp;</p>
+<p class="Element10">
+The ECC check bit value can be override when the write test mode is activated. Once this mode is activated, the check bit value for each write of data on HSMC or HSDRAMC memories is override by the given value instead of being calculated automatically. The check bit value used should be set using the function HEMC_TestModeSetCbValue.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p><div class="Element13"><div class="Element12"><pre class="Element12">    <i><span style="color: #008000">/* Enable HEMC HECC Test mode Write in HSDRAMC memory */</span></i>
+    HEMC_TestModeWriteEnable(HEMC_HEMC_CH_HSDRAMC);
+    __DSB();
+    __ISB();
+
+    <i><span style="color: #008000">/* Set the Check Bit for override when data will be write in external HSDRAMC memory */</span></i>
+    HEMC_TestModeSetCbValue(HEMC_HEMC_CH_HSDRAMC, tcb);
+    __DSB();
+    __ISB();
+
+    <i><span style="color: #008000">/* Write data in external memory */</span></i>
+    buffer = data;
+    __DSB();
+    __ISB();
+
+    <i><span style="color: #008000">/* Disable HEMC HECC Test mode Write in HSDRAMC memory */</span></i>
+    HEMC_TestModeWriteDisable(HEMC_HEMC_CH_HSDRAMC);</pre></div></div>
+<p class="Element10">
+<i>Note</i>: It is recommended to use memory barriers on Cortex-M core-based products where instructions can be executed out of programmed order, or to ensure that all memory transfers or instructions are completed before any new instruction is executed. In our application, we must ensure that register modification and memory transfers are completed before executing the next step.</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="03476.html" target="topic">HEMC Peripheral Library Help</a> &gt; <a href="03481.html" target="topic">Using the Library</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+Microchip 32-bit Chip Support Package</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="03472.html" target="topic">Previous</a> | <a href="03476.html" target="topic">Up</a> | <a href="03477.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: HEMC 44121 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

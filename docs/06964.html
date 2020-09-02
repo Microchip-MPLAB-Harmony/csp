@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Using the Library</title>
+<title>SPIx_ReadCountGet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05049.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04581.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05048.html" target="topic">Peripheral Libraries</a> &gt; <a href="06976.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="06955.html" target="topic">Capture</a> &gt; <a href="06964.html" target="topic">Using the Library</a></div>
+<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="06842.html" target="topic">SPI Peripheral Library Help</a> &gt; <a href="06846.html" target="topic">Slave</a> &gt; <a href="06876.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="06964.html" target="topic">SPIx_ReadCountGet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05049.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06956.html" target="topic">Previous</a> | <a href="06955.html" target="topic">Up</a> | <a href="06958.html" target="topic">Next</a></div>
+<a href="06965.html" target="topic">Previous</a> | <a href="06876.html" target="topic">Up</a> | <a href="06959.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC 44162 Capture Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: spi_slave_00753::SPIx_ReadCountGet Topic Title: SPIx_ReadCountGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Using the Library</div>
+SPIx_ReadCountGet Function</div>
 </div>
 </div>
 
@@ -49,38 +49,58 @@ Using the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The Capture mode allows the TC channel to perform measurements such as pulse timing, frequency, period, duty cycle and phase on TIOAx and TIOBx signals.&nbsp;</p>
+This function returns the number of unread bytes availabe in the SPI slave PLIB's internal receive buffer. The PLIB's internal receive buffer is reset after the application callback returns. Hence, this API must be called within the application event handler.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100">size_t <strong><span style="color: #000000">SPIx_ReadCountGet</span></strong>();</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-In Capture mode, TIOAx and TIOBx are configured as inputs. The counter value is captured in the buffer on the selected input edge and it is used as a timestamp for the event. The user can select up to two input events and the respective timestamp is captured in Capture A and Capture B buffers, it can be used to measure pulse, period, frequency and duty cycle of the external input.&nbsp;</p>
-<p class="Element10">
-It provides both polling and callback methods to indicate capture event has occurred.</p>
+The <a href="06960.html" target="topic">SPIx_Initialize</a> function must have been called.</p></div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+
 <ul class="Element630">
-<li class="Element600">With polling, the application will need to continuously poll to check if the capture event has occurred.</li>
-<li class="Element600">With callback, the registered callback function will be called when the capture event occurs. This means the application do not have to poll continuously.</li>
-</ul><p class="Element10">
-&nbsp;</p>
+<li class="Element600">size_t - Number of bytes available in the PLIB's internal receive buffer</li>
+</ul></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-<strong>Callback method</strong>&nbsp;</p>
-<p class="Element10">
-This example demonstrates how to use the TC channel in capture mode to measure off time and period. The rising edge is captured in Capture A and Falling edge is captured in Capture B register, and then the timer is reset.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p><div class="Element13"><div class="Element12"><pre class="Element12"><i><span style="color: #008000">/* This function is called after Capture B */</span></i>
-<strong><span style="color: #000080">void</span></strong> TC0_CH0_CaptureInterruptHandler(uintptr_t context)
+None.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">uint8_t APP_RxData[10];
+size_t nBytesAvailable;
+size_t nBytesRead;
+
+<strong><span style="color: #000080">void</span></strong> SPIEventHandler(uintptr_t context )
 {
-    <i><span style="color: #008000">/* Read Captured values */</span></i>
-    off_time = TC0_CH0_CaptureAGet();
-    period = TC0_CH0_CaptureBGet();
+    <strong><span style="color: #000080">if</span></strong> (SPI1_ErrorGet() == SPI_SLAVE_ERROR_NONE)
+    {
+        nBytesAvailable = SPI1_ReadCountGet();
+        
+        nBytesRead = SPI1_Read(APP_RxData, nBytesAvailable); 
+    }
+    <strong><span style="color: #000080">else</span></strong>
+    {
+        <i><span style="color: #008000">// Handle error</span></i>
+    }
+
 }
 
-<strong><span style="color: #000080">int</span></strong> main(<strong><span style="color: #000080">void</span></strong>)
-{
-
-    <i><span style="color: #008000">/* Register callback function for CH0 period interrupt */</span></i>
-    TC0_CH0_CaptureCallbackRegister(TC0_CH0_CaptureInterruptHandler, (uintptr_t)NULL);
-
-    <i><span style="color: #008000">/* Start the Capture channel 0*/</span></i>
-    TC0_CH0_CaptureStart();
-}</pre></div></div>
+SPI1_CallbackRegister(SPIEventHandler, (uintptr_t) 0);         </pre></div></div>
 </div>
 </div>
 </div>
@@ -88,7 +108,7 @@ This example demonstrates how to use the TC channel in capture mode to measure o
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05049.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04581.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05048.html" target="topic">Peripheral Libraries</a> &gt; <a href="06976.html" target="topic">TC Peripheral Library Help</a> &gt; <a href="06955.html" target="topic">Capture</a> &gt; <a href="06964.html" target="topic">Using the Library</a></div>
+<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="06842.html" target="topic">SPI Peripheral Library Help</a> &gt; <a href="06846.html" target="topic">Slave</a> &gt; <a href="06876.html" target="topic">Library Interface</a> &gt; d) Status Functions &gt; <a href="06964.html" target="topic">SPIx_ReadCountGet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -96,13 +116,13 @@ This example demonstrates how to use the TC channel in capture mode to measure o
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05049.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06956.html" target="topic">Previous</a> | <a href="06955.html" target="topic">Up</a> | <a href="06958.html" target="topic">Next</a></div>
+<a href="06965.html" target="topic">Previous</a> | <a href="06876.html" target="topic">Up</a> | <a href="06959.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TC 44162 Capture Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: spi_slave_00753::SPIx_ReadCountGet Topic Title: SPIx_ReadCountGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

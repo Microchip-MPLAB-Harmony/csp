@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>FLEXCOMx_USART_Read Function</title>
+<title>Using the Library</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05049.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04581.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05048.html" target="topic">Peripheral Libraries</a> &gt; <a href="02543.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02554.html" target="topic">USART</a> &gt; <a href="02559.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="02687.html" target="topic">FLEXCOMx_USART_Read Function</a></div>
+<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="02667.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02678.html" target="topic">USART</a> &gt; <a href="02687.html" target="topic">Using the Library</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05049.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02720.html" target="topic">Previous</a> | <a href="02559.html" target="topic">Up</a> | <a href="02688.html" target="topic">Next</a></div>
+<a href="02679.html" target="topic">Previous</a> | <a href="02678.html" target="topic">Up</a> | <a href="02683.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: flexcom_11268_usart::FLEXCOMx_USART_Read@void *@size_t Topic Title: FLEXCOMx_USART_Read Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: FLEXCOM 11277 USART Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-FLEXCOMx_USART_Read Function</div>
+Using the Library</div>
 </div>
 </div>
 
@@ -49,78 +49,224 @@ FLEXCOMx_USART_Read Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function submits a read buffer to the FLEXCOM USART peripheral to process. The behavior of this function call will vary based on the mode selected within MCC.&nbsp;</p>
+The FLEXCOM UART library supports the byte and buffer model to transfer data. The buffer model can process a block of data in a blocking or a non-blocking manner.&nbsp;</p>
 <p class="Element10">
-If the peripheral is configured for the interrupt mode, this function call is always non-blocking. Call to this function submits the buffer and the size to the peripheral library and returns immediately. User can check the transfer status through callback mechanism.&nbsp;</p>
+&nbsp;</p>
 <p class="Element10">
-If the peripheral is configured for the non-interrupt mode, this function call returns only after requested size is processed.</p></div>
-</div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">FLEXCOMx_USART_Read</span></strong>(
-    <strong><span style="color: #000080">void</span></strong> * <strong><span style="color: #000000">buffer</span></strong>, 
-    <strong><span style="color: #000080">const</span></strong> size_t <strong><span style="color: #000000">size</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
-<div class="Element11">
-<div class="Element10">
+<strong>Byte-by-Byte Transfer Model:</strong>&nbsp;</p>
 <p class="Element10">
-<a href="02686.html" target="topic">FLEXCOMx_USART_Initialize</a> must have been called for the associated FLEXCOM USART instance.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
-<div class="TableDiv">
-<table cellspacing="0" class="Table2">
-<tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-buffer&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Pointer to the user buffer.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-size&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Number of bytes to be transferred.&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
+The Byte-by-Byte Model allows the application to transfer data through the USART one byte at a time. With this model, the driver reads one byte from the receive buffer or writes one byte to the transmit buffer. The application must check if data has been received before reading the data. Similarly, it must check if the transmit buffer is empty before writing to the transmit buffer. The byte-by-byte data transfer model places the responsibility of maintaining the USART peripheral on the Application.&nbsp;</p>
 <p class="Element10">
-Read request status. True - Read request was successful. False - Read request has failed.</p></div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
+&nbsp;</p>
 <p class="Element10">
-This API is available when USART ring buffer mode is disabled in MHC.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12"><i><span style="color: #008000">//Example to use in non-interrupt</span></i>
-<strong><span style="color: #000080">char</span></strong> rxData[COUNT] = {}; <i><span style="color: #008000">//COUNT is expected size</span></i>
+The following example shows the byte-by-byte model usage. </p><div class="Element13"><div class="Element12"><pre class="Element12"> <strong><span style="color: #000080">char</span></strong> rxData;
+ <strong><span style="color: #000080">char</span></strong> txData = 'A';
 
-<strong><span style="color: #000080">if</span></strong>(<strong><span style="color: #000080">false</span></strong> != FLEXCOM1_USART_Read(&amp;rxData, COUNT))
+<strong><span style="color: #000080">int</span></strong> main(<strong><span style="color: #000080">void</span></strong>)
 {
-    <i><span style="color: #008000">//The transfer is completed</span></i>
+    <strong><span style="color: #000080">if</span></strong>(FLEXCOM0_USART_ReceiverIsReady() == <strong><span style="color: #000080">true</span></strong>)
+    {
+        rxData = FLEXCOM0_USART_ReadByte();
+    }
+
+    <strong><span style="color: #000080">if</span></strong>(FLEXCOM0_USART_TransmitterIsReady() == <strong><span style="color: #000080">true</span></strong>)
+    {
+        FLEXCOM0_USART_WriteByte(txData);
+    }
+
+}</pre></div></div>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<strong>Buffer Transfer Model:</strong>&nbsp;</p>
+<p class="Element10">
+The buffer model can process a block of data in a blocking or a non-blocking manner.</p>
+<ul class="Element630">
+<li class="Element600">With blocking, the read and write APIs will block until all of the data is transferred. The CPU polls the peripheral register continuously to manage the transfer.</li>
+<li class="Element600">With non-blocking, the read and write APIs will return immediately. The peripheral interrupt is used to manage the transfer. The user application can either use polling or callback method to indicate the transfer status.
+<ul class="Element631">
+<li class="Element601">With polling, the application will need to continuously poll to check if the transfer is completed.</li>
+<li class="Element601">With callback, the registered callback function will be called once the transfer is completed. This means the application do not have to poll continuously.</li>
+</ul></li>
+</ul><p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<strong>Blocking Transfer</strong>&nbsp;</p>
+<p class="Element10">
+The following example shows the blocking transfer. </p><div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">char</span></strong> myData[6] = {&quot;hello&quot;};
+
+<strong><span style="color: #000080">int</span></strong> main(<strong><span style="color: #000080">void</span></strong>)
+{
+   <i><span style="color: #008000">/* Write 6 bytes of data */</span></i>
+   FLEXCOM0_USART_Write(&amp;myData, 6);
+
+}</pre></div></div>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<strong>Non-blocking Transfer with callback</strong>&nbsp;</p>
+<p class="Element10">
+The following example shows a non-blocking transfer with callback. </p><div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">char</span></strong> readBuffer[10];
+
+<strong><span style="color: #000080">void</span></strong> FLEXCOM0_USART_Callback(uintptr_t context)
+{
+    <strong><span style="color: #000080">if</span></strong>(FLEXCOM0_USART_ErrorGet() != USART_ERROR_NONE)
+    {
+        <i><span style="color: #008000">//Handle error case</span></i>
+    }
+    <strong><span style="color: #000080">else</span></strong>
+    {
+        <i><span style="color: #008000">//Transfer completed successfully</span></i>
+    }
 }
-<strong><span style="color: #000080">else</span></strong>
+
+<strong><span style="color: #000080">int</span></strong> main (<strong><span style="color: #000080">void</span></strong>)
 {
-    <i><span style="color: #008000">//Read Failed</span></i>
+    <i><span style="color: #008000">/* Register Callback function for Read operation*/</span></i>
+    FLEXCOM0_USART_ReadCallbackRegister(FLEXCOM0_USART_Callback, (uintptr_t)NULL);
+
+    <i><span style="color: #008000">/* Submit Read request to read 10 bytes of data */</span></i>
+    FLEXCOM0_USART_Read(&amp;readBuffer, 10);
+
+}</pre></div></div>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<strong>Non-blocking Transfer with polling</strong>&nbsp;</p>
+<p class="Element10">
+The following example shows a non-blocking transfer with polling. </p><div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">char</span></strong> readBuffer[10];
+
+<strong><span style="color: #000080">int</span></strong> main(<strong><span style="color: #000080">void</span></strong>)
+{
+
+    FLEXCOM0_USART_Read(&amp;readBuffer, 10);
+
+    <i><span style="color: #008000">/* Poll and wait for the transfer to complete */</span></i>
+    <strong><span style="color: #000080">while</span></strong>(FLEXCOM0_USART_ReadIsBusy());
+
+    <strong><span style="color: #000080">if</span></strong>(FLEXCOM0_USART_ErrorGet() != USART_ERROR_NONE)
+    {
+        <i><span style="color: #008000">// Error occurred while receiving the buffer</span></i>
+    }
+    <strong><span style="color: #000080">else</span></strong>
+    {
+        <i><span style="color: #008000">//  Received the buffer without any error</span></i>
+    }
+}</pre></div></div>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<strong>Non-blocking Transfer with Ring Buffer enabled</strong>&nbsp;</p>
+<p class="Element10">
+The following example shows a non-blocking transfer with ring buffer enabled. </p><div class="Element13"><div class="Element12"><pre class="Element12">uint8_t txBuffer[50];
+uint8_t rxBuffer[10];
+<strong><span style="color: #000080">volatile</span></strong> uint32_t nBytesRead = 0;
+<strong><span style="color: #000080">volatile</span></strong> <strong><span style="color: #000080">bool</span></strong> txThresholdEventReceived = <strong><span style="color: #000080">false</span></strong>;
+<strong><span style="color: #000080">volatile</span></strong> <strong><span style="color: #000080">bool</span></strong> rxThresholdEventReceived = <strong><span style="color: #000080">false</span></strong>;
+
+<strong><span style="color: #000080">void</span></strong> usartReadEventHandler(FLEXCOM_USART_EVENT event, uintptr_t context )
+{
+    uint32_t nBytesAvailable = 0;
+
+    <strong><span style="color: #000080">if</span></strong> (event == FLEXCOM_USART_EVENT_READ_THRESHOLD_REACHED)
+    {
+        <i><span style="color: #008000">/* Receiver should atleast have the thershold number of bytes in the ring buffer */</span></i>
+        nBytesAvailable = FLEXCOMx_USART_ReadCountGet();
+
+        nBytesRead += FLEXCOMx_USART_Read((uint8_t*)&amp;rxBuffer[nBytesRead], nBytesAvailable);
+    }
+}
+
+<strong><span style="color: #000080">void</span></strong> usartWriteEventHandler(FLEXCOM_USART_EVENT event, uintptr_t context )
+{
+    txThresholdEventReceived = <strong><span style="color: #000080">true</span></strong>;
+}
+
+<strong><span style="color: #000080">int</span></strong> main ( <strong><span style="color: #000080">void</span></strong> )
+{
+    uint32_t nBytes = 0;
+
+    <i><span style="color: #008000">/* Initialize all modules */</span></i>
+    SYS_Initialize ( NULL );
+
+    <i><span style="color: #008000">/* Register a callback for write events */</span></i>
+    FLEXCOMx_USART_WriteCallbackRegister(usartWriteEventHandler, (uintptr_t) NULL);
+
+    <i><span style="color: #008000">/* Register a callback for read events */</span></i>
+    FLEXCOMx_USART_ReadCallbackRegister(usartReadEventHandler, (uintptr_t) NULL);
+
+    <i><span style="color: #008000">/* Print the size of the read buffer on the terminal */</span></i>
+    nBytes = sprintf((<strong><span style="color: #000080">char</span></strong>*)txBuffer, &quot;RX Buffer Size = %d\r\n&quot;, (<strong><span style="color: #000080">int</span></strong>)FLEXCOMx_USART_ReadBufferSizeGet());
+
+    FLEXCOMx_USART_Write((uint8_t*)txBuffer, nBytes);
+
+    <i><span style="color: #008000">/* Print the size of the write buffer on the terminal */</span></i>
+    nBytes = sprintf((<strong><span style="color: #000080">char</span></strong>*)txBuffer, &quot;TX Buffer Size = %d\r\n&quot;, (<strong><span style="color: #000080">int</span></strong>)FLEXCOMx_USART_WriteBufferSizeGet());
+
+    FLEXCOM_USART_Write((uint8_t*)txBuffer, nBytes);
+
+    FLEXCOMx_USART_Write((uint8_t*)&quot;Adding 10 characters to the TX buffer - &quot;, <strong><span style="color: #000080">sizeof</span></strong>(&quot;Adding 10 characters to the TX buffer - &quot;));
+
+    <i><span style="color: #008000">/* Wait for all bytes to be transmitted out */</span></i>
+    <strong><span style="color: #000080">while</span></strong> (FLEXCOMx_USART_WriteCountGet() != 0);
+
+    FLEXCOMx_USART_Write((uint8_t*)&quot;0123456789&quot;, 10);
+
+    <i><span style="color: #008000">/* Print the amount of free space available in the TX buffer. This should be 10 bytes less than the configured write buffer size. */</span></i>
+    nBytes = sprintf((<strong><span style="color: #000080">char</span></strong>*)txBuffer, &quot;\r\nFree Space in Transmit Buffer = %d\r\n&quot;, (<strong><span style="color: #000080">int</span></strong>)FLEXCOMx_USART_WriteFreeBufferCountGet());
+
+    FLEXCOMx_USART_Write((uint8_t*)txBuffer, nBytes);
+
+    <i><span style="color: #008000">/* Let's enable notifications to get notified when the TX buffer is empty */</span></i>
+    FLEXCOMx_USART_WriteThresholdSet(FLEXCOMx_USART_WriteBufferSizeGet());
+
+    <i><span style="color: #008000">/* Enable notifications */</span></i>
+    FLEXCOMx_USART_WriteNotificationEnable(<strong><span style="color: #000080">true</span></strong>, <strong><span style="color: #000080">false</span></strong>);
+
+    <i><span style="color: #008000">/* Wait for the TX buffer to become empty. Flag &quot;txThresholdEventReceived&quot; is set in the callback. */</span></i>
+    <strong><span style="color: #000080">while</span></strong> (txThresholdEventReceived == <strong><span style="color: #000080">false</span></strong>);
+
+    txThresholdEventReceived = <strong><span style="color: #000080">false</span></strong>;
+
+    <i><span style="color: #008000">/* Disable TX notifications */</span></i>
+    FLEXCOMx_USART_WriteNotificationEnable(<strong><span style="color: #000080">false</span></strong>, <strong><span style="color: #000080">false</span></strong>);
+
+    FLEXCOMx_USART_Write((uint8_t*)&quot;Enter 10 characters. The received characters are echoed back. \r\n&gt;&quot;, <strong><span style="color: #000080">sizeof</span></strong>(&quot;Enter 10 characters. The received characters are echoed back. \r\n&gt;&quot;));
+
+    <i><span style="color: #008000">/* Wait till 10 (or more) characters are received */</span></i>
+    <strong><span style="color: #000080">while</span></strong> (FLEXCOMx_USART_ReadCountGet() &lt; 10);
+
+    <i><span style="color: #008000">/* At-least 10 characters are available in the RX buffer. Read out into the application buffer */</span></i>
+    FLEXCOMx_USART_Read((uint8_t*)rxBuffer, 10);
+
+    <i><span style="color: #008000">/* Echo the received data */</span></i>
+    FLEXCOMx_USART_Write((uint8_t*)rxBuffer, 10);
+
+    <i><span style="color: #008000">/* Now demonstrating receiver notifications */</span></i>
+    FLEXCOMx_USART_Write((uint8_t*)&quot;\r\n Now turning on RX notifications \r\n&gt;&quot;, <strong><span style="color: #000080">sizeof</span></strong>(&quot;\r\n Now turning on RX notifications \r\n&gt;&quot;));
+
+    <i><span style="color: #008000">/* For demonstration purpose, set a threshold value to receive a callback after every 5 characters are received */</span></i>
+    FLEXCOMx_USART_ReadThresholdSet(5);
+
+    <i><span style="color: #008000">/* Enable RX event notifications */</span></i>
+    FLEXCOMx_USART_ReadNotificationEnable(<strong><span style="color: #000080">true</span></strong>, <strong><span style="color: #000080">false</span></strong>);
+
+    <strong><span style="color: #000080">while</span></strong>(1)
+    {
+        <i><span style="color: #008000">/* Wait until at-least 10 characters are entered by the user */</span></i>
+        <strong><span style="color: #000080">while</span></strong> (nBytesRead &lt; 10);
+
+        <i><span style="color: #008000">/* Echo the received data */</span></i>
+        FLEXCOMx_USART_Write((uint8_t*)rxBuffer, nBytesRead);
+
+        FLEXCOMx_USART_Write((uint8_t*)&quot;\r\n&gt;&quot;, 3);
+
+        nBytesRead = 0;
+    }
+
+    <i><span style="color: #008000">/* Execution should not come here during normal operation */</span></i>
+
+    <strong><span style="color: #000080">return</span></strong> ( EXIT_FAILURE );
 }</pre></div></div>
 </div>
 </div>
@@ -129,7 +275,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05049.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04581.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05048.html" target="topic">Peripheral Libraries</a> &gt; <a href="02543.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02554.html" target="topic">USART</a> &gt; <a href="02559.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="02687.html" target="topic">FLEXCOMx_USART_Read Function</a></div>
+<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="02667.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02678.html" target="topic">USART</a> &gt; <a href="02687.html" target="topic">Using the Library</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -137,13 +283,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05049.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02720.html" target="topic">Previous</a> | <a href="02559.html" target="topic">Up</a> | <a href="02688.html" target="topic">Next</a></div>
+<a href="02679.html" target="topic">Previous</a> | <a href="02678.html" target="topic">Up</a> | <a href="02683.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: flexcom_11268_usart::FLEXCOMx_USART_Read@void *@size_t Topic Title: FLEXCOMx_USART_Read Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: FLEXCOM 11277 USART Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

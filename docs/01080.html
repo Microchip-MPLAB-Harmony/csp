@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>CANx_MessageReceive Function</title>
+<title>CAN_MAILBOX_MASK Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05049.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04581.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05048.html" target="topic">Peripheral Libraries</a> &gt; <a href="00870.html" target="topic">CAN Peripheral Library Help</a> &gt; <a href="00871.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="01080.html" target="topic">CANx_MessageReceive Function</a></div>
+<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="00920.html" target="topic">CAN Peripheral Library Help</a> &gt; <a href="00921.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="01080.html" target="topic">CAN_MAILBOX_MASK Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05049.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01082.html" target="topic">Previous</a> | <a href="00871.html" target="topic">Up</a> | <a href="01069.html" target="topic">Next</a></div>
+<a href="01055.html" target="topic">Previous</a> | <a href="00921.html" target="topic">Up</a> | <a href="01089.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: can_6019::CANx_MessageReceive@uint32_t *@uint8_t *@uint8_t *@uint16_t *@CAN_MAILBOX_RX_ATTRIBUTE@CAN_MSG_RX_ATTRIBUTE * Topic Title: CANx_MessageReceive Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: can_6019::CAN_MAILBOX_MASK Topic Title: CAN_MAILBOX_MASK Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-CANx_MessageReceive Function</div>
+CAN_MAILBOX_MASK Enumeration</div>
 </div>
 </div>
 
@@ -46,99 +46,38 @@ CANx_MessageReceive Function</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+CAN Mailbox Mask&nbsp;</p>
+<p class="Element10">
+This data type defines CAN Mailbox mask.</p></div>
+</div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">CANx_MessageReceive</span></strong>(
-    uint32_t * <strong><span style="color: #000000">id</span></strong>, 
-    uint8_t * <strong><span style="color: #000000">length</span></strong>, 
-    uint8_t * <strong><span style="color: #000000">data</span></strong>, 
-    uint16_t * <strong><span style="color: #000000">timestamp</span></strong>, 
-    <a href="01048.html" target="topic">CAN_MAILBOX_RX_ATTRIBUTE</a> <strong><span style="color: #000000">mailboxAttr</span></strong>, 
-    <a href="01059.html" target="topic">CAN_MSG_RX_ATTRIBUTE</a> * <strong><span style="color: #000000">msgAttr</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-<a href="01070.html" target="topic">CANx_Initialize</a> must have been called for the associated CAN instance.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
-<div class="TableDiv">
-<table cellspacing="0" class="Table2">
-<tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-id&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Pointer to 11-bit / 29-bit identifier (ID) to be received.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-length&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Pointer to data length in number of bytes to be received.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-data&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-pointer to destination data buffer&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-timestamp&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Pointer to Rx message timestamp&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-mailboxAttr&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Mailbox type either RX Mailbox or RX Mailbox with overwrite&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-msgAttr&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Data frame or Remote frame to be received&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-Request status. true - Request was successful. false - Request has failed.</p></div>
-</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">CAN_MAILBOX_0_MASK</span></strong> = (1U &lt;&lt; 0U),
+  <strong><span style="color: #000000">CAN_MAILBOX_1_MASK</span></strong> = (1U &lt;&lt; 1U),
+  <strong><span style="color: #000000">CAN_MAILBOX_2_MASK</span></strong> = (1U &lt;&lt; 2U),
+  <strong><span style="color: #000000">CAN_MAILBOX_3_MASK</span></strong> = (1U &lt;&lt; 3U),
+  <strong><span style="color: #000000">CAN_MAILBOX_4_MASK</span></strong> = (1U &lt;&lt; 4U),
+  <strong><span style="color: #000000">CAN_MAILBOX_5_MASK</span></strong> = (1U &lt;&lt; 5U),
+  <strong><span style="color: #000000">CAN_MAILBOX_6_MASK</span></strong> = (1U &lt;&lt; 6U),
+  <strong><span style="color: #000000">CAN_MAILBOX_7_MASK</span></strong> = (1U &lt;&lt; 7U)
+} CAN_MAILBOX_MASK;</pre></div></div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This routine receives a standard or extended messages based upon the CAN Plib setup.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">uint8_t buf[8], id, length;
-uint16_t timestamp = 0;
-<a href="01059.html" target="topic">CAN_MSG_RX_ATTRIBUTE</a> msgAttr;
-CAN0_Initialize();
-CAN0_MessageReceive(&amp;id, &amp;length, buf, &amp;timestamp, CAN_MAILBOX_DATA_FRAME_RX_OVERWRITE, &amp;msgAttr);</pre></div></div>
-</div>
+None.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05049.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04581.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05048.html" target="topic">Peripheral Libraries</a> &gt; <a href="00870.html" target="topic">CAN Peripheral Library Help</a> &gt; <a href="00871.html" target="topic">Library Interface</a> &gt; c) Transaction Functions &gt; <a href="01080.html" target="topic">CANx_MessageReceive Function</a></div>
+<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="00920.html" target="topic">CAN Peripheral Library Help</a> &gt; <a href="00921.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="01080.html" target="topic">CAN_MAILBOX_MASK Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -146,13 +85,13 @@ CAN0_MessageReceive(&amp;id, &amp;length, buf, &amp;timestamp, CAN_MAILBOX_DATA_
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05049.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01082.html" target="topic">Previous</a> | <a href="00871.html" target="topic">Up</a> | <a href="01069.html" target="topic">Next</a></div>
+<a href="01055.html" target="topic">Previous</a> | <a href="00921.html" target="topic">Up</a> | <a href="01089.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: can_6019::CANx_MessageReceive@uint32_t *@uint8_t *@uint8_t *@uint16_t *@CAN_MAILBOX_RX_ATTRIBUTE@CAN_MSG_RX_ATTRIBUTE * Topic Title: CANx_MessageReceive Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: can_6019::CAN_MAILBOX_MASK Topic Title: CAN_MAILBOX_MASK Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

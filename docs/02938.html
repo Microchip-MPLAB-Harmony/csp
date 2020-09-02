@@ -1,0 +1,168 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>FLEXCOMx_USART_WriteNotificationEnable Function</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '02938.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="02667.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02678.html" target="topic">USART</a> &gt; <a href="02683.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="02938.html" target="topic">FLEXCOMx_USART_WriteNotificationEnable Function</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+Microchip 32-bit Chip Support Package</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="02931.html" target="topic">Previous</a> | <a href="02683.html" target="topic">Up</a> | <a href="02932.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: flexcom_11277_usart_ring_buffer::FLEXCOMx_USART_WriteNotificationEnable@bool@bool Topic Title: FLEXCOMx_USART_WriteNotificationEnable Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+FLEXCOMx_USART_WriteNotificationEnable Function</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+This API allows the application to enable or disable transmit notifications. Further the application can choose to get notified persistently until the threshold condition is true. For example, if the transmit threshold is set to 5, which means a notification is given when the internal transmit buffer has free space for at-least 5 characters. If persistent notification is turned off, the application is notified only once when there is free space for 5 characters in the transmit buffer. However, if persistent notification is turned on, the application is notified every time a byte is transmitted out and the transmit buffer has free space for 5 or more characters.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">FLEXCOMx_USART_WriteNotificationEnable</span></strong>(
+    <strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">isEnabled</span></strong>, 
+    <strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">isPersistent</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+FLEXCOMx_USART_Initialize must have been called for the associated FLEXCOM_USART instance.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+isEnabled&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+A true value turns on notification, false value turns off notification&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+isPersistent&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+A true value turns on persistent notification. A false value disables persistent notifications&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The API returns the previous state of notifications. A true value indicates notifications were previously enabled; false value indicates notifications were perviously disabled.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+This API is only available when FLEXCOM_USART ring buffer mode is enabled in MHC.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">
+uint8_t txBuffer[50];
+uint32_t nBytes;
+
+<strong><span style="color: #000080">volatile</span></strong> <strong><span style="color: #000080">bool</span></strong> txThresholdEventReceived = <strong><span style="color: #000080">false</span></strong>;
+
+<strong><span style="color: #000080">void</span></strong> usartWriteEventHandler(<a href="02920.html" target="topic">FLEXCOM_USART_EVENT</a> event, uintptr_t context )
+{
+    txThresholdEventReceived = <strong><span style="color: #000080">true</span></strong>;
+}       
+
+<i><span style="color: #008000">//----------------------------------------------------------//</span></i>
+
+<i><span style="color: #008000">// Register a callback for write events</span></i>
+FLEXCOM1_USART_WriteCallbackRegister(usartWriteEventHandler, (uintptr_t) NULL);
+
+<i><span style="color: #008000">// Set TX threshold - TX buffer is empty</span></i>
+FLEXCOM1_USART_WriteThresholdSet(FLEXCOM1_USART_WriteBufferSizeGet());   
+
+<i><span style="color: #008000">// Enable notifications. Disable persistent notifications.</span></i>
+FLEXCOM1_USART_WriteNotificationEnable(<strong><span style="color: #000080">true</span></strong>, <strong><span style="color: #000080">false</span></strong>);
+
+FLEXCOM1_USART_Write((uint8_t*)txBuffer, nBytes);
+
+<strong><span style="color: #000080">if</span></strong> (txThresholdEventReceived == <strong><span style="color: #000080">true</span></strong>)
+{
+    <i><span style="color: #008000">// Transmit buffer is empty</span></i>
+}
+</pre></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="02667.html" target="topic">FLEXCOM Peripheral Library Help</a> &gt; <a href="02678.html" target="topic">USART</a> &gt; <a href="02683.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="02938.html" target="topic">FLEXCOMx_USART_WriteNotificationEnable Function</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+Microchip 32-bit Chip Support Package</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="02931.html" target="topic">Previous</a> | <a href="02683.html" target="topic">Up</a> | <a href="02932.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: flexcom_11277_usart_ring_buffer::FLEXCOMx_USART_WriteNotificationEnable@bool@bool Topic Title: FLEXCOMx_USART_WriteNotificationEnable Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

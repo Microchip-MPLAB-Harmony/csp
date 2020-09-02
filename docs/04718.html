@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>PIO_PIN_CALLBACK Type</title>
+<title>PDEC_QDEC_STATUS Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05049.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04581.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05048.html" target="topic">Peripheral Libraries</a> &gt; <a href="04586.html" target="topic">PIO Peripheral Library Help</a> &gt; <a href="04587.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="04718.html" target="topic">PIO_PIN_CALLBACK Type</a></div>
+<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="04677.html" target="topic">PDEC Peripheral Library Help</a> &gt; <a href="04678.html" target="topic">QDEC</a> &gt; <a href="04683.html" target="topic">Library Interface</a> &gt; <a href="04680.html" target="topic">e) Data Types and Constants</a> &gt; <a href="04718.html" target="topic">PDEC_QDEC_STATUS Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05049.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04745.html" target="topic">Previous</a> | <a href="04587.html" target="topic">Up</a> | <a href="04602.html" target="topic">Next</a></div>
+<a href="04715.html" target="topic">Previous</a> | <a href="04680.html" target="topic">Up</a> | <a href="04666.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pio_11004::PIO_PIN_CALLBACK Topic Title: PIO_PIN_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pdec_u2263::PDEC_QDEC_STATUS Topic Title: PDEC_QDEC_STATUS Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-PIO_PIN_CALLBACK Type</div>
+PDEC_QDEC_STATUS Enumeration</div>
 </div>
 </div>
 
@@ -49,75 +49,86 @@ PIO_PIN_CALLBACK Type</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-PIO Pin-Event Handler Function Pointer&nbsp;</p>
+Interrupt source mask for QDEC mode&nbsp;</p>
 <p class="Element10">
-This data type defines the required function signature for the PIO pin-event handling callback function. The client must register a pointer to an event handling function whose function signature (parameter and return value types) match the types specified by this function pointer in order to receive calls back from the PLIB when a configured pin event occurs.&nbsp;</p>
-<p class="Element10">
-The parameters and return values are described here and a partial example implementation is provided.</p></div>
+This enumeration identifies quadrature mode interrupt source mask.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000">PIO_PIN_CALLBACK</span></strong>)(<a href="04602.html" target="topic">PIO_PIN</a> pin, uintptr_t context);</pre></div></div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">PDEC_QDEC_STATUS_NONE</span></strong> = 0,
+  <strong><span style="color: #000000">PDEC_QDEC_STATUS_OVERFLOW</span></strong> = PDEC_INTFLAG_OVF_Msk,
+  <strong><span style="color: #000000">PDEC_QDEC_STATUS_ERROR</span></strong> = PDEC_INTFLAG_ERR_Msk,
+  <strong><span style="color: #000000">PDEC_QDEC_STATUS_DIR</span></strong> = PDEC_INTFLAG_DIR_Msk,
+  <strong><span style="color: #000000">PDEC_QDEC_STATUS_VELOCITY</span></strong> = PDEC_INTFLAG_VLC_Msk,
+  <strong><span style="color: #000000">PDEC_QDEC_STAUTS_COMPARE_MATCH0</span></strong> = PDEC_INTFLAG_MC0_Msk,
+  <strong><span style="color: #000000">PDEC_QDEC_STATUS_COMPARE_MATCH1</span></strong> = PDEC_INTFLAG_MC1_Msk,
+  <strong><span style="color: #000000">PDEC_QDEC_STATUS_MSK</span></strong> = PDEC_QDEC_STATUS_OVERFLOW|PDEC_QDEC_STATUS_ERROR|PDEC_QDEC_STATUS_DIR|PDEC_QDEC_STATUS_VELOCITY\|PDEC_QDEC_STAUTS_COMPARE_MATCH0|PDEC_QDEC_STATUS_COMPARE_MATCH1,
+  <strong><span style="color: #000000">PDEC_QDEC_STATUS_INVALID</span></strong> = 0xFFFFFFFF
+} PDEC_QDEC_STATUS;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element312">
+<div class="Element272">
 <div class="TableDiv">
-<table cellspacing="0" class="Table2">
+<table cellspacing="0" class="Table3">
 <tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-pin&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-One of the IO pins from the enum <a href="04602.html" target="topic">PIO_PIN</a>&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Value identifying the context of the client that registered the event handling function&nbsp;</div></td></tr></table></div></div>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+PDEC_QDEC_STATUS_OVERFLOW = PDEC_INTFLAG_OVF_Msk&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Capture status overflow&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+PDEC_QDEC_STATUS_ERROR = PDEC_INTFLAG_ERR_Msk&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Capture status error&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+PDEC_QDEC_STATUS_DIR = PDEC_INTFLAG_DIR_Msk&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Direction change&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+PDEC_QDEC_STATUS_VELOCITY = PDEC_INTFLAG_VLC_Msk&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Direction change&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+PDEC_QDEC_STAUTS_COMPARE_MATCH0 = PDEC_INTFLAG_MC0_Msk&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Capture status ready for channel 0&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+PDEC_QDEC_STATUS_COMPARE_MATCH1 = PDEC_INTFLAG_MC1_Msk&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Capture status ready for channel 1&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+PDEC_QDEC_STATUS_INVALID = 0xFFFFFFFF&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Force the compiler to reserve 32-bit memory for enum&nbsp;</div></td></tr></table></div></div>
 </div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The context parameter contains the a handle to the client context, provided at the time the event handling function was registered using the <a href="04721.html" target="topic">PIO_PinInterruptCallbackRegister</a> function. This context handle value is passed back to the client as the &quot;context&quot; parameter. It can be any value (such as a pointer to the client's data) necessary to identify the client context.&nbsp;</p>
-<p class="Element10">
-The event handler function executes in the PLIB's interrupt context. It is recommended of the application to not perform process intensive or blocking operations with in this function.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-A function matching this signature: </p><div class="Element13"><div class="Element12"><pre class="Element12">    <strong><span style="color: #000080">void</span></strong> APP_PinEventHandler(<a href="04602.html" target="topic">PIO_PIN</a> pin, uintptr_t context)
-    {
-        <i><span style="color: #008000">// Do Something</span></i>
-    }</pre></div></div>
-<p class="Element10">
-Is registered as follows: </p><div class="Element13"><div class="Element12"><pre class="Element12">    <a href="04721.html" target="topic">PIO_PinInterruptCallbackRegister</a>(PIO_PIN_PA5, &amp;APP_PinEventHandler, NULL);</pre></div></div>
-</div>
+None.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05049.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04581.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05048.html" target="topic">Peripheral Libraries</a> &gt; <a href="04586.html" target="topic">PIO Peripheral Library Help</a> &gt; <a href="04587.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="04718.html" target="topic">PIO_PIN_CALLBACK Type</a></div>
+<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="04677.html" target="topic">PDEC Peripheral Library Help</a> &gt; <a href="04678.html" target="topic">QDEC</a> &gt; <a href="04683.html" target="topic">Library Interface</a> &gt; <a href="04680.html" target="topic">e) Data Types and Constants</a> &gt; <a href="04718.html" target="topic">PDEC_QDEC_STATUS Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -125,13 +136,13 @@ Is registered as follows: </p><div class="Element13"><div class="Element12"><pre
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05049.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04745.html" target="topic">Previous</a> | <a href="04587.html" target="topic">Up</a> | <a href="04602.html" target="topic">Next</a></div>
+<a href="04715.html" target="topic">Previous</a> | <a href="04680.html" target="topic">Up</a> | <a href="04666.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pio_11004::PIO_PIN_CALLBACK Topic Title: PIO_PIN_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: pdec_u2263::PDEC_QDEC_STATUS Topic Title: PDEC_QDEC_STATUS Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

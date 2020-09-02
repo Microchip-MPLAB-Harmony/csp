@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>SERCOM_I2C_SLAVE_CALLBACK Type</title>
+<title>SDHCx_BlockCountSet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="05049.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04581.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05048.html" target="topic">Peripheral Libraries</a> &gt; <a href="06412.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="06390.html" target="topic">I2C</a> &gt; <a href="06401.html" target="topic">Slave</a> &gt; <a href="06406.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="06456.html" target="topic">SERCOM_I2C_SLAVE_CALLBACK Type</a></div>
+<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="06329.html" target="topic">SDHC Peripheral Library Help</a> &gt; <a href="06330.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="06456.html" target="topic">SDHCx_BlockCountSet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05049.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="06453.html" target="topic">Previous</a> | <a href="06406.html" target="topic">Up</a> | <a href="06457.html" target="topic">Next</a></div>
+<a href="06473.html" target="topic">Previous</a> | <a href="06330.html" target="topic">Up</a> | <a href="06457.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_i2c_slave::SERCOM_I2C_SLAVE_CALLBACK Topic Title: SERCOM_I2C_SLAVE_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SDHCx_BlockCountSet@uint16_t Topic Title: SDHCx_BlockCountSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-SERCOM_I2C_SLAVE_CALLBACK Type</div>
+SDHCx_BlockCountSet Function</div>
 </div>
 </div>
 
@@ -49,19 +49,19 @@ SERCOM_I2C_SLAVE_CALLBACK Type</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-SERCOM I2C Slave Transfer Event Callback Function Pointer.&nbsp;</p>
-<p class="Element10">
-This data type defines the function signature for the SERCOM I2C Slave callback function. The SERCOM I2C peripheral will call back the client's function with this signature to report SERCOM I2C slave events.</p></div>
+Sets the number of blocks to transfer for a multi-block transfer. For example, the block count must be set to the appropriate value before issuing the multi-block read (CMD 18) or write (CMD 25) commands. For single blcok read (CMD 17) or write (CMD24) commands, the block count must be set to 1.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">bool</span></strong> (* <strong><span style="color: #000000">SERCOM_I2C_SLAVE_CALLBACK</span></strong>)(<a href="06476.html" target="topic">SERCOM_I2C_SLAVE_TRANSFER_EVENT</a> event, uintptr_t contextHandle);</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">SDHCx_BlockCountSet</span></strong>(
+    uint16_t <strong><span style="color: #000000">numBlocks</span></strong>
+);</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="06487.html" target="topic">SERCOMx_I2C_Initialize</a> must have been called for the given SERCOM I2C peripheral instance and <a href="06484.html" target="topic">SERCOMx_I2C_CallbackRegister</a> must have been called to set the function to be called. The callback register function should have been called before a read, write or transfer function has been initiated.</p></div>
+<a href="06468.html" target="topic">SDHCx_Initialize</a>() must have been called first for the associated instance.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -78,14 +78,9 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-event&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+numBlocks&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Indicates the data transfer event for which the callback function has been called.<br>&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-contextHandle&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Allows the caller to provide a context value (usually a pointer to the callers context for multi-instance clients).&nbsp;</div></td></tr></table></div></div>
+Number of blocks to transfer.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -93,7 +88,7 @@ Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-bool - The return value indicates to the SERCOM PLIB, whether to send ACK or NAK to the I2C master. The return value is valid only during the address match event or when the I2C slave is receiving data from the I2C master (SERCOM_I2C_SLAVE_TRANSFER_EVENT_RX_READY); that is during the I2C master write operation. The return value is ignored by the PLIB when the I2C slave is providing data to the I2C master (SERCOM_I2C_SLAVE_TRANSFER_EVENT_TX_READY); that is during the I2C master read operation.</p></div>
+None.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
@@ -106,44 +101,7 @@ None.</p></div>
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">     <strong><span style="color: #000080">bool</span></strong> APP_SERCOM_I2C_Callback ( <a href="06476.html" target="topic">SERCOM_I2C_SLAVE_TRANSFER_EVENT</a> event, uintptr_t contextHandle )
-     {
-         <strong><span style="color: #000080">switch</span></strong>(event)
-         {
-             <strong><span style="color: #000080">case</span></strong> SERCOM_I2C_SLAVE_TRANSFER_EVENT_ADDR_MATCH:
-                 
-                 <i><span style="color: #008000">// Handle address match event</span></i>
-                 
-                 <strong><span style="color: #000080">break</span></strong>;
-                 
-             <strong><span style="color: #000080">case</span></strong> SERCOM_I2C_SLAVE_TRANSFER_EVENT_RX_READY:
-             
-                 <i><span style="color: #008000">// I2C master is writing to data to I2C slave.</span></i>
-                 <i><span style="color: #008000">// Read the received data byte.</span></i>
-                 
-                 rxData = SERCOM1_I2C_ReadByte();
-             
-                 <strong><span style="color: #000080">break</span></strong>;
-             <strong><span style="color: #000080">case</span></strong> SERCOM_I2C_SLAVE_TRANSFER_EVENT_TX_READY:
-                 
-                 <i><span style="color: #008000">// I2C master is reading data from I2C slave.</span></i>
-                 <i><span style="color: #008000">// Provide data to I2C master.</span></i>
-                 
-                 SERCOM1_I2C_WriteByte(txData);
-                 
-                 <strong><span style="color: #000080">break</span></strong>;
-                 
-             <strong><span style="color: #000080">case</span></strong> SERCOM_I2C_SLAVE_TRANSFER_EVENT_STOP_BIT_RECEIVED:
-             
-                 <i><span style="color: #008000">// Handle stop bit received event</span></i>
-             
-                 <strong><span style="color: #000080">break</span></strong>;                                  
-         }
-     }
-
-     <i><span style="color: #008000">// Register Callback function which is defined above</span></i>
-     SERCOM1_I2C_CallbackRegister(APP_SERCOM_I2C_Callback, 0);
-</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">SDHC1_BlockCountSet(1);</pre></div></div>
 </div>
 </div>
 </div>
@@ -151,7 +109,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="05049.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04581.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05048.html" target="topic">Peripheral Libraries</a> &gt; <a href="06412.html" target="topic">SERCOM Peripheral Library Help</a> &gt; <a href="06390.html" target="topic">I2C</a> &gt; <a href="06401.html" target="topic">Slave</a> &gt; <a href="06406.html" target="topic">Library Interface</a> &gt; e) Data Types and Constants &gt; <a href="06456.html" target="topic">SERCOM_I2C_SLAVE_CALLBACK Type</a></div>
+<a href="05221.html" target="topic">Peripheral Library Overview</a> &gt; <a href="04753.html" target="topic">Peripheral Libraries Help</a> &gt; <a href="05220.html" target="topic">Peripheral Libraries</a> &gt; <a href="06329.html" target="topic">SDHC Peripheral Library Help</a> &gt; <a href="06330.html" target="topic">Library Interface</a> &gt; b) Setup Functions &gt; <a href="06456.html" target="topic">SDHCx_BlockCountSet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -159,13 +117,13 @@ Example</div>
 Microchip 32-bit Chip Support Package</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="05049.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="05221.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="06453.html" target="topic">Previous</a> | <a href="06406.html" target="topic">Up</a> | <a href="06457.html" target="topic">Next</a></div>
+<a href="06473.html" target="topic">Previous</a> | <a href="06330.html" target="topic">Up</a> | <a href="06457.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sercom_u2201_i2c_slave::SERCOM_I2C_SLAVE_CALLBACK Topic Title: SERCOM_I2C_SLAVE_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SDHCx_BlockCountSet@uint16_t Topic Title: SDHCx_BlockCountSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->
