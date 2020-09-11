@@ -74,7 +74,7 @@ typedef enum
     SPI_SLAVE_ERROR_NONE,
 
     /* Buffer overflow error has occured */
-    SPI_SLAVE_ERROR_BUFOVF = _SPI1STAT_SPIROV_MASK,
+    SPI_SLAVE_ERROR_BUFOVF = 0x00000040,
 
 } SPI_SLAVE_ERROR;
 
