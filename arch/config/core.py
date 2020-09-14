@@ -722,6 +722,7 @@ def instantiateComponent( coreComponent ):
     systemInitSysList =         coreComponent.createListSymbol( "LIST_SYSTEM_INIT_C_SYSTEM_INITIALIZATION",         None )
     systemAppInitDataList =     coreComponent.createListSymbol( "LIST_SYSTEM_INIT_C_APP_INITIALIZE_DATA",           None )
 
+    systemInitStart1List =      coreComponent.createListSymbol( "LIST_SYSTEM_INIT_C_SYS_INITIALIZE_START1",         None )
     systemInitStartList =       coreComponent.createListSymbol( "LIST_SYSTEM_INIT_C_SYS_INITIALIZE_START",          None )
     systemInitCoreList =        coreComponent.createListSymbol( "LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE",           None )
     systemInitPeripheral1List = coreComponent.createListSymbol( "LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS1",   None )

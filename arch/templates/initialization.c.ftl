@@ -122,6 +122,7 @@ ${LIST_SYSTEM_INIT_C_INITIALIZER_STATIC_FUNCTIONS}
 
 void SYS_Initialize ( void* data )
 {
+    <#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_START1}
     <#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_START}  <#-- global disable of interrupts before initializing anything -->
     <#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_CORE}
     <#lt>${LIST_SYSTEM_INIT_C_SYS_INITIALIZE_PERIPHERALS1}

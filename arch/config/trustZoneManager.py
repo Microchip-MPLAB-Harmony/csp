@@ -174,6 +174,7 @@ secsystemIntVectorsHandlesList =           coreComponent.createListSymbol( "LIST
 secSystemInitStaticFuncList =          coreComponent.createListSymbol( "LIST_SYSTEM_SECURE_INIT_C_INITIALIZER_STATIC_FUNCTIONS",  None )
 
 secsystemInitFuseList =        coreComponent.createListSymbol( "LIST_SYSTEM_SECURE_INIT_C_CONFIG_BITS_INITIALIZATION",    None )
+secsystemInitStart1List =      coreComponent.createListSymbol( "LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_START1",         None )
 secsystemInitStartList =       coreComponent.createListSymbol( "LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_START",          None )
 secsystemInitCoreList =        coreComponent.createListSymbol( "LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_CORE",           None )
 secsystemInitPeripheral1List = coreComponent.createListSymbol( "LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_PERIPHERALS1",   None )
