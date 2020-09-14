@@ -33,7 +33,6 @@ def fileUpdate(symbol, event):
     if event["value"] == False:
         PMfilesArray[0].setSecurity("SECURE")
         PMfilesArray[1].setSecurity("SECURE")
-        PMfilesArray[2].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_START")
         PMfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES")
         PMfilesArray[4].setEnabled(False)
         PMfilesArray[5].setEnabled(False)
@@ -43,7 +42,6 @@ def fileUpdate(symbol, event):
     else:
         PMfilesArray[0].setSecurity("NON_SECURE")
         PMfilesArray[1].setSecurity("NON_SECURE")
-        PMfilesArray[2].setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_START")
         PMfilesArray[3].setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
         PMfilesArray[4].setEnabled(True)
         PMfilesArray[5].setEnabled(True)
@@ -92,7 +90,7 @@ def instantiateComponent(pmComponent):
         pmSym_PM_PLCFG_PLDIS = pmComponent.createBooleanSymbol("PLCFG_PLDIS", None)
         pmSym_PM_PLCFG_PLDIS.setLabel("Force device to run in PL0")
         pmSym_PM_PLCFG_PLDIS.setDefaultValue(False)
-        
+
 
     if "HAS_BBIASHS_FIELD" in parameters:
         #PM standby back biasing for SRAM
@@ -124,7 +122,7 @@ def instantiateComponent(pmComponent):
         pmSym_STDBYCFG_BBIASTR = pmComponent.createBooleanSymbol("PM_STDBYCFG_BBIASTR", None)
         pmSym_STDBYCFG_BBIASTR.setLabel("Put TrustRAM in low power during standby mode")
         pmSym_STDBYCFG_BBIASTR.setDescription("RAM is backbiased in standby mode to reduce power")
-        
+
     if "HAS_BBIASLP_FIELD" in parameters:
         #PM standby back biasing for LP SRAM
         pmSym_STDBYCFG_BBIASLP = pmComponent.createKeyValueSetSymbol("PM_STDBYCFG_BBIASLP", None)
@@ -204,7 +202,7 @@ def instantiateComponent(pmComponent):
         pmSym_STDBYCFG_PDCFG.setDefaultValue(0)
         pmSym_STDBYCFG_PDCFG.setOutputMode("Value")
         pmSym_STDBYCFG_PDCFG.setDisplayMode("Description")
-        
+
     if "HAS_DPGPD0_BIT" in parameters:
         pmSym_STDBYCFG_DPGPD0 = pmComponent.createBooleanSymbol("PM_STDBYCFG_DPGPD0", None)
         pmSym_STDBYCFG_DPGPD0.setLabel("PD0 Dynamic Power Gating Enable")
@@ -222,7 +220,7 @@ def instantiateComponent(pmComponent):
         pmSym_STDBYCFG_DPGPD.setLabel("Dynamic Power Gating Enable")
         pmSym_STDBYCFG_DPGPD.setDefaultValue(0)
         pmSym_STDBYCFG_DPGPD.setDescription("Dynamic Power Gating for Switchable Power Domain")
-        
+
     #PM standby VREGMOD configuration
     pmSym_STDBYCFG_VREGSMOD = pmComponent.createKeyValueSetSymbol("PM_STDBYCFG_VREGSMOD", None)
     pmSym_STDBYCFG_VREGSMOD.setLabel("Voltage Regulator operation in Standby mode")
@@ -241,7 +239,7 @@ def instantiateComponent(pmComponent):
     pmSym_STDBYCFG_VREGSMOD.setDefaultValue(0)
     pmSym_STDBYCFG_VREGSMOD.setOutputMode("Value")
     pmSym_STDBYCFG_VREGSMOD.setDisplayMode("Description")
-    
+
     if "HAS_PWCFG" in parameters:
         pmSym_PWCFG = pmComponent.createKeyValueSetSymbol("PM_PWCFG_RAMPSWC", None)
         pmSym_PWCFG.setLabel("RAM Power Switch Configuration")
@@ -258,18 +256,18 @@ def instantiateComponent(pmComponent):
 
         pmSym_PWCFG.setDefaultValue(0)
         pmSym_PWCFG.setOutputMode("Value")
-        pmSym_PWCFG.setDisplayMode("Description")       
+        pmSym_PWCFG.setDisplayMode("Description")
 
     #Get different modes for Idle Sleep
     pmIdleSleepOptions = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PM\"]/value-group@[name=\"PM_SLEEPCFG__SLEEPMODE\"]")
-    
+
     pmIdleSleepOptionValues = []
     pmIdleSleepOptionValues = pmIdleSleepOptions.getChildren()
 
     IdleModeCount = 0
     for id in range(0,len(pmIdleSleepOptionValues)):
         if "IDLE" in pmIdleSleepOptionValues[id].getAttribute("name"):
-            IdleModeCount += 1 
+            IdleModeCount += 1
 
     if IdleModeCount > 1:
         #Idle configuration
@@ -319,7 +317,10 @@ def instantiateComponent(pmComponent):
 
     pmSym_SystemInitFile = pmComponent.createFileSymbol("PM_SYS_INIT", None)
     pmSym_SystemInitFile.setType("STRING")
-    pmSym_SystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_START")
+    if any(device in Database.getSymbolValue("core", "CoreSeries") for device in ["PIC32CMLE", "PIC32CMLS"]):
+        pmSym_SystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_START1")
+    else:
+        pmSym_SystemInitFile.setOutputName("core.LIST_SYSTEM_INIT_C_SYS_INITIALIZE_START")
     pmSym_SystemInitFile.setSourcePath("../peripheral/pm_u2240/templates/system/initialization.c.ftl")
     pmSym_SystemInitFile.setMarkup(True)
 
@@ -361,7 +362,10 @@ def instantiateComponent(pmComponent):
         secpmSymSystemDefFile.setMarkup(True)
         secpmSymSystemDefFile.setEnabled(pmIsNonSecure)
 
-        pmSym_SystemInitFile.setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_START")
+        if any(device in Database.getSymbolValue("core", "CoreSeries") for device in ["PIC32CMLE", "PIC32CMLS"]):
+            pmSym_SystemInitFile.setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_START1")
+        else:
+            pmSym_SystemInitFile.setOutputName("core.LIST_SYSTEM_SECURE_INIT_C_SYS_INITIALIZE_START")
 
         PMfilesArray.append(pmSym_HeaderFile)
         PMfilesArray.append(pmSym_SourceFile)
