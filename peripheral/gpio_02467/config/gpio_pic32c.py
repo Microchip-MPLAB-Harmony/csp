@@ -78,23 +78,28 @@ def ppsInputPinValueUpdate(symbol, event):
     tree = ET.parse(ppsXmlPath)
     root = tree.getroot()
 
-    if "SYS_PORT_PPS_INPUT_FUNCTION_" in event["id"]:
-        pinName = symbol.getKey(symbol.getValue())
-        functionName = event["symbol"].getKey(event["value"])
-
-        for myGroups in root.findall('groups'):
-            for myGroup in myGroups.findall('group'):
-                for myPin in myGroup.findall('pin'):
-                    if ("value" in myPin.attrib.keys()) and (pinName == myPin.get("name")): # means its group for input pins and pin name matched
-                        pinValue = myPin.get("value") # save the pin value
-                        for myFunction in myGroup.findall('function'): # Since pin name is found, now search the function within the same group
-                            if functionName == myFunction.get("name"):
-                                functionValue = myFunction.get("register-name") # if function is found, save it
-                                symbol.setKeyValue(pinName, pinValue) # update the pin value
-                                event["symbol"].setKeyValue(functionName, functionValue) # update the function value
-                                return
-    elif "USE_PPS_INPUT_" in event["id"]:
+    if "USE_PPS_INPUT_" in event["id"]:
         symbol.setVisible(event["value"] )
+
+    ppsNumber = event["id"].split("_")[-1]
+
+    pinName = symbol.getKey(symbol.getValue())
+    functionNameIndex = Database.getSymbolValue("core", "SYS_PORT_PPS_INPUT_FUNCTION_" + ppsNumber)
+    functionNameSymbol = event["source"].getSymbolByID("SYS_PORT_PPS_INPUT_FUNCTION_" + ppsNumber)
+    functionName = functionNameSymbol.getKey(functionNameIndex)
+
+    for myGroups in root.findall('groups'):
+        for myGroup in myGroups.findall('group'):
+            for myPin in myGroup.findall('pin'):
+                if ("value" in myPin.attrib.keys()) and (pinName == myPin.get("name")): # means its group for input pins and pin name matched
+                    pinValue = myPin.get("value") # save the pin value
+                    for myFunction in myGroup.findall('function'): # Since pin name is found, now search the function within the same group
+                        if functionName == myFunction.get("name"):
+                            functionValue = myFunction.get("register-name") # if function is found, save it
+                            symbol.setKeyValue(pinName, pinValue) # update the pin value
+                            functionNameSymbol.setKeyValue(functionName, functionValue) # update the function value
+                            return
+
 
 def ppsOutputPinValueUpdate(symbol, event):
     import xml.etree.ElementTree as ET
@@ -103,23 +108,28 @@ def ppsOutputPinValueUpdate(symbol, event):
     tree = ET.parse(ppsXmlPath)
     root = tree.getroot()
 
-    if ("SYS_PORT_PPS_OUTPUT_FUNCTION_" in event["id"]):
-        pinName = symbol.getKey(symbol.getValue())
-        functionName = event["symbol"].getKey(event["value"])
-
-        for myGroups in root.findall('groups'):
-            for myGroup in myGroups.findall('group'):
-                for myPin in myGroup.findall('pin'):
-                    if ("register-name" in myPin.attrib.keys()) and (pinName == myPin.get("name")): # means its group for output pins and pin name matched
-                        pinValue = myPin.get("register-name") # save the pin value
-                        for myFunction in myGroup.findall('function'): # Since pin name is found, now search the function within the same group
-                            if functionName == myFunction.get("name"):
-                                functionValue = myFunction.get("value") # if function is found, save it
-                                symbol.setKeyValue(pinName, pinValue) # update the function value
-                                event["symbol"].setKeyValue(functionName, functionValue) # update the pin value
-                                return
-    elif "USE_PPS_OUTPUT_" in event["id"]:
+    if "USE_PPS_OUTPUT_" in event["id"]:
         symbol.setVisible(event["value"] )
+
+    ppsNumber = event["id"].split("_")[-1]
+
+    pinName = symbol.getKey(symbol.getValue())
+    functionNameIndex = Database.getSymbolValue("core", "SYS_PORT_PPS_OUTPUT_FUNCTION_" + ppsNumber)
+    functionNameSymbol = event["source"].getSymbolByID("SYS_PORT_PPS_OUTPUT_FUNCTION_" + ppsNumber)
+    functionName = functionNameSymbol.getKey(functionNameIndex)
+
+    for myGroups in root.findall('groups'):
+        for myGroup in myGroups.findall('group'):
+            for myPin in myGroup.findall('pin'):
+                if ("register-name" in myPin.attrib.keys()) and (pinName == myPin.get("name")): # means its group for output pins and pin name matched
+                    pinValue = myPin.get("register-name") # save the pin value
+                    for myFunction in myGroup.findall('function'): # Since pin name is found, now search the function within the same group
+                        if functionName == myFunction.get("name"):
+                            functionValue = myFunction.get("value") # if function is found, save it
+                            symbol.setKeyValue(pinName, pinValue) # update the function value
+                            functionNameSymbol.setKeyValue(functionName, functionValue) # update the pin value
+                            return
+
 
 # Dependency Function to pass interrupt related info to Interrupt Manager.
 # This function will be entered only by internal change happening to PORT channel interrupt, never by manual
@@ -607,7 +617,7 @@ for pinNumber in range(0, PPSPinCount):
     ppsInputPin[pinNumber].setVisible(False)
     for key, value in ppsInputPinMap.items():
         ppsInputPin[pinNumber].addKey(key, value, key)
-    ppsInputPin[pinNumber].setDependencies(ppsInputPinValueUpdate, ["SYS_PORT_PPS_INPUT_FUNCTION_" + str(pinNumber), "USE_PPS_INPUT_" + str(pinNumber)])
+    ppsInputPin[pinNumber].setDependencies(ppsInputPinValueUpdate, ["SYS_PORT_PPS_INPUT_FUNCTION_" + str(pinNumber), "USE_PPS_INPUT_" + str(pinNumber), "SYS_PORT_PPS_INPUT_PIN_" + str(pinNumber)])
     
 
     #PPS Output pin Configuration
@@ -640,7 +650,7 @@ for pinNumber in range(0, PPSPinCount):
     ppsOutputPin[pinNumber].setVisible(False)
     for key, value in PORTS_REMAP_OUTPUT_PIN.items():
         ppsOutputPin[pinNumber].addKey(key, value, value)
-    ppsOutputPin[pinNumber].setDependencies(ppsOutputPinValueUpdate, ["SYS_PORT_PPS_OUTPUT_FUNCTION_" + str(pinNumber),"USE_PPS_OUTPUT_" + str(pinNumber)])
+    ppsOutputPin[pinNumber].setDependencies(ppsOutputPinValueUpdate, ["SYS_PORT_PPS_OUTPUT_FUNCTION_" + str(pinNumber),"USE_PPS_OUTPUT_" + str(pinNumber), "SYS_PORT_PPS_OUTPUT_PIN_" + str(pinNumber)])
 
 ###################################################################################################
 ################################# PORT Configuration related code #################################
