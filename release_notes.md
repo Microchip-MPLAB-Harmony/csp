@@ -3,11 +3,25 @@
 
 # Microchip MPLAB® Harmony 3 Release Notes
 
+## CSP Release v3.8.1
+
+### New Features
+- Updated supported product families
+
+### Bug fixes
+- N/A
+
+### Known Issues
+- Same as v3.8.0
+
+### Development Tools
+- Same as v3.8.0
+
 ## CSP Release v3.8.0
 
 ### New Features
 
-- **New part support** - This release introduces support for PIC32CM MC00 , PIC32CM JH00/JH01, PIC32CM LE/LS, SAM A5D2 SiP/SOM and SAM R34/R35 products.
+- **New part support** - This release introduces support for SAM A5D2 SiP/SOM and SAM R34/R35 products.
 
 
 - **Applications**
@@ -34,9 +48,6 @@ The current known issues are as follows:
      -  **SAM L21 Family**: SAML21_DFP v3.4.80
      -  **SAM L22 Family**: SAML22_DFP v3.4.59
      -  **SAM L10/L11 Family**: SAML10_DFP v3.3.82, SAML11_DFP v4.0.114
-     -  **PIC32CM JH00/JH01 Family**: PIC32CM-JH_DFP v1.0.59
-     -  **PIC32CM LE/LS Family**: PIC32CM-LE_DFP v1.0.88, PIC32CM-LS_DFP v1.0.88
-     -  **PIC32CM MC00 Family**: PIC32CM-MC_DFP v1.0.32
      -  **PIC32MK MCM/GPK Family**: PIC32MK-GP_DFP v1.4.117, PIC32MK-MC_DFP v1.5.115
 
 
