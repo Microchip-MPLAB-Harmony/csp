@@ -107,7 +107,7 @@ def instantiateComponent(nvmComponent):
     flashStartAddress = nvmFlashNode.getAttribute("start")
 
     #Convert Physical Address to Virtual Address 0x1Dxxxxx to 0x9Dxxxx
-    flashStartAddress = flashStartAddress[:2] + flashStartAddress[2:].replace('1', '9')
+    flashStartAddress = flashStartAddress.replace('0x1', '0x9')
 
     #Flash Address
     nvmSym_FLASH_ADDRESS = nvmComponent.createStringSymbol("FLASH_START_ADDRESS", None)
