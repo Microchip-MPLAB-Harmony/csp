@@ -431,7 +431,7 @@ def adcCalcAD1CSSL(symbol, event):
     scanPinNumber = event["id"].split("__CSSL_")[1]
     csslMask = component.getSymbolValue("AD1CSSL__CSSL_ENUM_VALUE_" + scanPinNumber)
     if event["value"] == True:
-        ad1cssl = ad1cssl + csslMask
+        ad1cssl = ad1cssl | csslMask
     else:
         ad1cssl = ad1cssl & (~csslMask)
     symbol.setValue(ad1cssl, 2)
@@ -705,7 +705,7 @@ def instantiateComponent(adcComponent):
     adcSym_AD1CON3 = adcComponent.createHexSymbol("ADC_AD1CON3", adcMenu)
     adcSym_AD1CON3.setLabel("AD1CON3 register value")
     adcSym_AD1CON3.setVisible(False)
-    adcSym_AD1CON3.setDefaultValue(0x0)
+    adcSym_AD1CON3.setDefaultValue(0x1f02)
     adcSym_AD1CON3.setDependencies(adcCalcAD1CON3, ad1con3_deplist)
 
     ad1chs_deplist = ["AD1CHS__CH0SA", "AD1CHS__CH0NA", "AD1CHS__CH0SB", "AD1CHS__CH0NB"]
