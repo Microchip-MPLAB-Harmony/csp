@@ -5,10 +5,10 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_${SPI_INSTANCE_NAME?lower_case}.h
+    plib_${SPI_INSTANCE_NAME?lower_case}_slave.h
 
   Summary:
-    ${SPI_INSTANCE_NAME} PLIB Header File
+    ${SPI_INSTANCE_NAME} SLAVE PLIB Header File
 
   Description:
     This file has prototype of all the interfaces provided for particular
@@ -39,11 +39,11 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
-#ifndef PLIB_${SPI_INSTANCE_NAME}_H
-#define PLIB_${SPI_INSTANCE_NAME}_H
+#ifndef PLIB_${SPI_INSTANCE_NAME}_SLAVE_H
+#define PLIB_${SPI_INSTANCE_NAME}_SLAVE_H
 
 #include "device.h"
-#include "plib_spi_common.h"
+#include "plib_spi_slave_common.h"
 
 /* Provide C++ Compatibility */
 #ifdef __cplusplus
@@ -54,21 +54,17 @@
 
 /****************************** ${SPI_INSTANCE_NAME} Interface *********************************/
 
-void ${SPI_INSTANCE_NAME}_Initialize( void );
-
-bool ${SPI_INSTANCE_NAME}_WriteRead( void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize );
-
-bool ${SPI_INSTANCE_NAME}_Write( void* pTransmitData, size_t txSize );
-
-bool ${SPI_INSTANCE_NAME}_Read( void* pReceiveData, size_t rxSize );
-
-bool ${SPI_INSTANCE_NAME}_TransferSetup( SPI_TRANSFER_SETUP *setup, uint32_t spiSourceClock );
-
-<#if SPI_INTERRUPT_MODE == true>
-bool ${SPI_INSTANCE_NAME}_IsBusy( void );
-
-void ${SPI_INSTANCE_NAME}_CallbackRegister( const SPI_CALLBACK callback, uintptr_t context );
-
+void ${SPI_INSTANCE_NAME}_Initialize (void);
+size_t ${SPI_INSTANCE_NAME}_Read(void* pRdBuffer, size_t size);
+size_t ${SPI_INSTANCE_NAME}_Write(void* pWrBuffer, size_t size );
+size_t ${SPI_INSTANCE_NAME}_ReadCountGet(void);
+size_t ${SPI_INSTANCE_NAME}_ReadBufferSizeGet(void);
+size_t ${SPI_INSTANCE_NAME}_WriteBufferSizeGet(void);
+void ${SPI_INSTANCE_NAME}_CallbackRegister(SPI_SLAVE_CALLBACK callBack, uintptr_t context );
+SPI_SLAVE_ERROR ${SPI_INSTANCE_NAME}_ErrorGet(void);
+bool ${SPI_INSTANCE_NAME}_IsBusy(void);
+<#if SPIS_USE_BUSY_PIN == true>
+void ${SPI_INSTANCE_NAME}_Ready(void);
 </#if>
 
 /* Provide C++ Compatibility */
@@ -78,7 +74,7 @@ void ${SPI_INSTANCE_NAME}_CallbackRegister( const SPI_CALLBACK callback, uintptr
 
 #endif
 
-#endif // PLIB_${SPI_INSTANCE_NAME}_H
+#endif // PLIB_${SPI_INSTANCE_NAME}_SLAVE_H
 
 /*******************************************************************************
  End of File
