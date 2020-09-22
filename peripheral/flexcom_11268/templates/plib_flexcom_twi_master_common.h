@@ -5,10 +5,10 @@
     Microchip Technology Inc.
 
   File Name
-    plib_flexcom_twi_master.h
+    plib_flexcom_twi_master_common.h
 
   Summary
-    FLEXCOM TWI peripheral library interface.
+    FLEXCOM TWI Master Common peripheral library interface.
 
   Description
     This file defines the interface to the FLEXCOM TWI peripheral library. This
@@ -44,8 +44,8 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_FLEXCOM_TWI_MASTER_H
-#define PLIB_FLEXCOM_TWI_MASTER_H
+#ifndef PLIB_FLEXCOM_TWI_MASTER_COMMON_H
+#define PLIB_FLEXCOM_TWI_MASTER_COMMON_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -214,7 +214,7 @@ typedef struct
 #endif
 // DOM-IGNORE-END
 
-#endif /* PLIB_FLEXCOM_TWI_MASTER_H */
+#endif /* PLIB_FLEXCOM_TWI_MASTER_COMMON_H */
 
 /*******************************************************************************
  End of File
