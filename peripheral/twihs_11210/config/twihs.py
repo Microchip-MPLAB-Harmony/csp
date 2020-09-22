@@ -29,17 +29,29 @@ opModeValues = ["MASTER", "SLAVE"]
 
 def handleMessage(messageID, args):
     global twihsOpMode
+    global twihsSym_Interrupt_Mode
 
     result_dict = {}
 
     if (messageID == "I2C_MASTER_MODE"):
-        if args.get("isReadOnly") != None and args["isReadOnly"] == True:
+        if args.get("isReadOnly") != None:
             twihsOpMode.setReadOnly(args["isReadOnly"])
         if args.get("isEnabled") != None and args["isEnabled"] == True:
             twihsOpMode.setValue("MASTER")
 
-    #elif (messageID == "I2C_SLAVE_MODE"):
-        # To be implemented
+    elif (messageID == "I2C_SLAVE_MODE"):
+        if args.get("isReadOnly") != None:
+            twihsOpMode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None and args["isEnabled"] == True:
+            twihsOpMode.setValue("SLAVE")
+
+    elif (messageID == "I2C_SLAVE_INTERRUPT_MODE"):
+        if args.get("isReadOnly") != None:
+            twihsSym_Interrupt_Mode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None:
+            twihsSym_Interrupt_Mode.setValue(args["isEnabled"])
+        if args.get("isVisible") != None:
+            twihsSym_Interrupt_Mode.setVisible(args["isVisible"])
 
     return result_dict
 
@@ -93,6 +105,48 @@ def getTWIHSClockDividerValue(twihsClkSpeed):
 
     return cldiv, chdiv, ckdiv
 
+def updateInterruptModeVisibility(symbol, event):
+    opMode = event["source"].getSymbolByID("TWIHS_OPMODE").getValue()
+
+    if opMode == "MASTER":
+        symbol.setReadOnly(True)
+        symbol.setValue(True)
+    else:
+        symbol.setReadOnly(False)
+
+def updateNVICInterrupt(symbol, event):
+    global twihsInstanceName
+
+    interruptEnable = event["source"].getSymbolByID("TWIHS_INTERRUPT_MODE").getValue()
+
+    if interruptEnable == True:
+        interruptHandlerName = twihsInstanceName.getValue() + "_InterruptHandler"
+    else:
+        interruptHandlerName = twihsInstanceName.getValue() + "_Handler"
+
+    # Initialize peripheral Interrupt
+    Database.setSymbolValue("core", twihsInstanceName.getValue() + "_INTERRUPT_ENABLE", interruptEnable, 1)
+
+    # Set Interrupt Handler Name
+    Database.setSymbolValue("core", twihsInstanceName.getValue() + "_INTERRUPT_HANDLER", interruptHandlerName, 1)
+
+    # Set Interrupt Handler Lock
+    Database.setSymbolValue("core", twihsInstanceName.getValue() + "_INTERRUPT_HANDLER_LOCK", interruptEnable, 1)
+
+def showMasterDependencies(symbol, event):
+    opMode = event["source"].getSymbolByID("TWIHS_OPMODE").getValue()
+    symbol.setVisible(opMode == "MASTER")
+
+def showSlaveDependencies(symbol, event):
+    opMode = event["source"].getSymbolByID("TWIHS_OPMODE").getValue()
+    symbol.setVisible(opMode == "SLAVE")
+
+def twihsMasterModeFileGeneration(symbol, event):
+    symbol.setEnabled(event["symbol"].getValue() == "MASTER")
+
+def twihsSlaveModeFileGeneration(symbol, event):
+    symbol.setEnabled(event["symbol"].getValue() == "SLAVE")
+
 ################################################################################
 #### Business Logic ####
 ################################################################################
@@ -111,13 +165,27 @@ def setClockDividerValue(symbol, event):
         Database.setSymbolValue(twihsInstanceName.getValue().lower(), "TWIHS_CWGR_CHDIV", chdiv, 1)
         Database.setSymbolValue(twihsInstanceName.getValue().lower(), "TWIHS_CWGR_CKDIV", ckdiv, 1)
 
-def setEnCommentVisibility(symbol, event):
+def updateClockWarning(symbol, event):
+    global twihsInstanceName
 
-    symbol.setVisible(event["value"])
+    clockEnabled = bool(Database.getSymbolValue("core", twihsInstanceName.getValue() + "_CLOCK_ENABLE"))
+    symbol.setVisible(clockEnabled == False)
+
+def updateInterruptWarning(symbol, event):
+    global twihsInstanceName
+
+    nvic_interrupt_status = bool(Database.getSymbolValue("core", twihsInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"))
+    isInterruptEnabled = event["source"].getSymbolByID("TWIHS_INTERRUPT_MODE").getValue()
+
+    symbol.setVisible(isInterruptEnabled == True and nvic_interrupt_status == True)
 
 def setClockSourceFreq(symbol, event):
 
-    symbol.setValue(event["value"], 2)
+    if event["id"] == "TWIHS_OPMODE":
+        opMode = event["source"].getSymbolByID("TWIHS_OPMODE").getValue()
+        symbol.setVisible(opMode == "MASTER")
+    else:
+        symbol.setValue(event["value"], 2)
 
 def onCapabilityConnected(event):
     localComponent = event["localComponent"]
@@ -137,6 +205,7 @@ def instantiateComponent(twihsComponent):
     global twihsInstanceName
     global twihsSymClockInvalid
     global twihsOpMode
+    global twihsSym_Interrupt_Mode
 
     twihsInstanceName = twihsComponent.createStringSymbol("TWIHS_INSTANCE_NAME", None)
     twihsInstanceName.setVisible(False)
@@ -151,7 +220,6 @@ def instantiateComponent(twihsComponent):
     twihsOpMode = twihsComponent.createComboSymbol("TWIHS_OPMODE", None, opModeValues)
     twihsOpMode.setLabel("TWIHS Operation Mode")
     twihsOpMode.setDefaultValue("MASTER")
-    twihsOpMode.setReadOnly(True)
 
     # Provide a source clock selection symbol for masks that supports it
     valueGroup = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"TWIHS\"]/value-group@[name=\"TWIHS_CWGR__CKSRC\"]")
@@ -168,14 +236,36 @@ def instantiateComponent(twihsComponent):
     twihsSymMasterClkFreq = twihsComponent.createIntegerSymbol("TWIHS_CLK_SRC_FREQ", None)
     twihsSymMasterClkFreq.setLabel("Source Clock Frequency (Hz)")
     twihsSymMasterClkFreq.setReadOnly(True)
+    twihsSymMasterClkFreq.setVisible(twihsOpMode.getValue() == "MASTER")
     twihsSymMasterClkFreq.setDefaultValue(int(Database.getSymbolValue("core", twihsInstanceName.getValue() + "_CLOCK_FREQUENCY")))
-    twihsSymMasterClkFreq.setDependencies(setClockSourceFreq, ["core." + twihsInstanceName.getValue() + "_CLOCK_FREQUENCY"])
+    twihsSymMasterClkFreq.setDependencies(setClockSourceFreq, ["core." + twihsInstanceName.getValue() + "_CLOCK_FREQUENCY", "TWIHS_OPMODE"])
 
     # Clock speed
     twihsSymClockSpeed = twihsComponent.createIntegerSymbol("I2C_CLOCK_SPEED", None)
     twihsSymClockSpeed.setLabel("Clock Speed")
     twihsSymClockSpeed.setDefaultValue(400000)
     twihsSymClockSpeed.setMax(400000)
+    twihsSymClockSpeed.setDependencies(showMasterDependencies, ["TWIHS_OPMODE"])
+
+    # Slave Address
+    twihsSym_ADDR = twihsComponent.createHexSymbol("TWIHS_SLAVE_ADDRESS", None)
+    twihsSym_ADDR.setLabel("I2C Slave Address (7-bit)")
+    twihsSym_ADDR.setMax(1023)
+    twihsSym_ADDR.setVisible(False)
+    twihsSym_ADDR.setDefaultValue(0x54)
+    twihsSym_ADDR.setDependencies(showSlaveDependencies, ["TWIHS_OPMODE"])
+
+    #I2C Interrupt Mode
+    twihsSym_Interrupt_Mode = twihsComponent.createBooleanSymbol("TWIHS_INTERRUPT_MODE", None)
+    twihsSym_Interrupt_Mode.setLabel("Enable Interrupts ?")
+    twihsSym_Interrupt_Mode.setDefaultValue(True)
+    twihsSym_Interrupt_Mode.setReadOnly(twihsOpMode.getValue() == "MASTER")
+    twihsSym_Interrupt_Mode.setDependencies(updateInterruptModeVisibility, ["TWIHS_OPMODE"])
+
+    twihsSym_Interrupt_Update = twihsComponent.createBooleanSymbol("TWIHS_INTERRUPT_UPDATE", None)
+    twihsSym_Interrupt_Update.setLabel("Interrupt Update")
+    twihsSym_Interrupt_Update.setVisible(False)
+    twihsSym_Interrupt_Update.setDependencies(updateNVICInterrupt, ["TWIHS_OPMODE", "TWIHS_INTERRUPT_MODE"])
 
     #clock invalid comment
     twihsSymClockInvalid = twihsComponent.createCommentSymbol("TW_HS_INVALID_CLOCK", None)
@@ -222,15 +312,15 @@ def instantiateComponent(twihsComponent):
 
     # Warning for change in Clock Enable Symbol
     twihsSymClkEnComment = twihsComponent.createCommentSymbol("TWIHS_CLK_EN_COMMENT", None)
-    twihsSymClkEnComment.setVisible(False)
+    twihsSymClkEnComment.setVisible(bool(Database.getSymbolValue("core", twihsInstanceName.getValue() + "_CLOCK_ENABLE")) == False)
     twihsSymClkEnComment.setLabel("Warning!!! TWIHS Peripheral Clock is Disabled in Clock Manager")
-    twihsSymClkEnComment.setDependencies(setEnCommentVisibility, ["core."+twihsInstanceName.getValue()+"_CLOCK_ENABLE"])
+    twihsSymClkEnComment.setDependencies(updateClockWarning, ["core." + twihsInstanceName.getValue() + "_CLOCK_ENABLE"])
 
     # Warning for change in Interrupt Enable Symbol
     twihsSymIntEnComment = twihsComponent.createCommentSymbol("TWIHS_INT_EN_COMMENT", None)
-    twihsSymIntEnComment.setVisible(False)
+    twihsSymIntEnComment.setVisible(bool(Database.getSymbolValue("core", twihsInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE")) == True)
     twihsSymIntEnComment.setLabel("Warning!!! TWIHS Interrupt is Disabled in Interrupt Manager")
-    twihsSymIntEnComment.setDependencies(setEnCommentVisibility, ["core."+twihsInstanceName.getValue()+"_INTERRUPT_ENABLE_UPDATE"])
+    twihsSymIntEnComment.setDependencies(updateInterruptWarning, ["core." + twihsInstanceName.getValue() + "_INTERRUPT_ENABLE_UPDATE"])
 
     #TWIHS API Prefix
     twihsSymAPIPrefix = twihsComponent.createStringSymbol("I2C_PLIB_API_PREFIX", None)
@@ -243,31 +333,69 @@ def instantiateComponent(twihsComponent):
 
     configName = Variables.get("__CONFIGURATION_NAME")
 
-    #Master Header
-    twihsMasterHeaderFile = twihsComponent.createFileSymbol("TWIHS_FILE_MASTER_HEADER", None)
-    twihsMasterHeaderFile.setSourcePath("../peripheral/twihs_11210/plib_twihs_master.h")
-    twihsMasterHeaderFile.setOutputName("plib_twihs_master.h")
-    twihsMasterHeaderFile.setDestPath("/peripheral/twihs/")
-    twihsMasterHeaderFile.setProjectPath("config/" + configName + "/peripheral/twihs/")
+    # TWIHS Master Common Header
+    twihsMasterCommonHeaderFile = twihsComponent.createFileSymbol("TWIHS_FILE_MASTER_HEADER", None)
+    twihsMasterCommonHeaderFile.setSourcePath("../peripheral/twihs_11210/plib_twihs_master_common.h")
+    twihsMasterCommonHeaderFile.setOutputName("plib_twihs_master_common.h")
+    twihsMasterCommonHeaderFile.setDestPath("/peripheral/twihs/master/")
+    twihsMasterCommonHeaderFile.setProjectPath("config/" + configName + "/peripheral/twihs/master/")
+    twihsMasterCommonHeaderFile.setType("HEADER")
+    twihsMasterCommonHeaderFile.setEnabled(twihsOpMode.getValue() == "MASTER")
+    twihsMasterCommonHeaderFile.setDependencies(twihsMasterModeFileGeneration, ["TWIHS_OPMODE"])
+
+    # TWIHS Master Source File
+    twihsMasterSourceFile = twihsComponent.createFileSymbol("TWIHS_FILE_SRC_MAIN", None)
+    twihsMasterSourceFile.setSourcePath("../peripheral/twihs_11210/templates/plib_twihs_master.c.ftl")
+    twihsMasterSourceFile.setOutputName("plib_" + twihsInstanceName.getValue().lower() + "_master.c")
+    twihsMasterSourceFile.setDestPath("/peripheral/twihs/master")
+    twihsMasterSourceFile.setProjectPath("config/" + configName + "/peripheral/twihs/master")
+    twihsMasterSourceFile.setType("SOURCE")
+    twihsMasterSourceFile.setMarkup(True)
+    twihsMasterSourceFile.setEnabled(twihsOpMode.getValue() == "MASTER")
+    twihsMasterSourceFile.setDependencies(twihsMasterModeFileGeneration, ["TWIHS_OPMODE"])
+
+    # TWIHS Master Header File
+    twihsMasterHeaderFile = twihsComponent.createFileSymbol("TWIHS_FILE_MAIN_HEADER", None)
+    twihsMasterHeaderFile.setSourcePath("../peripheral/twihs_11210/templates/plib_twihs_master.h.ftl")
+    twihsMasterHeaderFile.setOutputName("plib_" + twihsInstanceName.getValue().lower() + "_master.h")
+    twihsMasterHeaderFile.setDestPath("/peripheral/twihs/master")
+    twihsMasterHeaderFile.setProjectPath("config/" + configName + "/peripheral/twihs/master")
     twihsMasterHeaderFile.setType("HEADER")
+    twihsMasterHeaderFile.setMarkup(True)
+    twihsMasterHeaderFile.setEnabled(twihsOpMode.getValue() == "MASTER")
+    twihsMasterHeaderFile.setDependencies(twihsMasterModeFileGeneration, ["TWIHS_OPMODE"])
 
-    #Source File
-    twihsMainSourceFile = twihsComponent.createFileSymbol("TWIHS_FILE_SRC_MAIN", None)
-    twihsMainSourceFile.setSourcePath("../peripheral/twihs_11210/templates/plib_twihs.c.ftl")
-    twihsMainSourceFile.setOutputName("plib_" + twihsInstanceName.getValue().lower() + ".c")
-    twihsMainSourceFile.setDestPath("/peripheral/twihs/")
-    twihsMainSourceFile.setProjectPath("config/" + configName + "/peripheral/twihs/")
-    twihsMainSourceFile.setType("SOURCE")
-    twihsMainSourceFile.setMarkup(True)
+    # TWIHS Slave Common Header
+    twihsSlaveCommonHeaderFile = twihsComponent.createFileSymbol("TWIHS_SLAVE_COMMON_HEADER", None)
+    twihsSlaveCommonHeaderFile.setSourcePath("../peripheral/twihs_11210/plib_twihs_slave_common.h")
+    twihsSlaveCommonHeaderFile.setOutputName("plib_twihs_slave_common.h")
+    twihsSlaveCommonHeaderFile.setDestPath("/peripheral/twihs/slave/")
+    twihsSlaveCommonHeaderFile.setProjectPath("config/" + configName + "/peripheral/twihs/slave/")
+    twihsSlaveCommonHeaderFile.setType("HEADER")
+    twihsSlaveCommonHeaderFile.setEnabled(twihsOpMode.getValue() == "SLAVE")
+    twihsSlaveCommonHeaderFile.setDependencies(twihsSlaveModeFileGeneration, ["TWIHS_OPMODE"])
 
-    #Instance Header File
-    twihsInstHeaderFile = twihsComponent.createFileSymbol("TWIHS_FILE_MAIN_HEADER", None)
-    twihsInstHeaderFile.setSourcePath("../peripheral/twihs_11210/templates/plib_twihs.h.ftl")
-    twihsInstHeaderFile.setOutputName("plib_" + twihsInstanceName.getValue().lower() + ".h")
-    twihsInstHeaderFile.setDestPath("/peripheral/twihs/")
-    twihsInstHeaderFile.setProjectPath("config/" + configName + "/peripheral/twihs/")
+    # TWIHS Slave Source File
+    twihsSlaveSourceFile = twihsComponent.createFileSymbol("TWIHS_SLAVE_SOURCE", None)
+    twihsSlaveSourceFile.setSourcePath("../peripheral/twihs_11210/templates/plib_twihs_slave.c.ftl")
+    twihsSlaveSourceFile.setOutputName("plib_" + twihsInstanceName.getValue().lower() + "_slave.c")
+    twihsSlaveSourceFile.setDestPath("/peripheral/twihs/slave")
+    twihsSlaveSourceFile.setProjectPath("config/" + configName + "/peripheral/twihs/slave")
+    twihsSlaveSourceFile.setType("SOURCE")
+    twihsSlaveSourceFile.setMarkup(True)
+    twihsSlaveSourceFile.setEnabled(twihsOpMode.getValue() == "SLAVE")
+    twihsSlaveSourceFile.setDependencies(twihsSlaveModeFileGeneration, ["TWIHS_OPMODE"])
+
+    # TWIHS Slave Header File
+    twihsInstHeaderFile = twihsComponent.createFileSymbol("TWIHS_SLAVE_HEADER", None)
+    twihsInstHeaderFile.setSourcePath("../peripheral/twihs_11210/templates/plib_twihs_slave.h.ftl")
+    twihsInstHeaderFile.setOutputName("plib_" + twihsInstanceName.getValue().lower() + "_slave.h")
+    twihsInstHeaderFile.setDestPath("/peripheral/twihs/slave")
+    twihsInstHeaderFile.setProjectPath("config/" + configName + "/peripheral/twihs/slave")
     twihsInstHeaderFile.setType("HEADER")
     twihsInstHeaderFile.setMarkup(True)
+    twihsInstHeaderFile.setEnabled(twihsOpMode.getValue() == "SLAVE")
+    twihsInstHeaderFile.setDependencies(twihsSlaveModeFileGeneration, ["TWIHS_OPMODE"])
 
     #TWIHS Initialize
     twihsSystemInitFile = twihsComponent.createFileSymbol("TWIHS_FILE_SYS_INIT", None)

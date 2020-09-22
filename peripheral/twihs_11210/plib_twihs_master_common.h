@@ -5,10 +5,10 @@
     Microchip Technology Inc.
 
   File Name
-    twihs_master.h
+    plib_twihs_master_common.h
 
   Summary
-    TWIHS peripheral library interface.
+    TWIHS Master peripheral library common interface.
 
   Description
     This file defines the interface to the TWIHS peripheral library.  This
@@ -44,8 +44,8 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_TWIHS_MASTER_H
-#define PLIB_TWIHS_MASTER_H
+#ifndef PLIB_TWIHS_MASTER_COMMON_H
+#define PLIB_TWIHS_MASTER_COMMON_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -215,4 +215,4 @@ typedef struct
 #endif
 // DOM-IGNORE-END
 
-#endif // PLIB_TWIHS_MASTER_H
+#endif // PLIB_TWIHS_MASTER_COMMON_H

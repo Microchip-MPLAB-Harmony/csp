@@ -5,10 +5,10 @@
     Microchip Technology Inc.
 
   File Name
-    plib_${TWIHS_INSTANCE_NAME?lower_case}.h
+    plib_${TWIHS_INSTANCE_NAME?lower_case}_master.h
 
   Summary
-    TWIHS peripheral library interface.
+    TWIHS Master peripheral library interface.
 
   Description
     This file defines the interface to the TWIHS peripheral library.  This
@@ -44,8 +44,8 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_${TWIHS_INSTANCE_NAME}_H
-#define PLIB_${TWIHS_INSTANCE_NAME}_H
+#ifndef PLIB_${TWIHS_INSTANCE_NAME}_MASTER_H
+#define PLIB_${TWIHS_INSTANCE_NAME}_MASTER_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -53,7 +53,7 @@
 // *****************************************************************************
 // *****************************************************************************
 
-#include "plib_twihs_master.h"
+#include "plib_twihs_master_common.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -93,4 +93,4 @@ bool ${TWIHS_INSTANCE_NAME}_TransferSetup( TWIHS_TRANSFER_SETUP* setup, uint32_t
 #endif
 // DOM-IGNORE-END
 
-#endif //PLIB_${TWIHS_INSTANCE_NAME}_H
+#endif //PLIB_${TWIHS_INSTANCE_NAME}_MASTER_H

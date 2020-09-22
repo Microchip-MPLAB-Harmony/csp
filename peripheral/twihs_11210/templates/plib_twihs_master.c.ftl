@@ -5,10 +5,10 @@
     Microchip Technology Inc.
 
   File Name
-    plib_${TWIHS_INSTANCE_NAME?lower_case}.c
+    plib_${TWIHS_INSTANCE_NAME?lower_case}_master.c
 
   Summary
-    TWIHS peripheral library interface.
+    TWIHS Master peripheral library interface.
 
   Description
 
@@ -48,7 +48,7 @@
 // *****************************************************************************
 
 #include "device.h"
-#include "plib_${TWIHS_INSTANCE_NAME?lower_case}.h"
+#include "plib_${TWIHS_INSTANCE_NAME?lower_case}_master.h"
 
 // *****************************************************************************
 // *****************************************************************************
