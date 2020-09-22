@@ -30,25 +30,41 @@ def handleMessage(messageID, args):
     global flexcomSym_SPI_InterruptMode
     global flexcomSym_OperatingMode
     global flexcomSym_SPI_MR_PCS
-    result_dict = {}
+    global flexcomSym_Twi_Interrupt
+    result_dict = {"isSuccessful": "true"}
 
     if (messageID == "I2C_MASTER_MODE"):
         if args.get("isReadOnly") != None:
             flexcomSym_OperatingMode.setReadOnly(args["isReadOnly"])
+            flexcomSym_Twi_OpMode.setReadOnly(args["isReadOnly"])
         if args.get("isEnabled") != None and args["isEnabled"] == True:
             flexcomSym_OperatingMode.setSelectedKey("TWI")
+            flexcomSym_Twi_OpMode.setValue("MASTER")
 
-    # elif (messageID == "I2C_SLAVE_MODE"):
-        # To be implemented
+    elif (messageID == "I2C_SLAVE_MODE"):
+        if args.get("isReadOnly") != None:
+            flexcomSym_OperatingMode.setReadOnly(args["isReadOnly"])
+            flexcomSym_Twi_OpMode.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None and args["isEnabled"] == True:
+            flexcomSym_OperatingMode.setSelectedKey("TWI")
+            flexcomSym_Twi_OpMode.setValue("SLAVE")
+            
+    elif (messageID == "I2C_SLAVE_INTERRUPT_MODE"):
+        if flexcomSym_Twi_OpMode.getValue() == "SLAVE":
+            if args.get("isReadOnly") != None:
+                flexcomSym_Twi_Interrupt.setReadOnly(args["isReadOnly"])
+            if args.get("isEnabled") != None:
+                flexcomSym_Twi_Interrupt.setValue(args["isEnabled"])
+            if args.get("isVisible") != None:
+                flexcomSym_Twi_Interrupt.setVisible(args["isVisible"])
+        else:
+            result_dict["isSuccessful"] = "false"
 
     elif (messageID == "SPI_MASTER_MODE"):
         if args.get("isReadOnly") != None:
             flexcomSym_OperatingMode.setReadOnly(args["isReadOnly"])
         if args.get("isEnabled") != None and args["isEnabled"] == True:
-            flexcomSym_OperatingMode.setSelectedKey("SPI")
-
-    # elif (messageID == "SPI_SLAVE_MODE"):
-        # To be implemented
+            flexcomSym_OperatingMode.setSelectedKey("SPI")    
 
     elif (messageID == "UART_INTERRUPT_MODE"):
         if args.get("isReadOnly") != None:
@@ -155,38 +171,62 @@ def onCapabilityDisconnected(event):
 
 def setFLEXCOMCodeGenerationProperty(symbol, event):
     global flexcomSym_RingBuffer_Enable
+    global flexcomSym_Twi_OpMode
+    global flexcomSym_SPI_MR_MSTR
 
     usartRingBufferMode = ""
+    mode = ""
+    modePath = ""
     ####################################### Code Generation  ##########################################
     configName = Variables.get("__CONFIGURATION_NAME")
     flexcom_mode = flexcomSym_OperatingMode.getSelectedKey()
+
     if flexcom_mode == "USART":
         if flexcomSym_RingBuffer_Enable.getValue() == True:
             usartRingBufferMode = "_ring_buffer"
+
+    if flexcom_mode == "TWI":
+        if flexcomSym_Twi_OpMode.getValue() == "MASTER":
+            commonHeaderFile = "_master_common"
+            mode = "_master"
+            modePath = "/master"
+        else:
+            commonHeaderFile = "_slave_common"
+            mode = "_slave"
+            modePath = "/slave"
+    elif flexcom_mode == "SPI":
+        if flexcomSym_SPI_MR_MSTR.getValue() == "MASTER":
+            commonHeaderFile = "_master_common"
+            mode = "_master"
+            modePath = "/master"
+        else:
+            commonHeaderFile = "_slave_common"
+            mode = "_slave"
+            modePath = "/slave"
+    else:
+        commonHeaderFile = "_local"
+
     if (flexcom_mode != "NO_COM"):
-        flexcomHeaderFile.setSourcePath("../peripheral/flexcom_" + flexcomModuleID + "/templates/plib_flexcom_" + flexcom_mode.lower() + usartRingBufferMode + ".h.ftl")
-        flexcomHeaderFile.setOutputName("plib_" + deviceNamespace + "_" + flexcom_mode.lower() + ".h")
-        flexcomHeaderFile.setDestPath("/peripheral/flexcom/" + flexcom_mode.lower() + "/")
-        flexcomHeaderFile.setProjectPath("config/" + configName + "/peripheral/flexcom/" + flexcom_mode.lower() + "/")
+        flexcomHeaderFile.setSourcePath("../peripheral/flexcom_" + flexcomModuleID + "/templates/plib_flexcom_" + flexcom_mode.lower() + usartRingBufferMode + mode + ".h.ftl")
+        flexcomHeaderFile.setOutputName("plib_" + deviceNamespace + "_" + flexcom_mode.lower() + mode + ".h")
+        flexcomHeaderFile.setDestPath("/peripheral/flexcom/" + flexcom_mode.lower() + modePath + "/")
+        flexcomHeaderFile.setProjectPath("config/" + configName + "/peripheral/flexcom/" + flexcom_mode.lower() + modePath + "/")
         flexcomHeaderFile.setType("HEADER")
         flexcomHeaderFile.setMarkup(True)
         flexcomHeaderFile.setEnabled(True)
 
-        if (flexcom_mode == "TWI"):
-            commonHeaderFile = "_master"
-        else:
-            commonHeaderFile = "_local"
+
         flexcomCommonHeaderFile.setSourcePath("../peripheral/flexcom_" + flexcomModuleID + "/templates/plib_flexcom_" + flexcom_mode.lower() + commonHeaderFile + ".h")
         flexcomCommonHeaderFile.setOutputName("plib_flexcom_" + flexcom_mode.lower() + commonHeaderFile + ".h")
-        flexcomCommonHeaderFile.setDestPath("/peripheral/flexcom/" + flexcom_mode.lower() + "/")
-        flexcomCommonHeaderFile.setProjectPath("config/" + configName + "/peripheral/flexcom/" + flexcom_mode.lower() + "/")
+        flexcomCommonHeaderFile.setDestPath("/peripheral/flexcom/" + flexcom_mode.lower() + modePath + "/")
+        flexcomCommonHeaderFile.setProjectPath("config/" + configName + "/peripheral/flexcom/" + flexcom_mode.lower() + modePath + "/")
         flexcomCommonHeaderFile.setType("HEADER")
         flexcomCommonHeaderFile.setEnabled(True)
 
-        flexcomSourceFile.setSourcePath("../peripheral/flexcom_" + flexcomModuleID + "/templates/plib_flexcom" + "_" + flexcom_mode.lower() + usartRingBufferMode + ".c.ftl")
-        flexcomSourceFile.setOutputName("plib_" + deviceNamespace + "_" + flexcom_mode.lower() + ".c")
-        flexcomSourceFile.setDestPath("/peripheral/flexcom/" + flexcom_mode.lower() + "/")
-        flexcomSourceFile.setProjectPath("config/" + configName + "/peripheral/flexcom/" + flexcom_mode.lower() + "/")
+        flexcomSourceFile.setSourcePath("../peripheral/flexcom_" + flexcomModuleID + "/templates/plib_flexcom" + "_" + flexcom_mode.lower() + usartRingBufferMode + mode + ".c.ftl")
+        flexcomSourceFile.setOutputName("plib_" + deviceNamespace + "_" + flexcom_mode.lower() + mode + ".c")
+        flexcomSourceFile.setDestPath("/peripheral/flexcom/" + flexcom_mode.lower() + modePath + "/")
+        flexcomSourceFile.setProjectPath("config/" + configName + "/peripheral/flexcom/" + flexcom_mode.lower() + modePath + "/")
         flexcomSourceFile.setType("SOURCE")
         flexcomSourceFile.setMarkup(True)
         flexcomSourceFile.setEnabled(True)
@@ -351,7 +391,7 @@ def instantiateComponent(flexcomComponent):
     flexcomSym_CodeGeneration = flexcomComponent.createIntegerSymbol("FLEXCOM_CODE_GENERATION", None)
     flexcomSym_CodeGeneration.setDefaultValue(flexcomSym_OperatingMode.getValue())
     flexcomSym_CodeGeneration.setVisible(False)
-    flexcomSym_CodeGeneration.setDependencies(setFLEXCOMCodeGenerationProperty, ["FLEXCOM_MODE", "USART_RING_BUFFER_ENABLE"])
+    flexcomSym_CodeGeneration.setDependencies(setFLEXCOMCodeGenerationProperty, ["FLEXCOM_MODE", "USART_RING_BUFFER_ENABLE", "FLEXCOM_TWI_OPMODE", "FLEXCOM_SPI_MR_MSTR"])
     flexcomModuleNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"FLEXCOM\"]")
     flexcomModuleID = flexcomModuleNode.getAttribute("id")
 

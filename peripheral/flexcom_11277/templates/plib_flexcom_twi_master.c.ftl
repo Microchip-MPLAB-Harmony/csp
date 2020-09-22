@@ -5,10 +5,10 @@
     Microchip Technology Inc.
 
   File Name
-    plib_${FLEXCOM_INSTANCE_NAME?lower_case}_twi.c
+    plib_${FLEXCOM_INSTANCE_NAME?lower_case}_twi_master.c
 
   Summary
-    FLEXCOM TWI peripheral library interface.
+    FLEXCOM TWI Master peripheral library interface.
 
   Description
     This file defines the interface to the FLEXCOM TWI peripheral library. This
@@ -51,7 +51,7 @@
 // *****************************************************************************
 
 #include "device.h"
-#include "plib_${FLEXCOM_INSTANCE_NAME?lower_case}_twi.h"
+#include "plib_${FLEXCOM_INSTANCE_NAME?lower_case}_twi_master.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -440,60 +440,60 @@ FLEXCOM_TWI_ERROR ${FLEXCOM_INSTANCE_NAME}_TWI_ErrorGet(void)
 }
 
 bool ${FLEXCOM_INSTANCE_NAME}_TWI_TransferSetup(FLEXCOM_TWI_TRANSFER_SETUP* setup, uint32_t srcClkFreq )
-{       
+{
     uint32_t i2cClkSpeed;
     uint32_t cldiv;
     uint8_t ckdiv = 0;
-    
+
     if (setup == NULL)
     {
         return false;
-    }        
-        
+    }
+
     i2cClkSpeed = setup->clkSpeed;
-    
+
     /* Maximum I2C clock speed in Master mode cannot be greater than 400 KHz */
     if (i2cClkSpeed > 4000000)
     {
         return false;
     }
-    
+
     if( srcClkFreq == 0)
     {
         srcClkFreq = ${FLEXCOM_TWI_CLK_SRC_FREQ};
-    }            
-    
-    /* Formula for calculating baud value involves two unknowns. Fix one unknown and calculate the other. 
+    }
+
+    /* Formula for calculating baud value involves two unknowns. Fix one unknown and calculate the other.
        Fix the CKDIV value and see if CLDIV (or CHDIV) fits into the 8-bit register. */
-       
+
 <#if FLEXCOM_TWI_CWGR_BRSRCCLK == "PERIPH_CLK">
     /* Calculate CLDIV with CKDIV set to 0 */
     cldiv = (srcClkFreq /(2 * i2cClkSpeed)) - 3;
 <#else>
     /* Calculate CLDIV with CKDIV set to 0 */
-    cldiv = (srcClkFreq /(2 * i2cClkSpeed));    
-</#if>    
-                   
+    cldiv = (srcClkFreq /(2 * i2cClkSpeed));
+</#if>
+
     /* CLDIV must fit within 8-bits and CKDIV must fit within 3-bits */
     while ((cldiv > 255) && (ckdiv < 7))
     {
         ckdiv++;
         cldiv /= 2;
     }
-    
+
     if (cldiv > 255)
     {
         /* Could not generate CLDIV and CKDIV register values for the requested baud rate */
         return false;
-    }    
-    
+    }
+
     // Set Baud rate
     ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_CWGR = ( TWI_CWGR_HOLD_Msk & ${FLEXCOM_INSTANCE_NAME}_TWI_Module->TWI_CWGR) |
                                               TWI_CWGR_BRSRCCLK_${FLEXCOM_TWI_CWGR_BRSRCCLK} |
                                             ( TWI_CWGR_CLDIV(cldiv) |
                                               TWI_CWGR_CHDIV(cldiv) |
-                                              TWI_CWGR_CKDIV(ckdiv) );        
-            
+                                              TWI_CWGR_CKDIV(ckdiv) );
+
     return true;
 }
 
