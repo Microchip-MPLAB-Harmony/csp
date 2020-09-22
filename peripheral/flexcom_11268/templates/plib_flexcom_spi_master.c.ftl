@@ -5,10 +5,10 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_${FLEXCOM_INSTANCE_NAME?lower_case}_spi.c
+    plib_${FLEXCOM_INSTANCE_NAME?lower_case}_spi_master.c
 
   Summary:
-    ${FLEXCOM_INSTANCE_NAME} SPI PLIB Implementation File.
+    ${FLEXCOM_INSTANCE_NAME} SPI Master PLIB Implementation File.
 
   Description:
     This file defines the interface to the FLEXCOM SPI peripheral library.
@@ -45,7 +45,7 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#include "plib_${FLEXCOM_INSTANCE_NAME?lower_case}_spi.h"
+#include "plib_${FLEXCOM_INSTANCE_NAME?lower_case}_spi_master.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -281,7 +281,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize,
 
 bool ${FLEXCOM_INSTANCE_NAME}_SPI_TransferSetup (FLEXCOM_SPI_TRANSFER_SETUP * setup, uint32_t spiSourceClock )
 {
-<#assign flexcomClockSymbol = "core." + FLEXCOM_INSTANCE_NAME + "_CLOCK_FREQUENCY">    
+<#assign flexcomClockSymbol = "core." + FLEXCOM_INSTANCE_NAME + "_CLOCK_FREQUENCY">
     uint32_t scbr;
     if ((setup == NULL) || (setup->clockFrequency == 0))
     {

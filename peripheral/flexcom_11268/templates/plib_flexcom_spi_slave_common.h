@@ -1,19 +1,18 @@
 /*******************************************************************************
-  ${FLEXCOM_INSTANCE_NAME} SPI PLIB
+  FLEXCOM SPI PLIB
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_${FLEXCOM_INSTANCE_NAME?lower_case}_spi.h
+    plib_flexcom_spi_slave_common.h
 
   Summary:
-   ${FLEXCOM_INSTANCE_NAME} SPI PLIB Header File.
+   FLEXCOM SPI Slave PLIB Common Header File.
 
-  Description
-    This file defines the interface to the FLEXCOM SPI peripheral library.
-    This library provides access to and control of the associated
-    peripheral instance.
+  Description:
+    This file has prototype of all the interfaces which are common for all the
+    FLEXCOM SPI peripherals.
 
   Remarks:
     None.
@@ -45,49 +44,92 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_${FLEXCOM_INSTANCE_NAME}_SPI_H // Guards against multiple inclusion
-#define PLIB_${FLEXCOM_INSTANCE_NAME}_SPI_H
+#ifndef PLIB_FLEXCOM_SPI_SLAVE_COMMON_H  // Guards against multiple inclusion
+#define PLIB_FLEXCOM_SPI_SLAVE_COMMON_H
 
 // *****************************************************************************
 // *****************************************************************************
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-/* This section lists the other files that are included in this file.
-*/
 
-#include "device.h"
-#include "plib_flexcom_spi_local.h"
+#include <stdint.h>
+#include <stddef.h>
+#include <stdbool.h>
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
 
-extern "C" {
+    extern "C" {
 
 #endif
 
 // DOM-IGNORE-END
-
 /****************************** ${FLEXCOM_INSTANCE_NAME} SPI Interface *********************************/
 
-void ${FLEXCOM_INSTANCE_NAME}_SPI_Initialize( void );
-bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead( void * pTransmitData, size_t txSize, void * pReceiveData, size_t rxSize );
-bool ${FLEXCOM_INSTANCE_NAME}_SPI_Write( void * pTransmitData, size_t txSize );
-bool ${FLEXCOM_INSTANCE_NAME}_SPI_Read( void * pReceiveData, size_t rxSize );
-bool ${FLEXCOM_INSTANCE_NAME}_SPI_TransferSetup( FLEXCOM_SPI_TRANSFER_SETUP * setup, uint32_t spiSourceClock );
-<#if SPI_INTERRUPT_MODE == true>
-bool ${FLEXCOM_INSTANCE_NAME}_SPI_IsBusy( void );
-void ${FLEXCOM_INSTANCE_NAME}_SPI_CallbackRegister( FLEXCOM_SPI_CALLBACK callback, uintptr_t context );
-</#if>
+/* FLEXCOM SPI Slave Errors
 
-/* Provide C++ Compatibility */
-#ifdef __cplusplus
+  Summary:
+    Defines the data type for the SPI Slave mode errors
+
+  Description:
+    This may be used to check the type of error occurred
+
+  Remarks:
+    None
+*/
+
+typedef enum
+{
+    /* Error status when no error has occurred */
+    FLEXCOM_SPI_SLAVE_ERROR_NONE,
+
+    /* Buffer overflow error has occured */
+    FLEXCOM_SPI_SLAVE_ERROR_BUFOVF = FLEX_SPI_SR_OVRES_Msk,
+
+} FLEXCOM_SPI_SLAVE_ERROR;
+
+/****************************** SPI${SPI_INDEX?string} Interface *********************************/
+
+typedef  void (*FLEXCOM_SPI_SLAVE_CALLBACK) (uintptr_t context);
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Local: **** Do Not Use ****
+// *****************************************************************************
+// *****************************************************************************
+
+typedef struct
+{
+    /* Exchange busy status of the SPI */
+    bool                            transferIsBusy;
+
+    /* SPI Event handler */
+    FLEXCOM_SPI_SLAVE_CALLBACK      callback;
+
+    /* Context */
+    uintptr_t                       context;
+
+    FLEXCOM_SPI_SLAVE_ERROR         errorStatus;
+
+    /* Number of bytes to write in the transmit buffer */
+    uint32_t                        nWrBytes;
+
+    /* Index to the number of bytes already written out from the transmit buffer */
+    volatile uint32_t               wrOutIndex;
+
+    /* Index into the receive buffer where the next received byte will be copied */
+    volatile uint32_t               rdInIndex;
+
+} FLEXCOM_SPI_SLAVE_OBJECT;
+
+#ifdef __cplusplus // Provide C++ Compatibility
 
     }
 
 #endif
 
-#endif // PLIB_${FLEXCOM_INSTANCE_NAME}_SPI_H
+#endif /* PLIB_FLEXCOM_SPI_SLAVE_COMMON_H */
 
 /*******************************************************************************
  End of File
