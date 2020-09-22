@@ -5,13 +5,13 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_${FLEXCOM_INSTANCE_NAME?lower_case}_spi.c
+    plib_${FLEXCOM_INSTANCE_NAME?lower_case}_spi_master.c
 
   Summary:
-    ${FLEXCOM_INSTANCE_NAME} SPI PLIB Implementation File.
+    ${FLEXCOM_INSTANCE_NAME} SPI Master PLIB Implementation File.
 
   Description:
-    This file defines the interface to the FLEXCOM SPI peripheral library.
+    This file defines the interface to the FLEXCOM SPI Master peripheral library.
     This library provides access to and control of the associated
     peripheral instance.
 
@@ -45,7 +45,7 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#include "plib_${FLEXCOM_INSTANCE_NAME?lower_case}_spi.h"
+#include "plib_${FLEXCOM_INSTANCE_NAME?lower_case}_spi_master.h"
 
 // *****************************************************************************
 // *****************************************************************************

@@ -5,10 +5,10 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_${FLEXCOM_INSTANCE_NAME?lower_case}_spi.h
+    plib_${FLEXCOM_INSTANCE_NAME?lower_case}_spi_slave.h
 
   Summary:
-   ${FLEXCOM_INSTANCE_NAME} SPI PLIB Header File.
+   ${FLEXCOM_INSTANCE_NAME} SPI PLIB Slave Header File.
 
   Description
     This file defines the interface to the FLEXCOM SPI peripheral library.
@@ -45,8 +45,8 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef PLIB_${FLEXCOM_INSTANCE_NAME}_SPI_H // Guards against multiple inclusion
-#define PLIB_${FLEXCOM_INSTANCE_NAME}_SPI_H
+#ifndef PLIB_${FLEXCOM_INSTANCE_NAME}_SPI_SLAVE_H // Guards against multiple inclusion
+#define PLIB_${FLEXCOM_INSTANCE_NAME}_SPI_SLAVE_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -55,7 +55,7 @@
 // *****************************************************************************
 
 #include "device.h"
-#include "plib_flexcom_spi_local.h"
+#include "plib_flexcom_spi_slave_common.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
@@ -68,21 +68,19 @@
 
 /****************************** ${FLEXCOM_INSTANCE_NAME} SPI Interface *********************************/
 
-void ${FLEXCOM_INSTANCE_NAME}_SPI_Initialize( void );
-
-bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead( void * pTransmitData, size_t txSize, void * pReceiveData, size_t rxSize );
-
-bool ${FLEXCOM_INSTANCE_NAME}_SPI_Write( void * pTransmitData, size_t txSize );
-
-bool ${FLEXCOM_INSTANCE_NAME}_SPI_Read( void * pReceiveData, size_t rxSize );
-
-bool ${FLEXCOM_INSTANCE_NAME}_SPI_TransferSetup( FLEXCOM_SPI_TRANSFER_SETUP * setup, uint32_t spiSourceClock );
-
-<#if SPI_INTERRUPT_MODE == true>
-bool ${FLEXCOM_INSTANCE_NAME}_SPI_IsBusy( void );
-
-void ${FLEXCOM_INSTANCE_NAME}_SPI_CallbackRegister( FLEXCOM_SPI_CALLBACK callback, uintptr_t context );
+void ${FLEXCOM_INSTANCE_NAME}_SPI_Initialize (void);
+size_t ${FLEXCOM_INSTANCE_NAME}_SPI_Read(void* pRdBuffer, size_t size);
+size_t ${FLEXCOM_INSTANCE_NAME}_SPI_Write(void* pWrBuffer, size_t size );
+size_t ${FLEXCOM_INSTANCE_NAME}_SPI_ReadCountGet(void);
+size_t ${FLEXCOM_INSTANCE_NAME}_SPI_ReadBufferSizeGet(void);
+size_t ${FLEXCOM_INSTANCE_NAME}_SPI_WriteBufferSizeGet(void);
+void ${FLEXCOM_INSTANCE_NAME}_SPI_CallbackRegister(FLEXCOM_SPI_SLAVE_CALLBACK callBack, uintptr_t context );
+FLEXCOM_SPI_SLAVE_ERROR ${FLEXCOM_INSTANCE_NAME}_SPI_ErrorGet(void);
+bool ${FLEXCOM_INSTANCE_NAME}_SPI_IsBusy(void);
+<#if FLEXCOM_SPIS_USE_BUSY_PIN == true>
+void ${FLEXCOM_INSTANCE_NAME}_SPI_Ready(void);
 </#if>
+
 
 /* Provide C++ Compatibility */
 #ifdef __cplusplus
@@ -91,7 +89,7 @@ void ${FLEXCOM_INSTANCE_NAME}_SPI_CallbackRegister( FLEXCOM_SPI_CALLBACK callbac
 
 #endif
 
-#endif // PLIB_${FLEXCOM_INSTANCE_NAME}_SPI_H
+#endif // PLIB_${FLEXCOM_INSTANCE_NAME}_SPI_SLAVE_H
 
 /*******************************************************************************
  End of File

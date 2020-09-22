@@ -60,11 +60,21 @@ def handleMessage(messageID, args):
         else:
             result_dict["isSuccessful"] = "false"
 
+    elif (messageID == "SPI_SLAVE_MODE"):
+        if args.get("isReadOnly") != None:
+            flexcomSym_OperatingMode.setReadOnly(args["isReadOnly"])
+            flexcomSym_SPI_MR_MSTR.setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None and args["isEnabled"] == True:
+            flexcomSym_OperatingMode.setSelectedKey("SPI")
+            flexcomSym_SPI_MR_MSTR.setValue("SLAVE")
+
     elif (messageID == "SPI_MASTER_MODE"):
         if args.get("isReadOnly") != None:
             flexcomSym_OperatingMode.setReadOnly(args["isReadOnly"])
+            flexcomSym_SPI_MR_MSTR.setReadOnly(args["isReadOnly"])
         if args.get("isEnabled") != None and args["isEnabled"] == True:
-            flexcomSym_OperatingMode.setSelectedKey("SPI")    
+            flexcomSym_OperatingMode.setSelectedKey("SPI")
+            flexcomSym_SPI_MR_MSTR.setValue("MASTER")
 
     elif (messageID == "UART_INTERRUPT_MODE"):
         if args.get("isReadOnly") != None:
@@ -81,9 +91,6 @@ def handleMessage(messageID, args):
             flexcomSym_SPI_InterruptMode.setValue(args["isEnabled"])
         if args.get("isVisible") != None:
             flexcomSym_SPI_InterruptMode.setVisible(args["isVisible"])
-
-    # elif (messageID == "SPI_SLAVE_INTERRUPT_MODE"):
-        # To be implemented
 
     elif (messageID == "UART_RING_BUFFER_MODE"):
         if args.get("isReadOnly") != None:
