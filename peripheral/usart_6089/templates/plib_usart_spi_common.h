@@ -5,10 +5,10 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_usart_spi.h
+    plib_usart_spi_common.h
 
   Summary:
-    USART SPI PLIB Global Header File
+    USART SPI PLIB Common Global Header File
 
   Description:
     None

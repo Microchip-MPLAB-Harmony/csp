@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name:
-    plib_${USART_INSTANCE_NAME}_spi.c
+    plib_${USART_INSTANCE_NAME?lower_case}_spi.c
 
   Summary:
     ${USART_INSTANCE_NAME} SPI PLIB Implementation File
@@ -39,7 +39,7 @@
 *******************************************************************************/
 
 #include "device.h"
-#include "plib_${USART_INSTANCE_NAME}_spi.h"
+#include "plib_${USART_INSTANCE_NAME?lower_case}_spi.h"
 
 // *****************************************************************************
 // *****************************************************************************
