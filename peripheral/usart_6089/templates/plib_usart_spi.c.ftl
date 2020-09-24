@@ -93,7 +93,7 @@ void ${USART_INSTANCE_NAME}_SPI_Initialize( void )
 
 bool ${USART_INSTANCE_NAME}_SPI_TransferSetup( USART_SPI_TRANSFER_SETUP * setup, uint32_t spiSourceClock )
 {
-    uint32_t clockDivider;
+    uint32_t clockDivider = 0;
 
     if ((setup == NULL) || (setup->clockFrequency == 0))
     {
