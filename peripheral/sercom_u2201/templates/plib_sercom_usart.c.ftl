@@ -332,8 +332,8 @@ USART_ERROR ${SERCOM_INSTANCE_NAME}_USART_ErrorGet( void )
 void ${SERCOM_INSTANCE_NAME}_USART_TransmitterEnable( void )
 {
     ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB |= SERCOM_USART_INT_CTRLB_TXEN_Msk;
-	
-	/* Wait for sync */
+
+    /* Wait for sync */
 <#if SERCOM_SYNCBUSY = false>
     while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & SERCOM_USART_INT_STATUS_SYNCBUSY_Msk) & SERCOM_USART_INT_STATUS_SYNCBUSY_Msk);
 <#else>
@@ -344,8 +344,8 @@ void ${SERCOM_INSTANCE_NAME}_USART_TransmitterEnable( void )
 void ${SERCOM_INSTANCE_NAME}_USART_TransmitterDisable( void )
 {
     ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB &= ~SERCOM_USART_INT_CTRLB_TXEN_Msk;
-	
-	/* Wait for sync */
+
+    /* Wait for sync */
 <#if SERCOM_SYNCBUSY = false>
     while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & SERCOM_USART_INT_STATUS_SYNCBUSY_Msk) & SERCOM_USART_INT_STATUS_SYNCBUSY_Msk);
 <#else>
@@ -480,8 +480,8 @@ void ${SERCOM_INSTANCE_NAME}_USART_WriteByte( int data )
 void ${SERCOM_INSTANCE_NAME}_USART_ReceiverEnable( void )
 {
     ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB |= SERCOM_USART_INT_CTRLB_RXEN_Msk;
-	
-	/* Wait for sync */
+
+    /* Wait for sync */
 <#if SERCOM_SYNCBUSY = false>
     while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & SERCOM_USART_INT_STATUS_SYNCBUSY_Msk) & SERCOM_USART_INT_STATUS_SYNCBUSY_Msk);
 <#else>
@@ -492,8 +492,8 @@ void ${SERCOM_INSTANCE_NAME}_USART_ReceiverEnable( void )
 void ${SERCOM_INSTANCE_NAME}_USART_ReceiverDisable( void )
 {
     ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB &= ~SERCOM_USART_INT_CTRLB_RXEN_Msk;
-	
-	/* Wait for sync */
+
+    /* Wait for sync */
 <#if SERCOM_SYNCBUSY = false>
     while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & SERCOM_USART_INT_STATUS_SYNCBUSY_Msk) & SERCOM_USART_INT_STATUS_SYNCBUSY_Msk);
 <#else>
@@ -577,22 +577,22 @@ size_t ${SERCOM_INSTANCE_NAME}_USART_ReadCountGet( void )
 bool ${SERCOM_INSTANCE_NAME}_USART_ReadAbort(void)
 {
     if (${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBusyStatus == true)
-    {        
-        /* Disable the receive interrupt */				
-		${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTENCLR = SERCOM_USART_INT_INTENCLR_RXC_Msk;
-						
-		<#if USART_INTENSET_ERROR = true>
-		/* Disable error interrupt */
-		${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTENCLR = SERCOM_USART_INT_INTENCLR_ERROR_Msk;
-		</#if>
-        
-        ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBusyStatus = false;  		
-        
-		/* If required application should read the num bytes processed prior to calling the read abort API */
+    {
+        /* Disable the receive interrupt */
+        ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTENCLR = SERCOM_USART_INT_INTENCLR_RXC_Msk;
+
+        <#if USART_INTENSET_ERROR = true>
+        /* Disable error interrupt */
+        ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTENCLR = SERCOM_USART_INT_INTENCLR_ERROR_Msk;
+        </#if>
+
+        ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBusyStatus = false;
+
+        /* If required application should read the num bytes processed prior to calling the read abort API */
         ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxSize = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize = 0;
-    }	
-	
-	return true;	
+    }
+
+    return true;
 }
 
 void ${SERCOM_INSTANCE_NAME}_USART_ReadCallbackRegister( SERCOM_USART_CALLBACK callback, uintptr_t context )
@@ -635,16 +635,16 @@ void static ${SERCOM_INSTANCE_NAME}_USART_ISR_ERR_Handler( void )
 
     if(errorStatus != USART_ERROR_NONE)
     {
-        /* Clear error and receive interrupt to abort on-going transfer */
+        /* Disable error and receive interrupt to abort on-going transfer */
         ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTENCLR = SERCOM_USART_INT_INTENCLR_ERROR_Msk | SERCOM_USART_INT_INTENCLR_RXC_Msk;
+
+        /* Clear the RX busy flag */
+        ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBusyStatus = false;
 
         if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxCallback != NULL)
         {
             ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxCallback(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxContext);
         }
-
-        /* In case of errors are not cleared by client using ErrorGet API */
-        ${SERCOM_INSTANCE_NAME}_USART_ErrorClear();
     }
 }
 </#if>
@@ -654,10 +654,44 @@ void static ${SERCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
 {
     uint16_t temp;
 
+<#if USART_INTENSET_ERROR = false>
+    USART_ERROR errorStatus = (USART_ERROR) (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & (SERCOM_USART_INT_STATUS_PERR_Msk | SERCOM_USART_INT_STATUS_FERR_Msk | SERCOM_USART_INT_STATUS_BUFOVF_Msk));
+</#if>
+
     if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBusyStatus == true)
     {
         if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize < ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxSize)
         {
+            <#if USART_INTENSET_ERROR = false>
+            if (errorStatus != USART_ERROR_NONE)
+            {
+                ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBusyStatus = false;
+                ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxSize = 0;
+                ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTENCLR = SERCOM_USART_INT_INTENCLR_RXC_Msk;
+
+                if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxCallback != NULL)
+                {
+                    ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxCallback(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxContext);
+                }
+            }
+            else
+            {
+                temp = ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA;
+                ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBuffer[${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize++] = (uint8_t) (temp);
+
+                if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize == ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxSize)
+                {
+                    ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBusyStatus = false;
+                    ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxSize = 0;
+                    ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTENCLR = SERCOM_USART_INT_INTENCLR_RXC_Msk;
+
+                    if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxCallback != NULL)
+                    {
+                        ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxCallback(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxContext);
+                    }
+                }
+            }
+            <#else>
             temp = ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA;
             ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBuffer[${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize++] = (uint8_t) (temp);
 
@@ -665,17 +699,15 @@ void static ${SERCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
             {
                 ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBusyStatus = false;
                 ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxSize = 0;
-                ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTENCLR = SERCOM_USART_INT_INTENCLR_RXC_Msk;
-				
-				<#if USART_INTENSET_ERROR = true>
-				${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTENCLR = SERCOM_USART_INT_INTENCLR_ERROR_Msk;
-				</#if>
+                ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTENCLR = (SERCOM_USART_INT_INTENCLR_RXC_Msk | SERCOM_USART_INT_INTENCLR_ERROR_Msk);
 
                 if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxCallback != NULL)
                 {
                     ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxCallback(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxContext);
                 }
             }
+            </#if>
+
         }
     }
 }
@@ -712,7 +744,7 @@ void ${SERCOM_INSTANCE_NAME}_USART_InterruptHandler( void )
     {
         <#if USART_TX_ENABLE = true>
         /* Checks for data register empty flag */
-        if((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_DRE_Msk) == SERCOM_USART_INT_INTFLAG_DRE_Msk)
+        if((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTENSET & SERCOM_USART_INT_INTENSET_DRE_Msk) && (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_DRE_Msk))
         {
             ${SERCOM_INSTANCE_NAME}_USART_ISR_TX_Handler();
         }
@@ -720,7 +752,7 @@ void ${SERCOM_INSTANCE_NAME}_USART_InterruptHandler( void )
 
         <#if USART_RX_ENABLE = true>
         /* Checks for receive complete empty flag */
-        if((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_RXC_Msk) == SERCOM_USART_INT_INTFLAG_RXC_Msk)
+        if((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTENSET & SERCOM_USART_INT_INTENSET_RXC_Msk) && (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_RXC_Msk))
         {
             ${SERCOM_INSTANCE_NAME}_USART_ISR_RX_Handler();
         }
@@ -728,7 +760,7 @@ void ${SERCOM_INSTANCE_NAME}_USART_InterruptHandler( void )
 
         <#if USART_INTENSET_ERROR = true>
         /* Checks for error flag */
-        if((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_ERROR_Msk) == SERCOM_USART_INT_INTFLAG_ERROR_Msk)
+        if((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTENSET & SERCOM_USART_INT_INTENSET_ERROR_Msk) && (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_ERROR_Msk))
         {
             ${SERCOM_INSTANCE_NAME}_USART_ISR_ERR_Handler();
         }
