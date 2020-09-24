@@ -833,7 +833,7 @@ pioSystemDefFile.setMarkup(True)
 bspIncludeFile = coreComponent.createFileSymbol("GPIO_BSP_H", None)
 bspIncludeFile.setType("STRING")
 bspIncludeFile.setOutputName("core.LIST_BSP_MACRO_INCLUDES")
-bspIncludeFile.setSourcePath("../peripheral/gpio_02467/templates/plib_gpio_bsp.h.ftl")
+bspIncludeFile.setSourcePath("../peripheral/gpio_02467/templates/plib_gpio_bsp_pic32c.h.ftl")
 bspIncludeFile.setMarkup(True)
 
 bspIncludeFile = coreComponent.createFileSymbol("GPIO_BSP_C", None)
