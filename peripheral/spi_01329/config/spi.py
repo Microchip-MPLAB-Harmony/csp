@@ -20,6 +20,10 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
+import re
+import xml.etree.ElementTree as ET
+import os.path
+import inspect
 
 global sort_alphanumeric
 
@@ -91,16 +95,25 @@ dummyDataDict = {
 #### Business Logic ####
 ################################################################################
 
-def setSPIInterruptData(status):
+def setSPIInterruptData(mode, status):
 
     for id in InterruptVector:
-        Database.setSymbolValue("core", id, status, 1)
+        if (("FAULT" in id) and (mode == "Master mode")):
+            # Disable Fault interrupt for Master mode
+            Database.setSymbolValue("core", id, False, 1)
+        else:
+            Database.setSymbolValue("core", id, status, 1)
 
     for id in InterruptHandlerLock:
-        Database.setSymbolValue("core", id, status, 1)
+        if (("FAULT" in id) and (mode == "Master mode")):
+            Database.setSymbolValue("core", id, False, 1)
+        else:
+            Database.setSymbolValue("core", id, status, 1)
 
     for id in InterruptHandler:
         interruptName = id.split("_INTERRUPT_HANDLER")[0]
+        if (("FAULT" in id) and (mode == "Master mode")):
+            continue
         if status == True:
             Database.setSymbolValue("core", id, interruptName + "_InterruptHandler", 1)
         else:
@@ -108,14 +121,18 @@ def setSPIInterruptData(status):
 
 def updateSPIInterruptData(symbol, event):
 
+    mode = event["source"].getSymbolByID("SPI_MSTR_MODE_EN").getSelectedKey()
+
     if event["id"] == "SPI_INTERRUPT_MODE":
-        setSPIInterruptData(event["value"])
+        setSPIInterruptData(mode, event["value"])
 
     status = False
 
     for id in InterruptVectorUpdate:
         id = id.replace("core.", "")
-        if Database.getSymbolValue("core", id) == True:
+        if (("FAULT" in id) and (mode == "Master mode")):
+            continue
+        elif Database.getSymbolValue("core", id) == True:
             status = True
             break
 
@@ -218,31 +235,31 @@ def ClockModeInfo(symbol, event):
 
 def showMasterDependencies(symbol, event):
 
-    if event["symbol"].getKey(event["value"]) == "Master mode":
+    if event["source"].getSymbolByID("SPI_MSTR_MODE_EN").getSelectedKey() == "Master mode":
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
 
 def showSlaveDependencies(symbol, event):
-    if event["symbol"].getKey(event["value"]) == "Slave mode":
+    if event["source"].getSymbolByID("SPI_MSTR_MODE_EN").getSelectedKey() == "Slave mode":
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
 
 def spiMasterModeFileGeneration(symbol, event):
-    symbol.setEnabled(event["symbol"].getKey(event["value"]) == "Master mode")
+    symbol.setEnabled(event["source"].getSymbolByID("SPI_MSTR_MODE_EN").getSelectedKey() == "Master mode")
 
 def spiSlaveModeFileGeneration(symbol, event):
-    symbol.setEnabled(event["symbol"].getKey(event["value"]) == "Slave mode")
+    symbol.setEnabled(event["source"].getSymbolByID("SPI_MSTR_MODE_EN").getSelectedKey() == "Slave mode")
 
 def updateSPISlaveBusyPinVisibility(symbol, event):
 
-    spiMode = event["source"].getSymbolByID("SPI_MSTR_MODE_EN").getKey(event["value"])
-    busyPinEnabled = event["source"].getSymbolByID("SPIS_USE_BUSY_PIN").getValue() == True
+    spiMode = event["source"].getSymbolByID("SPI_MSTR_MODE_EN").getSelectedKey()
+    busyPinEnabled = event["source"].getSymbolByID("SPIS_USE_BUSY_PIN").getValue()
     symbol.setVisible(spiMode == "Slave mode" and busyPinEnabled == True)
 
 def updateIntReadOnlyAttr(symbol, event):
-    symbol.setReadOnly(event["symbol"].getKey(event["value"]) == "Slave mode")
+    symbol.setReadOnly(event["source"].getSymbolByID("SPI_MSTR_MODE_EN").getSelectedKey() == "Slave mode")
 
 def calculateBRGValue(clkfreq, baudRate):
 
@@ -298,8 +315,14 @@ def _find_key(value, keypairs):
     return ""
 
 def DummyData_ValueUpdate(symbol, event):
-    symbol.setValue(dummyDataDict[str(event["value"])], 1)
-    symbol.setMax(dummyDataDict[str(event["value"])])
+    spiMode = event["source"].getSymbolByID("SPI_MSTR_MODE_EN").getSelectedKey()
+
+    if event["id"] == "SPI_MSTR_MODE_EN":
+        symbol.setVisible(spiMode == "Master mode")
+
+    elif spiMode == "Master mode" and event["id"] == "SPI_SPICON_MODE":
+        symbol.setValue(dummyDataDict[str(event["value"])], 1)
+        symbol.setMax(dummyDataDict[str(event["value"])])
 
 def updateSPIClockWarningStatus(symbol, event):
 
@@ -313,6 +336,51 @@ def onCapabilityConnected(event):
     # is ready to accept configuration parameters from the dependent component
     argDict = {"localComponentID" : localComponent.getID()}
     argDict = Database.sendMessage(remoteComponent.getID(), "REQUEST_CONFIG_PARAMS", argDict)
+
+def getChipSelectPinList(ss_pin):
+    # parse XML
+    global pinoutXmlPath
+    node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"GPIO\"]")
+    gpioIP = "gpio_" + node.getAttribute("id")
+
+    currentPath = os.path.dirname(os.path.abspath(inspect.stack()[0][1]))
+    gpioPlibPath = os.path.split(currentPath)[0]
+    gpioPlibPath = os.path.split(gpioPlibPath)[0]
+    gpioPlibPath = os.path.join(gpioPlibPath, gpioIP)
+    deviceXmlPath = os.path.join(gpioPlibPath, "plugin/pin_xml/components/" + Variables.get("__PROCESSOR") + ".xml")
+    deviceXmlTree = ET.parse(deviceXmlPath)
+    deviceXmlRoot = deviceXmlTree.getroot()
+    pinoutXmlName = deviceXmlRoot.get("families")
+    pinoutXmlPath = os.path.join(gpioPlibPath, "plugin/pin_xml/families/" + pinoutXmlName + ".xml")
+    pinoutXmlPath = os.path.normpath(pinoutXmlPath)
+    tree = ET.parse(pinoutXmlPath)
+    root = tree.getroot()
+    tag_list = [elem.tag for elem in root.iter()]
+    # Get all elements with tag = "group" and having attribute "id"
+    group_elements = root.findall(".//group/[@id]")
+    # Get a list of all group elements. Each element of list is a dictionary.
+    # key is tag and value is attribute which is another dictionary.
+    group_elements_list = [{t.tag : t.attrib} for t in group_elements]
+    final_pin_list = []
+    for group_elem in group_elements_list:
+        target_elements = root.findall(".//group/[@id='" + group_elem["group"]["id"] + "']/*")
+        # Create a list containing a dictionary of "tag":"attrib"
+        # Each element of list is a dictionary. t.attrib is another dictionary.
+        result = [{t.tag : t.attrib} for t in target_elements]
+        for dic in result:
+            if "function" in dic:
+                if ss_pin in dic["function"]["name"] and dic["function"]["direction"] == "in":
+                    # Found the group containing the SSx function
+                    for dic in result:                        
+                        if "pin" in dic:
+                            pin = dic["pin"]["name"]
+                            # Discard any pin that does not start with character 'R'. Example: "PTG30"
+                            if pin.startswith('R'):
+                                final_pin_list.append(pin.replace('P', ''))
+                    break
+
+    final_pin_list.sort()
+    return final_pin_list
 
 def instantiateComponent(spiComponent):
 
@@ -405,6 +473,10 @@ def instantiateComponent(spiComponent):
     else:
         ## SPI Fault Interrrupt
         spiIrqFault = spiInstanceName.getValue() + "_FAULT"
+        InterruptVector.append(spiIrqFault + "_INTERRUPT_ENABLE")
+        InterruptHandler.append(spiIrqFault + "_INTERRUPT_HANDLER")
+        InterruptHandlerLock.append(spiIrqFault + "_INTERRUPT_HANDLER_LOCK")
+        InterruptVectorUpdate.append("core." + spiIrqFault + "_INTERRUPT_ENABLE_UPDATE")
         spiFaultVectorNum = int(getVectorIndex(spiIrqFault))
 
         ## SPI RX Interrupt
@@ -615,7 +687,7 @@ def instantiateComponent(spiComponent):
     spiSymDummyData.setDescription("Dummy Data to be written during SPI Read")
     spiSymDummyData.setDefaultValue(0xFF)
     spiSymDummyData.setMin(0x0)
-    spiSymDummyData.setDependencies(DummyData_ValueUpdate, ["SPI_SPICON_MODE"])
+    spiSymDummyData.setDependencies(DummyData_ValueUpdate, ["SPI_SPICON_MODE", "SPI_MSTR_MODE_EN"])
 
     spiSymClockModeComment = spiComponent.createCommentSymbol("SPI_CLOCK_MODE_COMMENT", None)
     spiSymClockModeComment.setLabel("***SPI Mode 0 Selected***")
@@ -639,12 +711,24 @@ def instantiateComponent(spiComponent):
     spisSym_RXBuffer_Size.setVisible(False)
     spisSym_RXBuffer_Size.setDependencies(showSlaveDependencies, ["SPI_MSTR_MODE_EN"])
 
+    # SPIS_SLAVE_SELECT_ENABLE
+    spisSym_SlaveSelect_Enable = spiComponent.createBooleanSymbol("SPIS_SLAVE_SELECT_ENABLE", None)
+    spisSym_SlaveSelect_Enable.setLabel("Enable Slave Select")
+    spisSym_SlaveSelect_Enable.setValue(True)
+    spisSym_SlaveSelect_Enable.setReadOnly(True)
+    spisSym_SlaveSelect_Enable.setVisible(False)
+    spisSym_SlaveSelect_Enable.setDependencies(showSlaveDependencies, ["SPI_MSTR_MODE_EN"])
+
     # SPIS_CS_PIN
+    slaveSelectPinList = getChipSelectPinList("SS" + spiInstanceNum.getValue())
+
     spisSymCSPin = spiComponent.createKeyValueSetSymbol("SPIS_CS_PIN", None)
     spisSymCSPin.setVisible(False)
     spisSymCSPin.setLabel("Chip Select Pin")
     spisSymCSPin.setOutputMode("Key")
     spisSymCSPin.setDisplayMode("Description")
+    for pin in slaveSelectPinList:
+        spisSymCSPin.addKey(pin, pin, pin)
     spisSymCSPin.setDependencies(showSlaveDependencies, ["SPI_MSTR_MODE_EN"])
 
     # SPIS_CS_PIN_LOGIC_LEVEL
@@ -662,7 +746,7 @@ def instantiateComponent(spiComponent):
     # SPIS_CS_PIN_CONFIG_COMMENT
     spisSymBusyPinConfigComment = spiComponent.createCommentSymbol("SPIS_CS_PIN_CONFIG_COMMENT", spisSymCSPin)
     spisSymBusyPinConfigComment.setVisible(False)
-    spisSymBusyPinConfigComment.setLabel("***Configure CS pin as GPIO input and enable Change Notification in Pin Manager***")
+    spisSymBusyPinConfigComment.setLabel("***Enable Change Notification on the Chip Select pin in Pin Manager***")
     spisSymBusyPinConfigComment.setDependencies(showSlaveDependencies, ["SPI_MSTR_MODE_EN"])
 
     # SPIS_USE_BUSY_PIN
@@ -690,7 +774,6 @@ def instantiateComponent(spiComponent):
         value = list(availablePinDictionary.keys())[list(availablePinDictionary.values()).index(pad)]
         description = pad
         spisSymBusyPin.addKey(key, value, description)
-        spisSymCSPin.addKey(key, value, description)
 
     # SPIS_BUSY_PIN_LOGIC_LEVEL
     spisSymBusyPinLogicLevel = spiComponent.createKeyValueSetSymbol("SPIS_BUSY_PIN_LOGIC_LEVEL", spisSymUseBusyPin)
@@ -717,7 +800,7 @@ def instantiateComponent(spiComponent):
     #### Dependency ####
     ############################################################################
 
-    setSPIInterruptData(spiSymInterruptMode.getValue())
+    setSPIInterruptData(spiSym_SPICON_MSTEN.getSelectedKey(), spiSymInterruptMode.getValue())
 
     spiSymIntEnComment = spiComponent.createCommentSymbol("SPI_INTRRUPT_ENABLE_COMMENT", None)
     spiSymIntEnComment.setLabel("Warning!!! " + spiInstanceName.getValue() + " Interrupt is Disabled in Interrupt Manager")
