@@ -42,6 +42,10 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #ifndef PLIB_CACHE_H
 #define PLIB_CACHE_H
 
+#ifdef __cplusplus  // Provide C++ Compatibility
+extern "C" {
+#endif
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Type definitions
@@ -122,5 +126,9 @@ size_t CACHE_InstructionCacheLinesPerWayGet(void);
 size_t CACHE_DataCacheSizeGet(void);
 
 size_t CACHE_InstructionCacheSizeGet(void);
+
+#ifdef __cplusplus  // Provide C++ Compatibility
+}
+#endif
 
 #endif //#ifndef PLIB_CACHE_H
