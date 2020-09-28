@@ -53,6 +53,10 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include <stdint.h>
 #include "device.h"
 
+#ifdef __cplusplus  // Provide C++ Compatibility
+    extern "C" {
+#endif
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Data Types
@@ -207,6 +211,10 @@ typedef enum {
 	device data sheet to determine availability.
 */
 void DDR_Initialize(void);
+
+#ifdef __cplusplus  // Provide C++ Compatibility
+    }
+#endif
 
 #endif // #ifndef _PLIB_DDR_H
 
