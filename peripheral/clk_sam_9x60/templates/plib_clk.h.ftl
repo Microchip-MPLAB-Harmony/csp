@@ -24,6 +24,14 @@
 #ifndef PLIB_CLK_H
 #define PLIB_CLK_H
 
+#ifdef __cplusplus  // Provide C++ Compatibility
+extern "C" {
+#endif
+
 void CLK_Initialize( void );
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //PLIB_CLK_H
