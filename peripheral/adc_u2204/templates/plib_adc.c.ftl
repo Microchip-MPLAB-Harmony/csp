@@ -294,6 +294,21 @@ uint16_t ${ADC_INSTANCE_NAME}_ConversionResultGet( void )
     return (uint16_t)${ADC_INSTANCE_NAME}_REGS->ADC_RESULT;
 }
 
+void ${ADC_INSTANCE_NAME}_InterruptsClear(ADC_STATUS interruptMask)
+{
+    ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = interruptMask;
+}
+
+void ${ADC_INSTANCE_NAME}_InterruptsEnable(ADC_STATUS interruptMask)
+{
+    ${ADC_INSTANCE_NAME}_REGS->ADC_INTENSET = interruptMask;
+}
+
+void ${ADC_INSTANCE_NAME}_InterruptsDisable(ADC_STATUS interruptMask)
+{
+    ${ADC_INSTANCE_NAME}_REGS->ADC_INTENCLR = interruptMask;
+}
+
 <#if ADC_INTENSET_RESRDY = true || (ADC_WINCTRL_WINMODE != "DISABLE" && ADC_INTENSET_WINMON = true)>
 /* Register callback function */
 void ${ADC_INSTANCE_NAME}_CallbackRegister( ADC_CALLBACK callback, uintptr_t context )

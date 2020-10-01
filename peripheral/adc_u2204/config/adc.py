@@ -131,6 +131,80 @@ def adcOffsetVisible(symbol, event):
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
+
+###################################################################################################
+########################### Dependency   #################################
+###################################################################################################
+def onAttachmentConnected(source, target):
+    localComponent = source["component"]
+    remoteComponent = target["component"]
+    remoteID = remoteComponent.getID()
+    connectID = source["id"]
+    targetID = target["id"]
+
+def onAttachmentDisconnected(source, target):
+    localComponent = source["component"]
+    remoteComponent = target["component"]
+    remoteID = remoteComponent.getID()
+    connectID = source["id"]
+    targetID = target["id"]
+    resetChannelsForPMSMFOC()
+
+# Disable ADC channels and interrupt
+def resetChannelsForPMSMFOC():
+    component = str(adcInstanceName.getValue()).lower()
+    #Database.setSymbolValue(component, "ADC_INPUTCTRL_MUXPOS", 0)
+    Database.setSymbolValue(component, "ADC_CONV_TRIGGER", "Free Run")
+    Database.setSymbolValue(component, "ADC_INTENSET_RESRDY", False)
+
+def handleMessage(messageID, args):
+    dict = {}
+    # handle message sent by PMSM_FOC component
+    if (messageID == "PMSM_FOC_ADC_CH_CONF"):
+        component = str(adcInstanceName.getValue()).lower()
+        
+        dict['ADC_MAX_CH'] = Database.getSymbolValue(component, "ADC_MAX_CHANNELS")
+        dict['ADC_MAX_MODULES'] = Database.getSymbolValue(component, "ADC_NUM_MODULES")
+        #Change ADC channels if they are changed in the PMSM_FOC
+        resetChannelsForPMSMFOC()
+        AdcConfigForPMSMFOC(component, args)
+
+    return dict
+
+# ADC configurations needed for PMSM_FOC component
+def AdcConfigForPMSMFOC(component, args):
+    phUModule = args['PHASE_U']
+    phUCh = args['PHASE_U_CH']
+    phVModule = args['PHASE_V']
+    phVCh = args['PHASE_V_CH']
+    phDCBusModule = args['VDC']
+    phDCBusCh = args['VDC_CH']
+    phPotModule = args['POT']
+    phPotCh = args['POT_CH']
+    resolution = args['RESOLUTION']
+    trigger = args['TRIGGER']
+
+    #fine the key index of the RESOLUTION
+    count = adcSym_CTRLC_RESSEL.getKeyCount()
+    resIndex = 0
+    for i in range(0,count):
+        if (str(resolution) in adcSym_CTRLC_RESSEL.getKeyDescription(i) ):
+            resIndex = i
+            break
+
+    # Enable ADC modules, Ph U interrupt
+    Database.setSymbolValue(component, "ADC_INPUTCTRL_MUXPOS", int(phUCh))
+    Database.setSymbolValue(component, "ADC_INTENSET_RESRDY", True)
+    Database.setSymbolValue(component, "ADC_CH_PHASE_U", "ADC_POSINPUT_AIN"+str(phUCh))
+    Database.setSymbolValue(component, "ADC_CH_PHASE_V", "ADC_POSINPUT_AIN"+str(phUCh))
+    Database.setSymbolValue(component, "ADC_CH_POT", "ADC_POSINPUT_AIN"+str(phPotCh))
+    Database.setSymbolValue(component, "ADC_CH_VDC_BUS", "ADC_POSINPUT_AIN"+str(phDCBusCh))
+
+    Database.setSymbolValue(component, "ADC_CONV_TRIGGER", "HW Event Trigger") #HW trigger
+    Database.setSymbolValue(component, "ADC_EVCTRL_START", True) #input start event
+    Database.setSymbolValue(component, "ADC_CTRLB_RESSEL", resIndex) #resolution
+
+
 ###################################################################################################
 ########################################## Component  #############################################
 ###################################################################################################
@@ -169,14 +243,93 @@ def instantiateComponent(adcComponent):
         availablePins.append(children[pad].getAttribute("pad"))
 
     adc_signals = []
+    maxChannels = 0
     adc = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"ADC\"]/instance@[name=\""+adcInstanceName.getValue()+"\"]/signals")
     adc_signals = adc.getChildren()
     for pad in range(0, len(adc_signals)):
         group = adc_signals[pad].getAttribute("group")
         if (("AIN" in group) and ("index" in adc_signals[pad].getAttributeList())):
+            maxChannels = maxChannels + 1
             padSignal = adc_signals[pad].getAttribute("pad")
             if padSignal in availablePins:
                 channel.append(adc_signals[pad].getAttribute("group")+adc_signals[pad].getAttribute("index"))
+
+    #number of ADC channels
+    adcSym_MAX_CHANNELS = adcComponent.createIntegerSymbol("ADC_MAX_CHANNELS", None)
+    adcSym_MAX_CHANNELS.setVisible(False)
+    adcSym_MAX_CHANNELS.setDefaultValue(maxChannels)
+
+    #number of ADC modules
+    adcSym_NUM_MODULES = adcComponent.createIntegerSymbol("ADC_NUM_MODULES", None)
+    adcSym_NUM_MODULES.setVisible(False)
+    adc = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"ADC\"]")
+    adcSym_NUM_MODULES.setDefaultValue(len(adc.getChildren()))    
+
+#----------------- motor control APIs ---------------------------------
+    adcConvAPI = adcComponent.createStringSymbol("ADC_START_CONV_API", None)
+    adcConvAPI.setVisible(False)
+    adcConvAPI.setValue(adcInstanceName.getValue()+"_ConversionStart")
+
+    adcResultAPI = adcComponent.createStringSymbol("ADC_GET_RESULT_API", None)
+    adcResultAPI.setVisible(False)
+    adcResultAPI.setValue(adcInstanceName.getValue()+"_ConversionResultGet")
+
+    adcResultReadyAPI = adcComponent.createStringSymbol("ADC_IS_RESULT_READY_API", None)
+    adcResultReadyAPI.setVisible(False)
+    adcResultReadyAPI.setValue(adcInstanceName.getValue()+"_ConversionStatusGet")
+
+    adcCallbackAPI = adcComponent.createStringSymbol("ADC_CALLBACK_API", None)
+    adcCallbackAPI.setVisible(False)
+    adcCallbackAPI.setValue(adcInstanceName.getValue()+"_CallbackRegister")
+
+    adcStartAPI = adcComponent.createStringSymbol("ADC_START_API", None)
+    adcStartAPI.setVisible(False)
+    adcStartAPI.setValue(adcInstanceName.getValue()+"_Enable")
+
+    adcStopAPI = adcComponent.createStringSymbol("ADC_STOP_API", None)
+    adcStopAPI.setVisible(False)
+    adcStopAPI.setValue(adcInstanceName.getValue()+"_Disable")
+
+    adcChannelSelectAPI = adcComponent.createStringSymbol("ADC_CHANNEL_SELECT_API", None)
+    adcChannelSelectAPI.setVisible(False)
+    adcChannelSelectAPI.setValue(adcInstanceName.getValue() + "_ChannelSelect")
+
+    adcIntDisableAPI = adcComponent.createStringSymbol("ADC_INT_DISABLE_API", None)
+    adcIntDisableAPI.setVisible(False)
+    adcIntDisableAPI.setValue(adcInstanceName.getValue() + "_InterruptsDisable")
+
+    adcIntEnableAPI = adcComponent.createStringSymbol("ADC_INT_ENABLE_API", None)
+    adcIntEnableAPI.setVisible(False)
+    adcIntEnableAPI.setValue(adcInstanceName.getValue() + "_InterruptsEnable")
+
+    adcIntClearAPI = adcComponent.createStringSymbol("ADC_INT_CLEAR_API", None)
+    adcIntClearAPI.setVisible(False)
+    adcIntClearAPI.setValue(adcInstanceName.getValue() + "_InterruptsClear")
+
+    adcPhUCh = adcComponent.createStringSymbol("ADC_CH_PHASE_U", None)
+    adcPhUCh.setVisible(False)
+    adcPhUCh.setValue("ADC_POSINPUT_AIN2")
+
+    adcPhVCh = adcComponent.createStringSymbol("ADC_CH_PHASE_V", None)
+    adcPhVCh.setVisible(False)
+    adcPhVCh.setValue("ADC_POSINPUT_AIN5")
+
+    adcVdcCh = adcComponent.createStringSymbol("ADC_CH_VDC_BUS", None)
+    adcVdcCh.setVisible(False)
+    adcVdcCh.setValue("ADC_POSINPUT_AIN0")
+
+    adcPotCh = adcComponent.createStringSymbol("ADC_CH_POT", None)
+    adcPotCh.setVisible(False)
+    adcPotCh.setValue("ADC_POSINPUT_AIN0")
+
+    adcGND = adcComponent.createStringSymbol("ADC_GND", None)
+    adcGND.setVisible(False)
+    adcGND.setValue("ADC_NEGINPUT_GND")
+
+    adcResultInt = adcComponent.createStringSymbol("INTERRUPT_ADC_RESULT", None)
+    adcResultInt.setVisible(False)
+    adcResultInt.setValue(adcInstanceName.getValue()+"_RESRDY_IRQn")
+#----------------- motor control APIs end---------------------------------
 
     adcSym_MCU_FAMILY = adcComponent.createStringSymbol("ADC_MCU_FAMILY", None)
     adcSym_MCU_FAMILY.setVisible(False)
