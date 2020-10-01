@@ -106,6 +106,12 @@ void ${ADC_INSTANCE_NAME}_WindowModeSet(ADC_WINMODE mode);
 
 bool ${ADC_INSTANCE_NAME}_ConversionSequenceIsFinished(void);
 
+void ${ADC_INSTANCE_NAME}_InterruptsClear(ADC_STATUS interruptMask);
+
+void ${ADC_INSTANCE_NAME}_InterruptsEnable(ADC_STATUS interruptMask);
+
+void ${ADC_INSTANCE_NAME}_InterruptsDisable(ADC_STATUS interruptMask);
+
 <#if ADC_INTENSET_RESRDY == true || (ADC_CTRLC_WINMODE != "0" && ADC_INTENSET_WINMON == true)>
 
 void ${ADC_INSTANCE_NAME}_CallbackRegister( ADC_CALLBACK callback, uintptr_t context );
