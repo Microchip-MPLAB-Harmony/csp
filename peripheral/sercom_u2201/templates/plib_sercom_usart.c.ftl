@@ -364,6 +364,7 @@ bool ${SERCOM_INSTANCE_NAME}_USART_Write( void *buffer, const size_t size )
     if(pu8Data != NULL)
     {
 <#if USART_INTERRUPT_MODE = false>
+
         /* Blocks while buffer is being transferred */
         while(u32Length--)
         {
@@ -371,7 +372,17 @@ bool ${SERCOM_INSTANCE_NAME}_USART_Write( void *buffer, const size_t size )
             while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_DRE_Msk) != SERCOM_USART_INT_INTFLAG_DRE_Msk);
 
             /* Write data to USART module */
-            ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA = *pu8Data++;
+            if (((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB & SERCOM_USART_INT_CTRLB_CHSIZE_Msk) >> SERCOM_USART_INT_CTRLB_CHSIZE_Pos) != 0x01)
+            {
+                /* 8-bit mode */
+                ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA = *pu8Data++;
+            }
+            else
+            {
+                /* 9-bit mode */
+                ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA = *(uint16_t*)pu8Data;
+                pu8Data += 2;
+            }
         }
 
         writeStatus = true;
@@ -386,7 +397,16 @@ bool ${SERCOM_INSTANCE_NAME}_USART_Write( void *buffer, const size_t size )
             /* Initiate the transfer by sending first byte */
             if((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_DRE_Msk) == SERCOM_USART_INT_INTFLAG_DRE_Msk)
             {
-                ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txBuffer[${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txProcessedSize++];
+                if (((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB & SERCOM_USART_INT_CTRLB_CHSIZE_Msk) >> SERCOM_USART_INT_CTRLB_CHSIZE_Pos) != 0x01)
+                {
+                    /* 8-bit mode */
+                    ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txBuffer[${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txProcessedSize++];
+                }
+                else
+                {
+                    /* 9-bit mode */
+                    ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA = ((uint16_t*)${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txBuffer)[${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txProcessedSize++];
+                }
             }
 
             ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTENSET = SERCOM_USART_INT_INTFLAG_DRE_Msk;
@@ -524,9 +544,18 @@ bool ${SERCOM_INSTANCE_NAME}_USART_Read( void *buffer, const size_t size )
             /* Check if USART has new data */
             while((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_RXC_Msk) != SERCOM_USART_INT_INTFLAG_RXC_Msk);
 
-            /* Read data from USART module */
-            *pu8Data++ = ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA;
-            processedSize++;
+            if (((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB & SERCOM_USART_INT_CTRLB_CHSIZE_Msk) >> SERCOM_USART_INT_CTRLB_CHSIZE_Pos) != 0x01)
+            {
+                /* 8-bit mode */
+                *pu8Data++ = (uint8_t) (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA);
+            }
+            else
+            {
+                /* 9-bit mode */
+                *(uint16_t*)pu8Data = (uint16_t) (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA);
+                pu8Data += 2;
+            }
+            processedSize += 1;
 
             errorStatus = (USART_ERROR) (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & (SERCOM_USART_INT_STATUS_PERR_Msk | SERCOM_USART_INT_STATUS_FERR_Msk | SERCOM_USART_INT_STATUS_BUFOVF_Msk));
 
@@ -693,7 +722,17 @@ void static ${SERCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
             }
             <#else>
             temp = ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA;
-            ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBuffer[${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize++] = (uint8_t) (temp);
+
+            if (((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB & SERCOM_USART_INT_CTRLB_CHSIZE_Msk) >> SERCOM_USART_INT_CTRLB_CHSIZE_Pos) != 0x01)
+            {
+                /* 8-bit mode */
+                ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBuffer[${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize++] = (uint8_t) (temp);
+            }
+            else
+            {
+                /* 9-bit mode */
+                ((uint16_t*)${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxBuffer)[${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize++] = (uint16_t) (temp);
+            }
 
             if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxProcessedSize == ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rxSize)
             {
@@ -720,7 +759,16 @@ void static ${SERCOM_INSTANCE_NAME}_USART_ISR_TX_Handler( void )
     {
         if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txProcessedSize < ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txSize)
         {
-            ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txBuffer[${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txProcessedSize++];
+            if (((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_CTRLB & SERCOM_USART_INT_CTRLB_CHSIZE_Msk) >> SERCOM_USART_INT_CTRLB_CHSIZE_Pos) != 0x01)
+            {
+                /* 8-bit mode */
+                ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txBuffer[${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txProcessedSize++];
+            }
+            else
+            {
+                /* 9-bit mode */
+                ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA = ((uint16_t*)${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txBuffer)[${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txProcessedSize++];
+            }
         }
 
         if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txProcessedSize >= ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.txSize)

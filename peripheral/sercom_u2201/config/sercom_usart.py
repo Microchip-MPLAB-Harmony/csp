@@ -28,6 +28,16 @@
 
 global getUSARTBaudValue
 
+global dataBitsDict
+
+dataBitsDict = {
+    "5_BIT": "DRV_USART_DATA_5_BIT",
+    "6_BIT": "DRV_USART_DATA_6_BIT",
+    "7_BIT": "DRV_USART_DATA_7_BIT",
+    "8_BIT": "DRV_USART_DATA_8_BIT",
+    "9_BIT": "DRV_USART_DATA_9_BIT"
+}
+
 def getUSARTBaudValue():
 
     global desiredUSARTBaudRate
@@ -182,12 +192,14 @@ def updateUSARTFORMValueProperty(symbol, event):
                 usart_interrupt_mode.setReadOnly(False)
                 usart_ring_buffer_mode.setReadOnly(False)
 
-
-
-
 def updateLinMasterModeOptionsVisibility(symbol, event):
 
     symbol.setVisible(event["symbol"].getSelectedKey() == "USART_FRAME_LIN_MASTER_MODE")
+
+def updateUSARTDataBits (symbol, event):
+
+    dataBits = event["symbol"].getSelectedKey()
+    symbol.setValue(dataBitsDict[dataBits])
 
 ###################################################################################################
 ############################################ USART ################################################
@@ -418,6 +430,7 @@ usartSym_CTRLB_CHSIZE.setDisplayMode("Description")
 usartSym_CTRLB_CHSIZE.setVisible(sercomSym_OperationMode.getSelectedKey() == "USART_INT")
 usartSym_CTRLB_CHSIZE.setDependencies(updateUSARTConfigurationVisibleProperty, ["SERCOM_MODE"])
 
+
 #Stop Bit
 usartSym_CTRLB_SBMODE = sercomComponent.createKeyValueSetSymbol("USART_STOP_BIT", sercomSym_OperationMode)
 usartSym_CTRLB_SBMODE.setLabel("Stop Bit Mode")
@@ -581,3 +594,8 @@ sercomSym_STATUS_PERR_Mask.setVisible(False)
 sercomSym_STATUS_FERR_Mask = sercomComponent.createStringSymbol("USART_FRAMING_ERROR_VALUE", sercomSym_OperationMode)
 sercomSym_STATUS_FERR_Mask.setDefaultValue("0x2")
 sercomSym_STATUS_FERR_Mask.setVisible(False)
+
+usartSym_DataBits = sercomComponent.createStringSymbol("USART_DATA_BITS", sercomSym_OperationMode)
+usartSym_DataBits.setDefaultValue(dataBitsDict[usartSym_CTRLB_CHSIZE.getSelectedKey()])
+usartSym_DataBits.setVisible(False)
+usartSym_DataBits.setDependencies(updateUSARTDataBits, ["USART_CHARSIZE_BITS"])
