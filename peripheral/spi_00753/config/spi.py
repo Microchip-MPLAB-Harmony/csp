@@ -116,16 +116,25 @@ dummyDataDict = {
 #### Business Logic ####
 ################################################################################
 
-def setSPIInterruptData(status):
+def setSPIInterruptData(mode, status):
 
     for id in InterruptVector:
-        Database.setSymbolValue("core", id, status, 1)
+        if (("FAULT" in id) and (mode == "Master mode")):
+            # Disable Fault interrupt for Master mode
+            Database.setSymbolValue("core", id, False, 1)
+        else:
+            Database.setSymbolValue("core", id, status, 1)
 
     for id in InterruptHandlerLock:
-        Database.setSymbolValue("core", id, status, 1)
+        if (("FAULT" in id) and (mode == "Master mode")):
+            Database.setSymbolValue("core", id, False, 1)
+        else:
+            Database.setSymbolValue("core", id, status, 1)
 
     for id in InterruptHandler:
         interruptName = id.split("_INTERRUPT_HANDLER")[0]
+        if (("FAULT" in id) and (mode == "Master mode")):
+            continue
         if status == True:
             Database.setSymbolValue("core", id, interruptName + "_InterruptHandler", 1)
         else:
@@ -133,14 +142,18 @@ def setSPIInterruptData(status):
 
 def updateSPIInterruptData(symbol, event):
 
+    mode = event["source"].getSymbolByID("SPI_MSTR_MODE_EN").getSelectedKey()
+
     if event["id"] == "SPI_INTERRUPT_MODE":
-        setSPIInterruptData(event["value"])
+        setSPIInterruptData(mode, event["value"])
 
     status = False
 
     for id in InterruptVectorUpdate:
         id = id.replace("core.", "")
-        if Database.getSymbolValue("core", id) == True:
+        if (("FAULT" in id) and (mode == "Master mode")):
+            continue
+        elif Database.getSymbolValue("core", id) == True:
             status = True
             break
 
@@ -403,6 +416,10 @@ def instantiateComponent(spiComponent):
     else:
         ## SPI Fault Interrrupt
         spiIrqFault = spiInstanceName.getValue() + "_FAULT"
+        InterruptVector.append(spiIrqFault + "_INTERRUPT_ENABLE")
+        InterruptHandler.append(spiIrqFault + "_INTERRUPT_HANDLER")
+        InterruptHandlerLock.append(spiIrqFault + "_INTERRUPT_HANDLER_LOCK")
+        InterruptVectorUpdate.append("core." + spiIrqFault + "_INTERRUPT_ENABLE_UPDATE")
         spiFaultVectorNum = int(getVectorIndex(spiIrqFault))
 
         ## SPI RX Interrupt
@@ -718,7 +735,7 @@ def instantiateComponent(spiComponent):
     #### Dependency ####
     ############################################################################
 
-    setSPIInterruptData(spiSymInterruptMode.getValue())
+    setSPIInterruptData(spiSym_SPICON_MSTEN.getSelectedKey(), spiSymInterruptMode.getValue())
 
     spiSymIntEnComment = spiComponent.createCommentSymbol("SPI_INTRRUPT_ENABLE_COMMENT", None)
     spiSymIntEnComment.setLabel("Warning!!! " + spiInstanceName.getValue() + " Interrupt is Disabled in Interrupt Manager")

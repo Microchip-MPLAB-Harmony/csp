@@ -104,7 +104,7 @@ SPI_SLAVE_OBJECT ${SPI_INSTANCE_NAME?lower_case}Obj;
 #define ${SPI_INSTANCE_NAME}_CLEAR_TX_INT_FLAG()            ${SPI_TX_IFS_REG}CLR = ${SPI_TX_IFS_REG_MASK}
 
 #define ${SPI_INSTANCE_NAME}_ENABLE_ERR_INT()               ${SPI_FLT_IEC_REG}SET = ${SPI_FLT_IEC_REG_MASK}
-#define ${SPI_INSTANCE_NAME}_CLEAR_ERR_INT_FLAG()           ${SPI_FLT_IEC_REG}CLR = ${SPI_FLT_IEC_REG_MASK}
+#define ${SPI_INSTANCE_NAME}_CLEAR_ERR_INT_FLAG()           ${SPI_FLT_IFS_REG}CLR = ${SPI_FLT_IFS_REG_MASK}
 
 /* Forward declarations */
 static void ${SPI_INSTANCE_NAME}_CS_Handler(CN_PIN pin, uintptr_t context);
