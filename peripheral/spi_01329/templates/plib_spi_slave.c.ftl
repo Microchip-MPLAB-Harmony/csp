@@ -104,7 +104,7 @@ SPI_SLAVE_OBJECT ${SPI_INSTANCE_NAME?lower_case}Obj;
 #define ${SPI_INSTANCE_NAME}_CLEAR_TX_INT_FLAG()            ${SPI_TX_IFS_REG}CLR = ${SPI_TX_IFS_REG_MASK}
 
 #define ${SPI_INSTANCE_NAME}_ENABLE_ERR_INT()               ${SPI_FLT_IEC_REG}SET = ${SPI_FLT_IEC_REG_MASK}
-#define ${SPI_INSTANCE_NAME}_CLEAR_ERR_INT_FLAG()           ${SPI_FLT_IEC_REG}CLR = ${SPI_FLT_IEC_REG_MASK}
+#define ${SPI_INSTANCE_NAME}_CLEAR_ERR_INT_FLAG()           ${SPI_FLT_IFS_REG}CLR = ${SPI_FLT_IFS_REG_MASK}
 
 /* Forward declarations */
 static void ${SPI_INSTANCE_NAME}_CS_Handler(GPIO_PIN pin, uintptr_t context);
@@ -323,9 +323,9 @@ static void ${SPI_INSTANCE_NAME}_CS_Handler(GPIO_PIN pin, uintptr_t context)
 }
 
 <#if SPI_INTERRUPT_COUNT == 1>
-static void ${SPI_INSTANCE_NAME}_ERR_InterruptHandler (void)
+static void ${SPI_INSTANCE_NAME}_FAULT_InterruptHandler (void)
 <#else>
-void ${SPI_INSTANCE_NAME}_ERR_InterruptHandler (void)
+void ${SPI_INSTANCE_NAME}_FAULT_InterruptHandler (void)
 </#if>
 {
     ${SPI_INSTANCE_NAME?lower_case}Obj.errorStatus = (${SPI_INSTANCE_NAME}STAT & _${SPI_INSTANCE_NAME}STAT_SPIROV_MASK);
@@ -411,7 +411,7 @@ void SPI_${SPI_INSTANCE_NUM}_InterruptHandler (void)
     if ((${SPI_FLT_IFS_REG} & _${SPI_FLT_IFS_REG}_${SPI_INSTANCE_NAME}EIF_MASK) && (${SPI_FLT_IEC_REG} & _${SPI_FLT_IEC_REG}_${SPI_INSTANCE_NAME}EIE_MASK))
     {
         /* Call error interrupt handler */
-        ${SPI_INSTANCE_NAME}_ERR_InterruptHandler();
+        ${SPI_INSTANCE_NAME}_FAULT_InterruptHandler();
     }
     if ((${SPI_RX_IFS_REG} & _${SPI_RX_IFS_REG}_${SPI_INSTANCE_NAME}RXIF_MASK) && (${SPI_RX_IEC_REG} & _${SPI_RX_IEC_REG}_${SPI_INSTANCE_NAME}RXIE_MASK))
     {
