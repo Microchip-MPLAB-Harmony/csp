@@ -27,7 +27,6 @@ global InterruptHandler
 global InterruptHandlerLock
 global InterruptVectorUpdate
 global adcInstanceName
-adcSym_SEQCTRL_SEQ = []
 global multiVectorSupport
 multiVectorSupport = False
 global ADCfilesArray
@@ -580,18 +579,18 @@ def instantiateComponent(adcComponent):
     adcPositiveInputValues = []
     adcPositiveInputValues = adcPositiveInputNode.getChildren()
     for index in range(0, len(adcPositiveInputValues)):
-        adcSym_SEQCTRL_SEQ.append(index)
-        adcSym_SEQCTRL_SEQ[index] = adcComponent.createBooleanSymbol("ADC_SEQCTRL_SEQ"+str(index), adcSym_SEQ_ENABLE)
-        adcSym_SEQCTRL_SEQ[index].setLabel("Enable "+ str(adcPositiveInputValues[index].getAttribute("caption")))
+        value = int(adcPositiveInputValues[index].getAttribute("value"), 16)
+        adcSym_SEQCTRL_SEQ = adcComponent.createBooleanSymbol("ADC_SEQCTRL_SEQ"+str(value), adcSym_SEQ_ENABLE)
+        adcSym_SEQCTRL_SEQ.setLabel("Enable "+ str(adcPositiveInputValues[index].getAttribute("caption")))
         if "AIN" in adcPositiveInputValues[index].getAttribute("name"):
             if adcPositiveInputValues[index].getAttribute("name") in channel:
-                adcSym_SEQCTRL_SEQ[index].setVisible(True)
+                adcSym_SEQCTRL_SEQ.setVisible(True)
             else:
-                adcSym_SEQCTRL_SEQ[index].setVisible(False)
+                adcSym_SEQCTRL_SEQ.setVisible(False)
 
     adcSym_NUM_CHANNELS = adcComponent.createIntegerSymbol("ADC_NUM_CHANNELS", None)
     adcSym_NUM_CHANNELS.setVisible(False)
-    adcSym_NUM_CHANNELS.setDefaultValue(len(adcPositiveInputValues))
+    adcSym_NUM_CHANNELS.setDefaultValue(value)
 
     adcChannelMenu = adcComponent.createMenuSymbol("ADC_CHANNEL_MENU", None)
     adcChannelMenu.setLabel("Channel Configuration")

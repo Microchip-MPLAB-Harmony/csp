@@ -83,11 +83,13 @@
 <#if ADC_CONV_TRIGGER != "Free Run" && ADC_SEQ_ENABLE == true>
     <#list 0..ADC_NUM_CHANNELS-1 as i>
         <#assign ADC_SEQCTRL = "ADC_SEQCTRL_SEQ" + i>
-        <#if .vars[ADC_SEQCTRL] == true>
-            <#if ADC_SEQCTRL_VAL != "">
-                <#assign ADC_SEQCTRL_VAL = ADC_SEQCTRL_VAL + "\n\t\t | " + "ADC_SEQCTRL_SEQEN(1U << " + i +")">
-            <#else>
-                <#assign ADC_SEQCTRL_VAL = "ADC_SEQCTRL_SEQEN(1U << " + i +")">
+        <#if .vars[ADC_SEQCTRL]?has_content>
+            <#if .vars[ADC_SEQCTRL] == true>
+                <#if ADC_SEQCTRL_VAL != "">
+                    <#assign ADC_SEQCTRL_VAL = ADC_SEQCTRL_VAL + "\n\t\t | " + "ADC_SEQCTRL_SEQEN(1U << " + i +")">
+                <#else>
+                    <#assign ADC_SEQCTRL_VAL = "ADC_SEQCTRL_SEQEN(1U << " + i +")">
+                </#if>
             </#if>
         </#if>
     </#list>
