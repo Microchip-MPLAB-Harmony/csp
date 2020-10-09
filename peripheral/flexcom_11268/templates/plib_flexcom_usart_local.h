@@ -220,6 +220,8 @@ typedef struct
     uint32_t                                				wrThreshold;
 
     bool                                    				isWrNotifyPersistently;
+	
+	uint32_t												wrBufferSize;
 
     FLEXCOM_USART_RING_BUFFER_CALLBACK                   	rdCallback;
 
@@ -234,6 +236,8 @@ typedef struct
     uint32_t                                				rdThreshold;
 
     bool                                    				isRdNotifyPersistently;
+	
+	uint32_t												rdBufferSize;
 
 } FLEXCOM_USART_RING_BUFFER_OBJECT;
 
