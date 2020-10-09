@@ -165,6 +165,12 @@ def updateSPIDMASymbolVisiblity(symbol, event):
 
 def sourceClkUpdate(symbol, event):
     symbol.setValue(event["value"])
+    
+def fifoModeVisible (symbol, event): 
+    if flexcomSym_OperatingMode.getSelectedKey() == "SPI" and flexcomSym_SPI_InterruptMode.getValue() == True:
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)    
 
 ###################################################################################################
 ############################################# FLEXCOM SPI #########################################
@@ -285,6 +291,12 @@ flexcomSym_SPI_CSR_NCPHA.addKey("NCPHA0", "0", "Data are changed on the leading 
 flexcomSym_SPI_CSR_NCPHA.addKey("NCPHA1", "1", "Data are captured on the leading edge of SPCK and changed on the following edge of SPCK (NCPHA=1)")
 flexcomSym_SPI_CSR_NCPHA.setVisible(False)
 flexcomSym_SPI_CSR_NCPHA.setDependencies(showSPIDependencies, ["FLEXCOM_MODE"])
+
+flexcomSym_SPI_FIFOEnable = flexcomComponent.createBooleanSymbol("FLEXCOM_SPI_FIFO_ENABLE", flexcomSym_OperatingMode)
+flexcomSym_SPI_FIFOEnable.setLabel("Enable FIFO")
+flexcomSym_SPI_FIFOEnable.setDefaultValue(False)
+flexcomSym_SPI_FIFOEnable.setVisible(False)
+flexcomSym_SPI_FIFOEnable.setDependencies(fifoModeVisible, ["FLEXCOM_MODE", "SPI_INTERRUPT_MODE"])
 
 flexcomSym_TXBuffer_Size = flexcomComponent.createIntegerSymbol("FLEXCOM_SPIS_TX_BUFFER_SIZE", None)
 flexcomSym_TXBuffer_Size.setLabel("TX Buffer Size (in bytes)")

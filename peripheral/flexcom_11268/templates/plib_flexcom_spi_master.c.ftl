@@ -65,6 +65,10 @@ void ${FLEXCOM_INSTANCE_NAME}_SPI_Initialize ( void )
     /* Disable and Reset the FLEXCOM SPI */
     ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CR = FLEX_SPI_CR_SPIDIS_Msk | FLEX_SPI_CR_SWRST_Msk;
 
+    <#if FLEXCOM_SPI_FIFO_ENABLE == true>
+    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CR = FLEX_SPI_CR_FIFOEN_Msk;
+    </#if>
+
 <#if FLEXCOM_SPI_MR_MSTR =="MASTER">
     /* Enable Master mode, select clock source, select particular NPCS line for chip select and disable mode fault detection */
     ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_MR = FLEX_SPI_MR_MSTR_Msk | FLEX_SPI_MR_BRSRCCLK_${FLEXCOM_SPI_MR_BRSRCCLK} <#if FLEXCOM_SPI_MR_PCS != "GPIO">| FLEX_SPI_MR_PCS(${FLEXCOM_SPI_MR_PCS?remove_beginning("NPCS")})<#else>| FLEX_SPI_MR_PCS(0)</#if> | FLEX_SPI_MR_MODFDIS_Msk;
@@ -188,6 +192,8 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead(void* pTransmitData, size_t txSize, 
     return isSuccess;
 }
 <#else>
+
+<#if FLEXCOM_SPI_FIFO_ENABLE == false>
 bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize)
 {
     bool isRequestAccepted = false;
@@ -277,6 +283,129 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize,
 
     return isRequestAccepted;
 }
+<#else>
+
+static uint8_t ${FLEXCOM_INSTANCE_NAME}_SPI_FIFO_Fill(void)
+{
+    uint8_t nDataCopiedToFIFO = 0;
+    uint32_t dataBits = ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CSR[${FLEXCOM_SPI_CSR_INDEX}] & FLEX_SPI_CSR_BITS_Msk;
+
+    while ((nDataCopiedToFIFO < 32) && (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_SR & FLEX_SPI_SR_TDRE_Msk))
+    {
+        if(dataBits == FLEX_SPI_CSR_BITS_8_BIT)
+        {
+            if (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount < ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txSize)
+            {
+                *((uint8_t*)&${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_TDR) =  ((uint8_t*)${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txBuffer)[${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount++];
+            }
+            else if (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.dummySize > 0)
+            {
+                *((uint8_t*)&${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_TDR) = (uint8_t)(0x${FLEXCOM_SPI_DUMMY_DATA});
+                ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.dummySize--;
+            }
+            else
+            {
+                break;
+            }
+        }
+        else
+        {
+            if (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount < ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txSize)
+            {
+                *((uint16_t*)&${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_TDR) =  ((uint16_t*)${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txBuffer)[${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount++];
+            }
+            else if (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.dummySize > 0)
+            {
+                *((uint16_t*)&${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_TDR) = (uint16_t)(0x${FLEXCOM_SPI_DUMMY_DATA}${FLEXCOM_SPI_DUMMY_DATA});
+                ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.dummySize--;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        nDataCopiedToFIFO++;
+    }
+
+    return nDataCopiedToFIFO;
+}
+
+bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize)
+{
+    bool isRequestAccepted = false;
+    uint32_t nTxPending = 0;
+    uint8_t rxThreshold = 0;
+
+    /* Verify the request */
+    if((((txSize > 0) && (pTransmitData != NULL)) || ((rxSize > 0) && (pReceiveData != NULL))) && (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.transferIsBusy == false))
+    {
+        isRequestAccepted = true;
+        ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txBuffer = pTransmitData;
+        ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxBuffer = pReceiveData;
+        ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount = 0;
+        ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount = 0;
+        ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.dummySize = 0;
+
+        if (pTransmitData != NULL)
+        {
+            ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txSize = txSize;
+        }
+        else
+        {
+            ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txSize = 0;
+        }
+
+        if (pReceiveData != NULL)
+        {
+            ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxSize = rxSize;
+        }
+        else
+        {
+            ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxSize = 0;
+        }
+
+        ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.transferIsBusy = true;
+
+        if (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxSize > ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txSize)
+        {
+            ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.dummySize = ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxSize - ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txSize;
+        }
+
+        if((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CSR[${FLEXCOM_SPI_CSR_INDEX}] & FLEX_SPI_CSR_BITS_Msk) != FLEX_SPI_CSR_BITS_8_BIT)
+        {
+            ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txSize >>= 1;
+            ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.dummySize >>= 1;
+            ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxSize >>= 1;
+        }
+
+        /* Clear TX and RX FIFO */
+        ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CR = (FLEX_SPI_CR_RXFCLR_Msk | FLEX_SPI_CR_TXFCLR_Msk);
+
+        nTxPending = (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txSize - ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount) + ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.dummySize;
+
+        if (nTxPending < 32)
+        {
+            rxThreshold = nTxPending;
+        }
+        else
+        {
+            rxThreshold = 32;
+        }
+
+        /* Set RX FIFO level so as to generate interrupt after all bytes are transmitted and response from slave is received for all the bytes */
+        /* RX FIFO level must be set first or else FIFO may be filled before RX threshold is set and hardware may not recognize threshold crossover and not generate threshold interrupt */
+        ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_FMR = (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_FMR & ~FLEX_SPI_FMR_RXFTHRES_Msk) | FLEX_SPI_FMR_RXFTHRES(rxThreshold);
+
+        (void) ${FLEXCOM_INSTANCE_NAME}_SPI_FIFO_Fill();
+
+        /* Enable RX FIFO Threshold interrupt */
+        ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_IER = FLEX_SPI_IER_RXFTHF_Msk;
+    }
+
+    return isRequestAccepted;
+}
+</#if>
 </#if>
 
 bool ${FLEXCOM_INSTANCE_NAME}_SPI_TransferSetup (FLEXCOM_SPI_TRANSFER_SETUP * setup, uint32_t spiSourceClock )
@@ -331,6 +460,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_IsBusy(void)
     return ((${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.transferIsBusy) || ((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_SR & FLEX_SPI_SR_TXEMPTY_Msk) == 0));
 }
 
+<#if FLEXCOM_SPI_FIFO_ENABLE == false>
 void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
 {
     uint32_t dataBits ;
@@ -450,6 +580,61 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
     }
 
 }
+<#else>
+void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
+{
+    uint32_t dataBits = ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CSR[${FLEXCOM_SPI_CSR_INDEX}] & FLEX_SPI_CSR_BITS_Msk;
+    uint32_t nTxPending = 0;
+    uint8_t rxThreshold = 0;
+
+    while ((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_SR & FLEX_SPI_SR_RDRF_Msk ) && (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount < ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxSize))
+    {
+        if(dataBits == FLEX_SPI_CSR_BITS_8_BIT)
+        {
+            ((uint8_t*)${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxBuffer)[${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount++] = *((uint8_t*)&${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_RDR);
+        }
+        else
+        {
+            ((uint16_t*)${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxBuffer)[${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount++] = *((uint16_t*)&${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_RDR);
+        }
+    }
+
+    /* Clear RX FIFO. This is done for the case where RX size is less than TX size and hence data is not read and copied into the application rx buffer. */
+    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CR = FLEX_SPI_CR_RXFCLR_Msk;
+
+    nTxPending = (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txSize - ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount) + ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.dummySize;
+
+    if (nTxPending > 0)
+    {
+        if (nTxPending < 32)
+        {
+            rxThreshold = nTxPending;
+        }
+        else
+        {
+            rxThreshold = 32;
+        }
+
+        /* Set RX FIFO level so as to generate interrupt after all bytes are transmitted and response from slave is received for all the bytes */
+        /* RX FIFO level must be set first or else FIFO may be filled before RX threshold is set and hardware may not recognize threshold crossover and not generate threshold interrupt */
+        ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_FMR = (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_FMR & ~FLEX_SPI_FMR_RXFTHRES_Msk) | FLEX_SPI_FMR_RXFTHRES(rxThreshold);
+
+        (void) ${FLEXCOM_INSTANCE_NAME}_SPI_FIFO_Fill();
+    }
+    else
+    {
+        ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.transferIsBusy = false;
+
+        /* Disable Receive FIFO Threshold interrupt */
+        ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_IDR = FLEX_SPI_IDR_RXFTHF_Msk;
+
+        if(${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.callback != NULL)
+        {
+            ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.callback(${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.context);
+        }
+    }
+}
+</#if>
 </#if>
 
 
