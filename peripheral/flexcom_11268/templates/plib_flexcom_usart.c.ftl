@@ -127,14 +127,14 @@ void static ${FLEXCOM_INSTANCE_NAME}_USART_ISR_TX_Handler( void )
     {
         while((FLEX_US_CSR_TXRDY_Msk == (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & FLEX_US_CSR_TXRDY_Msk)) && (${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txProcessedSize < ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txSize))
         {
-			if (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_MR & FLEX_US_MR_MODE9_Msk)
-			{
-				*((uint16_t*)&${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_THR) =  ((uint16_t*)${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txBuffer)[${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txProcessedSize++] & FLEX_US_THR_TXCHR_Msk;
-			}
-			else
-			{
-				*((uint8_t*)&${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_THR) =  ((uint8_t*)${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txBuffer)[${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txProcessedSize++];
-			}
+            if (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_MR & FLEX_US_MR_MODE9_Msk)
+            {
+                *((uint16_t*)&${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_THR) =  ((uint16_t*)${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txBuffer)[${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txProcessedSize++] & FLEX_US_THR_TXCHR_Msk;
+            }
+            else
+            {
+                *((uint8_t*)&${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_THR) =  ((uint8_t*)${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txBuffer)[${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txProcessedSize++];
+            }
         }
 
         /* Check if the buffer is done */
@@ -248,14 +248,14 @@ void static ${FLEXCOM_INSTANCE_NAME}_USART_ErrorClear( void )
     /* Flush existing error bytes from the RX FIFO */
     while( FLEX_US_CSR_RXRDY_Msk == (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & FLEX_US_CSR_RXRDY_Msk) )
     {
-		if (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_MR & FLEX_US_MR_MODE9_Msk)
-		{
-			dummyData = *((uint16_t*)&${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_RHR) & FLEX_US_RHR_RXCHR_Msk;
-		}
-		else
-		{
-			dummyData = *((uint8_t*)&${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_RHR);
-		}
+        if (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_MR & FLEX_US_MR_MODE9_Msk)
+        {
+            dummyData = *((uint16_t*)&${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_RHR) & FLEX_US_RHR_RXCHR_Msk;
+        }
+        else
+        {
+            dummyData = *((uint8_t*)&${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_RHR);
+        }
     }
 
     /* Ignore the warning */

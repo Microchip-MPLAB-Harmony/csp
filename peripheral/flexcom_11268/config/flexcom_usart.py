@@ -135,7 +135,7 @@ def fifoOptionsVisible(symbol, event):
    symbol.setVisible(fifoEnableSym.getVisible() and fifoEnableSym.getValue())
 
 def fifoModeVisible (symbol, event): 
-    if flexcomSym_OperatingMode.getSelectedKey() == "USART" and flexcomSym_UsartInterrupt.getValue() == True and flexcomSym_RingBuffer_Enable.getValue() == False:
+    if flexcomSym_OperatingMode.getSelectedKey() == "USART" and flexcomSym_UsartInterrupt.getValue() == True:
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)            
