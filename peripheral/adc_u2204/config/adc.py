@@ -28,6 +28,59 @@ global InterruptHandlerLock
 global InterruptVectorUpdate
 global adcInstanceName
 
+
+freeRunningDelayGain = { '1X' : 
+                                {'DIFF' : '0', 
+                                 'SINGLE' : '0',
+                                },
+                         '2X' : 
+                                {'DIFF' : '0', 
+                                 'SINGLE' : '1',
+                                },
+                         '4X' : 
+                                {'DIFF' : '1', 
+                                 'SINGLE' : '1',
+                                },                                
+                         '8X' : 
+                                {'DIFF' : '1', 
+                                 'SINGLE' : '2',
+                                },
+                         '16X' : 
+                                {'DIFF' : '2', 
+                                 'SINGLE' : '2',
+                                },
+                         'DIV2' : 
+                                {'DIFF' : '0', 
+                                 'SINGLE' : '1',
+                                },                                
+                        }
+
+singleShotDelayGain = { '1X' : 
+                                {'DIFF' : '0', 
+                                 'SINGLE' : '1',
+                                },
+                         '2X' : 
+                                {'DIFF' : '0.5', 
+                                 'SINGLE' : '1.5',
+                                },
+                         '4X' : 
+                                {'DIFF' : '1', 
+                                 'SINGLE' : '2',
+                                },                                
+                         '8X' : 
+                                {'DIFF' : '1.5', 
+                                 'SINGLE' : '2.5',
+                                },
+                         '16X' : 
+                                {'DIFF' : '2', 
+                                 'SINGLE' : '3',
+                                },
+                         'DIV2' : 
+                                {'DIFF' : '0.5', 
+                                 'SINGLE' : '1.5',
+                                },                                
+                        }                        
+
 ###################################################################################################
 ########################################## Callbacks  #############################################
 ###################################################################################################
@@ -59,13 +112,29 @@ def updateADCClockWarningStatus(symbol, event):
 
 def adcCalcSampleTime(symbol, event):
     clock_freq = Database.getSymbolValue("core", adcInstanceName.getValue()+"_CLOCK_FREQUENCY")
-    if clock_freq == 0:
-        clock_freq = 1
-    prescaler = adcSym_CTRLB_PRESCALER.getSelectedKey()[3:]
-    sample_cycles = adcSym_SAMPCTRL_SAMPLEN.getValue()
-    data_width = adcSym_CTRLC_RESSEL.getSelectedKey()[:-3]
-    conv_time = float((int(sample_cycles) + int(data_width)) * int(prescaler) * 1000000.0) / clock_freq
-    symbol.setLabel("**** Conversion Time is " + str(conv_time) + " uS ****")
+    if clock_freq != 0:
+        prescaler = adcSym_CTRLB_PRESCALER.getSelectedKey()[3:]
+        sample_cycles = adcSym_SAMPCTRL_SAMPLEN.getValue()
+        data_width = adcSym_CTRLC_RESSEL.getSelectedKey()[:-3]
+        gain = adcSym_INPUTCTRL_GAIN.getSelectedKey()
+ 
+        if adcSym_INPUTCTRL_MUXNEG.getSelectedKey() != "GND" and adcSym_INPUTCTRL_MUXNEG.getSelectedKey() != "IOGND":
+            key = 'DIFF'
+        else:
+            key = 'SINGLE'
+
+        halfADCClock = (float(prescaler) * 1000000.0) / (clock_freq * 2)
+        sample_time = float((sample_cycles)  * halfADCClock)
+        if (adcSym_CONV_TRIGGER.getValue() == "Free Run"): #free-running mode
+            delaygain = freeRunningDelayGain[gain][key]         
+            conv_time = sample_time + (float((float((int(data_width))/2) + float(delaygain)) * int(prescaler) * 1000000.0) / clock_freq) - halfADCClock
+        else:
+            delaygain = singleShotDelayGain[gain][key]     
+            conv_time = sample_time + (float((float(1 + ((int(data_width))/2)) + float(delaygain)) * int(prescaler) * 1000000.0) / clock_freq) - halfADCClock       
+        
+        symbol.setLabel("**** Conversion Time is " + str(conv_time) + " uS ****")
+    else:
+        symbol.setLabel("**** Conversion Time is 0 uS ****")
 
 def adcEvesysConfigure(symbol, event):
     if(event["id"] == "ADC_EVCTRL_RESRDYEO"):
@@ -347,7 +416,7 @@ def instantiateComponent(adcComponent):
     global adcSym_CTRLB_PRESCALER
     adcSym_CTRLB_PRESCALER = adcComponent.createKeyValueSetSymbol("ADC_CTRLB_PRESCALER", None)
     adcSym_CTRLB_PRESCALER.setLabel("Select Prescaler")
-    adcSym_CTRLB_PRESCALER.setDefaultValue(1)
+    adcSym_CTRLB_PRESCALER.setDefaultValue(3)
     adcSym_CTRLB_PRESCALER.setOutputMode("Key")
     adcSym_CTRLB_PRESCALER.setDisplayMode("Description")
     adcPrescalerNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"ADC\"]/value-group@[name=\"ADC_CTRLB__PRESCALER\"]")
@@ -359,18 +428,21 @@ def instantiateComponent(adcComponent):
     #sampling time
     global adcSym_SAMPCTRL_SAMPLEN
     adcSym_SAMPCTRL_SAMPLEN = adcComponent.createIntegerSymbol("ADC_SAMPCTRL_SAMPLEN", None)
-    adcSym_SAMPCTRL_SAMPLEN.setLabel("Select Sample Length (cycles)")
+    adcSym_SAMPCTRL_SAMPLEN.setLabel("Select Sample Length (half ADC clock cycles)")
     adcSym_SAMPCTRL_SAMPLEN.setMin(1)
     adcSym_SAMPCTRL_SAMPLEN.setMax(64)
     adcSym_SAMPCTRL_SAMPLEN.setDefaultValue(4)
 
     clock_freq = Database.getSymbolValue("core", adcInstanceName.getValue()+"_CLOCK_FREQUENCY")
     if clock_freq == 0:
-        clock_freq = 1
-    prescaler = adcSym_CTRLB_PRESCALER.getSelectedKey()[3:]
-    sample_cycles = adcSym_SAMPCTRL_SAMPLEN.getValue()
-    data_width = 12
-    conv_time = float((int(sample_cycles) + int(data_width)) * int(prescaler) * 1000000.0) / clock_freq
+        conv_time = 0
+    else:
+        prescaler = adcSym_CTRLB_PRESCALER.getSelectedKey()[3:]
+        sample_cycles = adcSym_SAMPCTRL_SAMPLEN.getValue()
+        data_width = 12
+        delaygain = freeRunningDelayGain['1X']['SINGLE']
+        sample_time = float((sample_cycles)  * float(prescaler) * 1000000.0) / (clock_freq * 2)
+        conv_time = sample_time + (float((float((int(data_width))/2) + float(delaygain)) * int(prescaler) * 1000000.0) / clock_freq)
 
     #Sampling time calculation
     adcSym_SAMPCTRL_SAMPLEN_TIME = adcComponent.createCommentSymbol("ADC_SAMPCTRL_SAMPLEN_TIME", None)
@@ -378,6 +450,7 @@ def instantiateComponent(adcComponent):
     # Dependency registration is done after all dependencies are defined.
 
     #reference selection
+    global adcSym_INPUTCTRL_GAIN
     adcSym_INPUTCTRL_GAIN = adcComponent.createKeyValueSetSymbol("ADC_INPUTCTRL_GAIN", None)
     adcSym_INPUTCTRL_GAIN.setLabel("Select Gain")
     default = 0
@@ -431,10 +504,6 @@ def instantiateComponent(adcComponent):
     adcPositiveInputValues = []
     adcPositiveInputValues = adcPositiveInputNode.getChildren()
 
-    adcSym_NUM_CHANNELS = adcComponent.createIntegerSymbol("ADC_NUM_CHANNELS", None)
-    adcSym_NUM_CHANNELS.setVisible(False)
-    adcSym_NUM_CHANNELS.setDefaultValue(len(adcPositiveInputValues))
-
     adcChannelMenu = adcComponent.createMenuSymbol("ADC_CHANNEL_MENU", None)
     adcChannelMenu.setLabel("Channel Configuration")
 
@@ -446,6 +515,7 @@ def instantiateComponent(adcComponent):
     adcSym_INPUTCTRL_MUXPOS.setDisplayMode("Description")
     posInput = 0
     for index in range(0, len(adcPositiveInputValues)):
+        value = adcPositiveInputValues[index].getAttribute("value")
         if "AIN" in adcPositiveInputValues[index].getAttribute("name"):
             if adcPositiveInputValues[index].getAttribute("name") in channel:
                 adcSym_MUXPOS_ENUM = adcComponent.createStringSymbol("ADC_MUXPOS_ENUM"+str(posInput), None)
@@ -463,6 +533,7 @@ def instantiateComponent(adcComponent):
             adcPositiveInputValues[index].getAttribute("caption"))
 
     #negative input
+    global adcSym_INPUTCTRL_MUXNEG
     adcSym_INPUTCTRL_MUXNEG = adcComponent.createKeyValueSetSymbol("ADC_INPUTCTRL_MUXNEG", adcChannelMenu)
     adcSym_INPUTCTRL_MUXNEG.setLabel("Select Negative Input")
     adcSym_INPUTCTRL_MUXNEG.setOutputMode("Key")
@@ -494,6 +565,10 @@ def instantiateComponent(adcComponent):
             adcNagativeInputValues[index].getAttribute("caption"))
             gndIndex += 1
     adcSym_INPUTCTRL_MUXNEG.setDefaultValue(defaultIndex)
+
+    adcSym_NUM_CHANNELS = adcComponent.createIntegerSymbol("ADC_NUM_CHANNELS", None)
+    adcSym_NUM_CHANNELS.setVisible(False)
+    adcSym_NUM_CHANNELS.setDefaultValue(int(value, 16))    
 
     adcSym_INPUTCTRL_INPUTSCAN = adcComponent.createIntegerSymbol("ADC_INPUTCTRL_INPUTSCAN", adcChannelMenu)
     adcSym_INPUTCTRL_INPUTSCAN.setLabel("Number of inputs to scan")
@@ -565,7 +640,8 @@ def instantiateComponent(adcComponent):
     adcSym_EVCTRL_RSERDYEO.setLabel("Enable Result Ready Event Out")
 
     adcSym_SAMPCTRL_SAMPLEN_TIME.setDependencies(adcCalcSampleTime, ["core."+adcInstanceName.getValue()+"_CLOCK_FREQUENCY", \
-        "ADC_SAMPCTRL_SAMPLEN", "ADC_CTRLB_PRESCALER", "ADC_CTRLB_RESSEL"])
+        "ADC_SAMPCTRL_SAMPLEN", "ADC_CTRLB_PRESCALER", "ADC_CTRLB_RESSEL", "ADC_INPUTCTRL_MUXNEG", 
+        "ADC_CONV_TRIGGER", "ADC_INPUTCTRL_GAIN"])
 
     adcWindowMenu = adcComponent.createMenuSymbol("ADC_WINDOW_CONFIG_MENU", None)
     adcWindowMenu.setLabel("Window Mode Configuration")
