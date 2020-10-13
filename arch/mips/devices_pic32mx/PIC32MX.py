@@ -233,6 +233,7 @@ ds60001185Regex = re.compile(r'[34][357]0F')            #PIC32MX330/350/370/430/
 ds60001290Regex = re.compile(r'[125][2357]0F\d+[HL]')   #PIC32MX1XX/2XX/5XX
 ds60001404Regex = re.compile(r'[12][57]4F')             #PIC32MX1XX/2XX XLP
 ds60001156Regex = re.compile(r'[567][3679][45]F\d+[HL]')  #PIC32MX5XX/6XX/7XX
+ds60001143Regex = re.compile(r'[34][246]0F\d+[HL]')     #PIC32MX3XX/4XX
 
 global deviceFamily
 
@@ -256,6 +257,8 @@ elif ds60001404Regex.search(processor):
     deviceFamily.setDefaultValue("DS60001404")
 elif ds60001156Regex.search(processor):
     deviceFamily.setDefaultValue("DS60001156")
+elif ds60001143Regex.search(processor):
+    deviceFamily.setDefaultValue("DS60001143")
 
 pcacheNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="PCACHE"]')
 
@@ -288,14 +291,14 @@ if pcacheNode != None:
 if deviceFamily.getValue() in ["DS60001185", "DS60001290", "DS60001404", "DS60001168"]:
     execfile(Variables.get("__CORE_DIR") + "/../peripheral/gpio_01618/config/gpio.py")
     coreComponent.addPlugin("../peripheral/gpio_01618/plugin/gpio_01618.jar")
-elif deviceFamily.getValue() in ["DS60001156"]:
+elif deviceFamily.getValue() in ["DS60001156", "DS60001143"]:
     execfile(Variables.get("__CORE_DIR") + "/../peripheral/gpio_01166/config/gpio.py")
     coreComponent.addPlugin("../peripheral/gpio_01166/plugin/gpio_01166.jar")
 
 cacheMenu = coreComponent.createMenuSymbol("CACHE_MENU", mipsMenu)
 cacheMenu.setLabel("(no additional MIPS configuration)")
 
-if deviceFamily.getValue() in ["DS60001156"]:
+if deviceFamily.getValue() in ["DS60001156", "DS60001143"]:
     execfile(Variables.get("__CORE_DIR") + "/../peripheral/evic_01166/config/evic.py")
     coreComponent.addPlugin("../peripheral/evic_01166/plugin/evic_01166.jar")
 else:
@@ -303,14 +306,17 @@ else:
     coreComponent.addPlugin("../peripheral/evic_02907/plugin/evic_02907.jar")
 
 # load wdt
-if deviceFamily.getValue() in ["DS60001156"]:
+if deviceFamily.getValue() in ["DS60001156", "DS60001143"]:
     execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_00781/config/wdt.py")
 else:
     execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_01385/config/wdt.py")
 
 # load dma manager information
-execfile(Variables.get("__CORE_DIR") + "/../peripheral/dmac_00735/config/dmac.py")
-coreComponent.addPlugin("../peripheral/dmac_00735/plugin/dmamanager.jar")
+dmaNode = ATDF.getNode('/avr-tools-device-file/modules/module@[name="DMAC"]')
+
+if dmaNode != None:
+    execfile(Variables.get("__CORE_DIR") + "/../peripheral/dmac_00735/config/dmac.py")
+    coreComponent.addPlugin("../peripheral/dmac_00735/plugin/dmamanager.jar")
 
 devconSystemInitFile = coreComponent.createFileSymbol("DEVICE_CONFIG_SYSTEM_INIT", None)
 devconSystemInitFile.setType("STRING")
