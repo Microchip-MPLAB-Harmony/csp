@@ -988,7 +988,7 @@ if __name__ == "__main__":
     elif Database.getSymbolValue("core", "DEVICE_FAMILY") in ["DS60001168", "DS60001185", "DS60001290"]:
         CLK_MANAGER_SELECT.setDefaultValue("clk_pic32mx1:MXClockModel")
         peripheralModuleDisableDict = peripheralModuleDisableDict_1xx_2xx_3xx_4xx.copy()
-    elif Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001156":
+    else: # DS60001156 and DS60001143
         CLK_MANAGER_SELECT.setDefaultValue("clk_pic32mx_no_refOsc:MXClockModel")
         peripheralModuleDisableDict = peripheralModuleDisableDict_5xx_6xx_7xx.copy()
 
@@ -1027,11 +1027,17 @@ if __name__ == "__main__":
         TEMP_RANGE.setReadOnly(True)
         TEMP_RANGE.setDefaultValue(0)
         max_clk_freq_for_selected_temp.setDefaultValue(72000000)
-    elif Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001156":
+    elif (Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001156") or \
+                ((Database.getSymbolValue("core", "DEVICE_FAMILY") == "DS60001143") and Variables.get("__PROCESSOR").find("032H") == -1):
         TEMP_RANGE.addKey("RANGE1", "0", "-40C to +105C, DC to 80 MHz")
         TEMP_RANGE.setReadOnly(True)
         TEMP_RANGE.setDefaultValue(0)
         max_clk_freq_for_selected_temp.setDefaultValue(80000000)
+    else: # it means DS60001143 datasheet 032H parts
+        TEMP_RANGE.addKey("RANGE1", "0", "-40C to +105C, DC to 40 MHz")
+        TEMP_RANGE.setReadOnly(True)
+        TEMP_RANGE.setDefaultValue(0)
+        max_clk_freq_for_selected_temp.setDefaultValue(40000000)
 
     max_clk_freq_for_selected_temp.setDependencies(updateMaxFreq, ["CONFIG_TEMPERATURE_RANGE"])
 
