@@ -71,6 +71,9 @@ def handleMessage(messageID, args):
 #### Register Information ####
 ################################################################################
 # SPICON Register
+
+spiBitField_SPI2CON_ENHBUF = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/register-group@[name="SPI"]/register@[name="SPI2CON"]/bitfield@[name="ENHBUF"]')
+
 spiValGrp_SPI2CON_MSTEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/value-group@[name="SPI2CON__MSTEN"]')
 spiBitField_SPI2CON_MSTEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/register-group@[name="SPI"]/register@[name="SPI2CON"]/bitfield@[name="MSTEN"]')
 
@@ -85,9 +88,6 @@ spiBitField_SPI2CON_CKE = ATDF.getNode('/avr-tools-device-file/modules/module@[n
 
 spiValGrp_SPI2CON_CKP = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/value-group@[name="SPI2CON__CKP"]')
 spiBitField_SPI2CON_CKP = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/register-group@[name="SPI"]/register@[name="SPI2CON"]/bitfield@[name="CKP"]')
-
-spiValGrp_SPI2CON_MSSEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/value-group@[name="SPI2CON__MSSEN"]')
-spiBitField_SPI2CON_MSSEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/register-group@[name="SPI"]/register@[name="SPI2CON"]/bitfield@[name="MSSEN"]')
 
 spiValGrp_SPI2CON_SMP = ATDF.getNode('/avr-tools-device-file/modules/module@[name="SPI"]/value-group@[name="SPI2CON__SMP"]')
 
@@ -543,16 +543,17 @@ def instantiateComponent(spiComponent):
     spiSym_SPICON_SMP.setDependencies(showMasterDependencies, ["SPI_MSTR_MODE_EN"])
 
     ## Slave slect pin enable bit
-    ssen_names = []
-    _get_bitfield_names(spiValGrp_SPI2CON_MSSEN, ssen_names)
-    spiSym_SPICON_MSSEN = spiComponent.createKeyValueSetSymbol( "SPI_SPICON_MSSEN",None)
-    spiSym_SPICON_MSSEN.setLabel(spiBitField_SPI2CON_MSSEN.getAttribute("caption"))
-    spiSym_SPICON_MSSEN.setDefaultValue(0)
-    spiSym_SPICON_MSSEN.setOutputMode( "Value" )
-    spiSym_SPICON_MSSEN.setDisplayMode( "Description" )
-    for ii in ssen_names:
-        spiSym_SPICON_MSSEN.addKey( ii['key'],ii['value'], ii['desc'] )
-    spiSym_SPICON_MSSEN.setDependencies(showMasterDependencies, ["SPI_MSTR_MODE_EN"])
+    if spiBitField_SPI2CON_MSSEN is not None:
+        ssen_names = []
+        _get_bitfield_names(spiValGrp_SPI2CON_MSSEN, ssen_names)
+        spiSym_SPICON_MSSEN = spiComponent.createKeyValueSetSymbol( "SPI_SPICON_MSSEN",None)
+        spiSym_SPICON_MSSEN.setLabel(spiBitField_SPI2CON_MSSEN.getAttribute("caption"))
+        spiSym_SPICON_MSSEN.setDefaultValue(0)
+        spiSym_SPICON_MSSEN.setOutputMode( "Value" )
+        spiSym_SPICON_MSSEN.setDisplayMode( "Description" )
+        for ii in ssen_names:
+            spiSym_SPICON_MSSEN.addKey( ii['key'],ii['value'], ii['desc'] )
+        spiSym_SPICON_MSSEN.setDependencies(showMasterDependencies, ["SPI_MSTR_MODE_EN"])
 
     ## SPI data width(Mode)
     spiSym_SPICON_MODE = spiComponent.createKeyValueSetSymbol( "SPI_SPICON_MODE",None)
@@ -812,7 +813,10 @@ def instantiateComponent(spiComponent):
     spimHeaderFile.setDependencies(spiMasterModeFileGeneration, ["SPI_MSTR_MODE_EN"])
 
     spimSourceFile = spiComponent.createFileSymbol("SPI_SOURCE", None)
-    spimSourceFile.setSourcePath("../peripheral/spi_00753/templates/plib_spi_master.c.ftl")
+    if spiBitField_SPI2CON_ENHBUF is not None:
+        spimSourceFile.setSourcePath("../peripheral/spi_00753/templates/plib_spi_master.c.ftl")
+    else:
+        spimSourceFile.setSourcePath("../peripheral/spi_00753/templates/plib_spi_master_2.c.ftl")
     spimSourceFile.setOutputName("plib_" + spiInstanceName.getValue().lower() + "_master.c")
     spimSourceFile.setDestPath("/peripheral/spi/spi_master")
     spimSourceFile.setProjectPath("config/" + configName +"/peripheral/spi/spi_master")
@@ -844,7 +848,10 @@ def instantiateComponent(spiComponent):
     spisHeaderFile.setDependencies(spiSlaveModeFileGeneration, ["SPI_MSTR_MODE_EN"])
 
     spisSourceFile = spiComponent.createFileSymbol("SPIS_SOURCE", None)
-    spisSourceFile.setSourcePath("../peripheral/spi_00753/templates/plib_spi_slave.c.ftl")
+    if spiBitField_SPI2CON_ENHBUF is not None:
+        spisSourceFile.setSourcePath("../peripheral/spi_00753/templates/plib_spi_slave.c.ftl")
+    else:
+        spisSourceFile.setSourcePath("../peripheral/spi_00753/templates/plib_spi_slave_2.c.ftl")
     spisSourceFile.setOutputName("plib_" + spiInstanceName.getValue().lower() + "_slave.c")
     spisSourceFile.setDestPath("/peripheral/spi/spi_slave")
     spisSourceFile.setProjectPath("config/" + configName +"/peripheral/spi/spi_slave")
