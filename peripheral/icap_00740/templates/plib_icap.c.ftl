@@ -61,15 +61,17 @@
 // *****************************************************************************
 <#assign ICAP_IEC_REG_VAL = "">
 
-<#if ICAPx_IEC_REG == ERROR_IEC_REG>
-    <#if ICAP_INTERRUPT_ENABLE?c == 'true'>
-        <#assign ICAP_IEC_REG_VAL = "_"+ICAPx_IEC_REG+"_IC"+INDEX+"IE_MASK">
-    </#if>
-    <#if ICAP_ERROR_INTERRUPT_ENABLE?c == 'true'>
-        <#if ICAP_IEC_REG_VAL != "">
-            <#assign ICAP_IEC_REG_VAL = ICAP_IEC_REG_VAL + " | _"+ICAPx_IEC_REG+"_IC"+INDEX+"EIE_MASK">
-        <#else>
-            <#assign ICAP_IEC_REG_VAL = "_"+ICAPx_IEC_REG+"_IC"+INDEX+"EIE_MASK">
+<#if ERROR_IEC_REG??>
+    <#if ICAPx_IEC_REG == ERROR_IEC_REG>
+        <#if ICAP_INTERRUPT_ENABLE?c == 'true'>
+            <#assign ICAP_IEC_REG_VAL = "_"+ICAPx_IEC_REG+"_IC"+INDEX+"IE_MASK">
+        </#if>
+        <#if ICAP_ERROR_INTERRUPT_ENABLE?c == 'true'>
+            <#if ICAP_IEC_REG_VAL != "">
+                <#assign ICAP_IEC_REG_VAL = ICAP_IEC_REG_VAL + " | _"+ICAPx_IEC_REG+"_IC"+INDEX+"EIE_MASK">
+            <#else>
+                <#assign ICAP_IEC_REG_VAL = "_"+ICAPx_IEC_REG+"_IC"+INDEX+"EIE_MASK">
+            </#if>
         </#if>
     </#if>
 </#if>
@@ -94,17 +96,22 @@ void ${ICAP_INSTANCE_NAME}_Initialize (void)
     ${ICAP_CFG_REG_NAME} |= ${ICAP_CFGCON_ICACLK_MASK};
     </#if>
 
-<#if (ICAPx_IEC_REG == ERROR_IEC_REG) && ICAP_IEC_REG_VAL?has_content>
-    ${ICAPx_IEC_REG}SET = ${ICAP_IEC_REG_VAL};
+<#if ERROR_IEC_REG??>
+    <#if (ICAPx_IEC_REG == ERROR_IEC_REG) && ICAP_IEC_REG_VAL?has_content>
+        ${ICAPx_IEC_REG}SET = ${ICAP_IEC_REG_VAL};
+    <#else>
+        <#if ICAP_INTERRUPT_ENABLE?c == 'true'>
+        ${ICAPx_IEC_REG}SET = _${ICAPx_IEC_REG}_IC${INDEX}IE_MASK;
+        </#if>
+        <#if ICAP_ERROR_INTERRUPT_ENABLE?c == 'true'>
+        ${ERROR_IEC_REG}SET = _${ERROR_IEC_REG}_IC${INDEX}EIE_MASK;
+        </#if>
+    </#if>
 <#else>
     <#if ICAP_INTERRUPT_ENABLE?c == 'true'>
     ${ICAPx_IEC_REG}SET = _${ICAPx_IEC_REG}_IC${INDEX}IE_MASK;
     </#if>
-    <#if ICAP_ERROR_INTERRUPT_ENABLE?c == 'true'>
-    ${ERROR_IEC_REG}SET = _${ERROR_IEC_REG}_IC${INDEX}EIE_MASK;
-    </#if>
 </#if>
-
 }
 
 
@@ -155,10 +162,12 @@ void INPUT_CAPTURE_${INDEX}_InterruptHandler(void)
     {
         ${ICAPx_IFS_REG}CLR = _${ICAPx_IFS_REG}_IC${INDEX}IF_MASK;    //Clear IRQ flag
     }
+    <#if ERROR_IEC_REG??>
     if ((${ERROR_IFS_REG} & _${ERROR_IFS_REG}_IC${INDEX}EIF_MASK) && (${ERROR_IEC_REG} & _${ERROR_IEC_REG}_IC${INDEX}EIE_MASK))
     {
         ${ERROR_IFS_REG}CLR = _${ERROR_IFS_REG}_IC${INDEX}EIF_MASK;    //Clear IRQ flag
     }
+    </#if>
 <#else>
     ${ICAPx_IFS_REG}CLR = _${ICAPx_IFS_REG}_IC${INDEX}IF_MASK;    //Clear IRQ flag
 </#if>

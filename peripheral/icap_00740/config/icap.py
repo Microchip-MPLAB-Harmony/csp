@@ -377,18 +377,20 @@ def instantiateComponent(icapComponent):
     icxIrq_index = int(getIRQIndex(irqString))
     if icxIrq_index == -1:
         icxIrq_index = int(getVectorIndex(irqString))
-    errStatRegName, statBitPosn = _get_statReg_parms(icxIrq_index)
-    errEnblRegName, enblBitPosn = _get_enblReg_parms(icxIrq_index)
 
-    #ERROR IEC REG
-    icapxErrIEC = icapComponent.createStringSymbol("ERROR_IEC_REG", None)
-    icapxErrIEC.setDefaultValue(errEnblRegName)
-    icapxErrIEC.setVisible(False)
+    if icxIrq_index != -1:
+        errStatRegName, statBitPosn = _get_statReg_parms(icxIrq_index)
+        errEnblRegName, enblBitPosn = _get_enblReg_parms(icxIrq_index)
 
-    #ERROR IFS REG
-    icapxErrIFS = icapComponent.createStringSymbol("ERROR_IFS_REG", None)
-    icapxErrIFS.setDefaultValue(errStatRegName)
-    icapxErrIFS.setVisible(False)
+        #ERROR IEC REG
+        icapxErrIEC = icapComponent.createStringSymbol("ERROR_IEC_REG", None)
+        icapxErrIEC.setDefaultValue(errEnblRegName)
+        icapxErrIEC.setVisible(False)
+
+        #ERROR IFS REG
+        icapxErrIFS = icapComponent.createStringSymbol("ERROR_IFS_REG", None)
+        icapxErrIFS.setDefaultValue(errStatRegName)
+        icapxErrIFS.setVisible(False)
 
 
     # NVIC Dynamic settings
@@ -410,9 +412,13 @@ def instantiateComponent(icapComponent):
     icapSym_ICxCON_ICI.setDependencies(icapSymbolVisible, ["ICAP_INTERRUPT_ENABLE"])
 
     icapinterrupt2Control = icapComponent.createBooleanSymbol("ICAP_ERROR_INTERRUPT_ENABLE", None)
-    icapinterrupt2Control.setVisible(True)
     icapinterrupt2Control.setLabel("Enable Error Interrupt")
     icapinterrupt2Control.setDefaultValue(False)
+    if icxIrq_index == -1:
+        icapinterrupt2Control.setVisible(False)
+    else:
+        icapinterrupt2Control.setVisible(True)
+
 
 ############################################################################
 #### Dependency ####
