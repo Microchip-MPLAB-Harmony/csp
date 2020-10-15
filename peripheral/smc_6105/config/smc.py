@@ -27,10 +27,10 @@ import re
 #------------------------------------------------------------------------------
 # Constants
 DEFAULT_SMC_MIN_VALUE =                 0
-DEFAULT_SMC_SETUP_VALUE =               16
-DEFAULT_SMC_PULSE_VALUE =               16
-DEFAULT_SMC_CYCLE_VALUE =               3
-DEFAULT_SMC_MODE_TDF_CYCLES_VALUE =     0
+DEFAULT_SMC_SETUP_VALUE =               2
+DEFAULT_SMC_PULSE_VALUE =               7
+DEFAULT_SMC_CYCLE_VALUE =               13
+DEFAULT_SMC_MODE_TDF_CYCLES_VALUE =     1
 
 #-- SMC ------------------------------------------------------------------------
 ModuleSmc =                             '/avr-tools-device-file/modules/module@[name="SMC"]'
@@ -73,7 +73,7 @@ atdfModuleSmcOcmsRegister =             ATDF.getNode( SmcOcmsRegister )
 atdfModuleSmcCsNumberGroup =            ATDF.getNode( SmcRegisterGroupDef + '/register-group@[name="SMC_CS_NUMBER"]' )
 #
 atdfSmcSrierBitField_SRIE =             ATDF.getNode( SmcSrierRegister + '/bitfield@[name="SRIE"]' )
-#  
+#
 atdfSmcOcmsBitField_TAMPCLR =           ATDF.getNode( SmcOcmsRegister + '/bitfield@[name="TAMPCLR"]' )
 # Setup bit fields
 atdfSmcCsSetupBitField_NWE_SETUP =      ATDF.getNode( SmcCsSetupRegister + '/bitfield@[name="NWE_SETUP"]' )
@@ -128,6 +128,36 @@ atdfPmerrlocElierBitField_DONE =        ATDF.getNode( PmerrlocElierRegister + '/
 #------------------------------------------------------------------------------
 # Dependency Functions
 #------------------------------------------------------------------------------
+
+def handleMessage(messageID, args):
+    global pmeccCtrlEnable
+    result_dict = {}
+
+    component = pmeccCtrlEnable.getComponent()
+
+    if ("SMC_CS_ENABLE_" in messageID):
+        if args.get("isReadOnly") != None:
+            component.getSymbolByID(messageID).setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None:
+            component.getSymbolByID(messageID).setValue(args["isEnabled"])
+    elif (messageID == "PMECC_CTRL_ENABLE"):
+        if args.get("isReadOnly") != None:
+            component.getSymbolByID("PMECC_CTRL_ENABLE").setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None:
+            component.getSymbolByID("PMECC_CTRL_ENABLE").setValue(args["isEnabled"])
+    elif (messageID == "PMECC_IER_ERRIE"):
+        if args.get("isReadOnly") != None:
+            component.getSymbolByID("PMECC_IER_ERRIE").setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None:
+            component.getSymbolByID("PMECC_IER_ERRIE").setValue(args["isEnabled"])
+    elif (messageID == "PMERRLOC_ELIER_DONE"):
+        if args.get("isReadOnly") != None:
+            component.getSymbolByID("PMERRLOC_ELIER_DONE").setReadOnly(args["isReadOnly"])
+        if args.get("isEnabled") != None:
+            component.getSymbolByID("PMERRLOC_ELIER_DONE").setValue(args["isEnabled"])
+
+    return result_dict
+
 def getNameValueCaptionTuple( aModule, aGroupName ):
     choiceNode = ATDF.getNode( aModule + '/value-group@[name="' + aGroupName + '"]' )
     tupleArray = []
@@ -137,7 +167,7 @@ def getNameValueCaptionTuple( aModule, aGroupName ):
         choiceValues = choiceNode.getChildren()
 
     for ii in range( 0, len( choiceValues ) ):
-        tupleArray.append( ( choiceValues[ ii ].getAttribute( "name" ), 
+        tupleArray.append( ( choiceValues[ ii ].getAttribute( "name" ),
                              choiceValues[ ii ].getAttribute( "value" ),
                              choiceValues[ ii ].getAttribute( "caption" )
                              ) )
@@ -153,7 +183,7 @@ def patternMatchCount( anAtdfNode, anAttribute, aPattern ):
             if bool( re.search( aPattern, childAttribute ) ):
                 matchCount += 1
 
-    return matchCount  
+    return matchCount
 
 
 def convertMaskToInt( aRegMask ):
@@ -190,7 +220,7 @@ def visibilityBasedOnBoolSymbol( symbol, event ):
 
 
 def smcModeByteWriteOrSelectAccessVisible( symbol, event ):
-    """ function to enable visibility based on selection of Byte Access Type """ 
+    """ function to enable visibility based on selection of Byte Access Type """
     if( event[ "symbol" ].getSelectedKey() == "SMC_MODE_DBW_BIT_16" ):
         symbol.setVisible( True )
     else:
@@ -202,8 +232,12 @@ def pmerrlocCfgSectorSize( symbol, event ):
     if( event["value"] != symbol.getDefaultValue() ):
         symbol.setValue( event["value"], 1 )
 
+def updateSymbolValue( symbol, event ):
+    symbol.setValue( not event[ "value" ] )
 
 def instantiateComponent( staticMemoryComponent ):
+    global pmeccCtrlEnable
+
     myNamespace = str( staticMemoryComponent.getID() ).upper()
 
     smcInstanceName = staticMemoryComponent.createStringSymbol( "SMC_INSTANCE_NAME", None )
@@ -221,7 +255,7 @@ def instantiateComponent( staticMemoryComponent ):
     #--------------------------------------------------------------------------
     # Peripheral clock enable in Clock Manager
     Database.clearSymbolValue( "core", myNamespace + "_CLOCK_ENABLE" )
-    Database.setSymbolValue(   "core", myNamespace + "_CLOCK_ENABLE", True, 2 ) 
+    Database.setSymbolValue(   "core", myNamespace + "_CLOCK_ENABLE", True, 2 )
 
     #--------------------------------------------------------------------------
     # Top level Menus
@@ -233,12 +267,12 @@ def instantiateComponent( staticMemoryComponent ):
     pmeccCtrlEnable = staticMemoryComponent.createBooleanSymbol( pmeccCtrlEnableName, None )
     pmeccCtrlEnable.setLabel( atdfPmeccCtrlBitField_ENABLE.getAttribute( "caption" ) )
 
-    pmeccControlsMenu = staticMemoryComponent.createMenuSymbol( "PMECC_CONTROLS_MENU", None )
+    pmeccControlsMenu = staticMemoryComponent.createMenuSymbol( "PMECC_CONTROLS_MENU", pmeccCtrlEnable )
     pmeccControlsMenu.setLabel( "PMECC Controls" )
     pmeccControlsMenu.setDependencies( visibilityBasedOnBoolSymbol, [ pmeccCtrlEnableName ] )
     pmeccControlsMenu.setVisible( False )
 
-    pmerrlocControlsMenu = staticMemoryComponent.createMenuSymbol( "PMERRLOC_CONTROLS_MENU", None )
+    pmerrlocControlsMenu = staticMemoryComponent.createMenuSymbol( "PMERRLOC_CONTROLS_MENU", pmeccCtrlEnable )
     pmerrlocControlsMenu.setLabel( "PMERR Controls" )
     pmerrlocControlsMenu.setDependencies( visibilityBasedOnBoolSymbol, [ pmeccCtrlEnableName ] )
     pmerrlocControlsMenu.setVisible( False )
@@ -374,7 +408,7 @@ def instantiateComponent( staticMemoryComponent ):
         smcModeSettingsMenu.setLabel( "Mode Settings" )
 
         smcModeDbwNameStem = "SMC_MODE_DBW"
-        smcModeDbwName = smcModeDbwNameStem + "_" + csNum  
+        smcModeDbwName = smcModeDbwNameStem + "_" + csNum
         smcModeDbw = staticMemoryComponent.createKeyValueSetSymbol( smcModeDbwName, smcModeSettingsMenu )
         smcModeDbw.setLabel( atdfSmcCsModeBitField_MODE_DBW.getAttribute( "caption" ) )
         smcModeDbw.setOutputMode( "Key" )
@@ -384,7 +418,7 @@ def instantiateComponent( staticMemoryComponent ):
             smcModeDbw.addKey( smcModeDbwNameStem + "_" + tupleElem[ 0 ], tupleElem[ 1 ], tupleElem[ 2 ] )
 
         smcModeBatNameStem = "SMC_MODE_BAT"
-        smcModeBatName = smcModeBatNameStem + "_" + csNum  
+        smcModeBatName = smcModeBatNameStem + "_" + csNum
         smcModeBat = staticMemoryComponent.createKeyValueSetSymbol( smcModeBatName, smcModeSettingsMenu )
         smcModeBat.setLabel( atdfSmcCsModeBitField_MODE_BAT.getAttribute( "caption" ) )
         smcModeBat.setOutputMode( "Key" )
@@ -397,13 +431,13 @@ def instantiateComponent( staticMemoryComponent ):
         smcModeBat.setVisible( False )
 
         smcModePmenNameStem = "SMC_MODE_PMEN"
-        smcModePmenName = smcModePmenNameStem + "_" + csNum  
+        smcModePmenName = smcModePmenNameStem + "_" + csNum
         smcModePmen = staticMemoryComponent.createBooleanSymbol( smcModePmenName, smcModeSettingsMenu )
         smcModePmen.setLabel( "Enable Page Mode" )
         smcModePmen.setDefaultValue( False )
 
         smcModePsNameStem = "SMC_MODE_PS"
-        smcModePsName = smcModePsNameStem + "_" + csNum  
+        smcModePsName = smcModePsNameStem + "_" + csNum
         smcModePs = staticMemoryComponent.createKeyValueSetSymbol( smcModePsName, smcModeSettingsMenu )
         smcModePs.setLabel( atdfSmcCsModeBitField_MODE_PS.getAttribute( "caption" ) )
         smcModePs.setOutputMode( "Key" )
@@ -417,7 +451,7 @@ def instantiateComponent( staticMemoryComponent ):
         smcModeTdfModeName = smcModeTdfModeNameStem + "_" + csNum
         smcModeTdfMode = staticMemoryComponent.createBooleanSymbol( smcModeTdfModeName, smcModeSettingsMenu )
         smcModeTdfMode.setLabel( "Enable Data Float Time Optimization" )
-        smcModeTdfMode.setDefaultValue( False )
+        smcModeTdfMode.setDefaultValue( True )
 
         smcModeTdfCyclesNameStem = "SMC_MODE_TDF_CYCLES"
         smcModeTdfCyclesName = smcModeTdfCyclesNameStem + "_" + csNum
@@ -429,9 +463,9 @@ def instantiateComponent( staticMemoryComponent ):
         smcModeTdfCycles.setDependencies( visibilityBasedOnBoolSymbol, [ smcModeTdfModeName ] )
 
         smcModeExnwModeNameStem = "SMC_MODE_EXNW_MODE"
-        smcModeExnwModeName = smcModeExnwModeNameStem + "_" + csNum  
+        smcModeExnwModeName = smcModeExnwModeNameStem + "_" + csNum
         smcModeExnwMode = staticMemoryComponent.createKeyValueSetSymbol( smcModeExnwModeName, smcModeSettingsMenu )
-        smcModeExnwMode.setLabel( atdfSmcCsModeBitField_MODE_EXNW_MODE.getAttribute( "caption" ) )        
+        smcModeExnwMode.setLabel( atdfSmcCsModeBitField_MODE_EXNW_MODE.getAttribute( "caption" ) )
         smcModeExnwMode.setOutputMode( "Key" )
         smcModeExnwMode.setDisplayMode( "Description" )
         smcModeExnwMode.setDefaultValue( 0 )
@@ -445,10 +479,13 @@ def instantiateComponent( staticMemoryComponent ):
         smcModeReadMode.setLabel( atdfSmcCsModeBitField_MODE_READ_MODE.getAttribute( "name" ) + " Control Signal" )
         smcModeReadMode.setOutputMode( "Key" )
         smcModeReadMode.setDisplayMode( "Description" )
-        smcModeReadMode.setDefaultValue( 0 )
         # using name twice, not caption -- the atdf caption is too long; a couple of sentences
         for tupleElem in getNameValueCaptionTuple( ModuleSmc, "SMC_MODE0__READ_MODE" ):
             smcModeReadMode.addKey( smcModeReadModeNameStem + "_" + tupleElem[ 0 ], tupleElem[ 1 ], tupleElem[ 0 ] )
+        if csNumIndex == 3:
+            smcModeReadMode.setDefaultValue(1)
+        else:
+            smcModeReadMode.setDefaultValue(0)
 
         smcModeWriteModeNameStem = "SMC_MODE_WRITE_MODE"
         smcModeWriteModeName = smcModeWriteModeNameStem + "_" + csNum
@@ -456,10 +493,22 @@ def instantiateComponent( staticMemoryComponent ):
         smcModeWriteMode.setLabel( atdfSmcCsModeBitField_MODE_WRITE_MODE.getAttribute( "name" ) + " Control Signal" )
         smcModeWriteMode.setOutputMode( "Key" )
         smcModeWriteMode.setDisplayMode( "Description" )
-        smcModeWriteMode.setDefaultValue( 0 )
         # using name twice, not caption -- the atdf caption is too long; a couple of sentences
         for tupleElem in getNameValueCaptionTuple( ModuleSmc, "SMC_MODE0__WRITE_MODE" ):
             smcModeWriteMode.addKey( smcModeWriteModeNameStem + "_" + tupleElem[ 0 ], tupleElem[ 1 ], tupleElem[ 0 ] )
+        if csNumIndex == 3:
+            smcModeWriteMode.setDefaultValue(1)
+        else:
+            smcModeWriteMode.setDefaultValue(0)
+
+        if csNumIndex == 3:
+            smcEbiCS3A = staticMemoryComponent.createBooleanSymbol("SFR_CCFG_EBICSA_EBI_CS3A", smcCsEnable)
+            smcEbiCS3A.setLabel("Enable NAND Flash Logic")
+            smcEbiCS3A.setDefaultValue(True)
+
+            smcEbiCS3A = staticMemoryComponent.createBooleanSymbol("SFR_CCFG_EBICSA_NFD0_ON_D16", smcCsEnable)
+            smcEbiCS3A.setLabel("Enable NAND Flash I/Os on D16-D23")
+            smcEbiCS3A.setDefaultValue(True)
 
     #--------------------------------------------------------------------------
     # PMECC
@@ -478,7 +527,7 @@ def instantiateComponent( staticMemoryComponent ):
     pmeccSareaSpareSize.setLabel( atdfPmeccSareaBitField_SPARESIZE.getAttribute( "caption" ) + " (bytes)" )
     pmeccSareaSpareSize.setMin( 1 )
     pmeccSareaSpareSize.setMax( 1 + convertMaskToInt( atdfPmeccSareaBitField_SPARESIZE.getAttribute( "mask" ) ) )
-    pmeccSareaSpareSize.setDefaultValue( 1 )
+    pmeccSareaSpareSize.setDefaultValue( 56 )
 
     # SADDR Register
     pmeccSaddrStartAddrName = "PMECC_SADDR_STARTADDR"
@@ -486,7 +535,7 @@ def instantiateComponent( staticMemoryComponent ):
     pmeccSaddrStartAddr.setLabel( atdfPmeccSaddrBitField_STARTADDR.getAttribute( "caption" ) )
     pmeccSaddrStartAddr.setMin( 0 )
     pmeccSaddrStartAddr.setMax( convertMaskToInt( atdfPmeccSaddrBitField_STARTADDR.getAttribute( "mask" ) ) )
-    pmeccSaddrStartAddr.setDefaultValue( 0 )
+    pmeccSaddrStartAddr.setDefaultValue( 2 )
 
     # EADDR Register
     pmeccEaddrEndAddrName = "PMECC_EADDR_ENDADDR"
@@ -494,7 +543,7 @@ def instantiateComponent( staticMemoryComponent ):
     pmeccEaddrEndAddr.setLabel( atdfPmeccEaddrBitField_ENDADDR.getAttribute( "caption" ) )
     pmeccEaddrEndAddr.setMin( 0 )
     pmeccEaddrEndAddr.setMax( convertMaskToInt( atdfPmeccEaddrBitField_ENDADDR.getAttribute( "mask" ) ) )
-    pmeccEaddrEndAddr.setDefaultValue( 0 )
+    pmeccEaddrEndAddr.setDefaultValue( 57 )
 
     # Clk Control Register
     pmeccClkClkCtrlName = "PMECC_CLK_CLKCTRL"
@@ -509,14 +558,17 @@ def instantiateComponent( staticMemoryComponent ):
     pmeccConfigurationMenu.setDependencies( visibilityBasedOnBoolSymbol, [ pmeccCtrlEnableName ] )
     pmeccConfigurationMenu.setVisible( False )
 
-    pmeccCfgAutoName = "PMECC_CFG_AUTO"
-    pmeccCfgAuto = staticMemoryComponent.createBooleanSymbol( pmeccCfgAutoName, pmeccConfigurationMenu )
-    pmeccCfgAuto.setLabel( atdfPmeccCfgBitField_AUTO.getAttribute( "caption" ) )
-
     pmeccCfgSpareenName = "PMECC_CFG_SPAREEN"
     pmeccCfgSpareen = staticMemoryComponent.createBooleanSymbol( pmeccCfgSpareenName, pmeccConfigurationMenu )
     pmeccCfgSpareen.setLabel( atdfPmeccCfgBitField_SPAREEN.getAttribute( "caption" ) )
-    
+
+    pmeccCfgAutoName = "PMECC_CFG_AUTO"
+    pmeccCfgAuto = staticMemoryComponent.createBooleanSymbol( pmeccCfgAutoName, pmeccConfigurationMenu )
+    pmeccCfgAuto.setLabel( atdfPmeccCfgBitField_AUTO.getAttribute( "caption" ) )
+    pmeccCfgAuto.setDefaultValue(pmeccCfgSpareen.getValue() == False)
+    pmeccCfgAuto.setReadOnly(True)
+    pmeccCfgAuto.setDependencies(updateSymbolValue, ["PMECC_CFG_SPAREEN"])
+
     pmeccCfgNandWrName = "PMECC_CFG_NANDWR"
     pmeccCfgNandWr = staticMemoryComponent.createBooleanSymbol( pmeccCfgNandWrName, pmeccConfigurationMenu )
     pmeccCfgNandWr.setLabel( atdfPmeccCfgBitField_NANDWR.getAttribute( "caption" ) )
@@ -524,9 +576,9 @@ def instantiateComponent( staticMemoryComponent ):
     pmeccCfgPageSizeName = "PMECC_CFG_PAGESIZE"
     pmeccCfgPageSize = staticMemoryComponent.createKeyValueSetSymbol( pmeccCfgPageSizeName, pmeccConfigurationMenu )
     pmeccCfgPageSize.setLabel( atdfPmeccCfgBitField_PAGESIZE.getAttribute( "caption" ) )
-    pmeccCfgPageSize.setOutputMode( "Key" )
+    pmeccCfgPageSize.setOutputMode( "Value" )
     pmeccCfgPageSize.setDisplayMode( "Description" )
-    pmeccCfgPageSize.setDefaultValue( 0 )
+    pmeccCfgPageSize.setDefaultValue( 3 )
     for tupleElem in getNameValueCaptionTuple( ModulePmecc, "PMECC_CFG__PAGESIZE" ):
         pmeccCfgPageSize.addKey( pmeccCfgPageSizeName + "_" + tupleElem[ 0 ], tupleElem[ 1 ], tupleElem[ 2 ] )
 
@@ -541,11 +593,16 @@ def instantiateComponent( staticMemoryComponent ):
     pmeccCfgBchErrName = pmeccCfgBchErrNameStem
     pmeccCfgBchErr = staticMemoryComponent.createKeyValueSetSymbol( pmeccCfgBchErrName, pmeccConfigurationMenu )
     pmeccCfgBchErr.setLabel( atdfPmeccCfgBitField_BCH_ERR.getAttribute( "caption" ) )
-    pmeccCfgBchErr.setOutputMode( "Key" )
+    pmeccCfgBchErr.setOutputMode( "Value" )
     pmeccCfgBchErr.setDisplayMode( "Description" )
-    pmeccCfgBchErr.setDefaultValue( 0 )
+    pmeccCfgBchErr.setDefaultValue( 1 )
     for tupleElem in getNameValueCaptionTuple(  ModulePmecc, "PMECC_CFG__BCH_ERR" ):
         pmeccCfgBchErr.addKey( pmeccCfgBchErrNameStem + "_" + tupleElem[ 0 ], tupleElem[ 1 ], tupleElem[ 2 ] )
+
+    #PMECC API Prefix for NAND Flash Driver
+    pmeccSym_API_Prefix = staticMemoryComponent.createStringSymbol("PMECC_API_PREFIX", None)
+    pmeccSym_API_Prefix.setDefaultValue(pmeccInstanceName.getValue())
+    pmeccSym_API_Prefix.setVisible(False)
 
     #--------------------------------------------------------------------------
     # PMERR
@@ -565,18 +622,17 @@ def instantiateComponent( staticMemoryComponent ):
     pmerrlocElcfgSectorSz.setMax( convertMaskToInt( atdfPmerrlocElcfgBitField_SECTORSZ.getAttribute( "mask" ) ) )
     pmerrlocElcfgSectorSz.setReadOnly( True )
     pmerrlocElcfgSectorSz.setDependencies( pmerrlocCfgSectorSize, [ pmeccCfgSectorSzName ] )
-    # ELIDR Register
-    # ELIMR Register
-    # ELISR Register
-    # ELSR Register
-    # ELPRIM Register
-    # PMERRLOC_ERRLOCN Registers
+
+    #PMERRLOC API Prefix for NAND Flash Driver
+    pmerrlocSym_API_Prefix = staticMemoryComponent.createStringSymbol("PMERRLOC_API_PREFIX", None)
+    pmerrlocSym_API_Prefix.setDefaultValue(pmeccLocInstanceName.getValue())
+    pmerrlocSym_API_Prefix.setVisible(False)
 
     #
     #------------------------------------------------------------------------------
     # Code Generation
     PeriphId = "6105"
-    PeriphName = myNamespace.lower() 
+    PeriphName = myNamespace.lower()
     PlibNameStem = "PLIB_" + PeriphName.upper()
     OutputNameStem = PlibNameStem.lower()
     FullTemplatePath = "../peripheral/" + PeriphName + "_" + PeriphId + "/templates/"
