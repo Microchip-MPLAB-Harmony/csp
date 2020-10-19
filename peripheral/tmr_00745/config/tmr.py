@@ -305,9 +305,9 @@ def timerMaxValue(symbol, event):
         resolution = 0
     mode_32 = component.getSymbolValue("TIMER_32BIT_MODE_SEL")
     if(mode_32 == 0):
-        symbol.setMax(4294967295.0 * resolution)
+        symbol.setMax(4294967296.0 * resolution)
     else:
-        symbol.setMax(65535.0 * resolution)
+        symbol.setMax(65536.0 * resolution)
     slave = component.getSymbolValue("TIMER_SLAVE")
     symbol.setVisible(not bool(slave))
 
@@ -527,7 +527,7 @@ def instantiateComponent(tmrComponent):
     clock = Database.getSymbolValue("core", tmrInstanceName.getValue() + "_CLOCK_FREQUENCY")
     if(clock != 0):
         resolution = 1000.0 * tmrPrescalerValue.getValue()/float(clock)
-        max = (65535.0 * resolution)
+        max = (65536.0 * resolution)
     else:
         max = 0
 
