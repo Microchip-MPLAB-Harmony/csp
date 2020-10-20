@@ -57,6 +57,14 @@
 #include "device.h"
 #include "plib_clk.h"
 
+#define CLK_READY_RETRIES  8000
+#define BTZB_XTAL_NOT_READY ((BTZBSYS_REGS->BTZBSYS_SUBSYS_STATUS_REG1 \
+                            & BTZBSYS_SUBSYS_STATUS_REG1_xtal_ready_out_Msk) \
+                            != BTZBSYS_SUBSYS_STATUS_REG1_xtal_ready_out_Msk)
+#define BTZB_PLL_NOT_LOCKED ((BTZBSYS_REGS->BTZBSYS_SUBSYS_STATUS_REG1 \
+                            & BTZBSYS_SUBSYS_CNTRL_REG1_subsys_dbg_bus_sel_top_Msk) \
+                            != BTZBSYS_SUBSYS_CNTRL_REG1_subsys_dbg_bus_sel_top_Msk)
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: File Scope Functions
@@ -84,14 +92,37 @@
 
 void CLK_Initialize( void )
 {
+    //check CLDO ready
+    while ((CFG_REGS->CFG_MISCSTAT & CFG_MISCSTAT_CLDORDY_Msk) == 0);    
+    
     // wait for xtal_ready      
-    while((BTZBSYS_REGS->BTZBSYS_SUBSYS_STATUS_REG1 & 0x01) != 0x01);
-
+    uint32_t clk_ready_tries = 0;
+    do
+    {
+        clk_ready_tries++;
+    } while(BTZB_XTAL_NOT_READY && (clk_ready_tries < CLK_READY_RETRIES));
+    
+    if((clk_ready_tries >= CLK_READY_RETRIES) && !BTZB_XTAL_NOT_READY)
+    {
+        BTZBSYS_REGS->BTZBSYS_SUBSYS_CNTRL_REG1 |=(BTZBSYS_SUBSYS_CNTRL_REG1_subsys_bypass_xtal_ready_Msk);
+        while(BTZB_XTAL_NOT_READY);
+    }
+       
     // set PLL_enable
-    BLE_REGS->BLE_DPLL_RG2 &= 0xFFFFFFFD;
+    BLE_REGS->BLE_DPLL_RG2 &= ~(0x02);
 
     // wait for PLL Lock
-    while((BTZBSYS_REGS->BTZBSYS_SUBSYS_STATUS_REG1 & 0x03) != 0x03);
+    clk_ready_tries = 0;
+    do
+    {
+        clk_ready_tries++;
+    } while(BTZB_PLL_NOT_LOCKED && (clk_ready_tries < CLK_READY_RETRIES));
+    
+    if((clk_ready_tries >= CLK_READY_RETRIES) && !BTZB_PLL_NOT_LOCKED)
+    {
+        BTZBSYS_REGS->BTZBSYS_SUBSYS_CNTRL_REG1 |= BTZBSYS_SUBSYS_CNTRL_REG1_subsys_bypass_pll_lock_Msk;
+        while(BTZB_PLL_NOT_LOCKED);
+    }
 
     /* Unlock system for clock configuration */
     CFG_REGS->CFG_SYSKEY = 0x00000000;
