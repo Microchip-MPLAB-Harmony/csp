@@ -108,16 +108,26 @@
 */
 void GPIO_Initialize ( void )
 {
-      <#if (CoreSeries == 'PIC32MZW')>
+      <#if (GPIO_PIN_TOTAL == 48)>
         <#if ((BSP_PIN_35_FUNCTION_TYPE == "TDI" || BSP_PIN_35_FUNCTION_TYPE == "") &&
           (BSP_PIN_38_FUNCTION_TYPE == "TDO" || BSP_PIN_38_FUNCTION_TYPE == "") &&
           (BSP_PIN_34_FUNCTION_TYPE == "TCK" || BSP_PIN_34_FUNCTION_TYPE == "") &&
           (BSP_PIN_37_FUNCTION_TYPE == "TMS" || BSP_PIN_37_FUNCTION_TYPE == "")) >
         <#else>
           <#lt>    /* Disable JTAG since at least one of its pins is configured for Non-JTAG function */
-          <#lt>    CFG_REGS->CFG_CFGCON0CLR = CFG_CFGCON0_JTAGKEN_Msk;
+          <#lt>    CFG_REGS->CFG_CFGCON0CLR = CFG_CFGCON0_JTAGEN_Msk;
 
         </#if>
+      <#else> <#-- 32 pin devices -->
+        <#if ((BSP_PIN_23_FUNCTION_TYPE == "TDI" || BSP_PIN_23_FUNCTION_TYPE == "") &&
+          (BSP_PIN_26_FUNCTION_TYPE == "TDO" || BSP_PIN_26_FUNCTION_TYPE == "") &&
+          (BSP_PIN_22_FUNCTION_TYPE == "TCK" || BSP_PIN_22_FUNCTION_TYPE == "") &&
+          (BSP_PIN_25_FUNCTION_TYPE == "TMS" || BSP_PIN_25_FUNCTION_TYPE == "")) >
+        <#else>
+          <#lt>    /* Disable JTAG since at least one of its pins is configured for Non-JTAG function */
+          <#lt>    CFG_REGS->CFG_CFGCON0CLR = CFG_CFGCON0_JTAGEN_Msk;
+
+        </#if>        
       </#if>
 <#list 0..GPIO_CHANNEL_TOTAL-1 as i>
     <#assign channel = "GPIO_CHANNEL_" + i + "_NAME">
