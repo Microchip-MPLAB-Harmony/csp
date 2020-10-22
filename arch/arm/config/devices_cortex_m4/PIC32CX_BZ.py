@@ -298,14 +298,6 @@ SYM_PFMWS.setMax(1)
 SYM_PFMWS.setReadOnly(False)
 SYM_PFMWS.setDependencies(calcWaitStates, ["CPU_CLOCK_FREQUENCY"])
 
-periphNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"NVM\"]")
-if periphNode is not None:
-    modules = periphNode.getChildren()
-    components = []
-    for nvmctrl_instance in range (0, len(modules)):
-        components.append(str(modules[nvmctrl_instance].getAttribute("name")).lower())
-    Database.activateComponents(components)
-
 # load pin manager information
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/gpio_02467/config/gpio_pic32c.py")
 coreComponent.addPlugin("../peripheral/gpio_02467/plugin/gpio_02467.jar")
