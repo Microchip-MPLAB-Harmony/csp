@@ -55,7 +55,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #define MLDO_ISENSE_CONFIG 0xC07
 #define MLDO_ENABLE 0x00000A80
 #define BUCK_PBYPASS_ENABLE 0x4
-#define MLDOCFG1_DEFUALT_VAL 0x180
+#define MLDOCFG1_DEFAULT_VAL 0x180
 #define PMU_STATUS_SPIRDY 0x80
 #define VREG1_BITS 0x0000001F
 #define VREG2_BITS 0x00001F00
@@ -156,7 +156,7 @@ void SYS_PMU_MLDO_TRIM(void)
             mldocfg1 = *otp_mldocfg1_data;
             if((mldocfg1 == 0xFFFFFFFF) || (mldocfg1 == 0x00000000))
             {
-                mldocfg1 = MLDOCFG1_DEFUALT_VAL | MLDO_ISENSE_CONFIG;
+                mldocfg1 = MLDOCFG1_DEFAULT_VAL | MLDO_ISENSE_CONFIG;
             }
             else
             {

@@ -269,6 +269,8 @@ execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_02674/config/wdt.py")
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/dmac_01500/config/dmac.py")
 coreComponent.addPlugin("../peripheral/dmac_01500/plugin/dmamanager.jar")
 
+CONFIG_NAME = Variables.get("__CONFIGURATION_NAME")
+
 MLDOInitFile = coreComponent.createFileSymbol("MLDO_C_INIT", None)
 MLDOInitFile.setSourcePath("templates/system_pmu_mldo_trim.c.ftl")
 MLDOInitFile.setOutputName("system_pmu_mldo_trim.c")
