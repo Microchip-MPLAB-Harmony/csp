@@ -127,7 +127,9 @@ void ${ADC_INSTANCE_NAME}_InputScanSelect(${ADC_INSTANCE_NAME}_INPUTS_SCAN scanI
 {
 <#if core.DEVICE_FAMILY == "DS60001290">
     AD1CSSL = (uint32_t)(scanInputs);
+    <#if AD1CSSL__CSSL_COUNT gt 31> 
     AD1CSSL2 = (uint32_t)(scanInputs >> 32);
+    </#if>
 <#else>
     AD1CSSL = scanInputs;
 </#if>
