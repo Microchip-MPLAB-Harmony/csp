@@ -69,7 +69,9 @@ ${LIST_SYSTEM_INTERRUPT_C_INCLUDES}
 // *****************************************************************************
 // *****************************************************************************
 
-<#if CoreArchitecture?matches("CORTEX-A.*")>
+<#if CoreArchitecture?matches("CORTEX-A7")>
+    <#lt><#include "interrupts_cortex_a7.c.ftl">
+<#elseif CoreArchitecture?matches("CORTEX-A5")>
     <#lt><#include "interrupts_cortex_a5.c.ftl">
 <#elseif CoreArchitecture?matches("CORTEX-M.*")>
     <#lt><#include "interrupts_xc32_cortex_m.c.ftl">
