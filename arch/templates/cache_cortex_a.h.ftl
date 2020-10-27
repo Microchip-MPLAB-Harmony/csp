@@ -54,7 +54,6 @@
 /*  This section Includes other configuration headers necessary to completely
     define this configuration.
 */
-
 <#if __PROCESSOR?matches("ATSAMA5.*")>
 <#if L2CC_ENABLE == true >
 #include <stdint.h>
@@ -90,60 +89,65 @@ extern "C" {
     <#lt>#define L1_ICACHE_INVALIDATE_ALL()
 </#if>
 
-<#if DATA_CACHE_ENABLE == true>
+<#if DATA_CACHE_ENABLE == true> <#-- Data cache is enabled -->
     <#lt>#define L1_DCACHE_IN_USE                               true
     <#lt>#define L1_DCACHE_ENABLE()                             dcache_Enable()
     <#lt>#define L1_DCACHE_DISABLE()                            dcache_Disable()
-    <#lt>#define L1_DCACHE_CLEAN_ALL()                          L1C_CleanDCacheAll()
-    <#lt>#define L1_DCACHE_INVALIDATE_ALL()                     L1C_InvalidateDCacheAll()
-    <#lt>#define L1_DCACHE_CLEAN_INVALIDATE_ALL()               L1C_CleanInvalidateDCacheAll()
+    <#lt>#define L1_DCACHE_CLEAN_ALL()                          dcache_CleanAll()
+    <#lt>#define L1_DCACHE_INVALIDATE_ALL()                     dcache_InvalidateAll()
+    <#lt>#define L1_DCACHE_CLEAN_INVALIDATE_ALL()               dcache_CleanInvalidateAll()
+<#if L2CC_ENABLE?? && L2CC_ENABLE><#-- L2 data cache exists and is enabled -->
 
-    <#-- L1 data cache must be enabled for L2 data cache to exist -->
-    <#if L2CC_ENABLE == true>
-        <#lt>#define L2_DCACHE_IN_USE                               true
-        <#lt>#define L2_DCACHE_CLEAN_ALL()                          PLIB_L2CC_CleanCache()
-        <#lt>#define L2_DCACHE_INVALIDATE_BY_ADDR(addr,sz)          PLIB_L2CC_InvalidateCacheByAddr(addr,sz)
-        <#lt>//
-        <#lt>#define DCACHE_CLEAN_BY_ADDR(addr,sz)                  dcache_CleanByAddr(addr,sz);\
-        <#lt>                                                       PLIB_L2CC_CleanCacheByAddr(addr,sz)
-        <#lt>#define DCACHE_INVALIDATE_BY_ADDR(addr,sz)             PLIB_L2CC_InvalidateCacheByAddr(addr,sz);\
-        <#lt>                                                       dcache_InvalidateByAddr(addr,sz)
-        <#lt>#define DCACHE_CLEAN_INVALIDATE_BY_ADDR(addr,sz)       dcache_CleanInvalidateByAddr(addr,sz);\
-        <#lt>                                                       PLIB_L2CC_CleanInvalidateCacheByAddr(addr,sz)
-        <#lt>#define DCACHE_CLEAN_ALL()                             L1C_CleanDCacheAll();\
-        <#lt>                                                       PLIB_L2CC_CleanCache()
-        <#lt>#define DCACHE_INVALIDATE_ALL()                        PLIB_L2CC_InvalidateCache();\
-        <#lt>                                                       L1C_InvalidateDCacheAll()
-        <#lt>#define DCACHE_CLEAN_INVALIDATE_ALL()                  L1C_CleanInvalidateDCacheAll();\
-        <#lt>                                                       PLIB_L2CC_CleanInvalidateCache()
-        <#lt>//
-        <#lt>#define DATA_CACHE_ENABLED                             true
-    <#else>
-        <#lt>#define L2_DCACHE_IN_USE                               false
-        <#lt>#define L2_DCACHE_CLEAN_ALL()
-        <#lt>#define L2_DCACHE_INVALIDATE_BY_ADDR(addr,sz)
-        <#lt>//
-        <#lt>#define DCACHE_CLEAN_BY_ADDR(addr,sz)                  dcache_CleanByAddr(addr,sz)
-        <#lt>#define DCACHE_INVALIDATE_BY_ADDR(addr,sz)             dcache_InvalidateByAddr(addr,sz)
-        <#lt>#define DCACHE_CLEAN_INVALIDATE_BY_ADDR(addr,sz)       dcache_CleanInvalidateByAddr(addr,sz)
-        <#lt>#define DCACHE_CLEAN_ALL()                             L1C_CleanDCacheAll()
-        <#lt>#define DCACHE_INVALIDATE_ALL()                        L1C_InvalidateDCacheAll()
-        <#lt>#define DCACHE_CLEAN_INVALIDATE_ALL()                  L1C_CleanInvalidateDCacheAll()
-        <#lt>//
-        <#lt>#define DATA_CACHE_ENABLED                             false
-    </#if>
-<#else>
+    <#lt>#define L2_DCACHE_IN_USE                               true
+    <#lt>#define L2_DCACHE_CLEAN_ALL()                          PLIB_L2CC_CleanCache()
+    <#lt>#define L2_DCACHE_INVALIDATE_BY_ADDR(addr,sz)          PLIB_L2CC_InvalidateCacheByAddr(addr,sz)
+    <#lt>//
+    <#lt>#define DCACHE_CLEAN_BY_ADDR(addr,sz)                  dcache_CleanByAddr(addr,sz);\
+    <#lt>                                                       PLIB_L2CC_CleanCacheByAddr(addr,sz)
+    <#lt>#define DCACHE_INVALIDATE_BY_ADDR(addr,sz)             PLIB_L2CC_InvalidateCacheByAddr(addr,sz);\
+    <#lt>                                                       dcache_InvalidateByAddr(addr,sz)
+    <#lt>#define DCACHE_CLEAN_INVALIDATE_BY_ADDR(addr,sz)       dcache_CleanInvalidateByAddr(addr,sz);\
+    <#lt>                                                       PLIB_L2CC_CleanInvalidateCacheByAddr(addr,sz)
+    <#lt>#define DCACHE_CLEAN_ALL()                             dcache_CleanAll();\
+    <#lt>                                                       PLIB_L2CC_CleanCache()
+    <#lt>#define DCACHE_INVALIDATE_ALL()                        PLIB_L2CC_InvalidateCache();\
+    <#lt>                                                       dcache_InvalidateAll()
+    <#lt>#define DCACHE_CLEAN_INVALIDATE_ALL()                  dcache_CleanInvalidateAll();\
+    <#lt>                                                       PLIB_L2CC_CleanInvalidateCache()
+    <#lt>//
+<#else><#-- L2CC does not exist, or is disabled -->
+<#if L2CC_ENABLE??> <#-- L2CC exists -->
+
+    <#lt>#define L2_DCACHE_IN_USE                               false
+    <#lt>#define L2_DCACHE_CLEAN_ALL()
+    <#lt>#define L2_DCACHE_INVALIDATE_BY_ADDR(addr,sz)
+    <#lt>//
+</#if><#-- endif L2C exists -->
+
+    <#lt>#define DCACHE_CLEAN_BY_ADDR(addr,sz)                  dcache_CleanByAddr(addr,sz)
+    <#lt>#define DCACHE_INVALIDATE_BY_ADDR(addr,sz)             dcache_InvalidateByAddr(addr,sz)
+    <#lt>#define DCACHE_CLEAN_INVALIDATE_BY_ADDR(addr,sz)       dcache_CleanInvalidateByAddr(addr,sz)
+    <#lt>#define DCACHE_CLEAN_ALL()                             dcache_CleanAll()
+    <#lt>#define DCACHE_INVALIDATE_ALL()                        dcache_InvalidateAll()
+    <#lt>#define DCACHE_CLEAN_INVALIDATE_ALL()                  dcache_CleanInvalidateAll()
+    <#lt>//
+</#if> <#-- endif L2C Enabled/Disabled -->
+    <#lt>#define DATA_CACHE_ENABLED                             true   
+<#else><#-- Data cache is disabled -->
     <#lt>#define L1_DCACHE_IN_USE                               false
     <#lt>#define L1_DCACHE_ENABLE()
     <#lt>#define L1_DCACHE_DISABLE()
     <#lt>#define L1_DCACHE_CLEAN_ALL()
     <#lt>#define L1_DCACHE_INVALIDATE_ALL()
     <#lt>#define L1_DCACHE_CLEAN_INVALIDATE_ALL()
+<#if L2CC_ENABLE??><#-- L2C exists -->
 
     <#lt>#define L2_DCACHE_IN_USE                               false
     <#lt>#define L2_DCACHE_CLEAN_ALL()
     <#lt>#define L2_DCACHE_INVALIDATE_BY_ADDR(addr,sz)
     <#lt>//
+</#if><#-- endif L2C exists -->
+
     <#lt>#define DCACHE_CLEAN_BY_ADDR(addr,sz)
     <#lt>#define DCACHE_INVALIDATE_BY_ADDR(addr,sz)
     <#lt>#define DCACHE_CLEAN_INVALIDATE_BY_ADDR(addr,sz)
@@ -152,7 +156,7 @@ extern "C" {
     <#lt>#define DCACHE_CLEAN_INVALIDATE_ALL()
     <#lt>//
     <#lt>#define DATA_CACHE_ENABLED                             false
-</#if>
+</#if><#-- Data cache enabled/disabled -->
 
 //DOM-IGNORE-BEGIN
 #ifdef __cplusplus
