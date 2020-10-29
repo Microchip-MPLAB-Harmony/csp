@@ -128,18 +128,19 @@ def symbolVisible(symbol, event):
         symbol.setVisible(True)
     else :
         symbol.setVisible(False)
-        
+
 def fifoOptionsVisible(symbol, event):
    fifoEnableSym = event["source"].getSymbolByID("FLEXCOM_USART_FIFO_ENABLE")
-   
+
    symbol.setVisible(fifoEnableSym.getVisible() and fifoEnableSym.getValue())
 
-def fifoModeVisible (symbol, event): 
+def fifoModeVisible (symbol, event):
     if flexcomSym_OperatingMode.getSelectedKey() == "USART" and flexcomSym_UsartInterrupt.getValue() == True:
         symbol.setVisible(True)
     else:
-        symbol.setVisible(False)            
-        
+        symbol.setVisible(False)
+
+
 ###################################################################################################
 ############################################ FLEXCOM USART ########################################
 ###################################################################################################
@@ -148,6 +149,30 @@ global flexcomSym_UsartInterrupt
 global flecomRxdmaEnable
 global flecomTxdmaEnable
 global flexcomSym_UsartFIFOEnable
+
+flexcomSym_UsartMode = flexcomComponent.createKeyValueSetSymbol("FLEXCOM_USART_MR_USART_MODE", flexcomSym_OperatingMode)
+flexcomSym_UsartMode.setLabel("Mode")
+flexcomSym_USART_MODE_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"FLEXCOM\"]/value-group@[name=\"FLEX_US_MR__USART_MODE\"]")
+flexcomSym_UsartMode_Values = []
+flexcomSym_UsartMode_Values = flexcomSym_USART_MODE_Node.getChildren()
+for index in range(len(flexcomSym_UsartMode_Values)):
+    flexcomSym_UsartMode_Key_Name = flexcomSym_UsartMode_Values[index].getAttribute("name")
+    flexcomSym_UsartMode_Key_Value = flexcomSym_UsartMode_Values[index].getAttribute("value")
+    flexcomSym_UsartMode_Key_Description = flexcomSym_UsartMode_Values[index].getAttribute("caption")
+    flexcomSym_UsartMode.addKey(flexcomSym_UsartMode_Key_Name, flexcomSym_UsartMode_Key_Value, flexcomSym_UsartMode_Key_Description)
+flexcomSym_UsartMode.setDisplayMode("Key")
+flexcomSym_UsartMode.setOutputMode("Key")
+flexcomSym_UsartMode.setDefaultValue(0)
+flexcomSym_UsartMode.setVisible(False)
+flexcomSym_UsartMode.setDependencies(symbolVisible, ["FLEXCOM_MODE"])
+
+flexcomSym_TimeGuardValue = flexcomComponent.createIntegerSymbol("FLEXCOM_USART_TTGR", flexcomSym_OperatingMode)
+flexcomSym_TimeGuardValue.setLabel("Time Guard Value")
+flexcomSym_TimeGuardValue.setDefaultValue(0)
+flexcomSym_TimeGuardValue.setMin(0)
+flexcomSym_TimeGuardValue.setMax(255)
+flexcomSym_TimeGuardValue.setVisible(False)
+flexcomSym_TimeGuardValue.setDependencies(symbolVisible, ["FLEXCOM_MODE"])
 
 flexcomSym_UsartInterrupt = flexcomComponent.createBooleanSymbol("USART_INTERRUPT_MODE", flexcomSym_OperatingMode)
 flexcomSym_UsartInterrupt.setLabel("Interrupt Mode")
