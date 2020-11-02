@@ -57,6 +57,36 @@
 // Section: ${FLEXCOM_INSTANCE_NAME} ${FLEXCOM_MODE} Implementation
 // *****************************************************************************
 // *****************************************************************************
+
+void static ${FLEXCOM_INSTANCE_NAME}_USART_ErrorClear( void )
+{
+    uint16_t dummyData = 0;
+
+    if (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & (FLEX_US_CSR_OVRE_Msk | FLEX_US_CSR_FRAME_Msk | FLEX_US_CSR_PARE_Msk))
+    {
+        /* Clear the error flags */
+        ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CR = FLEX_US_CR_RSTSTA_Msk;
+
+        /* Flush existing error bytes from the RX FIFO */
+        while( FLEX_US_CSR_RXRDY_Msk == (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & FLEX_US_CSR_RXRDY_Msk) )
+        {
+            if (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_MR & FLEX_US_MR_MODE9_Msk)
+            {
+                dummyData = *((uint16_t*)&${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_RHR) & FLEX_US_RHR_RXCHR_Msk;
+            }
+            else
+            {
+                dummyData = *((uint8_t*)&${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_RHR);
+            }
+        }
+    }
+
+    /* Ignore the warning */
+    (void)dummyData;
+
+    return;
+}
+
 <#if USART_INTERRUPT_MODE == true>
 
 FLEXCOM_USART_OBJECT ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj;
@@ -190,16 +220,20 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
 
     if((errorStatus != 0) && (interruptMask & (FLEX_US_IMR_RXRDY_Msk | FLEX_US_IMR_FRAME_Msk | FLEX_US_IMR_PARE_Msk | FLEX_US_IMR_OVRE_Msk)))
     {
-        /* Client must call ${FLEXCOM_INSTANCE_NAME}_USART_ErrorGet() function to clear the errors */
+        /* Save error to report it later */
+        ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.errorStatus = (FLEXCOM_USART_ERROR)errorStatus;
 
-        /* USART errors are normally associated with the receiver, hence calling
-         * receiver context */
+        /* Clear error flags and flush the error data */
+        ${FLEXCOM_INSTANCE_NAME}_USART_ErrorClear();
+
+        /* Transfer complete. Clear the busy flag. */
+        ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxBusyStatus = false;
+
+        /* USART errors are normally associated with the receiver, hence calling receiver context */
         if( ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxCallback != NULL )
         {
             ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxCallback(${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxContext);
         }
-
-        ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxBusyStatus = false;
 
         /* Disable Read, Overrun, Parity and Framing error interrupts */
         ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IDR = (FLEX_US_IDR_RXRDY_Msk | FLEX_US_IDR_FRAME_Msk | FLEX_US_IDR_PARE_Msk | FLEX_US_IDR_OVRE_Msk);
@@ -228,41 +262,15 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
         ${FLEXCOM_INSTANCE_NAME}_USART_ISR_RX_Handler();
     }
 
-    /* Transmitter status */	
-	if(((channelStatus & FLEX_US_CSR_TXRDY_Msk) && (interruptMask & FLEX_US_IMR_TXRDY_Msk)) || ((channelStatus & FLEX_US_CSR_TXEMPTY_Msk) && (interruptMask & FLEX_US_IMR_TXEMPTY_Msk)))
+    /* Transmitter status */
+    if(((channelStatus & FLEX_US_CSR_TXRDY_Msk) && (interruptMask & FLEX_US_IMR_TXRDY_Msk)) || ((channelStatus & FLEX_US_CSR_TXEMPTY_Msk) && (interruptMask & FLEX_US_IMR_TXEMPTY_Msk)))
     {
         ${FLEXCOM_INSTANCE_NAME}_USART_ISR_TX_Handler();
     }
 </#if>
-    return;
 }
 
 </#if>
-
-void static ${FLEXCOM_INSTANCE_NAME}_USART_ErrorClear( void )
-{
-    uint16_t dummyData = 0;
-
-    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CR = FLEX_US_CR_RSTSTA_Msk;
-
-    /* Flush existing error bytes from the RX FIFO */
-    while( FLEX_US_CSR_RXRDY_Msk == (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & FLEX_US_CSR_RXRDY_Msk) )
-    {
-        if (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_MR & FLEX_US_MR_MODE9_Msk)
-        {
-            dummyData = *((uint16_t*)&${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_RHR) & FLEX_US_RHR_RXCHR_Msk;
-        }
-        else
-        {
-            dummyData = *((uint8_t*)&${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_RHR);
-        }
-    }
-
-    /* Ignore the warning */
-    (void)dummyData;
-
-    return;
-}
 
 void ${FLEXCOM_INSTANCE_NAME}_USART_Initialize( void )
 {
@@ -296,6 +304,7 @@ void ${FLEXCOM_INSTANCE_NAME}_USART_Initialize( void )
     ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxProcessedSize = 0;
     ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxBusyStatus = false;
     ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxCallback = NULL;
+    ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.errorStatus = FLEXCOM_USART_ERROR_NONE;
     ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txBuffer = NULL;
     ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txSize = 0;
     ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txProcessedSize = 0;
@@ -306,6 +315,17 @@ void ${FLEXCOM_INSTANCE_NAME}_USART_Initialize( void )
     return;
 }
 
+<#if USART_INTERRUPT_MODE == true>
+FLEXCOM_USART_ERROR ${FLEXCOM_INSTANCE_NAME}_USART_ErrorGet( void )
+{
+    FLEXCOM_USART_ERROR errorStatus = ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.errorStatus;
+
+    ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.errorStatus = FLEXCOM_USART_ERROR_NONE;
+
+    /* All errors are cleared, but send the previous error state */
+    return errorStatus;
+}
+<#else>
 FLEXCOM_USART_ERROR ${FLEXCOM_INSTANCE_NAME}_USART_ErrorGet( void )
 {
     FLEXCOM_USART_ERROR errors = FLEXCOM_USART_ERROR_NONE;
@@ -333,6 +353,7 @@ FLEXCOM_USART_ERROR ${FLEXCOM_INSTANCE_NAME}_USART_ErrorGet( void )
     /* All errors are cleared, but send the previous error state */
     return errors;
 }
+</#if>
 
 bool ${FLEXCOM_INSTANCE_NAME}_USART_SerialSetup( FLEXCOM_USART_SERIAL_SETUP *setup, uint32_t srcClkFreq )
 {
@@ -402,14 +423,14 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_Read( void *buffer, const size_t size )
 
     if(pBuffer != NULL)
     {
-        /* Clear errors before submitting the request.
-         * ErrorGet clears errors internally. */
-
+        /* Clear errors that may have got generated when there was no active read request pending */
         ${FLEXCOM_INSTANCE_NAME}_USART_ErrorGet();
 
         while( processedSize < size )
         {
-            /* Error status */
+            while(!(${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & FLEX_US_CSR_RXRDY_Msk));
+
+            /* Read error status */
             errorStatus = (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & (FLEX_US_CSR_OVRE_Msk | FLEX_US_CSR_FRAME_Msk | FLEX_US_CSR_PARE_Msk));
 
             if(errorStatus != 0)
@@ -417,20 +438,17 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_Read( void *buffer, const size_t size )
                 break;
             }
 
-            if(FLEX_US_CSR_RXRDY_Msk == (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & FLEX_US_CSR_RXRDY_Msk))
+            if (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_MR & FLEX_US_MR_MODE9_Msk)
             {
-                if (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_MR & FLEX_US_MR_MODE9_Msk)
-                {
-                    *((uint16_t*)pBuffer) = *((uint16_t*)&${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_RHR) & FLEX_US_RHR_RXCHR_Msk;
-                    pBuffer += 2;
-                }
-                else
-                {
-                    *pBuffer++ = *((uint8_t*)&${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_RHR);
-                }
-
-                processedSize++;
+                *((uint16_t*)pBuffer) = *((uint16_t*)&${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_RHR) & FLEX_US_RHR_RXCHR_Msk;
+                pBuffer += 2;
             }
+            else
+            {
+                *pBuffer++ = *((uint8_t*)&${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_RHR);
+            }
+
+            processedSize++;
         }
 
         if(size == processedSize)
@@ -480,14 +498,15 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_Read( void *buffer, const size_t size )
 
     if(pBuffer != NULL)
     {
-        /* Clear errors before submitting the request.
-         * ErrorGet clears errors internally. */
-
-        ${FLEXCOM_INSTANCE_NAME}_USART_ErrorGet();
-
         /* Check if receive request is in progress */
         if(${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxBusyStatus == false)
         {
+            /* Clear errors that may have got generated when there was no active read request pending */
+            ${FLEXCOM_INSTANCE_NAME}_USART_ErrorClear();
+
+            /* Clear the errors related to pervious read requests */
+            ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.errorStatus = FLEXCOM_USART_ERROR_NONE;
+
             ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxBuffer = pBuffer;
             ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxSize = size;
             ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxProcessedSize = 0;

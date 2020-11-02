@@ -143,18 +143,19 @@ typedef struct
 {
     uint8_t *               txBuffer;
     size_t                  txSize;
-    size_t                  txProcessedSize;
+    volatile size_t         txProcessedSize;
     FLEXCOM_USART_CALLBACK  txCallback;
     uintptr_t               txContext;
     bool                    txBusyStatus;
 
     uint8_t *               rxBuffer;
     size_t                  rxSize;
-    size_t                  rxProcessedSize;
+    volatile size_t         rxProcessedSize;
     FLEXCOM_USART_CALLBACK  rxCallback;
     uintptr_t               rxContext;
-    bool                    rxBusyStatus;
+    volatile bool           rxBusyStatus;
     uint32_t                rxThreshold;
+	volatile FLEXCOM_USART_ERROR errorStatus;
 
 } FLEXCOM_USART_OBJECT ;
 
