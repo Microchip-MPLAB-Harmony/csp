@@ -62,9 +62,7 @@
 /* ${SERCOM_INSTANCE_NAME} USART baud value for ${USART_BAUD_RATE} Hz baud rate */
 #define ${SERCOM_INSTANCE_NAME}_USART_INT_BAUD_VALUE            (${USART_BAUD_VALUE}U)
 
-<#if USART_INTERRUPT_MODE = true>
 SERCOM_USART_RING_BUFFER_OBJECT ${SERCOM_INSTANCE_NAME?lower_case}USARTObj;
-</#if>
 
 // *****************************************************************************
 // *****************************************************************************
@@ -152,7 +150,6 @@ void ${SERCOM_INSTANCE_NAME}_USART_Initialize( void )
     while(${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_SYNCBUSY);
 </#if>
 
-<#if USART_INTERRUPT_MODE = true>
 <#if USART_RX_ENABLE = true>
     /* Initialize instance object */
     ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdCallback = NULL;
@@ -161,6 +158,7 @@ void ${SERCOM_INSTANCE_NAME}_USART_Initialize( void )
     ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.isRdNotificationEnabled = false;
     ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.isRdNotifyPersistently = false;
     ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdThreshold = 0;
+    ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.errorStatus = USART_ERROR_NONE;
 </#if>
 <#if USART_TX_ENABLE = true>
     ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.wrCallback = NULL;
@@ -181,7 +179,6 @@ void ${SERCOM_INSTANCE_NAME}_USART_Initialize( void )
 <#else>
     /* Enable Receive Complete interrupt */
     ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTENSET = SERCOM_USART_INT_INTENSET_RXC_Msk;
-</#if>
 </#if>
 </#if>
 }
@@ -342,14 +339,9 @@ void static ${SERCOM_INSTANCE_NAME}_USART_ErrorClear( void )
 
 USART_ERROR ${SERCOM_INSTANCE_NAME}_USART_ErrorGet( void )
 {
-    USART_ERROR errorStatus = USART_ERROR_NONE;
+    USART_ERROR errorStatus = ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.errorStatus;
 
-    errorStatus = (USART_ERROR) (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & (SERCOM_USART_INT_STATUS_PERR_Msk | SERCOM_USART_INT_STATUS_FERR_Msk | SERCOM_USART_INT_STATUS_BUFOVF_Msk <#if USART_FORM == "0x4" || USART_FORM == "0x5"> | SERCOM_USART_INT_STATUS_ISF_Msk </#if>));
-
-    if(errorStatus != USART_ERROR_NONE)
-    {
-        ${SERCOM_INSTANCE_NAME}_USART_ErrorClear();
-    }
+    ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.errorStatus = USART_ERROR_NONE;
 
     return errorStatus;
 }
@@ -719,25 +711,20 @@ bool ${SERCOM_INSTANCE_NAME}_USART_LIN_CommandSet(USART_LIN_MASTER_CMD cmd)
 <#if USART_INTENSET_ERROR = true>
 void static ${SERCOM_INSTANCE_NAME}_USART_ISR_ERR_Handler( void )
 {
-    USART_ERROR errorStatus = USART_ERROR_NONE;
-
-    errorStatus = (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS &
-                  (SERCOM_USART_INT_STATUS_PERR_Msk |
-                  SERCOM_USART_INT_STATUS_FERR_Msk |
-                  SERCOM_USART_INT_STATUS_BUFOVF_Msk <#if USART_FORM == "0x4" || USART_FORM == "0x5">| SERCOM_USART_INT_STATUS_ISF_Msk
-                  </#if>));
+    USART_ERROR errorStatus = (USART_ERROR)(${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & (SERCOM_USART_INT_STATUS_PERR_Msk | SERCOM_USART_INT_STATUS_FERR_Msk | SERCOM_USART_INT_STATUS_BUFOVF_Msk <#if USART_FORM == "0x4" || USART_FORM ==     "0x5">| SERCOM_USART_INT_STATUS_ISF_Msk </#if>));
 
     if(errorStatus != USART_ERROR_NONE)
     {
-        ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTENCLR = SERCOM_USART_INT_INTENCLR_ERROR_Msk;
+        /* Save the error to report later */
+        ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.errorStatus = errorStatus;
+
+        /* Clear error flags and flush the error bytes */
+        ${SERCOM_INSTANCE_NAME}_USART_ErrorClear();
 
         if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdCallback != NULL)
         {
             ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdCallback(SERCOM_USART_EVENT_READ_ERROR, ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdContext);
         }
-
-        /* In case of errors are not cleared by client using ErrorGet API */
-        ${SERCOM_INSTANCE_NAME}_USART_ErrorClear();
     }
 }
 </#if>
@@ -745,6 +732,60 @@ void static ${SERCOM_INSTANCE_NAME}_USART_ISR_ERR_Handler( void )
 <#if USART_RX_ENABLE = true>
 void static ${SERCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
 {
+    <#if USART_INTENSET_ERROR = false>
+
+    USART_ERROR errorStatus = (USART_ERROR)(${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_STATUS & (SERCOM_USART_INT_STATUS_PERR_Msk | SERCOM_USART_INT_STATUS_FERR_Msk | SERCOM_USART_INT_STATUS_BUFOVF_Msk <#if USART_FORM == "0x4" || USART_FORM ==     "0x5">| SERCOM_USART_INT_STATUS_ISF_Msk </#if>));
+
+    if(errorStatus != USART_ERROR_NONE)
+    {
+        /* Save the error to report later */
+        ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.errorStatus = errorStatus;
+
+        /* Clear error flags and flush the error bytes */
+        ${SERCOM_INSTANCE_NAME}_USART_ErrorClear();
+
+        if(${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdCallback != NULL)
+        {
+            ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdCallback(SERCOM_USART_EVENT_READ_ERROR, ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdContext);
+        }
+    }
+    else
+    {
+        <#if USART_FORM == "0x4" || USART_FORM == "0x5">
+
+        if (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_RXBRK_Msk)
+        {
+            /* Clear the receive break interrupt flag */
+            ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG = SERCOM_USART_INT_INTFLAG_RXBRK_Msk;
+
+            ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdCallback(SERCOM_USART_EVENT_BREAK_SIGNAL_DETECTED, ${SERCOM_INSTANCE_NAME?lower_case}USARTObj.rdContext);
+        }
+        if (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_RXC_Msk)
+        {
+            if (${SERCOM_INSTANCE_NAME}_USART_RxPushByte( ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA) == true)
+            {
+                ${SERCOM_INSTANCE_NAME}_USART_ReadNotificationSend();
+            }
+            else
+            {
+                /* UART RX buffer is full */
+            }
+        }
+        <#else>
+
+        if (${SERCOM_INSTANCE_NAME}_USART_RxPushByte( ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA) == true)
+        {
+            ${SERCOM_INSTANCE_NAME}_USART_ReadNotificationSend();
+        }
+        else
+        {
+            /* UART RX buffer is full */
+        }
+        </#if>
+    }
+
+    <#else>
+
     <#if USART_FORM == "0x4" || USART_FORM == "0x5">
 
     if (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_RXBRK_Msk)
@@ -766,6 +807,7 @@ void static ${SERCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
         }
     }
     <#else>
+
     if (${SERCOM_INSTANCE_NAME}_USART_RxPushByte( ${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_DATA) == true)
     {
         ${SERCOM_INSTANCE_NAME}_USART_ReadNotificationSend();
@@ -774,6 +816,7 @@ void static ${SERCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
     {
         /* UART RX buffer is full */
     }
+    </#if>
     </#if>
 }
 </#if>
@@ -808,6 +851,14 @@ void ${SERCOM_INSTANCE_NAME}_USART_InterruptHandler( void )
             ${SERCOM_INSTANCE_NAME}_USART_ISR_TX_Handler();
         }
 
+        <#if USART_INTENSET_ERROR = true>
+        /* Checks for error flag */
+        if((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTENSET & SERCOM_USART_INT_INTENSET_ERROR_Msk) && (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_ERROR_Msk))
+        {
+            ${SERCOM_INSTANCE_NAME}_USART_ISR_ERR_Handler();
+        }
+        </#if>
+
         </#if>
         <#if USART_RX_ENABLE = true>
         <#if USART_FORM == "0x4" || USART_FORM == "0x5">
@@ -824,13 +875,6 @@ void ${SERCOM_INSTANCE_NAME}_USART_InterruptHandler( void )
         }
         </#if>
 
-        </#if>
-        <#if USART_INTENSET_ERROR = true>
-        /* Checks for error flag */
-        if((${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTENSET & SERCOM_USART_INT_INTENSET_ERROR_Msk) && (${SERCOM_INSTANCE_NAME}_REGS->USART_INT.SERCOM_INTFLAG & SERCOM_USART_INT_INTFLAG_ERROR_Msk))
-        {
-            ${SERCOM_INSTANCE_NAME}_USART_ISR_ERR_Handler();
-        }
         </#if>
     }
 }
