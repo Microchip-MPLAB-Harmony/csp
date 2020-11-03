@@ -30,9 +30,13 @@ global updateSDASetupTimeMaxValueInNanoSeconds
 
 def updateSDASetupTimeMaxValueInNanoSeconds():
     sda_setup_reg_max_value = int(Database.getSymbolValue(sercomInstanceName.getValue().lower(), "I2CS_SDASETUP_MAX_VALUE"))
-    cpu_clk_period = 1.0/int(Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY"))
-    sda_setup_time_ns = (cpu_clk_period) * (6 + (16*sda_setup_reg_max_value))
-    return int(sda_setup_time_ns*1e9)
+    cpu_clk_frequency = int(Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY"))
+    if cpu_clk_frequency > 0:
+        cpu_clk_period = 1.0/cpu_clk_frequency
+        sda_setup_time_ns = (cpu_clk_period) * (6 + (16*sda_setup_reg_max_value))
+        return int(sda_setup_time_ns*1e9)
+    else:
+        return 0
 
 def updateSDASetupRegisterValue():
     sda_setup_time_ns = int(Database.getSymbolValue(sercomInstanceName.getValue().lower(), "I2CS_SDASETUP_TIME_NS")) * 1e-9
@@ -205,6 +209,7 @@ if sdaSetupTimeSupported == True:
     i2csSym_SDASETUP_Value = sercomComponent.createIntegerSymbol("I2CS_SDASETUP_TIME_NS", sercomSym_OperationMode)
     i2csSym_SDASETUP_Value.setLabel("SDA Setup Time (ns)")
     i2csSym_SDASETUP_Value.setVisible(False)
+    i2csSym_SDASETUP_Value.setMin(0)
     i2csSym_SDASETUP_Value.setDefaultValue(250)
     i2csSym_SDASETUP_Value.setDependencies(updateI2CSlaveConfigurationVisibleProperty, ["I2CS_SDASETUP_TIME_NS", "SERCOM_MODE", "core.CPU_CLOCK_FREQUENCY"])
 
