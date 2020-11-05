@@ -65,7 +65,8 @@
 #define ${FLEXCOM_INSTANCE_NAME}_USART_TX_INT_ENABLE()       ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IER = FLEX_US_IER_TXRDY_Msk
 
 <#else>
-#define ${FLEXCOM_INSTANCE_NAME}_USART_HW_FIFO_SIZE                 32
+#define ${FLEXCOM_INSTANCE_NAME}_USART_HW_RX_FIFO_THRES                 ${FLEXCOM_USART_RX_FIFO_THRESHOLD}
+#define ${FLEXCOM_INSTANCE_NAME}_USART_HW_TX_FIFO_THRES                 ${FLEXCOM_USART_TX_FIFO_THRESHOLD}
 
 /* Disable Read, Overrun, Parity and Framing error interrupts */
 #define ${FLEXCOM_INSTANCE_NAME}_USART_RX_INT_DISABLE()      do { \
@@ -81,12 +82,12 @@ ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_FIER = FLEX_US_FIER_RXFTHF_Msk; \
 
 #define ${FLEXCOM_INSTANCE_NAME}_USART_TX_INT_DISABLE()      do { \
 ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IDR = FLEX_US_IDR_TXRDY_Msk; \
-${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_FIDR = (FLEX_US_FIDR_TXFTHF_Msk | FLEX_US_FIDR_TXFEF_Msk); \
+${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_FIDR = (FLEX_US_FIDR_TXFTHF_Msk); \
 }while(0)
 
 #define ${FLEXCOM_INSTANCE_NAME}_USART_TX_INT_ENABLE()       do { \
 ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IER = FLEX_US_IER_TXRDY_Msk; \
-${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_FIER = (FLEX_US_FIER_TXFTHF_Msk | FLEX_US_FIER_TXFEF_Msk); \
+${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_FIER = (FLEX_US_FIER_TXFTHF_Msk); \
 }while(0)
 
 </#if>
@@ -116,7 +117,7 @@ void ${FLEXCOM_INSTANCE_NAME}_USART_Initialize( void )
 <#if FLEXCOM_USART_FIFO_ENABLE == true>
     ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CR = FLEX_US_CR_FIFOEN_Msk;
 
-    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_FMR = FLEX_US_FMR_RXFTHRES(${FLEXCOM_INSTANCE_NAME}_USART_HW_FIFO_SIZE) <#if FLEXCOM_USART_MR_USART_MODE == "HW_HANDSHAKING"> | FLEX_US_FMR_FRTSC_Msk </#if>;
+    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_FMR = FLEX_US_FMR_RXFTHRES(${FLEXCOM_INSTANCE_NAME}_USART_HW_RX_FIFO_THRES) | FLEX_US_FMR_TXFTHRES(${FLEXCOM_INSTANCE_NAME}_USART_HW_TX_FIFO_THRES)<#if FLEXCOM_USART_MR_USART_MODE == "HW_HANDSHAKING"> | FLEX_US_FMR_FRTSC_Msk </#if>;
 </#if>
 
     ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_TTGR = ${FLEXCOM_USART_TTGR};
@@ -442,41 +443,6 @@ size_t ${FLEXCOM_INSTANCE_NAME}_USART_WriteBufferSizeGet(void)
     return (${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.wrBufferSize - 1);
 }
 
-<#if FLEXCOM_USART_FIFO_ENABLE == true>
-static void ${FLEXCOM_INSTANCE_NAME}_USART_UpdateTXFIFOThreshold(void)
-{
-    uint32_t nFreeWrBufferCount = 0;
-    size_t nBytesPendingForWrThreshold = 0;
-    uint32_t txThreshold = 0;
-
-    if (${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.isWrNotificationEnabled == true)
-    {
-        nFreeWrBufferCount = ${FLEXCOM_INSTANCE_NAME}_USART_WriteFreeBufferCountGet();
-
-        if (${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.wrThreshold > nFreeWrBufferCount)
-        {
-            /* Don't have TX threshold number of free space in the Write buffer.
-             * Setup the hardware FIFO threshold level based on number of bytes remaining to reach the wrThreshold level */
-
-            nBytesPendingForWrThreshold = ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.wrThreshold - nFreeWrBufferCount;
-
-            if (nBytesPendingForWrThreshold < (${FLEXCOM_INSTANCE_NAME}_USART_HW_FIFO_SIZE - (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_FLR & FLEX_US_FLR_TXFL_Msk)))
-            {
-                /* There is enough free space in the hardware FIFO. Immediately generate TX threshold interrupt */
-                txThreshold = ${FLEXCOM_INSTANCE_NAME}_USART_HW_FIFO_SIZE;
-            }
-            else if (nBytesPendingForWrThreshold < ${FLEXCOM_INSTANCE_NAME}_USART_HW_FIFO_SIZE)
-            {
-                txThreshold = ${FLEXCOM_INSTANCE_NAME}_USART_HW_FIFO_SIZE - nBytesPendingForWrThreshold;
-            }
-        }
-
-        /* Set the new threshold level for hardware RX FIFO */
-        ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_FMR = (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_FMR & ~FLEX_US_FMR_TXFTHRES_Msk) | FLEX_US_FMR_TXFTHRES(txThreshold);
-    }
-}
-</#if>
-
 bool ${FLEXCOM_INSTANCE_NAME}_USART_WriteNotificationEnable(bool isEnabled, bool isPersistent)
 {
     bool previousStatus = ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.isWrNotificationEnabled;
@@ -484,10 +450,6 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_WriteNotificationEnable(bool isEnabled, bool
     ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.isWrNotificationEnabled = isEnabled;
 
     ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.isWrNotifyPersistently = isPersistent;
-
-<#if FLEXCOM_USART_FIFO_ENABLE == true>
-    ${FLEXCOM_INSTANCE_NAME}_USART_UpdateTXFIFOThreshold();
-</#if>
 
     return previousStatus;
 }
@@ -497,10 +459,6 @@ void ${FLEXCOM_INSTANCE_NAME}_USART_WriteThresholdSet(uint32_t nBytesThreshold)
     if (nBytesThreshold > 0)
     {
         ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.wrThreshold = nBytesThreshold;
-
-<#if FLEXCOM_USART_FIFO_ENABLE == true>
-        ${FLEXCOM_INSTANCE_NAME}_USART_UpdateTXFIFOThreshold();
-</#if>
     }
 }
 
@@ -704,9 +662,9 @@ static void ${FLEXCOM_INSTANCE_NAME}_USART_UpdateRXFIFOThreshold(void)
 
             nBytesPendingForRDThreshold = ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rdThreshold - nUnreadBytesAvailable;
 
-            if (nBytesPendingForRDThreshold > ${FLEXCOM_INSTANCE_NAME}_USART_HW_FIFO_SIZE)
+            if (nBytesPendingForRDThreshold > ${FLEXCOM_INSTANCE_NAME}_USART_HW_RX_FIFO_THRES)
             {
-                nBytesPendingForRDThreshold = ${FLEXCOM_INSTANCE_NAME}_USART_HW_FIFO_SIZE;
+                nBytesPendingForRDThreshold = ${FLEXCOM_INSTANCE_NAME}_USART_HW_RX_FIFO_THRES;
             }
 
             /* Set the new threshold level for hardware RX FIFO */
@@ -714,8 +672,8 @@ static void ${FLEXCOM_INSTANCE_NAME}_USART_UpdateRXFIFOThreshold(void)
         }
         else
         {
-            /* Set the threshold to generate interrupt when the HW RX FIFO is full */
-            ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_FMR = (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_FMR & ~FLEX_US_FMR_RXFTHRES_Msk) | FLEX_US_FMR_RXFTHRES(${FLEXCOM_INSTANCE_NAME}_USART_HW_FIFO_SIZE);
+            /* Set the threshold to generate interrupt when the HW RX FIFO has RX threshold number of bytes */
+            ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_FMR = (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_FMR & ~FLEX_US_FMR_RXFTHRES_Msk) | FLEX_US_FMR_RXFTHRES(${FLEXCOM_INSTANCE_NAME}_USART_HW_RX_FIFO_THRES);
         }
     }
 }
@@ -816,9 +774,11 @@ void static ${FLEXCOM_INSTANCE_NAME}_USART_ISR_TX_Handler( void )
         }
     }
 
-<#if FLEXCOM_USART_FIFO_ENABLE == true>
-    ${FLEXCOM_INSTANCE_NAME}_USART_UpdateTXFIFOThreshold();
+    /* At this point, either FIFO is completly full or all bytes are transmitted (copied in FIFO). If FIFO is full, then threshold interrupt
+    *  will be generated. If all bytes are transmitted then interrupts are disabled as interrupt generation is not needed in ring buffer mode
+    */
 
+<#if FLEXCOM_USART_FIFO_ENABLE == true>
     /* Always disable the TXRDY interrupt. It is only used to start off transmission. */
     ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IDR = FLEX_US_IDR_TXRDY_Msk;
 </#if>

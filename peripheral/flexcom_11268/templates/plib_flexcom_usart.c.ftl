@@ -51,6 +51,9 @@
 */
 #include "plib_${FLEXCOM_INSTANCE_NAME?lower_case}_${FLEXCOM_MODE?lower_case}.h"
 
+#define ${FLEXCOM_INSTANCE_NAME}_USART_HW_RX_FIFO_THRES                 ${FLEXCOM_USART_RX_FIFO_THRESHOLD}
+#define ${FLEXCOM_INSTANCE_NAME}_USART_HW_TX_FIFO_THRES                 ${FLEXCOM_USART_TX_FIFO_THRESHOLD}
+
 <#--Implementation-->
 // *****************************************************************************
 // *****************************************************************************
@@ -281,9 +284,7 @@ void ${FLEXCOM_INSTANCE_NAME}_USART_Initialize( void )
     ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CR = (FLEX_US_CR_RSTRX_Msk | FLEX_US_CR_RSTTX_Msk | FLEX_US_CR_RSTSTA_Msk <#if FLEXCOM_USART_FIFO_ENABLE == true && USART_INTERRUPT_MODE == true> | FLEX_US_CR_FIFOEN_Msk </#if>);
 
 <#if FLEXCOM_USART_FIFO_ENABLE == true && USART_INTERRUPT_MODE == true>
-    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_FMR = FLEX_US_FMR_TXFTHRES(${FLEXCOM_USART_TX_FIFO_THRESHOLD}) | FLEX_US_FMR_RXFTHRES(${FLEXCOM_USART_RX_FIFO_THRESHOLD}) <#if FLEXCOM_USART_MR_USART_MODE == "HW_HANDSHAKING"> | FLEX_US_FMR_FRTSC_Msk </#if>;
-
-    ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxThreshold = ${FLEXCOM_USART_RX_FIFO_THRESHOLD};
+    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_FMR = FLEX_US_FMR_TXFTHRES(${FLEXCOM_INSTANCE_NAME}_USART_HW_TX_FIFO_THRES) | FLEX_US_FMR_RXFTHRES(${FLEXCOM_INSTANCE_NAME}_USART_HW_RX_FIFO_THRES) <#if FLEXCOM_USART_MR_USART_MODE == "HW_HANDSHAKING"> | FLEX_US_FMR_FRTSC_Msk </#if>;
 </#if>
 
     ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_TTGR = ${FLEXCOM_USART_TTGR};
@@ -518,13 +519,13 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_Read( void *buffer, const size_t size )
             /* Clear RX FIFO */
             ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CR = FLEX_US_CR_RXFCLR_Msk;
 
-            if (${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxSize < ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxThreshold)
+            if (${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxSize < ${FLEXCOM_INSTANCE_NAME}_USART_HW_RX_FIFO_THRES)
             {
                 ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_FMR = (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_FMR & ~FLEX_US_FMR_RXFTHRES_Msk) | FLEX_US_FMR_RXFTHRES(${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxSize);
             }
             else
             {
-                ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_FMR = (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_FMR & ~FLEX_US_FMR_RXFTHRES_Msk) | FLEX_US_FMR_RXFTHRES(${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxThreshold);
+                ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_FMR = (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_FMR & ~FLEX_US_FMR_RXFTHRES_Msk) | FLEX_US_FMR_RXFTHRES(${FLEXCOM_INSTANCE_NAME}_USART_HW_RX_FIFO_THRES);
             }
 
             /* Enable Read, Overrun, Parity and Framing error interrupts */
@@ -571,8 +572,6 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_Write( void *buffer, const size_t size )
                     *((uint8_t*)&${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_THR) =  ((uint8_t*)${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txBuffer)[${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txProcessedSize++];
                 }
             }
-
-
 
             if ( ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txProcessedSize >= ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txSize)
             {

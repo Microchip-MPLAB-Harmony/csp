@@ -154,7 +154,6 @@ typedef struct
     FLEXCOM_USART_CALLBACK  rxCallback;
     uintptr_t               rxContext;
     volatile bool           rxBusyStatus;
-    uint32_t                rxThreshold;
 	volatile FLEXCOM_USART_ERROR errorStatus;
 
 } FLEXCOM_USART_OBJECT ;
