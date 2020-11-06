@@ -3,6 +3,20 @@
 
 # Microchip MPLAB® Harmony 3 Release Notes
 
+## CSP Release v3.8.2
+
+### New Features
+- Same as v3.8.1
+
+### Bug fixes
+- Fixed issues related to clock and NVM wait states
+
+### Known Issues
+- Same as v3.8.1
+
+### Development Tools
+- Same as v3.8.1
+
 ## CSP Release v3.8.1
 
 ### New Features
