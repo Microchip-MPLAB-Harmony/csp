@@ -423,25 +423,13 @@ void DMA${i}_InterruptHandler (void)
 {
     DMAC_CHANNEL_OBJECT *chanObj;
     DMAC_TRANSFER_EVENT dmaEvent = DMAC_TRANSFER_EVENT_NONE;
-    bool retVal = false;
 
     /* Find out the channel object */
     chanObj = (DMAC_CHANNEL_OBJECT *) &gDMAChannelObj[${i}];
 
     /* Check whether the active DMA channel event has occurred */
-    retVal = ${.vars[INTBITSREG]}.CHBCIF;
 
-    if(true == retVal) /* irq due to transfer complete */
-    {
-        /* Channel is by default disabled on completion of a block transfer */
-        /* Clear the Block transfer complete flag */
-        ${.vars[INTREG]}CLR = _DCH${i}INT_CHBCIF_MASK;
-
-        /* Update error and event */
-        chanObj->errorInfo = DMAC_ERROR_NONE;
-        dmaEvent = DMAC_TRANSFER_EVENT_COMPLETE;
-    }
-    else if(true == ${.vars[INTBITSREG]}.CHTAIF) /* irq due to transfer abort */
+    if(true == ${.vars[INTBITSREG]}.CHTAIF) /* irq due to transfer abort */
     {
         /* Channel is by default disabled on Transfer Abortion */
         /* Clear the Abort transfer complete flag */
@@ -451,9 +439,19 @@ void DMA${i}_InterruptHandler (void)
         chanObj->errorInfo = DMAC_ERROR_NONE;
         dmaEvent = DMAC_TRANSFER_EVENT_ERROR;
     }
-    else if(true == ${.vars[INTBITSREG]}.CHERIF)
+    if(true == ${.vars[INTBITSREG]}.CHBCIF) /* irq due to transfer complete */
     {
+        /* Channel is by default disabled on completion of a block transfer */
         /* Clear the Block transfer complete flag */
+        ${.vars[INTREG]}CLR = _DCH${i}INT_CHBCIF_MASK;
+
+        /* Update error and event */
+        chanObj->errorInfo = DMAC_ERROR_NONE;
+        dmaEvent = DMAC_TRANSFER_EVENT_COMPLETE;
+    }
+    if(true == ${.vars[INTBITSREG]}.CHERIF) /* irq due to address error */
+    {
+        /* Clear the address error flag */
         ${.vars[INTREG]}CLR = _DCH${i}INT_CHERIF_MASK;
 
         /* Update error and event */
@@ -463,15 +461,13 @@ void DMA${i}_InterruptHandler (void)
 
     chanObj->inUse = false;
 
+    /* Clear the interrupt flag and call event handler */
     IFS${.vars[STATCLRREG]}CLR = ${.vars[STATREGMASK]};
 
-    /* Clear the interrupt flag and call event handler */
     if((NULL != chanObj->pEventCallBack) && (DMAC_TRANSFER_EVENT_NONE != dmaEvent))
     {
         chanObj->pEventCallBack(dmaEvent, chanObj->hClientArg);
     }
-
-
 }
 </#if>
 </#list>
