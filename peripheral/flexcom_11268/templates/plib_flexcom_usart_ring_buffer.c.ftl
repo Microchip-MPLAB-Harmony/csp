@@ -756,7 +756,7 @@ void static ${FLEXCOM_INSTANCE_NAME}_USART_ISR_TX_Handler( void )
         {
             if (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_MR & FLEX_US_MR_MODE9_Msk)
             {
-                *((uint16_t*)&${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_THR) = wrByte;
+                *((uint16_t*)&${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_THR) = wrByte & FLEX_US_THR_TXCHR_Msk;
             }
             else
             {
@@ -774,11 +774,11 @@ void static ${FLEXCOM_INSTANCE_NAME}_USART_ISR_TX_Handler( void )
         }
     }
 
+<#if FLEXCOM_USART_FIFO_ENABLE == true>
     /* At this point, either FIFO is completly full or all bytes are transmitted (copied in FIFO). If FIFO is full, then threshold interrupt
     *  will be generated. If all bytes are transmitted then interrupts are disabled as interrupt generation is not needed in ring buffer mode
     */
 
-<#if FLEXCOM_USART_FIFO_ENABLE == true>
     /* Always disable the TXRDY interrupt. It is only used to start off transmission. */
     ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IDR = FLEX_US_IDR_TXRDY_Msk;
 </#if>
@@ -811,24 +811,24 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
         }
     }
 
-    /* Clear Error and FIFO related interrupt flags */
+<#if FLEXCOM_USART_FIFO_ENABLE == true>
+    /* Clear FIFO related interrupt flags */
     ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CR = FLEX_US_CR_RSTSTA_Msk;
 
-<#if FLEXCOM_USART_FIFO_ENABLE == true>
     ${FLEXCOM_INSTANCE_NAME}_USART_ISR_RX_Handler();
 
     ${FLEXCOM_INSTANCE_NAME}_USART_ISR_TX_Handler();
 
     ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.isInterruptActive = false;
 <#else>
-    /* Receiver status */
+    /* Receiver status. RX interrupt is never disabled. */
     if (channelStatus & FLEX_US_CSR_RXRDY_Msk)
     {
         ${FLEXCOM_INSTANCE_NAME}_USART_ISR_RX_Handler();
     }
 
     /* Transmitter status */
-    if(channelStatus & FLEX_US_CSR_TXRDY_Msk)
+    if( (channelStatus & FLEX_US_CSR_TXRDY_Msk) && (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IMR & FLEX_US_IMR_TXRDY_Msk) )
     {
         ${FLEXCOM_INSTANCE_NAME}_USART_ISR_TX_Handler();
     }
