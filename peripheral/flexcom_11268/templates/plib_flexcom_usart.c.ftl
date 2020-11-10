@@ -51,8 +51,10 @@
 */
 #include "plib_${FLEXCOM_INSTANCE_NAME?lower_case}_${FLEXCOM_MODE?lower_case}.h"
 
+<#if FLEXCOM_USART_FIFO_ENABLE == true && USART_INTERRUPT_MODE == true>
 #define ${FLEXCOM_INSTANCE_NAME}_USART_HW_RX_FIFO_THRES                 ${FLEXCOM_USART_RX_FIFO_THRESHOLD}
 #define ${FLEXCOM_INSTANCE_NAME}_USART_HW_TX_FIFO_THRES                 ${FLEXCOM_USART_TX_FIFO_THRESHOLD}
+</#if>
 
 <#--Implementation-->
 // *****************************************************************************
@@ -60,6 +62,9 @@
 // Section: ${FLEXCOM_INSTANCE_NAME} ${FLEXCOM_MODE} Implementation
 // *****************************************************************************
 // *****************************************************************************
+<#if USART_INTERRUPT_MODE == true>
+FLEXCOM_USART_OBJECT ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj;
+</#if>
 
 void static ${FLEXCOM_INSTANCE_NAME}_USART_ErrorClear( void )
 {
@@ -71,7 +76,7 @@ void static ${FLEXCOM_INSTANCE_NAME}_USART_ErrorClear( void )
         ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CR = FLEX_US_CR_RSTSTA_Msk;
 
         /* Flush existing error bytes from the RX FIFO */
-        while( FLEX_US_CSR_RXRDY_Msk == (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & FLEX_US_CSR_RXRDY_Msk) )
+        while( ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & FLEX_US_CSR_RXRDY_Msk )
         {
             if (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_MR & FLEX_US_MR_MODE9_Msk)
             {
@@ -91,9 +96,6 @@ void static ${FLEXCOM_INSTANCE_NAME}_USART_ErrorClear( void )
 }
 
 <#if USART_INTERRUPT_MODE == true>
-
-FLEXCOM_USART_OBJECT ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj;
-
 void static ${FLEXCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
 {
 <#if FLEXCOM_USART_FIFO_ENABLE == true>
@@ -102,7 +104,7 @@ void static ${FLEXCOM_INSTANCE_NAME}_USART_ISR_RX_Handler( void )
 </#if>
     if(${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxBusyStatus == true)
     {
-        while((FLEX_US_CSR_RXRDY_Msk == (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & FLEX_US_CSR_RXRDY_Msk)) && (${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxProcessedSize < ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxSize))
+        while( (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & FLEX_US_CSR_RXRDY_Msk) && (${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxProcessedSize < ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxSize) )
         {
             if (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_MR & FLEX_US_MR_MODE9_Msk)
             {
@@ -158,7 +160,7 @@ void static ${FLEXCOM_INSTANCE_NAME}_USART_ISR_TX_Handler( void )
 {
     if(${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txBusyStatus == true)
     {
-        while((FLEX_US_CSR_TXRDY_Msk == (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & FLEX_US_CSR_TXRDY_Msk)) && (${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txProcessedSize < ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txSize))
+        while( (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & FLEX_US_CSR_TXRDY_Msk) && (${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txProcessedSize < ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txSize))
         {
             if (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_MR & FLEX_US_MR_MODE9_Msk)
             {
@@ -173,15 +175,13 @@ void static ${FLEXCOM_INSTANCE_NAME}_USART_ISR_TX_Handler( void )
         /* Check if the buffer is done */
         if(${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txProcessedSize >= ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txSize)
         {
+<#if FLEXCOM_USART_FIFO_ENABLE == true>
             if (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & FLEX_US_CSR_TXEMPTY_Msk)
             {
                 ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txBusyStatus = false;
 
-<#if FLEXCOM_USART_FIFO_ENABLE == true>
                 ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_FIDR = FLEX_US_FIDR_TXFTHF_Msk;
-<#else>
-                ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IDR = FLEX_US_IDR_TXRDY_Msk;
-</#if>
+
                 ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IDR = FLEX_US_IDR_TXEMPTY_Msk;
 
                 if(${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txCallback != NULL)
@@ -191,13 +191,20 @@ void static ${FLEXCOM_INSTANCE_NAME}_USART_ISR_TX_Handler( void )
             }
             else
             {
-<#if FLEXCOM_USART_FIFO_ENABLE == true>
                 ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_FIDR = FLEX_US_FIDR_TXFTHF_Msk;
-<#else>
-                ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IDR = FLEX_US_IDR_TXRDY_Msk;
-</#if>
+
                 ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IER = FLEX_US_IER_TXEMPTY_Msk;
             }
+<#else>
+            ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txBusyStatus = false;
+
+            ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IDR = FLEX_US_IDR_TXRDY_Msk;
+
+            if(${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txCallback != NULL)
+            {
+                ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txCallback(${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txContext);
+            }
+</#if>
         }
     }
     else
@@ -214,9 +221,6 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
     /* Channel status */
     uint32_t channelStatus = ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR;
     uint32_t interruptMask = ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IMR;
-<#if FLEXCOM_USART_FIFO_ENABLE == true>
-    uint32_t fifoStatus = ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_FESR;
-</#if>
 
     /* Error status */
     uint32_t errorStatus = (channelStatus & (FLEX_US_CSR_OVRE_Msk | FLEX_US_CSR_FRAME_Msk | FLEX_US_CSR_PARE_Msk));
@@ -232,45 +236,30 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
         /* Transfer complete. Clear the busy flag. */
         ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxBusyStatus = false;
 
+<#if FLEXCOM_USART_FIFO_ENABLE == true>
+        ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_FIDR = FLEX_US_FIDR_RXFTHF_Msk;
+</#if>
+
+        /* Disable Read, Overrun, Parity and Framing error interrupts */
+        ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IDR = (FLEX_US_IDR_RXRDY_Msk | FLEX_US_IDR_FRAME_Msk | FLEX_US_IDR_PARE_Msk | FLEX_US_IDR_OVRE_Msk);
+
         /* USART errors are normally associated with the receiver, hence calling receiver context */
         if( ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxCallback != NULL )
         {
             ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxCallback(${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.rxContext);
         }
-
-        /* Disable Read, Overrun, Parity and Framing error interrupts */
-        ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IDR = (FLEX_US_IDR_RXRDY_Msk | FLEX_US_IDR_FRAME_Msk | FLEX_US_IDR_PARE_Msk | FLEX_US_IDR_OVRE_Msk);
     }
 
 <#if FLEXCOM_USART_FIFO_ENABLE == true>
 
     /* Clear the FIFO related interrupt flags */
     ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CR = FLEX_US_CR_RSTSTA_Msk;
-
-    /* Receiver status */
-    if((fifoStatus & FLEX_US_FESR_RXFTHF_Msk) && (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_FIMR & FLEX_US_FIMR_RXFTHF_Msk))
-    {
-        ${FLEXCOM_INSTANCE_NAME}_USART_ISR_RX_Handler();
-    }
-
-    /* Transmitter status */
-    if ((((fifoStatus & FLEX_US_FESR_TXFTHF_Msk) && (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_FIMR & FLEX_US_FIMR_TXFTHF_Msk))) || ((channelStatus & FLEX_US_CSR_TXEMPTY_Msk) && (interruptMask & FLEX_US_IMR_TXEMPTY_Msk)))
-    {
-        ${FLEXCOM_INSTANCE_NAME}_USART_ISR_TX_Handler();
-    }
-<#else>
-    /* Receiver status */
-    if((channelStatus & FLEX_US_CSR_RXRDY_Msk) && (interruptMask & FLEX_US_IMR_RXRDY_Msk))
-    {
-        ${FLEXCOM_INSTANCE_NAME}_USART_ISR_RX_Handler();
-    }
-
-    /* Transmitter status */
-    if(((channelStatus & FLEX_US_CSR_TXRDY_Msk) && (interruptMask & FLEX_US_IMR_TXRDY_Msk)) || ((channelStatus & FLEX_US_CSR_TXEMPTY_Msk) && (interruptMask & FLEX_US_IMR_TXEMPTY_Msk)))
-    {
-        ${FLEXCOM_INSTANCE_NAME}_USART_ISR_TX_Handler();
-    }
 </#if>
+
+    ${FLEXCOM_INSTANCE_NAME}_USART_ISR_RX_Handler();
+
+    ${FLEXCOM_INSTANCE_NAME}_USART_ISR_TX_Handler();
+
 }
 
 </#if>
@@ -425,7 +414,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_Read( void *buffer, const size_t size )
     if(pBuffer != NULL)
     {
         /* Clear errors that may have got generated when there was no active read request pending */
-        ${FLEXCOM_INSTANCE_NAME}_USART_ErrorGet();
+        ${FLEXCOM_INSTANCE_NAME}_USART_ErrorClear();
 
         while( processedSize < size )
         {
@@ -471,17 +460,15 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_Write( void *buffer, const size_t size )
     {
         while( processedSize < size )
         {
-            if(FLEX_US_CSR_TXEMPTY_Msk == (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR& FLEX_US_CSR_TXEMPTY_Msk))
-            {
-                if (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_MR & FLEX_US_MR_MODE9_Msk)
-                {
-                    *((uint16_t*)&${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_THR) = ((uint16_t*)pBuffer)[processedSize++] & FLEX_US_THR_TXCHR_Msk;
-                }
-                else
-                {
-                    *((uint8_t*)&${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_THR) = ((uint8_t*)pBuffer)[processedSize++];
-                }
+            while (!(${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & FLEX_US_CSR_TXRDY_Msk));
 
+            if (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_MR & FLEX_US_MR_MODE9_Msk)
+            {
+                *((uint16_t*)&${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_THR) = ((uint16_t*)pBuffer)[processedSize++] & FLEX_US_THR_TXCHR_Msk;
+            }
+            else
+            {
+                *((uint8_t*)&${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_THR) = ((uint8_t*)pBuffer)[processedSize++];
             }
         }
 
@@ -561,7 +548,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_Write( void *buffer, const size_t size )
             status = true;
 
             /* Initiate the transfer by sending first byte */
-            while((FLEX_US_CSR_TXRDY_Msk == (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & FLEX_US_CSR_TXRDY_Msk)) && (${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txProcessedSize < ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txSize))
+            while( (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & FLEX_US_CSR_TXRDY_Msk) && (${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txProcessedSize < ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txSize) )
             {
                 if (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_MR & FLEX_US_MR_MODE9_Msk)
                 {
@@ -573,18 +560,18 @@ bool ${FLEXCOM_INSTANCE_NAME}_USART_Write( void *buffer, const size_t size )
                 }
             }
 
+<#if FLEXCOM_USART_FIFO_ENABLE == true>
             if ( ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txProcessedSize >= ${FLEXCOM_INSTANCE_NAME?lower_case}UsartObj.txSize)
             {
                 ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IER = FLEX_US_IER_TXEMPTY_Msk;
             }
             else
             {
-<#if FLEXCOM_USART_FIFO_ENABLE == true>
                 ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_FIER = FLEX_US_FIER_TXFTHF_Msk;
-<#else>
-                ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IER = FLEX_US_IER_TXRDY_Msk;
-</#if>
             }
+<#else>
+             ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_IER = FLEX_US_IER_TXRDY_Msk;
+</#if>
         }
     }
 
@@ -650,18 +637,33 @@ uint8_t ${FLEXCOM_INSTANCE_NAME}_USART_ReadByte(void)
 
 void ${FLEXCOM_INSTANCE_NAME}_USART_WriteByte(uint8_t data)
 {
-    while (FLEX_US_CSR_TXEMPTY_Msk != (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & FLEX_US_CSR_TXEMPTY_Msk));
+    while (!(${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & FLEX_US_CSR_TXRDY_Msk));
+
     ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_THR = (FLEX_US_THR_TXCHR(data) & FLEX_US_THR_TXCHR_Msk);
 }
 
 bool ${FLEXCOM_INSTANCE_NAME}_USART_TransmitterIsReady( void )
 {
-    return (FLEX_US_CSR_TXEMPTY_Msk == (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR& FLEX_US_CSR_TXEMPTY_Msk));
+    if (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & FLEX_US_CSR_TXRDY_Msk)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 bool ${FLEXCOM_INSTANCE_NAME}_USART_ReceiverIsReady( void )
 {
-    return (FLEX_US_CSR_RXRDY_Msk == (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR& FLEX_US_CSR_RXRDY_Msk));
+    if (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_US_CSR & FLEX_US_CSR_RXRDY_Msk)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 </#if>

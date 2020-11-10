@@ -165,12 +165,18 @@ def updateSPIDMASymbolVisiblity(symbol, event):
 
 def sourceClkUpdate(symbol, event):
     symbol.setValue(event["value"])
-    
-def fifoModeVisible (symbol, event): 
+
+def fifoModeVisible (symbol, event):
     if flexcomSym_OperatingMode.getSelectedKey() == "SPI" and flexcomSym_SPI_InterruptMode.getValue() == True:
         symbol.setVisible(True)
     else:
-        symbol.setVisible(False)    
+        symbol.setVisible(False)
+
+def symbolVisible(symbol, event):
+    if flexcomSym_OperatingMode.getSelectedKey() == "SPI":
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
 
 ###################################################################################################
 ############################################# FLEXCOM SPI #########################################
