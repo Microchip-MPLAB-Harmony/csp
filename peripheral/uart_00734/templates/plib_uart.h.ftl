@@ -70,6 +70,10 @@ void ${UART_INSTANCE_NAME}_Initialize( void );
 
 bool ${UART_INSTANCE_NAME}_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcClkFreq );
 
+bool ${UART_INSTANCE_NAME}_AutoBaudQuery( void );
+
+void ${UART_INSTANCE_NAME}_AutoBaudSet( bool enable );
+
 bool ${UART_INSTANCE_NAME}_Write( void *buffer, const size_t size );
 
 bool ${UART_INSTANCE_NAME}_Read( void *buffer, const size_t size );

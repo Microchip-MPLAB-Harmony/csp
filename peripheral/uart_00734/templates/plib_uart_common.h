@@ -140,6 +140,8 @@ typedef struct
     uintptr_t               rxContext;
     bool                    rxBusyStatus;
 
+    volatile UART_ERROR     errors;
+
 } UART_OBJECT ;
 
 typedef enum
@@ -169,31 +171,37 @@ typedef struct
 {
     UART_RING_BUFFER_CALLBACK                           wrCallback;
 
-    uintptr_t                               			wrContext;
+    uintptr_t                                           wrContext;
 
-    volatile uint32_t                       			wrInIndex;
+    volatile uint32_t                                   wrInIndex;
 
-    volatile uint32_t                       			wrOutIndex;
+    volatile uint32_t                                   wrOutIndex;
 
-    bool                                    			isWrNotificationEnabled;
+    bool                                                isWrNotificationEnabled;
 
-    uint32_t                                			wrThreshold;
+    uint32_t                                            wrThreshold;
 
-    bool                                    			isWrNotifyPersistently;
+    uint32_t                                            wrBufferSize;
+
+    bool                                                isWrNotifyPersistently;
 
     UART_RING_BUFFER_CALLBACK                           rdCallback;
 
-    uintptr_t                               			rdContext;
+    uintptr_t                                           rdContext;
 
-    volatile uint32_t                       			rdInIndex;
+    volatile uint32_t                                   rdInIndex;
 
-    volatile uint32_t                       			rdOutIndex;
+    volatile uint32_t                                   rdOutIndex;
 
-    bool                                    			isRdNotificationEnabled;
+    uint32_t                                            rdBufferSize;
 
-    uint32_t                                			rdThreshold;
+    bool                                                isRdNotificationEnabled;
 
-    bool                                    			isRdNotifyPersistently;
+    uint32_t                                            rdThreshold;
+
+    bool                                                isRdNotifyPersistently;
+
+    volatile UART_ERROR                                 errors;
 
 } UART_RING_BUFFER_OBJECT;
 

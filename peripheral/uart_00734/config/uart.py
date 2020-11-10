@@ -290,6 +290,7 @@ def u1ModecombineValues(symbol, event):
         uart1modeValue = uart1modeValue & (~int(maskvalue, 0))
         uart1modeValue = uart1modeValue | (uenValue << 8)
 
+
     symbol.setValue(uart1modeValue, 2)
 
 def uartBRGHModeInfo(symbol, event):
@@ -349,6 +350,23 @@ def onCapabilityConnected(event):
     # is ready to accept configuration parameters from the dependent component
     argDict = {"localComponentID" : localComponent.getID()}
     argDict = Database.sendMessage(remoteComponent.getID(), "REQUEST_CONFIG_PARAMS", argDict)
+
+def updateAutoAddrSymVisibility(symbol, event):    
+    pdbit_mode = event["source"].getSymbolByID("UART_PDBIT_SELECT").getSelectedValue()
+
+    if pdbit_mode == "3":
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+        symbol.setReadOnly(True)
+        symbol.setValue(False)
+        symbol.setReadOnly(False)
+
+def updateAddrSymVisibility(symbol, event):    
+    pdbit_mode = event["source"].getSymbolByID("UART_PDBIT_SELECT").getSelectedValue()
+    addr_detection_enable = event["source"].getSymbolByID("UART_AUTOMATIC_ADDR_DETECTION_ENABLE").getValue()
+
+    symbol.setVisible(pdbit_mode == "3" and addr_detection_enable == True)
 
 ################################################################################
 #### Component ####
@@ -522,6 +540,24 @@ def instantiateComponent(uartComponent):
     uartSym_U1MODE_PDSEL.setDisplayMode( "Description" )
     for ii in pdsel_names:
         uartSym_U1MODE_PDSEL.addKey( ii['key'],ii['value'], ii['desc'] )
+
+
+    ##Automatic Address Detection Enable
+    uartSym_AutoAddr_Enable = uartComponent.createBooleanSymbol("UART_AUTOMATIC_ADDR_DETECTION_ENABLE", None)
+    uartSym_AutoAddr_Enable.setLabel("Enable Automatic Address Detection?")
+    uartSym_AutoAddr_Enable.setDefaultValue(False)
+    uartSym_AutoAddr_Enable.setVisible(False)
+    uartSym_AutoAddr_Enable.setDependencies(updateAutoAddrSymVisibility, ["UART_PDBIT_SELECT"])
+
+    ##Address value
+    uartSym_9BitMode_Addr = uartComponent.createIntegerSymbol("UART_9BIT_MODE_ADDR", None)
+    uartSym_9BitMode_Addr.setLabel("Address")
+    uartSym_9BitMode_Addr.setMin(0)
+    uartSym_9BitMode_Addr.setMax(255)
+    uartSym_9BitMode_Addr.setDefaultValue(1)
+    uartSym_9BitMode_Addr.setVisible(False)
+    uartSym_9BitMode_Addr.setDependencies(updateAddrSymVisibility, ["UART_PDBIT_SELECT", "UART_AUTOMATIC_ADDR_DETECTION_ENABLE"])
+
 
     ##BRGH Selection Bit
     BRGH_names = []
