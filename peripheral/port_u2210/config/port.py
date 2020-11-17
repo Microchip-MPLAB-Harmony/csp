@@ -655,6 +655,29 @@ for portNumber in range(0, len(group)):
             pin_nonsec_mask.setVisible(False)
             pin_nonsec_mask.setDefaultValue(0)
 
+portSymPMUX_FUNCTIONS_List = coreComponent.createListSymbol("PERIPHERAL_PMUX_FUNCTIONS_LIST", None)
+portSymPMUX_FUNCTIONS_List.setVisible(False)
+
+portSymPMUX_FUNCTIONS = coreComponent.createListEntrySymbol("PERIPHERAL_PMUX_FUNCTIONS", None)
+portSymPMUX_FUNCTIONS.setTarget("core.PERIPHERAL_PMUX_FUNCTIONS_LIST")
+portSymPMUX_FUNCTIONS.setVisible(False)
+
+portPMUXValueGroupValues = 0
+portPMUXValueGroupNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"PORT\"]/value-group@[name=\"PORT_PMUX__PMUXE\"]")
+if portPMUXValueGroupNode != None:
+    portPMUXValueGroupValues = portPMUXValueGroupNode.getChildren()
+
+portSymPMUXMap = coreComponent.createKeyValueSetSymbol("PIN_PERIPHERAL_FUNCTION_MAP", None)
+portSymPMUXMap.setVisible(False)
+for index in range(0, len(portPMUXValueGroupValues)):
+    portPMUXKeyName = portPMUXValueGroupValues[index].getAttribute("name")
+    portPMUXValue = portPMUXValueGroupValues[index].getAttribute("value")
+    portPMUXDescription = portPMUXValueGroupValues[index].getAttribute("caption")
+    portSymPMUXMap.addKey(portPMUXKeyName, portPMUXValue , portPMUXDescription)
+
+for i in range(portSymPMUXMap.getKeyCount()):
+    enum_value = "PERIPHERAL_FUNCTION_" + portSymPMUXMap.getKey(i) + " = " + portSymPMUXMap.getKeyValue(i) + ','
+    portSymPMUX_FUNCTIONS.addValue(enum_value)
 ###################################################################################################
 ####################################### Code Generation  ##########################################
 ###################################################################################################

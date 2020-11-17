@@ -167,6 +167,11 @@
 typedef uint32_t PORT_GROUP;
 
 
+typedef enum
+{
+    <#lt>${PERIPHERAL_PMUX_FUNCTIONS_LIST}
+}PERIPHERAL_FUNCTION;
+
 // *****************************************************************************
 /* PORT Pins
 
@@ -602,6 +607,36 @@ void PORT_GroupInputEnable(PORT_GROUP group, uint32_t mask);
 */
 
 void PORT_GroupOutputEnable(PORT_GROUP group, uint32_t mask);
+
+// *****************************************************************************
+/* Function:
+    void PORT_PinPeripheralFunctionConfig(PORT_PIN pin, PERIPHERAL_FUNCTION function)
+
+  Summary:
+    Configures the peripheral function on the selected port pin
+
+  Description:
+    This function configures the selected peripheral function on the given port pin.
+
+  Remarks:
+    None
+*/
+void PORT_PinPeripheralFunctionConfig(PORT_PIN pin, PERIPHERAL_FUNCTION function);
+
+// *****************************************************************************
+/* Function:
+    void PORT_PinGPIOConfig(PORT_PIN pin)
+
+  Summary:
+    Configures the selected pin as GPIO
+
+  Description:
+    This function configures the given pin as GPIO.
+
+  Remarks:
+    None
+*/
+void PORT_PinGPIOConfig(PORT_PIN pin);
 
 // *****************************************************************************
 // *****************************************************************************

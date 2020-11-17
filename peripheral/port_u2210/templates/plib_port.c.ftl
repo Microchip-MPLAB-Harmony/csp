@@ -112,7 +112,7 @@ void PORT_Initialize(void)
                     <#lt>   ${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_EVCTRL = ${.vars[PORT_GROUP_EVCTRL]};
                 </#if>
                 </#if>
-                
+
                 <#if __TRUSTZONE_ENABLED?? && __TRUSTZONE_ENABLED == "true">
                   <#if "${.vars[PORT_NONSEC]}" != "0x0">
                     <#lt>   ${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_NONSEC = 0x${.vars[PORT_NONSEC]};
@@ -310,4 +310,67 @@ void PORT_GroupInputEnable(PORT_GROUP group, uint32_t mask)
 void PORT_GroupOutputEnable(PORT_GROUP group, uint32_t mask)
 {
    ((port_group_registers_t*)group)->PORT_DIRSET = mask;
+}
+
+// *****************************************************************************
+/* Function:
+    void PORT_PinPeripheralFunctionConfig(PORT_PIN pin, PERIPHERAL_FUNCTION function)
+
+  Summary:
+    Configures the peripheral function on the selected port pin
+
+  Description:
+    This function configures the selected peripheral function on the given port pin.
+
+  Remarks:
+    Refer plib_port.h file for more information.
+*/
+
+void PORT_PinPeripheralFunctionConfig(PORT_PIN pin, PERIPHERAL_FUNCTION function)
+{
+    uint32_t pin_pos = (uint32_t) pin;
+    uint32_t port_group_num = (pin_pos >> 5);
+    uint32_t pin_num = pin - (port_group_num << 5);
+    uint32_t periph_func = (uint32_t) function;
+
+    port_group_registers_t* port_group = (port_group_registers_t*)(PORT_BASE_ADDRESS + (port_group_num * 0x80));
+
+    /* For odd pins */
+    if (pin_pos & 0x01)
+    {
+        port_group->PORT_PMUX[(pin_num >> 1)] = (port_group->PORT_PMUX[(pin_num >> 1)] & ~0xF0) | (periph_func << 4);
+    }
+    /* For even pins */
+    else
+    {
+        port_group->PORT_PMUX[(pin_num >> 1)] = (port_group->PORT_PMUX[(pin_num >> 1)] & ~0x0F) | periph_func;
+    }
+
+    /* Enable peripheral control of the pin */
+     port_group->PORT_PINCFG[pin_num] |= PORT_PINCFG_PMUXEN_Msk;
+}
+
+// *****************************************************************************
+/* Function:
+    void PORT_PinGPIOConfig(PORT_PIN pin)
+
+  Summary:
+    Configures the selected pin as GPIO
+
+  Description:
+    This function configures the given pin as GPIO.
+
+  Remarks:
+    Refer plib_port.h file for more information.
+*/
+void PORT_PinGPIOConfig(PORT_PIN pin)
+{
+    uint32_t pin_pos = (uint32_t) pin;
+    uint32_t port_group_num = (pin_pos >> 5);
+    uint32_t pin_num = pin - (port_group_num << 5);
+
+    port_group_registers_t* port_group = (port_group_registers_t*)(PORT_BASE_ADDRESS + (port_group_num * 0x80));
+
+    /* Disable peripheral control of the pin */
+    port_group->PORT_PINCFG[pin_num] &= ~PORT_PINCFG_PMUXEN_Msk;
 }
