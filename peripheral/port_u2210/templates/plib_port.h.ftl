@@ -83,13 +83,13 @@
 
                                 <#lt>/*** Macros for ${.vars[funcname]} pin ***/
                                 <#if .vars[functype] == "GPIO">
-                                    <#lt>#define ${.vars[funcname]}_Set()               (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_OUTSET = 1 << ${.vars[pinport]})
-                                    <#lt>#define ${.vars[funcname]}_Clear()             (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_OUTCLR = 1 << ${.vars[pinport]})
-                                    <#lt>#define ${.vars[funcname]}_Toggle()            (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_OUTTGL = 1 << ${.vars[pinport]})
-                                    <#lt>#define ${.vars[funcname]}_OutputEnable()      (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_DIRSET = 1 << ${.vars[pinport]})
-                                    <#lt>#define ${.vars[funcname]}_InputEnable()       (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_DIRCLR = 1 << ${.vars[pinport]})
+                                    <#lt>#define ${.vars[funcname]}_Set()               (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_OUTSET = ((uint32_t)1U << ${.vars[pinport]}U))
+                                    <#lt>#define ${.vars[funcname]}_Clear()             (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_OUTCLR = ((uint32_t)1U << ${.vars[pinport]}U))
+                                    <#lt>#define ${.vars[funcname]}_Toggle()            (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_OUTTGL = ((uint32_t)1U << ${.vars[pinport]}U))
+                                    <#lt>#define ${.vars[funcname]}_OutputEnable()      (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_DIRSET = ((uint32_t)1U << ${.vars[pinport]}U))
+                                    <#lt>#define ${.vars[funcname]}_InputEnable()       (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_DIRCLR = ((uint32_t)1U << ${.vars[pinport]}U))
                                 </#if>
-                                <#lt>#define ${.vars[funcname]}_Get()               (((${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_IN >> ${.vars[pinport]})) & 0x01)
+                                <#lt>#define ${.vars[funcname]}_Get()               (((${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_IN >> ${.vars[pinport]}U)) & 0x01U)
                                 <#lt>#define ${.vars[funcname]}_PIN                  PORT_PIN_${.vars[PORT_PIN_PAD]}
                             </#if>
                         </#if>
@@ -115,13 +115,13 @@
 
                             <#lt>/*** Macros for ${.vars[funcname]} pin ***/
                             <#if .vars[functype] == "GPIO">
-                                <#lt>#define ${.vars[funcname]}_Set()               (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_OUTSET = 1 << ${.vars[pinport]})
-                                <#lt>#define ${.vars[funcname]}_Clear()             (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_OUTCLR = 1 << ${.vars[pinport]})
-                                <#lt>#define ${.vars[funcname]}_Toggle()            (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_OUTTGL = 1 << ${.vars[pinport]})
-                                <#lt>#define ${.vars[funcname]}_OutputEnable()      (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_DIRSET = 1 << ${.vars[pinport]})
-                                <#lt>#define ${.vars[funcname]}_InputEnable()       (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_DIRCLR = 1 << ${.vars[pinport]})
+                                <#lt>#define ${.vars[funcname]}_Set()               (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_OUTSET = ((uint32_t)1U << ${.vars[pinport]}U))
+                                <#lt>#define ${.vars[funcname]}_Clear()             (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_OUTCLR = ((uint32_t)1U << ${.vars[pinport]}U))
+                                <#lt>#define ${.vars[funcname]}_Toggle()            (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_OUTTGL = ((uint32_t)1U << ${.vars[pinport]}U))
+                                <#lt>#define ${.vars[funcname]}_OutputEnable()      (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_DIRSET = ((uint32_t)1U << ${.vars[pinport]}U))
+                                <#lt>#define ${.vars[funcname]}_InputEnable()       (${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_DIRCLR = ((uint32_t)1U << ${.vars[pinport]}U))
                             </#if>
-                            <#lt>#define ${.vars[funcname]}_Get()               (((${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_IN >> ${.vars[pinport]})) & 0x01)
+                            <#lt>#define ${.vars[funcname]}_Get()               (((${PORT_REG_NAME}_REGS->GROUP[${.vars[PORT_GROUP_NAME]}].PORT_IN >> ${.vars[pinport]}U)) & 0x01U)
                             <#lt>#define ${.vars[funcname]}_PIN                  PORT_PIN_${.vars[PORT_PIN_PAD]}
                         </#if>
                     </#if>
@@ -130,6 +130,7 @@
         </#if>
     </#list>
 </#if>
+
 // *****************************************************************************
 /* PORT Group
 
@@ -137,29 +138,34 @@
     Identifies the port groups available on the device.
 
   Description:
-    This enumeration identifies all the ports groups that are available on this
+    These macros identifies all the ports groups that are available on this
     device.
 
   Remarks:
     The caller should not use the constant expressions assigned to any of
-    the enumeration constants as these may vary between devices.
+    the preprocessor macros as these may vary between devices.
 
     Port groups shown here are the ones available on the selected device. Not
     all ports groups are implemented. Refer to the device specific datasheet
-    for more details. The MHC will generate this enumeration with the port
+    for more details. The MHC will generate these macros with the port
     groups that are available on the device.
 */
 
-typedef enum
-{
 <#list 0..PORT_GROUP_COUNT - 1 as i>
     <#assign PORT_GROUP_INDEX = i>
     <#assign PORT_GROUP_NAME = "PORT_GROUP_NAME_" + i>
+/* Group ${.vars[PORT_GROUP_NAME]} */
+#define PORT_GROUP_${.vars[PORT_GROUP_NAME]} (${PORT_REG_NAME}_BASE_ADDRESS + (${.vars[PORT_GROUP_NAME]}U * 0x80U))
 
-    /* Group ${.vars[PORT_GROUP_NAME]} */
-    PORT_GROUP_${.vars[PORT_GROUP_NAME]} = ${PORT_REG_NAME}_BASE_ADDRESS + ${.vars[PORT_GROUP_NAME]} * (0x80),
 </#list>
-} PORT_GROUP;
+
+/* Helper macros to get port information from the pin */
+#define GET_PORT_GROUP(pin)  ((PORT_GROUP)(PORT_BASE_ADDRESS + (0x80U * (((uint32_t)pin) >> 5U))))
+#define GET_PIN_MASK(pin)   (((uint32_t)(0x1U)) << (((uint32_t)pin) & 0x1FU))
+
+/* Named type for port group */ 
+typedef uint32_t PORT_GROUP;
+
 
 // *****************************************************************************
 /* PORT Pins
@@ -192,7 +198,7 @@ typedef enum
           <#if .vars[PORT_PIN]?has_content>
               <#if .vars[PORT_GROUP]?has_content>
                   <#lt>    /* P${.vars[PORT_GROUP]}${.vars[PORT_PIN]?string["00"]} pin */
-                  <#lt>    PORT_PIN_P${.vars[PORT_GROUP]}${.vars[PORT_PIN]?string["00"]} = ${.vars[PORT_PIN]},
+                  <#lt>    PORT_PIN_P${.vars[PORT_GROUP]}${.vars[PORT_PIN]?string["00"]} = ${.vars[PORT_PIN]}U,
 
               </#if>
           </#if>
@@ -205,7 +211,7 @@ typedef enum
           <#if .vars[PORT_PIN_PAD]?has_content>
               <#if (.vars[PORT_PIN_PAD] != "None")>
                   <#lt>    /* ${.vars[PORT_PIN_PAD]} pin */
-                  <#lt>    PORT_PIN_${.vars[PORT_PIN_PAD]} = ${.vars[PORT_PIN_INDEX]},
+                  <#lt>    PORT_PIN_${.vars[PORT_PIN_PAD]} = ${.vars[PORT_PIN_INDEX]}U,
 
               </#if>
           </#if>
@@ -214,7 +220,7 @@ typedef enum
     /* This element should not be used in any of the PORT APIs.
      * It will be used by other modules or application to denote that none of
      * the PORT Pin is used */
-    <#lt>    PORT_PIN_NONE = -1,
+    <#lt>    PORT_PIN_NONE = 65535U,
 
 } PORT_PIN;
 
@@ -257,290 +263,6 @@ typedef enum
 */
 
 void PORT_Initialize(void);
-
-// *****************************************************************************
-// *****************************************************************************
-// Section: PORT APIs which operates on one pin at a time
-// *****************************************************************************
-// *****************************************************************************
-
-// *****************************************************************************
-/* Function:
-    void PORT_PinWrite(PORT_PIN pin, bool value)
-
-  Summary:
-    Writes the specified value to the selected pin.
-
-  Description:
-    This function writes/drives the "value" on the selected I/O line/pin.
-
-  Precondition:
-    The PORT_Initialize() function should have been called once.
-
-  Parameters:
-    pin - One of the IO pins from the enum PORT_PIN.
-    value - value to be written on the selected pin.
-            true  = set pin to high (1).
-            false = clear pin to low (0).
-
-  Returns:
-    None.
-
-  Example:
-    <code>
-
-    bool value = true;
-    PORT_PinWrite(PORT_PIN_PB3, value);
-
-    </code>
-
-  Remarks:
-    Calling this function with an input pin with the pull-up/pull-down feature
-    enabled will affect the pull-up/pull-down configuration. If the value is
-    false, the pull-down will be enabled. If the value is true, the pull-up will
-    be enabled.
-*/
-
-static inline void PORT_PinWrite(PORT_PIN pin, bool value);
-
-// *****************************************************************************
-/* Function:
-    bool PORT_PinRead(PORT_PIN pin)
-
-  Summary:
-    Read the selected pin value.
-
-  Description:
-    This function reads the present state at the selected input pin.  The
-    function can also be called to read the value of an output pin if input
-    sampling on the output pin is enabled in MHC. If input synchronization on
-    the pin is disabled in MHC, the function will cause a 2 PORT Clock cycles
-    delay. Enabling the synchronization eliminates the delay but will increase
-    power consumption.
-
-  Precondition:
-    The PORT_Initialize() function should have been called. Input buffer
-    (INEN bit in the Pin Configuration register) should be enabled in MHC.
-
-  Parameters:
-    pin - the port pin whose state needs to be read.
-
-  Returns:
-    true - the state at the pin is a logic high.
-    false - the state at the pin is a logic low.
-
-  Example:
-    <code>
-
-    bool value;
-    value = PORT_PinRead(PORT_PIN_PB3);
-
-    </code>
-
-  Remarks:
-    None.
-*/
-
-static inline bool PORT_PinRead(PORT_PIN pin);
-
-// *****************************************************************************
-/* Function:
-    bool PORT_PinLatchRead(PORT_PIN pin)
-
-  Summary:
-    Read the value driven on the selected pin.
-
-  Description:
-    This function reads the data driven on the selected I/O line/pin. The
-    function does not sample the state of the hardware pin. It only returns the
-    value that is written to output register. Refer to the PORT_PinRead()
-    function if the state of the output pin needs to be read.
-
-  Precondition:
-    The PORT_Initialize() function should have been called.
-
-  Parameters:
-    pin - One of the IO pins from the enum PORT_PIN.
-
-  Returns:
-    true - the present value in the output latch is a logic high.
-    false - the present value in the output latch is a logic low.
-
-  Example:
-    <code>
-
-    bool value;
-    value = PORT_PinLatchRead(PORT_PIN_PB3);
-
-    </code>
-
-  Remarks:
-    To read actual pin value, PIN_Read API should be used.
-*/
-
-static inline bool PORT_PinLatchRead(PORT_PIN pin);
-
-// *****************************************************************************
-/* Function:
-    void PORT_PinToggle(PORT_PIN pin)
-
-  Summary:
-    Toggles the selected pin.
-
-  Description:
-    This function toggles/inverts the present value on the selected I/O line/pin.
-
-  Precondition:
-    The PORT_Initialize() function should have been called.
-
-  Parameters:
-    pin - One of the IO pins from the enum PORT_PIN.
-
-  Returns:
-    None.
-
-  Example:
-    <code>
-
-    PORT_PinToggle(PORT_PIN_PB3);
-
-    </code>
-
-  Remarks:
-    None.
-*/
-
-static inline void PORT_PinToggle(PORT_PIN pin);
-
-// *****************************************************************************
-/* Function:
-    void PORT_PinSet(PORT_PIN pin)
-
-  Summary:
-    Sets the selected pin.
-
-  Description:
-    This function drives a logic 1 on the selected I/O line/pin.
-
-  Precondition:
-    The PORT_Initialize() function should have been called.
-
-  Parameters:
-    pin - One of the IO pins from the enum PORT_PIN.
-
-  Returns:
-    None.
-
-  Example:
-    <code>
-
-    PORT_PinSet(PORT_PIN_PB3);
-
-    </code>
-
-  Remarks:
-    None.
-*/
-
-static inline void PORT_PinSet(PORT_PIN pin);
-
-// *****************************************************************************
-/* Function:
-    void PORT_PinClear(PORT_PIN pin)
-
-  Summary:
-    Clears the selected pin.
-
-  Description:
-    This function drives a logic 0 on the selected I/O line/pin.
-
-  Precondition:
-    The PORT_Initialize() function should have been called.
-
-  Parameters:
-    pin - One of the IO pins from the enum PORT_PIN.
-
-  Returns:
-    None.
-
-  Example:
-    <code>
-
-    PORT_PinClear(PORT_PIN_PB3);
-
-    </code>
-
-  Remarks:
-    None.
-*/
-
-static inline void PORT_PinClear(PORT_PIN pin);
-
-// *****************************************************************************
-/* Function:
-    void PORT_PinInputEnable(PORT_PIN pin)
-
-  Summary:
-    Configures the selected IO pin as input.
-
-  Description:
-    This function configures the selected IO pin as input. This function
-    override the MHC input output pin settings.
-
-  Precondition:
-    The PORT_Initialize() function should have been called.
-
-  Parameters:
-    pin - One of the IO pins from the enum PORT_PIN.
-
-  Returns:
-    None.
-
-  Example:
-    <code>
-
-    PORT_PinInputEnable(PORT_PIN_PB3);
-
-    </code>
-
-  Remarks:
-    None.
-*/
-
-static inline void PORT_PinInputEnable(PORT_PIN pin);
-
-// *****************************************************************************
-/* Function:
-    void PORT_PinOutputEnable(PORT_PIN pin)
-
-  Summary:
-    Enables selected IO pin as output.
-
-  Description:
-    This function enables selected IO pin as output. Calling this function will
-    override the MHC input output pin configuration.
-
-  Precondition:
-    The PORT_Initialize() function should have been called.
-
-  Parameters:
-    pin - One of the IO pins from the enum PORT_PIN.
-
-  Returns:
-    None.
-
-  Example:
-    <code>
-
-    PORT_PinOutputEnable(PORT_PIN_PB3);
-
-    </code>
-
-  Remarks:
-    None.
-*/
-
-static inline void PORT_PinOutputEnable(PORT_PIN pin);
 
 // *****************************************************************************
 // *****************************************************************************
@@ -671,7 +393,7 @@ uint32_t PORT_GroupLatchRead(PORT_GROUP group);
 
   Example:
     <code>
-    // Write binary value 0011 to the pins PC3, PC2, PC1 and PC0 respectively.
+
     PORT_GroupWrite(PORT_GROUP_C, 0x0F, 0xF563D453);
 
     </code>
@@ -711,7 +433,6 @@ void PORT_GroupWrite(PORT_GROUP group, uint32_t mask, uint32_t value);
   Example:
     <code>
 
-    // Set PC5 and PC7 pins to 1
     PORT_GroupSet(PORT_GROUP_C, 0x00A0);
 
     </code>
@@ -753,7 +474,6 @@ void PORT_GroupSet(PORT_GROUP group, uint32_t mask);
   Example:
     <code>
 
-    // Clear PC5 and PC7 pins to 1
     PORT_GroupClear(PORT_GROUP_C, 0x00A0);
 
     </code>
@@ -794,7 +514,6 @@ void PORT_GroupClear(PORT_GROUP group, uint32_t mask);
   Example:
     <code>
 
-    // Clear PC5 and PC7 pins to 1
     PORT_GroupToggle(PORT_GROUP_C, 0x00A0);
 
     </code>
@@ -836,7 +555,6 @@ void PORT_GroupToggle(PORT_GROUP group, uint32_t mask);
   Example:
     <code>
 
-    // Make PC5 and PC7 pins as input
     PORT_GroupInputEnable(PORT_GROUP_C, 0x00A0);
 
     </code>
@@ -875,7 +593,6 @@ void PORT_GroupInputEnable(PORT_GROUP group, uint32_t mask);
   Example:
     <code>
 
-    // Make PC5 and PC7 pins as output
     PORT_GroupOutputEnable(PORT_GROUP_C, 0x00A0);
 
     </code>
@@ -888,7 +605,7 @@ void PORT_GroupOutputEnable(PORT_GROUP group, uint32_t mask);
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: PIO Functions which operates on one pin at a time
+// Section: PORT APIs which operates on one pin at a time
 // *****************************************************************************
 // *****************************************************************************
 
@@ -902,14 +619,40 @@ void PORT_GroupOutputEnable(PORT_GROUP group, uint32_t mask);
   Description:
     This function writes/drives the "value" on the selected I/O line/pin.
 
+  Precondition:
+    The PORT_Initialize() function should have been called once.
+
+  Parameters:
+    pin - One of the IO pins from the enum PORT_PIN.
+    value - value to be written on the selected pin.
+            true  = set pin to high (1).
+            false = clear pin to low (0).
+
+  Returns:
+    None.
+
+  Example:
+    <code>
+
+    bool value = true;
+    PORT_PinWrite(PORT_PIN_PB3, value);
+
+    </code>
+
   Remarks:
-    Refer plib_port.h file for more information.
+    Calling this function with an input pin with the pull-up/pull-down feature
+    enabled will affect the pull-up/pull-down configuration. If the value is
+    false, the pull-down will be enabled. If the value is true, the pull-up will
+    be enabled.
 */
 
 static inline void PORT_PinWrite(PORT_PIN pin, bool value)
 {
-    PORT_GroupWrite((PORT_GROUP)(PORT_BASE_ADDRESS + (0x80 * (pin>>5))), (uint32_t)(0x1) << (pin & 0x1f), (uint32_t)(value) << (pin & 0x1f));
+    PORT_GroupWrite(GET_PORT_GROUP(pin),
+                    GET_PIN_MASK(pin),
+                    (value ? GET_PIN_MASK(pin) : 0U));
 }
+
 
 // *****************************************************************************
 /* Function:
@@ -926,14 +669,34 @@ static inline void PORT_PinWrite(PORT_PIN pin, bool value)
     delay. Enabling the synchronization eliminates the delay but will increase
     power consumption.
 
+  Precondition:
+    The PORT_Initialize() function should have been called. Input buffer
+    (INEN bit in the Pin Configuration register) should be enabled in MHC.
+
+  Parameters:
+    pin - the port pin whose state needs to be read.
+
+  Returns:
+    true - the state at the pin is a logic high.
+    false - the state at the pin is a logic low.
+
+  Example:
+    <code>
+
+    bool value;
+    value = PORT_PinRead(PORT_PIN_PB3);
+
+    </code>
+
   Remarks:
-    Refer plib_port.h file for more information.
+    None.
 */
 
-bool PORT_PinRead(PORT_PIN pin)
+static inline bool PORT_PinRead(PORT_PIN pin)
 {
-    return (bool)((PORT_GroupRead((PORT_GROUP)(PORT_BASE_ADDRESS + (0x80 * (pin>>5)))) >> (pin & 0x1F)) & 0x1);
+    return ((PORT_GroupRead(GET_PORT_GROUP(pin)) & GET_PIN_MASK(pin)) != 0U);
 }
+
 
 // *****************************************************************************
 /* Function:
@@ -948,14 +711,33 @@ bool PORT_PinRead(PORT_PIN pin)
     value that is written to output register. Refer to the PORT_PinRead()
     function if the state of the output pin needs to be read.
 
+  Precondition:
+    The PORT_Initialize() function should have been called.
+
+  Parameters:
+    pin - One of the IO pins from the enum PORT_PIN.
+
+  Returns:
+    true - the present value in the output latch is a logic high.
+    false - the present value in the output latch is a logic low.
+
+  Example:
+    <code>
+
+    bool value;
+    value = PORT_PinLatchRead(PORT_PIN_PB3);
+
+    </code>
+
   Remarks:
-    Refer plib_port.h file for more information.
+    To read actual pin value, PIN_Read API should be used.
 */
 
-bool PORT_PinLatchRead(PORT_PIN pin)
+static inline bool PORT_PinLatchRead(PORT_PIN pin)
 {
-    return (bool)((PORT_GroupLatchRead((PORT_GROUP)(PORT_BASE_ADDRESS + (0x80 * (pin>>5)))) >> (pin & 0x1F)) & 0x1);
+    return ((PORT_GroupLatchRead(GET_PORT_GROUP(pin)) & GET_PIN_MASK(pin)) != 0U);
 }
+
 
 // *****************************************************************************
 /* Function:
@@ -967,14 +749,31 @@ bool PORT_PinLatchRead(PORT_PIN pin)
   Description:
     This function toggles/inverts the present value on the selected I/O line/pin.
 
+  Precondition:
+    The PORT_Initialize() function should have been called.
+
+  Parameters:
+    pin - One of the IO pins from the enum PORT_PIN.
+
+  Returns:
+    None.
+
+  Example:
+    <code>
+
+    PORT_PinToggle(PORT_PIN_PB3);
+
+    </code>
+
   Remarks:
-    Refer plib_port.h file for more information.
+    None.
 */
 
-void PORT_PinToggle(PORT_PIN pin)
+static inline void PORT_PinToggle(PORT_PIN pin)
 {
-    PORT_GroupToggle((PORT_GROUP)(PORT_BASE_ADDRESS + (0x80 * (pin>>5))), 0x1 << (pin & 0x1F));
+    PORT_GroupToggle(GET_PORT_GROUP(pin), GET_PIN_MASK(pin));
 }
+
 
 // *****************************************************************************
 /* Function:
@@ -986,14 +785,31 @@ void PORT_PinToggle(PORT_PIN pin)
   Description:
     This function drives a logic 1 on the selected I/O line/pin.
 
+  Precondition:
+    The PORT_Initialize() function should have been called.
+
+  Parameters:
+    pin - One of the IO pins from the enum PORT_PIN.
+
+  Returns:
+    None.
+
+  Example:
+    <code>
+
+    PORT_PinSet(PORT_PIN_PB3);
+
+    </code>
+
   Remarks:
-    Refer plib_port.h file for more information.
+    None.
 */
 
-void PORT_PinSet(PORT_PIN pin)
+static inline void PORT_PinSet(PORT_PIN pin)
 {
-    PORT_GroupSet((PORT_GROUP)(PORT_BASE_ADDRESS + (0x80 * (pin>>5))), 0x1 << (pin & 0x1F));
+    PORT_GroupSet(GET_PORT_GROUP(pin), GET_PIN_MASK(pin));
 }
+
 
 // *****************************************************************************
 /* Function:
@@ -1005,14 +821,31 @@ void PORT_PinSet(PORT_PIN pin)
   Description:
     This function drives a logic 0 on the selected I/O line/pin.
 
+  Precondition:
+    The PORT_Initialize() function should have been called.
+
+  Parameters:
+    pin - One of the IO pins from the enum PORT_PIN.
+
+  Returns:
+    None.
+
+  Example:
+    <code>
+
+    PORT_PinClear(PORT_PIN_PB3);
+
+    </code>
+
   Remarks:
-    Refer plib_port.h file for more information.
+    None.
 */
 
-void PORT_PinClear(PORT_PIN pin)
+static inline void PORT_PinClear(PORT_PIN pin)
 {
-    PORT_GroupClear((PORT_GROUP)(PORT_BASE_ADDRESS + (0x80 * (pin>>5))), 0x1 << (pin & 0x1F));
+    PORT_GroupClear(GET_PORT_GROUP(pin), GET_PIN_MASK(pin));
 }
+
 
 // *****************************************************************************
 /* Function:
@@ -1025,14 +858,31 @@ void PORT_PinClear(PORT_PIN pin)
     This function configures the selected IO pin as input. This function
     override the MHC input output pin settings.
 
+  Precondition:
+    The PORT_Initialize() function should have been called.
+
+  Parameters:
+    pin - One of the IO pins from the enum PORT_PIN.
+
+  Returns:
+    None.
+
+  Example:
+    <code>
+
+    PORT_PinInputEnable(PORT_PIN_PB3);
+
+    </code>
+
   Remarks:
-    Refer plib_port.h file for more information.
+    None.
 */
 
-void PORT_PinInputEnable(PORT_PIN pin)
+static inline void PORT_PinInputEnable(PORT_PIN pin)
 {
-    PORT_GroupInputEnable((PORT_GROUP)(PORT_BASE_ADDRESS + (0x80 * (pin>>5))), 0x1 << (pin & 0x1F));
+    PORT_GroupInputEnable(GET_PORT_GROUP(pin), GET_PIN_MASK(pin));
 }
+
 
 // *****************************************************************************
 /* Function:
@@ -1045,13 +895,29 @@ void PORT_PinInputEnable(PORT_PIN pin)
     This function enables selected IO pin as output. Calling this function will
     override the MHC input output pin configuration.
 
+  Precondition:
+    The PORT_Initialize() function should have been called.
+
+  Parameters:
+    pin - One of the IO pins from the enum PORT_PIN.
+
+  Returns:
+    None.
+
+  Example:
+    <code>
+
+    PORT_PinOutputEnable(PORT_PIN_PB3);
+
+    </code>
+
   Remarks:
-    Refer plib_port.h file for more information.
+    None.
 */
 
-void PORT_PinOutputEnable(PORT_PIN pin)
+static inline void PORT_PinOutputEnable(PORT_PIN pin)
 {
-    PORT_GroupOutputEnable((PORT_GROUP)(PORT_BASE_ADDRESS + (0x80 * (pin>>5))), 0x1 << (pin & 0x1F));
+    PORT_GroupOutputEnable(GET_PORT_GROUP(pin), GET_PIN_MASK(pin));
 }
 
 // DOM-IGNORE-BEGIN
