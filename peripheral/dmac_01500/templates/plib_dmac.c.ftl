@@ -224,7 +224,8 @@ void ${DMA_INSTANCE_NAME}_Initialize( void )
         <#assign SIRQEN = "DCH" + i + "_ECON_SIRQEN_VALUE">
         <#assign CHBSIE = "DCH" + i + "_INT_CHBCIE_VALUE">
         <#assign CHPRI = "DCH" + i + "_CON_CHPRI_VALUE">
-        <#assign STATCLRREG = "DMA" + i + "_STATREG_RD">
+        
+
         <#lt>    /* DMA channel ${i} configuration */
         <#lt>    /* CHPRI = ${.vars[CHPRI]} */
         <#lt>    ${DMACONREG} = 0x${.vars[DMACONVAL]};
@@ -235,18 +236,29 @@ void ${DMA_INSTANCE_NAME}_Initialize( void )
 
     </#if>
 </#list>
+<#assign STATCLRREG0 = "DMA0_STATREG_RD">
+<#assign STATREGMASK1 = "0">
+<#assign STATREGMASK2 = "0">
+
 <#lt>    /* Enable DMA channel interrupts */
-<#lt>    <@compress single_line=true>
-<#lt>    IEC${.vars[STATCLRREG]}SET = 0
 <#list 0..NUM_DMA_CHANS - 1 as i>
     <#assign CHANENABLE = "DMAC_CHAN" + i + "_ENBL">
     <#if .vars[CHANENABLE] == true>
-        <#assign STATREGMASK = "DMA" + i + "_STATREG_MASK">
-         | ${.vars[STATREGMASK]}
+        <#assign STATCLRREGi = "DMA" + i + "_STATREG_RD">
+        <#if .vars[STATCLRREGi] == .vars[STATCLRREG0] >
+          <#assign STATREGMASK1 = STATREGMASK1 + " | " + .vars["DMA" + i + "_STATREG_MASK"]>
+        <#else>
+          <#assign STATREGMASK2 = STATREGMASK2 + " | " + .vars["DMA" + i + "_STATREG_MASK"]>
+        </#if> 
     </#if>
 </#list>
-;
-</@compress>
+<#if STATREGMASK1 != "0">
+  IEC${.vars[STATCLRREG0]}SET = ${STATREGMASK1};
+</#if>  
+<#if STATREGMASK2 != "0">
+  IEC${.vars[STATCLRREGi]}SET = ${STATREGMASK2};
+</#if>  
+
 
 }
 
