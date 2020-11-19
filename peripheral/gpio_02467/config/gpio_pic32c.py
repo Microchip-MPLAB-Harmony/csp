@@ -299,6 +299,36 @@ def pinPullDownCal(pin, event):
 
         gpioSym_GPIO_CNPD[channelIndex].setValue(CNPD_Value, 2)
 
+
+def pinSlewRateCal(pin, event):
+    global gpioSym_GPIO_SRCON0
+    global gpioSym_GPIO_SRCON1    
+    global pinChannel
+    global pinBitPosition
+    pin_num = int((pin.getID()).split("_")[2])
+    portChannel = pinChannel[pin_num-1].getValue()
+
+    if portChannel != "":
+        channelIndex = pioSymChannel.index(portChannel)
+        bit_pos = pinBitPosition[pin_num-1].getValue()
+        SRCON0_Value = gpioSym_GPIO_SRCON0[channelIndex].getValue()
+        SRCON1_Value = gpioSym_GPIO_SRCON1[channelIndex].getValue()
+
+        if event["value"] == 0: #"Fastest Edge Rate"
+            SRCON0_Value &= ~(1 << bit_pos)
+            SRCON1_Value &= ~(1 << bit_pos)
+        elif event["value"] == 1: #"Medium Edge Rate"
+            SRCON1_Value &= ~(1 << bit_pos)
+            SRCON0_Value |= 1 << bit_pos 
+        elif event["value"] == 2: #"Slow Edge Rate"
+            SRCON0_Value &= ~(1 << bit_pos)
+            SRCON1_Value |= 1 << bit_pos 
+        elif event["value"] == 3: #"Slowest Edge Rate"
+            SRCON0_Value |= 1 << bit_pos
+            SRCON1_Value |= 1 << bit_pos            
+        gpioSym_GPIO_SRCON0[channelIndex].setValue(SRCON0_Value, 2)
+        gpioSym_GPIO_SRCON1[channelIndex].setValue(SRCON1_Value, 2)
+
 def packageChange(packageSymbol, event):
     import re
 
@@ -398,6 +428,7 @@ pinLatch = []
 pinOpenDrain = []
 pinPullUp = []
 pinPullDown = []
+pinSlewRate = []
 global pinInterrupt
 pinInterrupt = []
 pinGlitchFilter = []
@@ -526,6 +557,20 @@ for pinNumber in range(1, packagePinCount + 1):
     pinPullDown[pinNumber-1].setLabel("Pull Down")
     pinPullDown[pinNumber-1].setReadOnly(False)
     pinPullDown[pinNumber-1].setDependencies(pinPullDownCal, ["BSP_PIN_" + str(pinNumber) + "_PD"])
+
+    pinSlewRate.append(pinNumber)
+    pinSlewRate[pinNumber-1] = coreComponent.createKeyValueSetSymbol("BSP_PIN_" + str(pinNumber) + "_SR", pin[pinNumber-1])
+    pinSlewRate[pinNumber-1].setLabel("Slew Rate")
+    pinSlewRate[pinNumber-1].setReadOnly(False)
+    pinSlewRate[pinNumber-1].setOutputMode("Value")
+    pinSlewRate[pinNumber-1].setDisplayMode("Key")
+    pinSlewRate[pinNumber-1].setDefaultValue(0)
+    pinSlewRate[pinNumber-1].setVisible(True)
+    pinSlewRate[pinNumber-1].addKey("Fastest Edge Rate", "0x0", "Fastest Edge Rate (Slew Rate Control Disabled)")
+    pinSlewRate[pinNumber-1].addKey("Medium Edge Rate", "0x1", "Medium Edge Rate")
+    pinSlewRate[pinNumber-1].addKey("Slow Edge Rate", "0x2", "Slow Edge Rate")
+    pinSlewRate[pinNumber-1].addKey("Slowest Edge Rate", "0x3", "Slowest Edge Rate")
+    pinSlewRate[pinNumber-1].setDependencies(pinSlewRateCal, ["BSP_PIN_" + str(pinNumber) + "_SR"])
 
     #list created only for dependency
     pinInterruptList.append(pinNumber)
@@ -682,6 +727,10 @@ gpioSym_GPIO_ANSEL =[]
 global gpioSym_GPIO_CNEN
 gpioSym_GPIO_CNEN =[]
 
+global gpioSym_GPIO_SRCON0
+gpioSym_GPIO_SRCON0 =[]
+global gpioSym_GPIO_SRCON1
+gpioSym_GPIO_SRCON1 =[]
 
 global pioSymInterruptVector
 pioSymInterruptVector = []
@@ -772,6 +821,18 @@ for portNumber in range(0, len(pioSymChannel)):
     gpioSym_GPIO_CNEN[portNumber].setLabel("CNEN" + str(pioSymChannel[portNumber]) + " Value")
     gpioSym_GPIO_CNEN[portNumber].setDefaultValue(0x00000000)
     gpioSym_GPIO_CNEN[portNumber].setReadOnly(False)
+
+    gpioSym_GPIO_SRCON0.append(portNumber)
+    gpioSym_GPIO_SRCON0[portNumber] = coreComponent.createHexSymbol("SYS_PORT_" + str(pioSymChannel[portNumber]) + "_SRCON0", port[portNumber])
+    gpioSym_GPIO_SRCON0[portNumber].setLabel("SRCON0" + str(pioSymChannel[portNumber]) + " Value")
+    gpioSym_GPIO_SRCON0[portNumber].setDefaultValue(0x00000000)
+    gpioSym_GPIO_SRCON0[portNumber].setReadOnly(False)
+
+    gpioSym_GPIO_SRCON1.append(portNumber)
+    gpioSym_GPIO_SRCON1[portNumber] = coreComponent.createHexSymbol("SYS_PORT_" + str(pioSymChannel[portNumber]) + "_SRCON1", port[portNumber])
+    gpioSym_GPIO_SRCON1[portNumber].setLabel("SRCON1" + str(pioSymChannel[portNumber]) + " Value")
+    gpioSym_GPIO_SRCON1[portNumber].setDefaultValue(0x00000000)
+    gpioSym_GPIO_SRCON1[portNumber].setReadOnly(False)
 
     #symbols and variables for interrupt handling
     pioSymInterruptVector.append(portNumber)

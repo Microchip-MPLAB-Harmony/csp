@@ -152,6 +152,12 @@ void GPIO_Initialize ( void )
         <#if .vars["SYS_PORT_${.vars[channel]}_CNPD"] != "0">
              <#lt>    GPIO${.vars[channel]}_REGS->GPIO_CNPDSET = 0x${.vars["SYS_PORT_${.vars[channel]}_CNPD"]}; /* Pull-Down Enable */
         </#if>
+        <#if .vars["SYS_PORT_${.vars[channel]}_SRCON0"] != "0">
+             <#lt>    GPIO${.vars[channel]}_REGS->GPIO_SRCON0SET = 0x${.vars["SYS_PORT_${.vars[channel]}_SRCON0"]}; /* Slew Rate Control */
+        </#if>
+        <#if .vars["SYS_PORT_${.vars[channel]}_SRCON1"] != "0">
+             <#lt>    GPIO${.vars[channel]}_REGS->GPIO_SRCON1SET = 0x${.vars["SYS_PORT_${.vars[channel]}_SRCON1"]}; /* Slew Rate Control */
+        </#if>
         <#if .vars["SYS_PORT_${.vars[channel]}_CN_USED"] == true>
              <#lt>    /* Change Notice Enable */
              <#lt>    GPIO${.vars[channel]}_REGS->GPIO_CNCONSET = GPIO_CNCON_ON_Msk;
