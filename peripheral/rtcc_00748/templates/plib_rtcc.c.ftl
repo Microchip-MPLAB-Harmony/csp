@@ -56,7 +56,7 @@
 // *****************************************************************************
 // *****************************************************************************
 
-#define decimaltobcd(x)                 (((x/10)<<4)+((x - ((x/10)*10))))
+#define decimaltobcd(x)                 (((x / 10) << 4) + ((x - ((x / 10) * 10))))
 #define bcdtodecimal(x)                 ((x & 0xF0) >> 4) * 10 + (x & 0x0F)
 
 <#if RTCC_INTERRUPT_MODE == true>
@@ -87,67 +87,66 @@ void ${RTCC_INSTANCE_NAME}_Initialize( void )
     SYSKEY = 0xAA996655;
     SYSKEY = 0x556699AA;
 
-    /* Initialize RTCC */
     RTCCONSET = _RTCCON_RTCWREN_MASK;  /* Enable writes to RTCC */
 
     /* Lock System */
     SYSKEY = 0x00000000;
 
-    RTCCONCLR = _RTCCON_ON_MASK;   /* Disable clock to RTCC */
-
-    /* wait for clock to stop. Block too long? */
-    while(RTCCONbits.RTCCLKON);  /* clock disabled? */
-
-    /* initialize the time, date and alarm */
-    RTCTIME = 0x${RTCTIME_TIME}00;   /* Set RTCC time */
-
-    RTCDATE = 0x${RTCTIME_DATE}0${RTCTIME_WEEKDAY};  /* Set RTCC date */
-
-    RTCALRMCLR = _RTCALRM_ALRMEN_MASK;  /* Disable alarm */
-
-    while(RTCALRMbits.ALRMSYNC);  /* Wait for disable */
-
-    ALRMTIME = 0x${RTCALRM_TIME}00;   /* Set alarm time */
-
-    ALRMDATE = 0x00${RTCALRM_DATE}0${RTCALRM_DAY};   /* Set alarm date */
-
-    /* repeat forever or 0-255 times */
-    <#if RTCC_ALARM_REPEAT_FOREVER == true>
-    RTCALRMSET = _RTCALRM_CHIME_MASK;  /* Set alarm to repeat forever */
-    <#else>
-    RTCALRMCLR = _RTCALRM_CHIME_MASK;  /* Set alarm to repeat finite number of times */
-
-    RTCALRMbits.ARPT = ${RTCALRM_ARPT};
-    </#if>
-
-    RTCALRMbits.AMASK = ${RTCC_ALARM_MASK};
-
     <#if RTCC_OUTPUT_ENABLE == true>
-    /* Initialize the output */
-    /* Select ouput to be placed on output pin */
+    /* Select output to be placed on output pin */
     RTCCONbits.${RTCC_OUTPUT_SELECT_BITNAME} = ${RTCC_OUTPUT_SELECT};
-
     RTCCONSET = _RTCCON_RTCOE_MASK;  /* Enable RTCC output */
     <#else>
-    RTCCONCLR = _RTCCON_RTCOE_MASK;  /* Enable RTCC output */
+    RTCCONbits.RTCOE = 0;  /* Disable RTCC output */
     </#if>
 
     <#if RTCC_CLOCK_SOURCE??>
     /* Set RTCC clock source (LPRC/SOSC) */
     RTCCONbits.RTCCLKSEL = ${RTCC_CLOCK_SOURCE};
-
     </#if>
+
+    <#if RTC_TIMEANDDATE == true>
+        <#lt>    RTCCONbits.ON = 0;   /* Disable clock to RTCC */
+        <#lt>    while(RTCCONbits.RTCCLKON);  /* Wait for clock to stop */
+
+        <#lt>    RTCTIME = 0x${RTCTIME_TIME}00;   /* Set RTCC time */
+        <#lt>    RTCDATE = 0x${RTCTIME_DATE}0${RTCTIME_WEEKDAY};  /* Set RTCC date */
+    </#if>
+
+    <#if RTCC_ALARM_REPEAT_FOREVER == true>
+        <#lt>    RTCALRMSET = _RTCALRM_CHIME_MASK;  /* Set alarm to repeat forever */
+    <#else>
+        <#lt>    /* Set alarm to repeat finite number of times */
+        <#lt>    RTCALRMCLR = _RTCALRM_CHIME_MASK;
+        <#lt>    RTCALRMbits.ARPT = ${RTCALRM_ARPT};
+    </#if>
+
+    <#if RTC_ALARM == true>
+        <#lt>    RTCALRMCLR = _RTCALRM_ALRMEN_MASK;  /* Disable alarm */
+        <#lt>    while(RTCALRMbits.ALRMSYNC);  /* Wait for disable */
+
+        <#lt>    ALRMTIME = 0x${RTCALRM_TIME}00;   /* Set alarm time */
+        <#lt>    ALRMDATE = 0x00${RTCALRM_DATE}0${RTCALRM_DAY};   /* Set alarm date */
+        <#lt>    RTCALRMbits.AMASK = ${RTCC_ALARM_MASK}; /* Set alarm frequency */
+    
+        <#if RTCC_INTERRUPT_MODE == true>
+            <#lt>    ${RTCC_IEC_REG}SET = RTCC_INT_ALARM; /* Enable RTC Alarma interrupt */
+        </#if>
+    
+        <#lt>    RTCALRMSET = _RTCALRM_ALRMEN_MASK;  /* Enable the alarm */
+    </#if>
+
     /* start the RTC */
     RTCCONSET = _RTCCON_ON_MASK;
 }
 
 <#if RTCC_INTERRUPT_MODE == true>
-void ${RTCC_INSTANCE_NAME}_InterruptEnable(RTCC_INT_MASK interrupt)
+void ${RTCC_INSTANCE_NAME}_InterruptEnable( RTCC_INT_MASK interrupt )
 {
     ${RTCC_IEC_REG}SET = interrupt;
 }
 
-void ${RTCC_INSTANCE_NAME}_InterruptDisable(RTCC_INT_MASK interrupt)
+void ${RTCC_INSTANCE_NAME}_InterruptDisable( RTCC_INT_MASK interrupt )
 {
     ${RTCC_IEC_REG}CLR = interrupt;
 }
@@ -220,6 +219,9 @@ bool ${RTCC_INSTANCE_NAME}_AlarmSet( struct tm *alarmTime, RTCC_ALARM_MASK alarm
     ${RTCC_INSTANCE_NAME}_InterruptDisable(RTCC_INT_ALARM);
     </#if>
 
+    RTCALRMCLR = _RTCALRM_ALRMEN_MASK;  /* Disable alarm */
+    while(RTCALRMbits.ALRMSYNC);  /* Wait for disable */
+
     if(RTCC_ALARM_MASK_OFF != alarmFreq)
     {
         dataDate  = (decimaltobcd(alarmTime->tm_mon) << _RTCDATE_MONTH01_POSITION) & (_RTCDATE_MONTH01_MASK | _RTCDATE_MONTH10_MASK);
@@ -243,11 +245,6 @@ bool ${RTCC_INSTANCE_NAME}_AlarmSet( struct tm *alarmTime, RTCC_ALARM_MASK alarm
 
         /* ALRMEN = 1 */
         RTCALRMSET = _RTCALRM_ALRMEN_MASK;  /* Enable the alarm */
-    }
-    else
-    {
-        /* ALRMEN = 0 */
-        RTCALRMCLR = _RTCALRM_ALRMEN_MASK;  /* Disable the alarm */
     }
 
     <#if RTCC_INTERRUPT_MODE == true>
