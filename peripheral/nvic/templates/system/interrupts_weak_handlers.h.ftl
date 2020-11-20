@@ -18,11 +18,11 @@
             <#assign NVIC_VECTOR_NONSECURE = "NVIC_" + i + "_" + j + "_SECURITY_TYPE">
             <#if ((.vars[NVIC_VECTOR_NONSECURE])?? && .vars[NVIC_VECTOR_NONSECURE] == "NON-SECURE")>
                 <#if COMPILER_CHOICE == "XC32">
-void ${.vars[NVIC_VECTOR_GENERIC_HANDLER]?right_pad(26)} ( void ) __attribute__((weak, alias("Dummy_Handler")));
+extern void ${.vars[NVIC_VECTOR_GENERIC_HANDLER]?right_pad(26)} ( void ) __attribute__((weak, alias("Dummy_Handler")));
                 <#elseif COMPILER_CHOICE == "KEIL">
-void ${.vars[NVIC_VECTOR_GENERIC_HANDLER]?right_pad(26)} ( void ) __attribute__((weak, alias("Dummy_Handler")));
+extern void ${.vars[NVIC_VECTOR_GENERIC_HANDLER]?right_pad(26)} ( void ) __attribute__((weak, alias("Dummy_Handler")));
                 <#elseif COMPILER_CHOICE == "IAR">
-void ${.vars[NVIC_VECTOR_GENERIC_HANDLER]} ( void );
+extern void ${.vars[NVIC_VECTOR_GENERIC_HANDLER]} ( void );
 #pragma weak ${.vars[NVIC_VECTOR_GENERIC_HANDLER]}=Dummy_Handler
                 </#if>
                 <#break>
@@ -36,11 +36,11 @@ void ${.vars[NVIC_VECTOR_GENERIC_HANDLER]} ( void );
                 <#assign NVIC_VECTOR_NONSECURE = "NVIC_" + i + "_" + j + "_SECURITY_TYPE">
                 <#if .vars[NVIC_VECTOR]?has_content && (.vars[NVIC_VECTOR] != "None")>
                 <#if COMPILER_CHOICE == "XC32">
-void ${.vars[NVIC_VECTOR_HANDLER]?right_pad(26)} ( void ) __attribute__((weak, alias("Dummy_Handler")));
+extern void ${.vars[NVIC_VECTOR_HANDLER]?right_pad(26)} ( void ) __attribute__((weak, alias("Dummy_Handler")));
                 <#elseif COMPILER_CHOICE == "KEIL">
-void ${.vars[NVIC_VECTOR_HANDLER]?right_pad(26)} ( void ) __attribute__((weak, alias("Dummy_Handler")));
+extern void ${.vars[NVIC_VECTOR_HANDLER]?right_pad(26)} ( void ) __attribute__((weak, alias("Dummy_Handler")));
                 <#elseif COMPILER_CHOICE == "IAR">
-void ${.vars[NVIC_VECTOR_HANDLER]} ( void );
+extern void ${.vars[NVIC_VECTOR_HANDLER]} ( void );
 #pragma weak ${.vars[NVIC_VECTOR_HANDLER]}=Dummy_Handler
                 </#if>
                 </#if>
@@ -58,11 +58,11 @@ void ${.vars[NVIC_VECTOR_HANDLER]} ( void );
             <#if !dummyHandlers?seq_contains(handler)>
                 <#assign dummyHandlers = dummyHandlers + [handler] />
                 <#if COMPILER_CHOICE == "XC32">
-void ${.vars[NVIC_VECTOR_HANDLER]?right_pad(26)} ( void ) __attribute__((weak, alias("Dummy_Handler")));
+extern void ${.vars[NVIC_VECTOR_HANDLER]?right_pad(26)} ( void ) __attribute__((weak, alias("Dummy_Handler")));
                 <#elseif COMPILER_CHOICE == "KEIL">
-void ${.vars[NVIC_VECTOR_HANDLER]?right_pad(26)} ( void ) __attribute__((weak, alias("Dummy_Handler")));
+extern void ${.vars[NVIC_VECTOR_HANDLER]?right_pad(26)} ( void ) __attribute__((weak, alias("Dummy_Handler")));
                 <#elseif COMPILER_CHOICE == "IAR">
-void ${.vars[NVIC_VECTOR_HANDLER]} ( void );
+extern void ${.vars[NVIC_VECTOR_HANDLER]} ( void );
 #pragma weak ${.vars[NVIC_VECTOR_HANDLER]}=Dummy_Handler
                 </#if>
             </#if>
@@ -86,11 +86,11 @@ void ${.vars[NVIC_VECTOR_HANDLER]} ( void );
         </#list>
         <#if NVIC_COMMON_ENABLE == false>
         <#if COMPILER_CHOICE == "XC32">
-void ${.vars[NVIC_VECTOR_GENERIC_HANDLER]?right_pad(26)} ( void ) __attribute__((weak, alias("Dummy_Handler")));
+extern void ${.vars[NVIC_VECTOR_GENERIC_HANDLER]?right_pad(26)} ( void ) __attribute__((weak, alias("Dummy_Handler")));
         <#elseif COMPILER_CHOICE == "KEIL">
-void ${.vars[NVIC_VECTOR_GENERIC_HANDLER]?right_pad(26)} ( void ) __attribute__((weak, alias("Dummy_Handler")));
+extern void ${.vars[NVIC_VECTOR_GENERIC_HANDLER]?right_pad(26)} ( void ) __attribute__((weak, alias("Dummy_Handler")));
         <#elseif COMPILER_CHOICE == "IAR">
-void ${.vars[NVIC_VECTOR_GENERIC_HANDLER]} ( void );
+extern void ${.vars[NVIC_VECTOR_GENERIC_HANDLER]} ( void );
 #pragma weak ${.vars[NVIC_VECTOR_GENERIC_HANDLER]}=Dummy_Handler
         </#if>
         <#else>
@@ -100,11 +100,11 @@ void ${.vars[NVIC_VECTOR_GENERIC_HANDLER]} ( void );
                 <#assign NVIC_VECTOR_HANDLER = "NVIC_" + i + "_" + j + "_HANDLER">
                 <#if .vars[NVIC_VECTOR]?has_content && (.vars[NVIC_VECTOR] != "None")>
                 <#if COMPILER_CHOICE == "XC32">
-void ${.vars[NVIC_VECTOR_HANDLER]?right_pad(26)} ( void ) __attribute__((weak, alias("Dummy_Handler")));
+extern void ${.vars[NVIC_VECTOR_HANDLER]?right_pad(26)} ( void ) __attribute__((weak, alias("Dummy_Handler")));
                 <#elseif COMPILER_CHOICE == "KEIL">
-void ${.vars[NVIC_VECTOR_HANDLER]?right_pad(26)} ( void ) __attribute__((weak, alias("Dummy_Handler")));
+extern void ${.vars[NVIC_VECTOR_HANDLER]?right_pad(26)} ( void ) __attribute__((weak, alias("Dummy_Handler")));
                 <#elseif COMPILER_CHOICE == "IAR">
-void ${.vars[NVIC_VECTOR_HANDLER]} ( void );
+extern void ${.vars[NVIC_VECTOR_HANDLER]} ( void );
 #pragma weak ${.vars[NVIC_VECTOR_HANDLER]}=Dummy_Handler
                 </#if>
                 </#if>
@@ -119,11 +119,11 @@ void ${.vars[NVIC_VECTOR_HANDLER]} ( void );
             <#if !dummyHandlers?seq_contains(handler)>
                 <#assign dummyHandlers = dummyHandlers + [handler] />
                 <#if COMPILER_CHOICE == "XC32">
-void ${.vars[NVIC_VECTOR_HANDLER]?right_pad(26)} ( void ) __attribute__((weak, alias("Dummy_Handler")));
+extern void ${.vars[NVIC_VECTOR_HANDLER]?right_pad(26)} ( void ) __attribute__((weak, alias("Dummy_Handler")));
                 <#elseif COMPILER_CHOICE == "KEIL">
-void ${.vars[NVIC_VECTOR_HANDLER]?right_pad(26)} ( void ) __attribute__((weak, alias("Dummy_Handler")));
+extern void ${.vars[NVIC_VECTOR_HANDLER]?right_pad(26)} ( void ) __attribute__((weak, alias("Dummy_Handler")));
                 <#elseif COMPILER_CHOICE == "IAR">
-void ${.vars[NVIC_VECTOR_HANDLER]} ( void );
+extern void ${.vars[NVIC_VECTOR_HANDLER]} ( void );
 #pragma weak ${.vars[NVIC_VECTOR_HANDLER]}=Dummy_Handler
                 </#if>
             </#if>

@@ -13,7 +13,7 @@
             </#if>
         </#list>
         <#if NVIC_COMMON_ENABLE == true>
-void ${.vars[NVIC_VECTOR_GENERIC_HANDLER]}( void )
+static void ${.vars[NVIC_VECTOR_GENERIC_HANDLER]}( void )
 {
         <#list 0..NVIC_VECTOR_MAX_MULTIPLE_HANDLERS as j>
             <#assign NVIC_VECTOR_ENABLE = "NVIC_" + i + "_" + j + "_ENABLE">
@@ -41,7 +41,7 @@ void ${.vars[NVIC_VECTOR_GENERIC_HANDLER]}( void )
             </#if>
         </#list>
         <#if NVIC_COMMON_ENABLE == true>
-void ${.vars[NVIC_VECTOR_GENERIC_HANDLER]}( void )
+static void ${.vars[NVIC_VECTOR_GENERIC_HANDLER]}( void )
 {
         <#list 0..NVIC_VECTOR_MAX_MULTIPLE_HANDLERS as j>
             <#assign NVIC_VECTOR_ENABLE = "NVIC_" + i + "_" + j + "_ENABLE">
