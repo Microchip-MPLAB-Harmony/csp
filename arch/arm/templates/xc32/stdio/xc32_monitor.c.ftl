@@ -54,13 +54,19 @@ int _mon_getc(int canblock)
 {
     <#if stdio??>
         <#if stdio.DEBUG_PERIPHERAL?has_content>
-        <#lt>   volatile int c = 0;
-        <#lt>   while(${.vars["${stdio.DEBUG_PERIPHERAL?lower_case}"].USART_PLIB_API_PREFIX}_Read((void*)&c, 1) != true);
+        <#lt>   int c = 0;
+        <#lt>   bool success = false;
+        <#lt>   (void)canblock;
+        <#lt>   do
+        <#lt>   {
+        <#lt>       success = ${.vars["${stdio.DEBUG_PERIPHERAL?lower_case}"].USART_PLIB_API_PREFIX}_Read((void*)&c, 1);                
+        <#lt>   }while( !success);
         <#lt>   return c;
         <#else>
             <#lt>   return 0;
         </#if>
     <#else>
+        <#lt>   (void)canblock;
         <#lt>   return 0;
     </#if>
 }
@@ -69,11 +75,13 @@ void _mon_putc(char c)
 {
     <#if stdio??>
         <#if stdio.DEBUG_PERIPHERAL?has_content>
-        <#lt>   uint8_t size = 0;
+        <#lt>   bool success = false;
         <#lt>   do
         <#lt>   {
-        <#lt>       size = ${.vars["${stdio.DEBUG_PERIPHERAL?lower_case}"].USART_PLIB_API_PREFIX}_Write((void*)&c, 1);
-        <#lt>   }while (size != 1);
+        <#lt>       success = ${.vars["${stdio.DEBUG_PERIPHERAL?lower_case}"].USART_PLIB_API_PREFIX}_Write((void*)&c, 1);
+        <#lt>   }while (!success);
         </#if>
+    <#else>
+        <#lt>   (void)c;
     </#if>
 }

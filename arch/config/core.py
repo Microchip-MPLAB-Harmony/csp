@@ -229,6 +229,39 @@ def updateLinkerScriptParams(symbol, event):
     setLinkerScriptParams(symbol, arch, compiler, addLinkerFile)
 
 
+def generateDeviceVectorList(component):
+    interrupt_dict = {}
+    interruptNodes = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts").getChildren()
+    for index in range (0, len(interruptNodes)):
+        interrupt = interruptNodes[index]
+        interrupt_dict[int(interrupt.getAttribute("index"))] = (interrupt.getAttribute("name"), interrupt.getAttribute("caption"))
+    
+    min_interrupts = min(interrupt_dict.keys())
+    cortexMHandlerMinSym = component.createIntegerSymbol("CORTEX_M_HANDLER_MIN", None)
+    cortexMHandlerMinSym.setVisible(False)
+    cortexMHandlerMinSym.setDefaultValue(min_interrupts)
+
+    max_interrupts = max(interrupt_dict.keys())
+    cortexMHandlerMaxSym = component.createIntegerSymbol("CORTEX_M_HANDLER_MAX", None)
+    cortexMHandlerMaxSym.setVisible(False)
+    cortexMHandlerMaxSym.setDefaultValue(max_interrupts)
+    
+    for index in range(min_interrupts, max_interrupts + 1):
+        data = interrupt_dict.get(index)
+        if  data is not None:
+            field = "pfn_handler_t pfn{0}_Handler;".format(data[0])
+            comment = "/* {0} {1} */".format(int(index), data[1])
+            value = field.ljust(50) + comment
+        else:
+            value = "pfn_handler_t pfnReservedC{0};".format(int(abs(index)))
+        
+        symName = "CORTEX_M_" + ("CORE" if (index < 0) else "PERIPHERAL") +"_HANDLER_PTR_"+ str(index)
+        
+        cortexMHandlerSym = component.createStringSymbol(symName, None)
+        cortexMHandlerSym.setVisible(False)
+        cortexMHandlerSym.setDefaultValue(value)
+
+
 def instantiateComponent( coreComponent ):
     global compilers
     global compilerSpecifics
@@ -382,7 +415,6 @@ def instantiateComponent( coreComponent ):
     exceptionHandling.setLabel("Use Advanced Exception Handling")
     exceptionHandling.setDefaultValue(False)
     exceptionHandling.setDependencies(setFileVisibility, ["CoreSysExceptionFile"])
-
 
     filteringExceptionHandling = coreComponent.createBooleanSymbol("FILTERING_EXCEPTION", exceptionHandling)
     filteringExceptionHandling.setLabel("Use Advanced Exception Handling With Filtering Support")
@@ -613,6 +645,9 @@ def instantiateComponent( coreComponent ):
     keilHeapStackSize.setDependencies(setKeilHeapStackSize, ["KEIL_STACK_SIZE", "KEIL_HEAP_SIZE"])
 
     if "CORTEX-M" in coreArch.getValue():
+        #Generate device vector handler related string symbols
+        generateDeviceVectorList(coreComponent)
+
         #Symbols relevant to custom linker scripts
         deviceName = coreComponent.createStringSymbol("DEVICE_NAME", None)
         deviceName.setVisible(False)
@@ -744,6 +779,17 @@ def instantiateComponent( coreComponent ):
     intSourceFile.setProjectPath("config/" + configName + "/")
     intSourceFile.setType("SOURCE")
     intSourceFile.setDependencies(genSysSourceFile, ["CoreSysIntFile", "CoreSysFiles"])
+
+    if "CORTEX-M" in coreArch.getValue():
+    # generate device_vectors.h file
+        intHeaderFile = coreComponent.createFileSymbol( "DEVICE_VECTORS_H", None )
+        intHeaderFile.setSourcePath("templates/device_vectors.h.ftl")
+        intHeaderFile.setOutputName("device_vectors.h")
+        intHeaderFile.setMarkup(True)
+        intHeaderFile.setOverwrite(True)
+        intHeaderFile.setDestPath("")
+        intHeaderFile.setProjectPath("config/" + configName + "/")
+        intHeaderFile.setType("HEADER")
 
     if "PIC32M" in processor:
         intASMSourceFile = coreComponent.createFileSymbol("INTERRUPTS_ASM", None)

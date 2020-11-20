@@ -41,6 +41,9 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
+#ifndef DEVICE_H
+#define DEVICE_H
+
 <#if __PROCESSOR?contains("PIC32M") == true>
 #include <xc.h>
 #include <sys/attribs.h>
@@ -54,6 +57,12 @@
 #pragma GCC diagnostic ignored "-Wattributes"
 #pragma GCC diagnostic ignored "-Wundef"
 </#if>
+#ifndef DONT_USE_PREDEFINED_CORE_HANDLERS
+    #define DONT_USE_PREDEFINED_CORE_HANDLERS
+#endif //DONT_USE_PREDEFINED_CORE_HANDLERS
+#ifndef DONT_USE_PREDEFINED_PERIPHERALS_HANDLERS
+    #define DONT_USE_PREDEFINED_PERIPHERALS_HANDLERS
+#endif //DONT_USE_PREDEFINED_PERIPHERALS_HANDLERS
 #include "${__PROCESSOR?lower_case}.h"
 <#if core.COMPILER_CHOICE == "XC32">
 #pragma GCC diagnostic pop
@@ -62,3 +71,4 @@
 </#if>
 #include "toolchain_specifics.h"
 
+#endif //DEVICE_H

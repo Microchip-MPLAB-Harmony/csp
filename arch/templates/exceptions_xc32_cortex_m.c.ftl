@@ -51,6 +51,7 @@
         <#lt>#include "configuration.h"
     </#if>
 </#if>
+#include "interrupts.h"
 #include "definitions.h"
 <#if ADVANCED_EXCEPTION>
 #include <stdio.h>
@@ -69,7 +70,7 @@ void __attribute__((noreturn)) NonMaskableInt_Handler(void)
 #if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
     __builtin_software_breakpoint();
 #endif
-    while (1)
+    while (true)
     {
     }
 }
@@ -133,7 +134,7 @@ void __attribute__((noreturn)) NonMaskableInt_Handler(void)
     <#lt>   __builtin_software_breakpoint();
     <#lt>  #endif
 
-    <#lt>   while (1)
+    <#lt>   while (true)
     <#lt>   {
     <#lt>       // Do Nothing
     <#lt>   }
@@ -187,7 +188,7 @@ void __attribute__((noreturn)) NonMaskableInt_Handler(void)
     <#lt>  #if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
     <#lt>   __builtin_software_breakpoint();
     <#lt>  #endif
-    <#lt>   while (1)
+    <#lt>   while (true)
     <#lt>   {
     <#lt>       // Do Nothing
     <#lt>   }
@@ -246,7 +247,7 @@ void __attribute__((noreturn)) NonMaskableInt_Handler(void)
     <#lt>  #if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
     <#lt>   __builtin_software_breakpoint();
     <#lt>  #endif
-    <#lt>   while (1)
+    <#lt>   while (true)
     <#lt>   {
     <#lt>       // Do Nothing
     <#lt>   }
@@ -308,7 +309,7 @@ void __attribute__((noreturn)) NonMaskableInt_Handler(void)
     <#lt>  #if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
     <#lt>   __builtin_software_breakpoint();
     <#lt>  #endif
-    <#lt>   while (1)
+    <#lt>   while (true)
     <#lt>   {
     <#lt>       // Do Nothing
     <#lt>   }
@@ -364,7 +365,7 @@ void __attribute__((noreturn)) NonMaskableInt_Handler(void)
     <#lt>  #if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
     <#lt>   __builtin_software_breakpoint();
     <#lt>  #endif
-    <#lt>   while (1)
+    <#lt>   while (true)
     <#lt>   {
     <#lt>       // Do Nothing
     <#lt>   }
@@ -376,7 +377,7 @@ void __attribute__((noreturn)) NonMaskableInt_Handler(void)
     <#lt>#if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
     <#lt>   __builtin_software_breakpoint();
     <#lt>#endif
-    <#lt>   while (1)
+    <#lt>   while (true)
     <#lt>   {
     <#lt>   }
     <#lt>}
@@ -387,7 +388,7 @@ void __attribute__((noreturn)) NonMaskableInt_Handler(void)
     <#lt>#if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
     <#lt>   __builtin_software_breakpoint();
     <#lt>#endif
-    <#lt>   while (1)
+    <#lt>   while (true)
     <#lt>   {
     <#lt>   }
     <#lt>}
@@ -397,7 +398,7 @@ void __attribute__((noreturn)) NonMaskableInt_Handler(void)
     <#lt>#if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
     <#lt>   __builtin_software_breakpoint();
     <#lt>#endif
-    <#lt>   while (1)
+    <#lt>   while (true)
     <#lt>   {
     <#lt>   }
     <#lt>}
@@ -407,7 +408,7 @@ void __attribute__((noreturn)) NonMaskableInt_Handler(void)
     <#lt>#if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
     <#lt>   __builtin_software_breakpoint();
     <#lt>#endif
-    <#lt>   while (1)
+    <#lt>   while (true)
     <#lt>   {
     <#lt>   }
     <#lt>}
@@ -417,7 +418,7 @@ void __attribute__((noreturn)) NonMaskableInt_Handler(void)
     <#lt>#if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
     <#lt>   __builtin_software_breakpoint();
     <#lt>#endif
-    <#lt>   while (1)
+    <#lt>   while (true)
     <#lt>   {
     <#lt>   }
     <#lt>}

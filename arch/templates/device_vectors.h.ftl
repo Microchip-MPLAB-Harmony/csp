@@ -1,21 +1,17 @@
 /*******************************************************************************
- System Interrupts File
+ Cortex-M device vectors file
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    interrupt.c
+    device_vectors.h
 
   Summary:
-    Interrupt vectors mapping
+    Harmony3 device handler structure for cortex-M devices
 
   Description:
-    This file maps all the interrupt vectors to their corresponding
-    implementations. If a particular module interrupt is used, then its ISR
-    definition can be found in corresponding PLIB source file. If a module
-    interrupt is not used, then its ISR implementation is mapped to dummy
-    handler.
+    This file contains Harmony3 device handler structure for cortex-M devices
  *******************************************************************************/
 
 // DOM-IGNORE-BEGIN
@@ -43,40 +39,42 @@
  *******************************************************************************/
 // DOM-IGNORE-END
 
+#ifndef DEVICE_VECTORS_H
+#define DEVICE_VECTORS_H
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-${LIST_SYSTEM_INTERRUPT_C_INCLUDES}
-<#if HarmonyCore??>
-    <#if HarmonyCore.ENABLE_DRV_COMMON == true ||
-         HarmonyCore.ENABLE_SYS_COMMON == true ||
-         HarmonyCore.ENABLE_APP_FILE == true >
-        <#lt>#include "configuration.h"
-    </#if>
-</#if>
-<#if CoreArchitecture?matches("CORTEX-M.*")>
-#include "device_vectors.h"
-</#if>
-#include "definitions.h"
+#include <stdint.h>
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: System Interrupt Vector Functions
+// Section: Data Types
 // *****************************************************************************
 // *****************************************************************************
 
-<#if CoreArchitecture?matches("CORTEX-A.*")>
-    <#lt><#include "interrupts_cortex_a5.c.ftl">
-<#elseif CoreArchitecture?matches("CORTEX-M.*")>
-    <#lt><#include "interrupts_xc32_cortex_m.c.ftl">
-<#elseif CoreArchitecture?matches("ARM926.*")>
-    <#lt><#include "interrupts_arm_9.c.ftl">
-<#else>
-    <#lt><#include "interrupts_xc32_mips.c.ftl">
-</#if>
+/* Function pointer type for vector handlers */
+typedef void (*pfn_handler_t)(void);
 
-/*******************************************************************************
- End of File
-*/
+/* Structure defining device vector types */
+typedef struct _H3DeviceVectors
+{
+  /* Stack pointer */
+  uint32_t* pvStack;
+
+  /* ${CoreArchitecture} handlers */ 
+<#list CORTEX_M_HANDLER_MIN..-1 as index>
+<#assign function_ptr = "CORTEX_M_CORE_HANDLER_PTR_" + index>
+  ${.vars[function_ptr]}
+</#list>
+
+  /* Peripheral handlers */
+<#list 0..CORTEX_M_HANDLER_MAX as index>
+<#assign function_ptr = "CORTEX_M_PERIPHERAL_HANDLER_PTR_" + index>
+  ${.vars[function_ptr]}
+</#list>
+}H3DeviceVectors;
+
+#endif //DEVICE_VECTORS_H

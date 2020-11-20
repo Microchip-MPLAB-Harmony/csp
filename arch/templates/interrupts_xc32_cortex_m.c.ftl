@@ -2,7 +2,6 @@
 extern uint32_t _stack;
 
 void Dummy_Handler(void);
-
 /* Brief default interrupt handler for unused IRQs.*/
 void __attribute__((optimize("-O1"),section(".text.Dummy_Handler"),long_call, noreturn))Dummy_Handler(void)
 {
@@ -11,7 +10,7 @@ void __attribute__((optimize("-O1"),section(".text.Dummy_Handler"),long_call, no
     __builtin_software_breakpoint();
 #endif
 </#if>
-    while (1)
+    while (true)
     {
     }
 }
@@ -19,7 +18,7 @@ void __attribute__((optimize("-O1"),section(".text.Dummy_Handler"),long_call, no
 /* Brief default interrupt handler for unused IRQs.*/
 void __attribute__((section(".text.Dummy_Handler")))Dummy_Handler(void)
 {
-    while (1)
+    while (true)
     {
     }
 }
@@ -28,7 +27,7 @@ void __attribute__((section(".text.Dummy_Handler")))Dummy_Handler(void)
 
 void Dummy_Handler( void )
 {
-    while(1)
+    while(true)
     {
 
     }
