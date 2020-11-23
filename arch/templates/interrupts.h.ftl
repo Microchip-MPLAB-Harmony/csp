@@ -1,17 +1,17 @@
 /*******************************************************************************
- Cortex-M device vectors file
+ System Interrupts File
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    device_vectors.h
+    interrupt.h
 
   Summary:
-    Harmony3 device handler structure for cortex-M devices
+    Interrupt vectors mapping
 
   Description:
-    This file contains Harmony3 device handler structure for cortex-M devices
+    This file contains declarations of device vectors used by Harmony 3
  *******************************************************************************/
 
 // DOM-IGNORE-BEGIN
@@ -39,8 +39,8 @@
  *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef DEVICE_VECTORS_H
-#define DEVICE_VECTORS_H
+#ifndef INTERRUPTS_H
+#define INTERRUPTS_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -49,32 +49,13 @@
 // *****************************************************************************
 #include <stdint.h>
 
+
 // *****************************************************************************
 // *****************************************************************************
-// Section: Data Types
+// Section: Handler Routines
 // *****************************************************************************
 // *****************************************************************************
 
-/* Function pointer type for vector handlers */
-typedef void (*pfn_handler_t)(void);
+${LIST_SYSTEM_INTERRUPT_HANDLER_DECLS}
 
-/* Structure defining device vector types */
-typedef struct _H3DeviceVectors
-{
-  /* Stack pointer */
-  uint32_t* pvStack;
-
-  /* ${CoreArchitecture} handlers */ 
-<#list CORTEX_M_HANDLER_MIN..-1 as index>
-<#assign function_ptr = "CORTEX_M_CORE_HANDLER_PTR_" + index>
-  ${.vars[function_ptr]}
-</#list>
-
-  /* Peripheral handlers */
-<#list 0..CORTEX_M_HANDLER_MAX as index>
-<#assign function_ptr = "CORTEX_M_PERIPHERAL_HANDLER_PTR_" + index>
-  ${.vars[function_ptr]}
-</#list>
-}H3DeviceVectors;
-
-#endif //DEVICE_VECTORS_H
+#endif // INTERRUPTS_H

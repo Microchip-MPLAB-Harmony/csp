@@ -168,6 +168,7 @@ secStartAddress.setDefaultValue(int(Database.getSymbolValue("core", "IDAU_BOOTPR
 secStartAddress.setDependencies(secStartAddressCalculate, ["IDAU_BOOTPROT_SIZE"])
 
 secSystemDefinitionsHeadersList =      coreComponent.createListSymbol( "LIST_SYSTEM_DEFINITIONS_SECURE_H_INCLUDES",       None )
+secsystemIntHandlerdeclsList =         coreComponent.createListSymbol("LIST_SYSTEM_INTERRUPT_SECURE_HANDLER_DECLS",       None)
 secsystemIntVectorsMultipleHandlesList =   coreComponent.createListSymbol( "LIST_SYSTEM_INTERRUPT_SECURE_MULTIPLE_HANDLERS",  None )
 secsystemIntVectorsWeakHandlesList =       coreComponent.createListSymbol( "LIST_SYSTEM_INTERRUPT_SECURE_WEAK_HANDLERS",      None )
 secsystemIntVectorsHandlesList =           coreComponent.createListSymbol( "LIST_SYSTEM_INTERRUPT_SECURE_HANDLERS",           None )
@@ -216,6 +217,28 @@ secintSourceFile.setDestPath("")
 secintSourceFile.setProjectPath("config/" + configName + "/")
 secintSourceFile.setType("SOURCE")
 secintSourceFile.setSecurity("SECURE")
+
+# generate interrupts.h file
+secintHeaderFile = coreComponent.createFileSymbol( "SECURE_INTERRUPTS_H", None )
+secintHeaderFile.setSourcePath("templates/trustZone/interrupts.h.ftl")
+secintHeaderFile.setOutputName("interrupts.h")
+secintHeaderFile.setMarkup(True)
+secintHeaderFile.setOverwrite(True)
+secintHeaderFile.setDestPath("")
+secintHeaderFile.setProjectPath("config/" + configName + "/")
+secintHeaderFile.setType("HEADER")
+secintHeaderFile.setSecurity("SECURE")
+
+# generate device_vectors.h file
+secintHeaderFile = coreComponent.createFileSymbol( "SECURE_DEVICE_VECTORS_H", None )
+secintHeaderFile.setSourcePath("templates/trustZone/device_vectors_secure.h.ftl")
+secintHeaderFile.setOutputName("device_vectors.h")
+secintHeaderFile.setMarkup(True)
+secintHeaderFile.setOverwrite(True)
+secintHeaderFile.setDestPath("")
+secintHeaderFile.setProjectPath("config/" + configName + "/")
+secintHeaderFile.setType("HEADER")
+secintHeaderFile.setSecurity("SECURE")
 
 secinitSourceFile = coreComponent.createFileSymbol("SECURE_INITIALIZATION_C", None)
 secinitSourceFile.setSourcePath("templates/trustZone/initialization_secure.c.ftl")

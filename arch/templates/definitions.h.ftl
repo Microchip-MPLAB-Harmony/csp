@@ -48,7 +48,6 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
-#include "interrupts.h"
 <#if stdio?? >
     <#lt>#include <stdio.h>
 </#if>

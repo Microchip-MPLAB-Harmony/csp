@@ -234,7 +234,10 @@ def generateDeviceVectorList(component):
     interruptNodes = ATDF.getNode("/avr-tools-device-file/devices/device/interrupts").getChildren()
     for index in range (0, len(interruptNodes)):
         interrupt = interruptNodes[index]
-        interrupt_dict[int(interrupt.getAttribute("index"))] = (interrupt.getAttribute("name"), interrupt.getAttribute("caption"))
+        interrupt_dict[int(interrupt.getAttribute("index"))] = (interrupt.getAttribute("name"),
+                                                                interrupt.getAttribute("header:alternate-name"),
+                                                                interrupt.getAttribute("caption"),
+                                                                interrupt.getAttribute("header:alternate-caption"))
     
     min_interrupts = min(interrupt_dict.keys())
     cortexMHandlerMinSym = component.createIntegerSymbol("CORTEX_M_HANDLER_MIN", None)
@@ -249,11 +252,11 @@ def generateDeviceVectorList(component):
     for index in range(min_interrupts, max_interrupts + 1):
         data = interrupt_dict.get(index)
         if  data is not None:
-            field = "pfn_handler_t pfn{0}_Handler;".format(data[0])
-            comment = "/* {0} {1} */".format(int(index), data[1])
+            field = "pfn_handler_t pfn{0}_Handler;".format(data[1] if data[1] else data[0])
+            comment = "/* {0} {1} */".format(int(index), data[3] if (data[3] and index > 0) else data[2])
             value = field.ljust(50) + comment
         else:
-            value = "pfn_handler_t pfnReservedC{0};".format(int(abs(index)))
+            value = "pfn_handler_t pfnReserved{0}{1};".format(("C" if (index < 0) else ""), int(abs(index)))
         
         symName = "CORTEX_M_" + ("CORE" if (index < 0) else "PERIPHERAL") +"_HANDLER_PTR_"+ str(index)
         
@@ -780,6 +783,17 @@ def instantiateComponent( coreComponent ):
     intSourceFile.setType("SOURCE")
     intSourceFile.setDependencies(genSysSourceFile, ["CoreSysIntFile", "CoreSysFiles"])
 
+    # generate interrupts.h file
+    intHeaderFile = coreComponent.createFileSymbol( "INTERRUPTS_H", None )
+    intHeaderFile.setSourcePath("templates/interrupts.h.ftl")
+    intHeaderFile.setOutputName("interrupts.h")
+    intHeaderFile.setMarkup(True)
+    intHeaderFile.setOverwrite(True)
+    intHeaderFile.setDestPath("")
+    intHeaderFile.setProjectPath("config/" + configName + "/")
+    intHeaderFile.setType("HEADER")
+    intHeaderFile.setDependencies(genSysSourceFile, ["CoreSysIntFile", "CoreSysFiles"])
+
     if "CORTEX-M" in coreArch.getValue():
     # generate device_vectors.h file
         intHeaderFile = coreComponent.createFileSymbol( "DEVICE_VECTORS_H", None )
@@ -790,6 +804,7 @@ def instantiateComponent( coreComponent ):
         intHeaderFile.setDestPath("")
         intHeaderFile.setProjectPath("config/" + configName + "/")
         intHeaderFile.setType("HEADER")
+
 
     if "PIC32M" in processor:
         intASMSourceFile = coreComponent.createFileSymbol("INTERRUPTS_ASM", None)
@@ -804,6 +819,7 @@ def instantiateComponent( coreComponent ):
         intASMSourceFile.setDependencies(genSysIntASMSourceFile, ["CoreSysIntFile", "CoreSysFiles", "HarmonyCore.SELECT_RTOS"])
 
     systemIntHeadersList =                  coreComponent.createListSymbol( "LIST_SYSTEM_INTERRUPT_C_INCLUDES",         None )
+    systemIntHandlerdeclsList =             coreComponent.createListSymbol("LIST_SYSTEM_INTERRUPT_HANDLER_DECLS",       None)
     systemIntVectorsList =                  coreComponent.createListSymbol( "LIST_SYSTEM_INTERRUPT_C_VECTORS",          None )
     systemIntVectorsMultipleHandlesList =   coreComponent.createListSymbol( "LIST_SYSTEM_INTERRUPT_MULTIPLE_HANDLERS",  None )
     systemIntVectorsWeakHandlesList =       coreComponent.createListSymbol( "LIST_SYSTEM_INTERRUPT_WEAK_HANDLERS",      None )

@@ -59,7 +59,9 @@ ${LIST_SYSTEM_INTERRUPT_C_INCLUDES}
 <#if CoreArchitecture?matches("CORTEX-M.*")>
 #include "device_vectors.h"
 </#if>
+#include "interrupts.h"
 #include "definitions.h"
+
 
 // *****************************************************************************
 // *****************************************************************************
