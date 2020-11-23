@@ -384,6 +384,12 @@ nvicSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
 nvicSystemDefFile.setSourcePath("../peripheral/nvic/templates/system/definitions.h.ftl")
 nvicSystemDefFile.setMarkup(True)
 
+nvicSystemIntHandlerDeclsFile = coreComponent.createFileSymbol("NVIC_HANDLER_DECLS", None)
+nvicSystemIntHandlerDeclsFile.setType("STRING")
+nvicSystemIntHandlerDeclsFile.setOutputName("core.LIST_SYSTEM_INTERRUPT_HANDLER_DECLS")
+nvicSystemIntHandlerDeclsFile.setSourcePath("../peripheral/nvic/templates/system/interrupt_handlers_decls.h.ftl")
+nvicSystemIntHandlerDeclsFile.setMarkup(True)
+
 nvicSystemIntMultipleHandleFile = coreComponent.createFileSymbol("NVIC_MULTIPLE_HANDLER", None)
 nvicSystemIntMultipleHandleFile.setType("STRING")
 nvicSystemIntMultipleHandleFile.setOutputName("core.LIST_SYSTEM_INTERRUPT_MULTIPLE_HANDLERS")
@@ -408,6 +414,12 @@ if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_E
     secnvicSystemIntMultipleHandleFile.setOutputName("core.LIST_SYSTEM_INTERRUPT_SECURE_MULTIPLE_HANDLERS")
     secnvicSystemIntMultipleHandleFile.setSourcePath("../peripheral/nvic/templates/system/trustZone/interrupts_multiple_handlers_secure.h.ftl")
     secnvicSystemIntMultipleHandleFile.setMarkup(True)
+    
+    secnvicSystemIntHandlerDeclsFile = coreComponent.createFileSymbol("SEC_NVIC_HANDLER_DECLS", None)
+    secnvicSystemIntHandlerDeclsFile.setType("STRING")
+    secnvicSystemIntHandlerDeclsFile.setOutputName("core.LIST_SYSTEM_INTERRUPT_SECURE_HANDLER_DECLS")
+    secnvicSystemIntHandlerDeclsFile.setSourcePath("../peripheral/nvic/templates/system/trustZone/interrupt_handlers_decls_secure.h.ftl")
+    secnvicSystemIntHandlerDeclsFile.setMarkup(True)
 
     secnvicSystemIntWeakHandleFile = coreComponent.createFileSymbol("SEC_NVIC_INT_HANDLER", None)
     secnvicSystemIntWeakHandleFile.setType("STRING")
