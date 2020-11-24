@@ -340,8 +340,8 @@ ${CLK_INIT_LIST}
     MCLK_REGS->MCLK_APBBMASK = ${MCLK_APBB_INITIAL_VALUE};
 
     </#if>
-    <#if MCLK_APBC_INITIAL_VALUE != "0x7fff">
     <#if MCLK_APBC_INITIAL_VALUE??>
+    <#if MCLK_APBC_INITIAL_VALUE != "0x7fff">
     /* Configure the APBC Bridge Clocks */
     MCLK_REGS->MCLK_APBCMASK = ${MCLK_APBC_INITIAL_VALUE};
 
