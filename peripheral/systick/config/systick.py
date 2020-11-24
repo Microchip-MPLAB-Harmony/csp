@@ -32,6 +32,12 @@ global  systickSystemInitFile
 global  systickinterruptVector
 global  systickinterruptHandlerLock
 global  systickComment
+global  systickPeriodMS
+global  systickEnable
+global  systickInterrupt
+global  systickUsedBySysTime
+global  systickCommentForSysTime
+global  calAchievableTickRate
 
 Log.writeInfoMessage("Loading SYSTICK for " + Variables.get("__PROCESSOR"))
 
@@ -104,11 +110,23 @@ def sysTickMax(systick, event):
 
     systick.setMax(float(max))
 
+def calAchievableTickRate(periodVal, sourceFreq):
+
+    if systickUsedBySysTime.getValue() == True:
+        dummy_dict = dict()
+        if Database.getSymbolValue("core","SYSTICK_SYS_TIME_COMPONENT_ID") != "":
+            #Read the calculated timer count and Calculate the actual tick rate
+            achievableTickRateHz = (1.0/sourceFreq) * periodVal
+            achievableTickRateHz = (1.0/achievableTickRateHz) * 100000.0
+            dummy_dict = Database.sendMessage(Database.getSymbolValue("core","SYSTICK_SYS_TIME_COMPONENT_ID"), "SYS_TIME_ACHIEVABLE_TICK_RATE_HZ", {"tick_rate_hz": long(achievableTickRateHz)})
+
 def systickCal(symbol, event):
+    global calAchievableTickRate
     clock = 0
     freq_ext = 0
     freq_proc = 0
     value = 0
+    sourceFreq = 0
 
     if Database.getSymbolValue("core","SYSTICK_EXTERNAL_CLOCK"):
         clock = Database.getSymbolValue("core", "SYSTICK_CLOCK")
@@ -122,12 +140,45 @@ def systickCal(symbol, event):
     if clock == 0:
         if freq_ext != 0 and freq_ext != None:
             value = int(round(float(freq_ext) * (period / 1000)))
+            sourceFreq = freq_ext
     else:
         if freq_proc != 0 and freq_proc != None:
             value = int(round((float(freq_proc)) * (period / 1000)))
+            sourceFreq = freq_proc
 
     symbol.setValue(str(hex(value)),2)
     Database.setSymbolValue("core","SYSTICK_PERIOD_US", int(round(period * 1000)), 2)
+
+    # Calculate achievable tick rate in Hz if systick is connected to SYS TIME module
+    calAchievableTickRate(int(symbol.getValue(), 16), sourceFreq)
+
+def systickPubCapabilities(symbol, event):
+    sysTimePLIBConfig = dict()
+    # Send SYS TICK capability ("PERIOD_MODE") and get SYS TIME Tick Ms in return from SYS Time
+    if event["value"] == True:
+        modeDict = {"plib_mode": "PERIOD_MODE"}
+        sysTimePLIBConfig = Database.sendMessage(Database.getSymbolValue("core","SYSTICK_SYS_TIME_COMPONENT_ID"), "SYS_TIME_PLIB_CAPABILITY", modeDict)
+        if sysTimePLIBConfig["plib_mode"] == "SYS_TIME_PLIB_MODE_PERIOD":
+            systickPeriodMS.setReadOnly(True)
+            systickEnable.setReadOnly(True)
+            systickInterrupt.setReadOnly(True)
+            systickEnable.setValue(True)
+            systickInterrupt.setValue(True)
+            systickCommentForSysTime.setVisible(True)
+            systickUsedBySysTime.setValue(True)
+            systickPeriodMS.setValue(sysTimePLIBConfig["sys_time_tick_ms"])
+    else:
+        systickUsedBySysTime.setValue(False)
+        systickPeriodMS.setReadOnly(False)
+        systickEnable.setValue(False)
+        systickEnable.setReadOnly(False)
+        systickInterrupt.setReadOnly(False)
+        systickCommentForSysTime.setVisible(False)
+
+def updateSysTickMS(symbol, event):
+    sysTickPeriodLong = symbol.getValue()/1000.0
+    systickPeriodMS.setValue(sysTickPeriodLong)
+
 
 ################################################################################
 #### Menu ####
@@ -136,14 +187,34 @@ def systickCal(symbol, event):
 sysTickMenu = coreComponent.createMenuSymbol("SYSTICK_MENU", cortexMenu)
 sysTickMenu.setLabel("SysTick")
 
+systickSysTimeComponentId = coreComponent.createStringSymbol("SYSTICK_SYS_TIME_COMPONENT_ID", sysTickMenu)
+systickSysTimeComponentId.setLabel("Component id")
+systickSysTimeComponentId.setVisible(False)
+systickSysTimeComponentId.setDefaultValue("")
+
 # Interrupt Warning status
 systickComment = coreComponent.createCommentSymbol("SYSTICK_COMMENT", sysTickMenu)
 systickComment.setVisible(False)
 systickComment.setLabel("RTOS is using SysTick for Timebase")
 
+systickCommentForSysTime = coreComponent.createCommentSymbol("SYSTICK_COMMENT_SYS_TIME", sysTickMenu)
+systickCommentForSysTime.setVisible(False)
+systickCommentForSysTime.setLabel("SYS TIME is using SysTick for Timebase")
+
 systickEnable = coreComponent.createBooleanSymbol("systickEnable", sysTickMenu)
 systickEnable.setLabel("Enable SysTick")
 systickEnable.setDependencies(systickUse, ["HarmonyCore.SELECT_RTOS"])
+
+systickPublishCapabilities = coreComponent.createBooleanSymbol("SYSTICK_PUBLISH_CAPABILITIES", sysTickMenu)
+systickPublishCapabilities.setLabel("Systick Publish Capabilities")
+systickPublishCapabilities.setVisible(False)
+systickPublishCapabilities.setValue(False)
+systickPublishCapabilities.setDependencies(systickPubCapabilities, ["SYSTICK_PUBLISH_CAPABILITIES"])
+
+systickUsedBySysTime = coreComponent.createBooleanSymbol("SYSTICK_USED_BY_SYS_TIME", sysTickMenu)
+systickUsedBySysTime.setLabel("Systick Used By SYS Time")
+systickUsedBySysTime.setVisible(False)
+systickUsedBySysTime.setValue(False)
 
 systickConfigMenu = coreComponent.createMenuSymbol("SYSTICK_MENU_0", systickEnable)
 systickConfigMenu.setLabel("SysTick Configuration")
@@ -174,6 +245,12 @@ systickPeriodMS.setMin(0)
 systickPeriodMS.setMax(float(max))
 systickPeriodMS.setDependencies(sysTickMax, ["core.CPU_CLOCK_FREQUENCY", "SYSTICK_CLOCK", "core.SYSTICK_CLOCK_FREQUENCY"])
 
+systickPeriodMSLongInt = coreComponent.createLongSymbol("SYSTICK_PERIOD_MS_LONG_INT", systickConfigMenu)
+systickPeriodMSLongInt.setLabel("Systick Period(Milliseconds) Long")
+systickPeriodMSLongInt.setVisible(False)
+systickPeriodMSLongInt.setDefaultValue(0)
+systickPeriodMSLongInt.setMin(0)
+systickPeriodMSLongInt.setDependencies(updateSysTickMS, ["SYSTICK_PERIOD_MS_LONG_INT"])
 
 systickDefault = int(Database.getSymbolValue("core", "CPU_CLOCK_FREQUENCY")) / 1000
 systickPeriod = coreComponent.createStringSymbol("SYSTICK_PERIOD", systickConfigMenu)
@@ -195,6 +272,51 @@ systickinterruptHandlerLock = "SysTick_INTERRUPT_HANDLER_LOCK"
 SYSTICK_interruptControl = coreComponent.createBooleanSymbol("NVIC_SYSTICK_ENABLE", systickConfigMenu)
 SYSTICK_interruptControl.setDependencies(sysTickinterruptControl, ["USE_SYSTICK_INTERRUPT"])
 SYSTICK_interruptControl.setVisible(False)
+
+# Symbols needed by SYS TIME
+timerStartApiName = "SYSTICK_TimerStart"
+timerStopApiName = "SYSTICK_TimerStop"
+frequencyGetApiName = "SYSTICK_TimerFrequencyGet"
+callbackApiName = "SYSTICK_TimerCallbackSet"
+periodSetApiName = "SYSTICK_TimerPeriodSet"
+interruptEnableApiName = "SYSTICK_TimerInterruptEnable"
+interruptDisableApiName = "SYSTICK_TimerInterruptDisable"
+
+timerWidth_Sym = coreComponent.createIntegerSymbol("TIMER_WIDTH", None)
+timerWidth_Sym.setVisible(False)
+timerWidth_Sym.setDefaultValue(24)
+
+timerStartApiName_Sym = coreComponent.createStringSymbol("TIMER_START_API_NAME", None)
+timerStartApiName_Sym.setVisible(False)
+timerStartApiName_Sym.setDefaultValue(timerStartApiName)
+
+timeStopApiName_Sym = coreComponent.createStringSymbol("TIMER_STOP_API_NAME", None)
+timeStopApiName_Sym.setVisible(False)
+timeStopApiName_Sym.setDefaultValue(timerStopApiName)
+
+frequencyGetApiName_Sym = coreComponent.createStringSymbol("FREQUENCY_GET_API_NAME", None)
+frequencyGetApiName_Sym.setVisible(False)
+frequencyGetApiName_Sym.setDefaultValue(frequencyGetApiName)
+
+callbackApiName_Sym = coreComponent.createStringSymbol("CALLBACK_API_NAME", None)
+callbackApiName_Sym.setVisible(False)
+callbackApiName_Sym.setDefaultValue(callbackApiName)
+
+periodSetApiName_Sym = coreComponent.createStringSymbol("PERIOD_SET_API_NAME", None)
+periodSetApiName_Sym.setVisible(False)
+periodSetApiName_Sym.setDefaultValue(periodSetApiName);
+
+interruptEnableApiName_Sym = coreComponent.createStringSymbol("INTERRUPT_ENABLE_API_NAME", None)
+interruptEnableApiName_Sym.setVisible(False)
+interruptEnableApiName_Sym.setDefaultValue(interruptEnableApiName);
+
+interruptDisableApiName_Sym = coreComponent.createStringSymbol("INTERRUPT_DISABLE_API_NAME", None)
+interruptDisableApiName_Sym.setVisible(False)
+interruptDisableApiName_Sym.setDefaultValue(interruptDisableApiName);
+
+irqEnumName_Sym = coreComponent.createStringSymbol("IRQ_ENUM_NAME", None)
+irqEnumName_Sym.setVisible(False)
+irqEnumName_Sym.setDefaultValue("SysTick_IRQn")
 
 ############################################################################
 #### Code Generation ####

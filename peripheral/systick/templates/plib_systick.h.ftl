@@ -45,7 +45,7 @@
 #include <stddef.h>
 
 #ifdef __cplusplus // Provide C++ Compatibility
-	extern "C" {
+    extern "C" {
 #endif
 
 
@@ -56,25 +56,25 @@
 // *****************************************************************************
 
 <#if SYSTICK_CLOCK == "0">
-	<#lt>#define SYSTICK_FREQ		${SYSTICK_CLOCK_FREQUENCY}
+    <#lt>#define SYSTICK_FREQ       ${SYSTICK_CLOCK_FREQUENCY}
 </#if>
 <#if SYSTICK_CLOCK == "1">
-	<#lt>#define SYSTICK_FREQ	${CPU_CLOCK_FREQUENCY}
+    <#lt>#define SYSTICK_FREQ   ${CPU_CLOCK_FREQUENCY}
 </#if>
 
 <#if USE_SYSTICK_INTERRUPT == true>
-	<#lt>#define SYSTICK_INTERRUPT_PERIOD_IN_US  (${SYSTICK_PERIOD_US})
-	
-	<#lt>typedef void (*SYSTICK_CALLBACK)(uintptr_t context);
+    <#lt>#define SYSTICK_INTERRUPT_PERIOD_IN_US  (${SYSTICK_PERIOD_US})
+
+    <#lt>typedef void (*SYSTICK_CALLBACK)(uintptr_t context);
 </#if>
 
 <#if USE_SYSTICK_INTERRUPT == true>
-	<#lt>typedef struct
-	<#lt>{
-	<#lt>	SYSTICK_CALLBACK          callback;
-	<#lt>	uintptr_t                 context;
-	<#lt>	volatile uint32_t         tickCounter;
-	<#lt>} SYSTICK_OBJECT ;
+    <#lt>typedef struct
+    <#lt>{
+    <#lt>   SYSTICK_CALLBACK          callback;
+    <#lt>   uintptr_t                 context;
+    <#lt>   volatile uint32_t         tickCounter;
+    <#lt>} SYSTICK_OBJECT ;
 </#if>
 /***************************** SYSTICK API *******************************/
 void SYSTICK_TimerInitialize ( void );
@@ -86,11 +86,15 @@ uint32_t SYSTICK_TimerPeriodGet ( void );
 uint32_t SYSTICK_TimerCounterGet ( void );
 uint32_t SYSTICK_TimerFrequencyGet ( void );
 <#if USE_SYSTICK_INTERRUPT == false>
-	<#lt>bool SYSTICK_TimerPeriodHasExpired(void);
+    <#lt>bool SYSTICK_TimerPeriodHasExpired(void);
 </#if>
 <#if USE_SYSTICK_INTERRUPT == true>
-	<#lt>void SYSTICK_DelayMs ( uint32_t ms );
-	<#lt>void SYSTICK_TimerCallbackSet ( SYSTICK_CALLBACK callback, uintptr_t context );
+    <#lt>void SYSTICK_DelayMs ( uint32_t ms );
+    <#lt>void SYSTICK_TimerCallbackSet ( SYSTICK_CALLBACK callback, uintptr_t context );
+</#if>
+<#if SYSTICK_USED_BY_SYS_TIME == true>
+void SYSTICK_TimerInterruptEnable ( void );
+void SYSTICK_TimerInterruptDisable ( void );
 </#if>
 #ifdef __cplusplus // Provide C++ Compatibility
  }
