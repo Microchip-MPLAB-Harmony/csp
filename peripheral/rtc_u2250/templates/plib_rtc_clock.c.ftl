@@ -73,12 +73,24 @@
 
 void ${RTC_INSTANCE_NAME}_Initialize(void)
 {
+    <#if RTC_MODE2_DISABLE_RTC_RESET == true>
+    if ((${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CTRLA & RTC_MODE2_CTRLA_ENABLE_Msk) != RTC_MODE2_CTRLA_ENABLE_Msk)
+    {
+        ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CTRLA |= RTC_MODE2_CTRLA_SWRST_Msk;
+
+        while((${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_SYNCBUSY & RTC_MODE2_SYNCBUSY_SWRST_Msk) == RTC_MODE2_SYNCBUSY_SWRST_Msk)
+        {
+            /* Wait for synchronization after Software Reset */
+        }
+    }
+    <#else>
     ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CTRLA |= RTC_MODE2_CTRLA_SWRST_Msk;
 
     while((${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_SYNCBUSY & RTC_MODE2_SYNCBUSY_SWRST_Msk) == RTC_MODE2_SYNCBUSY_SWRST_Msk)
     {
         /* Wait for synchronization after Software Reset */
     }
+    </#if>
 
     <#if TAMP_DETECTION_SUPPORTED??>
         <#if TAMP_DETECTION_SUPPORTED>
@@ -331,7 +343,7 @@ void ${RTC_INSTANCE_NAME}_RTCCTimeGet ( struct tm * currentTime )
 
     <#lt>    /* Clear All Interrupts */
     <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_INTFLAG = RTC_MODE2_INTFLAG_Msk;
-    
+
     <#lt>    if(${RTC_INSTANCE_NAME?lower_case}Obj.alarmCallback != NULL)
     <#lt>    {
     <#lt>        ${RTC_INSTANCE_NAME?lower_case}Obj.alarmCallback(${RTC_INSTANCE_NAME?lower_case}Obj.intCause, ${RTC_INSTANCE_NAME?lower_case}Obj.context);

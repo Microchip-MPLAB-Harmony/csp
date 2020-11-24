@@ -1174,6 +1174,13 @@ def instantiateComponent(rtcComponent):
     rtcSymMode2_REFERENCE_YEAR.setLabel("Reference Year(Leap Year)")
     rtcSymMode2_REFERENCE_YEAR.setDefaultValue(2016)
 
+    # Do not reset RTC if it is already enabled
+    rtcSymMode2_DisableRtcReset = rtcComponent.createBooleanSymbol(
+        "RTC_MODE2_DISABLE_RTC_RESET", rtcSymMode2Menu)
+    rtcSymMode2_DisableRtcReset.setLabel("Disable RTC Reset")
+    rtcSymMode2_DisableRtcReset.setDescription("Do not reset RTC if it is already enabled")
+    rtcSymMode2_DisableRtcReset.setDefaultValue(False)
+
     rtcSymMode2Events = rtcComponent.createMenuSymbol(
         "RTC_MODE2_EVCTRL_MENU", rtcSymMode2Menu)
     rtcSymMode2Events.setLabel("RTC EVENTS configuration")
