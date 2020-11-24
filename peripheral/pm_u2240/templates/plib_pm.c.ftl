@@ -167,11 +167,14 @@ void ${PM_INSTANCE_NAME}_Initialize( void )
     /* Clear INTFLAG.PLRDY */
     ${PM_INSTANCE_NAME}_REGS->PM_INTFLAG |= PM_INTENCLR_PLRDY_Msk;
 
-    /* Configure performance level */
-    ${PM_INSTANCE_NAME}_REGS->PM_PLCFG = PM_PLCFG_PLSEL_${PM_PLCFG_PLSEL};
+    if ((${PM_INSTANCE_NAME}_REGS->PM_PLCFG & PM_PLCFG_PLSEL_Msk) != PM_PLCFG_PLSEL_${PM_PLCFG_PLSEL})
+    {
+        /* Configure performance level */
+        ${PM_INSTANCE_NAME}_REGS->PM_PLCFG = PM_PLCFG_PLSEL_${PM_PLCFG_PLSEL};
 
-    /* Wait for performance level transition to complete */
-    while(!(${PM_INSTANCE_NAME}_REGS->PM_INTFLAG & PM_INTFLAG_PLRDY_Msk));
+        /* Wait for performance level transition to complete */
+        while(!(${PM_INSTANCE_NAME}_REGS->PM_INTFLAG & PM_INTFLAG_PLRDY_Msk));
+    }
 </#if>
 </#if>
 <#if HAS_PWCFG??>
