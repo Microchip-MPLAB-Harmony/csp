@@ -43,7 +43,7 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 // DOM-IGNORE-END
-#include "device.h"
+#include "interrupts.h"
 #include "plib_${AC_INSTANCE_NAME?lower_case}.h"
 <#assign AC_WINCTRL_VAL = "">
 <#assign AC_EVCTRL_VAL = "">
@@ -61,9 +61,9 @@
     <#if AC_WINCTRL_WIN0 == true>
         <#if AC_WINTSEL0 ?has_content >
             <#if AC_WINCTRL_VAL != "">
-                <#assign AC_WINCTRL_VAL = AC_WINCTRL_VAL + " | AC_WINCTRL_WINTSEL0(${AC_WINTSEL0})">
+                <#assign AC_WINCTRL_VAL = AC_WINCTRL_VAL + " | AC_WINCTRL_WINTSEL0(${AC_WINTSEL0}UL)">
             <#else>
-                <#assign AC_WINCTRL_VAL = "AC_WINCTRL_WINTSEL0(${AC_WINTSEL0})">
+                <#assign AC_WINCTRL_VAL = "AC_WINCTRL_WINTSEL0(${AC_WINTSEL0}UL)">
             </#if>
         </#if>
     </#if>
@@ -81,9 +81,9 @@
     <#if AC_WINCTRL_WIN1 == true>
         <#if AC_WINTSEL1 ?has_content >
             <#if AC_WINCTRL_VAL != "">
-                <#assign AC_WINCTRL_VAL = AC_WINCTRL_VAL + " | AC_WINCTRL_WINTSEL1(${AC_WINTSEL1})">
+                <#assign AC_WINCTRL_VAL = AC_WINCTRL_VAL + " | AC_WINCTRL_WINTSEL1(${AC_WINTSEL1}UL)">
             <#else>
-                <#assign AC_WINCTRL_VAL = "AC_WINCTRL_WINTSEL1(${AC_WINTSEL1})">
+                <#assign AC_WINCTRL_VAL = "AC_WINCTRL_WINTSEL1(${AC_WINTSEL1}UL)">
             </#if>
         </#if>
     </#if>
@@ -166,7 +166,7 @@
         </#if>
     </#if>
 </#if>
-AC_OBJECT ${AC_INSTANCE_NAME?lower_case}Obj;
+static AC_OBJECT ${AC_INSTANCE_NAME?lower_case}Obj;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -177,7 +177,7 @@ AC_OBJECT ${AC_INSTANCE_NAME?lower_case}Obj;
 void ${AC_INSTANCE_NAME}_Initialize(void)
 {
     /*Reset AC registers*/
-    ${AC_INSTANCE_NAME}_REGS->AC_CTRLA = AC_CTRLA_SWRST_Msk;
+    ${AC_INSTANCE_NAME}_REGS->AC_CTRLA = (uint8_t)AC_CTRLA_SWRST_Msk;
     while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY & AC_SYNCBUSY_SWRST_Msk) == AC_SYNCBUSY_SWRST_Msk)
     {
         /* Wait for Synchronization */
@@ -218,7 +218,7 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
                                   | AC_COMPCTRL_MUXNEG_${.vars[AC_COMPCTRL_MUX_NEG]}
                                   | AC_COMPCTRL_INTSEL_${.vars[AC_COMPCTRL_INTSEL]}
                                   | AC_COMPCTRL_OUT_${.vars[AC_COMPCTRL_OUTPUT_TYPE]}
-                                  | AC_COMPCTRL_SPEED(${.vars[AC_COMPCTRL_SPEED]})
+                                  | AC_COMPCTRL_SPEED(${.vars[AC_COMPCTRL_SPEED]}UL)
                                   | AC_COMPCTRL_FLEN_${.vars[AC_COMPCTRL_FLEN]}
                                   ${.vars[AC_COMPCTRL_SINGLE_MODE]?then(' | AC_COMPCTRL_SINGLE_Msk','')}
                                   ${.vars[AC_COMPCTRL_HYSTEN]?then(' | AC_COMPCTRL_HYSTEN_Msk','')}
@@ -238,25 +238,25 @@ void ${AC_INSTANCE_NAME}_Initialize(void)
     {
         /* Wait for Synchronization */
     }
-    ${AC_INSTANCE_NAME}_REGS->AC_WINCTRL = ${AC_WINCTRL_VAL};
+    ${AC_INSTANCE_NAME}_REGS->AC_WINCTRL = (uint8_t)(${AC_WINCTRL_VAL});
 </#if>
 <#if AC_EVCTRL_VAL?has_content>
-    ${AC_INSTANCE_NAME}_REGS->AC_EVCTRL = ${AC_EVCTRL_VAL};
+    ${AC_INSTANCE_NAME}_REGS->AC_EVCTRL = (uint16_t)(${AC_EVCTRL_VAL});
 </#if>
 <#if AC_INTENSET_VAL?has_content>
-    ${AC_INSTANCE_NAME}_REGS->AC_INTENSET = ${AC_INTENSET_VAL};
+    ${AC_INSTANCE_NAME}_REGS->AC_INTENSET = (uint8_t)(${AC_INTENSET_VAL});
 </#if>
     while((${AC_INSTANCE_NAME}_REGS->AC_SYNCBUSY & AC_SYNCBUSY_ENABLE_Msk) == AC_SYNCBUSY_ENABLE_Msk)
     {
         /* Wait for Synchronization */
     }
-    ${AC_INSTANCE_NAME}_REGS->AC_CTRLA = AC_CTRLA_ENABLE_Msk;
+    ${AC_INSTANCE_NAME}_REGS->AC_CTRLA = (uint8_t)AC_CTRLA_ENABLE_Msk;
 }
 
 void ${AC_INSTANCE_NAME}_Start( AC_CHANNEL channel_id )
 {
     /* Start Comparison */
-    ${AC_INSTANCE_NAME}_REGS->AC_CTRLB |= (1 << channel_id);
+    ${AC_INSTANCE_NAME}_REGS->AC_CTRLB |= ((uint8_t)1U << (uint8_t)channel_id);
 }
 
 void ${AC_INSTANCE_NAME}_SetVddScalar( AC_CHANNEL channel_id , uint8_t vdd_scalar)
@@ -293,7 +293,7 @@ void ${AC_INSTANCE_NAME}_ChannelSelect( AC_CHANNEL channel_id , AC_POSINPUT posi
         /* Wait for Synchronization */
     }
     ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] &= ~(AC_COMPCTRL_MUXPOS_Msk | AC_COMPCTRL_MUXNEG_Msk);
-    ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] |= (positiveInput | negativeInput);
+    ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] |= ((uint32_t)positiveInput | (uint32_t)negativeInput);
 
     /* Enable comparator channel */
     ${AC_INSTANCE_NAME}_REGS->AC_COMPCTRL[channel_id] |= AC_COMPCTRL_ENABLE_Msk;
@@ -308,9 +308,9 @@ bool ${AC_INSTANCE_NAME}_StatusGet (AC_CHANNEL channel)
 {
     bool breturnVal = false;
 
-    if((${AC_INSTANCE_NAME}_REGS->AC_STATUSB & (AC_STATUSB_READY0_Msk << channel)) == (AC_STATUSB_READY0_Msk << channel))
+    if((${AC_INSTANCE_NAME}_REGS->AC_STATUSB & (AC_STATUSB_READY0_Msk << (uint8_t)channel)) == (AC_STATUSB_READY0_Msk << (uint8_t)channel))
     {
-        if((${AC_INSTANCE_NAME}_REGS->AC_STATUSA & (AC_STATUSA_STATE0_Msk << channel)) == (AC_STATUSA_STATE0_Msk << channel))
+        if((${AC_INSTANCE_NAME}_REGS->AC_STATUSA & (AC_STATUSA_STATE0_Msk << (uint8_t)channel)) == (AC_STATUSA_STATE0_Msk << (uint8_t)channel))
         {
             breturnVal = true;
         }
@@ -334,7 +334,7 @@ void ${AC_INSTANCE_NAME}_InterruptHandler( void )
     /* Copy the status to use inside the callback */
     acObj.int_flags = ${AC_INSTANCE_NAME}_REGS->AC_STATUSA;
     /* Clear the interrupt flags*/
-    ${AC_INSTANCE_NAME}_REGS->AC_INTFLAG = AC_INTFLAG_Msk;
+    ${AC_INSTANCE_NAME}_REGS->AC_INTFLAG = (uint8_t)AC_INTFLAG_Msk;
 
     /* Callback user function */
     if(${AC_INSTANCE_NAME?lower_case}Obj.callback != NULL)
