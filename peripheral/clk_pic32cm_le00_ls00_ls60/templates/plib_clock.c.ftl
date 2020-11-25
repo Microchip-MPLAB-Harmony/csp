@@ -87,8 +87,8 @@ static void OSC32KCTRL_Initialize(void)
                                                                ${XOSC32K_RUNSTDBY?then('| OSC32KCTRL_XOSC32K_RUNSTDBY_Msk',' ')}
                                                                ${XOSC32K_EN1K?then('| OSC32KCTRL_XOSC32K_EN1K_Msk',' ')}
                                                                ${XOSC32K_EN32K?then('| OSC32KCTRL_XOSC32K_EN32K_Msk',' ')}
-															   ${(XOSC32K_ONDEMAND == "ENABLE")?then('| OSC32KCTRL_XOSC32K_ONDEMAND_Msk',' ')}
-															   ${(XOSC32K_OSCILLATOR_MODE == "1")?then('| OSC32KCTRL_XOSC32K_XTALEN_Msk',' ')};</@compress>
+                                                               ${(XOSC32K_ONDEMAND == "ENABLE")?then('| OSC32KCTRL_XOSC32K_ONDEMAND_Msk',' ')}
+                                                               ${(XOSC32K_OSCILLATOR_MODE == "1")?then('| OSC32KCTRL_XOSC32K_XTALEN_Msk',' ')};</@compress>
 
     <#if XOSC32K_CFDEN == true >
     /* Enable clock failure detection */
@@ -101,7 +101,7 @@ static void OSC32KCTRL_Initialize(void)
         /* Waiting for the XOSC32K Ready state */
     }
 </#if>
-	OSC32KCTRL_REGS->OSC32KCTRL_RTCCTRL = OSC32KCTRL_RTCCTRL_RTCSEL(${CONFIG_CLOCK_RTC_SRC});
+    OSC32KCTRL_REGS->OSC32KCTRL_RTCCTRL = OSC32KCTRL_RTCCTRL_RTCSEL(${CONFIG_CLOCK_RTC_SRC});
 }
 
 <#if CONFIG_CLOCK_DFLL48M_ENABLE == true >
@@ -121,12 +121,14 @@ static void DFLL48M_Initialize(void)
     <@compress single_line=true>OSCCTRL_REGS->OSCCTRL_DFLLVAL = OSCCTRL_DFLLVAL_COARSE(calibCoarse) | OSCCTRL_DFLLVAL_FINE(512);</@compress>
 
     <#if CONFIG_CLOCK_DFLL48M_OPMODE == "1">
+    <#if CONFIG_CLOCK_DFLL48M_USB == false>
     GCLK_REGS->GCLK_PCHCTRL[${GCLK_ID_3_INDEX}] = GCLK_PCHCTRL_GEN(${GCLK_ID_3_GENSEL})${GCLK_ID_3_WRITELOCK?then(' | GCLK_PCHCTRL_WRTLOCK_Msk', ' ')} | GCLK_PCHCTRL_CHEN_Msk;
 
     while ((GCLK_REGS->GCLK_PCHCTRL[${GCLK_ID_3_INDEX}] & GCLK_PCHCTRL_CHEN_Msk) != GCLK_PCHCTRL_CHEN_Msk)
     {
         /* Wait for synchronization */
     }
+    </#if>
     OSCCTRL_REGS->OSCCTRL_DFLLMUL = OSCCTRL_DFLLMUL_MUL(${CONFIG_CLOCK_DFLL48M_MUL}) | OSCCTRL_DFLLMUL_FSTEP(${CONFIG_CLOCK_DFLL48M_FINE}) | OSCCTRL_DFLLMUL_CSTEP(${CONFIG_CLOCK_DFLL48M_COARSE});
 
     </#if>
@@ -137,7 +139,7 @@ static void DFLL48M_Initialize(void)
 
     /* Configure DFLL    */
     <@compress single_line=true>OSCCTRL_REGS->OSCCTRL_DFLLCTRL = OSCCTRL_DFLLCTRL_ENABLE_Msk ${(CONFIG_CLOCK_DFLL48M_OPMODE == "1")?then('| OSCCTRL_DFLLCTRL_MODE_Msk ', ' ')}
-    <#lt>                               ${(CONFIG_CLOCK_DFLL48M_ONDEMAND == "ENABLE")?then("| OSCCTRL_DFLLCTRL_ONDEMAND_Msk ", "")}
+    <#lt>                               ${(CONFIG_CLOCK_DFLL48M_ONDEMAND == "1")?then("| OSCCTRL_DFLLCTRL_ONDEMAND_Msk ", "")}
     <#lt>                               ${CONFIG_CLOCK_DFLL48M_RUNSTDY?then('| OSCCTRL_DFLLCTRL_RUNSTDBY_Msk ', ' ')}
     <#lt>                               ${CONFIG_CLOCK_DFLL48M_USB?then('| OSCCTRL_DFLLCTRL_USBCRM_Msk ', ' ')}
     <#lt>                               ${CONFIG_CLOCK_DFLL48M_WAIT_LOCK?then('| OSCCTRL_DFLLCTRL_WAITLOCK_Msk ', ' ')}
@@ -148,12 +150,12 @@ static void DFLL48M_Initialize(void)
     <#lt>                               ${CONFIG_CLOCK_DFLL48M_STABLE?then('| OSCCTRL_DFLLCTRL_STABLE_Msk ', ' ')}
     <#lt>                               ;</@compress>
 
-    <#if CONFIG_CLOCK_DFLL48M_OPMODE == "1">
+    <#if CONFIG_CLOCK_DFLL48M_OPMODE == "1" && CONFIG_CLOCK_DFLL48M_USB == false>
     while((OSCCTRL_REGS->OSCCTRL_STATUS & OSCCTRL_STATUS_DFLLLCKF_Msk) != OSCCTRL_STATUS_DFLLLCKF_Msk)
     {
         /* Waiting for DFLL to fully lock to meet clock accuracy */
     }
-    <#else>
+    <#elseif CONFIG_CLOCK_DFLL48M_ONDEMAND != "1">
     while((OSCCTRL_REGS->OSCCTRL_STATUS & OSCCTRL_STATUS_DFLLRDY_Msk) != OSCCTRL_STATUS_DFLLRDY_Msk)
     {
         /* Waiting for DFLL to be ready */
@@ -192,7 +194,7 @@ static void DFLLULP_Initialize(void)
     {
         /* Waiting for the Ready state */
     }
-    
+
     while((OSCCTRL_REGS->OSCCTRL_STATUS & OSCCTRL_STATUS_DFLLULPLOCK_Msk) != OSCCTRL_STATUS_DFLLULPLOCK_Msk)
     {
         /* Waiting for DFLL to fully lock to meet clock accuracy */
@@ -203,24 +205,24 @@ static void DFLLULP_Initialize(void)
 <#if CONFIG_CLOCK_DPLL_ENABLE == true >
 static void FDPLL_Initialize(void)
 {
-	<#if CONFIG_CLOCK_DPLL_REF_CLOCK == "2">
-	GCLK_REGS->GCLK_PCHCTRL[${GCLK_ID_0_INDEX}] = GCLK_PCHCTRL_GEN(${GCLK_ID_0_GENSEL})${GCLK_ID_0_WRITELOCK?then(' | GCLK_PCHCTRL_WRTLOCK_Msk', ' ')} | GCLK_PCHCTRL_CHEN_Msk;
-	while ((GCLK_REGS->GCLK_PCHCTRL[${GCLK_ID_0_INDEX}] & GCLK_PCHCTRL_CHEN_Msk) != GCLK_PCHCTRL_CHEN_Msk)
+    <#if CONFIG_CLOCK_DPLL_REF_CLOCK == "2">
+    GCLK_REGS->GCLK_PCHCTRL[${GCLK_ID_0_INDEX}] = GCLK_PCHCTRL_GEN(${GCLK_ID_0_GENSEL})${GCLK_ID_0_WRITELOCK?then(' | GCLK_PCHCTRL_WRTLOCK_Msk', ' ')} | GCLK_PCHCTRL_CHEN_Msk;
+    while ((GCLK_REGS->GCLK_PCHCTRL[${GCLK_ID_0_INDEX}] & GCLK_PCHCTRL_CHEN_Msk) != GCLK_PCHCTRL_CHEN_Msk)
     {
         /* Wait for synchronization */
     }
-	</#if>
+    </#if>
 
     /****************** DPLL Initialization  *********************************/
 
     /* Configure DPLL    */
     <@compress single_line=true>OSCCTRL_REGS->OSCCTRL_DPLLCTRLB = OSCCTRL_DPLLCTRLB_FILTER(${CONFIG_CLOCK_DPLL_FILTER}) |
                                                                    OSCCTRL_DPLLCTRLB_LTIME(${CONFIG_CLOCK_DPLL_LOCK_TIME})|
-																   OSCCTRL_DPLLCTRLB_REFCLK(${CONFIG_CLOCK_DPLL_REF_CLOCK})
+                                                                   OSCCTRL_DPLLCTRLB_REFCLK(${CONFIG_CLOCK_DPLL_REF_CLOCK})
                                                                    ${CONFIG_CLOCK_DPLL_LOCK_BYPASS?then('| OSCCTRL_DPLLCTRLB_LBYPASS_Msk', ' ')}
                                                                    ${CONFIG_CLOCK_DPLL_WAKEUP_FAST?then('| OSCCTRL_DPLLCTRLB_WUF_Msk', ' ')}
                                                                    ${CONFIG_CLOCK_DPLL_LOWPOWER_ENABLE?then('| OSCCTRL_DPLLCTRLB_LPEN_Msk', ' ')}
-																   ${(CONFIG_CLOCK_DPLL_REF_CLOCK == "1")?then('| OSCCTRL_DPLLCTRLB_DIV(${CONFIG_CLOCK_DPLL_DIVIDER})', ' ')};</@compress>
+                                                                   ${(CONFIG_CLOCK_DPLL_REF_CLOCK == "1")?then('| OSCCTRL_DPLLCTRLB_DIV(${CONFIG_CLOCK_DPLL_DIVIDER})', ' ')};</@compress>
 
 
     <@compress single_line=true>OSCCTRL_REGS->OSCCTRL_DPLLRATIO = OSCCTRL_DPLLRATIO_LDRFRAC(${CONFIG_CLOCK_DPLL_LDRFRAC_FRACTION}) |
@@ -231,7 +233,7 @@ static void FDPLL_Initialize(void)
         /* Waiting for the synchronization */
     }
 
-	<#if CONFIG_CLOCK_DPLL_PRESCALAR != "0">
+    <#if CONFIG_CLOCK_DPLL_PRESCALAR != "0">
     /* Selection of the DPLL Pre-Scalar */
    OSCCTRL_REGS->OSCCTRL_DPLLPRESC = OSCCTRL_DPLLPRESC_PRESC(${CONFIG_CLOCK_DPLL_PRESCALAR});
 
@@ -239,7 +241,7 @@ static void FDPLL_Initialize(void)
     {
         /* Waiting for the synchronization */
     }
-	</#if>
+    </#if>
     /* Selection of the DPLL Enable */
     OSCCTRL_REGS->OSCCTRL_DPLLCTRLA = OSCCTRL_DPLLCTRLA_ENABLE_Msk ${(CONFIG_CLOCK_DPLL_ONDEMAND == "1")?then('| OSCCTRL_DPLLCTRLA_ONDEMAND_Msk',' ')} ${CONFIG_CLOCK_DPLL_RUNSTDY?then('| OSCCTRL_DPLLCTRLA_RUNSTDBY_Msk','')};
 
@@ -272,7 +274,7 @@ static void FDPLL_Initialize(void)
 static void GCLK${i}_Initialize(void)
 {
     <#if (i==0)>
-    
+
 <#if CONF_CPU_CLOCK_DIVIDER != '0x01'>
     /* selection of the CPU clock Division */
     MCLK_REGS->MCLK_CPUDIV = MCLK_CPUDIV_CPUDIV(${CONF_CPU_CLOCK_DIVIDER});
@@ -289,8 +291,8 @@ static void GCLK${i}_Initialize(void)
                                                                ${(.vars[GCLK_IMPROVE_DUTYCYCLE])?then('| GCLK_GENCTRL_IDC_Msk', ' ')}
                                                                ${(.vars[GCLK_RUNSTDBY])?then('| GCLK_GENCTRL_RUNSTDBY_Msk', ' ')}
                                                                <#if i < GCLK_NUM_PADS >
-															   ${(.vars[GCLK_OUTPUTENABLE])?then('| GCLK_GENCTRL_OE_Msk', ' ')}
-															   ${((.vars[GCLK_OUTPUTOFFVALUE] == "HIGH"))?then('| GCLK_GENCTRL_OOV_Msk', ' ')}
+                                                               ${(.vars[GCLK_OUTPUTENABLE])?then('| GCLK_GENCTRL_OE_Msk', ' ')}
+                                                               ${((.vars[GCLK_OUTPUTOFFVALUE] == "HIGH"))?then('| GCLK_GENCTRL_OOV_Msk', ' ')}
                                                                </#if>
                                                                | GCLK_GENCTRL_GENEN_Msk;</@compress>
 
@@ -311,9 +313,9 @@ void CLOCK_Initialize (void)
     /* Function to Initialize the 32KHz Oscillators */
     OSC32KCTRL_Initialize();
 
-	<#if CONFIG_CLOCK_DFLL_ENABLE | CONFIG_CLOCK_DPLL_ENABLE | CONFIG_CLOCK_DFLL48M_ENABLE>
-	SUPC_REGS->SUPC_VREGPLL = SUPC_VREGPLL_ENABLE_Msk;
-	</#if>
+    <#if CONFIG_CLOCK_DFLL_ENABLE | CONFIG_CLOCK_DPLL_ENABLE | CONFIG_CLOCK_DFLL48M_ENABLE>
+    SUPC_REGS->SUPC_VREGPLL = SUPC_VREGPLL_ENABLE_Msk;
+    </#if>
 ${CLK_INIT_LIST}
 <#if !GCLK_INST_NUM0>
 <#if CONF_CPU_CLOCK_DIVIDER != '0x01'>
@@ -339,7 +341,7 @@ ${CLK_INIT_LIST}
     <#assign GCLK_ID_WRITELOCK = "GCLK_ID_" + i + "_WRITELOCK">
         <#if .vars[GCLK_ID_CHEN]?has_content>
             <#if (.vars[GCLK_ID_CHEN] != false)>
-	/* Selection of the Generator and write Lock for ${.vars[GCLK_ID_NAME]} */
+    /* Selection of the Generator and write Lock for ${.vars[GCLK_ID_NAME]} */
     GCLK_REGS->GCLK_PCHCTRL[${.vars[GCLK_ID_INDEX]}] = GCLK_PCHCTRL_GEN(${.vars[GCLK_ID_GENSEL]})${.vars[GCLK_ID_WRITELOCK]?then(' | GCLK_PCHCTRL_WRTLOCK_Msk', ' ')} | GCLK_PCHCTRL_CHEN_Msk;
 
     while ((GCLK_REGS->GCLK_PCHCTRL[${.vars[GCLK_ID_INDEX]}] & GCLK_PCHCTRL_CHEN_Msk) != GCLK_PCHCTRL_CHEN_Msk)
@@ -350,7 +352,7 @@ ${CLK_INIT_LIST}
     </#if>
 </#list>
 
-	<#if MCLK_AHB_INITIAL_VALUE != "0x3fff">
+    <#if MCLK_AHB_INITIAL_VALUE != "0x3fff">
     /* Configure the AHB Bridge Clocks */
     MCLK_REGS->MCLK_AHBMASK = ${MCLK_AHB_INITIAL_VALUE};
 

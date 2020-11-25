@@ -553,6 +553,7 @@ dfll48MFreq.setLabel("DFLL48M Clock Frequency")
 dfll48MFreq.setDependencies(setDfll48MFreq, ["CONFIG_CLOCK_DFLL48M_ENABLE",
                                        "CONFIG_CLOCK_DFLL48M_OPMODE",
                                        "CONFIG_CLOCK_DFLL48M_MUL",
+                                       "CONFIG_CLOCK_DFLL48M_USB",
                                        "GCLK_ID_3_FREQ"])
 
 ############################   DPLL Components    ############################
@@ -1057,7 +1058,7 @@ def codeGen(symbol, event):
         sourceDestmap["GCLK" + str(Database.getSymbolValue("core", "GCLK_ID_2_GENSEL"))].append("DFLLULP")
 
     if (Database.getSymbolValue("core", "CONFIG_CLOCK_DFLL48M_ENABLE")) == True:
-        if((int(Database.getSymbolValue("core", "CONFIG_CLOCK_DFLL48M_OPMODE"))) == 1):
+        if((int(Database.getSymbolValue("core", "CONFIG_CLOCK_DFLL48M_OPMODE"))) == 1 and (Database.getSymbolValue("core", "CONFIG_CLOCK_DFLL48M_USB") == False)):
             sourceDestmap["GCLK" + str(Database.getSymbolValue("core", "GCLK_ID_3_GENSEL"))].append("DFLL48M")
 
     if (Database.getSymbolValue("core", "CONFIG_CLOCK_DPLL_ENABLE")) == True :
@@ -1503,6 +1504,8 @@ codeGenerationDep.append("CONFIG_CLOCK_DPLL_REF_CLOCK")
 codeGenerationDep.append("CONFIG_CLOCK_DPLL_ENABLE")
 codeGenerationDep.append("CONFIG_CLOCK_DFLL_ENABLE")
 codeGenerationDep.append("CONFIG_CLOCK_DFLL48M_ENABLE")
+codeGenerationDep.append("CONFIG_CLOCK_DFLL48M_OPMODE")
+codeGenerationDep.append("CONFIG_CLOCK_DFLL48M_USB")
 codeGenerationDep.append("GCLK_ID_2_GENSEL")
 codeGenerationDep.append("GCLK_ID_3_GENSEL")
 codeGenerationList.setDependencies(codeGen, codeGenerationDep)
