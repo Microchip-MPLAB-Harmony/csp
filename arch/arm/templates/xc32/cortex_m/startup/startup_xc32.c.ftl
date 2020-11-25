@@ -65,13 +65,22 @@ extern void __attribute__((long_call)) __libc_init_array(void);
 <#include "devices/startup_xc32_${DeviceFamily}.c.ftl">
 </#if>
 </#if>
+
+extern void Dummy_App_Func(void);
+
+/* Brief default application function used as a weak reference */
+void __attribute__((optimize("-O1"),long_call))Dummy_App_Func(void)
+{
+    return;
+}
+
 /* Optional application-provided functions */
-extern void __attribute__((weak,long_call)) _on_reset(void);
-extern void __attribute__((weak,long_call)) _on_bootstrap(void);
+extern void __attribute__((weak,long_call, alias("Dummy_App_Func"))) _on_reset(void);
+extern void __attribute__((weak,long_call, alias("Dummy_App_Func"))) _on_bootstrap(void);
 
 /* Reserved for use by the MPLAB XC32 Compiler */
-extern void __attribute__((weak,long_call)) __xc32_on_reset(void);
-extern void __attribute__((weak,long_call)) __xc32_on_bootstrap(void);
+extern void __attribute__((weak,long_call, alias("Dummy_App_Func"))) __xc32_on_reset(void);
+extern void __attribute__((weak,long_call, alias("Dummy_App_Func"))) __xc32_on_bootstrap(void);
 
 /**
  * \brief This is the code that gets called on processor reset.
@@ -97,14 +106,10 @@ void __attribute__((optimize("-O1"), section(".text.Reset_Handler"), long_call, 
 
 
     /* Call the optional application-provided _on_reset() function. */
-    if (_on_reset)
-    {
-        _on_reset();
-    }
+    _on_reset();
 
     /* Reserved for use by MPLAB XC32. */
-    if (__xc32_on_reset)
-        __xc32_on_reset();
+    __xc32_on_reset();
 
 <#if FPU_Available>
 #if (__ARM_FP==14) || (__ARM_FP==4)
@@ -174,16 +179,10 @@ void __attribute__((optimize("-O1"), section(".text.Reset_Handler"), long_call, 
 </#if>
 
     /* Call the optional application-provided _on_bootstrap() function. */
-    if (_on_bootstrap)
-    {
-        _on_bootstrap();
-    }
-
+    _on_bootstrap();
+    
     /* Reserved for use by MPLAB XC32. */
-    if (__xc32_on_bootstrap)
-    {
-        __xc32_on_bootstrap();
-    }
+    __xc32_on_bootstrap();
 
     /* Branch to application's main function */
     int retval = main();
