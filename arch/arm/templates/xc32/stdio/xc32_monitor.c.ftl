@@ -59,7 +59,7 @@ int _mon_getc(int canblock)
         <#lt>   (void)canblock;
         <#lt>   do
         <#lt>   {
-        <#lt>       success = ${.vars["${stdio.DEBUG_PERIPHERAL?lower_case}"].USART_PLIB_API_PREFIX}_Read((void*)&c, 1);                
+        <#lt>       success = ${.vars["${stdio.DEBUG_PERIPHERAL?lower_case}"].USART_PLIB_API_PREFIX}_Read(&c, 1);                
         <#lt>   }while( !success);
         <#lt>   return c;
         <#else>
@@ -78,10 +78,11 @@ void _mon_putc(char c)
         <#lt>   bool success = false;
         <#lt>   do
         <#lt>   {
-        <#lt>       success = ${.vars["${stdio.DEBUG_PERIPHERAL?lower_case}"].USART_PLIB_API_PREFIX}_Write((void*)&c, 1);
+        <#lt>       success = ${.vars["${stdio.DEBUG_PERIPHERAL?lower_case}"].USART_PLIB_API_PREFIX}_Write(&c, 1);
         <#lt>   }while (!success);
         </#if>
     <#else>
         <#lt>   (void)c;
     </#if>
 }
+
