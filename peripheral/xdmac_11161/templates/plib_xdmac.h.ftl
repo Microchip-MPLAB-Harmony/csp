@@ -96,6 +96,10 @@ bool ${DMA_INSTANCE_NAME}_ChannelSettingsSet (XDMAC_CHANNEL channel, XDMAC_CHANN
 
 void ${DMA_INSTANCE_NAME}_ChannelBlockLengthSet (XDMAC_CHANNEL channel, uint16_t length);
 
+void ${DMA_INSTANCE_NAME}_ChannelSuspend (XDMAC_CHANNEL channel);
+
+void ${DMA_INSTANCE_NAME}_ChannelResume (XDMAC_CHANNEL channel);
+
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 

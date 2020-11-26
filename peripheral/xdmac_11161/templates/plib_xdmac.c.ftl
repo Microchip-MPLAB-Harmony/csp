@@ -266,3 +266,15 @@ void ${DMA_INSTANCE_NAME}_ChannelBlockLengthSet (XDMAC_CHANNEL channel, uint16_t
 
     ${DMA_INSTANCE_NAME}_REGS->XDMAC_CHID[channel].XDMAC_CBC = length;
 }
+
+void ${DMA_INSTANCE_NAME}_ChannelSuspend (XDMAC_CHANNEL channel)
+{
+    /* Suspend the channel */
+    ${DMA_INSTANCE_NAME}_REGS->XDMAC_GRWS = (XDMAC_GRWS_RWS0_Msk << channel);
+}
+
+void ${DMA_INSTANCE_NAME}_ChannelResume (XDMAC_CHANNEL channel)
+{
+    /* Resume the channel */
+    ${DMA_INSTANCE_NAME}_REGS->XDMAC_GRWR = (XDMAC_GRWR_RWR0_Msk << channel);
+}
