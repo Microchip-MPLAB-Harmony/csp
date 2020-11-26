@@ -80,7 +80,7 @@ void ${SPI_INSTANCE_NAME}_Initialize( void )
     /* Disable and Reset the SPI*/
     ${SPI_INSTANCE_NAME}_REGS->SPI_CR = SPI_CR_SPIDIS_Msk | SPI_CR_SWRST_Msk;
 
-<#if SPI_FIFO_SUPPORT_AVAILABLE == true>
+<#if SPI_FIFO_ENABLE == true>
     /* Enable FIFO support */
     ${SPI_INSTANCE_NAME}_REGS->SPI_CR = SPI_CR_FIFOEN_Msk;
 </#if>
