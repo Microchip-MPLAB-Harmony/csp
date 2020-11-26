@@ -89,11 +89,30 @@ fuseSettings.setDefaultValue(True)
 registerGroup = "USER_FUSES"
 registerNames = ["USER_WORD_0", "USER_WORD_1"]
 
-default = [0,  #NVMCTRL_BOOTPROT
+BOD12node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"" + "FUSES" + "\"]/register-group@[name=\"" + registerGroup + "\"]/register@[name=\"" + "USER_WORD_0" + "\"]/bitfield@[name=\"BOD12_DIS\"]")
+
+if BOD12node is None:
+    default = [0,  #NVMCTRL_BOOTPROT
+                0, #NVMCTRL_EEPROM_SIZE
+                0x6, #BOD33USERLEVEL
+                0,   #BOD33_DIS
+                0,   #BOD33_ACTION
+                0,   #WDT_ENABLE
+                0,   #WDT_ALWAYSON
+                11,  #WDT_PER
+                11,  #WDT_WINDOW
+                11,  #WDT_EWOFFSET
+                0,   #WDT_WEN
+                0,   #BOD33_HYST
+                0xFFFF#NVMCTRL_REGION_LOCKS
+                ]
+else:
+    default = [0,  #NVMCTRL_BOOTPROT
             0, #NVMCTRL_EEPROM_SIZE
             0x6, #BOD33USERLEVEL
             0,   #BOD33_DIS
             0,   #BOD33_ACTION
+            0,   #BOD12_DIS
             0,   #WDT_ENABLE
             0,   #WDT_ALWAYSON
             11,  #WDT_PER
@@ -101,6 +120,7 @@ default = [0,  #NVMCTRL_BOOTPROT
             11,  #WDT_EWOFFSET
             0,   #WDT_WEN
             0,   #BOD33_HYST
+            0,   #BOD12_HYST
             0xFFFF#NVMCTRL_REGION_LOCKS
             ]
 numfuses = 0
