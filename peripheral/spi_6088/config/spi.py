@@ -252,6 +252,24 @@ def onCapabilityConnected(event):
     argDict = {"localComponentID" : localComponent.getID()}
     argDict = Database.sendMessage(remoteComponent.getID(), "REQUEST_CONFIG_PARAMS", argDict)
 
+def fifoModeVisible (symbol, event):
+
+    if spiBitField_CR_FIFOEN != None:
+
+        spiMode = event["source"].getSymbolByID("SPI_MR_MSTR").getSelectedKey()
+        interruptMode = event["source"].getSymbolByID("SPI_INTERRUPT_MODE").getValue()
+
+        if spiMode == "SLAVE":
+            symbol.setReadOnly(True)
+            symbol.setVisible(True)
+            symbol.setValue(True)
+        else:
+            if interruptMode == True:
+                symbol.setReadOnly(False)
+                symbol.setVisible(True)
+            else:
+                symbol.setVisible(False)
+
 def instantiateComponent(spiComponent):
 
     global spiInstanceName
@@ -313,6 +331,12 @@ def instantiateComponent(spiComponent):
         value = spiValGrp_MR_MSTR.getChildren()[id].getAttribute("value")
         description = spiValGrp_MR_MSTR.getChildren()[id].getAttribute("caption")
         spiSym_MR_MSTR.addKey(valueName, value, description)
+
+    spisSymFIFOEnable = spiComponent.createBooleanSymbol("SPI_FIFO_ENABLE", None)
+    spisSymFIFOEnable.setLabel("Enable FIFO")
+    spisSymFIFOEnable.setDefaultValue(False)
+    spisSymFIFOEnable.setVisible(spiBitField_CR_FIFOEN != None)
+    spisSymFIFOEnable.setDependencies(fifoModeVisible, ["SPI_INTERRUPT_MODE", "SPI_MR_MSTR"])
 
     spiPCSMask = int(str(spiBitField_MR_PCS.getAttribute("mask")), 16)
     spiPCSValue = spiPCSMask >> 16
@@ -559,11 +583,6 @@ def instantiateComponent(spiComponent):
     spisSymBusyPinConfigComment.setVisible(False)
     spisSymBusyPinConfigComment.setLabel("***Above selected Busy pin must be configured as GPIO Output in Pin Manager***")
     spisSymBusyPinConfigComment.setDependencies(updateSPISlaveBusyPinVisibility, ["SPI_MR_MSTR", "SPIS_USE_BUSY_PIN"])
-    
-    spisSymFIFOSupport = spiComponent.createBooleanSymbol("SPI_FIFO_SUPPORT_AVAILABLE", None)
-    spisSymFIFOSupport.setLabel("FIFO Support Available?")
-    spisSymFIFOSupport.setDefaultValue(spiBitField_CR_FIFOEN != None)
-    spisSymFIFOSupport.setVisible(False)       
 
 
     #SPI Clock Phase Leading Edge Mask

@@ -71,6 +71,10 @@ void ${SPI_INSTANCE_NAME}_Initialize( void )
 {
     /* Disable and Reset the SPI*/
     ${SPI_INSTANCE_NAME}_REGS->SPI_CR = SPI_CR_SPIDIS_Msk | SPI_CR_SWRST_Msk;
+	
+<#if SPI_FIFO_ENABLE == true>
+	${SPI_INSTANCE_NAME}_REGS->SPI_CR = SPI_CR_FIFOEN_Msk;
+</#if>
 
 <#if SPI_MR_MSTR =="MASTER">
     /* Enable Master mode, <#if SPI_CLK_SRC??>select source clock, </#if>select particular NPCS line for chip select and disable mode fault detection */
@@ -194,6 +198,8 @@ bool ${SPI_INSTANCE_NAME}_WriteRead( void* pTransmitData, size_t txSize, void* p
         return isSuccess;
 }
 <#else>
+
+<#if SPI_FIFO_ENABLE == false>
 bool ${SPI_INSTANCE_NAME}_WriteRead( void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize )
 {
     bool isRequestAccepted = false;
@@ -347,6 +353,129 @@ bool ${SPI_INSTANCE_NAME}_WriteRead( void* pTransmitData, size_t txSize, void* p
     return isRequestAccepted;
 </#if>
 }
+
+<#else>
+static uint8_t ${SPI_INSTANCE_NAME}_FIFO_Fill(void)
+{
+    uint8_t nDataCopiedToFIFO = 0;
+    uint32_t dataBits = ${SPI_INSTANCE_NAME}_REGS->SPI_CSR[${SPI_CSR_INDEX}] & SPI_CSR_BITS_Msk;
+
+    while ((nDataCopiedToFIFO < 16) && (${SPI_INSTANCE_NAME}_REGS->SPI_SR & SPI_SR_TDRE_Msk))
+    {
+        if(dataBits == SPI_CSR_BITS_8_BIT)
+        {
+            if (${SPI_INSTANCE_NAME?lower_case}Obj.txCount < ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
+            {
+                *((uint8_t*)&${SPI_INSTANCE_NAME}_REGS->SPI_TDR) =  ((uint8_t*)${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[${SPI_INSTANCE_NAME?lower_case}Obj.txCount++];
+            }
+            else if (${SPI_INSTANCE_NAME?lower_case}Obj.dummySize > 0)
+            {
+                *((uint8_t*)&${SPI_INSTANCE_NAME}_REGS->SPI_TDR) = (uint8_t)(0x${SPI_DUMMY_DATA});
+                ${SPI_INSTANCE_NAME?lower_case}Obj.dummySize--;
+            }
+            else
+            {
+                break;
+            }
+        }
+        else
+        {
+            if (${SPI_INSTANCE_NAME?lower_case}Obj.txCount < ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
+            {
+                *((uint16_t*)&${SPI_INSTANCE_NAME}_REGS->SPI_TDR) =  ((uint16_t*)${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer)[${SPI_INSTANCE_NAME?lower_case}Obj.txCount++];
+            }
+            else if (${SPI_INSTANCE_NAME?lower_case}Obj.dummySize > 0)
+            {
+                *((uint16_t*)&${SPI_INSTANCE_NAME}_REGS->SPI_TDR) = (uint16_t)(0x${SPI_DUMMY_DATA}${SPI_DUMMY_DATA});
+                ${SPI_INSTANCE_NAME?lower_case}Obj.dummySize--;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        nDataCopiedToFIFO++;
+    }
+
+    return nDataCopiedToFIFO;
+}
+
+bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize)
+{
+    bool isRequestAccepted = false;
+    uint32_t nTxPending = 0;
+    uint8_t rxThreshold = 0;
+
+    /* Verify the request */
+    if((((txSize > 0) && (pTransmitData != NULL)) || ((rxSize > 0) && (pReceiveData != NULL))) && (${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy == false))
+    {
+        isRequestAccepted = true;
+        ${SPI_INSTANCE_NAME?lower_case}Obj.txBuffer = pTransmitData;
+        ${SPI_INSTANCE_NAME?lower_case}Obj.rxBuffer = pReceiveData;
+        ${SPI_INSTANCE_NAME?lower_case}Obj.rxCount = 0;
+        ${SPI_INSTANCE_NAME?lower_case}Obj.txCount = 0;
+        ${SPI_INSTANCE_NAME?lower_case}Obj.dummySize = 0;
+
+        if (pTransmitData != NULL)
+        {
+            ${SPI_INSTANCE_NAME?lower_case}Obj.txSize = txSize;
+        }
+        else
+        {
+            ${SPI_INSTANCE_NAME?lower_case}Obj.txSize = 0;
+        }
+
+        if (pReceiveData != NULL)
+        {
+            ${SPI_INSTANCE_NAME?lower_case}Obj.rxSize = rxSize;
+        }
+        else
+        {
+            ${SPI_INSTANCE_NAME?lower_case}Obj.rxSize = 0;
+        }
+
+        ${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy = true;
+
+        if (${SPI_INSTANCE_NAME?lower_case}Obj.rxSize > ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
+        {
+            ${SPI_INSTANCE_NAME?lower_case}Obj.dummySize = ${SPI_INSTANCE_NAME?lower_case}Obj.rxSize - ${SPI_INSTANCE_NAME?lower_case}Obj.txSize;
+        }
+
+        if((${SPI_INSTANCE_NAME}_REGS->SPI_CSR[${SPI_CSR_INDEX}] & SPI_CSR_BITS_Msk) != SPI_CSR_BITS_8_BIT)
+        {
+            ${SPI_INSTANCE_NAME?lower_case}Obj.txSize >>= 1;
+            ${SPI_INSTANCE_NAME?lower_case}Obj.dummySize >>= 1;
+            ${SPI_INSTANCE_NAME?lower_case}Obj.rxSize >>= 1;
+        }
+
+        /* Clear TX and RX FIFO */
+        ${SPI_INSTANCE_NAME}_REGS->SPI_CR = (SPI_CR_RXFCLR_Msk | SPI_CR_TXFCLR_Msk);
+
+        nTxPending = (${SPI_INSTANCE_NAME?lower_case}Obj.txSize - ${SPI_INSTANCE_NAME?lower_case}Obj.txCount) + ${SPI_INSTANCE_NAME?lower_case}Obj.dummySize;
+
+        if (nTxPending < 16)
+        {
+            rxThreshold = nTxPending;
+        }
+        else
+        {
+            rxThreshold = 16;
+        }
+
+        /* Set RX FIFO level so as to generate interrupt after all bytes are transmitted and response from slave is received for all the bytes */
+        /* RX FIFO level must be set first or else FIFO may be filled before RX threshold is set and hardware may not recognize threshold crossover and not generate threshold interrupt */
+        ${SPI_INSTANCE_NAME}_REGS->SPI_FMR = (${SPI_INSTANCE_NAME}_REGS->SPI_FMR & ~SPI_FMR_RXFTHRES_Msk) | SPI_FMR_RXFTHRES(rxThreshold);
+
+        (void) ${SPI_INSTANCE_NAME}_FIFO_Fill();
+
+        /* Enable RX FIFO Threshold interrupt */
+        ${SPI_INSTANCE_NAME}_REGS->SPI_IER = SPI_IER_RXFTHF_Msk;
+    }
+
+    return isRequestAccepted;
+}
+</#if>
 </#if>
 
 bool ${SPI_INSTANCE_NAME}_Write( void* pTransmitData, size_t txSize )
@@ -401,7 +530,7 @@ bool ${SPI_INSTANCE_NAME}_IsBusy( void )
 {
     return ((${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy) || ((${SPI_INSTANCE_NAME}_REGS->SPI_SR & SPI_SR_TXEMPTY_Msk) == 0));
 }
-
+<#if SPI_FIFO_ENABLE == false>
 void ${SPI_INSTANCE_NAME}_InterruptHandler( void )
 {
 <#if USE_SPI_DMA?? && USE_SPI_DMA == true>
@@ -568,4 +697,59 @@ void ${SPI_INSTANCE_NAME}_InterruptHandler( void )
     }
     </#if>
 }
+<#else>
+void ${SPI_INSTANCE_NAME}_InterruptHandler(void)
+{
+    uint32_t dataBits = ${SPI_INSTANCE_NAME}_REGS->SPI_CSR[${SPI_CSR_INDEX}] & SPI_CSR_BITS_Msk;
+    uint32_t nTxPending = 0;
+    uint8_t rxThreshold = 0;
+
+    while ((${SPI_INSTANCE_NAME}_REGS->SPI_SR & SPI_SR_RDRF_Msk ) && (${SPI_INSTANCE_NAME?lower_case}Obj.rxCount < ${SPI_INSTANCE_NAME?lower_case}Obj.rxSize))
+    {
+        if(dataBits == SPI_CSR_BITS_8_BIT)
+        {
+            ((uint8_t*)${SPI_INSTANCE_NAME?lower_case}Obj.rxBuffer)[${SPI_INSTANCE_NAME?lower_case}Obj.rxCount++] = *((uint8_t*)&${SPI_INSTANCE_NAME}_REGS->SPI_RDR);
+        }
+        else
+        {
+            ((uint16_t*)${SPI_INSTANCE_NAME?lower_case}Obj.rxBuffer)[${SPI_INSTANCE_NAME?lower_case}Obj.rxCount++] = *((uint16_t*)&${SPI_INSTANCE_NAME}_REGS->SPI_RDR);
+        }
+    }
+
+    /* Clear RX FIFO. This is done for the case where RX size is less than TX size and hence data is not read and copied into the application rx buffer. */
+    ${SPI_INSTANCE_NAME}_REGS->SPI_CR = SPI_CR_RXFCLR_Msk;
+
+    nTxPending = (${SPI_INSTANCE_NAME?lower_case}Obj.txSize - ${SPI_INSTANCE_NAME?lower_case}Obj.txCount) + ${SPI_INSTANCE_NAME?lower_case}Obj.dummySize;
+
+    if (nTxPending > 0)
+    {
+        if (nTxPending < 16)
+        {
+            rxThreshold = nTxPending;
+        }
+        else
+        {
+            rxThreshold = 16;
+        }
+
+        /* Set RX FIFO level so as to generate interrupt after all bytes are transmitted and response from slave is received for all the bytes */
+        /* RX FIFO level must be set first or else FIFO may be filled before RX threshold is set and hardware may not recognize threshold crossover and not generate threshold interrupt */
+        ${SPI_INSTANCE_NAME}_REGS->SPI_FMR = (${SPI_INSTANCE_NAME}_REGS->SPI_FMR & ~SPI_FMR_RXFTHRES_Msk) | SPI_FMR_RXFTHRES(rxThreshold);
+
+        (void) ${SPI_INSTANCE_NAME}_FIFO_Fill();
+    }
+    else
+    {
+        ${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy = false;
+
+        /* Disable Receive FIFO Threshold interrupt */
+        ${SPI_INSTANCE_NAME}_REGS->SPI_IDR = SPI_IDR_RXFTHF_Msk;
+
+        if(${SPI_INSTANCE_NAME?lower_case}Obj.callback != NULL)
+        {
+            ${SPI_INSTANCE_NAME?lower_case}Obj.callback(${SPI_INSTANCE_NAME?lower_case}Obj.context);
+        }
+    }
+}
+</#if>
 </#if>
