@@ -1435,7 +1435,7 @@ def apbValue(symbol,event):
                     Database.setSymbolValue("core", "MCLK_" + bridge + "_INITIAL_VALUE", hex(apbVal),2)
                     break
                 else:
-                    apbVal =  apbVal & ~(bitmask)
+                    apbVal =  (apbVal & ~(bitmask)) | int(apbInit[bridge], 16)
                     Database.setSymbolValue("core", "MCLK_" + bridge + "_INITIAL_VALUE", hex(apbVal),2)
                     break
 
