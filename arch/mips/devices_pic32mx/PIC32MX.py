@@ -69,6 +69,12 @@ def _process_valuegroup_entry(node):
     value = int(newstring,16)
     return str(value)
 
+def sort_alphanumeric(l):
+    import re
+    convert = lambda text: int(text) if text.isdigit() else text.lower()
+    alphanum_key = lambda key: [ convert(c) for c in re.split('([0-9]+)', key) ]
+    return sorted(l, key = alphanum_key)
+
 def getCorePeripheralsInterruptDataStructure():
 
     dmacVectName = ["DMA0", "DMA1", "DMA2", "DMA3"]
@@ -187,7 +193,7 @@ for ii in range(len(register)):
                     keyVals = {}
                     for ll in range(len(valuenode)):  # do this for each child <value ..> attribute for this bitfield
                         keyVals[valuenode[ll].getAttribute("name")] = _process_valuegroup_entry(valuenode[ll])
-            bitfielditem = coreComponent.createComboSymbol('CONFIG_'+bitfieldName, menuitem, sorted(keyVals.keys()))
+            bitfielditem = coreComponent.createComboSymbol('CONFIG_'+bitfieldName, menuitem, sort_alphanumeric(keyVals.keys()))
             bitfielditem.setDefaultValue(_find_key(_find_default_value(bitfields[jj], porValue),keyVals))
 
         bitfielditem.setVisible(True)
