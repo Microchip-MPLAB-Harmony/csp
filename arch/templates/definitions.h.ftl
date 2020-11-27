@@ -69,6 +69,9 @@ extern "C" {
 #endif
 // DOM-IGNORE-END
 
+/* CPU clock frequency */
+#define CPU_CLOCK_FREQUENCY ${CPU_CLOCK_FREQUENCY}
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: System Functions
@@ -167,22 +170,22 @@ void SYS_Initialize( void *data );
             <#lt>// Section: Type Definitions
             <#lt>// *****************************************************************************
             <#lt>// *****************************************************************************
-    
+
             <#lt>// *****************************************************************************
             <#lt>/* System Objects
-        
+
             <#lt>Summary:
             <#lt>    Structure holding the system's object handles
-        
+
             <#lt>Description:
             <#lt>    This structure contains the object handles for all objects in the
             <#lt>    MPLAB Harmony project's system configuration.
-        
+
             <#lt>Remarks:
             <#lt>    These handles are returned from the "Initialize" functions for each module
             <#lt>    and must be passed into the "Tasks" function for each module.
             <#lt>*/
-        
+
             <#lt>typedef struct
             <#lt>{
             <#if LIST_SYSTEM_DEFINITIONS_H_OBJECTS?length gt 0>

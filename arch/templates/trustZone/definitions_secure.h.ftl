@@ -70,6 +70,9 @@ extern "C" {
 #define TZ_START_S 0x${SEC_START_ADDRESS}
 </#if>
 
+/* CPU clock frequency */
+#define CPU_CLOCK_FREQUENCY ${CPU_CLOCK_FREQUENCY}
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: System Functions
