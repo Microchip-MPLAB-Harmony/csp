@@ -77,6 +77,10 @@ peripheralClockMenu.setLabel("Peripheral Clock Configuration")
 calculatedFreq_Menu = coreComponent.createMenuSymbol("FREQ_MENU", clkMenu)
 calculatedFreq_Menu.setLabel("Clock Frequencies")
 
+# SYSCTRL Interrupt Menu
+sysctrlInterrupt_Menu = coreComponent.createMenuSymbol("SYSCTRL_INTERRUPT_MENU", clkMenu)
+sysctrlInterrupt_Menu.setLabel("SYSCTRL Interrupts")
+
 ###################################################################################################
 ########################################## Callbacks  #############################################
 ###################################################################################################
@@ -1431,6 +1435,51 @@ gclkSym_GENCTRL_SRC[0].setValue(7, 1)
 
 #Disable RC oscillator
 osc8MEnable.setValue(False, 1)
+
+################################################################################
+###########             SYSCTRL Interrupts                  ####################
+################################################################################
+
+sysctrlInterruptNode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SYSCTRL\"]/register-group@[name=\"SYSCTRL\"]/register@[name=\"INTENSET\"]")
+sysctrlInterruptValues = []
+sysctrlInterruptValues = sysctrlInterruptNode.getChildren()
+global sysctrlInterruptMap
+sysctrlInterruptMap = {}
+
+def updateSysctrlInterrupt(symbol, event):
+    global sysctrlInterruptMap
+    sysctrlIntVal = int(Database.getSymbolValue("core", "SYSCTRL_INTERRUPT_ENABLE_VAL"), 16)
+
+    if event["value"]:
+        sysctrlIntVal |= int(sysctrlInterruptMap[event["id"].split("_")[2]], 16)
+    else:
+        sysctrlIntVal &= ~int(sysctrlInterruptMap[event["id"].split("_")[2]], 16)
+
+    sysctrlInterruptVector = "SYSCTRL_INTERRUPT_ENABLE"
+    sysctrlInterruptHandler = "SYSCTRL_INTERRUPT_HANDLER"
+    sysctrlInterruptHandlerLock = "SYSCTRL_INTERRUPT_HANDLER_LOCK"
+
+    if sysctrlIntVal:
+        Database.setSymbolValue("core", sysctrlInterruptVector, True)
+        Database.setSymbolValue("core", sysctrlInterruptHandler, "SYSCTRL_InterruptHandler")
+        Database.setSymbolValue("core", sysctrlInterruptHandlerLock, True)
+    else:
+        Database.setSymbolValue("core", sysctrlInterruptVector, False)
+        Database.setSymbolValue("core", sysctrlInterruptHandler, "SYSCTRL_Handler")
+        Database.setSymbolValue("core", sysctrlInterruptHandlerLock, False)
+
+    Database.setSymbolValue("core", "SYSCTRL_INTERRUPT_ENABLE_VAL", hex(sysctrlIntVal))
+
+for index in range(0, len(sysctrlInterruptValues)):
+    sysctrlInterrupt = coreComponent.createBooleanSymbol("SYSCTRL_INTERRUPT_" + sysctrlInterruptValues[index].getAttribute("name"), sysctrlInterrupt_Menu)
+    sysctrlInterrupt.setLabel(sysctrlInterruptValues[index].getAttribute("caption"))
+    sysctrlInterrupt.setDefaultValue(False)
+    sysctrlInterrupt.setDependencies(updateSysctrlInterrupt, ["SYSCTRL_INTERRUPT_" + sysctrlInterruptValues[index].getAttribute("name")])
+    sysctrlInterruptMap[sysctrlInterruptValues[index].getAttribute("name")] = sysctrlInterruptValues[index].getAttribute("mask")
+
+sysctrlInterruptEnableValue = coreComponent.createStringSymbol("SYSCTRL_INTERRUPT_ENABLE_VAL", sysctrlInterrupt_Menu)
+sysctrlInterruptEnableValue.setDefaultValue("0x0")
+sysctrlInterruptEnableValue.setVisible(False)
 
 ###################################################################################################
 ####################################### Code Generation  ##########################################

@@ -52,6 +52,9 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
+<#if SYSCTRL_INTERRUPT_ENABLE_VAL?? && SYSCTRL_INTERRUPT_ENABLE_VAL != "0x0">
+#include "device.h"
+</#if>
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
@@ -66,8 +69,75 @@ extern "C" {
 // *****************************************************************************
 // *****************************************************************************
 
+<#if SYSCTRL_INTERRUPT_ENABLE_VAL?? && SYSCTRL_INTERRUPT_ENABLE_VAL != "0x0">
+typedef enum
+{
+<#if SYSCTRL_INTERRUPT_XOSCRDY>
+    SYSCTRL_INTERRUPT_XOSCRDY_MASK = SYSCTRL_INTFLAG_XOSCRDY_Msk,
+</#if>
+<#if SYSCTRL_INTERRUPT_XOSC32KRDY>
+    SYSCTRL_INTERRUPT_XOSC32KRDY_MASK = SYSCTRL_INTFLAG_XOSC32KRDY_Msk,
+</#if>
+<#if SYSCTRL_INTERRUPT_OSC32KRDY>
+    SYSCTRL_INTERRUPT_OSC32KRDY_MASK = SYSCTRL_INTFLAG_OSC32KRDY_Msk,
+</#if>
+<#if SYSCTRL_INTERRUPT_OSC8MRDY>
+    SYSCTRL_INTERRUPT_OSC8MRDY_MASK = SYSCTRL_INTFLAG_OSC8MRDY_Msk,
+</#if>
+<#if SYSCTRL_INTERRUPT_DFLLRDY>
+    SYSCTRL_INTERRUPT_DFLLRDY_MASK = SYSCTRL_INTFLAG_DFLLRDY_Msk,
+</#if>
+<#if SYSCTRL_INTERRUPT_DFLLOOB>
+    SYSCTRL_INTERRUPT_DFLLOOB_MASK = SYSCTRL_INTFLAG_DFLLOOB_Msk,
+</#if>
+<#if SYSCTRL_INTERRUPT_DFLLLCKF>
+    SYSCTRL_INTERRUPT_DFLLLCKF_MASK = SYSCTRL_INTFLAG_DFLLLCKF_Msk,
+</#if>
+<#if SYSCTRL_INTERRUPT_DFLLLCKC>
+    SYSCTRL_INTERRUPT_DFLLLCKC_MASK = SYSCTRL_INTFLAG_DFLLLCKC_Msk,
+</#if>
+<#if SYSCTRL_INTERRUPT_DFLLRCS>
+    SYSCTRL_INTERRUPT_DFLLRCS_MASK = SYSCTRL_INTFLAG_DFLLRCS_Msk,
+</#if>
+<#if SYSCTRL_INTERRUPT_BOD33RDY>
+    SYSCTRL_INTERRUPT_BOD33RDY_MASK = SYSCTRL_INTFLAG_BOD33RDY_Msk,
+</#if>
+<#if SYSCTRL_INTERRUPT_BOD33DET>
+    SYSCTRL_INTERRUPT_BOD33DET_MASK = SYSCTRL_INTFLAG_BOD33DET_Msk,
+</#if>
+<#if SYSCTRL_INTERRUPT_B33SRDY>
+    SYSCTRL_INTERRUPT_B33SRDY_MASK = SYSCTRL_INTFLAG_B33SRDY_Msk,
+</#if>
+<#if SYSCTRL_INTERRUPT_DPLLLCKR>
+    SYSCTRL_INTERRUPT_DPLLLCKR_MASK = SYSCTRL_INTFLAG_DPLLLCKR_Msk,
+</#if>
+<#if SYSCTRL_INTERRUPT_DPLLLCKF>
+    SYSCTRL_INTERRUPT_DPLLLCKF_MASK = SYSCTRL_INTFLAG_DPLLLCKF_Msk,
+</#if>
+<#if SYSCTRL_INTERRUPT_DPLLLTO>
+    SYSCTRL_INTERRUPT_DPLLLTO_MASK = SYSCTRL_INTFLAG_DPLLLTO_Msk
+</#if>
+} SYSCTRL_INTERRUPT_MASK;
+
+typedef void (*SYSCTRL_CALLBACK)(SYSCTRL_INTERRUPT_MASK interruptMask, uintptr_t context);
+
+typedef struct
+{
+    SYSCTRL_CALLBACK    callback;
+    uintptr_t           context;
+} SYSCTRL_CALLBACK_OBJECT;
+</#if>
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Interface Routines
+// *****************************************************************************
+// *****************************************************************************
 
 void CLOCK_Initialize (void);
+<#if SYSCTRL_INTERRUPT_ENABLE_VAL?? && SYSCTRL_INTERRUPT_ENABLE_VAL != "0x0">
+void SYSCTRL_CallbackRegister(SYSCTRL_CALLBACK callback, uintptr_t context);
+</#if>
 
 #ifdef __cplusplus // Provide C++ Compatibility
 }
