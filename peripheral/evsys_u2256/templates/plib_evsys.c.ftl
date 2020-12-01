@@ -39,6 +39,7 @@
 *******************************************************************************/
 
 #include "plib_${EVSYS_INSTANCE_NAME?lower_case}.h"
+#include "interrupts.h"
 
 <#assign TOTAL_CHANNEL = EVSYS_CHANNEL_NUMBER?number >
 <#assign CONFIGURED_CHANNEL = 0>
@@ -52,7 +53,7 @@
         </#if>
     </#list>
     <#if CONFIGURED_CHANNEL != 0>
-        <#lt>EVSYS_OBJECT evsys[${CONFIGURED_CHANNEL}];
+        <#lt>static EVSYS_OBJECT evsys[${CONFIGURED_CHANNEL}];
     </#if>
 </#if>
 
@@ -64,7 +65,7 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
     <#assign CHANNEL = "EVSYS_USER_" + i >
     <#if .vars[CHANNEL]?has_content>
     <#if .vars[CHANNEL] != '0'>
-    ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_USER[${i}] = EVSYS_USER_CHANNEL(${.vars[CHANNEL]});
+    ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_USER[${i}] = EVSYS_USER_CHANNEL(${.vars[CHANNEL]}UL);
     </#if>
     </#if>
 </#list>
@@ -79,7 +80,7 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
     <#if .vars[CHANNEL_ENABLE]?has_content>
     <#if (.vars[CHANNEL_ENABLE] != false)>
     /* Event Channel ${i} Configuration */
-    ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_CHANNEL[${i}] = EVSYS_CHANNEL_EVGEN(${.vars[GENERATOR]}) | EVSYS_CHANNEL_PATH(${.vars[PATH]}) | EVSYS_CHANNEL_EDGSEL(${.vars[EDGE]}) \
+    ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_CHANNEL[${i}] = EVSYS_CHANNEL_EVGEN(${.vars[GENERATOR]}UL) | EVSYS_CHANNEL_PATH(${.vars[PATH]}UL) | EVSYS_CHANNEL_EDGSEL(${.vars[EDGE]}UL) \
                                     ${(.vars[RUNSTANDBY])?then('| EVSYS_CHANNEL_RUNSTDBY_Msk', '')} ${(.vars[ONDEMAND])?then('| EVSYS_CHANNEL_ONDEMAND_Msk', '')};
     </#if>
     </#if>
@@ -96,12 +97,12 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
 
     <#lt>void ${EVSYS_INSTANCE_NAME}_InterruptEnable(EVSYS_CHANNEL channel, EVSYS_INT_MASK interruptMask)
     <#lt>{
-    <#lt>   ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTENSET = interruptMask << channel;
+    <#lt>   ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTENSET = (uint32_t)interruptMask << (uint32_t)channel;
     <#lt>}
 
     <#lt>void ${EVSYS_INSTANCE_NAME}_InterruptDisable(EVSYS_CHANNEL channel, EVSYS_INT_MASK interruptMask)
     <#lt>{
-    <#lt>   ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTENCLR = interruptMask << channel;
+    <#lt>   ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTENCLR = (uint32_t)interruptMask << (uint32_t)channel;
     <#lt>}
 
     <#lt>void ${EVSYS_INSTANCE_NAME}_CallbackRegister(EVSYS_CHANNEL channel, EVSYS_CALLBACK callback, uintptr_t context )
@@ -119,23 +120,23 @@ void ${EVSYS_INSTANCE_NAME}_Initialize( void )
      <#lt>    uint32_t overrunIntFlagStatus = 0;
 
      <#lt>    /* Find any triggered channels, run associated callback handlers */
-     <#lt>    for (currentChannel = 0; currentChannel < ${CONFIGURED_CHANNEL}; currentChannel++)
+     <#lt>    for (currentChannel = 0U; currentChannel < ${CONFIGURED_CHANNEL}U; currentChannel++)
      <#lt>    {
 
      <#lt>        /* Read the interrupt flag status */
-     <#lt>        overrunIntFlagStatus = ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTFLAG & (EVSYS_INT_OVERRUN << currentChannel);
-     <#lt>        eventIntFlagStatus = ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTFLAG & (EVSYS_INT_EVENT_DETECT << currentChannel);
+     <#lt>        overrunIntFlagStatus = ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTFLAG & ((uint32_t)EVSYS_INT_OVERRUN << currentChannel);
+     <#lt>        eventIntFlagStatus = ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTFLAG & ((uint32_t)EVSYS_INT_EVENT_DETECT << currentChannel);
 
-     <#lt>        if (eventIntFlagStatus | overrunIntFlagStatus)
+     <#lt>        if (0U != (eventIntFlagStatus | overrunIntFlagStatus))
      <#lt>        {
      <#lt>            /* Find any associated callback entries in the callback table */
      <#lt>            if (evsys[currentChannel].callback != NULL)
      <#lt>            {
-     <#lt>                evsys[currentChannel].callback((uint32_t)((eventIntFlagStatus | overrunIntFlagStatus) >> currentChannel), evsys[currentChannel].context);
+     <#lt>                evsys[currentChannel].callback(((eventIntFlagStatus | overrunIntFlagStatus) >> currentChannel), evsys[currentChannel].context);
      <#lt>            }
 
      <#lt>            /* Clear interrupt flag */
-     <#lt>            ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTFLAG = (EVSYS_INT_OVERRUN  | EVSYS_INT_EVENT_DETECT) << currentChannel;
+     <#lt>            ${EVSYS_INSTANCE_NAME}_REGS->EVSYS_INTFLAG = ((uint32_t)EVSYS_INT_OVERRUN  | (uint32_t)EVSYS_INT_EVENT_DETECT) << currentChannel;
      <#lt>        }
      <#lt>    }
 <#lt>}
