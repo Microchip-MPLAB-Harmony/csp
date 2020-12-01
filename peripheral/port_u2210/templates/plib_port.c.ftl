@@ -325,29 +325,26 @@ void PORT_GroupOutputEnable(PORT_GROUP group, uint32_t mask)
   Remarks:
     Refer plib_port.h file for more information.
 */
-
 void PORT_PinPeripheralFunctionConfig(PORT_PIN pin, PERIPHERAL_FUNCTION function)
 {
-    uint32_t pin_pos = (uint32_t) pin;
-    uint32_t port_group_num = (pin_pos >> 5);
-    uint32_t pin_num = pin - (port_group_num << 5);
     uint32_t periph_func = (uint32_t) function;
-
-    port_group_registers_t* port_group = (port_group_registers_t*)(PORT_BASE_ADDRESS + (port_group_num * 0x80));
-
+    PORT_GROUP group = GET_PORT_GROUP(pin);
+    uint32_t pin_num = ((uint32_t)pin) & 0x1FU;
+    uint32_t pinmux_val = (uint32_t)((port_group_registers_t*)group)->PORT_PMUX[(pin_num >> 1)];
+    
     /* For odd pins */
-    if (pin_pos & 0x01)
+    if (0U != (pin_num & 0x01U))
     {
-        port_group->PORT_PMUX[(pin_num >> 1)] = (port_group->PORT_PMUX[(pin_num >> 1)] & ~0xF0) | (periph_func << 4);
+        pinmux_val = (pinmux_val & ~0xF0U) | (periph_func << 4);
     }
-    /* For even pins */
     else
     {
-        port_group->PORT_PMUX[(pin_num >> 1)] = (port_group->PORT_PMUX[(pin_num >> 1)] & ~0x0F) | periph_func;
+        pinmux_val = (pinmux_val & ~0x0FU) | periph_func;
     }
-
+    ((port_group_registers_t*)group)->PORT_PMUX[(pin_num >> 1)] = (uint8_t)pinmux_val;
+    
     /* Enable peripheral control of the pin */
-     port_group->PORT_PINCFG[pin_num] |= PORT_PINCFG_PMUXEN_Msk;
+    ((port_group_registers_t*)group)->PORT_PINCFG[pin_num] |= (uint8_t)PORT_PINCFG_PMUXEN_Msk;
 }
 
 // *****************************************************************************
@@ -365,12 +362,9 @@ void PORT_PinPeripheralFunctionConfig(PORT_PIN pin, PERIPHERAL_FUNCTION function
 */
 void PORT_PinGPIOConfig(PORT_PIN pin)
 {
-    uint32_t pin_pos = (uint32_t) pin;
-    uint32_t port_group_num = (pin_pos >> 5);
-    uint32_t pin_num = pin - (port_group_num << 5);
-
-    port_group_registers_t* port_group = (port_group_registers_t*)(PORT_BASE_ADDRESS + (port_group_num * 0x80));
+    PORT_GROUP group = GET_PORT_GROUP(pin);
+    uint32_t pin_num = ((uint32_t)pin) & 0x1FU;
 
     /* Disable peripheral control of the pin */
-    port_group->PORT_PINCFG[pin_num] &= ~PORT_PINCFG_PMUXEN_Msk;
+    ((port_group_registers_t*)group)->PORT_PINCFG[pin_num] &= ((uint8_t)(~PORT_PINCFG_PMUXEN_Msk));
 }
