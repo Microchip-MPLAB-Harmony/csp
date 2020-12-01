@@ -147,7 +147,7 @@ typedef enum
 
     void EIC_Pin0Callback (uintptr_t context)
     {
-        // This means an interrupt condition has been sensed on EIC Pin 0.
+        This means an interrupt condition has been sensed on EIC Pin 0.
     }
 
     ${EIC_INSTANCE_NAME}_CallbackRegister(EIC_PIN_0, EIC_Pin0Callback, 0);
@@ -207,7 +207,7 @@ typedef struct
 
     void EIC_NMICallback (uintptr_t context)
     {
-        // This means an interrupt condition has been sensed on the NMI Pin.
+        This means an interrupt condition has been sensed on the NMI Pin.
     }
 
     ${EIC_INSTANCE_NAME}_NMICallbackRegister(EIC_NMICallback, 0);
@@ -373,8 +373,8 @@ void ${EIC_INSTANCE_NAME}_InterruptDisable (EIC_PIN pin);
 
   Example:
     <code>
-    // Refer to the description of the EIC_CALLBACK data type for details on API
-    // usage.
+     Refer to the description of the EIC_CALLBACK data type for details on API
+     usage.
     </code>
 
   Remarks:
@@ -413,8 +413,8 @@ void ${EIC_INSTANCE_NAME}_CallbackRegister(EIC_PIN pin, EIC_CALLBACK callback, u
 
   Example:
     <code>
-    // Refer to the description of the EIC_NMI_CALLBACK data type for details on
-    // API usage.
+     Refer to the description of the EIC_NMI_CALLBACK data type for details on
+     API usage.
     </code>
 
   Remarks:
