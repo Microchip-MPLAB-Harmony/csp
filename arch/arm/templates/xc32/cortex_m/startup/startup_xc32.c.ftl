@@ -26,6 +26,7 @@
 #include <libpic32c.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include "device.h"
 #include "interrupts.h"
 
 
