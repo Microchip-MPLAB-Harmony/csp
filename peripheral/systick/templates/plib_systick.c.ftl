@@ -39,7 +39,8 @@
 *******************************************************************************/
 
 #include "device.h"
-#include "peripheral/systick/plib_systick.h"
+#include "interrupts.h"
+#include "plib_systick.h"
 
 <#if USE_SYSTICK_INTERRUPT == true>
 	<#lt>SYSTICK_OBJECT systick;
@@ -135,7 +136,7 @@ uint32_t SYSTICK_TimerFrequencyGet ( void )
 	<#lt>	systick.context = context;
 	<#lt>}
 
-	<#lt>void SysTick_Handler()
+	<#lt>void SysTick_Handler(void)
 	<#lt>{
 	<#lt>	systick.tickCounter++;
 	<#lt>	if(systick.callback != NULL)
