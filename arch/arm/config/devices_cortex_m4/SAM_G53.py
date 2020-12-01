@@ -146,6 +146,9 @@ coreComponent.addPlugin("../peripheral/mpu/plugin/mpu.jar")
 # #load systick
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/systick/config/systick.py")
 
+# #load DWT
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/dwt/config/dwt.py")
+
 # # load wdt
 execfile(Variables.get("__CORE_DIR") + "/../peripheral/wdt_6080/config/wdt.py")
 

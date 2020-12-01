@@ -265,6 +265,9 @@ coreComponent.addPlugin("../peripheral/mpu/plugin/mpu.jar")
 execfile(Variables.get("__CORE_DIR")
          + "/../peripheral/systick/config/systick.py")
 
+# #load DWT
+execfile(Variables.get("__CORE_DIR") + "/../peripheral/dwt/config/dwt.py")
+
 # load dma manager information
 execfile(Variables.get("__CORE_DIR")
          + "/../peripheral/xdmac_11161/config/xdmac.py")
