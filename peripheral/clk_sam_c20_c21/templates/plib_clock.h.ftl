@@ -169,7 +169,7 @@ void CLOCK_Initialize (void);
 
     }
 
-    // Register the callback function. Specify the context as NULL.
+    Register the callback function. Specify the context as NULL.
     OSCCTRL_CallbackRegister(MyOscillatorCallback, NULL);
 
     </code>
@@ -209,8 +209,8 @@ typedef void (*OSCCTRL_CFD_CALLBACK)(uintptr_t context);
   Example:
     <code>
 
-    //Refer to the code example provided in the description of the
-    //OSCCTRL_CFD_CALLBACK function pointer type.
+    Refer to the code example provided in the description of the
+    OSCCTRL_CFD_CALLBACK function pointer type.
 
     </code>
 
@@ -257,10 +257,10 @@ void OSCCTRL_CallbackRegister (OSCCTRL_CFD_CALLBACK callback, uintptr_t context)
 
     void MyOscillatorFailureCallback (uintptr_t context )
     {
-        // This means the 32KHz clock has failed.
+        This means the 32KHz clock has failed.
     }
 
-    // Register the callback function. Specify the context as NULL.
+    Register the callback function. Specify the context as NULL.
     OSC32KCTRL_CallbackRegister(MyOscillatorFailureCallback, NULL);
 
     </code>
@@ -303,8 +303,8 @@ typedef void (*OSC32KCTRL_CFD_CALLBACK)(uintptr_t context);
   Example:
     <code>
 
-    //Refer to the code example provided in the description of the
-    //OSC32KCTRL_CFD_CALLBACK function pointer type.
+    Refer to the code example provided in the description of the
+    OSC32KCTRL_CFD_CALLBACK function pointer type.
 
     </code>
 
