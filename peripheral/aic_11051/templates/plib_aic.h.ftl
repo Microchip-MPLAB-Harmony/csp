@@ -58,7 +58,11 @@ typedef struct {
     uint32_t    priority;
 } IrqData;
 
-void INT_Initialize( void );
+void AIC_INT_Initialize( void );
+void AIC_INT_IrqEnable( void );
+bool AIC_INT_IrqDisable( void );
+void AIC_INT_IrqRestore( bool state );
+
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
     }

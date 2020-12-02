@@ -1,2 +1,2 @@
-    INT_Initialize();
+    AIC_INT_Initialize();
     
