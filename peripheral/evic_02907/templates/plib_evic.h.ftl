@@ -108,9 +108,9 @@ typedef enum
         <#lt>    EXTERNAL_INT_${i} = _IEC0_INT${i}IE_MASK,
     </#if>
 </#list>
-    
-    
-    
+
+
+
 
 }EXTERNAL_INT_PIN;
 
@@ -136,6 +136,12 @@ bool EVIC_SourceStatusGet( INT_SOURCE source );
 void EVIC_SourceStatusSet( INT_SOURCE source );
 
 void EVIC_SourceStatusClear( INT_SOURCE source );
+
+void EVIC_INT_Enable( void );
+
+bool EVIC_INT_Disable( void );
+
+void EVIC_INT_Restore( bool state );
 
 <#if 0 < NumOfEnabledExtInt>
 bool EVIC_ExternalInterruptCallbackRegister(
