@@ -63,7 +63,7 @@ void EVIC_Initialize( void )
     INTCONSET = _INTCON_MVEC_MASK;
 
 <#-- Note that this list will iterate through all the numbers between EVIC_VECTOR_MIN and MAX,
- but interrupt vectors and hence symbols, won't be present for all the numbers, so existance of symbols is a must-->    
+ but interrupt vectors and hence symbols, won't be present for all the numbers, so existance of symbols is a must-->
     <#lt>    /* Set up priority and subpriority of enabled interrupts */
 <#list EVIC_VECTOR_MIN..EVIC_VECTOR_MAX as i>
     <#assign IPCREG = "EVIC_" + i + "_REGNAME">  <#-- IPCx register for given interrupt -->
@@ -167,6 +167,31 @@ void EVIC_SourceStatusClear( INT_SOURCE source )
     *IFSxCLR = 1 << (source & 0x1f);
 }
 
+void EVIC_INT_Enable( void )
+{
+    __builtin_enable_interrupts();
+}
+
+bool EVIC_INT_Disable( void )
+{
+    uint32_t processorStatus;
+
+    /* Save the processor status and then Disable the global interrupt */
+    processorStatus = ( uint32_t )__builtin_disable_interrupts();
+
+    /* return the interrupt status */
+    return (bool)(processorStatus & 0x01);
+}
+
+void EVIC_INT_Restore( bool state )
+{
+    if (state)
+    {
+        /* restore the state of CP0 Status register before the disable occurred */
+        __builtin_enable_interrupts();
+    }
+}
+
 <#if 0 < NumOfEnabledExtInt>
 void EVIC_ExternalInterruptEnable( EXTERNAL_INT_PIN extIntPin )
 {
@@ -202,6 +227,7 @@ bool EVIC_ExternalInterruptCallbackRegister(
 
     return status;
 }
+
 <#list 0..4 as i>
     <#assign EXT_INT_PIN = "EXTERNAL_" + i + "_EXTERNAL_INTERRUPT_UPDATE">
     <#if .vars[EXT_INT_PIN]?has_content && .vars[EXT_INT_PIN] == true>
@@ -211,7 +237,7 @@ bool EVIC_ExternalInterruptCallbackRegister(
   Summary:
     Interrupt Handler for External Interrupt pin ${i}.
   Remarks:
-	It is an internal function called from ISR, user should not call it directly.
+    It is an internal function called from ISR, user should not call it directly.
 */
 void EXTERNAL_${i}_InterruptHandler()
 {

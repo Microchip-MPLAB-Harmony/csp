@@ -145,6 +145,12 @@ void EVIC_SourceStatusSet( INT_SOURCE source );
 
 void EVIC_SourceStatusClear( INT_SOURCE source );
 
+void EVIC_INT_Enable( void );
+
+bool EVIC_INT_Disable( void );
+
+void EVIC_INT_Restore( bool state );
+
 <#if 0 < NumOfEnabledExtInt>
 bool EVIC_ExternalInterruptCallbackRegister(
         EXTERNAL_INT_PIN extIntPin,
@@ -163,7 +169,7 @@ typedef struct {
 
     /* Callback Context */
     uintptr_t               context;
-    
+
 } EXT_INT_PIN_CALLBACK_OBJ;
 </#if>
 
