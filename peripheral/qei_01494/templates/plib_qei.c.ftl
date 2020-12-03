@@ -128,19 +128,19 @@ void ${QEI_INSTANCE_NAME}_Initialize (void)
 }
 
 
-void ${QEI_INSTANCE_NAME}_Start()
+void ${QEI_INSTANCE_NAME}_Start(void)
 {
     /* Enable QEI channel */
     QEI${QEI_INSTANCE_NUM}CON |= _QEI${QEI_INSTANCE_NUM}CON_QEIEN_MASK;
 }
 
-void ${QEI_INSTANCE_NAME}_Stop()
+void ${QEI_INSTANCE_NAME}_Stop(void)
 {
     /* Disable QEI channel */
     QEI${QEI_INSTANCE_NUM}CON &= ~_QEI${QEI_INSTANCE_NUM}CON_QEIEN_MASK;
 }
 
-uint32_t ${QEI_INSTANCE_NAME}_PulseIntervalGet()
+uint32_t ${QEI_INSTANCE_NAME}_PulseIntervalGet(void)
 {
     return (INT${QEI_INSTANCE_NUM}HLD);
 }

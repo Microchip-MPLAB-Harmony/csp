@@ -68,26 +68,26 @@
 
 void ${QEI_INSTANCE_NAME}_Initialize (void);
 
-void ${QEI_INSTANCE_NAME}_Start();
+void ${QEI_INSTANCE_NAME}_Start(void);
 
-void ${QEI_INSTANCE_NAME}_Stop();
+void ${QEI_INSTANCE_NAME}_Stop(void);
 
-__STATIC_INLINE uint32_t ${QEI_INSTANCE_NAME}_PositionGet()
+__STATIC_INLINE uint32_t ${QEI_INSTANCE_NAME}_PositionGet(void)
 {
     return (POS${QEI_INSTANCE_NUM}CNT);
 }
 
-__STATIC_INLINE uint32_t ${QEI_INSTANCE_NAME}_VelocityGet()
+__STATIC_INLINE uint32_t ${QEI_INSTANCE_NAME}_VelocityGet(void)
 {
     return (VEL${QEI_INSTANCE_NUM}CNT);
 }
 
-__STATIC_INLINE uint32_t ${QEI_INSTANCE_NAME}_RevolutionsGet()
+__STATIC_INLINE uint32_t ${QEI_INSTANCE_NAME}_RevolutionsGet(void)
 {
     return (INDX${QEI_INSTANCE_NUM}CNT);
 }
 
-uint32_t ${QEI_INSTANCE_NAME}_PulseIntervalGet();
+uint32_t ${QEI_INSTANCE_NAME}_PulseIntervalGet(void);
 
 void ${QEI_INSTANCE_NAME}_PositionWindowSet(uint32_t high_threshold, uint32_t low_threshold);
 
