@@ -66,6 +66,11 @@
 ${LIST_SYSTEM_INIT_C_CONFIG_BITS_INITIALIZATION}
 </#if>
 
+<#if DEVICE_SECURITY_CMD?? && DEVICE_SECURITY_CMD == "SET" && "XC32" == COMPILER_CHOICE>
+#ifndef __DEBUG
+const unsigned int __attribute__((space(prog), keep, address(0x41004000))) SET_SECURITY_BIT = 1;
+#endif
+</#if>
 
 // *****************************************************************************
 // *****************************************************************************

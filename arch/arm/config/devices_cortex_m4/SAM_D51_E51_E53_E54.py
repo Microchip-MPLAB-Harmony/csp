@@ -61,6 +61,9 @@ def xc32SetStackInTcm(symbol, event):
     else:
         xc32StackInTCMSym.setValue("false")
 
+def udpateSymbolEnableAndVisibility (symbol, event):
+    symbol.setVisible(event["symbol"].getSelectedKey() == "XC32")
+
 # load family specific configurations
 print("Loading System Services for " + Variables.get("__PROCESSOR"))
 
@@ -77,14 +80,15 @@ fuseSettings.setLabel("Generate Fuse Settings")
 fuseSettings.setDefaultValue(True)
 
 # Device Configuration
-deviceSecurity = coreComponent.createKeyValueSetSymbol("DEVICE_SECURITY", devCfgMenu)
+deviceSecurity = coreComponent.createKeyValueSetSymbol("DEVICE_SECURITY_CMD", devCfgMenu)
 deviceSecurity.setLabel("Security")
 deviceSecurity.setOutputMode("Key")
 deviceSecurity.setDisplayMode("Description")
 deviceSecurity.addKey("CLEAR", "0", "Disable (Code Protection Disabled)" )
 deviceSecurity.addKey("SET", "1", "Enable (Code Protection Enabled)")
 deviceSecurity.setSelectedKey("CLEAR",1)
-deviceSecurity.setVisible(False)
+deviceSecurity.setVisible(compilerChoice.getSelectedKey() == "XC32")
+deviceSecurity.setDependencies(udpateSymbolEnableAndVisibility, ['core.COMPILER_CHOICE'])
 
 registerGroup = "USER_FUSES"
 registerNames = ["USER_WORD_0", "USER_WORD_1", "USER_WORD_2"]

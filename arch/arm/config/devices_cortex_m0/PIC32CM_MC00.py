@@ -22,6 +22,9 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
 
+def udpateSymbolEnableAndVisibility (symbol, event):
+    symbol.setVisible(event["symbol"].getSelectedKey() == "XC32")
+
 # load family specific configurations
 print("Loading System Services for " + Variables.get("__PROCESSOR"))
 
@@ -30,14 +33,15 @@ devCfgComment = coreComponent.createCommentSymbol("CoreCfgComment1", devCfgMenu)
 devCfgComment.setLabel("Note: Set Device Configuration Bits via Programming Tool")
 
 # Device Configuration
-deviceSecurity = coreComponent.createKeyValueSetSymbol("DEVICE_SECURITY", devCfgMenu)
+deviceSecurity = coreComponent.createKeyValueSetSymbol("DEVICE_SECURITY_CMD", devCfgMenu)
 deviceSecurity.setLabel("Security")
 deviceSecurity.setOutputMode("Key")
 deviceSecurity.setDisplayMode("Description")
 deviceSecurity.addKey("CLEAR", "0", "Disable (Code Protection Disabled)")
 deviceSecurity.addKey("SET", "1", "Enable (Code Protection Enabled)")
 deviceSecurity.setSelectedKey("CLEAR",1)
-deviceSecurity.setVisible(False)
+deviceSecurity.setVisible(compilerChoice.getSelectedKey() == "XC32")
+deviceSecurity.setDependencies(udpateSymbolEnableAndVisibility, ['core.COMPILER_CHOICE'])
 
 fuseSettings = coreComponent.createBooleanSymbol("FUSE_CONFIG_ENABLE", devCfgMenu)
 fuseSettings.setLabel("Generate Fuse Settings")
@@ -52,9 +56,9 @@ def getMaxValue(mask):
         mask = mask >> 1
 
     return mask
-    
 
-    
+
+
 registerGroup = "USER_FUSES"
 registerNames = ["USER_WORD_0", "USER_WORD_1"]
 
@@ -177,7 +181,7 @@ nvmWaitStates = { #VDD > 2.7
                     38000000 : 1,
                     48000000 : 2
                 }
-                
+
 periphNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"NVMCTRL\"]")
 modules = periphNode.getChildren()
 components = []

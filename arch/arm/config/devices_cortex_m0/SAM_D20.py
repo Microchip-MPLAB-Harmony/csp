@@ -22,6 +22,9 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
 
+def udpateSymbolEnableAndVisibility (symbol, event):
+    symbol.setVisible(event["symbol"].getSelectedKey() == "XC32")
+
 # load family specific configurations
 print("Loading System Services for " + Variables.get("__PROCESSOR"))
 
@@ -30,14 +33,15 @@ devCfgComment = coreComponent.createCommentSymbol("CoreCfgComment1", devCfgMenu)
 devCfgComment.setLabel("Note: Set Device Configuration Bits via Programming Tool")
 
 # Device Configuration
-deviceSecurity = coreComponent.createKeyValueSetSymbol("DEVICE_SECURITY", devCfgMenu)
+deviceSecurity = coreComponent.createKeyValueSetSymbol("DEVICE_SECURITY_CMD", devCfgMenu)
 deviceSecurity.setLabel("Security")
 deviceSecurity.setOutputMode("Key")
 deviceSecurity.setDisplayMode("Description")
 deviceSecurity.addKey("CLEAR", "0", "Disable (Code Protection Disabled)" )
 deviceSecurity.addKey("SET", "1", "Enable (Code Protection Enabled)")
 deviceSecurity.setSelectedKey("CLEAR",1)
-deviceSecurity.setVisible(False)
+deviceSecurity.setVisible(compilerChoice.getSelectedKey() == "XC32")
+deviceSecurity.setDependencies(udpateSymbolEnableAndVisibility, ['core.COMPILER_CHOICE'])
 
 def setWindow(symbol, event):
     if event["value"] & 1 == 1:
