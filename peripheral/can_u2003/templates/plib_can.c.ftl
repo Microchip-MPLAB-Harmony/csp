@@ -50,6 +50,7 @@
 // *****************************************************************************
 
 #include "device.h"
+#include "interrupts.h"
 #include "plib_${CAN_INSTANCE_NAME?lower_case}.h"
 
 // *****************************************************************************
@@ -63,10 +64,9 @@
 <#assign CAN_DBTP_DTSEG1  = DBTP_DTSEG1 - 1>
 <#assign CAN_DBTP_DTSEG2  = DBTP_DTSEG2 - 1>
 <#assign CAN_DBTP_DSJW    = DBTP_DSJW - 1>
-#define CAN_STD_ID_Msk        0x7FF
+#define CAN_STD_ID_Msk        0x7FFU
 <#if INTERRUPT_MODE == true>
-#define CAN_CALLBACK_TX_INDEX 3
-
+#define CAN_CALLBACK_TX_INDEX 3U
 <#assign NUM_OF_FIFO = 2>
 <#assign NUM_OF_ELEMENTS = 1>
  <#if RXF0_USE>
@@ -83,7 +83,9 @@
    <#assign NUM_OF_ELEMENTS = RX_BUFFER_ELEMENTS>
   </#if>
  </#if>
-static CAN_RX_MSG ${CAN_INSTANCE_NAME?lower_case}RxMsg[${NUM_OF_FIFO}][${NUM_OF_ELEMENTS}];
+#define NUM_RX_FIFOS ${NUM_OF_FIFO}U
+#define NUM_RX_BUFFER_ELEMENTS ${NUM_OF_ELEMENTS}U
+static CAN_RX_MSG ${CAN_INSTANCE_NAME?lower_case}RxMsg[NUM_RX_FIFOS][NUM_RX_BUFFER_ELEMENTS];
 static CAN_CALLBACK_OBJ ${CAN_INSTANCE_NAME?lower_case}CallbackObj[4];
 </#if>
 static CAN_OBJ ${CAN_INSTANCE_NAME?lower_case}Obj;
@@ -94,10 +96,10 @@ static const can_sidfe_registers_t ${CAN_INSTANCE_NAME?lower_case}StdFilter[] =
 {
     <#list 1..(numInstance) as idx>
     {
-        .CAN_SIDFE_0 = CAN_SIDFE_0_SFT(${.vars["${CAN_INSTANCE_NAME}_STD_FILTER${idx}_TYPE"]}) |
-                  CAN_SIDFE_0_SFID1(0x${.vars["${CAN_INSTANCE_NAME}_STD_FILTER${idx}_SFID1"]}) |
-                  CAN_SIDFE_0_SFID2(0x${.vars["${CAN_INSTANCE_NAME}_STD_FILTER${idx}_SFID2"]}) |
-                  CAN_SIDFE_0_SFEC(${.vars["${CAN_INSTANCE_NAME}_STD_FILTER${idx}_CONFIG"]})
+        .CAN_SIDFE_0 = CAN_SIDFE_0_SFT(${.vars["${CAN_INSTANCE_NAME}_STD_FILTER${idx}_TYPE"]}UL) |
+                  CAN_SIDFE_0_SFID1(0x${.vars["${CAN_INSTANCE_NAME}_STD_FILTER${idx}_SFID1"]}UL) |
+                  CAN_SIDFE_0_SFID2(0x${.vars["${CAN_INSTANCE_NAME}_STD_FILTER${idx}_SFID2"]}UL) |
+                  CAN_SIDFE_0_SFEC(${.vars["${CAN_INSTANCE_NAME}_STD_FILTER${idx}_CONFIG"]}UL)
     },
      </#list>
 };
@@ -109,8 +111,8 @@ static const can_xidfe_registers_t ${CAN_INSTANCE_NAME?lower_case}ExtFilter[] =
 {
     <#list 1..(numInstance) as idx>
     {
-        .CAN_XIDFE_0 = CAN_XIDFE_0_EFID1(0x${.vars["${CAN_INSTANCE_NAME}_EXT_FILTER${idx}_EFID1"]}) | CAN_XIDFE_0_EFEC(${.vars["${CAN_INSTANCE_NAME}_EXT_FILTER${idx}_CONFIG"]}),
-        .CAN_XIDFE_1 = CAN_XIDFE_1_EFID2(0x${.vars["${CAN_INSTANCE_NAME}_EXT_FILTER${idx}_EFID2"]}) | CAN_XIDFE_1_EFT(${.vars["${CAN_INSTANCE_NAME}_EXT_FILTER${idx}_TYPE"]}),
+        .CAN_XIDFE_0 = CAN_XIDFE_0_EFID1(0x${.vars["${CAN_INSTANCE_NAME}_EXT_FILTER${idx}_EFID1"]}UL) | CAN_XIDFE_0_EFEC(${.vars["${CAN_INSTANCE_NAME}_EXT_FILTER${idx}_CONFIG"]}UL),
+        .CAN_XIDFE_1 = CAN_XIDFE_1_EFID2(0x${.vars["${CAN_INSTANCE_NAME}_EXT_FILTER${idx}_EFID2"]}UL) | CAN_XIDFE_1_EFT(${.vars["${CAN_INSTANCE_NAME}_EXT_FILTER${idx}_TYPE"]}UL),
     },
      </#list>
 };
@@ -123,43 +125,43 @@ Local Functions
 <#if CAN_OPMODE == "CAN FD">
 static void CANLengthToDlcGet(uint8_t length, uint8_t *dlc)
 {
-    if (length <= 8)
+    if (length <= 8U)
     {
         *dlc = length;
     }
-    else if (length <= 12)
+    else if (length <= 12U)
     {
-        *dlc = 0x9;
+        *dlc = 0x9U;
     }
-    else if (length <= 16)
+    else if (length <= 16U)
     {
-        *dlc = 0xA;
+        *dlc = 0xAU;
     }
-    else if (length <= 20)
+    else if (length <= 20U)
     {
-        *dlc = 0xB;
+        *dlc = 0xBU;
     }
-    else if (length <= 24)
+    else if (length <= 24U)
     {
-        *dlc = 0xC;
+        *dlc = 0xCU;
     }
-    else if (length <= 32)
+    else if (length <= 32U)
     {
-        *dlc = 0xD;
+        *dlc = 0xDU;
     }
-    else if (length <= 48)
+    else if (length <= 48U)
     {
-        *dlc = 0xE;
+        *dlc = 0xEU;
     }
     else
     {
-        *dlc = 0xF;
+        *dlc = 0xFU;
     }
 }
 </#if>
 static uint8_t CANDlcToLengthGet(uint8_t dlc)
 {
-    uint8_t msgLength[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 12, 16, 20, 24, 32, 48, 64};
+    uint8_t msgLength[] = {0U, 1U, 2U, 3U, 4U, 5U, 6U, 7U, 8U, 12U, 16U, 20U, 24U, 32U, 48U, 64U};
     return msgLength[dlc];
 }
 
@@ -188,34 +190,39 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
 {
     /* Start CAN initialization */
     ${CAN_INSTANCE_NAME}_REGS->CAN_CCCR = CAN_CCCR_INIT_Msk;
-    while ((${CAN_INSTANCE_NAME}_REGS->CAN_CCCR & CAN_CCCR_INIT_Msk) != CAN_CCCR_INIT_Msk);
+    while ((${CAN_INSTANCE_NAME}_REGS->CAN_CCCR & CAN_CCCR_INIT_Msk) != CAN_CCCR_INIT_Msk)
+    {
+        /* Wait for initialization complete */
+    }
 
     /* Set CCE to unlock the configuration registers */
     ${CAN_INSTANCE_NAME}_REGS->CAN_CCCR |= CAN_CCCR_CCE_Msk;
 
 <#if CAN_OPMODE == "CAN FD">
     /* Set Data Bit Timing and Prescaler Register */
-    ${CAN_INSTANCE_NAME}_REGS->CAN_DBTP = CAN_DBTP_DTSEG2(${CAN_DBTP_DTSEG2}) | CAN_DBTP_DTSEG1(${CAN_DBTP_DTSEG1}) | CAN_DBTP_DBRP(${DBTP_DBRP}) | CAN_DBTP_DSJW(${CAN_DBTP_DSJW});
+    ${CAN_INSTANCE_NAME}_REGS->CAN_DBTP = CAN_DBTP_DTSEG2(${CAN_DBTP_DTSEG2}UL) | CAN_DBTP_DTSEG1(${CAN_DBTP_DTSEG1}UL) | CAN_DBTP_DBRP(${DBTP_DBRP}UL) | CAN_DBTP_DSJW(${CAN_DBTP_DSJW}UL);
 
 </#if>
     /* Set Nominal Bit timing and Prescaler Register */
-    ${CAN_INSTANCE_NAME}_REGS->CAN_NBTP  = CAN_NBTP_NTSEG2(${CAN_NBTP_NTSEG2}) | CAN_NBTP_NTSEG1(${CAN_NBTP_NTSEG1}) | CAN_NBTP_NBRP(${NBTP_NBRP}) | CAN_NBTP_NSJW(${CAN_NBTP_NSJW});
+    ${CAN_INSTANCE_NAME}_REGS->CAN_NBTP  = CAN_NBTP_NTSEG2(${CAN_NBTP_NTSEG2}UL) | CAN_NBTP_NTSEG1(${CAN_NBTP_NTSEG1}UL) | CAN_NBTP_NBRP(${NBTP_NBRP}UL) | CAN_NBTP_NSJW(${CAN_NBTP_NSJW}UL);
 
 <#if RXF0_USE || RXF1_USE || RXBUF_USE>
   <#if CAN_OPMODE == "CAN FD">
     /* Receive Buffer / FIFO Element Size Configuration Register */
-    ${CAN_INSTANCE_NAME}_REGS->CAN_RXESC = 0 <#if RXF0_USE> | CAN_RXESC_F0DS(${RXF0_BYTES_CFG!0})</#if><#if RXF1_USE> | CAN_RXESC_F1DS(${RXF1_BYTES_CFG!0})</#if><#if RXBUF_USE> | CAN_RXESC_RBDS(${RX_BUFFER_BYTES_CFG!0})</#if>;
+    ${CAN_INSTANCE_NAME}_REGS->CAN_RXESC = 0UL <#if RXF0_USE> | CAN_RXESC_F0DS(${RXF0_BYTES_CFG!0}UL)</#if><#if RXF1_USE> | CAN_RXESC_F1DS(${RXF1_BYTES_CFG!0}UL)</#if><#if RXBUF_USE> | CAN_RXESC_RBDS(${RX_BUFFER_BYTES_CFG!0}UL)</#if>;
   </#if>
 </#if>
 <#if RXBUF_USE>
-    ${CAN_INSTANCE_NAME}_REGS->CAN_NDAT1 = CAN_NDAT1_Msk;
+    /*lint -e{9048} PC lint incorrectly reports a missing 'U' Suffix */
+    ${CAN_INSTANCE_NAME}_REGS->CAN_NDAT1 = CAN_NDAT1_Msk; 
+    /*lint -e{9048} PC lint incorrectly reports a missing 'U' Suffix */
     ${CAN_INSTANCE_NAME}_REGS->CAN_NDAT2 = CAN_NDAT2_Msk;
 
 </#if>
 <#if TX_USE || TXBUF_USE>
   <#if CAN_OPMODE == "CAN FD">
     /* Transmit Buffer/FIFO Element Size Configuration Register */
-    ${CAN_INSTANCE_NAME}_REGS->CAN_TXESC = CAN_TXESC_TBDS(${TX_FIFO_BYTES_CFG});
+    ${CAN_INSTANCE_NAME}_REGS->CAN_TXESC = CAN_TXESC_TBDS(${TX_FIFO_BYTES_CFG}UL);
   </#if>
 </#if>
 
@@ -229,21 +236,24 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
 <#if TIMESTAMP_ENABLE || CAN_TIMEOUT>
 
     /* Timestamp Counter Configuration Register */
-    ${CAN_INSTANCE_NAME}_REGS->CAN_TSCC = CAN_TSCC_TCP(${TIMESTAMP_PRESCALER})<#if TIMESTAMP_ENABLE == true> | ${TIMESTAMP_MODE}</#if>;
+    ${CAN_INSTANCE_NAME}_REGS->CAN_TSCC = CAN_TSCC_TCP(${TIMESTAMP_PRESCALER}UL)<#if TIMESTAMP_ENABLE == true> | ${TIMESTAMP_MODE}</#if>;
 </#if>
 <#if CAN_TIMEOUT>
 
     /* Timeout Counter Configuration Register */
-    ${CAN_INSTANCE_NAME}_REGS->CAN_TOCC = ${TIMEOUT_SELECT} | CAN_TOCC_ETOC_Msk | CAN_TOCC_TOP(${TIMEOUT_COUNT});
+    ${CAN_INSTANCE_NAME}_REGS->CAN_TOCC = ${TIMEOUT_SELECT} | CAN_TOCC_ETOC_Msk | CAN_TOCC_TOP(${TIMEOUT_COUNT}UL);
 </#if>
 
     /* Set the operation mode */
     ${CAN_INSTANCE_NAME}_REGS->CAN_CCCR = (${CAN_INSTANCE_NAME}_REGS->CAN_CCCR & ~CAN_CCCR_INIT_Msk)${(CAN_OPMODE == "CAN FD")?then(' | CAN_CCCR_FDOE_Msk | CAN_CCCR_BRSE_Msk','')}<#if TX_PAUSE!false> | CAN_CCCR_TXP_Msk</#if>;
-    while ((${CAN_INSTANCE_NAME}_REGS->CAN_CCCR & CAN_CCCR_INIT_Msk) == CAN_CCCR_INIT_Msk);
+    while ((${CAN_INSTANCE_NAME}_REGS->CAN_CCCR & CAN_CCCR_INIT_Msk) == CAN_CCCR_INIT_Msk)
+    {
+        /* Wait for initialization complete */
+    }
 <#if INTERRUPT_MODE == true>
 
     /* Select interrupt line */
-    ${CAN_INSTANCE_NAME}_REGS->CAN_ILS = 0x0;
+    ${CAN_INSTANCE_NAME}_REGS->CAN_ILS = 0x0U;
 
     /* Enable interrupt line */
     ${CAN_INSTANCE_NAME}_REGS->CAN_ILE = CAN_ILE_EINT0_Msk;
@@ -252,12 +262,12 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
     ${CAN_INSTANCE_NAME}_REGS->CAN_IE = CAN_IE_BOE_Msk;
 
     // Initialize the CAN PLib Object
-    ${CAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex = 0;
-    ${CAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex1 = 0;
-    ${CAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex2 = 0;
-    memset((void *)${CAN_INSTANCE_NAME?lower_case}RxMsg, 0x00, sizeof(${CAN_INSTANCE_NAME?lower_case}RxMsg));
+    ${CAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex = 0U;
+    ${CAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex1 = 0U;
+    ${CAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex2 = 0U;
+    memset(${CAN_INSTANCE_NAME?lower_case}RxMsg, 0x00, sizeof(${CAN_INSTANCE_NAME?lower_case}RxMsg));
 </#if>
-    memset((void*)&${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig, 0x00, sizeof(CAN_MSG_RAM_CONFIG));
+    memset(&${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig, 0x00, sizeof(CAN_MSG_RAM_CONFIG));
 }
 
 // *****************************************************************************
@@ -285,129 +295,144 @@ void ${CAN_INSTANCE_NAME}_Initialize(void)
 bool ${CAN_INSTANCE_NAME}_MessageTransmit(uint32_t id, uint8_t length, uint8_t* data, CAN_MODE mode, CAN_MSG_TX_ATTRIBUTE msgAttr)
 {
 <#if CAN_OPMODE =="CAN FD">
-    uint8_t dlc = 0;
+    uint8_t dlc = 0U;
 </#if>
 <#if TXBUF_USE>
-    uint8_t bufferIndex = 0;
+    uint8_t bufferIndex = 0U;
 </#if>
-    uint8_t tfqpi = 0;
+    uint8_t tfqpi = 0U;
 <#if TX_USE || TXBUF_USE>
     can_txbe_registers_t *fifo = NULL;
 </#if>
-    static uint8_t messageMarker = 0;
+    static uint8_t messageMarker = 0U;
+    bool op_success = false;
 
     switch (msgAttr)
     {
 <#if TXBUF_USE>
         case CAN_MSG_ATTR_TX_BUFFER_DATA_FRAME:
         case CAN_MSG_ATTR_TX_BUFFER_RTR_FRAME:
-            for (bufferIndex = 0; bufferIndex < ${TX_BUFFER_ELEMENTS}; bufferIndex++)
+            for (bufferIndex = 0U; bufferIndex < ${TX_BUFFER_ELEMENTS}U; bufferIndex++)
             {
-                if ((${CAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex & (1 << (bufferIndex & 0x1F))) == 0)
+                if ((${CAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex & (1UL << (bufferIndex & 0x1FU))) == 0U)
                 {
-                    ${CAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex |= (1 << (bufferIndex & 0x1F));
+                    ${CAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex |= (uint8_t)(1UL << (bufferIndex & 0x1FU));
                     tfqpi = bufferIndex;
                     break;
                 }
             }
-            if(bufferIndex == ${TX_BUFFER_ELEMENTS})
+            /* The Tx buffers are not full */
+            if(bufferIndex != ${TX_BUFFER_ELEMENTS})
             {
-                /* The Tx buffers are full */
-                return false;
+                
+                fifo = (can_txbe_registers_t *) ((uint8_t*)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txBuffersAddress + ((uint32_t)tfqpi * ${CAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE));
+                op_successs = true;
             }
-            fifo = (can_txbe_registers_t *) ((uint8_t *)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txBuffersAddress + tfqpi * ${CAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE);
             break;
 </#if>
 <#if TX_USE>
         case CAN_MSG_ATTR_TX_FIFO_DATA_FRAME:
         case CAN_MSG_ATTR_TX_FIFO_RTR_FRAME:
-            if (${CAN_INSTANCE_NAME}_REGS->CAN_TXFQS & CAN_TXFQS_TFQF_Msk)
+            /* The FIFO is not full */
+            if (0U == (${CAN_INSTANCE_NAME}_REGS->CAN_TXFQS & CAN_TXFQS_TFQF_Msk))
             {
-                /* The FIFO is full */
-                return false;
-            }
-            tfqpi = (uint8_t)((${CAN_INSTANCE_NAME}_REGS->CAN_TXFQS & CAN_TXFQS_TFQPI_Msk) >> CAN_TXFQS_TFQPI_Pos);
+                tfqpi = (uint8_t)((${CAN_INSTANCE_NAME}_REGS->CAN_TXFQS & CAN_TXFQS_TFQPI_Msk) >> CAN_TXFQS_TFQPI_Pos);
 <#if TXBUF_USE>
-            ${CAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex |= (1 << ((tfqpi + ${TX_BUFFER_ELEMENTS}) & 0x1F));
+                ${CAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex |= (1UL << ((tfqpi + ${TX_BUFFER_ELEMENTS}) & 0x1FU));
 </#if>
-            fifo = (can_txbe_registers_t *) ((uint8_t *)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txBuffersAddress + tfqpi * ${CAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE);
+                fifo = (can_txbe_registers_t *) ((uint8_t*)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txBuffersAddress + ((uint32_t)tfqpi * ${CAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE));
+                op_success = true;            
+            }
             break;
 </#if>
         default:
             /* Invalid Message Attribute */
-            return false;
+            break;
     }
-
-    /* If the id is longer than 11 bits, it is considered as extended identifier */
-    if (id > CAN_STD_ID_Msk)
+    if (op_success)
     {
-        /* An extended identifier is stored into ID */
-        fifo->CAN_TXBE_0 = (id & CAN_TXBE_0_ID_Msk) | CAN_TXBE_0_XTD_Msk;
-    }
-    else
-    {
-        /* A standard identifier is stored into ID[28:18] */
-        fifo->CAN_TXBE_0 = id << 18;
-    }
+        /* If the id is longer than 11 bits, it is considered as extended identifier */
+        if (id > CAN_STD_ID_Msk)
+        {
+            /* An extended identifier is stored into ID */
+            fifo->CAN_TXBE_0 = (id & CAN_TXBE_0_ID_Msk) | CAN_TXBE_0_XTD_Msk;
+        }
+        else
+        {
+            /* A standard identifier is stored into ID[28:18] */
+            fifo->CAN_TXBE_0 = id << 18U;
+        }
 <#if CAN_OPMODE =="CAN FD">
-    if (length > 64)
-        length = 64;
+        if (length > 64U)
+        {
+            length = 64U;
+        }
 
-    CANLengthToDlcGet(length, &dlc);
+        CANLengthToDlcGet(length, &dlc);
 
-    fifo->CAN_TXBE_1 = CAN_TXBE_1_DLC(dlc);
+        fifo->CAN_TXBE_1 = CAN_TXBE_1_DLC((uint32_t)dlc);
 
-    if(mode == CAN_MODE_FD_WITH_BRS)
-    {
-        fifo->CAN_TXBE_1 |= CAN_TXBE_1_FDF_Msk | CAN_TXBE_1_BRS_Msk;
-    }
-    else if (mode == CAN_MODE_FD_WITHOUT_BRS)
-    {
-        fifo->CAN_TXBE_1 |= CAN_TXBE_1_FDF_Msk;
-    }
+        if(mode == CAN_MODE_FD_WITH_BRS)
+        {
+            fifo->CAN_TXBE_1 |= CAN_TXBE_1_FDF_Msk | CAN_TXBE_1_BRS_Msk;
+        }
+        else if (mode == CAN_MODE_FD_WITHOUT_BRS)
+        {
+            fifo->CAN_TXBE_1 |= CAN_TXBE_1_FDF_Msk;
+        }
+        else
+        {
+            /* Do nothing */
+        }
 <#else>
-
-    /* Limit length */
-    if (length > 8)
-        length = 8;
-    fifo->CAN_TXBE_1 = CAN_TXBE_1_DLC(length);
+        /* Limit length */
+        if (length > 8U)
+        {
+            length = 8U;
+        }
+        fifo->CAN_TXBE_1 = CAN_TXBE_1_DLC((uint32_t)length);
 </#if>
+        if ((msgAttr == CAN_MSG_ATTR_TX_BUFFER_DATA_FRAME) || (msgAttr == CAN_MSG_ATTR_TX_FIFO_DATA_FRAME))
+        {
+            /* copy the data into the payload */
+            memcpy((uint8_t *)&fifo->CAN_TXBE_DATA, data, length);
+        }
+        else if (msgAttr == CAN_MSG_ATTR_TX_BUFFER_RTR_FRAME || msgAttr == CAN_MSG_ATTR_TX_FIFO_RTR_FRAME)
+        {
+            fifo->CAN_TXBE_0 |= CAN_TXBE_0_RTR_Msk;
+        }
+        else
+        {
+            /* Do nothing */
+        }
 
-    if (msgAttr == CAN_MSG_ATTR_TX_BUFFER_DATA_FRAME || msgAttr == CAN_MSG_ATTR_TX_FIFO_DATA_FRAME)
-    {
-        /* copy the data into the payload */
-        memcpy((uint8_t *)&fifo->CAN_TXBE_DATA, data, length);
-    }
-    else if (msgAttr == CAN_MSG_ATTR_TX_BUFFER_RTR_FRAME || msgAttr == CAN_MSG_ATTR_TX_FIFO_RTR_FRAME)
-    {
-        fifo->CAN_TXBE_0 |= CAN_TXBE_0_RTR_Msk;
-    }
-
-    fifo->CAN_TXBE_1 |= ((++messageMarker << CAN_TXBE_1_MM_Pos) & CAN_TXBE_1_MM_Msk);
+        messageMarker++;
+        fifo->CAN_TXBE_1 |= (((uint32_t)(messageMarker) << CAN_TXBE_1_MM_Pos) & CAN_TXBE_1_MM_Msk);
 <#if INTERRUPT_MODE == true>
 
-    ${CAN_INSTANCE_NAME}_REGS->CAN_TXBTIE = 1U << tfqpi;
+        ${CAN_INSTANCE_NAME}_REGS->CAN_TXBTIE = 1UL << tfqpi;
 </#if>
 
-    /* request the transmit */
-    ${CAN_INSTANCE_NAME}_REGS->CAN_TXBAR = 1U << tfqpi;
+        /* request the transmit */
+        ${CAN_INSTANCE_NAME}_REGS->CAN_TXBAR = 1UL << tfqpi;
 
 <#if INTERRUPT_MODE == true>
-    ${CAN_INSTANCE_NAME}_REGS->CAN_IE |= CAN_IE_TCE_Msk;
+        ${CAN_INSTANCE_NAME}_REGS->CAN_IE |= CAN_IE_TCE_Msk;
 </#if>
 <#if TXBUF_USE && INTERRUPT_MODE == false>
-    for (bufferIndex = 0; bufferIndex < (${CAN_INSTANCE_NAME}_TX_FIFO_BUFFER_SIZE/${CAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE); bufferIndex++)
-    {
-        if (${CAN_INSTANCE_NAME}_REGS->CAN_TXBTO & (1 << (bufferIndex & 0x1F)))
+        for (bufferIndex = 0U; bufferIndex < (${CAN_INSTANCE_NAME}_TX_FIFO_BUFFER_SIZE/${CAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE); bufferIndex++)
         {
-            if (0 != (${CAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex & (1 << (bufferIndex & 0x1F))))
+            if (${CAN_INSTANCE_NAME}_REGS->CAN_TXBTO & (1UL << (bufferIndex & 0x1FU)))
             {
-                ${CAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex &= (~(1 << (bufferIndex & 0x1F)));
+                if (0U != (${CAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex & (1UL << (bufferIndex & 0x1FU))))
+                {
+                    ${CAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex &= (~(1UL << (bufferIndex & 0x1FU)));
+                }
             }
         }
-    }
 </#if>
-    return true;
+    }
+    return op_success;
 }
 
 // *****************************************************************************
@@ -438,8 +463,9 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
                                          CAN_MSG_RX_ATTRIBUTE msgAttr, CAN_MSG_RX_FRAME_ATTRIBUTE *msgFrameAttr)
 {
 <#if INTERRUPT_MODE == false>
-    uint8_t msgLength = 0;
-    uint8_t rxgi = 0;
+    uint8_t msgLength = 0U;
+    uint8_t rxgi = 0U;
+    bool testCondition = false;
 <#if RXBUF_USE>
     can_rxbe_registers_t *rxbeFifo = NULL;
 </#if>
@@ -450,7 +476,7 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
     can_rxf1e_registers_t *rxf1eFifo = NULL;
 </#if>
 <#else>
-    uint8_t bufferIndex = 0;
+    uint8_t bufferIndex = 0U;
 </#if>
     bool status = false;
 
@@ -460,44 +486,50 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
         case CAN_MSG_ATTR_RX_BUFFER:
 <#if INTERRUPT_MODE == false>
             /* Check and return false if nothing to be read */
-            if ((${CAN_INSTANCE_NAME}_REGS->CAN_NDAT1 == 0) && (${CAN_INSTANCE_NAME}_REGS->CAN_NDAT2 == 0))
+            testCondition = (${CAN_INSTANCE_NAME}_REGS->CAN_NDAT2 == 0U);
+            testCondition = (${CAN_INSTANCE_NAME}_REGS->CAN_NDAT1 == 0U) && testCondition;
+            if (testCondition)
             {
                 return status;
             }
             /* Read data from the Rx Buffer */
-            if (${CAN_INSTANCE_NAME}_REGS->CAN_NDAT1 != 0)
+            if (${CAN_INSTANCE_NAME}_REGS->CAN_NDAT1 != 0U)
             {
-                for (rxgi = 0; rxgi <= 0x1F; rxgi++)
+                for (rxgi = 0U; rxgi <= 0x1FU; rxgi++)
                 {
-                    if ((${CAN_INSTANCE_NAME}_REGS->CAN_NDAT1 & (1 << rxgi)) == (1 << rxgi))
+                    if ((${CAN_INSTANCE_NAME}_REGS->CAN_NDAT1 & (1UL << rxgi)) == (1UL << rxgi))
+                    {
                         break;
+                    } 
                 }
             }
             else
             {
-                for (rxgi = 0; rxgi <= 0x1F; rxgi++)
+                for (rxgi = 0U; rxgi <= 0x1FU; rxgi++)
                 {
-                    if ((${CAN_INSTANCE_NAME}_REGS->CAN_NDAT2 & (1 << rxgi)) == (1 << rxgi))
+                    if ((${CAN_INSTANCE_NAME}_REGS->CAN_NDAT2 & (1UL << rxgi)) == (1UL << rxgi))
                     {
-                        rxgi = rxgi + 32;
+                        rxgi = rxgi + 32U;
                         break;
                     }
                 }
             }
-            rxbeFifo = (can_rxbe_registers_t *) ((uint8_t *)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxBuffersAddress + rxgi * ${CAN_INSTANCE_NAME}_RX_BUFFER_ELEMENT_SIZE);
+            rxbeFifo = (can_rxbe_registers_t *) ((uint8_t *)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxBuffersAddress + ((uint32_t)rxgi * ${CAN_INSTANCE_NAME}_RX_BUFFER_ELEMENT_SIZE));
 
             /* Get received identifier */
-            if (rxbeFifo->CAN_RXBE_0 & CAN_RXBE_0_XTD_Msk)
+            if ((rxbeFifo->CAN_RXBE_0 & CAN_RXBE_0_XTD_Msk) != 0U)
             {
                 *id = rxbeFifo->CAN_RXBE_0 & CAN_RXBE_0_ID_Msk;
             }
             else
             {
-                *id = (rxbeFifo->CAN_RXBE_0 >> 18) & CAN_STD_ID_Msk;
+                *id = (rxbeFifo->CAN_RXBE_0 >> 18U) & CAN_STD_ID_Msk;
             }
 
             /* Check RTR and FDF bits for Remote/Data Frame */
-            if ((rxbeFifo->CAN_RXBE_0 & CAN_RXBE_0_RTR_Msk) && ((rxbeFifo->CAN_RXBE_1 & CAN_RXBE_1_FDF_Msk) == 0))
+            testCondition = ((rxbeFifo->CAN_RXBE_0 & CAN_RXBE_0_RTR_Msk) != 0U);
+            testCondition = ((rxbeFifo->CAN_RXBE_1 & CAN_RXBE_1_FDF_Msk) == 0U) && testCondition;
+            if (testCondition)
             {
                 *msgFrameAttr = CAN_MSG_RX_REMOTE_FRAME;
             }
@@ -507,7 +539,7 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
             }
 
             /* Get received data length */
-            msgLength = CANDlcToLengthGet(((rxbeFifo->CAN_RXBE_1 & CAN_RXBE_1_DLC_Msk) >> CAN_RXBE_1_DLC_Pos));
+            msgLength = CANDlcToLengthGet((uint8_t)((rxbeFifo->CAN_RXBE_1 & CAN_RXBE_1_DLC_Msk) >> CAN_RXBE_1_DLC_Pos));
 
             /* Copy data to user buffer */
             memcpy(data, (uint8_t *)&rxbeFifo->CAN_RXBE_DATA, msgLength);
@@ -522,32 +554,36 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
 
 </#if>
             /* Clear new data flag */
-            if (rxgi < 32)
+            if (rxgi < 32U)
             {
-                ${CAN_INSTANCE_NAME}_REGS->CAN_NDAT1 = (1 << rxgi);
+                ${CAN_INSTANCE_NAME}_REGS->CAN_NDAT1 = (1UL << rxgi);
             }
             else
             {
-                ${CAN_INSTANCE_NAME}_REGS->CAN_NDAT2 = (1 << (rxgi - 32));
+                ${CAN_INSTANCE_NAME}_REGS->CAN_NDAT2 = (1UL << (rxgi - 32U));
             }
 <#else>
-            for (bufferIndex = 0; bufferIndex < ${RX_BUFFER_ELEMENTS}; bufferIndex++)
+            for (bufferIndex = 0U; bufferIndex < ${RX_BUFFER_ELEMENTS}U; bufferIndex++)
             {
-                if (bufferIndex < 32)
+                if (bufferIndex < 32U)
                 {
-                    if ((${CAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex1 & (1 << (bufferIndex & 0x1F))) == 0)
+                    if ((${CAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex1 & (1UL << (bufferIndex & 0x1FU))) == 0U)
                     {
-                        ${CAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex1 |= (1 << (bufferIndex & 0x1F));
+                        ${CAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex1 |= (1UL << (bufferIndex & 0x1FU));
                         break;
                     }
                 }
-                else if ((${CAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex2 & (1 << ((bufferIndex - 32) & 0x1F))) == 0)
+                else if ((${CAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex2 & (1UL << ((bufferIndex - 32U) & 0x1FU))) == 0U)
                 {
-                    ${CAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex2 |= (1 << ((bufferIndex - 32) & 0x1F));
+                    ${CAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex2 |= (1UL << ((bufferIndex - 32U) & 0x1FU));
                     break;
                 }
+                else
+                {
+                    /* Do nothing */
+                }
             }
-            if(bufferIndex == ${RX_BUFFER_ELEMENTS})
+            if(bufferIndex == ${RX_BUFFER_ELEMENTS}U)
             {
                 /* The Rx buffers are full */
                 return false;
@@ -566,16 +602,16 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
         case CAN_MSG_ATTR_RX_FIFO0:
 <#if INTERRUPT_MODE == false>
             /* Check and return false if nothing to be read */
-            if ((${CAN_INSTANCE_NAME}_REGS->CAN_RXF0S & CAN_RXF0S_F0FL_Msk) == 0)
+            if ((${CAN_INSTANCE_NAME}_REGS->CAN_RXF0S & CAN_RXF0S_F0FL_Msk) == 0U)
             {
                 return status;
             }
             /* Read data from the Rx FIFO0 */
             rxgi = (uint8_t)((${CAN_INSTANCE_NAME}_REGS->CAN_RXF0S & CAN_RXF0S_F0GI_Msk) >> CAN_RXF0S_F0GI_Pos);
-            rxf0eFifo = (can_rxf0e_registers_t *) ((uint8_t *)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxFIFO0Address + rxgi * ${CAN_INSTANCE_NAME}_RX_FIFO0_ELEMENT_SIZE);
+            rxf0eFifo = (can_rxf0e_registers_t *) ((uint8_t *)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxFIFO0Address + ((uint32_t)rxgi * ${CAN_INSTANCE_NAME}_RX_FIFO0_ELEMENT_SIZE));
 
             /* Get received identifier */
-            if (rxf0eFifo->CAN_RXF0E_0 & CAN_RXF0E_0_XTD_Msk)
+            if ((rxf0eFifo->CAN_RXF0E_0 & CAN_RXF0E_0_XTD_Msk) != 0U)
             {
                 *id = rxf0eFifo->CAN_RXF0E_0 & CAN_RXF0E_0_ID_Msk;
             }
@@ -585,7 +621,9 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
             }
 
             /* Check RTR and FDF bits for Remote/Data Frame */
-            if ((rxf0eFifo->CAN_RXF0E_0 & CAN_RXF0E_0_RTR_Msk) && ((rxf0eFifo->CAN_RXF0E_1 & CAN_RXF0E_1_FDF_Msk) == 0))
+            testCondition = ((rxf0eFifo->CAN_RXF0E_0 & CAN_RXF0E_0_RTR_Msk) != 0U);
+            testCondition = ((rxf0eFifo->CAN_RXF0E_1 & CAN_RXF0E_1_FDF_Msk) == 0U) && testCondition;
+            if (testCondition)
             {
                 *msgFrameAttr = CAN_MSG_RX_REMOTE_FRAME;
             }
@@ -595,7 +633,7 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
             }
 
             /* Get received data length */
-            msgLength = CANDlcToLengthGet(((rxf0eFifo->CAN_RXF0E_1 & CAN_RXF0E_1_DLC_Msk) >> CAN_RXF0E_1_DLC_Pos));
+            msgLength = CANDlcToLengthGet((uint8_t)((rxf0eFifo->CAN_RXF0E_1 & CAN_RXF0E_1_DLC_Msk) >> CAN_RXF0E_1_DLC_Pos));
 
             /* Copy data to user buffer */
             memcpy(data, (uint8_t *)&rxf0eFifo->CAN_RXF0E_DATA, msgLength);
@@ -610,7 +648,7 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
 
 </#if>
             /* Ack the fifo position */
-            ${CAN_INSTANCE_NAME}_REGS->CAN_RXF0A = CAN_RXF0A_F0AI(rxgi);
+            ${CAN_INSTANCE_NAME}_REGS->CAN_RXF0A = CAN_RXF0A_F0AI((uint32_t)rxgi);
 <#else>
             bufferIndex = (uint8_t)((${CAN_INSTANCE_NAME}_REGS->CAN_RXF0S & CAN_RXF0S_F0GI_Msk) >> CAN_RXF0S_F0GI_Pos);
             ${CAN_INSTANCE_NAME?lower_case}RxMsg[msgAttr][bufferIndex].rxId = id;
@@ -627,26 +665,28 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
         case CAN_MSG_ATTR_RX_FIFO1:
 <#if INTERRUPT_MODE == false>
             /* Check and return false if nothing to be read */
-            if ((${CAN_INSTANCE_NAME}_REGS->CAN_RXF1S & CAN_RXF1S_F1FL_Msk) == 0)
+            if ((${CAN_INSTANCE_NAME}_REGS->CAN_RXF1S & CAN_RXF1S_F1FL_Msk) == 0U)
             {
                 return status;
             }
             /* Read data from the Rx FIFO1 */
             rxgi = (uint8_t)((${CAN_INSTANCE_NAME}_REGS->CAN_RXF1S & CAN_RXF1S_F1GI_Msk) >> CAN_RXF1S_F1GI_Pos);
-            rxf1eFifo = (can_rxf1e_registers_t *) ((uint8_t *)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxFIFO1Address + rxgi * ${CAN_INSTANCE_NAME}_RX_FIFO1_ELEMENT_SIZE);
+            rxf1eFifo = (can_rxf1e_registers_t *) ((uint8_t *)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxFIFO1Address + ((uint32_t)rxgi * ${CAN_INSTANCE_NAME}_RX_FIFO1_ELEMENT_SIZE));
 
             /* Get received identifier */
-            if (rxf1eFifo->CAN_RXF1E_0 & CAN_RXF1E_0_XTD_Msk)
+            if ((rxf1eFifo->CAN_RXF1E_0 & CAN_RXF1E_0_XTD_Msk) != 0U)
             {
                 *id = rxf1eFifo->CAN_RXF1E_0 & CAN_RXF1E_0_ID_Msk;
             }
             else
             {
-                *id = (rxf1eFifo->CAN_RXF1E_0 >> 18) & CAN_STD_ID_Msk;
+                *id = (rxf1eFifo->CAN_RXF1E_0 >> 18U) & CAN_STD_ID_Msk;
             }
 
             /* Check RTR and FDF bits for Remote/Data Frame */
-            if ((rxf1eFifo->CAN_RXF1E_0 & CAN_RXF1E_0_RTR_Msk) && ((rxf1eFifo->CAN_RXF1E_1 & CAN_RXF1E_1_FDF_Msk) == 0))
+            testCondition = ((rxf1eFifo->CAN_RXF1E_0 & CAN_RXF1E_0_RTR_Msk) != 0U);
+            testCondition = ((rxf1eFifo->CAN_RXF1E_1 & CAN_RXF1E_1_FDF_Msk) == 0U) && testCondition;
+            if (testCondition)
             {
                 *msgFrameAttr = CAN_MSG_RX_REMOTE_FRAME;
             }
@@ -656,7 +696,7 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
             }
 
             /* Get received data length */
-            msgLength = CANDlcToLengthGet(((rxf1eFifo->CAN_RXF1E_1 & CAN_RXF1E_1_DLC_Msk) >> CAN_RXF1E_1_DLC_Pos));
+            msgLength = CANDlcToLengthGet((uint8_t)((rxf1eFifo->CAN_RXF1E_1 & CAN_RXF1E_1_DLC_Msk) >> CAN_RXF1E_1_DLC_Pos));
 
             /* Copy data to user buffer */
             memcpy(data, (uint8_t *)&rxf1eFifo->CAN_RXF1E_DATA, msgLength);
@@ -671,7 +711,7 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
 
 </#if>
             /* Ack the fifo position */
-            ${CAN_INSTANCE_NAME}_REGS->CAN_RXF1A = CAN_RXF1A_F1AI(rxgi);
+            ${CAN_INSTANCE_NAME}_REGS->CAN_RXF1A = CAN_RXF1A_F1AI((uint32_t)rxgi);
 <#else>
             bufferIndex = (uint8_t)((${CAN_INSTANCE_NAME}_REGS->CAN_RXF1S & CAN_RXF1S_F1GI_Msk) >> CAN_RXF1S_F1GI_Pos);
             ${CAN_INSTANCE_NAME?lower_case}RxMsg[msgAttr][bufferIndex].rxId = id;
@@ -685,7 +725,8 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
             break;
 </#if>
         default:
-            return status;
+            /* Do nothing */
+            break;
     }
     return status;
 }
@@ -713,27 +754,27 @@ bool ${CAN_INSTANCE_NAME}_MessageReceive(uint32_t *id, uint8_t *length, uint8_t 
 bool ${CAN_INSTANCE_NAME}_TransmitEventFIFOElementGet(uint32_t *id, uint8_t *messageMarker, uint16_t *timestamp)
 {
     can_txefe_registers_t *txEventFIFOElement = NULL;
-    uint8_t txefgi = 0;
+    uint8_t txefgi = 0U;
     bool status = false;
 
     /* Check if Tx Event FIFO Element available */
-    if ((${CAN_INSTANCE_NAME}_REGS->CAN_TXEFS & CAN_TXEFS_EFFL_Msk) != 0)
+    if ((${CAN_INSTANCE_NAME}_REGS->CAN_TXEFS & CAN_TXEFS_EFFL_Msk) != 0U)
     {
         /* Get a pointer to Tx Event FIFO Element */
         txefgi = (uint8_t)((${CAN_INSTANCE_NAME}_REGS->CAN_TXEFS & CAN_TXEFS_EFGI_Msk) >> CAN_TXEFS_EFGI_Pos);
-        txEventFIFOElement = (can_txefe_registers_t *) ((uint8_t *)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txEventFIFOAddress + txefgi * sizeof(can_txefe_registers_t));
+        txEventFIFOElement = (can_txefe_registers_t *) ((uint8_t *)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txEventFIFOAddress + ((uint32_t)txefgi * sizeof(can_txefe_registers_t)));
 
         /* Check if it's a extended message type */
-        if (txEventFIFOElement->CAN_TXEFE_0 & CAN_TXEFE_0_XTD_Msk)
+        if (0U != (txEventFIFOElement->CAN_TXEFE_0 & CAN_TXEFE_0_XTD_Msk))
         {
             *id = txEventFIFOElement->CAN_TXEFE_0 & CAN_TXEFE_0_ID_Msk;
         }
         else
         {
-            *id = (txEventFIFOElement->CAN_TXEFE_0 >> 18) & CAN_STD_ID_Msk;
+            *id = (txEventFIFOElement->CAN_TXEFE_0 >> 18U) & CAN_STD_ID_Msk;
         }
 
-        *messageMarker = ((txEventFIFOElement->CAN_TXEFE_1 & CAN_TXEFE_1_MM_Msk) >> CAN_TXEFE_1_MM_Pos);
+        *messageMarker = (uint8_t)((txEventFIFOElement->CAN_TXEFE_1 & CAN_TXEFE_1_MM_Msk) >> CAN_TXEFE_1_MM_Pos);
 
         /* Get timestamp from transmitted message */
         if (timestamp != NULL)
@@ -742,7 +783,7 @@ bool ${CAN_INSTANCE_NAME}_TransmitEventFIFOElementGet(uint32_t *id, uint8_t *mes
         }
 
         /* Ack the Tx Event FIFO position */
-        ${CAN_INSTANCE_NAME}_REGS->CAN_TXEFA = CAN_TXEFA_EFAI(txefgi);
+        ${CAN_INSTANCE_NAME}_REGS->CAN_TXEFA = CAN_TXEFA_EFAI((uint32_t)txefgi);
 
         /* Tx Event FIFO Element read successfully, so return true */
         status = true;
@@ -778,7 +819,10 @@ CAN_ERROR ${CAN_INSTANCE_NAME}_ErrorGet(void)
     {
         ${CAN_INSTANCE_NAME}_REGS->CAN_CCCR |= CAN_CCCR_CCE_Msk;
         ${CAN_INSTANCE_NAME}_REGS->CAN_CCCR = (${CAN_INSTANCE_NAME}_REGS->CAN_CCCR & ~CAN_CCCR_INIT_Msk)${(CAN_OPMODE == "CAN FD")?then(' | CAN_CCCR_FDOE_Msk | CAN_CCCR_BRSE_Msk','')}<#if TX_PAUSE!false> | CAN_CCCR_TXP_Msk</#if>;
-        while ((${CAN_INSTANCE_NAME}_REGS->CAN_CCCR & CAN_CCCR_INIT_Msk) == CAN_CCCR_INIT_Msk);
+        while ((${CAN_INSTANCE_NAME}_REGS->CAN_CCCR & CAN_CCCR_INIT_Msk) == CAN_CCCR_INIT_Msk)
+        {
+            /* Wait for initialization complete */
+        }
     }
 
     return error;
@@ -826,7 +870,7 @@ void ${CAN_INSTANCE_NAME}_ErrorCountGet(uint8_t *txErrorCount, uint8_t *rxErrorC
 */
 bool ${CAN_INSTANCE_NAME}_InterruptGet(CAN_INTERRUPT_MASK interruptMask)
 {
-    return ((${CAN_INSTANCE_NAME}_REGS->CAN_IR & interruptMask) != 0x0);
+    return ((${CAN_INSTANCE_NAME}_REGS->CAN_IR & (uint32_t)interruptMask) != 0x0U);
 }
 
 // *****************************************************************************
@@ -847,7 +891,7 @@ bool ${CAN_INSTANCE_NAME}_InterruptGet(CAN_INTERRUPT_MASK interruptMask)
 */
 void ${CAN_INSTANCE_NAME}_InterruptClear(CAN_INTERRUPT_MASK interruptMask)
 {
-    ${CAN_INSTANCE_NAME}_REGS->CAN_IR = interruptMask;
+    ${CAN_INSTANCE_NAME}_REGS->CAN_IR = (uint32_t)interruptMask;
 }
 
 // *****************************************************************************
@@ -869,7 +913,7 @@ void ${CAN_INSTANCE_NAME}_InterruptClear(CAN_INTERRUPT_MASK interruptMask)
 */
 bool ${CAN_INSTANCE_NAME}_TxFIFOIsFull(void)
 {
-    return (${CAN_INSTANCE_NAME}_REGS->CAN_TXFQS & CAN_TXFQS_TFQF_Msk);
+    return ((${CAN_INSTANCE_NAME}_REGS->CAN_TXFQS & CAN_TXFQS_TFQF_Msk) == CAN_TXFQS_TFQF_Msk);
 }
 
 // *****************************************************************************
@@ -893,13 +937,16 @@ bool ${CAN_INSTANCE_NAME}_TxFIFOIsFull(void)
 */
 void ${CAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
 {
-    uint32_t offset = 0;
+    uint32_t offset = 0U;
 
-    memset((void*)msgRAMConfigBaseAddress, 0x00, ${CAN_INSTANCE_NAME}_MESSAGE_RAM_CONFIG_SIZE);
+    memset(msgRAMConfigBaseAddress, 0x00, ${CAN_INSTANCE_NAME}_MESSAGE_RAM_CONFIG_SIZE);
 
     /* Set CAN CCCR Init for Message RAM Configuration */
     ${CAN_INSTANCE_NAME}_REGS->CAN_CCCR = CAN_CCCR_INIT_Msk;
-    while ((${CAN_INSTANCE_NAME}_REGS->CAN_CCCR & CAN_CCCR_INIT_Msk) != CAN_CCCR_INIT_Msk);
+    while ((${CAN_INSTANCE_NAME}_REGS->CAN_CCCR & CAN_CCCR_INIT_Msk) != CAN_CCCR_INIT_Msk)
+    {
+        /* Wait for initialization complete */
+    }
 
     /* Set CCE to unlock the configuration registers */
     ${CAN_INSTANCE_NAME}_REGS->CAN_CCCR |= CAN_CCCR_CCE_Msk;
@@ -908,7 +955,7 @@ void ${CAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
     ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxFIFO0Address = (can_rxf0e_registers_t *)msgRAMConfigBaseAddress;
     offset = ${CAN_INSTANCE_NAME}_RX_FIFO0_SIZE;
     /* Receive FIFO 0 Configuration Register */
-    ${CAN_INSTANCE_NAME}_REGS->CAN_RXF0C = CAN_RXF0C_F0S(${RXF0_ELEMENTS}) | CAN_RXF0C_F0WM(${RXF0_WATERMARK})<#if RXF0_OVERWRITE> | CAN_RXF0C_F0OM_Msk</#if> |
+    ${CAN_INSTANCE_NAME}_REGS->CAN_RXF0C = CAN_RXF0C_F0S(${RXF0_ELEMENTS}UL) | CAN_RXF0C_F0WM(${RXF0_WATERMARK}UL)<#if RXF0_OVERWRITE> | CAN_RXF0C_F0OM_Msk</#if> |
             CAN_RXF0C_F0SA((uint32_t)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxFIFO0Address);
 
 </#if>
@@ -916,7 +963,7 @@ void ${CAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
     ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxFIFO1Address = (can_rxf1e_registers_t *)(msgRAMConfigBaseAddress + offset);
     offset += ${CAN_INSTANCE_NAME}_RX_FIFO1_SIZE;
     /* Receive FIFO 1 Configuration Register */
-    ${CAN_INSTANCE_NAME}_REGS->CAN_RXF1C = CAN_RXF1C_F1S(${RXF1_ELEMENTS}) | CAN_RXF1C_F1WM(${RXF1_WATERMARK})<#if RXF1_OVERWRITE> | CAN_RXF1C_F1OM_Msk</#if> |
+    ${CAN_INSTANCE_NAME}_REGS->CAN_RXF1C = CAN_RXF1C_F1S(${RXF1_ELEMENTS}UL) | CAN_RXF1C_F1WM(${RXF1_WATERMARK}UL)<#if RXF1_OVERWRITE> | CAN_RXF1C_F1OM_Msk</#if> |
             CAN_RXF1C_F1SA((uint32_t)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxFIFO1Address);
 
 </#if>
@@ -930,41 +977,46 @@ void ${CAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
     ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txBuffersAddress = (can_txbe_registers_t *)(msgRAMConfigBaseAddress + offset);
     offset += ${CAN_INSTANCE_NAME}_TX_FIFO_BUFFER_SIZE;
     /* Transmit Buffer/FIFO Configuration Register */
-    ${CAN_INSTANCE_NAME}_REGS->CAN_TXBC = CAN_TXBC_TFQS(${TX_FIFO_ELEMENTS})<#if TXBUF_USE> | CAN_TXBC_NDTB(${TX_BUFFER_ELEMENTS})</#if> |
+    ${CAN_INSTANCE_NAME}_REGS->CAN_TXBC = CAN_TXBC_TFQS(${TX_FIFO_ELEMENTS}UL)<#if TXBUF_USE> | CAN_TXBC_NDTB(${TX_BUFFER_ELEMENTS}UL)</#if> |
             CAN_TXBC_TBSA((uint32_t)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txBuffersAddress);
 
     ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txEventFIFOAddress =  (can_txefe_registers_t *)(msgRAMConfigBaseAddress + offset);
     offset += ${CAN_INSTANCE_NAME}_TX_EVENT_FIFO_SIZE;
     /* Transmit Event FIFO Configuration Register */
-    ${CAN_INSTANCE_NAME}_REGS->CAN_TXEFC = CAN_TXEFC_EFWM(${TX_FIFO_WATERMARK}) | CAN_TXEFC_EFS(${TX_FIFO_ELEMENTS}) |
+    ${CAN_INSTANCE_NAME}_REGS->CAN_TXEFC = CAN_TXEFC_EFWM(${TX_FIFO_WATERMARK}UL) | CAN_TXEFC_EFS(${TX_FIFO_ELEMENTS}UL) |
             CAN_TXEFC_EFSA((uint32_t)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.txEventFIFOAddress);
 
 </#if>
 <#if FILTERS_STD?number gt 0>
     ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress = (can_sidfe_registers_t *)(msgRAMConfigBaseAddress + offset);
-    memcpy((void *)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress,
+    memcpy(${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress,
            (const void *)${CAN_INSTANCE_NAME?lower_case}StdFilter,
            ${CAN_INSTANCE_NAME}_STD_MSG_ID_FILTER_SIZE);
     offset += ${CAN_INSTANCE_NAME}_STD_MSG_ID_FILTER_SIZE;
     /* Standard ID Filter Configuration Register */
-    ${CAN_INSTANCE_NAME}_REGS->CAN_SIDFC = CAN_SIDFC_LSS(${FILTERS_STD}) |
+    ${CAN_INSTANCE_NAME}_REGS->CAN_SIDFC = CAN_SIDFC_LSS(${FILTERS_STD}UL) |
             CAN_SIDFC_FLSSA((uint32_t)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress);
 
 </#if>
 <#if FILTERS_EXT?number gt 0>
     ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress = (can_xidfe_registers_t *)(msgRAMConfigBaseAddress + offset);
-    memcpy((void *)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress,
+    memcpy(${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress,
            (const void *)${CAN_INSTANCE_NAME?lower_case}ExtFilter,
            ${CAN_INSTANCE_NAME}_EXT_MSG_ID_FILTER_SIZE);
     /* Extended ID Filter Configuration Register */
-    ${CAN_INSTANCE_NAME}_REGS->CAN_XIDFC = CAN_XIDFC_LSE(${FILTERS_EXT}) |
+    ${CAN_INSTANCE_NAME}_REGS->CAN_XIDFC = CAN_XIDFC_LSE(${FILTERS_EXT}UL) |
             CAN_XIDFC_FLESA((uint32_t)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress);
-
 </#if>
+
+    /* Reference offset variable once to remove warning about the variable not being used after increment */
+    (void)offset;
 
     /* Complete Message RAM Configuration by clearing CAN CCCR Init */
     ${CAN_INSTANCE_NAME}_REGS->CAN_CCCR = (${CAN_INSTANCE_NAME}_REGS->CAN_CCCR & ~CAN_CCCR_INIT_Msk)${(CAN_OPMODE == "CAN FD")?then(' | CAN_CCCR_FDOE_Msk | CAN_CCCR_BRSE_Msk','')}<#if TX_PAUSE!false> | CAN_CCCR_TXP_Msk</#if>;
-    while ((${CAN_INSTANCE_NAME}_REGS->CAN_CCCR & CAN_CCCR_INIT_Msk) == CAN_CCCR_INIT_Msk);
+    while ((${CAN_INSTANCE_NAME}_REGS->CAN_CCCR & CAN_CCCR_INIT_Msk) == CAN_CCCR_INIT_Msk)
+    {
+        /* Wait for configuration complete */
+    }
 }
 
 <#if FILTERS_STD?number gt 0>
@@ -990,11 +1042,11 @@ void ${CAN_INSTANCE_NAME}_MessageRAMConfigSet(uint8_t *msgRAMConfigBaseAddress)
 */
 bool ${CAN_INSTANCE_NAME}_StandardFilterElementSet(uint8_t filterNumber, can_sidfe_registers_t *stdMsgIDFilterElement)
 {
-    if ((filterNumber > ${FILTERS_STD}) || (stdMsgIDFilterElement == NULL))
+    if ((filterNumber > ${FILTERS_STD}U) || (stdMsgIDFilterElement == NULL))
     {
         return false;
     }
-    ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress[filterNumber - 1].CAN_SIDFE_0 = stdMsgIDFilterElement->CAN_SIDFE_0;
+    ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress[filterNumber - 1U].CAN_SIDFE_0 = stdMsgIDFilterElement->CAN_SIDFE_0;
 
     return true;
 }
@@ -1021,11 +1073,11 @@ bool ${CAN_INSTANCE_NAME}_StandardFilterElementSet(uint8_t filterNumber, can_sid
 */
 bool ${CAN_INSTANCE_NAME}_StandardFilterElementGet(uint8_t filterNumber, can_sidfe_registers_t *stdMsgIDFilterElement)
 {
-    if ((filterNumber > ${FILTERS_STD}) || (stdMsgIDFilterElement == NULL))
+    if ((filterNumber > ${FILTERS_STD}U) || (stdMsgIDFilterElement == NULL))
     {
         return false;
     }
-    stdMsgIDFilterElement->CAN_SIDFE_0 = ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress[filterNumber - 1].CAN_SIDFE_0;
+    stdMsgIDFilterElement->CAN_SIDFE_0 = ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.stdMsgIDFilterAddress[filterNumber - 1U].CAN_SIDFE_0;
 
     return true;
 }
@@ -1054,12 +1106,12 @@ bool ${CAN_INSTANCE_NAME}_StandardFilterElementGet(uint8_t filterNumber, can_sid
 */
 bool ${CAN_INSTANCE_NAME}_ExtendedFilterElementSet(uint8_t filterNumber, can_xidfe_registers_t *extMsgIDFilterElement)
 {
-    if ((filterNumber > ${FILTERS_EXT}) || (extMsgIDFilterElement == NULL))
+    if ((filterNumber > ${FILTERS_EXT}U) || (extMsgIDFilterElement == NULL))
     {
         return false;
     }
-    ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress[filterNumber - 1].CAN_XIDFE_0 = extMsgIDFilterElement->CAN_XIDFE_0;
-    ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress[filterNumber - 1].CAN_XIDFE_1 = extMsgIDFilterElement->CAN_XIDFE_1;
+    ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress[filterNumber - 1U].CAN_XIDFE_0 = extMsgIDFilterElement->CAN_XIDFE_0;
+    ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress[filterNumber - 1U].CAN_XIDFE_1 = extMsgIDFilterElement->CAN_XIDFE_1;
 
     return true;
 }
@@ -1086,12 +1138,12 @@ bool ${CAN_INSTANCE_NAME}_ExtendedFilterElementSet(uint8_t filterNumber, can_xid
 */
 bool ${CAN_INSTANCE_NAME}_ExtendedFilterElementGet(uint8_t filterNumber, can_xidfe_registers_t *extMsgIDFilterElement)
 {
-    if ((filterNumber > ${FILTERS_EXT}) || (extMsgIDFilterElement == NULL))
+    if ((filterNumber > ${FILTERS_EXT}U) || (extMsgIDFilterElement == NULL))
     {
         return false;
     }
-    extMsgIDFilterElement->CAN_XIDFE_0 = ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress[filterNumber - 1].CAN_XIDFE_0;
-    extMsgIDFilterElement->CAN_XIDFE_1 = ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress[filterNumber - 1].CAN_XIDFE_1;
+    extMsgIDFilterElement->CAN_XIDFE_0 = ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress[filterNumber - 1U].CAN_XIDFE_0;
+    extMsgIDFilterElement->CAN_XIDFE_1 = ${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.extMsgIDFilterAddress[filterNumber - 1U].CAN_XIDFE_1;
 
     return true;
 }
@@ -1191,9 +1243,10 @@ void ${CAN_INSTANCE_NAME}_RxCallbackRegister(CAN_CALLBACK callback, uintptr_t co
 */
 void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
 {
-    uint8_t length = 0;
-    uint8_t rxgi = 0;
-    uint8_t bufferIndex = 0;
+    uint8_t length = 0U;
+    uint8_t rxgi = 0U;
+    uint8_t bufferIndex = 0U;
+    bool testCondition = false;
 <#if RXBUF_USE>
     can_rxbe_registers_t *rxbeFifo = NULL;
 </#if>
@@ -1206,25 +1259,25 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
     uint32_t ir = ${CAN_INSTANCE_NAME}_REGS->CAN_IR;
 
     /* Check if error occurred */
-    if (ir & CAN_IR_BO_Msk)
+    if ((ir & CAN_IR_BO_Msk) != 0U)
     {
         ${CAN_INSTANCE_NAME}_REGS->CAN_IR = CAN_IR_BO_Msk;
     }
 <#if RXF0_USE>
     /* New Message in Rx FIFO 0 */
-    if (ir & CAN_IR_RF0N_Msk)
+    if ((ir & CAN_IR_RF0N_Msk) != 0U)
     {
         ${CAN_INSTANCE_NAME}_REGS->CAN_IR = CAN_IR_RF0N_Msk;
         ${CAN_INSTANCE_NAME}_REGS->CAN_IE &= (~CAN_IE_RF0NE_Msk);
 
-        if (${CAN_INSTANCE_NAME}_REGS->CAN_RXF0S & CAN_RXF0S_F0FL_Msk)
+        if ((${CAN_INSTANCE_NAME}_REGS->CAN_RXF0S & CAN_RXF0S_F0FL_Msk) != 0U) 
         {
             /* Read data from the Rx FIFO0 */
             rxgi = (uint8_t)((${CAN_INSTANCE_NAME}_REGS->CAN_RXF0S & CAN_RXF0S_F0GI_Msk) >> CAN_RXF0S_F0GI_Pos);
-            rxf0eFifo = (can_rxf0e_registers_t *) ((uint8_t *)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxFIFO0Address + rxgi * ${CAN_INSTANCE_NAME}_RX_FIFO0_ELEMENT_SIZE);
+            rxf0eFifo = (can_rxf0e_registers_t *) ((uint8_t *)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxFIFO0Address + ((uint32_t)rxgi * ${CAN_INSTANCE_NAME}_RX_FIFO0_ELEMENT_SIZE));
 
             /* Get received identifier */
-            if (rxf0eFifo->CAN_RXF0E_0 & CAN_RXF0E_0_XTD_Msk)
+            if ((rxf0eFifo->CAN_RXF0E_0 & CAN_RXF0E_0_XTD_Msk) != 0U)
             {
                 *${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_FIFO0][rxgi].rxId = rxf0eFifo->CAN_RXF0E_0 & CAN_RXF0E_0_ID_Msk;
             }
@@ -1234,7 +1287,9 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
             }
 
             /* Check RTR and FDF bits for Remote/Data Frame */
-            if ((rxf0eFifo->CAN_RXF0E_0 & CAN_RXF0E_0_RTR_Msk) && ((rxf0eFifo->CAN_RXF0E_1 & CAN_RXF0E_1_FDF_Msk) == 0))
+            testCondition = ((rxf0eFifo->CAN_RXF0E_0 & CAN_RXF0E_0_RTR_Msk) != 0U);
+            testCondition = ((rxf0eFifo->CAN_RXF0E_1 & CAN_RXF0E_1_FDF_Msk) == 0U) && testCondition;
+            if (testCondition)
             {
                 *${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_FIFO0][rxgi].msgFrameAttr = CAN_MSG_RX_REMOTE_FRAME;
             }
@@ -1244,7 +1299,7 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
             }
 
             /* Get received data length */
-            length = CANDlcToLengthGet(((rxf0eFifo->CAN_RXF0E_1 & CAN_RXF0E_1_DLC_Msk) >> CAN_RXF0E_1_DLC_Pos));
+            length = CANDlcToLengthGet((uint8_t)((rxf0eFifo->CAN_RXF0E_1 & CAN_RXF0E_1_DLC_Msk) >> CAN_RXF0E_1_DLC_Pos));
 
             /* Copy data to user buffer */
             memcpy(${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_FIFO0][rxgi].rxBuffer, (uint8_t *)&rxf0eFifo->CAN_RXF0E_DATA, length);
@@ -1259,7 +1314,7 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
 
             </#if>
             /* Ack the fifo position */
-            ${CAN_INSTANCE_NAME}_REGS->CAN_RXF0A = CAN_RXF0A_F0AI(rxgi);
+            ${CAN_INSTANCE_NAME}_REGS->CAN_RXF0A = CAN_RXF0A_F0AI((uint32_t)rxgi);
 
             if (${CAN_INSTANCE_NAME?lower_case}CallbackObj[CAN_MSG_ATTR_RX_FIFO0].callback != NULL)
             {
@@ -1270,19 +1325,19 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
 </#if>
 <#if RXF1_USE>
     /* New Message in Rx FIFO 1 */
-    if (ir & CAN_IR_RF1N_Msk)
+    if ((ir & CAN_IR_RF1N_Msk) != 0U)
     {
         ${CAN_INSTANCE_NAME}_REGS->CAN_IR = CAN_IR_RF1N_Msk;
         ${CAN_INSTANCE_NAME}_REGS->CAN_IE &= (~CAN_IE_RF1NE_Msk);
 
-        if (${CAN_INSTANCE_NAME}_REGS->CAN_RXF1S & CAN_RXF1S_F1FL_Msk)
+        if ((${CAN_INSTANCE_NAME}_REGS->CAN_RXF1S & CAN_RXF1S_F1FL_Msk) != 0U)
         {
             /* Read data from the Rx FIFO1 */
             rxgi = (uint8_t)((${CAN_INSTANCE_NAME}_REGS->CAN_RXF1S & CAN_RXF1S_F1GI_Msk) >> CAN_RXF1S_F1GI_Pos);
-            rxf1eFifo = (can_rxf1e_registers_t *) ((uint8_t *)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxFIFO1Address + rxgi * ${CAN_INSTANCE_NAME}_RX_FIFO1_ELEMENT_SIZE);
+            rxf1eFifo = (can_rxf1e_registers_t *) ((uint8_t *)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxFIFO1Address + ((uint32_t)rxgi * ${CAN_INSTANCE_NAME}_RX_FIFO1_ELEMENT_SIZE));
 
             /* Get received identifier */
-            if (rxf1eFifo->CAN_RXF1E_0 & CAN_RXF1E_0_XTD_Msk)
+            if ((rxf1eFifo->CAN_RXF1E_0 & CAN_RXF1E_0_XTD_Msk) != 0U)
             {
                 *${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_FIFO1][rxgi].rxId = rxf1eFifo->CAN_RXF1E_0 & CAN_RXF1E_0_ID_Msk;
             }
@@ -1292,7 +1347,9 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
             }
 
             /* Check RTR and FDF bits for Remote/Data Frame */
-            if ((rxf1eFifo->CAN_RXF1E_0 & CAN_RXF1E_0_RTR_Msk) && ((rxf1eFifo->CAN_RXF1E_1 & CAN_RXF1E_1_FDF_Msk) == 0))
+            testCondition = ((rxf1eFifo->CAN_RXF1E_0 & CAN_RXF1E_0_RTR_Msk) != 0U);
+            testCondition = ((rxf1eFifo->CAN_RXF1E_1 & CAN_RXF1E_1_FDF_Msk) == 0U) && testCondition;
+            if (testCondition)
             {
                 *${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_FIFO1][rxgi].msgFrameAttr = CAN_MSG_RX_REMOTE_FRAME;
             }
@@ -1302,7 +1359,7 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
             }
 
             /* Get received data length */
-            length = CANDlcToLengthGet(((rxf1eFifo->CAN_RXF1E_1 & CAN_RXF1E_1_DLC_Msk) >> CAN_RXF1E_1_DLC_Pos));
+            length = CANDlcToLengthGet((uint8_t)((rxf1eFifo->CAN_RXF1E_1 & CAN_RXF1E_1_DLC_Msk) >> CAN_RXF1E_1_DLC_Pos));
 
             /* Copy data to user buffer */
             memcpy(${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_FIFO1][rxgi].rxBuffer, (uint8_t *)&rxf1eFifo->CAN_RXF1E_DATA, length);
@@ -1317,7 +1374,7 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
 
             </#if>
             /* Ack the fifo position */
-            ${CAN_INSTANCE_NAME}_REGS->CAN_RXF1A = CAN_RXF1A_F1AI(rxgi);
+            ${CAN_INSTANCE_NAME}_REGS->CAN_RXF1A = CAN_RXF1A_F1AI((uint32_t)rxgi);
 
             if (${CAN_INSTANCE_NAME?lower_case}CallbackObj[CAN_MSG_ATTR_RX_FIFO1].callback != NULL)
             {
@@ -1328,62 +1385,75 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
 </#if>
 <#if RXBUF_USE>
     /* New Message in Dedicated Rx Buffer */
-    if (ir & CAN_IR_DRX_Msk)
+    if ((ir & CAN_IR_DRX_Msk) != 0U)
     {
         ${CAN_INSTANCE_NAME}_REGS->CAN_IR = CAN_IR_DRX_Msk;
         ${CAN_INSTANCE_NAME}_REGS->CAN_IE &= (~CAN_IE_DRXE_Msk);
 
         /* Read data from the Rx Buffer */
-        if (${CAN_INSTANCE_NAME}_REGS->CAN_NDAT1 != 0)
+        if (${CAN_INSTANCE_NAME}_REGS->CAN_NDAT1 != 0U)
         {
-            for (rxgi = 0; rxgi <= 0x1F; rxgi++)
+            for (rxgi = 0U; rxgi <= 0x1FU; rxgi++)
             {
-                if ((${CAN_INSTANCE_NAME}_REGS->CAN_NDAT1 & (1 << rxgi)) == (1 << rxgi))
+                if ((${CAN_INSTANCE_NAME}_REGS->CAN_NDAT1 & (1UL << rxgi)) == (1UL << rxgi))
+                {
                     break;
+                }     
             }
         }
         else
         {
-            for (rxgi = 0; rxgi <= 0x1F; rxgi++)
+            for (rxgi = 0U; rxgi <= 0x1FU; rxgi++)
             {
-                if ((${CAN_INSTANCE_NAME}_REGS->CAN_NDAT2 & (1 << rxgi)) == (1 << rxgi))
+                if ((${CAN_INSTANCE_NAME}_REGS->CAN_NDAT2 & (1UL << rxgi)) == (1UL << rxgi))
                 {
-                    rxgi = rxgi + 32;
+                    rxgi = rxgi + 32U;
                     break;
                 }
             }
         }
-        rxbeFifo = (can_rxbe_registers_t *) ((uint8_t *)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxBuffersAddress + rxgi * ${CAN_INSTANCE_NAME}_RX_BUFFER_ELEMENT_SIZE);
+        rxbeFifo = (can_rxbe_registers_t *) ((uint8_t *)${CAN_INSTANCE_NAME?lower_case}Obj.msgRAMConfig.rxBuffersAddress + ((uint32_t)rxgi * ${CAN_INSTANCE_NAME}_RX_BUFFER_ELEMENT_SIZE));
 
-        for (bufferIndex = 0; bufferIndex < ${RX_BUFFER_ELEMENTS}; bufferIndex++)
+        for (bufferIndex = 0U; bufferIndex < ${RX_BUFFER_ELEMENTS}U; bufferIndex++)
         {
-            if (bufferIndex < 32)
+            if (bufferIndex < 32U)
             {
-                if ((${CAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex1 & (1 << (bufferIndex & 0x1F))) == (1 << (bufferIndex & 0x1F)))
+                if ((${CAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex1 & (1UL << (bufferIndex & 0x1FU))) == (1UL << (bufferIndex & 0x1FU)))
                 {
-                    ${CAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex1 &= ~(1 << (bufferIndex & 0x1F));
+                    ${CAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex1 &= ~(1UL << (bufferIndex & 0x1FU));
                     break;
                 }
             }
-            else if ((${CAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex2 & (1 << ((bufferIndex - 32) & 0x1F))) == (1 << ((bufferIndex - 32) & 0x1F)))
+            else if ((${CAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex2 & (1UL << ((bufferIndex - 32U) & 0x1FU))) == (1UL << ((bufferIndex - 32U) & 0x1FU)))
             {
-                ${CAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex2 &= ~(1 << ((bufferIndex - 32) & 0x1F));
+                ${CAN_INSTANCE_NAME?lower_case}Obj.rxBufferIndex2 &= ~(1UL << ((bufferIndex - 32U) & 0x1FU));
                 break;
             }
+            else
+            {
+                /* Do nothing */
+            }
+        }
+
+        if(bufferIndex >= NUM_RX_BUFFER_ELEMENTS)
+        {
+            bufferIndex = (uint8_t)(NUM_RX_BUFFER_ELEMENTS - 1U);
         }
 
         /* Get received identifier */
-        if (rxbeFifo->CAN_RXBE_0 & CAN_RXBE_0_XTD_Msk)
+        if ((rxbeFifo->CAN_RXBE_0 & CAN_RXBE_0_XTD_Msk) != 0U)
         {
             *${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_BUFFER][bufferIndex].rxId = rxbeFifo->CAN_RXBE_0 & CAN_RXBE_0_ID_Msk;
         }
         else
         {
-            *${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_BUFFER][bufferIndex].rxId = (rxbeFifo->CAN_RXBE_0 >> 18) & CAN_STD_ID_Msk;
+            *${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_BUFFER][bufferIndex].rxId = (rxbeFifo->CAN_RXBE_0 >> 18U) & CAN_STD_ID_Msk;
         }
 
         /* Check RTR and FDF bits for Remote/Data Frame */
-        if ((rxbeFifo->CAN_RXBE_0 & CAN_RXBE_0_RTR_Msk) && ((rxbeFifo->CAN_RXBE_1 & CAN_RXBE_1_FDF_Msk) == 0))
+        testCondition = ((rxbeFifo->CAN_RXBE_0 & CAN_RXBE_0_RTR_Msk) != 0U);
+        testCondition  = ((rxbeFifo->CAN_RXBE_1 & CAN_RXBE_1_FDF_Msk) == 0U) && testCondition;
+        if (testCondition)
         {
             *${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_BUFFER][bufferIndex].msgFrameAttr = CAN_MSG_RX_REMOTE_FRAME;
         }
@@ -1393,7 +1463,7 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
         }
 
         /* Get received data length */
-        length = CANDlcToLengthGet(((rxbeFifo->CAN_RXBE_1 & CAN_RXBE_1_DLC_Msk) >> CAN_RXBE_1_DLC_Pos));
+        length = CANDlcToLengthGet((uint8_t)((rxbeFifo->CAN_RXBE_1 & CAN_RXBE_1_DLC_Msk) >> CAN_RXBE_1_DLC_Pos));
 
         /* Copy data to user buffer */
         memcpy(${CAN_INSTANCE_NAME?lower_case}RxMsg[CAN_MSG_ATTR_RX_BUFFER][bufferIndex].rxBuffer, (uint8_t *)&rxbeFifo->CAN_RXBE_DATA, length);
@@ -1408,13 +1478,13 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
 
         </#if>
         /* Clear new data flag */
-        if (rxgi < 32)
+        if (rxgi < 32U)
         {
-            ${CAN_INSTANCE_NAME}_REGS->CAN_NDAT1 = (1 << rxgi);
+            ${CAN_INSTANCE_NAME}_REGS->CAN_NDAT1 = (1UL << rxgi);
         }
         else
         {
-            ${CAN_INSTANCE_NAME}_REGS->CAN_NDAT2 = (1 << (rxgi - 32));
+            ${CAN_INSTANCE_NAME}_REGS->CAN_NDAT2 = (1UL << (rxgi - 32U));
         }
         if (${CAN_INSTANCE_NAME?lower_case}CallbackObj[CAN_MSG_ATTR_RX_BUFFER].callback != NULL)
         {
@@ -1425,20 +1495,22 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
 
 <#if TX_USE || TXBUF_USE >
     /* TX Completed */
-    if (ir & CAN_IR_TC_Msk)
+    if ((ir & CAN_IR_TC_Msk) != 0U)
     {
         ${CAN_INSTANCE_NAME}_REGS->CAN_IR = CAN_IR_TC_Msk;
         ${CAN_INSTANCE_NAME}_REGS->CAN_IE &= (~CAN_IE_TCE_Msk);
-        for (bufferIndex = 0; bufferIndex < (${CAN_INSTANCE_NAME}_TX_FIFO_BUFFER_SIZE/${CAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE); bufferIndex++)
+        for (bufferIndex = 0U; bufferIndex < (${CAN_INSTANCE_NAME}_TX_FIFO_BUFFER_SIZE/${CAN_INSTANCE_NAME}_TX_FIFO_BUFFER_ELEMENT_SIZE); bufferIndex++)
         {
-            if ((${CAN_INSTANCE_NAME}_REGS->CAN_TXBTO & (1 << (bufferIndex & 0x1F))) &&
-                (${CAN_INSTANCE_NAME}_REGS->CAN_TXBTIE & (1 << (bufferIndex & 0x1F))))
+            uint32_t txbufferMask = (1UL << ((uint32_t)bufferIndex & 0x1FU));
+            testCondition = ((${CAN_INSTANCE_NAME}_REGS->CAN_TXBTO & txbufferMask) != 0U);
+            testCondition = ((${CAN_INSTANCE_NAME}_REGS->CAN_TXBTIE & txbufferMask) != 0U) && testCondition;
+            if (testCondition)
             {
-                ${CAN_INSTANCE_NAME}_REGS->CAN_TXBTIE &= ~(1 << (bufferIndex & 0x1F));
+                ${CAN_INSTANCE_NAME}_REGS->CAN_TXBTIE &= ~txbufferMask;
                 <#if TXBUF_USE>
-                if (0 != (${CAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex & (1 << (bufferIndex & 0x1F))))
+                if (0U != (${CAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex & txbufferMask))
                 {
-                    ${CAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex &= (~(1 << (bufferIndex & 0x1F)));
+                    ${CAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex &= (~txbufferMask);
                 }
                 </#if>
             }
@@ -1450,7 +1522,7 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
     }
 
     /* TX FIFO is empty */
-    if (ir & CAN_IR_TFE_Msk)
+    if ((ir & CAN_IR_TFE_Msk) != 0U)
     {
         ${CAN_INSTANCE_NAME}_REGS->CAN_IR = CAN_IR_TFE_Msk;
         uint8_t getIndex = (uint8_t)((${CAN_INSTANCE_NAME}_REGS->CAN_TXFQS & CAN_TXFQS_TFGI_Msk) >> CAN_TXFQS_TFGI_Pos);
@@ -1458,9 +1530,9 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
         for (uint8_t fifoIndex = getIndex; ; fifoIndex++)
         {
             <#if TXBUF_USE>
-            if (fifoIndex >= (${TX_BUFFER_ELEMENTS} + ${TX_FIFO_ELEMENTS}))
+            if (fifoIndex >= (${TX_BUFFER_ELEMENTS}U + ${TX_FIFO_ELEMENTS}U))
             {
-                fifoIndex = ${TX_BUFFER_ELEMENTS};
+                fifoIndex = ${TX_BUFFER_ELEMENTS}U;
             }
             </#if>
             if (fifoIndex >= putIndex)
@@ -1468,9 +1540,9 @@ void ${CAN_INSTANCE_NAME}_InterruptHandler(void)
                 break;
             }
             <#if TXBUF_USE>
-            if (0 != (${CAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex & (1 << ((fifoIndex + ${TX_BUFFER_ELEMENTS}) & 0x1F))))
+            if (0U != (${CAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex & (1UL << ((fifoIndex + ${TX_BUFFER_ELEMENTS}) & 0x1FU))))
             {
-                ${CAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex &= (~(1 << ((fifoIndex + ${TX_BUFFER_ELEMENTS}) & 0x1F)));
+                ${CAN_INSTANCE_NAME?lower_case}Obj.txBufferIndex &= (~(1UL << ((fifoIndex + ${TX_BUFFER_ELEMENTS}) & 0x1FU)));
             }
             </#if>
         }
