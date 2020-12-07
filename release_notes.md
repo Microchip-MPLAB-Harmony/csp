@@ -3,6 +3,21 @@
 
 # Microchip MPLAB® Harmony 3 Release Notes
 
+
+## CSP Release v3.8.3
+
+### New Features
+- Same as v3.8.2
+
+### Bug fixes
+- Fixed compiler warnings in QEI PLib
+
+### Known Issues
+- Same as v3.8.2
+
+### Development Tools
+- Same as v3.8.2
+
 ## CSP Release v3.8.2
 
 ### New Features
