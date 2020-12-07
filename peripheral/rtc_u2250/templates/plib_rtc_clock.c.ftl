@@ -120,6 +120,9 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
             </#if>
         </#if>
     </#if>
+    <#if RTC_MODE2_EVCTRL != "0">
+        <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_EVCTRL = 0x${RTC_MODE2_EVCTRL};
+    </#if>
 
     <@compress single_line=true>${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CTRLA = RTC_MODE2_CTRLA_MODE(2) |
                                                             RTC_MODE2_CTRLA_PRESCALER(${RTC_MODE2_PRESCALER}) |
@@ -143,9 +146,6 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     <#if (RTC_MODE2_INTERRUPT = true) && (RTC_MODE2_INTENSET != "0")>
         <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_INTENSET = 0x${RTC_MODE2_INTENSET};
 
-    </#if>
-    <#if RTC_MODE2_EVCTRL != "0">
-        <#lt>    ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_EVCTRL = 0x${RTC_MODE2_EVCTRL};
     </#if>
 }
 <#if RTC_FREQCORR = true >

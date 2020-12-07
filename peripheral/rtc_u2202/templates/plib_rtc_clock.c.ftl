@@ -103,6 +103,9 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
     {
         /* Wait for Write-Synchronization */
     }
+    <#if RTC_MODE2_EVCTRL != "0">
+        <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_EVCTRL = 0x${RTC_MODE2_EVCTRL};
+    </#if>
 
     /* Writing to CTRL register will trigger write-synchronization */
     <@compress single_line=true>${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_CTRL = RTC_MODE2_CTRL_MODE(2) |
@@ -115,9 +118,6 @@ void ${RTC_INSTANCE_NAME}_Initialize(void)
 
     <#if (RTC_MODE2_INTERRUPT = true) && (RTC_MODE2_INTENSET != "0")>
         <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_INTENSET = 0x${RTC_MODE2_INTENSET};
-    </#if>
-    <#if RTC_MODE2_EVCTRL != "0">
-        <#lt>   ${RTC_INSTANCE_NAME}_REGS->MODE2.RTC_EVCTRL = 0x${RTC_MODE2_EVCTRL};
     </#if>
     <#if RTC_COUNT_CLOCK_RCONT >
         <#lt>   /* Enable continuous read request for CLOCK register */
