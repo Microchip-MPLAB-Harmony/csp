@@ -146,7 +146,7 @@ def systickCal(symbol, event):
             value = int(round((float(freq_proc)) * (period / 1000)))
             sourceFreq = freq_proc
 
-    symbol.setValue(str(hex(value)),2)
+    symbol.setValue(("0x%X" % value))
     Database.setSymbolValue("core","SYSTICK_PERIOD_US", int(round(period * 1000)), 2)
 
     # Calculate achievable tick rate in Hz if systick is connected to SYS TIME module

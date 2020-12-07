@@ -56,14 +56,14 @@
 // *****************************************************************************
 
 <#if SYSTICK_CLOCK == "0">
-    <#lt>#define SYSTICK_FREQ       ${SYSTICK_CLOCK_FREQUENCY}
+    <#lt>#define SYSTICK_FREQ       ${SYSTICK_CLOCK_FREQUENCY}U
 </#if>
 <#if SYSTICK_CLOCK == "1">
-    <#lt>#define SYSTICK_FREQ   ${CPU_CLOCK_FREQUENCY}
+    <#lt>#define SYSTICK_FREQ   ${CPU_CLOCK_FREQUENCY}U
 </#if>
 
 <#if USE_SYSTICK_INTERRUPT == true>
-    <#lt>#define SYSTICK_INTERRUPT_PERIOD_IN_US  (${SYSTICK_PERIOD_US})
+    <#lt>#define SYSTICK_INTERRUPT_PERIOD_IN_US  (${SYSTICK_PERIOD_US}U)
 
     <#lt>typedef void (*SYSTICK_CALLBACK)(uintptr_t context);
 </#if>
@@ -89,8 +89,8 @@ uint32_t SYSTICK_TimerFrequencyGet ( void );
     <#lt>bool SYSTICK_TimerPeriodHasExpired(void);
 </#if>
 <#if USE_SYSTICK_INTERRUPT == true>
-    <#lt>void SYSTICK_DelayMs ( uint32_t ms );
-    <#lt>void SYSTICK_TimerCallbackSet ( SYSTICK_CALLBACK callback, uintptr_t context );
+	<#lt>void SYSTICK_DelayMs ( uint32_t delay_ms );
+	<#lt>void SYSTICK_TimerCallbackSet ( SYSTICK_CALLBACK callback, uintptr_t context );
 </#if>
 <#if SYSTICK_USED_BY_SYS_TIME == true>
 void SYSTICK_TimerInterruptEnable ( void );
