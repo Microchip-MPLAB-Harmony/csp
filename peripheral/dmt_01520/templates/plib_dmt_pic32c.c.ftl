@@ -62,12 +62,6 @@ void ${DMT_INSTANCE_NAME}_Enable( void )
     DMT_REGS->DMT_DMTCONSET = DMT_DMTCON_ON_Msk;
 }
 
-void ${DMT_INSTANCE_NAME}_Disable( void )
-{
-    /* ON = 0 */
-    DMT_REGS->DMT_DMTCONCLR = DMT_DMTCON_ON_Msk;
-}
-
 </#if>
 void ${DMT_INSTANCE_NAME}_Clear( void )
 {

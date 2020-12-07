@@ -62,12 +62,6 @@ void ${DMT_INSTANCE_NAME}_Enable( void )
     DMTCONbits.ON = 1;
 }
 
-void ${DMT_INSTANCE_NAME}_Disable( void )
-{
-    /* ON = 0 */
-    DMTCONbits.ON = 0;
-}
-
 </#if>
 void ${DMT_INSTANCE_NAME}_Clear( void )
 {
