@@ -170,7 +170,11 @@ size_t ${SERCOM_INSTANCE_NAME}_SPI_Read(void* pRdBuffer, size_t size)
         rdSize = ${SERCOM_INSTANCE_NAME?lower_case}SPISObj.rdInIndex;
     }
 
+<#if SPIS_CHARSIZE_BITS == "8_BIT">
     memcpy(pRdBuffer, ${SERCOM_INSTANCE_NAME}_SPI_ReadBuffer, rdSize);
+<#else>
+    memcpy(pRdBuffer, ${SERCOM_INSTANCE_NAME}_SPI_ReadBuffer, (rdSize << 1));
+</#if>
 
     ${SERCOM_INSTANCE_NAME}_REGS->SPIS.SERCOM_INTENSET = intState;
 
@@ -190,7 +194,11 @@ size_t ${SERCOM_INSTANCE_NAME}_SPI_Write(void* pWrBuffer, size_t size )
         wrSize = ${SERCOM_INSTANCE_NAME}_SPI_WRITE_BUFFER_SIZE;
     }
 
+<#if SPIS_CHARSIZE_BITS == "8_BIT">
     memcpy(${SERCOM_INSTANCE_NAME}_SPI_WriteBuffer, pWrBuffer, wrSize);
+<#else>
+    memcpy(${SERCOM_INSTANCE_NAME}_SPI_WriteBuffer, pWrBuffer, (wrSize << 1));
+</#if>
 
     ${SERCOM_INSTANCE_NAME?lower_case}SPISObj.nWrBytes = wrSize;
     ${SERCOM_INSTANCE_NAME?lower_case}SPISObj.wrOutIndex = 0;
