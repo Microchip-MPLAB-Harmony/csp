@@ -28,7 +28,11 @@
 #include <stddef.h>
 #include "device.h"
 #include "interrupts.h"
-
+<#if CoreUseMPU??>
+<#if CoreUseMPU>
+#include "peripheral/mpu/plib_mpu.h"
+</#if>
+</#if>
 
 /*
  *  The MPLAB X Simulator does not yet support simulation of programming the
