@@ -75,6 +75,9 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead( void * pTransmitData, size_t txSize
 bool ${FLEXCOM_INSTANCE_NAME}_SPI_Write( void * pTransmitData, size_t txSize );
 bool ${FLEXCOM_INSTANCE_NAME}_SPI_Read( void * pReceiveData, size_t rxSize );
 bool ${FLEXCOM_INSTANCE_NAME}_SPI_TransferSetup( FLEXCOM_SPI_TRANSFER_SETUP * setup, uint32_t spiSourceClock );
+<#if FLEXCOM_SPI_NUM_CSR != 1>
+void ${FLEXCOM_INSTANCE_NAME}_SPI_ChipSelectSetup(FLEXCOM_SPI_CHIP_SELECT chipSelect);
+</#if>
 <#if SPI_INTERRUPT_MODE == true>
 bool ${FLEXCOM_INSTANCE_NAME}_SPI_IsBusy( void );
 void ${FLEXCOM_INSTANCE_NAME}_SPI_CallbackRegister( FLEXCOM_SPI_CALLBACK callback, uintptr_t context );

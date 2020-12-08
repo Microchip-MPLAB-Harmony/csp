@@ -65,20 +65,34 @@ void ${FLEXCOM_INSTANCE_NAME}_SPI_Initialize ( void )
     /* Disable and Reset the FLEXCOM SPI */
     ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CR = FLEX_SPI_CR_SPIDIS_Msk | FLEX_SPI_CR_SWRST_Msk;
 
-    <#if FLEXCOM_SPI_FIFO_ENABLE == true>
+<#if SPI_INTERRUPT_MODE == true && FLEXCOM_SPI_FIFO_ENABLE == true>
     ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CR = FLEX_SPI_CR_FIFOEN_Msk;
-    </#if>
+</#if>
 
 <#if FLEXCOM_SPI_MR_MSTR =="MASTER">
     /* Enable Master mode, select clock source, select particular NPCS line for chip select and disable mode fault detection */
-    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_MR = FLEX_SPI_MR_MSTR_Msk | FLEX_SPI_MR_BRSRCCLK_${FLEXCOM_SPI_MR_BRSRCCLK} <#if FLEXCOM_SPI_MR_PCS != "GPIO">| FLEX_SPI_MR_PCS(${FLEXCOM_SPI_MR_PCS?remove_beginning("NPCS")})<#else>| FLEX_SPI_MR_PCS(0)</#if> | FLEX_SPI_MR_MODFDIS_Msk;
-<#else>
-    /* SPI is by default in Slave Mode, disable mode fault detection */
-    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_MR =  FLEX_SPI_MR_MODFDIS_Msk;
+    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_MR = FLEX_SPI_MR_MSTR_Msk | FLEX_SPI_MR_BRSRCCLK_${FLEXCOM_SPI_MR_BRSRCCLK} | FLEX_SPI_MR_DLYBCS(${FLEXCOM_SPI_MR_DLYBCS}) <#if FLEXCOM_SPI_EN_NPCS0?? && FLEXCOM_SPI_EN_NPCS0 == true>| FLEX_SPI_MR_PCS(FLEXCOM_SPI_CHIP_SELECT_NPCS0)<#elseif FLEXCOM_SPI_EN_NPCS1?? && FLEXCOM_SPI_EN_NPCS1 == true>| FLEX_SPI_MR_PCS(FLEXCOM_SPI_CHIP_SELECT_NPCS1) <#elseif FLEXCOM_SPI_EN_NPCS2?? && FLEXCOM_SPI_EN_NPCS2 == true>| FLEX_SPI_MR_PCS(FLEXCOM_SPI_CHIP_SELECT_NPCS2) <#elseif FLEXCOM_SPI_EN_NPCS3?? && FLEXCOM_SPI_EN_NPCS3 == true>| FLEX_SPI_MR_PCS(FLEXCOM_SPI_CHIP_SELECT_NPCS3)</#if> | FLEX_SPI_MR_MODFDIS_Msk;
 </#if>
 
-    /* Set up clock Polarity, data phase, Communication Width, Baud Rate<#if FLEXCOM_SPI_MR_PCS != "GPIO"> and Chip select active after transfer</#if> */
-    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CSR[${FLEXCOM_SPI_CSR_INDEX}]= FLEX_SPI_CSR_CPOL(${FLEXCOM_SPI_CSR_CPOL}) | FLEX_SPI_CSR_NCPHA(${FLEXCOM_SPI_CSR_NCPHA}) | FLEX_SPI_CSR_BITS${FLEXCOM_SPI_CSR_BITS} | FLEX_SPI_CSR_SCBR(${FLEXCOM_SPI_CSR_SCBR_VALUE})<#if FLEXCOM_SPI_MR_PCS != "GPIO"> | FLEX_SPI_CSR_CSAAT_Msk</#if>;
+<#if FLEXCOM_SPI_EN_NPCS0?? && FLEXCOM_SPI_EN_NPCS0 == true>
+    /* Set up clock Polarity, data phase, Communication Width, Baud Rate */
+    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CSR[0]= FLEX_SPI_CSR_CPOL(${FLEXCOM_SPI_CSR0_CPOL}) | FLEX_SPI_CSR_NCPHA(${FLEXCOM_SPI_CSR0_NCPHA}) | FLEX_SPI_CSR_BITS${FLEXCOM_SPI_CSR0_BITS} | FLEX_SPI_CSR_SCBR(${FLEXCOM_SPI_CSR0_SCBR_VALUE}) | FLEX_SPI_CSR_DLYBS(${FLEXCOM_SPI_CSR0_DLYBS}) | FLEX_SPI_CSR_DLYBCT(${FLEXCOM_SPI_CSR0_DLYBCT}) | FLEX_SPI_CSR_CSAAT_Msk;
+</#if>
+
+<#if FLEXCOM_SPI_EN_NPCS1?? && FLEXCOM_SPI_EN_NPCS1 == true>
+    /* Set up clock Polarity, data phase, Communication Width, Baud Rate */
+    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CSR[1]= FLEX_SPI_CSR_CPOL(${FLEXCOM_SPI_CSR1_CPOL}) | FLEX_SPI_CSR_NCPHA(${FLEXCOM_SPI_CSR1_NCPHA}) | FLEX_SPI_CSR_BITS${FLEXCOM_SPI_CSR1_BITS} | FLEX_SPI_CSR_SCBR(${FLEXCOM_SPI_CSR1_SCBR_VALUE}) | FLEX_SPI_CSR_DLYBS(${FLEXCOM_SPI_CSR1_DLYBS}) | FLEX_SPI_CSR_DLYBCT(${FLEXCOM_SPI_CSR1_DLYBCT}) | FLEX_SPI_CSR_CSAAT_Msk;
+</#if>
+
+<#if FLEXCOM_SPI_EN_NPCS2?? && FLEXCOM_SPI_EN_NPCS2 == true>
+    /* Set up clock Polarity, data phase, Communication Width, Baud Rate */
+    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CSR[2]= FLEX_SPI_CSR_CPOL(${FLEXCOM_SPI_CSR2_CPOL}) | FLEX_SPI_CSR_NCPHA(${FLEXCOM_SPI_CSR2_NCPHA}) | FLEX_SPI_CSR_BITS${FLEXCOM_SPI_CSR2_BITS} | FLEX_SPI_CSR_SCBR(${FLEXCOM_SPI_CSR2_SCBR_VALUE}) | FLEX_SPI_CSR_DLYBS(${FLEXCOM_SPI_CSR2_DLYBS}) | FLEX_SPI_CSR_DLYBCT(${FLEXCOM_SPI_CSR2_DLYBCT}) | FLEX_SPI_CSR_CSAAT_Msk;
+</#if>
+
+<#if FLEXCOM_SPI_EN_NPCS3?? && FLEXCOM_SPI_EN_NPCS3 == true>
+    /* Set up clock Polarity, data phase, Communication Width, Baud Rate */
+    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CSR[3]= FLEX_SPI_CSR_CPOL(${FLEXCOM_SPI_CSR3_CPOL}) | FLEX_SPI_CSR_NCPHA(${FLEXCOM_SPI_CSR3_NCPHA}) | FLEX_SPI_CSR_BITS${FLEXCOM_SPI_CSR3_BITS} | FLEX_SPI_CSR_SCBR(${FLEXCOM_SPI_CSR3_SCBR_VALUE}) | FLEX_SPI_CSR_DLYBS(${FLEXCOM_SPI_CSR3_DLYBS}) | FLEX_SPI_CSR_DLYBCT(${FLEXCOM_SPI_CSR3_DLYBCT}) | FLEX_SPI_CSR_CSAAT_Msk;
+</#if>
 
 <#if SPI_INTERRUPT_MODE == true >
     /* Initialize global variables */
@@ -90,6 +104,45 @@ void ${FLEXCOM_INSTANCE_NAME}_SPI_Initialize ( void )
     ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CR = FLEX_SPI_CR_SPIEN_Msk;
     return;
 }
+
+<#if FLEXCOM_SPI_NUM_CSR != 1>
+static uint8_t ${FLEXCOM_INSTANCE_NAME}_SPI_ChipSelectGet(void)
+{
+    uint8_t pcs = (uint8_t)((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_MR  & FLEX_SPI_MR_PCS_Msk) >> FLEX_SPI_MR_PCS_Pos);
+
+    if (pcs == FLEXCOM_SPI_CHIP_SELECT_NPCS0)
+    {
+        return 0;
+    }
+<#if FLEXCOM_SPI_EN_NPCS1??>
+    else if (pcs == FLEXCOM_SPI_CHIP_SELECT_NPCS1)
+    {
+        return 1;
+    }
+</#if>
+<#if FLEXCOM_SPI_EN_NPCS2??>
+    else if (pcs == FLEXCOM_SPI_CHIP_SELECT_NPCS2)
+    {
+        return 2;
+    }
+</#if>
+<#if FLEXCOM_SPI_EN_NPCS3??>
+    else if (pcs == FLEXCOM_SPI_CHIP_SELECT_NPCS3)
+    {
+        return 3;
+    }
+</#if>
+    else
+    {
+        return 0;
+    }
+}
+
+void ${FLEXCOM_INSTANCE_NAME}_SPI_ChipSelectSetup(FLEXCOM_SPI_CHIP_SELECT chipSelect)
+{
+    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_MR =  (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_MR & ~FLEX_SPI_MR_PCS_Msk) | FLEX_SPI_MR_PCS(chipSelect);
+}
+</#if>
 
 <#if SPI_INTERRUPT_MODE == false >
 bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead(void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize)
@@ -112,8 +165,11 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead(void* pTransmitData, size_t txSize, 
         {
             rxSize = 0;
         }
-
+<#if FLEXCOM_SPI_NUM_CSR == 1>
         dataBits = ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CSR[${FLEXCOM_SPI_CSR_INDEX}] & FLEX_SPI_CSR_BITS_Msk;
+<#else>
+        dataBits = ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CSR[${FLEXCOM_INSTANCE_NAME}_SPI_ChipSelectGet()] & FLEX_SPI_CSR_BITS_Msk;
+</#if>
 
         /* Flush out any unread data in SPI read buffer from the previous transfer */
         receivedData = (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_RDR & FLEX_SPI_RDR_RD_Msk) >> FLEX_SPI_RDR_RD_Pos;
@@ -147,7 +203,14 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead(void* pTransmitData, size_t txSize, 
             }
             else if (dummySize > 0)
             {
-                ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_TDR = 0x${FLEXCOM_SPI_DUMMY_DATA};
+                if(dataBits == FLEX_SPI_CSR_BITS_8_BIT)
+                {
+                    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_TDR = 0x${FLEXCOM_SPI_DUMMY_DATA};
+                }
+                else
+                {
+                    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_TDR = 0x${FLEXCOM_SPI_DUMMY_DATA}${FLEXCOM_SPI_DUMMY_DATA};
+                }
                 dummySize--;
             }
 
@@ -182,11 +245,9 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead(void* pTransmitData, size_t txSize, 
         /* Make sure no data is pending in the shift register */
         while ((bool)((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_SR & FLEX_SPI_SR_TXEMPTY_Msk) >> FLEX_SPI_SR_TXEMPTY_Pos) == false);
 
-        <#if FLEXCOM_SPI_MR_PCS != "GPIO">
         /* Set Last transfer to deassert NPCS after the last byte written in TDR has been transferred. */
         ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CR = FLEX_SPI_CR_LASTXFER_Msk;
 
-        </#if>
         isSuccess = true;
     }
     return isSuccess;
@@ -238,7 +299,11 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize,
         }
 
         /* Start the first write here itself, rest will happen in ISR context */
+<#if FLEXCOM_SPI_NUM_CSR == 1>
         if((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CSR[${FLEXCOM_SPI_CSR_INDEX}] & FLEX_SPI_CSR_BITS_Msk) == FLEX_SPI_CSR_BITS_8_BIT)
+<#else>
+        if((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CSR[${FLEXCOM_INSTANCE_NAME}_SPI_ChipSelectGet()] & FLEX_SPI_CSR_BITS_Msk) == FLEX_SPI_CSR_BITS_8_BIT)
+</#if>
         {
             if (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount < ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txSize)
             {
@@ -264,7 +329,7 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize,
             }
             else if (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.dummySize > 0)
             {
-                ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_TDR = (uint16_t)(0x${FLEXCOM_SPI_DUMMY_DATA});
+                ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_TDR = (uint16_t)(0x${FLEXCOM_SPI_DUMMY_DATA}${FLEXCOM_SPI_DUMMY_DATA});
                 ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.dummySize--;
             }
         }
@@ -288,7 +353,11 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize,
 static uint8_t ${FLEXCOM_INSTANCE_NAME}_SPI_FIFO_Fill(void)
 {
     uint8_t nDataCopiedToFIFO = 0;
+<#if FLEXCOM_SPI_NUM_CSR == 1>
     uint32_t dataBits = ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CSR[${FLEXCOM_SPI_CSR_INDEX}] & FLEX_SPI_CSR_BITS_Msk;
+<#else>
+    uint32_t dataBits = ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CSR[${FLEXCOM_INSTANCE_NAME}_SPI_ChipSelectGet()] & FLEX_SPI_CSR_BITS_Msk;
+</#if>
 
     while ((nDataCopiedToFIFO < 32) && (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_SR & FLEX_SPI_SR_TDRE_Msk))
     {
@@ -372,7 +441,11 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead (void* pTransmitData, size_t txSize,
             ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.dummySize = ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxSize - ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txSize;
         }
 
+<#if FLEXCOM_SPI_NUM_CSR == 1>
         if((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CSR[${FLEXCOM_SPI_CSR_INDEX}] & FLEX_SPI_CSR_BITS_Msk) != FLEX_SPI_CSR_BITS_8_BIT)
+<#else>
+        if((${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CSR[${FLEXCOM_INSTANCE_NAME}_SPI_ChipSelectGet()] & FLEX_SPI_CSR_BITS_Msk) != FLEX_SPI_CSR_BITS_8_BIT)
+</#if>
         {
             ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txSize >>= 1;
             ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.dummySize >>= 1;
@@ -433,7 +506,11 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_TransferSetup (FLEXCOM_SPI_TRANSFER_SETUP * se
         scbr = 255;
     }
 
-    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CSR[${FLEXCOM_SPI_CSR_INDEX}]= (uint32_t)setup->clockPolarity | (uint32_t)setup->clockPhase | (uint32_t)setup->dataBits | FLEX_SPI_CSR_SCBR(scbr);
+<#if FLEXCOM_SPI_NUM_CSR == 1>
+    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CSR[${FLEXCOM_SPI_CSR_INDEX}]= (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CSR[${FLEXCOM_SPI_CSR_INDEX}] & ~(FLEX_SPI_CSR_CPOL_Msk | FLEX_SPI_CSR_NCPHA_Msk | FLEX_SPI_CSR_BITS_Msk | FLEX_SPI_CSR_SCBR_Msk)) | ((uint32_t)setup->clockPolarity | (uint32_t)setup->clockPhase | (uint32_t)setup->dataBits | FLEX_SPI_CSR_SCBR(scbr));
+<#else>
+    ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CSR[${FLEXCOM_INSTANCE_NAME}_SPI_ChipSelectGet()]= (${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CSR[${FLEXCOM_INSTANCE_NAME}_SPI_ChipSelectGet()] & ~(FLEX_SPI_CSR_CPOL_Msk | FLEX_SPI_CSR_NCPHA_Msk | FLEX_SPI_CSR_BITS_Msk | FLEX_SPI_CSR_SCBR_Msk)) | ((uint32_t)setup->clockPolarity | (uint32_t)setup->clockPhase | (uint32_t)setup->dataBits | FLEX_SPI_CSR_SCBR(scbr));
+</#if>
 
     return true;
 }
@@ -465,7 +542,11 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
 {
     uint32_t dataBits ;
     uint32_t receivedData;
+<#if FLEXCOM_SPI_NUM_CSR == 1>
     dataBits = ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CSR[${FLEXCOM_SPI_CSR_INDEX}] & FLEX_SPI_CSR_BITS_Msk;
+<#else>
+    dataBits = ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CSR[${FLEXCOM_INSTANCE_NAME}_SPI_ChipSelectGet()] & FLEX_SPI_CSR_BITS_Msk;
+</#if>
 
     static bool isLastByteTransferInProgress = false;
 
@@ -516,7 +597,7 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
             }
             else if (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.dummySize > 0)
             {
-                ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_TDR = (uint16_t)(0x${FLEXCOM_SPI_DUMMY_DATA});
+                ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_TDR = (uint16_t)(0x${FLEXCOM_SPI_DUMMY_DATA}${FLEXCOM_SPI_DUMMY_DATA});
                 ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.dummySize--;
             }
         }
@@ -537,10 +618,6 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
              */
 
             isLastByteTransferInProgress = true;
-            <#if FLEXCOM_SPI_MR_PCS != "GPIO">
-            /* Set Last transfer to deassert NPCS after the last byte written in TDR has been transferred. */
-            ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CR = FLEX_SPI_CR_LASTXFER_Msk;
-            </#if>
         }
         else if (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount == ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxSize)
         {
@@ -557,6 +634,9 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
     {
         if (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxCount == ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxSize)
         {
+            /* Set Last transfer to deassert NPCS after the last byte written in TDR has been transferred. */
+            ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CR = FLEX_SPI_CR_LASTXFER_Msk;
+
             ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.transferIsBusy = false;
 
             /* Disable TDRE, RDRF and TXEMPTY interrupts */
@@ -583,7 +663,11 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
 <#else>
 void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
 {
+<#if FLEXCOM_SPI_NUM_CSR == 1>
     uint32_t dataBits = ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CSR[${FLEXCOM_SPI_CSR_INDEX}] & FLEX_SPI_CSR_BITS_Msk;
+<#else>
+    uint32_t dataBits = ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CSR[${FLEXCOM_INSTANCE_NAME}_SPI_ChipSelectGet()] & FLEX_SPI_CSR_BITS_Msk;
+</#if>
     uint32_t nTxPending = 0;
     uint8_t rxThreshold = 0;
 
@@ -623,6 +707,9 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
     }
     else
     {
+        /* Set Last transfer to deassert NPCS after the last byte written in TDR has been transferred. */
+        ${FLEXCOM_INSTANCE_NAME}_REGS->FLEX_SPI_CR = FLEX_SPI_CR_LASTXFER_Msk;
+
         ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.transferIsBusy = false;
 
         /* Disable Receive FIFO Threshold interrupt */
