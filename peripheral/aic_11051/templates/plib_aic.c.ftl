@@ -45,6 +45,26 @@
     <#lt>#include "toolchain_specifics.h"    // __disable_irq, __enable_irq
 <#lt></#if>
 
+<#if CoreArchitecture == "ARM926EJS">
+#ifndef CPSR_I_Msk
+#define CPSR_I_Msk      (1UL << 7U)
+#endif
+</#if>
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Local Functions
+// *****************************************************************************
+// *****************************************************************************
+<#if CoreArchitecture == "ARM926EJS">
+static inline unsigned int __get_CPSR( void )
+{
+    unsigned int value = 0;
+    asm volatile( "MRS %0, cpsr" : "=r"(value) );
+    return value;
+}
+</#if>
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: AIC Implementation
