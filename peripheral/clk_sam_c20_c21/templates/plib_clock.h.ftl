@@ -144,10 +144,10 @@ void CLOCK_Initialize (void);
   Description:
     This data type defines the function signature for the External Oscillator
     callback function. The External Oscillator will call back the client's
-    function with this signature when it needs to notify the oscillator failure. 
-	The context parameter is an application defined  data object specified 
-	at the time of registering the callback function and is returned in the 
-	context parameter of the callback function.
+    function with this signature when it needs to notify the oscillator failure.
+    The context parameter is an application defined  data object specified
+    at the time of registering the callback function and is returned in the
+    context parameter of the callback function.
 
   Precondition:
     The CLOCK_Initialize() initialize function should have been called. The
@@ -190,7 +190,7 @@ typedef void (*OSCCTRL_CFD_CALLBACK)(uintptr_t context);
 
   Description:
     This function registers the callback function to be called when the External
-    Oscillator has failed. 
+    Oscillator has failed.
 
   Precondition:
     The External Oscillator and/or should have been configured in MHC and
@@ -313,6 +313,94 @@ typedef void (*OSC32KCTRL_CFD_CALLBACK)(uintptr_t context);
 */
 
 void OSC32KCTRL_CallbackRegister (OSC32KCTRL_CFD_CALLBACK callback, uintptr_t context);
+
+</#if>
+
+<#if MCLK_INTENSET_CKRDY == true >
+
+// *****************************************************************************
+/* Main Clock Ready Callback Function Pointer Type.
+
+  Summary:
+    Defines the data type and function signature for the Main Clock Ready callback function.
+
+  Description:
+    This data type defines the function signature for the Main Clock Ready callback function.
+    The Main Clock will call back the client's function with this signature when it
+    needs to notify the client of oscillator failure.  The context parameter is
+    an application defined data object specified at the time of registering the
+    callback function and is returned in the context parameter of the callback
+    function.
+
+  Precondition:
+    The CLOCK_Initialize() initialize function should have been called. The
+    callback function should have been registered through
+    MCLK_CallbackRegister() function.
+
+  Parameters:
+    context  - Allows the caller to provide a context value (usually a pointer
+    to the callers context for multi-instance clients).
+
+  Returns:
+    None.
+
+  Example:
+    <code>
+
+    void MyMCLKReadyCallback (uintptr_t context )
+    {
+        This means the MCLK clock is ready.
+    }
+
+    Register the callback function. Specify the context as NULL.
+    MCLK_CallbackRegister(MyMCLKReadyCallback, NULL);
+
+    </code>
+
+  Remarks:
+    None.
+*/
+
+typedef void (*MCLK_CKRDY_CALLBACK)(uintptr_t context);
+
+
+// *****************************************************************************
+/* Function:
+    void MCLK_CallbackRegister (MCLK_CKRDY_CALLBACK callback, uintptr_t context)
+
+  Summary:
+    Register the function to be called when the MCLK is ready.
+
+  Description:
+    This function register the function to be called when the MCLK is ready.
+
+  Precondition:
+    The MCLK should have been configured in MHC and enabled.
+
+  Parameters:
+    callback - Pointer to the MCLK_CKRDY_CALLBACK type of function that will
+    be called when a clock failure is detected. This can be NULL, in which case
+    no callback will be generated.
+
+    context - Context value to be passed into the callback function when it
+    called.
+
+  Returns:
+    None.
+
+  Example:
+    <code>
+
+    Refer to the code example provided in the description of the
+    MCLK_CKRDY_CALLBACK function pointer type.
+
+    </code>
+
+  Remarks:
+    None.
+*/
+
+void MCLK_CallbackRegister (MCLK_CKRDY_CALLBACK callback, uintptr_t context);
 
 </#if>
 

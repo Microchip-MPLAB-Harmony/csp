@@ -67,6 +67,19 @@ static OSC32KCTRL_OBJECT osc32kctrlObj;
 
 </#if>
 
+<#if MCLK_INTENSET_CKRDY == true >
+
+typedef struct
+{
+    MCLK_CKRDY_CALLBACK   callback;
+    uintptr_t             context;
+} MCLK_OBJECT;
+
+/* Reference Object created for the MCLK */
+static MCLK_OBJECT mclkObj;
+
+</#if>
+
 static void OSCCTRL_Initialize(void)
 {
 <#if CONFIG_CLOCK_XOSC_ENABLE == true>
@@ -320,7 +333,7 @@ ${CLK_INIT_LIST}
 </#list>
     <#-- Here symbol names might be little confusing. Symbol name having word "RESET" is
         actually Reset value from ATDF, whereas symbol name having word "INITIAL" will actually have dynamic value-->
-	<#if MCLK_AHB_INITIAL_VALUE != MCLK_AHB_RESET_VALUE>
+    <#if MCLK_AHB_INITIAL_VALUE != MCLK_AHB_RESET_VALUE>
     /* Configure the AHB Bridge Clocks */
     MCLK_REGS->MCLK_AHBMASK = ${MCLK_AHB_INITIAL_VALUE}U;
     </#if>
@@ -354,6 +367,20 @@ ${CLK_INIT_LIST}
 
     OSCCTRL_REGS->OSCCTRL_OSC48MCTRL = 0x0U;
     </#if>
+    <#if CONFIG_CLOCK_XOSC_CFDEN == true>
+    /* Enabling the Clock Fail Interrupt  */
+    OSCCTRL_REGS->OSCCTRL_INTENSET = OSCCTRL_INTENSET_XOSCFAIL_Msk;
+
+    </#if>
+    <#if XOSC32K_CFDEN == true >
+    /* Enabling the Clock Failure Interrupt */
+    OSC32KCTRL_REGS->OSC32KCTRL_INTENSET = OSC32KCTRL_INTENSET_CLKFAIL_Msk;
+
+    </#if>
+    <#if MCLK_INTENSET_CKRDY == true >
+    /* Enabling the Clock Ready Interrupt */
+    MCLK_REGS->MCLK_INTENSET = MCLK_INTENSET_CKRDY_Msk;
+    </#if>
 }
 
 <#if CONFIG_CLOCK_XOSC_CFDEN == true>
@@ -362,23 +389,20 @@ void OSCCTRL_CallbackRegister(OSCCTRL_CFD_CALLBACK callback, uintptr_t context)
 {
     oscctrlObj.callback = callback;
     oscctrlObj.context = context;
-
-    /* Enabling the Clock Fail Interrupt  */
-    OSCCTRL_REGS->OSCCTRL_INTENSET = OSCCTRL_INTENSET_XOSCFAIL_Msk;
 }
 
-void OSCCTRL_Handler(void)
+void OSCCTRL_InterruptHandler(void)
 {
     /* Checking for the Clock Fail status */
     if ((OSCCTRL_REGS->OSCCTRL_STATUS & OSCCTRL_STATUS_XOSCFAIL_Msk) == OSCCTRL_STATUS_XOSCFAIL_Msk)
     {
+        /* Clearing the XOSC Fail Interrupt Flag */
+        OSCCTRL_REGS->OSCCTRL_INTFLAG = OSCCTRL_INTFLAG_XOSCFAIL_Msk;
+
         if (oscctrlObj.callback != NULL)
         {
             oscctrlObj.callback(oscctrlObj.context);
         }
-
-        /* Clearing the XOSC Fail Interrupt Flag */
-        OSCCTRL_REGS->OSCCTRL_INTFLAG = OSCCTRL_INTFLAG_XOSCFAIL_Msk;
     }
 }
 
@@ -390,24 +414,44 @@ void OSC32KCTRL_CallbackRegister (OSC32KCTRL_CFD_CALLBACK callback, uintptr_t co
 {
     osc32kctrlObj.callback = callback;
     osc32kctrlObj.context = context;
-
-   /* Enabling the Clock Failure Interrupt */
-    OSC32KCTRL_REGS->OSC32KCTRL_INTENSET = OSC32KCTRL_INTENSET_CLKFAIL_Msk;
 }
 
-void OSC32KCTRL_Handler(void)
+void OSC32KCTRL_InterruptHandler(void)
 {
     /* Checking for the Clock Failure status */
     if ((OSC32KCTRL_REGS->OSC32KCTRL_STATUS & OSC32KCTRL_STATUS_CLKFAIL_Msk) == OSC32KCTRL_STATUS_CLKFAIL_Msk)
     {
+        /* Clearing the Clock Fail Interrupt */
+        OSC32KCTRL_REGS->OSC32KCTRL_INTFLAG = OSC32KCTRL_INTFLAG_CLKFAIL_Msk;
 
         if(osc32kctrlObj.callback != NULL)
         {
             osc32kctrlObj.callback(osc32kctrlObj.context);
         }
+    }
+}
+</#if>
 
-       /* Clearing the Clock Fail Interrupt */
-        OSC32KCTRL_REGS->OSC32KCTRL_INTFLAG = OSC32KCTRL_INTFLAG_CLKFAIL_Msk;
+<#if MCLK_INTENSET_CKRDY == true >
+
+void MCLK_CallbackRegister (OSC32KCTRL_CFD_CALLBACK callback, uintptr_t context)
+{
+    mclkObj.callback = callback;
+    mclkObj.context = context;
+}
+
+void MCLK_InterruptHandler(void)
+{
+    /* Checking for the Clock Ready Interrupt */
+    if ((MCLK_REGS->MCLK_INTFLAG & MCLK_INTFLAG_CKRDY_Msk) == MCLK_INTFLAG_CKRDY_Msk)
+    {
+        /* Clearing the Clock Ready Interrupt */
+        MCLK_REGS->MCLK_INTFLAG = MCLK_INTFLAG_CKRDY_Msk;
+
+        if(mclkObj.callback != NULL)
+        {
+            mclkObj.callback(mclkObj.context);
+        }
     }
 }
 </#if>
