@@ -186,6 +186,29 @@ def calcDpllXoscDivider(symbol, event):
     if symbol.getValue() != div_value:
         symbol.setValue(div_value,2)
 
+def interruptControl(symbol, event):
+    if event["id"] == "CONFIG_CLOCK_XOSC_CFDEN":
+        moduleInterruptName = "OSCCTRL"
+    elif event["id"] == "XOSC32K_CFDEN":
+        moduleInterruptName = "OSC32KCTRL"
+    elif event["id"] == "MCLK_INTENSET_CKRDY":
+        moduleInterruptName = "MCLK"
+
+    InterruptVector = moduleInterruptName + "_INTERRUPT_ENABLE"
+    InterruptHandler = moduleInterruptName + "_INTERRUPT_HANDLER"
+    InterruptHandlerLock = moduleInterruptName + "_INTERRUPT_HANDLER_LOCK"
+
+    if (event["value"] == True):
+        Database.setSymbolValue("core", InterruptVector, True)
+        Database.setSymbolValue("core", InterruptHandler, moduleInterruptName + "_InterruptHandler")
+        Database.setSymbolValue("core", InterruptHandlerLock, True)
+        if Variables.get("__TRUSTZONE_ENABLED") != None and Variables.get("__TRUSTZONE_ENABLED") == "true":
+            Database.setSymbolValue("core", moduleInterruptName + "_SET_NON_SECURE", False)
+    else :
+        Database.setSymbolValue("core", InterruptVector, False)
+        Database.setSymbolValue("core", InterruptHandler, moduleInterruptName + "_Handler")
+        Database.setSymbolValue("core", InterruptHandlerLock, False)
+
 ################################################################################
 #######          OSCCTRL Database Components      ##############################
 ################################################################################
@@ -312,7 +335,7 @@ oscctrlSym_XOSCCTRL_CFDEN = coreComponent.createBooleanSymbol("CONFIG_CLOCK_XOSC
 oscctrlSym_XOSCCTRL_CFDEN.setLabel("Enable Clock Failure Detection")
 oscctrlSym_XOSCCTRL_CFDEN.setDescription("Clock Failure Detection enable or not")
 oscctrlSym_XOSCCTRL_CFDEN.setDefaultValue(False)
-
+oscctrlSym_XOSCCTRL_CFDEN.setDependencies(interruptControl, ["CONFIG_CLOCK_XOSC_CFDEN"])
 
 #XOSC Oscillator Clock Failure Detector(CFD) Pre-Scalar
 oscctrlSym_CFDPRESC_CFDPRESC = coreComponent.createKeyValueSetSymbol("CONFIG_CLOCK_XOSC_CFDPRESC",oscctrlSym_XOSCCTRL_CFDEN)
@@ -753,6 +776,7 @@ rtcClockSourceSelection.setDisplayMode("Key")
 #XOSC32K External Oscillator Clock Failure Detection(CFD) Enable
 osc32kctrlSym_XOSC32K_CFDCTRL_CFDEN = coreComponent.createBooleanSymbol("XOSC32K_CFDEN", xosc32k_Menu)
 osc32kctrlSym_XOSC32K_CFDCTRL_CFDEN.setLabel("Enable Clock Failure Detection")
+osc32kctrlSym_XOSC32K_CFDCTRL_CFDEN.setDependencies(interruptControl, ["XOSC32K_CFDEN"])
 
 #XOSC32K External Oscillator Clock Failure Detection(CFD) Pre-Scalar
 osc32kctrlSym_XOSC32K_CFDCTRL_CFDPRESC = coreComponent.createBooleanSymbol("XOSC32K_CFDPRESC", osc32kctrlSym_XOSC32K_CFDCTRL_CFDEN)
@@ -1071,7 +1095,7 @@ for index in range(0, len(children)):
     if packageName in children[index].getAttribute("package"):
         pinout = children[index].getAttribute("pinout")
 
-print pinout 
+print pinout
 
 children = []
 val = ATDF.getNode("/avr-tools-device-file/pinouts/pinout@[name=\""+str(pinout)+"\"]")
@@ -1526,6 +1550,11 @@ mclkSym_CPUDIV_CPUDIV.setDefaultValue(mclkcpudivDefaultValue)
 mclkSym_CPUDIV_CPUDIV.setOutputMode("Value")
 mclkSym_CPUDIV_CPUDIV.setDisplayMode("Key")
 
+#MCLK Enable Clock Ready Interrupt
+mclkSym_MCLK_INTENSET_CKRDY = coreComponent.createBooleanSymbol("MCLK_INTENSET_CKRDY", mclkSym_Menu)
+mclkSym_MCLK_INTENSET_CKRDY.setLabel("Enable Clock Ready Interrupt")
+mclkSym_MCLK_INTENSET_CKRDY.setDependencies(interruptControl, ["MCLK_INTENSET_CKRDY"])
+
 ################################################################################
 #######          Calculated Clock Frequencies        ###########################
 ################################################################################
@@ -1536,7 +1565,7 @@ def setMainClockFreq(symbol, event):
         freq = int(Database.getSymbolValue("core","GCLK_0_FREQ"))
     else:
         freq = int(Database.getSymbolValue("core","DFLL_CLOCK_FREQ"))
-        
+
     symbol.setValue(freq / (1 << divider), 1)
 
 
