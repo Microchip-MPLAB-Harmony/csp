@@ -41,6 +41,45 @@
 #include "plib_clock.h"
 #include "device.h"
 
+<#if CONFIG_CLOCK_XOSC_CFDEN == true>
+
+typedef struct
+{
+    OSCCTRL_CFD_CALLBACK   callback;
+    uintptr_t        context;
+} OSCCTRL_OBJECT;
+
+/* Reference Object created for the OSCCTRL */
+static OSCCTRL_OBJECT oscctrlObj;
+
+</#if>
+
+<#if XOSC32K_CFDEN == true >
+
+typedef struct
+{
+    OSC32KCTRL_CFD_CALLBACK   callback;
+    uintptr_t        context;
+} OSC32KCTRL_OBJECT;
+
+/* Reference Object created for the OSCCTRL */
+static OSC32KCTRL_OBJECT osc32kctrlObj;
+
+</#if>
+
+<#if MCLK_INTENSET_CKRDY == true >
+
+typedef struct
+{
+    MCLK_CKRDY_CALLBACK   callback;
+    uintptr_t             context;
+} MCLK_OBJECT;
+
+/* Reference Object created for the MCLK */
+static MCLK_OBJECT mclkObj;
+
+</#if>
+
 static void OSCCTRL_Initialize(void)
 {
 <#if CONFIG_CLOCK_OSC16M_ENABLE == true || (CONFIG_CLOCK_OSC16M_FREQSEL != "0x0") || (CONFIG_CLOCK_OSC16M_RUNSTDBY != false) || (CONFIG_CLOCK_OSC16M_ONDEMAND != "ENABLE")>
@@ -379,4 +418,91 @@ ${CLK_INIT_LIST}
     /*Disable internal RC oscillator*/
     OSCCTRL_REGS->OSCCTRL_OSC16MCTRL = 0;
     </#if>
+    <#if CONFIG_CLOCK_XOSC_CFDEN == true>
+    /* Enabling the Clock Fail Interrupt  */
+    OSCCTRL_REGS->OSCCTRL_INTENSET = OSCCTRL_INTENSET_XOSCFAIL_Msk;
+
+    </#if>
+    <#if XOSC32K_CFDEN == true >
+    /* Enabling the Clock Failure Interrupt */
+    OSC32KCTRL_REGS->OSC32KCTRL_INTENSET = OSC32KCTRL_INTENSET_CLKFAIL_Msk;
+
+    </#if>
+    <#if MCLK_INTENSET_CKRDY == true >
+    /* Enabling the Clock Ready Interrupt */
+    MCLK_REGS->MCLK_INTENSET = MCLK_INTENSET_CKRDY_Msk;
+    </#if>
 }
+
+<#if CONFIG_CLOCK_XOSC_CFDEN == true>
+
+void OSCCTRL_CallbackRegister(OSCCTRL_CFD_CALLBACK callback, uintptr_t context)
+{
+    oscctrlObj.callback = callback;
+    oscctrlObj.context = context;
+}
+
+void OSCCTRL_InterruptHandler(void)
+{
+    /* Checking for the Clock Fail status */
+    if ((OSCCTRL_REGS->OSCCTRL_STATUS & OSCCTRL_STATUS_XOSCFAIL_Msk) == OSCCTRL_STATUS_XOSCFAIL_Msk)
+    {
+        /* Clearing the XOSC Fail Interrupt Flag */
+        OSCCTRL_REGS->OSCCTRL_INTFLAG = OSCCTRL_INTFLAG_XOSCFAIL_Msk;
+
+        if (oscctrlObj.callback != NULL)
+        {
+            oscctrlObj.callback(oscctrlObj.context);
+        }
+    }
+}
+
+</#if>
+
+<#if XOSC32K_CFDEN == true >
+
+void OSC32KCTRL_CallbackRegister (OSC32KCTRL_CFD_CALLBACK callback, uintptr_t context)
+{
+    osc32kctrlObj.callback = callback;
+    osc32kctrlObj.context = context;
+}
+
+void OSC32KCTRL_InterruptHandler(void)
+{
+    /* Checking for the Clock Failure status */
+    if ((OSC32KCTRL_REGS->OSC32KCTRL_STATUS & OSC32KCTRL_STATUS_CLKFAIL_Msk) == OSC32KCTRL_STATUS_CLKFAIL_Msk)
+    {
+        /* Clearing the Clock Fail Interrupt */
+        OSC32KCTRL_REGS->OSC32KCTRL_INTFLAG = OSC32KCTRL_INTFLAG_CLKFAIL_Msk;
+
+        if(osc32kctrlObj.callback != NULL)
+        {
+            osc32kctrlObj.callback(osc32kctrlObj.context);
+        }
+    }
+}
+</#if>
+
+<#if MCLK_INTENSET_CKRDY == true >
+
+void MCLK_CallbackRegister (OSC32KCTRL_CFD_CALLBACK callback, uintptr_t context)
+{
+    mclkObj.callback = callback;
+    mclkObj.context = context;
+}
+
+void MCLK_InterruptHandler(void)
+{
+    /* Checking for the Clock Ready Interrupt */
+    if ((MCLK_REGS->MCLK_INTFLAG & MCLK_INTFLAG_CKRDY_Msk) == MCLK_INTFLAG_CKRDY_Msk)
+    {
+        /* Clearing the Clock Ready Interrupt */
+        MCLK_REGS->MCLK_INTFLAG = MCLK_INTFLAG_CKRDY_Msk;
+
+        if(mclkObj.callback != NULL)
+        {
+            mclkObj.callback(mclkObj.context);
+        }
+    }
+}
+</#if>
