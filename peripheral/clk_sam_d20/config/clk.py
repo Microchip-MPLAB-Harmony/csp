@@ -1036,6 +1036,7 @@ codeGenerationList = coreComponent.createListEntrySymbol("GCLK_CODE", None)
 codeGenerationList.setVisible(False)
 codeGenerationDep.append("GCLK_ID_0_GENSEL")
 codeGenerationDep.append("CONFIG_CLOCK_DFLL_ENABLE")
+codeGenerationDep.append("CONFIG_CLOCK_DFLL_OPMODE")
 codeGenerationList.setDependencies(codeGen, codeGenerationDep)
 codeGenerationList.addValue("    GCLK0_Initialize();")
 codeGenerationList.setTarget("core.CLK_INIT_LIST")
@@ -1216,14 +1217,30 @@ clkSym_MAIN_CLK_FREQ.setValue(gclk0_freq / (divider + 1), 1)
 
 
 #####################Default clock Setup####################################
+#Enable GCLK1
+Database.setSymbolValue("core", "GCLK_INST_NUM1", True)
+#Select GCLK1 clock source to OSC8M
+gclkSym_GENCTRL_SRC[1].setSelectedKey("OSC8M")
+#set GCLK1 frequency to 32000 Hz
+Database.setSymbolValue("core", "GCLK_1_DIV", 250)
+
+#Set DFLL clock source to GCLK1
+Database.setSymbolValue("core", "GCLK_ID_0_GENSEL", 1)
+#Enable Peripheral channel 0 clock
+Database.setSymbolValue("core", "GCLK_ID_0_CHEN", True)
+
+# Set DFLL in closed-loop operation
+dfllOpmode.setValue(1)
+#Set DFLL Multiply factor
+dfllMul.setValue(1500)
 #Enable DFLL
 dfllEnable.setValue(True, 1)
 
 #Select DFLL as default clock source
 gclkSym_GENCTRL_SRC[0].setValue(7, 1)
 
-#Disable RC oscillator
-osc8MEnable.setValue(False, 1)
+#Enable RC oscillator
+osc8MEnable.setValue(True, 1)
 
 ################################################################################
 ###########             SYSCTRL Interrupts                  ####################
