@@ -22,6 +22,7 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
 global sort_alphanumeric
+global updateCSR_SCBR_Value
 
 def sort_alphanumeric(l):
     import re
@@ -32,7 +33,6 @@ def sort_alphanumeric(l):
 def handleMessage(messageID, args):
     global spiSym_MR_MSTR
     global spiInterrupt
-    global spiSym_MR_PCS
     result_dict = {}
 
     if (messageID == "SPI_MASTER_MODE"):
@@ -54,14 +54,6 @@ def handleMessage(messageID, args):
             spiInterrupt.setValue(args["isEnabled"])
         if args.get("isVisible") != None:
             spiInterrupt.setVisible(args["isVisible"])
-
-    elif (messageID == "SPI_MASTER_HARDWARE_CS"):
-        if args.get("isReadOnly") != None:
-            spiSym_MR_PCS.setReadOnly(args["isReadOnly"])
-        if args.get("isEnabled") != None and args["isEnabled"] == False:
-            spiSym_MR_PCS.setSelectedKey("GPIO",1)
-        if args.get("isVisible") != None:
-            spiSym_MR_PCS.setVisible(args["isVisible"])
 
     #elif (messageID == "SPI_SLAVE_INTERRUPT_MODE"):
         # To be implemented
@@ -125,22 +117,7 @@ def InterruptStatusWarning(symbol, event):
 
 # Dependency Function for symbol visibility
 def updateSPIDMAConfigurationVisbleProperty(symbol, event):
-
     symbol.setVisible(event["value"])
-
-def ClockModeInfo(symbol, event):
-
-    CPHA = Database.getSymbolValue(spiInstanceName.getValue().lower(), "SPI_CLOCK_PHASE")
-    CPOL = Database.getSymbolValue(spiInstanceName.getValue().lower(), "SPI_CLOCK_POLARITY")
-
-    if (CPOL == 0) and (CPHA == 0):
-        symbol.setLabel("***SPI Mode 0 is Selected***")
-    elif (CPOL == 0) and (CPHA == 1):
-        symbol.setLabel("***SPI Mode 1 is Selected***")
-    elif (CPOL == 1) and (CPHA == 0):
-        symbol.setLabel("***SPI Mode 2 is Selected***")
-    else:
-        symbol.setLabel("***SPI Mode 3 is Selected***")
 
 def setupSpiIntSymbolAndIntHandler(spiInterrupt, event):
     global spiSyminterruptVector
@@ -210,17 +187,8 @@ def updateSPISlaveBusyPinVisibility(symbol, event):
     busyPinEnabled = event["source"].getSymbolByID("SPIS_USE_BUSY_PIN").getValue() == True
     symbol.setVisible(spiMode == "SLAVE" and busyPinEnabled == True)
 
-def SCBR_ValueUpdate(spiSym_CSR_SCBR_VALUE, event):
-
-    if event["id"] == "SPI_MASTER_CLOCK":
-        clk = int(event["value"])
-        baud = Database.getSymbolValue(spiInstanceName.getValue().lower(), "SPI_BAUD_RATE")
-    else:
-        #This means there is change in baud rate provided by user in GUI
-        baud = event["value"]
-        clk = int(Database.getSymbolValue(spiInstanceName.getValue().lower(), "SPI_MASTER_CLOCK"))
-
-    SCBR = clk/baud
+def updateCSR_SCBR_Value(symbol, baudVal, clockVal):
+    SCBR = clockVal/baudVal
     spiSymInvalidClock.setVisible(SCBR < 1 or SCBR > 255)
 
     if SCBR == 0:
@@ -228,7 +196,20 @@ def SCBR_ValueUpdate(spiSym_CSR_SCBR_VALUE, event):
     elif SCBR > 255:
         SCBR = 255
 
-    spiSym_CSR_SCBR_VALUE.setValue(SCBR, 1)
+    symbol.setValue(SCBR, 1)
+
+def updateCSRx_SCBR_Value(symbol, event):
+
+    csx = symbol.getID()[7]
+    if event["id"] == "SPI_MASTER_CLOCK":
+        clk = int(event["value"])
+        baud = Database.getSymbolValue(spiInstanceName.getValue().lower(), "SPI_CSR" + csx + "_BAUD_RATE")
+    else:
+        #This means there is change in baud rate provided by user in GUI
+        baud = event["value"]
+        clk = int(Database.getSymbolValue(spiInstanceName.getValue().lower(), "SPI_MASTER_CLOCK"))
+
+    updateCSR_SCBR_Value(symbol, baud, clk)
 
 def calculateCSRIndex(spiSymCSRIndex, event):
 
@@ -236,12 +217,8 @@ def calculateCSRIndex(spiSymCSRIndex, event):
 
 def DummyData_ValueUpdate(spiSymDummyData, event):
 
-    if event["id"] == "SPI_CHARSIZE_BITS":
-        spiSymDummyData.setValue(dummyDataDict[event["symbol"].getKey(event["value"])], 1)
-        spiSymDummyData.setMax(dummyDataDict[event["symbol"].getKey(event["value"])])
-    else:
-        spiMode = event["source"].getSymbolByID("SPI_MR_MSTR").getSelectedKey()
-        spiSymDummyData.setVisible(spiMode == "MASTER")
+    spiMode = event["source"].getSymbolByID("SPI_MR_MSTR").getSelectedKey()
+    spiSymDummyData.setVisible(spiMode == "MASTER")
 
 def onCapabilityConnected(event):
     localComponent = event["localComponent"]
@@ -270,6 +247,169 @@ def fifoModeVisible (symbol, event):
             else:
                 symbol.setVisible(False)
 
+def updateNumCSR(symbol, event):
+    en_npcs0 = 0
+    en_npcs1 = 0
+    en_npcs2 = 0
+    en_npcs3 = 0
+
+    en_npcs0 = event["source"].getSymbolByID("SPI_EN_NPCS0").getValue()
+
+    if event["source"].getSymbolByID("SPI_EN_NPCS1") != None:
+        en_npcs1 = event["source"].getSymbolByID("SPI_EN_NPCS1").getValue()
+
+    if event["source"].getSymbolByID("SPI_EN_NPCS2") != None:
+        en_npcs2 = event["source"].getSymbolByID("SPI_EN_NPCS2").getValue()
+
+    if event["source"].getSymbolByID("SPI_EN_NPCS3") != None:
+        en_npcs3 = event["source"].getSymbolByID("SPI_EN_NPCS3").getValue()
+
+    symbol.setValue(en_npcs0 + en_npcs1 + en_npcs2 + en_npcs3)
+
+def updateCSRIndex(symbol, event):
+    en_npcs0 = 0
+    en_npcs1 = 0
+    en_npcs2 = 0
+    en_npcs3 = 0
+
+    en_npcs0 = event["source"].getSymbolByID("SPI_EN_NPCS0").getValue()
+
+    if event["source"].getSymbolByID("SPI_EN_NPCS1") != None:
+        en_npcs1 = event["source"].getSymbolByID("SPI_EN_NPCS1").getValue()
+
+    if event["source"].getSymbolByID("SPI_EN_NPCS2") != None:
+        en_npcs2 = event["source"].getSymbolByID("SPI_EN_NPCS2").getValue()
+
+    if event["source"].getSymbolByID("SPI_EN_NPCS3") != None:
+        en_npcs3 = event["source"].getSymbolByID("SPI_EN_NPCS3").getValue()
+
+# The value of this symbol is valid only if only one CS is enabled. So, set the value of the symbol that is enabled and break.
+    if en_npcs0 == True:
+        symbol.setValue(0)
+    elif en_npcs1 == True:
+        symbol.setValue(1)
+    elif en_npcs2 == True:
+        symbol.setValue(2)
+    elif en_npcs3 == True:
+        symbol.setValue(3)
+
+def npcs0EnableVisible(symbol, event):
+    spi_mode = event["source"].getSymbolByID("SPI_MR_MSTR").getSelectedKey()
+    if spi_mode == "MASTER":
+        symbol.setLabel("Enable NPCS0/ Use GPIO?")
+        symbol.setReadOnly(False)
+    else:
+        symbol.setLabel("Enable NPCS0")
+        symbol.setValue(True)
+        symbol.setReadOnly(True)
+
+def npcsxEnableVisible(symbol, event):
+    spi_mode = event["source"].getSymbolByID("SPI_MR_MSTR").getSelectedKey()
+    symbol.setVisible(spi_mode == "MASTER")
+
+def updateCSRx_MasterBitFields(symbol, event):
+    csx = symbol.getID()[7]
+    spi_mode = event["source"].getSymbolByID("SPI_MR_MSTR").getSelectedKey()
+    en_npcsx = event["source"].getSymbolByID("SPI_EN_NPCS" + csx).getValue()
+    symbol.setVisible(spi_mode == "MASTER" and en_npcsx == True)
+
+def updateCSRx_BitFields(symbol, event):
+    symbol.setVisible(event["value"] == True)
+
+def updateCSRxClockModeInfo(symbol, event):
+    # visibility
+    csx = symbol.getID()[7]
+    en_npcsx = event["source"].getSymbolByID("SPI_EN_NPCS" + csx).getValue()
+    symbol.setVisible(en_npcsx == True)
+
+    CPHA = event["source"].getSymbolByID("SPI_CSR" + csx + "_NCPHA").getValue()
+    CPOL = event["source"].getSymbolByID("SPI_CSR" + csx + "_CPOL").getValue()
+    if (CPOL == 0) and (CPHA == 0):
+        symbol.setLabel("***SPI Mode 1 is Selected***")
+    elif (CPOL == 0) and (CPHA == 1):
+        symbol.setLabel("***SPI Mode 0 is Selected***")
+    elif (CPOL == 1) and (CPHA == 0):
+        symbol.setLabel("***SPI Mode 3 is Selected***")
+    else:
+        symbol.setLabel("***SPI Mode 2 is Selected***")
+
+def updatePCSFromDatabase(symbol, event):
+    if symbol.getReadOnly() == False:
+        cs_val = symbol.getSelectedKey()
+        if cs_val == "NPCS0" or cs_val == "GPIO":
+            event["source"].getSymbolByID("SPI_EN_NPCS0").setValue(True)
+        elif cs_val == "NPCS1":
+            event["source"].getSymbolByID("SPI_EN_NPCS1").setValue(True)
+            event["source"].getSymbolByID("SPI_EN_NPCS0").setValue(False)
+        elif cs_val == "NPCS2":
+            event["source"].getSymbolByID("SPI_EN_NPCS2").setValue(True)
+            event["source"].getSymbolByID("SPI_EN_NPCS0").setValue(False)
+        elif cs_val == "NPCS3":
+            event["source"].getSymbolByID("SPI_EN_NPCS3").setValue(True)
+            event["source"].getSymbolByID("SPI_EN_NPCS0").setValue(False)
+        # Clear off the comment symbol aswell
+        event["source"].getSymbolByID("SPI_CLOCK_MODE_COMMENT").setVisible(False)
+        symbol.setVisible(False)
+        symbol.setReadOnly(True)
+
+def updateBaudRateFromDatabase(symbol, event):
+    if symbol.getReadOnly() == False:
+        cs_val = spiSym_MR_PCS.getSelectedKey()
+        if cs_val == "NPCS0" or cs_val == "GPIO":
+            event["source"].getSymbolByID("SPI_CSR0_BAUD_RATE").setValue(symbol.getValue())
+        elif cs_val == "NPCS1":
+            event["source"].getSymbolByID("SPI_CSR1_BAUD_RATE").setValue(symbol.getValue())
+        elif cs_val == "NPCS2":
+            event["source"].getSymbolByID("SPI_CSR2_BAUD_RATE").setValue(symbol.getValue())
+        elif cs_val == "NPCS3":
+            event["source"].getSymbolByID("SPI_CSR3_BAUD_RATE").setValue(symbol.getValue())
+        symbol.setVisible(False)
+        symbol.setReadOnly(True)
+
+def updateBITSFromDatabase(symbol, event):
+    if symbol.getReadOnly() == False:
+        cs_val = spiSym_MR_PCS.getSelectedKey()
+        if cs_val == "NPCS0" or cs_val == "GPIO":
+            event["source"].getSymbolByID("SPI_CSR0_BITS").setValue(symbol.getValue())
+        elif cs_val == "NPCS1":
+            event["source"].getSymbolByID("SPI_CSR1_BITS").setValue(symbol.getValue())
+        elif cs_val == "NPCS2":
+            event["source"].getSymbolByID("SPI_CSR2_BITS").setValue(symbol.getValue())
+        elif cs_val == "NPCS3":
+            event["source"].getSymbolByID("SPI_CSR3_BITS").setValue(symbol.getValue())
+        symbol.setVisible(False)
+        symbol.setReadOnly(True)
+
+def updateCPOLFromDatabase(symbol, event):
+    if symbol.getReadOnly() == False:
+        cs_val = spiSym_MR_PCS.getSelectedKey()
+        if cs_val == "NPCS0" or cs_val == "GPIO":
+            event["source"].getSymbolByID("SPI_CSR0_CPOL").setValue(symbol.getValue())
+        elif cs_val == "NPCS1":
+            event["source"].getSymbolByID("SPI_CSR1_CPOL").setValue(symbol.getValue())
+        elif cs_val == "NPCS2":
+            event["source"].getSymbolByID("SPI_CSR2_CPOL").setValue(symbol.getValue())
+        elif cs_val == "NPCS3":
+            event["source"].getSymbolByID("SPI_CSR3_CPOL").setValue(symbol.getValue())
+        symbol.setVisible(False)
+        symbol.setReadOnly(True)
+
+def updateNCPHAFromDatabase(symbol, event):
+    if symbol.getReadOnly() == False:
+        cs_val = spiSym_MR_PCS.getSelectedKey()
+        if cs_val == "NPCS0" or cs_val == "GPIO":
+            event["source"].getSymbolByID("SPI_CSR0_NCPHA").setValue(symbol.getValue())
+        elif cs_val == "NPCS1":
+            event["source"].getSymbolByID("SPI_CSR1_NCPHA").setValue(symbol.getValue())
+        elif cs_val == "NPCS2":
+            event["source"].getSymbolByID("SPI_CSR2_NCPHA").setValue(symbol.getValue())
+        elif cs_val == "NPCS3":
+            event["source"].getSymbolByID("SPI_CSR3_NCPHA").setValue(symbol.getValue())
+
+        symbol.setVisible(False)
+        symbol.setReadOnly(True)
+
+
 def instantiateComponent(spiComponent):
 
     global spiInstanceName
@@ -279,12 +419,15 @@ def instantiateComponent(spiComponent):
     global spiSyminterruptVectorUpdate
     global InternalinterruptVectorChange
     global spiSym_MR_MSTR
+    global spi_CSR_Count
 
     InternalinterruptVectorChange = False
 
     spiInstanceName = spiComponent.createStringSymbol("SPI_INSTANCE_NAME", None)
     spiInstanceName.setVisible(False)
     spiInstanceName.setDefaultValue(spiComponent.getID().upper())
+
+    localComponent = spiInstanceName.getComponent()
 
     #IDs used in NVIC Manager
     spiSyminterruptVector = spiInstanceName.getValue() + "_INTERRUPT_ENABLE"
@@ -332,51 +475,6 @@ def instantiateComponent(spiComponent):
         description = spiValGrp_MR_MSTR.getChildren()[id].getAttribute("caption")
         spiSym_MR_MSTR.addKey(valueName, value, description)
 
-    spisSymFIFOEnable = spiComponent.createBooleanSymbol("SPI_FIFO_ENABLE", None)
-    spisSymFIFOEnable.setLabel("Enable FIFO")
-    spisSymFIFOEnable.setDefaultValue(False)
-    spisSymFIFOEnable.setVisible(spiBitField_CR_FIFOEN != None)
-    spisSymFIFOEnable.setDependencies(fifoModeVisible, ["SPI_INTERRUPT_MODE", "SPI_MR_MSTR"])
-
-    spiPCSMask = int(str(spiBitField_MR_PCS.getAttribute("mask")), 16)
-    spiPCSValue = spiPCSMask >> 16
-
-    DefaultPCS = 0
-    global spiSym_MR_PCS
-    spiSym_MR_PCS = spiComponent.createKeyValueSetSymbol("SPI_MR_PCS", None)
-    spiSym_MR_PCS.setLabel(spiBitField_MR_PCS.getAttribute("caption"))
-    spiSym_MR_PCS.setOutputMode("Key")
-    spiSym_MR_PCS.setDisplayMode("Key")
-    spiSym_MR_PCS.setDefaultValue(DefaultPCS)
-    spiSym_MR_PCS.setDependencies(chipSelectUpdateOnModeChange, ["SPI_MR_MSTR"])
-
-    spiSym_MR_PCS.addKey("NPCS0", "NPCS0", "NPCS0 as Chip Select")
-    spiSym_MR_PCS.addKey("NPCS1", "NPCS1", "NPCS1 as Chip Select")
-
-    # Check weather more than two chip select options are available
-    if spiPCSValue > 3:
-        spiSym_MR_PCS.addKey("NPCS2", "NPCS2", "NPCS2 as Chip Select")
-        spiSym_MR_PCS.addKey("NPCS3", "NPCS3", "NPCS3 as Chip Select")
-
-    # When User wants to control his chip select himself (through some GPIO pin),
-    # then all the NPCSx lines are free to be used as PIO pins. But in MR_PCS
-    # field, one of the NPCS lines still has to be selected in order to decide
-    # which SPI_CSRx register will be active. Here we have used NPCS0 selection
-    # for such case, it can be changed to any other NPCSx line without affecting
-    # the user.
-    spiSym_MR_PCS.addKey("GPIO", "NPCS0", "User Controlled Chip Select Through GPIO Pin")
-
-    defaultIndex = int(spiSym_MR_PCS.getKey(DefaultPCS)[-1])
-
-    # internal symbol, used to pass CSR register index to SPI FTL
-    spiSymCSRIndex = spiComponent.createIntegerSymbol("SPI_CSR_INDEX", None)
-    spiSymCSRIndex.setDefaultValue(defaultIndex)
-    spiSymCSRIndex.setVisible(False)
-    spiSymCSRIndex.setDependencies(calculateCSRIndex, ["SPI_MR_PCS"])
-
-    defaultbaudRate = 1000000
-    defaultSCBR = int(Database.getSymbolValue("core", spiInstanceName.getValue() + "_CLOCK_FREQUENCY"))/defaultbaudRate
-
     # Provide a source clock selection symbol for masks that supports it
     valueGroup = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SPI\"]/value-group@[name=\"SPI_MR__BRSRCCLK\"]")
     if valueGroup != None:
@@ -398,34 +496,247 @@ def instantiateComponent(spiComponent):
     spiSymMasterClock.setReadOnly(True)
     spiSymMasterClock.setDependencies(SPISourceClockChanged, ["core." + spiInstanceName.getValue() + "_CLOCK_FREQUENCY", "SPI_MR_MSTR"])
 
+    global spiSymInvalidClock
+    spiSymInvalidClock = spiComponent.createCommentSymbol("SPI_CLOCK_INVALID_COMMENT", None)
+    spiSymInvalidClock.setLabel("!!! Cannot generate input baud rate from the configured source clock frequency !!!")
+    spiSymInvalidClock.setVisible(False)
+
+    spiSym_SPI_CSR_Node = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"SPI\"]/register-group/register@[name=\"SPI_CSR\"]")
+    spi_CSR_Count = int(spiSym_SPI_CSR_Node.getAttribute('count'),10)
+
+# MR PCS (Unused, maintained for backward compatibility)
+    DefaultPCS = 0
+    global spiSym_MR_PCS
+    spiSym_MR_PCS = spiComponent.createKeyValueSetSymbol("SPI_MR_PCS", None)
+    spiSym_MR_PCS.setLabel(spiBitField_MR_PCS.getAttribute("caption"))
+    spiSym_MR_PCS.setOutputMode("Key")
+    spiSym_MR_PCS.setDisplayMode("Key")
+    spiSym_MR_PCS.setDefaultValue(DefaultPCS)
+    spiSym_MR_PCS.setVisible(False)
+    spiSym_MR_PCS.setDependencies(chipSelectUpdateOnModeChange, ["SPI_MR_MSTR"])
+
+    spiSym_MR_PCS.addKey("NPCS0", "NPCS0", "NPCS0 as Chip Select")
+    spiSym_MR_PCS.addKey("NPCS1", "NPCS1", "NPCS1 as Chip Select")
+
+    # Check weather more than two chip select options are available
+    if spi_CSR_Count > 2:
+        spiSym_MR_PCS.addKey("NPCS2", "NPCS2", "NPCS2 as Chip Select")
+        spiSym_MR_PCS.addKey("NPCS3", "NPCS3", "NPCS3 as Chip Select")
+
+    # When User wants to control his chip select himself (through some GPIO pin),
+    # then all the NPCSx lines are free to be used as PIO pins. But in MR_PCS
+    # field, one of the NPCS lines still has to be selected in order to decide
+    # which SPI_CSRx register will be active. Here we have used NPCS0 selection
+    # for such case, it can be changed to any other NPCSx line without affecting
+    # the user.
+    spiSym_MR_PCS.addKey("GPIO", "NPCS0", "User Controlled Chip Select Through GPIO Pin")
+
+    defaultIndex = int(spiSym_MR_PCS.getKey(DefaultPCS)[-1])
+    spiSym_MR_PCS.setDependencies(updatePCSFromDatabase, ["SPI_MR_PCS"])
+
+# MR DLYBCS
+    spiSym_SPI_MR_DLYBCS = spiComponent.createIntegerSymbol("SPI_MR_DLYBCS", None)
+    spiSym_SPI_MR_DLYBCS.setLabel("Delay between chip selects")
+    spiSym_SPI_MR_DLYBCS.setMax(255)
+    spiSym_SPI_MR_DLYBCS.setDefaultValue(0)
+    spiSym_SPI_MR_DLYBCS.setVisible(True)
+    spiSym_SPI_MR_DLYBCS.setDependencies(showMasterDependencies, ["SPI_MR_MSTR"])
+
+# FIFO Mode
+    spisSymFIFOEnable = spiComponent.createBooleanSymbol("SPI_FIFO_ENABLE", None)
+    spisSymFIFOEnable.setLabel("Enable FIFO")
+    spisSymFIFOEnable.setDefaultValue(False)
+    spisSymFIFOEnable.setVisible(spiBitField_CR_FIFOEN != None)
+    spisSymFIFOEnable.setDependencies(fifoModeVisible, ["SPI_INTERRUPT_MODE", "SPI_MR_MSTR"])
+
+# Slave mode TX Buffer Size
+    spisSym_TXBuffer_Size = spiComponent.createIntegerSymbol("SPIS_TX_BUFFER_SIZE", None)
+    spisSym_TXBuffer_Size.setLabel("TX Buffer Size (in bytes)")
+    spisSym_TXBuffer_Size.setMin(0)
+    spisSym_TXBuffer_Size.setMax(65535)
+    spisSym_TXBuffer_Size.setDefaultValue(256)
+    spisSym_TXBuffer_Size.setVisible(False)
+    spisSym_TXBuffer_Size.setDependencies(showSlaveDependencies, ["SPI_MR_MSTR"])
+
+# Slave mode RX Buffer Size
+    spisSym_RXBuffer_Size = spiComponent.createIntegerSymbol("SPIS_RX_BUFFER_SIZE", None)
+    spisSym_RXBuffer_Size.setLabel("RX Buffer Size (in bytes)")
+    spisSym_RXBuffer_Size.setMin(0)
+    spisSym_RXBuffer_Size.setMax(65535)
+    spisSym_RXBuffer_Size.setDefaultValue(256)
+    spisSym_RXBuffer_Size.setVisible(False)
+    spisSym_RXBuffer_Size.setDependencies(showSlaveDependencies, ["SPI_MR_MSTR"])
+
+    for i in range (spi_CSR_Count):
+        # CSR0 Enable
+        spiSym_SPI_EnableNPCSx = spiComponent.createBooleanSymbol("SPI_EN_NPCS" + str(i), None)
+        spiSym_SPI_EnableNPCSx.setVisible(True)
+        if i == 0:
+            spiSym_SPI_EnableNPCSx.setDefaultValue(True)
+            spiSym_SPI_EnableNPCSx.setLabel("Enable NPCS0/ Use GPIO?")
+            spiSym_SPI_EnableNPCSx.setDependencies(npcs0EnableVisible, ["SPI_MR_MSTR"])
+        else:
+            spiSym_SPI_EnableNPCSx.setDefaultValue(False)
+            spiSym_SPI_EnableNPCSx.setLabel("Enable NPCS" + str(i) + "?")
+            spiSym_SPI_EnableNPCSx.setDependencies(npcsxEnableVisible, ["SPI_MR_MSTR"])
+
+# MULTI CSR (True if more than one CSR is enabled)
+    spiSym_SPI_NumCSR = spiComponent.createIntegerSymbol("SPI_NUM_CSR", None)
+    spiSym_SPI_NumCSR.setDefaultValue(1)
+    spiSym_SPI_NumCSR.setVisible(False)
+    spiSym_SPI_NumCSR.setDependencies(updateNumCSR, ["SPI_EN_NPCS0", "SPI_EN_NPCS1", "SPI_EN_NPCS2", "SPI_EN_NPCS3"])
+
+# CSR Index (points to the CSR index only when MULTI CSR is false)
+    spiSymCSRIndex = spiComponent.createIntegerSymbol("SPI_CSR_INDEX", None)
+    spiSymCSRIndex.setDefaultValue(defaultIndex)
+    spiSymCSRIndex.setVisible(False)
+    spiSymCSRIndex.setDependencies(updateCSRIndex, ["SPI_EN_NPCS0", "SPI_EN_NPCS1", "SPI_EN_NPCS2", "SPI_EN_NPCS3"])
+
+    defaultbaudRate = 1000000
+    defaultSCBR = int(Database.getSymbolValue("core", spiInstanceName.getValue() + "_CLOCK_FREQUENCY"))/defaultbaudRate
+
+## Deprecated symbols ----------------------------------------------##
+
+# BAUD RATE (Unused, maintained for backward compatibility)
     spiSym_CSR_SCBR = spiComponent.createIntegerSymbol("SPI_BAUD_RATE", None)
     spiSym_CSR_SCBR.setLabel("Baud Rate in Hz")
     spiSym_CSR_SCBR.setDefaultValue(defaultbaudRate)
     spiSym_CSR_SCBR.setMin(1)
-    spiSym_CSR_SCBR.setDependencies(showMasterDependencies, ["SPI_MR_MSTR"])
+    spiSym_CSR_SCBR.setVisible(False)
+    spiSym_CSR_SCBR.setDependencies(updateBaudRateFromDatabase, ["SPI_BAUD_RATE"])
 
-    global spiSymInvalidClock
-    spiSymInvalidClock = spiComponent.createCommentSymbol("SPI_CLOCK_INVALID_COMMENT", None)
-    spiSymInvalidClock.setLabel("Cannot generate input baud rate from the configured source clock frequency !!!")
-    spiSymInvalidClock.setVisible(False)
-
-    #local variable for code generation
-    spiSym_CSR_SCBR_VALUE = spiComponent.createIntegerSymbol("SPI_CSR_SCBR_VALUE", None)
-    spiSym_CSR_SCBR_VALUE.setDefaultValue(defaultSCBR)
-    spiSym_CSR_SCBR_VALUE.setVisible(False)
-    spiSym_CSR_SCBR_VALUE.setDependencies(SCBR_ValueUpdate, ["SPI_BAUD_RATE", "SPI_MASTER_CLOCK"])
-
+# BITS (Unused, maintained for backward compatibility)
     spiSym_CSR_BITS = spiComponent.createKeyValueSetSymbol("SPI_CHARSIZE_BITS", None)
     spiSym_CSR_BITS.setLabel(spiBitField_CSR_BITS.getAttribute("caption"))
     spiSym_CSR_BITS.setOutputMode("Key")
     spiSym_CSR_BITS.setDisplayMode("Description")
     spiSym_CSR_BITS.setDefaultValue(0)
+    spiSym_CSR_BITS.setVisible(False)
+    spiSym_CSR_BITS.setDependencies(updateBITSFromDatabase, ["SPI_CHARSIZE_BITS"])
 
     for id in range(0,len(spiValGrp_CSR_BITS.getChildren())):
         valueName = spiValGrp_CSR_BITS.getChildren()[id].getAttribute("name")
         value = spiValGrp_CSR_BITS.getChildren()[id].getAttribute("value")
         description = spiValGrp_CSR_BITS.getChildren()[id].getAttribute("caption")
         spiSym_CSR_BITS.addKey(valueName, value, description)
+
+# CPOL (Unused, maintained for backward compatibility)
+    spiSym_CSR_CPOL = spiComponent.createKeyValueSetSymbol("SPI_CLOCK_POLARITY", None)
+    spiSym_CSR_CPOL.setLabel(spiBitField_CSR_CPOL.getAttribute("caption"))
+    spiSym_CSR_CPOL.setOutputMode("Key")
+    spiSym_CSR_CPOL.setDisplayMode("Description")
+    spiSym_CSR_CPOL.setDefaultValue(0)
+    spiSym_CSR_CPOL.setVisible(False)
+    spiSym_CSR_CPOL.setDependencies(updateCPOLFromDatabase, ["SPI_CLOCK_POLARITY"])
+
+    for id in range(0, len(spiValGrp_CSR_CPOL.getChildren())):
+        valueName = spiValGrp_CSR_CPOL.getChildren()[id].getAttribute("name")
+        value = spiValGrp_CSR_CPOL.getChildren()[id].getAttribute("value")
+        description = spiValGrp_CSR_CPOL.getChildren()[id].getAttribute("caption")
+        spiSym_CSR_CPOL.addKey(valueName, value, description)
+
+# NCPHA (Unused, maintained for backward compatibility)
+    spiSym_CSR_NCPHA = spiComponent.createKeyValueSetSymbol("SPI_CLOCK_PHASE", None)
+    spiSym_CSR_NCPHA.setLabel(spiBitField_CSR_NCPHA.getAttribute("caption"))
+    spiSym_CSR_NCPHA.setOutputMode("Key")
+    spiSym_CSR_NCPHA.setDisplayMode("Description")
+    spiSym_CSR_NCPHA.setDefaultValue(0)
+    spiSym_CSR_NCPHA.setVisible(False)
+    spiSym_CSR_NCPHA.setDependencies(updateNCPHAFromDatabase, ["SPI_CLOCK_PHASE"])
+
+    for id in range(0, len(spiValGrp_CSR_NCPHA.getChildren())):
+        valueName = spiValGrp_CSR_NCPHA.getChildren()[id].getAttribute("name")
+        value = spiValGrp_CSR_NCPHA.getChildren()[id].getAttribute("value")
+        description = spiValGrp_CSR_NCPHA.getChildren()[id].getAttribute("caption")
+        spiSym_CSR_NCPHA.addKey(valueName, value, description)
+
+# CLOCK MODE Comment(Unused, maintained for backward compatibility)
+    spiSymClockModeComment = spiComponent.createCommentSymbol("SPI_CLOCK_MODE_COMMENT", None)
+    spiSymClockModeComment.setLabel("***SPI Mode 0 is Selected***")
+    spiSymClockModeComment.setVisible(False)
+
+## Deprecated symbols ----------------------------------------------##
+
+    for i in range (spi_CSR_Count):
+        # CSRx BAUD RATE
+        spiSym_SPI_CSRx_Baudrate = spiComponent.createIntegerSymbol("SPI_CSR" + str(i) + "_BAUD_RATE", localComponent.getSymbolByID("SPI_EN_NPCS" + str(i)))
+        spiSym_SPI_CSRx_Baudrate.setLabel("Baud Rate (Hz)")
+        spiSym_SPI_CSRx_Baudrate.setDefaultValue(defaultbaudRate)
+        spiSym_SPI_CSRx_Baudrate.setVisible(i == 0)
+        spiSym_SPI_CSRx_Baudrate.setDependencies(updateCSRx_MasterBitFields, ["SPI_MR_MSTR", "SPI_EN_NPCS" + str(i)])
+
+        spiSym_SPI_CSRx_SCBR_VALUE = spiComponent.createIntegerSymbol("SPI_CSR" + str(i) + "_SCBR_VALUE", None)
+        spiSym_SPI_CSRx_SCBR_VALUE.setDefaultValue(defaultSCBR)
+        spiSym_SPI_CSRx_SCBR_VALUE.setReadOnly(True)
+        spiSym_SPI_CSRx_SCBR_VALUE.setVisible(False)
+        spiSym_SPI_CSRx_SCBR_VALUE.setDependencies(updateCSRx_SCBR_Value, ["SPI_CSR" + str(i) + "_BAUD_RATE", "SPI_MASTER_CLOCK"])
+
+        # CSRx BITS
+        spiSym_SPI_CSRx_BITS = spiComponent.createKeyValueSetSymbol("SPI_CSR" + str(i) + "_BITS", localComponent.getSymbolByID("SPI_EN_NPCS" + str(i)))
+        spiSym_SPI_CSRx_BITS.setLabel("Bits Per Transfer")
+        spiSym_SPI_CSRx_BITS.setOutputMode("Key")
+        spiSym_SPI_CSRx_BITS.setDisplayMode("Description")
+        spiSym_SPI_CSRx_BITS.setDefaultValue(0)
+        spiSym_SPI_CSRx_BITS.setVisible(i == 0)
+        spiSym_SPI_CSRx_BITS.setDependencies(updateCSRx_BitFields, ["SPI_EN_NPCS" + str(i)])
+
+        for id in range(0,len(spiValGrp_CSR_BITS.getChildren())):
+            valueName = spiValGrp_CSR_BITS.getChildren()[id].getAttribute("name")
+            value = spiValGrp_CSR_BITS.getChildren()[id].getAttribute("value")
+            description = spiValGrp_CSR_BITS.getChildren()[id].getAttribute("caption")
+            spiSym_SPI_CSRx_BITS.addKey(valueName, value, description)
+
+        # CSRx CPOL
+        spiSym_SPI_CSRx_CPOL = spiComponent.createKeyValueSetSymbol("SPI_CSR" + str(i) + "_CPOL", localComponent.getSymbolByID("SPI_EN_NPCS" + str(i)))
+        spiSym_SPI_CSRx_CPOL.setLabel("Clock Polarity")
+        spiSym_SPI_CSRx_CPOL.setOutputMode("Key")
+        spiSym_SPI_CSRx_CPOL.setDisplayMode("Description")
+        spiSym_SPI_CSRx_CPOL.setDefaultValue(0)
+        spiSym_SPI_CSRx_CPOL.setVisible(i == 0)
+        spiSym_SPI_CSRx_CPOL.setDependencies(updateCSRx_BitFields, ["SPI_EN_NPCS" + str(i)])
+
+        for id in range(0, len(spiValGrp_CSR_CPOL.getChildren())):
+            valueName = spiValGrp_CSR_CPOL.getChildren()[id].getAttribute("name")
+            value = spiValGrp_CSR_CPOL.getChildren()[id].getAttribute("value")
+            description = spiValGrp_CSR_CPOL.getChildren()[id].getAttribute("caption")
+            spiSym_SPI_CSRx_CPOL.addKey(valueName, value, description)
+
+        # CSRx NCPHA
+        spiSym_SPI_CSRx_NCPHA = spiComponent.createKeyValueSetSymbol("SPI_CSR" + str(i) + "_NCPHA", localComponent.getSymbolByID("SPI_EN_NPCS" + str(i)))
+        spiSym_SPI_CSRx_NCPHA.setLabel("Clock Phase")
+        spiSym_SPI_CSRx_NCPHA.setOutputMode("Key")
+        spiSym_SPI_CSRx_NCPHA.setDisplayMode("Description")
+        spiSym_SPI_CSRx_NCPHA.setDefaultValue(0)
+        spiSym_SPI_CSRx_NCPHA.setVisible(i == 0)
+        spiSym_SPI_CSRx_NCPHA.setDependencies(updateCSRx_BitFields, ["SPI_EN_NPCS" + str(i)])
+
+        for id in range(0, len(spiValGrp_CSR_NCPHA.getChildren())):
+            valueName = spiValGrp_CSR_NCPHA.getChildren()[id].getAttribute("name")
+            value = spiValGrp_CSR_NCPHA.getChildren()[id].getAttribute("value")
+            description = spiValGrp_CSR_NCPHA.getChildren()[id].getAttribute("caption")
+            spiSym_SPI_CSRx_NCPHA.addKey(valueName, value, description)
+
+        # CSRx DLYBS
+        spiSym_SPI_CSRx_DLYBS = spiComponent.createIntegerSymbol("SPI_CSR" + str(i) + "_DLYBS", localComponent.getSymbolByID("SPI_EN_NPCS" + str(i)))
+        spiSym_SPI_CSRx_DLYBS.setLabel("Delay before SPCK")
+        spiSym_SPI_CSRx_DLYBS.setMax(255)
+        spiSym_SPI_CSRx_DLYBS.setDefaultValue(0)
+        spiSym_SPI_CSRx_DLYBS.setVisible(i == 0)
+        spiSym_SPI_CSRx_DLYBS.setDependencies(updateCSRx_MasterBitFields, ["SPI_MR_MSTR", "SPI_EN_NPCS" + str(i)])
+
+        # CSRx DLYBCT
+        spiSym_SPI_CSRx_DLYBCT = spiComponent.createIntegerSymbol("SPI_CSR" + str(i) + "_DLYBCT", localComponent.getSymbolByID("SPI_EN_NPCS" + str(i)))
+        spiSym_SPI_CSRx_DLYBCT.setLabel("Delay between consecutive transfers")
+        spiSym_SPI_CSRx_DLYBCT.setMax(255)
+        spiSym_SPI_CSRx_DLYBCT.setDefaultValue(0)
+        spiSym_SPI_CSRx_DLYBCT.setVisible(i == 0)
+        spiSym_SPI_CSRx_DLYBCT.setDependencies(updateCSRx_MasterBitFields, ["SPI_MR_MSTR", "SPI_EN_NPCS" + str(i)])
+
+        # CSRx CLOCK MODE Comment
+        spiSym_SPI_CSRx_ClockModeComment = spiComponent.createCommentSymbol("SPI_CSR" + str(i) + "_CLOCK_MODE_COMMENT", localComponent.getSymbolByID("SPI_EN_NPCS" + str(i)))
+        spiSym_SPI_CSRx_ClockModeComment.setLabel("***SPI Mode 1 is Selected***")
+        spiSym_SPI_CSRx_ClockModeComment.setVisible(i == 0)
+        spiSym_SPI_CSRx_ClockModeComment.setDependencies(updateCSRxClockModeInfo, ["SPI_EN_NPCS" + str(i), "SPI_CSR" + str(i) + "_CPOL", "SPI_CSR" + str(i) +"_NCPHA"])
 
     #SPI Transmit data register
     transmitRegister = spiComponent.createStringSymbol("TRANSMIT_DATA_REGISTER", None)
@@ -487,19 +798,7 @@ def instantiateComponent(spiComponent):
     spiSymDummyData.setDescription("Dummy Data to be written during SPI Read")
     spiSymDummyData.setDefaultValue(0xFF)
     spiSymDummyData.setMin(0x0)
-    spiSymDummyData.setDependencies(DummyData_ValueUpdate, ["SPI_CHARSIZE_BITS", "SPI_MR_MSTR"])
-
-    spiSym_CSR_CPOL = spiComponent.createKeyValueSetSymbol("SPI_CLOCK_POLARITY", None)
-    spiSym_CSR_CPOL.setLabel(spiBitField_CSR_CPOL.getAttribute("caption"))
-    spiSym_CSR_CPOL.setOutputMode("Key")
-    spiSym_CSR_CPOL.setDisplayMode("Description")
-    spiSym_CSR_CPOL.setDefaultValue(0)
-
-    for id in range(0, len(spiValGrp_CSR_CPOL.getChildren())):
-        valueName = spiValGrp_CSR_CPOL.getChildren()[id].getAttribute("name")
-        value = spiValGrp_CSR_CPOL.getChildren()[id].getAttribute("value")
-        description = spiValGrp_CSR_CPOL.getChildren()[id].getAttribute("caption")
-        spiSym_CSR_CPOL.addKey(valueName, value, description)
+    spiSymDummyData.setDependencies(DummyData_ValueUpdate, ["SPI_MR_MSTR"])
 
     #SPI Clock Polarity Idle Low Mask
     spiSym_CSR_CPOL_IL_Mask = spiComponent.createStringSymbol("SPI_CLOCK_POLARITY_LOW_MASK", None)
@@ -510,39 +809,6 @@ def instantiateComponent(spiComponent):
     spiSym_CSR_CPOL_IH_Mask = spiComponent.createStringSymbol("SPI_CLOCK_POLARITY_HIGH_MASK", None)
     spiSym_CSR_CPOL_IH_Mask.setDefaultValue("0x1")
     spiSym_CSR_CPOL_IH_Mask.setVisible(False)
-
-    spiSym_CSR_NCPHA = spiComponent.createKeyValueSetSymbol("SPI_CLOCK_PHASE", None)
-    spiSym_CSR_NCPHA.setLabel(spiBitField_CSR_NCPHA.getAttribute("caption"))
-    spiSym_CSR_NCPHA.setOutputMode("Key")
-    spiSym_CSR_NCPHA.setDisplayMode("Description")
-    spiSym_CSR_NCPHA.setDefaultValue(0)
-    spiSym_CSR_NCPHA.setVisible(True)
-
-    for id in range(0, len(spiValGrp_CSR_NCPHA.getChildren())):
-        valueName = spiValGrp_CSR_NCPHA.getChildren()[id].getAttribute("name")
-        value = spiValGrp_CSR_NCPHA.getChildren()[id].getAttribute("value")
-        description = spiValGrp_CSR_NCPHA.getChildren()[id].getAttribute("caption")
-        spiSym_CSR_NCPHA.addKey(valueName, value, description)
-
-    spiSymClockModeComment = spiComponent.createCommentSymbol("SPI_CLOCK_MODE_COMMENT", None)
-    spiSymClockModeComment.setLabel("***SPI Mode 0 is Selected***")
-    spiSymClockModeComment.setDependencies(ClockModeInfo, ["SPI_CLOCK_POLARITY","SPI_CLOCK_PHASE"])
-
-    spisSym_TXBuffer_Size = spiComponent.createIntegerSymbol("SPIS_TX_BUFFER_SIZE", None)
-    spisSym_TXBuffer_Size.setLabel("TX Buffer Size (in bytes)")
-    spisSym_TXBuffer_Size.setMin(0)
-    spisSym_TXBuffer_Size.setMax(65535)
-    spisSym_TXBuffer_Size.setDefaultValue(256)
-    spisSym_TXBuffer_Size.setVisible(False)
-    spisSym_TXBuffer_Size.setDependencies(showSlaveDependencies, ["SPI_MR_MSTR"])
-
-    spisSym_RXBuffer_Size = spiComponent.createIntegerSymbol("SPIS_RX_BUFFER_SIZE", None)
-    spisSym_RXBuffer_Size.setLabel("RX Buffer Size (in bytes)")
-    spisSym_RXBuffer_Size.setMin(0)
-    spisSym_RXBuffer_Size.setMax(65535)
-    spisSym_RXBuffer_Size.setDefaultValue(256)
-    spisSym_RXBuffer_Size.setVisible(False)
-    spisSym_RXBuffer_Size.setDependencies(showSlaveDependencies, ["SPI_MR_MSTR"])
 
     spisSymUseBusyPin = spiComponent.createBooleanSymbol("SPIS_USE_BUSY_PIN", None)
     spisSymUseBusyPin.setLabel("Use GPIO pin as Busy signal?")
@@ -627,12 +893,12 @@ def instantiateComponent(spiComponent):
     configName = Variables.get("__CONFIGURATION_NAME")
 
     spimCommonHeaderFile = spiComponent.createFileSymbol("SPI_COMMON_HEADER", None)
-    spimCommonHeaderFile.setSourcePath("../peripheral/spi_6088/templates/plib_spi_master_common.h")
+    spimCommonHeaderFile.setSourcePath("../peripheral/spi_6088/templates/plib_spi_master_common.h.ftl")
     spimCommonHeaderFile.setOutputName("plib_spi_master_common.h")
     spimCommonHeaderFile.setDestPath("peripheral/spi/spi_master")
     spimCommonHeaderFile.setProjectPath("config/" + configName + "/peripheral/spi/spi_master")
     spimCommonHeaderFile.setType("HEADER")
-    spimCommonHeaderFile.setMarkup(False)
+    spimCommonHeaderFile.setMarkup(True)
     spimCommonHeaderFile.setOverwrite(True)
     spimCommonHeaderFile.setEnabled(spiSym_MR_MSTR.getSelectedKey() == "MASTER")
     spimCommonHeaderFile.setDependencies(spiMasterModeFileGeneration, ["SPI_MR_MSTR"])

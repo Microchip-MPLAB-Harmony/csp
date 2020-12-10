@@ -71,21 +71,36 @@ void ${SPI_INSTANCE_NAME}_Initialize( void )
 {
     /* Disable and Reset the SPI*/
     ${SPI_INSTANCE_NAME}_REGS->SPI_CR = SPI_CR_SPIDIS_Msk | SPI_CR_SWRST_Msk;
-	
-<#if SPI_FIFO_ENABLE == true>
-	${SPI_INSTANCE_NAME}_REGS->SPI_CR = SPI_CR_FIFOEN_Msk;
+
+<#if SPI_INTERRUPT_MODE == true && SPI_FIFO_ENABLE == true>
+    ${SPI_INSTANCE_NAME}_REGS->SPI_CR = SPI_CR_FIFOEN_Msk;
 </#if>
 
 <#if SPI_MR_MSTR =="MASTER">
     /* Enable Master mode, <#if SPI_CLK_SRC??>select source clock, </#if>select particular NPCS line for chip select and disable mode fault detection */
-    ${SPI_INSTANCE_NAME}_REGS->SPI_MR = SPI_MR_MSTR_Msk <#if SPI_CLK_SRC??>| SPI_MR_BRSRCCLK_${SPI_CLK_SRC} </#if><#if SPI_MR_PCS != "GPIO">| SPI_MR_PCS_${SPI_MR_PCS}<#else>| SPI_MR_PCS_NPCS0</#if> | SPI_MR_MODFDIS_Msk;
-<#else>
-    /* SPI is by default in Slave Mode, disable mode fault detection <#if SPI_CLK_SRC??> and select source clock </#if>*/
-    ${SPI_INSTANCE_NAME}_REGS->SPI_MR = SPI_MR_MODFDIS_Msk <#if SPI_CLK_SRC??>| SPI_MR_BRSRCCLK_${SPI_CLK_SRC}</#if>;
+    ${SPI_INSTANCE_NAME}_REGS->SPI_MR = SPI_MR_MSTR_Msk | SPI_MR_DLYBCS(${SPI_MR_DLYBCS}) <#if SPI_CLK_SRC??>| SPI_MR_BRSRCCLK_${SPI_CLK_SRC} </#if><#if SPI_EN_NPCS0?? && SPI_EN_NPCS0 == true>| SPI_MR_PCS_NPCS0 <#elseif SPI_EN_NPCS1?? && SPI_EN_NPCS1 == true>| SPI_MR_PCS_NPCS1<#elseif SPI_EN_NPCS2?? && SPI_EN_NPCS2 == true> | SPI_MR_PCS_NPCS2 <#elseif SPI_EN_NPCS3?? && SPI_EN_NPCS3 == true> | SPI_MR_PCS_NPCS3 </#if> | SPI_MR_MODFDIS_Msk;
 </#if>
 
-    /* Set up clock Polarity, data phase, Communication Width, Baud Rate<#if SPI_MR_PCS != "GPIO"> and Chip select active after transfer</#if> */
-    ${SPI_INSTANCE_NAME}_REGS->SPI_CSR[${SPI_CSR_INDEX}] = SPI_CSR_CPOL_${SPI_CLOCK_POLARITY} | SPI_CSR_NCPHA_${SPI_CLOCK_PHASE} | SPI_CSR_BITS${SPI_CHARSIZE_BITS} | SPI_CSR_SCBR(${SPI_CSR_SCBR_VALUE})<#if SPI_MR_PCS != "GPIO"> | SPI_CSR_CSAAT_Msk</#if>;
+<#if SPI_EN_NPCS0?? && SPI_EN_NPCS0 == true>
+    /* Set up clock Polarity, data phase, Communication Width, Baud Rate */
+    ${SPI_INSTANCE_NAME}_REGS->SPI_CSR[0] = SPI_CSR_CPOL_${SPI_CSR0_CPOL} | SPI_CSR_NCPHA_${SPI_CSR0_NCPHA} | SPI_CSR_BITS${SPI_CSR0_BITS} | SPI_CSR_SCBR(${SPI_CSR0_SCBR_VALUE})| SPI_CSR_DLYBS(${SPI_CSR0_DLYBS}) | SPI_CSR_DLYBCT(${SPI_CSR0_DLYBCT}) | SPI_CSR_CSAAT_Msk;
+</#if>
+
+<#if SPI_EN_NPCS1?? && SPI_EN_NPCS1 == true>
+    /* Set up clock Polarity, data phase, Communication Width, Baud Rate */
+    ${SPI_INSTANCE_NAME}_REGS->SPI_CSR[1] = SPI_CSR_CPOL_${SPI_CSR1_CPOL} | SPI_CSR_NCPHA_${SPI_CSR1_NCPHA} | SPI_CSR_BITS${SPI_CSR1_BITS} | SPI_CSR_SCBR(${SPI_CSR1_SCBR_VALUE})| SPI_CSR_DLYBS(${SPI_CSR1_DLYBS}) | SPI_CSR_DLYBCT(${SPI_CSR1_DLYBCT}) | SPI_CSR_CSAAT_Msk;
+</#if>
+
+<#if SPI_EN_NPCS2?? && SPI_EN_NPCS2 == true>
+    /* Set up clock Polarity, data phase, Communication Width, Baud Rate */
+    ${SPI_INSTANCE_NAME}_REGS->SPI_CSR[2] = SPI_CSR_CPOL_${SPI_CSR2_CPOL} | SPI_CSR_NCPHA_${SPI_CSR2_NCPHA} | SPI_CSR_BITS${SPI_CSR2_BITS} | SPI_CSR_SCBR(${SPI_CSR2_SCBR_VALUE})| SPI_CSR_DLYBS(${SPI_CSR2_DLYBS}) | SPI_CSR_DLYBCT(${SPI_CSR2_DLYBCT}) | SPI_CSR_CSAAT_Msk;
+</#if>
+
+<#if SPI_EN_NPCS3?? && SPI_EN_NPCS3 == true>
+    /* Set up clock Polarity, data phase, Communication Width, Baud Rate */
+    ${SPI_INSTANCE_NAME}_REGS->SPI_CSR[3] = SPI_CSR_CPOL_${SPI_CSR3_CPOL} | SPI_CSR_NCPHA_${SPI_CSR3_NCPHA} | SPI_CSR_BITS${SPI_CSR3_BITS} | SPI_CSR_SCBR(${SPI_CSR3_SCBR_VALUE})| SPI_CSR_DLYBS(${SPI_CSR3_DLYBS}) | SPI_CSR_DLYBCT(${SPI_CSR3_DLYBCT}) | SPI_CSR_CSAAT_Msk;
+</#if>
+
 
 <#if SPI_INTERRUPT_MODE == true >
     /* Initialize global variables */
@@ -96,6 +111,44 @@ void ${SPI_INSTANCE_NAME}_Initialize( void )
     /* Enable ${SPI_INSTANCE_NAME} */
     ${SPI_INSTANCE_NAME}_REGS->SPI_CR = SPI_CR_SPIEN_Msk;
 }
+
+<#if SPI_NUM_CSR != 1>
+static uint8_t ${SPI_INSTANCE_NAME}_ChipSelectGet(void)
+{
+    uint8_t pcs = (uint8_t)((${SPI_INSTANCE_NAME}_REGS->SPI_MR  & SPI_MR_PCS_Msk) >> SPI_MR_PCS_Pos);
+    if (pcs == SPI_CHIP_SELECT_NPCS0)
+    {
+        return 0;
+    }
+<#if SPI_EN_NPCS1??>
+    else if (pcs == SPI_CHIP_SELECT_NPCS1)
+    {
+        return 1;
+    }
+</#if>
+<#if SPI_EN_NPCS2??>
+    else if (pcs == SPI_CHIP_SELECT_NPCS2)
+    {
+        return 2;
+    }
+</#if>
+<#if SPI_EN_NPCS3??>
+    else if (pcs == SPI_CHIP_SELECT_NPCS3)
+    {
+        return 3;
+    }
+</#if>
+    else
+    {
+        return 0;
+    }
+}
+
+void ${SPI_INSTANCE_NAME}_ChipSelectSetup(SPI_CHIP_SELECT chipSelect)
+{
+    ${SPI_INSTANCE_NAME}_REGS->SPI_MR =  (${SPI_INSTANCE_NAME}_REGS->SPI_MR & ~SPI_MR_PCS_Msk) | SPI_MR_PCS(chipSelect);
+}
+</#if>
 
 <#if SPI_INTERRUPT_MODE == false >
 bool ${SPI_INSTANCE_NAME}_WriteRead( void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize )
@@ -119,7 +172,11 @@ bool ${SPI_INSTANCE_NAME}_WriteRead( void* pTransmitData, size_t txSize, void* p
             rxSize = 0;
         }
 
+<#if SPI_NUM_CSR == 1>
         dataBits = ${SPI_INSTANCE_NAME}_REGS->SPI_CSR[${SPI_CSR_INDEX}] & SPI_CSR_BITS_Msk;
+<#else>
+        dataBits = ${SPI_INSTANCE_NAME}_REGS->SPI_CSR[${SPI_INSTANCE_NAME}_ChipSelectGet()] & SPI_CSR_BITS_Msk;
+</#if>
 
         /* Flush out any unread data in SPI read buffer from the previous transfer */
         receivedData = (${SPI_INSTANCE_NAME}_REGS->SPI_RDR & SPI_RDR_RD_Msk) >> SPI_RDR_RD_Pos;
@@ -153,7 +210,14 @@ bool ${SPI_INSTANCE_NAME}_WriteRead( void* pTransmitData, size_t txSize, void* p
             }
             else if (dummySize > 0)
             {
-                ${SPI_INSTANCE_NAME}_REGS->SPI_TDR = 0x${SPI_DUMMY_DATA};
+                if(dataBits == SPI_CSR_BITS_8_BIT)
+                {
+                    ${SPI_INSTANCE_NAME}_REGS->SPI_TDR = 0x${SPI_DUMMY_DATA};
+                }
+                else
+                {
+                    ${SPI_INSTANCE_NAME}_REGS->SPI_TDR = (uint16_t)(0x${SPI_DUMMY_DATA}${SPI_DUMMY_DATA});
+                }
                 dummySize--;
             }
 
@@ -188,11 +252,9 @@ bool ${SPI_INSTANCE_NAME}_WriteRead( void* pTransmitData, size_t txSize, void* p
         /* Make sure no data is pending in the shift register */
         while ((bool)((${SPI_INSTANCE_NAME}_REGS->SPI_SR & SPI_SR_TXEMPTY_Msk) >> SPI_SR_TXEMPTY_Pos) == false);
 
-        <#if SPI_MR_PCS != "GPIO">
         /* Set Last transfer to deassert NPCS after the last byte written in TDR has been transferred. */
         ${SPI_INSTANCE_NAME}_REGS->SPI_CR = SPI_CR_LASTXFER_Msk;
 
-        </#if>
         isSuccess = true;
     }
         return isSuccess;
@@ -307,7 +369,11 @@ bool ${SPI_INSTANCE_NAME}_WriteRead( void* pTransmitData, size_t txSize, void* p
         }
 
         /* Start the first write here itself, rest will happen in ISR context */
+<#if SPI_NUM_CSR == 1>
         if((${SPI_INSTANCE_NAME}_REGS->SPI_CSR[${SPI_CSR_INDEX}] & SPI_CSR_BITS_Msk) == SPI_CSR_BITS_8_BIT)
+<#else>
+        if((${SPI_INSTANCE_NAME}_REGS->SPI_CSR[${SPI_INSTANCE_NAME}_ChipSelectGet()] & SPI_CSR_BITS_Msk) == SPI_CSR_BITS_8_BIT)
+</#if>
         {
             if (${SPI_INSTANCE_NAME?lower_case}Obj.txCount < ${SPI_INSTANCE_NAME?lower_case}Obj.txSize)
             {
@@ -333,7 +399,7 @@ bool ${SPI_INSTANCE_NAME}_WriteRead( void* pTransmitData, size_t txSize, void* p
             }
             else if (${SPI_INSTANCE_NAME?lower_case}Obj.dummySize > 0)
             {
-                ${SPI_INSTANCE_NAME}_REGS->SPI_TDR = (uint16_t)(0x${SPI_DUMMY_DATA});
+                ${SPI_INSTANCE_NAME}_REGS->SPI_TDR = (uint16_t)(0x${SPI_DUMMY_DATA}${SPI_DUMMY_DATA});
                 ${SPI_INSTANCE_NAME?lower_case}Obj.dummySize--;
             }
         }
@@ -358,7 +424,11 @@ bool ${SPI_INSTANCE_NAME}_WriteRead( void* pTransmitData, size_t txSize, void* p
 static uint8_t ${SPI_INSTANCE_NAME}_FIFO_Fill(void)
 {
     uint8_t nDataCopiedToFIFO = 0;
+<#if SPI_NUM_CSR == 1>
     uint32_t dataBits = ${SPI_INSTANCE_NAME}_REGS->SPI_CSR[${SPI_CSR_INDEX}] & SPI_CSR_BITS_Msk;
+<#else>
+    uint32_t dataBits = ${SPI_INSTANCE_NAME}_REGS->SPI_CSR[${SPI_INSTANCE_NAME}_ChipSelectGet()] & SPI_CSR_BITS_Msk;
+</#if>
 
     while ((nDataCopiedToFIFO < 16) && (${SPI_INSTANCE_NAME}_REGS->SPI_SR & SPI_SR_TDRE_Msk))
     {
@@ -442,7 +512,11 @@ bool ${SPI_INSTANCE_NAME}_WriteRead (void* pTransmitData, size_t txSize, void* p
             ${SPI_INSTANCE_NAME?lower_case}Obj.dummySize = ${SPI_INSTANCE_NAME?lower_case}Obj.rxSize - ${SPI_INSTANCE_NAME?lower_case}Obj.txSize;
         }
 
-        if((${SPI_INSTANCE_NAME}_REGS->SPI_CSR[${SPI_CSR_INDEX}] & SPI_CSR_BITS_Msk) != SPI_CSR_BITS_8_BIT)
+<#if SPI_NUM_CSR == 1>
+    if((${SPI_INSTANCE_NAME}_REGS->SPI_CSR[${SPI_CSR_INDEX}] & SPI_CSR_BITS_Msk) != SPI_CSR_BITS_8_BIT)
+<#else>
+    if((${SPI_INSTANCE_NAME}_REGS->SPI_CSR[${SPI_INSTANCE_NAME}_ChipSelectGet()] & SPI_CSR_BITS_Msk) != SPI_CSR_BITS_8_BIT)
+</#if>
         {
             ${SPI_INSTANCE_NAME?lower_case}Obj.txSize >>= 1;
             ${SPI_INSTANCE_NAME?lower_case}Obj.dummySize >>= 1;
@@ -514,7 +588,11 @@ bool ${SPI_INSTANCE_NAME}_TransferSetup( SPI_TRANSFER_SETUP * setup, uint32_t sp
         scbr = 255;
     }
 
-    ${SPI_INSTANCE_NAME}_REGS->SPI_CSR[${SPI_CSR_INDEX}] = (uint32_t)setup->clockPolarity | (uint32_t)setup->clockPhase | (uint32_t)setup->dataBits | SPI_CSR_SCBR(scbr);
+<#if SPI_NUM_CSR == 1>
+    ${SPI_INSTANCE_NAME}_REGS->SPI_CSR[${SPI_CSR_INDEX}] = (${SPI_INSTANCE_NAME}_REGS->SPI_CSR[${SPI_CSR_INDEX}] & ~(SPI_CSR_CPOL_Msk | SPI_CSR_NCPHA_Msk | SPI_CSR_BITS_Msk | SPI_CSR_SCBR_Msk)) |((uint32_t)setup->clockPolarity | (uint32_t)setup->clockPhase | (uint32_t)setup->dataBits | SPI_CSR_SCBR(scbr));
+<#else>
+    ${SPI_INSTANCE_NAME}_REGS->SPI_CSR[${SPI_INSTANCE_NAME}_ChipSelectGet()] = (${SPI_INSTANCE_NAME}_REGS->SPI_CSR[${SPI_INSTANCE_NAME}_ChipSelectGet()] & ~(SPI_CSR_CPOL_Msk | SPI_CSR_NCPHA_Msk | SPI_CSR_BITS_Msk | SPI_CSR_SCBR_Msk)) |((uint32_t)setup->clockPolarity | (uint32_t)setup->clockPhase | (uint32_t)setup->dataBits | SPI_CSR_SCBR(scbr));
+</#if>
 
     return true;
 }
@@ -541,7 +619,12 @@ void ${SPI_INSTANCE_NAME}_InterruptHandler( void )
     uint32_t receivedData;
     static bool isLastByteTransferInProgress = false;
 
+<#if SPI_NUM_CSR == 1>
     dataBits = ${SPI_INSTANCE_NAME}_REGS->SPI_CSR[${SPI_CSR_INDEX}] & SPI_CSR_BITS_Msk;
+<#else>
+    dataBits = ${SPI_INSTANCE_NAME}_REGS->SPI_CSR[${SPI_INSTANCE_NAME}_ChipSelectGet()] & SPI_CSR_BITS_Msk;
+</#if>
+
 </#if>
 
     <#if USE_SPI_DMA?? && USE_SPI_DMA == true>
@@ -581,10 +664,9 @@ void ${SPI_INSTANCE_NAME}_InterruptHandler( void )
     {
         ${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy = false;
 
-        <#if SPI_MR_PCS != "GPIO">
         /* Set Last transfer to deassert NPCS after the last byte written in TDR has been transferred. */
         ${SPI_INSTANCE_NAME}_REGS->SPI_CR = SPI_CR_LASTXFER_Msk;
-        </#if>
+
         ${SPI_INSTANCE_NAME}_REGS->SPI_PTCR = SPI_PTCR_RXTDIS_Msk | SPI_PTCR_TXTDIS_Msk;
         ${SPI_INSTANCE_NAME}_REGS->SPI_IDR = SPI_IDR_ENDRX_Msk;
 
@@ -638,7 +720,7 @@ void ${SPI_INSTANCE_NAME}_InterruptHandler( void )
             }
             else if (${SPI_INSTANCE_NAME?lower_case}Obj.dummySize > 0)
             {
-                ${SPI_INSTANCE_NAME}_REGS->SPI_TDR = (uint16_t)(0x${SPI_DUMMY_DATA});
+                ${SPI_INSTANCE_NAME}_REGS->SPI_TDR = (uint16_t)(0x${SPI_DUMMY_DATA}${SPI_DUMMY_DATA});
                 ${SPI_INSTANCE_NAME?lower_case}Obj.dummySize--;
             }
         }
@@ -654,10 +736,7 @@ void ${SPI_INSTANCE_NAME}_InterruptHandler( void )
              */
 
             isLastByteTransferInProgress = true;
-            <#if SPI_MR_PCS != "GPIO">
-            /* Set Last transfer to deassert NPCS after the last byte written in TDR has been transferred. */
-            ${SPI_INSTANCE_NAME}_REGS->SPI_CR = SPI_CR_LASTXFER_Msk;
-            </#if>
+
         }
         else if (${SPI_INSTANCE_NAME?lower_case}Obj.rxCount == ${SPI_INSTANCE_NAME?lower_case}Obj.rxSize)
         {
@@ -674,6 +753,9 @@ void ${SPI_INSTANCE_NAME}_InterruptHandler( void )
     {
         if (${SPI_INSTANCE_NAME?lower_case}Obj.rxCount == ${SPI_INSTANCE_NAME?lower_case}Obj.rxSize)
         {
+            /* Set Last transfer to deassert NPCS after the last byte written in TDR has been transferred. */
+            ${SPI_INSTANCE_NAME}_REGS->SPI_CR = SPI_CR_LASTXFER_Msk;
+
             ${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy = false;
 
             /* Disable TDRE, RDRF and TXEMPTY interrupts */
@@ -700,7 +782,11 @@ void ${SPI_INSTANCE_NAME}_InterruptHandler( void )
 <#else>
 void ${SPI_INSTANCE_NAME}_InterruptHandler(void)
 {
+<#if SPI_NUM_CSR == 1>
     uint32_t dataBits = ${SPI_INSTANCE_NAME}_REGS->SPI_CSR[${SPI_CSR_INDEX}] & SPI_CSR_BITS_Msk;
+<#else>
+    uint32_t dataBits = ${SPI_INSTANCE_NAME}_REGS->SPI_CSR[${SPI_INSTANCE_NAME}_ChipSelectGet()] & SPI_CSR_BITS_Msk;
+</#if>
     uint32_t nTxPending = 0;
     uint8_t rxThreshold = 0;
 
@@ -740,6 +826,9 @@ void ${SPI_INSTANCE_NAME}_InterruptHandler(void)
     }
     else
     {
+        /* Set Last transfer to deassert NPCS after the last byte written in TDR has been transferred. */
+        ${SPI_INSTANCE_NAME}_REGS->SPI_CR = SPI_CR_LASTXFER_Msk;
+
         ${SPI_INSTANCE_NAME?lower_case}Obj.transferIsBusy = false;
 
         /* Disable Receive FIFO Threshold interrupt */

@@ -50,7 +50,7 @@
 </#if>
 #include <string.h>
 
-<#if SPI_CHARSIZE_BITS = "_8_BIT">
+<#if SPI_CSR0_BITS = "_8_BIT">
 #define ${SPI_INSTANCE_NAME}_READ_BUFFER_SIZE            ${SPIS_RX_BUFFER_SIZE}
 #define ${SPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE           ${SPIS_TX_BUFFER_SIZE}
 
@@ -89,7 +89,7 @@ void ${SPI_INSTANCE_NAME}_Initialize( void )
     ${SPI_INSTANCE_NAME}_REGS->SPI_MR = SPI_MR_MODFDIS_Msk;
 
     /* Set up clock Polarity, data phase, Communication Width */
-    ${SPI_INSTANCE_NAME}_REGS->SPI_CSR[${SPI_CSR_INDEX}] = SPI_CSR_CPOL_${SPI_CLOCK_POLARITY} | SPI_CSR_NCPHA_${SPI_CLOCK_PHASE} | SPI_CSR_BITS${SPI_CHARSIZE_BITS};
+    ${SPI_INSTANCE_NAME}_REGS->SPI_CSR[0] = SPI_CSR_CPOL_${SPI_CSR0_CPOL} | SPI_CSR_NCPHA_${SPI_CSR0_NCPHA} | SPI_CSR_BITS${SPI_CSR0_BITS};
 
     ${SPI_INSTANCE_NAME?lower_case}Obj.rdInIndex = 0;
     ${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex = 0;
@@ -124,7 +124,7 @@ size_t ${SPI_INSTANCE_NAME}_Read(void* pRdBuffer, size_t size)
     {
         rdSize = rdInIndex;
     }
-<#if SPI_CHARSIZE_BITS = "_8_BIT">
+<#if SPI_CSR0_BITS = "_8_BIT">
     memcpy(pRdBuffer, ${SPI_INSTANCE_NAME}_ReadBuffer, rdSize);
 <#else>
     memcpy(pRdBuffer, ${SPI_INSTANCE_NAME}_ReadBuffer, (rdSize << 1));
@@ -146,7 +146,7 @@ size_t ${SPI_INSTANCE_NAME}_Write(void* pWrBuffer, size_t size )
         wrSize = ${SPI_INSTANCE_NAME}_WRITE_BUFFER_SIZE;
     }
 
-<#if SPI_CHARSIZE_BITS = "_8_BIT">
+<#if SPI_CSR0_BITS = "_8_BIT">
     memcpy(${SPI_INSTANCE_NAME}_WriteBuffer, pWrBuffer, wrSize);
 <#else>
     memcpy(${SPI_INSTANCE_NAME}_WriteBuffer, pWrBuffer, (wrSize << 1));
@@ -157,7 +157,7 @@ size_t ${SPI_INSTANCE_NAME}_Write(void* pWrBuffer, size_t size )
 
     while ((${SPI_INSTANCE_NAME}_REGS->SPI_SR & SPI_SR_TDRE_Msk) && (${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex < ${SPI_INSTANCE_NAME?lower_case}Obj.nWrBytes))
     {
-<#if SPI_CHARSIZE_BITS = "_8_BIT">
+<#if SPI_CSR0_BITS = "_8_BIT">
         *((uint8_t*)&${SPI_INSTANCE_NAME}_REGS->SPI_TDR) = ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex++];
 <#else>
         *((uint16_t*)&${SPI_INSTANCE_NAME}_REGS->SPI_TDR) = ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex++];
@@ -224,7 +224,7 @@ SPI_SLAVE_ERROR ${SPI_INSTANCE_NAME}_ErrorGet(void)
 
 void ${SPI_INSTANCE_NAME}_InterruptHandler(void)
 {
-<#if SPI_CHARSIZE_BITS = "_8_BIT">
+<#if SPI_CSR0_BITS = "_8_BIT">
     uint8_t txRxData = 0;
 <#else>
     uint16_t txRxData = 0;
@@ -259,7 +259,7 @@ void ${SPI_INSTANCE_NAME}_InterruptHandler(void)
          */
         while ((statusFlags |= ${SPI_INSTANCE_NAME}_REGS->SPI_SR) & SPI_SR_RDRF_Msk)
         {
-<#if SPI_CHARSIZE_BITS = "_8_BIT">
+<#if SPI_CSR0_BITS = "_8_BIT">
             /* Reading DATA register will also clear the RDRF flag */
             txRxData = *((uint8_t*)&${SPI_INSTANCE_NAME}_REGS->SPI_RDR);
 <#else>
@@ -281,7 +281,7 @@ void ${SPI_INSTANCE_NAME}_InterruptHandler(void)
     {
         while (((statusFlags |= ${SPI_INSTANCE_NAME}_REGS->SPI_SR) & SPI_SR_TDRE_Msk) && (${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex < ${SPI_INSTANCE_NAME?lower_case}Obj.nWrBytes))
         {
-<#if SPI_CHARSIZE_BITS = "_8_BIT">
+<#if SPI_CSR0_BITS = "_8_BIT">
             *((uint8_t*)&${SPI_INSTANCE_NAME}_REGS->SPI_TDR) = ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex++];
 <#else>
             *((uint16_t*)&${SPI_INSTANCE_NAME}_REGS->SPI_TDR) = ${SPI_INSTANCE_NAME}_WriteBuffer[${SPI_INSTANCE_NAME?lower_case}Obj.wrOutIndex++];
