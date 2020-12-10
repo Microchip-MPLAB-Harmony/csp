@@ -517,7 +517,7 @@ for channelID in range(0, dmacChCount.getValue()):
             dmaEvsysEVOSEL.setLabel("Event Output Selection")
 
             dmaEvsysEVOMODE = coreComponent.createKeyValueSetSymbol("DMAC_BTCTRL_EVSYS_EVOMODE_" + str(channelID), dmaEVSYSMenu)
-            dmaEvsysEVOMODE.setLabel("Event Output Selection")
+            dmaEvsysEVOMODE.setLabel("Event Output Mode")
 
             dmaEvsysEVOMODENode = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"DMAC\"]/value-group@[name=\"DMAC_CHEVCTRL__EVOMODE\"]")
             dmaEvsysEVOMODEValues = dmaEvsysEVOMODENode.getChildren()
