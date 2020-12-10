@@ -264,7 +264,7 @@ def instantiateComponent(evsysComponent):
 
     for id in user.keys():
         evsysUserChannel = evsysComponent.createKeyValueSetSymbol("EVSYS_USER_" + str(id), evsysUserMenu)
-        evsysUserChannel.setLabel(str(user.get(id)) + " Chanel Selection")
+        evsysUserChannel.setLabel(str(user.get(id)) + " Channel Selection")
         evsysUserChannel.addKey("NONE", str(0), "No Channel Selected")
         for i in range(0, channel):
             evsysUserChannel.addKey("CHANNEL_" + str(i), str(hex(i + 1)), "Use Channel" + str(id))

@@ -300,7 +300,7 @@ def instantiateComponent(evsysComponent):
     for id in range(0, channel):
         evsysChannel=evsysComponent.createBooleanSymbol(
             "EVSYS_CHANNEL_" + str(id), evsysSym_Menu)
-        evsysChannel.setLabel("Enable Channel" + str(id))
+        evsysChannel.setLabel("Enable Channel " + str(id))
         evsysChannel.setDefaultValue(False)
 
         # Dummy symbol to control clock enable
@@ -345,6 +345,7 @@ def instantiateComponent(evsysComponent):
         evsysGeneratorActive.setDefaultValue(False)
         evsysGeneratorActive.setVisible(True)
         evsysGeneratorActive.setLabel("Channel Generator source Active")
+        evsysGeneratorActive.setReadOnly(True)
         generatorSymbol.append("EVSYS_CHANNEL_" + str(id) + "_GENERATOR")
         evsysGeneratorActive.setDependencies(channelSource, generatorSymbol)
         del generatorSymbol[-1]
@@ -402,8 +403,9 @@ def instantiateComponent(evsysComponent):
         evsysUserReady=evsysComponent.createBooleanSymbol(
             "EVSYS_CHANNEL_" + str(id) + "_USER_READY", evsysChannelMenu)
         evsysUserReady.setDefaultValue(False)
-        evsysUserReady.setVisible(False)
-        evsysUserReady.setLabel("Channel" + str(id) + "Users Ready")
+        evsysUserReady.setVisible(True)
+        evsysUserReady.setLabel("Channel Users Ready")
+        evsysUserReady.setReadOnly(True)
         evsysUserReady.setDependencies(userStatus, channelUserDependency)
 
         if id <= numsyncChannels:
@@ -427,7 +429,7 @@ def instantiateComponent(evsysComponent):
     for id in user.keys():
         evsysUserChannel=evsysComponent.createKeyValueSetSymbol(
             "EVSYS_USER_" + str(id), evsysUserMenu)
-        evsysUserChannel.setLabel(str(user.get(id)) + " Chanel Selection")
+        evsysUserChannel.setLabel(str(user.get(id)) + " Channel Selection")
         evsysUserChannel.addKey("NONE", str(0), "No Channel Selected")
         for i in range(0, channel):
             evsysUserChannel.addKey(
