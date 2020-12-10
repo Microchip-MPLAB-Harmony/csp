@@ -20,6 +20,11 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
+import re
+import xml.etree.ElementTree as ET
+import os.path
+import inspect
+
 global sort_alphanumeric
 
 def sort_alphanumeric(l):
@@ -256,34 +261,34 @@ def ClockModeInfo(symbol, event):
 
 def showMasterDependencies(symbol, event):
 
-    if event["symbol"].getKey(event["value"]) == "Master mode":
+    if event["source"].getSymbolByID("SPI_MSTR_MODE_EN").getSelectedKey() == "Master mode":
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
 
 def showSlaveDependencies(symbol, event):
-    if event["symbol"].getKey(event["value"]) == "Slave mode":
+    if event["source"].getSymbolByID("SPI_MSTR_MODE_EN").getSelectedKey() == "Slave mode":
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
 
 def spiMasterModeFileGeneration(symbol, event):
-    symbol.setEnabled(event["symbol"].getKey(event["value"]) == "Master mode")
+    symbol.setEnabled(event["source"].getSymbolByID("SPI_MSTR_MODE_EN").getSelectedKey() == "Master mode")
 
 def spiSlaveModeFileGeneration(symbol, event):
-    symbol.setEnabled(event["symbol"].getKey(event["value"]) == "Slave mode")
+    symbol.setEnabled(event["source"].getSymbolByID("SPI_MSTR_MODE_EN").getSelectedKey() == "Slave mode")
 
 def updateSPISlaveBusyPinVisibility(symbol, event):
 
-    spiMode = event["source"].getSymbolByID("SPI_MSTR_MODE_EN").getKey(event["value"])
-    busyPinEnabled = event["source"].getSymbolByID("SPIS_USE_BUSY_PIN").getValue() == True
+    spiMode = event["source"].getSymbolByID("SPI_MSTR_MODE_EN").getSelectedKey()
+    busyPinEnabled = event["source"].getSymbolByID("SPIS_USE_BUSY_PIN").getValue()
     symbol.setVisible(spiMode == "Slave mode" and busyPinEnabled == True)
 
 def updateCNxValue(symbol, event):
     symbol.setValue(event["symbol"].getSelectedValue())
 
 def updateIntReadOnlyAttr(symbol, event):
-    symbol.setReadOnly(event["symbol"].getKey(event["value"]) == "Slave mode")
+    symbol.setReadOnly(event["source"].getSymbolByID("SPI_MSTR_MODE_EN").getSelectedKey() == "Slave mode")
 
 def calculateBRGValue(clkfreq, baudRate):
 
@@ -339,8 +344,14 @@ def _find_key(value, keypairs):
     return ""
 
 def DummyData_ValueUpdate(symbol, event):
-    symbol.setValue(dummyDataDict[str(event["value"])], 1)
-    symbol.setMax(dummyDataDict[str(event["value"])])
+    spiMode = event["source"].getSymbolByID("SPI_MSTR_MODE_EN").getSelectedKey()
+
+    if event["id"] == "SPI_MSTR_MODE_EN":
+        symbol.setVisible(spiMode == "Master mode")
+
+    elif spiMode == "Master mode" and event["id"] == "SPI_SPICON_MODE":
+        symbol.setValue(dummyDataDict[str(event["value"])], 1)
+        symbol.setMax(dummyDataDict[str(event["value"])])
 
 def updateSPIClockWarningStatus(symbol, event):
 
@@ -354,6 +365,85 @@ def onCapabilityConnected(event):
     # is ready to accept configuration parameters from the dependent component
     argDict = {"localComponentID" : localComponent.getID()}
     argDict = Database.sendMessage(remoteComponent.getID(), "REQUEST_CONFIG_PARAMS", argDict)
+
+
+
+def updateCNxValue (symbol, event):
+
+    cnPinCountNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"PORT\"]/instance@[name=\"PORT\"]/parameters/param@[name=\"CN_PIN_COUNT\"]")
+    CnPinCount = int(cnPinCountNode.getAttribute("value"))
+
+    for i in range(CnPinCount):
+
+        key = Database.getSymbolValue("core", "CN_PIN_" + str(i) + "_NAME")
+        value = "CN" + str(i) + "_PIN"
+        desc = key.split("_",2)
+        symbol.addKey(key, value, desc[2])
+
+def showCSPinConfigOptions (symbol, event):
+    mode = event["source"].getSymbolByID("SPI_MSTR_MODE_EN").getSelectedKey()
+    symbol.setVisible(mode == "Slave mode")
+
+def getChipSelectPinList(ss_pin):
+    # parse XML
+    global pinoutXmlPath
+    global spiSym_SPICON_MSTEN
+    gpioIP = ""
+    final_pin_list = []
+
+    processor = Variables.get("__PROCESSOR")
+    if ("PIC32MX" in processor):
+        deviceFamily = Database.getSymbolValue("core", "DEVICE_FAMILY")
+        if deviceFamily in ["DS60001185", "DS60001290", "DS60001404", "DS60001168"]:
+            gpioIP = "gpio_01618"
+        elif deviceFamily in ["DS60001156", "DS60001143"]:
+            gpioIP = "gpio_01166"
+    else:
+        gpioIP = "gpio_02467"
+
+    currentPath = os.path.dirname(os.path.abspath(inspect.stack()[0][1]))
+    gpioPlibPath = os.path.split(currentPath)[0]
+    gpioPlibPath = os.path.split(gpioPlibPath)[0]
+    gpioPlibPath = os.path.join(gpioPlibPath, gpioIP)
+    deviceXmlPath = os.path.join(gpioPlibPath, "plugin/pin_xml/components/" + Variables.get("__PROCESSOR") + ".xml")
+    deviceXmlTree = ET.parse(deviceXmlPath)
+    deviceXmlRoot = deviceXmlTree.getroot()
+
+    if gpioIP == "gpio_01166":
+        spiSym_SPICON_MSTEN.setReadOnly(True)
+    else:
+        pinoutXmlName = deviceXmlRoot.get("families")
+        pinoutXmlPath = os.path.join(gpioPlibPath, "plugin/pin_xml/families/" + pinoutXmlName + ".xml")
+        pinoutXmlPath = os.path.normpath(pinoutXmlPath)
+
+        tree = ET.parse(pinoutXmlPath)
+        root = tree.getroot()
+        tag_list = [elem.tag for elem in root.iter()]
+        # Get all elements with tag = "group" and having attribute "id"
+        group_elements = root.findall(".//group/[@id]")
+        # Get a list of all group elements. Each element of list is a dictionary.
+        # key is tag and value is attribute which is another dictionary.
+        group_elements_list = [{t.tag : t.attrib} for t in group_elements]
+        final_pin_list = []
+        for group_elem in group_elements_list:
+            target_elements = root.findall(".//group/[@id='" + group_elem["group"]["id"] + "']/*")
+            # Create a list containing a dictionary of "tag":"attrib"
+            # Each element of list is a dictionary. t.attrib is another dictionary.
+            result = [{t.tag : t.attrib} for t in target_elements]
+            for dic in result:
+                if "function" in dic:
+                    if ss_pin in dic["function"]["name"] and dic["function"]["direction"] == "in":
+                        # Found the group containing the SSx function
+                        for dic in result:
+                            if "pin" in dic:
+                                pin = dic["pin"]["name"]
+                                # Discard any pin that does not start with character 'R'. Example: "PTG30"
+                                if pin.startswith('R'):
+                                    final_pin_list.append(pin.replace('P', ''))
+                        break
+
+    final_pin_list.sort()
+    return final_pin_list
 
 def instantiateComponent(spiComponent):
 
@@ -620,7 +710,7 @@ def instantiateComponent(spiComponent):
     spiSymDummyData.setDescription("Dummy Data to be written during SPI Read")
     spiSymDummyData.setDefaultValue(0xFF)
     spiSymDummyData.setMin(0x0)
-    spiSymDummyData.setDependencies(DummyData_ValueUpdate, ["SPI_SPICON_MODE"])
+    spiSymDummyData.setDependencies(DummyData_ValueUpdate, ["SPI_SPICON_MODE", "SPI_MSTR_MODE_EN"])
 
     spiSymClockModeComment = spiComponent.createCommentSymbol("SPI_CLOCK_MODE_COMMENT", None)
     spiSymClockModeComment.setLabel("***SPI Mode 0 Selected***")
@@ -629,7 +719,7 @@ def instantiateComponent(spiComponent):
     # SPIS_TX_BUFFER_SIZE
     spisSym_TXBuffer_Size = spiComponent.createIntegerSymbol("SPIS_TX_BUFFER_SIZE", None)
     spisSym_TXBuffer_Size.setLabel("TX Buffer Size (in bytes)")
-    spisSym_TXBuffer_Size.setMin(0)
+    spisSym_TXBuffer_Size.setMin(1)
     spisSym_TXBuffer_Size.setMax(65535)
     spisSym_TXBuffer_Size.setDefaultValue(256)
     spisSym_TXBuffer_Size.setVisible(False)
@@ -638,33 +728,24 @@ def instantiateComponent(spiComponent):
     # SPIS_RX_BUFFER_SIZE
     spisSym_RXBuffer_Size = spiComponent.createIntegerSymbol("SPIS_RX_BUFFER_SIZE", None)
     spisSym_RXBuffer_Size.setLabel("RX Buffer Size (in bytes)")
-    spisSym_RXBuffer_Size.setMin(0)
+    spisSym_RXBuffer_Size.setMin(1)
     spisSym_RXBuffer_Size.setMax(65535)
     spisSym_RXBuffer_Size.setDefaultValue(256)
     spisSym_RXBuffer_Size.setVisible(False)
     spisSym_RXBuffer_Size.setDependencies(showSlaveDependencies, ["SPI_MSTR_MODE_EN"])
 
-    cnPinCountNode = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"PORT\"]/instance@[name=\"PORT\"]/parameters/param@[name=\"CN_PIN_COUNT\"]")
-    CnPinCount = int(cnPinCountNode.getAttribute("value"))
-
-    # SPIS_CS_PIN
     spisSymCSPin = spiComponent.createKeyValueSetSymbol("SPIS_CS_PIN", None)
     spisSymCSPin.setVisible(False)
     spisSymCSPin.setLabel("Chip Select Pin")
     spisSymCSPin.setOutputMode("Key")
     spisSymCSPin.setDisplayMode("Description")
     spisSymCSPin.setDependencies(showSlaveDependencies, ["SPI_MSTR_MODE_EN"])
-    for i in range(CnPinCount):
-        key = Database.getSymbolValue("core", "CN_PIN_" + str(i) + "_NAME")
-        value = "CN" + str(i) + "_PIN"
-        desc = key.split("_",2)
-        spisSymCSPin.addKey(key, value, desc[2])
 
-    # SPI_CS_CNX
-    spisSymCNx = spiComponent.createStringSymbol("SPI_CS_CNX", None)
-    spisSymCNx.setDefaultValue(spisSymCSPin.getSelectedValue())
-    spisSymCNx.setVisible(False)
-    spisSymCNx.setDependencies(updateCNxValue, ["SPIS_CS_PIN"])
+    # SPIS_CS_PIN
+    slaveSelectPinList = getChipSelectPinList("SS" + spiInstanceNum.getValue())
+
+    for pin in slaveSelectPinList:
+        spisSymCSPin.addKey(pin, pin, pin)
 
     # SPIS_CS_PIN_LOGIC_LEVEL
     spisSymCSPinLogicLevel = spiComponent.createKeyValueSetSymbol("SPIS_CS_PIN_LOGIC_LEVEL", spisSymCSPin)
@@ -675,14 +756,13 @@ def instantiateComponent(spiComponent):
     spisSymCSPinLogicLevel.setDefaultValue(0)
     spisSymCSPinLogicLevel.setOutputMode("Key")
     spisSymCSPinLogicLevel.setDisplayMode("Description")
-    spisSymCSPinLogicLevel.setVisible(False)
-    spisSymCSPinLogicLevel.setDependencies(showSlaveDependencies, ["SPI_MSTR_MODE_EN"])
+    spisSymCSPinLogicLevel.setDependencies(showCSPinConfigOptions, ["SPI_MSTR_MODE_EN"])
 
     # SPIS_CS_PIN_CONFIG_COMMENT
-    spisSymBusyPinConfigComment = spiComponent.createCommentSymbol("SPIS_CS_PIN_CONFIG_COMMENT", spisSymCSPin)
-    spisSymBusyPinConfigComment.setVisible(False)
-    spisSymBusyPinConfigComment.setLabel("***Enable Change Notification function for the CS pin in Pin Manager***")
-    spisSymBusyPinConfigComment.setDependencies(showSlaveDependencies, ["SPI_MSTR_MODE_EN"])
+    spisSymCSPinConfigComment = spiComponent.createCommentSymbol("SPIS_CS_PIN_CONFIG_COMMENT", spisSymCSPin)
+    spisSymCSPinConfigComment.setVisible(False)
+    spisSymCSPinConfigComment.setLabel("***Enable Change Notification on the Chip Select pin in Pin Manager***")
+    spisSymCSPinConfigComment.setDependencies(showCSPinConfigOptions, ["SPI_MSTR_MODE_EN"])
 
     # SPIS_USE_BUSY_PIN
     spisSymUseBusyPin = spiComponent.createBooleanSymbol("SPIS_USE_BUSY_PIN", None)

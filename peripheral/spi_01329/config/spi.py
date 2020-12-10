@@ -340,8 +340,17 @@ def onCapabilityConnected(event):
 def getChipSelectPinList(ss_pin):
     # parse XML
     global pinoutXmlPath
-    node = ATDF.getNode("/avr-tools-device-file/devices/device/peripherals/module@[name=\"GPIO\"]")
-    gpioIP = "gpio_" + node.getAttribute("id")
+    gpioIP = ""
+
+    processor = Variables.get("__PROCESSOR")
+    if ("PIC32MX" in processor):
+        deviceFamily = Database.getSymbolValue("core", "DEVICE_FAMILY")
+        if deviceFamily in ["DS60001185", "DS60001290", "DS60001404", "DS60001168"]:
+            gpioIP = "gpio_01618"
+        elif deviceFamily in ["DS60001156", "DS60001143"]:
+            gpioIP = "gpio_01166"
+    else:
+        gpioIP = "gpio_02467"
 
     currentPath = os.path.dirname(os.path.abspath(inspect.stack()[0][1]))
     gpioPlibPath = os.path.split(currentPath)[0]
@@ -371,7 +380,7 @@ def getChipSelectPinList(ss_pin):
             if "function" in dic:
                 if ss_pin in dic["function"]["name"] and dic["function"]["direction"] == "in":
                     # Found the group containing the SSx function
-                    for dic in result:                        
+                    for dic in result:
                         if "pin" in dic:
                             pin = dic["pin"]["name"]
                             # Discard any pin that does not start with character 'R'. Example: "PTG30"
@@ -696,7 +705,7 @@ def instantiateComponent(spiComponent):
     # SPIS_TX_BUFFER_SIZE
     spisSym_TXBuffer_Size = spiComponent.createIntegerSymbol("SPIS_TX_BUFFER_SIZE", None)
     spisSym_TXBuffer_Size.setLabel("TX Buffer Size (in bytes)")
-    spisSym_TXBuffer_Size.setMin(0)
+    spisSym_TXBuffer_Size.setMin(1)
     spisSym_TXBuffer_Size.setMax(65535)
     spisSym_TXBuffer_Size.setDefaultValue(256)
     spisSym_TXBuffer_Size.setVisible(False)
@@ -705,7 +714,7 @@ def instantiateComponent(spiComponent):
     # SPIS_RX_BUFFER_SIZE
     spisSym_RXBuffer_Size = spiComponent.createIntegerSymbol("SPIS_RX_BUFFER_SIZE", None)
     spisSym_RXBuffer_Size.setLabel("RX Buffer Size (in bytes)")
-    spisSym_RXBuffer_Size.setMin(0)
+    spisSym_RXBuffer_Size.setMin(1)
     spisSym_RXBuffer_Size.setMax(65535)
     spisSym_RXBuffer_Size.setDefaultValue(256)
     spisSym_RXBuffer_Size.setVisible(False)
