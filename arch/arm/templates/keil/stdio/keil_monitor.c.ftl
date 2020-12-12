@@ -1,5 +1,5 @@
 /*******************************************************************************
- Debug Console Source file 
+ Debug Console Source file
 
   Company:
     Microchip Technology Inc.
@@ -46,6 +46,15 @@
     <#lt>#include <stdio.h>
 </#if>
 
+#if __ARMCC_VERSION >= 6000000
+    __asm(".global __use_no_semihosting");
+#else
+    #error Unsupported compiler
+#endif
+
+FILE __stdout;
+FILE __stdin;
+
 int fgetc(FILE* stream)
 {
     <#if stdio??>
@@ -75,4 +84,8 @@ int fputc(int c, FILE* stream)
     <#else>
         <#lt>    return 0;
     </#if>
+}
+
+void _sys_exit(int return_code) {
+  while (1);    /* endless loop */
 }
