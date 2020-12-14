@@ -215,4 +215,18 @@ SECTIONS
 		. = ALIGN(8);
 		_cstack = .;
 	} >ram
+
+   	 _end = .;
+	_ramcode_lma = _end;
+	.ramcode :
+	AT ( _ramcode_lma )
+	{
+		_sramcode = .; *(.ramcode_section); _eramcode = .;
+	} > sram
+	_ramdata_lma = _end + _eramcode - _sramcode;
+	.ramdata :
+	AT ( _ramdata_lma )
+	{
+		_sramdata = .; *(.ramdata_section); _eramdata = .;
+	} > sram
 }
