@@ -89,8 +89,6 @@ typedef enum
 
 } FLEXCOM_SPI_SLAVE_ERROR;
 
-/****************************** SPI${SPI_INDEX?string} Interface *********************************/
-
 typedef  void (*FLEXCOM_SPI_SLAVE_CALLBACK) (uintptr_t context);
 
 // *****************************************************************************

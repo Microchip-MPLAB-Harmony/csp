@@ -83,14 +83,29 @@ void ${FLEXCOM_INSTANCE_NAME}_SPI_Initialize( void )
 
 <#if FLEXCOM_SPI_MR_MSTR == "MASTER">
     /* Enable Master mode, select clock source, select particular NPCS line for chip select and disable mode fault detection */
-    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_MR = SPI_MR_MSTR_Msk | SPI_MR_BRSRCCLK_${FLEXCOM_SPI_MR_BRSRCCLK} <#if FLEXCOM_SPI_MR_PCS != "GPIO">| SPI_MR_PCS(${FLEXCOM_SPI_MR_PCS?remove_beginning("NPCS")})<#else>| SPI_MR_PCS(0)</#if> | SPI_MR_MODFDIS_Msk;
-<#else>
-    /* SPI is by default in Slave Mode, disable mode fault detection */
-    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_MR = SPI_MR_MODFDIS_Msk;
+    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_MR = SPI_MR_MSTR_Msk | SPI_MR_BRSRCCLK_${FLEXCOM_SPI_MR_BRSRCCLK} | SPI_MR_DLYBCS(${FLEXCOM_SPI_MR_DLYBCS}) <#if FLEXCOM_SPI_EN_NPCS0?? && FLEXCOM_SPI_EN_NPCS0 == true>| SPI_MR_PCS(FLEXCOM_SPI_CHIP_SELECT_NPCS0)<#elseif FLEXCOM_SPI_EN_NPCS1?? && FLEXCOM_SPI_EN_NPCS1 == true>| SPI_MR_PCS(FLEXCOM_SPI_CHIP_SELECT_NPCS1) <#elseif FLEXCOM_SPI_EN_NPCS2?? && FLEXCOM_SPI_EN_NPCS2 == true>| SPI_MR_PCS(FLEXCOM_SPI_CHIP_SELECT_NPCS2) <#elseif FLEXCOM_SPI_EN_NPCS3?? && FLEXCOM_SPI_EN_NPCS3 == true>| SPI_MR_PCS(FLEXCOM_SPI_CHIP_SELECT_NPCS3)</#if> | SPI_MR_MODFDIS_Msk;
 </#if>
 
-    /* Set up clock Polarity, data phase, Communication Width, Baud Rate<#if FLEXCOM_SPI_MR_PCS != "GPIO"> and Chip select active after transfer</#if> */
-    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_CSR[${FLEXCOM_SPI_CSR_INDEX}] = SPI_CSR_CPOL(${FLEXCOM_SPI_CSR_CPOL}) | SPI_CSR_NCPHA(${FLEXCOM_SPI_CSR_NCPHA}) | SPI_CSR_BITS${FLEXCOM_SPI_CSR_BITS} | SPI_CSR_SCBR(${FLEXCOM_SPI_CSR_SCBR_VALUE})<#if FLEXCOM_SPI_MR_PCS != "GPIO"> | SPI_CSR_CSAAT_Msk</#if>;
+<#if FLEXCOM_SPI_EN_NPCS0?? && FLEXCOM_SPI_EN_NPCS0 == true>
+    /* Set up clock Polarity, data phase, Communication Width, Baud Rate */
+    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_CSR[0] = SPI_CSR_CPOL(${FLEXCOM_SPI_CSR0_CPOL}) | SPI_CSR_NCPHA(${FLEXCOM_SPI_CSR0_NCPHA}) | SPI_CSR_BITS${FLEXCOM_SPI_CSR0_BITS} | SPI_CSR_SCBR(${FLEXCOM_SPI_CSR0_SCBR_VALUE})| SPI_CSR_DLYBS(${FLEXCOM_SPI_CSR0_DLYBS}) | SPI_CSR_DLYBCT(${FLEXCOM_SPI_CSR0_DLYBCT}) | SPI_CSR_CSAAT_Msk;
+</#if>
+
+<#if FLEXCOM_SPI_EN_NPCS1?? && FLEXCOM_SPI_EN_NPCS1 == true>
+    /* Set up clock Polarity, data phase, Communication Width, Baud Rate */
+    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_CSR[1] = SPI_CSR_CPOL(${FLEXCOM_SPI_CSR1_CPOL}) | SPI_CSR_NCPHA(${FLEXCOM_SPI_CSR1_NCPHA}) | SPI_CSR_BITS${FLEXCOM_SPI_CSR1_BITS} | SPI_CSR_SCBR(${FLEXCOM_SPI_CSR1_SCBR_VALUE})| SPI_CSR_DLYBS(${FLEXCOM_SPI_CSR1_DLYBS}) | SPI_CSR_DLYBCT(${FLEXCOM_SPI_CSR1_DLYBCT}) | SPI_CSR_CSAAT_Msk;
+</#if>
+
+<#if FLEXCOM_SPI_EN_NPCS2?? && FLEXCOM_SPI_EN_NPCS2 == true>
+    /* Set up clock Polarity, data phase, Communication Width, Baud Rate */
+    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_CSR[2] = SPI_CSR_CPOL(${FLEXCOM_SPI_CSR2_CPOL}) | SPI_CSR_NCPHA(${FLEXCOM_SPI_CSR2_NCPHA}) | SPI_CSR_BITS${FLEXCOM_SPI_CSR2_BITS} | SPI_CSR_SCBR(${FLEXCOM_SPI_CSR2_SCBR_VALUE})| SPI_CSR_DLYBS(${FLEXCOM_SPI_CSR2_DLYBS}) | SPI_CSR_DLYBCT(${FLEXCOM_SPI_CSR2_DLYBCT}) | SPI_CSR_CSAAT_Msk;
+</#if>
+
+<#if FLEXCOM_SPI_EN_NPCS3?? && FLEXCOM_SPI_EN_NPCS3 == true>
+    /* Set up clock Polarity, data phase, Communication Width, Baud Rate */
+    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_CSR[3] = SPI_CSR_CPOL(${FLEXCOM_SPI_CSR3_CPOL}) | SPI_CSR_NCPHA(${FLEXCOM_SPI_CSR3_NCPHA}) | SPI_CSR_BITS${FLEXCOM_SPI_CSR3_BITS} | SPI_CSR_SCBR(${FLEXCOM_SPI_CSR3_SCBR_VALUE})| SPI_CSR_DLYBS(${FLEXCOM_SPI_CSR3_DLYBS}) | SPI_CSR_DLYBCT(${FLEXCOM_SPI_CSR3_DLYBCT}) | SPI_CSR_CSAAT_Msk;
+</#if>
+
 
 <#if SPI_INTERRUPT_MODE == true >
     /* Initialize global variables */
@@ -101,6 +116,45 @@ void ${FLEXCOM_INSTANCE_NAME}_SPI_Initialize( void )
     /* Enable ${FLEXCOM_INSTANCE_NAME} SPI */
     SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_CR = SPI_CR_SPIEN_Msk;
 }
+
+<#if FLEXCOM_SPI_NUM_CSR != 1>
+static uint8_t ${FLEXCOM_INSTANCE_NAME}_SPI_ChipSelectGet(void)
+{
+    uint8_t pcs = (uint8_t)((SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_MR  & SPI_MR_PCS_Msk) >> SPI_MR_PCS_Pos);
+
+    if (pcs == FLEXCOM_SPI_CHIP_SELECT_NPCS0)
+    {
+        return 0;
+    }
+<#if FLEXCOM_SPI_EN_NPCS1??>
+    else if (pcs == FLEXCOM_SPI_CHIP_SELECT_NPCS1)
+    {
+        return 1;
+    }
+</#if>
+<#if FLEXCOM_SPI_EN_NPCS2??>
+    else if (pcs == FLEXCOM_SPI_CHIP_SELECT_NPCS2)
+    {
+        return 2;
+    }
+</#if>
+<#if FLEXCOM_SPI_EN_NPCS3??>
+    else if (pcs == FLEXCOM_SPI_CHIP_SELECT_NPCS3)
+    {
+        return 3;
+    }
+</#if>
+    else
+    {
+        return 0;
+    }
+}
+
+void ${FLEXCOM_INSTANCE_NAME}_SPI_ChipSelectSetup(FLEXCOM_SPI_CHIP_SELECT chipSelect)
+{
+    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_MR =  (SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_MR & ~SPI_MR_PCS_Msk) | SPI_MR_PCS(chipSelect);
+}
+</#if>
 
 <#if SPI_INTERRUPT_MODE == false>
 bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead( void* pTransmitData, size_t txSize, void* pReceiveData, size_t rxSize )
@@ -124,7 +178,11 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead( void* pTransmitData, size_t txSize,
             rxSize = 0;
         }
 
+<#if FLEXCOM_SPI_NUM_CSR == 1>
         dataBits = SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_CSR[${FLEXCOM_SPI_CSR_INDEX}] & SPI_CSR_BITS_Msk;
+<#else>
+        dataBits = SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_CSR[${FLEXCOM_INSTANCE_NAME}_SPI_ChipSelectGet()] & SPI_CSR_BITS_Msk;
+</#if>
 
         /* Flush out any unread data in SPI read buffer from the previous transfer */
         receivedData = (SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_RDR & SPI_RDR_RD_Msk) >> SPI_RDR_RD_Pos;
@@ -309,8 +367,12 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_WriteRead( void* pTransmitData, size_t txSize,
             ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.dummySize = ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rxSize - ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txSize;
         }
 
+<#if FLEXCOM_SPI_NUM_CSR == 1>
         /* Start the first write here itself, rest will happen in ISR context */
         if((SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_CSR[${FLEXCOM_SPI_CSR_INDEX}] & SPI_CSR_BITS_Msk) == SPI_CSR_BITS_8_BIT)
+<#else>
+        if((SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_CSR[${FLEXCOM_INSTANCE_NAME}_SPI_ChipSelectGet()] & SPI_CSR_BITS_Msk) == SPI_CSR_BITS_8_BIT)
+</#if>
         {
             if (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txCount < ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.txSize)
             {
@@ -384,7 +446,11 @@ bool ${FLEXCOM_INSTANCE_NAME}_SPI_TransferSetup( FLEXCOM_SPI_TRANSFER_SETUP * se
         scbr = 255;
     }
 
-    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_CSR[${FLEXCOM_SPI_CSR_INDEX}] = (uint32_t)setup->clockPolarity | (uint32_t)setup->clockPhase | (uint32_t)setup->dataBits | SPI_CSR_SCBR(scbr);
+<#if FLEXCOM_SPI_NUM_CSR == 1>
+    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_CSR[${FLEXCOM_SPI_CSR_INDEX}] = (SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_CSR[${FLEXCOM_SPI_CSR_INDEX}] & ~(SPI_CSR_CPOL_Msk | SPI_CSR_NCPHA_Msk | SPI_CSR_BITS_Msk | SPI_CSR_SCBR_Msk)) | ((uint32_t)setup->clockPolarity | (uint32_t)setup->clockPhase | (uint32_t)setup->dataBits | SPI_CSR_SCBR(scbr));
+<#else>
+    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_CSR[${FLEXCOM_INSTANCE_NAME}_SPI_ChipSelectGet()] = (SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_CSR[${FLEXCOM_SPI_CSR_INDEX}] & ~(SPI_CSR_CPOL_Msk | SPI_CSR_NCPHA_Msk | SPI_CSR_BITS_Msk | SPI_CSR_SCBR_Msk)) | ((uint32_t)setup->clockPolarity | (uint32_t)setup->clockPhase | (uint32_t)setup->dataBits | SPI_CSR_SCBR(scbr));
+</#if>
 
     return true;
 }
@@ -416,7 +482,11 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler( void )
 <#if !(USE_SPI_DMA?? && USE_SPI_DMA == true)>
     uint32_t dataBits;
     uint32_t receivedData;
+<#if FLEXCOM_SPI_NUM_CSR == 1>
     dataBits = SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_CSR[${FLEXCOM_SPI_CSR_INDEX}] & SPI_CSR_BITS_Msk;
+<#else>
+    dataBits = SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_CSR[${FLEXCOM_INSTANCE_NAME}_SPI_ChipSelectGet()] & SPI_CSR_BITS_Msk;
+</#if>
 
     static bool isLastByteTransferInProgress = false;
 <#else>

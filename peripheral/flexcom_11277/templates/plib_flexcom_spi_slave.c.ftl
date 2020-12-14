@@ -56,7 +56,7 @@
 </#if>
 #include <string.h>
 
-<#if FLEXCOM_SPI_CSR_BITS = "_8_BIT">
+<#if FLEXCOM_SPI_CSR0_BITS = "_8_BIT">
 #define ${FLEXCOM_INSTANCE_NAME}_READ_BUFFER_SIZE            ${FLEXCOM_SPIS_RX_BUFFER_SIZE}
 #define ${FLEXCOM_INSTANCE_NAME}_WRITE_BUFFER_SIZE           ${FLEXCOM_SPIS_TX_BUFFER_SIZE}
 
@@ -93,7 +93,7 @@ void ${FLEXCOM_INSTANCE_NAME}_SPI_Initialize( void )
     SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_MR = SPI_MR_MODFDIS_Msk;
 
     /* Set up clock Polarity, data phase, Communication Width */
-    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_CSR[${FLEXCOM_SPI_CSR_INDEX}] = SPI_CSR_CPOL(${FLEXCOM_SPI_CSR_CPOL}) | SPI_CSR_NCPHA(${FLEXCOM_SPI_CSR_NCPHA}) | SPI_CSR_BITS${FLEXCOM_SPI_CSR_BITS};
+    SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_CSR[0] = SPI_CSR_CPOL(${FLEXCOM_SPI_CSR0_CPOL}) | SPI_CSR_NCPHA(${FLEXCOM_SPI_CSR0_NCPHA}) | SPI_CSR_BITS${FLEXCOM_SPI_CSR0_BITS};
 
     ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.rdInIndex = 0;
     ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.wrOutIndex = 0;
@@ -129,7 +129,7 @@ size_t ${FLEXCOM_INSTANCE_NAME}_SPI_Read(void* pRdBuffer, size_t size)
         rdSize = rdInIndex;
     }
 
-<#if FLEXCOM_SPI_CSR_BITS = "_8_BIT">
+<#if FLEXCOM_SPI_CSR0_BITS = "_8_BIT">
     memcpy(pRdBuffer, ${FLEXCOM_INSTANCE_NAME}_ReadBuffer, rdSize);
 <#else>
     memcpy(pRdBuffer, ${FLEXCOM_INSTANCE_NAME}_ReadBuffer, (rdSize << 1));
@@ -151,7 +151,7 @@ size_t ${FLEXCOM_INSTANCE_NAME}_SPI_Write(void* pWrBuffer, size_t size )
         wrSize = ${FLEXCOM_INSTANCE_NAME}_WRITE_BUFFER_SIZE;
     }
 
-<#if FLEXCOM_SPI_CSR_BITS = "_8_BIT">
+<#if FLEXCOM_SPI_CSR0_BITS = "_8_BIT">
     memcpy(${FLEXCOM_INSTANCE_NAME}_WriteBuffer, pWrBuffer, wrSize);
 <#else>
     memcpy(${FLEXCOM_INSTANCE_NAME}_WriteBuffer, pWrBuffer, (wrSize << 1));
@@ -162,7 +162,7 @@ size_t ${FLEXCOM_INSTANCE_NAME}_SPI_Write(void* pWrBuffer, size_t size )
 
     while ((SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_SR & SPI_SR_TDRE_Msk) && (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.wrOutIndex < ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.nWrBytes))
     {
-<#if FLEXCOM_SPI_CSR_BITS = "_8_BIT">
+<#if FLEXCOM_SPI_CSR0_BITS = "_8_BIT">
         *((uint8_t*)&SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_TDR) = ${FLEXCOM_INSTANCE_NAME}_WriteBuffer[${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.wrOutIndex++];
 <#else>
         *((uint16_t*)&SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_TDR) = ${FLEXCOM_INSTANCE_NAME}_WriteBuffer[${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.wrOutIndex++];
@@ -229,7 +229,7 @@ FLEXCOM_SPI_SLAVE_ERROR ${FLEXCOM_INSTANCE_NAME}_SPI_ErrorGet(void)
 
 void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
 {
-<#if FLEXCOM_SPI_CSR_BITS = "_8_BIT">
+<#if FLEXCOM_SPI_CSR0_BITS = "_8_BIT">
     uint8_t txRxData = 0;
 <#else>
     uint16_t txRxData = 0;
@@ -260,7 +260,7 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
 
         while ((statusFlags |= SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_SR) & SPI_SR_RDRF_Msk)
         {
-<#if FLEXCOM_SPI_CSR_BITS = "_8_BIT">
+<#if FLEXCOM_SPI_CSR0_BITS = "_8_BIT">
             /* Reading DATA register will also clear the RDRF flag */
             txRxData = *((uint8_t*)&SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_RDR);
 <#else>
@@ -280,7 +280,7 @@ void ${FLEXCOM_INSTANCE_NAME}_InterruptHandler(void)
     {
         while (((statusFlags |= SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_SR) & SPI_SR_TDRE_Msk) && (${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.wrOutIndex < ${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.nWrBytes))
         {
-<#if FLEXCOM_SPI_CSR_BITS = "_8_BIT">
+<#if FLEXCOM_SPI_CSR0_BITS = "_8_BIT">
             *((uint8_t*)&SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_TDR) = ${FLEXCOM_INSTANCE_NAME}_WriteBuffer[${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.wrOutIndex++];
 <#else>
             *((uint16_t*)&SPI${FLEXCOM_INSTANCE_NUMBER}_REGS->SPI_TDR) = ${FLEXCOM_INSTANCE_NAME}_WriteBuffer[${FLEXCOM_INSTANCE_NAME?lower_case}SpiObj.wrOutIndex++];
