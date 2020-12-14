@@ -92,6 +92,8 @@ void ${WDT_INSTANCE_NAME}_Disable( void );
 
 void ${WDT_INSTANCE_NAME}_Clear( void );
 
+void ${WDT_INSTANCE_NAME}_ClearWithSync( void );
+
 <#if WDT_EW_ENABLE = true>
 void ${WDT_INSTANCE_NAME}_CallbackRegister( WDT_CALLBACK callback, uintptr_t context );
 </#if>
