@@ -81,7 +81,12 @@ peripherals = {
                 "PWM_6343"      : ["PWM"],
                 "TCC_U2213"     : ["PWM"],
                 "QEI_01494"     : ["QDEC"],
-                "PDEC_U2263"    : ["QDEC", "HALL"]
+                "PDEC_U2263"    : ["QDEC", "HALL"],
+                "PM_U2206"      : ["PM"],
+                "PM_U2240"      : ["PM"],
+                "PM_U2406"      : ["PM"],
+                "SUPC_U2117"    : ["SUPC"],
+                "SUPC_U2407"    : ["SUPC"]
 }
 
 # a dictionary to translate the new id mentioned in ATDF to old id used in csp
