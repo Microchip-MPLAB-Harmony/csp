@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- This is an auto-generated pin data file created: 14:03:23 11/07/19 -->
+<!-- This is an auto-generated pin data file created: 00:41:16 12/15/20 -->
 <pinfile family="MZW1_132">
    <packages>
      <package diagram="MZ_W1_132_DQFN" id="1" name="DQFN" />
@@ -620,7 +620,7 @@
     <pin name="RA14">
        <number package="1" pin="B41" />
       <function name="TRCLK" />
-      <function name="AN12" />
+      <function name="AN14" />
       <function name="ANN0" />
       <function name="CVD14" />
       <function name="CVDR14" />
