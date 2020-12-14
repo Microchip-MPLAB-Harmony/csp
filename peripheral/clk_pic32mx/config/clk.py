@@ -915,6 +915,8 @@ if __name__ == "__main__":
     global clkValGrp_OSCTUN__TUN
     global clkValGrp_OSCCON__DRMEN
     global clkValGrp_OSCCON__SLP2SPD
+    global clkValGrp_OSCCON__SLOCK
+    global clkValGrp_OSCCON__LOCK
     global clkValGrp_REFOCON__OE
     global clkValGrp_REFOCON__ON
     global clkValGrp_REFOCON__RODIV
@@ -969,6 +971,8 @@ if __name__ == "__main__":
     clkValGrp_OSCTUN__TUN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OSC"]/value-group@[name="OSCTUN__TUN"]')
     clkValGrp_OSCCON__DRMEN = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OSC"]/value-group@[name="OSCCON__DRMEN"]')
     clkValGrp_OSCCON__SLP2SPD = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OSC"]/value-group@[name="OSCCON__SLP2SPD"]')
+    clkValGrp_OSCCON__SLOCK = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OSC"]/value-group@[name="OSCCON__SLOCK"]')
+    clkValGrp_OSCCON__LOCK = ATDF.getNode('/avr-tools-device-file/modules/module@[name="OSC"]/value-group@[name="OSCCON__LOCK"]')
 
     # parse atdf file to get key parameters
     atdf_file_path = join(Variables.get("__DFP_PACK_DIR"), "atdf", Variables.get("__PROCESSOR") + ".atdf")
@@ -1211,6 +1215,14 @@ if __name__ == "__main__":
         pmdxValue = Database.getSymbolValue("core", periPMDRegId)
         periPMDRegBitShift = 1 << int(peripheralModuleDisableDict["REFO"][1])
         Database.setSymbolValue("core", periPMDRegId, pmdxValue & ~periPMDRegBitShift, 1)
+
+    if clkValGrp_OSCCON__SLOCK is not None or clkValGrp_OSCCON__LOCK is not None:
+        pllLockStatusOption = coreComponent.createStringSymbol("PLL_LOCK_STATUS_OPTION", SYM_CLK_MENU)
+        pllLockStatusOption.setVisible(False)
+        if clkValGrp_OSCCON__SLOCK is not None:
+            pllLockStatusOption.setDefaultValue("SLOCK")
+        else:
+            pllLockStatusOption.setDefaultValue("LOCK")
 
     # File handling below
     CONFIG_NAME = Variables.get("__CONFIGURATION_NAME")

@@ -92,6 +92,8 @@ void CLK_Initialize( void )
     <#assign REFOCONreg = "REFOCON">
 </#if>
 
+    /* Code for fuse settings can be found in "initialization.c" */
+    
 <#if (CONFIG_SYS_CLK_FRCDIV != FRCDIV_DEFAULT) ||
      ((USB_PART = true) && (CONFIG_SYS_CLK_UFRCEN == "ON")) ||
      ((CONFIG_SYS_CLK_REFCLK_ENABLE?has_content) && (CONFIG_SYS_CLK_REFCLK_ENABLE == true)) ||
@@ -143,9 +145,15 @@ void CLK_Initialize( void )
 
     /* Lock system since done with clock configuration */
     SYSKEY = 0x33333333;
-<#else>
-    /* Default clock setting is used, hence no code is generated */
-    /* Code for fuse settings can be found in "initialization.c" */
+</#if>
+
+<#if PLL_LOCK_STATUS_OPTION?has_content && CONFIG_FNOSC?contains("PLL")>
+    <#lt>    /* Wait for PLL to be locked */
+    <#if PLL_LOCK_STATUS_OPTION == "SLOCK">
+        <#lt>    while(!OSCCONbits.SLOCK);
+    <#else>
+        <#lt>    while(!OSCCONbits.LOCK);
+    </#if>
 </#if>
 
 <#if PMD_COUNT?has_content>
