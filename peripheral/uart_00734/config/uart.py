@@ -351,7 +351,7 @@ def onCapabilityConnected(event):
     argDict = {"localComponentID" : localComponent.getID()}
     argDict = Database.sendMessage(remoteComponent.getID(), "REQUEST_CONFIG_PARAMS", argDict)
 
-def updateAutoAddrSymVisibility(symbol, event):    
+def updateAutoAddrSymVisibility(symbol, event):
     pdbit_mode = event["source"].getSymbolByID("UART_PDBIT_SELECT").getSelectedValue()
 
     if pdbit_mode == "3":
@@ -362,11 +362,14 @@ def updateAutoAddrSymVisibility(symbol, event):
         symbol.setValue(False)
         symbol.setReadOnly(False)
 
-def updateAddrSymVisibility(symbol, event):    
+def updateAddrSymVisibility(symbol, event):
     pdbit_mode = event["source"].getSymbolByID("UART_PDBIT_SELECT").getSelectedValue()
     addr_detection_enable = event["source"].getSymbolByID("UART_AUTOMATIC_ADDR_DETECTION_ENABLE").getValue()
 
     symbol.setVisible(pdbit_mode == "3" and addr_detection_enable == True)
+
+def updateUSARTDataBits (symbol, event):
+    symbol.setValue("DRV_USART_DATA_9_BIT" if (event["value"] == 0) else "DRV_USART_DATA_8_BIT")
 
 ################################################################################
 #### Component ####
@@ -769,3 +772,8 @@ def instantiateComponent(uartComponent):
     uartSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     uartSystemDefFile.setSourcePath("../peripheral/uart_00734/templates/system/definitions.h.ftl")
     uartSystemDefFile.setMarkup(True)
+
+    uartSym_DataBits = uartComponent.createStringSymbol("USART_DATA_BITS", None)
+    uartSym_DataBits.setDefaultValue("DRV_USART_DATA_9_BIT" if (uartSym_U1MODE_PDSEL.getValue() == 0) else "DRV_USART_DATA_8_BIT")
+    uartSym_DataBits.setVisible(False)
+    uartSym_DataBits.setDependencies(updateUSARTDataBits, ["UART_PDBIT_SELECT"])
