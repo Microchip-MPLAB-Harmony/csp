@@ -66,6 +66,30 @@
 
 // *****************************************************************************
 // *****************************************************************************
+// Section:Preprocessor macros
+// *****************************************************************************
+// *****************************************************************************
+// *****************************************************************************
+
+// *****************************************************************************
+/* USART Error convenience macros */
+// *****************************************************************************
+// *****************************************************************************
+    /* Error status when no error has occurred */
+#define USART_ERROR_NONE 0U
+
+    /* Error status when parity error has occurred */
+#define USART_ERROR_PARITY SERCOM_USART_INT_STATUS_PERR_Msk
+
+    /* Error status when framing error has occurred */
+#define USART_ERROR_FRAMING SERCOM_USART_INT_STATUS_FERR_Msk
+
+    /* Error status when overrun error has occurred */
+#define USART_ERROR_OVERRUN SERCOM_USART_INT_STATUS_BUFOVF_Msk
+
+
+// *****************************************************************************
+// *****************************************************************************
 // Section: Data Types
 // *****************************************************************************
 // *****************************************************************************
@@ -85,21 +109,7 @@
     None.
 */
 
-typedef enum
-{
-    /* Error status when no error has occurred */
-    USART_ERROR_NONE,
-
-    /* Error status when parity error has occurred */
-    USART_ERROR_PARITY = SERCOM_USART_INT_STATUS_PERR_Msk,
-
-    /* Error status when framing error has occurred */
-    USART_ERROR_FRAMING = SERCOM_USART_INT_STATUS_FERR_Msk,
-
-    /* Error status when overrun error has occurred */
-    USART_ERROR_OVERRUN = SERCOM_USART_INT_STATUS_BUFOVF_Msk
-
-} USART_ERROR;
+typedef uint16_t USART_ERROR;
 
 // *****************************************************************************
 /* USART DATA
