@@ -72,7 +72,8 @@ def _process_valuegroup_entry(node):
     newstring = stringval.replace('L','')
     value = int(newstring,16)
     return str(value)
-
+    
+global sort_alphanumeric
 def sort_alphanumeric(l):
     import re
     convert = lambda text: int(text) if text.isdigit() else text.lower()
