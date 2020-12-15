@@ -144,11 +144,20 @@ def fifoOptionsVisible(symbol, event):
 
    symbol.setVisible(fifoEnableSym.getVisible() and fifoEnableSym.getValue())
 
+def rxFifo2OptionVisible(symbol, event):
+    fifoEnableSym = event["source"].getSymbolByID("FLEXCOM_USART_FIFO_ENABLE")
+    uartMode = event["source"].getSymbolByID("FLEXCOM_USART_MR_USART_MODE").getSelectedKey()
+
+    symbol.setVisible(fifoEnableSym.getVisible() and fifoEnableSym.getValue() and uartMode == "HW_HANDSHAKING")
+
 def fifoModeVisible (symbol, event):
-    if flexcomSym_OperatingMode.getSelectedKey() == "USART" and flexcomSym_UsartInterrupt.getValue() == True:
-        symbol.setVisible(True)
+    uartMode = event["source"].getSymbolByID("FLEXCOM_USART_MR_USART_MODE").getSelectedKey()
+    symbol.setVisible(flexcomSym_OperatingMode.getSelectedKey() == "USART")
+    if uartMode == "HW_HANDSHAKING":
+        symbol.setReadOnly(True)
+        symbol.setValue(True)
     else:
-        symbol.setVisible(False)
+        symbol.setReadOnly(False)
 
 def updateUSARTDataBits (symbol, event):
 
@@ -383,7 +392,7 @@ flexcomSym_UsartFIFOEnable = flexcomComponent.createBooleanSymbol("FLEXCOM_USART
 flexcomSym_UsartFIFOEnable.setLabel("Enable FIFO")
 flexcomSym_UsartFIFOEnable.setDefaultValue(False)
 flexcomSym_UsartFIFOEnable.setVisible(False)
-flexcomSym_UsartFIFOEnable.setDependencies(fifoModeVisible, ["FLEXCOM_MODE", "USART_INTERRUPT_MODE", "USART_RING_BUFFER_ENABLE"])
+flexcomSym_UsartFIFOEnable.setDependencies(fifoModeVisible, ["FLEXCOM_MODE", "FLEXCOM_USART_MR_USART_MODE"])
 
 flexcomSym_UsartFIFORXThreshold = flexcomComponent.createIntegerSymbol("FLEXCOM_USART_RX_FIFO_THRESHOLD", flexcomSym_UsartFIFOEnable)
 flexcomSym_UsartFIFORXThreshold.setLabel("RX FIFO Threshold")
@@ -400,6 +409,14 @@ flexcomSym_UsartFIFOTXThreshold.setMax(31)
 flexcomSym_UsartFIFOTXThreshold.setDefaultValue(16)
 flexcomSym_UsartFIFOTXThreshold.setVisible(False)
 flexcomSym_UsartFIFOTXThreshold.setDependencies(fifoOptionsVisible, ["FLEXCOM_USART_FIFO_ENABLE"])
+
+flexcomSym_UsartFIFORX2Threshold = flexcomComponent.createIntegerSymbol("FLEXCOM_USART_RX_FIFO_THRESHOLD_2", flexcomSym_UsartFIFOEnable)
+flexcomSym_UsartFIFORX2Threshold.setLabel("RX FIFO Threshold 2")
+flexcomSym_UsartFIFORX2Threshold.setMin(1)
+flexcomSym_UsartFIFORX2Threshold.setMax(32)
+flexcomSym_UsartFIFORX2Threshold.setDefaultValue(12)
+flexcomSym_UsartFIFORX2Threshold.setVisible(False)
+flexcomSym_UsartFIFORX2Threshold.setDependencies(rxFifo2OptionVisible, ["FLEXCOM_USART_FIFO_ENABLE", "FLEXCOM_USART_MR_USART_MODE"])
 
 #FLEXCOM USART Stop 1-bit Mask
 flexcomSym_Usart_MR_NBSTOP_1_Mask = flexcomComponent.createStringSymbol("USART_STOP_1_BIT_MASK", flexcomSym_OperatingMode)
