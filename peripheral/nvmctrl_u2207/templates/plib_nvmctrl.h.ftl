@@ -61,6 +61,11 @@
 #endif
 
 // DOM-IGNORE-END
+// *****************************************************************************
+// *****************************************************************************
+// Section: Preprocessor macros
+// *****************************************************************************
+// *****************************************************************************
 
 #define ${NVMCTRL_INSTANCE_NAME}_FLASH_START_ADDRESS        (${.vars["FLASH_START_ADDRESS"]}U)
 #define ${NVMCTRL_INSTANCE_NAME}_FLASH_SIZE                 (${FLASH_SIZE}U)
@@ -75,26 +80,17 @@
 </#if>
 
 <#if DRV_MEMORY_CONNECTED == true>
-    <#lt>#define ${NVMCTRL_INSTANCE_NAME}_START_ADDRESS              0x${START_ADDRESS}
-    <#lt>#define ${NVMCTRL_INSTANCE_NAME}_MEDIA_SIZE                 ${MEMORY_MEDIA_SIZE}
-    <#lt>#define ${NVMCTRL_INSTANCE_NAME}_ERASE_BUFFER_SIZE          ${ERASE_BUFFER_SIZE}
+    <#lt>#define ${NVMCTRL_INSTANCE_NAME}_START_ADDRESS              0x${START_ADDRESS}U
+    <#lt>#define ${NVMCTRL_INSTANCE_NAME}_MEDIA_SIZE                 ${MEMORY_MEDIA_SIZE}U
+    <#lt>#define ${NVMCTRL_INSTANCE_NAME}_ERASE_BUFFER_SIZE          ${ERASE_BUFFER_SIZE}U
 </#if>
 
-typedef enum
-{
-    /* No error */
-    NVMCTRL_ERROR_NONE = 0x0,
+#define NVMCTRL_ERROR_NONE 0x0U
+#define NVMCTRL_ERROR_PROG 0x4U
+#define NVMCTRL_ERROR_LOCK 0x8U
+#define NVMCTRL_ERROR_NVM 0x10U
 
-    /* NVMCTRL invalid commands and/or bad keywords error */
-    NVMCTRL_ERROR_PROG = 0x4,
-
-    /* NVMCTRL lock error */
-    NVMCTRL_ERROR_LOCK = 0x8,
-
-    /* NVMCTRL programming or erase error */
-    NVMCTRL_ERROR_NVM = 0x10,
-
-} NVMCTRL_ERROR;
+typedef uint32_t NVMCTRL_ERROR;
 
 <#if INTERRUPT_ENABLE == true>
     <#lt>typedef void (*NVMCTRL_CALLBACK)(uintptr_t context);
