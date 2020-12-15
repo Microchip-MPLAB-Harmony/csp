@@ -107,7 +107,6 @@ typedef enum
 }ADC_NEGINPUT;
 
 typedef uint32_t ADC_STATUS;
-
 typedef enum
 {
     ADC_WINMODE_DISABLED = ADC_CTRLC_WINMODE_DISABLE_Val,

@@ -53,6 +53,7 @@
 /* This section lists the other files that are included in this file.
 */
 
+#include "interrupts.h"
 #include "plib_${ADC_INSTANCE_NAME?lower_case}.h"
 <#compress>
 <#assign ADC_CTRLC_VAL = "">
@@ -86,9 +87,9 @@
         <#if .vars[ADC_SEQCTRL]?has_content>
             <#if .vars[ADC_SEQCTRL] == true>
                 <#if ADC_SEQCTRL_VAL != "">
-                    <#assign ADC_SEQCTRL_VAL = ADC_SEQCTRL_VAL + "\n\t\t | " + "ADC_SEQCTRL_SEQEN(1U << " + i +")">
+                    <#assign ADC_SEQCTRL_VAL = ADC_SEQCTRL_VAL + "\n\t\t | " + "ADC_SEQCTRL_SEQEN(1U << " + i +"U)">
                 <#else>
-                    <#assign ADC_SEQCTRL_VAL = "ADC_SEQCTRL_SEQEN(1U << " + i +")">
+                    <#assign ADC_SEQCTRL_VAL = "ADC_SEQCTRL_SEQEN(1U << " + i +"U)">
                 </#if>
             </#if>
         </#if>
@@ -172,31 +173,31 @@
 // *****************************************************************************
 // *****************************************************************************
 <#if ADC_INTENSET_RESRDY = true || (ADC_CTRLC_WINMODE != "0" && ADC_INTENSET_WINMON = true)>
-ADC_CALLBACK_OBJ ${ADC_INSTANCE_NAME}_CallbackObject;
+static ADC_CALLBACK_OBJ ${ADC_INSTANCE_NAME}_CallbackObject;
 </#if>
 
 <#if ADC_LOAD_CALIB? has_content>
     <#if ADC_LOAD_CALIB == true >
         <#if ADC_INSTANCE_NAME = "ADC0">
             <#lt>#define ${ADC_INSTANCE_NAME}_LINEARITY_POS  (0)
-            <#lt>#define ${ADC_INSTANCE_NAME}_LINEARITY_Msk   (0x7 << ${ADC_INSTANCE_NAME}_LINEARITY_POS)
+            <#lt>#define ${ADC_INSTANCE_NAME}_LINEARITY_Msk   (0x7UL << ${ADC_INSTANCE_NAME}_LINEARITY_POS)
 
             <#lt>#define ${ADC_INSTANCE_NAME}_BIASCAL_POS  (3)
-            <#lt>#define ${ADC_INSTANCE_NAME}_BIASCAL_Msk   (0x7 << ${ADC_INSTANCE_NAME}_BIASCAL_POS)
+            <#lt>#define ${ADC_INSTANCE_NAME}_BIASCAL_Msk   (0x7UL << ${ADC_INSTANCE_NAME}_BIASCAL_POS)
 
         <#elseif ADC_INSTANCE_NAME = "ADC1">
             <#lt>#define ${ADC_INSTANCE_NAME}_LINEARITY_POS  (6)
-            <#lt>#define ${ADC_INSTANCE_NAME}_LINEARITY_Msk   (0x7 << ${ADC_INSTANCE_NAME}_LINEARITY_POS)
+            <#lt>#define ${ADC_INSTANCE_NAME}_LINEARITY_Msk   (0x7UL << ${ADC_INSTANCE_NAME}_LINEARITY_POS)
 
             <#lt>#define ${ADC_INSTANCE_NAME}_BIASCAL_POS  (9)
-            <#lt>#define ${ADC_INSTANCE_NAME}_BIASCAL_Msk   (0x7 << ${ADC_INSTANCE_NAME}_BIASCAL_POS)
+            <#lt>#define ${ADC_INSTANCE_NAME}_BIASCAL_Msk   (0x7UL << ${ADC_INSTANCE_NAME}_BIASCAL_POS)
 
         <#elseif ADC_INSTANCE_NAME = "ADC">
             <#lt>#define ${ADC_INSTANCE_NAME}_LINEARITY_POS  (0)
-            <#lt>#define ${ADC_INSTANCE_NAME}_LINEARITY_Msk   (0x7 << ${ADC_INSTANCE_NAME}_LINEARITY_POS)
+            <#lt>#define ${ADC_INSTANCE_NAME}_LINEARITY_Msk   (0x7UL << ${ADC_INSTANCE_NAME}_LINEARITY_POS)
 
             <#lt>#define ${ADC_INSTANCE_NAME}_BIASCAL_POS  (3)
-            <#lt>#define ${ADC_INSTANCE_NAME}_BIASCAL_Msk   (0x7 << ${ADC_INSTANCE_NAME}_BIASCAL_POS)
+            <#lt>#define ${ADC_INSTANCE_NAME}_BIASCAL_Msk   (0x7UL << ${ADC_INSTANCE_NAME}_BIASCAL_POS)
         </#if>
     </#if>
 </#if>
@@ -212,7 +213,7 @@ ADC_CALLBACK_OBJ ${ADC_INSTANCE_NAME}_CallbackObject;
 void ${ADC_INSTANCE_NAME}_Initialize( void )
 {
     /* Reset ADC */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLA = ADC_CTRLA_SWRST_Msk;
+    ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLA = (uint8_t)ADC_CTRLA_SWRST_Msk;
 
     while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY & ADC_SYNCBUSY_SWRST_Msk) == ADC_SYNCBUSY_SWRST_Msk)
     {
@@ -221,29 +222,31 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
 <#if ADC_LOAD_CALIB? has_content>
     <#if ADC_LOAD_CALIB == true >
     <#lt>    /* Write linearity calibration in BIASREFBUF and bias calibration in BIASCOMP */
-    <#lt>    ${ADC_INSTANCE_NAME}_REGS->ADC_CALIB = (uint32_t)(ADC_CALIB_BIASREFBUF(((*(uint64_t*)${ADC_NVM_CALIB_REG}) & ${ADC_INSTANCE_NAME}_LINEARITY_Msk))) \
-    <#lt>        | ADC_CALIB_BIASCOMP((((*(uint64_t*)${ADC_NVM_CALIB_REG}) & ${ADC_INSTANCE_NAME}_BIASCAL_Msk) >> ${ADC_INSTANCE_NAME}_BIASCAL_POS));
+    <#lt>    uint32_t calib_low_word = (uint32_t)(*(uint64_t*)${ADC_NVM_CALIB_REG});
+    <#lt>    ${ADC_INSTANCE_NAME}_REGS->ADC_CALIB = (uint16_t)((ADC_CALIB_BIASREFBUF((calib_low_word & ${ADC_INSTANCE_NAME}_LINEARITY_Msk) >> ${ADC_INSTANCE_NAME}_LINEARITY_POS)) | 
+    <#lt>                                      (ADC_CALIB_BIASCOMP((calib_low_word & ${ADC_INSTANCE_NAME}_BIASCAL_Msk) >> ${ADC_INSTANCE_NAME}_BIASCAL_POS)));
     </#if>
 </#if>
 
 <#if ADC_CTRLA_SLAVEEN == true>
-    ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLA = ADC_CTRLA_SLAVEEN_Msk;
+    ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLA = (uint8_t)ADC_CTRLA_SLAVEEN_Msk;
 <#else>
     /* Prescaler */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLB = ADC_CTRLB_PRESCALER_${ADC_CTRLB_PRESCALER};
+    ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLB = (uint8_t)ADC_CTRLB_PRESCALER_${ADC_CTRLB_PRESCALER};
 </#if>
     /* Sampling length */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_SAMPCTRL = ADC_SAMPCTRL_SAMPLEN(${ADC_SAMPCTRL_SAMPLEN - 1}U);
+    ${ADC_INSTANCE_NAME}_REGS->ADC_SAMPCTRL = (uint8_t)ADC_SAMPCTRL_SAMPLEN(${ADC_SAMPCTRL_SAMPLEN - 1}UL);
 
     /* Reference */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_REFCTRL = ADC_REFCTRL_REFSEL_${ADC_REFCTRL_REFSEL};
+    ${ADC_INSTANCE_NAME}_REGS->ADC_REFCTRL = (uint8_t)ADC_REFCTRL_REFSEL_${ADC_REFCTRL_REFSEL};
 
 <#if ADC_SEQCTRL_VAL?has_content>
+    /*lint -e{9048} false positive about a missing 'U' literal */
     ${ADC_INSTANCE_NAME}_REGS->ADC_SEQCTRL = ${ADC_SEQCTRL_VAL};
 <#else>
     <#if ADC_CTRLC_DIFFMODE == true>
     /* Positive and negative input pins */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_INPUTCTRL = (uint16_t) ADC_POSINPUT_${ADC_INPUTCTRL_MUXPOS} | (uint16_t) ADC_NEGINPUT_${ADC_INPUTCTRL_MUXNEG};
+    ${ADC_INSTANCE_NAME}_REGS->ADC_INPUTCTRL = (uint16_t) (ADC_POSINPUT_${ADC_INPUTCTRL_MUXPOS} | ADC_NEGINPUT_${ADC_INPUTCTRL_MUXNEG});
     <#else>
     /* Input pin */
     ${ADC_INSTANCE_NAME}_REGS->ADC_INPUTCTRL = (uint16_t) ADC_POSINPUT_${ADC_INPUTCTRL_MUXPOS};
@@ -251,35 +254,35 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
 </#if>
 
     /* Resolution & Operation Mode */
-    <@compress single_line=true>${ADC_INSTANCE_NAME}_REGS->ADC_CTRLC = ADC_CTRLC_RESSEL_${ADC_CTRLC_RESSEL} | ADC_CTRLC_WINMODE(${ADC_CTRLC_WINMODE})
-                                     <#if ADC_CTRLC_VAL?has_content>| ${ADC_CTRLC_VAL}</#if>;</@compress>
+    <@compress single_line=true>${ADC_INSTANCE_NAME}_REGS->ADC_CTRLC = (uint16_t)(ADC_CTRLC_RESSEL_${ADC_CTRLC_RESSEL} | ADC_CTRLC_WINMODE(${ADC_CTRLC_WINMODE}UL)
+                                     <#if ADC_CTRLC_VAL?has_content>| ${ADC_CTRLC_VAL}</#if>);</@compress>
 
 <#if ADC_CTRLC_RESSEL == "16BIT">
     /* Result averaging */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_AVGCTRL = ADC_AVGCTRL_SAMPLENUM_${ADC_AVGCTRL_SAMPLENUM} | ADC_AVGCTRL_ADJRES(${ADC_AVGCTRL_ADJRES});
+    ${ADC_INSTANCE_NAME}_REGS->ADC_AVGCTRL = (uint8_t)(ADC_AVGCTRL_SAMPLENUM_${ADC_AVGCTRL_SAMPLENUM} | ADC_AVGCTRL_ADJRES(${ADC_AVGCTRL_ADJRES}UL));
 </#if>
 
 <#if ADC_CTRLC_WINMODE != "0">
     /* Upper threshold for window mode  */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_WINUT = ${ADC_WINUT};
+    ${ADC_INSTANCE_NAME}_REGS->ADC_WINUT = (uint16_t)(${ADC_WINUT});
     /* Lower threshold for window mode  */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_WINLT = ${ADC_WINLT};
+    ${ADC_INSTANCE_NAME}_REGS->ADC_WINLT = (uint16_t)(${ADC_WINLT});
 </#if>
     /* Clear all interrupt flags */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ADC_INTFLAG_Msk;
+    ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = (uint8_t)ADC_INTFLAG_Msk;
 <#if ADC_INTENSET_VAL?has_content >
     /* Enable interrupts */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_INTENSET = ${ADC_INTENSET_VAL};
+    ${ADC_INSTANCE_NAME}_REGS->ADC_INTENSET = (uint8_t)(${ADC_INTENSET_VAL});
 </#if>
 <#if ADC_EVCTRL_VAL?has_content && ADC_CTRLA_SLAVEEN == false>
     /* Events configuration  */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_EVCTRL = ${ADC_EVCTRL_VAL};
+    ${ADC_INSTANCE_NAME}_REGS->ADC_EVCTRL = (uint8_t)(${ADC_EVCTRL_VAL});
 </#if>
 
 <#if ADC_CTRLA_VAL?has_content>
-    <@compress single_line=true>${ADC_INSTANCE_NAME}_REGS->ADC_CTRLA |= ${ADC_CTRLA_VAL};</@compress>
+    <@compress single_line=true>${ADC_INSTANCE_NAME}_REGS->ADC_CTRLA |= (uint8_t)(${ADC_CTRLA_VAL});</@compress>
 </#if>
-    while(${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY)
+    while(0U != ${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY)
     {
         /* Wait for Synchronization */
     }
@@ -288,8 +291,8 @@ void ${ADC_INSTANCE_NAME}_Initialize( void )
 /* Enable ADC module */
 void ${ADC_INSTANCE_NAME}_Enable( void )
 {
-    ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLA |= ADC_CTRLA_ENABLE_Msk;
-    while(${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY)
+    ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLA |= (uint8_t)ADC_CTRLA_ENABLE_Msk;
+    while(0U != ${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY)
     {
         /* Wait for Synchronization */
     }
@@ -298,8 +301,8 @@ void ${ADC_INSTANCE_NAME}_Enable( void )
 /* Disable ADC module */
 void ${ADC_INSTANCE_NAME}_Disable( void )
 {
-    ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLA &= ~ADC_CTRLA_ENABLE_Msk;
-    while(${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY)
+    ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLA &= (uint8_t)(~ADC_CTRLA_ENABLE_Msk);
+    while(0U != ${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY)
     {
         /* Wait for Synchronization */
     }
@@ -321,7 +324,7 @@ void ${ADC_INSTANCE_NAME}_ChannelSelect( ADC_POSINPUT positiveInput, ADC_NEGINPU
 void ${ADC_INSTANCE_NAME}_ConversionStart( void )
 {
     /* Start conversion */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_SWTRIG |= ADC_SWTRIG_START_Msk;
+    ${ADC_INSTANCE_NAME}_REGS->ADC_SWTRIG |= (uint8_t)ADC_SWTRIG_START_Msk;
 
     while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY & ADC_SYNCBUSY_SWTRIG_Msk) == ADC_SYNCBUSY_SWTRIG_Msk)
     {
@@ -345,7 +348,7 @@ void ${ADC_INSTANCE_NAME}_ComparisonWindowSet(uint16_t low_threshold, uint16_t h
 {
     ${ADC_INSTANCE_NAME}_REGS->ADC_WINLT = low_threshold;
     ${ADC_INSTANCE_NAME}_REGS->ADC_WINUT = high_threshold;
-    while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY))
+    while(0U != (${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY))
     {
         /* Wait for Synchronization */
     }
@@ -353,9 +356,9 @@ void ${ADC_INSTANCE_NAME}_ComparisonWindowSet(uint16_t low_threshold, uint16_t h
 
 void ${ADC_INSTANCE_NAME}_WindowModeSet(ADC_WINMODE mode)
 {
-    ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLC &= ~ADC_CTRLC_WINMODE_Msk;
-    ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLC |= (mode << ADC_CTRLC_WINMODE_Pos);
-    while((${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY))
+    ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLC &= (uint16_t)(~ADC_CTRLC_WINMODE_Msk);
+    ${ADC_INSTANCE_NAME}_REGS->ADC_CTRLC |= (uint16_t)((uint32_t)mode << ADC_CTRLC_WINMODE_Pos);
+    while(0U != (${ADC_INSTANCE_NAME}_REGS->ADC_SYNCBUSY))
     {
         /* Wait for Synchronization */
     }
@@ -369,17 +372,17 @@ uint16_t ${ADC_INSTANCE_NAME}_ConversionResultGet( void )
 
 void ${ADC_INSTANCE_NAME}_InterruptsClear(ADC_STATUS interruptMask)
 {
-    ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = interruptMask;
+    ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = (uint8_t)interruptMask;
 }
 
 void ${ADC_INSTANCE_NAME}_InterruptsEnable(ADC_STATUS interruptMask)
 {
-    ${ADC_INSTANCE_NAME}_REGS->ADC_INTENSET = interruptMask;
+    ${ADC_INSTANCE_NAME}_REGS->ADC_INTENSET = (uint8_t)interruptMask;
 }
 
 void ${ADC_INSTANCE_NAME}_InterruptsDisable(ADC_STATUS interruptMask)
 {
-    ${ADC_INSTANCE_NAME}_REGS->ADC_INTENCLR = interruptMask;
+    ${ADC_INSTANCE_NAME}_REGS->ADC_INTENCLR = (uint8_t)interruptMask;
 }
 
 <#if MULTI_VECTOR_SUPPORT??>
@@ -398,7 +401,7 @@ void ${ADC_INSTANCE_NAME}_RESRDY_InterruptHandler( void )
     volatile ADC_STATUS status;
     status = ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_RESRDY_Msk;
     /* Clear interrupt flag */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ADC_INTFLAG_RESRDY_Msk;
+    ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = (uint8_t)ADC_INTFLAG_RESRDY_Msk;
     if (${ADC_INSTANCE_NAME}_CallbackObject.callback != NULL)
     {
         ${ADC_INSTANCE_NAME}_CallbackObject.callback(status, ${ADC_INSTANCE_NAME}_CallbackObject.context);
@@ -412,7 +415,7 @@ bool ${ADC_INSTANCE_NAME}_ConversionStatusGet( void )
     status =  (bool)((${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_RESRDY_Msk) >> ADC_INTFLAG_RESRDY_Pos);
     if (status == true)
     {
-        ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ADC_INTFLAG_RESRDY_Msk;
+        ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = (uint8_t)ADC_INTFLAG_RESRDY_Msk;
     }
     return status;
 }
@@ -423,7 +426,7 @@ void ${ADC_INSTANCE_NAME}_OTHER_InterruptHandler( void )
     ADC_STATUS status;
     status = (ADC_STATUS) (${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG);
     /* Clear interrupt flag */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ADC_INTFLAG_WINMON_Msk | ADC_INTFLAG_OVERRUN_Msk;
+    ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = (uint8_t)(ADC_INTFLAG_WINMON_Msk | ADC_INTFLAG_OVERRUN_Msk);
     if (${ADC_INSTANCE_NAME}_CallbackObject.callback != NULL)
     {
         ${ADC_INSTANCE_NAME}_CallbackObject.callback(status, ${ADC_INSTANCE_NAME}_CallbackObject.context);
@@ -435,10 +438,10 @@ void ${ADC_INSTANCE_NAME}_OTHER_InterruptHandler( void )
 bool ${ADC_INSTANCE_NAME}_WindowMonitorStatusGet( void )
 {
     bool status;
-    status = (bool)((${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_WINMON_Msk) >> ADC_INTFLAG_WINMON_Pos);
+    status = (((${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_WINMON_Msk) >> ADC_INTFLAG_WINMON_Pos) != 0U);
     if (status == true)
     {
-        ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ADC_INTFLAG_WINMON_Msk;
+        ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = (uint8_t)ADC_INTFLAG_WINMON_Msk;
     }
     return status;
 }
@@ -449,10 +452,10 @@ bool ${ADC_INSTANCE_NAME}_WindowMonitorStatusGet( void )
 bool ${ADC_INSTANCE_NAME}_ConversionStatusGet( void )
 {
     bool status;
-    status =  (bool)((${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_RESRDY_Msk) >> ADC_INTFLAG_RESRDY_Pos);
+    status =  (((${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_RESRDY_Msk) >> ADC_INTFLAG_RESRDY_Pos) != 0U);
     if (status == true)
     {
-        ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ADC_INTFLAG_RESRDY_Msk;
+        ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = (uint8_t)ADC_INTFLAG_RESRDY_Msk;
     }
     return status;
 }
@@ -462,10 +465,10 @@ bool ${ADC_INSTANCE_NAME}_ConversionStatusGet( void )
 bool ${ADC_INSTANCE_NAME}_WindowMonitorStatusGet( void )
 {
     bool status;
-    status = (bool)((${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_WINMON_Msk) >> ADC_INTFLAG_WINMON_Pos);
+    status = (((${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_WINMON_Msk) >> ADC_INTFLAG_WINMON_Pos) != 0U);
     if (status == true)
     {
-        ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ADC_INTFLAG_WINMON_Msk;
+        ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = (uint8_t)ADC_INTFLAG_WINMON_Msk;
     }
     return status;
 }
@@ -484,10 +487,10 @@ void ${ADC_INSTANCE_NAME}_CallbackRegister( ADC_CALLBACK callback, uintptr_t con
 
 void ${ADC_INSTANCE_NAME}_InterruptHandler( void )
 {
-    volatile ADC_STATUS status;
+    ADC_STATUS status;
     status = ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG;
     /* Clear interrupt flag */
-    ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ${ADC_INTENSET_VAL};
+    ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = (uint8_t)(${ADC_INTENSET_VAL});
     if (${ADC_INSTANCE_NAME}_CallbackObject.callback != NULL)
     {
         ${ADC_INSTANCE_NAME}_CallbackObject.callback(status, ${ADC_INSTANCE_NAME}_CallbackObject.context);
@@ -499,10 +502,10 @@ void ${ADC_INSTANCE_NAME}_InterruptHandler( void )
 bool ${ADC_INSTANCE_NAME}_ConversionStatusGet( void )
 {
     bool status;
-    status =  (bool)((${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_RESRDY_Msk) >> ADC_INTFLAG_RESRDY_Pos);
+    status =  (((${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_RESRDY_Msk) >> ADC_INTFLAG_RESRDY_Pos) != 0U);
     if (status == true)
     {
-        ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ADC_INTFLAG_RESRDY_Msk;
+        ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = (uint8_t)ADC_INTFLAG_RESRDY_Msk;
     }
     return status;
 }
@@ -512,10 +515,10 @@ bool ${ADC_INSTANCE_NAME}_ConversionStatusGet( void )
 bool ${ADC_INSTANCE_NAME}_WindowMonitorStatusGet( void )
 {
     bool status;
-    status = (bool)((${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_WINMON_Msk) >> ADC_INTFLAG_WINMON_Pos);
+    status = (((${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG & ADC_INTFLAG_WINMON_Msk) >> ADC_INTFLAG_WINMON_Pos) != 0U);
     if (status == true)
     {
-        ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = ADC_INTFLAG_WINMON_Msk;
+        ${ADC_INSTANCE_NAME}_REGS->ADC_INTFLAG = (uint8_t)ADC_INTFLAG_WINMON_Msk;
     }
     return status;
 }
