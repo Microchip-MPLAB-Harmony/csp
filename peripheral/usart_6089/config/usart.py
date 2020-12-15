@@ -22,6 +22,16 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
 
+global dataBitsDict
+
+dataBitsDict = {
+    "5_BIT": "DRV_USART_DATA_5_BIT",
+    "6_BIT": "DRV_USART_DATA_6_BIT",
+    "7_BIT": "DRV_USART_DATA_7_BIT",
+    "8_BIT": "DRV_USART_DATA_8_BIT",
+    "9_BIT": "DRV_USART_DATA_9_BIT"
+}
+
 ################################################################################
 #### Global Variables ####
 ################################################################################
@@ -282,6 +292,10 @@ def USARTFileGeneration(symbol, event):
     symbol.setSourcePath(filepath)
     symbol.setOutputName(outputName)
 
+def updateUSARTDataBits (symbol, event):
+
+    dataBits = event["symbol"].getSelectedKey()
+    symbol.setValue(dataBitsDict[dataBits])
 ################################################################################
 #### Component ####
 ################################################################################
@@ -670,6 +684,11 @@ def instantiateComponent(usartComponent):
     usartSPISym_8BIT = usartComponent.createStringSymbol("SPI_CHARSIZE_BITS_8_BIT_MASK", None)
     usartSPISym_8BIT.setDefaultValue("0x000000C0")
     usartSPISym_8BIT.setVisible(False)
+
+    usartSym_DataBits = usartComponent.createStringSymbol("USART_DATA_BITS", None)
+    usartSym_DataBits.setDefaultValue(dataBitsDict[usartSym_MR_CHRL.getSelectedKey()])
+    usartSym_DataBits.setVisible(False)
+    usartSym_DataBits.setDependencies(updateUSARTDataBits, ["USART_MR_CHRL"])
 
     ############################################################################
     #### Dependency ####
