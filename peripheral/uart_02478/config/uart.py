@@ -158,30 +158,30 @@ def baudRateCalc(clk, baud):
     global uartSym_UxMODE_BRGH
     brgh0 = False
     brgh1 = False
-    
+
     if clk == 0:
         return -1
 
     UxBRG_BRGH0 = (((clk >> 4) + (baud >> 1)) / baud) - 1
     UxBRG_BRGH1 = (((clk >> 2) + (baud >> 1)) / baud) - 1
-    
+
     if ((UxBRG_BRGH0 >= 0) and (UxBRG_BRGH0 <= 65535)):
         brgh0 = True
     if ((UxBRG_BRGH1 >= 0) and (UxBRG_BRGH1 <= 65535)):
         brgh1 = True
-    
+
     # Baud rate is possible with both BRGH = 0 and BRGH = 1. Decide which one to use based on error.
     if brgh0 == True and brgh1 == True:
         actualBaud_BRGH0 = (clk/(16*(UxBRG_BRGH0 + 1)))
         actualBaud_BRGH1 = (clk/(4*(UxBRG_BRGH1 + 1)))
-        
+
         error_BRGH0 = abs((baud - actualBaud_BRGH0))
-        error_BRGH1 = abs((baud - actualBaud_BRGH1))  
-        
+        error_BRGH1 = abs((baud - actualBaud_BRGH1))
+
         # If error with BRGH0 is less or same as with BRGH1, use BRGH0
-        if (error_BRGH0 <= error_BRGH1):            
+        if (error_BRGH0 <= error_BRGH1):
             uartSym_UxMODE_BRGH.setValue(1, 2)
-            return UxBRG_BRGH0            
+            return UxBRG_BRGH0
         # If error with BRGH1 is less, use BRGH1
         else:
             uartSym_UxMODE_BRGH.setValue(0, 2)
@@ -189,14 +189,14 @@ def baudRateCalc(clk, baud):
     else:
         if brgh0 == True:
             uartSym_UxMODE_BRGH.setValue(1, 2)
-            return UxBRG_BRGH0            
+            return UxBRG_BRGH0
         elif brgh1 == True:
             uartSym_UxMODE_BRGH.setValue(0, 2)
             return UxBRG_BRGH1
         elif UxBRG_BRGH0 > 65535:
             return UxBRG_BRGH0
         elif UxBRG_BRGH1 < 0:
-            return UxBRG_BRGH1   
+            return UxBRG_BRGH1
 
 def baudRateTrigger(symbol, event):
 
@@ -404,8 +404,8 @@ def onCapabilityConnected(event):
     # is ready to accept configuration parameters from the dependent component
     argDict = {"localComponentID" : localComponent.getID()}
     argDict = Database.sendMessage(remoteComponent.getID(), "REQUEST_CONFIG_PARAMS", argDict)
-    
-def updateAutoAddrSymVisibility(symbol, event):    
+
+def updateAutoAddrSymVisibility(symbol, event):
     pdbit_mode = event["source"].getSymbolByID("UART_PDSEL").getSelectedValue()
 
     if pdbit_mode == "3":
@@ -416,12 +416,15 @@ def updateAutoAddrSymVisibility(symbol, event):
         symbol.setValue(False)
         symbol.setReadOnly(False)
 
-def updateAddrSymVisibility(symbol, event):    
+def updateAddrSymVisibility(symbol, event):
     pdbit_mode = event["source"].getSymbolByID("UART_PDSEL").getSelectedValue()
     addr_detection_enable = event["source"].getSymbolByID("UART_AUTOMATIC_ADDR_DETECTION_ENABLE").getValue()
 
     symbol.setVisible(pdbit_mode == "3" and addr_detection_enable == True)
-    
+
+def updateUSARTDataBits (symbol, event):
+    symbol.setValue("DRV_USART_DATA_9_BIT" if (event["value"] == 0) else "DRV_USART_DATA_8_BIT")
+
 ################################################################################
 #### Component ####
 ################################################################################
@@ -659,7 +662,7 @@ def instantiateComponent(uartComponent):
     uartSym_UxMODE_PDSEL.setDisplayMode( "Description" )
     for ii in pdsel_names:
         uartSym_UxMODE_PDSEL.addKey( ii['key'],ii['value'], ii['desc'] )
-        
+
     ##Automatic Address Detection Enable
     uartSym_AutoAddr_Enable = uartComponent.createBooleanSymbol("UART_AUTOMATIC_ADDR_DETECTION_ENABLE", None)
     uartSym_AutoAddr_Enable.setLabel("Enable Automatic Address Detection?")
@@ -675,7 +678,7 @@ def instantiateComponent(uartComponent):
     uartSym_9BitMode_Addr.setDefaultValue(0x01)
     uartSym_9BitMode_Addr.setVisible(False)
     uartSym_9BitMode_Addr.setDependencies(updateAddrSymVisibility, ["UART_PDSEL", "UART_AUTOMATIC_ADDR_DETECTION_ENABLE"])
-    
+
     ##Address Mask value
     uartSym_9BitMode_AddrMaskValue = uartComponent.createHexSymbol("UART_9BIT_MODE_ADDR_MASK", None)
     uartSym_9BitMode_AddrMaskValue.setLabel("Address Mask")
@@ -1013,3 +1016,8 @@ def instantiateComponent(uartComponent):
     uartSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     uartSystemDefFile.setSourcePath("../peripheral/uart_02478/templates/system/definitions.h.ftl")
     uartSystemDefFile.setMarkup(True)
+
+    uartSym_DataBits = uartComponent.createStringSymbol("USART_DATA_BITS", None)
+    uartSym_DataBits.setDefaultValue("DRV_USART_DATA_9_BIT" if (uartSym_UxMODE_PDSEL.getValue() == 0) else "DRV_USART_DATA_8_BIT")
+    uartSym_DataBits.setVisible(False)
+    uartSym_DataBits.setDependencies(updateUSARTDataBits, ["UART_PDSEL"])
