@@ -387,3 +387,7 @@ def instantiateComponent(dbguComponent):
     dbguSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     dbguSystemDefFile.setSourcePath("../peripheral/dbgu_6059/templates/system/definitions.h.ftl")
     dbguSystemDefFile.setMarkup(True)
+
+    dbguSym_Usart_DataBits = dbguComponent.createStringSymbol("USART_DATA_BITS", None)
+    dbguSym_Usart_DataBits.setDefaultValue("DRV_USART_DATA_8_BIT")
+    dbguSym_Usart_DataBits.setVisible(False)
