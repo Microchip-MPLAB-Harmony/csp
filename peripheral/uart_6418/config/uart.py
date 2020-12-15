@@ -436,3 +436,7 @@ def instantiateComponent(uartComponent):
     uartSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
     uartSystemDefFile.setSourcePath("../peripheral/uart_6418/templates/system/definitions.h.ftl")
     uartSystemDefFile.setMarkup(True)
+
+    uartSym_DataBits = uartComponent.createStringSymbol("USART_DATA_BITS", None)
+    uartSym_DataBits.setDefaultValue("DRV_USART_DATA_8_BIT")
+    uartSym_DataBits.setVisible(False)
